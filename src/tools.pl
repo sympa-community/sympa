@@ -1,3 +1,5 @@
+#!--PERL--
+
 # tools.pl - This module provides various tools for Sympa
 # RCS Identication ; $Revision$ ; $Date$ 
 #
@@ -329,7 +331,7 @@ sub get_templates_list {
     my $listdir = shift;
 
     do_log('debug', "get_templates_list ($type, $robot, $langdir, $listdir)");
-    do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list ($type, $robot, $langdir, $listdir)");
+ #   do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list ($type, $robot, $langdir, $listdir)");
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
@@ -412,20 +414,16 @@ sub get_template_path {
 
 
     if ($scope eq 'list')  {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxx resu $listdir/$type".'_tt2'."$lang/$tpll");
 	return $listdir.'/'.$type.'_tt2'.$lang.'/'.$tpl ;
     }
     if (($scope eq 'robot')||($scope eq 'list'))  {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $robot_dir/$tpl");
 	return $robot_dir.'/'.$tpl;
     }
     if (($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $site_dir/$tpl");
 	return $site_dir.'/'.$tpl;
     }
     
     if (($scope eq 'distrib')||($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $distrib_dir/$tpl");
 	return $distrib_dir.'/'.$tpl;
     }
 }
@@ -1849,7 +1847,7 @@ sub remove_dir {
 
 	if (!-l && -d _) {
 	    unless (rmdir($name)) {
-		&do_log('err','Error while removing dir %s',$name);
+		&do_log('info','Error while removing dir %s',$name);		
 	    }
 	}else{
 	    unless (unlink($name)) {
@@ -2088,11 +2086,13 @@ sub dump_var {
 		print $fd "\t"x$level.$index."\n";
 		&dump_var($var->[$index], $level+1, $fd);
 	    }
-	}else {
+	}elsif (ref($var) eq 'HASH') {
 	    foreach my $key (sort keys %{$var}) {
 		print $fd "\t"x$level.'_'.$key.'_'."\n";
 		&dump_var($var->{$key}, $level+1, $fd);
 	    }    
+	}else {
+	    printf $fd "\t"x$level."'%s'"."\n", ref($var);
 	}
     }else {
 	if (defined $var) {

@@ -43,9 +43,9 @@ use Log;
 
 ## Creates a new object
 sub new {
-    my($pkg, $file) = @_;
+    my($pkg, $file, $noxsympato) = @_;
     my $message;
-    &do_log('debug2', 'Message::new(%s)', $file);
+    &do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
     
     if (ref($file) =~ /MIME::Entity/i) {
 	$message->{'msg'} = $file;
@@ -108,38 +108,40 @@ sub new {
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};
-    unless ($message->{'rcpt'}) {
-	do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
-	return undef;
-    }
-    
-    ## Strip of the initial X-Sympa-To field
-    # Used by checksum later
-    #$hdr->delete('X-Sympa-To');
-
-    ## Do not check listname if processing a web message
-    unless ($hdr->get('X-Sympa-From')) {
-	## get listname & robot
-	my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
+    unless (defined $noxsympato) { # message.pm can be used for mesage not in the spool but in archive
+	unless ($message->{'rcpt'}) {
+	    do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
+	    return undef;
+	}
 	
-	$robot = lc($robot);
-	$listname = lc($listname);
-	$robot ||= $Conf{'host'};
+	## Strip of the initial X-Sympa-To field
+	# Used by checksum later
+	#$hdr->delete('X-Sympa-To');
 	
-	my $conf_email = &Conf::get_robot_conf($robot, 'email');
-	my $conf_host = &Conf::get_robot_conf($robot, 'host');
-	unless ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
-	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+	## Do not check listname if processing a web message
+	unless ($hdr->get('X-Sympa-From')) {
+	    ## get listname & robot
+	    my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
+	    
+	    $robot = lc($robot);
+	    $listname = lc($listname);
+	    $robot ||= $Conf{'host'};
+	    
+	    my $conf_email = &Conf::get_robot_conf($robot, 'email');
+	    my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	    unless ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
+		my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
 	        if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		    $listname = $1;
 		}
-	    
-	    $message->{'list'} = new List ($listname, $robot);
-	    unless ($message->{'rcpt'}) {
-		do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
-		return undef;
+		
+		$message->{'list'} = new List ($listname, $robot);
+		unless ($message->{'rcpt'}) {
+		    do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
+		    return undef;
+		}
+		
 	    }
-
 	}
     }
 

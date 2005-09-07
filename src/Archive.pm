@@ -162,6 +162,107 @@ sub list {
     return @l;
 }
 
+sub scan_dir_archive {
+    
+    my($dir, $month) = @_;
+    
+    &do_log ('info',"archive::scan_dir_archive($dir, $month)");
+
+    unless (opendir (DIR, "$dir/$month/arctxt")){
+	&do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
+	return undef;
+    }
+    
+    my $all_msg = [];
+    my $i = 0 ;
+    foreach my $file (sort readdir(DIR)) {
+	next unless ($file =~ /^\d+$/);
+	&do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
+
+	my $mail = new Message("$dir/$month/arctxt/$file",'noxsympato');
+	unless (defined $mail) {
+	    &do_log('err', 'Unable to create Message object %s', $file);
+	    return undef;
+	}
+	
+	&do_log('debug',"MAIL object : $mail");
+
+	$i++;
+	my $msg = {};
+	$msg->{'id'} = $i;
+
+	$msg->{'subject'}  = &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('Subject'));
+	chomp $msg->{'subject'};
+
+	$msg->{'from'}= &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('From'));
+	chomp $msg->{'from'};    	        	
+        
+	$msg->{'date'} = $mail->{'msg'}->head->get('Date');
+	chomp $msg->{'date'};
+	
+	$msg->{'full_msg'} = $mail->{'msg'}->as_string;
+
+	&do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
+
+	push @{$all_msg}, $msg ;
+    }
+    closedir DIR ;
+
+    return $all_msg;
+}
+
+#####################################################
+#  search_msgid                  
+####################################################
+#  
+# find a message in archive specified by arcpath and msgid
+# 
+# IN : arcpath and msgid
+#
+# OUT : undef | #message in arctxt
+#
+#################################################### 
+
+sub search_msgid {
+    
+    my($dir, $msgid) = @_;
+    
+    &do_log ('info',"archive::search_msgid($dir, $msgid)");
+
+    
+    if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
+	&do_log('err','remove_arc: no message id found');return undef;
+    } 
+    unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
+	&do_log ('info',"archive::search_msgid : dir $dir look unproper");
+	return undef;
+    }
+    unless (opendir (ARC, "$dir")){
+	&do_log ('info',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
+	return undef;
+    }
+    chomp $msgid ;
+
+    foreach my $file (grep (!/\./,readdir ARC)) {
+	#  do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  scan $arcpath/arctxt");
+	next unless (open MAIL,"$dir/$file") ;
+	while (<MAIL>) {
+	    last if /^$/ ; #stop parse after end of headers
+	    if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
+		my $id = $1;
+		if ($id eq $msgid) {
+		    close MAIL; closedir ARC;
+		    return $file;
+		}
+	    }
+	}
+	close MAIL;
+    }
+    closedir ARC;
+    return undef;
+}
+
+
 sub exist {
     my($name, $file) = @_;
     my $fn = "$name/$file";

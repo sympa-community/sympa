@@ -177,16 +177,103 @@ while (!$end) {
 
        last if $end;
 
-       if ($file  =~ /^\.remove\.(.*)\.\d+$/ ) {
-	   do_log('debug',"remove found : $file for list $1");
+       if ($file  =~ /^\.remove\.((.*)\.(\d\d\d\d\-\d\d))\.\d+$/ ) {
+	   my $arclistdir = $1;
+	   my $listadress = $2;
+	   my $yyyymm = $3;
+	   my $arcpath = "$wwsconf->{'arc_path'}/$listadress/$yyyymm";
+
+	   do_log('info',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	  
+	   my $list;
+	   unless ($list = new List ($listadress)) {
+	       do_log('err',"remove : unknown list $listadress");
+	       next;
+	   }
+
+	   do_log('debug',"remove found : $file for list $yyyymm");
 
 	   unless (open REMOVE, "$queue/$file") {
 	        do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
+	        do_log ('debug',"xxxxxxxxxxxxxxxxx Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
 		   next;
 	       }
-	   my $msgid = <REMOVE> ;
+	   do_log ('debug',"xxxxxxxxxxxxxxxxx ouverture");
+	   foreach my $removeorder (<REMOVE>) { 
+	   do_log ('debug',"xxxxxxxxxxxxxxxxx ouverture $removeorder");
+	       unless($removeorder =~ /(.*)\|\|($tools::regexp{'email'})/){
+		   do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
+		   do_log ('info',"xxxxxxxxxxxxxxx Ignoring remove_order $removeorder not recognized format");   
+		   next;
+	       }
+	       my $msgid = $1;
+	       my $sender = $2;
+
+
+do_log('info',"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx remove_arc: msgid : '$msgid' sender : '$sender'");
+	       chomp 	$msgid ;
+	       if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
+		   do_log('err','remove_arc: no message id found');
+		   next;
+	       } 
+
+	       my $message ;
+	       unless ($list->am_i('privileged_owner',$sender)|| $list->am_i('owner',$sender)||$list->am_i('editor', $sender)||&List::is_listmaster($sender,$list->{'admin'}{'host'} )){
+		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
+
+		   unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
+		       do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
+		       next;
+		   }
+		   unless (my $new_message = new Message("$arcpath/arctxt/$message",'noxsympato')) {
+		        do_log('err',"unable to load new message $arcpath/arctxt/$message");
+			next;
+		   }
+		   my $messagesender = $new_message->{'sender'};
+		   lc($messagesender);
+
+		   unless ($sender == $messagesender) {
+		       &do_log('err', 'remove command by unauthorized sender');
+		       return undef;
+		   }
+	       }
+	       # this point : requested command is from a authorized personn (message sender or list admin or listmaster
+
+	       &remove($arclistdir,$msgid);
+
+	       my $url_dir = $list->{'dir'}.'/urlized/'.$msgid;
+	       &tools::remove_dir ($url_dir);
+
+	       unless (-d "$arcpath/deleted"){
+		   # do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  $arcpath/deleted");
+		   unless (mkdir ("$arcpath/deleted",0777)) {
+		       do_log('info',"remove_arc: unable to create $arcpath/deleted : $!");
+		       last;
+		   }
+	       }
+
+	       unless (rename ("$arcpath/arctxt/$message","$arcpath/deleted/$message")) {
+		   do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
+		   next;
+	       }
+			       
+	       # remove directory if empty arctxt
+	       unless (opendir (DIR,"$arcpath/arctxt")) {
+		   do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
+		   next;
+	       }
+	       # do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  test emptydir");
+	       my @files = grep(/^\d+$/, readdir( DIR ));
+	       closedir (DIR);
+	       if ($#files == -1) {
+		   # do_log('info','remove_dir   xxxxxxxxxxxxxxxxxxx %s',$arcpath);
+		   &tools::remove_dir ($arcpath); 
+	       }else{			
+		   # do_log('info', "xxxxxxxxxxxxxxxxxxx $arcpath/arctxt not empty");
+	       }
+	   }
 	   close REMOVE;
-	   &remove($1,$msgid);
+
 	   unless (unlink("$queue/$file")) {
 	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       next;
@@ -252,7 +339,7 @@ sub remove {
     my $adrlist = shift;
     my $msgid = shift;
 
-    do_log ('debug2',"remove ($adrlist $msgid)");
+    do_log ('debug2',"remove ($adrlist, $msgid)");
     my $arc ;
 
     if ($adrlist =~ /^(.*)\.(\d{4}-\d{2})$/) {
@@ -268,7 +355,6 @@ sub remove {
     
     $msgid =~ s/\$/\\\$/g;
     system "$wwsconf->{'mhonarc'}  -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm -rmm $msgid";
-
 }
 
 sub rebuild {
@@ -303,18 +389,31 @@ sub rebuild {
 
     do_log('notice','Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s',$ENV{'M2H_ADDRESSMODIFYCODE'});
 
-
     if ($arc) {
         do_log('notice',"Rebuilding  $arc of $adrlist archive");
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
 
+	# remove empty directory
+	my $arcdir = $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm ;
+	my $arctxt = $arcdir.'/arctxt' ;
+	if (opendir (DIR,$arctxt)) {
+	    my @files = (grep /^\d+$/,(readdir DIR ));
+	    close (DIR);
+	    if ($#files == -1) { 
+		do_log('notice', "Removing empty directory $arcdir");
+		&tools::remove_dir ($arcdir);
+		next ;	 
+	    } 
+	}
+
 	## Remove .mhonarc.db
 	unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
 	
 	## Remove existing HTML files
 	opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
+	
 	## Skip arctxt/ . and ..
 	foreach my $html_file (grep !/arctxt|\.+$/, readdir(HTML)) {
 	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
@@ -442,7 +541,22 @@ sub mail2arc {
 	    &do_log('err', 'Cannot create directory %s', $monthdir);
 	    return undef;
 	}
-	do_log('debug',"mkdir $monthdir");
+
+	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm");
+
+	if ($list->{'admin'}{'web_archive'}{'max_month'}){ # maybe need to remove some old archive
+	    if (opendir DIR,"$arcpath/$listname\@$hostname") {
+		my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));	
+		closedir DIR;
+		my $nb_month = $#archives + 1 ;
+		my $i = 0 ;
+		while ( $nb_month >  $list->{'admin'}{'web_archive'}{'max_month'}) {
+		    do_log('info',"removing  $arcpath/$listname\@$hostname/$archives[$i]");
+		    &tools::remove_dir ("$arcpath/$listname\@$hostname/$archives[$i]");
+		    $i ++; $nb_month --;		    
+		}
+	    }
+	}
     }
 
     my $arctxtdir = $monthdir."/arctxt";

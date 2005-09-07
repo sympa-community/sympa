@@ -1380,7 +1380,8 @@ sub DoMessage{
     }
     
     ## Check if the message is too large
-    my $max_size = $list->get_max_size() ||  &Conf::get_robot_conf($robot,'max_size');
+    # my $max_size = $list->get_max_size() ||  &Conf::get_robot_conf($robot,'max_size');
+    my $max_size = $list->get_max_size();
 
     if ($max_size && $message->{'size'} > $max_size) {
 	&do_log('info', 'sympa::DoMessage(): Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);

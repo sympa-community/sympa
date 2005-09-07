@@ -507,7 +507,11 @@ my %in_regexp = (
 		 'scenario' => $tools::regexp{'scenario'},
 		 'read_access' => $tools::regexp{'scenario'},
 		 'edit_access' => $tools::regexp{'scenario'},
-
+                 ## RSS URL or blank
+                 'active_lists' => '.*',
+                 'latest_lists' => '.*',
+                 'latest_arc' => '.*',
+                 'latest_d_read' => '.*',
 		 );
 
 ## Open log
@@ -1294,11 +1298,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
 	 my $regexp;
+	 &wwslog('info','get_parameters: p_name = \'%s\'', $pname);
 	 if ($pname =~ /^additional_field/) {
+	     &wwslog('info','get_parameters: regexp selected by in_regexp{additional_field}');
 	     $regexp = $in_regexp{'additional_field'};
 	 }elsif ($in_regexp{$pname}) {
+	     &wwslog('info','get_parameters: regexp selected by in_regexp{%s}',$pname);
 	     $regexp = $in_regexp{$pname};
 	     }else {
+		 &wwslog('info','get_parameters: regexp selected by in_regexp{*}');
 		 $regexp = $in_regexp{'*'};
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
@@ -1312,7 +1320,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 close DUMP;
 
 		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
-		 &wwslog('err','get_parameters: syntax error for parameter %s ; dumped vars in %s', $p, $dump_file);
+		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp /^%s$/ ; dumped vars in %s', $pname, $one_p, $regexp,  $dump_file);
 		 $in{$p} = '';
 		 next;
 	     }
@@ -5381,7 +5389,6 @@ sub do_skinsedit {
      }
 
      ## Access control
-
      my $result = &List::request_action ('web_archive.access',$param->{'auth_method'},$robot,
 					 {'listname' => $param->{'list'},
 					  'sender' => $param->{'user'}{'email'},
@@ -5400,7 +5407,6 @@ sub do_skinsedit {
 	 &wwslog('err','do_arc: access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
-
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
 	 ## Reject Email Sniffers
 	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
@@ -5411,7 +5417,6 @@ sub do_skinsedit {
 	     }
 	 }
      }
-
      ## Calendar
      unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}") {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
@@ -5431,12 +5436,14 @@ sub do_skinsedit {
 
      unless ($in{'arc_file'}) {
 	 undef $latest;
-	 unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}") {
-	     &wwslog('err',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}");
-	     &report::reject_report_web('intern','month_not_found',{'month' => $in{'month'},
-								    'dir' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}",
+	 unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}") {
+	     &wwslog('err',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
+	     &report::reject_report_web('user','month_not_found',{'month' => $in{'month'},
+								    'dir' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}",
 								    'listname' => $param->{'list'}},
-					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+					$param->{'action'},
+                                        $list,$param->{'user'}{'email'},
+                                        $robot);
 	 }
 	 foreach my $file (grep(/^$index/,readdir ARC)) {
 	     if ($file =~ /^$index(\d+)\.html$/) {
@@ -5449,12 +5456,14 @@ sub do_skinsedit {
      }
 
      ## File exist ?
-     unless (-r "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}") {
-	 &wwslog('err',"unable to read $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}");
-	 &report::reject_report_web('intern','arc_not_found',{'arc_file' => $in{'arc_file'},
-							      'path' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}",
+     unless (-r "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}") {
+	 &wwslog('err',"unable to read $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
+	 &report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
+							      'path' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}",
 							      'listname' => $param->{'list'}},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
+				    $param->{'action'},
+				    $list,$param->{'user'}{'email'},
+				    $robot);
 	 return undef;
      }
 
@@ -5717,110 +5726,56 @@ sub get_timelocal_from_date {
 }
 
 
- ## Access to web archives
- sub do_remove_arc {
-     &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, msgid %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-     ## Access control should allow also email->sender to remove its messages
-     #unless ( $param->{'is_owner'}) {
- #	$param->{'error'}{'action'} = 'remove_arc';
- #	&message('may_not_remove_arc');
- #	&wwslog('info','remove_arc: access denied for %s', $param->{'user'}{'email'});
- #	return undef;
- #    }
+####################################################
+#  do_remove_arc                           
+####################################################
+#  
+#  request by list owner or message sender to remove message from archive
+#  Create in the outgoing spool a file containing the message-id of mesage to be removed
+# 
+# IN : list@host yyyy month and a tab of msgid
+#
+# OUT :  1 | undef
+#
+#################################################### 
 
-     if ($in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+sub do_remove_arc {
+    &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, #message %s', $in{'list'}, $in{'yyyy'}, $in{'month'});
+
+    my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'yyyy'}-$in{'month'}";
+
+    ## Access control
+
+#    $in{'msgid'} = &tools::unescape_chars($in{'msgid'});
+    my @msgids = split /\0/, $in{'msgid'};
+
+    if ($#msgids == -1) { 
 	 &report::reject_report_web('intern','may_not_remove_arc',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err','remove_arc: no message id found');
 	 $param->{'status'} = 'no_msgid';
 	 return undef;
      } 
-     ## 
-     my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'yyyy'}-$in{'month'}";
-     &wwslog('info','remove_arc: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
 
-     ## remove url directory if exists
-     my $url_dir = $list->{'dir'}.'/urlized/'.$in{'msgid'};
-     if (-d $url_dir) {
-	 opendir DIR, "$url_dir";
-	 my @list = readdir(DIR);
-	 closedir DIR;
-	 close (DIR);
-	 foreach (@list) {
-	     unlink ("$url_dir/$_")  ;
-	 }
-	 unless (rmdir $url_dir) {
-		 &wwslog('info',"remove_arc: unable to remove $url_dir");
-	 }
-     } 
+    my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'admin'}{'host'}.$in{'yyyy'}-$in{'month'}.".time;
+    unless (open REBUILD, ">$file") {
+	&report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	&wwslog('info','do_remove: cannot create %s', $file);
+	closedir ARC;
+	return undef;
+    }
 
-     opendir ARC, "$arcpath/arctxt";
-     my $message;
-     foreach my $file (grep (!/\./,readdir ARC)) {
-	 ## &wwslog('info','remove_arc: scanning %s', $file);
-	 next unless (open MAIL,"$arcpath/arctxt/$file") ;
-	 while (<MAIL>) {
-	     last if /^$/ ;
-	     if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
-		 my $id = $1;
-		 if ($id eq $in{'msgid'}) {
-		     $message = $file ;
-		 }
-		 last ;
-	     }
-	 }
-	 close MAIL ;
-	 if ($message) {
-	     unless (-d "$arcpath/deleted"){
-		 unless (mkdir ("$arcpath/deleted",0777)) {
-		     &report::reject_report_web('intern','cannot_mkdir',{'dir' => "$arcpath/deleted"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		     &wwslog('info',"remove_arc: unable to create $arcpath/deleted : $!");
-		     $param->{'status'} = 'error';
-		     last;
-		 }
-	     }
-	     unless (rename ("$arcpath/arctxt/$message","$arcpath/deleted/$message")) {
-		 &report::reject_report_web('intern','rename_file',{'old'=>"$arcpath/arctxt/$message",
-								    'new'=>"$arcpath/deleted/$message" },
-					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
-		 $param->{'status'} = 'error';
-		 last;
-	     }
-	     ## system "cd $arcpath ; $conf->{'mhonarc'} -rmm $in{'msgid'}";
+    foreach my $msgid (@msgids) {	
+	chomp $msgid ;	
+	printf REBUILD ('%s||%s',$msgid,$param->{'user'}{'email'}) ; printf  REBUILD "\n";
+    }
+    close REBUILD;	
+    &wwslog('info', 'do_remove_arc %d messages marked to be removed by archived', $#msgids+1);
+    $param->{'status'} = 'done';
 
-
-	     my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'domain'}.$in{'yyyy'}-$in{'month'}.".time;
-
-	     unless (open REBUILD, ">$file") {
-		 &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info','do_remove: cannot create %s', $file);
-		 closedir ARC;
-		 return undef;
-	     }
-
-	     &wwslog('info', 'create File: %s', $file);
-
-	     printf REBUILD ("%s\n",$in{'msgid'});
-	     close REBUILD;
-
-
-	     &wwslog('info', 'do_remove_arc message marked for remove by archived %s', $message);
-	     $param->{'status'} = 'done';
-
-	     last;
-	 }
-     }
-     closedir ARC;
-
-     unless ($message) {
-	 &wwslog('info', 'do_remove_arc : no file match msgid');
-	 $param->{'status'} = 'not_found';
-     }
-
-     closedir ARC;
-     return 1;
- }
+    return 1;
+}
+ 
 
 ####################################################
 #  do_send_me                           
@@ -5975,7 +5930,7 @@ sub get_timelocal_from_date {
      $search->archive_name ($in{'archive_name'});
 
      unless (defined($in{'directories'})) {
-	 # by default search in current mounth and in the previous none empty one
+	 # by default search in current month and in the previous none empty one
 	 my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}";
 	 my $previous_active_dir ;
 	 opendir ARC, "$search_base";
@@ -6142,7 +6097,7 @@ sub get_timelocal_from_date {
 
      $search->archive_name ($in{'archive_name'});
 
-     # search in current mounth and in the previous none empty one 
+     # search in current month and in the previous none empty one 
      my $search_base = $search->search_base; 
      my $previous_active_dir ; 
      opendir ARC, "$search_base"; 
@@ -7627,9 +7582,7 @@ sub do_edit_list {
 	## User Data Source
 	if ($pname eq 'user_data_source') {
 	    ## Migrating to database
-	    if (($list->{'admin'}{'user_data_source'} eq 'file') &&
-		($new_admin->{'user_data_source'} eq 'database' ||
-		 $new_admin->{'user_data_source'} eq 'include2')) {
+	    if (($list->{'admin'}{'user_data_source'} eq 'file') && ($new_admin->{'user_data_source'} eq 'database' || $new_admin->{'user_data_source'} eq 'include2')) {
 		unless (-f "$list->{'dir'}/subscribers") {
 		    &wwslog('notice', 'No subscribers to load in database');
 		}
@@ -13833,8 +13786,8 @@ sub do_rss_request {
 
 	my $args ;
 
-	$in{'count'} |= 20; 
-	$in{'for'} |= 10;
+	$in{'count'} ||= 20; 
+	$in{'for'} ||= 10;
 
         $args  = 'count='.$in{'count'}.'&' if ($in{'count'}) ;
         $args .= 'for='.$in{'for'} if ($in{'for'});

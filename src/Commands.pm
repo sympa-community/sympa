@@ -394,7 +394,7 @@ sub getfile {
 
     unless ($list->is_archived()) {
 	&report::reject_report_cmd('user','empty_archives',{},$cmd_line);
-	&do_log('info', 'GET %s %s from %s refused, archive not found', $which, $file, $sender);
+	&do_log('info', 'GET %s %s from %s refused, no archive for list %s', $which, $file, $sender, $which );
 	return 'no_archive';
     }
     ## Check file syntax
@@ -403,16 +403,17 @@ sub getfile {
 	&do_log('info', 'GET %s %s from %s, incorrect filename', $which, $file, $sender);
 	return 'no_archive';
     }
-    unless ($list->archive_exist($file)) {
-	&report::reject_report_cmd('user','no_required_file',{},$cmd_line);
- 	&do_log('info', 'GET %s %s from %s refused, archive not found', $which, $file, $sender);
-	return 'no_archive';
-    }
     unless ($list->may_do('get', $sender)) {
 	&report::reject_report_cmd('auth','list_private_no_archive',{},$cmd_line);
 	&do_log('info', 'GET %s %s from %s refused, review not allowed', $which, $file, $sender);
 	return 'not_allowed';
     }
+#    unless ($list->archive_exist($file)) {
+#	&report::reject_report_cmd('user','no_required_file',{},$cmd_line);
+# 	&do_log('info', 'GET %s %s from %s refused, archive not found for list %s', $which, $file, $sender, $which);
+#	return 'no_archive';
+#    }
+
     unless ($list->archive_send($sender, $file)) {
 	&report::reject_report_cmd('intern',"Unable to send archive to $sender",{'listname'=>$which},$cmd_line,$sender,$robot);
 	return 'no_archive';

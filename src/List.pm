@@ -1180,7 +1180,12 @@ my %alias = ('reply-to' => 'reply_to',
 							'unit' => 'Kbytes',
 							'gettext_id' => "quota",
 							'order' => 2
-							}
+							},
+ 					    'max_month' => {'format' => '\d+',
+							    'length' => 3,
+							    'gettext_id' => "Maximum number of month archived",
+							    'order' => 3 
+  							     }
 					},
 			       
 			       'gettext_id' => "Web archives",
@@ -3395,21 +3400,32 @@ sub request_auth {
 ######################################################
 sub archive_send {
    my($self, $who, $file) = @_;
-   do_log('debug2', 'List::archive_send(%s, %s)', $who, $file);
+   do_log('debug', 'List::archive_send(%s, %s)', $who, $file);
 
    return unless ($self->is_archived());
-   my $i;
-   if ($i = Archive::exist("$self->{'dir'}/archives", $file)) {
-       my $param = {'to' => "$who",
-		    'subject' => "File $self->{'name'} $file",
-		    'file' => $i};
        
-       &tt2::allow_absolute_path();
-       unless ($self->send_file('archive',$who,$self->{'domain'},$param)) {
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
+
+   my $msg_list = Archive::scan_dir_archive($dir, $file);
+
+
+   my $subject = 'File '.$self->{'name'}.' '.$file ;
+   my $param = {'to' => $who,
+		'subject' => $subject,
+		'msg_list' => $msg_list } ;
+
+
+   $param->{'boundary1'} = &tools::get_message_id($self->{'domain'});
+   $param->{'boundary2'} = &tools::get_message_id($self->{'domain'});
+   $param->{'from'} = &Conf::get_robot_conf($self->{'domain'},'sympa');
+
+#    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
+
+   unless ($self->send_file('get_archive',$who,$self->{'domain'},$param)) {
 	   &do_log('notice',"Unable to send template 'archive_send' to $who");
 	   return undef;
        }
-   }
+
 }
 
 
@@ -7062,14 +7078,13 @@ sub is_digest {
 ## Does the file exist ?
 sub archive_exist {
    my($self, $file) = @_;
-   do_log('debug3', 'List::archive_exist(%s)', $file);
+   do_log('debug', 'List::archive_exist (%s)', $file);
 
    return undef unless ($self->is_archived());
-   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').$self->{'name'}.'@'.$self->{'domain'};
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
    Archive::exist($dir, $file);
 
 }
-
 
 
 ## List the archived files
@@ -7077,7 +7092,7 @@ sub archive_ls {
    my $self = shift;
    do_log('debug2', 'List::archive_ls');
 
-   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').$self->{'name'}.'@'.$self->{'domain'};
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
 
    Archive::list($dir) if ($self->is_archived());
 }
@@ -7088,7 +7103,8 @@ sub archive_msg {
     do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
 
     my $is_archived = $self->is_archived();
-    Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
+    # No more mail archive 
+    # Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
 
     Archive::outgoing("$Conf{'queueoutgoing'}","$self->{'name'}\@$self->{'domain'}",$msg) 
       if ($self->is_web_archived());
@@ -7111,8 +7127,10 @@ sub is_moderated {
 
 ## Is the list archived ?
 sub is_archived {
-    do_log('debug3', 'List::is_archived');
-    return (shift->{'admin'}{'web_archive'}{'access'});
+    do_log('debug', 'List::is_archived');    
+    if (shift->{'admin'}{'web_archive'}{'access'}) {do_log('debug', 'List::is_archived : 1'); return 1 ;}  
+    do_log('debug', 'List::is_archived : undef');
+    return undef;
 }
 
 ## Is the list web archived ?
@@ -12310,7 +12328,3 @@ sub has_include_data_sources {
 
 ## Packages must return true.
 1;
-
-
-
-

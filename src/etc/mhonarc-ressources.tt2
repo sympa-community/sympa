@@ -20,12 +20,12 @@ CALENDAR
         <div>
         <ul class="calendar">
         <li class="calendarLinksInactive">($tag$% year.key %$tag$)</li>
-   	($tag$% FOREACH mounth = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
-          ($tag$% IF year.value.item(mounth) %$tag$)
-                 ($tag$% IF  year.key == '$yyyy$' && mounth == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% mounth %$tag$)/">($tag$% mounth %$tag$)</a></li>
-                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% mounth %$tag$)/">($tag$% mounth %$tag$)</a></li>
+   	($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
+          ($tag$% IF year.value.item(month) %$tag$)
+                 ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/">($tag$% month %$tag$)</a></li>
+                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/">($tag$% month %$tag$)</a></li>
 		 ($tag$% END %$tag$)
-          ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% mounth %$tag$)</li>
+          ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% month %$tag$)</li>
           ($tag$% END %$tag$)
         ($tag$% END %$tag$)
         </ul>
@@ -190,17 +190,31 @@ IDXPGEND
 <!-- top of message list -->
 <LISTBEGIN>
 <br />
+($tag$% IF is_owner %$tag$)<form  action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
 <ul>
 </LISTBEGIN>
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)
+
+<b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
 </LITEMPLATE> 
 
 <!-- bottom of message list -->
 <LISTEND>
-</ul>
+</ul><br />
+($tag$% IF is_owner %$tag$)
+<input type="hidden" name="yyyy" value="$yyyy$" />
+<input type="hidden" name="month" value="$mois$" />
+<input type="hidden" name="action" value="remove_arc" />
+<input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
+<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.myform.msgid)" />
+<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete theses messages ?($tag$%END%$tag$)')"/><br />
+<br />
+
+</form>
+($tag$%END%$tag$)
 </LISTEND>  
 
 <!--  maillist.html bottom -->
@@ -400,22 +414,22 @@ $POWERED_BY$
 ($tag$% IF user.email && action == 'arc' %$tag$)
 <span style="float: right">
 <form action="($tag$% path_cgi %$tag$)" method="post">
-  <input type="hidden" NAME="in_reply_to" VALUE="$MSGID$" />
-  <input type="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$" />
-  <input type="hidden" NAME="list" VALUE="($tag$% list %$tag$)" />
+  <input type="hidden" name="in_reply_to" value="$MSGID$" />
+  <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />
+  <input type="hidden" name="list" value="($tag$% list %$tag$)" />
   ($tag$%|loc%$tag$)Reply to sender($tag$%END%$tag$)
-  <input type="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" checked />
+  <input type="radio" name="to" value="$FROMADDRNAME$ $FROMADDRDOMAIN$" checked />
   ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
-  <input type="radio" NAME="to" VALUE="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-  <input class="MainMenuLinks" type="submit" NAME="action_compose_mail" VALUE="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
-  <input class="MainMenuLinks" type="submit" NAME="action_send_me" VALUE="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
+  <input type="radio" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+  <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
+  <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
   ($tag$% IF action != 'viewmod' %$tag$)
     ($tag$% IF user.email == '$FROMADDR$'  || is_owner %$tag$)
-    <input type="hidden" NAME="yyyy" VALUE="$yyyy$" />
-    <input type="hidden" NAME="month" VALUE="$mois$" />
-    <input type="hidden" NAME="msgid" VALUE="$MSGID$" />
-    <input type="hidden" NAME="action" VALUE="" />
-    <input class="MainMenuLinks" type="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
+    <input type="hidden" name="yyyy" value="$yyyy$" />
+    <input type="hidden" name="month" value="$mois$" />
+    <input type="hidden" name="msgid" value="$MSGID$" />
+    <input type="hidden" name="action" value="" />
+    <input class="MainMenuLinks" type="submit" name="action_remove_arc" value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
     ($tag$% END %$tag$)
   ($tag$% END %$tag$)
 </form>
