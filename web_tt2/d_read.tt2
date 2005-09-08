@@ -342,8 +342,8 @@
     <br /><div class="block">
     <form method="post" action="[% path_cgi %]">
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
-    <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
+    <label>[%|loc%]title[%END%] <input maxlength="100" size="25" type="text" name="name_doc" /></label><br />
+    <label>[%|loc%]URL[%END%] <input size="35" type="text" name="url" /></label>
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
