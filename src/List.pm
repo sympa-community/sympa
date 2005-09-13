@@ -8274,7 +8274,9 @@ sub _include_users_sql {
     
     ## Process the SQL results
     my $email;
-    while (defined ($email = $sth->fetchrow)) {
+    my $rows = $sth->rows;
+    foreach (1..$rows) { ## This way we don't stop at the first NULL entry found
+	$email = $sth->fetchrow;
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
