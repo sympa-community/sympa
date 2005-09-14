@@ -1298,12 +1298,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
 	 my $regexp;
-	 &wwslog('info','get_parameters: p_name = \'%s\'', $pname);
+	 &wwslog('debug','get_parameters: p_name = \'%s\'', $pname);
 	 if ($pname =~ /^additional_field/) {
-	     &wwslog('info','get_parameters: regexp selected by in_regexp{additional_field}');
+	     &wwslog('debug','get_parameters: regexp selected by in_regexp{additional_field}');
 	     $regexp = $in_regexp{'additional_field'};
 	 }elsif ($in_regexp{$pname}) {
-	     &wwslog('info','get_parameters: regexp selected by in_regexp{%s}',$pname);
+	     &wwslog('debug','get_parameters: regexp selected by in_regexp{%s}',$pname);
 	     $regexp = $in_regexp{$pname};
 	     }else {
 		 &wwslog('info','get_parameters: regexp selected by in_regexp{*}');
