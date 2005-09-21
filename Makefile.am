@@ -196,7 +196,9 @@ checkperl:
 	@if [ ! -f $(SUIDPERL) ]; then \
 		echo "##################################"; \
 		echo "## You don't have suidperl installed."; \
-		echo "## Suidperl is required to run WWSympa with SetUID."; \
+		echo "## Suidperl is the default way to run WWSympa with SetUID."; \
+		echo "## Among other options, you can use suExec with Apache"; \
+		echo "## Check Sympa reference manual for more details"; \
 		echo "#####################################################"; \
 		if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
