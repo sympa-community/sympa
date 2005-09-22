@@ -1750,6 +1750,7 @@ sub load {
  	    unless ($family = $self->get_family()) {
  		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
  		$self->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
+		return undef;
  	    }  
  	    my $error = $family->check_param_constraint($self);
  	    unless($error) {
