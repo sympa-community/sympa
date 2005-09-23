@@ -134,14 +134,16 @@ sub SetLang {
     unless (setlocale(&POSIX::LC_ALL, $locale)) {
 	unless (setlocale(&POSIX::LC_ALL, $lang)) {
 	    unless (setlocale(&POSIX::LC_ALL, $locale.'.'.$locale2charset{$locale})) {
-		&do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale.'.'.$locale2charset{$locale});
-		return undef;
+		unless (setlocale(&POSIX::LC_ALL, $locale.'.'.uc($locale2charset{$locale}))) { ## UpperCase required for FreeBSD
+		    &do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale.'.'.uc($locale2charset{$locale}));
+		    return undef;
+		}
 	    }
 	}
     }
 
     unless (setlocale(&POSIX::LC_TIME, $locale)) {
- 	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale.'.'.$locale2charset{$locale});
+ 	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale);
  	return undef;
     }
 
