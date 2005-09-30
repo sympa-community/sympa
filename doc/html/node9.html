@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1016"
+<A NAME="tex2html1014"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1010"
+<A NAME="tex2html1008"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1004"
+<A NAME="tex2html1002"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1012"
+<A NAME="tex2html1010"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1014"
+<A NAME="tex2html1012"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1017"
+<B> Next:</B> <A NAME="tex2html1015"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
-<B> Up:</B> <A NAME="tex2html1011"
+<B> Up:</B> <A NAME="tex2html1009"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1005"
+<B> Previous:</B> <A NAME="tex2html1003"
   HREF="node8.html">7. sympa.conf parameters</A>
- &nbsp; <B>  <A NAME="tex2html1013"
+ &nbsp; <B>  <A NAME="tex2html1011"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1015"
+ &nbsp; <B>  <A NAME="tex2html1013"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,35 +63,35 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1018"
+<LI><A NAME="tex2html1016"
   HREF="node9.html#SECTION00910000000000000000">8.1 Prerequisites</A>
-<LI><A NAME="tex2html1019"
+<LI><A NAME="tex2html1017"
   HREF="node9.html#SECTION00920000000000000000">8.2 Installing PERL modules</A>
-<LI><A NAME="tex2html1020"
+<LI><A NAME="tex2html1018"
   HREF="node9.html#SECTION00930000000000000000">8.3 Creating a sympa DataBase</A>
 <UL>
-<LI><A NAME="tex2html1021"
+<LI><A NAME="tex2html1019"
   HREF="node9.html#SECTION00931000000000000000">8.3.1 Database structure</A>
-<LI><A NAME="tex2html1022"
+<LI><A NAME="tex2html1020"
   HREF="node9.html#SECTION00932000000000000000">8.3.2 Database creation</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1023"
+<LI><A NAME="tex2html1021"
   HREF="node9.html#SECTION00940000000000000000">8.4 Setting database privileges</A>
-<LI><A NAME="tex2html1024"
+<LI><A NAME="tex2html1022"
   HREF="node9.html#SECTION00950000000000000000">8.5 Importing subscribers data</A>
 <UL>
-<LI><A NAME="tex2html1025"
+<LI><A NAME="tex2html1023"
   HREF="node9.html#SECTION00951000000000000000">8.5.1 Importing data from a text file</A>
-<LI><A NAME="tex2html1026"
+<LI><A NAME="tex2html1024"
   HREF="node9.html#SECTION00952000000000000000">8.5.2 Importing data from subscribers files</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1027"
+<LI><A NAME="tex2html1025"
   HREF="node9.html#SECTION00960000000000000000">8.6 Management of the include cache</A>
-<LI><A NAME="tex2html1028"
+<LI><A NAME="tex2html1026"
   HREF="node9.html#SECTION00970000000000000000">8.7 Extending database table format</A>
-<LI><A NAME="tex2html1029"
+<LI><A NAME="tex2html1027"
   HREF="node9.html#SECTION00980000000000000000">8.8 <I>Sympa</I> configuration</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -114,16 +114,16 @@ requires only a few changes in the code, since the API used, <A NAME="tex2html19
 Sympa stores three kind of information in the database, each in one table :
 
 <UL>
-<LI>User preferences and passwords are stored in the <A NAME="8384"></A>user_table  table
+<LI>User preferences and passwords are stored in the <A NAME="8376"></A>user_table  table
 
 <P>
 </LI>
-<LI>List subscription informations are stored in the <A NAME="8385"></A>subscriber_table  table, along with subscription options.
+<LI>List subscription informations are stored in the <A NAME="8377"></A>subscriber_table  table, along with subscription options.
   This table also contains the cache for included users (if using include2 mode).
 
 <P>
 </LI>
-<LI>List administrative informations are stored in the <A NAME="8386"></A>admin_table  table if using include2 mode, along with owner and editor options. This table also contains the cache for included owners and editors.
+<LI>List administrative informations are stored in the <A NAME="8378"></A>admin_table  table if using include2 mode, along with owner and editor options. This table also contains the cache for included owners and editors.
 
 <P>
 </LI>
@@ -150,9 +150,9 @@ Check the <A NAME="tex2html20"
 </H1>
 
 <P>
-<I>Sympa</I> will use <A NAME="8393"></A><TT>DBI</TT> to communicate with the database system and
+<I>Sympa</I> will use <A NAME="8385"></A><TT>DBI</TT> to communicate with the database system and
 therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (<A NAME="8396"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
+DBD::YourDB (<A NAME="8388"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
 CPAN modules. Refer to&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules">3.2.3</A>, 
 page&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for installation
 details of these modules.
@@ -171,9 +171,9 @@ details of these modules.
 
 <P>
 The sympa database structure is slightly different from the
-structure of a <A NAME="8399"></A><TT>subscribers</TT> file. A <A NAME="8402"></A><TT>subscribers</TT>
+structure of a <A NAME="8391"></A><TT>subscribers</TT> file. A <A NAME="8394"></A><TT>subscribers</TT>
 file is a text file based on paragraphs (similar to 
-the <A NAME="8405"></A><TT>config</TT> file) ; each paragraph completely describes 
+the <A NAME="8397"></A><TT>config</TT> file) ; each paragraph completely describes 
 a subscriber. If somebody is subscribed to two lists, he/she 
 will appear in both subscribers files.
 
@@ -197,8 +197,8 @@ private info, gecos and profile option for owners).
 </H2>
 
 <P>
-The <A NAME="8408"></A><TT>create_db</TT> script below will create the sympa database for 
-you. You can find it in the <A NAME="8411"></A><TT>script/</TT> directory of the 
+The <A NAME="8400"></A><TT>create_db</TT> script below will create the sympa database for 
+you. You can find it in the <A NAME="8403"></A><TT>script/</TT> directory of the 
 distribution (currently scripts are available for MySQL, SQLite, PostgreSQL, Oracle and Sybase).
 
 <P>
@@ -226,6 +226,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		datetime NOT NULL,
 	update_subscriber	datetime,
 	visibility_subscriber	varchar (20),
@@ -237,13 +238,14 @@ CREATE TABLE subscriber_table (
 	included_subscriber 	enum ('0','1'),
 	include_sources_subscriber varchar(50),
 	bounce_score_subscriber smallint (6),
-	PRIMARY KEY (list_subscriber, user_subscriber),
-	INDEX (user_subscriber,list_subscriber)
+	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber),
+	INDEX (user_subscriber,list_subscriber,robot_subscriber)
 );
 
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		enum('listmaster','owner','editor') NOT NULL,
 	date_admin 		datetime NOT NULL,
 	update_admin 		datetime,
@@ -254,8 +256,8 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		enum('privileged','normal'),
-	PRIMARY KEY (list_admin, user_admin,role_admin),
-	INDEX (list_admin, user_admin,role_admin)
+	PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin),
+	INDEX (list_admin, user_admin,robot_admin,role_admin)
 );
  
 
@@ -299,6 +301,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		timestamp NOT NULL,
 	update_subscriber	timestamp,
 	visibility_subscriber	varchar (20),
@@ -310,13 +313,14 @@ CREATE TABLE subscriber_table (
 	included_subscriber 	boolean,
 	include_sources_subscriber varchar(50),
 	bounce_score_subscriber integer,
-	PRIMARY KEY (list_subscriber, user_subscriber)
+	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber)
 );
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
 
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		varchar(15) NOT NULL,
 	date_admin 		timestamp NOT NULL,
 	update_admin 		timestamp,
@@ -327,9 +331,9 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
-	PRIMARY KEY (list_admin, user_admin,role_admin)
+	PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin)
 );
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_admin);
 </PRE>
 
 <P>
@@ -358,6 +362,7 @@ DROP TABLE subscriber_table;
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		timestamp with time zone NOT NULL,
 	update_subscriber 	timestamp with time zone,
 	visibility_subscriber	varchar (20),
@@ -369,14 +374,15 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	bit(1),
 	included_subscriber 	bit(1),
 	include_sources_subscriber varchar(50),
-	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
+	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber)
 );
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
 
 DROP TABLE admin_table;
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		varchar(15) NOT NULL,
 	date_admin 		timestamp with time zone NOT NULL,
 	update_admin 		timestamp with time zone,
@@ -387,9 +393,9 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
-        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin,role_admin)
+        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin)
 );
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,robot_admin, role_admin);
 </PRE>
 
 <P>
@@ -425,6 +431,7 @@ create table subscriber_table
 (
     list_subscriber        varchar(50)            not null,
     user_subscriber        varchar(100)           not null,
+    robot_subscriber       varchar(80)           not null,
     date_subscriber        datetime               not null,
     update_subscriber      datetime               null,
     visibility_subscriber  varchar(20)            null    ,
@@ -436,7 +443,7 @@ create table subscriber_table
     subscribed_subscriber  numeric		  null    ,
     included_subscriber    numeric                null    ,
     include_sources_subscriber varchar(50)        null    ,
-    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
+    constraint ind_subscriber primary key (list_subscriber, user_subscriber, robot_subscriber)
 )
 go
 
@@ -446,10 +453,14 @@ go
 create index user_subscriber_fk on subscriber_table (user_subscriber)
 go
 
+create index robot_subscriber_fk on subscriber_table (robot_subscriber)
+go
+
 create table admin_table 
 (
 	list_admin 		varchar(50)       not null,
  	user_admin 		varchar(100) 	  not null,
+ 	robot_admin 		varchar(80) 	  not null,
 	role_admin 		varchar(15)       not null,
 	date_admin 		datetime 	  not null,
 	update_admin 		datetime          null,
@@ -460,7 +471,7 @@ create table admin_table
 	include_sources_admin  	varchar(50)       null,
 	info_admin   		varchar(150)      null,
 	profile_admin  		varchar(15)       null,
-       constraint ind_admin primary key (list_admin, user_admin,role_admin)
+       constraint ind_admin primary key (list_admin, user_admin,robot_admin,role_admin)
 )
 go
 
@@ -468,6 +479,9 @@ create index list_admin_fk on admin_table (list_admin)
 go
 
 create index user_admin_fk on admin_table (user_admin)
+go
+
+create index robot_admin_fk on admin_table (robot_admin)
 go
 
 create index role_admin_fk on admin_table (role_admin)
@@ -507,6 +521,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
         list_subscriber         varchar2(50) NOT NULL,
         user_subscriber         varchar2(100) NOT NULL,
+        robot_subscriber         varchar2(80) NOT NULL,
         date_subscriber         date NOT NULL,
 	update_subscriber	date,
         visibility_subscriber   varchar2(20),
@@ -518,11 +533,12 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	number NULL    constraint  cons_subscribed_subscriber CHECK (subscribed_subscriber in (0,1)),
 	included_subscriber 	number NULL    constraint  cons_included_subscriber CHECK (included_subscriber in (0,1)),
 	include_sources_subscriber varchar2(50),
-        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
+        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)
 );
 CREATE TABLE admin_table (
 	list_admin 		varchar2(50) NOT NULL,
  	user_admin 		varchar2(100) NOT NULL,
+ 	robot_admin 		varchar2(80) NOT NULL,
 	role_admin 		varchar2(20) NOT NULL,
 	date_admin 		date NOT NULL,
 	update_admin 		date,
@@ -533,7 +549,7 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar2(50),
 	info_admin   		varchar2(150),
 	profile_admin  		varchar2(20),
-       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
+       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin),
 );
 
 !
@@ -562,10 +578,10 @@ Example:
 
 <P>
 We strongly recommend you restrict access to <I>sympa</I> database. You will
-then set <A NAME="8414"></A><TT>db_user</TT> and <A NAME="8417"></A><TT>db_passwd</TT> in <A NAME="8420"></A><TT>sympa.conf</TT>.
+then set <A NAME="8406"></A><TT>db_user</TT> and <A NAME="8409"></A><TT>db_passwd</TT> in <A NAME="8412"></A><TT>sympa.conf</TT>.
 
 <P>
-With <A NAME="8423"></A>MySQL :<PRE>
+With <A NAME="8415"></A>MySQL :<PRE>
 grant all on sympa.* to sympa@localhost identified by 'your_password';
 flush privileges;
 </PRE>
@@ -612,16 +628,16 @@ cat /tmp/my_import_file | sympa.pl --import=my_list
 
 <P>
 If a mailing list was previously setup to store subscribers into 
-<A NAME="8424"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
+<A NAME="8416"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
 you can load subscribers data into the sympa database. The easiest way
-is to edit the list configuration using <A NAME="8427"></A><I>WWSympa</I> (this requires listmaster 
+is to edit the list configuration using <A NAME="8419"></A><I>WWSympa</I> (this requires listmaster 
 privileges) and change the data source from <B>file</B> to <B>database</B>
 ; subscribers data will be loaded into the database at the same time.
 
 <P>
 If the subscribers file is big, a timeout may occur during the FastCGI execution
-(Note that you can set a longer timeout with the <A NAME="8430"></A><TT>-idle-timeout</TT> option of
-the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="8433"></A><I>WWSympa</I>, you should use the <A NAME="8436"></A><TT>load_subscribers.pl</TT> script.
+(Note that you can set a longer timeout with the <A NAME="8422"></A><TT>-idle-timeout</TT> option of
+the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="8425"></A><I>WWSympa</I>, you should use the <A NAME="8428"></A><TT>load_subscribers.pl</TT> script.
 
 <P>
 
@@ -683,7 +699,7 @@ explicitely the field it expects in SELECT queries.
 <P>
 Moreover you can access these database fields from within <I>Sympa</I> 
 (in templates), as far as you list these additional fields in
-<A NAME="8441"></A><TT>sympa.conf</TT> (See <A HREF="node8.html#db-additional-subscriber-fields">7.10.11</A>, page&nbsp;<A HREF="node8.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+<A NAME="8433"></A><TT>sympa.conf</TT> (See <A HREF="node8.html#db-additional-subscriber-fields">7.10.11</A>, page&nbsp;<A HREF="node8.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
 and <A HREF="node8.html#db-additional-user-fields">7.10.12</A>, page&nbsp;<A HREF="node8.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -699,25 +715,25 @@ database to work with, then you must configure
 your list to access the database.
 
 <P>
-You define the database source in <A NAME="8446"></A><TT>sympa.conf</TT> :
-<A NAME="8449"></A><TT>db_type</TT>, <A NAME="8452"></A><TT>db_name</TT>, 
-<A NAME="8455"></A><TT>db_host</TT>, <A NAME="8458"></A><TT>db_user</TT>, 
-<A NAME="8461"></A><TT>db_passwd</TT>.
+You define the database source in <A NAME="8438"></A><TT>sympa.conf</TT> :
+<A NAME="8441"></A><TT>db_type</TT>, <A NAME="8444"></A><TT>db_name</TT>, 
+<A NAME="8447"></A><TT>db_host</TT>, <A NAME="8450"></A><TT>db_user</TT>, 
+<A NAME="8453"></A><TT>db_passwd</TT>.
 
 <P>
 If you are interfacing <I>Sympa</I> with an Oracle database, 
-<A NAME="8465"></A><TT>db_name</TT> is the SID.
+<A NAME="8457"></A><TT>db_name</TT> is the SID.
 
 <P>
 All your lists are now configured to use the database,
-unless you set list parameter <A NAME="8468"></A><TT>user_data_source</TT> 
+unless you set list parameter <A NAME="8460"></A><TT>user_data_source</TT> 
 to <B>file</B> or <B>include</B>. 
 
 <P>
 <I>Sympa</I> will now extract and store user
 information for this list using the database instead of the
-<A NAME="8472"></A><TT>subscribers</TT> file. Note however that subscriber information is 
-dumped to <A NAME="8475"></A><TT>subscribers.db.dump</TT> at every shutdown, 
+<A NAME="8464"></A><TT>subscribers</TT> file. Note however that subscriber information is 
+dumped to <A NAME="8467"></A><TT>subscribers.db.dump</TT> at every shutdown, 
 to allow a manual rescue restart (by renaming subscribers.db.dump to
 subscribers and changing the user_data_source parameter), if ever the
 database were to become inaccessible.
@@ -726,36 +742,36 @@ database were to become inaccessible.
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1016"
+<A NAME="tex2html1014"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1010"
+<A NAME="tex2html1008"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1004"
+<A NAME="tex2html1002"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1012"
+<A NAME="tex2html1010"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1014"
+<A NAME="tex2html1012"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1017"
+<B> Next:</B> <A NAME="tex2html1015"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
-<B> Up:</B> <A NAME="tex2html1011"
+<B> Up:</B> <A NAME="tex2html1009"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1005"
+<B> Previous:</B> <A NAME="tex2html1003"
   HREF="node8.html">7. sympa.conf parameters</A>
- &nbsp; <B>  <A NAME="tex2html1013"
+ &nbsp; <B>  <A NAME="tex2html1011"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1015"
+ &nbsp; <B>  <A NAME="tex2html1013"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-10
+2005-09-30
 </ADDRESS>
 </BODY>
 </HTML>

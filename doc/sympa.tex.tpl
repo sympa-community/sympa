@@ -4667,13 +4667,22 @@ FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
 \end{verbatim}
 \end {quote}
 
-\item Create a \file {robot.conf} for the virtual robot (current web interface does
-not provide Virtual robot creation yet).
+\item Create a \file {[ETCDIR]/your.virtual.domain/robot.conf} configuration file for the virtual robot. Its format is a subset of \file {sympa.conf} and is described in the next section ; a sample \file {robot.conf} is provided.
+
+\item Create a \dir {[EXPL_DIR]/your.virtual.domain/} directory that will contain the virtual robot mailing lists directories. This directory should have the  \textit {sympa} user as its owner and must have read and write access for this user.
+
+\begin {quote}
+\begin{verbatim}
+# su sympa -c 'mkdir [EXPL_DIR]/your.virtual.domain'
+# chmod 750 [EXPL_DIR]/your.virtual.domain
+\end{verbatim}
+\end {quote}
+
 
 \end {itemize}
 
 \section {robot.conf}
-A robot is named by its domain, let's say \samplerobot and defined by a directory 
+A robot is named by its domain, let's say \samplerobot  and defined by a directory 
 \dir {[ETCDIR]/\samplerobot}. This directory must contain at least a 
 \file {robot.conf} file. This files has the same format as  \file {[CONFIG]}
 (have a look at robot.conf in the sample dir).

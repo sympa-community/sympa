@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1489"
+<A NAME="tex2html1487"
   HREF="node28.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1483"
+<A NAME="tex2html1481"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1477"
+<A NAME="tex2html1475"
   HREF="node26.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1485"
+<A NAME="tex2html1483"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1487"
+<A NAME="tex2html1485"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1490"
+<B> Next:</B> <A NAME="tex2html1488"
   HREF="node28.html">27. Using Sympa commands</A>
-<B> Up:</B> <A NAME="tex2html1484"
+<B> Up:</B> <A NAME="tex2html1482"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1478"
+<B> Previous:</B> <A NAME="tex2html1476"
   HREF="node26.html">25. Using Sympa with LDAP</A>
- &nbsp; <B>  <A NAME="tex2html1486"
+ &nbsp; <B>  <A NAME="tex2html1484"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1488"
+ &nbsp; <B>  <A NAME="tex2html1486"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,31 +63,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1491"
+<LI><A NAME="tex2html1489"
   HREF="node27.html#SECTION002710000000000000000">26.1 Signed message distribution</A>
-<LI><A NAME="tex2html1492"
+<LI><A NAME="tex2html1490"
   HREF="node27.html#SECTION002720000000000000000">26.2 Use of S/MIME signature by Sympa itself</A>
-<LI><A NAME="tex2html1493"
+<LI><A NAME="tex2html1491"
   HREF="node27.html#SECTION002730000000000000000">26.3 Use of S/MIME encryption</A>
-<LI><A NAME="tex2html1494"
+<LI><A NAME="tex2html1492"
   HREF="node27.html#SECTION002740000000000000000">26.4 S/Sympa configuration</A>
 <UL>
-<LI><A NAME="tex2html1495"
+<LI><A NAME="tex2html1493"
   HREF="node27.html#SECTION002741000000000000000">26.4.1 Installation</A>
-<LI><A NAME="tex2html1496"
+<LI><A NAME="tex2html1494"
   HREF="node27.html#SECTION002742000000000000000">26.4.2 configuration in sympa.conf</A>
-<LI><A NAME="tex2html1497"
+<LI><A NAME="tex2html1495"
   HREF="node27.html#SECTION002743000000000000000">26.4.3 configuration to recognize S/MIME signatures</A>
-<LI><A NAME="tex2html1498"
+<LI><A NAME="tex2html1496"
   HREF="node27.html#SECTION002744000000000000000">26.4.4 distributing encrypted messages</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1499"
+<LI><A NAME="tex2html1497"
   HREF="node27.html#SECTION002750000000000000000">26.5 Managing certificates with tasks</A>
 <UL>
-<LI><A NAME="tex2html1500"
+<LI><A NAME="tex2html1498"
   HREF="node27.html#SECTION002751000000000000000">26.5.1 chk_cert_expiration.daily.task model</A>
-<LI><A NAME="tex2html1501"
+<LI><A NAME="tex2html1499"
   HREF="node27.html#SECTION002752000000000000000">26.5.2 crl_update.daily.task model</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
@@ -221,26 +221,26 @@ feel at home, and there may even be changes you will wish to suggest to us.
 <P>
 The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
 and the certificates of the trusted certificate authority. 
-This is done using the optional parameters <A NAME="11410"></A><TT>openSSL</TT> and
-<A NAME="11413"></A><TT>capath</TT> and / or <A NAME="11416"></A><TT>cafile</TT>.
+This is done using the optional parameters <A NAME="11411"></A><TT>openSSL</TT> and
+<A NAME="11414"></A><TT>capath</TT> and / or <A NAME="11417"></A><TT>cafile</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="11419"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+<LI><A NAME="11420"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
-<LI><A NAME="11422"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="11425"></A><TT>~/tmp/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+<LI><A NAME="11423"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+        The file <A NAME="11426"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
-Both the <A NAME="11430"></A><TT>cafile</TT> file and the <A NAME="11433"></A><TT>capath</TT> directory
+Both the <A NAME="11431"></A><TT>cafile</TT> file and the <A NAME="11434"></A><TT>capath</TT> directory
         should be shared with your Apache+mod_ssl configuration. This is useful
 	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
 
 <P>
 </LI>
-<LI><A NAME="11436"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
+<LI><A NAME="11437"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
 </LI>
 </UL>
 
@@ -324,7 +324,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="11441"></A><TT>/tmp/sympa/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="11442"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -333,14 +333,14 @@ It is a good idea to have a look at the OpenCA (http://www.openssl.org)
 documentation and/or PKI providers' web documentation.
 You can use commercial certificates or home-made ones. Of course, the
 certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the <A NAME="11444"></A><TT>cafile</TT> file or the
-<A NAME="11447"></A><TT>capath</TT> Sympa configuration parameter. 
+the trusted CA's described in the <A NAME="11445"></A><TT>cafile</TT> file or the
+<A NAME="11448"></A><TT>capath</TT> Sympa configuration parameter. 
 
 <P>
 The list private key must be installed in a file named
-<A NAME="11450"></A><TT>/tmp/sympa/expl/mylist/private_key</TT>. All the list private
+<A NAME="11451"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
-<A NAME="11453"></A><TT>password</TT> parameter in <A NAME="11456"></A><TT>sympa.conf</TT>.
+<A NAME="11454"></A><TT>password</TT> parameter in <A NAME="11457"></A><TT>sympa.conf</TT>.
 
 <P>
 
@@ -369,10 +369,10 @@ it. The format used by Netscape is  ``pkcs#12''.
 Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
-<A NAME="11459"></A><TT>cert.pem</TT> and <A NAME="11462"></A><TT>private_key</TT> using
-the <A NAME="11465"></A><TT>/tmp/sympa/bin/p12topem.pl</TT> script. Use <A NAME="11468"></A><TT>p12topem.pl -help</TT> for details.
+<A NAME="11460"></A><TT>cert.pem</TT> and <A NAME="11463"></A><TT>private_key</TT> using
+the <A NAME="11466"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="11469"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
-<LI>be sure that <A NAME="11471"></A><TT>cert.pem</TT> and <A NAME="11474"></A><TT>private_key</TT>
+<LI>be sure that <A NAME="11472"></A><TT>cert.pem</TT> and <A NAME="11475"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
 </LI>
 <LI>As soon as a certificate is installed for a list, the list  home page
@@ -399,9 +399,9 @@ Report to <A HREF="node8.html#certificate-task-config">7.12.4</A>, page&nbsp;<A 
 </H2>
 
 <P>
-A task created with the model <A NAME="11479"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="11482"></A><TT>/tmp/sympa/expl/X509-user-certs/</TT> directory.
-The user is warned with the <A NAME="11485"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
+A task created with the model <A NAME="11480"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
+certificates stored in the <A NAME="11483"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
+The user is warned with the <A NAME="11486"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
 <P>
@@ -411,43 +411,43 @@ or is going to expire within three days.
 </H2>
 
 <P>
-You may use the model <A NAME="11488"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
+You may use the model <A NAME="11489"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
 lists when needed.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1489"
+<A NAME="tex2html1487"
   HREF="node28.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1483"
+<A NAME="tex2html1481"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1477"
+<A NAME="tex2html1475"
   HREF="node26.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1485"
+<A NAME="tex2html1483"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1487"
+<A NAME="tex2html1485"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1490"
+<B> Next:</B> <A NAME="tex2html1488"
   HREF="node28.html">27. Using Sympa commands</A>
-<B> Up:</B> <A NAME="tex2html1484"
+<B> Up:</B> <A NAME="tex2html1482"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1478"
+<B> Previous:</B> <A NAME="tex2html1476"
   HREF="node26.html">25. Using Sympa with LDAP</A>
- &nbsp; <B>  <A NAME="tex2html1486"
+ &nbsp; <B>  <A NAME="tex2html1484"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1488"
+ &nbsp; <B>  <A NAME="tex2html1486"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-10
+2005-09-30
 </ADDRESS>
 </BODY>
 </HTML>
