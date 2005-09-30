@@ -593,11 +593,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Parse CGI parameters
  #    &CGI::ReadParse();
 
-
-     if (defined $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}}) {
+     if (defined $Conf{'robot_by_http_host'}{&get_header_field('SERVER_NAME')}) {
 	 my ($selected_robot, $selected_path);
 	 my ($k,$v);
-	 while (($k, $v) = each %{$Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}}}) {
+	 while (($k, $v) = each %{$Conf{'robot_by_http_host'}{&get_header_field('SERVER_NAME')}}) {
 	     if ($ENV{'REQUEST_URI'} =~ /^$k/) {
 		 ## Longer path wins
 		 if (length($k) > length($selected_path)) {
@@ -616,7 +615,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
      $ip = 'undef' unless ($ip);
       ## In case HTTP_HOST does not match cookie_domain
-    my $http_host = $ENV{'HTTP_HOST'};
+    my $http_host = &get_header_field('HTTP_HOST');
      $http_host =~ s/:\d+$//; ## suppress port
      unless (($http_host =~ /$param->{'cookie_domain'}$/) || 
              ($param->{'cookie_domain'} eq 'localhost')) {
@@ -1165,20 +1164,33 @@ if ($wwsconf->{'use_fast_cgi'}) {
      return $query;
  }
 
+sub get_header_field {
+    my $field = shift;
+
+    ## HTTP_X_ header fields set when using a proxy
+    if ($field eq 'SERVER_NAME') {
+	return $ENV{'HTTP_X_FORWARDED_SERVER'} || $ENV{'SERVER_NAME'};
+    }elsif ($field eq 'HTTP_HOST') {
+	return $ENV{'HTTP_X_FORWARDED_HOST'} || $ENV{'HTTP_HOST'};
+    }else {
+	return $ENV{$field};
+    }
+}
+
  sub get_parameters {
  #    &wwslog('debug4', 'get_parameters');
 
      ## CGI URL
      if ($ENV{'HTTPS'} eq 'on') {
-	 $param->{'base_url'} = sprintf 'https://%s', $ENV{'HTTP_HOST'};
+	 $param->{'base_url'} = sprintf 'https://%s', &get_header_field('HTTP_HOST');
 	 $param->{'use_ssl'} = 1;
      }else {
-	 $param->{'base_url'} = sprintf 'http://%s', $ENV{'HTTP_HOST'};
+	 $param->{'base_url'} = sprintf 'http://%s', &get_header_field('HTTP_HOST');
 	 $param->{'use_ssl'} = 0;
      }
 
      $param->{'path_info'} = $ENV{'PATH_INFO'};
-     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
+     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
 
 
      if ($ENV{'REQUEST_METHOD'} eq 'GET') {
