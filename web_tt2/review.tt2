@@ -40,7 +40,6 @@
   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a>
 
 <br /><br />
-[% END %]
 
 <form action="[% path_cgi %]" method="post">
  <input type="hidden" name="previous_action" value="review" />
@@ -49,6 +48,7 @@
  <input type="text" name="email" size="35" />
  <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
 </form>
+[% END %]
 
 <br />
 <form action="[% path_cgi %]" method="post"> 
