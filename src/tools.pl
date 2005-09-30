@@ -1830,34 +1830,6 @@ sub clean_email {
     return $email;
 }
 
-## Function for Removing a non-empty directory
-## It takes a variale number of arguments : 
-## it can be a list of directory
-## or few direcoty paths
-sub remove_dir {
-    
-    do_log('debug2','remove_dir()');
-    
-    foreach my $current_dir (@_){
-
-	finddepth(\&del,$current_dir);
-    }
-    sub del {
-	my $name = $File::Find::name;
-
-	if (!-l && -d _) {
-	    unless (rmdir($name)) {
-		&do_log('info','Error while removing dir %s',$name);		
-	    }
-	}else{
-	    unless (unlink($name)) {
-		&do_log('err','Error while removing file  %s',$name);
-	    }
-	}
-    }
-    return 1;
-}
-
 ## Return canonical email address (lower-cased + space cleanup)
 ## It could also support alternate email
 sub get_canonical_email {
@@ -1878,12 +1850,12 @@ sub get_canonical_email {
 ## or few direcoty paths
 sub remove_dir {
     
-    do_log('info','remove_dir()');
+    do_log('debug2','remove_dir()');
     
     foreach my $current_dir (@_){
 	my @tree = split /\//, $current_dir ;
 	if ($#tree < 4) {
-	    do_log('info',"$current_dir not removed (not enough / in directory name)");
+	    do_log('err',"$current_dir not removed (not enough / in directory name)");
 	    next;
 	}
 	finddepth({wanted => \&del, no_chdir => 1},$current_dir);
@@ -1892,13 +1864,12 @@ sub remove_dir {
 	my $name = $File::Find::name;
 
 	if (!-l && -d _) {
-	    &do_log('info','removing dir %s',$name);
 	    unless (rmdir($name)) {
-		&do_log('info','Error while removing dir %s',$name);
+		&do_log('err','Error while removing dir %s',$name);
 	    }
 	}else{
 	    unless (unlink($name)) {
-		&do_log('info','Error while removing file  %s',$name);
+		&do_log('err','Error while removing file  %s',$name);
 	    }
 	}
     }
