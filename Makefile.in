@@ -540,7 +540,9 @@ checkperl:
 	@if [ ! -f $(SUIDPERL) ]; then \
 		echo "##################################"; \
 		echo "## You don't have suidperl installed."; \
-		echo "## Suidperl is required to run WWSympa with SetUID."; \
+		echo "## Suidperl is the default way to run WWSympa with SetUID."; \
+		echo "## Among other options, you can use suExec with Apache"; \
+		echo "## Check Sympa reference manual for more details"; \
 		echo "#####################################################"; \
 		if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
@@ -611,7 +613,7 @@ locale:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
-	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
+	SCRIPTDIR='${SCRIPTDIR}' \
 	USER='${USER}' GROUP='${GROUP}') || exit 1;
 
 installlocale:
@@ -619,7 +621,6 @@ installlocale:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
-	LOCALEDIR='${prefix}/locale' \
 	USER='${USER}' GROUP='${GROUP}' install) || exit 1;
 
 updatelocale:
@@ -627,7 +628,7 @@ updatelocale:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
-	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
+	SCRIPTDIR='${SCRIPTDIR}' \
 	USER='${USER}' GROUP='${GROUP}' update-po) || exit 1;
 
 installsrc:
