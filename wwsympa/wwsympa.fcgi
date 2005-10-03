@@ -13692,14 +13692,14 @@ sub do_arc_download {
 	unless (opendir SPOOL, $abs_dir) {
 	    &report::reject_report_web('intern','cannot_open_dir',{'dir' =>$abs_dir },$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	    &wwslog('info','do_arc_download: unable to open %s', $abs_dir);
-	    return 'undef';
+	    return undef;
 	}
 	
 	foreach my $msg (sort grep(!/^\./, readdir SPOOL)) { 
 	    unless ($zip->addFile ($abs_dir.'/'.$msg, $in{'list'}.'_'.$dir.'/'.$msg)) {
 		&report::reject_report_web('intern','add_file_zip',{'file' => "$abs_dir/$msg"},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		&wwslog('info','do_arc_download: failed to add %s file to archive', $abs_dir.'/'.$msg);
-		return 'undef';
+		return undef;
 	    }	   
 	}
 
