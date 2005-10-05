@@ -9879,9 +9879,11 @@ sub probe_db {
     
     my %not_null = ('email_user' => 1,
 		    'list_subscriber' => 1,
+		    'robot_subscriber' => 1,
 		    'user_subscriber' => 1,
 		    'date_subscriber' => 1,
 		    'list_admin' => 1,
+		    'robot_admin' => 1,
 		    'user_admin' => 1,
 		    'role_admin' => 1,
 		    'date_admin' => 1);
