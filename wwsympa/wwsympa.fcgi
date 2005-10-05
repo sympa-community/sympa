@@ -808,14 +808,18 @@ if ($wwsconf->{'use_fast_cgi'}) {
              $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
          }
          ## get sub crition using cookie and set param for use in templates
-         @{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
+         #@{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 
          # if no cookie was received, look for subscriptions
 #         unless (defined $param->{'get_which'}) {
-             @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
-	 @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner') ; 
-	 @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor') ; 
 	 
+	 
+	 ## Skip get_which if either in a list context or accessing the CSS
+	 unless ($in{'action'} eq 'css' || defined $in{'list'}) {
+	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+	     @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner') ; 
+	     @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor') ; 
+	 }
 #         }
 
      }else{
@@ -925,9 +929,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 
      ## Do not manage cookies at this level if content was already sent
-     unless ($param->{'bypass'} eq 'extreme') {
-	 ## Set cookies "your_subscribtions"
-	 if ($param->{'user'}{'email'}) {
+     unless ($param->{'bypass'} eq 'extreme' || $param->{'action'} eq 'css') {
+
+	 ## Set cookies "your_subscribtions" unless in one list page
+	 if ($param->{'user'}{'email'} && ! defined $list) {
 
 	     ## In case get_which was not set
 	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') unless (defined $param->{'get_which'}); 
