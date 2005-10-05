@@ -25,4 +25,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%|loc(available_reception_mode)%]Reception modes    : %1[%END%]
 [%|loc(url)%]Homepage           : %1[%END%]
 
+[% TRY %]
 [% PROCESS 'info' %]
+[% CATCH %]
+[% END %]
