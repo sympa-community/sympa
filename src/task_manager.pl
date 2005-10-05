@@ -277,7 +277,7 @@ while (!$end) {
 			     'robot' => $list->{'domain'}};
 	
 	    my %used_list_models; # stores which models already have a task 
-	    foreach (@list_models) { $used_list_models{$list->{'name'}} = undef; }
+	    foreach (@list_models) { $used_list_models{$_} = undef; }
 	    
 	    foreach $_ (@tasks) {
 		
