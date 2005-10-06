@@ -37,7 +37,7 @@ my %set_comment; #sets-of-messages comment
 
 ## The lang is the NLS catalogue name ; locale is the locale preference
 ## Ex: lang = fr ; locale = fr_FR
-my ($current_lang, $current_locale);
+my ($current_lang, $current_locale, @previous_locale);
 my $default_lang;
 ## This was the old style locale naming, used for templates, nls, scenario
 my %language_equiv = ( 'zh_CN' => 'cn',
@@ -104,6 +104,26 @@ sub GetSupportedLanguages {
 	push @lang_list, $lang2locale{$l}||$l;
     }
     return \@lang_list;
+}
+
+## Keep the previous lang ; can be restored with PopLang
+sub PushLang {
+    my $locale = shift;
+    &do_log('debug', 'Language::PushLang(%s)', $locale);
+
+    push @previous_locale, $current_locale;
+    &SetLang($locale);
+
+    return 1;
+}
+
+sub PopLang {
+    &do_log('debug', 'Language::PopLang(%s)');
+
+    my $locale = pop @previous_locale;
+    &SetLang($locale);
+
+    return 1;
 }
 
 sub SetLang {
