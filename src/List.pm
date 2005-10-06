@@ -215,6 +215,7 @@ currently selected descriptor.
 
 use Carp;
 
+use Storable;
 use Mail::Header;
 use Archive;
 use Language;
@@ -1674,6 +1675,12 @@ sub save_config {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
 	return undef;
     }
+    
+    ## Also update the binary version of the data structure
+    unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
+	&do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
+    }
+
 #    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
     
     return 1;
@@ -1720,17 +1727,33 @@ sub load {
 
     $self->{'name'}  = $name ;
 
-    my ($m1, $m2, $m3) = (0, 0, 0);
-    ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
+    my ($m1, $m2, $m3, $m4) = (0, 0, 0);
+    ($m1, $m2, $m3, $m4) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
 
     my $time_config = (stat("$self->{'dir'}/config"))[9];
+    my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
     my $time_subscribers; 
     my $time_stats = (stat("$self->{'dir'}/stats"))[9];
     my $config_reloaded = 0;
     my $admin;
     
-    if ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {
+    if ($time_config_bin > $self->{'mtime'}->[3]) {
+	## Load a binary version of the data structure
+	unless ($admin = &Storable::retrieve("$self->{'dir'}/config.bin")) {
+	    &do_log('err', 'Failed to load the binary config %s', "$self->{'dir'}/config.bin");
+	    return undef;
+	}
+
+	$m4 = $time_config_bin;
+
+    }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {	
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
+
+	## update the binary version of the data structure
+	unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
+	    &do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
+	}
+
 	$config_reloaded = 1;
  	unless (defined $admin) {
  	    &do_log('err', 'Impossible to load list config file for list % set in status error_config',$self->{'name'});
@@ -1876,7 +1899,7 @@ sub load {
 #	$self->{'total'} = $users->{'total'};
 #    }
 
-    $self->{'mtime'} = [ $m1, $m2, $m3 ];
+    $self->{'mtime'} = [ $m1, $m2, $m3, $m4 ];
 
     $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
