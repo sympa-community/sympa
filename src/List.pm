@@ -1677,7 +1677,7 @@ sub save_config {
     }
     
     ## Also update the binary version of the data structure
-    unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
+    unless (&Storable::store($self->{'admin'},"$self->{'dir'}/config.bin")) {
 	&do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
     }
 
@@ -1737,8 +1737,10 @@ sub load {
     my $config_reloaded = 0;
     my $admin;
     
-    if ($time_config_bin > $self->{'mtime'}->[3]) {
+    if ($time_config_bin > $self->{'mtime'}->[3] &&
+	$time_config <= $time_config_bin) { 
 	## Load a binary version of the data structure
+	## unless config is more recent than config.bin
 	unless ($admin = &Storable::retrieve("$self->{'dir'}/config.bin")) {
 	    &do_log('err', 'Failed to load the binary config %s', "$self->{'dir'}/config.bin");
 	    return undef;
