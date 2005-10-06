@@ -206,7 +206,7 @@ sub parse_tt2 {
 
 #    &do_log('notice', 'TPL: %s ; LANG: %s', $template, $data->{lang});
 
-    &Language::SetLang($data->{lang});
+    &Language::SetLang($data->{lang}) if ($data->{'lang'});
 
     my $config = {
 	# ABSOLUTE => 1,
