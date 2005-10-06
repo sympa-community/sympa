@@ -126,9 +126,9 @@ sub mail_file {
     if ($filename =~ /\.tt2$/) {
 	my $output;
 	my @path = split /\//, $filename;	   
-	&Language::PushLang($data->{'lang'});
+	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
 	&tt2::parse_tt2($data, $path[$#path], \$output);
-	&Language::PopLang();
+	&Language::PopLang() if (defined $data->{'lang'});
 	$message .= join('',$output);
 	$header_possible = 1;
 
