@@ -14,14 +14,665 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. (list.name,filename,who,conf.wwsympa_url)
+#: mail_tt2/listeditor_notification.tt2:24
+msgid ""
+"\n"
+" [% IF many_files %]There are new shared documents in list %1 : \n"
+"\t%2\n"
+"\n"
+"\tfrom %3\n"
+"\n"
+"To moderate these document : \n"
+"%4/modindex/%1\n"
+"\n"
+" [% ELSE %]\n"
+"There is a new shared document in list %1 : \n"
+"\t%2 from %3\n"
+"\n"
+"To moderate this document : \n"
+"%4/modindex/%1\n"
+" "
+msgstr ""
+
+#. (list.name,sympa,keyauth,list.name,escaped_who,sympa,keyauth,list.name,who)-)
+#: mail_tt2/listowner_notification.tt2:108
+msgid ""
+"\n"
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. Shall this be fine\n"
+"with you, you should click the following URL :\n"
+"\n"
+"[% FILTER escape_url %]mailto:%2?subject=auth %3 DEL %4 %5"
+msgstr ""
+
+#. (list.name,replyto,keyauth,list.name,escaped_who,escaped_gecos,replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:90
+msgid ""
+"\n"
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. Shall this be fine\n"
+"with you, you should click the following URL :\n"
+"\n"
+"[% FILTER escape_url %]mailto:%2?subject=auth %3 ADD %4 %5 %6"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:324
+msgid "  "
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:19
+msgid ""
+"  \n"
+"You asked for your e-mail address\n"
+"to be added to list '%1'.\n"
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:37
+#, fuzzy
+msgid ""
+"  \n"
+"You requested a subscription reminder to be sent\n"
+"to each subscriber of list %1\n"
+msgstr "Požadoval jste přihlášení do konference %1"
+
+#. (-)
+#: mail_tt2/request_auth.tt2:45
+#, fuzzy
+msgid ""
+"  \n"
+"You requested a subscription reminder to be sent\n"
+"to each subscriber of list '*'\n"
+msgstr "Chcete opravdu poslat připomínací zprávu k %1 členům?"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:25
+#, fuzzy
+msgid ""
+"  \n"
+"You requested a user of list %1 to be\n"
+"added.\n"
+msgstr "Požadoval jste přihlášení do konference %1"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:31
+#, fuzzy
+msgid ""
+"  \n"
+"You requested a user of list %1 to be\n"
+"removed.\n"
+msgstr "Požadoval jste přihlášení do konference %1"
+
+#: web_tt2/error.tt2:30
+msgid "   "
+msgstr ""
+
+#. (conf.sympa,command)-)
+#: mail_tt2/request_auth.tt2:57
+msgid ""
+"    \n"
+"If you want this action to be taken, please\n"
+"\n"
+"- reply to this mail\n"
+"OR\n"
+"- send a message to %1 with subject\n"
+" %2\n"
+"OR\n"
+"- hit the following mailto [%|loc(conf.sympa,command_escaped)-%][% FILTER "
+"escape_url %]mailto:%1?subject=%2"
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:13
+#, fuzzy
+msgid ""
+"    \n"
+"You asked for your e-mail address\n"
+"to be removed from list '%1'.\t\n"
+msgstr "Vaše emailová adresa %1 byla odstraněna z konference %2@%3"
+
+#. (error)
+#: mail_tt2/listmaster_notification.tt2:232
+#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:325
+#, fuzzy
+msgid "         %1 "
+msgstr "Přehled       : %1"
+
+#. (notice.cmd)
+#: mail_tt2/command_report.tt2:51
+#, fuzzy
+msgid "  Command '%1' found : ignoring end of message."
+msgstr "Žádný příkaz nebyl ve zprávě nalezen"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:30
+#, fuzzy
+msgid "  Information regarding user %1 have been updated for list %2."
+msgstr "Informace o o uživateli %s byli upraveny pro konferenci %s.\n"
+
 #: web_tt2/serveradmin.tt2:90
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Pozor, přesestavení html archívů může být časově náročné!"
+
+#. (notice.total,notice.listname)
+#: mail_tt2/command_report.tt2:39
+#, fuzzy
+msgid "  Subscription reminder sent to each of %1 %2 subscribers."
+msgstr "Chcete opravdu poslat upomínací zprávu k %1 členům?"
+
+#. (notice.count)
+#: mail_tt2/command_report.tt2:42
+msgid "  The Reminder has been sent to %1 users."
+msgstr ""
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:45
+#, fuzzy
+msgid "  The user %1 has been removed from the list %2."
+msgstr "Uživatel %s byl odstraněn ze seznamu %s/\n"
+
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:54
+#, fuzzy
+msgid "  There is no message to moderate for list '%1'."
+msgstr "Na moderování čeká %1 zpráv v konferenci %2@%3"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:36
+#, fuzzy
+msgid "  User %1 has been invited to subscribe in list %2."
+msgstr "Uživatel %s je nyní členem konference %s.\n"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:33
+#, fuzzy
+msgid "  User %1 is now subscriber of list %2."
+msgstr "Uživatel %s je nyní členem konference %s.\n"
+
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:48
+#, fuzzy
+msgid "  Your configuration regarding list %1 has been updated."
+msgstr "Konfigurace konference %s byla změněna.\n"
+
+#: mail_tt2/command_report.tt2:22
+#, fuzzy
+msgid "  Your message signature was successfully verified using S/MIME."
+msgstr "Podpis Vaší zprávy byl úspěšně ověřen pomocí S/MIME"
+
+#: mail_tt2/command_report.tt2:27
+msgid ""
+"  Your request to subscribe/unsubscribe has been forwarded to the list's\n"
+"owners for approval. You will receive a notification when you have\n"
+"been subscribed (or unsubscribed) to the list."
+msgstr ""
+
+#. (list.name,type)
+#: mail_tt2/user_notification.tt2:33
+#, fuzzy
+msgid " %1 / %2 "
+msgstr "strana %1 / %2"
 
 #. (from_count)
 #: web_tt2/arcsearch.tt2:64
 msgid " %1 hits on message's From field"
 msgstr "%1 shod v poli \"Od\" "
+
+#: web_tt2/error.tt2:115
+msgid " - "
+msgstr ""
+
+#. (u_err.path)
+#: web_tt2/error.tt2:87
+#, fuzzy
+msgid " - %1 : No such file or directory"
+msgstr "Soubor nebo adresář %1 nenalezen"
+
+#. (u_err.file)
+#: web_tt2/error.tt2:62
+#, fuzzy
+msgid " - %1 : file not editable"
+msgstr "Soubor %1 nelze upravovat"
+
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:95
+msgid " - %1 : incorrect name[%IF u_err.reason%] : %2 "
+msgstr ""
+
+#. (u_err.family)
+#: web_tt2/error.tt2:44
+#, fuzzy
+msgid " - %1 : unknown family"
+msgstr "%1 : je neznámý příkaz"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:42
+#, fuzzy
+msgid " - %1 : unknown list"
+msgstr "Neznámá konference %1"
+
+#. (u_err.new_robot)
+#: web_tt2/error.tt2:43
+#, fuzzy
+msgid " - %1 : unknown robot"
+msgstr "Neznámá konference %1"
+
+#. (u_err.email,u_err.list)
+#: web_tt2/error.tt2:64
+#, fuzzy
+msgid " - %1 is already subscribed to the list %2"
+msgstr "%1 je již členem konference %2"
+
+#. (u_err.reception_mode)
+#: web_tt2/error.tt2:61
+#, fuzzy
+msgid " - %1 is not an available reception mode"
+msgstr "Způsob příjmu zpráv"
+
+#. (u_err.bad_listname)
+#: web_tt2/error.tt2:82
+#, fuzzy
+msgid " - '%1' : bad listname"
+msgstr ": špatné jméno konference"
+
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:83
+#, fuzzy
+msgid " - '%1' list already exists"
+msgstr "Vytvoen konference"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:98
+#, fuzzy
+msgid " - A directory named '%1' already exists"
+msgstr "soubor %1 již existuje"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:49
+#, fuzzy
+msgid " - Address \"%1\" is incorrect"
+msgstr "Adresa \"%1\" je nesprávná"
+
+#: web_tt2/error.tt2:72
+msgid " - Archives are empty for this list"
+msgstr ""
+
+#. (i_err.year_month)
+#: web_tt2/error.tt2:10
+#, fuzzy
+msgid " - Archives from %1 are not accessible"
+msgstr "Archívy z %1 nejsou přístupné"
+
+#: web_tt2/error.tt2:114
+#, fuzzy
+msgid " - Authentication failed"
+msgstr "Proces autentikace selhal"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:68
+#, fuzzy
+msgid " - Cannot open file '%1'"
+msgstr "Nelze přečíst soubor %1"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:97
+#, fuzzy
+msgid " - Cannot overwrite file %1"
+msgstr "Nelze přepsat soubor %1"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:102
+#, fuzzy
+msgid " - Cannot upload file %1"
+msgstr "Nelze nahrát soubor %1"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:76
+#, fuzzy
+msgid " - Config file has been modified by %1. Cannot apply your changes"
+msgstr "%1 změnil konfigurační soubor. Vaše změny nelze použít"
+
+#: web_tt2/error.tt2:94
+#, fuzzy
+msgid " - Data have changed on disk. Cannot apply your changes"
+msgstr "Data změněna na disku. Vaše změny nelze použít"
+
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:105
+#, fuzzy
+msgid " - Directory %1 and its contents are not copied : %2"
+msgstr "Adresář %1 a jeho obsah nebyl zkopírován"
+
+#. (u_err.directory)
+#: web_tt2/error.tt2:107
+#, fuzzy
+msgid " - Failed : %1 not empty"
+msgstr "Chyba : Adresář %1 není prázdný"
+
+#: web_tt2/error.tt2:96
+#, fuzzy
+msgid " - Failed : your content is empty"
+msgstr "Chyba : obsah je prázdný"
+
+#: web_tt2/error.tt2:14
+#, fuzzy
+msgid " - Failed to include list admins"
+msgstr "Nelze vložit uživatele"
+
+#: web_tt2/error.tt2:13
+#, fuzzy
+msgid " - Failed to inlude members"
+msgstr "Nelze vložit uživatele"
+
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:106
+#, fuzzy
+msgid " - File %1 is not copied : %2 "
+msgstr "Soubor %1 uložen"
+
+#: web_tt2/error.tt2:73
+msgid " - Huummm... didn't change anything"
+msgstr ""
+
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:84
+msgid " - Incorrect listname '%1' : matches one of service aliases"
+msgstr ""
+
+#: web_tt2/error.tt2:75
+#, fuzzy
+msgid " - List has no bouncing subscribers"
+msgstr "Konference neobsahuje vrácené adresy"
+
+#: web_tt2/error.tt2:54
+#, fuzzy
+msgid " - List has no subscribers"
+msgstr "Konference nemá žádné členy"
+
+#. (u_err.argument)
+#: web_tt2/error.tt2:47
+#, fuzzy
+msgid " - Missing argument %1"
+msgstr "Chybějící nebo nesprávně zadaný parametr : %1"
+
+#: web_tt2/error.tt2:56
+#, fuzzy
+msgid " - Missing filter"
+msgstr "Chybí filtr"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:74
+#, fuzzy
+msgid " - No bounce for user  %1"
+msgstr "Pro uživatele %1 nejsou vráceny žádné zprávy"
+
+#. (u_err.directory)
+#: web_tt2/error.tt2:108
+#, fuzzy
+msgid " - No certificate for this list"
+msgstr "Nemohu nalézt certifikát pro tuto konferenci"
+
+#: web_tt2/error.tt2:92
+#, fuzzy
+msgid " - No description specified"
+msgstr "Chybí popis"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:111
+#, fuzzy
+msgid " - No entry for user '%1'"
+msgstr "Pro uživatele %1 nejsou vráceny žádné zprávy"
+
+#: web_tt2/error.tt2:100
+#, fuzzy
+msgid " - No name specified"
+msgstr "Nebylo specifikováno žádné jméno"
+
+#. (u_err.page)
+#: web_tt2/error.tt2:55
+#, fuzzy
+msgid " - No page %1"
+msgstr "Strana %1 neexistuje"
+
+#: web_tt2/error.tt2:113
+msgid " - No soap service"
+msgstr ""
+
+#. (u_err.email)
+#: web_tt2/error.tt2:58
+#, fuzzy
+msgid " - Not subscribed: %1"
+msgstr "Není členem konference %1"
+
+#. (u_err.param,u_err.val)
+#: web_tt2/error.tt2:79
+msgid " - Parameter '%1' has got wrong value : '%2'"
+msgstr ""
+
+#. (u_err.param)
+#: web_tt2/error.tt2:78
+msgid " - Parameter '%1' must have values"
+msgstr ""
+
+#: web_tt2/error.tt2:46
+#, fuzzy
+msgid " - Please provide email address"
+msgstr "Prosím poskytněte Vaši emailovou adresu"
+
+#: web_tt2/error.tt2:65
+#, fuzzy
+msgid " - Please provide your password"
+msgstr "Prosím poskytněte Vaše heslo"
+
+#: web_tt2/error.tt2:112
+#, fuzzy
+msgid " - Please select archive months"
+msgstr "Prosím zvolte datum archivace"
+
+#: web_tt2/error.tt2:50
+#, fuzzy
+msgid " - Provided password is incorrect"
+msgstr "Poskytnuté údaje je nesprávné"
+
+#. (u_err.tpl)
+#: web_tt2/error.tt2:67
+#, fuzzy
+msgid " - Provided path is incorrect for template '%1'"
+msgstr "Poskytnuté údaje je nesprávné"
+
+#: web_tt2/error.tt2:70
+#, fuzzy
+msgid ""
+" - Reject message failed, it may already have been rejected by another "
+"moderator"
+msgstr ""
+"Vase zprava pro konferenci %1@%2\n"
+"byla zamitnuta moderatorem (%3)."
+
+#. (u_err.params)
+#: web_tt2/error.tt2:41
+#, fuzzy
+msgid " - Syntax errors with the following parameters : %1["
+msgstr "Syntaktická chyba s následujícími parametry : %1"
+
+#: web_tt2/error.tt2:110
+msgid " - Tag message with topic is required for this list"
+msgstr ""
+
+#: web_tt2/error.tt2:71
+msgid " - Tagging message is required for this list"
+msgstr ""
+
+#: web_tt2/error.tt2:101
+msgid " - The document repository exceed disk quota."
+msgstr ""
+
+#. (i_err.listname)
+#: web_tt2/error.tt2:16
+#, fuzzy
+msgid " - The exporation failed for list '%1'"
+msgstr "%1: akce selhala"
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:80
+#, fuzzy
+msgid " - The list '%1' is already closed"
+msgstr "Tato konference je již uzavřena"
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:81
+#, fuzzy
+msgid " - The list '%1' is not closed"
+msgstr "Konference není uzavřena"
+
+#: web_tt2/error.tt2:66
+#, fuzzy
+msgid " - The passwords you typed do not match"
+msgstr "Hesla nejsou stejn"
+
+#. (u_err.nb_days)
+#: web_tt2/error.tt2:53
+msgid " - The period is too long (%1 days)"
+msgstr ""
+
+#: web_tt2/error.tt2:91
+msgid " - The shared directory cannot have any description"
+msgstr ""
+
+#: web_tt2/error.tt2:90
+#, fuzzy
+msgid " - The shared document space is empty"
+msgstr "Poslední sdílené dokumenty"
+
+#: web_tt2/error.tt2:104
+msgid " - The upload failed, try it again"
+msgstr ""
+
+#: web_tt2/error.tt2:89
+#, fuzzy
+msgid " - There is no shared documents"
+msgstr "Poslední sdílené dokumenty"
+
+#: web_tt2/error.tt2:15
+#, fuzzy
+msgid " - There is not any owner defined for the list"
+msgstr "Konference %1 není definován vlastník."
+
+#. (u_err.name)
+#: web_tt2/error.tt2:99
+msgid " - This is an already existing document : '%1'"
+msgstr ""
+
+#: web_tt2/error.tt2:109
+#, fuzzy
+msgid " - This list has no message topic"
+msgstr "Konference byla obnovena"
+
+#: web_tt2/error.tt2:77
+msgid " - Topic \"other\" is a reserved word"
+msgstr ""
+
+#. (u_err.path)
+#: web_tt2/error.tt2:93
+msgid " - Unable to describe, the document '%1' does not exist"
+msgstr ""
+
+#. (i_err.month)
+#: web_tt2/error.tt2:9
+msgid " - Unable to find month '%1'"
+msgstr ""
+
+#: web_tt2/error.tt2:12
+#, fuzzy
+msgid " - Unable to load create_list templates"
+msgstr "Nelze nahrát seznam témat"
+
+#: web_tt2/error.tt2:11
+#, fuzzy
+msgid " - Unable to load list topics"
+msgstr "Nelze nahrát seznam témat"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:88
+#, fuzzy
+msgid " - Unable to read %1 : empty document"
+msgstr "Nelze číst soubor %1 : prázdný dokument"
+
+#: web_tt2/error.tt2:85
+#, fuzzy
+msgid " - Unable to rename archive"
+msgstr "Nemohu přejmenovat archív"
+
+#: web_tt2/error.tt2:86
+#, fuzzy
+msgid " - Unable to rename bounces"
+msgstr "Nelze přečíst spool"
+
+#: web_tt2/error.tt2:40
+#, fuzzy
+msgid " - Unknown action"
+msgstr "%1 : je neznámý příkaz"
+
+#: web_tt2/error.tt2:39
+#, fuzzy
+msgid " - Wrong parameters"
+msgstr "Špatný parameter"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:45
+#, fuzzy
+msgid " - You are already logged in as %1"
+msgstr "Jste již přihlášen jako %1"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:63
+#, fuzzy
+msgid " - You are already subscribed to the list %1"
+msgstr "V konferenci %1 jste již členem"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:59
+#, fuzzy
+msgid " - You are not subscribed to list %1"
+msgstr "Nejste přihlášen do konference %1"
+
+#: web_tt2/error.tt2:51
+msgid ""
+" - You did not choose a password, request a reminder of the initial password"
+msgstr ""
+
+#: web_tt2/error.tt2:48
+#, fuzzy
+msgid " - You need to login"
+msgstr "Musíte se přihlásit"
+
+#: web_tt2/error.tt2:69
+#, fuzzy
+msgid " - You need to provide list name"
+msgstr "Musíte se přihlásit"
+
+#. (u_err.dir)
+#: web_tt2/error.tt2:103
+#, fuzzy
+msgid " - You're not authorized to upload an INDEX.HTML in %1"
+msgstr "Nemáte oprávnění nahrát INDEX.HTML do adresáře %1"
+
+#: web_tt2/error.tt2:52
+msgid ""
+" - Your password is stored in an LDAP directory, therefore Sympa cannot post "
+"you a reminder"
+msgstr ""
+
+#. (u_err.msg)
+#: web_tt2/error.tt2:116
+#, fuzzy
+msgid " : %1 "
+msgstr "Pro: %1"
 
 #. (count)
 #: web_tt2/latest_lists.tt2:6
@@ -59,6 +710,27 @@ msgstr "Začít od nejnovějších zpráv"
 msgid " The latest shared documents "
 msgstr "Poslední sdílené dokumenty"
 
+#. (who,action,listname,conf.host,error)
+#: mail_tt2/listmaster_notification.tt2:322
+msgid ""
+" User %1 has encountered a system error \n"
+"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
+msgstr ""
+
+#. (who,action,msg_id,cmd,listname,conf.host)
+#: mail_tt2/listmaster_notification.tt2:230
+msgid ""
+" User %1 has encountered an internal server error\n"
+"(%2[% IF msg_id %] - MSG_ID : %3"
+msgstr ""
+
+#. (who,action,listname,conf.host)
+#: mail_tt2/listmaster_notification.tt2:245
+msgid ""
+" User %1 has encountered an internal server error \n"
+"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
+msgstr ""
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -75,6 +747,14 @@ msgstr "dne %1"
 msgid "# message"
 msgstr "připomínací zpráva"
 
+#. (body)
+#. (subject)
+#. (command)
+#: mail_tt2/archive.tt2:3 mail_tt2/request_auth.tt2:3 mail_tt2/review.tt2:2
+#: mail_tt2/stats_report.tt2:2 web_tt2/request_topic.tt2:30
+msgid "%1"
+msgstr ""
+
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
 msgid "%1 / subscribing to %2"
@@ -90,63 +770,34 @@ msgstr "%1 / odhlášení se z konference %2"
 msgid "%1 / your environment"
 msgstr "%1 / vaše nastavení"
 
-#. (error.path)
-#: web_tt2/error.tt2:39
-msgid "%1 : No such file"
-msgstr "Soubor %1 neexistuje"
-
-#. (error.path)
-#: web_tt2/error.tt2:38
-msgid "%1 : No such file or directory"
-msgstr "Soubor nebo adresář %1 nenalezen"
-
 #. (notice.action)
-#: web_tt2/notice.tt2:12
+#: web_tt2/notice.tt2:11
 msgid "%1 : action succeeded"
 msgstr "%1 : příkaz proveden úspěšně"
 
-#. (error.file)
-#: web_tt2/error.tt2:23
-msgid "%1 : file not editable"
-msgstr "Soubor %1 nelze upravovat"
-
-#. (error.name)
-#: web_tt2/error.tt2:44
-msgid "%1 : incorrect name"
-msgstr "%1 : má nesprávný formát"
-
-#. (error.action)
-#: web_tt2/error.tt2:5
-msgid "%1 : unknown action"
-msgstr "%1 : je neznámý příkaz"
-
-#. (error.list)
-#: web_tt2/error.tt2:6
-msgid "%1 : unknown list"
-msgstr "Neznámá konference %1"
-
-#. (error.action)
-#: web_tt2/error.tt2:17
-msgid "%1 : you are not allowed to perform this action"
-msgstr "%1 : na tuto akci nemáte oprávnění"
+#. (notice.action)
+#: web_tt2/notice.tt2:14
+#, fuzzy
+msgid "%1 : action succeeded soon"
+msgstr "%1 : příkaz proveden úspěšně"
 
 #. (list.name,date)
-#: mail_tt2/digest_plain.tt2:4 mail_tt2/digest_plain.tt2:8
+#: mail_tt2/digest_plain.tt2:4 mail_tt2/digest_plain.tt2:9
 msgid "%1 Digest %2"
 msgstr "%1 Souhrn %2"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:45
+#: web_tt2/notice.tt2:62
 msgid "%1 addresses have been subscribed"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/list_created.tt2:9
+#: mail_tt2/list_created.tt2:12
 msgid "%1 admin page"
 msgstr "Konfigurace konference: %1"
 
 #. (list.name,list.host,size,conf.host,conf.listmaster_email)
-#: mail_tt2/listowner_notification.tt2:8
+#: mail_tt2/listowner_notification.tt2:11
 #, fuzzy
 msgid ""
 "%1 archive quota exceeded. \n"
@@ -178,15 +829,16 @@ msgstr "%1 nalezených shod v poli \"Datum\""
 msgid "%1 hits on message's Subject field"
 msgstr "%1 nalezených shod v předmětu zprávy"
 
-#. (error.email,error.list)
-#: web_tt2/error.tt2:25
-msgid "%1 is already subscribed to the list %2"
-msgstr "%1 je již členem konference %2"
-
 #. (list.name)
 #: mail_tt2/list_created.tt2:2
 msgid "%1 mailing list creation"
 msgstr "vytvořena konference %1"
+
+#. (u_err.listname)
+#: mail_tt2/command_report.tt2:106
+#, fuzzy
+msgid "%1 mailing list does not provide subscriber preferences."
+msgstr "%s konference nenabízí uživatelské nastavení.\n"
 
 #. (searched,num)
 #: web_tt2/arcsearch.tt2:53
@@ -199,14 +851,9 @@ msgid "%1 occurrence(s) found"
 msgstr "nalezeno %1 x"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:9
+#: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr "uživatel %1 byl přidán"
-
-#. (error.action)
-#: web_tt2/error.tt2:27
-msgid "%1: action failed"
-msgstr "%1: akce selhala"
 
 #. (l.name,l.host,l.subject,l.msg_count)
 #: web_tt2/rss.tt2:98
@@ -215,7 +862,7 @@ msgid "%1@%2 - %3 : %4 messages"
 msgstr "%1@%2 : %3 zprávy"
 
 #. (list.name,list.host,param0)
-#: mail_tt2/listowner_notification.tt2:22
+#: mail_tt2/listowner_notification.tt2:31
 #, fuzzy
 msgid ""
 "%1@%2 is no more an instance of family %3.\n"
@@ -225,35 +872,23 @@ msgstr ""
 "Tato konference byla uzavřena. \n"
 
 #. (list.name,list.host)
-#: mail_tt2/list_created.tt2:4
+#: mail_tt2/list_created.tt2:7
 msgid "%1@%2 mailing list has been activated by listmaster."
 msgstr "Konference %1@%2 byla spuštěna správcem"
 
 #. (list.name,list.host)
-#: mail_tt2/list_rejected.tt2:4
+#: mail_tt2/list_rejected.tt2:7
 msgid "%1@%2 mailing list has been rejected by listmaster."
 msgstr "Konference %1@%2 byla zamítnuta správcem"
 
 #. (rate2,list.name,list.host,rate)
-#: mail_tt2/listowner_notification.tt2:13
+#: mail_tt2/listowner_notification.tt2:19
 msgid "%2@%3 archives use %4% of allowed disk quota."
 msgstr "%2@%3 archívy využívají %4% povoleného místa na disku."
 
 #: src/PlainDigest.pm:353
 msgid "%Image(%s)"
 msgstr "%Obrázek(%s)"
-
-#: src/Commands.pm:2166
-msgid "%s did not receive confirmation for the following addresses :\n"
-msgstr "%s nepřijal potvrzení následucící adresy :\n"
-
-#: src/Commands.pm:1557
-msgid "%s mailing list does not provide subscriber preferences.\n"
-msgstr "%s konference nenabízí uživatelské nastavení.\n"
-
-#: src/Commands.pm:2023
-msgid "%s posted your expiration message to the following addresses :\n"
-msgstr "%s zaslal zprávu o vypršení, na následující adresu :\n"
 
 #: web_tt2/arcsearch.tt2:18
 msgid "(All of this words,"
@@ -271,7 +906,7 @@ msgid "(Each of this words,"
 msgstr "(Jakékoliv z těchto slov,"
 
 #. (subject)
-#: mail_tt2/reject.tt2:7
+#: mail_tt2/reject.tt2:11
 msgid "(Subject of your mail : %1)"
 msgstr "(Predmet vasi zpravy : %1)"
 
@@ -293,13 +928,9 @@ msgstr ""
 "    Některé znaky mohou být nečitelné nebo nesprávné **\n"
 "\n"
 
-#: mail_tt2/your_infected_msg.tt2:4
+#: mail_tt2/your_infected_msg.tt2:7
 msgid "***** V I R U S    A L E R T *****"
 msgstr "***** V I R U S   V E  Z P R A V E *****"
-
-#: src/tools.pl:138
-msgid "------ End of suspected message ------\n"
-msgstr "------ Konec podezřelé zprávy ------\n"
 
 #: src/PlainDigest.pm:258
 msgid "-----End of Delivery Status Report-----\n"
@@ -373,10 +1004,6 @@ msgstr "6 hodin"
 msgid ": Login / Logout from WWSympa."
 msgstr ": přihlášení / odhlášení z WWSympa."
 
-#: web_tt2/error.tt2:10
-msgid ": bad listname"
-msgstr ": špatné jméno konference"
-
 #: web_tt2/help.tt2:18
 msgid ": directory of lists available on the server"
 msgstr ": adresář konferencí dostupných na serveru"
@@ -384,10 +1011,6 @@ msgstr ": adresář konferencí dostupných na serveru"
 #: web_tt2/help.tt2:16
 msgid ": user preferences. This is proposed to identified users only."
 msgstr ": uživatelské nastavení. Je dostupné pouze přihlášeným uživatelům"
-
-#: web_tt2/error.tt2:12
-msgid ": user unknown"
-msgstr ": neznámý uživatel"
 
 #: web_tt2/help.tt2:20
 msgid ": your environment as a subscriber or as owner"
@@ -470,6 +1093,10 @@ msgstr ""
 msgid "A few lines describing the list"
 msgstr "Několik vět popisujících konferenci"
 
+#: mail_tt2/listmaster_notification.tt2:46
+msgid "A loop has been detected with the following message"
+msgstr ""
+
 #: mail_tt2/your_infected_msg.tt2:2
 msgid "A virus in your email"
 msgstr "Zpráva kterou jste odeslal obsahuje vir"
@@ -477,6 +1104,11 @@ msgstr "Zpráva kterou jste odeslal obsahuje vir"
 #: mail_tt2/helpfile.tt2:52
 msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr "ADD <list> user@host Full name  * Přidá uživatele do konference"
+
+#. (auth.action)
+#: web_tt2/error.tt2:124
+msgid "AUTHORIZATION REJECT (%1)"
+msgstr ""
 
 #: web_tt2/d_read.tt2:77
 msgid "Access"
@@ -488,11 +1120,11 @@ msgstr "Oprávnění"
 msgid "Access control for the document %1"
 msgstr "Přístupová k dokumentu %1"
 
-#: src/List.pm:309
+#: src/List.pm:313
 msgid "Account"
 msgstr "Účet"
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:50
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:49
 msgid "Add"
 msgstr "Přidat"
 
@@ -504,14 +1136,28 @@ msgstr "Přidat záložku"
 msgid "Add selected addresses"
 msgstr "Přidat vybranou adresu"
 
+#. (sub)
+#: mail_tt2/listmaster_notification.tt2:253
+msgid "Add subscriber '%1' in DB failed."
+msgstr ""
+
 #: web_tt2/add_request.tt2:11
 msgid "Add subscribers"
 msgstr "Přidat členy"
 
-#. (error.email)
-#: web_tt2/error.tt2:9
-msgid "Address \"%1\" is incorrect"
-msgstr "Adresa \"%1\" je nesprávná"
+#. (user)
+#: mail_tt2/listmaster_notification.tt2:251
+msgid "Add user '%1' in DB failed."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:23
+msgid "Adding a user to the list is impossible."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:20
+#, fuzzy
+msgid "Adding a user to the list is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
 
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
@@ -530,14 +1176,6 @@ msgstr "Aliasy, které byste měli instalovat do poštovního systému"
 msgid "All commands must be sent to the electronic address %1"
 msgstr "Všechny příkazy se musí poslat na adresu %1"
 
-#: src/sympa.pl:1629
-msgid ""
-"Among subscriber of list %s since %d days, %d didn't confirm there "
-"subscription.\n"
-msgstr ""
-"Některý z členů konference %s po dobu %d dní, %d nepotvrdil svou "
-"registraci.\n"
-
 #. (mail.sender,mail.subject)
 #: mail_tt2/x509-user-cert-missing.tt2:8
 #, fuzzy
@@ -548,24 +1186,11 @@ msgstr ""
 "Šifrovaná zpráva od %1 byla odeslána\n"
 "Předmět : %2\n"
 
-#: src/Commands.pm:2041
-msgid ""
-"An expiration process for list %s has been started. This process\n"
-"will end in %d days. You will then receive the list of subscribers \n"
-"who didn't confirm their subscription in time.\n"
-"You will then be able to remove these addresses yourself with the DEL "
-"command.\n"
-msgstr ""
-"Expirační proces pro konferenci %s byl spuštěn. Tento proces\n"
-"bude ukončen za %d dní. Poté obdržíte seznam členů kteří nepotrvdily \n"
-"svoji registraci včas.\n"
-"Poté budete moci tyto uživatele odstranit z konference pomocí příkazu DEL\n"
-
-#: src/List.pm:317
+#: src/List.pm:321
 msgid "Anonymous sender"
 msgstr "Anonymní odesilatel"
 
-#: mail_tt2/listmaster_notification.tt2:15
+#: mail_tt2/listmaster_notification.tt2:59
 msgid "Antivirus scan failed"
 msgstr "Antivirový test selhal"
 
@@ -577,7 +1202,7 @@ msgstr "Informace o této konferenci"
 msgid "Apply"
 msgstr "Použij"
 
-#: web_tt2/list_menu.tt2:41 web_tt2/list_menu.tt2:43
+#: web_tt2/list_menu.tt2:44 web_tt2/list_menu.tt2:46
 msgid "Archive"
 msgstr "Archív konference"
 
@@ -585,7 +1210,7 @@ msgstr "Archív konference"
 msgid "Archive Management"
 msgstr "Správa archívu"
 
-#: src/List.pm:336
+#: src/List.pm:340
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivuj šifrované zprávy jako:"
 
@@ -602,10 +1227,11 @@ msgstr "Archivace"
 msgid "Archives Selection:"
 msgstr "Výběr archívu"
 
-#. (error.year_month)
-#: web_tt2/error.tt2:69
-msgid "Archives from %1 are not accessible"
-msgstr "Archívy z %1 nejsou přístupné"
+#. (list.name)
+#: mail_tt2/index_archive.tt2:2
+#, fuzzy
+msgid "Archives index of list %1"
+msgstr "Shrnuti konference %1"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
@@ -620,11 +1246,17 @@ msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Chcete opravdu uzavřít konferenci %1 ?"
 
 #. (list.name,msg_from)
-#: mail_tt2/moderate.tt2:3
+#: mail_tt2/moderate.tt2:4
 msgid "Article to be approved for list %1 from %2"
 msgstr "Prispevek do konference %1 od %2"
 
-#: src/List.pm:562
+#. (list.name,msg_from)
+#: mail_tt2/moderate.tt2:3
+#, fuzzy
+msgid "Article to be tagged for list %1 from %2"
+msgstr "Prispevek do konference %1 od %2"
+
+#: src/List.pm:566
 msgid "Attachment type"
 msgstr "Typ přílohy"
 
@@ -632,12 +1264,8 @@ msgstr "Typ přílohy"
 msgid "Auth method"
 msgstr "Metoda přihlášení"
 
-#: src/List.pm:2587
-msgid "Authentication requested"
-msgstr "Odeslat požadavek na přihlášení"
-
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:21 web_tt2/modindex.tt2:80
+#: web_tt2/modindex.tt2:36 web_tt2/modindex.tt2:99
 msgid "Author"
 msgstr "Autor"
 
@@ -645,7 +1273,7 @@ msgstr "Autor"
 msgid "Available commands are:"
 msgstr "Dostupné příkazy jsou:"
 
-#: src/List.pm:346
+#: src/List.pm:350
 msgid "Available subscription options"
 msgstr "Dostupné možnosti odběru zpráv"
 
@@ -662,8 +1290,8 @@ msgstr ""
 "Search</a></em>, vyhledávacím enginu MHonArc archívů"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:112
-#: mail_tt2/listowner_notification.tt2:39
+#: mail_tt2/listmaster_notification.tt2:207
+#: mail_tt2/listowner_notification.tt2:63
 #, fuzzy
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -674,8 +1302,8 @@ msgstr ""
 "upozorněno, že mohou být odstranění z konference %2:\n"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:115
-#: mail_tt2/listowner_notification.tt2:42
+#: mail_tt2/listmaster_notification.tt2:210
+#: mail_tt2/listowner_notification.tt2:66
 #, fuzzy
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -686,8 +1314,8 @@ msgstr ""
 "odstraněno z konference %2:\n"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:118
-#: mail_tt2/listowner_notification.tt2:45
+#: mail_tt2/listmaster_notification.tt2:213
+#: mail_tt2/listowner_notification.tt2:69
 #, fuzzy
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -714,12 +1342,13 @@ msgstr "Přidat URL"
 msgid "Bounce Settings"
 msgstr "Nastavení chybných adres"
 
-#: src/List.pm:2309
+#. (list.name,rate,conf.wwsympa_url,list.name)
+#: mail_tt2/listowner_notification.tt2:125
 msgid ""
-"Bounce rate in list %s is %d%%.\n"
+"Bounce rate in list %1 is %2.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%3/reviewbouncing/%4\n"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
@@ -731,7 +1360,7 @@ msgstr "Vrácené adresy"
 msgid "Bounces count :"
 msgstr "Počet vrácených zpráv : %1"
 
-#: src/List.pm:365 web_tt2/edit_list_request.tt2:10
+#: src/List.pm:369 web_tt2/edit_list_request.tt2:10
 msgid "Bounces management"
 msgstr "Správa chybných adres"
 
@@ -751,29 +1380,49 @@ msgstr ""
 msgid "Cancel"
 msgstr "Zruš"
 
-#. (error.path)
-#: web_tt2/error.tt2:51
-msgid "Cannot create %1"
-msgstr "Nelze vytvořit %1"
+#. (db_name)
+#: mail_tt2/listmaster_notification.tt2:25
+msgid "Cannot connect to database %1, still trying..."
+msgstr ""
 
-#. (error.path)
-#: web_tt2/error.tt2:52
-msgid "Cannot create directory %1"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:293
+#, fuzzy
+msgid "Cannot create shared for list '%1'."
 msgstr "Nelze vytvořit adresář %1"
 
-#. (error.path)
-#: web_tt2/error.tt2:49
-msgid "Cannot overwrite file %1"
-msgstr "Nelze přepsat soubor %1"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:295
+msgid "Cannot delete shared for list '%1'."
+msgstr ""
 
-#. (error.name)
-#: web_tt2/error.tt2:53
-msgid "Cannot unzip file %1"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:294
+#, fuzzy
+msgid "Cannot restore shared for list '%1'."
+msgstr "Nelze přečíst soubor %1"
+
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:279
+#, fuzzy
+msgid "Cannot save config file for list '%1'."
+msgstr "Nemohu uložit konfiguraci"
+
+#. (name)
+#: mail_tt2/listmaster_notification.tt2:298
+#, fuzzy
+msgid "Cannot unzip file '%1'."
 msgstr "Nelze dekomprimovat zip soubor %1"
 
-#. (error.path)
-#: web_tt2/error.tt2:50
-msgid "Cannot upload file %1"
+#: web_tt2/error.tt2:17
+#, fuzzy
+msgid "Cannot unzip this file "
+msgstr "Nelze dekomprimovat zip soubor %1"
+
+#. (path)
+#: mail_tt2/listmaster_notification.tt2:297
+#, fuzzy
+msgid "Cannot upload file '%1'."
 msgstr "Nelze nahrát soubor %1"
 
 #: web_tt2/skinsedit.tt2:38
@@ -800,7 +1449,7 @@ msgstr "Zmenit mou emailovou adresu"
 msgid "Changing your email address"
 msgstr "Zmena Vaší emailové adresy"
 
-#: mail_tt2/sendpasswd.tt2:32 web_tt2/pref.tt2:38
+#: mail_tt2/sendpasswd.tt2:35 web_tt2/pref.tt2:38
 msgid "Changing your password"
 msgstr "Změna hesla"
 
@@ -809,24 +1458,24 @@ msgid "Check"
 msgstr "Kontrola"
 
 #. (list.name)
-#: mail_tt2/reject.tt2:10
+#: mail_tt2/reject.tt2:14
 msgid "Check %1 list usage :"
 msgstr "Informace o konferenci %1 :"
 
-#: mail_tt2/listmaster_notification.tt2:37
-#: mail_tt2/listmaster_notification.tt2:98
+#: mail_tt2/listmaster_notification.tt2:102
+#: mail_tt2/listmaster_notification.tt2:92
 msgid "Check Sympa log files for more precise information"
 msgstr "Viz Sympa log pro podrobné informace"
 
-#: mail_tt2/listmaster_notification.tt2:105
-#: mail_tt2/listmaster_notification.tt2:44
-#: mail_tt2/listmaster_notification.tt2:51
-#: mail_tt2/listmaster_notification.tt2:58
-#: mail_tt2/listmaster_notification.tt2:65
-#: mail_tt2/listmaster_notification.tt2:71
-#: mail_tt2/listmaster_notification.tt2:78
-#: mail_tt2/listmaster_notification.tt2:85
-#: mail_tt2/listmaster_notification.tt2:92
+#: mail_tt2/listmaster_notification.tt2:112
+#: mail_tt2/listmaster_notification.tt2:123
+#: mail_tt2/listmaster_notification.tt2:134
+#: mail_tt2/listmaster_notification.tt2:144
+#: mail_tt2/listmaster_notification.tt2:154
+#: mail_tt2/listmaster_notification.tt2:165
+#: mail_tt2/listmaster_notification.tt2:176
+#: mail_tt2/listmaster_notification.tt2:186
+#: mail_tt2/listmaster_notification.tt2:196
 msgid "Check Sympa log files for more precise information."
 msgstr "Viz Sympa log pro podrobné informace"
 
@@ -873,28 +1522,24 @@ msgstr "Uzavřené konference"
 msgid "Colors"
 msgstr ""
 
-#: src/Commands.pm:131
-msgid "Command 'quit' found : ignoring end of message.\n"
+#: mail_tt2/command_report.tt2:93
+msgid "Command not understood: ignoring end of message."
 msgstr ""
 
-#: src/sympa.pl:1485 src/sympa.pl:1516
-msgid "Command not understood: ignoring end of message.\n"
+#: mail_tt2/command_report.tt2:100
+msgid "Command syntax error."
 msgstr ""
 
-#: src/Commands.pm:1210 src/Commands.pm:1899 src/Commands.pm:813
-msgid "Command syntax error.\n"
-msgstr ""
-
-#. (error.email)
-#: web_tt2/error.tt2:36
-msgid "Config file has been modified by %1. Cannot apply your changes"
-msgstr "%1 změnil konfigurační soubor. Vaše změny nelze použít"
+#: web_tt2/notice.tt2:59
+#, fuzzy
+msgid "Concerned subscribers have been noticed about deleted topics"
+msgstr "Databáze členů byla aktualizována"
 
 #: web_tt2/set_pending_list_request.tt2:46
 msgid "Configuration file"
 msgstr "Konfigurační soubor"
 
-#: web_tt2/notice.tt2:15
+#: web_tt2/notice.tt2:17
 msgid "Configuration file has been updated"
 msgstr "Soubor s konfigurací byl změněn"
 
@@ -902,11 +1547,22 @@ msgstr "Soubor s konfigurací byl změněn"
 msgid "Confirm"
 msgstr "Potvrďte"
 
+#. (authkey)
+#: mail_tt2/send_auth.tt2:3
+#, fuzzy
+msgid "Confirm %1"
+msgstr "Potvrďte"
+
+#. (db_name)
+#: mail_tt2/listmaster_notification.tt2:34
+msgid "Connection to database %1 restored."
+msgstr ""
+
 #: web_tt2/pref.tt2:15
 msgid "Connexion expiration period"
 msgstr "Doba kdy vyprší doba připojení"
 
-#: web_tt2/list_menu.tt2:33
+#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
 msgid "Contact owners"
 msgstr "Kontaktovat správce"
 
@@ -914,27 +1570,17 @@ msgstr "Kontaktovat správce"
 msgid "Continue search"
 msgstr "Pokračovat ve hledání"
 
-#. (error.list)
-#: web_tt2/error.tt2:59
-msgid "Could not change email for list %1"
-msgstr "Nemohu změnit e-mail pro konferenci %1"
-
-#. (error.list)
-#: web_tt2/error.tt2:65
-#, fuzzy
-msgid ""
-"Could not change your subscription address for the list '%1'\n"
-"     because you are not allowed to unsubscribe."
+#. (env)
+#: mail_tt2/listmaster_notification.tt2:309
+msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
-"Could not change your subscription address for the list '%1%'\n"
-"because you are not allowed to unsubscribe.\n"
 
-#. (error.list)
-#: web_tt2/error.tt2:62
+#. (auth.listname)
+#: web_tt2/error.tt2:126
 #, fuzzy
 msgid ""
-"Could not change your subscription address for the list '%1'\n"
-"     because your new address is not allowed to subscribe."
+"Could not change your subscription address for the list '%1' \n"
+"     because your new address is not allowed to subscribe/unsubscribe :"
 msgstr ""
 "Could not change your subscription address for the list '%1%'\n"
 "because you are not allowed to unsubscribe.\n"
@@ -970,7 +1616,7 @@ msgstr "Vytvoření konference"
 msgid "Creation date"
 msgstr "Datum vytvoření"
 
-#: src/List.pm:438
+#: src/List.pm:442
 msgid "Creation of the list"
 msgstr "Vytvoření konference"
 
@@ -978,7 +1624,18 @@ msgstr "Vytvoření konference"
 msgid "Current password :"
 msgstr "Současné heslo :"
 
-#: src/List.pm:446
+#. (cssurl)
+#: web_tt2/skinsedit.tt2:57
+msgid ""
+"Currently you didn't define css_path parameter. <strong>You should edit the "
+"robot.conf configuration file </strong> (or if not using virtual robot sympa."
+"conf) and set this parameter so you could use this page to install static "
+"CSS and <strong>make sympa faster</strong>. Don't forget to set parameter "
+"css_url, it must be the URL for the directory where css are stored (current "
+"value is <a target=\"test\" href=\"%1\">%1</a>)."
+msgstr ""
+
+#: src/List.pm:450
 msgid "Custom header field"
 msgstr "Upravení hlavičky"
 
@@ -1007,31 +1664,18 @@ msgstr "Konference neobsahuje vrácené (bounce) adresy"
 msgid "Data Source"
 msgstr "Zdroj dat"
 
-#: web_tt2/error.tt2:46
-msgid "Data have changed on disk. Cannot apply your changes"
-msgstr "Data změněna na disku. Vaše změny nelze použít"
-
 #: web_tt2/edit_list_request.tt2:11
 msgid "Data sources setup"
 msgstr "Nastavení zdroje dat"
 
+#: mail_tt2/listmaster_notification.tt2:29
+msgid "DataBase connection restored"
+msgstr ""
+
 #: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:20 web_tt2/modindex.tt2:79 web_tt2/subindex.tt2:9
+#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:98 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr "Datum"
-
-#: src/List.pm:2302
-msgid ""
-"Dear owner of list %s,\n"
-"\n"
-"A user asked to be deleted from your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"or send an email to %s with the following subject :\n"
-"AUTH %s DEL %s %s\n"
-msgstr ""
 
 #: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
 #: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
@@ -1079,6 +1723,24 @@ msgstr "Smazat Sdílené"
 msgid "Delete selected email addresses"
 msgstr "Smazat označené e-mail adresy"
 
+#. (sub)
+#: mail_tt2/listmaster_notification.tt2:255
+msgid "Delete subscriber '%1' in DB failed."
+msgstr ""
+
+#. (old_email)
+#: mail_tt2/listmaster_notification.tt2:256
+msgid "Delete user in DB for old email '%s' failed."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:44
+msgid "Deleting a user from the list is impossible."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:41
+msgid "Deleting a user from the list is restricted to list owners."
+msgstr ""
+
 #: web_tt2/help_editfile.tt2:12
 #, fuzzy
 msgid ""
@@ -1118,8 +1780,9 @@ msgid "Digest"
 msgstr "Přehled"
 
 #. (digest)
-#: mail_tt2/info_report.tt2:17
-msgid "Digest       : %1"
+#: mail_tt2/info_report.tt2:23
+#, fuzzy
+msgid "Digest             : %1"
 msgstr "Přehled       : %1"
 
 #. (list.name)
@@ -1127,11 +1790,11 @@ msgstr "Přehled       : %1"
 msgid "Digest for list %1"
 msgstr "Shrnuti konference %1"
 
-#: src/List.pm:492
+#: src/List.pm:496
 msgid "Digest frequency"
 msgstr "Frekvence zasílání"
 
-#: src/List.pm:500
+#: src/List.pm:504
 msgid "Digest maximum number of messages"
 msgstr ""
 
@@ -1143,16 +1806,17 @@ msgstr ""
 msgid "Directory"
 msgstr "Adresář"
 
-#. (error.name)
-#: web_tt2/error.tt2:56
-msgid "Directory %1 and its contents are not copied"
-msgstr "Adresář %1 a jeho obsah nebyl zkopírován"
-
-#: src/List.pm:859
+#: src/List.pm:863
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
-#: web_tt2/modindex.tt2:10 web_tt2/modindex.tt2:58 web_tt2/viewmod.tt2:7
+#: web_tt2/suboptions.tt2:41
+#, fuzzy
+msgid "Disallow topic subscription"
+msgstr "Přihlášení konference"
+
+#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:74
+#: web_tt2/modindex.tt2:76 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:8
 msgid "Distribute"
 msgstr "Rozeslat"
 
@@ -1175,7 +1839,12 @@ msgstr "Opravdu chcete smazat %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Opravdu chcete smazat %1%2 ?"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:213
+#, fuzzy
+msgid "Do you really want to delete theses messages ?"
+msgstr "Opravdu chcete smazat %1%2 ?"
+
+#: src/etc/mhonarc-ressources.tt2:432
 msgid "Do you really want to delete this message ?"
 msgstr "Opravdu chcete smazat %1%2 ?"
 
@@ -1225,7 +1894,7 @@ msgstr "Opravdu chcete smazat %1%2 ?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "Opravdu se chcete přihlásit do konference %1"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:72
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:70
 msgid "Document"
 msgstr "Dokument"
 
@@ -1247,9 +1916,16 @@ msgstr "Stáhnout zip soubor"
 msgid "Dump"
 msgstr ""
 
-#: src/Commands.pm:1457 src/Commands.pm:1567
-msgid "E-mail address %s was not found in the list.\n"
+#. (u_err.email,u_err.listname)
+#: mail_tt2/command_report.tt2:113
+#, fuzzy
+msgid "E-mail address %1 has not been found in the list %2."
 msgstr "E-mailová adresa %s nebyla v konferenci nalezena.\n"
+
+#. (u_err.action)
+#: web_tt2/error.tt2:38
+msgid "ERROR (%1) "
+msgstr ""
 
 #: web_tt2/help_editlist.tt2:57
 msgid ""
@@ -1319,7 +1995,7 @@ msgid "Empty folder"
 msgstr "Prázdná složka"
 
 #. (list.name,date)
-#: mail_tt2/digest_plain.tt2:28
+#: mail_tt2/digest_plain.tt2:29
 msgid "End of %1 Digest %2"
 msgstr "Konec souhrnu konference %1 - %2"
 
@@ -1328,11 +2004,17 @@ msgstr "Konec souhrnu konference %1 - %2"
 msgid "End of digest for list %1 - %2"
 msgstr "Konec souhrnu konference %1 - %2"
 
-#: src/sympa.pl:1601
-msgid "End of your EXPIRE command on list %s"
-msgstr "Ukončení příkazu EXPIRE v konferenci %s"
+#. (i_err.key)
+#: web_tt2/error.tt2:20
+msgid "Erreur 404"
+msgstr ""
 
-#: src/Conf.pm:246
+#. (zipfile)
+#: mail_tt2/listmaster_notification.tt2:306
+msgid "Erreur 404."
+msgstr ""
+
+#: src/Conf.pm:248
 msgid "Error at line %d : %s"
 msgstr "Chyba na řádku %d : %s"
 
@@ -1347,22 +2029,28 @@ msgid ""
 msgstr ""
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:70
+#: mail_tt2/listmaster_notification.tt2:153
 msgid "Error(s) found in the file %1."
 msgstr "Nalezena chyba v souboru %1"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:49
+#: mail_tt2/listmaster_notification.tt2:121
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 
-#. (error.name)
-#: web_tt2/error.tt2:54
-msgid "Errors while unzipping file %1"
+#. (name)
+#: mail_tt2/listmaster_notification.tt2:299
+#, fuzzy
+msgid "Errors while unzipping file '%1'."
 msgstr "Chyba při dekomprimaci souboru %1"
 
-#: mail_tt2/expire_warning1.tt2:7 mail_tt2/expire_warning2.tt2:7
-#: mail_tt2/remind.tt2:6
+#: web_tt2/error.tt2:18
+#, fuzzy
+msgid "Errors while unzipping this file."
+msgstr "Chyba při dekomprimaci souboru %1"
+
+#: mail_tt2/expire_warning1.tt2:10 mail_tt2/expire_warning2.tt2:10
+#: mail_tt2/remind.tt2:9
 msgid "Everything about this list : "
 msgstr "Informace o konferenci :"
 
@@ -1374,7 +2062,7 @@ msgstr "Informace o konferenci:"
 msgid "Expert mode"
 msgstr "Práce s dokumenty, editace/přidání/smazání"
 
-#: src/List.pm:414
+#: src/List.pm:418
 msgid "Expiration of unmoderated messages"
 msgstr "Vypršení nemoderované zprávy"
 
@@ -1382,22 +2070,22 @@ msgstr "Vypršení nemoderované zprávy"
 msgid "Extend search field"
 msgstr "Rozšířit pole hledání"
 
-#: src/List.pm:2324
-msgid ""
-"FYI command %s list %s from %s %s \n"
-" (no action needed)\n"
+#. (command,list.name,who,gecos,by)
+#: mail_tt2/listowner_notification.tt2:134
+#, fuzzy
+msgid "FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 "
 msgstr ""
 "Přeposlání %s příkazu konference %s uživatel %s %s \n"
 " (pouze informace, nevyžaduje zásah)\n"
 
-#: src/List.pm:2322
-msgid ""
-"FYI command %s list %s from %s %s validated by %s\n"
-" (no action needed)\n"
+#. (type,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:34
+msgid "FYI: %1 List \"%2\" from %3 %4"
 msgstr ""
 
-#: src/List.pm:2278 src/List.pm:2320
-msgid "FYI: %s list %s from %s %s"
+#. (command,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:129
+msgid "FYI: %1 list %2 from %3 %4"
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:84
@@ -1414,68 +2102,69 @@ msgid ""
 "they are acted on."
 msgstr ""
 
-#. (error.directory)
-#: web_tt2/error.tt2:57
-msgid "Failed : %1 not empty"
-msgstr "Chyba : Adresář %1 není prázdný"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:289
+#, fuzzy
+msgid "Failed to include list admins for list '%1'"
+msgstr "Nelze vložit uživatele"
 
-#: web_tt2/error.tt2:42
-msgid "Failed : your content is empty"
-msgstr "Chyba : obsah je prázdný"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:288
+#, fuzzy
+msgid "Failed to inlude members for list '%1'"
+msgstr "Nelze vložit uživatele"
 
-#. (error.user)
-#: web_tt2/error.tt2:26
-msgid "Failed to add user %1"
-msgstr "Chyba pi pidvn uivatele %1"
-
-#: src/Commands.pm:1590 src/Commands.pm:1603
-msgid "Failed to change your subscriber options for list %s.\n"
-msgstr "V této konferenci %s nelze změnit uživatelské nastavení.\n"
+#: mail_tt2/listmaster_notification.tt2:280
+#, fuzzy
+msgid "Failed to install aliases."
+msgstr "Chyba při instalaci aliasů"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:90
+#: mail_tt2/listmaster_notification.tt2:184
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:281
+#, fuzzy
+msgid "Failed to remove aliases."
+msgstr "Nelze odstranit aliasy"
 
 #: web_tt2/serveradmin.tt2:20
 msgid "Families"
 msgstr "Skupiny"
 
-#: src/List.pm:556
+#: src/List.pm:560
 #, fuzzy
 msgid "Family name"
 msgstr "Jméno souboru"
 
-#: src/List.pm:6243
-msgid "File"
-msgstr "Soubor"
-
-#. (error.name)
-#: web_tt2/error.tt2:55
-msgid "File %1 is not copied"
-msgstr "Soubor %1 uložen"
+#. (notice.orig_file,notice.new_file)
+#: web_tt2/notice.tt2:68
+#, fuzzy
+msgid "File %1 has been renamed to %2"
+msgstr "Starý soubor %1 byl vymazán"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:30
+#: web_tt2/notice.tt2:41
 msgid "File %1 saved"
 msgstr "Soubor %1 uložen"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:18
+#: web_tt2/notice.tt2:29
 msgid "File %1 successfully uploaded!"
 msgstr "Soubor %1 byl úspěšně nahrán!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:21
+#: web_tt2/notice.tt2:32
 msgid "File %1 unziped!"
 msgstr "Soubor %1 uložen"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:27
+#: web_tt2/notice.tt2:38
 msgid "File %1 waiting for moderation"
 msgstr "Soubor %1 čeká na schválení"
 
-#: src/List.pm:577
+#: src/List.pm:581
 msgid "File inclusion"
 msgstr "Vložení souboru"
 
@@ -1491,9 +2180,17 @@ msgstr "První přihlášení ?"
 msgid "Folder name"
 msgstr "Jméno nové složky"
 
-#. (conf.host)
+#. (conf.listmaster_email,conf.host)
 #: mail_tt2/list_unknown.tt2:22
-msgid "For further assistance, please contact listmaster@%1"
+#, fuzzy
+msgid "For further assistance, please contact %1@%2"
+msgstr "Prosím kontaktujte správce@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:185 mail_tt2/message_report.tt2:17
+#: mail_tt2/message_report.tt2:74 mail_tt2/message_report.tt2:92
+#, fuzzy
+msgid "For further information, please contact %1@%2"
 msgstr "Prosím kontaktujte správce@%1"
 
 #: web_tt2/help_editlist.tt2:110
@@ -1504,16 +2201,16 @@ msgid ""
 "scenario. "
 msgstr ""
 
-#: src/List.pm:566
+#: src/List.pm:570
 msgid "Forced reply address"
 msgstr "Vynucená adresa odpovědi"
 
-#: mail_tt2/global_remind.tt2:5
+#: mail_tt2/global_remind.tt2:10
 msgid "Foreach list here is a mailto to use if you want to unsubscribe."
 msgstr "Pro každou konferenci je zde odkaz, kterým se můžete odhlásit."
 
 #. (stats.byte_sent)
-#: mail_tt2/stats_report.tt2:7
+#: mail_tt2/stats_report.tt2:13
 msgid "Forwarded mega-bytes        :      %1"
 msgstr "Přeposlaných mega-bytů        :      %1"
 
@@ -1522,7 +2219,7 @@ msgid "From"
 msgstr "Od"
 
 #. (user.email)
-#: web_tt2/compose_mail.tt2:4
+#: web_tt2/compose_mail.tt2:4 web_tt2/request_topic.tt2:25
 msgid "From: %1"
 msgstr "Od: %1"
 
@@ -1553,25 +2250,23 @@ msgstr "HELp                        * Tento help soubor"
 msgid "HTTPS authentication information"
 msgstr "Informace o HTTPS autentizaci"
 
-#: web_tt2/edit_list_request.tt2:33 web_tt2/menu.tt2:23
+#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
 #: web_tt2/suboptions.tt2:16
 msgid "Help"
 msgstr "Nápověda"
 
 #. (base_url,path_cgi)
-#: mail_tt2/sendpasswd.tt2:39
+#: mail_tt2/sendpasswd.tt2:42
 msgid "Help on Sympa: %1%2"
 msgstr "Nápověda pro systém Sympa: %1%2"
 
-#: src/Commands.pm:2364
+#: mail_tt2/which.tt2:7
 #, fuzzy
-msgid ""
-"Here are the lists you are currently subscribe to :\n"
-"\n"
+msgid "Here are the lists you are currently subscribe to :"
 msgstr "Zobrazí konference, jichž jste členy :\n"
 
 #. (list.name,list.host)
-#: mail_tt2/review.tt2:1
+#: mail_tt2/review.tt2:7
 msgid "Here are the subscribers of %1@%2 mailing list:"
 msgstr "Informace o konferenci %1@%2 :"
 
@@ -1585,7 +2280,7 @@ msgid "Home"
 msgstr "Návrat na začátek"
 
 #. (url)
-#: mail_tt2/info_report.tt2:20
+#: mail_tt2/info_report.tt2:26
 msgid "Homepage           : %1"
 msgstr "Domovská stránka           : %1"
 
@@ -1623,9 +2318,19 @@ msgstr "Odhlašuji se z konference %1"
 msgid "INDex <list>                * <list> archive file list"
 msgstr "INDex <list> \t\t\t\t* <list> seznam souborů z archívu<list>"
 
+#. (list.name)
+#: mail_tt2/info_report.tt2:2
+msgid "INFO %1"
+msgstr ""
+
 #: mail_tt2/helpfile.tt2:22
 msgid "INFO <list>                 * Information about a list"
 msgstr "Informace o konferenci"
+
+#. (i_err.action)
+#: web_tt2/error.tt2:8
+msgid "INTERNAL SERVER ERROR (%1)"
+msgstr ""
 
 #: mail_tt2/helpfile.tt2:44
 msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
@@ -1655,15 +2360,7 @@ msgstr ""
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Nemáte-li zájem o přihlášení, ignorujte prosím tuto zprávu."
 
-#: src/sympa.pl:1649
-msgid ""
-"If you want to remove these subscriber from the list, use the following "
-"commands :\n"
-msgstr ""
-"Pokud chcete odstranit tyto členy z konference, použijte "
-"následujícípříkazy:\n"
-
-#: mail_tt2/global_remind.tt2:3
+#: mail_tt2/global_remind.tt2:8
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "Pro pozdější odhlášení z konference, prosím uložte tuto zprávu."
 
@@ -1672,17 +2369,48 @@ msgid ""
 "If you've never had a password from that server or if you don't remember it :"
 msgstr "Pokud nemáte heslo, nebo si ho nepamatujete :"
 
-#: src/sympa.pl:1438
+#: mail_tt2/command_report.tt2:175
+msgid "Ignoring message because of an internal server error."
+msgstr ""
+
+#: mail_tt2/command_report.tt2:169
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only \n"
-"(or put your command in the subject).\n"
+"(or put your command in the subject)."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:296
+#, fuzzy
+msgid "Impossible to browse shared for list '%1'."
+msgstr "Prispevek do konference %1 od %2"
+
+#. (list.name)
+#: mail_tt2/message_report.tt2:15
+msgid ""
+"Impossible to distribute your message for list '%1' because of an internal "
+"server error."
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/message_report.tt2:31
+#, fuzzy
+msgid ""
+"Impossible to distribute your message for list '%1' for the following "
+"reason :"
+msgstr "Zvu Vás k přihlášení do konference :"
+
+#. (list.name,function)
+#: mail_tt2/message_report.tt2:13
+msgid ""
+"Impossible to forward your message to '%1-%2' because of an internal server "
+"error."
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:34
 msgid "Inactive lists"
 msgstr "Neaktivní konference"
 
-#: src/List.pm:1095
+#: src/List.pm:1134
 msgid "Inclusions timeout"
 msgstr ""
 
@@ -1691,20 +2419,16 @@ msgid "Information file"
 msgstr "Soubor s popisem"
 
 #. (list.name)
-#: mail_tt2/stats_report.tt2:1
+#: mail_tt2/stats_report.tt2:7
 msgid "Information regarding list %1"
 msgstr "Informace o konferenci %1"
 
 #. (list.name,list.host)
-#: mail_tt2/info_report.tt2:1
+#: mail_tt2/info_report.tt2:7
 msgid "Information regarding list %1@%2"
 msgstr "Informace o konferenci %1@%2"
 
-#: src/Commands.pm:1035
-msgid "Information regarding user %s have been updated for list %s.\n"
-msgstr "Informace o o uživateli %s byli upraveny pro konferenci %s.\n"
-
-#: web_tt2/modindex.tt2:107 web_tt2/modindex.tt2:72
+#: web_tt2/modindex.tt2:126 web_tt2/modindex.tt2:91
 msgid "Install"
 msgstr "Nainstalovat &nbsp;&nbsp;"
 
@@ -1735,7 +2459,12 @@ msgid ""
 "the multipart/digest MIME format."
 msgstr ""
 
-#: src/List.pm:571
+#: mail_tt2/listmaster_notification.tt2:282
+#, fuzzy
+msgid "Internal scenario error for 'create_list'."
+msgstr "Interní chyba v šabloně create_list"
+
+#: src/List.pm:575
 msgid "Internet domain"
 msgstr "Doména"
 
@@ -1751,7 +2480,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:578
+#: src/etc/mhonarc-ressources.tt2:592
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1765,11 +2494,11 @@ msgid ""
 msgstr ""
 "LAST <list>                 * Pro získání poslední zprávy z konference <list>"
 
-#: src/List.pm:777
+#: src/List.pm:781
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:669
+#: src/List.pm:673
 msgid "LDAP query inclusion"
 msgstr ""
 
@@ -1785,7 +2514,7 @@ msgstr "Jazyk"
 msgid "Language :"
 msgstr "Jazyk :"
 
-#: src/List.pm:884
+#: src/List.pm:888
 msgid "Language of the list"
 msgstr "Jazyk konference"
 
@@ -1804,7 +2533,7 @@ msgstr "Poslední změna :"
 msgid "Last update : %1"
 msgstr "Datum poslední změny : %1"
 
-#: src/List.pm:1120
+#: src/List.pm:1159
 msgid "Last update of config"
 msgstr "Poslední změna konfigurace"
 
@@ -1812,7 +2541,7 @@ msgstr "Poslední změna konfigurace"
 msgid "Last update:"
 msgstr "Poslední změna:"
 
-#: src/List.pm:902
+#: src/List.pm:906
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -1837,9 +2566,15 @@ msgid "Limit the number of response"
 msgstr "Omezit počet odpovědí"
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:54
+#: mail_tt2/listowner_notification.tt2:139
 msgid "List %1 / %2"
 msgstr "Konference %1 / %2"
+
+#. (u_err.listname,u_err.modes)
+#: mail_tt2/command_report.tt2:120
+#, fuzzy
+msgid "List %1 allows only these reception modes : %2"
+msgstr "Konference %s povoluje pouze následující metody příjmu zpráv : %s\n"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:4
@@ -1847,62 +2582,66 @@ msgid "List %1 archive quota exceeded"
 msgstr "Arch9v konference %1 přesáhl povolenou kvótu na disku"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:108
-#: mail_tt2/listowner_notification.tt2:35
+#: mail_tt2/listmaster_notification.tt2:200
+#: mail_tt2/listowner_notification.tt2:56
 msgid "List %1 automatic bounce management"
 msgstr "Správa vrácených adres konference %1"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:56
+#: mail_tt2/listmaster_notification.tt2:132
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
 "Nastavení konference %1 nerespektuje nastavení nadřazených pravidel %2."
 
+#. (u_err.listname)
+#: mail_tt2/command_report.tt2:117
+#, fuzzy
+msgid ""
+"List %1 does not accept the DIGEST mode. \n"
+"Your configuration regarding this command has not been updated."
+msgstr ""
+"Konference %s nepodporuje DIGEST. Díky tomu bude zachováno "
+"stávajícíuživatelské nastavení.\n"
+
+#. (glob.listname)
+#: mail_tt2/command_report.tt2:178
+#, fuzzy
+msgid "List %1 does not exist."
+msgstr "Konference '%s' neexistuje.\n"
+
+#. (u_err.listname)
+#: mail_tt2/command_report.tt2:129
+#, fuzzy
+msgid "List %1 has no subscriber."
+msgstr "Konference '%s' nemá žádné členy.\n"
+
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:19
+#: mail_tt2/listowner_notification.tt2:25
 msgid "List %1 is closed"
 msgstr "Konference %1 je uzavřena"
 
 #. (list.name,list.host,param0,param1,param2)
-#: mail_tt2/listowner_notification.tt2:32
+#: mail_tt2/listowner_notification.tt2:53
 msgid ""
 "List %1@%2 has been reinstantiated (family %3). \n"
 "Some of the customizations have been removed because they no more respect "
 "the family rules :\n"
 "\n"
 "     Parameters : %4\n"
-"     Files : %5\n"
+"\n"
 msgstr ""
 
-#: src/Commands.pm:1582
-msgid "List %s allows only these reception modes : %s\n"
-msgstr "Konference %s povoluje pouze následující metody příjmu zpráv : %s\n"
-
-#: src/Commands.pm:1574
-msgid ""
-"List %s does not accept the DIGEST mode. Your configuration regarding this "
-"command has not been updated.\n"
-msgstr ""
-"Konference %s nepodporuje DIGEST. Díky tomu bude zachováno "
-"stávajícíuživatelské nastavení.\n"
-
-#: src/Commands.pm:2200 src/Commands.pm:2244
-msgid "List %s is not currently running an expiration process.\n"
-msgstr "Konference %s nezpracovává expirační dávku.\n"
-
-#: src/Commands.pm:1097 src/Commands.pm:1221 src/Commands.pm:1294
-#: src/Commands.pm:1398 src/Commands.pm:1550 src/Commands.pm:1633
-#: src/Commands.pm:1821 src/Commands.pm:1910 src/Commands.pm:2121
-#: src/Commands.pm:2219 src/Commands.pm:2263 src/Commands.pm:263
-#: src/Commands.pm:319 src/Commands.pm:364 src/Commands.pm:410
-#: src/Commands.pm:451 src/Commands.pm:573 src/Commands.pm:718
-#: src/Commands.pm:841 src/Commands.pm:977
-msgid "List '%s' does not exist.\n"
+#. (u_err.listname)
+#: mail_tt2/command_report.tt2:103
+#, fuzzy
+msgid "List '%1' does not exist."
 msgstr "Konference '%s' neexistuje.\n"
 
-#: src/Commands.pm:504
-msgid "List '%s' has no subscriber.\n"
-msgstr "Konference '%s' nemá žádné členy.\n"
+#. (listname)
+#: mail_tt2/message_report.tt2:55
+#, fuzzy
+msgid "List '%1' does not exist.\n"
+msgstr "Konference '%s' neexistuje.\n"
 
 #: web_tt2/admin_menu.tt2:5
 msgid "List Administration Panel"
@@ -1918,12 +2657,12 @@ msgid "List \"%1\" creation request"
 msgstr "Požadavek na vytvoření konference \"%1\" "
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:25
+#: mail_tt2/listowner_notification.tt2:43
 msgid "List \"%1\" customizations have been removed"
 msgstr "Úpravy konference \"%1\" byly odstraněny"
 
 #. (list.name,rate)
-#: mail_tt2/listowner_notification.tt2:11
+#: mail_tt2/listowner_notification.tt2:14
 msgid "List \"%1\" warning : archive %2% full"
 msgstr "Varování konference \"%1\" : archív %2% je plný"
 
@@ -1935,6 +2674,16 @@ msgstr "Aliasy konference byly odstraněny."
 msgid "List classification in the directory"
 msgstr "Klasifikace konference v adresi"
 
+#: mail_tt2/authorization_reject.tt2:29
+#, fuzzy
+msgid "List creation is restricted to listmaster."
+msgstr "pouze pro hlavní správce"
+
+#: mail_tt2/authorization_reject.tt2:26
+#, fuzzy
+msgid "List creation is restricted to local domain users."
+msgstr "přístup pouze pro uživatele z místní domény"
+
 #: web_tt2/edit_list_request.tt2:6
 msgid "List definition"
 msgstr "Popis konference"
@@ -1945,13 +2694,20 @@ msgid ""
 "INFO. It can also be included in the"
 msgstr ""
 
-#: web_tt2/error.tt2:20
-msgid "List has no bouncing subscribers"
-msgstr "Konference neobsahuje vrácené adresy"
+#: web_tt2/notice.tt2:23
+#, fuzzy
+msgid "List has been closed"
+msgstr "Konference byla uzavřena"
 
-#: web_tt2/error.tt2:19
-msgid "List has no subscribers"
-msgstr "Konference nemá žádné členy"
+#: web_tt2/notice.tt2:20
+#, fuzzy
+msgid "List has been purged"
+msgstr "Konference byla obnovena"
+
+#: web_tt2/notice.tt2:26
+#, fuzzy
+msgid "List has been restored"
+msgstr "Konference byla obnovena"
 
 #: web_tt2/help_editfile.tt2:26
 msgid ""
@@ -1960,17 +2716,24 @@ msgid ""
 "description)"
 msgstr ""
 
-#: src/List.pm:782
+#: src/List.pm:786
 msgid "List inclusion"
 msgstr "Informace o konferenci"
 
-#: src/Commands.pm:421
-msgid "List is Private : You can not browse available files.\n"
+#: mail_tt2/authorization_reject.tt2:65
+#, fuzzy
+msgid "List information is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:140
+#, fuzzy
+msgid "List is Private : You can not browse available files."
 msgstr ""
 "Konference je privátní : Nemůžete procházet soubory pokud nejste členem.\n"
 
-#: src/Commands.pm:343 src/Commands.pm:383
-msgid "List is Private : You can not read the archives.\n"
+#: mail_tt2/authorization_reject.tt2:137
+#, fuzzy
+msgid "List is Private : You can not read the archives."
 msgstr "Konference je privátní : Nelze číst z archívu pokud nejste členem.\n"
 
 #: web_tt2/active_lists.tt2:20
@@ -1989,6 +2752,16 @@ msgid ""
 "message."
 msgstr ""
 
+#: mail_tt2/authorization_reject.tt2:56
+#, fuzzy
+msgid "List parameters edition is impossible."
+msgstr "Chybějící nebo nesprávný parametr konference"
+
+#: mail_tt2/authorization_reject.tt2:59
+#, fuzzy
+msgid "List parameters edition is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
 #: web_tt2/install_pending_list.tt2:17 web_tt2/set_pending_list_request.tt2:10
 msgid "List requested by"
 msgstr "Konference vyžádána"
@@ -2005,7 +2778,7 @@ msgstr "Neznáma konference"
 msgid "Listing messages to moderate"
 msgstr "Seznam zpráv k moderování"
 
-#: web_tt2/modindex.tt2:69
+#: web_tt2/modindex.tt2:88
 msgid "Listing of documents shared to moderate"
 msgstr "Seznam sdílených dokumentů k moderování"
 
@@ -2019,6 +2792,23 @@ msgstr "Výpis sdílené složky"
 
 #: web_tt2/login_menu.tt2:8
 msgid "Listmaster"
+msgstr "Správce"
+
+#. (list.name)
+#: mail_tt2/listmaster_notification.tt2:224
+#: mail_tt2/listmaster_notification.tt2:239
+#, fuzzy
+msgid "Listmaster : internal server error "
+msgstr "Interní chyba serveru"
+
+#. (list.name)
+#: mail_tt2/listmaster_notification.tt2:316
+msgid "Listmaster : system error "
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:2
+#, fuzzy
+msgid "Listmaster <[% to %]>"
 msgstr "Správce"
 
 #: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
@@ -2039,13 +2829,17 @@ msgstr "Vlastnící konferencí"
 msgid "Lists"
 msgstr "Konference"
 
+#: mail_tt2/which.tt2:20
+msgid "Lists you are editor of:"
+msgstr ""
+
+#: mail_tt2/which.tt2:13
+msgid "Lists you are owner of:"
+msgstr ""
+
 #: web_tt2/list_panel.tt2:18
 msgid "Load certificate"
 msgstr "Nahraj certifikát"
-
-#: web_tt2/error.tt2:47
-msgid "Loading admins failed"
-msgstr "Načítání tabulky administrátorů selhalo"
 
 #: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
 #: web_tt2/login_menu.tt2:63 web_tt2/loginbanner.tt2:77
@@ -2067,6 +2861,10 @@ msgstr ""
 #: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:25
 msgid "Logout"
 msgstr "Odhlášení"
+
+#: mail_tt2/listmaster_notification.tt2:38
+msgid "Loop detected"
+msgstr ""
 
 #: web_tt2/login_menu.tt2:68
 msgid "Lost password ?"
@@ -2102,7 +2900,7 @@ msgstr ""
 msgid "Mailing list for intranets"
 msgstr "Konference"
 
-#: web_tt2/home.tt2:10
+#: web_tt2/home.tt2:9
 msgid "Mailing lists categories"
 msgstr "Konference"
 
@@ -2111,25 +2909,29 @@ msgstr "Konference"
 msgid "Manage Archives"
 msgstr "Správa Archívů"
 
-#: src/List.pm:386
+#: src/List.pm:390
 msgid "Management of bouncers, 1st level"
 msgstr "Správa vrácených adres, první krok"
 
-#: src/List.pm:407
+#: src/List.pm:411
 msgid "Management of bouncers, 2nd level"
 msgstr "Správa vrácených adres, druhý krok"
 
-#: mail_tt2/listmaster_notification.tt2:125
-#: mail_tt2/listowner_notification.tt2:52
+#: mail_tt2/listmaster_notification.tt2:220
+#: mail_tt2/listowner_notification.tt2:76
 msgid "Managing bouncing subscribers:"
 msgstr "Správa vrácených adres:"
 
-#: src/List.pm:910
+#: src/List.pm:914
 msgid "Maximum message size"
 msgstr "Maximální velikost zprávy"
 
+#: src/List.pm:1187
+msgid "Maximum number of month archived"
+msgstr ""
+
 #. (max_size)
-#: mail_tt2/info_report.tt2:15
+#: mail_tt2/info_report.tt2:21
 msgid "Maximum size       : %1"
 msgstr "Maximální velikost    : %1"
 
@@ -2137,7 +2939,7 @@ msgstr "Maximální velikost    : %1"
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "maximální velikost zprávy v 8-bit bytech"
 
-#: mail_tt2/your_infected_msg.tt2:14
+#: mail_tt2/your_infected_msg.tt2:17
 #, fuzzy
 msgid ""
 "Maybe it is usefull to check your system for viruses.\n"
@@ -2157,13 +2959,68 @@ msgstr ""
 msgid "Message"
 msgstr "Chybové hlášení"
 
-#: src/Commands.pm:1684 src/Commands.pm:1793
-msgid "Message %s for list %s has been distributed.\n"
+#. (key,listname)
+#: mail_tt2/message_report.tt2:108
+#, fuzzy
+msgid "Message %1 for list '%2' has been distributed."
 msgstr "Zprava %s pro konferenci %s byla rozeslana.\n"
 
-#: src/Commands.pm:1857
-msgid "Message %s for list %s has been rejected.\n"
+#. (key,listname)
+#: mail_tt2/message_report.tt2:72
+#, fuzzy
+msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "Zprava %s pro konferenci %s byla odmitnuta.\n"
+
+#: mail_tt2/message_report.tt2:97
+#, fuzzy
+msgid "Message diffusion"
+msgstr "Počet zpráv"
+
+#: mail_tt2/message_report.tt2:80
+msgid "Message diffusion : Authorization reject"
+msgstr ""
+
+#: mail_tt2/message_report.tt2:4
+#, fuzzy
+msgid "Message diffusion : Internal server error"
+msgstr "Interní chyba serveru"
+
+#: mail_tt2/message_report.tt2:23
+msgid "Message diffusion : User error"
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:98
+msgid "Message diffusion in the list is impossible."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:107
+#, fuzzy
+msgid "Message diffusion in the list is restricted to list moderators."
+msgstr "Novinky, pouze pro moderátory"
+
+#: mail_tt2/authorization_reject.tt2:104
+#, fuzzy
+msgid ""
+"Message diffusion in the list is restricted to list subscribers and local "
+"domain users."
+msgstr "přístup pouze pro členy nebo uživatele z lokální domény"
+
+#: mail_tt2/authorization_reject.tt2:116
+#, fuzzy
+msgid ""
+"Message diffusion in the list is restricted to list subscribers check S/MIME "
+"signature."
+msgstr "přístup pouze pro členy, kontrola SMiMe signatury"
+
+#: mail_tt2/authorization_reject.tt2:113
+#, fuzzy
+msgid "Message diffusion in the list is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:101
+#, fuzzy
+msgid "Message diffusion in the list is restricted to local domain users."
+msgstr "přístup pouze pro uživatele z místní domény"
 
 #: web_tt2/help_editfile.tt2:35
 msgid ""
@@ -2177,8 +3034,27 @@ msgid ""
 "attachment at the beginning of each message distributed to the list."
 msgstr ""
 
+#: src/List.pm:949
+#, fuzzy
+msgid "Message tagging"
+msgstr "Počet zpráv"
+
+#: src/List.pm:925
+msgid "Message topic keywords"
+msgstr ""
+
+#: src/List.pm:920
+#, fuzzy
+msgid "Message topic name"
+msgstr "Počet zpráv k moderování :"
+
+#: src/List.pm:931
+#, fuzzy
+msgid "Message topic title"
+msgstr "Počet zpráv k moderování :"
+
 #. (conf.host,conf.listmaster_email)
-#: mail_tt2/listowner_notification.tt2:16
+#: mail_tt2/listowner_notification.tt2:22
 msgid "Messages are still archived but you should contact %2@%1"
 msgstr ""
 
@@ -2192,7 +3068,7 @@ msgstr ""
 "přes webové rozhraní (archív)\n"
 
 #. (list.name,to,subscriber.first_bounce)
-#: mail_tt2/subscriber_notification.tt2:8
+#: mail_tt2/user_notification.tt2:11
 msgid ""
 "Messages from list %1 that were sent to your address %2\n"
 "generated non-delivery reports since %3. \n"
@@ -2203,15 +3079,6 @@ msgstr ""
 #: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:12
 msgid "Miscellaneous"
 msgstr "Další nastavení"
-
-#. (error.argument)
-#: web_tt2/error.tt2:33
-msgid "Missing argument %1"
-msgstr "Chybějící nebo nesprávně zadaný parametr : %1"
-
-#: web_tt2/error.tt2:22
-msgid "Missing filter"
-msgstr "Chybí filtr"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
 #: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:62
@@ -2242,10 +3109,6 @@ msgstr "moderováno, pouze členové mají přístup"
 msgid "Moderated, with editor confirmation"
 msgstr "moderováno, s potvrzením editora"
 
-#: src/List.pm:2424
-msgid "Moderating your message"
-msgstr "Vase zprava je zpracovavana"
-
 #: web_tt2/d_read.tt2:80
 msgid "Moderation"
 msgstr "Moderátoři"
@@ -2256,21 +3119,33 @@ msgid "Moderation spool for list %1"
 msgstr "Moderování spoolu konference %1"
 
 #. (e.gecos)
-#: mail_tt2/info_report.tt2:8
+#: mail_tt2/info_report.tt2:14
 msgid "Moderator          : %1"
 msgstr "Moderátor             : %1"
 
-#: src/List.pm:526 web_tt2/list_panel.tt2:14
+#: src/List.pm:530 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "Moderátoři"
 
-#: src/List.pm:547
+#. (list.name,type)
+#: mail_tt2/listeditor_notification.tt2:27
+#, fuzzy
+msgid "Moderators List %1 / %2"
+msgstr "Moderatorum konference %1"
+
+#: src/List.pm:551
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:2
 msgid "Moderators of list %1"
+msgstr "Moderatorum konference %1"
+
+#. (list.name,to)
+#: mail_tt2/listeditor_notification.tt2:2
+#, fuzzy
+msgid "Moderators of list %1 <%2>"
 msgstr "Moderatorum konference %1"
 
 #: web_tt2/loginbanner.tt2:13
@@ -2284,6 +3159,10 @@ msgstr ""
 "Většina funkcí tohoto konferenčního serveru vyžaduje registraci. Některé "
 "konference jsou skryté neregistrovaným uživatelům.<br />\n"
 "Z důvodu maximálního využití služeb serveru, je proto nutné se přihlásit.\n"
+
+#: mail_tt2/authorization_reject.tt2:110
+msgid "Multipart messages diffusion is impossible."
+msgstr ""
 
 #: web_tt2/review.tt2:38
 msgid "Multiple add"
@@ -2353,55 +3232,49 @@ msgstr "Novinky, povoleno pouze pro moderátory po potvrzení"
 msgid "Next page"
 msgstr "Další strana"
 
-#: web_tt2/help_editlist.tt2:175
+#: web_tt2/help_editlist.tt2:181
 msgid "No Comment"
 msgstr "Bez Komentáře"
+
+#: mail_tt2/listmaster_notification.tt2:20
+msgid "No DataBase"
+msgstr ""
+
+#. (dir)
+#: mail_tt2/listmaster_notification.tt2:271
+msgid "No HTML version of the message available in '%1'."
+msgstr ""
 
 #: web_tt2/serveradmin.tt2:12
 msgid "No Virtual Robot defined on this server"
 msgstr "Nejsou definováni Virtuální sekce na tomto serveru"
 
-#. (error.email)
-#: web_tt2/error.tt2:34
-msgid "No bounces for user  %1"
-msgstr "Pro uživatele %1 nejsou vráceny žádné zprávy"
-
-#: src/sympa.pl:1507
-msgid "No command found in message"
+#: mail_tt2/command_report.tt2:172
+#, fuzzy
+msgid "No command found in message."
 msgstr "Žádný příkaz nebyl ve zprávě nalezen"
-
-#: web_tt2/error.tt2:41
-msgid "No description specified"
-msgstr "Chybí popis"
 
 #: web_tt2/lists.tt2:65 web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
 msgstr "Žádná konference není k dispozici."
 
 #. (notice.list)
-#: web_tt2/notice.tt2:39
+#: web_tt2/notice.tt2:50
 msgid "No message and no document to moderate for list %1"
 msgstr "V konferenci %1 nejsou žádné zprávy ke schválení"
 
-#: web_tt2/error.tt2:43
-msgid "No name specified"
-msgstr "Nebylo specifikováno žádné jméno"
+#. (msgid)
+#: mail_tt2/listmaster_notification.tt2:278
+#, fuzzy
+msgid "No message found in archives matching Message-ID '%1'."
+msgstr "V archívu nebyla nalezena žádná zpráva se stejným Message-ID"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:42
+#: mail_tt2/listmaster_notification.tt2:110
 msgid "No owner is defined for list %1."
 msgstr "Konference %1 není definován vlastník."
 
-#. (error.page)
-#: web_tt2/error.tt2:21
-msgid "No page %1"
-msgstr "Strana %1 neexistuje"
-
-#: web_tt2/error.tt2:13
-msgid "No password for user"
-msgstr "Nebylo nalezeno heslo pro uživatele"
-
-#: web_tt2/modindex.tt2:47
+#: web_tt2/modindex.tt2:62
 msgid "No subject"
 msgstr "Bez předmětu"
 
@@ -2418,11 +3291,6 @@ msgstr "Nebylo nalezeno žádné přihlášení adresy <strong>%1</strong>!"
 msgid "Nomail"
 msgstr "Bez e-mailu"
 
-#. (error.email)
-#: web_tt2/error.tt2:29
-msgid "Not subscribed: %1"
-msgstr "Není členem konference %1"
-
 #: web_tt2/help_editlist.tt2:132
 msgid ""
 "Note: it is inadvisable to change this parameter, and particularly "
@@ -2432,34 +3300,38 @@ msgid ""
 "least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
 
-#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:12 web_tt2/modindex.tt2:60
-#: web_tt2/modindex.tt2:74 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:128 web_tt2/modindex.tt2:16 web_tt2/modindex.tt2:79
+#: web_tt2/modindex.tt2:93 web_tt2/viewmod.tt2:13
 msgid "Notified reject"
 msgstr "Odmítnutí s upozorněním"
 
 #. (stats.msg_sent)
-#: mail_tt2/stats_report.tt2:4
+#: mail_tt2/stats_report.tt2:10
 msgid "Number of forwarded messages:      %1"
 msgstr "Počet předaných zpráv      :      %1"
 
 #. (mod_spool_size)
-#: mail_tt2/moderate.tt2:26
+#: mail_tt2/moderate.tt2:32
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr "Pocet zprav cekajicich na schvaleni v teto konferenci: %1"
 
 #. (stats.msg_rcv)
-#: mail_tt2/stats_report.tt2:3
+#: mail_tt2/stats_report.tt2:9
 msgid "Number of received messages :      %1"
 msgstr "Počet přijatých zpráv      :      %1"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:24
+#: web_tt2/notice.tt2:35
 msgid "Old file %1 has been erased"
 msgstr "Starý soubor %1 byl vymazán"
 
 #: web_tt2/arcsearch.tt2:42
 msgid "Oldest messages first"
 msgstr "Začít od nejstarších zpráv"
+
+#: src/List.pm:942
+msgid "On which part of message check for message topic keywords"
+msgstr ""
 
 #: web_tt2/help.tt2:32
 msgid ""
@@ -2482,13 +3354,21 @@ msgstr ""
 "během několika minut.\n"
 
 #. (conf.email,conf.host)
-#: mail_tt2/moderate.tt2:16 mail_tt2/moderate.tt2:22
+#: mail_tt2/moderate.tt2:22 mail_tt2/moderate.tt2:27
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr "Nebo zaslete zpravu na %1@%2 s timto predmetem :"
 
-#: web_tt2/create_list_request.tt2:68
+#: web_tt2/create_list_request.tt2:68 web_tt2/javascript.tt2:93
 msgid "Other"
 msgstr "Další"
+
+#: web_tt2/suboptions.tt2:34
+msgid "Other (messages not tagged) "
+msgstr ""
+
+#: web_tt2/suboptions.tt2:32
+msgid "Other (no tagged mails) "
+msgstr ""
 
 #: web_tt2/pref.tt2:73
 msgid "Other email address :"
@@ -2498,12 +3378,12 @@ msgstr "Další e-mailová adresa:"
 msgid "Other files/pages description :"
 msgstr "Další popis souborů/stránek"
 
-#: web_tt2/home.tt2:19
+#: web_tt2/home.tt2:18
 msgid "Others"
 msgstr "Ostatní"
 
 #. (virus_name,recipient,from)
-#: mail_tt2/your_infected_msg.tt2:8
+#: mail_tt2/your_infected_msg.tt2:11
 #, fuzzy
 msgid ""
 "Our viruschecker found a virus named %1\n"
@@ -2514,12 +3394,12 @@ msgstr ""
 "ve zprávě adresované %2 a zdá se že pochází\n"
 "od Vás (From: %3). Pokud tomu tak není omlouváme se.\n"
 
-#: src/List.pm:941 web_tt2/login_menu.tt2:10
+#: src/List.pm:981 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Vlastník"
 
 #. (o.gecos)
-#: mail_tt2/info_report.tt2:5
+#: mail_tt2/info_report.tt2:11
 msgid "Owner              : %1"
 msgstr "Vlastník              : %1"
 
@@ -2546,17 +3426,17 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:967
+#: src/List.pm:1006
 msgid "Owners defined in an external datasource"
 msgstr ""
-
-#: src/List.pm:2274 src/List.pm:2289 src/List.pm:2301
-msgid "Owners of list %s"
-msgstr "Vlastnici konference %s"
 
 #: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "Velikost strany"
+
+#: mail_tt2/listmaster_notification.tt2:308
+msgid "Parameter cookie undefined, authentication failure."
+msgstr ""
 
 #. (key_word)
 #: web_tt2/arcsearch.tt2:12
@@ -2572,7 +3452,7 @@ msgstr "Heslo :"
 msgid "Password for %1"
 msgstr "Heslo pro %1"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:81
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:100
 msgid "Path"
 msgstr "Cesta"
 
@@ -2588,7 +3468,7 @@ msgstr "Nevyřešené přihlášení"
 msgid "Period :"
 msgstr "Období"
 
-#: src/List.pm:551
+#: src/List.pm:555
 msgid "Periodical subscription expiration task"
 msgstr "Periodická expirace přihlášení"
 
@@ -2600,10 +3480,6 @@ msgstr "Prosím povolte JavaScript na svém prohlížeči"
 msgid "Please contact the listmaster."
 msgstr "Prosím kontaktujet správce"
 
-#: web_tt2/error.tt2:8
-msgid "Please provide your email address"
-msgstr "Prosím poskytněte Vaši emailovou adresu"
-
 #. (list)
 #: web_tt2/sigrequest.tt2:46
 msgid ""
@@ -2611,13 +3487,16 @@ msgid ""
 "1."
 msgstr ""
 
-#: web_tt2/error.tt2:11
-msgid "Please provide your password"
-msgstr "Prosím poskytněte Vaše heslo"
+#: web_tt2/modindex.tt2:22
+msgid ""
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
+msgstr ""
 
-#: web_tt2/error.tt2:68
-msgid "Please select archive months"
-msgstr "Prosím zvolte datum archivace"
+#: web_tt2/request_topic.tt2:6 web_tt2/viewmod.tt2:18
+msgid ""
+"Please select one or more topic(s) that corresponds to your message below :"
+msgstr ""
 
 #. (conf.email,conf.host)
 #: mail_tt2/x509-user-cert-missing.tt2:13
@@ -2626,7 +3505,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:49 web_tt2/list_menu.tt2:51
+#: web_tt2/list_menu.tt2:52 web_tt2/list_menu.tt2:54
 msgid "Post"
 msgstr "Příspěvek"
 
@@ -2651,7 +3530,7 @@ msgstr "Nastavení"
 msgid "Previous page"
 msgstr "Pedchoz strana"
 
-#: src/List.pm:973
+#: src/List.pm:1012
 msgid "Priority"
 msgstr "Priorita"
 
@@ -2702,19 +3581,11 @@ msgstr "Nastavení adresáře %1"
 msgid "Properties of the file %1"
 msgstr "Nastavení souboru %1"
 
-#: web_tt2/error.tt2:15
-msgid "Provided password is incomplete"
-msgstr "Poskytnuté heslo je nekompletní"
-
-#: web_tt2/error.tt2:14
-msgid "Provided password is incorrect"
-msgstr "Poskytnuté údaje je nesprávné"
-
 #: src/etc/create_list_templates/discussion_list/comment.tt2:1
 msgid "Public discussion mailing list"
 msgstr "Veřejná diskuzní konference"
 
-#: mail_tt2/lists.tt2:2 src/Commands.pm:245 web_tt2/help.tt2:18
+#: mail_tt2/lists.tt2:2 web_tt2/help.tt2:18
 msgid "Public lists"
 msgstr "Veřejná konference"
 
@@ -2749,11 +3620,11 @@ msgstr ""
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "REView <list>               * Zobrazí seznam členů konference <list>"
 
-#: src/List.pm:1024
+#: src/List.pm:1063
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 Hlavička zprávy"
 
-#: web_tt2/list_menu.tt2:55
+#: web_tt2/list_menu.tt2:58
 msgid "RSS"
 msgstr "RSS"
 
@@ -2781,7 +3652,7 @@ msgstr "\"RSS Poslední zprávy \""
 msgid "RSS channel"
 msgstr "RSS kanál"
 
-#: web_tt2/home.tt2:49
+#: web_tt2/home.tt2:48
 msgid "RSS news"
 msgstr "RSS novinky"
 
@@ -2806,11 +3677,12 @@ msgid "Rebuild archive"
 msgstr "Znovu sestavit archív"
 
 #. (stats.byte_rcv)
-#: mail_tt2/stats_report.tt2:6
-msgid "Received mega-bytes             :      %1"
+#: mail_tt2/stats_report.tt2:12
+#, fuzzy
+msgid "Received mega-bytes         :      %1"
 msgstr "Odesláno"
 
-#: web_tt2/review.tt2:113
+#: web_tt2/review.tt2:114
 msgid "Reception"
 msgstr "Způsob příjmu"
 
@@ -2823,17 +3695,17 @@ msgid "Reception mode :"
 msgstr "Způsob příjmu :"
 
 #. (available_reception_mode)
-#: mail_tt2/info_report.tt2:19
+#: mail_tt2/info_report.tt2:25
 msgid "Reception modes    : %1"
 msgstr "Způsob příjmu      : %1"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:28
+#: mail_tt2/listmaster_notification.tt2:80
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:59
-#: web_tt2/modindex.tt2:73 web_tt2/viewmod.tt2:8
+#: web_tt2/modindex.tt2:127 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:78
+#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:12
 msgid "Reject"
 msgstr "Odmítnout"
 
@@ -2857,10 +3729,6 @@ msgid ""
 "unsubscribe themselves."
 msgstr ""
 
-#: src/Commands.pm:1309
-msgid "Reminder of your %s subscription"
-msgstr "Pripomenuti Vaseho clenstvi v konferenci %s"
-
 #. (list.name)
 #: mail_tt2/remind.tt2:2
 msgid "Reminder of your subscription to %1"
@@ -2871,7 +3739,7 @@ msgstr "Pripomenuti Vaseho clenstvi v konferenci %1"
 msgid "Remote IP address"
 msgstr "Vzdálená adresa"
 
-#: src/List.pm:604
+#: src/List.pm:608
 msgid "Remote file inclusion"
 msgstr "List info"
 
@@ -2912,29 +3780,25 @@ msgstr "Přejmenuj soubor %1"
 msgid "Rename this list"
 msgstr "Přejmenuj konferenci"
 
-#: src/Commands.pm:2035
-msgid "Renewal of your subscription to list '%s'"
-msgstr "Obnoveni Vaseho clenstvi v konferenci %1"
-
 #. (visible_path)
 #: web_tt2/d_editfile.tt2:32
 msgid "Replace the file %1 with your file"
 msgstr "Nahradit soubor %1 Vaším souborem"
 
-#: src/etc/mhonarc-ressources.tt2:410
+#: src/etc/mhonarc-ressources.tt2:424
 msgid "Reply"
 msgstr "Odpovědět"
 
-#: src/List.pm:1012 src/List.pm:992
+#: src/List.pm:1031 src/List.pm:1051
 msgid "Reply address"
 msgstr "Adresa odpovědi"
 
 #. (reply_to)
-#: mail_tt2/info_report.tt2:14
+#: mail_tt2/info_report.tt2:20
 msgid "Reply to           : %1"
 msgstr "Odpověz na         : %1"
 
-#: src/etc/mhonarc-ressources.tt2:406
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "Reply to sender"
 msgstr "Odpovědět odesilateli"
 
@@ -2946,8 +3810,9 @@ msgstr "Požadavek od"
 msgid "Required aliases"
 msgstr "Vyžadované aliasy"
 
-#: src/Commands.pm:333 src/Commands.pm:338 src/Commands.pm:378
-msgid "Required file does not exist.\n"
+#: mail_tt2/command_report.tt2:126
+#, fuzzy
+msgid "Required file does not exist."
 msgstr "Požadovaný soubor neexistuje.\n"
 
 #: web_tt2/editsubscriber.tt2:55
@@ -2971,11 +3836,16 @@ msgstr "Obnovit sdílený adresář"
 msgid "Result"
 msgstr "Výsledek"
 
+#: mail_tt2/which.tt2:2
+#, fuzzy
+msgid "Result of your command which"
+msgstr "Vysledek prikazu"
+
 #: web_tt2/arcsearch.tt2:3
 msgid "Result of your search in the archive"
 msgstr "Výsledek Vašeho hledání v archívu"
 
-#: src/sympa.pl:1060
+#: mail_tt2/command_report.tt2:3
 msgid "Results of your commands"
 msgstr "Vysledek prikazu"
 
@@ -2984,25 +3854,22 @@ msgstr "Vysledek prikazu"
 msgid "Return to archive %1"
 msgstr "Návrat do archívu %1"
 
-#: src/List.pm:982
+#: src/List.pm:1021
 msgid "Return-path of the REMIND command"
 msgstr ""
-
-#: web_tt2/list_menu.tt2:68
-msgid "Review"
-msgstr "Uživatelé konference"
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
 msgstr ""
 
 #. (review)
-#: mail_tt2/info_report.tt2:13
+#: mail_tt2/info_report.tt2:19
 msgid "Review subscribers : %1"
 msgstr "Seznam len          : %1"
 
-#: src/tools.pl:131
-msgid "Routing error ?"
+#. (role,right)
+#: mail_tt2/authorization_reject.tt2:170
+msgid "Right on this action is '%2' for a '%1'."
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:37
@@ -3044,11 +3911,11 @@ msgid ""
 "a plain text email with all attachments"
 msgstr ""
 
-#: src/List.pm:855
+#: src/List.pm:859
 msgid "SQL query"
 msgstr ""
 
-#: src/List.pm:870
+#: src/List.pm:874
 msgid "SQL query inclusion"
 msgstr ""
 
@@ -3068,6 +3935,11 @@ msgstr ""
 msgid ""
 "SYMPA is an electronic mailing-list manager that automates list management "
 "functions such as subscriptions, moderation, and archive management."
+msgstr ""
+
+#. (s_err.action)
+#: web_tt2/error.tt2:29
+msgid "SYSTEM ERROR (%1)"
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:124
@@ -3108,12 +3980,18 @@ msgstr "Kde hledat"
 msgid "Search field :"
 msgstr "Hledání :"
 
-#: web_tt2/home.tt2:43
+#: web_tt2/home.tt2:42
 msgid "Search lists"
 msgstr "Hledat konference"
 
-#: src/List.pm:420
+#: src/List.pm:424
 msgid "Secret string for generating unique keys"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:235
+#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:327
+msgid "See logs for more details."
 msgstr ""
 
 #: web_tt2/lists.tt2:30
@@ -3143,7 +4021,7 @@ msgid "Sender"
 msgstr "Odesilatel"
 
 #. (send)
-#: mail_tt2/info_report.tt2:12
+#: mail_tt2/info_report.tt2:18
 msgid "Sending messages   : %1"
 msgstr "Zaslání zpráv        : %1"
 
@@ -3155,7 +4033,7 @@ msgstr "Odeslání/Příjem"
 msgid "Sending/reception setup"
 msgstr "Konfigurace Odeslání/Příjmu"
 
-#: src/List.pm:1035
+#: src/List.pm:1074
 msgid "Serial number of the config"
 msgstr "Seriové číslo konfigurace"
 
@@ -3188,7 +4066,47 @@ msgstr "Nastavení šablon serveru"
 msgid "Shared document directory size"
 msgstr ""
 
-#: src/List.pm:1055 web_tt2/list_menu.tt2:60 web_tt2/list_menu.tt2:62
+#: mail_tt2/authorization_reject.tt2:35
+#, fuzzy
+msgid "Shared document edition is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:38
+#, fuzzy
+msgid ""
+"Shared document edition is restricted to list subscribers authenticated with "
+"user certificat."
+msgstr "přístup pouze pro členy na základě osobního certifikátu"
+
+#: mail_tt2/authorization_reject.tt2:32
+#, fuzzy
+msgid "Shared document edition is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:47
+#, fuzzy
+msgid "Shared document reading is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:53
+#, fuzzy
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"user certificat."
+msgstr "přístup pouze pro členy na základě osobního certifikátu"
+
+#: mail_tt2/authorization_reject.tt2:50
+#, fuzzy
+msgid "Shared document reading is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#. (list.name)
+#: mail_tt2/listeditor_notification.tt2:4
+#, fuzzy
+msgid "Shared document to be approved for %1"
+msgstr "Prispevek do konference %1 od %2"
+
+#: src/List.pm:1094 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Sdílené dokumenty"
 
@@ -3202,7 +4120,7 @@ msgid ""
 "display multipart/digest format messages well."
 msgstr ""
 
-#: web_tt2/modindex.tt2:23 web_tt2/modindex.tt2:82
+#: web_tt2/modindex.tt2:101 web_tt2/modindex.tt2:38
 msgid "Size"
 msgstr "Velikost"
 
@@ -3218,62 +4136,12 @@ msgstr "Úprava designu správcovské sekce"
 msgid "Skins, CSS and colors"
 msgstr "Téma, CSS a barvy"
 
-#: src/List.pm:8813
+#. (list.name)
+#: mail_tt2/user_notification.tt2:23
 msgid ""
-"Someone (hopefully you) asked for your e-mail address\n"
-"to be added to list '%s'.\n"
-"If you want this action to be taken, please\n"
-"\n"
-"- reply to this mail\n"
-"OR\n"
-"- send a message to %s with subject\n"
-" %s\n"
-"OR\n"
-"- hit the following mailto %s\n"
-"\n"
-"If you do not want this action to be taken, you can safely ignore\n"
-"this message."
-msgstr ""
-
-#: src/List.pm:8806
-msgid ""
-"Someone (hopefully you) asked for your e-mail address\n"
-"to be removed from list '%s'.\n"
-"If you want this action to be taken, please \n"
-"\n"
-"- reply to this mail\n"
-"OR\n"
-"- send a message to '%s' with subject\n"
-" %s\n"
-"OR\n"
-"- hit the following mailto %s\n"
-"\n"
-"If you do not want this action to be taken, you can safely ignore\n"
-"this message"
-msgstr ""
-
-#: src/List.pm:8818 src/List.pm:8823
-msgid ""
-"Someone (hopefully you) requested a user of list %s to be\n"
-"added or removed.\n"
-"\n"
-"If you want this action to be taken, please send an e-mail to\n"
-"%s containing \n"
-"\n"
-"   %s\n"
-"\n"
-"If you do not want this action to be taken, simply ignore this message.\n"
-msgstr ""
-
-#: src/Commands.pm:2059
-msgid ""
-"Someone (hopefully you) requested that the subscribers to the list\n"
-"'%s' for more than %d days have to confirm their subscription.\n"
-"If you do not want this action to be taken, simply ignore this message.\n"
-"To confirm this action, please send an e-mail to '%s', with the following "
-"command:\n"
-"\n"
-"AUTH %s EXPIRE %s %d %d\n"
+"Some of the topics you are subscribed to in the list '%1' have been "
+"deleted.\n"
+"Deleted topic(s) is(are) :"
 msgstr ""
 
 #: web_tt2/review.tt2:118 web_tt2/review.tt2:121
@@ -3288,7 +4156,7 @@ msgstr "Stav : %1"
 msgid "Status :"
 msgstr "Stav : %1"
 
-#: src/List.pm:1071
+#: src/List.pm:1110
 msgid "Status of the list"
 msgstr "Stav konference"
 
@@ -3299,12 +4167,12 @@ msgstr "Setřídit podle data"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:57
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:22 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:37 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Předmět"
 
-#. (subject)
-#: mail_tt2/info_report.tt2:3
+#. (list.subject)
+#: mail_tt2/info_report.tt2:9
 msgid "Subject            : %1"
 msgstr "Předmět               : %1"
 
@@ -3312,11 +4180,17 @@ msgstr "Předmět               : %1"
 msgid "Subject :"
 msgstr "Předmět :"
 
-#: src/List.pm:1078
+#. (subject)
+#: web_tt2/request_topic.tt2:28
+#, fuzzy
+msgid "Subject : %1"
+msgstr "Předmět :"
+
+#: src/List.pm:1117
 msgid "Subject of the list"
 msgstr "Předmět konference"
 
-#: src/List.pm:451
+#: src/List.pm:455
 msgid "Subject tagging"
 msgstr "Předmět :"
 
@@ -3346,6 +4220,12 @@ msgstr "Členem od %1"
 msgid "Subscriber"
 msgstr "Člen"
 
+#. (email,listname)
+#: mail_tt2/listmaster_notification.tt2:257
+#, fuzzy
+msgid "Subscriber '%1' is not found in list %2."
+msgstr "Člen %s nenalezen"
+
 #: web_tt2/list_menu.tt2:11
 msgid "Subscriber Options"
 msgstr "Nastavení člena"
@@ -3355,6 +4235,7 @@ msgid "Subscriber information"
 msgstr "Informace o členu"
 
 #: web_tt2/admin_menu.tt2:11 web_tt2/admin_menu.tt2:17
+#: web_tt2/list_menu.tt2:71
 msgid "Subscribers"
 msgstr "Uživatelé"
 
@@ -3369,27 +4250,39 @@ msgid ""
 msgstr ""
 
 #. (subscribe)
-#: mail_tt2/info_report.tt2:10
+#: mail_tt2/info_report.tt2:16
 msgid "Subscription       : %1"
 msgstr "Přihlášení            : %1"
 
-#: src/List.pm:465
+#: src/List.pm:469
 msgid "Subscription profile"
 msgstr "Přihlašovací profil"
 
-#: src/Commands.pm:1316
-msgid "Subscription reminder sent to each of %d %s subscribers\n"
-msgstr ""
-
-#: src/List.pm:2288
-msgid "Subscription request to list %s"
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:79
+#, fuzzy
+msgid "Subscription request to list %1"
 msgstr "Požadavek na přihlášení do konference %s"
 
-#: src/Commands.pm:1327
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1610
 msgid "Subscription summary"
 msgstr "Souhrn přihlášení"
 
-#: web_tt2/list_admin_menu.tt2:78
+#: mail_tt2/authorization_reject.tt2:119
+#, fuzzy
+msgid "Subscription to this list is impossible."
+msgstr "Požadavek na přihlášení do konference %s"
+
+#: mail_tt2/authorization_reject.tt2:122
+#, fuzzy
+msgid "Subscription to this list is restricted to local domain users."
+msgstr "přístup pouze pro uživatele z místní domény"
+
+#: mail_tt2/authorization_reject.tt2:125
+msgid "Subscription to this list requires S/MIME signature."
+msgstr ""
+
+#: web_tt2/list_admin_menu.tt2:75
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Nastavení člena"
@@ -3398,16 +4291,18 @@ msgstr "Nastavení člena"
 msgid "Summary"
 msgstr "Souhrn"
 
-#: src/List.pm:3239
-msgid "Summary of list %s"
+#. (list.name)
+#: mail_tt2/summary.tt2:2
+#, fuzzy
+msgid "Summary of list %1"
 msgstr "Souhrn konference %s"
 
 #. (user.email)
-#: mail_tt2/global_remind.tt2:2
+#: mail_tt2/global_remind.tt2:7
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Souhrn Vašeho členství v konferencích (při použití adresy %1)"
 
-#: src/etc/mhonarc-ressources.tt2:560
+#: src/etc/mhonarc-ressources.tt2:574
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3440,7 +4335,7 @@ msgid ""
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:63
+#: mail_tt2/listmaster_notification.tt2:142
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -3450,33 +4345,33 @@ msgstr ""
 msgid "Sympa could not deliver the requested page for the following reason : "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:97
+#: mail_tt2/listmaster_notification.tt2:101
 msgid ""
 "Sympa could not include admins from external data sources ; the database or "
 "LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:36
+#: mail_tt2/listmaster_notification.tt2:91
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:83
+#: mail_tt2/listmaster_notification.tt2:174
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:76
+#: mail_tt2/listmaster_notification.tt2:163
 msgid "Sympa could not load the list config file."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:103
+#: mail_tt2/listmaster_notification.tt2:194
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: web_tt2/javascript.tt2:108
+#: web_tt2/javascript.tt2:147
 msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
@@ -3497,14 +4392,25 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#. (error.params)
-#: web_tt2/error.tt2:37
-msgid "Syntax errors with the following parameters : %1"
-msgstr "Syntaktická chyba s následujícími parametry : %1"
-
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3100
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2721
 msgid "Table of contents:"
 msgstr "Obsah:"
+
+#: src/etc/mhonarc-ressources.tt2:213
+#, fuzzy
+msgid "Tag messages for deletion"
+msgstr "Smazat zprávu"
+
+#: web_tt2/request_topic.tt2:14 web_tt2/request_topic.tt2:16
+#, fuzzy
+msgid "Tag this mail"
+msgstr "Poslat tuto zprávu"
+
+#. (list.name)
+#: mail_tt2/send_auth.tt2:2
+#, fuzzy
+msgid "Tag your message for list %1"
+msgstr "Šifrovaná zpráva pro konferenci %1@%2"
 
 #: web_tt2/edit_template.tt2:3
 msgid "Template edition system"
@@ -3524,7 +4430,7 @@ msgstr "Šablony"
 msgid "Templates"
 msgstr "Šablony"
 
-#: src/List.pm:331
+#: src/List.pm:335
 msgid "Text archives"
 msgstr "Nastavení archívu"
 
@@ -3535,7 +4441,7 @@ msgid ""
 msgstr ""
 
 #. (file_name)
-#: mail_tt2/urlized_part.tt2:5
+#: mail_tt2/urlized_part.tt2:2
 msgid ""
 "The %1 file that was initially attached to this message has been stored of "
 "the mailing lists server:"
@@ -3561,6 +4467,61 @@ msgstr "%1 sdílených dokumentů"
 msgid "The %1 most active lists"
 msgstr "Vytvoen konference"
 
+#: mail_tt2/authorization_reject.tt2:62
+#, fuzzy
+msgid "The 'global remind' feature is restricted to listmaster."
+msgstr "pouze pro hlavní správce"
+
+#: mail_tt2/authorization_reject.tt2:71
+#, fuzzy
+msgid "The 'invite' feature is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:74
+#, fuzzy
+msgid "The 'invite' feature is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:68
+msgid "The 'invite' feature is unavailable."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:80
+#, fuzzy
+msgid "The 'remind' feature is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:77
+#, fuzzy
+msgid "The 'remind' feature is restricted to listmaster."
+msgstr "pouze pro hlavní správce"
+
+#: mail_tt2/authorization_reject.tt2:92
+#, fuzzy
+msgid "The 'review' feature is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:86
+#, fuzzy
+msgid ""
+"The 'review' feature is restricted to list subscribers and local domain "
+"users."
+msgstr "přístup pouze pro členy nebo uživatele z lokální domény"
+
+#: mail_tt2/authorization_reject.tt2:95
+#, fuzzy
+msgid "The 'review' feature is restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:89
+#, fuzzy
+msgid "The 'review' feature is restricted to listmaster."
+msgstr "pouze pro hlavní správce"
+
+#: mail_tt2/authorization_reject.tt2:83
+msgid "The 'review' feature is unavailable."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:37
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
@@ -3575,34 +4536,28 @@ msgid ""
 "\tLevel 2 is the highest level of bouncing users"
 msgstr ""
 
-#: src/Commands.pm:1923 src/Commands.pm:2136 src/Commands.pm:2232
-msgid ""
-"The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners "
-"of the list.\n"
-"You are not one of the owners for list %s.\n"
-msgstr ""
-
-#: src/Commands.pm:2275
-msgid "The MODINDEX command is restricted to moderators.\n"
+#: mail_tt2/authorization_reject.tt2:143
+#, fuzzy
+msgid "The MODINDEX command is restricted to moderators."
 msgstr "Příkaz MODINDEX je pouze pro moderátory.\n"
 
-#: src/Commands.pm:1145
-msgid "The User '%s' is already subscriber of list '%s'\n"
+#. (u_err.email,u_err.listname)
+#: mail_tt2/command_report.tt2:132
+#, fuzzy
+msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Uživatel '%s' je již členem konference '%s'\n"
 
-#: mail_tt2/listmaster_notification.tt2:17
+#: mail_tt2/listmaster_notification.tt2:64
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr "Antivirus selhal při kontrole následujícího souboru:"
 
-#: src/Commands.pm:1110 src/Commands.pm:1243 src/Commands.pm:1411
-#: src/Commands.pm:1995 src/Commands.pm:466 src/Commands.pm:593
-#: src/Commands.pm:733 src/Commands.pm:854 src/Commands.pm:990
+#. (u_err.command)
+#: mail_tt2/command_report.tt2:137
 msgid ""
-"The authentication process failed\n"
-"\n"
+"The authentication process failed.\n"
+"You probably confirmed your %1 using a different\n"
+"email address. Please try using your canonical address."
 msgstr ""
-"Autentikační proces selhal\n"
-"\n"
 
 #: web_tt2/help_editlist.tt2:15
 msgid ""
@@ -3610,12 +4565,25 @@ msgid ""
 "options for the subscribers of the list."
 msgstr ""
 
-#: mail_tt2/certif_warning.tt2:5
+#: mail_tt2/certif_warning.tt2:8
 msgid "The certificate subject is :"
 msgstr ""
 
 #: src/alias_manager.pl:40
 msgid "The configuration file --CONFIG-- contains errors.\n"
+msgstr ""
+
+#: web_tt2/skinsedit.tt2:44
+#, fuzzy
+msgid "The css_path parameter is defined, value is"
+msgstr "Chybějící nebo nesprávný parametr konference"
+
+#: web_tt2/skinsedit.tt2:7
+msgid ""
+"The current version don't include a color editor, so you need to edit robot."
+"conf (or sympa.conf) to change colors. Here are the colors as defined for "
+"the current robot in robot.conf. If you did install statics CSS files, the "
+"colors in use may differ from this table."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:138
@@ -3635,8 +4603,9 @@ msgid ""
 "profile for the subscribers of the list."
 msgstr ""
 
-#: web_tt2/error.tt2:66
-msgid "The document repository exceed disk quota."
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:291
+msgid "The exporationto an Ldap directory failed for list '%1'"
 msgstr ""
 
 #: mail_tt2/list_unknown.tt2:14
@@ -3649,22 +4618,21 @@ msgid ""
 msgstr ""
 "Následující příkazy jsou dostupné pouze správcům nebo moderátorům konference:"
 
-#: src/tools.pl:136
+#. (list.name,conf.sympa,conf.host)
+#: mail_tt2/message_report.tt2:46
 msgid ""
-"The following message was sent to a list while it seems to contain\n"
+"The following message was sent to list '%1' while it seems to contain\n"
 "commands like subscribe, unsubscribe, help, index, get, ...\n"
 "\n"
 "If your message effectively contained a command, please notice that \n"
 "commands should never ever be sent to lists. Commands must be sent\n"
-"to %s exclusively.\n"
+"to %2 exclusively.\n"
 "\n"
 "If your message was effectively addressed to the list, it has been\n"
-"interpreted by the software as a command. Please contact the manager\n"
-"of the service : %s so that they can take care of your message.\n"
+"interpreted by the software as a command. Please contact the list owner :  \n"
+"%1-request@%3 so that he can take care of your message.\n"
 "\n"
 "Thank you for your attention.\n"
-"\n"
-"------ Beginning of suspected message ------\n"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:7
@@ -3684,11 +4652,21 @@ msgid "The latest shared documents"
 msgstr "Poslední sdílené dokumenty"
 
 #. (conf.wwsympa_url,list.name)
-#: mail_tt2/d_install_shared.tt2:7
+#: mail_tt2/d_install_shared.tt2:11
 msgid "The list document repository : %1/d_read/%2"
 msgstr ""
 
-#: web_tt2/notice.tt2:42
+#: mail_tt2/authorization_reject.tt2:182
+#, fuzzy
+msgid "The list is not open."
+msgstr "Konference není uzavřena"
+
+#: web_tt2/notice.tt2:53
+#, fuzzy
+msgid "The list of list members have been built/updated."
+msgstr "Databáze členů byla aktualizována"
+
+#: web_tt2/notice.tt2:56
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 
@@ -3698,14 +4676,14 @@ msgid ""
 "number (percentage) of bounces exceeds this value."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:104
-#: mail_tt2/listmaster_notification.tt2:43
-#: mail_tt2/listmaster_notification.tt2:50
-#: mail_tt2/listmaster_notification.tt2:57
-#: mail_tt2/listmaster_notification.tt2:64
-#: mail_tt2/listmaster_notification.tt2:77
-#: mail_tt2/listmaster_notification.tt2:84
-#: mail_tt2/listmaster_notification.tt2:91
+#: mail_tt2/listmaster_notification.tt2:111
+#: mail_tt2/listmaster_notification.tt2:122
+#: mail_tt2/listmaster_notification.tt2:133
+#: mail_tt2/listmaster_notification.tt2:143
+#: mail_tt2/listmaster_notification.tt2:164
+#: mail_tt2/listmaster_notification.tt2:175
+#: mail_tt2/listmaster_notification.tt2:185
+#: mail_tt2/listmaster_notification.tt2:195
 msgid "The list status has been set to error_config."
 msgstr ""
 
@@ -3725,10 +4703,6 @@ msgstr "Tma konference"
 msgid "The most active lists"
 msgstr "Vytvoen konference"
 
-#: web_tt2/error.tt2:32
-msgid "The passwords you typed do not match"
-msgstr "Hesla nejsou stejn"
-
 #: web_tt2/help_editlist.tt2:120
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
@@ -3742,7 +4716,7 @@ msgid ""
 "place in the Reply-To: SMTP header field of the messages it distributes."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:20
+#: mail_tt2/listmaster_notification.tt2:67
 msgid "The returned error message :"
 msgstr "Chybové hlášení :"
 
@@ -3753,10 +4727,6 @@ msgstr ""
 #: web_tt2/help_editlist.tt2:157
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
-
-#: src/Commands.pm:1490
-msgid "The user %s has been removed from the list %s/\n"
-msgstr "Uživatel %s byl odstraněn ze seznamu %s/\n"
 
 #. (total,list.name,list.host)
 #: mail_tt2/modindex.tt2:10
@@ -3771,18 +4741,70 @@ msgid ""
 "parameters. Possible value are:"
 msgstr ""
 
-#: web_tt2/error.tt2:48
-msgid "There is not any owner defined for the list"
-msgstr ""
+#: mail_tt2/listmaster_notification.tt2:248
+#, fuzzy
+msgid "There is not any authentication server name."
+msgstr "Zvolte autentikační server"
 
-#: src/sympa.pl:1631
-msgid "These subscribers are :\n"
-msgstr "Tito členové jsou :\n"
+#: mail_tt2/listmaster_notification.tt2:290
+#, fuzzy
+msgid "There is not any owner defined for the list '%1'"
+msgstr "Konference %1 není definován vlastník."
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr ""
+
+#. (role,right)
+#: mail_tt2/authorization_reject.tt2:176
+msgid "This action is impossible because edition is moderated."
+msgstr ""
+
+#. (role,right)
+#: mail_tt2/authorization_reject.tt2:179
+msgid "This action is impossible for directories because edition is moderated."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:164
+msgid ""
+"This action is restricted to document author, listmasters or privileged list "
+"owners."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:146
+#, fuzzy
+msgid "This action is restricted to list owners or moderators."
+msgstr "Příkaz MODINDEX je pouze pro moderátory.\n"
+
+#: mail_tt2/authorization_reject.tt2:152
+#, fuzzy
+msgid "This action is restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:158
+#, fuzzy
+msgid "This action is restricted to listmasters or list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:161
+msgid "This action is restricted to listmasters or privileged list owners."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:155
+#, fuzzy
+msgid "This action is restricted to listmasters."
+msgstr "pouze pro hlavní správce"
+
+#: mail_tt2/authorization_reject.tt2:149
+#, fuzzy
+msgid "This action is restricted to moderators."
+msgstr "Příkaz MODINDEX je pouze pro moderátory.\n"
+
+#: mail_tt2/authorization_reject.tt2:167
+#, fuzzy
+msgid "This action is restricted to privileged list owners."
+msgstr "pouze pro vlastníky konference"
 
 #: web_tt2/arc_protect.tt2:9
 msgid ""
@@ -3808,8 +4830,17 @@ msgstr "Toto je automatická odpověď zaslaná konferencnim serverem SYMPA"
 msgid "This list is about %1, so you are probably concerned."
 msgstr "Dobrý den"
 
-#: src/Commands.pm:327 src/Commands.pm:372 src/Commands.pm:426
-msgid "This list's archives do not contain any file.\n"
+#: web_tt2/request_topic.tt2:4
+msgid "This list is configured to require topic(s) foreach message."
+msgstr ""
+
+#: web_tt2/modindex.tt2:20 web_tt2/viewmod.tt2:16
+msgid "This list is configured to require topic(s)."
+msgstr ""
+
+#: mail_tt2/command_report.tt2:123
+#, fuzzy
+msgid "This list's archives do not contain any file."
 msgstr "Tento konferenční archív neobsahuje žádný soubor.\n"
 
 #: web_tt2/help_user_options.tt2:46
@@ -3869,6 +4900,14 @@ msgstr ""
 "\tnebo můžete využít hlavní adresu pouze jako přihlašovací\n"
 "\ta druhou pro příjem zpráv."
 
+#: web_tt2/help_editlist.tt2:175
+msgid ""
+"This paragraph defines a topic used to tag a message of a list, named by "
+"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
+"The msg_topic.keywords entry is optional and allows automatic tagging. This "
+"should be a list of keywords, separated by ','."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:22
 msgid "This paragraph defines bounce management parameters:"
 msgstr "Tento odstavec definuje zacházení s chybnými (bounce) adresami"
@@ -3919,6 +4958,17 @@ msgstr ""
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:179
+msgid ""
+"This parameter indicates if the tagging is optional or required for a list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:177
+msgid ""
+"This parameter indicates on which part of the message is used to perform "
+"automatic tagging."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:155
@@ -4061,24 +5111,26 @@ msgstr ""
 "místa můžete provádět změny v přihlášení a odhlášení,\n"
 "prohlížet archívy správu konferenci atd."
 
-#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
-#: src/etc/mhonarc-ressources.tt2:363
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
+#: src/etc/mhonarc-ressources.tt2:377
 msgid "Thread"
 msgstr "Podle vláken"
 
-#: src/Commands.pm:1940
-msgid "Thus, your message is sent back to you :\n"
-msgstr "Vaše zpráva Vám byla odeslána zpět:\n"
+#. (mailto)
+#: web_tt2/request_topic.tt2:26
+#, fuzzy
+msgid "To : %1"
+msgstr "Pro: %1"
 
-#: mail_tt2/sendpasswd.tt2:27
+#: mail_tt2/sendpasswd.tt2:30
 msgid "To access your personal environment, you need to login first"
 msgstr "Pro přístup k Vašemu osobnímu nastavení se musíte nejprve přihlásit"
 
-#: mail_tt2/listmaster_notification.tt2:12
+#: mail_tt2/listmaster_notification.tt2:15
 msgid "To activate/delete this mailing list :"
 msgstr "K aktivaci/smazání této konference :"
 
-#: web_tt2/notice.tt2:36
+#: web_tt2/notice.tt2:47
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Pro změnu hesla jděte do \"Nastavení\" v horní části stránky"
 
@@ -4141,7 +5193,7 @@ msgstr ""
 "Pro potvrzení přihlášení do %1, prosím zadejte\n"
 "\tVaše heslo:\n"
 
-#: mail_tt2/sendpasswd.tt2:15
+#: mail_tt2/sendpasswd.tt2:18
 msgid ""
 "To confirm your subscription, you need to provide the following password"
 msgstr "Pro potvrzení Vašeho přihlášení, musíte poskytnout následující heslo"
@@ -4160,22 +5212,23 @@ msgstr ""
 msgid "To contact this service administrator :"
 msgstr "Kontakt na správce :"
 
-#. (list.name)
-#: mail_tt2/moderate.tt2:13
-msgid "To distribute the attached message in list %1:"
-msgstr "Pro rozeslani prilozene zpravy do konference %1:"
-
-#: src/List.pm:2598
+#. (list.name,conf.sympa,authkey,conf.sympa,authkey)
+#: mail_tt2/send_auth.tt2:18
+#, fuzzy
 msgid ""
-"To distribute the attached message in list %s :\n"
-"mailto:%s?subject=CONFIRM%%20%s\n"
-"Or send a message to %s with the following subject :\n"
-"CONFIRM %s\n"
+"To distribute the attached message in list %1 :\n"
+"\n"
+"[% FILTER escape_url %]mailto:%2?subject=CONFIRM %3"
 msgstr ""
 "Pro rozeslani prilozene zpravy do konference %s :\n"
 "mailto:%s?subject=CONFIRM%%20%s\n"
 "Nebo zaslete zpravu %s s nasledujícim predmetem :\n"
 "CONFIRM %s\n"
+
+#. (list.name)
+#: mail_tt2/moderate.tt2:20
+msgid "To distribute the attached message in list %1:"
+msgstr "Pro rozeslani prilozene zpravy do konference %1:"
 
 #: mail_tt2/list_unknown.tt2:18
 msgid ""
@@ -4195,14 +5248,8 @@ msgid ""
 "password on the right column."
 msgstr ""
 
-#: src/Commands.pm:1982
-msgid ""
-"To read the list of subscribers who haven't confirm their\n"
-"subscription : EXPIREINDEX %s\n"
-msgstr ""
-
 #. (conf.email,conf.host)
-#: mail_tt2/certif_warning.tt2:12
+#: mail_tt2/certif_warning.tt2:15
 msgid ""
 "To receive them again, renew your certificate with your certification "
 "authority\n"
@@ -4215,48 +5262,95 @@ msgstr ""
 msgid "To receive your password :"
 msgstr "Pro získání hesla :"
 
-#: mail_tt2/moderate.tt2:19
+#: mail_tt2/moderate.tt2:25
 msgid "To reject it (it will be removed):"
 msgstr "Pro odmitnuti (smazani):"
-
-#: src/Commands.pm:1984 src/Commands.pm:2042
-msgid "To stop the expiration process : EXPIREDEL %s\n"
-msgstr ""
 
 #: mail_tt2/invite.tt2:10
 msgid ""
 "To subscribe just reply to this message or hit the following mailto url :"
 msgstr "Zvu Vás k přihlášení do konference :"
 
-#: mail_tt2/sendpasswd.tt2:22
+#. (list.name,conf.wwsympa_url,modkey)
+#: mail_tt2/moderate.tt2:18
+msgid ""
+"To tag the attached message in list %1 go to the following page :\n"
+"\n"
+"%2/viewmod/%1/%3\n"
+msgstr ""
+
+#. (list.name,conf.wwsympa_url,authkey)
+#: mail_tt2/send_auth.tt2:15
+msgid ""
+"To tag your attached message in list %1 go to the following page :\n"
+"\n"
+"%2/request_topic/%1/%3\n"
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:25
 msgid ""
 "To unsubscribe from the list, you need to provide the following password"
 msgstr "Pro potvrzení Vašeho přihlášení, musíte poskytnout následující heslo"
+
+#. (url)
+#: mail_tt2/user_notification.tt2:29
+#, fuzzy
+msgid ""
+"To update your topics subscription, go to the following page :\n"
+"%1"
+msgstr "%s zaslal zprávu o vypršení, na následující adresu :\n"
 
 #. (mailto)
 #: web_tt2/compose_mail.tt2:5
 msgid "To: %1"
 msgstr "Pro: %1"
 
-#: web_tt2/review.tt2:228 web_tt2/reviewbouncing.tt2:121
+#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:228
+#: web_tt2/reviewbouncing.tt2:121
 msgid "Toggle Selection"
 msgstr "Obrátit výběr"
 
-#: src/List.pm:1088
+#: web_tt2/suboptions.tt2:20
+#, fuzzy
+msgid "Topic subscription :"
+msgstr "Odhlaseni             : %1"
+
+#: src/List.pm:936
+#, fuzzy
+msgid "Topics for message categorisation"
+msgstr "Téma konference"
+
+#: src/List.pm:1127
 msgid "Topics for the list"
 msgstr "Téma konference"
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:17
+#, fuzzy
+msgid "Topics udpating in list %1"
+msgstr "Pozvánka do konference %1"
+
+#: mail_tt2/authorization_reject.tt2:131
+#, fuzzy
+msgid "Topics visibility is restricted to identified users."
+msgstr ": uživatelské nastavení. Je dostupné pouze přihlášeným uživatelům"
+
+#: mail_tt2/authorization_reject.tt2:128
+#, fuzzy
+msgid "Topics visibility is restricted to listmaster."
+msgstr "pouze pro hlavní správce"
 
 #: web_tt2/create_list_request.tt2:53
 msgid "Topics:"
 msgstr "Téma:"
 
 #. (list.name,size)
-#: mail_tt2/listowner_notification.tt2:14
+#: mail_tt2/listowner_notification.tt2:20
 msgid "Total size used for %1@%2 Bytes."
 msgstr ""
 
 #. (total)
-#: mail_tt2/review.tt2:7
+#: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "Celkem členů : %1"
 
@@ -4275,41 +5369,116 @@ msgid ""
 "address, usefull if different from your \"From:\" address."
 msgstr ""
 
-#: src/List.pm:2300
-msgid "UNsubscription request from list %s"
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:97
+#, fuzzy
+msgid "UNsubscription request from list %1"
 msgstr "Odhlášení z konference %1"
 
 #: web_tt2/d_read.tt2:346
 msgid "URL"
 msgstr "URL"
 
-#: src/sympa.pl:1528
+#: src/sympa.pl:1699
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
-#: src/Commands.pm:1731 src/Commands.pm:1851
+#. (listname,key)
+#: mail_tt2/message_report.tt2:60
+#, fuzzy
 msgid ""
-"Unable to access the moderated message on list %s with key %s.\n"
-"This message may already have been sent by one of the list's moderators\n"
+"Unable to access the message on list %1 with  key %2.\n"
+"Warning : this message may already have been sent by one of the list's "
+"editor.\n"
 msgstr ""
 "Nelze moderovat zpravu konference %s s md5 klicem %s.\n"
 "Tato zprava mohla byt zaroven odeslana jednim z moderatoru konference.\n"
 
-#: src/Commands.pm:1723
-msgid "Unable to access to the message authenticated with key %s.\n"
+#. (i_err.key)
+#: web_tt2/error.tt2:19
+#, fuzzy
+msgid "Unable to access to the message authenticated with key %1"
 msgstr "Nelze otevrit zpravu s timto %s autentikacnim klicem.\n"
 
-#: src/smtp.pm:114
+#. (key)
+#: mail_tt2/message_report.tt2:68
+#, fuzzy
+msgid ""
+"Unable to access to the message authenticated with key %1 because of a wrong "
+"format.\n"
+msgstr "Nelze otevrit zpravu s timto %s autentikacnim klicem.\n"
+
+#. (key)
+#: mail_tt2/message_report.tt2:64
+#, fuzzy
+msgid "Unable to access to the message authenticated with key %1.\n"
+msgstr "Nelze otevrit zpravu s timto %s autentikacnim klicem.\n"
+
+#. (key,listname)
+#: mail_tt2/listmaster_notification.tt2:302
+#, fuzzy
+msgid ""
+"Unable to access to the message authenticated with key '%1' for list '%2'."
+msgstr "Nelze otevrit zpravu s timto %s autentikacnim klicem.\n"
+
+#. (file)
+#: mail_tt2/listmaster_notification.tt2:304
+#, fuzzy
+msgid "Unable to add file '%1' to archives."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#: mail_tt2/listmaster_notification.tt2:247
+#, fuzzy
+msgid "Unable to change directory."
+msgstr "Nemohu změnit adresář"
+
+#. (new_listname,check_smtp,listname)
+#: mail_tt2/listmaster_notification.tt2:292
+msgid "Unable to check listname '%1' for smtp on '%2' to rename list '%3'"
+msgstr ""
+
+#. (path,listname)
+#: mail_tt2/listmaster_notification.tt2:307
+msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
+msgstr ""
+
+#: src/mail.pm:611
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Nelze vytvořit kanál v smtpto: %m"
 
-#: src/Commands.pm:1656
+#: mail_tt2/listmaster_notification.tt2:283
+#, fuzzy
+msgid "Unable to create list."
+msgstr "Nelze vytvořit adresář %1"
+
+#. (sub)
+#: mail_tt2/listmaster_notification.tt2:303
+#, fuzzy
+msgid "Unable to delete subscription request for user '%1'."
+msgstr "Odhlášení z konference %1"
+
+#. (file)
+#: mail_tt2/listmaster_notification.tt2:269
+#, fuzzy
+msgid "Unable to erase file '%1'."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#. (arc_file,listname,path)
+#: mail_tt2/listmaster_notification.tt2:274
 msgid ""
-"Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Unable to find archive '%1' for list '%2'[%IF path%] : unable to read '%3'."
 msgstr ""
-"Nelze nalezt zpravu pro konferenci %s oznacenou klicem %s.\n"
-"Upozorneni : tato zprava jiz mohla byt zpracovana jinym editorem"
+
+#. (listname,path)
+#: mail_tt2/listmaster_notification.tt2:275
+msgid "Unable to find archive for list '%1'[%IF path%] : unable to read '%3'."
+msgstr ""
+
+#. (month,listname,dir)
+#: mail_tt2/listmaster_notification.tt2:273
+msgid ""
+"Unable to find month '%1' for list '%2'[%IF dir%] : unable to readdir '%3'."
+msgstr ""
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -4322,13 +5491,126 @@ msgid ""
 "complete URL of the concerned message"
 msgstr ""
 
-#. (error.path)
-#: web_tt2/error.tt2:40
-msgid "Unable to read %1 : empty document"
-msgstr "Nelze číst soubor %1 : prázdný dokument"
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:286
+#, fuzzy
+msgid "Unable to get family for list '%1'."
+msgstr "Nemohu změnit e-mail pro konferenci %1"
 
-#: src/Commands.pm:201
-msgid "Unable to read help file : %s\n"
+#. (msg)
+#: mail_tt2/listmaster_notification.tt2:264
+#, fuzzy
+msgid "Unable to get message '%1'."
+msgstr "Nelze najít zprávu ke smazání"
+
+#: mail_tt2/listmaster_notification.tt2:285
+#, fuzzy
+msgid "Unable to load create_list templates."
+msgstr "Nelze nahrát seznam témat"
+
+#: mail_tt2/listmaster_notification.tt2:284
+#, fuzzy
+msgid "Unable to load list topics."
+msgstr "Nelze nahrát seznam témat"
+
+#. (dir)
+#: mail_tt2/listmaster_notification.tt2:262
+#, fuzzy
+msgid "Unable to make directory '%1'."
+msgstr "Nelze vytvořit adresář %1"
+
+#. (directory)
+#: mail_tt2/listmaster_notification.tt2:261
+#, fuzzy
+msgid "Unable to open directory '%1'."
+msgstr "Nemohu změnit adresář"
+
+#. (file)
+#: mail_tt2/listmaster_notification.tt2:260
+#, fuzzy
+msgid "Unable to open file '%1'."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#. (spool)
+#: mail_tt2/listmaster_notification.tt2:263
+#, fuzzy
+msgid "Unable to open spool '%1'."
+msgstr "Nelze přečíst spool"
+
+#. (filepath)
+#: mail_tt2/listmaster_notification.tt2:258
+#, fuzzy
+msgid "Unable to read file : '%1'."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#. (new_listname)
+#: mail_tt2/listmaster_notification.tt2:287
+msgid "Unable to reload list[%IF new_listname %] with new listname '%1'."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:276
+msgid "Unable to remove archive : no message id found."
+msgstr ""
+
+#. (old,new)
+#: mail_tt2/listmaster_notification.tt2:267
+#, fuzzy
+msgid "Unable to rename archive directory '%1' into '%2'."
+msgstr "Nelze vytvořit adresář %1"
+
+#. (old,new)
+#: mail_tt2/listmaster_notification.tt2:268
+#, fuzzy
+msgid "Unable to rename bounces directory '%1' into '%2'."
+msgstr "Nemohu přejmenovat adresář chybných adres (bounce)"
+
+#. (old,new)
+#: mail_tt2/listmaster_notification.tt2:266
+#, fuzzy
+msgid "Unable to rename directory '%1' into '%2'."
+msgstr "Nelze vytvořit adresář %1"
+
+#. (old,new)
+#: mail_tt2/listmaster_notification.tt2:265
+#, fuzzy
+msgid "Unable to rename file '%1' into '%2'."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#: mail_tt2/listmaster_notification.tt2:277
+#, fuzzy
+msgid "Unable to send archive : no message id found."
+msgstr "Nelze najít zprávu ke smazání"
+
+#. (from,listname)
+#: mail_tt2/listmaster_notification.tt2:270
+msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
+msgstr ""
+
+#. (from,listname)
+#: mail_tt2/listmaster_notification.tt2:300
+msgid "Unable to send command REMIND from '%1' to list '%2'."
+msgstr ""
+
+#. (from,listname)
+#: mail_tt2/listmaster_notification.tt2:301
+msgid "Unable to send mail from '%1' to list '%2'."
+msgstr ""
+
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:272
+msgid "Unable to update file config_changes for list '%1'."
+msgstr ""
+
+#. (filepath)
+#: mail_tt2/listmaster_notification.tt2:259
+#, fuzzy
+msgid "Unable to write file : '%1'."
+msgstr "Nelze přečíst soubor nápovědy : %s\n"
+
+#. (zipfile)
+#: mail_tt2/listmaster_notification.tt2:305
+#, fuzzy
+msgid "Unable to write file zip '%1'."
 msgstr "Nelze přečíst soubor nápovědy : %s\n"
 
 #: web_tt2/lists.tt2:49
@@ -4339,26 +5621,28 @@ msgstr ""
 msgid "Unknown"
 msgstr "Unknown"
 
+#. (name)
+#: mail_tt2/listmaster_notification.tt2:250
+#, fuzzy
+msgid "Unkown authentication service %1."
+msgstr "Neznámá autentikační služba"
+
 #: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:39
 #: web_tt2/sigrequest.tt2:53 web_tt2/sigrequest.tt2:68
 msgid "Unsubscribe"
 msgstr "Odhlásit z konference"
-
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3526
-msgid "Unsubscribe from list %s"
-msgstr "Odhlásit z konference %1"
 
 #: web_tt2/editsubscriber.tt2:39
 msgid "Unsubscribe the User"
 msgstr "Odhlásit uživatele"
 
 #. (unsubscribe)
-#: mail_tt2/info_report.tt2:11
+#: mail_tt2/info_report.tt2:17
 msgid "Unsubscription     : %1"
 msgstr "Odhlaseni             : %1"
 
-#: mail_tt2/expire_warning1.tt2:8 mail_tt2/expire_warning2.tt2:8
-#: mail_tt2/remind.tt2:7
+#: mail_tt2/expire_warning1.tt2:11 mail_tt2/expire_warning2.tt2:11
+#: mail_tt2/remind.tt2:10
 msgid "Unsubscription :"
 msgstr "Odhlaseni             : %1"
 
@@ -4366,6 +5650,11 @@ msgstr "Odhlaseni             : %1"
 #: mail_tt2/bye.tt2:2
 msgid "Unsubscription from %1"
 msgstr "Odhlašování z %1"
+
+#: mail_tt2/authorization_reject.tt2:134
+#, fuzzy
+msgid "Unsubscription from this list is impossible."
+msgstr "Odhlášení z konference %1"
 
 #: web_tt2/help_editfile.tt2:8
 #, fuzzy
@@ -4378,7 +5667,7 @@ msgstr ""
 "Quiet metoda.\n"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:30
+#: mail_tt2/listmaster_notification.tt2:82
 msgid ""
 "Until then we recommend your remove %1 ;\n"
 "default configuration will be used."
@@ -4400,7 +5689,7 @@ msgid "Up to higher level directory"
 msgstr "O úroveň výše"
 
 #: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:415
-#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:26
+#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:58
 msgid "Update"
 msgstr "Změň"
 
@@ -4412,6 +5701,16 @@ msgstr "Zobrazit URL RSS kanálu"
 msgid "Update of list members based on the TTL"
 msgstr "Obnov seznam členů, používajících TTL aut."
 
+#. (sub,old_email)
+#: mail_tt2/listmaster_notification.tt2:254
+msgid "Update subscriber '%1' in DB failed[% IF old_email %] (old email : %2)"
+msgstr ""
+
+#. (user)
+#: mail_tt2/listmaster_notification.tt2:252
+msgid "Update user '%1' in DB failed[% IF old_email %] (old email : %2)"
+msgstr ""
+
 #. (visible_path)
 #: web_tt2/d_read.tt2:359
 msgid "Upload a file inside the folder %1"
@@ -4422,27 +5721,15 @@ msgstr "Nahraj soubor do adresáře %1"
 msgid "Upload a file inside the folder SHARED"
 msgstr "Nahraj soubor do sdíleného adresáře"
 
-#: src/Commands.pm:1169 src/Commands.pm:1177
-msgid "User %s has been invited to subscribe in list %s.\n"
-msgstr ""
-
-#: src/Commands.pm:1046
-msgid "User %s is now subscriber of list %s.\n"
-msgstr "Uživatel %s je nyní členem konference %s.\n"
-
-#: src/Commands.pm:1185
-msgid "User %s is unwanted in list %s.\n"
-msgstr "Uživatel %s nebyl schválen do konference %s.\n"
-
 #: web_tt2/show_cert.tt2:8
 msgid "User certificate belong to"
 msgstr "Uživatelský certifikát patří"
 
-#: src/List.pm:1126
+#: src/List.pm:1165
 msgid "User data source"
 msgstr "Uživatelský zdroj dat"
 
-#: mail_tt2/helpfile.tt2:2 src/Commands.pm:160 src/Commands.pm:196
+#: mail_tt2/helpfile.tt2:2 src/Commands.pm:197 src/Commands.pm:213
 msgid "User guide"
 msgstr "Příručka uživatele"
 
@@ -4470,11 +5757,11 @@ msgstr "Zobrazit poslední vrácenou zprávu - chybná adresa"
 msgid "Virtual Robots"
 msgstr "Virtuální Domény"
 
-#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:19
+#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:51
 msgid "Visibility :"
 msgstr "Zobrazení"
 
-#: src/List.pm:1132
+#: src/List.pm:1171
 msgid "Visibility of the list"
 msgstr "Zobrazení konference"
 
@@ -4482,19 +5769,25 @@ msgstr "Zobrazení konference"
 msgid "Visibility of the subscriber with the REVIEW command."
 msgstr "Zobrazení členů pomocí příkazu REVIEW."
 
-#: src/List.pm:2279
+#: web_tt2/skinsedit.tt2:61
+msgid "W3C CSS validation tools"
+msgstr ""
+
+#. (who,gecos,list.name)
+#: mail_tt2/listowner_notification.tt2:40
 #, fuzzy
 msgid ""
-"WARNING : %s %s failed to unsubscribe from %s because his address was not "
-"found in the list\n"
-" (You may help this person)"
+"WARNING : %1 %2 failed to unsubscribe from %3 because his address was not "
+"found in the list.\n"
+"(You may help this person)."
 msgstr ""
 "Výstraha : %s %s se nemohl odhlasit z konference %s protože jeho adresa "
 "nebyla nalezena v seznamu\n"
 " (Muzete teto osobe pomoci)\n"
 
-#: src/List.pm:2308
-msgid "WARNING: bounce rate too high in list %s"
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:116
+msgid "WARNING: bounce rate too high in list %1"
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:25
@@ -4511,13 +5804,38 @@ msgid "WWSympa provides  you access to your environment on mailing list server"
 msgstr ""
 "WWSympa Vám poskytuje přístup k Vašemu prostředí na konferenčním serveru"
 
-#: mail_tt2/your_infected_msg.tt2:10
+#: mail_tt2/your_infected_msg.tt2:13
 msgid "We stopped delivery of this email."
 msgstr "Sympa zastavila doručení této zprávy"
 
-#: src/List.pm:1148
+#: src/List.pm:1192
 msgid "Web archives"
 msgstr "Webové archívy"
+
+#: mail_tt2/authorization_reject.tt2:5
+#, fuzzy
+msgid "Web archives are closed."
+msgstr "Velikost webových archívů"
+
+#: mail_tt2/authorization_reject.tt2:14
+#, fuzzy
+msgid "Web archives are restricted to list owners."
+msgstr "pouze pro vlastníky konference"
+
+#: mail_tt2/authorization_reject.tt2:8
+#, fuzzy
+msgid "Web archives are restricted to list subscribers and local domain users."
+msgstr "přístup pouze pro členy nebo uživatele z lokální domény"
+
+#: mail_tt2/authorization_reject.tt2:17
+#, fuzzy
+msgid "Web archives are restricted to list subscribers."
+msgstr "moderováno, pouze členové mají přístup"
+
+#: mail_tt2/authorization_reject.tt2:11
+#, fuzzy
+msgid "Web archives are restricted to listmaster."
+msgstr "pouze pro hlavní správce"
 
 #: web_tt2/stats.tt2:2
 msgid "Web archives size"
@@ -4540,14 +5858,7 @@ msgstr ""
 "Welcome message: This message is sent to new subscribers. It can be\n"
 "a full MIME structured message (only for MIME gurus).\n"
 
-#: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
-#: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3297 wwsympa/wwsympa.fcgi:3298
-#: wwsympa/wwsympa.fcgi:4240 wwsympa/wwsympa.fcgi:4241
-msgid "Welcome on list %s"
-msgstr "Vitejte v konferenci %1"
-
-#: src/List.pm:1154
+#: src/List.pm:1198
 msgid "Welcome return-path"
 msgstr ""
 
@@ -4577,79 +5888,54 @@ msgid ""
 "can be send to listowner or listmaster."
 msgstr ""
 
-#: src/List.pm:313
+#: src/List.pm:317
 msgid "Who can add subscribers"
 msgstr "Kdo smí přidat členy"
 
-#: src/List.pm:469
+#: src/List.pm:473
 msgid "Who can delete subscribers"
 msgstr "Kdo smí mazat členy"
 
-#: src/List.pm:1044
+#: src/List.pm:1083
 msgid "Who can edit"
 msgstr "Kdo může editovat"
 
-#: src/List.pm:878
+#: src/List.pm:882
 msgid "Who can invite people"
 msgstr "Kdo smí pozvat nové uživatele"
 
-#: src/List.pm:1017
+#: src/List.pm:1056
 msgid "Who can review subscribers"
 msgstr "Kdo může prohlížet seznam členů"
 
-#: src/List.pm:1028
+#: src/List.pm:1067
 msgid "Who can send messages"
 msgstr "Typ konference, práva pro zasílání zpráv"
 
-#: src/List.pm:977
+#: src/List.pm:1016
 msgid "Who can start a remind process"
 msgstr "Kdo může spustit připomínací proces"
 
-#: src/List.pm:1082
+#: src/List.pm:1121
 msgid "Who can subscribe to the list"
 msgstr "Kdo se smí přihlásit do konference"
 
-#: src/List.pm:1099
+#: src/List.pm:1138
 msgid "Who can unsubscribe"
 msgstr "Kdo se smí odhlásit"
 
-#: src/List.pm:1040
+#: src/List.pm:1079
 msgid "Who can view"
 msgstr "Kdo může zobrazit"
 
-#: src/List.pm:874
+#: src/List.pm:878
 msgid "Who can view list information"
 msgstr "Kdo smí vidět informace o konferenci"
-
-#. (error.email)
-#: web_tt2/error.tt2:7
-msgid "You are already logged in as %1"
-msgstr "Jste již přihlášen jako %1"
-
-#. (error.list)
-#: web_tt2/error.tt2:24
-msgid "You are already subscribed to the list %1"
-msgstr "V konferenci %1 jste již členem"
 
 #. (list)
 #: web_tt2/subrequest.tt2:70
 msgid "You are already subscriber of list %1"
 msgstr "Jste již členem konference %1."
-
-#: src/Commands.pm:1310
-msgid "You are member of list %s with email %s\n"
-msgstr "Jste členem konference %s s e-mail adresou %s\n"
-
-#: src/Commands.pm:1013 src/Commands.pm:1132 src/Commands.pm:1277
-#: src/Commands.pm:1438 src/Commands.pm:289 src/Commands.pm:493
-#: src/Commands.pm:619 src/Commands.pm:755 src/Commands.pm:878
-msgid "You are not allowed to perform command %s in list %s\n"
-msgstr "%1 : na tuto akci nemáte oprávnění\n"
-
-#. (error.list)
-#: web_tt2/error.tt2:30
-msgid "You are not subscribed to list %1"
-msgstr "Nejste přihlášen do konference %1"
 
 #. (list,email)
 #: web_tt2/sigrequest.tt2:16
@@ -4672,7 +5958,7 @@ msgstr "Zvolte položky které chcete editovat :"
 msgid "You can configure it via the admin button beside."
 msgstr "Můžete konfigurovat parametry pomoci tlačítka Správa"
 
-#: mail_tt2/subscriber_notification.tt2:10
+#: mail_tt2/user_notification.tt2:13
 msgid "You can contact list owner:"
 msgstr "Správce konference můžete kontaktovat:"
 
@@ -4697,43 +5983,19 @@ msgid ""
 "the subject are recognized."
 msgstr ""
 
-#: src/Commands.pm:2183
-msgid ""
-"You can remove these subscriber from the list by using the following "
-"commands :\n"
-msgstr ""
-
-#: mail_tt2/expire_deletion.tt2:8 mail_tt2/removed.tt2:8
+#: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
 msgid "You can subscribe again :"
 msgstr "Můžete se znovu přihlásit:"
 
-#: web_tt2/error.tt2:58
-msgid ""
-"You did not choose a password, request a reminder of the initial password"
-msgstr ""
-
-#: wwsympa/wwsympa.fcgi:3527 wwsympa/wwsympa.fcgi:4346
-msgid "You have been removed from list %s.\n"
-msgstr "Byl jste odstraněn z konference  %s.\n"
-
-#: soap/sympasoap.pm:554 src/Commands.pm:1485 src/Commands.pm:947
-msgid ""
-"You have been removed from list %s.\n"
-"Thank you for using this list.\n"
-msgstr ""
-"Byl jste odstraněn z konference  %s.\n"
-"Děkujeme za využívání naší konference.\n"
+#: web_tt2/notice.tt2:65
+msgid "You have been authenticated"
+msgstr "Byl jste autentifikován"
 
 #. (list.name,list.host,user.email)
-#: mail_tt2/expire_warning1.tt2:4 mail_tt2/expire_warning2.tt2:4
+#: mail_tt2/expire_warning1.tt2:7 mail_tt2/expire_warning2.tt2:7
 msgid ""
 "You have been subscriber of list %1@%2 with email %3 for 1 year or more;"
 msgstr ""
-
-#. (error.pname)
-#: web_tt2/error.tt2:35
-msgid "You have changed a parameter without permissions: %1"
-msgstr "Zmnil jste parametr bez oprvnn: %1"
 
 #: web_tt2/remindpasswd.tt2:4
 msgid ""
@@ -4745,10 +6007,6 @@ msgstr "Zapomněl jste Vaše heslo, nebo jste zde žádné heslo neměl."
 #: web_tt2/login.tt2:3
 msgid "You have logged in with email address %1"
 msgstr "Jste přihlášen s e-mailovou adresou %1"
-
-#: src/Commands.pm:2239
-msgid "You just stopped the expiration process for list %s\n"
-msgstr "Právě jste zastavil expirační proces konference %s\n"
 
 #: web_tt2/sigrequest.tt2:19
 msgid ""
@@ -4765,7 +6023,7 @@ msgstr ""
 "Pro přístup nebo pro k webovému rozhraní WWSympa je nutné se přihlásit, je "
 "požadovaná registrovaná e-mailová adresa popř. heslo."
 
-#: web_tt2/error.tt2:16
+#: web_tt2/error.tt2:130
 msgid "You need to login"
 msgstr "Musíte se přihlásit"
 
@@ -4777,28 +6035,14 @@ msgstr ""
 "Pro přístup nebo pro k webovému rozhraní WWSympa je nutné se přihlásit, je "
 "požadovaná registrovaná e-mailová adresa popř. heslo."
 
-#: src/Commands.pm:1111 src/Commands.pm:1412 src/Commands.pm:594
-#: src/Commands.pm:855 src/Commands.pm:991
-msgid ""
-"You probably confirmed your subscription using a different\n"
-"email address. Please try subscribing using your canonical address."
-msgstr ""
-
-#: src/List.pm:8828 src/List.pm:8835
-msgid ""
-"You requested a subscription reminder to be sent\n"
-"to each subscriber of list %s\n"
-"\n"
-"If you want this action to be taken, please send an e-mail to\n"
-"%s containing \n"
-"\n"
-"   %s\n"
-"\n"
-"If you do not want this action to be taken, simply ignore this message.\n"
-msgstr ""
+#. (role,right)
+#: mail_tt2/authorization_reject.tt2:173
+#, fuzzy
+msgid "You need to login."
+msgstr "Musíte se přihlásit"
 
 #. (list)
-#: mail_tt2/sendpasswd.tt2:13
+#: mail_tt2/sendpasswd.tt2:16
 msgid "You requested a subscription to %1 mailing list."
 msgstr "Požadoval jste přihlášení do konference %1."
 
@@ -4813,7 +6057,7 @@ msgid "You requested subscription to list %1"
 msgstr "Požadoval jste přihlášení do konference %1."
 
 #. (list)
-#: mail_tt2/sendpasswd.tt2:20
+#: mail_tt2/sendpasswd.tt2:23
 msgid "You requested unsubscription from %1 mailing list."
 msgstr "Požadoval jste odhlášení z konference %1."
 
@@ -4830,14 +6074,9 @@ msgstr "Měl by jste odstranit aliasy konference ručně."
 msgid "You will receive an email, reminding you your password."
 msgstr "Obdržíte zprávu, která Vám připomene Vaše heslo."
 
-#: mail_tt2/certif_warning.tt2:8
+#: mail_tt2/certif_warning.tt2:11
 msgid "You won't receive the signed messages from your lists."
 msgstr "Nemůžete přijmout podepsanou zprávu z vaší konference"
-
-#. (error.dir)
-#: web_tt2/error.tt2:45
-msgid "You're not authorized to upload an INDEX.HTML in %1"
-msgstr "Nemáte oprávnění nahrát INDEX.HTML do adresáře %1"
 
 #: web_tt2/your_lists.tt2:7
 #, fuzzy
@@ -4845,7 +6084,7 @@ msgid "Your Lists"
 msgstr "Konference"
 
 #. (user.email,list.name,list.host)
-#: mail_tt2/expire_deletion.tt2:6
+#: mail_tt2/expire_deletion.tt2:9
 #, fuzzy
 msgid ""
 "Your address (%1) has been removed from list\n"
@@ -4857,7 +6096,7 @@ msgstr ""
 "protože jste nepotvrdil registraci.\n"
 
 #. (user.email,list.name,list.host)
-#: mail_tt2/removed.tt2:6
+#: mail_tt2/removed.tt2:9
 #, fuzzy
 msgid ""
 "Your address (%1) has been removed from list\n"
@@ -4869,7 +6108,7 @@ msgstr ""
 "protože jste nepotvrdil registraci.\n"
 
 #. (list.name,list.host,user.email,user.password)
-#: mail_tt2/remind.tt2:4
+#: mail_tt2/remind.tt2:7
 msgid "Your are subscriber of list %1@%2 with  email %3"
 msgstr "Jste již členem konference %1."
 
@@ -4884,21 +6123,17 @@ msgstr ""
 "heslo."
 
 #. (expiration_date)
-#: mail_tt2/certif_warning.tt2:4
+#: mail_tt2/certif_warning.tt2:7
 msgid "Your authentification certificate will expire on %1."
 msgstr "Váš aut. certifikát vyprší %1."
 
 #. (list.name)
-#: mail_tt2/subscriber_notification.tt2:4
+#: mail_tt2/user_notification.tt2:4
 msgid "Your bouncing address in list %1"
 msgstr "Vaše vracející se adresa v konferenci %1"
 
-#: src/Commands.pm:1596 src/Commands.pm:1609
-msgid "Your configuration regarding list %s has been updated.\n"
-msgstr "Konfigurace konference %s byla změněna.\n"
-
 #. (filename,list.name,list.host,rejected_by)
-#: mail_tt2/d_reject_shared.tt2:5
+#: mail_tt2/d_reject_shared.tt2:8
 #, fuzzy
 msgid ""
 "Your document %1  for list %2@%3\n"
@@ -4908,7 +6143,7 @@ msgstr ""
 "byl odmítnut editorem %4 .\n"
 
 #. (filename,list.name,list.host,installed_by)
-#: mail_tt2/d_install_shared.tt2:5
+#: mail_tt2/d_install_shared.tt2:9
 #, fuzzy
 msgid ""
 "Your document %1 for list %2@%3\n"
@@ -4929,10 +6164,11 @@ msgstr "Váš dokument byl odmítnut"
 msgid "Your e-mail address"
 msgstr "Vaše e-mailová adresa"
 
-#: src/Commands.pm:909
+#. (u_err.email,u_err.listname)
+#: mail_tt2/command_report.tt2:110
 msgid ""
-"Your e-mail address %s has not been found in the list %s. Maybe\n"
-"you subscribed from a different e-mail address ?\n"
+"Your e-mail address %1 has not been found in the list %2. Maybe\n"
+"you subscribed from a different e-mail address ?"
 msgstr ""
 
 #: web_tt2/sigrequest.tt2:49
@@ -4940,7 +6176,7 @@ msgid "Your e-mail address :"
 msgstr "Vaše e-mailová adresa:"
 
 #. (user.email,list.name,list.host)
-#: mail_tt2/bye.tt2:4
+#: mail_tt2/bye.tt2:7
 msgid "Your email address (%1) has been removed from list %2@%3"
 msgstr "Vaše emailová adresa %1 byla odstraněna z konference %2@%3"
 
@@ -4960,14 +6196,21 @@ msgstr ""
 msgid "Your list is created."
 msgstr "Konference byla vytvořena."
 
-#: src/sympa.pl:1280
+#. (list.name)
+#: mail_tt2/message_report.tt2:51
 msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list.\n"
 msgstr ""
 
+#. (list.name)
+#: mail_tt2/message_report.tt2:104
+#, fuzzy
+msgid "Your message for list %1 has been forwarded to editor(s)"
+msgstr "Vase zprava pro konferenci %s byla preposlana editorovi\n"
+
 #. (list.name,list.host,rejected_by)
-#: mail_tt2/reject.tt2:5
+#: mail_tt2/reject.tt2:9
 msgid ""
 "Your message for list %1@%2\n"
 "has been rejected by the moderator (%3)."
@@ -4975,42 +6218,30 @@ msgstr ""
 "Vase zprava pro konferenci %1@%2\n"
 "byla zamitnuta moderatorem (%3)."
 
-#: src/List.pm:2425
-msgid "Your message for list %s has been forwarded to editor(s)\n"
-msgstr "Vase zprava pro konferenci %s byla preposlana editorovi\n"
-
-#: src/Commands.pm:1776 src/sympa.pl:1356
+#. (conf.host)
+#: mail_tt2/message_report.tt2:89
 msgid ""
-"Your message for list %s has been rejected.\n"
-"The message is thus sent back to you.\n"
-"\n"
-"Your message :\n"
+"Your message for list '%1' (attached below) was rejected. \n"
+"You are not allowed to send this message for the following reason :"
 msgstr ""
 
 #: mail_tt2/reject.tt2:2
 msgid "Your message has been rejected."
 msgstr "Vase zprava byla odmitnuta"
 
-#: src/Commands.pm:546
-msgid "Your message signature was succesfuly verified using S/MIME"
-msgstr "Podpis Vaší zprávy byl úspěšně ověřen pomocí S/MIME"
-
-#: src/Commands.pm:1772 src/sympa.pl:1276 src/sympa.pl:1352
-msgid "Your message to %s has been rejected"
-msgstr "Vase zprava pro %s byla odmitnuta"
-
-#: src/Commands.pm:549
+#: mail_tt2/command_report.tt2:97
 msgid ""
-"Your message was not a multipart/signed message or Sympa could not\n"
-"verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"Your message was not a multipart/signed message or Sympa could not verify "
+"the signature \n"
+"(be aware that Sympa can't check signature if you use the subject header to "
+"write a command)."
 msgstr ""
 
 #: web_tt2/pref.tt2:52
 msgid "Your other email addresses"
 msgstr "Další e-mailová adresa"
 
-#: web_tt2/notice.tt2:33
+#: web_tt2/notice.tt2:44
 msgid "Your password has been emailed to you"
 msgstr "Heslo Vám bylo odesláno e-mailem"
 
@@ -5021,49 +6252,24 @@ msgid ""
 "e-mail box to provide your password below."
 msgstr "Prosím prohlédněte si Vaši emailovou schránku a opište Vaše heslo."
 
-#: web_tt2/error.tt2:67
-msgid ""
-"Your password is stored in an LDAP directory, therefore Sympa cannot post "
-"you a reminder"
-msgstr ""
-
 #: web_tt2/login_menu.tt2:31
 msgid "Your preferences"
 msgstr "Osobní nastavení"
 
-#: web_tt2/notice.tt2:6
+#: web_tt2/notice.tt2:5
 msgid "Your request has been forwarded to the list owner"
 msgstr "Váš požadavek byl odeslán správci konference"
-
-#: soap/sympasoap.pm:625
-msgid ""
-"Your request of subscription/unssubscription has been forwarded to the "
-"list's\n"
-"owners for approval. You will receive a notification when you will have\n"
-"been subscribed (or unsubscribed) to the list.\n"
-msgstr ""
-
-#: src/Commands.pm:625 src/Commands.pm:892
-msgid ""
-"Your request to subscribe/unsubscribe has been forwarded to the list's\n"
-"owners for approval. You will receive a notification when you will have\n"
-"been subscribed (or unsubscribed) to the list.\n"
-msgstr ""
 
 #. (user.email)
 #: mail_tt2/welcome.tt2:11 mail_tt2/welcome.tt2:31
 msgid "Your subscription email is %1"
 msgstr "Jste přihlášen z adresy %1"
 
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4345
-msgid "Your subscription to list %s has been removed."
-msgstr "Vaše přihlášení do konference %1 bylo odstraněno."
-
 #: web_tt2/help.tt2:20
 msgid "Your subscriptions"
 msgstr "Přihlášené konference"
 
-#: src/smtp.pm:43
+#: src/mail.pm:50
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -5077,6 +6283,36 @@ msgstr ""
 
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
+msgstr ""
+
+#. (...)
+#: src/tt2.pl:124
+msgid "[% FILTER escape_url %] %1 %2 ..."
+msgstr ""
+
+#. (conf.sympa,list.name,modkey)-)
+#: mail_tt2/moderate.tt2:21
+msgid "[% FILTER escape_url %]mailto:%1?subject=DISTRIBUTE %2 %3"
+msgstr ""
+
+#. (conf.sympa,list.name,modkey)-)
+#: mail_tt2/moderate.tt2:26
+msgid "[% FILTER escape_url %]mailto:%1?subject=REJECT %2 %3"
+msgstr ""
+
+#. (conf.sympa,l,user.email)
+#: mail_tt2/global_remind.tt2:14
+msgid "[% FILTER escape_url %]mailto:%1?subject=sig %2 %3"
+msgstr ""
+
+#. (conf.email,conf.host,list.name,user.email)
+#: mail_tt2/expire_warning2.tt2:12 mail_tt2/remind.tt2:11
+msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sig %3 %4"
+msgstr ""
+
+#. (conf.email,conf.host,list.name)
+#: mail_tt2/expire_deletion.tt2:12 mail_tt2/removed.tt2:12
+msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sub %3"
 msgstr ""
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
@@ -5104,59 +6340,6 @@ msgid ""
 "-----Delivery Status Report-----\n"
 msgstr ""
 
-#: src/Commands.pm:1981 src/Commands.pm:2164
-msgid ""
-"\n"
-"An EXPIRE command is currently running for list %s.\n"
-"It had been run by owner %s (%s)\n"
-"There cannot be more than one 'expire' process at a time for a given list.\n"
-"The currently running expiration is for people subscribing for more\n"
-"than %d days and who didn't confirm their subscription. The expiration\n"
-"will end in %d day(s) (%s).\n"
-msgstr ""
-
-#: src/Commands.pm:2022
-msgid ""
-"\n"
-"An expiration process for list %s has been started. This process\n"
-"will end in %d days. You will then receive the list of subscribers \n"
-"who didn't confirm their subscription in time.\n"
-"You will then be able to remove these addresses yourself with the DEL "
-"command.\n"
-msgstr ""
-
-#: src/List.pm:2290
-msgid ""
-"\n"
-"Dear owner of list %s,\n"
-"\n"
-"A user asked to be added as a subscriber to your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-"\n"
-"or send an email to %s with the following subject :\n"
-"AUTH %s ADD %s %s %s\n"
-msgstr ""
-
-#: src/Commands.pm:183
-msgid ""
-"\n"
-"Powered by Sympa %s : http://www.sympa.org/\n"
-msgstr ""
-
-#: src/Commands.pm:1938
-msgid ""
-"\n"
-"The EXPIRE command couldn't be run. It must followed by an explication\n"
-"text aimed to subscribers who need to confirm their subscription.\n"
-"This text must\n"
-"\n"
-" - start on the very first line following the EXPIRE command,\n"
-" - contain at least 20 words,\n"
-" - and end with the QUIT word.\n"
-msgstr ""
-
 #: src/PlainDigest.pm:334
 msgid ""
 "\n"
@@ -5169,32 +6352,16 @@ msgid ""
 "[ ** Unable to process HTML message part **]\n"
 msgstr ""
 
-#: src/Commands.pm:2382
-msgid ""
-"\n"
-"\n"
-"Lists you are editor of :\n"
-"\n"
-msgstr ""
-
-#: src/Commands.pm:2374
-msgid ""
-"\n"
-"\n"
-"Lists you are owner of:\n"
-"\n"
-msgstr ""
-
 #: web_tt2/d_read.tt2:129 web_tt2/d_read.tt2:131 web_tt2/d_read.tt2:265
 #: web_tt2/d_read.tt2:267 web_tt2/d_read.tt2:31
 msgid "access"
 msgstr "přístup"
 
-#: src/List.pm:1136 src/List.pm:327
+#: src/List.pm:1175 src/List.pm:331
 msgid "access right"
 msgstr "přístupová práva"
 
-#: src/List.pm:377 src/List.pm:398
+#: src/List.pm:381 src/List.pm:402
 msgid "action for this population"
 msgstr "akce při této úrovni"
 
@@ -5206,10 +6373,6 @@ msgstr "Neaktivní konference"
 #: src/etc/scenari/add.closed:1
 msgid "add impossible"
 msgstr ""
-
-#: src/etc/scenari/add.auth:1
-msgid "add need authentication"
-msgstr "přidat nutnost autantikace"
 
 #: src/etc/scenari/add.owner:1
 msgid "add performed by list owner do not need authentication"
@@ -5224,7 +6387,7 @@ msgid "admin"
 msgstr "Administrace"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:95
+#: mail_tt2/listmaster_notification.tt2:96
 msgid "admins update failed for list %1"
 msgstr ""
 
@@ -5251,7 +6414,7 @@ msgid "and checking on part of word)"
 msgstr "a hledat i části slov)"
 
 #: src/etc/scenari/create_list.public_listmaster:1
-msgid "anybody by validation by listmaster requiered"
+msgid "anybody by validation by listmaster required"
 msgstr ""
 
 #: src/etc/scenari/review.public:1
@@ -5266,10 +6429,6 @@ msgstr "přístupné pro uživatele z místní domény"
 msgid "anyone with previous md5 authentication"
 msgstr "přístupné pro uživatele po md5 autentikaci"
 
-#: src/etc/scenari/unsubscribe.open.~1.8.~:1
-msgid "anyone without authentication"
-msgstr "kdokoliv bez autentikace"
-
 #: src/etc/scenari/subscribe.open_quiet:1
 msgid "anyone, no welcome message"
 msgstr "kdokoliv, bez uvítací zprávy"
@@ -5277,6 +6436,12 @@ msgstr "kdokoliv, bez uvítací zprávy"
 #: src/etc/scenari/subscribe.open_notify:1
 msgid "anyone, notification is sent to list owner"
 msgstr "kdokoliv, upozornění je zasláno vlastníkovi"
+
+#: mail_tt2/listmaster_notification.tt2:249
+msgid ""
+"auth.conf error : either email_http_header or ldap_host/"
+"ldap_get_email_by_uid_filter entries should be defined."
+msgstr ""
 
 #: src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
@@ -5298,7 +6463,7 @@ msgstr "pouze vlastník"
 msgid "by owner without authentication"
 msgstr "pouze vlastník bez autentikace"
 
-#: mail_tt2/bye.tt2:5
+#: mail_tt2/bye.tt2:8
 msgid "bye !"
 msgstr "Na shledanou!"
 
@@ -5310,7 +6475,7 @@ msgstr "nerozlišovat velikost písmen"
 msgid "case sensitive"
 msgstr "rozlišovat velikost písmen"
 
-#: src/List.pm:804
+#: src/List.pm:808
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
@@ -5318,8 +6483,8 @@ msgstr ""
 msgid "change access"
 msgstr "změnit práva"
 
-#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:280
-#: src/etc/mhonarc-ressources.tt2:362 src/etc/mhonarc-ressources.tt2:366
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294
+#: src/etc/mhonarc-ressources.tt2:376 src/etc/mhonarc-ressources.tt2:380
 #, fuzzy
 msgid "chronological"
 msgstr "Chronologicky"
@@ -5328,6 +6493,10 @@ msgstr "Chronologicky"
 #: src/etc/scenari/send.closed:1
 msgid "closed"
 msgstr "konference/funkce zakázána"
+
+#: web_tt2/skinsedit.tt2:14 web_tt2/skinsedit.tt2:18
+msgid "color effet"
+msgstr ""
 
 #: src/etc/scenari/visibility.secret:1
 msgid "conceal even for subscribers"
@@ -5350,11 +6519,11 @@ msgstr "skrytá, dokud uživatel není přihlášen"
 msgid "concealed"
 msgstr "neskrývat"
 
-#: src/List.pm:835
+#: src/List.pm:839
 msgid "connection options"
 msgstr "možnosti připojení"
 
-#: src/List.pm:659
+#: src/List.pm:663
 msgid "connection timeout"
 msgstr "spojení vypršelo"
 
@@ -5378,29 +6547,29 @@ msgstr ""
 msgid "daily update of the certificate revocation list"
 msgstr ""
 
-#: src/List.pm:581
+#: src/List.pm:585
 msgid "data location URL"
 msgstr "umístění dat - URL"
 
-#: src/List.pm:831
+#: src/List.pm:835
 msgid "database name"
 msgstr "název databáze"
 
-#: src/List.pm:821
+#: src/List.pm:825
 msgid "database type"
 msgstr "typ databáze"
 
-#: src/List.pm:535 src/List.pm:951
+#: src/List.pm:540 src/List.pm:991
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Špatný parameter"
 
-#: src/List.pm:1110 src/List.pm:893
+#: src/List.pm:1149 src/List.pm:897
 #, fuzzy
 msgid "date"
 msgstr "Změň"
 
-#: src/List.pm:476
+#: src/List.pm:480
 msgid "days"
 msgstr "Dny"
 
@@ -5451,7 +6620,7 @@ msgstr "e-mailová adresa"
 msgid "edit"
 msgstr "upravit"
 
-#: mail_tt2/listmaster_notification.tt2:26
+#: mail_tt2/listmaster_notification.tt2:78
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
@@ -5461,12 +6630,12 @@ msgstr ""
 msgid "editor rejection message"
 msgstr "zpráva pro odmítnutí editorem"
 
-#: src/List.pm:506 src/List.pm:916 web_tt2/login_menu.tt2:59
+#: src/List.pm:510 src/List.pm:956 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "emailová adresa"
 
-#: src/List.pm:1060 src/List.pm:1065
+#: src/List.pm:1099 src/List.pm:1104
 msgid "email address protection method"
 msgstr "ochrana e-mailových adres"
 
@@ -5482,16 +6651,16 @@ msgstr ""
 msgid "entire word"
 msgstr "celé slovo"
 
-#: src/List.pm:840
+#: src/List.pm:844
 msgid "environment variables for database connexion"
 msgstr "nastavení prostředí pro databázové připojení"
 
-#: src/List.pm:1105 src/List.pm:889
+#: src/List.pm:1144 src/List.pm:893
 #, fuzzy
 msgid "epoch date"
 msgstr "Změň"
 
-#: mail_tt2/listmaster_notification.tt2:68
+#: mail_tt2/listmaster_notification.tt2:148
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
@@ -5503,39 +6672,39 @@ msgstr "všichni mohou posílat"
 msgid "expiration routine run yearly"
 msgstr "expirační proces spouštět jednou ročně"
 
-#: src/List.pm:643
+#: src/List.pm:647
 msgid "extracted attribute"
 msgstr "získané atributy"
 
-#: src/List.pm:637
+#: src/List.pm:641
 msgid "filter"
 msgstr "filtr"
 
-#: src/List.pm:722
+#: src/List.pm:726
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:706
+#: src/List.pm:710
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:701
+#: src/List.pm:705
 msgid "first-level filter"
 msgstr ""
 
-#: src/List.pm:728
+#: src/List.pm:732
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:716
+#: src/List.pm:720
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:711
+#: src/List.pm:715
 msgid "first-level selection"
 msgstr ""
 
-#: src/List.pm:695
+#: src/List.pm:699
 msgid "first-level suffix"
 msgstr ""
 
@@ -5547,7 +6716,7 @@ msgstr "veřejně přístupné"
 msgid "for anyone without authentication"
 msgstr "veřejně přístupné, bez autentikace"
 
-#: src/List.pm:322
+#: src/List.pm:326
 msgid "frequency"
 msgstr "perioda archivace"
 
@@ -5564,7 +6733,7 @@ msgstr ""
 msgid "global remind message"
 msgstr "globální připomínací zpráva"
 
-#: src/List.pm:361
+#: src/List.pm:365
 msgid "halt rate"
 msgstr "úroveň blokování"
 
@@ -5572,11 +6741,11 @@ msgstr "úroveň blokování"
 msgid "help file"
 msgstr "soubor nápovědy"
 
-#: mail_tt2/list_created.tt2:6
+#: mail_tt2/list_created.tt2:9
 msgid "homepage"
 msgstr "WWW adresa nové konference"
 
-#: src/List.pm:482
+#: src/List.pm:486
 msgid "hour"
 msgstr "Hodina"
 
@@ -5588,7 +6757,7 @@ msgstr ""
 msgid "impossible"
 msgstr "není možné"
 
-#: mail_tt2/listmaster_notification.tt2:23
+#: mail_tt2/listmaster_notification.tt2:72
 msgid "incorrect format of edit_list.conf"
 msgstr ""
 
@@ -5637,14 +6806,14 @@ msgid "latest lists"
 msgstr "Poslední vytvořené"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:101
-#: mail_tt2/listmaster_notification.tt2:40
-#: mail_tt2/listmaster_notification.tt2:47
-#: mail_tt2/listmaster_notification.tt2:54
-#: mail_tt2/listmaster_notification.tt2:61
-#: mail_tt2/listmaster_notification.tt2:74
-#: mail_tt2/listmaster_notification.tt2:81
-#: mail_tt2/listmaster_notification.tt2:88
+#: mail_tt2/listmaster_notification.tt2:105
+#: mail_tt2/listmaster_notification.tt2:116
+#: mail_tt2/listmaster_notification.tt2:127
+#: mail_tt2/listmaster_notification.tt2:137
+#: mail_tt2/listmaster_notification.tt2:158
+#: mail_tt2/listmaster_notification.tt2:169
+#: mail_tt2/listmaster_notification.tt2:179
+#: mail_tt2/listmaster_notification.tt2:189
 msgid "list %1 in status error_config"
 msgstr "konference %1 má špatnou konfiguraci"
 
@@ -5714,7 +6883,7 @@ msgstr "pouze pro správce konference"
 msgid "local domain users or owner approval"
 msgstr "pouze uživatelé z místní domény nebo povolenené vlastníkem"
 
-#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:290
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -5728,7 +6897,7 @@ msgstr "patička zprávy"
 msgid "message header"
 msgstr "hlavička zprávy"
 
-#: src/List.pm:488
+#: src/List.pm:492
 msgid "minute"
 msgstr "Minuta"
 
@@ -5740,7 +6909,7 @@ msgstr "moderuj"
 msgid "moderated for subscribers"
 msgstr "Konference nemá žádné členy"
 
-#: src/List.pm:516 src/List.pm:926
+#: src/List.pm:520 src/List.pm:966
 msgid "name"
 msgstr "Jméno"
 
@@ -5782,7 +6951,7 @@ msgstr "nikdo nemá přístup k přehledu"
 msgid "notice mode"
 msgstr "celé slovo"
 
-#: src/List.pm:382 src/List.pm:403
+#: src/List.pm:386 src/List.pm:407
 msgid "notification"
 msgstr "zaslat upozornění"
 
@@ -5821,7 +6990,7 @@ msgstr "v"
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
-#: src/List.pm:1003
+#: src/List.pm:1042
 msgid "other email address"
 msgstr "další e-mail adresa"
 
@@ -5835,7 +7004,7 @@ msgid "page"
 msgstr "WWW adresa nové konference"
 
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:297
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "strana %1 / %2"
@@ -5844,6 +7013,15 @@ msgstr "strana %1 / %2"
 #: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
 msgid "page %1 / %2"
 msgstr "strana %1 / %2"
+
+#: web_tt2/skinsedit.tt2:12 web_tt2/skinsedit.tt2:16
+#, fuzzy
+msgid "parameter"
+msgstr "část"
+
+#: web_tt2/skinsedit.tt2:13 web_tt2/skinsedit.tt2:17
+msgid "parameter value"
+msgstr ""
 
 #: web_tt2/arcsearch_form.tt2:42
 msgid "part of word"
@@ -5856,7 +7034,7 @@ msgid "password"
 msgstr "heslo"
 
 #. (newuser.password)
-#: mail_tt2/sendpasswd.tt2:17 mail_tt2/sendpasswd.tt2:24
+#: mail_tt2/sendpasswd.tt2:20 mail_tt2/sendpasswd.tt2:27
 msgid "password: %1"
 msgstr "heslo: %1"
 
@@ -5865,15 +7043,15 @@ msgstr "heslo: %1"
 msgid "private archives"
 msgstr "soukromý archív"
 
-#: src/List.pm:521
+#: src/List.pm:525
 msgid "private information"
 msgstr "další údaje"
 
-#: src/List.pm:931
+#: src/List.pm:971
 msgid "private informations"
 msgstr "soukromé informace"
 
-#: src/List.pm:936 src/List.pm:962
+#: src/List.pm:1001 src/List.pm:976
 msgid "profile"
 msgstr "profil"
 
@@ -5920,17 +7098,17 @@ msgid "purge of orphan entries in user table every month"
 msgstr "smazat bezprizorní položky v tabulce uživatelů každý měsíc"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
-#: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
+#: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
 #: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "bez upozornění uživatele"
 
-#: src/List.pm:1051 src/List.pm:1143
+#: src/List.pm:1090 src/List.pm:1182
 msgid "quota"
 msgstr "Kapacita"
 
-#: src/List.pm:343 src/List.pm:456 src/List.pm:511 src/List.pm:541
-#: src/List.pm:921 src/List.pm:957
+#: src/List.pm:347 src/List.pm:460 src/List.pm:515 src/List.pm:545
+#: src/List.pm:961 src/List.pm:996
 msgid "reception mode"
 msgstr "způsob příjmu :"
 
@@ -5950,27 +7128,27 @@ msgstr "zasílat připomínku každý měsíc"
 msgid "remind message sent to subscribers every year"
 msgstr "zasílat připomínku každý rok"
 
-#: src/List.pm:610 src/List.pm:674 src/List.pm:787 src/List.pm:826
+#: src/List.pm:614 src/List.pm:678 src/List.pm:791 src/List.pm:830
 msgid "remote host"
 msgstr "vzdálený host"
 
-#: src/List.pm:816
+#: src/List.pm:820
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:594 src/List.pm:627 src/List.pm:691 src/List.pm:849
+#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:853
 msgid "remote password"
 msgstr "Heslo vzdáleného systému"
 
-#: src/List.pm:799
+#: src/List.pm:803
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:616 src/List.pm:680 src/List.pm:793
+#: src/List.pm:620 src/List.pm:684 src/List.pm:797
 msgid "remote port"
 msgstr "vzdálený port"
 
-#: src/List.pm:587 src/List.pm:621 src/List.pm:685 src/List.pm:844
+#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:848
 msgid "remote user"
 msgstr "vzdálený uživatel"
 
@@ -5990,7 +7168,7 @@ msgstr "vyžaduje S/MIME podpis nebo povolení vlastníka"
 msgid "requires authentication then owner approval"
 msgstr "vyžaduje autentikaci a potvrzení od vlastníka"
 
-#: src/List.pm:1008
+#: src/List.pm:1047
 msgid "respect of existing header field"
 msgstr "zachování existující hlavičky zprávy"
 
@@ -6015,6 +7193,11 @@ msgstr "přístup pouze z místní domény nebo členům"
 #: src/etc/scenari/subscribe.intranet:1
 msgid "restricted to local domain users"
 msgstr "přístup pouze pro uživatele z místní domény"
+
+#: src/etc/scenari/add.auth:1
+#, fuzzy
+msgid "restricted to owner with authentication"
+msgstr "pouze vlastník bez autentikace"
 
 #: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
@@ -6054,49 +7237,49 @@ msgstr "výsledků na stránku"
 msgid "save"
 msgstr "Uložit"
 
-#: web_tt2/edit_list_request.tt2:30
+#: web_tt2/edit_list_request.tt2:31
 #, fuzzy
 msgid "scenario source"
 msgstr "Testovací modul scénářů"
 
-#: src/List.pm:653
+#: src/List.pm:657
 msgid "search scope"
 msgstr "Kde hledat"
 
-#: src/List.pm:760
+#: src/List.pm:764
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:744
+#: src/List.pm:748
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:738
+#: src/List.pm:742
 msgid "second-level filter template"
 msgstr "Nastavení šablon serveru"
 
-#: src/List.pm:766
+#: src/List.pm:770
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:754
+#: src/List.pm:758
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:749
+#: src/List.pm:753
 msgid "second-level selection"
 msgstr "výběr druhé úrovně"
 
-#: src/List.pm:732
+#: src/List.pm:736
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/List.pm:648
+#: src/List.pm:652
 msgid "selection (if multiple)"
 msgstr "výběr (i vícenásobný)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:411
+#: src/etc/mhonarc-ressources.tt2:425
 msgid "send it back to %1"
 msgstr "Poslat zpět na %1"
 
@@ -6112,13 +7295,19 @@ msgstr "rozlišovat"
 msgid "session"
 msgstr "sezení"
 
-#: src/List.pm:599 src/List.pm:663 src/List.pm:770 src/List.pm:809
-#: src/List.pm:863
+#: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
+#: src/List.pm:867
 msgid "short name for this source"
 msgstr "zkratka pro tento zdroj"
 
 #: wwsympa/wwslib.pm:35
 msgid "standard (direct reception)"
+msgstr ""
+
+#: web_tt2/skinsedit.tt2:41
+msgid ""
+"static css installation succeed. Reload the current page and/or check sympa "
+"logs  to be sure that static css a really in use."
 msgstr ""
 
 #: web_tt2/set_pending_list_request.tt2:25 web_tt2/subrequest.tt2:47
@@ -6139,7 +7328,7 @@ msgid "subscribers only"
 msgstr "pouze pro členy"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:33
+#: mail_tt2/listmaster_notification.tt2:85
 msgid "subscribers update failed for list %1"
 msgstr ""
 
@@ -6151,7 +7340,7 @@ msgstr "zpráva pro pozvané"
 msgid "subscription request confirmed"
 msgstr "požadavek na přihlášení musí být potvrzen"
 
-#: src/List.pm:631
+#: src/List.pm:635
 msgid "suffix"
 msgstr "přípona"
 
@@ -6164,7 +7353,7 @@ msgstr "souhrná zpráva"
 msgid "summary mode"
 msgstr "souhrná zpráva"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:432
 msgid "tag this mail for deletion"
 msgstr "Smazat zprávu"
 
@@ -6185,7 +7374,11 @@ msgstr ""
 "adresy jsou schovány pomocí javascriptu. Uživatel, kterí povolí javascript "
 "ve svém prohlížeči, může e-maily normálně vidět."
 
-#: src/List.pm:531 src/List.pm:946
+#: web_tt2/skinsedit.tt2:45
+msgid "the current definition for css location (css_url parameter) is"
+msgstr ""
+
+#: src/List.pm:535 src/List.pm:986
 #, fuzzy
 msgid "the datasource"
 msgstr "Uživatelský zdroj dat"
@@ -6220,12 +7413,12 @@ msgstr ""
 msgid "this template is defined for list"
 msgstr "Konference %1 není definován vlastník."
 
-#: src/etc/mhonarc-ressources.tt2:366
+#: src/etc/mhonarc-ressources.tt2:380
 #, fuzzy
 msgid "thread"
 msgstr "Podle vláken"
 
-#: src/List.pm:372 src/List.pm:393
+#: src/List.pm:376 src/List.pm:397
 msgid "threshold"
 msgstr "limit"
 
@@ -6233,7 +7426,7 @@ msgstr "limit"
 msgid "title"
 msgstr "titulek"
 
-#: src/etc/mhonarc-ressources.tt2:408
+#: src/etc/mhonarc-ressources.tt2:422
 msgid "to list"
 msgstr "do konference"
 
@@ -6250,7 +7443,7 @@ msgstr "zpráva pro odhlášení"
 msgid "urlize mode"
 msgstr "Zobrazení sdílených dokumentů"
 
-#: src/List.pm:998 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1037 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "hodnota"
 
@@ -6262,11 +7455,11 @@ msgstr "zobraz lokalizace"
 msgid "virus infection message"
 msgstr "zpráva o viru v e-mailu"
 
-#: src/List.pm:461
+#: src/List.pm:465
 msgid "visibility"
 msgstr "zobrazení - dostupnost"
 
-#: src/List.pm:354
+#: src/List.pm:358
 msgid "warn rate"
 msgstr "úroveň upozornění"
 
@@ -6274,38 +7467,202 @@ msgstr "úroveň upozornění"
 msgid "welcome message"
 msgstr "uvítací zpráva"
 
-#: src/List.pm:898
+#: src/List.pm:902
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Kdo smí vidět informace o konferenci"
 
-#: src/List.pm:1116
+#: src/List.pm:1155
 #, fuzzy
 msgid "who updated the config"
 msgstr "Poslední změna konfigurace"
 
-#: src/etc/scenari/unsubscribe.open_notify.~1.9.~:1
-msgid "without authentication, notification is sent to owners"
-msgstr "bez autentikace, upozornění zasíláné správcům"
+#: mail_tt2/authorization_reject.tt2:185
+#, fuzzy
+msgid "you are not allowed to perform this action."
+msgstr "%1 : na tuto akci nemáte oprávnění"
 
 #: wwsympa/wwslib.pm:44
 #, fuzzy
 msgid "you do not receive your own posts"
 msgstr "Pro získání hesla :"
 
-#: web_tt2/error.tt2:18
-msgid "you need to login"
-msgstr "musíte se přihlásit"
-
 #. (newuser.email)
-#: mail_tt2/sendpasswd.tt2:29
+#: mail_tt2/sendpasswd.tt2:32
 msgid "your email address    : %1"
 msgstr "Vaše adresa  : %1"
 
 #. (newuser.password)
-#: mail_tt2/sendpasswd.tt2:30
+#: mail_tt2/sendpasswd.tt2:33
 msgid "your password : %1"
 msgstr "Vaše heslo   : %1"
+
+#~ msgid "%1 : No such file"
+#~ msgstr "Soubor %1 neexistuje"
+
+#~ msgid "%1 : incorrect name"
+#~ msgstr "%1 : má nesprávný formát"
+
+#~ msgid "%1: action failed"
+#~ msgstr "%1: akce selhala"
+
+#~ msgid "%s did not receive confirmation for the following addresses :\n"
+#~ msgstr "%s nepřijal potvrzení následucící adresy :\n"
+
+#~ msgid "------ End of suspected message ------\n"
+#~ msgstr "------ Konec podezřelé zprávy ------\n"
+
+#~ msgid ": user unknown"
+#~ msgstr ": neznámý uživatel"
+
+#~ msgid ""
+#~ "Among subscriber of list %s since %d days, %d didn't confirm there "
+#~ "subscription.\n"
+#~ msgstr ""
+#~ "Některý z členů konference %s po dobu %d dní, %d nepotvrdil svou "
+#~ "registraci.\n"
+
+#~ msgid ""
+#~ "An expiration process for list %s has been started. This process\n"
+#~ "will end in %d days. You will then receive the list of subscribers \n"
+#~ "who didn't confirm their subscription in time.\n"
+#~ "You will then be able to remove these addresses yourself with the DEL "
+#~ "command.\n"
+#~ msgstr ""
+#~ "Expirační proces pro konferenci %s byl spuštěn. Tento proces\n"
+#~ "bude ukončen za %d dní. Poté obdržíte seznam členů kteří nepotrvdily \n"
+#~ "svoji registraci včas.\n"
+#~ "Poté budete moci tyto uživatele odstranit z konference pomocí příkazu "
+#~ "DEL\n"
+
+#~ msgid "Authentication requested"
+#~ msgstr "Odeslat požadavek na přihlášení"
+
+#~ msgid "Cannot create %1"
+#~ msgstr "Nelze vytvořit %1"
+
+#, fuzzy
+#~ msgid ""
+#~ "Could not change your subscription address for the list '%1'\n"
+#~ "     because you are not allowed to unsubscribe."
+#~ msgstr ""
+#~ "Could not change your subscription address for the list '%1%'\n"
+#~ "because you are not allowed to unsubscribe.\n"
+
+#~ msgid "End of your EXPIRE command on list %s"
+#~ msgstr "Ukončení příkazu EXPIRE v konferenci %s"
+
+#~ msgid "Failed to add user %1"
+#~ msgstr "Chyba pi pidvn uivatele %1"
+
+#~ msgid "Failed to change your subscriber options for list %s.\n"
+#~ msgstr "V této konferenci %s nelze změnit uživatelské nastavení.\n"
+
+#~ msgid "File"
+#~ msgstr "Soubor"
+
+#~ msgid ""
+#~ "If you want to remove these subscriber from the list, use the following "
+#~ "commands :\n"
+#~ msgstr ""
+#~ "Pokud chcete odstranit tyto členy z konference, použijte "
+#~ "následujícípříkazy:\n"
+
+#~ msgid "List %s is not currently running an expiration process.\n"
+#~ msgstr "Konference %s nezpracovává expirační dávku.\n"
+
+#~ msgid "Loading admins failed"
+#~ msgstr "Načítání tabulky administrátorů selhalo"
+
+#~ msgid "Moderating your message"
+#~ msgstr "Vase zprava je zpracovavana"
+
+#~ msgid "No password for user"
+#~ msgstr "Nebylo nalezeno heslo pro uživatele"
+
+#~ msgid "Owners of list %s"
+#~ msgstr "Vlastnici konference %s"
+
+#~ msgid "Provided password is incomplete"
+#~ msgstr "Poskytnuté heslo je nekompletní"
+
+#~ msgid "Reminder of your %s subscription"
+#~ msgstr "Pripomenuti Vaseho clenstvi v konferenci %s"
+
+#~ msgid "Renewal of your subscription to list '%s'"
+#~ msgstr "Obnoveni Vaseho clenstvi v konferenci %1"
+
+#~ msgid "Review"
+#~ msgstr "Uživatelé konference"
+
+#~ msgid ""
+#~ "The authentication process failed\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Autentikační proces selhal\n"
+#~ "\n"
+
+#~ msgid "These subscribers are :\n"
+#~ msgstr "Tito členové jsou :\n"
+
+#~ msgid "Thus, your message is sent back to you :\n"
+#~ msgstr "Vaše zpráva Vám byla odeslána zpět:\n"
+
+#~ msgid ""
+#~ "Unable to find the message of the list %s locked by the key %s.\n"
+#~ "Warning : this message could have ever been send by another editor"
+#~ msgstr ""
+#~ "Nelze nalezt zpravu pro konferenci %s oznacenou klicem %s.\n"
+#~ "Upozorneni : tato zprava jiz mohla byt zpracovana jinym editorem"
+
+#~ msgid "Unsubscribe from list %s"
+#~ msgstr "Odhlásit z konference %1"
+
+#~ msgid "User %s is unwanted in list %s.\n"
+#~ msgstr "Uživatel %s nebyl schválen do konference %s.\n"
+
+#~ msgid "Welcome on list %s"
+#~ msgstr "Vitejte v konferenci %1"
+
+#~ msgid "You are member of list %s with email %s\n"
+#~ msgstr "Jste členem konference %s s e-mail adresou %s\n"
+
+#~ msgid "You are not allowed to perform command %s in list %s\n"
+#~ msgstr "%1 : na tuto akci nemáte oprávnění\n"
+
+#~ msgid "You have been removed from list %s.\n"
+#~ msgstr "Byl jste odstraněn z konference  %s.\n"
+
+#~ msgid ""
+#~ "You have been removed from list %s.\n"
+#~ "Thank you for using this list.\n"
+#~ msgstr ""
+#~ "Byl jste odstraněn z konference  %s.\n"
+#~ "Děkujeme za využívání naší konference.\n"
+
+#~ msgid "You have changed a parameter without permissions: %1"
+#~ msgstr "Zmnil jste parametr bez oprvnn: %1"
+
+#~ msgid "You just stopped the expiration process for list %s\n"
+#~ msgstr "Právě jste zastavil expirační proces konference %s\n"
+
+#~ msgid "Your message to %s has been rejected"
+#~ msgstr "Vase zprava pro %s byla odmitnuta"
+
+#~ msgid "Your subscription to list %s has been removed."
+#~ msgstr "Vaše přihlášení do konference %1 bylo odstraněno."
+
+#~ msgid "add need authentication"
+#~ msgstr "přidat nutnost autantikace"
+
+#~ msgid "anyone without authentication"
+#~ msgstr "kdokoliv bez autentikace"
+
+#~ msgid "without authentication, notification is sent to owners"
+#~ msgstr "bez autentikace, upozornění zasíláné správcům"
+
+#~ msgid "you need to login"
+#~ msgstr "musíte se přihlásit"
 
 #~ msgid "-Rename list"
 #~ msgstr "-Přejmenovat"
@@ -6348,26 +7705,11 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "Cannot find any database. WWSympa requires a RDBMS to run."
 #~ msgstr "Nemohu nalézt databázi. WWSympa vyžaduje pro běh RDBMS."
 
-#~ msgid "Cannot find certificate for this list"
-#~ msgstr "Nemohu nalézt certifikát pro tuto konferenci"
-
-#~ msgid "Cannot read file %1"
-#~ msgstr "Nelze přečíst soubor %1"
-
-#~ msgid "Cannot save config"
-#~ msgstr "Nemohu uložit konfiguraci"
-
 #~ msgid "Change"
 #~ msgstr "Změna"
 
 #~ msgid "Could not rename deleted message"
 #~ msgstr "Nemohu přejmenovat odstraněnou zprávu"
-
-#~ msgid "Could not rename the archive"
-#~ msgstr "Nemohu přejmenovat archív"
-
-#~ msgid "Could not rename the bounces directory"
-#~ msgstr "Nemohu přejmenovat adresář chybných adres (bounce)"
 
 #~ msgid "Create a new folder inside the folder"
 #~ msgstr "Vytvoř novou složku ve složce"
@@ -6387,23 +7729,8 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "Failed to add user"
 #~ msgstr "Chyba pi pidvn uivatele %1"
 
-#~ msgid "Failed to include members"
-#~ msgstr "Nelze vložit uživatele"
-
-#~ msgid "Failed to install aliases"
-#~ msgstr "Chyba při instalaci aliasů"
-
 #~ msgid "Failed to open the file. Someone else already removed it"
 #~ msgstr "Nelze otevřít soubor, někdo jiný jej již odstranil."
-
-#~ msgid "Failed to remove aliases"
-#~ msgstr "Nelze odstranit aliasy"
-
-#~ msgid "Internal error in scenario create_list"
-#~ msgstr "Interní chyba v šabloně create_list"
-
-#~ msgid "Internal server error"
-#~ msgstr "Interní chyba serveru"
 
 #~ msgid "List admin"
 #~ msgstr "Správa konference"
@@ -6430,12 +7757,6 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "May not send the message"
 #~ msgstr "Nemohu odeslat zprávu"
 
-#~ msgid "Message count"
-#~ msgstr "Počet zpráv"
-
-#~ msgid "Messages to moderate :"
-#~ msgstr "Počet zpráv k moderování :"
-
 #~ msgid "Missing argument: %1"
 #~ msgstr "Chybějící nebo nesprávně zadaný parametr : %1"
 
@@ -6447,9 +7768,6 @@ msgstr "Vaše heslo   : %1"
 
 #~ msgid "No entry found with email %1"
 #~ msgstr "Nebyla nalezena žádná zpráva z e-mailu %1"
-
-#~ msgid "No message found in archives matching Message-ID"
-#~ msgstr "V archívu nebyla nalezena žádná zpráva se stejným Message-ID"
 
 #~ msgid "No message to moderate"
 #~ msgstr "Žádné zprávy ke schválení"
@@ -6487,9 +7805,6 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "Sort by size"
 #~ msgstr "Setřídit podle velikosti"
 
-#~ msgid "Subscriber %s not found"
-#~ msgstr "Člen %s nenalezen"
-
 #~ msgid "Subscribers will be updated soon"
 #~ msgstr "Seznam členů bude obnoven"
 
@@ -6502,38 +7817,11 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "The archive is empty"
 #~ msgstr "Archív je prázdný"
 
-#~ msgid "The authentication process failed"
-#~ msgstr "Proces autentikace selhal"
-
 #~ msgid "The document %1 is awaiting moderation1"
 #~ msgstr "%1 čeká na moderování."
 
-#~ msgid "The exportation failed"
-#~ msgstr "%1: akce selhala"
-
-#~ msgid "The list already exists"
-#~ msgstr "Vytvoen konference"
-
-#~ msgid "The list has been closed"
-#~ msgstr "Konference byla uzavřena"
-
-#~ msgid "The list has been restored"
-#~ msgstr "Konference byla obnovena"
-
-#~ msgid "The list is already closed"
-#~ msgstr "Tato konference je již uzavřena"
-
-#~ msgid "The list is not closed"
-#~ msgstr "Konference není uzavřena"
-
-#~ msgid "The list parameter is missing"
-#~ msgstr "Chybějící nebo nesprávný parametr konference"
-
 #~ msgid "The requested action will be performed soon"
 #~ msgstr "Požadovaná funkce provedena"
-
-#~ msgid "The subscribers have been updated"
-#~ msgstr "Databáze členů byla aktualizována"
 
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"
@@ -6543,17 +7831,8 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "This reception mode is not allowed"
 #~ msgstr "Tento způsob příjmu zpráv není povolen"
 
-#~ msgid "Unable to change directory"
-#~ msgstr "Nemohu změnit adresář"
-
 #~ msgid "Unable to check list using smtp"
 #~ msgstr "Nelze zkontrolovat konferenci pomocí smtp"
-
-#~ msgid "Unable to create directory"
-#~ msgstr "Nelze vytvořit adresář %1"
-
-#~ msgid "Unable to load the list of topics"
-#~ msgstr "Nelze nahrát seznam témat"
 
 #~ msgid "Unable to load the templates required to create a list"
 #~ msgstr "Nelze nahrát šablony nutné pro vytvoření konference"
@@ -6561,20 +7840,11 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "Unable to open the scenari directory"
 #~ msgstr "Nelze otevřít adresář se scénáři"
 
-#~ msgid "Unable to read spool"
-#~ msgstr "Nelze přečíst spool"
-
-#~ msgid "Unknown authentication service"
-#~ msgstr "Neznámá autentikační služba"
-
 #~ msgid "Update failed"
 #~ msgstr "Obnovení selhalo"
 
 #~ msgid "You don't have required privileges to perform this action"
 #~ msgstr "%1 : na tuto akci nemte oprvnn"
-
-#~ msgid "You have been authenticated"
-#~ msgstr "Byl jste autentifikován"
 
 #~ msgid "You may not remove archive"
 #~ msgstr "Nemůžete odstranit archív"
@@ -6742,9 +8012,6 @@ msgstr "Vaše heslo   : %1"
 
 #~ msgid "one of"
 #~ msgstr "jakýkoliv"
-
-#~ msgid "part"
-#~ msgstr "část"
 
 #~ msgid "preferences"
 #~ msgstr "Nastavení"
