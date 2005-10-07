@@ -6,7 +6,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[% email %] requested creation of list "[% list.name %]"
+[%|loc(email,list.name)%]%1 requested creation of list "%2"[%END%]
 
 [% list.name %]@[% list.host %]
 [% list.subject %]
