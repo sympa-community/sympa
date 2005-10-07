@@ -151,22 +151,26 @@ sub SetLang {
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
     ## Set Locale::Messages context
-    unless (setlocale(&POSIX::LC_ALL, $locale)) {
-	unless (setlocale(&POSIX::LC_ALL, $lang)) {
-	    unless (setlocale(&POSIX::LC_ALL, $locale.'.'.$locale2charset{$locale})) {
-		unless (setlocale(&POSIX::LC_ALL, $locale.'.'.uc($locale2charset{$locale}))) { ## UpperCase required for FreeBSD
-		    &do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale.'.'.uc($locale2charset{$locale}));
-		    return undef;
-		}
-	    }
+    my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
+    foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
+	my $success;
+	foreach my $try ($locale,
+			 $lang,
+			 $locale.'.'.$locale2charset{$locale},
+			 $locale.'.'.uc($locale2charset{$locale}),  ## UpperCase required for FreeBSD
+			 $locale_dashless ## Required on HPUX
+			 ) {
+	    if (&setlocale($type, $try)) {
+		$success = 1;
+		last;
+	    }	
+	}
+	unless ($success) {
+	    &do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale);
+	    return undef;
 	}
     }
-
-    unless (setlocale(&POSIX::LC_TIME, $locale)) {
- 	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale);
- 	return undef;
-    }
-
+    
     $current_lang = $lang;
     $current_locale = $locale;
 
