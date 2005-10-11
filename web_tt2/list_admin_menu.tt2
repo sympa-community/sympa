@@ -25,6 +25,10 @@
 [% IF is_owner %]
 [% IF action == 'editfile' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <li><a class="[% class %]" href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing[%END%]</a></li>
+
+
+[% IF action == 'review' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
 [% END %]
 
 [% IF is_archived %]
