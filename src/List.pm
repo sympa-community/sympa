@@ -1727,8 +1727,8 @@ sub load {
 
     $self->{'name'}  = $name ;
 
-    my ($m1, $m2, $m3, $m4) = (0, 0, 0);
-    ($m1, $m2, $m3, $m4) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
+    my ($m1, $m2, $m3) = (0, 0, 0);
+    ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
 
     my $time_config = (stat("$self->{'dir'}/config"))[9];
     my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
@@ -1737,7 +1737,7 @@ sub load {
     my $config_reloaded = 0;
     my $admin;
     
-    if ($time_config_bin > $self->{'mtime'}->[3] &&
+    if ($time_config_bin > $self->{'mtime'}->[0] &&
 	$time_config <= $time_config_bin) { 
 	## Load a binary version of the data structure
 	## unless config is more recent than config.bin
@@ -1746,7 +1746,7 @@ sub load {
 	    return undef;
 	}
 
-	$m4 = $time_config_bin;
+	$m1 = $time_config_bin;
 
     }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {	
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
@@ -1901,7 +1901,7 @@ sub load {
 #	$self->{'total'} = $users->{'total'};
 #    }
 
-    $self->{'mtime'} = [ $m1, $m2, $m3, $m4 ];
+    $self->{'mtime'} = [ $m1, $m2, $m3];
 
     $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
