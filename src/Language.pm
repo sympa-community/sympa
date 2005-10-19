@@ -154,11 +154,11 @@ sub SetLang {
     my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
     foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
 	my $success;
-	foreach my $try ($locale,
-			 $lang,
-			 $locale.'.'.$locale2charset{$locale},
+	foreach my $try ($locale.'.'.$locale2charset{$locale},
 			 $locale.'.'.uc($locale2charset{$locale}),  ## UpperCase required for FreeBSD
-			 $locale_dashless ## Required on HPUX
+			 $locale_dashless, ## Required on HPUX
+			 $locale,
+			 $lang
 			 ) {
 	    if (&setlocale($type, $try)) {
 		$success = 1;
