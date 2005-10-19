@@ -107,6 +107,9 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(key,listname)%]Message %1 for list '%2' has been distributed.[%END%]
 
+[% ELSIF entry == 'message_in_distribution_spool' -%]
+
+[%|loc(key,listname)%]Message %1 for list '%2' has been validated ; it will be distributed soon.[%END%]
 
 [% END -%]
 [% END %]

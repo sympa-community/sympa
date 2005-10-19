@@ -2061,6 +2061,9 @@ sub distribute {
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
 	    return undef;
 	}
+	unless ($quiet || ($action =~ /quiet/i )) {
+	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
+	}
 	&do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
     }
     unlink($file);
@@ -2232,7 +2235,10 @@ sub confirm {
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
 		return undef;
 	    }
-	    
+	    unless ($quiet || ($action =~ /quiet/i )) {
+		&report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
+	    }
+
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
 	}
 	unlink($file);
