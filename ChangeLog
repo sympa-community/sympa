@@ -1,3 +1,77 @@
+2005-10-14 17:51  sympa-authors
+
+	* po/de.po: [M.Redinger] Updated de.po
+
+2005-10-11 17:09  sympa-authors
+
+	* src/List.pm: Fix previous patch using config.bin : problems while
+	  instantiating families
+
+2005-10-11 13:45  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Fix bug reported by
+	  Matthieu.Quenez (amue.fr)
+
+2005-10-11 08:54  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2: Add a "manage subscribers" button in
+	  admin sub-menu
+
+2005-10-07 14:45  sympa-authors
+
+	* mail_tt2/listmaster_notification.tt2: [reported by O.Lacroix] One
+	  string not translatable
+
+2005-10-07 14:41  sympa-authors
+
+	* src/Language.pm: [reported by O.Lacroix] Fix: failed to setlocale
+	  on HPUX ; now trying without dashes ('-').  Also fixed the
+	  setlocale(LC_TIME)
+
+2005-10-06 16:35  sympa-authors
+
+	* src/List.pm: [G.Bouteille] Fix: missing 'family_closed' parameter
+	  to close()
+
+2005-10-06 16:32  sympa-authors
+
+	* src/tt2.pl: [G.Bouteille] Fix: SetLang only if lang is available
+
+2005-10-06 16:31  sympa-authors
+
+	* src/mail.pm: Change: setlang only if lang is available
+
+2005-10-06 15:56  sympa-authors
+
+	* src/: Language.pm, mail.pm: New PushLang() and PopLang()
+	  subroutines
+
+2005-10-06 15:55  sympa-authors
+
+	* ChangeLog: update
+
+2005-10-06 15:52  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sympa.pot, tr.po, zh_CN.po, zh_TW.po: Update POT and PO files
+
+2005-10-06 15:12  sympa-authors
+
+	* mail_tt2/welcome.tt2: Fix: use exceptions, in case info file does
+	  not exist
+
+2005-10-06 12:18  sympa-authors
+
+	* src/List.pm: Fix preivous patch
+
+2005-10-06 11:47  sympa-authors
+
+	* src/List.pm: New feature: load/save a binary version of the list
+	  config file on disk. This makes the List::load() calls much
+	  faster.  This was a major problem with sites hosting thousands of
+	  mailing lists
+
 2005-10-05 18:03  sympa-authors
 
 	* mail_tt2/info_report.tt2: Fix: prevents a parser failure if info
