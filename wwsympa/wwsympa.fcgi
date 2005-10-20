@@ -918,7 +918,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 if ($param->{'subtitle'}) {
 	     $param->{'main_title'} = "$param->{'list'} - $param->{'subtitle'}";
-	     $param->{'title_clear_txt'} = $param->{'title'};
 	 }
 
      }else {
@@ -1087,7 +1086,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 my $lang = &Language::Lang2Locale($param->{'lang'});
 	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
- 	    
+	 
+	 ## Recode to utf-8 for RSS
  	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path)) {
  	     my $error = &tt2::get_error();
  	     $param->{'tt2_error'} = $error;
