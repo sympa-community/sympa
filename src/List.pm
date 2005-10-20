@@ -830,10 +830,14 @@ my %alias = ('reply-to' => 'reply_to',
 							    'gettext_id' => "remote host",
 							    'order' => 2
 							    },
-						 'db_name' => {'format' => '\S+',
+						 'db_port' => {'format' => '\d+',
+							       'gettext_id' => "database port",
+							       'order' => 3 
+							       },
+					         'db_name' => {'format' => '\S+',
 							       'occurrence' => '1',
 							       'gettext_id' => "database name",
-							       'order' => 3 
+							       'order' => 4 
 							       },
 						 'connect_options' => {'format' => '.+',
 								       'gettext_id' => "connection options",
@@ -8251,6 +8255,7 @@ sub _include_users_sql {
     my $db_type = $param->{'db_type'};
     my $db_name = $param->{'db_name'};
     my $host = $param->{'host'};
+    my $port = $param->{'db_port'};
     my $user = $param->{'user'};
     my $passwd = $param->{'passwd'};
     my $sql_query = $param->{'sql_query'};
@@ -8268,6 +8273,9 @@ sub _include_users_sql {
 	if ($host && $db_name) {
 	    $connect_string .= "host=$host;sid=$db_name";
 	}
+	if (defined $port) {
+	    $connect_string .= ';port=' . $port;
+	}
     }elsif ($db_type eq 'Pg') {
 	$connect_string = "DBI:Pg:dbname=$db_name;host=$host";
     }elsif ($db_type eq 'Sybase') {
@@ -8281,7 +8289,10 @@ sub _include_users_sql {
     if ($param->{'connect_options'}) {
 	$connect_string .= ';' . $param->{'connect_options'};
     }
-
+    if (defined $port) {
+	$connect_string .= ';port=' . $port;
+    }
+ 
     ## Set environment variables
     ## Used by Oracle (ORACLE_HOME)
     if ($param->{'db_env'}) {
