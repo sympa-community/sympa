@@ -49,7 +49,7 @@ my %language_equiv = ( 'zh_CN' => 'cn',
 ## Supported languages
 my @supported_languages = ('cs_CZ','de_DE','el_GR','en_US','es_ES','et_EE',
 			   'fi_FI','fr_FR','hu_HU','it_IT','ja_JP','nl_NL','oc_FR',
-			   'pl_PL','pt_BR','pt_PT','ro_RO','tr_TR','zh_CN','zh_TW');
+			   'pl_PL','pt_BR','pt_PT','ro_RO','sv_SE','tr_TR','zh_CN','zh_TW');
 
 my %lang2locale = ('cz' => 'cs_CZ',
 		   'de' => 'de_DE',
@@ -67,6 +67,7 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'pl' => 'pl_PL',
 		   'pt' => 'pt_PT',
 		   'ro' => 'ro_RO',
+		   'sv' => 'sv_SE',
 		   'cn' => 'zh_CN',
 		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
@@ -89,6 +90,7 @@ my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'pt_BR' => 'utf-8',
 		      'pt_PT' => 'iso8859-1',
 		      'ro_RO' => 'iso8859-2',
+		      'sv_SE' => 'utf-8',
 		      'tr_TR' => 'utf-8',
 		      'zh_CN' => 'utf-8',
 		      'zh_TW' => 'big5',
