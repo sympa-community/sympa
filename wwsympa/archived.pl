@@ -583,8 +583,9 @@ sub mail2arc {
 	do_log('debug',"indexing $listname archive");
 	opendir (DIR, arctxtdir);
 	my @files = (sort { $a <=> $b;}  readdir(DIR)) ;
-	$files[$#files]+=1;
-	$newfile = $files[$#files];
+	my $index = $files[$#files];
+	$index +=1;
+	$newfile = $index;
      }
     
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
