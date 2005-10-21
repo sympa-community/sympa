@@ -5346,11 +5346,13 @@ page~\pageref {list-aliases})
 The configuration file for the \mailaddr {\samplelist} list is named
 \file {[EXPL_DIR]/\samplerobot/\samplelist/config} 
 (or \file {[EXPL_DIR]/\samplelist/config} if no virtual robot is defined). 
-\Sympa reads it into memory the first time the list is refered to. This file is not rewritten by 
-\Sympa, so you may put comment lines in it. 
-It is possible to change this file when the program is running. 
-Changes are taken into account the next time the list is
-accessed. Be careful to provide read access for \Sympa user to this file !
+\Sympa reloads it into memory whenever this file has changed on disk. The file can either be
+edited via the web interface or directly via your favourite text editor. 
+
+A binary version of the config (\file {[EXPL_DIR]/\samplerobot/\samplelist/config.bin} is maintained to allow 
+a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
+
+Be careful to provide read access for \Sympa user to this file !
 
 You will find a few configuration files in the \dir {sample} directory. 
 
