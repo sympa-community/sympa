@@ -2074,6 +2074,34 @@ sub dump_var {
     }
 }
 
+sub remove_empty_entries {
+    my ($var) = @_;    
+    my $not_empty = 0;
+
+    if (ref($var)) {
+	if (ref($var) eq 'ARRAY') {
+	    foreach my $index (0..$#{$var}) {
+		my $status = &remove_empty_entries($var->[$index]);
+		$var->[$index] = undef unless ($status);
+		$not_empty ||= $status
+	    }	    
+	}elsif (ref($var) eq 'HASH') {
+	    foreach my $key (sort keys %{$var}) {
+		my $status = &remove_empty_entries($var->{$key});
+		$var->{$key} = undef unless ($status);
+		$not_empty ||= $status;
+	    }    
+	}
+    }else {
+	if (defined $var && $var) {
+	    $not_empty = 1
+	}
+    }
+    
+    return $not_empty;
+}
+
+
 ####################################################
 # get_array_from_splitted_string                          
 ####################################################
