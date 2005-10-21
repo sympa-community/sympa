@@ -1742,7 +1742,8 @@ sub load {
     my $admin;
     
     if ($time_config_bin > $self->{'mtime'}->[0] &&
-	$time_config <= $time_config_bin) { 
+	$time_config <= $time_config_bin &&
+	! $options->{'reload_config'}) { 
 	## Load a binary version of the data structure
 	## unless config is more recent than config.bin
 	unless ($admin = &Storable::retrieve("$self->{'dir'}/config.bin")) {
@@ -1752,7 +1753,8 @@ sub load {
 
 	$m1 = $time_config_bin;
 
-    }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {	
+    }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0] ||
+	    $options->{'reload_config'}) {	
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
 
 	## update the binary version of the data structure

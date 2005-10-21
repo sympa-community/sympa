@@ -7681,8 +7681,8 @@ sub do_edit_list {
      }
 
 
-     ## Reload config
-     $list = new List $list->{'name'}, $robot;
+     ## Reload config to clean some empty entries in $list->{'admin'}
+     $list = new List $list->{'name'}, $robot, {'reload_config' => 1};
 
       unless (defined $list) {
  	  &report::reject_report_web('intern','list_reload',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
