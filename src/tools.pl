@@ -2101,6 +2101,28 @@ sub remove_empty_entries {
     return $not_empty;
 }
 
+## Duplictate a complex variable
+sub dup_var {
+    my ($var) = @_;    
+
+    if (ref($var)) {
+	if (ref($var) eq 'ARRAY') {
+	    my $new_var = [];
+	    foreach my $index (0..$#{$var}) {
+		$new_var->[$index] = &dup_var($var->[$index]);
+	    }	    
+	    return $new_var;
+	}elsif (ref($var) eq 'HASH') {
+	    my $new_var = {};
+	    foreach my $key (sort keys %{$var}) {
+		$new_var->{$key} = &dup_var($var->{$key});
+	    }    
+	    return $new_var;
+	}
+    }
+    
+    return $var; 
+}
 
 ####################################################
 # get_array_from_splitted_string                          

@@ -7920,7 +7920,7 @@ sub _check_new_values {
 ## edition form
 sub _prepare_edit_form {
     my $list = shift;
-    my $list_config = $list->{'admin'};
+    my $list_config = &tools::dup_var($list->{'admin'});
     my $family;
 
     if (defined $list_config->{'family_name'}) {
