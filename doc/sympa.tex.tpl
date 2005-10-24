@@ -6026,11 +6026,10 @@ lists, and which parameters may be set by owners.
 
 \subsection {List creation on the Web interface}
 
-Listmasters have all privileges. The listmaster
-is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, newly created
-lists must be activated by the listmaster. List creation is possible for all intranet users 
-(i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the \cfkeyword {create\_list} authorization scenario.
+Listmasters are responsible for validating new mailing lists and, depending on the configuration chosen, 
+might be the only ones who can fill out the create list form.The listmaster
+is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, any authenticated user can 
+request a list creation but newly created are then validated by the listmaster. 
 
 List rejection message and list creation notification message are both
 templates that you can customize (\file {list\_rejected.tt2} and
