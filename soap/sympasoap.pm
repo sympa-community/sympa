@@ -781,7 +781,16 @@ sub which {
 	    ->faultdetail('You should login first');
     }
     
-    foreach my $list ( &List::get_which($sender,$robot, 'member') ){ 	    
+    my %listnames;
+
+    
+    foreach my$role ('member','owner','role') {
+	foreach my $name( &List::get_which($sender,$robot,$role) ){         
+	    $listnames{$name}=1;
+	}
+    }
+    
+    foreach my $listname (keys %listnames) {
 	my $listname = $list->{'name'};
 
 	my $list_address;
