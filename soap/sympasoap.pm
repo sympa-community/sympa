@@ -96,7 +96,7 @@ sub lists {
 	next unless ($action eq 'do_it');
 	
 	##building result packet
-	$result_item->{'listAddress'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'listAddress'} = $listname.'@'.$list->{'admin'}{'host'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = &Conf::get_robot_conf($robot,'wwsympa_url').'/info/'.$listname; 
@@ -362,7 +362,7 @@ sub info {
     if ($action =~ /do_it/i) {
 	my $result_item;
 
-	$result_item->{'listAddress'} = SOAP::Data->name('listAddress')->type('string')->value($listname.'@'.$list->{'domain'});
+	$result_item->{'listAddress'} = SOAP::Data->name('listAddress')->type('string')->value($listname.'@'.$list->{'admin'}{'host'});
 	$result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
 	$result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value(&Conf::get_robot_conf($robot,'wwsympa_url').'/info/'.$listname); 
 	
@@ -794,7 +794,7 @@ sub which {
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action =~ /do_it/i);
 
-	$result_item->{'listAddress'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'listAddress'} = $listname.'@'.$list->{'admin'}{'host'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = &Conf::get_robot_conf($robot,'wwsympa_url').'/info/'.$listname;
