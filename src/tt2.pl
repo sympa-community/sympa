@@ -141,6 +141,15 @@ sub escape_xml {
     return $string;
 }
 
+sub escape_quote {
+    my $string = shift;
+
+    $string =~ s/\'/\\\'/g; 
+    $string =~ s/\"/\\\"/g;
+
+    return $string;
+}
+
 sub maketext {
     my ($context, @arg) = @_;
 
@@ -219,7 +228,8 @@ sub parse_tt2 {
 	    loc => [\&tt2::maketext, 1],
 	    qencode => [\&qencode, 0],
  	    escape_xml => [\&escape_xml, 0],
-	    escape_url => [\&escape_url, 0]
+	    escape_url => [\&escape_url, 0],
+	    escape_quote => [\&escape_quote, 0],
 	    }
     };
     

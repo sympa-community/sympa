@@ -76,7 +76,7 @@ default <input type="radio" name="subdir" value="default"  [% IF subdir == 'defa
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.site %] ?');" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(file.value.site)%]Do you really want to remove %1 ?[%END%][%END%]');" />
     </form>	
   [% END %]
   </td>
@@ -90,7 +90,7 @@ default <input type="radio" name="subdir" value="default"  [% IF subdir == 'defa
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.robot %] ?');"/>
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(file.value.robot)%]Do you really want to remove [% file.value.robot %] ?[%END%][%END%]');"/>
     </form>
   [% END %]
   </td>
@@ -106,7 +106,7 @@ default <input type="radio" name="subdir" value="default"  [% IF subdir == 'defa
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.listname %] ?');"/>
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(file.value.listname)%]Do you really want to remove [% file.value.listname %] ?[%END%][%END%]');"/>
     </form>
   [% END %]
   </td>

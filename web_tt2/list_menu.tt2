@@ -12,12 +12,12 @@
   [% END %]
   [% IF may_signoff == '1' %] 
   [% IF action == 'signoff' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     <strong><a class="[% class %]" href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a></strong><br />
+     <strong><a class="[% class %]" href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%][%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a></strong><br />
   [% END %]
 [% ELSE %]
   [% IF may_subscribe %]
      [% IF action == 'subrequest' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-         <strong><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</a></strong><br />
+         <strong><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to subscribe to list %1?[%END%][%END%]'); return false;">[%|loc%]Subscribe[%END%]</a></strong><br />
   [% END %]
 
   [% IF ! user.email %]

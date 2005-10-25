@@ -24,7 +24,7 @@
     [% IF expert_page %]
     <span style="float: right">
       [% IF may_edit %]
-    <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|loc(visible_path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|loc%]delete[%END%]</a> 
+    <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[% FILTER escape_quote %][%|loc(visible_path)%]Do you really want to delete %1 ?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a> 
 	 <a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a>
       [% END %]
       [% IF may_control %]      
@@ -113,9 +113,9 @@
             <td>&nbsp; </td>
 	  <td style="text-align: center; font-size: smaller;">
 	    [% IF escaped_path %]
-	      <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]', '[%|loc(visible_path,s.doc)%]Do you really want to delete %1%2 ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
+	      <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2 ?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
             [% ELSE %]
-	      <a href="[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]', '[%|loc(visible_path,s.doc)%]Do you really want to delete %1%2 ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
+	      <a href="[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% s.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,s.doc)%]Do you really want to delete %1%2 ?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
 	    [% END %]
 	  </td>
 	[% ELSE %]
@@ -250,9 +250,9 @@
 	</td>
 	<td style="text-align: center; font-size: smaller;">
 	    [% IF escaped_path %]
-              <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]', '[%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
+              <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
 	    [% ELSE %]
-              <a href="[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]', '[%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
+              <a href="[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% f.escaped_doc %]', '[% FILTER escape_quote %][%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%][%END%]'); return false;">[%|loc%]delete[%END%]</a>
 	    [% END %]
 	</td>
 	[% ELSE %]
