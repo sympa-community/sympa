@@ -4577,6 +4577,9 @@ sub do_skinsedit {
      $param->{'is_subscriber'} = 1;
      $param->{'may_signoff'} = 1;
 
+     ## Skip search because we don't have the expression anymore
+     delete $in{'previous_action'} if ($in{'previous_action'} eq 'search');
+
      return $in{'previous_action'} || 'review';
  }
 
