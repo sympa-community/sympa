@@ -6153,7 +6153,7 @@ sub is_listmaster {
 
 ## Does the user have a particular function in the list ?
 sub am_i {
-    my($self, $function, $who) = @_;
+    my($self, $function, $who, $options) = @_;
     do_log('debug2', 'List::am_i(%s, %s, %s)', $function, $self->{'name'}, $who);
     
     return undef unless ($self && $who);
@@ -6161,16 +6161,19 @@ sub am_i {
     $who =~ y/A-Z/a-z/;
     chomp($who);
     
-    ## Listmaster has all privileges except editor
-    # sa contestable.
-    if (($function eq 'owner' || $function eq 'privileged_owner') and &is_listmaster($who,$self->{'domain'})) {
-	$list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}{$who} = 1;
-	return 1;
+    ## If 'strict' option is given, then listmaster does not inherit privileged
+    unless (defined $options and $options->{'strict'}) {
+	## Listmaster has all privileges except editor
+	# sa contestable.
+	if (($function eq 'owner' || $function eq 'privileged_owner') and &is_listmaster($who,$self->{'domain'})) {
+	    $list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}{$who} = 1;
+	    return 1;
+	}
     }
-
+	
     ## Use cache
     if (defined $list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}{$who} &&
- 	$function ne 'editor') { ## Defaults for editor may be owners) {
+	$function ne 'editor') { ## Defaults for editor may be owners) {
 	# &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$self->{'domain'}}{$name}{$who});
 	return $list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}{$who};
     }
@@ -9673,7 +9676,7 @@ sub get_which {
  		    $list_cache{'am_i'}{'owner'}{$list->{'domain'}}{$l}{$email} = 0;		    
  		}
   	    }else {	    
-  		push @which, $list if ($list->am_i('owner',$email));
+  		push @which, $list if ($list->am_i('owner',$email,{'strict' => 1}));
   	    }
 	}elsif ($function eq 'editor') {
   	    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
@@ -9687,7 +9690,7 @@ sub get_which {
  		    $list_cache{'am_i'}{'editor'}{$list->{'domain'}}{$l}{$email} = 0;		    
  		}
   	    }else {	    
-   		push @which, $list if ($list->am_i('editor',$email));
+   		push @which, $list if ($list->am_i('editor',$email,{'strict' => 1}));
   	    }
 	}else {
 	    do_log('err',"Internal error, unknown or undefined parameter $function  in get_which");
