@@ -740,11 +740,31 @@ msgid ""
 "(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
 msgstr ""
 
+#: web_tt2/rss.tt2:7
+#, fuzzy
+msgid " active lists "
+msgstr "活発なメーリングリスト"
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
 msgid " for %1 days "
 msgstr "(最近%1日)"
+
+#: web_tt2/rss.tt2:9
+#, fuzzy
+msgid " latest documents "
+msgstr "最新の共有ドキュメント"
+
+#: web_tt2/rss.tt2:6
+#, fuzzy
+msgid " latest lists "
+msgstr "最新のメーリングリスト"
+
+#: web_tt2/rss.tt2:8
+#, fuzzy
+msgid " latest messages "
+msgstr " 最新のメッセージ "
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -813,7 +833,7 @@ msgid ""
 msgstr ""
 
 #. (l.average)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1 by day "
 msgstr "一日%1 "
 
@@ -852,13 +872,19 @@ msgstr "%1 個のメッセージが %2 で見つかりました"
 msgid "%1 occurrence(s) found"
 msgstr "%1 件見つかりました"
 
+#. (email,list.name)
+#: mail_tt2/listmaster_notification.tt2:9
+#, fuzzy
+msgid "%1 requested creation of list \"%2\""
+msgstr "メーリングリスト %1 へ講読要求を出しました"
+
 #. (notice.total)
 #: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr "%1 人の購読者を追加しました"
 
 #. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1@%2 - %3 : %4 messages"
 msgstr "%1@%2 -%3 : %4通のメッセージ"
 
@@ -1221,12 +1247,12 @@ msgstr "メーリングリスト %1 のダイジェスト"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "本当にメーリングリスト %1 を閉鎖してもよろしいですか?"
 
 #. (list)
-#: web_tt2/list_admin_menu.tt2:43
+#: web_tt2/list_admin_menu.tt2:47
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "本当に共有ドキュメントを削除してもよろしいですか?"
 
@@ -1304,7 +1330,7 @@ msgid "Body"
 msgstr "本文"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:113
+#: web_tt2/rss.tt2:88
 msgid "Bookmark %1"
 msgstr "ブックマーク %1"
 
@@ -1326,7 +1352,7 @@ msgid ""
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:37
+#: web_tt2/list_admin_menu.tt2:41
 msgid "Bounces"
 msgstr "バウンス"
 
@@ -1553,7 +1579,7 @@ msgid "Create"
 msgstr "作成"
 
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:41
+#: web_tt2/list_admin_menu.tt2:45
 msgid "Create Shared"
 msgstr "共有webの作成"
 
@@ -1677,7 +1703,7 @@ msgstr "削除"
 msgid "Delete Selected Month(s)"
 msgstr "選択した月を削除"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:47
 msgid "Delete Shared"
 msgstr "共有webを削除"
 
@@ -1763,7 +1789,7 @@ msgstr ""
 msgid "Directory"
 msgstr "ディレクトリ"
 
-#: src/List.pm:863
+#: src/List.pm:867
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -1801,9 +1827,27 @@ msgstr "本当に選択したアーカイブを削除しますか?"
 msgid "Do you really want to delete theses messages ?"
 msgstr "本当にこのメッセージを削除しますか?"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "Do you really want to delete this message ?"
 msgstr "本当にこのメッセージを削除しますか?"
+
+#. (file.value.site)
+#: web_tt2/ls_templates.tt2:79
+#, fuzzy
+msgid "Do you really want to remove %1 ?"
+msgstr "本当に %1 を削除しますか?"
+
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109
+#, fuzzy
+msgid "Do you really want to remove [% file.value.listname %] ?"
+msgstr "本当に %1 を削除しますか?"
+
+#. (file.value.robot)
+#: web_tt2/ls_templates.tt2:93
+#, fuzzy
+msgid "Do you really want to remove [% file.value.robot %] ?"
+msgstr "本当に %1 を削除しますか?"
 
 #: web_tt2/rename_list_request.tt2:14
 msgid "Do you really want to rename this list?"
@@ -1851,7 +1895,7 @@ msgstr "古いファイル%1を削除しますか?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "ファイル%1をリネームしますか?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:70
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:74
 msgid "Document"
 msgstr "ドキュメント"
 
@@ -2360,7 +2404,7 @@ msgstr ""
 msgid "Inactive lists"
 msgstr "活発でないメーリングリスト"
 
-#: src/List.pm:1134
+#: src/List.pm:1138
 msgid "Inclusions timeout"
 msgstr "読み込みタイムアウト"
 
@@ -2428,7 +2472,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:592
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2459,7 +2503,7 @@ msgstr "言語"
 msgid "Language :"
 msgstr "言語:"
 
-#: src/List.pm:888
+#: src/List.pm:892
 msgid "Language of the list"
 msgstr "メーリングリストの言語"
 
@@ -2478,7 +2522,7 @@ msgstr "最終更新"
 msgid "Last update : %1"
 msgstr "最終更新: %1"
 
-#: src/List.pm:1159
+#: src/List.pm:1163
 msgid "Last update of config"
 msgstr "設定の最終更新"
 
@@ -2486,7 +2530,7 @@ msgstr "設定の最終更新"
 msgid "Last update:"
 msgstr "最終更新: "
 
-#: src/List.pm:906
+#: src/List.pm:910
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -2851,9 +2895,14 @@ msgid "Mailing lists categories"
 msgstr "メーリングリストのカテゴリ"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
-#: web_tt2/list_admin_menu.tt2:32
+#: web_tt2/list_admin_menu.tt2:36
 msgid "Manage Archives"
 msgstr "アーカイブ管理"
+
+#: web_tt2/list_admin_menu.tt2:31
+#, fuzzy
+msgid "Manage Subscribers"
+msgstr "購読者"
 
 #: src/List.pm:390
 msgid "Management of bouncers, 1st level"
@@ -2868,11 +2917,11 @@ msgstr ""
 msgid "Managing bouncing subscribers:"
 msgstr ""
 
-#: src/List.pm:914
+#: src/List.pm:918
 msgid "Maximum message size"
 msgstr "最大メッセージサイズ"
 
-#: src/List.pm:1187
+#: src/List.pm:1191
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -2894,7 +2943,7 @@ msgid ""
 "disregard this message."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:68
+#: web_tt2/list_admin_menu.tt2:72
 msgid "Message"
 msgstr "メッセージ"
 
@@ -2909,6 +2958,13 @@ msgstr "メッセージ%sはメーリングリスト%sに配送されました�
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "メッセージ%sは棄却され、メーリングリスト%sに配送されませんでした。\n"
+
+#. (key,listname)
+#: mail_tt2/message_report.tt2:112
+#, fuzzy
+msgid ""
+"Message %1 for list '%2' has been validated ; it will be distributed soon."
+msgstr "メッセージ%sはメーリングリスト%sに配送されました。\n"
 
 #: mail_tt2/message_report.tt2:97
 #, fuzzy
@@ -2973,21 +3029,21 @@ msgid ""
 "attachment at the beginning of each message distributed to the list."
 msgstr ""
 
-#: src/List.pm:949
+#: src/List.pm:953
 #, fuzzy
 msgid "Message tagging"
 msgstr "メッセージ数"
 
-#: src/List.pm:925
+#: src/List.pm:929
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:920
+#: src/List.pm:924
 #, fuzzy
 msgid "Message topic name"
 msgstr "査読待ちメッセージ:"
 
-#: src/List.pm:931
+#: src/List.pm:935
 #, fuzzy
 msgid "Message topic title"
 msgstr "査読待ちメッセージ:"
@@ -3017,7 +3073,7 @@ msgid "Miscellaneous"
 msgstr "その他"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:62
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
 msgid "Moderate"
 msgstr "モデレート"
 
@@ -3264,7 +3320,7 @@ msgstr "古いファイル %1 は削除されました"
 msgid "Oldest messages first"
 msgstr "古いメッセージを先にする"
 
-#: src/List.pm:942
+#: src/List.pm:946
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3323,7 +3379,7 @@ msgid ""
 "to be yours (From: %3)."
 msgstr ""
 
-#: src/List.pm:981 web_tt2/login_menu.tt2:10
+#: src/List.pm:985 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "オーナー"
 
@@ -3355,7 +3411,7 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1006
+#: src/List.pm:1010
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3459,7 +3515,7 @@ msgstr "ユーザ情報"
 msgid "Previous page"
 msgstr "前ぺーじ"
 
-#: src/List.pm:1012
+#: src/List.pm:1016
 msgid "Priority"
 msgstr "優先度"
 
@@ -3547,7 +3603,7 @@ msgstr ""
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr ""
 
-#: src/List.pm:1063
+#: src/List.pm:1067
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369ヘッダフィールド"
 
@@ -3671,7 +3727,7 @@ msgid "Remote host"
 msgstr "リモートホスト"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Remove List"
 msgstr "メーリングリストの閉鎖"
 
@@ -3685,7 +3741,7 @@ msgid "Rename"
 msgstr "名前の変更"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:55
+#: web_tt2/list_admin_menu.tt2:59
 msgid "Rename List"
 msgstr "メーリングリストのリネーム"
 
@@ -3708,11 +3764,11 @@ msgstr "このメーリングリストのリネーム"
 msgid "Replace the file %1 with your file"
 msgstr "ファイル %1 をあなたのファイルで置き換える"
 
-#: src/etc/mhonarc-ressources.tt2:424
+#: src/etc/mhonarc-ressources.tt2:422
 msgid "Reply"
 msgstr "リプライする"
 
-#: src/List.pm:1031 src/List.pm:1051
+#: src/List.pm:1035 src/List.pm:1055
 msgid "Reply address"
 msgstr ""
 
@@ -3721,7 +3777,7 @@ msgstr ""
 msgid "Reply to           : %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "Reply to sender"
 msgstr "送信者にリプライする"
 
@@ -3747,11 +3803,11 @@ msgid "Reset errors for selected users"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:54
 msgid "Restore List"
 msgstr "メーリングリストの復活"
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:45
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:49
 msgid "Restore shared"
 msgstr "共有webの復活"
 
@@ -3777,13 +3833,18 @@ msgstr "コマンドの結果"
 msgid "Return to archive %1"
 msgstr "アーカイブ%1へ戻る"
 
-#: src/List.pm:1021
+#: src/List.pm:1025
 msgid "Return-path of the REMIND command"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
 msgstr ""
+
+#: web_tt2/list_menu.tt2:71
+#, fuzzy
+msgid "Review members"
+msgstr "購読者一覧"
 
 #. (review)
 #: mail_tt2/info_report.tt2:19
@@ -3831,11 +3892,11 @@ msgid ""
 "a plain text email with all attachments"
 msgstr ""
 
-#: src/List.pm:859
+#: src/List.pm:863
 msgid "SQL query"
 msgstr "SQLクエリ"
 
-#: src/List.pm:874
+#: src/List.pm:878
 msgid "SQL query inclusion"
 msgstr "SQLクエリの取り込み"
 
@@ -3952,11 +4013,11 @@ msgstr "送受信"
 msgid "Sending/reception setup"
 msgstr "送受信の設定"
 
-#: src/List.pm:1074
+#: src/List.pm:1078
 msgid "Serial number of the config"
 msgstr "config中のシリアルナンバー"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:15 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr "サーバエラー"
 
@@ -4025,7 +4086,7 @@ msgstr "モデレートが必要、購読者のみ"
 msgid "Shared document to be approved for %1"
 msgstr "共有ドキュメントディレクトリのサイズ"
 
-#: src/List.pm:1094 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "共有ドキュメント"
 
@@ -4075,7 +4136,7 @@ msgstr "状態"
 msgid "Status :"
 msgstr "状態:"
 
-#: src/List.pm:1110
+#: src/List.pm:1114
 msgid "Status of the list"
 msgstr "メーリングリストの状態"
 
@@ -4105,7 +4166,7 @@ msgstr "内容:"
 msgid "Subject : %1"
 msgstr "内容:"
 
-#: src/List.pm:1117
+#: src/List.pm:1121
 msgid "Subject of the list"
 msgstr "メーリングリストの内容"
 
@@ -4154,7 +4215,6 @@ msgid "Subscriber information"
 msgstr "購読者情報"
 
 #: web_tt2/admin_menu.tt2:11 web_tt2/admin_menu.tt2:17
-#: web_tt2/list_menu.tt2:71
 msgid "Subscribers"
 msgstr "購読者"
 
@@ -4201,7 +4261,7 @@ msgstr "ローカルドメインのユーザ"
 msgid "Subscription to this list requires S/MIME signature."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:75
+#: web_tt2/list_admin_menu.tt2:79
 #, fuzzy
 msgid "Subscriptions"
 msgstr "購読"
@@ -4221,7 +4281,7 @@ msgstr "メーリングリスト%sのサマリ"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:574
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "日:月:火:水:曜:木:金:土"
 
@@ -4311,7 +4371,7 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr "データソースとメンバー情報を同期する"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2721
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
 msgid "Table of contents:"
 msgstr "目次:"
 
@@ -4365,22 +4425,22 @@ msgid ""
 msgstr ""
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:18
 msgid "The %1 latest created lists"
 msgstr "最新 %1件のメーリングリスト"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:38
 msgid "The %1 latest messages"
 msgstr "最新%1個のメッセージ"
 
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:47
 msgid "The %1 latest shared documents"
 msgstr "最新%1件の共有ドキュメント"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:28
 msgid "The %1 most active lists"
 msgstr "最も活発な%1のメーリングリスト"
 
@@ -4555,15 +4615,15 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "このサーバでは以下のvirtual robotが動作しています:"
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 msgid "The latest created lists"
 msgstr "最新のメーリングリスト"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:40
 msgid "The latest messages"
 msgstr "最新のメッセージ"
 
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:49
 msgid "The latest shared documents"
 msgstr "最新の共有ドキュメント"
 
@@ -4615,7 +4675,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "このメーリングリストの内容"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:30
 msgid "The most active lists"
 msgstr "もっとも活発なメーリングリスト"
 
@@ -5196,12 +5256,12 @@ msgstr "選択の反転"
 msgid "Topic subscription :"
 msgstr "退会:"
 
-#: src/List.pm:936
+#: src/List.pm:940
 #, fuzzy
 msgid "Topics for message categorisation"
 msgstr "メーリングリストのトピック"
 
-#: src/List.pm:1127
+#: src/List.pm:1131
 msgid "Topics for the list"
 msgstr "メーリングリストのトピック"
 
@@ -5595,7 +5655,7 @@ msgstr "フォルダSHAREDにファイルをアップロードする"
 msgid "User certificate belong to"
 msgstr ""
 
-#: src/List.pm:1165
+#: src/List.pm:1169
 msgid "User data source"
 msgstr "ユーザデータソース"
 
@@ -5631,7 +5691,7 @@ msgstr ""
 msgid "Visibility :"
 msgstr "見え方:"
 
-#: src/List.pm:1171
+#: src/List.pm:1175
 msgid "Visibility of the list"
 msgstr "メーリングリストの見え方"
 
@@ -5674,7 +5734,7 @@ msgstr "WWSympaはあなたに以下のメーリングリストサーバへの�
 msgid "We stopped delivery of this email."
 msgstr "このemailの配送を停止しました。"
 
-#: src/List.pm:1192
+#: src/List.pm:1196
 msgid "Web archives"
 msgstr "Webアーカイブ"
 
@@ -5721,7 +5781,7 @@ msgid ""
 "a full MIME structured message (only for MIME gurus)."
 msgstr ""
 
-#: src/List.pm:1198
+#: src/List.pm:1202
 msgid "Welcome return-path"
 msgstr "ウェルカムメッセージのreturn-path"
 
@@ -5759,39 +5819,39 @@ msgstr "購読者を追加できるのは"
 msgid "Who can delete subscribers"
 msgstr "購読者を削除できるのは"
 
-#: src/List.pm:1083
+#: src/List.pm:1087
 msgid "Who can edit"
 msgstr "編集できるのは"
 
-#: src/List.pm:882
+#: src/List.pm:886
 msgid "Who can invite people"
 msgstr "招待できるのは"
 
-#: src/List.pm:1056
+#: src/List.pm:1060
 msgid "Who can review subscribers"
 msgstr "購読者一覧を見ることができるのは"
 
-#: src/List.pm:1067
+#: src/List.pm:1071
 msgid "Who can send messages"
 msgstr "メッセージを送ることができるのは"
 
-#: src/List.pm:1016
+#: src/List.pm:1020
 msgid "Who can start a remind process"
 msgstr ""
 
-#: src/List.pm:1121
+#: src/List.pm:1125
 msgid "Who can subscribe to the list"
 msgstr "メーリングリストの講読をできるのは"
 
-#: src/List.pm:1138
+#: src/List.pm:1142
 msgid "Who can unsubscribe"
 msgstr "メーリングリストを退会できるのは"
 
-#: src/List.pm:1079
+#: src/List.pm:1083
 msgid "Who can view"
 msgstr "見ることができるのは"
 
-#: src/List.pm:878
+#: src/List.pm:882
 msgid "Who can view list information"
 msgstr "メーリングリスト情報を見ることができるのは"
 
@@ -6206,7 +6266,7 @@ msgstr ""
 msgid "access"
 msgstr "アクセス権限"
 
-#: src/List.pm:1175 src/List.pm:331
+#: src/List.pm:1179 src/List.pm:331
 msgid "access right"
 msgstr "アクセス権限"
 
@@ -6214,7 +6274,7 @@ msgstr "アクセス権限"
 msgid "action for this population"
 msgstr "処理"
 
-#: web_tt2/rss_request.tt2:46
+#: web_tt2/rss_request.tt2:48
 msgid "active lists"
 msgstr "活発なメーリングリスト"
 
@@ -6365,7 +6425,7 @@ msgstr "ログインしたユーザに見える"
 msgid "concealed"
 msgstr "concealed"
 
-#: src/List.pm:839
+#: src/List.pm:843
 msgid "connection options"
 msgstr "接続オプション"
 
@@ -6397,19 +6457,24 @@ msgstr ""
 msgid "data location URL"
 msgstr "データの場所(URL)"
 
-#: src/List.pm:835
+#: src/List.pm:839
 msgid "database name"
 msgstr "データベース名"
+
+#: src/List.pm:834
+#, fuzzy
+msgid "database port"
+msgstr "データベースのタイプ"
 
 #: src/List.pm:825
 msgid "database type"
 msgstr "データベースのタイプ"
 
-#: src/List.pm:540 src/List.pm:991
+#: src/List.pm:540 src/List.pm:995
 msgid "datasource parameters"
 msgstr "データソースの設定"
 
-#: src/List.pm:1149 src/List.pm:897
+#: src/List.pm:1153 src/List.pm:901
 msgid "date"
 msgstr "日付"
 
@@ -6473,12 +6538,12 @@ msgstr ""
 msgid "editor rejection message"
 msgstr "モデレータによる拒否メッセージ"
 
-#: src/List.pm:510 src/List.pm:956 web_tt2/login_menu.tt2:59
+#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "メールアドレス"
 
-#: src/List.pm:1099 src/List.pm:1104
+#: src/List.pm:1103 src/List.pm:1108
 msgid "email address protection method"
 msgstr "メールアドレス保護手法"
 
@@ -6494,11 +6559,11 @@ msgstr "email2@dom2 Name2"
 msgid "entire word"
 msgstr "単語全体"
 
-#: src/List.pm:844
+#: src/List.pm:848
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:1144 src/List.pm:893
+#: src/List.pm:1148 src/List.pm:897
 msgid "epoch date"
 msgstr "エポック"
 
@@ -6549,6 +6614,18 @@ msgstr "1段目 対象"
 #: src/List.pm:699
 msgid "first-level suffix"
 msgstr "1段目 suffix"
+
+#. (for)
+#: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
+#, fuzzy
+msgid "for %1 days"
+msgstr "(最近%1日)"
+
+#. (for)
+#: web_tt2/rss.tt2:43 web_tt2/rss.tt2:52
+#, fuzzy
+msgid "for %1 days "
+msgstr "(最近%1日)"
 
 #: src/etc/scenari/info.open:1
 msgid "for anyone"
@@ -6631,15 +6708,15 @@ msgstr "リストマスタのみ"
 msgid "language"
 msgstr "言語"
 
-#: web_tt2/rss_request.tt2:36
+#: web_tt2/rss_request.tt2:38
 msgid "latest arc"
 msgstr "最新アーカイブ"
 
-#: web_tt2/rss_request.tt2:41
+#: web_tt2/rss_request.tt2:43
 msgid "latest document"
 msgstr "最新の共有ドキュメント"
 
-#: web_tt2/rss_request.tt2:51
+#: web_tt2/rss_request.tt2:53
 msgid "latest lists"
 msgstr "最新のメーリングリスト"
 
@@ -6742,7 +6819,7 @@ msgstr "モデレート"
 msgid "moderated for subscribers"
 msgstr "購読者、モデレートが必要"
 
-#: src/List.pm:520 src/List.pm:966
+#: src/List.pm:520 src/List.pm:970
 msgid "name"
 msgstr "名前"
 
@@ -6821,7 +6898,7 @@ msgstr ""
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
-#: src/List.pm:1042
+#: src/List.pm:1046
 msgid "other email address"
 msgstr "他のメールアドレス"
 
@@ -6876,11 +6953,11 @@ msgstr "アーカイブは購読者だけが参照できる"
 msgid "private information"
 msgstr ""
 
-#: src/List.pm:971
+#: src/List.pm:975
 msgid "private informations"
 msgstr ""
 
-#: src/List.pm:1001 src/List.pm:976
+#: src/List.pm:1005 src/List.pm:980
 msgid "profile"
 msgstr ""
 
@@ -6932,12 +7009,12 @@ msgstr ""
 msgid "quiet"
 msgstr "通知を送らない"
 
-#: src/List.pm:1090 src/List.pm:1182
+#: src/List.pm:1094 src/List.pm:1186
 msgid "quota"
 msgstr "Quota"
 
-#: src/List.pm:347 src/List.pm:460 src/List.pm:515 src/List.pm:545
-#: src/List.pm:961 src/List.pm:996
+#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
+#: src/List.pm:545 src/List.pm:965
 msgid "reception mode"
 msgstr "メール受信モード"
 
@@ -6965,7 +7042,7 @@ msgstr "リモートホスト"
 msgid "remote list inclusion"
 msgstr "リモートメーリングリストの取り込み"
 
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:853
+#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
 msgid "remote password"
 msgstr "リモートパスワード"
 
@@ -6977,7 +7054,7 @@ msgstr ""
 msgid "remote port"
 msgstr "リモートポート"
 
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:848
+#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
 msgid "remote user"
 msgstr "リモートユーザー"
 
@@ -6997,7 +7074,7 @@ msgstr "S/MIMEのサインかオーナーの承認が必要"
 msgid "requires authentication then owner approval"
 msgstr "認証とオーナーの承認が必要"
 
-#: src/List.pm:1047
+#: src/List.pm:1051
 msgid "respect of existing header field"
 msgstr ""
 
@@ -7106,7 +7183,7 @@ msgid "selection (if multiple)"
 msgstr "複数ヒットした場合の対象"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "send it back to %1"
 msgstr "%1へ送り返す"
 
@@ -7123,7 +7200,7 @@ msgid "session"
 msgstr "セッション"
 
 #: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:867
+#: src/List.pm:871
 msgid "short name for this source"
 msgstr "このデータソースの短縮名"
 
@@ -7179,7 +7256,7 @@ msgstr "サマリメッセージ"
 msgid "summary mode"
 msgstr "サマリモード"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "tag this mail for deletion"
 msgstr "アーカイブから削除する"
 
@@ -7201,7 +7278,7 @@ msgstr ""
 msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
-#: src/List.pm:535 src/List.pm:986
+#: src/List.pm:535 src/List.pm:990
 msgid "the datasource"
 msgstr "ユーザデータソース"
 
@@ -7246,7 +7323,7 @@ msgstr "閾値"
 msgid "title"
 msgstr "タイトル"
 
-#: src/etc/mhonarc-ressources.tt2:422
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "to list"
 msgstr "メーリングリストに"
 
@@ -7262,7 +7339,7 @@ msgstr "退会メッセージ"
 msgid "urlize mode"
 msgstr "URL化モード"
 
-#: src/List.pm:1037 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "値"
 
@@ -7286,11 +7363,11 @@ msgstr "警告レート"
 msgid "welcome message"
 msgstr "ウェルカムメッセージ"
 
-#: src/List.pm:902
+#: src/List.pm:906
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/List.pm:1155
+#: src/List.pm:1159
 msgid "who updated the config"
 msgstr "設定の最終更新者"
 
@@ -7348,9 +7425,6 @@ msgstr "あなたのパスワード: %1"
 
 #~ msgid "Owners of list %s"
 #~ msgstr "メーリングリスト %s のオーナー"
-
-#~ msgid "Review"
-#~ msgstr "購読者一覧"
 
 #~ msgid ""
 #~ "The authentication process failed\n"

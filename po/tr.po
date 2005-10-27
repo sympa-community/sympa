@@ -726,11 +726,31 @@ msgid ""
 "(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
 msgstr ""
 
+#: web_tt2/rss.tt2:7
+#, fuzzy
+msgid " active lists "
+msgstr "Aktif olmayan listeler"
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
 msgid " for %1 days "
 msgstr " %1 gün için "
+
+#: web_tt2/rss.tt2:9
+#, fuzzy
+msgid " latest documents "
+msgstr "En son paylaşılan belgeler"
+
+#: web_tt2/rss.tt2:6
+#, fuzzy
+msgid " latest lists "
+msgstr "Son Listeler"
+
+#: web_tt2/rss.tt2:8
+#, fuzzy
+msgid " latest messages "
+msgstr "Son Mesajlar"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -803,7 +823,7 @@ msgstr ""
 "arşivlenmeyecektir. Lütfen %5@%4 ile iletişime geçiniz•"
 
 #. (l.average)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1 by day "
 msgstr "Gün başına %1"
 
@@ -843,13 +863,18 @@ msgstr "%2 mesajdan %1 tanesi seçildi"
 msgid "%1 occurrence(s) found"
 msgstr "%1 sonuç bulundu"
 
+#. (email,list.name)
+#: mail_tt2/listmaster_notification.tt2:9
+msgid "%1 requested creation of list \"%2\""
+msgstr ""
+
 #. (notice.total)
 #: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr "%1 üye eklendi"
 
 #. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1@%2 - %3 : %4 messages"
 msgstr "%1@%2 - %3 : %4 mesaj"
 
@@ -1231,12 +1256,12 @@ msgstr "%1 liste özeti"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "%1 listesini kapatmak istediğinizden emin misiniz?"
 
 #. (list)
-#: web_tt2/list_admin_menu.tt2:43
+#: web_tt2/list_admin_menu.tt2:47
 #, fuzzy
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "%1 listesini kapatmak istediğinizden emin misiniz?"
@@ -1324,7 +1349,7 @@ msgid "Body"
 msgstr "Mesaj"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:113
+#: web_tt2/rss.tt2:88
 msgid "Bookmark %1"
 msgstr "Bookmark %1"
 
@@ -1350,7 +1375,7 @@ msgstr ""
 "%s/reviewbouncing/%s"
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:37
+#: web_tt2/list_admin_menu.tt2:41
 msgid "Bounces"
 msgstr "Geri Dönen Epostalar"
 
@@ -1587,7 +1612,7 @@ msgid "Create"
 msgstr "Liste oluştur"
 
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:41
+#: web_tt2/list_admin_menu.tt2:45
 msgid "Create Shared"
 msgstr "Paylaşım Oluştur"
 
@@ -1716,7 +1741,7 @@ msgstr "Sil"
 msgid "Delete Selected Month(s)"
 msgstr "Seçili ayları sil"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:47
 msgid "Delete Shared"
 msgstr "Paylaşımı sil"
 
@@ -1807,7 +1832,7 @@ msgstr "DigestPlain"
 msgid "Directory"
 msgstr "Dizin"
 
-#: src/List.pm:863
+#: src/List.pm:867
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Veritabanının tutulduğu dizin (sadece DBD::CSV  için kullanılır)"
 
@@ -1844,9 +1869,27 @@ msgstr "Seçili arşivleri silmek istediğinizden emin misiniz?"
 msgid "Do you really want to delete theses messages ?"
 msgstr "Bu mesajı silmek istediğinize emin misiniz?"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "Do you really want to delete this message ?"
 msgstr "Bu mesajı silmek istediğinize emin misiniz?"
+
+#. (file.value.site)
+#: web_tt2/ls_templates.tt2:79
+#, fuzzy
+msgid "Do you really want to remove %1 ?"
+msgstr "%1 : Silmek istediğinizden emin misiniz?"
+
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109
+#, fuzzy
+msgid "Do you really want to remove [% file.value.listname %] ?"
+msgstr "%1 : Silmek istediğinizden emin misiniz?"
+
+#. (file.value.robot)
+#: web_tt2/ls_templates.tt2:93
+#, fuzzy
+msgid "Do you really want to remove [% file.value.robot %] ?"
+msgstr "%1 : Silmek istediğinizden emin misiniz?"
 
 #: web_tt2/rename_list_request.tt2:14
 msgid "Do you really want to rename this list?"
@@ -1897,7 +1940,7 @@ msgstr "%1 dosyasını silmek ister misiniz?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "%1 dosyasının adını değiştirmek ister misiniz?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:70
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:74
 msgid "Document"
 msgstr "Döküman"
 
@@ -2438,7 +2481,7 @@ msgstr ""
 msgid "Inactive lists"
 msgstr "Aktif olmayan listeler"
 
-#: src/List.pm:1134
+#: src/List.pm:1138
 msgid "Inclusions timeout"
 msgstr "İlaveler zaman aşımına uğradı."
 
@@ -2507,7 +2550,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:592
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2540,7 +2583,7 @@ msgstr "Dil"
 msgid "Language :"
 msgstr "Dil :"
 
-#: src/List.pm:888
+#: src/List.pm:892
 msgid "Language of the list"
 msgstr "Listenin dili"
 
@@ -2559,7 +2602,7 @@ msgstr "Son güncelleme :"
 msgid "Last update : %1"
 msgstr "Son güncelleme : %1"
 
-#: src/List.pm:1159
+#: src/List.pm:1163
 msgid "Last update of config"
 msgstr "Ayarın son güncellemesi"
 
@@ -2567,7 +2610,7 @@ msgstr "Ayarın son güncellemesi"
 msgid "Last update:"
 msgstr "Son güncelleme"
 
-#: src/List.pm:906
+#: src/List.pm:910
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -2925,9 +2968,14 @@ msgid "Mailing lists categories"
 msgstr "Mail listeleri kategorileri"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
-#: web_tt2/list_admin_menu.tt2:32
+#: web_tt2/list_admin_menu.tt2:36
 msgid "Manage Archives"
 msgstr "Arşivleri Yönet"
+
+#: web_tt2/list_admin_menu.tt2:31
+#, fuzzy
+msgid "Manage Subscribers"
+msgstr "Kayıtlı kullanıcılar"
 
 #: src/List.pm:390
 msgid "Management of bouncers, 1st level"
@@ -2942,11 +2990,11 @@ msgstr "Mesajı geri dönenlerin (bouncer) yönetimi, 2. seviye"
 msgid "Managing bouncing subscribers:"
 msgstr "Bounce (mesajı geri dönenlerin) olan kayıtlı kullanıcıların yönetimi:"
 
-#: src/List.pm:914
+#: src/List.pm:918
 msgid "Maximum message size"
 msgstr "Azami mesaj büyüklüğü"
 
-#: src/List.pm:1187
+#: src/List.pm:1191
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -2968,7 +3016,7 @@ msgid ""
 "disregard this message."
 msgstr "                        "
 
-#: web_tt2/list_admin_menu.tt2:68
+#: web_tt2/list_admin_menu.tt2:72
 #, fuzzy
 msgid "Message"
 msgstr "Mesaj Sayımı"
@@ -2984,6 +3032,13 @@ msgstr "% listesi için, %s mesajı dağıtıldı.\n"
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "%s listesi için, %s mesajı red edildi.\n"
+
+#. (key,listname)
+#: mail_tt2/message_report.tt2:112
+#, fuzzy
+msgid ""
+"Message %1 for list '%2' has been validated ; it will be distributed soon."
+msgstr "% listesi için, %s mesajı dağıtıldı.\n"
 
 #: mail_tt2/message_report.tt2:97
 msgid "Message diffusion"
@@ -3045,21 +3100,21 @@ msgid ""
 "attachment at the beginning of each message distributed to the list."
 msgstr "                        "
 
-#: src/List.pm:949
+#: src/List.pm:953
 #, fuzzy
 msgid "Message tagging"
 msgstr "Mesaj Sayımı"
 
-#: src/List.pm:925
+#: src/List.pm:929
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:920
+#: src/List.pm:924
 #, fuzzy
 msgid "Message topic name"
 msgstr "Modere edilecek mesaj:"
 
-#: src/List.pm:931
+#: src/List.pm:935
 #, fuzzy
 msgid "Message topic title"
 msgstr "Modere edilecek mesaj:"
@@ -3090,7 +3145,7 @@ msgid "Miscellaneous"
 msgstr "Çeşitli"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:62
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
 msgid "Moderate"
 msgstr "Modere et"
 
@@ -3336,7 +3391,7 @@ msgstr "Eski dosya %1 silindi"
 msgid "Oldest messages first"
 msgstr "İlk olarak en eski mesaj"
 
-#: src/List.pm:942
+#: src/List.pm:946
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3395,7 +3450,7 @@ msgstr ""
 "olan bir virüsü, %2 adresinine giden bir mesaj içinde bulmuştur ve\n"
 "bu mesaj size ait gibi görünüyor (From: %3)"
 
-#: src/List.pm:981 web_tt2/login_menu.tt2:10
+#: src/List.pm:985 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Sahip"
 
@@ -3435,7 +3490,7 @@ msgstr ""
 "düzenleyebilirler. Bir liste için ancak bir ayrıcalıklı sahip olabilir ve bu "
 "kişinin email adresi web üzerinden değiştirilemez."
 
-#: src/List.pm:1006
+#: src/List.pm:1010
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3539,7 +3594,7 @@ msgstr "Tercihler"
 msgid "Previous page"
 msgstr "Önceki sayfa"
 
-#: src/List.pm:1012
+#: src/List.pm:1016
 msgid "Priority"
 msgstr "Öncelik"
 
@@ -3632,7 +3687,7 @@ msgstr ""
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "REView <liste> * <liste>'ye kayıtlı kullanıcıları gösterir"
 
-#: src/List.pm:1063
+#: src/List.pm:1067
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 Başlık alanı"
 
@@ -3760,7 +3815,7 @@ msgid "Remote host"
 msgstr "Uzak bilgisayar"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Remove List"
 msgstr "Listeyi Kaldır"
 
@@ -3774,7 +3829,7 @@ msgid "Rename"
 msgstr "Yeniden adlandır"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:55
+#: web_tt2/list_admin_menu.tt2:59
 msgid "Rename List"
 msgstr "Listeyi Yeniden Adlandır"
 
@@ -3797,11 +3852,11 @@ msgstr "Bu listeyi yeniden adlandır"
 msgid "Replace the file %1 with your file"
 msgstr "Dosyayı sizin %1 dosyanızla yer değiştir"
 
-#: src/etc/mhonarc-ressources.tt2:424
+#: src/etc/mhonarc-ressources.tt2:422
 msgid "Reply"
 msgstr "Cavap"
 
-#: src/List.pm:1031 src/List.pm:1051
+#: src/List.pm:1035 src/List.pm:1055
 msgid "Reply address"
 msgstr "Cevap adresi"
 
@@ -3810,7 +3865,7 @@ msgstr "Cevap adresi"
 msgid "Reply to           : %1"
 msgstr "Cevapla : %1"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "Reply to sender"
 msgstr "Göndereni cevapla"
 
@@ -3836,11 +3891,11 @@ msgid "Reset errors for selected users"
 msgstr "Seçilen kullanıcı için hataları sıfırla"
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:54
 msgid "Restore List"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:45
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:49
 msgid "Restore shared"
 msgstr "Paylaşılanları eski haline getir"
 
@@ -3866,13 +3921,18 @@ msgstr "Komutlarınızın sonuçları"
 msgid "Return to archive %1"
 msgstr "%1 Arşivine geri dön"
 
-#: src/List.pm:1021
+#: src/List.pm:1025
 msgid "Return-path of the REMIND command"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
 msgstr "Bu aile için listeleri gözden geçir"
+
+#: web_tt2/list_menu.tt2:71
+#, fuzzy
+msgid "Review members"
+msgstr "Gözden geçir"
 
 #. (review)
 #: mail_tt2/info_report.tt2:19
@@ -3920,11 +3980,11 @@ msgid ""
 "a plain text email with all attachments"
 msgstr ""
 
-#: src/List.pm:859
+#: src/List.pm:863
 msgid "SQL query"
 msgstr "SQL sorgulaması"
 
-#: src/List.pm:874
+#: src/List.pm:878
 msgid "SQL query inclusion"
 msgstr "SQL sorgu kapsamı"
 
@@ -4040,11 +4100,11 @@ msgstr "Gönderme/Kabul"
 msgid "Sending/reception setup"
 msgstr "Gönderme/Kabül yapılandırması"
 
-#: src/List.pm:1074
+#: src/List.pm:1078
 msgid "Serial number of the config"
 msgstr "Ayarın seri numarası"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:15 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr "Sunucu hatası"
 
@@ -4111,7 +4171,7 @@ msgstr "Modere ediliyor, kayıtlı kullanıcılara kısıtlı"
 msgid "Shared document to be approved for %1"
 msgstr "%1 listesine %2 tarafından gönderilen onaylanacak makale"
 
-#: src/List.pm:1094 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Paylaşılan belgeler"
 
@@ -4161,7 +4221,7 @@ msgstr "Durum"
 msgid "Status :"
 msgstr "Durum :"
 
-#: src/List.pm:1110
+#: src/List.pm:1114
 msgid "Status of the list"
 msgstr "Listenin durumu"
 
@@ -4191,7 +4251,7 @@ msgstr "Konu :"
 msgid "Subject : %1"
 msgstr "Konu :"
 
-#: src/List.pm:1117
+#: src/List.pm:1121
 msgid "Subject of the list"
 msgstr "Listenin konusu"
 
@@ -4239,7 +4299,6 @@ msgid "Subscriber information"
 msgstr "Kayıtlı kullanıcı bilgisi"
 
 #: web_tt2/admin_menu.tt2:11 web_tt2/admin_menu.tt2:17
-#: web_tt2/list_menu.tt2:71
 msgid "Subscribers"
 msgstr "Kayıtlı kullanıcılar"
 
@@ -4285,7 +4344,7 @@ msgstr ""
 msgid "Subscription to this list requires S/MIME signature."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:75
+#: web_tt2/list_admin_menu.tt2:79
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Kayıtlı kullanıcı seçenekleri"
@@ -4305,7 +4364,7 @@ msgstr "%s Listesinin özeti"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Kayıtlarınızın özeti (%1 email adresini kullanarak)"
 
-#: src/etc/mhonarc-ressources.tt2:574
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Pazar:Pazartesi:Salı:Çarşamba:Perşembe:Cuma:Cumartesi"
 
@@ -4395,7 +4454,7 @@ msgstr "                        "
 msgid "Synchronize members with data sources"
 msgstr "Üyeleri veri kaynakları ile senkronize et"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2721
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
 msgid "Table of contents:"
 msgstr "İçerik tablosu:"
 
@@ -4451,22 +4510,22 @@ msgid ""
 msgstr "                        "
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:18
 msgid "The %1 latest created lists"
 msgstr "En son, %1 yaratılan liste"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:38
 msgid "The %1 latest messages"
 msgstr "En son, %1 mesaj"
 
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:47
 msgid "The %1 latest shared documents"
 msgstr "En son, %1 paylaşılan belge"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:28
 msgid "The %1 most active lists"
 msgstr "%1 En aktif liste"
 
@@ -4633,15 +4692,15 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "Belirtilen sanal robotlar bu sunucuda çalışıyor:"
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 msgid "The latest created lists"
 msgstr "En son yaratılan listeler"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:40
 msgid "The latest messages"
 msgstr "En son mesajlar"
 
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:49
 msgid "The latest shared documents"
 msgstr "En son paylaşılan belgeler"
 
@@ -4695,7 +4754,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "Listenin konusu"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:30
 msgid "The most active lists"
 msgstr "En aktif listeler"
 
@@ -5266,11 +5325,11 @@ msgstr ""
 msgid "Topic subscription :"
 msgstr "Bekleyen kayıtlar"
 
-#: src/List.pm:936
+#: src/List.pm:940
 msgid "Topics for message categorisation"
 msgstr ""
 
-#: src/List.pm:1127
+#: src/List.pm:1131
 msgid "Topics for the list"
 msgstr ""
 
@@ -5647,7 +5706,7 @@ msgstr ""
 msgid "User certificate belong to"
 msgstr ""
 
-#: src/List.pm:1165
+#: src/List.pm:1169
 msgid "User data source"
 msgstr ""
 
@@ -5683,7 +5742,7 @@ msgstr ""
 msgid "Visibility :"
 msgstr ""
 
-#: src/List.pm:1171
+#: src/List.pm:1175
 msgid "Visibility of the list"
 msgstr ""
 
@@ -5725,7 +5784,7 @@ msgstr ""
 msgid "We stopped delivery of this email."
 msgstr ""
 
-#: src/List.pm:1192
+#: src/List.pm:1196
 msgid "Web archives"
 msgstr ""
 
@@ -5769,7 +5828,7 @@ msgid ""
 "a full MIME structured message (only for MIME gurus)."
 msgstr ""
 
-#: src/List.pm:1198
+#: src/List.pm:1202
 msgid "Welcome return-path"
 msgstr ""
 
@@ -5807,39 +5866,39 @@ msgstr ""
 msgid "Who can delete subscribers"
 msgstr ""
 
-#: src/List.pm:1083
+#: src/List.pm:1087
 msgid "Who can edit"
 msgstr ""
 
-#: src/List.pm:882
+#: src/List.pm:886
 msgid "Who can invite people"
 msgstr ""
 
-#: src/List.pm:1056
+#: src/List.pm:1060
 msgid "Who can review subscribers"
 msgstr ""
 
-#: src/List.pm:1067
+#: src/List.pm:1071
 msgid "Who can send messages"
 msgstr ""
 
-#: src/List.pm:1016
+#: src/List.pm:1020
 msgid "Who can start a remind process"
 msgstr ""
 
-#: src/List.pm:1121
+#: src/List.pm:1125
 msgid "Who can subscribe to the list"
 msgstr ""
 
-#: src/List.pm:1138
+#: src/List.pm:1142
 msgid "Who can unsubscribe"
 msgstr ""
 
-#: src/List.pm:1079
+#: src/List.pm:1083
 msgid "Who can view"
 msgstr ""
 
-#: src/List.pm:878
+#: src/List.pm:882
 msgid "Who can view list information"
 msgstr ""
 
@@ -6237,7 +6296,7 @@ msgstr ""
 msgid "access"
 msgstr ""
 
-#: src/List.pm:1175 src/List.pm:331
+#: src/List.pm:1179 src/List.pm:331
 msgid "access right"
 msgstr ""
 
@@ -6245,7 +6304,7 @@ msgstr ""
 msgid "action for this population"
 msgstr ""
 
-#: web_tt2/rss_request.tt2:46
+#: web_tt2/rss_request.tt2:48
 #, fuzzy
 msgid "active lists"
 msgstr "Aktif olmayan listeler"
@@ -6397,7 +6456,7 @@ msgstr ""
 msgid "concealed"
 msgstr ""
 
-#: src/List.pm:839
+#: src/List.pm:843
 msgid "connection options"
 msgstr ""
 
@@ -6429,20 +6488,24 @@ msgstr ""
 msgid "data location URL"
 msgstr ""
 
-#: src/List.pm:835
+#: src/List.pm:839
 msgid "database name"
+msgstr ""
+
+#: src/List.pm:834
+msgid "database port"
 msgstr ""
 
 #: src/List.pm:825
 msgid "database type"
 msgstr ""
 
-#: src/List.pm:540 src/List.pm:991
+#: src/List.pm:540 src/List.pm:995
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Veri Kaynağı ayarları"
 
-#: src/List.pm:1149 src/List.pm:897
+#: src/List.pm:1153 src/List.pm:901
 #, fuzzy
 msgid "date"
 msgstr "Tarih"
@@ -6507,12 +6570,12 @@ msgstr ""
 msgid "editor rejection message"
 msgstr ""
 
-#: src/List.pm:510 src/List.pm:956 web_tt2/login_menu.tt2:59
+#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr ""
 
-#: src/List.pm:1099 src/List.pm:1104
+#: src/List.pm:1103 src/List.pm:1108
 msgid "email address protection method"
 msgstr ""
 
@@ -6528,11 +6591,11 @@ msgstr ""
 msgid "entire word"
 msgstr ""
 
-#: src/List.pm:844
+#: src/List.pm:848
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:1144 src/List.pm:893
+#: src/List.pm:1148 src/List.pm:897
 #, fuzzy
 msgid "epoch date"
 msgstr "Oluşturulma tarihi"
@@ -6584,6 +6647,18 @@ msgstr ""
 #: src/List.pm:699
 msgid "first-level suffix"
 msgstr ""
+
+#. (for)
+#: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
+#, fuzzy
+msgid "for %1 days"
+msgstr " %1 gün için "
+
+#. (for)
+#: web_tt2/rss.tt2:43 web_tt2/rss.tt2:52
+#, fuzzy
+msgid "for %1 days "
+msgstr " %1 gün için "
 
 #: src/etc/scenari/info.open:1
 msgid "for anyone"
@@ -6667,17 +6742,17 @@ msgstr ""
 msgid "language"
 msgstr "Dil"
 
-#: web_tt2/rss_request.tt2:36
+#: web_tt2/rss_request.tt2:38
 #, fuzzy
 msgid "latest arc"
 msgstr "Metin arşivleri"
 
-#: web_tt2/rss_request.tt2:41
+#: web_tt2/rss_request.tt2:43
 #, fuzzy
 msgid "latest document"
 msgstr "En son paylaşılan belgeler"
 
-#: web_tt2/rss_request.tt2:51
+#: web_tt2/rss_request.tt2:53
 #, fuzzy
 msgid "latest lists"
 msgstr "Son Listeler"
@@ -6782,7 +6857,7 @@ msgstr ""
 msgid "moderated for subscribers"
 msgstr ""
 
-#: src/List.pm:520 src/List.pm:966
+#: src/List.pm:520 src/List.pm:970
 msgid "name"
 msgstr ""
 
@@ -6861,7 +6936,7 @@ msgstr ""
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
-#: src/List.pm:1042
+#: src/List.pm:1046
 msgid "other email address"
 msgstr ""
 
@@ -6917,11 +6992,11 @@ msgstr ""
 msgid "private information"
 msgstr ""
 
-#: src/List.pm:971
+#: src/List.pm:975
 msgid "private informations"
 msgstr ""
 
-#: src/List.pm:1001 src/List.pm:976
+#: src/List.pm:1005 src/List.pm:980
 msgid "profile"
 msgstr ""
 
@@ -6973,12 +7048,12 @@ msgstr ""
 msgid "quiet"
 msgstr ""
 
-#: src/List.pm:1090 src/List.pm:1182
+#: src/List.pm:1094 src/List.pm:1186
 msgid "quota"
 msgstr ""
 
-#: src/List.pm:347 src/List.pm:460 src/List.pm:515 src/List.pm:545
-#: src/List.pm:961 src/List.pm:996
+#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
+#: src/List.pm:545 src/List.pm:965
 msgid "reception mode"
 msgstr ""
 
@@ -7006,7 +7081,7 @@ msgstr ""
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:853
+#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
 msgid "remote password"
 msgstr ""
 
@@ -7018,7 +7093,7 @@ msgstr ""
 msgid "remote port"
 msgstr ""
 
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:848
+#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
 msgid "remote user"
 msgstr ""
 
@@ -7038,7 +7113,7 @@ msgstr ""
 msgid "requires authentication then owner approval"
 msgstr ""
 
-#: src/List.pm:1047
+#: src/List.pm:1051
 msgid "respect of existing header field"
 msgstr ""
 
@@ -7148,7 +7223,7 @@ msgid "selection (if multiple)"
 msgstr ""
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "send it back to %1"
 msgstr ""
 
@@ -7165,7 +7240,7 @@ msgid "session"
 msgstr ""
 
 #: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:867
+#: src/List.pm:871
 msgid "short name for this source"
 msgstr ""
 
@@ -7222,7 +7297,7 @@ msgstr "özet mesajı"
 msgid "summary mode"
 msgstr "özet mesajı"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "tag this mail for deletion"
 msgstr "silmek için işaretle"
 
@@ -7247,7 +7322,7 @@ msgstr ""
 msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
-#: src/List.pm:535 src/List.pm:986
+#: src/List.pm:535 src/List.pm:990
 #, fuzzy
 msgid "the datasource"
 msgstr "Veri Kaynağı"
@@ -7294,7 +7369,7 @@ msgstr "Eşik"
 msgid "title"
 msgstr "başlık"
 
-#: src/etc/mhonarc-ressources.tt2:422
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "to list"
 msgstr "listesine"
 
@@ -7310,7 +7385,7 @@ msgstr "üyelikten çıkma mesajı"
 msgid "urlize mode"
 msgstr ""
 
-#: src/List.pm:1037 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "değer"
 
@@ -7334,11 +7409,11 @@ msgstr "uyarı oranı"
 msgid "welcome message"
 msgstr "hoşgeldin mesajı"
 
-#: src/List.pm:902
+#: src/List.pm:906
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/List.pm:1155
+#: src/List.pm:1159
 #, fuzzy
 msgid "who updated the config"
 msgstr "Ayarın son güncellemesi"
@@ -7453,9 +7528,6 @@ msgstr "Şifreniz : %1"
 
 #~ msgid "Renewal of your subscription to list '%s'"
 #~ msgstr "'%s' Kayıtlanma listelerinin tekrar yenilenmesi"
-
-#~ msgid "Review"
-#~ msgstr "Gözden geçir"
 
 #~ msgid "Routing error ?"
 #~ msgstr "Routing hatası ?"

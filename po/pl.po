@@ -771,11 +771,35 @@ msgid ""
 "(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
 msgstr ""
 
+# nlsref 15,3
+#: web_tt2/rss.tt2:7
+#, fuzzy
+msgid " active lists "
+msgstr "Wiadomo¶æ o usuniêciu"
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
 msgid " for %1 days "
 msgstr ""
+
+# nlsref 16,70
+#: web_tt2/rss.tt2:9
+#, fuzzy
+msgid " latest documents "
+msgstr "Dokumenty wspó³dzielone"
+
+# nlsref 15,3
+#: web_tt2/rss.tt2:6
+#, fuzzy
+msgid " latest lists "
+msgstr "Wiadomo¶æ o usuniêciu"
+
+# nlsref 15,3
+#: web_tt2/rss.tt2:8
+#, fuzzy
+msgid " latest messages "
+msgstr "Wiadomo¶æ o usuniêciu"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -845,7 +869,7 @@ msgid ""
 msgstr ""
 
 #. (l.average)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1 by day "
 msgstr ""
 
@@ -884,13 +908,18 @@ msgstr ""
 msgid "%1 occurrence(s) found"
 msgstr ""
 
+#. (email,list.name)
+#: mail_tt2/listmaster_notification.tt2:9
+msgid "%1 requested creation of list \"%2\""
+msgstr ""
+
 #. (notice.total)
 #: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr ""
 
 #. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 msgid "%1@%2 - %3 : %4 messages"
 msgstr ""
 
@@ -1260,13 +1289,13 @@ msgstr ""
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
 # nlsref 16,70
 #. (list)
-#: web_tt2/list_admin_menu.tt2:43
+#: web_tt2/list_admin_menu.tt2:47
 #, fuzzy
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Dokumenty wspó³dzielone"
@@ -1346,7 +1375,7 @@ msgid "Body"
 msgstr ""
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:113
+#: web_tt2/rss.tt2:88
 msgid "Bookmark %1"
 msgstr ""
 
@@ -1374,7 +1403,7 @@ msgstr ""
 "%s/reviewbouncing/%s"
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:37
+#: web_tt2/list_admin_menu.tt2:41
 msgid "Bounces"
 msgstr ""
 
@@ -1604,7 +1633,7 @@ msgid "Create"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:41
+#: web_tt2/list_admin_menu.tt2:45
 msgid "Create Shared"
 msgstr ""
 
@@ -1730,7 +1759,7 @@ msgstr ""
 msgid "Delete Selected Month(s)"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:47
 msgid "Delete Shared"
 msgstr ""
 
@@ -1816,7 +1845,7 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: src/List.pm:863
+#: src/List.pm:867
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -1856,9 +1885,30 @@ msgstr ""
 msgid "Do you really want to delete theses messages ?"
 msgstr "Dokumenty wspó³dzielone"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "Do you really want to delete this message ?"
 msgstr ""
+
+# nlsref 16,70
+#. (file.value.site)
+#: web_tt2/ls_templates.tt2:79
+#, fuzzy
+msgid "Do you really want to remove %1 ?"
+msgstr "Dokumenty wspó³dzielone"
+
+# nlsref 16,70
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109
+#, fuzzy
+msgid "Do you really want to remove [% file.value.listname %] ?"
+msgstr "Dokumenty wspó³dzielone"
+
+# nlsref 16,70
+#. (file.value.robot)
+#: web_tt2/ls_templates.tt2:93
+#, fuzzy
+msgid "Do you really want to remove [% file.value.robot %] ?"
+msgstr "Dokumenty wspó³dzielone"
 
 #: web_tt2/rename_list_request.tt2:14
 msgid "Do you really want to rename this list?"
@@ -1906,7 +1956,7 @@ msgstr ""
 msgid "Do you want to rename your file %1 ?"
 msgstr ""
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:70
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:74
 msgid "Document"
 msgstr ""
 
@@ -2436,7 +2486,7 @@ msgid "Inactive lists"
 msgstr ""
 
 # nlsref 16,75
-#: src/List.pm:1134
+#: src/List.pm:1138
 msgid "Inclusions timeout"
 msgstr "Up³yn±³ czas do³±czenia"
 
@@ -2507,7 +2557,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:592
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2541,7 +2591,7 @@ msgid "Language :"
 msgstr ""
 
 # nlsref 16,55
-#: src/List.pm:888
+#: src/List.pm:892
 msgid "Language of the list"
 msgstr "Jêzyk listy"
 
@@ -2563,7 +2613,7 @@ msgid "Last update : %1"
 msgstr ""
 
 # nlsref 16,77
-#: src/List.pm:1159
+#: src/List.pm:1163
 msgid "Last update of config"
 msgstr "Ostatnia modyfikacja pliku konfiguracyjnego"
 
@@ -2571,7 +2621,7 @@ msgstr "Ostatnia modyfikacja pliku konfiguracyjnego"
 msgid "Last update:"
 msgstr ""
 
-#: src/List.pm:906
+#: src/List.pm:910
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -2966,10 +3016,16 @@ msgstr ""
 
 # nlsref 16,83
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
-#: web_tt2/list_admin_menu.tt2:32
+#: web_tt2/list_admin_menu.tt2:36
 #, fuzzy
 msgid "Manage Archives"
 msgstr "Archiwa WWW"
+
+# nlsref 16,2
+#: web_tt2/list_admin_menu.tt2:31
+#, fuzzy
+msgid "Manage Subscribers"
+msgstr "Kto mo¿e zapisywaæ na listê"
 
 #: src/List.pm:390
 msgid "Management of bouncers, 1st level"
@@ -2985,11 +3041,11 @@ msgid "Managing bouncing subscribers:"
 msgstr ""
 
 # nlsref 16,56
-#: src/List.pm:914
+#: src/List.pm:918
 msgid "Maximum message size"
 msgstr "Maksymalny rozmiar wiadomo¶ci"
 
-#: src/List.pm:1187
+#: src/List.pm:1191
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -3012,7 +3068,7 @@ msgid ""
 msgstr ""
 
 # nlsref 15,4
-#: web_tt2/list_admin_menu.tt2:68
+#: web_tt2/list_admin_menu.tt2:72
 #, fuzzy
 msgid "Message"
 msgstr "Stopka wiadomo¶ci"
@@ -3030,6 +3086,14 @@ msgstr "Wiadomo¶æ %s wys³ana na listê %s zosta³a rozes³ana.\n"
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "Wiadomo¶æ %s wys³ana na listê %s zosta³a odrzucona.\n"
+
+# nlsref 6,44
+#. (key,listname)
+#: mail_tt2/message_report.tt2:112
+#, fuzzy
+msgid ""
+"Message %1 for list '%2' has been validated ; it will be distributed soon."
+msgstr "Wiadomo¶æ %s wys³ana na listê %s zosta³a rozes³ana.\n"
 
 # nlsref 15,4
 #: mail_tt2/message_report.tt2:97
@@ -3092,23 +3156,23 @@ msgid ""
 msgstr ""
 
 # nlsref 15,4
-#: src/List.pm:949
+#: src/List.pm:953
 #, fuzzy
 msgid "Message tagging"
 msgstr "Stopka wiadomo¶ci"
 
-#: src/List.pm:925
+#: src/List.pm:929
 msgid "Message topic keywords"
 msgstr ""
 
 # nlsref 15,4
-#: src/List.pm:920
+#: src/List.pm:924
 #, fuzzy
 msgid "Message topic name"
 msgstr "Stopka wiadomo¶ci"
 
 # nlsref 15,4
-#: src/List.pm:931
+#: src/List.pm:935
 #, fuzzy
 msgid "Message topic title"
 msgstr "Stopka wiadomo¶ci"
@@ -3138,7 +3202,7 @@ msgid "Miscellaneous"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:62
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
 msgid "Moderate"
 msgstr ""
 
@@ -3391,7 +3455,7 @@ msgstr ""
 msgid "Oldest messages first"
 msgstr ""
 
-#: src/List.pm:942
+#: src/List.pm:946
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3446,7 +3510,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,57
-#: src/List.pm:981 web_tt2/login_menu.tt2:10
+#: src/List.pm:985 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Administrator"
 
@@ -3478,7 +3542,7 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1006
+#: src/List.pm:1010
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3585,7 +3649,7 @@ msgid "Previous page"
 msgstr ""
 
 # nlsref 16,63
-#: src/List.pm:1012
+#: src/List.pm:1016
 msgid "Priority"
 msgstr "Priorytet"
 
@@ -3677,7 +3741,7 @@ msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr ""
 
 # nlsref 16,16
-#: src/List.pm:1063
+#: src/List.pm:1067
 #, fuzzy
 msgid "RFC 2369 Header fields"
 msgstr "Dodatkowe pole nag³ówka"
@@ -3814,7 +3878,7 @@ msgid "Remote host"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Remove List"
 msgstr ""
 
@@ -3830,7 +3894,7 @@ msgid "Rename"
 msgstr "nazwisko"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:55
+#: web_tt2/list_admin_menu.tt2:59
 msgid "Rename List"
 msgstr ""
 
@@ -3855,12 +3919,12 @@ msgstr "Jêzyk listy"
 msgid "Replace the file %1 with your file"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:424
+#: src/etc/mhonarc-ressources.tt2:422
 msgid "Reply"
 msgstr ""
 
 # nlsref 16,66
-#: src/List.pm:1031 src/List.pm:1051
+#: src/List.pm:1035 src/List.pm:1055
 msgid "Reply address"
 msgstr "Adres zwrotny"
 
@@ -3869,7 +3933,7 @@ msgstr "Adres zwrotny"
 msgid "Reply to           : %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "Reply to sender"
 msgstr ""
 
@@ -3896,11 +3960,11 @@ msgid "Reset errors for selected users"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:54
 msgid "Restore List"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:45
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:49
 msgid "Restore shared"
 msgstr ""
 
@@ -3928,12 +3992,16 @@ msgstr "Wyniki wydanych poleceñ"
 msgid "Return to archive %1"
 msgstr ""
 
-#: src/List.pm:1021
+#: src/List.pm:1025
 msgid "Return-path of the REMIND command"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
+msgstr ""
+
+#: web_tt2/list_menu.tt2:71
+msgid "Review members"
 msgstr ""
 
 #. (review)
@@ -3983,12 +4051,12 @@ msgid ""
 msgstr ""
 
 # nlsref 16,51
-#: src/List.pm:859
+#: src/List.pm:863
 msgid "SQL query"
 msgstr "zapytanie SQL"
 
 # nlsref 16,45
-#: src/List.pm:874
+#: src/List.pm:878
 msgid "SQL query inclusion"
 msgstr "Za³±czenie zapytania SQL"
 
@@ -4105,11 +4173,11 @@ msgid "Sending/reception setup"
 msgstr ""
 
 # nlsref 16,69
-#: src/List.pm:1074
+#: src/List.pm:1078
 msgid "Serial number of the config"
 msgstr "Numer seryjny pliku konfiguracyjnego"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:15 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr ""
 
@@ -4180,7 +4248,7 @@ msgid "Shared document to be approved for %1"
 msgstr ""
 
 # nlsref 16,70
-#: src/List.pm:1094 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Dokumenty wspó³dzielone"
 
@@ -4231,7 +4299,7 @@ msgid "Status :"
 msgstr ""
 
 # nlsref 16,71
-#: src/List.pm:1110
+#: src/List.pm:1114
 msgid "Status of the list"
 msgstr "Status listy"
 
@@ -4261,7 +4329,7 @@ msgid "Subject : %1"
 msgstr ""
 
 # nlsref 16,72
-#: src/List.pm:1117
+#: src/List.pm:1121
 msgid "Subject of the list"
 msgstr "Temat listy"
 
@@ -4314,7 +4382,6 @@ msgid "Subscriber information"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:11 web_tt2/admin_menu.tt2:17
-#: web_tt2/list_menu.tt2:71
 msgid "Subscribers"
 msgstr ""
 
@@ -4369,7 +4436,7 @@ msgid "Subscription to this list requires S/MIME signature."
 msgstr "Zapisanie na listê jest obecnie zawieszone.\n"
 
 # nlsref 15,2
-#: web_tt2/list_admin_menu.tt2:75
+#: web_tt2/list_admin_menu.tt2:79
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Wiadomo¶æ porzegnalna"
@@ -4390,7 +4457,7 @@ msgstr "Administracja listy %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:574
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -4480,7 +4547,7 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2721
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
 msgid "Table of contents:"
 msgstr ""
 
@@ -4537,28 +4604,28 @@ msgstr ""
 
 # nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:18
 #, fuzzy
 msgid "The %1 latest created lists"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:38
 #, fuzzy
 msgid "The %1 latest messages"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 16,70
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:47
 #, fuzzy
 msgid "The %1 latest shared documents"
 msgstr "Dokumenty wspó³dzielone"
 
 # nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:28
 #, fuzzy
 msgid "The %1 most active lists"
 msgstr "Wiadomo¶æ o usuniêciu"
@@ -4763,19 +4830,19 @@ msgid "The following virtual robots are running on this server :"
 msgstr ""
 
 # nlsref 15,3
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 #, fuzzy
 msgid "The latest created lists"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 15,3
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:40
 #, fuzzy
 msgid "The latest messages"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 16,70
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:49
 #, fuzzy
 msgid "The latest shared documents"
 msgstr "Dokumenty wspó³dzielone"
@@ -4829,7 +4896,7 @@ msgid "The list's subject"
 msgstr ""
 
 # nlsref 15,3
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:30
 #, fuzzy
 msgid "The most active lists"
 msgstr "Wiadomo¶æ o usuniêciu"
@@ -5429,13 +5496,13 @@ msgid "Topic subscription :"
 msgstr "Wiadomo¶æ porzegnalna"
 
 # nlsref 16,74
-#: src/List.pm:936
+#: src/List.pm:940
 #, fuzzy
 msgid "Topics for message categorisation"
 msgstr "Tematy dla listy"
 
 # nlsref 16,74
-#: src/List.pm:1127
+#: src/List.pm:1131
 msgid "Topics for the list"
 msgstr "Tematy dla listy"
 
@@ -5861,7 +5928,7 @@ msgid "User certificate belong to"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:1165
+#: src/List.pm:1169
 msgid "User data source"
 msgstr "¬ród³o danych u¿ytkownika"
 
@@ -5901,7 +5968,7 @@ msgid "Visibility :"
 msgstr ""
 
 # nlsref 16,82
-#: src/List.pm:1171
+#: src/List.pm:1175
 msgid "Visibility of the list"
 msgstr "Widoczno¶æ listy"
 
@@ -5952,7 +6019,7 @@ msgid "We stopped delivery of this email."
 msgstr ""
 
 # nlsref 16,83
-#: src/List.pm:1192
+#: src/List.pm:1196
 msgid "Web archives"
 msgstr "Archiwa WWW"
 
@@ -5999,7 +6066,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,85
-#: src/List.pm:1198
+#: src/List.pm:1202
 msgid "Welcome return-path"
 msgstr "Powitalna ¶cie¿ka-zwrotna"
 
@@ -6040,47 +6107,47 @@ msgid "Who can delete subscribers"
 msgstr "Kto mo¿e kasowaæ zapisanych"
 
 # nlsref 16,87
-#: src/List.pm:1083
+#: src/List.pm:1087
 msgid "Who can edit"
 msgstr "Kto mo¿e edytowaæ"
 
 # nlsref 16,54
-#: src/List.pm:882
+#: src/List.pm:886
 msgid "Who can invite people"
 msgstr "Kto mo¿e zapraszaæ na listê"
 
 # nlsref 16,67
-#: src/List.pm:1056
+#: src/List.pm:1060
 msgid "Who can review subscribers"
 msgstr "Kto mo¿e przegl±daæ zapisanych"
 
 # nlsref 16,68
-#: src/List.pm:1067
+#: src/List.pm:1071
 msgid "Who can send messages"
 msgstr "Kto mo¿e wysy³aæ wiadomo¶ci"
 
 # nlsref 16,64
-#: src/List.pm:1016
+#: src/List.pm:1020
 msgid "Who can start a remind process"
 msgstr "Kto mo¿e rozpocz±æ proces przypominania"
 
 # nlsref 16,73
-#: src/List.pm:1121
+#: src/List.pm:1125
 msgid "Who can subscribe to the list"
 msgstr "Kto mo¿e zapisaæ siêna listê"
 
 # nlsref 16,76
-#: src/List.pm:1138
+#: src/List.pm:1142
 msgid "Who can unsubscribe"
 msgstr "Kto mo¿e siê wypisaæ"
 
 # nlsref 16,86
-#: src/List.pm:1079
+#: src/List.pm:1083
 msgid "Who can view"
 msgstr "Kto mo¿e odczytywaæ"
 
 # nlsref 16,53
-#: src/List.pm:878
+#: src/List.pm:882
 msgid "Who can view list information"
 msgstr "Kto mo¿e przegl±daæ informacje o li¶cie"
 
@@ -6509,7 +6576,7 @@ msgid "access"
 msgstr ""
 
 # nlsref 16,6
-#: src/List.pm:1175 src/List.pm:331
+#: src/List.pm:1179 src/List.pm:331
 msgid "access right"
 msgstr "prawo dostêpu"
 
@@ -6518,7 +6585,7 @@ msgid "action for this population"
 msgstr ""
 
 # nlsref 15,3
-#: web_tt2/rss_request.tt2:46
+#: web_tt2/rss_request.tt2:48
 #, fuzzy
 msgid "active lists"
 msgstr "Wiadomo¶æ o usuniêciu"
@@ -6686,7 +6753,7 @@ msgid "concealed"
 msgstr ""
 
 # nlsref 16,94
-#: src/List.pm:839
+#: src/List.pm:843
 msgid "connection options"
 msgstr ""
 
@@ -6722,21 +6789,27 @@ msgid "data location URL"
 msgstr ""
 
 # nlsref 16,48
-#: src/List.pm:835
+#: src/List.pm:839
 msgid "database name"
 msgstr "nazwa bazy danych"
+
+# nlsref 16,46
+#: src/List.pm:834
+#, fuzzy
+msgid "database port"
+msgstr "typ bazy danych"
 
 # nlsref 16,46
 #: src/List.pm:825
 msgid "database type"
 msgstr "typ bazy danych"
 
-#: src/List.pm:540 src/List.pm:991
+#: src/List.pm:540 src/List.pm:995
 msgid "datasource parameters"
 msgstr ""
 
 # nlsref 16,26
-#: src/List.pm:1149 src/List.pm:897
+#: src/List.pm:1153 src/List.pm:901
 #, fuzzy
 msgid "date"
 msgstr "Moderatorzy"
@@ -6806,12 +6879,12 @@ msgid "editor rejection message"
 msgstr "Wiadomo¶æ o odrzuceniu przez edytora"
 
 # nlsref 16,27
-#: src/List.pm:510 src/List.pm:956 web_tt2/login_menu.tt2:59
+#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "adres email"
 
-#: src/List.pm:1099 src/List.pm:1104
+#: src/List.pm:1103 src/List.pm:1108
 msgid "email address protection method"
 msgstr ""
 
@@ -6830,11 +6903,11 @@ msgid "entire word"
 msgstr "zdalne has³o"
 
 # nlsref 16,148
-#: src/List.pm:844
+#: src/List.pm:848
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:1144 src/List.pm:893
+#: src/List.pm:1148 src/List.pm:897
 msgid "epoch date"
 msgstr ""
 
@@ -6895,6 +6968,16 @@ msgstr ""
 # nlsref 16,140
 #: src/List.pm:699
 msgid "first-level suffix"
+msgstr ""
+
+#. (for)
+#: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
+msgid "for %1 days"
+msgstr ""
+
+#. (for)
+#: web_tt2/rss.tt2:43 web_tt2/rss.tt2:52
+msgid "for %1 days "
 msgstr ""
 
 #: src/etc/scenari/info.open:1
@@ -6984,19 +7067,19 @@ msgid "language"
 msgstr ""
 
 # nlsref 16,4
-#: web_tt2/rss_request.tt2:36
+#: web_tt2/rss_request.tt2:38
 #, fuzzy
 msgid "latest arc"
 msgstr "Archiwa tekstowe"
 
 # nlsref 16,70
-#: web_tt2/rss_request.tt2:41
+#: web_tt2/rss_request.tt2:43
 #, fuzzy
 msgid "latest document"
 msgstr "Dokumenty wspó³dzielone"
 
 # nlsref 15,3
-#: web_tt2/rss_request.tt2:51
+#: web_tt2/rss_request.tt2:53
 #, fuzzy
 msgid "latest lists"
 msgstr "Wiadomo¶æ o usuniêciu"
@@ -7121,7 +7204,7 @@ msgid "moderated for subscribers"
 msgstr "Kto mo¿e przegl±daæ zapisanych"
 
 # nlsref 16,29
-#: src/List.pm:520 src/List.pm:966
+#: src/List.pm:520 src/List.pm:970
 msgid "name"
 msgstr "nazwisko"
 
@@ -7213,7 +7296,7 @@ msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
 # nlsref 16,92
-#: src/List.pm:1042
+#: src/List.pm:1046
 msgid "other email address"
 msgstr ""
 
@@ -7271,12 +7354,12 @@ msgid "private information"
 msgstr "informacje prywatne"
 
 # nlsref 16,61
-#: src/List.pm:971
+#: src/List.pm:975
 msgid "private informations"
 msgstr "informacje prywatne"
 
 # nlsref 16,62
-#: src/List.pm:1001 src/List.pm:976
+#: src/List.pm:1005 src/List.pm:980
 msgid "profile"
 msgstr "profil"
 
@@ -7337,13 +7420,13 @@ msgid "quiet"
 msgstr ""
 
 # nlsref 16,203
-#: src/List.pm:1090 src/List.pm:1182
+#: src/List.pm:1094 src/List.pm:1186
 msgid "quota"
 msgstr ""
 
 # nlsref 16,19
-#: src/List.pm:347 src/List.pm:460 src/List.pm:515 src/List.pm:545
-#: src/List.pm:961 src/List.pm:996
+#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
+#: src/List.pm:545 src/List.pm:965
 msgid "reception mode"
 msgstr "tryb odbioru"
 
@@ -7375,7 +7458,7 @@ msgid "remote list inclusion"
 msgstr ""
 
 # nlsref 16,39
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:853
+#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
 msgid "remote password"
 msgstr "zdalne has³o"
 
@@ -7390,7 +7473,7 @@ msgid "remote port"
 msgstr "zdalny port"
 
 # nlsref 16,38
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:848
+#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
 msgid "remote user"
 msgstr "zdalny u¿ytkownik"
 
@@ -7411,7 +7494,7 @@ msgid "requires authentication then owner approval"
 msgstr ""
 
 # nlsref 16,93
-#: src/List.pm:1047
+#: src/List.pm:1051
 msgid "respect of existing header field"
 msgstr ""
 
@@ -7538,7 +7621,7 @@ msgid "selection (if multiple)"
 msgstr "wybór (je¿eli istnieje wiele mo¿liwo¶ci)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "send it back to %1"
 msgstr ""
 
@@ -7557,7 +7640,7 @@ msgstr ""
 
 # nlsref 16,209
 #: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:867
+#: src/List.pm:871
 msgid "short name for this source"
 msgstr ""
 
@@ -7624,7 +7707,7 @@ msgstr "Podsumowanie"
 msgid "summary mode"
 msgstr "Podsumowanie"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -7649,7 +7732,7 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:535 src/List.pm:986
+#: src/List.pm:535 src/List.pm:990
 #, fuzzy
 msgid "the datasource"
 msgstr "¬ród³o danych u¿ytkownika"
@@ -7695,7 +7778,7 @@ msgstr ""
 msgid "title"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:422
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "to list"
 msgstr ""
 
@@ -7717,7 +7800,7 @@ msgid "urlize mode"
 msgstr "Instrukcja obs³ugi"
 
 # nlsref 16,91
-#: src/List.pm:1037 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr ""
 
@@ -7746,13 +7829,13 @@ msgid "welcome message"
 msgstr "Wiadomo¶æ powitalna"
 
 # nlsref 16,53
-#: src/List.pm:902
+#: src/List.pm:906
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Kto mo¿e przegl±daæ informacje o li¶cie"
 
 # nlsref 16,77
-#: src/List.pm:1155
+#: src/List.pm:1159
 #, fuzzy
 msgid "who updated the config"
 msgstr "Ostatnia modyfikacja pliku konfiguracyjnego"

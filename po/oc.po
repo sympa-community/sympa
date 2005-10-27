@@ -812,11 +812,32 @@ msgid ""
 "(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
 msgstr ""
 
+#: web_tt2/rss.tt2:7
+#, fuzzy
+msgid " active lists "
+msgstr "Tièras inactivas"
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
 msgid " for %1 days "
 msgstr " dempuèi %1 jorns "
+
+# nlsref 16,70
+#: web_tt2/rss.tt2:9
+#, fuzzy
+msgid " latest documents "
+msgstr "\"RSS : los documents nòus\""
+
+#: web_tt2/rss.tt2:6
+#, fuzzy
+msgid " latest lists "
+msgstr "Darrièras tièras"
+
+#: web_tt2/rss.tt2:8
+#, fuzzy
+msgid " latest messages "
+msgstr "Los darrièrs messatges"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -893,7 +914,7 @@ msgstr ""
 
 # nlsref 17,6
 #. (l.average)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 #, fuzzy
 msgid "%1 by day "
 msgstr "1 jorn"
@@ -935,13 +956,19 @@ msgstr "%1 messatges trobats entre %2"
 msgid "%1 occurrence(s) found"
 msgstr "%1 ocurréncia(s) trobada(s)"
 
+#. (email,list.name)
+#: mail_tt2/listmaster_notification.tt2:9
+#, fuzzy
+msgid "%1 requested creation of list \"%2\""
+msgstr "Avètz demandat de vos abonar a la tièra %1"
+
 #. (notice.total)
 #: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr "Venètz d'abonar %1 adreiças"
 
 #. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:98
+#: web_tt2/rss.tt2:72
 #, fuzzy
 msgid "%1@%2 - %3 : %4 messages"
 msgstr "%1@%2 : %3 messatges"
@@ -1343,12 +1370,12 @@ msgstr "Compilacion de la tièra %1"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "Sètz a man de suprimir la tièra %1. Confirmar ?"
 
 #. (list)
-#: web_tt2/list_admin_menu.tt2:43
+#: web_tt2/list_admin_menu.tt2:47
 #, fuzzy
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Sètz a man de suprimir la tièra %1. Confirmar ?"
@@ -1443,7 +1470,7 @@ msgid "Body"
 msgstr "Contengut del messatge"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:113
+#: web_tt2/rss.tt2:88
 msgid "Bookmark %1"
 msgstr "Marcapagina %1"
 
@@ -1471,7 +1498,7 @@ msgstr ""
 "%s/reviewbouncing/%s\n"
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:37
+#: web_tt2/list_admin_menu.tt2:41
 msgid "Bounces"
 msgstr "Errors"
 
@@ -1720,7 +1747,7 @@ msgid "Create"
 msgstr "Crear una tièra"
 
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:41
+#: web_tt2/list_admin_menu.tt2:45
 msgid "Create Shared"
 msgstr "Crear un espaci per partejar de documents"
 
@@ -1852,7 +1879,7 @@ msgstr "Suprimir"
 msgid "Delete Selected Month(s)"
 msgstr "Suprimir lo(s) mes(es) seleccionat(s)"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:47
 msgid "Delete Shared"
 msgstr "Tancar l'espaci de documents partejats"
 
@@ -1948,7 +1975,7 @@ msgstr "Compilacion (tèxt simple)"
 msgid "Directory"
 msgstr "Repertòri"
 
-#: src/List.pm:863
+#: src/List.pm:867
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Repertòri ont es registrada la basa de donadas (sonque amb DBD::CSV)"
 
@@ -1986,9 +2013,27 @@ msgstr "Sètz segur(a) de voler suprimir los archius seleccionats ?"
 msgid "Do you really want to delete theses messages ?"
 msgstr "Sètz segur(a) de voler suprimir aquel messatge ?"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "Do you really want to delete this message ?"
 msgstr "Sètz segur(a) de voler suprimir aquel messatge ?"
+
+#. (file.value.site)
+#: web_tt2/ls_templates.tt2:79
+#, fuzzy
+msgid "Do you really want to remove %1 ?"
+msgstr "Sètz segur(a) de voler suprimir %1 ?"
+
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109
+#, fuzzy
+msgid "Do you really want to remove [% file.value.listname %] ?"
+msgstr "Sètz segur(a) de voler suprimir %1 ?"
+
+#. (file.value.robot)
+#: web_tt2/ls_templates.tt2:93
+#, fuzzy
+msgid "Do you really want to remove [% file.value.robot %] ?"
+msgstr "Sètz segur(a) de voler suprimir %1 ?"
 
 #: web_tt2/rename_list_request.tt2:14
 msgid "Do you really want to rename this list?"
@@ -2040,7 +2085,7 @@ msgstr "Volètz suprimir lo fichièr ancian %1 ?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "Volètz renommar vòstre fichièr %1 ?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:70
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:74
 msgid "Document"
 msgstr "Document"
 
@@ -2627,7 +2672,7 @@ msgid "Inactive lists"
 msgstr "Tièras inactivas"
 
 # nlsref 16,75
-#: src/List.pm:1134
+#: src/List.pm:1138
 msgid "Inclusions timeout"
 msgstr "Expiracion de las inclusions"
 
@@ -2714,7 +2759,7 @@ msgstr ""
 "de tièra pòt pas accedir a vòstre X509 (per l'adreiça\n"
 "%1).\n"
 
-#: src/etc/mhonarc-ressources.tt2:592
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2752,7 +2797,7 @@ msgid "Language :"
 msgstr "Lenga :"
 
 # nlsref 16,55
-#: src/List.pm:888
+#: src/List.pm:892
 msgid "Language of the list"
 msgstr "Lenga de la tièra"
 
@@ -2772,7 +2817,7 @@ msgid "Last update : %1"
 msgstr "Darrièra actualizacion : %1"
 
 # nlsref 16,77
-#: src/List.pm:1159
+#: src/List.pm:1163
 msgid "Last update of config"
 msgstr "Darrièra actualizacion de la configuracion"
 
@@ -2780,7 +2825,7 @@ msgstr "Darrièra actualizacion de la configuracion"
 msgid "Last update:"
 msgstr "Darrièra actualizacion :"
 
-#: src/List.pm:906
+#: src/List.pm:910
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -3191,9 +3236,14 @@ msgid "Mailing lists categories"
 msgstr "Tièra per l'Intranet"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
-#: web_tt2/list_admin_menu.tt2:32
+#: web_tt2/list_admin_menu.tt2:36
 msgid "Manage Archives"
 msgstr "Gerir los archius"
+
+#: web_tt2/list_admin_menu.tt2:31
+#, fuzzy
+msgid "Manage Subscribers"
+msgstr "Abonats"
 
 #: src/List.pm:390
 msgid "Management of bouncers, 1st level"
@@ -3209,11 +3259,11 @@ msgid "Managing bouncing subscribers:"
 msgstr "Gestion dels abonats en error"
 
 # nlsref 16,56
-#: src/List.pm:914
+#: src/List.pm:918
 msgid "Maximum message size"
 msgstr "Talha maxima dels messatges"
 
-#: src/List.pm:1187
+#: src/List.pm:1191
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -3241,7 +3291,7 @@ msgstr ""
 "qu'aquel virus venga pas de vòstre ordenador. Foguèsse lo cas, podètz "
 "ignorar aquesta alèrta.\n"
 
-#: web_tt2/list_admin_menu.tt2:68
+#: web_tt2/list_admin_menu.tt2:72
 #, fuzzy
 msgid "Message"
 msgstr "Messatge incorrècte"
@@ -3259,6 +3309,14 @@ msgstr "Lo messatge %s per la tièra %s es estat distribuit.\n"
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "Lo messatge %s per la tièra %s es estat rejetat.\n"
+
+# nlsref 6,44
+#. (key,listname)
+#: mail_tt2/message_report.tt2:112
+#, fuzzy
+msgid ""
+"Message %1 for list '%2' has been validated ; it will be distributed soon."
+msgstr "Lo messatge %s per la tièra %s es estat distribuit.\n"
 
 # nlsref 15,4
 #: mail_tt2/message_report.tt2:97
@@ -3331,21 +3389,21 @@ msgstr ""
 "cap de cada messatge difusit a la tièra.\n"
 
 # nlsref 15,4
-#: src/List.pm:949
+#: src/List.pm:953
 #, fuzzy
 msgid "Message tagging"
 msgstr "Nombre de messatges"
 
-#: src/List.pm:925
+#: src/List.pm:929
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:920
+#: src/List.pm:924
 #, fuzzy
 msgid "Message topic name"
 msgstr "Messatges en espera d'aprobacion :"
 
-#: src/List.pm:931
+#: src/List.pm:935
 #, fuzzy
 msgid "Message topic title"
 msgstr "Messatges en espera d'aprobacion :"
@@ -3382,7 +3440,7 @@ msgid "Miscellaneous"
 msgstr "A forra borra"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:62
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
 msgid "Moderate"
 msgstr "Moderar"
 
@@ -3652,7 +3710,7 @@ msgstr "Lo fichièrs ancian %1 foguèt suprimit"
 msgid "Oldest messages first"
 msgstr "Messatges mai ancians en cap"
 
-#: src/List.pm:942
+#: src/List.pm:946
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3721,7 +3779,7 @@ msgstr ""
 "a destinacion de %2 capiá lo virus seguent : %1.\n"
 
 # nlsref 16,57
-#: src/List.pm:981 web_tt2/login_menu.tt2:10
+#: src/List.pm:985 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Proprietari"
 
@@ -3759,7 +3817,7 @@ msgstr ""
 "proprietaris privilegiats pòdon editar qualques paramètres mai que los autre "
 "proprietaris. Pòt pas i aver qu'un sol proprietari privilegiat per lista. "
 
-#: src/List.pm:1006
+#: src/List.pm:1010
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3870,7 +3928,7 @@ msgid "Previous page"
 msgstr "Pagina precedenta"
 
 # nlsref 16,63
-#: src/List.pm:1012
+#: src/List.pm:1016
 msgid "Priority"
 msgstr "Prioritat de la tièra"
 
@@ -3968,7 +4026,7 @@ msgstr ""
 "REView <liste>               * Recebre la tièra dels abonats a la tièra"
 
 # nlsref 16,16
-#: src/List.pm:1063
+#: src/List.pm:1067
 msgid "RFC 2369 Header fields"
 msgstr "Camps d'encap compatibles RFC 2369"
 
@@ -4104,7 +4162,7 @@ msgid "Remote host"
 msgstr "Servidor distant (Remote host)"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Remove List"
 msgstr "Quitar de la tièra"
 
@@ -4119,7 +4177,7 @@ msgid "Rename"
 msgstr "Renommar"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:55
+#: web_tt2/list_admin_menu.tt2:59
 msgid "Rename List"
 msgstr "Renommar la tièra"
 
@@ -4143,12 +4201,12 @@ msgstr "Renommar aquela tièra"
 msgid "Replace the file %1 with your file"
 msgstr "Remplaçar lo fichièr %1 per vòstre fichièr"
 
-#: src/etc/mhonarc-ressources.tt2:424
+#: src/etc/mhonarc-ressources.tt2:422
 msgid "Reply"
 msgstr "Respondre"
 
 # nlsref 16,66
-#: src/List.pm:1031 src/List.pm:1051
+#: src/List.pm:1035 src/List.pm:1055
 msgid "Reply address"
 msgstr "Adreiça de responsa"
 
@@ -4157,7 +4215,7 @@ msgstr "Adreiça de responsa"
 msgid "Reply to           : %1"
 msgstr "Respondre a          : %1"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "Reply to sender"
 msgstr "Repondre a l'autor"
 
@@ -4184,11 +4242,11 @@ msgid "Reset errors for selected users"
 msgstr "Anullar las errors pels abonats seleccionats"
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:54
 msgid "Restore List"
 msgstr "Restaurar la tièra"
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:45
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:49
 msgid "Restore shared"
 msgstr "Restaurar l'espaci de documents partejats"
 
@@ -4216,13 +4274,18 @@ msgstr "Resultats de vòstras comandas"
 msgid "Return to archive %1"
 msgstr "Tornar als archius %1"
 
-#: src/List.pm:1021
+#: src/List.pm:1025
 msgid "Return-path of the REMIND command"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
 msgstr "Veire las tièras d'aquela familha"
+
+#: web_tt2/list_menu.tt2:71
+#, fuzzy
+msgid "Review members"
+msgstr "Los abonats"
 
 #. (review)
 #: mail_tt2/info_report.tt2:19
@@ -4281,12 +4344,12 @@ msgstr ""
 "compilacion simpla (fichièr tèxt) (fichier texte)"
 
 # nlsref 16,51
-#: src/List.pm:859
+#: src/List.pm:863
 msgid "SQL query"
 msgstr "requista SQL"
 
 # nlsref 16,45
-#: src/List.pm:874
+#: src/List.pm:878
 msgid "SQL query inclusion"
 msgstr "Inclusion d'una requista SQL"
 
@@ -4410,11 +4473,11 @@ msgid "Sending/reception setup"
 msgstr "Configuracion Mandar/Recebre"
 
 # nlsref 16,69
-#: src/List.pm:1074
+#: src/List.pm:1078
 msgid "Serial number of the config"
 msgstr "Numèro de sèria de la configuracion"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:15 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr "Error del servidor"
 
@@ -4484,7 +4547,7 @@ msgid "Shared document to be approved for %1"
 msgstr "Messatge d'aprobar per la tièra %1 de %2"
 
 # nlsref 16,70
-#: src/List.pm:1094 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Documents partejats"
 
@@ -4542,7 +4605,7 @@ msgid "Status :"
 msgstr "Estatut :"
 
 # nlsref 16,71
-#: src/List.pm:1110
+#: src/List.pm:1114
 msgid "Status of the list"
 msgstr "Estatut de la tièra"
 
@@ -4573,7 +4636,7 @@ msgid "Subject : %1"
 msgstr "Subjècte :"
 
 # nlsref 16,72
-#: src/List.pm:1117
+#: src/List.pm:1121
 msgid "Subject of the list"
 msgstr "Objècte de la tièra"
 
@@ -4623,7 +4686,6 @@ msgid "Subscriber information"
 msgstr "Informacions pels abonats"
 
 #: web_tt2/admin_menu.tt2:11 web_tt2/admin_menu.tt2:17
-#: web_tt2/list_menu.tt2:71
 msgid "Subscribers"
 msgstr "Abonats"
 
@@ -4678,7 +4740,7 @@ msgstr "reservat als membres del domèni local"
 msgid "Subscription to this list requires S/MIME signature."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:75
+#: web_tt2/list_admin_menu.tt2:79
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Opcions pels abonats"
@@ -4699,7 +4761,7 @@ msgstr "Resumit de la tièra %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Sintèsi de vòstres abonaments (amb l'adreiça %1)."
 
-#: src/etc/mhonarc-ressources.tt2:574
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Diluns:Dimars:Dimècres:Dijòus:Divendres:Dissabte:Dimenge"
 
@@ -4815,7 +4877,7 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr "Sincronizar los membres amb las sorças de donadas"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2721
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
 msgid "Table of contents:"
 msgstr "Ensenhador :"
 
@@ -4875,23 +4937,23 @@ msgstr ""
 "Lo servidor de tièras a gardat lo fichièr %1 qu'èra jonch a aquel messatge:"
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:18
 msgid "The %1 latest created lists"
 msgstr "Las %1 darrièras tièras creadas"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:38
 msgid "The %1 latest messages"
 msgstr "Los %1 darrièrs messatges"
 
 # nlsref 16,70
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:47
 msgid "The %1 latest shared documents"
 msgstr "Los %1 darrièrs documents publicats"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:28
 msgid "The %1 most active lists"
 msgstr "Las %1 tièras mai activas"
 
@@ -5110,16 +5172,16 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "Çai sota la tièra dels robòts virtuals gerits a aqueste servidor :"
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 msgid "The latest created lists"
 msgstr "Las darrièras listas creadas"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:40
 msgid "The latest messages"
 msgstr "Los darrièrs messatges"
 
 # nlsref 16,70
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:49
 msgid "The latest shared documents"
 msgstr "Los darrièrs documents publicats"
 
@@ -5177,7 +5239,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "L'objècte de la tièra"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:30
 msgid "The most active lists"
 msgstr "Las tièras mai activas"
 
@@ -5938,13 +6000,13 @@ msgid "Topic subscription :"
 msgstr "Per vos desabonar :"
 
 # nlsref 16,74
-#: src/List.pm:936
+#: src/List.pm:940
 #, fuzzy
 msgid "Topics for message categorisation"
 msgstr "Categoria de la tièra"
 
 # nlsref 16,74
-#: src/List.pm:1127
+#: src/List.pm:1131
 msgid "Topics for the list"
 msgstr "Categoria de la tièra"
 
@@ -6389,7 +6451,7 @@ msgid "User certificate belong to"
 msgstr "Certificat per"
 
 # nlsref 16,81
-#: src/List.pm:1165
+#: src/List.pm:1169
 msgid "User data source"
 msgstr "Sorça de donadas"
 
@@ -6429,7 +6491,7 @@ msgid "Visibility :"
 msgstr "Visibilitat :"
 
 # nlsref 16,82
-#: src/List.pm:1171
+#: src/List.pm:1175
 msgid "Visibility of the list"
 msgstr "Visibilitat de la tièra"
 
@@ -6481,7 +6543,7 @@ msgstr ""
 "Avèm arrestat lo transferiment d'aquel messatge abans que siá distribuit."
 
 # nlsref 16,83
-#: src/List.pm:1192
+#: src/List.pm:1196
 msgid "Web archives"
 msgstr "Archius web"
 
@@ -6533,7 +6595,7 @@ msgstr ""
 "format MIME).\n"
 
 # nlsref 16,85
-#: src/List.pm:1198
+#: src/List.pm:1202
 msgid "Welcome return-path"
 msgstr "Adreiça de retorn del messatge de benvenguda (Welcome return-path)"
 
@@ -6580,47 +6642,47 @@ msgid "Who can delete subscribers"
 msgstr "Qual pòt suprimir d'abonats"
 
 # nlsref 16,87
-#: src/List.pm:1083
+#: src/List.pm:1087
 msgid "Who can edit"
 msgstr "Qual pòt editar"
 
 # nlsref 16,54
-#: src/List.pm:882
+#: src/List.pm:886
 msgid "Who can invite people"
 msgstr "Qual pòt convidar a s'abonar"
 
 # nlsref 16,67
-#: src/List.pm:1056
+#: src/List.pm:1060
 msgid "Who can review subscribers"
 msgstr "Qual pòt consultar la tièra dels abonats"
 
 # nlsref 16,68
-#: src/List.pm:1067
+#: src/List.pm:1071
 msgid "Who can send messages"
 msgstr "Qual pòt difusir de messatges"
 
 # nlsref 16,64
-#: src/List.pm:1016
+#: src/List.pm:1020
 msgid "Who can start a remind process"
 msgstr "Qual pòt amodar un procès de rampèl dels abonaments"
 
 # nlsref 16,73
-#: src/List.pm:1121
+#: src/List.pm:1125
 msgid "Who can subscribe to the list"
 msgstr "Qual se pòt abonar"
 
 # nlsref 16,76
-#: src/List.pm:1138
+#: src/List.pm:1142
 msgid "Who can unsubscribe"
 msgstr "Qual se pòt desabonar"
 
 # nlsref 16,86
-#: src/List.pm:1079
+#: src/List.pm:1083
 msgid "Who can view"
 msgstr "Qual pòt consultar"
 
 # nlsref 16,53
-#: src/List.pm:878
+#: src/List.pm:882
 msgid "Who can view list information"
 msgstr "Qual pòt cosultar las informacions de la tièra"
 
@@ -7106,7 +7168,7 @@ msgid "access"
 msgstr "accès"
 
 # nlsref 16,6
-#: src/List.pm:1175 src/List.pm:331
+#: src/List.pm:1179 src/List.pm:331
 msgid "access right"
 msgstr "Dreches d'accès"
 
@@ -7114,7 +7176,7 @@ msgstr "Dreches d'accès"
 msgid "action for this population"
 msgstr "accion per aquela populacion"
 
-#: web_tt2/rss_request.tt2:46
+#: web_tt2/rss_request.tt2:48
 #, fuzzy
 msgid "active lists"
 msgstr "Tièras inactivas"
@@ -7279,7 +7341,7 @@ msgid "concealed"
 msgstr "tièra visibla"
 
 # nlsref 16,94
-#: src/List.pm:839
+#: src/List.pm:843
 msgid "connection options"
 msgstr "paramètres de connexion"
 
@@ -7316,21 +7378,27 @@ msgid "data location URL"
 msgstr "URL de las donadas"
 
 # nlsref 16,48
-#: src/List.pm:835
+#: src/List.pm:839
 msgid "database name"
 msgstr "nom de la basa"
+
+# nlsref 16,46
+#: src/List.pm:834
+#, fuzzy
+msgid "database port"
+msgstr "mena de basa"
 
 # nlsref 16,46
 #: src/List.pm:825
 msgid "database type"
 msgstr "mena de basa"
 
-#: src/List.pm:540 src/List.pm:991
+#: src/List.pm:540 src/List.pm:995
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Paramètres incorrèctes"
 
-#: src/List.pm:1149 src/List.pm:897
+#: src/List.pm:1153 src/List.pm:901
 #, fuzzy
 msgid "date"
 msgstr "Actualizar"
@@ -7405,13 +7473,13 @@ msgid "editor rejection message"
 msgstr "messatge de refús pel moderator"
 
 # nlsref 16,27
-#: src/List.pm:510 src/List.pm:956 web_tt2/login_menu.tt2:59
+#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "adreiça de messatjariá"
 
 # nlsref 16,205
-#: src/List.pm:1099 src/List.pm:1104
+#: src/List.pm:1103 src/List.pm:1108
 msgid "email address protection method"
 msgstr "biais d'aparar las adreiças (contra l'spam)"
 
@@ -7428,11 +7496,11 @@ msgid "entire word"
 msgstr "mot complet"
 
 # nlsref 16,148
-#: src/List.pm:844
+#: src/List.pm:848
 msgid "environment variables for database connexion"
 msgstr "variablas d'entorn per se connectar a la basa de donadas"
 
-#: src/List.pm:1144 src/List.pm:893
+#: src/List.pm:1148 src/List.pm:897
 #, fuzzy
 msgid "epoch date"
 msgstr "Actualizar"
@@ -7493,6 +7561,18 @@ msgstr "seleccion (1r nivèl)"
 #: src/List.pm:699
 msgid "first-level suffix"
 msgstr "sufixe (1r nivèl)"
+
+#. (for)
+#: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
+#, fuzzy
+msgid "for %1 days"
+msgstr " dempuèi %1 jorns "
+
+#. (for)
+#: web_tt2/rss.tt2:43 web_tt2/rss.tt2:52
+#, fuzzy
+msgid "for %1 days "
+msgstr " dempuèi %1 jorns "
 
 #: src/etc/scenari/info.open:1
 msgid "for anyone"
@@ -7582,17 +7662,17 @@ msgstr "sonque per l'administrator (listmaster)"
 msgid "language"
 msgstr "Lenga"
 
-#: web_tt2/rss_request.tt2:36
+#: web_tt2/rss_request.tt2:38
 msgid "latest arc"
 msgstr ""
 
 # nlsref 16,70
-#: web_tt2/rss_request.tt2:41
+#: web_tt2/rss_request.tt2:43
 #, fuzzy
 msgid "latest document"
 msgstr "\"RSS : los documents nòus\""
 
-#: web_tt2/rss_request.tt2:51
+#: web_tt2/rss_request.tt2:53
 #, fuzzy
 msgid "latest lists"
 msgstr "Darrièras tièras"
@@ -7713,7 +7793,7 @@ msgid "moderated for subscribers"
 msgstr "moderada pels abonats"
 
 # nlsref 16,29
-#: src/List.pm:520 src/List.pm:966
+#: src/List.pm:520 src/List.pm:970
 msgid "name"
 msgstr "nom"
 
@@ -7796,7 +7876,7 @@ msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
 # nlsref 16,92
-#: src/List.pm:1042
+#: src/List.pm:1046
 msgid "other email address"
 msgstr "autra adreiça de messatjariá"
 
@@ -7856,12 +7936,12 @@ msgid "private information"
 msgstr "informacions privadas"
 
 # nlsref 16,61
-#: src/List.pm:971
+#: src/List.pm:975
 msgid "private informations"
 msgstr "informacions privadas"
 
 # nlsref 16,62
-#: src/List.pm:1001 src/List.pm:976
+#: src/List.pm:1005 src/List.pm:980
 msgid "profile"
 msgstr "perfil"
 
@@ -7917,13 +7997,13 @@ msgid "quiet"
 msgstr "sens avisar"
 
 # nlsref 16,203
-#: src/List.pm:1090 src/List.pm:1182
+#: src/List.pm:1094 src/List.pm:1186
 msgid "quota"
 msgstr "qüòta"
 
 # nlsref 16,19
-#: src/List.pm:347 src/List.pm:460 src/List.pm:515 src/List.pm:545
-#: src/List.pm:961 src/List.pm:996
+#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
+#: src/List.pm:545 src/List.pm:965
 msgid "reception mode"
 msgstr "biais de recebre"
 
@@ -7955,7 +8035,7 @@ msgid "remote list inclusion"
 msgstr "inclusion de tièra distanta"
 
 # nlsref 16,39
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:853
+#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
 msgid "remote password"
 msgstr "mot de santa Clara distant"
 
@@ -7970,7 +8050,7 @@ msgid "remote port"
 msgstr "pòrt distant"
 
 # nlsref 16,38
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:848
+#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
 msgid "remote user"
 msgstr "usancièr distant"
 
@@ -7995,7 +8075,7 @@ msgstr ""
 "proprietari"
 
 # nlsref 16,93
-#: src/List.pm:1047
+#: src/List.pm:1051
 msgid "respect of existing header field"
 msgstr "respectar lo camp d'encap existent"
 
@@ -8115,7 +8195,7 @@ msgid "selection (if multiple)"
 msgstr "seleccion (se multipla)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "send it back to %1"
 msgstr "de tornar a %1"
 
@@ -8134,7 +8214,7 @@ msgstr "la session"
 
 # nlsref 16,209
 #: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:867
+#: src/List.pm:871
 msgid "short name for this source"
 msgstr "nom brac per aquela sorça"
 
@@ -8196,7 +8276,7 @@ msgstr "resumit dels messatges"
 msgid "summary mode"
 msgstr "resumit dels messatges"
 
-#: src/etc/mhonarc-ressources.tt2:432
+#: src/etc/mhonarc-ressources.tt2:430
 msgid "tag this mail for deletion"
 msgstr "marcar aquel message per que siá escafat"
 
@@ -8224,7 +8304,7 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:535 src/List.pm:986
+#: src/List.pm:535 src/List.pm:990
 #, fuzzy
 msgid "the datasource"
 msgstr "Sorça de donadas"
@@ -8272,7 +8352,7 @@ msgstr "sulhet"
 msgid "title"
 msgstr "títol"
 
-#: src/etc/mhonarc-ressources.tt2:422
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "to list"
 msgstr "a la tièra"
 
@@ -8290,7 +8370,7 @@ msgid "urlize mode"
 msgstr ""
 
 # nlsref 16,91
-#: src/List.pm:1037 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "valor"
 
@@ -8319,13 +8399,13 @@ msgid "welcome message"
 msgstr "messatge de benvenguda"
 
 # nlsref 16,53
-#: src/List.pm:902
+#: src/List.pm:906
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Qual pòt cosultar las informacions de la tièra"
 
 # nlsref 16,77
-#: src/List.pm:1155
+#: src/List.pm:1159
 #, fuzzy
 msgid "who updated the config"
 msgstr "Darrièra actualizacion de la configuracion"
@@ -8471,9 +8551,6 @@ msgstr "vòstre mot de santa Clara         : %1"
 # nlsref 6,21
 #~ msgid "Renewal of your subscription to list '%s'"
 #~ msgstr "Renovelar vòstre abonament a la tièra '%s'"
-
-#~ msgid "Review"
-#~ msgstr "Los abonats"
 
 # nlsref 5,2
 #~ msgid "Routing error ?"
