@@ -42,7 +42,7 @@ use List;
 #  Send a notification to the user about an error rejecting
 #  its message diffusion, using mail_tt2/message_report.tt2
 #  
-# IN : -$type (+): 'intern'|'intern_quiet'|'user'|auth' - the error type 
+# IN : -$type (+): 'intern'||'intern_quiet'||'user'||auth' - the error type 
 #      -$error : scalar - the entry in message_report.tt2 if $type = 'user'
 #                       - string error for listmaster if $type = 'intern'
 #                       - the entry in authorization reject (called by message_report.tt2)
@@ -60,7 +60,7 @@ use List;
 sub reject_report_msg {
     my ($type,$error,$user,$param,$robot,$msg_string,$list) = @_;
 
-    unless ($type eq 'intern' | $type eq 'intern_quiet' | $type eq 'user'| $type eq 'auth') {
+    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user'|| $type eq 'auth') {
 	&do_log('err',"report::reject_report_msg(): error to prepare parsing 'message_report' template to $user : not a valid error type");
 	return undef
     }
@@ -303,7 +303,7 @@ sub send_report_cmd {
 #  if $now , the template is sent now
 #  if $type eq 'intern', the listmaster is notified
 # 
-# IN : -$type (+): 'intern'|'intern_quiet|'user'
+# IN : -$type (+): 'intern'||'intern_quiet||'user'
 #      -$error : scalar - $glob.entry in command_report.tt2 if $type = 'user'
 #                          - string error for listmaster if $type = 'intern'
 #      -$data : ref(HASH) - var used in command_report.tt2
@@ -313,14 +313,14 @@ sub send_report_cmd {
 #                  scalar - to notify useror listmaster
 #      -$now : send now if true
 #
-# OUT : 1| undef  
+# OUT : 1|| undef  
 #      
 ######################################################### 
 sub global_report_cmd {
     my ($type,$error,$data,$sender,$robot,$now) = @_;
     my $entry;
 
-    unless ($type eq 'intern' | $type eq 'intern_quiet' | $type eq 'user') {
+    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user') {
 	&do_log('err',"report::global_report_msg(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
 	return undef;
     }
@@ -373,7 +373,7 @@ sub global_report_cmd {
 #  mail_tt2/command_report.tt2
 #  if $type eq 'intern', the listmaster is notified
 # 
-# IN : -$type (+): 'intern'|'intern_quiet|'user'|'auth'
+# IN : -$type (+): 'intern'||'intern_quiet||'user'||'auth'
 #      -$error : scalar - $u_err.entry in command_report.tt2 if $type = 'user'
 #                       - $auth.entry in command_report.tt2 if $type = 'auth' 
 #                       - string error for listmaster if $type = 'intern'
@@ -384,13 +384,13 @@ sub global_report_cmd {
 #      -$robot :   required if $type eq 'intern'
 #                  scalar - to notify listmaster
 #
-# OUT : 1| undef  
+# OUT : 1|| undef  
 #      
 ######################################################### 
 sub reject_report_cmd {
     my ($type,$error,$data,$cmd,$sender,$robot) = @_;
 
-    unless ($type eq 'intern' | $type eq 'intern_quiet' | $type eq 'user' | $type eq 'auth') {
+    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user' || $type eq 'auth') {
 	&do_log('err',"report::reject_report_cmd(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
 	return undef;
     }
@@ -659,33 +659,33 @@ sub notice_report_web {
 #  puts errors reports of web commands in 
 #  @intern/user/system_error_web, @auth_reject_web
 #   used to send message with template  web_tt2/error.tt2
-#  if $type = 'intern'|'system', the listmaster is notified
-#  (with 'web_intern_error' | 'web_system_error')
+#  if $type = 'intern'||'system', the listmaster is notified
+#  (with 'web_intern_error' || 'web_system_error')
 # 
-# IN : -$type (+): 'intern'|'intern_quiet|'system'|'system_quiet'|user'|'auth'
+# IN : -$type (+): 'intern'||'intern_quiet||'system'||'system_quiet'||user'||'auth'
 #      -$error (+): scalar  - $u_err.msg in error.tt2 if $type = 'user'
 #                           - $auth.msg in error.tt2 if $type = 'auth' 
-#                           - $s_err.msg in error.tt2 if $type = 'system'|'system_quiet'
-#                           - $i_err.msg in error.tt2 if $type = 'intern' | 'intern_quiet'
-#                           - $error in listmaster_notification if $type = 'system'|'intern'
+#                           - $s_err.msg in error.tt2 if $type = 'system'||'system_quiet'
+#                           - $i_err.msg in error.tt2 if $type = 'intern' || 'intern_quiet'
+#                           - $error in listmaster_notification if $type = 'system'||'intern'
 #      -$data : ref(HASH) - var used in web_tt2/error.tt2 
 #      -$action(+) : SCALAR - the rejected action : 
 #            $xx.action in web_tt2/error.tt2
 #            $action in listmaster_notification.tt2 if needed
-#      -$list : ref(List) | ''
-#      -$user :  required if $type eq 'intern'|'system'
+#      -$list : ref(List) || ''
+#      -$user :  required if $type eq 'intern'||'system'
 #                  scalar - the concerned user to notify listmaster
-#      -$robot :   required if $type eq 'intern'|'system'
+#      -$robot :   required if $type eq 'intern'||'system'
 #                  scalar - the robot to notify listmaster
 #
-# OUT : 1| undef  
+# OUT : 1|| undef  
 #      
 ######################################################### 
 sub reject_report_web {
     my ($type,$error,$data,$action,$list,$user,$robot) = @_;
 
 
-    unless ($type eq 'intern' | $type eq 'intern_quiet' | $type eq 'system' | $type eq 'system_quiet' | $type eq 'user'| $type eq 'auth') {
+    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'system' || $type eq 'system_quiet' || $type eq 'user'|| $type eq 'auth') {
 	&do_log('err',"report::reject_report_web(): error  to prepare parsing 'web_tt2/error.tt2' template to $user : not a valid error type");
 	return undef
     }
@@ -696,7 +696,7 @@ sub reject_report_web {
     }
 
 
-    if ($type eq 'intern'| $type eq 'system') {
+    if ($type eq 'intern'|| $type eq 'system') {
 	if ($robot){
 	    my $param = $data;
 	    $param ||= {};
@@ -725,10 +725,10 @@ sub reject_report_web {
     }elsif ($type eq 'user') {
 	push @user_error_web,$data;
 	
-    }elsif ($type eq 'system' | $type eq 'system_quiet') {
+    }elsif ($type eq 'system' || $type eq 'system_quiet') {
 	push @system_error_web,$data;
 	
-    }elsif ($type eq 'intern' | $type eq 'intern_quiet') {
+    }elsif ($type eq 'intern' || $type eq 'intern_quiet') {
 	push @intern_error_web,$data;
 	
     }
