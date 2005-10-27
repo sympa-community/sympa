@@ -440,8 +440,8 @@ my %in_regexp = (
 		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
 
 		 ## Search
-		 'filter' => '[\w@.-+*?]+', # search list
-		 'key_word' => '[\w@.-+*?]+', # search in archives
+		 'filter' => '[\w\@\.\-\+\*\?]+', # search list
+		 'key_word' => '[\w\@\.\-\+\*\?]+', # search in archives
 
 		 ## File names
 		 'file' => '[^<>\*\$]+',
