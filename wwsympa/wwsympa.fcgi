@@ -679,6 +679,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Default auth method (for scenarios)
      $param->{'auth_method'} = 'md5';
 
+     &report::init_report_web();
+
      ## Get PATH_INFO parameters
      &get_parameters();
 
@@ -840,7 +842,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
      # if ($wwsconf->{'export_topics'} =~ /all/i);
 
-     &report::init_report_web();
      ## Session loop
      while ($action) {
          unless (&check_param_in()) {
