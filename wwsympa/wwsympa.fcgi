@@ -915,7 +915,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'list_title'} = $list->{'admin'}{'subject'};
 	 $param->{'list_protected_email'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
 	 $param->{'title'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
-	 $param->{'title_clear_txt'} = "$param->{'list'}\@$list->{'admin'}{'host'}";
+	 $param->{'title_clear_txt'} = "$param->{'list'}";
 
 	 if ($param->{'subtitle'}) {
 	     $param->{'main_title'} = "$param->{'list'} - $param->{'subtitle'}";
@@ -5565,16 +5565,16 @@ sub do_skinsedit {
 	 return undef;
      }
 
-     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 ## Reject Email Sniffers
-	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
-	     if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-		 &cookielib::set_arc_cookie($param->{'cookie_domain'});
-	     }else {
-		 return 'arc_protect';
-	     }
-	 }
-     }
+#     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+#	 ## Reject Email Sniffers
+#	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+#	     if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
+#		 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+#	     }else {
+#		 return 'arc_protect';
+#	     }
+#	 }
+#     }
 
      ## parameters of the query
      my $today  = time;
@@ -5679,6 +5679,16 @@ sub do_skinsedit {
  			 $msg_info{$var} = $msg_info{$var}->[0];
  		     }
  
+ 		     ## Hide full email address
+ 		     if ($field eq 'from') {
+ 			 if ($msg_info{$var} =~ /(.+)\<.+\>/) {
+ 			     $msg_info{$var} = $1;
+			 }else {
+			     my @email = split /\@/, $msg_info{$var};
+			     $msg_info{$var} = $email[0];
+			 }
+ 		     }
+		     
  		     if ($field eq 'message-id') {
  			 $msg_info{$var} = &tools::clean_msg_id($msg_info{'message_id'});
  			 $msg_info{$var} = &tools::escape_chars($msg_info{$var});
@@ -5699,6 +5709,7 @@ sub do_skinsedit {
 
 		 my @array_date = &time_utils::parse_date($date);
 
+		 $msg_info{'date_smtp'} = $date;
 		 $msg_info{'date_epoch'} = &get_timelocal_from_date(@array_date[1..$#array_date]);
 
 		 $msg_info{'date'} = &POSIX::strftime("%d %b %Y",localtime($msg_info{'date_epoch'}) );
