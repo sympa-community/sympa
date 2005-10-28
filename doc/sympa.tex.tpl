@@ -1626,7 +1626,9 @@ to contact the list editors if any are defined in
 is not compulsory.
 
 The address \mailaddr {\samplelist-owner} is the address receiving
-non-delivery reports. The \file {bouncequeue} program stores these messages 
+non-delivery reports (note that the -owner suffix can be customized, 
+see~\ref {kw-return-path-suffix}, page~\pageref {kw-return-path-suffix}). 
+The \file {bouncequeue} program stores these messages 
 in the \dir {queuebounce} directory. \WWSympa ((see~\ref {wwsympa}, page~\pageref {wwsympa})
 may then analyze them and provide a web access to them.
 
@@ -2201,7 +2203,7 @@ files. The server admin module include a CSS administration page that can help y
 	\default {\dir {[SPOOLDIR]/bounce}}
 
         Spool to store bounces (non-delivery reports) received by the \file {bouncequeue}
-	program via the \samplelist-owner or bounce+* addresses . This parameter is mandatory
+	program via the \samplelist-owner (unless this suffix was customized) or bounce+* addresses . This parameter is mandatory
         and must be an absolute path.
 
 \subsection {\cfkeyword {queuetask}} 
@@ -2351,6 +2353,15 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
 	Also requires the bounce+* alias to be installed.
+
+\subsection {\cfkeyword {return\_path\_suffix}}
+        \label {kw-return-path-suffix}
+         
+        \default {-owner}
+
+	This defines the suffix that is appended to the list name to build the return-path
+	of messages sent to the lists. This is the address that will receive all non delivery
+	reports (also called bounces).
 
 \subsection {\cfkeyword {expire\_bounce\_task}}
         \label {kw-expire-bounce-task}
@@ -8879,7 +8890,9 @@ sent to a bouncing subscriber) in their own mailbox. Without
 automatic processing of bounces, list owners either go
 mad, or just delete them without further attention.
 
-Bounces are received at \samplelist-owner address, which should
+Bounces are received at \samplelist-owner address (note that the -owner 
+suffix can be customized, see~\ref {kw-return-path-suffix}, 
+page~\pageref {kw-return-path-suffix}), which should
 be sent to the \file {bouncequeue} program via aliases :
 
 \begin {quote}

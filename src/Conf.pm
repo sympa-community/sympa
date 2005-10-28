@@ -49,7 +49,7 @@ my @valid_options = qw(
 		       purge_user_table_task  purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
-		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
+		       remind_return_path request_priority return_path_suffix rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority supported_lang syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
@@ -210,6 +210,7 @@ my %Default_Conf =
      'default_remind_task' => '',
      'update_db_field_types' => 'auto',
      'logo_html_definition' => '',
+     'return_path_suffix' => '-owner',
      );
    
 my $wwsconf;

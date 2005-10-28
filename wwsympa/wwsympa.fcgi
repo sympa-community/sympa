@@ -6514,6 +6514,7 @@ sub do_set_pending_list_request {
 	 $data{'list'}{'name'} = $list->{'name'};
 	 $data{'default_domain'} = $Conf{'domain'};
 	 $data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
+	 $data{'return_path_suffix'} = &Conf::get_robot_conf($robot, 'return_path_suffix');
 
 	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'','','');
 	 &tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
@@ -6529,6 +6530,7 @@ sub do_set_pending_list_request {
      &wwslog('info', "_remove_aliases($list->{'name'},$list->{'domain'})");
 
      my $status = $list->remove_aliases();
+     my $suffix = &Conf::get_robot_conf($robot, 'return_path_suffix');
 
      unless ($status == 1) {
 	 &wwslog('info','Failed to remove aliases for list %s', $list->{'name'});
@@ -6538,7 +6540,7 @@ sub do_set_pending_list_request {
 	 $param->{'aliases'}  = "#----------------- $in{'list'}\n";
 	 $param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
 	 $param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
-	 $param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
+	 $param->{'aliases'} .= "$in{'list'}$suffix: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
 	 $param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
 	 $param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
 	 

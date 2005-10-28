@@ -2411,7 +2411,7 @@ sub distribute_msg {
     ## Add useful headers
     $hdr->add('X-Loop', "$name\@$host");
     $hdr->add('X-Sequence', $sequence);
-    $hdr->add('Errors-to', "$name-owner\@$host");
+    $hdr->add('Errors-to', $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host);
     $hdr->add('Precedence', 'list');
     $hdr->add('X-no-archive', 'yes');
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
@@ -2511,7 +2511,7 @@ sub send_msg {
  
     ## Who is the enveloppe sender ?
     my $host = $self->{'admin'}{'host'};
-    my $from = "$name-owner\@$host";
+    my $from = $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host;
     
     my (@tabrcpt, @tabrcpt_notice, @tabrcpt_txt, @tabrcpt_html, @tabrcpt_url);
     my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
@@ -3033,7 +3033,7 @@ sub send_file {
 	}
     }
 
-    $data->{'return_path'} ||= "$name-owner\@$self->{'admin'}{'host'}";
+    $data->{'return_path'} ||= $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$self->{'admin'}{'host'};
 
     ## Lang
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');

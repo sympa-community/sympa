@@ -654,7 +654,8 @@ sub install_aliases {
 	$data{'list'}{'name'} = $list->{'name'};
 	$data{'default_domain'} = $Conf{'domain'};
 	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
-	
+	$data{'return_path_suffix'} = &Conf::get_robot_conf($robot, 'return_path_suffix');
+
 	my $tt2_include_path = &tools::make_tt2_include_path($robot,'','','');
 
 	&tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
@@ -683,6 +684,7 @@ sub install_aliases {
      &do_log('info', "_remove_aliases($list->{'name'},$robot");
 
      my $status = $list->remove_aliases();
+     my $suffix = &Conf::get_robot_conf($robot, 'return_path_suffix');
      my $aliases;
 
      unless ($status == 1) {
@@ -692,7 +694,7 @@ sub install_aliases {
 	 $aliases = "#----------------- $list->{'name'}\n";
 	 $aliases .= "$list->{'name'}: \"| --MAILERPROGDIR--/queue $list->{'name'}\"\n";
 	 $aliases .= "$list->{'name'}-request: \"| --MAILERPROGDIR--/queue $list->{'name'}-request\"\n";
-	 $aliases .= "$list->{'name'}-owner: \"| --MAILERPROGDIR--/bouncequeue $list->{'name'}\"\n";
+	 $aliases .= "$list->{'name'}$suffix: \"| --MAILERPROGDIR--/bouncequeue $list->{'name'}\"\n";
 	 $aliases .= "$list->{'name'}-unsubscribe: \"| --MAILERPROGDIR--/queue $list->{'name'}-unsubscribe\"\n";
 	 $aliases .= "# $list->{'name'}-subscribe: \"| --MAILERPROGDIR--/queue $list->{'name'}-subscribe\"\n";
 	 
