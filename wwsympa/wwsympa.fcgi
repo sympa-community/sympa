@@ -4333,14 +4333,14 @@ sub do_skinsedit {
 
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {
-	     if (/^(\S+|\".*\"@\S+)(\s+(.*))?\s*$/) {
-		 $user{&tools::get_canonical_email($1)} = $3;
+	     if (/^($tools::regexp{'email'})(\s+(.*))?\s*$/) {
+		 $user{&tools::get_canonical_email($1)} = $5;
 	     }
 	 }
      }elsif ($in{'email'} =~ /,/) {
 	 foreach my $pair (split /\0/, $in{'email'}) {
-	     if ($pair =~ /^(.+),(.+)$/) {
-		 $user{&tools::get_canonical_email($1)} = $2;
+	     if ($pair =~ /^($tools::regexp{'email'})(,(.*))?\s*$/) {
+		 $user{&tools::get_canonical_email($1)} = $5;
 	     }
 	 }
      }elsif ($in{'email'}) {
@@ -4348,8 +4348,8 @@ sub do_skinsedit {
      }elsif ($in{'pending_email'}) {
 	 foreach my $pair (split /\0/, $in{'pending_email'}) {
 	     my ($email, $gecos);
-	     if ($pair =~ /^(.+),(.*)$/) {
-		 ($email, $gecos) = ($1,$2);
+	     if ($pair =~ /^($tools::regexp{'email'})(,(.*))?\s*$/) {
+		 ($email, $gecos) = ($1,$5);
 		 $user{&tools::get_canonical_email($email)} = $gecos;
 	     }
 	 }
