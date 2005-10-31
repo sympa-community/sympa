@@ -762,12 +762,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 next unless ($auth_service->{'auth_type'} eq 'cas');
 		 next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
 		 
-		 ## skip cas server where client as been allready redirect to 
-		 ## (redirection carry the list of cas servers allready checked
+		 ## skip cas server where client as been already redirect to 
+		 ## (redirection carry the list of cas servers already checked
 		 &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
 		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
 		 
-		 # before redirect update the list of allready checked cas server to prevent loop
+		 # before redirect update the list of already checked cas server to prevent loop
 		 my $cas_server = $auth_service->{'cas_server'};
 		 my $return_url = &wwslib::get_my_url();
 
@@ -9021,7 +9021,7 @@ sub merge_edit{
 	     return undef;
 	 }
 	 if (-e "$dir/shared") {
-	     &wwslog('info',"do_d_admin : restore; $dir/shared allready exist");
+	     &wwslog('info',"do_d_admin : restore; $dir/shared already exist");
 	     &report::reject_report_web('intern','restore_shared',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     return undef;
 	 }
@@ -9039,7 +9039,7 @@ sub merge_edit{
 	     return undef;
 	 }
 	 if (-e "$dir/pending.shared") {
-	     &wwslog('info',"do_d_admin : delete ; $dir/pending.shared allready exist");
+	     &wwslog('info',"do_d_admin : delete ; $dir/pending.shared already exist");
 	     &report::reject_report_web('intern','delete_shared',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     return undef;
 	 }

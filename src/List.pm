@@ -7665,7 +7665,7 @@ sub _include_users_remote_sympa_list {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    do_log('debug4',"ignore $email because allready member");
+	    do_log('debug4',"ignore $email because already member");
 	    if ($tied) {
 		%u = split "\n",$users->{$email};
 	    }else {
@@ -12368,7 +12368,7 @@ sub create_shared {
     my $dir = $self->{'dir'}.'/shared';
 
     if (-e $dir) {
-	&do_log('err',"List::create_shared : %s allready exists", $dir);
+	&do_log('err',"List::create_shared : %s already exists", $dir);
 	return undef;
     }
 

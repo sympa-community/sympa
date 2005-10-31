@@ -2429,7 +2429,7 @@ sub modindex {
     my @spool;
 
     foreach $i (@files) {
-	## skip message allready marked to be distributed using WWS
+	## skip message already marked to be distributed using WWS
 	next if ($i =~ /.distribute$/) ;
 
 	## Push message for building MODINDEX

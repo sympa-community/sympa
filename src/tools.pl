@@ -273,7 +273,7 @@ sub get_list_list_tpl {
     return ($list_templates);
 }
 
-#to be used before creating a file in a directory that may not exist allready. 
+#to be used before creating a file in a directory that may not exist already. 
 sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/ ;
