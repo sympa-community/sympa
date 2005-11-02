@@ -855,9 +855,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $param->{'domain'} = $list->{'domain'};
 
          ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
-	 
-         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || 
-	     $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+	 $param->{'list_lang'} = $list->{'admin'}{'lang'} if (ref($list) eq 'List');
+	 $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});
+
+
+         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user_lang'} || 
+	     $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');
          $param->{'locale'} = &Language::SetLang($param->{'lang'});
 
 	 &export_topics ($robot);
@@ -13826,11 +13829,11 @@ sub do_rss_request {
         $args  = 'count='.$in{'count'}.'&' if ($in{'count'}) ;
         $args .= 'for='.$in{'for'} if ($in{'for'});
 	if ($list ) {
-   		$param->{'latest_arc_url'} = $Conf{'wwsympa_url'}."/rss/latest_arc/".$list->{'name'}."?".$args;
-		$param->{'latest_d_read_url'} = $Conf{'wwsympa_url'}."/rss/latest_d_read/".$list->{'name'}."?".$args;
+   		$param->{'latest_arc_url'} = &Conf::get_robot_conf($robot, 'wwsympa_url')."/rss/latest_arc/".$list->{'name'}."?".$args;
+		$param->{'latest_d_read_url'} = &Conf::get_robot_conf($robot, 'wwsympa_url')."/rss/latest_d_read/".$list->{'name'}."?".$args;
 	}
-	$param->{'active_lists_url'} = $Conf{'wwsympa_url'}."/rss/active_lists?".$args;
-	$param->{'latest_lists_url'} = $Conf{'wwsympa_url'}."/rss/latest_lists?".$args;	
+	$param->{'active_lists_url'} = &Conf::get_robot_conf($robot, 'wwsympa_url')."/rss/active_lists?".$args;
+	$param->{'latest_lists_url'} = &Conf::get_robot_conf($robot, 'wwsympa_url')."/rss/latest_lists?".$args;	
 
 	$param->{'output'} = 1;
 	return 1;
