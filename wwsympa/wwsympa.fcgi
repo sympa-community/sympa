@@ -1092,7 +1092,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
 	 
 	 ## Recode to utf-8 for RSS
- 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path)) {
+	 my $tt2_options = {};
+	 if ($Conf{'web_recode_to'}) {
+	     $tt2_options =  {'recode' => $Conf{'web_recode_to'}};
+	 }    
+
+ 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path, $tt2_options)) {
  	     my $error = &tt2::get_error();
  	     $param->{'tt2_error'} = $error;
  	     unless (&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error])) {
