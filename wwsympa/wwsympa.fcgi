@@ -4582,7 +4582,7 @@ sub do_skinsedit {
      # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join(',',@removed_users),'done',$total) if (@removed_users) ;
      $list->save();
 
-     &report::notice_report_web('performed',{},$param->{'action'});
+     &report::notice_report_web('del_performed',{'total' => $total},$param->{'action'});
      $param->{'is_subscriber'} = 1;
      $param->{'may_signoff'} = 1;
 

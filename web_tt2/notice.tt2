@@ -7,6 +7,9 @@
 [% ELSIF notice.msg == 'add_performed' %]
 [%|loc(notice.total)%]%1 subscribers added[%END%]
 
+[% ELSIF notice.msg == 'del_performed' %]
+[%|loc(notice.total)%]%1 addresses have been removed[%END%]
+
 [% ELSIF notice.msg == 'performed' %]
 [%|loc(notice.action)%]%1 : action succeeded[%END%]
 
