@@ -2342,8 +2342,25 @@ sub lock {
     my $got_lock = 1;
     unless (flock (FH, $operation | LOCK_NB)) {
 	&do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
+
+	## If lock was obtained more than 20 minutes ago, then force the lock
+	if ( (time - (stat($lock_file))[9] ) >= 60*20) {
+	    &do_log('notice','Removing lock file %s', $lock_file);
+	    unless (unlink $lock_file) {
+		&do_log('err', 'Cannot remove %s: %s', $lock_file, $!);
+		return undef;	    		
+	    }
+	    
+	    unless (open FH, ">$lock_file") {
+		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		return undef;	    
+	    }
+	}
+
 	$got_lock = undef;
-	for (my $i = 1; $i < 10; $i++) {
+	my $max = 10;
+	$max = 2 if ($ENV{'HTTP_HOST'}); ## Web context
+	for (my $i = 1; $i < $max; $i++) {
 	    sleep (10 * $i);
 	    if (flock (FH, $operation | LOCK_NB)) {
 		$got_lock = 1;
@@ -2355,6 +2372,11 @@ sub lock {
 	
     if ($got_lock) {
 	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+
+	## Keep track of the locking PID
+	if ($mode eq 'write') {
+	    print FH "$$\n";
+	}
     }else {
 	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
 	return undef;
