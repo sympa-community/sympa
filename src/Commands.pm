@@ -2044,7 +2044,7 @@ sub distribute {
 	unless ($numsmtp) {
 	    &do_log('info', 'Message for %s from %s accepted but all subscribers use digest,nomail or summary',$which, $sender);
 	} 
-	&do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $which, $sender, time - $start_time, $numsmtp, $bytes);
+	&do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $hdr->get('Message-Id'), $bytes);
 
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $which,'key' => $key},$robot,$list)) {
