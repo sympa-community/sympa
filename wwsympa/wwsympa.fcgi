@@ -567,7 +567,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Check effective ID
      unless ($> eq (getpwnam('--USER--'))[2]) {
 	 &report::reject_report_web('intern_quiet','incorrect_server_config',{},'','');
-	 &wwslog('err','Config error: wwsympa should with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
+	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
      }
 
      unless ($List::use_db = &List::check_db_connect()) {
