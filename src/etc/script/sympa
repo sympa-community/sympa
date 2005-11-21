@@ -205,7 +205,9 @@ case "$1" in
 	sympa_stop bounced
 	sympa_stop archived
 	sympa_stop sympa
-	sympa_stop sympa-distribute
+	if [ -f --PIDDIR--/sympa-distribute.pid ]; then
+		sympa_stop sympa-distribute
+	fi
 	sympa_stop task_manager
 	if [ -f --LOCKDIR--/sympa ]; then
 		rm -f --LOCKDIR--/sympa
