@@ -10300,9 +10300,17 @@ sub maintenance {
 	}
 	close VFILE;
     }else {
+	&do_log('notice', "No previous data_structure.version file was found ; assuming you are upgrading to %s", $Version::Version);
 	$previous_version = '0';
     }
     
+    ## Skip if version is the same
+    if ($previous_version eq $Version::Version) {
+	return 1;
+    }
+
+    &do_log('notice', "Upgrading from Sympa version %s to %s", $previous_version, $Version::Version);    
+
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     unless (&tools::higher_version($previous_version, '4.2a')) {
 
@@ -10506,9 +10514,9 @@ sub maintenance {
     }
 
 
-    ## Saving current version
+    ## Saving current version if required
     unless (open VFILE, ">$version_file") {
-	do_log('err', "Unable to open %s : %s", $version_file, $!);
+	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf{'etc'}, $!);
 	return undef;
     }
     printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";

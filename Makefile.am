@@ -255,12 +255,15 @@ clean:
 install: importantchanges installsrc installwws installwebtt2 installmailtt2 installlocale installman installscript installsample installdir installconfig installdoc installsoap
 
 importantchanges:
-	@( 	PERL=$(PERL); export PERL; \
+	( 	PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		BINDIR=$(SBINDIR); export BINDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		LIBDIR=$(LIBDIR); export LIBDIR; \
+		ETCDIR=$(ETCDIR); export ETCDIR;\
+		USER=$(USER); export USER;\
+		GROUP=$(GROUP); export GROUP;\
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
 		$(PERL) ./important_changes.pl \
 	) ;

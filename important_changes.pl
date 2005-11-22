@@ -48,6 +48,26 @@ unless ($first_install) {
 }
 close VERSION;
 
+## Create the data_structure.version file if none exists
+my $version_file = "$ENV{'ETCDIR'}/data_structure.version";
+if ($ENV{'ETCDIR'} && ! -f $version_file) {
+    print STDERR "Creating missing $version_file\n";
+    
+    unless (open VFILE, ">$version_file") {
+	printf STDERR "Unable to write %s ; sympa.pl needs write access on %s directory : %s\n", $version_file, $ENV{'ETCDIR'}, $!;
+	return undef;
+    }
+    printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
+    if ($previous_version) {
+	printf VFILE "%s\n", $previous_version;
+    }else { 
+	printf VFILE "%s\n", $current_version;
+    }
+    close VFILE;
+}
+
+`chown $ENV{'USER'}.$ENV{'GROUP'} $version_file`;
+
 if (($previous_version eq $current_version) ||
     &higher($previous_version,$current_version)){
     exit 0;
