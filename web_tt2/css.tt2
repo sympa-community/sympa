@@ -1,7 +1,6 @@
 [% IF css == 'style.css' %]
 @media screen {
 * {
-	background-color: transparent;
 	border: 0px solid [% color_1 %];
 	color: [% color_2 %];
 	font-size: 12px; font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
@@ -146,15 +145,15 @@ a.ActionMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background:
 ul li.ActionMenuLinksInactive {border: 1px doted [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 
 
-a.ArcMenuLinks {border: 1px solid [% color_2 %]; background: transparent; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:link {border: 1px solid [% color_2 %]; background: transparent; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:visited {border: 1px solid [% color_2 %]; background: transparent;  text-decoration: none; padding: 0px 10px 0px 10px;}
+a.ArcMenuLinks {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.ArcMenuLinks:link {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.ArcMenuLinks:visited {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.ArcMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.ArcMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.ArcMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.ArcMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; background: transparent; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; background: transparent; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.ArcMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.ArcMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 #ArcMenuLinksInactive {border: 0px solid [% color_2 %]; text-decoration: none; padding: 0px 0px 0px 3px;}
 
 a.actionMenuLinks {border: 1px solid [% color_2 %]; background:[% color_4 %] ; text-decoration: none; padding: 0px 10px 0px 10px;}
@@ -164,8 +163,8 @@ a.actionMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6
 a.actionMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.actionMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 a.actionMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; background: transparent; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; background: transparent; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.actionMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.actionMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
 #actionnuLinksInactive {border: 0px solid [% color_2 %]; text-decoration: none; padding: 0px 0px 0px 3px;}
 
 .block {border: 1px dotted [% color_2 %]; padding: 7px;}
