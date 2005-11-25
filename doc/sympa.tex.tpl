@@ -2064,11 +2064,11 @@ files. The server admin module include a CSS administration page that can help y
 
         Arguments passed to SMTP message transfer agent
 
-\subsection {\cfkeyword {sendmail\_alias}} 
+\subsection {\cfkeyword {sendmail\_aliases}} 
 
 	\default {defined by makefile, sendmail\_aliases}
 
-        Path of the alias file that contain all lists related aliases. It is recommended to create a spécific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
+        Path of the alias file that contain all lists related aliases. It is recommended to create a specific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
