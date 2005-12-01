@@ -4412,7 +4412,7 @@ Rules are defined as follows :
              | request_auth
              | owner
 	     | editor
-	     | editorkey
+	     | editorkey[,quiet]
 	     | listmaster
 
 <reason_key> ::= match a key in mail_tt2/authorization_reject.tt2 template corresponding to 
