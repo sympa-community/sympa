@@ -1,0 +1,89 @@
+Pb general :
+   X creation de taches avec .. légal
+
+Pas de chgt
+    Rep de liste : 
+    Archives
+
+A changer
+    o BD (tables subscriber et admin)
+       X dans List.pm
+       o dans les scripts de creation
+    o spool (compatibilité)
+	X auth (on n'exploite pas les infos de la liste dans le nom du fic)  
+	X bounce  
+	  X queuebounce
+	  X bounce_path
+	X digest  
+	(o expire)
+	X moderation (grep queuemod)
+	  X wwsympa.fcgi
+	  X List.pm
+	  X Commands.pm
+	> msg  
+	o outgoing
+	X subscribe  
+	X task  
+	o tmp
+    o spools / script de migration :
+        o renommer les sous-rep de bounce_path
+
+Modules :
+    o List.pm
+       X %list_of_lists
+       X accès à la base (subscriber_table et admin_table)
+       X modifier appels à List::rename_list_db()
+       X modif appels à List::get_which_db()
+       - %map_field
+       o %list_cache
+       o get_which_db()
+       o get_lists()
+       o get_which()
+       o _load_total_db()
+    o Family.pm
+    o wwsympa.fcgi
+      o verification si liste existe deja
+    o partout ou on trimbale $listname
+    o pb utilisation de host (au lieu de robot) dans spool outgoing
+    X ts les new List doivent avoir un param robot
+      X ./wwsympa/wwsympa.fcgi
+      X ./wwsympa/bounced.pl
+      X ./wwsympa/archived.pl
+      X ./soap/sympa_soap_server.fcgi
+      X ./soap/sympasoap.pm
+      X ./src/etc/script/p12topem.pl
+      X ./src/etc/script/arc2webarc.pl
+      X ./src/etc/script/tpl2tt2.pl
+      X ./src/etc/script/mod2html.pl
+      X ./src/admin.pm
+      X ./src/Commands.pm
+      X ./src/sympa.pl
+      X ./src/List.pm
+      ! ./src/task_manager.pl
+      X ./src/Message.pm
+      X ./src/Family.pm
+      X ./src/tools.pl
+      X bounced.pl
+
+    X changer appels à _load_total_db()
+    X appels à List::verify()
+    o cloisonnement (pb include_list ou ref dans scenario) des listes
+    X chgt appels _include_users_xx
+    X task_manager::match_task()
+
+o Migration existant :
+    o spool
+    X DB
+    
+o Indiquer le robot dans les log :
+  o sympa.pl
+  o soap
+  o archived
+  o bounced
+  
+Auth.conf par robot
+  
+Pb à vérifier :
+  o reference à une liste d'un autre robot dans :
+    o scenario
+    o include_list
