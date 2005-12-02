@@ -51,6 +51,15 @@ close VERSION;
 ## Create the data_structure.version file if none exists
 my $version_file = "$ENV{'ETCDIR'}/data_structure.version";
 if ($ENV{'ETCDIR'} && ! -f $version_file) {
+    ## Create missing directory
+    unless (-d $ENV{'ETCDIR'}) {
+	print STDERR "Creating missing directory %s...\n", $ENV{'ETCDIR'};
+	unless (mkdir $ENV{'ETCDIR'}, 0770) {
+	    print STDERR "Failed to create $ENV{'ETCDIR'} directory : $!\n";
+	    exit -1;
+	}
+    }
+    
     print STDERR "Creating missing $version_file\n";
     
     unless (open VFILE, ">$version_file") {
