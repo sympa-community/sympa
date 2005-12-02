@@ -68,6 +68,7 @@ use CPAN;
 	     'FCGI' => 'FCGI',
 	     'DBI' => 'DBI',
 	     'DBD::SQLite' => 'DBD-SQLite',
+	     'Crypt::CipherSaber' => 'CipherSaber',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',
@@ -76,8 +77,7 @@ use CPAN;
 	     'DBD::mysql' => 'Msql-Mysql-modules',
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
-             'Crypt::CipherSaber' => 'CipherSaber',
-	     'Net::SMTP' => 'libnet',
+ 	     'Net::SMTP' => 'libnet',
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',
 	     'Bundle::LWP' => 'LWP',
