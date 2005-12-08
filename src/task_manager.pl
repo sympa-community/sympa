@@ -269,7 +269,8 @@ while (!$end) {
     
     ## list tasks
     foreach my $robot (keys %{$Conf{'robots'}}) {
-	foreach my $list ( &List::get_lists($robot) ) {
+	my $all_lists = &List::get_lists($robot);
+	foreach my $list ( @$all_lists ) {
 	    
 	    my %data = %default_data;
 	
@@ -1127,7 +1128,9 @@ sub purge_user_table {
     }
 
     foreach my $r (keys %{$Conf{'robots'}}) {
-	foreach my $list (&List::get_lists($r)){
+
+	my $all_lists = &List::get_lists($r);
+	foreach my $list (@$all_lists){
 
 	    ## Owners
 	    my $owners = $list->get_owners();
@@ -1178,15 +1181,15 @@ sub purge_orphan_bounces {
 
     ## Hash {'listname' => 'bounced address' => 1}
     my %bounced_users;
-    my @all_lists;
+    my $all_lists;
 
-    unless (@all_lists = &List::get_lists('*')) {
+    unless ($all_lists = &List::get_lists('*')) {
 	&do_log('notice','No list available');
 	return 1;
     }
 
 
-    foreach my $list (@all_lists) {
+    foreach my $list (@$all_lists) {
 
 	my $listname = $list->{'name'};
 
@@ -1233,7 +1236,8 @@ sub purge_orphan_bounces {
      my $delay = $tab[0];
 
      do_log('debug2','expire_bounce(%d)',$delay);
-     foreach my $list (&List::get_lists('*') ) {
+     my $all_lists = &List::get_lists('*');
+     foreach my $list (@$all_lists ) {
 
 	 my $listname = $list->{'name'};
 
@@ -1470,7 +1474,8 @@ sub purge_orphan_bounces {
  sub eval_bouncers {
  #################       
 
-     foreach my $list (&List::get_lists()) {
+     my $all_lists = &List::get_lists();
+     foreach my $list (@$all_lists) {
 
 	 my $listname = $list->{'name'};
 	 my $list_traffic = {};
@@ -1535,7 +1540,8 @@ sub process_bouncers {
 		   'none'            => \&none
 		   );
 
-    foreach my $list (&List::get_lists()) {
+    my $all_lists = &List::get_lists();
+    foreach my $list (@$all_lists) {
 	my $listname = $list->{'name'};
 	
 	my @bouncers;

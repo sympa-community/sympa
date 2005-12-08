@@ -56,7 +56,7 @@ require "--LIBDIR--/tools.pl";
 #######################################################
 sub create_list_old{
     my ($param,$template,$robot) = @_;
-    &do_log('info', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot);
+    &do_log('debug', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot);
 
      ## obligatory list parameters 
     foreach my $arg ('listname','subject') {
@@ -607,7 +607,7 @@ sub check_owner_defined {
 sub install_aliases {
     my $list = shift;
     my $robot = shift;
-    &do_log('info', "admin::install_aliases($list->{'name'},$robot)");
+    &do_log('debug', "admin::install_aliases($list->{'name'},$robot)");
   
     my $alias_installed = 0;
     my $alias_manager = '--SBINDIR--/alias_manager.pl';

@@ -6,6 +6,7 @@ Pas de chgt
     Archives
 
 A changer
+    o remplacer tous les accès direct à Conf wwsconf par get_robot_conf()
     o BD (tables subscriber et admin)
        X dans List.pm
        o dans les scripts de creation
@@ -21,7 +22,7 @@ A changer
 	  X List.pm
 	  X Commands.pm
 	> msg  
-	o outgoing
+	X outgoing
 	X subscribe  
 	X task  
 	o tmp
@@ -81,9 +82,19 @@ o Indiquer le robot dans les log :
   o archived
   o bounced
   
-Auth.conf par robot
+o Auth.conf par robot
   
 Pb à vérifier :
   o reference à une liste d'un autre robot dans :
     o scenario
     o include_list
+Extras :
+  o supprimer wwsympa.conf
+  o vérifier format params sympa.conf
+  o meilleure gestion robot.conf
+  o ménage dans les logs xxx
+
+A virer :
+  o commande expire
+  o fonctions export LDAP
+

@@ -251,7 +251,7 @@ foreach my $msg (@msgs) {
   
 ## Rebuild web archives
 print STDERR "Rebuilding HTML\n";
-`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$listname\@$list->{'admin'}{'host'}`;
+`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$listname\@$list->{'domain'}`;
 
 print STDERR "\nHave a look in $dest_dir/-/ directory for messages dateless
 Now, you should add a web_archive parameter in the config file to make it accessible from the web\n";

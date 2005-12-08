@@ -7763,19 +7763,19 @@ sub _include_users_admin {
     my ($users, $selection, $role, $default_user_options,$tied) = @_;
 #   il faut préparer une liste de hash avec le nom de liste, le nom de robot, le répertoire de la liset pour appeler
 #    load_admin_file décommanter le include_admin
-    my @lists;
+    my $lists;
     
     unless ($role eq 'listmaster') {
 	
 	if ($selection =~ /^\*\@(\S+)$/) {
-	    @lists = get_lists($1);
+	    $lists = &get_lists($1);
 	    my $robot = $1;
 	}else{
 	    $selection =~ /^(\S+)@(\S+)$/ ;
-	    $lists[0] = $1;
+	    $lists->[0] = $1;
 	}
 	
-	foreach my $list (@lists) {
+	foreach my $list (@$lists) {
 	    #my $admin = _load_admin_file($dir, $domain, 'config');
 	}
     }
@@ -9527,7 +9527,7 @@ sub get_lists {
 	}
 	closedir DIR;
     }
-    return @lists;
+    return \@lists;
 }
 
 ## List of robots hosted by Sympa
@@ -9644,7 +9644,8 @@ sub get_which {
 	$db_which = &get_which_db($email, $function);
     }
 
-    foreach my $list (get_lists($robot)){
+    my $all_lists = &get_lists($robot);
+    foreach my $list (@$all_lists){
  
 	my $l = $list->{'name'};
 	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
@@ -10341,10 +10342,11 @@ sub maintenance {
 	close EXEC;
 	
 	&do_log('notice','Rebuilding web archives...');
-	foreach my $list ( &List::get_lists('*') ) {
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
+	    my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'domain'}";
 	    
 	    unless (open REBUILD, ">$file") {
 		&do_log('err','Cannot create %s', $file);
@@ -10358,7 +10360,8 @@ sub maintenance {
     ## Initializing the new admin_table
     unless (&tools::higher_version($previous_version, '4.2b.4')) {
 	&do_log('notice','Initializing the new admin_table...');
-	foreach my $list ( &List::get_lists('*') ) {
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
 	    $list->sync_include_admin();
 	}
     }
@@ -10383,7 +10386,8 @@ sub maintenance {
 	}
 
 	## Search in V. Robot Lists
-	foreach my $list ( &List::get_lists('*') ) {
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
 	    if (-d "$list->{'dir'}/web_tt2") {
 		push @directories, "$list->{'dir'}/web_tt2";
 	    }	    
@@ -10418,7 +10422,8 @@ sub maintenance {
     ## Clean buggy list config files
     unless (&tools::higher_version($previous_version, '5.1b')) {
 	&do_log('notice','Cleaning buggy list config files...');
-	foreach my $list ( &List::get_lists('*') ) {
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
 	    $list->save_config('listmaster@'.$list->{'domain'});
 	}
     }
@@ -10426,7 +10431,8 @@ sub maintenance {
     ## Fix a bug in Sympa 5.1
     unless (&tools::higher_version($previous_version, '5.1.2')) {
 	&do_log('notice','Rename archives/log. files...');
-	foreach my $l ( &List::get_lists('*') ) {
+	my $all_lists = &List::get_lists('*');
+	foreach my $l ( @$all_lists ) {
 	    my $list = new List ($l); 
 	    if (-f $list->{'dir'}.'/archives/log.') {
 		rename $list->{'dir'}.'/archives/log.', $list->{'dir'}.'/archives/log.00';
@@ -10450,7 +10456,8 @@ sub maintenance {
 	}	   
 
 	foreach my $r (keys %{$Conf{'robots'}}) {
-	    foreach my $list ( &List::get_lists($r, {'skip_sync_admin' => 1}) ) {
+	    my $all_lists = &List::get_lists($r, {'skip_sync_admin' => 1});
+	    foreach my $list ( @$all_lists ) {
 		
 		foreach my $table ('subscriber','admin') {
 		    my $statement = sprintf "UPDATE %s_table SET robot_%s=%s WHERE (list_%s=%s)",

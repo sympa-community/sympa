@@ -82,7 +82,8 @@ sub lists {
     
     &do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
    
-    foreach my $list ( &List::get_lists($robot) ) {
+    my $all_lists = &List::get_lists($robot);
+    foreach my $list ( @$all_lists ) {
 	
 	my $listname = $list->{'name'};
 

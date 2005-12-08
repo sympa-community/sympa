@@ -195,22 +195,16 @@ while (!$end) {
 
 	   unless (open REMOVE, "$queue/$file") {
 	        do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
-	        do_log ('debug',"xxxxxxxxxxxxxxxxx Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
 		   next;
 	       }
-	   do_log ('debug',"xxxxxxxxxxxxxxxxx ouverture");
 	   foreach my $removeorder (<REMOVE>) { 
-	   do_log ('debug',"xxxxxxxxxxxxxxxxx ouverture $removeorder");
 	       unless($removeorder =~ /(.*)\|\|($tools::regexp{'email'})/){
 		   do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
-		   do_log ('info',"xxxxxxxxxxxxxxx Ignoring remove_order $removeorder not recognized format");   
 		   next;
 	       }
 	       my $msgid = $1;
 	       my $sender = $2;
 
-
-do_log('info',"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx remove_arc: msgid : '$msgid' sender : '$sender'");
 	       chomp 	$msgid ;
 	       if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
 		   do_log('err','remove_arc: no message id found');
@@ -218,7 +212,7 @@ do_log('info',"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx remove_arc: msgid : '$msgid' s
 	       } 
 
 	       my $message ;
-	       unless ($list->am_i('privileged_owner',$sender)|| $list->am_i('owner',$sender)||$list->am_i('editor', $sender)||&List::is_listmaster($sender,$list->{'admin'}{'host'} )){
+	       unless ($list->am_i('privileged_owner',$sender)|| $list->am_i('owner',$sender)||$list->am_i('editor', $sender)||&List::is_listmaster($sender,$list->{'domain'} )){
 		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 
 		   unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){

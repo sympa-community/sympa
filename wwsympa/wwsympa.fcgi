@@ -539,9 +539,7 @@ my $birthday = time ;
 ## If using fast_cgi, it is usefull to initialize all list context
 if ($wwsconf->{'use_fast_cgi'}) {
 
-    foreach my $list ( &List::get_lists('*') ) {
-	# nothing to do here
-    }
+    my $all_lists = &List::get_lists('*');
 }
 
  ## Main loop
@@ -1324,15 +1322,11 @@ sub get_header_field {
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
 	 my $regexp;
-	 &wwslog('debug','get_parameters: p_name = \'%s\'', $pname);
 	 if ($pname =~ /^additional_field/) {
-	     &wwslog('debug','get_parameters: regexp selected by in_regexp{additional_field}');
 	     $regexp = $in_regexp{'additional_field'};
 	 }elsif ($in_regexp{$pname}) {
-	     &wwslog('debug','get_parameters: regexp selected by in_regexp{%s}',$pname);
 	     $regexp = $in_regexp{$pname};
 	     }else {
-		 &wwslog('info','get_parameters: regexp selected by in_regexp{*}');
 		 $regexp = $in_regexp{'*'};
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
@@ -2536,7 +2530,8 @@ sub do_remindpasswd {
 	 }
      }
 
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 
 	 my $sender = $param->{'user'}{'email'} || 'nobody';
 
@@ -5446,10 +5441,12 @@ sub do_skinsedit {
 	     }
 	 }
      }
+
+     my $arc_path = $wwsconf->{'arc_path'}.'/'.$param->{'list'}.'@'.$param->{'domain'};
      ## Calendar
-     unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}") {
+     unless (opendir ARC, $arc_path) {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
-	 &wwslog('err','do_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}");
+	 &wwslog('err','do_arc: no directory %s', $arc_path);
 	 return undef;
      }
      foreach my $dir (sort grep(!/^\./,readdir ARC)) {
@@ -5462,13 +5459,14 @@ sub do_skinsedit {
 
      ## Read html file
      $in{'month'} ||= $latest;
+     my $arc_month_path = $arc_path.'/'.$in{'month'};
 
      unless ($in{'arc_file'}) {
 	 undef $latest;
-	 unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}") {
-	     &wwslog('err',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
+	 unless (opendir ARC, $arc_month_path) {
+	     &wwslog('err',"unable to readdir $arc_month_path");
 	     &report::reject_report_web('user','month_not_found',{'month' => $in{'month'},
-								    'dir' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}",
+								    'dir' => $arc_month_path,
 								    'listname' => $param->{'list'}},
 					$param->{'action'},
                                         $list,$param->{'user'}{'email'},
@@ -5485,10 +5483,11 @@ sub do_skinsedit {
      }
 
      ## File exist ?
-     unless (-r "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}") {
-	 &wwslog('err',"unable to read $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
+     my $arc_file_path = $arc_month_path.'/'.$in{'arc_file'};
+     unless (-r $arc_file_path) {
+	 &wwslog('err',"unable to read $arc_file_path");
 	 &report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
-							      'path' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}",
+							      'path' => $arc_file_path,
 							      'listname' => $param->{'list'}},
 				    $param->{'action'},
 				    $list,$param->{'user'}{'email'},
@@ -5505,12 +5504,12 @@ sub do_skinsedit {
 	     $param->{'bypass'} = 1;
 	 }
 
-	  $param->{'file'} = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}";
+	  $param->{'file'} = $arc_file_path;
      }else {
 	 
 	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
 	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
-	     open (FILE, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}");
+	     open (FILE, $arc_file_path);
 	     while (<FILE>) {
 		 if (/<!--X-Subject: (.+) -->/) {
 		     $param->{'subtitle'} = $1;
@@ -5520,11 +5519,11 @@ sub do_skinsedit {
 	     close FILE;
 	 }
 	 
-	 &tt2::add_include_path("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}");
-	 $param->{'file'} = "$in{'arc_file'}";
+	 &tt2::add_include_path($arc_month_path);
+	 $param->{'file'} = $in{'arc_file'};
      }
 
-     my @stat = stat ("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'month'}/$in{'arc_file'}");
+     my @stat = stat ($arc_file_path);
      $param->{'date'} = $stat[9];
 
      $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
@@ -5609,9 +5608,10 @@ sub do_skinsedit {
 	 $nb_arc = $NB_ARC_MAX;
      }       
 
-     unless (opendir ARC_DIR, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/") {
+     my $arc_path = $wwsconf->{'arc_path'}.'/'.$param->{'list'}.'@'.$param->{'domain'};
+    unless (opendir ARC_DIR, $arc_path) {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
-	 &wwslog('err','do_latest_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}");
+	 &wwslog('err','do_latest_arc: no directory %s', $arc_path);
 	 return undef;
      }
 
@@ -5638,11 +5638,12 @@ sub do_skinsedit {
 	  
 	 last if $stop_search;
 	 
-	 unless (opendir MONTH, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$year_month/arctxt") {
-	     &report::reject_report_web('intern','inaccessible_archive',{'path' => "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$year_month/arctxt",
+	 my $arc_month_path = $arc_path.'/'.$year_month.'/arctxt';
+	 unless (opendir MONTH, $arc_month_path) {
+	     &report::reject_report_web('intern','inaccessible_archive',{'path' => $arc_month_path,
 									 'listname' => $list->{'name'}},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_latest_arc: unable to open directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$year_month/arctxt");
+	     &wwslog('err','do_latest_arc: unable to open directory %s', $arc_month_path);
 	     next;
 	 }
 
@@ -5657,7 +5658,7 @@ sub do_skinsedit {
 		 my $parser = new MIME::Parser;
 		 $parser->output_to_core(1);
 		 
-		 my $arc_file = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$year_month/arctxt/$arc";
+		 my $arc_file = $arc_month_path;
 		 
 		 unless (open (FILE, $arc_file)) {
 		     &wwslog('err', 'Unable to open file %s', $arc_file);
@@ -5783,7 +5784,7 @@ sub get_timelocal_from_date {
 sub do_remove_arc {
     &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, #message %s', $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'yyyy'}-$in{'month'}";
+    my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'yyyy'}-$in{'month'}";
 
     ## Access control
 
@@ -5797,7 +5798,7 @@ sub do_remove_arc {
 	 return undef;
      } 
 
-    my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'admin'}{'host'}.$in{'yyyy'}-$in{'month'}.".time;
+    my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'domain'}.$in{'yyyy'}-$in{'month'}.".time;
     unless (open REBUILD, ">$file") {
 	&report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('info','do_remove: cannot create %s', $file);
@@ -6223,7 +6224,8 @@ sub do_remove_arc {
 	 return undef;
      } 
 
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
 	     $param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
@@ -6250,7 +6252,8 @@ sub do_remove_arc {
 	 return undef;
      } 
 
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'closed' ||
 	     $list->{'admin'}{'status'} eq 'family_closed') {
 	     $param->{'closed'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
@@ -6280,7 +6283,8 @@ sub do_remove_arc {
      } 
 
      my @unordered_lists;
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 
 	 push @unordered_lists, {'name' => $list->{'name'},
 				 'subject' => $list->{'admin'}{'subject'},
@@ -6315,7 +6319,8 @@ sub do_get_inactive_lists {
      } 
 
      my @unordered_lists;
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 
 	 ## skip closed lists
 	 if ($list->{'admin'}{'status'} eq 'closed') {
@@ -6472,95 +6477,6 @@ sub do_set_pending_list_request {
      return 1;
  }
 
- ## Install sendmail aliases
- sub _install_aliases {
-     &wwslog('info', "_install_aliases($list->{'name'},$list->{'domain'})");
-
-     my $alias_manager = '--SBINDIR--/alias_manager.pl';
-     &wwslog('debug2',"$alias_manager add $list->{'name'} $list->{'domain'}");
-     if (-x $alias_manager) {
-	 system ("$alias_manager add $list->{'name'} $list->{'domain'}") ;
-	 my $status = $? / 256;
-	 if ($status == '0') {
-	     &wwslog('info','Aliases installed successfully') ;
-	     $param->{'auto_aliases'} = 1;
-	 }elsif ($status == '1') {
-	     &wwslog('info','Configuration file --CONFIG-- has errors');
-	 }elsif ($status == '2')  {
-	     &wwslog('info','Internal error : Incorrect call to alias_manager');
-	 }elsif ($status == '3')  {
-	     &wwslog('info','Could not read sympa config file, report to httpd error_log') ;
-	 }elsif ($status == '4')  {
-	     &wwslog('info','Could not get default domain, report to httpd error_log') ;
-	 }elsif ($status == '5')  {
-	     &wwslog('info','Unable to append to alias file') ;
-	 }elsif ($status == '6')  {
-	     &wwslog('info','Unable to run newaliases') ;
-	 }elsif ($status == '7')  {
-	     &wwslog('info','Unable to read alias file, report to httpd error_log') ;
-	 }elsif ($status == '8')  {
-	     &wwslog('info','Could not create temporary file, report to httpd error_log') ;
-	 }elsif ($status == '13') {
-	     &wwslog('info','Some of list aliases already exist') ;
-	 }elsif ($status == '14') {
-	     &wwslog('info','Can not open lock file, report to httpd error_log') ;
-	 }elsif ($status == '15') {
-	     &wwslog('info','The parser returned empty aliases') ;
-	 }else {
-	     &report::reject_report_web('intern','failed_to_install_aliases',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	     &wwslog('info',"Unknown error $status while running alias manager $alias_manager");
-	 } 
-     }else {
-	 &wwslog('info','Failed to install aliases: %s', $!);
-	 &report::reject_report_web('intern','failed_to_install_aliases',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-     }
-
-     unless ($param->{'auto_aliases'}) {
-	 my $aliases ;
-	 my %data;
-	 $data{'list'}{'domain'} = $data{'robot'} = $robot;
-	 $data{'list'}{'name'} = $list->{'name'};
-	 $data{'default_domain'} = $Conf{'domain'};
-	 $data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
-	 $data{'return_path_suffix'} = &Conf::get_robot_conf($robot, 'return_path_suffix');
-
-	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'','','');
-	 &tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
-
-	 $param->{'aliases'}  = $aliases;
-     }
-
-     return 1;
- }
-
- ## Remove sendmail aliases
- sub _remove_aliases {
-     &wwslog('info', "_remove_aliases($list->{'name'},$list->{'domain'})");
-
-     my $status = $list->remove_aliases();
-     my $suffix = &Conf::get_robot_conf($robot, 'return_path_suffix');
-
-     unless ($status == 1) {
-	 &wwslog('info','Failed to remove aliases for list %s', $list->{'name'});
-	 &report::reject_report_web('intern','failed_to_remove_aliases',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-
-	 ## build a list of required aliases the listmaster should install
-	 $param->{'aliases'}  = "#----------------- $in{'list'}\n";
-	 $param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
-	 $param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
-	 $param->{'aliases'} .= "$in{'list'}$suffix: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
-	 $param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
-	 $param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
-	 
-	 return 1;
-     }
-
-     &wwslog('info','Aliases removed successfully');
-     $param->{'auto_aliases'} = 1;
-
-     return 1;
- }
-
  ## check if the requested list exists already using smtp 'rcpt to'
  sub list_check_smtp {
      my $list = shift;
@@ -6630,7 +6546,7 @@ sub do_set_pending_list_request {
      }elsif ($param->{'create_action'} =~ /listmaster/i) {
 	 $param->{'status'} = 'pending' ;
      }elsif  ($param->{'create_action'} =~ /do_it/i) {
-	 $param->{'status'} = 'open' ;ryn
+	 $param->{'status'} = 'open' ;
      }else{
 	 &report::reject_report_web('intern','internal_scenario_error_create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_create_list: internal error in scenario create_list');
@@ -6919,7 +6835,8 @@ sub do_set_pending_list_request {
 	 }
      }
      closedir SCENARI;
-     foreach my $list ( &List::get_lists('*') ) {
+     my $all_lists = &List::get_lists('*');
+     foreach my $list ( @$all_lists ) {
 	 $param->{'listname'}{$list->{'name'}}{'defined'}=1 ;
      }
      foreach my $a ('smtp','md5','smime') {
@@ -7173,7 +7090,9 @@ sub do_set_pending_list_request {
 	 &wwslog('info','do_rebuildallarc: not listmaster');
 	 return undef;
      }
-     foreach my $list ( &List::get_lists($robot) ) {
+
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 	 next unless (defined $list->{'admin'}{'web_archive'});
 	 my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'domain'}";
 
@@ -7223,7 +7142,8 @@ sub do_set_pending_list_request {
 
      ## Members list
      my $record = 0;
-     foreach my $list ( &List::get_lists($robot) ) {
+     my $all_lists = &List::get_lists($robot);
+     foreach my $list ( @$all_lists ) {
 	 my $is_admin;
 	 ## Search filter
 	 my $regtest = eval { (($list->{'name'} !~ /$param->{'regexp'}/i)

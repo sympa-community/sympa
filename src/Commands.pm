@@ -251,7 +251,8 @@ sub lists {
     my $data = {};
     my $lists = {};
 
-    foreach my $list ( &List::get_lists($robot) ) {
+    my $all_lists =  &List::get_lists($robot);
+    foreach my $list ( @$all_lists ) {
 	my $l = $list->{'name'};
 
 	my $result = &List::request_action('visibility','smtp',$robot,
@@ -1609,7 +1610,9 @@ sub remind {
 
 	    $context{'subject'} = gettext("Subscription summary");
 	    # this remind is a global remind.
-	    foreach my $list (List::get_lists($robot)){
+
+	    my $all_lists = &List::get_lists($robot);
+	    foreach my $list (@$all_lists){
 		
 		my $listname = $list->{'name'};
 

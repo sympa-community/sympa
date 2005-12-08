@@ -993,7 +993,8 @@ sub get_family_lists {
     my @list_of_lists;
     &do_log('debug2','Family::get_family_lists(%s)',$self->{'name'});
 
-    foreach my $list ( &List::get_lists($self->{'robot'}) ) {
+    my $all_lists = &List::get_lists($self->{'robot'});
+    foreach my $list ( @$all_lists ) {
 	if ((defined $list->{'admin'}{'family_name'}) && ($list->{'admin'}{'family_name'} eq $self->{'name'})) {
 	    push (@list_of_lists, $list);
 	}
@@ -1014,7 +1015,8 @@ sub get_hash_family_lists {
     my %list_of_lists;
     &do_log('debug2','Family::get_hash_family_lists(%s)',$self->{'name'});
 
-    foreach my $list ( &List::get_lists($self->{'robot'}) ) {
+    my $all_lists = &List::get_lists($self->{'robot'});
+    foreach my $list ( @$all_lists ) {
 	if ((defined $list->{'admin'}{'family_name'}) && ($list->{'admin'}{'family_name'} eq $self->{'name'})) {
 	    $list_of_lists{$list->{'name'}} = 1;
 	}
