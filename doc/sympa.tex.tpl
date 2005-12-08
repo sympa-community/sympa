@@ -7049,8 +7049,6 @@ Example :
 \begin {quote}
 \begin{verbatim}
 
-user_data_source include
-
 include_sql_query
       db_type mysql
       host sqlserv.admin.univ-x.fr
@@ -7104,8 +7102,6 @@ Example :
 
 \begin {quote}
 \begin{verbatim}
-
-user_data_source include
 
 include_sql_query
       db_type oracle
