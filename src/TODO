@@ -1,0 +1,28 @@
+X Changer param out de List::get_lists()
+  actuellement un array ; à changer en ref sur array car sinon on ne
+  peut pas gérer le cas ou il renvoie undef (transformé en un tab avec la première
+  entrée qui est undef)
+
+Pb de droits pour les rep bin, doc, etc, locale, sample (root)
+
+Pb droit sur /home/sympa/arc (root)
+
+Pb de compilation des binaires C
+
+Ajouter un HOWTO-virtualdomain qui explique les manip et fournir un
+  exemple de robot.conf
+
+Ajouter instruct d'nstall après le make nstall :
+* sendmail
+  + alias pour sympa, listmaster,...
+  + utilisation SMRSH (configure --bindir=/etc/smrsh)
+  + creation + droits sur /etc/mail/sympa_aliases (write pour sympa)
+  + prise en compte du fichier d'alias par sendmail
+* syslog
+  + edit /etc/syslogd.conf puis restart
+* apache
+  + install mod fastcgi (donner URL)
+  + pb ipcdir (a reporter aux auteurs de fastcgi) : double pb pour creation
+    dir et subdir
+  + ajout de l'alias dans conf apache
+  
