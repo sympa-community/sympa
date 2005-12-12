@@ -10336,7 +10336,7 @@ sub maintenance {
 	    return undef unless &db_connect();
 	}
 	
-	my $statement = "UPDATE subscriber_table SET subscribed_subscriber='1' WHERE ((included_subscriber IS NULL OR included_subscriber!='1') AND (subscribed_subscriber IS NULL OR subscribed_subscriber!='1'))";
+	my $statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
 	
 	&do_log('notice','Updating subscribed field of the subscriber table...');
 	my $rows = $dbh->do($statement);
