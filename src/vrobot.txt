@@ -7,9 +7,9 @@ Pas de chgt
 
 A changer
     o remplacer tous les accès direct à Conf wwsconf par get_robot_conf()
-    o BD (tables subscriber et admin)
+    X BD (tables subscriber et admin)
        X dans List.pm
-       o dans les scripts de creation
+       X dans les scripts de creation
     o spool (compatibilité)
 	X auth (on n'exploite pas les infos de la liste dans le nom du fic)  
 	X bounce  
@@ -21,31 +21,55 @@ A changer
 	  X wwsympa.fcgi
 	  X List.pm
 	  X Commands.pm
-	> msg  
+	X msg (uncompatible change si param de queue incorrect)  
 	X outgoing
 	X subscribe  
 	X task  
 	o tmp
     o spools / script de migration :
         o renommer les sous-rep de bounce_path
+    X new List::check_list_authz() that does request_action() calls
+    X new wwsympa::check_authz() sub
 
 Modules :
-    o List.pm
+    X List.pm
        X %list_of_lists
        X accès à la base (subscriber_table et admin_table)
        X modifier appels à List::rename_list_db()
        X modif appels à List::get_which_db()
-       - %map_field
-       o %list_cache
-       o get_which_db()
-       o get_lists()
-       o get_which()
-       o _load_total_db()
-    o Family.pm
-    o wwsympa.fcgi
-      o verification si liste existe deja
+       X %map_field (rien à faire car on ne change jamais le robot d'un abonné)
+       X %list_cache
+       X get_which_db() (not robot specific)
+       X get_lists() (some calls with '*' param) 
+       X get_which() (all calls changed)
+       X _load_total_db()
+    X Family.pm (a priori OK car l'objet famille utilise le robot)
+    o task_manager
+      X taches relatives à un robot ? (pas tant que les param d'un robot sont limités)
+      o créer un objet Task (evite de transporter le contexte)
+    X wwsympa.fcgi
+      X verification si liste existe deja
     o partout ou on trimbale $listname
-    o pb utilisation de host (au lieu de robot) dans spool outgoing
+      o soap/sympasoap.pm
+      o src/tools.pl
+      o src/sympa.pl
+      o src/Commands.pm
+      o src/Family.pm
+      o src/task_manager.pl
+      o src/alias_manager.pl
+      o src/Message.pm
+      o src/vrobot.txt
+      o src/report.pm
+      o src/List.pm
+      o src/Archive.pm
+      o src/etc/script/p12topem.pl
+      o src/etc/script/mod2html.pl
+      o src/etc/script/load_subscribers.pl
+      o src/mail.pm
+      o wwsympa/archived.pl
+      o wwsympa/wwsympa.fcgi
+      o wwsympa/bounced.pl
+    X pb utilisation de host (au lieu de robot) dans spool outgoing
     X ts les new List doivent avoir un param robot
       X ./wwsympa/wwsympa.fcgi
       X ./wwsympa/bounced.pl
@@ -60,7 +84,7 @@ Modules :
       X ./src/Commands.pm
       X ./src/sympa.pl
       X ./src/List.pm
-      ! ./src/task_manager.pl
+      X ./src/task_manager.pl
       X ./src/Message.pm
       X ./src/Family.pm
       X ./src/tools.pl
@@ -89,6 +113,11 @@ Pb à vérifier :
     o scenario
     o include_list
 Extras :
+  o renommer
+    o update_user en update_subscriber
+    o update_user_db en update_user
+    o is_user en is_subscriber
+    o is_user_db en is_subscriber
   o supprimer wwsympa.conf
   o vérifier format params sympa.conf
   o meilleure gestion robot.conf

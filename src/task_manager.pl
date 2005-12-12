@@ -328,7 +328,7 @@ while (!$end) {
 	    &do_log ('debug3', "procesing %s/%s", $spool_task,$task_file);
 	    last unless ($task->{'date'} < $current_date);
 	    if ($task->{'list'} ne '_global') { # list task
-		my $list = new List ($task->{'list'});
+		my $list = new List ($task->{'list'},$task->{'domain'});
 
 		## Skip closed lists
 		unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
@@ -401,7 +401,7 @@ sub create {
     if (defined $Rdata->{'list'}) { 
 	$list_name = $Rdata->{'list'}{'name'};
 	$robot = $Rdata->{'list'}{'robot'};
-	$task_file  = "$spool_task/$date.$label.$model.$list_name";
+	$task_file  = "$spool_task/$date.$label.$model.$list_name\@$robot";
 	$object = 'list';
     }
     else {
@@ -785,13 +785,19 @@ sub cmd_process {
      # building of %context
     my %context; # datas necessary to command processing
     $context{'task_file'} = $task_file; # long task file name
-    $task_file =~ /\/($tools::regexp{'listname'})$/i;
-    $context{'task_name'} = $1; # task file name
-    $context{'task_name'} =~ /^(\d+)\..+/;
-    $context{'execution_date'} = $1; # task execution date
-    $context{'task_name'} =~ /^\w+\.\w*\.\w+\.($tools::regexp{'listname'})$/;
-    $context{'object_name'} = $1; # object of the task
-    $context{'line_number'} = $lnb;
+
+    my $task;
+    if ($task = &match_task($task_file)) {
+	&do_log('debug2','Current task : %s', join(':',%$task));
+	$context{'task_name'} = $task->{'model'}; # task file name
+	$context{'execution_date'} = $task->{'date'}; # task execution date
+	$context{'object_name'} = $task->{'list'}; # object of the task
+	$context{'object_name'} .= '@'.$task->{'domain'} if $task->{'domain'};
+	$context{'line_number'} = $lnb;
+    }else {
+	&do_log('err','Incorrect taskfile %s', $task_file);
+	return undef;
+    }
 
      # regular commands
     return stop (\%context) if ($command eq 'stop');
@@ -907,17 +913,14 @@ sub next_cmd {
 
     &do_log ('notice', "line $context->{'line_number'} of $context->{'task_name'} : next ($date, $label)");
 
-    my @name = split /\./, $context->{'task_name'};
-
-    ## Last item (listname) can contain '.' chars
-    $name[3] = join('.',@name[3..$#name]);
-    my $model = $name[2];
+    my $listname = $context->{'object_name'};
+    my $model = $context->{'task_name'};
 
     ## Determine type
     my ($type, $model_choice);
     my %data = ('creation_date'  => $context->{'execution_date'},
 		'execution_date' => 'execution_date');
-    if ($name[3] eq '_global') {
+    if ($listname eq '_global') {
 	$type = '_global';
 	foreach my $key (keys %global_models) {
 	    if ($global_models{$key} eq $model) {
@@ -927,7 +930,7 @@ sub next_cmd {
 	}
     }else {
 	$type = 'list';
-	my $list = new List($name[3]);
+	my $list = new List($listname);
 	$data{'list'}{'name'} = $list->{'name'};
 	
 	if ( $model eq 'sync_include') {
@@ -948,7 +951,7 @@ sub next_cmd {
 	}
     }
 
-    unless (create ($date, $tab[1], $name[2], $model_choice, \%data)) {
+    unless (create ($date, $tab[1], $model, $model_choice, \%data)) {
 	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
     }
@@ -1030,17 +1033,16 @@ sub delete_subs_cmd {
     &do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
 
     
-    my $list = new List ($context->{'list_name'});
+    my $list = new List ($context->{'object_name'});
     my %selection; # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
 
 	&do_log ('notice', "email : $email");
-	my $result = &List::request_action ('del', 'smime',
-					    {'listname' => $context->{'list_name'},
-					     'sender'   => $Conf{'listmaster'},
-					     'email'    => $email,
-					 });
+	my $result = $list->check_list_authz('del', 'smime',
+					     {'sender'   => $Conf{'listmaster'},
+					      'email'    => $email,
+					  });
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	if ($action =~ /reject/i) {
@@ -1474,7 +1476,7 @@ sub purge_orphan_bounces {
  sub eval_bouncers {
  #################       
 
-     my $all_lists = &List::get_lists();
+     my $all_lists = &List::get_lists('*');
      foreach my $list (@$all_lists) {
 
 	 my $listname = $list->{'name'};
@@ -1757,9 +1759,23 @@ sub sync_include {
 ## Check if the provided filename matches a task
 ## Returns an array of its parts
 sub match_task {
-    my $filename = shift;
+    my $filepath = shift;
+    
+    ## Extract filename from path
+    my @path = split /\//, $filepath;
+    my $filename = $path[$#path]; 
 
-    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
+    ## File including the list domain
+    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)\@($tools::regexp{'host'})$/) {
+	my $task = {'date' => $1,
+		    'label' => $2,
+		    'model' => $3,
+		    'list' => $4,
+		    'domain' => $5
+		    };
+	return $task;
+	
+    }elsif ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
 	my $task = {'date' => $1,
 		    'label' => $2,
 		    'model' => $3,

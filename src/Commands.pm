@@ -255,9 +255,8 @@ sub lists {
     foreach my $list ( @$all_lists ) {
 	my $l = $list->{'name'};
 
-	my $result = &List::request_action('visibility','smtp',$robot,
-                                            {'listname' => $l,
-                                             'sender' => $sender });
+	my $result = $list->check_list_authz('visibility','smtp',
+					     {'sender' => $sender });
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -323,9 +322,8 @@ sub stats {
     return 'wrong_auth'
 	unless (defined $auth_method);
 
-    my $result = &List::request_action ('review',$auth_method,$robot,
-					{'listname' => $listname,
-					 'sender' => $sender});
+    my $result = $list->check_list_authz('review',$auth_method,
+					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -572,9 +570,8 @@ sub review {
     return 'wrong_auth'
 	unless (defined $auth_method);
 
-    my $result = &List::request_action ('review',$auth_method,$robot,
-                                     {'listname' => $listname,
-                                      'sender' => $sender});
+    my $result = $list->check_list_authz('review',$auth_method,
+					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -728,9 +725,8 @@ sub subscribe {
 
     ## query what to do with this subscribtion request
     
-    my $result = &List::request_action('subscribe',$auth_method,$robot,
-				       {'listname' => $which, 
-					'sender' => $sender });
+    my $result = $list->check_list_authz('subscribe',$auth_method,
+					 {'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -890,9 +886,8 @@ sub info {
     return 'wrong_auth'
 	unless (defined $auth_method);
 
-    my $result = &List::request_action('info',$auth_method,$robot,
-				       {'listname' => $listname, 
-					'sender' => $sender });
+    my $result = $list->check_list_authz('info',$auth_method,
+					 {'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -996,9 +991,8 @@ sub signoff {
 	    $l = $list->{'name'};
 
 	    ## Skip hidden lists
-	    my $result = &List::request_action ('visibility', 'smtp',$robot,
-						{'listname' =>  $l,
-						 'sender' => $sender}) ;
+	    my $result = $list->check_list_authz('visibility', 'smtp',
+						 {'sender' => $sender}) ;
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');
 	    
@@ -1039,10 +1033,9 @@ sub signoff {
     return 'wrong_auth'
 	unless (defined $auth_method);
     
-    my $result = &List::request_action('unsubscribe',$auth_method,$robot,
-				       {'listname' => $which, 
-					'email' => $email,
-					'sender' => $sender });
+    my $result = $list->check_list_authz('unsubscribe',$auth_method,
+					 {'email' => $email,
+					  'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
    
@@ -1199,10 +1192,9 @@ sub add {
     return 'wrong_auth'
 	unless (defined $auth_method);    
     
-    my $result = &List::request_action('add',$auth_method,$robot,
-				       {'listname' => $which, 
-					'email' => $email,
-					'sender' => $sender });
+    my $result = $list->check_list_authz('add',$auth_method,
+					 {'email' => $email,
+					  'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -1346,9 +1338,8 @@ sub invite {
     return 'wrong_auth'
 	unless (defined $auth_method);    
     
-    my $result = &List::request_action('invite',$auth_method,$robot,
-				       {'listname' => $which, 
-					'sender' => $sender });
+    my $result = $list->check_list_authz('invite',$auth_method,
+					 {'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1392,9 +1383,8 @@ sub invite {
 	    $context{'user'}{'gecos'} = $comment;
 	    $context{'requested_by'} = $sender;
 
-	    my $result = &List::request_action('subscribe','smtp',$robot,
-					       {'listname' => $which, 
-						'sender' => $sender });
+	    my $result = $list->check_list_authz('subscribe','smtp',
+						 {'sender' => $sender });
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1518,7 +1508,7 @@ sub remind {
     if ($listname eq '*') {
 
 	$result = &List::request_action('global_remind',$auth_method,$robot,
-					   {'sender' => $sender });
+					{'sender' => $sender });
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	
     }else{
@@ -1527,9 +1517,8 @@ sub remind {
 
 	$host = $list->{'admin'}{'host'};
 
-	$result = &List::request_action('remind',$auth_method,$robot,
-					   {'listname' => $listname, 
-					    'sender' => $sender });
+	$result = $list->check_list_authz('remind',$auth_method,
+					  {'sender' => $sender });
 	$action = $result->{'action'} if (ref($result) eq 'HASH');	
 
     }
@@ -1622,9 +1611,8 @@ sub remind {
 		    my $email = lc ($user->{'email'});
 
 		    
-		    my $result = &List::request_action('visibility','smtp',$robot,
-						       {'listname' => $listname, 
-							'sender' => $email});
+		    my $result = $list->check_list_authz('visibility','smtp',
+							 {'sender' => $email});
 		    my $action;
 		    $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -1728,11 +1716,10 @@ sub del {
 	unless (defined $auth_method);  
 
     ## query what to do with this DEL request
-    my $result = &List::request_action ('del',$auth_method,$robot,
-					{'listname' =>$which,
-					 'sender' => $sender,
-					 'email' => $who
-					 });
+    my $result = $list->rcheck_list_authz('del',$auth_method,
+					  {'sender' => $sender,
+					   'email' => $who
+					   });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');	
     
@@ -1868,9 +1855,8 @@ sub set {
 	    my $l = $list->{'name'};
 
 	    ## Skip hidden lists
-	    my $result = &List::request_action ('visibility', 'smtp',$robot,
-						{'listname' =>  $l,
-						 'sender' => $sender});
+	    my $result = $list->check_list_authz('visibility', 'smtp',
+						 {'sender' => $sender});
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -2143,10 +2129,9 @@ sub confirm {
     my $msgid = $hdr->get('Message-Id');
     my $msg_string = $message->{'msg'}->as_string;
 
-    my $result = &List::request_action('send','md5',$robot,
-				       {'listname' => $name, 
-					'sender' => $sender ,
-					'message' => $message});
+    my $result = $list->check_list_authz('send','md5',
+					 {'sender' => $sender ,
+					  'message' => $message});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -2493,9 +2478,8 @@ sub which {
         ##            next unless (defined $list);
 	$listname = $list->{'name'};
 
-	my $result = &List::request_action ('visibility', 'smtp',$robot,
-					    {'listname' =>  $listname,
-					     'sender' => $sender});
+	my $result = $list->check_list_authz('visibility', 'smtp',
+					     {'sender' => $sender});
 	
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');

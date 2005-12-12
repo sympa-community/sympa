@@ -88,9 +88,8 @@ sub lists {
 	my $listname = $list->{'name'};
 
 	my $result_item = {};
-	my $result = &List::request_action ('visibility','md5',$robot,
-					    {'listname' =>  $listname,
-					     'sender' => $sender}
+	my $result = $list->check_list_authz('visibility','md5',
+					    {'sender' => $sender}
 					    );
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -343,9 +342,8 @@ sub info {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $result = &List::request_action ('info','md5',$robot,
-                                     {'listname' => $listname,
-                                      'sender' => $sender});
+    my $result = $list->check_list_authz('info','md5'
+					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -426,9 +424,8 @@ sub review {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $result = &List::request_action ('review','md5',$robot,
-                                     {'listname' => $listname,
-                                      'sender' => $sender});
+    my $result = $list->check_list_authz('review','md5'
+					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -518,10 +515,9 @@ sub signoff {
     # Part of the authorization code
     my $user = &List::get_user_db($sender);
     
-    my $result = &List::request_action('unsubscribe','md5',$robot,
-				       {'listname' => $listname,
-					'email' => $sender,
-					'sender' => $sender });
+    my $result = $list->check_list_authz('unsubscribe','md5',
+					 {'email' => $sender,
+					  'sender' => $sender });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -622,9 +618,8 @@ sub subscribe {
   $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
   
   ## query what to do with this subscribtion request
-  my $result = &List::request_action('subscribe','md5',$robot,
-				     {'listname' => $listname,
-				      'sender' => $sender });
+  my $result = $list->check_list_authz('subscribe','md5',
+				       {'sender' => $sender });
   my $action;
   $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -797,9 +792,8 @@ sub which {
 	my $list_address;
 	my $result_item;
 
-	my $result = &List::request_action ('visibility', 'md5', $robot,
-					    {'listname' =>  $listname,
-					     'sender' =>$sender});
+	my $result = $list->check_list_authz('visibility', 'md5',
+					     {'sender' =>$sender});
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action =~ /do_it/i);

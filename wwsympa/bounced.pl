@@ -225,10 +225,9 @@ while (!$end) {
 		my $listname = $3 ;
 		my $listrobot = $4;
 		my $list = new List ($listname, $listrobot);
-		my $result =&List::request_action ('del','smtp',$listrobot,
-						   {'listname' =>$listname,
-						    'sender' => $Conf{'listmasters'}[0],
-						    'email' => $who});
+		my $result =$list->check_list_authz('del','smtp',
+						    {'sender' => $Conf{'listmasters'}[0],
+						     'email' => $who});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
 #                    &List::get_action ('del', $listname, $Conf{'listmasters'}[0], 'smtp');

@@ -6301,6 +6301,21 @@ sub am_i {
     }
 }
 
+## Check list authorizations
+## Higher level sub for request_action
+sub check_list_authz {
+    my $self = shift;
+    my $operation = shift;
+    my $auth_method = shift;
+    my $context = shift;
+    my $debug = shift;
+    &do_log('debug', 'List::check_list_authz %s,%s',$operation,$auth_method);
+
+    $context->{'listname'} = $self->{'name'};
+
+    return &request_action($operation, $auth_method, $self->{'domain'}, $context, $debug);
+}
+
 ####################################################
 # request_action
 ####################################################
@@ -9554,6 +9569,7 @@ sub get_robots {
 }
 
 ## List of lists in database mode which e-mail parameter is member of
+## Results concern ALL robots
 sub get_which_db {
     my $email = shift;
     my $function = shift;
@@ -9641,7 +9657,7 @@ sub get_which {
     my $db_which = {};
 
     if (defined $Conf{'db_type'} && $List::use_db) {
-	$db_which = &get_which_db($email, $function);
+	$db_which = &get_which_db($email,  $function);
     }
 
     my $all_lists = &get_lists($robot);

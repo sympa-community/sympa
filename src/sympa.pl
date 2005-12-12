@@ -1391,8 +1391,7 @@ sub DoMessage{
     
     my $rc;
 	
-    my $context =  {'listname' => $listname,
-		    'sender' => $sender,
+    my $context =  {'sender' => $sender,
 		    'message' => $message };
 	
     ## list msg topic	
@@ -1427,10 +1426,10 @@ sub DoMessage{
     my $action;
     my $result;	
     if ($is_signed->{'body'}) {
-	$result = &List::request_action ('send', 'smime',$robot,$context);
+	$result = $list->check_list_authz('send', 'smime',$context);
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
     }else{
-	$result = &List::request_action ('send', 'smtp',$robot,$context);
+	$result = $list->check_list_authz('send', 'smtp',$context);
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
     } 
 

@@ -90,16 +90,16 @@ sub new {
         # use the current family in memory and update it
 	$self = $list_of_families{$robot}{$name};
 ###########
-	# the robot can be different from lastest new ...
+	# the robot can be different from latest new ...
 	if ($robot eq $self->{'robot'}) {
-	return $self;
+	    return $self;
 	}else {
 	    $self = {};
 	}
     }
-        # create a new object family
-	bless $self, $class;
-	$list_of_families{$robot}{$name} = $self;
+    # create a new object family
+    bless $self, $class;
+    $list_of_families{$robot}{$name} = $self;
 
     ## family name
     unless ($name && ($name =~ /^$tools::regexp{'family_name'}$/io) ) {
