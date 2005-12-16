@@ -344,7 +344,7 @@ my @params = ({'title' => 'Directories and file location'},
 	      {'title' => 'Database'},
 	      
 	      {'name' => 'db_type',
-	       'default' => 'SQLite',
+	       'default' => 'mysql',
 	       'query' => 'Database type (mysql | Pg | Oracle | Sybase | SQLite)',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>'be carefull to the case'},
