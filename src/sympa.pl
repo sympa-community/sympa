@@ -424,11 +424,7 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'create_list'}) {
     
-    my $robot;
-    unless ($robot = $main::options{'robot'}) {
- 	print STDERR "Error : missing 'robot' parameter\n";
- 	exit 1;
-    }
+    my $robot = $main::options{'robot'} || $Conf{'host'};
     
     unless ($main::options{'input_file'}) {
  	print STDERR "Error : missing 'input_file' parameter\n";
@@ -465,11 +461,8 @@ if ($main::options{'dump'}) {
     }
 }elsif ($main::options{'instantiate_family'}) {
     
-    my $robot;
-    unless ($robot = $main::options{'robot'}) {
- 	print STDERR "Error : missing robot parameter\n";
- 	exit 1;
-    }
+    my $robot = $main::options{'robot'} || $Conf{'host'};
+
     my $family_name;
     unless ($family_name = $main::options{'instantiate_family'}) {
  	print STDERR "Error : missing family parameter\n";
@@ -503,11 +496,8 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'add_list'}) {
      
-    my $robot;
-    unless ($robot = $main::options{'robot'}) {
- 	print STDERR "Error : missing robot parameter\n";
- 	exit 1;
-    }
+    my $robot = $main::options{'robot'}) || $Conf{'host'};
+
     my $family_name;
     unless ($family_name = $main::options{'add_list'}) {
 	print STDERR "Error : missing family parameter\n";
@@ -556,11 +546,8 @@ if ($main::options{'dump'}) {
 ##########################################
 elsif ($main::options{'modify_list'}) {
     
-    my $robot;
-    unless ($robot = $main::options{'robot'}) {
- 	print STDERR "Error : missing 'robot' parameter\n";
- 	exit 1;
-    }
+    my $robot = $main::options{'robot'} || $Conf{'host'};
+
     my $family_name;
     unless ($family_name = $main::options{'modify_list'}) {
  	print STDERR "Error : missing family parameter\n";
@@ -609,11 +596,8 @@ elsif ($main::options{'modify_list'}) {
 ##########################################
 elsif ($main::options{'close_family'}) {
     
-    my $robot;
-    unless ($robot = $main::options{'robot'}) {
- 	print STDERR $usage_string;
- 	exit 1;
-    }
+    my $robot = $main::options{'robot'} || $Conf{'host'};
+
     my $family_name;
     unless ($family_name = $main::options{'close_family'}) {
  	print STDERR $usage_string;
