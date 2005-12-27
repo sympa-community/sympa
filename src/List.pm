@@ -255,6 +255,16 @@ my %date_format = (
 		       }
 	       );
 
+## DB fields with numeric type
+## We should not do quote() for these while inserting data
+my %numeric_field = ('cookie_delay_user' => 1,
+		      'bounce_score_subscriber' => 1,
+		      'subscribed_subscriber' => 1,
+		      'included_subscriber' => 1,
+		      'subscribed_admin' => 1,
+		      'included_admin' => 1,
+		      );
+		      
 ## List parameters defaults
 my %default = ('occurrence' => '0-1',
 	       'length' => 25
@@ -5583,7 +5593,11 @@ sub update_user {
 			    $value = '\N';
 			}
 		    }else {
-			$value = $dbh->quote($value);
+			if ($numeric_field{$map_field{$field}}) {
+			    $value ||= 0; ## Can't have a null value
+			}else {
+			    $value = $dbh->quote($value);
+			}
 		    }
 		    my $set = sprintf "%s=%s", $map_field{$field}, $value;
 		    push @set_list, $set;
@@ -5732,7 +5746,11 @@ sub update_admin_user {
 			$value = '\N';
 		    }
 		}else {
-		    $value = $dbh->quote($value);
+		    if ($numeric_field{$map_field{$field}}) {
+			$value ||= 0; ## Can't have a null value
+		    }else {
+			$value = $dbh->quote($value);
+		    }
 		}
 		my $set = sprintf "%s=%s", $map_field{$field}, $value;
 
@@ -5817,7 +5835,8 @@ sub update_user_db {
 	next unless ($map_field{$field});
 	my $set;
 	
-	if ($map_field{$field} eq 'cookie_delay_user')  {
+	if ($numeric_field{$map_field{$field}})  {
+	    $value ||= 0; ## Can't have a null value
 	    $set = sprintf '%s=%s', $map_field{$field}, $value;
 	}else { 
 	    $set = sprintf '%s=%s', $map_field{$field}, $dbh->quote($value);
@@ -5882,7 +5901,13 @@ sub add_user_db {
 	
 	next unless ($map_field{$field});
 	
-	my $insert = sprintf "%s", $dbh->quote($value);
+	my $insert;
+	if ($numeric_field{$map_field{$field}}) {
+	    $value ||= 0; ## Can't have a null value
+	    $insert = $value;
+	}else {
+	    $insert = sprintf "%s", $dbh->quote($value);
+	}
 	push @insert_value, $insert;
 	push @insert_field, $map_field{$field}
     }
@@ -5952,6 +5977,9 @@ sub add_user {
 		}
 	    }	    
 
+	    $new_user->{'subscribed'} ||= 0;
+ 	    $new_user->{'included'} ||= 0;
+
 	    ## Update Subscriber Table
 	    $statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 	    $dbh->quote($who), 
@@ -5963,8 +5991,8 @@ sub add_user {
 	    $dbh->quote($new_user->{'reception'}), 
 	    $dbh->quote($new_user->{'topics'}), 
 	    $dbh->quote($new_user->{'visibility'}), 
-	    $dbh->quote($new_user->{'subscribed'}), 
-	    $dbh->quote($new_user->{'included'}), 
+	    $new_user->{'subscribed'}, 
+	    $new_user->{'included'}, 
 	    $dbh->quote($new_user->{'id'});
 	    
 	    unless ($dbh->do($statement)) {
@@ -6051,6 +6079,9 @@ sub add_admin_user {
 	    }
 	}	    
 
+	$new_admin_user->{'subscribed'} ||= 0;
+ 	$new_admin_user->{'included'} ||= 0;
+
 	## Update Admin Table
 	$statement = sprintf "INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin,subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 	$dbh->quote($who), 
@@ -6060,8 +6091,8 @@ sub add_admin_user {
 	$date_field, 
 	$update_field, 
 	$dbh->quote($new_admin_user->{'reception'}), 
-	$dbh->quote($new_admin_user->{'subscribed'}), 
-	$dbh->quote($new_admin_user->{'included'}), 
+	$new_admin_user->{'subscribed'}, 
+	$new_admin_user->{'included'}, 
 	$dbh->quote($new_admin_user->{'id'}), 
 	$dbh->quote($role), 
 	$dbh->quote($new_admin_user->{'info'}), 
@@ -9881,8 +9912,8 @@ sub probe_db {
 							'topics_subscriber' => 'varchar(200)',
 							'bounce_subscriber' => 'varchar(35)',
 							'comment_subscriber' => 'varchar(150)',
-							'subscribed_subscriber' => "enum('0','1')",
-							'included_subscriber' => "enum('0','1')",
+							'subscribed_subscriber' => "int(1)",
+							'included_subscriber' => "int(1)",
 							'include_sources_subscriber' => 'varchar(50)',
 							'bounce_score_subscriber' => 'smallint(6)'},
 				 'admin_table' => {'list_admin' => 'varchar(50)',
@@ -9893,8 +9924,8 @@ sub probe_db {
 						   'update_admin' => 'datetime',
 						   'reception_admin' => 'varchar(20)',
 						   'comment_admin' => 'varchar(150)',
-						   'subscribed_admin' => "enum('0','1')",
-						   'included_admin' => "enum('0','1')",
+						   'subscribed_admin' => "int(1)",
+						   'included_admin' => "int(1)",
 						   'include_sources_admin' => 'varchar(50)',
 						   'info_admin' =>  'varchar(150)',
 						   'profile_admin' => "enum('privileged','normal')"}
@@ -12160,7 +12191,7 @@ sub db_log {
 
     my $statement = 'INSERT INTO log_table (id, date, pid, process, email_user, auth, ip, operation, list, robot, arg, status, subscriber_count) ';
 
-    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($subscriber_count);		    
+    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$$,$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$subscriber_count;		    
     $statement = $statement.$statement_value;
     
 		    unless ($dbh->do($statement)) {
