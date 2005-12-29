@@ -693,102 +693,107 @@ if ($wwsconf->{'use_fast_cgi'}) {
      
      &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
-     if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
-	 ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
-
-	 &do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{'SSL_CLIENT_S_DN_Email'});
-	 if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
-	     ## this is the X509v3 SubjectAlternativeName, and requires
-	     ## a patch to mod_ssl -- cm@coretec.at
-	     $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
-	 }elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
-	     $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
-	 }elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
-	     ## Compatibility issue with old a-sign.at certs
-	     $param->{'user'}{'email'} = lc($1);
-	 }
+     ## RSS does not require user authentication
+     unless ($rss) {
 	 
-	 if($param->{user}{email}) {
-	     $param->{'auth_method'} = 'smime';
-	     $param->{'auth'} = 'x509';
-	     $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
-	     $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
-	     $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
-	     $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
-	 }
-
-     }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
-         ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($Conf{'cookie'});
-	 
-     }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
-	 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
-	 # select the cas server that redirect the user to sympa and check the ticket
-	 do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
-	 if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
-	     my $cas_id = $1;
-	     my $ticket = $in{'ticket'};
-	     my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
+	 if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
+	     ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
 	     
-	     my $service_url = &wwslib::get_my_url();
-	     $service_url =~ s/\&ticket\=.+$//;
-
-	     my $net_id = $cas_server->validateST($service_url, $ticket);
-
-	     if(defined $net_id) { # the ticket is valid net-id
-		 do_log('notice',"login CAS OK server netid=$net_id" );
-		 $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($cas_id, {'uid' => $net_id}));
-		 $param->{'auth'} = 'cas';
-
-		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
-
-		 
-	     }else{
-		 do_log('err',"CAS ticket validation failed : %s", &CAS::get_errors()); 
+	     &do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{'SSL_CLIENT_S_DN_Email'});
+	     if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
+		 ## this is the X509v3 SubjectAlternativeName, and requires
+		 ## a patch to mod_ssl -- cm@coretec.at
+		 $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
+	     }elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
+		 $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
+	     }elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
+		 ## Compatibility issue with old a-sign.at certs
+		 $param->{'user'}{'email'} = lc($1);
 	     }
-	 }else{
-	      do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
-	 }
-     }elsif(($Conf{'cas_number'} > 0) &&
-	    ($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
-	 if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
-	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
-	 }else{
-	     # user not taggued as not using cas
-	     do_log ('debug',"no cas ticket detected");
-	     foreach my $auth_service (@{$Conf{'auth_services'}}){
-		 # skip auth services not related to cas
-		 next unless ($auth_service->{'auth_type'} eq 'cas');
-		 next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
+	     
+	     if($param->{user}{email}) {
+		 $param->{'auth_method'} = 'smime';
+		 $param->{'auth'} = 'x509';
+		 $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
+		 $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
+		 $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
+		 $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
+	     }
+	     
+	 }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
+	     ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($Conf{'cookie'});
+	     
+	 }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
+	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
+	     # select the cas server that redirect the user to sympa and check the ticket
+	     do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
+	     if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
+		 my $cas_id = $1;
+		 my $ticket = $in{'ticket'};
+		 my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
 		 
-		 ## skip cas server where client as been already redirect to 
-		 ## (redirection carry the list of cas servers already checked
-		 &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
-		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
+		 my $service_url = &wwslib::get_my_url();
+		 $service_url =~ s/\&ticket\=.+$//;
 		 
-		 # before redirect update the list of already checked cas server to prevent loop
-		 my $cas_server = $auth_service->{'cas_server'};
-		 my $return_url = &wwslib::get_my_url();
-
-		 if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
-		     $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$auth_service->{'auth_service_name'}},/;
-		 }else{		 
-		     $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
+		 my $net_id = $cas_server->validateST($service_url, $ticket);
+		 
+		 if(defined $net_id) { # the ticket is valid net-id
+		     do_log('notice',"login CAS OK server netid=$net_id" );
+		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($cas_id, {'uid' => $net_id}));
+		     $param->{'auth'} = 'cas';
+		     
+		     &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
+		     
+		     
+		 }else{
+		     do_log('err',"CAS ticket validation failed : %s", &CAS::get_errors()); 
 		 }
-		 
-		 my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);
-		 		 
-		 if ($redirect_url =~ /http(s)+\:\//i) {
-		     $in{'action'} = 'redirect';
-		     $param->{'redirect_to'} = $redirect_url;
-		     last
-		     }elsif($redirect_url == -1) { # CAS server auth error
-			 do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
-		     }else{
-			 do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
-		     }
+	     }else{
+		 do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
 	     }
-	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}) unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set the cookie do_not_use_cas because all cas server as been checked without success
+	 }elsif(($Conf{'cas_number'} > 0) &&
+		($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
+	     if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
+		 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
+	     }else{
+		 # user not taggued as not using cas
+		 do_log ('debug',"no cas ticket detected");
+		 foreach my $auth_service (@{$Conf{'auth_services'}}){
+		     # skip auth services not related to cas
+		     next unless ($auth_service->{'auth_type'} eq 'cas');
+		     next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
+		     
+		     ## skip cas server where client as been already redirect to 
+		     ## (redirection carry the list of cas servers already checked
+		     &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
+		     next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
+		     
+		     # before redirect update the list of already checked cas server to prevent loop
+		     my $cas_server = $auth_service->{'cas_server'};
+		     my $return_url = &wwslib::get_my_url();
+		     
+		     if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
+			 $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$auth_service->{'auth_service_name'}},/;
+		     }else{		 
+			 $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
+		     }
+		     
+		     my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);
+		     
+		     if ($redirect_url =~ /http(s)+\:\//i) {
+			 $in{'action'} = 'redirect';
+			 $param->{'redirect_to'} = $redirect_url;
+			 last
+			 }elsif($redirect_url == -1) { # CAS server auth error
+			     do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
+			 }else{
+			     do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
+			 }
+		 }
+		 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}) unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set the cookie do_not_use_cas because all cas server as been checked without success
+	     }
 	 }
+	 
      }
 
      ##Cookie extern : sympa_altemails
