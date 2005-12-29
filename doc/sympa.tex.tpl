@@ -2606,8 +2606,9 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 [STOPPARSE]
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other programs access this
-	table), you can make \Sympa load these fields. You will then be able to
+	table), you can make \Sympa recognize these fields. You will then be able to
 	use them from within mail/web templates and authorization scenarios (as [subscriber-\texttt{>}field]).
+	These fields will also appear in the list members review page and will be editable by the list owner.
 [STARTPARSE]
 	This parameter is a comma-separated list.
 
@@ -2625,7 +2626,7 @@ db_additional_subscriber_fields 	billing_delay,subscription_expiration
 [STOPPARSE]
 	If your \textbf {user\_table} database table has more fields
 	than required by \Sympa (because other programs access this
-	table), you can make \Sympa load these fields. You will then be able to
+	table), you can make \Sympa recognize these fields. You will then be able to
 	use them from within mail/web templates (as [user-\texttt{>}field]).
 [STARTPARSE]
 
