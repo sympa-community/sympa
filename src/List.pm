@@ -1999,25 +1999,20 @@ sub get_editors_email {
     my($self) = @_;
     do_log('debug3', 'List::get_editors_email(%s)', $self->{'name'});
     
-    my ($i, @rcpt);
-    my $admin = $self->{'admin'}; 
-    my $name = $self->{'name'};
+    my @rcpt;
+    my $editors = ();
 
-    foreach $i (@{$admin->{'editor'}}) {
-	next if ($i->{'reception'} eq 'nomail');
-	if (ref($i->{'email'})) {
-	    push(@rcpt, @{$i->{'email'}});
-	}elsif ($i->{'email'}) {
-	    push(@rcpt, $i->{'email'});
-	}
+    $editors = $self->get_editors();
+    foreach my $e (@{$editors}) {
+	next if ($e->{'reception'} eq 'nomail');
+	push (@rcpt, lc($e->{'email'}));
     }
 
-    if ($#rcpt < 0) {
-	return &get_owners_email($self);
+    unless (@rcpt) {
+	@rcpt = $self->get_owners_email();
+	do_log('notice','Warning : no editor defined for list %s, getting owners', $self->{'name'} );
     }
-
     return @rcpt;
-
 }
 
 ## Returns an object Family if the list belongs to a family
