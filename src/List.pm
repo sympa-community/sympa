@@ -10355,7 +10355,7 @@ sub maintenance {
     &do_log('notice', "Upgrading from Sympa version %s to %s", $previous_version, $Version::Version);    
 
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
-    unless (&tools::higher_version($previous_version, '4.2a')) {
+    if (&tools::lower_version($previous_version, '4.2a')) {
 
 	## Check database connection
 	unless ($dbh and $dbh->ping) {
@@ -10373,7 +10373,7 @@ sub maintenance {
     }    
 
     ## Migration to tt2
-    unless (&tools::higher_version($previous_version, '4.2b')) {
+    if (&tools::lower_version($previous_version, '4.2b')) {
 
 	&do_log('notice','Migrating templates to TT2 format...');	
 	
@@ -10400,7 +10400,7 @@ sub maintenance {
     }
     
     ## Initializing the new admin_table
-    unless (&tools::higher_version($previous_version, '4.2b.4')) {
+    if (&tools::lower_version($previous_version, '4.2b.4')) {
 	&do_log('notice','Initializing the new admin_table...');
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
@@ -10409,7 +10409,7 @@ sub maintenance {
     }
 
     ## Move old-style web templates out of the include_path
-    unless (&tools::higher_version($previous_version, '5.0.1')) {
+    if (&tools::lower_version($previous_version, '5.0.1')) {
 	&do_log('notice','Old web templates HTML structure is not compliant with latest ones.');
 	&do_log('notice','Moving old-style web templates out of the include_path...');
 
@@ -10462,7 +10462,7 @@ sub maintenance {
 
 
     ## Clean buggy list config files
-    unless (&tools::higher_version($previous_version, '5.1b')) {
+    if (&tools::lower_version($previous_version, '5.1b')) {
 	&do_log('notice','Cleaning buggy list config files...');
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
@@ -10471,18 +10471,18 @@ sub maintenance {
     }
 
     ## Fix a bug in Sympa 5.1
-    unless (&tools::higher_version($previous_version, '5.1.2')) {
+    if (&tools::lower_version($previous_version, '5.1.2')) {
 	&do_log('notice','Rename archives/log. files...');
 	my $all_lists = &List::get_lists('*');
-	foreach my $l ( @$all_lists ) {
-	    my $list = new List ($l); 
+	foreach my $list ( @$all_lists ) {
+	    my $l = $list->{'name'}; 
 	    if (-f $list->{'dir'}.'/archives/log.') {
 		rename $list->{'dir'}.'/archives/log.', $list->{'dir'}.'/archives/log.00';
 	    }
 	}
     }
 
-    unless (&tools::higher_version($previous_version, '5.2a.1')) {
+    if (&tools::lower_version($previous_version, '5.2a.1')) {
 
 	## Fill the robot_subscriber and robot_admin fields in DB
 	&do_log('notice','Updating the new robot_subscriber and robot_admin  Db fields...');
@@ -10560,8 +10560,78 @@ sub maintenance {
 	    }		     
 	}
 	
+	
     }
 
+    ## DB fields of enum type have been changed to int
+    if (&tools::lower_version($previous_version, '5.2a.1')) {
+	
+	if ($List::use_db && $Conf{'db_type'} eq 'mysql') {
+	    my %check = ('subscribed_subscriber' => 'subscriber_table',
+			 'included_subscriber' => 'subscriber_table',
+			 'subscribed_admin' => 'admin_table',
+			 'included_admin' => 'admin_table');
+	    
+	    ## Check database connection
+	    unless ($dbh and $dbh->ping) {
+		return undef unless &db_connect();
+	    }	   
+	    
+	    foreach my $field (keys %check) {
+
+		my $statement;
+				
+		## Query the Database
+		$statement = sprintf "SELECT max(%s) FROM %s", $field, $check{$field};
+		
+		my $sth;
+		
+		unless ($sth = $dbh->prepare($statement)) {
+		    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+		    return undef;
+		}
+		
+		unless ($sth->execute) {
+		    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    return undef;
+		}
+		
+		my $max = $sth->fetchrow();
+		$sth->finish();		
+
+		## '0' has been mapped to 1 and '1' to 2
+		## Restore correct field value
+		if ($max > 1) {
+		    ## 1 to 0
+		    &do_log('notice', 'Fixing DB field %s ; turning 1 to 0...', $field);
+		    
+		    my $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 0, $field, 1;
+		    my $rows;
+		    unless ($rows = $dbh->do($statement)) {
+			do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+			return undef;
+		    }
+		    
+		    &do_log('notice', 'Updated %d rows', $rows);
+
+		    ## 2 to 1
+		    &do_log('notice', 'Fixing DB field %s ; turning 2 to 1...', $field);
+		    
+		    my $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 1, $field, 2;
+		    my $rows;
+		    unless ($rows = $dbh->do($statement)) {
+			do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+			return undef;
+		    }
+		    
+		    &do_log('notice', 'Updated %d rows', $rows);		    
+
+		}
+	    }
+	}
+    }
+
+   
 
     ## Saving current version if required
     unless (open VFILE, ">$version_file") {
