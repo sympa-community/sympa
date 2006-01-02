@@ -3223,7 +3223,7 @@ sub send_to_editor {
 	       return undef;
 	   }
 
-	   my $crypted_file = "$Conf{'tmpdir'}/$name.moderate.$$";
+	   my $crypted_file = "$Conf{'tmpdir'}/$name\@$robot.moderate.$$";
 	   unless (open CRYPTED, ">$crypted_file") {
 	       &do_log('notice', 'Could not create file %s', $crypted_file);
 	       return undef;

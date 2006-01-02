@@ -438,10 +438,11 @@ sub smime_sign {
 
     my $self = new List($list, $robot);
     my($cert, $key) = &smime_find_keys($self->{dir}, 'sign');
-    my $temporary_file = $Conf{'tmpdir'}."/".$list.".".$$ ;    
+    my $temporary_file = $Conf{'tmpdir'}."/".$list.'@'.$robot.".".$$ ;    
+    my $temporary_pwd = $Conf{'tmpdir'}.'/pass.'.$$;
 
     my ($signed_msg,$pass_option );
-    $pass_option = "-passin file:$Conf{'tmpdir'}/pass.$$" if ($Conf{'key_passwd'} ne '') ;
+    $pass_option = "-passin file:$temporary_pwd" if ($Conf{'key_passwd'} ne '') ;
 
     ## Keep a set of header fields ONLY
     ## OpenSSL only needs content type & encoding to generate a multipart/signed msg
@@ -461,8 +462,8 @@ sub smime_sign {
     close(MSGDUMP);
 
     if ($Conf{'key_passwd'} ne '') {
-	unless ( &POSIX::mkfifo("$Conf{'tmpdir'}/pass.$$",0600)) {
-	    do_log('notice', 'Unable to make fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	unless ( &POSIX::mkfifo($temporary_pwd,0600)) {
+	    do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
 
@@ -472,13 +473,13 @@ sub smime_sign {
     }
 
     if ($Conf{'key_passwd'} ne '') {
-	unless (open (FIFO,"> $Conf{'tmpdir'}/pass.$$")) {
-	    do_log('notice', 'Unable to open fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	unless (open (FIFO,"> $temporary_pwd")) {
+	    do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
 	}
 
 	print FIFO $Conf{'key_passwd'};
 	close FIFO;
-	unlink ("$Conf{'tmpdir'}/pass.$$");
+	unlink ($temporary_pwd);
     }
 
     my $parser = new MIME::Parser;
@@ -809,8 +810,9 @@ sub smime_decrypt {
 	return undef;
     }
 
-    my $temporary_file = $Conf{'tmpdir'}."/".$list->{'name'}.".".$$ ;
-    
+    my $temporary_file = $Conf{'tmpdir'}."/".$list->{'name'}.'@'.$list->{'domain'}.".".$$ ;
+    my $temporary_pwd = $Conf{'tmpdir'}.'/pass.'.$$;
+
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
 	&do_log('info', 'Can\'t store message in file %s',$temporary_file);
@@ -821,7 +823,7 @@ sub smime_decrypt {
     my ($decryptedmsg, $pass_option, $msg_as_string);
     if ($Conf{'key_passwd'} ne '') {
 	# if password is define in sympa.conf pass the password to OpenSSL using
-	$pass_option = "-passin file:$Conf{'tmpdir'}/pass.$$";	
+	$pass_option = "-passin file:$temporary_pwd";	
     }
 
     ## try all keys/certs until one decrypts.
@@ -829,8 +831,8 @@ sub smime_decrypt {
 	my $keyfile = shift @$keys;
 	&do_log('debug', "Trying decrypt with $certfile, $keyfile");
 	if ($Conf{'key_passwd'} ne '') {
-	    unless (&POSIX::mkfifo("$Conf{'tmpdir'}/pass.$$",0600)) {
-		&do_log('err', 'Unable to make fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	    unless (&POSIX::mkfifo($temporary_pwd,0600)) {
+		&do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	}
@@ -839,13 +841,13 @@ sub smime_decrypt {
 	open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |");
 
 	if ($Conf{'key_passwd'} ne '') {
-	    unless (open (FIFO,"> $Conf{'tmpdir'}/pass.$$")) {
-		&do_log('notice', 'Unable to open fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	    unless (open (FIFO,"> $temporary_pwd")) {
+		&do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	    print FIFO $Conf{'key_passwd'};
 	    close FIFO;
-	    unlink ("$Conf{'tmpdir'}/pass.$$");
+	    unlink ($temporary_pwd);
 	}
 	
 	while (<NEWMSG>) {
