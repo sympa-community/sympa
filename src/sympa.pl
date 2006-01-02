@@ -496,7 +496,7 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'add_list'}) {
      
-    my $robot = $main::options{'robot'}) || $Conf{'host'};
+    my $robot = $main::options{'robot'} || $Conf{'host'};
 
     my $family_name;
     unless ($family_name = $main::options{'add_list'}) {
