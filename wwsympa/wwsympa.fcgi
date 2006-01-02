@@ -5541,7 +5541,7 @@ sub do_skinsedit {
 		 my $parser = new MIME::Parser;
 		 $parser->output_to_core(1);
 		 
-		 my $arc_file = $arc_month_path;
+		 my $arc_file = $arc_month_path.'/'.$arc;
 		 
 		 unless (open (FILE, $arc_file)) {
 		     &wwslog('err', 'Unable to open file %s', $arc_file);
