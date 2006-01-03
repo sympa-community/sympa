@@ -1,3 +1,356 @@
+2006-01-03 16:54  sympa-authors
+
+	* src/vrobot.txt: Updated
+
+2006-01-03 16:46  sympa-authors
+
+	* src/: Makefile, Task.pm, task_manager.pl: Introduced a new
+	  Task.pm module
+
+2006-01-03 11:08  sympa-authors
+
+	* src/: List.pm, vrobot.txt: Change: renamed bounce subdirectories
+
+2006-01-02 16:52  sympa-authors
+
+	* src/: List.pm, tools.pl, vrobot.txt: Change: using robot in
+	  tmpdir
+
+2006-01-02 15:52  sympa-authors
+
+	* src/: List.pm, tools.pl: ***** Change: changed of enum datatypes
+	  requires DB field update (2 -> 1 AND 1 -> 0) Fix: now use
+	  lower_version() instead of higher_version() because some code
+	  could be run twice
+
+2006-01-02 14:37  sympa-authors
+
+	* src/sympa.pl: Fix recent changes
+
+2006-01-02 13:58  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: Fix recent changes
+
+2005-12-30 09:44  sympa-authors
+
+	* src/List.pm: [BugID 589] Fix: restore correct get_editors_email()
+	  subroutine
+
+2005-12-30 09:27  sympa-authors
+
+	* soap/sympasoap.pm: [BugID 591] Fix typo iun which()
+
+2005-12-29 14:41  sympa-authors
+
+	* doc/sympa.tex.tpl: More information on additional DB fields
+
+2005-12-29 14:20  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: Skip CAS authentication with RSS
+
+2005-12-28 17:30  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by H.Brunet] Fix: moved the RSS
+	  code before the redirect_to code to prevent CAS redirection in
+	  RSS context
+
+2005-12-28 13:50  sympa-authors
+
+	* src/List.pm: [reported by M.Schoeb] Fix:
+	  List::has_include_data_sources() did not check owner_include and
+	  editor_include.  Therefore sync_include task might not be
+	  created.
+
+2005-12-27 15:08  sympa-authors
+
+	* wwsympa/wwslib.pm: Add better error log for missing bounce dir
+
+2005-12-27 12:26  sympa-authors
+
+	* src/sympa.pl: Change: If a robot parameter is missing from the
+	  comman line, then use the 'host' parameter
+
+2005-12-27 11:38  sympa-authors
+
+	* src/List.pm: Change: turned the mysql subscribed and included
+	  fields into int(1) to be compatible with other RDBMS [reported by
+	  B.Riffle] Fix: no more use quoting in SQL queries with numeric
+	  fields
+
+2005-12-16 10:59  sympa-authors
+
+	* src/sympa_wizard.pl: Change: restore mysql as the default RDBMS
+	  because SQLite does not provide an ALTER TABLME feature
+
+2005-12-12 13:47  sympa-authors
+
+	* src/List.pm: [reported by B.Riffle] Fix: treat
+	  subscribed_subscriber DB field as a numeric
+
+2005-12-12 09:42  sympa-authors
+
+	* src/TODO: List of things that should be fixed
+
+2005-12-12 09:40  sympa-authors
+
+	* soap/sympasoap.pm, src/Commands.pm, src/Family.pm, src/List.pm,
+	  src/sympa.pl, src/task_manager.pl, src/vrobot.txt,
+	  wwsympa/bounced.pl, wwsympa/wwsympa.fcgi: Changes for full
+	  virtual robot support :  * replaced list-related calls to
+	  request_action() with $list->check_list_authz()  * added the
+	  robot to taskfiles  * new wwsympa::check_authz() to avoid
+	  duplicate code in most subroutines
+
+2005-12-08 16:43  sympa-authors
+
+	* soap/sympa_soap_server.fcgi, soap/sympasoap.pm, src/Commands.pm,
+	  src/Family.pm, src/List.pm, src/admin.pm, src/sympa.pl,
+	  src/task_manager.pl, src/vrobot.txt,
+	  src/etc/script/arc2webarc.pl, wwsympa/archived.pl,
+	  wwsympa/wwsympa.fcgi: Changes: Changed output List::get_lists()
+	  type Also made web archives full Vrobot enabled
+
+2005-12-08 16:39  sympa-authors
+
+	* doc/sympa.tex.tpl: Still referred to 'include' mode
+
+2005-12-02 11:59  sympa-authors
+
+	* important_changes.pl: [no log message]
+
+2005-12-02 11:58  sympa-authors
+
+	* src/vrobot.txt: Development status for full virtual robot support
+
+2005-12-02 10:18  sympa-authors
+
+	* check_perl_modules.pl: Made CipherSaber module required
+
+2005-12-01 10:57  sympa-authors
+
+	* doc/sympa.tex.tpl: fix a bug in the scenario grammar
+
+2005-11-25 10:33  sympa-authors
+
+	* doc/sympa.tex.tpl: [reported by A.Lund] Typo in parameter name
+	  sendmail_aliases
+
+2005-11-22 17:22  sympa-authors
+
+	* Makefile.am, Makefile.in, important_changes.pl, src/List.pm:
+	  Changes related to sympa upgrade :   * no more saving
+	  data_structure.version if verion did not change   * adding a log
+	  "upgrading from x to y"   * initialize the data_structure.version
+	  file if missing
+
+2005-11-22 14:55  sympa-authors
+
+	* web_tt2/css.tt2: Fix: remove use of 'transparent' color ; it was
+	  interpreted as dark grey
+
+2005-11-21 14:49  sympa-authors
+
+	* src/etc/script/sympa: Fix: don't try to stop sympa-distribute if
+	  no PID was found
+
+2005-11-21 14:42  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: missing word
+
+2005-11-15 17:57  sympa-authors
+
+	* src/: Commands.pm, sympa.pl: New feature: added number of
+	  subscribers to log when a message is sent
+
+2005-11-15 16:10  sympa-authors
+
+	* po/Makefile: [reported by JP Masse] Fix: swedish catalog was not
+	  compiled
+
+2005-11-14 12:08  sympa-authors
+
+	* src/tools.pl: Change: tools::lock() is now able to force the lock
+	  if the blocking lock was performed more than 20 minutes ago.	The
+	  PID is now written in the lockfile.  The number of attempts to
+	  lock is now different in a web context
+
+2005-11-09 11:27  sympa-authors
+
+	* check_perl_modules.pl: [reported by J.Beretta] Fix: the
+	  '-modifybodyaddresses' option is only available since mhonarc
+	  2.6.0
+
+2005-11-09 10:47  sympa-authors
+
+	* web_tt2/notice.tt2, wwsympa/wwsympa.fcgi: [proposed by J.Abbott]
+	  A better removal notice
+
+2005-11-02 13:10  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Now use web_recode_to for the RSS feed
+
+2005-11-02 12:02  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix RSS feed ; URL for virtual robots was
+	  incorrect
+
+2005-10-31 11:37  sympa-authors
+
+	* src/Commands.pm, src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi:
+	  [BugID 194] Fixed spelling errors
+
+2005-10-28 16:39  sympa-authors
+
+	* src/task_manager.pl: [BugID 498] Change: 'process_bouncers' task
+	  failed if no owner could be contacted ; no more return undef
+
+2005-10-28 16:10  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 528] Fix: adding a pending
+	  subscriber failed if the user gecos contained a comma (',')
+
+2005-10-28 11:02  sympa-authors
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm, src/admin.pm,
+	  src/alias_manager.pl, src/etc/list_aliases.tt2,
+	  wwsympa/wwsympa.fcgi: [requested by J.Abbott] New feature: new
+	  return_path_suffix parameter in sympa.conf
+
+2005-10-27 17:56  sympa-authors
+
+	* po/fr.po, web_tt2/rss.tt2, wwsympa/wwsympa.fcgi: Fied some RSS
+	  problems
+
+2005-10-27 17:54  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sv.po, sympa.pot, tr.po, zh_CN.po, zh_TW.po: Update POT and PO
+	  files
+
+2005-10-27 11:55  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: web report structure was initialized
+	  after get_parameters() was run
+
+2005-10-27 11:08  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: escape some chars in regexp
+
+2005-10-27 11:03  sympa-authors
+
+	* src/report.pm: Fix: replace use of '|' with '||'
+
+2005-10-27 09:30  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by K.Moriwaka] Fix: restricted
+	  the acceptable set of characters for search expressions
+
+2005-10-26 16:53  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 526] Fix: () and [] no more allowed
+	  in search expressions
+
+2005-10-26 10:48  sympa-authors
+
+	* src/List.pm: Fix: get_which() for listamster returned all
+	  non-include2 lists
+
+2005-10-25 14:44  sympa-authors
+
+	* src/tt2.pl, web_tt2/admin_menu.tt2, web_tt2/arc_manage.tt2,
+	  web_tt2/d_read.tt2, web_tt2/list_admin_menu.tt2,
+	  web_tt2/list_menu.tt2, web_tt2/ls_templates.tt2,
+	  web_tt2/rename_list_request.tt2, web_tt2/review.tt2,
+	  web_tt2/reviewbouncing.tt2: [BugID 522] Fix: escape quotes in
+	  javascript calls
+
+2005-10-25 13:33  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: never go back to the search action
+	  after a del
+
+2005-10-24 12:11  sympa-authors
+
+	* doc/sympa.tex.tpl: Complete documentation about list creation
+
+2005-10-24 11:50  sympa-authors
+
+	* soap/sympasoap.pm: [G.Bouteille] Change: which SOAP subroutine
+	  result now includes lists the user is admin of
+
+2005-10-24 11:48  sympa-authors
+
+	* soap/sympasoap.pm: [BugID 516] Fix: lists and which used domain
+	  in list address instead of host
+
+2005-10-21 15:38  sympa-authors
+
+	* doc/sympa.tex.tpl: Change: new config.bin
+
+2005-10-21 14:22  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: force config reload after
+	  the it was edited to cleanup some empty entries
+
+2005-10-21 14:12  sympa-authors
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Fix: new empty entries were
+	  added each time the user would reload the edit_list_request page.
+	  Now working on a copy of list config data structure
+
+2005-10-21 13:40  sympa-authors
+
+	* src/tools.pl: New remove_empty_entries() subroutine
+
+2005-10-20 18:01  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: yourlists was never provided
+
+2005-10-20 14:39  sympa-authors
+
+	* web_tt2/rss_request.tt2, wwsympa/wwsympa.fcgi: [reported by
+	  P.Mounier] Fix: incorrect RSS title ; syntax error while changing
+	  parameter in rss_request
+
+2005-10-20 12:23  sympa-authors
+
+	* wwsympa/archived.pl: Fix: archived.pl would die with a
+	  "Modification of non-creatable array value attempted" error while
+	  creating the index file
+
+2005-10-20 11:49  sympa-authors
+
+	* po/Makefile, po/sv.po, src/Conf.pm, src/Language.pm: [D.Nylander]
+	  New feature: sympa translated to Swedish
+
+2005-10-20 09:39  sympa-authors
+
+	* src/List.pm: [requested by D.Jahnke] New feature: 'db_port' now
+	  available in include_sql_query paragraph
+
+2005-10-19 17:33  sympa-authors
+
+	* web_tt2/list_menu.tt2: Renamed "Subscribers" to "Review members"
+
+2005-10-19 16:42  sympa-authors
+
+	* mail_tt2/message_report.tt2, src/Commands.pm: [reported by
+	  A.Brugalle] Add a notification when a message is moved to the
+	  distribution spool
+
+2005-10-19 16:42  sympa-authors
+
+	* ChangeLog: update
+
+2005-10-19 15:46  sympa-authors
+
+	* src/Language.pm: Fix: try a setlocale() with locale.charset first
+
+2005-10-17 14:31  sympa-authors
+
+	* src/List.pm: Rename buggy archives/log. files
+
 2005-10-14 17:51  sympa-authors
 
 	* po/de.po: [M.Redinger] Updated de.po
