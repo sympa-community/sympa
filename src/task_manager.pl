@@ -28,6 +28,7 @@
 use lib '--LIBDIR--';
 use strict vars;
 
+use Task;
 use List;
 use Conf;
 use Log;
@@ -235,19 +236,17 @@ while (!$end) {
     my $current_date = time; # current epoch date
     my $rep = &tools::adate ($current_date);
 
-    ## Create required tasks
-    unless (opendir(DIR, $spool_task)) {
-	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
+
+    ## List all tasks
+    unless (&Task::list_tasks($spool_task)) {
+	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"})
+	&do_log ('err', "Failed to list task files in %s", $spool_task);
+	exit -1;
     }
-    undef @tasks;
-    @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR); # @tasks updating
-    closedir DIR;
 
     my %used_models; # models for which a task exists
-    foreach (@tasks) {
-	if (my $task = &match_task($_)) {
-	    $used_models{$task->{'model'}} = 1;
-	}
+    foreach my $model (&Task::get_used_models) {
+	$used_models{$model} = 1;
     }
 
     ### creation of required tasks 
@@ -280,15 +279,10 @@ while (!$end) {
 	    my %used_list_models; # stores which models already have a task 
 	    foreach (@list_models) { $used_list_models{$_} = undef; }
 	    
-	    foreach $_ (@tasks) {
-		
-		if (my $task = &match_task($_)) {
-		    my $model = $task->{'model'};
-		    my $object = $task->{'list'};
-		    if ($object eq $list->{'name'}) { $used_list_models{$model} = 1; }
-		}
+	    foreach my $model (&Task::get_used_models($list->{'name'}.'@'.$list->{'domain'})) {
+		$used_list_models{$model} = 1; 
 	    }
-
+	    
 	    foreach my $model (keys %used_list_models) {
 		unless ($used_list_models{$model}) {
 		    my $model_task_parameter = "$model".'_task';
@@ -314,58 +308,58 @@ while (!$end) {
     my $rep = &tools::adate ($current_date);
 
     ## Execute existing tasks
-    unless (opendir(DIR, $spool_task)) {
-	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
+    ## List all tasks
+    unless (&Task::list_tasks($spool_task)) {
+	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"})
+	&do_log ('err', "Failed to list task files in %s", $spool_task);
+	exit -1;
     }
-    my @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR);
 
     ## processing of tasks anterior to the current date
     &do_log ('debug3', 'processing of tasks anterior to the current date');
-    foreach (@tasks) {
-	my $task_file = $_;
+    foreach my $task ( &Task::get_task_list() ) {
+	my $task_file = $task->{'filepath'};
 
-	if (my $task = &match_task($task_file)) {
-	    &do_log ('debug3', "procesing %s/%s", $spool_task,$task_file);
-	    last unless ($task->{'date'} < $current_date);
-	    if ($task->{'list'} ne '_global') { # list task
-		my $list = new List ($task->{'list'},$task->{'domain'});
-
-		## Skip closed lists
-		unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
+	&do_log ('debug3', "procesing %s", $task_file);
+	last unless ($task->{'date'} < $current_date);
+	if ($task->{'object'} ne '_global') { # list task
+	    my $list = $task->{'list_object'};
+	    
+	    ## Skip closed lists
+	    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
+		&do_log('notice','Removing task file %s', $task_file);
+		unless (unlink $task_file) {
+		    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+		    next;
+		}
+		next;
+	    }
+	    
+	    ## Skip if parameter is not defined
+	    if ( $task->{'model'} eq 'sync_include') {
+		unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+			$list->has_include_data_sources() &&
+			($list->{'admin'}{'status'} eq 'open')) {
 		    &do_log('notice','Removing task file %s', $task_file);
-		    unless (unlink "$spool_task/$task_file") {
+		    unless (unlink $task_file) {
 			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 			next;
 		    }
 		    next;
 		}
-
-		## Skip if parameter is not defined
-		if ( $task->{'model'} eq 'sync_include') {
-		    unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-			    $list->has_include_data_sources() &&
-			    ($list->{'admin'}{'status'} eq 'open')) {
-			&do_log('notice','Removing task file %s', $task_file);
-			unless (unlink "$spool_task/$task_file") {
-			    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-			    next;
-			}
+	    }else {
+		unless (defined $list->{'admin'}{$task->{'model'}} && 
+			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
+		    &do_log('notice','Removing task file %s', $task_file);
+		    unless (unlink $task_file) {
+			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 			next;
 		    }
-		}else {
-		    unless (defined $list->{'admin'}{$task->{'model'}} && 
-			    defined $list->{'admin'}{$task->{'model'}}{'name'}) {
-			&do_log('notice','Removing task file %s', $task_file);
-			unless (unlink "$spool_task/$task_file") {
-			    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-			    next;
-			}
-			next;
-		    }		
-		}
+		    next;
+		}		
 	    }
-	    execute ("$spool_task/$_");
 	}
+	execute ($task);
     }
 
     sleep 60;
@@ -701,7 +695,9 @@ sub chk_cmd {
 
 sub execute {
 
-    my $task_file = $_[0]; # task to execute
+    my $task = shift;
+    my $task_file = $task->{'filepath'}; # task to execute
+
     my %result; # stores the result of the chk_line subroutine
     my %vars; # list of task vars
     my $lnb = 0; # line number
@@ -713,13 +709,7 @@ sub execute {
 	return undef;
     }
 
-    # get the task name, without the path
-    my @path = split /\//, $task_file;
-    my $task_name = $path[$#path];
-
-    # positioning at the right label
-    $task_name =~ /\w*\.(\w*)\..*/;
-    my $label = $1;
+    my $label = $task->{'label'};
     return undef if ($label eq 'ERROR');
 
     &do_log ('debug2', "* execution of the task $task_file");
@@ -746,13 +736,13 @@ sub execute {
 	
 	# processing of the assignments
 	if ($result{'nature'} eq 'assignment') {
-	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task, \%vars, $lnb);
 	    last unless defined($status);
 	}
 	
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
-	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task, \%vars, $lnb);
 	    last unless defined($status);
 	}
     } 
@@ -776,52 +766,42 @@ sub cmd_process {
 
     my $command = $_[0]; # command name
     my $Rarguments = $_[1]; # command arguments
-    my $task_file = $_[2]; # task
+    my $task = $_[2]; # task
     my $Rvars = $_[3]; # variable list of the task
     my $lnb = $_[4]; # line number
+
+    my $task_file = $task->{'filepath'};
 
     &do_log('debug2', 'cmd_process(%s, %s, %d)', $command, $task_file, $lnb);
 
      # building of %context
-    my %context; # datas necessary to command processing
-    $context{'task_file'} = $task_file; # long task file name
+    my %context = ('line_number' => $lnb);
 
-    my $task;
-    if ($task = &match_task($task_file)) {
-	&do_log('debug2','Current task : %s', join(':',%$task));
-	$context{'task_name'} = $task->{'model'}; # task file name
-	$context{'execution_date'} = $task->{'date'}; # task execution date
-	$context{'object_name'} = $task->{'list'}; # object of the task
-	$context{'object_name'} .= '@'.$task->{'domain'} if $task->{'domain'};
-	$context{'line_number'} = $lnb;
-    }else {
-	&do_log('err','Incorrect taskfile %s', $task_file);
-	return undef;
-    }
+    &do_log('debug2','Current task : %s', join(':',%$task));
 
      # regular commands
-    return stop (\%context) if ($command eq 'stop');
-    return next_cmd ($Rarguments, \%context) if ($command eq 'next');
-    return create_cmd ($Rarguments, \%context) if ($command eq 'create');
-    return exec_cmd ($Rarguments) if ($command eq 'exec');
-    return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
-    return expire_bounce ($Rarguments, \%context) if ($command eq 'expire_bounce');
-    return purge_user_table (\%context) if ($command eq 'purge_user_table');
-    return sync_include(\%context) if ($command eq 'sync_include');
-    return purge_orphan_bounces (\%context) if ($command eq 'purge_orphan_bounces');
-    return eval_bouncers (\%context) if ($command eq 'eval_bouncers');
-    return process_bouncers (\%context) if ($command eq 'process_bouncers');
+    return stop ($task, \%context) if ($command eq 'stop');
+    return next_cmd ($task, $Rarguments, \%context) if ($command eq 'next');
+    return create_cmd ($task, $Rarguments, \%context) if ($command eq 'create');
+    return exec_cmd ($task, $Rarguments) if ($command eq 'exec');
+    return update_crl ($task, $Rarguments, \%context) if ($command eq 'update_crl');
+    return expire_bounce ($task, $Rarguments, \%context) if ($command eq 'expire_bounce');
+    return purge_user_table ($task, \%context) if ($command eq 'purge_user_table');
+    return sync_include($task, \%context) if ($command eq 'sync_include');
+    return purge_orphan_bounces ($task, \%context) if ($command eq 'purge_orphan_bounces');
+    return eval_bouncers ($task, \%context) if ($command eq 'eval_bouncers');
+    return process_bouncers ($task, \%context) if ($command eq 'process_bouncers');
 
      # commands which use a variable
-    return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
-    return rm_file ($Rarguments, $Rvars, \%context) if ($command eq 'rm_file');
+    return send_msg ($task, $Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
+    return rm_file ($task, $Rarguments, $Rvars, \%context) if ($command eq 'rm_file');
 
      # commands which return a variable
-    return select_subs ($Rarguments, \%context) if ($command eq 'select_subs');
-    return chk_cert_expiration ($Rarguments, \%context) if ($command eq 'chk_cert_expiration');
+    return select_subs ($task, $Rarguments, \%context) if ($command eq 'select_subs');
+    return chk_cert_expiration ($task, $Rarguments, \%context) if ($command eq 'chk_cert_expiration');
 
      # commands which return and use a variable
-    return delete_subs_cmd ($Rarguments, $Rvars, \%context) if ($command eq 'delete_subs');  
+    return delete_subs_cmd ($task, $Rarguments, $Rvars, \%context) if ($command eq 'delete_subs');  
 }
 
 
@@ -830,9 +810,7 @@ sub cmd_process {
  # remove files whose name is given in the key 'file' of the hash
 sub rm_file {
     
-    my $Rarguments = $_[0];
-    my $Rvars = $_[1];
-    my $context = $_[2];
+    my ($task, $Rarguments,$Rvars, $context) = @_;
     
     my @tab = @{$Rarguments};
     my $var = $tab[0];
@@ -841,7 +819,7 @@ sub rm_file {
 	my $file = $Rvars->{$var}{$key}{'file'};
 	next unless ($file);
 	unless (unlink ($file)) {
-	    error ("$context->{'task_file'}", "error in rm_file command : unable to remove $file");
+	    error ($task->{'filepath'}, "error in rm_file command : unable to remove $file");
 	    return undef;
 	}
     }
@@ -850,9 +828,9 @@ sub rm_file {
 }
 
 sub stop {
-
-    my $context = $_[0];
-    my $task_file = $context->{'task_file'};
+    
+    my ($task, $context) = @_;
+    my $task_file = $spool_task.'/'.$task->{'file'};
 
     &do_log ('notice', "$context->{'line_number'} : stop $task_file");
     
@@ -865,9 +843,7 @@ sub stop {
 
 sub send_msg {
         
-    my $Rarguments = $_[0];
-    my $Rvars = $_[1];
-    my $context = $_[2];
+    my ($task, $Rarguments, $Rvars, $context) = @_;
     
     my @tab = @{$Rarguments};
     my $template = $tab[1];
@@ -876,7 +852,7 @@ sub send_msg {
     &do_log ('notice', "line $context->{'line_number'} : send_msg (@{$Rarguments})");
 
 
-    if ($context->{'object_name'} eq '_global') {
+    if ($task->{'object'} eq '_global') {
 
 	foreach my $email (keys %{$Rvars->{$var}}) {
 	    &do_log ('notice', "--> message sent to $email");
@@ -887,8 +863,7 @@ sub send_msg {
  	    }
 	}
     } else {
-	my $list = new List ($context->{'object_name'});
-        &do_log('err',"Unknown list '$context->{'object_name'}', unable to send message '$template'") unless($list);
+	my $list = $task->{'list_object'};
 	
 	foreach my $email (keys %{$Rvars->{$var}}) {
 	    &do_log ('notice', "--> message sent to $email");
@@ -903,22 +878,22 @@ sub send_msg {
 }
 
 sub next_cmd {
-    
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+        
+    my ($task, $Rarguments, $context) = @_;
     
     my @tab = @{$Rarguments};
-    my $date = &tools::epoch_conv ($tab[0], $context->{'execution_date'}); # conversion of the date argument into epoch format
+    my $date = &tools::epoch_conv ($tab[0], $task->{'date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
 
-    &do_log ('notice', "line $context->{'line_number'} of $context->{'task_name'} : next ($date, $label)");
+    &do_log ('notice', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
-    my $listname = $context->{'object_name'};
-    my $model = $context->{'task_name'};
+    my $listname = $task->{'object'};
+    my $model = $task->{'model'};
+    my $filename = $task->{'filepath'};
 
     ## Determine type
     my ($type, $model_choice);
-    my %data = ('creation_date'  => $context->{'execution_date'},
+    my %data = ('creation_date'  => $task->{'date'},
 		'execution_date' => 'execution_date');
     if ($listname eq '_global') {
 	$type = '_global';
@@ -930,12 +905,13 @@ sub next_cmd {
 	}
     }else {
 	$type = 'list';
-	my $list = new List($listname);
+	my $list = $task->{'list_object'};
 	$data{'list'}{'name'} = $list->{'name'};
+	$data{'list'}{'robot'} = $list->{'domain'};
 	
 	if ( $model eq 'sync_include') {
 	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
-		error ($context->{'task_file'}, "List $list->{'name'} no more require sync_include task");
+		error ($filename, "List $list->{'name'} no more require sync_include task");
 		return undef;
 	    }
 
@@ -943,7 +919,7 @@ sub next_cmd {
 	    $model_choice = 'ttl';
 	}else {
 	    unless (defined $list->{'admin'}{"$model\_task"}) {
-		error ($context->{'task_file'}, "List $list->{'name'} no more require $model task");
+		error ($filename, "List $list->{'name'} no more require $model task");
 		return undef;
 	    }
 
@@ -952,19 +928,19 @@ sub next_cmd {
     }
 
     unless (create ($date, $tab[1], $model, $model_choice, \%data)) {
-	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
+	error ($filename, "error in create command : creation subroutine failure");
 	return undef;
     }
 
 #    my $new_task = "$date.$label.$name[2].$name[3]";
     my $human_date = &tools::adate ($date);
 #    my $new_task_file = "$spool_task/$new_task";
-#    unless (rename ($context->{'task_file'}, $new_task_file)) {
-#	error ("$context->{'task_file'}", "error in next command : unable to rename task file into $new_task");
+#    unless (rename ($filename, $new_task_file)) {
+#	error ($filename, "error in next command : unable to rename task file into $new_task");
 #	return undef;
 #    }
-    unless (unlink ($context->{'task_file'})) {
-	error ("$context->{'task_file'}", "error in next command : unable to remove task file $context->{'task_file'}");
+    unless (unlink ($filename)) {
+	error ($filename, "error in next command : unable to remove task file $filename");
 	return undef;
     }
 
@@ -975,8 +951,7 @@ sub next_cmd {
 
 sub select_subs {
 
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+    my ($task, $Rarguments, $context) = @_;
 
     my @tab = @{$Rarguments};
     my $condition = $tab[0];
@@ -984,13 +959,13 @@ sub select_subs {
     &do_log ('debug2', "line $context->{'line_number'} : select_subs ($condition)");
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) { # conversion of the date argument into epoch format
-	my $date = &tools::epoch_conv ($2, $context->{'execution_date'});
+	my $date = &tools::epoch_conv ($2, $task->{'date'});
         $condition = "$1($date)";
     }  
  
     my @users; # the subscribers of the list      
     my %selection; # hash of subscribers who match the condition
-    my $list = new List ($context->{'object_name'});
+    my $list = $task->{'list_object'};
     
     if ( $list->{'admin'}{'user_data_source'} =~ /database|file|include2/) {
         for ( my $user = $list->get_first_user(); $user; $user = $list->get_next_user() ) { 
@@ -1002,7 +977,7 @@ sub select_subs {
     my $verify_context = {'sender' => 'nobody',
 			  'email' => 'nobody',
 			  'remote_host' => 'unknown_host',
-			  'listname' => $context->{'object_name'}};
+			  'listname' => $task->{'object'}};
     
     my $new_condition = $condition; # necessary to the older & newer condition rewriting
     # loop on the subscribers of $list_name
@@ -1023,9 +998,7 @@ sub select_subs {
 
 sub delete_subs_cmd {
 
-    my $Rarguments = $_[0];
-    my $Rvars = $_[1];
-    my $context = $_[2];
+    my ($task, $Rarguments, $Rvars,  $context) = @_;
 
     my @tab = @{$Rarguments};
     my $var = $tab[0];
@@ -1033,7 +1006,7 @@ sub delete_subs_cmd {
     &do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
 
     
-    my $list = new List ($context->{'object_name'});
+    my $list = $task->{'list_object'};
     my %selection; # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$Rvars->{$var}}) {
@@ -1046,7 +1019,7 @@ sub delete_subs_cmd {
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	if ($action =~ /reject/i) {
-	    error ("$context->{'task_file'}", "error in delete_subs command : deletion of $email not allowed");
+	    error ($task->{'filepath'}, "error in delete_subs command : deletion of $email not allowed");
 	} else {
 	    my $u = $list->delete_user ($email) if (!$log);
 	    $list->save() if (!$log);;
@@ -1060,8 +1033,7 @@ sub delete_subs_cmd {
 
 sub create_cmd {
 
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+    my ($task, $Rarguments, $context) = @_;
 
     my @tab = @{$Rarguments};
     my $arg = $tab[0];
@@ -1077,12 +1049,12 @@ sub create_cmd {
 	$type = $1;
 	$object = $3;
     } else {
-	error ($context->{'task_file'}, "error in create command : don't know how to create $arg");
+	error ($task->{'filepath'}, "error in create command : don't know how to create $arg");
 	return undef;
     }
 
     # building of the data hash necessary to the create subroutine
-    my %data = ('creation_date'  => $context->{'execution_date'},
+    my %data = ('creation_date'  => $task->{'date'},
 		'execution_date' => 'execution_date');
 
     if ($type eq 'list') {
@@ -1091,8 +1063,8 @@ sub create_cmd {
     }
     $type = '_global';
     #printf "xxxxxxxxxxxxx appel 3\n";
-    unless (create ($context->{'execution_date'}, '', $model, $model_choice, \%data)) {
-	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
+    unless (create ($task->{'date'}, '', $model, $model_choice, \%data)) {
+	error ($task->{'filepath'}, "error in create command : creation subroutine failure");
 	return undef;
     }
     
@@ -1101,8 +1073,7 @@ sub create_cmd {
 
 sub exec_cmd {
 
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+    my ($task, $Rarguments, $context) = @_;
 
     my @tab = @{$Rarguments};
     my $file = $tab[0];
@@ -1114,8 +1085,7 @@ sub exec_cmd {
 }
 
 sub purge_user_table {
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+    my ($task, $Rarguments, $context) = @_;
     do_log('debug2','purge_user_table()');
 
     ## Load user_table entries
@@ -1176,8 +1146,9 @@ sub purge_user_table {
     return $#purged_users + 1;
 }
 
-sub purge_orphan_bounces {
 ## Subroutine which remove bounced message of no-more known users
+sub purge_orphan_bounces {
+    my($task, $context) = @_;
     
     do_log('info','purge_orphan_bounces()');
 
@@ -1230,10 +1201,9 @@ sub purge_orphan_bounces {
  sub expire_bounce {
      # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
      # Is this variable my be set in to task modele ?
-     my $Rarguments = $_[0];
-     my $context = $_[1];
+     my ($task, $Rarguments, $context) = @_;
 
-     my $execution_date = $context->{'execution_date'};
+     my $execution_date = $task->{'date'};
      my @tab = @{$Rarguments};
      my $delay = $tab[0];
 
@@ -1290,10 +1260,9 @@ sub purge_orphan_bounces {
 
  sub chk_cert_expiration {
 
-     my $Rarguments = $_[0];
-     my $context = $_[1];
+     my ($task, $Rarguments, $context) = @_;
 
-     my $execution_date = $context->{'execution_date'};
+     my $execution_date = $task->{'date'};
      my @tab = @{$Rarguments};
      my $template = $tab[0];
      my $limit = &tools::duration_conv ($tab[1], $execution_date);
@@ -1302,7 +1271,7 @@ sub purge_orphan_bounces {
 
      ## building of certificate list
      unless (opendir(DIR, $cert_dir)) {
-	 error ($context->{'task_file'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
+	 error ($task->{'filepath'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
 	 return undef;
      }
      my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
@@ -1394,18 +1363,17 @@ sub purge_orphan_bounces {
  ## attention, j'ai n'ai pas pu comprendre les retours d'erreurs des commandes wget donc pas de verif sur le bon fonctionnement de cette commande
  sub update_crl {
 
-     my $Rarguments = $_[0];
-     my $context = $_[1];
+     my ($task, $Rarguments, $context) = @_;
 
      my @tab = @{$Rarguments};
-     my $limit = &tools::epoch_conv ($tab[1], $context->{'execution_date'});
+     my $limit = &tools::epoch_conv ($tab[1], $task->{'date'});
      my $CA_file = "$Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
      &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
 
      # building of CA list
      my @CA;
      unless (open (FILE, $CA_file)) {
-	 error ($context->{'task_file'}, "error in update_crl command : can't open $CA_file file");
+	 error ($task->{'filepath'}, "error in update_crl command : can't open $CA_file file");
 	 return undef;
      }
      while (<FILE>) {
@@ -1454,7 +1422,7 @@ sub purge_orphan_bounces {
 	 my $rep = &tools::adate ($expiration_date);
 
 	 ## check if the crl is soon expired or expired
-	 #my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
+	 #my $file_date = $task->{'date'} - (-M $file) * 24 * 60 * 60; # last modification date
 	 my $condition = "newer($limit, $expiration_date)";
 	 my $verify_context;
 	 $verify_context->{'sender'} = 'nobody';
@@ -1475,6 +1443,7 @@ sub purge_orphan_bounces {
  # give a score for each bouncing user
  sub eval_bouncers {
  #################       
+     my ($task, $context) = @_;
 
      my $all_lists = &List::get_lists('*');
      foreach my $list (@$all_lists) {
@@ -1519,7 +1488,7 @@ sub none {
 ##
 sub process_bouncers {
 ###################
-
+    my ($task,$context) = @_;
     &do_log('info','Processing automatic actions on bouncing users'); 
 
 ###########################################################################
@@ -1730,15 +1699,11 @@ sub error {
 }
 
 sub sync_include {
-    my $context = $_[0];
+    my ($task, $context) = @_;
 
-    &do_log('debug2', 'sync_include(%s)', $context->{'object_name'});
+    &do_log('debug2', 'sync_include(%s)', $task->{'id'});
 
-    my $list = new List($context->{'object_name'});
-    unless (defined $list) {
-	error ($context->{'task_file'}, "Unknown list $context->{'object_name'}");
-	return undef;
-    }
+    my $list = $task->{'list_object'};
 
     unless ( $list->{'admin'}{'user_data_source'} eq 'include2' ) {
 	&do_log('notice', 'sync_include() called for %s but user_data_source is %s', 
@@ -1755,35 +1720,4 @@ sub sync_include {
     $list->sync_include();
     $list->sync_include_admin();
     }
-
-## Check if the provided filename matches a task
-## Returns an array of its parts
-sub match_task {
-    my $filepath = shift;
-    
-    ## Extract filename from path
-    my @path = split /\//, $filepath;
-    my $filename = $path[$#path]; 
-
-    ## File including the list domain
-    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)\@($tools::regexp{'host'})$/) {
-	my $task = {'date' => $1,
-		    'label' => $2,
-		    'model' => $3,
-		    'list' => $4,
-		    'domain' => $5
-		    };
-	return $task;
-	
-    }elsif ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
-	my $task = {'date' => $1,
-		    'label' => $2,
-		    'model' => $3,
-		    'list' => $4
-		};
-	return $task;
-    }
-    
-    return undef;
-}
 
