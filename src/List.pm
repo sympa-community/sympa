@@ -10559,7 +10559,7 @@ sub maintenance {
 		}
 	    }		     
 	}
-	
+	close ARCDIR;
 	
     }
 
@@ -10631,7 +10631,45 @@ sub maintenance {
 	}
     }
 
-   
+    ## Rename bounce sub-directories
+    if (&tools::lower_version($previous_version, '5.2a.1')) {
+
+	&do_log('notice','Renaming bounce sub-directories adding list domain...');
+	
+	my $root_dir = &Conf::get_robot_conf($Conf{'host'},'bounce_path');
+	unless (opendir BOUNCEDIR, $root_dir) {
+	    do_log('err',"Unable to open $root_dir : $!");
+	    return undef;
+	}
+	
+	foreach my $dir (sort readdir(BOUNCEDIR)) {
+	    next if (($dir =~ /^\./o) || (! -d $root_dir.'/'.$dir)); ## Skip files and entries starting with '.'
+		     
+	    next if ($dir =~ /\@/); ## Directory already include the list domain
+
+	    my $listname = $dir;
+	    my $list = new List $listname;
+	    unless (defined $list) {
+		do_log('notice',"Skipping unknown list $listname");
+		next;
+	    }
+	    
+	    my $old_path = $root_dir.'/'.$listname;		
+	    my $new_path = $root_dir.'/'.$listname.'@'.$list->{'domain'};
+	    
+	    if (-d $new_path) {
+		do_log('err',"Could not rename %s to %s ; directory already exists", $old_path, $new_path);
+		next;
+	    }else {
+		unless (rename $old_path, $new_path) {
+		    do_log('err',"Failed to rename %s to %s : %s", $old_path, $new_path, $!);
+		    next;
+		}
+		&do_log('notice', "Renamed %s to %s", $old_path, $new_path);
+	    }
+	}
+	close BOUNCEDIR;
+    }
 
     ## Saving current version if required
     unless (open VFILE, ">$version_file") {
