@@ -4080,7 +4080,7 @@ sub do_copy_template  {
     $in{'scope'} = $in{'scopeout'};
     $in{'template_path'} = $pathout;
 
-    return (edit_template);    
+    return ('edit_template');    
 }
 
 ## online template edition
@@ -4474,10 +4474,12 @@ sub do_skinsedit {
 	 }else {
 	     push @removed_users, $email;
 	 }
+	 
+	 my $bounce_dir = $list->get_bounce_dir();
 
-	 if (-f "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
-	     unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
-		 &wwslog('info','do_resetbounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email");
+	 if (-f $bounce_dir.'/'.$escaped_email) {
+	     unless (unlink $bounce_dir.'/'.$escaped_email) {
+		 &wwslog('info','do_resetbounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
 		 next;
 	     }
 	 }
@@ -6640,7 +6642,7 @@ sub do_set_pending_list_request {
 
      my $escaped_email = &tools::escape_chars($in{'email'});
 
-     $param->{'lastbounce_path'} = "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email";
+     $param->{'lastbounce_path'} = $list->get_bounce_dir().'/'.$escaped_email;
 
      unless (-r $param->{'lastbounce_path'}) {
 	 &report::reject_report_web('user','no_bounce_user',{'email'=>$in{'email'}},$param->{'action'},$list);
@@ -6858,8 +6860,10 @@ sub do_set_pending_list_request {
 	     return undef;
 	 }
 
-	 unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
-	     &wwslog('info','do_resetbounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email");
+	 my $bounce_dir = $list->get_bounce_dir();
+
+	 unless (unlink $bounce_dir.'/'.$escaped_email) {
+	     &wwslog('info','do_resetbounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
 	 }
 
 	 &wwslog('info','do_resetbounce: bounces for %s reset ', $email);
@@ -8168,14 +8172,16 @@ sub _restrict_values {
 	 }
      }
      ## Rename bounces
-     if (-d "$wwsconf->{'bounce_path'}/$list->{'name'}" &&
+     my $bounce_dir = $list->get_bounce_dir();
+     my $new_bounce_dir = &Conf::get_robot_conf($in{'new_robot'}, 'bounce_path').'/'.$in{'new_listname'}.'@'.$in{'new_robot'};
+     if (-d $bounce_dir &&
 	 ($list->{'name'} ne $in{'new_listname'})
 	 ) {
-	 unless (rename ("$wwsconf->{'bounce_path'}/$list->{'name'}","$wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
-	     &report::reject_report_web('intern','unable_rename_bounces',{'old'=> "$wwsconf->{'bounce_path'}/$list->{'name'}",
-									  'new'=>"$wwsconf->{'bounce_path'}/$in{'new_listname'}"},
+	 unless (rename ($bounce_dir,$new_bounce_dir)) {
+	     &report::reject_report_web('intern','unable_rename_bounces',{'old'=> $bounce_dir,
+									  'new'=>$new_bounce_dir},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('info',"do_rename_list unable to rename bounces from $wwsconf->{'bounce_path'}/$list->{'name'} to $wwsconf->{'bounce_path'}/$in{'new_listname'}");
+	     &wwslog('info',"do_rename_list unable to rename bounces from $bounce_dir to $new_bounce_dir");
 	 }
      }
 

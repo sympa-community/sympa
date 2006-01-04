@@ -1450,7 +1450,7 @@ sub DoMessage{
 
 	}else{   
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	    unless (&tools::move_message($message->{'filename'},$listname,$robot)) {
+	    unless ($list->move_message($message->{'filename'})) {
 		&do_log('err','sympa::DoMessage(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
 		return undef;

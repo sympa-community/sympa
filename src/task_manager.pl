@@ -1172,14 +1172,16 @@ sub purge_orphan_bounces {
 	     $bounced_users{$listname}{$user_id} = 1;
 	 }
 
-	 unless (-d $wwsconf->{'bounce_path'}.'/'.$listname) {
+	my $bounce_dir = $list->get_bounce_dir();
+
+	 unless (-d $bounce_dir) {
 	     &do_log('notice', 'No bouncing subscribers in list %s', $listname);
 	     next;
 	 }
 
 	 ## then reading Bounce directory & compare with %bounced_users
-	 unless (opendir(BOUNCE,$wwsconf->{'bounce_path'}.'/'.$listname)) {
-	     &do_log('err','Error while opening bounce directory %s for list %s',$wwsconf->{'bounce_path'},$listname);
+	 unless (opendir(BOUNCE,$bounce_dir)) {
+	     &do_log('err','Error while opening bounce directory %s',$bounce_dir);
 	     return undef;
 	 }
 
@@ -1188,8 +1190,8 @@ sub purge_orphan_bounces {
 	     if ($bounce =~ /\@/){
 		 unless (defined($bounced_users{$listname}{$bounce})) {
 		     &do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
-		     unless (unlink($wwsconf->{'bounce_path'}.'/'.$listname.'/'.$bounce)) {
-			 &do_log('err','Error while removing file %s',$bounce);
+		     unless (unlink($bounce_dir.'/'.$bounce)) {
+			 &do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
 		     }
 		 }
 	     }	    
@@ -1242,9 +1244,12 @@ sub purge_orphan_bounces {
 		     next;
 		 }
 		 my $escaped_email = &tools::escape_chars($email);
-		 unless (unlink "$wwsconf->{'bounce_path'}/$listname/$escaped_email") {
-		     do_log('info','expire_bounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$listname/$escaped_email");
-		    next;
+
+		 my $bounce_dir = $list->get_bounce_dir();
+
+		 unless (unlink $bounce_dir.'/'.$escaped_email) {
+		     &do_log('info','expire_bounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
+		     next;
 		 }
 		 do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
 			$email,$listname,

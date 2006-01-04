@@ -290,7 +290,7 @@ sub modify_list {
 
     #getting list
     my $list;
-    unless ($list = new List($hash_list->{'config'}{'listname'},$self->{'robot'})) {
+    unless ($list = new List($hash_list->{'config'}{'listname'}, $self->{'robot'})) {
 	$return->{'string_error'} = "\nThe list $hash_list->{'config'}{'listname'} does not exist.\n";
 	return $return;
     }
@@ -581,18 +581,18 @@ sub instantiate {
 
 	    my $result = &admin::create_list($hash_list->{'config'},$self,$self->{'robot'});
 	    unless (defined $result) {
-		push (@{$self->{'errors'}{'create_list'}},$hash_list->{'config'}{'listname'});
+		push (@{$self->{'errors'}{'create_list'}}, $hash_list->{'config'}{'listname'});
 		next;
 	    }
 	    unless (defined $result->{'list'}) {
-		push (@{$self->{'errors'}{'create_list'}},$hash_list->{'config'}{'listname'});
+		push (@{$self->{'errors'}{'create_list'}}, $hash_list->{'config'}{'listname'});
 		next;
 	    }
 	    $list = $result->{'list'};
 	    
 	    ## aliases
 	    if ($result->{'aliases'} == 1) {
-		push (@{$self->{'created_lists'}{'with_aliases'}},$list->{'name'});
+		push (@{$self->{'created_lists'}{'with_aliases'}}, $list->{'name'});
 		
 	    }else {
 		$self->{'created_lists'}{'without_aliases'}{$list->{'name'}} = $result->{'aliases'};

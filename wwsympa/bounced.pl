@@ -255,7 +255,7 @@ while (!$end) {
 	}
 
 	## ELSE
-	my $list = new List ($listname);
+	my $list = new List ($listname, $robot);
 	if ($list) {
 
 	    do_log('debug',"Processing bouncefile $file for list $listname");      
@@ -267,7 +267,7 @@ while (!$end) {
 	    }
 
 	    my (%hash, $from);
-	    my $bounce_dir = "$wwsconf->{'bounce_path'}/$list->{'name'}";
+	    my $bounce_dir = $list->get_bounce_dir();
 
 	    ## RFC1891 compliance check
 	    my $bounce_count = &rfc1891(\*BOUNCE, \%hash, \$from);

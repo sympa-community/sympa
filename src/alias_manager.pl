@@ -54,7 +54,7 @@ my ($operation, $listname, $domain, $file) = @ARGV;
 
 
 if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
-    printf STDERR "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
+    printf STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
     exit(2);
 }
 

@@ -781,13 +781,14 @@ sub which {
 
     
     foreach my$role ('member','owner','editor') {
-	foreach my $name( &List::get_which($sender,$robot,$role) ){         
-	    $listnames{$name}=1;
+	foreach my $list( &List::get_which($sender,$robot,$role) ){         
+	    my $name = $list->{'name'};
+	    $listnames{$name} = $list;
 	}
     }
     
-    foreach my $listname (keys %listnames) {
-	my $listname = $list->{'name'};
+    foreach my $name (keys %listnames) {
+	my $list = $listnames{$name};
 
 	my $list_address;
 	my $result_item;
@@ -798,10 +799,10 @@ sub which {
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action =~ /do_it/i);
 
-	$result_item->{'listAddress'} = $listname.'@'.$list->{'admin'}{'host'};
+	$result_item->{'listAddress'} = $name.'@'.$list->{'admin'}{'host'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
-	$result_item->{'homepage'} = &Conf::get_robot_conf($robot,'wwsympa_url').'/info/'.$listname;
+	$result_item->{'homepage'} = &Conf::get_robot_conf($robot,'wwsympa_url').'/info/'.$name;
 	 
 	## determine status of user 
 	$result_item->{'isOwner'} = 0;

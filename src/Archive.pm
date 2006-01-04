@@ -33,15 +33,15 @@ my $serial_number = 0; # incremented on each archived mail
 ## copie a message in $dir using a unique file name based on liSTNAME
 
 sub outgoing {
-    my($dir,$listname,$msg) = @_;
+    my($dir,$list_id,$msg) = @_;
     
-    do_log ('debug2',"outgoing for list $listname to directory $dir");
+    do_log ('debug2',"outgoing for list $list_id to directory $dir");
     
     return 1 if ($dir eq '/dev/null');
 
     ## ignoring message with a no-archive flag
     if (ref($msg) && (($msg->head->get('X-no-archive') =~ /yes/i) || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))) {
-	do_log('info',"Do not archive message with no-archive flag for list $listname");
+	do_log('info',"Do not archive message with no-archive flag for list $list_id");
 	return 1;
     }
 
@@ -56,11 +56,11 @@ sub outgoing {
     
     my @now  = localtime(time);
 #    my $prefix= sprintf("%04d-%02d-%02d-%02d-%02d-%02d",1900+$now[5],$now[4]+1,$now[3],$now[2],$now[1],$now[0]);
-#    my $filename = "$dir"."/"."$prefix-$listname";
-    my $filename = sprintf '%s/%s.%d.%d.%d', $dir, $listname, time, $$, $serial_number;
+#    my $filename = "$dir"."/"."$prefix-$list_id";
+    my $filename = sprintf '%s/%s.%d.%d.%d', $dir, $list_id, time, $$, $serial_number;
     $serial_number = ($serial_number+1)%100000;
     unless ( open(OUT, "> $filename")) {
-	do_log('info',"error unable open outgoing dir $dir for list $listname");
+	do_log('info',"error unable open outgoing dir $dir for list $list_id");
 	return undef;
     }
     do_log('debug',"put message in $filename");

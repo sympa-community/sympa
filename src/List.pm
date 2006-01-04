@@ -2720,7 +2720,7 @@ sub send_msg_digest {
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
     my $filename;
-    ## Reverse compatibility concern
+    ## Backward compatibility concern
     if (-f "$Conf{'queuedigest'}/$listname") {
  	$filename = "$Conf{'queuedigest'}/$listname";
     }else {
@@ -3816,11 +3816,10 @@ sub compute_auth {
 
 ## Add footer/header to a message
 sub add_parts {
-    my ($self, $msg, $listname, $type) = @_;
-    do_log('debug2', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
-
+    my ($self, $msg) = @_;
     my ($listname,$type) = ($self->{'name'}, $self->{'admin'}{'footer_type'});
     my $listdir = $self->{'dir'};
+    do_log('debug2', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
 
     my ($header, $headermime);
     foreach my $file ("$listdir/message.header", 
@@ -12555,6 +12554,55 @@ sub has_include_data_sources {
     }
     
     return 0
+}
+
+# move a message to distribute spool
+sub move_message {
+    my ($self, $file) = @_;
+    &do_log('debug2', "tools::move_mesage($file, $self->{'name'})");
+
+    my $dir = $Conf{'queuedistribute'};    
+    my $filename = $self->{'name'}.'@'.$self->{'domain'}.time.'.'.int(rand(999));
+
+    unless (open OUT, ">$dir/T.$filename") {
+	&do_log('err', 'Cannot create file %s', "$dir/T.$filename");
+	return undef;
+    }
+    
+    unless (open IN, $file) {
+	&do_log('err', 'Cannot open file %s', $file);
+	return undef;
+    }
+    
+    print OUT <IN>; close IN; close OUT;
+    unless (rename "$dir/T.$filename", "$dir/$filename") {
+	&do_log('err', 'Cannot rename file %s into %s',"$dir/T.$filename","$dir/$filename" );
+	return undef;
+    }
+    return 1;
+}
+
+## Return the path to the list bounce directory, where bounces are stored
+sub get_bounce_dir {
+    my $self = shift;
+
+    my $root_dir = &Conf::get_robot_conf($self->{'domain'}, 'bounce_path');
+    
+    return $root_dir.'/'.$self->{'name'}.'@'.$self->{'domain'};
+}
+
+## Return the list email address
+sub get_list_address {
+    my $self = shift;
+
+    return $self->{'name'}.'@'.$self->{'admin'}{'host'};
+}
+
+## Return the list ID, different from the list address (uses the robot name)
+sub get_list_id {
+    my $self = shift;
+
+    return $self->{'name'}.'@'.$self->{'domain'};
 }
 
 #################################################################

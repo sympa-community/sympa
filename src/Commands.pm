@@ -2045,7 +2045,7 @@ sub distribute {
 	
     }else{   
 	# this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	unless (&tools::move_message($file,$name,$robot)) {
+	unless ($list->move_message($file)) {
 	    &do_log('err','COmmands::distribute(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
 	    return undef;
@@ -2218,7 +2218,7 @@ sub confirm {
 
 	}else{
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	    unless (&tools::move_message($file,$name,$robot)){
+	    unless ($list->move_message($file)){
 		&do_log('err','Commands::confirm(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
 		return undef;
