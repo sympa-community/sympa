@@ -6922,8 +6922,8 @@ parameter. The default value is 3600.
 \lparam {include\_list} \texttt {listname}
 
 This parameter will be interpreted only if 
-\lparam {user\_data\_source} is set to \texttt {include}.
-All subscribers of list \texttt {listname} become subscribers 
+\lparam {user\_data\_source} is set to \texttt {include} or \texttt {include2}.
+All subscribers of list \texttt {listname} become members 
 of the current list. You may include as many lists as required, using one
 \lparam {include\_list} \texttt {listname} line for each included
 list. Any list at all may be included ; the \lparam {user\_data\_source} definition
@@ -6932,6 +6932,10 @@ include lists which are also defined by the inclusion of other lists.
 Be careful, however, not to include list \texttt {A} in list \texttt {B} and
 then list \texttt {B} in list \texttt {A}, since this will give rise an 
 infinite loop.
+
+\example {include\_list  local-list}
+
+\example {include\_list  other-local-list@other-local-robot}
 
 \subsection {include\_remote\_sympa\_list}
 

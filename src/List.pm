@@ -791,7 +791,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'gettext_id' => "LDAP 2-level query inclusion",
 				     'group' => 'data_source'
 				     },
-	    'include_list' => {'format' => $tools::regexp{'listname'},
+	    'include_list' => {'format' => "$tools::regexp{'listname'}(\@$tools::regexp{'host'})?",
 			       'occurrence' => '0-n',
 			       'gettext_id' => "List inclusion",
 			       'group' => 'data_source'
@@ -6798,7 +6798,13 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	$list2 = new List ($args[0], $robot);
+	## The list is local or in another local robot
+	if ($args[0] =~ /\@/) {
+	    $list2 = new List ($args[0]);
+	}else {
+	    $list2 = new List ($args[0], $robot);
+	}
+		
 	if (! $list2) {
 	    do_log('err',"unable to create list object \"$args[0]\"");
 	    return -1 * $negation ;
@@ -7751,7 +7757,15 @@ sub _include_users_list {
 
     my $total = 0;
     
-    my $includelist = new List ($includelistname, $robot);
+    my $includelist;
+    
+    ## The included list is local or in another local robot
+    if ($includelistname =~ /\@/) {
+	$includelist = new List ($includelistname);
+    }else {
+	$includelist = new List ($includelistname, $robot);
+    }
+
     unless ($includelist) {
 	do_log('info', 'Included list %s unknown' , $includelistname);
 	return undef;
@@ -10668,6 +10682,33 @@ sub maintenance {
 	    }
 	}
 	close BOUNCEDIR;
+    }
+
+    ## Update lists config using 'include_list'
+    if (&tools::lower_version($previous_version, '5.2a.1')) {
+	
+	&do_log('notice','Update lists config using include_list parameter...');
+
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
+
+	    if (defined $list->{'admin'}{'include_list'}) {
+	    
+		foreach my $index (0..$#{$list->{'admin'}{'include_list'}}) {
+		    my $incl = $list->{'admin'}{'include_list'}[$index];
+		    my $incl_list = new List ($incl);
+		    
+		    if (defined $incl_list &&
+			$incl_list->{'domain'} ne $list->{'domain'}) {
+			&do_log('notice','Update config file of list %s, including list %s', $list->get_list_id(), $incl_list->get_list_id());
+			
+			$list->{'admin'}{'include_list'}[$index] = $incl_list->get_list_id();
+
+			$list->save_config('listmaster@'.$list->{'domain'});
+		    }
+		}
+	    }
+	}	
     }
 
     ## Saving current version if required
