@@ -175,7 +175,6 @@ sub help {
     my $robot=shift;
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
-    my $host = &Conf::get_robot_conf($robot, 'host');
     my $etc =  &Conf::get_robot_conf($robot, 'etc');
 
     &do_log('debug', 'Commands::help to robot %s',$robot);
@@ -1990,7 +1989,6 @@ sub distribute {
     my $modqueue =  &Conf::get_robot_conf($robot,'queuemod') ;
     
     my $name = $list->{'name'};
-    my $host = $list->{'admin'}{'host'};
     my $file = "$modqueue\/$name\_$key";
     
     ## if the file has been accepted by WWSympa, it's name is different.

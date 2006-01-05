@@ -303,9 +303,14 @@ while (!$end) {
 	       next;
 	   }
 	   
-	   $adrlist =~ /^(.*)\@(.*)$/;
-	   my $listname = $1;
-	   my $hostname = $2;
+	   my ($listname, $hostname);
+	   if ($adrlist =~ /^(.*)\@(.*)$/) {
+	       $listname = $1;
+	       $hostname = $2;
+	   }else {
+	       &do_log('err',"Match of list address '$adrlist' failed");
+	       return undef;
+	   }
 
 	   do_log('notice',"Archiving $file for list $adrlist");      
 	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) ;
@@ -363,9 +368,14 @@ sub rebuild {
         $arc = $2;
     }
 
-    $adrlist =~ /^(.*)\@(.*)$/;
-    my $listname = $1;
-    my $hostname = $2;
+    my ($listname, $hostname);
+    if ($adrlist =~ /^(.*)\@(.*)$/) {
+	$listname = $1;
+	$hostname = $2;
+    }else {
+	&do_log('err',"Match of list address '$adrlist' failed");
+	       return undef;
+    }
 
     my $tag = &get_tag($listname);
 
@@ -495,10 +505,10 @@ sub mail2arc {
 	&unset_hidden_mode();
     }    
 
-    do_log('debug',"mail2arc $file for $listname\@$hostname yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss");
+    do_log('debug',"mail2arc $file for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list->get_list_id());
     #    chdir($wwsconf->{'arc_path'});
 
-    my $basedir = "$arcpath/$listname\@$hostname";
+    my $basedir = $arcpath.'/'.$list->get_list_id();
     
     if (! -d $basedir) {
 	unless (mkdir $basedir, 0775) {
@@ -536,17 +546,17 @@ sub mail2arc {
 	    return undef;
 	}
 
-	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm");
+	do_log('debug',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_list_id());
 
 	if ($list->{'admin'}{'web_archive'}{'max_month'}){ # maybe need to remove some old archive
-	    if (opendir DIR,"$arcpath/$listname\@$hostname") {
+	    if (opendir DIR,$arcpath.'/'.$list->get_list_id()) {
 		my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));	
 		closedir DIR;
 		my $nb_month = $#archives + 1 ;
 		my $i = 0 ;
 		while ( $nb_month >  $list->{'admin'}{'web_archive'}{'max_month'}) {
-		    do_log('info',"removing  $arcpath/$listname\@$hostname/$archives[$i]");
-		    &tools::remove_dir ("$arcpath/$listname\@$hostname/$archives[$i]");
+		    do_log('info',"removing  $arcpath/%s/$archives[$i]", $list->get_list_id());
+		    &tools::remove_dir ($arcpath.'/'.$list->get_list_id().'/'.$archives[$i]);
 		    $i ++; $nb_month --;		    
 		}
 	    }
@@ -584,7 +594,7 @@ sub mail2arc {
     
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
     
-    do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
+    do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
     my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";
     
     do_log('debug',"System call : $cmd");

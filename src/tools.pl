@@ -438,7 +438,7 @@ sub smime_sign {
 
     my $self = new List($list, $robot);
     my($cert, $key) = &smime_find_keys($self->{dir}, 'sign');
-    my $temporary_file = $Conf{'tmpdir'}."/".$list.'@'.$robot.".".$$ ;    
+    my $temporary_file = $Conf{'tmpdir'}."/".$self->get_list_id().".".$$ ;    
     my $temporary_pwd = $Conf{'tmpdir'}.'/pass.'.$$;
 
     my ($signed_msg,$pass_option );
@@ -800,7 +800,7 @@ sub smime_decrypt {
     &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list->{'name'});
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
-    my $dir = $list->{dir};
+    my $dir = $list->{'dir'};
     unless ($dir) {
 	$dir = $Conf{home} . '/sympa';
     }
@@ -810,7 +810,7 @@ sub smime_decrypt {
 	return undef;
     }
 
-    my $temporary_file = $Conf{'tmpdir'}."/".$list->{'name'}.'@'.$list->{'domain'}.".".$$ ;
+    my $temporary_file = $Conf{'tmpdir'}."/".$list->get_list_id().".".$$ ;
     my $temporary_pwd = $Conf{'tmpdir'}.'/pass.'.$$;
 
     ## dump the incomming message.

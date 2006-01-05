@@ -98,7 +98,7 @@ if ($robot) {
 }else {
     $home_sympa = $Conf::Conf{'home'};
 }
-my $dest_dir = "$wwsconf->{'arc_path'}/$listname\@$list->{'admin'}{'host'}";
+my $dest_dir = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
 
 ## Burst archives
 unless (-d "$home_sympa/$listname") {
@@ -251,7 +251,8 @@ foreach my $msg (@msgs) {
   
 ## Rebuild web archives
 print STDERR "Rebuilding HTML\n";
-`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$listname\@$list->{'domain'}`;
+my $list_id = $list->get_list_id();
+`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$list_id`;
 
 print STDERR "\nHave a look in $dest_dir/-/ directory for messages dateless
 Now, you should add a web_archive parameter in the config file to make it accessible from the web\n";

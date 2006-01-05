@@ -279,7 +279,7 @@ while (!$end) {
 	    my %used_list_models; # stores which models already have a task 
 	    foreach (@list_models) { $used_list_models{$_} = undef; }
 	    
-	    foreach my $model (&Task::get_used_models($list->{'name'}.'@'.$list->{'domain'})) {
+	    foreach my $model (&Task::get_used_models($list->get_list_id())) {
 		$used_list_models{$model} = 1; 
 	    }
 	    

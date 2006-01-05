@@ -2724,11 +2724,11 @@ sub send_msg_digest {
     if (-f "$Conf{'queuedigest'}/$listname") {
  	$filename = "$Conf{'queuedigest'}/$listname";
     }else {
- 	$filename = $Conf{'queuedigest'}.'/'.$listname.'@'.$robot;
+ 	$filename = $Conf{'queuedigest'}.'/'.$self->get_list_id();
     }
     
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
-		 'to' => "$self->{'name'}\@$self->{'admin'}{'host'}",
+		 'to' => $self->get_list_address(),
 		 'table_of_content' => sprintf(gettext("Table of contents:")),
 		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
 		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
@@ -3034,7 +3034,7 @@ sub send_file {
 	    (($self->{'admin'}{'remind_return_path'} eq 'unique') && ($tpl eq 'remind')))  {
 	    my $escapercpt = $who ;
 	    $escapercpt =~ s/\@/\=\=a\=\=/;
-	    $data->{'return_path'} = "$Conf{'bounce_email_prefix'}+$escapercpt\=\=$name\@$self->{'domain'}";
+	    $data->{'return_path'} = $Conf{'bounce_email_prefix'}.'+'.$escapercpt.'\=\='.$self->get_list_id();
 	}
     }
 
@@ -3086,7 +3086,7 @@ sub send_file {
     # . a list should have several certificats and use if possible a certificat
     #   issued by the same CA as the receipient CA if it exists 
     if ($sign_mode eq 'smime') {
-	$data->{'fromlist'} = "$name\@$data->{'list'}{'host'}";
+	$data->{'fromlist'} = $self->get_list_address();
 	$data->{'replyto'} = "$name"."-request\@$data->{'list'}{'host'}";
     }else{
 	$data->{'fromlist'} = "$name"."-request\@$data->{'list'}{'host'}";
@@ -3223,7 +3223,7 @@ sub send_to_editor {
 	       return undef;
 	   }
 
-	   my $crypted_file = "$Conf{'tmpdir'}/$name\@$robot.moderate.$$";
+	   my $crypted_file = $Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
 	   unless (open CRYPTED, ">$crypted_file") {
 	       &do_log('notice', 'Could not create file %s', $crypted_file);
 	       return undef;
@@ -3441,7 +3441,7 @@ sub archive_send {
 
    return unless ($self->is_archived());
        
-   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->get_list_id();
 
    my $msg_list = Archive::scan_dir_archive($dir, $file);
 
@@ -7167,7 +7167,7 @@ sub archive_exist {
    do_log('debug', 'List::archive_exist (%s)', $file);
 
    return undef unless ($self->is_archived());
-   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->get_list_id();
    Archive::exist($dir, $file);
 
 }
@@ -7178,7 +7178,7 @@ sub archive_ls {
    my $self = shift;
    do_log('debug2', 'List::archive_ls');
 
-   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->get_list_id();
 
    Archive::list($dir) if ($self->is_archived());
 }
@@ -7192,7 +7192,7 @@ sub archive_msg {
     # No more mail archive 
     # Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
 
-    Archive::outgoing("$Conf{'queueoutgoing'}","$self->{'name'}\@$self->{'domain'}",$msg) 
+    Archive::outgoing("$Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
       if ($self->is_web_archived());
 }
 
@@ -7237,7 +7237,7 @@ sub get_nextdigest {
     ## Reverse compatibility concerns
     my $filename;
     foreach my $f ("$Conf{'queuedigest'}/$listname",
- 		   $Conf{'queuedigest'}.'/'.$listname.'@'.$self->{'domain'}) {
+ 		   $Conf{'queuedigest'}.'/'.$self->get_list_id()) {
  	$filename = $f if (-f $f);
     }
     
@@ -9501,7 +9501,7 @@ sub store_digest {
     if (-f "$Conf{'queuedigest'}/$self->{'name'}") {
   	$filename = "$Conf{'queuedigest'}/$self->{'name'}";
     }else {
- 	$filename = $Conf{'queuedigest'}.'/'.$self->{'name'}.'@'.$self->{'domain'};
+ 	$filename = $Conf{'queuedigest'}.'/'.$self->get_list_id();
     }
 
     $newfile = !(-e $filename);
@@ -10387,7 +10387,7 @@ sub maintenance {
 	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'domain'}";
+	    my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&do_log('err','Cannot create %s', $file);
@@ -11769,10 +11769,10 @@ sub tag_topic {
 
     my $robot = $self->{'domain'};
     my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
-    my $listname = "$self->{'name'}\@$robot.";
+    my $list_id = $self->get_list_id();
     $msg_id = &tools::clean_msg_id($msg_id);
     $msg_id =~ s/>$//;
-    my $file = $listname.$msg_id;
+    my $file = $list_id.'.'.$msg_id;
 
     unless (open (FILE, ">$queuetopic/$file")) {
 	&do_log('info','Unable to create msg topic file %s/%s : %s', $queuetopic,$file, $!);
@@ -11813,8 +11813,8 @@ sub load_msg_topic_file {
     &do_log('debug4','List::load_msg_topic_file(%s,%s)',$self->{'name'},$msg_id);
     
     my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
-    my $listname = "$self->{'name'}\@$robot";
-    my $file = "$listname.$msg_id";
+    my $list_id = $self->get_list_id();
+    my $file = "$list_id.$msg_id";
     
     unless (open (FILE, "$queuetopic/$file")) {
 	&do_log('info','Unable to open info msg_topic file %s/%s : %s', $queuetopic,$file, $!);
@@ -12068,7 +12068,7 @@ sub store_subscription_request {
     my ($self, $email, $gecos) = @_;
     do_log('debug2', 'List::store_subscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
 
-    my $filename = $Conf{'queuesubscribe'}.'/'.$self->{'name'}.'@'.$self->{'domain'}.'.'.time.'.'.int(rand(1000));
+    my $filename = $Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
     
     unless (open REQUEST, ">$filename") {
 	do_log('notice', 'Could not open %s', $filename);
@@ -12191,8 +12191,7 @@ sub get_arc_size {
     my $self = shift;
     my $dir = shift;
 
-    # do_log('notice',"$dir/$self->{'name'}\@$self->{'domain'}");
-    return tools::get_dir_size("$dir/$self->{'name'}\@$self->{'domain'}");
+    return tools::get_dir_size($dir.'/'.$self->get_list_id());
 }
 
 
@@ -12434,9 +12433,8 @@ sub purge {
 
     if ($self->{'name'}) {
 	my $arc_dir = &Conf::get_robot_conf($self->{'domain'},'arc_path');
-	&tools::remove_dir("$arc_dir/$self->{'name'}\@$self->{'domain'}");
-	my $bounce_dir = &Conf::get_robot_conf($self->{'domain'},'bounce_path');
-	&tools::remove_dir("$bounce_dir/$self->{'name'}");
+	&tools::remove_dir($arc_dir.'/'.$self->get_list_id());
+	&tools::remove_dir($self->get_bounce_dir());
     }
     my @users;
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
@@ -12562,7 +12560,7 @@ sub move_message {
     &do_log('debug2', "tools::move_mesage($file, $self->{'name'})");
 
     my $dir = $Conf{'queuedistribute'};    
-    my $filename = $self->{'name'}.'@'.$self->{'domain'}.time.'.'.int(rand(999));
+    my $filename = $self->get_list_id().time.'.'.int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {
 	&do_log('err', 'Cannot create file %s', "$dir/T.$filename");
@@ -12588,7 +12586,7 @@ sub get_bounce_dir {
 
     my $root_dir = &Conf::get_robot_conf($self->{'domain'}, 'bounce_path');
     
-    return $root_dir.'/'.$self->{'name'}.'@'.$self->{'domain'};
+    return $root_dir.'/'.$self->get_list_id();
 }
 
 ## Return the list email address

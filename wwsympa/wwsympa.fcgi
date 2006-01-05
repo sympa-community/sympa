@@ -5354,7 +5354,7 @@ sub do_skinsedit {
 	 }
      }
 
-     my $arc_path = $wwsconf->{'arc_path'}.'/'.$param->{'list'}.'@'.$param->{'domain'};
+     my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
      ## Calendar
      unless (opendir ARC, $arc_path) {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
@@ -5493,7 +5493,7 @@ sub do_skinsedit {
 	 $nb_arc = $NB_ARC_MAX;
      }       
 
-     my $arc_path = $wwsconf->{'arc_path'}.'/'.$param->{'list'}.'@'.$param->{'domain'};
+     my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
     unless (opendir ARC_DIR, $arc_path) {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
 	 &wwslog('err','do_latest_arc: no directory %s', $arc_path);
@@ -5669,7 +5669,7 @@ sub get_timelocal_from_date {
 sub do_remove_arc {
     &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, #message %s', $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'yyyy'}-$in{'month'}";
+    my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
 
     ## Access control
 
@@ -5683,7 +5683,7 @@ sub do_remove_arc {
 	 return undef;
      } 
 
-    my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'domain'}.$in{'yyyy'}-$in{'month'}.".time;
+    my $file = $Conf{'queueoutgoing'}.'/.remove.'.$list->get_list_id().'.'.$in{'yyyy'}.'-'.$in{'month'}.'.'.time;
     unless (open REBUILD, ">$file") {
 	&report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('info','do_remove: cannot create %s', $file);
@@ -5725,7 +5725,7 @@ sub do_remove_arc {
 	 return undef;
      } 
      ## 
-     my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}/$in{'yyyy'}-$in{'month'}";
+     my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
      &wwslog('info','send_me: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
 
      opendir ARC, "$arcpath/arctxt";
@@ -5788,7 +5788,7 @@ sub do_remove_arc {
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch_form', 'web_archive.access'));
 
-     my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}";
+     my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
      opendir ARC, "$search_base";
      foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	 if ($dir =~ /^(\d{4})-(\d{2})$/) {
@@ -5819,13 +5819,13 @@ sub do_remove_arc {
      use Marc::Search;
 
      my $search = new Marc::Search;
-     $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'domain'});
+     $search->search_base ($wwsconf->{'arc_path'} . '/' . $list->get_list_id());
      $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
      $search->archive_name ($in{'archive_name'});
 
      unless (defined($in{'directories'})) {
 	 # by default search in current month and in the previous none empty one
-	 my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}";
+	 my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
 	 my $previous_active_dir ;
 	 opendir ARC, "$search_base";
 	 foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
@@ -5970,7 +5970,7 @@ sub do_remove_arc {
      use Marc::Search;
 
      my $search = new Marc::Search;
-     $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'domain'});
+     $search->search_base ($wwsconf->{'arc_path'} . '/' . $list->get_list_id());
      $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
 
      $search->archive_name ($in{'archive_name'});
@@ -6895,7 +6895,7 @@ sub do_set_pending_list_request {
 	 return undef;
      }
 
-     my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'domain'}";
+     my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 
      unless (open REBUILD, ">$file") {
 	 &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -6932,7 +6932,7 @@ sub do_set_pending_list_request {
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
 	 next unless (defined $list->{'admin'}{'web_archive'});
-	 my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'domain'}";
+	 my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 
 	 unless (open REBUILD, ">$file") {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -8161,11 +8161,13 @@ sub _restrict_values {
 	 return undef;
      }
      ## Rename archive
-     if (-d "$wwsconf->{'arc_path'}/$list->{'name'}\@$robot") {
-	 unless (rename ("$wwsconf->{'arc_path'}/$list->{'name'}\@$robot","$wwsconf->{'arc_path'}/$in{'new_listname'}\@$in{'new_robot'}")) {
-	     &wwslog('info',"do_rename_list : unable to rename archive $wwsconf->{'arc_path'}/$list->{'name'}\@$robot");
-	     &report::reject_report_web('intern','unable_rename_archive',{'old'=>"$wwsconf->{'arc_path'}/$list->{'name'}\@$robot", 
-							       'new'=>"$wwsconf->{'arc_path'}/$in{'new_listname'}\@$in{'new_robot'}"},
+     my $arc_dir = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+     my $new_arc_dir = $wwsconf->{'arc_path'}.'/'.$in{'new_listname'}.'@'.$in{'new_robot'};
+     if (-d $arc_dir) {
+	 unless (rename ($arc_dir,$new_arc_dir)) {
+	     &wwslog('info',"do_rename_list : unable to rename archive $arc_dir");
+	     &report::reject_report_web('intern','unable_rename_archive',{'old'=>$arc_dir, 
+							       'new'=>$new_arc_dir},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     # continue even if there is some troubles with archives
 	     # return undef;
@@ -12622,7 +12624,7 @@ sub d_test_existing_and_rights {
 	 $in{'to'} =~ s/ /\@/;
 	 $param->{'to'} = $in{'to'};
      }else{
-	 $param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
+	 $param->{'to'} = $list->get_list_address();
      }
      ($param->{'local_to'},$param->{'domain_to'}) = split ('@',$param->{'to'});
 
@@ -12682,7 +12684,7 @@ sub d_test_existing_and_rights {
 	     &wwslog('info','do_send_mail: may not send message');
 	     return undef;
 	 }
-	 $to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
+	 $to = $list->get_list_address();
      }
 
      $Text::Wrap::columns = 80;
@@ -12777,7 +12779,7 @@ sub d_test_existing_and_rights {
 	 }
      }
 
-     $param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
+     $param->{'to'} = $list->get_list_address();
      $param->{'mailto'}= &mailto($list,$param->{'to'});
      $param->{'authkey'} = $in{'authkey'};
 
@@ -13359,7 +13361,7 @@ sub get_protected_email_address {
 sub do_arc_manage {
     &wwslog('info', "do_arc_manage ($in{'list'})");
 
-    my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'domain'}";
+    my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
     opendir ARC, "$search_base";
     foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	if ($dir =~ /^(\d{4})-(\d{2})$/) {
@@ -13402,7 +13404,7 @@ sub do_arc_download {
 	    $dir = $1;
 	}
 
-	my $abs_dir = ($wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'domain'}.'/'.$dir.'/arctxt');
+	my $abs_dir = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$dir.'/arctxt';
 	##check arc directory
 	unless (-d $abs_dir) {
 	    &report::reject_report_web('intern','arc_not_found',{'arc_file' => $dir,
@@ -13489,7 +13491,7 @@ sub do_arc_delete {
   
     
     foreach my $dir (split/\0/, $in{'directories'}) {
-	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'domain'}.'/'.$dir);
+	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$dir);
     }
 
     unless (tools::remove_dir(@abs_dirs)) {

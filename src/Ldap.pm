@@ -154,7 +154,7 @@ sub export_list{
     return undef
 	unless &delete_list($directory, $list, $ldap);
 	
-    my $list_email = "$list->{'name'}".'@'."$list->{'admin'}{'host'}"; 
+    my $list_email = $list->get_list_address();
     my $dn = "cn=$list_email,$Conf{'ldap_export'}{$directory}{'suffix'}";
 
     my $total =  $list->get_total() || 0;
@@ -235,7 +235,7 @@ sub delete_list{
     }
     
     ##To create the dn and delete this entry
-    my $list_email = "$list->{'name'}".'@'."$list->{'admin'}{'host'}"; 
+    my $list_email = $list->get_list_address();
     my $dn = "cn=$list_email,$Conf{'ldap_export'}{$directory}{'suffix'}";
     my $filter = "(listEmailAddress = $list_email)";
     
