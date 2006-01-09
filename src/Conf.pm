@@ -603,7 +603,7 @@ sub _load_auth {
 
     my %valid_keywords = ('ldap' => {'regexp' => '.*',
 				     'negative_regexp' => '.*',
-				     'host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				     'host' => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
 				     'timeout' => '\d+',
 				     'suffix' => '.+',
 				     'bind_dn' => '.+',
@@ -630,7 +630,7 @@ sub _load_auth {
 				    'proxy_validate_path' => '.*',
 				    'auth_service_name' => '.*',
 				    'authentication_info_url' => 'http(s)?:/.*',
-				    'ldap_host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				    'ldap_host' => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
 				    'ldap_bind_dn' => '.+',
 				    'ldap_bind_password' => '.+',
 				    'ldap_timeout'=> '\d+',
@@ -646,7 +646,7 @@ sub _load_auth {
 					    'service_id' => '\S+',
 					    'http_header_prefix' => '\w+',
 					    'email_http_header' => '\w+',
-					    'ldap_host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+					    'ldap_host' => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
 					    'ldap_bind_dn' => '.+',
 					    'ldap_bind_password' => '.+',
 					    'ldap_timeout'=> '\d+',
@@ -684,12 +684,17 @@ sub _load_auth {
 	}elsif (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    my ($keyword,$value) = ($1,$2);
 	    unless (defined $valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}) {
-		do_log('notice',"_load_auth: unknown keyword '%s' in %s line %d", $keyword, $config, $line_num);
+		do_log('err',"_load_auth: unknown keyword '%s' in %s line %d", $keyword, $config, $line_num);
 		next;
 	    }
 	    unless ($value =~ /^$valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}$/) {
-		do_log('notice',"_load_auth: unknown format '%s' for keyword '%s' in %s line %d", $value, $keyword, $config,$line_num);
+		do_log('err',"_load_auth: unknown format '%s' for keyword '%s' in %s line %d", $value, $keyword, $config,$line_num);
 		next;
+	    }
+
+	    ## Allow white spaces between hosts
+	    if ($keyword =~ /host$/) {
+		$value =~ s/\s//g;
 	    }
 	    
 	    $current_paragraph->{$keyword} = $value;
