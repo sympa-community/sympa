@@ -335,7 +335,7 @@ sub get_email_by_net_id {
     my $auth_id = shift;
     my $attributes = shift;
 
-    do_log ('info',"Auth::get_email_by_net_id($auth_id,$attribute->{'uid'})");
+    do_log ('info',"Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
 
     unless (eval "require Net::LDAP") {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
