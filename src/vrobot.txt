@@ -129,6 +129,27 @@ X Indiquer le robot dans les log : trop lourd (variable globale ou params)
 o Auth.conf par robot
 o mettre auth_services dans Robot.pm
   
+o Ajout champ robot dans table user (pour avoir des mdp diff�rents par vrobot) :
+  o ajout champ dans DB
+    o scripts creation
+    o List::probe_db
+  o modif quelques sub dans List.pm
+    o delete_user_db
+    o get_user_db
+    o get_all_user_db
+    o is_user_db
+    o update_user ?
+    o update_admin_user ?
+    o update_user_db
+    o add_user_db
+    o add_user
+    o add_admin_user
+
+
+Pb à vérifier :
+  o reference à une liste d'un autre robot dans :
+    o scenario
+    o include_list
 Extras :
   o renommer
     o update_user en update_subscriber
