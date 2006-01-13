@@ -855,7 +855,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 $param->{'host'} = $list->{'admin'}{'host'} if (ref($list) eq 'List');
          $param->{'host'} ||= $robot;
-         $param->{'domain'} = $list->{'domain'};
+         $param->{'domain'} = $list->{'domain'} if (ref($list) eq 'List');
 
          ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	 $param->{'list_lang'} = $list->{'admin'}{'lang'} if (ref($list) eq 'List');
@@ -938,7 +938,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      unless ($param->{'bypass'} eq 'extreme' || $param->{'action'} eq 'css') {
 
 	 ## Set cookies "your_subscribtions" unless in one list page
-	 if ($param->{'user'}{'email'} && ! defined $in{'list'}) {
+	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
 
 	     ## In case get_which was not set
 	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') unless (defined $param->{'get_which'}); 
@@ -947,7 +947,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	     # if at least one element defined in get_which tab
 	     &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
-	     
+
 	     ## Add lists information to 'which_info'
 	     foreach my $list (@{$param->{'get_which'}}) {
 		 my $l = $list->{'name'};
