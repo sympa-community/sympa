@@ -640,7 +640,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      foreach my $auth (keys  %{$Conf{'generic_sso_id'}}) {
 	 &do_log('debug', "Generic SSO authentication service $auth");
-	 $param->{'sso'}{$auth} = $Conf{'auth_services'}[$Conf{'generic_sso_id'}{$auth}]{'service_name'};
+	 $param->{'sso'}{$auth} = $Conf{'auth_services'}{$robot}[$Conf{'generic_sso_id'}{$auth}]{'service_name'};
      }
 
      $param->{'sso_number'} = $Conf{'cas_number'} + $Conf{'generic_sso_number'};
@@ -730,7 +730,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
 		 my $cas_id = $1;
 		 my $ticket = $in{'ticket'};
-		 my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
+		 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 		 
 		 my $service_url = &wwslib::get_my_url();
 		 $service_url =~ s/\&ticket\=.+$//;
@@ -758,7 +758,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }else{
 		 # user not taggued as not using cas
 		 do_log ('debug',"no cas ticket detected");
-		 foreach my $auth_service (@{$Conf{'auth_services'}}){
+		 foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
 		     # skip auth services not related to cas
 		     next unless ($auth_service->{'auth_type'} eq 'cas');
 		     next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
@@ -1838,7 +1838,7 @@ sub prepare_report_user {
 
      ##authentication of the sender
      my $data;
-     unless($data = &Auth::check_auth($in{'email'},$in{'passwd'})){
+     unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
 	 &report::reject_report_web('intern_quiet','',{},$param->{'action'},'');
 	 # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
 	 &do_log('notice', "Authentication failed\n");
@@ -1923,7 +1923,7 @@ sub do_sso_login {
 
     ## This is a CAS service
     if (defined (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}})) {
-	my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
+	my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 	
 	my $path = '';
 	if ($param->{'nomenu'}) {
@@ -1966,11 +1966,11 @@ sub do_sso_login {
 	}
 
 	my $email;
-	if (defined $Conf{'auth_services'}[$sso_id]{'email_http_header'}) {
-	    $email = lc($ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}});
+	if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}) {
+	    $email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
 	}else {
-	    unless (defined $Conf{'auth_services'}[$sso_id]{'ldap_host'} &&
-		    defined $Conf{'auth_services'}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
+	    unless (defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_host'} &&
+		    defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
 		&report::reject_report_web('intern','auth_conf_no_identified_user',{},$param->{'action'},'','',$robot);
 		&wwslog('err','do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined');
 		return 'home';	
@@ -1981,7 +1981,7 @@ sub do_sso_login {
 
 	unless ($email) {
 	    &report::reject_report_web('intern_quiet','no_identified_user',{},$param->{'action'},'');
-	    &wwslog('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}[$sso_id]{'email_http_header'});
+	    &wwslog('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'});
 	    return 'home';	
 	}
 
@@ -1989,7 +1989,7 @@ sub do_sso_login {
 	$param->{'auth'} = 'generic_sso';
 	
 	&wwslog('notice', 'User identified as %s', $email);
-	my $prefix = $Conf{'auth_services'}[$sso_id]{'http_header_prefix'};
+	my $prefix = $Conf{'auth_services'}{$robot}[$sso_id]{'http_header_prefix'};
 	
 	my @sso_attr;
 	foreach my $k (keys %ENV) {
@@ -2147,7 +2147,7 @@ sub do_sso_login_succeeded {
 
      ## List all LDAP servers first
      my @ldap_servers;
-     foreach my $ldap (@{$Conf{'auth_services'}}){
+     foreach my $ldap (@{$Conf{'auth_services'}{$robot}}){
 	 next unless ($ldap->{'auth_type'} eq 'ldap');
 	 
 	 push @ldap_servers, $ldap;
@@ -2311,9 +2311,9 @@ sub do_redirect {
      $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
      my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
-     if (defined $cas_id && (defined $Conf{'auth_services'}[$cas_id])) {
+     if (defined $cas_id && (defined $Conf{'auth_services'}{$robot}[$cas_id])) {
 	 # this user was logged using CAS
-	 my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
+	 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 
 	 $in{'action'} = 'redirect';
 	 my $return_url = &wwslib::get_my_url();

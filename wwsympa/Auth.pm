@@ -39,6 +39,7 @@ use report;
 
  ## authentication : via email or uid
  sub check_auth{
+     my $robot = shift;
      my $auth = shift; ## User email or UID
      my $pwd = shift; ## Password
      &do_log('debug', 'Auth::check_auth(%s)', $auth);
@@ -46,11 +47,11 @@ use report;
      my ($canonic, $user);
 
      if( &tools::valid_email($auth)) {
-	 return &authentication($auth,$pwd);
+	 return &authentication($robot, $auth,$pwd);
 
      }else{
 	 ## This is an UID
-	 if ($canonic = &ldap_authentication($auth,$pwd,'uid_filter')){
+	 if ($canonic = &ldap_authentication($robot, $auth,$pwd,'uid_filter')){
 
 	     unless($user = &List::get_user_db($canonic)){
 		 $user = {'email' => $canonic};
@@ -70,7 +71,7 @@ use report;
 
 
 sub authentication {
-    my ($email,$pwd) = @_;
+    my ($robot, $email,$pwd) = @_;
     my ($user,$canonic);
     &do_log('debug', 'Auth::authentication(%s)', $email);
 
@@ -86,7 +87,7 @@ sub authentication {
     
 
 
-    foreach my $auth_service (@{$Conf{'auth_services'}}){
+    foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	if ($auth_service->{'auth_type'} eq 'user_table') {
@@ -99,7 +100,7 @@ sub authentication {
 			};
 	    }
 	}elsif($auth_service->{'auth_type'} eq 'ldap') {
-	    if ($canonic = &ldap_authentication($email,$pwd,'email_filter')){
+	    if ($canonic = &ldap_authentication($robot, $email,$pwd,'email_filter')){
 		unless($user = &List::get_user_db($canonic)){
 		    $user = {'email' => $canonic};
 		}
@@ -114,7 +115,7 @@ sub authentication {
     ## If web context and password has never been changed
     ## Then prompt user
     unless ($ENV{'SYMPA_SOAP'}) {
-	foreach my $auth_service (@{$Conf{'auth_services'}}){
+	foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
 	    next unless ($email !~ /$auth_service->{'regexp'}/i);
 	    next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	    if ($auth_service->{'auth_type'} eq 'user_table') {
@@ -136,7 +137,7 @@ sub authentication {
 
 
 sub ldap_authentication {
-     my ($auth,$pwd,$whichfilter) = @_;
+     my ($robot, $auth,$pwd,$whichfilter) = @_;
      my ($cnx, $mesg, $host,$ldap_passwd,$ldap_anonymous);
      &do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,$pwd,$whichfilter);
 
@@ -145,7 +146,7 @@ sub ldap_authentication {
      }
 
      ## No LDAP entry is defined in auth.conf
-     if ($#{$Conf{'auth_services'}} < 0) {
+     if ($#{$Conf{'auth_services'}{$robot}} < 0) {
 	 &do_log('notice', 'Skipping empty auth.conf');
 	 return undef;
      }
@@ -168,7 +169,7 @@ sub ldap_authentication {
      }
      require Net::LDAP::Message;
      
-     foreach my $ldap (@{$Conf{'auth_services'}}){
+     foreach my $ldap (@{$Conf{'auth_services'}{$robot}}){
 	 # only ldap service are to be applied here
 	 next unless ($ldap->{'auth_type'} eq 'ldap');
 

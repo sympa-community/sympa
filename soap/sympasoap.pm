@@ -135,6 +135,7 @@ sub login {
     my $passwd = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
     &Log::do_log('notice', 'login(%s)', $email);
     
     #foreach my  $k (keys %ENV) {
@@ -151,7 +152,7 @@ sub login {
     ## Authentication of the sender
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
-    my $user = &Auth::check_auth($email,$passwd);
+    my $user = &Auth::check_auth($robot, $email,$passwd);
 
     unless($user){
 	&do_log('notice', "SOAP : login authentication failed");
@@ -194,8 +195,8 @@ sub casLogin {
     ## Validate the CAS ST against all known CAS servers defined in auth.conf
     ## CAS server response will include the user's NetID
     my ($user, @proxies, $email, $cas_id);
-    foreach my $service_id (0..$#{$Conf{'auth_services'}}){
-	my $auth_service = $Conf{'auth_services'}[$service_id];
+    foreach my $service_id (0..$#{$Conf{'auth_services'}{$robot}}){
+	my $auth_service = $Conf{'auth_services'}{$robot}[$service_id];
 	next unless ($auth_service->{'auth_type'} eq 'cas'); ## skip non CAS entries
 	
 	my $cas = new CAS(casUrl => $auth_service->{'base_url'}, 

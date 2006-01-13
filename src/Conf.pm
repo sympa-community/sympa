@@ -321,8 +321,19 @@ sub load {
     }
 
     
-    my @array = &_load_auth();
-    $Conf{'auth_services'} = [@array];
+    my $robots_conf = &load_robots ;    
+    $Conf{'robots'} = $robots_conf ;
+
+    
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $config;
+	unless ($config = &tools::get_filename('etc', 'auth.conf', $robot)) {
+	    &do_log('err',"_load_auth: Unable to find auth.conf");
+	    next;
+	}
+
+	$Conf{'auth_services'}{$robot} = &_load_auth($config);	
+    }
 
     if ($Conf{'ldap_export_name'}) {    
 	##Export
@@ -374,9 +385,6 @@ sub load {
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     
-    my $robots_conf = &load_robots ;
-    
-    $Conf{'robots'} = $robots_conf ;
     return 1;
 }
 
@@ -589,11 +597,8 @@ sub checkfiles {
 
 sub _load_auth {
     
-    my $config;
-    unless ($config = &tools::get_filename('etc', 'auth.conf', $Conf{'domain'})) {
-	do_log('err',"_load_auth: Unable to find auth.conf");
-	return undef;
-    }
+    my $config = shift;
+    &do_log('notice', 'Conf::_load_auth(%s)', $config);
 
     my $line_num = 0;
     my $config_err = 0;
@@ -755,7 +760,7 @@ sub _load_auth {
     }
     close(IN); 
 
-    return @paragraphs;
+    return \@paragraphs;
     
 }
 
