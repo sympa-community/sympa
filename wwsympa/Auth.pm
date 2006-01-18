@@ -333,6 +333,7 @@ sub ldap_authentication {
 # fetch user email using his cas net_id and the paragrapah number in auth.conf
 sub get_email_by_net_id {
     
+    my $robot = shift;
     my $auth_id = shift;
     my $attributes = shift;
 
@@ -356,7 +357,7 @@ sub get_email_by_net_id {
     }
     require Net::LDAP::Message;
 
-    my $ldap = @{$Conf{'auth_services'}}[$auth_id];
+    my $ldap = @{$Conf{'auth_services'}{$robot}}[$auth_id];
     my $filter = $ldap->{'ldap_get_email_by_uid_filter'} ;
 
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;

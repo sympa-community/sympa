@@ -739,7 +739,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 
 		 if(defined $net_id) { # the ticket is valid net-id
 		     do_log('notice',"login CAS OK server netid=$net_id" );
-		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($cas_id, {'uid' => $net_id}));
+		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $net_id}));
 		     $param->{'auth'} = 'cas';
 		     
 		     &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
@@ -1976,7 +1976,7 @@ sub do_sso_login {
 		return 'home';	
 	    }
 	    
-	    $email = &Auth::get_email_by_net_id($sso_id, \%ENV);
+	    $email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
 	}
 
 	unless ($email) {
@@ -2029,9 +2029,14 @@ sub do_sso_login {
 }
 
 sub do_sso_login_succeeded {
-    &wwslog('info', 'do_sso_login(%s)', $in{'auth_service_name'});
-    &report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
-    
+    &wwslog('info', 'do_sso_login_succeeded(%s)', $in{'auth_service_name'});
+
+    if (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	&report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
+    }else {
+	&report::reject_report_web('user','auth_failed',{},$param->{'action'});
+    }    
+
     ## We should refresh the main window
     if ($param->{'nomenu'}) {
 	$param->{'back_to_mom'} = 1;
