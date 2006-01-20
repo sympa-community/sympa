@@ -809,8 +809,7 @@ while (!$signal) {
 		&fatal_err("Exiting, unable to rename bad file $filename to BAD-$filename");
 	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
-	}
-	
+	}	
     }
 
 } ## END of infinite loop
