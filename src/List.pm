@@ -9710,6 +9710,12 @@ sub get_which {
 	my $l = $list->{'name'};
 	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
 
+	## Skip closed lists unless the user is Listmaster
+	if ($list->{'admin'}{'status'} =~ /closed/ &&
+	    ! &is_listmaster($email, $robot)) {
+	    next;
+	}
+
         if ($function eq 'member') {
 	    if (($list->{'admin'}{'user_data_source'} eq 'database') ||
 		($list->{'admin'}{'user_data_source'} eq 'include2')){
