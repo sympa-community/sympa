@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.2a.1}
+    \newcommand {\version} {5.2a.2}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2a.1\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2a.2\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {30 September 2005}
+    \date {20 January 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1622,7 +1622,9 @@ to contact the list editors if any are defined in
 is not compulsory.
 
 The address \mailaddr {\samplelist-owner} is the address receiving
-non-delivery reports. The \file {bouncequeue} program stores these messages 
+non-delivery reports (note that the -owner suffix can be customized, 
+see~\ref {kw-return-path-suffix}, page~\pageref {kw-return-path-suffix}). 
+The \file {bouncequeue} program stores these messages 
 in the \dir {queuebounce} directory. \WWSympa ((see~\ref {wwsympa}, page~\pageref {wwsympa})
 may then analyze them and provide a web access to them.
 
@@ -2058,11 +2060,11 @@ files. The server admin module include a CSS administration page that can help y
 
         Arguments passed to SMTP message transfer agent
 
-\subsection {\cfkeyword {sendmail\_alias}} 
+\subsection {\cfkeyword {sendmail\_aliases}} 
 
 	\default {defined by makefile, sendmail\_aliases}
 
-        Path of the alias file that contain all lists related aliases. It is recommended to create a spécific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
+        Path of the alias file that contain all lists related aliases. It is recommended to create a specific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
@@ -2197,7 +2199,7 @@ files. The server admin module include a CSS administration page that can help y
 	\default {\dir {/usr/local/sympa-os/spool/bounce}}
 
         Spool to store bounces (non-delivery reports) received by the \file {bouncequeue}
-	program via the \samplelist-owner or bounce+* addresses . This parameter is mandatory
+	program via the \samplelist-owner (unless this suffix was customized) or bounce+* addresses . This parameter is mandatory
         and must be an absolute path.
 
 \subsection {\cfkeyword {queuetask}} 
@@ -2347,6 +2349,15 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
 	Also requires the bounce+* alias to be installed.
+
+\subsection {\cfkeyword {return\_path\_suffix}}
+        \label {kw-return-path-suffix}
+         
+        \default {-owner}
+
+	This defines the suffix that is appended to the list name to build the return-path
+	of messages sent to the lists. This is the address that will receive all non delivery
+	reports (also called bounces).
 
 \subsection {\cfkeyword {expire\_bounce\_task}}
         \label {kw-expire-bounce-task}
@@ -2590,8 +2601,9 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other programs access this
-	table), you can make \Sympa load these fields. You will then be able to
+	table), you can make \Sympa recognize these fields. You will then be able to
 	use them from within mail/web templates and authorization scenarios (as [subscriber-\texttt{>}field]).
+	These fields will also appear in the list members review page and will be editable by the list owner.
 	This parameter is a comma-separated list.
 
 Example :
@@ -2607,7 +2619,7 @@ db_additional_subscriber_fields 	billing_delay,subscription_expiration
 
 	If your \textbf {user\_table} database table has more fields
 	than required by \Sympa (because other programs access this
-	table), you can make \Sympa load these fields. You will then be able to
+	table), you can make \Sympa recognize these fields. You will then be able to
 	use them from within mail/web templates (as [user-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
@@ -5114,7 +5126,7 @@ Rules are defined as follows :
              | request_auth
              | owner
 	     | editor
-	     | editorkey
+	     | editorkey[,quiet]
 	     | listmaster
 
 <reason_key> ::= match a key in mail_tt2/authorization_reject.tt2 template corresponding to 
@@ -6050,11 +6062,13 @@ page~\pageref {list-aliases})
 The configuration file for the \mailaddr {\samplelist} list is named
 \file {/usr/local/sympa-os/expl/\samplerobot/\samplelist/config} 
 (or \file {/usr/local/sympa-os/expl/\samplelist/config} if no virtual robot is defined). 
-\Sympa reads it into memory the first time the list is refered to. This file is not rewritten by 
-\Sympa, so you may put comment lines in it. 
-It is possible to change this file when the program is running. 
-Changes are taken into account the next time the list is
-accessed. Be careful to provide read access for \Sympa user to this file !
+\Sympa reloads it into memory whenever this file has changed on disk. The file can either be
+edited via the web interface or directly via your favourite text editor. 
+
+A binary version of the config (\file {/usr/local/sympa-os/expl/\samplerobot/\samplelist/config.bin} is maintained to allow 
+a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
+
+Be careful to provide read access for \Sympa user to this file !
 
 You will find a few configuration files in the \dir {sample} directory. 
 
@@ -6724,11 +6738,10 @@ lists, and which parameters may be set by owners.
 
 \subsection {List creation on the Web interface}
 
-Listmasters have all privileges. The listmaster
-is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, newly created
-lists must be activated by the listmaster. List creation is possible for all intranet users 
-(i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the \cfkeyword {create\_list} authorization scenario.
+Listmasters are responsible for validating new mailing lists and, depending on the configuration chosen, 
+might be the only ones who can fill out the create list form.The listmaster
+is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, any authenticated user can 
+request a list creation but newly created are then validated by the listmaster. 
 
 List rejection message and list creation notification message are both
 templates that you can customize (\file {list\_rejected.tt2} and
@@ -7621,8 +7634,8 @@ parameter. The default value is 3600.
 \lparam {include\_list} \texttt {listname}
 
 This parameter will be interpreted only if 
-\lparam {user\_data\_source} is set to \texttt {include}.
-All subscribers of list \texttt {listname} become subscribers 
+\lparam {user\_data\_source} is set to \texttt {include} or \texttt {include2}.
+All subscribers of list \texttt {listname} become members 
 of the current list. You may include as many lists as required, using one
 \lparam {include\_list} \texttt {listname} line for each included
 list. Any list at all may be included ; the \lparam {user\_data\_source} definition
@@ -7631,6 +7644,10 @@ include lists which are also defined by the inclusion of other lists.
 Be careful, however, not to include list \texttt {A} in list \texttt {B} and
 then list \texttt {B} in list \texttt {A}, since this will give rise an 
 infinite loop.
+
+\example {include\_list  local-list}
+
+\example {include\_list  other-local-list@other-local-robot}
 
 \subsection {include\_remote\_sympa\_list}
 
@@ -7711,6 +7728,12 @@ DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 The Database Server \Sympa will try to connect to.
 
 \item
+\label {db-port}
+\lparam {db\_port} \textit {port}
+
+If not using the default RDBMS port, you can specify it.
+
+\item
 \label {db-name}
 \lparam {db\_name} \textit {sympa\_db\_name}
 
@@ -7748,8 +7771,6 @@ Example :
 
 \begin {quote}
 \begin{verbatim}
-
-user_data_source include
 
 include_sql_query
       db_type mysql
@@ -7804,8 +7825,6 @@ Example :
 
 \begin {quote}
 \begin{verbatim}
-
-user_data_source include
 
 include_sql_query
       db_type oracle
@@ -9924,7 +9943,9 @@ sent to a bouncing subscriber) in their own mailbox. Without
 automatic processing of bounces, list owners either go
 mad, or just delete them without further attention.
 
-Bounces are received at \samplelist-owner address, which should
+Bounces are received at \samplelist-owner address (note that the -owner 
+suffix can be customized, see~\ref {kw-return-path-suffix}, 
+page~\pageref {kw-return-path-suffix}), which should
 be sent to the \file {bouncequeue} program via aliases :
 
 \begin {quote}
