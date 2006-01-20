@@ -7004,13 +7004,15 @@ sub may_edit {
     return undef unless ($self);
 
     my $edit_conf;
-    
-    if (! $edit_list_conf{$self->{'domain'}} || ((stat(&tools::get_filename('etc','edit_list.conf',$self->{'domain'},$self)))[9] > $mtime{'edit_list_conf'}{$self->{'domain'}})) {
 
-        $edit_conf = $edit_list_conf{$self->{'domain'}} = &tools::load_edit_list_conf($self->{'domain'}, $self);
-	$mtime{'edit_list_conf'}{$self->{'domain'}} = time;
+    # Load edit_list.conf: track by file, not domain (file may come from server, robot, family or list context)
+    my $edit_conf_file = &tools::get_filename('etc','edit_list.conf',$self->{'domain'},$self); 
+    if (! $edit_list_conf{$edit_conf_file} || ((stat($edit_conf_file))[9] > $mtime{'edit_list_conf'}{$edit_conf_file})) {
+
+        $edit_conf = $edit_list_conf{$edit_conf_file} = &tools::load_edit_list_conf($self->{'domain'}, $self);
+	$mtime{'edit_list_conf'}{$edit_conf_file} = time;
     }else {
-        $edit_conf = $edit_list_conf{$self->{'domain'}};
+        $edit_conf = $edit_list_conf{$edit_conf_file};
     }
 
     ## What privilege ?
