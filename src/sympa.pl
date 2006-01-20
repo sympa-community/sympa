@@ -639,6 +639,7 @@ if ($main::options{'keepcopy'}) {
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 $SIG{'HUP'} = 'sighup';
+$SIG{'PIPE'} = 'IGNORE'; ## Ignore SIGPIPE ; prevents sympa.pl from dying
 
 my $index_queuedigest = 0; # verify the digest queue
 my $index_cleanqueue = 0; 
