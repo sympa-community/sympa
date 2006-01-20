@@ -140,11 +140,16 @@ sub SetLang {
 	return undef;
     }
 
-   if (length($locale) == 2) {
+    if (length($lang) == 2) {
 	$locale = $lang2locale{$lang};
     }else {
+	## uppercase the country part if needed
+	my @items = split /_/, $locale;
+	$items[1] = uc($items[1]);
+	$locale = join '_', @items;
+
 	## Get the NLS equivalent for the lang
-	$lang = &Locale2Lang($lang);
+	$lang = &Locale2Lang($locale);
     }
    
     &Locale::Messages::textdomain("sympa");
