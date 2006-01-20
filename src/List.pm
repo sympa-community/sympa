@@ -9452,6 +9452,11 @@ sub _save_stats_file {
     my $last_sync = shift;
     my $last_sync_admin_user = shift;
     
+    unless (defined $stats && ref ($stats) eq 'ARRAY') {
+	&do_log('err', 'List_save_stats_file() : incorrect parameter');
+	return undef;
+    }
+
     do_log('debug2', 'List::_save_stats_file(%s, %d, %d, %d)', $file, $total,$last_sync,$last_sync_admin_user );
     
     open(L, "> $file") || return undef;
