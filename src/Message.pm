@@ -73,6 +73,7 @@ sub new {
 	return undef;
     }
     $message->{'msg'} = $msg;
+    $message->{'msg_as_string'} = $msg->as_string;
     
     ## Message size
     $message->{'size'} = -s $file;    

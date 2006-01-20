@@ -959,8 +959,8 @@ sub DoFile {
     }else {
 	$list = new List ($listname, $robot);
 	unless (defined $list) {
-	    &do_log('err', 'sympa::DoFile() : list %s no existing',$listname);
-	    &report::global_report_cmd('user','no_existing_list',{'listname'=>$listname},$sender,$robot,1);
+	    &do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
+	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
 	    return undef;
 	}
 	$host = $list->{'admin'}{'host'};
