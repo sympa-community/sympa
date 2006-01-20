@@ -7016,6 +7016,12 @@ DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 The Database Server \Sympa will try to connect to.
 
 \item
+\label {db-port}
+\lparam {db\_port} \textit {port}
+
+If not using the default RDBMS port, you can specify it.
+
+\item
 \label {db-name}
 \lparam {db\_name} \textit {sympa\_db\_name}
 
