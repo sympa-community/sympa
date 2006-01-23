@@ -113,7 +113,7 @@
 
    <td style="background: [% light_color %]; text-align: center;">
        [% IF list_conf.status == 'closed' %]         
-        [% IF is_privileged_owner %]                   
+        [% IF is_listmaster %]                   
         <a href="[% path_cgi %]/restore_list/[% list %]" >
           <span style="font-size: smaller;"><strong>[%|loc%]Restore List[%END%]</strong></span></a>
         [% ELSE %]                               
