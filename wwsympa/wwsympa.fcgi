@@ -1032,9 +1032,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	     ## if bypass = 'asis', file content-type is in the file itself as is define by the action in $param->{'content_type'};
 	     unless ($param->{'bypass'} eq 'asis') {
-		 $mime_types->{$param->{'file_extension'}} ||= $param->{'content_type'};
-		 $mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
-		 printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
+		 my $type = $param->{'content_type'} || $mime_types->{$param->{'file_extension'}} || 'application/octet-stream';
+		 printf "Content-Type: %s\n\n", $type;
 	     }
 
 	     #  $param->{'file'} or $param->{'error'} must be define in this case.
@@ -13017,12 +13016,11 @@ sub d_test_existing_and_rights {
      # parameters for the template file
      # view a file 
      $param->{'file'} = $doc;
+     $param->{'bypass'} = 'asis';
 
      ## File type
      if ($in{'file'} =~ /\.(\w+)$/) {
-
 	 $param->{'file_extension'} = $1;
-	 $param->{'bypass'} = 'asis';
      }
 
      return 1;
