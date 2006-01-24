@@ -707,9 +707,8 @@ while (!$signal) {
 
 	## test ever if it is an old bad file
 	if ($t_filename =~ /^BAD\-/i){
- 	    my $queue = &Conf::get_robot_conf($robot, 'queue');
- 	    if ((stat "$queue/$t_filename")[9] < (time - &Conf::get_robot_conf($robot, 'clean_delay_queue')*86400) ){
- 		unlink ("$queue/$t_filename") ;
+ 	    if ((stat "$spool/$t_filename")[9] < (time - &Conf::get_robot_conf($robot, 'clean_delay_queue')*86400) ){
+ 		unlink ("$spool/$t_filename") ;
 		&do_log('notice',"Deleting bad message %s because too old", $t_filename);
 	    };
 	    next;
@@ -784,29 +783,28 @@ while (!$signal) {
     ## Set NLS default lang for current message
     $Language::default_lang = $main::options{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
-    my $queue = &Conf::get_robot_conf($robot, 'queue');
-    my $status = &DoFile("$queue/$filename");
+    my $status = &DoFile("$spool/$filename");
     
     if (defined($status)) {
-	&do_log('debug', "Finished %s", "$queue/$filename") ;
+	&do_log('debug', "Finished %s", "$spool/$filename") ;
 
 	if ($main::options{'keepcopy'}) {
-	    unless (&File::Copy::copy($queue.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
- 		&do_log('notice', 'Could not rename %s to %s: %s', "$queue/$filename", $main::options{'keepcopy'}."/$filename", $!);
+	    unless (&File::Copy::copy($spool.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
+ 		&do_log('notice', 'Could not rename %s to %s: %s', "$spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
 	    }
 	}
-	unlink("$queue/$filename");
+	unlink("$spool/$filename");
     }else {
-	my $bad_dir = "$queue/bad";
+	my $bad_dir = "$spool/bad";
 	
 	if (-d $bad_dir) {
-	    unless (rename("$queue/$filename", "$bad_dir/$filename")){
+	    unless (rename("$spool/$filename", "$bad_dir/$filename")){
 		&fatal_err("Exiting, unable to rename bad file $filename to $bad_dir/$filename (check directory permission)");
 	    }
 	    do_log('notice', "Moving bad file %s to bad/", $filename);
 	}else{
 	    do_log('notice', "Missing directory '%s'", $bad_dir);
-	    unless (rename("$queue/$filename", "$queue/BAD-$filename")) {
+	    unless (rename("$spool/$filename", "$spool/BAD-$filename")) {
 		&fatal_err("Exiting, unable to rename bad file $filename to BAD-$filename");
 	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
