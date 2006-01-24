@@ -322,7 +322,6 @@ while (!$end) {
 		$adr_count++;
 		my $bouncefor = $who;
 		$bouncefor ||= $rcpt;
-		&do_log('notice', 'xxxxxxxxxxx who %s rcpt %s bouncefor %s', $who,$rcpt,$bouncefor);
 
 		next unless (&store_bounce ($bounce_dir,$file,$bouncefor));
 		next unless (&update_subscriber_bounce_history($list, $rcpt, $bouncefor, &canonicalize_status ($status)));
