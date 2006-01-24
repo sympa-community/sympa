@@ -39,6 +39,7 @@ use Digest::MD5;
 
 use wwslib;
 use mail;
+use Version;
 
 require 'tt2.pl';
 require 'tools.pl';
@@ -54,8 +55,6 @@ if ($main::options{'debug'}) {
 }
 
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
-
-$Version = '0.1';
 
 $wwsympa_conf = "--WWSCONFIG--";
 $sympa_conf_file = '--CONFIG--';
@@ -141,7 +140,7 @@ my $pinfo = &List::_apply_defaults();
 
 $Language::default_lang = $Conf{'lang'};
 
-do_log('notice', "archived $Version Started");
+do_log('notice', "archived $Version::Version Started");
 
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
