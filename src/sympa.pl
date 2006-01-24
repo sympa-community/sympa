@@ -1442,7 +1442,7 @@ sub DoMessage{
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
 		return undef;
 	    }
-	    &do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $listname, $sender, $list->get_total(), time - $start_time, $numsmtp, $messageid, $message->{'size'});
+	    &do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $listname, $sender,  time - $start_time, $numsmtp, $list->get_total(),$messageid, $message->{'size'});
 	    return 1;
 
 	}else{   
