@@ -1715,7 +1715,7 @@ sub del {
 	unless (defined $auth_method);  
 
     ## query what to do with this DEL request
-    my $result = $list->rcheck_list_authz('del',$auth_method,
+    my $result = $list->check_list_authz('del',$auth_method,
 					  {'sender' => $sender,
 					   'email' => $who
 					   });
