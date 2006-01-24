@@ -4,16 +4,17 @@
 <h3 class="block">[%|loc%]Subscriber information[%END%]</h3>
 
 <table>
-<tr><td>
-<input type="hidden" name="previous_action" value="[% previous_action %]" />
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
-<table border="0" style="text-align: left;">
-<tr><th><label for="new_email">[%|loc%]Email :[%END%]</label></th><td><input type="text" name="new_email" id="new_email" value="[% current_subscriber.escaped_email %]" size="25" /></td></tr>
-<tr><th><label for="gecos">[%|loc%]Name :[%END%]</label></th><td><input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" /></td></tr>
-<tr><th>[%|loc%]Subscribed since :[%END%]</th><td>[% current_subscriber.date %]</td></tr>
-<tr><th>[%|loc%]Last update :[%END%]</th><td>[% current_subscriber.update_date %]</td></tr>
-<tr><th><label for="reception">[%|loc%]Reception :[%END%]</label><td><select name="reception" id="reception">
+<tr>
+  <td><input type="hidden" name="previous_action" value="[% previous_action %]" /><input type="hidden" name="list" value="[% list %]" /><input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
+  <table border="0" style="text-align: left;">
+   <tr><th><label for="new_email">[%|loc%]Email :[%END%]</label></th>
+       <td><input type="text" name="new_email" id="new_email" value="[% current_subscriber.escaped_email %]" size="25" />
+      </td>
+   </tr>
+   <tr><th><label for="gecos">[%|loc%]Name :[%END%]</label></th><td><input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" /></td></tr>
+   <tr><th>[%|loc%]Subscribed since :[%END%]</th><td>[% current_subscriber.date %]</td></tr>
+   <tr><th>[%|loc%]Last update :[%END%]</th><td>[% current_subscriber.update_date %]</td></tr>
+   <tr><th><label for="reception">[%|loc%]Reception :[%END%]</label><td><select name="reception" id="reception">
 		  [% FOREACH r = reception %]
 		    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
 		  [% END %]
@@ -42,12 +43,17 @@
 </tr>
 </table>
 </td></tr>
+
 [% IF current_subscriber.bounce %]
 <tr><th style="background: [% error_color %];">
 <span style="color: [% bg_color %];">[%|loc%]Bouncing address[%END%]</span>
 </th></tr>
 <tr><td>
 <table border="0">
+
+[% IF current_subscriber.escaped_bounce_address  %]
+ <tr><th> [%|loc%]Address detected via VERP technologie[%END%]</th><td>[% current_subscriber.escaped_bounce_address %]</td></tr>
+[% END %]
 <tr><th>[%|loc%]Status :[%END%]</th><td>[% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])</td></tr>
 <tr><th>[%|loc%]Bounces count :[%END%]</th><td>[% current_subscriber.bounce_count %]</td></tr>
 <tr><th>[%|loc%]Period :[%END%]</th><td>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]</td></tr>

@@ -35,6 +35,7 @@ CREATE TABLE subscriber_table (
 	topics_subscriber	varchar2(200),
  	bounce_subscriber       varchar2 (35),
 	bounce_score_subscriber number,
+	bounce_address_subscriber       varchar2 (100),
  	comment_subscriber      varchar2 (150),
 	subscribed_subscriber 	number NULL    constraint  cons_subscribed_subscriber CHECK (subscribed_subscriber in (0,1)),
 	included_subscriber 	number NULL    constraint  cons_included_subscriber CHECK (included_subscriber in (0,1)),

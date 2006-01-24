@@ -4121,7 +4121,6 @@ sub do_edit_template  {
     $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name,$in{'subdir'});
     $param->{'pathout'} = $pathout ;
     
-    &wwslog('info', "xxxxxxxxxxxxxxx open $pathout");
     unless (open (TPLOUT,">$pathout")) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $pathout},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	&wwslog('err',"edit_template: can't open file %s",$pathout);
@@ -6554,7 +6553,7 @@ sub do_set_pending_list_request {
 
      $param->{'current_subscriber'} = $user;
      $param->{'current_subscriber'}{'escaped_email'} = &tools::escape_html($param->{'current_subscriber'}{'email'});
-
+     $param->{'current_subscriber'}{'escaped_bounce_address'} = &tools::escape_html($param->{'current_subscriber'}{'bounce_address'});
      $param->{'current_subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
      $param->{'current_subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
 
@@ -8153,6 +8152,8 @@ sub _restrict_values {
 	 &report::reject_report_web('user','unknown_robot',{'new_robot' =>  $in{'new_robot'}},$param->{'action'},$list);
 	 return undef;
      }
+     # set list status topending if creation list is moderated
+     $list->{'admin'}{'status'} = 'pending' if ($r_action =~ /listmaster/) ;
 
      ## Save config file for the new() later to reload it
      $list->save_config($param->{'user'}{'email'});

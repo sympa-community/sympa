@@ -239,80 +239,99 @@ sub mail_file {
 # IN : -$message(+) : ref(Message)
 #      -$from(+) : message from
 #      -$robot(+) : robot
+#      -{verp=>[on|off]} : a hash to introduce verp parameters, starting just on or off, later will probably introduce optionnal parameters 
 #      -@rcpt(+) : recepients
 # OUT : -$numsmtp : number of sendmail process | undef
 #       
 ####################################################
 sub mail_message {
-   my($message, $from, $robot, @rcpt) = @_;
-   do_log('debug2', 'mail::mail_message(from: %s, , file:%s, %s, %d rcpt)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $#rcpt+1);
-
-   my($i, $j, $nrcpt, $size, @sendto);
-   my $numsmtp = 0;
+    my($message, $list, $verp, @rcpt) = @_;
    
-   ## If message contain a footer or header added by Sympa  use the object message else
-   ## Extract body from original file to preserve signature
-   my ($msg_body, $msg_header);
 
-   $msg_header = $message->{'msg'}->head;
+    my $host = $list->{'admin'}{'host'};
+    my $robot = $list->{'domain'};
+    my $name = $list->{'name'};
 
-   if ($message->{'altered'}) {
-       $msg_body = $message->{'msg'}->body_as_string;
-       
-   }elsif ($message->{'smime_crypted'}) {
-       $msg_body = ${$message->{'msg_as_string'}};
-       
-   }else {
-       ## Get body from original file
-       unless (open MSG, $message->{'filename'}) {
-	   do_log ('notice',"mail::mail_message : Unable to open %s:%s",$message->{'filename'},$!);
-	   return undef;
-       }
-       my $in_header = 1 ;
-       while (<MSG>) {
-	   if ( !$in_header)  { 
-	       $msg_body .= $_;       
-	   }else {
-	       $in_header = 0 if (/^$/); 
-	   }
-       }
-       close (MSG);
-   }
-   
-   ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
-   ## n.b. : sendto can send by setting in spool, however, $numsmtp is incremented (=> to change)
-   if ($message->{'smime_crypted'}){
-       $numsmtp = 0;
-       while (defined ($i = shift(@rcpt))) {
-	   $numsmtp++ if (&sendto($msg_header, $msg_body, $from, [$i], $robot, $message->{'smime_crypted'}));
-       }
-       
-       return ($numsmtp);
-   }
+    # normal return_path (ie used if verp is not enabled)
+    my $from = $list->{'name'}.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host;
 
-   while (defined ($i = shift(@rcpt))) {
-       my @k = reverse(split(/[\.@]/, $i));
-       my @l = reverse(split(/[\.@]/, $j));
-       if ($j && $#sendto >= &Conf::get_robot_conf($robot, 'avg') && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
-           $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
-	   $nrcpt = $size = 0;
-           @sendto = ();
-       }
-       if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) {
-           $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
-	   $nrcpt = $size = 0;
-           @sendto = ();
-       }
-       $nrcpt++; $size += length($i) + 5;
-       push(@sendto, $i);
-       $j = $i;
-   }
-   if ($#sendto >= 0) {
-       $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
-       
-   }
-   
-   return $numsmtp;
+    do_log('debug', 'mail::mail_message(from: %s, , file:%s, %s, verp->%s %d rcpt)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $verp->{'enable'}, $#rcpt+1);
+    
+    
+    my($i, $j, $nrcpt, $size, @sendto);
+    my $numsmtp = 0;
+    
+    ## If message contain a footer or header added by Sympa  use the object message else
+    ## Extract body from original file to preserve signature
+    my ($msg_body, $msg_header);
+    
+    $msg_header = $message->{'msg'}->head;
+    
+    if ($message->{'altered'}) {
+	$msg_body = $message->{'msg'}->body_as_string;
+	
+    }elsif ($message->{'smime_crypted'}) {
+	$msg_body = ${$message->{'msg_as_string'}};
+	
+    }else {
+	## Get body from original file
+	unless (open MSG, $message->{'filename'}) {
+	    do_log ('notice',"mail::mail_message : Unable to open %s:%s",$message->{'filename'},$!);
+	    return undef;
+	}
+	my $in_header = 1 ;
+	while (<MSG>) {
+	    if ( !$in_header)  { 
+		$msg_body .= $_;       
+	    }else {
+		$in_header = 0 if (/^$/); 
+	    }
+	}
+	close (MSG);
+    }
+    
+    ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
+    ## n.b. : sendto can send by setting in spool, however, $numsmtp is incremented (=> to change)
+    # ignore verp if crypted. It should be better to do the reverse : allway use verp if crypted (sa 03/01/2006)
+    
+    if (($message->{'smime_crypted'})||($verp->{'enable'} eq 'on')){
+	$numsmtp = 0;
+	while (defined ($i = shift(@rcpt))) {
+	    my $return_path = $from;
+	    if ($verp->{'enable'} eq 'on') {
+		$return_path = $i ;
+		$return_path =~ s/\@/\=\=a\=\=/; 
+		$return_path = "$Conf{'bounce_email_prefix'}+$return_path\=\=$name\@$robot";
+	    }
+	    $numsmtp++ if (&sendto($msg_header, $msg_body, $return_path, [$i], $robot, $message->{'smime_crypted'}));
+	}
+	
+	return ($numsmtp);
+    }
+    
+    while (defined ($i = shift(@rcpt))) {
+	my @k = reverse(split(/[\.@]/, $i));
+	my @l = reverse(split(/[\.@]/, $j));
+	if ($j && $#sendto >= &Conf::get_robot_conf($robot, 'avg') && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
+	    $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $nrcpt = $size = 0;
+	    @sendto = ();
+	}
+	if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) {
+	    $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $nrcpt = $size = 0;
+	    @sendto = ();
+	}
+	$nrcpt++; $size += length($i) + 5;
+	push(@sendto, $i);
+	$j = $i;
+    }
+    if ($#sendto >= 0) {
+	$numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	
+    }
+    
+    return $numsmtp;
 }
 
 
@@ -398,7 +417,7 @@ sub reaper {
 ####################################################
 sub sendto {
     my($msg_header, $msg_body, $from, $rcpt, $robot, $encrypt) = @_;
-    do_log('debug2', 'mail::sendto(%s, %s, %s)', $from, $rcpt, $encrypt);
+    do_log('debug2', 'mail::sendto(%s, %s, %s', $from, $rcpt, $encrypt);
 
     my $msg;
 

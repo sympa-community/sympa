@@ -205,33 +205,53 @@ while (!$end) {
 	my ($listname, $robot) = split(/\@/,$1);
 	$robot ||= $Conf{'domain'};
 
-	if ($listname eq 'sympa') {
-	    ## In this case return-path should has been set by sympa
-            ## in order to recognize a welcome message bounce
-	    unless (open BOUNCE, "$queue/$file") {
-		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-		rename "$queue/$file", "$queue/BAD-$file";
-		next;
-		}
+         
+	unless (open BOUNCE, "$queue/$file") {
+	    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+	    rename "$queue/$file", "$queue/BAD-$file";
+	    next;
+	}
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
+	my $entity = $parser->read(\*BOUNCE);
+	my $head = $entity->head;
+	my $to = $head->get('to', 0);
+	close BOUNCE ; 
 
-	    my $parser = new MIME::Parser;
-	    $parser->output_to_core(1);
-	    my $entity = $parser->read(\*BOUNCE);
-	    my $head = $entity->head;
-	    my $to = $head->get('to', 0);
-	    close BOUNCE ;
-	    if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\=\=a\=\=(.*)\=\=(.*)\@(.*)$/) {
-		my $who = "$1\@$2";
-		my $listname = $3 ;
-		my $listrobot = $4;
-		my $list = new List ($listname, $listrobot);
+	my $who;
+	chomp $to;	
+	&do_log('debug', 'bounce for :%s:  Conf{bounce_email_prefix}=%sxx',$to,$Conf{'bounce_email_prefix'});
+	$to =~ s/<//;
+	$to =~ s/>//;
+	if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\@(.*)$/) { #VERP in use
+
+	    my $local_part = $1;
+	    my $robot = $2;
+	    my $unique ;
+	    if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
+		$local_part = $1;
+		$unique = $2;
+	    }
+	    $local_part =~ s/\=\=a\=\=/\@/ ;
+	    $local_part =~ /^(.*)\=\=(.*)$/ ; 	    
+	    $who = $1;
+	    $listname = $2 ;
+
+	    &do_log('debug', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot);
+	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
+		&do_log('debug', "VERP for a service message, try to remove the subscriber");
+		my $list = new List ($listname, $robot);		
+		unless($list) {
+		    do_log('notice','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
+		    unlink("$queue/$file");
+		    next;
+		}
 		my $result =$list->check_list_authz('del','smtp',
 						    {'sender' => $Conf{'listmasters'}[0],
 						     'email' => $who});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
-#                    &List::get_action ('del', $listname, $Conf{'listmasters'}[0], 'smtp');
-
+		    
 		if ($action =~ /do_it/i) {
 		    if ($list->is_user($who)) {
 			my $u = $list->delete_user($who);
@@ -239,7 +259,7 @@ while (!$end) {
 			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			
 			unless ($list->send_notify_to_owner('notice',{'who' => $who, 
-						     'gecos' => "", 
+								      'gecos' => "", 
 								      'command' => 'automatic_del', 
 								      'by' => 'listmaster'})) {
 			    &do_log('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
@@ -254,11 +274,14 @@ while (!$end) {
 	    next;
 	}
 
-	## ELSE
+	# else (not a welcome or remind) 
 	my $list = new List ($listname, $robot);
-	if ($list) {
-
-	    do_log('debug',"Processing bouncefile $file for list $listname");      
+	if (! $list) {
+ 	    &do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
+  	    unlink("$queue/$file");
+  	    next;
+ 	}else{
+	    &do_log('debug',"Processing bouncefile $file for list $listname");      
 
 	    unless (open BOUNCE, "$queue/$file") {
 		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
@@ -274,17 +297,14 @@ while (!$end) {
 
 	    unless ($bounce_count) {
 		close BOUNCE;
-
 		unless (open BOUNCE, "$queue/$file") {
 		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
 		    rename "$queue/$file", "$queue/BAD-$file";
 		    next;
-		    }
-		
+		    }		
 		## Analysis of bounced message
 		&anabounce(\*BOUNCE, \%hash, \$from);
 	    }
-
 	    close BOUNCE;
 	    
 	    ## Bounce directory
@@ -297,94 +317,55 @@ while (!$end) {
  
 	    my $adr_count;
 	    ## Bouncing addresses
+
 	    while (my ($rcpt, $status) = each %hash) {
 		$adr_count++;
+		my $bouncefor = $who;
+		$bouncefor ||= $rcpt;
+		&do_log('notice', 'xxxxxxxxxxx who %s rcpt %s bouncefor %s', $who,$rcpt,$bouncefor);
 
-		## Set error message to a status RFC1893 compliant
-		if ($status !~ /^\d+\.\d+\.\d+$/) {
-		    if ($equiv{$status}) {
-			$status = $equiv{$status};
-		    }else {
-			undef $status;
-		    }
-		}
-		    
-		my $escaped_rcpt = $rcpt;
-		$escaped_rcpt = &tools::escape_chars($rcpt);
-		
-		&do_log('debug', 'bouncing address %s in list %s, %s', $rcpt
-			, $list->{'name'}, $status);
-
-		## Original message
-		unless (open BOUNCE, "$queue/$file") {
-		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-		    rename "$queue/$file", "$queue/BAD-$file";
-		    next;
-		}
-		
-		unless (open ARC, ">$bounce_dir/$escaped_rcpt") {
-		    &do_log('notice', "Unable to write $bounce_dir/$escaped_rcpt");
-		    next;
-		}
-		print ARC <BOUNCE>;
-		close BOUNCE;
-		close ARC;
-
-		## History
-		my $first = my $last = time;
-		my $count = 0;
-		
-		my $user = $list->get_subscriber($rcpt);
-		
-		unless ($user) {
-		    &do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $rcpt); 
-		    next;
-		}
-
-		if ($user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
-		    ($first, $count) = ($1, $2);
-		}
-		$count++;
-		
-		$list->update_user($rcpt,{'bounce' => "$first $last $count $status"});
+		next unless (&store_bounce ($bounce_dir,$file,$bouncefor));
+		next unless (&update_subscriber_bounce_history($list, $rcpt, $bouncefor, &canonicalize_status ($status)));
 	    }
     
-	    ## No address found
+	    ## No address found in the bounce itself
 	    unless ($adr_count) {
 		
-		my $escaped_from = &tools::escape_chars($from);
-		&do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
-		
-		## We keep bounce msg
-		if (! -d "$bounce_dir/OTHER") {
-		    unless (mkdir  "$bounce_dir/OTHER",0777) {
-			&do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
-			next;
-		    }
-		}
-		
-		## Original msg
-		if (-w "$bounce_dir/OTHER") {
-		    unless (open BOUNCE, "$queue/$file") {
-			&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-			rename "$queue/$file", "$queue/BAD-$file";
-			next;
-			}
+		if ( $who ) {	# rcpt not recognized in the bounce but VERP was used
+		    &store_bounce ($bounce_dir,$file,$who)
+		    &update_subscriber_bounce_history('unknown', $who); # status is undefined 
+		}else{          # no VERP and no rcpt recognized		
+		    my $escaped_from = &tools::escape_chars($from);
+		    &do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
 		    
-		    unless (open ARC, ">$bounce_dir/OTHER/$escaped_from") {
-			&do_log('notice', "Cannot create $bounce_dir/OTHER/$escaped_from");
-			next;
+		    ## We keep bounce msg
+		    if (! -d "$bounce_dir/OTHER") {
+			unless (mkdir  "$bounce_dir/OTHER",0777) {
+			    &do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
+			    next;
+			}
 		    }
-		    print ARC <BOUNCE>;
-		    close BOUNCE;
-		    close ARC;
-		}else {
-		    &do_log('notice', "Failed to write $bounce_dir/OTHER/$escaped_from");
-		}
+		     
+		    ## Original msg
+		    if (-w "$bounce_dir/OTHER") {
+			unless (open BOUNCE, "$queue/$file") {
+			    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+			    rename "$queue/$file", "$queue/BAD-$file";
+			    next;
+			}
+			
+			unless (open ARC, ">$bounce_dir/OTHER/$escaped_from") {
+			    &do_log('notice', "Cannot create $bounce_dir/OTHER/$escaped_from");
+			    next;
+			}
+			print ARC <BOUNCE>;
+			close BOUNCE;
+			close ARC;
+		    }else {
+			&do_log('notice', "Failed to write $bounce_dir/OTHER/$escaped_from");
+		    }
+	    	}
 	    }
-	    
-	}else {
-	    do_log('debug',"Skipping bouncefile $file for unknown list $listname");
 	}
 	
 	unless (unlink("$queue/$file")) {
@@ -411,17 +392,86 @@ sub sigterm {
     $end = 1;
 }
 
+## copy the bounce to the appropriate filename
+sub store_bounce {
+
+    my $bounce_dir = shift; 
+    my $file= shift;
+    my $rcpt=shift;
+    
+    do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir,$file,$rcpt);
+
+    my $queue = $Conf{'queuebounce'};
+
+    #Store bounce 
+    unless (open BOUNCE, "$queue/$file") {
+	&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+	rename "$queue/$file", "$queue/BAD-$file";
+	return undef;
+    }
+
+    my $filename = &tools::escape_chars($rcpt);    
+    
+    unless (open ARC, ">$bounce_dir/$filename") {
+	&do_log('notice', "Unable to write $bounce_dir/$filename");
+	return undef;
+    }
+    print ARC <BOUNCE>;
+    close BOUNCE; 
+}
 
 
+## Set error message to a status RFC1893 compliant
+sub canonicalize_status {
+
+    my $status =shift;
+    
+    if ($status !~ /^\d+\.\d+\.\d+$/) {
+	if ($equiv{$status}) {
+	    $status = $equiv{$status};
+	}else {
+	    return undef;
+	}
+    }
+    return $status;
+}
 
 
+## update subscriber information
+# $bouncefor : the email address the bounce is related for (may be extracted using verp)
+# $rcpt : the email address recognized in the bounce itself. In most case $rcpt eq $bouncefor
 
+sub update_subscriber_bounce_history {
 
+    my $list = shift;
+    my $rcpt = shift;
+    my $bouncefor = shift;
+    my $status = shift;
+    
+    &do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)',$list->{'name'},$rcpt,$bouncefor,$status); 
 
-
-
-
-
+    my $first = my $last = time;
+    my $count = 0;
+    
+    my $user = $list->get_subscriber($bouncefor);
+    
+    unless ($user) {
+	&do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $bouncefor); 		    
+	return undef;
+    }
+    
+    if ($user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
+	($first, $count) = ($1, $2);
+    }
+    $count++;
+    if ($rcpt ne $bouncefor) {
+	&do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
+	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status",
+				       'bounce_address' => $rcpt});
+    }else{
+	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status"});
+    }
+}
 
 
 

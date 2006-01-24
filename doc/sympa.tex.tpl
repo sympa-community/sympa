@@ -385,6 +385,7 @@ Other date :
    \item Sep 2003 CAS-base and Shibboleth-based authentication
    \item Dec 2003 Sympa SOAP server
    \item Aug 2004 Changed for TT2 template format and PO catalogue format
+   \item     2005 Changed HTML to XHTML + CSS, RSS, List families, ...
 \end {itemize} 
 	  
 
@@ -1551,9 +1552,10 @@ page~\pageref {virtual-robot}).
 \mailaddr {sympa-owner} is the return address for \Sympa error
 messages.
 
-The alias bounce+* is dedicated to collect bounces. It is useful
-only if at least one list uses \texttt { welcome\_return\_path unique } or
-\texttt { remind\_return\_path unique}.
+The alias bounce+* is dedicated to collect bounces where VERP (variable envelope return path) was actived. It is useful
+if \texttt { welcome\_return\_path unique } or \texttt { remind\_return\_path unique} or the
+\cfkeyword {verp\_rate} parameter is no null for at least one list.
+
 Don't forget to run \unixcmd {newaliases} after any change to
 the \file {/etc/aliases} file!
 
@@ -2203,7 +2205,7 @@ files. The server admin module include a CSS administration page that can help y
 	\default {\dir {[SPOOLDIR]/bounce}}
 
         Spool to store bounces (non-delivery reports) received by the \file {bouncequeue}
-	program via the \samplelist-owner (unless this suffix was customized) or bounce+* addresses . This parameter is mandatory
+	program via the \samplelist-owner (unless this suffix was customized) or bounce+* addresses (VERP) . This parameter is mandatory
         and must be an absolute path.
 
 \subsection {\cfkeyword {queuetask}} 
@@ -2317,34 +2319,36 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 
 \section {Bounce related}
 
-\subsection {\cfkeyword {bounce\_warn\_rate}}
-        \label {kw-bounce-warn-rate}
-         
-        \default {30}
+\subsection {\cfkeyword {verp\_rate}}
+	 \label {kw-verp-rate}
+	 \default {0\%}
 
-	Site default value for \lparam {bounce}.
-	The list owner receives a warning whenever a message is distributed and
-	the number of bounces exceeds this value.
+	VERP (Variable Envelop Return Path) is used to ease automatic reconnaissance of
+        subscriber email when receiving a bounce. If VERP is enabled, the subscriber address is encoded
+        in the return path itself so Sympa bounce management processus (bounced) will use the address the bounce
+        was received for to retreive the subscriber email. This is very usefull because sometime, non delivery
+        report does not contain the initial subscriber address but an alternative address where messages
+        are forwarded. VERP is the only solution to detect automaticaly some subscriber errors but the cost
+        of VERP is significant, indeed VERP require to distribute a separate message for each subscriber and
+        brake the bulk mailer grouping optimization.
 
-\subsection {\cfkeyword {bounce\_halt\_rate}}
-        \label {kw-bounce-halt-rate}
-         
-        \default {50}
+	In order to benefit from VERP and kip distribution process fast, Sympa enable VERP only for a specified
+        rate of the subscribers. If texttt {verp\_rate} is 10\% then after 10 messages distributed in the list
+        all subscribers have received at least one message where VERP was enabled. Later distribution message enable
+        VERP also for all users where some bounce was collected and analysed by previous VERP mechanism. 
 
-	\texttt {FOR FUTURE USE}
 
-	Site default value for \lparam {bounce}.
-	Messages will cease to be distributed if the number of bounces exceeds this value.
+        When \texttt {verp\_rate} is null VERP is not used ; if  \texttt {verp\_rate} is 100\% VERP is alway in use.
+
+	VERP requires plussed aliases to be supported and the bounce+* alias to be installed.
 
 \subsection {\cfkeyword {welcome\_return\_path}}
         \label {kw-welcome-return-path}
          
         \default {owner}
 
-	If set to string \texttt {unique}, sympa will use a unique e-mail address in the
-        return path, prefixed by \texttt {bounce+}, in order to remove the corresponding
-	subscriber. Requires the \texttt {bounced} daemon to run and bounce+* alias to
-	be installed (plussed aliases as in sendmail 8.7 and later).
+	If  set to string \texttt {unique}, Sympa enable VERP for welcome message and bounce processing will
+        remove the subscription if a bounce is received for the welcome message. This prevent to add bad address in subscriber list.
 
 \subsection {\cfkeyword {remind\_return\_path}}
         \label {kw-remind-return-path}
@@ -2352,7 +2356,7 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
         \default {owner}
 
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
-	Also requires the bounce+* alias to be installed.
+
 
 \subsection {\cfkeyword {return\_path\_suffix}}
         \label {kw-return-path-suffix}
@@ -2428,6 +2432,7 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 	(days) for a bounce to come back to sympa-server after a post was send to a list.
 	Usually bounces are arriving same day as the original message.
 
+
 \subsection {\cfkeyword {default\_bounce\_level1\_rate}}
         \label {kw-default-bounce-level1-rate}
          
@@ -2451,14 +2456,15 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 
 	\default {bounce}
 
-        The prefix Username (the part of the address preceding the \texttt {@}
-	sign) used in the bounce email. The email is used to collect bounce.
+        The prefix string used to build variable envelope return path (VERP). In the context
+        of VERP enabled, the local part of the address start with a constant string specified by this parameter. The email is used to collect bounce.
+	Plussed aliases are used in order to introduce the variable part of the email that encode the subscriber address. 
 	This parameter is useful if you want to run more than one sympa on the
 	same host (a sympa test for example).
 
 	If you change the default value, you must modify the sympa aliases too.
 
-	For example, if you put :
+	For example, if you set it as :
 
 \begin {quote}
 bounce\_email\_prefix bounce-test
@@ -2471,6 +2477,27 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 \end {quote}
 
  	See \ref {robot-aliases},page~\pageref {robot-aliases} for all aliases.
+
+
+\subsection {\cfkeyword {bounce\_warn\_rate}}
+        \label {kw-bounce-warn-rate}
+         
+        \default {30}
+
+	Site default value for \lparam {bounce}.
+	The list owner receives a warning whenever a message is distributed and
+	the number of bounces exceeds this value.
+
+\subsection {\cfkeyword {bounce\_halt\_rate}}
+        \label {kw-bounce-halt-rate}
+         
+        \default {50}
+
+	\texttt {FOR FUTURE USE}
+
+	Site default value for \lparam {bounce}.
+	Messages will cease to be distributed if the number of bounces exceeds this value.
+
 
 \subsection {\cfkeyword {default\_remind\_task}}
         \label {kw-default-remind-task}

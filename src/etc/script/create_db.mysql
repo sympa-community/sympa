@@ -25,11 +25,12 @@ CREATE TABLE subscriber_table (
 	reception_subscriber	varchar (20),
 	topics_subscriber	varchar (200),
 	bounce_subscriber	varchar (35),
+	bounce_score_subscriber smallint (6),
+	bounce_address_subscriber	varchar (100),
 	comment_subscriber	varchar (150),
 	subscribed_subscriber 	enum ('0','1'),
 	included_subscriber 	enum ('0','1'),
 	include_sources_subscriber varchar(50),
-	bounce_score_subscriber smallint (6),
 	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber),
 	INDEX (user_subscriber,list_subscriber,robot_subscriber)
 );
