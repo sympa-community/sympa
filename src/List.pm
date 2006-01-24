@@ -13108,7 +13108,7 @@ sub move_message {
     &do_log('debug2', "tools::move_mesage($file, $self->{'name'})");
 
     my $dir = $Conf{'queuedistribute'};    
-    my $filename = $self->get_list_id().time.'.'.int(rand(999));
+    my $filename = $self->get_list_id().'.'.time.'.'.int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {
 	&do_log('err', 'Cannot create file %s', "$dir/T.$filename");
