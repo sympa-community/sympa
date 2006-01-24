@@ -2710,14 +2710,26 @@ sub send_msg {
 	my $new_msg = $self->add_parts($txt_msg);
 	if (defined $new_msg) {
 	    $txt_msg = $new_msg;
-       }
+	}
 	my $new_message = new Message($txt_msg);
-	my $result = &mail::mail_message($new_message, $from,$robot, @tabrcpt_txt);
+
+	my @verp_tabrcpt_txt = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_txt, \@tabrcpt_txt_verp);
+	
+	my $result = &mail::mail_message($new_message, $self,  {'enable' => 'off'}, @tabrcpt_txt);
 	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from");
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
+
+	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_txt);
+	unless (defined $result) {
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
+	    return undef;
+	}
+	$nbr_smtp += $result;
+	$nbr_verp += $result;
+
     }
 
    ##Prepare and send message for html reception mode
@@ -2732,12 +2744,23 @@ sub send_msg {
 	    $html_msg = $new_msg;
         }
 	my $new_message = new Message($html_msg);
-	my $result = &mail::mail_message($new_message, $from,$robot, @tabrcpt_html);
+
+	my @verp_tabrcpt_html = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_html, \@tabrcpt_html_verp);
+
+	my $result = &mail::mail_message($new_message, $self , {'enable' => 'off'}, @tabrcpt_html);
 	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from");
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
+
+	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_html);
+	unless (defined $result) {
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
+	    return undef;
+	}
+	$nbr_smtp += $result;
+	$nbr_verp += $result;
     }
 
    ##Prepare and send message for urlize reception mode
@@ -2783,12 +2806,25 @@ sub send_msg {
 	    $url_msg = $new_msg;
 	} 
 	my $new_message = new Message($url_msg);
-	my $result = &mail::mail_message($new_message, $from,$robot, @tabrcpt_url);
+
+
+	my @verp_tabrcpt_url = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_url, \@tabrcpt_url_verp);
+
+	my $result = &mail::mail_message($new_message, $self , {'enable' => 'off'}, @tabrcpt_url);
 	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from");
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
+
+	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_url);
+	unless (defined $result) {
+	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
+	    return undef;
+	}
+	$nbr_smtp += $result;
+	$nbr_verp += $result;
+
     }
 
     return $nbr_smtp;
@@ -3053,6 +3089,149 @@ sub send_global_file {
 
     unless (&mail::mail_file($filename, $who, $data, $robot)) {
 	&do_log('err',"List::send_global_file, could not send template $filename to $who");
+	return undef;
+    }
+
+    return 1;
+}
+
+####################################################
+# send_file                              
+####################################################
+#  Send a message to a user, relative to a list.
+#  Find the tt2 file according to $tpl, set up 
+#  $data for the next parsing (with $context and
+#  configuration)
+#  Message is signed if the list as a key and a 
+#  certificat
+#  
+# IN : -$self (+): ref(List)
+#      -$tpl (+): template file name (file.tt2),
+#         without tt2 extension
+#      -$who (+): SCALAR |ref(ARRAY) - recepient(s)
+#      -$robot (+): robot
+#      -$context : ref(HASH) - for the $data set up 
+#         to parse file tt2, keys can be :
+#         -user : ref(HASH), keys can be :
+#           -email
+#           -lang
+#           -password
+#         -...
+# OUT : 1 | undef
+####################################################
+sub send_file {
+    my($self, $tpl, $who, $robot, $context) = @_;
+    do_log('debug2', 'List::send_file(%s, %s, %s)', $tpl, $who, $robot);
+
+    my $name = $self->{'name'};
+    my $sign_mode;
+
+    my $data = $context;
+
+    ## Any recepients
+    if ((ref ($who) && ($#{$who} < 0)) ||
+	(!ref ($who) && ($who eq ''))) {
+	&do_log('err', 'No recipient for sending %s', $tpl);
+	return undef;
+    }
+    
+    ## Unless multiple recepients
+    unless (ref ($who)) {
+	unless ($data->{'user'}) {
+	    unless ($data->{'user'} = &get_user_db($who)) {
+		$data->{'user'}{'email'} = $who;
+		$data->{'user'}{'lang'} = $self->{'admin'}{'lang'};
+	    }
+	}
+	
+	$data->{'subscriber'} = $self->get_subscriber($who);
+	
+	if ($data->{'subscriber'}) {
+	    $data->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
+	    $data->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
+	    if ($data->{'subscriber'}{'bounce'}) {
+		$data->{'subscriber'}{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+		
+		$data->{'subscriber'}{'first_bounce'} =  &POSIX::strftime("%d %b %Y",localtime($1));
+	    }
+	}
+	
+	unless ($data->{'user'}{'password'}) {
+	    $data->{'user'}{'password'} = &tools::tmp_passwd($who);
+	}
+	
+	## Unique return-path VERP
+	if ((($self->{'admin'}{'welcome_return_path'} eq 'unique') && ($tpl eq 'welcome')) ||
+	    (($self->{'admin'}{'remind_return_path'} eq 'unique') && ($tpl eq 'remind')))  {
+	    my $escapercpt = $who ;
+	    $escapercpt =~ s/\@/\=\=a\=\=/;
+	    $data->{'return_path'} = "$Conf{'bounce_email_prefix'}+$escapercpt\=\=$name";
+	    $data->{'return_path'} .= '==w' if ($tpl eq 'welcome');
+	    $data->{'return_path'} .= '==r' if ($tpl eq 'remind');
+	    $data->{'return_path'} .= "\@$self->{'domain'}";
+	}
+    }
+
+    $data->{'return_path'} ||= $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$self->{'admin'}{'host'};
+
+    ## Lang
+    $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+
+    ## What file   
+    my $lang = &Language::Lang2Locale($data->{'lang'});
+    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$self);
+
+    push @{$tt2_include_path},$self->{'dir'};             ## list directory to get the 'info' file
+    push @{$tt2_include_path},$self->{'dir'}.'/archives'; ## list archives to include the last message
+
+    foreach my $d (@{$tt2_include_path}) {
+	&tt2::add_include_path($d);
+    }
+
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
+	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
+    }
+
+    my @path = &tt2::get_include_path();
+    my $filename = &tools::find_file($tpl.'.tt2',@path);
+    
+    unless (defined $filename) {
+	&do_log('err','Could not find template %s.tt2 in %s', $tpl, join(':',@path));
+	return undef;
+    }
+
+    $data->{'sender'} = $who;
+    $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
+    $data->{'list'}{'name'} = $name;
+    $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
+    $data->{'list'}{'host'} = $self->{'admin'}{'host'};
+    $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
+    $data->{'list'}{'owner'} = $self->get_owners();
+    $data->{'list'}{'dir'} = $self->{'dir'};
+
+    ## Sign mode
+    if ($Conf{'openssl'} &&
+	(-r $self->{'dir'}.'/cert.pem') && (-r $self->{'dir'}.'/private_key')) {
+	$sign_mode = 'smime';
+    }
+
+    # if the list have it's private_key and cert sign the message
+    # . used only for the welcome message, could be usefull in other case ? 
+    # . a list should have several certificats and use if possible a certificat
+    #   issued by the same CA as the receipient CA if it exists 
+    if ($sign_mode eq 'smime') {
+	$data->{'fromlist'} = "$name\@$data->{'list'}{'host'}";
+	$data->{'replyto'} = "$name"."-request\@$data->{'list'}{'host'}";
+    }else{
+	$data->{'fromlist'} = "$name"."-request\@$data->{'list'}{'host'}";
+    }
+
+    $data->{'from'} = $data->{'fromlist'} unless ($data->{'from'});
+
+    $data->{'boundary'} = '----------=_'.&tools::get_message_id($robot) unless ($data->{'boundary'});
+
+    unless (&mail::mail_file($filename, $who, $data, $self->{'domain'}, $sign_mode)) {
+	&do_log('err',"List::send_file, could not send template $filename to $who");
 	return undef;
     }
 
