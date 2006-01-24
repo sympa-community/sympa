@@ -3635,7 +3635,7 @@ sub send_to_editor {
 	   open MSG, ">msg00000.html";
 	   
 
-	   &do_log('notice', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey");
+	   &do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey");
 
 ########################## APRES
 	   print MSG <ARCMOD>;
