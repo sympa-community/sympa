@@ -63,7 +63,8 @@ my @valid_options = qw(
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
-		   'msgcat' => 'localedir');
+		   'msgcat' => 'localedir',
+		   'queueexpire' => '');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -304,8 +305,12 @@ sub load {
     ## Check if we have unknown values.
     foreach $i (sort keys %o) {
 	next if ($valid_options{$i});
-	if ($old_options{$i}) {
-	    printf STDERR  "Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s\n", $o{$i}[1], $i, $old_options{$i};
+	if (defined $old_options{$i}) {
+	    if ($old_options{$i}) {
+		printf STDERR  "Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s\n", $o{$i}[1], $i, $old_options{$i};
+	    }else {
+		printf STDERR  "Line %d of sympa.conf, parameter %s is now obsolete\n", $o{$i}[1], $i;
+	    }
 	}else {
 	    printf STDERR  "Line %d, unknown field: %s in sympa.conf\n", $o{$i}[1], $i;
 	}
