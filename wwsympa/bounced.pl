@@ -332,7 +332,7 @@ while (!$end) {
 		
 		if ( $who ) {	# rcpt not recognized in the bounce but VERP was used
 		    &store_bounce ($bounce_dir,$file,$who)
-		    &update_subscriber_bounce_history('unknown', $who); # status is undefined 
+		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
 		    &do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
