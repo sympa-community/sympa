@@ -949,11 +949,13 @@ sub DoFile {
 	
     ## Q- and B-decode subject
     my $subject_field = $message->{'decoded_subject'};
-        
+    my $list_address;
+
     my ($list, $host, $name);   
     if ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
 	$host = $conf_host;
 	$name = $listname;
+	$list_address = $name.'@'.$host;
     }else {
 	$list = new List ($listname, $robot);
 	unless (defined $list) {
@@ -963,6 +965,7 @@ sub DoFile {
 	}
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
+	$list_address = $list->get_list_address();
 	# setting log_level using list config unless it is set by calling option
 	unless ($main::options{'log_level'}) {
 	    $log_level = $list->{'log_level'};
@@ -976,7 +979,7 @@ sub DoFile {
 	chomp $loop;
 	&do_log('debug2','X-Loop: %s', $loop);
 	#foreach my $l (split(/[\s,]+/, lc($loop))) {
-	    if ($loop eq lc($list->get_list_address())) {
+	    if ($loop eq lc($list_address)) {
 		do_log('notice', "Ignoring message which would cause a loop (X-Loop: $loop)");
 		return undef;
 	    }
@@ -1013,12 +1016,12 @@ sub DoFile {
     if ($rc) {
 	if ( &Conf::get_robot_conf($robot,'antivirus_notify') eq 'sender') {
 	    unless (&List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
-										   'recipient' => $list->get_list_address(),
+										   'recipient' => $list_address,
 										   'lang' => $Language::default_lang})) {
 		&do_log('notice',"Unable to send template 'your infected_msg' to $sender");
 	    }
 	}
-	&do_log('notice', "Message for %s from %s ignored, virus %s found", $list->get_list_address(), $sender, $rc);
+	&do_log('notice', "Message for %s from %s ignored, virus %s found", $list_address, $sender, $rc);
 	return undef;
 
     }elsif (! defined($rc)) {
