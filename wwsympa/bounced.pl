@@ -203,7 +203,7 @@ while (!$end) {
 	    unlink("$queue/$file");
 	}
 	my ($listname, $robot) = split(/\@/,$1);
-	$robot ||= $Conf{'domain'};
+	$robot ||= &List::search_list_among_robots($listname);
 
          
 	unless (open BOUNCE, "$queue/$file") {
@@ -238,6 +238,7 @@ while (!$end) {
 	    $listname = $2 ;
 
 	    &do_log('debug', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot);
+
 	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&do_log('debug', "VERP for a service message, try to remove the subscriber");
 		my $list = new List ($listname, $robot);		
