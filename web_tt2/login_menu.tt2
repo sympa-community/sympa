@@ -32,12 +32,12 @@
 
 [% ELSE %]
   <div class="MenuBlock">    
+        [% IF use_sso %]
       <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
         <input type="hidden" name="list" value="[% list %]" />
-        [% IF use_sso %]
 	  <input type="hidden" name="action" value="sso_login" />
           [% IF sso_number == '1' %]
      	    <strong><div class="menuInactive2">[%|loc%]Magic authentification[%END%]</div></strong>
@@ -53,7 +53,14 @@
             </select>
           [% END %] 
           <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" /><br />
-      [% END %] 
+      </form>
+     [% END %] 
+
+      <form action="[% path_cgi %]" method="post"> 
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="previous_list" value="[% previous_list %]" />
+	<input type="hidden" name="referer" value="[% referer %]" />
+        <input type="hidden" name="list" value="[% list %]" />
 
       <input type="hidden" name="action" value="login" />
       <label for="email">[%|loc%]email address[%END%] :<br />
