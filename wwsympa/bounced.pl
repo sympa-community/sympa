@@ -464,6 +464,7 @@ sub update_subscriber_bounce_history {
     }
     $count++;
     if ($rcpt ne $bouncefor) {
+	&do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
 	&do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
 	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
