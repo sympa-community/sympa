@@ -781,7 +781,7 @@ sub which {
     my %listnames;
 
     
-    foreach my$role ('member','owner','editor') {
+    foreach my $role ('member','owner','editor') {
 	foreach my $list( &List::get_which($sender,$robot,$role) ){         
 	    my $name = $list->{'name'};
 	    $listnames{$name} = $list;
