@@ -251,7 +251,7 @@ while (!$end) {
 						     'email' => $who});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
-		    
+		
 		if ($action =~ /do_it/i) {
 		    if ($list->is_user($who)) {
 			my $u = $list->delete_user($who);
@@ -268,10 +268,9 @@ while (!$end) {
 		}else {
 		    do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
 		}
-		
+		unlink("$queue/$file");
+		next;
 	    }
-	    unlink("$queue/$file");
-	    next;
 	}
 
 	# else (not a welcome or remind) 
