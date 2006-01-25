@@ -2323,22 +2323,10 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 	 \label {kw-verp-rate}
 	 \default {0\%}
 
-	VERP (Variable Envelop Return Path) is used to ease automatic reconnaissance of
-        subscriber email when receiving a bounce. If VERP is enabled, the subscriber address is encoded
-        in the return path itself so Sympa bounce management processus (bounced) will use the address the bounce
-        was received for to retreive the subscriber email. This is very usefull because sometime, non delivery
-        report does not contain the initial subscriber address but an alternative address where messages
-        are forwarded. VERP is the only solution to detect automaticaly some subscriber errors but the cost
-        of VERP is significant, indeed VERP require to distribute a separate message for each subscriber and
-        brake the bulk mailer grouping optimization.
 
-	In order to benefit from VERP and kip distribution process fast, Sympa enable VERP only for a specified
-        rate of the subscribers. If texttt {verp\_rate} is 10\% then after 10 messages distributed in the list
-        all subscribers have received at least one message where VERP was enabled. Later distribution message enable
-        VERP also for all users where some bounce was collected and analysed by previous VERP mechanism. 
+        See \ref {verp},page~\pageref {verp} for more information on VERP in Sympa.
 
-
-        When \texttt {verp\_rate} is null VERP is not used ; if  \texttt {verp\_rate} is 100\% VERP is alway in use.
+        When \cfkeyword {verp\_rate} is null VERP is not used ; if  \cfkeyword {verp\_rate} is 100\% VERP is alway in use.
 
 	VERP requires plussed aliases to be supported and the bounce+* alias to be installed.
 
@@ -4679,6 +4667,7 @@ messages for the new robot domain. Add mail aliases for the robot :
 \begin{verbatim}
 sympa@your.virtual.domain:      "| [MAILERPROGDIR]/queue sympa@your.virtual.domain"
 listmaster@your.virtual.domain: "| [MAILERPROGDIR]/queue listmaster@your.virtual.domain"
+bounce+*@your.virtual.domain:          "| [MAILERPROGDIR]/bouncequeue sympa@your.virtual.domain"\\
 \end{verbatim}
 \end {quote}
 
@@ -9016,6 +9005,25 @@ With these informations, the automatic bounce management is possible:
 %(file:\file {List.pm}), in the field \cfkeyword {bouncers\_levelX->bounce\_level1\_action->format}
 
 \end{itemize}
+
+\section {VERP}
+\label {verp}
+
+	VERP (Variable Envelop Return Path) is used to ease automatic recognition of
+        subscribers email address when receiving a bounce. If VERP is enabled, the subscriber address is encoded
+        in the return path itself so Sympa bounce management processus (bounced) will use the address the bounce
+        was received for to retreive the subscriber email. This is very usefull because sometimes, non delivery
+        report don't contain the initial subscriber email address but an alternative address where messages
+        are forwarded. VERP is the only solution to detect automaticaly these subscriber errors but the cost
+        of VERP is significant, indeed VERP requires to distribute a separate message for each subscriber and
+        break the bulk emailer grouping optimization.
+
+	In order to benefit from VERP and keep distribution process fast, Sympa enables VERP only for a share
+        of the list members. If texttt \cfkeyword {verp\_rate} (see \ref {kw-verp-rate},page~\pageref {kw-verp-rate}) is 10\% then after 10 messages distributed in the list
+        all subscribers have received at least one message where VERP was enabled. Later distribution message enable
+        VERP also for all users where some bounce wer collected and analysed by previous VERP mechanism. 
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands
