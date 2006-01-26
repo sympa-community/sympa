@@ -911,12 +911,12 @@ msgid "%1 / your environment"
 msgstr "%1 / zona ta"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:11
+#: web_tt2/notice.tt2:14
 msgid "%1 : action succeeded"
 msgstr "%1 : operatie reusita"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:14
+#: web_tt2/notice.tt2:17
 #, fuzzy
 msgid "%1 : action succeeded soon"
 msgstr "%1 : operatie reusita"
@@ -928,7 +928,13 @@ msgid "%1 Digest %2"
 msgstr "Digest"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:62
+#: web_tt2/notice.tt2:11
+#, fuzzy
+msgid "%1 addresses have been removed"
+msgstr "Aliasurile listei au fost sterse."
+
+#. (notice.total)
+#: web_tt2/notice.tt2:65
 msgid "%1 addresses have been subscribed"
 msgstr ""
 
@@ -1276,7 +1282,7 @@ msgid "Access control for the document %1"
 msgstr "Drepturi de acces pentru documetul %1"
 
 # nlsref 16,1
-#: src/List.pm:313
+#: src/List.pm:323
 msgid "Account"
 msgstr "Cont"
 
@@ -1318,6 +1324,10 @@ msgstr ""
 "proprietarul \n"
 "    listei."
 
+#: web_tt2/editsubscriber.tt2:55
+msgid "Address detected via VERP technologie"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Cautare avansata"
@@ -1345,7 +1355,7 @@ msgid ""
 msgstr "Mesajul %s pentru lista %s a fost distribuit.\n"
 
 # nlsref 16,3
-#: src/List.pm:321
+#: src/List.pm:331
 msgid "Anonymous sender"
 msgstr "Expeditor anonim"
 
@@ -1378,7 +1388,7 @@ msgstr ""
 "    bumerang"
 
 # nlsref 16,212
-#: src/List.pm:340
+#: src/List.pm:350
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
@@ -1427,7 +1437,7 @@ msgid "Article to be tagged for list %1 from %2"
 msgstr "Articol pentru aprobat %1"
 
 # nlsref 16,31
-#: src/List.pm:566
+#: src/List.pm:576
 msgid "Attachment type"
 msgstr "Tipul atasamentului"
 
@@ -1445,7 +1455,7 @@ msgid "Available commands are:"
 msgstr "Comenzile disponibile sunt:"
 
 # nlsref 16,88
-#: src/List.pm:350
+#: src/List.pm:360
 msgid "Available subscription options"
 msgstr "Preferinte disponibile"
 
@@ -1525,14 +1535,14 @@ msgstr ""
 msgid "Bounces"
 msgstr "Adresa bumerang"
 
-#: web_tt2/editsubscriber.tt2:52
+#: web_tt2/editsubscriber.tt2:58
 #, fuzzy
 msgid "Bounces count :"
 msgstr "Contor adrese bumerang: %1"
 
 # #-#-#-#-#  ro.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: src/List.pm:369 web_tt2/edit_list_request.tt2:10
+#: src/List.pm:379 web_tt2/edit_list_request.tt2:10
 #, fuzzy
 msgid "Bounces management"
 msgstr ""
@@ -1542,7 +1552,7 @@ msgstr ""
 "Managementul mesajelor \n"
 "    bumerang"
 
-#: web_tt2/editsubscriber.tt2:47
+#: web_tt2/editsubscriber.tt2:49
 msgid "Bouncing address"
 msgstr "Adresa bumerang"
 
@@ -1719,7 +1729,7 @@ msgid "Command syntax error."
 msgstr "Comanda eronata.\n"
 
 # nlsref 4,26
-#: web_tt2/notice.tt2:59
+#: web_tt2/notice.tt2:62
 #, fuzzy
 msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr "Lista membrilor:\n"
@@ -1728,7 +1738,7 @@ msgstr "Lista membrilor:\n"
 msgid "Configuration file"
 msgstr "Fisier de configurare"
 
-#: web_tt2/notice.tt2:17
+#: web_tt2/notice.tt2:20
 msgid "Configuration file has been updated"
 msgstr "Fisierul de actualizare a fost actualizat"
 
@@ -1815,7 +1825,7 @@ msgid "Creation date"
 msgstr "Data crearii"
 
 # nlsref 16,12
-#: src/List.pm:442
+#: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Crearea listei"
 
@@ -1835,7 +1845,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,16
-#: src/List.pm:450
+#: src/List.pm:460
 msgid "Custom header field"
 msgstr "Camp header"
 
@@ -2001,11 +2011,11 @@ msgid "Digest for list %1"
 msgstr "Mesaje compilate pentru lista %1"
 
 # nlsref 16,22
-#: src/List.pm:496
+#: src/List.pm:506
 msgid "Digest frequency"
 msgstr "Frecventa de compilare a mesajelor"
 
-#: src/List.pm:504
+#: src/List.pm:514
 msgid "Digest maximum number of messages"
 msgstr ""
 
@@ -2018,7 +2028,7 @@ msgstr "Digest"
 msgid "Directory"
 msgstr ""
 
-#: src/List.pm:867
+#: src/List.pm:877
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -2233,7 +2243,7 @@ msgstr ""
 msgid "Email"
 msgstr "Nomail"
 
-#: web_tt2/editsubscriber.tt2:12
+#: web_tt2/editsubscriber.tt2:10
 #, fuzzy
 msgid "Email :"
 msgstr "Nomail"
@@ -2264,7 +2274,7 @@ msgid "Erreur 404."
 msgstr ""
 
 # nlsref 1,3
-#: src/Conf.pm:248
+#: src/Conf.pm:251
 msgid "Error at line %d : %s"
 msgstr "Greseala în linia %d %s"
 
@@ -2317,7 +2327,7 @@ msgid "Expert mode"
 msgstr "Folder gol"
 
 # nlsref 16,10
-#: src/List.pm:418
+#: src/List.pm:428
 msgid "Expiration of unmoderated messages"
 msgstr "Expirarea mesajelor nemoderate"
 
@@ -2402,41 +2412,41 @@ msgstr ""
 msgid "Families"
 msgstr "Fisier"
 
-#: src/List.pm:560
+#: src/List.pm:570
 #, fuzzy
 msgid "Family name"
 msgstr "denumire lista"
 
 #. (notice.orig_file,notice.new_file)
-#: web_tt2/notice.tt2:68
+#: web_tt2/notice.tt2:71
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Dezabonare de pe lista %1"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:41
+#: web_tt2/notice.tt2:44
 msgid "File %1 saved"
 msgstr "Fisierul %1 salvat"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:29
+#: web_tt2/notice.tt2:32
 #, fuzzy
 msgid "File %1 successfully uploaded!"
 msgstr "Fisierul %1 a fost incarcat!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:32
+#: web_tt2/notice.tt2:35
 #, fuzzy
 msgid "File %1 unziped!"
 msgstr "Fisierul %1 salvat"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:38
+#: web_tt2/notice.tt2:41
 msgid "File %1 waiting for moderation"
 msgstr ""
 
 # nlsref 16,34
-#: src/List.pm:581
+#: src/List.pm:591
 msgid "File inclusion"
 msgstr "Includere fisier"
 
@@ -2445,7 +2455,7 @@ msgstr "Includere fisier"
 msgid "File name"
 msgstr "denumire lista"
 
-#: web_tt2/login_menu.tt2:67
+#: web_tt2/login_menu.tt2:74
 msgid "First login ?"
 msgstr ""
 
@@ -2476,7 +2486,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,32
-#: src/List.pm:570
+#: src/List.pm:580
 msgid "Forced reply address"
 msgstr "Adresa fortata de raspuns"
 
@@ -2703,7 +2713,7 @@ msgstr ""
 "      lista"
 
 # nlsref 16,75
-#: src/List.pm:1138
+#: src/List.pm:1148
 msgid "Inclusions timeout"
 msgstr "Timeout pentru includeri"
 
@@ -2759,7 +2769,7 @@ msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
 # nlsref 16,33
-#: src/List.pm:575
+#: src/List.pm:585
 msgid "Internet domain"
 msgstr "Domeniu internet"
 
@@ -2790,12 +2800,12 @@ msgid ""
 msgstr "Utilizat pentru accesarea ultimului mesaj de pe <list>"
 
 # nlsref 16,135
-#: src/List.pm:781
+#: src/List.pm:791
 msgid "LDAP 2-level query inclusion"
 msgstr "Includere cerere LDAP de nivel 2"
 
 # nlsref 16,35
-#: src/List.pm:673
+#: src/List.pm:683
 msgid "LDAP query inclusion"
 msgstr "Includere cerere LDAP"
 
@@ -2808,13 +2818,13 @@ msgstr "Directorul listelor administrate pe acest nod"
 msgid "Language"
 msgstr "Limba"
 
-#: web_tt2/editsubscriber.tt2:23
+#: web_tt2/editsubscriber.tt2:24
 #, fuzzy
 msgid "Language :"
 msgstr "Limba"
 
 # nlsref 16,55
-#: src/List.pm:892
+#: src/List.pm:902
 msgid "Language of the list"
 msgstr "Limba pentru lista"
 
@@ -2823,7 +2833,7 @@ msgstr "Limba pentru lista"
 msgid "Last update"
 msgstr "Ultima actualizare"
 
-#: web_tt2/editsubscriber.tt2:15
+#: web_tt2/editsubscriber.tt2:16
 #, fuzzy
 msgid "Last update :"
 msgstr "Ultima actualizare:"
@@ -2835,7 +2845,7 @@ msgid "Last update : %1"
 msgstr "Ultima actualizare: %1"
 
 # nlsref 16,77
-#: src/List.pm:1163
+#: src/List.pm:1173
 msgid "Last update of config"
 msgstr "Ultima actualizare a config"
 
@@ -2843,7 +2853,7 @@ msgstr "Ultima actualizare a config"
 msgid "Last update:"
 msgstr "Ultima actualizare:"
 
-#: src/List.pm:910
+#: src/List.pm:920
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -3018,17 +3028,17 @@ msgid ""
 "INFO. It can also be included in the"
 msgstr ""
 
-#: web_tt2/notice.tt2:23
+#: web_tt2/notice.tt2:26
 #, fuzzy
 msgid "List has been closed"
 msgstr "The list's subject"
 
-#: web_tt2/notice.tt2:20
+#: web_tt2/notice.tt2:23
 #, fuzzy
 msgid "List has been purged"
 msgstr "Aliasurile listei au fost sterse."
 
-#: web_tt2/notice.tt2:26
+#: web_tt2/notice.tt2:29
 #, fuzzy
 msgid "List has been restored"
 msgstr "Aliasurile listei au fost sterse."
@@ -3041,7 +3051,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,44
-#: src/List.pm:786
+#: src/List.pm:796
 msgid "List inclusion"
 msgstr "Includere lista"
 
@@ -3184,7 +3194,7 @@ msgid "Load certificate"
 msgstr "Incarca certificatul</"
 
 #: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
-#: web_tt2/login_menu.tt2:63 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:70 web_tt2/loginbanner.tt2:77
 msgid "Login"
 msgstr "Autentifica-te"
 
@@ -3209,7 +3219,7 @@ msgstr "Iesi din sistem"
 msgid "Loop detected"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:68
+#: web_tt2/login_menu.tt2:75
 #, fuzzy
 msgid "Lost password ?"
 msgstr "value=\"Parola mea ?\">"
@@ -3262,11 +3272,11 @@ msgstr "Arhive"
 msgid "Manage Subscribers"
 msgstr "Subscribers"
 
-#: src/List.pm:390
+#: src/List.pm:400
 msgid "Management of bouncers, 1st level"
 msgstr ""
 
-#: src/List.pm:411
+#: src/List.pm:421
 msgid "Management of bouncers, 2nd level"
 msgstr ""
 
@@ -3277,11 +3287,11 @@ msgid "Managing bouncing subscribers:"
 msgstr "Lista nu are abonati in asteptare"
 
 # nlsref 16,56
-#: src/List.pm:918
+#: src/List.pm:928
 msgid "Maximum message size"
 msgstr "Marimea maxima a mesajului"
 
-#: src/List.pm:1191
+#: src/List.pm:1201
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -3392,22 +3402,22 @@ msgid ""
 msgstr ""
 
 # nlsref 15,4
-#: src/List.pm:953
+#: src/List.pm:963
 #, fuzzy
 msgid "Message tagging"
 msgstr "footer pentru mesaj"
 
-#: src/List.pm:929
+#: src/List.pm:939
 #, fuzzy
 msgid "Message topic keywords"
 msgstr "Reseteaza erorile\">"
 
-#: src/List.pm:924
+#: src/List.pm:934
 #, fuzzy
 msgid "Message topic name"
 msgstr "Mesaje pentru moderare:"
 
-#: src/List.pm:935
+#: src/List.pm:945
 #, fuzzy
 msgid "Message topic title"
 msgstr "Mesaje pentru moderare:"
@@ -3486,7 +3496,7 @@ msgstr "Moderator          : %1"
 
 # #-#-#-#-#  ro.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: src/List.pm:530 web_tt2/list_panel.tt2:14
+#: src/List.pm:540 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "Moderatori"
 
@@ -3496,7 +3506,7 @@ msgstr "Moderatori"
 msgid "Moderators List %1 / %2"
 msgstr "Moderatorul listei %1"
 
-#: src/List.pm:551
+#: src/List.pm:561
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
@@ -3542,7 +3552,7 @@ msgstr ""
 msgid "Name"
 msgstr "Nume"
 
-#: web_tt2/editsubscriber.tt2:13
+#: web_tt2/editsubscriber.tt2:14
 msgid "Name :"
 msgstr "Nume :"
 
@@ -3621,7 +3631,7 @@ msgid "No mailing list available."
 msgstr "%1 creare de lista"
 
 #. (notice.list)
-#: web_tt2/notice.tt2:50
+#: web_tt2/notice.tt2:53
 #, fuzzy
 msgid "No message and no document to moderate for list %1"
 msgstr "Nu exista mesaje pentru moderarea pe aceasta lista %1"
@@ -3688,7 +3698,7 @@ msgid "Number of received messages :      %1"
 msgstr "Numar de mesaje primite       :      %1"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:35
+#: web_tt2/notice.tt2:38
 msgid "Old file %1 has been erased"
 msgstr ""
 
@@ -3696,7 +3706,7 @@ msgstr ""
 msgid "Oldest messages first"
 msgstr "Ordonate dupa mesaje vechi"
 
-#: src/List.pm:946
+#: src/List.pm:956
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3752,7 +3762,7 @@ msgstr ""
 
 # #-#-#-#-#  ro.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
-#: src/List.pm:985 web_tt2/login_menu.tt2:10
+#: src/List.pm:995 web_tt2/login_menu.tt2:10
 #, fuzzy
 msgid "Owner"
 msgstr ""
@@ -3789,7 +3799,7 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1010
+#: src/List.pm:1020
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3833,13 +3843,13 @@ msgstr ""
 "b>Inscrierile \n"
 "                  tale</b"
 
-#: web_tt2/editsubscriber.tt2:53
+#: web_tt2/editsubscriber.tt2:59
 #, fuzzy
 msgid "Period :"
 msgstr "perioada"
 
 # nlsref 16,88
-#: src/List.pm:555
+#: src/List.pm:565
 #, fuzzy
 msgid "Periodical subscription expiration task"
 msgstr "Preferinte disponibile"
@@ -3906,7 +3916,7 @@ msgid "Previous page"
 msgstr "Previous page"
 
 # nlsref 16,63
-#: src/List.pm:1016
+#: src/List.pm:1026
 msgid "Priority"
 msgstr "Prioritate"
 
@@ -4007,7 +4017,7 @@ msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "Afisarea membrilor inscrisi in <list>"
 
 # nlsref 16,16
-#: src/List.pm:1067
+#: src/List.pm:1077
 #, fuzzy
 msgid "RFC 2369 Header fields"
 msgstr "Camp header"
@@ -4080,7 +4090,7 @@ msgstr "Megabytes trimisi             :      %1"
 msgid "Reception"
 msgstr "Primire"
 
-#: web_tt2/editsubscriber.tt2:16
+#: web_tt2/editsubscriber.tt2:17
 msgid "Reception :"
 msgstr "Primire :"
 
@@ -4135,7 +4145,7 @@ msgid "Remote IP address"
 msgstr "Adresa Remote"
 
 # nlsref 16,34
-#: src/List.pm:608
+#: src/List.pm:618
 #, fuzzy
 msgid "Remote file inclusion"
 msgstr "Includere fisier"
@@ -4194,7 +4204,7 @@ msgid "Reply"
 msgstr ""
 
 # nlsref 16,66
-#: src/List.pm:1035 src/List.pm:1055
+#: src/List.pm:1045 src/List.pm:1065
 msgid "Reply address"
 msgstr "Adresa de raspuns"
 
@@ -4221,7 +4231,7 @@ msgstr "Aliasuri obligatorii"
 msgid "Required file does not exist."
 msgstr "Fisierul cerut nu exista.\n"
 
-#: web_tt2/editsubscriber.tt2:55
+#: web_tt2/editsubscriber.tt2:61
 msgid "Reset errors"
 msgstr "Reseteaza erorile\">"
 
@@ -4264,7 +4274,7 @@ msgstr "Rezultatul comenzii:"
 msgid "Return to archive %1"
 msgstr "Inapoi in arhiva %1"
 
-#: src/List.pm:1025
+#: src/List.pm:1035
 msgid "Return-path of the REMIND command"
 msgstr ""
 
@@ -4331,12 +4341,12 @@ msgid ""
 msgstr ""
 
 # nlsref 16,51
-#: src/List.pm:863
+#: src/List.pm:873
 msgid "SQL query"
 msgstr "Cerere SQL"
 
 # nlsref 16,45
-#: src/List.pm:878
+#: src/List.pm:888
 msgid "SQL query inclusion"
 msgstr "Cerere includere SQL"
 
@@ -4405,7 +4415,7 @@ msgid "Search lists"
 msgstr "Search lists"
 
 # nlsref 16,11
-#: src/List.pm:424
+#: src/List.pm:434
 msgid "Secret string for generating unique keys"
 msgstr "Sir secret pentru generarea de chei unice"
 
@@ -4454,7 +4464,7 @@ msgid "Sending/reception setup"
 msgstr "Configurare trimitere/primire"
 
 # nlsref 16,69
-#: src/List.pm:1078
+#: src/List.pm:1088
 msgid "Serial number of the config"
 msgstr "Numar de serie pentru config"
 
@@ -4529,7 +4539,7 @@ msgid "Shared document to be approved for %1"
 msgstr "Articol pentru aprobat %1"
 
 # nlsref 16,70
-#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1108 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Fisiere shared"
 
@@ -4579,13 +4589,13 @@ msgstr ""
 msgid "Status"
 msgstr "Statut : %1"
 
-#: web_tt2/editsubscriber.tt2:51
+#: web_tt2/editsubscriber.tt2:57
 #, fuzzy
 msgid "Status :"
 msgstr "Statut : %1"
 
 # nlsref 16,71
-#: src/List.pm:1114
+#: src/List.pm:1124
 msgid "Status of the list"
 msgstr "Statutul listei"
 
@@ -4617,12 +4627,12 @@ msgid "Subject : %1"
 msgstr "Subiect :"
 
 # nlsref 16,72
-#: src/List.pm:1121
+#: src/List.pm:1131
 msgid "Subject of the list"
 msgstr "Subiectul listei"
 
 # nlsref 16,17
-#: src/List.pm:455
+#: src/List.pm:465
 msgid "Subject tagging"
 msgstr "Subiect afisat"
 
@@ -4646,7 +4656,7 @@ msgstr ""
 "Inscrie-te\">\n"
 "  <input type"
 
-#: web_tt2/editsubscriber.tt2:14
+#: web_tt2/editsubscriber.tt2:15
 #, fuzzy
 msgid "Subscribed since :"
 msgstr "Abonat din%1"
@@ -4689,7 +4699,7 @@ msgid "Subscription       : %1"
 msgstr "Inscriere       : %1"
 
 # nlsref 16,18
-#: src/List.pm:469
+#: src/List.pm:479
 msgid "Subscription profile"
 msgstr "Profil de abonare"
 
@@ -4701,7 +4711,7 @@ msgid "Subscription request to list %1"
 msgstr "Cerere de abonare la lista %s"
 
 # nlsref 6,83
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1610
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1599
 msgid "Subscription summary"
 msgstr "Rezumatul abonarilor"
 
@@ -4835,7 +4845,7 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
 #, fuzzy
 msgid "Table of contents:"
 msgstr "Continut:"
@@ -4875,7 +4885,7 @@ msgid "Templates"
 msgstr "Templateuri"
 
 # nlsref 16,4
-#: src/List.pm:335
+#: src/List.pm:345
 msgid "Text archives"
 msgstr "Arhive text"
 
@@ -4890,7 +4900,7 @@ msgstr ""
 #. (file_name)
 #: mail_tt2/urlized_part.tt2:2
 msgid ""
-"The %1 file that was initially attached to this message has been stored of "
+"The %1 file that was initially attached to this message has been stored on "
 "the mailing lists server:"
 msgstr ""
 
@@ -5145,15 +5155,15 @@ msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:182
 #, fuzzy
-msgid "The list is not open."
+msgid "The list is closed."
 msgstr "Fisierul %1 salvat"
 
-#: web_tt2/notice.tt2:53
+#: web_tt2/notice.tt2:56
 #, fuzzy
 msgid "The list of list members have been built/updated."
 msgstr "Nu exista mesaje pentru moderarea pe aceasta lista [% notice.list %]"
 
-#: web_tt2/notice.tt2:56
+#: web_tt2/notice.tt2:59
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "Nu exista mesaje pentru moderarea pe aceasta lista [% notice.list %]"
 
@@ -5630,7 +5640,7 @@ msgstr "Pentru a avea acces la zona ta, trebuie sa fi autentificat"
 msgid "To activate/delete this mailing list :"
 msgstr ""
 
-#: web_tt2/notice.tt2:47
+#: web_tt2/notice.tt2:50
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr ""
 "Pentru \n"
@@ -5802,13 +5812,13 @@ msgid "Topic subscription :"
 msgstr "Dezabonare de pe lista :"
 
 # nlsref 16,74
-#: src/List.pm:940
+#: src/List.pm:950
 #, fuzzy
 msgid "Topics for message categorisation"
 msgstr "Subiecte pentrlista"
 
 # nlsref 16,74
-#: src/List.pm:1131
+#: src/List.pm:1141
 msgid "Topics for the list"
 msgstr "Subiecte pentrlista"
 
@@ -5871,7 +5881,7 @@ msgid "URL"
 msgstr "titlu"
 
 # nlsref 3,1
-#: src/sympa.pl:1699
+#: src/sympa.pl:1682
 msgid "Unable to access directory %s : %m"
 msgstr "%s libraria nu este disponibila: %m"
 
@@ -5944,7 +5954,7 @@ msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
 # nlsref 11,2
-#: src/mail.pm:611
+#: src/mail.pm:630
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Nu se poate crea un canal in smtpto: %m"
 
@@ -6157,7 +6167,7 @@ msgstr "La autentificare("
 msgid "Unsubscribe"
 msgstr "Dezabonare\">"
 
-#: web_tt2/editsubscriber.tt2:39
+#: web_tt2/editsubscriber.tt2:40
 msgid "Unsubscribe the User"
 msgstr "Dezabonare utilizator\">"
 
@@ -6215,7 +6225,7 @@ msgid "Up to higher level directory"
 msgstr "Up toNivelul precedent"
 
 #: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:415
-#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:58
+#: web_tt2/editsubscriber.tt2:39 web_tt2/suboptions.tt2:58
 msgid "Update"
 msgstr "Actualizeaza\">"
 
@@ -6254,12 +6264,12 @@ msgid "User certificate belong to"
 msgstr "Certificatul de utilizare apartine lui"
 
 # nlsref 16,81
-#: src/List.pm:1169
+#: src/List.pm:1179
 msgid "User data source"
 msgstr "Data sursa pentru utilizator"
 
 # nlsref 6,81
-#: mail_tt2/helpfile.tt2:2 src/Commands.pm:197 src/Commands.pm:213
+#: mail_tt2/helpfile.tt2:2 src/Commands.pm:196 src/Commands.pm:212
 msgid "User guide"
 msgstr "Ghidul utilizatorului"
 
@@ -6284,7 +6294,7 @@ msgstr ""
 "Validare\">\n"
 "      </FORM>"
 
-#: web_tt2/editsubscriber.tt2:54
+#: web_tt2/editsubscriber.tt2:60
 msgid "View last bounce"
 msgstr ""
 "Vezi \n"
@@ -6294,12 +6304,12 @@ msgstr ""
 msgid "Virtual Robots"
 msgstr "Roboti virtuali"
 
-#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:51
+#: web_tt2/editsubscriber.tt2:23 web_tt2/suboptions.tt2:51
 msgid "Visibility :"
 msgstr "Vizibilitate :"
 
 # nlsref 16,82
-#: src/List.pm:1175
+#: src/List.pm:1185
 msgid "Visibility of the list"
 msgstr "Vizibilitatea listei"
 
@@ -6350,7 +6360,7 @@ msgid "We stopped delivery of this email."
 msgstr "Am oprit trimiterea mesajului catre lista."
 
 # nlsref 16,83
-#: src/List.pm:1196
+#: src/List.pm:1206
 msgid "Web archives"
 msgstr "Arhive WEB"
 
@@ -6396,7 +6406,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,85
-#: src/List.pm:1202
+#: src/List.pm:1212
 msgid "Welcome return-path"
 msgstr "Bun venit prin calea de returnare"
 
@@ -6427,57 +6437,57 @@ msgid ""
 msgstr ""
 
 # nlsref 16,2
-#: src/List.pm:317
+#: src/List.pm:327
 msgid "Who can add subscribers"
 msgstr "Cine poate adauga abonati"
 
 # nlsref 16,21
-#: src/List.pm:473
+#: src/List.pm:483
 msgid "Who can delete subscribers"
 msgstr "Cine poate sterge abonatii"
 
 # nlsref 16,87
-#: src/List.pm:1087
+#: src/List.pm:1097
 msgid "Who can edit"
 msgstr "Cine poate edita"
 
 # nlsref 16,54
-#: src/List.pm:886
+#: src/List.pm:896
 msgid "Who can invite people"
 msgstr "Cine poate invita pe altii"
 
 # nlsref 16,67
-#: src/List.pm:1060
+#: src/List.pm:1070
 msgid "Who can review subscribers"
 msgstr "Cine poate verifica abonatii"
 
 # nlsref 16,68
-#: src/List.pm:1071
+#: src/List.pm:1081
 msgid "Who can send messages"
 msgstr "Cine poate trimite mesaje"
 
 # nlsref 16,64
-#: src/List.pm:1020
+#: src/List.pm:1030
 msgid "Who can start a remind process"
 msgstr "Cine poate porni un proces de trimitere de mesaje de atentionare"
 
 # nlsref 16,73
-#: src/List.pm:1125
+#: src/List.pm:1135
 msgid "Who can subscribe to the list"
 msgstr "Cine se poate abona la lista"
 
 # nlsref 16,76
-#: src/List.pm:1142
+#: src/List.pm:1152
 msgid "Who can unsubscribe"
 msgstr "Cine se poate dezabona"
 
 # nlsref 16,86
-#: src/List.pm:1083
+#: src/List.pm:1093
 msgid "Who can view"
 msgstr "Cine poate vizualiza"
 
 # nlsref 16,53
-#: src/List.pm:882
+#: src/List.pm:892
 msgid "Who can view list information"
 msgstr "Cine poate vizualiza informatiile despre lisat"
 
@@ -6539,7 +6549,7 @@ msgstr ""
 msgid "You can subscribe again :"
 msgstr "Te poti re-abona din nou trimitand un mesaj :"
 
-#: web_tt2/notice.tt2:65
+#: web_tt2/notice.tt2:68
 #, fuzzy
 msgid "You have been authenticated"
 msgstr "La autentificare("
@@ -6797,7 +6807,7 @@ msgstr ""
 msgid "Your other email addresses"
 msgstr "Celalalte adrese email"
 
-#: web_tt2/notice.tt2:44
+#: web_tt2/notice.tt2:47
 msgid "Your password has been emailed to you"
 msgstr "Parola ti-a fost trimisa"
 
@@ -6925,11 +6935,11 @@ msgid "access"
 msgstr "acces"
 
 # nlsref 16,6
-#: src/List.pm:1179 src/List.pm:331
+#: src/List.pm:1189 src/List.pm:341
 msgid "access right"
 msgstr "Drept de accesare"
 
-#: src/List.pm:381 src/List.pm:402
+#: src/List.pm:391 src/List.pm:412
 msgid "action for this population"
 msgstr ""
 
@@ -7061,7 +7071,7 @@ msgid "case sensitive"
 msgstr "caz senzitiv"
 
 # nlsref 16,208
-#: src/List.pm:808
+#: src/List.pm:818
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
@@ -7108,12 +7118,12 @@ msgid "concealed"
 msgstr ""
 
 # nlsref 16,94
-#: src/List.pm:843
+#: src/List.pm:853
 msgid "connection options"
 msgstr "Optiuni de conectare"
 
 # nlsref 16,98
-#: src/List.pm:663
+#: src/List.pm:673
 msgid "connection timeout"
 msgstr "Timeout conectare"
 
@@ -7140,40 +7150,40 @@ msgstr ""
 msgid "daily update of the certificate revocation list"
 msgstr ""
 
-#: src/List.pm:585
+#: src/List.pm:595
 msgid "data location URL"
 msgstr ""
 
 # nlsref 16,48
-#: src/List.pm:839
+#: src/List.pm:849
 msgid "database name"
 msgstr "Numele bazei de date"
 
 # nlsref 16,46
-#: src/List.pm:834
+#: src/List.pm:844
 #, fuzzy
 msgid "database port"
 msgstr "Tipul bazei de date"
 
 # nlsref 16,46
-#: src/List.pm:825
+#: src/List.pm:835
 msgid "database type"
 msgstr "Tipul bazei de date"
 
-#: src/List.pm:540 src/List.pm:995
+#: src/List.pm:1005 src/List.pm:550
 #, fuzzy
 msgid "datasource parameters"
 msgstr ""
 "Configurarea \n"
 "    surselor informatiilor"
 
-#: src/List.pm:1153 src/List.pm:901
+#: src/List.pm:1163 src/List.pm:911
 #, fuzzy
 msgid "date"
 msgstr "Actualizeaza\">"
 
 # nlsref 16,23
-#: src/List.pm:480
+#: src/List.pm:490
 msgid "days"
 msgstr "Zile"
 
@@ -7237,12 +7247,12 @@ msgid "editor rejection message"
 msgstr "mesaj de respingere din partea editorului"
 
 # nlsref 16,27
-#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
+#: src/List.pm:520 src/List.pm:970 web_tt2/login_menu.tt2:66
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "Adresa email"
 
-#: src/List.pm:1103 src/List.pm:1108
+#: src/List.pm:1113 src/List.pm:1118
 msgid "email address protection method"
 msgstr ""
 
@@ -7260,11 +7270,11 @@ msgid "entire word"
 msgstr "intregi"
 
 # nlsref 16,148
-#: src/List.pm:848
+#: src/List.pm:858
 msgid "environment variables for database connexion"
 msgstr "Variabile de mediu pentru conectarea cu baza de date"
 
-#: src/List.pm:1148 src/List.pm:897
+#: src/List.pm:1158 src/List.pm:907
 #, fuzzy
 msgid "epoch date"
 msgstr "Actualizeaza\">"
@@ -7284,47 +7294,47 @@ msgid "expiration routine run yearly"
 msgstr ""
 
 # nlsref 16,42
-#: src/List.pm:647
+#: src/List.pm:657
 msgid "extracted attribute"
 msgstr "Atribut extras"
 
 # nlsref 16,41
-#: src/List.pm:641
+#: src/List.pm:651
 msgid "filter"
 msgstr "Filter"
 
 # nlsref 16,198
-#: src/List.pm:726
+#: src/List.pm:736
 msgid "first-level connection timeout"
 msgstr "Timeout conectare la primul nivel"
 
 # nlsref 16,142
-#: src/List.pm:710
+#: src/List.pm:720
 msgid "first-level extracted attribute"
 msgstr "Atribut extras la primul nivel"
 
 # nlsref 16,141
-#: src/List.pm:705
+#: src/List.pm:715
 msgid "first-level filter"
 msgstr "Filtru la primul nivel"
 
 # nlsref 16,201
-#: src/List.pm:732
+#: src/List.pm:742
 msgid "first-level regular expression"
 msgstr "Primul nivel al unei expresii obisnuite"
 
 # nlsref 16,197
-#: src/List.pm:720
+#: src/List.pm:730
 msgid "first-level search scope"
 msgstr "Scopul cautarii la primul nivel"
 
 # nlsref 16,143
-#: src/List.pm:715
+#: src/List.pm:725
 msgid "first-level selection"
 msgstr "Selectie la primul nivel"
 
 # nlsref 16,140
-#: src/List.pm:699
+#: src/List.pm:709
 msgid "first-level suffix"
 msgstr "Sufix la primul nivel"
 
@@ -7351,12 +7361,12 @@ msgid "for anyone without authentication"
 msgstr ""
 
 # nlsref 16,5
-#: src/List.pm:326
+#: src/List.pm:336
 msgid "frequency"
 msgstr "Frecventa"
 
 #. (current_subscriber.first_bounce,current_subscriber.last_bounce)
-#: web_tt2/editsubscriber.tt2:53
+#: web_tt2/editsubscriber.tt2:59
 #, fuzzy
 msgid "from %1 to %2"
 msgstr "Perioada : de la %1 la%2"
@@ -7372,7 +7382,7 @@ msgid "global remind message"
 msgstr "mesaj global de avertizare"
 
 # nlsref 16,9
-#: src/List.pm:365
+#: src/List.pm:375
 msgid "halt rate"
 msgstr "Rata de orpire"
 
@@ -7386,7 +7396,7 @@ msgid "homepage"
 msgstr "[% list.name %] pagina principala"
 
 # nlsref 16,24
-#: src/List.pm:486
+#: src/List.pm:496
 msgid "hour"
 msgstr "Ore"
 
@@ -7554,7 +7564,7 @@ msgid "message header"
 msgstr "header pentru mesaj"
 
 # nlsref 16,25
-#: src/List.pm:492
+#: src/List.pm:502
 msgid "minute"
 msgstr "Minute"
 
@@ -7571,7 +7581,7 @@ msgstr ""
 "subscriber"
 
 # nlsref 16,29
-#: src/List.pm:520 src/List.pm:970
+#: src/List.pm:530 src/List.pm:980
 msgid "name"
 msgstr "Nume"
 
@@ -7617,7 +7627,7 @@ msgstr "Cine poate vizualiza"
 msgid "notice mode"
 msgstr "intregi"
 
-#: src/List.pm:386 src/List.pm:407
+#: src/List.pm:396 src/List.pm:417
 msgid "notification"
 msgstr ""
 
@@ -7661,7 +7671,7 @@ msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
 # nlsref 16,92
-#: src/List.pm:1046
+#: src/List.pm:1056
 msgid "other email address"
 msgstr "Alte adrese email"
 
@@ -7699,7 +7709,7 @@ msgstr ""
 msgid "part of word"
 msgstr "<b>i</b> din cuvinte"
 
-#: web_tt2/login_menu.tt2:61 web_tt2/loginbanner.tt2:76
+#: web_tt2/login_menu.tt2:68 web_tt2/loginbanner.tt2:76
 #: web_tt2/sigrequest.tt2:35 web_tt2/sigrequest.tt2:64
 #: web_tt2/subrequest.tt2:28 web_tt2/subrequest.tt2:58
 msgid "password"
@@ -7710,6 +7720,10 @@ msgstr "parola"
 msgid "password: %1"
 msgstr "password: %1"
 
+#: src/List.pm:1217
+msgid "percentage of message sent with verp"
+msgstr ""
+
 # nlsref 16,83
 #: src/etc/create_list_templates/hotline/comment.tt2:4
 #: src/etc/create_list_templates/private_working_group/comment.tt2:4
@@ -7718,17 +7732,17 @@ msgid "private archives"
 msgstr "Arhive WEB"
 
 # nlsref 16,30
-#: src/List.pm:525
+#: src/List.pm:535
 msgid "private information"
 msgstr "Informatii private"
 
 # nlsref 16,61
-#: src/List.pm:975
+#: src/List.pm:985
 msgid "private informations"
 msgstr "Informatii confidentiale"
 
 # nlsref 16,62
-#: src/List.pm:1005 src/List.pm:980
+#: src/List.pm:1015 src/List.pm:990
 msgid "profile"
 msgstr "Profil"
 
@@ -7785,20 +7799,20 @@ msgstr ""
 msgid "purge of orphan entries in user table every month"
 msgstr ""
 
-#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
+#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
 #: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "mut"
 
 # nlsref 16,203
-#: src/List.pm:1094 src/List.pm:1186
+#: src/List.pm:1104 src/List.pm:1196
 msgid "quota"
 msgstr ""
 
 # nlsref 16,19
-#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
-#: src/List.pm:545 src/List.pm:965
+#: src/List.pm:1010 src/List.pm:357 src/List.pm:470 src/List.pm:525
+#: src/List.pm:555 src/List.pm:975
 msgid "reception mode"
 msgstr "Modalitate de primire"
 
@@ -7820,32 +7834,32 @@ msgid "remind message sent to subscribers every year"
 msgstr ""
 
 # nlsref 16,36
-#: src/List.pm:614 src/List.pm:678 src/List.pm:791 src/List.pm:830
+#: src/List.pm:624 src/List.pm:688 src/List.pm:801 src/List.pm:840
 msgid "remote host"
 msgstr "Remote host"
 
 # nlsref 16,206
-#: src/List.pm:820
+#: src/List.pm:830
 msgid "remote list inclusion"
 msgstr ""
 
 # nlsref 16,39
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
+#: src/List.pm:608 src/List.pm:641 src/List.pm:705 src/List.pm:867
 msgid "remote password"
 msgstr "Remote password"
 
 # nlsref 16,207
-#: src/List.pm:803
+#: src/List.pm:813
 msgid "remote path of sympa list dump"
 msgstr ""
 
 # nlsref 16,37
-#: src/List.pm:620 src/List.pm:684 src/List.pm:797
+#: src/List.pm:630 src/List.pm:694 src/List.pm:807
 msgid "remote port"
 msgstr "Remote port"
 
 # nlsref 16,38
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
+#: src/List.pm:601 src/List.pm:635 src/List.pm:699 src/List.pm:862
 msgid "remote user"
 msgstr "Remote user"
 
@@ -7867,7 +7881,7 @@ msgid "requires authentication then owner approval"
 msgstr ""
 
 # nlsref 16,93
-#: src/List.pm:1051
+#: src/List.pm:1061
 msgid "respect of existing header field"
 msgstr "Respecta headerul campului existent"
 
@@ -7946,47 +7960,47 @@ msgid "scenario source"
 msgstr "Scenario test module"
 
 # nlsref 16,97
-#: src/List.pm:657
+#: src/List.pm:667
 msgid "search scope"
 msgstr "Scopul cautarii"
 
 # nlsref 16,200
-#: src/List.pm:764
+#: src/List.pm:774
 msgid "second-level connection timeout"
 msgstr "Timeout conectare la al doilea nivel"
 
 # nlsref 16,146
-#: src/List.pm:748
+#: src/List.pm:758
 msgid "second-level extracted attribute"
 msgstr "Atribut extras la al doilea nivel"
 
 # nlsref 16,145
-#: src/List.pm:742
+#: src/List.pm:752
 msgid "second-level filter template"
 msgstr "Filter template la al doilea nivel"
 
 # nlsref 16,202
-#: src/List.pm:770
+#: src/List.pm:780
 msgid "second-level regular expression"
 msgstr "Al doilea nivel al unei expresii obisnuite"
 
 # nlsref 16,199
-#: src/List.pm:758
+#: src/List.pm:768
 msgid "second-level search scope"
 msgstr "Scopul cautarii la al doilea nivel"
 
 # nlsref 16,147
-#: src/List.pm:753
+#: src/List.pm:763
 msgid "second-level selection"
 msgstr "Selectie la al doilea nivel"
 
 # nlsref 16,144
-#: src/List.pm:736
+#: src/List.pm:746
 msgid "second-level suffix template"
 msgstr "Suffix template la al doilea nivel"
 
 # nlsref 16,43
-#: src/List.pm:652
+#: src/List.pm:662
 msgid "selection (if multiple)"
 msgstr "Selectie (daca e multipla)"
 
@@ -8009,8 +8023,8 @@ msgid "session"
 msgstr "Sesiune"
 
 # nlsref 16,209
-#: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:871
+#: src/List.pm:613 src/List.pm:677 src/List.pm:784 src/List.pm:823
+#: src/List.pm:881
 msgid "short name for this source"
 msgstr ""
 
@@ -8059,7 +8073,7 @@ msgid "subscription request confirmed"
 msgstr "Nu exista cereri de inscriere"
 
 # nlsref 16,40
-#: src/List.pm:635
+#: src/List.pm:645
 msgid "suffix"
 msgstr "Sufix"
 
@@ -8099,7 +8113,7 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:535 src/List.pm:990
+#: src/List.pm:1000 src/List.pm:545
 #, fuzzy
 msgid "the datasource"
 msgstr "Data sursa pentru utilizator"
@@ -8139,7 +8153,7 @@ msgstr "Modificarea emailului pentru lista nu a putut fi operata %1"
 msgid "thread"
 msgstr ""
 
-#: src/List.pm:376 src/List.pm:397
+#: src/List.pm:386 src/List.pm:407
 msgid "threshold"
 msgstr ""
 
@@ -8171,7 +8185,7 @@ msgid "urlize mode"
 msgstr "Ghidul utilizatorului"
 
 # nlsref 16,91
-#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1051 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "Valoare"
 
@@ -8185,12 +8199,12 @@ msgid "virus infection message"
 msgstr "mesaj de infectare cu virus"
 
 # nlsref 16,20
-#: src/List.pm:465
+#: src/List.pm:475
 msgid "visibility"
 msgstr "Visibilitate"
 
 # nlsref 16,8
-#: src/List.pm:358
+#: src/List.pm:368
 msgid "warn rate"
 msgstr "Rata de avertizare"
 
@@ -8200,13 +8214,13 @@ msgid "welcome message"
 msgstr "mesaj de bun venit"
 
 # nlsref 16,53
-#: src/List.pm:906
+#: src/List.pm:916
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Cine poate vizualiza informatiile despre lisat"
 
 # nlsref 16,77
-#: src/List.pm:1159
+#: src/List.pm:1169
 #, fuzzy
 msgid "who updated the config"
 msgstr "Ultima actualizare a config"

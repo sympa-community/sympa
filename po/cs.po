@@ -791,12 +791,12 @@ msgid "%1 / your environment"
 msgstr "%1 / vaše nastavení"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:11
+#: web_tt2/notice.tt2:14
 msgid "%1 : action succeeded"
 msgstr "%1 : příkaz proveden úspěšně"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:14
+#: web_tt2/notice.tt2:17
 #, fuzzy
 msgid "%1 : action succeeded soon"
 msgstr "%1 : příkaz proveden úspěšně"
@@ -807,7 +807,13 @@ msgid "%1 Digest %2"
 msgstr "%1 Souhrn %2"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:62
+#: web_tt2/notice.tt2:11
+#, fuzzy
+msgid "%1 addresses have been removed"
+msgstr "Aliasy konference byly odstraněny."
+
+#. (notice.total)
+#: web_tt2/notice.tt2:65
 msgid "%1 addresses have been subscribed"
 msgstr ""
 
@@ -1146,7 +1152,7 @@ msgstr "Oprávnění"
 msgid "Access control for the document %1"
 msgstr "Přístupová k dokumentu %1"
 
-#: src/List.pm:313
+#: src/List.pm:323
 msgid "Account"
 msgstr "Účet"
 
@@ -1185,6 +1191,10 @@ msgstr ""
 msgid "Adding a user to the list is restricted to list owners."
 msgstr "pouze pro vlastníky konference"
 
+#: web_tt2/editsubscriber.tt2:55
+msgid "Address detected via VERP technologie"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Pokročilé vyhledávání"
@@ -1212,7 +1222,7 @@ msgstr ""
 "Šifrovaná zpráva od %1 byla odeslána\n"
 "Předmět : %2\n"
 
-#: src/List.pm:321
+#: src/List.pm:331
 msgid "Anonymous sender"
 msgstr "Anonymní odesilatel"
 
@@ -1236,7 +1246,7 @@ msgstr "Archív konference"
 msgid "Archive Management"
 msgstr "Správa archívu"
 
-#: src/List.pm:340
+#: src/List.pm:350
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivuj šifrované zprávy jako:"
 
@@ -1282,7 +1292,7 @@ msgstr "Prispevek do konference %1 od %2"
 msgid "Article to be tagged for list %1 from %2"
 msgstr "Prispevek do konference %1 od %2"
 
-#: src/List.pm:566
+#: src/List.pm:576
 msgid "Attachment type"
 msgstr "Typ přílohy"
 
@@ -1299,7 +1309,7 @@ msgstr "Autor"
 msgid "Available commands are:"
 msgstr "Dostupné příkazy jsou:"
 
-#: src/List.pm:350
+#: src/List.pm:360
 msgid "Available subscription options"
 msgstr "Dostupné možnosti odběru zpráv"
 
@@ -1382,15 +1392,15 @@ msgstr ""
 msgid "Bounces"
 msgstr "Vrácené adresy"
 
-#: web_tt2/editsubscriber.tt2:52
+#: web_tt2/editsubscriber.tt2:58
 msgid "Bounces count :"
 msgstr "Počet vrácených zpráv : %1"
 
-#: src/List.pm:369 web_tt2/edit_list_request.tt2:10
+#: src/List.pm:379 web_tt2/edit_list_request.tt2:10
 msgid "Bounces management"
 msgstr "Správa chybných adres"
 
-#: web_tt2/editsubscriber.tt2:47
+#: web_tt2/editsubscriber.tt2:49
 msgid "Bouncing address"
 msgstr "Vracející se adresa"
 
@@ -1556,7 +1566,7 @@ msgstr ""
 msgid "Command syntax error."
 msgstr ""
 
-#: web_tt2/notice.tt2:59
+#: web_tt2/notice.tt2:62
 #, fuzzy
 msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr "Databáze členů byla aktualizována"
@@ -1565,7 +1575,7 @@ msgstr "Databáze členů byla aktualizována"
 msgid "Configuration file"
 msgstr "Konfigurační soubor"
 
-#: web_tt2/notice.tt2:17
+#: web_tt2/notice.tt2:20
 msgid "Configuration file has been updated"
 msgstr "Soubor s konfigurací byl změněn"
 
@@ -1642,7 +1652,7 @@ msgstr "Vytvoření konference"
 msgid "Creation date"
 msgstr "Datum vytvoření"
 
-#: src/List.pm:442
+#: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Vytvoření konference"
 
@@ -1661,7 +1671,7 @@ msgid ""
 "value is <a target=\"test\" href=\"%1\">%1</a>)."
 msgstr ""
 
-#: src/List.pm:450
+#: src/List.pm:460
 msgid "Custom header field"
 msgstr "Upravení hlavičky"
 
@@ -1816,11 +1826,11 @@ msgstr "Přehled       : %1"
 msgid "Digest for list %1"
 msgstr "Shrnuti konference %1"
 
-#: src/List.pm:496
+#: src/List.pm:506
 msgid "Digest frequency"
 msgstr "Frekvence zasílání"
 
-#: src/List.pm:504
+#: src/List.pm:514
 msgid "Digest maximum number of messages"
 msgstr ""
 
@@ -1832,7 +1842,7 @@ msgstr ""
 msgid "Directory"
 msgstr "Adresář"
 
-#: src/List.pm:867
+#: src/List.pm:877
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -2030,7 +2040,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:12
+#: web_tt2/editsubscriber.tt2:10
 msgid "Email :"
 msgstr ""
 
@@ -2058,7 +2068,7 @@ msgstr ""
 msgid "Erreur 404."
 msgstr ""
 
-#: src/Conf.pm:248
+#: src/Conf.pm:251
 msgid "Error at line %d : %s"
 msgstr "Chyba na řádku %d : %s"
 
@@ -2106,7 +2116,7 @@ msgstr "Informace o konferenci:"
 msgid "Expert mode"
 msgstr "Práce s dokumenty, editace/přidání/smazání"
 
-#: src/List.pm:418
+#: src/List.pm:428
 msgid "Expiration of unmoderated messages"
 msgstr "Vypršení nemoderované zprávy"
 
@@ -2177,38 +2187,38 @@ msgstr "Nelze odstranit aliasy"
 msgid "Families"
 msgstr "Skupiny"
 
-#: src/List.pm:560
+#: src/List.pm:570
 #, fuzzy
 msgid "Family name"
 msgstr "Jméno souboru"
 
 #. (notice.orig_file,notice.new_file)
-#: web_tt2/notice.tt2:68
+#: web_tt2/notice.tt2:71
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Starý soubor %1 byl vymazán"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:41
+#: web_tt2/notice.tt2:44
 msgid "File %1 saved"
 msgstr "Soubor %1 uložen"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:29
+#: web_tt2/notice.tt2:32
 msgid "File %1 successfully uploaded!"
 msgstr "Soubor %1 byl úspěšně nahrán!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:32
+#: web_tt2/notice.tt2:35
 msgid "File %1 unziped!"
 msgstr "Soubor %1 uložen"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:38
+#: web_tt2/notice.tt2:41
 msgid "File %1 waiting for moderation"
 msgstr "Soubor %1 čeká na schválení"
 
-#: src/List.pm:581
+#: src/List.pm:591
 msgid "File inclusion"
 msgstr "Vložení souboru"
 
@@ -2216,7 +2226,7 @@ msgstr "Vložení souboru"
 msgid "File name"
 msgstr "Jméno souboru"
 
-#: web_tt2/login_menu.tt2:67
+#: web_tt2/login_menu.tt2:74
 msgid "First login ?"
 msgstr "První přihlášení ?"
 
@@ -2245,7 +2255,7 @@ msgid ""
 "scenario. "
 msgstr ""
 
-#: src/List.pm:570
+#: src/List.pm:580
 msgid "Forced reply address"
 msgstr "Vynucená adresa odpovědi"
 
@@ -2454,7 +2464,7 @@ msgstr ""
 msgid "Inactive lists"
 msgstr "Neaktivní konference"
 
-#: src/List.pm:1138
+#: src/List.pm:1148
 msgid "Inclusions timeout"
 msgstr ""
 
@@ -2508,7 +2518,7 @@ msgstr ""
 msgid "Internal scenario error for 'create_list'."
 msgstr "Interní chyba v šabloně create_list"
 
-#: src/List.pm:575
+#: src/List.pm:585
 msgid "Internet domain"
 msgstr "Doména"
 
@@ -2538,11 +2548,11 @@ msgid ""
 msgstr ""
 "LAST <list>                 * Pro získání poslední zprávy z konference <list>"
 
-#: src/List.pm:781
+#: src/List.pm:791
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:673
+#: src/List.pm:683
 msgid "LDAP query inclusion"
 msgstr ""
 
@@ -2554,11 +2564,11 @@ msgstr "Seznam konferenc na tomto potai"
 msgid "Language"
 msgstr "Jazyk"
 
-#: web_tt2/editsubscriber.tt2:23
+#: web_tt2/editsubscriber.tt2:24
 msgid "Language :"
 msgstr "Jazyk :"
 
-#: src/List.pm:892
+#: src/List.pm:902
 msgid "Language of the list"
 msgstr "Jazyk konference"
 
@@ -2567,7 +2577,7 @@ msgstr "Jazyk konference"
 msgid "Last update"
 msgstr "Poslední změna"
 
-#: web_tt2/editsubscriber.tt2:15
+#: web_tt2/editsubscriber.tt2:16
 msgid "Last update :"
 msgstr "Poslední změna :"
 
@@ -2577,7 +2587,7 @@ msgstr "Poslední změna :"
 msgid "Last update : %1"
 msgstr "Datum poslední změny : %1"
 
-#: src/List.pm:1163
+#: src/List.pm:1173
 msgid "Last update of config"
 msgstr "Poslední změna konfigurace"
 
@@ -2585,7 +2595,7 @@ msgstr "Poslední změna konfigurace"
 msgid "Last update:"
 msgstr "Poslední změna:"
 
-#: src/List.pm:910
+#: src/List.pm:920
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -2738,17 +2748,17 @@ msgid ""
 "INFO. It can also be included in the"
 msgstr ""
 
-#: web_tt2/notice.tt2:23
+#: web_tt2/notice.tt2:26
 #, fuzzy
 msgid "List has been closed"
 msgstr "Konference byla uzavřena"
 
-#: web_tt2/notice.tt2:20
+#: web_tt2/notice.tt2:23
 #, fuzzy
 msgid "List has been purged"
 msgstr "Konference byla obnovena"
 
-#: web_tt2/notice.tt2:26
+#: web_tt2/notice.tt2:29
 #, fuzzy
 msgid "List has been restored"
 msgstr "Konference byla obnovena"
@@ -2760,7 +2770,7 @@ msgid ""
 "description)"
 msgstr ""
 
-#: src/List.pm:786
+#: src/List.pm:796
 msgid "List inclusion"
 msgstr "Informace o konferenci"
 
@@ -2886,7 +2896,7 @@ msgid "Load certificate"
 msgstr "Nahraj certifikát"
 
 #: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
-#: web_tt2/login_menu.tt2:63 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:70 web_tt2/loginbanner.tt2:77
 msgid "Login"
 msgstr "Přihlášení"
 
@@ -2910,7 +2920,7 @@ msgstr "Odhlášení"
 msgid "Loop detected"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:68
+#: web_tt2/login_menu.tt2:75
 msgid "Lost password ?"
 msgstr "Moje heslo ?"
 
@@ -2958,11 +2968,11 @@ msgstr "Správa Archívů"
 msgid "Manage Subscribers"
 msgstr "Uživatelé"
 
-#: src/List.pm:390
+#: src/List.pm:400
 msgid "Management of bouncers, 1st level"
 msgstr "Správa vrácených adres, první krok"
 
-#: src/List.pm:411
+#: src/List.pm:421
 msgid "Management of bouncers, 2nd level"
 msgstr "Správa vrácených adres, druhý krok"
 
@@ -2971,11 +2981,11 @@ msgstr "Správa vrácených adres, druhý krok"
 msgid "Managing bouncing subscribers:"
 msgstr "Správa vrácených adres:"
 
-#: src/List.pm:918
+#: src/List.pm:928
 msgid "Maximum message size"
 msgstr "Maximální velikost zprávy"
 
-#: src/List.pm:1191
+#: src/List.pm:1201
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -3090,21 +3100,21 @@ msgid ""
 "attachment at the beginning of each message distributed to the list."
 msgstr ""
 
-#: src/List.pm:953
+#: src/List.pm:963
 #, fuzzy
 msgid "Message tagging"
 msgstr "Počet zpráv"
 
-#: src/List.pm:929
+#: src/List.pm:939
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:924
+#: src/List.pm:934
 #, fuzzy
 msgid "Message topic name"
 msgstr "Počet zpráv k moderování :"
 
-#: src/List.pm:935
+#: src/List.pm:945
 #, fuzzy
 msgid "Message topic title"
 msgstr "Počet zpráv k moderování :"
@@ -3179,7 +3189,7 @@ msgstr "Moderování spoolu konference %1"
 msgid "Moderator          : %1"
 msgstr "Moderátor             : %1"
 
-#: src/List.pm:530 web_tt2/list_panel.tt2:14
+#: src/List.pm:540 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "Moderátoři"
 
@@ -3189,7 +3199,7 @@ msgstr "Moderátoři"
 msgid "Moderators List %1 / %2"
 msgstr "Moderatorum konference %1"
 
-#: src/List.pm:551
+#: src/List.pm:561
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
@@ -3239,7 +3249,7 @@ msgstr ""
 msgid "Name"
 msgstr "Jméno"
 
-#: web_tt2/editsubscriber.tt2:13
+#: web_tt2/editsubscriber.tt2:14
 msgid "Name :"
 msgstr "Jméno :"
 
@@ -3315,7 +3325,7 @@ msgid "No mailing list available."
 msgstr "Žádná konference není k dispozici."
 
 #. (notice.list)
-#: web_tt2/notice.tt2:50
+#: web_tt2/notice.tt2:53
 msgid "No message and no document to moderate for list %1"
 msgstr "V konferenci %1 nejsou žádné zprávy ke schválení"
 
@@ -3377,7 +3387,7 @@ msgid "Number of received messages :      %1"
 msgstr "Počet přijatých zpráv      :      %1"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:35
+#: web_tt2/notice.tt2:38
 msgid "Old file %1 has been erased"
 msgstr "Starý soubor %1 byl vymazán"
 
@@ -3385,7 +3395,7 @@ msgstr "Starý soubor %1 byl vymazán"
 msgid "Oldest messages first"
 msgstr "Začít od nejstarších zpráv"
 
-#: src/List.pm:946
+#: src/List.pm:956
 msgid "On which part of message check for message topic keywords"
 msgstr ""
 
@@ -3450,7 +3460,7 @@ msgstr ""
 "ve zprávě adresované %2 a zdá se že pochází\n"
 "od Vás (From: %3). Pokud tomu tak není omlouváme se.\n"
 
-#: src/List.pm:985 web_tt2/login_menu.tt2:10
+#: src/List.pm:995 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Vlastník"
 
@@ -3482,7 +3492,7 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1010
+#: src/List.pm:1020
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3520,11 +3530,11 @@ msgstr "Čekající konference"
 msgid "Pending subscriptions"
 msgstr "Nevyřešené přihlášení"
 
-#: web_tt2/editsubscriber.tt2:53
+#: web_tt2/editsubscriber.tt2:59
 msgid "Period :"
 msgstr "Období"
 
-#: src/List.pm:555
+#: src/List.pm:565
 msgid "Periodical subscription expiration task"
 msgstr "Periodická expirace přihlášení"
 
@@ -3586,7 +3596,7 @@ msgstr "Nastavení"
 msgid "Previous page"
 msgstr "Pedchoz strana"
 
-#: src/List.pm:1016
+#: src/List.pm:1026
 msgid "Priority"
 msgstr "Priorita"
 
@@ -3676,7 +3686,7 @@ msgstr ""
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "REView <list>               * Zobrazí seznam členů konference <list>"
 
-#: src/List.pm:1067
+#: src/List.pm:1077
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 Hlavička zprávy"
 
@@ -3742,7 +3752,7 @@ msgstr "Odesláno"
 msgid "Reception"
 msgstr "Způsob příjmu"
 
-#: web_tt2/editsubscriber.tt2:16
+#: web_tt2/editsubscriber.tt2:17
 msgid "Reception :"
 msgstr "Příjem :"
 
@@ -3795,7 +3805,7 @@ msgstr "Pripomenuti Vaseho clenstvi v konferenci %1"
 msgid "Remote IP address"
 msgstr "Vzdálená adresa"
 
-#: src/List.pm:608
+#: src/List.pm:618
 msgid "Remote file inclusion"
 msgstr "List info"
 
@@ -3845,7 +3855,7 @@ msgstr "Nahradit soubor %1 Vaším souborem"
 msgid "Reply"
 msgstr "Odpovědět"
 
-#: src/List.pm:1035 src/List.pm:1055
+#: src/List.pm:1045 src/List.pm:1065
 msgid "Reply address"
 msgstr "Adresa odpovědi"
 
@@ -3871,7 +3881,7 @@ msgstr "Vyžadované aliasy"
 msgid "Required file does not exist."
 msgstr "Požadovaný soubor neexistuje.\n"
 
-#: web_tt2/editsubscriber.tt2:55
+#: web_tt2/editsubscriber.tt2:61
 msgid "Reset errors"
 msgstr "Vynulovat chyby"
 
@@ -3910,7 +3920,7 @@ msgstr "Vysledek prikazu"
 msgid "Return to archive %1"
 msgstr "Návrat do archívu %1"
 
-#: src/List.pm:1025
+#: src/List.pm:1035
 msgid "Return-path of the REMIND command"
 msgstr ""
 
@@ -3972,11 +3982,11 @@ msgid ""
 "a plain text email with all attachments"
 msgstr ""
 
-#: src/List.pm:863
+#: src/List.pm:873
 msgid "SQL query"
 msgstr ""
 
-#: src/List.pm:878
+#: src/List.pm:888
 msgid "SQL query inclusion"
 msgstr ""
 
@@ -4045,7 +4055,7 @@ msgstr "Hledání :"
 msgid "Search lists"
 msgstr "Hledat konference"
 
-#: src/List.pm:424
+#: src/List.pm:434
 msgid "Secret string for generating unique keys"
 msgstr ""
 
@@ -4094,7 +4104,7 @@ msgstr "Odeslání/Příjem"
 msgid "Sending/reception setup"
 msgstr "Konfigurace Odeslání/Příjmu"
 
-#: src/List.pm:1078
+#: src/List.pm:1088
 msgid "Serial number of the config"
 msgstr "Seriové číslo konfigurace"
 
@@ -4167,7 +4177,7 @@ msgstr "moderováno, pouze členové mají přístup"
 msgid "Shared document to be approved for %1"
 msgstr "Prispevek do konference %1 od %2"
 
-#: src/List.pm:1098 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1108 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "Sdílené dokumenty"
 
@@ -4213,11 +4223,11 @@ msgstr "Stav"
 msgid "Status"
 msgstr "Stav : %1"
 
-#: web_tt2/editsubscriber.tt2:51
+#: web_tt2/editsubscriber.tt2:57
 msgid "Status :"
 msgstr "Stav : %1"
 
-#: src/List.pm:1114
+#: src/List.pm:1124
 msgid "Status of the list"
 msgstr "Stav konference"
 
@@ -4247,11 +4257,11 @@ msgstr "Předmět :"
 msgid "Subject : %1"
 msgstr "Předmět :"
 
-#: src/List.pm:1121
+#: src/List.pm:1131
 msgid "Subject of the list"
 msgstr "Předmět konference"
 
-#: src/List.pm:455
+#: src/List.pm:465
 msgid "Subject tagging"
 msgstr "Předmět :"
 
@@ -4273,7 +4283,7 @@ msgstr "Odeslat požadavek na vytvoření"
 msgid "Subscribe"
 msgstr "Přihlásit se"
 
-#: web_tt2/editsubscriber.tt2:14
+#: web_tt2/editsubscriber.tt2:15
 msgid "Subscribed since :"
 msgstr "Členem od %1"
 
@@ -4314,7 +4324,7 @@ msgstr ""
 msgid "Subscription       : %1"
 msgstr "Přihlášení            : %1"
 
-#: src/List.pm:469
+#: src/List.pm:479
 msgid "Subscription profile"
 msgstr "Přihlašovací profil"
 
@@ -4324,7 +4334,7 @@ msgstr "Přihlašovací profil"
 msgid "Subscription request to list %1"
 msgstr "Požadavek na přihlášení do konference %s"
 
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1610
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1599
 msgid "Subscription summary"
 msgstr "Souhrn přihlášení"
 
@@ -4452,7 +4462,7 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2727
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
 msgid "Table of contents:"
 msgstr "Obsah:"
 
@@ -4490,7 +4500,7 @@ msgstr "Šablony"
 msgid "Templates"
 msgstr "Šablony"
 
-#: src/List.pm:335
+#: src/List.pm:345
 msgid "Text archives"
 msgstr "Nastavení archívu"
 
@@ -4503,7 +4513,7 @@ msgstr ""
 #. (file_name)
 #: mail_tt2/urlized_part.tt2:2
 msgid ""
-"The %1 file that was initially attached to this message has been stored of "
+"The %1 file that was initially attached to this message has been stored on "
 "the mailing lists server:"
 msgstr ""
 
@@ -4718,15 +4728,15 @@ msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:182
 #, fuzzy
-msgid "The list is not open."
+msgid "The list is closed."
 msgstr "Konference není uzavřena"
 
-#: web_tt2/notice.tt2:53
+#: web_tt2/notice.tt2:56
 #, fuzzy
 msgid "The list of list members have been built/updated."
 msgstr "Databáze členů byla aktualizována"
 
-#: web_tt2/notice.tt2:56
+#: web_tt2/notice.tt2:59
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 
@@ -5190,7 +5200,7 @@ msgstr "Pro přístup k Vašemu osobnímu nastavení se musíte nejprve přihlá
 msgid "To activate/delete this mailing list :"
 msgstr "K aktivaci/smazání této konference :"
 
-#: web_tt2/notice.tt2:47
+#: web_tt2/notice.tt2:50
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Pro změnu hesla jděte do \"Nastavení\" v horní části stránky"
 
@@ -5375,12 +5385,12 @@ msgstr "Obrátit výběr"
 msgid "Topic subscription :"
 msgstr "Odhlaseni             : %1"
 
-#: src/List.pm:940
+#: src/List.pm:950
 #, fuzzy
 msgid "Topics for message categorisation"
 msgstr "Téma konference"
 
-#: src/List.pm:1131
+#: src/List.pm:1141
 msgid "Topics for the list"
 msgstr "Téma konference"
 
@@ -5439,7 +5449,7 @@ msgstr "Odhlášení z konference %1"
 msgid "URL"
 msgstr "URL"
 
-#: src/sympa.pl:1699
+#: src/sympa.pl:1682
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -5502,7 +5512,7 @@ msgstr ""
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
-#: src/mail.pm:611
+#: src/mail.pm:630
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Nelze vytvořit kanál v smtpto: %m"
 
@@ -5692,7 +5702,7 @@ msgstr "Neznámá autentikační služba"
 msgid "Unsubscribe"
 msgstr "Odhlásit z konference"
 
-#: web_tt2/editsubscriber.tt2:39
+#: web_tt2/editsubscriber.tt2:40
 msgid "Unsubscribe the User"
 msgstr "Odhlásit uživatele"
 
@@ -5749,7 +5759,7 @@ msgid "Up to higher level directory"
 msgstr "O úroveň výše"
 
 #: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:415
-#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:58
+#: web_tt2/editsubscriber.tt2:39 web_tt2/suboptions.tt2:58
 msgid "Update"
 msgstr "Změň"
 
@@ -5785,11 +5795,11 @@ msgstr "Nahraj soubor do sdíleného adresáře"
 msgid "User certificate belong to"
 msgstr "Uživatelský certifikát patří"
 
-#: src/List.pm:1169
+#: src/List.pm:1179
 msgid "User data source"
 msgstr "Uživatelský zdroj dat"
 
-#: mail_tt2/helpfile.tt2:2 src/Commands.pm:197 src/Commands.pm:213
+#: mail_tt2/helpfile.tt2:2 src/Commands.pm:196 src/Commands.pm:212
 msgid "User guide"
 msgstr "Příručka uživatele"
 
@@ -5809,7 +5819,7 @@ msgstr "Uživatelé"
 msgid "Validate"
 msgstr "Validuj"
 
-#: web_tt2/editsubscriber.tt2:54
+#: web_tt2/editsubscriber.tt2:60
 msgid "View last bounce"
 msgstr "Zobrazit poslední vrácenou zprávu - chybná adresa"
 
@@ -5817,11 +5827,11 @@ msgstr "Zobrazit poslední vrácenou zprávu - chybná adresa"
 msgid "Virtual Robots"
 msgstr "Virtuální Domény"
 
-#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:51
+#: web_tt2/editsubscriber.tt2:23 web_tt2/suboptions.tt2:51
 msgid "Visibility :"
 msgstr "Zobrazení"
 
-#: src/List.pm:1175
+#: src/List.pm:1185
 msgid "Visibility of the list"
 msgstr "Zobrazení konference"
 
@@ -5868,7 +5878,7 @@ msgstr ""
 msgid "We stopped delivery of this email."
 msgstr "Sympa zastavila doručení této zprávy"
 
-#: src/List.pm:1196
+#: src/List.pm:1206
 msgid "Web archives"
 msgstr "Webové archívy"
 
@@ -5918,7 +5928,7 @@ msgstr ""
 "Welcome message: This message is sent to new subscribers. It can be\n"
 "a full MIME structured message (only for MIME gurus).\n"
 
-#: src/List.pm:1202
+#: src/List.pm:1212
 msgid "Welcome return-path"
 msgstr ""
 
@@ -5948,47 +5958,47 @@ msgid ""
 "can be send to listowner or listmaster."
 msgstr ""
 
-#: src/List.pm:317
+#: src/List.pm:327
 msgid "Who can add subscribers"
 msgstr "Kdo smí přidat členy"
 
-#: src/List.pm:473
+#: src/List.pm:483
 msgid "Who can delete subscribers"
 msgstr "Kdo smí mazat členy"
 
-#: src/List.pm:1087
+#: src/List.pm:1097
 msgid "Who can edit"
 msgstr "Kdo může editovat"
 
-#: src/List.pm:886
+#: src/List.pm:896
 msgid "Who can invite people"
 msgstr "Kdo smí pozvat nové uživatele"
 
-#: src/List.pm:1060
+#: src/List.pm:1070
 msgid "Who can review subscribers"
 msgstr "Kdo může prohlížet seznam členů"
 
-#: src/List.pm:1071
+#: src/List.pm:1081
 msgid "Who can send messages"
 msgstr "Typ konference, práva pro zasílání zpráv"
 
-#: src/List.pm:1020
+#: src/List.pm:1030
 msgid "Who can start a remind process"
 msgstr "Kdo může spustit připomínací proces"
 
-#: src/List.pm:1125
+#: src/List.pm:1135
 msgid "Who can subscribe to the list"
 msgstr "Kdo se smí přihlásit do konference"
 
-#: src/List.pm:1142
+#: src/List.pm:1152
 msgid "Who can unsubscribe"
 msgstr "Kdo se smí odhlásit"
 
-#: src/List.pm:1083
+#: src/List.pm:1093
 msgid "Who can view"
 msgstr "Kdo může zobrazit"
 
-#: src/List.pm:882
+#: src/List.pm:892
 msgid "Who can view list information"
 msgstr "Kdo smí vidět informace o konferenci"
 
@@ -6047,7 +6057,7 @@ msgstr ""
 msgid "You can subscribe again :"
 msgstr "Můžete se znovu přihlásit:"
 
-#: web_tt2/notice.tt2:65
+#: web_tt2/notice.tt2:68
 msgid "You have been authenticated"
 msgstr "Byl jste autentifikován"
 
@@ -6301,7 +6311,7 @@ msgstr ""
 msgid "Your other email addresses"
 msgstr "Další e-mailová adresa"
 
-#: web_tt2/notice.tt2:44
+#: web_tt2/notice.tt2:47
 msgid "Your password has been emailed to you"
 msgstr "Heslo Vám bylo odesláno e-mailem"
 
@@ -6417,11 +6427,11 @@ msgstr ""
 msgid "access"
 msgstr "přístup"
 
-#: src/List.pm:1179 src/List.pm:331
+#: src/List.pm:1189 src/List.pm:341
 msgid "access right"
 msgstr "přístupová práva"
 
-#: src/List.pm:381 src/List.pm:402
+#: src/List.pm:391 src/List.pm:412
 msgid "action for this population"
 msgstr "akce při této úrovni"
 
@@ -6535,7 +6545,7 @@ msgstr "nerozlišovat velikost písmen"
 msgid "case sensitive"
 msgstr "rozlišovat velikost písmen"
 
-#: src/List.pm:808
+#: src/List.pm:818
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
@@ -6579,11 +6589,11 @@ msgstr "skrytá, dokud uživatel není přihlášen"
 msgid "concealed"
 msgstr "neskrývat"
 
-#: src/List.pm:843
+#: src/List.pm:853
 msgid "connection options"
 msgstr "možnosti připojení"
 
-#: src/List.pm:663
+#: src/List.pm:673
 msgid "connection timeout"
 msgstr "spojení vypršelo"
 
@@ -6607,34 +6617,34 @@ msgstr ""
 msgid "daily update of the certificate revocation list"
 msgstr ""
 
-#: src/List.pm:585
+#: src/List.pm:595
 msgid "data location URL"
 msgstr "umístění dat - URL"
 
-#: src/List.pm:839
+#: src/List.pm:849
 msgid "database name"
 msgstr "název databáze"
 
-#: src/List.pm:834
+#: src/List.pm:844
 #, fuzzy
 msgid "database port"
 msgstr "typ databáze"
 
-#: src/List.pm:825
+#: src/List.pm:835
 msgid "database type"
 msgstr "typ databáze"
 
-#: src/List.pm:540 src/List.pm:995
+#: src/List.pm:1005 src/List.pm:550
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Špatný parameter"
 
-#: src/List.pm:1153 src/List.pm:901
+#: src/List.pm:1163 src/List.pm:911
 #, fuzzy
 msgid "date"
 msgstr "Změň"
 
-#: src/List.pm:480
+#: src/List.pm:490
 msgid "days"
 msgstr "Dny"
 
@@ -6695,12 +6705,12 @@ msgstr ""
 msgid "editor rejection message"
 msgstr "zpráva pro odmítnutí editorem"
 
-#: src/List.pm:510 src/List.pm:960 web_tt2/login_menu.tt2:59
+#: src/List.pm:520 src/List.pm:970 web_tt2/login_menu.tt2:66
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "emailová adresa"
 
-#: src/List.pm:1103 src/List.pm:1108
+#: src/List.pm:1113 src/List.pm:1118
 msgid "email address protection method"
 msgstr "ochrana e-mailových adres"
 
@@ -6716,11 +6726,11 @@ msgstr ""
 msgid "entire word"
 msgstr "celé slovo"
 
-#: src/List.pm:848
+#: src/List.pm:858
 msgid "environment variables for database connexion"
 msgstr "nastavení prostředí pro databázové připojení"
 
-#: src/List.pm:1148 src/List.pm:897
+#: src/List.pm:1158 src/List.pm:907
 #, fuzzy
 msgid "epoch date"
 msgstr "Změň"
@@ -6737,39 +6747,39 @@ msgstr "všichni mohou posílat"
 msgid "expiration routine run yearly"
 msgstr "expirační proces spouštět jednou ročně"
 
-#: src/List.pm:647
+#: src/List.pm:657
 msgid "extracted attribute"
 msgstr "získané atributy"
 
-#: src/List.pm:641
+#: src/List.pm:651
 msgid "filter"
 msgstr "filtr"
 
-#: src/List.pm:726
+#: src/List.pm:736
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:710
+#: src/List.pm:720
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:705
+#: src/List.pm:715
 msgid "first-level filter"
 msgstr ""
 
-#: src/List.pm:732
+#: src/List.pm:742
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:720
+#: src/List.pm:730
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:715
+#: src/List.pm:725
 msgid "first-level selection"
 msgstr ""
 
-#: src/List.pm:699
+#: src/List.pm:709
 msgid "first-level suffix"
 msgstr ""
 
@@ -6793,12 +6803,12 @@ msgstr "veřejně přístupné"
 msgid "for anyone without authentication"
 msgstr "veřejně přístupné, bez autentikace"
 
-#: src/List.pm:326
+#: src/List.pm:336
 msgid "frequency"
 msgstr "perioda archivace"
 
 #. (current_subscriber.first_bounce,current_subscriber.last_bounce)
-#: web_tt2/editsubscriber.tt2:53
+#: web_tt2/editsubscriber.tt2:59
 msgid "from %1 to %2"
 msgstr "Období : od %1 do %2"
 
@@ -6810,7 +6820,7 @@ msgstr ""
 msgid "global remind message"
 msgstr "globální připomínací zpráva"
 
-#: src/List.pm:365
+#: src/List.pm:375
 msgid "halt rate"
 msgstr "úroveň blokování"
 
@@ -6822,7 +6832,7 @@ msgstr "soubor nápovědy"
 msgid "homepage"
 msgstr "WWW adresa nové konference"
 
-#: src/List.pm:486
+#: src/List.pm:496
 msgid "hour"
 msgstr "Hodina"
 
@@ -6974,7 +6984,7 @@ msgstr "patička zprávy"
 msgid "message header"
 msgstr "hlavička zprávy"
 
-#: src/List.pm:492
+#: src/List.pm:502
 msgid "minute"
 msgstr "Minuta"
 
@@ -6986,7 +6996,7 @@ msgstr "moderuj"
 msgid "moderated for subscribers"
 msgstr "Konference nemá žádné členy"
 
-#: src/List.pm:520 src/List.pm:970
+#: src/List.pm:530 src/List.pm:980
 msgid "name"
 msgstr "Jméno"
 
@@ -7028,7 +7038,7 @@ msgstr "nikdo nemá přístup k přehledu"
 msgid "notice mode"
 msgstr "celé slovo"
 
-#: src/List.pm:386 src/List.pm:407
+#: src/List.pm:396 src/List.pm:417
 msgid "notification"
 msgstr "zaslat upozornění"
 
@@ -7067,7 +7077,7 @@ msgstr "v"
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
-#: src/List.pm:1046
+#: src/List.pm:1056
 msgid "other email address"
 msgstr "další e-mail adresa"
 
@@ -7104,7 +7114,7 @@ msgstr ""
 msgid "part of word"
 msgstr "část slova"
 
-#: web_tt2/login_menu.tt2:61 web_tt2/loginbanner.tt2:76
+#: web_tt2/login_menu.tt2:68 web_tt2/loginbanner.tt2:76
 #: web_tt2/sigrequest.tt2:35 web_tt2/sigrequest.tt2:64
 #: web_tt2/subrequest.tt2:28 web_tt2/subrequest.tt2:58
 msgid "password"
@@ -7115,20 +7125,24 @@ msgstr "heslo"
 msgid "password: %1"
 msgstr "heslo: %1"
 
+#: src/List.pm:1217
+msgid "percentage of message sent with verp"
+msgstr ""
+
 #: src/etc/create_list_templates/hotline/comment.tt2:4
 #: src/etc/create_list_templates/private_working_group/comment.tt2:4
 msgid "private archives"
 msgstr "soukromý archív"
 
-#: src/List.pm:525
+#: src/List.pm:535
 msgid "private information"
 msgstr "další údaje"
 
-#: src/List.pm:975
+#: src/List.pm:985
 msgid "private informations"
 msgstr "soukromé informace"
 
-#: src/List.pm:1005 src/List.pm:980
+#: src/List.pm:1015 src/List.pm:990
 msgid "profile"
 msgstr "profil"
 
@@ -7174,18 +7188,18 @@ msgstr "veřejná konference, Bcc je zakazáno (anti-spam)"
 msgid "purge of orphan entries in user table every month"
 msgstr "smazat bezprizorní položky v tabulce uživatelů každý měsíc"
 
-#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
+#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
 #: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "bez upozornění uživatele"
 
-#: src/List.pm:1094 src/List.pm:1186
+#: src/List.pm:1104 src/List.pm:1196
 msgid "quota"
 msgstr "Kapacita"
 
-#: src/List.pm:1000 src/List.pm:347 src/List.pm:460 src/List.pm:515
-#: src/List.pm:545 src/List.pm:965
+#: src/List.pm:1010 src/List.pm:357 src/List.pm:470 src/List.pm:525
+#: src/List.pm:555 src/List.pm:975
 msgid "reception mode"
 msgstr "způsob příjmu :"
 
@@ -7205,27 +7219,27 @@ msgstr "zasílat připomínku každý měsíc"
 msgid "remind message sent to subscribers every year"
 msgstr "zasílat připomínku každý rok"
 
-#: src/List.pm:614 src/List.pm:678 src/List.pm:791 src/List.pm:830
+#: src/List.pm:624 src/List.pm:688 src/List.pm:801 src/List.pm:840
 msgid "remote host"
 msgstr "vzdálený host"
 
-#: src/List.pm:820
+#: src/List.pm:830
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:598 src/List.pm:631 src/List.pm:695 src/List.pm:857
+#: src/List.pm:608 src/List.pm:641 src/List.pm:705 src/List.pm:867
 msgid "remote password"
 msgstr "Heslo vzdáleného systému"
 
-#: src/List.pm:803
+#: src/List.pm:813
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:620 src/List.pm:684 src/List.pm:797
+#: src/List.pm:630 src/List.pm:694 src/List.pm:807
 msgid "remote port"
 msgstr "vzdálený port"
 
-#: src/List.pm:591 src/List.pm:625 src/List.pm:689 src/List.pm:852
+#: src/List.pm:601 src/List.pm:635 src/List.pm:699 src/List.pm:862
 msgid "remote user"
 msgstr "vzdálený uživatel"
 
@@ -7245,7 +7259,7 @@ msgstr "vyžaduje S/MIME podpis nebo povolení vlastníka"
 msgid "requires authentication then owner approval"
 msgstr "vyžaduje autentikaci a potvrzení od vlastníka"
 
-#: src/List.pm:1051
+#: src/List.pm:1061
 msgid "respect of existing header field"
 msgstr "zachování existující hlavičky zprávy"
 
@@ -7319,39 +7333,39 @@ msgstr "Uložit"
 msgid "scenario source"
 msgstr "Testovací modul scénářů"
 
-#: src/List.pm:657
+#: src/List.pm:667
 msgid "search scope"
 msgstr "Kde hledat"
 
-#: src/List.pm:764
+#: src/List.pm:774
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:748
+#: src/List.pm:758
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:742
+#: src/List.pm:752
 msgid "second-level filter template"
 msgstr "Nastavení šablon serveru"
 
-#: src/List.pm:770
+#: src/List.pm:780
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:758
+#: src/List.pm:768
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:753
+#: src/List.pm:763
 msgid "second-level selection"
 msgstr "výběr druhé úrovně"
 
-#: src/List.pm:736
+#: src/List.pm:746
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/List.pm:652
+#: src/List.pm:662
 msgid "selection (if multiple)"
 msgstr "výběr (i vícenásobný)"
 
@@ -7372,8 +7386,8 @@ msgstr "rozlišovat"
 msgid "session"
 msgstr "sezení"
 
-#: src/List.pm:603 src/List.pm:667 src/List.pm:774 src/List.pm:813
-#: src/List.pm:871
+#: src/List.pm:613 src/List.pm:677 src/List.pm:784 src/List.pm:823
+#: src/List.pm:881
 msgid "short name for this source"
 msgstr "zkratka pro tento zdroj"
 
@@ -7417,7 +7431,7 @@ msgstr "zpráva pro pozvané"
 msgid "subscription request confirmed"
 msgstr "požadavek na přihlášení musí být potvrzen"
 
-#: src/List.pm:635
+#: src/List.pm:645
 msgid "suffix"
 msgstr "přípona"
 
@@ -7455,7 +7469,7 @@ msgstr ""
 msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
-#: src/List.pm:535 src/List.pm:990
+#: src/List.pm:1000 src/List.pm:545
 #, fuzzy
 msgid "the datasource"
 msgstr "Uživatelský zdroj dat"
@@ -7495,7 +7509,7 @@ msgstr "Konference %1 není definován vlastník."
 msgid "thread"
 msgstr "Podle vláken"
 
-#: src/List.pm:376 src/List.pm:397
+#: src/List.pm:386 src/List.pm:407
 msgid "threshold"
 msgstr "limit"
 
@@ -7520,7 +7534,7 @@ msgstr "zpráva pro odhlášení"
 msgid "urlize mode"
 msgstr "Zobrazení sdílených dokumentů"
 
-#: src/List.pm:1041 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1051 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "hodnota"
 
@@ -7532,11 +7546,11 @@ msgstr "zobraz lokalizace"
 msgid "virus infection message"
 msgstr "zpráva o viru v e-mailu"
 
-#: src/List.pm:465
+#: src/List.pm:475
 msgid "visibility"
 msgstr "zobrazení - dostupnost"
 
-#: src/List.pm:358
+#: src/List.pm:368
 msgid "warn rate"
 msgstr "úroveň upozornění"
 
@@ -7544,12 +7558,12 @@ msgstr "úroveň upozornění"
 msgid "welcome message"
 msgstr "uvítací zpráva"
 
-#: src/List.pm:906
+#: src/List.pm:916
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Kdo smí vidět informace o konferenci"
 
-#: src/List.pm:1159
+#: src/List.pm:1169
 #, fuzzy
 msgid "who updated the config"
 msgstr "Poslední změna konfigurace"
