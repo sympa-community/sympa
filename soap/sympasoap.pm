@@ -343,7 +343,7 @@ sub info {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $result = $list->check_list_authz('info','md5'
+    my $result = $list->check_list_authz('info','md5',
 					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -425,7 +425,7 @@ sub review {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $result = $list->check_list_authz('review','md5'
+    my $result = $list->check_list_authz('review','md5',
 					 {'sender' => $sender});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
