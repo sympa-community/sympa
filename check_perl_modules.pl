@@ -67,14 +67,14 @@ use CPAN;
 	     'MHonArc::UTF8' => 'MHonArc',
 	     'FCGI' => 'FCGI',
 	     'DBI' => 'DBI',
-	     'DBD::SQLite' => 'DBD-SQLite',
+	     'DBD::mysql' => 'Msql-Mysql-modules',
 	     'Crypt::CipherSaber' => 'CipherSaber',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',
 	     'DBD::Oracle' => 'DBD-Oracle',
 	     'DBD::Sybase' => 'DBD-Sybase',
-	     'DBD::mysql' => 'Msql-Mysql-modules',
+	     'DBD::SQLite' => 'DBD-SQLite',
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
  	     'Net::SMTP' => 'libnet',

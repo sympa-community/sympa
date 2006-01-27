@@ -193,7 +193,7 @@ sub load_config {
     }
 
     if ($conf->{'bounce_path'} && (! -d $conf->{'bounce_path'})) {
-	&Log::do_log('err',"Unable to create required directory '%s' (defined by 'bounce_path' parameter)", $conf->{'bounce_path'});
+	&Log::do_log('err',"Missing directory '%s' (defined by 'bounce_path' parameter)", $conf->{'bounce_path'});
     }
 
     if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {

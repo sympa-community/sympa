@@ -10812,6 +10812,8 @@ sub probe_db {
 sub create_db {
     &do_log('debug3', 'List::create_db()');    
 
+    &do_log('notice','Trying to create %s database...', $Conf{'db_name'});
+
     unless ($Conf{'db_type'} eq 'mysql') {
 	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
 	return undef;

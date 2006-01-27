@@ -205,7 +205,7 @@ checkperl:
 	@if [ ! -f $(MSGFMT) ]; then \
 		echo "##################################"; \
 		echo "## You don't have msgfmt installed. It is required to build message catalogues"; \
-		echo "## msgfmt is provided with a 'gettest' package on most systems..."; \
+		echo "## msgfmt is provided with a 'gettext' package on most systems..."; \
 		echo "#####################################################"; \
 		if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
