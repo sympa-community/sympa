@@ -1,6 +1,6 @@
 From: [% fromlist %]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc(subject)%]%1[%END%][%END%]
+Subject: [% FILTER qencode %][%subject%][%END%]
 Mime-version: 1.0
 Content-Type: multipart/mixed; charset=[%|loc%]_charset_[%END%]; boundary="[% boundary%]"
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]

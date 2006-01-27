@@ -47,25 +47,20 @@ Thank you for your attention.
 [% ELSIF entry == 'message_too_large' -%]
 
 [%|loc(list.name)%]Your message could not be sent because its size 
-was over the maximum size allowed on this list.
-[%END%]
+was over the maximum size allowed on this list.[%END%]
 [% ELSIF entry == 'list_unknown' -%]
 
-[%|loc(listname)%]List '%1' does not exist.
-[%END%]
+[%|loc(listname)%]List '%1' does not exist.[%END%]
 [% ELSIF entry == 'unfound_message' -%]
 
 [%|loc(listname,key)%]Unable to access the message on list %1 with  key %2.
-Warning : this message may already have been sent by one of the list's editor.
-[%END%]
+Warning : this message may already have been sent by one of the list's editor.[%END%]
 [% ELSIF entry == 'unfound_file_message' -%]
 
-[%|loc(key)%]Unable to access to the message authenticated with key %1.
-[%END%]
+[%|loc(key)%]Unable to access the message authenticated with key %1.[%END%]
 [% ELSIF entry == 'wrong_format_message' -%]
 
-[%|loc(key)%]Unable to access to the message authenticated with key %1 because of a wrong format.
-[%END%]
+[%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format.[%END%]
 [% ELSIF entry == 'message_rejected' -%]
 
 [%|loc(key,listname)%]Message %1 for list '%2' has been rejected.

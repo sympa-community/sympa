@@ -6,17 +6,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc(list.name,filename,who,conf.wwsympa_url)%]
- [% IF many_files %]There are new shared documents in list %1 : 
+[% IF many_files %]
+[%|loc(list.name,filename,who,conf.wwsympa_url)%]There are new shared documents in list %1 : 
 	%2
 
 	from %3
 
 To moderate these document : 
-%4/modindex/%1
+%4/modindex/%1[% END %]
 
- [% ELSE %]
-There is a new shared document in list %1 : 
+[% ELSE %]
+[%|loc(list.name,filename,who,conf.wwsympa_url)%]There is a new shared document in list %1 : 
 	%2 from %3
 
 To moderate this document : 

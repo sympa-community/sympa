@@ -174,7 +174,7 @@
       [% ELSIF p.key == 'msg_topic' %]
         [%|loc%]This paragraph defines a topic used to tag a message of a list, named by msg_topic.name ("other" is a reserved word), its title is msg_topic.title. The msg_topic.keywords entry is optional and allows automatic tagging. This should be a list of keywords, separated by ','.[%END%]
       [% ELSIF p.key == 'msg_topic_keywords_apply_on' %]
-        [%|loc%]This parameter indicates on which part of the message is used to perform automatic tagging.[%END%]
+        [%|loc%]This parameter indicates which part of the message is used to perform automatic tagging.[%END%]
       [% ELSIF p.key == 'msg_topic_tagging' %]
         [%|loc%]This parameter indicates if the tagging is optional or required for a list.[%END%]
       [% ELSE %]

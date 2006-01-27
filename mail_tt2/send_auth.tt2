@@ -13,12 +13,12 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 
 %2/request_topic/%1/%3
 [% END %]
-[%- ELSE -%][%|loc(list.name,conf.sympa,authkey,conf.sympa,authkey)%]To distribute the attached message in list %1 :
+[%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, folow the link below :[%END%]
 
-[% FILTER escape_url %]mailto:%2?subject=CONFIRM %3[% END %]
+[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=CONFIRM [%authkey%][% END %]
 
-Or send a message to %4 with the following subject :
-CONFIRM %5
+[%|loc(conf.sympa,authkey)%]Or send a message to %1 with the following subject :
+CONFIRM %2
 [% END %]
 [%- END -%]
 --[% boundary %]

@@ -5680,7 +5680,7 @@ sub do_remove_arc {
     my @msgids = split /\0/, $in{'msgid'};
 
     if ($#msgids == -1) { 
-	 &report::reject_report_web('intern','may_not_remove_arc',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('user','may_not_remove_arc',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err','remove_arc: no message id found');
 	 $param->{'status'} = 'no_msgid';
 	 return undef;
@@ -6248,7 +6248,7 @@ sub do_set_pending_list_request {
      }
      
      if ($list->{'admin'}{'status'} eq $in{'status'}) {
-	 &report::reject_report_web('user','huummm_didnt_change_anything',{},$param->{'action'});
+	 &report::reject_report_web('user','didnt_change_anything',{},$param->{'action'});
 	 &wwslog('info','view_pending_list: didn t change really the status, nothing to do');
 	 return undef ;
      }    
@@ -8171,7 +8171,7 @@ sub _restrict_values {
      if (-d $arc_dir) {
 	 unless (rename ($arc_dir,$new_arc_dir)) {
 	     &wwslog('info',"do_rename_list : unable to rename archive $arc_dir");
-	     &report::reject_report_web('intern','unable_rename_archive',{'old'=>$arc_dir, 
+	     &report::reject_report_web('intern','rename_dir',{'old'=>$arc_dir, 
 							       'new'=>$new_arc_dir},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     # continue even if there is some troubles with archives
@@ -8185,7 +8185,7 @@ sub _restrict_values {
 	 ($list->{'name'} ne $in{'new_listname'})
 	 ) {
 	 unless (rename ($bounce_dir,$new_bounce_dir)) {
-	     &report::reject_report_web('intern','unable_rename_bounces',{'old'=> $bounce_dir,
+	     &report::reject_report_web('intern','rename_dir',{'old'=> $bounce_dir,
 									  'new'=>$new_bounce_dir},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('info',"do_rename_list unable to rename bounces from $bounce_dir to $new_bounce_dir");
@@ -11066,13 +11066,13 @@ sub creation_desc_file {
      my $status = &d_unzip_shared_file($zip_abs_dir,$fname,$path);
 
      unless (defined($status)) {
-	 &report::reject_report_web('intern','cannot_unzip',{'path' => "$zip_abs_dir/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('intern','cannot_unzip',{'path' => "$zip_abs_dir/$fname", 'name' => $fname},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err',"do_d_unzip($path/$fname) : Unable to unzip the file $zip_abs_dir/$fname");
 	 return undef;
      }
 
      unless ($status) {
-	 &report::reject_report_web('intern','error_during_unzip',{'name' => "$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('intern','cannot_unzip',{'name' => "$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
      }	 
 
  ### install the file hierarchy

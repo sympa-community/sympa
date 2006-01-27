@@ -11,6 +11,6 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists -%]
-[% l %]	[%|loc(conf.sympa,l,user.email)%][% FILTER escape_url %]mailto:%1?subject=sig %2 %3[% END %][% END %] 
+[% l %]	[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=sig [%l%] [%user.email%][% END %] 
 [% END %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

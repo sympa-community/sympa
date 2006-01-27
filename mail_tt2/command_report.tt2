@@ -19,39 +19,39 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 > [% notice.cmd -%]
 
 [% IF notice.entry == 'smime' -%]
-[%|loc%]  Your message signature was successfully verified using S/MIME.[%END%]
+[%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
 
 [% ELSIF notice.entry == 'req_forward' -%]
-[%|loc%]  Your request to subscribe/unsubscribe has been forwarded to the list's
+[%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's
 owners for approval. You will receive a notification when you have
 been subscribed (or unsubscribed) to the list.[%END-%]
 
 [% ELSIF notice.entry == 'updated_info' -%]
-[%|loc(notice.email,notice.listname)%]  Information regarding user %1 have been updated for list %2.[%END%]
+[%|loc(notice.email,notice.listname)%]Information regarding user %1 have been updated for list %2.[%END%]
 
 [% ELSIF notice.entry == 'now_subscriber' -%]
-[%|loc(notice.email,notice.listname)%]  User %1 is now subscriber of list %2.[%END%]
+[%|loc(notice.email,notice.listname)%]User %1 is now subscriber of list %2.[%END%]
 
 [% ELSIF notice.entry == 'invite' -%]
-[%|loc(notice.email,notice.listname)%]  User %1 has been invited to subscribe in list %2.[%END%]
+[%|loc(notice.email,notice.listname)%]User %1 has been invited to subscribe in list %2.[%END%]
 
 [% ELSIF notice.entry == 'remind' -%]
-[%|loc(notice.total,notice.listname)%]  Subscription reminder sent to each of %1 %2 subscribers.[%END%]
+[%|loc(notice.total,notice.listname)%]Subscription reminder sent to each of %1 %2 subscribers.[%END%]
 
 [% ELSIF notice.entry == 'glob_remind' -%]
-[%|loc(notice.count)%]  The Reminder has been sent to %1 users.[%END%]
+[%|loc(notice.count)%]The Reminder has been sent to %1 users.[%END%]
 
 [% ELSIF notice.entry == 'removed' -%]
-[%|loc(notice.email,notice.listname)%]  The user %1 has been removed from the list %2.[%END%]
+[%|loc(notice.email,notice.listname)%]The user %1 has been removed from the list %2.[%END%]
 
 [% ELSIF notice.entry == 'config_updated' -%]
-[%|loc(notice.listname)%]  Your configuration regarding list %1 has been updated.[%END%]
+[%|loc(notice.listname)%]Your configuration regarding list %1 has been updated.[%END%]
 
 [% ELSIF notice.entry == 'finished' -%]
-[%|loc(notice.cmd)%]  Command '%1' found : ignoring end of message.[%END%]
+[%|loc(notice.cmd)%]Command '%1' found : ignoring end of message.[%END%]
 
 [% ELSIF notice.entry == 'no_message_to_moderate' -%]
-[%|loc(notice.listname)%]  There is no message to moderate for list '%1'.[%END%]
+[%|loc(notice.listname)%]There is no message to moderate for list '%1'.[%END%]
 
 [% END -%]
 [% END -%]
@@ -120,7 +120,7 @@ Your configuration regarding this command has not been updated.[%END-%]
   [%|loc(u_err.listname,u_err.modes)%]List %1 allows only these reception modes : %2[%END%]
 
 [% ELSIF u_err.entry == 'empty_archives' -%]
-  [%|loc()%]This list's archives do not contain any file.[%END%] 
+  [%|loc()%]This list archive is empty.[%END%] 
 
 [% ELSIF u_err.entry == 'no_required_file' -%]
   [%|loc%]Required file does not exist.[%END%]
@@ -165,8 +165,7 @@ email address. Please try using your canonical address.[%END-%]
            ==========================================
 
 [% IF glob.entry == 'error_content_type' -%]
-[%|loc%]Ignoring message body not in text/plain, please use text/plain only 
-(or put your command in the subject).[%END-%]
+[%|loc%]Ignoring message body not in text/plain, please use text/plain only (or put your command in the subject).[%END-%]
 
 [% ELSIF glob.entry == 'no_cmd_found' -%]
 [%|loc%]No command found in message.[%END%]
@@ -175,7 +174,7 @@ email address. Please try using your canonical address.[%END-%]
 [%|loc%]Ignoring message because of an internal server error.[%END%]
 
 [% ELSIF glob.entry == 'no_existing_list' -%]
-[%|loc(glob.listname)%]List %1 does not exist.[%END%]
+[%|loc(glob.listname)%]List '%1' does not exist.[%END%]
 [% END -%]
 [% END -%]
 [% END -%]

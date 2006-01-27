@@ -81,16 +81,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc(list.name,replyto,keyauth,list.name,escaped_who,escaped_gecos,replyto,keyauth,list.name,who,gecos)-%]
-Dear owner of list %1,
+[%|loc(list.name)-%]Dear owner of list %1,
  
 A user asked to be added as a subscriber to your list. Shall this be fine
-with you, you should click the following URL :
+with you, you should click the following URL :[%END%]
 
-[% FILTER escape_url %]mailto:%2?subject=auth %3 ADD %4 %5 %6[% END %]
+[% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_gecos%] [%replyto%][% END %]
 
-or send an email to %7 with the following subject :
-AUTH %8 ADD %9 %10 %11
+[%|loc(replyto,keyauth,list.name,who,gecos)-%]
+or send an email to %1 with the following subject :
+AUTH %2 ADD %3 %4 %5
 [%END%]
 
 [% ELSIF type == 'sigrequest' -%]
@@ -99,16 +99,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc(list.name,sympa,keyauth,list.name,escaped_who,sympa,keyauth,list.name,who)-%]
-Dear owner of list %1,
+[%|loc(list.name)-%]Dear owner of list %1,
 
 A user asked to be deleted from your list. Shall this be fine
-with you, you should click the following URL :
+with you, you should click the following URL :[% END %]
 
-[% FILTER escape_url %]mailto:%2?subject=auth %3 DEL %4 %5[% END %]
+[% FILTER escape_url %]mailto:[%sympa%]?subject=auth [%keyauth%]DEL [%list.name%] [%escaped_who%][% END %]
  
-or send an email to %6 with the following subject :
-AUTH %7 DEL %8 %9
+[%|loc(sympa,keyauth,list.name,who)-%]
+or send an email to %1 with the following subject :
+AUTH %2 DEL %3 %4
 [%END%]
 
 
@@ -131,7 +131,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc(command,list.name,who,gecos,by)%]FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 [%END%]
+[%|loc(command,list.name,who,gecos)%]FYI command %1 list %2 from %3 %4[%END%][% IF by -%][%|loc(by)%] validated by %1 [%END%]
 (no action needed)
 [%END%]
 

@@ -121,7 +121,7 @@ sub qencode {
 }
 
 sub escape_url {
-    # FAUX  put : [%|loc(...)%][% FILTER escape_url %] %1 %2 ...[% END %][% END %]
+
     my $string = shift;
     
     $string =~ s/ /%%20/g;

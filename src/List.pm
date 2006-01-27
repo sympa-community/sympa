@@ -947,13 +947,13 @@ my %alias = ('reply-to' => 'reply_to',
 						     }
 				         },
 			    'occurrence' => '0-n',
-			    'gettext_id' => "Topics for message categorisation",
+			    'gettext_id' => "Topics for message categorization",
 			    'group' => 'sending'
 			    },
 	    'msg_topic_keywords_apply_on' => { 'format' => ['subject','body','subject_and_body'],
 					       'occurrence' => '0-1',
 					       'default' => 'subject',
-					       'gettext_id' => "On which part of message check for message topic keywords",
+					       'gettext_id' => "On which part of messages, topic keywords are applied",
 					       'group' => 'sending'
 					     },    
 
@@ -1214,7 +1214,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  },
 	    'verp_rate' => {'format' => ['100%','50%','33%','25%','20%','10%','5%','2%','0%'],
 			     'default' =>  {'conf' => 'verp_rate'},
-			     'gettext_id' => "percentage of message sent with verp",
+			     'gettext_id' => "percentage of list members in VERP mode",
 			     'group' => 'bounces'
 			     },
 

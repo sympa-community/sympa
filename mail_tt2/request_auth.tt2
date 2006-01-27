@@ -1,61 +1,40 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc(command)%]%1[%END%][%END%]
+Subject: [% FILTER qencode %][%command%][%END%]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF list_context -%]
   [% IF type == 'signoff' -%]
-[%|loc(list.name)-%]    
-You asked for your e-mail address
-to be removed from list '%1'.	
-[%- END -%]
+[%|loc(list.name)-%]You asked for your e-mail address to be removed from list '%1'.[%- END -%]
 
   [%- ELSIF type == 'subscribe'  -%]
-[%|loc(list.name)-%]  
-You asked for your e-mail address
-to be added to list '%1'.
-[%- END -%]
+[%|loc(list.name)-%]You asked for your e-mail address to be added to list '%1'.[%- END -%]
 
   [%- ELSIF type == 'add' -%]
-[%|loc(list.name)-%]  
-You requested a user of list %1 to be
-added.
-[%- END -%]
+[%|loc(list.name)-%]You requested a user subscription in list %1.[%- END -%]
 
   [%- ELSIF type == 'del' -%]
-[%|loc(list.name)-%]  
-You requested a user of list %1 to be
-removed.
-[%- END -%]
+[%|loc(list.name)-%]You requested a user removal from list %1.[%- END -%]
 
   [%- ELSIF type == 'remind' -%]
-[%|loc(list.name)-%]  
-You requested a subscription reminder to be sent
-to each subscriber of list %1
-[%- END -%]
+[%|loc(list.name)-%]You requested a subscription reminder to be sent to each subscriber of list %1[%- END -%]
   [%- END -%]
 
 [%- ELSE -%]
   [% IF type == 'remind' -%]
-[%|loc-%]  
-You requested a subscription reminder to be sent
-to each subscriber of list '*'
-[%- END -%]
+[%|loc-%]You requested a subscription reminder to be sent to each subscriber of list '*'[%- END -%]
   [%- END -%]	
 [%- END -%]
 
-[%|loc(conf.sympa,command)-%]    
-If you want this action to be taken, please
+[%|loc(conf.sympa)-%]If you want this action to be taken, please
 
 - reply to this mail
 OR
 - send a message to %1 with subject
  %2
 OR
-- hit the following mailto [%|loc(conf.sympa,command_escaped)-%][% FILTER escape_url %]mailto:%1?subject=%2[% END %][% END %]
+- hit the following mailto[% END %] [% FILTER escape_url %]mailto:[%conf.sympa%]?subject=[%command_escaped%][% END %]
 
-If you do not want this action to be taken, you can safely ignore
-this message.
-[% END %]
+[%|loc-%]If you do not want this action to be taken, you can safely ignore this message.[% END %]

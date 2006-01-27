@@ -9,4 +9,4 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 because you didn't confirm your subscription.[%END%]
 
 [%|loc%]You can subscribe again :[%END%]
-[%|loc(conf.email,conf.host,list.name)%][% FILTER escape_url %]mailto:%1@%2?subject=sub %3[% END %][% END %]
+[% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sub [%list.name%][% END %]

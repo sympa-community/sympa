@@ -30,7 +30,7 @@ Deleted topic(s) is(are) :[%END%]
 
 
 [% ELSE -%]
-Subject: [% FILTER qencode %][%|loc(list.name,type)%] %1 / %2 [%END%][%END%]
+Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]

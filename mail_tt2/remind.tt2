@@ -8,4 +8,4 @@ Content-Transfer-Tncoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
 [%|loc%]Unsubscription :[%END%]
-[%|loc(conf.email,conf.host,list.name,user.email)%][% FILTER escape_url %]mailto:%1@%2?subject=sig %3 %4[% END %][% END %]
+[% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%][% END %]

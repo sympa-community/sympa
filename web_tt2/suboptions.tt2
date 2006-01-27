@@ -29,7 +29,7 @@
  	     <br />
  	  [% END %]
  	  [%IF topic_checked.other %]
- 	   <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (no tagged mails) [%END%]
+ 	   <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
           [%ELSE%]	
            <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%] 	
  	  [%END%] 
@@ -38,7 +38,7 @@
   
  	  [%IF sub_user_topic %]
 	   <br />	
- 	   <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disallow topic subscription[%END%]</input>
+ 	   <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
  	   <br />
  	  [%END%]
        	
