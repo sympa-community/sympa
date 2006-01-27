@@ -18,684 +18,51 @@ msgstr ""
 "X-Rosetta-Version: 0.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
 
-#. (list.name,filename,who,conf.wwsympa_url)
-#: mail_tt2/listeditor_notification.tt2:24
-msgid ""
-"\n"
-" [% IF many_files %]There are new shared documents in list %1 : \n"
-"\t%2\n"
-"\n"
-"\tfrom %3\n"
-"\n"
-"To moderate these document : \n"
-"%4/modindex/%1\n"
-"\n"
-" [% ELSE %]\n"
-"There is a new shared document in list %1 : \n"
-"\t%2 from %3\n"
-"\n"
-"To moderate this document : \n"
-"%4/modindex/%1\n"
-" "
-msgstr ""
-
-#. (list.name,sympa,keyauth,list.name,escaped_who,sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:108
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:94
 #, fuzzy
 msgid ""
 "\n"
-"Dear owner of list %1,\n"
-"\n"
-"A user asked to be deleted from your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=auth %3 DEL %4 %5"
-msgstr ""
-"Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
-"\n"
-"Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε την \n"
-"πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
-"AUTH %s DEL %s %s\n"
+"or send an email to %1 with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
+msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
-#. (list.name,replyto,keyauth,list.name,escaped_who,escaped_gecos,replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:90
+#. (sympa,keyauth,list.name,who)-)
+#: mail_tt2/listowner_notification.tt2:112
 #, fuzzy
 msgid ""
 "\n"
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=auth %3 ADD %4 %5 %6"
-msgstr ""
-"Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
-"\n"
-"Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε την \n"
-"πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
-"AUTH %s DEL %s %s\n"
-
-#: mail_tt2/listmaster_notification.tt2:324
-msgid "  "
-msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:19
-msgid ""
-"  \n"
-"You asked for your e-mail address\n"
-"to be added to list '%1'.\n"
-msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:37
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a subscription reminder to be sent\n"
-"to each subscriber of list %1\n"
-msgstr ""
-"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
-"συνδρομητές\n"
-
-#. (-)
-#: mail_tt2/request_auth.tt2:45
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a subscription reminder to be sent\n"
-"to each subscriber of list '*'\n"
-msgstr ""
-"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
-"συνδρομητές\n"
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:25
-msgid ""
-"  \n"
-"You requested a user of list %1 to be\n"
-"added.\n"
-msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:31
-msgid ""
-"  \n"
-"You requested a user of list %1 to be\n"
-"removed.\n"
-msgstr ""
-
-#: web_tt2/error.tt2:30
-msgid "   "
-msgstr ""
-
-#. (conf.sympa,command)-)
-#: mail_tt2/request_auth.tt2:57
-#, fuzzy
-msgid ""
-"    \n"
-"If you want this action to be taken, please\n"
-"\n"
-"- reply to this mail\n"
-"OR\n"
-"- send a message to %1 with subject\n"
-" %2\n"
-"OR\n"
-"- hit the following mailto [%|loc(conf.sympa,command_escaped)-%][% FILTER "
-"escape_url %]mailto:%1?subject=%2"
-msgstr ""
-"Υπάρξη αίτησης για την προσθήκη της ηλεκτρονικής σας διεύθυνσης\n"
-"στη λίστα '%s'.\n"
-"Αν επιθυμείτε την εκτέλεση της συγκεκριμένης ενέργειας, παρακαλούμε όπως\n"
-"- απαντήσετε στο παρόν μήνυμα\n"
-"Ή\n"
-"- αποστείλετε μήνυμα προς %s με θέμα\n"
-" %s\n"
-"Ή\n"
-"- επιλέξετε τον ακόλουθο σύνδεσμο %s\n"
-"Αν δεν επιθυμείτε την εκτέλεση της συγκεκριμένης ενέργειας,\n"
-"παρακαλούμε αγνοείστε\n"
-"το παρόν μήνυμα."
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:13
-#, fuzzy
-msgid ""
-"    \n"
-"You asked for your e-mail address\n"
-"to be removed from list '%1'.\t\n"
-msgstr ""
-"Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας για την "
-"αφαίρεση της συνδρομής σας από τη λίστα %2."
-
-#. (error)
-#: mail_tt2/listmaster_notification.tt2:232
-#: mail_tt2/listmaster_notification.tt2:310
-#: mail_tt2/listmaster_notification.tt2:325
-#, fuzzy
-msgid "         %1 "
-msgstr "Επισκόπηση : %1"
-
-#. (notice.cmd)
-#: mail_tt2/command_report.tt2:51
-#, fuzzy
-msgid "  Command '%1' found : ignoring end of message."
-msgstr "Εύρεση της εντολής 'Έξοδος' : Θα αγνοηθεί το τέλος του μηνύματος.\n"
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:30
-#, fuzzy
-msgid "  Information regarding user %1 have been updated for list %2."
-msgstr "Οι πληροφορίες του χρήστη %s έχουν ενημερωθεί για τη λίστα %s.\n"
+"or send an email to %1 with the following subject :\n"
+"AUTH %2 DEL %3 %4\n"
+msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #: web_tt2/serveradmin.tt2:90
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "  Προσοχή! Ενδέχεται να απαιτηθεί πολύς χρόνος επεξεργασίας"
-
-#. (notice.total,notice.listname)
-#: mail_tt2/command_report.tt2:39
-#, fuzzy
-msgid "  Subscription reminder sent to each of %1 %2 subscribers."
-msgstr ""
-"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
-"συνδρομητές\n"
-
-#. (notice.count)
-#: mail_tt2/command_report.tt2:42
-msgid "  The Reminder has been sent to %1 users."
-msgstr ""
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:45
-msgid "  The user %1 has been removed from the list %2."
-msgstr ""
-
-#. (notice.listname)
-#: mail_tt2/command_report.tt2:54
-#, fuzzy
-msgid "  There is no message to moderate for list '%1'."
-msgstr "Δεν υπάρχουν μηνύματα ή έγγραφα προς συντονισμό στη λίστα %1"
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:36
-msgid "  User %1 has been invited to subscribe in list %2."
-msgstr ""
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:33
-#, fuzzy
-msgid "  User %1 is now subscriber of list %2."
-msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
-
-#. (notice.listname)
-#: mail_tt2/command_report.tt2:48
-#, fuzzy
-msgid "  Your configuration regarding list %1 has been updated."
-msgstr "Το αρχείο διαμόρφωσης ενημερώθηκε"
-
-#: mail_tt2/command_report.tt2:22
-msgid "  Your message signature was successfully verified using S/MIME."
-msgstr ""
-
-#: mail_tt2/command_report.tt2:27
-msgid ""
-"  Your request to subscribe/unsubscribe has been forwarded to the list's\n"
-"owners for approval. You will receive a notification when you have\n"
-"been subscribed (or unsubscribed) to the list."
-msgstr ""
-
-#. (list.name,type)
-#: mail_tt2/user_notification.tt2:33
-#, fuzzy
-msgid " %1 / %2 "
-msgstr "Λίστα %1 / %2"
 
 #. (from_count)
 #: web_tt2/arcsearch.tt2:64
 msgid " %1 hits on message's From field"
 msgstr " %1 επιτυχίες στο πεδίο μηνύματος Από"
 
-#: web_tt2/error.tt2:115
-msgid " - "
+#. (old_email)
+#: mail_tt2/listmaster_notification.tt2:252
+msgid " (old email : %1)"
 msgstr ""
 
-#. (u_err.path)
-#: web_tt2/error.tt2:87
-#, fuzzy
-msgid " - %1 : No such file or directory"
-msgstr "%1 : Ανύπαρκτο αρχείο ή κατάλογος"
-
-#. (u_err.file)
-#: web_tt2/error.tt2:62
-#, fuzzy
-msgid " - %1 : file not editable"
-msgstr "%1 : μη επεξεργάσιμο αρχείο"
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:95
-msgid " - %1 : incorrect name[%IF u_err.reason%] : %2 "
+#. (old_email)
+#: mail_tt2/listmaster_notification.tt2:254
+msgid " (old email : %2)"
 msgstr ""
 
-#. (u_err.family)
-#: web_tt2/error.tt2:44
+#. (dir)
+#. (path)
+#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:273
 #, fuzzy
-msgid " - %1 : unknown family"
-msgstr "%1 : άγνωστη ενέργεια"
-
-#. (u_err.list)
-#: web_tt2/error.tt2:42
-#, fuzzy
-msgid " - %1 : unknown list"
-msgstr "%1 : άγνωστη λίστα"
-
-#. (u_err.new_robot)
-#: web_tt2/error.tt2:43
-#, fuzzy
-msgid " - %1 : unknown robot"
-msgstr "%1 : άγνωστη λίστα"
-
-#. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:64
-#, fuzzy
-msgid " - %1 is already subscribed to the list %2"
-msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
-
-#. (u_err.reception_mode)
-#: web_tt2/error.tt2:61
-#, fuzzy
-msgid " - %1 is not an available reception mode"
-msgstr "Τρόπος παραβαλής μηνύματος."
-
-#. (u_err.bad_listname)
-#: web_tt2/error.tt2:82
-#, fuzzy
-msgid " - '%1' : bad listname"
-msgstr ": μη επιτρεπτό όνομα λίστας"
-
-#. (u_err.new_listname)
-#: web_tt2/error.tt2:83
-msgid " - '%1' list already exists"
-msgstr ""
-
-#. (u_err.path)
-#: web_tt2/error.tt2:98
-msgid " - A directory named '%1' already exists"
-msgstr ""
-
-#. (u_err.email)
-#: web_tt2/error.tt2:49
-#, fuzzy
-msgid " - Address \"%1\" is incorrect"
-msgstr "Η διεύθυνση \"%1\" είναι λανθασμένη"
-
-#: web_tt2/error.tt2:72
-msgid " - Archives are empty for this list"
-msgstr ""
-
-#. (i_err.year_month)
-#: web_tt2/error.tt2:10
-#, fuzzy
-msgid " - Archives from %1 are not accessible"
-msgstr "Το Αρχείο από %1 δεν είναι προσβάσιμο"
-
-#: web_tt2/error.tt2:114
-#, fuzzy
-msgid " - Authentication failed"
-msgstr "Αίτηση ταυτοποίησης"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:68
-#, fuzzy
-msgid " - Cannot open file '%1'"
-msgstr "Αδυναμία αποσυμπίεσης του αρχείου %1"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:97
-#, fuzzy
-msgid " - Cannot overwrite file %1"
+msgid " : unable to read '%1'."
 msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:102
-#, fuzzy
-msgid " - Cannot upload file %1"
-msgstr "Αδυναμία αναβίβασης του αρχείου %1"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:76
-#, fuzzy
-msgid " - Config file has been modified by %1. Cannot apply your changes"
-msgstr ""
-"Το αρχείο διαμόρφωσης έχει τροποποιηθεί από %1. Αδυναμία εφαρμογής των "
-"αλλαγών σας.                        "
-
-#: web_tt2/error.tt2:94
-#, fuzzy
-msgid " - Data have changed on disk. Cannot apply your changes"
-msgstr "Αλλαγή δεδομένων στο δίσκο. Αδυναμία εφαρμογής των αλλαγών"
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:105
-#, fuzzy
-msgid " - Directory %1 and its contents are not copied : %2"
-msgstr "Ο κατάλογος %1 και τα περιεχόμενά τους δεν αντιγράφησαν"
-
-#. (u_err.directory)
-#: web_tt2/error.tt2:107
-#, fuzzy
-msgid " - Failed : %1 not empty"
-msgstr "Αποτυχία : %1 μη κενό"
-
-#: web_tt2/error.tt2:96
-#, fuzzy
-msgid " - Failed : your content is empty"
-msgstr "Αποτυχία: το περιεχόμενο είναι κενό"
-
-#: web_tt2/error.tt2:14
-msgid " - Failed to include list admins"
-msgstr ""
-
-#: web_tt2/error.tt2:13
-msgid " - Failed to inlude members"
-msgstr ""
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:106
-#, fuzzy
-msgid " - File %1 is not copied : %2 "
-msgstr "Το αρχείο %1 δεν έχει αντιγραφεί"
-
-#: web_tt2/error.tt2:73
-msgid " - Huummm... didn't change anything"
-msgstr ""
-
-#. (u_err.new_listname)
-#: web_tt2/error.tt2:84
-msgid " - Incorrect listname '%1' : matches one of service aliases"
-msgstr ""
-
-#: web_tt2/error.tt2:75
-#, fuzzy
-msgid " - List has no bouncing subscribers"
-msgstr "Η λίστα δεν έχει συνδρομητές bouncing"
-
-#: web_tt2/error.tt2:54
-#, fuzzy
-msgid " - List has no subscribers"
-msgstr "Η λίστα δεν έχει συνδρομητές"
-
-#. (u_err.argument)
-#: web_tt2/error.tt2:47
-#, fuzzy
-msgid " - Missing argument %1"
-msgstr "Ελλειπές όρισμα %1"
-
-#: web_tt2/error.tt2:56
-#, fuzzy
-msgid " - Missing filter"
-msgstr "Ελλειπές φίλτρο"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:74
-#, fuzzy
-msgid " - No bounce for user  %1"
-msgstr "Δεν υπάρχουν bounces για το χρήστη %1"
-
-#. (u_err.directory)
-#: web_tt2/error.tt2:108
-msgid " - No certificate for this list"
-msgstr ""
-
-#: web_tt2/error.tt2:92
-#, fuzzy
-msgid " - No description specified"
-msgstr "Δεν ορίστηκε περιγραφή"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:111
-#, fuzzy
-msgid " - No entry for user '%1'"
-msgstr "Δεν υπάρχουν bounces για το χρήστη %1"
-
-#: web_tt2/error.tt2:100
-#, fuzzy
-msgid " - No name specified"
-msgstr "Δεν ορίστηκε όνομα"
-
-#. (u_err.page)
-#: web_tt2/error.tt2:55
-#, fuzzy
-msgid " - No page %1"
-msgstr "Ανύπαρκτη σελίδα %1"
-
-#: web_tt2/error.tt2:113
-msgid " - No soap service"
-msgstr ""
-
-#. (u_err.email)
-#: web_tt2/error.tt2:58
-#, fuzzy
-msgid " - Not subscribed: %1"
-msgstr "Δεν πραγματοποιήθηκε εγγραφή συνδρομητή: %1"
-
-#. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:79
-msgid " - Parameter '%1' has got wrong value : '%2'"
-msgstr ""
-
-#. (u_err.param)
-#: web_tt2/error.tt2:78
-msgid " - Parameter '%1' must have values"
-msgstr ""
-
-#: web_tt2/error.tt2:46
-#, fuzzy
-msgid " - Please provide email address"
-msgstr "Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας"
-
-#: web_tt2/error.tt2:65
-#, fuzzy
-msgid " - Please provide your password"
-msgstr "Παρακαλούμε συμπληρώστε το συνθηματικό σας"
-
-#: web_tt2/error.tt2:112
-#, fuzzy
-msgid " - Please select archive months"
-msgstr "Παρακαλούμε επιλέξτε τους μήνες του αρχείου"
-
-#: web_tt2/error.tt2:50
-#, fuzzy
-msgid " - Provided password is incorrect"
-msgstr "Λανθασμένο συνθηματικό"
-
-#. (u_err.tpl)
-#: web_tt2/error.tt2:67
-#, fuzzy
-msgid " - Provided path is incorrect for template '%1'"
-msgstr "Λανθασμένο συνθηματικό"
-
-#: web_tt2/error.tt2:70
-msgid ""
-" - Reject message failed, it may already have been rejected by another "
-"moderator"
-msgstr ""
-
-#. (u_err.params)
-#: web_tt2/error.tt2:41
-msgid " - Syntax errors with the following parameters : %1["
-msgstr ""
-
-#: web_tt2/error.tt2:110
-msgid " - Tag message with topic is required for this list"
-msgstr ""
-
-#: web_tt2/error.tt2:71
-msgid " - Tagging message is required for this list"
-msgstr ""
-
-#: web_tt2/error.tt2:101
-msgid " - The document repository exceed disk quota."
-msgstr ""
-
-#. (i_err.listname)
-#: web_tt2/error.tt2:16
-#, fuzzy
-msgid " - The exporation failed for list '%1'"
-msgstr "Χώρος συντονισμού για λίστα %1"
-
-#. (u_err.listname)
-#: web_tt2/error.tt2:80
-#, fuzzy
-msgid " - The list '%1' is already closed"
-msgstr "Η λίστα %1 έχει κλείσει"
-
-#. (u_err.listname)
-#: web_tt2/error.tt2:81
-#, fuzzy
-msgid " - The list '%1' is not closed"
-msgstr "Η λίστα %1 έχει κλείσει"
-
-#: web_tt2/error.tt2:66
-msgid " - The passwords you typed do not match"
-msgstr ""
-
-#. (u_err.nb_days)
-#: web_tt2/error.tt2:53
-msgid " - The period is too long (%1 days)"
-msgstr ""
-
-#: web_tt2/error.tt2:91
-msgid " - The shared directory cannot have any description"
-msgstr ""
-
-#: web_tt2/error.tt2:90
-#, fuzzy
-msgid " - The shared document space is empty"
-msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
-
-#: web_tt2/error.tt2:104
-msgid " - The upload failed, try it again"
-msgstr ""
-
-#: web_tt2/error.tt2:89
-#, fuzzy
-msgid " - There is no shared documents"
-msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
-
-#: web_tt2/error.tt2:15
-#, fuzzy
-msgid " - There is not any owner defined for the list"
-msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
-
-#. (u_err.name)
-#: web_tt2/error.tt2:99
-msgid " - This is an already existing document : '%1'"
-msgstr ""
-
-#: web_tt2/error.tt2:109
-msgid " - This list has no message topic"
-msgstr ""
-
-#: web_tt2/error.tt2:77
-msgid " - Topic \"other\" is a reserved word"
-msgstr ""
-
-#. (u_err.path)
-#: web_tt2/error.tt2:93
-msgid " - Unable to describe, the document '%1' does not exist"
-msgstr ""
-
-#. (i_err.month)
-#: web_tt2/error.tt2:9
-msgid " - Unable to find month '%1'"
-msgstr ""
-
-#: web_tt2/error.tt2:12
-#, fuzzy
-msgid " - Unable to load create_list templates"
-msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
-
-#: web_tt2/error.tt2:11
-msgid " - Unable to load list topics"
-msgstr ""
-
-#. (u_err.path)
-#: web_tt2/error.tt2:88
-msgid " - Unable to read %1 : empty document"
-msgstr ""
-
-#: web_tt2/error.tt2:85
-msgid " - Unable to rename archive"
-msgstr ""
-
-#: web_tt2/error.tt2:86
-msgid " - Unable to rename bounces"
-msgstr ""
-
-#: web_tt2/error.tt2:40
-#, fuzzy
-msgid " - Unknown action"
-msgstr "%1 : άγνωστη ενέργεια"
-
-#: web_tt2/error.tt2:39
-#, fuzzy
-msgid " - Wrong parameters"
-msgstr "Εγκατάσταση πηγών δεδομένων"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:45
-msgid " - You are already logged in as %1"
-msgstr ""
-
-#. (u_err.list)
-#: web_tt2/error.tt2:63
-#, fuzzy
-msgid " - You are already subscribed to the list %1"
-msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
-
-#. (u_err.list)
-#: web_tt2/error.tt2:59
-#, fuzzy
-msgid " - You are not subscribed to list %1"
-msgstr "Επιθυμείτε την εγγραφή σας ως συνδρομητή στη λίστα %1;"
-
-#: web_tt2/error.tt2:51
-msgid ""
-" - You did not choose a password, request a reminder of the initial password"
-msgstr ""
-
-#: web_tt2/error.tt2:48
-msgid " - You need to login"
-msgstr ""
-
-#: web_tt2/error.tt2:69
-msgid " - You need to provide list name"
-msgstr ""
-
-#. (u_err.dir)
-#: web_tt2/error.tt2:103
-msgid " - You're not authorized to upload an INDEX.HTML in %1"
-msgstr ""
-
-#: web_tt2/error.tt2:52
-msgid ""
-" - Your password is stored in an LDAP directory, therefore Sympa cannot post "
-"you a reminder"
-msgstr ""
-
-#. (u_err.msg)
-#: web_tt2/error.tt2:116
-#, fuzzy
-msgid " : %1 "
-msgstr " σε %1"
 
 #. (count)
 #: web_tt2/latest_lists.tt2:6
@@ -733,25 +100,15 @@ msgstr " Τα πρόσφατα μηνύματα "
 msgid " The latest shared documents "
 msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
 
-#. (who,action,listname,conf.host,error)
-#: mail_tt2/listmaster_notification.tt2:322
-msgid ""
-" User %1 has encountered a system error \n"
-"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
+#. (who)
+#: mail_tt2/listmaster_notification.tt2:318
+msgid " User %1 has encountered a system error"
 msgstr ""
 
-#. (who,action,msg_id,cmd,listname,conf.host)
-#: mail_tt2/listmaster_notification.tt2:230
-msgid ""
-" User %1 has encountered an internal server error\n"
-"(%2[% IF msg_id %] - MSG_ID : %3"
-msgstr ""
-
-#. (who,action,listname,conf.host)
-#: mail_tt2/listmaster_notification.tt2:245
-msgid ""
-" User %1 has encountered an internal server error \n"
-"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
+#. (who)
+#: mail_tt2/listmaster_notification.tt2:229
+#: mail_tt2/listmaster_notification.tt2:244
+msgid " User %1 has encountered an internal server error"
 msgstr ""
 
 #: web_tt2/rss.tt2:7
@@ -785,18 +142,15 @@ msgstr " Τα πρόσφατα μηνύματα "
 msgid " on %1"
 msgstr " σε %1"
 
+#. (by)
+#: mail_tt2/listowner_notification.tt2:134
+msgid " validated by %1 "
+msgstr ""
+
 #: web_tt2/active_lists.tt2:21
 #, fuzzy
 msgid "# message"
 msgstr "Τελευταίο μήνυμα"
-
-#. (body)
-#. (subject)
-#. (command)
-#: mail_tt2/archive.tt2:3 mail_tt2/request_auth.tt2:3 mail_tt2/review.tt2:2
-#: mail_tt2/stats_report.tt2:2 web_tt2/request_topic.tt2:30
-msgid "%1"
-msgstr ""
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -813,6 +167,12 @@ msgstr "%1 / αποχώρηση συνδρομητή από %2"
 msgid "%1 / your environment"
 msgstr "%1 / στο περιβάλλον σου"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:84
+#, fuzzy
+msgid "%1 : No such file or directory"
+msgstr "%1 : Ανύπαρκτο αρχείο ή κατάλογος"
+
 #. (notice.action)
 #: web_tt2/notice.tt2:14
 msgid "%1 : action succeeded"
@@ -823,6 +183,35 @@ msgstr "%1 : επιτυχής ενέργεια"
 #, fuzzy
 msgid "%1 : action succeeded soon"
 msgstr "%1 : επιτυχής ενέργεια"
+
+#. (u_err.file)
+#: web_tt2/error.tt2:61
+#, fuzzy
+msgid "%1 : file not editable"
+msgstr "%1 : μη επεξεργάσιμο αρχείο"
+
+#. (u_err.name)
+#: web_tt2/error.tt2:92
+msgid "%1 : incorrect name"
+msgstr "%1 : λανθασμένο όνομα"
+
+#. (u_err.family)
+#: web_tt2/error.tt2:43
+#, fuzzy
+msgid "%1 : unknown family"
+msgstr "%1 : άγνωστη ενέργεια"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:41
+#, fuzzy
+msgid "%1 : unknown list"
+msgstr "%1 : άγνωστη λίστα"
+
+#. (u_err.new_robot)
+#: web_tt2/error.tt2:42
+#, fuzzy
+msgid "%1 : unknown robot"
+msgstr "%1 : άγνωστη λίστα"
 
 #. (list.name,date)
 #: mail_tt2/digest_plain.tt2:4 mail_tt2/digest_plain.tt2:9
@@ -877,6 +266,18 @@ msgstr "%1 επιτυχίες στο πεδίο Ημερομηνία του μη
 #: web_tt2/arcsearch.tt2:60
 msgid "%1 hits on message's Subject field"
 msgstr "% επιτυχίες στο πεδίο Θέμα του μηνύματος"
+
+#. (u_err.email,u_err.list)
+#: web_tt2/error.tt2:63
+#, fuzzy
+msgid "%1 is already subscribed to the list %2"
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
+
+#. (u_err.reception_mode)
+#: web_tt2/error.tt2:60
+#, fuzzy
+msgid "%1 is not an available reception mode"
+msgstr "Τρόπος παραβαλής μηνύματος."
 
 #. (list.name)
 #: mail_tt2/list_created.tt2:2
@@ -946,6 +347,17 @@ msgstr "Το αρχείο %2@%3 χρησιμοποιεί το %4% του επι�
 #: src/PlainDigest.pm:353
 msgid "%Image(%s)"
 msgstr "%Εικόνα(%s)"
+
+#. (u_err.bad_listname)
+#: web_tt2/error.tt2:81
+#, fuzzy
+msgid "'%1' : bad listname"
+msgstr ": μη επιτρεπτό όνομα λίστας"
+
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:82
+msgid "'%1' list already exists"
+msgstr ""
 
 #: web_tt2/arcsearch.tt2:18
 msgid "(All of this words,"
@@ -1166,6 +578,11 @@ msgstr ""
 "τρέχουσα λίστα. Απαιτούνται δικαιώματα διαχειριστή για την ανάκτηση της "
 "λίστας."
 
+#. (u_err.path)
+#: web_tt2/error.tt2:95
+msgid "A directory named '%1' already exists"
+msgstr ""
+
 #: web_tt2/create_list_request.tt2:77
 msgid "A few lines describing the list"
 msgstr "Σύντομη περιγραφή της λίστας"
@@ -1184,7 +601,7 @@ msgstr ""
 "ADD <list> user@host Πλήρες όνομα * Για την προσθήκη ενός χρήστη σε λίστα"
 
 #. (auth.action)
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:120
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
@@ -1235,6 +652,12 @@ msgstr ""
 #: mail_tt2/authorization_reject.tt2:20
 msgid "Adding a user to the list is restricted to list owners."
 msgstr ""
+
+#. (u_err.email)
+#: web_tt2/error.tt2:48
+#, fuzzy
+msgid "Address \"%1\" is incorrect"
+msgstr "Η διεύθυνση \"%1\" είναι λανθασμένη"
 
 #: web_tt2/editsubscriber.tt2:55
 msgid "Address detected via VERP technologie"
@@ -1309,6 +732,16 @@ msgstr "Αρχείο"
 msgid "Archives Selection:"
 msgstr "Επιλογή Αρχείου:"
 
+#: web_tt2/error.tt2:71
+msgid "Archives are empty for this list"
+msgstr ""
+
+#. (i_err.year_month)
+#: web_tt2/error.tt2:10
+#, fuzzy
+msgid "Archives from %1 are not accessible"
+msgstr "Το Αρχείο από %1 δεν είναι προσβάσιμο"
+
 #. (list.name)
 #: mail_tt2/index_archive.tt2:2
 #, fuzzy
@@ -1345,6 +778,11 @@ msgstr "Τύπος επισύναψης"
 #: web_tt2/scenario_test.tt2:59
 msgid "Auth method"
 msgstr "Μέθοδος ταυτοποίησης"
+
+#: web_tt2/error.tt2:111
+#, fuzzy
+msgid "Authentication failed"
+msgstr "Αίτηση ταυτοποίησης"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
 #: web_tt2/modindex.tt2:36 web_tt2/modindex.tt2:99
@@ -1472,41 +910,54 @@ msgid "Cannot connect to database %1, still trying..."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:290
 #, fuzzy
 msgid "Cannot create shared for list '%1'."
 msgstr "Αδυναμία δημιουργίας καταλόγου %1"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:292
 msgid "Cannot delete shared for list '%1'."
 msgstr ""
 
+#. (u_err.path)
+#: web_tt2/error.tt2:67
+#, fuzzy
+msgid "Cannot open file '%1'"
+msgstr "Αδυναμία αποσυμπίεσης του αρχείου %1"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:94
+#, fuzzy
+msgid "Cannot overwrite file %1"
+msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:291
 #, fuzzy
 msgid "Cannot restore shared for list '%1'."
 msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:276
 #, fuzzy
 msgid "Cannot save config file for list '%1'."
 msgstr "Αδυναμία αλλαγής της διεύθυνσης της λίστας %1"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:295 web_tt2/error.tt2:17
 #, fuzzy
 msgid "Cannot unzip file '%1'."
 msgstr "Αδυναμία αποσυμπίεσης του αρχείου %1"
 
-#: web_tt2/error.tt2:17
+#. (u_err.path)
+#: web_tt2/error.tt2:99
 #, fuzzy
-msgid "Cannot unzip this file "
-msgstr "Αδυναμία αποσυμπίεσης του αρχείου %1"
+msgid "Cannot upload file %1"
+msgstr "Αδυναμία αναβίβασης του αρχείου %1"
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:294
 #, fuzzy
 msgid "Cannot upload file '%1'."
 msgstr "Αδυναμία αναβίβασης του αρχείου %1"
@@ -1606,6 +1057,12 @@ msgstr "Κλειστές λίστες"
 msgid "Colors"
 msgstr "Χρώματα"
 
+#. (notice.cmd)
+#: mail_tt2/command_report.tt2:51
+#, fuzzy
+msgid "Command '%1' found : ignoring end of message."
+msgstr "Εύρεση της εντολής 'Έξοδος' : Θα αγνοηθεί το τέλος του μηνύματος.\n"
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1619,6 +1076,14 @@ msgstr "Λάθος σύνταξη εντολής\n"
 #: web_tt2/notice.tt2:62
 msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr ""
+
+#. (u_err.email)
+#: web_tt2/error.tt2:75
+#, fuzzy
+msgid "Config file has been modified by %1. Cannot apply your changes"
+msgstr ""
+"Το αρχείο διαμόρφωσης έχει τροποποιηθεί από %1. Αδυναμία εφαρμογής των "
+"αλλαγών σας.                        "
 
 #: web_tt2/set_pending_list_request.tt2:46
 msgid "Configuration file"
@@ -1657,12 +1122,12 @@ msgid "Continue search"
 msgstr "Συνέχεια αναζήτησης"
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
 #. (auth.listname)
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:122
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -1753,6 +1218,11 @@ msgstr "Ημερήσια αξιολόγηση bouncing χρηστών"
 msgid "Data Source"
 msgstr "Πηγή δεδομένων"
 
+#: web_tt2/error.tt2:91
+#, fuzzy
+msgid "Data have changed on disk. Cannot apply your changes"
+msgstr "Αλλαγή δεδομένων στο δίσκο. Αδυναμία εφαρμογής των αλλαγών"
+
 #: web_tt2/edit_list_request.tt2:11
 msgid "Data sources setup"
 msgstr "Εγκατάσταση πηγών δεδομένων"
@@ -1765,6 +1235,44 @@ msgstr ""
 #: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:98 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr "Ημερομηνία"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:105
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. Shall this be fine\n"
+"with you, you should click the following URL :"
+msgstr ""
+"Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
+"\n"
+"Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε την \n"
+"πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+"\n"
+"ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
+"AUTH %s DEL %s %s\n"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:87
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. Shall this be fine\n"
+"with you, you should click the following URL :"
+msgstr ""
+"Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
+"\n"
+"Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε την \n"
+"πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+"\n"
+"ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
+"AUTH %s DEL %s %s\n"
 
 #: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
 #: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
@@ -1824,7 +1332,7 @@ msgstr ""
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:256
-msgid "Delete user in DB for old email '%s' failed."
+msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:44
@@ -1899,13 +1407,20 @@ msgstr "Επισκόπηση απλού κειμένου"
 msgid "Directory"
 msgstr "Κατάλογος"
 
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:102
+#, fuzzy
+msgid "Directory %1 and its contents could not be copied : %2"
+msgstr "Ο κατάλογος %1 και τα περιεχόμενά τους δεν αντιγράφησαν"
+
 #: src/List.pm:877
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Κατάλογος αποθήκευσης της βάσης δεδομένων (χρήση μόνο DBD::CSV)"
 
 #: web_tt2/suboptions.tt2:41
-msgid "Disallow topic subscription"
-msgstr ""
+#, fuzzy
+msgid "Disable topics subscription"
+msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 
 #: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:74
 #: web_tt2/modindex.tt2:76 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:8
@@ -1941,21 +1456,12 @@ msgid "Do you really want to delete this message ?"
 msgstr "Επιθυμείτε τη διαγραφή του μηνύματος;"
 
 #. (file.value.site)
-#: web_tt2/ls_templates.tt2:79
-#, fuzzy
-msgid "Do you really want to remove %1 ?"
-msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
-
-#. (file.value.listname)
-#: web_tt2/ls_templates.tt2:109
-#, fuzzy
-msgid "Do you really want to remove [% file.value.listname %] ?"
-msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
-
 #. (file.value.robot)
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109 web_tt2/ls_templates.tt2:79
 #: web_tt2/ls_templates.tt2:93
 #, fuzzy
-msgid "Do you really want to remove [% file.value.robot %] ?"
+msgid "Do you really want to remove %1 ?"
 msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
 
 #: web_tt2/rename_list_request.tt2:14
@@ -2039,7 +1545,7 @@ msgid "E-mail address %1 has not been found in the list %2."
 msgstr "Η διεθύνση %s δεν βρέθηκε στη λίστα\n"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:38
+#: web_tt2/error.tt2:37
 msgid "ERROR (%1) "
 msgstr ""
 
@@ -2131,16 +1637,6 @@ msgstr "Τέλος της %1 Επισκόπησης %2"
 msgid "End of digest for list %1 - %2"
 msgstr "Τέλος της Επισκόπησης της λίστας %1 - %2"
 
-#. (i_err.key)
-#: web_tt2/error.tt2:20
-msgid "Erreur 404"
-msgstr ""
-
-#. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:306
-msgid "Erreur 404."
-msgstr ""
-
 #: src/Conf.pm:251
 msgid "Error at line %d : %s"
 msgstr "Σφάλμα στη γραμμή %d : %s"
@@ -2174,14 +1670,9 @@ msgstr ""
 "                        "
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:296
 #, fuzzy
 msgid "Errors while unzipping file '%1'."
-msgstr "Σφάλμα κατά την αποσυμπίεση του αρχείου %1"
-
-#: web_tt2/error.tt2:18
-#, fuzzy
-msgid "Errors while unzipping this file."
 msgstr "Σφάλμα κατά την αποσυμπίεση του αρχείου %1"
 
 #: mail_tt2/expire_warning1.tt2:10 mail_tt2/expire_warning2.tt2:10
@@ -2205,13 +1696,11 @@ msgstr "Λήξη μη συντονιζόμενων μηνυμάτων"
 msgid "Extend search field"
 msgstr "Πεδίο επεκταμένης αναζήτησης"
 
-#. (command,list.name,who,gecos,by)
+#. (command,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:134
 #, fuzzy
-msgid "FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 "
-msgstr ""
-"FYI εντολή %s λίστας %s από   %s %s επικυρωμένη από %s \n"
-" (δεν απαιτείται καμία επιπλέον ενέργεια) \n"
+msgid "FYI command %1 list %2 from %3 %4"
+msgstr "FYI: %s λίστας %s από %s %s"
 
 #. (type,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:34
@@ -2245,19 +1734,40 @@ msgstr ""
 "συντακτών. Τα μηνύματα που δεν έχουν διανεμηθεί ή απορριφθεί θα παραμείνουν "
 "στην περιοχή συντονισμού έως ότου επεξεργαστούν."
 
+#. (u_err.directory)
+#: web_tt2/error.tt2:104
+#, fuzzy
+msgid "Failed : %1 not empty"
+msgstr "Αποτυχία : %1 μη κενό"
+
+#: web_tt2/error.tt2:93
+#, fuzzy
+msgid "Failed : your content is empty"
+msgstr "Αποτυχία: το περιεχόμενο είναι κενό"
+
+#: web_tt2/error.tt2:14
+#, fuzzy
+msgid "Failed to include list admins"
+msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:286
 #, fuzzy
 msgid "Failed to include list admins for list '%1'"
 msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
 
+#: web_tt2/error.tt2:13
+#, fuzzy
+msgid "Failed to inlude members"
+msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:285
 #, fuzzy
 msgid "Failed to inlude members for list '%1'"
 msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
 
-#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:277
 msgid "Failed to install aliases."
 msgstr ""
 
@@ -2266,7 +1776,7 @@ msgstr ""
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
 
-#: mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:278
 msgid "Failed to remove aliases."
 msgstr ""
 
@@ -2284,6 +1794,12 @@ msgstr "Οικογένειες"
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Διαγραφή παλαιού αρχείου %1"
+
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:103
+#, fuzzy
+msgid "File %1 is not copied : %2 "
+msgstr "Το αρχείο %1 δεν έχει αντιγραφεί"
 
 #. (notice.path)
 #: web_tt2/notice.tt2:44
@@ -2314,6 +1830,12 @@ msgstr "Συμπερίληψη αρχείου"
 msgid "File name"
 msgstr "Μετονομασία"
 
+#. (i_err.key)
+#. (zipfile)
+#: mail_tt2/listmaster_notification.tt2:303 web_tt2/error.tt2:19
+msgid "File not found."
+msgstr ""
+
 #: web_tt2/login_menu.tt2:74
 msgid "First login ?"
 msgstr "Πρώτη είσοδος;"
@@ -2324,16 +1846,9 @@ msgid "Folder name"
 msgstr "Συντονισμός"
 
 #. (conf.listmaster_email,conf.host)
-#: mail_tt2/list_unknown.tt2:22
-#, fuzzy
-msgid "For further assistance, please contact %1@%2"
-msgstr ""
-"Για περισσότερες πληροφορίες, παρακαλούμε επικοινωνήστε με τη διεύθυνση "
-"listmaster@%1"
-
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:185 mail_tt2/message_report.tt2:17
-#: mail_tt2/message_report.tt2:74 mail_tt2/message_report.tt2:92
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
+#: mail_tt2/message_report.tt2:87
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr ""
@@ -2418,7 +1933,7 @@ msgstr "Βοήθεια Sympa: %1%2"
 
 #: mail_tt2/which.tt2:7
 #, fuzzy
-msgid "Here are the lists you are currently subscribe to :"
+msgid "Here are the lists you are currently subscribed to :"
 msgstr ""
 "Οι λίστες στις οποίες είστε συνδρομητής:\n"
 "\n"
@@ -2527,9 +2042,43 @@ msgstr ""
 "Αν οριστεί ως άλλη_διεύθυνση (other_email), η παράμετρος ορίζει τη "
 "χρησιμοποιούμενη διεύθυνση ηλεκτρονικού ταχυδρομείου."
 
+#. (-)
+#: mail_tt2/request_auth.tt2:40
+#, fuzzy
+msgid ""
+"If you do not want this action to be taken, you can safely ignore this "
+"message."
+msgstr "Αν δεν επιθυμείτε την εγγραφή ως συνδρομητής αγνοείστε αυτό το μήνυμα."
+
 #: mail_tt2/invite.tt2:13
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Αν δεν επιθυμείτε την εγγραφή ως συνδρομητής αγνοείστε αυτό το μήνυμα."
+
+#. (conf.sympa)-)
+#: mail_tt2/request_auth.tt2:38
+#, fuzzy
+msgid ""
+"If you want this action to be taken, please\n"
+"\n"
+"- reply to this mail\n"
+"OR\n"
+"- send a message to %1 with subject\n"
+" %2\n"
+"OR\n"
+"- hit the following mailto"
+msgstr ""
+"Υπάρξη αίτησης για την προσθήκη της ηλεκτρονικής σας διεύθυνσης\n"
+"στη λίστα '%s'.\n"
+"Αν επιθυμείτε την εκτέλεση της συγκεκριμένης ενέργειας, παρακαλούμε όπως\n"
+"- απαντήσετε στο παρόν μήνυμα\n"
+"Ή\n"
+"- αποστείλετε μήνυμα προς %s με θέμα\n"
+" %s\n"
+"Ή\n"
+"- επιλέξετε τον ακόλουθο σύνδεσμο %s\n"
+"Αν δεν επιθυμείτε την εκτέλεση της συγκεκριμένης ενέργειας,\n"
+"παρακαλούμε αγνοείστε\n"
+"το παρόν μήνυμα."
 
 #: mail_tt2/global_remind.tt2:8
 msgid "If you want to unsubscribe from some list, please save this mail."
@@ -2544,21 +2093,21 @@ msgstr ""
 "Αν δεν διεθέτετε συνθηματικό από τον συγκεκριμένο εξυπηρετητή ή δεν το "
 "θυμάστε:"
 
-#: mail_tt2/command_report.tt2:175
+#: mail_tt2/command_report.tt2:174
 msgid "Ignoring message because of an internal server error."
 msgstr ""
 
-#: mail_tt2/command_report.tt2:169
+#: mail_tt2/command_report.tt2:168
 #, fuzzy
 msgid ""
-"Ignoring message body not in text/plain, please use text/plain only \n"
-"(or put your command in the subject)."
+"Ignoring message body not in text/plain, please use text/plain only (or put "
+"your command in the subject)."
 msgstr ""
 "Το μήνυμα θα αγνοηθεί καθώς το σώμα του δεν είναι απλό κείμενο, παρακαλούμε "
 "χρησιμοποιήστε μόνο απλό κείμενο \n"
 "(ή ορίστε την εντολή στο θέμα).\n"
 
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:293
 #, fuzzy
 msgid "Impossible to browse shared for list '%1'."
 msgstr "Αποδοχή άρθρου από τη λίστα %1 προς τη λίστα %2"
@@ -2595,6 +2144,11 @@ msgstr "Μη-ενεργές λίστες"
 msgid "Inclusions timeout"
 msgstr "Λήξη χρόνου αναμονής συμπερίληψης"
 
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:83
+msgid "Incorrect listname '%1' : matches one of service aliases"
+msgstr ""
+
 #: web_tt2/set_pending_list_request.tt2:34
 msgid "Information file"
 msgstr "Πληροφοριακό αρχείο"
@@ -2608,6 +2162,12 @@ msgstr "Πληροφορίες λίστας %1"
 #: mail_tt2/info_report.tt2:7
 msgid "Information regarding list %1@%2"
 msgstr "Πληροφορίες λίστας %1@%2"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:30
+#, fuzzy
+msgid "Information regarding user %1 have been updated for list %2."
+msgstr "Οι πληροφορίες του χρήστη %s έχουν ενημερωθεί για τη λίστα %s.\n"
 
 #: web_tt2/modindex.tt2:126 web_tt2/modindex.tt2:91
 msgid "Install"
@@ -2647,7 +2207,7 @@ msgstr ""
 "μία Επισκόπηση. Η Επισκόπηση συγκεντρώνει μία ομάδα μηνυμάτων της λίστας με "
 "χρήση μορφής multipart/digest MIME."
 
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:279
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
@@ -2794,12 +2354,6 @@ msgstr ""
 "Η λίστα %s δεν δέχεται τον τρόπο ΕΠΙΣΚΟΠΗΣΗ. Δεν ενημερώθηκε η διαμόρφωση "
 "σχετικά με τη συγκεκριμένη εντολή.\n"
 
-#. (glob.listname)
-#: mail_tt2/command_report.tt2:178
-#, fuzzy
-msgid "List %1 does not exist."
-msgstr "Η λίστα '%s' δεν υπάρχει.\n"
-
 #. (u_err.listname)
 #: mail_tt2/command_report.tt2:129
 #, fuzzy
@@ -2831,15 +2385,12 @@ msgstr ""
 "     Αρχεία : %5\n"
 
 #. (u_err.listname)
-#: mail_tt2/command_report.tt2:103
+#. (glob.listname)
+#. (listname)
+#: mail_tt2/command_report.tt2:103 mail_tt2/command_report.tt2:177
+#: mail_tt2/message_report.tt2:53
 #, fuzzy
 msgid "List '%1' does not exist."
-msgstr "Η λίστα '%s' δεν υπάρχει.\n"
-
-#. (listname)
-#: mail_tt2/message_report.tt2:55
-#, fuzzy
-msgid "List '%1' does not exist.\n"
 msgstr "Η λίστα '%s' δεν υπάρχει.\n"
 
 #: web_tt2/admin_menu.tt2:5
@@ -2908,6 +2459,16 @@ msgstr "Η λίστα δεν έχει συνδρομητές"
 #, fuzzy
 msgid "List has been restored"
 msgstr "Τα παρωνύμια της λίστας έχουν αφαιρεθεί."
+
+#: web_tt2/error.tt2:74
+#, fuzzy
+msgid "List has no bouncing subscribers"
+msgstr "Η λίστα δεν έχει συνδρομητές bouncing"
+
+#: web_tt2/error.tt2:53
+#, fuzzy
+msgid "List has no subscribers"
+msgstr "Η λίστα δεν έχει συνδρομητές"
 
 #: web_tt2/help_editfile.tt2:26
 msgid ""
@@ -3005,7 +2566,7 @@ msgid "Listmaster : internal server error "
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:313
 msgid "Listmaster : system error "
 msgstr ""
 
@@ -3167,29 +2728,29 @@ msgid "Message"
 msgstr "Αριθμός μηνύματος"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:108
+#: mail_tt2/message_report.tt2:103
 #, fuzzy
 msgid "Message %1 for list '%2' has been distributed."
 msgstr "Το μήνυμα %s της λίστας %s έχει διανεμηθεί.\n"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:72
+#: mail_tt2/message_report.tt2:67
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "Το μήνυμα %s της λίστας %s έχει απορριφθεί.\n"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:112
+#: mail_tt2/message_report.tt2:107
 #, fuzzy
 msgid ""
 "Message %1 for list '%2' has been validated ; it will be distributed soon."
 msgstr "Το μήνυμα %s της λίστας %s έχει διανεμηθεί.\n"
 
-#: mail_tt2/message_report.tt2:97
+#: mail_tt2/message_report.tt2:92
 msgid "Message diffusion"
 msgstr ""
 
-#: mail_tt2/message_report.tt2:80
+#: mail_tt2/message_report.tt2:75
 msgid "Message diffusion : Authorization reject"
 msgstr ""
 
@@ -3298,6 +2859,17 @@ msgstr ""
 #: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:12
 msgid "Miscellaneous"
 msgstr "Διάφορα"
+
+#. (u_err.argument)
+#: web_tt2/error.tt2:46
+#, fuzzy
+msgid "Missing argument %1"
+msgstr "Ελλειπές όρισμα %1"
+
+#: web_tt2/error.tt2:55
+#, fuzzy
+msgid "Missing filter"
+msgstr "Ελλειπές φίλτρο"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
 #: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
@@ -3472,18 +3044,45 @@ msgid "No DataBase"
 msgstr ""
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:269
 msgid "No HTML version of the message available in '%1'."
+msgstr ""
+
+#: web_tt2/error.tt2:110
+msgid "No SOAP service"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:12
 msgid "No Virtual Robot defined on this server"
 msgstr "Δεν έχει οριστεί virtual robot στο συγκεκριμένο εξυπηρετητή"
 
-#: mail_tt2/command_report.tt2:172
+#. (u_err.email)
+#: web_tt2/error.tt2:73
+#, fuzzy
+msgid "No bounce for user  %1"
+msgstr "Δεν υπάρχουν bounces για το χρήστη %1"
+
+#. (u_err.directory)
+#: web_tt2/error.tt2:105
+#, fuzzy
+msgid "No certificate for this list"
+msgstr "Εκδότης πιστοποιητικού"
+
+#: mail_tt2/command_report.tt2:171
 #, fuzzy
 msgid "No command found in message."
 msgstr "Δε βρέθηκε εντολή στο μήνυμα"
+
+#: web_tt2/error.tt2:89
+#, fuzzy
+msgid "No description specified"
+msgstr "Δεν ορίστηκε περιγραφή"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:108
+#, fuzzy
+msgid "No entry for user '%1'"
+msgstr "Δεν υπάρχουν bounces για το χρήστη %1"
 
 #: web_tt2/lists.tt2:65 web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
@@ -3495,14 +3094,30 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Δεν υπάρχουν μηνύματα ή έγγραφα προς συντονισμό στη λίστα %1"
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:278
+#: mail_tt2/listmaster_notification.tt2:275
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
+
+#: web_tt2/error.tt2:97
+#, fuzzy
+msgid "No name specified"
+msgstr "Δεν ορίστηκε όνομα"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:110
 msgid "No owner is defined for list %1."
 msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
+
+#: mail_tt2/listmaster_notification.tt2:287
+#, fuzzy
+msgid "No owner is defined for the list '%1'"
+msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
+
+#. (u_err.page)
+#: web_tt2/error.tt2:54
+#, fuzzy
+msgid "No page %1"
+msgstr "Ανύπαρκτη σελίδα %1"
 
 #: web_tt2/modindex.tt2:62
 msgid "No subject"
@@ -3520,6 +3135,12 @@ msgstr "Ανύπαρκτες συνδρομές με τη διεύθυνση <st
 #: web_tt2/help_user_options.tt2:29
 msgid "Nomail"
 msgstr "Δεν υπάρχει μήνυμα"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:57
+#, fuzzy
+msgid "Not subscribed: %1"
+msgstr "Δεν πραγματοποιήθηκε εγγραφή συνδρομητή: %1"
 
 #: web_tt2/help_editlist.tt2:132
 msgid ""
@@ -3565,7 +3186,7 @@ msgid "Oldest messages first"
 msgstr "Πρώτο το παλαιότερο μήνυμα"
 
 #: src/List.pm:956
-msgid "On which part of message check for message topic keywords"
+msgid "On which part of messages, topic keywords are applied"
 msgstr ""
 
 #: web_tt2/help.tt2:32
@@ -3586,6 +3207,14 @@ msgstr ""
 "Επιτυχής ενέργεια. Το μήνυμα θα διαγραφεί το συντομότερο δυνατόν.\n"
 "Η συγκεκριμένη εργασία μπορεί να εκτελεστεί σε ορισμένα λεπτά."
 
+#. (conf.sympa,authkey)
+#: mail_tt2/send_auth.tt2:22
+#, fuzzy
+msgid ""
+"Or send a message to %1 with the following subject :\n"
+"CONFIRM %2\n"
+msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
+
 #. (conf.email,conf.host)
 #: mail_tt2/moderate.tt2:22 mail_tt2/moderate.tt2:27
 msgid "Or send a message to %1@%2 with the following subject :"
@@ -3595,12 +3224,8 @@ msgstr "Ή αποστολή του μηνύματος στη διεύθυνση 
 msgid "Other"
 msgstr "Άλλα"
 
-#: web_tt2/suboptions.tt2:34
+#: web_tt2/suboptions.tt2:32 web_tt2/suboptions.tt2:34
 msgid "Other (messages not tagged) "
-msgstr ""
-
-#: web_tt2/suboptions.tt2:32
-msgid "Other (no tagged mails) "
 msgstr ""
 
 #: web_tt2/pref.tt2:73
@@ -3676,7 +3301,17 @@ msgstr ""
 msgid "Page size"
 msgstr "Μέγεθος σελίδας"
 
-#: mail_tt2/listmaster_notification.tt2:308
+#. (u_err.param,u_err.val)
+#: web_tt2/error.tt2:78
+msgid "Parameter '%1' has got wrong value : '%2'"
+msgstr ""
+
+#. (u_err.param)
+#: web_tt2/error.tt2:77
+msgid "Parameter '%1' must have values"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
@@ -3724,6 +3359,11 @@ msgstr "Παρακαλούμε ενεργοποιείστε τη JavaScript στ
 msgid "Please contact the listmaster."
 msgstr "Παρακαλούμε επικοινωνήστε με το διαχειριστή."
 
+#: web_tt2/error.tt2:45
+#, fuzzy
+msgid "Please provide email address"
+msgstr "Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας"
+
 #. (list)
 #: web_tt2/sigrequest.tt2:46
 msgid ""
@@ -3732,6 +3372,16 @@ msgid ""
 msgstr ""
 "Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας για την "
 "αφαίρεση της συνδρομής σας από τη λίστα %2."
+
+#: web_tt2/error.tt2:64
+#, fuzzy
+msgid "Please provide your password"
+msgstr "Παρακαλούμε συμπληρώστε το συνθηματικό σας"
+
+#: web_tt2/error.tt2:109
+#, fuzzy
+msgid "Please select archive months"
+msgstr "Παρακαλούμε επιλέξτε τους μήνες του αρχείου"
 
 #: web_tt2/modindex.tt2:22
 msgid ""
@@ -3828,6 +3478,17 @@ msgstr "Ιδιότητες καταλόγου %1"
 #: web_tt2/d_properties.tt2:11
 msgid "Properties of the file %1"
 msgstr "Ιδιότητες αρχείου %1"
+
+#: web_tt2/error.tt2:49
+#, fuzzy
+msgid "Provided password is incorrect"
+msgstr "Λανθασμένο συνθηματικό"
+
+#. (u_err.tpl)
+#: web_tt2/error.tt2:66
+#, fuzzy
+msgid "Provided path is incorrect for template '%1'"
+msgstr "Λανθασμένο συνθηματικό"
 
 #: src/etc/create_list_templates/discussion_list/comment.tt2:1
 msgid "Public discussion mailing list"
@@ -3966,6 +3627,11 @@ msgstr "Συμβουλευτείτε την τεκμηρίωση για την �
 #: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:12
 msgid "Reject"
 msgstr "Απόρριψη"
+
+#: web_tt2/error.tt2:69
+msgid ""
+"Reject message failed, it may already have been rejected by another moderator"
+msgstr ""
 
 #: web_tt2/subindex.tt2:52
 msgid "Reject selected addresses"
@@ -4219,7 +3885,7 @@ msgstr ""
 "συνδρομές, το συντονισμό και τη διαχείριση αρχείου."
 
 #. (s_err.action)
-#: web_tt2/error.tt2:29
+#: web_tt2/error.tt2:28
 msgid "SYSTEM ERROR (%1)"
 msgstr ""
 
@@ -4272,8 +3938,8 @@ msgid "Secret string for generating unique keys"
 msgstr "Μυστικό συμβολοσειρά για τη δημιουργία μοναδικών κλειδιών"
 
 #: mail_tt2/listmaster_notification.tt2:235
-#: mail_tt2/listmaster_notification.tt2:312
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:324
 msgid "See logs for more details."
 msgstr ""
 
@@ -4547,6 +4213,14 @@ msgstr "Συνδρομή : %1"
 msgid "Subscription profile"
 msgstr "Προφίλ συνδρομητή"
 
+#. (notice.total,notice.listname)
+#: mail_tt2/command_report.tt2:39
+#, fuzzy
+msgid "Subscription reminder sent to each of %1 %2 subscribers."
+msgstr ""
+"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
+"συνδρομητές\n"
+
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:79
 #, fuzzy
@@ -4699,8 +4373,17 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
+#. (u_err.params)
+#: web_tt2/error.tt2:40
+msgid "Syntax errors with the following parameters : %1"
+msgstr ""
+
 #: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
 msgid "Table of contents:"
+msgstr ""
+
+#: web_tt2/error.tt2:107
+msgid "Tag message with topic is required for this list"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:213
@@ -4718,6 +4401,10 @@ msgstr "Αποστολή μηνύματος"
 #, fuzzy
 msgid "Tag your message for list %1"
 msgstr "Επισκόπηση λίστας %1"
+
+#: web_tt2/error.tt2:70
+msgid "Tagging message is required for this list"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:3
 msgid "Template edition system"
@@ -4839,6 +4526,11 @@ msgstr ""
 msgid "The MODINDEX command is restricted to moderators."
 msgstr "Newsletter, περιορισμένο σε συντονιστές"
 
+#. (notice.count)
+#: mail_tt2/command_report.tt2:42
+msgid "The Reminder has been sent to %1 users."
+msgstr ""
+
 #. (u_err.email,u_err.listname)
 #: mail_tt2/command_report.tt2:132
 #, fuzzy
@@ -4856,6 +4548,11 @@ msgid ""
 "You probably confirmed your %1 using a different\n"
 "email address. Please try using your canonical address."
 msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:248
+#, fuzzy
+msgid "The authentication server name is not defined."
+msgstr "Επιλέξτε τον εξυπηρετητή ταυτοποίησης"
 
 #: web_tt2/help_editlist.tt2:15
 msgid ""
@@ -4877,10 +4574,10 @@ msgstr ""
 
 #: web_tt2/skinsedit.tt2:7
 msgid ""
-"The current version don't include a color editor, so you need to edit robot."
-"conf (or sympa.conf) to change colors. Here are the colors as defined for "
-"the current robot in robot.conf. If you did install statics CSS files, the "
-"colors in use may differ from this table."
+"The current version doesn't include a color editor, so you need to edit "
+"robot.conf (or sympa.conf) to change colors. Here are the colors as defined "
+"for the current robot in robot.conf. If you did install statics CSS files, "
+"the colors in use may differ from this table."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:138
@@ -4900,10 +4597,21 @@ msgid ""
 "profile for the subscribers of the list."
 msgstr ""
 
-#. (listname)
-#: mail_tt2/listmaster_notification.tt2:291
-msgid "The exporationto an Ldap directory failed for list '%1'"
+#: web_tt2/error.tt2:98
+msgid "The document repository exceed disk quota."
 msgstr ""
+
+#. (i_err.listname)
+#: web_tt2/error.tt2:16
+#, fuzzy
+msgid "The exporation failed for list '%1'"
+msgstr "Χώρος συντονισμού για λίστα %1"
+
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:288
+#, fuzzy
+msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "Χώρος συντονισμού για λίστα %1"
 
 #: mail_tt2/list_unknown.tt2:14
 msgid "The following address is not a known mailing list :"
@@ -4946,6 +4654,18 @@ msgstr ""
 #: web_tt2/rss.tt2:49
 msgid "The latest shared documents"
 msgstr ""
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:79
+#, fuzzy
+msgid "The list '%1' is already closed"
+msgstr "Η λίστα %1 έχει κλείσει"
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:80
+#, fuzzy
+msgid "The list '%1' is not closed"
+msgstr "Η λίστα %1 έχει κλείσει"
 
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:11
@@ -4996,6 +4716,15 @@ msgstr ""
 msgid "The most active lists"
 msgstr ""
 
+#: web_tt2/error.tt2:65
+msgid "The passwords you typed do not match"
+msgstr ""
+
+#. (u_err.nb_days)
+#: web_tt2/error.tt2:52
+msgid "The period is too long (%1 days)"
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:120
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
@@ -5017,13 +4746,44 @@ msgstr ""
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 
+#: web_tt2/error.tt2:88
+msgid "The shared directory cannot have any description"
+msgstr ""
+
+#: web_tt2/error.tt2:87
+#, fuzzy
+msgid "The shared document space is empty"
+msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
+
 #: web_tt2/help_editlist.tt2:157
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
 
+#: web_tt2/error.tt2:101
+msgid "The upload failed, try it again"
+msgstr ""
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:45
+#, fuzzy
+msgid "The user %1 has been removed from the list %2."
+msgstr "Η διεθύνση %s δεν βρέθηκε στη λίστα\n"
+
 #. (total,list.name,list.host)
 #: mail_tt2/modindex.tt2:10
 msgid "There are %1 messages to be moderated for list %2@%3"
+msgstr ""
+
+#. (list.name,filename,who,conf.wwsympa_url)
+#: mail_tt2/listeditor_notification.tt2:16
+msgid ""
+"There are new shared documents in list %1 : \n"
+"\t%2\n"
+"\n"
+"\tfrom %3\n"
+"\n"
+"To moderate these document : \n"
+"%4/modindex/%1"
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:148
@@ -5034,14 +4794,31 @@ msgid ""
 "parameters. Possible value are:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:248
-#, fuzzy
-msgid "There is not any authentication server name."
-msgstr "Επιλέξτε τον εξυπηρετητή ταυτοποίησης"
+#. (list.name,filename,who,conf.wwsympa_url)
+#: mail_tt2/listeditor_notification.tt2:24
+msgid ""
+"There is a new shared document in list %1 : \n"
+"\t%2 from %3\n"
+"\n"
+"To moderate this document : \n"
+"%4/modindex/%1\n"
+" "
+msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:290
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:54
 #, fuzzy
-msgid "There is not any owner defined for the list '%1'"
+msgid "There is no message to moderate for list '%1'."
+msgstr "Δεν υπάρχουν μηνύματα ή έγγραφα προς συντονισμό στη λίστα %1"
+
+#: web_tt2/error.tt2:86
+#, fuzzy
+msgid "There is no shared documents"
+msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
+
+#: web_tt2/error.tt2:15
+#, fuzzy
+msgid "There is not any owner defined for the list"
 msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
 
 #. (process_id,loop_count,start_time)
@@ -5108,8 +4885,21 @@ msgid ""
 "for specific mailing lists."
 msgstr ""
 
+#. (u_err.name)
+#: web_tt2/error.tt2:96
+msgid "This is an already existing document : '%1'"
+msgstr ""
+
 #: mail_tt2/list_unknown.tt2:12
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
+msgstr ""
+
+#: mail_tt2/command_report.tt2:123
+msgid "This list archive is empty."
+msgstr ""
+
+#: web_tt2/error.tt2:106
+msgid "This list has no message topic"
 msgstr ""
 
 #. (list.subject)
@@ -5123,10 +4913,6 @@ msgstr ""
 
 #: web_tt2/modindex.tt2:20 web_tt2/viewmod.tt2:16
 msgid "This list is configured to require topic(s)."
-msgstr ""
-
-#: mail_tt2/command_report.tt2:123
-msgid "This list's archives do not contain any file."
 msgstr ""
 
 #: web_tt2/help_user_options.tt2:46
@@ -5247,12 +5033,6 @@ msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
 
-#: web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates on which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-
 #: web_tt2/help_editlist.tt2:155
 msgid ""
 "This parameter indicates the subject of the list, which is sent in response "
@@ -5272,6 +5052,12 @@ msgid ""
 "This parameter indicates whether the list should feature in the output "
 "generated in response to a LISTS command or should be shown in the list "
 "overview of the web-interface."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:177
+msgid ""
+"This parameter indicates which part of the message is used to perform "
+"automatic tagging."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:67
@@ -5463,13 +5249,13 @@ msgstr ""
 msgid "To contact this service administrator :"
 msgstr ""
 
-#. (list.name,conf.sympa,authkey,conf.sympa,authkey)
-#: mail_tt2/send_auth.tt2:18
-msgid ""
-"To distribute the attached message in list %1 :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=CONFIRM %3"
+#. (list.name)
+#: mail_tt2/send_auth.tt2:16
+#, fuzzy
+msgid "To distribute the attached message in list %1, folow the link below :"
 msgstr ""
+"Το λογισμικό Sympa δεν μπόρεσε να παραδώσει την αιτούμενη σελίδα για τους "
+"ακόλουθους λόγους:"
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:20
@@ -5556,13 +5342,17 @@ msgstr ""
 msgid "Toggle Selection"
 msgstr ""
 
+#: web_tt2/error.tt2:76
+msgid "Topic \"other\" is a reserved word"
+msgstr ""
+
 #: web_tt2/suboptions.tt2:20
 #, fuzzy
 msgid "Topic subscription :"
 msgstr "Εκκρεμείς εγγραφές συνδρομητών"
 
 #: src/List.pm:950
-msgid "Topics for message categorisation"
+msgid "Topics for message categorization"
 msgstr ""
 
 #: src/List.pm:1141
@@ -5627,39 +5417,39 @@ msgstr ""
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
-#. (listname,key)
-#: mail_tt2/message_report.tt2:60
-msgid ""
-"Unable to access the message on list %1 with  key %2.\n"
-"Warning : this message may already have been sent by one of the list's "
-"editor.\n"
-msgstr ""
-
 #. (i_err.key)
-#: web_tt2/error.tt2:19
-msgid "Unable to access to the message authenticated with key %1"
+#: web_tt2/error.tt2:18
+msgid "Unable to access the message authenticated with key %1"
 msgstr ""
 
 #. (key)
-#: mail_tt2/message_report.tt2:68
+#: mail_tt2/message_report.tt2:63
 msgid ""
-"Unable to access to the message authenticated with key %1 because of a wrong "
-"format.\n"
+"Unable to access the message authenticated with key %1 because of a wrong "
+"format."
 msgstr ""
 
 #. (key)
-#: mail_tt2/message_report.tt2:64
-msgid "Unable to access to the message authenticated with key %1.\n"
+#: mail_tt2/message_report.tt2:60
+msgid "Unable to access the message authenticated with key %1."
 msgstr ""
 
 #. (key,listname)
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:299
+#, fuzzy
+msgid "Unable to access the message authenticated with key '%1' for list '%2'."
+msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
+
+#. (listname,key)
+#: mail_tt2/message_report.tt2:57
 msgid ""
-"Unable to access to the message authenticated with key '%1' for list '%2'."
+"Unable to access the message on list %1 with  key %2.\n"
+"Warning : this message may already have been sent by one of the list's "
+"editor."
 msgstr ""
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:301
 msgid "Unable to add file '%1' to archives."
 msgstr ""
 
@@ -5668,13 +5458,13 @@ msgstr ""
 msgid "Unable to change directory."
 msgstr "Δημιουργία νέου υποκαταλόγου"
 
-#. (new_listname,check_smtp,listname)
-#: mail_tt2/listmaster_notification.tt2:292
-msgid "Unable to check listname '%1' for smtp on '%2' to rename list '%3'"
+#. (new_listname)
+#: mail_tt2/listmaster_notification.tt2:289
+msgid "Unable to check listname '%1' on SMTP server"
 msgstr ""
 
 #. (path,listname)
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
@@ -5682,38 +5472,56 @@ msgstr ""
 msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:283
+#. (dir)
+#: mail_tt2/listmaster_notification.tt2:262
+#, fuzzy
+msgid "Unable to create directory '%1'."
+msgstr "Μετονομασία καταλόγου %1"
+
+#: mail_tt2/listmaster_notification.tt2:280
 #, fuzzy
 msgid "Unable to create list."
 msgstr "Γλώσσας λίστας"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:300
 #, fuzzy
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:90
+msgid "Unable to describe, the document '%1' does not exist"
+msgstr ""
+
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:269
+#: mail_tt2/listmaster_notification.tt2:267
 msgid "Unable to erase file '%1'."
 msgstr ""
 
 #. (arc_file,listname,path)
-#: mail_tt2/listmaster_notification.tt2:274
-msgid ""
-"Unable to find archive '%1' for list '%2'[%IF path%] : unable to read '%3'."
-msgstr ""
+#: mail_tt2/listmaster_notification.tt2:272
+#, fuzzy
+msgid "Unable to find archive '%1' for list '%2'"
+msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
 
-#. (listname,path)
-#: mail_tt2/listmaster_notification.tt2:275
-msgid "Unable to find archive for list '%1'[%IF path%] : unable to read '%3'."
-msgstr ""
-
-#. (month,listname,dir)
+#. (listname)
 #: mail_tt2/listmaster_notification.tt2:273
-msgid ""
-"Unable to find month '%1' for list '%2'[%IF dir%] : unable to readdir '%3'."
-msgstr ""
+#, fuzzy
+msgid "Unable to find archive for list '%1'"
+msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
+
+#. (i_err.month)
+#: web_tt2/error.tt2:9
+#, fuzzy
+msgid "Unable to find month '%1'"
+msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
+
+#. (month,listname)
+#: mail_tt2/listmaster_notification.tt2:271
+#, fuzzy
+msgid "Unable to find month '%1' for list '%2'"
+msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -5727,7 +5535,7 @@ msgid ""
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:283
 #, fuzzy
 msgid "Unable to get family for list '%1'."
 msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
@@ -5737,20 +5545,14 @@ msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη
 msgid "Unable to get message '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:282 web_tt2/error.tt2:12
 #, fuzzy
 msgid "Unable to load create_list templates."
 msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
 
-#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:281 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr ""
-
-#. (dir)
-#: mail_tt2/listmaster_notification.tt2:262
-#, fuzzy
-msgid "Unable to make directory '%1'."
-msgstr "Μετονομασία καταλόγου %1"
 
 #. (directory)
 #: mail_tt2/listmaster_notification.tt2:261
@@ -5768,29 +5570,26 @@ msgstr ""
 msgid "Unable to open spool '%1'."
 msgstr ""
 
+#. (u_err.path)
+#: web_tt2/error.tt2:85
+msgid "Unable to read %1 : empty document"
+msgstr ""
+
 #. (filepath)
 #: mail_tt2/listmaster_notification.tt2:258
 msgid "Unable to read file : '%1'."
 msgstr ""
 
+#: mail_tt2/listmaster_notification.tt2:284
+#, fuzzy
+msgid "Unable to reload list"
+msgstr "Γλώσσας λίστας"
+
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:287
-msgid "Unable to reload list[%IF new_listname %] with new listname '%1'."
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:276
-msgid "Unable to remove archive : no message id found."
-msgstr ""
-
-#. (old,new)
-#: mail_tt2/listmaster_notification.tt2:267
-msgid "Unable to rename archive directory '%1' into '%2'."
-msgstr ""
-
-#. (old,new)
-#: mail_tt2/listmaster_notification.tt2:268
-msgid "Unable to rename bounces directory '%1' into '%2'."
-msgstr ""
+#: mail_tt2/listmaster_notification.tt2:284
+#, fuzzy
+msgid "Unable to reload list with new listname '%1'."
+msgstr "Αποτυχία δημιουργίας οικογένειας %2 στη λίστα %1"
 
 #. (old,new)
 #: mail_tt2/listmaster_notification.tt2:266
@@ -5802,27 +5601,27 @@ msgstr ""
 msgid "Unable to rename file '%1' into '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:274
 msgid "Unable to send archive : no message id found."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:270
+#: mail_tt2/listmaster_notification.tt2:268
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:297
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:298
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:270
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 
@@ -5833,7 +5632,7 @@ msgid "Unable to write file : '%1'."
 msgstr "Αδυναμία αντικατάστασης του αρχείου %1"
 
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:302
 msgid "Unable to write file zip '%1'."
 msgstr ""
 
@@ -5844,6 +5643,11 @@ msgstr ""
 #: web_tt2/d_read.tt2:103 web_tt2/d_read.tt2:218 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
 msgstr ""
+
+#: web_tt2/error.tt2:39
+#, fuzzy
+msgid "Unknown action"
+msgstr "%1 : άγνωστη ενέργεια"
 
 #. (name)
 #: mail_tt2/listmaster_notification.tt2:250
@@ -5921,12 +5725,12 @@ msgstr ""
 
 #. (sub,old_email)
 #: mail_tt2/listmaster_notification.tt2:254
-msgid "Update subscriber '%1' in DB failed[% IF old_email %] (old email : %2)"
+msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
 #. (user)
 #: mail_tt2/listmaster_notification.tt2:252
-msgid "Update user '%1' in DB failed[% IF old_email %] (old email : %2)"
+msgid "Update user '%1' in DB failed"
 msgstr ""
 
 #. (visible_path)
@@ -5937,6 +5741,18 @@ msgstr ""
 #: web_tt2/d_read.tt2:361
 msgid "Upload a file inside the folder SHARED"
 msgstr ""
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:36
+#, fuzzy
+msgid "User %1 has been invited to subscribe in list %2."
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:33
+#, fuzzy
+msgid "User %1 is now subscriber of list %2."
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
 
 #: web_tt2/show_cert.tt2:8
 msgid "User certificate belong to"
@@ -6054,6 +5870,11 @@ msgstr ""
 msgid "Web forum ML"
 msgstr ""
 
+#: mail_tt2/listmaster_notification.tt2:245
+#: mail_tt2/listmaster_notification.tt2:319
+msgid "Web interface"
+msgstr ""
+
 #: web_tt2/help_editfile.tt2:29
 msgid "Welcome message"
 msgstr ""
@@ -6138,10 +5959,33 @@ msgstr ""
 msgid "Who can view list information"
 msgstr ""
 
+#: web_tt2/error.tt2:38
+#, fuzzy
+msgid "Wrong parameters"
+msgstr "Εγκατάσταση πηγών δεδομένων"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:44
+#, fuzzy
+msgid "You are already logged in as %1"
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:62
+#, fuzzy
+msgid "You are already subscribed to the list %1"
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
+
 #. (list)
 #: web_tt2/subrequest.tt2:70
 msgid "You are already subscriber of list %1"
 msgstr ""
+
+#. (u_err.list)
+#: web_tt2/error.tt2:58
+#, fuzzy
+msgid "You are not subscribed to list %1"
+msgstr "Επιθυμείτε την εγγραφή σας ως συνδρομητή στη λίστα %1;"
 
 #. (list,email)
 #: web_tt2/sigrequest.tt2:16
@@ -6155,6 +5999,22 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:17
 msgid "You are the privileged owner of this list"
 msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:13
+#, fuzzy
+msgid "You asked for your e-mail address to be added to list '%1'."
+msgstr ""
+"Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας για την "
+"αφαίρεση της συνδρομής σας από τη λίστα %2."
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:10
+#, fuzzy
+msgid "You asked for your e-mail address to be removed from list '%1'."
+msgstr ""
+"Παρακαλούμε συμπληρώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας για την "
+"αφαίρεση της συνδρομής σας από τη λίστα %2."
 
 #: web_tt2/edit_list_request.tt2:4
 msgid "You can choose below a subset of parameters to edit :"
@@ -6190,6 +6050,15 @@ msgstr ""
 msgid "You can subscribe again :"
 msgstr ""
 
+#: web_tt2/error.tt2:50
+msgid ""
+"You did not choose a password, request a reminder of the initial password"
+msgstr ""
+
+#: web_tt2/error.tt2:72
+msgid "You did not select an action to perform"
+msgstr ""
+
 #: web_tt2/notice.tt2:68
 msgid "You have been authenticated"
 msgstr ""
@@ -6223,7 +6092,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/error.tt2:130
+#: web_tt2/error.tt2:126 web_tt2/error.tt2:47
 msgid "You need to login"
 msgstr ""
 
@@ -6238,6 +6107,30 @@ msgstr ""
 msgid "You need to login."
 msgstr ""
 
+#: web_tt2/error.tt2:68
+msgid "You need to provide list name"
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:22
+#, fuzzy
+msgid ""
+"You requested a subscription reminder to be sent to each subscriber of list %"
+"1"
+msgstr ""
+"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
+"συνδρομητές\n"
+
+#. (-)
+#: mail_tt2/request_auth.tt2:27
+#, fuzzy
+msgid ""
+"You requested a subscription reminder to be sent to each subscriber of list "
+"'*'"
+msgstr ""
+"Μήνυμα υπενθύμισης συνδρομής αποστέλλεται σε καθένα από τους %d %s "
+"συνδρομητές\n"
+
 #. (list)
 #: mail_tt2/sendpasswd.tt2:16
 msgid "You requested a subscription to %1 mailing list."
@@ -6247,6 +6140,18 @@ msgstr ""
 #: web_tt2/subrequest.tt2:17
 msgid "You requested a subscription to list %1"
 msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:19
+#, fuzzy
+msgid "You requested a user removal from list %1."
+msgstr "Η διεθύνση %s δεν βρέθηκε στη λίστα\n"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:16
+#, fuzzy
+msgid "You requested a user subscription in list %1."
+msgstr "%1 είναι ήδη συνδρομητής στη λίστα %2"
 
 #. (list)
 #: web_tt2/subrequest.tt2:5
@@ -6273,6 +6178,11 @@ msgstr ""
 
 #: mail_tt2/certif_warning.tt2:11
 msgid "You won't receive the signed messages from your lists."
+msgstr ""
+
+#. (u_err.dir)
+#: web_tt2/error.tt2:100
+msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr ""
 
 #: web_tt2/your_lists.tt2:7
@@ -6317,6 +6227,12 @@ msgstr ""
 #: mail_tt2/user_notification.tt2:4
 msgid "Your bouncing address in list %1"
 msgstr ""
+
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:48
+#, fuzzy
+msgid "Your configuration regarding list %1 has been updated."
+msgstr "Το αρχείο διαμόρφωσης ενημερώθηκε"
 
 #. (filename,list.name,list.host,rejected_by)
 #: mail_tt2/d_reject_shared.tt2:8
@@ -6372,14 +6288,14 @@ msgid "Your list is created."
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/message_report.tt2:51
+#: mail_tt2/message_report.tt2:50
 msgid ""
 "Your message could not be sent because its size \n"
-"was over the maximum size allowed on this list.\n"
+"was over the maximum size allowed on this list."
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/message_report.tt2:104
+#: mail_tt2/message_report.tt2:99
 #, fuzzy
 msgid "Your message for list %1 has been forwarded to editor(s)"
 msgstr "Το μήνυμα %s της λίστας %s έχει απορριφθεί.\n"
@@ -6392,7 +6308,7 @@ msgid ""
 msgstr ""
 
 #. (conf.host)
-#: mail_tt2/message_report.tt2:89
+#: mail_tt2/message_report.tt2:84
 msgid ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason :"
@@ -6400,6 +6316,10 @@ msgstr ""
 
 #: mail_tt2/reject.tt2:2
 msgid "Your message has been rejected."
+msgstr ""
+
+#: mail_tt2/command_report.tt2:22
+msgid "Your message signature was successfully verified using S/MIME."
 msgstr ""
 
 #: mail_tt2/command_report.tt2:97
@@ -6425,6 +6345,12 @@ msgid ""
 "e-mail box to provide your password below."
 msgstr ""
 
+#: web_tt2/error.tt2:51
+msgid ""
+"Your password is stored in an LDAP directory, therefore Sympa cannot post "
+"you a reminder"
+msgstr ""
+
 #: web_tt2/login_menu.tt2:31
 #, fuzzy
 msgid "Your preferences"
@@ -6432,6 +6358,13 @@ msgstr "Προτιμήσεις"
 
 #: web_tt2/notice.tt2:5
 msgid "Your request has been forwarded to the list owner"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:27
+msgid ""
+"Your request to subscribe/unsubscribe has been forwarded to the list's\n"
+"owners for approval. You will receive a notification when you have\n"
+"been subscribed (or unsubscribed) to the list."
 msgstr ""
 
 #. (user.email)
@@ -6457,36 +6390,6 @@ msgstr ""
 
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
-msgstr ""
-
-#. (...)
-#: src/tt2.pl:124
-msgid "[% FILTER escape_url %] %1 %2 ..."
-msgstr ""
-
-#. (conf.sympa,list.name,modkey)-)
-#: mail_tt2/moderate.tt2:21
-msgid "[% FILTER escape_url %]mailto:%1?subject=DISTRIBUTE %2 %3"
-msgstr ""
-
-#. (conf.sympa,list.name,modkey)-)
-#: mail_tt2/moderate.tt2:26
-msgid "[% FILTER escape_url %]mailto:%1?subject=REJECT %2 %3"
-msgstr ""
-
-#. (conf.sympa,l,user.email)
-#: mail_tt2/global_remind.tt2:14
-msgid "[% FILTER escape_url %]mailto:%1?subject=sig %2 %3"
-msgstr ""
-
-#. (conf.email,conf.host,list.name,user.email)
-#: mail_tt2/expire_warning2.tt2:12 mail_tt2/remind.tt2:11
-msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sig %3 %4"
-msgstr ""
-
-#. (conf.email,conf.host,list.name)
-#: mail_tt2/expire_deletion.tt2:12 mail_tt2/removed.tt2:12
-msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sub %3"
 msgstr ""
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
@@ -6667,8 +6570,12 @@ msgstr ""
 msgid "closed"
 msgstr ""
 
-#: web_tt2/skinsedit.tt2:14 web_tt2/skinsedit.tt2:18
+#: web_tt2/skinsedit.tt2:18
 msgid "color effet"
+msgstr ""
+
+#: web_tt2/skinsedit.tt2:14
+msgid "color lookup"
 msgstr ""
 
 #: src/etc/scenari/visibility.secret:1
@@ -7072,6 +6979,17 @@ msgstr ""
 msgid "mails"
 msgstr ""
 
+#. (conf.email,conf.host,list.name)
+#: mail_tt2/expire_deletion.tt2:12
+msgid "mailto:%1@%2?subject=sub %3"
+msgstr ""
+
+#. (conf.email,conf.host,list.name,user.email)
+#: mail_tt2/expire_warning2.tt2:12
+msgid ""
+"mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%]"
+msgstr ""
+
 #: wwsympa/wwslib.pm:64
 msgid "message footer"
 msgstr ""
@@ -7219,7 +7137,7 @@ msgid "password: %1"
 msgstr ""
 
 #: src/List.pm:1217
-msgid "percentage of message sent with verp"
+msgid "percentage of list members in VERP mode"
 msgstr ""
 
 #: src/etc/create_list_templates/hotline/comment.tt2:4
@@ -7674,11 +7592,88 @@ msgstr ""
 msgid "your password : %1"
 msgstr ""
 
+#, fuzzy
+#~ msgid " : unable to readdir '%1'."
+#~ msgstr "Μετονομασία καταλόγου %1"
+
+#, fuzzy
+#~ msgid "Cannot unzip this file "
+#~ msgstr "Αδυναμία αποσυμπίεσης του αρχείου %1"
+
+#, fuzzy
+#~ msgid "Do you really want to remove [% file.value.listname %] ?"
+#~ msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
+
+#, fuzzy
+#~ msgid "Do you really want to remove [% file.value.robot %] ?"
+#~ msgstr "Επιθυμείτε τη διαγραφή του(της) %1;"
+
+#, fuzzy
+#~ msgid "Errors while unzipping this file."
+#~ msgstr "Σφάλμα κατά την αποσυμπίεση του αρχείου %1"
+
+#, fuzzy
+#~ msgid "FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 "
+#~ msgstr ""
+#~ "FYI εντολή %s λίστας %s από   %s %s επικυρωμένη από %s \n"
+#~ " (δεν απαιτείται καμία επιπλέον ενέργεια) \n"
+
+#, fuzzy
+#~ msgid "File not found"
+#~ msgstr "Το αρχείο %1 αποσυμπιέστηκε!"
+
+#, fuzzy
+#~ msgid "For further assistance, please contact %1@%2"
+#~ msgstr ""
+#~ "Για περισσότερες πληροφορίες, παρακαλούμε επικοινωνήστε με τη διεύθυνση "
+#~ "listmaster@%1"
+
+#, fuzzy
+#~ msgid "List %1 does not exist."
+#~ msgstr "Η λίστα '%s' δεν υπάρχει.\n"
+
+#, fuzzy
+#~ msgid "List '%1' does not exist.\n"
+#~ msgstr "Η λίστα '%s' δεν υπάρχει.\n"
+
+#, fuzzy
+#~ msgid "There is not any owner defined for the list '%1'"
+#~ msgstr "Δεν ορίστηκαν ιδιοκτήτες για τη λίστα %1."
+
+#, fuzzy
+#~ msgid "Unable to load create_list templates"
+#~ msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
+
+#, fuzzy
+#~ msgid "Unable to load list topics"
+#~ msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
+
+#, fuzzy
+#~ msgid "Unable to rename archive"
+#~ msgstr "Γλώσσας λίστας"
+
+#, fuzzy
+#~ msgid "Unable to rename bounces"
+#~ msgstr "Γλώσσας λίστας"
+
+#, fuzzy
+#~ msgid "         %1 "
+#~ msgstr "Επισκόπηση : %1"
+
+#, fuzzy
+#~ msgid " %1 / %2 "
+#~ msgstr "Λίστα %1 / %2"
+
+#, fuzzy
+#~ msgid " - Unable to load create_list templates"
+#~ msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
+
+#, fuzzy
+#~ msgid " : %1 "
+#~ msgstr " σε %1"
+
 #~ msgid "%1 : No such file"
 #~ msgstr "%1 : Ανύπαρκτο αρχείο"
-
-#~ msgid "%1 : incorrect name"
-#~ msgstr "%1 : λανθασμένο όνομα"
 
 #~ msgid "%1: action failed"
 #~ msgstr "1%: αποτυχημένη ενέργεια"

@@ -27,181 +27,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
 
-#. (list.name,filename,who,conf.wwsympa_url)
-#: mail_tt2/listeditor_notification.tt2:24
-msgid ""
-"\n"
-" [% IF many_files %]There are new shared documents in list %1 : \n"
-"\t%2\n"
-"\n"
-"\tfrom %3\n"
-"\n"
-"To moderate these document : \n"
-"%4/modindex/%1\n"
-"\n"
-" [% ELSE %]\n"
-"There is a new shared document in list %1 : \n"
-"\t%2 from %3\n"
-"\n"
-"To moderate this document : \n"
-"%4/modindex/%1\n"
-" "
-msgstr ""
-
-#. (list.name,sympa,keyauth,list.name,escaped_who,sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:108
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:94
 #, fuzzy
 msgid ""
 "\n"
-"Dear owner of list %1,\n"
-"\n"
-"A user asked to be deleted from your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=auth %3 DEL %4 %5"
-msgstr ""
-"Geachte eigenaar van de lijst  %s,\n"
-"\n"
-"Een gebruiker vroeg om zich uit te schrijven bij de lijst. Vind u dit goed\n"
-"klik dan op de volgende URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"of stuur een email naar %s met het volgende onderwerp :\n"
-"AUTH %s DEL %s %s\n"
+"or send an email to %1 with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
+msgstr "Of zend een bericht naar %1@%2 met het volgende onderwerp :"
 
-#. (list.name,replyto,keyauth,list.name,escaped_who,escaped_gecos,replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:90
+#. (sympa,keyauth,list.name,who)-)
+#: mail_tt2/listowner_notification.tt2:112
 #, fuzzy
 msgid ""
 "\n"
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. Shall this be fine\n"
-"with you, you should click the following URL :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=auth %3 ADD %4 %5 %6"
-msgstr ""
-"Geachte eigenaar van lijst %s,\n"
-"\n"
-"Iemand vroeg om ingeschreven te worden voor de lijst. Vindt u dit goed\n"
-", klik dan op de volgende URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-"\n"
-"of stuur een email naar %s met het volgende onderwerp :\n"
-"AUTH %s ADD %s %s %s\n"
-
-#: mail_tt2/listmaster_notification.tt2:324
-msgid "  "
-msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:19
-msgid ""
-"  \n"
-"You asked for your e-mail address\n"
-"to be added to list '%1'.\n"
-msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:37
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a subscription reminder to be sent\n"
-"to each subscriber of list %1\n"
-msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
-
-#. (-)
-#: mail_tt2/request_auth.tt2:45
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a subscription reminder to be sent\n"
-"to each subscriber of list '*'\n"
-msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:25
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a user of list %1 to be\n"
-"added.\n"
-msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:31
-#, fuzzy
-msgid ""
-"  \n"
-"You requested a user of list %1 to be\n"
-"removed.\n"
-msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
-
-#: web_tt2/error.tt2:30
-msgid "   "
-msgstr ""
-
-#. (conf.sympa,command)-)
-#: mail_tt2/request_auth.tt2:57
-#, fuzzy
-msgid ""
-"    \n"
-"If you want this action to be taken, please\n"
-"\n"
-"- reply to this mail\n"
-"OR\n"
-"- send a message to %1 with subject\n"
-" %2\n"
-"OR\n"
-"- hit the following mailto [%|loc(conf.sympa,command_escaped)-%][% FILTER "
-"escape_url %]mailto:%1?subject=%2"
-msgstr ""
-"Iemand (hopelijk uzelf) vroeg om uw emaildres \n"
-"toe te voegen aan de lijst '%s'.\n"
-"Wanneer u dit wil, beantwoord dan\n"
-"\n"
-"- dit bericht\n"
-"OF\n"
-"- stuur een bericht naar  %s met als onderwerp\n"
-" %s\n"
-"OF\n"
-"- klik hierop %s\n"
-"\n"
-"Wanneer u niet wilt dat dit gebeurd, kunt u dit bericht \n"
-"negeren."
-
-#. (list.name)-)
-#: mail_tt2/request_auth.tt2:13
-#, fuzzy
-msgid ""
-"    \n"
-"You asked for your e-mail address\n"
-"to be removed from list '%1'.\t\n"
-msgstr "Uw emailadres (%1) is verwijderd van lijst %2@%3"
-
-#. (error)
-#: mail_tt2/listmaster_notification.tt2:232
-#: mail_tt2/listmaster_notification.tt2:310
-#: mail_tt2/listmaster_notification.tt2:325
-#, fuzzy
-msgid "         %1 "
-msgstr "Thuispagina        : %1"
-
-#. (notice.cmd)
-#: mail_tt2/command_report.tt2:51
-#, fuzzy
-msgid "  Command '%1' found : ignoring end of message."
-msgstr ""
-"Commando 'quit' gevonden : Het einde van het bericht wordt genegeerd.\n"
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:30
-#, fuzzy
-msgid "  Information regarding user %1 have been updated for list %2."
-msgstr "Informatie over gebruiker %s is gewijzigd voor lijst %s.\n"
+"or send an email to %1 with the following subject :\n"
+"AUTH %2 DEL %3 %4\n"
+msgstr "Of zend een bericht naar %1@%2 met het volgende onderwerp :"
 
 #: web_tt2/serveradmin.tt2:90
 msgid "  May take a lot of CPU time,  be careful !"
@@ -209,529 +51,30 @@ msgstr ""
 " Dit vergt veel rekenkracht van de computer, wees voorzichtig als u dit "
 "uitvoert!"
 
-#. (notice.total,notice.listname)
-#: mail_tt2/command_report.tt2:39
-#, fuzzy
-msgid "  Subscription reminder sent to each of %1 %2 subscribers."
-msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
-
-#. (notice.count)
-#: mail_tt2/command_report.tt2:42
-msgid "  The Reminder has been sent to %1 users."
-msgstr ""
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:45
-#, fuzzy
-msgid "  The user %1 has been removed from the list %2."
-msgstr "Gebruiker %s is uitgeschreven van lijst %s/\n"
-
-#. (notice.listname)
-#: mail_tt2/command_report.tt2:54
-#, fuzzy
-msgid "  There is no message to moderate for list '%1'."
-msgstr "Er zijn %1 berichten die gemodereerd moeten worden voor de lijst %2@%3"
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:36
-#, fuzzy
-msgid "  User %1 has been invited to subscribe in list %2."
-msgstr "Gebruiker %s is uitgenodigd om zich in te schrijven voor lijst %s.\n"
-
-#. (notice.email,notice.listname)
-#: mail_tt2/command_report.tt2:33
-#, fuzzy
-msgid "  User %1 is now subscriber of list %2."
-msgstr "Gebruiker %s is nu geabonneerd op lijst %s.\n"
-
-#. (notice.listname)
-#: mail_tt2/command_report.tt2:48
-#, fuzzy
-msgid "  Your configuration regarding list %1 has been updated."
-msgstr "Uw configuratie voor lijst %s is gewijzigd.\n"
-
-#: mail_tt2/command_report.tt2:22
-#, fuzzy
-msgid "  Your message signature was successfully verified using S/MIME."
-msgstr "Uw handtekening onder dit bericht was succesvol gechecked met S/MIME"
-
-#: mail_tt2/command_report.tt2:27
-#, fuzzy
-msgid ""
-"  Your request to subscribe/unsubscribe has been forwarded to the list's\n"
-"owners for approval. You will receive a notification when you have\n"
-"been subscribed (or unsubscribed) to the list."
-msgstr ""
-"Uw aanvraag voor in- of uitschrijven is doorgestuurd naar de lijsteigenaars "
-"voor \n"
-"toestemming. U zult nog een bevestiging ontvangenn wanneer u bent \n"
-"in- of uitgeschreven voor de lijst.\n"
-
-#. (list.name,type)
-#: mail_tt2/user_notification.tt2:33
-#, fuzzy
-msgid " %1 / %2 "
-msgstr "pagina %1 / %2"
-
 #. (from_count)
 #: web_tt2/arcsearch.tt2:64
 #, fuzzy
 msgid " %1 hits on message's From field"
 msgstr " %1 keer raak op bericht "
 
-#: web_tt2/error.tt2:115
-msgid " - "
+#. (old_email)
+#: mail_tt2/listmaster_notification.tt2:252
+msgid " (old email : %1)"
 msgstr ""
 
-#. (u_err.path)
-#: web_tt2/error.tt2:87
-#, fuzzy
-msgid " - %1 : No such file or directory"
-msgstr "%1 : Bestand of map niet gevonden"
-
-#. (u_err.file)
-#: web_tt2/error.tt2:62
-#, fuzzy
-msgid " - %1 : file not editable"
-msgstr "%1 : bestand is niet te wijzigen"
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:95
-msgid " - %1 : incorrect name[%IF u_err.reason%] : %2 "
+#. (old_email)
+#: mail_tt2/listmaster_notification.tt2:254
+msgid " (old email : %2)"
 msgstr ""
 
-#. (u_err.family)
-#: web_tt2/error.tt2:44
+#. (dir)
+#. (path)
+#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:273
 #, fuzzy
-msgid " - %1 : unknown family"
-msgstr "%1 : onbekende actie"
-
-#. (u_err.list)
-#: web_tt2/error.tt2:42
-#, fuzzy
-msgid " - %1 : unknown list"
-msgstr "%1 : onbekende lijst"
-
-#. (u_err.new_robot)
-#: web_tt2/error.tt2:43
-#, fuzzy
-msgid " - %1 : unknown robot"
-msgstr "%1 : onbekende lijst"
-
-#. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:64
-#, fuzzy
-msgid " - %1 is already subscribed to the list %2"
-msgstr "%1 is al geabonneerd op de lijst %2"
-
-#. (u_err.reception_mode)
-#: web_tt2/error.tt2:61
-#, fuzzy
-msgid " - %1 is not an available reception mode"
-msgstr "Ontvangst stand"
-
-#. (u_err.bad_listname)
-#: web_tt2/error.tt2:82
-#, fuzzy
-msgid " - '%1' : bad listname"
-msgstr ": foute lijstnaam"
-
-#. (u_err.new_listname)
-#: web_tt2/error.tt2:83
-#, fuzzy
-msgid " - '%1' list already exists"
-msgstr "Verwijder geselecteerde lijsten"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:98
-msgid " - A directory named '%1' already exists"
-msgstr ""
-
-#. (u_err.email)
-#: web_tt2/error.tt2:49
-#, fuzzy
-msgid " - Address \"%1\" is incorrect"
-msgstr "Adres \"%1\" is incorrect"
-
-#: web_tt2/error.tt2:72
-msgid " - Archives are empty for this list"
-msgstr ""
-
-#. (i_err.year_month)
-#: web_tt2/error.tt2:10
-#, fuzzy
-msgid " - Archives from %1 are not accessible"
-msgstr "Archieven van %1 zijn niet beschikbaar"
-
-#: web_tt2/error.tt2:114
-#, fuzzy
-msgid " - Authentication failed"
-msgstr ""
-"De authenticatie is niet gelukt.\n"
-"\n"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:68
-#, fuzzy
-msgid " - Cannot open file '%1'"
-msgstr "kan bestand niet uploaden %1"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:97
-#, fuzzy
-msgid " - Cannot overwrite file %1"
-msgstr "kan bestand niet overschrijven %1"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:102
-#, fuzzy
-msgid " - Cannot upload file %1"
-msgstr "kan bestand niet uploaden %1"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:76
-#, fuzzy
-msgid " - Config file has been modified by %1. Cannot apply your changes"
-msgstr ""
-"Het configuratiebestand is veranderd door %1. Kan uw wijzigingen niet "
-"doorvoeren"
-
-#: web_tt2/error.tt2:94
-#, fuzzy
-msgid " - Data have changed on disk. Cannot apply your changes"
-msgstr "Data is veranderd op de disk, kan uw wijzigingen niet doorvoeren"
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:105
-#, fuzzy
-msgid " - Directory %1 and its contents are not copied : %2"
-msgstr "Map %1 en de inhoud is niet gecopieerd"
-
-#. (u_err.directory)
-#: web_tt2/error.tt2:107
-#, fuzzy
-msgid " - Failed : %1 not empty"
-msgstr "Fout : %1 niet leeg"
-
-#: web_tt2/error.tt2:96
-#, fuzzy
-msgid " - Failed : your content is empty"
-msgstr "Fout: Uw inhoud is leeg"
-
-#: web_tt2/error.tt2:14
-#, fuzzy
-msgid " - Failed to include list admins"
-msgstr "Mislukt om de gebruiker toe te voegen %1"
-
-#: web_tt2/error.tt2:13
-#, fuzzy
-msgid " - Failed to inlude members"
-msgstr "Mislukt om de gebruiker toe te voegen %1"
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:106
-#, fuzzy
-msgid " - File %1 is not copied : %2 "
-msgstr "Bestand %1 is niet gecopieerd"
-
-#: web_tt2/error.tt2:73
-msgid " - Huummm... didn't change anything"
-msgstr ""
-
-#. (u_err.new_listname)
-#: web_tt2/error.tt2:84
-msgid " - Incorrect listname '%1' : matches one of service aliases"
-msgstr ""
-
-#: web_tt2/error.tt2:75
-#, fuzzy
-msgid " - List has no bouncing subscribers"
-msgstr "De lijst geeft geen abonnees met bounces"
-
-#: web_tt2/error.tt2:54
-#, fuzzy
-msgid " - List has no subscribers"
-msgstr "De lijst heeft geen abonnees"
-
-#. (u_err.argument)
-#: web_tt2/error.tt2:47
-#, fuzzy
-msgid " - Missing argument %1"
-msgstr "Missend argument %1"
-
-#: web_tt2/error.tt2:56
-#, fuzzy
-msgid " - Missing filter"
-msgstr "Missend filter"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:74
-#, fuzzy
-msgid " - No bounce for user  %1"
-msgstr "Geen bounces voor gebruiker  %1"
-
-#. (u_err.directory)
-#: web_tt2/error.tt2:108
-#, fuzzy
-msgid " - No certificate for this list"
-msgstr "Onderwerpen voor de lijst"
-
-#: web_tt2/error.tt2:92
-#, fuzzy
-msgid " - No description specified"
-msgstr "Geen omschrijving gegeven"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:111
-#, fuzzy
-msgid " - No entry for user '%1'"
-msgstr "Geen bounces voor gebruiker  %1"
-
-#: web_tt2/error.tt2:100
-#, fuzzy
-msgid " - No name specified"
-msgstr "Geen naam gegeven"
-
-#. (u_err.page)
-#: web_tt2/error.tt2:55
-#, fuzzy
-msgid " - No page %1"
-msgstr "Geen pagina %1"
-
-#: web_tt2/error.tt2:113
-msgid " - No soap service"
-msgstr ""
-
-#. (u_err.email)
-#: web_tt2/error.tt2:58
-#, fuzzy
-msgid " - Not subscribed: %1"
-msgstr "Niet geabonneerd: %1"
-
-#. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:79
-msgid " - Parameter '%1' has got wrong value : '%2'"
-msgstr ""
-
-#. (u_err.param)
-#: web_tt2/error.tt2:78
-msgid " - Parameter '%1' must have values"
-msgstr ""
-
-#: web_tt2/error.tt2:46
-#, fuzzy
-msgid " - Please provide email address"
-msgstr "Geeft u a.u.b. uw emailadres"
-
-#: web_tt2/error.tt2:65
-#, fuzzy
-msgid " - Please provide your password"
-msgstr "Geeft u uw wachtwoord"
-
-#: web_tt2/error.tt2:112
-msgid " - Please select archive months"
-msgstr ""
-
-#: web_tt2/error.tt2:50
-#, fuzzy
-msgid " - Provided password is incorrect"
-msgstr "Het ingegeven wachtwoord is incorrect"
-
-#. (u_err.tpl)
-#: web_tt2/error.tt2:67
-#, fuzzy
-msgid " - Provided path is incorrect for template '%1'"
-msgstr "Het ingegeven wachtwoord is incorrect"
-
-#: web_tt2/error.tt2:70
-#, fuzzy
-msgid ""
-" - Reject message failed, it may already have been rejected by another "
-"moderator"
-msgstr "Uw bericht voor lijst %s is doorgestuurd naar de editor(s)\n"
-
-#. (u_err.params)
-#: web_tt2/error.tt2:41
-#, fuzzy
-msgid " - Syntax errors with the following parameters : %1["
-msgstr "Syntax fout met de volgende parameters : %1"
-
-#: web_tt2/error.tt2:110
-msgid " - Tag message with topic is required for this list"
-msgstr ""
-
-#: web_tt2/error.tt2:71
-msgid " - Tagging message is required for this list"
-msgstr ""
-
-#: web_tt2/error.tt2:101
-msgid " - The document repository exceed disk quota."
-msgstr ""
-
-#. (i_err.listname)
-#: web_tt2/error.tt2:16
-#, fuzzy
-msgid " - The exporation failed for list '%1'"
-msgstr "%1: actie mislukt"
-
-#. (u_err.listname)
-#: web_tt2/error.tt2:80
-#, fuzzy
-msgid " - The list '%1' is already closed"
-msgstr "Gedeelde documenten"
-
-#. (u_err.listname)
-#: web_tt2/error.tt2:81
-#, fuzzy
-msgid " - The list '%1' is not closed"
-msgstr "Bestand %1 opgeslagen"
-
-#: web_tt2/error.tt2:66
-#, fuzzy
-msgid " - The passwords you typed do not match"
-msgstr "De wachtwoorden die u ingaf zijn ongelijk"
-
-#. (u_err.nb_days)
-#: web_tt2/error.tt2:53
-msgid " - The period is too long (%1 days)"
-msgstr ""
-
-#: web_tt2/error.tt2:91
-msgid " - The shared directory cannot have any description"
-msgstr ""
-
-#: web_tt2/error.tt2:90
-#, fuzzy
-msgid " - The shared document space is empty"
-msgstr "Nieuwste gedeelde documenten"
-
-#: web_tt2/error.tt2:104
-msgid " - The upload failed, try it again"
-msgstr ""
-
-#: web_tt2/error.tt2:89
-#, fuzzy
-msgid " - There is no shared documents"
-msgstr "Nieuwste gedeelde documenten"
-
-#: web_tt2/error.tt2:15
-#, fuzzy
-msgid " - There is not any owner defined for the list"
-msgstr "Er is geen eigenaar voor lijst %1 gevonden."
-
-#. (u_err.name)
-#: web_tt2/error.tt2:99
-msgid " - This is an already existing document : '%1'"
-msgstr ""
-
-#: web_tt2/error.tt2:109
-#, fuzzy
-msgid " - This list has no message topic"
-msgstr "Lijst aliassen zijn verwijderd."
-
-#: web_tt2/error.tt2:77
-msgid " - Topic \"other\" is a reserved word"
-msgstr ""
-
-#. (u_err.path)
-#: web_tt2/error.tt2:93
-msgid " - Unable to describe, the document '%1' does not exist"
-msgstr ""
-
-#. (i_err.month)
-#: web_tt2/error.tt2:9
-msgid " - Unable to find month '%1'"
-msgstr ""
-
-#: web_tt2/error.tt2:12
-#, fuzzy
-msgid " - Unable to load create_list templates"
+msgid " : unable to read '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
-
-#: web_tt2/error.tt2:11
-#, fuzzy
-msgid " - Unable to load list topics"
-msgstr "Het helpbestand kan niet gelezen worden : %s\n"
-
-#. (u_err.path)
-#: web_tt2/error.tt2:88
-#, fuzzy
-msgid " - Unable to read %1 : empty document"
-msgstr "Unable to read %1 : leeg document"
-
-#: web_tt2/error.tt2:85
-#, fuzzy
-msgid " - Unable to rename archive"
-msgstr "Resultaat van uw zoekopdracht in het archief"
-
-#: web_tt2/error.tt2:86
-#, fuzzy
-msgid " - Unable to rename bounces"
-msgstr "Het helpbestand kan niet gelezen worden : %s\n"
-
-#: web_tt2/error.tt2:40
-#, fuzzy
-msgid " - Unknown action"
-msgstr "%1 : onbekende actie"
-
-#: web_tt2/error.tt2:39
-#, fuzzy
-msgid " - Wrong parameters"
-msgstr "Data bronnen configuratie"
-
-#. (u_err.email)
-#: web_tt2/error.tt2:45
-#, fuzzy
-msgid " - You are already logged in as %1"
-msgstr "U bent al ingelogd als %1"
-
-#. (u_err.list)
-#: web_tt2/error.tt2:63
-#, fuzzy
-msgid " - You are already subscribed to the list %1"
-msgstr "U bent al geabonneerd op de lijst %1"
-
-#. (u_err.list)
-#: web_tt2/error.tt2:59
-#, fuzzy
-msgid " - You are not subscribed to list %1"
-msgstr "U bent niet geabonneerd op de lijst %1"
-
-#: web_tt2/error.tt2:51
-#, fuzzy
-msgid ""
-" - You did not choose a password, request a reminder of the initial password"
-msgstr ""
-"U heeft geen wachtwoord gekozen, kies een herinering voor uw eerste "
-"wachtwoord"
-
-#: web_tt2/error.tt2:48
-#, fuzzy
-msgid " - You need to login"
-msgstr "U moet nog inloggen"
-
-#: web_tt2/error.tt2:69
-#, fuzzy
-msgid " - You need to provide list name"
-msgstr "U moet nog inloggen"
-
-#. (u_err.dir)
-#: web_tt2/error.tt2:103
-#, fuzzy
-msgid " - You're not authorized to upload an INDEX.HTML in %1"
-msgstr "U bent niet geautoriseerd om een INDEX.HTML te uploaden in %1"
-
-#: web_tt2/error.tt2:52
-msgid ""
-" - Your password is stored in an LDAP directory, therefore Sympa cannot post "
-"you a reminder"
-msgstr ""
-
-#. (u_err.msg)
-#: web_tt2/error.tt2:116
-#, fuzzy
-msgid " : %1 "
-msgstr "Aan: %1"
 
 #. (count)
 #: web_tt2/latest_lists.tt2:6
@@ -769,26 +112,17 @@ msgstr "Nieuwste berichten"
 msgid " The latest shared documents "
 msgstr "Nieuwste gedeelde documenten"
 
-#. (who,action,listname,conf.host,error)
-#: mail_tt2/listmaster_notification.tt2:322
-msgid ""
-" User %1 has encountered a system error \n"
-"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
+#. (who)
+#: mail_tt2/listmaster_notification.tt2:318
+msgid " User %1 has encountered a system error"
 msgstr ""
 
-#. (who,action,msg_id,cmd,listname,conf.host)
-#: mail_tt2/listmaster_notification.tt2:230
-msgid ""
-" User %1 has encountered an internal server error\n"
-"(%2[% IF msg_id %] - MSG_ID : %3"
-msgstr ""
-
-#. (who,action,listname,conf.host)
-#: mail_tt2/listmaster_notification.tt2:245
-msgid ""
-" User %1 has encountered an internal server error \n"
-"(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4"
-msgstr ""
+#. (who)
+#: mail_tt2/listmaster_notification.tt2:229
+#: mail_tt2/listmaster_notification.tt2:244
+#, fuzzy
+msgid " User %1 has encountered an internal server error"
+msgstr "Reset foutmeldingen"
 
 #: web_tt2/rss.tt2:7
 #, fuzzy
@@ -821,18 +155,15 @@ msgstr "Nieuwste berichten"
 msgid " on %1"
 msgstr "op %1"
 
+#. (by)
+#: mail_tt2/listowner_notification.tt2:134
+msgid " validated by %1 "
+msgstr ""
+
 #: web_tt2/active_lists.tt2:21
 #, fuzzy
 msgid "# message"
 msgstr "berichten"
-
-#. (body)
-#. (subject)
-#. (command)
-#: mail_tt2/archive.tt2:3 mail_tt2/request_auth.tt2:3 mail_tt2/review.tt2:2
-#: mail_tt2/stats_report.tt2:2 web_tt2/request_topic.tt2:30
-msgid "%1"
-msgstr ""
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -849,6 +180,12 @@ msgstr "%1 / uitschrijven van %2"
 msgid "%1 / your environment"
 msgstr "%1 / uw omgeving"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:84
+#, fuzzy
+msgid "%1 : No such file or directory"
+msgstr "%1 : Bestand of map niet gevonden"
+
 #. (notice.action)
 #: web_tt2/notice.tt2:14
 msgid "%1 : action succeeded"
@@ -859,6 +196,35 @@ msgstr "%1 : actie gelukt"
 #, fuzzy
 msgid "%1 : action succeeded soon"
 msgstr "%1 : actie gelukt"
+
+#. (u_err.file)
+#: web_tt2/error.tt2:61
+#, fuzzy
+msgid "%1 : file not editable"
+msgstr "%1 : bestand is niet te wijzigen"
+
+#. (u_err.name)
+#: web_tt2/error.tt2:92
+msgid "%1 : incorrect name"
+msgstr "%1 : foute naam"
+
+#. (u_err.family)
+#: web_tt2/error.tt2:43
+#, fuzzy
+msgid "%1 : unknown family"
+msgstr "%1 : onbekende actie"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:41
+#, fuzzy
+msgid "%1 : unknown list"
+msgstr "%1 : onbekende lijst"
+
+#. (u_err.new_robot)
+#: web_tt2/error.tt2:42
+#, fuzzy
+msgid "%1 : unknown robot"
+msgstr "%1 : onbekende lijst"
 
 #. (list.name,date)
 #: mail_tt2/digest_plain.tt2:4 mail_tt2/digest_plain.tt2:9
@@ -915,6 +281,18 @@ msgstr "keer raak op bericht"
 #, fuzzy
 msgid "%1 hits on message's Subject field"
 msgstr "keer raak op bericht"
+
+#. (u_err.email,u_err.list)
+#: web_tt2/error.tt2:63
+#, fuzzy
+msgid "%1 is already subscribed to the list %2"
+msgstr "%1 is al geabonneerd op de lijst %2"
+
+#. (u_err.reception_mode)
+#: web_tt2/error.tt2:60
+#, fuzzy
+msgid "%1 is not an available reception mode"
+msgstr "Ontvangst stand"
 
 #. (list.name)
 #: mail_tt2/list_created.tt2:2
@@ -982,6 +360,18 @@ msgstr "%1"
 #, fuzzy
 msgid "%Image(%s)"
 msgstr "%Image(%s)"
+
+#. (u_err.bad_listname)
+#: web_tt2/error.tt2:81
+#, fuzzy
+msgid "'%1' : bad listname"
+msgstr ": foute lijstnaam"
+
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:82
+#, fuzzy
+msgid "'%1' list already exists"
+msgstr "Verwijder geselecteerde lijsten"
 
 #: web_tt2/arcsearch.tt2:18
 msgid "(All of this words,"
@@ -1190,6 +580,12 @@ msgstr ""
 "de huidige lijst compleet verwijderen. Listmaster rechten zijn nodig om "
 "telijst te"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:95
+#, fuzzy
+msgid "A directory named '%1' already exists"
+msgstr "Verwijder geselecteerde lijsten"
+
 #: web_tt2/create_list_request.tt2:77
 msgid "A few lines describing the list"
 msgstr "Een paar regels die de lijst beschrijven"
@@ -1207,7 +603,7 @@ msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
 
 #. (auth.action)
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:120
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
@@ -1262,6 +658,12 @@ msgstr ""
 "Het interval waarmee de Digests worden verstuurd wordt bepaald door de "
 "lijst\n"
 "eigenaar."
+
+#. (u_err.email)
+#: web_tt2/error.tt2:48
+#, fuzzy
+msgid "Address \"%1\" is incorrect"
+msgstr "Adres \"%1\" is incorrect"
 
 #: web_tt2/editsubscriber.tt2:55
 msgid "Address detected via VERP technologie"
@@ -1335,6 +737,16 @@ msgstr "Archives"
 msgid "Archives Selection:"
 msgstr "Archiefselectie:"
 
+#: web_tt2/error.tt2:71
+msgid "Archives are empty for this list"
+msgstr ""
+
+#. (i_err.year_month)
+#: web_tt2/error.tt2:10
+#, fuzzy
+msgid "Archives from %1 are not accessible"
+msgstr "Archieven van %1 zijn niet beschikbaar"
+
 #. (list.name)
 #: mail_tt2/index_archive.tt2:2
 #, fuzzy
@@ -1371,6 +783,13 @@ msgstr "Bijlage type"
 #: web_tt2/scenario_test.tt2:59
 msgid "Auth method"
 msgstr "Auth method"
+
+#: web_tt2/error.tt2:111
+#, fuzzy
+msgid "Authentication failed"
+msgstr ""
+"De authenticatie is niet gelukt.\n"
+"\n"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
 #: web_tt2/modindex.tt2:36 web_tt2/modindex.tt2:99
@@ -1498,42 +917,55 @@ msgid "Cannot connect to database %1, still trying..."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:290
 #, fuzzy
 msgid "Cannot create shared for list '%1'."
 msgstr "kan map niet maken %1"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:292
 #, fuzzy
 msgid "Cannot delete shared for list '%1'."
 msgstr "Tot die tijd bevelen we aan om %1 te verwijderen"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:67
+#, fuzzy
+msgid "Cannot open file '%1'"
+msgstr "kan bestand niet uploaden %1"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:94
+#, fuzzy
+msgid "Cannot overwrite file %1"
+msgstr "kan bestand niet overschrijven %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:291
 #, fuzzy
 msgid "Cannot restore shared for list '%1'."
 msgstr "kan bestand niet uploaden %1"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:276
 #, fuzzy
 msgid "Cannot save config file for list '%1'."
 msgstr "Laatste update van de configuratie"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:295 web_tt2/error.tt2:17
 #, fuzzy
 msgid "Cannot unzip file '%1'."
 msgstr "kan bestand niet uploaden %1"
 
-#: web_tt2/error.tt2:17
+#. (u_err.path)
+#: web_tt2/error.tt2:99
 #, fuzzy
-msgid "Cannot unzip this file "
+msgid "Cannot upload file %1"
 msgstr "kan bestand niet uploaden %1"
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:294
 #, fuzzy
 msgid "Cannot upload file '%1'."
 msgstr "kan bestand niet uploaden %1"
@@ -1633,6 +1065,13 @@ msgstr "Gesloten lijsten"
 msgid "Colors"
 msgstr "Kleuren"
 
+#. (notice.cmd)
+#: mail_tt2/command_report.tt2:51
+#, fuzzy
+msgid "Command '%1' found : ignoring end of message."
+msgstr ""
+"Commando 'quit' gevonden : Het einde van het bericht wordt genegeerd.\n"
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1647,6 +1086,14 @@ msgstr "Commando syntax fout.\n"
 #, fuzzy
 msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr "Deze inschrijvers zijn :\n"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:75
+#, fuzzy
+msgid "Config file has been modified by %1. Cannot apply your changes"
+msgstr ""
+"Het configuratiebestand is veranderd door %1. Kan uw wijzigingen niet "
+"doorvoeren"
 
 #: web_tt2/set_pending_list_request.tt2:46
 msgid "Configuration file"
@@ -1685,12 +1132,12 @@ msgid "Continue search"
 msgstr "Doorgaan met zoeken"
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
 #. (auth.listname)
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:122
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -1781,6 +1228,11 @@ msgstr "De lijst geeft geen abonnees met bounces"
 msgid "Data Source"
 msgstr "Data Bron"
 
+#: web_tt2/error.tt2:91
+#, fuzzy
+msgid "Data have changed on disk. Cannot apply your changes"
+msgstr "Data is veranderd op de disk, kan uw wijzigingen niet doorvoeren"
+
 #: web_tt2/edit_list_request.tt2:11
 msgid "Data sources setup"
 msgstr "Data bronnen configuratie"
@@ -1793,6 +1245,44 @@ msgstr ""
 #: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:98 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr "Datum"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:105
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. Shall this be fine\n"
+"with you, you should click the following URL :"
+msgstr ""
+"Geachte eigenaar van de lijst  %s,\n"
+"\n"
+"Een gebruiker vroeg om zich uit te schrijven bij de lijst. Vind u dit goed\n"
+"klik dan op de volgende URL :\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+"\n"
+"of stuur een email naar %s met het volgende onderwerp :\n"
+"AUTH %s DEL %s %s\n"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:87
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. Shall this be fine\n"
+"with you, you should click the following URL :"
+msgstr ""
+"Geachte eigenaar van lijst %s,\n"
+"\n"
+"Iemand vroeg om ingeschreven te worden voor de lijst. Vindt u dit goed\n"
+", klik dan op de volgende URL :\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+"\n"
+"of stuur een email naar %s met het volgende onderwerp :\n"
+"AUTH %s ADD %s %s %s\n"
 
 #: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
 #: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
@@ -1848,7 +1338,7 @@ msgstr ""
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:256
-msgid "Delete user in DB for old email '%s' failed."
+msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:44
@@ -1927,13 +1417,19 @@ msgstr "Digest"
 msgid "Directory"
 msgstr "Map"
 
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:102
+#, fuzzy
+msgid "Directory %1 and its contents could not be copied : %2"
+msgstr "Map %1 en de inhoud is niet gecopieerd"
+
 #: src/List.pm:877
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "De map waar de database is opgeslagen (enkel gebruikt bij DBD:CSV)"
 
 #: web_tt2/suboptions.tt2:41
 #, fuzzy
-msgid "Disallow topic subscription"
+msgid "Disable topics subscription"
 msgstr "Uw abonnementen"
 
 #: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:74
@@ -1972,21 +1468,12 @@ msgid "Do you really want to delete this message ?"
 msgstr "Wilt u het volgende %1 echt verwijderen?"
 
 #. (file.value.site)
-#: web_tt2/ls_templates.tt2:79
-#, fuzzy
-msgid "Do you really want to remove %1 ?"
-msgstr "Wilt u het volgende %1 echt verwijderen?"
-
-#. (file.value.listname)
-#: web_tt2/ls_templates.tt2:109
-#, fuzzy
-msgid "Do you really want to remove [% file.value.listname %] ?"
-msgstr "Wilt u het volgende %1 echt verwijderen?"
-
 #. (file.value.robot)
+#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:109 web_tt2/ls_templates.tt2:79
 #: web_tt2/ls_templates.tt2:93
 #, fuzzy
-msgid "Do you really want to remove [% file.value.robot %] ?"
+msgid "Do you really want to remove %1 ?"
 msgstr "Wilt u het volgende %1 echt verwijderen?"
 
 #: web_tt2/rename_list_request.tt2:14
@@ -2070,7 +1557,7 @@ msgid "E-mail address %1 has not been found in the list %2."
 msgstr "Email adres %s is niet gevonden op deze lijst.\n"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:38
+#: web_tt2/error.tt2:37
 msgid "ERROR (%1) "
 msgstr ""
 
@@ -2163,16 +1650,6 @@ msgstr "Einde van de samenvatting van de lijst %1 - %2"
 msgid "End of digest for list %1 - %2"
 msgstr "Einde van de samenvatting van de lijst %1 - %2"
 
-#. (i_err.key)
-#: web_tt2/error.tt2:20
-msgid "Erreur 404"
-msgstr ""
-
-#. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:306
-msgid "Erreur 404."
-msgstr ""
-
 #: src/Conf.pm:251
 msgid "Error at line %d : %s"
 msgstr "Fout in regel %d : %s"
@@ -2200,14 +1677,9 @@ msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:296
 #, fuzzy
 msgid "Errors while unzipping file '%1'."
-msgstr "Editie van het bestand %1"
-
-#: web_tt2/error.tt2:18
-#, fuzzy
-msgid "Errors while unzipping this file."
 msgstr "Editie van het bestand %1"
 
 #: mail_tt2/expire_warning1.tt2:10 mail_tt2/expire_warning2.tt2:10
@@ -2232,13 +1704,11 @@ msgstr "Afloop van de termijn voor gemodereerde berichten"
 msgid "Extend search field"
 msgstr "Uitgebreid zoek veld"
 
-#. (command,list.name,who,gecos,by)
+#. (command,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:134
 #, fuzzy
-msgid "FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 "
-msgstr ""
-"Ter info: commando %s lijst %s van %s %s gevalideerd door %s\n"
-" (geen actie benodigd)\n"
+msgid "FYI command %1 list %2 from %3 %4"
+msgstr "Ter info: %s lijst %s van %s %s"
 
 #. (type,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:34
@@ -2266,19 +1736,40 @@ msgid ""
 "they are acted on."
 msgstr ""
 
+#. (u_err.directory)
+#: web_tt2/error.tt2:104
+#, fuzzy
+msgid "Failed : %1 not empty"
+msgstr "Fout : %1 niet leeg"
+
+#: web_tt2/error.tt2:93
+#, fuzzy
+msgid "Failed : your content is empty"
+msgstr "Fout: Uw inhoud is leeg"
+
+#: web_tt2/error.tt2:14
+#, fuzzy
+msgid "Failed to include list admins"
+msgstr "Mislukt om de gebruiker toe te voegen %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:286
 #, fuzzy
 msgid "Failed to include list admins for list '%1'"
 msgstr "Kon email voor lijst %1 niet veranderen"
 
+#: web_tt2/error.tt2:13
+#, fuzzy
+msgid "Failed to inlude members"
+msgstr "Mislukt om de gebruiker toe te voegen %1"
+
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:285
 #, fuzzy
 msgid "Failed to inlude members for list '%1'"
 msgstr "Mislukt om de gebruiker toe te voegen %1"
 
-#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:277
 #, fuzzy
 msgid "Failed to install aliases."
 msgstr "Mislukt om de gebruiker toe te voegen %1"
@@ -2289,7 +1780,7 @@ msgstr "Mislukt om de gebruiker toe te voegen %1"
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "Kon email voor lijst %1 niet veranderen"
 
-#: mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:278
 #, fuzzy
 msgid "Failed to remove aliases."
 msgstr "Mislukt om de gebruiker toe te voegen %1"
@@ -2309,6 +1800,12 @@ msgstr "Bestand"
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Bestand %1 was oud en is verwijderd"
+
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:103
+#, fuzzy
+msgid "File %1 is not copied : %2 "
+msgstr "Bestand %1 is niet gecopieerd"
 
 #. (notice.path)
 #: web_tt2/notice.tt2:44
@@ -2339,6 +1836,13 @@ msgstr "Bestand insluiten"
 msgid "File name"
 msgstr "lijst naam"
 
+#. (i_err.key)
+#. (zipfile)
+#: mail_tt2/listmaster_notification.tt2:303 web_tt2/error.tt2:19
+#, fuzzy
+msgid "File not found."
+msgstr "Wissel selectie"
+
 #: web_tt2/login_menu.tt2:74
 msgid "First login ?"
 msgstr "Eerste login?"
@@ -2349,14 +1853,9 @@ msgid "Folder name"
 msgstr "Modereer"
 
 #. (conf.listmaster_email,conf.host)
-#: mail_tt2/list_unknown.tt2:22
-#, fuzzy
-msgid "For further assistance, please contact %1@%2"
-msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
-
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:185 mail_tt2/message_report.tt2:17
-#: mail_tt2/message_report.tt2:74 mail_tt2/message_report.tt2:92
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
+#: mail_tt2/message_report.tt2:87
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
@@ -2432,7 +1931,7 @@ msgstr "Hulp voor Sympa: %1%2"
 
 #: mail_tt2/which.tt2:7
 #, fuzzy
-msgid "Here are the lists you are currently subscribe to :"
+msgid "Here are the lists you are currently subscribed to :"
 msgstr ""
 "Hier zijn de lijsten waar u op geabonneerd bent :\n"
 "\n"
@@ -2534,10 +2033,46 @@ msgid ""
 "used."
 msgstr "                        "
 
+#. (-)
+#: mail_tt2/request_auth.tt2:40
+#, fuzzy
+msgid ""
+"If you do not want this action to be taken, you can safely ignore this "
+"message."
+msgstr ""
+"Wanneer u zich niet wilt inschrijven kunt u dit bericht gewoon negeren."
+
 #: mail_tt2/invite.tt2:13
 msgid "If you don't want to subscribe just ignore this message."
 msgstr ""
 "Wanneer u zich niet wilt inschrijven kunt u dit bericht gewoon negeren."
+
+#. (conf.sympa)-)
+#: mail_tt2/request_auth.tt2:38
+#, fuzzy
+msgid ""
+"If you want this action to be taken, please\n"
+"\n"
+"- reply to this mail\n"
+"OR\n"
+"- send a message to %1 with subject\n"
+" %2\n"
+"OR\n"
+"- hit the following mailto"
+msgstr ""
+"Iemand (hopelijk uzelf) vroeg om uw emaildres \n"
+"toe te voegen aan de lijst '%s'.\n"
+"Wanneer u dit wil, beantwoord dan\n"
+"\n"
+"- dit bericht\n"
+"OF\n"
+"- stuur een bericht naar  %s met als onderwerp\n"
+" %s\n"
+"OF\n"
+"- klik hierop %s\n"
+"\n"
+"Wanneer u niet wilt dat dit gebeurd, kunt u dit bericht \n"
+"negeren."
 
 #: mail_tt2/global_remind.tt2:8
 msgid "If you want to unsubscribe from some list, please save this mail."
@@ -2551,21 +2086,21 @@ msgstr ""
 "Wanneer u nog nooit een wachtwoord van deze server heeft ontvangen of "
 "wanneer u zich deze niet herinnert:"
 
-#: mail_tt2/command_report.tt2:175
+#: mail_tt2/command_report.tt2:174
 msgid "Ignoring message because of an internal server error."
 msgstr ""
 
-#: mail_tt2/command_report.tt2:169
+#: mail_tt2/command_report.tt2:168
 #, fuzzy
 msgid ""
-"Ignoring message body not in text/plain, please use text/plain only \n"
-"(or put your command in the subject)."
+"Ignoring message body not in text/plain, please use text/plain only (or put "
+"your command in the subject)."
 msgstr ""
 "Het bericht wordt genegeerd omdat het niet in het text/plain formaat is, "
 "gebruikt uw alstublieft uitsluitend text/plain \n"
 "(of zet uw commando in het onderwerp).\n"
 
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:293
 #, fuzzy
 msgid "Impossible to browse shared for list '%1'."
 msgstr "Mail voor goedkeuring op lijst %1 van %2"
@@ -2602,6 +2137,11 @@ msgstr "Niet actieve lijsten"
 msgid "Inclusions timeout"
 msgstr "Timeout voor de inclusions"
 
+#. (u_err.new_listname)
+#: web_tt2/error.tt2:83
+msgid "Incorrect listname '%1' : matches one of service aliases"
+msgstr ""
+
 #: web_tt2/set_pending_list_request.tt2:34
 msgid "Information file"
 msgstr "Information file"
@@ -2615,6 +2155,12 @@ msgstr "Informatie over de lijst %1"
 #: mail_tt2/info_report.tt2:7
 msgid "Information regarding list %1@%2"
 msgstr "Informatie over de lijst %1@%2"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:30
+#, fuzzy
+msgid "Information regarding user %1 have been updated for list %2."
+msgstr "Informatie over gebruiker %s is gewijzigd voor lijst %s.\n"
 
 #: web_tt2/modindex.tt2:126 web_tt2/modindex.tt2:91
 #, fuzzy
@@ -2648,7 +2194,7 @@ msgid ""
 "the multipart/digest MIME format."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:279
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
@@ -2793,12 +2339,6 @@ msgid ""
 "Your configuration regarding this command has not been updated."
 msgstr "Lijst %s kent geen DIGEST stand. Uw configuratie is niet gewijzigd..\n"
 
-#. (glob.listname)
-#: mail_tt2/command_report.tt2:178
-#, fuzzy
-msgid "List %1 does not exist."
-msgstr "Lijst '%s' bestaat niet.\n"
-
 #. (u_err.listname)
 #: mail_tt2/command_report.tt2:129
 #, fuzzy
@@ -2822,15 +2362,12 @@ msgid ""
 msgstr ""
 
 #. (u_err.listname)
-#: mail_tt2/command_report.tt2:103
+#. (glob.listname)
+#. (listname)
+#: mail_tt2/command_report.tt2:103 mail_tt2/command_report.tt2:177
+#: mail_tt2/message_report.tt2:53
 #, fuzzy
 msgid "List '%1' does not exist."
-msgstr "Lijst '%s' bestaat niet.\n"
-
-#. (listname)
-#: mail_tt2/message_report.tt2:55
-#, fuzzy
-msgid "List '%1' does not exist.\n"
 msgstr "Lijst '%s' bestaat niet.\n"
 
 #: web_tt2/admin_menu.tt2:5
@@ -2899,6 +2436,16 @@ msgstr "Lijst aliassen zijn verwijderd."
 #, fuzzy
 msgid "List has been restored"
 msgstr "Lijst aliassen zijn verwijderd."
+
+#: web_tt2/error.tt2:74
+#, fuzzy
+msgid "List has no bouncing subscribers"
+msgstr "De lijst geeft geen abonnees met bounces"
+
+#: web_tt2/error.tt2:53
+#, fuzzy
+msgid "List has no subscribers"
+msgstr "De lijst heeft geen abonnees"
 
 #: web_tt2/help_editfile.tt2:26
 msgid ""
@@ -2995,7 +2542,7 @@ msgid "Listmaster : internal server error "
 msgstr "Reset foutmeldingen"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:313
 msgid "Listmaster : system error "
 msgstr ""
 
@@ -3167,30 +2714,30 @@ msgid "Message"
 msgstr "berichten"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:108
+#: mail_tt2/message_report.tt2:103
 #, fuzzy
 msgid "Message %1 for list '%2' has been distributed."
 msgstr "Bericht %s voor lijst %s is gedistribueerd.\n"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:72
+#: mail_tt2/message_report.tt2:67
 #, fuzzy
 msgid "Message %1 for list '%2' has been rejected.\n"
 msgstr "Bericht %s voor lijst %s is afgewezen.\n"
 
 #. (key,listname)
-#: mail_tt2/message_report.tt2:112
+#: mail_tt2/message_report.tt2:107
 #, fuzzy
 msgid ""
 "Message %1 for list '%2' has been validated ; it will be distributed soon."
 msgstr "Bericht %s voor lijst %s is gedistribueerd.\n"
 
-#: mail_tt2/message_report.tt2:97
+#: mail_tt2/message_report.tt2:92
 #, fuzzy
 msgid "Message diffusion"
 msgstr "voetregel van bericht"
 
-#: mail_tt2/message_report.tt2:80
+#: mail_tt2/message_report.tt2:75
 msgid "Message diffusion : Authorization reject"
 msgstr ""
 
@@ -3301,6 +2848,17 @@ msgstr ""
 #: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:12
 msgid "Miscellaneous"
 msgstr "Overig"
+
+#. (u_err.argument)
+#: web_tt2/error.tt2:46
+#, fuzzy
+msgid "Missing argument %1"
+msgstr "Missend argument %1"
+
+#: web_tt2/error.tt2:55
+#, fuzzy
+msgid "Missing filter"
+msgstr "Missend filter"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
 #: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
@@ -3469,18 +3027,45 @@ msgid "No DataBase"
 msgstr ""
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:269
 msgid "No HTML version of the message available in '%1'."
+msgstr ""
+
+#: web_tt2/error.tt2:110
+msgid "No SOAP service"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:12
 msgid "No Virtual Robot defined on this server"
 msgstr "Geen virtuele robots zijn gedefinieerd op deze server."
 
-#: mail_tt2/command_report.tt2:172
+#. (u_err.email)
+#: web_tt2/error.tt2:73
+#, fuzzy
+msgid "No bounce for user  %1"
+msgstr "Geen bounces voor gebruiker  %1"
+
+#. (u_err.directory)
+#: web_tt2/error.tt2:105
+#, fuzzy
+msgid "No certificate for this list"
+msgstr "Onderwerpen voor de lijst"
+
+#: mail_tt2/command_report.tt2:171
 #, fuzzy
 msgid "No command found in message."
 msgstr "Geen commando gevonden in het bericht."
+
+#: web_tt2/error.tt2:89
+#, fuzzy
+msgid "No description specified"
+msgstr "Geen omschrijving gegeven"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:108
+#, fuzzy
+msgid "No entry for user '%1'"
+msgstr "Geen bounces voor gebruiker  %1"
 
 #: web_tt2/lists.tt2:65 web_tt2/your_lists.tt2:22
 #, fuzzy
@@ -3494,14 +3079,30 @@ msgid "No message and no document to moderate for list %1"
 msgstr "Geen bericht om te modereren voor lijst %1"
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:278
+#: mail_tt2/listmaster_notification.tt2:275
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
+
+#: web_tt2/error.tt2:97
+#, fuzzy
+msgid "No name specified"
+msgstr "Geen naam gegeven"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:110
 msgid "No owner is defined for list %1."
 msgstr "Er is geen eigenaar voor lijst %1 gevonden."
+
+#: mail_tt2/listmaster_notification.tt2:287
+#, fuzzy
+msgid "No owner is defined for the list '%1'"
+msgstr "Er is geen eigenaar voor lijst %1 gevonden."
+
+#. (u_err.page)
+#: web_tt2/error.tt2:54
+#, fuzzy
+msgid "No page %1"
+msgstr "Geen pagina %1"
 
 #: web_tt2/modindex.tt2:62
 msgid "No subject"
@@ -3519,6 +3120,12 @@ msgstr "Geen inschrijvingen met adres <strong>%1</strong>!"
 #: web_tt2/help_user_options.tt2:29
 msgid "Nomail"
 msgstr "Geenmail"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:57
+#, fuzzy
+msgid "Not subscribed: %1"
+msgstr "Niet geabonneerd: %1"
 
 #: web_tt2/help_editlist.tt2:132
 msgid ""
@@ -3561,7 +3168,7 @@ msgid "Oldest messages first"
 msgstr "Oudste berichten eerst"
 
 #: src/List.pm:956
-msgid "On which part of message check for message topic keywords"
+msgid "On which part of messages, topic keywords are applied"
 msgstr ""
 
 #: web_tt2/help.tt2:32
@@ -3580,6 +3187,14 @@ msgstr ""
 "Operatie gelukt.  Het bericht wordt zo snel mogelijk verwijderd.  Dit kan "
 "enkele minuten duren."
 
+#. (conf.sympa,authkey)
+#: mail_tt2/send_auth.tt2:22
+#, fuzzy
+msgid ""
+"Or send a message to %1 with the following subject :\n"
+"CONFIRM %2\n"
+msgstr "Of zend een bericht naar %1@%2 met het volgende onderwerp :"
+
 #. (conf.email,conf.host)
 #: mail_tt2/moderate.tt2:22 mail_tt2/moderate.tt2:27
 msgid "Or send a message to %1@%2 with the following subject :"
@@ -3589,12 +3204,8 @@ msgstr "Of zend een bericht naar %1@%2 met het volgende onderwerp :"
 msgid "Other"
 msgstr "Overig"
 
-#: web_tt2/suboptions.tt2:34
+#: web_tt2/suboptions.tt2:32 web_tt2/suboptions.tt2:34
 msgid "Other (messages not tagged) "
-msgstr ""
-
-#: web_tt2/suboptions.tt2:32
-msgid "Other (no tagged mails) "
 msgstr ""
 
 #: web_tt2/pref.tt2:73
@@ -3661,7 +3272,17 @@ msgstr ""
 msgid "Page size"
 msgstr "Page size"
 
-#: mail_tt2/listmaster_notification.tt2:308
+#. (u_err.param,u_err.val)
+#: web_tt2/error.tt2:78
+msgid "Parameter '%1' has got wrong value : '%2'"
+msgstr ""
+
+#. (u_err.param)
+#: web_tt2/error.tt2:77
+msgid "Parameter '%1' must have values"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
@@ -3714,6 +3335,11 @@ msgstr ""
 msgid "Please contact the listmaster."
 msgstr "beperkt tot de listmaster"
 
+#: web_tt2/error.tt2:45
+#, fuzzy
+msgid "Please provide email address"
+msgstr "Geeft u a.u.b. uw emailadres"
+
 #. (list)
 #: web_tt2/sigrequest.tt2:46
 #, fuzzy
@@ -3722,6 +3348,16 @@ msgid ""
 "1."
 msgstr ""
 "Geeft u alstublieft uw emailadres voor het uitschrijven bij de lijst %1."
+
+#: web_tt2/error.tt2:64
+#, fuzzy
+msgid "Please provide your password"
+msgstr "Geeft u uw wachtwoord"
+
+#: web_tt2/error.tt2:109
+#, fuzzy
+msgid "Please select archive months"
+msgstr "Verwijder de geselecteerde maand(en)"
 
 #: web_tt2/modindex.tt2:22
 msgid ""
@@ -3820,6 +3456,17 @@ msgstr "Eigenschappen van de map %1"
 #: web_tt2/d_properties.tt2:11
 msgid "Properties of the file %1"
 msgstr "Eigenschappen van het bestand %1"
+
+#: web_tt2/error.tt2:49
+#, fuzzy
+msgid "Provided password is incorrect"
+msgstr "Het ingegeven wachtwoord is incorrect"
+
+#. (u_err.tpl)
+#: web_tt2/error.tt2:66
+#, fuzzy
+msgid "Provided path is incorrect for template '%1'"
+msgstr "Het ingegeven wachtwoord is incorrect"
 
 #: src/etc/create_list_templates/discussion_list/comment.tt2:1
 msgid "Public discussion mailing list"
@@ -3955,6 +3602,12 @@ msgstr "Verwijs naar de documentatie om \"%1\" aan te passen"
 #: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:12
 msgid "Reject"
 msgstr "Weiger"
+
+#: web_tt2/error.tt2:69
+#, fuzzy
+msgid ""
+"Reject message failed, it may already have been rejected by another moderator"
+msgstr "Uw bericht voor lijst %s is doorgestuurd naar de editor(s)\n"
 
 #: web_tt2/subindex.tt2:52
 msgid "Reject selected addresses"
@@ -4200,7 +3853,7 @@ msgid ""
 msgstr ""
 
 #. (s_err.action)
-#: web_tt2/error.tt2:29
+#: web_tt2/error.tt2:28
 msgid "SYSTEM ERROR (%1)"
 msgstr ""
 
@@ -4251,8 +3904,8 @@ msgid "Secret string for generating unique keys"
 msgstr "Geheim woord voor het aanmaken van een unieke sleutel"
 
 #: mail_tt2/listmaster_notification.tt2:235
-#: mail_tt2/listmaster_notification.tt2:312
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:324
 msgid "See logs for more details."
 msgstr ""
 
@@ -4525,6 +4178,12 @@ msgstr "Inschrijven        : %1"
 msgid "Subscription profile"
 msgstr "Inschrijvings profiel"
 
+#. (notice.total,notice.listname)
+#: mail_tt2/command_report.tt2:39
+#, fuzzy
+msgid "Subscription reminder sent to each of %1 %2 subscribers."
+msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
+
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:79
 #, fuzzy
@@ -4661,10 +4320,20 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
+#. (u_err.params)
+#: web_tt2/error.tt2:40
+#, fuzzy
+msgid "Syntax errors with the following parameters : %1"
+msgstr "Syntax fout met de volgende parameters : %1"
+
 #: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
 #, fuzzy
 msgid "Table of contents:"
 msgstr "Inhoudsopgave:"
+
+#: web_tt2/error.tt2:107
+msgid "Tag message with topic is required for this list"
+msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:213
 #, fuzzy
@@ -4681,6 +4350,10 @@ msgstr "Stuur deze email"
 #, fuzzy
 msgid "Tag your message for list %1"
 msgstr "Gecodeerd bericht voor lijst %1@%2"
+
+#: web_tt2/error.tt2:70
+msgid "Tagging message is required for this list"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:3
 msgid "Template edition system"
@@ -4819,6 +4492,11 @@ msgstr ""
 "Het MODINDEX commando is alleen voor moderators.\n"
 "U bent geen moderator voor lijst %s.\n"
 
+#. (notice.count)
+#: mail_tt2/command_report.tt2:42
+msgid "The Reminder has been sent to %1 users."
+msgstr ""
+
 #. (u_err.email,u_err.listname)
 #: mail_tt2/command_report.tt2:132
 #, fuzzy
@@ -4842,6 +4520,11 @@ msgstr ""
 "U hebt waarschijnlijk uw abonnement met een ander email adres\n"
 " bevestigd. Probeer met uw echte adres in te schrijven."
 
+#: mail_tt2/listmaster_notification.tt2:248
+#, fuzzy
+msgid "The authentication server name is not defined."
+msgstr "Kies uw toegangsserver"
+
 #: web_tt2/help_editlist.tt2:15
 msgid ""
 "The available_user_options parameter starts a paragraph to define available "
@@ -4864,10 +4547,10 @@ msgstr "Verwijder geselecteerde lijsten"
 
 #: web_tt2/skinsedit.tt2:7
 msgid ""
-"The current version don't include a color editor, so you need to edit robot."
-"conf (or sympa.conf) to change colors. Here are the colors as defined for "
-"the current robot in robot.conf. If you did install statics CSS files, the "
-"colors in use may differ from this table."
+"The current version doesn't include a color editor, so you need to edit "
+"robot.conf (or sympa.conf) to change colors. Here are the colors as defined "
+"for the current robot in robot.conf. If you did install statics CSS files, "
+"the colors in use may differ from this table."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:138
@@ -4887,10 +4570,21 @@ msgid ""
 "profile for the subscribers of the list."
 msgstr ""
 
-#. (listname)
-#: mail_tt2/listmaster_notification.tt2:291
-msgid "The exporationto an Ldap directory failed for list '%1'"
+#: web_tt2/error.tt2:98
+msgid "The document repository exceed disk quota."
 msgstr ""
+
+#. (i_err.listname)
+#: web_tt2/error.tt2:16
+#, fuzzy
+msgid "The exporation failed for list '%1'"
+msgstr "%1: actie mislukt"
+
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:288
+#, fuzzy
+msgid "The exportation to an Ldap directory failed for list '%1'"
+msgstr "%1: actie mislukt"
 
 #: mail_tt2/list_unknown.tt2:14
 msgid "The following address is not a known mailing list :"
@@ -4957,6 +4651,18 @@ msgstr "Nieuwste berichten eerst"
 msgid "The latest shared documents"
 msgstr "Gedeelde documenten"
 
+#. (u_err.listname)
+#: web_tt2/error.tt2:79
+#, fuzzy
+msgid "The list '%1' is already closed"
+msgstr "Gedeelde documenten"
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:80
+#, fuzzy
+msgid "The list '%1' is not closed"
+msgstr "Bestand %1 opgeslagen"
+
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:11
 msgid "The list document repository : %1/d_read/%2"
@@ -5014,6 +4720,16 @@ msgstr "Het onderwerp van de lijst"
 msgid "The most active lists"
 msgstr "Nieuwste lijsten"
 
+#: web_tt2/error.tt2:65
+#, fuzzy
+msgid "The passwords you typed do not match"
+msgstr "De wachtwoorden die u ingaf zijn ongelijk"
+
+#. (u_err.nb_days)
+#: web_tt2/error.tt2:52
+msgid "The period is too long (%1 days)"
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:120
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
@@ -5038,14 +4754,45 @@ msgstr ""
 "lijst\n"
 "eigenaar."
 
+#: web_tt2/error.tt2:88
+msgid "The shared directory cannot have any description"
+msgstr ""
+
+#: web_tt2/error.tt2:87
+#, fuzzy
+msgid "The shared document space is empty"
+msgstr "Nieuwste gedeelde documenten"
+
 #: web_tt2/help_editlist.tt2:157
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
+
+#: web_tt2/error.tt2:101
+msgid "The upload failed, try it again"
+msgstr ""
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:45
+#, fuzzy
+msgid "The user %1 has been removed from the list %2."
+msgstr "Gebruiker %s is uitgeschreven van lijst %s/\n"
 
 #. (total,list.name,list.host)
 #: mail_tt2/modindex.tt2:10
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "Er zijn %1 berichten die gemodereerd moeten worden voor de lijst %2@%3"
+
+#. (list.name,filename,who,conf.wwsympa_url)
+#: mail_tt2/listeditor_notification.tt2:16
+msgid ""
+"There are new shared documents in list %1 : \n"
+"\t%2\n"
+"\n"
+"\tfrom %3\n"
+"\n"
+"To moderate these document : \n"
+"%4/modindex/%1"
+msgstr ""
 
 #: web_tt2/help_editlist.tt2:148
 msgid ""
@@ -5055,14 +4802,31 @@ msgid ""
 "parameters. Possible value are:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:248
-#, fuzzy
-msgid "There is not any authentication server name."
-msgstr "Kies uw toegangsserver"
+#. (list.name,filename,who,conf.wwsympa_url)
+#: mail_tt2/listeditor_notification.tt2:24
+msgid ""
+"There is a new shared document in list %1 : \n"
+"\t%2 from %3\n"
+"\n"
+"To moderate this document : \n"
+"%4/modindex/%1\n"
+" "
+msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:290
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:54
 #, fuzzy
-msgid "There is not any owner defined for the list '%1'"
+msgid "There is no message to moderate for list '%1'."
+msgstr "Er zijn %1 berichten die gemodereerd moeten worden voor de lijst %2@%3"
+
+#: web_tt2/error.tt2:86
+#, fuzzy
+msgid "There is no shared documents"
+msgstr "Nieuwste gedeelde documenten"
+
+#: web_tt2/error.tt2:15
+#, fuzzy
+msgid "There is not any owner defined for the list"
 msgstr "Er is geen eigenaar voor lijst %1 gevonden."
 
 #. (process_id,loop_count,start_time)
@@ -5138,10 +4902,25 @@ msgid ""
 "for specific mailing lists."
 msgstr ""
 
+#. (u_err.name)
+#: web_tt2/error.tt2:96
+msgid "This is an already existing document : '%1'"
+msgstr ""
+
 #: mail_tt2/list_unknown.tt2:12
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr ""
 "Dit is een automatisch bericht verstuurd door Sympa Mailing Lists Manager."
+
+#: mail_tt2/command_report.tt2:123
+#, fuzzy
+msgid "This list archive is empty."
+msgstr "Nieuwste lijsten"
+
+#: web_tt2/error.tt2:106
+#, fuzzy
+msgid "This list has no message topic"
+msgstr "Lijst aliassen zijn verwijderd."
 
 #. (list.subject)
 #: mail_tt2/invite.tt2:8
@@ -5155,11 +4934,6 @@ msgstr ""
 #: web_tt2/modindex.tt2:20 web_tt2/viewmod.tt2:16
 msgid "This list is configured to require topic(s)."
 msgstr ""
-
-#: mail_tt2/command_report.tt2:123
-#, fuzzy
-msgid "This list's archives do not contain any file."
-msgstr "Het archief van deze lijst is leeg.\n"
 
 #: web_tt2/help_user_options.tt2:46
 msgid ""
@@ -5279,12 +5053,6 @@ msgid ""
 "This parameter indicates if the tagging is optional or required for a list."
 msgstr ""
 
-#: web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates on which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-
 #: web_tt2/help_editlist.tt2:155
 msgid ""
 "This parameter indicates the subject of the list, which is sent in response "
@@ -5304,6 +5072,12 @@ msgid ""
 "This parameter indicates whether the list should feature in the output "
 "generated in response to a LISTS command or should be shown in the list "
 "overview of the web-interface."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:177
+msgid ""
+"This parameter indicates which part of the message is used to perform "
+"automatic tagging."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:67
@@ -5502,18 +5276,11 @@ msgstr ""
 msgid "To contact this service administrator :"
 msgstr "Om in contact te komen met uw lijst beheerder :"
 
-#. (list.name,conf.sympa,authkey,conf.sympa,authkey)
-#: mail_tt2/send_auth.tt2:18
+#. (list.name)
+#: mail_tt2/send_auth.tt2:16
 #, fuzzy
-msgid ""
-"To distribute the attached message in list %1 :\n"
-"\n"
-"[% FILTER escape_url %]mailto:%2?subject=CONFIRM %3"
-msgstr ""
-"Om het toegevoegde bericht te distribueren in de lijst %s :\n"
-"mailto:%s?subject=CONFIRM%%20%s\n"
-"Of zend een bericht naar %s met het volgende onderwerp :\n"
-"CONFIRM %s\n"
+msgid "To distribute the attached message in list %1, folow the link below :"
+msgstr "Om de bijgevoegde mail te distribueren op lijst %1:"
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:20
@@ -5606,6 +5373,10 @@ msgstr "Aan: %1"
 msgid "Toggle Selection"
 msgstr "Wissel selectie"
 
+#: web_tt2/error.tt2:76
+msgid "Topic \"other\" is a reserved word"
+msgstr ""
+
 #: web_tt2/suboptions.tt2:20
 #, fuzzy
 msgid "Topic subscription :"
@@ -5613,7 +5384,7 @@ msgstr "Uitschrijven :"
 
 #: src/List.pm:950
 #, fuzzy
-msgid "Topics for message categorisation"
+msgid "Topics for message categorization"
 msgstr "Onderwerpen voor de lijst"
 
 #: src/List.pm:1141
@@ -5683,48 +5454,47 @@ msgstr "URL"
 msgid "Unable to access directory %s : %m"
 msgstr "Fout bij benaderen van map %s : %m"
 
-#. (listname,key)
+#. (i_err.key)
+#: web_tt2/error.tt2:18
+#, fuzzy
+msgid "Unable to access the message authenticated with key %1"
+msgstr "Geen toegang tot het bericht met sleutel %s.\n"
+
+#. (key)
+#: mail_tt2/message_report.tt2:63
+#, fuzzy
+msgid ""
+"Unable to access the message authenticated with key %1 because of a wrong "
+"format."
+msgstr "Geen toegang tot het bericht met sleutel %s.\n"
+
+#. (key)
 #: mail_tt2/message_report.tt2:60
+#, fuzzy
+msgid "Unable to access the message authenticated with key %1."
+msgstr "Geen toegang tot het bericht met sleutel %s.\n"
+
+#. (key,listname)
+#: mail_tt2/listmaster_notification.tt2:299
+#, fuzzy
+msgid "Unable to access the message authenticated with key '%1' for list '%2'."
+msgstr "Geen toegang tot het bericht met sleutel %s.\n"
+
+#. (listname,key)
+#: mail_tt2/message_report.tt2:57
 #, fuzzy
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
 "Warning : this message may already have been sent by one of the list's "
-"editor.\n"
+"editor."
 msgstr ""
 "Onmogelijk om het gemodereerde bericht op lijst %s met sleutel %s te "
 "benaderen.\n"
 "Dit bericht kan al verstuurd zijn door een van de moderators van de lijst\n"
 ".\n"
 
-#. (i_err.key)
-#: web_tt2/error.tt2:19
-#, fuzzy
-msgid "Unable to access to the message authenticated with key %1"
-msgstr "Geen toegang tot het bericht met sleutel %s.\n"
-
-#. (key)
-#: mail_tt2/message_report.tt2:68
-#, fuzzy
-msgid ""
-"Unable to access to the message authenticated with key %1 because of a wrong "
-"format.\n"
-msgstr "Geen toegang tot het bericht met sleutel %s.\n"
-
-#. (key)
-#: mail_tt2/message_report.tt2:64
-#, fuzzy
-msgid "Unable to access to the message authenticated with key %1.\n"
-msgstr "Geen toegang tot het bericht met sleutel %s.\n"
-
-#. (key,listname)
-#: mail_tt2/listmaster_notification.tt2:302
-#, fuzzy
-msgid ""
-"Unable to access to the message authenticated with key '%1' for list '%2'."
-msgstr "Geen toegang tot het bericht met sleutel %s.\n"
-
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:301
 #, fuzzy
 msgid "Unable to add file '%1' to archives."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
@@ -5734,13 +5504,14 @@ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 msgid "Unable to change directory."
 msgstr "Fout bij benaderen van map %s : %m"
 
-#. (new_listname,check_smtp,listname)
-#: mail_tt2/listmaster_notification.tt2:292
-msgid "Unable to check listname '%1' for smtp on '%2' to rename list '%3'"
-msgstr ""
+#. (new_listname)
+#: mail_tt2/listmaster_notification.tt2:289
+#, fuzzy
+msgid "Unable to check listname '%1' on SMTP server"
+msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
 
 #. (path,listname)
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
@@ -5748,39 +5519,57 @@ msgstr ""
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
 
-#: mail_tt2/listmaster_notification.tt2:283
+#. (dir)
+#: mail_tt2/listmaster_notification.tt2:262
+#, fuzzy
+msgid "Unable to create directory '%1'."
+msgstr "Fout bij benaderen van map %s : %m"
+
+#: mail_tt2/listmaster_notification.tt2:280
 #, fuzzy
 msgid "Unable to create list."
 msgstr "Fout bij benaderen van map %s : %m"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:300
 #, fuzzy
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "Aanvraag voor uitschrijven bij lijst %s"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:90
+msgid "Unable to describe, the document '%1' does not exist"
+msgstr ""
+
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:269
+#: mail_tt2/listmaster_notification.tt2:267
 #, fuzzy
 msgid "Unable to erase file '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
 #. (arc_file,listname,path)
-#: mail_tt2/listmaster_notification.tt2:274
-msgid ""
-"Unable to find archive '%1' for list '%2'[%IF path%] : unable to read '%3'."
-msgstr ""
+#: mail_tt2/listmaster_notification.tt2:272
+#, fuzzy
+msgid "Unable to find archive '%1' for list '%2'"
+msgstr "Kon email voor lijst %1 niet veranderen"
 
-#. (listname,path)
-#: mail_tt2/listmaster_notification.tt2:275
-msgid "Unable to find archive for list '%1'[%IF path%] : unable to read '%3'."
-msgstr ""
-
-#. (month,listname,dir)
+#. (listname)
 #: mail_tt2/listmaster_notification.tt2:273
-msgid ""
-"Unable to find month '%1' for list '%2'[%IF dir%] : unable to readdir '%3'."
-msgstr ""
+#, fuzzy
+msgid "Unable to find archive for list '%1'"
+msgstr "Kon email voor lijst %1 niet veranderen"
+
+#. (i_err.month)
+#: web_tt2/error.tt2:9
+#, fuzzy
+msgid "Unable to find month '%1'"
+msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#. (month,listname)
+#: mail_tt2/listmaster_notification.tt2:271
+#, fuzzy
+msgid "Unable to find month '%1' for list '%2'"
+msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -5794,7 +5583,7 @@ msgid ""
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:283
 #, fuzzy
 msgid "Unable to get family for list '%1'."
 msgstr "Kon email voor lijst %1 niet veranderen"
@@ -5805,21 +5594,15 @@ msgstr "Kon email voor lijst %1 niet veranderen"
 msgid "Unable to get message '%1'."
 msgstr "Ik kan het bericht niet vinden om te verwijderen"
 
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:282 web_tt2/error.tt2:12
 #, fuzzy
 msgid "Unable to load create_list templates."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
-#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:281 web_tt2/error.tt2:11
 #, fuzzy
 msgid "Unable to load list topics."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
-
-#. (dir)
-#: mail_tt2/listmaster_notification.tt2:262
-#, fuzzy
-msgid "Unable to make directory '%1'."
-msgstr "Fout bij benaderen van map %s : %m"
 
 #. (directory)
 #: mail_tt2/listmaster_notification.tt2:261
@@ -5839,32 +5622,28 @@ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 msgid "Unable to open spool '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
+#. (u_err.path)
+#: web_tt2/error.tt2:85
+#, fuzzy
+msgid "Unable to read %1 : empty document"
+msgstr "Unable to read %1 : leeg document"
+
 #. (filepath)
 #: mail_tt2/listmaster_notification.tt2:258
 #, fuzzy
 msgid "Unable to read file : '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
+#: mail_tt2/listmaster_notification.tt2:284
+#, fuzzy
+msgid "Unable to reload list"
+msgstr "Fout bij benaderen van map %s : %m"
+
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:287
-msgid "Unable to reload list[%IF new_listname %] with new listname '%1'."
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:276
-msgid "Unable to remove archive : no message id found."
-msgstr ""
-
-#. (old,new)
-#: mail_tt2/listmaster_notification.tt2:267
+#: mail_tt2/listmaster_notification.tt2:284
 #, fuzzy
-msgid "Unable to rename archive directory '%1' into '%2'."
-msgstr "Fout bij benaderen van map %s : %m"
-
-#. (old,new)
-#: mail_tt2/listmaster_notification.tt2:268
-#, fuzzy
-msgid "Unable to rename bounces directory '%1' into '%2'."
-msgstr "Fout bij benaderen van map %s : %m"
+msgid "Unable to reload list with new listname '%1'."
+msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
 #. (old,new)
 #: mail_tt2/listmaster_notification.tt2:266
@@ -5878,28 +5657,28 @@ msgstr "Fout bij benaderen van map %s : %m"
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
-#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:274
 #, fuzzy
 msgid "Unable to send archive : no message id found."
 msgstr "Ik kan het bericht niet vinden om te verwijderen"
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:270
+#: mail_tt2/listmaster_notification.tt2:268
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:297
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:298
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:270
 #, fuzzy
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "Tot die tijd bevelen we aan om %1 te verwijderen"
@@ -5911,7 +5690,7 @@ msgid "Unable to write file : '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
 
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:302
 #, fuzzy
 msgid "Unable to write file zip '%1'."
 msgstr "Het helpbestand kan niet gelezen worden : %s\n"
@@ -5923,6 +5702,11 @@ msgstr "Maak al uw abonnementen gelijk met emailadres"
 #: web_tt2/d_read.tt2:103 web_tt2/d_read.tt2:218 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
 msgstr "Unknown"
+
+#: web_tt2/error.tt2:39
+#, fuzzy
+msgid "Unknown action"
+msgstr "%1 : onbekende actie"
 
 #. (name)
 #: mail_tt2/listmaster_notification.tt2:250
@@ -6005,13 +5789,14 @@ msgstr ""
 
 #. (sub,old_email)
 #: mail_tt2/listmaster_notification.tt2:254
-msgid "Update subscriber '%1' in DB failed[% IF old_email %] (old email : %2)"
+msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
 #. (user)
 #: mail_tt2/listmaster_notification.tt2:252
-msgid "Update user '%1' in DB failed[% IF old_email %] (old email : %2)"
-msgstr ""
+#, fuzzy
+msgid "Update user '%1' in DB failed"
+msgstr "Wijzig"
 
 #. (visible_path)
 #: web_tt2/d_read.tt2:359
@@ -6021,6 +5806,18 @@ msgstr "Upload een bestand in de map %1"
 #: web_tt2/d_read.tt2:361
 msgid "Upload a file inside the folder SHARED"
 msgstr "Upload een bestand in de map SHARED"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:36
+#, fuzzy
+msgid "User %1 has been invited to subscribe in list %2."
+msgstr "Gebruiker %s is uitgenodigd om zich in te schrijven voor lijst %s.\n"
+
+#. (notice.email,notice.listname)
+#: mail_tt2/command_report.tt2:33
+#, fuzzy
+msgid "User %1 is now subscriber of list %2."
+msgstr "Gebruiker %s is nu geabonneerd op lijst %s.\n"
 
 #: web_tt2/show_cert.tt2:8
 msgid "User certificate belong to"
@@ -6152,6 +5949,11 @@ msgstr "Web archief grootte"
 msgid "Web forum ML"
 msgstr ""
 
+#: mail_tt2/listmaster_notification.tt2:245
+#: mail_tt2/listmaster_notification.tt2:319
+msgid "Web interface"
+msgstr ""
+
 #: web_tt2/help_editfile.tt2:29
 msgid "Welcome message"
 msgstr "Welkomstbericht"
@@ -6236,10 +6038,33 @@ msgstr "Wie kan zien"
 msgid "Who can view list information"
 msgstr "Wie kan lijstinformatie zien"
 
+#: web_tt2/error.tt2:38
+#, fuzzy
+msgid "Wrong parameters"
+msgstr "Data bronnen configuratie"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:44
+#, fuzzy
+msgid "You are already logged in as %1"
+msgstr "U bent al ingelogd als %1"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:62
+#, fuzzy
+msgid "You are already subscribed to the list %1"
+msgstr "U bent al geabonneerd op de lijst %1"
+
 #. (list)
 #: web_tt2/subrequest.tt2:70
 msgid "You are already subscriber of list %1"
 msgstr "U bent al abonnee van lijst %1"
+
+#. (u_err.list)
+#: web_tt2/error.tt2:58
+#, fuzzy
+msgid "You are not subscribed to list %1"
+msgstr "U bent niet geabonneerd op de lijst %1"
 
 #. (list,email)
 #: web_tt2/sigrequest.tt2:16
@@ -6254,6 +6079,18 @@ msgstr "U bent ingeschreven sinds"
 #: web_tt2/create_list_request.tt2:17
 msgid "You are the privileged owner of this list"
 msgstr "U bent de eigenaar van deze lijst"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:13
+#, fuzzy
+msgid "You asked for your e-mail address to be added to list '%1'."
+msgstr "Uw emailadres (%1) is verwijderd van lijst %2@%3"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:10
+#, fuzzy
+msgid "You asked for your e-mail address to be removed from list '%1'."
+msgstr "Uw emailadres (%1) is verwijderd van lijst %2@%3"
 
 #: web_tt2/edit_list_request.tt2:4
 msgid "You can choose below a subset of parameters to edit :"
@@ -6292,6 +6129,18 @@ msgstr ""
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
 msgid "You can subscribe again :"
 msgstr "U kunt zich opnieuw inschrijven :"
+
+#: web_tt2/error.tt2:50
+#, fuzzy
+msgid ""
+"You did not choose a password, request a reminder of the initial password"
+msgstr ""
+"U heeft geen wachtwoord gekozen, kies een herinering voor uw eerste "
+"wachtwoord"
+
+#: web_tt2/error.tt2:72
+msgid "You did not select an action to perform"
+msgstr ""
 
 #: web_tt2/notice.tt2:68
 #, fuzzy
@@ -6332,7 +6181,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/error.tt2:130
+#: web_tt2/error.tt2:126 web_tt2/error.tt2:47
 msgid "You need to login"
 msgstr "U moet nog inloggen"
 
@@ -6348,6 +6197,27 @@ msgstr ""
 msgid "You need to login."
 msgstr "U moet nog inloggen"
 
+#: web_tt2/error.tt2:68
+#, fuzzy
+msgid "You need to provide list name"
+msgstr "U moet nog inloggen"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:22
+#, fuzzy
+msgid ""
+"You requested a subscription reminder to be sent to each subscriber of list %"
+"1"
+msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
+
+#. (-)
+#: mail_tt2/request_auth.tt2:27
+#, fuzzy
+msgid ""
+"You requested a subscription reminder to be sent to each subscriber of list "
+"'*'"
+msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
+
 #. (list)
 #: mail_tt2/sendpasswd.tt2:16
 msgid "You requested a subscription to %1 mailing list."
@@ -6356,6 +6226,18 @@ msgstr "U vroeg om een inschrijving voor de %1 mailinglijst."
 #. (list)
 #: web_tt2/subrequest.tt2:17
 msgid "You requested a subscription to list %1"
+msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:19
+#, fuzzy
+msgid "You requested a user removal from list %1."
+msgstr "U vroeg om uitgeschreven te worden van de lijst %1"
+
+#. (list.name)-)
+#: mail_tt2/request_auth.tt2:16
+#, fuzzy
+msgid "You requested a user subscription in list %1."
 msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
 
 #. (list)
@@ -6385,6 +6267,12 @@ msgstr "U heeft een email ontvangen met een herinnering over uw wachtwoord."
 #, fuzzy
 msgid "You won't receive the signed messages from your lists."
 msgstr "Om het laatste bericht van lijst <list> te krijgen"
+
+#. (u_err.dir)
+#: web_tt2/error.tt2:100
+#, fuzzy
+msgid "You're not authorized to upload an INDEX.HTML in %1"
+msgstr "U bent niet geautoriseerd om een INDEX.HTML te uploaden in %1"
 
 #: web_tt2/your_lists.tt2:7
 #, fuzzy
@@ -6432,6 +6320,12 @@ msgstr "Uw authentificatie certificaat verloopt op %1."
 #, fuzzy
 msgid "Your bouncing address in list %1"
 msgstr "Bouncing adres"
+
+#. (notice.listname)
+#: mail_tt2/command_report.tt2:48
+#, fuzzy
+msgid "Your configuration regarding list %1 has been updated."
+msgstr "Uw configuratie voor lijst %s is gewijzigd.\n"
 
 #. (filename,list.name,list.host,rejected_by)
 #: mail_tt2/d_reject_shared.tt2:8
@@ -6494,16 +6388,17 @@ msgid "Your list is created."
 msgstr "Uw lijst is aangemaakt."
 
 #. (list.name)
-#: mail_tt2/message_report.tt2:51
+#: mail_tt2/message_report.tt2:50
+#, fuzzy
 msgid ""
 "Your message could not be sent because its size \n"
-"was over the maximum size allowed on this list.\n"
+"was over the maximum size allowed on this list."
 msgstr ""
 "Uw bericht kon niet worden verstuurd omdat \n"
 "hij groter was dan het maximum toegestaan op deze lijst.\n"
 
 #. (list.name)
-#: mail_tt2/message_report.tt2:104
+#: mail_tt2/message_report.tt2:99
 #, fuzzy
 msgid "Your message for list %1 has been forwarded to editor(s)"
 msgstr "Uw bericht voor lijst %s is doorgestuurd naar de editor(s)\n"
@@ -6517,7 +6412,7 @@ msgid ""
 msgstr "Uw bericht voor lijst %s is doorgestuurd naar de editor(s)\n"
 
 #. (conf.host)
-#: mail_tt2/message_report.tt2:89
+#: mail_tt2/message_report.tt2:84
 msgid ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason :"
@@ -6526,6 +6421,11 @@ msgstr ""
 #: mail_tt2/reject.tt2:2
 msgid "Your message has been rejected."
 msgstr "Uw bericht is afgwezen"
+
+#: mail_tt2/command_report.tt2:22
+#, fuzzy
+msgid "Your message signature was successfully verified using S/MIME."
+msgstr "Uw handtekening onder dit bericht was succesvol gechecked met S/MIME"
 
 #: mail_tt2/command_report.tt2:97
 #, fuzzy
@@ -6555,6 +6455,12 @@ msgid ""
 "e-mail box to provide your password below."
 msgstr "Controleer uw email om het wachtwoord hieronder in te kunnen geven."
 
+#: web_tt2/error.tt2:51
+msgid ""
+"Your password is stored in an LDAP directory, therefore Sympa cannot post "
+"you a reminder"
+msgstr ""
+
 #: web_tt2/login_menu.tt2:31
 #, fuzzy
 msgid "Your preferences"
@@ -6563,6 +6469,18 @@ msgstr "voorkeursinstellingen"
 #: web_tt2/notice.tt2:5
 msgid "Your request has been forwarded to the list owner"
 msgstr "Uw aanvraag is doorgestuurd naar de eigenaar van de lijst"
+
+#: mail_tt2/command_report.tt2:27
+#, fuzzy
+msgid ""
+"Your request to subscribe/unsubscribe has been forwarded to the list's\n"
+"owners for approval. You will receive a notification when you have\n"
+"been subscribed (or unsubscribed) to the list."
+msgstr ""
+"Uw aanvraag voor in- of uitschrijven is doorgestuurd naar de lijsteigenaars "
+"voor \n"
+"toestemming. U zult nog een bevestiging ontvangenn wanneer u bent \n"
+"in- of uitgeschreven voor de lijst.\n"
 
 #. (user.email)
 #: mail_tt2/welcome.tt2:11 mail_tt2/welcome.tt2:31
@@ -6592,36 +6510,6 @@ msgstr ""
 
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
-msgstr ""
-
-#. (...)
-#: src/tt2.pl:124
-msgid "[% FILTER escape_url %] %1 %2 ..."
-msgstr ""
-
-#. (conf.sympa,list.name,modkey)-)
-#: mail_tt2/moderate.tt2:21
-msgid "[% FILTER escape_url %]mailto:%1?subject=DISTRIBUTE %2 %3"
-msgstr ""
-
-#. (conf.sympa,list.name,modkey)-)
-#: mail_tt2/moderate.tt2:26
-msgid "[% FILTER escape_url %]mailto:%1?subject=REJECT %2 %3"
-msgstr ""
-
-#. (conf.sympa,l,user.email)
-#: mail_tt2/global_remind.tt2:14
-msgid "[% FILTER escape_url %]mailto:%1?subject=sig %2 %3"
-msgstr ""
-
-#. (conf.email,conf.host,list.name,user.email)
-#: mail_tt2/expire_warning2.tt2:12 mail_tt2/remind.tt2:11
-msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sig %3 %4"
-msgstr ""
-
-#. (conf.email,conf.host,list.name)
-#: mail_tt2/expire_deletion.tt2:12 mail_tt2/removed.tt2:12
-msgid "[% FILTER escape_url %]mailto:%1@%2?subject=sub %3"
 msgstr ""
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
@@ -6808,8 +6696,12 @@ msgstr ""
 msgid "closed"
 msgstr "gesloten"
 
-#: web_tt2/skinsedit.tt2:14 web_tt2/skinsedit.tt2:18
+#: web_tt2/skinsedit.tt2:18
 msgid "color effet"
+msgstr ""
+
+#: web_tt2/skinsedit.tt2:14
+msgid "color lookup"
 msgstr ""
 
 #: src/etc/scenari/visibility.secret:1
@@ -7224,6 +7116,17 @@ msgstr "lokale domein gebruikers of eigenaren toestemming"
 msgid "mails"
 msgstr "Geenmail"
 
+#. (conf.email,conf.host,list.name)
+#: mail_tt2/expire_deletion.tt2:12
+msgid "mailto:%1@%2?subject=sub %3"
+msgstr ""
+
+#. (conf.email,conf.host,list.name,user.email)
+#: mail_tt2/expire_warning2.tt2:12
+msgid ""
+"mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%]"
+msgstr ""
+
 #: wwsympa/wwslib.pm:64
 msgid "message footer"
 msgstr "voetregel van bericht"
@@ -7382,7 +7285,7 @@ msgid "password: %1"
 msgstr "password: %1"
 
 #: src/List.pm:1217
-msgid "percentage of message sent with verp"
+msgid "percentage of list members in VERP mode"
 msgstr ""
 
 #: src/etc/create_list_templates/hotline/comment.tt2:4
@@ -7850,11 +7753,129 @@ msgstr "uw emailadres    : %1"
 msgid "your password : %1"
 msgstr "uw wachtwoord    : %1"
 
+#, fuzzy
+#~ msgid " : unable to readdir '%1'."
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid "Cannot unzip this file "
+#~ msgstr "kan bestand niet uploaden %1"
+
+#, fuzzy
+#~ msgid "Do you really want to remove [% file.value.listname %] ?"
+#~ msgstr "Wilt u het volgende %1 echt verwijderen?"
+
+#, fuzzy
+#~ msgid "Do you really want to remove [% file.value.robot %] ?"
+#~ msgstr "Wilt u het volgende %1 echt verwijderen?"
+
+#, fuzzy
+#~ msgid "Errors while unzipping this file."
+#~ msgstr "Editie van het bestand %1"
+
+#, fuzzy
+#~ msgid "FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 "
+#~ msgstr ""
+#~ "Ter info: commando %s lijst %s van %s %s gevalideerd door %s\n"
+#~ " (geen actie benodigd)\n"
+
+#, fuzzy
+#~ msgid "File not found"
+#~ msgstr "Wissel selectie"
+
+#, fuzzy
+#~ msgid "For further assistance, please contact %1@%2"
+#~ msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
+
+#, fuzzy
+#~ msgid "List %1 does not exist."
+#~ msgstr "Lijst '%s' bestaat niet.\n"
+
+#, fuzzy
+#~ msgid "List '%1' does not exist.\n"
+#~ msgstr "Lijst '%s' bestaat niet.\n"
+
+#, fuzzy
+#~ msgid "There is not any owner defined for the list '%1'"
+#~ msgstr "Er is geen eigenaar voor lijst %1 gevonden."
+
+#, fuzzy
+#~ msgid "This list's archives do not contain any file."
+#~ msgstr "Het archief van deze lijst is leeg.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "To distribute the attached message in list %1 :\n"
+#~ "\n"
+#~ "[% FILTER escape_url %]mailto:%2?subject=CONFIRM %3"
+#~ msgstr ""
+#~ "Om het toegevoegde bericht te distribueren in de lijst %s :\n"
+#~ "mailto:%s?subject=CONFIRM%%20%s\n"
+#~ "Of zend een bericht naar %s met het volgende onderwerp :\n"
+#~ "CONFIRM %s\n"
+
+#, fuzzy
+#~ msgid "Unable to load create_list templates"
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid "Unable to load list topics"
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid "Unable to rename archive"
+#~ msgstr "Resultaat van uw zoekopdracht in het archief"
+
+#, fuzzy
+#~ msgid "Unable to rename archive directory '%1' into '%2'."
+#~ msgstr "Fout bij benaderen van map %s : %m"
+
+#, fuzzy
+#~ msgid "Unable to rename bounces"
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid "Unable to rename bounces directory '%1' into '%2'."
+#~ msgstr "Fout bij benaderen van map %s : %m"
+
+#, fuzzy
+#~ msgid "You requested a user of list %1 to be added."
+#~ msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
+
+#, fuzzy
+#~ msgid "You requested a user of list %1 to be removed."
+#~ msgstr "U vroeg om ingeschreven te worden bij de lijst %1"
+
+#, fuzzy
+#~ msgid "         %1 "
+#~ msgstr "Thuispagina        : %1"
+
+#, fuzzy
+#~ msgid " %1 / %2 "
+#~ msgstr "pagina %1 / %2"
+
+#, fuzzy
+#~ msgid " - Missing argument %1"
+#~ msgstr "Missend argument %1"
+
+#, fuzzy
+#~ msgid " - Unable to load create_list templates"
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid " - Unable to load list topics"
+#~ msgstr "Het helpbestand kan niet gelezen worden : %s\n"
+
+#, fuzzy
+#~ msgid " - You need to login"
+#~ msgstr "U moet nog inloggen"
+
+#, fuzzy
+#~ msgid " : %1 "
+#~ msgstr "Aan: %1"
+
 #~ msgid "%1 : No such file"
 #~ msgstr "%1 : Bestand niet gevonden"
-
-#~ msgid "%1 : incorrect name"
-#~ msgstr "%1 : foute naam"
 
 #~ msgid "%1: action failed"
 #~ msgstr "%1: actie mislukt"
@@ -8289,10 +8310,6 @@ msgstr "uw wachtwoord    : %1"
 #~ msgstr "ALL"
 
 #, fuzzy
-#~ msgid "Archive not found"
-#~ msgstr "Wissel selectie"
-
-#, fuzzy
 #~ msgid "Could not rename the bounces directory"
 #~ msgstr "kan map niet maken %1"
 
@@ -8333,10 +8350,6 @@ msgstr "uw wachtwoord    : %1"
 #, fuzzy
 #~ msgid "May not send the message"
 #~ msgstr "Wie kan berichten sturen"
-
-#, fuzzy
-#~ msgid "Missing argument: %1"
-#~ msgstr "Missend argument %1"
 
 #, fuzzy
 #~ msgid "No SOAP service available on this server"
@@ -8380,10 +8393,6 @@ msgstr "uw wachtwoord    : %1"
 #~ msgstr "emailadres beveiligingsmethode"
 
 #, fuzzy
-#~ msgid "The archive is empty"
-#~ msgstr "Nieuwste lijsten"
-
-#, fuzzy
 #~ msgid "The document %1 is awaiting moderation1"
 #~ msgstr "Geen berichten om te modereren"
 
@@ -8393,20 +8402,12 @@ msgstr "uw wachtwoord    : %1"
 #~ msgstr "Geen bericht om te modereren voor lijst %1"
 
 #, fuzzy
-#~ msgid "Unable to check list using smtp"
-#~ msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
-
-#, fuzzy
 #~ msgid "Unable to load the templates required to create a list"
 #~ msgstr "Ik kan het bericht niet vinden om te verwijderen"
 
 #, fuzzy
 #~ msgid "Unable to open the scenari directory"
 #~ msgstr "Fout bij benaderen van map %s : %m"
-
-#, fuzzy
-#~ msgid "Update failed"
-#~ msgstr "Wijzig"
 
 #, fuzzy
 #~ msgid "You don't have required privileges to perform this action"
