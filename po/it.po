@@ -49,12 +49,8 @@ msgstr "%1 risultato(i) nel campo From: del messaggio"
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:252
-msgid " (old email : %1)"
-msgstr ""
-
-#. (old_email)
 #: mail_tt2/listmaster_notification.tt2:254
-msgid " (old email : %2)"
+msgid " (old email : %1)"
 msgstr ""
 
 # nlsref 6,2
@@ -3225,6 +3221,11 @@ msgstr "Nessun nome specificato"
 msgid "No owner is defined for list %1."
 msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
 
+#: web_tt2/error.tt2:15
+#, fuzzy
+msgid "No owner is defined for the list"
+msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
+
 #: mail_tt2/listmaster_notification.tt2:287
 #, fuzzy
 msgid "No owner is defined for the list '%1'"
@@ -5082,11 +5083,6 @@ msgstr "Ci sono %1 messaggi da moderare per la lista '%2@%3'"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Documenti condivisi"
-
-#: web_tt2/error.tt2:15
-#, fuzzy
-msgid "There is not any owner defined for the list"
-msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7698,17 +7694,6 @@ msgstr ""
 msgid "mails"
 msgstr "Email"
 
-#. (conf.email,conf.host,list.name)
-#: mail_tt2/expire_deletion.tt2:12
-msgid "mailto:%1@%2?subject=sub %3"
-msgstr ""
-
-#. (conf.email,conf.host,list.name,user.email)
-#: mail_tt2/expire_warning2.tt2:12
-msgid ""
-"mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%]"
-msgstr ""
-
 # nlsref 15,4
 #: wwsympa/wwslib.pm:64
 msgid "message footer"
@@ -8376,6 +8361,10 @@ msgstr "Il tuo indirizzo email     :%1"
 #: mail_tt2/sendpasswd.tt2:33
 msgid "your password : %1"
 msgstr "La tua password : %"
+
+#, fuzzy
+#~ msgid "There is not any owner defined for the list"
+#~ msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
 
 # nlsref 6,2
 #, fuzzy

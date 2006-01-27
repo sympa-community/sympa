@@ -57,12 +57,8 @@ msgstr "%1 Treffer im Absender-Feld der Nachricht"
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:252
-msgid " (old email : %1)"
-msgstr ""
-
-#. (old_email)
 #: mail_tt2/listmaster_notification.tt2:254
-msgid " (old email : %2)"
+msgid " (old email : %1)"
 msgstr ""
 
 # nlsref 6,2
@@ -3226,6 +3222,11 @@ msgstr "Kein Name angegeben"
 msgid "No owner is defined for list %1."
 msgstr "Es ist kein Eigentümer für die Liste %1 definiert."
 
+#: web_tt2/error.tt2:15
+#, fuzzy
+msgid "No owner is defined for the list"
+msgstr "Es ist kein Eigentümer für die Liste %1 definiert."
+
 #: mail_tt2/listmaster_notification.tt2:287
 #, fuzzy
 msgid "No owner is defined for the list '%1'"
@@ -5043,11 +5044,6 @@ msgstr "%1 Nachrichten für die Liste %2@%3 müssen moderiert werden"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " Die neuesten gemeinsame Dokumente "
-
-#: web_tt2/error.tt2:15
-#, fuzzy
-msgid "There is not any owner defined for the list"
-msgstr "Es ist kein Eigentümer für diese Liste definiert"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7602,17 +7598,6 @@ msgstr "Benutzer der lokalen Domäne oder nach Bestätigung durch den Eigentümer"
 msgid "mails"
 msgstr "E-Mails"
 
-#. (conf.email,conf.host,list.name)
-#: mail_tt2/expire_deletion.tt2:12
-msgid "mailto:%1@%2?subject=sub %3"
-msgstr ""
-
-#. (conf.email,conf.host,list.name,user.email)
-#: mail_tt2/expire_warning2.tt2:12
-msgid ""
-"mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%]"
-msgstr ""
-
 # nlsref 15,4
 #: wwsympa/wwslib.pm:64
 msgid "message footer"
@@ -8266,6 +8251,10 @@ msgstr "Ihre E-Mail Adresse   : %1"
 #: mail_tt2/sendpasswd.tt2:33
 msgid "your password : %1"
 msgstr "Ihr Passwort : %1"
+
+#, fuzzy
+#~ msgid "There is not any owner defined for the list"
+#~ msgstr "Es ist kein Eigentümer für diese Liste definiert"
 
 # nlsref 6,2
 #, fuzzy
