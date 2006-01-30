@@ -6,7 +6,39 @@ Pas de chgt
     Archives
 
 A changer
-    o remplacer tous les accès direct à Conf wwsconf par get_robot_conf()
+    o remplacer tous les accès direct à Conf wwsconf par
+    get_robot_conf()
+      X soap/SympaTransport.pm
+      o soap/sympa_soap_server.fcgi
+      o soap/sympasoap.pm
+      o src/etc/script/arc2webarc.pl
+      o src/etc/script/crypt_passwd.pl
+      o src/etc/script/init_comment.pl
+      o src/etc/script/load_subscribers.pl
+      o src/etc/script/mod2html.pl
+      o src/etc/script/p12topem.pl
+      o src/etc/script/testlogs.pl
+      o src/etc/script/tpl2tt2.pl
+      o src/Commands.pm
+      o src/Conf.pm
+      o src/Family.pm
+      o src/Fetch.pm
+      o src/Ldap.pm
+      o src/List.pm
+      o src/Log.pm
+      o src/Message.pm
+      o src/admin.pm
+      o src/alias_manager.pl
+      o src/mail.pm
+      o src/sympa.pl
+      o src/sympa_wizard.pl
+      o src/task_manager.pl
+      o src/tools.pl
+      o wwsympa/Auth.pm
+      o wwsympa/archived.pl
+      o wwsympa/bounced.pl
+      o wwsympa/wwslib.pm
+      o wwsympa/wwsympa.fcgi
     X BD (tables subscriber et admin)
        X dans List.pm
        X dans les scripts de creation

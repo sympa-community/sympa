@@ -12727,7 +12727,7 @@ sub d_test_existing_and_rights {
      my $filetopic = $list->tag_topic($in{'message_id'},$list_topics,'sender');
 
      my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
-		      'Message-ID' => $in{'message_id'}}, 
+			       'Message-ID' => $in{'message_id'}}, 
 	         'subject' => $in{'subject'},
 		 'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
 		 'from'=> $from,

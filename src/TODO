@@ -3,16 +3,16 @@ X Changer param out de List::get_lists()
   peut pas gÃ©rer le cas ou il renvoie undef (transformÃ© en un tab avec la premiÃ¨re
   entrÃ©e qui est undef)
 
-Pb de droits pour les rep bin, doc, etc, locale, sample (root)
+x Pb de droits pour les rep bin, doc, etc, locale, sample (root)
 
-Pb droit sur /home/sympa/arc (root)
+X Pb droit sur /home/sympa/arc (root)
 
-Pb de compilation des binaires C
+o Pb de compilation des binaires C
 
 Ajouter un HOWTO-virtualdomain qui explique les manip et fournir un
   exemple de robot.conf
 
-Ajouter instruct d'nstall aprÃ¨s le make nstall :
+x Ajouter instruct d'nstall aprÃ¨s le make nstall :
 * sendmail
   + alias pour sympa, listmaster,...
   + utilisation SMRSH (configure --bindir=/etc/smrsh)
@@ -30,10 +30,11 @@ Pb avec Mandrake :
   o creation utilisateur sympa
   o msgfmt pas dispo par défaut (gettext à ajouter dans dépendance)
   o MHonArc::UTF8 pas installé
-  o Regexp::Common pas installé
+  o Regexp::Common pas installé (pb installé dans /usr/locale/mhonarc)
   o Pb setloate(en_US) au démarage sympa.pl
   o Unable to create required directory '/home/sympa/bounce'
-
+  X MAILERPROGDIR pas bien initialisé
+  o confusion arguments configure : --xxdir et --with-xxdir
   
 o Un script à lancer pour initialiser la DB
 o Pb : base et tables crées par wwsympa=======
@@ -55,4 +56,5 @@ o Traductions :
     o Subject / Sujet ou objet
     o supprimé / retiré / désabonné
     o feature / action / operation
+o restaurer choix langue sur page accueil
     

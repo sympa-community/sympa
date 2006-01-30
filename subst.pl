@@ -30,7 +30,12 @@ foreach $src (@ARGV) {
        die "Missing INSTALLDIR variable";
    }
 
-   my $dest = "$ENV{'DESTDIR'}$ENV{'INSTALLDIR'}/$src";
+   my $dest;
+   if (defined $ENV{'INSTALLNAME'}) {
+       $dest = "$ENV{'DESTDIR'}$ENV{'INSTALLDIR'}/$ENV{'INSTALLNAME'}";
+   }else {
+       $dest = "$ENV{'DESTDIR'}$ENV{'INSTALLDIR'}/$src";
+   }
 
    if (-f $dest) {
       print STDERR "Overwriting $dest\n";

@@ -50,7 +50,7 @@ AC_SUBST(CGIDIR)
 
 ## location of icons
 ICONSDIR='/var/www/icons'
-AC_ARG_WITH(iconsdir, [  --with-iconsdir=DIR     web interface icons in DIR  (default /home/httpd/icons)], [ICONSDIR="$withval"])
+AC_ARG_WITH(iconsdir, [  --with-iconsdir=DIR     web interface icons in DIR  (default /var/www/icons)], [ICONSDIR="$withval"])
 AC_SUBST(ICONSDIR)
 
 ## location of user executables

@@ -44,7 +44,7 @@ makedir:
 installtemplates:
 	@echo
 	@echo "Installing web templates..."
-		( \
+		@( \
 		PERL=$(PERL); export PERL; \
 		UMASK=0644; export UMASK; \
 		INSTALLDIR=$(ETCBINDIR)/web_tt2; export INSTALLDIR; \

@@ -35,6 +35,7 @@ pot:
 	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? web_tt2/*.tt2 mail_tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/* src/etc/global_task_models/* src/etc/list_task_models/* src/etc/create_list_templates/*/*
 
 install: $(MOFILES)
+	@( \
 	targetdir='$(DESTDIR)$(LOCALEDIR)'; \
 	languages='$(LINGUAS)'; \
 	for lang in $$languages; do \
@@ -43,7 +44,8 @@ install: $(MOFILES)
 		cat="$$lang.mo"; \
 		echo "Installing mo file...$$dest"; \
 		cp -f $$cat $$dest && chmod 644 $$dest || exit 1; \
-	done
+	done \
+	)
 
 update-po: potfile
 	languages='$(LINGUAS)'; \

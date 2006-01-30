@@ -416,7 +416,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>''},
 
 	      {'name' => 'icons_url',
-	       'default' => '/icons/sympa',
+	       'default' => '/icons',
 	       'query' => 'Icons directory (web) location for Sympa',
 	       'file' => 'wwsympa.conf'},
 

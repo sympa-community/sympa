@@ -272,7 +272,7 @@ in a single software package, including:
         \file {config} file or by
         the robot \textindex {administrator}, the listmaster, defined
         in the \file {[CONFIG]}  global configuration file (listmaster
-        can also be defined for a particular virtual robot).
+        can also be defined for a particular virtual host).
         Privileged operations include the usual \mailcmd {ADD}, \mailcmd
         {DELETE} or \mailcmd {REVIEW} commands, which can be
         authenticated via a one-time password or an S/MIME signature.
@@ -314,7 +314,7 @@ in a single software package, including:
         \textindex{Oracle}, \textindex{Sybase}).
 	(See ref {sec-rdbms}, page~\pageref {sec-rdbms})
 
-    \item \textbf {Virtual robots} : a single \Sympa installation
+    \item \textbf {Virtual hosting} : a single \Sympa installation
         can provide multiple virtual robots with both email and web interface
         customization (See \ref {virtual-robot}, page~\pageref {virtual-robot}).
 
@@ -380,7 +380,7 @@ Other date :
    \item May 2000 List creation feature from the web
    \item Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
    \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
-   \item Jan 2002 Virtual robot, \textindex {LDAP authentication}
+   \item Jan 2002 Virtual hosting, \textindex {LDAP authentication}
    \item Aug 2003 Automatic bounces management
    \item Sep 2003 CAS-base and Shibboleth-based authentication
    \item Dec 2003 Sympa SOAP server
@@ -524,7 +524,7 @@ you will find the latest version, \htmladdnormallink {FAQ} {http://www.sympa.org
 Here is a snapshot of what \Sympa looks like once it has settled down
 on your system. This also illustrates the \Sympa philosophy, I guess.
 Almost all configuration files can be defined for a particular list, for
-a virtual robot or for the whole site.  
+a virtual host or for the whole site.  
  
 \begin {itemize}
 
@@ -556,7 +556,7 @@ a virtual robot or for the whole site.
 	This directory will contain your authorization scenarios.
 	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios},page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
         \dir {[ETCDIR]/\samplerobot/scenari/} for default scenarios of \samplerobot
-        virtual robot and \dir {[EXPL_DIR]/\samplelist/scenari} for scenarios
+        virtual host and \dir {[EXPL_DIR]/\samplelist/scenari} for scenarios
         specific to a particular list 
 
 	\item \dir {[ETCDIR]/data\_sources/}\\
@@ -579,17 +579,17 @@ a virtual robot or for the whole site.
 	Some of the mail robot's replies are defined by templates
 	(\file{welcome.tt2} for SUBSCRIBE). You can overload
 	these template files in the individual list directories or
-        for each virtual robot, but these are the defaults.
+        for each virtual host, but these are the defaults.
 
 	\item \dir {[ETCDIR]/families/}\\
 	Contains family directories of yours (see \ref {ml-creation}, page~\pageref {ml-creation}).
 	Families directories can also be created in \dir {[ETCDIR]/\samplerobot/families/}
 
 	\item \dir {[ETCDIR]/\samplerobot}\\
-        The directory to define the virtual robot \samplerobot dedicated to
+        The directory to define the virtual host \samplerobot dedicated to
         managment of all lists of this domain (list description of \samplerobot are stored
         in \dir {[EXPL_DIR]/\samplerobot}).
-        Those directories for virtual robots have the same structure as  \dir {[ETCDIR]} which is
+        Those directories for virtual hosts have the same structure as  \dir {[ETCDIR]} which is
         the configuration dir of the default robot. 
 
 	\item \dir {[EXPL_DIR]}\\
@@ -600,7 +600,7 @@ a virtual robot or for the whole site.
 	page~\pageref {list-directory}). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
         can be stored in \dir {[EXPL_DIR]/\samplerobot/\samplelist} directory and it
-        is managed by \samplerobot virtual robot.
+        is managed by \samplerobot virtual host.
 
 	\item \dir {[EXPL_DIR]/X509-user-certs}\\
 	The directory where Sympa stores all user's certificates
@@ -628,7 +628,7 @@ a virtual robot or for the whole site.
 
 	\item \file {sympa\_wizard.pl}\\
 	A wizard to edit \file {sympa.conf} and \file {wwsympa.conf}.
-	Maybe it is a good idea to run it at the beginning, but thoses
+	Maybe it is a good idea to run it at the beginning, but these
 	file can also be edited with your favorite text editor. 
 
 	\item \file {wwsympa.fcgi}\\
@@ -694,8 +694,8 @@ a virtual robot or for the whole site.
 	Defines authentication backend organisation ( \textindex {LDAP-based authentication},  \textindex {CAS-based authentication} and sympa internal )
 
 	\item \file {robot.conf}\\
-	It is a subset of \file {sympa.conf} defining a Virtual robot 
-	(one per Virtual robot).
+	It is a subset of \file {sympa.conf} defining a Virtual host 
+	(one per Virtual host).
 
 \end {itemize}
 
@@ -751,12 +751,12 @@ We list these roles below (from the most powerful to the less), along with the r
 
 \subsection {(Super) listmasters}
 
-These are the persons administrating the service, defined in the \file {sympa.conf} file. They inherit the listmaster role in virtual robots and are the default set
-of listmasters for virtual robots.
+These are the persons administrating the service, defined in the \file {sympa.conf} file. They inherit the listmaster role in virtual hosts and are the default set
+of listmasters for virtual hosts.
 
 \subsection {(Robot) listmasters}
 
-You can define a different set of listmasters at a virtual robot level (in the \file {robot.conf} file). They are responsible for moderating mailing lists creation (if list creation is configured this way), editing default templates, providing help to list owners and moderators. Users defined as listmasters get a privileged access to Sympa web interface. Listmasters also inherit the privileges of list owners (for any list defined in the virtual robot), but not the moderator privileges.
+You can define a different set of listmasters at a virtual host level (in the \file {robot.conf} file). They are responsible for moderating mailing lists creation (if list creation is configured this way), editing default templates, providing help to list owners and moderators. Users defined as listmasters get a privileged access to Sympa web interface. Listmasters also inherit the privileges of list owners (for any list defined in the virtual host), but not the moderator privileges.
 
 \subsection {Privileged list owners}
 
@@ -1541,8 +1541,8 @@ sympa-request:     postmaster\\
 sympa-owner:       postmaster\\
 \end {quote}
 
-Note: if you run \Sympa virtual robots, you will need one \mailaddr {sympa}
-alias entry per virtual robot (see virtual robots section, \ref {virtual-robot},
+Note: if you run \Sympa virtual hosts, you will need one \mailaddr {sympa}
+alias entry per virtual host (see virtual hosts section, \ref {virtual-robot},
 page~\pageref {virtual-robot}).
 
 \mailaddr {sympa-request} should be the address of the robot
@@ -1761,7 +1761,7 @@ is still recognized but should not be used anymore.
 \subsection {\cfkeyword {listmaster}} 
 
         The list of e-mail addresses  of listmasters (users authorized to perform
-        global  server commands). Listmasters can be defined for each virtual robot.
+        global  server commands). Listmasters can be defined for each virtual host.
 
         \example {listmaster postmaster@cru.fr,root@cru.fr}
 
@@ -1833,7 +1833,7 @@ see a  nice mailto adresses where others have nothing.
 
 \subsection {\cfkeyword {color\_0}, \cfkeyword {color\_1} ..  \cfkeyword {color\_15}}
   \label {colors}
- They are the color definition for web interface.  Thoses parameters can be overwritten in each virtual robot definition. 
+ They are the color definition for web interface.  These parameters can be overwritten in each virtual host definition. 
  The color are used in the CSS file and unfortunitly they are also in use in some web templates. The sympa admin interface 
  show every colors in use.
  
@@ -1841,7 +1841,7 @@ see a  nice mailto adresses where others have nothing.
  \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
  
  
- 	Deprecated. They are the color definition for previous web interface. Thoses parameters are unused in 5.1 and higher 
+ 	Deprecated. They are the color definition for previous web interface. These parameters are unused in 5.1 and higher 
  version but still availible.style.css, print.css, print-preview.css and fullPage.css
  
 \subsection {\cfkeyword {logo\_html\_definition}}
@@ -1850,10 +1850,10 @@ This parameter allow you to insert in the left top page corner oa piece of html 
 
 \subsection {\cfkeyword {css\_path}}
  
-Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. Thoses CSS files are 
+Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. These CSS files are 
 installed in a part of the web server that can be reached without using sympa web engine. In order to do this edit the 
 robot.conf file and set the css\_path parameter. Then retart the server and use skins module from the "admin sympa" page 
-to install preparsed CSS file. The in order to replace dynamic CSS by thoses static files 
+to install preparsed CSS file. The in order to replace dynamic CSS by these static files 
 set the \cfkeyword {css\_url} parameter.
 
 
@@ -1865,7 +1865,7 @@ definition of colors and in a near futur a complete definition of the skin, user
   
 In order to make sympa web interface faster, it is strongly recommended to install static css file somewhere in your web site. This way sympa will deliver 
 only one page insteed of one page and four css page at each clic. This can be done using css\_url parameter. The parameter must contain the URL of the 
-directory where  style.css, print.css, print-preview.css and fullPage.css are installed. You can make your own a sophisticated new skin editing thoses 
+directory where  style.css, print.css, print-preview.css and fullPage.css are installed. You can make your own a sophisticated new skin editing these 
 files. The server admin module include a CSS administration page that can help you to install static CSS.
 
 
@@ -2015,7 +2015,7 @@ files. The server admin module include a CSS administration page that can help y
 	\default {5 Mb}
 
 	Maximum size allowed for messages distributed by \Sympa.
-	This may be customized per virtual robot or per list by setting the \lparam {max\_size} 
+	This may be customized per virtual host or per list by setting the \lparam {max\_size} 
 	robot or list parameter.
 
         \example {max\_size           2097152}
@@ -2108,7 +2108,7 @@ files. The server admin module include a CSS administration page that can help y
 	If this parameter is set with a SMTP server address, \Sympa will check if alias
 	with the same name as the list you're gonna create already exists on the
 	SMTP server. It is robot specific, i.e. you can specify a different SMTP
-	server for every virtual robot you are running. This is needed if you are
+	server for every virtual host you are running. This is needed if you are
 	running \Sympa on somehost.foo.org, but you handle all your mail on a
 	separate mail relay.
 
@@ -3181,7 +3181,7 @@ int main(int argn, char **argv, char **envp) {
  \end{verbatim}
 \end {quote}
  
-If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
+If you run virtual hosts, then the FastCgiServer(s) can serve multiple robots. 
 Therefore you need to define it in the common section of your Apache configuration
 file.
 
@@ -3410,8 +3410,8 @@ to explore the admin interface, create mailing lists.
 Multiple email addresses can be declared as listmaster via the \file {sympa.conf} (or \file {robot.conf})
 \cfkeyword {listmaster} configuration parameter (see \ref {exp-admin},  page~\pageref {exp-admin}). Note
 that listmasters on the main robot (declared in  \file {sympa.conf}) also have listmaster privileges on
-the virtual robots but they will not receive the various mail notifications (list creation, warnings,...)
-regarding these virtual robots.
+the virtual hosts but they will not receive the various mail notifications (list creation, warnings,...)
+regarding these virtual hosts.
 
 The listmasters should log in with their canonical email address as an identifier (not \textit {listmaster@my.host}).
 The associated password is not declared in sympa.conf ; it will be allocated by \Sympa when first hitting
@@ -3568,8 +3568,8 @@ the \cfkeyword {soap\_url} parameter that defines the URL of the SOAP service co
 to the ScriptAlias you've previously setup in Apache config. 
 
 This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
-also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
-(a single SOAP server will serve all Sympa Virtual robots).
+also for the SOAP server to deduce what Virtual Host is concerned by the current SOAP request 
+(a single SOAP server will serve all Sympa virtual hosts).
 
 \section {The WSDL service description}
 
@@ -4478,7 +4478,7 @@ directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
 \dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
 [STOPPARSE]
 
 Example:
@@ -4627,15 +4627,15 @@ The \texttt{intranetorprivate} \texttt{send} scenario will be hidden (on the web
 at the \samplerobot robot level only.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Virtual robot how to
+% virtual host how to
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter {Virtual robot}
+\chapter {virtual host}
     \label {virtual-robot}
 
 Sympa is designed to manage multiple distinct mailing list servers on
-a single host with a single Sympa installation. Sympa virtual robots
-are like Apache virtual hosting. Sympa virtual robot definition includes
+a single host with a single Sympa installation. Sympa virtual hosts
+are like Apache virtual hosting. Sympa virtual host definition includes
 a specific email address for the robot itself and its lists and also a virtual
 http server. Each robot provides access to a set of lists, each list is
 related to only one robot.
@@ -4644,16 +4644,16 @@ Most configuration parameters can be redefined for each robot except
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
-The Virtual robot name as defined in \Sympa documentation and configuration file refers
-to the Internet domaine of the Virtual robot.
+The virtual host name as defined in \Sympa documentation and configuration file refers
+to the Internet domaine of the virtual host.
 
-Note that the main limitation of virtual robots in Sympa is that you cannot create 
-2 lists with the same name (local part) among your virtual robots.
+Note that the main limitation of virtual hosts in Sympa is that you cannot create 
+2 lists with the same name (local part) among your virtual hosts.
 
-\section {How to create a virtual robot}
+\section {How to create a virtual host}
 
 You don't need to install several Sympa servers. A single \file {sympa.pl} daemon
-and one or more fastcgi servers can serve all virtual robot. Just configure the 
+and one or more fastcgi servers can serve all virtual host. Just configure the 
 server environment in order to accept the new domain definition.
 \begin {itemize}
 \item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) 
@@ -4673,7 +4673,7 @@ bounce+*@your.virtual.domain:          "| [MAILERPROGDIR]/bouncequeue sympa@your
 
 \item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined 
 in the common section of you httpd server can be used by each virtual host. You don't 
-need to run dedicated fascgi server for each virtual robot.
+need to run dedicated fascgi server for each virtual host.
 
 \textit {Examples:} 
 \begin {quote}
@@ -4695,9 +4695,9 @@ FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
 \end{verbatim}
 \end {quote}
 
-\item Create a \file {[ETCDIR]/your.virtual.domain/robot.conf} configuration file for the virtual robot. Its format is a subset of \file {sympa.conf} and is described in the next section ; a sample \file {robot.conf} is provided.
+\item Create a \file {[ETCDIR]/your.virtual.domain/robot.conf} configuration file for the virtual host. Its format is a subset of \file {sympa.conf} and is described in the next section ; a sample \file {robot.conf} is provided.
 
-\item Create a \dir {[EXPL_DIR]/your.virtual.domain/} directory that will contain the virtual robot mailing lists directories. This directory should have the  \textit {sympa} user as its owner and must have read and write access for this user.
+\item Create a \dir {[EXPL_DIR]/your.virtual.domain/} directory that will contain the virtual host mailing lists directories. This directory should have the  \textit {sympa} user as its owner and must have read and write access for this user.
 
 \begin {quote}
 \begin{verbatim}
@@ -4720,8 +4720,8 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {http\_host} \\
 	This hostname will be compared with 'SERVER\_NAME' environment variable in wwsympa.fcgi
-	to determine the current Virtual Robot. You can a path at the end of this parameter if
-	you are running multiple Virtual robots on the same host. 
+	to determine the current Virtual Host. You can a path at the end of this parameter if
+	you are running multiple virtual hosts on the same host. 
 	\begin {quote}
 	\begin{verbatim}Examples: \\
 	http_host  myhost.mydom
@@ -4776,21 +4776,21 @@ environment variable to recognize which robot is in used.
 
 In order to customize the web look and feel, you may edit the CSS definition. CSS are defined in a template named css.tt2. Any robot can use static css file for making Sympa web interface faster. Then you can edit this static definition and change web style. Please refer to  \cfkeyword {css\_path} \cfkeyword {css\_url}. You can also quickly introduce a logo in left top corner of all pages configuring \cfkeyword {logo\_html\_definition} parameter in robot.conf file. 
 
-In addition, if needed, you can customize each virtual robot using its set of templates and authorization scenarios. 
+In addition, if needed, you can customize each virtual host using its set of templates and authorization scenarios. 
 
 \dir {[ETCDIR]/\samplerobot/web\_tt2/},
 \dir {[ETCDIR]/\samplerobot/mail\_tt2/}, 
 \dir {[ETCDIR]/\samplerobot/scenari/} directories are searched when
-loading templates or scenari before searching into \dir {[ETCDIR]} and  \dir {[ETCBINDIR]}. This allows to define different privileges and a different GUI for a Virtual Robot.
+loading templates or scenari before searching into \dir {[ETCDIR]} and  \dir {[ETCBINDIR]}. This allows to define different privileges and a different GUI for a Virtual Host.
 
-\section {Managing multiple virtual robots}
+\section {Managing multiple virtual hosts}
 
-If you are managing more than 2 virtual robots, then you might cinsider moving all the mailing lists in the default
-robot to a dedicated virtual robot located in the \dir {[EXPL_DIR]/\samplerobot/} directory. The main benefit of 
+If you are managing more than 2 virtual hosts, then you might cinsider moving all the mailing lists in the default
+robot to a dedicated virtual host located in the \dir {[EXPL_DIR]/\samplerobot/} directory. The main benefit of 
 this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
-for this robot without inheriting them within other virtual robots.
+for this robot without inheriting them within other virtual hosts.
 
-To create such a virtual robot, you need to create \dir {[EXPL_DIR]/\samplerobot/} and \file {[ETCDIR]/\samplerobot/} directories ; 
+To create such a virtual host, you need to create \dir {[EXPL_DIR]/\samplerobot/} and \file {[ETCDIR]/\samplerobot/} directories ; 
 customize \cfkeyword {host}, \cfkeyword {http\_host} and \cfkeyword {wwsympa\_url} parameters in the \file {[ETCDIR]/\samplerobot/robot.conf} 
 with the same values as the default robot (as defined in \file {sympa.conf} and \file {wwsympa.conf} files).
 
@@ -5373,7 +5373,7 @@ page~\pageref {list-aliases})
 
 The configuration file for the \mailaddr {\samplelist} list is named
 \file {[EXPL_DIR]/\samplerobot/\samplelist/config} 
-(or \file {[EXPL_DIR]/\samplelist/config} if no virtual robot is defined). 
+(or \file {[EXPL_DIR]/\samplelist/config} if no virtual host is defined). 
 \Sympa reloads it into memory whenever this file has changed on disk. The file can either be
 edited via the web interface or directly via your favourite text editor. 
 
@@ -6056,7 +6056,7 @@ lists, and which parameters may be set by owners.
 
 Listmasters are responsible for validating new mailing lists and, depending on the configuration chosen, 
 might be the only ones who can fill out the create list form.The listmaster
-is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, any authenticated user can 
+is defined in \file {sympa.conf} and others are defined at the virtual host level. By default, any authenticated user can 
 request a list creation but newly created are then validated by the listmaster. 
 
 List rejection message and list creation notification message are both
@@ -7002,7 +7002,7 @@ certificate (the certificate subject distinguished name email is the list adress
 Certificate and private key are located in the list directory.
  \item  \lparam {cert} \texttt {robot} the certificate used is then related to
 sympa itself : the certificate subject distinguished name email look like
-sympa@my.domain and files are located in virtual robot etc dir if virtual robot
+sympa@my.domain and files are located in virtual host etc dir if virtual host
 is used otherwise in \dir {[ETCDIR]}.
 \end{itemize}
 

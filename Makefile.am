@@ -252,10 +252,17 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: importantchanges installsrc installwws installwebtt2 installmailtt2 installlocale installman installscript installsample installdir installconfig installdoc installsoap
+install: importantchanges installdir installsrc installwws installwebtt2 installmailtt2 installlocale installman installscript installsample installconfig installdoc installsoap nextstep
+
+nextstep: 
+	@echo ""
+	@echo "#########################################################"
+	@echo "# If you install Sympa for the first time on this server"
+	@echo "# you should check the INSTALL file."
+	@echo "#######################################################"
 
 importantchanges:
-	( 	PERL=$(PERL); export PERL; \
+	@( 	PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		BINDIR=$(SBINDIR); export BINDIR; \
@@ -383,7 +390,7 @@ installscript:
 
 installdir:
 	@echo "Creating required directories"
-	@for dir in $(DIR) $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) ; do \
+	@for dir in $(DIR) $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) $(ETCDIR) $(BINDIR) $(LOCALEDIR) $(DOCDIR) ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			mkdir -p $(DESTDIR)$$dir; \
@@ -402,7 +409,18 @@ installdir:
 			chown $(USER) $(DESTDIR)$(ETCDIR)/$$dir; \
 			chgrp $(GROUP) $(DESTDIR)$(ETCDIR)/$$dir; \
 		fi \
-	done \
+	done; \
+	( \
+		PERL=$(PERL); export PERL; \
+		UMASK=0600; export UMASK; \
+		INSTALLDIR=$(ETCDIR); export INSTALLDIR; \
+		USER=$(USER); export USER;\
+		GROUP=$(GROUP); export GROUP;\
+		INSTALLNAME='README'; export INSTALLNAME; \
+                ETCDIR=$(ETCDIR); export ETCDIR; \
+                ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
+		$(PERL) ./subst.pl src/etc/README_etc \
+	) \
 	fi
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing spool directories..."; \
@@ -418,6 +436,18 @@ installdir:
 		fi \
 	done \
 	fi
+	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
+	echo "First installation : creating archives and bounce directories..."; \
+	for dir in bounce arc ; do \
+		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
+			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
+			mkdir -p $(DESTDIR)$(DIR)/$$dir; \
+			chown $(USER) $(DESTDIR)$(DIR)/$$dir; \
+			chgrp $(GROUP) $(DESTDIR)$(DIR)/$$dir; \
+		fi \
+	done \
+	fi
+
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
