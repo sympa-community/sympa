@@ -124,7 +124,7 @@ sub escape_url {
 
     my $string = shift;
     
-    $string =~ s/ /%%20/g;
+    $string =~ s/ /%20/g;
     
     return $string;
 }
