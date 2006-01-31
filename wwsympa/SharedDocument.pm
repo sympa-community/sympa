@@ -93,9 +93,6 @@ sub new {
 	return undef;
     }
     
-    if ($document->{'path'} =~ /^(\.).*(.moderate)$/) {
-	$document->{'moderate'} = 1;
-    }
     $document->{'visible_path'} = &main::make_visible_path($document->{'path'});
     
     ## Date
@@ -108,7 +105,14 @@ sub new {
 
     ## Filename
     my @tokens = split /\//, $document->{'path'};
-    $document->{'filename'} = $tokens[$#tokens];
+    $document->{'filename'} = $document->{'visible_filename'} = $tokens[$#tokens];
+
+    ## Moderated document
+    if ($document->{'filename'} =~ /^\.(.*)(\.moderate)$/) {
+	$document->{'moderate'} = 1;
+	$document->{'visible_filename'} = $1;
+    }
+
     $document->{'escaped_filename'} =  &tools::escape_chars($document->{'filename'});
 
     ## Father dir

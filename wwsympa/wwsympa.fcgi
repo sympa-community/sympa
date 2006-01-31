@@ -8540,8 +8540,7 @@ sub _restrict_values {
      $result{'scenario'}{'read'} = $list->{'admin'}{'shared_doc'}{'d_read'}{'name'};
      $result{'scenario'}{'edit'} = $list->{'admin'}{'shared_doc'}{'d_edit'}{'name'};
 
-	 # Test of privileged owner
-
+     ## Privileged owner has all privileges
      if ($param->{'is_privileged_owner'}) {
 	 $result{'may'}{'read'} = 1;
 	 $result{'may'}{'edit'} = 1;
@@ -8682,6 +8681,7 @@ sub _restrict_values {
 		 $result{'scenario'}{'edit'} = $desc_hash{'edit'};
 	     }
 	     
+	     ## Author has all privileges
 	     if ($is_author) {
 		 $result{'may'}{'read'} = 1;
 		 $result{'may'}{'edit'} = 1;
@@ -13703,7 +13703,7 @@ sub _prepare_subscriber {
 ## New d_read function using SharedDocument module
 ## The following features should be tested : 
 ##      * inheritance on privileges
-##      * moderation
+##      X moderation
 ##      * escaping special chars
 sub new_d_read {
      &wwslog('info', 'new_d_read(%s)', $in{'path'});
@@ -13790,7 +13790,7 @@ sub new_d_read {
 		 if ($subdocument->{'access'}{'may'}{'read'}) {
 		     
 		     $subdirs{$d} = $subdocument->dup();
-		     $subdirs{$d}{'doc'} = $subdocument->{'filename'};
+		     $subdirs{$d}{'doc'} = $subdocument->{'visible_filename'};
 		     $subdirs{$d}{'escaped_doc'} =  $subdocument->{'escaped_filename'};
 		     
 		     if ($param->{'user'}{'email'}) {
@@ -13818,7 +13818,7 @@ sub new_d_read {
 		     
 		     $files{$d} = $subdocument->dup();
 
-		     $files{$d}{'doc'} = $subdocument->{'filename'};
+		     $files{$d}{'doc'} = $subdocument->{'visible_filename'};
 		     $files{$d}{'escaped_doc'} =  $subdocument->{'escaped_filename'};
 
 		     ## exception of index.html
