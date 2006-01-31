@@ -1287,6 +1287,11 @@ page~\pageref{lists-families}.
    Modify the existing family list, with description contained in the XML file. See \ref{family-modify-list}, 
    page~\pageref{family-modify-list}.
     
+ \item \option {- - sync\_include \textit {listaddress} }
+ 
+   Trigger an update of list members, usefull if the list uses
+   external data sources.
+
 \end {itemize}
 
 \section {INIT script}

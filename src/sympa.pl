@@ -93,6 +93,7 @@ Options:
                                          : close lists of family_name family under robot_name.      
 
    --close_list=listname\@robot          : close a list
+   --sync_include=listname\@robot        : trigger the list members update
    --log_level=LEVEL                     : sets Sympa log level
 
    -h, --help                            : print this help
@@ -109,7 +110,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
-		    'input_file=s')) {
+		    'input_file=s','sync_include=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -129,7 +130,8 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'instantiate_family'} ||
 				     $main::options{'add_list'} ||
 				     $main::options{'modify_list'} ||
-				     $main::options{'close_family'});
+				     $main::options{'close_family'} ||
+				     $main::options{'sync_include'});
 
 ## Batch mode, ie NOT daemon
  $main::options{'batch'} = 1 if ($main::options{'dump'} || 
@@ -143,7 +145,8 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'instantiate_family'} ||
 				 $main::options{'add_list'} ||
 				 $main::options{'modify_list'} ||
-				 $main::options{'close_family'});
+				 $main::options{'close_family'} ||
+				 $main::options{'sync_include'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -541,6 +544,22 @@ if ($main::options{'dump'}) {
     close INFILE;
 
     print STDOUT $result->{'string_info'};
+    exit 0;
+}elsif ($main::options{'sync_include'}) {
+
+    my $list = new List ($main::options{'sync_include'});
+
+    unless (defined $list) {
+	print STDERR "Incorrect list name $main::options{'sync_include'}\n";
+	exit 1;
+    }
+
+    unless (defined $list->sync_include()) {
+	print STDERR "Failed to synchronize list members\n";
+	exit 1;
+    }
+
+    printf "Members of list %s have been successfully update.\n", $list->get_list_address();
     exit 0;
 }
 
