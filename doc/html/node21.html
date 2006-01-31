@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -324,7 +321,7 @@ even when several moderators are defined.
 <A NAME="10263"></A><TT>host</TT> <I>fully-qualified-domain-name</I>
 
 <P>
-Domain name of the list, default is the robot domain name set in the related <A NAME="10266"></A><TT>robot.conf</TT> file or in file <A NAME="10269"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>.
+Domain name of the list, default is the robot domain name set in the related <A NAME="10266"></A><TT>robot.conf</TT> file or in file <A NAME="10269"></A><TT>/etc/sympa.conf</TT>.
 
 <P>
 
@@ -798,8 +795,8 @@ Certificate and private key are located in the list directory.
 </LI>
 <LI><A NAME="10472"></A><TT>cert</TT> <TT>robot</TT> the certificate used is then related to
 sympa itself : the certificate subject distinguished name email look like
-sympa@my.domain and files are located in virtual robot etc dir if virtual robot
-is used otherwise in <A NAME="10475"></A><TT>/usr/local/sympa-os/etc</TT>.
+sympa@my.domain and files are located in virtual host etc dir if virtual host
+is used otherwise in <A NAME="10475"></A><TT>/home/sympa/etc</TT>.
 </LI>
 </UL>
 
@@ -2229,7 +2226,7 @@ apply forced
 
 <P>
 Maximum size of a message in 8-bit bytes. The default value is set in
- the <A NAME="10960"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file.
+ the <A NAME="10960"></A><TT>/etc/sympa.conf</TT> file.
 
 <P>
 
@@ -2354,7 +2351,7 @@ The default value. Sympa will add the
 <P>
 Sympa will not create new MIME parts, but
         will try to append the header/footer to the body of the
-        message. <A NAME="10998"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer.mime</TT> will be
+        message. <A NAME="10998"></A><TT>/home/sympa/expl/mylist/message.footer.mime</TT> will be
         ignored. Headers/footers may be appended to text/plain
         messages only.
 
@@ -2547,7 +2544,13 @@ The <A NAME="11059"></A><TT>msg_topic_keywords_apply_on</TT> parameter defines o
 <I>Example:</I> <PRE>
 msg_topic_key_apply_on subject
 </PRE>  
-Its values can be : subject  body subject_and_body.
+Its values can be : subject <IMG
+ WIDTH="9" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="\(\mid\)"> body<IMG
+ WIDTH="9" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="\(\mid\)"> subject_and_body.
 
 <P>
 
@@ -2566,7 +2569,10 @@ The <A NAME="11062"></A><TT>msg_topic_tagging</TT> parameter indicates if the ta
 <I>Example:</I> <PRE>
 msg_topic_tagging optional
 </PRE>  
-Its values can be : optional  required
+Its values can be : optional <IMG
+ WIDTH="9" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.png"
+ ALT="\(\mid\)"> required
 
 <P>
 
@@ -2845,7 +2851,7 @@ Same as <A NAME="11181"></A><TT>welcome_return_path</TT>, but applied to remind
 
 <P>
 Mail archives can be retrieved via a mail command send to the robot,
-they are stored in <A NAME="11191"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory.
+they are stored in <A NAME="11191"></A><TT>/home/sympa/expl/mylist/archives/</TT> directory.
 
 <P>
 Web archives are accessed via the web interface (with access control), they
@@ -2890,7 +2896,7 @@ command (the last message of a list can be consulted using the <A NAME="11213"><
 This parameter specifies how archiving is organized: by <TT>day</TT>, <TT>week</TT>, <TT>month</TT>, <TT>quarter</TT>,
 or <TT>year</TT>.  Generation of automatic list archives requires
 the creation of an archive directory at the root of the list directory 
-(<A NAME="11219"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT>), used to store these documents.
+(<A NAME="11219"></A><TT>/home/sympa/expl/mylist/archives/</TT>), used to store these documents.
 
 <P>
 <A NAME="11222"></A><TT>access</TT>
@@ -3144,7 +3150,7 @@ date_epoch 1090911878
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

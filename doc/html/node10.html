@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -247,7 +244,7 @@ The User and Group directive have to be set before the FastCgiServer directive
       <A NAME="8552"></A><TT>wwsympa.fcgi</TT>. Here is an example (with no guarantee attached) :<PRE>
 #include &lt;unistd.h&gt;
 
-#define WWSYMPA "/usr/local/sympa-os/bin/wwsympa.fcgi"
+#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
 
 int main(int argn, char **argv, char **envp) {
     argv[0] = WWSYMPA;
@@ -267,7 +264,7 @@ int main(int argn, char **argv, char **envp) {
 
 <P><PRE>
      Example :
-       	ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
+       	ScriptAlias /sympa /home/sympa/bin/wwsympa.fcgi
 </PRE>
 
 <P>
@@ -278,16 +275,16 @@ Running  FastCGI will provide much faster responses from your server and
 
 <P><PRE>
      Example :
-	FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 2
+	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
 	&lt;Location /sympa&gt;
    	  SetHandler fastcgi-script
 	&lt;/Location&gt;
 
-	ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
+	ScriptAlias /sympa /home/sympa/bin/wwsympa.fcgi
 </PRE>
 
 <P>
-If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
+If you run virtual hosts, then the FastCgiServer(s) can serve multiple robots. 
 Therefore you need to define it in the common section of your Apache configuration
 file.
 
@@ -530,12 +527,12 @@ provided in the <A NAME="8609"></A><I>WWSympa</I> distribution and to modify it 
 The mhonarc resource file is named <A NAME="8612"></A><TT>mhonarc-ressources</TT>. 
 You may locate this file either in 
 <OL>
-<LI><A NAME="8615"></A><TT>/usr/local/sympa-os/expl/mylist/mhonarc-ressources</TT>
+<LI><A NAME="8615"></A><TT>/home/sympa/expl/mylist/mhonarc-ressources</TT>
 	in order to create a specific archive look for a particular list
 
 <P>
 </LI>
-<LI>or <A NAME="8618"></A><TT>/usr/local/sympa-os/etc/mhonarc-ressources</TT>
+<LI>or <A NAME="8618"></A><TT>/home/sympa/etc/mhonarc-ressources</TT>
 
 <P>
 </LI>
@@ -550,7 +547,7 @@ You may locate this file either in
 and calls <A NAME="8625"></A><TT>mhonarc</TT> to create html versions (whose location is defined by the 
 "arc_path" WWSympa parameter). You should probably install these archives 
 outside the <I>Sympa</I> home_dir (<I>Sympa</I>'s initial choice for storing mail archives : 
-<A NAME="8630"></A><TT>/usr/local/sympa-os/expl/mylist</TT>). Note that the html archive 
+<A NAME="8630"></A><TT>/home/sympa/expl/mylist</TT>). Note that the html archive 
 contains a text version of each message and is totally separate from <I>Sympa</I>'s
 main archive.
 
@@ -570,7 +567,7 @@ main archive.
 
 <P>
 If web_archive is defined for a list, every message distributed by this list is copied
-     to <A NAME="8634"></A><TT>/usr/local/sympa-os/spool/outgoing/</TT>. (No need to create nonexistent subscribers to receive
+     to <A NAME="8634"></A><TT>/home/sympa/spool/outgoing/</TT>. (No need to create nonexistent subscribers to receive
      copies of messages). In this example disk quota for the archive is limited to 10 Mo.
 
 <P>
@@ -586,11 +583,11 @@ If web_archive is defined for a list, every message distributed by this list is 
 </LI>
 <LI>If you change mhonarc resources and wish to rebuild the entire archive 
 using the new look defined for mhonarc, simply create an empty file named
-".rebuild.mylist@myhost" in <A NAME="8647"></A><TT>/usr/local/sympa-os/spool/outgoing</TT>, and make sure that
+".rebuild.mylist@myhost" in <A NAME="8647"></A><TT>/home/sympa/spool/outgoing</TT>, and make sure that
 the owner of this file is <I>Sympa</I>. 
 
 <P><PRE>
-     example : su sympa -c "touch /usr/local/sympa-os/spool/outgoing/.rebuild.sympa-fr@cru.fr"
+     example : su sympa -c "touch /home/sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
 </PRE>
 You can also rebuild web archives from within the admin page of the list.
 
@@ -646,8 +643,8 @@ to explore the admin interface, create mailing lists.
 Multiple email addresses can be declared as listmaster via the <A NAME="8674"></A><TT>sympa.conf</TT> (or <A NAME="8677"></A><TT>robot.conf</TT>)
 <A NAME="8680"></A><TT>listmaster</TT> configuration parameter (see <A HREF="node8.html#exp-admin">7</A>,  page&nbsp;<A HREF="node8.html#exp-admin"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Note
 that listmasters on the main robot (declared in  <A NAME="8683"></A><TT>sympa.conf</TT>) also have listmaster privileges on
-the virtual robots but they will not receive the various mail notifications (list creation, warnings,...)
-regarding these virtual robots.
+the virtual hosts but they will not receive the various mail notifications (list creation, warnings,...)
+regarding these virtual hosts.
 
 <P>
 The listmasters should log in with their canonical email address as an identifier (not <I>listmaster@my.host</I>).
@@ -692,7 +689,7 @@ mail messages including password reminders.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

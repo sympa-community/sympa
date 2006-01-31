@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -128,11 +125,11 @@ lines must therefore be added to the <A NAME="7592"></A><TT>sendmail</TT> alias 
 
 <P>
 <BLOCKQUOTE>
-sympa:             "| /usr/local/sympa-os/bin/queue sympa@my.domain.org"
+sympa:             "| /etc/smrsh/queue sympa@my.domain.org"
 <BR>
-listmaster: 	   "| /usr/local/sympa-os/bin/queue listmaster@my.domain.org"
+listmaster: 	   "| /etc/smrsh/queue listmaster@my.domain.org"
 <BR>
-bounce+*:          "| /usr/local/sympa-os/bin/bouncequeue sympa@my.domain.org"
+bounce+*:          "| /etc/smrsh/bouncequeue sympa@my.domain.org"
 <BR>
 sympa-request:     postmaster
 <BR>
@@ -141,8 +138,8 @@ sympa-owner:       postmaster
 </BLOCKQUOTE>
 
 <P>
-Note: if you run <I>Sympa</I> virtual robots, you will need one <TT>sympa</TT>
-alias entry per virtual robot (see virtual robots section, <A HREF="node15.html#virtual-robot">14</A>,
+Note: if you run <I>Sympa</I> virtual hosts, you will need one <TT>sympa</TT>
+alias entry per virtual host (see virtual hosts section, <A HREF="node15.html#virtual-robot">14</A>,
 page&nbsp;<A HREF="node15.html#virtual-robot"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -199,37 +196,37 @@ aliases must be added:
 <TR><TD ALIGN="LEFT"><TT>
         <TT>mylist</TT>:         </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist@my.domain.org"
+            "|/etc/smrsh/queue mylist@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-request</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-request@my.domain.org"
+            "|/etc/smrsh/queue mylist-request@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-editor</TT>:  </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-editor@my.domain.org"
+            "|/etc/smrsh/queue mylist-editor@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-owner</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/bouncequeue mylist@my.domain.org
+            "|/etc/smrsh/bouncequeue mylist@my.domain.org
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-subscribe</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-subscribe@my.domain.org@my.domain.org"
+            "|/etc/smrsh/queue mylist-subscribe@my.domain.org@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-unsubscribe</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-unsubscribe@my.domain.org"
+            "|/etc/smrsh/queue mylist-unsubscribe@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD></TD>
@@ -242,14 +239,14 @@ The address <TT>mylist-request</TT> should correspond
 to the person responsible for managing <TT>mylist</TT>
 (the <A NAME="7630"></A>owner).  <I>Sympa</I> will forward messages for
 <TT>mylist-request</TT> to the owner of <TT>mylist</TT>,
-as defined in the <A NAME="7634"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>
+as defined in the <A NAME="7634"></A><TT>/home/sympa/expl/mylist/config</TT>
 file.  Using this feature means you would not need to modify the
 alias file if the owner of the list were to change.
 
 <P>
 Similarly, the address <TT>mylist-editor</TT> can be used
 to contact the list editors if any are defined in
-<A NAME="7638"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>.  This address definition
+<A NAME="7638"></A><TT>/home/sympa/expl/mylist/config</TT>.  This address definition
 is not compulsory.
 
 <P>
@@ -294,16 +291,16 @@ The script expects the following arguments :
 <LI><TT>&lt;</TT>list domain<TT>&gt;</TT>
 </LI>
 </OL>
-Example : <A NAME="7659"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl add mylistcru.fr</TT>
+Example : <A NAME="7659"></A><TT>/etc/smrsh/alias_manager.pl add mylistcru.fr</TT>
 
 <P>
-<A NAME="7662"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="7665"></A><TT>sympa.conf</TT>)
+<A NAME="7662"></A><TT>/etc/smrsh/alias_manager.pl</TT> works on the alias file as defined in <A NAME="7665"></A><TT>sympa.conf</TT>)
 by the <A NAME="7668"></A>SENDMAIL_ALIASES  variable (default is <A NAME="7669"></A><TT>/etc/mail/sympa_aliases</TT>) in the main Makefile (see <A HREF="node4.html#makefile">3.3</A>,  page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). You must refer to this aliases file in your <A NAME="7672"></A><TT>sendmail.mc</TT> (if using sendmail) :<PRE>
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 </PRE>
 
 <P>
-<A NAME="7675"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> runs a <A NAME="7678"></A><TT>newaliases</TT> command (via <A NAME="7681"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
+<A NAME="7675"></A><TT>/etc/smrsh/alias_manager.pl</TT> runs a <A NAME="7678"></A><TT>newaliases</TT> command (via <A NAME="7681"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
 
 <P>
 If you manage virtual domains with your mail server, then you might want to change
@@ -338,9 +335,9 @@ With Postfix, you should edit the <A NAME="7700"></A><TT>/etc/postfix/virtual.re
 </BLOCKQUOTE>
  Entries in the 'aliases' file will look like this :
 <BLOCKQUOTE>
-my.domain.org-sympa:   "|/usr/local/sympa-os/bin/sympa.pl sympa@my.domain.org"
+my.domain.org-sympa:   "|/etc/smrsh/sympa.pl sympa@my.domain.org"
     .....
-    my.domain.org-listA:   "|/usr/local/sympa-os/bin/sympa.pl listA@my.domain.org"
+    my.domain.org-listA:   "|/etc/smrsh/sympa.pl listA@my.domain.org"
 
 </BLOCKQUOTE>
 
@@ -384,7 +381,7 @@ With Sendmail, add the following entry to <A NAME="7703"></A><TT>/etc/mail/virtu
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

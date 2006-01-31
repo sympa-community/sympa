@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -123,8 +120,8 @@ You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because 
 
 <P>
 Here is a sample piece of your Apache <A NAME="8759"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
-	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
+	FastCgiServer /home/sympa/bin/sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap /home/sympa/bin/sympa_soap_server.fcgi
 
 	&lt;Location /sympasoap&gt;
    	  SetHandler fastcgi-script
@@ -144,8 +141,8 @@ to the ScriptAlias you've previously setup in Apache config.
 
 <P>
 This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
-also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
-(a single SOAP server will serve all Sympa Virtual robots).
+also for the SOAP server to deduce what Virtual Host is concerned by the current SOAP request 
+(a single SOAP server will serve all Sympa virtual hosts).
 
 <P>
 
@@ -705,7 +702,7 @@ String[] _abonnements = tmp.which();
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

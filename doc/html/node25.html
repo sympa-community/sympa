@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -72,7 +69,7 @@ In this case you must set the <A NAME="11431"></A><TT>antivirus_path</TT> and
 <A NAME="11434"></A><TT>antivirus_args</TT> configuration parameters
  (see <A HREF="node8.html#Antivirus_plug-in">7.13</A>, page&nbsp;<A HREF="node8.html#Antivirus_plug-in"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 <I>Sympa</I> is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
-For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="11439"></A><TT>/usr/local/sympa-os/spool/tmp/antivirus</TT> directory and
+For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="11439"></A><TT>/home/sympa/spool/tmp/antivirus</TT> directory and
 then calls the antivirus software to check them.
 When a virus is detected, <I>Sympa</I> looks for the virus name in the virus scanner STDOUT and sends a
 <A NAME="11443"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
@@ -83,7 +80,7 @@ The mail is saved as 'bad' and the working directory is deleted (except if <I>Sy
 <BR><HR>
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -365,14 +362,14 @@ The list creator has to choose a profile
 for the list and put its name in the XML element <A NAME="10080"></A><TT>&lt;type&gt;</TT>.
 
 <P>
-List profiles are stored in <A NAME="10083"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> or in
-<A NAME="10086"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> (default of distrib).
+List profiles are stored in <A NAME="10083"></A><TT>/home/sympa/etc/create_list_templates</TT> or in
+<A NAME="10086"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> (default of distrib).
 
 <P>
 You might want to hide or modify profiles (not useful, or dangerous 
 for your site). If a profile exists both in the local site directory
-<A NAME="10089"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> and
-<A NAME="10092"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> directory, then the local profile 
+<A NAME="10089"></A><TT>/home/sympa/etc/create_list_templates</TT> and
+<A NAME="10092"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
 will be used by WWSympa. 
 
 <P>
@@ -398,7 +395,7 @@ lists, and which parameters may be set by owners.
 <P>
 Listmasters are responsible for validating new mailing lists and, depending on the configuration chosen, 
 might be the only ones who can fill out the create list form.The listmaster
-is defined in <A NAME="10095"></A><TT>sympa.conf</TT> and others are defined at the virtual robot level. By default, any authenticated user can 
+is defined in <A NAME="10095"></A><TT>sympa.conf</TT> and others are defined at the virtual host level. By default, any authenticated user can 
 request a list creation but newly created are then validated by the listmaster. 
 
 <P>
@@ -445,8 +442,8 @@ these typical list profiles, they are described before, see <A HREF="#typical-li
 You can check available profile. On the Web interface, another way 
 to control publicly available profiles is to
 edit the <A NAME="10122"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="10125"></A><TT>/usr/local/sympa-os/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="10128"></A><TT>/usr/local/sympa-os/etc</TT>).
+the <A NAME="10125"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
+version in <A NAME="10128"></A><TT>/home/sympa/etc</TT>).
 This file controls which of the available list templates are to be displayed. Example :<PRE>
 # Do not allow the public_anonymous profile
 public_anonymous hidden
@@ -462,9 +459,9 @@ public_anonymous hidden
 </H2>
 
 <P>
-For each parameter, you may specify (via the <A NAME="10131"></A><TT>/usr/local/sympa-os/etc/edit_list.conf</TT>
+For each parameter, you may specify (via the <A NAME="10131"></A><TT>/home/sympa/etc/edit_list.conf</TT>
 configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="10134"></A><TT>/usr/local/sympa-os/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="10134"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
 
 <P>
 <PRE>
@@ -583,7 +580,7 @@ Concerning list edition in a family context, see <A HREF="node20.html#list-param
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

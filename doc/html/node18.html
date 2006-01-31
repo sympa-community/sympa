@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -150,13 +147,13 @@ page&nbsp;<A HREF="node18.html#list-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT
 
 <P>
 The configuration file for the <TT>mylist</TT> list is named
-<A NAME="9711"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config</TT> 
-(or <A NAME="9714"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT> if no virtual robot is defined). 
+<A NAME="9711"></A><TT>/home/sympa/expl/my.domain.org/mylist/config</TT> 
+(or <A NAME="9714"></A><TT>/home/sympa/expl/mylist/config</TT> if no virtual host is defined). 
 <I>Sympa</I> reloads it into memory whenever this file has changed on disk. The file can either be
 edited via the web interface or directly via your favourite text editor. 
 
 <P>
-A binary version of the config (<A NAME="9718"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
+A binary version of the config (<A NAME="9718"></A><TT>/home/sympa/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
 a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
 
 <P>
@@ -257,7 +254,7 @@ not be use anymore except for testing purpose. <I>Sympa</I> will not use this fi
 with <TT>include</TT> or <TT>database</TT> <A NAME="9728"></A><TT>user_data_source</TT>.
 
 <P>
-The <A NAME="9731"></A><TT>/usr/local/sympa-os/expl/mylist/subscribers</TT> file is automatically created and
+The <A NAME="9731"></A><TT>/home/sympa/expl/mylist/subscribers</TT> file is automatically created and
 populated. It contains information about list
 subscribers.  It is not advisable to edit this file.  Main parameters
 are:
@@ -327,7 +324,7 @@ Special mode which allows the subscriber to remain invisible when
 </H1>
 
 <P>
-<A NAME="9767"></A><TT>/usr/local/sympa-os/expl/mylist/info</TT> should contain a detailed text
+<A NAME="9767"></A><TT>/home/sympa/expl/mylist/info</TT> should contain a detailed text
 description of the list, to be displayed by the <A NAME="9770"></A><TT>INFO</TT> command. 
 It can also be referenced from template files for service messages.
 
@@ -338,7 +335,7 @@ It can also be referenced from template files for service messages.
 </H1>
 
 <P>
-<A NAME="9773"></A><TT>/usr/local/sympa-os/expl/mylist/homepage</TT> is the HTML text 
+<A NAME="9773"></A><TT>/home/sympa/expl/mylist/homepage</TT> is the HTML text 
 on the <A NAME="9776"></A><I>WWSympa</I> info page for the list.
 
 <P>
@@ -360,11 +357,11 @@ This files can be template file.
 Sympa looks for them in the following order :
 
 <OL>
-<LI><A NAME="9800"></A><TT>/usr/local/sympa-os/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="9800"></A><TT>/home/sympa/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="9821"></A><TT>/usr/local/sympa-os/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="9821"></A><TT>/home/sympa/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="9842"></A><TT>/usr/local/sympa-os/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
+<LI><A NAME="9842"></A><TT>/home/sympa/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
 </LI>
 </OL> 
 
@@ -448,11 +445,11 @@ page&nbsp;<A HREF="node17.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="
 Sympa looks for these files in the following order :
 
 <OL>
-<LI><A NAME="9908"></A><TT>/usr/local/sympa-os/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
+<LI><A NAME="9908"></A><TT>/home/sympa/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
 </LI>
-<LI><A NAME="9929"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="9929"></A><TT>/home/sympa/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="9950"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="9950"></A><TT>/home/sympa/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
 </LI>
 </OL>
 
@@ -670,7 +667,7 @@ Template that defines list mail alises. It is used by the alias_manager script.
 </H1>
 
 <P>
-<A NAME="9979"></A><TT>/usr/local/sympa-os/expl/mylist/stats</TT> is a text file containing 
+<A NAME="9979"></A><TT>/home/sympa/expl/mylist/stats</TT> is a text file containing 
 statistics about the list. Data are numerics separated
 by white space within a single line :
 
@@ -743,8 +740,8 @@ Every month <I>Sympa</I> will delete subscribers older than one year who haven't
 </H1>
 
 <P>
-You may create <A NAME="9988"></A><TT>/usr/local/sympa-os/expl/mylist/message.header</TT> and
-<A NAME="9991"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer</TT> files. Their content
+You may create <A NAME="9988"></A><TT>/home/sympa/expl/mylist/message.header</TT> and
+<A NAME="9991"></A><TT>/home/sympa/expl/mylist/message.footer</TT> files. Their content
 is added, respectively at the beginning and at the end of each message 
 before the distribution process. You may also include the content-type
 of the appended part (when <A NAME="9994"></A><TT>footer_type</TT> list parameter s set 
@@ -778,7 +775,7 @@ if message is not multipart/signed
 </H2> 
 
 <P>
-The <A NAME="10006"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory contains the 
+The <A NAME="10006"></A><TT>/home/sympa/expl/mylist/archives/</TT> directory contains the 
 archived messages for lists which are archived; see <A HREF="node21.html#par-archive">20.6.1</A>, 
 page&nbsp;<A HREF="node21.html#par-archive"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. The files are named in accordance with the 
 archiving frequency defined by the <A NAME="10009"></A><TT>archive</TT> parameter.
@@ -816,7 +813,7 @@ archiving frequency defined by the <A NAME="10009"></A><TT>archive</TT> paramete
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

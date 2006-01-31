@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -231,7 +228,7 @@ This is done using the optional parameters <A NAME="11460"></A><TT>openSSL</TT> 
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
 <LI><A NAME="11472"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="11475"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+        The file <A NAME="11475"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
 Both the <A NAME="11480"></A><TT>cafile</TT> file and the <A NAME="11483"></A><TT>capath</TT> directory
@@ -324,7 +321,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="11491"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="11491"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -338,7 +335,7 @@ the trusted CA's described in the <A NAME="11494"></A><TT>cafile</TT> file or th
 
 <P>
 The list private key must be installed in a file named
-<A NAME="11500"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
+<A NAME="11500"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
 <A NAME="11503"></A><TT>password</TT> parameter in <A NAME="11506"></A><TT>sympa.conf</TT>.
 
@@ -370,7 +367,7 @@ Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
 <A NAME="11509"></A><TT>cert.pem</TT> and <A NAME="11512"></A><TT>private_key</TT> using
-the <A NAME="11515"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="11518"></A><TT>p12topem.pl -help</TT> for details.
+the <A NAME="11515"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="11518"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
 <LI>be sure that <A NAME="11521"></A><TT>cert.pem</TT> and <A NAME="11524"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
@@ -400,7 +397,7 @@ Report to <A HREF="node8.html#certificate-task-config">7.12.4</A>, page&nbsp;<A 
 
 <P>
 A task created with the model <A NAME="11529"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="11532"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
+certificates stored in the <A NAME="11532"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
 The user is warned with the <A NAME="11535"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
@@ -447,7 +444,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>

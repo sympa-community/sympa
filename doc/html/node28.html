@@ -1,0 +1,547 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>27. Using Sympa commands</TITLE>
+<META NAME="description" CONTENT="27. Using Sympa commands">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node29.html">
+<LINK REL="previous" HREF="node27.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node29.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html1519"
+  HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1513"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1507"
+  HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1515"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html1517"
+  HREF="node30.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1520"
+  HREF="node29.html">28. Internals</A>
+<B> Up:</B> <A NAME="tex2html1514"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html1508"
+  HREF="node27.html">26. Sympa with S/MIME and HTTPS</A>
+ &nbsp; <B>  <A NAME="tex2html1516"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1518"
+  HREF="node30.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html1521"
+  HREF="node28.html#SECTION002810000000000000000">27.1 User commands</A>
+<LI><A NAME="tex2html1522"
+  HREF="node28.html#SECTION002820000000000000000">27.2 Owner commands</A>
+<LI><A NAME="tex2html1523"
+  HREF="node28.html#SECTION002830000000000000000">27.3 Moderator commands</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION002800000000000000000">
+27. Using <I>Sympa</I> commands</A>
+</H1>
+
+<P>
+Users interact with <I>Sympa</I>, of course, when they send messages to
+one of the lists, but also indirectly through administrative requests
+(subscription, list of users, etc.).
+
+<P>
+This section describes administrative requests, as well as interaction
+modes in the case of private and moderated lists.  Administrative
+requests are messages whose body contains commands understood by
+<I>Sympa</I>, one per line. These commands can be indiscriminately placed
+in the <A NAME="11544"></A><TT>Subject:</TT> or in the body of the message. The
+<A NAME="11547"></A><TT>To:</TT> address is generally the <TT>sympadomain</TT>
+alias, although it is also advisable to recognize the <TT>listservdomain</TT> address.
+
+<P>
+Example:
+
+<P><PRE>
+From: pda@prism.uvsq.fr
+To: sympa@cru.fr
+
+LISTS
+INFO sympa-users
+REVIEW sympa-users
+QUIT
+</PRE>
+
+<P>
+Most user commands have three-letter abbreviations (e.g. <TT>REV</TT> instead of <A NAME="11554"></A><TT>REVIEW</TT>).
+
+<P>
+
+<H1><A NAME="SECTION002810000000000000000">
+27.1 User commands</A>
+</H1>
+
+<P>
+
+<UL>
+<LI><A NAME="11557"></A><TT>HELP</TT>
+
+<P>
+Provides instructions for the use of <I>Sympa</I> commands.  The
+        result is the content of the <A NAME="11561"></A><TT>helpfile.tt2</TT> template
+        file. 
+
+<P>
+</LI>
+<LI><A NAME="11564"></A><TT>INFO</TT> <I>listname</I>
+
+<P>
+Provides the parameters of the specified list (owner,
+        subscription mode, etc.) and its description. The
+        result is the content of <A NAME="11567"></A><TT>~welcome[.mime]</TT>.
+
+<P>
+</LI>
+<LI><A NAME="11572"></A><TT>LISTS</TT>
+        <A NAME="cmd-lists"></A>
+<P>
+Provides the names of lists managed by <I>Sympa</I>.  This list
+        is generated dynamically, using the <A NAME="11576"></A><TT>visibility</TT>
+        (see <A HREF="node21.html#par-visibility">20.1.9</A>, page&nbsp;<A HREF="node21.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+	The <TT>lists.tt2</TT> template defines the message return
+	by the <A NAME="11579"></A><TT>LISTS</TT> command.
+
+<P>
+</LI>
+<LI><A NAME="11582"></A><TT>REVIEW</TT> <I>listname</I>
+        <A NAME="cmd-review"></A>
+<P>
+Provides the addresses of subscribers if the run mode authorizes it. 
+	See the <A NAME="11585"></A><TT>review</TT> parameter (<A HREF="node21.html#par-review">20.3.9</A>, page&nbsp;<A HREF="node21.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for the configuration file of each list,
+        which controls consultation authorizations for the subscriber
+        list. Since subscriber addresses can be abused by spammers,
+        it is strongly recommended that you <B>only authorize owners
+        to access the subscriber list</B>.
+
+<P>
+</LI>
+<LI><A NAME="11588"></A><TT>WHICH</TT>
+         <A NAME="cmd-which"></A>
+<P>
+Returns the list of lists to which one is subscribed,
+        as well as the configuration of his or her subscription to
+        each of the lists (DIGEST, NOMAIL, SUMMARY, CONCEAL).
+
+<P>
+</LI>
+<LI><A NAME="11591"></A><TT>STATS</TT> <I>listname</I>
+        <A NAME="cmd-stats"></A>
+<P>
+Provides statistics for the specified list:
+        number of messages received, number of messages sent,
+        megabytes received, megabytes sent. This is the contents
+        of the <A NAME="11594"></A><TT>stats</TT> file.
+
+<P>
+Access to this command is controlled by the <A NAME="11597"></A><TT>review</TT> parameter.
+
+<P>
+</LI>
+<LI><A NAME="11600"></A><TT>INDEX</TT> <I>listname</I>
+        <A NAME="cmd-index"></A>
+<P>
+Provides index of archives for specified list. Access rights
+        to this function are the same as for the <A NAME="11603"></A><TT>GET</TT>
+        command. 
+
+<P>
+</LI>
+<LI><A NAME="11606"></A><TT>GET</TT> <I>listname</I> <I>archive</I>
+        <A NAME="cmd-get"></A>
+<P>
+To retrieve archives for list (see above).  Access
+        rights are the same as for the <A NAME="11609"></A><TT>REVIEW</TT> command.
+        See <A NAME="11612"></A><TT>review</TT> parameter (<A HREF="node21.html#par-review">20.3.9</A>,
+        page&nbsp;<A HREF="node21.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><A NAME="11615"></A><TT>LAST</TT> <I>listname</I>
+        <A NAME="cmd-last"></A>
+<P>
+To receive the last message distributed in a list (see above).  Access
+        rights are the same as for the <A NAME="11618"></A><TT>GET</TT> command.
+
+<P>
+</LI>
+<LI><A NAME="11621"></A><TT>SUBSCRIBE</TT> <I>listname firstname name</I>
+        <A NAME="cmd-subscribe"></A>
+<P>
+Requests sign-up to the specified list. The <I>firstname</I> and <I>name</I> are optional. If the
+        list is parameterized with a restricted subscription (see
+        <A NAME="11624"></A><TT>subscribe</TT> parameter, <A HREF="node21.html#par-subscribe">20.3.1</A>,
+        page&nbsp;<A HREF="node21.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), this command is sent to the
+        list owner for approval.
+
+<P>
+</LI>
+<LI><A NAME="11627"></A><TT>INVITE</TT> <I>listname user@host name</I>
+        <A NAME="cmd-invite"></A>
+<P>
+Invite someone to subscribe to the specified list. The 
+        <I>name</I> is optional. The command is similar to the
+        <A NAME="11630"></A><TT>ADD</TT> but the specified person is not added to the
+        list but invited to subscribe to it in accordance with the 
+        <A NAME="11633"></A><TT>subscribe</TT> parameter, <A HREF="node21.html#par-subscribe">20.3.1</A>,
+        page&nbsp;<A HREF="node21.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><A NAME="11636"></A><TT>SIGNOFF</TT> <I>listname</I> [ <I>user@host</I> ]
+        <A NAME="cmd-signoff"></A>
+<P>
+Requests unsubscription from the specified list.
+        <A NAME="11639"></A><TT>SIGNOFF *</TT> means unsubscription from all lists.
+
+<P>
+</LI>
+<LI><A NAME="11642"></A><TT>SET</TT> <I>listname</I> <TT>DIGEST</TT>
+        <A NAME="cmd-setdigest"></A>
+<P>
+Puts the subscriber in <I>digest</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
+        in a normal manner, the subscriber will periodically receive
+        it in a DIGEST. This DIGEST compiles a group of messages
+        from the list, using multipart/digest mime format.
+
+<P>
+The sending period for these DIGESTs is regulated by the
+        list owner using the <A NAME="11645"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node21.html#par-digest">20.4.8</A>, page&nbsp;<A HREF="node21.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  See the <A NAME="11648"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="#cmd-setmail">27.1</A>, page&nbsp;<A HREF="node28.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="11651"></A><TT>reception</TT> parameter (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><A NAME="11654"></A><TT>SET</TT> <I>listname</I> <TT>SUMMARY</TT>
+        <A NAME="cmd-setsummary"></A>
+<P>
+Puts the subscriber in <I>summary</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
+        in a normal manner, the subscriber will periodically receive
+        the list of messages. This mode is very close to the DIGEST
+        reception mode but the subscriber receives only the list of messages.
+
+<P>
+This option is available only if the digest mode is set.
+
+<P>
+</LI>
+<LI><A NAME="11657"></A><TT>SET</TT> <I>listname</I> <TT>NOMAIL</TT>
+        <A NAME="cmd-setnomail"></A>
+<P>
+Puts subscriber in <I>nomail</I> mode for the <I>listname</I> list.  This mode is used when a subscriber no longer wishes
+        to receive mail from the list, but nevertheless wishes to retain
+        the possibility of posting to the list.
+        This mode therefore prevents the subscriber from unsubscribing
+        and subscribing later on.  See the <A NAME="11660"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT>
+        command (<A HREF="#cmd-setmail">27.1</A>, page&nbsp;<A HREF="node28.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+        the <A NAME="11663"></A><TT>reception</TT> (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+
+<P>
+</LI>
+<LI><A NAME="11666"></A><TT>SET</TT> <I>listname</I> <TT>TXT</TT>
+        <A NAME="cmd-settxt"></A>
+<P>
+Puts subscriber in <I>txt</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
+        to receive mails sent in both format txt/html and txt/plain 
+        only in txt/plain format.
+        See the <A NAME="11669"></A><TT>reception</TT> (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+
+<P>
+</LI>
+<LI><A NAME="11672"></A><TT>SET</TT> <I>listname</I> <TT>HTML</TT>
+        <A NAME="cmd-sethtml"></A>
+<P>
+Puts subscriber in <I>html</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
+        to receive mails sent in both format txt/html and txt/plain 
+        only in txt/html format.
+        See the <A NAME="11675"></A><TT>reception</TT> (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+
+<P>
+</LI>
+<LI><A NAME="11678"></A><TT>SET</TT> <I>listname</I> <TT>URLIZE</TT>
+        <A NAME="cmd-seturlize"></A>
+<P>
+Puts subscriber in <I>urlize</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
+        not to receive attached files. The attached files are replaced by
+        an URL leading to the file stored on the list site. 
+
+<P>
+See the <A NAME="11681"></A><TT>reception</TT> (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+
+<P>
+</LI>
+<LI><A NAME="11684"></A><TT>SET</TT> <I>listname</I> <TT>NOT_ME</TT>
+        <A NAME="cmd-not-me"></A>
+<P>
+Puts subscriber in <I>not_me</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
+        not to receive back the message that he has sent to the list. 
+
+<P>
+See the <A NAME="11687"></A><TT>reception</TT> (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+
+<P>
+</LI>
+<LI><A NAME="11690"></A><TT>SET</TT> <I>listname</I> <TT>MAIL</TT>
+        <A NAME="cmd-setmail"></A>
+<P>
+Puts the subscriber in normal mode (default) for the <I>listname</I> list.  This option is mainly used to cancel the
+        <I>nomail</I>, <I>summary</I> or <I>digest</I> modes. If the subscriber
+        was in <I>nomail</I> mode, he or she will again receive
+        mail from the list in a normal manner.  See the <A NAME="11693"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="#cmd-setnomail">27.1</A>,
+        page&nbsp;<A HREF="node28.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="11696"></A><TT>reception</TT>
+        parameter (<A HREF="node18.html#par-reception">17.4</A>, page&nbsp;<A HREF="node18.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+	Moreover, this mode allows message topic subscription  
+	(<A HREF="node22.html#msg-topics">21.1</A>, page&nbsp;<A HREF="node22.html#msg-topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI><A NAME="11699"></A><TT>SET</TT> <I>listname</I> <TT>CONCEAL</TT>
+        <A NAME="cmd-setconceal"></A>
+<P>
+Puts the subscriber in <I>conceal</I> mode for the
+        <I>listname</I> list.  The subscriber will then become
+        invisible during <A NAME="11702"></A><TT>REVIEW</TT> on this list. Only owners
+        will see the whole subscriber list.
+
+<P>
+See the <A NAME="11705"></A><TT>SET&nbsp;LISTNAME&nbsp;NOCONCEAL</TT> command (<A HREF="#cmd-setnoconceal">27.1</A>, page&nbsp;<A HREF="node28.html#cmd-setnoconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+        the <A NAME="11708"></A><TT>visibility</TT> parameter (<A HREF="node21.html#par-visibility">20.1.9</A>,
+        page&nbsp;<A HREF="node21.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><A NAME="11711"></A><TT>SET</TT> <I>listname</I> <TT>NOCONCEAL</TT>
+        <A NAME="cmd-setnoconceal"></A>
+<P>
+Puts the subscriber in <I>noconceal</I> mode (default)
+        for <I>listname</I> list. The subscriber will then
+        become visible during <A NAME="11714"></A><TT>REVIEW</TT> of this list. The
+        <I>conceal</I> mode is then cancelled.
+
+<P>
+See <A NAME="11717"></A><TT>SET&nbsp;LISTNAME&nbsp;CONCEAL</TT> command (<A HREF="#cmd-setconceal">27.1</A>, page&nbsp;<A HREF="node28.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+        <A NAME="11720"></A><TT>visibility</TT> parameter (<A HREF="node21.html#par-visibility">20.1.9</A>,
+        page&nbsp;<A HREF="node21.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><A NAME="11723"></A><TT>QUIT</TT>
+        <A NAME="cmd-quit"></A>
+<P>
+Ends acceptance of commands. This can prove useful when
+        the message contains additional lines, as for example in
+        the case where a signature is automatically added by the
+        user's mail program (MUA).
+
+<P>
+</LI>
+<LI><A NAME="11726"></A><TT>CONFIRM</TT> <I>key</I>
+        <A NAME="cmd-confirm"></A>
+<P>
+If the <A NAME="11729"></A><TT>send</TT> parameter of a list is set to <TT>privatekey, publickey</TT> or <TT>privateorpublickey</TT>,
+        messages are only distributed in the list after an
+        <A NAME="11732"></A>authentication phase by return mail, using a
+        one-time password (numeric key). For this authentication,
+        the sender of the message is requested to post the ``<A NAME="11733"></A><TT>CONFIRM</TT>&nbsp;<I>key</I>'' command to <I>Sympa</I>.
+
+<P>
+</LI>
+<LI><A NAME="11737"></A><TT>QUIET</TT>
+
+<P>
+This command is used for silent (mute) processing: no
+        performance report is returned for commands prefixed with
+        <A NAME="11740"></A><TT>QUIET</TT>.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION002820000000000000000">
+27.2 Owner commands</A>
+</H1>
+
+<P>
+Some administrative requests are only available to list owner(s).
+They are indispensable for all procedures in limited access mode,
+and to perform requests in place of users.
+These comands are:
+
+<P>
+
+<UL>
+<LI><A NAME="11743"></A><TT>ADD</TT> <I>listname user@host firstname name</I>
+        <A NAME="cmd-add"></A>
+<P>
+Add command similar to <A NAME="11746"></A><TT>SUBSCRIBE</TT>. 
+	You can avoid user notification by using the <A NAME="11749"></A><TT>QUIET</TT>
+	prefix (ie: <A NAME="11752"></A><TT>QUIET ADD</TT>).
+
+<P>
+</LI>
+<LI><A NAME="11755"></A><TT>DELETE</TT> <I>listname user@host</I>
+        <A NAME="cmd-delete"></A>
+<P>
+Delete command similar to <A NAME="11758"></A><TT>SIGNOFF</TT>.
+	You can avoid user notification by using the <A NAME="11761"></A><TT>QUIET</TT>
+	prefix (ie: <A NAME="11764"></A><TT>QUIET DELETE</TT>).
+
+<P>
+</LI>
+<LI><A NAME="11767"></A><TT>REMIND</TT> <I>listname</I>
+	<A NAME="cmd-remind"></A>
+<P>
+<A NAME="11770"></A><TT>REMIND</TT> is used by list owners in order to send
+        an individual service reminder message to each subscriber. This
+        message is made by parsing the remind.tt2 file.
+
+<P>
+</LI>
+<LI><A NAME="11773"></A><TT>REMIND</TT> <I>*</I>
+
+<P>
+<A NAME="11776"></A><TT>REMIND</TT> is used by the listmaster to send to each subscriber of any list a single
+        message with a summary of his/her subscriptions. In this case the 
+        message sent is constructed by parsing the global_remind.tt2 file.
+        For each list, <I>Sympa</I> tests whether the list is configured as hidden 
+	to each subscriber (parameter lparam visibility). By default the use 
+	of this command is restricted to listmasters. 
+	Processing may take a lot of time !
+
+<P>
+</LI>
+</UL>
+
+<P>
+As above, these commands can be prefixed with <A NAME="11780"></A><TT>QUIET</TT> to
+indicate processing without acknowledgment of receipt.
+
+<P>
+
+<H1><A NAME="SECTION002830000000000000000"></A>
+    <A NAME="moderation"></A>
+<BR>
+27.3 Moderator commands
+</H1>
+
+<P>
+If a list is moderated, <I>Sympa</I> only distributes messages enabled by one of
+its moderators (editors). Moderators have several
+methods for enabling message distribution, depending on the <A NAME="11784"></A><TT>send</TT> list parameter (<A HREF="node21.html#par-send">20.3.8</A>, page&nbsp;<A HREF="node21.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
+<UL>
+<LI><A NAME="11787"></A><TT>DISTRIBUTE</TT> <I>listname</I> <I>key</I>
+        <A NAME="cmd-distribute"></A>
+<P>
+If the <A NAME="11790"></A><TT>send</TT> parameter of a list is set to <TT>editorkey</TT> or <TT>editorkeyonly</TT>, each message queued
+        for <A NAME="11793"></A>moderation is stored in a spool (see&nbsp;<A HREF="node8.html#cf:queuemod">7.6.4</A>, page&nbsp;<A HREF="node8.html#cf:queuemod"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and linked
+        to a key.
+
+<P>
+The <A NAME="11794"></A>moderator must use this command to enable
+        message distribution.
+
+<P>
+</LI>
+<LI><A NAME="11795"></A><TT>REJECT</TT> <I>listname</I> <I>key</I>
+        <A NAME="cmd-reject"></A>
+<P>
+The message with the <I>key</I> key is deleted from the
+        moderation <A NAME="11798"></A>spool of the <I>listname</I>
+        list.
+
+<P>
+</LI>
+<LI><A NAME="11799"></A><TT>MODINDEX</TT> <I>listname</I>
+        <A NAME="cmd-modindex"></A>
+<P>
+This command returns the list of messages queued for
+        moderation for the <I>listname</I> list.
+
+<P>
+The result is presented in the form of an index, which
+        supplies, for each message, its sending date, its sender,
+        its size, and its associated key, as well as all
+        messages in the form of a digest.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1519"
+  HREF="node29.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1513"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1507"
+  HREF="node27.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1515"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html1517"
+  HREF="node30.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1520"
+  HREF="node29.html">28. Internals</A>
+<B> Up:</B> <A NAME="tex2html1514"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html1508"
+  HREF="node27.html">26. Sympa with S/MIME and HTTPS</A>
+ &nbsp; <B>  <A NAME="tex2html1516"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1518"
+  HREF="node30.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+root
+2006-01-30
+</ADDRESS>
+</BODY>
+</HTML>

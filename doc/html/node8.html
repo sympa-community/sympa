@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -354,12 +351,12 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-The <A NAME="7706"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> configuration file contains numerous
+The <A NAME="7706"></A><TT>/etc/sympa.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="7711"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file contains directives in the following
+The <A NAME="7711"></A><TT>/etc/sympa.conf</TT> file contains directives in the following
 format:
 
 <P>
@@ -423,7 +420,7 @@ Example: <TT>email           listserv</TT>
 
 <P>
 The list of e-mail addresses  of listmasters (users authorized to perform
-        global  server commands). Listmasters can be defined for each virtual robot.
+        global  server commands). Listmasters can be defined for each virtual host.
 
 <P>
 Example: <TT>listmaster postmaster@cru.fr,root@cru.fr</TT>
@@ -545,7 +542,7 @@ Idem <A NAME="7769"></A><TT>spam_protection</TT> but restricted to web archive.
 <BR>
 7.1.9 <TT>color_0</TT>, <TT>color_1</TT> ..  <TT>color_15</TT>
 </H2>
- They are the color definition for web interface.  Thoses parameters can be overwritten in each virtual robot definition. 
+ They are the color definition for web interface.  These parameters can be overwritten in each virtual host definition. 
  The color are used in the CSS file and unfortunitly they are also in use in some web templates. The sympa admin interface 
  show every colors in use.
 
@@ -557,7 +554,7 @@ Idem <A NAME="7769"></A><TT>spam_protection</TT> but restricted to web archive.
 </H2>
 
 <P>
-Deprecated. They are the color definition for previous web interface. Thoses parameters are unused in 5.1 and higher 
+Deprecated. They are the color definition for previous web interface. These parameters are unused in 5.1 and higher 
  version but still availible.style.css, print.css, print-preview.css and fullPage.css
 
 <P>
@@ -577,10 +574,10 @@ Example: <TT>logo_html_definition &lt;a href="http://www.mycompagnie.com"&gt;&lt
 </H2>
 
 <P>
-Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. Thoses CSS files are 
+Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. These CSS files are 
 installed in a part of the web server that can be reached without using sympa web engine. In order to do this edit the 
 robot.conf file and set the css_path parameter. Then retart the server and use skins module from the "admin sympa" page 
-to install preparsed CSS file. The in order to replace dynamic CSS by thoses static files 
+to install preparsed CSS file. The in order to replace dynamic CSS by these static files 
 set the <A NAME="7809"></A><TT>css_url</TT> parameter.
 
 <P>
@@ -598,7 +595,7 @@ definition of colors and in a near futur a complete definition of the skin, user
 <P>
 In order to make sympa web interface faster, it is strongly recommended to install static css file somewhere in your web site. This way sympa will deliver 
 only one page insteed of one page and four css page at each clic. This can be done using css_url parameter. The parameter must contain the URL of the 
-directory where  style.css, print.css, print-preview.css and fullPage.css are installed. You can make your own a sophisticated new skin editing thoses 
+directory where  style.css, print.css, print-preview.css and fullPage.css are installed. You can make your own a sophisticated new skin editing these 
 files. The server admin module include a CSS administration page that can help you to install static CSS.
 
 <P>
@@ -676,7 +673,7 @@ Defines who can run a <TT>REMIND *</TT> command.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="7842"></A><TT>/usr/local/sympa-os/expl</TT></TT>)
+(Default value: <TT><A NAME="7842"></A><TT>/home/sympa/expl</TT></TT>)
 
 <P>
 The directory whose subdirectories correspond to the different lists.
@@ -692,7 +689,7 @@ Example: <TT>home          /home/sympa/expl</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="7851"></A><TT>/usr/local/sympa-os/etc</TT></TT>)
+(Default value: <TT><A NAME="7851"></A><TT>/home/sympa/etc</TT></TT>)
 
 <P>
 This is the local directory for configuration files (such as
@@ -768,7 +765,7 @@ Example: <TT>log_level          2</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="7899"></A><TT>/usr/local/sympa-os/etc/sympa.pid</TT></TT>)
+(Default value: <TT><A NAME="7899"></A><TT>/home/sympa/etc/sympa.pid</TT></TT>)
 
 <P>
 The file where the <A NAME="7902"></A><TT>sympa.pl</TT> daemon stores its
@@ -864,7 +861,7 @@ Example: <TT>log_smtp           on</TT>
 
 <P>
 Maximum size allowed for messages distributed by <I>Sympa</I>.
-	This may be customized per virtual robot or per list by setting the <A NAME="7935"></A><TT>max_size</TT> 
+	This may be customized per virtual host or per list by setting the <A NAME="7935"></A><TT>max_size</TT> 
 	robot or list parameter.
 
 <P>
@@ -1036,7 +1033,7 @@ This parameter defines the list of SMTP header fields that should be
 If this parameter is set with a SMTP server address, <I>Sympa</I> will check if alias
 	with the same name as the list you're gonna create already exists on the
 	SMTP server. It is robot specific, i.e. you can specify a different SMTP
-	server for every virtual robot you are running. This is needed if you are
+	server for every virtual host you are running. This is needed if you are
 	running <I>Sympa</I> on somehost.foo.org, but you handle all your mail on a
 	separate mail relay.
 
@@ -1112,7 +1109,7 @@ The default disk quota for lists' web archives.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8033"></A><TT>/usr/local/sympa-os/spool</TT></TT>)
+(Default value: <TT><A NAME="8033"></A><TT>/home/sympa/spool</TT></TT>)
 
 <P>
 The parent directory which contains all the other spools.  
@@ -1130,7 +1127,7 @@ The absolute path of the directory which contains the queue, used both by the
         parameter is mandatory.
 
 <P>
-Example: <TT><A NAME="8047"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
+Example: <TT><A NAME="8047"></A><TT>/home/sympa/spool/msg</TT></TT>
 
 <P>
 
@@ -1142,7 +1139,7 @@ Example: <TT><A NAME="8047"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8055"></A><TT>/usr/local/sympa-os/spool/distribute</TT></TT>)
+(Default value: <TT><A NAME="8055"></A><TT>/home/sympa/spool/distribute</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1156,7 +1153,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8063"></A><TT>/usr/local/sympa-os/spool/moderation</TT></TT>)
+(Default value: <TT><A NAME="8063"></A><TT>/home/sympa/spool/moderation</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1181,7 +1178,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8074"></A><TT>/usr/local/sympa-os/spool/auth</TT></TT>)
+(Default value: <TT><A NAME="8074"></A><TT>/home/sympa/spool/auth</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1194,7 +1191,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8082"></A><TT>/usr/local/sympa-os/spool/outgoing</TT></TT>)
+(Default value: <TT><A NAME="8082"></A><TT>/home/sympa/spool/outgoing</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1207,7 +1204,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8090"></A><TT>/usr/local/sympa-os/spool/topic</TT></TT>)
+(Default value: <TT><A NAME="8090"></A><TT>/home/sympa/spool/topic</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1221,7 +1218,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8098"></A><TT>/usr/local/sympa-os/spool/bounce</TT></TT>)
+(Default value: <TT><A NAME="8098"></A><TT>/home/sympa/spool/bounce</TT></TT>)
 
 <P>
 Spool to store bounces (non-delivery reports) received by the <A NAME="8101"></A><TT>bouncequeue</TT>
@@ -1237,7 +1234,7 @@ Spool to store bounces (non-delivery reports) received by the <A NAME="8101"></A
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8109"></A><TT>/usr/local/sympa-os/spool/task</TT></TT>)
+(Default value: <TT><A NAME="8109"></A><TT>/home/sympa/spool/task</TT></TT>)
 
 <P>
 Spool to store task files created by the task manager. This parameter is mandatory
@@ -1251,7 +1248,7 @@ Spool to store task files created by the task manager. This parameter is mandato
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8117"></A><TT>/usr/local/sympa-os/spool/tmp</TT></TT>)
+(Default value: <TT><A NAME="8117"></A><TT>/home/sympa/spool/tmp</TT></TT>)
 
 <P>
 Temporary directory used by OpenSSL and antiviruses.
@@ -1354,7 +1351,7 @@ Delay for keeping message topic files (in days) in the <A NAME="8155"></A>topic
 </H2>   
 
 <P>
-(Default value: <TT><A NAME="8161"></A><TT>/usr/local/sympa-os/locale</TT></TT>)
+(Default value: <TT><A NAME="8161"></A><TT>/home/sympa/locale</TT></TT>)
 
 <P>
 The location of multilingual catalog files. Must correspond to	<A NAME="8164"></A><TT>~src/locale/Makefile</TT>.
@@ -2239,7 +2236,7 @@ detected.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-25
+2006-01-30
 </ADDRESS>
 </BODY>
 </HTML>
