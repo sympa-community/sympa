@@ -159,6 +159,7 @@ sub SetLang {
 
     ## Set Locale::Messages context
     my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
+    $locale_dashless =~ s/-//g;
     foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
 	my $success;
 	foreach my $try ($locale.'.'.$locale2charset{$locale},
