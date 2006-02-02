@@ -13718,7 +13718,7 @@ sub new_d_read {
      # current list / current shared directory
      my $list_name = $list->{'name'};
 
-     my $document = new SharedDocument ($list, $in{'path'}, $param->{'user'}{'email'});
+     my $document = new SharedDocument ($list, $in{'path'}, $param);
 
      unless (defined $document) {
 	 &report::reject_report_web('intern','new_document_failed',{'path'=>$in{'path'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -13929,17 +13929,6 @@ sub new_d_read {
      return 1;
 }
 
-sub get_icon {
-    my $type = shift;
-
-    return $icon_table{$type};
-}
-
-sub get_mime_type {
-    my $type = shift;
-
-    return $mime_types->{$type};
-}
 
 ## Check authorizations to the current action
 ## used in common cases where actions fails unless result is 'do_it'
@@ -13966,4 +13955,16 @@ sub check_authz {
     }
     
     return 1;
+}
+
+sub get_icon {
+    my $type = shift;
+
+    return $icon_table{$type};
+}
+
+sub get_mime_type {
+    my $type = shift;
+
+    return $mime_types->{$type};
 }

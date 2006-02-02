@@ -35,8 +35,9 @@ use POSIX;
 
 ## Creates a new object
 sub new {
-    my($pkg, $list, $path, $email) = @_;
+    my($pkg, $list, $path, $param) = @_;
 
+    my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
     &do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
@@ -46,7 +47,7 @@ sub new {
 	return undef;
     }
 
-    my $shared_dir = $list->{'dir'}.'/shared';
+    $document->{'root_path'} = $list->{'dir'}.'/shared';
 
     $document->{'path'} = &main::no_slash_end($path);
     $document->{'escaped_path'} = &tools::escape_chars($document->{'path'}, '/');
@@ -57,29 +58,19 @@ sub new {
 	return undef;
     }
 
-    ## Check privileges
-    my %mode = ('read' => 1,
-		'edit' => 1,
-		'control' => 1
-	    );
-
-    my %access = &main::d_access_control(\%mode, $document->{'path'});
-    unless (defined %access) {
-	&do_log('err',"SharedDocument::new : failed to determine access privileges for %s", $document->{'absolute_path'});
-	return undef;
+    ## absolute path
+    # my $doc;
+    $document->{'absolute_path'} = $document->{'root_path'};
+    if ($document->{'path'}) {
+	$document->{'absolute_path'} .= '/'.$document->{'path'};
     }
-    $document->{'access'} = \%access;   
+
+    ## Check access control
+    &check_access_control($document, $param);
 
     ###############################
     ## The path has been checked ##
     ###############################
-
-    ## absolute path
-    # my $doc;
-    $document->{'absolute_path'} = $shared_dir;
-    if ($document->{'path'}) {
-	$document->{'absolute_path'} .= '/'.$document->{'path'};
-    }
 
     ### Document exist ? 
     unless (-r $document->{'absolute_path'}) {
@@ -231,7 +222,7 @@ sub new {
 
 	foreach my $d (@{$dir}) {
 
-	    my $sub_document = new SharedDocument ($list, $path.'/'.$d, $email);	    
+	    my $sub_document = new SharedDocument ($list, $document->{'path'}.'/'.$d, $param);	    
 	    push @{$document->{'subdir'}}, $sub_document;
 	}
     }
@@ -263,6 +254,228 @@ sub dup {
 
     return $copy;
 }
+
+ ## Regulars
+ #  read(/) = default (config list)
+ #  edit(/) = default (config list)
+ #  control(/) = not defined
+#  read(A/B)= (read(A) && read(B)) ||
+ #             (author(A) || author(B))
+ #  edit = idem read
+ #  control (A/B) : author(A) || author(B)
+ #  + (set owner A/B) if (empty directory &&   
+ #                        control A)
+
+
+sub check_access_control {
+    # Arguments:
+    # (\%mode,$path)
+    # if mode->{'read'} control access only for read
+    # if mode->{'edit'} control access only for edit
+    # if mode->{'control'} control access only for control
+    
+    # return the hash (
+    # $result{'may'}{'read'} == $result{'may'}{'edit'} == $result{'may'}{'control'}  if is_author else :
+    # $result{'may'}{'read'} = 0 or 1 (right or not)
+    # $result{'may'}{'edit'} = 0(not may edit) or 0.5(may edit with moderation) or 1(may edit ) : it is not a boolean anymore
+    # $result{'may'}{'control'} = 0 or 1 (right or not)
+    # $result{'reason'}{'read'} = string for authorization_reject.tt2 when may_read == 0
+    # $result{'reason'}{'edit'} = string for authorization_reject.tt2 when may_edit == 0
+    # $result{'scenario'}{'read'} = scenario name for the document
+    # $result{'scenario'}{'edit'} = scenario name for the document
+    
+    
+    # Result
+    my %result;
+    $result{'reason'} = {};
+    
+    # Control 
+    
+    # Arguments
+    my $self = shift;
+    my $param = shift;
+
+    my $list = $self->{'list'};
+
+    &do_log('debug', "check_access_control(%s)", $self->{'path'});
+
+    # Control for editing
+    my $may_read = 1;
+    my $why_not_read = ''; 
+    my $may_edit = 1;
+    my $why_not_edit = ''; 
+    
+    ## First check privileges on the root shared directory
+    $result{'scenario'}{'read'} = $list->{'admin'}{'shared_doc'}{'d_read'}{'name'};
+    $result{'scenario'}{'edit'} = $list->{'admin'}{'shared_doc'}{'d_edit'}{'name'};
+    
+    ## Privileged owner has all privileges
+    if ($param->{'is_privileged_owner'}) {
+	$result{'may'}{'read'} = 1;
+	$result{'may'}{'edit'} = 1;
+	$result{'may'}{'control'} = 1; 
+
+	$self->{'access'} = \%result;
+	return 1;
+    }
+    
+    # if not privileged owner
+    if (1) {
+	my $result = $list->check_list_authz('shared_doc.d_read',$param->{'auth_method'},
+					     {'sender' => $param->{'user'}{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});    
+	my $action;
+	if (ref($result) eq 'HASH') {
+	    $action = $result->{'action'};   
+	    $why_not_read = $result->{'reason'}; 
+	}	     
+	
+	$may_read = ($action =~ /do_it/i);
+    }
+    
+    if (1) {
+	my $result = $list->check_list_authz('shared_doc.d_edit',$param->{'auth_method'},
+					     {'sender' => $param->{'user'}{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});
+	my $action;
+	if (ref($result) eq 'HASH') {
+	    $action = $result->{'action'};   
+	    $why_not_edit = $result->{'reason'}; 
+	}	 
+	
+	#edit = 0, 0.5 or 1
+	$may_edit = &main::find_edit_mode($action);	 
+	$why_not_edit = '' if ($may_edit);
+    }
+    
+    ## Only authenticated users can edit files
+    unless ($param->{'user'}{'email'}) {
+	$may_edit = 0;
+	$why_not_edit = 'not_authenticated';
+    }
+    
+    my $current_path = $self->{'path'};
+    my $current_document;
+    my %desc_hash;
+    my $user = $param->{'user'}{'email'} || 'nobody';
+    
+    while ($current_path ne "") {
+	# no description file found yet
+	my $def_desc_file = 0;
+	my $desc_file;
+	
+	$current_path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	$current_document = $3;
+	my $next_path = $1;
+	
+	# opening of the description file appropriated
+	if (-d $self->{'root_path'}.'/'.$current_path) {
+	    # case directory
+	    
+	    #		unless ($slash) {
+	    $current_path = $current_path.'/';
+	    #		}
+	    
+	    if (-e "$self->{'root_path'}/$current_path.desc"){
+		$desc_file = $self->{'root_path'}.'/'.$current_path.".desc";
+		$def_desc_file = 1;
+	    }
+	    
+	}else {
+	    # case file
+	    if (-e "$self->{'root_path'}/$next_path.desc.$3"){
+		$desc_file = $self->{'root_path'}.'/'.$next_path.".desc.".$3;
+		$def_desc_file = 1;
+	    } 
+	}
+	
+	if ($def_desc_file) {
+	    # a description file was found
+	    # loading of acces information
+	    
+	    %desc_hash = &main::get_desc_file($desc_file);
+	    
+	    ## Author has all privileges
+	    if ($user eq $desc_hash{'email'}) {
+		$result{'may'}{'read'} = 1;
+		$result{'may'}{'edit'} = 1;
+		$result{'may'}{'control'} = 1;
+
+		$self->{'access'} = \%result;
+		return 1;
+	    } 
+	    
+	    if (1) {
+		
+		my $result = $list->check_list_authz('shared_doc.d_read',$param->{'auth_method'},
+						     {'sender' => $param->{'user'}{'email'},
+						      'remote_host' => $param->{'remote_host'},
+						      'remote_addr' => $param->{'remote_addr'},
+						      'scenario'=> $desc_hash{'read'}});
+		my $action;
+		if (ref($result) eq 'HASH') {
+		    $action = $result->{'action'};   
+		    $why_not_read = $result->{'reason'}; 
+		}	     
+		
+		$may_read = $may_read && ( $action=~ /do_it/i);
+		$why_not_read = '' if ($may_read);
+	    }
+	    
+	    if (1) {
+		my $result = $list->check_list_authz('shared_doc.d_edit',$param->{'auth_method'},
+						     {'sender' => $param->{'user'}{'email'},
+						      'remote_host' => $param->{'remote_host'},
+						      'remote_addr' => $param->{'remote_addr'},
+						      'scenario'=> $desc_hash{'edit'}});
+		my $action_edit;
+		if (ref($result) eq 'HASH') {
+		    $action_edit = $result->{'action'};   
+		    $why_not_edit = $result->{'reason'}; 
+		}
+		
+		
+		# $may_edit = 0, 0.5 or 1
+		my $may_action_edit = &main::find_edit_mode($action_edit);
+		$may_edit = &main::merge_edit($may_edit,$may_action_edit); 
+		$why_not_edit = '' if ($may_edit);
+		
+		
+	    }
+	    
+	    ## Only authenticated users can edit files
+	    unless ($param->{'user'}{'email'}) {
+		$may_edit = 0;
+		$why_not_edit = 'not_authenticated';
+	    }
+	    
+	    unless (defined $result{'scenario'}{'read'}) {
+		$result{'scenario'}{'read'} = $desc_hash{'read'};
+		$result{'scenario'}{'edit'} = $desc_hash{'edit'};
+	    }
+	    
+	}
+	
+	# truncate the path for the while   
+	$current_path = $next_path; 
+    }
+    
+    if (1) {
+	$result{'may'}{'read'} = $may_read;
+	$result{'reason'}{'read'} = $why_not_read;
+    }
+    
+    if (1) {
+	  $result{'may'}{'edit'} = $may_edit;
+	  $result{'reason'}{'edit'} = $why_not_edit;
+      }
+    
+    $self->{'access'} = \%result;
+    return 1;
+}
+
 
 ## Packages must return true.
 1;
