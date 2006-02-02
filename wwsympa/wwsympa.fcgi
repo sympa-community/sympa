@@ -4870,7 +4870,7 @@ sub do_skinsedit {
 #      
 ####################################################
  sub do_reject {
-     &wwslog('info', 'do_reject()');
+     &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
 
      unless ($param->{'list'}) {
@@ -4954,7 +4954,7 @@ sub do_skinsedit {
 #      
 ###################################################### 
  sub do_distribute {
-     &wwslog('info', 'do_distribute()');
+     &wwslog('info', 'do_distribute(%s)', $in{'id'});
      my ($msg, $file);
 
      unless ($param->{'list'}) {
