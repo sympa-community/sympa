@@ -4982,7 +4982,7 @@ sub do_skinsedit {
      }
 
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => <"$time"."\@wwsympa">},
+     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
 		 'from'=> $param->{'user'}{'email'}};
 
      ## msg topics
@@ -12415,7 +12415,7 @@ sub d_test_existing_and_rights {
      }
 
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => <"$time"."\@wwsympa">},
+     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
 		 'from'=> $param->{'user'}{'email'},
 		 'body' => $mail_command};
 
@@ -12866,7 +12866,7 @@ sub d_test_existing_and_rights {
 
      ## CONFIRM
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => <"$time"."\@wwsympa">},
+     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
 		 'from'=> $param->{'user'}{'email'}};
 
      $data->{'body'} = sprintf ("QUIET CONFIRM %s\n",$in{'authkey'});
