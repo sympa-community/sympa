@@ -906,6 +906,7 @@ sub sighup {
 sub DoFile {
     my ($file) = @_;
     &do_log('debug', 'DoFile(%s)', $file);
+
     
     my ($listname, $robot);
     my $status;
@@ -920,6 +921,7 @@ sub DoFile {
     my $hdr = $msg->head;
     my $rcpt = $message->{'rcpt'};
     
+    &do_log('notice', 'Processing %s ; sender: %s ; message-id: %s', $file, $hdr->get('From'), $hdr->get('Message-ID'));
 
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
