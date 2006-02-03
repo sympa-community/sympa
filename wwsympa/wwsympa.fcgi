@@ -4988,7 +4988,7 @@ sub do_skinsedit {
      }
 
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
+     my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot)},
 		 'from'=> $param->{'user'}{'email'}};
 
      ## msg topics
@@ -5011,7 +5011,7 @@ sub do_skinsedit {
      ## messages
      foreach my $id (split /,/, $in{'id'}) {
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
-	 $data->{'body'} = $mail_command;
+	 $data->{'body'} .= $mail_command;
 
 	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
 
@@ -5031,21 +5031,20 @@ sub do_skinsedit {
 	     my $head = $msg->head();
 	     my $filetopic = $list->tag_topic(&tools::clean_msg_id($head->get('Message-Id')),$list_topics,'editor');
 	 }
-
-
-	 unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'),$data,$robot)) {
-	     &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
-					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_distribute: failed to send message for file %s', $file);
-	     return undef;
-	 }
-
+	 
 	 unless (rename($file,"$file.distribute")) {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$file,
 								'new'=>"$file.distribute"},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_distribute: failed to rename %s', $file);
 	 }
+     }
+
+     unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'), $data, $robot)) {
+	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
+				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('err','do_distribute: failed to send message for file %s', $file);
+	 return undef;
      }
 
      &report::notice_report_web('performed_soon',{},$param->{'action'});
