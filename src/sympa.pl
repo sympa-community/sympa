@@ -1634,41 +1634,41 @@ sub DoCommand {
     ## unless subject contained commands or message has no body
     if ( (!$cmd_found) && (defined $msg->bodyhandle)) { 
 
-    ## check Content-type
-    my $mime = $hdr->get('Mime-Version') ;
-    my $content_type = $hdr->get('Content-type');
-    my $transfert_encoding = $hdr->get('Content-transfer-encoding');
-    unless (($content_type =~ /text/i and !$mime)
-	    or !($content_type) 
-	    or ($content_type =~ /text\/plain/i)) {
-	&do_log('notice', "Ignoring message body not in text/plain, Content-type: %s", $content_type);
-	&report::global_report_cmd('user','error_content_type',{});
-	return $success; 
-    }
-    
-    my @body = $msg->bodyhandle->as_lines();
-    foreach $i (@body) {
-	if ($transfert_encoding =~ /quoted-printable/i) {
-	    $i = MIME::QuotedPrint::decode($i);
+	## check Content-type
+	my $mime = $hdr->get('Mime-Version') ;
+	my $content_type = $hdr->get('Content-type');
+	my $transfert_encoding = $hdr->get('Content-transfer-encoding');
+	unless (($content_type =~ /text/i and !$mime)
+		or !($content_type) 
+		or ($content_type =~ /text\/plain/i)) {
+	    &do_log('notice', "Ignoring message body not in text/plain, Content-type: %s", $content_type);
+	    &report::global_report_cmd('user','error_content_type',{});
+	    return $success; 
 	}
 	
-	$i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
-	next if ($i =~ /^$/); ## skip empty lines
-	next if ($i =~ /^\s*\#/) ;
-    
-	&do_log('debug2',"is_signed->body $is_signed->{'body'}");
-	
-	$status = &Commands::parse($sender, $robot, $i, $is_signed->{'body'});
-	$cmd_found = 1; # if problem no_cmd_understood is sent here
-	if ($status eq 'unknown_cmd') {
-	    &do_log('notice', "Unknown command found :%s", $i);
-	    &report::reject_report_cmd('user','not_understood',{},$i);
-  	    last;
-	}
-	
-	    if ($i =~ /^(qui|quit|end|stop|-)/io) {
+	my @body = $msg->bodyhandle->as_lines();
+	foreach $i (@body) {
+	    if ($transfert_encoding =~ /quoted-printable/i) {
+		$i = MIME::QuotedPrint::decode($i);
+	    }
+	    
+	    $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
+	    next if ($i =~ /^$/); ## skip empty lines
+	    next if ($i =~ /^\s*\#/) ;
+	    
+	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
+	    
+	    $status = &Commands::parse($sender, $robot, $i, $is_signed->{'body'});
+	    $cmd_found = 1; # if problem no_cmd_understood is sent here
+	    if ($status eq 'unknown_cmd') {
+		&do_log('notice', "Unknown command found :%s", $i);
+		&report::reject_report_cmd('user','not_understood',{},$i);
 		last;
 	    }
+	    
+#	    if ($i =~ /^(qui|quit|end|stop|-)/io) {
+#		last;
+#	    }
 	    
 	    $success ||= $status;
 	}
