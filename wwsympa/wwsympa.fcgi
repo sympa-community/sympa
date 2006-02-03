@@ -4870,7 +4870,10 @@ sub do_skinsedit {
 #      
 ####################################################
  sub do_reject {
-     &wwslog('info', 'do_reject(%s)', $in{'id'});
+
+     $in{'id'} =~ s/\0/,/;
+     
+    &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
 
      unless ($param->{'list'}) {
@@ -4897,7 +4900,7 @@ sub do_skinsedit {
 	 return undef;
      }
 
-     foreach my $id (split /\0/, $in{'id'}) {
+     foreach my $id (split /,/, $in{'id'}) {
 
 	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
 
@@ -4954,6 +4957,9 @@ sub do_skinsedit {
 #      
 ###################################################### 
  sub do_distribute {
+
+     $in{'id'} =~ s/\0/,/;
+
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
      my ($msg, $file);
 
@@ -5003,7 +5009,7 @@ sub do_skinsedit {
 
 
      ## messages
-     foreach my $id (split /\0/, $in{'id'}) {
+     foreach my $id (split /,/, $in{'id'}) {
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} = $mail_command;
 
