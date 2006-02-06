@@ -4871,7 +4871,7 @@ sub do_skinsedit {
 ####################################################
  sub do_reject {
 
-     $in{'id'} =~ s/\0/,/;
+     $in{'id'} =~ s/\0/,/g;
      
     &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
@@ -4958,7 +4958,7 @@ sub do_skinsedit {
 ###################################################### 
  sub do_distribute {
 
-     $in{'id'} =~ s/\0/,/;
+     $in{'id'} =~ s/\0/,/g;
 
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
      my ($msg, $file);
