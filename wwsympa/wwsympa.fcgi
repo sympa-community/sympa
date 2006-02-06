@@ -4905,10 +4905,10 @@ sub do_skinsedit {
 	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
 
 	 ## Open the file
-	 if (!open(IN, $file)) {
-	     &report::reject_report_web('user','reject_someone_else_did_it',{},$param->{'action'});
+	 unless (open(IN, $file)) {
+	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
 	     &wwslog('err','do_reject: Unable to open %s', $file);
-	     return undef;
+	     next;
 	 }
 	 unless ($in{'quiet'}) {
 	     my $msg;
@@ -5014,6 +5014,12 @@ sub do_skinsedit {
 	 $data->{'body'} .= $mail_command;
 
 	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
+
+	 unless (-f $file) {
+	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
+	     &wwslog('err','do_distribute: Unable to open %s', $file);
+	     next;
+	 }
 
 	 ## TAG 
 	 if ($list_topics) {
