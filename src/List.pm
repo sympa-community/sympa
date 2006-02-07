@@ -1116,7 +1116,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'web_archive_spam_protection' => {'format' => ['cookie','javascript','at','none'],
 			 'default' => {'conf' => 'web_archive_spam_protection'},
 			 'gettext_id' => "email address protection method",
-			 'group' => 'other'
+			 'group' => 'archives'
 			  },
 
 	    'status' => {'format' => ['open','closed','pending','error_config','family_closed'],
