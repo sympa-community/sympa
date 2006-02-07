@@ -1764,17 +1764,10 @@ sub CleanSpool {
 		unlink ("$spool_dir/$f") ;
 		&do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
 	    }elsif (-d "$spool_dir/$f") {
-		unless (opendir(DIR, "$spool_dir/$f")) {
-		    &do_log('err', 'Cannot open directory %s : %s', "$spool_dir/$f", $!);
+		unless (&tools::remove_dir("$spool_dir/$f")) {
+		    &do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
 		    next;
 		}
-		my @files = sort grep (!/^\./,readdir(DIR));
-		foreach my $file (@files) {
-		    unlink ("$spool_dir/$f/$file");
-		}	
-		closedir DIR;
-		
-		rmdir ("$spool_dir/$f") ;
 		&do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
 	    }
 	}
