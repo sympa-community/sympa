@@ -1989,11 +1989,21 @@ sub distribute {
     my $modqueue =  &Conf::get_robot_conf($robot,'queuemod') ;
     
     my $name = $list->{'name'};
-    my $file = "$modqueue\/$name\_$key";
+    my $file;
+
+    ## For compatibility concerns
+    foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	$file = $modqueue.'/'.$list_id.'_'.$key;
+	last if (-f $file);
+    }    
     
     ## if the file has been accepted by WWSympa, it's name is different.
     unless (-r $file) {
-        $file= "$modqueue\/$name\_$key.distribute";
+	## For compatibility concerns
+	foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	    $file = $modqueue.'/'.$list_id.'_'.$key.'.distribute';
+	    last if (-f $file);
+	}    
     }
 
     ## Open and parse the file
@@ -2269,8 +2279,13 @@ sub reject {
     &Language::SetLang($list->{'admin'}{'lang'});
 
     my $name = "$list->{'name'}";
-    my $file= "$modqueue\/$name\_$key";
+    my $file;
 
+    ## For compatibility concerns
+    foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	$file = $modqueue.'/'.$list_id.'_'.$key;
+	last if (-f $file);
+    }       
 
     my $msg;
     my $parser = new MIME::Parser;
@@ -2380,12 +2395,7 @@ sub modindex {
     my ($curlist,$moddelay);
     foreach $i (sort @qfile) {
 
-	## Erase diretories used for web modindex
-	if (-d "$modqueue/$i") {
-	    unlink <$modqueue/$i/*>;
-	    rmdir "$modqueue/$i";
-	    next;
-	}
+	next if (-d "$modqueue/$i");
 
 	$i=~/\_(.+)$/;
 	$curlist = new List ($`,$robot);
@@ -2406,7 +2416,8 @@ sub modindex {
 
     opendir(DIR, $modqueue);
 
-    my @files = ( sort grep (/^$name\_/,readdir(DIR)));
+    my $list_id = $list->get_list_id();
+    my @files = ( sort grep (/^($name|$list_id)\_/,readdir(DIR)));
     closedir(DIR);
     my $n;
     my @now = localtime(time);

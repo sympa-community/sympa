@@ -3597,8 +3597,9 @@ sub send_to_editor {
    
    ## Keeps a copy of the message
    if ($method eq 'md5'){  
-       unless (open(OUT, ">$modqueue\/$name\_$modkey")) {
-	   do_log('notice', 'Could Not open %s', "$modqueue\/$name\_$modkey");
+       my $mod_file = $modqueue.'/'.$self->get_list_id().'_'.$modkey;
+       unless (open(OUT, ">$mod_file")) {
+	   do_log('notice', 'Could Not open %s', $mod_file);
 	   return undef;
        }
 
@@ -3611,7 +3612,7 @@ sub send_to_editor {
        close MSG ;
        close(OUT);
 
-       my $tmp_dir = "$modqueue\/.$name\_$modkey";
+       my $tmp_dir = $modqueue.'/.'.$self->get_list_id().'_'.$modkey;
        unless (-d $tmp_dir) {
 	   unless (mkdir ($tmp_dir, 0777)) {
 	       &do_log('err','Unable to create %s', $tmp_dir);
@@ -3628,11 +3629,11 @@ sub send_to_editor {
 	   chdir $tmp_dir;
 	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
 	   
-	   open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey|";
+	   open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file|";
 	   open MSG, ">msg00000.html";
 	   
 
-	   &do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey");
+	   &do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file");
 
 ########################## APRES
 	   print MSG <ARCMOD>;
@@ -10284,7 +10285,9 @@ sub get_mod_spool_size {
 	return undef;
     }
 
-    @msg = sort grep(/^$self->{'name'}\_\w+$/, readdir SPOOL);
+    my $list_name = $self->{'name'};
+    my $list_id = $self->get_list_id();
+    @msg = sort grep(/^($list_id|$list_name)\_\w+$/, readdir SPOOL);
 
     closedir SPOOL;
     return ($#msg + 1);

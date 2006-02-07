@@ -4562,9 +4562,12 @@ sub do_skinsedit {
 	 return 'admin';
      }
 
+     my $list_name = $list->{'name'};
+     my $list_id = $list->get_list_id();
      foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
 	 next
-	     unless ($msg =~ /^$list->{'name'}\_(\w+)$/);
+	     unless ($msg =~ /^$list_id\_(\w+)$/ ||
+		     $msg =~ /^$list_name\_(\w+)$/);
 
 	 my $id = $1;
 
@@ -4902,7 +4905,11 @@ sub do_skinsedit {
 
      foreach my $id (split /,/, $in{'id'}) {
 
-	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
+	 ## For compatibility concerns
+	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
+	     last if (-f $file);
+	 }
 
 	 ## Open the file
 	 unless (open(IN, $file)) {
@@ -5013,7 +5020,12 @@ sub do_skinsedit {
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} .= $mail_command;
 
-	 $file = "$Conf{'queuemod'}/$list->{'name'}_$id";
+
+	 ## For compatibility concerns
+	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
+	     last if (-f $file);
+	 }
 
 	 unless (-f $file) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
@@ -5069,7 +5081,7 @@ sub do_skinsedit {
 # OUT : 'login,request' | '1' | undef
 #
 ####################################################
- sub do_viewmod {
+sub do_viewmod {
      &wwslog('info', 'do_viewmod(%s)', $in{'id'});
      my $msg;
 
@@ -5097,8 +5109,15 @@ sub do_skinsedit {
 	 return undef;
      }
 
-     my $tmp_dir = $Conf{'queuemod'}.'/.'.$list->{'name'}.'_'.$in{'id'};
-
+     my $tmp_dir;
+     ## For compatibility concerns
+     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
+	 if (-d $tmp_dir) {
+	     last;
+	 }
+     }
+     
      unless (-d $tmp_dir) {
 	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
 	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
@@ -5108,10 +5127,10 @@ sub do_skinsedit {
      if ($in{'file'}) {
 	 $in{'file'} =~ /\.(\w+)$/;
 	 $param->{'file_extension'} = $1;
-	 $param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/$in{'file'}";
+	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
 	 $param->{'bypass'} = 1;
      }else {
-	 &tt2::add_include_path("$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}") ;
+	 &tt2::add_include_path($tmp_dir) ;
      }
 
      $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};
@@ -8241,6 +8260,7 @@ sub _restrict_values {
 	     next unless ($file =~ /^$param->{'list'}\_/ ||
 			  $file =~ /^$param->{'list'}\./ ||
 			  $file =~ /^$param->{'list'}\@$robot\./ ||
+			  $file =~ /^$param->{'list'}\@$robot\_/ ||
 			  $file =~ /\.$param->{'list'}$/);
 	     
 	     my $newfile = $file;
@@ -8250,6 +8270,8 @@ sub _restrict_values {
 		 $newfile =~ s/^$param->{'list'}\./$in{'new_listname'}\./;
 	     }elsif ($file =~ /^$param->{'list'}\@$robot\./) {
 		 $newfile =~ s/^$param->{'list'}\@$robot\./$in{'new_listname'}\@$in{'new_robot'}\./;
+	     }elsif ($file =~ /^$param->{'list'}\@$robot\_/) {
+		 $newfile =~ s/^$param->{'list'}\@$robot\_/$in{'new_listname'}\@$in{'new_robot'}\_/;
 	     }elsif ($file =~ /\.$param->{'list'}$/) {
 		 $newfile =~ s/\.$param->{'list'}$/\.$in{'new_listname'}/;
 	     }
