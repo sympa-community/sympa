@@ -696,6 +696,7 @@ sub reject_report_web {
     }
 
 
+    ## Notify listmaster for internal or system errors
     if ($type eq 'intern'|| $type eq 'system') {
 	if ($robot){
 	    my $param = $data;
@@ -703,7 +704,7 @@ sub reject_report_web {
 	    $param->{'error'} = &gettext($error);
 	    $param->{'listname'} = $listname;
 	    $param->{'who'} = $user;
-	    $param->{'action'} = 'Command process';
+	    $param->{'action'} ||= 'Command process';
 
 	    unless (&List::send_notify_to_listmaster('web_'.$type.'_error', $robot, $param)) {
 		&do_log('notice',"report::reject_report_web(): Unable to notify listmaster concerning '$user'");
