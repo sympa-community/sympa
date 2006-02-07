@@ -12825,6 +12825,12 @@ sub d_test_existing_and_rights {
      my $authqueue = &Conf::get_robot_conf($robot,'queueauth');
      my $filename = "$authqueue\/$listname\_$in{'authkey'}";
 
+     ## For compatibility concerns
+     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	 $filename = $authqueue.'/'.$list_id.'_'.$in{'authkey'};
+	 last if (-f $filename);
+     }
+
      my $parser = new MIME::Parser;
      $parser->output_to_core(1);
 
@@ -12906,6 +12912,12 @@ sub d_test_existing_and_rights {
 
      my $queueauth = &Conf::get_robot_conf($robot, 'queueauth');
      my $filemsg = "$queueauth/$list->{'name'}_$in{'authkey'}";
+
+     ## For compatibility concerns
+     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	 $filemsg = $queueauth.'/'.$list_id.'_'.$in{'authkey'};
+	 last if (-f $filemsg);
+     }
 
      unless ($filemsg && (-r $filemsg)) {
 	 &report::reject_report_web('intern','update_subscriber_db_failed',{'key' => $in{'authkey'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);

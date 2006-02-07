@@ -3743,8 +3743,9 @@ sub send_auth {
 		   .int(rand(6)).int(rand(6))."\@".$host;
    my $authkey = Digest::MD5::md5_hex(join('/', $self->get_cookie(),$messageid));
      
-   unless (open OUT, ">$authqueue\/$name\_$authkey") {
-       &do_log('notice', 'Cannot create file %s', "$authqueue/$name\_$authkey");
+   my $auth_file = $authqueue.'/'.$self->get_list_id().'_'.$authkey;   
+   unless (open OUT, ">$auth_file") {
+       &do_log('notice', 'Cannot create file %s', $auth_file);
        return undef;
    }
 
