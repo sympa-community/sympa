@@ -2239,10 +2239,12 @@ sub diff_on_arrays {
 ######################################################
 sub clean_msg_id {
     my $msg_id = shift;
-  
-    ## remove leading and trailing spaces, cr
-    chomp($msg_id);
-    $msg_id =~ s/^\s*<?([^>\s]+)>?\s*/$1/i;
+    
+    chomp $msg_id;
+
+    if ($msg_id =~ /\<(.+)\>/) {
+	$msg_id = $1;
+    }
 
     return $msg_id;
 }
@@ -2438,6 +2440,5 @@ sub unlock {
     
     return 1;
 }
-
 
 1;

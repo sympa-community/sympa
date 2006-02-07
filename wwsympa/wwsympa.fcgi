@@ -5970,7 +5970,7 @@ sub do_remove_arc {
 
  ## Search message-id in web archives
  sub do_arcsearch_id {
-     &wwslog('info', 'do_arcsearch_id(%s,%s)', $param->{'list'},$in{'msgid'});
+     &wwslog('info', 'do_arcsearch_id(%s,%s,%s)', $param->{'list'},$in{'archive_name'},$in{'msgid'});
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});

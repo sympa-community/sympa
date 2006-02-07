@@ -2952,10 +2952,9 @@ sub send_msg_digest {
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
-	$msg->{'message_id'} = $mail->head->get('Message-Id');
+	$msg->{'message_id'} = &tools::clean_msg_id($mail->head->get('Message-Id'));
 	
 	## Clean up Message-ID
-	$msg->{'message_id'} =~ s/^\<(.+)\>$/$1/;
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
         #push @{$param->{'msg_list'}}, $msg ;
@@ -3501,11 +3500,9 @@ sub send_msg {
 	    return undef;
 	}
 
-	my $dir1 = $url_msg->head->get('Message-ID');
-	chomp($dir1);
+	my $dir1 = &tools::clean_msg_id($url_msg->head->get('Message-ID'));
 
 	## Clean up Message-ID
-	$dir1 =~ s/^\<(.+)\>$/$1/;
 	$dir1 = &tools::escape_chars($dir1);
 	$dir1 = '/'.$dir1;
 
