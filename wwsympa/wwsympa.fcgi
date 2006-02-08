@@ -5395,7 +5395,8 @@ sub do_viewmod {
 	 return undef;
      }
      foreach my $dir (sort grep(!/^\./,readdir ARC)) {
-	 if ($dir =~ /^(\d{4})-(\d{2})$/) {
+	 if ($dir =~ /^(\d{4})-(\d{2})$/ &&
+	     -d $arc_path.'/'.$dir.'/arctxt') {
 	     $param->{'calendar'}{$1}{$2} = 1;
 	     $latest = $dir;
 	 }
