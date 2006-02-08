@@ -86,7 +86,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 A user asked to be added as a subscriber to your list. Shall this be fine
 with you, you should click the following URL :[%END%]
 
-[% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_gecos%] [%replyto%][% END %]
+[% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_who%] [%escaped_gecos%][% END %]
 
 [%|loc(replyto,keyauth,list.name,who,gecos)-%]
 or send an email to %1 with the following subject :
