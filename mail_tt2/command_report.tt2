@@ -10,9 +10,9 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%########## SUCCESS #########-%]
 [%############################-%]
 [% IF nb_notice -%]
-[% IF nb_notice == 1 -%]Command has been performed :
+[% IF nb_notice == 1 -%][%|loc%]Command has been performed :[%END%]
 
-[% ELSIF nb_notice > 1 -%]These commands have been performed :
+[% ELSIF nb_notice > 1 -%][%|loc%]These commands have been performed :[%END%]
 
 [% END -%]
 [%- FOREACH notice = notices -%]
@@ -63,9 +63,9 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [% IF before_auth %]
                    ===============================
 [% END %]
-[% IF nb_auth == 1 -%]Command has been rejected :
+[% IF nb_auth == 1 -%][%|loc%]Command has been rejected :[%END%]
 
-[% ELSIF nb_auth > 1 -%]These commands have been rejected :
+[% ELSIF nb_auth > 1 -%][%|loc%]These commands have been rejected :[%END%]
 
 [% END -%]
 [%- FOREACH auth = auths -%]
@@ -81,9 +81,9 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [% IF before_user_err %]
                    ===============================
 [% END %]
-[% IF nb_user_err == 1 -%]Command has failed :
+[% IF nb_user_err == 1 -%][%|loc%]Command has failed :[%END%]
 
-[% ELSIF nb_user_err > 1 -%]These commands have failed :
+[% ELSIF nb_user_err > 1 -%][%|loc%]These commands have failed :[%END%]
 
 [% END -%]
 [%- FOREACH u_err = user_errors -%]
@@ -146,9 +146,9 @@ email address. Please try using your canonical address.[%END-%]
 [% IF before_intern_err %]
                    ===============================
 [% END %]
-[% IF nb_intern_err == 1 -%]Command has failed because of an internal server error :
+[% IF nb_intern_err == 1 -%][%|loc%]Command has failed because of an internal server error :[%END%]
 
-[% ELSIF nb_intern_err > 1 -%]These commands have failed because of an internal server error :
+[% ELSIF nb_intern_err > 1 -%][%|loc%]These commands have failed because of an internal server error :[%END%]
 
 [% END -%]
 [%- FOREACH i_err = intern_errors -%]
