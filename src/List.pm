@@ -12109,7 +12109,7 @@ sub available_reception_mode {
 # OUT : 1 - some are defined | 0 - not defined
 ####################################################
 sub is_there_msg_topic {
-    my ($self) = @_;
+    my ($self) = shift;
     
     if (defined $self->{'admin'}{'msg_topic'}) {
 	if (ref($self->{'admin'}{'msg_topic'}) eq "ARRAY") {
