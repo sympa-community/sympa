@@ -153,7 +153,7 @@ sub SetLang {
     }
    
     &Locale::Messages::textdomain("sympa");
-    &Locale::Messages::bindtextdomain('sympa','--DIR--/locale');
+    &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
     &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
