@@ -12753,12 +12753,14 @@ sub d_test_existing_and_rights {
      }
 
      if (!$list_topics && $list->is_msg_topic_tagging_required()) {
-#	 &error_message('msg_topic_missing');
-#	 &wwslog('info','do_send_mail: message without topic but in a requiring list');
-#	 return undef;
+	 &report::reject_report_web('user','msg_topic_missing',{},$param->{'action'});
+	 &wwslog('info','do_send_mail: message(s) without topic topic but in a required list');
+	 return undef;
      }
 
-     my $filetopic = $list->tag_topic($in{'message_id'},$list_topics,'sender');
+     if ($list_topics) {
+	 my $filetopic = $list->tag_topic($in{'message_id'},$list_topics,'sender');
+     }
 
      my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
 			       'Message-ID' => $in{'message_id'}}, 
