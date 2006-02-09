@@ -181,7 +181,9 @@ foreach my $tpl (@templates) {
     ## Destinatination Path
     $dest_path = $path;
     if ($path =~ /\/wws_templates$/) {
-	$dest_path =~ s/wws_templates/web_tt2/;
+	## translated web templates should not be used because they
+	## will not fit the new CSS/XHTML web structure
+	$dest_path =~ s/wws_templates/web_tt2.old/;
     }elsif ($path =~ /\/templates$/) {
 	$dest_path =~ s/templates/mail_tt2/;
     }elsif ($path =~ /\/expl\//) {
