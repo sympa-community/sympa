@@ -37,8 +37,6 @@ newinstall: makedir
 			ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
 			$(PERL) ../../subst.pl $$manfile \
 		) ;\
-		chown $(USER) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
-		chgrp $(GROUP) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
 	done
 makedir:
 	@if [ ! -d $(DESTDIR)$(MANDIR) ]; then \
