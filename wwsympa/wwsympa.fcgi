@@ -13304,8 +13304,8 @@ sub do_dump_scenario {
      ## Access control
      return undef unless (defined &check_authz('do_dump', 'review'));
 
-     &list->dump();
-     $param->{'file'} = "$list->{'dir'}/subscribers.db.dump";
+     $list->dump();
+     $param->{'file'} = $list->{'dir'}.'/subscribers.db.dump';
 
      if ($in{'format'}= 'light') {
 	 unless (open (DUMP,$param->{'file'} )) {
