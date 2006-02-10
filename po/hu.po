@@ -1062,6 +1062,26 @@ msgstr "Színek"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "'quit' parancs megadva: üzenet többi része figyelmen kívül hagyva.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Hibásan megadott parancs.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "A levelét visszautasították."
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Az adminisztrátorok betöltése nem sikerült"
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1860,10 +1880,15 @@ msgstr "Elsõ bejelentkezés?"
 msgid "Folder name"
 msgstr "Mappa neve"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "További segítségért kérem írjon az alábbi címre: listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "További segítségért kérem írjon az alábbi címre: listmaster@%1"
@@ -4718,7 +4743,7 @@ msgstr ""
 "Csak a listák tulajdonosai vagy szerkesztõi által használható parancsok:"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4951,6 +4976,24 @@ msgstr "A(z) %2@%3 listán %1 levél vár beavatkozásra"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " A legutolsó megosztott dokumentumok "
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "A(z) %s listára küldött levele vissza lett utasítva"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8345,9 +8388,6 @@ msgstr "jelszava      : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "A(z) %s listán nincs folyamatban megerõsítési felszólítás.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Az adminisztrátorok betöltése nem sikerült"
-
 # nlsref 4,40
 #~ msgid "Moderating your message"
 #~ msgstr "Levele megjelenésérõl a moderátor dönt."
@@ -8562,10 +8602,6 @@ msgstr "jelszava      : %1"
 #~ "így a levelet visszaküldtük.\n"
 #~ "\n"
 #~ "Az Ön levele:\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "A(z) %s listára küldött levele vissza lett utasítva"
 
 # nlsref 6,25
 #~ msgid ""

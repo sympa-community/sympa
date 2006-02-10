@@ -1034,6 +1034,25 @@ msgstr "Renkler"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "'quit' komutu bulundu. mesajın sonu gözardı edilecek.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Komut söz dizimi hatası\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Liste özellikleri kaldırıldı"
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Yöneticileri yükleme başarısız oldu"
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1789,10 +1808,15 @@ msgstr "İlk giriş?"
 msgid "Folder name"
 msgstr "Modere et"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Daha fazla yardım için listmaster ile iletişime geçin"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Daha fazla yardım için listmaster ile iletişime geçin"
@@ -4394,7 +4418,7 @@ msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr "Belirtilen komutlar sadece listenin sahibi veya moderetörler içindir:"
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4593,6 +4617,22 @@ msgstr "                        "
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Son Paylaşılan Dosyalar"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+msgid "These commands have been rejected :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7501,9 +7541,6 @@ msgstr "Şifreniz : %1"
 #~ msgstr ""
 #~ "Eğer bu kayıtlı kullanıcıları listeden çıkarmak istiyorsanız, aşağıdaki "
 #~ "komutları kullanın:\n"
-
-#~ msgid "Loading admins failed"
-#~ msgstr "Yöneticileri yükleme başarısız oldu"
 
 #~ msgid "Moderating your message"
 #~ msgstr "Mesajınız modere ediliyor"

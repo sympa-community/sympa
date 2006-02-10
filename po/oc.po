@@ -1093,6 +1093,27 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Se tròba la comanda 'quit': s'ignora la fin del messatge.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Error de sintaxi.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Vòstre messatge es estat refusat."
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Lo cargament dels administrators a abocat"
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Error del servidor"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1910,10 +1931,15 @@ msgstr "Primièra identificacion ?"
 msgid "Folder name"
 msgstr "Moderar"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Per mai de detalhs, contactatz listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Per mai de detalhs, contactatz listmaster@%1"
@@ -4824,7 +4850,7 @@ msgstr ""
 "Las comandas seguentas son reservadas als proprietaris o als moderators :"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -5060,6 +5086,26 @@ msgstr "I a %1 messatges de moderar per la tièra %2@%3."
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Los darrièrs documents "
+
+#: mail_tt2/command_report.tt2:15
+#, fuzzy
+msgid "These commands have been performed :"
+msgstr "L'accion demandada lèu serà executada "
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Vòstre messatge a %s es estat refusat."
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Error del servidor"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8566,9 +8612,6 @@ msgstr "vòstre mot de santa Clara         : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "La tièra %s a pas cap d'expiracion en cors.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Lo cargament dels administrators a abocat"
-
 # nlsref 4,40
 #~ msgid "Moderating your message"
 #~ msgstr "Moderacion de vòstre messatge"
@@ -8794,10 +8837,6 @@ msgstr "vòstre mot de santa Clara         : %1"
 #~ "Per consequent lo vos tornam.\n"
 #~ "\n"
 #~ "Vòstre messatge :\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Vòstre messatge a %s es estat refusat."
 
 # nlsref 6,25
 #~ msgid ""
@@ -9068,9 +9107,6 @@ msgstr "vòstre mot de santa Clara         : %1"
 
 #~ msgid "The message could not be found on the server"
 #~ msgstr "Aquel messatge se tròba pas pel servidor"
-
-#~ msgid "The requested action will be performed soon"
-#~ msgstr "L'accion demandada lèu serà executada "
 
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"

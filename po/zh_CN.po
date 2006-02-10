@@ -1093,6 +1093,27 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "·¢ÏÖÃüÁî¡°quit¡± : ºöÂÔËæºóµÄÐÅÏ¢¡£\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "ÃüÁîÓï·¨´íÎó¡£\n"
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Äú·¢µ½ %s µÄÓÊ¼þÒÑ¾­±»¾Ü¾ø"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "重置错误计数"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1876,10 +1897,14 @@ msgstr ""
 msgid "Folder name"
 msgstr "监管"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
@@ -4678,7 +4703,7 @@ msgid ""
 msgstr ""
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4907,6 +4932,25 @@ msgstr "没有邮件要监管"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "¹²ÏíÎÄµµ"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Äú·¢µ½ %s µÄÓÊ¼þÒÑ¾­±»¾Ü¾ø"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "重置错误计数"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8406,10 +8450,6 @@ msgstr "口令: %1"
 #~ msgstr ""
 #~ "Äú·¢µ½ÓÊµÝ±í %s µÄÓÊ¼þ±»¾Ü¾øÁË£¬Òò´ËËü±»·¢»Ø¸øÄú¡£\n"
 #~ "ÄúµÄÓÊ¼þÊÇ:\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Äú·¢µ½ %s µÄÓÊ¼þÒÑ¾­±»¾Ü¾ø"
 
 # nlsref 6,25
 #, fuzzy

@@ -14,7 +14,7 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 [% ELSE %]
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' because of an internal server error.[%END%]
 [% END %]
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 
 [%################ %]
 [%#### USER  ERROR %]
@@ -31,7 +31,7 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
 
 [% IF entry == 'routing_error' -%]
-[%|loc(list.name,conf.sympa,conf.host)%]The following message was sent to list '%1' while it seems to contain
+[%|loc(list.name,conf.sympa,clist.host)%]The following message was sent to list '%1' while it seems to contain
 commands like subscribe, unsubscribe, help, index, get, ...
 
 If your message effectively contained a command, please notice that 
@@ -66,7 +66,7 @@ Warning : this message may already have been sent by one of the list's editor.[%
 [%|loc(key,listname)%]Message %1 for list '%2' has been rejected.
 [%END%]
 [% END -%]
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 
 [%##################### %]
 [%# AUTHORIZATION ERROR %]
@@ -84,7 +84,7 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 You are not allowed to send this message for the following reason :[%END%]
 
 [% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 [%##################### %]
 [%###### SUCCESS NOTICE %]
 [%##################### %]

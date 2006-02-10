@@ -1123,6 +1123,26 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Comanda 'quit' executata: restul mesajului a fost ignorat.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Comanda eronata.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Mesajul tau a fost respins"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Reseteaza erorile\">"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1949,10 +1969,15 @@ msgstr ""
 msgid "Folder name"
 msgstr "Sterge lista comuna"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Pentru mai multe informatii, contacteaza listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Pentru mai multe informatii, contacteaza listmaster@%1"
@@ -4773,7 +4798,7 @@ msgstr ""
 "pentru moderatorii acestora:"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -5000,6 +5025,25 @@ msgstr "Sunt in total de %1 mesaje care asteapta a fi moderate pe lista %2@%3"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Fisiere shared"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Mesajul trimis catre %s a fost respinsa"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Reseteaza erorile\">"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8589,10 +8633,6 @@ msgstr "parola ta: %1"
 #~ "Mesajul tau a fost returnat.\n"
 #~ "\n"
 #~ "Mesajul:\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Mesajul trimis catre %s a fost respinsa"
 
 # nlsref 6,25
 #, fuzzy

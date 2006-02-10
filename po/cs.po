@@ -1033,6 +1033,26 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Žádný příkaz nebyl ve zprávě nalezen"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Konference byla obnovena"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Vase zprava byla odmitnuta"
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Načítání tabulky administrátorů selhalo"
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Interní chyba serveru"
+
 #: mail_tt2/command_report.tt2:93
 msgid "Command not understood: ignoring end of message."
 msgstr ""
@@ -1762,10 +1782,15 @@ msgstr "První přihlášení ?"
 msgid "Folder name"
 msgstr "Jméno nové složky"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Prosím kontaktujte správce@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Prosím kontaktujte správce@%1"
@@ -4390,7 +4415,7 @@ msgid ""
 msgstr ""
 "Následující příkazy jsou dostupné pouze správcům nebo moderátorům konference:"
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4587,6 +4612,25 @@ msgstr "Na moderování čeká %1 zpráv v konferenci %2@%3"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Poslední sdílené dokumenty"
+
+#: mail_tt2/command_report.tt2:15
+#, fuzzy
+msgid "These commands have been performed :"
+msgstr "Požadovaná funkce provedena"
+
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Vase zprava pro %s byla odmitnuta"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Interní chyba serveru"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7664,9 +7708,6 @@ msgstr "Vaše heslo   : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "Konference %s nezpracovává expirační dávku.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Načítání tabulky administrátorů selhalo"
-
 #~ msgid "Moderating your message"
 #~ msgstr "Vase zprava je zpracovavana"
 
@@ -7735,9 +7776,6 @@ msgstr "Vaše heslo   : %1"
 
 #~ msgid "You just stopped the expiration process for list %s\n"
 #~ msgstr "Právě jste zastavil expirační proces konference %s\n"
-
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Vase zprava pro %s byla odmitnuta"
 
 #~ msgid "Your subscription to list %s has been removed."
 #~ msgstr "Vaše přihlášení do konference %1 bylo odstraněno."
@@ -7897,9 +7935,6 @@ msgstr "Vaše heslo   : %1"
 
 #~ msgid "The document %1 is awaiting moderation1"
 #~ msgstr "%1 čeká na moderování."
-
-#~ msgid "The requested action will be performed soon"
-#~ msgstr "Požadovaná funkce provedena"
 
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"

@@ -1079,6 +1079,26 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Leitud käsk 'quit': ignoreerin kirja lõppu.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Käsu süntaks on vigane.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Sinu kirja ei saadetud listi."
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Sisemine viga serveris"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1860,10 +1880,15 @@ msgstr "Esmane sisselogimine?"
 msgid "Folder name"
 msgstr "Grupi nimi"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Probleemide puhul kirjutage listserveri haldajatele listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Probleemide puhul kirjutage listserveri haldajatele listmaster@%1"
@@ -4603,7 +4628,7 @@ msgstr ""
 "Järgnevaid käskusid saavad kasutada vaid listide omanikud ja moderaatorid:"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4822,6 +4847,26 @@ msgstr "%1 kirja ootab listis %2@%3 toimetamist"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Jagatud dokumendid"
+
+#: mail_tt2/command_report.tt2:15
+#, fuzzy
+msgid "These commands have been performed :"
+msgstr "Soovitud tegevus teostatakse varsti"
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Sinu kirja saatmisest aadressile %s keelduti"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Sisemine viga serveris"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8332,9 +8377,6 @@ msgstr "teie parool             : %1"
 #~ msgid "The message could not be found on the server"
 #~ msgstr "Seda kirja ei leitud serverist"
 
-#~ msgid "The requested action will be performed soon"
-#~ msgstr "Soovitud tegevus teostatakse varsti"
-
 #, fuzzy
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"
@@ -8464,10 +8506,6 @@ msgstr "teie parool             : %1"
 #~ "Seetõttu saadan kirja sulle tagasi.\n"
 #~ "\n"
 #~ "Sinu kiri: \n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Sinu kirja saatmisest aadressile %s keelduti"
 
 # nlsref 6,25
 #, fuzzy

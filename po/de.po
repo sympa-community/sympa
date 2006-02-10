@@ -1083,6 +1083,29 @@ msgstr "Farben"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Befehl 'quit' gefunden. Rest der Nachricht ignoriert.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr ""
+"Syntaxfehler im Befehl.\n"
+"\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Ihre Nachricht wurde abgelehnt."
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Konnte Administratoren nicht laden"
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Interner Fehler des Servers"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1909,10 +1932,15 @@ msgstr "Erste Anmeldung ?"
 msgid "Folder name"
 msgstr "Name des Ordners"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Für weitere Hilfe wenden Sie sich bitte an listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Für weitere Hilfe wenden Sie sich bitte an listmaster@%1"
@@ -4807,7 +4835,7 @@ msgstr ""
 "verfügbar:"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -5044,6 +5072,26 @@ msgstr "%1 Nachrichten für die Liste %2@%3 müssen moderiert werden"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " Die neuesten gemeinsame Dokumente "
+
+#: mail_tt2/command_report.tt2:15
+#, fuzzy
+msgid "These commands have been performed :"
+msgstr "Die gewünschte Aktion wird in Kürze durchgeführt"
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Ihre Nachricht an %s abgelehnt"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Interner Fehler des Servers"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8481,9 +8529,6 @@ msgstr "Ihr Passwort : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "Für die Liste %s läuft im Moment kein EXPIRE-Befehl.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Konnte Administratoren nicht laden"
-
 # nlsref 4,40
 #~ msgid "Moderating your message"
 #~ msgstr "Ihre Nachricht wird moderiert"
@@ -8713,10 +8758,6 @@ msgstr "Ihr Passwort : %1"
 #~ "Sie wurde daher an Sie zurückgesendet. \n"
 #~ "\n"
 #~ "Ihre Nachricht :\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Ihre Nachricht an %s abgelehnt"
 
 # nlsref 6,25
 #~ msgid ""
@@ -8981,9 +9022,6 @@ msgstr "Ihr Passwort : %1"
 
 #~ msgid "The message could not be found on the server"
 #~ msgstr "Die Nachricht wurde am Server nicht gefunden"
-
-#~ msgid "The requested action will be performed soon"
-#~ msgstr "Die gewünschte Aktion wird in Kürze durchgeführt"
 
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"

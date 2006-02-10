@@ -1020,6 +1020,24 @@ msgstr "Cores"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Comando não compreendido: ignorando fim da mensagem.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Erro de sintaxe no comando.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Sua mensagem foi rejeitada."
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1750,10 +1768,14 @@ msgstr ""
 msgid "Folder name"
 msgstr "moderar"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
@@ -4336,7 +4358,7 @@ msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr ""
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4531,6 +4553,23 @@ msgstr "Existem %1 mensagens a ser moderadas para a lista %2@%3"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " Os últimos documentos compartilhados "
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Sua mensagem para %s foi rejeitada"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7588,9 +7627,6 @@ msgstr "sua senha  : %1"
 #~ "Sua mensagem para a lista %s foi rejeitada.\n"
 #~ "Assim, a mensagem foi mandada de volta para você.\n"
 #~ "\n"
-
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Sua mensagem para %s foi rejeitada"
 
 #~ msgid "Your subscription to list %s has been removed."
 #~ msgstr "Sua assinatura à lista %s foi removida."

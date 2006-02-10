@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2006-02-06 13:30+0100\n"
+"PO-Revision-Date: 2006-02-10 14:09+0100\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -1038,6 +1038,23 @@ msgstr "Couleurs"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Commande '%1' trouvée : la fin du message est ignorée."
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+msgid "Command has been performed :"
+msgstr "La commande a été exécutée :"
+
+#: mail_tt2/command_report.tt2:66
+msgid "Command has been rejected :"
+msgstr "La commande a été rejetée :"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr "La commande a échoué :"
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr "Message ignoré à cause d'une erreur interne"
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 msgid "Command not understood: ignoring end of message."
@@ -1738,10 +1755,11 @@ msgid "Failed to instantiate family %2 for list %1"
 msgstr "Echec d'instantiation de la famille %2 pour la liste %1"
 
 #: web_tt2/error.tt2:69
-#, fuzzy
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderatir"
-msgstr "Le message n'a pas pu être modéré ; il a probablement déjà été modéré par un autre modérateur"
+msgstr ""
+"Le message n'a pas pu être modéré ; il a probablement déjà été modéré par un "
+"autre modérateur"
 
 #: mail_tt2/listmaster_notification.tt2:278
 msgid "Failed to remove aliases."
@@ -1809,10 +1827,14 @@ msgstr "Premier login ?"
 msgid "Folder name"
 msgstr "Nom du dossier"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr "Pour plus de détails, contactez %1-request@%2"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr "Pour plus de détails, contactez %1@%2"
 
@@ -4590,7 +4612,7 @@ msgid ""
 msgstr "Commandes réservées aux propriétaires de listes :"
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4825,6 +4847,23 @@ msgstr "Aucun message à modérer pour la liste '%1'."
 #: web_tt2/error.tt2:86
 msgid "There is no shared documents"
 msgstr "Aucun document partagé"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr "Ces commandes ont été exécutées :"
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+msgid "These commands have been rejected :"
+msgstr "Ces commande ont été rejetées :"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr "Ces commandes ont échoué à cause d'une erreur interne du serveur :"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8187,9 +8226,6 @@ msgstr "votre mot de passe         : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "La liste %s n'a pas d'expiration en cours.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Le chargement des administrateurs a échoué"
-
 # nlsref 4,40
 #~ msgid "Moderating your message"
 #~ msgstr "Modération de votre message"
@@ -8419,10 +8455,6 @@ msgstr "votre mot de passe         : %1"
 #~ "Le message vous est donc renvoyé.\n"
 #~ "\n"
 #~ "Votre message :\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Votre message pour %s a ete rejete"
 
 # nlsref 6,25
 #~ msgid ""
@@ -8716,9 +8748,6 @@ msgstr "votre mot de passe         : %1"
 
 #~ msgid "The message could not be found on the server"
 #~ msgstr "Ce message est introuvable sur le serveur"
-
-#~ msgid "The requested action will be performed soon"
-#~ msgstr "L'action requise sera bientôt exécutée "
 
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"

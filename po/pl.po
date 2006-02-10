@@ -1027,6 +1027,26 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Polecenie 'quit' znalezione : nie przetwarzam koñca wiadomo¶ci.\n"
 
+# nlsref 6,13
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "B³±d sk³adni polecenia.\n"
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Twoja wiadomo¶æ do %s zosta³a odrzucona"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 # nlsref 4,19
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
@@ -1775,10 +1795,14 @@ msgstr ""
 msgid "Folder name"
 msgstr "Moderatorzy"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
@@ -4510,7 +4534,7 @@ msgid ""
 msgstr ""
 
 # nlsref 5,3
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4735,6 +4759,24 @@ msgstr ""
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Dokumenty wspó³dzielone"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+# nlsref 4,11
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Twoja wiadomo¶æ do %s zosta³a odrzucona"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8136,10 +8178,6 @@ msgstr ""
 #~ "Zostaje wiêc zwrócona do nadawcy.\n"
 #~ "\n"
 #~ "Twoja wiadomo¶æ :\n"
-
-# nlsref 4,11
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Twoja wiadomo¶æ do %s zosta³a odrzucona"
 
 # nlsref 6,25
 #, fuzzy

@@ -1000,6 +1000,24 @@ msgstr "Färger"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Kommandot 'quit' hittades : ignorerar slutet av meddelandet.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Kommandosyntaxfel.↵\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Listan har inga prenumeranter"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1737,10 +1755,14 @@ msgstr "Första inloggningen ?"
 msgid "Folder name"
 msgstr "Mappnamn"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
@@ -4281,7 +4303,7 @@ msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr ""
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4474,6 +4496,22 @@ msgstr "Samlingsbrev för listan %1"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " De senast delade dokumenten "
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+msgid "These commands have been rejected :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98

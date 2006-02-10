@@ -1067,6 +1067,25 @@ msgstr ""
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Command 'quit' found : ignoring end of message.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Command syntax error.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Your message has been rejected."
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Reset errors"
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1870,10 +1889,15 @@ msgstr ""
 msgid "Folder name"
 msgstr "moderate"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "For further assistance, please contact listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "For further assistance, please contact listmaster@%1"
@@ -4711,7 +4735,7 @@ msgid ""
 msgstr ""
 "The following commands are available only for lists's owners or moderators:"
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4950,6 +4974,24 @@ msgstr "There are %1 messages to be moderated for list %2@%3"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Shared documents"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Your message to %s has been rejected"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Reset errors"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -8448,9 +8490,6 @@ msgstr "your password : %1"
 #~ "The message is thus sent back to you.\n"
 #~ "\n"
 #~ "Your message :\n"
-
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Your message to %s has been rejected"
 
 #, fuzzy
 #~ msgid ""

@@ -1059,6 +1059,25 @@ msgstr "Χρώματα"
 msgid "Command '%1' found : ignoring end of message."
 msgstr "Εύρεση της εντολής 'Έξοδος' : Θα αγνοηθεί το τέλος του μηνύματος.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Λάθος σύνταξη εντολής\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Τα παρωνύμια της λίστας έχουν αφαιρεθεί."
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Αποτυχία φόρτωσης διαχειριστών (admins)"
+
+#: mail_tt2/command_report.tt2:149
+msgid "Command has failed because of an internal server error :"
+msgstr ""
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1846,10 +1865,17 @@ msgstr "Πρώτη είσοδος;"
 msgid "Folder name"
 msgstr "Συντονισμός"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+"Για περισσότερες πληροφορίες, παρακαλούμε επικοινωνήστε με τη διεύθυνση "
+"listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr ""
@@ -4623,7 +4649,7 @@ msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr ""
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4816,6 +4842,22 @@ msgstr "Δεν υπάρχουν μηνύματα ή έγγραφα προς συ
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " Τα πρόσφατα διαμοιραζόμενα έγγραφα "
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+msgid "These commands have been rejected :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+msgid "These commands have failed because of an internal server error :"
+msgstr ""
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7736,9 +7778,6 @@ msgstr ""
 
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "Η λίστα %s δεν βρίσκεται σε διαδικασία λήξης.\n"
-
-#~ msgid "Loading admins failed"
-#~ msgstr "Αποτυχία φόρτωσης διαχειριστών (admins)"
 
 #~ msgid "Moderating your message"
 #~ msgstr "Συντονισμός μηνήματος"

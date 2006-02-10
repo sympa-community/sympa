@@ -992,6 +992,25 @@ msgid "Command '%1' found : ignoring end of message."
 msgstr ""
 "'QUIT'コマンドが見つかりました: メッセージの残りの部分は無視されます。\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "コマンド構文エラー\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "あなたのメールは棄却されました。"
+
+#: mail_tt2/command_report.tt2:84
+msgid "Command has failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Internal server error"
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1714,10 +1733,14 @@ msgstr "はじめてのログインですか?"
 msgid "Folder name"
 msgstr "フォルダ名"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+msgid "For further information, please contact %1-request@%2"
+msgstr ""
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 msgid "For further information, please contact %1@%2"
 msgstr ""
 
@@ -4302,7 +4325,7 @@ msgid ""
 msgstr ""
 "以下のコマンドはメーリングリストのオーナーかモデレータだけが利用できます:"
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 msgid ""
 "The following message was sent to list '%1' while it seems to contain\n"
@@ -4500,6 +4523,24 @@ msgstr ""
 #, fuzzy
 msgid "There is no shared documents"
 msgstr " 最新の共有ドキュメント "
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "あなたの %s へのメールは棄却されました。"
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Internal server error"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7455,9 +7496,6 @@ msgstr "あなたのパスワード: %1"
 
 #~ msgid "You have been removed from list %s.\n"
 #~ msgstr "あなたはメーリングリスト %s のメンバーではなくなりました。\n"
-
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "あなたの %s へのメールは棄却されました。"
 
 #~ msgid "Your subscription to list %s has been removed."
 #~ msgstr "あなたのメーリングリス%sへの講読は停止されました。"

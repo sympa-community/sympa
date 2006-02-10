@@ -1068,6 +1068,26 @@ msgid "Command '%1' found : ignoring end of message."
 msgstr ""
 "Commando 'quit' gevonden : Het einde van het bericht wordt genegeerd.\n"
 
+#: mail_tt2/command_report.tt2:13
+#, fuzzy
+msgid "Command has been performed :"
+msgstr "Commando syntax fout.\n"
+
+#: mail_tt2/command_report.tt2:66
+#, fuzzy
+msgid "Command has been rejected :"
+msgstr "Uw bericht is afgwezen"
+
+#: mail_tt2/command_report.tt2:84
+#, fuzzy
+msgid "Command has failed :"
+msgstr "Laden administratie gefaald"
+
+#: mail_tt2/command_report.tt2:149
+#, fuzzy
+msgid "Command has failed because of an internal server error :"
+msgstr "Reset foutmeldingen"
+
 #: mail_tt2/command_report.tt2:93
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
@@ -1854,10 +1874,15 @@ msgstr "Eerste login?"
 msgid "Folder name"
 msgstr "Modereer"
 
-#. (conf.listmaster_email,conf.host)
-#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
+#. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
 #: mail_tt2/message_report.tt2:87
+#, fuzzy
+msgid "For further information, please contact %1-request@%2"
+msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
+
+#. (conf.listmaster_email,conf.host)
+#: mail_tt2/command_report.tt2:184 mail_tt2/list_unknown.tt2:22
 #, fuzzy
 msgid "For further information, please contact %1@%2"
 msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
@@ -4598,7 +4623,7 @@ msgstr ""
 "De volgende commando's zijn alleen beschikbaar voor de eigenaren of "
 "moderators van een lijst:"
 
-#. (list.name,conf.sympa,conf.host)
+#. (list.name,conf.sympa,clist.host)
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
@@ -4824,6 +4849,24 @@ msgstr "Er zijn %1 berichten die gemodereerd moeten worden voor de lijst %2@%3"
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Nieuwste gedeelde documenten"
+
+#: mail_tt2/command_report.tt2:15
+msgid "These commands have been performed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:68
+#, fuzzy
+msgid "These commands have been rejected :"
+msgstr "Uw bericht aan %s is afgewezen."
+
+#: mail_tt2/command_report.tt2:86
+msgid "These commands have failed :"
+msgstr ""
+
+#: mail_tt2/command_report.tt2:151
+#, fuzzy
+msgid "These commands have failed because of an internal server error :"
+msgstr "Reset foutmeldingen"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:98
@@ -7943,9 +7986,6 @@ msgstr "uw wachtwoord    : %1"
 #~ msgid "List %s is not currently running an expiration process.\n"
 #~ msgstr "Voor lijst %s draait geen expiratie proces op dit moment.\n"
 
-#~ msgid "Loading admins failed"
-#~ msgstr "Laden administratie gefaald"
-
 #~ msgid "Moderating your message"
 #~ msgstr "Uw bericht wordt gemodereerd."
 
@@ -8149,9 +8189,6 @@ msgstr "uw wachtwoord    : %1"
 #~ "Het bericht wordt dus aan u teruggestuurd.\n"
 #~ "\n"
 #~ "Uw bericht :\n"
-
-#~ msgid "Your message to %s has been rejected"
-#~ msgstr "Uw bericht aan %s is afgewezen."
 
 #, fuzzy
 #~ msgid ""
