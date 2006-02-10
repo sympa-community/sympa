@@ -37,10 +37,13 @@
   <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
   <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a> <br />
   <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%][%END%]'); return false;">[%|loc%]Remind all subscribers[%END%]</a>
-  <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a>
+[% IF action == 'search' %]
+   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
+[% ELSE %]
+   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
+[% END %]
 
 <br /><br />
-
 <form action="[% path_cgi %]" method="post">
  <input type="hidden" name="previous_action" value="review" />
  <input type="hidden" name="list" value="[% list %]" />

@@ -442,6 +442,7 @@ my %in_regexp = (
 		 ## Search
 		 'filter' => '[^<>\\\[\]\(\)\$]+', # search list
 		 'key_word' => '[^<>\\\*\[\]\(\)\$]+',
+		 'format' => '[^<>\\\$]+', # dump format/filter string
 
 		 ## File names
 		 'file' => '[^<>\*\$]+',
@@ -13307,7 +13308,7 @@ sub do_dump_scenario {
      $list->dump();
      $param->{'file'} = $list->{'dir'}.'/subscribers.db.dump';
 
-     if ($in{'format'}= 'light') {
+     if ($in{'format'} eq 'light') {
 	 unless (open (DUMP,$param->{'file'} )) {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'file'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog ('info', 'unable to open file %s\n',$param->{'file'} );
@@ -13325,8 +13326,35 @@ sub do_dump_scenario {
 	 close LIGHTDUMP;
 	 close DUMP;
 	 $param->{'file'} = "$list->{'dir'}/subscribers.db.dump.light";
-     }	 
-     	
+
+     }	else {
+	 $param->{'file'} = "$list->{'dir'}/select.dump";
+	 &wwslog('info','opening %s',$param->{'file'});
+
+	 unless (open (DUMP,">$param->{'file'}")) {
+	     &error_message("internal error unable to create dumpfile");
+	     &wwslog('err','unable to create file %s\n',$param->{'file'} );
+	     return undef;
+	 }
+
+	 if ($in{'format'} eq 'bounce') {
+	     do_reviewbouncing();
+	     print DUMP "# Exported bouncing subscribers\n";
+	     print DUMP "# Email\t\tName\tBounce score\tFirst bounce\tLast bounce\n";
+	     foreach my $user (@{$param->{'members'}}){
+		 print DUMP "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
+	     }
+	 }
+	 else {
+	     $in{'filter'} = $in{'format'};
+	     do_search();
+	     print DUMP "# Exported subscribers with search filter \"$in{'format'}\"\n";
+	     foreach my $user (@{$param->{'members'}}){
+		 print DUMP "$user->{'email'}\t$user->{'gecos'}\n";
+	     }
+	 }
+	 close DUMP;
+     }
      return 1;
  }
 
