@@ -1505,37 +1505,33 @@ sub prepare_report_user {
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
 	    $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
 	}else {
-	    unless ($param->{'user'}{'email'}) {
-		$param->{'may_subscribe'} = $param->{'may_signoff'} = 1;
-
-	    }else {
-		if ($param->{'is_subscriber'} &&
+	    ## May signoff
+	    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+						 {'sender' =>$param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	    
+	    if (! $param->{'user'}{'email'}) {
+		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+		
+	    }elsif ($param->{'is_subscriber'} &&
 		    ($param->{'subscriber'}{'subscribed'} == 1)) {
-		    ## May signoff
-		    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-							 {'sender' =>$param->{'user'}{'email'},
-							  'remote_host' => $param->{'remote_host'},
-							  'remote_addr' => $param->{'remote_addr'}});
-		    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-		    
-		    $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner/);
-		    $param->{'may_suboptions'} = 1;
-		    
-		}else {
-		    
-		    ## May Subscribe
-		    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
-							 {'sender' => $param->{'user'}{'email'},
-							  'remote_host' => $param->{'remote_host'},
-							  'remote_addr' => $param->{'remote_addr'}});
-		    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-		    
-		    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner/);
-		}
+		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+		$param->{'may_suboptions'} = 1;
 	    }
+	    
+	    ## May Subscribe
+	    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+						 {'sender' =>$param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	    
+	    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
 	}
-
-	## Shared documents
+	
+    	## Shared documents
 	my %mode;
 	$mode{'read'} = 1;
 	my %access = &d_access_control(\%mode,"");
@@ -1724,34 +1720,31 @@ sub prepare_report_user {
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
 	    $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
 	}else {
-	    unless ($param->{'user'}{'email'}) {
-		$param->{'may_subscribe'} = $param->{'may_signoff'} = 1;
-
-	    }else {
-		if ($param->{'is_subscriber'} &&
+	    ## May signoff
+	    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+						 {'sender' =>$param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	    
+	    if (! $param->{'user'}{'email'}) {
+		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+		
+	    }elsif ($param->{'is_subscriber'} &&
 		    ($param->{'subscriber'}{'subscribed'} == 1)) {
-		    ## May signoff
-		    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-							 {'sender' =>$param->{'user'}{'email'},
-							  'remote_host' => $param->{'remote_host'},
-							  'remote_addr' => $param->{'remote_addr'}});
-		    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-
-		    $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner/);
-		    $param->{'may_suboptions'} = 1;
-
-		}else {
-
-		    ## May Subscribe
-		    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
-							 {'sender' => $param->{'user'}{'email'},
-							  'remote_host' => $param->{'remote_host'},
-							  'remote_addr' => $param->{'remote_addr'}});
-		    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-
-		    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner/);
-		}
+		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+		$param->{'may_suboptions'} = 1;
 	    }
+	    
+	    ## May Subscribe
+	    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+						 {'sender' =>$param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	    
+	    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+
 	}
 
 	 ## Archives Access control
