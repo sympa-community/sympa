@@ -3117,7 +3117,7 @@ sub do_remindpasswd {
      } 
 
      unless ($list->is_user($email)) {
-	 &reject_report_web('user','not_subscriber',{'list'=> $param->{'list'}},$param->{'action'},$list);
+	 &report::reject_report_web('user','not_subscriber',{'list'=> $param->{'list'}},$param->{'action'},$list);
 	 &wwslog('info','do_set: %s not subscriber of list %s', $email, $param->{'list'});
 	 return undef;
      }
@@ -3437,7 +3437,7 @@ sub do_remindpasswd {
      }
 
      unless($param->{'is_subscriber'} ) {
-	 &reject_report_web('user','not_subscriber',{'list'=> $list->{'name'}},$param->{'action'},$list);
+	 &report::reject_report_web('user','not_subscriber',{'list'=> $list->{'name'}},$param->{'action'},$list);
 	 &wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 return undef;
      }
@@ -3604,7 +3604,7 @@ sub do_remindpasswd {
      }
 
      unless ($list->is_user($param->{'user'}{'email'})) {
-	 &reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
+	 &report::reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
 	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 return undef;
      }
@@ -4457,7 +4457,7 @@ sub do_skinsedit {
 	 my $user_entry = $list->get_subscriber($email);
 
 	 unless ( defined($user_entry) && ($user_entry->{'subscribed'} == 1) ) {
-	     &reject_report_web('user','not_subscriber',{'email' => $email},$param->{'action'},$list);
+	     &report::reject_report_web('user','not_subscriber',{'email' => $email},$param->{'action'},$list);
 	     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     next;
@@ -6883,7 +6883,7 @@ sub do_set_pending_list_request {
 	 my $escaped_email = &tools::escape_chars($email);
 
 	 unless ( $list->is_user($email) ) {
-	     &reject_report_web('user','not_subscriber',{'email'=> $email},$param->{'action'},$list);
+	     &report::reject_report_web('user','not_subscriber',{'email'=> $email},$param->{'action'},$list);
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     return undef;
 	 }
