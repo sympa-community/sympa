@@ -75,53 +75,20 @@ sub outgoing {
 ## Does the real job : stores the message given as an argument into
 ## the indicated directory.
 
-sub store {
-    my($dir, $period, $msg) = @_;
+sub store_last {
+    my($list, $msg) = @_;
     
-    do_log ('debug2','archive::store (%s,%s)',$dir, $period);
+    do_log ('debug2','archive::store ()');
     
     my($filename, $newfile);
     
-    return unless $period;
+    return unless $list->is_archived();
+    my $dir = $list->{'dir'}.'/archives';
     
     ## Create the archive directory if needed
     mkdir ($dir, "0775") if !(-d $dir);
     chmod 0774, $dir;
     
-    my $separator = $tools::separator;  
-    
-    my @now  = localtime(time);
-    
-    if ($period eq 'day') {
-	$filename = sprintf("%04d%02d%02d", 1900 + $now[5], $now[4] + 1, $now[3]);
-    } elsif ($period eq 'year') {
-	$filename = sprintf("%04d", 1900 + $now[5]);
-    } elsif ($period eq 'month') {
-	$filename = sprintf("%04d%02d", 1900 + $now[5], $now[4] + 1);
-    } elsif ($period eq 'quarter') {
-	$filename = sprintf("%04dq%1d", 1900 + $now[5], $now[4] / 3 + 1);
-    } elsif ($period eq 'week') {
-	$filename = sprintf("%04dw%02d", 1900 + $now[5], int($now[7] / 7) + 1);
-    }
-    $filename = "$dir/log.$filename";
-    $newfile = !(-e $filename);
-    
-    ## add the message to the current archive
-    
-    open(OUT, ">> $filename") || return;
-    if ($newfile) {
-	printf OUT "\nThis digest for list has been created on %s\n\n",
-      POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
-	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
-    }
-    #   xxxxx we should leave the Received headers isn't ?
-    if (ref ($msg)) {
-  	$msg->print(\*OUT);
-    }else {
- 	print OUT $msg;
-    }
-    printf OUT "\n%s\n\n", $tools::separator;
-    close(OUT);
     
     ## erase the last  message and replace it by the current one
     open(OUT, "> $dir/last_message");
@@ -271,8 +238,21 @@ sub exist {
     return undef;
 }
 
+
+# return path for latest message distributed in the list
+sub last_path {
+    
+    my $list = shift;
+
+    &do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
+  my $file = $list->{'dir'}.'/archives/last_message';  &do_log('info', 'yyyyyyyyyyyyyyyyyyy file %s', $file);
+    return undef unless ($list->is_archived());
+    my $file = $list->{'dir'}.'/archives/last_message';  &do_log('info', 'xxxxxxxxxxxxxx file %s', $file);
+
+    return ($list->{'dir'}.'/archives/last_message') if (-f $list->{'dir'}.'/archives/last_message'); 
+    return undef;
+
+}
 1;
-
-
 
 

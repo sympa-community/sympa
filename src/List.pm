@@ -3894,6 +3894,7 @@ sub archive_send {
    return unless ($self->is_archived());
        
    my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->get_list_id();
+   $dir = $self->{'dir'}.'/archives' if ($file eq 'last_message');
 
    my $msg_list = Archive::scan_dir_archive($dir, $file);
 
@@ -7700,8 +7701,7 @@ sub archive_msg {
     do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
 
     my $is_archived = $self->is_archived();
-    # No more mail archive 
-    # Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
+    Archive::store_last($self, $msg) if ($is_archived);
 
     Archive::outgoing("$Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
       if ($self->is_web_archived());

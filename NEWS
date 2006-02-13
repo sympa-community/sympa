@@ -3,9 +3,77 @@
 
 (See Changelog file for the full changes log)
 
-5.2a.3		26 January 2006
+5.2b		13 February 2006
 
+   New features :
+	
+*****	Full virtual robot support ; you can now create 2 lists with the same same in different virtual robots.
+*****	The database structure should be updated (automatically performed with MySQL) to add new database fields.
+*****	Check the create_db.XX scripts (XX being your RDBMS) to know about the new fields
+*****	The spool file names has evolved to include the hostname, but existing spools will be processed.
+
+	Auth.conf file can be defined for each virtual robot.
+
+	[G. Bouteille] Message topics : list messages can be tagged with topics. List owner defines a set of topics for the list.
+	List members can select topics and only recieve related messages. See documentation for more info.
+
+	Added support for an SQlite backend.A create_db.SQLite has been added. Sympa.pl is able to
+	automatically create the database if none exists. SQLite is now  the default 'db_type' in sympa.conf 
+	(SQlite drivers include the database engine itself, therefore nothing needs to be installed).
+
+	Sympa is now VERP enabled ; this includes the following changes:	 
+		* new bounce_address_subscriber DB field   
+		* verp_rate list and global parameter
+
+src/sympa.pl: new --sync_include sympa.pl option
+
+	web_tt2/review.tt2, web_tt2/reviewbouncing.tt2,	wwsympa/wwsympa.fcgi: 
+	[BugID 538] [A.Bernstein]: provide a dump for searched members or bouncing members
+
+	[requested by J.Abbott] new return_path_suffix parameter in sympa.conf
+
+	po/Makefile, po/sv.po, src/Conf.pm, src/Language.pm: [D.Nylander] sympa translated to Swedish
+
+	src/List.pm: [requested by D.Jahnke] 'db_port' now available in include_sql_query paragraph
+
+	src/: Language.pm, mail.pm: New PushLang() and PopLang() subroutines
+
+	doc/: New "roles and privileges" section
+
+	src/List.pm: clean buggy list config files at startup
+
+	
+	[A.Bernstein] subscriber's groups always listed in a box. Resized the menu box (+60px) ; 
+	removed the "your subscriptions ; new your_lists.tt2 template
+
+	src/List.pm: new 'digest_max_size' list parameter. If a digest exceeds this limit, then multiple messages are sent.
+
+	Added PO files for Greek, Dutch, Portuguese (Brazil) and Turkish
+	
   Changes :
+
+	[G. Bouteille] Redesigned the message distribution subroutines. The new organization is described in a new section 
+	of the reference manual entitled "Internals"
+	Reorganisation of error reports (mail and web interface) to provide more precise error notification.
+
+*****	Only one copy of message for archive. No more archiving in expl/list/arc directory
+*****	Mail archive command now uses web_archive. Old list parameter   section for
+*****	archive still in use for access control.
+
+
+
+*****	src/List.pm: load/save a binary version of the list config file on disk. This makes the List::load() calls much
+*****	faster.  This was a major problem with sites hosting thousands of mailing lists
+
+*****	src/List.pm: turned the mysql subscribed and included fields into int(1) 
+*****	to be compatible with other RDBMS 
+	
+	src/: Introduced a new Task.pm module
+
+	src/etc/script/tpl2tt2.pl: old customized web templates are translated but should not be used 
+	because they will not fit the new CSS/XHTML web structure
+
+	wwsympa/wwsympa.fcgi: [BugID 537] [A.Bernstein] Don't display Subscribe/Unsubscribe for not logged-in users, if closed
 
 *****	Authorization scenarios that refer to mailing list outside the current virtual robot should qualify the 
 *****	list with the domain. Example: is_subscriber([sender],'list@dom')
@@ -14,6 +82,210 @@
 	used within mail notice. Check provided scenarios to customize your own.
 
 	All command / mail reports have been moved to mail templates.
+	
+	po/oc.po: [Moni] Completed Occitan translations
+	
+	po/fr.po: Updated translations
+
+	No more saving data_structure.version if version did not change
+
+	src/tools.pl: tools::lock() is now able to force the lock if the blocking lock was performed 
+	more than 20 minutes ago. The PID is now written in the lockfile.  The number of attempts to
+	lock is now different in a web context
+
+	wwsympa/wwsympa.fcgi: [BugID 526] () and [] no more allowed in search expressions
+
+	soap/sympasoap.pm: [G.Bouteille] which SOAP subroutine result now includes lists the user is admin of
+
+	po/de.po: [M.Redinger] Updated de.po
+
+	po/et.po: [T.Kindsigo] Updated Estonian PO file
+
+	po/ja.po: [K.Moriwaka] Update from Rosetta
+
+	wwsympa/wwsympa.fcgi: optimization : skip get_which() when either in a list context or while returning CSS
+
+	Makefile.am, Makefile.in: [requested by S.Hornburg] never wait for user input while building a package (DESTDIR is set)
+
+	src/admin.pm: [reported by JH. Belpois] owner and subject XML nodes are no more mandatory while instantiating a family
+
+	src/Family.pm: [BugId 411] use File::Copy::copy instead of rename() to allow traversing filesystems
+
+  Bug fixes :	
+	
+	src/Language.pm: [BugID 597] use LOCALEDIR var instead of DIR/locale
+
+	wwsympa/wwsympa.fcgi: skip month without arctxt/ dir in archives
+
+	src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi: now cleaning up the message-id for use 
+	with summary reception mode
+
+	wwsympa/wwsympa.fcgi: don't set cookies while performing a RSS request Doing so would logout the current user
+
+	wwsympa/wwsympa.fcgi: [BugID 594] if urlized file had no file extension, 
+	the attach web action failed with the following error : "file error - attach.tt2 not found"
+
+	mail_tt2/urlized_part.tt2: [BugID 594] Fix typo
+
+	src/List.pm: [BugID 608] If multiple edit_list.conf files exist, the first one loaded is always used for that domain
+
+	src/sympa.pl: [BugID 114] ignore SIGPIPE, to prevent sympa.pl crash
+
+	src/List.pm: [BugID 539] no more show closed lists to list owners
+
+	src/List.pm: [BugID 481] prevents crash if _save_stats_file() parameter has the wrong type
+
+	src/sympa.pl: [BugID 545] using File:Copy instead of rename() for the --keepcopy option, 
+	because the keepcopy directory might be on a different filesystem
+
+	src/Language.pm: prevents case problem with locale names
+
+	wwsympa/wwslib.pm: [reported by H.Brunet] apache-ssl does not set SSL_PROTOCOL env variable 
+	but SSL_PROTOCOL_VERSION instead
+
+	soap/sympasoap.pm, wwsympa/Auth.pm, wwsympa/wwsympa.fcgi:  now report CAS authentication failures 
+	Also fixed a bug related to recent auth_services changes
+
+	wwsympa/wwsympa.fcgi: 'your_lists' was empty just after the login
+	
+	src/Conf.pm: [requested by F.Jammes] in auth.conf, allow white spaces in the list of hosts
+
+	src/List.pm: [BugID 589] restore correct get_editors_email() subroutine
+
+	soap/sympasoap.pm: [BugID 591] typo iun which()
+
+	src/List.pm: [reported by M.Schoeb]  List::has_include_data_sources() did not check owner_include and
+	  editor_include.  Therefore sync_include task might not be created.
+
+	[reported by B.Riffle] no more use quoting in SQL queries with numeric fields
+
+	check_perl_modules.pl: [reported by J.Beretta] the '-modifybodyaddresses' option is only available 
+	since mhonarc  2.6.0
+
+	rc/task_manager.pl: [BugID 498] 'process_bouncers' task failed if no owner could be contacted ; no more return undef
+
+	[BugID 522] escape quotes in javascript calls
+	
+	wwsympa/archived.pl: archived.pl would die with a "Modification of non-creatable array value attempted" 
+	error while creating the index file
+
+	src/Language.pm: [reported by O.Lacroix] failed to setlocale on HPUX ; now trying without dashes ('-').  
+	Also fixed the setlocale(LC_TIME)
+
+	wwsympa/wwsympa.fcgi: [proposed by G.Crompton] problems when using Sympa in a proxy context (virtual robot selection,
+	navigation in web archives). WWSympa now uses the HTTP_X_FORWARDED_SERVER and HTTP_X_FORWARDED_HOST header fields
+	if set
+
+	src/Language.pm: [BugID 502] Fix for i18n on FreeBSD
+
+	src/List.pm: [BugID 501] if family_name was set to an unknown family, wwsympa would die with the following error msg
+	"Can't call method "check_param_constraint" on an undefined value at /var/sympa/bin/List.pm line 1728."
+
+	src/List.pm: [reported by P.Maes] while including users from SQL, Sympa would stop at the first NULL row. 
+	Now going though all rows
+
+	src/List.pm: [BugID 461] List::am_i() cache control had 2 blocks which returned before updating the cache
+
+	src/Language.pm:  when 'web_recode_to' is set, also change the 'charset'
+
+	src/alias_manager.pl: [BugID 451] print errors to STDERR
+
+	src/task_manager.pl: [D.Lamballais] missing chomp ; incorrect split on file path.  
+	The consequence of this bug : all tasks would fail ("Error while processing task..")
+
+	wwsympa/wwsympa.fcgi: [BugID 447] [E.Rynes]  If a multivalued list parameter is set to read only, 
+	then the web pages will display an extra, empty value
+
+	wwsympa/wwsympa.fcgi: [reported by JH.Belpois] load subscribers in DB if changing the user_data_source from file to
+	include2
+
+	src/List.pm: limit the SQL queries when calling get_which().
+	Sympa would do run am_i() on every list the user is not owner of
+
+	src/alias_manager.pl: [reported by L.Ghys] reference to incorrect sympa.conf parameter 'sendmail_alias'
+
+	src/: Family.pm, sympa.pl: [reported by S.Amrani & JH.Belpois] Sympa.pl would die while instantiating families with the
+	following error : "free(): invalid pointer". Using parse_file() instead of parse_fh() seems to fix the problem.
+
+	web_tt2/arcsearch.tt2, wwsympa/wwsympa.fcgi: [BugId 427] [reported by K/Moriwaka] sort by age did not work properly
+	in web archives search engine
+
+
+
+5.1.2		31 October 2005
+
+   New features :
+
+	po/Makefile, src/Conf.pm, src/Language.pm, web_tt2/rss_request.tt2, wwsympa/wwsympa.fcgi: 
+	[D.Nylander] sympa translated to Swedish
+
+   Changes :
+
+	soap/sympasoap.pm: [G.Bouteille] which SOAP subroutine result now includes lists the user is admin of
+
+	src/Language.pm: try a setlocale() with locale.charset first
+
+	po/de.po: [M.Redinger] Updated de.po
+
+	po/ja.po: [K.Moriwaka] Updated Japanese translations
+
+	po/et.po: [T.Kindsigo] Updated Estonian PO file
+
+	Makefile.am, Makefile.in: [requested by S.Hornburg] never wait for user input while 
+	building a package (DESTDIR is set)
+
+   Bug fixes :	
+
+	src/task_manager.pl: [BugID 498] 'process_bouncers' task failed if no owner could be contacted ; no more return undef
+
+	wwsympa/wwsympa.fcgi: [BugID 528] adding a pending subscriber failed if the user gecos contained a comma (',')
+
+	web_tt2/rss.tt2, wwsympa/wwsympa.fcgi: Fixed some RSS problems
+
+	src/List.pm: get_which() for listamster returned all non-include2 lists
+	
+	* src/tt2.pl, web_tt2/: [BugID 522] escape quotes in javascript calls
+
+	wwsympa/wwsympa.fcgi: never go back to the search action after a del
+
+	soap/sympasoap.pm: [BugID 516] lists and which used domain in list address instead of host
+
+	wwsympa/wwsympa.fcgi: optimization : skip get_which() when either in a list context or while returning CSS
+
+	wwsympa/wwsympa.fcgi: escape encoded SMTP header fields for RSS
+
+	wwsympa/archived.pl: archived.pl would die with a "Modification of non-creatable array value attempted" 
+	error while creating the index file
+
+	src/Commands.pm, web_tt2/skinsedit.tt2: [reported by A.Brugalle] Add a notification 
+	when a message is moved to the distribution spool
+
+	src/: Archive.pm, List.pm: [reported by V.Mathieu] mail archives files had an incorrect 'log.' filename
+
+	src/Language.pm: [reported by O.Lacroix] failed to setlocale on HPUX ; 
+	now trying without dashes ('-').  Also fixed the setlocale(LC_TIME)
+
+	src/List.pm: [G.Bouteille] missing 'family_closed' parameter to close()
+
+	src/tt2.pl: [G.Bouteille] SetLang only if lang is available
+
+	mail_tt2/info_report.tt2: prevents a parser failure if info file was not found
+
+	web_tt2/review.tt2: [O.Lacroix] subscriber add form was shown regardless of owner privilege
+
+	po/fr.po: [O.Lacroix] [BugId 471] Fix
+
+	Makefile.am, Makefile.in: [BugId 504] Fix: LOCALDIR was hardcoded
+
+	ChangeLog, src/Language.pm: [BugID 502] Fix for i18n on FreeBSD
+
+	src/List.pm: [BugID 501] if family_name was set to an unknown family, wwsympa would die with 
+	the following error msg "Can't call method "check_param_constraint" on an undefined value
+	at /var/sympa/bin/List.pm line 1728."
+
+	web_tt2/list_menu.tt2, wwsympa/wwsympa.fcgi: [BugID 465] "contact owners" failed if protection mode was not javascript
+
+	src/List.pm: [BugID 461] List::am_i() cache control had 2 blocks which returned before updating the cache
 
 5.1		4 August 2005
 

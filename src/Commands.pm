@@ -457,9 +457,9 @@ sub last {
 	return 'no_archive';
     }
     my $file;
-    unless ($file = $list->archive_exist('last_message')) {
+    unless ($file = &Archive::last_path($list)) {
 	&report::reject_report_cmd('user','no_required_file',{},$cmd_line);
- 	&do_log('info', 'LAST %s from %s refused, archive not found', $which,  $sender);
+ 	&do_log('info', 'LAST %s from %s refused, archive file %s not found', $which,  $sender, $file);
 	return 'no_archive';
     }
     unless ($list->may_do('get', $sender)) {
