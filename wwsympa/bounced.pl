@@ -109,7 +109,7 @@ unless (Conf::load($sympa_conf_file)) {
 unshift @INC, $wwsconf->{'wws_path'};
 
 ## Check databse connectivity
-unless ($List::use_db = &List::probe_db()) {
+unless ($List::use_db = &List::check_db_connect()) {
     print STDERR "Sympa not setup to use DBI, unable to manage bounces\n";
     exit (-1);
 }

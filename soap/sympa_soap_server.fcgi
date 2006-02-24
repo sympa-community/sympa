@@ -55,7 +55,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'soap');
 &Log::do_log('info', 'SOAP server launched');
 
-unless ($List::use_db = &List::probe_db()) {
+unless ($List::use_db = &List::check_db_connect()) {
     &do_log('err','SOAP server requires a RDBMS to run');
 }
 

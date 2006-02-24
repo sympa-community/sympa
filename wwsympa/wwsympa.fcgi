@@ -525,7 +525,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 $Language::default_lang = $Conf{'lang'};	 
 
 ## Important to leave this there because it defined defaults for user_data_source
-$List::use_db = &List::probe_db();
+$List::use_db = &List::check_db_connect();
 
 my $pinfo = &List::_apply_defaults();
 
