@@ -5827,11 +5827,11 @@ archiving frequency defined by the \lparam {archive} parameter.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% List creation, families  and edition
+% List creation, edition and removal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {List creation, families and list edition}
+\chapter {List creation, edition and removal}
     \label {ml-creation}
 
 The list creation can be done by two ways, according to listmaster 
@@ -6187,6 +6187,21 @@ of any owner
       referring to the listmaster.
 
 Concerning list edition in a family context, see \ref{list-param-edit-family}, page~\pageref{list-param-edit-family}
+
+\section {Removing a list}
+    \label {ml-removal}
+
+You can remove a list either from the command line or using the web interface.
+
+\file {sympa.pl} provides an option to remove a mailing list, see the example below :
+\begin {quote}
+sympa.pl --remove\_list=mylist@mydomain
+\end {quote}
+
+Privileged owners can remove a mailing list through the list admin part of the web interface. Removing the mailing list
+consists in removing its subscribers from the database and setting its status to \textit{closed}.Once removed, the list 
+can still be restored by the listmaster ; list members are saved in a \file {subscribers.closed.dump} file.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Lists Families 
