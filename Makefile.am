@@ -179,6 +179,7 @@ warning:
 	echo "## because of the 'make test'), try downloading them from the"; \
 	echo "## CPAN website (http://search.cpan.org) and install them manually."; \
 	echo "#############################################################"; \
+	echo -n "Please hit <Enter> to proceed"; \
 	if [ "$(DESTDIR)" = "" ]; then read rep; fi
 
 checkperl:
