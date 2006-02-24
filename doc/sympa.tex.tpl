@@ -1498,6 +1498,30 @@ You can also customize more parameters via the \file {/home/sympa-dev/etc/sympa.
 If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
 \cfkeyword {home}, \cfkeyword {db\_name}, \cfkeyword {arc\_path}
 
+\section {Moving to another server}
+    \index{new server}
+
+If you're upgrading and moving to another server at the same time, we recommend you first move your data and 
+then upgrade Sympa on the new server. This will guarantee that Sympa upgrade procedures have been applied
+on the data.
+
+The migration process requires that you move the following data from the old server to the new one :
+\begin {itemize}
+
+    \item the user database. If using mysql you can probably just stop \file {mysqld} and copy the \dir {/var/lib/mysql/sympa/}
+      directory to the new server.
+
+    \item the \dir {[EXPL_DIR]} directory that contains list config
+
+    \item the \dir {[SPOOL_DIR]} directory that contains the spools
+
+    \item the \dir {[ETCL_DIR]} directory and \file {sympa.conf} and \file {wwsympa.conf} 
+
+    \item the web archives
+
+\end {itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mail aliases 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
