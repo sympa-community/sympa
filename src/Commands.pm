@@ -468,7 +468,7 @@ sub last {
 	return 'not_allowed';
     }
 
-    unless ($list->archive_send($sender,'last_message')) {
+    unless ($list->archive_send_last($sender)) {
 	&report::reject_report_cmd('intern',"Unable to send archive to $sender",{'listname'=>$which},$cmd_line,$sender,$robot);
 	return 'no_archive';
     }

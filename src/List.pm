@@ -3894,15 +3894,68 @@ sub archive_send {
    return unless ($self->is_archived());
        
    my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').'/'.$self->get_list_id();
-   $dir = $self->{'dir'}.'/archives' if ($file eq 'last_message');
-
    my $msg_list = Archive::scan_dir_archive($dir, $file);
-
 
    my $subject = 'File '.$self->{'name'}.' '.$file ;
    my $param = {'to' => $who,
 		'subject' => $subject,
 		'msg_list' => $msg_list } ;
+
+   $param->{'boundary1'} = &tools::get_message_id($self->{'domain'});
+   $param->{'boundary2'} = &tools::get_message_id($self->{'domain'});
+   $param->{'from'} = &Conf::get_robot_conf($self->{'domain'},'sympa');
+
+#    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
+
+   unless ($self->send_file('get_archive',$who,$self->{'domain'},$param)) {
+	   &do_log('notice',"Unable to send template 'archive_send' to $who");
+	   return undef;
+       }
+
+}
+
+####################################################
+# archive_send_last                              
+####################################################
+# sends last archive file
+#  
+# IN : -$self(+) : ref(List)
+#      -$who(+) : recepient
+# OUT : - | undef
+#
+######################################################
+sub archive_send_last {
+   my($self, $who) = @_;
+   do_log('debug', 'List::archive_send_last(%s, %s)',$self->{'listname'}, $who);
+
+   return unless ($self->is_archived());
+   my $dir = $self->{'dir'}.'/archives' ;
+
+   my $mail = new Message("$dir/last_message",'noxsympato');
+   unless (defined $mail) {
+       &do_log('err', 'Unable to create Message object %s', "$dir/last_message");
+       return undef;
+   }
+   
+   my @msglist;
+   my $msg = {};
+   $msg->{'id'} = 1;
+   
+   $msg->{'subject'}  = &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('Subject'));
+   chomp $msg->{'subject'};   
+   $msg->{'from'}= &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('From'));
+   chomp $msg->{'from'};    	        	
+   $msg->{'date'} = $mail->{'msg'}->head->get('Date');
+   chomp $msg->{'date'};
+   
+   $msg->{'full_msg'} = $mail->{'msg'}->as_string;
+   
+   push @msglist,$msg;
+
+   my $subject = 'File '.$self->{'name'}.'.last_message' ;
+   my $param = {'to' => $who,
+		'subject' => $subject,
+		'msg_list' => @msglist } ;
 
 
    $param->{'boundary1'} = &tools::get_message_id($self->{'domain'});
