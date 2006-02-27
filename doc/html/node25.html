@@ -1,6 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
+patched version by:  Kenshi Muto, Debian Project.
+* modified by:  Shige TAKENO
+LaTeX2HTML 2002-2-1 (1.70),
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -14,7 +17,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -27,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1466"
+<A NAME="tex2html1472"
   HREF="node26.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1460"
+<A NAME="tex2html1466"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1454"
+<A NAME="tex2html1460"
   HREF="node24.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1462"
+<A NAME="tex2html1468"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1464"
+<A NAME="tex2html1470"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1467"
+<B> Next:</B> <A NAME="tex2html1473"
   HREF="node26.html">25. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html1461"
+<B> Up:</B> <A NAME="tex2html1467"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1455"
+<B> Previous:</B> <A NAME="tex2html1461"
   HREF="node24.html">23. Bounce management</A>
- &nbsp; <B>  <A NAME="tex2html1463"
+ &nbsp; <B>  <A NAME="tex2html1469"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1465"
+ &nbsp; <B>  <A NAME="tex2html1471"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -65,14 +68,14 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 <I>Sympa</I> lets you use an external antivirus solution to check incoming mails.
-In this case you must set the <A NAME="11431"></A><TT>antivirus_path</TT> and 
-<A NAME="11434"></A><TT>antivirus_args</TT> configuration parameters
+In this case you must set the <A NAME="11493"></A><TT>antivirus_path</TT> and 
+<A NAME="11496"></A><TT>antivirus_args</TT> configuration parameters
  (see <A HREF="node8.html#Antivirus_plug-in">7.13</A>, page&nbsp;<A HREF="node8.html#Antivirus_plug-in"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 <I>Sympa</I> is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
-For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="11439"></A><TT>/home/sympa/spool/tmp/antivirus</TT> directory and
+For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="11501"></A><TT>/usr/local/sympa-os/spool/tmp/antivirus</TT> directory and
 then calls the antivirus software to check them.
 When a virus is detected, <I>Sympa</I> looks for the virus name in the virus scanner STDOUT and sends a
-<A NAME="11443"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
+<A NAME="11505"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
 The mail is saved as 'bad' and the working directory is deleted (except if <I>Sympa</I> is running in debug mode).
 
 <P>
@@ -80,7 +83,7 @@ The mail is saved as 'bad' and the working directory is deleted (except if <I>Sy
 <BR><HR>
 <ADDRESS>
 root
-2006-01-30
+2006-02-27
 </ADDRESS>
 </BODY>
 </HTML>

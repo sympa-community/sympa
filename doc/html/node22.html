@@ -1,6 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
+patched version by:  Kenshi Muto, Debian Project.
+* modified by:  Shige TAKENO
+LaTeX2HTML 2002-2-1 (1.70),
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -14,7 +17,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -27,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1400"
+<A NAME="tex2html1406"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1394"
+<A NAME="tex2html1400"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1388"
+<A NAME="tex2html1394"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1396"
+<A NAME="tex2html1402"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1398"
+<A NAME="tex2html1404"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1401"
+<B> Next:</B> <A NAME="tex2html1407"
   HREF="node23.html">22. Shared documents</A>
-<B> Up:</B> <A NAME="tex2html1395"
+<B> Up:</B> <A NAME="tex2html1401"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1389"
+<B> Previous:</B> <A NAME="tex2html1395"
   HREF="node21.html">20. List configuration parameters</A>
- &nbsp; <B>  <A NAME="tex2html1397"
+ &nbsp; <B>  <A NAME="tex2html1403"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1399"
+ &nbsp; <B>  <A NAME="tex2html1405"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,21 +63,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1402"
+<LI><A NAME="tex2html1408"
   HREF="node22.html#SECTION002210000000000000000">21.1 Message topics</A>
 <UL>
-<LI><A NAME="tex2html1403"
+<LI><A NAME="tex2html1409"
   HREF="node22.html#SECTION002211000000000000000">21.1.1 Message topic definition in a list</A>
-<LI><A NAME="tex2html1404"
+<LI><A NAME="tex2html1410"
   HREF="node22.html#SECTION002212000000000000000">21.1.2 Subscribing to message topic for list subscribers</A>
-<LI><A NAME="tex2html1405"
+<LI><A NAME="tex2html1411"
   HREF="node22.html#SECTION002213000000000000000">21.1.3 Message tagging</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION002200000000000000000"></A>
-    <A NAME="reception-mode"></A>    <A NAME="4021"></A>
+    <A NAME="reception-mode"></A>    <A NAME="4040"></A>
 <BR>
 21. Reception mode
 </H1>
@@ -82,7 +85,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <H1><A NAME="SECTION002210000000000000000"></A>
-<A NAME="msg-topics"></A><A NAME="4024"></A>
+<A NAME="msg-topics"></A><A NAME="4043"></A>
 <BR>
 21.1 Message topics
 </H1>
@@ -101,13 +104,13 @@ sender or by the list moderator.
 </H2>
 
 <P>
-Available message topics are defined by list parameters. Foreach new message topic, create a new <A NAME="11294"></A><TT>msg_topic</TT> paragraph
+Available message topics are defined by list parameters. Foreach new message topic, create a new <A NAME="11356"></A><TT>msg_topic</TT> paragraph
 that defines the name and the title of the topic. If a thread is identified for the current message then the automatic procedure is performed.
 Else, to use automatic tagging, you should define keywords (See (<A HREF="node21.html#par-msg-topic">20.4.12</A>, page&nbsp;<A HREF="node21.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) 
 To define which part of the message is used for automatic tagging
-you have to define <A NAME="11297"></A><TT>msg_topic_keywords_apply_on</TT> list parameter (See <A HREF="node21.html#par-msg-topic-key-apply-on">20.4.13</A>, 
+you have to define <A NAME="11359"></A><TT>msg_topic_keywords_apply_on</TT> list parameter (See <A HREF="node21.html#par-msg-topic-key-apply-on">20.4.13</A>, 
 page&nbsp;<A HREF="node21.html#par-msg-topic-key-apply-on"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Tagging a message can be optional or it can be required, depending on the
-<A NAME="11300"></A><TT>msg_topic_tagging</TT> list parameter (See (<A HREF="node21.html#par-msg-topic-tagging">20.4.14</A>,page&nbsp;<A HREF="node21.html#par-msg-topic-tagging"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+<A NAME="11362"></A><TT>msg_topic_tagging</TT> list parameter (See (<A HREF="node21.html#par-msg-topic-tagging">20.4.14</A>,page&nbsp;<A HREF="node21.html#par-msg-topic-tagging"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 
@@ -127,7 +130,7 @@ database (subscriber_table table).
 </H2>
 
 <P>
-First of all, if one or more <A NAME="11304"></A><TT>msg_topic.keywords</TT> are defined, <I>Sympa</I> tries to tag messages automatically. 
+First of all, if one or more <A NAME="11366"></A><TT>msg_topic.keywords</TT> are defined, <I>Sympa</I> tries to tag messages automatically. 
 To trigger manual tagging, by message sender or list moderator, on the web interface, <I>Sympa</I> uses authorization scenarios : if the resulted action is ``editorkey'' 
 (for example in scenario send.editorkey), the list moderator is asked to tag the message. 
 If the resulted action is ``request_auth'' (for example in scenario send.privatekey), the message sender is asked to tag the message. 
@@ -135,43 +138,43 @@ The following variables are available as scenario variables to customize tagging
 (See (<A HREF="node14.html#scenarios">13</A>, page&nbsp;<A HREF="node14.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) If message tagging is required and if it was not yet performed, <I>Sympa</I> will ask to the list moderator.
 
 <P>
-Tagging a message will create a topic information file in the <A NAME="11310"></A><TT>/home/sympa/spool/topic/</TT> spool. Its name is based on the listname and the Message-ID. 
+Tagging a message will create a topic information file in the <A NAME="11372"></A><TT>/usr/local/sympa-os/spool/topic/</TT> spool. Its name is based on the listname and the Message-ID. 
 For message distribution, a ``X-Sympa-Topic'' field is added to the message to allow members to use mail filters.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1400"
+<A NAME="tex2html1406"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1394"
+<A NAME="tex2html1400"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1388"
+<A NAME="tex2html1394"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1396"
+<A NAME="tex2html1402"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1398"
+<A NAME="tex2html1404"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1401"
+<B> Next:</B> <A NAME="tex2html1407"
   HREF="node23.html">22. Shared documents</A>
-<B> Up:</B> <A NAME="tex2html1395"
+<B> Up:</B> <A NAME="tex2html1401"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1389"
+<B> Previous:</B> <A NAME="tex2html1395"
   HREF="node21.html">20. List configuration parameters</A>
- &nbsp; <B>  <A NAME="tex2html1397"
+ &nbsp; <B>  <A NAME="tex2html1403"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1399"
+ &nbsp; <B>  <A NAME="tex2html1405"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-30
+2006-02-27
 </ADDRESS>
 </BODY>
 </HTML>

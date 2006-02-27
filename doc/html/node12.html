@@ -1,6 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
+patched version by:  Kenshi Muto, Debian Project.
+* modified by:  Shige TAKENO
+LaTeX2HTML 2002-2-1 (1.70),
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -14,7 +17,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -27,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1103"
+<A NAME="tex2html1108"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1097"
+<A NAME="tex2html1102"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1091"
+<A NAME="tex2html1096"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1099"
+<A NAME="tex2html1104"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1101"
+<A NAME="tex2html1106"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1104"
+<B> Next:</B> <A NAME="tex2html1109"
   HREF="node13.html">12. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1098"
+<B> Up:</B> <A NAME="tex2html1103"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1092"
+<B> Previous:</B> <A NAME="tex2html1097"
   HREF="node11.html">10. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1100"
+ &nbsp; <B>  <A NAME="tex2html1105"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1102"
+ &nbsp; <B>  <A NAME="tex2html1107"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,18 +63,18 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1105"
+<LI><A NAME="tex2html1110"
   HREF="node12.html#SECTION001210000000000000000">11.1 Introduction</A>
-<LI><A NAME="tex2html1106"
+<LI><A NAME="tex2html1111"
   HREF="node12.html#SECTION001220000000000000000">11.2 Web server setup</A>
-<LI><A NAME="tex2html1107"
+<LI><A NAME="tex2html1112"
   HREF="node12.html#SECTION001230000000000000000">11.3 Sympa setup</A>
-<LI><A NAME="tex2html1108"
+<LI><A NAME="tex2html1113"
   HREF="node12.html#SECTION001240000000000000000">11.4 The WSDL service description</A>
-<LI><A NAME="tex2html1109"
+<LI><A NAME="tex2html1114"
   HREF="node12.html#SECTION001250000000000000000">11.5 Client-side programming</A>
 <UL>
-<LI><A NAME="tex2html1110"
+<LI><A NAME="tex2html1115"
   HREF="node12.html#SECTION001251000000000000000">11.5.1 Writting a Java client with Axis</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
@@ -119,9 +122,9 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="8759"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /home/sympa/bin/sympa_soap_server.fcgi -processes 1
-	ScriptAlias /sympasoap /home/sympa/bin/sympa_soap_server.fcgi
+Here is a sample piece of your Apache <A NAME="8815"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
 	&lt;Location /sympasoap&gt;
    	  SetHandler fastcgi-script
@@ -135,8 +138,8 @@ Here is a sample piece of your Apache <A NAME="8759"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only parameters that you need to set in <A NAME="8762"></A><TT>sympa.conf</TT>/<A NAME="8765"></A><TT>robot.conf</TT> files is
-the <A NAME="8768"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+The only parameters that you need to set in <A NAME="8818"></A><TT>sympa.conf</TT>/<A NAME="8821"></A><TT>robot.conf</TT> files is
+the <A NAME="8824"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -673,36 +676,36 @@ String[] _abonnements = tmp.which();
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1103"
+<A NAME="tex2html1108"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1097"
+<A NAME="tex2html1102"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1091"
+<A NAME="tex2html1096"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1099"
+<A NAME="tex2html1104"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1101"
+<A NAME="tex2html1106"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1104"
+<B> Next:</B> <A NAME="tex2html1109"
   HREF="node13.html">12. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1098"
+<B> Up:</B> <A NAME="tex2html1103"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1092"
+<B> Previous:</B> <A NAME="tex2html1097"
   HREF="node11.html">10. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1100"
+ &nbsp; <B>  <A NAME="tex2html1105"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1102"
+ &nbsp; <B>  <A NAME="tex2html1107"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-01-30
+2006-02-27
 </ADDRESS>
 </BODY>
 </HTML>
