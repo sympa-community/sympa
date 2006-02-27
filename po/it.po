@@ -310,7 +310,7 @@ msgid "%1 messages selected out of %2"
 msgstr "%1 messaggi selezionati su %2"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:62
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:65
 msgid "%1 occurrence(s) found"
 msgstr "%1 risultato/i trovato/i"
 
@@ -623,7 +623,7 @@ msgstr "Diritti di accesso per il documento %1"
 msgid "Account"
 msgstr "Account"
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:49
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:52
 msgid "Add"
 msgstr "Aggiungi"
 
@@ -728,6 +728,11 @@ msgstr "Gestione dell'archivio"
 #: src/List.pm:350
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivia in chiaro le mail crittate"
+
+#. (list.name)
+#: mail_tt2/get_archive.tt2:3
+msgid "Archive of %1, file %2"
+msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:90
 msgid "Archive powered by"
@@ -1377,8 +1382,8 @@ msgstr "Elimina i mesi selezionatoi."
 msgid "Delete Shared"
 msgstr "Elimina lo spazio condiviso"
 
-#: web_tt2/review.tt2:229 web_tt2/review.tt2:74 web_tt2/reviewbouncing.tt2:106
-#: web_tt2/reviewbouncing.tt2:30
+#: web_tt2/review.tt2:232 web_tt2/review.tt2:77 web_tt2/reviewbouncing.tt2:108
+#: web_tt2/reviewbouncing.tt2:32
 msgid "Delete selected email addresses"
 msgstr "Rimuovi gli utenti selezionati"
 
@@ -1581,7 +1586,7 @@ msgstr "Vuoi davvero rimuovere %1?"
 msgid "Document"
 msgstr "Documento"
 
-#: web_tt2/review.tt2:94 web_tt2/review.tt2:98
+#: web_tt2/review.tt2:101 web_tt2/review.tt2:97
 msgid "Domain"
 msgstr "Dominio"
 
@@ -1597,7 +1602,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr "Scarica il file Zip"
 
-#: web_tt2/review.tt2:40
+#: web_tt2/review.tt2:41 web_tt2/review.tt2:43 web_tt2/reviewbouncing.tt2:22
 msgid "Dump"
 msgstr ""
 
@@ -1676,8 +1681,8 @@ msgstr ""
 "moderata, i messaggi inviati alla lista devono prima passare dai moderatori, "
 "che decidono se distribuirli o rifiutarli."
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:86 web_tt2/review.tt2:89
-#: web_tt2/reviewbouncing.tt2:62 web_tt2/subindex.tt2:7
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:89 web_tt2/review.tt2:92
+#: web_tt2/reviewbouncing.tt2:64 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr "Email"
 
@@ -1696,7 +1701,7 @@ msgid "End of %1 Digest %2"
 msgstr "Fine della raccolta %1 della lista %2"
 
 #. (list.name,date)
-#: mail_tt2/digest.tt2:37
+#: mail_tt2/digest.tt2:37 mail_tt2/get_archive.tt2:36
 msgid "End of digest for list %1 - %2"
 msgstr "Fine della raccolta della lista %1 - %2"
 
@@ -2365,7 +2370,7 @@ msgid "Language of the list"
 msgstr "Lingua della lista"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:133
+#: web_tt2/review.tt2:136
 msgid "Last update"
 msgstr "Ultimo aggiornamento"
 
@@ -3119,8 +3124,8 @@ msgstr ""
 "Se il numero di rimbalzi supera questo valore, i messaggi per la lista non "
 "vengono piú distributiti.\n"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104
-#: web_tt2/review.tt2:108 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:107
+#: web_tt2/review.tt2:111 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Nome"
 
@@ -3174,8 +3179,8 @@ msgstr "Newsletter, ristretto ai moderatori"
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr "Newsletter, ristretto ai moderatori dopo conferma"
 
-#: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
-#: web_tt2/reviewbouncing.tt2:52
+#: web_tt2/review.tt2:247 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:120
+#: web_tt2/reviewbouncing.tt2:54
 msgid "Next page"
 msgstr "Prossima pagina"
 
@@ -3456,7 +3461,7 @@ msgstr ""
 msgid "Owners defined in an external datasource"
 msgstr ""
 
-#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:36
 msgid "Page size"
 msgstr "Per pagina"
 
@@ -3509,6 +3514,12 @@ msgstr ""
 #: src/List.pm:565
 #, fuzzy
 msgid "Periodical subscription expiration task"
+msgstr "Modalità di iscrizione disponibili"
+
+# nlsref 16,88
+#: src/List.pm:1039
+#, fuzzy
+msgid "Periodical subscription reminder task"
 msgstr "Modalità di iscrizione disponibili"
 
 #: web_tt2/main.tt2:49
@@ -3586,8 +3597,8 @@ msgstr "Scegli"
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
-#: web_tt2/reviewbouncing.tt2:46
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:241 web_tt2/reviewbouncing.tt2:114
+#: web_tt2/reviewbouncing.tt2:48
 msgid "Previous page"
 msgstr "Pagina precedente"
 
@@ -3769,7 +3780,7 @@ msgstr "Riscostruisce gli archivi"
 msgid "Received mega-bytes         :      %1"
 msgstr "MegaByte ricevuti              :      %1"
 
-#: web_tt2/review.tt2:114
+#: web_tt2/review.tt2:117
 msgid "Reception"
 msgstr "Ricezione"
 
@@ -3919,7 +3930,7 @@ msgstr "Il file richiesto non e' disponibile.\n"
 msgid "Reset errors"
 msgstr "Azzera gli errori"
 
-#: web_tt2/reviewbouncing.tt2:108 web_tt2/reviewbouncing.tt2:55
+#: web_tt2/reviewbouncing.tt2:110 web_tt2/reviewbouncing.tt2:57
 msgid "Reset errors for selected users"
 msgstr "Azzera gli errori per gli utenti selezionati"
 
@@ -4082,7 +4093,7 @@ msgid "Scope"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:62
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "Cerca"
@@ -4125,7 +4136,7 @@ msgstr ""
 "Seleziona qui sotto i mesi d'archivio che vuoi cancellare o scaricare  "
 "(formato ZIP)"
 
-#: web_tt2/review.tt2:64
+#: web_tt2/review.tt2:67
 msgid "Selection too wide, can not show selection"
 msgstr "Selezione troppo ampia, non posso mostrare la selezione"
 
@@ -4276,7 +4287,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:118 web_tt2/review.tt2:121
+#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
 msgid "Sources"
 msgstr "Fonte dei dati"
 
@@ -4295,7 +4306,7 @@ msgstr "Stato : %1"
 msgid "Status of the list"
 msgstr "Stato della lista"
 
-#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
 msgid "Sub date"
 msgstr "Abbonato da"
 
@@ -4578,7 +4589,8 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Errore nella sintassi del parametro : %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2863
 msgid "Table of contents:"
 msgstr "Sommario:"
 
@@ -5810,8 +5822,8 @@ msgstr "%s ha inviato il tuo messaggio di scadenza ai seguenti indirizzi:\n"
 msgid "To: %1"
 msgstr "To; %1"
 
-#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:228
-#: web_tt2/reviewbouncing.tt2:121
+#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:231
+#: web_tt2/reviewbouncing.tt2:123
 msgid "Toggle Selection"
 msgstr "Cambia la selezione"
 
@@ -7223,11 +7235,11 @@ msgstr ""
 msgid "authentication requested, notification sent to owner"
 msgstr "con autenticazione, notifica al proprietario"
 
-#: web_tt2/reviewbouncing.tt2:63
+#: web_tt2/reviewbouncing.tt2:65
 msgid "bounce score"
 msgstr "Tasso d'errore"
 
-#: web_tt2/review.tt2:165
+#: web_tt2/review.tt2:168
 msgid "bouncing"
 msgstr "Errato"
 
@@ -7864,7 +7876,7 @@ msgid "page # %1/%2"
 msgstr "pagina %1 / %2"
 
 #. (page,total_page)
-#: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
+#: web_tt2/reviewbouncing.tt2:117 web_tt2/reviewbouncing.tt2:51
 msgid "page %1 / %2"
 msgstr "pagina %1 / %2"
 
@@ -7965,8 +7977,8 @@ msgid "purge of orphan entries in user table every month"
 msgstr "Elimina le voci orfane nella tabella degli utenti ogni mese"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41
-#: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
+#: web_tt2/review.tt2:234 web_tt2/review.tt2:52 web_tt2/review.tt2:78
+#: web_tt2/reviewbouncing.tt2:109 web_tt2/reviewbouncing.tt2:33
 msgid "quiet"
 msgstr "silenzioso"
 

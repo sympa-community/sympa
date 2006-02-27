@@ -295,7 +295,7 @@ msgid "%1 messages selected out of %2"
 msgstr "%2 levélbõl %1 mutatva"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:62
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:65
 msgid "%1 occurrence(s) found"
 msgstr "%1 találat"
 
@@ -607,7 +607,7 @@ msgstr "A(z) %1 dokumentum hozzáférési jogosultságai"
 msgid "Account"
 msgstr "Azonosító"
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:49
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:52
 msgid "Add"
 msgstr "Hozzáad"
 
@@ -710,6 +710,11 @@ msgstr "Archívum kezelése"
 #: src/List.pm:350
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archiválja a titkosított leveleket sima szöveges formátumban"
+
+#. (list.name)
+#: mail_tt2/get_archive.tt2:3
+msgid "Archive of %1, file %2"
+msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:90
 msgid "Archive powered by"
@@ -1345,8 +1350,8 @@ msgstr "Kijelölt hónap(ok) törlése"
 msgid "Delete Shared"
 msgstr "Megosztott mappa törlése"
 
-#: web_tt2/review.tt2:229 web_tt2/review.tt2:74 web_tt2/reviewbouncing.tt2:106
-#: web_tt2/reviewbouncing.tt2:30
+#: web_tt2/review.tt2:232 web_tt2/review.tt2:77 web_tt2/reviewbouncing.tt2:108
+#: web_tt2/reviewbouncing.tt2:32
 msgid "Delete selected email addresses"
 msgstr "Kijelölt e-mail címek törlése"
 
@@ -1542,7 +1547,7 @@ msgstr "Tényleg át akarja nevezni a(z) %1 állományt?"
 msgid "Document"
 msgstr "Dokumentumok"
 
-#: web_tt2/review.tt2:94 web_tt2/review.tt2:98
+#: web_tt2/review.tt2:101 web_tt2/review.tt2:97
 msgid "Domain"
 msgstr "Tartomány"
 
@@ -1558,7 +1563,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr "Zip állomány letöltése"
 
-#: web_tt2/review.tt2:40
+#: web_tt2/review.tt2:41 web_tt2/review.tt2:43 web_tt2/reviewbouncing.tt2:22
 msgid "Dump"
 msgstr "Kipakolás"
 
@@ -1639,8 +1644,8 @@ msgstr ""
 "moderált, akkor egy listára küldött üzenet elõször a szerkesztõkhöz kerül, "
 "akik eldöntik, hogy engedélyezik, vagy elutasítják."
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:86 web_tt2/review.tt2:89
-#: web_tt2/reviewbouncing.tt2:62 web_tt2/subindex.tt2:7
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:89 web_tt2/review.tt2:92
+#: web_tt2/reviewbouncing.tt2:64 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr "E-mail"
 
@@ -1658,7 +1663,7 @@ msgid "End of %1 Digest %2"
 msgstr "Vége a(z) %1 lista kivonatának %2"
 
 #. (list.name,date)
-#: mail_tt2/digest.tt2:37
+#: mail_tt2/digest.tt2:37 mail_tt2/get_archive.tt2:36
 msgid "End of digest for list %1 - %2"
 msgstr "Vége a(z) %1 lista kivonatának - %2"
 
@@ -2307,7 +2312,7 @@ msgid "Language of the list"
 msgstr "A lista nyelve"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:133
+#: web_tt2/review.tt2:136
 msgid "Last update"
 msgstr "Utolsó módosítás"
 
@@ -3042,8 +3047,8 @@ msgstr ""
 "lesznek tartva késõbbi moderálásig. Ha a visszapattanások száma tullépi ezt "
 "az értéket, az erre a listára küldött üzenetek nem lesznek szétküldve."
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104
-#: web_tt2/review.tt2:108 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:107
+#: web_tt2/review.tt2:111 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Név:"
 
@@ -3096,8 +3101,8 @@ msgstr "Hírlevél, csak a szerkesztõk küldhetnek"
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr "Hírlevél, csak a szerkesztõk küldhetnek megerõsítés után"
 
-#: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
-#: web_tt2/reviewbouncing.tt2:52
+#: web_tt2/review.tt2:247 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:120
+#: web_tt2/reviewbouncing.tt2:54
 msgid "Next page"
 msgstr "Következõ oldal"
 
@@ -3366,7 +3371,7 @@ msgstr ""
 msgid "Owners defined in an external datasource"
 msgstr "Külsp adatforrásban megadott tulajdonosok"
 
-#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:36
 msgid "Page size"
 msgstr "Oldal méret"
 
@@ -3419,6 +3424,12 @@ msgstr "Idõszak: "
 # nlsref 16,88
 #: src/List.pm:565
 msgid "Periodical subscription expiration task"
+msgstr "Periódikus feliratkozásmegerõsítési-feladat"
+
+# nlsref 16,88
+#: src/List.pm:1039
+#, fuzzy
+msgid "Periodical subscription reminder task"
 msgstr "Periódikus feliratkozásmegerõsítési-feladat"
 
 #: web_tt2/main.tt2:49
@@ -3492,8 +3503,8 @@ msgstr "Találatok megjelenítése"
 msgid "Preferences"
 msgstr "Beállításaim"
 
-#: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
-#: web_tt2/reviewbouncing.tt2:46
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:241 web_tt2/reviewbouncing.tt2:114
+#: web_tt2/reviewbouncing.tt2:48
 msgid "Previous page"
 msgstr "Elõzõ oldal"
 
@@ -3667,7 +3678,7 @@ msgstr "Archívum frissítése"
 msgid "Received mega-bytes         :      %1"
 msgstr "Fogadott megabyte-ok            :      %1"
 
-#: web_tt2/review.tt2:114
+#: web_tt2/review.tt2:117
 msgid "Reception"
 msgstr "Kézbesítés típusa"
 
@@ -3813,7 +3824,7 @@ msgstr "A kért állomány nem létezik.\n"
 msgid "Reset errors"
 msgstr "Hibák törlése"
 
-#: web_tt2/reviewbouncing.tt2:108 web_tt2/reviewbouncing.tt2:55
+#: web_tt2/reviewbouncing.tt2:110 web_tt2/reviewbouncing.tt2:57
 msgid "Reset errors for selected users"
 msgstr "Kijelölt felhasználók hibáinak törlése"
 
@@ -3973,7 +3984,7 @@ msgid "Scope"
 msgstr "Hatókör"
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:62
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "Keresés"
@@ -4016,7 +4027,7 @@ msgstr ""
 "Válassza ki az alábbi archívumból azokat a hónapokat, amiket szeretne "
 "törölni vagy letölteni (ZIP formátumban):"
 
-#: web_tt2/review.tt2:64
+#: web_tt2/review.tt2:67
 msgid "Selection too wide, can not show selection"
 msgstr "Túl sokat jelölt ki, nem tudom megjeleníteni."
 
@@ -4166,7 +4177,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:118 web_tt2/review.tt2:121
+#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
 msgid "Sources"
 msgstr "Adatforrások"
 
@@ -4183,7 +4194,7 @@ msgstr "Állapot:"
 msgid "Status of the list"
 msgstr "A lista állapota"
 
-#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
 msgid "Sub date"
 msgstr "Feliratkozott"
 
@@ -4460,7 +4471,8 @@ msgstr "A tagok szinkronizálása az adatforrásokkal"
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Hibásan megadott parancs: %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2863
 msgid "Table of contents:"
 msgstr "Tartalomjegyzék:"
 
@@ -5660,8 +5672,8 @@ msgstr "%s a megerõsítési üzeneteket a következõ címekre küldte el:\n"
 msgid "To: %1"
 msgstr "Címzett: %1"
 
-#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:228
-#: web_tt2/reviewbouncing.tt2:121
+#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:231
+#: web_tt2/reviewbouncing.tt2:123
 msgid "Toggle Selection"
 msgstr "Kijelölés megfordítása"
 
@@ -7035,11 +7047,11 @@ msgstr ""
 msgid "authentication requested, notification sent to owner"
 msgstr "azonosítással, a lista tulajdonosa értesítve lesz"
 
-#: web_tt2/reviewbouncing.tt2:63
+#: web_tt2/reviewbouncing.tt2:65
 msgid "bounce score"
 msgstr "visszapattanások száma"
 
-#: web_tt2/review.tt2:165
+#: web_tt2/review.tt2:168
 msgid "bouncing"
 msgstr "Visszapattanások beállítása"
 
@@ -7649,7 +7661,7 @@ msgid "page # %1/%2"
 msgstr "oldal # %1/%2"
 
 #. (page,total_page)
-#: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
+#: web_tt2/reviewbouncing.tt2:117 web_tt2/reviewbouncing.tt2:51
 msgid "page %1 / %2"
 msgstr "%1.-ik oldal %2 oldalból"
 
@@ -7747,8 +7759,8 @@ msgid "purge of orphan entries in user table every month"
 msgstr "a felhasználói tábla elárvult bejegyzéseinek havi törlése"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41
-#: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
+#: web_tt2/review.tt2:234 web_tt2/review.tt2:52 web_tt2/review.tt2:78
+#: web_tt2/reviewbouncing.tt2:109 web_tt2/reviewbouncing.tt2:33
 msgid "quiet"
 msgstr "nincs értesítés"
 

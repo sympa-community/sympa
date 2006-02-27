@@ -335,7 +335,7 @@ msgid "%1 messages selected out of %2"
 msgstr "在 %2 中选中了 %1 个邮件"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:62
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:65
 msgid "%1 occurrence(s) found"
 msgstr "找到 %1 个匹配项"
 
@@ -639,7 +639,7 @@ msgstr "文档 %1 的访问权限"
 msgid "Account"
 msgstr "ÕÊºÅ"
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:49
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:52
 msgid "Add"
 msgstr "新增"
 
@@ -744,6 +744,11 @@ msgstr ""
 # nlsref 16,212
 #: src/List.pm:350
 msgid "Archive encrypted mails as cleartext"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/get_archive.tt2:3
+msgid "Archive of %1, file %2"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:90
@@ -1371,8 +1376,8 @@ msgstr "删除选中的用户"
 msgid "Delete Shared"
 msgstr ""
 
-#: web_tt2/review.tt2:229 web_tt2/review.tt2:74 web_tt2/reviewbouncing.tt2:106
-#: web_tt2/reviewbouncing.tt2:30
+#: web_tt2/review.tt2:232 web_tt2/review.tt2:77 web_tt2/reviewbouncing.tt2:108
+#: web_tt2/reviewbouncing.tt2:32
 msgid "Delete selected email addresses"
 msgstr "删除选中的邮件地址"
 
@@ -1570,7 +1575,7 @@ msgstr "确定要删除 %1 ?"
 msgid "Document"
 msgstr "文档"
 
-#: web_tt2/review.tt2:94 web_tt2/review.tt2:98
+#: web_tt2/review.tt2:101 web_tt2/review.tt2:97
 msgid "Domain"
 msgstr ""
 
@@ -1584,7 +1589,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr ""
 
-#: web_tt2/review.tt2:40
+#: web_tt2/review.tt2:41 web_tt2/review.tt2:43 web_tt2/reviewbouncing.tt2:22
 msgid "Dump"
 msgstr ""
 
@@ -1655,8 +1660,8 @@ msgid ""
 "who will decide whether to distribute or reject it."
 msgstr ""
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:86 web_tt2/review.tt2:89
-#: web_tt2/reviewbouncing.tt2:62 web_tt2/subindex.tt2:7
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:89 web_tt2/review.tt2:92
+#: web_tt2/reviewbouncing.tt2:64 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr ""
 
@@ -1675,7 +1680,7 @@ msgid "End of %1 Digest %2"
 msgstr "邮递表 %1 的摘要结束 - %2"
 
 #. (list.name,date)
-#: mail_tt2/digest.tt2:37
+#: mail_tt2/digest.tt2:37 mail_tt2/get_archive.tt2:36
 msgid "End of digest for list %1 - %2"
 msgstr "邮递表 %1 的摘要结束 - %2"
 
@@ -2297,7 +2302,7 @@ msgid "Language of the list"
 msgstr "ÓÊµÝ±íµÄÓïÑÔ"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:133
+#: web_tt2/review.tt2:136
 msgid "Last update"
 msgstr "最后更新"
 
@@ -3028,8 +3033,8 @@ msgid ""
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104
-#: web_tt2/review.tt2:108 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:107
+#: web_tt2/review.tt2:111 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr ",AC{3F(B"
 
@@ -3078,8 +3083,8 @@ msgstr ""
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
 
-#: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
-#: web_tt2/reviewbouncing.tt2:52
+#: web_tt2/review.tt2:247 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:120
+#: web_tt2/reviewbouncing.tt2:54
 msgid "Next page"
 msgstr "后一页"
 
@@ -3339,7 +3344,7 @@ msgstr ""
 msgid "Owners defined in an external datasource"
 msgstr ""
 
-#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:36
 msgid "Page size"
 msgstr "页面大小"
 
@@ -3396,6 +3401,12 @@ msgstr "间隔"
 #: src/List.pm:565
 #, fuzzy
 msgid "Periodical subscription expiration task"
+msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
+
+# nlsref 16,88
+#: src/List.pm:1039
+#, fuzzy
+msgid "Periodical subscription reminder task"
 msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
 
 #: web_tt2/main.tt2:49
@@ -3467,8 +3478,8 @@ msgstr "优先"
 msgid "Preferences"
 msgstr "首选项"
 
-#: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
-#: web_tt2/reviewbouncing.tt2:46
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:241 web_tt2/reviewbouncing.tt2:114
+#: web_tt2/reviewbouncing.tt2:48
 msgid "Previous page"
 msgstr "前一页"
 
@@ -3660,7 +3671,7 @@ msgstr "重建归档"
 msgid "Received mega-bytes         :      %1"
 msgstr ""
 
-#: web_tt2/review.tt2:114
+#: web_tt2/review.tt2:117
 msgid "Reception"
 msgstr "接收"
 
@@ -3809,7 +3820,7 @@ msgstr "ÐèÒªµÄÎÄ¼þ²»´æÔÚ¡£\n"
 msgid "Reset errors"
 msgstr "重置错误计数"
 
-#: web_tt2/reviewbouncing.tt2:108 web_tt2/reviewbouncing.tt2:55
+#: web_tt2/reviewbouncing.tt2:110 web_tt2/reviewbouncing.tt2:57
 msgid "Reset errors for selected users"
 msgstr "为选中的用户重置错误计数"
 
@@ -3956,7 +3967,7 @@ msgid "Scope"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:62
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "查找"
@@ -3997,7 +4008,7 @@ msgid ""
 "Select below Archives months you want to delete or download (ZiP format):"
 msgstr ""
 
-#: web_tt2/review.tt2:64
+#: web_tt2/review.tt2:67
 msgid "Selection too wide, can not show selection"
 msgstr "选择范围太宽，无法显示选择"
 
@@ -4138,7 +4149,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:118 web_tt2/review.tt2:121
+#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
 #, fuzzy
 msgid "Sources"
 msgstr "size=\"-1\"><b>定制</b"
@@ -4158,7 +4169,7 @@ msgstr "状态: %1"
 msgid "Status of the list"
 msgstr "ÓÊµÝ±í×´Ì¬"
 
-#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
 #, fuzzy
 msgid "Sub date"
 msgstr "按日期排序"
@@ -4415,7 +4426,8 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr "下列参数语法错误: %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 src/List.pm:2863
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2863
 #, fuzzy
 msgid "Table of contents:"
 msgstr "目录:"
@@ -5500,8 +5512,8 @@ msgstr "%s ½«ÄúµÄ¹ýÆÚ²Ù×÷ÓÊ¼þ·¢ËÍµ½ÏÂÁÐÓÊ¼þµØ�
 msgid "To: %1"
 msgstr ",A<DVA(B: %1<"
 
-#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:228
-#: web_tt2/reviewbouncing.tt2:121
+#: src/etc/mhonarc-ressources.tt2:212 web_tt2/review.tt2:231
+#: web_tt2/reviewbouncing.tt2:123
 msgid "Toggle Selection"
 msgstr "切换选取"
 
@@ -6822,12 +6834,12 @@ msgstr ""
 msgid "authentication requested, notification sent to owner"
 msgstr "ÒªÇó %s ½øÐÐÑéÖ¤ÒÔÖ´ÐÐÃüÁî %s\n"
 
-#: web_tt2/reviewbouncing.tt2:63
+#: web_tt2/reviewbouncing.tt2:65
 #, fuzzy
 msgid "bounce score"
 msgstr "退信计数"
 
-#: web_tt2/review.tt2:165
+#: web_tt2/review.tt2:168
 msgid "bouncing"
 msgstr ""
 
@@ -7469,7 +7481,7 @@ msgid "page # %1/%2"
 msgstr "第%1页，共%2页"
 
 #. (page,total_page)
-#: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
+#: web_tt2/reviewbouncing.tt2:117 web_tt2/reviewbouncing.tt2:51
 msgid "page %1 / %2"
 msgstr "第%1页，共%2页"
 
@@ -7586,8 +7598,8 @@ msgid "purge of orphan entries in user table every month"
 msgstr ""
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41
-#: web_tt2/review.tt2:231 web_tt2/review.tt2:49 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
+#: web_tt2/review.tt2:234 web_tt2/review.tt2:52 web_tt2/review.tt2:78
+#: web_tt2/reviewbouncing.tt2:109 web_tt2/reviewbouncing.tt2:33
 msgid "quiet"
 msgstr "安静"
 
