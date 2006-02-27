@@ -1036,7 +1036,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
-			      'gettext-id' => 'Periodical subscription reminder task',
+			      'gettext_id' => 'Periodical subscription reminder task',
 			      'default' => {'conf' => 'default_remind_task'},
 			      'group' => 'other'
 			      },
