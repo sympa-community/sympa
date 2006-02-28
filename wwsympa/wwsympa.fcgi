@@ -278,7 +278,7 @@ my %action_args = ('default' => ['list'],
 		'latest_lists' => ['topic','subtopic'],   
 		'active_lists' => ['topic','subtopic'],  
 		'login' => ['email','passwd','previous_action','previous_list'],
-		'sso_login' => ['auth_service_name','previous_action','previous_list'],
+		'sso_login' => ['auth_service_name','subaction','previous_action','previous_list', 'email', 'passwd'],
 		'sso_login_succeeded' => ['auth_service_name','previous_action','previous_list'],
 		'loginrequest' => ['previous_action','previous_list'],
 		'logout' => ['previous_action','previous_list'],
@@ -1212,7 +1212,7 @@ sub get_header_field {
 
      if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	 my $path_info = $ENV{'PATH_INFO'};
-	 &do_log('debug2', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+	 &do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
 
 	 $path_info =~ s+^/++;
 
@@ -1289,6 +1289,7 @@ sub get_header_field {
 	     $in{'action'} = $in{'javascript_action'};
 	 }
 	 foreach my $p (keys %in) {
+	     do_log('debug2',"POST key $p value $in{$p}");
 	     if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
 		 
 		 $in{'action'} = $1;
@@ -1941,12 +1942,25 @@ sub do_sso_login {
 	## If contacted via POST, then redirect the user to the URL for the access control to apply
 	if ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	    my $path = '';
+	    my $service;
 
 	    if ($param->{'nomenu'}) {
 		$path = "/nomenu";
 	    }
-	    $path .= "/sso_login_succeeded/$in{'auth_service_name'}";
+	    &wwslog('info', 'do_sso_login(): POST request processing');
 	    
+	    if ($in{'subaction'} eq 'validateemail') {
+		$path .= "/validateemail/sso_login_succeeded/$in{'auth_service_name'}/$in{'email'}";
+		
+	    }elsif ($in{'subaction'} eq 'confirmemail') {
+		
+		$path .= "/$in{'subaction'}/sso_login_succeeded/$in{'auth_service_name'}/$in{'email'}/$in{'passwd'}";
+		
+	    }else {
+		
+		$path .= "/init/sso_login_succeeded/$in{'auth_service_name'}";
+	    }
+
 	    my $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
 	    
 	    &wwslog('info', 'do_sso_login: redirect user to %s', $service);
@@ -1959,17 +1973,139 @@ sub do_sso_login {
 	}
 
 	my $email;
-	if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}) {
-	    $email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
-	}else {
-	    unless (defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_host'} &&
-		    defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
+	##
+	if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'force_email_verify'}) {
+	    my $emailvalid;
+
+	    ## the subactions order is : init, requestemail, validateemail, sendssopasswd, confirmemail
+
+	    ## get email from NetiD table
+	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'internal_email_by_netid'}) {
+		&wwslog('debug', 'do_sso_login(): lookup email internal: %s', $sso_id);
+		$email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
+		if ($email) {
+		    $emailvalid = 1;
+		}else {
+		    $emailvalid = 0;
+		}
+	    }
+	    
+	    ## get email from authN module
+	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'} && ! $emailvalid) {
+		$email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
+		$emailvalid = 0;
+	    }
+	    
+	    ## No email at all, ask for one
+	    if (! $emailvalid and $in{'subaction'} eq 'init') {
+		&wwslog('info', 'do_sso_login(): return request email');
+		$param->{'auth'} = 'generic_sso';	
+		$param->{'server'}{'key'} = $in{'auth_service_name'};
+		$param->{'subaction'} = 'requestemail';
+		$param->{'init_email'} = $email;
+		return 1;
+	    }
+	    
+	    if (defined($in{'email'}) and !($in{'subaction'} eq 'init')) {
+		$email = $in{'email'};
+	    }
+	    
+	    ## Send a confirmation email and request it on the web interface
+	    if ($in{'subaction'} eq 'validateemail') {
+		$param->{'auth'} = 'generic_sso';	
+		$param->{'server'}{'key'} = $in{'auth_service_name'};
+		$param->{'init_email'} = $email;
+
+		unless (&sendssopasswd($email)) {
+		    &report::reject_report_web('user','incorrect_email',{'email' => $email},$param->{'action'});
+		    $param->{'subaction'} = 'requestemail';
+		    return 1;
+		}
+
+		$param->{'subaction'} = 'validateemail';
+		return 1;		
+	    }
+	    
+	    if ($in{'subaction'} eq 'confirmemail') {
+		$param->{'auth'} = 'generic_sso';	
+		$param->{'server'}{'key'} = $in{'auth_service_name'};
+		$param->{'init_email'} = $email;
+		$in{'email'} = $email;
+		
+		#
+		# Check input parameters and verify passwd for email, stolen from do_login
+		#
+		unless ($in{'email'}) {
+		    &report::reject_report_web('user','no_email',{},$param->{'action'});
+		    &wwslog('info','do_sso_login: confirmemail: no email');
+		    # &List::db_log('wwsympa','nobody',$param->{'auth_method'},$ip,'login','',$robot,'','no email');
+		    $param->{'subaction'} = 'validateemail';
+		    return 1;
+		}
+		
+		unless ($in{'passwd'}) {
+		    $in{'init_email'} = $in{'email'};
+		    $param->{'init_email'} = $in{'email'};
+		    $param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
+		    
+		    &report::reject_report_web('user','missing_arg',{'argument' => 'passwd'},$param->{'action'});
+		    &wwslog('info','do_sso_login: confirmemail: missing parameter passwd');
+		    
+		    $param->{'subaction'} = 'validateemail';
+		    return 1;		    
+		}
+		
+		##authentication of the sender
+		my $data;
+		unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
+		    &report::reject_report_web('user','auth_failed',{},$param->{'action'});
+		    # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
+		    &wwslog('err', "Authentication failed\n");
+
+		    $param->{'subaction'} = 'validateemail';
+		    return 1;		    
+		} 
+
+		&wwslog('info', 'do_sso_login: confirmemail: email validation succeeded');
+		# need to create netid to email map entry
+		$email = $in{'email'};
+		
+		# everything is ok to proceed to with possible sympa account created and traddional sso login
+		
+		
+		if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'internal_email_by_netid'}) {
+
+		    my $netid = $ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'netid_http_header'}};
+		    my $idpname = $Conf{'auth_services'}{$robot}[$sso_id]{'service_id'};		    
+		    
+		    unless(&List::set_netidtoemail_db($robot, $netid, $idpname, $in{'email'})) {
+			&report::reject_report_web('intern','db_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+			&wwslog('err', 'error update netid map');
+			return home;
+		    }
+		    
+		}else {
+		    &wwslog('info', 'do_sso_login: confirmemail: validation failed');
+
+		    $param->{'subaction'} = 'validateemail';
+		    return 1;		    
+		}
+	    }
+	    
+ 	}else {
+	    ##
+	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}) {
+		$email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
+	    }else {
+		unless (defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_host'} &&
+			defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
 		&report::reject_report_web('intern','auth_conf_no_identified_user',{},$param->{'action'},'','',$robot);
 		&wwslog('err','do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined');
 		return 'home';	
 	    }
-	    
-	    $email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
+		
+		$email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
+	    }
 	}
 
 	unless ($email) {
@@ -2010,6 +2146,8 @@ sub do_sso_login {
 	    return undef;
 	}
 	
+	&report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
+
 	return 'home';
     }else {
 	## Unknown SSO service
@@ -2156,7 +2294,7 @@ sub do_sso_login_succeeded {
      }
 
      unless (eval "require Net::LDAP") {
-	 wwslog ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
+	 &wwslog ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
 	 return undef;
      }
      require Net::LDAP;
@@ -2190,7 +2328,7 @@ sub do_sso_login_succeeded {
 	     my $ldap_anonymous;
 	     if ($ldap->{'use_ssl'}) {
 		 unless (eval "require Net::LDAPS") {
-		     wwslog ('err',"Unable to use LDAPS library, Net::LDAPS required");
+		     &wwslog ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
 		 require Net::LDAPS;
@@ -2207,13 +2345,13 @@ sub do_sso_login_succeeded {
 
 
 	     unless ($ldap_anonymous ){
-		 wwslog ('err','Unable to connect to the LDAP server %s',$host);
+		 &wwslog ('err','Unable to connect to the LDAP server %s',$host);
 		 next;
 	     }
 
 	     my $status = $ldap_anonymous->bind;
 	     unless(defined($status) && ($status->code == 0)){
-		 &Log::wwslog('err', 'Bind failed on  %s', $host);
+		 &wwslog('err', 'Bind failed on  %s', $host);
 		 last;
 	     }
 
@@ -2223,7 +2361,7 @@ sub do_sso_login_succeeded {
 						timeout => $ldap->{'timeout'} );
 
 	     unless($mesg->count() != 0) {
-		 wwslog('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
+		 &wwslog('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
 		 $ldap_anonymous->unbind;
 		 last;
 	     } 
@@ -2331,6 +2469,64 @@ sub do_redirect {
 
      return 'home';
  }
+
+sub sendssopasswd {
+    my $email = shift;
+    do_log('info', 'sendssopasswd(%s)', $email);
+    
+    my ($passwd, $user);
+    
+    unless ($email) {
+	&report::reject_report_web('user','no_email',{},$param->{'action'});
+	&wwslog('info','do_sendpasswd: no email');
+	return 'requestemail';
+    }
+    
+    unless (&tools::valid_email($email)) {
+	&report::reject_report_web('user','incorrect_email',{'email' => $email},$param->{'action'});
+	&wwslog('info','do_sendpasswd: incorrect email %s', $email);
+	return 'requestemail';
+    }
+    
+    my $url_redirect;
+    
+    if ($param->{'newuser'} =  &List::get_user_db($email)) {
+	
+	## Create a password if none
+	unless ($param->{'newuser'}{'password'}) {
+	    unless ( &List::update_user_db($email,
+					   {'password' => &tools::tmp_passwd($email) 
+					    })) {
+		&report::reject_report_web('intern','db_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+		&wwslog('info','send_passwd: update failed');
+		return undef;
+	    }
+	    $param->{'newuser'}{'password'} = &tools::tmp_passwd($email);
+	}
+	
+	$param->{'newuser'}{'escaped_email'} =  &tools::escape_chars($param->{'newuser'}{'email'});
+	
+    }else {
+	
+	$param->{'newuser'} = {'email' => $email,
+			       'escaped_email' => &tools::escape_chars($email),
+			       'password' => &tools::tmp_passwd($email) 
+			       };
+	
+    }
+    
+    $param->{'init_passwd'} = 1 
+	if ($param->{'user'}{'password'} =~ /^init/);
+    
+    &List::send_global_file('sendssopasswd', $email, $robot, $param);
+    
+    
+    $param->{'email'} = $email;
+    $param->{'referer'} = $in{'referer'};
+    
+    
+    return 'validateemail';
+}
 
  ## Remind the password
 sub do_remindpasswd {
@@ -13325,7 +13521,7 @@ sub do_dump_scenario {
 	 &wwslog('info','opening %s',$param->{'file'});
 
 	 unless (open (DUMP,">$param->{'file'}")) {
-	     &error_message("internal error unable to create dumpfile");
+	     &report::reject_report_web('intern','file_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('err','unable to create file %s\n',$param->{'file'} );
 	     return undef;
 	 }

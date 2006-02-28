@@ -1,0 +1,15 @@
+From: [% conf.sympa %]
+Reply-to: [% conf.request %]
+To: [% newuser.email %]
+Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%END%]
+
+[%|loc%]To complete your account setup actions you need to confirm that you have 
+supplied a working email address.  Please enter the following email and password
+in the setup wizard to complete your account configuration.[%END%]
+
+     [%|loc(newuser.email)%]your email address    : %1[%END%]
+     [%|loc(newuser.password)%]your password : %1[%END%]
+
+[% conf.title %]: [% base_url %][% path_cgi %] 
+
+[%|loc(base_url,path_cgi)%]Help on Sympa: %1%2[%END%]/help

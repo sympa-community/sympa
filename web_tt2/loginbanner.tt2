@@ -29,7 +29,7 @@ If it is not listed or if you don't have any, login using your email and passwor
 
 [% IF use_sso %]
 
-[% IF sso_number == '1' %]
+[% IF sso_number == 1 %]
 <P>
     <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />

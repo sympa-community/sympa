@@ -10246,6 +10246,81 @@ sub get_which_db {
     return \%which;
 }
 
+## get idp xref to locally validated email address
+sub get_netidtoemail_db {
+    my $robot = shift;
+    my $netid = shift;
+    my $idpname = shift;
+    do_log('debug', 'List::get_netidtoemail_db(%s, %s)', $netid, $idpname);
+
+    unless ($List::use_db) {
+	&do_log('err', 'Sympa not setup to use DBI');
+	return undef;
+    }
+    
+    my ($l, %which, $statement, $email);
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+
+    $statement = sprintf "SELECT email_netidmap FROM netidmap_table WHERE netid_netidmap = %s and serviceid_netidmap = %s and robot_netidmap = %s", $dbh->quote($netid), $dbh->quote($idpname), $dbh->quote($robot);
+
+    push @sth_stack, $sth;
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    $email = $sth->fetchrow;
+
+    $sth->finish();
+
+    $sth = pop @sth_stack;
+
+    return $email;
+}
+
+## set idp xref to locally validated email address
+sub set_netidtoemail_db {
+    my $robot = shift;
+    my $netid = shift;
+    my $idpname = shift;
+    my $email = shift; 
+    do_log('debug', 'List::set_netidtoemail_db(%s, %s, %s)', $netid, $idpname, $email);
+
+    unless ($List::use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+    
+    my ($l, %which, $statement);
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+
+    $statement = sprintf "INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (%s, %s, %s, %s)", $dbh->quote($netid), $dbh->quote($idpname), $dbh->quote($email), $dbh->quote($robot);
+
+    push @sth_stack, $sth;
+
+
+     unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    return 1;
+}
+
 ## List of lists where $1 (an email) is $3 (owner, editor or subscriber)
 sub get_which {
     my $email = shift;
@@ -10508,7 +10583,11 @@ sub probe_db {
 						   'included_admin' => "int(1)",
 						   'include_sources_admin' => 'varchar(50)',
 						   'info_admin' =>  'varchar(150)',
-						   'profile_admin' => "enum('privileged','normal')"}
+						   'profile_admin' => "enum('privileged','normal')"},
+				 'netidmap_table' => {'netid_netidmap' => 'varchar(100)',
+						      'serviceid_netidmap' => 'varchar(100)',
+						      'email_netidmap' => 'varchar(100)',
+						      'robot_netidmap' => 'varchar(80)'},
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
 						   'gecos_user' => 'varchar(150)',
@@ -10543,7 +10622,11 @@ sub probe_db {
 						    'included_admin' => "boolean",
 						    'include_sources_admin' => 'varchar(50)',
 						    'info_admin' =>  'varchar(150)',
-						    'profile_admin' => "varchar(15)"}
+						    'profile_admin' => "varchar(15)"},
+				  'netidmap_table' => {'netid_netidmap' => 'varchar(100)',
+						       'serviceid_netidmap' => 'varchar(100)',
+						       'email_netidmap' => 'varchar(100)',
+						       'robot_netidmap' => 'varchar(80)'},
 			      },
 		     );
     
@@ -10556,7 +10639,17 @@ sub probe_db {
 		    'robot_admin' => 1,
 		    'user_admin' => 1,
 		    'role_admin' => 1,
-		    'date_admin' => 1);
+		    'date_admin' => 1,
+		    'netid_netidmap' => 1,
+		    'serviceid_netidmap' => 1,
+		    'robot_netidmap' => 1
+		    );
+    
+    my %primary = ('user_table' => ['email_user'],
+		   'subscriber_table' => ['list_subscriber','robot_subscriber','user_subscriber'],
+		   'admin_table' => ['list_admin','robot_admin','user_admin','role_admin'],
+		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap']
+		   );
     
     ## Is the Database defined
     unless ($Conf{'db_name'}) {
@@ -10734,6 +10827,8 @@ sub probe_db {
 		return undef;
 	    }
 	    
+	    my %added_fields;
+	    
 	    foreach my $f (sort keys %{$db_struct{$Conf{'db_type'}}{$t}}) {
 		unless ($real_struct{$t}{$f}) {
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
@@ -10750,41 +10845,9 @@ sub probe_db {
 			return undef;
 		    }
 		    
-		    if ($f eq 'email_user') {
-			&do_log('info', 'Setting %s field as PRIMARY', $f);
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($f)")) {
-			    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table \'%s\'.', $f, $t);
-			    return undef;
-			}
-		    }
-		    
-		    ## We should DROP existing indexes
-		    if ($f eq 'user_subscriber') {
-			&do_log('info', 'Setting list_subscriber,user_subscriber fields as PRIMARY');
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)")) {
-			    &do_log('err', 'Could not set field \'list_subscriber,user_subscriber,robot_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
-			    return undef;
-			}
-			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_subscriber,list_subscriber,robot_subscriber)")) {
-			    &do_log('err', 'Could not set INDEX on field \'user_subscriber,list_subscriber,robot_subscriber\', table\'%s\'.', $t);
-			    return undef;
-			}
-		    }
-		    
-		    if ($f eq 'user_admin') {
-			&do_log('info', 'Setting list_admin,user_admin,robot_admin,role_admin fields as PRIMARY');
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin)")) {
-			    &do_log('err', 'Could not set field \'list_admin,user_admin,robot_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
-			    return undef;
-			}
-			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_admin,list_admin,robot_admin,role_admin)")) {
-			    &do_log('err', 'Could not set INDEX on field \'user_admin,list_admin,robot_admin,role_admin\', table\'%s\'.', $t);
-			    return undef;
-			}
-		    }		    
-		    
 		    &do_log('info', 'Field %s added to table %s', $f, $t);
-		    
+		    $added_fields{$f} = 1;
+
 		    ## Remove temporary DB field
 		    if ($real_struct{$t}{'temporary'}) {
 			unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
@@ -10824,6 +10887,37 @@ sub probe_db {
 		    }
 		}
 	    }
+
+	    ## Create required INDEX and PRIMARY KEY
+	    my $should_update;
+	    foreach my $field (@{$primary{$t}}) {		
+		if ($added_fields{$field}) {
+		    $should_update = 1;
+		    last;
+		}
+	    }
+	    
+	    if ($should_update) {
+		my $fields = join ',',@{$primary{$t}};
+
+		## Add primary key
+		unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
+		    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
+		    return undef;
+		}
+		&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
+
+
+		## We should DROP existing indexes
+		## Add INDEX
+		unless ($dbh->do("ALTER TABLE $t ADD INDEX ($fields)")) {
+		    &do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
+		    return undef;
+		}
+		&do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
+
+	    }
+	    
 	}
 
 	## Try to run the create_db.XX script

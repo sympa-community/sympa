@@ -39,7 +39,7 @@
 	<input type="hidden" name="referer" value="[% referer %]" />
         <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="action" value="sso_login" />
-          [% IF sso_number == '1' %]
+          [% IF sso_number == 1 %]
      	    <strong><div class="menuInactive2">[%|loc%]Magic authentification[%END%]</div></strong>
             [% FOREACH server = sso %]
               <input type="hidden" name="auth_service_name" value="[% server.key %]" />

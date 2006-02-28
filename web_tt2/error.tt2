@@ -17,6 +17,8 @@
   [% ELSIF i_err.msg == 'cannot_unzip' %][%|loc(name)%]Cannot unzip file '%1'.[%END%] 
   [% ELSIF i_err.msg == 'auth_msg_failed' %][%|loc(i_err.key)%]Unable to access the message authenticated with key %1[%END%]
   [% ELSIF i_err.msg == 'err_404' %][%|loc(i_err.key)%]File not found.[%END%]
+  [% ELSIF i_err.msg == 'db_update_failed' %][%|loc(i_err.key)%]Failed to update database.[%END%]
+  [% ELSIF i_err.msg == 'file_update_failed' %][%|loc(i_err.key)%]Failed to update a file.[%END%]
 
 [% END %]
 <br />		

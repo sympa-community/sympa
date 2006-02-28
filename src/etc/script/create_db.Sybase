@@ -83,5 +83,22 @@ go
 create index role_admin_fk on admin_table (role_admin)
 go
 
- 
+create table netidmap_table 
+(
+        netid_netidmap             varchar (100) NOT NULL,
+	idp_netidmap		   varchar (100) NOT NULL,
+	robot_netidmap	           varchar (80) NOT NULL,
+        email_netidmap             varchar (100),
+        constraint ind_netidmap primary key (netid_netidmap, idp_netidmap, robot_netidmap)
+)
+go
+
+create index netid_netidmap_fk on admin_table (netid_netidmap)
+go
+
+create index serviceid_netidmap_fk on admin_table (serviceid_netidmap)
+go
+
+create index robot_netidmap_fk on admin_table (robot_netidmap)
+go
 

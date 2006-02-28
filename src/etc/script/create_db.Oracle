@@ -56,7 +56,15 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar2(50),
 	info_admin   		varchar2(150),
 	profile_admin  		varchar2(20),
-       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin),
+       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin)
+);
+
+CREATE TABLE netidmap_table (
+        netid_netidmap              varchar (100) NOT NULL,
+	idp_netidmap		    varchar (100) NOT NULL,
+	robot_netidmap	            varchar (80) NOT NULL,
+        email_netidmap              varchar (100),
+        CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
 );
 
 !

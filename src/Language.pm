@@ -131,7 +131,7 @@ sub PopLang {
 sub SetLang {
 ###########
     my $locale = shift;
-    &do_log('debug', 'Language::SetLang(%s)', $locale);
+    &do_log('debug2', 'Language::SetLang(%s)', $locale);
 
     my $lang = $locale;
 

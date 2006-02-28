@@ -336,9 +336,20 @@ sub get_email_by_net_id {
     my $robot = shift;
     my $auth_id = shift;
     my $attributes = shift;
-
-    do_log ('info',"Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
-
+    
+    do_log ('debug',"Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
+    
+    if (defined $Conf{'auth_services'}{$robot}[$auth_id]{'internal_email_by_netid'}) {
+	my $sso_config = @{$Conf{'auth_services'}{$robot}}[$auth_id];
+	my $netid_cookie = $sso_config->{'netid_http_header'} ;
+	
+	$netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
+	
+	$email = &List::get_netidtoemail_db($robot, $netid_cookie, $Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
+	
+	return $email;
+    }
+ 
     unless (eval "require Net::LDAP") {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
