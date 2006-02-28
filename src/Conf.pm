@@ -674,7 +674,6 @@ sub _load_auth {
 					    'force_email_verify' => '1',
 					    'internal_email_by_netid' => '1',
 					    'netid_http_header' => '\w+',
-					    'id_to_email_map' => 'idp_xref'					    }
 			  );
     
 
