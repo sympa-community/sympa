@@ -1,0 +1,40 @@
+From: [% from %]
+To: [% to %]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Archive of %1, file %2[%END%][%END%]
+Mime-version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary1 %]"
+
+--[% boundary1 %]
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]Table of contents:[%END%]
+
+[% FOREACH m = msg_list -%]
+[% m.id %]. [% m.subject %] - [% m.from %]
+[% END %]
+
+--[% boundary1 %]
+Content-Type: multipart/digest; boundary="[% boundary2 %]"
+Mime-Version: 1.0
+
+This is a multi-part message in MIME format...
+
+[% FOREACH m = msg_list -%]
+--[% boundary2 %]
+Content-Type: message/rfc822
+Content-Disposition: inline
+
+[% m.full_msg %]
+
+[% END %]
+--[% boundary2 %]
+Content-Type: text/plain
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Disposition: inline
+
+[%|loc(list.name,date)%]End of digest for list %1 - %2[%END%]
+
+--[% boundary2 %]--
+
+--[% boundary1 %]--
