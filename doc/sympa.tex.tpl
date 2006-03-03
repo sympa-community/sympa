@@ -404,6 +404,8 @@ Our thanks to all contributors, including:
 
 \begin {itemize}
 
+  \item John-Paul Robinson, University of Alabama at Birmingham, who added to email verification procedure to the Shibboleth support.
+
   \item Gwenaelle Bouteille who joined the development team for a few months and produced a great job for various feature introduced in V5 (familly, RSS, shared document moderation, ...).
 
   \item Pierre David, who in addition to his help and suggestions
@@ -3800,7 +3802,7 @@ The authentication method has first been introduced to allow interraction with \
 \end {quote}
 
 
-\Sympa will get user attributes via environment variables. In the most simple case the SSO will provide the user email address. If not, Sympa can be configured to look for the user email address in a LDAP directory (the search filter will make use of user information inherited from the SSO Apache module).
+\Sympa will get user attributes via environment variables. In the most simple case the SSO will provide the user email address. If not, Sympa can be configured to verify an email address provided by the user hiself or to look for the user email address in a LDAP directory (the search filter will make use of user information inherited from the SSO Apache module).
 
 To plug a new SSO server in your Sympa server you should add a \textbf {generic\_sso} paragraph (describing the SSO service) in your \file {auth.conf} configuration file (See  \ref {generic-sso-format}, page~\pageref {generic-sso-format}). Once this paragraph has been added, the SSO service name will be automatically added to the web login menu.
 
@@ -3880,6 +3882,15 @@ generic_sso
         service_id         inqueue
         http_header_prefix HTTP_SHIB
         email_http_header  HTTP_SHIB_EMAIL_ADDRESS
+
+## The email address is not provided by the user home institution
+generic_sso
+        service_name               Shibboleth Federation
+        service_id                 myfederation
+        http_header_prefix         HTTP_SHIB
+        netid_http_header          HTTP_SHIB_EMAIL_ADDRESS
+	internal_email_by_netid    1
+	force_email_verify         1
 
 ldap
 	regexp				univ-rennes1\.fr
@@ -4112,6 +4123,22 @@ Sympa gets user attributes from environment variables comming from the web serve
 
 \item{email\_http\_header} \\
 This parameter defines the environment variable that will contain the authenticated user's email address.
+
+\end{itemize}
+
+The following parameters define how Sympa can verify the user email address, either provided by the SSO or by the user himself :
+
+ \begin{itemize}
+
+\item{internal\_email\_by\_netid} \\
+If set to 1 this parameter makes Sympa use its netidmap table to associate NetIDs to user email address.
+
+\item{netid\_http\_header} \\
+This parameter defines the environment variable that will contain the user's identifier. This netid will then be associated with an email address either provided by the user.
+
+\item{force\_email\_verify} \\
+If set to 1 this parameter makes Sympa verify the user's email address. If the email address was not provided by the authentication module, then the user is requested to provide a valid email address.
+
 
 \end{itemize}
 

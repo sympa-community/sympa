@@ -99,12 +99,12 @@ a few things (DB update, CPAN modules installation).
 </H1>
 
 <P>
-New features, changes and bug fixes are summarized in the <A NAME="7551"></A><TT>NEWS</TT> file, part of the tar.gz (the 
-<A NAME="7554"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the <A NAME="7557"></A><TT>make install</TT> Sympa will
+New features, changes and bug fixes are summarized in the <A NAME="7556"></A><TT>NEWS</TT> file, part of the tar.gz (the 
+<A NAME="7559"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
+file, uncompatible changes are preceded by '*****'. While running the <A NAME="7562"></A><TT>make install</TT> Sympa will
 detect the previously installed version and will prompt you with uncompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
-Output of the <A NAME="7560"></A><TT>make install</TT> :<PRE>
+Output of the <A NAME="7565"></A><TT>make install</TT> :<PRE>
 You are upgrading from Sympa 4.2
 You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
 &lt;RETURN&gt;
@@ -142,10 +142,10 @@ You should read CAREFULLY the changes listed below ; they might be uncompatible 
 </H1>
 
 <P>
-Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7563"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
+Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7568"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
 
 <P>
-Output of the <A NAME="7566"></A><TT>make</TT> command :<PRE>
+Output of the <A NAME="7571"></A><TT>make</TT> command :<PRE>
 Checking for REQUIRED modules:
 ------------------------------------------
 perl module          from CPAN       STATUS
@@ -193,10 +193,10 @@ Install module DBD::Oracle ?
 </H1>
 
 <P>
-Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7569"></A><TT>sympa.pl</TT>
-will not start. If you are using <A NAME="7572"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
-assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7573"></A><TT>sympa.conf</TT> 
-does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7576"></A><TT>NEWS</TT> file.
+Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7574"></A><TT>sympa.pl</TT>
+will not start. If you are using <A NAME="7577"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
+assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7578"></A><TT>sympa.conf</TT> 
+does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7581"></A><TT>NEWS</TT> file.
 
 <P>
 Output of Sympa logs :<PRE>
@@ -237,8 +237,8 @@ Field user_admin added to table admin_table
 </H1>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7579"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7582"></A><TT>/usr/local/sympa-os/etc</TT> directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7584"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7587"></A><TT>/usr/local/sympa-os/etc</TT> directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 <P>
@@ -257,7 +257,7 @@ Both sympa instances must be completely partitioned, unless you want the make pr
 test service. 
 
 <P>
-The biggest part of the partitioning is achieved while running the <A NAME="7585"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7588"></A><TT>./configure</TT>
+The biggest part of the partitioning is achieved while running the <A NAME="7590"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7593"></A><TT>./configure</TT>
 on the test server side :
 
 <P><PRE>
@@ -271,11 +271,11 @@ on the test server side :
 </PRE>
 
 <P>
-You can also customize more parameters via the <A NAME="7591"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
+You can also customize more parameters via the <A NAME="7596"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
 
 <P>
 If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
-<A NAME="7594"></A><TT>home</TT>, <A NAME="7597"></A><TT>db_name</TT>, <A NAME="7600"></A><TT>arc_path</TT>
+<A NAME="7599"></A><TT>home</TT>, <A NAME="7602"></A><TT>db_name</TT>, <A NAME="7605"></A><TT>arc_path</TT>
 
 <P>
 
@@ -294,20 +294,20 @@ on the data.
 The migration process requires that you move the following data from the old server to the new one :
 
 <UL>
-<LI>the user database. If using mysql you can probably just stop <A NAME="7603"></A><TT>mysqld</TT> and copy the <A NAME="7606"></A><TT>/var/lib/mysql/sympa/</TT>
+<LI>the user database. If using mysql you can probably just stop <A NAME="7608"></A><TT>mysqld</TT> and copy the <A NAME="7611"></A><TT>/var/lib/mysql/sympa/</TT>
       directory to the new server.
 
 <P>
 </LI>
-<LI>the <A NAME="7609"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
+<LI>the <A NAME="7614"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
 
 <P>
 </LI>
-<LI>the <A NAME="7612"></A> directory that contains the spools
+<LI>the <A NAME="7617"></A> directory that contains the spools
 
 <P>
 </LI>
-<LI>the <A NAME="7615"></A> directory and <A NAME="7618"></A><TT>sympa.conf</TT> and <A NAME="7621"></A><TT>wwsympa.conf</TT> 
+<LI>the <A NAME="7620"></A> directory and <A NAME="7623"></A><TT>sympa.conf</TT> and <A NAME="7626"></A><TT>wwsympa.conf</TT> 
 
 <P>
 </LI>
@@ -350,7 +350,7 @@ The migration process requires that you move the following data from the old ser
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-02-27
+2006-03-03
 </ADDRESS>
 </BODY>
 </HTML>

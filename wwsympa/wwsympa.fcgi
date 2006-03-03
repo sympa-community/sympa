@@ -1973,31 +1973,28 @@ sub do_sso_login {
 	}
 
 	my $email;
-	##
+	## We need to collect/verify the user's email address
 	if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'force_email_verify'}) {
-	    my $emailvalid;
-
+	    my $email_is_trusted = 0;
+	    
 	    ## the subactions order is : init, requestemail, validateemail, sendssopasswd, confirmemail
-
+	    
 	    ## get email from NetiD table
 	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'internal_email_by_netid'}) {
 		&wwslog('debug', 'do_sso_login(): lookup email internal: %s', $sso_id);
-		$email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
-		if ($email) {
-		    $emailvalid = 1;
-		}else {
-		    $emailvalid = 0;
+		if ($email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV)) {
+		    $email_is_trusted = 1;
 		}
 	    }
 	    
 	    ## get email from authN module
 	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'} && ! $emailvalid) {
 		$email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
-		$emailvalid = 0;
 	    }
 	    
-	    ## No email at all, ask for one
-	    if (! $emailvalid and $in{'subaction'} eq 'init') {
+	    ## Start the email validation process
+	    if ($in{'subaction'} eq 'init' &&
+		($email_is_trusted == 0 || ! $email)) {
 		&wwslog('info', 'do_sso_login(): return request email');
 		$param->{'auth'} = 'generic_sso';	
 		$param->{'server'}{'key'} = $in{'auth_service_name'};
@@ -2061,11 +2058,11 @@ sub do_sso_login {
 		    &report::reject_report_web('user','auth_failed',{},$param->{'action'});
 		    # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
 		    &wwslog('err', "Authentication failed\n");
-
+		    
 		    $param->{'subaction'} = 'validateemail';
 		    return 1;		    
 		} 
-
+		
 		&wwslog('info', 'do_sso_login: confirmemail: email validation succeeded');
 		# need to create netid to email map entry
 		$email = $in{'email'};
@@ -2099,21 +2096,21 @@ sub do_sso_login {
 	    }else {
 		unless (defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_host'} &&
 			defined $Conf{'auth_services'}{$robot}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
-		&report::reject_report_web('intern','auth_conf_no_identified_user',{},$param->{'action'},'','',$robot);
-		&wwslog('err','do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined');
-		return 'home';	
-	    }
+		    &report::reject_report_web('intern','auth_conf_no_identified_user',{},$param->{'action'},'','',$robot);
+		    &wwslog('err','do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined');
+		    return 'home';	
+		}
 		
 		$email = &Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
 	    }
 	}
-
+	
 	unless ($email) {
 	    &report::reject_report_web('intern_quiet','no_identified_user',{},$param->{'action'},'');
 	    &wwslog('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'});
 	    return 'home';	
 	}
-
+	
 	$param->{'user'}{'email'} = $email;
 	$param->{'auth'} = 'generic_sso';
 	
@@ -2127,9 +2124,9 @@ sub do_sso_login {
 		&wwslog('notice', 'Var : %s = %s', $k, $ENV{$k});
 	    }
 	}
-
+	
 	my $all_sso_attr = join ';', @sso_attr;
-
+	
 	## Create user entry if required
 	unless (&List::is_user_db($email)) {
 	    unless (&List::add_user_db({'email' => $email})) {
@@ -2137,8 +2134,8 @@ sub do_sso_login {
 		&wwslog('info','do_sso_login: add failed');
 		return undef;
 	    }
-	 }
-
+	}
+	
 	unless (&List::update_user_db($email,
 				      {'attributes' => $all_sso_attr })) {
 	    &report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
@@ -2147,7 +2144,7 @@ sub do_sso_login {
 	}
 	
 	&report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
-
+	
 	return 'home';
     }else {
 	## Unknown SSO service
@@ -2155,7 +2152,7 @@ sub do_sso_login {
 	&wwslog('err','do_sso_login: unknown authentication service %s', $in{'auth_service_name'});
 	return 'home';	
     }    
-
+    
     return 1;
 }
 
