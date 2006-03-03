@@ -309,15 +309,37 @@ sub mail_message {
 	return ($numsmtp);
     }
     
+
+    my %rcpt_by_dom ;
+
+
     while (defined ($i = shift(@rcpt))) {
 	my @k = reverse(split(/[\.@]/, $i));
 	my @l = reverse(split(/[\.@]/, $j));
+
+	my $dom;
+	if ($i =~ /\@(.*)$/) {
+	    $dom = $1;
+	    chomp $dom;
+	}
+	$rcpt_by_dom{$dom} += 1 ;
+	&do_log('debug', "domain: $dom ; rcpt by dom: $rcpt_by_dom{$dom} ; limit for this domain: $Conf{'nrcpt_by_domain'}{$dom}");
+
+	if (defined ($Conf{'nrcpt_by_domain'}{$dom}) && ( $rcpt_by_dom{$dom} >= $Conf{'nrcpt_by_domain'}{$dom} )){
+	    undef %rcpt_by_dom ;
+	    $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $nrcpt = $size = 0;
+	    @sendto = ();  
+	}
+	
 	if ($j && $#sendto >= &Conf::get_robot_conf($robot, 'avg') && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
+	    undef %rcpt_by_dom ;
 	    $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
 	    $nrcpt = $size = 0;
 	    @sendto = ();
 	}
 	if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) {
+	    undef %rcpt_by_dom ;
 	    $numsmtp++ if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
 	    $nrcpt = $size = 0;
 	    @sendto = ();

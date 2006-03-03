@@ -330,7 +330,8 @@ sub load {
     
     my $robots_conf = &load_robots ;    
     $Conf{'robots'} = $robots_conf ;
-
+    my $nrcpt_by_domain =  &load_nrcpt_by_domain ;
+    $Conf{'nrcpt_by_domain'} = $nrcpt_by_domain ;
     
     foreach my $robot (keys %{$Conf{'robots'}}) {
 	my $config;
@@ -394,6 +395,44 @@ sub load {
     
     return 1;
 }
+
+## load nrcpt file (limite receipient par domain
+sub load_nrcpt_by_domain {
+  my $config = $Conf{'etc'}.'/nrcpt_by_domain.conf';
+  my $line_num = 0;
+  my $config_err = 0;
+  my %nrcpt_by_domain ; 
+  my $valid_dom = 0;
+
+  
+
+
+  return undef unless (-f $config) ;
+  &do_log('notice',"load_nrcpt: loading $config");
+
+  ## Open the configuration file or return and read the lines.
+  unless (open(IN, $config)) {
+      printf STDERR  "load: Unable to open %s: %s\n", $config, $!;
+      return undef;
+  }
+  while (<IN>) {
+      $line_num++;
+      next if (/^\s*$/o || /^[\#\;]/o);
+      if (/^(\S+)\s+(\d+)$/io) {
+	  my($domain, $value) = ($1, $2);
+	  chomp $domain; chomp $value;
+	  $nrcpt_by_domain->{$domain} = $value;
+	  $valid_dom +=1;
+      }else {
+	  printf STDERR gettext("Error at line %d : %s"), $line_num, $config, $_;
+	  $config_err++;
+      }
+  } 
+  close(IN);
+  &do_log('debug',"load_nrcpt: loaded $valid_dom config lines from $config");
+  return ($nrcpt_by_domain);
+}
+
 
 ## load each virtual robots configuration files
 sub load_robots {
@@ -674,6 +713,7 @@ sub _load_auth {
 					    'force_email_verify' => '1',
 					    'internal_email_by_netid' => '1',
 					    'netid_http_header' => '\w+',
+					}
 			  );
     
 
