@@ -3,6 +3,31 @@
 
 (See Changelog file for the full changes log)
 
+5.2b1		06 March 2006
+
+   New features :
+
+	src/: Conf.pm, mail.pm: nrcpt_by_domain.conf allows to control the number 
+	of recipients per SMTP session, depending on the destination domain
+
+	[John-Paul Robinson] When using generic_sso, Sympa is now able to verify the user's email
+	address when it is provided by the SSO. If no email is provided, the user is asked.
+
+   Changes :
+
+*****	PostgreSQL DB fields type changes
+*****	The following fields have changed from bit(1) to smallint :
+*****	subscribed_subscriber, included_subscriber, subscribed_admin, included_admin
+*****	You should perform as follows to migrate :
+*****		1/ stop Sympa
+*****		2/ run pg_dup on the database
+*****		3/ change in the dump-file "bit(1)" to "smallint" in both subscriber_table and admin_table
+*****		4/ remove the old tables and did a fresh import
+
+   Bug Fixes :
+
+	
+
 5.2b		13 February 2006
 
    New features :

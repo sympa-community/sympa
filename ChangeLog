@@ -1,3 +1,119 @@
+2006-03-06 17:42  sympa-authors
+
+	* src/etc/script/create_db.mysql: Fix: type enum() was changed to
+	  int(1)
+
+2006-03-03 16:48  sympa-authors
+
+	* src/: Conf.pm, mail.pm: New feature: nrcpt_by_domain.conf allows
+	  to control the number of recipients per SMTP session, depending
+	  on the destination domain
+
+2006-03-03 16:28  sympa-authors
+
+	* web_tt2/sso_login.tt2, wwsympa/wwsympa.fcgi, doc/sympa.pdf,
+	  doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps:
+	  Finilized the latest generic_sso extensions
+
+2006-03-01 16:52  sympa-authors
+
+	* mail_tt2/get_archive.tt2:
+	  Missing file in first 5.2b
+
+2006-02-28 18:05  sympa-authors
+
+	* src/Conf.pm: Unused parameter has been removed
+
+2006-02-28 17:44  sympa-authors
+
+	* mail_tt2/sendssopasswd.tt2, src/Conf.pm, src/Language.pm,
+	  src/List.pm, src/etc/script/create_db.Oracle,
+	  src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite,
+	  src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql,
+	  web_tt2/error.tt2, web_tt2/login_menu.tt2,
+	  web_tt2/loginbanner.tt2, web_tt2/sso_login.tt2, wwsympa/Auth.pm,
+	  wwsympa/wwsympa.fcgi: [John-Paul Robinson] New feature: When
+	  using generic_sso, Sympa is now able to verify the user's email
+	  address when it is provided by the SSO. If no email is provided,
+	  the user is asked.
+
+2006-02-27 12:01  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sv.po, sympa.pot, tr.po, zh_CN.po, zh_TW.po: Updated
+
+2006-02-27 11:49  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, html/img1.old,
+	  html/img2.old, html/index.html, html/node1.html,
+	  html/node10.html, html/node11.html, html/node12.html,
+	  html/node13.html, html/node14.html, html/node15.html,
+	  html/node16.html, html/node17.html, html/node18.html,
+	  html/node19.html, html/node2.html, html/node20.html,
+	  html/node21.html, html/node22.html, html/node23.html,
+	  html/node24.html, html/node25.html, html/node26.html,
+	  html/node27.html, html/node3.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Update
+
+2006-02-27 11:49  sympa-authors
+
+	* src/List.pm: Fix: incorrect 'gettext-id' made remind_task not
+	  translatable
+
+2006-02-27 09:49  sympa-authors
+
+	* po/fr.po: Remove %s
+
+2006-02-24 17:18  sympa-authors
+
+	* doc/sympa.tex.tpl: Explain the process of moving to another
+	  server
+
+2006-02-24 17:03  sympa-authors
+
+	* doc/sympa.tex.tpl: Added documentation for list removal
+
+2006-02-24 15:36  sympa-authors
+
+	* soap/sympa_soap_server.fcgi, src/task_manager.pl,
+	  wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi:
+	  [requested by JC Delepine] Call List::probe_db() only from
+	  sympa.pl to prevent conflicts in the DB upgrade
+
+2006-02-24 14:01  sympa-authors
+
+	* ChangeLog, Makefile.in: Update
+
+2006-02-24 14:00  sympa-authors
+
+	* src/: Commands.pm, List.pm: Fixed access to latest message
+
+2006-02-24 14:00  sympa-authors
+
+	* po/fr.po: Fix
+
+2006-02-24 13:59  sympa-authors
+
+	* Makefile.am: [ID 528] Added a "Please hit enter" notice
+
+2006-02-23 14:38  sympa-authors
+
+	* mail_tt2/send_auth.tt2: Fix: set the From to the robot email
+	  address
+
 2006-02-13 15:29  sympa-authors
 
 	* .version, ChangeLog, NEWS, aclocal.m4, configure, src/Archive.pm,

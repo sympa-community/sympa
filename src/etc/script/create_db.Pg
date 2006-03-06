@@ -30,8 +30,8 @@ CREATE TABLE subscriber_table (
 	bounce_score_subscriber int4,
 	bounce_address_subscriber	varchar (100),
 	comment_subscriber	varchar (150),
-	subscribed_subscriber 	bit(1),
-	included_subscriber 	bit(1),
+	subscribed_subscriber 	smallint,
+	included_subscriber 	smallint,
 	include_sources_subscriber varchar(50),
 	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber)
 );
@@ -47,8 +47,8 @@ CREATE TABLE admin_table (
 	update_admin 		timestamp with time zone,
 	reception_admin 	varchar(20),
 	comment_admin 		varchar(150),
-	subscribed_admin  	bit(1),
-	included_admin  	bit(1),
+	subscribed_admin  	smallint,
+	included_admin  	smallint,
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
