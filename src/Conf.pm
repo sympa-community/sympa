@@ -340,7 +340,7 @@ sub load {
 	    next;
 	}
 
-	$Conf{'auth_services'}{$robot} = &_load_auth($config);	
+	$Conf{'auth_services'}{$robot} = &_load_auth($robot, $config);	
     }
 
     if ($Conf{'ldap_export_name'}) {    
@@ -645,6 +645,7 @@ sub checkfiles {
 
 sub _load_auth {
     
+    my $robot = shift;
     my $config = shift;
     &do_log('notice', 'Conf::_load_auth(%s)', $config);
 
@@ -724,10 +725,10 @@ sub _load_auth {
 	return undef;
     }
     
-    $Conf{'cas_number'} = 0;
-    $Conf{'generic_sso_number'} = 0;
-    $Conf{'ldap_number'} = 0;
-    $Conf{'use_passwd'} = 0;
+    $Conf{'cas_number'}{$robot} = 0;
+    $Conf{'generic_sso_number'}{$robot} = 0;
+    $Conf{'ldap_number'}{$robot} = 0;
+    $Conf{'use_passwd'}{$robot} = 0;
     
     ## Parsing  auth.conf
     while (<IN>) {
@@ -788,16 +789,16 @@ sub _load_auth {
 			next;
 		    }
 
-		    $Conf{'cas_number'}  ++ ;
-		    $Conf{'cas_id'}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
+		    $Conf{'cas_number'}{$robot}  ++ ;
+		    $Conf{'cas_id'}{$robot}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
 		}elsif($current_paragraph->{'auth_type'} eq 'generic_sso') {
-		    $Conf{'generic_sso_number'}  ++ ;
-		    $Conf{'generic_sso_id'}{$current_paragraph->{'service_id'}} =  $#paragraphs+1 ; 
+		    $Conf{'generic_sso_number'}{$robot}  ++ ;
+		    $Conf{'generic_sso_id'}{$robot}{$current_paragraph->{'service_id'}} =  $#paragraphs+1 ; 
 		}elsif($current_paragraph->{'auth_type'} eq 'ldap') {
-		    $Conf{'ldap'}  ++ ;
-		    $Conf{'use_passwd'} = 1;
+		    $Conf{'ldap'}{$robot}  ++ ;
+		    $Conf{'use_passwd'}{$robot} = 1;
 		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
-		    $Conf{'use_passwd'} = 1;
+		    $Conf{'use_passwd'}{$robot} = 1;
 		}
 		# setting default
 		$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;

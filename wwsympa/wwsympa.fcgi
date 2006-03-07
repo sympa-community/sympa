@@ -634,18 +634,18 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
 
-     foreach my $auth (keys  %{$Conf{'cas_id'}}) {
+     foreach my $auth (keys  %{$Conf{'cas_id'}{$robot}}) {
 	 &do_log('debug2', "cas authentication service $auth");
 	 $param->{'sso'}{$auth} = $auth;
      }
 
-     foreach my $auth (keys  %{$Conf{'generic_sso_id'}}) {
+     foreach my $auth (keys  %{$Conf{'generic_sso_id'}{$robot}}) {
 	 &do_log('debug', "Generic SSO authentication service $auth");
-	 $param->{'sso'}{$auth} = $Conf{'auth_services'}{$robot}[$Conf{'generic_sso_id'}{$auth}]{'service_name'};
+	 $param->{'sso'}{$auth} = $Conf{'auth_services'}{$robot}[$Conf{'generic_sso_id'}{$robot}{$auth}]{'service_name'};
      }
 
-     $param->{'sso_number'} = $Conf{'cas_number'} + $Conf{'generic_sso_number'};
-     $param->{'use_passwd'} = $Conf{'use_passwd'};
+     $param->{'sso_number'} = $Conf{'cas_number'}{$robot} + $Conf{'generic_sso_number'}{$robot};
+     $param->{'use_passwd'} = $Conf{'use_passwd'}{$robot};
      $param->{'use_sso'} = 1 if ($param->{'sso_number'});
      $param->{'wwsconf'} = $wwsconf;
 
@@ -752,7 +752,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }else{
 		 do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
 	     }
-	 }elsif(($Conf{'cas_number'} > 0) &&
+	 }elsif(($Conf{'cas_number'}{$robot} > 0) &&
 		($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
 	     if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
 		 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
@@ -766,17 +766,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		     
 		     ## skip cas server where client as been already redirect to 
 		     ## (redirection carry the list of cas servers already checked
-		     &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
-		     next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
+		     &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}");
+		     next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/) ;
 		     
 		     # before redirect update the list of already checked cas server to prevent loop
 		     my $cas_server = $auth_service->{'cas_server'};
 		     my $return_url = &wwslib::get_my_url();
 		     
 		     if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
-			 $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$auth_service->{'auth_service_name'}},/;
+			 $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}},/;
 		     }else{		 
-			 $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
+			 $return_url .= '?checked_cas='.$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
 		     }
 		     
 		     my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);
@@ -1916,7 +1916,7 @@ sub do_sso_login {
     }
 
     ## This is a CAS service
-    if (defined (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}})) {
+    if (defined (my $cas_id = $Conf{'cas_id'}{$robot}{$in{'auth_service_name'}})) {
 	my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 	
 	my $path = '';
@@ -1936,7 +1936,7 @@ sub do_sso_login {
 	    print "Location: $param->{'redirect_to'}\n\n";
 	}
 	
-    }elsif (defined (my $sso_id = $Conf{'generic_sso_id'}{$in{'auth_service_name'}})) {
+    }elsif (defined (my $sso_id = $Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}})) {
 	## Generic SSO
 	
 	## If contacted via POST, then redirect the user to the URL for the access control to apply
@@ -1988,7 +1988,7 @@ sub do_sso_login {
 	    }
 	    
 	    ## get email from authN module
-	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'} && ! $emailvalid) {
+	    if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'} && ! $email_is_trusted) {
 		$email = lc($ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'}});
 	    }
 	    
