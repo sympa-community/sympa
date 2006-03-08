@@ -10911,7 +10911,15 @@ sub probe_db {
 	    if ($should_update) {
 		my $fields = join ',',@{$primary{$t}};
 
+		## drop previous primary key
+		unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
+		    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
+		    return undef;
+		}
+		&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+
 		## Add primary key
+		&do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
 		unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
 		    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
 		    return undef;
@@ -10919,9 +10927,23 @@ sub probe_db {
 		&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
 
 
-		## We should DROP existing indexes
+		## drop previous index, but we don't know the index name
+		my $success;
+		foreach my $field (@{$primary{$t}}) {		
+		    unless ($dbh->do("ALTER TABLE $t DROP INDEX $field")) {
+			next;
+		    }
+		    $success = 1; last;
+		}
+
+		if ($success) {
+		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+		}else {
+		    &do_log('err', 'Could not drop PRINDEX, table\'%s\'.', $t);
+		}
+
 		## Add INDEX
-		unless ($dbh->do("ALTER TABLE $t ADD INDEX ($fields)")) {
+		unless ($dbh->do("ALTER TABLE $t ADD INDEX $t\_index ($fields)")) {
 		    &do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
 		    return undef;
 		}
