@@ -182,7 +182,7 @@ while (!$end) {
 	   my $yyyymm = $3;
 	   my $arcpath = "$wwsconf->{'arc_path'}/$listadress/$yyyymm";
 
-	   do_log('info',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	   do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
 	  
 	   my $list;
 	   unless ($list = new List ($listadress)) {
@@ -211,13 +211,14 @@ while (!$end) {
 	       } 
 
 	       my $message ;
+	       unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
+		   do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
+		   next;
+	       }
+
 	       unless ($list->am_i('privileged_owner',$sender)|| $list->am_i('owner',$sender)||$list->am_i('editor', $sender)||&List::is_listmaster($sender,$list->{'domain'} )){
 		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 
-		   unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
-		       do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
-		       next;
-		   }
 		   unless (my $new_message = new Message("$arcpath/arctxt/$message",'noxsympato')) {
 		        do_log('err',"unable to load new message $arcpath/arctxt/$message");
 			next;
