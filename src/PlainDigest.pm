@@ -282,7 +282,7 @@
   
   $use_lynx = undef if (!$lynx);
   
-  if ($entity->bodyhandle) {
+  if (defined $entity->bodyhandle) {
     
     if ($have_mods && !$use_lynx) { # use perl HTML::* modules 
       eval {

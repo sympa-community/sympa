@@ -4386,7 +4386,11 @@ sub add_parts {
 	
 	if (!$content_type or $content_type =~ /^text\/plain/i) {
 		    
-	    my @body = $msg->bodyhandle->as_lines;
+	    my @body;
+	    if (defined $msg->bodyhandle) {
+		@body = $msg->bodyhandle->as_lines;
+	    }
+
 	    $msg->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
 
 	}elsif ($content_type =~ /^multipart\/mixed/i) {
@@ -4395,7 +4399,11 @@ sub add_parts {
 	    if ($msg->parts(0)->head->get('Content-Type') =~ /^text\/plain/i) {
 		
 		my $part = $msg->parts(0);
-		my @body = $part->bodyhandle->as_lines;
+		my @body;
+		
+		if (defined $part->bodyhandle) {
+		    @body = $part->bodyhandle->as_lines;
+		}
 		$part->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
 	    }else {
 		&do_log('notice', 'First part of message not in text/plain ; ignoring footers and headers');
@@ -4408,7 +4416,10 @@ sub add_parts {
 		&do_log('debug3', 'TYPE: %s', $part->head->get('Content-Type'));
 		if ($part->head->get('Content-Type') =~ /^text\/plain/i) {
 
-		    my @body = $part->bodyhandle->as_lines;
+		    my @body;
+		    if (defined $part->bodyhandle) {
+			@body = $part->bodyhandle->as_lines;
+		    }
 		    $part->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
 		    next;
 		}
@@ -7250,7 +7261,7 @@ sub verify {
 	    ## Should be recurcive...
 	    foreach my $i (0..$#parts) {
 		next unless ($parts[$i]->effective_type() =~ /^text/);
-		next unless ($parts[$i]->bodyhandle);
+		next unless (defined $parts[$i]->bodyhandle);
 
 		push @bodies, $parts[$i]->bodyhandle->as_string();
 	    }
@@ -12426,10 +12437,15 @@ sub compute_topic {
 	$mail_string = $msg->head->get('subject');
 
     }elsif ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'body'){
-	$mail_string = $msg->bodyhandle->as_string();
+	if (defined $msg->bodyhandle) {
+	    $mail_string = $msg->bodyhandle->as_string();
+	}
     }else {
 	$mail_string = $msg->head->get('subject');
-	$mail_string .= $msg->bodyhandle->as_string();
+
+	if (defined $msg->bodyhandle) {
+	    $mail_string .= $msg->bodyhandle->as_string();
+	}
     }
 
     $mail_string =~ s/\-/\\-/;
