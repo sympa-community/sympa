@@ -323,7 +323,7 @@ sub mail_message {
 	    chomp $dom;
 	}
 	$rcpt_by_dom{$dom} += 1 ;
-	&do_log('debug', "domain: $dom ; rcpt by dom: $rcpt_by_dom{$dom} ; limit for this domain: $Conf{'nrcpt_by_domain'}{$dom}");
+	&do_log('debug2', "domain: $dom ; rcpt by dom: $rcpt_by_dom{$dom} ; limit for this domain: $Conf{'nrcpt_by_domain'}{$dom}");
 
 	if (defined ($Conf{'nrcpt_by_domain'}{$dom}) && ( $rcpt_by_dom{$dom} >= $Conf{'nrcpt_by_domain'}{$dom} )){
 	    undef %rcpt_by_dom ;
