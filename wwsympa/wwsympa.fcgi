@@ -2566,7 +2566,6 @@ sub do_remindpasswd {
      my ($passwd, $user);
 
      unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
 	 &wwslog('info','do_sendpasswd: no email');
 	 return 'remindpasswd';
      }
