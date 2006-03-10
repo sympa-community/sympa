@@ -283,7 +283,7 @@ while (!$end) {
 		$used_list_models{$model} = 1; 
 	    }
 	    
-	    foreach my $model (keys %used_list_models) {
+	    foreach my $model (@list_models) {
 		unless ($used_list_models{$model}) {
 		    my $model_task_parameter = "$model".'_task';
 		    

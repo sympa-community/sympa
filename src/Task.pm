@@ -113,7 +113,7 @@ sub list_tasks {
 	my $model = $task->{'model'};
 
 	$task_by_model{$model}->{$list_id} = $task;
-	$task_by_model{$list_id}->{$model} = $task;
+	$task_by_list{$list_id}->{$model} = $task;
     }    
 
     return 1;
@@ -123,9 +123,13 @@ sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
 
-    if (defined $list_id &&
-	defined $task_by_model{$list_id}) {
-	return keys %{$task_by_model{$list_id}}
+    if (defined $list_id) {
+	if (defined $task_by_list{$list_id}) {
+	    return keys %{$task_by_list{$list_id}}
+	}else {
+	    return ();
+	}
+	
     }else {
 	return keys %task_by_model;
     }
