@@ -28,29 +28,28 @@
 </div>
 [% END %]
 
-
 [% IF is_owner %]
-
   [% IF may_sync %]
-  <a class="actionMenuLinks" href="[% path_cgi %]/sync_include/[% list %]" >[%|loc%]Synchronize members with data sources[%END%]</a>
+    <a class="actionMenuLinks" href="[% path_cgi %]/sync_include/[% list %]" >[%|loc%]Synchronize members with data sources[%END%]</a>
   [% END %]
   <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
   <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a> <br />
   <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%][%END%]'); return false;">[%|loc%]Remind all subscribers[%END%]</a>
-[% IF action == 'search' %]
-   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
-[% ELSE %]
-   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
 [% END %]
-
-<br /><br />
-<form action="[% path_cgi %]" method="post">
- <input type="hidden" name="previous_action" value="review" />
- <input type="hidden" name="list" value="[% list %]" />
- <input type="hidden" name="action" value="add" />
- <input type="text" name="email" size="35" />
- <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
-</form>
+  [% IF action == 'search' %]
+     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
+  [% ELSE %]
+     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
+  [% END %]
+[% IF is_owner %]
+  <br /><br />
+  <form action="[% path_cgi %]" method="post">
+   <input type="hidden" name="previous_action" value="review" />
+   <input type="hidden" name="list" value="[% list %]" />
+   <input type="hidden" name="action" value="add" />
+   <input type="text" name="email" size="35" />
+   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
+  </form>
 [% END %]
 
 <br />
