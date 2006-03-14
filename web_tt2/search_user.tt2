@@ -1,0 +1,77 @@
+<!-- $Id$ -->
+
+  [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%] :
+
+[% IF which %] 
+<table style="border: solid 1px; width: auto; margin: 10px">
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;">	    
+	    <span style="text-align: center;">[%|loc%]list[%END%]</span>
+   </th>
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;">	    
+	    <span style="text-align: center;">[%|loc%]role[%END%]</span>
+   </th>
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;">	    
+	    <span style="text-align: center;">[%|loc%]reception[%END%]</span>
+   </th>
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;">	    
+	    <span style="text-align: center;">[%|loc%]topics[%END%]</span>
+   </th>
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;">
+	    <span style="text-align: center;">[%|loc%]bounce[%END%]</span>
+   </th>
+   <th style="padding: 3px; white-space: nowrap; border: solid 1px;" colspan="2">	    
+   </th>
+
+ [% FOREACH l = which %]
+
+	[% IF dark == '1' %]
+         [% SET dark = 0 %]
+	<tr style="background-color: [% color_4 %];" valign="top">
+	[% ELSE %]
+          [% SET dark = 1 %]
+          <tr style="background-color: [% color_0 %];" valign="top">
+	[% END %]
+        <td>
+           <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a>
+        </td>
+        <td>
+           [% IF l.value.is_editor %][%|loc%]editor[%END%] [% END %]
+	   [% IF l.value.is_editor &&  l.value.is_owner %],[% END %]
+	   [% IF l.value.is_owner %][%|loc%]owner[%END%][% END %]
+        </td>
+        <td>
+	[% l.value.reception %]
+        </td>
+        <td>
+        [% l.value.topic %]
+        </td>
+        <td>
+	[% l.value.bounce %]
+        </td>
+	[% IF l.value.subscribed %]
+        <td> 
+           <form action="[% path_cgi %]" method="post">
+           <input type="hidden" name="previous_action" value="search_user" />
+	   <input type="hidden" name="email" value="[% email %]" />
+	   <input type="hidden" name="list" value="[% l.key %]" />
+	   <input type="checkbox" name="quiet" /> <label>quiet</label>
+	   <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]del[%END%]" />
+	  </form>
+	</td>
+	<td>
+	   <form action="[% path_cgi %]" method="post">
+	   <input type="hidden" name="previous_action" value="search_user" />
+	   <input type="hidden" name="email" value="[% email %]" />
+	   <input type="hidden" name="list" value="[% l.key %]" />
+	   <input class="MainMenuLinks" type="submit" name="action_editsubscriber" value="[%|loc%]edit[%END%]" />
+	</td>
+	[% ELSE %]
+	<td colspan="2"></td>
+        [% END %]
+        </tr>
+ [% END %] 
+</table>
+[% ELSE %]
+<p>[%|loc%]No mailing list available.[%END%]</p>
+[% END %]
+

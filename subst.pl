@@ -37,6 +37,12 @@ foreach $src (@ARGV) {
        $dest = "$ENV{'DESTDIR'}$ENV{'INSTALLDIR'}/$src";
    }
 
+   ## If destination file is a symbolic link, remove it first
+   if (-l $dest) {
+       print STDERR "Removing symbolic link $dest\n";
+       unlink $dest;
+   }
+
    if (-f $dest) {
       print STDERR "Overwriting $dest\n";
    } else {

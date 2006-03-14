@@ -4792,7 +4792,7 @@ sub get_subscriber {
 
 	## Use session cache
 	if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email}) {
-	    &do_log('debug3', 'xxx Use cache(get_subscriber, %s,%s)', $name, $email);
+	    # &do_log('debug3', 'xxx Use cache(get_subscriber, %s,%s)', $name, $email);
 	    return $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email};
 	}
 
@@ -10202,7 +10202,7 @@ sub get_which_db {
 
     if ($function eq 'member') {
  	## Get subscribers
-	$statement = sprintf "SELECT list_subscriber, robot_subscriber FROM subscriber_table WHERE user_subscriber = %s",$dbh->quote($email);
+	$statement = sprintf "SELECT list_subscriber, robot_subscriber, bounce_subscriber, reception_subscriber, topics_subscriber, include_sources_subscriber, subscribed_subscriber, included_subscriber  FROM subscriber_table WHERE user_subscriber = %s",$dbh->quote($email);
 	
 	push @sth_stack, $sth;
 	
@@ -10221,10 +10221,16 @@ sub get_which_db {
 	    my ($name, $robot) = ($l->{'list_subscriber'}, $l->{'robot_subscriber'});
 	    $name =~ s/\s*$//;  ## usefull for PostgreSQL
 	    $which{$robot}{$name}{'member'} = 1;
-	}
-	
-	$sth->finish();
-	
+	    $which{$robot}{$name}{'reception'} = $l->{'reception_subscriber'};
+	    $which{$robot}{$name}{'bounce'} = $l->{'bounce_subscriber'};
+	    $which{$robot}{$name}{'topic'} = $l->{'topic_subscriber'};
+	    $which{$robot}{$name}{'included'} = $l->{'included_subscriber'};
+	    $which{$robot}{$name}{'subscribed'} = $l->{'subscribed_subscriber'};
+	    $which{$robot}{$name}{'include_sources'} = $l->{'include_sources_subscriber'};
+	    # do_log('info','xxxxx reception : %s bounce: %s topic : %s include_source : %s subscribed : %s inclueded : %s ', $which{$robot}{$name}{'reception'}, $which{$robot}{$name}{'bounce'}, $which{$robot}{$name}{'topic'}, $which{$robot}{$name}{'include_sources'},$which{$robot}{$name}{'subscribed'},$which{$robot}{$name}{'included'});
+
+	}	
+	$sth->finish();	
 	$sth = pop @sth_stack;
 
     }else {
@@ -10364,6 +10370,17 @@ sub get_which {
 	    if (($list->{'admin'}{'user_data_source'} eq 'database') ||
 		($list->{'admin'}{'user_data_source'} eq 'include2')){
 		if ($db_which->{$robot}{$l}{'member'}) {
+		    # my $reception = $db_which->{$robot}{$l}{'reception'};
+		    # my $bounce = $db_which->{$robot}{$l}{'bounce'};
+		    # my $topic  = $db_which->{$robot}{$l}{'topic'};
+		    # my $subscribed =  $db_which->{$robot}{$l}{'subscribed'};
+		    # do_log('info',"xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx reception $reception  , topic $topic,  bounce $reception subscribed $subscribed");
+		    $list->{'user'}{'reception'} = $db_which->{$robot}{$l}{'reception'};
+		    $list->{'user'}{'topic'} = $db_which->{$robot}{$l}{'topic'};
+		    $list->{'user'}{'bounce'} = $db_which->{$robot}{$l}{'bounce'};
+		    $list->{'user'}{'subscribed'} = $db_which->{$robot}{$l}{'subscribed'};
+		    $list->{'user'}{'included'} = $db_which->{$robot}{$l}{'included'};
+
 		    push @which, $list ;
 
 		    ## Update cache

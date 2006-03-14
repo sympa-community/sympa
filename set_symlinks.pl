@@ -37,7 +37,7 @@ my @scenario_defaults = ('add.owner',
 
 $default_lang = 'us';
 
-my %wws_template_equiv = ('lists' => ['which', 'search_list','search_user'],
+my %wws_template_equiv = ('lists' => ['which', 'search_list'],
 			  'review' => ['search']
 			  );
 

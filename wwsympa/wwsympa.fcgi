@@ -13159,14 +13159,32 @@ sub d_test_existing_and_rights {
 	     next unless (defined $list);
 	     $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
-	     if ($role eq 'member') {
-		 $param->{'which'}{$l}{'info'} = 1;
-	     }else {
+
+	     # show the requestor role not the requested one
+	     if ( ($list->am_i('owner',$param->{'user'}{'email'}) || $list->am_i('editor',$param->{'user'}{'email'})) ) {
 		 $param->{'which'}{$l}{'admin'} = 1;
+	     }
+
+	     if ($role eq 'member') {
+		 $param->{'which'}{$l}{'is_member'} = 1;
+		 $param->{'which'}{$l}{'reception'} = $list->{'user'}{'reception'};
+		 $param->{'which'}{$l}{'include_source'} = $list->{'user'}{'include_source'};
+		 $param->{'which'}{$l}{'bounce'} = $list->{'user'}{'bounce'} ;
+		 $param->{'which'}{$l}{'topic'} = $list->{'user'}{'topic'} ; 
+		 $param->{'which'}{$l}{'included'} =  $list->{'user'}{'included'} if ($list->{'user'}{'included'} == 1)  ;
+		 $param->{'which'}{$l}{'subscribed'} = $list->{'user'}{'subscribed'} if ($list->{'user'}{'subscribed'} == 1);
+		 my $un = $list->{'user'}{'subscribed'};
+		 &wwslog('info','xxxxxxxxxx do_search_user: subscribed %s, %s', $param->{'which'}{$l}{'subscribed'}, $un);
+#		 $param->{'which'}{$l}{'subscribed'} = 1;
+
+	     }elsif  ($role eq 'owner') {
+		 $param->{'which'}{$l}{'is_owner'} = 1;
+	     }elsif  ($role eq 'editor') {
+		 $param->{'which'}{$l}{'is_editor'} = 1;
 	     }
 	 }
      }
-
+     
      $param->{'email'} = $in{'email'};
 
      unless (defined $param->{'which'}) {
