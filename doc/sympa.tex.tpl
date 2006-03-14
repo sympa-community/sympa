@@ -699,6 +699,20 @@ a virtual host or for the whole site.
 	It is a subset of \file {sympa.conf} defining a Virtual host 
 	(one per Virtual host).
 
+	\item \file {nrcpt\_by\_domain}\\
+	\label {nrcptbydomain}
+	This file is used to limit the number of recipients per SMTP session. Some ISPs trying to \textindex {block spams}
+	rejects sessions with too many recipients. In such case you can set the  \ref {nrcpt} robot.conf parameter
+        to a lower value but this will affect all smtp session with any remote MTA. This file is used to limit the number
+        of receipient for some particular domains. the file must contain a list of domain followed by the maximum number
+        of recipient per SMTP session. Example : 
+\begin {quote}
+\begin{verbatim}
+     yohaa.com 3
+     oal.com 5
+\end{verbatim}
+\end {quote}
+
 \end {itemize}
 
 \section {Spools}
@@ -1333,13 +1347,25 @@ page~\pageref{lists-families}.
 
 Sympa upgrade is a relatively riskless operations, mainly because the install process preserves your
 customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
-a few things (DB update, CPAN modules installation).
+a few things (DB update, CPAN modules installation). 
 
 \section {Uncompatible changes}
     \index{changes}
 
 New features, changes and bug fixes are summarized in the \file {NEWS} file, part of the tar.gz (the 
-\file {Changelog} file is a complete log file of CVS changes). As mentionned at the beginning of this
+\file {Changelog} file is a complete log file of CVS changes). 
+
+
+Sympa is 10 years old project, so some major changes may need some extra work. The following list is wellkown changes that require some attention :
+\begin {itemize}
+\item version 5.1 (August 2005) use XHTML and CSS in web templates
+\item version 4.2b3 (August 2004) introduce TT2 template format
+\item version 4.0a5 (September 2003) change auth.conf (no default anymore so you may have the create this file)
+\item version 3.3.6b2 (May 2002) the list parameter user\_data\_source as a new value include2 which is the recommended value for any list.
+\end {itemize}
+
+
+The file \file {NEWS} list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
 file, uncompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
 detect the previously installed version and will prompt you with uncompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
@@ -1422,6 +1448,8 @@ Install module DBD::Oracle ? [n]
 \end{verbatim}
 \end {quote}
 
+
+
 \section {Database structure update}
     \index{db update}
 
@@ -1500,12 +1528,13 @@ You can also customize more parameters via the \file {/home/sympa-dev/etc/sympa.
 If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
 \cfkeyword {home}, \cfkeyword {db\_name}, \cfkeyword {arc\_path}
 
+
 \section {Moving to another server}
     \index{new server}
 
-If you're upgrading and moving to another server at the same time, we recommend you first move your data and 
+If you're upgrading and moving to another server at the same time, we recommend you first to stop the operational service, move your data and 
 then upgrade Sympa on the new server. This will guarantee that Sympa upgrade procedures have been applied
-on the data.
+on the data. 
 
 The migration process requires that you move the following data from the old server to the new one :
 \begin {itemize}
@@ -1517,11 +1546,21 @@ The migration process requires that you move the following data from the old ser
 
     \item the \dir {[SPOOL_DIR]} directory that contains the spools
 
-    \item the \dir {[ETCL_DIR]} directory and \file {sympa.conf} and \file {wwsympa.conf} 
+    \item the \dir {[ETCL_DIR]} directory and \file {[CONFIG]} and \file {wwsympa.conf}. Sympa new installation create a file \file {[CONFIG]} (see \ref {exp-admin}) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
 
     \item the web archives
 
 \end {itemize}
+
+In some case, you may want to install the new version and run it for a few days before switching
+the existing service to the new Sympa server.  In this case perform a new installation with an empty
+database and play with it. When you decide to move the existing service to the new server :
+\begin {enumerate}
+\item stop all sympa processus on both servers, 
+\item transfert the database
+\item edit the \file {[ETCL_DIR]/data\_structure.version} on the new server ; change the version value to reflect the old number
+\item start sympa.pl, it will upgrade the database structure according the hop you do. 
+\end {enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1901,7 +1940,7 @@ files. The server admin module include a CSS administration page that can help y
 
 
 \subsection {\cfkeyword {cookie}} 
-
+ 
 	This string is used to generate MD5 authentication keys.
 	It allows generated authentication keys to differ from one
 	site to another. It is also used for reversible encryption of
@@ -1911,9 +1950,12 @@ files. The server admin module include a CSS administration page that can help y
        
         Note that changing this parameter will break all
         http cookies stored in users' browsers, as well as all user passwords
-	and lists X509 private keys.
+	and lists X509 private keys. To prevent a catastroph, sympa.pl refuse to start if the cookie parameter was changed.
+        
+
 
         \example {cookie gh869jku5}
+
 
 \subsection {\cfkeyword {create\_list}}  
 
@@ -2069,10 +2111,13 @@ files. The server admin module include a CSS administration page that can help y
 
 	\default {25}
 
+	\label {nrcpt}
         Maximum number of recipients per \unixcmd {sendmail} call.
         This grouping factor makes it possible for the (\unixcmd
         {sendmail}) MTA to optimize the number of SMTP sessions for
-        message distribution.
+        message distribution. 	If needed, you can limit the number of receipient for a particular domain. 
+        Check nrcpt\_by\_domain configuration file. (see 
+	\ref {nrcptbydomain},  page~\pageref {nrcptbydomain})
 
 \subsection {\cfkeyword {avg}} 
 
