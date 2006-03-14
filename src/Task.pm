@@ -61,6 +61,7 @@ sub new {
 	
 	if ($task->{'object'} ne '_global') { # list task
 	    $task->{'list_object'} = new List ($task->{'object'},$task->{'domain'});
+	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
 
     }elsif ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
@@ -71,6 +72,7 @@ sub new {
 
 	if ($task->{'object'} ne '_global') { # list task
 	    $task->{'list_object'} = new List ($task->{'object'});
+	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
     }else {
 	&do_log('err', "Unknown format for task '%s'", $task->{'filename'});
@@ -78,7 +80,7 @@ sub new {
     }
 
     $task->{'id'} = $task->{'object'};
-    $task->{'id'} .= '@'.$task->{'robot'} if (defined $task->{'robot'});
+    $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
 
     ## Bless Task object
     bless $task, $pkg;
