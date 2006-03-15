@@ -3,17 +3,28 @@
 
 (See Changelog file for the full changes log)
 
-5.2b1		06 March 2006
+5.2b1		15 March 2006
 
    New features :
 
-	src/: Conf.pm, mail.pm: nrcpt_by_domain.conf allows to control the number 
+	The "search user" feature now has its own web template. It provides more information 
+	about the searched user and the ability to remove him from the list.
+
+	src/: Conf.pm, mail.pm: new nrcpt_by_domain.conf file allows to control the number 
 	of recipients per SMTP session, depending on the destination domain
 
 	[John-Paul Robinson] When using generic_sso, Sympa is now able to verify the user's email
 	address when it is provided by the SSO. If no email is provided, the user is asked.
+	Check The related documentation for more details.
 
    Changes :
+	
+	src/etc/list_task_models/: changed the behavior of REMIND tasks.  
+	The task is first programmed and executed later
+
+	src/List.pm: Dropping and recreating INDEXES and PRIMARY KEYS
+
+	[requested by JC Delepine] Call List::probe_db() only from sympa.pl to prevent conflicts in the DB upgrade
 
 *****	PostgreSQL DB fields type changes
 *****	The following fields have changed from bit(1) to smallint :
@@ -26,7 +37,23 @@
 
    Bug Fixes :
 
-	
+	src/Task.pm: task manager would not detect existing tasks and would recreate them.  
+	This could lead to some tasks running in loop (remind for example)
+
+	web_tt2/review.tt2: ****** dump button should be printed as long as review is permitted (not only for owners)
+
+	src/: new required list tasks were not created by the task_manager. This only concerns Sympa 5.2b.
+
+	src/: List.pm, PlainDigest.pm: check if $msg->bodyhandle is defined before calling object methods
+
+	wwsympa/archived.pl: removing a message was removing the whole month.
+
+	src/Conf.pm, wwsympa/wwsympa.fcgi: when defining per robot auth.conf files, 
+	they would not be fully partitioned
+
+	mail_tt2/get_archive.tt2: Missing file in first 5.2b
+
+	src/etc/script/create_db.mysql: Fix: type enum() was changed to int(1)
 
 5.2b		13 February 2006
 
