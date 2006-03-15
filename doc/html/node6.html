@@ -88,23 +88,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 Sympa upgrade is a relatively riskless operations, mainly because the install process preserves your
 customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
-a few things (DB update, CPAN modules installation).
+a few things (DB update, CPAN modules installation). 
 
 <P>
 
 <H1><A NAME="SECTION00610000000000000000"></A>
-    <A NAME="652"></A>
+    <A NAME="660"></A>
 <BR>
 5.1 Uncompatible changes
 </H1>
 
 <P>
-New features, changes and bug fixes are summarized in the <A NAME="7556"></A><TT>NEWS</TT> file, part of the tar.gz (the 
-<A NAME="7559"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the <A NAME="7562"></A><TT>make install</TT> Sympa will
+New features, changes and bug fixes are summarized in the <A NAME="7579"></A><TT>NEWS</TT> file, part of the tar.gz (the 
+<A NAME="7582"></A><TT>Changelog</TT> file is a complete log file of CVS changes). 
+
+<P>
+Sympa is 10 years old project, so some major changes may need some extra work. The following list is wellkown changes that require some attention :
+
+<UL>
+<LI>version 5.1 (August 2005) use XHTML and CSS in web templates
+</LI>
+<LI>version 4.2b3 (August 2004) introduce TT2 template format
+</LI>
+<LI>version 4.0a5 (September 2003) change auth.conf (no default anymore so you may have the create this file)
+</LI>
+<LI>version 3.3.6b2 (May 2002) the list parameter user_data_source as a new value include2 which is the recommended value for any list.
+</LI>
+</UL>
+
+<P>
+The file <A NAME="7585"></A><TT>NEWS</TT> list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
+file, uncompatible changes are preceded by '*****'. While running the <A NAME="7588"></A><TT>make install</TT> Sympa will
 detect the previously installed version and will prompt you with uncompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
-Output of the <A NAME="7565"></A><TT>make install</TT> :<PRE>
+Output of the <A NAME="7591"></A><TT>make install</TT> :<PRE>
 You are upgrading from Sympa 4.2
 You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
 &lt;RETURN&gt;
@@ -136,16 +153,16 @@ You should read CAREFULLY the changes listed below ; they might be uncompatible 
 <P>
 
 <H1><A NAME="SECTION00620000000000000000"></A>
-    <A NAME="662"></A>
+    <A NAME="673"></A>
 <BR>
 5.2 CPAN modules update
 </H1>
 
 <P>
-Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7568"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
+Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7594"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
 
 <P>
-Output of the <A NAME="7571"></A><TT>make</TT> command :<PRE>
+Output of the <A NAME="7597"></A><TT>make</TT> command :<PRE>
 Checking for REQUIRED modules:
 ------------------------------------------
 perl module          from CPAN       STATUS
@@ -187,16 +204,16 @@ Install module DBD::Oracle ?
 <P>
 
 <H1><A NAME="SECTION00630000000000000000"></A>
-    <A NAME="670"></A>
+    <A NAME="681"></A>
 <BR>
 5.3 Database structure update
 </H1>
 
 <P>
-Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7574"></A><TT>sympa.pl</TT>
-will not start. If you are using <A NAME="7577"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
-assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7578"></A><TT>sympa.conf</TT> 
-does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7581"></A><TT>NEWS</TT> file.
+Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7600"></A><TT>sympa.pl</TT>
+will not start. If you are using <A NAME="7603"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
+assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7604"></A><TT>sympa.conf</TT> 
+does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7607"></A><TT>NEWS</TT> file.
 
 <P>
 Output of Sympa logs :<PRE>
@@ -231,20 +248,20 @@ Field user_admin added to table admin_table
 <P>
 
 <H1><A NAME="SECTION00640000000000000000"></A>
-    <A NAME="680"></A>
+    <A NAME="691"></A>
 <BR>
 5.4 Preserving your customizations
 </H1>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7584"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7587"></A><TT>/usr/local/sympa-os/etc</TT> directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7610"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7613"></A><TT>/usr/local/sympa-os/etc</TT> directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 <P>
 
 <H1><A NAME="SECTION00650000000000000000"></A>
-    <A NAME="684"></A>
+    <A NAME="695"></A>
 <BR>
 5.5 Running 2 Sympa versions on a single server
 </H1>
@@ -257,7 +274,7 @@ Both sympa instances must be completely partitioned, unless you want the make pr
 test service. 
 
 <P>
-The biggest part of the partitioning is achieved while running the <A NAME="7590"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7593"></A><TT>./configure</TT>
+The biggest part of the partitioning is achieved while running the <A NAME="7616"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7619"></A><TT>./configure</TT>
 on the test server side :
 
 <P><PRE>
@@ -271,43 +288,43 @@ on the test server side :
 </PRE>
 
 <P>
-You can also customize more parameters via the <A NAME="7596"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
+You can also customize more parameters via the <A NAME="7622"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
 
 <P>
 If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
-<A NAME="7599"></A><TT>home</TT>, <A NAME="7602"></A><TT>db_name</TT>, <A NAME="7605"></A><TT>arc_path</TT>
+<A NAME="7625"></A><TT>home</TT>, <A NAME="7628"></A><TT>db_name</TT>, <A NAME="7631"></A><TT>arc_path</TT>
 
 <P>
 
 <H1><A NAME="SECTION00660000000000000000"></A>
-    <A NAME="696"></A>
+    <A NAME="707"></A>
 <BR>
 5.6 Moving to another server
 </H1>
 
 <P>
-If you're upgrading and moving to another server at the same time, we recommend you first move your data and 
+If you're upgrading and moving to another server at the same time, we recommend you first to stop the operational service, move your data and 
 then upgrade Sympa on the new server. This will guarantee that Sympa upgrade procedures have been applied
-on the data.
+on the data. 
 
 <P>
 The migration process requires that you move the following data from the old server to the new one :
 
 <UL>
-<LI>the user database. If using mysql you can probably just stop <A NAME="7608"></A><TT>mysqld</TT> and copy the <A NAME="7611"></A><TT>/var/lib/mysql/sympa/</TT>
+<LI>the user database. If using mysql you can probably just stop <A NAME="7634"></A><TT>mysqld</TT> and copy the <A NAME="7637"></A><TT>/var/lib/mysql/sympa/</TT>
       directory to the new server.
 
 <P>
 </LI>
-<LI>the <A NAME="7614"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
+<LI>the <A NAME="7640"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
 
 <P>
 </LI>
-<LI>the <A NAME="7617"></A> directory that contains the spools
+<LI>the <A NAME="7643"></A> directory that contains the spools
 
 <P>
 </LI>
-<LI>the <A NAME="7620"></A> directory and <A NAME="7623"></A><TT>sympa.conf</TT> and <A NAME="7626"></A><TT>wwsympa.conf</TT> 
+<LI>the <A NAME="7646"></A> directory and <A NAME="7649"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> and <A NAME="7652"></A><TT>wwsympa.conf</TT>. Sympa new installation create a file <A NAME="7655"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> (see <A HREF="node8.html#exp-admin">7</A>) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
 
 <P>
 </LI>
@@ -316,6 +333,22 @@ The migration process requires that you move the following data from the old ser
 <P>
 </LI>
 </UL>
+
+<P>
+In some case, you may want to install the new version and run it for a few days before switching
+the existing service to the new Sympa server.  In this case perform a new installation with an empty
+database and play with it. When you decide to move the existing service to the new server :
+
+<OL>
+<LI>stop all sympa processus on both servers, 
+</LI>
+<LI>transfert the database
+</LI>
+<LI>edit the <A NAME="7658"></A><TT>/data_structure.version</TT> on the new server ; change the version value to reflect the old number
+</LI>
+<LI>start sympa.pl, it will upgrade the database structure according the hop you do. 
+</LI>
+</OL>
 
 <P>
 
@@ -350,7 +383,7 @@ The migration process requires that you move the following data from the old ser
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-03-03
+2006-03-15
 </ADDRESS>
 </BODY>
 </HTML>

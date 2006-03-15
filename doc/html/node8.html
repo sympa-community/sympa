@@ -347,19 +347,19 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HR>
 
 <H1><A NAME="SECTION00800000000000000000"></A>
-    <A NAME="exp-admin"></A>    <A NAME="826"></A>
-    <A NAME="827"></A>
+    <A NAME="exp-admin"></A>    <A NAME="842"></A>
+    <A NAME="843"></A>
 <BR>
 7. sympa.conf parameters
 </H1>
 
 <P>
-The <A NAME="7767"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> configuration file contains numerous
+The <A NAME="7799"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="7772"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file contains directives in the following
+The <A NAME="7804"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file contains directives in the following
 format:
 
 <P>
@@ -382,16 +382,16 @@ the file is of no importance.
 
 <P>
 
-<H2><A NAME="SECTION00811000000000000000"></A><A NAME="7775"></A>
+<H2><A NAME="SECTION00811000000000000000"></A><A NAME="7807"></A>
 <BR>
 7.1.1 <TT>domain</TT>
 </H2>
 
 <P>
 This keyword is <B>mandatory</B>. It is the domain name
-used in the <A NAME="7778"></A><TT>From:</TT> header in replies to administrative
+used in the <A NAME="7810"></A><TT>From:</TT> header in replies to administrative
 requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
-recognize this domain as a local address. The old keyword <A NAME="7781"></A><TT>host</TT>
+recognize this domain as a local address. The old keyword <A NAME="7813"></A><TT>host</TT>
 is still recognized but should not be used anymore.
 
 <P>
@@ -399,7 +399,7 @@ Example: <TT>domain cru.fr</TT>
 
 <P>
 
-<H2><A NAME="SECTION00812000000000000000"></A><A NAME="7785"></A>
+<H2><A NAME="SECTION00812000000000000000"></A><A NAME="7817"></A>
 <BR>
 7.1.2 <TT>email</TT>
 </H2> 
@@ -409,14 +409,14 @@ Example: <TT>domain cru.fr</TT>
 
 <P>
 Username (the part of the address preceding the <TT>@</TT> sign) used
-        in the <A NAME="7789"></A><TT>From:</TT> header in replies to administrative requests.
+        in the <A NAME="7821"></A><TT>From:</TT> header in replies to administrative requests.
 
 <P>
 Example: <TT>email           listserv</TT>
 
 <P>
 
-<H2><A NAME="SECTION00813000000000000000"></A><A NAME="7793"></A>
+<H2><A NAME="SECTION00813000000000000000"></A><A NAME="7825"></A>
 <BR>
 7.1.3 <TT>listmaster</TT>
 </H2> 
@@ -430,7 +430,7 @@ Example: <TT>listmaster postmaster@cru.fr,root@cru.fr</TT>
 
 <P>
 
-<H2><A NAME="SECTION00814000000000000000"></A><A NAME="7797"></A>
+<H2><A NAME="SECTION00814000000000000000"></A><A NAME="7829"></A>
 <BR>
 7.1.4 <TT>listmaster_email</TT>
 </H2> 
@@ -469,7 +469,7 @@ See <A HREF="node7.html#robot-aliases">6.1</A>,page&nbsp;<A HREF="node7.html#rob
 
 <P>
 
-<H2><A NAME="SECTION00815000000000000000"></A><A NAME="7801"></A>
+<H2><A NAME="SECTION00815000000000000000"></A><A NAME="7833"></A>
 <BR>
 7.1.5 <TT>wwsympa_url</TT>
 </H2>  
@@ -478,14 +478,14 @@ See <A HREF="node7.html#robot-aliases">6.1</A>,page&nbsp;<A HREF="node7.html#rob
 (Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws</TT>)
 
 <P>
-This is the root URL of <A NAME="7807"></A><I>WWSympa</I>.
+This is the root URL of <A NAME="7839"></A><I>WWSympa</I>.
 
 <P>
 Example: <TT>wwsympa_url https://my.server/sympa</TT>
 
 <P>
 
-<H2><A NAME="SECTION00816000000000000000"></A><A NAME="7811"></A>
+<H2><A NAME="SECTION00816000000000000000"></A><A NAME="7843"></A>
 <BR>
 7.1.6 <TT>soap_url</TT>
 </H2>  
@@ -498,20 +498,20 @@ Example: <TT>soap_url http://my.server/sympasoap</TT>
 
 <P>
 
-<H2><A NAME="SECTION00817000000000000000"></A><A NAME="7815"></A>
+<H2><A NAME="SECTION00817000000000000000"></A><A NAME="7847"></A>
 <BR>
 7.1.7 <TT>spam_protection</TT>
 </H2>  
 
 <P>
-<A NAME="7818"></A>spam_protection 
+<A NAME="7850"></A>spam_protection 
 	 (Default value: <TT>javascript</TT>)
 
 <P>
 There is a need to protection Sympa web site against spambot which collect
         email adresse in public web site. Various method are availble into Sympa
-        and you can choose it with <A NAME="7820"></A><TT>spam_protection</TT> and
-        <A NAME="7823"></A><TT>web_archive_spam_protection</TT> parameters.
+        and you can choose it with <A NAME="7852"></A><TT>spam_protection</TT> and
+        <A NAME="7855"></A><TT>web_archive_spam_protection</TT> parameters.
         Possible value are :
 
 <UL>
@@ -526,21 +526,21 @@ see a  nice mailto adresses where others have nothing.
 
 <P>
 
-<H2><A NAME="SECTION00818000000000000000"></A><A NAME="7826"></A>
+<H2><A NAME="SECTION00818000000000000000"></A><A NAME="7858"></A>
 <BR>
 7.1.8 <TT>web_archive_spam_protection</TT>
 </H2>
 	  (Default value: <TT>cookie</TT>)
 
 <P>
-Idem <A NAME="7830"></A><TT>spam_protection</TT> but restricted to web archive.
+Idem <A NAME="7862"></A><TT>spam_protection</TT> but restricted to web archive.
         A additional value is availible : cookie which mean that users
         must submit a small form in order to receive a cookie before
         browsing archives. This block all robot, even google and co.
 
 <P>
 
-<H2><A NAME="SECTION00819000000000000000"></A><A NAME="7833"></A><A NAME="7836"></A><A NAME="7839"></A>
+<H2><A NAME="SECTION00819000000000000000"></A><A NAME="7865"></A><A NAME="7868"></A><A NAME="7871"></A>
   <A NAME="colors"></A>
 <BR>
 7.1.9 <TT>color_0</TT>, <TT>color_1</TT> ..  <TT>color_15</TT>
@@ -551,7 +551,7 @@ Idem <A NAME="7830"></A><TT>spam_protection</TT> but restricted to web archive.
 
 <P>
 
-<H2><A NAME="SECTION008110000000000000000"></A><A NAME="7842"></A><A NAME="7845"></A><A NAME="7848"></A><A NAME="7851"></A><A NAME="7854"></A><A NAME="7857"></A><A NAME="7860"></A>
+<H2><A NAME="SECTION008110000000000000000"></A><A NAME="7874"></A><A NAME="7877"></A><A NAME="7880"></A><A NAME="7883"></A><A NAME="7886"></A><A NAME="7889"></A><A NAME="7892"></A>
 <BR>
 7.1.10 <TT>dark_color</TT> <TT>light_color</TT> <TT>text_color</TT> <TT>bg_color</TT> <TT>error_color</TT> <TT>selected_color</TT> <TT>shaded_color</TT>
 </H2>
@@ -562,7 +562,7 @@ Deprecated. They are the color definition for previous web interface. These para
 
 <P>
 
-<H2><A NAME="SECTION008111000000000000000"></A><A NAME="7863"></A>
+<H2><A NAME="SECTION008111000000000000000"></A><A NAME="7895"></A>
 <BR>
 7.1.11 <TT>logo_html_definition</TT>
 </H2>
@@ -571,7 +571,7 @@ Example: <TT>logo_html_definition &lt;a href="http://www.mycompagnie.com"&gt;&lt
 
 <P>
 
-<H2><A NAME="SECTION008112000000000000000"></A><A NAME="7867"></A>
+<H2><A NAME="SECTION008112000000000000000"></A><A NAME="7899"></A>
 <BR>
 7.1.12 <TT>css_path</TT>
 </H2>
@@ -581,11 +581,11 @@ Pre-parsed CSS files (let's say static css files) can be installed using Sympa s
 installed in a part of the web server that can be reached without using sympa web engine. In order to do this edit the 
 robot.conf file and set the css_path parameter. Then retart the server and use skins module from the "admin sympa" page 
 to install preparsed CSS file. The in order to replace dynamic CSS by these static files 
-set the <A NAME="7870"></A><TT>css_url</TT> parameter.
+set the <A NAME="7902"></A><TT>css_url</TT> parameter.
 
 <P>
 
-<H2><A NAME="SECTION008113000000000000000"></A><A NAME="7873"></A>
+<H2><A NAME="SECTION008113000000000000000"></A><A NAME="7905"></A>
 <BR>
 7.1.13 <TT>css_url</TT>
 </H2>
@@ -603,7 +603,7 @@ files. The server admin module include a CSS administration page that can help y
 
 <P>
 
-<H2><A NAME="SECTION008114000000000000000"></A><A NAME="7876"></A>
+<H2><A NAME="SECTION008114000000000000000"></A><A NAME="7908"></A>
 <BR>
 7.1.14 <TT>cookie</TT>
 </H2> 
@@ -613,20 +613,20 @@ This string is used to generate MD5 authentication keys.
 	It allows generated authentication keys to differ from one
 	site to another. It is also used for reversible encryption of
         user passwords stored in the database. The presence of this string
-	is one reason why access to <A NAME="7879"></A><TT>sympa.conf</TT> needs to be restricted
+	is one reason why access to <A NAME="7911"></A><TT>sympa.conf</TT> needs to be restricted
 	to the Sympa user. 
 
 <P>
 Note that changing this parameter will break all
         http cookies stored in users' browsers, as well as all user passwords
-	and lists X509 private keys.
+	and lists X509 private keys. To prevent a catastroph, sympa.pl refuse to start if the cookie parameter was changed.
 
 <P>
 Example: <TT>cookie gh869jku5</TT>
 
 <P>
 
-<H2><A NAME="SECTION008115000000000000000"></A><A NAME="7883"></A>
+<H2><A NAME="SECTION008115000000000000000"></A><A NAME="7915"></A>
 <BR>
 7.1.15 <TT>create_list</TT>
 </H2>  
@@ -648,7 +648,7 @@ Example: <TT>create_list intranet</TT>
 
 <P>
 
-<H2><A NAME="SECTION008116000000000000000"></A><A NAME="7891"></A>
+<H2><A NAME="SECTION008116000000000000000"></A><A NAME="7923"></A>
 <BR>
 7.1.16 <TT>global_remind</TT>
 </H2>  
@@ -670,13 +670,13 @@ Defines who can run a <TT>REMIND *</TT> command.
 7.2 Directories</A>
 </H1>
 
-<H2><A NAME="SECTION00821000000000000000"></A><A NAME="7898"></A>
+<H2><A NAME="SECTION00821000000000000000"></A><A NAME="7930"></A>
 <BR>
 7.2.1 <TT>home</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="7903"></A><TT>/usr/local/sympa-os/expl</TT></TT>)
+(Default value: <TT><A NAME="7935"></A><TT>/usr/local/sympa-os/expl</TT></TT>)
 
 <P>
 The directory whose subdirectories correspond to the different lists.
@@ -686,21 +686,21 @@ Example: <TT>home          /home/sympa/expl</TT>
 
 <P>
 
-<H2><A NAME="SECTION00822000000000000000"></A><A NAME="7907"></A>
+<H2><A NAME="SECTION00822000000000000000"></A><A NAME="7939"></A>
 <BR>
 7.2.2 <TT>etc</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="7912"></A><TT>/usr/local/sympa-os/etc</TT></TT>)
+(Default value: <TT><A NAME="7944"></A><TT>/usr/local/sympa-os/etc</TT></TT>)
 
 <P>
 This is the local directory for configuration files (such as
-	<A NAME="7915"></A><TT>edit_list.conf</TT>. It contains 5 subdirectories:
-	<A NAME="7918"></A><TT>scenari</TT> for local authorization scenarios; <A NAME="7921"></A><TT>mail_tt2</TT>
-	for the site's local mail templates and default list templates; <A NAME="7924"></A><TT>web_tt2</TT>
-        for the site's local html templates; <A NAME="7927"></A><TT>global_task_models</TT> for local
-	global task models; and <A NAME="7930"></A><TT>list_task_models</TT> for local list task models
+	<A NAME="7947"></A><TT>edit_list.conf</TT>. It contains 5 subdirectories:
+	<A NAME="7950"></A><TT>scenari</TT> for local authorization scenarios; <A NAME="7953"></A><TT>mail_tt2</TT>
+	for the site's local mail templates and default list templates; <A NAME="7956"></A><TT>web_tt2</TT>
+        for the site's local html templates; <A NAME="7959"></A><TT>global_task_models</TT> for local
+	global task models; and <A NAME="7962"></A><TT>list_task_models</TT> for local list task models
 
 <P>
 Example: <TT>etc          /home/sympa/etc</TT>
@@ -713,7 +713,7 @@ Example: <TT>etc          /home/sympa/etc</TT>
 
 <P>
 
-<H2><A NAME="SECTION00831000000000000000"></A><A NAME="7934"></A>
+<H2><A NAME="SECTION00831000000000000000"></A><A NAME="7966"></A>
 <BR>
 7.3.1 <TT>syslog</TT>
 </H2> 
@@ -729,7 +729,7 @@ Example: <TT>syslog          LOCAL2</TT>
 
 <P>
 
-<H2><A NAME="SECTION00832000000000000000"></A><A NAME="7939"></A>
+<H2><A NAME="SECTION00832000000000000000"></A><A NAME="7971"></A>
 <BR>
 7.3.2 <TT>log_level</TT>
 </H2> 
@@ -747,7 +747,7 @@ Example: <TT>log_level          2</TT>
 
 <P>
 
-<H2><A NAME="SECTION00833000000000000000"></A><A NAME="7944"></A> 
+<H2><A NAME="SECTION00833000000000000000"></A><A NAME="7976"></A> 
     <A NAME="par-log-socket-type"></A>
 <BR>
 7.3.3 <TT>log_socket_type</TT>
@@ -757,21 +757,21 @@ Example: <TT>log_level          2</TT>
 (Default value: <TT>unix</TT>)
 
 <P>
-<I>Sympa</I> communicates with <A NAME="7949"></A><TT>syslogd</TT>
-        using either UDP or UNIX sockets.  Set <A NAME="7952"></A><TT>log_socket_type</TT> to <TT>inet</TT> to use UDP, or <TT>unix</TT> for UNIX sockets.
+<I>Sympa</I> communicates with <A NAME="7981"></A><TT>syslogd</TT>
+        using either UDP or UNIX sockets.  Set <A NAME="7984"></A><TT>log_socket_type</TT> to <TT>inet</TT> to use UDP, or <TT>unix</TT> for UNIX sockets.
 
 <P>
 
-<H2><A NAME="SECTION00834000000000000000"></A><A NAME="7955"></A>
+<H2><A NAME="SECTION00834000000000000000"></A><A NAME="7987"></A>
 <BR>
 7.3.4 <TT>pidfile</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="7960"></A><TT>/usr/local/sympa-os/etc/sympa.pid</TT></TT>)
+(Default value: <TT><A NAME="7992"></A><TT>/usr/local/sympa-os/etc/sympa.pid</TT></TT>)
 
 <P>
-The file where the <A NAME="7963"></A><TT>sympa.pl</TT> daemon stores its
+The file where the <A NAME="7995"></A><TT>sympa.pl</TT> daemon stores its
         process number. Warning: the <TT>sympa</TT> user must be
         able to write to this file, and to create it if it doesn't
         exist.
@@ -781,7 +781,7 @@ Example: <TT>pidfile         /var/run/sympa.pid</TT>
 
 <P>
 
-<H2><A NAME="SECTION00835000000000000000"></A><A NAME="7967"></A>
+<H2><A NAME="SECTION00835000000000000000"></A><A NAME="7999"></A>
 <BR>
 7.3.5 <TT>umask</TT>
 </H2> 
@@ -790,7 +790,7 @@ Example: <TT>pidfile         /var/run/sympa.pid</TT>
 (Default value: <TT>027</TT>)
 
 <P>
-Default mask for file creation (see <A NAME="7971"></A><TT>umask</TT>(2)).
+Default mask for file creation (see <A NAME="8003"></A><TT>umask</TT>(2)).
 	Note that it will be interpreted as an octual value.
 
 <P>
@@ -804,7 +804,7 @@ Example: <TT>umask 007</TT>
 
 <P>
 
-<H2><A NAME="SECTION00841000000000000000"></A><A NAME="7975"></A>
+<H2><A NAME="SECTION00841000000000000000"></A><A NAME="8007"></A>
 <BR>
 7.4.1 <TT>distribution_mode</TT>
 </H2>
@@ -821,7 +821,7 @@ Example: <TT>distribution_mode fork</TT>
 
 <P>
 
-<H2><A NAME="SECTION00842000000000000000"></A><A NAME="7980"></A>
+<H2><A NAME="SECTION00842000000000000000"></A><A NAME="8012"></A>
 <BR>
 7.4.2 <TT>maxsmtp</TT>
 </H2> 
@@ -838,7 +838,7 @@ Example: <TT>maxsmtp           500</TT>
 
 <P>
 
-<H2><A NAME="SECTION00843000000000000000"></A><A NAME="7986"></A>
+<H2><A NAME="SECTION00843000000000000000"></A><A NAME="8018"></A>
 <BR>
 7.4.3 <TT>log_smtp</TT>
 </H2> 
@@ -854,7 +854,7 @@ Example: <TT>log_smtp           on</TT>
 
 <P>
 
-<H2><A NAME="SECTION00844000000000000000"></A><A NAME="7991"></A>
+<H2><A NAME="SECTION00844000000000000000"></A><A NAME="8023"></A>
 <BR>
 7.4.4 <TT>max_size</TT>
 </H2> 
@@ -864,7 +864,7 @@ Example: <TT>log_smtp           on</TT>
 
 <P>
 Maximum size allowed for messages distributed by <I>Sympa</I>.
-	This may be customized per virtual host or per list by setting the <A NAME="7996"></A><TT>max_size</TT> 
+	This may be customized per virtual host or per list by setting the <A NAME="8028"></A><TT>max_size</TT> 
 	robot or list parameter.
 
 <P>
@@ -872,7 +872,7 @@ Example: <TT>max_size           2097152</TT>
 
 <P>
 
-<H2><A NAME="SECTION00845000000000000000"></A><A NAME="8000"></A>
+<H2><A NAME="SECTION00845000000000000000"></A><A NAME="8032"></A>
 <BR>
 7.4.5 <TT>misaddressed_commands</TT>
 </H2> 
@@ -882,11 +882,11 @@ Example: <TT>max_size           2097152</TT>
 
 <P>
 When a robot command is sent to a list, by default Sympa reject this message. This feature
-        can be turned off setting this parameter to <A NAME="8004"></A><TT>ignore</TT>.
+        can be turned off setting this parameter to <A NAME="8036"></A><TT>ignore</TT>.
 
 <P>
 
-<H2><A NAME="SECTION00846000000000000000"></A><A NAME="8007"></A>
+<H2><A NAME="SECTION00846000000000000000"></A><A NAME="8039"></A>
 <BR>
 7.4.6 <TT>misaddressed_commands_regexp</TT>
 </H2> 
@@ -896,11 +896,11 @@ When a robot command is sent to a list, by default Sympa reject this message. Th
 
 <P>
 This is the Perl regular expression applied on messages subject and body to detect 
-	misaddressed commands, see <A NAME="8011"></A><TT>misaddressed_commands</TT> parameter above.
+	misaddressed commands, see <A NAME="8043"></A><TT>misaddressed_commands</TT> parameter above.
 
 <P>
 
-<H2><A NAME="SECTION00847000000000000000"></A><A NAME="8014"></A>
+<H2><A NAME="SECTION00847000000000000000"></A><A NAME="8046"></A>
 <BR>
 7.4.7 <TT>nrcpt</TT>
 </H2> 
@@ -909,13 +909,15 @@ This is the Perl regular expression applied on messages subject and body to dete
 (Default value: <TT>25</TT>)
 
 <P>
-Maximum number of recipients per <A NAME="8018"></A><TT>sendmail</TT> call.
-        This grouping factor makes it possible for the (<A NAME="8021"></A><TT>sendmail</TT>) MTA to optimize the number of SMTP sessions for
-        message distribution.
+<A NAME="nrcpt"></A>        Maximum number of recipients per <A NAME="8050"></A><TT>sendmail</TT> call.
+        This grouping factor makes it possible for the (<A NAME="8053"></A><TT>sendmail</TT>) MTA to optimize the number of SMTP sessions for
+        message distribution. 	If needed, you can limit the number of receipient for a particular domain. 
+        Check nrcpt_by_domain configuration file. (see 
+	<A HREF="node3.html#nrcptbydomain">2.3</A>,  page&nbsp;<A HREF="node3.html#nrcptbydomain"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 
-<H2><A NAME="SECTION00848000000000000000"></A><A NAME="8024"></A>
+<H2><A NAME="SECTION00848000000000000000"></A><A NAME="8056"></A>
 <BR>
 7.4.8 <TT>avg</TT>
 </H2> 
@@ -925,11 +927,11 @@ Maximum number of recipients per <A NAME="8018"></A><TT>sendmail</TT> call.
 
 <P>
 Maximum number of different internet domains within addresses per
-        <A NAME="8028"></A><TT>sendmail</TT> call.
+        <A NAME="8060"></A><TT>sendmail</TT> call.
 
 <P>
 
-<H2><A NAME="SECTION00849000000000000000"></A><A NAME="8031"></A>
+<H2><A NAME="SECTION00849000000000000000"></A><A NAME="8063"></A>
 <BR>
 7.4.9 <TT>sendmail</TT>
 </H2> 
@@ -939,7 +941,7 @@ Maximum number of different internet domains within addresses per
 
 <P>
 Absolute path to SMTP message transfer agent binary. Sympa expects this binary to
-	be sendmail compatible (<A NAME="8035"></A>postfix, <A NAME="8036"></A>Qmail and <A NAME="8037"></A>Exim binaries all
+	be sendmail compatible (<A NAME="8067"></A>postfix, <A NAME="8068"></A>Qmail and <A NAME="8069"></A>Exim binaries all
 	provide sendmail compatibility).
 
 <P>
@@ -947,7 +949,7 @@ Example: <TT>sendmail        /usr/sbin/sendmail</TT>
 
 <P>
 
-<H2><A NAME="SECTION008410000000000000000"></A><A NAME="8039"></A>
+<H2><A NAME="SECTION008410000000000000000"></A><A NAME="8071"></A>
 <BR>
 7.4.10 <TT>sendmail_args</TT>
 </H2> 
@@ -960,7 +962,7 @@ Arguments passed to SMTP message transfer agent
 
 <P>
 
-<H2><A NAME="SECTION008411000000000000000"></A><A NAME="8043"></A>
+<H2><A NAME="SECTION008411000000000000000"></A><A NAME="8075"></A>
 <BR>
 7.4.11 <TT>sendmail_aliases</TT>
 </H2> 
@@ -969,11 +971,11 @@ Arguments passed to SMTP message transfer agent
 (Default value: <TT>defined by makefile, sendmail_aliases</TT>)
 
 <P>
-Path of the alias file that contain all lists related aliases. It is recommended to create a specific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your <A NAME="8047"></A><TT>sendmail.mc</TT> :
+Path of the alias file that contain all lists related aliases. It is recommended to create a specific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your <A NAME="8079"></A><TT>sendmail.mc</TT> :
 
 <P>
 
-<H2><A NAME="SECTION008412000000000000000"></A><A NAME="8050"></A>
+<H2><A NAME="SECTION008412000000000000000"></A><A NAME="8082"></A>
 <BR>
 7.4.12 <TT>rfc2369_header_fields</TT>
 </H2> 
@@ -988,7 +990,7 @@ RFC2369 compliant header fields (List-xxx) to be added to
 
 <P>
 
-<H2><A NAME="SECTION008413000000000000000"></A><A NAME="8054"></A>
+<H2><A NAME="SECTION008413000000000000000"></A><A NAME="8086"></A>
 <BR>
 7.4.13 <TT>remove_headers</TT>
 </H2> 
@@ -1009,7 +1011,7 @@ Example: <TT>remove_headers      Resent-Date,Resent-From,Resent-To,Resent-Messag
 
 <P>
 
-<H2><A NAME="SECTION008414000000000000000"></A><A NAME="8061"></A>
+<H2><A NAME="SECTION008414000000000000000"></A><A NAME="8093"></A>
 <BR>
 7.4.14 <TT>anonymous_headers_fields</TT>
 </H2> 
@@ -1024,7 +1026,7 @@ This parameter defines the list of SMTP header fields that should be
 
 <P>
 
-<H2><A NAME="SECTION008415000000000000000"></A><A NAME="8065"></A>
+<H2><A NAME="SECTION008415000000000000000"></A><A NAME="8097"></A>
 <BR>
 7.4.15 <TT>list_check_smtp</TT>
 </H2> 
@@ -1042,7 +1044,7 @@ If this parameter is set with a SMTP server address, <I>Sympa</I> will check if 
 
 <P>
 
-<H2><A NAME="SECTION008416000000000000000"></A><A NAME="8071"></A>
+<H2><A NAME="SECTION008416000000000000000"></A><A NAME="8103"></A>
 <BR>
 7.4.16 <TT>list_check_suffixes</TT>
 </H2> 
@@ -1053,12 +1055,12 @@ If this parameter is set with a SMTP server address, <I>Sympa</I> will check if 
 <P>
 This paramater is a comma-separated list of admin suffixes you're using
 	for <I>Sympa</I> aliases, i.e. mylist-request, mylist-owner etc...
-	This parameter is used with <A NAME="8076"></A><TT>list_check_smtp</TT> parameter.
+	This parameter is used with <A NAME="8108"></A><TT>list_check_smtp</TT> parameter.
 	It is also used to check list names at list creation time.
 
 <P>
 
-<H2><A NAME="SECTION008417000000000000000"></A><A NAME="8079"></A>
+<H2><A NAME="SECTION008417000000000000000"></A><A NAME="8111"></A>
 <BR>
 7.4.17 <TT>urlize_min_size</TT>
 </H2> 
@@ -1080,7 +1082,7 @@ This parameter is related to the <TT>URLIZE</TT> subscriber reception mode ; it
 
 <P>
 
-<H2><A NAME="SECTION00851000000000000000"></A><A NAME="8083"></A>
+<H2><A NAME="SECTION00851000000000000000"></A><A NAME="8115"></A>
 <BR>
 7.5.1 <TT>default_shared_quota</TT>
 </H2>
@@ -1090,7 +1092,7 @@ The default disk quota for lists' document repository.
 
 <P>
 
-<H2><A NAME="SECTION00852000000000000000"></A><A NAME="8086"></A>
+<H2><A NAME="SECTION00852000000000000000"></A><A NAME="8118"></A>
 <BR>
 7.5.2 <TT>default_archive_quota</TT>
 </H2>
@@ -1106,66 +1108,66 @@ The default disk quota for lists' web archives.
 7.6 Spool related
 </H1>
 
-<H2><A NAME="SECTION00861000000000000000"></A><A NAME="8089"></A>
+<H2><A NAME="SECTION00861000000000000000"></A><A NAME="8121"></A>
 <BR>
 7.6.1 <TT>spool</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8094"></A><TT>/usr/local/sympa-os/spool</TT></TT>)
+(Default value: <TT><A NAME="8126"></A><TT>/usr/local/sympa-os/spool</TT></TT>)
 
 <P>
 The parent directory which contains all the other spools.  
 
 <P>
 
-<H2><A NAME="SECTION00862000000000000000"></A><A NAME="8097"></A>
+<H2><A NAME="SECTION00862000000000000000"></A><A NAME="8129"></A>
 <BR>
 7.6.2 <TT>queue</TT>
 </H2> 
 
 <P>
 The absolute path of the directory which contains the queue, used both by the
-        <A NAME="8100"></A><TT>queue</TT> program and the <A NAME="8103"></A><TT>sympa.pl</TT> daemon. This
+        <A NAME="8132"></A><TT>queue</TT> program and the <A NAME="8135"></A><TT>sympa.pl</TT> daemon. This
         parameter is mandatory.
 
 <P>
-Example: <TT><A NAME="8108"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
+Example: <TT><A NAME="8140"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
 
 <P>
 
-<H2><A NAME="SECTION00863000000000000000"></A><A NAME="8111"></A> 
-	<A NAME="1008"></A>
-	<A NAME="1009"></A>
+<H2><A NAME="SECTION00863000000000000000"></A><A NAME="8143"></A> 
+	<A NAME="1027"></A>
+	<A NAME="1028"></A>
 <BR>
 7.6.3 <TT>queuedistribute</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8116"></A><TT>/usr/local/sympa-os/spool/distribute</TT></TT>)
+(Default value: <TT><A NAME="8148"></A><TT>/usr/local/sympa-os/spool/distribute</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00864000000000000000"></A><A NAME="8119"></A>  
-        <A NAME="cf:queuemod"></A>        <A NAME="1013"></A>
+<H2><A NAME="SECTION00864000000000000000"></A><A NAME="8151"></A>  
+        <A NAME="cf:queuemod"></A>        <A NAME="1032"></A>
 <BR>
 7.6.4 <TT>queuemod</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8124"></A><TT>/usr/local/sympa-os/spool/moderation</TT></TT>)
+(Default value: <TT><A NAME="8156"></A><TT>/usr/local/sympa-os/spool/moderation</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00865000000000000000"></A><A NAME="8127"></A>  
-        <A NAME="1016"></A>
-        <A NAME="1017"></A>
+<H2><A NAME="SECTION00865000000000000000"></A><A NAME="8159"></A>  
+        <A NAME="1035"></A>
+        <A NAME="1036"></A>
 <BR>
 7.6.5 <TT>queuedigest</TT>
 </H2>
@@ -1175,69 +1177,69 @@ This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00866000000000000000"></A><A NAME="8130"></A>
+<H2><A NAME="SECTION00866000000000000000"></A><A NAME="8162"></A>
 <BR>
 7.6.6 <TT>queueauth</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8135"></A><TT>/usr/local/sympa-os/spool/auth</TT></TT>)
+(Default value: <TT><A NAME="8167"></A><TT>/usr/local/sympa-os/spool/auth</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00867000000000000000"></A><A NAME="8138"></A>
+<H2><A NAME="SECTION00867000000000000000"></A><A NAME="8170"></A>
 <BR>
 7.6.7 <TT>queueoutgoing</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8143"></A><TT>/usr/local/sympa-os/spool/outgoing</TT></TT>)
+(Default value: <TT><A NAME="8175"></A><TT>/usr/local/sympa-os/spool/outgoing</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00868000000000000000"></A><A NAME="8146"></A>
+<H2><A NAME="SECTION00868000000000000000"></A><A NAME="8178"></A>
 <BR>
 7.6.8 <TT>queuetopic</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8151"></A><TT>/usr/local/sympa-os/spool/topic</TT></TT>)
+(Default value: <TT><A NAME="8183"></A><TT>/usr/local/sympa-os/spool/topic</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
 
 <P>
 
-<H2><A NAME="SECTION00869000000000000000"></A><A NAME="8154"></A> 
-    <A NAME="1025"></A>
+<H2><A NAME="SECTION00869000000000000000"></A><A NAME="8186"></A> 
+    <A NAME="1044"></A>
 <BR>
 7.6.9 <TT>queuebounce</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8159"></A><TT>/usr/local/sympa-os/spool/bounce</TT></TT>)
+(Default value: <TT><A NAME="8191"></A><TT>/usr/local/sympa-os/spool/bounce</TT></TT>)
 
 <P>
-Spool to store bounces (non-delivery reports) received by the <A NAME="8162"></A><TT>bouncequeue</TT>
+Spool to store bounces (non-delivery reports) received by the <A NAME="8194"></A><TT>bouncequeue</TT>
 	program via the mylist-owner (unless this suffix was customized) or bounce+* addresses (VERP) . This parameter is mandatory
         and must be an absolute path.
 
 <P>
 
-<H2><A NAME="SECTION008610000000000000000"></A><A NAME="8165"></A> 
-    <A NAME="1029"></A>
+<H2><A NAME="SECTION008610000000000000000"></A><A NAME="8197"></A> 
+    <A NAME="1048"></A>
 <BR>
 7.6.10 <TT>queuetask</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8170"></A><TT>/usr/local/sympa-os/spool/task</TT></TT>)
+(Default value: <TT><A NAME="8202"></A><TT>/usr/local/sympa-os/spool/task</TT></TT>)
 
 <P>
 Spool to store task files created by the task manager. This parameter is mandatory
@@ -1245,20 +1247,20 @@ Spool to store task files created by the task manager. This parameter is mandato
 
 <P>
 
-<H2><A NAME="SECTION008611000000000000000"></A><A NAME="8173"></A>
+<H2><A NAME="SECTION008611000000000000000"></A><A NAME="8205"></A>
 <BR>
 7.6.11 <TT>tmpdir</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8178"></A><TT>/usr/local/sympa-os/spool/tmp</TT></TT>)
+(Default value: <TT><A NAME="8210"></A><TT>/usr/local/sympa-os/spool/tmp</TT></TT>)
 
 <P>
 Temporary directory used by OpenSSL and antiviruses.
 
 <P>
 
-<H2><A NAME="SECTION008612000000000000000"></A><A NAME="8181"></A>  
+<H2><A NAME="SECTION008612000000000000000"></A><A NAME="8213"></A>  
         <A NAME="kw-sleep"></A>
 <BR>
 7.6.12 <TT>sleep</TT>
@@ -1273,7 +1275,7 @@ Waiting period (in seconds) between each scan of the main queue.
 
 <P>
 
-<H2><A NAME="SECTION008613000000000000000"></A><A NAME="8185"></A>
+<H2><A NAME="SECTION008613000000000000000"></A><A NAME="8217"></A>
 <BR>
 7.6.13 <TT>clean_delay_queue</TT>
 </H2> 
@@ -1283,7 +1285,7 @@ Waiting period (in seconds) between each scan of the main queue.
 
 <P>
 Retention period (in days) for ``bad'' messages in
-        <A NAME="8189"></A>spool (as specified by <A NAME="8190"></A><TT>queue</TT>).
+        <A NAME="8221"></A>spool (as specified by <A NAME="8222"></A><TT>queue</TT>).
         <I>Sympa</I> keeps messages rejected for various reasons (badly
         formatted, looping, etc.) in
         this directory, with a name prefixed by <TT>BAD</TT>.
@@ -1295,7 +1297,7 @@ Example: <TT>clean_delay_queue 3</TT>
 
 <P>
 
-<H2><A NAME="SECTION008614000000000000000"></A><A NAME="8195"></A>
+<H2><A NAME="SECTION008614000000000000000"></A><A NAME="8227"></A>
 <BR>
 7.6.14 <TT>clean_delay_queuemod</TT>
 </H2> 
@@ -1304,15 +1306,15 @@ Example: <TT>clean_delay_queue 3</TT>
 (Default value: <TT>10</TT>)
 
 <P>
-Expiration delay (in days) in the <A NAME="8199"></A>moderation
-        <A NAME="8200"></A>spool (as specified by <A NAME="8201"></A><TT>queuemod</TT>).
+Expiration delay (in days) in the <A NAME="8231"></A>moderation
+        <A NAME="8232"></A>spool (as specified by <A NAME="8233"></A><TT>queuemod</TT>).
         Beyond this deadline, messages that have not been processed
         are deleted.  For moderated lists, the contents of this spool
-	can be consulted using a key along with the <A NAME="8204"></A><TT>MODINDEX</TT> command.
+	can be consulted using a key along with the <A NAME="8236"></A><TT>MODINDEX</TT> command.
 
 <P>
 
-<H2><A NAME="SECTION008615000000000000000"></A><A NAME="8207"></A>
+<H2><A NAME="SECTION008615000000000000000"></A><A NAME="8239"></A>
 <BR>
 7.6.15 <TT>clean_delay_queueauth</TT>
 </H2>  
@@ -1321,13 +1323,13 @@ Expiration delay (in days) in the <A NAME="8199"></A>moderation
 (Default value: <TT>3</TT>)
 
 <P>
-Expiration delay (in days) in the <A NAME="8211"></A>authentication
+Expiration delay (in days) in the <A NAME="8243"></A>authentication
         queue.  Beyond this deadline, messages not enabled are
         deleted.
 
 <P>
 
-<H2><A NAME="SECTION008616000000000000000"></A><A NAME="8212"></A>
+<H2><A NAME="SECTION008616000000000000000"></A><A NAME="8244"></A>
 <BR>
 7.6.16 <TT>clean_delay_queuetopic</TT>
 </H2>  
@@ -1336,7 +1338,7 @@ Expiration delay (in days) in the <A NAME="8211"></A>authentication
 (Default value: <TT>7</TT>)
 
 <P>
-Delay for keeping message topic files (in days) in the <A NAME="8216"></A>topic
+Delay for keeping message topic files (in days) in the <A NAME="8248"></A>topic
         queue.  Beyond this deadline, files are
         deleted.
 
@@ -1348,20 +1350,20 @@ Delay for keeping message topic files (in days) in the <A NAME="8216"></A>topic
 
 <P>
 
-<H2><A NAME="SECTION00871000000000000000"></A><A NAME="8217"></A>
+<H2><A NAME="SECTION00871000000000000000"></A><A NAME="8249"></A>
 <BR>
 7.7.1 <TT>localedir</TT>
 </H2>   
 
 <P>
-(Default value: <TT><A NAME="8222"></A><TT>/usr/local/sympa-os/locale</TT></TT>)
+(Default value: <TT><A NAME="8254"></A><TT>/usr/local/sympa-os/locale</TT></TT>)
 
 <P>
-The location of multilingual catalog files. Must correspond to	<A NAME="8225"></A><TT>~src/locale/Makefile</TT>.
+The location of multilingual catalog files. Must correspond to	<A NAME="8257"></A><TT>~src/locale/Makefile</TT>.
 
 <P>
 
-<H2><A NAME="SECTION00872000000000000000"></A><A NAME="8230"></A>
+<H2><A NAME="SECTION00872000000000000000"></A><A NAME="8262"></A>
 <BR>
 7.7.2 <TT>supported_lang</TT>
 </H2>
@@ -1375,7 +1377,7 @@ This parameter lists all supported languages (comma separated) for the user inte
 
 <P>
 
-<H2><A NAME="SECTION00873000000000000000"></A><A NAME="8234"></A>
+<H2><A NAME="SECTION00873000000000000000"></A><A NAME="8266"></A>
 <BR>
 7.7.3 <TT>lang</TT>
 </H2>   
@@ -1385,11 +1387,11 @@ This parameter lists all supported languages (comma separated) for the user inte
 
 <P>
 This is the default language for <I>Sympa</I>. The message catalog (.po, compiled as a .mo file) located 
-	in the corresponding <A NAME="8239"></A><TT>locale</TT> directory will be used.
+	in the corresponding <A NAME="8271"></A><TT>locale</TT> directory will be used.
 
 <P>
 
-<H2><A NAME="SECTION00874000000000000000"></A><A NAME="8242"></A>
+<H2><A NAME="SECTION00874000000000000000"></A><A NAME="8274"></A>
 <BR>
 7.7.4 <TT>web_recode_to</TT>
 </H2>   
@@ -1405,7 +1407,7 @@ web_recode_to   utf-8
 </PRE>
 
 <P>
-Note : if you recode web pages to utf-8, you should also add the following tag to your <A NAME="8245"></A><TT>mhonarc-ressources.tt2</TT> file :<PRE>
+Note : if you recode web pages to utf-8, you should also add the following tag to your <A NAME="8277"></A><TT>mhonarc-ressources.tt2</TT> file :<PRE>
 &lt;TextEncode&gt;
 utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 &lt;/TextEncode&gt;
@@ -1419,7 +1421,7 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 
 <P>
 
-<H2><A NAME="SECTION00881000000000000000"></A><A NAME="8248"></A>
+<H2><A NAME="SECTION00881000000000000000"></A><A NAME="8280"></A>
 	 <A NAME="kw-verp-rate"></A>
 <BR>
 7.8.1 <TT>verp_rate</TT>
@@ -1430,14 +1432,14 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 See <A HREF="node24.html#verp">23.1</A>,page&nbsp;<A HREF="node24.html#verp"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for more information on VERP in Sympa.
 
 <P>
-When <A NAME="8252"></A><TT>verp_rate</TT> is null VERP is not used ; if  <A NAME="8255"></A><TT>verp_rate</TT> is 100% VERP is alway in use.
+When <A NAME="8284"></A><TT>verp_rate</TT> is null VERP is not used ; if  <A NAME="8287"></A><TT>verp_rate</TT> is 100% VERP is alway in use.
 
 <P>
 VERP requires plussed aliases to be supported and the bounce+* alias to be installed.
 
 <P>
 
-<H2><A NAME="SECTION00882000000000000000"></A><A NAME="8258"></A>
+<H2><A NAME="SECTION00882000000000000000"></A><A NAME="8290"></A>
         <A NAME="kw-welcome-return-path"></A>
 <BR>
 7.8.2 <TT>welcome_return_path</TT>
@@ -1452,7 +1454,7 @@ If  set to string <TT>unique</TT>, Sympa enable VERP for welcome message and bou
 
 <P>
 
-<H2><A NAME="SECTION00883000000000000000"></A><A NAME="8262"></A>
+<H2><A NAME="SECTION00883000000000000000"></A><A NAME="8294"></A>
         <A NAME="kw-remind-return-path"></A>
 <BR>
 7.8.3 <TT>remind_return_path</TT>
@@ -1462,11 +1464,11 @@ If  set to string <TT>unique</TT>, Sympa enable VERP for welcome message and bou
 (Default value: <TT>owner</TT>)
 
 <P>
-Like <A NAME="8266"></A><TT>welcome_return_path</TT>, but relates to the remind message.
+Like <A NAME="8298"></A><TT>welcome_return_path</TT>, but relates to the remind message.
 
 <P>
 
-<H2><A NAME="SECTION00884000000000000000"></A><A NAME="8269"></A>
+<H2><A NAME="SECTION00884000000000000000"></A><A NAME="8301"></A>
         <A NAME="kw-return-path-suffix"></A>
 <BR>
 7.8.4 <TT>return_path_suffix</TT>
@@ -1482,7 +1484,7 @@ This defines the suffix that is appended to the list name to build the return-pa
 
 <P>
 
-<H2><A NAME="SECTION00885000000000000000"></A><A NAME="8273"></A>
+<H2><A NAME="SECTION00885000000000000000"></A><A NAME="8305"></A>
         <A NAME="kw-expire-bounce-task"></A>
 <BR>
 7.8.5 <TT>expire_bounce_task</TT>
@@ -1492,13 +1494,13 @@ This defines the suffix that is appended to the list name to build the return-pa
 (Default value: <TT>daily</TT>)
 
 <P>
-This parameter tells what task will be used by <A NAME="8277"></A><TT>task_manager.pl</TT>
+This parameter tells what task will be used by <A NAME="8309"></A><TT>task_manager.pl</TT>
 	to perform bounces expiration. This task resets bouncing information for
 	addresses not bouncing in the last 10 days after the latest message distribution.
 
 <P>
 
-<H2><A NAME="SECTION00886000000000000000"></A><A NAME="8280"></A>
+<H2><A NAME="SECTION00886000000000000000"></A><A NAME="8312"></A>
         <A NAME="kw-purge-orphan-bounce-task"></A>
 <BR>
 7.8.6 <TT>purge_orphan_bounces_task</TT>
@@ -1508,13 +1510,13 @@ This parameter tells what task will be used by <A NAME="8277"></A><TT>task_manag
 (Default value: <TT>Monthly</TT>)
 
 <P>
-This parameter tells what task will be used by <A NAME="8284"></A><TT>task_manager.pl</TT>
+This parameter tells what task will be used by <A NAME="8316"></A><TT>task_manager.pl</TT>
 	to perform bounces cleaning. This task delete bounces archives for 
 	unsubscribed users.	
 
 <P>
 
-<H2><A NAME="SECTION00887000000000000000"></A><A NAME="8287"></A>
+<H2><A NAME="SECTION00887000000000000000"></A><A NAME="8319"></A>
         <A NAME="kw-eval-bouncers-task"></A>
 <BR>
 7.8.7 <TT>eval_bouncers_task</TT>
@@ -1525,12 +1527,12 @@ This parameter tells what task will be used by <A NAME="8284"></A><TT>task_manag
 
 <P>
 The task eval_bouncers evaluate all bouncing users for all lists, and fill
-	the field <A NAME="8291"></A><TT>bounce_score_suscriber</TT> in table <A NAME="8294"></A><TT>suscriber_table</TT>
+	the field <A NAME="8323"></A><TT>bounce_score_suscriber</TT> in table <A NAME="8326"></A><TT>suscriber_table</TT>
 	with a score. This score allow the auto-management of bouncing-users.
 
 <P>
 
-<H2><A NAME="SECTION00888000000000000000"></A><A NAME="8297"></A>
+<H2><A NAME="SECTION00888000000000000000"></A><A NAME="8329"></A>
         <A NAME="kw-process-bouncers-task"></A>
 <BR>
 7.8.8 <TT>process_bouncers_task</TT>
@@ -1546,7 +1548,7 @@ The task process_bouncers execute configured actions on bouncing users, accordin
 
 <P>
 
-<H2><A NAME="SECTION00889000000000000000"></A><A NAME="8301"></A>
+<H2><A NAME="SECTION00889000000000000000"></A><A NAME="8333"></A>
         <A NAME="kw-minimum-bouncing-count"></A>
 <BR>
 7.8.9 <TT>minimum_bouncing_count</TT>
@@ -1563,7 +1565,7 @@ This parameter is for the bounce-score evaluation : the bounce-score is a note t
 
 <P>
 
-<H2><A NAME="SECTION008810000000000000000"></A><A NAME="8305"></A>
+<H2><A NAME="SECTION008810000000000000000"></A><A NAME="8337"></A>
         <A NAME="kw-minimum-bouncing-period"></A>
 <BR>
 7.8.10 <TT>minimum_bouncing_period</TT>
@@ -1578,7 +1580,7 @@ Determine the minimum bouncing period for a user to allow his bounce-score evalu
 
 <P>
 
-<H2><A NAME="SECTION008811000000000000000"></A><A NAME="8309"></A>
+<H2><A NAME="SECTION008811000000000000000"></A><A NAME="8341"></A>
         <A NAME="kw-bounce-score-min-bouncing-period"></A>
 <BR>
 7.8.11 <TT>bounce_delay</TT>
@@ -1594,7 +1596,7 @@ Another parameter for the bounce-score evaluation : This one represent the avera
 
 <P>
 
-<H2><A NAME="SECTION008812000000000000000"></A><A NAME="8313"></A>
+<H2><A NAME="SECTION008812000000000000000"></A><A NAME="8345"></A>
         <A NAME="kw-default-bounce-level1-rate"></A>
 <BR>
 7.8.12 <TT>default_bounce_level1_rate</TT>
@@ -1604,12 +1606,12 @@ Another parameter for the bounce-score evaluation : This one represent the avera
 (Default value: <TT>45</TT>)
 
 <P>
-This is the default value for <A NAME="8317"></A><TT>bouncerslevel1</TT> <A NAME="8320"></A><TT>rate</TT> entry
+This is the default value for <A NAME="8349"></A><TT>bouncerslevel1</TT> <A NAME="8352"></A><TT>rate</TT> entry
 	(<A HREF="#bouncers-level1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#bouncers-level1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 
-<H2><A NAME="SECTION008813000000000000000"></A><A NAME="8323"></A>
+<H2><A NAME="SECTION008813000000000000000"></A><A NAME="8355"></A>
         <A NAME="kw-default-bounce-level1-rate"></A>
 <BR>
 7.8.13 <TT>default_bounce_level2_rate</TT>
@@ -1619,12 +1621,12 @@ This is the default value for <A NAME="8317"></A><TT>bouncerslevel1</TT> <A NAME
 (Default value: <TT>75</TT>)
 
 <P>
-This is the default value for <A NAME="8327"></A><TT>bouncerslevel2</TT> <A NAME="8330"></A><TT>rate</TT> entry
+This is the default value for <A NAME="8359"></A><TT>bouncerslevel2</TT> <A NAME="8362"></A><TT>rate</TT> entry
 	(<A HREF="node21.html#bouncers-level2">20.5.3</A>, page&nbsp;<A HREF="node21.html#bouncers-level2"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 
-<H2><A NAME="SECTION008814000000000000000"></A><A NAME="8333"></A>
+<H2><A NAME="SECTION008814000000000000000"></A><A NAME="8365"></A>
 <BR>
 7.8.14 <TT>bounce_email_prefix</TT>
 </H2> 
@@ -1665,7 +1667,7 @@ See <A HREF="node7.html#robot-aliases">6.1</A>,page&nbsp;<A HREF="node7.html#rob
 
 <P>
 
-<H2><A NAME="SECTION008815000000000000000"></A><A NAME="8337"></A>
+<H2><A NAME="SECTION008815000000000000000"></A><A NAME="8369"></A>
         <A NAME="kw-bounce-warn-rate"></A>
 <BR>
 7.8.15 <TT>bounce_warn_rate</TT>
@@ -1675,13 +1677,13 @@ See <A HREF="node7.html#robot-aliases">6.1</A>,page&nbsp;<A HREF="node7.html#rob
 (Default value: <TT>30</TT>)
 
 <P>
-Site default value for <A NAME="8341"></A><TT>bounce</TT>.
+Site default value for <A NAME="8373"></A><TT>bounce</TT>.
 	The list owner receives a warning whenever a message is distributed and
 	the number of bounces exceeds this value.
 
 <P>
 
-<H2><A NAME="SECTION008816000000000000000"></A><A NAME="8344"></A>
+<H2><A NAME="SECTION008816000000000000000"></A><A NAME="8376"></A>
         <A NAME="kw-bounce-halt-rate"></A>
 <BR>
 7.8.16 <TT>bounce_halt_rate</TT>
@@ -1694,12 +1696,12 @@ Site default value for <A NAME="8341"></A><TT>bounce</TT>.
 <TT>FOR FUTURE USE</TT>
 
 <P>
-Site default value for <A NAME="8348"></A><TT>bounce</TT>.
+Site default value for <A NAME="8380"></A><TT>bounce</TT>.
 	Messages will cease to be distributed if the number of bounces exceeds this value.
 
 <P>
 
-<H2><A NAME="SECTION008817000000000000000"></A><A NAME="8351"></A>
+<H2><A NAME="SECTION008817000000000000000"></A><A NAME="8383"></A>
         <A NAME="kw-default-remind-task"></A>
 <BR>
 7.8.17 <TT>default_remind_task</TT>
@@ -1709,7 +1711,7 @@ Site default value for <A NAME="8348"></A><TT>bounce</TT>.
 (Default value: <TT>2month</TT>)
 
 <P>
-This parameter defines the default <A NAME="8355"></A><TT>remind_task</TT> list parameter.
+This parameter defines the default <A NAME="8387"></A><TT>remind_task</TT> list parameter.
 
 <P>
 
@@ -1719,7 +1721,7 @@ This parameter defines the default <A NAME="8355"></A><TT>remind_task</TT> list 
 
 <P>
 
-<H2><A NAME="SECTION00891000000000000000"></A><A NAME="8358"></A>  
+<H2><A NAME="SECTION00891000000000000000"></A><A NAME="8390"></A>  
         <A NAME="kw-sympa-priority"></A>
 <BR>
 7.9.1 <TT>sympa_priority</TT>
@@ -1736,7 +1738,7 @@ Available since release 2.3.1.
 
 <P>
 
-<H2><A NAME="SECTION00892000000000000000"></A><A NAME="8363"></A>  
+<H2><A NAME="SECTION00892000000000000000"></A><A NAME="8395"></A>  
         <A NAME="kw-request-priority"></A>
 <BR>
 7.9.2 <TT>request_priority</TT>
@@ -1754,7 +1756,7 @@ Available since release 2.3.3
 
 <P>
 
-<H2><A NAME="SECTION00893000000000000000"></A><A NAME="8367"></A>  
+<H2><A NAME="SECTION00893000000000000000"></A><A NAME="8399"></A>  
         <A NAME="kw-owner-priority"></A>
 <BR>
 7.9.3 <TT>owner_priority</TT>
@@ -1773,7 +1775,7 @@ Available since release 2.3.3
 
 <P>
 
-<H2><A NAME="SECTION00894000000000000000"></A><A NAME="8371"></A>  
+<H2><A NAME="SECTION00894000000000000000"></A><A NAME="8403"></A>  
         <A NAME="kw-default-list-priority"></A>
 <BR>
 7.9.4 <TT>default_list_priority</TT>
@@ -1800,7 +1802,7 @@ The following parameters are needed when using an RDBMS, but are otherwise not r
 
 <P>
 
-<H2><A NAME="SECTION008101000000000000000"></A><A NAME="8375"></A>
+<H2><A NAME="SECTION008101000000000000000"></A><A NAME="8407"></A>
 <BR>
 7.10.1 <TT>update_db_field_types</TT>
 </H2>
@@ -1813,11 +1815,11 @@ The following parameters are needed when using an RDBMS, but are otherwise not r
 
 <P>
 This parameter defines if Sympa may automatically update database structure to match the expected datafield types.
-This feature is only available with <A NAME="8379"></A>mysql.
+This feature is only available with <A NAME="8411"></A>mysql.
 
 <P>
 
-<H2><A NAME="SECTION008102000000000000000"></A><A NAME="8380"></A>
+<H2><A NAME="SECTION008102000000000000000"></A><A NAME="8412"></A>
 <BR>
 7.10.2 <TT>db_type</TT>
 </H2>
@@ -1834,7 +1836,7 @@ This corresponds to the PERL DataBase Driver (DBD) name and
 
 <P>
 
-<H2><A NAME="SECTION008103000000000000000"></A><A NAME="8383"></A>
+<H2><A NAME="SECTION008103000000000000000"></A><A NAME="8415"></A>
 <BR>
 7.10.3 <TT>db_name</TT>
 </H2> 
@@ -1850,7 +1852,7 @@ Name of the database containing user information. See
 
 <P>
 
-<H2><A NAME="SECTION008104000000000000000"></A><A NAME="8387"></A>
+<H2><A NAME="SECTION008104000000000000000"></A><A NAME="8419"></A>
 <BR>
 7.10.4 <TT>db_host</TT>
 </H2>
@@ -1860,7 +1862,7 @@ Database host name.
 
 <P>
 
-<H2><A NAME="SECTION008105000000000000000"></A><A NAME="8390"></A>
+<H2><A NAME="SECTION008105000000000000000"></A><A NAME="8422"></A>
 <BR>
 7.10.5 <TT>db_port</TT>
 </H2>
@@ -1870,7 +1872,7 @@ Database port.
 
 <P>
 
-<H2><A NAME="SECTION008106000000000000000"></A><A NAME="8393"></A>
+<H2><A NAME="SECTION008106000000000000000"></A><A NAME="8425"></A>
 <BR>
 7.10.6 <TT>db_user</TT>
 </H2>
@@ -1880,17 +1882,17 @@ User with read access to the database.
 
 <P>
 
-<H2><A NAME="SECTION008107000000000000000"></A><A NAME="8396"></A>
+<H2><A NAME="SECTION008107000000000000000"></A><A NAME="8428"></A>
 <BR>
 7.10.7 <TT>db_passwd</TT>
 </H2>
 
 <P>
-Password for <A NAME="8399"></A><TT>db_user</TT>.
+Password for <A NAME="8431"></A><TT>db_user</TT>.
 
 <P>
 
-<H2><A NAME="SECTION008108000000000000000"></A><A NAME="8402"></A>
+<H2><A NAME="SECTION008108000000000000000"></A><A NAME="8434"></A>
 <BR>
 7.10.8 <TT>db_timeout</TT>
 </H2>
@@ -1900,7 +1902,7 @@ This parameter is used for SQLite only.
 
 <P>
 
-<H2><A NAME="SECTION008109000000000000000"></A><A NAME="8405"></A>
+<H2><A NAME="SECTION008109000000000000000"></A><A NAME="8437"></A>
 <BR>
 7.10.9 <TT>db_options</TT>
 </H2>
@@ -1916,7 +1918,7 @@ db_options	mysql_read_default_file=/home/joe/my.cnf
 
 <P>
 
-<H2><A NAME="SECTION0081010000000000000000"></A><A NAME="8408"></A>
+<H2><A NAME="SECTION0081010000000000000000"></A><A NAME="8440"></A>
 <BR>
 7.10.10 <TT>db_env</TT>
 </H2>
@@ -1932,7 +1934,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 
 <P>
 
-<H2><A NAME="SECTION0081011000000000000000"></A><A NAME="8411"></A>
+<H2><A NAME="SECTION0081011000000000000000"></A><A NAME="8443"></A>
 <A NAME="db-additional-subscriber-fields"></A>
 <BR>
 7.10.11 <TT>db_additional_subscriber_fields</TT>
@@ -1953,7 +1955,7 @@ db_additional_subscriber_fields 	billing_delay,subscription_expiration
 
 <P>
 
-<H2><A NAME="SECTION0081012000000000000000"></A><A NAME="8416"></A>
+<H2><A NAME="SECTION0081012000000000000000"></A><A NAME="8448"></A>
 <BR>
 7.10.12 <TT>db_additional_user_fields</TT>
 </H2>
@@ -1976,7 +1978,7 @@ db_additional_user_fields 	address,gender
 
 <P>
 
-<H2><A NAME="SECTION0081013000000000000000"></A><A NAME="8421"></A>
+<H2><A NAME="SECTION0081013000000000000000"></A><A NAME="8453"></A>
 <BR>
 7.10.13 <TT>purge_user_table_task</TT>
 </H2>
@@ -1985,8 +1987,8 @@ db_additional_user_fields 	address,gender
 <A NAME="purge-user-table-task"></A>
 <P>
 This parameter refers to the name of the task (Example: <TT>monthly</TT>) that will be regularly run
-by the <A NAME="8425"></A><TT>task_manager.pl</TT> to remove entries in the <A NAME="8428"></A>user_table  table that
-have no corresponding entries in the <A NAME="8429"></A>subscriber_table  table.
+by the <A NAME="8457"></A><TT>task_manager.pl</TT> to remove entries in the <A NAME="8460"></A>user_table  table that
+have no corresponding entries in the <A NAME="8461"></A>subscriber_table  table.
 
 <P>
 
@@ -2000,7 +2002,7 @@ The following define your loop prevention policy for commands.
 
 <P>
 
-<H2><A NAME="SECTION008111000000000000000"></A><A NAME="8430"></A>
+<H2><A NAME="SECTION008111000000000000000"></A><A NAME="8462"></A>
 <BR>
 7.11.1 <TT>loop_command_max</TT>
 </H2>
@@ -2015,7 +2017,7 @@ The maximum number of command reports sent to an e-mail
 
 <P>
 
-<H2><A NAME="SECTION008112000000000000000"></A><A NAME="8434"></A>
+<H2><A NAME="SECTION008112000000000000000"></A><A NAME="8466"></A>
 <BR>
 7.11.2 <TT>loop_command_sampling_delay</TT>
 </H2> 
@@ -2029,7 +2031,7 @@ This parameter defines the delay in seconds before decrementing
 
 <P>
 
-<H2><A NAME="SECTION008113000000000000000"></A><A NAME="8438"></A>
+<H2><A NAME="SECTION008113000000000000000"></A><A NAME="8470"></A>
 <BR>
 7.11.3 <TT>loop_command_decrease_factor</TT>
 </H2> 
@@ -2054,7 +2056,7 @@ In this case, the three first following parameters must be set by the listmaster
 
 <P>
 
-<H2><A NAME="SECTION008121000000000000000"></A><A NAME="8443"></A>
+<H2><A NAME="SECTION008121000000000000000"></A><A NAME="8475"></A>
 <BR>
 7.12.1 <TT>openssl</TT>
 </H2>
@@ -2064,7 +2066,7 @@ The path for the openSSL binary file.
 
 <P>
 
-<H2><A NAME="SECTION008122000000000000000"></A><A NAME="8446"></A>
+<H2><A NAME="SECTION008122000000000000000"></A><A NAME="8478"></A>
 <BR>
 7.12.2 <TT>capath</TT>
 </H2> 
@@ -2080,7 +2082,7 @@ SSLCACertificatePath specified for mod_ssl module for Apache.
 
 <P>
 
-<H2><A NAME="SECTION008123000000000000000"></A><A NAME="8449"></A>
+<H2><A NAME="SECTION008123000000000000000"></A><A NAME="8481"></A>
 <BR>
 7.12.3 <TT>cafile</TT>
 </H2> 
@@ -2089,11 +2091,11 @@ the Certificates of Certification Authorities (CA) whose clients
 you deal with. These are used for Client Authentication. Such a
 file is simply the concatenation of the various PEM-encoded
 Certificate files, in order of preference. This can be used
-alternatively and/or additionally to <A NAME="8452"></A><TT>capath</TT>. 
+alternatively and/or additionally to <A NAME="8484"></A><TT>capath</TT>. 
 
 <P>
 
-<H2><A NAME="SECTION008124000000000000000"></A><A NAME="8455"></A>
+<H2><A NAME="SECTION008124000000000000000"></A><A NAME="8487"></A>
 <BR>
 7.12.4 <TT>key_passwd</TT>
 </H2> 
@@ -2104,7 +2106,7 @@ The password for list private key encryption. If not
 
 <P>
 <A NAME="certificate-task-config"></A>
-<H2><A NAME="SECTION008125000000000000000"></A><A NAME="8459"></A>
+<H2><A NAME="SECTION008125000000000000000"></A><A NAME="8491"></A>
 <BR>
 7.12.5 <TT>chk_cert_expiration_task</TT>
 </H2>
@@ -2116,7 +2118,7 @@ To know more about tasks, see <A HREF="node17.html#tasks">16.8</A>, page&nbsp;<A
 
 <P>
 
-<H2><A NAME="SECTION008126000000000000000"></A><A NAME="8462"></A>
+<H2><A NAME="SECTION008126000000000000000"></A><A NAME="8494"></A>
 <BR>
 7.12.6 <TT>crl_update_task</TT>
 </H2>
@@ -2139,7 +2141,7 @@ You must then set two parameters.
 
 <P>
 
-<H2><A NAME="SECTION008131000000000000000"></A><A NAME="8466"></A>
+<H2><A NAME="SECTION008131000000000000000"></A><A NAME="8498"></A>
 <BR>
 7.13.1 <TT>antivirus_path</TT>
 </H2>
@@ -2154,7 +2156,7 @@ antivirus_path		/usr/local/bin/uvscan
 
 <P>
 
-<H2><A NAME="SECTION008132000000000000000"></A><A NAME="8469"></A>
+<H2><A NAME="SECTION008132000000000000000"></A><A NAME="8501"></A>
 <BR>
 7.13.2 <TT>antivirus_args</TT>
 </H2> 
@@ -2194,7 +2196,7 @@ antivirus_args  --stdout
 
 <P>
 
-<H2><A NAME="SECTION008133000000000000000"></A><A NAME="8472"></A>
+<H2><A NAME="SECTION008133000000000000000"></A><A NAME="8504"></A>
 <BR>
 7.13.3 <TT>antivirus_notify</TT>
 </H2> <TT>sender</TT> | <TT>nobody</TT>
@@ -2239,7 +2241,7 @@ detected.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-03-03
+2006-03-15
 </ADDRESS>
 </BODY>
 </HTML>

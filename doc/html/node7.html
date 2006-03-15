@@ -76,21 +76,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HR>
 
 <H1><A NAME="SECTION00700000000000000000"></A>
-    <A NAME="aliases"></A>    <A NAME="708"></A>
+    <A NAME="aliases"></A>    <A NAME="724"></A>
 <BR>
 6. Mail aliases
 </H1>
 
 <P>
-Mail aliases are required in Sympa for <A NAME="7629"></A><TT>sympa.pl</TT> to receive mail commands and 
-list messages. Management of these aliases management will depend on the MTA (<A NAME="7632"></A><TT>sendmail</TT>, <A NAME="7635"></A><TT>qmail</TT>,
-<A NAME="7638"></A><TT>postfix</TT>, <A NAME="7641"></A><TT>exim</TT>) you're using, where you store aliases and whether
+Mail aliases are required in Sympa for <A NAME="7661"></A><TT>sympa.pl</TT> to receive mail commands and 
+list messages. Management of these aliases management will depend on the MTA (<A NAME="7664"></A><TT>sendmail</TT>, <A NAME="7667"></A><TT>qmail</TT>,
+<A NAME="7670"></A><TT>postfix</TT>, <A NAME="7673"></A><TT>exim</TT>) you're using, where you store aliases and whether
 you are managing virtual domains or not.
 
 <P>
 
 <H1><A NAME="SECTION00710000000000000000"></A>
-   <A NAME="robot-aliases"></A>    <A NAME="716"></A>
+   <A NAME="robot-aliases"></A>    <A NAME="732"></A>
 <BR>
 6.1 Robot aliases
 </H1>
@@ -104,12 +104,12 @@ An electronic list manager such as <I>Sympa</I> is built around two processing s
 <LI>a message sent to a list or to <I>Sympa</I> itself
         (commands such as subscribe or unsubscribe) is received
         by the SMTP server. The SMTP server, on reception of this message, runs the
-        <A NAME="7646"></A><TT>queue</TT> program (supplied in this package) to store
+        <A NAME="7678"></A><TT>queue</TT> program (supplied in this package) to store
         the message in a spool.
 
 <P>
 </LI>
-<LI>the <A NAME="7649"></A><TT>sympa.pl</TT> daemon, set in motion at
+<LI>the <A NAME="7681"></A><TT>sympa.pl</TT> daemon, set in motion at
         system startup, scans this spool. As soon as it
         detects a new message, it processes it and performs the
         requested action (distribution or processing of a command).
@@ -123,8 +123,8 @@ To separate the processing of commands (subscription,
 unsubscription, help requests, etc.) from the processing of messages destined for mailing
 lists, a special mail alias is reserved for administrative requests, so
 that <I>Sympa</I> can be permanently accessible to users. The following
-lines must therefore be added to the <A NAME="7653"></A><TT>sendmail</TT> alias file
-(often <A NAME="7656"></A><TT>/etc/aliases</TT>):
+lines must therefore be added to the <A NAME="7685"></A><TT>sendmail</TT> alias file
+(often <A NAME="7688"></A><TT>/etc/aliases</TT>):
 
 <P>
 <BLOCKQUOTE>
@@ -147,7 +147,7 @@ page&nbsp;<A HREF="node15.html#virtual-robot"><IMG  ALIGN="BOTTOM" BORDER="1" AL
 
 <P>
 <TT>sympa-request</TT> should be the address of the robot
-<A NAME="7662"></A>administrator, i.e. a person who looks after
+<A NAME="7694"></A>administrator, i.e. a person who looks after
 <I>Sympa</I> (here <TT>postmastercru.fr</TT>).
 
 <P>
@@ -157,11 +157,11 @@ messages.
 <P>
 The alias bounce+* is dedicated to collect bounces where VERP (variable envelope return path) was actived. It is useful
 if <TT> welcome_return_path unique </TT> or <TT> remind_return_path unique</TT> or the
-<A NAME="7668"></A><TT>verp_rate</TT> parameter is no null for at least one list.
+<A NAME="7700"></A><TT>verp_rate</TT> parameter is no null for at least one list.
 
 <P>
-Don't forget to run <A NAME="7671"></A><TT>newaliases</TT> after any change to
-the <A NAME="7674"></A><TT>/etc/aliases</TT> file!
+Don't forget to run <A NAME="7703"></A><TT>newaliases</TT> after any change to
+the <A NAME="7706"></A><TT>/etc/aliases</TT> file!
 
 <P>
 Note: aliases based on <TT>listserv</TT> (in addition to those
@@ -179,8 +179,8 @@ listserv-owner:    sympa-owner
 <P>
 
 <H1><A NAME="SECTION00720000000000000000"></A>
-<A NAME="list-aliases"></A>    <A NAME="747"></A>
-    <A NAME="748"></A>
+<A NAME="list-aliases"></A>    <A NAME="763"></A>
+    <A NAME="764"></A>
 <BR>
 6.2 List aliases
 </H1>
@@ -240,24 +240,24 @@ aliases must be added:
 <P>
 The address <TT>mylist-request</TT> should correspond
 to the person responsible for managing <TT>mylist</TT>
-(the <A NAME="7691"></A>owner).  <I>Sympa</I> will forward messages for
+(the <A NAME="7723"></A>owner).  <I>Sympa</I> will forward messages for
 <TT>mylist-request</TT> to the owner of <TT>mylist</TT>,
-as defined in the <A NAME="7695"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>
+as defined in the <A NAME="7727"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>
 file.  Using this feature means you would not need to modify the
 alias file if the owner of the list were to change.
 
 <P>
 Similarly, the address <TT>mylist-editor</TT> can be used
 to contact the list editors if any are defined in
-<A NAME="7699"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>.  This address definition
+<A NAME="7731"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>.  This address definition
 is not compulsory.
 
 <P>
 The address <TT>mylist-owner</TT> is the address receiving
 non-delivery reports (note that the -owner suffix can be customized, 
 see&nbsp;<A HREF="node8.html#kw-return-path-suffix">7.8.4</A>, page&nbsp;<A HREF="node8.html#kw-return-path-suffix"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-The <A NAME="7703"></A><TT>bouncequeue</TT> program stores these messages 
-in the <A NAME="7706"></A><TT>queuebounce</TT> directory. <A NAME="7709"></A><I>WWSympa</I> ((see&nbsp;<A HREF="node2.html#wwsympa">1.2</A>, page&nbsp;<A HREF="node2.html#wwsympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+The <A NAME="7735"></A><TT>bouncequeue</TT> program stores these messages 
+in the <A NAME="7738"></A><TT>queuebounce</TT> directory. <A NAME="7741"></A><I>WWSympa</I> ((see&nbsp;<A HREF="node2.html#wwsympa">1.2</A>, page&nbsp;<A HREF="node2.html#wwsympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 may then analyze them and provide a web access to them.
 
 <P>
@@ -280,7 +280,7 @@ be for you to manage your list!
 </H1>	
 
 <P>
-The <A NAME="7714"></A><TT>alias_manager.pl</TT> script does aliases management. It is run by <A NAME="7717"></A><I>WWSympa</I> and
+The <A NAME="7746"></A><TT>alias_manager.pl</TT> script does aliases management. It is run by <A NAME="7749"></A><I>WWSympa</I> and
  will install aliases for a new list and delete aliases for closed lists. 
 
 <P>
@@ -294,25 +294,25 @@ The script expects the following arguments :
 <LI><TT>&lt;</TT>list domain<TT>&gt;</TT>
 </LI>
 </OL>
-Example : <A NAME="7720"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl add mylistcru.fr</TT>
+Example : <A NAME="7752"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl add mylistcru.fr</TT>
 
 <P>
-<A NAME="7723"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="7726"></A><TT>sympa.conf</TT>)
-by the <A NAME="7729"></A>SENDMAIL_ALIASES  variable (default is <A NAME="7730"></A><TT>/etc/mail/sympa_aliases</TT>) in the main Makefile (see <A HREF="node4.html#makefile">3.3</A>,  page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). You must refer to this aliases file in your <A NAME="7733"></A><TT>sendmail.mc</TT> (if using sendmail) :<PRE>
+<A NAME="7755"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="7758"></A><TT>sympa.conf</TT>)
+by the <A NAME="7761"></A>SENDMAIL_ALIASES  variable (default is <A NAME="7762"></A><TT>/etc/mail/sympa_aliases</TT>) in the main Makefile (see <A HREF="node4.html#makefile">3.3</A>,  page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). You must refer to this aliases file in your <A NAME="7765"></A><TT>sendmail.mc</TT> (if using sendmail) :<PRE>
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 </PRE>
 
 <P>
-<A NAME="7736"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> runs a <A NAME="7739"></A><TT>newaliases</TT> command (via <A NAME="7742"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
+<A NAME="7768"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> runs a <A NAME="7771"></A><TT>newaliases</TT> command (via <A NAME="7774"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
 
 <P>
 If you manage virtual domains with your mail server, then you might want to change
-the form of aliases used by the alias_manager. You can customize the <A NAME="7745"></A><TT>list_aliases</TT>
+the form of aliases used by the alias_manager. You can customize the <A NAME="7777"></A><TT>list_aliases</TT>
 template that is parsed to generate list aliases (see<A HREF="node18.html#list-aliases-tpl">17.8.8</A>,  
 page&nbsp;<A HREF="node18.html#list-aliases-tpl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
-<A NAME="ldap-aliases"></A>L. Marcotte has written a version of <A NAME="7748"></A><TT>alias_manager.pl</TT> that is LDAP enabled.
+<A NAME="ldap-aliases"></A>L. Marcotte has written a version of <A NAME="7780"></A><TT>alias_manager.pl</TT> that is LDAP enabled.
 Check the contrib. page for more information : <A NAME="tex2html18"
   HREF="http://sympa.org/contrib.html">http://sympa.org/contrib.html</A>.
 
@@ -325,13 +325,13 @@ Check the contrib. page for more information : <A NAME="tex2html18"
 </H1>	
 
 <P>
-When using virtual domains with <A NAME="7751"></A><TT>sendmail</TT> or <A NAME="7754"></A><TT>postfix</TT>, you can't
+When using virtual domains with <A NAME="7783"></A><TT>sendmail</TT> or <A NAME="7786"></A><TT>postfix</TT>, you can't
 refer to  <TT>mylist@my.domain.org</TT> on the right-hand side of an 
-<A NAME="7758"></A><TT>/etc/aliases</TT> entry. You need to define an additional entry in a virtual table.
+<A NAME="7790"></A><TT>/etc/aliases</TT> entry. You need to define an additional entry in a virtual table.
 You can also add a unique entry, with a regular expression, for your domain. 
 
 <P>
-With Postfix, you should edit the <A NAME="7761"></A><TT>/etc/postfix/virtual.regexp</TT> file as follows :
+With Postfix, you should edit the <A NAME="7793"></A><TT>/etc/postfix/virtual.regexp</TT> file as follows :
 <BLOCKQUOTE>
 /<code>^</code>(.*)@my.domain.org$/	 my.domain.org-$1
 
@@ -345,7 +345,7 @@ my.domain.org-sympa:   "|/usr/local/sympa-os/bin/sympa.pl sympa@my.domain.org"
 </BLOCKQUOTE>
 
 <P>
-With Sendmail, add the following entry to <A NAME="7764"></A><TT>/etc/mail/virtusertable</TT> file :
+With Sendmail, add the following entry to <A NAME="7796"></A><TT>/etc/mail/virtusertable</TT> file :
 <BLOCKQUOTE>
 @my.domain.org       my.domain.org-%1%3
 
@@ -384,7 +384,7 @@ With Sendmail, add the following entry to <A NAME="7764"></A><TT>/etc/mail/virtu
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-03-03
+2006-03-15
 </ADDRESS>
 </BODY>
 </HTML>
