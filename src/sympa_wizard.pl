@@ -275,7 +275,7 @@ my @params = ({'title' => 'Directories and file location'},
 
 	      {'name' => 'nrcpt',
 	       'default' => '25',
-	       'query' => 'Maximum number of recipients per call to Sendmail',
+	       'query' => 'Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf file allows a different tuning per destination domain.',
 	       'file' => 'sympa.conf',
 	       'advice' =>''},
 
