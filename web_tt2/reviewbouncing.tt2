@@ -47,11 +47,12 @@
 	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]"></a>
         [% END %]
     </td></tr>
-    <tr><td><input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" />
-    </td></tr>
     </table>
 
-    <table border="1">
+     <form name="myform" action="[% path_cgi %]" method="post">
+     <input type="hidden" name="list" value="[% list %]" /> 	 
+     <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
+     <table border="1">
       <tr>
 	<th>X</th>
         <th>[%|loc%]Email[%END%]</th>
