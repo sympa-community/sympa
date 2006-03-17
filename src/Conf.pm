@@ -565,6 +565,27 @@ sub load_robots {
     return ($robot_conf);
 }
 
+## Check required files and create them if required
+sub checkfiles_as_root {
+
+    ## Check aliases file
+    unless (-f $Conf{'sendmail_aliases'}) {
+	unless (open ALIASES, ">$Conf{'sendmail_aliases'}") {
+	    &do_log('err',"Failed to create aliases file %s", $Conf{'sendmail_aliases'});
+	    return undef;
+	}
+
+	print ALIASES "## This aliases file is dedicated to Sympa Mailing List Manager\n";
+	print ALIASES "## You should edit your sendmail.mc or sendmail.cf file to declare it\n";
+	close ALIASES;
+	&do_log('notice', "Created missing file %s", $Conf{'sendmail_aliases'});
+	`chown --USER--.--GROUP-- $Conf{'sendmail_aliases'}`;
+	chmod 0644, $Conf{'sendmail_aliases'}
+	
+    }
+
+}
+
 ## Check a few files
 sub checkfiles {
     my $config_err = 0;
