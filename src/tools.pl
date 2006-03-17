@@ -1397,11 +1397,13 @@ sub virus_infected {
 	}
 
 	## Clam antivirus
-    }elsif ("${Conf{'antivirus_path'}}" =~ /\/clamscan$/) {
+    }elsif ("${Conf{'antivirus_path'}}" =~ /\/clamd?scan$/) {
 	
         open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
 	
+	my $result;
 	while (<ANTIVIR>) {
+	    $result .= $_; chomp $result;
 	    if (/^\S+:\s(.*)\sFOUND$/) {
 		$virusfound = $1;
 	    }
@@ -1414,6 +1416,10 @@ sub virus_infected {
 	if (( $status == 1) and not($virusfound)) {
 	    $virusfound = "unknown";
 	}
+
+	$error_msg = $result
+	    if ($status != 0 && $status != 1);
+
     }         
 
     ## Error while running antivir, notify listmaster
