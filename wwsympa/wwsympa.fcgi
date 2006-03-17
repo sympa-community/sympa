@@ -5560,7 +5560,11 @@ sub do_viewmod {
      }
 
      ## Access control
-     return undef unless (defined &check_authz('do_arc', 'web_archive.access'));
+     unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	 $param->{'previous_action'} = 'arc';
+	 $param->{'previous_list'} = $list->{'name'};
+	 return undef;
+     }
 
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
 	 ## Reject Email Sniffers
