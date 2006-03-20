@@ -1748,8 +1748,8 @@ template that is parsed to generate list aliases (see\ref {list-aliases-tpl},
 page~\pageref {list-aliases-tpl}).
 
 \label {ldap-aliases}
-L. Marcotte has written a version of \file {alias\_manager.pl} that is LDAP enabled.
-Check the contrib. page for more information : \htmladdnormallink {http://sympa.org/contrib.html} {http://sympa.org/contrib.html}.
+A L. Marcotte has written a version of \file {ldap\_alias\_manager.pl} that is LDAP enabled.
+This script is distributed with Sympa distribution ; it needs to be customized with your LDAP parameters.
 
 %\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
 %variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via

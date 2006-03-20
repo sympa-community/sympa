@@ -212,6 +212,12 @@ if ($main::options{'service'} eq 'process_message') {
     $main::daemon_usage = 'command_and_message'; # default is to run one sympa.pl server for both commands and message 
 }
 
+## Check for several files.
+unless (&Conf::checkfiles_as_root()) {
+   fatal_err("Missing files. Aborting.");
+   ## No return.
+}
+
 if ($signal ne 'hup') {
     ## Put ourselves in background if we're not in debug mode. That method
     ## works on many systems, although, it seems that Unix conceptors have
