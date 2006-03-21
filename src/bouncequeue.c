@@ -39,11 +39,11 @@ static int      i, fd;
 # define CONFIG		"/etc/sympa.conf"
 #endif
 
-unsigned char *
+char *
 readconf(char *file)
 {
    FILE			*f;
-   unsigned char	buf[16384], *p, *r, *s;
+   char	buf[16384], *p, *r, *s;
 
    r = NULL;
    if ((f = fopen(file, "r")) != NULL) {
@@ -51,7 +51,7 @@ readconf(char *file)
 	/* Search for the configword "queuebounce" and a whitespace after it */
 	if (strncmp(buf, "queuebounce", 11) == 0 && isspace(buf[11])) {
             /* Strip the ending \n */
-            if ((p = (unsigned char *)strrchr((char *)buf, '\n')) != NULL)
+            if ((p = strrchr((char *)buf, '\n')) != NULL)
                *p = '\0';
             p = buf + 11;
             while (*p && isspace(*p)) p++;
@@ -82,8 +82,8 @@ readconf(char *file)
 int
 main(int argn, char **argv)
 {
-   unsigned char	*bouncedir;
-   unsigned char        *listname;
+   char	*bouncedir;
+   char        *listname;
    unsigned int		priority;
    int			firstfrom = 0;
 
