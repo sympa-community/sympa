@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.2b}
+    \newcommand {\version} {5.2b.1}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2b\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2b.1\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {14 March 2006}
+    \date {21 March 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1744,8 +1744,8 @@ template that is parsed to generate list aliases (see\ref {list-aliases-tpl},
 page~\pageref {list-aliases-tpl}).
 
 \label {ldap-aliases}
-L. Marcotte has written a version of \file {alias\_manager.pl} that is LDAP enabled.
-Check the contrib. page for more information : \htmladdnormallink {http://sympa.org/contrib.html} {http://sympa.org/contrib.html}.
+A L. Marcotte has written a version of \file {ldap\_alias\_manager.pl} that is LDAP enabled.
+This script is distributed with Sympa distribution ; it needs to be customized with your LDAP parameters.
 
 %\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
 %variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
@@ -2757,6 +2757,14 @@ have no corresponding entries in the \textindex {subscriber\_table} table.
 
 	The decrementation factor (\texttt {from 0 to 1}), used to
 	determine the new report counter after expiration of the delay.
+
+\subsection {\cfkeyword {loop\_prevention\_regex}} 
+
+	\default {mailer-daemon|sympa|listserv|majordomo|smartlist|mailman}
+
+	
+	This regular expression is applied to messages sender address. If the sender address matches the regular expression, then
+	the message is rejected. The goal of this parameter is to prevent loops between Sympa and other robots.
 
 \section {S/MIME configuration}
 
@@ -9086,7 +9094,15 @@ custom header lines in the configuration file at the same time.
 RFC2369 compliant header fields (List-xxx) to be added to distributed messages. 
 These header-fields should be implemented by MUA's, adding menus.
 
-\example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
+\subsection {loop\_prevention\_regex}
+    	\label {par-loop-prevention-regex}
+    	\index{loop-prevention-regex}
+
+	\default {\cfkeyword {loop\_prevention\_regex} sympa.conf parameter}
+	\lparam {loop\_prevention\_regex} \textit {mailer-daemon|sympa|listserv|majordomo|smartlist|mailman}
+
+This regular expression is applied to messages sender address. If the sender address matches the regular expression, then
+the message is rejected. The goal of this parameter is to prevent loops between Sympa and other robots.
 
 \subsection {custom\_subject}
 

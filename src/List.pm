@@ -921,6 +921,12 @@ my %alias = ('reply-to' => 'reply_to',
 				       'internal' => 1,
 				       'group' => 'other'
  				       },
+	    'loop_prevention_regex' => {'format' => '\S*',
+					'length' => 70,
+					'default' => {'conf' => 'loop_prevention_regex'},
+					'gettext_id' => "Regular expression applied to prevent loops with robots",
+					'group' => 'other'
+					},
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
 			   'unit' => 'bytes',

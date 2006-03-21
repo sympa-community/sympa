@@ -2766,6 +2766,14 @@ have no corresponding entries in the \textindex {subscriber\_table} table.
 	The decrementation factor (\texttt {from 0 to 1}), used to
 	determine the new report counter after expiration of the delay.
 
+\subsection {\cfkeyword {loop\_prevention\_regex}} 
+
+	\default {mailer-daemon|sympa|listserv|majordomo|smartlist|mailman}
+
+	
+	This regular expression is applied to messages sender address. If the sender address matches the regular expression, then
+	the message is rejected. The goal of this parameter is to prevent loops between Sympa and other robots.
+
 \section {S/MIME configuration}
 
 \Sympa can optionally verify and use S/MIME signatures for security purposes.
@@ -8013,7 +8021,15 @@ custom header lines in the configuration file at the same time.
 RFC2369 compliant header fields (List-xxx) to be added to distributed messages. 
 These header-fields should be implemented by MUA's, adding menus.
 
-\example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
+\subsection {loop\_prevention\_regex}
+    	\label {par-loop-prevention-regex}
+    	\index{loop-prevention-regex}
+
+	\default {\cfkeyword {loop\_prevention\_regex} sympa.conf parameter}
+	\lparam {loop\_prevention\_regex} \textit {mailer-daemon|sympa|listserv|majordomo|smartlist|mailman}
+
+This regular expression is applied to messages sender address. If the sender address matches the regular expression, then
+the message is rejected. The goal of this parameter is to prevent loops between Sympa and other robots.
 
 \subsection {custom\_subject}
 

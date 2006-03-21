@@ -963,20 +963,12 @@ sub DoFile {
     ## Strip of the initial X-Sympa-To field
     $hdr->delete('X-Sympa-To');
     
-    ## Loop prevention
-    my $conf_email = &Conf::get_robot_conf($robot, 'email');
-    my $conf_host = &Conf::get_robot_conf($robot, 'host');
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|mailman|majordomo|smartlist|$conf_email)(\@|$)/mio) {
-	&do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
-	return undef;
-    }
-	
     ## Initialize command report
     &report::init_report_cmd();
 	
-    ## Q- and B-decode subject
-    my $subject_field = $message->{'decoded_subject'};
     my $list_address;
+    my $conf_email = &Conf::get_robot_conf($robot, 'email');
+    my $conf_host = &Conf::get_robot_conf($robot, 'host');
 
     my ($list, $host, $name);   
     if ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
@@ -1000,6 +992,18 @@ sub DoFile {
 	}
     }
     
+    ## Loop prevention
+   my $conf_loop_prevention_regex;
+    $conf_loop_prevention_regex = $list->{'admin'}{'loop_prevention_regex'};
+    $conf_loop_prevention_regex ||= &Conf::get_robot_conf($robot, 'loop_prevention_regex');
+    if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mio) {
+	&do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
+	return undef;
+    }
+	
+    ## Q- and B-decode subject
+    my $subject_field = $message->{'decoded_subject'};
+
     ## Loop prevention
     my $loop;
     foreach $loop ($hdr->get('X-Loop')) {
@@ -1354,7 +1358,8 @@ sub DoMessage{
     &do_log('info', "Processing message for %s with priority %s, %s", $listname,$list->{'admin'}{'priority'}, $messageid );
     
     my $conf_email = &Conf::get_robot_conf($robot, 'sympa');
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$conf_email)(\@|$)/mio) {
+    my $conf_loop_prevention_regex = $list->{'admin'}{'loop_prevention_regex'};
+    if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mio) {
 	do_log('notice', 'Ignoring message which would cause a loop');
 	return undef;
     }

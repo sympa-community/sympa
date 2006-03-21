@@ -45,7 +45,7 @@ my @valid_options = qw(
 		       owner_priority pidfile pidfile_distribute
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest 
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir
-		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
+		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
 		       purge_user_table_task  purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
@@ -147,6 +147,7 @@ my %Default_Conf =
      'loop_command_max' => 200,
      'loop_command_sampling_delay' => 3600,
      'loop_command_decrease_factor' => 0.5,
+     'loop_prevention_regex' => 'mailer-daemon|sympa|listserv|majordomo|smartlist|mailman',
      'rfc2369_header_fields' => 'help,subscribe,unsubscribe,post,owner,archive',
      'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
      'antivirus_path' => '',
@@ -473,6 +474,7 @@ sub load_robots {
 				  supported_lang => 1,
 				  default_shared_quota => 1,
 				  verp_rate => 1,
+				  loop_prevention_regex => 1,
 				  );
 
     ## Load wwsympa.conf
