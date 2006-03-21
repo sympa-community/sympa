@@ -13178,7 +13178,6 @@ sub d_test_existing_and_rights {
 		 $param->{'which'}{$l}{'included'} =  $list->{'user'}{'included'} if ($list->{'user'}{'included'} == 1)  ;
 		 $param->{'which'}{$l}{'subscribed'} = $list->{'user'}{'subscribed'} if ($list->{'user'}{'subscribed'} == 1);
 		 my $un = $list->{'user'}{'subscribed'};
-		 &wwslog('info','xxxxxxxxxx do_search_user: subscribed %s, %s', $param->{'which'}{$l}{'subscribed'}, $un);
 #		 $param->{'which'}{$l}{'subscribed'} = 1;
 
 	     }elsif  ($role eq 'owner') {
