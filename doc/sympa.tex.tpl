@@ -2339,6 +2339,13 @@ files. The server admin module include a CSS administration page that can help y
         queue.  Beyond this deadline, messages not enabled are
         deleted.
 
+\subsection {\cfkeyword {clean\_delay\_queuesubscribe}}  
+
+	\default {10}
+
+        Expiration delay (in days) in the \textindex {subscription requests}
+        queue.  Beyond this deadline, requests not validated are deleted.
+
 \subsection {\cfkeyword {clean\_delay\_queuetopic}}  
 
 	\default {7}

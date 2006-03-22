@@ -36,7 +36,7 @@ use Carp;
 
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
-		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuetopic default_remind_task
+		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queuetopic default_remind_task
 		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
@@ -108,6 +108,7 @@ my %Default_Conf =
      'clean_delay_queue'    => 1,
      'clean_delay_queuemod' => 10,
      'clean_delay_queuetopic' => 7,
+     'clean_delay_queuesubscribe' => 10,
      'clean_delay_queueauth' => 3,
      'log_socket_type'      => 'unix',
      'log_smtp'      => '',

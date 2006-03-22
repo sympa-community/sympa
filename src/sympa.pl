@@ -711,6 +711,8 @@ while (!$signal) {
 	    &CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
 	    &CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
 	    &CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
+	    &CleanSpool($Conf{'tmpdir'}, 7);
+	    &CleanSpool($Conf{'queuesubscribe'}, $Conf{'clean_delay_queuesubscribe'});
 	}
     }
     my $filename;
