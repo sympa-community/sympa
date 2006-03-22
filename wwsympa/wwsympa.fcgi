@@ -428,6 +428,7 @@ my %in_regexp = (
 		 'content' => '.+',
 		 'body' => '.+',
 		 'info' => '.+',
+		 'new_scenario_content' => '.+',
 
 		 ## Integer
 		 'page' => '\d+',
@@ -13486,8 +13487,41 @@ sub do_dump_scenario {
 	 &wwslog('info','do_dump_scenario: reject because not listmaster');
 	 return undef;
      }
+
      ($param->{'dumped_scenario'}, $param->{'scenario_path'}) =  &List::_load_scenario_file($in{'pname'},$robot,$list->{'admin'}{$in{'pname'}}{'name'},$list->{'dir'},'flush');
-     $param->{'parameter'} = $in{'pname'};
+     $param->{'pname'} = $in{'pname'};
+     $param->{'scenario_name'} = $list->{'admin'}{$in{'pname'}}{'name'};
+     
+     if ($in{'new_scenario_name'}) {
+	 # in this case it's a submit.
+	 my $scenario_dir = $list->{'dir'}.'/scenari/';
+	 my $scenario_file = $scenario_dir.$in{'pname'}.'.'.$in{'new_scenario_name'} ;
+	 if ($param->{'dumped_scenario'} eq $in{'new_scenario_content'}){
+	     &wwslog('info','do_dump_scenario: scenario unchanged');
+	     $param->{'result'} = 'unchanged';
+	     return 1;
+	 }
+	 unless (-d $scenario_dir) {
+	     unless (mkdir ($scenario_dir, 0777)) {
+		 &do_log('err',"do_dump_scenario: cannot_create_dir %s : %s ", $scenario_dir, $!);
+		 &report::reject_report_web('intern','cannot_create_dir',{'file' => $scenario_dir,$param->{'action'},'',$param->{'user'}{'email'}},$robot);
+		 return undef;
+	     }
+	 }
+	 unless (open SCENARIO , ">$scenario_file") {
+	     &wwslog('info','do_dump_scenario: cannot_open_file %s', $scenario_file);
+	     &report::reject_report_web('intern','cannot_open_file',{'file' => $scenario_file,$param->{'action'},'',$param->{'user'}{'email'}},$robot);
+	     return undef;
+	 }
+	 print SCENARIO $in{'new_scenario_content'};
+	 close   SCENARIO;  
+	 # load the new scenario in the list config.
+         if ($in{'new_scenario_name'} eq $in{'scenario_name'}) { 
+	     $param->{'result'} = 'success';
+	 }else{
+	      $param->{'result'} = 'success_new_name';
+	 }
+     }
      return 1 ;
 }
 

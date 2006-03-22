@@ -7915,7 +7915,6 @@ sub _load_scenario {
     my @scenario;
     my @rules = split /\n/, $paragraph;
 
-    
 
     ## Following lines are ordered
     push(@scenario, 'scenario');
