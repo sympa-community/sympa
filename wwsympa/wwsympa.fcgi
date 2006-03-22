@@ -13486,8 +13486,7 @@ sub do_dump_scenario {
 	 &wwslog('info','do_dump_scenario: reject because not listmaster');
 	 return undef;
      }
-     my $result = $list->check_list_authz($in{'pname'},'smtp',{},'dump');
-     $param->{'rules'} =  ($result->{'condition'},$result->{'auth_method'},$result->{'action'});
+     ($param->{'dumped_scenario'}, $param->{'scenario_path'}) =  &List::_load_scenario_file($in{'pname'},$robot,$list->{'admin'}{$in{'pname'}}{'name'},$list->{'dir'},'flush');
      $param->{'parameter'} = $in{'pname'};
      return 1 ;
 }

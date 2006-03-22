@@ -1,8 +1,11 @@
 <!-- begin dump_scenario.tt2 -->
-<h2 class='block'>[% parameter %]</h2>
+<div id="ActionHeader">
+  <h2 class='block'>[% parameter %]</h2>
+  <span style="text-align: center;">(path: [% scenario_path %])</span>
+</div>
 <font size="-2">
 <pre>
-[% rules %]
+[% dumped_scenario %]
 </pre>
 </font>
 <!-- end dump_scenario.tt2 -->

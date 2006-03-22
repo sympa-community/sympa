@@ -7857,17 +7857,17 @@ sub get_nextdigest {
 }
 
 ## load a scenario if not inline (in the list configuration file)
+# if $flush defined  -> return the file content and file path
 sub _load_scenario_file {
-    my ($function, $robot, $name, $directory)= @_;
+    my ($function, $robot, $name, $directory, $flush)= @_;
     ## Too much log
-    do_log('debug3', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $robot, $name, $directory);
+    # do_log('debug3', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $robot, $name, $directory);
 
     my $structure;
     
     ## List scenario
 
-   
-    # sa tester le chargement de scenario spÅÈcifique Å‡ un rÅÈpertoire du shared
+    # sa tester le chargement de scenario spÈcifique ‡ un rÈpertoire du shared
     my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
 	## Robot scenario
@@ -7887,6 +7887,15 @@ sub _load_scenario_file {
 	    }
 	}
     }
+    if (defined $flush) {
+	my $content ;
+	while (<SCENARI>) {
+	    $content .= $_;
+	}
+        close  SCENARI;
+	return ($content,$scenario_file);
+    }
+
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
     unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
