@@ -1,3 +1,124 @@
+2006-03-22 18:00  sympa-authors
+
+	* src/List.pm, web_tt2/dump_scenario.tt2, wwsympa/wwsympa.fcgi:
+
+	  Listmaster can create or edit scenario with a scope limited to a
+	  list. access tothis feature from "dump scenario" buton in
+	  edit_list_request.
+
+2006-03-22 17:59  sympa-authors
+
+	* web_tt2/rss.tt2: [BugID 545] Fix: XML-escape wired caracters in
+	  RSS feed
+
+2006-03-22 17:26  sympa-authors
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/sympa.pl: [ID 462] Fix: tmp
+	  and subscribe spools were never cleaned
+
+2006-03-22 10:33  sympa-authors
+
+	* src/List.pm, web_tt2/dump_scenario.tt2, wwsympa/wwsympa.fcgi:
+
+	  Fixe bug for view scenario source (listmaster only)
+
+2006-03-22 09:43  sympa-authors
+
+	* po/fr.po: Fixed a typo
+
+2006-03-21 13:43  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Remove traces
+
+2006-03-21 12:36  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/Conf.pm, src/List.pm, src/sympa.pl:
+	  [J.Abbott, Duke University] New feature: added a new
+	  'loop_prevention_regex' parameter
+
+2006-03-21 10:59  sympa-authors
+
+	* src/: bouncequeue.c, queue.c: Change: replaced 'unsigned char'
+	  with 'char' to prevent warnings on FC4
+
+2006-03-20 15:38  sympa-authors
+
+	* doc/sympa.tex.tpl, src/sympa.pl, src/etc/script/Makefile,
+	  src/etc/script/ldap_alias_manager.pl: [F.Lachapelle] New feature:
+	  a LDAP-enabled version of alias_manager.pl is now distributed.
+
+2006-03-17 18:19  sympa-authors
+
+	* src/Conf.pm: [reported by M.Paineau] New feature: Sympa.pl is now
+	  able to create missing sympa_aliases file (as defined by
+	  'sendmail_aliases' sympa.conf parameter)
+
+2006-03-17 18:15  sympa-authors
+
+	* src/tools.pl: [M.Bouissou] Change: extend support to clamDscan
+
+2006-03-17 18:11  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: [N.Duboc] Change: now preserving
+	  attachments filenames in web archives
+
+2006-03-17 18:03  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by G.Younger] Fix: keep track of
+	  the previous 'arc' action when authentication is requested
+
+2006-03-17 14:15  sympa-authors
+
+	* src/List.pm: Fixe S/MIME encryption : in case sender owne 2
+	  certificats : one for encryption, one for signature. When looking
+	  for user cert should check also certificate filename with ".enc"
+	  extention.
+
+2006-03-17 11:20  sympa-authors
+
+	* web_tt2/reviewbouncing.tt2: Fix: Recent changes in the template
+	  broke most actions (del, reset)
+
+2006-03-15 10:23  sympa-authors
+
+	* Makefile.in: Updated
+
+2006-03-15 10:19  sympa-authors
+
+	* .version, ChangeLog, NEWS: Preparing Sympa 5.2b.1
+
+2006-03-15 10:18  sympa-authors
+
+	* src/: sympa_wizard.pl, etc/nrcpt_by_domain.conf: Complete
+	  nrcpt_by_domain documentation
+
+2006-03-15 10:18  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, html/index.html,
+	  html/node1.html, html/node10.html, html/node11.html,
+	  html/node12.html, html/node13.html, html/node14.html,
+	  html/node15.html, html/node16.html, html/node17.html,
+	  html/node18.html, html/node19.html, html/node2.html,
+	  html/node20.html, html/node21.html, html/node22.html,
+	  html/node23.html, html/node24.html, html/node25.html,
+	  html/node26.html, html/node27.html, html/node28.html,
+	  html/node29.html, html/node3.html, html/node30.html,
+	  html/node31.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Updates
+
 2006-03-14 15:53  sympa-authors
 
 	* src/etc/list_task_models/: remind.2month.task,
