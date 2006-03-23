@@ -25,6 +25,17 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%|loc(db_name)%]Cannot connect to database %1, still trying...[%END%]
 
 
+[% ELSIF type == 'db_struct_updated' -%]
+Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(db_name)%]The database structure has been updated ; check log file for further details : [%END%]
+[% FOREACH report_item = report -%]
+  [% report_item %]
+[% END %]
+
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 MIME-Version: 1.0

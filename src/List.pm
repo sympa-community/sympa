@@ -10693,9 +10693,12 @@ sub probe_db {
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap']
 		   );
     
+    ## Report changes to listmaster
+    my @report;
+
     ## Is the Database defined
     unless ($Conf{'db_name'}) {
-	&do_log('info', 'No db_name defined in configuration file');
+	&do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
     unless ($dbh and $dbh->ping) {
@@ -10739,6 +10742,7 @@ sub probe_db {
 		    next;
 		}
 		
+		push @report, sprintf('Table %s created in database %s', $t1, $Conf{'db_name'});
 		&do_log('notice', 'Table %s created in database %s', $t1, $Conf{'db_name'});
 		push @tables, $t1;
 		$real_struct{$t1} = {};
@@ -10768,13 +10772,13 @@ sub probe_db {
     }elsif ($Conf{'db_type'} eq 'Pg') {
 		
 	unless (@tables = $dbh->tables) {
-	    &do_log('info', 'Can\'t load tables list from database %s', $Conf{'db_name'});
+	    &do_log('err', 'Can\'t load tables list from database %s', $Conf{'db_name'});
 	    return undef;
 	}
     }elsif ($Conf{'db_type'} eq 'SQLite') {
  	
  	unless (@tables = $dbh->tables) {
- 	    &do_log('info', 'Can\'t load tables list from database %s', $Conf{'db_name'});
+ 	    &do_log('err', 'Can\'t load tables list from database %s', $Conf{'db_name'});
  	    return undef;
  	}
 	
@@ -10865,7 +10869,7 @@ sub probe_db {
     if (%real_struct) {
 	foreach my $t (keys %{$db_struct{$Conf{'db_type'}}}) {
 	    unless ($real_struct{$t}) {
-		&do_log('info', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf{'db_name'}, $Conf{'db_type'});
+		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf{'db_name'}, $Conf{'db_type'});
 		return undef;
 	    }
 	    
@@ -10873,6 +10877,7 @@ sub probe_db {
 	    
 	    foreach my $f (sort keys %{$db_struct{$Conf{'db_type'}}{$t}}) {
 		unless ($real_struct{$t}{$f}) {
+		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
 		    
 		    my $options;
@@ -10887,6 +10892,7 @@ sub probe_db {
 			return undef;
 		    }
 		    
+		    push @report, sprintf('Field %s added to table %s', $f, $t);
 		    &do_log('info', 'Field %s added to table %s', $f, $t);
 		    $added_fields{$f} = 1;
 
@@ -10905,13 +10911,17 @@ sub probe_db {
 		## Change DB types if different and if update_db_types enabled
 		if ($Conf{'update_db_field_types'} eq 'auto') {
 		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
-			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
+					      $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
+				$f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
 			
 			my $options;
 			if ($not_null{$f}) {
 			    $options .= 'NOT NULL';
 			}
 
+			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
 			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
 			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
 			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
@@ -10919,6 +10929,7 @@ sub probe_db {
 			    return undef;
 			}
 			
+			push @report, sprintf('Field %s in table %s, structur updated', $f, $t);
 			&do_log('info', 'Field %s in table %s, structur updated', $f, $t);
 		    }
 		}else {
@@ -10947,6 +10958,7 @@ sub probe_db {
 		    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
 		    return undef;
 		}
+		push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
 		&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
 
 		## Add primary key
@@ -10955,6 +10967,7 @@ sub probe_db {
 		    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
 		    return undef;
 		}
+		push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
 		&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
 
 
@@ -10968,6 +10981,7 @@ sub probe_db {
 		}
 
 		if ($success) {
+		    push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
 		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
 		}else {
 		    &do_log('err', 'Could not drop PRINDEX, table\'%s\'.', $t);
@@ -10978,6 +10992,7 @@ sub probe_db {
 		    &do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
 		    return undef;
 		}
+		push @report, sprintf('Table %s, INDEX set on %s', $t, $fields);
 		&do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
 
 	    }
@@ -10997,7 +11012,8 @@ sub probe_db {
 	close SCRIPT;
 	my @scripts = split /;\n/,$script;
 
-	&do_log('notice', "Trying to run the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
+	push @report, sprintf("Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
+	&do_log('notice', "Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
 	foreach my $sc (@scripts) {
 	    next if ($sc =~ /^\#/);
 	    unless ($dbh->do($sc)) {
@@ -11017,6 +11033,9 @@ sub probe_db {
 	return undef;
     }
     
+    ## Notify listmaster
+    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report});
+
     return 1;
 }
 
