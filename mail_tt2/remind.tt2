@@ -7,5 +7,7 @@ Content-Transfer-Tncoding: [%|loc%]_encoding_[%END%]
 [%|loc(list.name,list.host,user.email,user.password)%]Your are subscriber of list %1@%2 with  email %3[%END%]
 
 [%|loc%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
+[% IF subscriber.included != 1 %]
 [%|loc%]Unsubscription :[%END%]
 [% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sig [%list.name%] [%user.email%][% END %]
+[%END%]
