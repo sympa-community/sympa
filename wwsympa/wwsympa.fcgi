@@ -5941,7 +5941,7 @@ sub do_remove_arc {
 #
 #################################################### 
  sub do_send_me {
-     &wwslog('info', 'do_send_me : list %s, yyyy %s, mm %s, msgid %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+     &wwslog('info', 'do_send_me(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
      if ($in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
 	 &report::reject_report_web('intern','may_not_send_me',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -5951,7 +5951,6 @@ sub do_remove_arc {
      } 
      ## 
      my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
-     &wwslog('info','send_me: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
 
      opendir ARC, "$arcpath/arctxt";
      my $msgfile;
