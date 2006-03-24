@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {21 March 2006}
+    \date {24 March 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2334,6 +2334,13 @@ files. The server admin module include a CSS administration page that can help y
         Expiration delay (in days) in the \textindex {authentication}
         queue.  Beyond this deadline, messages not enabled are
         deleted.
+
+\subsection {\cfkeyword {clean\_delay\_queuesubscribe}}  
+
+	\default {10}
+
+        Expiration delay (in days) in the \textindex {subscription requests}
+        queue.  Beyond this deadline, requests not validated are deleted.
 
 \subsection {\cfkeyword {clean\_delay\_queuetopic}}  
 
@@ -5361,7 +5368,7 @@ Copy the previous scenario to \file {scenari/subscribe.rennes1} :
 \begin {quote}
 \begin{verbatim}
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
-match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
+match([sender], /univ-rennes1\.fr$/) smtp,smime -> do_it
 true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
@@ -5464,7 +5471,7 @@ Scenarios can also contain includes :
 \begin{verbatim}
     subscribe
         include commonreject
-        match(, /cru\.fr\$/)          smtp,smime -> do_it
+        match(, /cru\.fr$/)          smtp,smime -> do_it
 	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
