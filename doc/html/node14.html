@@ -83,18 +83,18 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HR>
 
 <H1><A NAME="SECTION001400000000000000000"></A>
-<A NAME="scenarios"></A><A NAME="1873"></A>
+<A NAME="scenarios"></A><A NAME="1883"></A>
 <BR>
 13. Authorization scenarios
 </H1>
 
 <P>
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the <A NAME="9016"></A><TT>send private</TT> parameter is related to the send.private scenario.
+For example : the <A NAME="9038"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="9032"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="9041"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9044"></A><TT>/usr/local/sympa-os/etc/scenari</TT>,
-and finally <A NAME="9047"></A><TT>/usr/local/sympa-os/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="9054"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="9063"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9066"></A><TT>/usr/local/sympa-os/etc/scenari</TT>,
+and finally <A NAME="9069"></A><TT>/usr/local/sympa-os/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 An authorization scenario is a small configuration language to describe who
@@ -109,11 +109,11 @@ Each authorization scenario rule contains :
 <LI>a condition : the condition is evaluated by <I>Sympa</I>. It can use
   variables such as sender for the sender e-mail, list for the listname etc.
 </LI>
-<LI>an authentication method. The authentication method can be <A NAME="9051"></A><TT>smtp</TT>,
-<A NAME="9054"></A><TT>md5</TT> or <A NAME="9057"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="9061"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="9065"></A><TT>from:</TT> header , <A NAME="9068"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="9071"></A><TT>smime</TT>
+<LI>an authentication method. The authentication method can be <A NAME="9073"></A><TT>smtp</TT>,
+<A NAME="9076"></A><TT>md5</TT> or <A NAME="9079"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="9083"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="9087"></A><TT>from:</TT> header , <A NAME="9090"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="9093"></A><TT>smime</TT>
 is used for signed messages (see <A HREF="node27.html#smimeforsign">26.4.3</A>, page&nbsp;<A HREF="node27.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 </LI>
 <LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
@@ -250,7 +250,7 @@ It can be used, for example, to require editor validation for multipart messages
 for MIME parts in text/xxx format only.
 
 <P>
-The difference between <A NAME="9075"></A>editor and <A NAME="9076"></A>editorkey is, that with <A NAME="9077"></A>editor the message is simply forwarded to the moderaotr. He then can forward it to the list, if he wishes. <A NAME="9078"></A>editorkey assigns a key to the message and sends it to the moderator together with the message. So the moderator can just send back the key to distribute the message. Please note, that moderation from the webinterface is only possible when using <A NAME="9079"></A>editorkey, because otherwise there is no copy of the message saved on the server. 
+The difference between <A NAME="9097"></A>editor and <A NAME="9098"></A>editorkey is, that with <A NAME="9099"></A>editor the message is simply forwarded to the moderaotr. He then can forward it to the list, if he wishes. <A NAME="9100"></A>editorkey assigns a key to the message and sends it to the moderator together with the message. So the moderator can just send back the key to distribute the message. Please note, that moderation from the webinterface is only possible when using <A NAME="9101"></A>editorkey, because otherwise there is no copy of the message saved on the server. 
 
 <P>
 A bunch of authorization scenarios is provided with the <I>Sympa</I> distribution ; they provide
@@ -259,19 +259,19 @@ probably create authorization scenarios for your own need. In this case, don't f
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 <P>
-These standard authorization scenarios are located in the <A NAME="9082"></A><TT>/usr/local/sympa-os/bin/etc/scenari/</TT>
+These standard authorization scenarios are located in the <A NAME="9104"></A><TT>/usr/local/sympa-os/bin/etc/scenari/</TT>
 directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own authorization scenarios. Store them in the
-<A NAME="9085"></A><TT>/usr/local/sympa-os/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory <A NAME="9100"></A><TT>/usr/local/sympa-os/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9127"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
+<A NAME="9107"></A><TT>/usr/local/sympa-os/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual host (using directory <A NAME="9122"></A><TT>/usr/local/sympa-os/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9149"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
 
 <P>
 Example:
 
 <P>
-Copy the previous scenario to <A NAME="9142"></A><TT>scenari/subscribe.rennes1</TT> :
+Copy the previous scenario to <A NAME="9164"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
@@ -298,7 +298,7 @@ subscribe rennes1
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="9145"></A>LDAP directory thanks to an authorization scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="9167"></A>LDAP directory thanks to an authorization scenario.
 
 <P>
 
@@ -307,7 +307,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="9146"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="9147"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
+People are selected through an <A NAME="9168"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="9169"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
