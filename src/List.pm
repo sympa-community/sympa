@@ -1392,7 +1392,7 @@ sub db_get_handler {
 sub new {
     my($pkg, $name, $robot, $options) = @_;
     my $list={};
-    do_log('debug2', 'List::new(%s,%s)', $name, $robot);
+    do_log('debug2', 'List::new(%s, %s, %s)', $name, $robot, join('/',keys %$options));
     
     ## Allow robot in the name
     if ($name =~ /\@/) {
@@ -1755,7 +1755,7 @@ sub save_config {
 ## Loads the administrative data for a list
 sub load {
     my ($self, $name, $robot, $options) = @_;
-    do_log('debug2', 'List::load(%s, %s)', $name, $robot);
+    do_log('debug2', 'List::load(%s, %s, %s)', $name, $robot, join('/',keys %$options));
     
     my $users;
 

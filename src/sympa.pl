@@ -978,7 +978,7 @@ sub DoFile {
 	$name = $listname;
 	$list_address = $name.'@'.$host;
     }else {
-	$list = new List ($listname, $robot);
+	$list = new List ($listname, $robot, {'reload_config' => 1});
 	unless (defined $list) {
 	    &do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
 	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
