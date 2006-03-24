@@ -2611,7 +2611,8 @@ sub send_msg {
 	    }else{
 		push @tabrcpt_url, $user->{'email'};
 	    }
-	} elsif (($message->{'smime_crypted'}) && (! (-r "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($user->{'email'}) ||  -r "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($user->{'email'}).'.enc'))) {
+	} elsif (($message->{'smime_crypted'}) && (! (-r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) ||  
+						      -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}).'.enc'))) {
 	    ## Missing User certificate
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
 												     'sender' => $message->{'msg'}->head->get('From')}})) {
@@ -3337,7 +3338,8 @@ sub send_msg {
 	    }else{
 		push @tabrcpt_url, $user->{'email'};
 	    }
-	} elsif (($message->{'smime_crypted'}) && (! -r "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($user->{'email'}))) {
+	} elsif (($message->{'smime_crypted'}) && ((! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
+						    (! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'.enc' )))) {
 	    ## Missing User certificate
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
 												     'sender' => $message->{'msg'}->head->get('From')}})) {
