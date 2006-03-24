@@ -706,6 +706,11 @@ a virtual host or for the whole site.
         to a lower value but this will affect all smtp session with any remote MTA. This file is used to limit the number
         of receipient for some particular domains. the file must contain a list of domain followed by the maximum number
         of recipient per SMTP session. Example : 
+
+	\item \file {data\_structure.version}\\
+	This file is automatically created and maintained by Sympa itself. It contains the current version of your Sympa service
+	and is used to detect upgrades and trigger maintenance procedures such as database structure changes.
+
 \begin {quote}
 \begin{verbatim}
      yohaa.com 3
@@ -1356,7 +1361,7 @@ New features, changes and bug fixes are summarized in the \file {NEWS} file, par
 \file {Changelog} file is a complete log file of CVS changes). 
 
 
-Sympa is 10 years old project, so some major changes may need some extra work. The following list is wellkown changes that require some attention :
+Sympa is a long-term project, so some major changes may need some extra work. The following list is well kown changes that require some attention :
 \begin {itemize}
 \item version 5.1 (August 2005) use XHTML and CSS in web templates
 \item version 4.2b3 (August 2004) introduce TT2 template format
@@ -1490,6 +1495,15 @@ Field user_admin added to table admin_table
 \end{verbatim}
 \end {quote}
 
+You might need, for some reason, to make Sympa run the migration procedure from version \textit {X} to version \textit {Y}.
+This procedure is run automatically by \file {sympa.pl} when it detects that \file {[ETCL_DIR]/data\_structure.version} is older 
+than the current version, but you can also run trigger this procedure yourself :
+\begin {quote}
+\begin{verbatim}
+sympa.pl --migrate --from=4.1 --to=5.2
+\end{verbatim}
+\end {quote}
+
 
 \section {Preserving your customizations}
     \index{preserve customizations}
@@ -1559,7 +1573,7 @@ database and play with it. When you decide to move the existing service to the n
 \item stop all sympa processus on both servers, 
 \item transfert the database
 \item edit the \file {[ETCL_DIR]/data\_structure.version} on the new server ; change the version value to reflect the old number
-\item start sympa.pl, it will upgrade the database structure according the hop you do. 
+\item start \file {sympa.pl}, it will upgrade the database structure according the hop you do. 
 \end {enumerate}
 
 
@@ -1769,9 +1783,9 @@ With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as fo
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
-    \samplerobot-sympa:   "|[MAILERPROGDIR]/sympa.pl sympa@\samplerobot"
+    \samplerobot-sympa:   "|[MAILERPROGDIR]/queue sympa@\samplerobot"
     .....
-    \samplerobot-listA:   "|[MAILERPROGDIR]/sympa.pl listA@\samplerobot"
+    \samplerobot-listA:   "|[MAILERPROGDIR]/queue listA@\samplerobot"
 \end {quote}
 
 With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :

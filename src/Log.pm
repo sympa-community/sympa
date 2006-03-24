@@ -77,8 +77,8 @@ sub do_log {
 	    syslog($fac, $m, @_);
     }
     if ($main::options{'foreground'}) {
-	if (!$main::options{'batch'} 
-	    || ($main::options{'batch'} && $fac eq 'err')) {
+	if ($main::options{'log_to_stderr'} || 
+	    ($main::options{'batch'} && $fac eq 'err')) {
 	    $m =~ s/%m/$errno/g;
 	    printf STDERR "$m\n", @_;
 	}

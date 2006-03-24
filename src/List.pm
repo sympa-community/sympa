@@ -11122,6 +11122,28 @@ sub maintenance {
 
     &do_log('notice', "Upgrading from Sympa version %s to %s", $previous_version, $Version::Version);    
 
+    unless (&migrate($previous_version, $Version::Version)) {
+	return undef;
+    }
+
+    ## Saving current version if required
+    unless (open VFILE, ">$version_file") {
+	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf{'etc'}, $!);
+	return undef;
+    }
+    printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
+    printf VFILE "%s\n", $Version::Version;
+    close VFILE;
+
+    return 1;
+}
+
+## Migrate data structure from one version to another
+sub migrate {
+    my ($previous_version, $new_version) = @_;
+
+    &do_log('notice', 'List::migrate(%s, %s)', $previous_version, $new_version);
+    
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     if (&tools::lower_version($previous_version, '4.2a')) {
 
@@ -11465,15 +11487,6 @@ sub maintenance {
 	    }
 	}	
     }
-
-    ## Saving current version if required
-    unless (open VFILE, ">$version_file") {
-	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf{'etc'}, $!);
-	return undef;
-    }
-    printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
-    printf VFILE "%s\n", $Version::Version;
-    close VFILE;
 
     return 1;
 }

@@ -94,6 +94,7 @@ Options:
 
    --close_list=listname\@robot          : close a list
    --sync_include=listname\@robot        : trigger the list members update
+   --migrate --from=X --to=Y             : runs Sympa maintenance script to migrate from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
 
    -h, --help                            : print this help
@@ -110,31 +111,15 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
-		    'input_file=s','sync_include=s')) {
+		    'input_file=s','sync_include=s','migrate','from=s','to=s')) {
     &fatal_err("Unknown options.");
 }
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
-# Some option force foreground mode
-$main::options{'foreground'} = 1 if ($main::options{'debug'} ||
-                                     $main::options{'version'} || 
-				     $main::options{'import'} ||
-				     $main::options{'help'} || 
-				     $main::options{'make_alias_file'} || 
-				     $main::options{'lowercase'} || 
-				     $main::options{'dump'} ||
-				     $main::options{'close_list'} ||
-				     $main::options{'create_list'} ||
-				     $main::options{'instantiate_family'} ||
-				     $main::options{'add_list'} ||
-				     $main::options{'modify_list'} ||
-				     $main::options{'close_family'} ||
-				     $main::options{'sync_include'});
-
 ## Batch mode, ie NOT daemon
- $main::options{'batch'} = 1 if ($main::options{'dump'} || 
+$main::options{'batch'} = 1 if ($main::options{'dump'} || 
 				 $main::options{'help'} ||
 				 $main::options{'version'} || 
 				 $main::options{'import'} || 
@@ -146,7 +131,15 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'add_list'} ||
 				 $main::options{'modify_list'} ||
 				 $main::options{'close_family'} ||
-				 $main::options{'sync_include'});
+				 $main::options{'sync_include'} ||
+				 $main::options{'migrate'}
+				 );
+
+# Some option force foreground mode
+$main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
+
+$main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'migrate'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -566,6 +559,25 @@ if ($main::options{'dump'}) {
     }
 
     printf "Members of list %s have been successfully update.\n", $list->get_list_address();
+    exit 0;
+## Migration from one version to another
+}elsif ($main::options{'migrate'}) {
+
+    unless ($main::options{'from'}) {
+ 	print STDERR "Error : missing 'from' parameter\n";
+ 	exit 1;
+    }
+
+    unless ($main::options{'to'}) {
+ 	print STDERR "Error : missing 'to' parameter\n";
+ 	exit 1;
+    }
+
+    unless (&List::migrate($main::options{'from'}, $main::options{'to'})) {
+	printf STDERR "Migration from %s to %s failed\n", $main::options{'from'}, $main::options{'to'};
+ 	exit 1;
+    }
+
     exit 0;
 }
 
