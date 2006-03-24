@@ -24,8 +24,8 @@
 	password. This will confirm your subscription to list %1[%END%].
 	
         <form action="[% path_cgi %]" method="post">
-          <span style="color: [% dark_color %];"><strong>[%|loc%]e-mail address[%END%]</strong> </span>[% email %]<br />
-	  <span style="color: [% dark_color %];"><strong>[%|loc%]password[%END%]</strong> </span> 
+          <strong>[%|loc%]e-mail address[%END%]</strong> [% email %]<br />
+	  <strong>[%|loc%]password[%END%]</strong> 
   	  <input type="password" name="passwd" size="20" />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% email %]" />
@@ -40,7 +40,7 @@
   [% ELSIF status == 'notauth_noemail' %]
 
          <form action="[% path_cgi %]" method="post">
-          <span style="color: [% dark_color %];"><strong>[%|loc%]Your e-mail address[%END%]</strong> </span>
+          <strong>[%|loc%]Your e-mail address[%END%]</strong> 
 	  <input type="text" name="email" size="30" /><br />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="action" value="subrequest" />
@@ -54,8 +54,8 @@
 	your password below :[%END%]
 
          <form action="[% path_cgi %]" METHOD=POST>
-          <span style="color: [% dark_color %];"><strong>[%|loc%]e-mail address[%END%]</strong> </span>[% email %]<br />
-            <span style="color: [% dark_color %];"><strong>[%|loc%]password[%END%]</strong> </span> 
+          <strong>[%|loc%]e-mail address[%END%]</strong> % email %]<br />
+            <strong>[%|loc%]password[%END%]</strong>
   	  <input type="password" name="passwd" size="20" />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% email %]" />
@@ -67,8 +67,7 @@
 
   [% ELSIF status == 'notauth_subscriber' %]
 
-	<span style="color: [% dark_color %];"><strong>[%|loc(list)%]You are already subscriber of list %1[%END%].</strong>
-	</span>
+	<strong>[%|loc(list)%]You are already subscriber of list %1[%END%].</strong>
 	<br /><br />
 
 

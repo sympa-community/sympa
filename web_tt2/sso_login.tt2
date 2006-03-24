@@ -48,11 +48,11 @@
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 
         <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-         <tr style="background-color: [% light_color %];">
+         <tr style="background-color: [% color_4 %];">
           <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <label><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]email address[%END%] :</span></strong><input type="text" name="email" size="30" value="[% init_email %]" /></label>
-	      <label><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]password[%END%] :</span></strong><input type="password" name="passwd" size="8" /></label>
+     	      <label><strong><span style="font-size: smaller; ">[%|loc%]email address[%END%] :</span></strong><input type="text" name="email" size="30" value="[% init_email %]" /></label>
+	      <label><strong><span style="font-size: smaller;">[%|loc%]password[%END%] :</span></strong><input type="password" name="passwd" size="8" /></label>
 	      &nbsp;&nbsp;
               <input type="submit" name="action_sso_login" value="[%|loc%]Validate Address[%END%]" />
    	    </td>

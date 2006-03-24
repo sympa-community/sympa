@@ -52,7 +52,7 @@
      <form name="myform" action="[% path_cgi %]" method="post">
      <input type="hidden" name="list" value="[% list %]" /> 	 
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
-     <table border="1">
+     <table class="listOfItems">
       <tr>
 	<th>X</th>
         <th>[%|loc%]Email[%END%]</th>
@@ -62,9 +62,9 @@
       [% FOREACH u = members %]
       
 	[% IF dark == '1' %]
-	  <tr style="background-color: [% shaded_color %];">
+	  <tr>
 	[% ELSE %]
-	  <tr style="background-color: [% bg_color %];">
+	  <tr style="background-color: [% color_0 %];">
 	[% END %]
 
 	  <td>

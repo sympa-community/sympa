@@ -11,10 +11,10 @@ a {
 	text-decoration: none;
 }
 a:link {
-	color: [% selected_color %];
+	color: [% color_2 %];
 }
 a:visited {
-	color: [% selected_color %];
+	color: [% color_2 %];
 }
 -->
 </style>
@@ -22,16 +22,16 @@ a:visited {
   <title>[%|loc%]Sympa error - could not display web page[%END%]</title>
 </head>
 
-<body style="background-color: [% bg_color %]; color: [% text_color %];">
+<body style="background-color: [% color_4 %]; color: [% color_2 %];">
 
 <h2>[%|loc%]Sympa could not deliver the requested page for the following reason : [%END%]<br />
 [% IF tt2_error %]
 <em>[% tt2_error %]</em><br /><br />
 [% ELSIF errors %]
           <table>
-          <tr style="background-color: [% error_color %];">
+          <tr style="background-color: [% color_4 %];">
             <td>
-              <span style="color: [% bg_color %];">
+              <span style="color: [% color_4 %];">
        [% PROCESS error.tt2 %]
        </span>
             </td>

@@ -2,8 +2,8 @@
 
   <form action="[% path_cgi %]" method="post">
 
-  [%|loc%]You are subscribed since[%END%] <span style="color: [% dark_color %];">[% subscriber.date %]</span>  <br /><br />
-  [%|loc%]Last update:[%END%] <span style="color: [% dark_color %];">[% subscriber.update_date %]</span>  <br /><br />
+  [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
+  [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
      [%|loc%]Reception mode :[%END%] 
      <select name="reception">
