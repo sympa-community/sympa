@@ -11037,7 +11037,7 @@ sub probe_db {
     }
     
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report});
+    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
 
     return 1;
 }
