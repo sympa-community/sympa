@@ -4604,7 +4604,7 @@ Copy the previous scenario to \file {scenari/subscribe.rennes1} :
 \begin {quote}
 \begin{verbatim}
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
-match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
+match([sender], /univ-rennes1\.fr$/) smtp,smime -> do_it
 true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
@@ -4712,7 +4712,7 @@ Scenarios can also contain includes :
 \begin{verbatim}
     subscribe
         include commonreject
-        match([sender], /cru\.fr\$/)          smtp,smime -> do_it
+        match([sender], /cru\.fr$/)          smtp,smime -> do_it
 	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
