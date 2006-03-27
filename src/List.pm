@@ -11122,7 +11122,7 @@ sub maintenance {
 
     &do_log('notice', "Upgrading from Sympa version %s to %s", $previous_version, $Version::Version);    
 
-    unless (&migrate($previous_version, $Version::Version)) {
+    unless (&upgrade($previous_version, $Version::Version)) {
 	return undef;
     }
 
@@ -11138,11 +11138,11 @@ sub maintenance {
     return 1;
 }
 
-## Migrate data structure from one version to another
-sub migrate {
+## Upgrade data structure from one version to another
+sub upgrade {
     my ($previous_version, $new_version) = @_;
 
-    &do_log('notice', 'List::migrate(%s, %s)', $previous_version, $new_version);
+    &do_log('notice', 'List::upgrade(%s, %s)', $previous_version, $new_version);
     
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     if (&tools::lower_version($previous_version, '4.2a')) {

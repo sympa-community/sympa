@@ -94,7 +94,7 @@ Options:
 
    --close_list=listname\@robot          : close a list
    --sync_include=listname\@robot        : trigger the list members update
-   --migrate --from=X --to=Y             : runs Sympa maintenance script to migrate from version X to version Y
+   --upgrate --from=X --to=Y             : runs Sympa maintenance script to upgrate from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
 
    -h, --help                            : print this help
@@ -111,7 +111,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
-		    'input_file=s','sync_include=s','migrate','from=s','to=s')) {
+		    'input_file=s','sync_include=s','upgrate','from=s','to=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -132,14 +132,14 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				 $main::options{'modify_list'} ||
 				 $main::options{'close_family'} ||
 				 $main::options{'sync_include'} ||
-				 $main::options{'migrate'}
+				 $main::options{'upgrate'}
 				 );
 
 # Some option force foreground mode
 $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
-$main::options{'log_to_stderr'} = 1 if ($main::options{'migrate'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrate'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -561,7 +561,7 @@ if ($main::options{'dump'}) {
     printf "Members of list %s have been successfully update.\n", $list->get_list_address();
     exit 0;
 ## Migration from one version to another
-}elsif ($main::options{'migrate'}) {
+}elsif ($main::options{'upgrate'}) {
 
     unless ($main::options{'from'}) {
  	print STDERR "Error : missing 'from' parameter\n";
@@ -573,7 +573,7 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
 
-    unless (&List::migrate($main::options{'from'}, $main::options{'to'})) {
+    unless (&List::upgrate($main::options{'from'}, $main::options{'to'})) {
 	printf STDERR "Migration from %s to %s failed\n", $main::options{'from'}, $main::options{'to'};
  	exit 1;
     }

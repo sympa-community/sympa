@@ -1500,7 +1500,7 @@ This procedure is run automatically by \file {sympa.pl} when it detects that \fi
 than the current version, but you can also run trigger this procedure yourself :
 \begin {quote}
 \begin{verbatim}
-sympa.pl --migrate --from=4.1 --to=5.2
+sympa.pl --upgrade --from=4.1 --to=5.2
 \end{verbatim}
 \end {quote}
 
