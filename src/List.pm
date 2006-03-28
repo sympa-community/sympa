@@ -450,6 +450,7 @@ my %alias = ('reply-to' => 'reply_to',
 						    }
 				    },
 			   'gettext_id' => "Creation of the list",
+			   'occurrence' => '0-1',
 			   'internal' => 1,
 			   'group' => 'other'
 
