@@ -383,8 +383,9 @@ sub load {
     }else {
 	$Conf{'remove_headers'} = [split(/,/, $Conf{'remove_headers'})];
     }
-
+    $Conf{'listmaster'} =~ s/\s//g ;
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
+
     
     ## Set Regexp for accepted list suffixes
     if (defined ($Conf{'list_check_suffixes'})) {
@@ -518,6 +519,7 @@ sub load_robots {
 	    }
 	}
 	# listmaster is a list of email separated by commas
+	$robot_conf->{$robot}{'listmaster'} =~ s/\s//g;
 	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'})
 	    if $robot_conf->{$robot}{'listmaster'};
 
