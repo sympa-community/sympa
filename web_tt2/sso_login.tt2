@@ -12,7 +12,7 @@
   	  <input type="hidden" name="nomenu" value="[% nomenu %]" />
           <input type="hidden" name="auth_service_name" value="[% server.key %]" />
 
-        <label><strong>[%|loc%]Your e-mail address:</strong> :<br />
+        <label><strong>[%|loc%]Your e-mail address:[%END%]</strong><br />
         [% IF init_email %]
 	  [% email %]
           <input type="text" name="email" value="[% init_email %]" />
