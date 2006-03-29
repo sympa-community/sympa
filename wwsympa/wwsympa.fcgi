@@ -1326,6 +1326,13 @@ sub get_header_field {
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
 	 $in{$p} =~ s/\015//g;	 
 
+	 ## Convert from the web encoding to unicode string
+	 if ($Conf{'web_recode_to'}){ 
+	     if (require "Encode.pm") {
+		 $p = &Encode::decode($Conf{'web_recode_to'}, $p);
+	     }
+	 }
+
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
 	 my $regexp;
