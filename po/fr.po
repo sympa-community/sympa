@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2006-02-27 12:01+0100\n"
+"PO-Revision-Date: 2006-03-29 11:57+0200\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -559,13 +559,13 @@ msgstr ""
 
 #. (init_email)
 #: web_tt2/sso_login.tt2:29
-#, fuzzy
 msgid ""
 "A confirmation password has been sent to your email address %1.<br />Please "
 "check your e-mail box to provide the confirmation password below."
 msgstr ""
-"Votre mot de passe vous a été transmis à l'adresse email %1<br>Relevez votre "
-"boîte aux lettres pour renseigner votre mot de passe ci-dessous."
+"Un mot de passe de confirmation vous a été transmis à l'adresse email %"
+"1<br>Relevez votre boîte aux lettres pour renseigner votre mot de passe ci-"
+"dessous."
 
 #: web_tt2/sso_login.tt2:4
 msgid ""
@@ -573,6 +573,10 @@ msgid ""
 "pressing the button. This will take you to the next screen to confirm that "
 "your address is operational."
 msgstr ""
+"Un mot de passe de confirmation va vous être envoyé à l'adresse email que "
+"vous avez fourni ; cliquez sur le bouton.\n"
+"Vous serez guidé vers la prochaine page pour vérifier que votre adresse "
+"email est opérationnelle."
 
 #. (u_err.path)
 #: web_tt2/error.tt2:97
@@ -1252,7 +1256,7 @@ msgstr "La connexion avec la base de données a été restaurée"
 
 #: mail_tt2/listmaster_notification.tt2:29
 msgid "Database structure updated"
-msgstr ""
+msgstr "La structure de la base de données a été mise à jour"
 
 #: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19
 #: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:98 web_tt2/subindex.tt2:9
@@ -1792,15 +1796,13 @@ msgstr "Impossible de supprimer les alias de messagerie."
 
 #. (i_err.key)
 #: web_tt2/error.tt2:21
-#, fuzzy
 msgid "Failed to update a file."
-msgstr "Impossible de supprimer les alias de messagerie."
+msgstr "Impossible de mettre à jour le fichier."
 
 #. (i_err.key)
 #: web_tt2/error.tt2:20
-#, fuzzy
 msgid "Failed to update database."
-msgstr "Impossible de supprimer les alias de messagerie."
+msgstr "Impossible de mettre à jour la base de données."
 
 # nlsref 8,7
 #: web_tt2/serveradmin.tt2:20
@@ -1866,9 +1868,8 @@ msgstr "Nom du dossier"
 
 #. (conf.wwsympa_url)
 #: mail_tt2/command_report.tt2:184
-#, fuzzy
 msgid "For further information, check the mailing list web site %1"
-msgstr "Pour plus de détails, contactez %1@%2"
+msgstr "Pour plus de détails, consultez le site web du service de listes %1"
 
 #. (list.name,list.host)
 #: mail_tt2/message_report.tt2:17 mail_tt2/message_report.tt2:69
@@ -3628,6 +3629,8 @@ msgstr "Reportez-vous à la documentation pour adapter %1."
 #: src/List.pm:928
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
+"Expression régulière appliquée pour prévenir les boucles avec le robot de "
+"listes"
 
 #: web_tt2/modindex.tt2:127 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:78
 #: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:12
@@ -3963,9 +3966,8 @@ msgid "Selection too wide, can not show selection"
 msgstr "La sélection est trop large, impossible d'afficher la sélection"
 
 #: web_tt2/sso_login.tt2:23
-#, fuzzy
 msgid "Send me a confirmation password"
-msgstr "Envoyez-moi un mot de passe"
+msgstr "Envoyez-moi un mot de passe de confirmation"
 
 #: web_tt2/remindpasswd.tt2:13 web_tt2/sigrequest.tt2:71
 msgid "Send me my password"
@@ -4629,6 +4631,8 @@ msgid ""
 "The database structure has been updated ; check log file for further "
 "details : "
 msgstr ""
+"La structure de la base de données a été mise à jour ; consultez les "
+"journaux pour plus de détails : "
 
 #: web_tt2/help_editlist.tt2:138
 msgid ""
@@ -4797,6 +4801,18 @@ msgid ""
 "to you.  Please press the \"Send me a confirmation password\" to continue to "
 "the confirmation step."
 msgstr ""
+"Le serveur de listes requiert une adresse email valide. Veuillez renseigner\n"
+"votre adresse email ce-dessous. <p><i>Remarque :</i> le formulaire peut être "
+"pré-rempli.\n"
+"Dans ce cas, votre adresse email a été fournie par votre serveur "
+"d'authentification.\n"
+"Dans tous les cas (adresse pré-remplie ou pas), vous devez confirmer qu'il "
+"s'agit\n"
+"d'une adresse valide en fournissant le mot de passe de confirmation reçu par "
+"mail.\n"
+"Veuillez cliquer sur \\\"Envoyer-moi un mot de passe de confirmation\\\" "
+"pour passer à \n"
+"l'étape suivante."
 
 #: web_tt2/rss.tt2:30
 msgid "The most active lists"
@@ -5436,6 +5452,9 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+"Pour terminer la validation de votre compte, vous devez confirmer que votre\n"
+"adresse email est valide. Veuillez saisir les éléments email et mot de\n"
+"passe fournis ci-dessous dans l'assistant pour valider votre compte."
 
 #: web_tt2/subrequest.tt2:6
 msgid ""
@@ -6102,9 +6121,8 @@ msgid "Validate"
 msgstr "Valider"
 
 #: web_tt2/sso_login.tt2:57
-#, fuzzy
 msgid "Validate Address"
-msgstr "Valider"
+msgstr "Valider l'adresse email"
 
 #: web_tt2/editsubscriber.tt2:60
 msgid "View last bounce"
@@ -6652,16 +6670,10 @@ msgstr ""
 msgid "Your e-mail address :"
 msgstr "Votre adresse email :"
 
-#: web_tt2/sso_login.tt2:21
-msgid ""
-"Your e-mail address:</strong> :<br />\n"
-"        [% IF init_email %]\n"
-"\t  [% email %]\n"
-"          <input type=\"text\" name=\"email\" value=\"[% init_email %]\" />\n"
-"\t[% ELSE %]\n"
-"\t  <input type=\"text\" name=\"email\" value=\"\" />\n"
-"\t"
-msgstr ""
+#: web_tt2/sso_login.tt2:15
+#, fuzzy
+msgid "Your e-mail address:"
+msgstr "Votre adresse email :"
 
 #. (user.email,list.name,list.host)
 #: mail_tt2/bye.tt2:7
@@ -6964,9 +6976,8 @@ msgid "authentication requested, notification sent to owner"
 msgstr "authentification demandée, notification du propriétaire"
 
 #: web_tt2/search_user.tt2:20
-#, fuzzy
 msgid "bounce"
-msgstr "Gestion des erreurs"
+msgstr "en erreur"
 
 #: web_tt2/reviewbouncing.tt2:59
 msgid "bounce score"
@@ -7117,7 +7128,6 @@ msgid "default reception format is HTML"
 msgstr "le format de réception par défaut est HTML"
 
 #: web_tt2/search_user.tt2:58
-#, fuzzy
 msgid "del"
 msgstr "supprimer"
 
@@ -7170,9 +7180,8 @@ msgstr ""
 "'default' n'est plus reconnu pour une population."
 
 #: web_tt2/search_user.tt2:38
-#, fuzzy
 msgid "editor"
-msgstr "Modérateur"
+msgstr "modérateur"
 
 # nlsref 15,7
 #: wwsympa/wwslib.pm:67
@@ -7379,15 +7388,13 @@ msgid "latest lists"
 msgstr "Listes récentes"
 
 #: web_tt2/search_user.tt2:8
-#, fuzzy
 msgid "list"
-msgstr "<liste>"
+msgstr "liste"
 
 #. (list)
 #: web_tt2/dump_scenario.tt2:30
-#, fuzzy
 msgid "list %1"
-msgstr "Liste %1 / %2"
+msgstr "liste %1"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:116
@@ -7522,10 +7529,13 @@ msgid ""
 "new scenario is created but not loaded in the list config. Edit list config "
 "if you need to apply it for that list"
 msgstr ""
+"Le nouveau scénario est créé mais la configuration de la list n'a pas été "
+"mise à jour.\n"
+"Editez la configuration de la liste pour l'utiliser pour cette liste."
 
 #: web_tt2/dump_scenario.tt2:9
 msgid "new scenario is equal to previous one. Nothing done."
-msgstr ""
+msgstr "Le scenario est inchangé ; il n'a pas été sauvegardé."
 
 #: web_tt2/arcsearch_form.tt2:30
 msgid "newest messages"
@@ -7597,9 +7607,8 @@ msgstr "autre adresse email"
 
 # nlsref 16,57
 #: web_tt2/search_user.tt2:40
-#, fuzzy
 msgid "owner"
-msgstr "Propriétaire"
+msgstr "propriétaire"
 
 #: src/etc/scenari/subscribe.owner:1 src/etc/scenari/unsubscribe.owner:1
 msgid "owners approval"
@@ -7723,9 +7732,8 @@ msgid "quota"
 msgstr "quota"
 
 #: web_tt2/search_user.tt2:14
-#, fuzzy
 msgid "reception"
-msgstr "Réception"
+msgstr "mode de réception"
 
 # nlsref 16,19
 #: src/List.pm:1017 src/List.pm:357 src/List.pm:471 src/List.pm:526
@@ -7862,13 +7870,11 @@ msgstr "résultats par page"
 
 #. (robot)
 #: web_tt2/dump_scenario.tt2:29
-#, fuzzy
 msgid "robot %1"
-msgstr "De : %1"
+msgstr "robot : %1"
 
 # nlsref 16,62
 #: web_tt2/search_user.tt2:11
-#, fuzzy
 msgid "role"
 msgstr "profil"
 
@@ -7877,23 +7883,21 @@ msgid "save"
 msgstr "Sauvegarder"
 
 #: web_tt2/dump_scenario.tt2:5
-#, fuzzy
 msgid "scenario is created but not loaded in the list config"
-msgstr "Sympa n'a pas pu charger la configuration de la liste."
+msgstr ""
+"Le scénario est créé mais la configuration de la list n'a pas été mise à jour"
 
 #: web_tt2/dump_scenario.tt2:34
-#, fuzzy
 msgid "scenario name :"
-msgstr "Nom du scénario"
+msgstr "nom du scénario : "
 
 #: web_tt2/edit_list_request.tt2:31
 msgid "scenario source"
 msgstr "code source du scénario"
 
 #: web_tt2/dump_scenario.tt2:27
-#, fuzzy
 msgid "scope :"
-msgstr "Portée"
+msgstr "portée : "
 
 # nlsref 16,97
 #: src/List.pm:668
@@ -8108,9 +8112,8 @@ msgid "to moderate"
 msgstr "à modérer"
 
 #: web_tt2/search_user.tt2:17
-#, fuzzy
 msgid "topics"
-msgstr "Catégories :"
+msgstr "catégories"
 
 # nlsref 15,2
 #: wwsympa/wwslib.pm:62
