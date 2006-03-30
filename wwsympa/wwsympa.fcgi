@@ -1444,7 +1444,7 @@ sub prepare_report_user {
      }
 
     if ($in{'list'}) {
-	unless ($list = new List ($in{'list'}, $robot, {'reload_config' => 1})) {
+	unless ($list = new List ($in{'list'}, $robot, {})) {
 	    &report::reject_report_web('user','unknown_list',{'list' => $in{'list'}},$param->{'action'},'');
 	    &wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	    return undef;

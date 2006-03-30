@@ -598,8 +598,8 @@ a virtual host or for the whole site.
 	\Sympa's working directory.
 
 	\item \dir {[EXPL_DIR]/\samplelist}\\
-	The list directory (refer to \ref {list-directory}, 
-	page~\pageref {list-directory}). Lists stored in this directory
+	The list directory (refer to \ref {ml-definition}, 
+	page~\pageref {ml-definition}). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
         can be stored in \dir {[EXPL_DIR]/\samplerobot/\samplelist} directory and it
         is managed by \samplerobot virtual host.
@@ -1312,6 +1312,15 @@ page~\pageref{lists-families}.
  
    Trigger an update of list members, usefull if the list uses
    external data sources.
+
+ \item \option {- - upgrade - - from=X - -to=Y }
+ 
+   Runs Sympa maintenance script to upgrate from version X to version Y
+
+ \item \option {- - reload_list_config - -list=mylist@dom }
+ 
+   Recreates all \file {config.bin} files. You should run this command if you edit authorization scenarios. The list parameter is optional.
+
 
 \end {itemize}
 
@@ -4608,7 +4617,8 @@ directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
 \dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload_list_config command to update the \file {config.bin} files.}
+
 [STOPPARSE]
 
 Example:
@@ -5486,7 +5496,7 @@ to remove existing task files in the \dir {task/} spool if needed. Task file nam
 
 \cleardoublepage
 \chapter {Mailing list definition}
-    \label {ml-creation}
+    \label {ml-definition}
 
 This chapter describes what a mailing list is made of within Sympa environment.
 

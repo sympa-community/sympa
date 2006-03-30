@@ -74,7 +74,7 @@ Options:
    -k, --keepcopy=dir                    : keep a copy of incoming message
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
-   --service == process_command|process_message  : process dedicated to messages distribution or to commands (default both)
+   --service=process_command|process_message  : process dedicated to messages distribution or to commands (default both)
    --dump=list\@dom|ALL                  : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
@@ -94,6 +94,8 @@ Options:
 
    --close_list=listname\@robot          : close a list
    --sync_include=listname\@robot        : trigger the list members update
+   --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
+                                                authorization scenarios. The list parameter is optional.
    --upgrate --from=X --to=Y             : runs Sympa maintenance script to upgrate from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
 
@@ -111,7 +113,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
-		    'input_file=s','sync_include=s','upgrate','from=s','to=s')) {
+		    'input_file=s','sync_include=s','upgrate','from=s','to=s','reload_list_config','list=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -132,14 +134,15 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				 $main::options{'modify_list'} ||
 				 $main::options{'close_family'} ||
 				 $main::options{'sync_include'} ||
-				 $main::options{'upgrate'}
+				 $main::options{'upgrate'} ||
+				 $main::options{'reload_list_config'}
 				 );
 
 # Some option force foreground mode
 $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
-$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrate'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrate'} || $main::options{'reload_list_config'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -579,6 +582,24 @@ if ($main::options{'dump'}) {
     }
 
     exit 0;
+
+## Reload binary list config files
+}elsif ($main::options{'reload_list_config'}) {
+
+    if ($main::options{'list'}) {
+
+	&do_log('notice', "Loading list $main::options{'list'}...");
+	my $list = new List ($main::options{'list'}, '', {'reload_config' => 1});
+	unless (defined $list) {
+	    print STDERR "Error : incorrect list name '$main::options{'list'}'\n";
+	    exit 1;
+	}
+    }else {
+	&do_log('notice', "Loading ALL lists...");
+	my $all_lists = &List::get_lists('*',{'reload_config' => 1});
+    }
+
+    exit 0;
 }
 
 ##########################################
@@ -990,7 +1011,7 @@ sub DoFile {
 	$name = $listname;
 	$list_address = $name.'@'.$host;
     }else {
-	$list = new List ($listname, $robot, {'reload_config' => 1});
+	$list = new List ($listname, $robot);
 	unless (defined $list) {
 	    &do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
 	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
