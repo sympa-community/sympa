@@ -96,7 +96,7 @@ Options:
    --sync_include=listname\@robot        : trigger the list members update
    --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
                                                 authorization scenarios. The list parameter is optional.
-   --upgrate --from=X --to=Y             : runs Sympa maintenance script to upgrate from version X to version Y
+   --upgrade --from=X --to=Y             : runs Sympa maintenance script to upgrade from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
 
    -h, --help                            : print this help
@@ -113,7 +113,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
-		    'input_file=s','sync_include=s','upgrate','from=s','to=s','reload_list_config','list=s')) {
+		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -134,7 +134,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				 $main::options{'modify_list'} ||
 				 $main::options{'close_family'} ||
 				 $main::options{'sync_include'} ||
-				 $main::options{'upgrate'} ||
+				 $main::options{'upgrade'} ||
 				 $main::options{'reload_list_config'}
 				 );
 
@@ -142,7 +142,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
-$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrate'} || $main::options{'reload_list_config'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -564,7 +564,7 @@ if ($main::options{'dump'}) {
     printf "Members of list %s have been successfully update.\n", $list->get_list_address();
     exit 0;
 ## Migration from one version to another
-}elsif ($main::options{'upgrate'}) {
+}elsif ($main::options{'upgrade'}) {
 
     unless ($main::options{'from'}) {
  	print STDERR "Error : missing 'from' parameter\n";
@@ -576,7 +576,7 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
 
-    unless (&List::upgrate($main::options{'from'}, $main::options{'to'})) {
+    unless (&List::upgrade($main::options{'from'}, $main::options{'to'})) {
 	printf STDERR "Migration from %s to %s failed\n", $main::options{'from'}, $main::options{'to'};
  	exit 1;
     }
