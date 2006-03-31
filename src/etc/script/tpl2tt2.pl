@@ -160,8 +160,8 @@ foreach my $tpl (@templates) {
 
     ## We don't migrate mhonarc-ressources files
     if ($tpl =~ /mhonarc\-ressources$/) {
-	rename $tpl, "$tpl.uncompatible";
-	printf STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.uncompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
+	rename $tpl, "$tpl.incompatible";
+	printf STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.incompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
 	next;
     }
 

@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.2b.1}
+    \newcommand {\version} {5.2b.2}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2b.1\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2b.2\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {24 March 2006}
+    \date {31 March 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -594,8 +594,8 @@ a virtual host or for the whole site.
 	\Sympa's working directory.
 
 	\item \dir {/usr/local/sympa-os/expl/\samplelist}\\
-	The list directory (refer to \ref {list-directory}, 
-	page~\pageref {list-directory}). Lists stored in this directory
+	The list directory (refer to \ref {ml-definition}, 
+	page~\pageref {ml-definition}). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
         can be stored in \dir {/usr/local/sympa-os/expl/\samplerobot/\samplelist} directory and it
         is managed by \samplerobot virtual host.
@@ -1309,6 +1309,15 @@ page~\pageref{lists-families}.
    Trigger an update of list members, usefull if the list uses
    external data sources.
 
+ \item \option {- - upgrade - - from=X - -to=Y }
+ 
+   Runs Sympa maintenance script to upgrate from version X to version Y
+
+ \item \option {- - reload\_list\_config - -list=mylist@dom }
+ 
+   Recreates all \file {config\.bin} files. You should run this command if you edit authorization scenarios. The list parameter is optional.
+
+
 \end {itemize}
 
 \section {INIT script}
@@ -1350,7 +1359,7 @@ Sympa upgrade is a relatively riskless operations, mainly because the install pr
 customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
 a few things (DB update, CPAN modules installation). 
 
-\section {Uncompatible changes}
+\section {Incompatible changes}
     \index{changes}
 
 New features, changes and bug fixes are summarized in the \file {NEWS} file, part of the tar.gz (the 
@@ -1367,14 +1376,14 @@ Sympa is a long-term project, so some major changes may need some extra work. Th
 
 
 The file \file {NEWS} list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
-detect the previously installed version and will prompt you with uncompatible changes between both versions
+file, incompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
+detect the previously installed version and will prompt you with incompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
 Output of the \unixcmd {make install} :
 \begin {quote}
 \begin{verbatim}
 You are upgrading from Sympa 4.2
-You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
+You should read CAREFULLY the changes listed below ; they might be incompatible changes :
 <RETURN>
 
 *****   require new perlmodule XML-LibXML
@@ -1496,7 +1505,7 @@ This procedure is run automatically by \file {sympa.pl} when it detects that \fi
 than the current version, but you can also run trigger this procedure yourself :
 \begin {quote}
 \begin{verbatim}
-sympa.pl --migrate --from=4.1 --to=5.2
+sympa.pl --upgrade --from=4.1 --to=5.2
 \end{verbatim}
 \end {quote}
 
@@ -5373,7 +5382,8 @@ directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
 \dir {/usr/local/sympa-os/etc/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory \dir {/usr/local/sympa-os/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/usr/local/sympa-os/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+Scenarios can also be defined for a particular virtual host (using directory \dir {/usr/local/sympa-os/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/usr/local/sympa-os/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload\_list\_config command to update the \file {config.bin} files.}
+
 
 Example:
 
@@ -6243,7 +6253,7 @@ next ([execution_date] + 1d, ACTION)
 
 \cleardoublepage
 \chapter {Mailing list definition}
-    \label {ml-creation}
+    \label {ml-definition}
 
 This chapter describes what a mailing list is made of within Sympa environment.
 

@@ -1317,9 +1317,9 @@ page~\pageref{lists-families}.
  
    Runs Sympa maintenance script to upgrate from version X to version Y
 
- \item \option {- - reload_list_config - -list=mylist@dom }
+ \item \option {- - reload\_list\_config - -list=mylist@dom }
  
-   Recreates all \file {config.bin} files. You should run this command if you edit authorization scenarios. The list parameter is optional.
+   Recreates all \file {config\.bin} files. You should run this command if you edit authorization scenarios. The list parameter is optional.
 
 
 \end {itemize}
@@ -1363,7 +1363,7 @@ Sympa upgrade is a relatively riskless operations, mainly because the install pr
 customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
 a few things (DB update, CPAN modules installation). 
 
-\section {Uncompatible changes}
+\section {Incompatible changes}
     \index{changes}
 
 New features, changes and bug fixes are summarized in the \file {NEWS} file, part of the tar.gz (the 
@@ -1380,14 +1380,14 @@ Sympa is a long-term project, so some major changes may need some extra work. Th
 
 
 The file \file {NEWS} list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
-detect the previously installed version and will prompt you with uncompatible changes between both versions
+file, incompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
+detect the previously installed version and will prompt you with incompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
 Output of the \unixcmd {make install} :
 \begin {quote}
 \begin{verbatim}
 You are upgrading from Sympa 4.2
-You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
+You should read CAREFULLY the changes listed below ; they might be incompatible changes :
 <RETURN>
 
 *****   require new perlmodule XML-LibXML
@@ -4617,7 +4617,7 @@ directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
 \dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload_list_config command to update the \file {config.bin} files.}
+Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload\_list\_config command to update the \file {config.bin} files.}
 
 [STOPPARSE]
 
