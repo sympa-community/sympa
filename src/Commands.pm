@@ -2310,9 +2310,6 @@ sub reject {
 	&report::reject_report_msg('user','unfound_message',$sender,{'listname' => $name,'key'=> $key},$robot,'',$list);
 	return 'wrong_auth';
     }
-    &do_log('debug2', 'message to be rejected by %s',$sender);
-
-    &report::reject_report_msg('user','message_rejected',$sender,{'key'=> $key,'listname' => $name},$robot,'',$list);
     
     my $message;
     my $parser = new MIME::Parser;
