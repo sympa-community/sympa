@@ -54,6 +54,25 @@ update-po: potfile
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
 	done
 
+## Merge translations, coming from Rosetta for instance
+## These PO files are supposed to gathered in a directory
+merge:
+	@echo -n "Enter directory containing PO files to merge: "; \
+	read dir; \
+	for file in $$dir/*.po; do \
+		filename=`basename $$file`; \
+		count=`$(MSGATTRIB) --translated --no-obsolete "$$file"|grep -c "^msgid"`; \
+		if [ ! -f  "$$filename" ]; then \
+			echo "New PO file: $$filename ; $$count strings"; \
+		else \
+			echo "Updating $$filename..."; \
+			countprevious=`$(MSGATTRIB) --translated --no-obsolete "$$filename"|grep -c "^msgid"`; \
+			$(MSGMERGE) -o "/tmp/$$filename.new" "$$filename" "$$file"; \
+			countnew=`$(MSGATTRIB) --translated --no-obsolete "/tmp/$$filename.new"|grep -c "^msgid"`; \
+			echo "Stats: $$countprevious => $$countnew"; \
+		fi \
+	done
+
 stats:
 	languages='$(LINGUAS)'; \
 	for lang in $$languages; do \
