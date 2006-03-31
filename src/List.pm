@@ -5620,7 +5620,11 @@ sub get_first_admin_user {
 	## In case it was not set in the database
 	$admin_user->{'subscribed'} = 1
 	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+    }else {
+	$sth->finish;
+        $sth = pop @sth_stack;
     }
+
     return $admin_user;
 }
     
