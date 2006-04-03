@@ -560,7 +560,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      undef $log_level;
      $log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
-     $log_level |= 0;
+     $log_level ||= 0;
 
      &Language::SetLang($Language::default_lang);
 
