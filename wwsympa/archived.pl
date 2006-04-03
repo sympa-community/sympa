@@ -419,7 +419,7 @@ sub rebuild {
 	opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
 	
 	## Skip arctxt/ . and ..
-	foreach my $html_file (grep !/arctxt|\.+$/, readdir(HTML)) {
+	foreach my $html_file (grep !/^arctxt$|^index$|\.+$/, readdir(HTML)) {
 	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
 	}	
 	closedir HTML;
@@ -463,7 +463,7 @@ sub rebuild {
 	    ## Remove existing HTML files
 	    opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
 	    ## Skip arctxt/ . and ..
-	    foreach my $html_file (grep !/arctxt|\.+$/, readdir(HTML)) {
+	    foreach my $html_file (grep !/^arctxt$|^index$|\.+$/, readdir(HTML)) {
 		unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
 	    }	
 	    closedir HTML;	

@@ -5595,7 +5595,13 @@ sub do_viewmod {
      foreach my $dir (sort grep(!/^\./,readdir ARC)) {
 	 if ($dir =~ /^(\d{4})-(\d{2})$/ &&
 	     -d $arc_path.'/'.$dir.'/arctxt') {
-	     $param->{'calendar'}{$1}{$2} = 1;
+	     $param->{'calendar'}{$1}{$2} = '???';
+	     if (open(IDX, $arc_path.'/'.$dir.'/index')) {
+		 my ($msgs) = <IDX>;
+		 chomp ($msgs);
+		 close IDX;
+		 $param->{'calendar'}{$1}{$2} = $msgs if ($msgs);
+	     }
 	     $latest = $dir;
 	 }
      }

@@ -22,8 +22,8 @@ CALENDAR
         <li class="calendarLinksInactive">($tag$% year.key %$tag$)</li>
    	($tag$% FOREACH month = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
           ($tag$% IF year.value.item(month) %$tag$)
-                 ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/">($tag$% month %$tag$)</a></li>
-                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/">($tag$% month %$tag$)</a></li>
+                 ($tag$% IF  year.key == '$yyyy$' && month == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
+                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% month %$tag$)/" title="($tag$%|loc(year.value.item(month))%$tag$)%1 message(s)($tag$%END%$tag$)">($tag$% month %$tag$)</a></li>
 		 ($tag$% END %$tag$)
           ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% month %$tag$)</li>
           ($tag$% END %$tag$)
