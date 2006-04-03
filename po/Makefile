@@ -1,7 +1,7 @@
 
 
-LINGUAS = cs de en_US el es et fi fr hu it ja nl oc pl pt pt_BR ro sv tr zh_CN zh_TW
-SYMPA_LOCALES = cs_CZ de_DE el_GR en_US es_ES et_EE fi_FI fr_FR hu_HU it_IT ja_JP nl_NL oc_FR pl_PL pt_BR pt_PT ro_RO sv_SE tr_TR zh_CN zh_TW
+LINGUAS = cs de en_US el es et fi fr hu it ja nb_NO nl oc pl pt pt_BR ro sv tr zh_CN zh_TW
+SYMPA_LOCALES = cs_CZ de_DE el_GR en_US es_ES et_EE fi_FI fr_FR hu_HU it_IT ja_JP nb_NO nl_NL oc_FR pl_PL pt_BR pt_PT ro_RO sv_SE tr_TR zh_CN zh_TW
 MOFILES = $(addsuffix .mo, $(LINGUAS))
 
 DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? web_tt2/*.tt2 mail_tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*)
