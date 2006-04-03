@@ -508,7 +508,11 @@ sub load_robots {
 		my($keyword, $value) = ($1, $2);
 		$value =~ s/\s*$//;
 		$keyword = lc($keyword);
-		$value = lc($value) unless ($keyword eq 'title');
+
+		## Not all parameters should be lowercased
+		## We should define which parameter needs to be lowercased
+		#$value = lc($value) unless ($keyword eq 'title' || $keyword eq 'logo_html_definition' || $keyword eq 'lang');
+
 		if ($valid_robot_key_words{$keyword}) {
 		    $robot_conf->{$robot}{$keyword} = $value;
 		    # printf STDERR "load robots config: $keyword = $value\n";
