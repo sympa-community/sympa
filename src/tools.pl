@@ -1581,7 +1581,7 @@ sub get_filename {
  	if ($list->{'admin'}{'family_name'}) {
  	    unless ($family = $list->get_family()) {
  		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
- 		$self->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
+ 		$list->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
  		return undef;
  	    }  
  	}
