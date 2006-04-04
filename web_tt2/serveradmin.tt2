@@ -44,6 +44,17 @@
 	</form>
  </p>
 <p>
+<h2>[%|loc%]Archives[%END%]</h2><br />
+
+[%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br /
+>
+<form action="[% path_cgi %]" method="post">
+listname : <input type="text" name="list" size="20" /> <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
+or  <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
+</form>
+
+</p>
+<p>
 <h2>[%|loc%]Templates[%END%]</h2><br />
 
 <!-- 
@@ -80,15 +91,21 @@
 <a class="actionMenuLinks" href="[% path_cgi %]/skinsedit">[%|loc%]Skins administration page[%END%]</a>
 
 </p>
-<p>
-<h2>[%|loc%]Archives[%END%]</h2><br />
 
-[%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br /
->
-<form action="[% path_cgi %]" method="post">
-listname : <input type="text" name="list" size="20" /> <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
-or  <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
-</form>
+<p>
+<h2>[%|loc%]Translating Sympa[%END%]</h2><br />
+
+[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). All translations for one language are gathered in a single PO file that can be manipulated by standard GNU gettext tools.[%END%]
+</p>
+<p>
+[%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language : [%END%] <a href="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</a>
+
+</p>
+
+<p>
+<h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2><br />
+
+[%|loc%]You can submit a problem or request a new feature : [%END%]<a href="http://sourcesup.cru.fr/tracker/?group_id=23">http://sourcesup.cru.fr/tracker/?group_id=23</a>
 
 </p>
 
