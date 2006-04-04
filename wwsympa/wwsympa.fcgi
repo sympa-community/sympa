@@ -1607,7 +1607,7 @@ sub prepare_report_user {
      if (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	 $param->{'is_listmaster'} = 1;
      }else {
-	 $param->{'is_listmaster'} = 0;
+	 undef $param->{'is_listmaster'};
      }
 
      if ($list->{'name'}) {
