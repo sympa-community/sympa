@@ -12996,7 +12996,7 @@ sub d_test_existing_and_rights {
 #
 ####################################################
  sub do_request_topic {
-     &wwslog('info', 'do_request_topic');
+     &wwslog('info', 'do_request_topic(%s)', $in{'authkey'});
 
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
@@ -13014,6 +13014,12 @@ sub d_test_existing_and_rights {
      unless ($list->is_there_msg_topic()) {
 	 &report::reject_report_web('user','no_topic',{},$param->{'action'},$list);
 	 &wwslog('info','do_request_topic: list without topic message');
+	 return undef;
+     }
+
+     unless ($in{'authkey'}) {
+	 &report::reject_report_web('user','missing_arg',{'argument' => 'authkey'},$param->{'action'});
+	 &wwslog('info','do_request_topic: no authkey');
 	 return undef;
      }
 
