@@ -5570,6 +5570,7 @@ sub do_viewmod {
 
      ## Access control
      unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 $param->{'previous_action'} = 'arc';
 	 $param->{'previous_list'} = $list->{'name'};
 	 return undef;
@@ -6291,6 +6292,7 @@ sub do_remove_arc {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_pending_lists :  no user');
 	 $param->{'previous_action'} = 'get_pending_lists';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
      unless ( $param->{'is_listmaster'}) {
@@ -6319,6 +6321,7 @@ sub do_remove_arc {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_closed_lists :  no user');
 	 $param->{'previous_action'} = 'get_closed_lists';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
      unless ( $param->{'is_listmaster'}) {
@@ -6384,6 +6387,7 @@ sub do_get_inactive_lists {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_inactive_lists :  no user');
 	 $param->{'previous_action'} = 'get_inactive_lists';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -6692,6 +6696,7 @@ sub do_set_pending_list_request {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_create_list_request:  no user');
 	 $param->{'previous_action'} = 'create_list_request';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -7831,6 +7836,7 @@ sub do_edit_list {
 	 &wwslog('info','do_edit_list_request:  no user');
 	 $param->{'previous_action'} = 'edit_list_request';
 	 $param->{'previous_list'} = $in{'list'};
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -12848,6 +12854,7 @@ sub d_test_existing_and_rights {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_compose_mail: no user');
 	 $param->{'previous_action'} = 'compose_mail';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
