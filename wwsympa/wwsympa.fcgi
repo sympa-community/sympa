@@ -1015,6 +1015,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 
      ## Available languages
      my $saved_lang = &Language::GetLang();
+     # Recode the language strings to the correct codeset
+     &Language::set_recode ($Conf{'web_recode_to'} || &Language::gettext('_charset_'));
+     
      foreach my $l (@{&Language::GetSupportedLanguages($robot)}) {
 	 &Language::SetLang($l) || next;
 	 $param->{'languages'}{$l}{'complete'} = gettext("_language_");
@@ -1025,6 +1028,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $param->{'languages'}{$l}{'selected'} = '';
 	 }
      }
+     &Language::set_recode ();
      &Language::SetLang($saved_lang);
      # if bypass is defined select the content-type from various vars
      if ($param->{'bypass'}) {
