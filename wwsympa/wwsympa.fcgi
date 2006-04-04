@@ -5288,6 +5288,7 @@ sub do_viewmod {
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('err','do_viewmod: no user');
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -13001,7 +13002,7 @@ sub d_test_existing_and_rights {
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_request_topic: no user');
-	 $param->{'previous_action'} = 'request_topic';
+	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
