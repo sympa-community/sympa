@@ -1603,6 +1603,13 @@ sub prepare_report_user {
 	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
      }
 
+     ## listmaster has owner and editor privileges for the list
+     if (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
+	 $param->{'is_listmaster'} = 1;
+     }else {
+	 $param->{'is_listmaster'} = 0;
+     }
+
      if ($list->{'name'}) {
 	 &wwslog('debug2', "list-name $list->{'name'}");
 
