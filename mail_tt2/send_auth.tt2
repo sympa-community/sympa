@@ -9,10 +9,9 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 --[% boundary %]
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 
-[% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,authkey)%]To tag your attached message in list %1 go to the following page :
+[% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,authkey)%]List %1 allows you to tag your messages, using a set of defined topics. To tag the attached message go to the following page :[%END%]
 
-%2/request_topic/%1/%3
-[% END %]
+[%conf.wwsympa_url%]/request_topic/[%list.name%]/[%authkey%]
 [%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, folow the link below :[%END%]
 
 [% FILTER escape_url %]mailto:[%conf.sympa%]?subject=CONFIRM [%authkey%][% END %]
