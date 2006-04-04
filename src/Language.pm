@@ -46,10 +46,7 @@ my %language_equiv = ( 'zh_CN' => 'cn',
 		       'en_US' => 'us',
 		       );
 
-## Supported languages
-my @supported_languages = ('cs_CZ','de_DE','el_GR','en_US','es_ES','et_EE',
-			   'fi_FI','fr_FR','hu_HU','it_IT','ja_JP','nl_NL','oc_FR',
-			   'pl_PL','pt_BR','pt_PT','ro_RO','sv_SE','tr_TR','zh_CN','zh_TW');
+## Supported languages are defined by 'supported_lang' sympa.conf parameter
 
 my %lang2locale = ('cz' => 'cs_CZ',
 		   'de' => 'de_DE',
@@ -62,6 +59,7 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'hu' => 'hu_HU',
 		   'it' => 'it_IT',
 		   'ja' => 'ja_JP',
+		   'nb' => 'nb_NO',
 		   'nl' => 'nl_NL',
 		   'oc' => 'oc_FR',
 		   'pl' => 'pl_PL',
@@ -69,6 +67,7 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'ro' => 'ro_RO',
 		   'sv' => 'sv_SE',
 		   'cn' => 'zh_CN',
+		   'cs' => 'cs_CZ',
 		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
 
@@ -84,6 +83,7 @@ my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'hu_HU' => 'iso8859-2',
 		      'it_IT' => 'iso8859-1',
 		      'ja_JP' => 'utf-8',
+		      'nb_NO' => 'utf-8',
 		      'nl_NL' => 'iso8859-1',
 		      'oc_FR' => 'iso8859-1',		      
 		      'pl_PL' => 'iso8859-2',
