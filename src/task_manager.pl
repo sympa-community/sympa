@@ -1196,6 +1196,8 @@ sub purge_orphan_bounces {
 		 }
 	     }	    
 	 }
+
+	closedir BOUNCE;
      }
  }
 
@@ -1280,7 +1282,7 @@ sub purge_orphan_bounces {
 	 return undef;
      }
      my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
-     close (DIR);
+     closedir (DIR);
 
      foreach (@certificates) {
 
