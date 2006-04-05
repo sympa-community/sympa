@@ -268,6 +268,16 @@ my %comm = ('home' => 'do_home',
 	 'rss_request' => 'do_rss_request',
 	 );
 
+my %auth_action = ('logout' => 1,
+		   'loginrequest' => 1,
+		   'login' => 1,
+		   'sso_login' => 1,
+		   'sso_login_succeeded' => 1,
+		   'remindpasswd' => 1,
+		   'choosepasswd' => 1,
+		   'sendssopasswd' => 1,
+		   );		  
+
 ## Arguments awaited in the PATH_INFO, depending on the action 
 my %action_args = ('default' => ['list'],
 		'editfile' => ['list','file'],
@@ -1718,6 +1728,16 @@ sub prepare_report_user {
 		$param->{'is_owner'}) {
 		$param->{'may_sync'} = 1;
 	    }
+	}else {
+	    ## If user not logged in && GET method && not an authN-related action
+	    ## Keep track of the 'referer' parameter
+	    if ($ENV{'REQUEST_METHOD'} eq 'GET' &&
+		! $auth_action{$in{'action'}} ) {
+		$param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
+	    }else {
+		## Keep the previous value of the referer
+		$param->{'referer'} = $in{'referer'};
+	    }
 	}
 
 	 ## Should Not be used anymore ##
@@ -2538,7 +2558,6 @@ sub sendssopasswd {
     
     
     $param->{'email'} = $email;
-    $param->{'referer'} = $in{'referer'};
     
     
     return 'validateemail';
@@ -2645,7 +2664,6 @@ sub do_remindpasswd {
 
 
      $param->{'email'} = $in{'email'};
-     $param->{'referer'} = $in{'referer'};
 
  #    if ($in{'previous_action'}) {
  #	$in{'list'} = $in{'previous_list'};
@@ -5299,7 +5317,6 @@ sub do_viewmod {
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('err','do_viewmod: no user');
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -5581,7 +5598,6 @@ sub do_viewmod {
 
      ## Access control
      unless (defined &check_authz('do_arc', 'web_archive.access')) {
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 $param->{'previous_action'} = 'arc';
 	 $param->{'previous_list'} = $list->{'name'};
 	 return undef;
@@ -6303,7 +6319,6 @@ sub do_remove_arc {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_pending_lists :  no user');
 	 $param->{'previous_action'} = 'get_pending_lists';
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
      unless ( $param->{'is_listmaster'}) {
@@ -6332,7 +6347,6 @@ sub do_remove_arc {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_closed_lists :  no user');
 	 $param->{'previous_action'} = 'get_closed_lists';
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
      unless ( $param->{'is_listmaster'}) {
@@ -6398,7 +6412,6 @@ sub do_get_inactive_lists {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','get_inactive_lists :  no user');
 	 $param->{'previous_action'} = 'get_inactive_lists';
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -6707,7 +6720,6 @@ sub do_set_pending_list_request {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_create_list_request:  no user');
 	 $param->{'previous_action'} = 'create_list_request';
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -7847,7 +7859,6 @@ sub do_edit_list {
 	 &wwslog('info','do_edit_list_request:  no user');
 	 $param->{'previous_action'} = 'edit_list_request';
 	 $param->{'previous_list'} = $in{'list'};
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -12865,7 +12876,6 @@ sub d_test_existing_and_rights {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_compose_mail: no user');
 	 $param->{'previous_action'} = 'compose_mail';
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
@@ -13020,7 +13030,6 @@ sub d_test_existing_and_rights {
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_request_topic: no user');
-	 $param->{'referer'} = &tools::escape_chars(&wwslib::get_my_url());
 	 return 'loginrequest';
      }
 
