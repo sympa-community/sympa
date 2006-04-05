@@ -3,6 +3,53 @@
 
 (See Changelog file for the full changes log)
 
+5.2		5 April 2006
+
+   New features :
+
+*****	wwsympa.fcgi can use sudo instead of setuidperl 
+*****   You should run 'configure --enable-secure' and 
+*****   use wwsympa_sudo_wrapper.pl instead of wwsympa.fcgi
+
+	po/nb_NO.po:  [A.Lund and J.Gunnar] Added Norwegian BokmÅÂl
+
+	po/Makefile: new "check" target to compare the PO files with another set of PO files (usefull for Rosetta)
+
+	src/sympa.pl: sympa.pl --reload_list_config is provided to recreate config.bin files
+
+   Changes :
+
+	wwsympa/wwsympa.fcgi: [BugID 482] keep track of first accessed URL in 'referer' variable.  
+	It is then possible to bring the user back to this URL at the end of the authentication
+	process.
+
+	po/: updated tranlations from Rosetta
+
+	src/sympa.pl, wwsympa/wwsympa.fcgi: cancel previous change to reload list config for each action.
+	This behavior would require locking of config files.	
+
+	wwsympa/wwsympa.fcgi: [bugID 567] if 'web_recode_to' is  set, decode incoming parameters from this charset to perl's
+	internal encoding (utf-8). This is required for CJK binary strings that can't be used in perl regexp.
+
+	mail_tt2/command_report.tt2: no more provide the listmaster email address ; refer to the web site instead
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: [BugID 599] Language dropdown displays names in wrong codeset
+
+	src/etc/mhonarc-ressources.tt2, wwsympa/archived.pl, wwsympa/wwsympa.fcgi: [BugID 602] Rebuild would remove index
+	files.  New feature: now providing the index info to web templates ; used to provide the number of messages per month in
+	the calendar
+
+	src/Commands.pm: [reported by A.Lund, Uninett] moderator received an unwanted notification when rejecting a message
+
+	src/List.pm: [BugID 664] [E.Rynes, Case Western Reserve University] The get_first_admin_user subroutine in Lists.pm
+	does not free up the DB statement handle on a failed lookup. This causes the database (at least when using oracle) 
+	to run out of cursors when the number of lists is high.
+
+	src/List.pm: made 'creation' parameter optional, for list that were created before web creation was provided
+
+
 5.2b2		27 March 2006
 
    New features :

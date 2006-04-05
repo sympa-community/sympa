@@ -1,3 +1,222 @@
+2006-04-05 11:37  sympa-authors
+
+	* src/task_manager.pl: [BugID 499] Fix: opendir without closedir
+
+2006-04-05 11:10  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 482] Fix: keep track of first
+	  accessed URL in 'referer' variable.  It is then possible to bring
+	  the user back to this URL at the end of the authentication
+	  process.
+
+2006-04-05 10:22  sympa-authors
+
+	* Makefile.am, Makefile.in, configure, configure.in, doc/sympa.pdf,
+	  doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, po/cs.po, po/de.po, po/el.po, po/en_US.po,
+	  po/es.po, po/fi.po, po/hu.po, po/it.po, po/ja.po, po/nl.po,
+	  po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/sv.po,
+	  po/sympa.pot, po/tr.po, po/zh_CN.po, po/zh_TW.po,
+	  wwsympa/Makefile, wwsympa/wwsympa.fcgi,
+	  wwsympa/wwsympa_sudo_wrapper.pl: New feature : *****
+	  wwsympa.fcgi can use sudo instead of setuidperl *****   You
+	  should run 'configure --enable-secure' and *****    use
+	  wwsympa_sudo_wrapper.pl instead of wwsympa.fcgi
+
+2006-04-04 15:26  sympa-authors
+
+	* web_tt2/serveradmin.tt2: Added links for translating, submitting
+	  a bug
+
+2006-04-04 14:55  sympa-authors
+
+	* src/: Conf.pm, Language.pm: Extended list of supported languages
+
+2006-04-04 14:40  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 599] Fix: anguage dropdown displays
+	  names in wrong codeset
+
+2006-04-04 14:39  sympa-authors
+
+	* po/et.po: Added language name
+
+2006-04-04 14:33  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Better fix
+
+2006-04-04 14:31  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 570] Fix: after logout as
+	  listmaster, the "sympa admin"-tab is still shown
+
+2006-04-04 14:24  sympa-authors
+
+	* po/fr.po: Updated
+
+2006-04-04 14:22  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: use referer variable to bring user
+	  back to action after login was performed
+
+2006-04-04 14:19  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: better handling of previous action
+	  (using referer) when login is required
+
+2006-04-04 14:17  sympa-authors
+
+	* mail_tt2/send_auth.tt2: Fix: multipart was broken
+
+2006-04-04 10:53  sympa-authors
+
+	* mail_tt2/send_auth.tt2: Complete the notice regarding message
+	  tagging
+
+2006-04-04 10:42  sympa-authors
+
+	* po/fr.po: Fixed typo
+
+2006-04-04 10:30  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: check that authkey parameter is
+	  provided in do_request_topic()
+
+2006-04-03 17:54  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2, wwsympa/archived.pl,
+	  wwsympa/wwsympa.fcgi: [BugID 602] Fix: rebuild would remove index
+	  files.  New feature: now providing the index info to web
+	  templates ; used to provide the number of messages per month in
+	  the calendar
+
+2006-04-03 17:49  sympa-authors
+
+	* src/tools.pl: Fix: using incorrect variable would cause error
+	  "Can't call method "set_status_error_config" on unblessed
+	  reference"
+
+2006-04-03 17:07  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: using |= instead of ||=
+
+2006-04-03 14:25  sympa-authors
+
+	* src/Conf.pm: Fix: no more lowercase parameter value ; could make
+	  problems with some parameters
+
+2006-04-03 12:05  sympa-authors
+
+	* po/: Makefile, el.po, es.po, ja.po, pt_BR.po, sv.po: Updates:
+	  updated tranlations from Rosetta [A.Lund and J.Gunnar] Added
+	  Norwegian Bokmål (nb_NO.po)
+
+2006-04-03 11:42  sympa-authors
+
+	* po/Makefile: Change: renamed target "merge" to "check"
+
+2006-03-31 17:23  sympa-authors
+
+	* po/Makefile: New feature: new "merge" target
+
+2006-03-31 14:12  sympa-authors
+
+	* src/Commands.pm: [reported by A.Lund, Uninett] Fix: moderator
+	  received an unwanted notification when rejecting a message
+
+2006-03-31 13:48  sympa-authors
+
+	* src/List.pm: [BugID 664] [E.Rynes, Case Western Reserve
+	  University] Fix: The get_first_admin_user subroutine in Lists.pm
+	  does not free up the DB statement handle on a failed lookup.
+	  This causes the database (at least when using oracle) to run out
+	  of cursors when the number of lists is high.
+
+2006-03-31 13:39  sympa-authors
+
+	* important_changes.pl, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node28.html, doc/html/node29.html,
+	  doc/html/node3.html, doc/html/node30.html, doc/html/node31.html,
+	  doc/html/node4.html, doc/html/node5.html, doc/html/node6.html,
+	  doc/html/node7.html, doc/html/node8.html, doc/html/node9.html,
+	  doc/html/sympa.html, doc/html/sympa.ps,
+	  src/etc/script/tpl2tt2.pl: [ID 671] incompatible was miss spelled
+
+2006-03-30 14:50  sympa-authors
+
+	* src/sympa.pl: Fix typo: upgrade instead of upgrate
+
+2006-03-30 14:49  sympa-authors
+
+	* doc/sympa.tex.tpl, src/sympa.pl, wwsympa/wwsympa.fcgi: Change:
+	  cancel previous change to reload list config for each action.
+	  This behavior would require locking of config files.	New
+	  feature: sympa.pl --reload_list_config is provided to recreate
+	  config.bin files
+
+2006-03-29 12:21  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [bugID 567] Change: if 'web_recode_to' is
+	  set, decode incoming parameters from this charset to perl's
+	  internal encoding (utf-8). This is required for CJK binary
+	  strings that can't be used in perl regexp.
+
+2006-03-29 12:11  sympa-authors
+
+	* web_tt2/sso_login.tt2: Fix typo
+
+2006-03-29 12:00  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, hu.po,
+	  it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po, sv.po,
+	  sympa.pot, tr.po, zh_CN.po, zh_TW.po: updated
+
+2006-03-29 12:00  sympa-authors
+
+	* po/fr.po: Updated
+
+2006-03-29 11:28  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sv.po, sympa.pot, tr.po, zh_CN.po, zh_TW.po: update
+
+2006-03-29 11:20  sympa-authors
+
+	* mail_tt2/command_report.tt2: Change: no more provide the
+	  listmaster email address ; refer to the web site instead
+
+2006-03-29 09:23  sympa-authors
+
+	* src/Conf.pm:	remove white spaces in listmaster conf parameter
+
+2006-03-28 09:45  sympa-authors
+
+	* src/List.pm: Fix: made 'creation' parameter optional, for list
+	  that were created before web creation was provided
+
+2006-03-27 16:52  sympa-authors
+
+	* .version, ChangeLog, Makefile.in, NEWS: Preparing Sympa 5.2b.2
+
 2006-03-27 10:52  sympa-authors
 
 	* doc/sympa.tex.tpl, src/List.pm, src/sympa.pl: Renamed migrate to
