@@ -133,6 +133,9 @@ SPOOLDIR='${prefix}/spool'
 AC_ARG_WITH(spooldir, [  --with-spooldir=DIR     spool directory is DIR  (default ${prefix}/spool)], [SPOOLDIR="$withval"])
 AC_SUBST(SPOOLDIR)
 
+## to run wwsympa.fcgi without setuidperl
+AC_ARG_ENABLE(secure, [  --enable-secure     install wwsympa to be run in a secure mode, without suidperl (default disabled)])
+AC_SUBST(enable_secure)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -145,6 +148,9 @@ AC_SUBST(PERL)
 
 AC_PATH_PROG(SUIDPERL, suidperl, /usr/bin/suidperl)
 AC_SUBST(SUIDPERL)
+
+AC_PATH_PROG(SUDO, sudo, /usr/bin/sudo)
+AC_SUBST(SUDO)
 
 AC_PATH_PROG(MHONARC, mhonarc, /usr/bin/mhonarc)
 AC_ARG_WITH(mhonarc, [  --with-mhonarc=FULLPATH       set full path to MhOnArc mail archiving system (default /usr/bin/mhonarc)], [MHONARC="$withval"])

@@ -122,7 +122,7 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="8908"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+Here is a sample piece of your Apache <A NAME="8938"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
 	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
 	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
@@ -138,8 +138,8 @@ Here is a sample piece of your Apache <A NAME="8908"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only parameters that you need to set in <A NAME="8911"></A><TT>sympa.conf</TT>/<A NAME="8914"></A><TT>robot.conf</TT> files is
-the <A NAME="8917"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+The only parameters that you need to set in <A NAME="8941"></A><TT>sympa.conf</TT>/<A NAME="8944"></A><TT>robot.conf</TT> files is
+the <A NAME="8947"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -705,7 +705,7 @@ String[] _abonnements = tmp.which();
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-03-31
+2006-04-05
 </ADDRESS>
 </BODY>
 </HTML>

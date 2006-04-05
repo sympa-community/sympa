@@ -273,7 +273,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="check_perl_modules.pl"
 ac_default_prefix=/home/sympa
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR LOCKDIR PIDDIR ETCDIR LOCALEDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP EGREP PERL SUIDPERL MHONARC OPENSSL CVS2CL MSGFMT SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR LOCKDIR PIDDIR ETCDIR LOCALEDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR enable_secure CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP EGREP PERL SUIDPERL SUDO MHONARC OPENSSL CVS2CL MSGFMT SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -814,6 +814,7 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-secure     install wwsympa to be run in a secure mode, without suidperl (default disabled)
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --enable-maintainer-mode  enable make rules and dependencies not useful
@@ -2015,6 +2016,13 @@ if test "${with_spooldir+set}" = set; then
   SPOOLDIR="$withval"
 fi;
 
+
+## to run wwsympa.fcgi without setuidperl
+# Check whether --enable-secure or --disable-secure was given.
+if test "${enable_secure+set}" = set; then
+  enableval="$enable_secure"
+
+fi;
 
 
 ac_ext=c
@@ -3521,6 +3529,48 @@ fi
 
 
 
+# Extract the first word of "sudo", so it can be a program name with args.
+set dummy sudo; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_SUDO+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $SUDO in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_SUDO="$SUDO" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_SUDO="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_SUDO" && ac_cv_path_SUDO="/usr/bin/sudo"
+  ;;
+esac
+fi
+SUDO=$ac_cv_path_SUDO
+
+if test -n "$SUDO"; then
+  echo "$as_me:$LINENO: result: $SUDO" >&5
+echo "${ECHO_T}$SUDO" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+
+
 # Extract the first word of "mhonarc", so it can be a program name with args.
 set dummy mhonarc; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -4564,6 +4614,7 @@ s,@DOCDIR@,$DOCDIR,;t t
 s,@SCRIPTDIR@,$SCRIPTDIR,;t t
 s,@SAMPLEDIR@,$SAMPLEDIR,;t t
 s,@SPOOLDIR@,$SPOOLDIR,;t t
+s,@enable_secure@,$enable_secure,;t t
 s,@CC@,$CC,;t t
 s,@CFLAGS@,$CFLAGS,;t t
 s,@LDFLAGS@,$LDFLAGS,;t t
@@ -4584,6 +4635,7 @@ s,@CPP@,$CPP,;t t
 s,@EGREP@,$EGREP,;t t
 s,@PERL@,$PERL,;t t
 s,@SUIDPERL@,$SUIDPERL,;t t
+s,@SUDO@,$SUDO,;t t
 s,@MHONARC@,$MHONARC,;t t
 s,@OPENSSL@,$OPENSSL,;t t
 s,@CVS2CL@,$CVS2CL,;t t

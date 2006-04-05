@@ -302,6 +302,13 @@ msgstr "%1 Mailingliste erstellt"
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "Die Liste %s ermöglicht keine Abonneteneinstellung.\n"
 
+# nlsref 15,6
+#. (year.value.item(month))
+#: src/etc/mhonarc-ressources.tt2:25 src/etc/mhonarc-ressources.tt2:26
+#, fuzzy
+msgid "%1 message(s)"
+msgstr "# Nachricht"
+
 #. (searched,num)
 #: web_tt2/arcsearch.tt2:53
 msgid "%1 messages selected out of %2"
@@ -2480,6 +2487,13 @@ msgstr ""
 "Die Liste %s erlaubt nur die folgenden Empfangsmodi : %s \n"
 "Ihre Konfiguration wurde nicht modifiziert.\n"
 
+#. (list.name,conf.wwsympa_url,authkey)
+#: mail_tt2/send_auth.tt2:12
+msgid ""
+"List %1 allows you to tag your messages, using a set of defined topics. To "
+"tag the attached message go to the following page :"
+msgstr ""
+
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:4
 msgid "List %1 archive quota exceeded"
@@ -3409,7 +3423,7 @@ msgstr ""
 "gelöscht."
 
 #. (conf.sympa,authkey)
-#: mail_tt2/send_auth.tt2:22
+#: mail_tt2/send_auth.tt2:21
 #, fuzzy
 msgid ""
 "Or send a message to %1 with the following subject :\n"
@@ -5746,7 +5760,7 @@ msgid "To contact this service administrator :"
 msgstr "Zum Kontaktieren des Service-Administrators :"
 
 #. (list.name)
-#: mail_tt2/send_auth.tt2:16
+#: mail_tt2/send_auth.tt2:15
 #, fuzzy
 msgid "To distribute the attached message in list %1, folow the link below :"
 msgstr "Um die angehängte Nachricht an die Liste %1 weiterzuleiten :"
@@ -5816,14 +5830,6 @@ msgid ""
 "To tag the attached message in list %1 go to the following page :\n"
 "\n"
 "%2/viewmod/%1/%3\n"
-msgstr ""
-
-#. (list.name,conf.wwsympa_url,authkey)
-#: mail_tt2/send_auth.tt2:15
-msgid ""
-"To tag your attached message in list %1 go to the following page :\n"
-"\n"
-"%2/request_topic/%1/%3\n"
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:25
@@ -5932,7 +5938,7 @@ msgid "URL"
 msgstr "URL"
 
 # nlsref 3,1
-#: src/sympa.pl:1728
+#: src/sympa.pl:1749
 msgid "Unable to access directory %s : %m"
 msgstr "Auf das Verzeichnis %s kann nicht zugegriffen werden: %m"
 

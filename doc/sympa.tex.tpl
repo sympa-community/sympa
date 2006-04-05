@@ -1121,6 +1121,8 @@ This is used by the \file {postfix\_manager.pl} script :
 
 \item \option {- - with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
 
+\item \option {- - enable-secure}, install wwsympa to be run in a secure mode, without suidperl (default disabled)
+
 
 \end {itemize}
 
@@ -3225,16 +3227,23 @@ others. Depending on permissions, the same URL may generate a different view.
      Because Sympa and WWSympa share a lot of files, \file {wwsympa.fcgi},
      must run with the same 
      uid/gid as \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
-     There are different ways to organize this :
+     There are different ways to achieve this :
 \begin{itemize}
-\item With some operating systems no special setup is required because
-      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
-      if suid scripts are refused by your system.
+\item SetuidPerl : this is the default method but might be insecure. If you don't set the \textbf {- -enable\_secure} configure option,
+      \file {wwsympa.fcgi} is installed with the SetUID bit set. On most systems you will need to install the suidperl package.
 
-\item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
-      is nobody.nobody)
+\item Sudo : use \textbf {sudo} to run \file {wwsympa.fcgi} as user sympa. Your Apache configuration should use \file {wwsympa\_sudo\_wrapper.pl} instead 
+       of \file {wwsympa.fcgi}. You should edit your \file {/etc/sudoers} file (with visudo command) as follows :
+\begin {quote}
+\begin{verbatim}
+apache ALL = (sympa  NOPASSWD: [CGIDIR]/wwsympa.fcgi
+\end{verbatim}
+\end {quote}
 
-\item Use a Apache virtual host with sympa.sympa as uid.gid ; Apache
+\item Dedicated Apache server : run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
+      is apache.apache).
+
+\item Apache suExec : use an Apache virtual host with sympa.sympa as uid.gid ; Apache
       needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
       UID/GID allowed to be a target user for suEXEC. For most systems including binaries
       distribution of Apache, the default value 100 is common.
@@ -3244,7 +3253,7 @@ others. Depending on permissions, the same URL may generate a different view.
       The User and Group directive have to be set before the FastCgiServer directive
       is encountered.
 
-\item Otherwise, you can overcome restrictions on the execution of suid scripts
+\item C wrapper : otherwise, you can overcome restrictions on the execution of suid scripts
       by using a short C program, owned by sympa and with the suid bit set, to start
       \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
 \begin {quote}
@@ -3295,9 +3304,10 @@ int main(int argn, char **argv, char **envp) {
  \end{verbatim}
 \end {quote}
  
-If you run virtual hosts, then the FastCgiServer(s) can serve multiple robots. 
-Therefore you need to define it in the common section of your Apache configuration
-file.
+If you are using \textbf {sudo} (see evious subsection), then replace \file {wwsympa.fcgi} calls with \file {wwsympa\_sudo\_wrapper.pl}.
+
+If you run virtual hosts, then each FastCgiServer(s) can serve multiple hosts. 
+Therefore you need to define it in the common section of your Apache configuration file.
 
 \subsection {Using FastCGI}
 
