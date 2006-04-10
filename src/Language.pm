@@ -152,11 +152,6 @@ sub SetLang {
 	$lang = &Locale2Lang($locale);
     }
    
-    &Locale::Messages::textdomain("sympa");
-    &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
-    &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
-    #bind_textdomain_codeset sympa => 'iso-8859-1';
-
     ## Set Locale::Messages context
     my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
     $locale_dashless =~ s/-//g;
@@ -179,6 +174,11 @@ sub SetLang {
 	}
     }
     
+    &Locale::Messages::textdomain("sympa");
+    &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
+    &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
+    #bind_textdomain_codeset sympa => 'iso-8859-1';
+
     $current_lang = $lang;
     $current_locale = $locale;
 
