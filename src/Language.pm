@@ -155,8 +155,8 @@ sub SetLang {
     ## Set Locale::Messages context
     my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
     $locale_dashless =~ s/-//g;
-    my $success;
     foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
+	my $success;
 	foreach my $try ($locale.'.'.$locale2charset{$locale},
 			 $locale.'.'.uc($locale2charset{$locale}),  ## UpperCase required for FreeBSD
 			 $locale_dashless, ## Required on HPUX
@@ -168,15 +168,10 @@ sub SetLang {
 		last;
 	    }	
 	}
-    }
-
-    ## Just set the right environment variables
-    unless ($success) {
-	&Locale::Messages::nl_putenv ("LANGUAGE=$locale");
-	&Locale::Messages::nl_putenv ("LC_ALL=$locale");
-	&Locale::Messages::nl_putenv ("LANG=$locale");
-	&Locale::Messages::nl_putenv ("LC_MESSAGES=$locale");
-	&Locale::Messages::nl_putenv ("LC_TIME=$locale");
+	unless ($success) {
+	    &do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale);
+	    return undef;
+	}
     }
     
     ## Define what catalog is used
