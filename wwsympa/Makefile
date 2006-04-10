@@ -159,7 +159,7 @@ substcgi:
 		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
 		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
 		CONFIG=$(CONFIG); export CONFIG; \
-		if [ "$(enable_secure)" == "yes" ]; then PERLOPT=""; else PERLOPT="-U"; fi; export PERLOPT; \
+		if [ "$(enable_secure)" = "yes" ]; then PERLOPT=""; else PERLOPT="-U"; fi; export PERLOPT; \
 		$(PERL) ../subst.pl $(cgi_SUBST) \
 	)
 
