@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.2b.2}
+    \newcommand {\version} {5.2}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,7 +126,7 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2b.2\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.2\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
@@ -3599,13 +3599,13 @@ others. Depending on permissions, the same URL may generate a different view.
      There are different ways to achieve this :
 \begin{itemize}
 \item SetuidPerl : this is the default method but might be insecure. If you don't set the \textbf {- -enable\_secure} configure option,
-      \file {wwsympa.fcgi} is installed with the SetUID bit set. On most you will need to install the suidperl package.
+      \file {wwsympa.fcgi} is installed with the SetUID bit set. On most systems you will need to install the suidperl package.
 
 \item Sudo : use \textbf {sudo} to run \file {wwsympa.fcgi} as user sympa. Your Apache configuration should use \file {wwsympa\_sudo\_wrapper.pl} instead 
        of \file {wwsympa.fcgi}. You should edit your \file {/etc/sudoers} file (with visudo command) as follows :
 \begin {quote}
 \begin{verbatim}
-apache ALL = (sympa  NOPASSWD: /usr/local/sympa-os/bin/wwsympa.fcgi
+apache ALL = (sympa)  NOPASSWD: /usr/local/sympa-os/bin/wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
@@ -3671,9 +3671,10 @@ int main(int argn, char **argv, char **envp) {
  \end{verbatim}
 \end {quote}
  
-If you run virtual hosts, then the FastCgiServer(s) can serve multiple robots. 
-Therefore you need to define it in the common section of your Apache configuration
-file.
+If you are using \textbf {sudo} (see evious subsection), then replace \file {wwsympa.fcgi} calls with \file {wwsympa\_sudo\_wrapper.pl}.
+
+If you run virtual hosts, then each FastCgiServer(s) can serve multiple hosts. 
+Therefore you need to define it in the common section of your Apache configuration file.
 
 \subsection {Using FastCGI}
 

@@ -3236,7 +3236,7 @@ others. Depending on permissions, the same URL may generate a different view.
        of \file {wwsympa.fcgi}. You should edit your \file {/etc/sudoers} file (with visudo command) as follows :
 \begin {quote}
 \begin{verbatim}
-apache ALL = (sympa  NOPASSWD: [CGIDIR]/wwsympa.fcgi
+apache ALL = (sympa)  NOPASSWD: [CGIDIR]/wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
