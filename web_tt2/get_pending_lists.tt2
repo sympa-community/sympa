@@ -7,12 +7,13 @@
 
 <table style="border: solid 1px; width: auto; margin: 10px">
  <tr style="background-color: [% color_4 %];">
-   <th style="padding: 10px; border: solid 1px;" colspan="3">[%|loc%]Pending lists[%END%]</td>
+   <th style="padding: 10px; border: solid 1px;" colspan="4">[%|loc%]Pending lists[%END%]</td>
  </tr>
  <tr style="background-color: [% color_4 %];">
    <th style="padding: 3px; border: solid 1px;">[%|loc%]list name[%END%]</th>
    <th style="padding: 3px; border: solid 1px;">[%|loc%]list subject[%END%]</th>
    <th style="padding: 3px; border: solid 1px;">[%|loc%]Requested by[%END%]</th>
+   <th style="padding: 3px; border: solid 1px;">[%|loc%]Requested date[%END%]</th>
  </tr>
 
 [% FOREACH list = pending %]
@@ -25,6 +26,7 @@
 <td><a href="[% path_cgi %]/set_pending_list_request/[% list.key %]">[% list.key %]</a></td>
 <td>[% list.value.subject %]</td>
 <td>[% list.value.by %]</td>
+<td>[% list.value.date %]</td>
 </tr>
 [% END %]
 </table>

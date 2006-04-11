@@ -6332,6 +6332,7 @@ sub do_remove_arc {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
 	     $param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
+	     $param->{'pending'}{$list->{'name'}}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'}));
 	 }
      }
 
