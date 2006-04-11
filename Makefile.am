@@ -202,7 +202,7 @@ checkperl:
 		echo "##     but it might be insecure."; \
 		echo "##  2/ Use 'sudo' to run wwsympa.fcgi as user $(USER). Your Apache configuration should use wwsympa_sudo_wrapper.pl"; \
 		echo "##     You should edit your /etc/sudoers file (with visudo command) as follows :"; \
-		echo "##     apache ALL = ($(USER)  NOPASSWD: $(CGIDIR)/wwsympa.fcgi"; \
+		echo "##     apache ALL = ($(USER))  NOPASSWD: $(CGIDIR)/wwsympa.fcgi"; \
 		echo "##  3/ Use Apache's suExec mode."; \
 		echo "## For (2) and (3) you should run Sympa's 'configure' with the '--enable-secure' option"; \
 		echo "#######################################################################################"; \
