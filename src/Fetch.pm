@@ -108,7 +108,7 @@ sub get_https{
 	   do_log ('debug','ssl peer certificat %s issued by %s. Cipher used %s',$subject_name,$issuer_name,$cipher);
 	}
 
-	print $ssl_socket "GET $path HTTP/1.0\n\n";
+	print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
 
 	do_log ('debug',"requested GET $path HTTP/1.1");
 	#my ($buffer) = $ssl_socket->getlines;
@@ -186,7 +186,7 @@ sub get_https2{
 #	   do_log ('debug','ssl peer certificat %s issued by %s. Cipher used %s',$subject_name,$issuer_name,$cipher);
 #	}
 
-	my $request = "GET $path HTTP/1.0\n\n";
+	my $request = "GET $path HTTP/1.0\nHost: $host\n\n";
 	print $ssl_socket "$request\n\n";
 
 	do_log ('debug',"requesting  $request");
