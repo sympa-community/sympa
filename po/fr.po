@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2006-04-04 14:24+0200\n"
+"PO-Revision-Date: 2006-04-12 10:39+0200\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr ""
 "ou envoyez un e-mail à %1 avec comme sujet :\n"
 "AUTH %2 DEL %3 %4\n"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Attention, cela peut prendre beaucoup de temps CPU !"
 
@@ -736,7 +736,7 @@ msgid "Archive powered by"
 msgstr "Archives gérées par"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:84
+#: web_tt2/serveradmin.tt2:47
 msgid "Archives"
 msgstr "Les archives"
 
@@ -1024,6 +1024,14 @@ msgstr "Consultez les logs de Sympa pour plus de précisions."
 msgid "Check Sympa log files for more precise information."
 msgstr "Consultez les logs de Sympa pour plus de précisions."
 
+#: web_tt2/serveradmin.tt2:101
+msgid ""
+"Check our translation FAQ if you wish to translate Sympa GUI in your native "
+"language : "
+msgstr ""
+"Consultez notre FAQ pour les traducteurs si vous souhaitez traduire Sympa dans \n"
+"votre langue :"
+
 #. (list)
 #: web_tt2/sigrequest.tt2:31
 msgid ""
@@ -1220,7 +1228,7 @@ msgstr ""
 msgid "Custom header field"
 msgstr "Champs d'entête personnalisés"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:86
 msgid "Customize templates"
 msgstr "Personnaliser les \"templates\""
 
@@ -1589,8 +1597,8 @@ msgstr ""
 "niveau 1 concerne     les abonnés en erreur dont le score est compris entre "
 "45 et le seuil de niveau 2."
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
-#: web_tt2/serveradmin.tt2:67
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:67
+#: web_tt2/serveradmin.tt2:78
 msgid "Edit"
 msgstr "Editer"
 
@@ -2250,7 +2258,7 @@ msgstr ""
 "de liste ne dispose pas de votre certificat X509 (pour l'adresse\n"
 "%1)."
 
-#: src/etc/mhonarc-ressources.tt2:589
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -2356,7 +2364,10 @@ msgstr "La liste %1 autorise uniquement les modes de réception suivants : %2"
 msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page :"
-msgstr "La liste %s vous permet d'indiquer le thème de votre message parmi une liste de thèmes prédéfinis. Pour marquer le message ci-joint, consultez la page suivante :"
+msgstr ""
+"La liste %s vous permet d'indiquer le thème de votre message parmi une liste "
+"de thèmes prédéfinis. Pour marquer le message ci-joint, consultez la page "
+"suivante :"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:4
@@ -3600,15 +3611,15 @@ msgstr "Ressaisissez le nouveau mot de passe :"
 msgid "Read access"
 msgstr "Droit de consultation"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:49
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "Reconstruire les archives HTML"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "Rebuild all"
 msgstr "Reconstruire TOUTES les archives"
 
-#: web_tt2/serveradmin.tt2:89
+#: web_tt2/serveradmin.tt2:52
 msgid "Rebuild archive"
 msgstr "Reconstruire les archives"
 
@@ -3755,6 +3766,11 @@ msgstr "Répondre à l'auteur"
 
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:15
 msgid "Requested by"
+msgstr "Demandée par"
+
+#: web_tt2/get_pending_lists.tt2:16
+#, fuzzy
+msgid "Requested date"
 msgstr "Demandée par"
 
 #: web_tt2/create_list.tt2:11
@@ -4029,11 +4045,11 @@ msgstr "Changer le propriétaire"
 msgid "Set the owner of the directory %1"
 msgstr "Changer le propriétaire de %1"
 
-#: web_tt2/serveradmin.tt2:52
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting defaults list templates"
 msgstr "Editer les \"templates\" par défaut des listes"
 
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
 msgstr "Editer les \"templates\" du serveur"
 
@@ -4106,11 +4122,11 @@ msgstr "Taille"
 msgid "Size (Kb)"
 msgstr "Taille (Ko)"
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:91
 msgid "Skins administration page"
 msgstr "Administration des skins "
 
-#: web_tt2/serveradmin.tt2:79
+#: web_tt2/serveradmin.tt2:90
 msgid "Skins, CSS and colors"
 msgstr "Skins, feuilles de style et couleurs"
 
@@ -4188,6 +4204,11 @@ msgstr "Valider"
 
 #: web_tt2/create_list_request.tt2:85
 msgid "Submit your creation request"
+msgstr "Envoyer votre demande de création"
+
+#: web_tt2/serveradmin.tt2:106
+#, fuzzy
+msgid "Submitting a bug, a feature request"
 msgstr "Envoyer votre demande de création"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
@@ -4293,7 +4314,7 @@ msgstr "Résumé de la liste %1"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Synthèse de vos abonnements (avec l'adresse %1)."
 
-#: src/etc/mhonarc-ressources.tt2:571
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
 
@@ -4393,6 +4414,18 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr "Erreur de Sympa - impossible d'afficher la page web"
 
+#: web_tt2/serveradmin.tt2:98
+msgid ""
+"Sympa is designed to allow easy internationalization of its user interface "
+"(service mail messages and web interface). All translations for one language "
+"are gathered in a single PO file that can be manipulated by standard GNU "
+"gettext tools."
+msgstr ""
+"Sympa est conçu pour permettre une traduction aisée de son interface utilisateur\n"
+"(messages de service et interface web). Toutes les traductions pour une langue \n"
+"sont regroupées dans un fichier unique au format PO, éditable à l'aide des outils \n"
+"standards GNU."
+
 #: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
@@ -4450,7 +4483,7 @@ msgstr "Nom du template"
 msgid "Template saved"
 msgstr "Template mis à jour"
 
-#: web_tt2/serveradmin.tt2:47
+#: web_tt2/serveradmin.tt2:58
 msgid "Templates"
 msgstr "Les templates"
 
@@ -4972,7 +5005,7 @@ msgid "These commands have failed because of an internal server error :"
 msgstr "Ces commandes ont échoué à cause d'une erreur interne du serveur :"
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:98
+#: web_tt2/serveradmin.tt2:115
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Ce processus FastCGI (%1) a traité %2 requêtes depuis %3."
 
@@ -5692,6 +5725,10 @@ msgstr "Espace total utilisé par %1@%2 en octets."
 #: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "Nombre d'abonnés : %1"
+
+#: web_tt2/serveradmin.tt2:96
+msgid "Translating Sympa"
+msgstr "Traduire Sympa"
 
 #: web_tt2/edit_template.tt2:7
 msgid "Type"
@@ -6419,6 +6456,10 @@ msgstr ""
 "fanatique d'un agent de messagerie qui fabrique systématiquement des "
 "messages multipart ou text/html, les commandes placées dans le sujet du "
 "messages sont reconnues."
+
+#: web_tt2/serveradmin.tt2:108
+msgid "You can submit a problem or request a new feature : "
+msgstr "Vous pouvez soumettre un problème ou une demande de fonctionnalité :"
 
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
 msgid "You can subscribe again :"
@@ -8131,7 +8172,7 @@ msgstr "attachements stockés sur le serveur"
 msgid "value"
 msgstr "valeur"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:85
 msgid "view translations"
 msgstr "voir les traductions"
 

@@ -45,7 +45,7 @@ msgid ""
 "AUTH %2 DEL %3 %4\n"
 msgstr "Of zend een bericht naar %1@%2 met het volgende onderwerp :"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr ""
 " Dit vergt veel rekenkracht van de computer, wees voorzichtig als u dit "
@@ -751,7 +751,7 @@ msgid "Archive powered by"
 msgstr "Archief powerd by"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:84
+#: web_tt2/serveradmin.tt2:47
 msgid "Archives"
 msgstr "Archives"
 
@@ -1046,6 +1046,12 @@ msgstr "Kijk de Sympa logfiles na voor meer preciese informatie."
 msgid "Check Sympa log files for more precise information."
 msgstr "Kijk de Sympa logfiles na voor meer preciese informatie."
 
+#: web_tt2/serveradmin.tt2:101
+msgid ""
+"Check our translation FAQ if you wish to translate Sympa GUI in your native "
+"language : "
+msgstr ""
+
 #. (list)
 #: web_tt2/sigrequest.tt2:31
 msgid ""
@@ -1242,7 +1248,7 @@ msgstr ""
 msgid "Custom header field"
 msgstr "Speciaal koptekst veld"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:86
 msgid "Customize templates"
 msgstr "Wijzig sjablonen"
 
@@ -1626,8 +1632,8 @@ msgstr ""
 "definieert de laagste grens van elke categorie.  Bvb: Level 1 begint vanaf "
 "45 tot level_2_treshold."
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
-#: web_tt2/serveradmin.tt2:67
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:67
+#: web_tt2/serveradmin.tt2:78
 msgid "Edit"
 msgstr "Wijzig"
 
@@ -2289,7 +2295,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:589
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3649,15 +3655,15 @@ msgstr "Nogmaails uw nieuwe wachtwoord :"
 msgid "Read access"
 msgstr "Lees toegang"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:49
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "Rebuild all"
 msgstr "Hergenereer archief"
 
-#: web_tt2/serveradmin.tt2:89
+#: web_tt2/serveradmin.tt2:52
 msgid "Rebuild archive"
 msgstr "Herbouw archief"
 
@@ -3800,6 +3806,11 @@ msgstr "Antwoord aan zender"
 
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:15
 msgid "Requested by"
+msgstr "Aangevraagd door"
+
+#: web_tt2/get_pending_lists.tt2:16
+#, fuzzy
+msgid "Requested date"
 msgstr "Aangevraagd door"
 
 #: web_tt2/create_list.tt2:11
@@ -4063,11 +4074,11 @@ msgstr "Bepaal eigenaar"
 msgid "Set the owner of the directory %1"
 msgstr "Bepaal de eigenaar van de map %1"
 
-#: web_tt2/serveradmin.tt2:52
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting defaults list templates"
 msgstr "Zet de standaard lijst sjablonen"
 
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
 msgstr "Zet de site sjablonen"
 
@@ -4137,12 +4148,12 @@ msgstr "Grootte"
 msgid "Size (Kb)"
 msgstr "Size (Kb)"
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:91
 #, fuzzy
 msgid "Skins administration page"
 msgstr "Lijst Administratie Paneel"
 
-#: web_tt2/serveradmin.tt2:79
+#: web_tt2/serveradmin.tt2:90
 msgid "Skins, CSS and colors"
 msgstr ""
 
@@ -4219,6 +4230,11 @@ msgstr "Verstuur"
 
 #: web_tt2/create_list_request.tt2:85
 msgid "Submit your creation request"
+msgstr "Verstuur uw lijst aanmaak aanvraag"
+
+#: web_tt2/serveradmin.tt2:106
+#, fuzzy
+msgid "Submitting a bug, a feature request"
 msgstr "Verstuur uw lijst aanmaak aanvraag"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
@@ -4323,7 +4339,7 @@ msgstr "Samenvatting van lijst %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Samenvatting van uw abonnement (met het emailadres %1)."
 
-#: src/etc/mhonarc-ressources.tt2:571
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -4403,6 +4419,14 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
+#: web_tt2/serveradmin.tt2:98
+msgid ""
+"Sympa is designed to allow easy internationalization of its user interface "
+"(service mail messages and web interface). All translations for one language "
+"are gathered in a single PO file that can be manipulated by standard GNU "
+"gettext tools."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
@@ -4464,7 +4488,7 @@ msgstr "Templates"
 msgid "Template saved"
 msgstr "Templates"
 
-#: web_tt2/serveradmin.tt2:47
+#: web_tt2/serveradmin.tt2:58
 msgid "Templates"
 msgstr "Templates"
 
@@ -4957,7 +4981,7 @@ msgid "These commands have failed because of an internal server error :"
 msgstr "Reset foutmeldingen"
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:98
+#: web_tt2/serveradmin.tt2:115
 #, fuzzy
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "This FastCGI process (%1) has served %2 since %3."
@@ -5551,6 +5575,10 @@ msgstr ""
 #: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "Totaal aantal abonnees : %1"
+
+#: web_tt2/serveradmin.tt2:96
+msgid "Translating Sympa"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:7
 #, fuzzy
@@ -6256,6 +6284,10 @@ msgid ""
 "body is ignored if the Content-Type is different from text/plain but even "
 "with crasy mailer using multipart and text/html for any message, commands in "
 "the subject are recognized."
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:108
+msgid "You can submit a problem or request a new feature : "
 msgstr ""
 
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
@@ -7906,7 +7938,7 @@ msgstr "Gebruikershandleiding"
 msgid "value"
 msgstr "waarde"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:85
 msgid "view translations"
 msgstr ""
 

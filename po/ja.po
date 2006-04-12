@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "もしくは、以下の題名 (subject) で %1@%2 へメッセージを送信してください :"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "  CPU負荷が大きくなりますので注意してください。"
 
@@ -715,7 +715,7 @@ msgid "Archive powered by"
 msgstr "アーカイブ作成:"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:84
+#: web_tt2/serveradmin.tt2:47
 msgid "Archives"
 msgstr "アーカイブ"
 
@@ -1002,6 +1002,12 @@ msgstr "詳細な情報についてはSympaのログを参照してください"
 msgid "Check Sympa log files for more precise information."
 msgstr "より詳細な情報についてはSympaのログをごらんください"
 
+#: web_tt2/serveradmin.tt2:101
+msgid ""
+"Check our translation FAQ if you wish to translate Sympa GUI in your native "
+"language : "
+msgstr ""
+
 #. (list)
 #: web_tt2/sigrequest.tt2:31
 msgid ""
@@ -1192,7 +1198,7 @@ msgstr ""
 msgid "Custom header field"
 msgstr "カスタムヘッダフィールド"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:86
 msgid "Customize templates"
 msgstr "テンプレートのカスタマイズ"
 
@@ -1567,8 +1573,8 @@ msgstr ""
 "このパラメータはバウンスユーザのカテゴリの下限を定義します。\n"
 "例えば、レベル1は45からレベル2の閾(しきい)値の間を指します。"
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
-#: web_tt2/serveradmin.tt2:67
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:67
+#: web_tt2/serveradmin.tt2:78
 msgid "Edit"
 msgstr "編集"
 
@@ -2242,7 +2248,7 @@ msgstr ""
 "あなたの証明書(メールアドレス %1 )にアクセスできなかった為、\n"
 "送信する事ができませんでした。"
 
-#: src/etc/mhonarc-ressources.tt2:589
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3591,15 +3597,15 @@ msgstr "パスワードの再入力:"
 msgid "Read access"
 msgstr "読み込み権限"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:49
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "\"arctxt\"ディレクトリを入力としてHTMLアーカイブを再生成する。"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "Rebuild all"
 msgstr "全アーカイブを再生成する"
 
-#: web_tt2/serveradmin.tt2:89
+#: web_tt2/serveradmin.tt2:52
 msgid "Rebuild archive"
 msgstr "アーカイブを再生成する"
 
@@ -3737,6 +3743,11 @@ msgstr "送信者にリプライする"
 
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:15
 msgid "Requested by"
+msgstr "要求者:"
+
+#: web_tt2/get_pending_lists.tt2:16
+#, fuzzy
+msgid "Requested date"
 msgstr "要求者:"
 
 #: web_tt2/create_list.tt2:11
@@ -4009,11 +4020,11 @@ msgstr "オーナーの設定"
 msgid "Set the owner of the directory %1"
 msgstr "ディレクトリ %1 のオーナーを設定"
 
-#: web_tt2/serveradmin.tt2:52
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting defaults list templates"
 msgstr "デフォルトのメーリングリストテンプレートの設定"
 
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
 msgstr "サイト全体のテンプレート設定"
 
@@ -4088,11 +4099,11 @@ msgstr "サイズ"
 msgid "Size (Kb)"
 msgstr "サイズ (Kb)"
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:91
 msgid "Skins administration page"
 msgstr "スキン管理ページ"
 
-#: web_tt2/serveradmin.tt2:79
+#: web_tt2/serveradmin.tt2:90
 msgid "Skins, CSS and colors"
 msgstr "スキン、CSS、色"
 
@@ -4165,6 +4176,11 @@ msgstr "設定"
 
 #: web_tt2/create_list_request.tt2:85
 msgid "Submit your creation request"
+msgstr "作成要求の送信"
+
+#: web_tt2/serveradmin.tt2:106
+#, fuzzy
+msgid "Submitting a bug, a feature request"
 msgstr "作成要求の送信"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
@@ -4270,7 +4286,7 @@ msgstr "メーリングリスト%sのサマリ"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "あなたのメーリングリスト購読の要約(メールアドレス %1 によるもの)。"
 
-#: src/etc/mhonarc-ressources.tt2:571
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "日:月:火:水:曜:木:金:土"
 
@@ -4372,6 +4388,14 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr "Sympa error - ウェブページを表示できません"
 
+#: web_tt2/serveradmin.tt2:98
+msgid ""
+"Sympa is designed to allow easy internationalization of its user interface "
+"(service mail messages and web interface). All translations for one language "
+"are gathered in a single PO file that can be manipulated by standard GNU "
+"gettext tools."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
@@ -4432,7 +4456,7 @@ msgstr "テンプレート名"
 msgid "Template saved"
 msgstr "テンプレートは保存されました"
 
-#: web_tt2/serveradmin.tt2:47
+#: web_tt2/serveradmin.tt2:58
 msgid "Templates"
 msgstr "テンプレート"
 
@@ -4929,7 +4953,7 @@ msgid "These commands have failed because of an internal server error :"
 msgstr ""
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:98
+#: web_tt2/serveradmin.tt2:115
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "このFastCGIプロセス (%1) は %3から %2 回サービスしています。"
 
@@ -5625,6 +5649,10 @@ msgstr "%1@ が使用しているサイズは %2バイトです。"
 #: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "講読人数: %1人"
+
+#: web_tt2/serveradmin.tt2:96
+msgid "Translating Sympa"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:7
 msgid "Type"
@@ -6332,6 +6360,10 @@ msgstr ""
 "文に書かれていなければならず、各々の行には一つのコマンドのしか記述出来ませ"
 "ん。Content-Typeがtext/plain以外の場合、メッセージ本文の記述は無視されます。"
 "しかし、subjectの中のコマンドは常に解釈されます。"
+
+#: web_tt2/serveradmin.tt2:108
+msgid "You can submit a problem or request a new feature : "
+msgstr ""
 
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
 msgid "You can subscribe again :"
@@ -7966,7 +7998,7 @@ msgstr "URL化モード"
 msgid "value"
 msgstr "値"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:85
 msgid "view translations"
 msgstr "翻訳を参照"
 

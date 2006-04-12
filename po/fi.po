@@ -41,7 +41,7 @@ msgid ""
 "AUTH %2 DEL %3 %4\n"
 msgstr "tai lähetä viesti osoitteeseen %1@%2 seuraavalla otsikolla :"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 #, fuzzy
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Saattaa viedä paljon CPU aikaa, ole varovainen !"
@@ -749,7 +749,7 @@ msgid "Archive powered by"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:84
+#: web_tt2/serveradmin.tt2:47
 msgid "Archives"
 msgstr "Arkistot"
 
@@ -1049,6 +1049,12 @@ msgstr ""
 msgid "Check Sympa log files for more precise information."
 msgstr ""
 
+#: web_tt2/serveradmin.tt2:101
+msgid ""
+"Check our translation FAQ if you wish to translate Sympa GUI in your native "
+"language : "
+msgstr ""
+
 #. (list)
 #: web_tt2/sigrequest.tt2:31
 msgid ""
@@ -1245,7 +1251,7 @@ msgstr ""
 msgid "Custom header field"
 msgstr "Mukautettu otsikko kenttä"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:86
 msgid "Customize templates"
 msgstr "Muuta malleja"
 
@@ -1615,8 +1621,8 @@ msgid ""
 "to level_2_treshold."
 msgstr ""
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
-#: web_tt2/serveradmin.tt2:67
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:67
+#: web_tt2/serveradmin.tt2:78
 msgid "Edit"
 msgstr "Muuta"
 
@@ -2284,7 +2290,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:589
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3666,16 +3672,16 @@ msgstr "Salasana uudelleen :"
 msgid "Read access"
 msgstr "Lukuoikeus"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:49
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 #, fuzzy
 msgid "Rebuild all"
 msgstr "Luo arkisto uudelleen"
 
-#: web_tt2/serveradmin.tt2:89
+#: web_tt2/serveradmin.tt2:52
 msgid "Rebuild archive"
 msgstr "Luo arkisto uudelleen"
 
@@ -3822,6 +3828,11 @@ msgstr ""
 
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:15
 msgid "Requested by"
+msgstr "Pyytäjä"
+
+#: web_tt2/get_pending_lists.tt2:16
+#, fuzzy
+msgid "Requested date"
 msgstr "Pyytäjä"
 
 #: web_tt2/create_list.tt2:11
@@ -4092,11 +4103,11 @@ msgstr "Aseta omistaja"
 msgid "Set the owner of the directory %1"
 msgstr "Aseta hakemiston omistaja %1"
 
-#: web_tt2/serveradmin.tt2:52
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting defaults list templates"
 msgstr "Asetetaan lista oletusmallit"
 
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
 msgstr "Asetetaan sivuston oletusmallit"
 
@@ -4167,12 +4178,12 @@ msgstr "Koko"
 msgid "Size (Kb)"
 msgstr "Koko (Kb)"
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:91
 #, fuzzy
 msgid "Skins administration page"
 msgstr "Listojen hallinnan paneeli"
 
-#: web_tt2/serveradmin.tt2:79
+#: web_tt2/serveradmin.tt2:90
 msgid "Skins, CSS and colors"
 msgstr ""
 
@@ -4252,6 +4263,11 @@ msgstr "Lähetä"
 
 #: web_tt2/create_list_request.tt2:85
 msgid "Submit your creation request"
+msgstr "Lähetä luontipyyntö"
+
+#: web_tt2/serveradmin.tt2:106
+#, fuzzy
+msgid "Submitting a bug, a feature request"
 msgstr "Lähetä luontipyyntö"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
@@ -4364,7 +4380,7 @@ msgstr "Yhteenveto listasta %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Yhteenveto tilauksestasi (käyttäen osoitetta %1)."
 
-#: src/etc/mhonarc-ressources.tt2:571
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -4444,6 +4460,14 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
+#: web_tt2/serveradmin.tt2:98
+msgid ""
+"Sympa is designed to allow easy internationalization of its user interface "
+"(service mail messages and web interface). All translations for one language "
+"are gathered in a single PO file that can be manipulated by standard GNU "
+"gettext tools."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
@@ -4505,7 +4529,7 @@ msgstr "Oletusmallit"
 msgid "Template saved"
 msgstr "Oletusmallit"
 
-#: web_tt2/serveradmin.tt2:47
+#: web_tt2/serveradmin.tt2:58
 msgid "Templates"
 msgstr "Oletusmallit"
 
@@ -4999,7 +5023,7 @@ msgid "These commands have failed because of an internal server error :"
 msgstr "Tyhjää virheet"
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:98
+#: web_tt2/serveradmin.tt2:115
 #, fuzzy
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Tämä FastCGI prosessi (%1) on ollut ajossa %2 %3 asti."
@@ -5594,6 +5618,10 @@ msgstr "Lista \"%1\" varoitus : arkisto [% rate %]% täynnä"
 #: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "Tilaajaa yhteensä : %1"
+
+#: web_tt2/serveradmin.tt2:96
+msgid "Translating Sympa"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:7
 #, fuzzy
@@ -6344,6 +6372,10 @@ msgid ""
 "body is ignored if the Content-Type is different from text/plain but even "
 "with crasy mailer using multipart and text/html for any message, commands in "
 "the subject are recognized."
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:108
+msgid "You can submit a problem or request a new feature : "
 msgstr ""
 
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
@@ -8108,7 +8140,7 @@ msgstr "Käyttäjän opas"
 msgid "value"
 msgstr "arvo"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:85
 msgid "view translations"
 msgstr ""
 

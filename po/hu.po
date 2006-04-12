@@ -35,7 +35,7 @@ msgid ""
 "AUTH %2 DEL %3 %4\n"
 msgstr "Vagy a következõ tárggyal küldjön egy levelet a(z) %1@%2 címre:"
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Csak óvatosan, mivel nagyon gépigényes!"
 
@@ -744,7 +744,7 @@ msgid "Archive powered by"
 msgstr "Az archívumot mûködteti:"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:84
+#: web_tt2/serveradmin.tt2:47
 msgid "Archives"
 msgstr "Archívum"
 
@@ -1042,6 +1042,12 @@ msgstr "Bõvebb információt a Sympa napló állományában lehet találni"
 msgid "Check Sympa log files for more precise information."
 msgstr "Bõvebb információt a Sympa napló állományában lehet találni."
 
+#: web_tt2/serveradmin.tt2:101
+msgid ""
+"Check our translation FAQ if you wish to translate Sympa GUI in your native "
+"language : "
+msgstr ""
+
 #. (list)
 #: web_tt2/sigrequest.tt2:31
 msgid ""
@@ -1239,7 +1245,7 @@ msgstr ""
 msgid "Custom header field"
 msgstr "Egyéni fejléc mezõ"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:86
 msgid "Customize templates"
 msgstr "Sablonok módosítása"
 
@@ -1627,8 +1633,8 @@ msgstr ""
 "kategóriái között. Pédául: az 1-es szint 45-tõl a 2-es szint határáig "
 "(level_2_treshold) tart."
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
-#: web_tt2/serveradmin.tt2:67
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:67
+#: web_tt2/serveradmin.tt2:78
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -2315,7 +2321,7 @@ msgstr ""
 "A levelezési lista kezelõ nem tudta továbbítani Önnek a levelet, mert nem "
 "tudta elérni a személyes tanusítványát (e-mail: %1)."
 
-#: src/etc/mhonarc-ressources.tt2:589
+#: src/etc/mhonarc-ressources.tt2:590
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3711,15 +3717,15 @@ msgstr "Új jelszó mégegyszer:"
 msgid "Read access"
 msgstr "Olvasási jog"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:49
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "HTML archívum frissítése az \"arctxt\" könyvtár felhasználásával."
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:53
 msgid "Rebuild all"
 msgstr "Mind frissítése"
 
-#: web_tt2/serveradmin.tt2:89
+#: web_tt2/serveradmin.tt2:52
 msgid "Rebuild archive"
 msgstr "Archívum frissítése"
 
@@ -3863,6 +3869,11 @@ msgstr "Válasz a feladónak"
 
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:15
 msgid "Requested by"
+msgstr "Kérelmezõ"
+
+#: web_tt2/get_pending_lists.tt2:16
+#, fuzzy
+msgid "Requested date"
 msgstr "Kérelmezõ"
 
 #: web_tt2/create_list.tt2:11
@@ -4139,11 +4150,11 @@ msgstr "Tulajdonos beállítása"
 msgid "Set the owner of the directory %1"
 msgstr "A(z) %1 könyvtár tulajdonosának beállítása"
 
-#: web_tt2/serveradmin.tt2:52
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting defaults list templates"
 msgstr "A lista alapértelmezett sablonjainak beállítása"
 
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
 msgstr "A rendszer sablonjainak beállítása"
 
@@ -4221,11 +4232,11 @@ msgstr "Méret"
 msgid "Size (Kb)"
 msgstr "Méret (Kb)"
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:91
 msgid "Skins administration page"
 msgstr "Kinézet adminisztrációs oldal"
 
-#: web_tt2/serveradmin.tt2:79
+#: web_tt2/serveradmin.tt2:90
 msgid "Skins, CSS and colors"
 msgstr "Kinézetek, CSS és színek"
 
@@ -4301,6 +4312,11 @@ msgstr "Mentés"
 
 #: web_tt2/create_list_request.tt2:85
 msgid "Submit your creation request"
+msgstr "Kérelem elküldése"
+
+#: web_tt2/serveradmin.tt2:106
+#, fuzzy
+msgid "Submitting a bug, a feature request"
 msgstr "Kérelem elküldése"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
@@ -4411,7 +4427,7 @@ msgstr "Összefoglaló a(z) %s listáról"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Összefoglaló a feliratkozásairól (%1 címmel)."
 
-#: src/etc/mhonarc-ressources.tt2:571
+#: src/etc/mhonarc-ressources.tt2:572
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Vasárnap:Hétfõ:Kedd:Szerda:Csütörtök:Péntek:Szombat"
 
@@ -4510,6 +4526,14 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr "Sympa hiba - nem sikerült megjeleníteni a weblapot"
 
+#: web_tt2/serveradmin.tt2:98
+msgid ""
+"Sympa is designed to allow easy internationalization of its user interface "
+"(service mail messages and web interface). All translations for one language "
+"are gathered in a single PO file that can be manipulated by standard GNU "
+"gettext tools."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
@@ -4572,7 +4596,7 @@ msgstr "Sablon neve"
 msgid "Template saved"
 msgstr "Sablon elmentve"
 
-#: web_tt2/serveradmin.tt2:47
+#: web_tt2/serveradmin.tt2:58
 msgid "Templates"
 msgstr "Sablonok"
 
@@ -5087,7 +5111,7 @@ msgid "These commands have failed because of an internal server error :"
 msgstr ""
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:98
+#: web_tt2/serveradmin.tt2:115
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Ez a FastCGI folyamat (%1) %3 óta %2 kérést szolgált ki."
 
@@ -5806,6 +5830,10 @@ msgstr "A(z) %1 lista jelenlegi teljes mérete %2 byte."
 #: mail_tt2/review.tt2:13
 msgid "Total subscribers : %1"
 msgstr "Feliratkozások száma: %1"
+
+#: web_tt2/serveradmin.tt2:96
+msgid "Translating Sympa"
+msgstr ""
 
 #: web_tt2/edit_template.tt2:7
 msgid "Type"
@@ -6566,6 +6594,10 @@ msgstr ""
 "feldolgozásra, ha az sima szöveges formátumú, vagyis a Content-Type text/"
 "plain, ugyanakkor olyan levelezõ programnál, ami mindig többrészes vagy text/"
 "html üzenetet használ, a levél tárgyában lévõ parancsok fel lesznek ismerve."
+
+#: web_tt2/serveradmin.tt2:108
+msgid "You can submit a problem or request a new feature : "
+msgstr ""
 
 #: mail_tt2/expire_deletion.tt2:11 mail_tt2/removed.tt2:11
 msgid "You can subscribe again :"
@@ -8305,7 +8337,7 @@ msgstr "urlize mód"
 msgid "value"
 msgstr "Érték"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:85
 msgid "view translations"
 msgstr "fordítások mutatása"
 
