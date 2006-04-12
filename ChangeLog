@@ -1,3 +1,79 @@
+2006-04-11 17:33  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Added Dkim-signature to hidden
+	  SMTP header fields
+
+2006-04-11 15:58  sympa-authors
+
+	* src/Fetch.pm: Fix: Added Host: HTTP header to requests in
+	  get_https() and get_https2()
+
+2006-04-11 15:55  sympa-authors
+
+	* src/CAS.pm: [BugID 694] Fix: CAS ticket validation fails due to
+	  virtualhost error
+
+2006-04-11 15:24  sympa-authors
+
+	* web_tt2/get_pending_lists.tt2, wwsympa/wwsympa.fcgi: [J.Abbott,
+	  Duke Univ] New feature: added submition date to list of pending
+	  lists
+
+2006-04-11 15:22  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node10.html, html/node11.html,
+	  html/node12.html, html/node13.html, html/node14.html,
+	  html/node15.html, html/node16.html, html/node17.html,
+	  html/node18.html, html/node19.html, html/node2.html,
+	  html/node20.html, html/node21.html, html/node22.html,
+	  html/node23.html, html/node24.html, html/node25.html,
+	  html/node26.html, html/node27.html, html/node28.html,
+	  html/node29.html, html/node3.html, html/node30.html,
+	  html/node31.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Update
+
+2006-04-11 15:22  sympa-authors
+
+	* Makefile.am, Makefile.in: Fixed typo
+
+2006-04-10 18:13  sympa-authors
+
+	* wwsympa/Makefile: [C.Peck, William and Mary univ ] Fix: replaced
+	  == with =
+
+2006-04-10 17:54  sympa-authors
+
+	* src/Language.pm: Fix: reverse to previous version
+
+2006-04-10 17:33  sympa-authors
+
+	* src/Language.pm: Change: if setlocale() failed, set environment
+	  variables.  This way installing locale packages should no more be
+	  required.
+
+2006-04-10 16:41  sympa-authors
+
+	* src/Language.pm: [reported by P.Maes, Univ. Louvain] Fix: locales
+	  would not work with Solaris. Solaris requires that
+	  POSIX::setlocale() is run before Locale::Messages::textdomain()
+	  and Messages::bindtextdomain()
+
+2006-04-07 14:36  sympa-authors
+
+	* wwsympa/bounce-lib.pl: [reported by P.Young, Ac. Creteil] Fix:
+	  bounce-lib would not analyse correctly som kind of
+	  message/delivery-status
+
+2006-04-05 11:53  sympa-authors
+
+	* .version, ChangeLog, NEWS: Preparing 5.2 release
+
+2006-04-05 11:49  sympa-authors
+
+	* po/nb_NO.po: Added
+
 2006-04-05 11:37  sympa-authors
 
 	* src/task_manager.pl: [BugID 499] Fix: opendir without closedir

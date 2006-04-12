@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-5.2		5 April 2006
+5.2		11 April 2006
 
    New features :
 
@@ -18,6 +18,9 @@
 	src/sympa.pl: sympa.pl --reload_list_config is provided to recreate config.bin files
 
    Changes :
+
+	src/etc/mhonarc-ressources.tt2: Added Dkim-signature to hidden
+	SMTP header fields
 
 	wwsympa/wwsympa.fcgi: [BugID 482] keep track of first accessed URL in 'referer' variable.  
 	It is then possible to bring the user back to this URL at the end of the authentication
@@ -34,6 +37,17 @@
 	mail_tt2/command_report.tt2: no more provide the listmaster email address ; refer to the web site instead
 
    Bug fixes :
+
+	wwsympa/bounce-lib.pl: [reported by P.Young, Ac. Creteil] bounce-lib would not analyse correctly som kind of
+	message/delivery-status
+
+	src/Language.pm: [reported by P.Maes, Univ. Louvain] locales would not work with Solaris. 
+	Solaris requires that POSIX::setlocale() is run before Locale::Messages::textdomain()
+	and Messages::bindtextdomain()
+
+	wwsympa/Makefile: [C.Peck, William and Mary univ ] replaced == with =
+	
+	src/CAS.pm: [BugI 694] CAS ticket validation fails due tovirtualhost error
 
 	wwsympa/wwsympa.fcgi: [BugID 599] Language dropdown displays names in wrong codeset
 
