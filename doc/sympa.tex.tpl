@@ -2235,11 +2235,11 @@ files. The server admin module include a CSS administration page that can help y
 
 \subsection {\cfkeyword {default\_shared\_quota}}
 
-	The default disk quota for lists' document repository.
+	The default disk quota (the unit is Kbytes) for lists' document repository.
  
 \subsection {\cfkeyword {default\_archive\_quota}}
 
-	The default disk quota for lists' web archives.
+	The default disk quota (the unit is Kbytes) for lists' web archives.
 
 \section {Spool related}
 \label {spool-related}
@@ -3481,7 +3481,7 @@ main archive.
 
      If web\_archive is defined for a list, every message distributed by this list is copied
      to \dir {[SPOOLDIR]/outgoing/}. (No need to create nonexistent subscribers to receive
-     copies of messages). In this example disk quota for the archive is limited to 10 Mo.
+     copies of messages). In this example disk quota (expressed in Kbytes) for the archive is limited to 10 Mo.
 
 \item start \file {archived.pl}.
 \Sympa and Apache
@@ -7958,7 +7958,7 @@ d_edit		private
 
 \lparam {quota} \textit {number-of-Kbytes}
 
-This parameter specifies the disk quota for the document repository, in kilobytes.
+This parameter specifies the disk quota (the unit is Kbytes) for the document repository, in kilobytes.
 If quota is exceeded, file uploads fail.
 
 \section {List tuning}
