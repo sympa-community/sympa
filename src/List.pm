@@ -1286,6 +1286,13 @@ sub db_connect {
 	}
     }
 
+    ## Check if DBD is installed
+     unless (eval "require DBD::$Conf{'db_type'}") {
+	do_log('err',"No Database Driver installed for $Conf{'db_type'} ; you should download and install DBD::$Conf{'db_type'} from CPAN");
+	&send_notify_to_listmaster('missing_dbd', $Conf{'domain'},{'db_type' => $Conf{'db_type'}});
+	return undef;
+    }   
+
     ## Used by Oracle (ORACLE_HOME)
     if ($Conf{'db_env'}) {
 	foreach my $env (split /;/, $Conf{'db_env'}) {
@@ -8915,6 +8922,12 @@ sub _include_users_sql {
 
     my ($dbh, $sth);
     my $connect_string;
+
+    unless (eval "require DBD::$db_type") {
+	do_log('err',"No Database Driver installed for $db_type ; you should download and install DBD::$db_type from CPAN");
+	&send_notify_to_listmaster('missing_dbd', $Conf{'domain'},{'db_type' => $db_type});
+	return undef;
+    }
 
     if ($f_dir) {
 	$connect_string = "DBI:CSV:f_dir=$f_dir";
