@@ -8466,7 +8466,7 @@ sub _restrict_values {
      ## Install new aliases
      $in{'listname'} = $in{'new_listname'};
      
-     unless ($list = new List ($in{'new_listname'}, $in{'new_robot'})) {
+     unless ($list = new List ($in{'new_listname'}, $in{'new_robot'},{'reload_config' => 1})) {
 	 &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
 	 &report::reject_report_web('intern','list_reload',{'new_listname' => $in{'new_listname'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 return undef;
