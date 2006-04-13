@@ -11002,10 +11002,10 @@ sub probe_db {
 		}
 
 		if ($success) {
-		    push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
-		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+		    push @report, sprintf('Table %s, INDEX dropped', $t);
+		    &do_log('info', 'Table %s, INDEX dropped', $t);
 		}else {
-		    &do_log('err', 'Could not drop PRINDEX, table\'%s\'.', $t);
+		    &do_log('err', 'Could not drop INDEX, table\'%s\'.', $t);
 		}
 
 		## Add INDEX
