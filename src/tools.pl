@@ -327,35 +327,29 @@ sub get_templates_list {
 
     my $type = shift;
     my $robot = shift;
-    my $langdir = shift;
-    my $listdir = shift;
+    my $list = shift;
 
-    do_log('debug', "get_templates_list ($type, $robot, $langdir, $listdir)");
- #   do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list ($type, $robot, $langdir, $listdir)");
+    my $listdir;
+
+    do_log('debug', "get_templates_list ($type, $robot, $list)");
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
-    if ($langdir eq 'default') {
-	$langdir = '';
-    }else{
-	$langdir = '/'.$langdir;
-    }
-
     my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
-    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2'.$langdir;
-    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2'.$langdir;
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
 
     my @try;
     push @try, $distrib_dir ;
     push @try, $site_dir ;
     push @try, $robot_dir;
     
-    unless ($listdir) {
-	$listdir .='/'.$type.'_tt2'.$langdir;
+    if (defined $list) {
+	$listdir = $list->{'dir'}.'/'.$type.'_tt2';	
 	push @try, $listdir ;
     }
-	
+
     my $i = 0 ;
     my $tpl;
 
@@ -368,11 +362,10 @@ sub get_templates_list {
 		next unless opendir (LANGDIR, $dir.'/'.$lang);
 		foreach my $file (grep (!/^\./,readdir(LANGDIR))) {
 		    next unless ($file =~ /\.tt2$/);
-		    &do_log('notice',"TPL: %s",$dir.'/'.$lang.'/'.$file); 
 		    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{$lang} = $dir.'/'.$lang.'/'.$file;}
 		    if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{$lang} =  $dir.'/'.$lang.'/'.$file;}
 		    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{$lang} = $dir.'/'.$lang.'/'.$file;}
-		    if ($dir eq $listdir)    {$tpl->{$file}{'listname'}{$lang} = $dir.'/'.$lang.'/'.$file;}
+		    if ($dir eq $listdir)    {$tpl->{$file}{'list'}{$lang} = $dir.'/'.$lang.'/'.$file;}
 		}
 		closedir LANGDIR;
 
@@ -381,15 +374,11 @@ sub get_templates_list {
 		if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{'default'} = $dir.'/'.$file;}
 		if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{'default'} =  $dir.'/'.$file;}
 		if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{'default'} = $dir.'/'.$file;}
-		if ($dir eq $listdir)    {$tpl->{$file}{'listname'}{'default'}= $dir.'/'.$file;}
+		if ($dir eq $listdir)    {$tpl->{$file}{'list'}{'default'}= $dir.'/'.$file;}
 	    }
 	}
 	closedir DIR;
     }
-
-#    open DUMP, ">/tmp/dump";
-#    &tools::dump_var($tpl, 0, \*DUMP);
-#    close DUMP;
     return ($tpl);
 
 }
@@ -401,48 +390,43 @@ sub get_template_path {
     my $robot = shift;
     my $scope = shift;
     my $tpl = shift;
-    my $lang = shift;
-    my $listname = shift;
+    my $lang = shift || 'default';
+    my $list = shift;
 
-    do_log('notice', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
+    do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
 
-    if ($lang eq 'default') {
-	$lang = '';
-    }else{
-	$lang = '/'.$lang;
+    my $listdir;
+    if (defined $list) {
+	$listdir = $list->{'dir'};
     }
-
-    if ($listname) {
-	chomp ($listname);
-	unless ($namedlist = new List ($listname, $robot)) {
-	    return undef;		
-	}
-    }
-
-    my $listdir = $namedlist->{'dir'} if (defined $namedlist);
 
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_path () : internal error incorrect parameter');
     }
 
     my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
-    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2'.$lang;
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
+    $site_dir .= '/'.$lang unless ($lang eq 'default');
     my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2'.$lang;
-
+    $robot_dir .= '/'.$lang unless ($lang eq 'default');    
 
     if ($scope eq 'list')  {
-	return $listdir.'/'.$type.'_tt2'.$lang.'/'.$tpl ;
-    }
-    if (($scope eq 'robot')||($scope eq 'list'))  {
+	my $dir = $listdir.'/'.$type.'_tt2';
+	$dir .= '/'.$lang unless ($lang eq 'default');
+	return $dir.'/'.$tpl ;
+
+    }elsif ($scope eq 'robot')  {
 	return $robot_dir.'/'.$tpl;
-    }
-    if (($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
+
+    }elsif ($scope eq 'site') {
 	return $site_dir.'/'.$tpl;
-    }
-    
-    if (($scope eq 'distrib')||($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
+
+    }elsif ($scope eq 'distrib') {
 	return $distrib_dir.'/'.$tpl;
+
     }
+
+    return undef;
 }
 
 # input object msg and listname, output signed message object
@@ -1007,6 +991,16 @@ sub escape_html {
     $s =~ s/\"/\&quot\;/g;
     $s =~ s/\</&lt\;/g;
     $s =~ s/\>/&gt\;/g;
+    
+    return $s;
+}
+
+sub unescape_html {
+    my $s = shift;
+
+    $s =~ s/\&quot\;/\"/g;
+    $s =~ s/&lt\;/\</g;
+    $s =~ s/&gt\;/\>/g;
     
     return $s;
 }
