@@ -46,6 +46,7 @@
   [% ELSIF u_err.msg == 'already_login' %][%|loc(u_err.email)%]You are already logged in as %1[%END%]
   [% ELSIF u_err.msg == 'no_email' %][%|loc%]Please provide email address[%END%]
   [% ELSIF u_err.msg == 'missing_arg' %][%|loc(u_err.argument)%]Missing argument %1[%END%]
+  [% ELSIF u_err.msg == 'wrong_value' %][%|loc(u_err.argument)%]Wrong value for parameter %1[%END%]
   [% ELSIF u_err.msg == 'no_user' %][%|loc%]You need to login[%END%]
   [% ELSIF u_err.msg == 'incorrect_email' %][%|loc(u_err.email)%]Address "%1" is incorrect[%END%]
   [% ELSIF u_err.msg == 'incorrect_passwd' %][%|loc%]Provided password is incorrect[%END%]

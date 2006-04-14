@@ -7,7 +7,7 @@
 <li>[%|loc%]Type[%END%] : <strong> [% webormail %] </strong></li>
 <li>[%|loc%]Path[%END%] : <strong> [% template_path %] </strong></li>
 <li>[%|loc%]Scope[%END%] : <strong> [% scope %] </strong>.[% IF scope == 'list' %]
-  ( [%|loc%]this template is defined for list[%END%] [% listname %]@[%robot %] )
+  ( [%|loc%]this template is defined for list[%END%] [% list %]@[%robot %] )
 [% ELSE %]
   [% IF scope == 'robot' %]
      ( [%|loc%]this template is defined for all lists of robot [%robot %] unless it is redefined for some particular list[%END%] )
@@ -27,8 +27,8 @@
 <input type="hidden" name="template_name" value="[% template_name %]" />
 <input type="hidden" name="action" value="edit_template" />
 <input type="hidden" name="template_path" value="[% template_path %]" />
-[% IF listname %]
-	<input type="hidden" name="listname" value="[% listname %]" /> 
+[% IF list %]
+	<input type="hidden" name="list" value="[% list %]" /> 
 [% END %] 
 
 <input type="hidden" name="scopeout" value="[% scope %]" />

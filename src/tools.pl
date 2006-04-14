@@ -361,12 +361,28 @@ sub get_templates_list {
 
     foreach my $dir (@try) {
 	next unless opendir (DIR, $dir);
-	foreach my $file ( readdir(DIR)) {	    
-	    next unless ($file =~ /\.tt2$/);
-	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file;}
-	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}
-	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}
-	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file;}
+	foreach my $file ( grep (!/^\./,readdir(DIR))) {	    
+	    ## Subdirectory for a lang
+	    if (-d $dir.'/'.$file) {
+		my $lang = $file;
+		next unless opendir (LANGDIR, $dir.'/'.$lang);
+		foreach my $file (grep (!/^\./,readdir(LANGDIR))) {
+		    next unless ($file =~ /\.tt2$/);
+		    &do_log('notice',"TPL: %s",$dir.'/'.$lang.'/'.$file); 
+		    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{$lang} = $dir.'/'.$lang.'/'.$file;}
+		    if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{$lang} =  $dir.'/'.$lang.'/'.$file;}
+		    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{$lang} = $dir.'/'.$lang.'/'.$file;}
+		    if ($dir eq $listdir)    {$tpl->{$file}{'listname'}{$lang} = $dir.'/'.$lang.'/'.$file;}
+		}
+		closedir LANGDIR;
+
+	    }else {
+		next unless ($file =~ /\.tt2$/);
+		if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{'default'} = $dir.'/'.$file;}
+		if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{'default'} =  $dir.'/'.$file;}
+		if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{'default'} = $dir.'/'.$file;}
+		if ($dir eq $listdir)    {$tpl->{$file}{'listname'}{'default'}= $dir.'/'.$file;}
+	    }
 	}
 	closedir DIR;
     }
@@ -388,7 +404,8 @@ sub get_template_path {
     my $lang = shift;
     my $listname = shift;
 
-    do_log('info', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
+    do_log('notice', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
+
     if ($lang eq 'default') {
 	$lang = '';
     }else{
