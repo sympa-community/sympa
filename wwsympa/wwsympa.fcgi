@@ -4154,10 +4154,6 @@ sub do_ls_templates  {
 
     $param->{'webormail'} = $in{'webormail'};
     
-    open TMP, ">/tmp/dump_tpl";
-    &tools::dump_var($param, 0, \*TMP);
-    close TMP;
-
     return 1;
 }    
 
