@@ -678,7 +678,25 @@ my %alias = ('reply-to' => 'reply_to',
 							      'gettext_id' => "short name for this source",
 							      'length' => 15,
 							      'order' => 1
-							      }
+							      },
+							      'use_ssl' => {'format' => ['yes','no'],
+									    'default' => 'no',
+									    'gettext_id' => 'use SSL (LDAPS)',
+									    'order' => 2.5,
+									},
+							      'ssl_version' => {'format' => ['sslv2','sslv3','tls'],
+										'default' => '',
+										'gettext_id' => 'SSL version',
+										'order' => 2.5,
+									    },
+							      'ssl_ciphers' => {'format' => '\s+',
+										'default' => 'ALL',
+										'gettext_id' => 'SSL ciphers used',
+										'order' => 2.5,
+									   },
+							      
+							      
+									    
 					      },
 				     'occurrence' => '0-n',
 				     'gettext_id' => "LDAP query inclusion",
@@ -785,7 +803,22 @@ my %alias = ('reply-to' => 'reply_to',
 							      'gettext_id' => "short name for this source",
 							      'length' => 15,
 							      'order' => 1
-							      }
+							      },
+							      'use_ssl' => {'format' => ['yes','no'],
+									    'default' => 'no',
+									    'gettext_id' => 'use SSL (LDAPS)',
+									    'order' => 2.5,
+									},
+							      'ssl_version' => {'format' => ['sslv2','sslv3','tls'],
+										'default' => '',
+										'gettext_id' => 'SSL version',
+										'order' => 2.5,
+									    },
+							      'ssl_ciphers' => {'format' => '\s+',
+										'default' => 'ALL',
+										'gettext_id' => 'SSL ciphers used',
+										'order' => 2.5,
+									    },
 
 					      },
 				     'occurrence' => '0-n',
@@ -8609,12 +8642,31 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
+    if ($param->{'use_ssl'} eq 'yes' ) {
+	unless (eval "require Net::LDAPS") {
+	    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
+	    return undef;
+	} 
+	
+	my %new_param = (async => 1);
+	$new_param{'timeout'} = $param->{'timeout'} if ($param->{'timeout'});
+	$new_param{'sslversion'} = $param->{'ssl_version'} if ($param->{'ssl_version'});
+	$new_param{'ciphers'} = $param->{'ssl_ciphers'} if ($param->{'ssl_ciphers'});
 
-	do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
-	return undef;
+	unless ($ldaph = Net::LDAPS->new($host, %new_param)) {
+	    
+	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
+	    return undef;
+	}	
+	
+    }else { 
+	unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
+	    
+	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
+	    return undef;
+	}
+	
     }
-    
     do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
     my $status;
     
@@ -8757,9 +8809,28 @@ sub _include_users_ldap_2level {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
-	do_log('notice',"Can\'t connect to LDAP server '%s' : $@",join(',',@{$host}) );
-	return undef;
+    if ($param->{'use_ssl'} eq 'yes' ) {
+	unless (eval "require Net::LDAPS") {
+	    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
+	    return undef;
+	} 
+	
+	my %new_param = (async => 1);
+	$new_param{'timeout'} = $param->{'timeout'} if ($param->{'timeout'});
+	$new_param{'sslversion'} = $param->{'ssl_version'} if ($param->{'ssl_version'});
+	$new_param{'ciphers'} = $param->{'ssl_ciphers'} if ($param->{'ssl_ciphers'});
+
+	unless ($ldaph = Net::LDAPS->new($host, %new_param)) {
+	    
+	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
+	    return undef;
+	}	
+	
+    }else { 
+	unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
+	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@",join(',',@{$host}) );
+	    return undef;
+	}
     }
     
     do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
