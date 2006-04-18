@@ -160,8 +160,10 @@
  	        [% u.email %]
  	      [% END %]
 	  </span></td>
+	  [% IF is_owner %]
             <td style="text-align: right; background-color: [% color_7 %];"><span style="font-size: smaller;"><strong>[%|loc%]bouncing[%END%]</strong></span>
 	    </td>
+	  [% END %]
 
 	 [% ELSE %]
 	  <td colspan="3" style="white-space: nowrap"><span style="font-size: smaller;">
