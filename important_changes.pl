@@ -75,7 +75,8 @@ if ($ENV{'ETCDIR'} && ! -f $version_file) {
     close VFILE;
 }
 
-`chown $ENV{'USER'}.$ENV{'GROUP'} $version_file`;
+`chown $ENV{'USER'} $version_file`;
+`chgrp $ENV{'GROUP'} $version_file`;
 
 if (($previous_version eq $current_version) ||
     &higher($previous_version,$current_version)){
