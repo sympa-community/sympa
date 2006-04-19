@@ -11047,7 +11047,6 @@ sub probe_db {
 		## drop previous primary key
 		unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
 		    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
-		    return undef;
 		}
 		push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
 		&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
@@ -11075,7 +11074,7 @@ sub probe_db {
 		    push @report, sprintf('Table %s, INDEX dropped', $t);
 		    &do_log('info', 'Table %s, INDEX dropped', $t);
 		}else {
-		    &do_log('err', 'Could not drop INDEX, table\'%s\'.', $t);
+		    &do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
 		}
 
 		## Add INDEX
