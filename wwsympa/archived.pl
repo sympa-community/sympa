@@ -87,6 +87,10 @@ unless ($List::use_db = &List::check_db_connect()) {
     &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
 }
 
+## Check databse connectivity
+unless ($List::use_db = &List::check_db_connect()) {
+    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+}
 
 ## Put ourselves in background if not in debug mode. 
 unless ($main::options{'debug'} || $main::options{'foreground'}) {

@@ -266,6 +266,7 @@ my %comm = ('home' => 'do_home',
 	 'view_template' => 'do_view_template',
 	 'edit_template' => 'do_edit_template',
 	 'rss_request' => 'do_rss_request',
+	    'maintenance' => 'do_maintenance',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -540,6 +541,14 @@ $List::use_db = &List::check_db_connect();
 
 my $pinfo = &List::_apply_defaults();
 
+## Check that the data structure is uptodate
+## If not, set the web interface to maintenance mode
+my $maintenance_mode;
+unless (&List::data_structure_uptodate()) {
+    $maintenance_mode = 1;
+    &do_log('notice',"Web interface set to maintenance mode");
+}
+
 &tools::ciphersaber_installed();
 
 %::changed_params;
@@ -551,14 +560,13 @@ my $birthday = time ;
 ## If using fast_cgi, it is usefull to initialize all list context
 if ($wwsconf->{'use_fast_cgi'}) {
 
-    my $all_lists = &List::get_lists('*');
+    my $all_lists = &List::get_lists('*') unless ($maintenance_mode);
 }
 
  ## Main loop
  my $loop_count;
  my $start_time = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
  while ($query = &new_loop()) {
-
 
      undef %::changed_params;
      
@@ -586,6 +594,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
      &List::init_list_cache();
+
+     ## If in maintenance mode, check if the data structure is now uptodate
+     if ($maintenance_mode && &List::data_structure_uptodate()) {
+	 $maintenance_mode = undef;
+	 &do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
+     }
 
      ## Get params in a hash
  #    foreach ($query->param) {
@@ -862,69 +876,73 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
      # if ($wwsconf->{'export_topics'} =~ /all/i);
 
-     ## Session loop
-     while ($action) {
-         unless (&check_param_in()) {
-	     &report::reject_report_web('user','wrong_param',{},$action,$list);
-             &wwslog('info','Wrong parameters');
-             last;
-         }
-
-	 $param->{'host'} = $list->{'admin'}{'host'} if (ref($list) eq 'List');
-         $param->{'host'} ||= $robot;
-         $param->{'domain'} = $list->{'domain'} if (ref($list) eq 'List');
-
-         ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
-	 $param->{'list_lang'} = $list->{'admin'}{'lang'} if (ref($list) eq 'List');
-	 $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});
-
-
-         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user_lang'} || 
-	     $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');
-         $param->{'locale'} = &Language::SetLang($param->{'lang'});
-
-	 &export_topics ($robot);
-
-         ## use default_home parameter
-         if ($action eq 'home') {
-             $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
-
-             if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
-                 ($action eq 'home')) {
-                 $action = 'lists';
-             }
-         }
-
-         unless ($comm{$action}) {
-	     &report::reject_report_web('user','unknown_action',{},$action,$list);
-             &wwslog('info','unknown action %s', $action);
-             last;
-         }
-
-         $param->{'action'} = $action;
-
-         my $old_action = $action;
-
-         ## Execute the action ## 
-         $action = &{$comm{$action}}();
-
-         delete($param->{'action'}) if (! defined $action);
+     if ($maintenance_mode) {
+	 &do_maintenance();
+	 $param->{'action'} = 'maintenance';
+     }else {
+	 ## Session loop
+	 while ($action) {
+	     unless (&check_param_in()) {
+		 &report::reject_report_web('user','wrong_param',{},$action,$list);
+		 &wwslog('info','Wrong parameters');
+		 last;
+	     }
+	     
+	     $param->{'host'} = $list->{'admin'}{'host'} if (ref($list) eq 'List');
+	     $param->{'host'} ||= $robot;
+	     $param->{'domain'} = $list->{'domain'} if (ref($list) eq 'List');
+	     
+	     ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
+	     $param->{'list_lang'} = $list->{'admin'}{'lang'} if (ref($list) eq 'List');
+	     $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});
+	     
+	     
+	     $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user_lang'} || 
+		 $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');
+	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
+	     
+	     &export_topics ($robot);
+	     
+	     ## use default_home parameter
+	     if ($action eq 'home') {
+		 $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
+		 
+		 if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
+		     ($action eq 'home')) {
+		     $action = 'lists';
+		 }
+	     }
+	     
+	     unless ($comm{$action}) {
+		 &report::reject_report_web('user','unknown_action',{},$action,$list);
+		 &wwslog('info','unknown action %s', $action);
+		 last;
+	     }
+	     
+	     $param->{'action'} = $action;
 	 
-	 last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
+	     my $old_action = $action;
+	     
+	     ## Execute the action ## 
+	     $action = &{$comm{$action}}();
+	 
+	     delete($param->{'action'}) if (! defined $action);
+	 
+	     last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
 
+	     
+	     if ($action eq $old_action) {
+		 &wwslog('info','Stopping loop with %s action', $action);
+		 #undef $action;
+		 $action = 'home';
+	     }
 
-         if ($action eq $old_action) {
-             &wwslog('info','Stopping loop with %s action', $action);
-             #undef $action;
-             $action = 'home';
-         }
-
-         undef $action if ($action == 1);
+	     undef $action if ($action == 1);
+	 }
      }
 
      ## Prepare outgoing params
      &check_param_out();
-
 
      ## Params 
      $param->{'action_type'} = $action_type{$param->{'action'}};
@@ -950,9 +968,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
      $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
-
      ## Do not manage cookies at this level if content was already sent
-     unless ($param->{'bypass'} eq 'extreme' || $param->{'action'} eq 'css' || $rss) {
+     unless ($param->{'bypass'} eq 'extreme' || 
+	     $param->{'action'} eq 'css' || 
+	     $maintenance_mode ||
+	     $rss) {
 
 	 ## Set cookies "your_subscribtions" unless in one list page
 	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
@@ -14351,4 +14371,10 @@ sub get_mime_type {
     my $type = shift;
 
     return $mime_types->{$type};
+}
+
+sub do_maintenance {
+    &wwslog('notice', 'do_maintenance()');
+    
+    return 1;
 }

@@ -678,7 +678,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      'gettext_id' => "short name for this source",
 							      'length' => 15,
 							      'order' => 1
-							      ,}
+							      },
 							      'use_ssl' => {'format' => ['yes','no'],
 									    'default' => 'no',
 									    'gettext_id' => 'use SSL (LDAPS)',
@@ -11179,6 +11179,36 @@ sub create_db {
 
     return 1;
 }
+
+## Check if data structures are uptodate
+## If not, no operation should be performed before the upgrade process is run
+sub data_structure_uptodate {
+     my $version_file = "$Conf{'etc'}/data_structure.version";
+     my $data_structure_version;
+
+     if (-f $version_file) {
+	 unless (open VFILE, $version_file) {
+	     do_log('err', "Unable to open %s : %s", $version_file, $!);
+	     return undef;
+	 }
+	 while (<VFILE>) {
+	     next if /^\s*$/;
+	     next if /^\s*\#/;
+	     chomp;
+	     $data_structure_version = $_;
+	     last;
+	 }
+	 close VFILE;
+     }
+
+     if (defined $data_structure_version &&
+	 $data_structure_version ne $Version::Version) {
+	 &do_log('err', "Data structure (%s) is not uptodate for current release (%s)", $data_structure_version, $Version::Version);
+	 return 0;
+     }
+
+     return 1;
+ }
 
 ## Update DB structure or content if required
 sub maintenance {
