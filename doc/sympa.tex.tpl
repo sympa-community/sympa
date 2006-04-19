@@ -7353,6 +7353,23 @@ Username with read access to the LDAP directory.
 
 Password for \lparam {user}.
 
+\item
+\lparam {use\_ssl} \textit {yes|no}
+
+If set to yes, LDAPS protocol is used.
+
+
+\item
+\lparam {ssl\_version} \textit {sslv2|sslv3|tls}
+\default {sslv3}
+
+If using SSL, this parameter define if SSL or TLS is used.
+
+\item
+\lparam {ssl\_version} \textit {ciphers used}
+\default {ALL}
+
+If using SSL, this parameter specifies which subset of cipher suites are permissible for this connection, using the standard OpenSSL string format. The default value of Net::LDAPS for ciphers is ALL, which permits all ciphers, even those that don't encrypt!
 
 \item
 \label {suffix}
@@ -7479,6 +7496,24 @@ Username with read access to the LDAP directory.
 
 Password for \lparam {user}.
 
+
+\item
+\lparam {use\_ssl} \textit {yes|no}
+
+If set to yes, LDAPS protocol is used.
+
+
+\item
+\lparam {ssl\_version} \textit {sslv2|sslv3|tls}
+\default {sslv3}
+
+If using SSL, this parameter define if SSL or TLS is used.
+
+\item
+\lparam {ssl\_version} \textit {ciphers used}
+\default {ALL}
+
+If using SSL, this parameter specifies which subset of cipher suites are permissible for this connection, using the standard OpenSSL string format. The default value of Net::LDAPS for ciphers is ALL, which permits all ciphers, even those that don't encrypt!
 
 \item
 \label {suffix1}
