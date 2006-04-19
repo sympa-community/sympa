@@ -876,7 +876,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
      # if ($wwsconf->{'export_topics'} =~ /all/i);
 
-     if ($maintenance_mode) {
+     if ($in{'action'} eq 'css') {
+	 &do_css();
+	 $param->{'action'} = 'css';
+     }elsif ($maintenance_mode) {
 	 &do_maintenance();
 	 $param->{'action'} = 'maintenance';
      }else {
