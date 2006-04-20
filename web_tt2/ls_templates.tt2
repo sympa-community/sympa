@@ -99,7 +99,7 @@
   [% IF default_robot %]
   <td></td>
   [% ELSE %]
-[% FOREACH lang = file.value.site %]
+[% FOREACH lang = file.value.robot %]
   <td style="text-align: center;" >
   [% IF lang.value %]
     <form action="[% path_cgi %]/edit_template" method="post">
