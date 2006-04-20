@@ -407,7 +407,7 @@ sub get_template_path {
     my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
     my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
     $site_dir .= '/'.$lang unless ($lang eq 'default');
-    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2'.$lang;
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
     $robot_dir .= '/'.$lang unless ($lang eq 'default');    
 
     if ($scope eq 'list')  {
