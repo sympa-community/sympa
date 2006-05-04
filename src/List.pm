@@ -11419,6 +11419,7 @@ sub upgrade {
 		    unless ($dbh->do($statement)) {
 			do_log('err','Unable to execute SQL statement "%s" : %s', 
 			       $statement, $dbh->errstr);
+			&send_notify_to_listmaster('upgrade_failed', $Conf{'domain'},{'error' => $dbh->errstr});
 			return undef;
 		    }
 		}

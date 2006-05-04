@@ -34,6 +34,17 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%|loc(db_type)%]No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN.[%END%]
 
 
+[% ELSIF type == 'upgrade_failed' -%]
+Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]Sympa encountered the following error while running upgrade procedures : [%END%]
+     [%error%]
+
+[%|loc%]Check log file for further details.[%END%]
+
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 MIME-Version: 1.0
