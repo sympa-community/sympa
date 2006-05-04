@@ -9055,10 +9055,11 @@ sub _include_users_sql {
     my $total = 0;
     
     ## Process the SQL results
-    my $email;
-    my $rows = $sth->rows;
-    foreach (1..$rows) { ## This way we don't stop at the first NULL entry found
-	$email = $sth->fetchrow;
+    # my $rows = $sth->rows;
+    # foreach (1..$rows) { ## This way we don't stop at the first NULL entry found
+    while (defined (my $row = $sth->fetchrow_arrayref)) {
+	
+	my $email = $row->[0]; ## only get first field
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
