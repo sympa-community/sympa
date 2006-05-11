@@ -1822,7 +1822,7 @@ sub load {
     }elsif (lc($robot) eq lc($Conf{'host'})) {
  	$self->{'dir'} = "$Conf{'home'}/$name";
     }else {
-	&do_log('err', 'No such list %s', $name) unless ($options->{'just_try'});
+	&do_log('err', 'No such robot (virtual domain) %s', $robot) unless ($options->{'just_try'});
 	return undef ;
     }
     
