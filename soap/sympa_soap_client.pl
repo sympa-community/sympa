@@ -18,87 +18,180 @@
 use SOAP::Lite;
 use HTTP::Cookies;
 use URI;
+use Getopt::Long;
 
 use lib '--LIBDIR--';
-use Conf;
+# use Conf;
 require 'tools.pl';
 
 use strict;
 
-my ($service, $reponse, @ret, $val, %fault);
 
-## Cookies management
-my $uri = new URI($ARGV[0]);
-
-my $cookies = HTTP::Cookies->new(ignore_discard => 1,
-				 file => '/tmp/my_cookies' );
-$cookies->load();
-printf "%s\n", $cookies->as_string();
+my ($reponse, @ret, $val, %fault);
 
 
-# Change to the path of Sympa.wsdl
-#$service = SOAP::Lite->service($ARGV[0]);
-#$reponse = $service->login($ARGV[1],$ARGV[2]);
+my $usage = "$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to code access to features of Sympa soap server. Authentication can be done via user/password or user cookie or as a trusted remote application\n";
+   $usage = "Usage: $0 --soap_url=<soap sympa server url> --service=<a sympa service> --trusted_application=<app name> __trusted_application_password=<password> --proxy_vars=<id=value,id2=value2> --service_parameters=<value1,value2,value3>";
+   $usage .="       $0 --soap_url=<soap sympa server url> --user_email=<email> --user_password=<password> \n";
 
-#my $soap = SOAP::Lite->service($ARGV[0]);
-
-my $soap = new SOAP::Lite();
-#$soap->on_debug(sub{print@_});
-$soap->uri('urn:sympasoap');
-$soap->proxy($ARGV[0],
-	     cookie_jar =>$cookies);
+my %options;
+unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','proxy_vars=s','service_parameters=s')) {
+    printf "";
+}
 
 
-print "LOGIN....\n";
+my $soap_url = $main::options{'soap_url'};
+unless (defined $soap_url){
+    printf "error : missing soap_url parameter\n";
+    printf $usage;
+    exit;
+}
 
-#$reponse = $soap->casLogin($ARGV[0]);
-$reponse = $soap->login($ARGV[1],$ARGV[2]);
-$cookies->save;
-&print_result($reponse);
-my $md5 = $reponse->result;
+my $user_email = $main::options{'user_email'};
+my $user_password =$main::options{'user_password'};
+my $trusted_application =$main::options{'trusted_application'};
+my $trusted_application_password =$main::options{'trusted_application_password'};
+my $proxy_vars=$main::options{'proxy_vars'};
+my $service=$main::options{'service'};
+my $service_parameters=$main::options{'service_parameters'};
 
-print "\n\nAuthenticateAndRun simple which....\n";
-$reponse = $soap->authenticateAndRun($ARGV[1],$md5,'which');
-&print_result($reponse);
+if (defined $trusted_application) {
+    unless (defined $trusted_application_password) {
+	printf "error : missing trsuted_application_password parameter\n";
+	printf $usage;
+	exit;
+    }
+    unless (defined $service) {
+	printf "error : missing service parameter\n";
+	printf $usage;
+	exit;
+    }
+    unless (defined $proxy_vars) {
+	printf "error : missing proxy_vars parameter\n";
+	printf $usage;
+	exit;
+    }
 
-#printf "%s\n", $cookies->as_string();
+    &play_soap_as_trusted($soap_url, $trusted_application,  $trusted_application_password, $service, $proxy_vars, $service_parameters);
+}else{
 
-print "\n\nWHICH....\n";
-$reponse = $soap->complexWhich();
-&print_result($reponse);
+    unless (defined $user_email){
+	printf "error : missing user_email parameter\n";
+	printf $usage;
+	exit;
+    }
+    unless (defined  $user_password) {
+	printf "error : missing user_password parameter\n";
+	printf $usage;
+	exit;
+    }
 
-#print "\n\nINFO....\n";
-#$reponse = $soap->info('aliba');
-#&print_result($reponse);
-
-#print "\n\nSUB....\n";
-#$reponse = $soap->subscribe('aliba', 'ALI');
-#&print_result($reponse);
-
-#print "\n\nREVIEW....\n";
-#$reponse = $soap->review('aliba');
-#&print_result($reponse);
+    &play_soap($soap_url, $user_email, $user_password);
 
 
-#print "\n\nSIG....\n";
-#$reponse = $soap->signoff('aliba');
-#&print_result($reponse);
+}
 
-print "\n\nLIST....\n";
-$reponse = $soap->lists('Kulturelles');
-&print_result($reponse);
+sub play_soap_as_trusted{
+    my $soap_url=shift;
+    my $trusted_application=shift;
+    my $trusted_application_password=shift;
+    my $service=shift;
+    my $proxy_vars=shift;
+    my $service_parameters=shift;
 
-print "\n\nComplex LIST....\n";
-$reponse = $soap->complexLists('Kulturelles');
-&print_result($reponse);
+    my $soap = new SOAP::Lite();    
+    $soap->uri('urn:sympasoap');
+    $soap->proxy($soap_url);
 
-print "\n\nAM I....\n";
-$reponse = $soap->amI('aliba','owner','olivier.salaun@cru.fr');
-&print_result($reponse);
+    my @parameters; 
+    @parameters= split(/,/,$service_parameters) if (defined $service_parameters);
+    my $p= join(',',@parameters);
+    printf "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
 
-print "\n\nCheckCookie....\n";
-$reponse = $soap->checkCookie();
-&print_result($reponse);
+    my $reponse = $soap->authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,\@parameters);
+    &print_result($reponse);
+}
+
+
+
+sub play_soap{
+    my $soap_url=shift;
+    my $user_email=shift;
+    my $user_password=shift;
+
+    my ($service, $reponse, @ret, $val, %fault);
+
+    ## Cookies management
+    # my $uri = new URI($soap_url);
+    
+    my $cookies = HTTP::Cookies->new(ignore_discard => 1,
+				     file => '/tmp/my_cookies' );
+    $cookies->load();
+    printf "cookie : %s\n", $cookies->as_string();
+
+
+    # Change to the path of Sympa.wsdl
+    #$service = SOAP::Lite->service($soap_url);
+    #$reponse = $service->login($user_email,$user_password);
+    #my $soap = SOAP::Lite->service($soap_url);
+     
+    my $soap = new SOAP::Lite();
+    #$soap->on_debug(sub{print@_});
+    $soap->uri('urn:sympasoap');
+    $soap->proxy($soap_url,
+		 cookie_jar =>$cookies);
+
+    print "LOGIN....\n";
+
+    #$reponse = $soap->casLogin($soap_url);
+    $reponse = $soap->login($user_email,$user_password);
+    $cookies->save;
+    &print_result($reponse);
+    my $md5 = $reponse->result;
+    
+    print "\n\nAuthenticateAndRun simple which....\n";
+    $reponse = $soap->authenticateAndRun($user_email,$md5,'which');
+    &print_result($reponse);
+    
+    #printf "%s\n", $cookies->as_string();
+       
+    print "\n\nWHICH....\n";
+    $reponse = $soap->complexWhich();
+    &print_result($reponse);
+exit;    
+    #print "\n\nINFO....\n";
+    #$reponse = $soap->info('aliba');
+    #&print_result($reponse);
+    
+    # print "\n\nSUB....\n";
+    # $reponse = $soap->subscribe('aliba', 'ALI'); 
+    # &print_result($reponse);
+    
+    #print "\n\nREVIEW....\n";
+    #$reponse = $soap->review('aliba');
+    #&print_result($reponse);
+    
+  
+    #print "\n\nSIG....\n";
+    #$reponse = $soap->signoff('aliba');
+    #&print_result($reponse);
+    
+    print "\n\nLIST....\n";
+    $reponse = $soap->lists('Kulturelles');
+    &print_result($reponse);
+    
+    print "\n\nComplex LIST....\n";
+    $reponse = $soap->complexLists('Kulturelles');
+    &print_result($reponse);
+
+    print "\n\nAM I....\n";
+    $reponse = $soap->amI('aliba','owner','olivier.salaun@cru.fr');
+    &print_result($reponse);
+    
+    print "\n\nCheckCookie....\n";
+    $reponse = $soap->checkCookie();
+    &print_result($reponse);
+}
 
 sub print_result {
     my $r = shift;
@@ -106,7 +199,7 @@ sub print_result {
 # If we get a fault
     if (defined $r && $r->fault) {
 	print "Soap error :\n";
-	%fault = %{$r->fault};
+	my %fault = %{$r->fault};
 	foreach $val (keys %fault) {
 	    print "$val = $fault{$val}\n";
 	}

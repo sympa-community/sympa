@@ -1,3 +1,136 @@
+2006-05-05 11:46  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by JM.Bourdin, IUFM Dijon] Fix:
+	  visibility authorization scenario was not evaluated to compute
+	  the "your lists" box.
+
+2006-05-04 16:55  sympa-authors
+
+	* src/List.pm: [BugID 750]Fix: include_sql_query requests would
+	  fail with Oracle.  Apparently the ->rows() method does not return
+	  the number of rows.  We now use fetchrow_arrayref() to get rows,
+	  thus allowing to differenciate an empty field an the last row.
+
+2006-05-04 10:04  sympa-authors
+
+	* mail_tt2/listmaster_notification.tt2, src/List.pm: New feature:
+	  notify listmaster if upgrade procedure failed
+
+2006-05-02 16:12  sympa-authors
+
+	* wwsympa/bounce-lib.pl: Fix: analyze the 'Original-recipient'
+	  entries of message/delivery-status MIME parts
+
+2006-04-20 16:27  sympa-authors
+
+	* src/tools.pl: Fix: incorrect path returned by get_template_path()
+
+2006-04-20 16:20  sympa-authors
+
+	* web_tt2/ls_templates.tt2: Fix: robot templates would not be
+	  printed correctly in ls_templates
+
+2006-04-20 09:35  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: [proposed by E.Hood] Fix: now
+	  using $FROMADDRNAME$@$FROMADDRDOMAIN$ instead of $FROMADDR$. See
+	  https://savannah.nongnu.org/bugs/index.php?func=detailitem&item_id=11759
+
+2006-04-19 17:01  sympa-authors
+
+	* doc/sympa.tex.tpl: Added documentation for LDAPS features
+
+2006-04-19 16:45  sympa-authors
+
+	* important_changes.pl: [reported by C.Peck, Univ William and Mary]
+	  Fix: on Solaris, chown does not like the '.' separator
+
+2006-04-19 15:47  sympa-authors
+
+	* src/List.pm: Small changes
+
+2006-04-19 15:36  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Change: shortcut for css to keep css
+	  working when in maintenance mode
+
+2006-04-19 15:19  sympa-authors
+
+	* src/List.pm, src/task_manager.pl, web_tt2/maintenance.tt2,
+	  wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi:
+	  [BugID 709] Fix: prevent any process to run before data structure
+	  have been updated.  This prevents "duplicate entries error" in DB
+	  tables
+
+2006-04-19 10:29  sympa-authors
+
+	* src/List.pm: changed default ssl version
+
+2006-04-19 10:28  sympa-authors
+
+	* src/etc/script/testldap.pl: New feature: testldap made
+	  LDAPS-aware
+
+2006-04-18 16:52  sympa-authors
+
+	* web_tt2/review.tt2: Fix: Don't show bouncing status to other
+	  members
+
+2006-04-18 16:31  sympa-authors
+
+	* src/List.pm: Added LDAPS support to include_ldap_xx
+
+2006-04-14 17:09  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Remove traces
+
+2006-04-14 17:05  sympa-authors
+
+	* src/tools.pl, web_tt2/copy_template.tt2,
+	  web_tt2/edit_template.tt2, web_tt2/ls_templates.tt2,
+	  web_tt2/view_template.tt2, wwsympa/wwsympa.fcgi: New feature:
+	  template editor for the listmaster.
+
+2006-04-14 09:32  olivier.salaun
+
+	* po/fr.po, src/tools.pl, web_tt2/copy_template.tt2,
+	  web_tt2/edit_template.tt2, web_tt2/error.tt2,
+	  web_tt2/ls_templates.tt2, wwsympa/wwsympa.fcgi: Working on the
+	  templates editor
+
+2006-04-13 16:27  sympa-authors
+
+	* src/List.pm: Change: hide closed lists, even to listmasters
+
+2006-04-13 15:19  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by J.Beretta, France Telecom]
+	  Fix: a renamed list would keep its previous domain name
+
+2006-04-13 15:01  sympa-authors
+
+	* doc/sympa.tex.tpl: [BugID 710] Tell the quota unit
+
+2006-04-13 11:50  sympa-authors
+
+	* src/List.pm: Fixed incorrect log while dropping indexes
+
+2006-04-13 11:07  sympa-authors
+
+	* mail_tt2/listmaster_notification.tt2, src/List.pm: Fix: Sympa now
+	  check if the DBD is available ; otherwise processes would die
+
+2006-04-12 10:42  sympa-authors
+
+	* ChangeLog, NEWS: preparing 5.2 release
+
+2006-04-12 10:39  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nb_NO.po, nl.po, oc.po, pl.po, pt.po,
+	  pt_BR.po, ro.po, sv.po, sympa.pot, tr.po, zh_CN.po, zh_TW.po:
+	  Updates
+
 2006-04-11 17:33  sympa-authors
 
 	* src/etc/mhonarc-ressources.tt2: Added Dkim-signature to hidden

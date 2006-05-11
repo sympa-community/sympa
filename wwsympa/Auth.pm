@@ -31,13 +31,28 @@ use Log;
 use Conf;
 use List;
 use report;
+use Digest::MD5;
 
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
 
 
 
- ## authentication : via email or uid
+## input a password
+## output md5 digest
+sub md5password {
+    
+    my $password = shift;
+    return undef unless (defined $password);
+    chomp $password;
+    
+    my $digestmd5 = new Digest::MD5;
+    $digestmd5->reset;
+    $digestmd5->add($password);
+    return (unpack("H*", $digestmd5->digest));
+}
+ 
+## authentication : via email or uid
  sub check_auth{
      my $robot = shift;
      my $auth = shift; ## User email or UID
@@ -450,7 +465,48 @@ sub get_email_by_net_id {
 
  }
 
-
+# check trusted_application_name et trusted_application_password : return 1 or undef;
+sub remote_app_check_password {
+    
+    my ($trusted_application_name,$password,$robot) = @_;
+    do_log('debug','Auth::remote_app_check_password (%s,%s)',$trusted_application_name,$robot);
+    
+    my $md5 = &md5password($password);
+    
+    my $vars;
+    # seach entry for trusted_application in Conf
+    my @trusted_apps ;
+    
+    # select trusted_apps from robot context or symap context
+    if ((defined $robot) &&  (defined $Conf::Conf{'robots'}{$robot}{'trusted_applications'})) {
+ 	@trusted_apps = @{$Conf::Conf{'robots'}{$robot}{'trusted_applications'}{'trusted_application'}};
+    }else{
+ 	@trusted_apps = @{$Conf::Conf{'trusted_applications'}{'trusted_application'}};
+    }
+    # open TMP2, ">>/tmp/yy"; printf TMP2 "xxxxxxxxxxx\@ trusted_apps \n"; &tools::dump_var(\@trusted_apps, 0, \*TMP2);printf TMP2 "--------\n"; close TMP2;
+    
+    foreach my $application (@trusted_apps){
+	
+ 	if ($application->{'name'} eq $trusted_application_name) {
+ 	    if ($md5 eq $application->{'md5password'}) {
+ 		# &do_log('debug', 'Auth::remote_app_check_password : authentication succeed for %s',$application->{'name'});
+ 		my %proxy_for_vars ;
+ 		foreach my $varname (@{$application->{'proxy_for_variables'}}) {
+ 		    $proxy_for_vars{$varname}=1;
+ 		}		
+ 		return (\%proxy_for_vars);
+ 	    }else{
+ 		&do_log('info', 'Auth::remote_app_check_password: bad password from %s', $trusted_application_name);
+ 		return undef;
+ 	    }
+ 	}
+    }				 
+    # no matching application found
+    &do_log('info', 'Auth::remote_app-check_password: unknown application name %s', $trusted_application_name);
+    return undef;
+}
+ 
+  
 1;
 
 

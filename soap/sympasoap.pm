@@ -89,7 +89,8 @@ sub lists {
 
 	my $result_item = {};
 	my $result = $list->check_list_authz('visibility','md5',
-					    {'sender' => $sender}
+					     {'sender' => $sender,
+					      'remote_application_name' =>  $ENV{'remote_application_name'} }
 					    );
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -141,6 +142,15 @@ sub login {
     #foreach my  $k (keys %ENV) {
     #&Log::do_log('notice', 'ENV %s = %s', $k, $ENV{$k});
     #}
+    unless (defined $http_host){
+	&do_log('err', 'login(): SERVER_NAME not defined');
+    } 
+    unless (defined $email){
+	&do_log('err', 'login(): email not defined');
+    } 
+    unless (defined $passwd){
+	&do_log('err', 'login(): passwd not defined');
+    } 
 
     unless ($http_host and $email and $passwd) {
 	&do_log('err', 'login(): incorrect number of parameters');
@@ -152,7 +162,9 @@ sub login {
     ## Authentication of the sender
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
-    my $user = &Auth::check_auth($robot, $email,$passwd);
+
+    &do_log('notice', 'call check_auth(%s,%s,%s)',$robot,$email,$passwd);
+    my $user = &Auth::check_auth($robot,$email,$passwd);
 
     unless($user){
 	&do_log('notice', "SOAP : login authentication failed");
@@ -270,11 +282,62 @@ sub authenticateAndRun {
 
     &{$service}($self,@$parameters);
 }
+## Used to call a service from a remote proxy application
+## First parameter is the application name as defined in the trusted_applications.conf file
+##   2nd parameter is remote application password
+##   3nd a string with multiple cars definition comma separated (var=value,var=value,...) 
+##   4nd is service name requested
+##   5nd service parameters
+sub authenticateRemoteAppAndRun {
+    my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
+    my $robot = $ENV{'SYMPA_ROBOT'};
+
+#    open TMP2, ">>/tmp/yy"; printf TMP2 "xxxxxxxxxx  parameters \n"; &tools::dump_var($proxy_vs, 0, \*TMP2);printf TMP2 "--------\n"; close TMP2;
+    &do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s,%s)', $appname, $apppassword, $vars, $service, join(',',@$parameters));
+
+    unless ($appname and $apppassword and $service) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <appname> <apppassword> <vars> <service>');
+    }
+    my $proxy_vars = &Auth::remote_app_check_password($appname, $apppassword, $robot);
+        
+    unless (defined $proxy_vars) {
+	&do_log('notice', "authenticateRemoteAppAndRun(): authentication failed");
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authentification failed')
+	    ->faultdetail("Authentication failed for application $appname");
+    }
+    $ENV{'remote_application_name'}=$appname;
+
+    foreach my $var (split(/,/,$vars)) {
+	# check if the remote application is trusted proxy for this variable
+	# &do_log('notice', "sympasoap::authenticateRemoteAppAndRun: Remote application is trusted proxy for  $var");		
+
+	my ($id,$value) = split(/=/,$var);
+	if (!defined $id) {	
+	    &do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe id");
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Incorrect syntaxe id')
+		->faultdetail("Unrecognized syntaxe  $var");
+	}
+	if (!defined $value) {	
+	    &do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe value");
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Incorrect syntaxe value')
+		->faultdetail("Unrecognized syntaxe  $var");
+	}
+	$ENV{$id}=$value	if ($proxy_vars->{$id}) ;	
+    }		
+    &{$service}($self,@$parameters);
+}
 
 sub amI {
   my ($class,$listname,$function,$user)=@_;
 
   my $robot = $ENV{'SYMPA_ROBOT'};
+
+  &do_log('notice','amI(%s,%s,%s)',$listname,$function,$user);
 
   unless ($listname and $user and $function) {
       die SOAP::Fault->faultcode('Client')
@@ -344,7 +407,9 @@ sub info {
     $user = &List::get_user_db($sender);
      
     my $result = $list->check_list_authz('info','md5',
-					 {'sender' => $sender});
+					 {'sender' => $sender,
+  					  'remote_application_name' =>  $ENV{'remote_application_name'} }
+					 );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -384,6 +449,126 @@ sub info {
     die SOAP::Fault->faultcode('Server')
 	->faultstring('Unknown requested action')
 	    ->faultdetail("SOAP info : %s from %s aborted because unknown requested action in scenario",$listname,$sender);
+}
+
+sub createList {
+    my $class = shift;
+    my $listname  = shift;
+    my $subject = shift;
+    my $template = shift;
+    my $description = shift;
+    my $topics = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
+    my $remote_application_name = $ENV{'remote_application_name'};
+
+    &Log::do_log('info', 'SOAP createList(list = %s\@%s,subject = %s,template = %s,description = %s,topics = %s) from %s via proxy application %s', $listname,$robot,$subject,$template,$description,$topics,$sender,$remote_application_name);
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not specified')
+	    ->faultdetail('Use a trusted proxy aor login first ');
+    }
+
+    my @resultSoap;
+
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
+    }
+	
+    &Log::do_log('debug', 'SOAP create_list(%s,%s)', $listname,$robot);
+
+    my $list = new List ($listname, $robot);
+    if ($list) {
+	&Log::do_log('info', 'create_list %s@%s from %s refused, list already exist', $listname,$robot,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('List already exists')
+	    ->faultdetail("List $listname already exists");
+    }
+    
+    my $reject;
+    unless ($subject) {	
+	$reject .= 'subject'; 
+    }
+    unless ($template) {	
+	$reject .= ', template'; 
+    }
+    unless ($info) {	
+	$reject .= ', info'; 
+    }
+    unless ($topics) {	
+	$reject .= 'topics'; 
+    }
+    unless ($reject){
+	&Log::do_log('info', 'create_list %s@%s from %s refused, missing parameter(s) %s', $listname,$robot,$sender,$reject);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Missing parameter')
+	    ->faultdetail("Missing required parameter(s) : $reject");	
+    }
+    # check authorization
+    my $result = &List::request_action('create_list','md5',$robot,
+					 {'sender' => $sender,
+					  'remote_host' => $ENV{'REMOTE_HOST'},
+					  'remote_addr' =>  $ENV{'REMOTE_ADDR'},
+					  'remote_application_name' =>  $ENV{'remote_application_name'} }
+					 );
+    my $r_action;
+    my $reason;
+    if (ref($result) eq 'HASH') {
+	$r_action = $result->{'action'};
+	$reason = $result->{'reason'};
+    }
+    unless ($r_action =~ /do_it|listmaster/) {
+	&Log::do_log('info', 'create_list %s@%s from %s refused, reason %s', $listname,$robot,$sender,$reason);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authorization reject')
+	    ->faultdetail("Authorization reject : $reason");	
+    }
+
+    # prepare parameters
+    my $param = {};
+    $param->{'user'}{'email'} = $sender;
+    if (&List::is_user_db($param->{'user'}{'email'})) {
+	$param->{'user'} = &List::get_user_db($sender);
+    }
+    my $parameters;
+    $parameters->{'creation_email'} =$sender;
+    my %owner;
+    $owner{'email'} = $param->{'user'}{'email'};
+    $owner{'gecos'} = $param->{'user'}{'gecos'};
+    push @{$parameters->{'owner'}},\%owner;
+
+    $parameters->{'listname'} = $listname;
+    $parameters->{'subject'} = $subject;
+    $parameters->{'description'} = $description;
+    
+    if ($r_action =~ /listmaster/i) {
+	$param->{'status'} = 'pending' ;
+    }elsif  ($r_action =~ /do_it/i) {
+	$param->{'status'} = 'open' ;
+    }
+    
+     ## create liste
+     my $resul = &admin::create_list_old($parameters,$template,$robot);
+     unless(defined $resul) {
+	 &Log::do_log('info', 'unable to create list %s@%s from %s ', $listname,$robot,$sender);
+	 die SOAP::Fault->faultcode('Server')
+	     ->faultstring('unable to create list')
+	     ->faultdetail('unable to create list');	
+     }
+     
+     ## notify listmaster
+     if ($param->{'create_action'} =~ /notify/) {
+         if(&List::send_notify_to_listmaster('request_list_creation',$robot,{'listname' => $listname,'email' => $sender})) {
+	     &Log::do_log('info','notify listmaster for list creation');
+	 }else{
+	     &Log::do_log('notice',"Unable to send notify 'request_list_creation' to listmaster");
+	 }
+     }
+     return 1;
 }
 
 sub review {
@@ -426,7 +611,9 @@ sub review {
     $user = &List::get_user_db($sender);
      
     my $result = $list->check_list_authz('review','md5',
-					 {'sender' => $sender});
+					 {'sender' => $sender,
+					  'remote_application_name' =>  $ENV{'remote_application_name'} }
+					 );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -518,7 +705,9 @@ sub signoff {
     
     my $result = $list->check_list_authz('unsubscribe','md5',
 					 {'email' => $sender,
-					  'sender' => $sender });
+					  'sender' => $sender,
+					  'remote_application_name' =>  $ENV{'remote_application_name'} }
+					 );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -620,7 +809,9 @@ sub subscribe {
   
   ## query what to do with this subscribtion request
   my $result = $list->check_list_authz('subscribe','md5',
-				       {'sender' => $sender });
+				       {'sender' => $sender,
+					'remote_application_name' =>  $ENV{'remote_application_name'} }
+				       );
   my $action;
   $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -743,7 +934,7 @@ sub subscribe {
      my $self = shift;
      my @result;
      my $sender = $ENV{'USER_EMAIL'};
-     &do_log('notice', 'complexWhich(%s)',$sender);
+     &do_log('notice', 'xx complexWhich(%s)',$sender);
 
      $self->which('complex');
  }
@@ -795,7 +986,9 @@ sub which {
 	my $result_item;
 
 	my $result = $list->check_list_authz('visibility', 'md5',
-					     {'sender' =>$sender});
+					     {'sender' =>$sender,
+					      'remote_application_name' =>  $ENV{'remote_application_name'} }
+					     );
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action =~ /do_it/i);

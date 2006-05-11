@@ -717,7 +717,6 @@ a virtual host or for the whole site.
      oal.com 5
 \end{verbatim}
 \end {quote}
-
 \end {itemize}
 
 \section {Spools}
@@ -3662,7 +3661,20 @@ procedure calls, input parameters and resulting data in an XML data structure. T
 API is published in a \textbf {WSDL } document, retreived via Sympa's web interface.
 
 The SOAP server provides a limited set of high level functions including \texttt{login}, \texttt{which},
-\texttt{lists},\texttt{subscribe},\texttt{signoff}. Other functions might be implemented in the future.
+\texttt{lists}, \texttt{subscribe}, \texttt{signoff} and list creation. Other functions might be implemented in the future. One
+of the important implementation constraint is to provide services for proxy application with a correct authorization evaluation
+processus where authentication may differ from classic web method. The following cases can be used to access to the service :
+\begin{itemize}
+   \item The client first ask for a login and later service request provide the \texttt{sympa-user} cookie.
+   \item The client provide user email and password and request a service in a single soap access using the \texttt{authenticateAndRun} soap service.
+   \item The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
+         Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
+         a configuration file name  \file {trusted\_applications.conf}. See \ref{trustedapplications} page~\pageref{trustedapplications}.
+\end{itemize}
+
+In any case scenario authorization is used with same rules as mail interface or usual web interface.
+           
+
 
 The SOAP server uses \htmladdnormallink {SOAP::Lite} {http://www.soaplite.com/} Perl library. The server 
 is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
@@ -3687,13 +3699,36 @@ Here is a sample piece of your Apache \file {httpd.conf} with a SOAP server conf
 
 \section {Sympa setup}
 
-The only parameters that you need to set in \file {sympa.conf}/\file {robot.conf} files is
-the \cfkeyword {soap\_url} parameter that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in \file {sympa.conf}/\file {robot.conf} files is
+the \cfkeyword {soap\_url} that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
 also for the SOAP server to deduce what Virtual Host is concerned by the current SOAP request 
 (a single SOAP server will serve all Sympa virtual hosts).
+
+\section {trust remote application}
+\label {trustedapplications}
+
+The SOAP service \cfkeyword {authenticateRemoteAppAndRun} is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+
+This configuration file \cfkeyword {trusted\_applications.conf} can be created in the robot \dir {etc/} subdirectory or in \dir {[ETCDIR]} directory depending on the scope you want for it (the source package include a sample of file \file {trusted\_applications.conf} in directory \dir {soap}). This file is constructed with paragraphs separated by empty line and stating with key word  \cfkeyword {trusted\_application}. A sample \file {trusted\_applications.conf} file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+
+\begin{itemize}
+\item \cfkeyword {name} : the name of the application. Used with password for authentication ; the \cfkeyword {remote\_application\_name} variable is set for use in authorization scenarios.
+\item  \cfkeyword {md5password} : the MD5 digest of the application password. You can compute the digest as follows :  \unixcmd{sympa.pl -md5\_digest=<the password>}.
+\item  \cfkeyword {proxy\_for\_variables} : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list \cfkeyword {USER\_EMAIL} in this parameter, then the remote application can act as a user. Any other variable such as  \cfkeyword {remote\_host} can be listed.
+ 
+\end{itemize}
+
+
+You can test your SOAP service using the \file {sympa\_soap\_client.pl} sample script as follows :
+\begin {quote}
+\begin{verbatim}
+[BINDIR]/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+\end{verbatim}
+\end {quote}
+
 
 \section {The WSDL service description}
 

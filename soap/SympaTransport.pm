@@ -48,7 +48,7 @@ sub request {
 	&Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
     }else {
 	&Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
-	delete $ENV{'SYMPA_ROBOT'};
+	$ENV{'SYMPA_ROBOT'} =  $Conf::Conf{'host'} ;
     }
 
     $self->SUPER::request(@_);

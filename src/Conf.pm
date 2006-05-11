@@ -217,6 +217,24 @@ my %Default_Conf =
      'verp_rate' => '0%',
      );
    
+
+my %trusted_applications = ('trusted_application' => {'occurrence' => '0-n',
+						'format' => { 'name' => {'format' => '\S*',
+									 'occurrence' => '1',
+									 'case' => 'insensitive',
+								        },
+							      'ip'   => {'format' => '\d+\.\d+\.\d+\.\d+',
+									 'occurrence' => '0-1'},
+							      'md5password' => {'format' => '.*',
+										'occurrence' => '0-1'},
+							      'proxy_for_variables'=> {'format' => '.*',	    
+										      'occurrence' => '0-n',
+										      'split_char' => ','
+										  }
+							  }
+					    }
+			    );
+
 my $wwsconf;
 %Conf = ();
 
@@ -395,6 +413,7 @@ sub load {
 
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
+    $Conf{'trusted_applications'} = &load_trusted_application (); 
     
     return 1;
 }
@@ -559,7 +578,8 @@ sub load_robots {
 	    $url =~ s/^http(s)?:\/\/(.+)$/$2/;
 	    $Conf{'robot_by_soap_url'}{$url} = $robot;
 	}
-
+	# printf STDERR "load trusted de $robot";
+	$robot_conf->{'trusted_applications'} = &load_trusted_application($robot);
 	close (ROBOT_CONF);
     }
     closedir(DIR);
@@ -859,6 +879,246 @@ sub get_robot_conf {
     ## default
     return $Conf{$param} || $wwsconf->{$param};
 }
+
+
+
+
+## load trusted_application.conf configuration file
+sub load_trusted_application {
+    my $robot = shift;
+    
+    # find appropriate trusted-application.conf file
+    my $config ;
+    if (defined $robot) {
+	$config = $Conf{'etc'}.'/'.$robot.'/trusted_applications.conf';
+    }else{
+	$config = $Conf{'etc'}.'/trusted_applications.conf' ;
+    }
+    # print STDERR "load_trusted_applications $config ($robot)\n";
+
+    return undef unless  (-r $config);
+    # open TMP, ">/tmp/dump1";&tools::dump_var(&load_generic_conf_file($config,\%trusted_applications);, 0,\*TMP);close TMP;
+    return (&load_generic_conf_file($config,\%trusted_applications));
+
+
+}
+
+## load a generic config organized by paragraph syntax
+#
+# 
+sub load_generic_conf_file {
+    my $config_file = shift;
+    my $structure_ref = shift;
+    my %structure = %$structure_ref;
+
+    # printf STDERR "load_generic_file  $config_file \n";
+
+    unless (open (CONF,$config_file)) {
+	 printf STDERR "load_generic_conf_file: Unable to open $config_file";
+	 return undef;
+    }
+
+    my %admin;
+    my (@paragraphs);
+    
+    ## Just in case...
+    $/ = "\n";
+    
+    ## Set defaults to 1
+    foreach my $pname (keys %structure) {       
+	$admin{'defaults'}{$pname} = 1 unless ($structure{$pname}{'internal'});
+    }
+        ## Split in paragraphs
+    my $i = 0;
+    unless (open (CONFIG, $config_file)) {
+	printf STDERR 'unable to read configuration file %s\n',$config_file;
+	return undef;
+    }
+    while (<CONFIG>) {
+	if (/^\s*$/) {
+	    $i++ if $paragraphs[$i];
+	}else {
+	    push @{$paragraphs[$i]}, $_; # printf STDERR "xxxxxxxxxxxxxxxxxxx detected paragraph $_\n";
+	}
+    }
+   # printf STDERR "xxxxxxxxxxxxxxxxxxx #detected paragraph $i\n";
+
+    for my $index (0..$#paragraphs) {
+	my @paragraph = @{$paragraphs[$index]};
+
+	my $pname;
+
+	# printf STDERR "xxxxxxxxxxxxxxxxxxx paragraph $index\n";
+	## Clean paragraph, keep comments
+	for my $i (0..$#paragraph) {
+	    my $changed = undef;
+	    for my $j (0..$#paragraph) {
+		if ($paragraph[$j] =~ /^\s*\#/) {
+		    chomp($paragraph[$j]);
+		    push @{$admin{'comment'}}, $paragraph[$j];
+		    splice @paragraph, $j, 1;
+		    $changed = 1;
+		}elsif ($paragraph[$j] =~ /^\s*$/) {
+		    splice @paragraph, $j, 1;
+		    $changed = 1;
+		}
+
+		last if $changed;
+	    }
+
+	    last unless $changed;
+	}
+
+	## Empty paragraph
+	next unless ($#paragraph > -1);
+	
+	## Look for first valid line
+	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
+	    printf STDERR 'Bad paragraph "%s" in %s, ignored', @paragraph, $config_file;
+	    next;
+	}
+	    
+	$pname = $1;	
+	# printf STDERR "xxxxxxxxxxxx parametre pname $pname\n";
+	unless (defined $structure{$pname}) {
+	    printf STDERR 'Unknown parameter "%s" in %s, ignored', $pname, $config_file;
+	    next;
+	}
+	## Uniqueness
+	if (defined $admin{$pname}) {
+	    unless (($structure{$pname}{'occurrence'} eq '0-n') or
+		    ($structure{$pname}{'occurrence'} eq '1-n')) {
+		printf STDERR 'Multiple parameter "%s" in %s', $pname, $config_file;
+	    }
+	}
+	
+	## Line or Paragraph
+	if (ref $structure{$pname}{'format'} eq 'HASH') {
+	    ## This should be a paragraph
+	    unless ($#paragraph > 0) {
+		printf STDERR 'Expecting a paragraph for "%s" parameter in %s, ignore it\n', $pname, $config_file;
+		next;
+	    }
+	    
+	    ## Skipping first line
+	    shift @paragraph;
+
+	    my %hash;
+	    for my $i (0..$#paragraph) {	    
+		next if ($paragraph[$i] =~ /^\s*\#/);		
+		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+		    printf STDERR 'Bad line "%s" in %s\n',$paragraph[$i], $config_file;
+		}		
+		my $key = $1;
+			
+		unless (defined $structure{$pname}{'format'}{$key}) {
+		    printf STDERR 'Unknown key "%s" in paragraph "%s" in %s\n', $key, $pname, $config_file;
+		    next;
+		}
+		
+		unless ($paragraph[$i] =~ /^\s*$key\s+($structure{$pname}{'format'}{$key}{'format'})\s*$/i) {
+		    printf STDERR 'Bad entry "%s" in paragraph "%s" in %s\n', $paragraph[$i], $key, $pname, $config_file;
+		    next;
+		}
+
+		$hash{$key} = &_load_a_param($key, $1, $structure{$pname}{'format'}{$key});
+	    }
+
+
+	    ## Apply defaults & Check required keys
+	    my $missing_required_field;
+	    foreach my $k (keys %{$structure{$pname}{'format'}}) {
+
+		## Default value
+		unless (defined $hash{$k}) {
+		    if (defined $structure{$pname}{'format'}{$k}{'default'}) {
+			$hash{$k} = &_load_a_param($k, 'default', $structure{$pname}{'format'}{$k});
+		    }
+		}
+
+		## Required fields
+		if ($structure{$pname}{'format'}{$k}{'occurrence'} eq '1') {
+		    unless (defined $hash{$k}) {
+			printf STDERR 'Missing key %s in param %s in %s\n', $k, $pname, $config_file;
+			$missing_required_field++;
+		    }
+		}
+	    }
+
+	    next if $missing_required_field;
+
+	    delete $admin{'defaults'}{$pname};
+
+	    ## Should we store it in an array
+	    if (($structure{$pname}{'occurrence'} =~ /n$/)) {
+		push @{$admin{$pname}}, \%hash;
+	    }else {
+		$admin{$pname} = \%hash;
+	    }
+	}else {
+	    ## This should be a single line
+	    my $xxxmachin =  $structure{$pname}{'format'};
+	    unless ($#paragraph == 0) {
+		printf STDERR 'Expecting a single line for %s parameter in %sxxxxxx %s\n', $pname, $config_file, $xxxmachin ;
+	    }
+
+	    unless ($paragraph[0] =~ /^\s*$pname\s+($structure{$pname}{'format'})\s*$/i) {
+		printf STDERR 'Bad entry "%s" in %s\n', $paragraph[0], $config_file ;
+		next;
+	    }
+
+	    my $value = &_load_a_param($pname, $1, $structure{$pname});
+
+	    delete $admin{'defaults'}{$pname};
+
+	    if (($structure{$pname}{'occurrence'} =~ /n$/)
+		&& ! (ref ($value) =~ /^ARRAY/)) {
+		push @{$admin{$pname}}, $value;
+	    }else {
+		$admin{$pname} = $value;
+	    }
+	}
+    }
+    
+    close CONFIG;
+open TMP2, ">>/tmp/sss"; printf TMP2 "xxxxxxxxxxxxxxxxxxx--------structure admin\n"; &tools::dump_var(\%admin, 0, \*TMP2);printf TMP2 "xxxxxxxxxxxxxxxxxxx--------\n"; close TMP2;
+    return \%admin;
+}
+
+
+### load_a_param
+# 
+sub _load_a_param {
+    my ($key, $value, $p) = @_;
+    # print STDERR 'xxxxxxxxxxxxx _load_list_param(%s,\'%s\',\'%s\')\n', $robot,$key, $value;
+    
+    ## Empty value
+    if ($value =~ /^\s*$/) {
+	return undef;
+    }
+    
+    ## Default
+    if ($value eq 'default') {
+	$value = $p->{'default'};
+    }
+    ## lower case if usefull
+    $value = lc($value) if ($p->{'case'} eq 'insensitive'); 
+    
+    ## Do we need to split param if it is not already an array
+    if (($p->{'occurrence'} =~ /n$/)
+	&& $p->{'split_char'}
+	&& !(ref($value) eq 'ARRAY')) {
+	my @array = split /$p->{'split_char'}/, $value;
+	foreach my $v (@array) {
+	    $v =~ s/^\s*(.+)\s*$/$1/g;
+	}
+	
+	return \@array;
+    }else {
+	return $value;
+    }
+}
+
 
 ## Packages must return true.
 1;

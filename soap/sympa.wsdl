@@ -103,6 +103,18 @@
 	<part name="gecos" type="xsd:string" xsd:minOccurs="0"/>	
 </message>
 
+<message name="createListRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="subject" type="xsd:string"/>
+	<part name="template" type="xsd:string"/>
+	<part name="description" type="xsd:string"/>
+	<part name="topics" type="xsd:string"/>
+</message>
+
+<message name="createListResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
 <message name="subscribeResponse">
 	<part name="return" type="xsd:boolean"/>
 </message>
@@ -124,6 +136,18 @@
 </message>
 
 <message name="authenticateAndRunResponse">
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
+</message>
+
+<message name="authenticateRemoteAppAndRunRequest">
+	<part name="appname" type="xsd:string"/>
+	<part name="apppassword" type="xsd:string"/>
+	<part name="vars" type="xsd:string"/>
+	<part name="service" type="xsd:string"/>
+	<part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/>
+</message>
+
+<message name="authenticateRemoteAppAndRunResponse">
 	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
 </message>
 
@@ -178,6 +202,10 @@
 		<input message="tns:amIRequest" />
 		<output message="tns:amIResponse" />
 	</operation>
+	<operation name="createList">
+		<input message="tns:createListRequest" />
+		<output message="tns:createListResponse" />
+	</operation>
 	<operation name="review">
 		<input message="tns:reviewRequest" />
 		<output message="tns:reviewResponse" />
@@ -201,6 +229,10 @@
 	<operation name="authenticateAndRun">
 		<input message="tns:authenticateAndRunRequest" />
 		<output message="tns:authenticateAndRunResponse" />
+	</operation>
+	<operation name="authenticateRemoteAppAndRun">
+		<input message="tns:authenticateRemoteAppAndRunRequest" />
+		<output message="tns:authenticateRemoteAppAndRunResponse" />
 	</operation>
 	<operation name="lists">
 		<input message="tns:listsRequest" />
@@ -262,6 +294,19 @@
 	</operation>
 	<operation name="amI">
 		<soap:operation soapAction="urn:sympasoap#amI"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="createList">
+		<soap:operation soapAction="urn:sympasoap#createList"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -340,6 +385,19 @@
 	</operation>
 	<operation name="authenticateAndRun">
 		<soap:operation soapAction="urn:sympasoap#authenticateAndRun"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="authenticateRemoteAppAndRun">
+		<soap:operation soapAction="urn:sympasoap#authenticateRemoteAppAndRun"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

@@ -45,6 +45,7 @@ installmod:
 	@for i in $(script_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(SCRIPTDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(SCRIPTDIR)/$$i; \
+	chmod a+x $(DESTDIR)$(SCRIPTDIR)/$$i; \
 	done
 	@for i in $(cgi_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \

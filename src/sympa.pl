@@ -32,6 +32,7 @@ use File::Path;
 
 use Commands;
 use Conf;
+use Auth;
 use Language;
 use Log;
 use Version;
@@ -98,7 +99,7 @@ Options:
                                                 authorization scenarios. The list parameter is optional.
    --upgrade --from=X --to=Y             : runs Sympa maintenance script to upgrade from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
-
+   --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
    -h, --help                            : print this help
    -v, --version                         : print version number
 
@@ -112,7 +113,7 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
-		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
+		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
 		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s')) {
     &fatal_err("Unknown options.");
 }
@@ -122,20 +123,21 @@ if ($main::options{'debug'}) {
 }
 ## Batch mode, ie NOT daemon
 $main::options{'batch'} = 1 if ($main::options{'dump'} || 
-				 $main::options{'help'} ||
-				 $main::options{'version'} || 
-				 $main::options{'import'} || 
-				 $main::options{'make_alias_file'} ||
-				 $main::options{'lowercase'} ||
-				 $main::options{'close_list'} ||
-				 $main::options{'create_list'} ||
-				 $main::options{'instantiate_family'} ||
-				 $main::options{'add_list'} ||
-				 $main::options{'modify_list'} ||
-				 $main::options{'close_family'} ||
-				 $main::options{'sync_include'} ||
-				 $main::options{'upgrade'} ||
-				 $main::options{'reload_list_config'}
+				$main::options{'help'} ||
+				$main::options{'version'} || 
+				$main::options{'import'} || 
+				$main::options{'make_alias_file'} ||
+				$main::options{'lowercase'} ||
+				$main::options{'close_list'} ||
+				$main::options{'create_list'} ||
+				$main::options{'instantiate_family'} ||
+				$main::options{'add_list'} ||
+				$main::options{'modify_list'} ||
+				$main::options{'close_family'} ||
+				$main::options{'md5_digest'} || 
+				$main::options{'sync_include'} ||
+				$main::options{'upgrade'} ||
+				$main::options{'reload_list_config'}
 				 );
 
 # Some option force foreground mode
@@ -339,6 +341,11 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'version'}) {
     print $version_string;
+    
+    exit 0;
+}elsif ($main::options{'md5_digest'}) {
+    my $md5 = &Auth::md5password($main::options{'md5_digest'});
+    printf "md5 digest : $md5 \n";
     
     exit 0;
 }elsif ($main::options{'import'}) {

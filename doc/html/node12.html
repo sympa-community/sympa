@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1112"
+<A NAME="tex2html1114"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1106"
+<A NAME="tex2html1108"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1100"
+<A NAME="tex2html1102"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1108"
+<A NAME="tex2html1110"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1110"
+<A NAME="tex2html1112"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1113"
+<B> Next:</B> <A NAME="tex2html1115"
   HREF="node13.html">12. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1107"
+<B> Up:</B> <A NAME="tex2html1109"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1101"
+<B> Previous:</B> <A NAME="tex2html1103"
   HREF="node11.html">10. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1109"
-  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html1111"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1113"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,19 +63,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1114"
-  HREF="node12.html#SECTION001210000000000000000">11.1 Introduction</A>
-<LI><A NAME="tex2html1115"
-  HREF="node12.html#SECTION001220000000000000000">11.2 Web server setup</A>
 <LI><A NAME="tex2html1116"
-  HREF="node12.html#SECTION001230000000000000000">11.3 Sympa setup</A>
+  HREF="node12.html#SECTION001210000000000000000">11.1 Introduction</A>
 <LI><A NAME="tex2html1117"
-  HREF="node12.html#SECTION001240000000000000000">11.4 The WSDL service description</A>
+  HREF="node12.html#SECTION001220000000000000000">11.2 Web server setup</A>
 <LI><A NAME="tex2html1118"
-  HREF="node12.html#SECTION001250000000000000000">11.5 Client-side programming</A>
-<UL>
+  HREF="node12.html#SECTION001230000000000000000">11.3 Sympa setup</A>
 <LI><A NAME="tex2html1119"
-  HREF="node12.html#SECTION001251000000000000000">11.5.1 Writting a Java client with Axis</A>
+  HREF="node12.html#SECTION001240000000000000000">11.4 trust remote application</A>
+<LI><A NAME="tex2html1120"
+  HREF="node12.html#SECTION001250000000000000000">11.5 The WSDL service description</A>
+<LI><A NAME="tex2html1121"
+  HREF="node12.html#SECTION001260000000000000000">11.6 Client-side programming</A>
+<UL>
+<LI><A NAME="tex2html1122"
+  HREF="node12.html#SECTION001261000000000000000">11.6.1 Writting a Java client with Axis</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
@@ -103,7 +105,23 @@ API is published in a <B>WSDL </B> document, retreived via Sympa's web interface
 
 <P>
 The SOAP server provides a limited set of high level functions including <TT>login</TT>, <TT>which</TT>,
-<TT>lists</TT>,<TT>subscribe</TT>,<TT>signoff</TT>. Other functions might be implemented in the future.
+<TT>lists</TT>, <TT>subscribe</TT>, <TT>signoff</TT> and list creation. Other functions might be implemented in the future. One
+of the important implementation constraint is to provide services for proxy application with a correct authorization evaluation
+processus where authentication may differ from classic web method. The following cases can be used to access to the service :
+
+<UL>
+<LI>The client first ask for a login and later service request provide the <TT>sympa-user</TT> cookie.
+</LI>
+<LI>The client provide user email and password and request a service in a single soap access using the <TT>authenticateAndRun</TT> soap service.
+</LI>
+<LI>The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
+         Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
+         a configuration file name  <A NAME="8994"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">11.4</A> page&nbsp;<A HREF="node12.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+</LI>
+</UL>
+
+<P>
+In any case scenario authorization is used with same rules as mail interface or usual web interface.
 
 <P>
 The SOAP server uses <A NAME="tex2html30"
@@ -122,7 +140,7 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="8947"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+Here is a sample piece of your Apache <A NAME="8997"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
 	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
 	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
@@ -138,8 +156,8 @@ Here is a sample piece of your Apache <A NAME="8947"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only parameters that you need to set in <A NAME="8950"></A><TT>sympa.conf</TT>/<A NAME="8953"></A><TT>robot.conf</TT> files is
-the <A NAME="8956"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in <A NAME="9000"></A><TT>sympa.conf</TT>/<A NAME="9003"></A><TT>robot.conf</TT> files is
+the <A NAME="9006"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -149,8 +167,40 @@ also for the SOAP server to deduce what Virtual Host is concerned by the current
 
 <P>
 
-<H1><A NAME="SECTION001240000000000000000">
-11.4 The WSDL service description</A>
+<H1><A NAME="SECTION001240000000000000000"></A>
+<A NAME="trustedapplications"></A>
+<BR>
+11.4 trust remote application
+</H1>
+
+<P>
+The SOAP service <A NAME="9009"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+
+<P>
+This configuration file <A NAME="9012"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9015"></A><TT>etc/</TT> subdirectory or in <A NAME="9018"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9021"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9024"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9027"></A><TT>trusted_application</TT>. A sample <A NAME="9030"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+
+<P>
+
+<UL>
+<LI><A NAME="9033"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9036"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
+</LI>
+<LI><A NAME="9039"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9042"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
+</LI>
+<LI><A NAME="9045"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9048"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9051"></A><TT>remote_host</TT> can be listed.
+
+<P>
+</LI>
+</UL>
+
+<P>
+You can test your SOAP service using the <A NAME="9054"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
+/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION001250000000000000000">
+11.5 The WSDL service description</A>
 </H1>
 
 <P>
@@ -262,6 +312,18 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;part name="gecos" type="xsd:string" xsd:minOccurs="0"/&gt;	
 &lt;/message&gt;
 
+&lt;message name="createListRequest"&gt;
+	&lt;part name="list" type="xsd:string"/&gt;
+	&lt;part name="subject" type="xsd:string"/&gt;
+	&lt;part name="template" type="xsd:string"/&gt;
+	&lt;part name="description" type="xsd:string"/&gt;
+	&lt;part name="topics" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="createListResponse"&gt;
+	&lt;part name="return" type="xsd:boolean"/&gt;
+&lt;/message&gt;
+
 &lt;message name="subscribeResponse"&gt;
 	&lt;part name="return" type="xsd:boolean"/&gt;
 &lt;/message&gt;
@@ -283,6 +345,18 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 &lt;/message&gt;
 
 &lt;message name="authenticateAndRunResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="authenticateRemoteAppAndRunRequest"&gt;
+	&lt;part name="appname" type="xsd:string"/&gt;
+	&lt;part name="apppassword" type="xsd:string"/&gt;
+	&lt;part name="vars" type="xsd:string"/&gt;
+	&lt;part name="service" type="xsd:string"/&gt;
+	&lt;part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
+&lt;/message&gt;
+
+&lt;message name="authenticateRemoteAppAndRunResponse"&gt;
 	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;	
 &lt;/message&gt;
 
@@ -337,6 +411,10 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 		&lt;input message="tns:amIRequest" /&gt;
 		&lt;output message="tns:amIResponse" /&gt;
 	&lt;/operation&gt;
+	&lt;operation name="createList"&gt;
+		&lt;input message="tns:createListRequest" /&gt;
+		&lt;output message="tns:createListResponse" /&gt;
+	&lt;/operation&gt;
 	&lt;operation name="review"&gt;
 		&lt;input message="tns:reviewRequest" /&gt;
 		&lt;output message="tns:reviewResponse" /&gt;
@@ -360,6 +438,10 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;operation name="authenticateAndRun"&gt;
 		&lt;input message="tns:authenticateAndRunRequest" /&gt;
 		&lt;output message="tns:authenticateAndRunResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="authenticateRemoteAppAndRun"&gt;
+		&lt;input message="tns:authenticateRemoteAppAndRunRequest" /&gt;
+		&lt;output message="tns:authenticateRemoteAppAndRunResponse" /&gt;
 	&lt;/operation&gt;
 	&lt;operation name="lists"&gt;
 		&lt;input message="tns:listsRequest" /&gt;
@@ -421,6 +503,19 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;/operation&gt;
 	&lt;operation name="amI"&gt;
 		&lt;soap:operation soapAction="urn:sympasoap#amI"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="createList"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#createList"/&gt;
 			&lt;input&gt;
 				&lt;soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -510,6 +605,19 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
 			&lt;/output&gt;
 	&lt;/operation&gt;
+	&lt;operation name="authenticateRemoteAppAndRun"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#authenticateRemoteAppAndRun"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
 	&lt;operation name="lists"&gt;
 		&lt;soap:operation soapAction="urn:sympasoap#lists"/&gt;
 			&lt;input&gt;
@@ -565,8 +673,8 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 
 <P>
 
-<H1><A NAME="SECTION001250000000000000000">
-11.5 Client-side programming</A>
+<H1><A NAME="SECTION001260000000000000000">
+11.6 Client-side programming</A>
 </H1>
 
 <P>
@@ -591,8 +699,8 @@ should use the <B>authenticateAndRun()</B> function that does not require cookie
 
 <P>
 
-<H2><A NAME="SECTION001251000000000000000">
-11.5.1 Writting a Java client with Axis</A>
+<H2><A NAME="SECTION001261000000000000000">
+11.6.1 Writting a Java client with Axis</A>
 </H2>
 
 <P>
@@ -676,36 +784,36 @@ String[] _abonnements = tmp.which();
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1112"
+<A NAME="tex2html1114"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1106"
+<A NAME="tex2html1108"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1100"
+<A NAME="tex2html1102"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1108"
+<A NAME="tex2html1110"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1110"
+<A NAME="tex2html1112"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1113"
+<B> Next:</B> <A NAME="tex2html1115"
   HREF="node13.html">12. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1107"
+<B> Up:</B> <A NAME="tex2html1109"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1101"
+<B> Previous:</B> <A NAME="tex2html1103"
   HREF="node11.html">10. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1109"
-  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html1111"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1113"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-04-05
+2006-05-11
 </ADDRESS>
 </BODY>
 </HTML>

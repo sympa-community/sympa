@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {05 April 2006}
+    \date {11 May 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -713,7 +713,6 @@ a virtual host or for the whole site.
      oal.com 5
 \end{verbatim}
 \end {quote}
-
 \end {itemize}
 
 \section {Spools}
@@ -2231,11 +2230,11 @@ files. The server admin module include a CSS administration page that can help y
 
 \subsection {\cfkeyword {default\_shared\_quota}}
 
-	The default disk quota for lists' document repository.
+	The default disk quota (the unit is Kbytes) for lists' document repository.
  
 \subsection {\cfkeyword {default\_archive\_quota}}
 
-	The default disk quota for lists' web archives.
+	The default disk quota (the unit is Kbytes) for lists' web archives.
 
 \section {Spool related}
 \label {spool-related}
@@ -3848,7 +3847,7 @@ main archive.
 
      If web\_archive is defined for a list, every message distributed by this list is copied
      to \dir {/usr/local/sympa-os/spool/outgoing/}. (No need to create nonexistent subscribers to receive
-     copies of messages). In this example disk quota for the archive is limited to 10 Mo.
+     copies of messages). In this example disk quota (expressed in Kbytes) for the archive is limited to 10 Mo.
 
 \item start \file {archived.pl}.
 \Sympa and Apache
@@ -4029,7 +4028,20 @@ procedure calls, input parameters and resulting data in an XML data structure. T
 API is published in a \textbf {WSDL } document, retreived via Sympa's web interface.
 
 The SOAP server provides a limited set of high level functions including \texttt{login}, \texttt{which},
-\texttt{lists},\texttt{subscribe},\texttt{signoff}. Other functions might be implemented in the future.
+\texttt{lists}, \texttt{subscribe}, \texttt{signoff} and list creation. Other functions might be implemented in the future. One
+of the important implementation constraint is to provide services for proxy application with a correct authorization evaluation
+processus where authentication may differ from classic web method. The following cases can be used to access to the service :
+\begin{itemize}
+   \item The client first ask for a login and later service request provide the \texttt{sympa-user} cookie.
+   \item The client provide user email and password and request a service in a single soap access using the \texttt{authenticateAndRun} soap service.
+   \item The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
+         Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
+         a configuration file name  \file {trusted\_applications.conf}. See \ref{trustedapplications} page~\pageref{trustedapplications}.
+\end{itemize}
+
+In any case scenario authorization is used with same rules as mail interface or usual web interface.
+           
+
 
 The SOAP server uses \htmladdnormallink {SOAP::Lite} {http://www.soaplite.com/} Perl library. The server 
 is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
@@ -4054,13 +4066,36 @@ Here is a sample piece of your Apache \file {httpd.conf} with a SOAP server conf
 
 \section {Sympa setup}
 
-The only parameters that you need to set in \file {sympa.conf}/\file {robot.conf} files is
-the \cfkeyword {soap\_url} parameter that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in \file {sympa.conf}/\file {robot.conf} files is
+the \cfkeyword {soap\_url} that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
 also for the SOAP server to deduce what Virtual Host is concerned by the current SOAP request 
 (a single SOAP server will serve all Sympa virtual hosts).
+
+\section {trust remote application}
+\label {trustedapplications}
+
+The SOAP service \cfkeyword {authenticateRemoteAppAndRun} is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+
+This configuration file \cfkeyword {trusted\_applications.conf} can be created in the robot \dir {etc/} subdirectory or in \dir {/usr/local/sympa-os/etc} directory depending on the scope you want for it (the source package include a sample of file \file {trusted\_applications.conf} in directory \dir {soap}). This file is constructed with paragraphs separated by empty line and stating with key word  \cfkeyword {trusted\_application}. A sample \file {trusted\_applications.conf} file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+
+\begin{itemize}
+\item \cfkeyword {name} : the name of the application. Used with password for authentication ; the \cfkeyword {remote\_application\_name} variable is set for use in authorization scenarios.
+\item  \cfkeyword {md5password} : the MD5 digest of the application password. You can compute the digest as follows :  \unixcmd{sympa.pl -md5\_digest=<the password>}.
+\item  \cfkeyword {proxy\_for\_variables} : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list \cfkeyword {USER\_EMAIL} in this parameter, then the remote application can act as a user. Any other variable such as  \cfkeyword {remote\_host} can be listed.
+ 
+\end{itemize}
+
+
+You can test your SOAP service using the \file {sympa\_soap\_client.pl} sample script as follows :
+\begin {quote}
+\begin{verbatim}
+/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+\end{verbatim}
+\end {quote}
+
 
 \section {The WSDL service description}
 
@@ -4173,6 +4208,18 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	<part name="gecos" type="xsd:string" xsd:minOccurs="0"/>	
 </message>
 
+<message name="createListRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="subject" type="xsd:string"/>
+	<part name="template" type="xsd:string"/>
+	<part name="description" type="xsd:string"/>
+	<part name="topics" type="xsd:string"/>
+</message>
+
+<message name="createListResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
 <message name="subscribeResponse">
 	<part name="return" type="xsd:boolean"/>
 </message>
@@ -4194,6 +4241,18 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 </message>
 
 <message name="authenticateAndRunResponse">
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
+</message>
+
+<message name="authenticateRemoteAppAndRunRequest">
+	<part name="appname" type="xsd:string"/>
+	<part name="apppassword" type="xsd:string"/>
+	<part name="vars" type="xsd:string"/>
+	<part name="service" type="xsd:string"/>
+	<part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/>
+</message>
+
+<message name="authenticateRemoteAppAndRunResponse">
 	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
 </message>
 
@@ -4248,6 +4307,10 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 		<input message="tns:amIRequest" />
 		<output message="tns:amIResponse" />
 	</operation>
+	<operation name="createList">
+		<input message="tns:createListRequest" />
+		<output message="tns:createListResponse" />
+	</operation>
 	<operation name="review">
 		<input message="tns:reviewRequest" />
 		<output message="tns:reviewResponse" />
@@ -4271,6 +4334,10 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	<operation name="authenticateAndRun">
 		<input message="tns:authenticateAndRunRequest" />
 		<output message="tns:authenticateAndRunResponse" />
+	</operation>
+	<operation name="authenticateRemoteAppAndRun">
+		<input message="tns:authenticateRemoteAppAndRunRequest" />
+		<output message="tns:authenticateRemoteAppAndRunResponse" />
 	</operation>
 	<operation name="lists">
 		<input message="tns:listsRequest" />
@@ -4332,6 +4399,19 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	</operation>
 	<operation name="amI">
 		<soap:operation soapAction="urn:sympasoap#amI"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="createList">
+		<soap:operation soapAction="urn:sympasoap#createList"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -4410,6 +4490,19 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	</operation>
 	<operation name="authenticateAndRun">
 		<soap:operation soapAction="urn:sympasoap#authenticateAndRun"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="authenticateRemoteAppAndRun">
+		<soap:operation soapAction="urn:sympasoap#authenticateRemoteAppAndRun"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -8118,6 +8211,23 @@ Username with read access to the LDAP directory.
 
 Password for \lparam {user}.
 
+\item
+\lparam {use\_ssl} \textit {yes|no}
+
+If set to yes, LDAPS protocol is used.
+
+
+\item
+\lparam {ssl\_version} \textit {sslv2|sslv3|tls}
+\default {sslv3}
+
+If using SSL, this parameter define if SSL or TLS is used.
+
+\item
+\lparam {ssl\_version} \textit {ciphers used}
+\default {ALL}
+
+If using SSL, this parameter specifies which subset of cipher suites are permissible for this connection, using the standard OpenSSL string format. The default value of Net::LDAPS for ciphers is ALL, which permits all ciphers, even those that don't encrypt!
 
 \item
 \label {suffix}
@@ -8244,6 +8354,24 @@ Username with read access to the LDAP directory.
 
 Password for \lparam {user}.
 
+
+\item
+\lparam {use\_ssl} \textit {yes|no}
+
+If set to yes, LDAPS protocol is used.
+
+
+\item
+\lparam {ssl\_version} \textit {sslv2|sslv3|tls}
+\default {sslv3}
+
+If using SSL, this parameter define if SSL or TLS is used.
+
+\item
+\lparam {ssl\_version} \textit {ciphers used}
+\default {ALL}
+
+If using SSL, this parameter specifies which subset of cipher suites are permissible for this connection, using the standard OpenSSL string format. The default value of Net::LDAPS for ciphers is ALL, which permits all ciphers, even those that don't encrypt!
 
 \item
 \label {suffix1}
@@ -9031,7 +9159,7 @@ d_edit		private
 
 \lparam {quota} \textit {number-of-Kbytes}
 
-This parameter specifies the disk quota for the document repository, in kilobytes.
+This parameter specifies the disk quota (the unit is Kbytes) for the document repository, in kilobytes.
 If quota is exceeded, file uploads fail.
 
 \section {List tuning}
