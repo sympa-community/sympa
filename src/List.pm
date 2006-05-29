@@ -7293,8 +7293,9 @@ sub verify {
 	    my $field_name = $2;
 	    if (defined ($context->{'msg'})) {
 		my $header = $context->{'msg'}->head;
-		my $field = $header->get($field_name);
-		$value =~ s/\[(msg_header|header)\-\>$field_name\]/$field/;
+		my @fields = $header->get($field_name);
+
+		$value = \@fields;
 	    }else {
 		return -1 * $negation;
 	    }
