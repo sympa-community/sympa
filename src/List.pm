@@ -3668,31 +3668,23 @@ sub send_to_editor {
 	       &do_log('err','Unable to create %s', $tmp_dir);
 	       return undef;
 	   }
-	   my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources.tt2', $robot, $self);
+	   my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
 
 	   unless ($mhonarc_ressources) {
 	       do_log('notice',"Cannot find any MhOnArc ressource file");
 	       return undef;
 	   }
-
 	   ## generate HTML
 	   chdir $tmp_dir;
 	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
 	   
 	   open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file|";
 	   open MSG, ">msg00000.html";
-	   
-
 	   &do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file");
-
-########################## APRES
 	   print MSG <ARCMOD>;
-########################## AVANT
-
 	   close MSG;
 	   close ARCMOD;
 	   chdir $Conf{'home'};
-
        }
    }
 
@@ -4998,7 +4990,7 @@ sub get_admin_user {
 
     ## Use session cache
     if (defined $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email}) {
-	&do_log('debug3', 'xxx Use cache(get_admin_user, %s,%s,%s)', $name, $role, $email);
+	# &do_log('debug3', 'xxx Use cache(get_admin_user, %s,%s,%s)', $name, $role, $email);
 	return $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email};
     }
 
@@ -7084,10 +7076,10 @@ sub request_action {
     my $return = {};
     foreach my $rule (@rules) {
 	next if ($rule eq 'scenario');
-	if ($auth_method eq $rule->{'auth_method'}) {
+	# &do_log('info', 'List::request_action : verify rule %s',$rule->{'condition'});
 
+	if ($auth_method eq $rule->{'auth_method'}) {
 	    my $result =  &verify ($context,$rule->{'condition'});
-	    
 	    if (! defined ($result)) {
 		do_log('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
 		
@@ -7182,7 +7174,7 @@ sub init_list_cache {
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;
-    do_log('debug3', 'List::verify(%s)', $condition);
+    # do_log('info', 'xxx  List::verify(%s)', $condition);
 
     my $robot = $context->{'robot_domain'};
 
@@ -7485,11 +7477,12 @@ sub verify {
 
     }
     
-    ##search
+    ## search rule
     if ($condition_key eq 'search') {
 	my $val_search;
  	# we could search in the family if we got ref on Family object
  	if (defined $list){
+            do_log('debug3',"appel de search($args[0],$args[1],$robot,$list)");
  	    $val_search = &search($args[0],$args[1],$robot,$list);
  	}else {
  	    $val_search = &search($args[0],$args[1],$robot);
@@ -7515,106 +7508,119 @@ sub verify {
 		return $negation ;
 	    }
 	}
-
 	return -1 * $negation ;
     }
     return undef;
 }
 
-## Verify if a given user is part of an LDAP search filter
+## Verify if a given user is part of an LDAP or TXT search filter
 sub search{
     my $filter_file = shift;
     my $sender = shift;
     my $robot = shift;
     my $list = shift;
 
-    &do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
+    # &do_log('info', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
+    
+    if ($filter_file =~ /\.ldap$/) {	
+	my $file;
+	unless ($file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list)) {
+	    &do_log('err', 'Could not find search filter %s', $filter_file);
+	    return undef;
+	}   
 
-    my $file;
+	my $timeout = 3600;	
+	my $var;
+	my $time = time;
+	my $value;	
+	my %ldap_conf;
+    
+	return undef unless (%ldap_conf = &Ldap::load($file));
 
-    unless ($file = &tools::get_filename('etc',"search_filters/$filter_file", $robot, $list)) {
-	&do_log('err', 'Could not find search filter %s', $filter_file);
-	return undef;
-    }   
-
-    if ($filter_file =~ /\.ldap$/) {
+	my $filter = $ldap_conf{'filter'};	
+	$filter =~ s/\[sender\]/$sender/g;
 	
-    my $timeout = 3600;
-
-    my $var;
-    my $time = time;
-    my $value;
-
-    my %ldap_conf;
-    
-    return undef unless (%ldap_conf = &Ldap::load($file));
-
- 
-    my $filter = $ldap_conf{'filter'};	
-    $filter =~ s/\[sender\]/$sender/g;
-    
 	if (defined ($persistent_cache{'named_filter'}{$filter_file}{$filter}) &&
 	    (time <= $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
-        &do_log('notice', 'Using previous LDAP named filter cache');
+	    &do_log('notice', 'Using previous LDAP named filter cache');
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
-    }
-
-    unless (eval "require Net::LDAP") {
-	do_log('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
-	return undef;
-    }
-    require Net::LDAP;
-    
-    ## There can be replicates
-    foreach my $host_entry (split(/,/,$ldap_conf{'host'})) {
-
-	$host_entry =~ s/^\s*(\S.*\S)\s*$/$1/;
-	my ($host,$port) = split(/:/,$host_entry);
-	
-	## If port a 'port' entry was defined, use it as default
-	$port = $port || $ldap_conf{'port'} || 389;
-	
-	my $ldap = Net::LDAP->new($host, port => $port );
-	
-	unless ($ldap) {	
-	    do_log('notice','Unable to connect to the LDAP server %s:%d',$host, $port);
-	    next;
 	}
 	
-	my $status; 
-
-	if (defined $ldap_conf{'bind_dn'} && defined $ldap_conf{'bind_password'}) {
-	    $status = $ldap->bind($ldap_conf{'bind_dn'}, password =>$ldap_conf{'bind_password'});
-	}else {
-	    $status = $ldap->bind();
+	unless (eval "require Net::LDAP") {
+	    do_log('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
+	    return undef;
 	}
-
-	unless ($status && ($status->code == 0)) {
-	    do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
-	    next;
-	}
+	require Net::LDAP;
 	
-	my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
-				 filter => "$filter",
-				 scope => "$ldap_conf{'scope'}");
-    	
-	
-	if ($mesg->count() == 0){
-		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
+	## There can be replicates
+	foreach my $host_entry (split(/,/,$ldap_conf{'host'})) {
 	    
-	}else {
+	    $host_entry =~ s/^\s*(\S.*\S)\s*$/$1/;
+	    my ($host,$port) = split(/:/,$host_entry);	    
+	    ## If port a 'port' entry was defined, use it as default
+	    $port = $port || $ldap_conf{'port'} || 389;	    
+	    my $ldap = Net::LDAP->new($host, port => $port );	    
+	    unless ($ldap) {	
+		do_log('notice','Unable to connect to the LDAP server %s:%d',$host, $port);
+		next;
+	    }	    
+	    my $status; 
+
+	    if (defined $ldap_conf{'bind_dn'} && defined $ldap_conf{'bind_password'}) {
+		$status = $ldap->bind($ldap_conf{'bind_dn'}, password =>$ldap_conf{'bind_password'});
+	    }else {
+		$status = $ldap->bind();
+	    }
+	    
+	    unless ($status && ($status->code == 0)) {
+		do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
+		next;
+	    }
+	    
+	    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
+				     filter => "$filter",
+				     scope => "$ldap_conf{'scope'}");
+	    if ($mesg->count() == 0){
+		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
+		
+	    }else {
 		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 1;
-	}
-      	
-	$ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
+	    }
+	    
+	    $ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
 	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} = time;
-	
+	    
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
 	}
+    }elsif($filter_file =~ /\.txt$/){ 
+	# &do_log('info', 'List::search: eval %s', $filter_file);
+	my @files ; 
+	unless (@files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list)) {
+	    &do_log('err', 'Could not find search filter %s', $filter_file);
+	    return undef;
+	}
+	my $sender = lc($sender);
+	foreach my $file (@files) {
+	    &do_log('debug3', 'List::search: found file  %s', $file);
+	    unless (open FILE, $file) {
+		&do_log('err', 'Could not openfile %s', $file);
+		return undef;
+	    } 
+	    while (<FILE>) {
+		# &do_log('debug3', 'List::search: eval rule %s', $_);
+		next if (/^\s*$/o || /^[\#\;]/o);
+		my $regexp= $_ ;
+		chomp $regexp;
+		$regexp =~ s/\*/.*/ ; 
+		$regexp = '^'.$regexp.'$';
+		# &do_log('debug3', 'List::search: eval  %s =~ /%s/i', $sender,$regexp);
+		return 1  if ($sender =~ /$regexp/i);
+	    }
+	}
+	return -1;
     }
-    
-    return undef;
 }
+
 
 ## May the indicated user edit the indicated list parameter or not ?
 sub may_edit {
@@ -7629,7 +7635,7 @@ sub may_edit {
     my $edit_conf;
 
     # Load edit_list.conf: track by file, not domain (file may come from server, robot, family or list context)
-    my $edit_conf_file = &tools::get_filename('etc','edit_list.conf',$self->{'domain'},$self); 
+    my $edit_conf_file = &tools::get_filename('etc',{},'edit_list.conf',$self->{'domain'},$self); 
     if (! $edit_list_conf{$edit_conf_file} || ((stat($edit_conf_file))[9] > $mtime{'edit_list_conf'}{$edit_conf_file})) {
 
         $edit_conf = $edit_list_conf{$edit_conf_file} = &tools::load_edit_list_conf($self->{'domain'}, $self);
@@ -7944,9 +7950,9 @@ sub _load_scenario_file {
         close  SCENARI;
 	return ($content,$scenario_file);
     }
-
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
+    
     unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
 	do_log('err',"Error in $function scenario $scenario_file ");
 	return undef;
@@ -7957,19 +7963,31 @@ sub _load_scenario_file {
 
 sub _load_scenario {
     my ($function, $robot,$scenario_name, $paragraph, $directory ) = @_;
-    do_log('debug3', 'List::_load_scenario(%s,%s,%s)', $function,$robot,$scenario_name);
+    # do_log('debug', 'List::_load_scenario(%s,%s,%s)', $function,$robot,$scenario_name);
 
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
     my @scenario;
     my @rules = split /\n/, $paragraph;
 
-
     ## Following lines are ordered
     push(@scenario, 'scenario');
+
+    # include a default first rule if configured for this action item
+    if ($Conf{'blacklist'}{$function}) {
+	foreach my $auth ('smtp','md5','pgp','smime'){
+	    my $blackrule = {};
+	    $blackrule->{'condition'}='search(blacklist.txt,[sender])';
+	    $blackrule->{'action'} = 'reject,quiet';
+	    $blackrule->{'auth_method'}=$auth;	
+	    # do_log('info','load rule %s,%s,%s', $blackrule->{'condition'},$blackrule->{'action'},$blackrule->{'auth_method'});
+
+	    push(@scenario,$blackrule);
+	}
+    }
+
     unless ($function eq 'include') {
-	my $include = &_load_scenario_file ('include',$robot,"$function.header", $directory);
-	
+        my $include = &_load_scenario_file ('include',$robot,"$function.header", $directory);
 	push(@scenario,@{$include->{'rules'}}) if ($include);
     }
     foreach (@rules) {
@@ -7998,8 +8016,8 @@ sub _load_scenario {
 	    do_log('err',"error parsing $rule");
 	    return undef;
 	}
-	$rule->{condition}=$1;
-	$rule->{auth_method}=$2 || 'smtp';
+	$rule->{'condition'}=$1;
+	$rule->{'auth_method'}=$2 || 'smtp';
 	$rule->{'action'} = $6;
 
 	
@@ -8293,8 +8311,8 @@ sub _include_users_remote_sympa_list {
 	$cert_file = $dir.'/cert.pem';
 	$key_file = $dir.'/private_key';
     }elsif($cert eq 'robot') {
-	$cert_file = &tools::get_filename('etc','cert.pem',$robot,$self);
-	$key_file =  &tools::get_filename('etc','private_key',$robot,$self);
+	$cert_file = &tools::get_filename('etc',{},'cert.pem',$robot,$self);
+	$key_file =  &tools::get_filename('etc',{},'private_key',$robot,$self);
     }
     unless ((-r $cert_file) && ( -r $key_file)) {
 	do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
@@ -9335,7 +9353,7 @@ sub _load_admin_users_include {
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
 	
 
-      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}\.incl",$self->{'domain'},$self);
+      	my $include_file = &tools::get_filename('etc',{},"data_sources/$entry->{'source'}\.incl",$self->{'domain'},$self);
 
         unless (defined $include_file){
 	    &do_log('err', '_load_admin_users_include : the file %s.incl doesn\'t exist',$entry->{'source'});
@@ -11657,7 +11675,7 @@ sub load_topics {
     my $robot = shift ;
     do_log('debug2', 'List::load_topics(%s)',$robot);
 
-    my $conf_file = &tools::get_filename('etc','topics.conf',$robot);
+    my $conf_file = &tools::get_filename('etc',{},'topics.conf',$robot);
 
     unless ($conf_file) {
 	&do_log('err','No topics.conf defined');

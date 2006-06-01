@@ -118,7 +118,7 @@ sub create_list_old{
     }
 
 
-    my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$template.'/config.tt2', $robot);
+    my $template_file = &tools::get_filename('etc',{},'create_list_templates/'.$template.'/config.tt2', $robot);
     unless (defined $template_file) {
 	&do_log('err', 'no template %s found',$template);
 	return undef;
@@ -280,7 +280,7 @@ sub create_list{
     }
 
     ## template file
-    my $template_file = &tools::get_filename('etc', 'config.tt2', $robot,$family);
+    my $template_file = &tools::get_filename('etc',{},'config.tt2', $robot,$family);
     unless (defined $template_file) {
 	&do_log('err', 'admin::create_list : no config template from family %s@%s',$family->{'name'},$robot);
 	return undef;
@@ -403,7 +403,7 @@ sub update_list{
     }
 
     ## template file
-    my $template_file = &tools::get_filename('etc', 'config.tt2', $robot,$family);
+    my $template_file = &tools::get_filename('etc',{}, 'config.tt2', $robot,$family);
     unless (defined $template_file) {
 	&do_log('err', 'admin::update_list : no config template from family %s@%s',$family->{'name'},$robot);
 	return undef;

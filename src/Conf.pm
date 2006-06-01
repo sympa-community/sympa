@@ -59,7 +59,7 @@ my @valid_options = qw(
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
-		       web_recode_to
+		       web_recode_to use_blacklist
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
@@ -215,6 +215,7 @@ my %Default_Conf =
      'logo_html_definition' => '',
      'return_path_suffix' => '-owner',
      'verp_rate' => '0%',
+     'use_blacklist' => 'send'
      );
    
 
@@ -355,7 +356,7 @@ sub load {
     
     foreach my $robot (keys %{$Conf{'robots'}}) {
 	my $config;
-	unless ($config = &tools::get_filename('etc', 'auth.conf', $robot)) {
+	unless ($config = &tools::get_filename('etc',{},'auth.conf', $robot)) {
 	    &do_log('err',"_load_auth: Unable to find auth.conf");
 	    next;
 	}
@@ -388,6 +389,9 @@ sub load {
 	delete $Conf{'rfc2369_header_fields'};
     }else {
 	$Conf{'rfc2369_header_fields'} = [split(/,/, $Conf{'rfc2369_header_fields'})];
+    }
+    foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
+	$Conf{'blacklist'}{$action} = 1;
     }
 
     if ($Conf{'anonymous_header_fields'} eq 'none') {
@@ -486,6 +490,7 @@ sub load_robots {
 				  web_archive_spam_protection => 1,
 				  bounce_level1_rate => 1,
 				  bounce_level2_rate => 1,
+				  use_blacklist => 1,
 				  soap_url => 1,
 				  css_url => 1,
  				  css_path => 1,
@@ -563,6 +568,12 @@ sub load_robots {
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
 	#$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
 	$robot_conf->{$robot}{'verp_rate'} ||= $Conf{'verp_rate'};
+	$robot_conf->{$robot}{'use_blacklist'} ||= $Conf{'use_blacklist'};
+
+	# split action list for blacklist usage
+	foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
+	    $robot_conf->{$robot}{'blacklist'}{$action} = 1;
+	}
 
 	my ($host, $path);
 	if ($robot_conf->{$robot}{'http_host'} =~ /^([^\/]+)(\/.*)$/) {
@@ -590,7 +601,6 @@ sub load_robots {
 	$url =~ s/^http(s)?:\/\/(.+)$/$2/;
 	$Conf{'robot_by_soap_url'}{$url} = $Conf{'domain'};
     }
-
     return ($robot_conf);
 }
 

@@ -156,7 +156,7 @@ sub ldap_authentication {
      my ($cnx, $mesg, $host,$ldap_passwd,$ldap_anonymous);
      &do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,$pwd,$whichfilter);
 
-     unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
+     unless (&tools::get_filename('etc',{},'auth.conf', $robot)) {
 	 return undef;
      }
 

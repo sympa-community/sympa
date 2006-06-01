@@ -387,7 +387,7 @@ sub rebuild {
 
     do_log('debug',"Rebuilding $adrlist archive ($2)");
 
-    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
+    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
 	&set_hidden_mode($tag);
@@ -596,7 +596,7 @@ sub mail2arc {
 	$newfile = $index;
      }
     
-    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
+    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
     my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";

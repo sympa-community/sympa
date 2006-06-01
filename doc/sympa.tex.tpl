@@ -2107,6 +2107,20 @@ files. The server admin module include a CSS administration page that can help y
         \example {log\_smtp           on}
 
 
+\subsection {\cfkeyword {use\_blacklist}}
+
+	\default {send,create\_list}
+        \index{use\_blacklist}
+        \label{useblacklist}
+	Sympa provide a blacklist feature availible for list editor and list owner. The \cfkeyword {use\_blacklist} parameter
+        define which operation use the blacklist. Search in black list is mainly usefull for the  \cfkeyword {send} service
+        (distribution of a message to the subscribers). You may use blacklist for more operation such as review,archive etc but
+        be aware that thoses web services needs fast response and blacklist may require some ressources.
+
+        If you don't want blacklist at all, define \cfkeyword {use\_blacklist none} so the user interface to manage blacklist
+        will disappear from the web interface.
+
+
 \subsection {\cfkeyword {max\_size}} 
 
 	\default {5 Mb}
@@ -4758,17 +4772,21 @@ The syntax of this rule is:
 \begin {quote}
 \begin{verbatim}
 	search(example.ldap,[sender])      smtp,smime,md5    -> do_it
+	search(blacklist.txt,[sender])     smtp,smime,md5    -> do_it
 \end{verbatim}
 \end {quote}
 
 The variables used by 'search' are :
 \begin{itemize}
-	\item{the name of the LDAP Configuration file}\\
+	\item{the name of the LDAP Configuration file or a txt matching enumeration}\\
 	\item{the [sender]}\\
 	That is to say the sender email address. 
 \end{itemize}
  
 Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory ; each entry has a lifetime of 1 hour in the cache.
+
+When using .txt file extention, the file is read looking for a line that match the second parameter (usually the user email address). Each line is a string where the
+char * can be used once to mach any block. This feature is used by the blacklist implicit scenario rule.   (see~\ref {blacklist}) 
 
 The method of authentication does not change.
 [STARTPARSE]
@@ -4794,6 +4812,17 @@ order to facilitate the administration of common rules.
 You can define a set of common scenario rules, used by all lists.
 include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
 
+\section {blacklist implicit rule}
+
+For each service listed in parameter \cfkeyword {use\_blacklist} (see~\ref {useblacklist}), the following implicit scenario rule is added at the beginning of the scenario :
+\begin {quote}
+\begin{verbatim}
+search(blacklist.txt,[sender])  smtp,md5,pgp,smime -> reject,quiet
+\end{verbatim}
+\end {quote}
+	    
+The goal is to block message or other service request from unwanted users. The blacklist can be defined for the robot or for the list. The one at the list level is to
+managed by list owner or list editor  via the web interface.
 
 \section {Hidding scenario files}
 

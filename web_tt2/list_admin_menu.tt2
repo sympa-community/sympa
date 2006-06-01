@@ -31,6 +31,11 @@
 <li><a class="[% class %]" href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
 [% END %]
 
+[% IF conf.use_blacklist != 'none' %]
+[% IF action == 'blacklist' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+     <li><a class="menuLinks" href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]-Blacklist[%END%]</a></li>
+[% END %]
+
 [% IF is_archived %]
 [% IF action == 'arc_manage' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <li><a class="[% class %]"  href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Manage Archives[%END%]</a></li>

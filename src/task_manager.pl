@@ -416,7 +416,7 @@ sub create {
 
      # for global model
     if ($object eq '_global') {
-	unless ($model_file = &tools::get_filename('etc', "global_task_models/$model_name", $Conf{'host'})) {
+	unless ($model_file = &tools::get_filename('etc',{},"global_task_models/$model_name", $Conf{'host'})) {
 	    &do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;
 	}
@@ -428,8 +428,7 @@ sub create {
 
 	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
-	unless ($model_file = &tools::get_filename('etc', "list_task_models/$model_name", 
-						   $list->{'domain'}, $list)) {
+	unless ($model_file = &tools::get_filename('etc', {},"list_task_models/$model_name", $list->{'domain'}, $list)) {
 	    &do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
 	    return undef;
 	}

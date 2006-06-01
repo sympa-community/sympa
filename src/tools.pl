@@ -148,7 +148,7 @@ sub load_edit_list_conf {
     my $conf ;
     
     return undef 
-	unless ($file = &tools::get_filename('etc','edit_list.conf',$robot,$list));
+	unless ($file = &tools::get_filename('etc',{},'edit_list.conf',$robot,$list));
 
     unless (open (FILE, $file)) {
 	&do_log('info','Unable to open config file %s', $file);
@@ -199,7 +199,7 @@ sub load_create_list_conf {
     my $file;
     my $conf ;
     
-    $file = &tools::get_filename('etc', 'create_list.conf', $robot);
+    $file = &tools::get_filename('etc',{}, 'create_list.conf', $robot);
     unless ($file) {
 	&do_log('info','unable to read --ETCBINDIR--/create_list.conf');
 	return undef;
@@ -1582,10 +1582,11 @@ sub duration_conv {
 
 ## Look for a file in the list > robot > server > default locations
 sub get_filename {
-    my ($type, $name, $robot, $object) = @_;
+    my ($type, $options, $name, $robot, $object) = @_;
     my $list;
     my $family;
-    &do_log('debug3','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $object->{'name'});
+    &do_log('debug3','tools::get_filename(%s,%s,%s,%s,%s)', $type,  join('/',keys %$options), $name, $robot, $object->{'name'});
+
     
     if (ref($object) eq 'List') {
  	$list = $object;
@@ -1637,12 +1638,17 @@ sub get_filename {
 	    
 	    unshift @try, $list->{'dir'}.'/'.$name;
 	}
+	my @result;
 	foreach my $f (@try) {
-	    &do_log('debug3','get_filname : NAME: %s ; DIR %s', $name, $f  );
+	    &do_log('debug3','get_filname : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
+		if ($options->{'order'} == 'all') {
+		    push @result, $f;
+		}
 		return $f;
 	    }
 	}
+	return (@result) ;
     }
     
     &do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
@@ -2442,6 +2448,55 @@ sub lock {
 
     return \*FH;
 }
+
+sub add_in_blacklist {
+    my $entry = shift;
+    my $robot = shift;
+    my $list =shift;
+
+    &do_log('info',"tools::add_in_blacklist(%s,%s,%s)",$entry,$robot,$list->{'name'});
+    $entry = lc($entry);
+    chomp $entry;
+
+    # robot blacklist not yet availible 
+    unless ($list) {
+	 &do_log('info',"tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter");
+	 return undef;
+    }
+    unless (($entry)&&($robot)) {
+	 &do_log('info',"tools::add_in_blacklist:  missing parameters");
+	 return undef;
+    }
+    if ($entry =~ /\*.*\*/) {
+	&do_log('info',"tools::add_in_blacklist: incorrect parameter $entry");
+	return undef;
+    }
+    my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
+    unless (open BLACKLIST, "$file"){
+	&do_log('info','do_blacklist : unable to open file %s',$file);
+	return undef;
+    }
+    while(<BLACKLIST>) {
+	next if (/^\s*$/o || /^[\#\;]/o);
+	my $regexp= $_ ;
+	chomp $regexp;
+	$regexp =~ s/\*/.*/ ; 
+	$regexp = '^'.$regexp.'$';
+	if ($entry =~ /$regexp/i) { 
+	    &do_log('notice','do_blacklist : %s already in blacklist(%s)',$entry,$_);
+	    return 0;
+	}	
+    }
+    close BLACKLIST;
+    unless (open BLACKLIST, ">> $file"){
+
+    }
+    printf BLACKLIST "$entry\n";
+    close BLACKLIST;
+
+}
+
+
 
 ## unlock a file 
 sub unlock {

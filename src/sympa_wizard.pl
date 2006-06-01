@@ -220,7 +220,11 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 
-
+	      {'name' => 'use_blacklist',
+	       'query' => 'comma separated list of operation for which blacklist filter is applyed', 
+               'default' => 'send,create_list',
+	       'file' => 'sympa.conf','edit' => '1',
+	       'advice' =>'set this parameter to "none" hidde blacklist feature'},
 
 	      {'name'  => 'rfc2369_header_fields',
 	       'query' => 'Specify which rfc2369 mailing list headers to add',

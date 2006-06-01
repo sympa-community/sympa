@@ -266,7 +266,8 @@ my %comm = ('home' => 'do_home',
 	 'view_template' => 'do_view_template',
 	 'edit_template' => 'do_edit_template',
 	 'rss_request' => 'do_rss_request',
-	    'maintenance' => 'do_maintenance',
+	 'maintenance' => 'do_maintenance',
+	 'blacklist' => 'do_blacklist',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -421,6 +422,7 @@ my %action_type = ('editfile' => 'admin',
 		'remove_template' => 'admin',
 		'copy_template' => 'admin',
 		'edit_template' => 'admin',
+		'blacklist' => 'admin',
 #		'viewlogs' => 'admin'
 );
 
@@ -440,6 +442,7 @@ my %in_regexp = (
 		 'body' => '.+',
 		 'info' => '.+',
 		 'new_scenario_content' => '.+',
+                 'blacklist' => '.+',
 
 		 ## Integer
 		 'page' => '\d+',
@@ -657,7 +660,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Sympa parameters in $param->{'conf'}
      $param->{'conf'} = {};
      foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email','logo_html_definition',
-		    'dark_color','light_color','text_color','bg_color','error_color',
+		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist',
                     'selected_color','shaded_color','web_recode_to','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
@@ -910,7 +913,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     if ($action eq 'home') {
 		 $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
 		 
-		 if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
+		 if (! &tools::get_filename('etc',{},'topics.conf', $robot) &&
 		     ($action eq 'home')) {
 		     $action = 'lists';
 		 }
@@ -1727,7 +1730,6 @@ sub prepare_report_user {
 	 foreach my $k (keys %ENV) {
 	     $param->{'env'}{$k} = $ENV{$k};
 	 }
-
 	## privileges
 	if ($param->{'user'}{'email'}) {
 	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
@@ -1778,7 +1780,7 @@ sub prepare_report_user {
 	 ## Should Not be used anymore ##
 	 $param->{'may_subunsub'} = 1 
 	     if ($param->{'may_signoff'} || $param->{'may_subscribe'});
-
+	 
 	 ## May review
 	 my $result = $list->check_list_authz('review',$param->{'auth_method'},
 					      {'sender' => $param->{'user'}{'email'},
@@ -2348,7 +2350,7 @@ sub do_sso_login_succeeded {
      my $auth = shift; ## User email or UID
      &wwslog('debug2',"is_ldap_user ($auth)");
 
-     unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
+     unless (&tools::get_filename('etc',{}, 'auth.conf', $robot)) {
 	 return undef;
      }
 
@@ -4356,7 +4358,7 @@ sub do_edit_template  {
 
     $in{'subdir'} ||= 'default';
 
-    &wwslog('info', "xxx do_edit_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
+    &wwslog('info', "do_edit_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
 
     unless ($param->{'is_listmaster'}) {
 	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
@@ -5140,7 +5142,7 @@ sub do_skinsedit {
 #  do_reject
 ####################################################
 #  Moderation of messages : rejects messages and notifies 
-#  their senders
+#  their senders. If in{'blacklist'} add sender to list blacklist
 # 
 # IN : -
 #
@@ -5177,7 +5179,8 @@ sub do_skinsedit {
 	 &wwslog('err','do_reject: no msgid');
 	 return undef;
      }
-
+     $param->{'blacklist_added'} = 0;
+     $param->{'blacklist_ignored'} = 0;
      foreach my $id (split /,/, $in{'id'}) {
 
 	 ## For compatibility concerns
@@ -5192,23 +5195,33 @@ sub do_skinsedit {
 	     &wwslog('err','do_reject: Unable to open %s', $file);
 	     next;
 	 }
-	 unless ($in{'quiet'}) {
+	 unless (($in{'quiet'})||($in{'blacklist'})) {
 	     my $msg;
 	     my $parser = new MIME::Parser;
 	     $parser->output_to_core(1);
 	     unless ($msg = $parser->read(\*IN)) {
 		 &wwslog('err', 'Unable to parse message %s', $file);
 		 next;
-	     }
-	     
+	     }	     
 	     my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
 	     unless  ($#sender_hdr == -1) {
 		 my $rejected_sender = $sender_hdr[0]->address;
-		 my %context;
-		 $context{'subject'} = &MIME::Words::decode_mimewords($msg->head->get('subject'));
-		 $context{'rejected_by'} = $param->{'user'}{'email'};
-		 unless ($list->send_file('reject', $rejected_sender, $robot, \%context)) {
-		     &wwslog('notice',"Unable to send template 'reject' to $rejected_sender");
+		 unless ($in{'quiet'}) {
+		     my %context;
+		     $context{'subject'} = &MIME::Words::decode_mimewords($msg->head->get('subject'));
+		     $context{'rejected_by'} = $param->{'user'}{'email'};
+		     unless ($list->send_file('reject', $rejected_sender, $robot, \%context)) {
+			 &wwslog('notice',"Unable to send template 'reject' to $rejected_sender");
+		     }
+		 }		 
+		 unless ($in{'blacklist'}) {
+		     if (&tools::add_in_blacklist($rejected_sender,$robot,$list)) {
+			 $param->{'blacklist_added'} += 1;
+			 &wwslog('info',"added $rejected_sender to $list->{'name'} blacklist");		     
+		     }else{
+			 &wwslog('notice',"Unable to add $rejected_sender to $list->{'name'} blacklist");		     
+			 $param->{'blacklist_ignored'} += 0;
+		     }
 		 }
 	     }
 	 }
@@ -5483,12 +5496,12 @@ sub do_viewmod {
 	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot, $list);
+	 $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot, $list);
 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
 	     ! $param->{'filepath'}) {
-	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.'info',$robot, $list);
+	     $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.'info',$robot, $list);
 	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
@@ -5501,12 +5514,12 @@ sub do_viewmod {
 
 	 ## Look for the template
 	 if ($file eq 'list_aliases.tt2') {
-	     $param->{'filepath'} = &tools::get_filename('etc',$file,$robot,$list);
+	     $param->{'filepath'} = &tools::get_filename('etc',{},$file,$robot,$list);
 	 }else {
 	     #my $lang = &Conf::get_robot_conf($robot, 'lang');
 	     #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
-	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot,$list);
+	     $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot,$list);
 	 }
      }
 
@@ -13567,6 +13580,74 @@ sub d_test_existing_and_rights {
      $param->{'topics'}[int($total / 2)]{'next'} = 1;
  }
 
+
+# manage blacklist
+sub do_blacklist {
+    &wwslog('info', 'do_blacklist(%d)', $param->{'list'});
+
+    unless ($param->{'list'}){
+	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
+	&wwslog('info','do_blacklist: no list');
+	return undef;
+    }
+    unless($param->{'is_owner'}|| $param->{'is_editor'} || $param->{'is_listmaster'}) {
+	&wwslog('info','do_blacklist : not listmaster or list owner or list editor');
+    }
+    my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
+    $param->{'rows'} = 0 ;
+
+    if ($in{'blacklist'}){
+	&wwslog('info','do_blacklist : submit blacklist update');
+	my $dir = $list->{'dir'}.'/search_filters';
+	unless ((-d $dir) || mkdir ($dir, 0755)) {
+	    &report::reject_report_web('intern','unable to create dir');
+	    &wwslog('info','do_blacklist : unable to create dir %s',$dir);
+	}
+	my $file = $dir.'/blacklist.txt';
+	unless (open BLACKLIST, "> $file"){
+	    &report::reject_report_web('intern','unable to create file');
+	    &wwslog('info','do_blacklist : unable to create file %s',$file);
+	}
+	my @lines = split(/\n/, $in{'blacklist'});
+	$param->{'ignored'} = 0;
+	my $count = 0; # count utils lines in order to remove empty blacklist file
+	foreach my $line (@lines) {
+	    $line =~ s/\015//;
+
+	    if ($line =~ /\*.*\*/) {
+		$param->{'ignored_linest'} .=  $line."\n";
+		$param->{'ignored'} += 1;
+	    }else{
+		printf BLACKLIST "$line\n";
+		$param->{'blacklist'} .=  $line."\n";
+		$param->{'rows'} += 1;
+        	$count += 1  unless ($line =~ /^\s*$/o || /^[\#\;]/o);
+	    }
+	}
+	close BLACKLIST;
+	if ($count == 0) {
+	    unless (unlink $file) {
+		&report::reject_report_web('intern','unable to remove empty blacklist file');
+		&wwslog('info','do_blacklist : unable to remove empty blacklist file %s',$file);
+	    }
+	    &wwslog('info','do_blacklist : removed empty blacklist file %s',$file);
+	} 
+    }else{
+	if (-f $file) {
+	    unless (open BLACKLIST, $file) {
+		&report::reject_report_web('intern','unable to open file',{'file' => $file,$param->{'action'},'',$param->{'user'}{'email'}},$robot);
+		&wwslog('err','unable to read %s',$file);
+	    }
+	    while (<BLACKLIST>) {
+		$param->{'blacklist'} .= $_ ;
+		$param->{'rows'} += 1;
+	    }
+	    close BLACKLIST;
+	}else{
+	    $param->{'blacklist'} = $file;
+	}
+    }
+}
 
 # output in text/plain format a scenario
 sub do_dump_scenario {
