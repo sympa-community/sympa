@@ -3406,6 +3406,13 @@ sub do_remindpasswd {
 	     return undef;
 	 }
 
+	 ## Check if new email is already subscribed
+	 if ($list->is_user($in{'new_email'})) {
+	     &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
+	     &wwslog('info','do_set: %s already subscriber', $in{'new_email'});
+	     return undef;
+	 }
+
 	 ## Duplicate entry in user_table
 	 unless (&List::is_user_db($in{'new_email'})) {
 
