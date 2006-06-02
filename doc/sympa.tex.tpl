@@ -2719,10 +2719,12 @@ This feature is only available with \textindex{mysql}.
 Example for MySQL:
 \begin {quote}
 \begin{verbatim}
-db_options	mysql_read_default_file=/home/joe/my.cnf
+db_options	mysql_read_default_file=/home/joe/my.cnf;mysql_socket=tmp/mysql.sock-test
 \end{verbatim}
 \end {quote}
    
+Check the related DBD documentation to learn about the available options.
+
 \subsection {\cfkeyword {db\_env}}
 
 	Gives a list of environment variables to set before database connexion.
