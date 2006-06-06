@@ -11135,7 +11135,8 @@ sub probe_db {
 	## SQLite :  the only access permissions that can be applied are 
 	##           the normal file access permissions of the underlying operating system
 	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
-	    `chown --USER--.--GROUP-- $Conf{'db_name'}`; ## Failed with chmod() perl subroutine
+	    `chown --USER-- $Conf{'db_name'}`; ## Failed with chmod() perl subroutine
+	    `chgrp --GROUP-- $Conf{'db_name'}`; ## Failed with chmod() perl subroutine
 	}
 
     }elsif ($found_tables < 3) {

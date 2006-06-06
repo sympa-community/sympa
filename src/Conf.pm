@@ -618,7 +618,8 @@ sub checkfiles_as_root {
 	print ALIASES "## You should edit your sendmail.mc or sendmail.cf file to declare it\n";
 	close ALIASES;
 	&do_log('notice', "Created missing file %s", $Conf{'sendmail_aliases'});
-	`chown --USER--.--GROUP-- $Conf{'sendmail_aliases'}`;
+	`chown --USER-- $Conf{'sendmail_aliases'}`;
+	`chgrp --GROUP-- $Conf{'sendmail_aliases'}`;
 	chmod 0644, $Conf{'sendmail_aliases'}
 	
     }
