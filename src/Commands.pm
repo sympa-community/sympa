@@ -2218,7 +2218,7 @@ sub confirm {
 	    }
  
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $name,'key' => $key},$robot,$list)) {
+		unless (&report::notice_report_msg('message_confirmed',$sender,{'listname' => $list->{'name'},'key' => $key},$robot,$list)) {
 		    &do_log('notice',"Commands::confirm(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 		}
 	    }
@@ -2232,7 +2232,7 @@ sub confirm {
 		return undef;
 	    }
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		&report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
+		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
 	    }
 
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
