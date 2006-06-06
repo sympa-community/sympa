@@ -1,3 +1,56 @@
+2006-06-06 15:50  sympa-authors
+
+	* src/Language.pm: [reported by P.Maes, Univ. Louvain] Fix:
+	  localization failed on Solaris. The native Solaris gettext
+	  libraries failed to use the appropriate .mo file.  We're now
+	  using the "Pure Perl" implementation of gettext
+
+2006-06-06 11:06  sympa-authors
+
+	* src/: Conf.pm, List.pm: [reported by P.Maes, Univ. Louvain] Don't
+	  use chown user.group that fails on Solaris. Run separate chown
+	  and chgrp commands instead
+
+2006-06-02 16:37  sympa-authors
+
+	* soap/sympasoap.pm: [reported by V. Mathieu, Univ. Nancy2] [BugID
+	  281] Fix: now decoding and encoding SOAP data to UTF-8
+
+2006-06-02 14:36  sympa-authors
+
+	* doc/sympa.tex.tpl: Added mysql_socket example
+
+2006-06-01 15:14  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: report an error if a subscriber email
+	  is changed and the new address is already subscribed
+
+2006-06-01 11:51  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/Conf.pm, src/List.pm, src/admin.pm,
+	  src/sympa_wizard.pl, src/task_manager.pl, src/tools.pl,
+	  src/etc/script/mod2html.pl, web_tt2/list_admin_menu.tt2,
+	  web_tt2/modindex.tt2, web_tt2/review.tt2, wwsympa/Auth.pm,
+	  wwsympa/archived.pl, wwsympa/wwsympa.fcgi: New feature: Now
+	  blacklist is available.  Only one new parameter : use_blacklist
+	  (sympa.conf) .  Include web interface for blacklist management.
+
+2006-05-30 13:26  sympa-authors
+
+	* .version, ChangeLog: Preparing 5.3a.2
+
 2006-05-29 17:05  sympa-authors
 
 	* src/List.pm: [requested by A.Bernstein] Change: now scenario
