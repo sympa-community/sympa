@@ -32,6 +32,12 @@ use Version;
 use POSIX qw (setlocale);
 use Locale::Messages qw (:locale_h :libintl_h !gettext);
 
+BEGIN {
+    ## Using the Pure Perl implementation of gettext
+    ## This is required on Solaris : native implementation of gettext does not map ll_CC with ll
+    Locale::Messages->select_package ('gettext_pp');
+}
+
 my %msghash;     # Hash organization is like Messages file: File>>Sections>>Messages
 my %set_comment; #sets-of-messages comment   
 
