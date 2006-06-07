@@ -3890,6 +3890,17 @@ SSLVerifyDepth  10
  \end{verbatim}
 \end {quote}
 
+If you are using the SubjAltName, then you additionaly need to export the certificate data because of a \textindex {mod\_ssl} bug. You will also 
+need to install the textindex {Crypt-OpenSSL-X509} CPAN module. Add this option to the Apache configuration file :
+
+\begin {quote}
+\begin{verbatim}
+   SSLOptions +ExportCertData
+ \end{verbatim}
+\end {quote}
+
+
+
 
 \section {Authentication with email address, uid or alternate email address}
 \label {ldap-auth}

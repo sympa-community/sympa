@@ -59,6 +59,16 @@ use Mail::Address;
 require "--LIBDIR--/tools.pl";
 require "--LIBDIR--/time_utils.pl";
 
+my $crypt_openssl_x509_ok;
+BEGIN {
+    if (eval "require Crypt::OpenSSL::X509") {
+        require Crypt::OpenSSL::X509;
+        $crypt_openssl_x509_ok = 1;
+    } else {
+        $crypt_openssl_x509_ok = 0;
+    }
+};
+
 ## WWSympa librairies
 use wwslib;
 use cookielib;
@@ -743,6 +753,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
 		 ## Compatibility issue with old a-sign.at certs
 		 $param->{'user'}{'email'} = lc($1);
+	     }elsif ($crypt_openssl_x509_ok and exists($ENV{SSL_CLIENT_CERT})) {
+		 ## this is the X509v3 SubjectAlternativeName, and does only
+		 ## require "SSLOptions +ExportCertData" without patching
+		 ## mod_ssl -- massar@unix-ag.uni-kl.de
+		 $param->{'user'}{'email'} = lc(Crypt::OpenSSL::X509->new_from_string($ENV{SSL_CLIENT_CERT})->email());
 	     }
 	     
 	     if($param->{user}{email}) {
