@@ -69,6 +69,7 @@ use CPAN;
 	     'DBI' => 'DBI',
 	     'DBD::mysql' => 'Msql-Mysql-modules',
 	     'Crypt::CipherSaber' => 'CipherSaber',
+	     'Encode' => 'Encode',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',

@@ -1063,12 +1063,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 
      ## Available languages
      my $saved_lang = &Language::GetLang();
+
      # Recode the language strings to the correct codeset
      &Language::set_recode ($Conf{'web_recode_to'} || &Language::gettext('_charset_'));
      
      foreach my $l (@{&Language::GetSupportedLanguages($robot)}) {
 	 &Language::SetLang($l) || next;
-	 $param->{'languages'}{$l}{'complete'} = gettext("_language_");
+
+	 ## Decode from the language charset...later we will encode to the appropriate encoding
+	 $param->{'languages'}{$l}{'complete'} = &Encode::decode(gettext("_charset_"), gettext("_language_"));
 
 	 if ($param->{'locale'} eq $l) {
 	     $param->{'languages'}{$l}{'selected'} = 'selected="selected"';
@@ -1076,8 +1079,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $param->{'languages'}{$l}{'selected'} = '';
 	 }
      }
-     &Language::set_recode ();
+     &Language::set_recode (); ## Unset recoding
      &Language::SetLang($saved_lang);
+
+     ## Encode language names to the current charset
+     foreach my $l (keys %{$param->{'languages'}}) {
+	 $param->{'languages'}{$l}{'complete'} = &Encode::encode(gettext("_charset_"), $param->{'languages'}{$l}{'complete'});
+     }
+
      # if bypass is defined select the content-type from various vars
      if ($param->{'bypass'}) {
 
