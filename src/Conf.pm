@@ -590,7 +590,7 @@ sub load_robots {
 	    $Conf{'robot_by_soap_url'}{$url} = $robot;
 	}
 	# printf STDERR "load trusted de $robot";
-	$robot_conf->{'trusted_applications'} = &load_trusted_application($robot);
+	$robot_conf->{$robot}{'trusted_applications'} = &load_trusted_application($robot);
 	close (ROBOT_CONF);
     }
     closedir(DIR);
