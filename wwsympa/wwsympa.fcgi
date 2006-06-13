@@ -2499,7 +2499,6 @@ sub do_sso_login_succeeded {
 	     }
 	 }
 
-	 $param->{'nomenu'} = 1;
 	 $param->{'help_topic'} = $in{'help_topic'};
      }
 

@@ -11,8 +11,10 @@ body {
 	background: [% color_4 %];
 	text-align: center;
 }
+
 ul { margin: 0 0 0 1em }
 ol { margin: 0 0 0 1em }
+
 /* ########## Blocks, id and class ########## */
 
 #Canvas {margin: 7px 7px 0px 7px;}
@@ -179,7 +181,7 @@ h6.block {text-align: center; background: [% color_4 %];}
 
 .ErrorBlock {border: 1px solid [% color_2 %]; font-size: 14px; background: [% color_7 %]; padding: 10px; text-decoration: underline overline; }
 
-ul.listenum {list-style: none;}
+ul.listenum {list-style: none; margin: 0 0 0 1em}
 ul li.listenum {padding : 5px;} 
 
 ul.menuLinks {list-style-type: none;}
@@ -225,13 +227,21 @@ p a:hover {text-indent: 30px;}
 p a:first-letter {font-size: 16px; font-weight: bold;}
  
 p {text-indent: 0px;}
+code {font-weight: bold;}
 
-h1 {text-indent: 0px; font-size: 20px;}
-h2 {text-indent: 0px; font-size: 16px;}
-h3 {text-indent: 0px; font-size: 14px;}
-h4 {text-indent: 0px; font-size: 14px;}
-h5 {text-indent: 0px; font-size: 12px;}
-h6 {text-indent: 0px; font-size: 12px;}
+.retraitita {
+	background-color: [% color_13 %];
+        border: 1px dashed [% color_1 %];
+        padding: 2px 2px 2px 2px;
+        margin: 5px 5px 5px 5px;
+}
+
+h1 {text-indent: 0px; margin-top: 10px; font-size: 20px;}
+h2 {color: [% color_11 %]; text-indent: 0px; margin-top: 10px; font-size: 16px;}
+h3 {color: [% color_11 %]; text-indent: 10px; margin-top: 10px; font-size: 14px;}
+h4 {color: [% color_11 %]; text-indent: 20px; margin-top: 10px; font-size: 14px;}
+h5 {color: [% color_11 %]; text-indent: 30px; margin-top: 10px; font-size: 12px;}
+h6 {color: [% color_11 %]; text-indent: 40px; margin-top: 10px; font-size: 12px;}
 /* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;} */
 /* strong {text-indent: 30px; font-size: 16px;} */
 

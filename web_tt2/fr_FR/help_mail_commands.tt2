@@ -1,0 +1,70 @@
+	<h2>Liste des commandes de l'interface mail de Sympa</h2>
+
+<p>Toutes les commandes doivent être adressées à l'adresse [% conf.email %]@[% conf.host %]</p>
+
+<p>Il est possible de mettre plusieurs commandes dans chaque message. Les commandes doivent apparaître dans le corps du message et chaque ligne ne doit contenir qu'une seule commande.</p>
+
+<h3>Les commandes pour les utilisateurs</h3>
+
+<p>
+<dl>
+<dd><code>HELP</code> : recevoir la liste des commandes disponibles</dd>
+<dd><code>LISTS</code> : recevoir l'annuaire des listes gérées sur ce serveur</dd>
+<dd><code>WHICH</code> : recevoir la liste des listes auxquelles vous êtes abonné</dd>
+<dd><code>CONFIRM <em>cle</em></code> : confirmer l'envoi d'un message (selon la configuration de la liste)</dd>
+<dd><code>QUIT</code> : indique la fin des commandes (pour ignorer une signature)</em>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>INFO <em>liste</em></code> : obtenir des informations sur une liste</dd>
+<dd><code>REVIEW <em>liste</em></code> : recevoir la liste des abonnés à la liste</dd>
+<dd><code>SUBSCRIBE <em>liste nom</em></code> : abonnement (ou confirmation d'abonnement) à la liste</dd>
+<dd><code>INVITE <em>liste email</em></code> : inviter un personne à s'abonner à la liste</dd>
+<dd><code>UNSUBSCRIBE <em>liste email</em></code> : se désabonner de la liste. L'adresse email est optionnelle ; uniquement requise si vous voulez vous désabonner d'une adresse différente de votre adresse courante</dd>
+<dd><code>UNSUBSCRIBE * <em>email</em></code> : se désabonner de toutes les listes auxquelles vous êtes abonné</dd>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>SET <em>liste</em> NOMAIL</code> : suspendre la réception des message de la liste</dd>
+<dd><code>SET <em>list</em> DIGEST</code> : recevoir les messages en mode compilation</dd>
+<dd><code>SET <em>liste</em> DIGESTPLAIN</code> : recevoir les messages en mode compilation (fichier texte)</dd>
+<dd><code>SET <em>liste</em> SUMMARY</code> : recevoir la liste des messages uniquement</dd>
+<dd><code>SET <em>liste</em> NOTICE</code> : recevoir l'objet des messages uniquement</dd>
+<dd><code>SET <em>liste</em> MAIL</code> : mode de réception normal des message</dd>
+<dd><code>SET <em>liste</em> CONCEAL</code> : passage en liste rouge (adresse d'abonné cachée)</dd>
+<dd><code>SET <em>liste</em> NOCONCEAL</code> : adresse d'abonné visible via REView</dd>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>INDEX <em>liste</em></code> : recevoir la liste des fichiers des archives</dd>
+<dd><code>GET <em>liste fichier</em></code> : obtenir un fichier des archives de la liste</dd>
+<dd><code>LAST <em>liste</em></code> : recevoir le dernier message de la liste</dd>
+</dl>
+</p>
+
+<h3>Les commandes pour les propriétaires</h3>
+
+<p>
+<dl>
+<dd><code>ADD <em>liste email nom</em></code> : ajouter un membre à la liste</dd>
+<dd><code>DEL <em>liste email</em></code> : supprimer un utilisateur de la liste</dd>
+<dd><code>STATS <em>liste</em></code> : consulter les statistiques de la liste</dd>
+<dd><code>REMIND <em>liste</em></code> : envoyer à chaque abonné un message personnalisé lui rappelant l'adresse avec laquelle il est abonné</dd>
+</dl>
+</p>
+
+<h3>Les commandes pour les modérateurs</h3>
+
+<p>
+<dl>
+<dd><code>DISTRIBUTE <em>liste cle</em></code> : valider un message</dd>
+<dd><code>REJECT <em>liste cle</em></code> : rejeter un message à modérer</dd>
+<dd><code>MODINDEX <em>liste</em></code> : consultation de la liste des messages à modérer</dd>
+</dl>
+</p>
