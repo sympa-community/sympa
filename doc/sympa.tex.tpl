@@ -1963,6 +1963,28 @@ directory where  style.css, print.css, print-preview.css and fullPage.css are in
 files. The server admin module include a CSS administration page that can help you to install static CSS.
 
 
+\subsection {\cfkeyword {pictures\_path}}
+
+Each list can be configured to accept pictures from subscribers. Pictures are showed in web interface review page. This as been added for private working
+group list. Pictures are uploaded in subscriber option page. There are stored in a directory where they can be view by apache direct interface. The
+directory where they are storted must specified with this parameter. Take care that apache option indexes must be removed on that directory. 
+
+You must create this directory with Unix acces to the directory must be :
+\begin{itemize}
+\item owner apache
+\item group sympa
+\end{itemize}
+
+wwsympa.fcgi processus will create and remove files in this directory where apache only need read access on created files. 
+
+\subsection {\cfkeyword {pictures\_url}}
+
+This parameter is the web URI to access to \cfkeyword {pictures\_path}
+
+\subsection {\cfkeyword {pictures\_max\_size}}
+
+The maximum size of the uploaded file (bytes)
+
 \subsection {\cfkeyword {cookie}} 
  
 	This string is used to generate MD5 authentication keys.

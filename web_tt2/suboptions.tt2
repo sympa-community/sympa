@@ -57,4 +57,33 @@
 
      <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
      
-</form>
+</form><br /><br /> 
+[% IF pictures_display %]
+        <div class="block">
+          <strong>
+          [%|loc%]Changing your picture for this list[%END%]
+          </strong><br />
+          <p>[%|loc%]You have the possibility of displaying your picture in the subscribers list. This one must be on gif, jpp, jpeg or png format and doesn't have to exceed 100 Ko.[%END%]</p><br />
+ 	 
+ 	 <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+            <label><td><input type="file" name="uploaded_file"/></label>
+ 	   <input class="MainMenuLinks" type="submit" value="[%|loc%]Submit[%END%]" name="action_upload_pictures" />
+ 	   <input class="MainMenuLinks" type="submit" value="[%|loc%]Delete[%END%]" name="action_delete_pictures" />
+ 	   <input type="hidden" name="list" value="[% list %]" /><br /><br />
+ 	 </form>
+ 	 [% IF pictures_url %]
+ 	   <table border="0" cellpadding="2" cellspacing="0" >
+ 	   <tr>
+ 	     <td align=center valign=bottom width="50%">
+ 	       <a href="[%pictures_url%]" title="[%pictures_url%]" target="pictures">
+ 	       <img src="[%pictures_url%]" height="80" alt="" /></a></td>
+ 	     <td align=center valign=bottom width="50%">
+ 	       <img src="[%pictures_url%]" height="30" alt="" /></td>
+ 	   <tr>
+ 	     <td align=center valign=bottom width="50%"> [%|loc%]Your picture[%END%]</td>
+ 	     <td align=center valign=bottom width="50%">[%|loc%]In the subscribers list[%END%]</td></tr>
+ 	   </table>
+ 	 [%END%]
+ 	 </div>
+ 	   <br />
+      [% END %]

@@ -1219,6 +1219,12 @@ my %alias = ('reply-to' => 'reply_to',
 				   'gettext_id' => "User data source",
 				   'group' => 'data_source'
 				   },
+	    'use_pictures' => {'format' => ['on','off'],
+			       'occurence' => '0-1',
+			       'default' => 'off',
+			       'gettext_id' => "Allow pictures display ?",
+			       'group' => 'other'
+			       },	    
 	    'visibility' => {'scenario' => 'visibility',
 			     'synonym' => {'public' => 'noconceal',
 					   'private' => 'conceal'},
@@ -4195,6 +4201,37 @@ sub send_notify_to_owner {
     return 1;
 }
 
+#########################
+## Delete a pictures file
+#########################
+# remove picture from user $2 in list $1 
+#########################
+sub delete_user_picture {
+    my ($self,$email) = @_;    
+    do_log('info', 'delete_user_picture(%s)', $email);
+    
+    my $fullfilename;
+    my $filename = &Auth::md5password($email);
+    my $name = $self->{'name'};
+    my $robot = $self->{'domain'};
+    
+    my $fullfilename = undef;
+    foreach my $ext ('.gif','.jpg','.jpeg','.png') {
+  	if(-f &Conf::get_robot_conf($robot,'pictures_path').'/'.$name.'@'.$robot.'/'.$filename.$ext) {
+  	    my $file = &Conf::get_robot_conf($robot,'pictures_path').'/'.$name.'@'.$robot.'/'.$filename.$ext;
+  	    $fullfilename = $file;
+  	    last;
+  	} 	
+    }
+    
+    unless(unlink($fullfilename)) {
+  	do_log('err', 'delete_user_picture() : Failed to delete '.$fullfilename);
+  	return undef;  
+    }
+    do_log('notice', 'delete_user_picture() : File deleted successfull '.$fullfilename);
+    return 1;
+}
+
 
 ####################################################
 # send_notify_to_editor                             
@@ -4603,6 +4640,7 @@ sub delete_user {
 
     $self->{'total'} += $total;
     $self->savestats();
+    &delete_user_picture($self,shift(@u));
     return (-1 * $total);
 }
 

@@ -55,7 +55,7 @@ my @valid_options = qw(
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       color_0 color_1 color_2 color_3 color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11 color_12 color_13 color_14 color_15
- 		       css_url css_path
+ 		       css_url css_path pictures_path pictures_max_size pictures_url
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
@@ -214,7 +214,10 @@ my %Default_Conf =
      'update_db_field_types' => 'auto',
      'logo_html_definition' => '',
      'return_path_suffix' => '-owner',
-     'verp_rate' => '0%',
+     'verp_rate' => '0%', 
+     'pictures_path' => '/var/www/html/pictures_sympa',
+     'pictures_url' => '/pictures_sympa/',
+     'pictures_max_size' => 102400, ## 100Kb
      'use_blacklist' => 'send'
      );
    

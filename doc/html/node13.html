@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1139"
+<A NAME="tex2html1145"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1133"
+<A NAME="tex2html1139"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1127"
+<A NAME="tex2html1133"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1135"
+<A NAME="tex2html1141"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1137"
+<A NAME="tex2html1143"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1140"
+<B> Next:</B> <A NAME="tex2html1146"
   HREF="node14.html">13. Authorization scenarios</A>
-<B> Up:</B> <A NAME="tex2html1134"
+<B> Up:</B> <A NAME="tex2html1140"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1128"
+<B> Previous:</B> <A NAME="tex2html1134"
   HREF="node12.html">11. Sympa SOAP server</A>
- &nbsp; <B>  <A NAME="tex2html1136"
+ &nbsp; <B>  <A NAME="tex2html1142"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1138"
+ &nbsp; <B>  <A NAME="tex2html1144"
   HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,30 +63,30 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1141"
+<LI><A NAME="tex2html1147"
   HREF="node13.html#SECTION001310000000000000000">12.1 S/MIME and HTTPS authentication</A>
-<LI><A NAME="tex2html1142"
+<LI><A NAME="tex2html1148"
   HREF="node13.html#SECTION001320000000000000000">12.2 Authentication with email address, uid or alternate email address</A>
-<LI><A NAME="tex2html1143"
+<LI><A NAME="tex2html1149"
   HREF="node13.html#SECTION001330000000000000000">12.3 Generic SSO authentication</A>
-<LI><A NAME="tex2html1144"
+<LI><A NAME="tex2html1150"
   HREF="node13.html#SECTION001340000000000000000">12.4 CAS-based authentication</A>
-<LI><A NAME="tex2html1145"
+<LI><A NAME="tex2html1151"
   HREF="node13.html#SECTION001350000000000000000">12.5 auth.conf</A>
 <UL>
-<LI><A NAME="tex2html1146"
+<LI><A NAME="tex2html1152"
   HREF="node13.html#SECTION001351000000000000000">12.5.1 user_table paragraph</A>
-<LI><A NAME="tex2html1147"
+<LI><A NAME="tex2html1153"
   HREF="node13.html#SECTION001352000000000000000">12.5.2 ldap paragraph</A>
-<LI><A NAME="tex2html1148"
+<LI><A NAME="tex2html1154"
   HREF="node13.html#SECTION001353000000000000000">12.5.3 generic_sso paragraph</A>
-<LI><A NAME="tex2html1149"
+<LI><A NAME="tex2html1155"
   HREF="node13.html#SECTION001354000000000000000">12.5.4 cas paragraph</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1150"
+<LI><A NAME="tex2html1156"
   HREF="node13.html#SECTION001360000000000000000">12.6 Sharing <I>WWSympa</I> authentication with other applications</A>
-<LI><A NAME="tex2html1151"
+<LI><A NAME="tex2html1157"
   HREF="node13.html#SECTION001370000000000000000">12.7 Provide a Sympa login form in another application</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -106,12 +106,12 @@ when using user+password it can validate these credentials against LDAP authenti
 
 <P>
 When contacted on the mail interface <I>Sympa</I> has 3 authentication levels. Lower level is to trust
-the <A NAME="9089"></A><TT>From:</TT> SMTP header field. A higher level of authentication will require that the 
+the <A NAME="9116"></A><TT>From:</TT> SMTP header field. A higher level of authentication will require that the 
 user confirms his/her message. The strongest supported authentication method is S/MIME (note that <I>Sympa</I> 
 also deals with S/MIME encrypted messages).
 
 <P>
-On the <I>Sympa</I> web interface (<A NAME="9094"></A><I>WWSympa</I>) the user can authenticate in 4 different ways (if appropriate setup
+On the <I>Sympa</I> web interface (<A NAME="9121"></A><I>WWSympa</I>) the user can authenticate in 4 different ways (if appropriate setup
 has been done on <I>Sympa</I> serveur). Default authentication mean is via the user's email address and a password 
 managed by <I>Sympa</I> itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
 can authentication with his/her LDAP uid and password. <I>Sympa</I> is also able to delegate the authentication
@@ -126,7 +126,7 @@ same authorization scenarios are used for both mail and web accesss ; therefore 
 methods are considered as equivalent : mail confirmation (on the mail interface) is equivalent to
 password authentication (on the web interface) ; S/MIME authentication is equivalent to HTTPS with
 client certificate authentication. Each rule in authorization scenarios requires an authentication method 
-(<A NAME="9102"></A><TT>smtp</TT>,<A NAME="9105"></A><TT>md5</TT> or <A NAME="9108"></A><TT>smime</TT>) ; if the required authentication method was 
+(<A NAME="9129"></A><TT>smtp</TT>,<A NAME="9132"></A><TT>md5</TT> or <A NAME="9135"></A><TT>smime</TT>) ; if the required authentication method was 
 not used, a higher authentication mode can be requested.
 
 <P>
@@ -157,6 +157,14 @@ SSLVerifyDepth  10
 </PRE>
 
 <P>
+If you are using the SubjAltName, then you additionaly need to export the certificate data because of a <A NAME="9142"></A>mod_ssl  bug. You will also 
+need to install the textindex Crypt-OpenSSL-X509 CPAN module. Add this option to the Apache configuration file :
+
+<P><PRE>
+   SSLOptions +ExportCertData
+</PRE>
+
+<P>
 
 <H1><A NAME="SECTION001320000000000000000"></A>
 <A NAME="ldap-auth"></A>
@@ -165,13 +173,13 @@ SSLVerifyDepth  10
 </H1>
 
 <P>
-<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="9116"></A>LDAP authentication allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="9144"></A>LDAP authentication allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
 
 <P>
-This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="9118"></A>LDAP directory.
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="9146"></A>LDAP directory.
 
 <P>
-<I>Sympa</I> gets the canonic email in the <A NAME="9120"></A>LDAP directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> gets the canonic email in the <A NAME="9148"></A>LDAP directory with the ldap_uid or the alternate_email.  
 <I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
 
 <P>
@@ -223,7 +231,7 @@ The authentication method has first been introduced to allow interraction with <
 <I>Sympa</I> will get user attributes via environment variables. In the most simple case the SSO will provide the user email address. If not, Sympa can be configured to verify an email address provided by the user hiself or to look for the user email address in a LDAP directory (the search filter will make use of user information inherited from the SSO Apache module).
 
 <P>
-To plug a new SSO server in your Sympa server you should add a <B>generic_sso</B> paragraph (describing the SSO service) in your <A NAME="9126"></A><TT>auth.conf</TT> configuration file (See  <A HREF="#generic-sso-format">12.5.3</A>, page&nbsp;<A HREF="node13.html#generic-sso-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Once this paragraph has been added, the SSO service name will be automatically added to the web login menu.
+To plug a new SSO server in your Sympa server you should add a <B>generic_sso</B> paragraph (describing the SSO service) in your <A NAME="9154"></A><TT>auth.conf</TT> configuration file (See  <A HREF="#generic-sso-format">12.5.3</A>, page&nbsp;<A HREF="node13.html#generic-sso-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Once this paragraph has been added, the SSO service name will be automatically added to the web login menu.
 
 <P>
 Apart from the user email address, the SSO can provide other user attributes that <I>Sympa</I> will store in the user_table DB table (for persistancy) and make them available in the [user_attributes] structure that you can use within authorization scenarios (see&nbsp;<A HREF="node14.html#rules">13.1</A>, page&nbsp;<A HREF="node14.html#rules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) or in web templates via the [% user.attributes %] structure.
@@ -240,7 +248,7 @@ Apart from the user email address, the SSO can provide other user attributes tha
 CAS is Yale university SSO software. Sympa can use CAS authentication service.
 
 <P>
-The listmaster should define at least one or more CAS servers (<B>cas</B> paragraph) in <A NAME="9130"></A><TT>auth.conf</TT>. If <B>non_blocking_redirection</B> parameter was set for a CAS server then Sympa will try a transparent login on this server
+The listmaster should define at least one or more CAS servers (<B>cas</B> paragraph) in <A NAME="9158"></A><TT>auth.conf</TT>. If <B>non_blocking_redirection</B> parameter was set for a CAS server then Sympa will try a transparent login on this server
 when the user accesses the web interface. If one CAS server redirect the user to Sympa with a valid ticket Sympa receives a user ID from the CAS server. It then connects to the related LDAP directory to get the user email address. If no CAS server returns a valid user ID, Sympa will let the user either select a CAS server to login or perform a Sympa login.
 
 <P>
@@ -252,20 +260,20 @@ when the user accesses the web interface. If one CAS server redirect the user to
 </H1>
 
 <P>
-The <A NAME="9133"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> configuration file contains numerous
+The <A NAME="9161"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart wwsympa.fcgi afterwards. 
 
 <P>
-The <A NAME="9137"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
+The <A NAME="9165"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
 service with all required parameters to perform an authentication using this service. Current version of
 <I>Sympa</I> can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
 or Shibboleth), or using internal user_table.
 
 <P>
 The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user_table authentication
-paragraph is applied unless email adress input from form match the <A NAME="9141"></A><TT>negative_regexp</TT> or do not match <A NAME="9144"></A><TT>regexp</TT>. 
- <A NAME="9147"></A><TT>negative_regexp</TT> and <A NAME="9150"></A><TT>regexp</TT> can be defined for earch ldap or user_table authentication service so
+paragraph is applied unless email adress input from form match the <A NAME="9169"></A><TT>negative_regexp</TT> or do not match <A NAME="9172"></A><TT>regexp</TT>. 
+ <A NAME="9175"></A><TT>negative_regexp</TT> and <A NAME="9178"></A><TT>regexp</TT> can be defined for earch ldap or user_table authentication service so
 administrator can block some authentication methode for class of users.
 
 <P>
@@ -275,7 +283,7 @@ The segond form in login page contain the list of CAS server so user can choose 
 Each paragraph start with one of the keyword cas, ldap or user_table  
 
 <P>
-The <A NAME="9153"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> file contains directives in the following format:
+The <A NAME="9181"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> file contains directives in the following format:
 
 <P>
 <P>
@@ -372,7 +380,7 @@ user_table
 
 <P>
 The user_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
-are <A NAME="9156"></A><TT>regexp</TT> or <A NAME="9159"></A><TT>negative_regexp</TT> which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
+are <A NAME="9184"></A><TT>regexp</TT> or <A NAME="9187"></A><TT>negative_regexp</TT> which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
 
 <P>
 
@@ -383,7 +391,7 @@ are <A NAME="9156"></A><TT>regexp</TT> or <A NAME="9159"></A><TT>negative_regexp
 <P>
 
 <UL>
-<LI><A NAME="9162"></A><TT>regexp</TT> and <A NAME="9165"></A><TT>negative_regexp</TT>
+<LI><A NAME="9190"></A><TT>regexp</TT> and <A NAME="9193"></A><TT>negative_regexp</TT>
 	Same as in user_table paragraph : if a provided email address (does not apply to an uid), then the
 	regular expression will be applied to find out if this LDAP directory can be used to authenticate a
 	subset of users.
@@ -569,7 +577,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9171"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9199"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -578,7 +586,7 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="91
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of <A NAME="9172"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="9200"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -720,7 +728,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ldap_ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9173"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9201"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -729,7 +737,7 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="91
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the  
-	OpenSSL string format. The default value of <A NAME="9174"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="9202"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -883,7 +891,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ldap_ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9176"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9204"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -892,7 +900,7 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="91
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the  
-	OpenSSL string format. The default value of <A NAME="9177"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="9205"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -901,7 +909,7 @@ Specify which subset of cipher suites are permissible for this connection, using
 
 <P>
 
-<H1><A NAME="SECTION001360000000000000000"></A><A NAME="9178"></A>
+<H1><A NAME="SECTION001360000000000000000"></A><A NAME="9206"></A>
 <A NAME="sharing-auth"></A>
 <BR>
 12.6 Sharing <I>WWSympa</I> authentication with other applications
@@ -917,22 +925,22 @@ work with <I>Sympa</I>, you have two possibilities :
 <P>
 
 <UL>
-<LI>Delegating authentication operations to <A NAME="9184"></A><I>WWSympa</I> 
+<LI>Delegating authentication operations to <A NAME="9212"></A><I>WWSympa</I> 
 <BR>
 If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy <A NAME="9187"></A><I>WWSympa</I>'s login page to your 
+and Remindpassword, you can copy <A NAME="9215"></A><I>WWSympa</I>'s login page to your 
 application, and then make use of the cookie information within your application. 
 The cookie format is :
 <PRE>
 sympauser=&lt;user_email&gt;:&lt;checksum&gt;
 </PRE>
 where <TT>&lt;</TT>user_email<TT>&gt;</TT> is the user's complete e-mail address, and
-<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 last bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="9191"></A><TT>cookie</TT>
+<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 last bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="9219"></A><TT>cookie</TT>
 configuration parameter.
-Your application needs to know what the <A NAME="9194"></A><TT>cookie</TT> parameter
+Your application needs to know what the <A NAME="9222"></A><TT>cookie</TT> parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
-between <A NAME="9197"></A><I>WWSympa</I> and your application.
-<A NAME="9200"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
+between <A NAME="9225"></A><I>WWSympa</I> and your application.
+<A NAME="9228"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
 referer URL when an action is performed. Here is a sample HTML anchor :
 
 <P>
@@ -941,18 +949,18 @@ referer URL when an action is performed. Here is a sample HTML anchor :
 </PRE>
 
 <P>
-You can also have your own HTML page submitting data to <A NAME="9203"></A><TT>wwsympa.fcgi</TT> CGI. If you're
+You can also have your own HTML page submitting data to <A NAME="9231"></A><TT>wwsympa.fcgi</TT> CGI. If you're
 doing so, you can set the <TT>referer</TT> variable to another URI. You can also
 set the <TT>failure_referer</TT> to make WWSympa redirect the client to a different
 URI if login fails.
 
 <P>
 </LI>
-<LI>Using <A NAME="9206"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
+<LI>Using <A NAME="9234"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
 <BR>
-To cooperate with <A NAME="9209"></A><I>WWSympa</I>, you simply need to adopt its HTTP
+To cooperate with <A NAME="9237"></A><I>WWSympa</I>, you simply need to adopt its HTTP
 cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the <A NAME="9212"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="9215"></A><I>WWSympa</I> 
+i.e. the <A NAME="9240"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="9243"></A><I>WWSympa</I> 
 will accept users authenticated through your application without
 further authentication.
 
@@ -994,36 +1002,36 @@ The  <TT>previous_action</TT> and <TT>previous_list</TT> variable define the act
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1139"
+<A NAME="tex2html1145"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1133"
+<A NAME="tex2html1139"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1127"
+<A NAME="tex2html1133"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1135"
+<A NAME="tex2html1141"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1137"
+<A NAME="tex2html1143"
   HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1140"
+<B> Next:</B> <A NAME="tex2html1146"
   HREF="node14.html">13. Authorization scenarios</A>
-<B> Up:</B> <A NAME="tex2html1134"
+<B> Up:</B> <A NAME="tex2html1140"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1128"
+<B> Previous:</B> <A NAME="tex2html1134"
   HREF="node12.html">11. Sympa SOAP server</A>
- &nbsp; <B>  <A NAME="tex2html1136"
+ &nbsp; <B>  <A NAME="tex2html1142"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1138"
+ &nbsp; <B>  <A NAME="tex2html1144"
   HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-05-31
+2006-06-13
 </ADDRESS>
 </BODY>
 </HTML>

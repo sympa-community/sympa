@@ -138,6 +138,10 @@
 	  <th>[% additional_fields %]</th>
 	  [% END %]
         [% END %]
+	[% IF pictures_display %]
+  	    <th colspan="2">	    
+  	    [%|loc%]Picture[%END%]</a>
+  	[% END %]
       </tr>
       
       [% FOREACH u = members %]
@@ -214,6 +218,16 @@
 	    </span></td>
 	  [% END %]
        	  [% END %]
+  	  [% IF pictures_display %]
+  	    [% IF u.pictures_url %]
+  	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+  	      <div class="Pictures"><a href="[%u.pictures_url%]" title="[%u.pictures_url%]" target="pictures"><img src="[%u.pictures_url%]" alt="" /></a></div>
+  	      </span></td>
+  	    [% ELSE %]
+  	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+  	      </span></td>
+  	    [% END %]
+  	  [% END %]
         </tr>
 
         [% IF dark == '1' %]
