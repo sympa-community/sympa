@@ -1219,10 +1219,10 @@ my %alias = ('reply-to' => 'reply_to',
 				   'gettext_id' => "User data source",
 				   'group' => 'data_source'
 				   },
-	    'use_pictures' => {'format' => ['on','off'],
+	    'pictures_feature' => {'format' => ['on','off'],
 			       'occurence' => '0-1',
 			       'default' => 'off',
-			       'gettext_id' => "Allow pictures display ?",
+			       'gettext_id' => "Allow pictures display ? (require to be enabled for the current robot)",
 			       'group' => 'other'
 			       },	    
 	    'visibility' => {'scenario' => 'visibility',

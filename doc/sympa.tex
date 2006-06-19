@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {13 June 2006}
+    \date {15 June 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1959,27 +1959,26 @@ directory where  style.css, print.css, print-preview.css and fullPage.css are in
 files. The server admin module include a CSS administration page that can help you to install static CSS.
 
 
-\subsection {\cfkeyword {pictures\_path}}
+\subsection {\cfkeyword {static\_content\_path}}
 
-Each list can be configured to accept pictures from subscribers. Pictures are showed in web interface review page. This as been added for private working
-group list. Pictures are uploaded in subscriber option page. There are stored in a directory where they can be view by apache direct interface. The
-directory where they are storted must specified with this parameter. Take care that apache option indexes must be removed on that directory. 
+Some content may be delivred by http server (apache) without any need to be controled or parserd by Sympa. They are stored in directory choosen with parameter static\_content\_dir. Current Sympa version store in this directory subscribers pictures. Later update will add style sheet, icons, ... The directory is created by Sympa.pl when started. This parameter can be defined also in robot.conf
 
-You must create this directory with Unix acces to the directory must be :
-\begin{itemize}
-\item owner apache
-\item group sympa
-\end{itemize}
+\subsection {\cfkeyword {static\_content\_url}}
 
-wwsympa.fcgi processus will create and remove files in this directory where apache only need read access on created files. 
+Content stored in directory specified by parameter \cfkeyword {static\_content\_url} must be served by http server under the URL specified by {\cfkeyword {static\_content\_url}}. Check apache configuration in order to make this directory availible. This parameter can be defined in robot.conf.
 
-\subsection {\cfkeyword {pictures\_url}}
+\subsection {\cfkeyword {pictures\_feature}}
 
-This parameter is the web URI to access to \cfkeyword {pictures\_path}
+ \default {off}
+ \example {pictures\_feature       on}
+
+Subscribers can upload their picture (from the sun option page) so reviewing subsribers show a gallery. This feature is availible if it is turn on for the robot and for the list. This parameter can be defined in sympa.conf or in ronot.conf. The same parameter exists in list configuration file but it's not inherited from robot configuration. 
+
+Pictures are stored in a directory specified by {\cfkeyword {static\_content\_path}} parameter.
 
 \subsection {\cfkeyword {pictures\_max\_size}}
 
-The maximum size of the uploaded file (bytes)
+The maximum size of the uploaded picture file (bytes)
 
 \subsection {\cfkeyword {cookie}} 
  
@@ -5824,6 +5823,14 @@ Only the following parameters can be redefined for a particular robot :
         \item \cfkeyword {css\_path}
 
         \item \cfkeyword {css\_url}
+
+	\item \cfkeyword {static\_content\_path}
+
+	\item \cfkeyword {static\_content\_url}
+
+	\item \cfkeyword {pictures\_feature}
+
+	\item \cfkeyword {pictures\_max\_size}
 
         \item \cfkeyword {logo\_html\_definition}
 

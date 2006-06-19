@@ -1518,7 +1518,8 @@ sub prepare_report_user {
 	$param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
 	$param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
 
- 	if(($list->{'admin'}{'use_pictures'}) eq 'off') {
+	# pictures are not avilible unless it is configured for the list and the robot
+ 	if((($list->{'admin'}{'pictures_feature'}) eq 'off')||(&Conf::get_robot_conf($robot,'pictures_feature') eq 'off')) {
  	    $param->{'pictures_display'} = undef;
  	}
  	else {
@@ -11258,6 +11259,35 @@ sub do_d_savefile {
      return 'd_read';
  }
 
+## Creation of a picture file
+sub creation_picture_file {
+    my($shareddir,$path,$fname)=@_;
+
+    unless(-d $shareddir.'/'.$path) {
+ 	&wwslog('notice',"creation_shared_file : Create dir $shareddir/$path/");
+ 	
+ 	unless (mkdir($shareddir.'/'.$path,0755)){
+ 	    &wwslog('err',"creation_shared_file : Unable to create dir $shareddir/$path/");
+ 	    return undef;
+ 	}
+	unless (open(FF,">$shareddir".'/'.$path.'/index.html')){
+	    &wwslog('err',"creation_shared_file : Unable to create dir $shareddir/$path/index.html");
+	}
+	close FF;
+    }
+    
+    my $fh = $query->upload('uploaded_file');
+    unless (open FILE, ">$shareddir/$path/$fname") {
+	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	&wwslog('err',"creation_shared_file : Cannot open file $shareddir/$path/$fname : $!");
+	return undef;
+    }
+    while (<$fh>) {
+	print FILE;
+    }
+    close FILE;
+}
+
 
 ## Creation of a shared file
 sub creation_shared_file {
@@ -11270,6 +11300,7 @@ sub creation_shared_file {
  	    &wwslog('err',"creation_shared_file : Unable to create dir $shareddir/$path/");
  	    return undef;
  	}
+
     }
     
     my $fh = $query->upload('uploaded_file');
@@ -12918,7 +12949,7 @@ sub do_upload_pictures {
 	}
     }
     
-    unless(&creation_shared_file(&Conf::get_robot_conf($robot,'pictures_path'),$param->{'list'}.'@'.$robot,$fullfilename)) {
+    unless(&creation_picture_file(&Conf::get_robot_conf($robot,'pictures_path'),$param->{'list'}.'@'.$robot,$fullfilename)) {
 	&report::notice_report_web('upload_failed', {'path' => $fullfilename},$param->{'action'});
 	&wwslog('err','do_upload_pictures : Failed to create file %s/%s@%s%s',&Conf::get_robot_conf($robot,'pictures_path'),$param->{'list'},$robot,$filename);
 	return 'suboptions';	 
@@ -12938,7 +12969,6 @@ sub do_upload_pictures {
     
     # message of success
     unlink($filetmp.'.tmp'); 
-    &report::notice_report_web('upload_success', {'path' => $fullfilename},$param->{'action'});
     &wwslog('info',"do_upload_pictures : Upload of the pictures succeeded");
     return 'suboptions';
     

@@ -55,7 +55,7 @@ my @valid_options = qw(
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       color_0 color_1 color_2 color_3 color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11 color_12 color_13 color_14 color_15
- 		       css_url css_path pictures_path pictures_max_size pictures_url
+ 		       css_url css_path static_content_path static_content_url pictures_max_size pictures_feature
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
@@ -215,10 +215,11 @@ my %Default_Conf =
      'logo_html_definition' => '',
      'return_path_suffix' => '-owner',
      'verp_rate' => '0%', 
-     'pictures_path' => '/var/www/html/pictures_sympa',
-     'pictures_url' => '/pictures_sympa/',
      'pictures_max_size' => 102400, ## 100Kb
-     'use_blacklist' => 'send'
+     'pictures_feature' => 'off',
+     'use_blacklist' => 'send',
+     'static_content_url' => '',
+     'static_content_path' => ''
      );
    
 
@@ -324,7 +325,7 @@ sub load {
     }
     unless (defined $o{'tmpdir'}) {
 	$o{'tmpdir'}[0] = "$spool/tmp";
-    }
+    }    
 
     ## Check if we have unknown values.
     foreach $i (sort keys %o) {
@@ -421,6 +422,9 @@ sub load {
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     $Conf{'trusted_applications'} = &load_trusted_application (); 
+
+    $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
+    $Conf{'pictures_path'}  = $Conf{'static_content_path'}.'/pictures/';
     
     return 1;
 }
@@ -497,6 +501,9 @@ sub load_robots {
 				  soap_url => 1,
 				  css_url => 1,
  				  css_path => 1,
+				  static_content_path => 1,
+                                  static_content_url => 1,
+				  pictures_max_size => 1,
  				  color_0 => 1, color_1 => 1, color_2 => 1, color_3 => 1, color_4 => 1, color_5 => 1,color_6 => 1, 
 				  color_7 => 1, color_8 => 1, color_9 => 1,
 				  color_10 => 1, color_11 => 1, color_12 => 1,color_13 => 1, color_14 => 1, color_15 => 1,
@@ -572,6 +579,11 @@ sub load_robots {
 	#$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
 	$robot_conf->{$robot}{'verp_rate'} ||= $Conf{'verp_rate'};
 	$robot_conf->{$robot}{'use_blacklist'} ||= $Conf{'use_blacklist'};
+	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'use_content_url'};
+	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'use_content_path'};
+	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'pictures_path'}.'/pictures/' if ($robot_conf->{$robot}{'pictures_path'});
+	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'pictures_url'}.'/pictures/' if ($robot_conf->{$robot}{'pictures_url'}) ;
+	$robot_conf->{$robot}{'pictures_feature'} ||= $Conf{'pictures_feature'};
 
 	# split action list for blacklist usage
 	foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
@@ -610,10 +622,12 @@ sub load_robots {
 ## Check required files and create them if required
 sub checkfiles_as_root {
 
+
     ## Check aliases file
     unless (-f $Conf{'sendmail_aliases'}) {
 	unless (open ALIASES, ">$Conf{'sendmail_aliases'}") {
 	    &do_log('err',"Failed to create aliases file %s", $Conf{'sendmail_aliases'});
+	    # printf STDERR "Failed to create aliases file %s", $Conf{'sendmail_aliases'};
 	    return undef;
 	}
 
@@ -627,6 +641,41 @@ sub checkfiles_as_root {
 	
     }
 
+    # create static content directory
+    if ($Conf{'static_content_path'} ne ''){
+	# printf STDERR 'static_content_file in use %s',$Conf{'static_content_path'};
+	unless (-d $Conf{'static_content_path'}){
+	    unless ( mkdir ($Conf{'static_content_path'}, 0775)) {
+		do_log('err', 'Unable to create directory %s',$Conf{'static_content_path'});
+		printf STDERR 'Unable to create directory %s',$Conf{'static_content_path'};
+		$config_err++;
+	    }
+	    # printf STDERR 'created directory %s',$Conf{'static_content_path'};
+	    `chown --USER-- $Conf{'static_content_path'}`;
+	    `chgrp --GROUP-- $Conf{'static_content_path'}`;
+	}
+    }
+    
+    #create static content dir for each virtual robot
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $dir = $Conf{'robots'}{$robot}{'static_content_path'};
+	if ($dir ne ''){
+	    # printf STDERR 'static_content_file in use %s',$dir;
+	    unless (-d $dir){
+		unless ( mkdir ($dir, 0775)) {
+		    do_log('err', 'Unable to create directory %s',$dir);
+		    printf STDERR 'Unable to create directory %s',$dir;
+		    $config_err++;
+		}
+		# printf STDERR 'created directory %s',$dir;
+		`chown --USER-- $dir`;
+		`chgrp --GROUP-- $dir`;
+	    }
+	}
+    }
+
+
+    return 1 ;
 }
 
 ## Check a few files
@@ -700,6 +749,56 @@ sub checkfiles {
 	$config_err++;
     }
 
+    #  create pictures dir if usefull
+    if (($Conf{'static_content_path'} ne '') && (-d $Conf{'static_content_path'})) {
+	unless (-f $Conf{'static_content_path'}.'/index.html'){
+	    unless(open (FF, ">$Conf{'static_content_path'}".'/index.html')) {
+		&do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $Conf{'static_content_path'});
+	    }
+	    close FF;		
+	}
+	if ( $Conf{'pictures_feature'} eq 'on') {
+	    unless (-d $Conf{'static_content_path'}.'/pictures'){
+		unless (mkdir ($Conf{'static_content_path'}.'/pictures', 0775)) {
+		    do_log('err', 'Unable to create directory %s/pictures',$Conf{'static_content_path'});
+		    $config_err++;
+		}
+		unless (-f $Conf{'static_content_path'}.'/pictures/index.html'){
+		    unless(open (FF, ">$Conf{'static_content_path'}".'/pictures/index.html')) {
+			&do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $Conf{'static_content_path'});
+		    }
+		    close FF;
+		}
+	    }		
+	}
+    }
+    #  create pictures dir if usefull for each robot
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $dir = $Conf{'robots'}{$robot}{'static_content_path'};
+	if (($dir ne '') && (-d $dir)) {
+	    unless (-f $dir.'/index.html'){
+		unless(open (FF, ">$dir".'/index.html')) {
+		    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $dir);
+		}
+		close FF;		
+	    }
+	    # create picture dir
+	    if ( $Conf{'robots'}{$robot}{'pictures_feature'} eq 'on') {
+		unless (-d $dir.'/pictures'){
+		    unless (mkdir ($dir.'/pictures', 0775)) {
+			do_log('err', 'Unable to create directory %s/pictures',$dir);
+			$config_err++;
+		    }
+		    unless (-f $dir.'/pictures/index.html'){
+			unless(open (FF, ">$dir".'/pictures/index.html')) {
+			    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $dir);
+			}
+			close FF;
+		    }
+		}		
+	    }
+	}
+    }    		
     return undef if ($config_err);
     return 1;
 }

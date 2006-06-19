@@ -212,7 +212,7 @@ if ($main::options{'service'} eq 'process_message') {
 
 ## Check for several files.
 unless (&Conf::checkfiles_as_root()) {
-   fatal_err("Missing files. Aborting.");
+   fatal_err("output checkfiles_as_root : Missing files. Aborting.");
    ## No return.
 }
 
