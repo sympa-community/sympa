@@ -1920,7 +1920,7 @@ see a  nice mailto adresses where others have nothing.
 	  \default {cookie}
 
 	Idem \cfkeyword {spam\_protection} but restricted to web archive.
-        A additional value is availible : cookie which mean that users
+        A additional value is available : cookie which mean that users
         must submit a small form in order to receive a cookie before
         browsing archives. This block all robot, even google and co.
 
@@ -1936,7 +1936,7 @@ see a  nice mailto adresses where others have nothing.
  
  
  	Deprecated. They are the color definition for previous web interface. These parameters are unused in 5.1 and higher 
- version but still availible.style.css, print.css, print-preview.css and fullPage.css
+ version but still available.style.css, print.css, print-preview.css and fullPage.css
  
 \subsection {\cfkeyword {logo\_html\_definition}}
 This parameter allow you to insert in the left top page corner oa piece of html code, usually to insert la logo in the page. This is a very basic but easy customization.
@@ -1969,14 +1969,14 @@ Some content may be delivred by http server (apache) without any need to be cont
 
 \subsection {\cfkeyword {static\_content\_url}}
 
-Content stored in directory specified by parameter \cfkeyword {static\_content\_url} must be served by http server under the URL specified by {\cfkeyword {static\_content\_url}}. Check apache configuration in order to make this directory availible. This parameter can be defined in robot.conf.
+Content stored in directory specified by parameter \cfkeyword {static\_content\_url} must be served by http server under the URL specified by {\cfkeyword {static\_content\_url}}. Check apache configuration in order to make this directory available. This parameter can be defined in robot.conf.
 
 \subsection {\cfkeyword {pictures\_feature}}
 
  \default {off}
  \example {pictures\_feature       on}
 
-Subscribers can upload their picture (from the sun option page) so reviewing subsribers show a gallery. This feature is availible if it is turn on for the robot and for the list. This parameter can be defined in sympa.conf or in ronot.conf. The same parameter exists in list configuration file but it's not inherited from robot configuration. 
+Subscribers can upload their picture (from the subscriber option page) so reviewing subsribers shows a gallery. This parameter defines the default for corresponding list parameter but it does NOT allow to disable the feature globaly. If you want to disable the feature for your whole site, you need to customize the \file {edit-list.conf} file to disallow edition of the corresponding list parameter.
 
 Pictures are stored in a directory specified by {\cfkeyword {static\_content\_path}} parameter.
 
@@ -2133,7 +2133,7 @@ The maximum size of the uploaded picture file (bytes)
 	\default {send,create\_list}
         \index{use\_blacklist}
         \label{useblacklist}
-	Sympa provide a blacklist feature availible for list editor and list owner. The \cfkeyword {use\_blacklist} parameter
+	Sympa provide a blacklist feature available for list editor and list owner. The \cfkeyword {use\_blacklist} parameter
         define which operation use the blacklist. Search in black list is mainly usefull for the  \cfkeyword {send} service
         (distribution of a message to the subscribers). You may use blacklist for more operation such as review,archive etc but
         be aware that thoses web services needs fast response and blacklist may require some ressources.
@@ -3311,6 +3311,17 @@ int main(int argn, char **argv, char **envp) {
 \end{itemize}
 
 \subsection {Installing wwsympa.fcgi in your Apache server}
+
+     You first need to set an alias to the directory where Sympa stores static contents (CSS, members pictures, documentation) directly delivered by Apache
+
+
+\begin {quote}
+\begin{verbatim}
+     Example :
+       	Alias /sympa_static [DIR]/static_content
+\end{verbatim}
+\end {quote}
+
      If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
      script alias it. 
 
@@ -8426,30 +8437,16 @@ msg_topic_tagging optional
 \end {quote}  
 Its values can be : optional \(\mid\) required
 
+\subsection {pictures\_feature}
 
+    	\label {par-pictures}
+	\index{pictures}
 
+	\default {\cfkeyword {pictures\_feature} robot parameter}
 
+\lparam {pictures\_feature} \textit {on | off}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+This enables the feature that allows list members to upload a picture that will be shown on review page.
 
 
 \subsection {cookie}
@@ -8774,7 +8771,7 @@ archived, list owner is notified. When archives are 95\% full, the list owner is
 	\default {\cfkeyword {spam\_protection} robot parameter}
 
 	There is a need to protection Sympa web site against spambot which collect
-        email adresse in public web site. Various method are availible into Sympa
+        email adresse in public web site. Various method are available into Sympa
         and you can choose it with \cfkeyword {spam\_protection} and
         \cfkeyword {web\_archive\_spam\_protection} parameters.
         Possible value are :

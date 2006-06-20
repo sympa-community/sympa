@@ -1221,7 +1221,7 @@ my %alias = ('reply-to' => 'reply_to',
 				   },
 	    'pictures_feature' => {'format' => ['on','off'],
 			       'occurence' => '0-1',
-			       'default' => 'off',
+			       'default' => {'conf' => 'pictures_feature'},
 			       'gettext_id' => "Allow pictures display ? (require to be enabled for the current robot)",
 			       'group' => 'other'
 			       },	    

@@ -126,7 +126,19 @@ my @params = ({'title' => 'Directories and file location'},
 	       'query' => 'Bounce incoming spool',
 	       'file' => 'sympa.conf',
 	       'advice' =>''},
+
+	      {'name' => 'static_content_path',
+	       'default' => '--DIR--/static_content',
+	       'query' => 'The directory where Sympa stores static contents (CSS, members pictures, documentation) directly delivered by Apache',
+	       'file' => 'sympa.conf',
+	       'advice' =>''},	      
 	      
+	      {'name' => 'static_content_url',
+	       'default' => '/sympa-static',
+	       'query' => 'The URL mapped with the static_content_path directory defined above',
+	       'file' => 'sympa.conf',
+	       'advice' =>''},	      
+
 	      {'title' => 'Syslog'},
 
 	      {'name' => 'syslog',

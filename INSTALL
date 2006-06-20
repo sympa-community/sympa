@@ -71,6 +71,8 @@ You should also create the main Sympa aliases ; they will look like this :
 5/ Web setup
 You should add these lines to your httpd.conf file :
 
+	Alias /sympa-static /home/sympa/static_content
+
 	ScriptAlias /sympa /wwsympa.fcgi
 
 	## Running FastCGI will provide much faster responses from your server and reduce load 

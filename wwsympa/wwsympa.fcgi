@@ -1519,7 +1519,7 @@ sub prepare_report_user {
 	$param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
 
 	# pictures are not avilible unless it is configured for the list and the robot
- 	if((($list->{'admin'}{'pictures_feature'}) eq 'off')||(&Conf::get_robot_conf($robot,'pictures_feature') eq 'off')) {
+ 	if ($list->{'admin'}{'pictures_feature'} eq 'off') {
  	    $param->{'pictures_display'} = undef;
  	}
  	else {
