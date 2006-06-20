@@ -38,12 +38,12 @@ msgstr ""
 msgid " %1 hits on message's From field"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:263 mail_tt2/listmaster_notification.tt2:265
+#: mail_tt2/listmaster_notification.tt2:283 mail_tt2/listmaster_notification.tt2:285
 #. (old_email)
 msgid " (old email : %1)"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:282 mail_tt2/listmaster_notification.tt2:283 mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:302 mail_tt2/listmaster_notification.tt2:303 mail_tt2/listmaster_notification.tt2:304
 #. (dir)
 #. (path)
 msgid " : unable to read '%1'."
@@ -85,12 +85,12 @@ msgstr ""
 msgid " The latest shared documents "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:329
+#: mail_tt2/listmaster_notification.tt2:349
 #. (who)
 msgid " User %1 has encountered a system error"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:240 mail_tt2/listmaster_notification.tt2:255
+#: mail_tt2/listmaster_notification.tt2:260 mail_tt2/listmaster_notification.tt2:275
 #. (who)
 msgid " User %1 has encountered an internal server error"
 msgstr ""
@@ -145,7 +145,7 @@ msgstr ""
 msgid "%1 / your environment"
 msgstr ""
 
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 #. (u_err.path)
 msgid "%1 : No such file or directory"
 msgstr ""
@@ -160,12 +160,12 @@ msgstr ""
 msgid "%1 : action succeeded soon"
 msgstr ""
 
-#: web_tt2/error.tt2:63
+#: web_tt2/error.tt2:64
 #. (u_err.file)
 msgid "%1 : file not editable"
 msgstr ""
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 #. (u_err.name)
 msgid "%1 : incorrect name"
 msgstr ""
@@ -233,12 +233,12 @@ msgstr ""
 msgid "%1 hits on message's Subject field"
 msgstr ""
 
-#: web_tt2/error.tt2:65
+#: web_tt2/error.tt2:66
 #. (u_err.email,u_err.list)
 msgid "%1 is already subscribed to the list %2"
 msgstr ""
 
-#: web_tt2/error.tt2:62
+#: web_tt2/error.tt2:63
 #. (u_err.reception_mode)
 msgid "%1 is not an available reception mode"
 msgstr ""
@@ -263,7 +263,7 @@ msgstr ""
 msgid "%1 messages selected out of %2"
 msgstr ""
 
-#: web_tt2/lists.tt2:6 web_tt2/review.tt2:64
+#: web_tt2/lists.tt2:6 web_tt2/review.tt2:69
 #. (occurrence)
 msgid "%1 occurrence(s) found"
 msgstr ""
@@ -309,14 +309,28 @@ msgstr ""
 msgid "%Image(%s)"
 msgstr ""
 
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 #. (u_err.bad_listname)
 msgid "'%1' : bad listname"
 msgstr ""
 
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 #. (u_err.new_listname)
 msgid "'%1' list already exists"
+msgstr ""
+
+#: web_tt2/view_template.tt2:15
+#. (robot)
+msgid "( this template is defined for all lists of robot %1 unless it is redefined for some particular list )"
+msgstr ""
+
+#: web_tt2/view_template.tt2:17
+msgid "( this template is defined for all robots unless  it is redefined for some particular robot )"
+msgstr ""
+
+#: web_tt2/view_template.tt2:12
+#. (list,robot)
+msgid "( this template is defined for list %1@%2 )"
 msgstr ""
 
 #: web_tt2/arcsearch.tt2:18
@@ -338,6 +352,10 @@ msgstr ""
 
 #: web_tt2/arcsearch.tt2:16
 msgid "(This sentence,"
+msgstr ""
+
+#: web_tt2/edit_template.tt2:19
+msgid "(this template is used for any language unless it is redefined for a specific language)"
 msgstr ""
 
 #: web_tt2/help.tt2:28
@@ -370,6 +388,10 @@ msgstr ""
 
 #: web_tt2/list_admin_menu.tt2:17
 msgid "-Archives"
+msgstr ""
+
+#: web_tt2/list_admin_menu.tt2:36
+msgid "-Blacklist"
 msgstr ""
 
 #: web_tt2/list_admin_menu.tt2:18
@@ -445,31 +467,31 @@ msgstr ""
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr ""
 
-#: web_tt2/help_admin.tt2:8
+#: web_tt2/admin.tt2:7
 msgid "<strong>Bounces</strong>  : Manage non-delivery reports (also called bounces)."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:10
+#: web_tt2/admin.tt2:9
 msgid "<strong>Create shared</strong> : initializes the shared document web space."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:6
+#: web_tt2/admin.tt2:5
 msgid "<strong>Customizing</strong> : editing of various files and messages attached to your list."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:11
+#: web_tt2/admin.tt2:10
 msgid "<strong>Delete shared</strong> closes it. It can be restored using \"Restore shared\" button"
 msgstr ""
 
-#: web_tt2/help_admin.tt2:5
+#: web_tt2/admin.tt2:4
 msgid "<strong>Edit list config</strong>:  must be used with care : it allows to modify some of the list parameters. The list of parameters you can modify depends on your privilege."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:7
+#: web_tt2/admin.tt2:6
 msgid "<strong>Manage Archives</strong>  : Allow you to download and delete list archives."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:9
+#: web_tt2/admin.tt2:8
 msgid "<strong>Remove list</strong> : completely removes the current list. Listmaster privileges are required to Restore a list"
 msgstr ""
 
@@ -482,7 +504,7 @@ msgstr ""
 msgid "A confirmation password will be sent to the address you supply, after pressing the button. This will take you to the next screen to confirm that your address is operational."
 msgstr ""
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 #. (u_err.path)
 msgid "A directory named '%1' already exists"
 msgstr ""
@@ -491,7 +513,7 @@ msgstr ""
 msgid "A few lines describing the list"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:57
+#: mail_tt2/listmaster_notification.tt2:77
 msgid "A loop has been detected with the following message"
 msgstr ""
 
@@ -503,7 +525,7 @@ msgstr ""
 msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
 
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #. (auth.action)
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
@@ -521,7 +543,7 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:51
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:54
 msgid "Add"
 msgstr ""
 
@@ -533,7 +555,7 @@ msgstr ""
 msgid "Add selected addresses"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:264
+#: mail_tt2/listmaster_notification.tt2:284
 #. (sub)
 msgid "Add subscriber '%1' in DB failed."
 msgstr ""
@@ -542,7 +564,7 @@ msgstr ""
 msgid "Add subscribers"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:262
+#: mail_tt2/listmaster_notification.tt2:282
 #. (user)
 msgid "Add user '%1' in DB failed."
 msgstr ""
@@ -555,12 +577,12 @@ msgstr ""
 msgid "Adding a user to the list is restricted to list owners."
 msgstr ""
 
-#: web_tt2/error.tt2:50
+#: web_tt2/error.tt2:51
 #. (u_err.email)
 msgid "Address \"%1\" is incorrect"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:55
+#: web_tt2/editsubscriber.tt2:61
 msgid "Address detected via VERP technologie"
 msgstr ""
 
@@ -581,6 +603,10 @@ msgstr ""
 msgid "All commands must be sent to the electronic address %1"
 msgstr ""
 
+#: src/List.pm:1225
+msgid "Allow pictures display ? (require to be enabled for the current robot)"
+msgstr ""
+
 #: mail_tt2/x509-user-cert-missing.tt2:8
 #. (mail.sender,mail.subject)
 msgid ""
@@ -592,7 +618,7 @@ msgstr ""
 msgid "Anonymous sender"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:70
+#: mail_tt2/listmaster_notification.tt2:90
 msgid "Antivirus scan failed"
 msgstr ""
 
@@ -600,7 +626,7 @@ msgstr ""
 msgid "Any information about this list :"
 msgstr ""
 
-#: web_tt2/d_properties.tt2:37
+#: web_tt2/copy_template.tt2:46 web_tt2/d_properties.tt2:37
 msgid "Apply"
 msgstr ""
 
@@ -633,7 +659,7 @@ msgstr ""
 msgid "Archives Selection:"
 msgstr ""
 
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 msgid "Archives are empty for this list"
 msgstr ""
 
@@ -647,12 +673,12 @@ msgstr ""
 msgid "Archives index of list %1"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125 web_tt2/list_admin_menu.tt2:56
+#: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125 web_tt2/list_admin_menu.tt2:61
 #. (list)
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:47
+#: web_tt2/list_admin_menu.tt2:52
 #. (list)
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr ""
@@ -675,11 +701,11 @@ msgstr ""
 msgid "Auth method"
 msgstr ""
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "Authentication failed"
 msgstr ""
 
-#: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21 web_tt2/modindex.tt2:36 web_tt2/modindex.tt2:99
+#: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21 web_tt2/modindex.tt2:107 web_tt2/modindex.tt2:39
 msgid "Author"
 msgstr ""
 
@@ -699,25 +725,29 @@ msgstr ""
 msgid "Based on <em><a href=\"http://www.mhonarc.org/contrib/marc-search/\">Marc-Search</a></em>, search engine of MHonArc archives"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:218 mail_tt2/listowner_notification.tt2:63
+#: mail_tt2/listmaster_notification.tt2:238 mail_tt2/listowner_notification.tt2:63
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "notified that they might be removed from list %2:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:221 mail_tt2/listowner_notification.tt2:66
+#: mail_tt2/listmaster_notification.tt2:241 mail_tt2/listowner_notification.tt2:66
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "removed from list %2:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:224 mail_tt2/listowner_notification.tt2:69
+#: mail_tt2/listmaster_notification.tt2:244 mail_tt2/listowner_notification.tt2:69
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "selected by Sympa as severe bouncing addresses:"
+msgstr ""
+
+#: web_tt2/review.tt2:38
+msgid "Blacklist"
 msgstr ""
 
 #: web_tt2/arcsearch_form.tt2:63
@@ -745,11 +775,11 @@ msgid ""
 "%3/reviewbouncing/%4\n"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88 web_tt2/list_admin_menu.tt2:41
+#: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88 web_tt2/list_admin_menu.tt2:46 web_tt2/review.tt2:40
 msgid "Bounces"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:58
+#: web_tt2/editsubscriber.tt2:64
 msgid "Bounces count :"
 msgstr ""
 
@@ -757,7 +787,7 @@ msgstr ""
 msgid "Bounces management"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:49
+#: web_tt2/editsubscriber.tt2:55
 msgid "Bouncing address"
 msgstr ""
 
@@ -774,47 +804,47 @@ msgstr ""
 msgid "Cannot connect to database %1, still trying..."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:321
 #. (listname)
 msgid "Cannot create shared for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:323
 #. (listname)
 msgid "Cannot delete shared for list '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 #. (u_err.path)
 msgid "Cannot open file '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 #. (u_err.path)
 msgid "Cannot overwrite file %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:322
 #. (listname)
 msgid "Cannot restore shared for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:287
+#: mail_tt2/listmaster_notification.tt2:307
 #. (listname)
 msgid "Cannot save config file for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:306 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:326 web_tt2/error.tt2:17
 #. (name)
 msgid "Cannot unzip file '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 #. (u_err.path)
 msgid "Cannot upload file %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:325
 #. (path)
 msgid "Cannot upload file '%1'."
 msgstr ""
@@ -847,6 +877,10 @@ msgstr ""
 msgid "Changing your password"
 msgstr ""
 
+#: web_tt2/editsubscriber.tt2:28
+msgid "Changing your picture for this list"
+msgstr ""
+
 #: web_tt2/arcsearch_form.tt2:41
 msgid "Check"
 msgstr ""
@@ -856,12 +890,16 @@ msgstr ""
 msgid "Check %1 list usage :"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:103 mail_tt2/listmaster_notification.tt2:113
+#: mail_tt2/listmaster_notification.tt2:123 mail_tt2/listmaster_notification.tt2:133
 msgid "Check Sympa log files for more precise information"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:123 mail_tt2/listmaster_notification.tt2:134 mail_tt2/listmaster_notification.tt2:145 mail_tt2/listmaster_notification.tt2:155 mail_tt2/listmaster_notification.tt2:165 mail_tt2/listmaster_notification.tt2:176 mail_tt2/listmaster_notification.tt2:187 mail_tt2/listmaster_notification.tt2:197 mail_tt2/listmaster_notification.tt2:207
+#: mail_tt2/listmaster_notification.tt2:143 mail_tt2/listmaster_notification.tt2:154 mail_tt2/listmaster_notification.tt2:165 mail_tt2/listmaster_notification.tt2:175 mail_tt2/listmaster_notification.tt2:185 mail_tt2/listmaster_notification.tt2:196 mail_tt2/listmaster_notification.tt2:207 mail_tt2/listmaster_notification.tt2:217 mail_tt2/listmaster_notification.tt2:227
 msgid "Check Sympa log files for more precise information."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:46
+msgid "Check log file for further details."
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:101
@@ -936,7 +974,7 @@ msgstr ""
 msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr ""
 
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 #. (u_err.email)
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
@@ -958,7 +996,7 @@ msgstr ""
 msgid "Confirm %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:45
+#: mail_tt2/listmaster_notification.tt2:65
 #. (db_name)
 msgid "Connection to database %1 restored."
 msgstr ""
@@ -975,12 +1013,16 @@ msgstr ""
 msgid "Continue search"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:337
 #. (env)
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
-#: web_tt2/error.tt2:124
+#: web_tt2/copy_template.tt2:3
+msgid "Copying template"
+msgstr ""
+
+#: web_tt2/error.tt2:125
 #. (auth.listname)
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -991,7 +1033,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99 web_tt2/list_admin_menu.tt2:45
+#: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99 web_tt2/list_admin_menu.tt2:50
 msgid "Create Shared"
 msgstr ""
 
@@ -1057,7 +1099,7 @@ msgstr ""
 msgid "Data Source"
 msgstr ""
 
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "Data have changed on disk. Cannot apply your changes"
 msgstr ""
 
@@ -1065,15 +1107,15 @@ msgstr ""
 msgid "Data sources setup"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:40
+#: mail_tt2/listmaster_notification.tt2:60
 msgid "DataBase connection restored"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:29
+#: mail_tt2/listmaster_notification.tt2:49
 msgid "Database structure updated"
 msgstr ""
 
-#: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19 web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:98 web_tt2/subindex.tt2:9
+#: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19 web_tt2/modindex.tt2:106 web_tt2/modindex.tt2:38 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr ""
 
@@ -1114,7 +1156,7 @@ msgstr ""
 msgid "Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compilations of messages are sent to subscribers in accordance with the rhythm selected with this parameter."
 msgstr ""
 
-#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:11
+#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:11 web_tt2/suboptions.tt2:71
 msgid "Delete"
 msgstr ""
 
@@ -1122,20 +1164,20 @@ msgstr ""
 msgid "Delete Selected Month(s)"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:47
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:52
 msgid "Delete Shared"
 msgstr ""
 
-#: web_tt2/review.tt2:227 web_tt2/review.tt2:76 web_tt2/reviewbouncing.tt2:102
+#: web_tt2/review.tt2:248 web_tt2/review.tt2:81 web_tt2/reviewbouncing.tt2:102
 msgid "Delete selected email addresses"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:266
+#: mail_tt2/listmaster_notification.tt2:286
 #. (sub)
 msgid "Delete subscriber '%1' in DB failed."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:267
+#: mail_tt2/listmaster_notification.tt2:287
 #. (old_email)
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
@@ -1205,12 +1247,12 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 #. (u_err.name,u_err.reason)
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr ""
 
-#: src/List.pm:878
+#: src/List.pm:911
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -1218,7 +1260,7 @@ msgstr ""
 msgid "Disable topics subscription"
 msgstr ""
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:74 web_tt2/modindex.tt2:76 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:8
+#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:78 web_tt2/modindex.tt2:80 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:8
 msgid "Distribute"
 msgstr ""
 
@@ -1249,10 +1291,8 @@ msgstr ""
 msgid "Do you really want to delete this message ?"
 msgstr ""
 
-#: web_tt2/ls_templates.tt2:109 web_tt2/ls_templates.tt2:79 web_tt2/ls_templates.tt2:93
-#. (file.value.site)
-#. (file.value.robot)
-#. (file.value.listname)
+#: web_tt2/ls_templates.tt2:113 web_tt2/ls_templates.tt2:133 web_tt2/ls_templates.tt2:93
+#. (lang.value)
 msgid "Do you really want to remove %1 ?"
 msgstr ""
 
@@ -1265,7 +1305,7 @@ msgstr ""
 msgid "Do you really want to send a subscription remind message to the %1 subscribers"
 msgstr ""
 
-#: web_tt2/review.tt2:37
+#: web_tt2/review.tt2:36
 #. (total)
 msgid "Do you really want to send a subscription remind message to the %1 subscribers ?"
 msgstr ""
@@ -1298,11 +1338,11 @@ msgstr ""
 msgid "Do you want to rename your file %1 ?"
 msgstr ""
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:74
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:79
 msgid "Document"
 msgstr ""
 
-#: web_tt2/review.tt2:96 web_tt2/review.tt2:99
+#: web_tt2/review.tt2:101 web_tt2/review.tt2:104
 msgid "Domain"
 msgstr ""
 
@@ -1314,7 +1354,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr ""
 
-#: web_tt2/review.tt2:40 web_tt2/review.tt2:42 web_tt2/reviewbouncing.tt2:22
+#: web_tt2/review.tt2:43 web_tt2/review.tt2:45 web_tt2/reviewbouncing.tt2:22
 msgid "Dump"
 msgstr ""
 
@@ -1371,7 +1411,7 @@ msgstr ""
 msgid "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it."
 msgstr ""
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:88 web_tt2/review.tt2:91 web_tt2/reviewbouncing.tt2:58 web_tt2/subindex.tt2:7
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:93 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:58 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr ""
 
@@ -1393,7 +1433,11 @@ msgstr ""
 msgid "End of digest for list %1 - %2"
 msgstr ""
 
-#: src/Conf.pm:253 src/Conf.pm:430
+#: web_tt2/copy_template.tt2:36
+msgid "Enter listname : "
+msgstr ""
+
+#: src/Conf.pm:276 src/Conf.pm:460
 msgid "Error at line %d : %s"
 msgstr ""
 
@@ -1407,17 +1451,17 @@ msgid ""
 "complete URL of the concerned message."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:164
+#: mail_tt2/listmaster_notification.tt2:184
 #. (param0)
 msgid "Error(s) found in the file %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:132
+#: mail_tt2/listmaster_notification.tt2:152
 #. (param0,param1)
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:327
 #. (name)
 msgid "Errors while unzipping file '%1'."
 msgstr ""
@@ -1465,12 +1509,12 @@ msgstr ""
 msgid "FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on."
 msgstr ""
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 #. (u_err.directory)
 msgid "Failed : %1 not empty"
 msgstr ""
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "Failed : your content is empty"
 msgstr ""
 
@@ -1478,7 +1522,7 @@ msgstr ""
 msgid "Failed to include list admins"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:317
 #. (listname)
 msgid "Failed to include list admins for list '%1'"
 msgstr ""
@@ -1487,25 +1531,25 @@ msgstr ""
 msgid "Failed to inlude members"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:316
 #. (listname)
 msgid "Failed to inlude members for list '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:308
 msgid "Failed to install aliases."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:195
+#: mail_tt2/listmaster_notification.tt2:215
 #. (param0,param1)
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 msgid "Failed to moderate a message ; it was probably moderated by another moderatir"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:309
 msgid "Failed to remove aliases."
 msgstr ""
 
@@ -1532,7 +1576,7 @@ msgstr ""
 msgid "File %1 has been renamed to %2"
 msgstr ""
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 #. (u_err.name,u_err.reason)
 msgid "File %1 is not copied : %2 "
 msgstr ""
@@ -1565,7 +1609,7 @@ msgstr ""
 msgid "File name"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:314 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:334 web_tt2/error.tt2:19
 #. (i_err.key)
 #. (zipfile)
 msgid "File not found."
@@ -1573,6 +1617,10 @@ msgstr ""
 
 #: web_tt2/login_menu.tt2:74
 msgid "First login ?"
+msgstr ""
+
+#: web_tt2/ls_templates.tt2:15
+msgid "First you may list a category of templates including or not templates specific of a particular list, then you have oportunity to copy and edit templates of the current robot or the named list."
 msgstr ""
 
 #: web_tt2/d_read.tt2:318
@@ -1776,7 +1824,7 @@ msgstr ""
 msgid "Ignoring message body not in text/plain, please use text/plain only (or put your command in the subject)."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:324
 msgid "Impossible to browse shared for list '%1'."
 msgstr ""
 
@@ -1795,15 +1843,19 @@ msgstr ""
 msgid "Impossible to forward your message to '%1-%2' because of an internal server error."
 msgstr ""
 
+#: web_tt2/suboptions.tt2:84
+msgid "In the subscribers list"
+msgstr ""
+
 #: web_tt2/serveradmin.tt2:34
 msgid "Inactive lists"
 msgstr ""
 
-#: src/List.pm:1155
+#: src/List.pm:1188
 msgid "Inclusions timeout"
 msgstr ""
 
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 #. (u_err.new_listname)
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
@@ -1827,7 +1879,11 @@ msgstr ""
 msgid "Information regarding user %1 have been updated for list %2."
 msgstr ""
 
-#: web_tt2/modindex.tt2:126 web_tt2/modindex.tt2:91
+#: web_tt2/copy_template.tt2:8
+msgid "Input template"
+msgstr ""
+
+#: web_tt2/modindex.tt2:134 web_tt2/modindex.tt2:99
 msgid "Install"
 msgstr ""
 
@@ -1853,7 +1909,7 @@ msgid ""
 "the multipart/digest MIME format."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:290
+#: mail_tt2/listmaster_notification.tt2:310
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
@@ -1881,11 +1937,11 @@ msgstr ""
 msgid "LAST <list>                 * Used to received the last message from <list>"
 msgstr ""
 
-#: src/List.pm:792
+#: src/List.pm:825
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:684
+#: src/List.pm:702
 msgid "LDAP query inclusion"
 msgstr ""
 
@@ -1901,11 +1957,15 @@ msgstr ""
 msgid "Language :"
 msgstr ""
 
-#: src/List.pm:903
+#: web_tt2/copy_template.tt2:23 web_tt2/copy_template.tt2:25
+msgid "Language : "
+msgstr ""
+
+#: src/List.pm:936
 msgid "Language of the list"
 msgstr ""
 
-#: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19 web_tt2/review.tt2:131
+#: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19 web_tt2/review.tt2:136
 msgid "Last update"
 msgstr ""
 
@@ -1918,7 +1978,7 @@ msgstr ""
 msgid "Last update : %1"
 msgstr ""
 
-#: src/List.pm:1180
+#: src/List.pm:1213
 msgid "Last update of config"
 msgstr ""
 
@@ -1926,7 +1986,7 @@ msgstr ""
 msgid "Last update:"
 msgstr ""
 
-#: src/List.pm:921
+#: src/List.pm:954
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -1970,12 +2030,12 @@ msgstr ""
 msgid "List %1 archive quota exceeded"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:211 mail_tt2/listowner_notification.tt2:56
+#: mail_tt2/listmaster_notification.tt2:231 mail_tt2/listowner_notification.tt2:56
 #. (list.name)
 msgid "List %1 automatic bounce management"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:143
+#: mail_tt2/listmaster_notification.tt2:163
 #. (param0,param1)
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
@@ -2073,11 +2133,11 @@ msgstr ""
 msgid "List has been restored"
 msgstr ""
 
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 msgid "List has no bouncing subscribers"
 msgstr ""
 
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid "List has no subscribers"
 msgstr ""
 
@@ -2087,7 +2147,7 @@ msgid ""
 "right-hand side of the main list page. (default for this is the list description)"
 msgstr ""
 
-#: src/List.pm:797
+#: src/List.pm:830
 msgid "List inclusion"
 msgstr ""
 
@@ -2139,7 +2199,7 @@ msgstr ""
 msgid "Listing messages to moderate"
 msgstr ""
 
-#: web_tt2/modindex.tt2:88
+#: web_tt2/modindex.tt2:96
 msgid "Listing of documents shared to moderate"
 msgstr ""
 
@@ -2155,12 +2215,12 @@ msgstr ""
 msgid "Listmaster"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:235 mail_tt2/listmaster_notification.tt2:250
+#: mail_tt2/listmaster_notification.tt2:255 mail_tt2/listmaster_notification.tt2:270
 #. (list.name)
 msgid "Listmaster : internal server error "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:324
+#: mail_tt2/listmaster_notification.tt2:344
 #. (list.name)
 msgid "Listmaster : system error "
 msgstr ""
@@ -2213,7 +2273,7 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:49
+#: mail_tt2/listmaster_notification.tt2:69
 msgid "Loop detected"
 msgstr ""
 
@@ -2249,7 +2309,7 @@ msgstr ""
 msgid "Mailing lists categories"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:36
+#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:41
 msgid "Manage Archives"
 msgstr ""
 
@@ -2265,15 +2325,15 @@ msgstr ""
 msgid "Management of bouncers, 2nd level"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:231 mail_tt2/listowner_notification.tt2:76
+#: mail_tt2/listmaster_notification.tt2:251 mail_tt2/listowner_notification.tt2:76
 msgid "Managing bouncing subscribers:"
 msgstr ""
 
-#: src/List.pm:935
+#: src/List.pm:968
 msgid "Maximum message size"
 msgstr ""
 
-#: src/List.pm:1208
+#: src/List.pm:1247
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -2292,7 +2352,7 @@ msgid ""
 "Note, however, that many viruses fake sender's e-mail address, so it is possible that the virus didn't come from your computer. In that case, please disregard this message."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:72
+#: web_tt2/list_admin_menu.tt2:77
 msgid "Message"
 msgstr ""
 
@@ -2364,19 +2424,19 @@ msgid ""
 "attachment at the beginning of each message distributed to the list."
 msgstr ""
 
-#: src/List.pm:970
+#: src/List.pm:1003
 msgid "Message tagging"
 msgstr ""
 
-#: src/List.pm:946
+#: src/List.pm:979
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:941
+#: src/List.pm:974
 msgid "Message topic name"
 msgstr ""
 
-#: src/List.pm:952
+#: src/List.pm:985
 msgid "Message topic title"
 msgstr ""
 
@@ -2408,11 +2468,11 @@ msgstr ""
 msgid "Missing argument %1"
 msgstr ""
 
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 msgid "Missing filter"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42 web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:66
+#: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42 web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:71
 msgid "Moderate"
 msgstr ""
 
@@ -2487,7 +2547,7 @@ msgstr ""
 msgid "Multipart messages diffusion is impossible."
 msgstr ""
 
-#: web_tt2/review.tt2:36
+#: web_tt2/review.tt2:55
 msgid "Multiple add"
 msgstr ""
 
@@ -2499,12 +2559,16 @@ msgstr ""
 msgid "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104 web_tt2/review.tt2:107 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109 web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr ""
 
 #: web_tt2/editsubscriber.tt2:14
 msgid "Name :"
+msgstr ""
+
+#: web_tt2/copy_template.tt2:12
+msgid "Name : "
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:31
@@ -2531,6 +2595,10 @@ msgstr ""
 msgid "New search"
 msgstr ""
 
+#: web_tt2/copy_template.tt2:13
+msgid "New template name : "
+msgstr ""
+
 #: web_tt2/arcsearch.tt2:40
 msgid "Newest messages first"
 msgstr ""
@@ -2543,7 +2611,7 @@ msgstr ""
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
 
-#: web_tt2/review.tt2:242 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:114 web_tt2/reviewbouncing.tt2:47
+#: web_tt2/review.tt2:26 web_tt2/review.tt2:263 web_tt2/reviewbouncing.tt2:114 web_tt2/reviewbouncing.tt2:47
 msgid "Next page"
 msgstr ""
 
@@ -2555,12 +2623,22 @@ msgstr ""
 msgid "No DataBase"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:29
+#. (db_type)
+msgid "No DataBase Driver for %1"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:34
+#. (db_type)
+msgid "No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:300
 #. (dir)
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "No SOAP service"
 msgstr ""
 
@@ -2568,12 +2646,12 @@ msgstr ""
 msgid "No Virtual Robot defined on this server"
 msgstr ""
 
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 #. (u_err.email)
 msgid "No bounce for user  %1"
 msgstr ""
 
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 #. (u_err.directory)
 msgid "No certificate for this list"
 msgstr ""
@@ -2582,11 +2660,11 @@ msgstr ""
 msgid "No command found in message."
 msgstr ""
 
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "No description specified"
 msgstr ""
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 #. (u_err.email)
 msgid "No entry for user '%1'"
 msgstr ""
@@ -2600,16 +2678,16 @@ msgstr ""
 msgid "No message and no document to moderate for list %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:306
 #. (msgid)
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "No name specified"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:121
+#: mail_tt2/listmaster_notification.tt2:141
 #. (param0)
 msgid "No owner is defined for list %1."
 msgstr ""
@@ -2618,16 +2696,16 @@ msgstr ""
 msgid "No owner is defined for the list"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:318
 msgid "No owner is defined for the list '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 #. (u_err.page)
 msgid "No page %1"
 msgstr ""
 
-#: web_tt2/modindex.tt2:62
+#: web_tt2/modindex.tt2:65
 msgid "No subject"
 msgstr ""
 
@@ -2644,7 +2722,7 @@ msgstr ""
 msgid "Nomail"
 msgstr ""
 
-#: web_tt2/error.tt2:59
+#: web_tt2/error.tt2:60
 #. (u_err.email)
 msgid "Not subscribed: %1"
 msgstr ""
@@ -2653,7 +2731,7 @@ msgstr ""
 msgid "Note: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
 
-#: web_tt2/modindex.tt2:128 web_tt2/modindex.tt2:16 web_tt2/modindex.tt2:79 web_tt2/modindex.tt2:93 web_tt2/viewmod.tt2:13
+#: web_tt2/modindex.tt2:101 web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:16 web_tt2/modindex.tt2:83 web_tt2/viewmod.tt2:13
 msgid "Notified reject"
 msgstr ""
 
@@ -2681,7 +2759,7 @@ msgstr ""
 msgid "Oldest messages first"
 msgstr ""
 
-#: src/List.pm:963
+#: src/List.pm:996
 msgid "On which part of messages, topic keywords are applied"
 msgstr ""
 
@@ -2738,7 +2816,11 @@ msgid ""
 "to be yours (From: %3)."
 msgstr ""
 
-#: src/List.pm:1002 web_tt2/login_menu.tt2:10
+#: web_tt2/copy_template.tt2:9
+msgid "Output template"
+msgstr ""
+
+#: src/List.pm:1035 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr ""
 
@@ -2765,7 +2847,7 @@ msgstr ""
 msgid "Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1027
+#: src/List.pm:1060
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -2773,17 +2855,17 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 #. (u_err.param,u_err.val)
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr ""
 
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 #. (u_err.param)
 msgid "Parameter '%1' must have values"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:336
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
@@ -2801,8 +2883,12 @@ msgstr ""
 msgid "Password for %1"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:100
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:108
 msgid "Path"
+msgstr ""
+
+#: web_tt2/view_template.tt2:9
+msgid "Path : "
 msgstr ""
 
 #: web_tt2/get_pending_lists.tt2:10 web_tt2/serveradmin.tt2:32
@@ -2813,7 +2899,7 @@ msgstr ""
 msgid "Pending subscriptions"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:59
+#: web_tt2/editsubscriber.tt2:65
 msgid "Period :"
 msgstr ""
 
@@ -2821,8 +2907,16 @@ msgstr ""
 msgid "Periodical subscription expiration task"
 msgstr ""
 
-#: src/List.pm:1046
+#: src/List.pm:1079
 msgid "Periodical subscription reminder task"
+msgstr ""
+
+#: web_tt2/review.tt2:143
+msgid "Picture"
+msgstr ""
+
+#: web_tt2/editsubscriber.tt2:26
+msgid "Picture :"
 msgstr ""
 
 #: web_tt2/main.tt2:49
@@ -2842,15 +2936,15 @@ msgstr ""
 msgid "Please provide your email address for your unsubscription request from list %1."
 msgstr ""
 
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 msgid "Please provide your password"
 msgstr ""
 
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Please select archive months"
 msgstr ""
 
-#: web_tt2/modindex.tt2:22
+#: web_tt2/modindex.tt2:25
 msgid "Please select one or more topic(s) that corresponds to the messages you wish to distribute :"
 msgstr ""
 
@@ -2885,12 +2979,23 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: web_tt2/review.tt2:20 web_tt2/review.tt2:236 web_tt2/reviewbouncing.tt2:108 web_tt2/reviewbouncing.tt2:41
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:257 web_tt2/reviewbouncing.tt2:108 web_tt2/reviewbouncing.tt2:41
 msgid "Previous page"
 msgstr ""
 
-#: src/List.pm:1033
+#: src/List.pm:1066
 msgid "Priority"
+msgstr ""
+
+#: web_tt2/ls_templates.tt2:13
+msgid ""
+"Priority rules for template selection :\n"
+"<ul>\n"
+"<li>IF list context defined apply list template if exist</li>\n"
+"<li>ELSE apply robot defined template if exist</li>\n"
+"<li>ELSE apply localy defined template if exist</li>\n"
+"<li>ELSE apply template include in the distribution (theses must not be edited because Sympa's update will overright theses files)</li>\n"
+"</ul>"
 msgstr ""
 
 #: src/etc/create_list_templates/private_working_group/comment.tt2:1
@@ -2940,11 +3045,11 @@ msgstr ""
 msgid "Properties of the file %1"
 msgstr ""
 
-#: web_tt2/error.tt2:51
+#: web_tt2/error.tt2:52
 msgid "Provided password is incorrect"
 msgstr ""
 
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 #. (u_err.tpl)
 msgid "Provided path is incorrect for template '%1'"
 msgstr ""
@@ -2981,7 +3086,7 @@ msgstr ""
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr ""
 
-#: src/List.pm:1084
+#: src/List.pm:1117
 msgid "RFC 2369 Header fields"
 msgstr ""
 
@@ -3038,7 +3143,7 @@ msgstr ""
 msgid "Received mega-bytes         :      %1"
 msgstr ""
 
-#: web_tt2/review.tt2:112
+#: web_tt2/review.tt2:117
 msgid "Reception"
 msgstr ""
 
@@ -3055,17 +3160,21 @@ msgstr ""
 msgid "Reception modes    : %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:91
+#: mail_tt2/listmaster_notification.tt2:111
 #. (param0)
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: src/List.pm:928
+#: src/List.pm:961
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
-#: web_tt2/modindex.tt2:127 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:78 web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:12
+#: web_tt2/modindex.tt2:100 web_tt2/modindex.tt2:135 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:82 web_tt2/viewmod.tt2:12
 msgid "Reject"
+msgstr ""
+
+#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:85
+msgid "Reject and blacklist sender"
 msgstr ""
 
 #: web_tt2/subindex.tt2:52
@@ -3076,7 +3185,15 @@ msgstr ""
 msgid "Related email"
 msgstr ""
 
-#: web_tt2/review.tt2:37 web_tt2/reviewbouncing.tt2:16
+#: web_tt2/ls_templates.tt2:24
+msgid "Reload"
+msgstr ""
+
+#: web_tt2/review.tt2:36
+msgid "Remind all"
+msgstr ""
+
+#: web_tt2/reviewbouncing.tt2:16
 msgid "Remind all subscribers"
 msgstr ""
 
@@ -3105,7 +3222,7 @@ msgstr ""
 msgid "Remote host"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125 web_tt2/list_admin_menu.tt2:56
+#: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125 web_tt2/list_admin_menu.tt2:61
 msgid "Remove List"
 msgstr ""
 
@@ -3118,7 +3235,7 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132 web_tt2/list_admin_menu.tt2:59
+#: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132 web_tt2/list_admin_menu.tt2:64
 msgid "Rename List"
 msgstr ""
 
@@ -3145,7 +3262,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: src/List.pm:1052 src/List.pm:1072
+#: src/List.pm:1085 src/List.pm:1105
 msgid "Reply address"
 msgstr ""
 
@@ -3174,7 +3291,7 @@ msgstr ""
 msgid "Required file does not exist."
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:61
+#: web_tt2/editsubscriber.tt2:67
 msgid "Reset errors"
 msgstr ""
 
@@ -3182,11 +3299,11 @@ msgstr ""
 msgid "Reset errors for selected users"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120 web_tt2/list_admin_menu.tt2:54
+#: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120 web_tt2/list_admin_menu.tt2:59
 msgid "Restore List"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:49
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:54
 msgid "Restore shared"
 msgstr ""
 
@@ -3211,7 +3328,7 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr ""
 
-#: src/List.pm:1042
+#: src/List.pm:1075
 msgid "Return-path of the REMIND command"
 msgstr ""
 
@@ -3265,12 +3382,20 @@ msgstr ""
 msgid "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments"
 msgstr ""
 
-#: src/List.pm:874
+#: src/List.pm:907
 msgid "SQL query"
 msgstr ""
 
-#: src/List.pm:889
+#: src/List.pm:922
 msgid "SQL query inclusion"
+msgstr ""
+
+#: src/List.pm:694 src/List.pm:819
+msgid "SSL ciphers used"
+msgstr ""
+
+#: src/List.pm:689 src/List.pm:814
+msgid "SSL version"
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:54
@@ -3310,7 +3435,11 @@ msgstr ""
 msgid "Scope"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15 web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:61 web_tt2/reviewbouncing.tt2:11
+#: web_tt2/copy_template.tt2:15 web_tt2/copy_template.tt2:17 web_tt2/view_template.tt2:10
+msgid "Scope : "
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15 web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:66 web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr ""
 
@@ -3334,7 +3463,7 @@ msgstr ""
 msgid "Secret string for generating unique keys"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:246 mail_tt2/listmaster_notification.tt2:320 mail_tt2/listmaster_notification.tt2:335
+#: mail_tt2/listmaster_notification.tt2:266 mail_tt2/listmaster_notification.tt2:340 mail_tt2/listmaster_notification.tt2:355
 msgid "See logs for more details."
 msgstr ""
 
@@ -3342,11 +3471,19 @@ msgstr ""
 msgid "See your subscriptions with the following email addresses"
 msgstr ""
 
+#: web_tt2/ls_templates.tt2:23
+msgid "Select a list : "
+msgstr ""
+
 #: web_tt2/arc_manage.tt2:5
 msgid "Select below Archives months you want to delete or download (ZiP format):"
 msgstr ""
 
-#: web_tt2/review.tt2:66
+#: web_tt2/ls_templates.tt2:19
+msgid "Select templates type :"
+msgstr ""
+
+#: web_tt2/review.tt2:71
 msgid "Selection too wide, can not show selection"
 msgstr ""
 
@@ -3379,7 +3516,7 @@ msgstr ""
 msgid "Sending/reception setup"
 msgstr ""
 
-#: src/List.pm:1095
+#: src/List.pm:1128
 msgid "Serial number of the config"
 msgstr ""
 
@@ -3406,6 +3543,10 @@ msgstr ""
 
 #: web_tt2/serveradmin.tt2:74
 msgid "Setting site templates"
+msgstr ""
+
+#: web_tt2/suboptions.tt2:64
+msgid "Setting your picture for this list"
 msgstr ""
 
 #: web_tt2/stats.tt2:1
@@ -3441,7 +3582,7 @@ msgstr ""
 msgid "Shared document to be approved for %1"
 msgstr ""
 
-#: src/List.pm:1115 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1148 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr ""
 
@@ -3453,7 +3594,7 @@ msgid ""
 "display multipart/digest format messages well."
 msgstr ""
 
-#: web_tt2/modindex.tt2:101 web_tt2/modindex.tt2:38
+#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:41
 msgid "Size"
 msgstr ""
 
@@ -3476,7 +3617,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
 msgid "Sources"
 msgstr ""
 
@@ -3484,19 +3625,19 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:57
+#: web_tt2/editsubscriber.tt2:63
 msgid "Status :"
 msgstr ""
 
-#: src/List.pm:1131
+#: src/List.pm:1164
 msgid "Status of the list"
 msgstr ""
 
-#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
+#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
 msgid "Sub date"
 msgstr ""
 
-#: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:57 web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8 web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23 web_tt2/modindex.tt2:37 web_tt2/review_family.tt2:9
+#: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:57 web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8 web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23 web_tt2/modindex.tt2:40 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr ""
 
@@ -3514,7 +3655,7 @@ msgstr ""
 msgid "Subject : %1"
 msgstr ""
 
-#: src/List.pm:1138
+#: src/List.pm:1171
 msgid "Subject of the list"
 msgstr ""
 
@@ -3526,7 +3667,7 @@ msgstr ""
 msgid "Subject:"
 msgstr ""
 
-#: web_tt2/choosepasswd.tt2:19 web_tt2/pref.tt2:22 web_tt2/pref.tt2:35 web_tt2/pref.tt2:47 web_tt2/pref.tt2:78
+#: web_tt2/choosepasswd.tt2:19 web_tt2/pref.tt2:22 web_tt2/pref.tt2:35 web_tt2/pref.tt2:47 web_tt2/pref.tt2:78 web_tt2/suboptions.tt2:70
 msgid "Submit"
 msgstr ""
 
@@ -3550,7 +3691,7 @@ msgstr ""
 msgid "Subscriber"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:268
+#: mail_tt2/listmaster_notification.tt2:288
 #. (email,listname)
 msgid "Subscriber '%1' is not found in list %2."
 msgstr ""
@@ -3612,7 +3753,7 @@ msgstr ""
 msgid "Subscription to this list requires S/MIME signature."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:79
+#: web_tt2/list_admin_menu.tt2:84
 msgid "Subscriptions"
 msgstr ""
 
@@ -3650,7 +3791,7 @@ msgstr ""
 msgid "Sympa can contact another Sympa service using https to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise an infinite loop making cross includes."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:153
+#: mail_tt2/listmaster_notification.tt2:173
 #. (param0,param1)
 msgid "Sympa could not check family %2 rules with list %1 param_constraint.conf file."
 msgstr ""
@@ -3659,26 +3800,26 @@ msgstr ""
 msgid "Sympa could not deliver the requested page for the following reason : "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:112
+#: mail_tt2/listmaster_notification.tt2:132
 msgid "Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:102
+#: mail_tt2/listmaster_notification.tt2:122
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:185
+#: mail_tt2/listmaster_notification.tt2:205
 #. (param0,param1)
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:174
+#: mail_tt2/listmaster_notification.tt2:194
 msgid "Sympa could not load the list config file."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:205
+#: mail_tt2/listmaster_notification.tt2:225
 #. (param0,param1)
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
@@ -3687,6 +3828,10 @@ msgstr ""
 msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:43
+msgid "Sympa encountered the following error while running upgrade procedures : "
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -3710,11 +3855,11 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr ""
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 mail_tt2/get_archive.tt2:11 src/List.pm:2871
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11 mail_tt2/get_archive.tt2:11 src/List.pm:2917
 msgid "Table of contents:"
 msgstr ""
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
@@ -3731,16 +3876,20 @@ msgstr ""
 msgid "Tag your message for list %1"
 msgstr ""
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 msgid "Tagging message is required for this list"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:3
+#: web_tt2/edit_template.tt2:3 web_tt2/ls_templates.tt2:3 web_tt2/view_template.tt2:3
 msgid "Template edition system"
 msgstr ""
 
 #: web_tt2/edit_template.tt2:6
 msgid "Template name"
+msgstr ""
+
+#: web_tt2/view_template.tt2:7
+msgid "Template name : "
 msgstr ""
 
 #: web_tt2/edit_template.tt2:39
@@ -3854,7 +4003,7 @@ msgstr ""
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:75
+#: mail_tt2/listmaster_notification.tt2:95
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr ""
 
@@ -3866,7 +4015,7 @@ msgid ""
 "email address. Please try using your canonical address."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:259
+#: mail_tt2/listmaster_notification.tt2:279
 msgid "The authentication server name is not defined."
 msgstr ""
 
@@ -3891,7 +4040,7 @@ msgstr ""
 msgid "The current version doesn't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:34
+#: mail_tt2/listmaster_notification.tt2:54
 #. (db_name)
 msgid "The database structure has been updated ; check log file for further details : "
 msgstr ""
@@ -3908,7 +4057,7 @@ msgstr ""
 msgid "The default_user_options parameter starts a paragraph to define a default profile for the subscribers of the list."
 msgstr ""
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "The document repository exceed disk quota."
 msgstr ""
 
@@ -3917,7 +4066,7 @@ msgstr ""
 msgid "The exporation failed for list '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:319
 #. (listname)
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr ""
@@ -3960,12 +4109,12 @@ msgstr ""
 msgid "The latest shared documents"
 msgstr ""
 
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 #. (u_err.listname)
 msgid "The list '%1' is already closed"
 msgstr ""
 
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 #. (u_err.listname)
 msgid "The list '%1' is not closed"
 msgstr ""
@@ -3991,7 +4140,7 @@ msgstr ""
 msgid "The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:122 mail_tt2/listmaster_notification.tt2:133 mail_tt2/listmaster_notification.tt2:144 mail_tt2/listmaster_notification.tt2:154 mail_tt2/listmaster_notification.tt2:175 mail_tt2/listmaster_notification.tt2:186 mail_tt2/listmaster_notification.tt2:196 mail_tt2/listmaster_notification.tt2:206
+#: mail_tt2/listmaster_notification.tt2:142 mail_tt2/listmaster_notification.tt2:153 mail_tt2/listmaster_notification.tt2:164 mail_tt2/listmaster_notification.tt2:174 mail_tt2/listmaster_notification.tt2:195 mail_tt2/listmaster_notification.tt2:206 mail_tt2/listmaster_notification.tt2:216 mail_tt2/listmaster_notification.tt2:226
 msgid "The list status has been set to error_config."
 msgstr ""
 
@@ -4003,6 +4152,10 @@ msgstr ""
 msgid "The list's subject"
 msgstr ""
 
+#: web_tt2/maintenance.tt2:1
+msgid "The mailing list server is in maintenance mode, no operation can be performed during this period."
+msgstr ""
+
 #: web_tt2/sso_login.tt2:3
 msgid "The mailing list server requires a working email address. Please provide your email address below. <p><i>Please note:</i> the email field may be pre-populated.  If it is, then your authentication server has supplied an email address it associates with you.  Wether you enter an address manually or accept the one provided, you will still need to confirm that this is a working email address by entering a confirmation password that will be sent to you.  Please press the \"Send me a confirmation password\" to continue to the confirmation step."
 msgstr ""
@@ -4011,11 +4164,11 @@ msgstr ""
 msgid "The most active lists"
 msgstr ""
 
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 msgid "The passwords you typed do not match"
 msgstr ""
 
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 #. (u_err.nb_days)
 msgid "The period is too long (%1 days)"
 msgstr ""
@@ -4028,7 +4181,7 @@ msgstr ""
 msgid "The reply_to_header parameter starts a paragraph defining what Sympa will place in the Reply-To: SMTP header field of the messages it distributes."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:78
+#: mail_tt2/listmaster_notification.tt2:98
 msgid "The returned error message :"
 msgstr ""
 
@@ -4036,11 +4189,11 @@ msgstr ""
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 msgid "The shared directory cannot have any description"
 msgstr ""
 
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 msgid "The shared document space is empty"
 msgstr ""
 
@@ -4048,7 +4201,7 @@ msgstr ""
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
 
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "The upload failed, try it again"
 msgstr ""
 
@@ -4091,7 +4244,7 @@ msgstr ""
 msgid "There is no message to moderate for list '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "There is no shared documents"
 msgstr ""
 
@@ -4166,7 +4319,7 @@ msgstr ""
 msgid "This is a description of the reception modes available in Sympa. These options are mutually exclusive, which means that you can't set two different reception modes at the same time. Only some of the modes might be available for specific mailing lists."
 msgstr ""
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 #. (u_err.name)
 msgid "This is an already existing document : '%1'"
 msgstr ""
@@ -4179,7 +4332,7 @@ msgstr ""
 msgid "This list archive is empty."
 msgstr ""
 
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "This list has no message topic"
 msgstr ""
 
@@ -4192,7 +4345,7 @@ msgstr ""
 msgid "This list is configured to require topic(s) foreach message."
 msgstr ""
 
-#: web_tt2/modindex.tt2:20 web_tt2/viewmod.tt2:16
+#: web_tt2/modindex.tt2:23 web_tt2/viewmod.tt2:16
 msgid "This list is configured to require topic(s)."
 msgstr ""
 
@@ -4235,6 +4388,10 @@ msgid ""
 "This other email address, that should be known by Sympa, will be recognized by Sympa as \n"
 "	an alternate email address. You will also be able to unify your subscriptions with\n"
 "	your main email address."
+msgstr ""
+
+#: web_tt2/ls_templates.tt2:5
+msgid "This page is proposed in order to edit or create mail or web tt2 templates."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:175
@@ -4512,11 +4669,11 @@ msgstr ""
 msgid "To: %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:213 web_tt2/review.tt2:226 web_tt2/reviewbouncing.tt2:117
+#: src/etc/mhonarc-ressources.tt2:213 web_tt2/review.tt2:247 web_tt2/reviewbouncing.tt2:117
 msgid "Toggle Selection"
 msgstr ""
 
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 msgid "Topic \"other\" is a reserved word"
 msgstr ""
 
@@ -4524,11 +4681,11 @@ msgstr ""
 msgid "Topic subscription :"
 msgstr ""
 
-#: src/List.pm:957
+#: src/List.pm:990
 msgid "Topics for message categorization"
 msgstr ""
 
-#: src/List.pm:1148
+#: src/List.pm:1181
 msgid "Topics for the list"
 msgstr ""
 
@@ -4567,6 +4724,10 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+#: web_tt2/view_template.tt2:8
+msgid "Type : "
+msgstr ""
+
 #: mail_tt2/helpfile.tt2:29
 msgid "UNSubscribe * <EMAIL>       * To quit all lists."
 msgstr ""
@@ -4584,7 +4745,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: src/sympa.pl:1749
+#: src/sympa.pl:1756
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -4603,7 +4764,7 @@ msgstr ""
 msgid "Unable to access the message authenticated with key %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:330
 #. (key,listname)
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
@@ -4615,21 +4776,21 @@ msgid ""
 "Warning : this message may already have been sent by one of the list's editor."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:332
 #. (file)
 msgid "Unable to add file '%1' to archives."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:258
+#: mail_tt2/listmaster_notification.tt2:278
 msgid "Unable to change directory."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:320
 #. (new_listname)
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:335
 #. (path,listname)
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
@@ -4638,36 +4799,36 @@ msgstr ""
 msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:273
+#: mail_tt2/listmaster_notification.tt2:293
 #. (dir)
 msgid "Unable to create directory '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:311
 msgid "Unable to create list."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:331
 #. (sub)
 msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 #. (u_err.path)
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:278
+#: mail_tt2/listmaster_notification.tt2:298
 #. (file)
 msgid "Unable to erase file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:303
 #. (arc_file,listname,path)
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:304
 #. (listname)
 msgid "Unable to find archive for list '%1'"
 msgstr ""
@@ -4677,7 +4838,7 @@ msgstr ""
 msgid "Unable to find month '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:302
 #. (month,listname)
 msgid "Unable to find month '%1' for list '%2'"
 msgstr ""
@@ -4693,98 +4854,98 @@ msgid ""
 "complete URL of the concerned message"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:314
 #. (listname)
 msgid "Unable to get family for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:275
+#: mail_tt2/listmaster_notification.tt2:295
 #. (msg)
 msgid "Unable to get message '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:293 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:313 web_tt2/error.tt2:12
 msgid "Unable to load create_list templates."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:292 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:312 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:292
 #. (directory)
 msgid "Unable to open directory '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:291
 #. (file)
 msgid "Unable to open file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:274
+#: mail_tt2/listmaster_notification.tt2:294
 #. (spool)
 msgid "Unable to open spool '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 #. (u_err.path)
 msgid "Unable to read %1 : empty document"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:269
+#: mail_tt2/listmaster_notification.tt2:289
 #. (filepath)
 msgid "Unable to read file : '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to reload list"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:315
 #. (new_listname)
 msgid "Unable to reload list with new listname '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:297
 #. (old,new)
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:276
+#: mail_tt2/listmaster_notification.tt2:296
 #. (old,new)
 msgid "Unable to rename file '%1' into '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Unable to send archive : no message id found."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:299
 #. (from,listname)
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:328
 #. (from,listname)
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:329
 #. (from,listname)
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:301
 #. (listname)
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:270
+#: mail_tt2/listmaster_notification.tt2:290
 #. (filepath)
 msgid "Unable to write file : '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:313
+#: mail_tt2/listmaster_notification.tt2:333
 #. (zipfile)
 msgid "Unable to write file zip '%1'."
 msgstr ""
@@ -4801,7 +4962,7 @@ msgstr ""
 msgid "Unknown action"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:261
+#: mail_tt2/listmaster_notification.tt2:281
 #. (name)
 msgid "Unkown authentication service %1."
 msgstr ""
@@ -4810,7 +4971,7 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:40
+#: web_tt2/editsubscriber.tt2:46
 msgid "Unsubscribe the User"
 msgstr ""
 
@@ -4838,7 +4999,7 @@ msgid ""
 "using the UNSUBSCRIBE command."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:93
+#: mail_tt2/listmaster_notification.tt2:113
 #. (param0)
 msgid ""
 "Until then we recommend your remove %1 ;\n"
@@ -4858,7 +5019,7 @@ msgstr ""
 msgid "Up to higher level directory"
 msgstr ""
 
-#: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:415 web_tt2/editsubscriber.tt2:39 web_tt2/suboptions.tt2:58
+#: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:415 web_tt2/editsubscriber.tt2:45 web_tt2/suboptions.tt2:58
 msgid "Update"
 msgstr ""
 
@@ -4870,14 +5031,18 @@ msgstr ""
 msgid "Update of list members based on the TTL"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:265
+#: mail_tt2/listmaster_notification.tt2:285
 #. (sub,old_email)
 msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:263
+#: mail_tt2/listmaster_notification.tt2:283
 #. (user)
 msgid "Update user '%1' in DB failed"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:38
+msgid "Upgrade procedures failed"
 msgstr ""
 
 #: web_tt2/d_read.tt2:359
@@ -4903,7 +5068,7 @@ msgstr ""
 msgid "User certificate belong to"
 msgstr ""
 
-#: src/List.pm:1186
+#: src/List.pm:1219
 msgid "User data source"
 msgstr ""
 
@@ -4931,7 +5096,7 @@ msgstr ""
 msgid "Validate Address"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:60
+#: web_tt2/editsubscriber.tt2:66
 msgid "View last bounce"
 msgstr ""
 
@@ -4943,7 +5108,7 @@ msgstr ""
 msgid "Visibility :"
 msgstr ""
 
-#: src/List.pm:1192
+#: src/List.pm:1231
 msgid "Visibility of the list"
 msgstr ""
 
@@ -4983,7 +5148,7 @@ msgstr ""
 msgid "We stopped delivery of this email."
 msgstr ""
 
-#: src/List.pm:1213
+#: src/List.pm:1252
 msgid "Web archives"
 msgstr ""
 
@@ -5015,7 +5180,7 @@ msgstr ""
 msgid "Web forum ML"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:256 mail_tt2/listmaster_notification.tt2:330
+#: mail_tt2/listmaster_notification.tt2:276 mail_tt2/listmaster_notification.tt2:350
 msgid "Web interface"
 msgstr ""
 
@@ -5029,7 +5194,7 @@ msgid ""
 "a full MIME structured message (only for MIME gurus)."
 msgstr ""
 
-#: src/List.pm:1219
+#: src/List.pm:1258
 msgid "Welcome return-path"
 msgstr ""
 
@@ -5063,39 +5228,39 @@ msgstr ""
 msgid "Who can delete subscribers"
 msgstr ""
 
-#: src/List.pm:1104
+#: src/List.pm:1137
 msgid "Who can edit"
 msgstr ""
 
-#: src/List.pm:897
+#: src/List.pm:930
 msgid "Who can invite people"
 msgstr ""
 
-#: src/List.pm:1077
+#: src/List.pm:1110
 msgid "Who can review subscribers"
 msgstr ""
 
-#: src/List.pm:1088
+#: src/List.pm:1121
 msgid "Who can send messages"
 msgstr ""
 
-#: src/List.pm:1037
+#: src/List.pm:1070
 msgid "Who can start a remind process"
 msgstr ""
 
-#: src/List.pm:1142
+#: src/List.pm:1175
 msgid "Who can subscribe to the list"
 msgstr ""
 
-#: src/List.pm:1159
+#: src/List.pm:1192
 msgid "Who can unsubscribe"
 msgstr ""
 
-#: src/List.pm:1100
+#: src/List.pm:1133
 msgid "Who can view"
 msgstr ""
 
-#: src/List.pm:893
+#: src/List.pm:926
 msgid "Who can view list information"
 msgstr ""
 
@@ -5103,12 +5268,17 @@ msgstr ""
 msgid "Wrong parameters"
 msgstr ""
 
+#: web_tt2/error.tt2:49
+#. (u_err.argument)
+msgid "Wrong value for parameter %1"
+msgstr ""
+
 #: web_tt2/error.tt2:46
 #. (u_err.email)
 msgid "You are already logged in as %1"
 msgstr ""
 
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 #. (u_err.list)
 msgid "You are already subscribed to the list %1"
 msgstr ""
@@ -5118,7 +5288,7 @@ msgstr ""
 msgid "You are already subscriber of list %1"
 msgstr ""
 
-#: web_tt2/error.tt2:60
+#: web_tt2/error.tt2:61
 #. (u_err.list)
 msgid "You are not subscribed to list %1"
 msgstr ""
@@ -5167,7 +5337,7 @@ msgid "You can logout (deletion of the cookie) at any time using logout button."
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:17
-msgid "You can put multiple commands in a message. These commands must appear in the message body and each line must contain only one command. The message body is ignored if the Content-Type is different from text/plain but even with crasy mailer using multipart and text/html for any message, commands in the subject are recognized."
+msgid "You can put multiple commands in a message. These commands must appear in the message body and each line must contain only one command."
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:108
@@ -5178,11 +5348,15 @@ msgstr ""
 msgid "You can subscribe again :"
 msgstr ""
 
-#: web_tt2/error.tt2:52
+#: web_tt2/suboptions.tt2:66
+msgid "You can upload your picture below ; it will be available in the list review page. The picture should use a standard format (gif, jpp, jpeg or png) and its size should not exceed 100 Kb."
+msgstr ""
+
+#: web_tt2/error.tt2:53
 msgid "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "You did not select an action to perform"
 msgstr ""
 
@@ -5216,7 +5390,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/error.tt2:128 web_tt2/error.tt2:49
+#: web_tt2/error.tt2:129 web_tt2/error.tt2:50
 msgid "You need to login"
 msgstr ""
 
@@ -5229,7 +5403,7 @@ msgstr ""
 msgid "You need to login."
 msgstr ""
 
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 msgid "You need to provide list name"
 msgstr ""
 
@@ -5290,7 +5464,7 @@ msgstr ""
 msgid "You won't receive the signed messages from your lists."
 msgstr ""
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 #. (u_err.dir)
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr ""
@@ -5423,6 +5597,16 @@ msgid ""
 "You are not allowed to send this message for the following reason :"
 msgstr ""
 
+#: mail_tt2/message_report.tt2:115
+#. (key,listname)
+msgid "Your message for list '%2' with the %1 ID has been confirmed ; it will be distributed soon."
+msgstr ""
+
+#: mail_tt2/message_report.tt2:111
+#. (key,listname)
+msgid "Your message for list '%2' with the %1 ID has been confirmed and distributed."
+msgstr ""
+
 #: mail_tt2/reject.tt2:2
 msgid "Your message has been rejected."
 msgstr ""
@@ -5450,8 +5634,12 @@ msgstr ""
 msgid "Your password has been sent to your email address %1.<br />Please check your e-mail box to provide your password below."
 msgstr ""
 
-#: web_tt2/error.tt2:53
+#: web_tt2/error.tt2:54
 msgid "Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder"
+msgstr ""
+
+#: web_tt2/suboptions.tt2:83
+msgid "Your picture"
 msgstr ""
 
 #: web_tt2/login_menu.tt2:31
@@ -5530,7 +5718,7 @@ msgstr ""
 msgid "access"
 msgstr ""
 
-#: src/List.pm:1196 src/List.pm:341
+#: src/List.pm:1235 src/List.pm:341
 msgid "access right"
 msgstr ""
 
@@ -5558,7 +5746,7 @@ msgstr ""
 msgid "admin"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:107
+#: mail_tt2/listmaster_notification.tt2:127
 #. (param0)
 msgid "admins update failed for list %1"
 msgstr ""
@@ -5607,7 +5795,7 @@ msgstr ""
 msgid "anyone, notification is sent to list owner"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:260
+#: mail_tt2/listmaster_notification.tt2:280
 msgid "auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
 
@@ -5623,7 +5811,7 @@ msgstr ""
 msgid "bounce score"
 msgstr ""
 
-#: web_tt2/review.tt2:163
+#: web_tt2/review.tt2:173
 msgid "bouncing"
 msgstr ""
 
@@ -5647,7 +5835,7 @@ msgstr ""
 msgid "case sensitive"
 msgstr ""
 
-#: src/List.pm:819
+#: src/List.pm:852
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
@@ -5691,7 +5879,7 @@ msgstr ""
 msgid "concealed"
 msgstr ""
 
-#: src/List.pm:854
+#: src/List.pm:887
 msgid "connection options"
 msgstr ""
 
@@ -5701,6 +5889,10 @@ msgstr ""
 
 #: src/etc/create_list_templates/hotline/comment.tt2:5 src/etc/create_list_templates/private_working_group/comment.tt2:5
 msgid "controlled subscription"
+msgstr ""
+
+#: web_tt2/ls_templates.tt2:112 web_tt2/ls_templates.tt2:132 web_tt2/ls_templates.tt2:76 web_tt2/ls_templates.tt2:92
+msgid "cp"
 msgstr ""
 
 #: mail_tt2/x509-user-cert-missing.tt2:2
@@ -5720,23 +5912,23 @@ msgstr ""
 msgid "data location URL"
 msgstr ""
 
-#: src/List.pm:850
+#: src/List.pm:883
 msgid "database name"
 msgstr ""
 
-#: src/List.pm:845
+#: src/List.pm:878
 msgid "database port"
 msgstr ""
 
-#: src/List.pm:836
+#: src/List.pm:869
 msgid "database type"
 msgstr ""
 
-#: src/List.pm:1012 src/List.pm:551
+#: src/List.pm:1045 src/List.pm:551
 msgid "datasource parameters"
 msgstr ""
 
-#: src/List.pm:1170 src/List.pm:912
+#: src/List.pm:1203 src/List.pm:945
 msgid "date"
 msgstr ""
 
@@ -5744,7 +5936,7 @@ msgstr ""
 msgid "days"
 msgstr ""
 
-#: web_tt2/edit_list_request.tt2:405
+#: web_tt2/copy_template.tt2:26 web_tt2/edit_list_request.tt2:405
 msgid "default"
 msgstr ""
 
@@ -5784,15 +5976,19 @@ msgstr ""
 msgid "directory of lists"
 msgstr ""
 
+#: web_tt2/ls_templates.tt2:33
+msgid "distrib"
+msgstr ""
+
 #: web_tt2/sigrequest.tt2:34 web_tt2/sigrequest.tt2:63 web_tt2/subrequest.tt2:27 web_tt2/subrequest.tt2:57
 msgid "e-mail address"
 msgstr ""
 
-#: web_tt2/d_read.tt2:246 web_tt2/d_read.tt2:248 web_tt2/search_user.tt2:66
+#: web_tt2/d_read.tt2:246 web_tt2/d_read.tt2:248 web_tt2/ls_templates.tt2:111 web_tt2/ls_templates.tt2:131 web_tt2/ls_templates.tt2:91 web_tt2/search_user.tt2:66
 msgid "edit"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:89
+#: mail_tt2/listmaster_notification.tt2:109
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
@@ -5806,11 +6002,11 @@ msgstr ""
 msgid "editor rejection message"
 msgstr ""
 
-#: src/List.pm:521 src/List.pm:977 web_tt2/login_menu.tt2:66 web_tt2/loginbanner.tt2:75 web_tt2/sso_login.tt2:54
+#: src/List.pm:1010 src/List.pm:521 web_tt2/login_menu.tt2:66 web_tt2/loginbanner.tt2:75 web_tt2/sso_login.tt2:54
 msgid "email address"
 msgstr ""
 
-#: src/List.pm:1120 src/List.pm:1125
+#: src/List.pm:1153 src/List.pm:1158
 msgid "email address protection method"
 msgstr ""
 
@@ -5826,15 +6022,15 @@ msgstr ""
 msgid "entire word"
 msgstr ""
 
-#: src/List.pm:859
+#: src/List.pm:892
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:1165 src/List.pm:908
+#: src/List.pm:1198 src/List.pm:941
 msgid "epoch date"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:159
+#: mail_tt2/listmaster_notification.tt2:179
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
@@ -5854,31 +6050,31 @@ msgstr ""
 msgid "filter"
 msgstr ""
 
-#: src/List.pm:737
+#: src/List.pm:755
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:721
+#: src/List.pm:739
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:716
+#: src/List.pm:734
 msgid "first-level filter"
 msgstr ""
 
-#: src/List.pm:743
+#: src/List.pm:761
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:731
+#: src/List.pm:749
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:726
+#: src/List.pm:744
 msgid "first-level selection"
 msgstr ""
 
-#: src/List.pm:710
+#: src/List.pm:728
 msgid "first-level suffix"
 msgstr ""
 
@@ -5904,7 +6100,7 @@ msgstr ""
 msgid "frequency"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:59
+#: web_tt2/editsubscriber.tt2:65
 #. (current_subscriber.first_bounce,current_subscriber.last_bounce)
 msgid "from %1 to %2"
 msgstr ""
@@ -5941,7 +6137,7 @@ msgstr ""
 msgid "impossible"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:83
+#: mail_tt2/listmaster_notification.tt2:103
 msgid "incorrect format of edit_list.conf"
 msgstr ""
 
@@ -5970,7 +6166,7 @@ msgid "just for listmaster"
 msgstr ""
 
 #: web_tt2/edit_template.tt2:19
-msgid "language"
+msgid "language : "
 msgstr ""
 
 #: web_tt2/rss_request.tt2:38
@@ -5985,16 +6181,16 @@ msgstr ""
 msgid "latest lists"
 msgstr ""
 
-#: web_tt2/search_user.tt2:8
+#: web_tt2/copy_template.tt2:20 web_tt2/search_user.tt2:8
 msgid "list"
 msgstr ""
 
-#: web_tt2/dump_scenario.tt2:30
+#: web_tt2/dump_scenario.tt2:30 web_tt2/ls_templates.tt2:36
 #. (list)
 msgid "list %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:116 mail_tt2/listmaster_notification.tt2:127 mail_tt2/listmaster_notification.tt2:138 mail_tt2/listmaster_notification.tt2:148 mail_tt2/listmaster_notification.tt2:169 mail_tt2/listmaster_notification.tt2:180 mail_tt2/listmaster_notification.tt2:190 mail_tt2/listmaster_notification.tt2:200
+#: mail_tt2/listmaster_notification.tt2:136 mail_tt2/listmaster_notification.tt2:147 mail_tt2/listmaster_notification.tt2:158 mail_tt2/listmaster_notification.tt2:168 mail_tt2/listmaster_notification.tt2:189 mail_tt2/listmaster_notification.tt2:200 mail_tt2/listmaster_notification.tt2:210 mail_tt2/listmaster_notification.tt2:220
 #. (param0)
 msgid "list %1 in status error_config"
 msgstr ""
@@ -6041,10 +6237,6 @@ msgstr ""
 msgid "list subject"
 msgstr ""
 
-#: web_tt2/ls_templates.tt2:31
-msgid "list templates"
-msgstr ""
-
 #: wwsympa/wwslib.pm:56
 msgid "listed in the list review page"
 msgstr ""
@@ -6085,7 +6277,7 @@ msgstr ""
 msgid "moderated for subscribers"
 msgstr ""
 
-#: src/List.pm:531 src/List.pm:987
+#: src/List.pm:1020 src/List.pm:531
 msgid "name"
 msgstr ""
 
@@ -6170,7 +6362,7 @@ msgstr ""
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
-#: src/List.pm:1063
+#: src/List.pm:1096
 msgid "other email address"
 msgstr ""
 
@@ -6217,7 +6409,7 @@ msgstr ""
 msgid "password: %1"
 msgstr ""
 
-#: src/List.pm:1224
+#: src/List.pm:1263
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
@@ -6229,11 +6421,11 @@ msgstr ""
 msgid "private information"
 msgstr ""
 
-#: src/List.pm:992
+#: src/List.pm:1025
 msgid "private informations"
 msgstr ""
 
-#: src/List.pm:1022 src/List.pm:997
+#: src/List.pm:1030 src/List.pm:1055
 msgid "profile"
 msgstr ""
 
@@ -6277,11 +6469,11 @@ msgstr ""
 msgid "purge of orphan entries in user table every month"
 msgstr ""
 
-#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:41 web_tt2/review.tt2:229 web_tt2/review.tt2:51 web_tt2/review.tt2:77 web_tt2/reviewbouncing.tt2:103
+#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:47 web_tt2/review.tt2:250 web_tt2/review.tt2:54 web_tt2/review.tt2:82 web_tt2/reviewbouncing.tt2:103
 msgid "quiet"
 msgstr ""
 
-#: src/List.pm:1111 src/List.pm:1203
+#: src/List.pm:1144 src/List.pm:1242
 msgid "quota"
 msgstr ""
 
@@ -6289,7 +6481,7 @@ msgstr ""
 msgid "reception"
 msgstr ""
 
-#: src/List.pm:1017 src/List.pm:357 src/List.pm:471 src/List.pm:526 src/List.pm:556 src/List.pm:982
+#: src/List.pm:1015 src/List.pm:1050 src/List.pm:357 src/List.pm:471 src/List.pm:526 src/List.pm:556
 msgid "reception mode"
 msgstr ""
 
@@ -6309,27 +6501,27 @@ msgstr ""
 msgid "remind message sent to subscribers every year"
 msgstr ""
 
-#: src/List.pm:625 src/List.pm:689 src/List.pm:802 src/List.pm:841
+#: src/List.pm:625 src/List.pm:707 src/List.pm:835 src/List.pm:874
 msgid "remote host"
 msgstr ""
 
-#: src/List.pm:831
+#: src/List.pm:864
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:609 src/List.pm:642 src/List.pm:706 src/List.pm:868
+#: src/List.pm:609 src/List.pm:642 src/List.pm:724 src/List.pm:901
 msgid "remote password"
 msgstr ""
 
-#: src/List.pm:814
+#: src/List.pm:847
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:631 src/List.pm:695 src/List.pm:808
+#: src/List.pm:631 src/List.pm:713 src/List.pm:841
 msgid "remote port"
 msgstr ""
 
-#: src/List.pm:602 src/List.pm:636 src/List.pm:700 src/List.pm:863
+#: src/List.pm:602 src/List.pm:636 src/List.pm:718 src/List.pm:896
 msgid "remote user"
 msgstr ""
 
@@ -6349,7 +6541,7 @@ msgstr ""
 msgid "requires authentication then owner approval"
 msgstr ""
 
-#: src/List.pm:1068
+#: src/List.pm:1101
 msgid "respect of existing header field"
 msgstr ""
 
@@ -6406,6 +6598,14 @@ msgstr ""
 msgid "results by page"
 msgstr ""
 
+#: web_tt2/ls_templates.tt2:113 web_tt2/ls_templates.tt2:133 web_tt2/ls_templates.tt2:93
+msgid "rm"
+msgstr ""
+
+#: web_tt2/copy_template.tt2:19 web_tt2/ls_templates.tt2:35
+msgid "robot"
+msgstr ""
+
 #: web_tt2/dump_scenario.tt2:29
 #. (robot)
 msgid "robot %1"
@@ -6439,31 +6639,31 @@ msgstr ""
 msgid "search scope"
 msgstr ""
 
-#: src/List.pm:775
+#: src/List.pm:793
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:759
+#: src/List.pm:777
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:753
+#: src/List.pm:771
 msgid "second-level filter template"
 msgstr ""
 
-#: src/List.pm:781
+#: src/List.pm:799
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:769
+#: src/List.pm:787
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:764
+#: src/List.pm:782
 msgid "second-level selection"
 msgstr ""
 
-#: src/List.pm:747
+#: src/List.pm:765
 msgid "second-level suffix template"
 msgstr ""
 
@@ -6488,8 +6688,12 @@ msgstr ""
 msgid "session"
 msgstr ""
 
-#: src/List.pm:614 src/List.pm:678 src/List.pm:785 src/List.pm:824 src/List.pm:882
+#: src/List.pm:614 src/List.pm:678 src/List.pm:803 src/List.pm:857 src/List.pm:915
 msgid "short name for this source"
+msgstr ""
+
+#: web_tt2/copy_template.tt2:18 web_tt2/ls_templates.tt2:34
+msgid "site"
 msgstr ""
 
 #: wwsympa/wwslib.pm:35
@@ -6516,7 +6720,7 @@ msgstr ""
 msgid "subscribers only"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:96
+#: mail_tt2/listmaster_notification.tt2:116
 #. (param0)
 msgid "subscribers update failed for list %1"
 msgstr ""
@@ -6545,6 +6749,10 @@ msgstr ""
 msgid "tag this mail for deletion"
 msgstr ""
 
+#: web_tt2/ls_templates.tt2:32
+msgid "template name"
+msgstr ""
+
 #: wwsympa/wwslib.pm:40
 msgid "text only mode"
 msgstr ""
@@ -6561,7 +6769,7 @@ msgstr ""
 msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
-#: src/List.pm:1007 src/List.pm:546
+#: src/List.pm:1040 src/List.pm:546
 msgid "the datasource"
 msgstr ""
 
@@ -6579,7 +6787,8 @@ msgid "this sentence"
 msgstr ""
 
 #: web_tt2/edit_template.tt2:13
-msgid "this template is defined for all lists of robot [%robot %] unless it is redefined for some particular list"
+#. (robot)
+msgid "this template is defined for all lists of robot %1 unless it is redefined for some particular list"
 msgstr ""
 
 #: web_tt2/edit_template.tt2:15
@@ -6587,7 +6796,8 @@ msgid "this template is defined for all robots unless  it is redefined for some 
 msgstr ""
 
 #: web_tt2/edit_template.tt2:10
-msgid "this template is defined for list"
+#. (list,robot)
+msgid "this template is defined for list %1@%2"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:381
@@ -6622,8 +6832,16 @@ msgstr ""
 msgid "urlize mode"
 msgstr ""
 
-#: src/List.pm:1058 web_tt2/help_editlist.tt2:130
+#: src/List.pm:684 src/List.pm:809
+msgid "use SSL (LDAPS)"
+msgstr ""
+
+#: src/List.pm:1091 web_tt2/help_editlist.tt2:130
 msgid "value"
+msgstr ""
+
+#: web_tt2/ls_templates.tt2:75
+msgid "view"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:85
@@ -6646,11 +6864,11 @@ msgstr ""
 msgid "welcome message"
 msgstr ""
 
-#: src/List.pm:917
+#: src/List.pm:950
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/List.pm:1176
+#: src/List.pm:1209
 msgid "who updated the config"
 msgstr ""
 

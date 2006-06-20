@@ -61,9 +61,9 @@
 [% IF pictures_display %]
         <div class="block">
           <strong>
-          [%|loc%]Changing your picture for this list[%END%]
+          [%|loc%]Setting your picture for this list[%END%]
           </strong><br />
-          <p>[%|loc%]You have the possibility of displaying your picture in the subscribers list. This one must be on gif, jpp, jpeg or png format and doesn't have to exceed 100 Ko.[%END%]</p><br />
+          <p>[%|loc%]You can upload your picture below ; it will be available in the list review page. The picture should use a standard format (gif, jpp, jpeg or png) and its size should not exceed 100 Kb.[%END%]</p><br />
  	 
  	 <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
             <label><td><input type="file" name="uploaded_file"/></label>

@@ -75,7 +75,7 @@ my %Default_Conf =
      'key_passwd' => '',
      'ssl_cert_dir' => '--EXPL_DIR--/X509-user-certs',
      'crl_dir' => '--EXPL_DIR--/crl',
-     'umask'   => '027',
+     'umask'   => '022',
      'syslog'  => 'LOCAL1',
      'log_level'  => 0,
      'nrcpt'   => 25,
@@ -579,10 +579,11 @@ sub load_robots {
 	#$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
 	$robot_conf->{$robot}{'verp_rate'} ||= $Conf{'verp_rate'};
 	$robot_conf->{$robot}{'use_blacklist'} ||= $Conf{'use_blacklist'};
-	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'use_content_url'};
-	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'use_content_path'};
-	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'pictures_path'}.'/pictures/' if ($robot_conf->{$robot}{'pictures_path'});
-	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'pictures_url'}.'/pictures/' if ($robot_conf->{$robot}{'pictures_url'}) ;
+
+	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'static_content_url'};
+	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'static_content_path'};
+	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_url'}) ;
+	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'static_content_path'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_path'});
 	$robot_conf->{$robot}{'pictures_feature'} ||= $Conf{'pictures_feature'};
 
 	# split action list for blacklist usage
@@ -642,38 +643,20 @@ sub checkfiles_as_root {
     }
 
     # create static content directory
-    if ($Conf{'static_content_path'} ne ''){
-	# printf STDERR 'static_content_file in use %s',$Conf{'static_content_path'};
-	unless (-d $Conf{'static_content_path'}){
-	    unless ( mkdir ($Conf{'static_content_path'}, 0775)) {
-		do_log('err', 'Unable to create directory %s',$Conf{'static_content_path'});
-		printf STDERR 'Unable to create directory %s',$Conf{'static_content_path'};
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $dir = &get_robot_conf($robot, 'static_content_path');
+	if ($dir ne '' && ! -d $dir){
+	    unless ( mkdir ($dir, 0775)) {
+		&do_log('err', 'Unable to create directory %s : %s', $dir, $!);
+		printf STDERR 'Unable to create directory %s : $!',$dir, $!;
 		$config_err++;
 	    }
-	    # printf STDERR 'created directory %s',$Conf{'static_content_path'};
-	    `chown --USER-- $Conf{'static_content_path'}`;
-	    `chgrp --GROUP-- $Conf{'static_content_path'}`;
-	}
-    }
-    
-    #create static content dir for each virtual robot
-    foreach my $robot (keys %{$Conf{'robots'}}) {
-	my $dir = $Conf{'robots'}{$robot}{'static_content_path'};
-	if ($dir ne ''){
-	    # printf STDERR 'static_content_file in use %s',$dir;
-	    unless (-d $dir){
-		unless ( mkdir ($dir, 0775)) {
-		    do_log('err', 'Unable to create directory %s',$dir);
-		    printf STDERR 'Unable to create directory %s',$dir;
-		    $config_err++;
-		}
-		# printf STDERR 'created directory %s',$dir;
-		`chown --USER-- $dir`;
-		`chgrp --GROUP-- $dir`;
-	    }
-	}
-    }
 
+	    # printf STDERR 'created directory %s',$Conf{'static_content_path'};
+	    `chown --USER-- $dir`;
+	    `chgrp --GROUP-- $dir`;
+	}
+    }
 
     return 1 ;
 }
@@ -749,49 +732,31 @@ sub checkfiles {
 	$config_err++;
     }
 
-    #  create pictures dir if usefull
-    if (($Conf{'static_content_path'} ne '') && (-d $Conf{'static_content_path'})) {
-	unless (-f $Conf{'static_content_path'}.'/index.html'){
-	    unless(open (FF, ">$Conf{'static_content_path'}".'/index.html')) {
-		&do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $Conf{'static_content_path'});
-	    }
-	    close FF;		
-	}
-	if ( $Conf{'pictures_feature'} eq 'on') {
-	    unless (-d $Conf{'static_content_path'}.'/pictures'){
-		unless (mkdir ($Conf{'static_content_path'}.'/pictures', 0775)) {
-		    do_log('err', 'Unable to create directory %s/pictures',$Conf{'static_content_path'});
-		    $config_err++;
-		}
-		unless (-f $Conf{'static_content_path'}.'/pictures/index.html'){
-		    unless(open (FF, ">$Conf{'static_content_path'}".'/pictures/index.html')) {
-			&do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $Conf{'static_content_path'});
-		    }
-		    close FF;
-		}
-	    }		
-	}
-    }
     #  create pictures dir if usefull for each robot
     foreach my $robot (keys %{$Conf{'robots'}}) {
-	my $dir = $Conf{'robots'}{$robot}{'static_content_path'};
-	if (($dir ne '') && (-d $dir)) {
+	my $dir = &get_robot_conf($robot, 'static_content_path');
+	if ($dir ne '' && -d $dir) {
 	    unless (-f $dir.'/index.html'){
 		unless(open (FF, ">$dir".'/index.html')) {
-		    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $dir);
+		    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory : %s', $dir, $!);
 		}
 		close FF;		
 	    }
+	    
 	    # create picture dir
-	    if ( $Conf{'robots'}{$robot}{'pictures_feature'} eq 'on') {
-		unless (-d $dir.'/pictures'){
-		    unless (mkdir ($dir.'/pictures', 0775)) {
-			do_log('err', 'Unable to create directory %s/pictures',$dir);
+	    if ( &get_robot_conf($robot, 'pictures_feature') eq 'on') {
+		my $pictures_dir = &get_robot_conf($robot, 'pictures_path');
+		unless (-d $pictures_dir){
+		    unless (mkdir ($pictures_dir, 0775)) {
+			do_log('err', 'Unable to create directory %s',$pictures_dir);
 			$config_err++;
 		    }
-		    unless (-f $dir.'/pictures/index.html'){
-			unless(open (FF, ">$dir".'/pictures/index.html')) {
-			    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory', $dir);
+		    chmod 0775, $pictures_dir;
+
+		    my $index_path = $pictures_dir.'/index.html';
+		    unless (-f $index_path){
+			unless (open (FF, ">$index_path")) {
+			    &do_log('err', 'Unable to create %s as an empty file to protect directory', $index_path);
 			}
 			close FF;
 		    }
