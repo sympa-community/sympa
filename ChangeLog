@@ -1,3 +1,150 @@
+2006-06-22 14:05  sympa-authors
+
+	* .version: Perpare 5.3a.4
+
+2006-06-20 17:45  sympa-authors
+
+	* INSTALL, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node28.html, doc/html/node29.html,
+	  doc/html/node3.html, doc/html/node30.html, doc/html/node31.html,
+	  doc/html/node4.html, doc/html/node5.html, doc/html/node6.html,
+	  doc/html/node7.html, doc/html/node8.html, doc/html/node9.html,
+	  doc/html/sympa.html, doc/html/sympa.ps, src/List.pm,
+	  src/sympa_wizard.pl,
+	  src/etc/create_list_templates/discussion_list/config.tt2,
+	  src/etc/create_list_templates/private_working_group/config.tt2,
+	  web_tt2/review.tt2, wwsympa/wwsympa.fcgi: Changes related to the
+	  new pictures feature : - the 'pictures_feature' robot parameter
+	  is now considered a default for the list - added the feature to
+	  appropriate list templates - changed the order of review page
+	  columns - documented how to setup an Alias for static_content -
+	  added static_content path and url to the wizard
+
+2006-06-20 17:08  sympa-authors
+
+	* po/cs.po, po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/it.po, po/ja.po, po/nb_NO.po,
+	  po/nl.po, po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po,
+	  po/sv.po, po/sympa.pot, po/tr.po, po/zh_CN.po, po/zh_TW.po,
+	  src/Conf.pm, web_tt2/suboptions.tt2, wwsympa/wwsympa.fcgi:
+	  Changes related to the new pictures feature :  - changed default
+	  sympa umask  - fixed virtual robot parameter definition  - added
+	  chmod while creating dir/files  - changed explanation in
+	  editsubscriber page  - translated to french
+
+2006-06-19 10:58  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/Conf.pm, src/List.pm, src/sympa.pl,
+	  wwsympa/wwsympa.fcgi:
+
+	  New organization of users pictures. Picturees are stores in a
+	  directory named "pictures" which is a sub directory of
+	  'static_contennt_path' . static_contennt_path is a parameter that
+	  can be specified in robot.conf or sympa.conf. pictures must be
+	  served by apache under static_content_url.
+
+	  Pictures can be enabled with pictures_feature parameter in
+	  robot.conf (or sympa.conf) AND list config.
+
+2006-06-13 17:55  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/Conf.pm, src/List.pm, web_tt2/css.tt2,
+	  web_tt2/editsubscriber.tt2, web_tt2/review.tt2,
+	  web_tt2/suboptions.tt2, wwsympa/wwsympa.fcgi:
+
+	  Subscribers pictures feature set. Contrib from Adrien Brard.
+
+2006-06-13 14:17  sympa-authors
+
+	* mail_tt2/helpfile.tt2, web_tt2/Makefile, web_tt2/admin.tt2,
+	  web_tt2/css.tt2, web_tt2/edit_list_request.tt2,
+	  web_tt2/help_admin.tt2, web_tt2/fr_FR/help.tt2,
+	  web_tt2/fr_FR/help_admin.tt2, web_tt2/fr_FR/help_arc.tt2,
+	  web_tt2/fr_FR/help_introduction.tt2,
+	  web_tt2/fr_FR/help_listconfig.tt2,
+	  web_tt2/fr_FR/help_mail_commands.tt2,
+	  web_tt2/fr_FR/help_sendmsg.tt2, web_tt2/fr_FR/help_shared.tt2,
+	  web_tt2/fr_FR/help_user.tt2, wwsympa/wwsympa.fcgi: [Virginie
+	  Paitrault, Univ. Rennes 2] New user and admin web documentation.
+	  Currently in French only.
+
+2006-06-09 08:58  sympa-authors
+
+	* src/Conf.pm: Fix trusted_applications bug while listing robots in
+	  serveradmin page
+
+2006-06-08 14:45  sympa-authors
+
+	* check_perl_modules.pl, wwsympa/wwsympa.fcgi: Fix: language names
+	  were incorrectly encoded in drop-down web menu. The reason is
+	  that each language name is encoded with the associated charset.
+	  We now use the Encode module (added to the list of required
+	  modules) to decode and encode the language name
+
+2006-06-08 14:41  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Updated
+
+2006-06-08 14:38  sympa-authors
+
+	* po/en_US.po, src/Language.pm: Change: changed charset for English
+	  from us-ascii to utf-8
+
+2006-06-07 17:36  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: raise an error if no msgid is provided
+	  to do_send_me()
+
+2006-06-07 16:15  sympa-authors
+
+	* check_perl_modules.pl, doc/sympa.tex.tpl, wwsympa/wwsympa.fcgi:
+	  [M.Massar, univ Kaiserslautern] New feature: Sympa is now able to
+	  get the Email in SubjAltName.  As I was not able to find the
+	  mentioned patch to mod_ssl to get SSL_CLIENT_S_EMAIL exported, I
+	  wrote another patch based on SSL_CLIENT_CERT from "SSLOptions
+	  +ExportCertData"
+
+2006-06-06 17:57  sympa-authors
+
+	* mail_tt2/message_report.tt2, src/Commands.pm: Fix: use a better
+	  report when a message has been confirmed
+
+2006-06-06 16:20  sympa-authors
+
+	* .version, ChangeLog: Preparing a 5.3a.3 before adding trombi
+	  feature
+
 2006-06-06 15:50  sympa-authors
 
 	* src/Language.pm: [reported by P.Maes, Univ. Louvain] Fix:

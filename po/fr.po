@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2006-06-20 16:39+0200\n"
+"PO-Revision-Date: 2006-06-26 14:29+0200\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -362,7 +362,9 @@ msgstr "La liste '%1' existe déjà"
 msgid ""
 "( this template is defined for all lists of robot %1 unless it is redefined "
 "for some particular list )"
-msgstr "ce template est défini pour toutes les listes du robot %1 sauf si il est redéfini au niveau d'une liste"
+msgstr ""
+"ce template est défini pour toutes les listes du robot %1 sauf si il est "
+"redéfini au niveau d'une liste"
 
 #: web_tt2/view_template.tt2:17
 msgid ""
@@ -448,7 +450,7 @@ msgstr "Les archives "
 
 #: web_tt2/list_admin_menu.tt2:36
 msgid "-Blacklist"
-msgstr "Liste noir"
+msgstr "Liste noire"
 
 #: web_tt2/list_admin_menu.tt2:18
 msgid "-Bounces"
@@ -898,6 +900,11 @@ msgstr ""
 msgid "Blacklist"
 msgstr "Liste noire"
 
+# nlsref 16,7
+#: web_tt2/blacklist.tt2:3
+msgid "Blacklist management"
+msgstr "Gestion de la liste noire"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Contenu de message"
@@ -1254,6 +1261,15 @@ msgstr "Date de création"
 #: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Création de la liste"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr "La liste noire comporte %1 entrée(s)"
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
+msgstr "La liste noire est vide"
 
 #: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
@@ -2383,7 +2399,7 @@ msgid "Language of the list"
 msgstr "Langue de la liste"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "Mise à jour"
 
@@ -3093,8 +3109,8 @@ msgstr ""
 "les messages à destination de la liste seront retenus ; ils pourront être "
 "ultérieurement diffusés par le modérateur."
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Nom"
 
@@ -3337,6 +3353,16 @@ msgstr ""
 "La durée de vie de ce cookie est paramétrable via vos <strong>Préférences</"
 "strong>"
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+"Les opérations effectuées par les personnes listées dans la liste noire "
+"seront rejettées.\n"
+"La liste noire est active pour les opérations suivantes"
+
 #: web_tt2/remove_arc.tt2:5
 msgid ""
 "Operation successful. The message will be deleted as soon\n"
@@ -3501,7 +3527,7 @@ msgstr "Tache périodique d'expiration des abonnements"
 msgid "Periodical subscription reminder task"
 msgstr "Tâche périodique de rappel des abonnements"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr "Vignette"
 
@@ -3774,7 +3800,7 @@ msgstr "Reconstruire les archives"
 msgid "Received mega-bytes         :      %1"
 msgstr "Méga-octets reçus           :      %1"
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "Réception"
 
@@ -4332,7 +4358,7 @@ msgstr ""
 "supprimés.\n"
 "Les thèmes supprimés sont les suivants : "
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Sources"
 msgstr "Sources"
 
@@ -4349,7 +4375,7 @@ msgstr "Statut :"
 msgid "Status of the list"
 msgstr "Etat de la liste"
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 msgid "Sub date"
 msgstr "Abonné depuis"
 
@@ -4685,7 +4711,7 @@ msgstr "Nom du template"
 msgid "Template name : "
 msgstr "Nom du template"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 msgid "Template saved"
 msgstr "Template mis à jour"
 
@@ -6701,8 +6727,10 @@ msgid ""
 "page. The picture should use a standard format (gif, jpp, jpeg or png) and "
 "its size should not exceed 100 Kb."
 msgstr ""
-"Vous pouvez charger votre vignette ci-dessous ; elle apparaitra dans la page des\n"
-"abonnés de la liste. Cette vignette doit être un fichier à un format standard\n"
+"Vous pouvez charger votre vignette ci-dessous ; elle apparaitra dans la page "
+"des\n"
+"abonnés de la liste. Cette vignette doit être un fichier à un format "
+"standard\n"
 "(gif, jpp, jpeg ou png) et sa taille ne doit pas excéder 100 Ko."
 
 #: web_tt2/error.tt2:53
@@ -7321,6 +7349,20 @@ msgstr "Certificat pour authentification de la connection"
 msgid "change access"
 msgstr "Changer les droits"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr "le caractère # définit un commentaire"
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+"le caractère * correspond à un ensemble de caractères non définis. \n"
+"Exemple : \\\"*@spammer-domain.com\\\" correspond à n'importe quelle "
+"adresse\n"
+"email de ce domaine"
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 msgid "chronological"
@@ -7896,6 +7938,14 @@ msgstr "A : %1"
 msgid "one of these words"
 msgstr "Un de ces mots"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr "Un seul caractère * est autorisé par ligne"
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr "une seule adresse email par ligne"
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "propriétaire de liste seulement (et listmaster)"
@@ -8202,7 +8252,8 @@ msgstr "robot : %1"
 msgid "role"
 msgstr "profil"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 msgid "save"
 msgstr "Sauvegarder"
 

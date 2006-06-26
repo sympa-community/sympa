@@ -922,6 +922,11 @@ msgstr ""
 msgid "Blacklist"
 msgstr "恢複"
 
+#: web_tt2/blacklist.tt2:3
+#, fuzzy
+msgid "Blacklist management"
+msgstr "Bounces management"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Body"
@@ -1291,6 +1296,15 @@ msgstr ""
 # nlsref 16,12
 #: src/List.pm:452
 msgid "Creation of the list"
+msgstr ""
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
 msgstr ""
 
 #: web_tt2/choosepasswd.tt2:13
@@ -2398,7 +2412,7 @@ msgid "Language of the list"
 msgstr ""
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "最後更新"
 
@@ -3115,8 +3129,8 @@ msgid ""
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr ",AC{3F(B"
 
@@ -3358,6 +3372,13 @@ msgid ""
 "<em>cookie</em> is customizeable through your <strong>Preferences</strong>"
 msgstr ""
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+
 #: web_tt2/remove_arc.tt2:5
 msgid ""
 "Operation successful. The message will be deleted as soon\n"
@@ -3512,7 +3533,7 @@ msgstr ",AF>V$5=FZHU(B"
 msgid "Periodical subscription reminder task"
 msgstr ",AF>V$5=FZHU(B"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr ""
 
@@ -3794,7 +3815,7 @@ msgstr "重建歸檔"
 msgid "Received mega-bytes         :      %1"
 msgstr ""
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "接收"
 
@@ -4329,7 +4350,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 #, fuzzy
 msgid "Sources"
 msgstr "size=\"-1\"><b>定制</b"
@@ -4349,7 +4370,7 @@ msgstr "狀態: %1"
 msgid "Status of the list"
 msgstr ""
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 #, fuzzy
 msgid "Sub date"
 msgstr "按日期排序"
@@ -4669,7 +4690,7 @@ msgstr "郵遞論壇名"
 msgid "Template name : "
 msgstr "郵遞論壇名"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "刪除共享"
@@ -7149,6 +7170,16 @@ msgstr ""
 msgid "change access"
 msgstr "修改權限"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 msgid "chronological"
@@ -7749,6 +7780,14 @@ msgstr "收件者: %1"
 msgid "one of these words"
 msgstr "(所有的詞，"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr ""
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr ""
@@ -8088,7 +8127,8 @@ msgstr "寄件者: %1"
 msgid "role"
 msgstr "最舊的"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "保存"

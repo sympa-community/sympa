@@ -881,6 +881,11 @@ msgstr ""
 msgid "Blacklist"
 msgstr "do konference"
 
+#: web_tt2/blacklist.tt2:3
+#, fuzzy
+msgid "Blacklist management"
+msgstr "Správa chybných adres"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Tělo zprávy"
@@ -1241,6 +1246,15 @@ msgstr "Datum vytvoření"
 #: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Vytvoření konference"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
+msgstr ""
 
 #: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
@@ -2284,7 +2298,7 @@ msgid "Language of the list"
 msgstr "Jazyk konference"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "Poslední změna"
 
@@ -2974,8 +2988,8 @@ msgid ""
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Jméno"
 
@@ -3216,6 +3230,13 @@ msgstr ""
 "a informace o posledním přihlášení. Životnost cookies je možno \n"
 "nastavit v <strong>Nastavení</strong>"
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+
 #: web_tt2/remove_arc.tt2:5
 #, fuzzy
 msgid ""
@@ -3373,7 +3394,7 @@ msgstr "Periodická expirace přihlášení"
 msgid "Periodical subscription reminder task"
 msgstr "Periodická expirace přihlášení"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr ""
 
@@ -3629,7 +3650,7 @@ msgstr "Znovu sestavit archív"
 msgid "Received mega-bytes         :      %1"
 msgstr "Odesláno"
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "Způsob příjmu"
 
@@ -4152,7 +4173,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Sources"
 msgstr "Stav"
 
@@ -4168,7 +4189,7 @@ msgstr "Stav : %1"
 msgid "Status of the list"
 msgstr "Stav konference"
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 msgid "Sub date"
 msgstr "Setřídit podle data"
 
@@ -4473,7 +4494,7 @@ msgstr "Šablony"
 msgid "Template name : "
 msgstr "Šablony"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "Šablony"
@@ -6847,6 +6868,16 @@ msgstr ""
 msgid "change access"
 msgstr "změnit práva"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 #, fuzzy
@@ -7395,6 +7426,14 @@ msgstr "Pro: %1"
 msgid "one of these words"
 msgstr "jedno z těchto slov"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr ""
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "pouze vlastník (a správce)"
@@ -7692,7 +7731,8 @@ msgstr "Od: %1"
 msgid "role"
 msgstr "profil"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "Uložit"

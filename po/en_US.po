@@ -909,6 +909,11 @@ msgstr ""
 msgid "Blacklist"
 msgstr "to list"
 
+#: web_tt2/blacklist.tt2:3
+#, fuzzy
+msgid "Blacklist management"
+msgstr "Bounces management"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Body"
@@ -1281,6 +1286,15 @@ msgstr "Creation date"
 #: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Creation of the list"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
+msgstr ""
 
 #: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
@@ -2447,7 +2461,7 @@ msgid "Language of the list"
 msgstr "Language of the list"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "Last update"
 
@@ -3179,8 +3193,8 @@ msgstr ""
 "number of bounces exceeds this value, messages for the list are no longer\n"
 "              distributed.\n"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Name"
 
@@ -3435,6 +3449,13 @@ msgstr ""
 "information make your connection to WWSympa last. The lifetime of this\n"
 "<I>cookie</I> is customizeable through your <b>Preferences</b>\n"
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+
 #: web_tt2/remove_arc.tt2:5
 #, fuzzy
 msgid ""
@@ -3601,7 +3622,7 @@ msgstr "Available subscription options"
 msgid "Periodical subscription reminder task"
 msgstr "Available subscription options"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr ""
 
@@ -3871,7 +3892,7 @@ msgstr "Rebuild archive"
 msgid "Received mega-bytes         :      %1"
 msgstr "Sent mega-bytes             :      %1"
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "Reception"
 
@@ -4413,7 +4434,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Sources"
 msgstr "Sources"
 
@@ -4431,7 +4452,7 @@ msgstr "Status : %1"
 msgid "Status of the list"
 msgstr "Status of the list"
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 msgid "Sub date"
 msgstr "Sub date"
 
@@ -4767,7 +4788,7 @@ msgstr "Templates"
 msgid "Template name : "
 msgstr "Templates"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "Templates"
@@ -7397,6 +7418,16 @@ msgstr "certificate for authentication by remote Sympa"
 msgid "change access"
 msgstr "change access"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 #, fuzzy
@@ -7953,6 +7984,14 @@ msgstr "on %1"
 msgid "one of these words"
 msgstr "one of these words"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr ""
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "only owner (and listmaster)"
@@ -8254,7 +8293,8 @@ msgstr "From: %1"
 msgid "role"
 msgstr "profile"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "Save"

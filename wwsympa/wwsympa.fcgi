@@ -444,7 +444,7 @@ my %in_regexp = (
 		 'body' => '.+',
 		 'info' => '.+',
 		 'new_scenario_content' => '.+',
-                 'blacklist' => '.+',
+                 'blacklist' => '.*',
 
 		 ## Integer
 		 'page' => '\d+',
@@ -13831,7 +13831,7 @@ sub do_blacklist {
     my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
     $param->{'rows'} = 0 ;
 
-    if ($in{'blacklist'}){
+    if (defined $in{'blacklist'}){
 	&wwslog('info','do_blacklist : submit blacklist update');
 	my $dir = $list->{'dir'}.'/search_filters';
 	unless ((-d $dir) || mkdir ($dir, 0755)) {
@@ -13878,10 +13878,10 @@ sub do_blacklist {
 		$param->{'rows'} += 1;
 	    }
 	    close BLACKLIST;
-	}else{
-	    $param->{'blacklist'} = $file;
 	}
     }
+
+    return 1;
 }
 
 # output in text/plain format a scenario

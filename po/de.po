@@ -934,6 +934,13 @@ msgstr ""
 msgid "Blacklist"
 msgstr "an Liste"
 
+# #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#: web_tt2/blacklist.tt2:3
+#, fuzzy
+msgid "Blacklist management"
+msgstr "Verwaltung der Zustellfehler"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Nachrichtentext"
@@ -1320,6 +1327,15 @@ msgstr "Erstellungsdatum"
 #: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Erzeugung der Liste"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
+msgstr ""
 
 #: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
@@ -2521,7 +2537,7 @@ msgid "Language of the list"
 msgstr "Sprache der Liste"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "Letzte Aktualisierung"
 
@@ -3276,8 +3292,8 @@ msgstr ""
 "diesen Wert überschreitet, werden Nachrichten nicht mehr an die Liste "
 "weitergeleitet."
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Name"
 
@@ -3531,6 +3547,13 @@ msgstr ""
 "Die Lebensdauer dieses <em>Cookies<em kann in Ihren <em>Einstellungen</em> "
 "geändert werden."
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+
 #: web_tt2/remove_arc.tt2:5
 msgid ""
 "Operation successful. The message will be deleted as soon\n"
@@ -3697,7 +3720,7 @@ msgstr "Periodische Aufgabe zum Abonnement-Ablauf"
 msgid "Periodical subscription reminder task"
 msgstr "Periodische Aufgabe zum Abonnement-Ablauf"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr ""
 
@@ -3962,7 +3985,7 @@ msgstr "Archiv neu aufbauen"
 msgid "Received mega-bytes         :      %1"
 msgstr "Empfangene MB                   :      %1"
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "Empfang"
 
@@ -4518,7 +4541,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Sources"
 msgstr "Quellen"
 
@@ -4535,7 +4558,7 @@ msgstr "Status :"
 msgid "Status of the list"
 msgstr "Status der Liste"
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 msgid "Sub date"
 msgstr "Datum"
 
@@ -4876,7 +4899,7 @@ msgstr "Name der Vorlage"
 msgid "Template name : "
 msgstr "Name der Vorlage"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 msgid "Template saved"
 msgstr "Vorlage gespeichert"
 
@@ -7575,6 +7598,16 @@ msgstr "Zertifikat zur Authentifizierung bei einer entfernten Sympa Instanz"
 msgid "change access"
 msgstr "Zugriff ändern"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 msgid "chronological"
@@ -8157,6 +8190,14 @@ msgstr "auf %1"
 msgid "one of these words"
 msgstr "eines dieser Wörter"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr ""
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "nur Listen-Eigentümer (und Listmaster)"
@@ -8471,7 +8512,8 @@ msgstr "Absender: %1"
 msgid "role"
 msgstr "Profil"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 msgid "save"
 msgstr "Speichern"
 

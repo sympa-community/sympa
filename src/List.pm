@@ -7561,8 +7561,10 @@ sub search{
     # &do_log('info', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
     
     if ($filter_file =~ /\.ldap$/) {	
-	my $file;
-	unless ($file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list)) {
+	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	
+	## Raise an error except for blacklist.txt
+	if ($filter_file ne 'blacklist.txt' && ! $file) {
 	    &do_log('err', 'Could not find search filter %s', $filter_file);
 	    return undef;
 	}   

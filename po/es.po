@@ -891,6 +891,12 @@ msgstr ""
 msgid "Blacklist"
 msgstr "Restaurar la lista"
 
+# #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
+#: web_tt2/blacklist.tt2:3
+#, fuzzy
+msgid "Blacklist management"
+msgstr "Administración de Rebotados"
+
 #: web_tt2/arcsearch_form.tt2:63
 msgid "Body"
 msgstr "Cuerpo"
@@ -1255,6 +1261,15 @@ msgstr "Fecha de creación"
 #: src/List.pm:452
 msgid "Creation of the list"
 msgstr "Creación de la lista"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:21
+msgid "Current blacklist contain %1 line(s)"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:19
+msgid "Current blacklist is empty"
+msgstr ""
 
 #: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
@@ -2405,7 +2420,7 @@ msgid "Language of the list"
 msgstr "Idioma de la lista"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:136
+#: web_tt2/review.tt2:140
 msgid "Last update"
 msgstr "Ult. actualización"
 
@@ -3125,8 +3140,8 @@ msgid ""
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:109
-#: web_tt2/review.tt2:112 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
+#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Nombre"
 
@@ -3359,6 +3374,13 @@ msgid ""
 "<em>cookie</em> is customizeable through your <strong>Preferences</strong>"
 msgstr ""
 
+#: web_tt2/blacklist.tt2:7
+msgid ""
+"Operation requested by users which email is listed in the blacklist file are "
+"rejected. The\n"
+"blacklist is in use for the following operation"
+msgstr ""
+
 #: web_tt2/remove_arc.tt2:5
 msgid ""
 "Operation successful. The message will be deleted as soon\n"
@@ -3514,7 +3536,7 @@ msgstr "Opciones de suscripción sobre expiración"
 msgid "Periodical subscription reminder task"
 msgstr "Opciones de suscripción sobre expiración"
 
-#: web_tt2/review.tt2:143
+#: web_tt2/review.tt2:109
 msgid "Picture"
 msgstr ""
 
@@ -3772,7 +3794,7 @@ msgstr "Reconstruir archivo"
 msgid "Received mega-bytes         :      %1"
 msgstr "Megabytes recividos: %1"
 
-#: web_tt2/review.tt2:117
+#: web_tt2/review.tt2:121
 msgid "Reception"
 msgstr "Recepción"
 
@@ -4313,7 +4335,7 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:121 web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Sources"
 msgstr ""
 
@@ -4331,7 +4353,7 @@ msgstr "Estado : %1"
 msgid "Status of the list"
 msgstr "Estado de la lista"
 
-#: web_tt2/review.tt2:130 web_tt2/review.tt2:133
+#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
 #, fuzzy
 msgid "Sub date"
 msgstr "Ordenar por fecha"
@@ -4638,7 +4660,7 @@ msgstr "Nombre del template"
 msgid "Template name : "
 msgstr "Nombre del template"
 
-#: web_tt2/edit_template.tt2:39
+#: web_tt2/blacklist.tt2:38 web_tt2/edit_template.tt2:39
 msgid "Template saved"
 msgstr "Template guardado."
 
@@ -7038,6 +7060,16 @@ msgstr ""
 msgid "change access"
 msgstr "cambiar acceso"
 
+#: web_tt2/blacklist.tt2:11
+msgid "char # introduce a comment"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:12
+msgid ""
+"char * match any string. Example : \"*@spammer-domain.com\" match any sender "
+"from that exact domai"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
 #: src/etc/mhonarc-ressources.tt2:377 src/etc/mhonarc-ressources.tt2:381
 msgid "chronological"
@@ -7593,6 +7625,14 @@ msgstr "Para: %1"
 msgid "one of these words"
 msgstr "(Todas estas palabras,"
 
+#: web_tt2/blacklist.tt2:13
+msgid "only one char * is autorized in a line"
+msgstr ""
+
+#: web_tt2/blacklist.tt2:10
+msgid "only one email or expression by line"
+msgstr ""
+
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "sólo propietario (y listmaster)"
@@ -7895,7 +7935,8 @@ msgstr "De: %1"
 msgid "role"
 msgstr "perfil"
 
-#: web_tt2/dump_scenario.tt2:35 web_tt2/edit_template.tt2:36
+#: web_tt2/blacklist.tt2:36 web_tt2/dump_scenario.tt2:35
+#: web_tt2/edit_template.tt2:36
 msgid "save"
 msgstr ""
 

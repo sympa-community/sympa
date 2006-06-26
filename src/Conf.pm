@@ -217,7 +217,7 @@ my %Default_Conf =
      'verp_rate' => '0%', 
      'pictures_max_size' => 102400, ## 100Kb
      'pictures_feature' => 'off',
-     'use_blacklist' => 'send',
+     'use_blacklist' => 'send,subscribe',
      'static_content_url' => '',
      'static_content_path' => ''
      );
