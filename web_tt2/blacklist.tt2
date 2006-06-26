@@ -1,0 +1,42 @@
+<!-- $Id$ -->
+
+<h2>[%|loc%]Blacklist management[%END%]</h2><br />
+
+<p>
+[%|loc%]Operation requested by users which email is listed in the blacklist file are rejected. The
+blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %]. <br />
+Syntax :
+<ul>
+  <li>only one email or expression by line</li>
+  <li>char # introduce a comment</li>
+  <li>char * match any string. Example : "*@spammer-domain.com" match any sender from that exact domain</li>
+  <li>only one char * is autorized in a line
+</ul>
+[%end%]
+</p>
+<p>
+[% IF rows == '0' %]
+ [%|loc%]Current blacklist is empty[%END%]
+[% ELSE %]
+ [%|loc(rows)%]Current blacklist contain %1 line(s)[%END%]
+[% END %]
+</p>
+<p>
+[% rows = '20' IF rows > 20 %]
+[% rows = '10' IF rows < 10 %]
+[% rows = rows+2 %]
+<form action="[% path_cgi %]/blacklist" method="post">
+ <textarea name="blacklist" cols="80" rows="[% rows %]" />
+[% blacklist %]
+</textarea><br />
+<input type="hidden" name="action" value="blacklist" />
+[% IF list %]
+	<input type="hidden" name="list" value="[% list %]" /> 
+[% END %] 
+<br /><input type="submit" class="MainMenuLinks" name="action_blacklist" value="[%|loc%]save[%END%]" />
+[% IF saved %]
+[%|loc%]Template saved[%END%] ([% time %]) <br /><br />
+[% END %]
+
+</form>
+</p>
