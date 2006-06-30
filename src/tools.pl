@@ -2471,25 +2471,31 @@ sub add_in_blacklist {
 	&do_log('info',"tools::add_in_blacklist: incorrect parameter $entry");
 	return undef;
     }
-    my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
-    unless (open BLACKLIST, "$file"){
-	&do_log('info','do_blacklist : unable to open file %s',$file);
+    my $dir = $list->{'dir'}.'/search_filters';
+    unless ((-d $dir) || mkdir ($dir, 0755)) {
+	&do_log('info','do_blacklist : unable to create dir %s',$dir);
 	return undef;
     }
-    while(<BLACKLIST>) {
-	next if (/^\s*$/o || /^[\#\;]/o);
-	my $regexp= $_ ;
-	chomp $regexp;
-	$regexp =~ s/\*/.*/ ; 
-	$regexp = '^'.$regexp.'$';
-	if ($entry =~ /$regexp/i) { 
-	    &do_log('notice','do_blacklist : %s already in blacklist(%s)',$entry,$_);
-	    return 0;
-	}	
+    my $file = $dir'/blacklist.txt';
+    
+    if (open BLACKLIST, "$file"){
+	while(<BLACKLIST>) {
+	    next if (/^\s*$/o || /^[\#\;]/o);
+	    my $regexp= $_ ;
+	    chomp $regexp;
+	    $regexp =~ s/\*/.*/ ; 
+	    $regexp = '^'.$regexp.'$';
+	    if ($entry =~ /$regexp/i) { 
+		&do_log('notice','do_blacklist : %s already in blacklist(%s)',$entry,$_);
+		return 0;
+	    }	
+	}
+	close BLACKLIST;
     }
-    close BLACKLIST;
+    
     unless (open BLACKLIST, ">> $file"){
-
+	&do_log('info','do_blacklist : append to file %s',$file);
+	return undef;
     }
     printf BLACKLIST "$entry\n";
     close BLACKLIST;
