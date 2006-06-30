@@ -2513,4 +2513,19 @@ sub unlock {
     return 1;
 }
 
+## input a string
+## output md5 digest
+sub md5_fingerprint {
+    
+    my $input_string = shift;
+    return undef unless (defined $input_string);
+    chomp $input_string;
+    
+    my $digestmd5 = new Digest::MD5;
+    $digestmd5->reset;
+    $digestmd5->add($input_string);
+    return (unpack("H*", $digestmd5->digest));
+}
+
+
 1;

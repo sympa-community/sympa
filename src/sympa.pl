@@ -344,7 +344,7 @@ if ($main::options{'dump'}) {
     
     exit 0;
 }elsif ($main::options{'md5_digest'}) {
-    my $md5 = &Auth::md5password($main::options{'md5_digest'});
+    my $md5 = &tools::md5_fingerprint($main::options{'md5_digest'});
     printf "md5 digest : $md5 \n";
     
     exit 0;

@@ -38,20 +38,6 @@ use Digest::MD5;
 
 
 
-## input a password
-## output md5 digest
-sub md5password {
-    
-    my $password = shift;
-    return undef unless (defined $password);
-    chomp $password;
-    
-    my $digestmd5 = new Digest::MD5;
-    $digestmd5->reset;
-    $digestmd5->add($password);
-    return (unpack("H*", $digestmd5->digest));
-}
- 
 ## authentication : via email or uid
  sub check_auth{
      my $robot = shift;
@@ -471,7 +457,7 @@ sub remote_app_check_password {
     my ($trusted_application_name,$password,$robot) = @_;
     do_log('debug','Auth::remote_app_check_password (%s,%s)',$trusted_application_name,$robot);
     
-    my $md5 = &md5password($password);
+    my $md5 = &tools::md5_fingerprint($password);
     
     my $vars;
     # seach entry for trusted_application in Conf

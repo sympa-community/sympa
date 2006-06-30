@@ -12874,7 +12874,7 @@ sub d_test_existing_and_rights {
 
 sub pictures_filename {
     my ($login) = shift;
-    $login = &Auth::md5password($login);
+    $login = &tools::md5_fingerprint($login);
     
     my $filetype;
     my $filename = undef;
@@ -12924,7 +12924,7 @@ sub do_upload_pictures {
     }
     else {$filetype = undef};
     
-    my $filename = &Auth::md5password($param->{'user'}{'email'});
+    my $filename = &tools::md5_fingerprint($param->{'user'}{'email'});
     my $fullfilename = $filename.'.'.$filetype;
     
     #uploaded file must have a name 

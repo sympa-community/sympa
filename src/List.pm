@@ -4211,7 +4211,7 @@ sub delete_user_picture {
     do_log('info', 'delete_user_picture(%s)', $email);
     
     my $fullfilename;
-    my $filename = &Auth::md5password($email);
+    my $filename = &tools::md5_fingerprint($email);
     my $name = $self->{'name'};
     my $robot = $self->{'domain'};
     
