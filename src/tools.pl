@@ -2476,7 +2476,7 @@ sub add_in_blacklist {
 	&do_log('info','do_blacklist : unable to create dir %s',$dir);
 	return undef;
     }
-    my $file = $dir'/blacklist.txt';
+    my $file = $dir.'/blacklist.txt';
     
     if (open BLACKLIST, "$file"){
 	while(<BLACKLIST>) {
