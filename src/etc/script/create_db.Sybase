@@ -93,12 +93,32 @@ create table netidmap_table
 )
 go
 
-create index netid_netidmap_fk on admin_table (netid_netidmap)
+create index netid_netidmap_fk on netidmap_table (netid_netidmap)
 go
 
-create index serviceid_netidmap_fk on admin_table (serviceid_netidmap)
+create index serviceid_netidmap_fk on netidmap_table (serviceid_netidmap)
 go
 
-create index robot_netidmap_fk on admin_table (robot_netidmap)
+create index robot_netidmap_fk on netidmap_table (robot_netidmap)
 go
 
+CREATE TABLE logs_table (
+	id_logs			numeric NOT NULL,
+	date_logs		numeric NOT NULL,
+	robot_logs		varchar(80),
+	list_logs		varchar(50),
+	action_logs		varchar(50) NOT NULL,
+	parameters_logs		varchar(100),
+	target_email_logs	varchar(100),
+	user_email_logs		varchar(100),
+	msg_id_logs		varchar(255),
+	status_logs		varchar(10) NOT NULL,
+	error_type_logs		varchar(150),
+	client_logs		varchar(100),
+	daemon_logs		varchar(10) NOT NULL,
+	constraint ind_logs primary key (id_logs)
+)
+go
+
+create index id_logs_fk on logs_table (id_logs)
+go

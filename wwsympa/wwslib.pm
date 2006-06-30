@@ -151,6 +151,7 @@ sub load_config {
 			icons_url => '/icons',
 			mhonarc => '/usr/bin/mhonarc',
 			review_page_size => 25,
+			viewlogs_page_size => 25,
 			task_manager_pidfile => '--PIDDIR--/task_manager.pid',
 			title => 'Mailing Lists Service',
 			use_fast_cgi => 1,

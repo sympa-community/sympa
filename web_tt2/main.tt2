@@ -58,16 +58,23 @@
 [% ELSE %]
 <div id="Canvas">
   <div id="Header">
+    
+	<!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
+    	<a href="javascript:cacheId('contenu','Stretcher');">Fermer</a-->
+
     [% PROCESS title.tt2 %]
     [% PROCESS menu.tt2 %]
   </div> <!-- end div Header -->
-
+  <div class="contenant" id="contenu"> <!-- To hide Menus -->&nbsp;
   <div id="Menus"><!-- Start Menus -->&nbsp;
+	
     [% PROCESS login_menu.tt2 %]
     [% PROCESS list_menu.tt2 IF list %]
     [% PROCESS your_lists.tt2 IF !list %]
     [% PROCESS setlang.tt2 %]
   </div><!-- End div Menus -->
+  </div><!-- End div contenant -->
+	
 
   <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the meneu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
      <div id="Paint">

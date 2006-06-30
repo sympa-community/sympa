@@ -1,0 +1,5 @@
+title.gettext daily delete logs older than 3 months
+
+/ACTION
+purge_logs_table ()
+next ([execution_date]+1d, ACTION)

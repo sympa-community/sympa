@@ -18,7 +18,11 @@ ol { margin: 0 0 0 1em }
 /* ########## Blocks, id and class ########## */
 
 #Canvas {margin: 7px 7px 0px 7px;}
-#Stretcher {margin: 0px 0px 0px 250px; text-align: left;}
+#Stretcher {
+	/*margin: 0px 0px 0px 250px; */
+	margin-left: 25%;
+	text-align: left;
+}
 #Paint {
 	vertical-align:top;
 	text-align: center;
@@ -75,6 +79,18 @@ ul#MainMenuLinks li {list-style: none; display: inline;}
 #Identity {text-align: left; font-size: 12px; font-weight: bold; overflow: hidden;}
 
 .Help {display: none; position: absolute; border: 1px dotted [% color_2 %]; z-index: 1000; background: [% color_13 %]; }
+
+#rows_nb {
+	/*margin-top: 30%;*/
+	/*margin-left: 90%;*/
+	font-size: 0.8em;
+}
+
+#page_size {
+	float: right;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+}
 
 .MenuBlock {
 	background: [% color_5 %];
@@ -187,7 +203,13 @@ h3.block {text-align: center; background: [% color_4 %];}
 h4.block {text-align: center; background: [% color_4 %];}
 h5.block {text-align: center; background: [% color_4 %];}
 h6.block {text-align: center; background: [% color_4 %];}
-
+h7 {
+	font-size: 0.8em;
+	font-style: italic;
+}
+h7 strong {
+	font-size: 1em;
+}	
 .listTitle {text-align: center; border: solid 1px [% color_2 %]; padding: 5px; background: [% color_5 %];}
 
 .ErrorBlock {border: 1px solid [% color_2 %]; font-size: 14px; background: [% color_7 %]; padding: 10px; text-decoration: underline overline; }
@@ -270,7 +292,12 @@ input.button { background:[% color_4 %] !important; border: 1px solid; padding: 
 input.button:hover {background: [% color_4 %]; border-top-color: [% color_1 %]; border-right-color: [% color_6 %]; border-bottom-color: [% color_6 %]; border-left-color: [% color_1 %];}
 
 /* Tables */
-table.listOfItems {border: solid 1px; width: auto; margin: 10px;}
+table.listOfItems {
+	border: solid 1px;
+	width: auto;
+	margin: 10px;
+}
+
 table.listOfItems th {background: [% color_4 %]; padding: 3px; border:solid 1px; text-align: center;white-space: nowrap;}
 table.listOfItems tr { valign: top}
 

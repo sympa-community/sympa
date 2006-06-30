@@ -61,24 +61,20 @@ CREATE TABLE netidmap_table (
         PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
 );
 
-# CREATE TABLE log_table (
-# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
-# 	date			int NOT NULL,
-# 	pid			int,
-# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
-#   	email_user          	varchar (100),
-# 	auth			enum ('smtp','md5','smime','null'),	
-# 	ip			varchar (15),
-#   	operation		varchar (40),
-# 	list			varchar (50),
-# 	robot			varchar (60),
-# 	arg			varchar (100),
-# 	status			varchar (100),
-# 	subscriber_count	int,
-# 	PRIMARY KEY (id),
-# 	INDEX (date),	
-# 	INDEX (robot),
-# 	INDEX (list),
-# 	INDEX (email_user)
-# );
+CREATE TABLE logs_table (
+	id_logs			bigint(20) NOT NULL,
+	date_logs		int(11) NOT NULL,
+	robot_logs		varchar(80),
+	list_logs		varchar(50),
+	action_logs		varchar(50) NOT NULL,
+	parameters_logs		varchar(100),
+	target_email_logs	varchar(100),
+	user_email_logs		varchar(100),
+	msg_id_logs		varchar(255),
+	status_logs		varchar(10) NOT NULL,
+	error_type_logs		varchar(150),
+	client_logs		varchar(100),
+	daemon_logs		varchar(10) NOT NULL,
+	PRIMARY KEY (id_logs)					  
+);
 

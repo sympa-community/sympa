@@ -44,6 +44,9 @@ use Version;
 require 'tt2.pl';
 require 'tools.pl';
 
+my $daemon_name = &Log::set_daemon($0);
+my $ip = $ENV{'REMOTE_HOST'};
+
 #getopts('dF');
 
 ## Check options
@@ -351,6 +354,9 @@ sub remove {
     }
 
     do_log('notice',"Removing $msgid in list $adrlist section $2");
+    unless(&Log::db_log({'robot' => $robot,'list' => $adrlist,'action' => 'remove','parameters' => $msgid.','.$adrlist,'target_email' => '','msg_id' => $msgid,'status' => 'succes','error_type' => '','user_email' =>'','client' => $ip,'daemon' => $daemon_name})) {
+	&do_log('error','archived::remove: unable to log event');
+    }
   
     $arc =~ /^(\d{4})-(\d{2})$/ ;
     my $yyyy = $1 ;

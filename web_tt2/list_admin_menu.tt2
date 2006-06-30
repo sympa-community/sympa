@@ -46,6 +46,11 @@
 <li><a class="[% class %]" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a></li>
 [% END %]
 
+[% IF is_priv || is_listmaster %]
+[% IF action == 'viewlogs' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/viewlogs/[% list %]/first" >[%|loc%]Logs[%END%]</a></li>
+[% END %]
+
 [% IF shared == 'none' %]
 <li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Create Shared[%END%]</a></li> 
 [% ELSIF shared == 'exist' %]

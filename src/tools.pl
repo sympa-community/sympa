@@ -1669,7 +1669,7 @@ sub get_filename {
 ######################################################
 sub make_tt2_include_path {
     my ($robot,$dir,$lang,$list) = @_;
-    &do_log('debug3','tools::make_tt2_include_path(%s,%s,%s,%s)',$robot,$dir,$lang,$list);
+    &Log::do_log('debug3','tools::make_tt2_include_path(%s,%s,%s,%s)',$robot,$dir,$lang,$list);
 
     my @include_path;
 
@@ -1744,7 +1744,7 @@ sub make_tt2_include_path {
 ## Find a file in an ordered list of directories
 sub find_file {
     my ($filename, @directories) = @_;
-    &do_log('debug3','tools::find_file(%s,%s)', $filename, join(':',@directories));
+    &Log::do_log('debug3','tools::find_file(%s,%s)', $filename, join(':',@directories));
 
     foreach my $d (@directories) {
 	if (-f "$d/$filename") {
@@ -1890,11 +1890,11 @@ sub remove_dir {
 
 	if (!-l && -d _) {
 	    unless (rmdir($name)) {
-		&do_log('err','Error while removing dir %s',$name);
+		&Log::do_log('err','Error while removing dir %s',$name);
 	    }
 	}else{
 	    unless (unlink($name)) {
-		&do_log('err','Error while removing file  %s',$name);
+		&Log::do_log('err','Error while removing file  %s',$name);
 	    }
 	}
     }
@@ -1911,7 +1911,7 @@ sub remove_dir {
 ## for 'decrypt', these are arrayrefs containing absolute filenames
 sub smime_find_keys {
     my($dir, $oper) = @_;
-    &do_log('debug', 'tools::smime_find_keys(%s, %s)', $dir, $oper);
+    &Log::do_log('debug', 'tools::smime_find_keys(%s, %s)', $dir, $oper);
 
     my(%certs, %keys);
     my $ext = ($oper eq 'sign' ? 'sign' : 'enc');
@@ -1979,10 +1979,10 @@ sub smime_find_keys {
 #  sign => true if v3 purpose is signing
 sub smime_parse_cert {
     my($arg) = @_;
-    &do_log('debug', 'tools::smime_parse_cert(%s)', join('/',%{$arg}));
+    &Log::do_log('debug', 'tools::smime_parse_cert(%s)', join('/',%{$arg}));
 
     unless (ref($arg)) {
-	&do_log('err', "smime_parse_cert: must be called with hashref, not %s", ref($arg));
+	&Log::do_log('err', "smime_parse_cert: must be called with hashref, not %s", ref($arg));
 	return undef;
     }
 
@@ -1992,31 +1992,31 @@ sub smime_parse_cert {
 	@cert = ($arg->{'text'});
     }elsif ($arg->{file}) {
 	unless (open(PSC, "$arg->{file}")) {
-	    &do_log('err', "smime_parse_cert: open $file: $!");
+	    &Log::do_log('err', "smime_parse_cert: open $file: $!");
 	    return undef;
 	}
 	@cert = <PSC>;
 	close(PSC);
     }else {
-	&do_log('err', 'smime_parse_cert: neither "text" nor "file" given');
+	&Log::do_log('err', 'smime_parse_cert: neither "text" nor "file" given');
 	return undef;
     }
 
     ## Extract information from cert
     my ($tmpfile) = $Conf{'tmpdir'}."/parse_cert.$$";
     unless (open(PSC, "| $Conf{openssl} x509 -email -subject -purpose -noout > $tmpfile")) {
-	&do_log('err', "smime_parse_cert: open |openssl: $!");
+	&Log::do_log('err', "smime_parse_cert: open |openssl: $!");
 	return undef;
     }
     print PSC join('', @cert);
 
     unless (close(PSC)) {
-	&do_log('err', "smime_parse_cert: close openssl: $!, $@");
+	&Log::do_log('err', "smime_parse_cert: close openssl: $!, $@");
 	return undef;
     }
 
     unless (open(PSC, "$tmpfile")) {
-	&do_log('err', "smime_parse_cert: open $tmpfile: $!");
+	&Log::do_log('err', "smime_parse_cert: open $tmpfile: $!");
 	return undef;
     }
 
@@ -2054,18 +2054,18 @@ sub smime_parse_cert {
 
 sub smime_extract_certs {
     my($mime, $outfile) = @_;
-    &do_log('debug2', "tools::smime_extract_certs(%s)",$mime->mime_type);
+    &Log::do_log('debug2', "tools::smime_extract_certs(%s)",$mime->mime_type);
 
     if ($mime->mime_type =~ /application\/(x-)?pkcs7-/) {
 	unless (open(MSGDUMP, "| $Conf{openssl} pkcs7 -print_certs ".
 		     "-inform der > $outfile")) {
-	    &do_log('err', "unable to run openssl pkcs7: $!");
+	    &Log::do_log('err', "unable to run openssl pkcs7: $!");
 	    return 0;
 	}
 	print MSGDUMP $mime->bodyhandle->as_string;
 	close(MSGDUMP);
 	if ($?) {
-	    &do_log('err', "openssl pkcs7 returned an error: ", $?/256);
+	    &Log::do_log('err', "openssl pkcs7 returned an error: ", $?/256);
 	    return 0;
 	}
 	return 1;
@@ -2399,24 +2399,24 @@ sub lock {
     
     ## Read access to prevent "Bad file number" error on Solaris
     unless (open FH, $open_mode.$lock_file) {
-	&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	&Log::do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 	return undef;
     }
     
     my $got_lock = 1;
     unless (flock (FH, $operation | LOCK_NB)) {
-	&do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
+	&Log::do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
 
 	## If lock was obtained more than 20 minutes ago, then force the lock
 	if ( (time - (stat($lock_file))[9] ) >= 60*20) {
-	    &do_log('notice','Removing lock file %s', $lock_file);
+	    &Log::do_log('notice','Removing lock file %s', $lock_file);
 	    unless (unlink $lock_file) {
-		&do_log('err', 'Cannot remove %s: %s', $lock_file, $!);
+		&Log::do_log('err', 'Cannot remove %s: %s', $lock_file, $!);
 		return undef;	    		
 	    }
 	    
 	    unless (open FH, ">$lock_file") {
-		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		&Log::do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 		return undef;	    
 	    }
 	}
@@ -2430,19 +2430,19 @@ sub lock {
 		$got_lock = 1;
 		last;
 	    }
-	    &do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
+	    &Log::do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
 	}
     }
 	
     if ($got_lock) {
-	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+	&Log::do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
 
 	## Keep track of the locking PID
 	if ($mode eq 'write') {
 	    print FH "$$\n";
 	}
     }else {
-	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+	&Log::do_log('err', 'Failed locking %s: %s', $lock_file, $!);
 	return undef;
     }
 
@@ -2510,11 +2510,11 @@ sub unlock {
     my $fh = shift;
     
     unless (flock($fh,LOCK_UN)) {
-	&do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
+	&Log::do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
 	return undef;
     }
     close $fh;
-    &do_log('debug2', 'Release lock on %s', $lock_file);
+    &Log::do_log('debug2', 'Release lock on %s', $lock_file);
     
     return 1;
 }

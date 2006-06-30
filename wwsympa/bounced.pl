@@ -92,6 +92,9 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'});
 my $wwsympa_conf = "--WWSCONFIG--";
 my $sympa_conf_file = '--CONFIG--';
 
+my $daemon_name = &Log::set_daemon($0);
+my $ip = $ENV{'REMOTE_HOST'};
+
 my $wwsconf = {};
 
 # Load WWSympa configuration
@@ -314,7 +317,8 @@ while (!$end) {
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
-		    &do_log('notice', 'Could not create %s: %s bounced die, check bounce-path in wwsympa.conf', $bounce_dir, $!);
+		    &List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list create bounce directory $bounce_dir"})
+		    &do_log('err', 'Could not create %s: %s bounced die, check bounce-path in wwsympa.conf', $bounce_dir, $!);
 		    exit;
 		} 
 	    }
@@ -472,8 +476,14 @@ sub update_subscriber_bounce_history {
 	&do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
 	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
+	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce','parameters' => "address=$rcpt",
+		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
+		      'daemon' => 'bounced'});
     }else{
 	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status"});
+	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce',
+		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
+		      'daemon' => 'bounced'});
     }
 }
 

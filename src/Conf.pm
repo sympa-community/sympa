@@ -46,7 +46,7 @@ my @valid_options = qw(
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest 
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
-		       purge_user_table_task  purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
+		       purge_user_table_task purge_logs_table_task purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority return_path_suffix rfc2369_header_fields sendmail sendmail_args sleep 
@@ -190,6 +190,8 @@ my %Default_Conf =
      'list_check_suffixes' => 'request,owner,editor,unsubscribe,subscribe',
      'expire_bounce_task' => 'daily',
      'purge_user_table_task' => 'monthly',
+     'purge_logs_table_task' => 'daily',
+     'logs_expiration_period' => 3, #3 months
      'purge_orphan_bounces_task' => 'monthly',
      'eval_bouncers_task' => 'daily',
      'process_bouncers_task' => 'weekly',

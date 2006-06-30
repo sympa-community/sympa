@@ -161,7 +161,7 @@ msgid "%1 / your environment"
 msgstr "%1 / din miljö"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "%1 : No such file or directory"
 msgstr "%1 : Ingen sådan fil eller mapp"
 
@@ -177,28 +177,28 @@ msgid "%1 : action succeeded soon"
 msgstr "%1 : åtgärd lyckades"
 
 #. (u_err.file)
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 msgid "%1 : file not editable"
 msgstr "%1 : filen inte ändringsbar"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "%1 : incorrect name"
 msgstr "%1 : felaktigt namn"
 
 #. (u_err.family)
-#: web_tt2/error.tt2:45
+#: web_tt2/error.tt2:46
 #, fuzzy
 msgid "%1 : unknown family"
 msgstr "%1 : okänd åtgärd"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:43
+#: web_tt2/error.tt2:44
 msgid "%1 : unknown list"
 msgstr "%1 : okänd lista"
 
 #. (u_err.new_robot)
-#: web_tt2/error.tt2:44
+#: web_tt2/error.tt2:45
 #, fuzzy
 msgid "%1 : unknown robot"
 msgstr "%1 : okänd lista"
@@ -257,12 +257,12 @@ msgid "%1 hits on message's Subject field"
 msgstr "%1 träffar på meddelandets ämnes-fält"
 
 #. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 är redan en prenumerant av listan %2"
 
 #. (u_err.reception_mode)
-#: web_tt2/error.tt2:63
+#: web_tt2/error.tt2:64
 msgid "%1 is not an available reception mode"
 msgstr ""
 
@@ -289,7 +289,7 @@ msgid "%1 messages selected out of %2"
 msgstr "%1 meddelande valt utav %2"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:6 web_tt2/review.tt2:69
+#: web_tt2/lists.tt2:6 web_tt2/review.tt2:71
 msgid "%1 occurrence(s) found"
 msgstr "%1 händelse(r) hittades"
 
@@ -297,6 +297,12 @@ msgstr "%1 händelse(r) hittades"
 #: mail_tt2/listmaster_notification.tt2:9
 msgid "%1 requested creation of list \"%2\""
 msgstr ""
+
+#. (rows_nb)
+#: web_tt2/viewlogs.tt2:163
+#, fuzzy
+msgid "%1 results"
+msgstr "Resultat"
 
 #. (notice.total)
 #: web_tt2/notice.tt2:8
@@ -337,13 +343,13 @@ msgid "%Image(%s)"
 msgstr "%Bild(%s)"
 
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 #, fuzzy
 msgid "'%1' : bad listname"
 msgstr ": felaktigt listnamn"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 #, fuzzy
 msgid "'%1' list already exists"
 msgstr "filen %1 finns redan"
@@ -524,7 +530,7 @@ msgstr ""
 "<strong>Studsande e-post</strong> : Hantera rapporter som inte kan skickas "
 "(också kända som studsande e-post)."
 
-#: web_tt2/admin.tt2:9
+#: web_tt2/admin.tt2:10
 msgid ""
 "<strong>Create shared</strong> : initializes the shared document web space."
 msgstr "<strong>Skapa delad</strong> : startar den delade dokumentwebbplatsen."
@@ -537,7 +543,7 @@ msgstr ""
 "<strong>Anpassa</strong> : redigera filer och meddelande kopplade till din "
 "lista."
 
-#: web_tt2/admin.tt2:10
+#: web_tt2/admin.tt2:11
 msgid ""
 "<strong>Delete shared</strong> closes it. It can be restored using \"Restore "
 "shared\" button"
@@ -555,6 +561,10 @@ msgstr ""
 "tillåter modifikationer av några parametrar. Listan av parametrar du kan "
 "modifiera beror på de rättigheter du har."
 
+#: web_tt2/admin.tt2:8
+msgid "<strong>Logs</strong> : Make a search on Sympa logs."
+msgstr ""
+
 #: web_tt2/admin.tt2:6
 msgid ""
 "<strong>Manage Archives</strong>  : Allow you to download and delete list "
@@ -562,7 +572,7 @@ msgid ""
 msgstr ""
 "<strong>Hantera arkiv</strong> : Låter dig ladda ner och ta bort arkiv."
 
-#: web_tt2/admin.tt2:8
+#: web_tt2/admin.tt2:9
 msgid ""
 "<strong>Remove list</strong> : completely removes the current list. "
 "Listmaster privileges are required to Restore a list"
@@ -585,7 +595,7 @@ msgid ""
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 #, fuzzy
 msgid "A directory named '%1' already exists"
 msgstr "filen %1 finns redan"
@@ -609,7 +619,7 @@ msgstr ""
 "användare till en lista"
 
 #. (auth.action)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
@@ -626,7 +636,12 @@ msgstr "Tillgångskontroll för dokumentet %1"
 msgid "Account"
 msgstr "Konto"
 
-#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:54
+#: web_tt2/viewlogs.tt2:190 web_tt2/viewlogs.tt2:193
+#, fuzzy
+msgid "Action"
+msgstr "Beskrivning:"
+
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:56
 msgid "Add"
 msgstr "Lägg till"
 
@@ -662,7 +677,7 @@ msgid "Adding a user to the list is restricted to list owners."
 msgstr "begränsad till listägare"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:51
+#: web_tt2/error.tt2:52
 msgid "Address \"%1\" is incorrect"
 msgstr "Addressen \"%1\" är felaktig"
 
@@ -681,6 +696,11 @@ msgstr "Alias har installerats."
 #: web_tt2/install_pending_list.tt2:29
 msgid "Aliases you should install in your mailer"
 msgstr "Alias du bör lägga till i din e-postserver"
+
+#: web_tt2/viewlogs.tt2:108 web_tt2/viewlogs.tt2:72 web_tt2/viewlogs.tt2:79
+#: web_tt2/viewlogs.tt2:99
+msgid "All"
+msgstr ""
 
 #. (conf.sympa)
 #: mail_tt2/helpfile.tt2:15
@@ -746,7 +766,7 @@ msgstr "Arkiv"
 msgid "Archives Selection:"
 msgstr "Arkivval:"
 
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "Archives are empty for this list"
 msgstr ""
 
@@ -763,12 +783,12 @@ msgstr "Samlingsbrev för listan %1"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:61
+#: web_tt2/list_admin_menu.tt2:66
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "Är du säker att du vill stänga listan %1?"
 
 #. (list)
-#: web_tt2/list_admin_menu.tt2:52
+#: web_tt2/list_admin_menu.tt2:57
 msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Är du säker att du önskar radera de delade dokumenten ?"
 
@@ -791,7 +811,12 @@ msgstr "Bifogningstyp"
 msgid "Auth method"
 msgstr "Autentiseringsmetod"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/viewlogs.tt2:81
+#, fuzzy
+msgid "Authentication"
+msgstr "Autentisering önskad"
+
+#: web_tt2/error.tt2:115
 #, fuzzy
 msgid "Authentication failed"
 msgstr "Autentisering önskad"
@@ -853,7 +878,7 @@ msgstr ""
 "så har de %1 prenumeranter som visas nedan blivit klassade som återkommande "
 "studsar:"
 
-#: web_tt2/review.tt2:38
+#: web_tt2/review.tt2:40
 #, fuzzy
 msgid "Blacklist"
 msgstr "till lista"
@@ -890,7 +915,7 @@ msgid ""
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:46 web_tt2/review.tt2:40
+#: web_tt2/list_admin_menu.tt2:46 web_tt2/review.tt2:42
 msgid "Bounces"
 msgstr "Studsar"
 
@@ -898,7 +923,7 @@ msgstr "Studsar"
 msgid "Bounces count :"
 msgstr "Studsräkning :"
 
-#: src/List.pm:379 web_tt2/edit_list_request.tt2:10
+#: src/List.pm:379 web_tt2/edit_list_request.tt2:10 web_tt2/viewlogs.tt2:82
 msgid "Bounces management"
 msgstr "Hantera studsar"
 
@@ -935,13 +960,13 @@ msgid "Cannot delete shared for list '%1'."
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 #, fuzzy
 msgid "Cannot open file '%1'"
 msgstr "Kan inte packa upp ZIP-filen %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "Cannot overwrite file %1"
 msgstr "Kan inte skriva över filen %1"
 
@@ -964,7 +989,7 @@ msgid "Cannot unzip file '%1'."
 msgstr "Kan inte packa upp ZIP-filen %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Cannot upload file %1"
 msgstr "Kan inte ladda upp filen %1"
 
@@ -1070,6 +1095,11 @@ msgstr "Välj din autentiseringsserver"
 msgid "Cipher key size used"
 msgstr "Krypteringsalgoritmens nyckelstorlek"
 
+#: web_tt2/viewlogs.tt2:228
+#, fuzzy
+msgid "Client"
+msgstr "till lista"
+
 #: web_tt2/set_pending_list_request.tt2:22
 msgid "Close it"
 msgstr "Stäng den"
@@ -1121,7 +1151,7 @@ msgid "Concerned subscribers have been noticed about deleted topics"
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Konfigurationsfilen har modifierats av %1. Kan inte genomföra dina ändringar"
@@ -1172,7 +1202,7 @@ msgid "Copying template"
 msgstr "Anpassar mallar"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:125
+#: web_tt2/error.tt2:126
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -1186,7 +1216,7 @@ msgid "Create"
 msgstr "Skapa"
 
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:55
 msgid "Create Shared"
 msgstr "Skapa delad"
 
@@ -1263,6 +1293,11 @@ msgid "DISTribute <list> <key>        * Moderation: to validate a message"
 msgstr ""
 "DISTribute <lista> <nyckel> * Moderation: för att validera ett meddelande"
 
+#: web_tt2/viewlogs.tt2:233
+#, fuzzy
+msgid "Daemon"
+msgstr "Datum"
+
 #: src/etc/global_task_models/eval_bouncers.daily.task:1
 msgid "Daily evaluation of bouncing users"
 msgstr "Daglig utvärdering av studsande prenumeranter"
@@ -1271,7 +1306,7 @@ msgstr "Daglig utvärdering av studsande prenumeranter"
 msgid "Data Source"
 msgstr "Datakälla"
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "Data have changed on disk. Cannot apply your changes"
 msgstr "Data har ändrats på disken. Kan inte genomföra dina ändringar"
 
@@ -1283,12 +1318,17 @@ msgstr "Inställningar för datakällor"
 msgid "DataBase connection restored"
 msgstr ""
 
+#: web_tt2/error.tt2:20
+msgid "Database error."
+msgstr ""
+
 #: mail_tt2/listmaster_notification.tt2:49
 msgid "Database structure updated"
 msgstr ""
 
 #: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19
 #: web_tt2/modindex.tt2:106 web_tt2/modindex.tt2:38 web_tt2/subindex.tt2:9
+#: web_tt2/viewlogs.tt2:173
 msgid "Date"
 msgstr "Datum"
 
@@ -1359,7 +1399,7 @@ msgid ""
 "with this parameter."
 msgstr ""
 
-#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:11 web_tt2/suboptions.tt2:71
+#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:11 web_tt2/picture_upload.tt2:11
 msgid "Delete"
 msgstr "Radera"
 
@@ -1367,11 +1407,11 @@ msgstr "Radera"
 msgid "Delete Selected Month(s)"
 msgstr "Radera vald(a) månad(er)"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:52
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:57
 msgid "Delete Shared"
 msgstr "Radera delad"
 
-#: web_tt2/review.tt2:248 web_tt2/review.tt2:81 web_tt2/reviewbouncing.tt2:102
+#: web_tt2/review.tt2:250 web_tt2/review.tt2:83 web_tt2/reviewbouncing.tt2:102
 msgid "Delete selected email addresses"
 msgstr "Ta bort valda e-postaddresser"
 
@@ -1453,7 +1493,7 @@ msgid "Directory"
 msgstr "Mapp"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Katalogen %1 och dess innehåll har inte kopierats"
@@ -1521,7 +1561,7 @@ msgstr ""
 "1 prenumeranter"
 
 #. (total)
-#: web_tt2/review.tt2:36
+#: web_tt2/review.tt2:38
 msgid ""
 "Do you really want to send a subscription remind message to the %1 "
 "subscribers ?"
@@ -1557,11 +1597,11 @@ msgstr "Vill du radera den gamla filen %1 ?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "Vill du byta namn på din fil %1 ?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:79
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:84
 msgid "Document"
 msgstr "Dokument"
 
-#: web_tt2/review.tt2:101 web_tt2/review.tt2:104
+#: web_tt2/review.tt2:103 web_tt2/review.tt2:106
 msgid "Domain"
 msgstr "Domän"
 
@@ -1577,7 +1617,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr "Ladda ner ZIP-fil"
 
-#: web_tt2/review.tt2:43 web_tt2/review.tt2:45 web_tt2/reviewbouncing.tt2:22
+#: web_tt2/review.tt2:45 web_tt2/review.tt2:47 web_tt2/reviewbouncing.tt2:22
 msgid "Dump"
 msgstr "Kasta"
 
@@ -1588,7 +1628,7 @@ msgid "E-mail address %1 has not been found in the list %2."
 msgstr "E-postaddressen %s hittades inte i listan.\n"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:39
+#: web_tt2/error.tt2:40
 msgid "ERROR (%1) "
 msgstr ""
 
@@ -1649,8 +1689,9 @@ msgstr ""
 "så kommer skickade meddelanden först att ges till redaktörerna, som i sin "
 "tur bestämmer om meddelandet skall distribueras eller raderas."
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:93 web_tt2/review.tt2:96
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:95 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:58 web_tt2/subindex.tt2:7
+#: web_tt2/viewlogs.tt2:43 web_tt2/viewlogs.tt2:52
 msgid "Email"
 msgstr "E-post"
 
@@ -1677,12 +1718,17 @@ msgstr ""
 msgid "Enter listname : "
 msgstr "Nytt listnamn:"
 
-#: src/Conf.pm:276 src/Conf.pm:460
+#: src/Conf.pm:278 src/Conf.pm:462
 msgid "Error at line %d : %s"
 msgstr "Fel på rad %d : %s"
 
 #: web_tt2/list_panel.tt2:8
 msgid "Error rate:"
+msgstr "Fel ratio:"
+
+#: web_tt2/viewlogs.tt2:214
+#, fuzzy
+msgid "Error type"
 msgstr "Fel ratio:"
 
 #: web_tt2/remove_arc.tt2:14
@@ -1762,11 +1808,11 @@ msgid ""
 msgstr ""
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "Failed : %1 not empty"
 msgstr "Misslyckades: %1 inte tom"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "Failed : your content is empty"
 msgstr "Misslyckades : innehållet är tomt"
 
@@ -1800,7 +1846,7 @@ msgstr ""
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderatir"
 msgstr ""
@@ -1810,12 +1856,12 @@ msgid "Failed to remove aliases."
 msgstr ""
 
 #. (i_err.key)
-#: web_tt2/error.tt2:21
+#: web_tt2/error.tt2:22
 msgid "Failed to update a file."
 msgstr ""
 
 #. (i_err.key)
-#: web_tt2/error.tt2:20
+#: web_tt2/error.tt2:21
 msgid "Failed to update database."
 msgstr ""
 
@@ -1834,7 +1880,7 @@ msgid "File %1 has been renamed to %2"
 msgstr "Gammal fil %1 har tagits bort"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 #, fuzzy
 msgid "File %1 is not copied : %2 "
 msgstr "Filen %1 är inte kopierad"
@@ -2159,7 +2205,7 @@ msgid ""
 "error."
 msgstr ""
 
-#: web_tt2/suboptions.tt2:84
+#: web_tt2/picture_upload.tt2:24
 #, fuzzy
 msgid "In the subscribers list"
 msgstr "Jag vill prenumerera på listan %1"
@@ -2173,7 +2219,7 @@ msgid "Inclusions timeout"
 msgstr ""
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 
@@ -2295,7 +2341,7 @@ msgid "Language of the list"
 msgstr "Listans språk"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:140
+#: web_tt2/review.tt2:142
 msgid "Last update"
 msgstr "Senaste uppdateringen"
 
@@ -2340,6 +2386,11 @@ msgstr ""
 #: web_tt2/rss_request.tt2:9
 msgid "Limit the number of response"
 msgstr ""
+
+#: web_tt2/viewlogs.tt2:180 web_tt2/viewlogs.tt2:183
+#, fuzzy
+msgid "List"
+msgstr "Listor"
 
 #. (list.name,type)
 #: mail_tt2/listowner_notification.tt2:139
@@ -2423,6 +2474,11 @@ msgstr "Listadministration"
 msgid "List Definition"
 msgstr "Listdefinition"
 
+#: web_tt2/viewlogs.tt2:83
+#, fuzzy
+msgid "List Management"
+msgstr "Listnamn"
+
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1\" creation request"
@@ -2483,11 +2539,11 @@ msgstr "Listan har inga prenumeranter"
 msgid "List has been restored"
 msgstr "Listan har inga prenumeranter"
 
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 msgid "List has no bouncing subscribers"
 msgstr "Listan har inga prenumeranter som studsar"
 
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 msgid "List has no subscribers"
 msgstr "Listan har inga prenumeranter"
 
@@ -2640,6 +2696,17 @@ msgstr ""
 msgid "Logout"
 msgstr "Logga ut"
 
+#: web_tt2/list_admin_menu.tt2:51
+#, fuzzy
+msgid "Logs"
+msgstr "Inloggning"
+
+#. (date_from,date_to)
+#: web_tt2/viewlogs.tt2:156
+msgid ""
+"Logs have been created between <strong>%1</strong> and  <strong>%2</strong>."
+msgstr ""
+
 #: mail_tt2/listmaster_notification.tt2:69
 msgid "Loop detected"
 msgstr ""
@@ -2730,7 +2797,7 @@ msgid ""
 "disregard this message."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:77
+#: web_tt2/list_admin_menu.tt2:82 web_tt2/viewlogs.tt2:84
 msgid "Message"
 msgstr "Meddelande"
 
@@ -2752,6 +2819,11 @@ msgstr "Meddelande %s för listan %s har nekats.\n"
 msgid ""
 "Message %1 for list '%2' has been validated ; it will be distributed soon."
 msgstr "Meddelande %s för listan %s har distribuerats.\n"
+
+#: web_tt2/viewlogs.tt2:206 web_tt2/viewlogs.tt2:47 web_tt2/viewlogs.tt2:53
+#, fuzzy
+msgid "Message Id"
+msgstr "Meddelande"
 
 #: mail_tt2/message_report.tt2:92
 msgid "Message diffusion"
@@ -2857,16 +2929,16 @@ msgid "Miscellaneous"
 msgstr "Allmänt"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:48
+#: web_tt2/error.tt2:49
 msgid "Missing argument %1"
 msgstr "Saknar argument %1"
 
-#: web_tt2/error.tt2:58
+#: web_tt2/error.tt2:59
 msgid "Missing filter"
 msgstr "Saknar filter"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:71
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:76
 msgid "Moderate"
 msgstr "Moderera"
 
@@ -2945,7 +3017,7 @@ msgstr ""
 msgid "Multipart messages diffusion is impossible."
 msgstr ""
 
-#: web_tt2/review.tt2:55
+#: web_tt2/review.tt2:57
 msgid "Multiple add"
 msgstr ""
 
@@ -2959,8 +3031,8 @@ msgid ""
 "will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:113
-#: web_tt2/review.tt2:116 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:115
+#: web_tt2/review.tt2:118 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Namn"
 
@@ -3018,8 +3090,8 @@ msgstr ""
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
 
-#: web_tt2/review.tt2:26 web_tt2/review.tt2:263 web_tt2/reviewbouncing.tt2:114
-#: web_tt2/reviewbouncing.tt2:47
+#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:114
+#: web_tt2/reviewbouncing.tt2:47 web_tt2/viewlogs.tt2:26
 msgid "Next page"
 msgstr "Nästa sida"
 
@@ -3048,7 +3120,7 @@ msgstr ""
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "No SOAP service"
 msgstr ""
 
@@ -3057,13 +3129,13 @@ msgid "No Virtual Robot defined on this server"
 msgstr "Det finns ingen Virtuell Robot definerad för denna server"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 #, fuzzy
 msgid "No bounce for user  %1"
 msgstr "Inga studs för användaren %1"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 #, fuzzy
 msgid "No certificate for this list"
 msgstr "Certifikatutgivare"
@@ -3073,12 +3145,12 @@ msgstr "Certifikatutgivare"
 msgid "No command found in message."
 msgstr "Inga kommandon hittades i meddelandet"
 
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 msgid "No description specified"
 msgstr "Ingen beskrivning specificerad"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 #, fuzzy
 msgid "No entry for user '%1'"
 msgstr "Inga studs för användaren %1"
@@ -3097,7 +3169,7 @@ msgstr ""
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "No name specified"
 msgstr "Inget namn specificerat"
 
@@ -3117,7 +3189,7 @@ msgid "No owner is defined for the list '%1'"
 msgstr "Ingen ägare definerad för lista %1."
 
 #. (u_err.page)
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 msgid "No page %1"
 msgstr "Ingen sida %1"
 
@@ -3139,7 +3211,7 @@ msgid "Nomail"
 msgstr "Ingen post"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:60
+#: web_tt2/error.tt2:61
 msgid "Not subscribed: %1"
 msgstr "Icke prenumerant: %1"
 
@@ -3237,6 +3309,11 @@ msgstr ""
 msgid "Other email address :"
 msgstr "Annan e-postaddress :"
 
+#: web_tt2/viewlogs.tt2:277
+#, fuzzy
+msgid "Other events"
+msgstr "Andra"
+
 #: web_tt2/help_editfile.tt2:23
 msgid "Other files/pages description :"
 msgstr ""
@@ -3294,23 +3371,28 @@ msgstr ""
 msgid "Owners defined in an external datasource"
 msgstr ""
 
-#: web_tt2/review.tt2:5
+#: web_tt2/review.tt2:7 web_tt2/viewlogs.tt2:5
 msgid "Page size"
 msgstr "Sidstorlek"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr ""
 
 #. (u_err.param)
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 msgid "Parameter '%1' must have values"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:336
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
+
+#: web_tt2/viewlogs.tt2:198
+#, fuzzy
+msgid "Parameters"
+msgstr "Föredrar"
 
 #. (key_word)
 #: web_tt2/arcsearch.tt2:12
@@ -3339,7 +3421,7 @@ msgstr "Sökväg"
 msgid "Pending lists"
 msgstr ""
 
-#: web_tt2/review.tt2:35
+#: web_tt2/review.tt2:37
 msgid "Pending subscriptions"
 msgstr ""
 
@@ -3355,7 +3437,7 @@ msgstr ""
 msgid "Periodical subscription reminder task"
 msgstr ""
 
-#: web_tt2/review.tt2:109
+#: web_tt2/review.tt2:111
 msgid "Picture"
 msgstr ""
 
@@ -3371,7 +3453,7 @@ msgstr "Vänligen aktivera JavaScript i din webbläsare"
 msgid "Please contact the listmaster."
 msgstr "Kontakta listmästaren."
 
-#: web_tt2/error.tt2:47
+#: web_tt2/error.tt2:48
 #, fuzzy
 msgid "Please provide email address"
 msgstr "Ange din e-postaddress"
@@ -3385,11 +3467,11 @@ msgstr ""
 "Vänligen uppge din epostadress för att kunna avsluta prenumerationen för "
 "listan %1."
 
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 msgid "Please provide your password"
 msgstr "Ange ditt lösenord"
 
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "Please select archive months"
 msgstr ""
 
@@ -3431,8 +3513,8 @@ msgstr "Föredrar"
 msgid "Preferences"
 msgstr "Egenskaper"
 
-#: web_tt2/review.tt2:20 web_tt2/review.tt2:257 web_tt2/reviewbouncing.tt2:108
-#: web_tt2/reviewbouncing.tt2:41
+#: web_tt2/review.tt2:22 web_tt2/review.tt2:259 web_tt2/reviewbouncing.tt2:108
+#: web_tt2/reviewbouncing.tt2:41 web_tt2/viewlogs.tt2:20
 msgid "Previous page"
 msgstr "Fölregående sida"
 
@@ -3499,12 +3581,12 @@ msgstr "Egenskaper för mappen %1"
 msgid "Properties of the file %1"
 msgstr "Egenskaper för filen %1"
 
-#: web_tt2/error.tt2:52
+#: web_tt2/error.tt2:53
 msgid "Provided password is incorrect"
 msgstr "Angivet lösenord är felaktigt"
 
 #. (u_err.tpl)
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 #, fuzzy
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Angivet lösenord är felaktigt"
@@ -3604,7 +3686,7 @@ msgstr "Bygg om arkiv"
 msgid "Received mega-bytes         :      %1"
 msgstr "Vidarebefodrade megabytes : %1"
 
-#: web_tt2/review.tt2:121
+#: web_tt2/review.tt2:123
 msgid "Reception"
 msgstr ""
 
@@ -3651,7 +3733,7 @@ msgstr "Relaterat epostmeddelande"
 msgid "Reload"
 msgstr ""
 
-#: web_tt2/review.tt2:36
+#: web_tt2/review.tt2:38
 #, fuzzy
 msgid "Remind all"
 msgstr "Bygga om alla"
@@ -3686,7 +3768,7 @@ msgid "Remote host"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:61
+#: web_tt2/list_admin_menu.tt2:66
 msgid "Remove List"
 msgstr "Ta bort lista"
 
@@ -3700,7 +3782,7 @@ msgid "Rename"
 msgstr "Byt namn"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:64
+#: web_tt2/list_admin_menu.tt2:69
 msgid "Rename List"
 msgstr "Byt namn på lista"
 
@@ -3758,6 +3840,21 @@ msgstr ""
 msgid "Required file does not exist."
 msgstr "Listan '%s' finns inte.↵\n"
 
+#. (current_list)
+#: web_tt2/viewlogs.tt2:157
+msgid "Research was carried out in the list <strong>%1</strong>."
+msgstr ""
+
+#. (current_robot)
+#: web_tt2/viewlogs.tt2:159
+msgid "Research was carried out in the robot <strong>%1</strong>."
+msgstr ""
+
+#: web_tt2/viewlogs.tt2:146
+#, fuzzy
+msgid "Reset"
+msgstr "Avslå"
+
 #: web_tt2/editsubscriber.tt2:67
 msgid "Reset errors"
 msgstr ""
@@ -3767,11 +3864,11 @@ msgid "Reset errors for selected users"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:59
+#: web_tt2/list_admin_menu.tt2:64
 msgid "Restore List"
 msgstr "Återskapa listan"
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:54
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:59
 msgid "Restore shared"
 msgstr "Återställ delade"
 
@@ -3892,7 +3989,7 @@ msgstr ""
 "arkivhantering."
 
 #. (s_err.action)
-#: web_tt2/error.tt2:30
+#: web_tt2/error.tt2:31
 msgid "SYSTEM ERROR (%1)"
 msgstr ""
 
@@ -3923,7 +4020,7 @@ msgid "Scope : "
 msgstr "Omfång"
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:66
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:68
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "Sök"
@@ -3936,6 +4033,16 @@ msgstr "Sök användare"
 msgid "Search area"
 msgstr "Sökområde"
 
+#: web_tt2/viewlogs.tt2:39
+#, fuzzy
+msgid "Search by :"
+msgstr "Sökfält :"
+
+#: web_tt2/viewlogs.tt2:68
+#, fuzzy
+msgid "Search by type :"
+msgstr "Sökfält :"
+
 #: web_tt2/arcsearch.tt2:6 web_tt2/arcsearch_form.tt2:11
 msgid "Search field :"
 msgstr "Sökfält :"
@@ -3943,6 +4050,11 @@ msgstr "Sökfält :"
 #: web_tt2/home.tt2:42
 msgid "Search lists"
 msgstr "Sök listor"
+
+#: web_tt2/viewlogs.tt2:95
+#, fuzzy
+msgid "Search on the list"
+msgstr "Ämnet för listan"
 
 #: src/List.pm:434
 msgid "Secret string for generating unique keys"
@@ -3973,7 +4085,7 @@ msgstr ""
 msgid "Select templates type :"
 msgstr "listmallar"
 
-#: web_tt2/review.tt2:71
+#: web_tt2/review.tt2:73
 msgid "Selection too wide, can not show selection"
 msgstr ""
 
@@ -4036,7 +4148,7 @@ msgstr ""
 msgid "Setting site templates"
 msgstr ""
 
-#: web_tt2/suboptions.tt2:64
+#: web_tt2/picture_upload.tt2:4
 #, fuzzy
 msgid "Setting your picture for this list"
 msgstr "Certifikatutgivare"
@@ -4121,11 +4233,11 @@ msgid ""
 "Deleted topic(s) is(are) :"
 msgstr ""
 
-#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
+#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
 msgid "Sources"
 msgstr "Källor"
 
-#: web_tt2/review_family.tt2:6
+#: web_tt2/review_family.tt2:6 web_tt2/viewlogs.tt2:210
 msgid "Status"
 msgstr "Status"
 
@@ -4137,7 +4249,7 @@ msgstr "Status :"
 msgid "Status of the list"
 msgstr "Liststatus"
 
-#: web_tt2/review.tt2:134 web_tt2/review.tt2:137
+#: web_tt2/review.tt2:136 web_tt2/review.tt2:139 web_tt2/viewlogs.tt2:170
 msgid "Sub date"
 msgstr ""
 
@@ -4175,8 +4287,9 @@ msgstr ""
 msgid "Subject:"
 msgstr "Ämne:"
 
-#: web_tt2/choosepasswd.tt2:19 web_tt2/pref.tt2:22 web_tt2/pref.tt2:35
-#: web_tt2/pref.tt2:47 web_tt2/pref.tt2:78 web_tt2/suboptions.tt2:70
+#: web_tt2/choosepasswd.tt2:19 web_tt2/picture_upload.tt2:10
+#: web_tt2/pref.tt2:22 web_tt2/pref.tt2:35 web_tt2/pref.tt2:47
+#: web_tt2/pref.tt2:78
 msgid "Submit"
 msgstr "Skicka"
 
@@ -4269,7 +4382,7 @@ msgstr "begränsad till prenumeranter eller användare på den lokala domänen"
 msgid "Subscription to this list requires S/MIME signature."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:84
+#: web_tt2/list_admin_menu.tt2:89
 msgid "Subscriptions"
 msgstr "Prenumerationer"
 
@@ -4387,12 +4500,12 @@ msgid ""
 "ignored. Headers/footers may be appended to text/plain messages only."
 msgstr ""
 
-#: web_tt2/review.tt2:33
+#: web_tt2/review.tt2:35
 msgid "Synchronize members with data sources"
 msgstr ""
 
 #. (u_err.params)
-#: web_tt2/error.tt2:42
+#: web_tt2/error.tt2:43
 msgid "Syntax errors with the following parameters : %1"
 msgstr ""
 
@@ -4401,7 +4514,7 @@ msgstr ""
 msgid "Table of contents:"
 msgstr "Innehållsförteckning:"
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
@@ -4421,9 +4534,14 @@ msgstr "Skicka detta brev"
 msgid "Tag your message for list %1"
 msgstr "Samlingsbrev för listan %1"
 
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 msgid "Tagging message is required for this list"
 msgstr ""
+
+#: web_tt2/viewlogs.tt2:202
+#, fuzzy
+msgid "Target Email"
+msgstr "Skicka detta brev"
 
 #: web_tt2/edit_template.tt2:3 web_tt2/ls_templates.tt2:3
 #: web_tt2/view_template.tt2:3
@@ -4635,7 +4753,7 @@ msgid ""
 "profile for the subscribers of the list."
 msgstr ""
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "The document repository exceed disk quota."
 msgstr ""
 
@@ -4694,13 +4812,13 @@ msgid "The latest shared documents"
 msgstr "De senaste delade dokumenten"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 #, fuzzy
 msgid "The list '%1' is already closed"
 msgstr "Lista %1 är stängd"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 #, fuzzy
 msgid "The list '%1' is not closed"
 msgstr "Lista %1 är stängd"
@@ -4773,12 +4891,12 @@ msgstr ""
 msgid "The most active lists"
 msgstr "De mest aktiva listorna"
 
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 msgid "The passwords you typed do not match"
 msgstr ""
 
 #. (u_err.nb_days)
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid "The period is too long (%1 days)"
 msgstr ""
 
@@ -4803,11 +4921,11 @@ msgstr ""
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "The shared directory cannot have any description"
 msgstr ""
 
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 #, fuzzy
 msgid "The shared document space is empty"
 msgstr " De senast delade dokumenten "
@@ -4816,7 +4934,7 @@ msgstr " De senast delade dokumenten "
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
 
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "The upload failed, try it again"
 msgstr ""
 
@@ -4868,7 +4986,7 @@ msgstr ""
 msgid "There is no message to moderate for list '%1'."
 msgstr "%1 meddelande väntar på att bli modererade för listan %2@%3"
 
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "De senaste delade dokumenten"
@@ -4958,7 +5076,7 @@ msgid ""
 msgstr ""
 
 #. (u_err.name)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "This is an already existing document : '%1'"
 msgstr ""
 
@@ -4971,7 +5089,7 @@ msgstr ""
 msgid "This list archive is empty."
 msgstr "De mest aktiva listorna"
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "This list has no message topic"
 msgstr ""
 
@@ -5411,12 +5529,12 @@ msgstr ""
 msgid "To: %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:213 web_tt2/review.tt2:247
+#: src/etc/mhonarc-ressources.tt2:213 web_tt2/review.tt2:249
 #: web_tt2/reviewbouncing.tt2:117
 msgid "Toggle Selection"
 msgstr ""
 
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 msgid "Topic \"other\" is a reserved word"
 msgstr ""
 
@@ -5495,7 +5613,7 @@ msgstr "Jag avregisterar mig från listan %1"
 msgid "URL"
 msgstr ""
 
-#: src/sympa.pl:1756
+#: src/sympa.pl:1799
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -5570,7 +5688,7 @@ msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr ""
 
@@ -5646,7 +5764,7 @@ msgid "Unable to open spool '%1'."
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "Unable to read %1 : empty document"
 msgstr ""
 
@@ -5717,7 +5835,7 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: web_tt2/error.tt2:41
+#: web_tt2/error.tt2:42
 #, fuzzy
 msgid "Unknown action"
 msgstr "%1 : okänd åtgärd"
@@ -5832,6 +5950,11 @@ msgstr "Användaren %s har tagits bort från listan %s/\n"
 msgid "User %1 is now subscriber of list %2."
 msgstr "Användaren '%s' är redan en prenumerant av listan '%s'↵\n"
 
+#: web_tt2/viewlogs.tt2:219 web_tt2/viewlogs.tt2:222
+#, fuzzy
+msgid "User Email"
+msgstr "sändarens e-post"
+
 #: web_tt2/show_cert.tt2:8
 msgid "User certificate belong to"
 msgstr ""
@@ -5844,9 +5967,19 @@ msgstr ""
 msgid "User guide"
 msgstr ""
 
+#: web_tt2/viewlogs.tt2:86
+#, fuzzy
+msgid "User management"
+msgstr "Hantera studsar"
+
 #: web_tt2/d_read.tt2:11 web_tt2/d_read.tt2:15
 msgid "User mode"
 msgstr ""
+
+#: web_tt2/viewlogs.tt2:85
+#, fuzzy
+msgid "User preferences"
+msgstr "Egenskaper"
 
 #: mail_tt2/helpfile.tt2:10
 msgid "User's Guide"
@@ -5862,6 +5995,14 @@ msgstr ""
 
 #: web_tt2/sso_login.tt2:57
 msgid "Validate Address"
+msgstr ""
+
+#: web_tt2/viewlogs.tt2:144
+msgid "View"
+msgstr ""
+
+#: web_tt2/viewlogs.tt2:148
+msgid "View all"
 msgstr ""
 
 #: web_tt2/editsubscriber.tt2:66
@@ -5949,6 +6090,11 @@ msgstr "begränsad till listmästare"
 #: web_tt2/stats.tt2:2
 msgid "Web archives size"
 msgstr ""
+
+#: web_tt2/viewlogs.tt2:87
+#, fuzzy
+msgid "Web documents management"
+msgstr "Hantera studsar"
 
 #: src/etc/create_list_templates/public_web_forum/comment.tt2:1
 msgid "Web forum ML"
@@ -6043,22 +6189,22 @@ msgstr ""
 msgid "Who can view list information"
 msgstr ""
 
-#: web_tt2/error.tt2:40
+#: web_tt2/error.tt2:41
 msgid "Wrong parameters"
 msgstr ""
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:49
+#: web_tt2/error.tt2:50
 msgid "Wrong value for parameter %1"
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:46
+#: web_tt2/error.tt2:47
 msgid "You are already logged in as %1"
 msgstr ""
 
 #. (u_err.list)
-#: web_tt2/error.tt2:65
+#: web_tt2/error.tt2:66
 msgid "You are already subscribed to the list %1"
 msgstr ""
 
@@ -6068,7 +6214,7 @@ msgid "You are already subscriber of list %1"
 msgstr ""
 
 #. (u_err.list)
-#: web_tt2/error.tt2:61
+#: web_tt2/error.tt2:62
 msgid "You are not subscribed to list %1"
 msgstr ""
 
@@ -6133,19 +6279,19 @@ msgstr ""
 msgid "You can subscribe again :"
 msgstr ""
 
-#: web_tt2/suboptions.tt2:66
+#: web_tt2/picture_upload.tt2:6
 msgid ""
 "You can upload your picture below ; it will be available in the list review "
 "page. The picture should use a standard format (gif, jpp, jpeg or png) and "
 "its size should not exceed 100 Kb."
 msgstr ""
 
-#: web_tt2/error.tt2:53
+#: web_tt2/error.tt2:54
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 msgid "You did not select an action to perform"
 msgstr ""
 
@@ -6183,7 +6329,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/error.tt2:129 web_tt2/error.tt2:50
+#: web_tt2/error.tt2:130 web_tt2/error.tt2:51
 msgid "You need to login"
 msgstr ""
 
@@ -6199,7 +6345,7 @@ msgstr ""
 msgid "You need to login."
 msgstr "du behöver logga in"
 
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 #, fuzzy
 msgid "You need to provide list name"
 msgstr "du behöver logga in"
@@ -6274,7 +6420,7 @@ msgid "You won't receive the signed messages from your lists."
 msgstr ""
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr ""
 
@@ -6457,13 +6603,13 @@ msgid ""
 "e-mail box to provide your password below."
 msgstr ""
 
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
 msgstr ""
 
-#: web_tt2/suboptions.tt2:83
+#: web_tt2/picture_upload.tt2:23
 msgid "Your picture"
 msgstr ""
 
@@ -6647,7 +6793,7 @@ msgstr "Studsar"
 msgid "bounce score"
 msgstr ""
 
-#: web_tt2/review.tt2:173
+#: web_tt2/review.tt2:175
 msgid "bouncing"
 msgstr ""
 
@@ -6754,6 +6900,10 @@ msgstr ""
 msgid ""
 "daily certificate expiration date checking ; users are warned when their "
 "certificate has expired or expires within 3 days"
+msgstr ""
+
+#: src/etc/global_task_models/purge_logs_table.daily.task:1
+msgid "daily delete logs older than 3 months"
 msgstr ""
 
 #: src/etc/global_task_models/crl_update.daily.task:1
@@ -7259,7 +7409,7 @@ msgstr "Ägare"
 msgid "owners approval"
 msgstr ""
 
-#: web_tt2/review.tt2:23
+#: web_tt2/review.tt2:25 web_tt2/viewlogs.tt2:23
 msgid "page"
 msgstr "sida"
 
@@ -7361,7 +7511,7 @@ msgid "purge of orphan entries in user table every month"
 msgstr ""
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:47
-#: web_tt2/review.tt2:250 web_tt2/review.tt2:54 web_tt2/review.tt2:82
+#: web_tt2/review.tt2:252 web_tt2/review.tt2:56 web_tt2/review.tt2:84
 #: web_tt2/reviewbouncing.tt2:103
 msgid "quiet"
 msgstr "tyst"
@@ -7766,6 +7916,10 @@ msgstr "värde"
 
 #: web_tt2/ls_templates.tt2:75
 msgid "view"
+msgstr ""
+
+#: web_tt2/viewlogs.tt2:277
+msgid "view other events related to this message id."
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:85

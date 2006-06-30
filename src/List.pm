@@ -10781,6 +10781,20 @@ sub probe_db {
 						      'serviceid_netidmap' => 'varchar(100)',
 						      'email_netidmap' => 'varchar(100)',
 						      'robot_netidmap' => 'varchar(80)'},
+				 'logs_table' => {'id_logs' => 'bigint(20)',
+						  'date_logs' => 'int(11)',
+						  'robot_logs' => 'varchar(80)',
+						  'list_logs' => 'varchar(50)',
+						  'action_logs' => 'varchar(50)',
+						  'parameters_logs' => 'varchar(100)',
+						  'target_email_logs' => 'varchar(100)',
+						  'user_email_logs' => 'varchar(100)',
+						  'msg_id_logs' => 'varchar(255)',
+						  'status_logs' => 'varchar(10)',
+						  'error_type_logs' => 'varchar(150)',
+						  'client_logs' => 'varchar(100)',
+						  'daemon_logs' => 'varchar(10)'						  
+						  },				 
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
 						   'gecos_user' => 'varchar(150)',
@@ -10820,6 +10834,21 @@ sub probe_db {
 						       'serviceid_netidmap' => 'varchar(100)',
 						       'email_netidmap' => 'varchar(100)',
 						       'robot_netidmap' => 'varchar(80)'},
+				  'logs_table' => {'id_logs' => 'integer',
+						   'date_logs' => 'integer',
+						   'robot_logs' => 'varchar(80)',
+						   'list_logs' => 'varchar(50)',
+						   'action_logs' => 'varchar(50)',
+						   'parameters_logs' => 'varchar(100)',
+						   'target_email_logs' => 'varchar(100)',
+						   'user_email_logs' => 'varchar(100)',
+						   'msg_id_logs' => 'varchar(255)',
+						   'status_logs' => 'varchar(10)',
+						   'error_type_logs' => 'varchar(150)',
+						   'client_logs' => 'varchar(100)',
+						   'daemon_logs' => 'varchar(10)'						  
+						  },				 
+
 			      },
 		     );
     
@@ -10835,13 +10864,19 @@ sub probe_db {
 		    'date_admin' => 1,
 		    'netid_netidmap' => 1,
 		    'serviceid_netidmap' => 1,
-		    'robot_netidmap' => 1
+		    'robot_netidmap' => 1,
+		    'id_logs' => 1,
+		    'date_logs' => 1,
+		    'action_logs' => 1,
+		    'status_logs' => 1,
+		    'daemon_logs' => 1
 		    );
     
     my %primary = ('user_table' => ['email_user'],
 		   'subscriber_table' => ['list_subscriber','robot_subscriber','user_subscriber'],
 		   'admin_table' => ['list_admin','robot_admin','user_admin','role_admin'],
-		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap']
+		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
+		   'logs_table' => ['id_logs']
 		   );
     
     ## Report changes to listmaster
@@ -13247,112 +13282,6 @@ sub remove_task {
     }
 
     return 1;
-}
-
-
-# add log in RDBMS 
-sub db_log {
-
-    my $process = shift;
-    my $email_user = shift; $email_user = lc($email_user);
-    my $auth = shift;
-    my $ip = shift; $ip = lc($ip);
-    my $ope = shift; $ope = lc($ope);
-    my $list = shift; $list = lc($list);
-    my $robot = shift; $robot = lc($robot);
-    my $arg = shift; 
-    my $status = shift;
-    my $subscriber_count = shift;
-
-    do_log ('info',"db_log (PROCESS = $process, EMAIL = $email_user, AUTH = $auth, IP = $ip, OPERATION = $ope, LIST = $list,ROBOT = $robot, ARG = $arg ,STATUS = $status , LIST= list_subscriber)");
-
-    unless ($process =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounce))$/) {
-	do_log ('err',"Internal_error : incorrect process value $process");
-	return undef;
-    }
-
-    unless ($auth =~ /^((smtp)|(md5)|(smime)|(null))$/) {
-	do_log ('err',"Internal_error : incorrect auth value $auth");
-	return undef;
-    }
-    $auth = '' if ($auth eq 'null');
-
-    my $date=time;
-    
-    ## Insert in log_table
-
-
-
-    my $statement = 'INSERT INTO log_table (id, date, pid, process, email_user, auth, ip, operation, list, robot, arg, status, subscriber_count) ';
-
-    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$$,$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$subscriber_count;		    
-    $statement = $statement.$statement_value;
-    
-		    unless ($dbh->do($statement)) {
-			do_log('err','Unable to execute SQL statement \n"%s" \n %s', $statement, $dbh->errstr);
-			return undef;
-		    }
-
-}
-
-# Scan log_table with appropriate select 
-sub get_first_db_log {
-
-    my $select = shift;
-
-    do_log('info','get_first_db_log (%s)',$select);
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }
-
-    my $statement; 
-
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## "AS" not supported by Oracle
-	$statement = "SELECT date \"date\", pid \"pid\", process \"process\", email_user \"email\", auth \"auth\", ip \"ip\",operation \"operation\", list \"list\", robot \"robot\", arg \"arg\", status \"status\", subscriber_count \"count\" FROM log_table WHERE 1 ";
-    }else{
-	$statement = "SELECT date AS date, pid AS pid, process AS process, email_user AS email, auth AS auth, ip AS ip, operation AS operation, list AS list, robot AS robot, arg AS arg, status AS status, subscriber_count AS count FROM log_table WHERE 1 ";	
-    }
-    if ($select->{'list'}) {
-	$select->{'list'} = lc ($select->{'list'});
-	$statement .= sprintf "AND list = %s ",$select->{'list'}; 
-    }
-    if ($select->{'robot'}) {
-	$select->{'robot'} = lc ($select->{'robot'});
-	$statement .= sprintf "AND robot = %s ",$select->{'robot'}; 
-    }
-    if ($select->{'ip'}) {
-	$select->{'ip'} = lc ($select->{'ip'});
-	$statement .= sprintf "AND ip = %s ",$select->{'ip'}; 
-    }
-    if ($select->{'ope'}) {
-	$select->{'ope'} = lc ($select->{'ope'});
-	$statement .= sprintf "AND operation = %s ",$select->{'operation'}; 
-    }
-
-    push @sth_stack, $sth;
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-        unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-    return ($sth->fetchrow_hashref);
-
-}
-
-sub get_next_db_log {
-
-    my $log = $sth->fetchrow_hashref;
-    
-    unless (defined $log) {
-	$sth->finish;
-	$sth = pop @sth_stack;
-    }
-    return $log;
 }
 
 ## Close the list (remove from DB, remove aliases, change status to 'closed' or 'family_closed')

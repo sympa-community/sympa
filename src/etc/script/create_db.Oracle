@@ -60,11 +60,28 @@ CREATE TABLE admin_table (
 );
 
 CREATE TABLE netidmap_table (
-        netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
-	robot_netidmap	            varchar (80) NOT NULL,
-        email_netidmap              varchar (100),
+        netid_netidmap              varchar2 (100) NOT NULL,
+	idp_netidmap		    varchar2 (100) NOT NULL,
+	robot_netidmap	            varchar2 (80) NOT NULL,
+        email_netidmap              varchar2 (100),
         CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+);
+
+CREATE TABLE logs_table (
+	id_logs			number NOT NULL,
+	date_logs		number NOT NULL,
+	robot_logs		varchar2 (80),
+	list_logs		varchar2 (50),
+	action_logs		varchar2 (50) NOT NULL,
+	parameters_logs		varchar2 (100),
+	target_email_logs	varchar2 (100),
+	user_email_logs		varchar2 (100),
+	msg_id_logs		varchar2 (255),
+	status_logs		varchar2 (10) NOT NULL,
+	error_type_logs		varchar2 (150),
+	client_logs		varchar2 (100),
+	daemon_logs		varchar2 (10) NOT NULL,
+	CONSTRAINT ind_admin PRIMARY KEY (id_logs)
 );
 
 !

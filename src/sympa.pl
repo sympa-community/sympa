@@ -65,6 +65,11 @@ srand (time());
 
 my $version_string = "Sympa version is $Version\n";
 
+my $daemon_name = &Log::set_daemon($0);
+my $ip;
+$ip = $ENV{'REMOTE_HOST'};
+$ip = $ENV{'REMOTE_ADDR'} unless ($ip);
+
 my $usage_string = "Usage:
    $0 [OPTIONS]
 
@@ -163,6 +168,7 @@ my $config_file = $main::options{'config'} || '--CONFIG--';
 ## Load configuration file
 unless (Conf::load($config_file)) {
    &fatal_err("Configuration file $config_file has errors.");
+   
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -304,12 +310,14 @@ if ($main::options{'dump'}) {
 	## The parameter can be a list address
 	unless ($main::options{'dump'} =~ /\@/) {
 	    &do_log('err','Incorrect list address %s', $main::options{'dump'});
+	    
 	    exit;
 	} 
 
 	my $list = new List ($main::options{'dump'});
 	unless (defined $list) {
 	    &do_log('err','Unknown list %s', $main::options{'dump'});
+	    
 	    exit;
 	}
 	push @$all_lists, $list;
@@ -962,6 +970,7 @@ sub DoFile {
     my $message = new Message($file);
     unless (defined $message) {
 	&do_log('err', 'Unable to create Message object %s', $file);
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'unable_create_message','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
     
@@ -999,6 +1008,8 @@ sub DoFile {
     my $sender = $message->{'sender'};
     unless ($sender) {
 	&do_log('err', 'No From found in message, skipping.');
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'no_sender','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	return undef;
 	return undef;
     }
 
@@ -1022,6 +1033,7 @@ sub DoFile {
 	unless (defined $list) {
 	    &do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
 	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
+	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	}
 	$host = $list->{'admin'}{'host'};
@@ -1095,6 +1107,7 @@ sub DoFile {
 	    }
 	}
 	&do_log('notice', "Message for %s from %s ignored, virus %s found", $list_address, $sender, $rc);
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'virus','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
 
     }elsif (! defined($rc)) {
@@ -1109,6 +1122,7 @@ sub DoFile {
 	if (($rcpt =~ /^$Conf{'listmaster_email'}(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
 	    &do_log('err','internal serveur error : distribution daemon should never proceed with command');
 	    &report::global_report_cmd('intern','Distribution daemon proceed with command',{},$sender,$robot,1);
+	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	} 
     }
@@ -1172,6 +1186,7 @@ sub DoFile {
 
 	## Send the reply message
 	&report::send_report_cmd($sender,$robot);
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 
     }
     
@@ -1211,6 +1226,7 @@ sub DoSendMessage {
 	&report::reject_report_msg('intern','Message ignored because incorrect checksum',$sender,
 			  {'msg_id' => $msg_id},
 			  $robot,$string,'');
+	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'sendMessage','parameters' => "$msg_id,$rcpt",'target_email' => '','msg_id' => $msg_id,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef ;
     }
 
@@ -1225,10 +1241,12 @@ sub DoSendMessage {
 	&do_log('err',"sympa::DoSendMessage(): Impossible to forward mail from $from");
 	&report::reject_report_msg('intern','Impossible to forward a message pushed in spool by another process than sympa.pl.',$sender,
 			  {'msg_id' => $msg_id},$robot,$string,'');
+	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'sendMessage','parameters' => "$msg_id,$rcpt",'target_email' => '','msg_id' => $msg_id,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
 
     &do_log('info', "Message for %s sent", $rcpt);
+    &Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'sendMessage','parameters' => "$msg_id,$rcpt",'target_email' => '','msg_id' => $msg_id,'status' => 'succes','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 
     return 1;
 }
@@ -1320,13 +1338,14 @@ sub DoForward {
 			   'entry' => 'forward',
 			   'function' => $function}
 			  ,$robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
    }
    
     my $rc;
     my $msg_copy = $msg->dup;
 
-    unless (&mail::mail_forward($msg,&Conf::get_robot_conf($robot, 'request'),\@rcpt,$robot)) {
+unless (&mail::mail_forward($msg,&Conf::get_robot_conf($robot, 'request'),\@rcpt,$robot)) {
 	&do_log('err',"Impossible to forward mail for $name-$function  ");
 	my $string = sprintf 'Impossible to forward a message for %s-%s',$name,$function;
 	my $sender = $hdr->get('From');
@@ -1335,9 +1354,10 @@ sub DoForward {
 			   'entry' => 'forward',
 			   'function' => $function}
 			  ,$robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
-
+    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $hdr->get('From'),'client' => $ip,'daemon' => $daemon_name});
     return 1;
 }
 
@@ -1359,6 +1379,7 @@ sub DoForward {
 sub DoMessage{
     my($which, $message, $robot) = @_;
     &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $message->{'msg'}, $robot, $message->{'sender'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
+    
     
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
@@ -1408,6 +1429,7 @@ sub DoMessage{
 	
     if ($msgid_table{$listname}{$messageid}) {
 	&do_log('notice', 'Found known Message-ID, ignoring message which would cause a loop');
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'known_message','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
 	
@@ -1417,6 +1439,7 @@ sub DoMessage{
 	if (&tools::checkcommand($message->{'msg'}, $sender, $robot)) {
 	    &do_log('info', 'sympa::DoMessage(): Found command in message, ignoring message');
 	    &report::reject_report_msg('user','routing_error',$sender,{},$robot,$msg_string,$list);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'routing_error','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	}
     }
@@ -1425,6 +1448,7 @@ sub DoMessage{
     unless ($admin) {
 	&do_log('err', 'sympa::DoMessage(): list config is undefined');
 	&report::reject_report_msg('intern','',$sender,{'msg'=>$messageid},$robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
   }
     
@@ -1434,6 +1458,7 @@ sub DoMessage{
     ## Check if the message is a return receipt
     if ($hdr->get('multipart/report')) {
 	&do_log('notice', 'Message for %s from %s ignored because it is a report', $listname, $sender);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'ignored_report','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
     
@@ -1444,6 +1469,7 @@ sub DoMessage{
     if ($max_size && $message->{'size'} > $max_size) {
 	&do_log('info', 'sympa::DoMessage(): Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);
 	&report::reject_report_msg('user','message_too_large',$sender,{},$robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'message_too_large','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
    }
     
@@ -1496,6 +1522,7 @@ sub DoMessage{
 	&report::reject_report_msg('intern','Message ignored because scenario "send" cannot be evaluated',$sender,
 			  {'msg_id' => $messageid},
 			  $robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef ;
     }
 	
@@ -1517,9 +1544,11 @@ sub DoMessage{
 	    unless (defined($numsmtp)) {
 		&do_log('err','sympa::DoMessage(): Unable to send message to list %s', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+		&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef;
 	    }
 	    &do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $listname, $sender,  time - $start_time, $numsmtp, $list->get_total(),$messageid, $message->{'size'});
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return 1;
 
 	}else{   
@@ -1527,9 +1556,11 @@ sub DoMessage{
 	    unless ($list->move_message($message->{'filename'})) {
 		&do_log('err','sympa::DoMessage(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+		&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef;
 	    }
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $listname, $sender, $Conf{'queuedistribute'},$messageid);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => 'moved_in_spool','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return 1;
 	}
 	
@@ -1539,9 +1570,11 @@ sub DoMessage{
 	unless (defined $key) {
 	    &do_log('err','sympa::DoMessage(): Calling to send_auth function failed for user %s in list %s', $sender, $list->{'name'});
 	    &report::reject_report_msg('intern','The request authentication sending failed',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef
 	}
 	&do_log('notice', 'Message for %s from %s kept for authentication with key %s', $listname, $sender, $key);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => 'kept_for_auth','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return 1;
     }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){
 	my $key = $list->send_to_editor('md5',$message);
@@ -1549,6 +1582,7 @@ sub DoMessage{
 	unless (defined $key) {
 	    &do_log('err','sympa::DoMessage(): Calling to send_to_editor() function failed for user %s in list %s', $sender, $list->{'name'});
 	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef
 	}
 
@@ -1566,6 +1600,7 @@ sub DoMessage{
 	unless (defined $key) {
 	    &do_log('err','sympa::DoMessage(): Calling to send_to_editor() function failed for user %s in list %s', $sender, $list->{'name'});
 	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef
 	}
 
@@ -1591,10 +1626,12 @@ sub DoMessage{
 		}
 	    }
 	}
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'rejected_authorization','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }else {
 	&do_log('err','sympa::DoMessage(): unknown action %s returned by the scenario "send"', $action);
 	&report::reject_report_msg('intern','Unknown action returned by the scenario "send"',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
+	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
 }
@@ -1639,6 +1676,7 @@ sub DoCommand {
     ## Detect loops
     if ($msgid_table{$robot}{$messageid}) {
 	&do_log('notice', 'Found known Message-ID, ignoring command which would cause a loop');
+	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'known_message','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }## Clean old files from spool
     
@@ -1650,6 +1688,7 @@ sub DoCommand {
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	&do_log('debug',"processing message for $1-$2");
 	&Commands::parse($sender,$robot,"$2 $1");
+	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return 1; 
     }
     
@@ -1672,6 +1711,7 @@ sub DoCommand {
 	unless (defined $status) {
 	    &do_log('err', 'Could not change multipart to singlepart');
 	    &report::global_report_cmd('user','error_content_type',{});
+	    &Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'error_content_type','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	}
 
@@ -1696,6 +1736,7 @@ sub DoCommand {
 		or ($content_type =~ /text\/plain/i)) {
 	    &do_log('notice', "Ignoring message body not in text/plain, Content-type: %s", $content_type);
 	    &report::global_report_cmd('user','error_content_type',{});
+	    &Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'error_content_type','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return $success; 
 	}
 	
@@ -1716,6 +1757,7 @@ sub DoCommand {
 	    if ($status eq 'unknown_cmd') {
 		&do_log('notice', "Unknown command found :%s", $i);
 		&report::reject_report_cmd('user','not_understood',{},$i);
+		&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'not_understood','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		last;
 	    }
 	    
@@ -1731,6 +1773,7 @@ sub DoCommand {
     unless ($cmd_found == 1) {
 	&do_log('info', "No command found in message");
 	&report::global_report_cmd('user','no_cmd_found',{});
+	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'no_cmd_found','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
     
@@ -1767,6 +1810,7 @@ sub SendDigest{
  	my $list = new List ($listname, $listrobot);
 	unless ($list) {
 	    &do_log('info', 'Unknown list, deleting digest file %s', $filename);
+	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	    unlink $filename;
 	    return undef;
 	}
@@ -1781,6 +1825,7 @@ sub SendDigest{
 
 	    unlink($filename);
 	    do_log('info', 'Digest of the list %s sent (%d seconds)', $listname,time - $start_time);
+	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "",'target_email' => '','msg_id' => '','status' => 'success','error_type' => '','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	}
     }
 }

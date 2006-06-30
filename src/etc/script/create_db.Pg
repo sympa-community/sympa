@@ -65,3 +65,22 @@ CREATE TABLE netidmap_table (
         CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
 );
 CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, idp_netidmap, robot_netidmap);
+
+DROP TABLE logs_table;
+CREATE TABLE logs_table (
+	id_logs			bigint NOT NULL,
+	date_logs		int4 NOT NULL,
+	robot_logs		varchar (80),
+	list_logs		varchar (50),
+	action_logs		varchar (50) NOT NULL,
+	parameters_logs		varchar (100),
+	target_email_logs	varchar (100),
+	user_email_logs		varchar (100),
+	msg_id_logs		varchar (255),
+	status_logs		varchar (10) NOT NULL,
+	error_type_logs		varchar (150),
+	client_logs		varchar (100),
+	daemon_logs		varchar (10) NOT NULL,
+        CONSTRAINT ind_logs PRIMARY KEY (id_logs)
+);
+CREATE	INDEX logs_idx ON logs_table(id_logs);

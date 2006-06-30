@@ -209,6 +209,62 @@ function hide(div){
   }   
 [% END %]
 
+//launch a search by message Id
+function searched_by_msgId(id) {
+	var lgt_type_searched = document.log_form.type_searched.options.length;
+	var length = document.log_form.target_type.options.length;
+	document.log_form.target_type.options[length-2].selected = true;
+	document.log_form.elements["target_searched"].value=id;
+	document.log_form.type_searched.options[lgt_type_searched-1].selected = true;
+	document.log_form.submit();
+}
+
+//reset all field in log form.
+function clear_log_form() {
+	var lgt_target_type = document.log_form.target_type.options.length;
+	var lgt_type_searched = document.log_form.type_searched.options.length;
+	document.log_form.target_type.options[lgt_target_type-3].selected = true;
+	document.log_form.elements["target_searched"].value='';
+	document.log_form.elements["date_from"].value='';
+	document.log_form.elements["date_to"].value='';
+	document.log_form.type_searched.options[lgt_type_searched-10].selected = true;
+	var lgt_list_searched = document.log_form.list_searched.options.length;
+	document.log_form.list_searched.options[lgt_list_searched-11].selected = true;
+	document.log_form.elements["ip_searched"].value='';
+}
+
+//to hide menu
+
+function afficheId(baliseId,baliseId2)
+  {
+  if (document.getElementById && document.getElementById(baliseId) != null)
+    {
+    document.getElementById(baliseId).style.visibility='visible';
+    document.getElementById(baliseId).style.display='block';
+    }
+  if (document.getElementById(baliseId2) != null)
+    {
+    document.getElementById(baliseId2).style.margin='0 0 0 25%';
+    }
+  }
+
+function cacheId(baliseId,baliseId2)
+  {
+  if (document.getElementById && document.getElementById(baliseId) != null)
+    {
+    document.getElementById(baliseId).style.visibility='hidden';
+    document.getElementById(baliseId).style.display='none';
+    }
+  if (document.getElementById(baliseId2) != null)
+    {
+    document.getElementById(baliseId2).style.margin='0 0 0 0';
+    }
+  
+  }
+
+cacheId('contenu','Stretcher');
+// if JavaScript is available, hide the content on the page load.
+// Without JavaScript, content will be display.
 
 // end browsers -->
 </script>
