@@ -145,10 +145,12 @@ my %comm = ('home' => 'do_home',
 	 'sso_login' => 'do_sso_login',
 	 'sso_login_succeeded' => 'do_sso_login_succeeded',
 	 'subscribe' => 'do_subscribe',
+	 'multiple_subscribe' => 'do_multiple_subscribe',
 	 'subrequest' => 'do_subrequest',
 	 'subindex' => 'do_subindex',
 	 'suboptions' => 'do_suboptions',
 	 'signoff' => 'do_signoff',
+	 'multiple_signoff' => 'do_multiple_sigoff',
 	 'sigrequest' => 'do_sigrequest',
 	 'ignoresub' => 'do_ignoresub',
 	 'which' => 'do_which',
@@ -379,7 +381,9 @@ my %action_args = ('default' => ['list'],
  		'edit_template' => [],
 		'rss_request' => ['list'],
 		'request_topic' => ['list','authkey'],
-		'tag_topic_by_sender' => ['list']   
+		'tag_topic_by_sender' => ['list'],
+		'multiple_subscribe' => ['lists'],
+		'multiple_signoff' => ['lists']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -2981,6 +2985,7 @@ sub do_remindpasswd {
 	 }
 
 	 ## no topic ; List all lists
+
 	 if (! $in{'topic'}) {
 	     $param->{'which'}{$list->{'name'}} = $list_info;
 	 }elsif ($list->{'admin'}{'topics'}) {
@@ -3906,6 +3911,52 @@ sub do_remindpasswd {
 
  #    return 'suboptions';
      return 'info';
+ }
+
+
+
+
+
+####################################################
+# do_multiple_subscribe
+####################################################
+# Subscribes a user to each lists
+# 
+# IN : lists a array of lists
+#
+# OUT :'subrequest'|'login'|'info'|$in{'previous_action'}
+#     | undef
+####################################################
+ sub do_multiple_subscribe {
+     &wwslog('info', 'do_multiple_subscribe(%s)', $in{'email'});
+
+     unless ($param->{'lists'}) {
+	 &report::reject_report_web('user','missing_arg',{'argument' => 'lists'},$param->{'action'});
+	 &wwslog('info','do_multiple_subscribe: no list');
+	 &web_db_log({'parameters' => $in{'email'},
+		      'target_email' => $in{'email'} || $param->{'user'}{'email'},
+		      'status' => 'error',
+		      'error_type' => 'no_list'});		      
+	 return undef;
+     }
+     
+     ## Not authenticated
+     unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	 ## no email 
+	 unless ($in{'email'}) {
+	     return 'lists';
+	 }
+     }
+     
+     my @lists = split /\0/, $in{'lists'};
+     my $total;
+     my %results ;
+
+
+     foreach my $requested_list (@lists) {	 
+	 my $param->{'list'} = new List ($requested_list, $robot);
+	 $results{'requested_list'} = &do_subscribe();
+     }
  }
 
  ## Subscription request (user not authenticated)
@@ -5596,7 +5647,8 @@ sub do_skinsedit {
 			  'error_type' => 'internal'});
 	     next;
 	 }
-	 unless (($in{'quiet'})||($in{'blacklist'})) {
+         #  extract sender address is needed to report reject to sender and in case the sender is to be added in blacklist
+	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
 	     my $msg;
 	     my $parser = new MIME::Parser;
 	     $parser->output_to_core(1);
@@ -5615,7 +5667,7 @@ sub do_skinsedit {
 			 &wwslog('notice',"Unable to send template 'reject' to $rejected_sender");
 		     }
 		 }		 
-		 unless ($in{'blacklist'}) {
+		 if ($in{'blacklist'}) {
 		     if (&tools::add_in_blacklist($rejected_sender,$robot,$list)) {
 			 $param->{'blacklist_added'} += 1;
 			 &wwslog('info',"added $rejected_sender to $list->{'name'} blacklist");		     
