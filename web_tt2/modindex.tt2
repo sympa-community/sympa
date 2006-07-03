@@ -15,7 +15,8 @@
   <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
 [% IF conf.use_blacklist != 'none' %]
-  <input class="MainMenuLinks" type="submit" name="action_reject.blaclist" value="[%|loc%]Reject and blacklist sender[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject.quiet.blacklist" value="[%|loc%]Reject and blacklist sender[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [% END %]
 </td></tr></table>  
  [%- IF request_topic -%]
