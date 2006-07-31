@@ -11692,7 +11692,7 @@ sub do_d_savefile {
 
  sub do_d_upload {
      # Parameters of the uploaded file (from d_read.tt2)
-     my $fn = $query->param('uploaded_file');
+     my $fn = $in{'uploaded_file'};
 
      # name of the file, without path
      my $fname;
