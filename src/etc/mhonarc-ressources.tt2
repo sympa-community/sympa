@@ -299,19 +299,20 @@ TIDXPGEND
 </div>
 <!-- end header -->
 
+($tag$% IF is_owner %$tag$)<form  action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
 <ul>
 </THEAD>
 
 <TSINGLETXT>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
 </TSINGLETXT>
 
 <TTOPBEGIN>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
 </TTOPBEGIN>
 
 <TLITXT>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
 </TLITXT>
 
 <TTOPEND>
@@ -320,6 +321,16 @@ TIDXPGEND
 
 <TFOOT>
 </ul>
+($tag$% IF is_owner %$tag$)
+<input type="hidden" name="yyyy" value="$yyyy$" />
+<input type="hidden" name="month" value="$mois$" />
+<input type="hidden" name="action" value="remove_arc" />
+<input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
+<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.myform.msgid)" />
+<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete theses messages ?($tag$%END%$tag$)')"/><br />
+<br />
+</form>
+($tag$%END%$tag$)<br />
 </TFOOT>
 
 <TIDXPGEND>
