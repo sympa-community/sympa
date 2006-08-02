@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
   <form action="[% path_cgi %]" method="post">
-
+   <label for="gecos">[%|loc%]Name :[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
   [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
