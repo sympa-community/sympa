@@ -7487,6 +7487,15 @@ sub do_set_pending_list_request {
        }
      }
 
+     foreach my $m (keys %wwslib::visibility_mode) {
+	 $param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+	 if ($param->{'current_subscriber'}{'visibility'} eq $m) {
+	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	 }else {
+	     $param->{'visibility'}{$m}{'selected'} = '';
+	 }
+     }
+
      ## Bounces
      if ($user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
 	 my @bounce = ($1, $2, $3, $5);

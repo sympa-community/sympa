@@ -20,7 +20,13 @@
 		  [% END %]
 	        </select></td></tr>
 
-<tr><th>[%|loc%]Visibility :[%END%]</th><td>[% current_subscriber.visibility %]</td></tr>
+<tr><th>[%|loc%]Visibility :[%END%]</th>
+<td>    <select name="visibility">
+        [% FOREACH r = visibility %]
+          <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
+        [% END %]
+     </select>
+</td></tr>
 <tr><th>[%|loc%]Language :[%END%]</th><td>[% current_subscriber.lang %]</td></tr>
 [% IF pictures_display %]
     <tr><th>[%|loc%]Picture :[%END%]</th><td><a href="[% current_subscriber.pictures_url %]" title="[% current_subscriber.pictures_url %]" target="pictures"><img src="[% current_subscriber.pictures_url %]" height="80" alt=""/></a></td></tr>
