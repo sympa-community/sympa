@@ -457,7 +457,7 @@ my %in_regexp = (
 		 'size' => '\d+',
 
 		 ## Free data
-		 'subject' => '[^<>\\\*\$]+',
+		 'subject' => '.*',
 		 'gecos' => '[^<>\\\*\$]+',
 		 'additional_field' => '[^<>\\\*\$]+',
 		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
