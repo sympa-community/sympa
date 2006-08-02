@@ -49,12 +49,12 @@ CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_
 
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
+	serviceid_netidmap	    varchar (100) NOT NULL,
 	robot_netidmap	            varchar (80) NOT NULL,
         email_netidmap              varchar (100),
-        PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+        PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
 );
-CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, idp_netidmap, robot_netidmap);
+CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, serviceid_netidmap, robot_netidmap);
 
 CREATE TABLE logs_table (
 	id_logs			integer NOT NULL,

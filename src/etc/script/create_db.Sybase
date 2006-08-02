@@ -86,10 +86,10 @@ go
 create table netidmap_table 
 (
         netid_netidmap             varchar (100) NOT NULL,
-	idp_netidmap		   varchar (100) NOT NULL,
+	serviceid_netidmap	   varchar (100) NOT NULL,
 	robot_netidmap	           varchar (80) NOT NULL,
         email_netidmap             varchar (100),
-        constraint ind_netidmap primary key (netid_netidmap, idp_netidmap, robot_netidmap)
+        constraint ind_netidmap primary key (netid_netidmap, serviceid_netidmap, robot_netidmap)
 )
 go
 
