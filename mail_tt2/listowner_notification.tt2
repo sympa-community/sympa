@@ -135,6 +135,16 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 (no action needed)
 [%END%]
 
+[% ELSIF type == 'automatic_del' -%]
+Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. One possible reason : the welcome message sent to the user has triggered a non-delivery report. The user email address might be incorrect.[%END%]
+(no action needed)
+[%END%]
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
 MIME-Version: 1.0

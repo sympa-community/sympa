@@ -129,7 +129,7 @@ sub get_log_date {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }
 
     my $statement;
@@ -193,7 +193,7 @@ sub db_log {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }
 
     unless ($daemon =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounced)|(sympa_soap))$/) {
@@ -278,7 +278,7 @@ sub get_first_db_log {
 		       
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }
 
     my $statement = sprintf "SELECT date_logs AS date, robot_logs AS robot, list_logs AS list, action_logs AS action, parameters_logs AS parameters, target_email_logs AS target_email,msg_id_logs AS msg_id, status_logs AS status, error_type_logs AS error_type, user_email_logs AS user_email, client_logs AS client, daemon_logs AS daemon FROM logs_table WHERE robot_logs=%s ", $dbh->quote($select->{'robot'});	
