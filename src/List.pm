@@ -4208,7 +4208,7 @@ sub send_notify_to_owner {
 #########################
 sub delete_user_picture {
     my ($self,$email) = @_;    
-    do_log('info', 'delete_user_picture(%s)', $email);
+    do_log('debug2', 'delete_user_picture(%s)', $email);
     
     my $fullfilename;
     my $filename = &tools::md5_fingerprint($email);
@@ -4224,11 +4224,15 @@ sub delete_user_picture {
   	} 	
     }
     
-    unless(unlink($fullfilename)) {
-  	do_log('err', 'delete_user_picture() : Failed to delete '.$fullfilename);
-  	return undef;  
+    if (defined $fullfilename) {
+	unless(unlink($fullfilename)) {
+	    do_log('err', 'delete_user_picture() : Failed to delete '.$fullfilename);
+	    return undef;  
+	}
+
+	do_log('notice', 'delete_user_picture() : File deleted successfull '.$fullfilename);
     }
-    do_log('notice', 'delete_user_picture() : File deleted successfull '.$fullfilename);
+
     return 1;
 }
 
