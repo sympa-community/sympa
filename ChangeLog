@@ -1,3 +1,148 @@
+2006-08-02 16:13  sympa-authors
+
+	* mail_tt2/send_auth.tt2: [reported by W.Werner, Fraunhofer] Fix:
+	  When using x509 list certificates, reply-to would be forced to
+	  list-request.  Added a reply-to header field to the send_auth.tt2
+	  template
+
+2006-08-02 15:56  sympa-authors
+
+	* src/etc/script/: create_db.Oracle, create_db.Pg,
+	  create_db.SQLite, create_db.Sybase, create_db.mysql: [reported by
+	  P.Bricourt, Mongueurs] Fix: still refering to idp_netimap DB
+	  field
+
+2006-08-02 15:55  sympa-authors
+
+	* web_tt2/editsubscriber.tt2, wwsympa/wwsympa.fcgi: [A.Bernstein]
+	  [ID 901] Change: List owners are now able to edit subscriber's
+	  visibility
+
+2006-08-02 12:04  sympa-authors
+
+	* web_tt2/suboptions.tt2: [A.Bernstein] New feature: Subscribers
+	  can now edit their gecos on a list
+
+2006-08-02 09:48  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by J.Abbott, univ Duke] Fix:
+	  sending a mail from the web archives would raise an error if the
+	  mail subject contained unusual characters.  The subject regexp
+	  has been extended.
+
+2006-08-01 17:51  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: New feature: now provide archives
+	  mass-deletion also from the threaded page
+
+2006-08-01 16:51  sympa-authors
+
+	* web_tt2/: create_list_request.tt2, editfile.tt2: [reported by
+	  P.von der Hagen, univ. Karlsruhe] Fix: removed the wrapping in
+	  textarea
+
+2006-08-01 15:45  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: [A.Bernstein] [ID 905] Change:
+	  The threaded view is more useful if you can see the date of each
+	  message in the list.	This requires both adding the date field to
+	  a few lines in mhonarc-ressources.tt2 and adding two new
+	  resources that weren't customized at all before.
+
+2006-07-31 15:10  sympa-authors
+
+	* po/: en_US.po, fr.po: Fix: use sympa.pot as the default en_US.po
+
+2006-07-31 14:24  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by V.Nilsen] Fix: links to
+	  archives month from calendar were broken. Now clean up the
+	  arc_file parameter
+
+2006-07-31 11:07  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Use $in{'uploaded_file'} to have regexp
+	  rules applied
+
+2006-07-03 16:58  sympa-authors
+
+	* web_tt2/modindex.tt2: fix a bug with blacklist
+
+2006-07-03 16:58  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix a bug with blacklist
+
+2006-06-30 17:54  sympa-authors
+
+	* po/cs.po, po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po,
+	  po/fi.po, po/hu.po, po/it.po, po/ja.po, po/nb_NO.po, po/nl.po,
+	  po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/sv.po,
+	  po/sympa.pot, po/tr.po, po/zh_CN.po, po/zh_TW.po, src/Conf.pm,
+	  src/List.pm, src/Log.pm, src/sympa.pl, src/task_manager.pl,
+	  src/tools.pl,
+	  src/etc/global_task_models/purge_logs_table.daily.task,
+	  src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	  src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase,
+	  src/etc/script/create_db.mysql, web_tt2/admin.tt2,
+	  web_tt2/css.tt2, web_tt2/error.tt2, web_tt2/javascript.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/main.tt2,
+	  web_tt2/viewlogs.tt2, wwsympa/archived.pl, wwsympa/bounced.pl,
+	  wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: [Adrien Brard] New
+	  feature: DB logs Each operations theat changes the status of
+	  messages/subscriptions/list config is now logged in a structured
+	  DB entry. Both listmasters and listowners can search this events
+	  DB using the Sympa web interface.
+
+2006-06-30 13:40  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: attachement were not accessible though
+	  web archives Made the last arc_file parameter multiple (using the
+	  @ notation) and changed the associated regexp
+
+2006-06-30 11:48  sympa-authors
+
+	* web_tt2/fr_FR/: help_faqadmin.tt2, help_faquser.tt2: Added
+	  missing FAQ web templates
+
+2006-06-30 11:43  sympa-authors
+
+	* src/tools.pl: [no log message]
+
+2006-06-30 11:23  sympa-authors
+
+	* src/tools.pl: fix blacklist usage when first usage from
+	  moderation interface.
+
+2006-06-30 09:36  sympa-authors
+
+	* src/List.pm, src/sympa.pl, src/tools.pl, wwsympa/Auth.pm,
+	  wwsympa/wwsympa.fcgi: Fix: bounced.pl dies with error "undefined
+	  subroutine Auth::md5passwd()" Renamed the subroutine
+	  md5_fingerprint and moves it to tools.pl
+
+2006-06-26 16:39  sympa-authors
+
+	* web_tt2/review.tt2: Fixed colspan
+
+2006-06-26 15:50  sympa-authors
+
+	* web_tt2/: picture_upload.tt2, review.tt2, suboptions.tt2: Added a
+	  picture upload feature to the review page
+
+2006-06-26 14:32  sympa-authors
+
+	* ChangeLog, po/cs.po, po/de.po, po/el.po, po/en_US.po, po/es.po,
+	  po/et.po, po/fi.po, po/fr.po, po/hu.po, po/it.po, po/ja.po,
+	  po/nb_NO.po, po/nl.po, po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po,
+	  po/ro.po, po/sv.po, po/sympa.pot, po/tr.po, po/zh_CN.po,
+	  po/zh_TW.po, src/Conf.pm, src/List.pm, web_tt2/blacklist.tt2,
+	  wwsympa/wwsympa.fcgi: Fixed a few things related to the blacklist
+	  feature
+
+2006-06-26 12:01  sympa-authors
+
+	* web_tt2/blacklist.tt2: Added missing template
+
 2006-06-22 14:05  sympa-authors
 
 	* .version: Perpare 5.3a.4
