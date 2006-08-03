@@ -266,10 +266,8 @@ while (!$end) {
 			$list->save();
 			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			
-			unless ($list->send_notify_to_owner('notice',{'who' => $who, 
-								      'gecos' => "", 
-								      'command' => 'automatic_del', 
-								      'by' => 'listmaster'})) {
+			unless ($list->send_notify_to_owner('automatic_del',{'who' => $who, 
+									     'by' => 'listmaster'})) {
 			    &do_log('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
 			}
 		    }
