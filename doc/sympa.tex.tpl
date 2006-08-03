@@ -1756,13 +1756,14 @@ The script expects the following arguments :
 Example : \file {[BINDIR]/alias\_manager.pl add \samplelist cru.fr}
 
 \file {[BINDIR]/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
-by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
+by the \cfkeyword {sendmail\_aliases} variable (default is \file {/etc/mail/sympa\_aliases}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 \end{verbatim}
 \end {quote}
 
+Note that \unixcmd{sendmail} has requirements regarding the ownership and rights on both \file {sympa\_aliases} and \file {sympa\_aliases.db} files (the later being created by sendmail via the \unixcmd{newaliases} command). Anyhow these two files should be located in a directory, every path component of which being owned by and writable only by the root user.
 
 \file {[BINDIR]/alias\_manager.pl} runs a \unixcmd{newaliases} command (via \file {aliaswrapper}), after any changes to aliases file.
 
