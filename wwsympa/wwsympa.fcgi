@@ -739,7 +739,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## If CSS file not found, let Sympa do the job...
      unless (-f $param->{'css_path'}.'/style.css') {
  	 &wwslog('err','Could not find CSS file %s, using default CSS', $param->{'css_path'}.'/style.css') 
-	     if ($param->{'css_path'}) ## Notice only if path was defined;
+	     if ($param->{'css_path'}); ## Notice only if path was defined;
  	 $param->{'css_url'} = $param->{'base_url'}.$param->{'path_cgi'}.'/css';
      }
      
