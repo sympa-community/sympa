@@ -295,7 +295,7 @@ TIDXPGEND
      <a class="ArcMenuLinks" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
      <a class="ArcMenuLinksCurrentPage" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
    </span>  
-   $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $NEXTPGLINK$ 
+   $TPREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $TNEXTPGLINK$ 
 </div>
 <!-- end header -->
 
@@ -340,23 +340,23 @@ $POWERED_BY$
 
 <!-- links definition -->
 <TPrevPgLink chop>
-<a class="ArcMenuLinks" href="$TFIRSTPG$">First</a>
-<a class="ArcMenuLinks" href="$TPREVPG$">Previous<:a>
+<a class="ArcMenuLinks" href="$TFIRSTPG$">&lt;&lt;</a>
+<a class="ArcMenuLinks" href="$TPREVPG$">&lt;</a>
 </TPrevPgLink>
 
 <TPrevPgLinkIA chop>
-<li class="ArcMenuLinksInactive">Next</li>
-<li class="ArcMenuLinksInactive">Last</li>
+<a class="ArcMenuLinksInactive">&lt;&lt;</a>
+<a class="ArcMenuLinksInactive">&lt;</a>
 </TPrevPgLinkIA>
 
 <TNextPgLink chop>
-<a  class="ArcMenuLinks" href="$TNEXTPG$">Next</a>
-<a class="ArcMenuLinks"  href="$TLASTPG$">Last</a>
+<a class="ArcMenuLinks" href="$TNEXTPG$">&gt;</a>
+<a class="ArcMenuLinks"  href="$TLASTPG$">&gt;&gt;</a>
 </TNextPgLink>
 
 <TNextPgLinkIA chop>
-<a class="ArcMenuLinksInactive">Next</a>
-<a class="ArcMenuLinksInactive">Last</a>
+<a class="ArcMenuLinksInactive">&gt;</a>
+<a class="ArcMenuLinksInactive">&gt;&gt;</a>
 </TNextPgLinkIA>
 
 <!-- ================================================================== -->
