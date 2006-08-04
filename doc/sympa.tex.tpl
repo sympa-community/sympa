@@ -8299,11 +8299,9 @@ format (from 0 for Sunday to 6 for Saturday), separated by commas.
 
 In this example, \Sympa sends digests at 3:30 PM from Monday to Friday.
 
-\textbf {WARNING}: if the sending time is too late, \Sympa may not
-be able to process it. It is essential that \Sympa could scan the digest
-queue at least once between the time laid down for sending the
-digest and 12:00~AM (midnight). As a rule of thumb, do not use a digest time
-later than 11:00~PM.
+\textbf {WARNING}: if the sending time is too late (ie around midnight), \Sympa may not
+be able to process it in time. Therefore do not setuse a digest time
+later than 23:00.
 
 N.B.: In family context, \lparam{digest} can be constrainted only on days.
 
