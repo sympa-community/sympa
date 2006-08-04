@@ -279,14 +279,14 @@ if ($signal ne 'hup') {
     $( = $) = (getgrnam('--GROUP--'))[2];
     $< = $> = (getpwnam('--USER--'))[2];
 
+    ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
+    &POSIX::setuid((getpwnam('--USER--'))[2]);
+    &POSIX::setgid((getgrnam('--GROUP--'))[2]);
+
     ## Check if the UID has correctly been set (usefull on OS X)
     unless (($( == (getgrnam('--GROUP--'))[2]) && ($< == (getpwnam('--USER--'))[2])) {
 	&fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
     }
-
-    ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
-    &POSIX::setuid((getpwnam('--USER--'))[2]);
-    &POSIX::setgid((getgrnam('--GROUP--'))[2]);
 
     # Sets the UMASK
     umask(oct($Conf{'umask'}));
