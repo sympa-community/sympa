@@ -13,6 +13,24 @@
 <input name="key_word" type="text" size="30" value="[% key_word %]" />
 <input name="action" type="hidden" value="arcsearch" />
 <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
+</td>
+<td>
+<dl>
+<dt><strong>[%|loc%]Extend search field[%END%]</strong>
+<dd>
+<select name="directories" multiple="multiple" size="4">    
+
+[% FOREACH u = yyyymm %]
+	[% IF u.key.defined %]
+          [% SET tmp = u.key u = u.value u.NAME = tmp %]
+          [% SET selected = 1 IF u.value == archive_name %]
+        [% END %]
+
+<option value="[% u %]">[% u %]</option>
+
+[% END %] 
+
+</select></dd></dl>
 </td></tr></table>
 </div>
 
@@ -23,12 +41,6 @@
 <td><label><input type="radio" name="how" value="phrase" checked="checked" /> <strong>[%|loc%]this sentence[%END%]</strong></label></td>
 <td><label><input type="radio" name="how" value="all" /> <strong>[%|loc%]all of these words[%END%]</strong></label></td>
 <td><label><input type="radio" name="how" value="any" /> <strong>[%|loc%]one of these words[%END%]</strong></label></td>
-</tr>
-
-<tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|loc%]Prefer[%END%]</strong></th>
-<td><label><input type="radio" name="age" value="new" checked="checked" /> <strong>[%|loc%]newest messages[%END%]</strong></label></td>
-<td><label><input type="radio" name="age" value="old" /> <strong>[%|loc%]oldest messages[%END%]</strong></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
@@ -43,12 +55,7 @@
 <td><label><input type="radio" name="match" value="exact" /> <strong>[%|loc%]entire word[%END%]</strong></label></td>
 </tr>
 
-<tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|loc%]Layout[%END%]</strong></th>
-<td><label><input type="radio" name="limit" value="10" checked="checked" /> <strong>10</strong> [%|loc%]results by page[%END%]</label></td>
-<td><label><input type="radio" name="limit" value="25" /> <strong>25</strong> [%|loc%]results by page[%END%]</label></td>
-<td><label><input type="radio" name="limit" value="50" /> <strong>50</strong> [%|loc%]results by page[%END%]</label></td>
-</tr>
+<tr><td>&nbsp;</td></tr>
 
 <tr style="white-space: nowrap;" valign="top">
 <th rowspan="2"><strong>[%|loc%]Search area[%END%]</strong></th>
@@ -63,20 +70,21 @@
 <td><label><input type="checkbox" name="body" value="True" checked="checked" /> <strong>[%|loc%]Body[%END%]</strong></label></td>
 </tr>
 
+<tr><td>&nbsp;</td></tr>
+
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|loc%]Prefer[%END%]</strong></th>
+<td><label><input type="radio" name="age" value="new" checked="checked" /> <strong>[%|loc%]newest messages[%END%]</strong></label></td>
+<td><label><input type="radio" name="age" value="old" /> <strong>[%|loc%]oldest messages[%END%]</strong></label></td>
+</tr>
+
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|loc%]Layout[%END%]</strong></th>
+<td><label><input type="radio" name="limit" value="10" checked="checked" /> <strong>10</strong> [%|loc%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="25" /> <strong>25</strong> [%|loc%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="50" /> <strong>50</strong> [%|loc%]results by page[%END%]</label></td>
+</tr>
+
 </table>
-
-<dl>
-<dt><strong>[%|loc%]Extend search field[%END%]</strong>
-<dd>
-<select name="directories" multiple="multiple" size="4">    
-
-[% FOREACH u = yyyymm %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-
-<option value="[% u %]">[% u %]</option>
-
-[% END %] 
-
-</select></dd></dl>
 
 </form>
