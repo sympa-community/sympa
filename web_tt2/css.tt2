@@ -122,16 +122,14 @@ ul#MainMenuLinks li {list-style: none; display: inline;}
 .ContentBlock * a:hover {text-decoration:none;}
 .ContentBlock * a img {border: 0px;}
 
-.Pictures img {
- 	border:0;
- 	height:30px;
- 	align: center;
-}
- 
-.Pictures img:hover {
- 	height:80px;
+a img.Pictures {
+border:0px;
+height:30px;
 }
 
+a:hover img.Pictures {
+height: 80px;
+}
 
 .navBar {margin: 0px 0px 0px 250px;}
 
@@ -250,7 +248,7 @@ a img {border: 0px;}
 a {text-decoration: none;}
 a:link {text-decoration: none;}
 a:visited {text-decoration: none;}
-a:hover {color: [% color_11 %]; text-decoration:underline overline;}
+a:hover {color: [% color_11 %]; text-decoration:underline overline;background:none;}
 abbr, acronym, .info {
 	border-bottom: 1px dotted [% color_8 %];
 	cursor: help;

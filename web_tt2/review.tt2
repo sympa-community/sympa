@@ -189,7 +189,7 @@
   	  [% IF pictures_display %]
   	    [% IF u.pictures_url %]
   	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
-  	      <div class="Pictures"><a href="[%u.pictures_url%]" title="[%u.pictures_url%]" target="pictures"><img src="[%u.pictures_url%]" alt="" /></a></div>
+  	      <a href="[%u.pictures_url%]" title="[%u.pictures_url%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc%][% u.email %]'s picture[%END%]" /></a>   
   	      </span></td>
   	    [% ELSE %]
   	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
