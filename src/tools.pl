@@ -282,6 +282,32 @@ sub mk_parent_dir {
     return undef unless (mkdir ($dir, 0755));
 }
 
+## Recursively create directory and all parent directories
+sub mkdir_all {
+    my ($path, $umask) = @_;
+
+    return undef if ($path eq '');
+    return 1 if (-d $path);
+
+    ## Compute parent path
+    my @token = split /\//, $path;
+    pop @token;
+    my $parent_path = join '/', @token;
+
+    if (-d $parent_path) {
+	## Try to create directory
+	mkdir ($path, $umask) && chmod $umask, $path && return 1;	   
+    }else {
+	my $status =  &mkdir_all($parent_path, $umask);
+	if ($status) {
+
+	    ## Try to create directory
+	    mkdir ($path, $umask) && chmod $umask, $path && return 1;	   
+	}
+    }
+    return undef;
+}
+
 # shift file renaming it with date. If count is defined, keep $count file and unlink others
 sub shift_file {
     my $file = shift;

@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.3a.3}
+    \newcommand {\version} {5.3a.5}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.3a.3\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.3a.5\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {20 June 2006}
+    \date {08 August 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -399,6 +399,8 @@ list service.
 Our thanks to all contributors, including:
 
 \begin {itemize}
+
+  \item Virginie Paitrault,Université de Rennes 2, who wrote the excellent online user documentation.
 
   \item John-Paul Robinson, University of Alabama at Birmingham, who added to email verification procedure to the Shibboleth support.
 
@@ -1752,13 +1754,14 @@ The script expects the following arguments :
 Example : \file {/usr/local/sympa-os/bin/alias\_manager.pl add \samplelist cru.fr}
 
 \file {/usr/local/sympa-os/bin/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
-by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
+by the \cfkeyword {sendmail\_aliases} variable (default is \file {/etc/mail/sympa\_aliases}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 \end{verbatim}
 \end {quote}
 
+Note that \unixcmd{sendmail} has requirements regarding the ownership and rights on both \file {sympa\_aliases} and \file {sympa\_aliases.db} files (the later being created by sendmail via the \unixcmd{newaliases} command). Anyhow these two files should be located in a directory, every path component of which being owned by and writable only by the root user.
 
 \file {/usr/local/sympa-os/bin/alias\_manager.pl} runs a \unixcmd{newaliases} command (via \file {aliaswrapper}), after any changes to aliases file.
 
@@ -3081,32 +3084,28 @@ CREATE TABLE admin_table (
  
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
+	serviceid_netidmap		    varchar (100) NOT NULL,
 	robot_netidmap	            varchar (80) NOT NULL,
         email_netidmap              varchar (100),
-        PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+        PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
 );
 
-# CREATE TABLE log_table (
-# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
-# 	date			int NOT NULL,
-# 	pid			int,
-# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
-#   	email_user          	varchar (100),
-# 	auth			enum ('smtp','md5','smime','null'),	
-# 	ip			varchar (15),
-#   	operation		varchar (40),
-# 	list			varchar (50),
-# 	robot			varchar (60),
-# 	arg			varchar (100),
-# 	status			varchar (100),
-# 	subscriber_count	int,
-# 	PRIMARY KEY (id),
-# 	INDEX (date),	
-# 	INDEX (robot),
-# 	INDEX (list),
-# 	INDEX (email_user)
-# );
+CREATE TABLE logs_table (
+	id_logs			bigint(20) NOT NULL,
+	date_logs		int(11) NOT NULL,
+	robot_logs		varchar(80),
+	list_logs		varchar(50),
+	action_logs		varchar(50) NOT NULL,
+	parameters_logs		varchar(100),
+	target_email_logs	varchar(100),
+	user_email_logs		varchar(100),
+	msg_id_logs		varchar(255),
+	status_logs		varchar(10) NOT NULL,
+	error_type_logs		varchar(150),
+	client_logs		varchar(100),
+	daemon_logs		varchar(10) NOT NULL,
+	PRIMARY KEY (id_logs)					  
+);
 
 	\end{verbatim}
 	\end {quote}
@@ -3165,12 +3164,30 @@ CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_
 
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
+	serviceid_netidmap	    varchar (100) NOT NULL,
 	robot_netidmap	            varchar (80) NOT NULL,
         email_netidmap              varchar (100),
-        PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+        PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
 );
-CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, idp_netidmap, robot_netidmap);
+CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, serviceid_netidmap, robot_netidmap);
+
+CREATE TABLE logs_table (
+	id_logs			integer NOT NULL,
+	date_logs		integer NOT NULL,
+	robot_logs		varchar(80),
+	list_logs		varchar(50),
+	action_logs		varchar(50) NOT NULL,
+	parameters_logs		varchar(100),
+	target_email_logs	varchar(100),
+	user_email_logs		varchar(100),
+	msg_id_logs		varchar(255),
+	status_logs		varchar(10) NOT NULL,
+	error_type_logs		varchar(150),
+	client_logs		varchar(100),
+	daemon_logs		varchar(10) NOT NULL,
+	PRIMARY KEY (id_logs)					  
+);
+CREATE	INDEX logs_idx ON logs_table(id_logs);
 	\end{verbatim}
 	\end {quote}
 
@@ -3238,12 +3255,31 @@ CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,robot_admin, role_a
 DROP TABLE netidmap_table;
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
+	serviceid_netidmap	    varchar (100) NOT NULL,
 	robot_netidmap	            varchar (80) NOT NULL,
         email_netidmap              varchar (100),
-        CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+        CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
 );
-CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, idp_netidmap, robot_netidmap);
+CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, serviceid_netidmap, robot_netidmap);
+
+DROP TABLE logs_table;
+CREATE TABLE logs_table (
+	id_logs			bigint NOT NULL,
+	date_logs		int4 NOT NULL,
+	robot_logs		varchar (80),
+	list_logs		varchar (50),
+	action_logs		varchar (50) NOT NULL,
+	parameters_logs		varchar (100),
+	target_email_logs	varchar (100),
+	user_email_logs		varchar (100),
+	msg_id_logs		varchar (255),
+	status_logs		varchar (10) NOT NULL,
+	error_type_logs		varchar (150),
+	client_logs		varchar (100),
+	daemon_logs		varchar (10) NOT NULL,
+        CONSTRAINT ind_logs PRIMARY KEY (id_logs)
+);
+CREATE	INDEX logs_idx ON logs_table(id_logs);
 	\end{verbatim}
 	\end {quote}
 
@@ -3338,22 +3374,42 @@ go
 create table netidmap_table 
 (
         netid_netidmap             varchar (100) NOT NULL,
-	idp_netidmap		   varchar (100) NOT NULL,
+	serviceid_netidmap	   varchar (100) NOT NULL,
 	robot_netidmap	           varchar (80) NOT NULL,
         email_netidmap             varchar (100),
-        constraint ind_netidmap primary key (netid_netidmap, idp_netidmap, robot_netidmap)
+        constraint ind_netidmap primary key (netid_netidmap, serviceid_netidmap, robot_netidmap)
 )
 go
 
-create index netid_netidmap_fk on admin_table (netid_netidmap)
+create index netid_netidmap_fk on netidmap_table (netid_netidmap)
 go
 
-create index serviceid_netidmap_fk on admin_table (serviceid_netidmap)
+create index serviceid_netidmap_fk on netidmap_table (serviceid_netidmap)
 go
 
-create index robot_netidmap_fk on admin_table (robot_netidmap)
+create index robot_netidmap_fk on netidmap_table (robot_netidmap)
 go
 
+CREATE TABLE logs_table (
+	id_logs			numeric NOT NULL,
+	date_logs		numeric NOT NULL,
+	robot_logs		varchar(80),
+	list_logs		varchar(50),
+	action_logs		varchar(50) NOT NULL,
+	parameters_logs		varchar(100),
+	target_email_logs	varchar(100),
+	user_email_logs		varchar(100),
+	msg_id_logs		varchar(255),
+	status_logs		varchar(10) NOT NULL,
+	error_type_logs		varchar(150),
+	client_logs		varchar(100),
+	daemon_logs		varchar(10) NOT NULL,
+	constraint ind_logs primary key (id_logs)
+)
+go
+
+create index id_logs_fk on logs_table (id_logs)
+go
 	\end{verbatim}
 	\end {quote}
 
@@ -3422,11 +3478,28 @@ CREATE TABLE admin_table (
 );
 
 CREATE TABLE netidmap_table (
-        netid_netidmap              varchar (100) NOT NULL,
-	idp_netidmap		    varchar (100) NOT NULL,
-	robot_netidmap	            varchar (80) NOT NULL,
-        email_netidmap              varchar (100),
-        CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, idp_netidmap, robot_netidmap)
+        netid_netidmap              varchar2 (100) NOT NULL,
+	serviceid_netidmap	    varchar2 (100) NOT NULL,
+	robot_netidmap	            varchar2 (80) NOT NULL,
+        email_netidmap              varchar2 (100),
+        CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
+);
+
+CREATE TABLE logs_table (
+	id_logs			number NOT NULL,
+	date_logs		number NOT NULL,
+	robot_logs		varchar2 (80),
+	list_logs		varchar2 (50),
+	action_logs		varchar2 (50) NOT NULL,
+	parameters_logs		varchar2 (100),
+	target_email_logs	varchar2 (100),
+	user_email_logs		varchar2 (100),
+	msg_id_logs		varchar2 (255),
+	status_logs		varchar2 (10) NOT NULL,
+	error_type_logs		varchar2 (150),
+	client_logs		varchar2 (100),
+	daemon_logs		varchar2 (10) NOT NULL,
+	CONSTRAINT ind_admin PRIMARY KEY (id_logs)
 );
 
 !
@@ -3678,6 +3751,17 @@ int main(int argn, char **argv, char **envp) {
 \end{itemize}
 
 \subsection {Installing wwsympa.fcgi in your Apache server}
+
+     You first need to set an alias to the directory where Sympa stores static contents (CSS, members pictures, documentation) directly delivered by Apache
+
+
+\begin {quote}
+\begin{verbatim}
+     Example :
+       	Alias /static-sympa /usr/local/sympa-os/static_content
+\end{verbatim}
+\end {quote}
+
      If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
      script alias it. 
 
@@ -5755,6 +5839,8 @@ FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 3 -idle-timeout 12
   </Location>
 
   ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
+
+  Alias /static-sympa /usr/local/sympa-os/static_content
 
 </VirtualHost>
 \end{verbatim}
@@ -9416,11 +9502,9 @@ format (from 0 for Sunday to 6 for Saturday), separated by commas.
 
 In this example, \Sympa sends digests at 3:30 PM from Monday to Friday.
 
-\textbf {WARNING}: if the sending time is too late, \Sympa may not
-be able to process it. It is essential that \Sympa could scan the digest
-queue at least once between the time laid down for sending the
-digest and 12:00~AM (midnight). As a rule of thumb, do not use a digest time
-later than 11:00~PM.
+\textbf {WARNING}: if the sending time is too late (ie around midnight), \Sympa may not
+be able to process it in time. Therefore do not setuse a digest time
+later than 23:00.
 
 N.B.: In family context, \lparam{digest} can be constrainted only on days.
 

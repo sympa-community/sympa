@@ -1953,6 +1953,7 @@ robot.conf file and set the css\_path parameter. Then retart the server and use 
 to install preparsed CSS file. The in order to replace dynamic CSS by these static files 
 set the \cfkeyword {css\_url} parameter.
 
+\textbf {After an upgrade, \file {sympa.pl} automatically updates the static CSS files with the new installed css.tt2. Therefore it's not a good place to store customized CSS files.}
 
 \subsection {\cfkeyword {css\_url}}
 
@@ -3321,7 +3322,7 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-       	Alias /sympa_static [DIR]/static_content
+       	Alias /static-sympa [DIR]/static_content
 \end{verbatim}
 \end {quote}
 
@@ -4952,6 +4953,8 @@ FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
   </Location>
 
   ScriptAlias /sympa [CGIDIR]/wwsympa.fcgi
+
+  Alias /static-sympa [DIR]/your.virtual.domain/static_content
 
 </VirtualHost>
 \end{verbatim}

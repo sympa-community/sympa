@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -102,7 +99,7 @@ exactly who is authorized to perform the relevant operations, along with the
 authentication method to be used. Currently, authentication can be based
 on either an SMTP From header, a password, or an S/MIME signature.
 <BR><I>Sympa</I> is also able to extract electronic
-addresses from an <A NAME="6644"></A>LDAP directory or <A NAME="6645"></A>SQL server, and include them
+addresses from an <A NAME="6650"></A>LDAP directory or <A NAME="6651"></A>SQL server, and include them
 dynamically in a list.
 
 <P>
@@ -116,7 +113,7 @@ i386 server with Linux).
 
 <P>
 This guide covers the installation, configuration and management of
-the current release (5.3a.3) of
+the current release (5.3a.5) of
 <A NAME="tex2html2"
   HREF="http://www.sympa.org">sympa</A>.
 
@@ -160,7 +157,7 @@ in a single software package, including:
 
 <UL>
 <LI>the use of your preferred SMTP engine, e.g.
-                <A NAME="6653"></A><TT>sendmail</TT>, <A NAME="6656"></A><TT>qmail</TT> or <A NAME="6659"></A><TT>postfix</TT>
+                <A NAME="6659"></A><TT>sendmail</TT>, <A NAME="6662"></A><TT>qmail</TT> or <A NAME="6665"></A><TT>postfix</TT>
 
 <P>
 </LI>
@@ -192,10 +189,10 @@ in a single software package, including:
 <P>
 </LI>
 <LI><B>MIME support</B>. <I>Sympa</I> naturally respects
-        <A NAME="6663"></A>MIME in the distribution process, and in addition
+        <A NAME="6669"></A>MIME in the distribution process, and in addition
         allows list owners to configure their lists with
         welcome, goodbye and other predefined messages using complex
-        <A NAME="6664"></A>MIME structures. For example, a welcome message can be in
+        <A NAME="6670"></A>MIME structures. For example, a welcome message can be in
         <B>multipart/alternative</B> format, using <B>text/html</B>,
         <B>audio/x-wav</B>&nbsp;:-), or whatever (Note that <I>Sympa</I> 
         commands in multipart messages are successfully processed, provided that
@@ -205,14 +202,14 @@ in a single software package, including:
 </LI>
 <LI>The <B>sending process is controlled</B> on a per-list basis.
         The list definition allows a number of different actions for
-        each incoming message. A <A NAME="6666"></A><TT>private</TT> list is a list where
+        each incoming message. A <A NAME="6672"></A><TT>private</TT> list is a list where
         only subscribers can send messages. A list configured using
-        <A NAME="6669"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
+        <A NAME="6675"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
         from subscribers, but will forward any other (i.e. non-subscriber) message
 	to the editor with a one-time secret numeric key that will be used by the
         editor to <I>reject</I> or <I>distribute</I> it.
         For details about the different sending modes, refer to the
-        <A NAME="6672"></A><TT>send</TT> parameter (<A HREF="node21.html#par-send">20.3.8</A>, page&nbsp;<A HREF="node21.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+        <A NAME="6678"></A><TT>send</TT> parameter (<A HREF="node21.html#par-send">20.3.8</A>, page&nbsp;<A HREF="node21.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 	The sending process configuration (as well as most other list
 	operations) is defined using  an <B>authorization scenario</B>. Any listmaster
         can define new authorization scenarios in order to complement the 20
@@ -225,17 +222,17 @@ Example : forward multipart messages to the list editor, while
 </LI>
 <LI>Privileged operations can be performed by list editors or
         list owners (or any other user category), as defined in the list
-        <A NAME="6675"></A><TT>config</TT> file or by
-        the robot <A NAME="6678"></A>administrator, the listmaster, defined
-        in the <A NAME="6679"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>  global configuration file (listmaster
+        <A NAME="6681"></A><TT>config</TT> file or by
+        the robot <A NAME="6684"></A>administrator, the listmaster, defined
+        in the <A NAME="6685"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>  global configuration file (listmaster
         can also be defined for a particular virtual host).
-        Privileged operations include the usual <A NAME="6682"></A><TT>ADD</TT>, <A NAME="6685"></A><TT>DELETE</TT> or <A NAME="6688"></A><TT>REVIEW</TT> commands, which can be
+        Privileged operations include the usual <A NAME="6688"></A><TT>ADD</TT>, <A NAME="6691"></A><TT>DELETE</TT> or <A NAME="6694"></A><TT>REVIEW</TT> commands, which can be
         authenticated via a one-time password or an S/MIME signature.
 
 <P>
 <A NAME="wwsympa"></A> 
 </LI>
-<LI><B>Web interface</B> : <A NAME="6691"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
+<LI><B>Web interface</B> : <A NAME="6697"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
     	(including administration). It provides :
 
 <P>
@@ -280,10 +277,10 @@ Example : forward multipart messages to the list editor, while
 <LI><B>RDBMS</B> : the internal subscriber and administrative data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
         files for subscriber data. The introduction of databases came out of the
-        <A NAME="6695"></A><I>WWSympa</I> project.  The database ensures a secure access to
-        shared data. The PERL database API <A NAME="6698"></A><TT>DBI</TT>/<A NAME="6701"></A><TT>DBD</TT> enables
-        interoperability with various <A NAME="6704"></A>RDBMS (<A NAME="6705"></A>MySQL, <A NAME="6706"></A>SQLite, <A NAME="6707"></A>PostgreSQL,
-        <A NAME="6708"></A>Oracle, <A NAME="6709"></A>Sybase).
+        <A NAME="6701"></A><I>WWSympa</I> project.  The database ensures a secure access to
+        shared data. The PERL database API <A NAME="6704"></A><TT>DBI</TT>/<A NAME="6707"></A><TT>DBD</TT> enables
+        interoperability with various <A NAME="6710"></A>RDBMS (<A NAME="6711"></A>MySQL, <A NAME="6712"></A>SQLite, <A NAME="6713"></A>PostgreSQL,
+        <A NAME="6714"></A>Oracle, <A NAME="6715"></A>Sybase).
 	(See ref sec-rdbms, page&nbsp;<A HREF="node9.html#sec-rdbms"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
@@ -294,15 +291,15 @@ Example : forward multipart messages to the list editor, while
 
 <P>
 </LI>
-<LI><B><A NAME="6711"></A>LDAP-based mailing lists</B> : e-mail addresses can be retrieved dynamically from a database
-    	accepting <A NAME="6712"></A>SQL queries, or from an <A NAME="6713"></A>LDAP directory. In the interest
+<LI><B><A NAME="6717"></A>LDAP-based mailing lists</B> : e-mail addresses can be retrieved dynamically from a database
+    	accepting <A NAME="6718"></A>SQL queries, or from an <A NAME="6719"></A>LDAP directory. In the interest
 	of reasonable response times, <I>Sympa</I> retains the data source in an
 	internal cache controlled by a TTL (Time To Live) parameter.
 	(See <A HREF="node21.html#include-ldap-query">20.2.6</A>, page&nbsp;<A HREF="node21.html#include-ldap-query"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 </LI>
-<LI><B><A NAME="6715"></A>LDAP authentication</B>:  via uid and emails stored 
+<LI><B><A NAME="6721"></A>LDAP authentication</B>:  via uid and emails stored 
       	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
         directory, may be used to "unify" subscriptions.
 	(See ref ldap-auth, page&nbsp;<A HREF="node13.html#ldap-auth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
@@ -352,7 +349,7 @@ for information about project direction.
 
 <P>
 <I>Sympa</I> development started from scratch in 1995. The goal was to
-ensure continuity with the <A NAME="6719"></A>TULP list manager, produced
+ensure continuity with the <A NAME="6725"></A>TULP list manager, produced
 partly by the initial author of <I>Sympa</I>: Christophe Wolfhugel.
 
 <P>
@@ -370,7 +367,7 @@ Other date :
 <P>
 
 <UL>
-<LI>Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or <A NAME="6722"></A>LDAP).
+<LI>Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or <A NAME="6728"></A>LDAP).
 </LI>
 <LI>Oct 1999 Stable version of WWsympa, introduction of authorization scenarios.
 </LI>
@@ -384,7 +381,7 @@ Other date :
 </LI>
 <LI>Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
 </LI>
-<LI>Jan 2002 Virtual hosting, <A NAME="6723"></A>LDAP authentication
+<LI>Jan 2002 Virtual hosting, <A NAME="6729"></A>LDAP authentication
 </LI>
 <LI>Aug 2003 Automatic bounces management
 </LI>
@@ -423,6 +420,10 @@ Our thanks to all contributors, including:
 <P>
 
 <UL>
+<LI>Virginie Paitrault,Universit&#233; de Rennes 2, who wrote the excellent online user documentation.
+
+<P>
+</LI>
 <LI>John-Paul Robinson, University of Alabama at Birmingham, who added to email verification procedure to the Shibboleth support.
 
 <P>
@@ -455,7 +456,7 @@ Our thanks to all contributors, including:
 <P>
 </LI>
 <LI>Vincent Mathieu, Lynda Amadouche, John Dalbec for their integration
-	of <A NAME="6726"></A>LDAP features in <I>Sympa</I>.
+	of <A NAME="6732"></A>LDAP features in <I>Sympa</I>.
 
 <P>
 </LI>
@@ -528,7 +529,7 @@ Our thanks to all contributors, including:
 
 <P>
 </LI>
-<LI>All contributors and beta-testers cited in the <A NAME="6728"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
+<LI>All contributors and beta-testers cited in the <A NAME="6734"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
        being the first to use it, made it possible to quickly and
        efficiently debug the <I>Sympa</I> software.
 
@@ -645,7 +646,7 @@ and so on.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-06-20
+2006-08-08
 </ADDRESS>
 </BODY>
 </HTML>

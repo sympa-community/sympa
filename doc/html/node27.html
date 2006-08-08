@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -221,26 +218,26 @@ feel at home, and there may even be changes you will wish to suggest to us.
 <P>
 The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
 and the certificates of the trusted certificate authority. 
-This is done using the optional parameters <A NAME="11896"></A><TT>openSSL</TT> and
-<A NAME="11899"></A><TT>capath</TT> and / or <A NAME="11902"></A><TT>cafile</TT>.
+This is done using the optional parameters <A NAME="11915"></A><TT>openSSL</TT> and
+<A NAME="11918"></A><TT>capath</TT> and / or <A NAME="11921"></A><TT>cafile</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="11905"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+<LI><A NAME="11924"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
-<LI><A NAME="11908"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="11911"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+<LI><A NAME="11927"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+        The file <A NAME="11930"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
-Both the <A NAME="11916"></A><TT>cafile</TT> file and the <A NAME="11919"></A><TT>capath</TT> directory
+Both the <A NAME="11935"></A><TT>cafile</TT> file and the <A NAME="11938"></A><TT>capath</TT> directory
         should be shared with your Apache+mod_ssl configuration. This is useful
 	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
 
 <P>
 </LI>
-<LI><A NAME="11922"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
+<LI><A NAME="11941"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
 </LI>
 </UL>
 
@@ -324,7 +321,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="11927"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="11946"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -333,14 +330,14 @@ It is a good idea to have a look at the OpenCA (http://www.openssl.org)
 documentation and/or PKI providers' web documentation.
 You can use commercial certificates or home-made ones. Of course, the
 certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the <A NAME="11930"></A><TT>cafile</TT> file or the
-<A NAME="11933"></A><TT>capath</TT> Sympa configuration parameter. 
+the trusted CA's described in the <A NAME="11949"></A><TT>cafile</TT> file or the
+<A NAME="11952"></A><TT>capath</TT> Sympa configuration parameter. 
 
 <P>
 The list private key must be installed in a file named
-<A NAME="11936"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
+<A NAME="11955"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
-<A NAME="11939"></A><TT>password</TT> parameter in <A NAME="11942"></A><TT>sympa.conf</TT>.
+<A NAME="11958"></A><TT>password</TT> parameter in <A NAME="11961"></A><TT>sympa.conf</TT>.
 
 <P>
 
@@ -369,10 +366,10 @@ it. The format used by Netscape is  ``pkcs#12''.
 Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
-<A NAME="11945"></A><TT>cert.pem</TT> and <A NAME="11948"></A><TT>private_key</TT> using
-the <A NAME="11951"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="11954"></A><TT>p12topem.pl -help</TT> for details.
+<A NAME="11964"></A><TT>cert.pem</TT> and <A NAME="11967"></A><TT>private_key</TT> using
+the <A NAME="11970"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="11973"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
-<LI>be sure that <A NAME="11957"></A><TT>cert.pem</TT> and <A NAME="11960"></A><TT>private_key</TT>
+<LI>be sure that <A NAME="11976"></A><TT>cert.pem</TT> and <A NAME="11979"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
 </LI>
 <LI>As soon as a certificate is installed for a list, the list  home page
@@ -399,9 +396,9 @@ Report to <A HREF="node8.html#certificate-task-config">7.12.4</A>, page&nbsp;<A 
 </H2>
 
 <P>
-A task created with the model <A NAME="11965"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="11968"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
-The user is warned with the <A NAME="11971"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
+A task created with the model <A NAME="11984"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
+certificates stored in the <A NAME="11987"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
+The user is warned with the <A NAME="11990"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
 <P>
@@ -411,7 +408,7 @@ or is going to expire within three days.
 </H2>
 
 <P>
-You may use the model <A NAME="11974"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
+You may use the model <A NAME="11993"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
 lists when needed.
 
 <P>
@@ -447,7 +444,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-06-20
+2006-08-08
 </ADDRESS>
 </BODY>
 </HTML>

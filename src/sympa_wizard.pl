@@ -134,7 +134,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>''},	      
 	      
 	      {'name' => 'static_content_url',
-	       'default' => '/sympa-static',
+	       'default' => '/static-sympa',
 	       'query' => 'The URL mapped with the static_content_path directory defined above',
 	       'file' => 'sympa.conf',
 	       'advice' =>''},	      

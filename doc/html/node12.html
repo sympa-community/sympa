@@ -1,9 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 
-<!--Converted with jLaTeX2HTML 2002-2-1 (1.70) JA patch-2.0
-patched version by:  Kenshi Muto, Debian Project.
-* modified by:  Shige TAKENO
-LaTeX2HTML 2002-2-1 (1.70),
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
 original version by:  Nikos Drakos, CBLU, University of Leeds
 * revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
 * with significant contributions from:
@@ -17,7 +14,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="distribution" CONTENT="global">
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
 <LINK REL="STYLESHEET" HREF="sympa.css">
@@ -116,7 +113,7 @@ processus where authentication may differ from classic web method. The following
 </LI>
 <LI>The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
          Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
-         a configuration file name  <A NAME="9082"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">11.4</A> page&nbsp;<A HREF="node12.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+         a configuration file name  <A NAME="9102"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">11.4</A> page&nbsp;<A HREF="node12.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 </LI>
 </UL>
 
@@ -140,7 +137,7 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="9085"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+Here is a sample piece of your Apache <A NAME="9105"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
 	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
 	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
@@ -156,8 +153,8 @@ Here is a sample piece of your Apache <A NAME="9085"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only mandatory parameter you need to set in <A NAME="9088"></A><TT>sympa.conf</TT>/<A NAME="9091"></A><TT>robot.conf</TT> files is
-the <A NAME="9094"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in <A NAME="9108"></A><TT>sympa.conf</TT>/<A NAME="9111"></A><TT>robot.conf</TT> files is
+the <A NAME="9114"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -174,26 +171,26 @@ also for the SOAP server to deduce what Virtual Host is concerned by the current
 </H1>
 
 <P>
-The SOAP service <A NAME="9097"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+The SOAP service <A NAME="9117"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
 
 <P>
-This configuration file <A NAME="9100"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9103"></A><TT>etc/</TT> subdirectory or in <A NAME="9106"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9109"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9112"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9115"></A><TT>trusted_application</TT>. A sample <A NAME="9118"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+This configuration file <A NAME="9120"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9123"></A><TT>etc/</TT> subdirectory or in <A NAME="9126"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9129"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9132"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9135"></A><TT>trusted_application</TT>. A sample <A NAME="9138"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
 
 <P>
 
 <UL>
-<LI><A NAME="9121"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9124"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
+<LI><A NAME="9141"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9144"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
 </LI>
-<LI><A NAME="9127"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9130"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
+<LI><A NAME="9147"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9150"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
 </LI>
-<LI><A NAME="9133"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9136"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9139"></A><TT>remote_host</TT> can be listed.
+<LI><A NAME="9153"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9156"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9159"></A><TT>remote_host</TT> can be listed.
 
 <P>
 </LI>
 </UL>
 
 <P>
-You can test your SOAP service using the <A NAME="9142"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
+You can test your SOAP service using the <A NAME="9162"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
 /usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
 </PRE>
 
@@ -813,7 +810,7 @@ String[] _abonnements = tmp.which();
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-06-20
+2006-08-08
 </ADDRESS>
 </BODY>
 </HTML>

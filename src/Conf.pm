@@ -207,8 +207,8 @@ my %Default_Conf =
      'default_bounce_level1_rate' => 45,
      'default_bounce_level2_rate' => 75,
      'soap_url' => '',
-     'css_url' => '',
-     'css_path' => '',
+     'css_url' => '', ## Defined below
+     'css_path' => '',## Defined below
      'urlize_min_size' => 10240, ## 10Kb
      'supported_lang' => 'de,cs,el,es,et_EE,en_US,fr,hu,it,ja_JP,nl,oc,pt_BR,sv,tr',
      'web_recode_to' => '',
@@ -220,8 +220,8 @@ my %Default_Conf =
      'pictures_max_size' => 102400, ## 100Kb
      'pictures_feature' => 'off',
      'use_blacklist' => 'send,subscribe',
-     'static_content_url' => '',
-     'static_content_path' => ''
+     'static_content_url' => '/static-sympa',
+     'static_content_path' => '--DIR--/static_content'
      );
    
 
@@ -285,8 +285,13 @@ sub load {
     unless (defined $o{'wwsympa_url'}) {
 	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/wws";
     }
-    unless (defined $o{'css_url'}) {
-	$o{'css_url'}[0] = "$o{'wwsympa_url'}[0]/css/";
+
+    unless ($o{'css_url'}) {
+	$o{'css_url'}[0] = "$o{'static_content_url'}[0]/css";
+    }
+
+    unless ($o{'css_path'}) {
+	$o{'css_path'}[0] = "$o{'static_content_path'}[0]/css";
     }
 
     # 'host' and 'domain' are mandatory and synonime.$Conf{'host'} is
@@ -574,7 +579,11 @@ sub load_robots {
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
-	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'wwsympa_url'}.'/css';
+
+	## CSS
+	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css';
+	$robot_conf->{$robot}{'css_path'} ||= $Conf{'static_content_path'}.'/css/'.$robot;
+	
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
@@ -766,6 +775,67 @@ sub checkfiles {
 	    }
 	}
     }    		
+
+    # create or update static CSS files
+    my $css_updated = undef;
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $dir = &get_robot_conf($robot, 'css_path');
+	
+	## Get colors for parsing
+	my $param = {};
+	foreach my $p (@valid_options) {
+	    $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
+	}
+
+	## Set TT2 path
+	my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2','','');
+
+	## Create directory if required
+	unless (-d $dir) {
+	    unless ( &tools::mkdir_all($dir, 0755)) {
+		&List::send_notify_to_listmaster('cannot_mkdir',  $robot, ["Could not create directory $dir : $!"]);
+		&do_log('err','Failed to create directory %s',$dir);
+		return undef;
+	    }
+	}
+
+	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
+
+	    $param->{'css'} = $css;
+
+	    ## Update the CSS if it is missing or if a new css.tt2 was installed
+	    if (! -f $dir.'/'.$css ||
+		(stat('--ETCBINDIR--/web_tt2/css.tt2'))[9] > (stat($dir.'/'.$css))[9]) {
+		&do_log('notice',"Updating static CSS file $dir/$css ; previous file renamed");
+		
+		## Keep copy of previous file
+		rename $dir.'/'.$css, $dir.'/'.$css.'.'.time;
+
+		unless (open (CSS,">$dir/$css")) {
+		    &List::send_notify_to_listmaster('cannot_open_file',  $robot, ["Could not open file $dir/$css : $!"]);
+		    &do_log('err','Failed to open (write) file %s',$dir.'/'.$css);
+		    return undef;
+		}
+		
+		unless (&tt2::parse_tt2($param,'css.tt2' ,\*CSS, $tt2_include_path)) {
+		    my $error = &tt2::get_error();
+		    $param->{'tt2_error'} = $error;
+		    &List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
+		    &do_log('err', "Error while installing $dir/$css");
+		}
+
+		$css_updated ++;
+
+		close (CSS) ;		
+	    }	    
+	}
+    }
+    if ($css_updated) {
+	## Notify main listmaster
+	&List::send_notify_to_listmaster('css_updated',  $Conf{'host'}, ["Static CSS files have been updated ; check log file for details"]);
+    }
+
+
     return undef if ($config_err);
     return 1;
 }
