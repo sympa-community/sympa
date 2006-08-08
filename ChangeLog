@@ -1,3 +1,107 @@
+2006-08-04 18:12  sympa-authors
+
+	* src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,
+	  wwsympa/bounced.pl: [requested by P.Farmer, ZVENO] [ID 828]
+	  Change: on OS X 10.3 scripts can't change their real UID.  Now
+	  checking that the UID change succeeded.
+
+2006-08-04 18:08  sympa-authors
+
+	* src/sympa.pl: [requested by P.Farmer, ZVENO] [ID 828] Change: on
+	  OS X 10.3 scripts can't change their real UID.  Now checking that
+	  the UID change succeeded.
+
+2006-08-04 16:47  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: [A.Bernstein] [ID 898] Fix:
+	  Numerous bugs in mhonarc-ressources.tt2 for thread view When
+	  viewing an archive in threaded order, the
+	  first/previous/next/last buttons all return incorrectly to
+	  chronological view.  This happens because the line in the
+	  mhonarc-ressources.tt2 that creates these buttons is an exact
+	  copy of the one from the chronological view section, with
+	  "PREVPGLINK" and "NEXTPGLINK" instead of "TPREVPGLINK" and
+	  "TNEXTPGLINK".
+
+2006-08-04 16:36  sympa-authors
+
+	* web_tt2/arcsearch.tt2: [A.Bernstein] [ID 899] Fix: Minor bugs and
+	  cosmetic improvements in archive search results 1. In the
+	  presentation of search results in the archive, the listing of
+	  parameters that was used for the search is incorrect because of
+	  various typos in the arcsearch.tt2 file.
+
+	  2. Search results are hard to read because messages blend
+	  together, so I've made minor changes (making them list elements),
+	  and also added some linebreaks and removed some confusing
+	  feedback (the "Results" lines at the bottom).
+
+2006-08-04 16:22  sympa-authors
+
+	* web_tt2/arcsearch_form.tt2: [A.Bernstein] [ID 900] Change:
+	  Cosmetic reorganization of the archive advanced search page
+
+2006-08-04 16:21  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [no log message]
+
+2006-08-04 16:04  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix typo
+
+2006-08-04 09:03  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Warn about default CSS only if css_path was
+	  defined
+
+2006-08-04 08:34  sympa-authors
+
+	* doc/sympa.tex.tpl: Rephrased the digest-related explanations
+
+2006-08-03 15:30  sympa-authors
+
+	* po/en_US.po: Fixed charset and other metadata
+
+2006-08-03 14:58  sympa-authors
+
+	* doc/sympa.tex.tpl: Added comments about the requirements on the
+	  aliases file
+
+2006-08-03 14:50  sympa-authors
+
+	* wwsympa/bounced.pl: Changed call to send_notofy_to_owner to use
+	  updated message
+
+2006-08-03 14:45  sympa-authors
+
+	* src/Log.pm: Fix: connection to DB would fail
+
+2006-08-03 14:21  sympa-authors
+
+	* mail_tt2/listowner_notification.tt2: Fixed typo
+
+2006-08-03 11:50  sympa-authors
+
+	* mail_tt2/listowner_notification.tt2, src/Log.pm: Fix: incorrect
+	  calls to List::db_connect()
+
+2006-08-03 09:24  sympa-authors
+
+	* .version, ChangeLog: preparing 5.3a.5
+
+2006-08-03 09:24  sympa-authors
+
+	* src/List.pm: Removed logs about pictures removal
+
+2006-08-03 09:23  sympa-authors
+
+	* web_tt2/create_list_request.tt2: Removed wrapping
+
+2006-08-02 16:32  sympa-authors
+
+	* web_tt2/: edit_template.tt2, editfile.tt2: [proposed by P.van der
+	  Hagen] Fix: wrap is non HTML-standard ; setting it to "off"
+
 2006-08-02 16:13  sympa-authors
 
 	* mail_tt2/send_auth.tt2: [reported by W.Werner, Fraunhofer] Fix:

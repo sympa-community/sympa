@@ -56,5 +56,20 @@ installtemplates:
 		$(PERL) ../subst.pl *.tt2; \
 		); \
 	$(PERL) ../set_symlinks.pl web_tt2 $(DESTDIR)$(ETCBINDIR)/web_tt2
+	@for subdir in fr_FR ; do \
+		mkdir -p $(DESTDIR)$(ETCBINDIR)/web_tt2/$$subdir; \
+		cd $$subdir; \
+		( \
+			PERL=$(PERL); export PERL; \
+			UMASK=0644; export UMASK; \
+			INSTALLDIR=$(ETCBINDIR)/web_tt2/$$subdir; export INSTALLDIR; \
+			SBINDIR=$(SBINDIR); export SBINDIR; \
+			CGIDIR=$(CGIDIR); export CGIDIR; \
+			LIBDIR=$(LIBDIR); export LIBDIR; \
+			DESTDIR=$(DESTDIR); export DESTDIR; \
+			ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
+			$(PERL) ../../subst.pl *.tt2; \
+		); \
+	done	
 	find $(DESTDIR)$(ETCBINDIR) -type d -exec chmod 755 {} \;
 	find $(DESTDIR)$(ETCBINDIR) -type f -exec chmod 444 {} \;

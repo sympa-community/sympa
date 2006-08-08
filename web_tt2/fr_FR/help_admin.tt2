@@ -11,11 +11,11 @@
 	</ul>
 	<p>Reportez-vous à la <a href="[% path_cgi %]/help/introduction#roles">description du rôle de chacun</a> pour en savoir plus.</p>
 	
-	<h3><a name="crealiste"></a>Demander la création d'une liste de diffusion</h3>
+	<h3><a name="create_list"></a>Demander la création d'une liste de diffusion</h3>
 	<p>La <strong>demande de création</strong> d'une liste de diffusion peut être <strong>soumise à conditions</strong>. Si vous remplissez les conditions nécessaires pour effectuer une demande, la <strong>création de la liste</strong> sera néanmoins <strong>soumise à approbation par les listmasters</strong>.</p>
 	<p>Pour demander la création d'une liste de diffusion, procédez comme suit&#160;:</p>
 	<ol>
-		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <a href="#sympa_auth"><strong>authentifiez-vous</strong></a>.</li>
+		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <a href="[% path_cgi %]/help/user#sympa_auth"><strong>authentifiez-vous</strong></a>.</li>
 		<li>Dans le menu supérieur, <strong>cliquez sur le lien 'Création de liste'</strong>.<br/>
 	        <p class="retraitita">Si le bouton n'apparait pas, cela signifie que vous n'avez pas les privilèges nécessaires pour créer une liste.</p>
 		<li>Donnez un <strong>nom</strong> à votre liste (n'entrez que le nom sans l'arobase et le domaine&#160;; exemple&#160;: <em class="example">lettres_grec</em> et non pas <em class="example">lettres_grec@[% conf.host %]</em>).<br />
@@ -49,17 +49,17 @@
 		<li>Allez sur la <strong>page d'accueil</strong> de l'environnement de listes et <strong>authentifiez-vous</strong>.<br />
 		<p class="retraitita">Si vous êtes abonné à la liste avec plusieurs adresses, utilisez celle avec laquelle vous avez demandé la création de la liste.</p></li>
 		<li><strong>Allez sur la page d'information de la liste</strong> que vous souhaitez administrer.</li>
-		<li>Dans le menu de gauche, <strong>cliquez sur le lien 'Admin'</strong>. Vous arrivez sur une page semblable à celle-ci&#160;:</li>
+		<li>Dans le menu de gauche, <strong>cliquez sur le lien 'Admin'</strong>.</li>
 	</ol>
 
 	<p>Pour passer d'une section à une autre, cliquez sur le menu de gauche sous l'intitulé 'Admin'.</p>
 	<p>Les différentes sections du module d'administration de la liste vous permettent&#160;:</p>
 	<ul>
-		<li>de <a href="#listconfig">configurer la liste</a>&#160;;</li>
-		<li>de <a href="#personnaliser">personnaliser les fichiers associés</a> à la liste&#160;;</li>
+		<li>de <a href="[% path_cgi %]/help/listconfig">configurer la liste</a>&#160;;</li>
+		<li>de <a href="#customize">personnaliser les fichiers associés</a> à la liste&#160;;</li>
 		<li>de <a href="#manage_members">gérer les abonnés</a>&#160;;</li>
 		<li>de <a href="#manage_archives">gérer les archives de messages</a> de la liste&#160;;</li>
-		<li>de <a href="#erreurs">gérer les erreurs</a>&#160;;</li>
+		<li>de <a href="#manage_bounces">gérer les erreurs</a>&#160;;</li>
 		<li>de <a href="#manage_shared">créer, fermer ou restaurer l'espace de stockage partagé</a>&#160;;</li>
 		<li>de <a href="#supprlist">supprimer la liste</a>.</li>
 		<li>de <a href="#renamelist">renommer la liste</a>&#160;;</li>
@@ -73,10 +73,10 @@
 	</ul>
 
 
-	<h4><a name="listconfig"></a>Configurer la liste</h4>
+	<h4><a name="edit_list"></a>Configurer la liste</h4>
 	<p>Consultez la <a href="[% path_cgi %]/help/listconfig"><strong>documentation de la configuration de listes</strong></a>.</p>
 
-	<h4><a name="personnaliser"></a>Personnaliser la liste</h4>
+	<h4><a name="customize"></a>Personnaliser la liste</h4>
 	<p>À partir de cette page, vous pouvez <strong>éditer certains fichiers associés à votre liste</strong>, parmi lesquels&#160;:</p>
 	<ul>
 		<li>Messages type envoyés aux abonnés dans certains cas particuliers&#160;:
@@ -101,20 +101,22 @@
 		<p class="retraitita">Attention&#160;: les valeurs entre crochets sont des variables. Ne les modifiez pas, à moins de réellement savoir ce que vous faites...</p>
 
 	<h4><a name="manage_shared"></a>Gérer l'espace de stockage partagé</h4>
-	<p>Par défaut, les listes ne possèdent pas d'espace de stockage partagé. Il faut donc le créer. Pour cela, allez dans le <strong>module d'administration</strong> de la liste et cliquez sur '<strong>Créer un espace partagé</strong>'.</p>
-	<p>Pour que les abonnés puissent publier des documents dans l'espace de stockage partagé, vous devez <strong>modifier les droits</strong> par défaut&#160;: dans le module d'administration de la liste, cliquez sur '<strong>Configurer la liste</strong>' puis sur '<strong>Droits d'accès</strong>' (ou 'Privilèges'). Au bas de la page, vous trouverez une liste déroulante intitulée '<a href="#docsrights"><strong>Droit d'édition</strong></a>'&#160;; choisissez l'option '<strong>Limité aux abonnés (private)</strong>'.</p>
-	<p class="retraitita">Attention&#160;: si vous avez créé des dossiers avant d'effectuer cette opération, ces dossiers resteront interdits en écriture. Si vous souhaitez les autoriser en écriture, vous devrez <a href="#acces">modifier leurs droits d'accès</a> dossier par dossier.</p>
-	<p>Découvrez également <a href="#docsrights">comment créer des <strong>quotas</strong></a> pour l'espace de stockage partagé via la page 'Privilèges' de la section 'Configurer la liste'.</p>
+	<p>Par défaut, les listes ne possèdent pas toujours d'espace de stockage partagé. Il faut donc le créer. Pour cela, allez dans le <strong>module d'administration</strong> de la liste et cliquez sur '<strong>Créer un espace documents</strong>'.</p>
+	<p>Pour que les abonnés puissent publier des documents dans l'espace de stockage partagé, vous devez <strong>modifier les droits</strong> par défaut&#160;: dans le module d'administration de la liste, cliquez sur '<strong>Configurer la liste</strong>' puis sur '<strong>Droits d'accès</strong>' (ou 'Privilèges'). Au bas de la page, vous trouverez une liste déroulante intitulée '<a href="[% path_cgi %]/help/listconfig#docsrights"><strong>Droit d'édition</strong></a>'&#160;; choisissez l'option '<strong>Limité aux abonnés (private)</strong>'.</p>
+	<p class="retraitita">Attention&#160;: si vous avez créé des dossiers avant d'effectuer cette opération, ces dossiers resteront interdits en écriture. Si vous souhaitez les autoriser en écriture, vous devrez <a href="[% path_cgi %]/help/shared#acces">modifier leurs droits d'accès</a> dossier par dossier.</p>
+	<p>Découvrez également <a href="[% path_cgi %]/help/listconfig#docsrights">comment créer des <strong>quotas</strong></a> pour l'espace de stockage partagé via la page 'Privilèges' de la section 'Configurer la liste'.</p>
 	<p>Pour <strong>tout savoir sur la gestion de l'espace de stockage partagé</strong> (organisation de l'espace de stockage partagé, modification des droits d'accès, nommage des documents, etc.), reportez-vous à la section '<a href="[% path_cgi %]/help/shared">Utiliser l'espace de stockage partagé</a>' du Guide de l'utilisateur.</p>
-	<p>Pour <strong>supprimer tout accès à l'espace de stockage partagé</strong>, cliquez sur '<strong>Fermer l'espace partagé</strong>' dans le menu supérieur du module d'administration de liste. Vous pourrez ensuite <strong> le rouvrir</strong> en cliquant sur '<strong>Restaurer l'espace partagé</strong>'. Le fait de fermer et de rouvrir l'espace de stockage partagé n'a <strong>aucun impact sur les documents qu'il contient</strong>.</p>
+	<p>Pour <strong>supprimer tout accès à l'espace de stockage partagé</strong>, cliquez sur '<strong>Fermer l'espace documents</strong>' dans le menu supérieur du module d'administration de liste. Vous pourrez ensuite <strong> le rouvrir</strong> en cliquant sur '<strong>Restaurer l'espace documents</strong>'. Le fait de fermer et de rouvrir l'espace de stockage partagé n'a <strong>aucun impact sur les documents qu'il contient</strong>.</p>
 
 	<h4><a name="manage_members"></a>Gérer les abonnés</h4>
 	<p>La section 'Abonnés' vous présente la <strong>liste de toutes les personnes abonnées à la liste</strong>. Pour chaque abonné, les informations affichées sont&#160;:</p>
 	<ul>
 		<li><strong>adresse e-mail</strong>&#160;;</li>
 		<li><strong>domaine</strong> auquel appartient l'adresse utilisée pour l'abonnement (<em class="example">@cru.fr</em>, <em class="example">@sympa.org</em>, <em class="example">@fai.com</em>, etc.)&#160;;</li>
+		<li><strong>vignette</strong> si la fonctionnalité a été activé pour la liste;</li>
 		<li><strong>nom</strong> (pas toujours affiché&#160;: la mention ou non du nom dépend de la méthode employée lors de l'abonnement)&#160;;</li>
 		<li><a href="#deliverymode"><strong>mode de réception</strong></a> des messages&#160;;</li>
+		<li><strong>source de données</strong></a> indiquant l'origine si l'utilisateur est inclus dans la liste et pas directement abonné&#160;;</li>
 		<li><strong>date d'abonnement</strong> à la liste&#160;;</li>
 		<li><strong>date de dernière mise à jour</strong> des options d'abonné.</li>
 	</ul>
@@ -123,10 +125,10 @@
 	<p>Vous pouvez <strong>abonner de nouvelles personnes à la liste</strong> à partir de cette page&#160;:</p>
 	<ul>
 		<li>Pour ajouter <strong>une seule personne</strong>, entrez l'adresse e-mail de la personne que vous souhaitez abonner dans le champ de saisie et cliquez sur le bouton '<strong>Ajout</strong>'.</li>
-		<li>Pour ajouter <strong>plusieurs personnes</strong>, cliquez sur '<strong>Ajout multiple</strong>'. Dans la zone de texte qui apparaît, entrez les adresses e-mail et les noms des personnes que vous souhaitez abonner à la liste (une personne par ligne). Supprimez le texte d'exemple puis cliquez sur '<strong>Ajout d'abonnés</strong>'.</li>
+		<li>Pour ajouter <strong>plusieurs personnes</strong>, cliquez sur '<strong>Abonnements par lots</strong>'. Dans la zone de texte qui apparaît, entrez les adresses e-mail et les noms des personnes que vous souhaitez abonner à la liste (une personne par ligne). Supprimez le texte d'exemple puis cliquez sur '<strong>Ajout d'abonnés</strong>'.</li>
 	</ul>
 	<p class="retraitita">Si vous souhaitez abonner des personnes sans qu'elles ne reçoivent de notification, cochez la case 'Sans prévenir'. Sachez néanmoins qu'il est déconseillé d'abonner des gens sans les prévenir.</p>
-	<p>Même si vous pouvez abonner vous-même des personnes à vos listes de diffusion, il est toujours <strong>préférable que les gens fassent la démarche de s'inscrire eux-mêmes</strong> à la liste. Vous pouvez également <strong>inviter des personnes à s'abonner à la liste</strong> au moyen de la commande INVITE&#160;: envoyez un e-mail à sympa@nomdedomaine en mettant dans le corps du message la commande <strong>invite nomdelaliste adresseemail</strong> (exemple&#160;: <em class="example">invite cri-exemple jean.dupond(@)fai.com</em>).</p>
+	<p>Même si vous pouvez abonner vous-même des personnes à vos listes de diffusion, il est toujours <strong>préférable que les gens fassent la démarche de s'inscrire eux-mêmes</strong> à la liste. Vous pouvez également <strong>inviter des personnes à s'abonner à la liste</strong> au moyen de la commande INVITE&#160;: envoyez un e-mail à [% conf.email %]@[% conf.host %] en mettant dans le corps du message la commande <strong>invite nomdelaliste adresseemail</strong> (exemple&#160;: <em class="example">invite cri-exemple jean.dupond(@)fai.com</em>).</p>
 	<p>Pour <strong>accepter ou rejeter les demandes d'abonnement à la liste</strong>, cliquez sur '<strong>Abonnements en attente</strong>'. Vous voyez apparaître la liste des personnes ayant demandé leur abonnement à la liste. Pour accepter ou rejeter une demande, cochez la case correspondant à la personne ayant effectué la demande et cliquez sur le bouton de votre choix.</p>
 	<p>Pour <strong>envoyer à chacun des abonnés une notification de rappel d'abonnement</strong>, cliquez sur le bouton '<strong>Rappel des abonnements</strong>'. La notification de rappel d'abonnement contient&#160;:</p>
 	<ul>
@@ -140,10 +142,10 @@
 	<p>Pour <strong>désabonner des abonnés</strong> à partir de cette page, sélectionnez les abonnés en cochant les cases situées en bout de ligne et cliquez sur le bouton '<strong>Désabonner les adresses sélectionnées</strong>'.</p>
 	<p class="retraitita">Si vous souhaitez que le désabonnement ne soit pas suivi d'une notification, cochez la case 'Sans prévenir'. Il est déconseillé de désabonner des abonnés sans les prévenir, excepté dans le cas où il s'agit d'abonnés en erreur.</p>
 	<p class="retraitita">Astuce&#160;: pour sélectionner tous les abonnés en une fois, assurez-vous tout d'abord qu'ils sont tous affichés sur la page, puis cliquez sur le bouton 'Inverser la sélection'&#160;: tous les abonnés seront sélectionnés en un clic&#160;!</p>
-	<p>Pour <strong>modifier les options d'abonnés d'un abonné</strong>, cliquez sur son adresse e-mail. Vous arrivez sur une page semblable à celle-ci&#160;:</p>
+	<p>Pour <strong>modifier les options d'abonnés d'un abonné</strong>, cliquez sur son adresse e-mail.</p>
 
 	<p>À partir de cette page, vous pouvez <strong>modifier le nom, l'adresse e-mail et le mode de réception des messages de l'abonné</strong>. Vous pouvez également <strong>le désabonner</strong>.</p>
-	<p>Si l'abonné est <a href="#erreurs">en erreur</a>, un second bandeau apparaît sous le bandeau 'Information abonné'&#160;:</p>
+	<p>Si l'abonné est <a href="#manage_bounces">en erreur</a>, un second bandeau apparaît sous le bandeau 'Information abonné'&#160;:</p>
 
 	<p>Les informations affichées sont&#160;:</p>
 	<ul>
@@ -152,18 +154,19 @@
 		<li>période au cours de laquelle des erreurs ont été observées.</li>
 	</ul>
 	<p>Vous pouvez <strong>consulter la dernière erreur</strong> ou <strong>effacer toutes les erreurs</strong>. Si vous effacez toutes les erreurs, le <a href="#bouncers">score</a> de l'abonné sera remis à zéro.</p>
-	<p>Pour gérer plus facilement les adresses en erreur, allez à la page '<a href="#erreurs">Erreurs</a>' du module d'administration de la liste.</p>
+	<p>Pour gérer plus facilement les adresses en erreur, allez à la page '<a href="#manage_bounces">Erreurs</a>' du module d'administration de la liste.</p>
 
-	<h4><a name="erreurs"></a>Gérer les erreurs</h4>
-	<p>Lorsqu'il y a un <strong>problème avec les adresses e-mail de certains abonnés</strong> (adresses qui n'existent plus, adresses momentanément indisponibles au moment de l'envoi de messages, capacité de la boîte de réception atteinte, etc.), un pourcentage d'adresses en erreur est affiché dans le menu de gauche sous le texte '<strong>Taux d'adresses en erreur</strong>'. Pour gérer les adresses en erreur, allez à la page '<strong>Erreurs</strong>' du module d'administration de la liste.</p>
+	<h4><a name="manage_bounces"></a>Gérer les erreurs</h4>
+	<p>Lorsqu'il y a un <strong>problème avec les adresses e-mail de certains abonnés</strong> (adresses qui n'existent plus, adresses momentanément indisponibles au moment de l'envoi de messages, capacité de la boîte de réception atteinte, etc.), un pourcentage d'adresses en erreur est affiché dans le menu de gauche sous le texte '<strong>Taux d'adresses en erreur</strong>'. Pour consulter les adresses en erreur, allez à la page '<strong>Erreurs</strong>' du module d'administration de la liste.</p>
+	<p>Le logiciel Sympa gère automatiquement les abonnés en erreur : en fonction du nombre d'erreurs et du traffic deans la liste, les abonnés en erreur sont soit notifiés, soit désabonnés, soit leur score est remis à zéro lorsque l'erreur ne se reproduit plus.</p>
 	<p>Pour <strong>faire en sorte que des adresses ne soient plus en erreur</strong>, sélectionnez ces adresses en cochant les cases situées en bout de ligne et cliquez sur le bouton '<strong>Annuler les erreurs pour les abonnés sélectionnés</strong>'. Si l'erreur persiste, les adresses concernées seront de nouveau marquées en erreur lors du prochain envoi de message.</p>
 	<p>Vous pouvez aussi <strong>désabonner les abonnés dont les adresses sont toujours en erreur</strong>&#160;: un nombre trop grand d'adresses en erreur cause une charge significative sur le serveur de listes. Pour désabonner des abonnés, sélectionnez leurs adresses en cochant les cases situées en bout de ligne et cliquez sur le bouton '<strong>Supprimer les adresses sélectionnées</strong>'.</p>	
 	<p class="retraitita">Astuce&#160;: pour sélectionner tous les abonnés en une fois, assurez-vous tout d'abord qu'ils sont tous affichés sur la page, puis cliquez sur le bouton 'Inverser la sélection'&#160;: tous les abonnés seront sélectionnés en un clic&#160;!</p>
 
 	<h4><a name="moderate"></a>Modérer les messages envoyés à la liste</h4>
-	<p>Lorsqu'une liste est modérée, <strong>tous les messages doivent être approuvés par l'un des modérateurs avant de pouvoir être diffusés sur la liste</strong>. Lorsqu'un abonné envoie un message à la liste, il reçoit le message suivant de la part de l'automate de gestion de listes Sympa&#160;:</p>
+	<p>Lorsqu'une liste est modérée, <strong>tous les messages doivent être approuvés par l'un des modérateurs avant de pouvoir être diffusés sur la liste</strong>. Lorsqu'un abonné envoie un message à la liste, il reçoit un message de notification de la part de l'automate de gestion de listes Sympa&#160;.</p>
 
-	<p>Les modérateurs, quant à eux, reçoivent un message de ce type&#160;:</p>
+	<p>Les modérateurs, reçoivent eux aussi un message incluant le message à modérer.</p>
 
 	<p>Vous pouvez <strong>effectuer des tâches de modération</strong> soit <strong>par e-mail</strong>, en répondant aux messages que vous adresse Sympa, soit <strong>via l'interface web du serveur de listes</strong>. Pour cela, il vous suffit d'aller dans le <strong>module d'administration de la liste</strong> et de cliquer sur '<strong>Modérer</strong>' dans le menu supérieur&#160;: la page qui s'affiche contient tous les messages en attente de modération (les messages les plus récents sont en haut de la page). <strong>Pour consulter un message, cliquez sur son objet</strong>.</p>
 
@@ -175,15 +178,15 @@
 		<p class="retraitita">Attention&#160;: le rejet avec notification n'est disponible que via l'interface web du serveur de listes.</p></li>
 	</ul>
 	<p>Tous les modérateurs peuvent décider de diffuser ou non un message. Néanmoins, <strong>c'est le premier modérateur à intervenir sur le message qui emporte la décision</strong>. Si vous essayez d'intervenir sur un message qui a déjà été modéré, vous recevrez un message de Sympa vous informant que le message a déjà été traité. Si vous êtes plusieurs modérateurs, il est <strong>préférable de modérer les messages depuis l'interface web du serveur de listes</strong>&#160;: ainsi, vous verrez précisément quels messages restent à modérer.</p>
-	<p><strong>Quelles que soient la date et l'heure de la modération, la date et l'heure d'envoi du message ne changent pas</strong>. Si la diffusion du message est autorisée avec beaucoup de retard, il est donc possible de recevoir le 31 décembre un message daté du 1er janvier&#160;!</p>
-	<p>En cas de rejet avec notification, l'abonné qui avait envoyé le message rejeté reçoit un message de la forme suivante&#160;:</p>
+	<p class="retraitita"><strong>Quelles que soient la date et l'heure de la modération, la date et l'heure d'envoi du message ne changent pas</strong>. Si la diffusion du message est autorisée avec beaucoup de retard, il est donc possible de recevoir le 31 décembre un message daté du 1er janvier&#160;!</p>
+	<p>En cas de rejet avec notification, l'abonné qui avait envoyé le message rejeté reçoit un message de notification. Vous pouvez <a href="#customize">personnaliser ce message</a>.</p>
 
-	<p><strong>Rappel</strong>&#160;: vous pouvez <a href="#defliste">ajouter ou supprimer des modérateurs</a> via le module d'administration de la liste. Pour cela, à partir de la page d'information de la liste, cliquez sur '<strong>Admin</strong>', puis sur '<strong>Configurer la liste</strong>', et enfin sur '<strong>Définition de la liste</strong>'.</p>
+	<p><strong>Rappel</strong>&#160;: vous pouvez <a href="[% path_cgi %]/help/listconfig#description">ajouter ou supprimer des modérateurs</a> via le module d'administration de la liste. Pour cela, à partir de la page d'information de la liste, cliquez sur '<strong>Admin</strong>', puis sur '<strong>Configurer la liste</strong>', et enfin sur '<strong>Définition de la liste</strong>'.</p>
 	<p>Il est aussi possible d'<strong>intervenir sur les messages après leur diffusion sur la liste</strong>&#160;; ceci est utile dans le cas d'une liste non modérée. Si vous souhaitez <strong>supprimer un message</strong>, allez le consulter en ligne dans la section 'Archives' et cliquez sur le bouton '<strong>Marquer ce message pour suppression</strong>' situé en haut à droite du message. Un message de confirmation s'affiche&#160;; cliquez sur OK.</p>
 
 	<p>Le message sera supprimé au bout de quelques secondes. <strong>Attention&#160;: cette manipulation est irréversible&#160;!!! Si vous supprimez un message, vous ne pourrez en aucun cas le récupérer.</strong></p>
 		
-	<h4><a name="managearchives"></a>Gérer les archives</h4>
+	<h4><a name="manage_archives"></a>Gérer les archives</h4>
 	<p>L'automate de gestion de listes Sympa peut générer des <strong>archives compressées téléchargeables (format .ZIP) des messages envoyés sur la liste</strong>. Pour télécharger ces archives, <strong>sélectionnez les mois</strong> qui vous intéressent dans la liste et cliquez sur le bouton '<strong>Télécharger le Zip</strong>'.</p>
 	<p class="retraitita">Astuce&#160;: dans la liste 'Sélection des archives', pour sélectionner tous les mois pendant lesquels des messages ont été échangés, cliquez sur le premier mois, maintenez la touche SHIFT (ou &#171;&#160;MAJ&#160;&#187;) enfoncée et cliquez sur le dernier mois de la liste.</p>
 	<p>Vous recevrez un fichier du type '<strong>nomdelaliste_archives.zip</strong>' contenant des <strong>dossiers du type 'nomdelaliste_annee-mois'</strong> (exemple&#160;: <em class="example">cri-exemple_2005-06</em>) pour chaque mois. À l'intérieur de chaque dossier, <strong>les fichiers ont pour seul nom un numéro</strong> qui représente leur place dans la chronologie des messages envoyés (exemple&#160;: le fichier '1' contient le premier message envoyé dans le mois). Les fichiers de messages n'ont <strong>pas d'extension</strong>&#160;; utilisez l'éditeur de texte de votre choix (Bloc-notes, WordPad, Vim, etc.) pour les ouvrir. <strong>Chaque fichier correspond à un message entier (en-tête détaillé)</strong>.</p>
@@ -198,13 +201,13 @@
 	<p><strong>ATTENTION&#160;: lors du renommage d'une liste, vous devez informer les listmasters, sans quoi le changement de nom ne pourra être effectif</strong>.</p>
 	<p>Quelques conseils pour le choix des noms de vos listes&#160;:</p>
 	<ul>
-		<li>N'utilisez <strong>pas d'espaces, d'accents, de tirets ni de caractères spéciaux</strong> dans les noms des listes&#160;: ces caractères peuvent créer des problèmes.</li>
+		<li>N'utilisez <strong>pas d'espaces, d'accents ni de caractères spéciaux</strong> dans les noms des listes&#160;: ces caractères peuvent créer des problèmes.</li>
 		<li>Choisissez un <strong>nom explicite mais pas trop long</strong>&#160;: pensez aux abonnés qui devront taper ce nom à chaque fois qu'ils voudront envoyer un message à la liste&#160;!</li>
 		<li>Si vous administrez un ensemble de listes, vous pouvez <strong>préfixer le nom de vos listes avec un préfixe commun</strong> afin qu'elles soient classées à la suite et clairement identifiables par tous (exemple&#160;: <em class="example">sympa-users(@)cru.fr, sympa-fr(@)cru.fr</em>, etc.).</li>
 	</ul>
 
 	<h4><a name="supprlist"></a>Supprimer la liste</h4>
-	<p>Dans le <strong>module d'administration</strong> de la liste, cliquez sur '<strong>Supprimer la liste</strong>'. Un message de demande de confirmation s'affiche&#160;; cliquez sur 'OK'. La mention 'list_closed' s'affiche en haut de votre écran&#160;: la liste est fermée.</p>
+	<p>Dans le <strong>module d'administration</strong> de la liste, cliquez sur '<strong>Supprimer la liste</strong>'. Un message de demande de confirmation s'affiche&#160;; cliquez sur 'OK'.</p>
 	<p class="retraitita"><strong>Attention&#160;: si vous supprimez la liste, vous ne pourrez pas la rouvrir vous-même&#160;!!! Si vous désirez rouvrir la liste, il vous faudra faire appel aux listmasters.</strong></p>
 	<p>Concrètement, quelles sont les <strong>conséquences</strong> d'une fermeture de liste&#160;?</p>
 	<ul>
@@ -232,6 +235,6 @@
 			<li>etc.</li>
 
 		</ul>
-		<p class="retraitita">Pour que tous les abonnés prennent connaissance de la charte d'utilisation de la liste, le mieux est de l'inclure dans le message de bienvenue qu'ils reçoivent lors de leur abonnement. Pour cela, vous devez <a href="#personnaliser">personnaliser ce message</a> en allant à la page 'Personnaliser' du module d'administration de la liste.</p>
+		<p class="retraitita">Pour que tous les abonnés prennent connaissance de la charte d'utilisation de la liste, le mieux est de l'inclure dans le message de bienvenue qu'ils reçoivent lors de leur abonnement. Pour cela, vous devez <a href="#customize">personnaliser ce message</a> en allant à la page 'Personnaliser' du module d'administration de la liste.</p>
 		<p class="red">Lorsqu'elle existe, la <a target="_blank" title="Exemple de charte destinée aux propriétaires et modérateurs" href="http://listes.cru.fr/cnil/charte.proprio.html">Charte du propriétaire, animateur ou modérateur de liste</a> fournit aux propriétaires et aux modérateurs de listes toutes les informations indispensables pour pouvoir remplir leurs fonctions. Cette Charte recouvre l'ensemble des responsabilités et des attributions des propriétaires et modérateurs.</p>
 		<hr />

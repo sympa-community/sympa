@@ -3,9 +3,9 @@
 	<ul>
 		<li><a href="#description">Définition de la liste</a>&#160;;</li>
 		<li><a href="#sending">Diffusion/réception</a>&#160;;</li>
-		<li><a href="#command">Droits d'accès OU Privilèges</a>&#160;;</li>
+		<li><a href="#command">Droits d'accès</a>&#160;;</li>
 		<li><a href="#archives">Archives</a>&#160;;</li>
-		<li><a href="#bounces">Gestion des rapports de non-remise OU Gestion des erreurs</a>&#160;;</li>
+		<li><a href="#bounces">Gestion des rapports de non-remise</a>&#160;;</li>
 		<li><a href="#other">Divers</a>.</li>
 	</ul>
 	<p>Nous vous conseillons d'<strong>effectuer vos changements de configuration très progressivement</strong>&#160;: ainsi, si le résultat ne correspond pas à vos attentes, vous pouvez plus facilement revenir en arrière.</p>
@@ -35,34 +35,8 @@
 	<p><strong>ATTENTION&#160;: n'oubliez pas de cliquer sur 'Mise à jour'</strong> au bas de la page pour enregistrer tous vos changements.</p>
 
 	<h5><a name="sending"></a>Diffusion/réception</h5>
-	<p>À partir de cette page, vous pouvez tout d'abord <strong>décider qui peut envoyer des messages sur la liste</strong>. Les différentes options disponibles pour la liste sont&#160;:</p>
-	<ul>
-		<li>liste fermée (closed)&#160;;</li>
-		<li>liste modérée, ancienne méthode (editor)&#160;;</li>
-		<li>liste modérée (editorkey)&#160;;</li>
-		<li>liste modérée, même pour les modérateurs (editorkeyonly)&#160;;</li>
-		<li>liste modérée, avec confirmation du modérateur (editorkeyonlyauth)&#160;;</li>
-		<li>limité aux utilisateurs du domaine local (intranet)&#160;;</li>
-		<li>limité aux utilisateurs du domaine local et aux abonnés (intranetorprivate)&#160;;</li>
-		<li>newsletter, limité aux modérateurs (newsletter)&#160;;</li>
-		<li>newsletter, limité aux modérateurs après confirmation (newsletterkeyonly)&#160;;</li>
-		<li>limité aux abonnés (private) - <em>option par défaut</em>&#160;;</li>
-		<li>limité aux abonnés, vérif de la signature smime (private_smime)&#160;;</li>
-		<li>liste modérée, limité aux abonnés (privateandeditorkey)&#160;;</li>
-		<li>limité aux abonnés avec modération (privateandeditorkeyonly)&#160;;</li>
-		<li>liste modérée, pour les non-abonnés postant un message multipart (privateandnomultipartoreditorkey)&#160;;</li>
-		<li>limité aux abonnés avec authentification MD5 préalable (privatekey)&#160;;</li>
-		<li>liste modérée, pour les abonnés et les modérateurs (privatekeyandeditorkeyonly)&#160;;</li>
-		<li>liste privée, modérée pour les non-abonnés (privateoreditorkey)&#160;;</li>
-		<li>liste privée, modérée pour les non-abonnés (privateoreditorkeyorabsences)&#160;;</li>
-		<li>liste privée, confirmation pour les non-abonnés (privateorpublickey)&#160;;</li>
-		<li>ouvert (public)&#160;;</li>
-		<li>ouvert, Bcc interdit (anti-spam) (public_nobcc)&#160;;</li>
-		<li>ouvert à quiconque mais avec authentification md5 (publickey)&#160;;</li>
-		<li>ouvert mais attachements passés au modérateur (publicnoattachment)&#160;;</li>
-		<li>ouvert mais attachements interdits (publicnomultipart).</li>
-	</ul>
-	<p>Dans la zone '<strong>Périodicité des compilations</strong>', vous pouvez définir à quel intervalle sont envoyées les compilations de messages (modes de réception Digest et Summary)&#160;: sélectionnez dans la liste tous les <strong>jours</strong> pour lesquels vous souhaitez que des compilations soient envoyées. Choisissez ensuite un <strong>horaire d'envoi</strong> des compilations (évitez de choisir un horaire compris entre 23h et minuit).</p>
+	<p>À partir de cette page, vous pouvez tout d'abord <strong>décider qui peut envoyer des messages sur la liste</strong>.</p>
+	<p>Dans la zone '<strong>Périodicité des compilations</strong>', vous pouvez définir à quel intervalle sont envoyées les compilations de messages (modes de réception Compilation et Résumé)&#160;: sélectionnez dans la liste tous les <strong>jours</strong> pour lesquels vous souhaitez que des compilations soient envoyées. Choisissez ensuite un <strong>horaire d'envoi</strong> des compilations (évitez de choisir un horaire compris entre 23h et minuit).</p>
 	<p>Dans la liste '<strong>Options d'abonné disponibles</strong>', sélectionnez toutes les options d'abonné que vous souhaitez offrir à vos abonnés. Par défaut, toutes les options sont sélectionnées.</p>
 	<p>La zone '<strong>Adresse de réponse</strong>' vous permet de définir les destinataires par défaut lors d'une réponse à un message envoyé sur la liste&#160;:</p>
 	<ul>
@@ -76,7 +50,7 @@
 	<p>Enfin, l'option '<strong>Marquage du sujet des messages</strong>' permet de choisir le <strong>texte qui sera inséré devant l'objet de tous les messages</strong> envoyés sur la liste&#160;: ceci permet aux abonnés de pouvoir trier leurs messages plus facilement, de leur appliquer des filtres de messages, etc. Par défaut, ce texte est constitué du <strong>nom de la liste entouré de crochets</strong> (les crochets sont rajoutés automatiquement par le système, il est inutile de les indiquer vous-même).</p>
 	<p><strong>ATTENTION&#160;: n'oubliez pas de cliquer sur 'Mise à jour'</strong> au bas de la page pour enregistrer tous vos changements.</p>
 
-	<h5><a name="command"></a>Droits d'accès OU Privilèges</h5>
+	<h5><a name="command"></a>Droits d'accès</h5>
 	<p>À partir de cette page, vous pouvez décider&#160;:</p>
 	<ul>
 		<li><strong>qui a accès aux informations sur la liste</strong>. Les options disponibles sont les suivantes&#160;:
@@ -84,20 +58,7 @@
 			<li>pour tous (open) - <em>option par défaut</em>&#160;;</li>
 			<li>réservé aux abonnés (private).</li>
 		</ul></li>
-		<li><strong>qui peut s'abonner à la liste</strong>. Les options disponibles sont les suivantes&#160;:
-		<ul>
-			<li>demande d'abonnement après confirmation (auth)&#160;;</li>
-			<li>soumis à authentification (notification des proprios) (auth_notify)&#160;;</li>
-			<li>soumis à authentification puis accord du proprio (auth_owner)&#160;;</li>
-			<li>abonnement impossible (closed)&#160;;</li>
-			<li>limité aux utilisateurs du domaine local (intranet)&#160;;</li>
-			<li>usager du domaine local ou via autorisation du proprio (intranetorowner)&#160;;</li>
-			<li>ouvert à tous sans authentification (open) - <em>option par défaut</em>&#160;;</li>
-			<li>ouvert à tous, notification du propriétaire (open_notify)&#160;;</li>
-			<li>n'importe qui pas de bienvenue (open_quiet)&#160;;</li>
-			<li>ouvert à tous après autorisation du proprio (owner)&#160;;</li>
-			<li>demande d'abonnement avec signature par certificat (smime)&#160;;</li>
-			<li>ouvert à tous après autorisation du proprio ou avec signature par certificat (smimeorowner).<br />
+		<li><strong>qui peut s'abonner à la liste</strong>.</li>
 			<p class="retraitita">Il est conseillé de toujours choisir une option comportant le paramètre 'auth'&#160;: ainsi, le système demandera confirmation par e-mail au futur abonné avant de l'abonner à la liste. Ceci permet d'éviter des abonnements avec une adresse e-mail invalide et assure que personne ne peut être abonné à la liste à son insu.</p></li></ul></li>
 		<li><strong>qui peut se désabonner de la liste</strong>. Les options disponibles sont les suivantes&#160;:
 		<ul>
@@ -159,7 +120,7 @@
 	</ul>
 	<p>La zone de texte '<strong>Quota</strong>' vous permet de définir une <strong>taille maximale à ne pas dépasser pour les archives de messages</strong>. Cette taille est exprimée en kilo-octets. Les propriétaires reçoivent une notification lorsque les archives atteignent 95&#160;% de la taille autorisée. Si la taille maximale dévolue aux archives est atteinte, les messages ultérieurs ne sont pas archivés.<br />
 	<p class="retraitita">Même si les messages cessent d'être archivés, il reste évidemment possible d'envoyer des messages sur la liste.</p></p>
-	<p>Il est également possible d'<strong>accéder aux archives de la liste par e-mail</strong>, en envoyant à <strong>sympa@nomdedomaine</strong> la commande suivante&#160;: <span class="commande"><strong>get nomdelaliste log.anneemois</strong></span> (exemple&#160;: <em class="example">get cri-exemple log.200507</em>). L'abonné reçoit alors une compilation de tous les messages envoyés au cours du mois choisi. Cette compilation est envoyée en texte brut et contient des balises <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> à la place du formatage d'origine&#160;; elle comprend également des en-têtes détaillés pour chaque message. Le paramètre '<strong>Archives textuelles</strong>' vous permet de définir&#160;:</p>
+	<p>Il est également possible d'<strong>accéder aux archives de la liste par e-mail</strong>, en envoyant à <strong>[% conf.email %]@[% conf.host %]</strong> la commande suivante&#160;: <span class="commande"><strong>get nomdelaliste log.anneemois</strong></span> (exemple&#160;: <em class="example">get cri-exemple log.200507</em>). L'abonné reçoit alors une compilation de tous les messages envoyés au cours du mois choisi. Cette compilation est envoyée en texte brut et contient des balises <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> à la place du formatage d'origine&#160;; elle comprend également des en-têtes détaillés pour chaque message. Le paramètre '<strong>Archives textuelles</strong>' vous permet de définir&#160;:</p>
 	<ul>
 		<li><strong>qui a le droit</strong> de se faire envoyer par e-mail les archives récapitulatives des messages de la liste&#160;;</li>
 		<li>la <strong>périodicité de création de ces archives</strong>. Par exemple, si la périodicité est 'month', l'ensemble des messages envoyés sur la liste en un mois sera regroupé dans un message d'archives unique qui pourra être demandé par e-mail au serveur.</li>
@@ -174,7 +135,7 @@
 	<p class="retraita">Cette option s'applique à la fois aux archives de messages textuelles et aux archives en ligne, ainsi qu'aux compilations de messages envoyées aux personnes qui ont souscrit leur abonnement avec le mode de réception Digest.</p>	
 	<p><strong>ATTENTION&#160;: n'oubliez pas de cliquer sur 'Mise à jour'</strong> au bas de la page pour enregistrer tous vos changements.</p>
 
-	<h5><a name="bounces"></a>Gestion des rapports de non-remise OU Gestion des erreurs</h5>
+	<h5><a name="bounces"></a>Gestion des rapports de non-remise</h5>
 	<p>Les &#171;&#160;<strong>bounces</strong>&#160;&#187; représentent les <strong>abonnés en erreur</strong>, c'est-à-dire les abonnés qui ne reçoivent pas les messages envoyés sur la liste. Les raisons peuvent être variées&#160;: adresses qui n'existent plus, adresses momentanément indisponibles au moment de l'envoi de messages, capacité de la boîte de réception atteinte, etc.</p>
 	<p>La section '<strong>Gestion des bounces</strong>' définit deux seuils&#160;:</p>
 	<ul>

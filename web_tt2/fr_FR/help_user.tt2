@@ -38,7 +38,7 @@
 	<p>En fonction du type de liste (liste à inscription soumise à conditions ou non) et de la disponibilité du propriétaire, <strong>le délai de réception de la notification peut varier</strong>. Il est inutile d'envoyer plusieurs demandes.</p>
 	<p><strong>Si votre demande a été acceptée, le message que vous recevez confirme votre inscription à la liste. Ce message</strong> (la Charte des abonnés de la liste) <strong>contient plusieurs informations capitales&#160;:</strong></p>
 	<ul>
-		<li>votre <strong>mot de passe de listes</strong>. Ce mot de passe sera le même pour l'ensemble des listes auxquelles vous serez abonné avec la même adresse. Vous pouvez le <a href="#prefsgenerales" title="Comment modifier son mot de passe">modifier en ligne</a> en vous connectant sur l'environnement de listes&#160;;</li>
+		<li>votre <strong>mot de passe de listes</strong>. Ce mot de passe sera le même pour l'ensemble des listes auxquelles vous serez abonné avec la même adresse. Vous pouvez le <a href="#global_pref" title="Comment modifier son mot de passe">modifier en ligne</a> en vous connectant sur l'environnement de listes&#160;;</li>
 		<li>des <strong>informations détaillées sur la liste</strong>&#160;: son objet, l'adresse web où aller consulter les archives, etc&#160;;</li>
 		<li>les <strong>conditions d'utilisation de la liste</strong>&#160;: sujets de discussion autorisés et exclus, nétiquette, informations légales, politique de confidentialité, etc&#160;;</li>
 	</ul>
@@ -51,7 +51,7 @@
 	</ol>
 
 	<h3><a name="sympa_auth"></a>Se connecter sur l'environnement de listes</h3>
-	<p>Pour vous connecter sur l'environnement de listes, allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil de l'environnement de listes</a></strong> et <strong>cliquez sur le bouton 'Login'</strong> situé en haut à gauche de votre écran.<br />
+	<p>Une zone d'authentification est présente dans la colonne gauche (en haut) de l'interface web. Si vous êtes déjà authentifié, y aparaissent votre adresse email et votre profil (abonné propriétaire). Dans le cas contraire, un formulaire d'authentification vous est proposé.<br />
 
 	<p>En fonction de votre situation personnelle, la procédure d'authentification varie&#160;:</p>
 	<ul>
@@ -66,17 +66,17 @@
 	<p class="retraitita">Attention&#160;: le mot de passe de listes est un mot de passe spécial qui ne vous sert que pour les listes&#160;.</p>
 
 	<h3>Consulter ses abonnements</h3>
-	<p>Pour voir toutes les listes auxquelles vous êtes abonné, vous devez tout d'abord être <a href="#sympa_auth">authentifié</a>. Vous voyez apparaître dans la boîte 'Vos listes' de la colonne de droite, le nom de toutes les listes auxquelles vous êtes abonné, suivi chacun d'une brève description de la liste.</p>
+	<p>Pour voir toutes les listes auxquelles vous êtes abonné, vous devez tout d'abord être <a href="#sympa_auth">authentifié</a>. Vous voyez apparaître dans la boîte 'Vos listes' de la colonne de gauche, le nom de toutes les listes auxquelles vous êtes abonné, suivi chacun d'une brève description de la liste.</p>
 
 	<p><strong>Pour aller consulter la page d'information d'une liste, cliquez sur son nom</strong>. La page d'information comporte une description plus ou moins détaillée de la liste (son objet, les usages en vigueur pour l'envoi de messages, etc.).</p>
 	<p>À partir de cette page d'information, vous pourrez&#160;:</p>
 	<ul>
 		<li>modifier vos <a href="#options">options d'abonné</a>&#160;;</li>
 		<li><a href="[% path_cgi %]/help/arc">lire les archives</a> de la liste&#160;;</li>
-		<li>effectuer une <a href="#search">recherche dans les archives</a>&#160;;</li>
-		<li><a href="#sendmsg">envoyer des messages</a>&#160;;</li>
-		<li><a href="#downloaddoc">télécharger des documents</a> à partir de l'espace partagé&#160;;</li>
-		<li><a href="#publishdoc">publier des documents</a> dans l'espace partagé&#160;;</li>
+		<li>effectuer une <a href="[% path_cgi %]/help/arc#search">recherche dans les archives</a>&#160;;</li>
+		<li><a href="[% path_cgi %]/help/sendmsg">envoyer des messages</a>&#160;;</li>
+		<li><a href="[% path_cgi %]/help/shared#downloaddoc">télécharger des documents</a> à partir de l'espace partagé&#160;;</li>
+		<li><a href="[% path_cgi %]/help/shared#publishdoc">publier des documents</a> dans l'espace partagé&#160;;</li>
 		<li>accéder à la <a href="#subscribers">liste des abonnés</a> (lorsqu'elle est disponible)&#160;;</li>
 		<li><a href="#unsubscribe">vous désabonner</a> de la liste.</li>
 	</ul>	<p><a name="subscribers"></a>Le <strong>nombre de personnes abonnées</strong> à la liste est affiché de manière permanente dans le <strong>menu de gauche</strong>. <strong>Pour accéder à la liste des abonnés, cliquez sur le lien 'Voir les abonnés'</strong> dans le menu de gauche (si le propriétaire de la liste n'a pas autorisé l'accès à la liste des abonnés, ce bouton n'apparaît pas). La liste des abonnés s'affiche et vous présente l'<strong>adresse e-mail</strong> et le <strong>nom</strong> de chacun des abonnés (la mention ou non du nom dépend de la méthode employée lors de l'abonnement).</p>
@@ -84,7 +84,7 @@
 	<p><strong>Les noms des propriétaires et des modérateurs de la liste sont indiqués dans le menu de gauche</strong>. N'écrivez jamais directement à un propriétaire ou à un modérateur de liste. Lorsque vous avez une question ou une remarque, l'adresse que vous devez utiliser est&#160;: <strong>nomdelaliste-request@[% conf.host %]</strong> (remplacez 'nomdelaliste' par le nom de la liste en question).</p>
 	<p>Pour voir la <strong>date de votre inscription à la liste</strong> et la <strong>date de dernière mise à jour de vos options d'abonné</strong>, <strong>cliquez sur le lien 'Options d'abonné'</strong> dans le menu de gauche.</p>
 
-	<h3><a name="prefs"></a>Gérer ses préférences</h3>
+	<h3><a name="pref"></a>Gérer ses préférences</h3>
 	<p>Pour une <strong>plus grande souplesse</strong> dans votre utilisation des listes, <strong>il vous est possible de définir certaines préférences personnelles</strong>. Ces préférences se décomposent en deux volets&#160;:</p>
 	<ul>
 		<li>vos <strong>options d'abonné</strong>, qui sont à choisir liste par liste&#160;;</li>
@@ -116,11 +116,11 @@
 		<li><strong>Cliquez sur le bouton 'Mise à jour'</strong>.</li>
 	</ol>
 
-	<h4><a name="prefsgenerales"></a>Modifier ses préférences générales</h4>
+	<h4><a name="global_pref"></a>Modifier ses préférences générales</h4>
 	<p>Les préférences générales sont relatives à l'ensemble de vos abonnements et à la manière dont se présente votre interface de listes Sympa. Pour modifier vos préférences, procédez comme suit&#160;:</p>
 	<ol>
 		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <strong>authentifiez-vous</strong>.</li>
-		<li>Dans la boîte en haut de la colonne de droite, <strong>cliquez sur le lien 'Vos préférences'</strong>.</li>
+		<li>Dans la boîte en haut de la colonne de gauche, <strong>cliquez sur le lien 'Vos préférences'</strong>.</li>
 		<li><strong>Modifiez vos préférences</strong>.</li>
 		<li><strong>Cliquez sur 'Valider' pour chaque option</strong> que vous modifiez.</li>
 	</ol>
@@ -141,9 +141,9 @@
 		<ul>
 			<li><strong>parcourir les différentes rubriques</strong> listées en <a href="[% path_cgi %]/home">page d'accueil du serveur de listes</a>&#160;;</li>
 			<li>rechercher une liste grâce au <strong>champ de recherche</strong>&#160;: la chaîne recherchée renverra tous les résultats trouvés dans les noms et les descriptions des listes (les descriptions des listes se résument généralement à une courte phrase)&#160;;</li>
-			<li>cliquer sur le lien '<a href="[% path_cgi %]/lists">Liste des listes</a>' situé sur la <a href="[% path_cgi %]/home">page d'accueil</a> du serveur de listes pour <strong>afficher l'intégralité des listes</strong>.</li>
+			<li>cliquer sur l'onglet '<a href="[% path_cgi %]/lists">Liste des listes</a>' en haut de page pour <strong>afficher l'intégralité des listes</strong>.</li>
 		</ul>
-		<p>En fonction du domaine auquel appartient votre adresse (exemple&#160;: <em class="example">cru.fr</em>, <em class="example">fai.com</em>, etc.) et de l'endroit à partir duquel vous vous connectez, vous n'aurez pas accès aux mêmes listes. Vous pouvez malgré tout vous abonner aux listes qui vous sont cachées si vous connaissez leur nom. Pour cela, <a href="#abbo">utilisez votre client de messagerie</a>.</p>
+		<p class="retraitita">En fonction du domaine auquel appartient votre adresse (exemple&#160;: <em class="example">cru.fr</em>, <em class="example">fai.com</em>, etc.) et de l'endroit à partir duquel vous vous connectez, vous n'aurez pas accès aux mêmes listes. Vous pouvez malgré tout vous abonner aux listes qui vous sont cachées si vous connaissez leur nom. Pour cela, <a href="#abbo">utilisez votre client de messagerie</a>.</p>
 
 	<h3><a name="archives"></a>Lire les archives d'une liste en ligne</h3>
 	<p>Consultez la <a href="[% path_cgi %]/help/arc"><strong>documentation des archives</strong></a>.</p>

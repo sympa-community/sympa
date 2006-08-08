@@ -404,6 +404,8 @@ Our thanks to all contributors, including:
 
 \begin {itemize}
 
+  \item Virginie Paitrault,Université de Rennes 2, who wrote the excellent online user documentation.
+
   \item John-Paul Robinson, University of Alabama at Birmingham, who added to email verification procedure to the Shibboleth support.
 
   \item Gwenaelle Bouteille who joined the development team for a few months and produced a great job for various feature introduced in V5 (familly, RSS, shared document moderation, ...).
