@@ -1289,7 +1289,8 @@ sub DoForward {
     }else {
 	unless ($list = new List ($name, $robot)) {
 	    &do_log('notice', "Message for %s-%s ignored, unknown list %s",$name, $function, $name );
-	    my $sender = chomp($hdr->get('From'));
+	    my $sender = $hdr->get('From');
+	    chomp $sender;
 	    my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
 	    unless (&List::send_global_file('list_unknown', $sender, $robot,
 					    {'list' => $name,
