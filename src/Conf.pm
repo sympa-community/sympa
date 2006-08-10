@@ -286,14 +286,6 @@ sub load {
 	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/wws";
     }
 
-    unless ($o{'css_url'}) {
-	$o{'css_url'}[0] = "$o{'static_content_url'}[0]/css";
-    }
-
-    unless ($o{'css_path'}) {
-	$o{'css_path'}[0] = "$o{'static_content_path'}[0]/css";
-    }
-
     # 'host' and 'domain' are mandatory and synonime.$Conf{'host'} is
     # still wydly use even if the doc require domain.
  
@@ -359,9 +351,19 @@ sub load {
 	$Conf{$i} = $o{$i}[0] || $Default_Conf{$i};
     }
 
+    ## Some parameters depend on others
+    unless ($Conf{'css_url'}) {
+	$Conf{'css_url'} = $Conf{'static_content_url'}.'/css';
+    }
     
+    unless ($Conf{'css_path'}) {
+	$Conf{'css_path'} = $Conf{'static_content_path'}.'/css';
+    }
+
+    ## Load robot.conf files
     my $robots_conf = &load_robots ;    
     $Conf{'robots'} = $robots_conf ;
+
     my $nrcpt_by_domain =  &load_nrcpt_by_domain ;
     $Conf{'nrcpt_by_domain'} = $nrcpt_by_domain ;
     

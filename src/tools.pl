@@ -284,7 +284,13 @@ sub mk_parent_dir {
 
 ## Recursively create directory and all parent directories
 sub mkdir_all {
-    my ($path, $umask) = @_;
+    my ($path, $mode) = @_;
+
+    my $status = 1;
+
+    ## Change umask to fully apply modes of mkdir()
+    my $saved_mask = umask;
+    umask 0000;
 
     return undef if ($path eq '');
     return 1 if (-d $path);
@@ -294,18 +300,22 @@ sub mkdir_all {
     pop @token;
     my $parent_path = join '/', @token;
 
-    if (-d $parent_path) {
-	## Try to create directory
-	mkdir ($path, $umask) && chmod $umask, $path && return 1;	   
-    }else {
-	my $status =  &mkdir_all($parent_path, $umask);
-	if ($status) {
-
-	    ## Try to create directory
-	    mkdir ($path, $umask) && chmod $umask, $path && return 1;	   
+    unless (-d $parent_path) {
+	unless (&mkdir_all($parent_path, $mode)) {
+	    $status = undef;
 	}
     }
-    return undef;
+
+    if (defined $status) { ## Don't try if parent dir could not be created
+	unless (mkdir ($path, $mode)) {
+	    $status = undef;
+	}
+    }
+
+    ## Restore umask
+    umask $saved_mask;
+
+    return $status;
 }
 
 # shift file renaming it with date. If count is defined, keep $count file and unlink others
