@@ -828,7 +828,10 @@ sub checkfiles {
 
 		$css_updated ++;
 
-		close (CSS) ;		
+		close (CSS) ;
+		
+		## Make the CSS world-readable
+		chmod 0644, $dir.'/'.$css;
 	    }	    
 	}
     }
