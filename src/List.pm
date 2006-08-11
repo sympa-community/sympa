@@ -11706,6 +11706,44 @@ sub upgrade {
 	}	
     }
 
+    ## New mhonarc ressource file with utf-8 recoding
+    if (&tools::lower_version($previous_version, '5.3a.6')) {
+	
+	&do_log('notice','Looking for customized mhonarc-ressources.tt2 files...');
+	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+	    my $etc_dir = $Conf::Conf{'etc'};
+
+	    if ($vr ne $Conf::Conf{'host'}) {
+		$etc_dir .= '/'.$vr;
+	    }
+
+	    if (-f $etc_dir.'/mhonarc-ressources.tt2') {
+		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
+		rename $etc_dir.'/mhonarc-ressources.tt2', $new_filename;
+		&do_log('notice', "Custom %s file has been backed up as %s", $etc_dir.'/mhonarc-ressources.tt2', $new_filename);
+		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'host'},
+						 [$etc_dir.'/mhonarc-ressources.tt2', $new_filename]);
+	    }
+	}
+
+
+	&do_log('notice','Rebuilding web archives...');
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
+
+	    next unless (defined $list->{'admin'}{'web_archive'});
+	    my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+	    
+	    unless (open REBUILD, ">$file") {
+		&do_log('err','Cannot create %s', $file);
+		next;
+	    }
+	    print REBUILD ' ';
+	    close REBUILD;
+	}	
+
+    }
+
     return 1;
 }
 
@@ -12202,7 +12240,7 @@ sub _load_admin_file {
 	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
     }
 
-    unless (open CONFIG, $config_file) {
+    unless (open CONFIG, "<:encoding($Conf{'filesystem_encoding'})", $config_file) {
 	&do_log('info', 'Cannot open %s', $config_file);
     }
 
@@ -12499,7 +12537,7 @@ sub _save_admin_file {
 	return undef;
     }
 
-    unless (open CONFIG, ">$config_file") {
+    unless (open CONFIG, , ">:encoding($Conf{'filesystem_encoding'})", "$config_file") {
 	&do_log('info', 'Cannot open %s', $config_file);
 	return undef;
     }

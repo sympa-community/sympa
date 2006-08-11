@@ -2439,18 +2439,9 @@ The maximum size of the uploaded picture file (bytes)
         This is the default language for \Sympa. The message catalog (.po, compiled as a .mo file) located 
 	in the corresponding \cfkeyword {locale} directory will be used.
 
-\subsection {\cfkeyword {web\_recode\_to}}   
+\subsection {\cfkeyword {web\_recode\_to}} (OBSOLETE)
 
-        If you set this parameter to a charset then web pages will be recoded to this specified charset. This is usefull to have web pages 
-	in UTF-8, allowing multi-lingual contents. You should check that customized web templates, topics.conf, list config files, info files are
-	all using the same charset.
-
-	Example :
-\begin {quote}
-\begin{verbatim}
-web_recode_to   utf-8
-\end{verbatim}
-\end {quote}
+    All web pages are now encoded in utf-8.
    
 Note : if you recode web pages to utf-8, you should also add the following tag to your \file {mhonarc-ressources.tt2} file :
 \begin {quote}
@@ -2461,6 +2452,17 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 \end{verbatim}
 \end {quote}
 
+\subsection {\cfkeyword {filesystem\_encoding}}   
+    \index{filesystem-encoding}
+
+	\default {utf-8}
+
+	\example {filesystem\_encoding  iso-8859-1}
+
+        Sympa (and Perl) use utf-8 as the its internal encoding and
+        also for the encoding of web pages. Because you might use a
+        different character encoding on your filesystem, you need to
+        declare it, so that Sympa is able to properly decode strings.
 
 
 \section {Bounce related}
@@ -3595,6 +3597,43 @@ the \textbf {Send me a password} button on the web interface. As for any user, t
 
 Note that you must start the \file {sympa.pl} process with the web interface ; it is in responsible for delivering 
 mail messages including password reminders.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sympa Internationalization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Sympa Internationalization}
+\label{i18n}
+\index{i18n}
+
+
+\section {Translating Sympa GUI}
+
+
+\section {Defining language-specific templates}
+
+
+\section {Handling of encodings}
+
+Until version 5.3, Sympa web pages were encoded in each language's
+encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
+web page is now encoded in utf-8. Thanks to
+the \perlmodule {Encode} Perl module, Sympa can now juggle with the
+filesystem encoding, each message catalog's encoding and its web
+encoding (utf-8).
+
+If your operating system uses a character encoding different from
+utf-8, then you should declare it using the \cfkeyword
+{filesystem\_encoding} sympa.conf parameter (see 
+\ref {filesystem-encoding}, page~\pageref {filesystem-encoding}). It is required to do so
+because Sympa has no way to find out what encoding is used for its
+configuration files. Once this encoding is known, every template or
+configuration parameter can be read properly for the web and also
+saved properly when edited from the web interface.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

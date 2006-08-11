@@ -53,6 +53,8 @@ use admin;
 use SharedDocument;
 use report;
 
+use open ':utf8'; ## Default is to consider files utf8 
+
 use Mail::Header;
 use Mail::Address;
 
@@ -583,6 +585,13 @@ if ($wwsconf->{'use_fast_cgi'}) {
     my $all_lists = &List::get_lists('*') unless ($maintenance_mode);
 }
 
+## Set output encoding
+## All outgoing strings will be recoded transparently using this charset
+binmode STDOUT, ":utf8";
+
+## Incoming data is utf8-encoded
+binmode STDIN, ":utf8";
+
  ## Main loop
  my $loop_count;
  my $start_time = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
@@ -678,7 +687,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'conf'} = {};
      foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email','logo_html_definition',
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist',
-                    'selected_color','shaded_color','web_recode_to','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
+                    'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
@@ -904,6 +913,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 &do_maintenance();
 	 $param->{'action'} = 'maintenance';
      }else {
+     
 	 ## Session loop
 	 while ($action) {
 	     unless (&check_param_in()) {
@@ -922,7 +932,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     
 	     
 	     $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user_lang'} || 
-		 $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');
+		 $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');	     
+
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
 	     
 	     &export_topics ($robot);
@@ -1082,14 +1093,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Available languages
      my $saved_lang = &Language::GetLang();
 
-     # Recode the language strings to the correct codeset
-     &Language::set_recode ($Conf{'web_recode_to'} || &Language::gettext('_charset_'));
-     
+
      foreach my $l (@{&Language::GetSupportedLanguages($robot)}) {
 	 &Language::SetLang($l) || next;
 
-	 if (gettext("_charset_")) {
-	     $param->{'languages'}{$l}{'complete'} = &Encode::decode(gettext("_charset_"), gettext("_language_"));
+	 if (gettext("_language_")) {
+	     $param->{'languages'}{$l}{'complete'} = gettext("_language_");
 	 }else {
 	     $param->{'languages'}{$l}{'complete'} = $l;
 	 }
@@ -1100,7 +1109,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $param->{'languages'}{$l}{'selected'} = '';
 	 }
      }
-     &Language::set_recode (); ## Unset recoding
+
      &Language::SetLang($saved_lang);
 
      # if bypass is defined select the content-type from various vars
@@ -1153,8 +1162,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
       }elsif ($rss) {
  	 ## Send RSS 
  	 print "Cache-control: no-cache\n";
- 	 my $charset = gettext("_charset_");
- 	 print "Content-Type: application/rss+xml; charset=$charset\n\n";
+ 	 print "Content-Type: application/rss+xml; charset=utf-8\n\n";
  
  	 ## Icons
  	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
@@ -1169,19 +1177,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 my $lang = &Language::Lang2Locale($param->{'lang'});
 	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
 	 
-	 ## Recode to utf-8 for RSS
-	 my $tt2_options = {};
-	 if ($Conf{'web_recode_to'}) {
-	     $tt2_options =  {'recode' => $Conf{'web_recode_to'}};
-	 }    
-
- 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path, $tt2_options)) {
+ 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path, {})) {
  	     my $error = &tt2::get_error();
  	     $param->{'tt2_error'} = $error;
  	     unless (&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error])) {
  		 &wwslog('notice','Unable to send notify "web_tt2_error" to listmaster');
  	     }
  	 }
+
+
 # 	 close FILE;
      }elsif ($param->{'redirect_to'}) {
 	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
@@ -1422,11 +1426,7 @@ sub get_header_field {
 	 $in{$p} =~ s/\015//g;	 
 
 	 ## Convert from the web encoding to unicode string
-	 if ($Conf{'web_recode_to'}){ 
-	     if (require "Encode.pm") {
-		 $p = &Encode::decode($Conf{'web_recode_to'}, $p);
-	     }
-	 }
+	 $in{$p} = &Encode::decode('utf-8', $in{$p});
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
@@ -1485,18 +1485,15 @@ sub send_html {
     my $lang = &Language::Lang2Locale($param->{'lang'});
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
     
-    my $tt2_options = {};
-    if ($Conf{'web_recode_to'}) {
-	$tt2_options =  {'recode' => $Conf{'web_recode_to'}};
-    }
-    
-    unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, $tt2_options)) {
+
+    unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
 	&tt2::parse_tt2($param,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
     }
-    
+
+
 }
 
 sub prepare_report_user {
@@ -6283,12 +6280,11 @@ sub do_viewmod {
 	     $param->{'bypass'} = 1;
 	 }
 
-	  $param->{'file'} = $arc_file_path;
      }else {
 	 
 	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
 	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
-	     open (FILE, $arc_file_path);
+	     open (FILE, '<:utf8', $arc_file_path);
 	     while (<FILE>) {
 		 if (/<!--X-Subject: (.+) -->/) {
 		     $param->{'subtitle'} = $1;
@@ -6296,11 +6292,15 @@ sub do_viewmod {
 		 }
 	     }
 	     close FILE;
+
 	 }
 	 
 	 &tt2::add_include_path($arc_month_path);
-	 $param->{'file'} = $in{'arc_file'};
      }
+
+     ## Provide a filehandle to the TT2 parser (instead of a filename previously)
+     ## It allows to set the appropriate utf8 binmode on the FH
+     open $param->{'file'}, '<:utf8', $arc_file_path;
 
      my @stat = stat ($arc_file_path);
      $param->{'date'} = $stat[9];

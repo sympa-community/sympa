@@ -43,7 +43,7 @@ my %set_comment; #sets-of-messages comment
 
 ## The lang is the NLS catalogue name ; locale is the locale preference
 ## Ex: lang = fr ; locale = fr_FR
-my ($current_lang, $current_locale, @previous_locale);
+my ($current_lang, $current_locale, $current_charset, @previous_locale);
 my $default_lang;
 ## This was the old style locale naming, used for templates, nls, scenario
 my %language_equiv = ( 'zh_CN' => 'cn',
@@ -101,8 +101,6 @@ my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'zh_CN' => 'utf-8',
 		      'zh_TW' => 'big5',
 		      );
-
-my $recode;
 
 sub GetSupportedLanguages {
     my $robot = shift;
@@ -183,23 +181,24 @@ sub SetLang {
     ## Define what catalog is used
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
-    &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
     $current_lang = $lang;
     $current_locale = $locale;
+    $current_charset = gettext("_charset_");
 
     return $locale;
 }#SetLang
-
-sub set_recode {
-    $recode = shift;
-}
 
 sub GetLang {
 ############
 
     return $current_lang;
+}
+
+sub GetCharset {
+
+    return $current_charset;
 }
 
 sub Locale2Lang {
@@ -256,9 +255,7 @@ sub gettext {
 		    return $language;
 		}
 	    }elsif ($var eq 'charset') {
-		if ($recode) {
-		    return $recode;
-		} elsif (/^Content-Type:\s*.*charset=(\S+)$/i) {
+		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
 		    return $1;
 		}
 	    }elsif ($var eq 'encoding') {
@@ -270,7 +267,11 @@ sub gettext {
 	return '';
     }
 
-    &Locale::Messages::gettext(@_);
+    ## Decode from catalog encoding
+    my $translation = &Encode::decode($current_charset, &Locale::Messages::gettext(@_));
+
+    return $translation;
+
 }
 
 1;

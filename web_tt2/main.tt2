@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="[%|loc%]_charset_[%END%]" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xml:lang="[% iso639 = locale.match('^(.)(.)'); iso639.0; iso639.1 %]">
 
 <!-- begin main.tt2 (distrib) -->
@@ -27,11 +27,7 @@
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
 <meta name="generator" content="Sympa" />
 
-[% IF conf.web_recode_to %]
-<meta http-equiv="content-type" content="text/html; charset=[% conf.web_recode_to %]" />
-[% ELSE %]
-<meta http-equiv="content-type" content="text/html; charset=[%|loc%]_charset_[%END%]" />
-[% END %]
+<meta http-equiv="content-type" content="text/html; charset="utf-8" />
 
 [% PROCESS javascript.tt2 %]
 

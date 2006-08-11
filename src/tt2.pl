@@ -25,6 +25,7 @@ package Sympa::Template::Compat;
 
 use strict;
 use base 'Template::Provider';
+use Encode;
 
 my @other_include_path;
 my $allow_absolute;
@@ -150,6 +151,30 @@ sub escape_quote {
     return $string;
 }
 
+sub encode_utf8 {
+    my $string = shift;
+
+    ## Skip if already internally tagged utf8
+    if (&Encode::is_utf8($string)) {
+	return &Encode::encode_utf8($string);
+    }
+
+    return $string;
+
+}
+
+sub decode_utf8 {
+    my $string = shift;
+
+    ## Skip if already internally tagged utf8
+    unless (&Encode::is_utf8($string)) {
+	return &Encode::decode_utf8($string);
+    }
+
+    return $string;
+
+}
+
 sub maketext {
     my ($context, @arg) = @_;
 
@@ -202,13 +227,6 @@ sub parse_tt2 {
 	$template = \join('', @$template);
     }
 
-    # Do we need to recode strings
-    # maketext will check the $recode variable
-    if (defined $options &&
-	$options->{'recode'}) {
-	&Language::set_recode( $options->{'recode'});
-    }
-
     # quick hack! wrong layer!
 #    s|^/home/sympa/bin/etc/wws_templates/(.*?)(\...)?(\.tpl)|$1.tt2|
 #	for values %$data;
@@ -230,6 +248,8 @@ sub parse_tt2 {
  	    escape_xml => [\&escape_xml, 0],
 	    escape_url => [\&escape_url, 0],
 	    escape_quote => [\&escape_quote, 0],
+	    decode_utf8 => [\&decode_utf8, 0],
+	    encode_utf8 => [\&encode_utf8, 0]
 	    }
     };
     
@@ -245,14 +265,9 @@ sub parse_tt2 {
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
 	&do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
 
-	# Reset $recode
-	&Language::set_recode();
 
 	return undef;
     } 
-
-    # Reset $recode
-    &Language::set_recode();
 
     return 1;
 }

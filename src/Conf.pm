@@ -58,13 +58,14 @@ my @valid_options = qw(
  		       css_url css_path static_content_path static_content_url pictures_max_size pictures_feature
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
-		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
+		       list_check_smtp list_check_suffixes filesystem_encoding spam_protection web_archive_spam_protection soap_url
 		       web_recode_to use_blacklist
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
 		   'msgcat' => 'localedir',
-		   'queueexpire' => '');
+		   'queueexpire' => '',
+		   'web_recode_to' => '');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -211,7 +212,6 @@ my %Default_Conf =
      'css_path' => '',## Defined below
      'urlize_min_size' => 10240, ## 10Kb
      'supported_lang' => 'de,cs,el,es,et_EE,en_US,fr,hu,it,ja_JP,nl,oc,pt_BR,sv,tr',
-     'web_recode_to' => '',
      'default_remind_task' => '',
      'update_db_field_types' => 'auto',
      'logo_html_definition' => '',
@@ -221,7 +221,8 @@ my %Default_Conf =
      'pictures_feature' => 'off',
      'use_blacklist' => 'send,subscribe',
      'static_content_url' => '/static-sympa',
-     'static_content_path' => '--DIR--/static_content'
+     'static_content_path' => '--DIR--/static_content',
+     'filesystem_encoding' => 'utf-8'
      );
    
 
@@ -585,7 +586,7 @@ sub load_robots {
 	## CSS
 	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css';
 	$robot_conf->{$robot}{'css_path'} ||= $Conf{'static_content_path'}.'/css/'.$robot;
-	
+
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';

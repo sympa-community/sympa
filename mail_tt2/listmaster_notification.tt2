@@ -185,15 +185,23 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
 
-[% ELSIF type == 'load_admin_file_error' -%]
-Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+[% ELSIF type == 'param_constraint_conf_error' -%]
+Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc%]Sympa could not load the list config file.[%END%]
-[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc(param0)%]Error(s) found in the file %1.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'file_removed' -%]
+Subject: [% FILTER qencode %][%|loc%]File removed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(param0)%]The following file has been removed : %1[%END%]
+[%|loc(param1)%]A backup of the file has been made : %1[%END%]
 
 
 [% ELSIF type == 'no_list_family' -%]
