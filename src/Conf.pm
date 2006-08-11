@@ -59,13 +59,13 @@ my @valid_options = qw(
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes filesystem_encoding spam_protection web_archive_spam_protection soap_url
-		       web_recode_to use_blacklist
+		       use_blacklist
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
 		   'msgcat' => 'localedir',
 		   'queueexpire' => '',
-		   'web_recode_to' => '');
+		   'web_recode_to' => 'filesystem_encoding');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
