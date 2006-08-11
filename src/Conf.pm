@@ -675,6 +675,31 @@ sub checkfiles_as_root {
     return 1 ;
 }
 
+## return 1 if the parameter is a known robot
+sub valid_robot {
+    my $robot = shift;
+
+    ## Missing etc directory
+    unless (-d $Conf{'etc'}.'/'.$robot) {
+	&do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'etc'}.'/'.$robot);
+	return undef;
+    }
+
+    ## Missing expl directory
+    unless (-d $Conf{'home'}.'/'.$robot) {
+	&do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'home'}.'/'.$robot);
+	return undef;
+    }
+    
+    ## Robot not loaded
+    unless (defined $Conf{'robots'}{$robot}) {
+	&do_log('err', 'Robot %s was not loaded by this Sympa process', $robot);
+	return undef;
+    }
+
+    return 1;
+}
+
 ## Check a few files
 sub checkfiles {
     my $config_err = 0;

@@ -990,7 +990,7 @@ sub DoFile {
     
     $robot = lc($robot);
     $listname = lc($listname);
-    $robot ||= &Conf::get_robot_conf($robot,'host');
+    $robot ||= $Conf{'host'};
     
     my $type;
     my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
@@ -1028,6 +1028,14 @@ sub DoFile {
     my $conf_email = &Conf::get_robot_conf($robot, 'email');
     my $conf_host = &Conf::get_robot_conf($robot, 'host');
 
+    ## Unknown robot
+    unless (&Conf::valid_robot($robot)) {
+	&do_log('err', 'sympa::DoFile() : robot %s does not exist',$robot);
+	&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_robot','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	return undef;
+    }
+    
     my ($list, $host, $name);   
     if ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
 	$host = $conf_host;
