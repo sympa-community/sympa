@@ -5033,6 +5033,10 @@ Only the following parameters can be redefined for a particular robot :
 	\end{verbatim}
 	\end {quote}
 
+	\item \cfkeyword {host} \\
+	This is the equivalent of the \cfkeyword {host} sympa.conf parameter.
+	The default for this parameter is the name of the virtual host (ie the name of the subdirectory).
+
 	\item \cfkeyword {wwsympa\_url} \\
 	The base URL of WWSympa
 
