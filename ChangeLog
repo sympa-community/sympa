@@ -1,3 +1,86 @@
+2006-08-11 17:33  sympa-authors
+
+	* src/: Conf.pm, sympa.pl: [reported by O.Germes, Univ Rennes 1]
+	  Added checks to determine if a message is addressed to an unknown
+	  robot
+
+2006-08-11 16:41  sympa-authors
+
+	* doc/sympa.tex.tpl: The documentation did not mention the "host"
+	  robot.conf parameter
+
+2006-08-11 15:28  sympa-authors
+
+	* src/: Conf.pm, sympa_wizard.pl: Fixed filesystem_encoding param
+	  definition and created an i18n category in the wizard
+
+2006-08-11 14:30  olivier.salaun
+
+	* .version, doc/sympa.tex.tpl,
+	  mail_tt2/listmaster_notification.tt2, src/Conf.pm,
+	  src/Language.pm, src/List.pm, src/tt2.pl,
+	  src/etc/mhonarc-ressources.tt2, web_tt2/arc.tt2,
+	  web_tt2/main.tt2, web_tt2/tt2_error.tt2, wwsympa/wwsympa.fcgi:
+	  ***** Changes: web pages are now utf-8 encoded, as well as
+	  mhonarc HTML ***** archives that can now mix different character
+	  sets within a single ***** web archive. Sympa now uses perl's I/O
+	  layer to encode/decode characters.  ***** The web_recode_to
+	  parameter is now obsolete ; the new ***** filesystem_encoding
+	  parameter allows you defining how the configuration ***** files
+	  are encoded on disk. A new mhonarc-ressources.tt2 file is
+	  provided ***** and should replace any custom one.
+
+2006-08-10 11:13  sympa-authors
+
+	* src/Conf.pm: Fix: make the static CSS world-readable
+
+2006-08-10 11:02  sympa-authors
+
+	* src/: Conf.pm, tools.pl: Fix: incorrect handling of css_path.
+	  Default value would not apply ; directories would be created with
+	  wrong mode
+
+2006-08-10 10:32  sympa-authors
+
+	* src/sympa.pl: [reported by S.Amrani, Gendarmerie Nat.] Fix:
+	  sympa.pl would die when processing a message for
+	  unknownlist-request.	The error message was : "Can't modify
+	  non-lvalue subroutine call" Fixed a buggy call to chomp.
+
+2006-08-08 17:55  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/Conf.pm, src/sympa_wizard.pl,
+	  src/tools.pl: ***** Change: default for css_path is now relative
+	  to static_content_path.  ***** CSS files are now AUTOMATICALLY
+	  updated by sympa.pl if a new css.tt2 has been installed.
+
+2006-08-08 14:07  sympa-authors
+
+	* ChangeLog, doc/sympa.tex.tpl, web_tt2/Makefile,
+	  web_tt2/fr_FR/help_admin.tt2, web_tt2/fr_FR/help_arc.tt2,
+	  web_tt2/fr_FR/help_introduction.tt2,
+	  web_tt2/fr_FR/help_listconfig.tt2, web_tt2/fr_FR/help_shared.tt2,
+	  web_tt2/fr_FR/help_user.tt2: [V.Paitrault, Univ Rennes 2] New
+	  feature: online user documentation has been completed
+
+2006-08-07 17:03  sympa-authors
+
+	* web_tt2/: css.tt2, review.tt2: [A.Brard] Fix: incorrect handling
+	  of pictures with IE. Now apply hover on the link instead of the
+	  image.
+
 2006-08-04 18:12  sympa-authors
 
 	* src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,
