@@ -299,9 +299,12 @@ if ($signal ne 'hup') {
 }
 
 ## Check for several files.
-unless (&Conf::checkfiles()) {
-   fatal_err("Missing files. Aborting.");
-   ## No return.
+## Prevent that 2 processes perform checks at the same time...
+if ($main::daemon_usage =~ /command/) {
+    unless (&Conf::checkfiles()) {
+	fatal_err("Missing files. Aborting.");
+	## No return.
+    }
 }
 
 ## Daemon called for dumping subscribers list
