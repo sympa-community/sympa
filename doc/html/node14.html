@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>13. Authorization scenarios</TITLE>
-<META NAME="description" CONTENT="13. Authorization scenarios">
+<TITLE>13. Authentication</TITLE>
+<META NAME="description" CONTENT="13. Authentication">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,32 +27,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1173"
+<A NAME="tex2html1176"
   HREF="node15.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1167"
+<A NAME="tex2html1170"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1161"
+<A NAME="tex2html1164"
   HREF="node13.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1169"
+<A NAME="tex2html1172"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1171"
-  HREF="node30.html">
+<A NAME="tex2html1174"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1174"
-  HREF="node15.html">14. virtual host</A>
-<B> Up:</B> <A NAME="tex2html1168"
+<B> Next:</B> <A NAME="tex2html1177"
+  HREF="node15.html">14. Authorization scenarios</A>
+<B> Up:</B> <A NAME="tex2html1171"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1162"
-  HREF="node13.html">12. Authentication</A>
- &nbsp; <B>  <A NAME="tex2html1170"
+<B> Previous:</B> <A NAME="tex2html1165"
+  HREF="node13.html">12. Sympa SOAP server</A>
+ &nbsp; <B>  <A NAME="tex2html1173"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1172"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1175"
+  HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -60,458 +60,975 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1175"
-  HREF="node14.html#SECTION001410000000000000000">13.1 rules specifications</A>
-<LI><A NAME="tex2html1176"
-  HREF="node14.html#SECTION001420000000000000000">13.2 LDAP Named Filters</A>
-<UL>
-<LI><A NAME="tex2html1177"
-  HREF="node14.html#SECTION001421000000000000000">13.2.1 Definition</A>
 <LI><A NAME="tex2html1178"
-  HREF="node14.html#SECTION001422000000000000000">13.2.2 Search Condition</A>
+  HREF="node14.html#SECTION001410000000000000000">13.1 S/MIME and HTTPS authentication</A>
+<LI><A NAME="tex2html1179"
+  HREF="node14.html#SECTION001420000000000000000">13.2 Authentication with email address, uid or alternate email address</A>
+<LI><A NAME="tex2html1180"
+  HREF="node14.html#SECTION001430000000000000000">13.3 Generic SSO authentication</A>
+<LI><A NAME="tex2html1181"
+  HREF="node14.html#SECTION001440000000000000000">13.4 CAS-based authentication</A>
+<LI><A NAME="tex2html1182"
+  HREF="node14.html#SECTION001450000000000000000">13.5 auth.conf</A>
+<UL>
+<LI><A NAME="tex2html1183"
+  HREF="node14.html#SECTION001451000000000000000">13.5.1 user_table paragraph</A>
+<LI><A NAME="tex2html1184"
+  HREF="node14.html#SECTION001452000000000000000">13.5.2 ldap paragraph</A>
+<LI><A NAME="tex2html1185"
+  HREF="node14.html#SECTION001453000000000000000">13.5.3 generic_sso paragraph</A>
+<LI><A NAME="tex2html1186"
+  HREF="node14.html#SECTION001454000000000000000">13.5.4 cas paragraph</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1179"
-  HREF="node14.html#SECTION001430000000000000000">13.3 scenario inclusion</A>
-<LI><A NAME="tex2html1180"
-  HREF="node14.html#SECTION001440000000000000000">13.4 blacklist implicit rule</A>
-<LI><A NAME="tex2html1181"
-  HREF="node14.html#SECTION001450000000000000000">13.5 Hidding scenario files</A>
+<LI><A NAME="tex2html1187"
+  HREF="node14.html#SECTION001460000000000000000">13.6 Sharing <I>WWSympa</I> authentication with other applications</A>
+<LI><A NAME="tex2html1188"
+  HREF="node14.html#SECTION001470000000000000000">13.7 Provide a Sympa login form in another application</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001400000000000000000"></A>
-<A NAME="scenarios"></A><A NAME="1961"></A>
+<A NAME="authn"></A>
 <BR>
-13. Authorization scenarios
+13. Authentication
 </H1>
 
 <P>
-List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the <A NAME="9298"></A><TT>send private</TT> parameter is related to the send.private scenario.
-There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="9314"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="9323"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9326"></A><TT>/usr/local/sympa-os/etc/scenari</TT>,
-and finally <A NAME="9329"></A><TT>/usr/local/sympa-os/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+<I>Sympa</I> needs to authenticate users (subscribers, owners, moderators, listmaster) on both its
+mail and web interface to then apply appropriate privileges (authorization process) to subsequent 
+requested actions. <I>Sympa</I> is able to cope with multiple authentication means on the client side and 
+when using user+password it can validate these credentials against LDAP authentication backends.
 
 <P>
-An authorization scenario is a small configuration language to describe who
-can perform an operation and which authentication method is requested for it.
-An authorization scenario is an ordered set of rules. The goal is to provide a simple and
-flexible way to configure authorization and required authentication method for each operation.
+When contacted on the mail interface <I>Sympa</I> has 3 authentication levels. Lower level is to trust
+the <A NAME="9200"></A><TT>From:</TT> SMTP header field. A higher level of authentication will require that the 
+user confirms his/her message. The strongest supported authentication method is S/MIME (note that <I>Sympa</I> 
+also deals with S/MIME encrypted messages).
 
 <P>
-Each authorization scenario rule contains :
-
-<UL>
-<LI>a condition : the condition is evaluated by <I>Sympa</I>. It can use
-  variables such as sender for the sender e-mail, list for the listname etc.
-</LI>
-<LI>an authentication method. The authentication method can be <A NAME="9333"></A><TT>smtp</TT>,
-<A NAME="9336"></A><TT>md5</TT> or <A NAME="9339"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="9343"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="9347"></A><TT>from:</TT> header , <A NAME="9350"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="9353"></A><TT>smime</TT>
-is used for signed messages (see <A HREF="node27.html#smimeforsign">26.4.3</A>, page&nbsp;<A HREF="node27.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-</LI>
-<LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
+On the <I>Sympa</I> web interface (<A NAME="9205"></A><I>WWSympa</I>) the user can authenticate in 4 different ways (if appropriate setup
+has been done on <I>Sympa</I> serveur). Default authentication mean is via the user's email address and a password 
+managed by <I>Sympa</I> itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
+can authentication with his/her LDAP uid and password. <I>Sympa</I> is also able to delegate the authentication
+job to a web Single SignOn system ; currently <A NAME="tex2html32"
+  HREF="http://www.yale.edu/tp/auth/">CAS</A>
+(the Yale University system) or a generic SSO setup, adapted to SSO products providing an Apache module. 
+When contacted via HTTPS, <I>Sympa</I> can make use of X509 client certificates to authenticate users.
 
 <P>
-</LI>
-</UL>
-
-<P>
-Example
-
-<P>
-<BLOCKQUOTE>
-del.auth
-</BLOCKQUOTE><PRE>
-title.us deletion performed only by list owners, need authentication
-title.fr suppression réservée au propriétaire avec authentification
-title.es eliminacin reservada slo para el propietario, necesita autentificacin
-
-
-  is_owner([listname],[sender])  smtp       -&gt; request_auth
-  is_listmaster([sender])        smtp       -&gt; request_auth
-  true()                         md5,smime  -&gt; do_it
-</PRE>
+The authorization process in <I>Sympa</I> (authorization scenarios) refers to authentication methods. The 
+same authorization scenarios are used for both mail and web accesss ; therefore some authentication 
+methods are considered as equivalent : mail confirmation (on the mail interface) is equivalent to
+password authentication (on the web interface) ; S/MIME authentication is equivalent to HTTPS with
+client certificate authentication. Each rule in authorization scenarios requires an authentication method 
+(<A NAME="9213"></A><TT>smtp</TT>,<A NAME="9216"></A><TT>md5</TT> or <A NAME="9219"></A><TT>smime</TT>) ; if the required authentication method was 
+not used, a higher authentication mode can be requested.
 
 <P>
 
-<H1><A NAME="SECTION001410000000000000000"></A>
-<A NAME="rules"></A>
-<BR>
-13.1 rules specifications
+<H1><A NAME="SECTION001410000000000000000">
+13.1 S/MIME and HTTPS authentication</A>
 </H1>
 
 <P>
-An authorization scenario consists of rules, evaluated in order beginning with the first. 
-Rules are defined as follows :<PRE>
-&lt;rule&gt; ::= &lt;condition&gt; &lt;auth_list&gt; -&gt; &lt;action&gt;
+Chapter <A HREF="node28.html#smime-sig">27.2</A> (page&nbsp;<A HREF="node28.html#smime-sig"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) deals with <I>Sympa</I> and S/MIME signature.
+<I>Sympa</I> uses <TT>OpenSSL</TT> library to work on S/MIME messages, you need to configure some
+related <I>Sympa</I> parameters : <A HREF="node28.html#smimeconf">27.4.3</A> (page&nbsp;<A HREF="node28.html#smimeconf"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
-&lt;condition&gt; ::= [!] &lt;condition
-                | true ()
-                | all ()
-                | equal (&lt;var&gt;, &lt;var&gt;)
-                | match (&lt;var&gt;, /perl_regexp/)
-		| search (&lt;filter.ldap&gt;,&lt;var&gt;)
-                | is_subscriber (&lt;listname&gt;, &lt;var&gt;)
-                | is_owner (&lt;listname&gt;, &lt;var&gt;)
-                | is_editor (&lt;listname&gt;, &lt;var&gt;)
-                | is_listmaster (&lt;var&gt;)
-                | older (&lt;date&gt;, &lt;date&gt;)    # true if first date is anterior to the second date
-                | newer (&lt;date&gt;, &lt;date&gt;)    # true if first date is posterior to the second date
-&lt;var&gt; ::= [email] | [sender] | [user-&gt;&lt;user_key_word&gt;] | [previous_email]
-                  | [remote_host] | [remote_addr] | [user_attributes-&gt;&lt;user_attributes_keyword&gt;]
-	 	  | [subscriber-&gt;&lt;subscriber_key_word&gt;] | [list-&gt;&lt;list_key_word&gt;] | [env-&gt;&lt;env_var&gt;]
-		  | [conf-&gt;&lt;conf_key_word&gt;] | [msg_header-&gt;&lt;smtp_key_word&gt;] | [msg_body] 
-	 	  | [msg_part-&gt;type] | [msg_part-&gt;body] | [msg_encrypted] | [is_bcc] | [current_date] 
-		  | [topic-auto] | [topic-sender,] | [topic-editor] | [topic] | [topic-needed]
-		  | &lt;string&gt;
+<P>
+<I>Sympa</I> HTTPS authentication is based on Apache+mod_SSL that provide the required authentication
+information via CGI environment variables. You will need to edit Apache configuration to 
+allow HTTPS access and require X509 client certificate. Here is a sample Apache configuration
 
-[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
-
-[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
-
-[previous_email] ::= old email when changing subscription email in preference page. 
-
-[msg_encrypted] ::= set to 'smime' if the message was S/MIME encrypted
-
-[topic-auto] ::= topic of the message if it has been automatically tagged
-
-[topic-sender] ::= topic of the message if it has been tagged by sender
-
-[topic-editor] ::= topic of the message if it has been tagged by editor
-
-[topic]  ::= topic of the message
-
-[topic-needed] ::= the message has not got any topic and message topic are required for the list
-
-&lt;date&gt; ::= '&lt;date_element&gt; [ +|- &lt;date_element&gt;]'
-
-&lt;date_element&gt; ::= &lt;epoch_date&gt; | &lt;var&gt; | &lt;date_expr&gt;
-
-&lt;epoch_date&gt; ::= &lt;integer&gt;
-
-&lt;date_expr&gt; ::= &lt;integer&gt;y&lt;integer&gt;m&lt;integer&gt;d&lt;integer&gt;h&lt;integer&gt;min&lt;integer&gt;sec
-
-&lt;listname&gt; ::= [listname] | &lt;listname_string&gt;
-
-&lt;auth_list&gt; ::= &lt;auth&gt;,&lt;auth_list&gt; | &lt;auth&gt;
-
-&lt;auth&gt; ::= smtp|md5|smime
-
-&lt;action&gt; ::=   do_it [,notify]
-             | do_it [,quiet]
-	     | reject(reason=&lt;reason_key&gt;)
-	     | reject(tt2=&lt;tpl_name&gt;)
-             | request_auth
-             | owner
-	     | editor
-	     | editorkey[,quiet]
-	     | listmaster
-
-&lt;reason_key&gt; ::= match a key in mail_tt2/authorization_reject.tt2 template corresponding to 
-                 an information message about the reason of the reject of the user
-  
-&lt;tpl_name&gt; ::= corresponding template (&lt;tpl_name&gt;.tt2) is send to the sender
-
-&lt;user_key_word&gt; ::= email | gecos | lang | password | cookie_delay_user
-	            | &lt;additional_user_fields&gt;
-
-&lt;user_attributes_key_word&gt; ::= one of the user attributes provided by the SSO system via environment variables. The [user_attributes] structure is available only if user authenticated with a generic_sso.
-
-&lt;subscriber_key_word&gt; ::= email | gecos | bounce | reception 
-	                  | visibility | date | update_date
-			  | &lt;additional_subscriber_fields&gt;
-
-&lt;list_key_word&gt; ::= name | host | lang | max_size | priority | reply_to | 
-		    status | subject | account | total
-
-&lt;conf_key_word&gt; ::= domain | email | listmaster | default_list_priority | 
-		      sympa_priority | request_priority | lang | max_size
+<P><PRE>
+SSLEngine on
+SSLVerifyClient optional
+SSLVerifyDepth  10
+...
+&lt;Location /sympa&gt;
+   SSLOptions +StdEnvVars
+   SetHandler fastcgi-script
+&lt;/Location&gt;
 </PRE>
 
 <P>
-(Refer to  <A HREF="node17.html#tasks">16.8</A>, page&nbsp;<A HREF="node17.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for date format definition)
-
-<P>
-The function to evaluate scenario is described in section <A HREF="node29.html#list-scenario-evaluation">28.2.6</A>, page&nbsp;<A HREF="node29.html#list-scenario-evaluation"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
-
-<P>
-perl_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg_header-<TT>&gt;&lt;</TT>smtp_key_word<TT>&gt;</TT>] is interpreted as the 
-SMTP header value only when evaluating the authorization scenario for sending messages. 
-It can be used, for example, to require editor validation for multipart messages.
-[msg_part-<TT>&gt;</TT>type] and [msg_part-<TT>&gt;</TT>body] are the MIME parts content-types and bodies ; the body is available
-for MIME parts in text/xxx format only.
-
-<P>
-The difference between <A NAME="9357"></A>editor and <A NAME="9358"></A>editorkey is, that with <A NAME="9359"></A>editor the message is simply forwarded to the moderaotr. He then can forward it to the list, if he wishes. <A NAME="9360"></A>editorkey assigns a key to the message and sends it to the moderator together with the message. So the moderator can just send back the key to distribute the message. Please note, that moderation from the webinterface is only possible when using <A NAME="9361"></A>editorkey, because otherwise there is no copy of the message saved on the server. 
-
-<P>
-A bunch of authorization scenarios is provided with the <I>Sympa</I> distribution ; they provide
-a large set of configuration that allow to create lists for most usage. But you will
-probably create authorization scenarios for your own need. In this case, don't forget to restart <I>Sympa</I> 
-and wwsympa because authorization scenarios are not reloaded dynamicaly.
-
-<P>
-These standard authorization scenarios are located in the <A NAME="9364"></A><TT>/usr/local/sympa-os/bin/etc/scenari/</TT>
-directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
-
-<P>
-You may also define and name your own authorization scenarios. Store them in the
-<A NAME="9367"></A><TT>/usr/local/sympa-os/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory <A NAME="9382"></A><TT>/usr/local/sympa-os/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9409"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ). <B>Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload_list_config command to update the <A NAME="9424"></A><TT>config.bin</TT> files.</B>
-
-<P>
-Example:
-
-<P>
-Copy the previous scenario to <A NAME="9427"></A><TT>scenari/subscribe.rennes1</TT> :
+If you are using the SubjAltName, then you additionaly need to export the certificate data because of a <A NAME="9226"></A>mod_ssl  bug. You will also 
+need to install the textindex Crypt-OpenSSL-X509 CPAN module. Add this option to the Apache configuration file :
 
 <P><PRE>
-equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
-match([sender], /univ-rennes1\.fr$/) smtp,smime -&gt; do_it
-true()                               smtp,smime -&gt; owner
-</PRE>
-
-<P>
-You may now refer to this authorization scenario in any list configuration file, for example :
-
-<P><PRE>
-subscribe rennes1
+   SSLOptions +ExportCertData
 </PRE>
 
 <P>
 
 <H1><A NAME="SECTION001420000000000000000"></A>
-<A NAME="named-filters"></A>
+<A NAME="ldap-auth"></A>
 <BR>
-13.2 LDAP Named Filters
+13.2 Authentication with email address, uid or alternate email address
 </H1>
 
 <P>
-At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="9228"></A>LDAP authentication allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="9430"></A>LDAP directory thanks to an authorization scenario.
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="9230"></A>LDAP directory.
+
+<P>
+<I>Sympa</I> gets the canonic email in the <A NAME="9232"></A>LDAP directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
+
+<P>
+Example: a person is described by<PRE>
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+</PRE>
+
+<P>
+So Fabrice Rafart can be authenticated with: frafart, Fabrice.Rafart@MaSociete.fr, frafart@MaSociete.fr,Rafart@MaSociete.fr.
+After this operation, the address in the field FROM will be the Canonic email, in this case  Fabrice.Rafart@MaSociete.fr. 
+That means that <I>Sympa</I> will get this email and use it during all the session until you clearly ask <I>Sympa</I> to change your email address via the two pages : which and pref.
 
 <P>
 
-<H2><A NAME="SECTION001421000000000000000">
-13.2.1 Definition</A>
+<H1><A NAME="SECTION001430000000000000000"></A>
+<A NAME="generic-sso"></A>
+<BR>
+13.3 Generic SSO authentication
+</H1>
+
+<P>
+The authentication method has first been introduced to allow interraction with <A NAME="tex2html33"
+  HREF="http://shibboleth.internet2.edu/">Shibboleth</A>, Internet2's inter-institutional authentication system. But it should be usable with any SSO system that provides an Apache authentication module being able to protect a specified URL on the site (not the whole site). Here is a sample httpd.conf that shib-protects the associated Sympa URL :<PRE>
+...
+&lt;Location /sympa/sso_login/inqueue&gt;
+  AuthType shibboleth
+  require affiliation ~ ^member@.+
+&lt;/Location&gt;
+...
+</PRE>
+
+<P>
+<I>Sympa</I> will get user attributes via environment variables. In the most simple case the SSO will provide the user email address. If not, Sympa can be configured to verify an email address provided by the user hiself or to look for the user email address in a LDAP directory (the search filter will make use of user information inherited from the SSO Apache module).
+
+<P>
+To plug a new SSO server in your Sympa server you should add a <B>generic_sso</B> paragraph (describing the SSO service) in your <A NAME="9238"></A><TT>auth.conf</TT> configuration file (See  <A HREF="#generic-sso-format">13.5.3</A>, page&nbsp;<A HREF="node14.html#generic-sso-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Once this paragraph has been added, the SSO service name will be automatically added to the web login menu.
+
+<P>
+Apart from the user email address, the SSO can provide other user attributes that <I>Sympa</I> will store in the user_table DB table (for persistancy) and make them available in the [user_attributes] structure that you can use within authorization scenarios (see&nbsp;<A HREF="node15.html#rules">14.1</A>, page&nbsp;<A HREF="node15.html#rules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) or in web templates via the [% user.attributes %] structure.
+
+<P>
+
+<H1><A NAME="SECTION001440000000000000000"></A>
+<A NAME="cas"></A>
+<BR>
+13.4 CAS-based authentication
+</H1>
+
+<P>
+CAS is Yale university SSO software. Sympa can use CAS authentication service.
+
+<P>
+The listmaster should define at least one or more CAS servers (<B>cas</B> paragraph) in <A NAME="9242"></A><TT>auth.conf</TT>. If <B>non_blocking_redirection</B> parameter was set for a CAS server then Sympa will try a transparent login on this server
+when the user accesses the web interface. If one CAS server redirect the user to Sympa with a valid ticket Sympa receives a user ID from the CAS server. It then connects to the related LDAP directory to get the user email address. If no CAS server returns a valid user ID, Sympa will let the user either select a CAS server to login or perform a Sympa login.
+
+<P>
+
+<H1><A NAME="SECTION001450000000000000000"></A>
+<A NAME="auth-conf"></A>
+<BR>
+13.5 auth.conf
+</H1>
+
+<P>
+The <A NAME="9245"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> configuration file contains numerous
+parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
+that you will need to restart wwsympa.fcgi afterwards. 
+
+<P>
+The <A NAME="9249"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
+service with all required parameters to perform an authentication using this service. Current version of
+<I>Sympa</I> can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
+or Shibboleth), or using internal user_table.
+
+<P>
+The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user_table authentication
+paragraph is applied unless email adress input from form match the <A NAME="9253"></A><TT>negative_regexp</TT> or do not match <A NAME="9256"></A><TT>regexp</TT>. 
+ <A NAME="9259"></A><TT>negative_regexp</TT> and <A NAME="9262"></A><TT>regexp</TT> can be defined for earch ldap or user_table authentication service so
+administrator can block some authentication methode for class of users.
+
+<P>
+The segond form in login page contain the list of CAS server so user can choose explicitely his CAS service.
+
+<P>
+Each paragraph start with one of the keyword cas, ldap or user_table  
+
+<P>
+The <A NAME="9265"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> file contains directives in the following format:
+
+<P>
+<P>
+<BLOCKQUOTE><I>paragraphs</I>
+<BR>    <I>keyword    value</I>
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><I>paragraphs</I>
+<BR>    <I>keyword    value</I> 
+</BLOCKQUOTE>
+<P>
+
+<P>
+Comments start with the <TT>#</TT> character at the beginning of a line.
+
+<P>
+Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
+There should only be one directive per line, but their order in the paragraph is of no importance.
+
+<P>
+Example :
+
+<P><PRE>
+#Configuration file auth.conf for the LDAP authentification
+#Description of parameters for each directory
+
+
+cas
+	base_url			https://sso-cas.cru.fr
+	non_blocking_redirection        on
+	auth_service_name		cas-cru
+	ldap_host			ldap.cru.fr:389
+        ldap_get_email_by_uid_filter    (uid=[uid])
+	ldap_timeout			7
+	ldap_suffix			dc=cru,dc=fr
+	ldap_scope			sub
+	ldap_email_attribute		mail
+
+## The URL corresponding to the service_id should be protected by the SSO (Shibboleth in the exampl)
+## The URL would look like http://yourhost.yourdomain/sympa/sso_login/inqueue in the following example
+generic_sso
+        service_name       InQueue Federation
+        service_id         inqueue
+        http_header_prefix HTTP_SHIB
+        email_http_header  HTTP_SHIB_EMAIL_ADDRESS
+
+## The email address is not provided by the user home institution
+generic_sso
+        service_name               Shibboleth Federation
+        service_id                 myfederation
+        http_header_prefix         HTTP_SHIB
+        netid_http_header          HTTP_SHIB_EMAIL_ADDRESS
+	internal_email_by_netid    1
+	force_email_verify         1
+
+ldap
+	regexp				univ-rennes1\.fr
+	host				ldap.univ-rennes1.fr:389
+	timeout				30
+	suffix				dc=univ-rennes1,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email_filter		(|(mail=[sender])(mailalternateaddress=[sender]))
+	email_attribute			mail
+	alternative_email_attribute	mailalternateaddress,ur1mail
+	scope				sub
+	use_ssl                         1
+	ssl_version                     sslv3
+	ssl_ciphers                     MEDIUM:HIGH
+
+ldap
+	
+	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
+	timeout				20
+	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
+	bind_password                   sympaPASSWD
+	suffix				dc=univ-nancy2,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
+	alternative_email_attribute	n2atrmaildrop
+	email_attribute			mail
+	scope				sub
+        authentication_info_url         http://sso.univ-nancy2.fr/
+	
+
+user_table
+	negative_regexp 		((univ-rennes1)|(univ-nancy2))\.fr
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION001451000000000000000">
+13.5.1 user_table paragraph</A>
 </H2>
 
 <P>
-People are selected through an <A NAME="9431"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="9432"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
+The user_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
+are <A NAME="9268"></A><TT>regexp</TT> or <A NAME="9271"></A><TT>negative_regexp</TT> which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
 
 <P>
-You must give several informations in order to create a Named Filter:
+
+<H2><A NAME="SECTION001452000000000000000">
+13.5.2 ldap paragraph</A>
+</H2>
+
+<P>
 
 <UL>
+<LI><A NAME="9274"></A><TT>regexp</TT> and <A NAME="9277"></A><TT>negative_regexp</TT>
+	Same as in user_table paragraph : if a provided email address (does not apply to an uid), then the
+	regular expression will be applied to find out if this LDAP directory can be used to authenticate a
+	subset of users.
+
+<P>
+</LI>
 <LI>host
 <BR>
-A list of host:port LDAP directories (replicates) entries.
+<P>
+This keyword is <B>mandatory</B>. It is the domain name
+	used in order to bind to the directory and then to extract informations.
+	You must mention the port number after the server name.
+	Server replication is supported by listing several servers separated by commas.
+
+<P>
+Example :
+	<PRE>
+	host ldap.univ-rennes1.fr:389
+	host ldap0.university.com:389,ldap1.university.com:389,ldap2.university.com:389
+</PRE>
+
+<P>
+</LI>
+<LI>timeout
+<BR>
+<P>
+It corresponds to the timelimit in the Search fonction. A timelimit that restricts the maximum 
+	time (in seconds) allowed for a search. A value of 0 (the default), means that no timelimit
+        will be requested.
 
 <P>
 </LI>
 <LI>suffix
 <BR>
-Defines the naming space covered by the search (optional, depending on the LDAP server).
+<P>
+The root of the DIT (Directory Information Tree). The DN that is the base object entry relative 
+	to which the search is to be performed. 
 
 <P>
-</LI>
-<LI>filter
-<BR>
-Defines the LDAP search filter (RFC 2254 compliant). 
-	But you must absolutely take into account the first part of the filter which is:
-	('mail_attribute' = [sender]) as shown in the example. you will have to replce 'mail_attribute' by the name 
-	of the attribute for the email.
-	<I>Sympa</I> verifies if the user belongs to the category of people defined in the filter. 
-
-<P>
-</LI>
-<LI>scope
-<BR>
-By default the search is performed on the whole tree below the specified base object. This may be changed by specifying a scope :
-
-<P>
-
-<UL>
-<LI>base : Search only the base object.
-</LI>
-<LI>one
-<BR>
-Search the entries immediately below the base object. 
-</LI>
-<LI>sub
-<BR>
-Search the whole tree below the base object. This is the default. 
-	
-</LI>
-</UL>
+Example: <TT>dc=university,dc=fr</TT>
 
 <P>
 </LI>
 <LI>bind_dn
 <BR>
+<P>
 If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
 
 <P>
 </LI>
 <LI>bind_password
 <BR>
+<P>
 This password is used, combined with the bind_dn above.
 
 <P>
 </LI>
-</UL>
+<LI>get_dn_by_uid_filter
+<BR>
+<P>
+Defines the search filter corresponding to the ldap_uid. (RFC 2254 compliant).
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
+	type of authentication (uid, alternate_email..). 
 
 <P>
-example.ldap : we want to select the professors of mathematics in the university of Rennes1 in France<PRE>
+Example :
+	<PRE>
+	(Login = [sender])
+	(|(ID = [sender])(UID = [sender]))
+</PRE>
+
+<P>
+</LI>
+<LI>get_dn_by_email_filter
+<BR>
+<P>
+Defines the search filter corresponding to the email addresses (canonic and alternative).(RFC 2254 compliant). 
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
+	type of authentication (uid, alternate_email..). 
+
+<P>
+Example: a person is described by
+
+<P><PRE>
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+</PRE>
+
+<P>
+The filters can be :
+
+<P><PRE>
 	
-	host		ldap.univ-rennes1.fr:389,ldap2.univ-rennes1.fr:390
-	suffix		dc=univ-rennes1.fr,dc=fr
-	filter		(&amp;(canonic_mail = [sender])(EmployeeType = prof)(subject = math))
-	scope		sub
+	(mail = [sender])
+	(| (mail = [sender])(alternate_email = [sender]) )
+	(| (mail = [sender])(alternate_email = [sender])(alternate  = [sender]) )
 </PRE>
 
 <P>
-
-<H2><A NAME="SECTION001422000000000000000">
-13.2.2 Search Condition</A>
-</H2>
+</LI>
+<LI>email_attribute
+<BR>
+<P>
+The name of the attribute for the canonic email in your directory : for instance mail, canonic_email, canonic_address ...
+	In the previous example the canonic email is 'mail'.
 
 <P>
-The search condition is used in authorization scenarios which are defined and described in (see&nbsp;<A HREF="#scenarios">13</A>) 
+</LI>
+<LI>alternative_email_attribute
+<BR>
+<P>
+The name of the attribute for the alternate email in your directory : for instance alternate_email, mailalternateaddress, ...
+	You make a list of these attributes separated by commas.
 
 <P>
-The syntax of this rule is:<PRE>
-	search(example.ldap,[sender])      smtp,smime,md5    -&gt; do_it
-	search(blacklist.txt,[sender])     smtp,smime,md5    -&gt; do_it
-</PRE>
+With this list <I>Sympa</I> creates a cookie which contains various information : the user is authenticated via Ldap or not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences and subscriptions. 
+	That is to say you want to use a unique address in User_table and Subscriber_table which is the canonic email.
 
 <P>
-The variables used by 'search' are :
+</LI>
+<LI>scope
+<BR>
+<P>
+(Default value: <TT>sub</TT>)
+	By default the search is performed on the whole tree below the specified base object. This may be changed by 
+	specifying a scope :
+
+<P>
 
 <UL>
-<LI>the name of the LDAP Configuration file or a txt matching enumeration
-<BR></LI>
-<LI>the [sender]
+<LI>base
 <BR>
-That is to say the sender email address. 
+Search only the base object.
+
+<P>
+</LI>
+<LI>one
+<BR>
+Search the entries immediately below the base object. 
+
+<P>
+</LI>
+<LI>sub
+<BR>
+Search the whole tree below the base object. This is the default. 
+
+<P>
 </LI>
 </UL>
 
 <P>
-Note that <I>Sympa</I> processes maintain a cache of processed search conditions to limit access to the LDAP directory ; each entry has a lifetime of 1 hour in the cache.
+</LI>
+<LI>authentication_info_url
+<BR>
+<P>
+Defines the URL of a document describing LDAP password management. When hitting Sympa's 
+	<I>Send me a password</I> button, LDAP users will be redirected to this URL.
 
 <P>
-When using .txt file extention, the file is read looking for a line that match the second parameter (usually the user email address). Each line is a string where the
-char * can be used once to mach any block. This feature is used by the blacklist implicit scenario rule.   (see&nbsp;<A HREF="#blacklist"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) 
+</LI>
+<LI>use_ssl
 
 <P>
-The method of authentication does not change.
+If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
+
+<P>
+</LI>
+<LI>ssl_version
+
+<P>
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9283"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
+
+<P>
+</LI>
+<LI>ssl_ciphers
+
+<P>
+Specify which subset of cipher suites are permissible for this connection, using the standard 
+	OpenSSL string format. The default value of <A NAME="9284"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	which permits all ciphers, even those that don't encrypt!
+
+<P>
+</LI>
+</UL>
 
 <P>
 
-<H1><A NAME="SECTION001430000000000000000">
-13.3 scenario inclusion</A>
-</H1>
+<H2><A NAME="SECTION001453000000000000000"></A>
+<A NAME="generic-sso-format"></A>
+<BR>
+13.5.3 generic_sso paragraph
+</H2>
 
 <P>
-Scenarios can also contain includes :
 
-<P><PRE>
-    subscribe
-        include commonreject
-        match(, /cru\.fr$/)          smtp,smime -&gt; do_it
-	true()                               smtp,smime -&gt; owner
+<UL>
+<LI>service_name 
+<BR>
+This is the SSO service name that will be proposed to the user in the login banner menu.
+
+<P>
+</LI>
+<LI>service_id 
+<BR>
+This service ID is used as a parameter by sympa to refer to the SSO service (instead of the service name). 
+
+<P>
+A corresponding URL on the local web server should be protected by the SSO system ; this URL would look like <B>http://yourhost.yourdomain/sympa/sso_login/inqueue</B> if the service_id is <B>inqueue</B>.
+
+<P>
+</LI>
+<LI>http_header_prefix 
+<BR>
+Sympa gets user attributes from environment variables comming from the web server. These variables are then stored in the user_table DB table for later use in authorization scenarios (in  structure). Only environment variables starting with the defined prefix will kept.
+
+<P>
+</LI>
+<LI>email_http_header 
+<BR>
+This parameter defines the environment variable that will contain the authenticated user's email address.
+
+<P>
+</LI>
+</UL>
+
+<P>
+The following parameters define how Sympa can verify the user email address, either provided by the SSO or by the user himself :
+
+<P>
+
+<UL>
+<LI>internal_email_by_netid 
+<BR>
+If set to 1 this parameter makes Sympa use its netidmap table to associate NetIDs to user email address.
+
+<P>
+</LI>
+<LI>netid_http_header 
+<BR>
+This parameter defines the environment variable that will contain the user's identifier. This netid will then be associated with an email address either provided by the user.
+
+<P>
+</LI>
+<LI>force_email_verify 
+<BR>
+If set to 1 this parameter makes Sympa verify the user's email address. If the email address was not provided by the authentication module, then the user is requested to provide a valid email address.
+
+<P>
+</LI>
+</UL>
+
+<P>
+The following parameters define how Sympa can retrieve the user email address ; <B>these are only useful if the email_http_header entry was not defined :</B>
+
+<P>
+
+<UL>
+<LI>ldap_host
+<BR>
+The LDAP host Sympa will connect to fetch user email. The ldap_host include the
+        port number and it may be a comma separated list of redondant host.   
+
+<P>
+</LI>
+<LI>ldap_bind_dn
+<BR>
+The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
+
+<P>
+</LI>
+<LI>ldap_bind_password
+<BR>
+The password used unless anonymous bind is used.
+
+<P>
+</LI>
+<LI>ldap_suffix
+<BR>
+The LDAP suffix used when seraching user email
+
+<P>
+</LI>
+<LI>ldap_scope
+<BR>
+The scope used when seraching user email, possible values are <TT>sub</TT>, <TT>base</TT>, and <TT>one</TT>.
+
+<P>
+</LI>
+<LI>ldap_get_email_by_uid_filter
+<BR>
+The filter to perform the email search. It can refer to any environment variables inherited from the SSO module, as shown below.
+	Example : 
+	<PRE>
+	    ldap_get_email_by_uid_filter    (mail=[SSL_CLIENT_S_DN_Email])
 </PRE>
 
 <P>
-In this case sympa applies recursively the scenario named <TT>include.commonreject</TT>
-before introducing the other rules. This possibility was introduced in
-order to facilitate the administration of common rules.
+</LI>
+<LI>ldap_email_attribute
+<BR>
+The attribut name to be used as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
 
 <P>
-You can define a set of common scenario rules, used by all lists.
-include.<TT>&lt;</TT>action<TT>&gt;</TT>.header is automatically added to evaluated scenarios.
+</LI>
+<LI>ldap_timeout
+<BR>
+The time out for the search.
+
+<P>
+</LI>
+<LI>ldap_use_ssl
+
+<P>
+If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
+
+<P>
+</LI>
+<LI>ldap_ssl_version
+
+<P>
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9285"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
+
+<P>
+</LI>
+<LI>ldap_ssl_ciphers
+
+<P>
+Specify which subset of cipher suites are permissible for this connection, using the  
+	OpenSSL string format. The default value of <A NAME="9286"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	which permits all ciphers, even those that don't encrypt!
+
+<P>
+</LI>
+</UL>
 
 <P>
 
-<H1><A NAME="SECTION001440000000000000000">
-13.4 blacklist implicit rule</A>
+<H2><A NAME="SECTION001454000000000000000">
+13.5.4 cas paragraph</A>
+</H2>
+
+<P>
+
+<UL>
+<LI>auth_service_name
+<BR>
+The friendly user service name as shown by <I>Sympa</I> in the login page.
+
+<P>
+</LI>
+<LI>host (OBSOLETE) 
+<BR>
+This parameter has been replaced by <B>base_url</B> parameter
+
+<P>
+</LI>
+<LI>base_url 
+<BR>
+<P>
+The base URL of the CAS server.
+
+<P>
+</LI>
+<LI>non_blocking_redirection
+<BR>
+<P>
+This parameter concern only the first access to Sympa services by a user, it activate or not the non blocking
+redirection to the related cas server to check automatically if the user as been previously authenticated with  this CAS server.
+Possible values are <B>on</B>  <B>off</B>, default is  <B>on</B>. The redirection to CAS is use with
+the cgi parameter <B>gateway=1</B> that specify to CAS server to always redirect the user to the origine
+URL but just check if the user is logged. If active, the SSO service is effective and transparent, but in case
+the CAS server is out of order the access to Sympa services is impossible.
+
+<P>
+</LI>
+<LI>login_uri (OBSOLETE) 
+<BR>
+This parameter has been replaced by <B>login_path</B> parameter.
+
+<P>
+</LI>
+<LI>login_path (OPTIONAL)
+<BR>
+The login service path
+
+<P>
+</LI>
+<LI>check_uri (OBSOLETE) 
+<BR>
+This parameter has been replaced by <B>service_validate_path</B> parameter
+
+<P>
+</LI>
+<LI>service_validate_path (OPTIONAL)
+<BR>
+The ticket validation service path
+
+<P>
+</LI>
+<LI>logout_uri (OBSOLETE) 
+<BR>
+This parameter has been replaced by <B>logout_path</B> parameter
+
+<P>
+</LI>
+<LI>logout_path (OPTIONAL)
+<BR>
+The logout service path
+
+<P>
+</LI>
+<LI>proxy_path (OPTIONAL)
+<BR>
+The proxy service path, used by Sympa SOAP server only.
+
+<P>
+</LI>
+<LI>proxy_validate_path (OPTIONAL)
+<BR>
+The proxy validate service path, used by Sympa SOAP server only.
+
+<P>
+</LI>
+<LI>ldap_host
+<BR>
+The LDAP host Sympa will connect to fetch user email when user uid is return by CAS service. The ldap_host include the
+        port number and it may be a comma separated list of redondant host.   
+
+<P>
+</LI>
+<LI>ldap_bind_dn
+<BR>
+The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
+
+<P>
+</LI>
+<LI>ldap_bind_password
+<BR>
+The password used unless anonymous bind is used.
+
+<P>
+</LI>
+<LI>ldap_suffix
+<BR>
+The LDAP suffix used when seraching user email
+
+<P>
+</LI>
+<LI>ldap_scope
+<BR>
+The scope used when seraching user email, possible values are <TT>sub</TT>, <TT>base</TT>, and <TT>one</TT>.
+
+<P>
+</LI>
+<LI>ldap_get_email_by_uid_filter
+<BR>
+The filter to perform the email search.
+
+<P>
+</LI>
+<LI>ldap_email_attribute
+<BR>
+The attribut name to be use as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
+
+<P>
+</LI>
+<LI>ldap_timeout
+<BR>
+The time out for the search.
+
+<P>
+</LI>
+<LI>ldap_use_ssl
+
+<P>
+If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
+
+<P>
+</LI>
+<LI>ldap_ssl_version
+
+<P>
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="9288"></A>Net::LDAPS to <TT>sslv2/3</TT>, 
+	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
+
+<P>
+</LI>
+<LI>ldap_ssl_ciphers
+
+<P>
+Specify which subset of cipher suites are permissible for this connection, using the  
+	OpenSSL string format. The default value of <A NAME="9289"></A>Net::LDAPS for ciphers is <TT>ALL</TT>, 
+	which permits all ciphers, even those that don't encrypt!
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001460000000000000000"></A><A NAME="9290"></A>
+<A NAME="sharing-auth"></A>
+<BR>
+13.6 Sharing <I>WWSympa</I> authentication with other applications
 </H1>
 
 <P>
-For each service listed in parameter <A NAME="9437"></A><TT>use_blacklist</TT> (see&nbsp;<A HREF="node8.html#useblacklist">7.4.4</A>), the following implicit scenario rule is added at the beginning of the scenario :<PRE>
-search(blacklist.txt,)  smtp,md5,pgp,smime -&gt; reject,quiet
+If your are not using a web Single SignOn system you might want to make other web applications collaborate with <I>Sympa</I>,
+and share the same authentication system. <I>Sympa</I> uses
+HTTP cookies to carry users' auth information from page to page.
+This cookie carries no information concerning privileges. To make your application
+work with <I>Sympa</I>, you have two possibilities :
+
+<P>
+
+<UL>
+<LI>Delegating authentication operations to <A NAME="9296"></A><I>WWSympa</I> 
+<BR>
+If you want to avoid spending a lot of time programming a CGI to do Login, Logout
+and Remindpassword, you can copy <A NAME="9299"></A><I>WWSympa</I>'s login page to your 
+application, and then make use of the cookie information within your application. 
+The cookie format is :
+<PRE>
+sympauser=&lt;user_email&gt;:&lt;checksum&gt;
+</PRE>
+where <TT>&lt;</TT>user_email<TT>&gt;</TT> is the user's complete e-mail address, and
+<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 last bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="9303"></A><TT>cookie</TT>
+configuration parameter.
+Your application needs to know what the <A NAME="9306"></A><TT>cookie</TT> parameter
+is, so it can check the HTTP cookie validity ; this is a secret shared
+between <A NAME="9309"></A><I>WWSympa</I> and your application.
+<A NAME="9312"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
+referer URL when an action is performed. Here is a sample HTML anchor :
+
+<P>
+<PRE>
+&lt;A HREF="/sympa/loginrequest/referer"&gt;Login page&lt;/A&gt;
 </PRE>
 
 <P>
-The goal is to block message or other service request from unwanted users. The blacklist can be defined for the robot or for the list. The one at the list level is to
-managed by list owner or list editor  via the web interface.
+You can also have your own HTML page submitting data to <A NAME="9315"></A><TT>wwsympa.fcgi</TT> CGI. If you're
+doing so, you can set the <TT>referer</TT> variable to another URI. You can also
+set the <TT>failure_referer</TT> to make WWSympa redirect the client to a different
+URI if login fails.
+
+<P>
+</LI>
+<LI>Using <A NAME="9318"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
+<BR>
+To cooperate with <A NAME="9321"></A><I>WWSympa</I>, you simply need to adopt its HTTP
+cookie format and share the secret it uses to generate MD5 checksums,
+i.e. the <A NAME="9324"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="9327"></A><I>WWSympa</I> 
+will accept users authenticated through your application without
+further authentication.
+
+<P>
+</LI>
+</UL>
 
 <P>
 
-<H1><A NAME="SECTION001450000000000000000">
-13.5 Hidding scenario files</A>
+<H1><A NAME="SECTION001470000000000000000"></A>
+<A NAME="external-auth"></A>
+<BR>
+13.7 Provide a Sympa login form in another application
 </H1>
 
 <P>
-Because <I>Sympa</I> is distributed with many default scenario files, you may want to hidde some of them 
-to list owners (to make list admin menus shorter and readable). To hidde a scenario file you should 
-create an empty file with the <TT>:ignore</TT> suffix. Depending on where this file has been created
-will make it ignored at either a global, robot or list level.
+You can easily trigger a Sympa login from within another web page. The login form should look like this :<PRE>
+&lt;FORM ACTION="http://listes.cru.fr/sympa" method="post"&gt;
+      &lt;input type="hidden" name="previous_action" value="arc" /&gt;
+      Accès web archives of list
+      &lt;select name="previous_list"&gt;
+      &lt;option value="sympa-users" &gt;sympa-users&lt;/option&gt;
+      &lt;/select&gt;&lt;br/&gt;
+
+      &lt;input type="hidden" name="action" value="login" /&gt;
+      &lt;label for="email"&gt;email address :
+      &lt;input type="text" name="email" id="email" size="18" value="" /&gt;&lt;/label&gt;&lt;br /&gt;
+      &lt;label for="passwd" &gt;password :
+      &lt;input type="password" name="passwd" id="passwd" size="8" /&gt;&lt;/label&gt; &lt;br/&gt;
+      &lt;input class="MainMenuLinks" type="submit" name="action_login" value="Login and access web archives" /&gt;
+&lt;/FORM&gt;
+</PRE>
 
 <P>
-<I>Example :</I> 
-<BLOCKQUOTE>
-/usr/local/sympa-os/etc/my.domain.org/scenari/send.intranetorprivate:ignore
-
-</BLOCKQUOTE>
+The example above does not only perform the login action but also redirects the user to another sympa page, a list web archives here. 
+The  <TT>previous_action</TT> and <TT>previous_list</TT> variable define the action that will be performed after the login is done.
 
 <P>
-The <TT>intranetorprivate</TT> <TT>send</TT> scenario will be hidden (on the web admin interface),
-at the my.domain.orgrobot level only.
 
-<P>
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1173"
+<A NAME="tex2html1176"
   HREF="node15.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1167"
+<A NAME="tex2html1170"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1161"
+<A NAME="tex2html1164"
   HREF="node13.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1169"
+<A NAME="tex2html1172"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1171"
-  HREF="node30.html">
+<A NAME="tex2html1174"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1174"
-  HREF="node15.html">14. virtual host</A>
-<B> Up:</B> <A NAME="tex2html1168"
+<B> Next:</B> <A NAME="tex2html1177"
+  HREF="node15.html">14. Authorization scenarios</A>
+<B> Up:</B> <A NAME="tex2html1171"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1162"
-  HREF="node13.html">12. Authentication</A>
- &nbsp; <B>  <A NAME="tex2html1170"
+<B> Previous:</B> <A NAME="tex2html1165"
+  HREF="node13.html">12. Sympa SOAP server</A>
+ &nbsp; <B>  <A NAME="tex2html1173"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1172"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1175"
+  HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-08
+2006-08-23
 </ADDRESS>
 </BODY>
 </HTML>

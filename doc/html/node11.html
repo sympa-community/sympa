@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>10. Sympa RSS channel</TITLE>
-<META NAME="description" CONTENT="10. Sympa RSS channel">
+<TITLE>10. Sympa Internationalization</TITLE>
+<META NAME="description" CONTENT="10. Sympa Internationalization">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,32 +27,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1109"
+<A NAME="tex2html1120"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1103"
+<A NAME="tex2html1114"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1097"
+<A NAME="tex2html1108"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1105"
+<A NAME="tex2html1116"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1107"
-  HREF="node30.html">
+<A NAME="tex2html1118"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1110"
-  HREF="node12.html">11. Sympa SOAP server</A>
-<B> Up:</B> <A NAME="tex2html1104"
+<B> Next:</B> <A NAME="tex2html1121"
+  HREF="node12.html">11. Sympa RSS channel</A>
+<B> Up:</B> <A NAME="tex2html1115"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1098"
+<B> Previous:</B> <A NAME="tex2html1109"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1106"
+ &nbsp; <B>  <A NAME="tex2html1117"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1108"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1119"
+  HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -60,210 +60,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1111"
-  HREF="node11.html#SECTION001110000000000000000">10.1 <TT>latest_lists</TT></A>
-<LI><A NAME="tex2html1112"
-  HREF="node11.html#SECTION001120000000000000000">10.2 <TT>active_lists</TT></A>
-<LI><A NAME="tex2html1113"
-  HREF="node11.html#SECTION001130000000000000000">10.3 <TT>latest_arc</TT></A>
-<LI><A NAME="tex2html1114"
-  HREF="node11.html#SECTION001140000000000000000">10.4 <TT>latest_d_read</TT></A>
+<LI><A NAME="tex2html1122"
+  HREF="node11.html#SECTION001110000000000000000">10.1 Translating Sympa GUI</A>
+<LI><A NAME="tex2html1123"
+  HREF="node11.html#SECTION001120000000000000000">10.2 Defining language-specific templates</A>
+<LI><A NAME="tex2html1124"
+  HREF="node11.html#SECTION001130000000000000000">10.3 Handling of encodings</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001100000000000000000"></A>
-<A NAME="rss"></A><A NAME="1600"></A>
+<A NAME="i18n"></A><A NAME="1601"></A>
 <BR>
-10. Sympa RSS channel
+10. Sympa Internationalization
 </H1>
 
 <P>
-This service is provided by <A NAME="9033"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
-Here is the root of <A NAME="9037"></A><I>WWSympa</I>'s rss channel :
-<BR>
-<P>
-(Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws/rss</TT>)
-<BR>
-Example: <TT>https://my.server/wws/rss</TT>
 
-<P>
-The access control of RSS queries proceed on the same way as <A NAME="9044"></A><I>WWSympa</I> actions referred to.
-<I>Sympa</I> provides the following RSS features :
-
-<UL>
-<LI>the latest created lists on a robot (<A NAME="9048"></A><TT>latest_lists</TT>) ;
-</LI>
-<LI>the most active lists on a robot(<A NAME="9051"></A><TT>active_lists</TT>) ;  
-</LI>
-<LI>the latest messages of a list (<A NAME="9054"></A><TT>active_arc</TT>) ;   
-</LI>
-<LI>the latest shared documents of a list (<A NAME="9057"></A><TT>latest_d_read</TT>) ; 
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION001110000000000000000"></A><A NAME="9060"></A>
-<BR>
-10.1 <TT>latest_lists</TT>
+<H1><A NAME="SECTION001110000000000000000">
+10.1 Translating Sympa GUI</A>
 </H1>
 
 <P>
-This provides the latest created lists.  
 
-<P>
-Example: <TT>http://my.server/wws/rss/latest_lists?for=3&amp;count=6</TT>
-<BR>
-This provides the 6 latest created lists for the last 3 days.
-<BR>
-<P>
-Example: <TT>http://my.server/wws/rss/latest_lists/computing?count=6</TT>
-<BR>
-This provides the 6 latest created lists with topic ``computing''.
-<BR>
-<P>
-Parameters : 
-
-<UL>
-<LI><A NAME="9065"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI><A NAME="9068"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI>topic : the topic is indicated in the path info (see example below with topic computing). 
-    This parameter is optional.
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION001120000000000000000"></A><A NAME="9071"></A>
-<BR>
-10.2 <TT>active_lists</TT>
+<H1><A NAME="SECTION001120000000000000000">
+10.2 Defining language-specific templates</A>
 </H1>
 
 <P>
-This provides the most active lists, based on the number of distributed messages (number of received messages).  
 
-<P>
-Example: <TT>http://my.server/wws/rss/active_lists?for=3&amp;count=6</TT>
-<BR>
-This provides the 6 most active lists for the last 3 days.
-<BR>
-<P>
-Example: <TT>http://my.server/wws/rss/active_lists/computing?count=6</TT>
-<BR>
-This provides the 6 most active lists with topic ``computing''.
-<BR>
-<P>
-Parameters : 
-
-<UL>
-<LI><A NAME="9076"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI><A NAME="9079"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI>topic : the topic is indicated in the path info (see example below with topic computing). 
-    This parameter is optional.
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION001130000000000000000"></A><A NAME="9082"></A>
-<BR>
-10.3 <TT>latest_arc</TT>
+<H1><A NAME="SECTION001130000000000000000">
+10.3 Handling of encodings</A>
 </H1>
 
 <P>
-This provides the latest messages of a list.  
+Until version 5.3, Sympa web pages were encoded in each language's
+encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
+web page is now encoded in utf-8. Thanks to
+the <A NAME="9059"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
+filesystem encoding, each message catalog's encoding and its web
+encoding (utf-8).
 
 <P>
-Example: <TT>http://my.server/wws/rss/latest_arc/mylist?for=3&amp;count=6</TT>
-<BR>
-This provides the 6 latest messages received on the mylistlist for the last 3 days.
-<BR>
-<P>
-Parameters : 
-
-<UL>
-<LI>list : the list is indicated in the path info. This parameter is mandatory.
-</LI>
-<LI><A NAME="9086"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI><A NAME="9089"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION001140000000000000000"></A><A NAME="9092"></A>
-<BR>
-10.4 <TT>latest_d_read</TT>
-</H1>
-
-<P>
-This provides the latest updated and uploaded shared documents of a list.  
-
-<P>
-Example: <TT>http://my.server/wws/rss/latest_d_read/mylist?for=3&amp;count=6</TT>
-<BR>
-This provides the 6 latest documents uploaded or updated on the mylistlist for the last 3 days.
-<BR>
-<P>
-Parameters : 
-
-<UL>
-<LI>list : the list is indicated in the path info. This parameter is mandatory.
-</LI>
-<LI><A NAME="9096"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-<LI><A NAME="9099"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
-     ``for'' or ``count'' is required.
-</LI>
-</UL>
+If your operating system uses a character encoding different from
+utf-8, then you should declare it using the <A NAME="9062"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
+<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). It is required to do so
+because Sympa has no way to find out what encoding is used for its
+configuration files. Once this encoding is known, every template or
+configuration parameter can be read properly for the web and also
+saved properly when edited from the web interface.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1109"
+<A NAME="tex2html1120"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1103"
+<A NAME="tex2html1114"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1097"
+<A NAME="tex2html1108"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1105"
+<A NAME="tex2html1116"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1107"
-  HREF="node30.html">
+<A NAME="tex2html1118"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1110"
-  HREF="node12.html">11. Sympa SOAP server</A>
-<B> Up:</B> <A NAME="tex2html1104"
+<B> Next:</B> <A NAME="tex2html1121"
+  HREF="node12.html">11. Sympa RSS channel</A>
+<B> Up:</B> <A NAME="tex2html1115"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1098"
+<B> Previous:</B> <A NAME="tex2html1109"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1106"
+ &nbsp; <B>  <A NAME="tex2html1117"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1108"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1119"
+  HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-08
+2006-08-23
 </ADDRESS>
 </BODY>
 </HTML>

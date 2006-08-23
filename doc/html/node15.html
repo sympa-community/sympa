@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>14. virtual host</TITLE>
-<META NAME="description" CONTENT="14. virtual host">
+<TITLE>14. Authorization scenarios</TITLE>
+<META NAME="description" CONTENT="14. Authorization scenarios">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,32 +27,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1194"
+<A NAME="tex2html1201"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1188"
+<A NAME="tex2html1195"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1182"
+<A NAME="tex2html1189"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1190"
+<A NAME="tex2html1197"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1192"
-  HREF="node30.html">
+<A NAME="tex2html1199"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1195"
-  HREF="node16.html">15. Interaction between Sympa and other</A>
-<B> Up:</B> <A NAME="tex2html1189"
+<B> Next:</B> <A NAME="tex2html1202"
+  HREF="node16.html">15. virtual host</A>
+<B> Up:</B> <A NAME="tex2html1196"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1183"
-  HREF="node14.html">13. Authorization scenarios</A>
- &nbsp; <B>  <A NAME="tex2html1191"
+<B> Previous:</B> <A NAME="tex2html1190"
+  HREF="node14.html">13. Authentication</A>
+ &nbsp; <B>  <A NAME="tex2html1198"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1193"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1200"
+  HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -60,308 +60,458 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1196"
-  HREF="node15.html#SECTION001510000000000000000">14.1 How to create a virtual host</A>
-<LI><A NAME="tex2html1197"
-  HREF="node15.html#SECTION001520000000000000000">14.2 robot.conf</A>
+<LI><A NAME="tex2html1203"
+  HREF="node15.html#SECTION001510000000000000000">14.1 rules specifications</A>
+<LI><A NAME="tex2html1204"
+  HREF="node15.html#SECTION001520000000000000000">14.2 LDAP Named Filters</A>
 <UL>
-<LI><A NAME="tex2html1198"
-  HREF="node15.html#SECTION001521000000000000000">14.2.1 Robot customization</A>
+<LI><A NAME="tex2html1205"
+  HREF="node15.html#SECTION001521000000000000000">14.2.1 Definition</A>
+<LI><A NAME="tex2html1206"
+  HREF="node15.html#SECTION001522000000000000000">14.2.2 Search Condition</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1199"
-  HREF="node15.html#SECTION001530000000000000000">14.3 Managing multiple virtual hosts</A>
+<LI><A NAME="tex2html1207"
+  HREF="node15.html#SECTION001530000000000000000">14.3 scenario inclusion</A>
+<LI><A NAME="tex2html1208"
+  HREF="node15.html#SECTION001540000000000000000">14.4 blacklist implicit rule</A>
+<LI><A NAME="tex2html1209"
+  HREF="node15.html#SECTION001550000000000000000">14.5 Hidding scenario files</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001500000000000000000"></A>
-    <A NAME="virtual-robot"></A>
+<A NAME="scenarios"></A><A NAME="1972"></A>
 <BR>
-14. virtual host
+14. Authorization scenarios
 </H1>
 
 <P>
-Sympa is designed to manage multiple distinct mailing list servers on
-a single host with a single Sympa installation. Sympa virtual hosts
-are like Apache virtual hosting. Sympa virtual host definition includes
-a specific email address for the robot itself and its lists and also a virtual
-http server. Each robot provides access to a set of lists, each list is
-related to only one robot.
+List parameters controlling the behavior of commands are linked to different authorization scenarios.
+For example : the <A NAME="9330"></A><TT>send private</TT> parameter is related to the send.private scenario.
+There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
+looks first in the related list directory <A NAME="9346"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="9355"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9358"></A><TT>/usr/local/sympa-os/etc/scenari</TT>,
+and finally <A NAME="9361"></A><TT>/usr/local/sympa-os/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
-Most configuration parameters can be redefined for each robot except 
-general Sympa installation parameters (binary and spool location, smtp engine,
-antivirus plugging,...).
+An authorization scenario is a small configuration language to describe who
+can perform an operation and which authentication method is requested for it.
+An authorization scenario is an ordered set of rules. The goal is to provide a simple and
+flexible way to configure authorization and required authentication method for each operation.
 
 <P>
-The virtual host name as defined in <I>Sympa</I> documentation and configuration file refers
-to the Internet domaine of the virtual host.
-
-<P>
-Note that the main limitation of virtual hosts in Sympa is that you cannot create 
-2 lists with the same name (local part) among your virtual hosts.
-
-<P>
-
-<H1><A NAME="SECTION001510000000000000000">
-14.1 How to create a virtual host</A>
-</H1>
-
-<P>
-You don't need to install several Sympa servers. A single <A NAME="9442"></A><TT>sympa.pl</TT> daemon
-and one or more fastcgi servers can serve all virtual host. Just configure the 
-server environment in order to accept the new domain definition.
+Each authorization scenario rule contains :
 
 <UL>
-<LI><B>The DNS</B> must be configured to define a new mail exchanger record (MX) 
-to route message to your server. A new host (A record) or alias (CNAME) are mandatory
-to define the new web server.
+<LI>a condition : the condition is evaluated by <I>Sympa</I>. It can use
+  variables such as sender for the sender e-mail, list for the listname etc.
 </LI>
-<LI>Configure your <B>MTA (sendmail, postfix, exim, ...)</B> to accept incoming 
-messages for the new robot domain. Add mail aliases for the robot :
+<LI>an authentication method. The authentication method can be <A NAME="9365"></A><TT>smtp</TT>,
+<A NAME="9368"></A><TT>md5</TT> or <A NAME="9371"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="9375"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="9379"></A><TT>from:</TT> header , <A NAME="9382"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="9385"></A><TT>smime</TT>
+is used for signed messages (see <A HREF="node28.html#smimeforsign">27.4.4</A>, page&nbsp;<A HREF="node28.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+</LI>
+<LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
 
 <P>
-<I>Examples (with sendmail):</I> <PRE>
-sympa@your.virtual.domain:      "| /usr/local/sympa-os/bin/queue sympa@your.virtual.domain"
-listmaster@your.virtual.domain: "| /usr/local/sympa-os/bin/queue listmaster@your.virtual.domain"
-bounce+*@your.virtual.domain:          "| /usr/local/sympa-os/bin/bouncequeue sympa@your.virtual.domain"\\
+</LI>
+</UL>
+
+<P>
+Example
+
+<P>
+<BLOCKQUOTE>
+del.auth
+</BLOCKQUOTE><PRE>
+title.us deletion performed only by list owners, need authentication
+title.fr suppression réservée au propriétaire avec authentification
+title.es eliminacin reservada slo para el propietario, necesita autentificacin
+
+
+  is_owner([listname],[sender])  smtp       -&gt; request_auth
+  is_listmaster([sender])        smtp       -&gt; request_auth
+  true()                         md5,smime  -&gt; do_it
 </PRE>
 
 <P>
-</LI>
-<LI>Define a <B>virtual host in your HTTPD server</B>. The fastcgi servers defined 
-in the common section of you httpd server can be used by each virtual host. You don't 
-need to run dedicated fascgi server for each virtual host.
+
+<H1><A NAME="SECTION001510000000000000000"></A>
+<A NAME="rules"></A>
+<BR>
+14.1 rules specifications
+</H1>
 
 <P>
-<I>Examples:</I> <PRE>
-FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
-.....
-&lt;VirtualHost 195.215.92.16&gt;
-  ServerAdmin webmaster@your.virtual.domain
-  DocumentRoot /var/www/your.virtual.domain
-  ServerName your.virtual.domain
+An authorization scenario consists of rules, evaluated in order beginning with the first. 
+Rules are defined as follows :<PRE>
+&lt;rule&gt; ::= &lt;condition&gt; &lt;auth_list&gt; -&gt; &lt;action&gt;
 
-  &lt;Location /sympa&gt;
-     SetHandler fastcgi-script
-  &lt;/Location&gt;
+&lt;condition&gt; ::= [!] &lt;condition
+                | true ()
+                | all ()
+                | equal (&lt;var&gt;, &lt;var&gt;)
+                | match (&lt;var&gt;, /perl_regexp/)
+		| search (&lt;filter.ldap&gt;,&lt;var&gt;)
+                | is_subscriber (&lt;listname&gt;, &lt;var&gt;)
+                | is_owner (&lt;listname&gt;, &lt;var&gt;)
+                | is_editor (&lt;listname&gt;, &lt;var&gt;)
+                | is_listmaster (&lt;var&gt;)
+                | older (&lt;date&gt;, &lt;date&gt;)    # true if first date is anterior to the second date
+                | newer (&lt;date&gt;, &lt;date&gt;)    # true if first date is posterior to the second date
+&lt;var&gt; ::= [email] | [sender] | [user-&gt;&lt;user_key_word&gt;] | [previous_email]
+                  | [remote_host] | [remote_addr] | [user_attributes-&gt;&lt;user_attributes_keyword&gt;]
+	 	  | [subscriber-&gt;&lt;subscriber_key_word&gt;] | [list-&gt;&lt;list_key_word&gt;] | [env-&gt;&lt;env_var&gt;]
+		  | [conf-&gt;&lt;conf_key_word&gt;] | [msg_header-&gt;&lt;smtp_key_word&gt;] | [msg_body] 
+	 	  | [msg_part-&gt;type] | [msg_part-&gt;body] | [msg_encrypted] | [is_bcc] | [current_date] 
+		  | [topic-auto] | [topic-sender,] | [topic-editor] | [topic] | [topic-needed]
+		  | &lt;string&gt;
 
-  ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
+[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
-  Alias /static-sympa /usr/local/sympa-os/static_content
+[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
 
-&lt;/VirtualHost&gt;
+[previous_email] ::= old email when changing subscription email in preference page. 
+
+[msg_encrypted] ::= set to 'smime' if the message was S/MIME encrypted
+
+[topic-auto] ::= topic of the message if it has been automatically tagged
+
+[topic-sender] ::= topic of the message if it has been tagged by sender
+
+[topic-editor] ::= topic of the message if it has been tagged by editor
+
+[topic]  ::= topic of the message
+
+[topic-needed] ::= the message has not got any topic and message topic are required for the list
+
+&lt;date&gt; ::= '&lt;date_element&gt; [ +|- &lt;date_element&gt;]'
+
+&lt;date_element&gt; ::= &lt;epoch_date&gt; | &lt;var&gt; | &lt;date_expr&gt;
+
+&lt;epoch_date&gt; ::= &lt;integer&gt;
+
+&lt;date_expr&gt; ::= &lt;integer&gt;y&lt;integer&gt;m&lt;integer&gt;d&lt;integer&gt;h&lt;integer&gt;min&lt;integer&gt;sec
+
+&lt;listname&gt; ::= [listname] | &lt;listname_string&gt;
+
+&lt;auth_list&gt; ::= &lt;auth&gt;,&lt;auth_list&gt; | &lt;auth&gt;
+
+&lt;auth&gt; ::= smtp|md5|smime
+
+&lt;action&gt; ::=   do_it [,notify]
+             | do_it [,quiet]
+	     | reject(reason=&lt;reason_key&gt;)
+	     | reject(tt2=&lt;tpl_name&gt;)
+             | request_auth
+             | owner
+	     | editor
+	     | editorkey[,quiet]
+	     | listmaster
+
+&lt;reason_key&gt; ::= match a key in mail_tt2/authorization_reject.tt2 template corresponding to 
+                 an information message about the reason of the reject of the user
+  
+&lt;tpl_name&gt; ::= corresponding template (&lt;tpl_name&gt;.tt2) is send to the sender
+
+&lt;user_key_word&gt; ::= email | gecos | lang | password | cookie_delay_user
+	            | &lt;additional_user_fields&gt;
+
+&lt;user_attributes_key_word&gt; ::= one of the user attributes provided by the SSO system via environment variables. The [user_attributes] structure is available only if user authenticated with a generic_sso.
+
+&lt;subscriber_key_word&gt; ::= email | gecos | bounce | reception 
+	                  | visibility | date | update_date
+			  | &lt;additional_subscriber_fields&gt;
+
+&lt;list_key_word&gt; ::= name | host | lang | max_size | priority | reply_to | 
+		    status | subject | account | total
+
+&lt;conf_key_word&gt; ::= domain | email | listmaster | default_list_priority | 
+		      sympa_priority | request_priority | lang | max_size
 </PRE>
 
 <P>
-</LI>
-<LI>Create a <A NAME="9445"></A><TT>/usr/local/sympa-os/etc/your.virtual.domain/robot.conf</TT> configuration file for the virtual host. Its format is a subset of <A NAME="9448"></A><TT>sympa.conf</TT> and is described in the next section ; a sample <A NAME="9451"></A><TT>robot.conf</TT> is provided.
+(Refer to  <A HREF="node18.html#tasks">17.8</A>, page&nbsp;<A HREF="node18.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for date format definition)
 
 <P>
-</LI>
-<LI>Create a <A NAME="9454"></A><TT>/usr/local/sympa-os/expl/your.virtual.domain/</TT> directory that will contain the virtual host mailing lists directories. This directory should have the  <I>sympa</I> user as its owner and must have read and write access for this user.
+The function to evaluate scenario is described in section <A HREF="node30.html#list-scenario-evaluation">29.2.6</A>, page&nbsp;<A HREF="node30.html#list-scenario-evaluation"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+perl_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
+The variable notation [msg_header-<TT>&gt;&lt;</TT>smtp_key_word<TT>&gt;</TT>] is interpreted as the 
+SMTP header value only when evaluating the authorization scenario for sending messages. 
+It can be used, for example, to require editor validation for multipart messages.
+[msg_part-<TT>&gt;</TT>type] and [msg_part-<TT>&gt;</TT>body] are the MIME parts content-types and bodies ; the body is available
+for MIME parts in text/xxx format only.
+
+<P>
+The difference between <A NAME="9389"></A>editor and <A NAME="9390"></A>editorkey is, that with <A NAME="9391"></A>editor the message is simply forwarded to the moderaotr. He then can forward it to the list, if he wishes. <A NAME="9392"></A>editorkey assigns a key to the message and sends it to the moderator together with the message. So the moderator can just send back the key to distribute the message. Please note, that moderation from the webinterface is only possible when using <A NAME="9393"></A>editorkey, because otherwise there is no copy of the message saved on the server. 
+
+<P>
+A bunch of authorization scenarios is provided with the <I>Sympa</I> distribution ; they provide
+a large set of configuration that allow to create lists for most usage. But you will
+probably create authorization scenarios for your own need. In this case, don't forget to restart <I>Sympa</I> 
+and wwsympa because authorization scenarios are not reloaded dynamicaly.
+
+<P>
+These standard authorization scenarios are located in the <A NAME="9396"></A><TT>/usr/local/sympa-os/bin/etc/scenari/</TT>
+directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
+
+<P>
+You may also define and name your own authorization scenarios. Store them in the
+<A NAME="9399"></A><TT>/usr/local/sympa-os/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual host (using directory <A NAME="9414"></A><TT>/usr/local/sympa-os/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9441"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ). <B>Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload_list_config command to update the <A NAME="9456"></A><TT>config.bin</TT> files.</B>
+
+<P>
+Example:
+
+<P>
+Copy the previous scenario to <A NAME="9459"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
-# su sympa -c 'mkdir /usr/local/sympa-os/expl/your.virtual.domain'
-# chmod 750 /usr/local/sympa-os/expl/your.virtual.domain
+equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
+match([sender], /univ-rennes1\.fr$/) smtp,smime -&gt; do_it
+true()                               smtp,smime -&gt; owner
 </PRE>
 
 <P>
-</LI>
-</UL>
+You may now refer to this authorization scenario in any list configuration file, for example :
+
+<P><PRE>
+subscribe rennes1
+</PRE>
 
 <P>
 
-<H1><A NAME="SECTION001520000000000000000">
-14.2 robot.conf</A>
+<H1><A NAME="SECTION001520000000000000000"></A>
+<A NAME="named-filters"></A>
+<BR>
+14.2 LDAP Named Filters
 </H1>
-A robot is named by its domain, let's say my.domain.organd defined by a directory 
-<A NAME="9457"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>. This directory must contain at least a 
-<A NAME="9460"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="9463"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
-(have a look at robot.conf in the sample dir).
-Only the following parameters can be redefined for a particular robot :
 
 <P>
-
-<UL>
-<LI><A NAME="9466"></A><TT>http_host</TT> 
-<BR>
-This hostname will be compared with 'SERVER_NAME' environment variable in wwsympa.fcgi
-	to determine the current Virtual Host. You can a path at the end of this parameter if
-	you are running multiple virtual hosts on the same host. 
-	<PRE>Examples: \\
-	http_host  myhost.mydom
-	http_host  myhost.mydom/sympa
-</PRE>
+At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-</LI>
-<LI><A NAME="9469"></A><TT>wwsympa_url</TT> 
-<BR>
-The base URL of WWSympa
-
-<P>
-</LI>
-<LI><A NAME="9472"></A><TT>soap_url</TT> 
-<BR>
-The base URL of Sympa's SOAP server (if it is running ; see&nbsp;<A HREF="node12.html#soap">11</A>, page&nbsp;<A HREF="node12.html#soap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
-
-<P>
-</LI>
-<LI><A NAME="9475"></A><TT>cookie_domain</TT>
-
-<P>
-</LI>
-<LI><A NAME="9478"></A><TT>email</TT>
-
-<P>
-</LI>
-<LI><A NAME="9481"></A><TT>title</TT>
-
-<P>
-</LI>
-<LI><A NAME="9484"></A><TT>default_home</TT>
-
-<P>
-</LI>
-<LI><A NAME="9487"></A><TT>create_list</TT>
-
-<P>
-</LI>
-<LI><A NAME="9490"></A><TT>lang</TT>
-
-<P>
-</LI>
-<LI><A NAME="9493"></A><TT>supported_lang</TT>
-
-<P>
-</LI>
-<LI><A NAME="9496"></A><TT>log_smtp</TT>
-
-<P>
-</LI>
-<LI><A NAME="9499"></A><TT>listmaster</TT>
-
-<P>
-</LI>
-<LI><A NAME="9502"></A><TT>max_size</TT>
-
-<P>
-</LI>
-<LI><A NAME="9505"></A><TT>css_path</TT>
-
-<P>
-</LI>
-<LI><A NAME="9508"></A><TT>css_url</TT>
-
-<P>
-</LI>
-<LI><A NAME="9511"></A><TT>static_content_path</TT>
-
-<P>
-</LI>
-<LI><A NAME="9514"></A><TT>static_content_url</TT>
-
-<P>
-</LI>
-<LI><A NAME="9517"></A><TT>pictures_feature</TT>
-
-<P>
-</LI>
-<LI><A NAME="9520"></A><TT>pictures_max_size</TT>
-
-<P>
-</LI>
-<LI><A NAME="9523"></A><TT>logo_html_definition</TT>
-
-<P>
-</LI>
-<LI><A NAME="9526"></A><TT>color_0</TT>, color_1 ... color_15
-
-<P>
-</LI>
-<LI>deprecated color definition <A NAME="9529"></A><TT>dark_color</TT>, <A NAME="9532"></A><TT>light_color</TT>, <A NAME="9535"></A><TT>text_color</TT>, <A NAME="9538"></A><TT>bg_color</TT>, <A NAME="9541"></A><TT>error_color</TT>, <A NAME="9544"></A><TT>selected_color</TT>, <A NAME="9547"></A><TT>shaded_color</TT>
-
-<P>
-</LI>
-</UL>
-
-<P>
-These settings overwrite the equivalent global parameter defined in <A NAME="9550"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
-for my.domain.orgrobot ; the main <A NAME="9553"></A><TT>listmaster</TT> still has privileges on Virtual
-Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
-environment variable to recognize which robot is in used. 
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="9462"></A>LDAP directory thanks to an authorization scenario.
 
 <P>
 
 <H2><A NAME="SECTION001521000000000000000">
-14.2.1 Robot customization</A>
+14.2.1 Definition</A>
 </H2>
 
 <P>
-In order to customize the web look and feel, you may edit the CSS definition. CSS are defined in a template named css.tt2. Any robot can use static css file for making Sympa web interface faster. Then you can edit this static definition and change web style. Please refer to  <A NAME="9556"></A><TT>css_path</TT> <A NAME="9559"></A><TT>css_url</TT>. You can also quickly introduce a logo in left top corner of all pages configuring <A NAME="9562"></A><TT>logo_html_definition</TT> parameter in robot.conf file. 
+People are selected through an <A NAME="9463"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="9464"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
 
 <P>
-In addition, if needed, you can customize each virtual host using its set of templates and authorization scenarios. 
+You must give several informations in order to create a Named Filter:
+
+<UL>
+<LI>host
+<BR>
+A list of host:port LDAP directories (replicates) entries.
 
 <P>
-<A NAME="9565"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>,
-<A NAME="9568"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/</TT>, 
-<A NAME="9571"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> directories are searched when
-loading templates or scenari before searching into <A NAME="9574"></A><TT>/usr/local/sympa-os/etc</TT> and  <A NAME="9577"></A><TT>/usr/local/sympa-os/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Host.
+</LI>
+<LI>suffix
+<BR>
+Defines the naming space covered by the search (optional, depending on the LDAP server).
+
+<P>
+</LI>
+<LI>filter
+<BR>
+Defines the LDAP search filter (RFC 2254 compliant). 
+	But you must absolutely take into account the first part of the filter which is:
+	('mail_attribute' = [sender]) as shown in the example. you will have to replce 'mail_attribute' by the name 
+	of the attribute for the email.
+	<I>Sympa</I> verifies if the user belongs to the category of people defined in the filter. 
+
+<P>
+</LI>
+<LI>scope
+<BR>
+By default the search is performed on the whole tree below the specified base object. This may be changed by specifying a scope :
+
+<P>
+
+<UL>
+<LI>base : Search only the base object.
+</LI>
+<LI>one
+<BR>
+Search the entries immediately below the base object. 
+</LI>
+<LI>sub
+<BR>
+Search the whole tree below the base object. This is the default. 
+	
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI>bind_dn
+<BR>
+If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
+
+<P>
+</LI>
+<LI>bind_password
+<BR>
+This password is used, combined with the bind_dn above.
+
+<P>
+</LI>
+</UL>
+
+<P>
+example.ldap : we want to select the professors of mathematics in the university of Rennes1 in France<PRE>
+	
+	host		ldap.univ-rennes1.fr:389,ldap2.univ-rennes1.fr:390
+	suffix		dc=univ-rennes1.fr,dc=fr
+	filter		(&amp;(canonic_mail = [sender])(EmployeeType = prof)(subject = math))
+	scope		sub
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION001522000000000000000">
+14.2.2 Search Condition</A>
+</H2>
+
+<P>
+The search condition is used in authorization scenarios which are defined and described in (see&nbsp;<A HREF="#scenarios">14</A>) 
+
+<P>
+The syntax of this rule is:<PRE>
+	search(example.ldap,[sender])      smtp,smime,md5    -&gt; do_it
+	search(blacklist.txt,[sender])     smtp,smime,md5    -&gt; do_it
+</PRE>
+
+<P>
+The variables used by 'search' are :
+
+<UL>
+<LI>the name of the LDAP Configuration file or a txt matching enumeration
+<BR></LI>
+<LI>the [sender]
+<BR>
+That is to say the sender email address. 
+</LI>
+</UL>
+
+<P>
+Note that <I>Sympa</I> processes maintain a cache of processed search conditions to limit access to the LDAP directory ; each entry has a lifetime of 1 hour in the cache.
+
+<P>
+When using .txt file extention, the file is read looking for a line that match the second parameter (usually the user email address). Each line is a string where the
+char * can be used once to mach any block. This feature is used by the blacklist implicit scenario rule.   (see&nbsp;<A HREF="#blacklist"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) 
+
+<P>
+The method of authentication does not change.
 
 <P>
 
 <H1><A NAME="SECTION001530000000000000000">
-14.3 Managing multiple virtual hosts</A>
+14.3 scenario inclusion</A>
 </H1>
 
 <P>
-If you are managing more than 2 virtual hosts, then you might cinsider moving all the mailing lists in the default
-robot to a dedicated virtual host located in the <A NAME="9580"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> directory. The main benefit of 
-this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
-for this robot without inheriting them within other virtual hosts.
+Scenarios can also contain includes :
+
+<P><PRE>
+    subscribe
+        include commonreject
+        match(, /cru\.fr$/)          smtp,smime -&gt; do_it
+	true()                               smtp,smime -&gt; owner
+</PRE>
 
 <P>
-To create such a virtual host, you need to create <A NAME="9583"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> and <A NAME="9586"></A><TT>/usr/local/sympa-os/etc/my.domain.org/</TT> directories ; 
-customize <A NAME="9589"></A><TT>host</TT>, <A NAME="9592"></A><TT>http_host</TT> and <A NAME="9595"></A><TT>wwsympa_url</TT> parameters in the <A NAME="9598"></A><TT>/usr/local/sympa-os/etc/my.domain.org/robot.conf</TT> 
-with the same values as the default robot (as defined in <A NAME="9601"></A><TT>sympa.conf</TT> and <A NAME="9604"></A><TT>wwsympa.conf</TT> files).
+In this case sympa applies recursively the scenario named <TT>include.commonreject</TT>
+before introducing the other rules. This possibility was introduced in
+order to facilitate the administration of common rules.
+
+<P>
+You can define a set of common scenario rules, used by all lists.
+include.<TT>&lt;</TT>action<TT>&gt;</TT>.header is automatically added to evaluated scenarios.
 
 <P>
 
+<H1><A NAME="SECTION001540000000000000000">
+14.4 blacklist implicit rule</A>
+</H1>
+
+<P>
+For each service listed in parameter <A NAME="9469"></A><TT>use_blacklist</TT> (see&nbsp;<A HREF="node8.html#useblacklist">7.4.4</A>), the following implicit scenario rule is added at the beginning of the scenario :<PRE>
+search(blacklist.txt,)  smtp,md5,pgp,smime -&gt; reject,quiet
+</PRE>
+
+<P>
+The goal is to block message or other service request from unwanted users. The blacklist can be defined for the robot or for the list. The one at the list level is to
+managed by list owner or list editor  via the web interface.
+
+<P>
+
+<H1><A NAME="SECTION001550000000000000000">
+14.5 Hidding scenario files</A>
+</H1>
+
+<P>
+Because <I>Sympa</I> is distributed with many default scenario files, you may want to hidde some of them 
+to list owners (to make list admin menus shorter and readable). To hidde a scenario file you should 
+create an empty file with the <TT>:ignore</TT> suffix. Depending on where this file has been created
+will make it ignored at either a global, robot or list level.
+
+<P>
+<I>Example :</I> 
+<BLOCKQUOTE>
+/usr/local/sympa-os/etc/my.domain.org/scenari/send.intranetorprivate:ignore
+
+</BLOCKQUOTE>
+
+<P>
+The <TT>intranetorprivate</TT> <TT>send</TT> scenario will be hidden (on the web admin interface),
+at the my.domain.orgrobot level only.
+
+<P>
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1194"
+<A NAME="tex2html1201"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1188"
+<A NAME="tex2html1195"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1182"
+<A NAME="tex2html1189"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1190"
+<A NAME="tex2html1197"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1192"
-  HREF="node30.html">
+<A NAME="tex2html1199"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1195"
-  HREF="node16.html">15. Interaction between Sympa and other</A>
-<B> Up:</B> <A NAME="tex2html1189"
+<B> Next:</B> <A NAME="tex2html1202"
+  HREF="node16.html">15. virtual host</A>
+<B> Up:</B> <A NAME="tex2html1196"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1183"
-  HREF="node14.html">13. Authorization scenarios</A>
- &nbsp; <B>  <A NAME="tex2html1191"
+<B> Previous:</B> <A NAME="tex2html1190"
+  HREF="node14.html">13. Authentication</A>
+ &nbsp; <B>  <A NAME="tex2html1198"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1193"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1200"
+  HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-08
+2006-08-23
 </ADDRESS>
 </BODY>
 </HTML>

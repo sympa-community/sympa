@@ -9518,6 +9518,23 @@ OpenSSL is used by \Sympa as an external plugin
 (like sendmail or postfix), so it must be installed with the appropriate access
 (x for sympa.sympa). 
 
+\subsection {managing user certificates}
+\label {smimeusercert}
+
+User certs are automatically catched by Sympa when receiving a signed s/mime messsage 
+so if Sympa needs to send encrypted message to this user it can perform encryption 
+using this certificate. This works fine but it's not conpliant with the PKI theory : 
+Sympa should be able to search for user certificates using PKI certificate directory (LDAP) .
+
+That's why Sympa tests the key usage certificate attribute to known if the certificate 
+allows both encryption and signature.
+
+Certificates are stored as PEM files in the \dir {[EXPL_DIR]/X509-user-certs/} directory. 
+Files are named user@some.domain@enc or user@some.domain@sign  (@enc and @sign suffix 
+are used according to certificates usage.  No other tool is provided by Sympa in order 
+to collect this certificate repository but you can easily imagine your own tool to create 
+those files. 
+
 \subsection {configuration in sympa.conf}
 \label {smimeconf}
 

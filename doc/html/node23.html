@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>22. Shared documents</TITLE>
-<META NAME="description" CONTENT="22. Shared documents">
+<TITLE>22. Reception mode</TITLE>
+<META NAME="description" CONTENT="22. Reception mode">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,32 +27,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1447"
+<A NAME="tex2html1457"
   HREF="node24.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1441"
+<A NAME="tex2html1451"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1435"
+<A NAME="tex2html1445"
   HREF="node22.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1443"
+<A NAME="tex2html1453"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1445"
-  HREF="node30.html">
+<A NAME="tex2html1455"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1448"
-  HREF="node24.html">23. Bounce management</A>
-<B> Up:</B> <A NAME="tex2html1442"
+<B> Next:</B> <A NAME="tex2html1458"
+  HREF="node24.html">23. Shared documents</A>
+<B> Up:</B> <A NAME="tex2html1452"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1436"
-  HREF="node22.html">21. Reception mode</A>
- &nbsp; <B>  <A NAME="tex2html1444"
+<B> Previous:</B> <A NAME="tex2html1446"
+  HREF="node22.html">21. List configuration parameters</A>
+ &nbsp; <B>  <A NAME="tex2html1454"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1446"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1456"
+  HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -60,566 +60,118 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1449"
-  HREF="node23.html#SECTION002310000000000000000">22.1 The three kind of operations on a document</A>
-<LI><A NAME="tex2html1450"
-  HREF="node23.html#SECTION002320000000000000000">22.2 The description file</A>
-<UL>
-<LI><A NAME="tex2html1451"
-  HREF="node23.html#SECTION002321000000000000000">22.2.1 Structure of description files</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html1452"
-  HREF="node23.html#SECTION002330000000000000000">22.3 The predefined authorization scenarios</A>
-<UL>
-<LI><A NAME="tex2html1453"
-  HREF="node23.html#SECTION002331000000000000000">22.3.1 The public scenario</A>
-<LI><A NAME="tex2html1454"
-  HREF="node23.html#SECTION002332000000000000000">22.3.2 The private scenario</A>
-<LI><A NAME="tex2html1455"
-  HREF="node23.html#SECTION002333000000000000000">22.3.3 The scenario owner</A>
-<LI><A NAME="tex2html1456"
-  HREF="node23.html#SECTION002334000000000000000">22.3.4 The scenario editor</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html1457"
-  HREF="node23.html#SECTION002340000000000000000">22.4 Access control</A>
-<UL>
-<LI><A NAME="tex2html1458"
-  HREF="node23.html#SECTION002341000000000000000">22.4.1 Listmaster and privileged owners</A>
 <LI><A NAME="tex2html1459"
-  HREF="node23.html#SECTION002342000000000000000">22.4.2 Special case of the <TT>shared</TT> directory</A>
-<LI><A NAME="tex2html1460"
-  HREF="node23.html#SECTION002343000000000000000">22.4.3 General case</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html1461"
-  HREF="node23.html#SECTION002350000000000000000">22.5 Shared document actions</A>
-<LI><A NAME="tex2html1462"
-  HREF="node23.html#SECTION002360000000000000000">22.6 Template files</A>
+  HREF="node23.html#SECTION002310000000000000000">22.1 Message topics</A>
 <UL>
-<LI><A NAME="tex2html1463"
-  HREF="node23.html#SECTION002361000000000000000">22.6.1 d_read.tt2</A>
-<LI><A NAME="tex2html1464"
-  HREF="node23.html#SECTION002362000000000000000">22.6.2 d_editfile.tt2</A>
-<LI><A NAME="tex2html1465"
-  HREF="node23.html#SECTION002363000000000000000">22.6.3 d_control.tt2</A>
-<LI><A NAME="tex2html1466"
-  HREF="node23.html#SECTION002364000000000000000">22.6.4 d_upload.tt2</A>
-<LI><A NAME="tex2html1467"
-  HREF="node23.html#SECTION002365000000000000000">22.6.5 d_properties.tt2</A>
+<LI><A NAME="tex2html1460"
+  HREF="node23.html#SECTION002311000000000000000">22.1.1 Message topic definition in a list</A>
+<LI><A NAME="tex2html1461"
+  HREF="node23.html#SECTION002312000000000000000">22.1.2 Subscribing to message topic for list subscribers</A>
+<LI><A NAME="tex2html1462"
+  HREF="node23.html#SECTION002313000000000000000">22.1.3 Message tagging</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION002300000000000000000"></A>
-    <A NAME="shared"></A>    <A NAME="4217"></A>
+    <A NAME="reception-mode"></A>    <A NAME="4208"></A>
 <BR>
-22. Shared documents
+22. Reception mode
 </H1>
-
-<P>
-Shared documents are documents that different users can manipulate
-on-line via the web interface of <I>Sympa</I>, provided that the are authorized
-to do so. A shared space is associated with a list, and users of the list 
-can upload, download, delete, etc, documents in the shared space.
-
-<P>
-<A NAME="11769"></A><I>WWSympa</I> shared web features are fairly rudimentary. It is not our aim to provide
-a sophisticated tool for web publishing, such as are provided by products
-like <I>Rearsite</I>.
-It is nevertheless very useful to be able to define privilege on
-web documents in relation to list attributes such as <I>subscribers</I>,
-<I>list owners</I>, or <I>list editors</I>. 
-
-<P>
-All file and directory names are lowercased by Sympa. It is consequently
-impossible to create two different documents whose names differ only
-in their case. The reason Sympa does this is to allow correct URL links
-even when using an HTML document generator (typically Powerpoint) which uses 
-random case for file names!
-
-<P>
-In order to have better control over the documents and to enforce security in
-the shared space, each document is linked to a set of specific control information : 
-its access rights.
-
-<P>
-A list's shared documents are stored in the <A NAME="11772"></A><TT>/usr/local/sympa-os/expl/mylist/shared</TT>
-directory. 
-
-<P>
-This chapter describes how the shared documents are managed, 
-especially as regards their access rights. 
-We shall see :  
-
-<P>
-
-<UL>
-<LI>the kind of operations which can be performed on shared documents 
-
-<P>
-</LI>
-<LI>access rights management  
-
-<P>
-</LI>
-<LI>access rights control specifications
-
-<P>
-</LI>
-<LI>actions on shared documents
-
-<P>
-</LI>
-<LI>template files
-</LI>
-</UL>
 
 <P>
 
 <H1><A NAME="SECTION002310000000000000000"></A>
-    <A NAME="shared-operations"></A>
+<A NAME="msg-topics"></A><A NAME="4211"></A>
 <BR>
-22.1 The three kind of operations on a document
-</H1>
-Where shared documents are concerned, there are three kinds of operation which
-have the same constraints relating to access control :
-
-<UL>
-<LI>The read operation :
-<BR>	
-<UL>
-<LI>If applied on a directory, opens it and lists its contents (only those
-		sub-documents the user is authorized to ``see'').
-</LI>
-<LI>If applied on a file, downloads it, and in the case of a viewable file (<I>text/plain</I>, <I>text/html</I>,
-		or image), displays it. 
-	
-</LI>
-</UL>
-</LI>
-<LI>The edit operation allows :
-<BR>		
-<UL>
-<LI>Subdirectory creation
-</LI>
-<LI>File uploading
-</LI>
-<LI>File unzipping
-</LI>
-<LI>Description of a document (title and basic information)
-</LI>
-<LI>On-line editing of a text file
-</LI>
-<LI>Document (file or directory) removal. If on a directory, it must be empty.
-		
-</LI>
-</UL>
-	These different edit actions are equivalent as regards access rights. Users who are
-	authorized to edit a directory can create a subdirectory or upload a file to it,
-	as well as describe or delete it. Users authorized to edit a file can edit
-	it on-line, describe it, replace or remove it.  
-</LI>
-<LI>The control operation :
-<BR>
-The control operation is directly linked to the notion of access rights. If we wish
-	shared documents to be secure, we have to control the access to them. Not everybody
-	must be authorized to do everything to them. Consequently, each document has
-	specific access rights for reading and editing. Performing a control action on a document
-	involves changing its Read/Edit rights.
-<BR>
-The control operation has more restrictive access rights than the other two operations.
-	Only the owner of a document, the privileged owner of the list and the listmaster have
-	control rights on a document. Another possible control action on a document is therefore
-	specifying who owns it.  
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION002320000000000000000"></A>
-<A NAME="shared-desc-file"></A>
-<BR>
-22.2 The description file
-</H1>
-The information (title, owner, access rights...) relative to each document must be stored, and so
-each shared document is linked to a special file called a description file, whose name includes
-the <A NAME="11775"></A><TT>.desc</TT> prefix.
-
-<P>
-The description file of a directory having the path <A NAME="11778"></A><TT>mydirectory/mysubdirectory</TT> has the path
-<A NAME="11781"></A><TT>mydirectory/mysubdirectory/.desc</TT> .
-The description file of a file having the path <A NAME="11784"></A><TT>mydirectory/mysubdirectory/myfile.myextension</TT> has the path
-<A NAME="11787"></A><TT>mydirectory/mysubdirectory/.desc.myfile.myextension</TT> .
-
-<P>
-
-<H2><A NAME="SECTION002321000000000000000">
-22.2.1 Structure of description files</A>
-</H2>
-
-<P>
-The structure of a document (file or directory) description file is given below.
-You should <I>never</I> have to edit a description file.
-
-<P><PRE>
-title
-  &lt;description of the file in a few words&gt;
-
-creation
-  email        &lt;e-mail of the owner of the document&gt; 
-  date_epoch   &lt;date_epoch of the creation of the document&gt;
-
-access
- read &lt;access rights for read&gt;
- edit &lt;access rights for edit&gt;
-</PRE>
-
-<P>
-The following example is for a document that subscribers can read, but which only the owner of the document
-and the owner of the list can edit.<PRE>
-title
-  module C++ which uses the class List
-
-creation
-  email foo@some.domain.com
-  date_epoch 998698638
-
-access
- read  private
- edit  owner
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION002330000000000000000"></A>
-    <A NAME="shared-scenarios"></A>
-<BR>
-22.3 The predefined authorization scenarios
+22.1 Message topics
 </H1>
 
 <P>
+A list can be configured to have message topics (this notion is different from topics used to class
+mailing lists). Users can subscribe to these message topics in order to receive a subset of distributed messages :
+a message can have one or more topics and subscribers will receive only messages that have been 
+tagged with a topic they are subscribed to. A message can be tagged automatically, by the message 
+sender or by the list moderator.
 
-<H2><A NAME="SECTION002331000000000000000">
-22.3.1 The public scenario</A>
+<P>
+
+<H2><A NAME="SECTION002311000000000000000">
+22.1.1 Message topic definition in a list</A>
 </H2>
-The <B>public</B> scenario is the most permissive scenario. It enables anyone (including
-unknown users) to perform the corresponding action.
+
+<P>
+Available message topics are defined by list parameters. Foreach new message topic, create a new <A NAME="11787"></A><TT>msg_topic</TT> paragraph
+that defines the name and the title of the topic. If a thread is identified for the current message then the automatic procedure is performed.
+Else, to use automatic tagging, you should define keywords (See (<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) 
+To define which part of the message is used for automatic tagging
+you have to define <A NAME="11790"></A><TT>msg_topic_keywords_apply_on</TT> list parameter (See <A HREF="node22.html#par-msg-topic-key-apply-on">21.4.14</A>, 
+page&nbsp;<A HREF="node22.html#par-msg-topic-key-apply-on"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Tagging a message can be optional or it can be required, depending on the
+<A NAME="11793"></A><TT>msg_topic_tagging</TT> list parameter (See (<A HREF="node22.html#par-msg-topic-tagging">21.4.15</A>,page&nbsp;<A HREF="node22.html#par-msg-topic-tagging"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 
-<H2><A NAME="SECTION002332000000000000000">
-22.3.2 The private scenario</A>
+<H2><A NAME="SECTION002312000000000000000">
+22.1.2 Subscribing to message topic for list subscribers</A>
 </H2>
-The <B>private</B> scenario is the basic scenario for a shared space. Every subscriber of
-the list is authorized to perform the corresponding action. The <B>private</B> scenario is the default
-read scenario for <A NAME="11790"></A><TT>shared</TT> when this shared space is created. This can be modified by editing
-the list configuration file.
+
+<P>
+This functionnality is only available via ``normal'' reception mode. Subscribers can select message topic to receive messages tagged with this topic.
+To receive messages that were not tagged, users can subscribe to the topic ``other''. Message topics selected by a subscriber are stored in <I>Sympa</I> 
+database (subscriber_table table).
 
 <P>
 
-<H2><A NAME="SECTION002333000000000000000">
-22.3.3 The scenario owner</A>
+<H2><A NAME="SECTION002313000000000000000">
+22.1.3 Message tagging</A>
 </H2>
-The scenario <B>owner</B> is the most restrictive scenario for a shared space.
-Only the listmaster, list owners and the owner of the document
-(or those of a parent document) are allowed to perform the corresponding action.
-The <B>owner</B> scenario is the default scenario for editing. 
 
 <P>
-
-<H2><A NAME="SECTION002334000000000000000">
-22.3.4 The scenario editor</A>
-</H2>
-The scenario <B>editor</B> is for a moderated shared space for editing. Every suscriber of the list is 
-allowed to editing a document. But this document will have to be installed or rejected by the editor of the 
-list. Documents awaiting for moderation are visible by their author and the editor(s) of the list in the
-shared space. The editor has also an interface with all documents awaiting. When there is a new document,
-the editor is notiied and when the document is installed, the author is notiied too. In case of reject, 
-the editor can notify the author or not.  
+First of all, if one or more <A NAME="11797"></A><TT>msg_topic.keywords</TT> are defined, <I>Sympa</I> tries to tag messages automatically. 
+To trigger manual tagging, by message sender or list moderator, on the web interface, <I>Sympa</I> uses authorization scenarios : if the resulted action is ``editorkey'' 
+(for example in scenario send.editorkey), the list moderator is asked to tag the message. 
+If the resulted action is ``request_auth'' (for example in scenario send.privatekey), the message sender is asked to tag the message. 
+The following variables are available as scenario variables to customize tagging : topic, topic-sender, topic-editor, topic-auto, topic-needed.
+(See (<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) If message tagging is required and if it was not yet performed, <I>Sympa</I> will ask to the list moderator.
 
 <P>
-
-<H1><A NAME="SECTION002340000000000000000"></A>
-    <A NAME="shared-access"></A>
-<BR>
-22.4 Access control
-</H1>
-Access control is an important operation performed
-every time a document within the shared space is accessed.
-
-<P>
-The access control relative to a document in the hierarchy involves an iterative
-operation on all its parent directories. 
-
-<P>
-
-<H2><A NAME="SECTION002341000000000000000">
-22.4.1 Listmaster and privileged owners</A>
-</H2>
-The listmaster and privileged list owners are special users in the shared
-web. They are allowed to perform every action on every document in
-the shared space. This privilege enables control over
-the shared space to be maintained. It is impossible to prevent the listmaster and
-privileged owners from performing whatever action they please on any document
-in the shared space.
-
-<P>
-
-<H2><A NAME="SECTION002342000000000000000"></A><A NAME="11793"></A>
-<BR>
-22.4.2 Special case of the <TT>shared</TT> directory
-</H2>
-In order to allow access to a root directory to be more restrictive than
-that of its subdirectories, the <A NAME="11796"></A><TT>shared</TT> directory (root directory) is
-a special case as regards access control.
-The access rights for read and edit are those specified in the list configuration file.
-Control of the root directory is specific. 
-Only those users authorized to edit a list's configuration may change access rights on
-its <A NAME="11799"></A><TT>shared</TT> directory. 
-
-<P>
-
-<H2><A NAME="SECTION002343000000000000000">
-22.4.3 General case</A>
-</H2>
-<A NAME="11802"></A><TT>mydirectory/mysubdirectory/myfile</TT> is an arbitrary document in the shared space,
-but not in the <I>root</I> directory. A user <B>X</B> wishes to perform one
-of the three operations (read, edit, control) on this document.
-The access control will proceed as follows :
-
-<UL>
-<LI>Read operation
-<BR>
-To be authorized to perform a read action on
-	<A NAME="11805"></A><TT>mydirectory/mysubdirectory/myfile</TT>, <B>X</B> must be
-	authorized to read every document making up the path; in other words, she
-	must be allowed to read <A NAME="11808"></A><TT>myfile</TT> (the authorization scenario of the description file
-	of <A NAME="11811"></A><TT>myfile</TT> must return <I>do_it</I> for user <B>X</B>), and the
-	same goes for <A NAME="11814"></A><TT>mysubdirectory</TT> and <A NAME="11817"></A><TT>mydirectory</TT>).
-<BR>
-In addition, given that the owner of a document or one of its parent directories
-	is allowed to perform <B>all actions on that document</B>,
-	<A NAME="11820"></A><TT>mydirectory/mysubdirectory/myfile</TT> may also have read operations performed
-	on it by the owners of <A NAME="11823"></A><TT>myfile</TT>, <A NAME="11826"></A><TT>mysubdirectory</TT>,
-	and <A NAME="11829"></A><TT>mydirectory</TT>.
-
-<P>
-This can be schematized as follows :<PRE>
-	X can read &lt;a/b/c&gt; 
-
-	if			  
-
-	(X can read &lt;c&gt;
-	AND X can read &lt;b&gt;
-	AND X can read &lt;a&gt;)
-					
-	OR
-
-	(X owner of &lt;c&gt;
-	OR X owner of &lt;b&gt;
-	OR X owner of &lt;a&gt;)
-</PRE>
-
-<P>
-</LI>
-<LI>Edit operation
-<BR>
-The access algorithm for edit is identical to the algorithm for read :<PRE>
-	X can edit &lt;a/b/c&gt; 
-	
-	if 
-		
-	(X can edit &lt;c&gt;
-	AND X can edit &lt;b&gt;				
-	AND X can edit &lt;a&gt;)
-					
-	OR
-
-	(X owner of &lt;c&gt;
-	OR X owner of &lt;b&gt;
-	OR X owner of &lt;a&gt;)
-</PRE>
-
-<P>
-</LI>
-<LI>Control operation
-<BR>
-The access control which precedes a control action (change rights
-	or set the owner of a document) is much more restrictive.
-	Only the owner of a document or the owners of a parent
-	document may perform a control action :<PRE>
-	X can control &lt;a/b/c&gt; 
-
-	if
-					
-	(X owner of &lt;c&gt;
-	OR X owner of &lt;b&gt;
-	OR X owner of &lt;a&gt;)
-</PRE>
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION002350000000000000000">
-22.5 Shared document actions</A>
-</H1>
-
-<P>
-The shared web feature has called for some new actions.
-
-<UL>
-<LI>action D_ADMIN
-<BR>
-Create the shared web, close it or restore it. The d_admin action is accessible
-	from a list's <B>admin</B> page.
-</LI>
-<LI>action D_READ
-<BR>
-Reads the document after read access control. If a folder, lists all the subdocuments that can
-	be read. If a file, displays it if it is viewable, else downloads it to disk.
-	If the document to be read contains a file named <A NAME="11832"></A><TT>index.html</TT> or <A NAME="11835"></A><TT>index.htm</TT>, and if
-	the user has no permissions other than read on all contained subdocuments, the read action will
-	consist in displaying the index.
-	The d_read action is accessible from a list's <B>info</B> page.
-</LI>
-<LI>action D_CREATE_DIR
-<BR>
-Creates a new subdirectory in a directory that can be edited without moderation. 
-	The creator is the owner of the directory. The access rights are
-	those of the parent directory.
-</LI>
-<LI>action D_DESCRIBE
-<BR>
-Describes a document that can be edited.
-</LI>
-<LI>action D_DELETE
-<BR>
-Deletes a document after edit access control. If applied to a folder, it has to be empty.
-</LI>
-<LI>action D_UPLOAD
-<BR>
-Uploads a file into a directory that can be edited.  
-</LI>
-<LI>action D_UNZIP
-<BR>
-Unzip a file into a directory that can be edited without moderation. The whole file hierarchy contained in the zip file
-	is installed into the directory.
-</LI>
-<LI>action D_OVERWRITE
-<BR>
-Overwrites a file if it can be edited. The new owner of the file is the one who has done
-	the overwriting operation.
-</LI>
-<LI>actions D_EDIT_FILE and D_SAVE_FILE
-<BR>
-Edits a file and saves it after edit access control. The new owner of the file is the one 
-	who has done the saving operation. 
-</LI>
-<LI>action D_CHANGE_ACCESS
-<BR>
-Changes the access rights of a document (read or edit), provided that control of this document is
-	authorized. 
-</LI>
-<LI>action D_SET_OWNER
-<BR>
-Changes the owner of a directory, provided that control of this document is
-	authorized. The directory must be empty. The new owner can be anyone, but authentication is necessary
-	before any action may be performed on the document.
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION002360000000000000000">
-22.6 Template files</A>
-</H1>
-The following template files have been created for the shared web:
-
-<P>
-
-<H2><A NAME="SECTION002361000000000000000">
-22.6.1 d_read.tt2</A>
-</H2> 
-The default page for reading a document. If for a file, displays it (if 
-viewable) or downloads it. If for a directory, displays all readable
-subdocuments, each of which will feature buttons corresponding
-to the different actions this subdocument allows. If the directory is
-editable, displays buttons to describe it or upload a file to it. If the
-directory is editable without moderation, it displays button to
-create a new subdirector or to upload a zip file in order to install a file hierarchy. 
-If access to the document is editable,
-displays a button to edit the access to it. 
-
-<P>
-
-<H2><A NAME="SECTION002362000000000000000">
-22.6.2 d_editfile.tt2</A>
-</H2> 
-The page used to edit a file. If for a text file, allows it to be edited on-line.
-This page also enables another file to be substituted in its place.
-
-<P>
-
-<H2><A NAME="SECTION002363000000000000000">
-22.6.3 d_control.tt2</A>
-</H2>
-The page to edit the access rights and the owner of a document. 
-
-<P>
-
-<H2><A NAME="SECTION002364000000000000000">
-22.6.4 d_upload.tt2</A>
-</H2>
-This page to upload a file is only used when the name of the file already exists.
-
-<P>
-
-<H2><A NAME="SECTION002365000000000000000">
-22.6.5 d_properties.tt2</A>
-</H2>
-This page is used to edit description file and to rename it.
+Tagging a message will create a topic information file in the <A NAME="11803"></A><TT>/usr/local/sympa-os/spool/topic/</TT> spool. Its name is based on the listname and the Message-ID. 
+For message distribution, a ``X-Sympa-Topic'' field is added to the message to allow members to use mail filters.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1447"
+<A NAME="tex2html1457"
   HREF="node24.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1441"
+<A NAME="tex2html1451"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1435"
+<A NAME="tex2html1445"
   HREF="node22.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1443"
+<A NAME="tex2html1453"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1445"
-  HREF="node30.html">
+<A NAME="tex2html1455"
+  HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1448"
-  HREF="node24.html">23. Bounce management</A>
-<B> Up:</B> <A NAME="tex2html1442"
+<B> Next:</B> <A NAME="tex2html1458"
+  HREF="node24.html">23. Shared documents</A>
+<B> Up:</B> <A NAME="tex2html1452"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1436"
-  HREF="node22.html">21. Reception mode</A>
- &nbsp; <B>  <A NAME="tex2html1444"
+<B> Previous:</B> <A NAME="tex2html1446"
+  HREF="node22.html">21. List configuration parameters</A>
+ &nbsp; <B>  <A NAME="tex2html1454"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1446"
-  HREF="node30.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1456"
+  HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-08
+2006-08-23
 </ADDRESS>
 </BODY>
 </HTML>
