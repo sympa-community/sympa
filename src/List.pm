@@ -1790,8 +1790,10 @@ sub save_config {
     }
     
     ## Also update the binary version of the data structure
-    unless (&Storable::store($self->{'admin'},"$self->{'dir'}/config.bin")) {
-	&do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
+    if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file') {
+	unless (&Storable::store($self->{'admin'},"$self->{'dir'}/config.bin")) {
+	    &do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
+	}
     }
 
 #    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
@@ -1850,7 +1852,8 @@ sub load {
     my $config_reloaded = 0;
     my $admin;
     
-    if ($time_config_bin > $self->{'mtime'}->[0] &&
+    if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file' &&
+	$time_config_bin > $self->{'mtime'}->[0] &&
 	$time_config <= $time_config_bin &&
 	! $options->{'reload_config'}) { 
 	## Load a binary version of the data structure
@@ -1867,9 +1870,11 @@ sub load {
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
 
 	## update the binary version of the data structure
-	unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
-	    &do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
-	}
+	if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file') {
+		unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
+		    &do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
+		}
+	    }
 
 	$config_reloaded = 1;
  	unless (defined $admin) {

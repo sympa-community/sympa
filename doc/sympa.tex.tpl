@@ -2643,7 +2643,21 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 	This parameter defines the default \lparam {remind\_task} list parameter.
 
 
-\section {Priority related}
+\section {Tuning}
+
+\subsection {\cfkeyword {cache\_list\_config}}
+\label{cache-list}
+	\texttt {Format: none | binary\_file}
+	\default {none}
+
+If this parameter is set to binary\_file, then Sympa processes will maintain a binary version of the
+list config structure on disk (\file {config.bin} file}. This file is bypassed whenever the \file {config}
+file changes on disk. Thanks to this method, the startup of Sympa processes is much faster because it 
+saves the time for parse all config files. The drawback of this method is that the list config cache could 
+live for a long time (not recreated when Sympa process restart) ; Sympa processes could still use authorization 
+scenario rules that have changed on disk in the meanwhile.
+
+You should use list config cache if you are managing a big amount of lists (1000+).
 
 \subsection {\cfkeyword {sympa\_priority}}  
         \label {kw-sympa-priority}
@@ -4764,7 +4778,7 @@ directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
 \dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not detect that you a used scenario has changed on disk. You should run the sympa.pl -reload\_list\_config command to update the \file {config.bin} files.}
+Scenarios can also be defined for a particular virtual host (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ). \textbf {Sympa will not dynamically detect that a list config should be reloaded after a scenario has been changed on disk.}
 
 [STOPPARSE]
 
@@ -5693,7 +5707,8 @@ The configuration file for the \mailaddr {\samplelist} list is named
 \Sympa reloads it into memory whenever this file has changed on disk. The file can either be
 edited via the web interface or directly via your favourite text editor. 
 
-A binary version of the config (\file {[EXPL_DIR]/\samplerobot/\samplelist/config.bin} is maintained to allow 
+If you have set the \cfkeyword {cache\_list\_config} sympa.conf parameter (see \ref {cache-list},  
+page~\pageref {cache-list}), a binary version of the config (\file {[EXPL_DIR]/\samplerobot/\samplelist/config.bin} is maintained to allow 
 a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
 
 Be careful to provide read access for \Sympa user to this file !

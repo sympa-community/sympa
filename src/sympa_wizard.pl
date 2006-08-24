@@ -189,7 +189,15 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>'This parameter is a scenario, check sympa documentation about scenarios if you want to define one'},
 
-	      
+	      {'title' => 'Tuning'},
+	      	      
+
+	      {'name' => 'cache\_list\_config',
+	       'default' => 'none',
+	       'query' => 'Use of binary version of the list config structure on disk: none | binary_file',
+	       'file' => 'sympa.conf','edit' => '1',
+	       'advice' =>'Set this parameter to "binary_file" if you manage a big amount of lists (1000+) ; it should make the web interface startup faster'},
+
 	      {'name' => 'sympa_priority',
 	       'query' => 'Sympa commands priority',
 	       'file' => 'sympa.conf',
