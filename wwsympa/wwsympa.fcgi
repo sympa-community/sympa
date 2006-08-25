@@ -9059,6 +9059,8 @@ sub _restrict_values {
 	 return undef;
      }  
 
+     my $old_listname = $list->{'name'};
+
      # check new listname syntax
      $in{'new_listname'} = lc ($in{'new_listname'});
      unless ($in{'new_listname'} =~ /^$tools::regexp{'listname'}$/i) {
@@ -9232,6 +9234,12 @@ sub _restrict_values {
 		      'status' => 'error',
 		      'error_type' => 'internal'});
 	 return undef;
+     }
+
+     ## Check custom_subject
+     if (defined $list->{'admin'}{'custom_subject'} &&
+	 $list->{'admin'}{'custom_subject'} =~ /$old_listname/) {
+	 $list->{'admin'}{'custom_subject'} =~ s/$old_listname/$in{'new_listname'}/g;
      }
 
      if ($list->{'admin'}{'status'} eq 'open') {
