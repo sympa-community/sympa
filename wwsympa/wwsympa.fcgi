@@ -8281,7 +8281,7 @@ sub do_edit_list {
     }
 
     ## For changed msg_topic.name
-    if ($list->modifying_msg_topic_for_subscribers($new_admin->{'msg_topic'})) {
+    if (defined $new_admin->{'msg_topic'} && $list->modifying_msg_topic_for_subscribers($new_admin->{'msg_topic'})) {
 	&report::notice_report_web('subscribers_noticed_deleted_topics',{},$param->{'action'});
     }
 
