@@ -3669,7 +3669,7 @@ sub do_remindpasswd {
      &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
 		  'status' => 'success',
 	      });
-     return 'suboptions';
+     return $in{'previous_action'} || 'suboptions';
  }
 
  ## Update of user preferences
