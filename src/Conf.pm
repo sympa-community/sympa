@@ -542,7 +542,14 @@ sub load_robots {
 
     foreach $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
-	next unless (-r "$Conf{'etc'}/$robot/robot.conf");
+	next unless (-f "$Conf{'etc'}/$robot/robot.conf");
+
+	unless (-r "$Conf{'etc'}/$robot/robot.conf") {
+	    printf STDERR "No read access on %s\n", "$Conf{'etc'}/$robot/robot.conf";
+	    &List::send_notify_to_listmaster('cannot_access_robot_conf',$Conf{'domain'}, ["No read access on $Conf{'etc'}/$robot/robot.conf. you should change privileges on this file to activate this virtual host. "]);
+	    next;
+	}
+
 	unless (open (ROBOT_CONF,"$Conf{'etc'}/$robot/robot.conf")) {
 	    printf STDERR "load robots config: Unable to open $Conf{'etc'}/$robot/robot.conf\n"; 
 	    next ;
@@ -658,8 +665,9 @@ sub checkfiles_as_root {
 	
     }
 
-    # create static content directory
     foreach my $robot (keys %{$Conf{'robots'}}) {
+
+	# create static content directory
 	my $dir = &get_robot_conf($robot, 'static_content_path');
 	if ($dir ne '' && ! -d $dir){
 	    unless ( mkdir ($dir, 0775)) {
