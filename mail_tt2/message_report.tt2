@@ -80,7 +80,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 --[% boundary %]
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 
-[%|loc(conf.host)%]Your message for list '%1' (attached below) was rejected. 
+[%|loc(list.name)%]Your message for list '%1' (attached below) was rejected. 
 You are not allowed to send this message for the following reason :[%END%]
 
 [% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
