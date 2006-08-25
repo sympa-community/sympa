@@ -14,7 +14,12 @@ created lists and deleting aliases for closed lists.
 Is is called by
 I<wwsympa.fcgi> via the I<aliaswrapper>. Alias management is performed
 by I<wwsympa.fcgi> only if it was setup in I<--CONFDIR--/wwsympa.conf>
-(I<alias_manager> configuration parameter).
+(I<sendmail_aliases> configuration parameter).
+
+Administrators using MTA functionalities to manage aliases (ie
+virtual_regexp and transport_regexp with postfix) can disable alias
+management by setting
+I<sendmail_aliases> configuration parameter to B<none>.
 
 =head1 OPTIONS
 

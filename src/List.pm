@@ -13419,7 +13419,8 @@ sub remove_aliases {
     my $self = shift;
 
     return undef 
-	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
+	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}})
+		&& ($Conf{'sendmail_aliases'} !~ /^none$/i));
     
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     
@@ -13564,3 +13565,4 @@ sub get_list_id {
 
 ## Packages must return true.
 1;
+

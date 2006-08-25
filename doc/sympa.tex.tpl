@@ -1106,7 +1106,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {- - with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {- - with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
+\item \option {- - with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). Set to 'none' to disable alias management (You can overright this value at runtime giving its value in \file {sympa.conf})\\
 
 \item \option {- - with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
@@ -1260,7 +1260,8 @@ page~\pageref{list-creation-sympa}.
 
 \item \option {- - close\_list \textit {listname@robot}}
 
-Close the list (changing its status to closed), remove aliases and remove
+Close the list (changing its status to closed), remove aliases (if sendmail\_aliases
+parameter was set) and remove
 subscribers from DB (a dump is created in the list directory to allow restoring
 the list). See \ref{family-close-list}, page~\pageref{family-close-list} when you
 are in a family context.
@@ -1774,6 +1775,11 @@ the form of aliases used by the alias\_manager. You can customize the \file {lis
 template that is parsed to generate list aliases (see\ref {list-aliases-tpl},  
 page~\pageref {list-aliases-tpl}).
 
+\label {virtual-transport}
+
+Note that you don't need alias management if you use MTA functionalities such as Postfix' \file {virtual\_transport}. You can then disable alias management in \Sympa by positioning the
+\cfkeyword {sendmail\_aliases} parameter to \texttt{none}.
+
 \label {ldap-aliases}
 A L. Marcotte has written a version of \file {ldap\_alias\_manager.pl} that is LDAP enabled.
 This script is distributed with Sympa distribution ; it needs to be customized with your LDAP parameters.
@@ -2207,9 +2213,11 @@ The maximum size of the uploaded picture file (bytes)
 
 \subsection {\cfkeyword {sendmail\_aliases}} 
 
-	\default {defined by makefile, sendmail\_aliases}
+	\default {defined by makefile, sendmail\_aliases | none}
 
         Path of the alias file that contain all lists related aliases. It is recommended to create a specific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
+
+        Set this parameter to 'none' if you want to disable alias management in sympa (e.g. if you use \file {virtual\_transport} with Postfix).
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
@@ -2651,7 +2659,7 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 	\default {none}
 
 If this parameter is set to binary\_file, then Sympa processes will maintain a binary version of the
-list config structure on disk (\file {config.bin} file}. This file is bypassed whenever the \file {config}
+list config structure on disk (\file {config.bin} file). This file is bypassed whenever the \file {config}
 file changes on disk. Thanks to this method, the startup of Sympa processes is much faster because it 
 saves the time for parse all config files. The drawback of this method is that the list config cache could 
 live for a long time (not recreated when Sympa process restart) ; Sympa processes could still use authorization 

@@ -50,7 +50,7 @@ require "--LIBDIR--/tools.pl";
 #       - $robot : the list's robot         
 # OUT : - hash with keys :
 #          -list :$list
-#          -aliases :1 (if ok) or
+#          -aliases : undef if not applicable; 1 (if ok) or
 #           $aliases : concated string of alias if they 
 #           are not installed or 1(in status open)
 #######################################################
@@ -219,7 +219,7 @@ sub create_list_old{
 #       - $robot : the list's robot         
 # OUT : - hash with keys :
 #          -list :$list
-#          -aliases :1 (if ok) or
+#          -aliases : undef if not applicable; 1 (if ok) or
 #           $aliases : concated string of alias if they 
 #           are not installed or 1(in status open)
 #######################################################
@@ -601,14 +601,18 @@ sub check_owner_defined {
 #
 # IN  : - $list : object list
 #       - $robot : the list's robot
-# OUT : - 1 (if ok) or
+# OUT : - undef if not applicable
+#         1 (if ok) or
 #         $resul : concated string of alias not installed 
 ##########################################################
 sub install_aliases {
     my $list = shift;
     my $robot = shift;
     &do_log('debug', "admin::install_aliases($list->{'name'},$robot)");
-  
+
+    return 1
+	if ($Conf{'sendmail_aliases'} =~ /^none$/i);
+
     my $alias_installed = 0;
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     &do_log('debug2',"admin::install_aliases : $alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
@@ -674,7 +678,8 @@ sub install_aliases {
 #
 # IN  : - $list : object list
 #       - $robot : the list's robot
-# OUT : - 1 (if ok) or
+# OUT : - undef if not applicable
+#         1 (if ok) or
 #         $aliases : concated string of alias not removed
 #########################################################
 
@@ -682,6 +687,9 @@ sub install_aliases {
      my $list = shift;
      my $robot = shift;
      &do_log('info', "_remove_aliases($list->{'name'},$robot");
+
+    return 1
+	if ($Conf{'sendmail_aliases'} =~ /^none$/i);
 
      my $status = $list->remove_aliases();
      my $suffix = &Conf::get_robot_conf($robot, 'return_path_suffix');

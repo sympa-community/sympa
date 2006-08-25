@@ -481,7 +481,7 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
     
-    if ($resul->{'aliases'} == 1) {
+    if (! defined($resul->{'aliases'}) || $resul->{'aliases'} == 1) {
  	printf STDOUT "List has been created \n";
  	exit 0;
     }else {
