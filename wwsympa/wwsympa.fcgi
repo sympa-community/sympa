@@ -9240,6 +9240,8 @@ sub _restrict_values {
      if (defined $list->{'admin'}{'custom_subject'} &&
 	 $list->{'admin'}{'custom_subject'} =~ /$old_listname/) {
 	 $list->{'admin'}{'custom_subject'} =~ s/$old_listname/$in{'new_listname'}/g;
+
+	 $list->save_config($param->{'user'}{'email'});	
      }
 
      if ($list->{'admin'}{'status'} eq 'open') {
