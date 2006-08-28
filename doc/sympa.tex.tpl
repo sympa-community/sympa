@@ -8718,6 +8718,18 @@ halt_rate	20
         messages. See \cfkeyword {remind\_return\_path} \file {sympa.conf}
 	parameter (\ref{kw-remind-return-path}, page~\pageref{kw-remind-return-path}).
 
+\subsection {verp\_rate} 
+\label {verp-rate}
+
+	\default {\cfkeyword {verp\_rate} host parameter}
+
+        See \ref {verp},page~\pageref {verp} for more information on VERP in Sympa.
+
+        When \cfkeyword {verp\_rate} is null VERP is not used ; if  \lparam {verp\_rate} is 100\% VERP is alway in use.
+
+	VERP requires plussed aliases to be supported and the bounce+* alias to be installed.
+
+
 \section {Archive related}
 
 \Sympa maintains 2 kinds of archives: mail archives and web archives.
@@ -9404,6 +9416,15 @@ With these informations, the automatic bounce management is possible:
         all subscribers have received at least one message where VERP was enabled. Later distribution message enable
         VERP also for all users where some bounce wer collected and analysed by previous VERP mechanism. 
 
+
+	If VERP is enabled, the format of the messages return path are as follows :
+\begin {quote}
+\begin{verbatim}
+Return-Path: <bounce+user==a==userdomain==listname@listdomain>
+\end{verbatim}
+\end {quote}
+        Note that you need to set a mail alias for the generic bounce+* alias (see \ref {robot-aliases},
+page~\pageref {robot-aliases}).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
