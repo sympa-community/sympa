@@ -7206,7 +7206,7 @@ sub request_action {
     $return = {'action' => 'reject',
 	       'reason' => 'no-rule-match',
 			   'auth_method' => 'default',
-			   'condition' => 'default²'
+			   'condition' => 'default'
 			   };
     return $return;
 }
