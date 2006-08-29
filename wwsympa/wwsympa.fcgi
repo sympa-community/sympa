@@ -14313,8 +14313,8 @@ sub make_pictures_url {
      my @body = split /\0/, $in{'body'};
 
      my $from = $param->{'user'}{'email'};
-     if ($param->{'user'}{'gecos'}) {
-	 $from = $param->{'user'}{'gecos'}.'<'.$from.'>';
+     if (defined $param->{'subscriber'}) {
+	 $from = $param->{'subscriber'}{'gecos'}.'<'.$from.'>';
      }
 
      ## TOPICS
