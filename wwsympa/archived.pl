@@ -565,7 +565,7 @@ sub mail2arc {
 
 	if ($list->{'admin'}{'web_archive'}{'max_month'}){ # maybe need to remove some old archive
 	    if (opendir DIR,$arcpath.'/'.$list->get_list_id()) {
-		my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));	
+		my @archives = (sort {$a cmp $b} grep (/^\d{4}-\d{2}/, readdir(DIR)));	
 		closedir DIR;
 		my $nb_month = $#archives + 1 ;
 		my $i = 0 ;
