@@ -509,7 +509,7 @@ if ($main::options{'dump'}) {
     }
 
     unless (-r $main::options{'input_file'}) {
-	print STDERR "Unable to read $main::options{'input_file'}) file";
+	print STDERR "Unable to read $main::options{'input_file'} file";
  	exit 1;	
     }
 
@@ -1051,8 +1051,7 @@ sub DoFile {
 	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
 	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
-	}
-	$host = $list->{'admin'}{'host'};
+	}	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
 	$list_address = $list->get_list_address();
 	# setting log_level using list config unless it is set by calling option
