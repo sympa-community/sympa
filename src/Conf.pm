@@ -224,7 +224,7 @@ my %Default_Conf =
      'static_content_url' => '/static-sympa',
      'static_content_path' => '--DIR--/static_content',
      'filesystem_encoding' => 'utf-8',
-     'cache_list_config' => 'none',
+     'cache_list_config' => 'none', ## none | binary_file
      );
    
 
@@ -688,6 +688,9 @@ sub checkfiles_as_root {
 ## return 1 if the parameter is a known robot
 sub valid_robot {
     my $robot = shift;
+
+    ## Main host
+    return 1 if ($robot eq $Conf{'domain'});
 
     ## Missing etc directory
     unless (-d $Conf{'etc'}.'/'.$robot) {
