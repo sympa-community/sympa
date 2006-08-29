@@ -54,11 +54,10 @@ $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
+$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases ;
 
-my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
-                        $Conf{'etc'},
-                        '/usr/share/sympa'];
+my $tt2_include_path = &tools::make_tt2_include_path($domain,'',,);
 
 my $aliases_dump;
 &tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
