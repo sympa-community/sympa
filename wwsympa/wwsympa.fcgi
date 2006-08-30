@@ -5992,6 +5992,21 @@ sub do_viewmod {
 	 ## Look for the template
 	 $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot, $list);
 
+	 ## open file and provide filecontent to the parser
+	 ## It allows to us the correct file encoding
+	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
+	     &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     &wwslog('err','do_editfile: failed to open file %s: %s', $param->{'filepath'},$!);
+	     &web_db_log({'parameters' => $in{'file'},
+			  'status' => 'error',
+			  'error_type' => 'internal'});
+	     return undef;
+	 }
+
+	 while (<FILE>) {
+	     $param->{'filecontent'} .= $_;
+	 }
+	 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
 	     ! $param->{'filepath'}) {
@@ -6152,7 +6167,7 @@ sub do_viewmod {
 	 }
      
 	 ## Save new file
-	 unless (open FILE, ">$param->{'filepath'}") {
+	 unless (open FILE, ">:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_savefile: failed to save file %s: %s', $param->{'filepath'},$!);
 	     &web_db_log({'parameters' => $in{'file'},
