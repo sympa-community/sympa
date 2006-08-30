@@ -1,15 +1,9 @@
 <!-- $Id$ -->
-[% IF homepage %]
-  [% TRY %]
-     [% INSERT 'homepage' %]
-  [% CATCH %]
-  [% END %]
+[% IF homepage_content %]
+     [% homepage_content %]
 [% ELSE %]
    <pre>
-   [% TRY %]
-     [% INSERT 'info' %]
-   [% CATCH %]
-   [% END %]
+     [% info_content %]
    </pre>
 [% END %]
 

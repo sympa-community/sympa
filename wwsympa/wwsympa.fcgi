@@ -3178,50 +3178,41 @@ sub do_remindpasswd {
      ## Access control
      return undef unless (defined &check_authz('do_info', 'info'));
 
-     ## Digest frequency
-     if ($list->{'admin'}{'digest'} =~ /^([\d\,]+)\s+([\d\:]+)/m) {
-	 my (@days, $d);
-	 my $hour = $2;
-	 foreach $d (split /\,/, $1) {
- #	    push @days, $week{$param->{'lang'}}[$d];
-	     &Language::SetLang($list->{'admin'}{'lang'});
-	     push @days, &POSIX::strftime("%A", localtime(0 + ($d +3) * (3600 * 24)));
-	 }
-	 $param->{'digest'} = sprintf '%s - %s', (join ', ', @days), $hour;
-     }
-
-     ## Is_user
-     if ($param->{'is_subscriber'}) {
-	 my ($s, $m);
-
-	 unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
-	     &report::reject_report_web('intern','subscriber_not_found',{'email' => $param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('info', 'do_info: subscriber %s not found', $param->{'user'}{'email'});
-	     return undef;
-	 }
-
-	 $s->{'reception'} ||= 'mail';
-	 $s->{'visibility'} ||= 'noconceal';
-	 $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
-
-	 foreach $m (keys %wwslib::reception_mode) {
-	     $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
-	     if ($s->{'reception'} eq $m) {
-		 $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
-
-	     }else {
-		 $param->{'reception'}{$m}{'selected'} = '';
-	     }
-	 }
-
-	 ## my $sortby = $in{'sortby'} || 'email';
-	 $param->{'subscriber'} = $s;
-     }
-
      ## Get List Description
      if (-r $list->{'dir'}.'/homepage') {
+	 my $file_path = $list->{'dir'}.'/homepage';
+	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $file_path) {
+	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     &wwslog('err','do_info: failed to open file %s: %s', $file_path,$!);
+	     &web_db_log({'parameters' => $file_path,
+			  'status' => 'error',
+			  'error_type' => 'internal'});
+	     return undef;
+	 }
+	 while (<FILE>) {
+	     $param->{'homepage_content'} .= $_;
+	 }
+	 close FILE;
+
+	 ## Used by previous templates
 	 $param->{'homepage'} = 1;
+     }elsif (-r $list->{'dir'}.'/info') {
+	 my $file_path = $list->{'dir'}.'/info';
+	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $file_path) {
+	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     &wwslog('err','do_info: failed to open file %s: %s', $file_path,$!);
+	     &web_db_log({'parameters' => $file_path,
+			  'status' => 'error',
+			  'error_type' => 'internal'});
+	     return undef;
+	 }
+	 while (<FILE>) {
+	     $param->{'info_content'} .= $_;
+	 }
+	 close FILE;
+
      }
+
      &tt2::add_include_path($list->{'dir'});
 
      return 1;
@@ -6006,6 +5997,7 @@ sub do_viewmod {
 	 while (<FILE>) {
 	     $param->{'filecontent'} .= $_;
 	 }
+	 close FILE;
 	 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
