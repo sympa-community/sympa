@@ -3210,7 +3210,6 @@ sub do_remindpasswd {
 	     $param->{'info_content'} .= $_;
 	 }
 	 close FILE;
-
      }
 
      &tt2::add_include_path($list->{'dir'});
@@ -6279,16 +6278,8 @@ sub do_viewmod {
      }
 
      ## File type
-     if ($in{'arc_file'} !~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
-	 $in{'arc_file'} =~ /\.(\w+)$/;
-	 $param->{'file_extension'} = $1;
+     if ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
 
-	 if ($param->{'file_extension'} !~ /^html$/i) {
-	     $param->{'bypass'} = 1;
-	 }
-
-     }else {
-	 
 	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
 	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
 	     open (FILE, '<:utf8', $arc_file_path);
@@ -6299,15 +6290,22 @@ sub do_viewmod {
 		 }
 	     }
 	     close FILE;
-
 	 }
 	 
-	 &tt2::add_include_path($arc_month_path);
-     }
+	 ## Provide a filehandle to the TT2 parser (instead of a filename previously)
+	 ## It allows to set the appropriate utf8 binmode on the FH
+	 open $param->{'file_handle'}, '<:utf8', $arc_file_path;
 
-     ## Provide a filehandle to the TT2 parser (instead of a filename previously)
-     ## It allows to set the appropriate utf8 binmode on the FH
-     open $param->{'file'}, '<:utf8', $arc_file_path;
+	 &tt2::add_include_path($arc_month_path);
+     }else {
+	 if ($in{'arc_file'} =~ /\.(\w+)$/) {
+	     $param->{'file_extension'} = $1;
+	 }
+
+	 $param->{'bypass'} = 1;
+	 	 
+	 $param->{'file'} = $arc_file_path;
+     }
 
      my @stat = stat ($arc_file_path);
      $param->{'date'} = $stat[9];
