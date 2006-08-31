@@ -1426,7 +1426,13 @@ sub get_header_field {
 	 $in{$p} =~ s/\015//g;	 
 
 	 ## Convert from the web encoding to unicode string
-	 $in{$p} = &Encode::decode('utf-8', $in{$p});
+	 ## Try to guess encoding first to prevent errors
+	 my $decoder = &Encode::Guess::guess_encoding($in{$p}, 'utf8', $Conf{'filesystem_encoding'});
+	 if (ref $decoder) {
+	     $in{$p} = $decoder->decode($in{$p}); ## If not ref, it is an error message
+	 }else {
+	     $in{$p} = Encode::decode('utf8', $in{$p});
+	 }
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
@@ -1453,6 +1459,15 @@ sub get_header_field {
 		 $in{$p} = '';
 		 next;
 	     }
+	 }
+     }
+
+     ## For shared-related actions, decode parameters to native filesystem encoding
+     if ($in{'action'} =~ /^d_/) {
+	 foreach my $p (keys %in) {
+
+	     ## Decode param
+	     $in{$p} = &Encode::encode($Conf{'filesystem_encoding'}, $in{$p});
 	 }
      }
 
@@ -10500,7 +10515,7 @@ sub get_directory_content {
     }else {
 	my @privatedir = &select_my_files($user,$doc,\@moderate_dir);
 	push(@dir,@privatedir);
- }
+    }
 
     return \@dir;
 }
