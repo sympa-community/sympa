@@ -1429,7 +1429,7 @@ sub get_header_field {
 	 ## Convert from the web encoding to unicode string
 	 ## Try to guess encoding first to prevent errors
 	 my $decoder = &Encode::Guess::guess_encoding($in{$p}, 'utf8', $Conf{'filesystem_encoding'});
-	 if (ref $decoder) {
+	 if (ref $decoder && ($decoder->name eq $Conf{'filesystem_encoding'})) { ## Don't use suggested encoding if other than filesystem one
 	     $in{$p} = $decoder->decode($in{$p}); ## If not ref, it is an error message
 	 }else {
 	     $in{$p} = Encode::decode('utf8', $in{$p});
