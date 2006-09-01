@@ -53,7 +53,7 @@ use admin;
 use SharedDocument;
 use report;
 
-use open ':utf8'; ## Default is to consider files utf8 
+#use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
 use Mail::Address;
@@ -548,6 +548,7 @@ my %in_regexp = (
 		 'robot_searched' => '[\w\-\.\@\:]+',
 		 'ip_searched' => '[\d\.]+',
 		 );
+
 
 ## Open log
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -11625,7 +11626,7 @@ sub do_d_savefile {
      rename ("$shareddir/$path","$shareddir/$path.old");
 
      # Creation of the shared file
-     unless (open FILE, ">$shareddir/$path") {
+     unless (open FILE, ">:bytes", "$shareddir/$path") {
 	 &report::reject_report_web('user','cannot_overwrite', {'reason' => $!,
 								'path' => $visible_path }
 				    ,$param->{'action'},$list);
@@ -12235,7 +12236,7 @@ sub creation_picture_file {
     }
     
     my $fh = $query->upload('uploaded_file');
-    unless (open FILE, ">$root_dir/$path/$fname") {
+    unless (open FILE, ">:bytes", "$root_dir/$path/$fname") {
 	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('err',"creation_shared_file : Cannot open file $root_dir/$path/$fname : $!");
 	return undef;
@@ -12263,7 +12264,7 @@ sub creation_shared_file {
     }
     
     my $fh = $query->upload('uploaded_file');
-    unless (open FILE, ">$shareddir/$path/$fname") {
+    unless (open FILE, ">:bytes", "$shareddir/$path/$fname") {
 	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('err',"creation_shared_file : Cannot open file $shareddir/$path/$fname : $!");
 	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
@@ -12421,7 +12422,7 @@ sub creation_desc_file {
      
  ### uploaded of the file.zip
      my $fh = $query->upload('unzipped_file');
-     unless (open FILE, ">$zip_abs_dir/$fname") {
+     unless (open FILE, ">:bytes", "$zip_abs_dir/$fname") {
 	 &report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err',"do_d_unzip($path/$fname) : Cannot open file $zip_abs_dir/$fname : $!");
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});

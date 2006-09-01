@@ -1,3 +1,179 @@
+2006-08-31 14:28  sympa-authors
+
+	* web_tt2/main.tt2: [reported by R.Bourges]Fix: removing one quote
+
+2006-08-31 11:30  sympa-authors
+
+	* src/tt2.pl, wwsympa/wwsympa.fcgi: Fix: encoding problems with
+	  shared document names. Now encoding incoming parameters to
+	  filesystem_encoding when action relates to the shared. Also using
+	  Encode::Guess now.
+
+2006-08-30 15:34  sympa-authors
+
+	* web_tt2/arc.tt2, wwsympa/wwsympa.fcgi: Fix: archgives attachement
+	  were no more accessible
+
+2006-08-30 10:58  sympa-authors
+
+	* web_tt2/info.tt2, wwsympa/wwsympa.fcgi: Fix: select correct
+	  encoding while loading info or homepage files.
+
+2006-08-30 09:23  sympa-authors
+
+	* web_tt2/editfile.tt2, wwsympa/wwsympa.fcgi: Fix: use filesystem
+	  encoding to read or write templates
+
+2006-08-30 09:22  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, html/index.html,
+	  html/node1.html, html/node10.html, html/node11.html,
+	  html/node12.html, html/node13.html, html/node14.html,
+	  html/node15.html, html/node16.html, html/node17.html,
+	  html/node18.html, html/node19.html, html/node2.html,
+	  html/node20.html, html/node21.html, html/node22.html,
+	  html/node23.html, html/node24.html, html/node25.html,
+	  html/node26.html, html/node27.html, html/node28.html,
+	  html/node29.html, html/node3.html, html/node30.html,
+	  html/node31.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Updated
+
+2006-08-29 16:24  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: use subscriber gecos instead of user
+	  gecos when posting a message from the web
+
+2006-08-29 14:16  sympa-authors
+
+	* src/etc/script/ldap_alias_manager.pl: [A.Gavara, INPL Nancy] [ID
+	  953] Fix: added missing -owner aliases ; fixed $tt2_include_path
+	  construction
+
+2006-08-29 13:24  sympa-authors
+
+	* wwsympa/archived.pl: Fix: sort archives directories before
+	  expiring ; otherwise latest months might expire.
+
+2006-08-29 11:49  sympa-authors
+
+	* src/Conf.pm: Added comment
+
+2006-08-29 11:07  sympa-authors
+
+	* src/sympa.pl: typo
+
+2006-08-28 17:48  sympa-authors
+
+	* src/List.pm: [S.Amrani, Gendarmerie Nat.] Fix: typo
+
+2006-08-28 15:57  sympa-authors
+
+	* doc/sympa.tex.tpl: Complete doc about VERP
+
+2006-08-25 18:06  sympa-authors
+
+	* src/etc/script/arc2webarc.pl: [reported by D.Ghent, UMBC] [ID
+	  927]Fix: arc2webarc.pl failed with big lists (lots of messages)
+	  because all messages were stored in memory.  Now process one log
+	  file at a time.
+
+2006-08-25 17:25  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by S.Amrani, Gendarmerie Nat.]
+	  Fix: After editing a subscriber email, the list owner might get a
+	  "not subscribed to list" error.  The bug happened because the
+	  do_set() is used by both list members and list owners. Wwsympa
+	  now used the previous_action information to bring the user back
+	  to the right page.
+
+2006-08-25 17:01  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Previous patch did not save list config
+
+2006-08-25 15:57  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [requested by M.Ward] [ID 935] Change: When
+	  renaming a list, custom_subject is not updated with the new list
+	  name
+
+2006-08-25 15:12  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by P.Von Der Hagen, Karlsruhe
+	  Univ.] [ID 876] Fix:	sympa sends message "topics have changed"
+	  when owner is changed
+
+2006-08-25 14:06  sympa-authors
+
+	* mail_tt2/message_report.tt2: [reported by P.Von Der Hagen,
+	  Karlsruhe Univ.] [ID 878] Fix: used incorrect variable in mail
+	  report
+
+2006-08-25 10:03  sympa-authors
+
+	* src/Conf.pm: Now check if robot.conf has required read-access ;
+	  otherwise notify listmaster
+
+2006-08-25 09:38  sympa-authors
+
+	* src/List.pm: Fixed regexp for ssl_ciphers
+
+2006-08-25 09:11  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, doc/man8/alias_manager.pod, src/List.pm,
+	  src/admin.pm, src/sympa.pl: [S.Amrani, Gendarmerie Nat.] New
+	  feature: alias management can now be disabled.  You should set
+	  the 'sendmail_aliases' parameter to 'none'
+
+2006-08-24 17:01  sympa-authors
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm, src/sympa_wizard.pl:
+	  ***** Change: config.bin files are no more used unless the new
+	  cache_list_config sympa.conf parameter ***** is set to
+	  'binary_file'. This mode is only usefull if you manage lots of
+	  lists (1000+) to ***** have a faster startup of processes.
+
+2006-08-24 15:54  sympa-authors
+
+	* wwsympa/Marc/Search.pm: Fix: open archive files as utf-8
+
+2006-08-23 09:30  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Updated S/MIME documentation
+
+2006-08-22 11:37  sympa-authors
+
+	* src/sympa.pl: Fix: Prevent that 2 processes perform checks at the
+	  same time...
+
+2006-08-21 15:37  sympa-authors
+
+	* .version, ChangeLog: preparing 5.3a.7
+
 2006-08-11 17:33  sympa-authors
 
 	* src/: Conf.pm, sympa.pl: [reported by O.Germes, Univ Rennes 1]
