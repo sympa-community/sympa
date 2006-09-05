@@ -178,9 +178,7 @@ my %comm = ('home' => 'do_home',
 	 'modindex' => 'do_modindex',
 	 'reject' => 'do_reject',
 	 'reject_notify' => 'do_reject_notify',
-         'd_reject_shared' =>'admin',
          'reject_notify_shared' =>'admin',
-         'd_install_shared' =>'admin',
 	 'distribute' => 'do_distribute',
 	 'viewmod' => 'do_viewmod',
 	 'd_reject_shared' => 'do_d_reject_shared',
@@ -416,6 +414,10 @@ my %action_type = ('editfile' => 'admin',
 		'close_list' =>'admin',
 		'restore_list' => 'admin',
 		'd_admin' => 'admin',
+		'd_reject_shared' =>'admin',
+		'd_install_shared' =>'admin',
+
+
                 'dump_scenario' => 'admin',
 ## 
 		'dump' => 'admin',
@@ -549,6 +551,25 @@ my %in_regexp = (
 		 'ip_searched' => '[\d\.]+',
 		 );
 
+## List some required filtering of incoming parameters, depending on current action
+## Like Q-encoding
+my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
+		 'd_install_shared' => {'id' => 'qencode'},
+		 'd_read' => {'path' => 'qencode'},
+		 'd_create_dir' => {'name_doc' => 'qencode', 'path' => 'qencode'},
+		 'd_upload' => {'path' => 'qencode', 'uploaded_file' => 'qencode'},
+		 'd_unzip' => {'path' => 'qencode', 'unzipped_file' => 'qencode'},
+		 'd_editfile' => {'path' => 'qencode'},
+		 'd_properties' => {'path' => 'qencode'},
+		 'd_overwrite' => {'path' => 'qencode'},
+		 'd_savefile' => {'path' => 'qencode', 'name_doc' => 'qencode'},
+		 'd_describe' => {'path' => 'qencode'},
+		 'd_delete' => {'path' => 'qencode'},
+		 'd_rename' => {'path' => 'qencode','new_name' => 'qencode'},
+		 'd_control' => {'path' => 'qencode'},
+		 'd_change_access' => {'path' => 'qencode'},
+		 'd_set_owner' => {'path' => 'qencode'},
+		 );
 
 ## Open log
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -1427,13 +1448,7 @@ sub get_header_field {
 	 $in{$p} =~ s/\015//g;	 
 
 	 ## Convert from the web encoding to unicode string
-	 ## Try to guess encoding first to prevent errors
-	 my $decoder = &Encode::Guess::guess_encoding($in{$p}, 'utf8', $Conf{'filesystem_encoding'});
-	 if (ref $decoder && ($decoder->name eq $Conf{'filesystem_encoding'})) { ## Don't use suggested encoding if other than filesystem one
-	     $in{$p} = $decoder->decode($in{$p}); ## If not ref, it is an error message
-	 }else {
-	     $in{$p} = Encode::decode('utf8', $in{$p});
-	 }
+	 $in{$p} = Encode::decode('utf8', $in{$p});
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
@@ -1463,12 +1478,15 @@ sub get_header_field {
 	 }
      }
 
-     ## For shared-related actions, decode parameters to native filesystem encoding
-     if ($in{'action'} =~ /^d_/) {
-	 foreach my $p (keys %in) {
+     ## For shared-related actions, Q-encode filenames
+     ## This required for filenames that include non ascii characters
+     if (defined $filtering{$in{'action'}}) {
 
-	     ## Decode param
-	     $in{$p} = &Encode::encode($Conf{'filesystem_encoding'}, $in{$p});
+	 foreach my $p (keys %{$filtering{$in{'action'}}}) {
+	     if ($filtering{$in{'action'}}{$p} eq 'qencode') {
+		 ## Q-decode param
+		 $in{$p} = &tools::qencode_filename($in{$p});
+	     }
 	 }
      }
 
@@ -10182,8 +10200,8 @@ sub do_d_read {
 			 # Case read authorized : fill the hash 
 			 $subdirs{$d}{'icon'} = $icon_table{'folder'};
 			 
-			 $subdirs{$d}{'doc'} = $d;
-			 $subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+			 $subdirs{$d}{'doc'} = &make_visible_path($d);
+			 $subdirs{$d}{'escaped_doc'} =  &tools::escape_docname($d);
 			 
 			 # size of the doc
 			 $subdirs{$d}{'size'} = (-s $path_doc)/1000;
@@ -10285,10 +10303,7 @@ sub do_d_read {
 			 close DOC;
 			 chomp $url;
 			 $files{$d}{'url'} = $url;
-			 $files{$d}{'anchor'} = $d;
-			$files{$d}{'anchor'} =~ s/\.moderate$//;
-			$files{$d}{'anchor'} =~ s/^\.//;
-			 $files{$d}{'anchor'} =~ s/\.url$//;
+			 $files{$d}{'anchor'} = &make_visible_path($d);
 			 $files{$d}{'icon'} = $icon_table{'url'};			
 
 		     ## MIME - TYPES : icons for template
@@ -10372,15 +10387,12 @@ sub do_d_read {
 		       # name of the file
 			 if ($d =~ /^(\.).*(.moderate)$/) {
 			         # file not yet moderated can be seen by its author 
-			     	 my $visible_d = $d;
-				 $visible_d =~ s/^(\.)/ /;
-				 $visible_d =~ s/\.moderate/ /;
-				 $files{$d}{'doc'} = $visible_d;
+				 $files{$d}{'doc'} = &make_visible_path($d);
 				 $files{$d}{'moderate'} = 1;
 			 } else {
-		     $files{$d}{'doc'} = $d;
+			     $files{$d}{'doc'} = &make_visible_path($d);
 			 }
-		     $files{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+			 $files{$d}{'escaped_doc'} =  &tools::escape_docname($d);
 
 		       # last update
 		     my @info = stat $path_doc;
@@ -10431,7 +10443,7 @@ sub do_d_read {
 	     }else {
 		 $param->{'father'} = '';
 	     }
-	     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
+	     $param->{'escaped_father'} = &tools::escape_docname($param->{'father'}, '/');
 
 
 	     # Parameters for the description
@@ -10444,7 +10456,7 @@ sub do_d_read {
 
 	    $param->{'path'} = $path;
 	    $param->{'visible_path'} = $visible_path;
-	     $param->{'escaped_path'} = &tools::escape_chars($param->{'path'}, '/');
+	     $param->{'escaped_path'} = &tools::escape_docname($param->{'path'}, '/');
 	 }
 	 if (scalar keys %subdirs) {
 	     $param->{'sort_subdirs'} = \@sort_subdirs;
@@ -10551,17 +10563,28 @@ sub select_my_files {
 
 ## return a visible path from a moderated file or not
 sub make_visible_path {
-    my $path=shift;
-    if ($path =~ /\.moderate/){
-	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-	my $name = $3;
-	$name =~ s/^\.//;
-	$name =~ s/\.moderate//;
-	return "$2"."$name";
+    my $path = shift;
+
+    my $visible_path = $path; 
+
+    if ($path =~ /\.url(\.moderate)?$/){
+	if ($path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/) {
+	    $visible_path =~ s/\.moderate$//;
+	    $visible_path =~ s/^\.//;
+	    $visible_path =~ s/\.url$//;
+	}
+
+    }elsif ($path =~ /\.moderate$/){
+	if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
+	    my $name = $3;
+	    $name =~ s/^\.//;
+	    $name =~ s/\.moderate//;
+	    $visible_path =  "$2"."$name";
+	}
     }
-    else {
-	return $path;
-    }
+
+    ## Qdecode the visible path
+    return &tools::qdecode_filename($visible_path);
 }
 
 
@@ -10755,8 +10778,7 @@ sub do_latest_d_read {
 		     close DOC;
 		     chomp $url;
 		     $file_info{'url'} = $url;
-		     $file_info{'anchor'} = $d;
-		     $file_info{'anchor'} =~ s/\.url$//;
+		     $file_info{'anchor'} = &make_visible_path($d);
 		     $file_info{'icon'} = $icon_table{'url'};			
 		     
 		 ## MIME - TYPES : icons for template
@@ -10785,16 +10807,16 @@ sub do_latest_d_read {
 		 }
 	
 		 ## name of the file
-		 $file_info{'name'} = $d;
-		 $file_info{'escaped_name'} =  &tools::escape_chars($d);
+		 $file_info{'name'} = &make_visible_path($d);
+		 $file_info{'escaped_name'} =  &tools::escape_docname($d);
 		 
 		 ## content_directory
 		 if ($dir) {
-		     $file_info{'content_dir'} = $dir;
+		     $file_info{'content_dir'} = &make_visible_path($dir);
 		 } else {
 		     $file_info{'content_dir'} = "/"; 
 		 }
-		 $file_info{'escaped_content_dir'} = &tools::escape_chars($dir,'/');
+		 $file_info{'escaped_content_dir'} = &tools::escape_docname($dir,'/');
 		 
 		 if ($def_desc) {
 		     ## description
@@ -10925,7 +10947,7 @@ sub do_latest_d_read {
      }else {
 	 $param->{'father'} = '';
      }
-     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
+     $param->{'escaped_father'} = &tools::escape_docname($param->{'father'}, '/');
 
      # Description of the file
      my $descfile;
@@ -11067,9 +11089,9 @@ sub do_latest_d_read {
      }else {
 	 $param->{'father'} = '';
      }
-     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
+     $param->{'escaped_father'} = &tools::escape_docname($param->{'father'}, '/');
 
-     $param->{'fname'} = $3;
+     $param->{'fname'} = &make_visible_path($3);
      # Description of the file
      my $descfile;
      if (-d "$shareddir/$path") {
@@ -12302,7 +12324,7 @@ sub creation_desc_file {
 
  sub do_d_unzip {
      # Parameters of the uploaded file (from d_read.tt2)
-     my $fn = $query->param('unzipped_file');
+     my $fn = $in{'unzipped_file'};
 
      # name of the file, without path
      my $fname;
@@ -13037,7 +13059,7 @@ sub d_test_existing_and_rights {
      #moderation
      my $visible_path = &make_visible_path($path);     
      my $moderate;
-     if ($visible_path ne $path) {
+     if ($path =~ /\.moderate$/) {
 	 $moderate=1;
      }
 
@@ -13126,6 +13148,7 @@ sub d_test_existing_and_rights {
 	 return undef;
      }
      if ($moderate){
+	 &do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
 	 unless (rename $doc, "$shareddir/$current_directory/.$in{'new_name'}.moderate") {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$doc,
 								'new'=>"$shareddir/$current_directory/.$in{'new_name'}.moderate"},
@@ -13135,14 +13158,15 @@ sub d_test_existing_and_rights {
 	     return undef;
 	 }
      }else {
-     unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
-	 &report::reject_report_web('intern','rename_file',{'old'=>$doc,
-							    'new'=>"$shareddir/$current_directory/$in{'new_name'}"},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('err',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
+	 &do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
+	 unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
+	     &report::reject_report_web('intern','rename_file',{'old'=>$doc,
+								'new'=>"$shareddir/$current_directory/$in{'new_name'}"},
+					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     &wwslog('err',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     return undef;
+	 }
      }
      ## Rename description file
      my $desc_file = "$shareddir/$current_directory/.desc.$document";
@@ -13441,7 +13465,7 @@ sub d_test_existing_and_rights {
      }else {
 	 $param->{'father'} = '';
      }
-     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
+     $param->{'escaped_father'} = &tools::escape_docname($param->{'father'}, '/');
 
      my $desc_file;
      # path of the description file
@@ -13523,7 +13547,7 @@ sub d_test_existing_and_rights {
      }else {
 	 $param->{'father'} = '';
      }
-     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
+     $param->{'escaped_father'} = &tools::escape_docname($param->{'father'}, '/');
 
      $param->{'set_owner'} = 1;
 

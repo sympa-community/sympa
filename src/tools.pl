@@ -1007,6 +1007,47 @@ sub escape_chars {
     return $s;
 }
 
+## Escape shared document file name
+## Q-decode it first
+sub escape_docname {
+    my $filename = shift;
+
+    ## Q-decode
+    $filename = MIME::Words::decode_mimewords($filename);
+
+    ## Decode from FS encoding to utf-8
+    $filename = &Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
+
+    ## escapesome chars for use in URL
+    return &escape_chars($filename);
+}
+
+## Q-Encode web file name
+sub qencode_filename {
+    my $filename = shift;
+
+    ## We don't use MIME::Words here because it does not encode properly Unicode
+    ## Check if string is already Q-encoded first
+    unless ($filename =~ /\=\?UTF-8\?/) {
+	$filename = &Encode::encode('MIME-Q', $filename);
+    }
+    
+    return $filename;
+}
+
+## Q-Decode web file name
+sub qdecode_filename {
+    my $filename = shift;
+
+    ## We don't use MIME::Words here because it does not encode properly Unicode
+    ## Check if string is already Q-encoded first
+    #if ($filename =~ /\=\?UTF-8\?/) {
+	$filename = &Encode::decode('MIME-Q', $filename);
+    #}
+    
+    return $filename;
+}
+
 ## Unescape weird characters
 sub unescape_chars {
     my $s = shift;

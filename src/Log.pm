@@ -66,6 +66,11 @@ sub do_log {
 
     my $level = 0;
 
+    ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
+    foreach my $i (0..$#_) {
+	$_[$i] = Encode::encode($Conf::Conf{'filesystem_encoding'}, $_[$i]) if (&Encode::is_utf8($_[$i]));
+    }
+
     $level = 1 if ($fac =~ /^debug$/) ;
 
     if ($fac =~ /debug(\d)/ ) {
