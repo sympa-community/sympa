@@ -3,6 +3,181 @@
 
 (See Changelog file for the full changes log)
 
+5.3a.8		6 September 2006
+
+   New features :
+
+
+	[Adrien Brard] DB logs : each operations that changes the status of messages/subscriptions/list 
+	config is now logged in a structured DB entry. Both listmasters and listowners can search this events
+	DB using the Sympa web interface.
+
+	New static_content_path and static_content_url parameters. It refers to a directory, accessible
+	from the web server, containing CSS stylesheats, member pictures and other statuc contents 
+	managed by Sympa.
+
+	[Adrien Brard] List members can upload and share their pictures via the REVIEW web page.
+
+	[Virginie Paitrault, Univ. Rennes 2] New user and admin web documentation.
+	Currently in French only.
+
+	Per list blacklist : list owners can manage a blacklist for their list, via the web interface
+	Only one new sympa.conf parameter : use_blacklist
+
+	List creation available via the SOAP server. 
+	New trusted_applications.conf file that defines the trust relationship with SOAP clients.
+
+	src/etc/script/testldap.pl: testldap made LDAPS-aware
+
+	src/List.pm: Added LDAPS support to include_ldap_xx
+
+	wwsympa/wwsympa.fcgi: Templates editor for the listmaster.
+
+   Changes :
+
+	src/etc/script/arc2webarc.pl: [reported by D.Ghent, UMBC] [ID 927] arc2webarc.pl failed 
+	with big lists (lots of messages) because all messages were stored in memory.  Now process 
+	one log file at a time.
+
+	wwsympa/wwsympa.fcgi: [requested by M.Ward] [ID 935] When renaming a list, custom_subject 
+	is not updated with the new list name
+
+	[S.Amrani, Gendarmerie Nat.] alias management can now be disabled.  You should set the 
+	'sendmail_aliases' parameter to 'none'
+
+	***** Change: config.bin files are no more used unless the new cache_list_config sympa.conf parameter 
+	***** is set to 'binary_file'. This mode is only usefull if you manage lots of lists (1000+) to 
+	***** have a faster startup of web processes.
+
+	***** Changes: web pages are now utf-8 encoded, as well as mhonarc HTML 
+	***** archives that can now mix different character sets within a single 
+	***** web archive. Sympa now uses perl's I/O layer to encode/decode characters.  
+	***** The web_recode_to  parameter is now obsolete ; the new 
+	***** filesystem_encoding parameter allows you to define how the configuration 
+	***** files are encoded on disk. A new mhonarc-ressources.tt2 file is provided 
+	***** and should replace any custom one.
+	***** Shared documents filenames are now Q-encoded to prevent any encoding problems.
+	***** An automatic upgrade process will rename existing files according to Q-encoding
+
+	***** Change: default for css_path is now relative to static_content_path.  
+	***** CSS files are now AUTOMATICALLY updated by sympa.pl if a new css.tt2 has been installed.
+
+	web_tt2/arcsearch.tt2: [A.Bernstein] [ID 899] Minor bugs and cosmetic improvements 
+	in archive search results 
+	1. In the presentation of search results in the archive, the listing of parameters that 
+	was used for the search is incorrect because of various typos in the arcsearch.tt2 file.
+	2. Search results are hard to read because messages blend together, so I've made minor changes 
+	(making them list elements), and also added some linebreaks and removed some confusing
+	feedback (the "Results" lines at the bottom).
+
+	web_tt2/arcsearch_form.tt2: [A.Bernstein] [ID 900] Cosmetic reorganization of the archive advanced 
+	search page
+
+	doc/sympa.tex.tpl: Added comments about the requirements on the aliases file
+
+	web_tt2/editsubscriber.tt2, wwsympa/wwsympa.fcgi: [A.Bernstein] [ID 901] 
+	List owners are now able to edit subscriber's visibility
+
+	web_tt2/suboptions.tt2: [A.Bernstein] Subscribers can now edit their gecos on a list
+
+	src/etc/mhonarc-ressources.tt2: now provide archives mass-deletion also from the threaded page
+
+	src/etc/mhonarc-ressources.tt2: [A.Bernstein] [ID 905] The threaded view is more useful 
+	if you can see the date of each message in the list.	This requires both adding the date 
+	field to a few lines in mhonarc-ressources.tt2 and adding two new resources that weren't 
+	customized at all before.
+
+	po/: en_US.po, fr.po: use sympa.pot as the default en_US.po
+
+	po/en_US.po, src/Language.pm: changed charset for English from us-ascii to utf-8
+
+	wwsympa/wwsympa.fcgi: [M.Massar, univ Kaiserslautern] Sympa is now able to get the Email in SubjAltName.  
+	As I was not able to find the mentioned patch to mod_ssl to get SSL_CLIENT_S_EMAIL exported, I wrote 
+	another patch based on SSL_CLIENT_CERT from "SSLOptions +ExportCertData"
+
+	src/List.pm: [requested by A.Bernstein] now scenario rules can apply on header fields that have multiple values
+
+	mail_tt2/listmaster_notification.tt2, src/List.pm:  notify listmaster if upgrade procedure failed
+
+	[BugID 709] prevent any process to run before data structure have been updated. 
+	This prevents "duplicate entries error" in DB tables
+
+	src/List.pm: hide closed lists, even to listmasters
+
+   Bug fixes :
+
+	src/etc/script/ldap_alias_manager.pl: [A.Gavara, INPL Nancy] [ID 953] added missing -owner aliases 
+	; fixed $tt2_include_path construction
+
+	wwsympa/archived.pl: sort archives directories before expiring ; otherwise latest months might expire.
+
+	wwsympa/wwsympa.fcgi: [reported by S.Amrani, Gendarmerie Nat.] After editing a subscriber email, 
+	the list owner might get a "not subscribed to list" error.  The bug happened because the do_set() 
+	is used by both list members and list owners. Wwsympa now used the previous_action information to 
+	bring the user back to the right page.
+
+	wwsympa/wwsympa.fcgi: [reported by P.Von Der Hagen, Karlsruhe Univ.] [ID 876] 
+	Sympa sends message "topics have changed" when owner is changed
+
+	mail_tt2/message_report.tt2: [reported by P.Von Der Hagen, Karlsruhe Univ.] [ID 878] used incorrect 
+	variable in mail report
+
+	src/sympa.pl: [reported by S.Amrani, Gendarmerie Nat.]  sympa.pl would die when processing 
+	a message for unknownlist-request. The error message was : "Can't modify non-lvalue subroutine 
+	call" Fixed a buggy call to chomp.
+
+	src/sympa.pl: [requested by P.Farmer, ZVENO] [ID 828] on OS X 10.3 scripts can't change their 
+	real UID.  Now checking that the UID change succeeded.
+
+	src/etc/mhonarc-ressources.tt2: [A.Bernstein] [ID 898] Numerous bugs in mhonarc-ressources.tt2 
+	for thread view When viewing an archive in threaded order, the first/previous/next/last buttons 
+	all return incorrectly to chronological view.  This happens because the line in the 
+	mhonarc-ressources.tt2 that creates these buttons is an exact copy of the one from the chronological 
+	view section, with "PREVPGLINK" and "NEXTPGLINK" instead of "TPREVPGLINK" and "TNEXTPGLINK".
+
+	mail_tt2/send_auth.tt2: [reported by W.Werner, Fraunhofer]  When using x509 list certificates, 
+	reply-to would be forced to list-request.  Added a reply-to header field to the send_auth.tt2 template
+
+	src/etc/script/: [reported by P.Bricourt, Mongueurs] still refering to idp_netimap DB field
+
+	wwsympa/wwsympa.fcgi: [reported by J.Abbott, univ Duke]  sending a mail from the web archives would 
+	raise an error if the mail subject contained unusual characters.  The subject regexp has been extended.
+
+	web_tt2/: create_list_request.tt2, editfile.tt2: [reported by P.von der Hagen, univ. Karlsruhe] 
+	removed the wrapping in	textarea
+
+	wwsympa/wwsympa.fcgi: [reported by V.Nilsen] links to archives month from calendar were broken. 
+	Now clean up the arc_file parameter
+
+	src/Language.pm: [reported by P.Maes, Univ. Louvain] localization failed on Solaris. 
+	The native Solaris gettext libraries failed to use the appropriate .mo file.  We're now using the "Pure Perl" 
+	implementation of gettext
+
+	src/: Conf.pm, List.pm: [reported by P.Maes, Univ. Louvain] Don't use chown user.group that fails on Solaris. 
+	Run separate chown and chgrp commands instead
+
+	soap/sympasoap.pm: [reported by V. Mathieu, Univ. Nancy2] [BugID 281] now decoding and encoding SOAP data to UTF-8
+
+	wwsympa/wwsympa.fcgi: [reported by JM.Bourdin, IUFM Dijon] visibility authorization scenario was not 
+	evaluated to compute the "your lists" box.
+
+	src/List.pm: [BugID 750] include_sql_query requests would fail with Oracle.  
+	Apparently the ->rows() method does not return the number of rows.  We now use fetchrow_arrayref() 
+	to get rows, thus allowing to differenciate an empty field an the last row.
+
+	wwsympa/bounce-lib.pl: analyze the 'Original-recipient' entries of message/delivery-status MIME parts
+
+	src/etc/mhonarc-ressources.tt2: [proposed by E.Hood] now using $FROMADDRNAME$@$FROMADDRDOMAIN$ instead of $FROMADDR$. See
+	https://savannah.nongnu.org/bugs/index.php?func=detailitem&item_id=11759
+
+	important_changes.pl: [reported by C.Peck, Univ William and Mary] on Solaris, chown does not like the '.' separator
+
+	web_tt2/review.tt2: don't show bouncing status to other members
+
+	wwsympa/wwsympa.fcgi: [reported by J.Beretta, France Telecom]: a renamed list would keep its previous domain name
+
+	mail_tt2/listmaster_notification.tt2, src/List.pm: Sympa now check if the DBD is available ; otherwise processes would die
+
 5.2		11 April 2006
 
    New features :

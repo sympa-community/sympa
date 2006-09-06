@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1225"
+<A NAME="tex2html1226"
   HREF="node17.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1219"
+<A NAME="tex2html1220"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1213"
+<A NAME="tex2html1214"
   HREF="node15.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1221"
+<A NAME="tex2html1222"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1223"
+<A NAME="tex2html1224"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1226"
+<B> Next:</B> <A NAME="tex2html1227"
   HREF="node17.html">16. Interaction between Sympa and other</A>
-<B> Up:</B> <A NAME="tex2html1220"
+<B> Up:</B> <A NAME="tex2html1221"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1214"
+<B> Previous:</B> <A NAME="tex2html1215"
   HREF="node15.html">14. Authorization scenarios</A>
- &nbsp; <B>  <A NAME="tex2html1222"
+ &nbsp; <B>  <A NAME="tex2html1223"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1224"
+ &nbsp; <B>  <A NAME="tex2html1225"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,16 +60,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1227"
-  HREF="node16.html#SECTION001610000000000000000">15.1 How to create a virtual host</A>
 <LI><A NAME="tex2html1228"
+  HREF="node16.html#SECTION001610000000000000000">15.1 How to create a virtual host</A>
+<LI><A NAME="tex2html1229"
   HREF="node16.html#SECTION001620000000000000000">15.2 robot.conf</A>
 <UL>
-<LI><A NAME="tex2html1229"
+<LI><A NAME="tex2html1230"
   HREF="node16.html#SECTION001621000000000000000">15.2.1 Robot customization</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1230"
+<LI><A NAME="tex2html1231"
   HREF="node16.html#SECTION001630000000000000000">15.3 Managing multiple virtual hosts</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -109,7 +109,7 @@ Note that the main limitation of virtual hosts in Sympa is that you cannot creat
 </H1>
 
 <P>
-You don't need to install several Sympa servers. A single <A NAME="9519"></A><TT>sympa.pl</TT> daemon
+You don't need to install several Sympa servers. A single <A NAME="9535"></A><TT>sympa.pl</TT> daemon
 and one or more fastcgi servers can serve all virtual host. Just configure the 
 server environment in order to accept the new domain definition.
 
@@ -156,11 +156,11 @@ FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 3 -idle-timeout 12
 
 <P>
 </LI>
-<LI>Create a <A NAME="9522"></A><TT>/usr/local/sympa-os/etc/your.virtual.domain/robot.conf</TT> configuration file for the virtual host. Its format is a subset of <A NAME="9525"></A><TT>sympa.conf</TT> and is described in the next section ; a sample <A NAME="9528"></A><TT>robot.conf</TT> is provided.
+<LI>Create a <A NAME="9538"></A><TT>/usr/local/sympa-os/etc/your.virtual.domain/robot.conf</TT> configuration file for the virtual host. Its format is a subset of <A NAME="9541"></A><TT>sympa.conf</TT> and is described in the next section ; a sample <A NAME="9544"></A><TT>robot.conf</TT> is provided.
 
 <P>
 </LI>
-<LI>Create a <A NAME="9531"></A><TT>/usr/local/sympa-os/expl/your.virtual.domain/</TT> directory that will contain the virtual host mailing lists directories. This directory should have the  <I>sympa</I> user as its owner and must have read and write access for this user.
+<LI>Create a <A NAME="9547"></A><TT>/usr/local/sympa-os/expl/your.virtual.domain/</TT> directory that will contain the virtual host mailing lists directories. This directory should have the  <I>sympa</I> user as its owner and must have read and write access for this user.
 
 <P><PRE>
 # su sympa -c 'mkdir /usr/local/sympa-os/expl/your.virtual.domain'
@@ -177,15 +177,15 @@ FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 3 -idle-timeout 12
 15.2 robot.conf</A>
 </H1>
 A robot is named by its domain, let's say my.domain.organd defined by a directory 
-<A NAME="9534"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>. This directory must contain at least a 
-<A NAME="9537"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="9540"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
+<A NAME="9550"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>. This directory must contain at least a 
+<A NAME="9553"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="9556"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
 (have a look at robot.conf in the sample dir).
 Only the following parameters can be redefined for a particular robot :
 
 <P>
 
 <UL>
-<LI><A NAME="9543"></A><TT>http_host</TT> 
+<LI><A NAME="9559"></A><TT>http_host</TT> 
 <BR>
 This hostname will be compared with 'SERVER_NAME' environment variable in wwsympa.fcgi
 	to determine the current Virtual Host. You can a path at the end of this parameter if
@@ -197,106 +197,106 @@ This hostname will be compared with 'SERVER_NAME' environment variable in wwsymp
 
 <P>
 </LI>
-<LI><A NAME="9546"></A><TT>host</TT> 
+<LI><A NAME="9562"></A><TT>host</TT> 
 <BR>
-This is the equivalent of the <A NAME="9549"></A><TT>host</TT> sympa.conf parameter.
+This is the equivalent of the <A NAME="9565"></A><TT>host</TT> sympa.conf parameter.
 	The default for this parameter is the name of the virtual host (ie the name of the subdirectory).
 
 <P>
 </LI>
-<LI><A NAME="9552"></A><TT>wwsympa_url</TT> 
+<LI><A NAME="9568"></A><TT>wwsympa_url</TT> 
 <BR>
 The base URL of WWSympa
 
 <P>
 </LI>
-<LI><A NAME="9555"></A><TT>soap_url</TT> 
+<LI><A NAME="9571"></A><TT>soap_url</TT> 
 <BR>
 The base URL of Sympa's SOAP server (if it is running ; see&nbsp;<A HREF="node13.html#soap">12</A>, page&nbsp;<A HREF="node13.html#soap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 </LI>
-<LI><A NAME="9558"></A><TT>cookie_domain</TT>
+<LI><A NAME="9574"></A><TT>cookie_domain</TT>
 
 <P>
 </LI>
-<LI><A NAME="9561"></A><TT>email</TT>
+<LI><A NAME="9577"></A><TT>email</TT>
 
 <P>
 </LI>
-<LI><A NAME="9564"></A><TT>title</TT>
+<LI><A NAME="9580"></A><TT>title</TT>
 
 <P>
 </LI>
-<LI><A NAME="9567"></A><TT>default_home</TT>
+<LI><A NAME="9583"></A><TT>default_home</TT>
 
 <P>
 </LI>
-<LI><A NAME="9570"></A><TT>create_list</TT>
+<LI><A NAME="9586"></A><TT>create_list</TT>
 
 <P>
 </LI>
-<LI><A NAME="9573"></A><TT>lang</TT>
+<LI><A NAME="9589"></A><TT>lang</TT>
 
 <P>
 </LI>
-<LI><A NAME="9576"></A><TT>supported_lang</TT>
+<LI><A NAME="9592"></A><TT>supported_lang</TT>
 
 <P>
 </LI>
-<LI><A NAME="9579"></A><TT>log_smtp</TT>
+<LI><A NAME="9595"></A><TT>log_smtp</TT>
 
 <P>
 </LI>
-<LI><A NAME="9582"></A><TT>listmaster</TT>
+<LI><A NAME="9598"></A><TT>listmaster</TT>
 
 <P>
 </LI>
-<LI><A NAME="9585"></A><TT>max_size</TT>
+<LI><A NAME="9601"></A><TT>max_size</TT>
 
 <P>
 </LI>
-<LI><A NAME="9588"></A><TT>css_path</TT>
+<LI><A NAME="9604"></A><TT>css_path</TT>
 
 <P>
 </LI>
-<LI><A NAME="9591"></A><TT>css_url</TT>
+<LI><A NAME="9607"></A><TT>css_url</TT>
 
 <P>
 </LI>
-<LI><A NAME="9594"></A><TT>static_content_path</TT>
+<LI><A NAME="9610"></A><TT>static_content_path</TT>
 
 <P>
 </LI>
-<LI><A NAME="9597"></A><TT>static_content_url</TT>
+<LI><A NAME="9613"></A><TT>static_content_url</TT>
 
 <P>
 </LI>
-<LI><A NAME="9600"></A><TT>pictures_feature</TT>
+<LI><A NAME="9616"></A><TT>pictures_feature</TT>
 
 <P>
 </LI>
-<LI><A NAME="9603"></A><TT>pictures_max_size</TT>
+<LI><A NAME="9619"></A><TT>pictures_max_size</TT>
 
 <P>
 </LI>
-<LI><A NAME="9606"></A><TT>logo_html_definition</TT>
+<LI><A NAME="9622"></A><TT>logo_html_definition</TT>
 
 <P>
 </LI>
-<LI><A NAME="9609"></A><TT>color_0</TT>, color_1 ... color_15
+<LI><A NAME="9625"></A><TT>color_0</TT>, color_1 ... color_15
 
 <P>
 </LI>
-<LI>deprecated color definition <A NAME="9612"></A><TT>dark_color</TT>, <A NAME="9615"></A><TT>light_color</TT>, <A NAME="9618"></A><TT>text_color</TT>, <A NAME="9621"></A><TT>bg_color</TT>, <A NAME="9624"></A><TT>error_color</TT>, <A NAME="9627"></A><TT>selected_color</TT>, <A NAME="9630"></A><TT>shaded_color</TT>
+<LI>deprecated color definition <A NAME="9628"></A><TT>dark_color</TT>, <A NAME="9631"></A><TT>light_color</TT>, <A NAME="9634"></A><TT>text_color</TT>, <A NAME="9637"></A><TT>bg_color</TT>, <A NAME="9640"></A><TT>error_color</TT>, <A NAME="9643"></A><TT>selected_color</TT>, <A NAME="9646"></A><TT>shaded_color</TT>
 
 <P>
 </LI>
 </UL>
 
 <P>
-These settings overwrite the equivalent global parameter defined in <A NAME="9633"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
-for my.domain.orgrobot ; the main <A NAME="9636"></A><TT>listmaster</TT> still has privileges on Virtual
+These settings overwrite the equivalent global parameter defined in <A NAME="9649"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
+for my.domain.orgrobot ; the main <A NAME="9652"></A><TT>listmaster</TT> still has privileges on Virtual
 Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
 environment variable to recognize which robot is in used. 
 
@@ -307,16 +307,16 @@ environment variable to recognize which robot is in used.
 </H2>
 
 <P>
-In order to customize the web look and feel, you may edit the CSS definition. CSS are defined in a template named css.tt2. Any robot can use static css file for making Sympa web interface faster. Then you can edit this static definition and change web style. Please refer to  <A NAME="9639"></A><TT>css_path</TT> <A NAME="9642"></A><TT>css_url</TT>. You can also quickly introduce a logo in left top corner of all pages configuring <A NAME="9645"></A><TT>logo_html_definition</TT> parameter in robot.conf file. 
+In order to customize the web look and feel, you may edit the CSS definition. CSS are defined in a template named css.tt2. Any robot can use static css file for making Sympa web interface faster. Then you can edit this static definition and change web style. Please refer to  <A NAME="9655"></A><TT>css_path</TT> <A NAME="9658"></A><TT>css_url</TT>. You can also quickly introduce a logo in left top corner of all pages configuring <A NAME="9661"></A><TT>logo_html_definition</TT> parameter in robot.conf file. 
 
 <P>
 In addition, if needed, you can customize each virtual host using its set of templates and authorization scenarios. 
 
 <P>
-<A NAME="9648"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>,
-<A NAME="9651"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/</TT>, 
-<A NAME="9654"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> directories are searched when
-loading templates or scenari before searching into <A NAME="9657"></A><TT>/usr/local/sympa-os/etc</TT> and  <A NAME="9660"></A><TT>/usr/local/sympa-os/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Host.
+<A NAME="9664"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>,
+<A NAME="9667"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/</TT>, 
+<A NAME="9670"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> directories are searched when
+loading templates or scenari before searching into <A NAME="9673"></A><TT>/usr/local/sympa-os/etc</TT> and  <A NAME="9676"></A><TT>/usr/local/sympa-os/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Host.
 
 <P>
 
@@ -326,49 +326,49 @@ loading templates or scenari before searching into <A NAME="9657"></A><TT>/usr/l
 
 <P>
 If you are managing more than 2 virtual hosts, then you might cinsider moving all the mailing lists in the default
-robot to a dedicated virtual host located in the <A NAME="9663"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> directory. The main benefit of 
+robot to a dedicated virtual host located in the <A NAME="9679"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> directory. The main benefit of 
 this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
 for this robot without inheriting them within other virtual hosts.
 
 <P>
-To create such a virtual host, you need to create <A NAME="9666"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> and <A NAME="9669"></A><TT>/usr/local/sympa-os/etc/my.domain.org/</TT> directories ; 
-customize <A NAME="9672"></A><TT>host</TT>, <A NAME="9675"></A><TT>http_host</TT> and <A NAME="9678"></A><TT>wwsympa_url</TT> parameters in the <A NAME="9681"></A><TT>/usr/local/sympa-os/etc/my.domain.org/robot.conf</TT> 
-with the same values as the default robot (as defined in <A NAME="9684"></A><TT>sympa.conf</TT> and <A NAME="9687"></A><TT>wwsympa.conf</TT> files).
+To create such a virtual host, you need to create <A NAME="9682"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> and <A NAME="9685"></A><TT>/usr/local/sympa-os/etc/my.domain.org/</TT> directories ; 
+customize <A NAME="9688"></A><TT>host</TT>, <A NAME="9691"></A><TT>http_host</TT> and <A NAME="9694"></A><TT>wwsympa_url</TT> parameters in the <A NAME="9697"></A><TT>/usr/local/sympa-os/etc/my.domain.org/robot.conf</TT> 
+with the same values as the default robot (as defined in <A NAME="9700"></A><TT>sympa.conf</TT> and <A NAME="9703"></A><TT>wwsympa.conf</TT> files).
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1225"
+<A NAME="tex2html1226"
   HREF="node17.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1219"
+<A NAME="tex2html1220"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1213"
+<A NAME="tex2html1214"
   HREF="node15.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1221"
+<A NAME="tex2html1222"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1223"
+<A NAME="tex2html1224"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1226"
+<B> Next:</B> <A NAME="tex2html1227"
   HREF="node17.html">16. Interaction between Sympa and other</A>
-<B> Up:</B> <A NAME="tex2html1220"
+<B> Up:</B> <A NAME="tex2html1221"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1214"
+<B> Previous:</B> <A NAME="tex2html1215"
   HREF="node15.html">14. Authorization scenarios</A>
- &nbsp; <B>  <A NAME="tex2html1222"
+ &nbsp; <B>  <A NAME="tex2html1223"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1224"
+ &nbsp; <B>  <A NAME="tex2html1225"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-28
+2006-09-06
 </ADDRESS>
 </BODY>
 </HTML>

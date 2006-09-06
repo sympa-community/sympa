@@ -1,3 +1,20 @@
+2006-09-05 13:36  sympa-authors
+
+	* src/Log.pm, src/tools.pl, wwsympa/wwsympa.fcgi: Change: now
+	  Q-encoding shared filenames to prevent problems with 8bit
+	  filenames. This is required because readdir does not do Unicode.
+
+2006-09-01 14:46  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: check the suggested charset from
+	  Encode::Guess before decoding incoming parameters. The
+	  Encode::Guess module would sometimes gives fancy advices...
+
+2006-09-01 14:38  sympa-authors
+
+	* ChangeLog, wwsympa/wwsympa.fcgi: Fix: Do not recode while saving
+	  uploaded files
+
 2006-08-31 14:28  sympa-authors
 
 	* web_tt2/main.tt2: [reported by R.Bourges]Fix: removing one quote

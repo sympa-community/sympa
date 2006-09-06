@@ -3633,8 +3633,23 @@ mail messages including password reminders.
 
 \section {Translating Sympa GUI}
 
+Instructions for translating Sympa are maintained on Sympa web site :
+\htmladdnormallink {http://www.sympa.org/howtotranslate.html} {http://www.sympa.org/howtotranslate.html}
 
 \section {Defining language-specific templates}
+
+The default Sympa templates are language independant, refering to catalogue entries for translations. 
+When customizing either web or mail templates, you can define different templates for different languages. 
+The template should be located in a subdirectory of \dir {web\_tt2} or \dir {mail\_tt2} with the language code.
+
+Example :
+\begin {quote}
+\begin{verbatim}
+[ETC_DIR]/web_tt2/home.tt2
+[ETC_DIR]/web_tt2/de_DE/home.tt2
+[ETC_DIR]/web_tt2/fr_FR/home.tt2
+\end{verbatim}
+\end {quote}
 
 
 \section {Handling of encodings}
@@ -3655,7 +3670,9 @@ configuration files. Once this encoding is known, every template or
 configuration parameter can be read properly for the web and also
 saved properly when edited from the web interface.
 
-
+Note that the shared documents (see\ref {shared}, page~\pageref {shared}) filenames are 
+Q-encoded to make their storage encoding neutral. This encoding is transparent 
+for the end-users.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5215,7 +5232,7 @@ Here are some aspects regarding templates that are specific to \Sympa :
   that should be Q-encoded. \example {[\% FILTER qencode \%]Message à modérer[\%END\%]}
 
   \item You can write different versions of a template file in different language, each of them 
-  being located in a subdirectory of the \textbf {tt2} directory. \example {[ETC_DIR]/web\_tt2/fr\_FR/helpfile.tt2}
+  being located in a subdirectory of the \textbf {tt2} directory. \example {[ETC_DIR]/mail\_tt2/fr\_FR/helpfile.tt2}
 
 \end {itemize}
 

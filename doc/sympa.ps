@@ -11,7 +11,7 @@
 %DVIPSWebPage: (www.radicaleye.com)
 %DVIPSCommandLine: dvips -f sympa.dvi
 %DVIPSParameters: dpi=600
-%DVIPSSource:  TeX output 2006.08.28:1552
+%DVIPSSource:  TeX output 2006.09.06:1013
 %%BeginProcSet: tex.pro 0 0
 %!
 /TeXDict 300 dict def TeXDict begin/N{def}def/B{bind def}N/S{exch}N/X{S
@@ -2359,8 +2359,8 @@ rf /Fu 133[37 42 42 60 42 46 28 32 37 46 46 42 46 69
 42 42 42 42 42 23 21 28 21 47 42 28 28 28 65 69 42 42
 1[28 2[28 26[46 46 2[{TeXBase1Encoding ReEncodeFont}95
 83.022 /Times-Roman rf /Fw 87[33 49[50 50 28 39 33 1[50
-50 50 78 28 2[28 50 50 33 44 3[44 9[94 3[55 3[72 11[66
-1[72 8[50 1[50 3[50 1[50 3[25 44[{TeXBase1Encoding ReEncodeFont}27
+50 50 78 28 2[28 50 50 33 44 2[50 44 9[94 3[55 3[72 11[66
+1[72 10[50 3[50 1[50 3[25 44[{TeXBase1Encoding ReEncodeFont}27
 99.6264 /Times-Roman rf /Fx 136[124 86 1[57 67 76 1[96
 86 96 143 48 2[48 96 86 57 76 3[86 13[96 5[163 115 8[124
 9[86 86 86 86 86 86 86 86 86 86 1[43 46[{TeXBase1Encoding ReEncodeFont}
@@ -3986,9 +3986,9 @@ SDict begin [ /View [/XYZ H.V] /Dest (Doc-Start) cvn H.B /DEST pdfmark
 end
  232 448 a Black Black 1360 2216 a Fy(Sympa)325
 2424 y Fx(Mailing)42 b(Lists)h(Management)h(Softwar)m(e)1161
-2631 y(v)n(ersion)g(5.3a.7)586 2996 y Fw(Ser)n(ge)26
+2631 y(v)n(ersion)g(5.3a.8)586 2996 y Fw(Ser)n(ge)26
 b(Aumont,)d(Oli)n(vier)h(Sala)8 b(\250)-41 b(un,)25 b(Christophe)f(W)-8
-b(olfhugel,)1346 3355 y(28)25 b(August)f(2006)p Black
+b(olfhugel,)1277 3355 y(06)25 b(September)g(2006)p Black
 Black eop end
 %%Page: 2 2
 TeXDict begin 2 1 bop 0 0 a
@@ -9428,7 +9428,7 @@ f(memory)-5 b(,)232 4185 y Fs(Sympa)16 b Fv(is)h(especially)e(well)i
 (a)n(v)n(ailable)e(\(tested)h(on)g(a)h(300)e(MHz,)h(256)f(MB)i(i386)e
 (serv)o(er)g(with)232 4484 y(Linux\).)232 4702 y(This)h(guide)e(co)o(v)
 o(ers)f(the)i(installation,)g(con\002guration)d(and)i(management)f(of)i
-(the)g(current)e(release)232 4802 y(\(5.3a.7\))i(of)601
+(the)g(current)e(release)232 4802 y(\(5.3a.8\))i(of)601
 4820 y
 SDict begin H.S end
  601 4820 a Black -18 x Fv(sympa)p Black 818 4764
@@ -11449,7 +11449,7 @@ Fs(Sympa)p Fv(,)f(you)h(must)h(customize)f(the)h(sources)f(in)h(order)f
 b(e)o(xtract)e(the)h(sources)g(from)f(the)h(archi)n(v)o(e)e(\002le,)j
 (for)e(e)o(xample)f(in)j(the)f Fq(~sympa/src/)23 b Fv(di-)232
 1252 y(rectory)e(:)h(the)f(archi)n(v)o(e)f(will)i(create)g(a)f
-(directory)f(named)g Fq(sympa-5.3a.7/)d Fv(where)k(all)h(the)f(use-)232
+(directory)f(named)g Fq(sympa-5.3a.8/)d Fv(where)k(all)h(the)f(use-)232
 1352 y(ful)26 b(\002les)h(and)f(directories)f(will)h(be)g(located.)g
 (In)f(particular)m(,)f(you)h(will)i(ha)n(v)o(e)f(a)g
 Fq(doc/)f Fv(directory)232 1451 y(containing)g(this)j(documentation)c
@@ -11461,7 +11461,7 @@ y(sages)19 b(are)f(stored)12 b(;)19 b(and,)e(of)h(course,)f(the)h
 Fq(src/)f Fv(directory)f(for)h(the)h(mail)g(robot)f(and)g
 Fq(wwsympa)f Fv(for)232 1750 y(the)21 b(web)f(interf)o(ace.)232
 1968 y(Example)f(:)p Black Black 440 2227 a Fq(#)43 b(su)g(-)440
-2326 y($)g(gzip)f(-dc)g(sympa-5.3a.7.tar.)o(gz)37 b(|)43
+2326 y($)g(gzip)f(-dc)g(sympa-5.3a.8.tar.)o(gz)37 b(|)43
 b(tar)g(xf)f(-)232 2585 y Fv(No)n(w)21 b(you)e(can)h(run)f(the)h
 (installation)g(process)g(:)p Black Black 440 2844 a
 Fq($)43 b(./configure)440 2944 y($)g(make)440 3043 y($)g(make)f
@@ -17769,45 +17769,57 @@ SDict begin [ /View [/XYZ H.V] /Dest (section.10.1) cvn H.B /DEST pdfmark
 end
  232 2179 a 226
 x Fp(10.1)119 b(T)-9 b(ranslating)30 b(Sympa)g(GUI)232
-2515 y
+2712 y Fv(Instructions)72 b(for)g(translating)g(Sympa)g(are)h
+(maintained)e(on)h(Sympa)g(web)h(site)h(:)232 2830 y
 SDict begin H.S end
- 232 2515 a 232 2515 a
+
+232 2830 a Black -18 x Fv(http)20 b(://www)-5 b(.sympa.or)o(g/ho)n
+(wtotranslate.htm)o(l)p Black 1676 2755 a
+SDict begin H.R end
+ 1676 2755 a
+1676 2812 a
+SDict begin [ /H /I /Border [0 0 12] /Color [0 1 1] /Action << /Subtype
+/URI /URI (http://www.sympa.org/howtotranslate.html) >> /Subtype /Link
+H.B /ANN pdfmark end
+ 1676 2812 a 232 2980 a
+SDict begin H.S end
+ 232 2980 a 232 2980
+a
 SDict begin 12 H.A end
- 232 2515 a 232 2515 a
+ 232 2980 a 232 2980 a
 SDict begin [ /View [/XYZ H.V] /Dest (section.10.2) cvn H.B /DEST pdfmark
 end
- 232
-2515 a 243 x Fp(10.2)119 b(De\002ning)32 b(language-speci\002c)f
-(templates)232 2869 y
+ 232 2980 a 249 x Fp(10.2)119
+b(De\002ning)32 b(language-speci\002c)f(templates)232
+3537 y Fv(The)26 b(def)o(ault)f(Sympa)g(templates)g(are)h(language)d
+(independant,)g(refering)h(to)i(catalogue)e(entries)232
+3636 y(for)h(translations.)g(When)h(customizing)e(either)h(web)g(or)h
+(mail)f(templates,)h(you)e(can)i(de\002ne)f(dif-)232
+3736 y(ferent)20 b(templates)h(for)f(dif)n(ferent)f(languages.)g(The)h
+(template)g(should)f(be)i(located)f(in)h(a)g(subdirec-)232
+3836 y(tory)f(of)g Fq(web)p 614 3836 27 4 v 30 w(tt2)g
+Fv(or)f Fq(mail)p 1061 3836 V 30 w(tt2)h Fv(with)g(the)g(language)f
+(code.)232 4053 y(Example)g(:)p Black Black Black Black
+440 4190 a Fq(/web_tt2/home.tt)o(2)440 4290 y(/web_tt2/de_DE/h)o(ome)o
+(.t)o(t2)440 4390 y(/web_tt2/fr_FR/h)o(ome)o(.t)o(t2)232
+4547 y
 SDict begin H.S end
- 232 2869 a 232 2869 a
+ 232 4547 a 232 4547 a
 SDict begin 12 H.A end
- 232 2869
-a 232 2869 a
+ 232 4547 a 232 4547 a
 SDict begin [ /View [/XYZ H.V] /Dest (section.10.3) cvn H.B /DEST pdfmark
 end
- 232 2869 a 243 x Fp(10.3)119 b(Handling)32
-b(of)d(encodings)232 3416 y Fv(Until)c(v)o(ersion)f(5.3,)f(Sympa)h(web)
-g(pages)h(were)f(encoded)f(in)i(each)f(language')-5 b(s)23
-b(encoding)g(\(iso-)232 3515 y(8859-1)g(for)h(French,)g(utf-8)g(for)g
-(Japanese,...\))g(whereas)g(e)n(v)o(ery)g(web)h(page)f(is)i(no)n(w)e
-(encoded)f(in)232 3615 y(utf-8.)h(Thanks)f(to)i(the)g
-Fq(Encode)d Fv(Perl)j(module,)e(Sympa)h(can)g(no)n(w)g(juggle)g(with)g
-(the)h(\002lesystem)232 3714 y(encoding,)18 b(each)i(message)g
-(catalog')-5 b(s)20 b(encoding)e(and)i(its)h(web)f(encoding)e
-(\(utf-8\).)232 3932 y(If)e(your)e(operating)g(system)h(uses)h(a)g
-(character)e(encoding)g(dif)n(ferent)f(from)i(utf-8,)f(then)h(you)f
-(should)232 4032 y(declare)23 b(it)h(using)f(the)g Fq(filesystem)p
-1340 4032 27 4 v 27 w(encoding)e Fv(sympa.conf)g(parameter)h(\(see)h
-Fu(??)o Fv(,)h(page)e Fu(??)o Fv(\).)232 4131 y(It)e(is)h(required)d
-(to)i(do)f(so)h(because)g(Sympa)e(has)i(no)g(w)o(ay)g(to)f(\002nd)h
-(out)f(what)h(encoding)e(is)i(used)g(for)232 4231 y(its)29
-b(con\002guration)24 b(\002les.)k(Once)f(this)h(encoding)d(is)j(kno)n
-(wn,)e(e)n(v)o(ery)f(template)i(or)g(con\002guration)232
-4331 y(parameter)21 b(can)g(be)h(read)f(properly)f(for)h(the)h(web)f
-(and)h(also)g(sa)n(v)o(ed)f(properly)f(when)h(edited)g(from)232
-4430 y(the)g(web)f(interf)o(ace.)p Black 1602 5662 a(101)p
-Black eop end
+ 232
+4547 a 260 x Fp(10.3)119 b(Handling)32 b(of)d(encodings)232
+5114 y Fv(Until)c(v)o(ersion)f(5.3,)f(Sympa)h(web)g(pages)h(were)f
+(encoded)f(in)i(each)f(language')-5 b(s)23 b(encoding)g(\(iso-)232
+5214 y(8859-1)g(for)h(French,)g(utf-8)g(for)g(Japanese,...\))g(whereas)
+g(e)n(v)o(ery)g(web)h(page)f(is)i(no)n(w)e(encoded)f(in)232
+5313 y(utf-8.)h(Thanks)f(to)i(the)g Fq(Encode)d Fv(Perl)j(module,)e
+(Sympa)h(can)g(no)n(w)g(juggle)g(with)g(the)h(\002lesystem)232
+5413 y(encoding,)18 b(each)i(message)g(catalog')-5 b(s)20
+b(encoding)e(and)i(its)h(web)f(encoding)e(\(utf-8\).)p
+Black 1602 5662 a(101)p Black eop end
 %%Page: 102 102
 TeXDict begin 102 101 bop 0 0 a
 SDict begin /product where{pop product(Distiller)search{pop pop pop
@@ -17825,7 +17837,39 @@ end
  656
 241 a Fv(102)882 b Fr(CHAPITRE)20 b(10.)40 b(SYMP)-8
 b(A)22 b(INTERN)m(A)-9 b(TION)m(ALIZA)g(TION)p Black
-Black Black eop end
+656 531 a Fv(If)15 b(your)f(operating)g(system)i(uses)g(a)f(character)g
+(encoding)e(dif)n(ferent)h(from)g(utf-8,)g(then)h(you)g(should)656
+631 y(declare)22 b(it)i(using)f(the)g Fq(filesystem)p
+1763 631 27 4 v 28 w(encoding)d Fv(sympa.conf)h(parameter)h(\(see)h
+Fu(??)o Fv(,)h(page)f Fu(??)o Fv(\).)656 731 y(It)d(is)h(required)d(to)
+h(do)h(so)g(because)f(Sympa)g(has)h(no)f(w)o(ay)h(to)g(\002nd)f(out)h
+(what)f(encoding)f(is)j(used)e(for)656 830 y(its)28 b(con\002guration)d
+(\002les.)j(Once)e(this)i(encoding)d(is)j(kno)n(wn,)e(e)n(v)o(ery)g
+(template)g(or)h(con\002guration)656 930 y(parameter)20
+b(can)i(be)f(read)h(properly)d(for)i(the)h(web)g(and)f(also)h(sa)n(v)o
+(ed)g(properly)d(when)i(edited)h(from)656 1029 y(the)e(web)g(interf)o
+(ace.)656 1247 y(Note)26 b(that)h(the)g(shared)f(documents)f(\(see)1890
+1248 y
+SDict begin H.S end
+ 1890 1248 a Black -1 x Fv(23)p Black 1972 1191
+a
+SDict begin H.R end
+ 1972 1191 a 1972 1247 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (chapter.23) cvn H.B /ANN pdfmark end
+ 1972 1247 a Fv(,)i(page)2204
+1249 y
+SDict begin H.S end
+ 2204 1249 a Black -2 x Fv(219)p Black 2329 1191
+a
+SDict begin H.R end
+ 2329 1191 a 2329 1247 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (chapter.23) cvn H.B /ANN pdfmark end
+ 2329 1247 a Fv(\))g(\002lenames)f(are)h
+(Q-encoded)d(to)j(mak)o(e)656 1347 y(their)20 b(storage)f(encoding)f
+(neutral.)h(This)i(encoding)d(is)j(transparent)e(for)g(the)h
+(end-users.)p Black Black eop end
 %%Page: 103 103
 TeXDict begin 103 102 bop 0 0 a
 SDict begin /product where{pop product(Distiller)search{pop pop pop
@@ -21304,8 +21348,8 @@ Fv(\226)p Black 41 w(Y)-9 b(ou)57 b(can)g(write)g(dif)n(ferent)f(v)o
 (ersions)g(of)h(a)h(template)e(\002le)i(in)g(dif)n(ferent)d(language,)
 315 4653 y(each)46 b(of)f(them)g(being)f(located)h(in)h(a)g
 (subdirectory)d(of)i(the)h Fu(tt2)e Fv(directory)-5 b(.)44
-b(Example:)315 4753 y Fq(/web)p 496 4753 27 4 v 30 w(tt2/fr)p
-790 4753 V 29 w(FR/helpfile.tt2)p Black 232 5334 1146
+b(Example:)315 4753 y Fq(/mail)p 540 4753 27 4 v 30 w(tt2/fr)p
+834 4753 V 29 w(FR/helpfile.tt2)p Black 232 5334 1146
 4 v 323 5390 a Fn(1)352 5334 y
 SDict begin H.S end
  352 5334 a Black Black
@@ -43329,11 +43373,11 @@ SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
  2450 3522 a Fv(,)2492 3523 y
 SDict begin H.S end
  2492 3523 a Black -1 x
-Fv(101)p Black 2616 3465 a
+Fv(102)p Black 2616 3465 a
 SDict begin H.R end
  2616 3465 a 2616 3522 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.101) cvn H.B /ANN pdfmark end
+/Dest (page.102) cvn H.B /ANN pdfmark end
  2616
 3522 a 1706 3622 a Fq(filter)18 b Fv(list)k(parameter)m(,)2481
 3624 y
@@ -45493,15 +45537,24 @@ SDict begin H.R end
  2482 3232 a 2482 3289 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.55) cvn H.B /ANN pdfmark end
- 2482 3289 a 1706
-3391 a Fq(mail)p 1887 3391 27 4 v 30 w(tt2/authorizatio)o(n)p
-2664 3391 V 25 w(reject.tt2)2038 3490 y Fv(\002le,)2186
-3491 y
+ 2482 3289 a Fv(,)2524
+3290 y
 SDict begin H.S end
- 2186 3491 a Black -1 x Fv(277)p Black 2310 3434
+ 2524 3290 a Black -1 x Fv(101)p Black 2648 3232
 a
 SDict begin H.R end
- 2310 3434 a 2310 3490 a
+ 2648 3232 a 2648 3289 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.101) cvn H.B /ANN pdfmark end
+ 2648 3289 a 1706 3391 a Fq(mail)p
+1887 3391 27 4 v 30 w(tt2/authorizatio)o(n)p 2664 3391
+V 25 w(reject.tt2)2038 3490 y Fv(\002le,)2186 3491 y
+SDict begin H.S end
+
+2186 3491 a Black -1 x Fv(277)p Black 2310 3434 a
+SDict begin H.R end
+ 2310
+3434 a 2310 3490 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.277) cvn H.B /ANN pdfmark end
  2310 3490 a 1706 3592 a Fq(mail)p
@@ -50755,7 +50808,7 @@ SDict begin H.R end
 1174 a 1140 1230 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.28) cvn H.B /ANN pdfmark end
- 1140 1230 a 656 1330 a Fq(sympa-5.3a.7/)15
+ 1140 1230 a 656 1330 a Fq(sympa-5.3a.8/)15
 b Fv(directory)-5 b(,)1579 1331 y
 SDict begin H.S end
  1579 1331 a Black -1
@@ -52440,465 +52493,474 @@ SDict begin H.R end
  965 4256 a 965 4313 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.55) cvn H.B /ANN pdfmark end
- 965 4313 a 232 4413 a Fq(web)p
-369 4413 27 4 v 31 w(tt2/error.tt2)15 b Fv(\002le,)1130
-4414 y
+ 965 4313 a Fv(,)1006 4314
+y
 SDict begin H.S end
- 1130 4414 a Black -1 x Fv(277)p Black 1254 4356
-a
+ 1006 4314 a Black -1 x Fv(101)p Black 1131 4256 a
 SDict begin H.R end
- 1254 4356 a 1254 4413 a
+ 1131
+4256 a 1131 4313 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.101) cvn H.B /ANN pdfmark end
+ 1131 4313 a 232 4413 a Fq(web)p 369
+4413 27 4 v 31 w(tt2/error.tt2)15 b Fv(\002le,)1130 4414
+y
+SDict begin H.S end
+ 1130 4414 a Black -1 x Fv(277)p Black 1254 4356 a
+SDict begin H.R end
+ 1254
+4356 a 1254 4413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.277) cvn H.B /ANN pdfmark end
- 1254 4413 a Fv(,)1296 4414
-y
+ 1254 4413 a Fv(,)1296 4414 y
 SDict begin H.S end
- 1296 4414 a Black -1 x Fv(280)p Black 1420 4356 a
+ 1296
+4414 a Black -1 x Fv(280)p Black 1420 4356 a
 SDict begin H.R end
- 1420
-4356 a 1420 4413 a
+ 1420 4356
+a 1420 4413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.280) cvn H.B /ANN pdfmark end
- 1420 4413 a 232 4513 a Fq(web)p 369
-4513 27 4 v 31 w(tt2/notice.tt2)g Fv(\002le,)1173 4514
-y
+ 1420 4413 a 232 4513 a Fq(web)p 369 4513
+27 4 v 31 w(tt2/notice.tt2)g Fv(\002le,)1173 4514 y
 SDict begin H.S end
- 1173 4514 a Black -1 x Fv(277)p Black 1298 4456 a
+ 1173
+4514 a Black -1 x Fv(277)p Black 1298 4456 a
 SDict begin H.R end
- 1298
-4456 a 1298 4513 a
+ 1298 4456
+a 1298 4513 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.277) cvn H.B /ANN pdfmark end
  1298 4513 a Fv(,)1339 4514 y
 SDict begin H.S end
- 1339
-4514 a Black -1 x Fv(280)p Black 1464 4456 a
+ 1339 4514
+a Black -1 x Fv(280)p Black 1464 4456 a
 SDict begin H.R end
- 1464 4456
-a 1464 4513 a
+ 1464 4456 a 1464
+4513 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.280) cvn H.B /ANN pdfmark end
- 1464 4513 a 232 4613 a Fq(welcome.tt2)i
-Fv(\002le,)880 4613 y
+ 1464 4513 a 232 4613 a Fq(welcome.tt2)i Fv(\002le,)880
+4613 y
 SDict begin H.S end
- 880 4613 a Black Fv(22)p Black
-963 4556 a
+ 880 4613 a Black Fv(22)p Black 963 4556 a
 SDict begin H.R end
- 963 4556 a 963 4613 a
+ 963
+4556 a 963 4613 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.22) cvn H.B /ANN pdfmark end
- 963 4613 a 232 4713
-a Fq(~welcome[.mime])e Fv(\002le,)1055 4713 y
+ 963 4613 a 232 4713 a Fq(~welcome[.mime])e
+Fv(\002le,)1055 4713 y
 SDict begin H.S end
- 1055 4713
-a Black Fv(242)p Black 1179 4657 a
+ 1055 4713 a Black Fv(242)p Black
+1179 4657 a
 SDict begin H.R end
- 1179 4657 a 1179 4713
-a
+ 1179 4657 a 1179 4713 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.242) cvn H.B /ANN pdfmark end
- 1179 4713 a 232 4813 a Fq(welcome)p 545 4813 27 4 v
-29 w(return)p 838 4813 V 29 w(path)142 b Fv(con\002guration)565
-4913 y(k)o(e)o(yw)o(ord,)894 4914 y
+ 1179 4713 a 232 4813
+a Fq(welcome)p 545 4813 27 4 v 29 w(return)p 838 4813
+V 29 w(path)142 b Fv(con\002guration)565 4913 y(k)o(e)o(yw)o(ord,)894
+4914 y
 SDict begin H.S end
- 894 4914 a Black
--1 x Fv(65)p Black 977 4856 a
+ 894 4914 a Black -1 x Fv(65)p Black 977 4856 a
 SDict begin H.R end
- 977 4856 a 977 4913 a
+
+977 4856 a 977 4913 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.65) cvn H.B /ANN pdfmark end
- 977
-4913 a Fv(,)1018 4913 y
+ 977 4913 a Fv(,)1018 4913 y
 SDict begin H.S end
- 1018 4913 a Black Fv(211)p Black
-1143 4856 a
+ 1018
+4913 a Black Fv(211)p Black 1143 4856 a
 SDict begin H.R end
- 1143 4856 a 1143 4913 a
+ 1143 4856 a 1143
+4913 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.211) cvn H.B /ANN pdfmark end
- 1143 4913 a 232 5013
-a Fq(welcome)p 545 5013 27 4 v 29 w(return)p 838 5013
-V 29 w(path)66 b Fv(list)j(parameter)m(,)565 5113 y
+ 1143 4913 a 232 5013 a Fq(welcome)p 545 5013 27
+4 v 29 w(return)p 838 5013 V 29 w(path)66 b Fv(list)j(parameter)m(,)565
+5113 y
 SDict begin H.S end
- 565
-5113 a Black Fv(211)p Black 689 5056 a
+ 565 5113 a Black Fv(211)p Black 689 5056 a
 SDict begin H.R end
- 689 5056 a 689
-5113 a
+ 689
+5056 a 689 5113 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.211) cvn H.B /ANN pdfmark end
- 689 5113 a 232 5213 a Fq(what)20 b Fv(list)h(parameter)m(,)920
-5214 y
+ 689 5113 a 232 5213 a Fq(what)20 b
+Fv(list)h(parameter)m(,)920 5214 y
 SDict begin H.S end
- 920 5214 a Black -1 x Fv(267)p Black 1044 5156
-a
+ 920 5214 a Black -1
+x Fv(267)p Black 1044 5156 a
 SDict begin H.R end
  1044 5156 a 1044 5213 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.267) cvn H.B /ANN pdfmark end
- 1044 5213 a Fv(\226)1086 5214
-y
+
+1044 5213 a Fv(\226)1086 5214 y
 SDict begin H.S end
- 1086 5214 a Black -1 x Fv(270)p Black 1211 5156 a
+ 1086 5214 a Black -1
+x Fv(270)p Black 1211 5156 a
 SDict begin H.R end
- 1211
-5156 a 1211 5213 a
+ 1211 5156 a 1211 5213 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.270) cvn H.B /ANN pdfmark end
- 1211 5213 a 232 5313 a Fq(WHICH)e
-Fv(mail)i(command,)1008 5313 y
+
+1211 5213 a 232 5313 a Fq(WHICH)e Fv(mail)i(command,)1008
+5313 y
 SDict begin H.S end
- 1008 5313 a Black Fv(242)p
-Black 1133 5256 a
+ 1008 5313 a Black Fv(242)p Black 1133 5256 a
 SDict begin H.R end
- 1133 5256 a 1133 5313 a
+ 1133
+5256 a 1133 5313 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.242) cvn H.B /ANN pdfmark end
- 1133 5313 a
-232 5413 a Fq(which)e Fv(list)i(parameter)m(,)964 5414
-y
+ 1133 5313 a 232 5413 a Fq(which)e
+Fv(list)i(parameter)m(,)964 5414 y
 SDict begin H.S end
- 964 5414 a Black -1 x Fv(264)p Black 1088 5356 a
+ 964 5414 a Black -1
+x Fv(264)p Black 1088 5356 a
 SDict begin H.R end
- 1088
-5356 a 1088 5413 a
+ 1088 5356 a 1088 5413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.264) cvn H.B /ANN pdfmark end
- 1088 5413 a Fv(,)1130 5414 y
+
+1088 5413 a Fv(,)1130 5414 y
 SDict begin H.S end
- 1130
-5414 a Black -1 x Fv(268)p Black 1254 5356 a
+ 1130 5414 a Black -1 x Fv(268)p
+Black 1254 5356 a
 SDict begin H.R end
- 1254 5356
-a 1254 5413 a
+ 1254 5356 a 1254 5413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.268) cvn H.B /ANN pdfmark end
- 1254 5413 a Fv(,)1296 5415 y
+ 1254 5413 a
+Fv(,)1296 5415 y
 SDict begin H.S end
- 1296 5415
-a Black -2 x Fv(269)p Black 1420 5356 a
+ 1296 5415 a Black -2 x Fv(269)p Black
+1420 5356 a
 SDict begin H.R end
- 1420 5356 a 1420
-5413 a
+ 1420 5356 a 1420 5413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.269) cvn H.B /ANN pdfmark end
- 1420 5413 a Fv(,)1462 5414 y
+ 1420 5413 a Fv(,)1462
+5414 y
 SDict begin H.S end
- 1462 5414 a Black
--1 x Fv(271)p Black 1586 5356 a
-SDict begin H.R end
- 1586 5356 a 1586 5413
+ 1462 5414 a Black -1 x Fv(271)p Black 1586 5356
 a
+SDict begin H.R end
+ 1586 5356 a 1586 5413 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.271) cvn H.B /ANN pdfmark end
- 1586 5413 a Black Black 1706 531 a Fq(who)f Fv(list)h(parameter)m(,)
-2350 532 y
+ 1586 5413 a Black Black 1706
+531 a Fq(who)f Fv(list)h(parameter)m(,)2350 532 y
 SDict begin H.S end
- 2350 532 a Black -1 x Fv(254)p Black 2475
-475 a
+ 2350
+532 a Black -1 x Fv(254)p Black 2475 475 a
 SDict begin H.R end
- 2475 475 a 2475 531 a
+ 2475 475 a
+2475 531 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.254) cvn H.B /ANN pdfmark end
- 2475 531 a Fv(,)2516 532
-y
+ 2475 531 a Fv(,)2516 532 y
 SDict begin H.S end
- 2516 532 a Black -1 x Fv(255)p Black 2641 475 a
+ 2516 532 a Black
+-1 x Fv(255)p Black 2641 475 a
 SDict begin H.R end
- 2641
-475 a 2641 531 a
+ 2641 475 a 2641 531 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.255) cvn H.B /ANN pdfmark end
- 2641 531 a 1706 631 a Fs(WWSympa)p Fv(,)2106
-632 y
-SDict begin H.S end
- 2106 632 a Black -1 x Fv(17)p Black 2189 574 a
-SDict begin H.R end
 
-2189 574 a 2189 631 a
+2641 531 a 1706 631 a Fs(WWSympa)p Fv(,)2106 632 y
+SDict begin H.S end
+ 2106
+632 a Black -1 x Fv(17)p Black 2189 574 a
+SDict begin H.R end
+ 2189 574 a
+2189 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.17) cvn H.B /ANN pdfmark end
  2189 631 a Fv(,)2230 631 y
 SDict begin H.S end
- 2230
-631 a Black Fv(22)p Black 2313 574 a
+ 2230 631 a Black
+Fv(22)p Black 2313 574 a
 SDict begin H.R end
- 2313 574 a 2313
-631 a
+ 2313 574 a 2313 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.22) cvn H.B /ANN pdfmark end
- 2313 631 a Fv(,)2354 632 y
+ 2313 631
+a Fv(,)2354 632 y
 SDict begin H.S end
- 2354 632 a Black -1
-x Fv(23)p Black 2437 574 a
+ 2354 632 a Black -1 x Fv(23)p Black
+2437 574 a
 SDict begin H.R end
  2437 574 a 2437 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.23) cvn H.B /ANN pdfmark end
- 2437
-631 a Fv(,)2477 632 y
-SDict begin H.S end
- 2477 632 a Black -1 x Fv(30)p Black
-2560 574 a
-SDict begin H.R end
- 2560 574 a 2560 631 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.30) cvn H.B /ANN pdfmark end
- 2560 631 a Fv(,)2601
+ 2437 631 a Fv(,)2477
 632 y
 SDict begin H.S end
- 2601 632 a Black -1 x Fv(47)p Black 2684 574 a
+ 2477 632 a Black -1 x Fv(30)p Black 2560 574 a
 SDict begin H.R end
 
-2684 574 a 2684 631 a
+2560 574 a 2560 631 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.30) cvn H.B /ANN pdfmark end
+ 2560 631 a Fv(,)2601 632 y
+SDict begin H.S end
+ 2601
+632 a Black -1 x Fv(47)p Black 2684 574 a
+SDict begin H.R end
+ 2684 574 a
+2684 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.47) cvn H.B /ANN pdfmark end
  2684 631 a Fv(,)2725 632 y
 SDict begin H.S end
- 2725
-632 a Black -1 x Fv(51)p Black 2808 574 a
+ 2725 632 a Black
+-1 x Fv(51)p Black 2808 574 a
 SDict begin H.R end
- 2808 574 a
-2808 631 a
+ 2808 574 a 2808 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.51) cvn H.B /ANN pdfmark end
- 2808 631 a Fv(,)2849 633 y
+ 2808
+631 a Fv(,)2849 633 y
 SDict begin H.S end
- 2849 633 a Black
--2 x Fv(89)p Black 2932 574 a
+ 2849 633 a Black -2 x Fv(89)p Black
+2932 574 a
 SDict begin H.R end
  2932 574 a 2932 631 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.89) cvn H.B /ANN pdfmark end
- 2932
-631 a Fv(,)2972 633 y
+ 2932 631 a Fv(,)2972
+633 y
 SDict begin H.S end
- 2972 633 a Black -2 x Fv(91)p Black
-3055 574 a
-SDict begin H.R end
- 3055 574 a 3055 631 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.91) cvn H.B /ANN pdfmark end
- 3055 631 a Fv(\226)2038
-733 y
-SDict begin H.S end
- 2038 733 a Black -2 x Fv(95)p Black 2121 674 a
+ 2972 633 a Black -2 x Fv(91)p Black 3055 574 a
 SDict begin H.R end
 
-2121 674 a 2121 731 a
+3055 574 a 3055 631 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.91) cvn H.B /ANN pdfmark end
+ 3055 631 a Fv(\226)2038 733 y
+SDict begin H.S end
+ 2038
+733 a Black -2 x Fv(95)p Black 2121 674 a
+SDict begin H.R end
+ 2121 674 a
+2121 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.95) cvn H.B /ANN pdfmark end
  2121 731 a Fv(,)2170 733 y
 SDict begin H.S end
- 2170
-733 a Black -2 x Fv(97)p Black 2253 674 a
+ 2170 733 a Black
+-2 x Fv(97)p Black 2253 674 a
 SDict begin H.R end
- 2253 674 a
-2253 731 a
+ 2253 674 a 2253 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.97) cvn H.B /ANN pdfmark end
- 2253 731 a Fv(,)2301 733 y
+ 2253
+731 a Fv(,)2301 733 y
 SDict begin H.S end
- 2301 733 a Black
--2 x Fv(98)p Black 2384 674 a
+ 2301 733 a Black -2 x Fv(98)p Black
+2384 674 a
 SDict begin H.R end
  2384 674 a 2384 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.98) cvn H.B /ANN pdfmark end
- 2384
-731 a Fv(,)2433 732 y
+ 2384 731 a Fv(,)2433
+732 y
 SDict begin H.S end
- 2433 732 a Black -1 x Fv(103)p
-Black 2557 674 a
+ 2433 732 a Black -1 x Fv(103)p Black 2557 674 a
 SDict begin H.R end
- 2557 674 a 2557 731 a
+
+2557 674 a 2557 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.103) cvn H.B /ANN pdfmark end
- 2557 731 a Fv(,)2606
-731 y
+ 2557 731 a Fv(,)2606 731 y
 SDict begin H.S end
- 2606 731 a Black Fv(121)p Black 2730 674 a
+ 2606
+731 a Black Fv(121)p Black 2730 674 a
 SDict begin H.R end
- 2730
-674 a 2730 731 a
+ 2730 674 a 2730
+731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.121) cvn H.B /ANN pdfmark end
  2730 731 a Fv(,)2778 732 y
 SDict begin H.S end
- 2778 732
-a Black -1 x Fv(132)p Black 2903 674 a
+ 2778 732 a Black -1
+x Fv(132)p Black 2903 674 a
 SDict begin H.R end
- 2903 674 a 2903
-731 a
+ 2903 674 a 2903 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.132) cvn H.B /ANN pdfmark end
- 2903 731 a Fv(,)2951 732 y
+ 2903
+731 a Fv(,)2951 732 y
 SDict begin H.S end
- 2951 732 a Black -1
-x Fv(147)p Black 3076 674 a
+ 2951 732 a Black -1 x Fv(147)p
+Black 3076 674 a
 SDict begin H.R end
  3076 674 a 3076 731 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.147) cvn H.B /ANN pdfmark end
- 3076
-731 a Fv(,)2038 832 y
+ 3076 731 a Fv(,)2038
+832 y
 SDict begin H.S end
- 2038 832 a Black -2 x Fv(149)p
-Black 2163 774 a
-SDict begin H.R end
- 2163 774 a 2163 830 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.149) cvn H.B /ANN pdfmark end
- 2163 830 a Fv(,)2221
-831 y
-SDict begin H.S end
- 2221 831 a Black -1 x Fv(150)p Black 2345 774 a
+ 2038 832 a Black -2 x Fv(149)p Black 2163 774 a
 SDict begin H.R end
 
-2345 774 a 2345 830 a
+2163 774 a 2163 830 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.149) cvn H.B /ANN pdfmark end
+ 2163 830 a Fv(,)2221 831 y
+SDict begin H.S end
+ 2221
+831 a Black -1 x Fv(150)p Black 2345 774 a
+SDict begin H.R end
+ 2345 774 a
+2345 830 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.150) cvn H.B /ANN pdfmark end
  2345 830 a Fv(,)2403 831 y
 SDict begin H.S end
- 2403
-831 a Black -1 x Fv(152)p Black 2528 774 a
+ 2403 831 a Black
+-1 x Fv(152)p Black 2528 774 a
 SDict begin H.R end
- 2528 774 a
-2528 830 a
+ 2528 774 a 2528 830 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.152) cvn H.B /ANN pdfmark end
- 2528 830 a Fv(,)2586 831 y
+
+2528 830 a Fv(,)2586 831 y
 SDict begin H.S end
- 2586 831 a Black
--1 x Fv(153)p Black 2711 774 a
+ 2586 831 a Black -1 x Fv(153)p
+Black 2711 774 a
 SDict begin H.R end
  2711 774 a 2711 830 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.153) cvn H.B /ANN pdfmark end
-
-2711 830 a Fv(,)2769 831 y
-SDict begin H.S end
- 2769 831 a Black -1 x Fv(162)p
-Black 2893 774 a
-SDict begin H.R end
- 2893 774 a 2893 830 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.162) cvn H.B /ANN pdfmark end
- 2893 830 a Fv(,)2951
+ 2711 830 a Fv(,)2769
 831 y
 SDict begin H.S end
- 2951 831 a Black -1 x Fv(163)p Black 3076 774 a
+ 2769 831 a Black -1 x Fv(162)p Black 2893 774 a
 SDict begin H.R end
 
-3076 774 a 3076 830 a
+2893 774 a 2893 830 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.162) cvn H.B /ANN pdfmark end
+ 2893 830 a Fv(,)2951 831 y
+SDict begin H.S end
+ 2951
+831 a Black -1 x Fv(163)p Black 3076 774 a
+SDict begin H.R end
+ 3076 774 a
+3076 830 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.163) cvn H.B /ANN pdfmark end
  3076 830 a Fv(,)2038 932 y
 SDict begin H.S end
- 2038
-932 a Black -2 x Fv(189)p Black 2163 873 a
+ 2038 932 a Black
+-2 x Fv(189)p Black 2163 873 a
 SDict begin H.R end
- 2163 873 a
-2163 930 a
+ 2163 873 a 2163 930 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.189) cvn H.B /ANN pdfmark end
- 2163 930 a Fv(,)2204 932 y
+
+2163 930 a Fv(,)2204 932 y
 SDict begin H.S end
- 2204 932 a Black
--2 x Fv(190)p Black 2329 873 a
+ 2204 932 a Black -2 x Fv(190)p
+Black 2329 873 a
 SDict begin H.R end
  2329 873 a 2329 930 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.190) cvn H.B /ANN pdfmark end
-
-2329 930 a Fv(,)2370 932 y
+ 2329 930 a Fv(,)2370
+932 y
 SDict begin H.S end
- 2370 932 a Black -2 x Fv(219)p
-Black 2495 873 a
+ 2370 932 a Black -2 x Fv(219)p Black 2495 873 a
 SDict begin H.R end
- 2495 873 a 2495 930 a
+
+2495 873 a 2495 930 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.219) cvn H.B /ANN pdfmark end
- 2495 930 a 1706
-1029 a Fq(wwsympa)d Fv(directory)-5 b(,)2368 1030 y
+ 2495 930 a 1706 1029 a Fq(wwsympa)d
+Fv(directory)-5 b(,)2368 1030 y
 SDict begin H.S end
- 2368
-1030 a Black -1 x Fv(31)p Black 2451 973 a
+ 2368 1030 a Black -1
+x Fv(31)p Black 2451 973 a
 SDict begin H.R end
- 2451 973 a
-2451 1029 a
+ 2451 973 a 2451 1029 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.31) cvn H.B /ANN pdfmark end
- 2451 1029 a 1706 1129 a Fq(wwsympa.conf)25
-b Fv(\002le,)2416 1130 y
+ 2451
+1029 a 1706 1129 a Fq(wwsympa.conf)25 b Fv(\002le,)2416
+1130 y
 SDict begin H.S end
- 2416 1130 a Black -1 x Fv(23)p
-Black 2499 1072 a
+ 2416 1130 a Black -1 x Fv(23)p Black 2499 1072
+a
 SDict begin H.R end
  2499 1072 a 2499 1129 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.23) cvn H.B /ANN pdfmark end
- 2499 1129 a
-Fv(,)2550 1130 y
-SDict begin H.S end
- 2550 1130 a Black -1 x Fv(31)p Black
-2633 1072 a
-SDict begin H.R end
- 2633 1072 a 2633 1129 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.31) cvn H.B /ANN pdfmark end
- 2633 1129 a Fv(,)2684
-1130 y
-SDict begin H.S end
- 2684 1130 a Black -1 x Fv(33)p Black 2767 1072
-a
-SDict begin H.R end
- 2767 1072 a 2767 1129 a
-SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
-/Dest (page.33) cvn H.B /ANN pdfmark end
- 2767 1129 a Fv(,)2818 1130
+ 2499 1129 a Fv(,)2550 1130
 y
 SDict begin H.S end
- 2818 1130 a Black -1 x Fv(43)p Black 2901 1072 a
+ 2550 1130 a Black -1 x Fv(31)p Black 2633 1072 a
 SDict begin H.R end
- 2901
-1072 a 2901 1129 a
+ 2633
+1072 a 2633 1129 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.31) cvn H.B /ANN pdfmark end
+ 2633 1129 a Fv(,)2684 1130 y
+SDict begin H.S end
+ 2684
+1130 a Black -1 x Fv(33)p Black 2767 1072 a
+SDict begin H.R end
+ 2767 1072
+a 2767 1129 a
+SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
+/Dest (page.33) cvn H.B /ANN pdfmark end
+ 2767 1129 a Fv(,)2818 1130 y
+SDict begin H.S end
+ 2818 1130
+a Black -1 x Fv(43)p Black 2901 1072 a
+SDict begin H.R end
+ 2901 1072 a 2901
+1129 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.43) cvn H.B /ANN pdfmark end
  2901 1129 a Fv(,)2951 1130 y
 SDict begin H.S end
- 2951
-1130 a Black -1 x Fv(145)p Black 3076 1072 a
+ 2951 1130 a Black
+-1 x Fv(145)p Black 3076 1072 a
 SDict begin H.R end
- 3076 1072
-a 3076 1129 a
+ 3076 1072 a 3076 1129
+a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.145) cvn H.B /ANN pdfmark end
  3076 1129 a Fv(,)2038 1229 y
 SDict begin H.S end
- 2038 1229
-a Black Fv(212)p Black 2163 1172 a
+ 2038 1229 a Black Fv(212)p
+Black 2163 1172 a
 SDict begin H.R end
- 2163 1172 a 2163 1229
-a
+ 2163 1172 a 2163 1229 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.212) cvn H.B /ANN pdfmark end
- 2163 1229 a Fv(,)2204 1230 y
+ 2163 1229 a
+Fv(,)2204 1230 y
 SDict begin H.S end
- 2204 1230 a Black -1 x
-Fv(227)p Black 2329 1172 a
+ 2204 1230 a Black -1 x Fv(227)p Black
+2329 1172 a
 SDict begin H.R end
  2329 1172 a 2329 1229 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.227) cvn H.B /ANN pdfmark end
- 2329
-1229 a 1706 1328 a Fq(WWSympa.fcgi)16 b Fv(\002le,)2398
-1330 y
+ 2329 1229 a 1706
+1328 a Fq(WWSympa.fcgi)16 b Fv(\002le,)2398 1330 y
 SDict begin H.S end
- 2398 1330 a Black -2 x Fv(91)p Black 2481 1272
-a
+ 2398
+1330 a Black -2 x Fv(91)p Black 2481 1272 a
 SDict begin H.R end
- 2481 1272 a 2481 1328 a
+ 2481 1272
+a 2481 1328 a
 SDict begin [ /Color [1 0 0] /H /I /Border [0 0 12] /Subtype /Link
 /Dest (page.91) cvn H.B /ANN pdfmark end
  2481 1328 a 1706 1428 a Fv(wwsympa.fcgi,)2234

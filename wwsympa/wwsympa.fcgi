@@ -477,6 +477,7 @@ my %in_regexp = (
 		 'arc_file' => '[^<>\\\*\$]+',
 		 'path' => '[^<>\\\*\$]+',
 		 'uploaded_file' => '[^<>\*\$]+', # Could be precised (use of "'")
+		 'unzipped_file' => '[^<>\*\$]+',
 		 'dir' => '[^<>\\\*\$]+',
 		 'name_doc' => '[^<>\\\*\$]+',
 		 'shortname' => '[^<>\\\*\$]+',
@@ -557,8 +558,8 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'd_install_shared' => {'id' => 'qencode'},
 		 'd_read' => {'path' => 'qencode'},
 		 'd_create_dir' => {'name_doc' => 'qencode', 'path' => 'qencode'},
-		 'd_upload' => {'path' => 'qencode', 'uploaded_file' => 'qencode'},
-		 'd_unzip' => {'path' => 'qencode', 'unzipped_file' => 'qencode'},
+		 'd_upload' => {'path' => 'qencode'},
+		 'd_unzip' => {'path' => 'qencode'},
 		 'd_editfile' => {'path' => 'qencode'},
 		 'd_properties' => {'path' => 'qencode'},
 		 'd_overwrite' => {'path' => 'qencode'},
@@ -5312,27 +5313,30 @@ sub do_skinsedit {
 	 
          $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
 	 
-	 my $path = $1; # path without the filename
+	 my $long_path = $1; # path without the filename
 	 my $fname = $3; # the filename with .moderate
+	 my $path = $long_path; $path =~ s/^.*\/shared//; #the path for the user, without the filename
 	 my $visible_fname = &make_visible_path($fname); # the filename without .moderate
 	 my $visible_path = $path;
-	 $visible_path =~ s/^.*\/shared//; #the path for the user, without the filename
+	 $visible_path = &make_visible_path($visible_path);
 
 	 my %desc_hash;
-	 if ($d  && (-e "$path.desc.$fname")){
-	     %desc_hash = &get_desc_file("$path.desc.$fname");
+	 if ($d  && (-e "$long_path.desc.$fname")){
+	     %desc_hash = &get_desc_file("$long_path.desc.$fname");
 	 }
 
 	 my @info = stat $d;
 
 	 my $doc = {};
-	 $doc->{'visible_path'} = "$visible_path";
-         $doc->{'visible_fname'} = "$visible_fname";
-	 $doc->{'fname'} = "$fname";
+	 $doc->{'visible_path'} = $visible_path;
+         $doc->{'visible_fname'} = $visible_fname;
+	 $doc->{'escaped_fname'} = &tools::escape_docname($fname);
+	 $doc->{'escaped_path'} = &tools::escape_docname($path);
+	 $doc->{'fname'} = $fname;
 	 $doc->{'size'} = (-s $d)/1000; 
 	 $doc->{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
 	 $doc->{'author'} = $desc_hash{'email'};
-         $doc->{'path'} = $d;
+         $doc->{'path'} = $path;
 	
 	 push(@{$param->{'info_doc_mod'}},$doc)
      }
@@ -5348,7 +5352,7 @@ sub do_skinsedit {
 
 ### installation of moderated documents of shared
  sub do_d_install_shared {
-     &wwslog('info', 'do_d_install_shared()');
+     &wwslog('info', 'do_d_install_shared(%s)', $in{'id'});
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -5427,28 +5431,33 @@ sub do_skinsedit {
 
 	 $file = "$shareddir$id";
          $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-	 $slash_path = $1;
+	 $slash_path = $1;	 
 	 $fname = $3;
+	 my $new_fname; ## new filename without the .moderate extension
+	 if ($fname =~ /^\.(.+)\.moderate$/) {
+	     $new_fname = $1;
+	 }
+	 my $visible_path = &make_visible_path($slash_path);
 	 $visible_fname = &make_visible_path($fname);
 	 
      	 if (-e "$file") {
 	     
 	     # rename the old file in .old if exists
-	     if (-e "$shareddir$slash_path$visible_fname") {
-		 unless (rename "$shareddir$slash_path$visible_fname","$shareddir$slash_path$visible_fname.old"){
-		     &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path$visible_fname", 
-									'new'=>"$shareddir$slash_path$visible_fname.old" },
+	     if (-e "$shareddir$slash_path$new_fname") {
+		 unless (rename "$shareddir$slash_path$new_fname","$shareddir$slash_path$new_fname.old"){
+		     &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path$new_fname", 
+									'new'=>"$shareddir$slash_path$new_fname.old" },
 						$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		     &wwslog('err',"do_d_install_shared : Failed to rename $shareddir$slash_path$visible_fname to .old : %s",$!);
+		     &wwslog('err',"do_d_install_shared : Failed to rename $shareddir$slash_path$new_fname to .old : %s",$!);
 		     &web_db_log({'status' => 'error',
 				  'error_type' => 'internal'});
 		     return undef;
 		 }
-		 unless (rename "$shareddir$slash_path.desc.$visible_fname","$shareddir$slash_path.desc.$visible_fname.old"){
-		     &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path.desc.$visible_fname", 
-									'new'=>"$shareddir$slash_path.desc.$visible_fname.old"},
+		 unless (rename "$shareddir$slash_path.desc.$new_fname","$shareddir$slash_path.desc.$new_fname.old"){
+		     &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path.desc.$new_fname", 
+									'new'=>"$shareddir$slash_path.desc.$new_fname.old"},
 						$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		     &wwslog('err',"do_d_install_shared : Failed to rename shareddir$slash_path.desc.$visible_fname to .old : %s",$!);
+		     &wwslog('err',"do_d_install_shared : Failed to rename shareddir$slash_path.desc.$new_fname to .old : %s",$!);
 		     &web_db_log({'status' => 'error',
 				  'error_type' => 'internal'});
 		     return undef;
@@ -5456,20 +5465,20 @@ sub do_skinsedit {
 		 
 	     }
 
-	     unless (rename ("$shareddir$id","$shareddir$slash_path$visible_fname")){
+	     unless (rename ("$shareddir$id","$shareddir$slash_path$new_fname")){
 		 &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$id", 
-								    'new'=>"$shareddir$slash_path$visible_fname"},
+								    'new'=>"$shareddir$slash_path$new_fname"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$slash_path$visible_fname : $!");
+		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$slash_path$new_fname : $!");
 		 &web_db_log({'status' => 'error',
 			      'error_type' => 'internal'});
 		 return undef; 
 	     }
-	     unless (rename ("$shareddir$slash_path.desc.$fname","$shareddir$slash_path.desc.$visible_fname")){
-		 &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path.desc.$fname", 
-								    'new'=>"$shareddir$slash_path.desc.$visible_fname"},
+	     unless (rename ("$shareddir$slash_path.desc.$fname","$shareddir$slash_path.desc.$new_fname")){
+		 &report::reject_report_web('intern','rename_file',{'old'=>"$shareddir$slash_path.desc.$fname",
+								    'new'=>"$shareddir$slash_path.desc.$new_fname"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$slash_path$visible_fname : $!");
+		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$slash_path$new_fname : $!");
 		 &web_db_log({'status' => 'error',
 			      'error_type' => 'internal'});
 		 return undef; 
@@ -5478,7 +5487,7 @@ sub do_skinsedit {
 	     # send a message to the author
 	     my %context;
 	     $context{'installed_by'} = $param->{'user'}{'email'};
-	     $context{'filename'} = "$slash_path$visible_fname";
+	     $context{'filename'} = "$visible_path$visible_fname";
 	     
 	     my %desc_hash;
 	     if ($id  && (-e "$shareddir$slash_path.desc.$visible_fname")){
@@ -5499,7 +5508,7 @@ sub do_skinsedit {
 
 ### reject moderated documents of shared
  sub do_d_reject_shared {
-     &wwslog('info', 'do_d_reject_shared()');
+     &wwslog('info', 'do_d_reject_shared(%s)', $in{'id'});
   
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -5550,13 +5559,14 @@ sub do_skinsedit {
 	 $slash_path = $1;
 	 $fname = $3;
 	 $visible_fname = &make_visible_path($fname); 
+	 my $visible_path = &make_visible_path($slash_path); 
 
 	 unless ($in{'quiet'}) {
 	     
 	     my %context;
 	     my $sender;
 	     $context{'rejected_by'} = $param->{'user'}{'email'};
-	     $context{'filename'} = "$slash_path$visible_fname";
+	     $context{'filename'} = "$visible_path$visible_fname";
 	     
 	     my %desc_hash;
 	     if ($id  && (-e "$shareddir$slash_path.desc.$fname")){
@@ -11763,21 +11773,22 @@ sub do_d_savefile {
      my $fn = $in{'uploaded_file'};
 
      # name of the file, without path
-     my $fname;
+     my ($fname, $visible_fname);
      if ($fn =~ /([^\/\\]+)$/) {
-	 $fname = $1; 
+	 $fname = &tools::qencode_filename($1);
+	 $visible_fname = &make_visible_path($fname); 
      }
      
      # param from d_upload.tt2
      if ($in{'shortname'}){
 	 $fname = $in{'shortname'};
      }
-
      &wwslog('info', 'do_d_upload(%s/%s)', $in{'path'},$fname);
 
      # Variables 
      my $path = &no_slash_end($in{'path'});
-     
+     my $visible_path = &make_visible_path($path); 
+
      # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
      
@@ -11797,7 +11808,7 @@ sub do_d_savefile {
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	 &wwslog('err','do_d_upload : no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
@@ -11806,7 +11817,7 @@ sub do_d_savefile {
      unless ($fname) {
 	 &report::reject_report_web('user','no_name',{},$param->{'action'},$list);
 	 &wwslog('err',"do_d_upload : No file specified to upload");
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
@@ -11815,7 +11826,7 @@ sub do_d_savefile {
 	 if ($list->get_shared_size() >= $list->{'admin'}{'shared_doc'}{'quota'} * 1024){
 	     &report::reject_report_web('user','shared_full',{},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'shared_full','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'shared_full','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
      }
@@ -11831,16 +11842,15 @@ sub do_d_savefile {
  #	    $fname !~ /\.desc/) {
 	 &report::reject_report_web('user','incorrect_name',{'name' => $fname},$param->{'action'},$list);
 	 &wwslog('err',"do_d_upload : Unable to create file $fname : incorrect name");
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
-     my $visible_path = &make_visible_path($path); 
      # the file must be uploaded in a directory existing
      unless (-d "$shareddir/$path") {
 	 &report::reject_report_web('user','no_such_document',{'path'=> $visible_path},$param->{'action'},$list);
 	 &wwslog('err',"do_d_upload : $shareddir/$path : not a directory");
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
@@ -11853,7 +11863,7 @@ sub do_d_savefile {
      if ($access_dir{'may'}{'edit'} == 0) {
 	 &report::reject_report_web('auth',$access_dir{'reason'}{'edit'},{},$param->{'action'},$list);
 	 &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
@@ -11895,14 +11905,14 @@ sub do_d_savefile {
 	     my $timeold = time - $info[10];
 	     
 	     if ($timeold<=300){
-		 my %desc_hash = &get_desc_file("$longtmpdesc");
+		 my %desc_hash = &get_desc_file($longtmpdesc);
 		 
 		 unless($desc_hash{'email'} eq $param->{'user'}{'email'}){
-		     &report::reject_report_web('user','cannot_upload',{'path' => "$path/$fname",
+		     &report::reject_report_web('user','cannot_upload',{'path' => "$visible_path/$visible_fname",
 									'reason' => "file being uploaded by $desc_hash{'email'} at this time" },
 						$param->{'action'},$list);
 		     &wwslog('err',"do_d_upload : Unable to upload $longtmpname : file being uploaded at this time ");
-		     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		     return undef;
 		 }
 	     }
@@ -11911,7 +11921,7 @@ sub do_d_savefile {
 	 &creation_shared_file($shareddir,$path,$tmpname);
 	 &creation_desc_file($shareddir,$path,$tmpname,%access_file);
 	 
-	 my @info = stat "$longname";
+	 my @info = stat $longname;
 	 $param->{'serial_file'} = $info[9];
 	 $param->{'path'} = $path;
 	 $param->{'shortname'} = $fname;
@@ -11940,7 +11950,7 @@ sub do_d_savefile {
 								'reason' => "file already exists but not yet moderated"},
 					$param->{'action'},$list); 
 	     &wwslog('err',"do_d_upload : Unable to create $longname : file already exists but not yet moderated");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
      }
@@ -11953,7 +11963,7 @@ sub do_d_savefile {
 							     'reason' => "d_access_control"},
 					$param->{'action'},$list); 
 	     &wwslog('err',"do_d_upload : $param->{'user'}{'email'} not authorized to upload a INDEX.HTML file in $path");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
      }
@@ -11966,14 +11976,14 @@ sub do_d_savefile {
 	 unless(-e $longtmpname){
 	     &report::reject_report_web('user','no_uploaded_file',{},$param->{'action'},$list); 
 	     &wwslog('err',"do_d_upload : there isn't any temp file for the uploaded file $fname");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
 	 unless(-e $longtmpdesc){
 	     &report::reject_report_web('user','no_uploaded_file',{},$param->{'action'},$list); 
 	     &wwslog('err',"do_d_upload : there isn't any desc temp file for the uploaded file $fname");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_file','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
      }
 
@@ -11988,7 +11998,7 @@ sub do_d_savefile {
 	 unless (&synchronize("$longname",$in{'serial'})){
 	     &report::reject_report_web('user','synchro_failed',{},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : Synchronization failed for $longname");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'synchro_failed','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'synchro_failed','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
@@ -12004,7 +12014,7 @@ sub do_d_savefile {
 								    'new'=>"$longgoodname.old"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to .old : %s",$longgoodname, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		 return undef;
 	     }
 	     
@@ -12016,7 +12026,7 @@ sub do_d_savefile {
 								    'new'=>"$longgooddesc.old"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to .old : %s", $longgooddesc, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 
 	     # the tmp file
@@ -12025,7 +12035,7 @@ sub do_d_savefile {
 								     'new'=>"$longgoodname"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpname, $longgoodname, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	     
 	     # the tmp desc file
@@ -12034,7 +12044,7 @@ sub do_d_savefile {
 								    'new'=>"$longgooddesc"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpdesc, $longgooddesc, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 
 	 }elsif ($access_dir{'may'}{'edit'} == 0.5 ){	 
@@ -12044,7 +12054,7 @@ sub do_d_savefile {
 								    'new'=>"$longmodname"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpname, $longmodname, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	     
 	     unless (rename "$longtmpdesc","$longmoddesc"){
@@ -12052,7 +12062,7 @@ sub do_d_savefile {
 								    'new'=>"$longmoddesc"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpdesc, $longmoddesc, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	       
  	     unless ($list->send_notify_to_editor('shared_moderated',{'filename' => "$path/$fname",
@@ -12063,7 +12073,7 @@ sub do_d_savefile {
 	 }else {
 	     &report::reject_report_web('auth',$access_dir{'reason'}{'edit'},{},$param->{'action'},$list);
 	     &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 
@@ -12071,7 +12081,7 @@ sub do_d_savefile {
 	 
 	 # message of success
 	 &report::notice_report_web('upload_success', {'path' => $fname},$param->{'action'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      	 return 'd_read';
      }
      
@@ -12085,7 +12095,7 @@ sub do_d_savefile {
 	 unless ($in{'new_name'}) {
 	     &report::reject_report_web('user','missing_arg',{'argument' => 'new name'},$param->{'action'});
 	     &wwslog('err',"do_d_upload : new name missing to rename the uploaded file");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'missing_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'missing_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 if ($in{'new_name'} =~ /^\./
@@ -12093,21 +12103,21 @@ sub do_d_savefile {
 	     || $in{'new_name'} =~ /[~\#\[\]\/]$/) {
 	     &report::reject_report_web('user','incorrect_name',{'name' => $in{'new_name'}},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : Unable to create file $in{'new_name'} : incorrect name");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
 	 if (($fname =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
 	     &report::reject_report_web('user','incorrect_name',{'name' => $in{'new_name'}},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : New file name $in{'new_name'} does not match URL filenames");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'bad_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
 	 if (-e $longnewname){
 	     &report::reject_report_web('user','doc_already_exist',{'name' => $in{'new_name'}},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 
@@ -12115,14 +12125,14 @@ sub do_d_savefile {
 	 if (-e "$shareddir/$path/.$in{'new_name'}.moderate"){
 	     &report::reject_report_web('user','doc_already_exist',{'name' => $in{'new_name'}},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name for a not yet moderated file" );
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 # when a file is being uploaded
 	 if (-e "$shareddir/$path/.$in{'new_name'}.duplicate"){
 	     &report::reject_report_web('user','doc_already_exist',{'name' => $in{'new_name'}},$param->{'action'},$list);
 	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name for a file being uploaded ");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'file_already_exists','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 }
 
 	 # Renaming the tmp file and the desc file
@@ -12133,7 +12143,7 @@ sub do_d_savefile {
 								    'new'=>"$longnewname"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpname, $longnewname, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	     
 	     my $longnewdesc="$shareddir/$path/.desc.$in{'new_name'}";
@@ -12144,7 +12154,7 @@ sub do_d_savefile {
 								    'new'=>"$longnewdesc"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename %s to %s : %s", $longtmpdesc, $longnewdesc, $!);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	 
 	 }elsif ($access_dir{'may'}{'edit'} == 0.5 ){	 
@@ -12154,7 +12164,7 @@ sub do_d_savefile {
 								    'new'=>"$shareddir/$path/.$in{'new_name'}.moderate"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename $longtmpname to $shareddir/$path/.$in{'new_name'}.moderate : $!");
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 	     
 	     unless (rename "$longtmpdesc","$shareddir/$path/.desc..$in{'new_name'}.moderate"){
@@ -12162,7 +12172,7 @@ sub do_d_savefile {
 								    'new'=>"$shareddir/$path/.desc..$in{'new_name'}.moderate"},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err',"do_d_upload : Failed to rename $longtmpdesc to $shareddir/$path/.desc..$in{'new_name'}.moderate: $!");
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     }
 
  	     unless ($list->send_notify_to_editor('shared_moderated',{'filename' => "$path/$in{'new_name'}",
@@ -12173,7 +12183,7 @@ sub do_d_savefile {
 	 }else {
 	     &report::reject_report_web('auth',$access_dir{'reason'}{'edit'},{},$param->{'action'},$list);
 	     &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
@@ -12181,7 +12191,7 @@ sub do_d_savefile {
 
 	 # message of success
 	 &report::notice_report_web('upload_success', {'path' => $fname},$param->{'action'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      	 return 'd_read';
      }
 
@@ -12192,7 +12202,7 @@ sub do_d_savefile {
 	 unless (unlink($longtmpname)) {
 	     &report::reject_report_web('intern','erase_file',{'file' => $longtmpname},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_d_upload: failed to erase the temp file %s', $longtmpname);
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
@@ -12200,7 +12210,7 @@ sub do_d_savefile {
 	 unless (unlink($longtmpdesc)) {
 	     &report::reject_report_web('intern','erase_file',{'file' => $longtmpdesc},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_d_upload: failed to erase the desc temp file %s', $longtmpdesc);
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	     return undef;
 	 }
 	 
@@ -12232,8 +12242,8 @@ sub do_d_savefile {
     
      $in{'list'} = $list_name;
   
-     &report::notice_report_web('upload_success', {'path' => $fname},$param->{'action'});
-     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'},$fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+     &report::notice_report_web('upload_success', {'path' => $visible_fname},$param->{'action'});
+     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      return 'd_read';
  }
 
@@ -12507,13 +12517,17 @@ sub d_unzip_shared_file {
     my @memberNames = $zip->memberNames();
  
     foreach my $name (@memberNames) {
-	my $az = $zip->extractMember($name,"$zip_abs_dir/zip/$name");
+	my $az = $zip->extractMember($name, $zip_abs_dir.'/zip/'.$name);
 	unless ($az == AZ_OK) {
 	    &wwslog('err',"unzip_shared_file : Unable to extract member $name of the zip file $zip_abs_dir/$fname : $az");
 	    &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$zip_abs_dir,$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	    $status = 0;
 	}
     }		 
+
+    ## Change 8bit filenames afterward    
+    &tools::qencode_hierarchy($zip_abs_dir.'/zip');
+
     return $status;
 }
 
@@ -13214,6 +13228,10 @@ sub d_test_existing_and_rights {
      $param->{'list'} = $list_name;
      $param->{'path'} = $path;
 
+     ## Q-decode file path and names
+     $param->{'decoded_path'} = &tools::qdecode_filename($param->{'path'});
+     $param->{'decoded_name_doc'} = &tools::qdecode_filename($name_doc);
+
      my $type = $in{'type'} || 'directory';
      my $desc_file;
 
@@ -13367,7 +13385,7 @@ sub d_test_existing_and_rights {
 	 }
 
 	 unless ($file_moderated){
- 	     unless ($list->send_notify_to_editor('shared_moderated',{'filename' => "$path/$name_doc",
+ 	     unless ($list->send_notify_to_editor('shared_moderated',{'filename' => $param->{'decoded_path'}.'/'.$param->{'decoded_name_doc'},
  								      'who' => $param->{'user'}{'email'}})) {
  		 &wwslog('notice',"Unable to send notify 'shared_moderated' to $list->{'name'} list editor");
  	     }	     

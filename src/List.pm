@@ -11348,6 +11348,8 @@ sub maintenance {
 	return undef;
     }
 
+    &do_log('notice', "Upgrade process finished");    
+
     ## Saving current version if required
     unless (open VFILE, ">$version_file") {
 	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf{'etc'}, $!);
@@ -11748,6 +11750,23 @@ sub upgrade {
 	}	
 
     }
+
+    ## Changed shared documents name encoding
+    ## They are Q-encoded therefore easier to store on any filesystem with any encoding
+    if (&tools::lower_version($previous_version, '5.3a.8')) {
+	&do_log('notice','Q-Encoding web documents filenames...');
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
+	    if (-d $list->{'dir'}.'/shared') {
+		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared');
+
+		if ($count) {
+		    &do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);
+		}
+	    }
+	}
+
+    }    
 
     return 1;
 }

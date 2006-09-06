@@ -112,7 +112,7 @@
       [% FOREACH f = info_doc_mod %]
         <tr>
          <td>
-            <input type="checkbox" name="id" value="[% f.visible_path %][% f.fname %]" />
+            <input type="checkbox" name="id" value="[% f.path %][% f.fname %]" />
 	 </td>
 	  <td>
 	    [% IF f.date %]
@@ -123,7 +123,7 @@
 	  </td>
 	  <td><span style="font-size: smaller;">[% f.author %]</span></td>
 	  <td>
-	    <a href="[% path_cgi %]/d_read/[% list %][% f.visible_path %][% f.fname %]"><span style="font-size: smaller;">[% f.visible_path %][% f.visible_fname %]</span></a>
+	    <a href="[% path_cgi %]/d_read/[% list %][% f.escaped_path %][% f.escaped_fname %]"><span style="font-size: smaller;">[% f.visible_path %][% f.visible_fname %]</span></a>
 	  </td>
 	  <td><span style="font-size: smaller;">[% f.size %] kb</span></td>
 	</tr>

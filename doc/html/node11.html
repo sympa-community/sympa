@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1123"
+<A NAME="tex2html1124"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1117"
+<A NAME="tex2html1118"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1111"
+<A NAME="tex2html1112"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1119"
+<A NAME="tex2html1120"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1121"
+<A NAME="tex2html1122"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1124"
+<B> Next:</B> <A NAME="tex2html1125"
   HREF="node12.html">11. Sympa RSS channel</A>
-<B> Up:</B> <A NAME="tex2html1118"
+<B> Up:</B> <A NAME="tex2html1119"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1112"
+<B> Previous:</B> <A NAME="tex2html1113"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1120"
+ &nbsp; <B>  <A NAME="tex2html1121"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1122"
+ &nbsp; <B>  <A NAME="tex2html1123"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,11 +60,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1125"
-  HREF="node11.html#SECTION001110000000000000000">10.1 Translating Sympa GUI</A>
 <LI><A NAME="tex2html1126"
-  HREF="node11.html#SECTION001120000000000000000">10.2 Defining language-specific templates</A>
+  HREF="node11.html#SECTION001110000000000000000">10.1 Translating Sympa GUI</A>
 <LI><A NAME="tex2html1127"
+  HREF="node11.html#SECTION001120000000000000000">10.2 Defining language-specific templates</A>
+<LI><A NAME="tex2html1128"
   HREF="node11.html#SECTION001130000000000000000">10.3 Handling of encodings</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -83,10 +83,26 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
+Instructions for translating Sympa are maintained on Sympa web site :
+<A NAME="tex2html29"
+  HREF="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</A>
+<P>
 
 <H1><A NAME="SECTION001120000000000000000">
 10.2 Defining language-specific templates</A>
 </H1>
+
+<P>
+The default Sympa templates are language independant, refering to catalogue entries for translations. 
+When customizing either web or mail templates, you can define different templates for different languages. 
+The template should be located in a subdirectory of <A NAME="9117"></A><TT>web_tt2</TT> or <A NAME="9120"></A><TT>mail_tt2</TT> with the language code.
+
+<P>
+Example :<PRE>
+/web_tt2/home.tt2
+/web_tt2/de_DE/home.tt2
+/web_tt2/fr_FR/home.tt2
+</PRE>
 
 <P>
 
@@ -98,13 +114,13 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 Until version 5.3, Sympa web pages were encoded in each language's
 encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
 web page is now encoded in utf-8. Thanks to
-the <A NAME="9107"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
+the <A NAME="9123"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
 filesystem encoding, each message catalog's encoding and its web
 encoding (utf-8).
 
 <P>
 If your operating system uses a character encoding different from
-utf-8, then you should declare it using the <A NAME="9110"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
+utf-8, then you should declare it using the <A NAME="9126"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
 <A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). It is required to do so
 because Sympa has no way to find out what encoding is used for its
 configuration files. Once this encoding is known, every template or
@@ -112,39 +128,44 @@ configuration parameter can be read properly for the web and also
 saved properly when edited from the web interface.
 
 <P>
+Note that the shared documents (see<A HREF="node24.html#shared">23</A>, page&nbsp;<A HREF="node24.html#shared"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) filenames are 
+Q-encoded to make their storage encoding neutral. This encoding is transparent 
+for the end-users.
+
+<P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1123"
+<A NAME="tex2html1124"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1117"
+<A NAME="tex2html1118"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1111"
+<A NAME="tex2html1112"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1119"
+<A NAME="tex2html1120"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1121"
+<A NAME="tex2html1122"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1124"
+<B> Next:</B> <A NAME="tex2html1125"
   HREF="node12.html">11. Sympa RSS channel</A>
-<B> Up:</B> <A NAME="tex2html1118"
+<B> Up:</B> <A NAME="tex2html1119"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1112"
+<B> Previous:</B> <A NAME="tex2html1113"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1120"
+ &nbsp; <B>  <A NAME="tex2html1121"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1122"
+ &nbsp; <B>  <A NAME="tex2html1123"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-08-28
+2006-09-06
 </ADDRESS>
 </BODY>
 </HTML>

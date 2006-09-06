@@ -1832,6 +1832,69 @@ sub find_file {
     return undef;
 }
 
+## Recursively list the content of a directory
+## Return an array of hash, each entry with directory + filename + encoding
+sub list_dir {
+    my $dir = shift;
+    my $all = shift;
+
+    my $size=0;
+
+    if (opendir(DIR, $dir)) {
+	foreach my $file ( sort grep (!/^\.\.?$/,readdir(DIR))) {
+
+	    ## Guess filename encoding
+	    my ($encoding, $guess);
+	    my $decoder = &Encode::Guess::guess_encoding($file);
+	    if (ref $decoder) {
+		$encoding = $decoder->name;
+	    }else {
+		$guess = $decoder;
+	    }
+
+	    push @$all, {'directory' => $dir,
+			 'filename' => $file,
+			 'encoding' => $encoding,
+			 'guess' => $guess};
+	    if (-d "$dir/$file") {
+		&list_dir($dir.'/'.$file, $all);
+	    }
+	}
+        closedir DIR;
+    }
+
+    return 1;
+}
+
+## Q-encode a complete file hierarchy
+## Usefull to Q-encode shared documents
+sub qencode_hierarchy {
+    my $dir = shift;
+
+    my $count;
+    my @all_files;
+    &tools::list_dir($dir, \@all_files);
+
+    foreach my $f_struct (reverse @all_files) {
+    
+	my $new_filename = $f_struct->{'filename'};
+	my $encoding = $f_struct->{'encoding'} || 'utf-8';
+	$new_filename = Encode::decode($encoding, $f_struct->{'filename'});
+    
+	## Q-encode filename to escape chars with accents
+	$new_filename = &tools::qencode_filename($new_filename);
+    
+	next if ($new_filename eq $f_struct->{'filename'});
+	
+	## Rename the file using utf8
+	unless (rename $f_struct->{'directory'}.'/'.$f_struct->{'filename'}, $f_struct->{'directory'}.'/'.$new_filename) {
+	    &do_log('err', "Failed to rename %s to %s : %s", $f_struct->{'directory'}.'/'.$f_struct->{'filename'}, $f_struct->{'directory'}.'/'.$new_filename, $!);
+	    next;
+	}
+    }
+    return $count;
+}
+
 sub write_pid {
     my ($pidfile, $pid) = @_;
 
