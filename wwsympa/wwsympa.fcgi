@@ -1211,7 +1211,7 @@ binmode STDIN, ":utf8";
 
 # 	 close FILE;
      }elsif ($param->{'redirect_to'}) {
-	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
+	 do_log ('notice',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
      }else {
 	 &prepare_report_user();
@@ -9218,7 +9218,14 @@ sub _restrict_values {
 	 return undef;
      }
      # set list status topending if creation list is moderated
-     $list->{'admin'}{'status'} = 'pending' if ($r_action =~ /listmaster/) ;
+     if ($r_action =~ /listmaster/) {
+	 $list->{'admin'}{'status'} = 'pending' ;
+	 &List::send_notify_to_listmaster('request_list_renaming',$robot, 
+					  {'listname' => $list->{'name'},
+					   'new_listname' => $in{'new_listname'},
+					   'email' => $param->{'user'}{'email'}});
+	 &report::notice_report_web('pending_list',{},$param->{'action'},$list);
+     }
 
      ## Save config file for the new() later to reload it
      $list->save_config($param->{'user'}{'email'});

@@ -16,6 +16,17 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% conf.wwsympa_url %]/get_pending_lists
 
 
+[% ELSIF type == 'request_list_renaming' -%]
+Subject: [% FILTER qencode %][%|loc(listname)%]List "%1" renaming request[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(email,listname,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
+
+[%|loc%]To activate/delete this mailing list :[%END%]
+[% conf.wwsympa_url %]/get_pending_lists
+
 [% ELSIF type == 'no_db' -%]
 Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
 MIME-Version: 1.0
