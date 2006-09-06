@@ -103,6 +103,28 @@
 	<part name="gecos" type="xsd:string" xsd:minOccurs="0"/>	
 </message>
 
+<message name="addRequest">
+	<part name="list" type="xsd:string"/>		
+	<part name="email" type="xsd:string"/>
+	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
+</message>
+
+
+<message name="addResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="delRequest">
+	<part name="list" type="xsd:string"/>		
+	<part name="email" type="xsd:string"/>
+	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
+</message>
+
+
+<message name="delResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
 <message name="createListRequest">
 	<part name="list" type="xsd:string"/>
 	<part name="subject" type="xsd:string"/>
@@ -201,6 +223,18 @@
 	<operation name="amI">
 		<input message="tns:amIRequest" />
 		<output message="tns:amIResponse" />
+	</operation>
+	<operation name="add">
+		<input message="tns:addRequest" />
+		<output message="tns:addResponse" />
+	</operation>
+	<operation name="del">
+		<input message="tns:delRequest" />
+		<output message="tns:delResponse" />
+	</operation>
+	<operation name="createList">
+		<input message="tns:createListRequest" />
+		<output message="tns:createListResponse" />
 	</operation>
 	<operation name="createList">
 		<input message="tns:createListRequest" />

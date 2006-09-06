@@ -468,7 +468,7 @@ sub createList {
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('User not specified')
-	    ->faultdetail('Use a trusted proxy aor login first ');
+	    ->faultdetail('Use a trusted proxy or login first ');
     }
 
     my @resultSoap;
@@ -569,6 +569,253 @@ sub createList {
 	 }
      }
      return 1;
+}
+
+sub add {
+    my $class = shift;
+    my $listname  = shift;
+    my $email = shift;
+    my $gecos = shift;
+    my $quiet = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
+    my $remote_application_name = $ENV{'remote_application_name'};
+    
+    &Log::do_log('info', 'SOAP add(list = %s@%s,email = %s,quiet = %s) from %s via proxy application %s', $listname,$robot,$email,$quiet,$sender,$remote_application_name);
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not specified')
+	    ->faultdetail('Use a trusted proxy or login first ');
+    }
+    
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
+    }
+    unless ($email) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <email>');
+    }
+    my $list = new List ($listname, $robot);
+    unless ($list) {
+	&Log::do_log('info', 'add %s@%s %s from %s refused, no such list ', $listname,$robot,$email,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Undefined list')
+	    ->faultdetail("Undefined list");
+    }
+
+    # check authorization
+
+    my $result = $list->check_list_authz('add','md5',
+					 {'sender' => $sender, 
+					  'email' => $email,
+					  'remote_host' => $param->{'remote_host'},
+					  'remote_addr' => $param->{'remote_addr'},
+					  'remote_application_name' => $ENV{'remote_application_name'}} );
+
+    
+    my $action;
+    my $reason;
+    if (ref($result) eq 'HASH') {
+	$action = $result->{'action'};
+	$reason = $result->{'reason'};
+    }
+
+    unless (defined $action){
+	&Log::do_log('info', 'add %s@%s %s from %s : scenario error', $listname,$robot,$email,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('scenario error')
+	    ->faultdetail("sender $sender email $email remote $ENV{'remote_application_name'} ");
+    }
+
+    unless ($action =~ /do_it/) {
+	my $reason_string = &get_reason_string($reason,$robot);
+	&Log::do_log('info', 'SOAP : add %s@%s %s from %s refused (not allowed)',  $listname,$robot,$email,$sender);
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Not allowed')
+	    ->faultdetail($reason_string);
+    }
+
+
+    if ($list->is_user($email)) {
+	my $user = {};
+	$user->{'update_date'} = time;
+	$user->{'gecos'} = $gecos if $gecos;
+	$user->{'subscribed'} = 1;
+	
+	unless ($list->update_user($email, $user)){
+	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to update user allready subscribed', $listname,$robot,$email,$sender);
+	    my $error = "Unable to update user $user in list $listname";
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Unable to update user allreadu subscribed')
+		->faultdetail($error);
+	}
+    }else {
+	my $u;
+	my $defaults = $list->get_default_user_options();
+	%{$u} = %{$defaults};
+	$u->{'email'} = $email;
+	$u->{'gecos'} = $comment;
+	$u->{'date'} = $u->{'update_date'} = time;
+	
+	unless ($list->add_user($u)) {
+	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
+	    my $error = "Unable to add user $user in list $listname";
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Unable to update user allreadu subscribed')
+		->faultdetail($error);
+	}
+	$list->delete_subscription_request($email);
+    }
+    
+    if ($List::use_db) {
+	my $u = &List::get_user_db($email);	
+	&List::update_user_db($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
+				       'password' => $u->{'password'} || &tools::tmp_passwd($email)
+				       });
+    }
+    
+    $list->save();
+    
+    ## Now send the welcome file to the user if it exists.
+    unless ($quiet || ($action =~ /quiet/i )) {
+	unless ($list->send_file('welcome', $email, $robot,{})) {
+	    &do_log('notice',"Unable to send template 'welcome' to $email");
+	}
+    }
+    
+    &do_log('info', 'ADD %s %s from %s accepted (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
+    if ($action =~ /notify/i) {
+	unless ($list->send_notify_to_owner('notice',{'who' => $email, 
+						      'gecos' => $comment,
+						      'command' => 'add',
+						      'by' => $sender})) {
+	    &do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
+	}
+    }
+}
+
+sub del {
+    my $class = shift;
+    my $listname  = shift;
+    my $email = shift;
+    my $quiet = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
+    my $remote_application_name = $ENV{'remote_application_name'};
+    
+    &Log::do_log('info', 'SOAP del(list = %s@%s,email = %s,quiet = %s) from %s via proxy application %s', $listname,$robot,$email,$quiet,$sender,$remote_application_name);
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not specified')
+	    ->faultdetail('Use a trusted proxy or login first ');
+    }
+    
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
+    }
+    unless ($email) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <email>');
+    }
+    my $list = new List ($listname, $robot);
+    unless ($list) {
+	&Log::do_log('info', 'del %s@%s %s from %s refused, no such list ', $listname,$robot,$email,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Undefined list')
+	    ->faultdetail("Undefined list");
+    }
+
+    # check authorization
+
+    my $result = $list->check_list_authz('del','md5',
+					 {'sender' => $sender, 
+					  'email' => $email,
+					  'remote_host' => $param->{'remote_host'},
+					  'remote_addr' => $param->{'remote_addr'},
+					  'remote_application_name' => $ENV{'remote_application_name'}} );
+
+    
+    my $action;
+    my $reason;
+    if (ref($result) eq 'HASH') {
+	$action = $result->{'action'};
+	$reason = $result->{'reason'};
+    }
+
+    unless (defined $action){
+	&Log::do_log('info', 'del %s@%s %s from %s : scenario error', $listname,$robot,$email,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('scenario error')
+	    ->faultdetail("sender $sender email $email remote $ENV{'remote_application_name'} ");
+    }
+
+    unless ($action =~ /do_it/) {
+	my $reason_string = &get_reason_string($reason,$robot);
+	&Log::do_log('info', 'SOAP : del %s@%s %s from %s by %srefused (not allowed)',  $listname,$robot,$email,$sende,$ENV{'remote_application_name'});
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Not allowed')
+	    ->faultdetail($reason_string);
+    }
+
+    my $user_entry = $list->get_subscriber($email);
+    unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	    &do_log('info', 'DEL %s %s from %s refused, not on list', $listname, $email, $sender);
+	    die SOAP::Fault->faultcode('Client')
+		->faultstring('Not subscribed')
+		->faultdetail('Not member of list or not subscribed');
+	}
+    
+    my $gecos = $user_entry->{'gecos'};
+    
+    if ($user_entry->{'included'} == 1) {
+	unless ($list->update_user($email, {'subscribed' => 0, 'update_date' => time})) {
+	    &do_log('info', 'DEL %s %s from %s failed, database update failed', $email, $listname, $sender);
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Unable to update subscriber informations')
+		->faultdetail('Database update failed');	    
+	}
+    } else {
+	## Really delete and rewrite to disk.
+	my $u;
+	unless ($u = $list->delete_user($email)){
+	    my $error = "Unable to delete user $who from list $which for command 'del'";
+	    &do_log('info', 'DEL %s %s from %s failed, '.$error);
+	    die SOAP::Fault->faultcode('Server')
+		->faultstring('Unable to remove subscriber informations')
+		->faultdetail('Database access failed');	  
+	}
+    }
+    $list->save();
+    
+    ## Send a notice to the removed user, unless the owner indicated
+    ## quiet del.
+    unless ($quiet || ($action =~ /quiet/i )) {
+	unless ($list->send_file('removed', $email, $robot, {})) {
+	    &do_log('notice',"Unable to send template 'removed' to $email");
+	}
+    }
+    
+    
+    &do_log('info', 'DEL %s %s from %s accepted (%d subscribers)', $listname, $email, $sender,  $list->get_total() );
+    if ($action =~ /notify/i) {
+	unless ($list->send_notify_to_owner('notice',{'who' => $email, 
+						      'gecos' => "", 
+						      'command' => 'del',
+						      'by' => $sender})) {
+	    &do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
+	}
+    }
+    return 1;
 }
 
 sub review {

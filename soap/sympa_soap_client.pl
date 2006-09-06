@@ -57,7 +57,7 @@ my $service_parameters=$main::options{'service_parameters'};
 
 if (defined $trusted_application) {
     unless (defined $trusted_application_password) {
-	printf "error : missing trsuted_application_password parameter\n";
+	printf "error : missing trusted_application_password parameter\n";
 	printf $usage;
 	exit;
     }
