@@ -3856,8 +3856,27 @@ You can test your SOAP service using the \file {sympa\_soap\_client.pl} sample s
 \begin {quote}
 \begin{verbatim}
 [BINDIR]/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+
+[BINDIR]/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
 \end{verbatim}
 \end {quote}
+
+Availible services are :
+\begin{itemize}
+\item info <list>
+\item which
+\item lists
+\item review <list>
+\item amI <function>
+\item subscribe  <list> 
+\item signoff <list>
+\item add <list><email>
+\item del <list><email>
+\item createList <list>...
+\item login <email><password>
+\item casLogin <proxyTicket>
+\item checkCookie
+\end{itemize}
 
 
 \section {The WSDL service description}
