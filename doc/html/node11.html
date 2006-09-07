@@ -95,7 +95,7 @@ Instructions for translating Sympa are maintained on Sympa web site :
 <P>
 The default Sympa templates are language independant, refering to catalogue entries for translations. 
 When customizing either web or mail templates, you can define different templates for different languages. 
-The template should be located in a subdirectory of <A NAME="9117"></A><TT>web_tt2</TT> or <A NAME="9120"></A><TT>mail_tt2</TT> with the language code.
+The template should be located in a subdirectory of <A NAME="9119"></A><TT>web_tt2</TT> or <A NAME="9122"></A><TT>mail_tt2</TT> with the language code.
 
 <P>
 Example :<PRE>
@@ -114,13 +114,13 @@ Example :<PRE>
 Until version 5.3, Sympa web pages were encoded in each language's
 encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
 web page is now encoded in utf-8. Thanks to
-the <A NAME="9123"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
+the <A NAME="9125"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
 filesystem encoding, each message catalog's encoding and its web
 encoding (utf-8).
 
 <P>
 If your operating system uses a character encoding different from
-utf-8, then you should declare it using the <A NAME="9126"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
+utf-8, then you should declare it using the <A NAME="9128"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
 <A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). It is required to do so
 because Sympa has no way to find out what encoding is used for its
 configuration files. Once this encoding is known, every template or
@@ -165,7 +165,7 @@ for the end-users.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-06
+2006-09-07
 </ADDRESS>
 </BODY>
 </HTML>

@@ -79,8 +79,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-This service is provided by <A NAME="9129"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
-Here is the root of <A NAME="9133"></A><I>WWSympa</I>'s rss channel :
+This service is provided by <A NAME="9131"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
+Here is the root of <A NAME="9135"></A><I>WWSympa</I>'s rss channel :
 <BR>
 <P>
 (Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws/rss</TT>)
@@ -88,23 +88,23 @@ Here is the root of <A NAME="9133"></A><I>WWSympa</I>'s rss channel :
 Example: <TT>https://my.server/wws/rss</TT>
 
 <P>
-The access control of RSS queries proceed on the same way as <A NAME="9140"></A><I>WWSympa</I> actions referred to.
+The access control of RSS queries proceed on the same way as <A NAME="9142"></A><I>WWSympa</I> actions referred to.
 <I>Sympa</I> provides the following RSS features :
 
 <UL>
-<LI>the latest created lists on a robot (<A NAME="9144"></A><TT>latest_lists</TT>) ;
+<LI>the latest created lists on a robot (<A NAME="9146"></A><TT>latest_lists</TT>) ;
 </LI>
-<LI>the most active lists on a robot(<A NAME="9147"></A><TT>active_lists</TT>) ;  
+<LI>the most active lists on a robot(<A NAME="9149"></A><TT>active_lists</TT>) ;  
 </LI>
-<LI>the latest messages of a list (<A NAME="9150"></A><TT>active_arc</TT>) ;   
+<LI>the latest messages of a list (<A NAME="9152"></A><TT>active_arc</TT>) ;   
 </LI>
-<LI>the latest shared documents of a list (<A NAME="9153"></A><TT>latest_d_read</TT>) ; 
+<LI>the latest shared documents of a list (<A NAME="9155"></A><TT>latest_d_read</TT>) ; 
 </LI>
 </UL>
 
 <P>
 
-<H1><A NAME="SECTION001210000000000000000"></A><A NAME="9156"></A>
+<H1><A NAME="SECTION001210000000000000000"></A><A NAME="9158"></A>
 <BR>
 11.1 <TT>latest_lists</TT>
 </H1>
@@ -126,10 +126,10 @@ This provides the 6 latest created lists with topic ``computing''.
 Parameters : 
 
 <UL>
-<LI><A NAME="9161"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9163"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9164"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9166"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 <LI>topic : the topic is indicated in the path info (see example below with topic computing). 
@@ -139,7 +139,7 @@ Parameters :
 
 <P>
 
-<H1><A NAME="SECTION001220000000000000000"></A><A NAME="9167"></A>
+<H1><A NAME="SECTION001220000000000000000"></A><A NAME="9169"></A>
 <BR>
 11.2 <TT>active_lists</TT>
 </H1>
@@ -161,10 +161,10 @@ This provides the 6 most active lists with topic ``computing''.
 Parameters : 
 
 <UL>
-<LI><A NAME="9172"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9174"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9175"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9177"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 <LI>topic : the topic is indicated in the path info (see example below with topic computing). 
@@ -174,7 +174,7 @@ Parameters :
 
 <P>
 
-<H1><A NAME="SECTION001230000000000000000"></A><A NAME="9178"></A>
+<H1><A NAME="SECTION001230000000000000000"></A><A NAME="9180"></A>
 <BR>
 11.3 <TT>latest_arc</TT>
 </H1>
@@ -193,17 +193,17 @@ Parameters :
 <UL>
 <LI>list : the list is indicated in the path info. This parameter is mandatory.
 </LI>
-<LI><A NAME="9182"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9184"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9185"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9187"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 </UL>
 
 <P>
 
-<H1><A NAME="SECTION001240000000000000000"></A><A NAME="9188"></A>
+<H1><A NAME="SECTION001240000000000000000"></A><A NAME="9190"></A>
 <BR>
 11.4 <TT>latest_d_read</TT>
 </H1>
@@ -222,10 +222,10 @@ Parameters :
 <UL>
 <LI>list : the list is indicated in the path info. This parameter is mandatory.
 </LI>
-<LI><A NAME="9192"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9194"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9195"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9197"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 </UL>
@@ -263,7 +263,7 @@ Parameters :
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-06
+2006-09-07
 </ADDRESS>
 </BODY>
 </HTML>

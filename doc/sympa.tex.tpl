@@ -3873,6 +3873,7 @@ Availible services are :
 \item add <list><email>
 \item del <list><email>
 \item createList <list>...
+\item closeList <list>
 \item login <email><password>
 \item casLogin <proxyTicket>
 \item checkCookie

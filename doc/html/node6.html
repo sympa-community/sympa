@@ -96,8 +96,8 @@ a few things (DB update, CPAN modules installation).
 </H1>
 
 <P>
-New features, changes and bug fixes are summarized in the <A NAME="7793"></A><TT>NEWS</TT> file, part of the tar.gz (the 
-<A NAME="7796"></A><TT>Changelog</TT> file is a complete log file of CVS changes). 
+New features, changes and bug fixes are summarized in the <A NAME="7795"></A><TT>NEWS</TT> file, part of the tar.gz (the 
+<A NAME="7798"></A><TT>Changelog</TT> file is a complete log file of CVS changes). 
 
 <P>
 Sympa is a long-term project, so some major changes may need some extra work. The following list is well kown changes that require some attention :
@@ -114,11 +114,11 @@ Sympa is a long-term project, so some major changes may need some extra work. Th
 </UL>
 
 <P>
-The file <A NAME="7799"></A><TT>NEWS</TT> list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
-file, incompatible changes are preceded by '*****'. While running the <A NAME="7802"></A><TT>make install</TT> Sympa will
+The file <A NAME="7801"></A><TT>NEWS</TT> list all changes and of course, all changes that may require some attention from the installer. As mentionned at the beginning of this
+file, incompatible changes are preceded by '*****'. While running the <A NAME="7804"></A><TT>make install</TT> Sympa will
 detect the previously installed version and will prompt you with incompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
-Output of the <A NAME="7805"></A><TT>make install</TT> :<PRE>
+Output of the <A NAME="7807"></A><TT>make install</TT> :<PRE>
 You are upgrading from Sympa 4.2
 You should read CAREFULLY the changes listed below ; they might be incompatible changes :
 &lt;RETURN&gt;
@@ -156,10 +156,10 @@ You should read CAREFULLY the changes listed below ; they might be incompatible 
 </H1>
 
 <P>
-Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7808"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
+Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="7810"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
 
 <P>
-Output of the <A NAME="7811"></A><TT>make</TT> command :<PRE>
+Output of the <A NAME="7813"></A><TT>make</TT> command :<PRE>
 Checking for REQUIRED modules:
 ------------------------------------------
 perl module          from CPAN       STATUS
@@ -207,10 +207,10 @@ Install module DBD::Oracle ?
 </H1>
 
 <P>
-Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7814"></A><TT>sympa.pl</TT>
-will not start. If you are using <A NAME="7817"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
-assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7818"></A><TT>sympa.conf</TT> 
-does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7821"></A><TT>NEWS</TT> file.
+Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="7816"></A><TT>sympa.pl</TT>
+will not start. If you are using <A NAME="7819"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
+assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="7820"></A><TT>sympa.conf</TT> 
+does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="7823"></A><TT>NEWS</TT> file.
 
 <P>
 Output of Sympa logs :<PRE>
@@ -244,7 +244,7 @@ Field user_admin added to table admin_table
 
 <P>
 You might need, for some reason, to make Sympa run the migration procedure from version <I>X</I> to version <I>Y</I>.
-This procedure is run automatically by <A NAME="7824"></A><TT>sympa.pl</TT> when it detects that <A NAME="7827"></A><TT>/data_structure.version</TT> is older 
+This procedure is run automatically by <A NAME="7826"></A><TT>sympa.pl</TT> when it detects that <A NAME="7829"></A><TT>/data_structure.version</TT> is older 
 than the current version, but you can also run trigger this procedure yourself :<PRE>
 sympa.pl --upgrade --from=4.1 --to=5.2
 </PRE>
@@ -258,8 +258,8 @@ sympa.pl --upgrade --from=4.1 --to=5.2
 </H1>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7830"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7833"></A><TT>/usr/local/sympa-os/etc</TT> directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="7832"></A><TT>/usr/local/sympa-sa/bin</TT> directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="7835"></A><TT>/usr/local/sympa-sa/etc</TT> directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 <P>
@@ -278,7 +278,7 @@ Both sympa instances must be completely partitioned, unless you want the make pr
 test service. 
 
 <P>
-The biggest part of the partitioning is achieved while running the <A NAME="7836"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7839"></A><TT>./configure</TT>
+The biggest part of the partitioning is achieved while running the <A NAME="7838"></A><TT>./configure</TT>. Here is a sample call to <A NAME="7841"></A><TT>./configure</TT>
 on the test server side :
 
 <P><PRE>
@@ -292,11 +292,11 @@ on the test server side :
 </PRE>
 
 <P>
-You can also customize more parameters via the <A NAME="7842"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
+You can also customize more parameters via the <A NAME="7844"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
 
 <P>
 If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
-<A NAME="7845"></A><TT>home</TT>, <A NAME="7848"></A><TT>db_name</TT>, <A NAME="7851"></A><TT>arc_path</TT>
+<A NAME="7847"></A><TT>home</TT>, <A NAME="7850"></A><TT>db_name</TT>, <A NAME="7853"></A><TT>arc_path</TT>
 
 <P>
 
@@ -315,20 +315,20 @@ on the data.
 The migration process requires that you move the following data from the old server to the new one :
 
 <UL>
-<LI>the user database. If using mysql you can probably just stop <A NAME="7854"></A><TT>mysqld</TT> and copy the <A NAME="7857"></A><TT>/var/lib/mysql/sympa/</TT>
+<LI>the user database. If using mysql you can probably just stop <A NAME="7856"></A><TT>mysqld</TT> and copy the <A NAME="7859"></A><TT>/var/lib/mysql/sympa/</TT>
       directory to the new server.
 
 <P>
 </LI>
-<LI>the <A NAME="7860"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
+<LI>the <A NAME="7862"></A><TT>/usr/local/sympa-sa/expl</TT> directory that contains list config
 
 <P>
 </LI>
-<LI>the <A NAME="7863"></A> directory that contains the spools
+<LI>the <A NAME="7865"></A> directory that contains the spools
 
 <P>
 </LI>
-<LI>the <A NAME="7866"></A> directory and <A NAME="7869"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> and <A NAME="7872"></A><TT>wwsympa.conf</TT>. Sympa new installation create a file <A NAME="7875"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> (see <A HREF="node8.html#exp-admin">7</A>) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
+<LI>the <A NAME="7868"></A> directory and <A NAME="7871"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> and <A NAME="7874"></A><TT>wwsympa.conf</TT>. Sympa new installation create a file <A NAME="7877"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> (see <A HREF="node8.html#exp-admin">7</A>) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
 
 <P>
 </LI>
@@ -348,9 +348,9 @@ database and play with it. When you decide to move the existing service to the n
 </LI>
 <LI>transfert the database
 </LI>
-<LI>edit the <A NAME="7878"></A><TT>/data_structure.version</TT> on the new server ; change the version value to reflect the old number
+<LI>edit the <A NAME="7880"></A><TT>/data_structure.version</TT> on the new server ; change the version value to reflect the old number
 </LI>
-<LI>start <A NAME="7881"></A><TT>sympa.pl</TT>, it will upgrade the database structure according the hop you do. 
+<LI>start <A NAME="7883"></A><TT>sympa.pl</TT>, it will upgrade the database structure according the hop you do. 
 </LI>
 </OL>
 
@@ -387,7 +387,7 @@ database and play with it. When you decide to move the existing service to the n
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-06
+2006-09-07
 </ADDRESS>
 </BODY>
 </HTML>

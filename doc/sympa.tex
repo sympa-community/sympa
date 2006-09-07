@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {06 September 2006}
+    \date {07 September 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -4293,6 +4293,8 @@ You can test your SOAP service using the \file {sympa\_soap\_client.pl} sample s
 \begin {quote}
 \begin{verbatim}
 /usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+
+/usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
 \end{verbatim}
 \end {quote}
 
@@ -4308,6 +4310,7 @@ Availible services are :
 \item add <list><email>
 \item del <list><email>
 \item createList <list>...
+\item closeList <list>
 \item login <email><password>
 \item casLogin <proxyTicket>
 \item checkCookie
@@ -4428,6 +4431,7 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 <message name="addRequest">
 	<part name="list" type="xsd:string"/>		
 	<part name="email" type="xsd:string"/>
+	<part name="gecos" type="xsd:string"  xsd:minOccurs="0"//>	
 	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
 </message>
 
@@ -4456,6 +4460,14 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 </message>
 
 <message name="createListResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="closeListRequest">
+	<part name="list" type="xsd:string"/>
+</message>
+
+<message name="closeListResponse">
 	<part name="return" type="xsd:boolean"/>
 </message>
 
@@ -4558,9 +4570,9 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 		<input message="tns:createListRequest" />
 		<output message="tns:createListResponse" />
 	</operation>
-	<operation name="createList">
-		<input message="tns:createListRequest" />
-		<output message="tns:createListResponse" />
+	<operation name="closeList">
+		<input message="tns:closeListRequest" />
+		<output message="tns:closeListResponse" />
 	</operation>
 	<operation name="review">
 		<input message="tns:reviewRequest" />

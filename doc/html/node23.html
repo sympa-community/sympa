@@ -74,7 +74,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HR>
 
 <H1><A NAME="SECTION002300000000000000000"></A>
-    <A NAME="reception-mode"></A>    <A NAME="4239"></A>
+    <A NAME="reception-mode"></A>    <A NAME="4241"></A>
 <BR>
 22. Reception mode
 </H1>
@@ -82,7 +82,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <H1><A NAME="SECTION002310000000000000000"></A>
-<A NAME="msg-topics"></A><A NAME="4242"></A>
+<A NAME="msg-topics"></A><A NAME="4244"></A>
 <BR>
 22.1 Message topics
 </H1>
@@ -101,13 +101,13 @@ sender or by the list moderator.
 </H2>
 
 <P>
-Available message topics are defined by list parameters. Foreach new message topic, create a new <A NAME="11862"></A><TT>msg_topic</TT> paragraph
+Available message topics are defined by list parameters. Foreach new message topic, create a new <A NAME="11864"></A><TT>msg_topic</TT> paragraph
 that defines the name and the title of the topic. If a thread is identified for the current message then the automatic procedure is performed.
 Else, to use automatic tagging, you should define keywords (See (<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) 
 To define which part of the message is used for automatic tagging
-you have to define <A NAME="11865"></A><TT>msg_topic_keywords_apply_on</TT> list parameter (See <A HREF="node22.html#par-msg-topic-key-apply-on">21.4.14</A>, 
+you have to define <A NAME="11867"></A><TT>msg_topic_keywords_apply_on</TT> list parameter (See <A HREF="node22.html#par-msg-topic-key-apply-on">21.4.14</A>, 
 page&nbsp;<A HREF="node22.html#par-msg-topic-key-apply-on"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Tagging a message can be optional or it can be required, depending on the
-<A NAME="11868"></A><TT>msg_topic_tagging</TT> list parameter (See (<A HREF="node22.html#par-msg-topic-tagging">21.4.15</A>,page&nbsp;<A HREF="node22.html#par-msg-topic-tagging"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+<A NAME="11870"></A><TT>msg_topic_tagging</TT> list parameter (See (<A HREF="node22.html#par-msg-topic-tagging">21.4.15</A>,page&nbsp;<A HREF="node22.html#par-msg-topic-tagging"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 
@@ -127,7 +127,7 @@ database (subscriber_table table).
 </H2>
 
 <P>
-First of all, if one or more <A NAME="11872"></A><TT>msg_topic.keywords</TT> are defined, <I>Sympa</I> tries to tag messages automatically. 
+First of all, if one or more <A NAME="11874"></A><TT>msg_topic.keywords</TT> are defined, <I>Sympa</I> tries to tag messages automatically. 
 To trigger manual tagging, by message sender or list moderator, on the web interface, <I>Sympa</I> uses authorization scenarios : if the resulted action is ``editorkey'' 
 (for example in scenario send.editorkey), the list moderator is asked to tag the message. 
 If the resulted action is ``request_auth'' (for example in scenario send.privatekey), the message sender is asked to tag the message. 
@@ -135,7 +135,7 @@ The following variables are available as scenario variables to customize tagging
 (See (<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) If message tagging is required and if it was not yet performed, <I>Sympa</I> will ask to the list moderator.
 
 <P>
-Tagging a message will create a topic information file in the <A NAME="11878"></A><TT>/usr/local/sympa-os/spool/topic/</TT> spool. Its name is based on the listname and the Message-ID. 
+Tagging a message will create a topic information file in the <A NAME="11880"></A><TT>/usr/local/sympa-sa/spool/topic/</TT> spool. Its name is based on the listname and the Message-ID. 
 For message distribution, a ``X-Sympa-Topic'' field is added to the message to allow members to use mail filters.
 
 <P>
@@ -171,7 +171,7 @@ For message distribution, a ``X-Sympa-Topic'' field is added to the message to a
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-06
+2006-09-07
 </ADDRESS>
 </BODY>
 </HTML>
