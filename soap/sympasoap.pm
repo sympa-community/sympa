@@ -484,7 +484,7 @@ sub createList {
     my $list = new List ($listname, $robot);
     if ($list) {
 	&Log::do_log('info', 'create_list %s@%s from %s refused, list already exist', $listname,$robot,$sender);
-	die SOAP::Fault->faultcode('Server')
+	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('List already exists')
 	    ->faultdetail("List $listname already exists");
     }
@@ -568,6 +568,63 @@ sub createList {
 	     &Log::do_log('notice',"Unable to send notify 'request_list_creation' to listmaster");
 	 }
      }
+     return 1;
+}
+
+sub closeList {
+    my $class = shift;
+    my $listname  = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
+    my $remote_application_name = $ENV{'remote_application_name'};
+
+    &Log::do_log('info', 'SOAP closeList(list = %s\@%s) from %s via proxy application %s', $listname,$robot,$sender,$remote_application_name);
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not specified')
+	    ->faultdetail('Use a trusted proxy or login first ');
+    }
+
+    my @resultSoap;
+
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
+    }
+	
+    &Log::do_log('debug', 'SOAP closeList(%s,%s)', $listname,$robot);
+
+    my $list = new List ($listname, $robot);
+    unless ($list) {
+	&Log::do_log('info', 'closeList %s@%s from %s refused, unknown list', $listname,$robot,$sender);
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('unknown list')
+	    ->faultdetail("inknown list $listname");
+    }
+    
+    # check authorization
+    unless (($list->am_i('owner', $sender)) || (&List::is_listmaster($sender))) {
+	&Log::do_log('info', 'closeList %s from %s not allowed',$listname,$sender);
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Not allowed')
+	    ->faultdetail("Not allowed");
+     }      
+
+    if ($list->{'admin'}{'status'} eq 'closed') {
+	&Log::do_log('info', 'closeList: already closed');
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('list allready closed')
+	    ->faultdetail("list $listname all ready closed");
+     }elsif($list->{'admin'}{'status'} eq 'pending') {
+	 &Log::do_log('info','do_close_list: closing a pending list makes it purged');
+	 $list->purge($sender);
+     }else{
+	 $list->close($sender);
+	 &Log::do_log('info','do_close_list: list %s closed',$listname);
+     }     
      return 1;
 }
 

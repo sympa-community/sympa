@@ -106,6 +106,7 @@
 <message name="addRequest">
 	<part name="list" type="xsd:string"/>		
 	<part name="email" type="xsd:string"/>
+	<part name="gecos" type="xsd:string"  xsd:minOccurs="0"//>	
 	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
 </message>
 
@@ -134,6 +135,14 @@
 </message>
 
 <message name="createListResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="closeListRequest">
+	<part name="list" type="xsd:string"/>
+</message>
+
+<message name="closeListResponse">
 	<part name="return" type="xsd:boolean"/>
 </message>
 
@@ -236,9 +245,9 @@
 		<input message="tns:createListRequest" />
 		<output message="tns:createListResponse" />
 	</operation>
-	<operation name="createList">
-		<input message="tns:createListRequest" />
-		<output message="tns:createListResponse" />
+	<operation name="closeList">
+		<input message="tns:closeListRequest" />
+		<output message="tns:closeListResponse" />
 	</operation>
 	<operation name="review">
 		<input message="tns:reviewRequest" />
