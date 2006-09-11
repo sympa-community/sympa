@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1528"
+<A NAME="tex2html1536"
   HREF="node27.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1522"
+<A NAME="tex2html1530"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1516"
+<A NAME="tex2html1524"
   HREF="node25.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1524"
+<A NAME="tex2html1532"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1526"
+<A NAME="tex2html1534"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1529"
+<B> Next:</B> <A NAME="tex2html1537"
   HREF="node27.html">26. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html1523"
+<B> Up:</B> <A NAME="tex2html1531"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1517"
+<B> Previous:</B> <A NAME="tex2html1525"
   HREF="node25.html">24. Bounce management</A>
- &nbsp; <B>  <A NAME="tex2html1525"
+ &nbsp; <B>  <A NAME="tex2html1533"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1527"
+ &nbsp; <B>  <A NAME="tex2html1535"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -65,14 +65,14 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 <I>Sympa</I> lets you use an external antivirus solution to check incoming mails.
-In this case you must set the <A NAME="12001"></A><TT>antivirus_path</TT> and 
-<A NAME="12004"></A><TT>antivirus_args</TT> configuration parameters
+In this case you must set the <A NAME="12027"></A><TT>antivirus_path</TT> and 
+<A NAME="12030"></A><TT>antivirus_args</TT> configuration parameters
  (see <A HREF="node8.html#Antivirus_plug-in">7.13</A>, page&nbsp;<A HREF="node8.html#Antivirus_plug-in"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 <I>Sympa</I> is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
-For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="12009"></A><TT>/usr/local/sympa-sa/spool/tmp/antivirus</TT> directory and
+For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="12035"></A><TT>/usr/local/sympa-os/spool/tmp/antivirus</TT> directory and
 then calls the antivirus software to check them.
 When a virus is detected, <I>Sympa</I> looks for the virus name in the virus scanner STDOUT and sends a
-<A NAME="12013"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
+<A NAME="12039"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
 The mail is saved as 'bad' and the working directory is deleted (except if <I>Sympa</I> is running in debug mode).
 
 <P>
@@ -80,7 +80,7 @@ The mail is saved as 'bad' and the working directory is deleted (except if <I>Sy
 <BR><HR>
 <ADDRESS>
 root
-2006-09-07
+2006-09-11
 </ADDRESS>
 </BODY>
 </HTML>

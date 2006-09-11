@@ -3630,8 +3630,33 @@ mail messages including password reminders.
 \label{i18n}
 \index{i18n}
 
+\section {Catalogs and templates}
 
-\section {Translating Sympa GUI}
+Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). 
+All translations for one language are gathered in a single PO file that can be manipulated by standard 
+\htmladdnormallinkfoot {GNU gettext tools} {http://www.gnu.org/software/gettext/\#TOCintroduction}.
+
+Documentation and ressources about software translations : \htmladdnormallinkfoot {http://translate.sourceforge.net/doc/} {http://translate.sourceforge.net/doc/} 
+
+Sympa previously (until Sympa 4.1.x) used XPG4 messages catalogue format. Web and mail templates were language specific. 
+The new organization both provide a unique file to work on for translators and a standard format supported by many software.
+Sympa templates refer to translatable strings using the \texttt {loc} TT2 filter.
+
+Examples :
+\begin {quote}
+\begin{verbatim}
+[%|loc%]User Email[%END%]
+
+[%|loc(list.name,user.email)%]You have subscribed to list %1 with email address %2[%END%]
+\end{verbatim}
+\end {quote}
+
+Sympa had previously been translated into 15 languages more or less completely. We have automatically extracted the 
+translatable strings from previous templates but this process is awkward and is only seen as a bootstrap for translators. 
+Therefore Sympa distribution will not include previous translations until a skilled translator has reviewed and updated 
+the corresponding PO file. 
+
+\section {Translating Sympa GUI in your language}
 
 Instructions for translating Sympa are maintained on Sympa web site :
 \htmladdnormallink {http://www.sympa.org/howtotranslate.html} {http://www.sympa.org/howtotranslate.html}
@@ -3640,7 +3665,7 @@ Instructions for translating Sympa are maintained on Sympa web site :
 
 The default Sympa templates are language independant, refering to catalogue entries for translations. 
 When customizing either web or mail templates, you can define different templates for different languages. 
-The template should be located in a subdirectory of \dir {web\_tt2} or \dir {mail\_tt2} with the language code.
+The template should be located in a ll\_CC subdirectory of \dir {web\_tt2} or \dir {mail\_tt2} with the language code.
 
 Example :
 \begin {quote}
@@ -3650,6 +3675,27 @@ Example :
 [ETC_DIR]/web_tt2/fr_FR/home.tt2
 \end{verbatim}
 \end {quote}
+
+This mecanism also applies to \file {comment.tt2} files used by create list templates.
+
+
+Web templates can also make use of the \texttt {locale} variable to make templates multi-lingual :
+
+Example :
+\begin {quote}
+\begin{verbatim}
+[% IF locale == 'fr_FR' %]
+Personnalisation
+[% ELSE %]
+Customization
+[% END %]
+\end{verbatim}
+\end {quote}
+
+\section {Translating topics titles}
+
+Topics are defined in a \file {topics.conf} file. In this file, each entry can be given a title in different languages, see
+\ref{topics}, page~\pageref{topics}.
 
 
 \section {Handling of encodings}

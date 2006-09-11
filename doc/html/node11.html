@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1124"
+<A NAME="tex2html1130"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1118"
+<A NAME="tex2html1124"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1112"
+<A NAME="tex2html1118"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1120"
+<A NAME="tex2html1126"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1122"
+<A NAME="tex2html1128"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1125"
+<B> Next:</B> <A NAME="tex2html1131"
   HREF="node12.html">11. Sympa RSS channel</A>
-<B> Up:</B> <A NAME="tex2html1119"
+<B> Up:</B> <A NAME="tex2html1125"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1113"
+<B> Previous:</B> <A NAME="tex2html1119"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1121"
+ &nbsp; <B>  <A NAME="tex2html1127"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1123"
+ &nbsp; <B>  <A NAME="tex2html1129"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,12 +60,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1126"
-  HREF="node11.html#SECTION001110000000000000000">10.1 Translating Sympa GUI</A>
-<LI><A NAME="tex2html1127"
-  HREF="node11.html#SECTION001120000000000000000">10.2 Defining language-specific templates</A>
-<LI><A NAME="tex2html1128"
-  HREF="node11.html#SECTION001130000000000000000">10.3 Handling of encodings</A>
+<LI><A NAME="tex2html1132"
+  HREF="node11.html#SECTION001110000000000000000">10.1 Catalogs and templates</A>
+<LI><A NAME="tex2html1133"
+  HREF="node11.html#SECTION001120000000000000000">10.2 Translating Sympa GUI in your language</A>
+<LI><A NAME="tex2html1134"
+  HREF="node11.html#SECTION001130000000000000000">10.3 Defining language-specific templates</A>
+<LI><A NAME="tex2html1135"
+  HREF="node11.html#SECTION001140000000000000000">10.4 Translating topics titles</A>
+<LI><A NAME="tex2html1136"
+  HREF="node11.html#SECTION001150000000000000000">10.5 Handling of encodings</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
@@ -79,23 +83,56 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <H1><A NAME="SECTION001110000000000000000">
-10.1 Translating Sympa GUI</A>
+10.1 Catalogs and templates</A>
+</H1>
+
+<P>
+Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). 
+All translations for one language are gathered in a single PO file that can be manipulated by standard 
+<A NAME="tex2html29"
+  HREF="http://www.gnu.org/software/gettext/#TOCintroduction">GNU gettext tools</A>.
+
+<P>
+Documentation and ressources about software translations : <A NAME="tex2html30"
+  HREF="http://translate.sourceforge.net/doc/">http://translate.sourceforge.net/doc/</A>
+<P>
+Sympa previously (until Sympa 4.1.x) used XPG4 messages catalogue format. Web and mail templates were language specific. 
+The new organization both provide a unique file to work on for translators and a standard format supported by many software.
+Sympa templates refer to translatable strings using the <TT>loc</TT> TT2 filter.
+
+<P>
+Examples :<PRE>
+[%|loc%]User Email[%END%]
+
+[%|loc(list.name,user.email)%]You have subscribed to list %1 with email address %2[%END%]
+</PRE>
+
+<P>
+Sympa had previously been translated into 15 languages more or less completely. We have automatically extracted the 
+translatable strings from previous templates but this process is awkward and is only seen as a bootstrap for translators. 
+Therefore Sympa distribution will not include previous translations until a skilled translator has reviewed and updated 
+the corresponding PO file. 
+
+<P>
+
+<H1><A NAME="SECTION001120000000000000000">
+10.2 Translating Sympa GUI in your language</A>
 </H1>
 
 <P>
 Instructions for translating Sympa are maintained on Sympa web site :
-<A NAME="tex2html29"
+<A NAME="tex2html31"
   HREF="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</A>
 <P>
 
-<H1><A NAME="SECTION001120000000000000000">
-10.2 Defining language-specific templates</A>
+<H1><A NAME="SECTION001130000000000000000">
+10.3 Defining language-specific templates</A>
 </H1>
 
 <P>
 The default Sympa templates are language independant, refering to catalogue entries for translations. 
 When customizing either web or mail templates, you can define different templates for different languages. 
-The template should be located in a subdirectory of <A NAME="9119"></A><TT>web_tt2</TT> or <A NAME="9122"></A><TT>mail_tt2</TT> with the language code.
+The template should be located in a ll_CC subdirectory of <A NAME="9139"></A><TT>web_tt2</TT> or <A NAME="9142"></A><TT>mail_tt2</TT> with the language code.
 
 <P>
 Example :<PRE>
@@ -105,22 +142,47 @@ Example :<PRE>
 </PRE>
 
 <P>
+This mecanism also applies to <A NAME="9145"></A><TT>comment.tt2</TT> files used by create list templates.
 
-<H1><A NAME="SECTION001130000000000000000">
-10.3 Handling of encodings</A>
+<P>
+Web templates can also make use of the <TT>locale</TT> variable to make templates multi-lingual :
+
+<P>
+Example :<PRE>
+[% IF locale == 'fr_FR' %]
+Personnalisation
+[% ELSE %]
+Customization
+[% END %]
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION001140000000000000000">
+10.4 Translating topics titles</A>
+</H1>
+
+<P>
+Topics are defined in a <A NAME="9148"></A><TT>topics.conf</TT> file. In this file, each entry can be given a title in different languages, see
+<A HREF="node18.html#topics">17.5</A>, page&nbsp;<A HREF="node18.html#topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+
+<H1><A NAME="SECTION001150000000000000000">
+10.5 Handling of encodings</A>
 </H1>
 
 <P>
 Until version 5.3, Sympa web pages were encoded in each language's
 encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
 web page is now encoded in utf-8. Thanks to
-the <A NAME="9125"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
+the <A NAME="9151"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
 filesystem encoding, each message catalog's encoding and its web
 encoding (utf-8).
 
 <P>
 If your operating system uses a character encoding different from
-utf-8, then you should declare it using the <A NAME="9128"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
+utf-8, then you should declare it using the <A NAME="9154"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
 <A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). It is required to do so
 because Sympa has no way to find out what encoding is used for its
 configuration files. Once this encoding is known, every template or
@@ -136,36 +198,36 @@ for the end-users.
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1124"
+<A NAME="tex2html1130"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1118"
+<A NAME="tex2html1124"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1112"
+<A NAME="tex2html1118"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1120"
+<A NAME="tex2html1126"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1122"
+<A NAME="tex2html1128"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1125"
+<B> Next:</B> <A NAME="tex2html1131"
   HREF="node12.html">11. Sympa RSS channel</A>
-<B> Up:</B> <A NAME="tex2html1119"
+<B> Up:</B> <A NAME="tex2html1125"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1113"
+<B> Previous:</B> <A NAME="tex2html1119"
   HREF="node10.html">9. WWSympa, Sympa's web interface</A>
- &nbsp; <B>  <A NAME="tex2html1121"
+ &nbsp; <B>  <A NAME="tex2html1127"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1123"
+ &nbsp; <B>  <A NAME="tex2html1129"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-07
+2006-09-11
 </ADDRESS>
 </BODY>
 </HTML>
