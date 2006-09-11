@@ -157,7 +157,7 @@ sub mail_file {
    }
    
    ## Charset for encoding
-   my $charset = sprintf (gettext("_charset_"));
+   my $charset = $data->{'charset'} || sprintf (gettext("_charset_"));
 
     ## ADD MISSING HEADERS
     my $headers="";
