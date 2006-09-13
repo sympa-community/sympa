@@ -1297,7 +1297,7 @@ sub LOCK_UN {8};
 sub db_connect {
     my $option = shift;
 
-    do_log('debug3', 'List::db_connect');
+    do_log('debug2', 'List::db_connect');
 
     my $connect_string;
 
@@ -1306,7 +1306,13 @@ sub db_connect {
 	return undef;
     }
     require DBI;
-
+    
+    ## Check if already connected
+    if ($dbh && $dbh->ping()) {
+	&do_log('notice', 'List::db_connect(): Db handle already available');
+	return 1;
+    }
+    
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name') {
 	unless ($Conf{$db_param}) {
@@ -1362,7 +1368,8 @@ sub db_connect {
 	$connect_string .= ';' . $Conf{'db_options'};
     }
 
-    unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
+    unless ( ( $dbh && $dbh->ping() ) ||
+	     ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) ) {
 
 	return undef if ($option eq 'just_try');
 
@@ -1379,10 +1386,12 @@ sub db_connect {
 
 	## Loop until connect works
 	my $sleep_delay = 60;
-	do {
+	while (1) {
 	    sleep $sleep_delay;
+	    $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'});
+	    last if ($dbh && $dbh->ping());
 	    $sleep_delay += 10;
-	} until ($dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) );
+	}
 	
 	do_log('notice','Connection to Database %s restored.', $connect_string);
 	unless (&send_notify_to_listmaster('db_restored', $Conf{'domain'},{})) {
@@ -3093,19 +3102,19 @@ sub send_msg_digest {
 #           -lang
 #           -password
 #         -...
+#      -$options : ref(HASH) - options
 # OUT : 1 | undef
 #       
 ####################################################
 sub send_global_file {
-    my($tpl, $who, $robot, $context) = @_;
+    my($tpl, $who, $robot, $context, $options) = @_;
     do_log('debug2', 'List::send_global_file(%s, %s, %s)', $tpl, $who, $robot);
 
     my $data = $context;
 
     unless ($data->{'user'}) {
-	unless ($data->{'user'} = &get_user_db($who)) {
-	    $data->{'user'}{'email'} = $who;
-	}
+	$data->{'user'} = &get_user_db($who) unless ($options->{'skip_db'});
+	$data->{'user'}{'email'} = $who unless (defined $data->{'user'});;
     }
     unless ($data->{'user'}{'lang'}) {
 	$data->{'user'}{'lang'} = $Language::default_lang;
@@ -4060,6 +4069,7 @@ sub send_notify_to_listmaster {
     my $host = &Conf::get_robot_conf($robot, 'host');
     my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
     my $to = "$Conf{'listmaster_email'}\@$host";
+    my $options = {}; ## options for send_global_file()
 
     if (ref($param) eq 'HASH') {
 
@@ -4073,7 +4083,7 @@ sub send_notify_to_listmaster {
 		&do_log('err','Parameter %s is not a valid list', $param->{'listname'});
 		return undef;
 	    }
-	    unless ($list->send_file('listmaster_notification',$listmaster, $robot,$param)) {
+	    unless ($list->send_file('listmaster_notification',$listmaster, $robot, $param, $options)) {
 		&do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
 		return undef;
 	    }
@@ -4084,6 +4094,7 @@ sub send_notify_to_listmaster {
 	    if (($operation eq 'no_db')||($operation eq 'db_restored')) {
 		
 		$param->{'db_name'} = &Conf::get_robot_conf($robot, 'db_name');  
+		$options->{'skip_db'} = 1; ## Skip DB access because DB is not accessible
 		
 	    ## creation list requested
 	    }elsif ($operation eq 'request_list_creation') {
@@ -4102,7 +4113,7 @@ sub send_notify_to_listmaster {
 		&tt2::allow_absolute_path();
 	    }
 
-	    unless (&send_global_file('listmaster_notification', $listmaster, $robot,$param)) {
+	    unless (&send_global_file('listmaster_notification', $listmaster, $robot, $param, $options)) {
 		&do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
 		return undef;
 	    }
@@ -4115,7 +4126,7 @@ sub send_notify_to_listmaster {
 	for my $i(0..$#{$param}) {
 	    $data->{"param$i"} = $param->[$i];
 	}
-	unless (&send_global_file('listmaster_notification', $listmaster, $robot, $data)) {
+	unless (&send_global_file('listmaster_notification', $listmaster, $robot, $data, $options)) {
 	    &do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
 	    return undef;
 	}
