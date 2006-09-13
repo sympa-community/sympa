@@ -1368,8 +1368,7 @@ sub db_connect {
 	$connect_string .= ';' . $Conf{'db_options'};
     }
 
-    unless ( ( $dbh && $dbh->ping() ) ||
-	     ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) ) {
+    unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
 
 	return undef if ($option eq 'just_try');
 
