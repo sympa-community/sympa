@@ -5142,7 +5142,7 @@ sub get_first_user {
 			return undef;
 		    }
 		}
-		close $lock_file;
+		close FH;
 
 		unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
 		    return undef;
@@ -5471,7 +5471,7 @@ sub get_first_admin_user {
 	    }
 	}
 	
-	close $lock_file;
+	close FH;
 	
 	unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
 		return undef;
@@ -5867,7 +5867,7 @@ sub get_first_bouncing_user {
 		    return undef;
 		}
 	    }
-	    close $lock_file;
+	    close FH;
 	    
 
 	    unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
