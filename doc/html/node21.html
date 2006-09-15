@@ -170,7 +170,7 @@ Here is a list of operation performed on a family :
 </H2>
 Families can be defined at the robot level, at  the site level or on the distribution level
  (where default families are provided).
-So, you have to create a sub directory named after the family's name in a <A NAME="10689"></A><TT>families</TT> directory  : 
+So, you have to create a sub directory named after the family's name in a <A NAME="10692"></A><TT>families</TT> directory  : 
 
 <P>
 <I>Examples:</I> <PRE>
@@ -180,11 +180,11 @@ So, you have to create a sub directory named after the family's name in a <A NAM
 In this directory you must provide these files :
 
 <UL>
-<LI><A NAME="10692"></A><TT>config.tt2</TT> (mandatory)
+<LI><A NAME="10695"></A><TT>config.tt2</TT> (mandatory)
 </LI>
-<LI><A NAME="10695"></A><TT>param_constraint.conf</TT> (mandatory)
+<LI><A NAME="10698"></A><TT>param_constraint.conf</TT> (mandatory)
 </LI>
-<LI><A NAME="10698"></A><TT>edit_list.conf</TT>
+<LI><A NAME="10701"></A><TT>edit_list.conf</TT>
 </LI>
 <LI>customizable files
 </LI>
@@ -269,13 +269,13 @@ ttl 360
 	 
 <UL>
 <LI><I>free</I> parameters : no constraint on these parameters, 
-                  they are not written in the <A NAME="10701"></A><TT>param_constraint.conf</TT> file.
+                  they are not written in the <A NAME="10704"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>controlled</I> parameters : these parameters must select their values 
-                  in a set of available values indicated in the <A NAME="10704"></A><TT>param_constraint.conf</TT> file.
+                  in a set of available values indicated in the <A NAME="10707"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>fixed</I> parameters : these parameters must have the imposed value indicated
-	          in the <A NAME="10707"></A><TT>param_constraint.conf</TT> file.
+	          in the <A NAME="10710"></A><TT>param_constraint.conf</TT> file.
 
 <P>
 </LI>
@@ -283,9 +283,9 @@ ttl 360
 	 The parameters constraints will be checked at every list loading.
 
 <P>
-<B>WARNING</B> : Some parameters cannot be constrained, they are : <A NAME="10710"></A><TT>msg_topic.keywords</TT> 
-(see&nbsp;<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),<A NAME="10713"></A><TT>owner_include.source_parameter</TT> 
-(see&nbsp;<A HREF="node22.html#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), <A NAME="10716"></A><TT>editor_include.source_parameter</TT> (see&nbsp;<A HREF="node22.html#par-editor-include">21.1.2</A>, page&nbsp;<A HREF="node22.html#par-editor-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). About <A NAME="10719"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node22.html#par-digest">21.4.9</A>, page&nbsp;<A HREF="node22.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) , just days can be constrained.
+<B>WARNING</B> : Some parameters cannot be constrained, they are : <A NAME="10713"></A><TT>msg_topic.keywords</TT> 
+(see&nbsp;<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),<A NAME="10716"></A><TT>owner_include.source_parameter</TT> 
+(see&nbsp;<A HREF="node22.html#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), <A NAME="10719"></A><TT>editor_include.source_parameter</TT> (see&nbsp;<A HREF="node22.html#par-editor-include">21.1.2</A>, page&nbsp;<A HREF="node22.html#par-editor-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). About <A NAME="10722"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node22.html#par-digest">21.4.9</A>, page&nbsp;<A HREF="node22.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) , just days can be constrained.
 
 <P>
 <I>Example:</I> <PRE>
@@ -340,8 +340,8 @@ by the set of values for affectation list parameters.
 Here is an sample command to instantiate a family :<PRE>
 sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file /path/to/my\_file.xml
 </PRE>
-This means lists that belong to family <A NAME="10722"></A><TT>my_family</TT> will be created under the robot 
-<A NAME="10725"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="10728"></A><TT>my_file.xml</TT>. Sympa will split this file 
+This means lists that belong to family <A NAME="10725"></A><TT>my_family</TT> will be created under the robot 
+<A NAME="10728"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="10731"></A><TT>my_file.xml</TT>. Sympa will split this file 
 into several xml files describing lists. Each list XML file is put in each list directory.
 <BR>
 <P>
@@ -416,7 +416,7 @@ Each instantiation describes lists. Compared to the previous instantiation, ther
         the XML file or because of changed family's properties.
 </LI>
 <LI>lists removal : lists nomore described by the new instantiation. In this case, the listmaster must 
-        valid his choice on command line. If the list is removed, it is set in status <A NAME="10731"></A><TT>family_closed</TT>, or if the 
+        valid his choice on command line. If the list is removed, it is set in status <A NAME="10734"></A><TT>family_closed</TT>, or if the 
 	list is recovered, the list XML file from the previous instantiation is got back to go on as a list modification then.
 
 <P>
@@ -444,7 +444,7 @@ diagram
 In case of modification (see diagram), allowed customizations can be preserved :
 
 <UL>
-<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="10734"></A><TT>config_changes</TT> 
+<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="10737"></A><TT>config_changes</TT> 
     file, values can be collected in the old list configuration file, according to new family properties :
     
 <UL>
@@ -470,9 +470,9 @@ Notes :
 
 <UL>
 <LI>For each list problem (as family file error, error parameter constraint, error instanciation ...),
-    the list is set in status <A NAME="10737"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
+    the list is set in status <A NAME="10740"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
 </LI>
-<LI>For each list closing in family context, the list is set in status <A NAME="10740"></A><TT>family_closed</TT> and the owner is notified.
+<LI>For each list closing in family context, the list is set in status <A NAME="10743"></A><TT>family_closed</TT> and the owner is notified.
 </LI>
 <LI>For each overwritten list customization, the owner is notified. 
 </LI>
@@ -497,7 +497,7 @@ new family properties and they would be set in status error_config immediately.
 <A NAME="family-closure"></A>
 <P>
 Closes every list (installed under the indicated robot) 
- of this family : lists status are set to <A NAME="10743"></A><TT>family_closed</TT>, aliases are 
+ of this family : lists status are set to <A NAME="10746"></A><TT>family_closed</TT>, aliases are 
  removed and subscribers are removed from DB. (a dump is created in the list 
  directory to allow restoration of the list).
 
@@ -518,7 +518,7 @@ Here is a sample command to close a family :
 <P>
 Adds a list to the family without instantiate all the family. The list is created
  as if it was created during an instantiation, under the indicated robot. The XML file
- describes the list and the root element is <A NAME="10746"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
+ describes the list and the root element is <A NAME="10749"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
  <A HREF="node20.html#list-creation-sympa">19.3</A>, page&nbsp;<A HREF="node20.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -535,7 +535,7 @@ Here is a sample command to add a list to a family :
 
 <P>
 Closes the list  installed under the indicated robot : the list status is set to
-  <A NAME="10749"></A><TT>family_closed</TT>, aliases are 
+  <A NAME="10752"></A><TT>family_closed</TT>, aliases are 
  removed and subscribers are removed from DB. (a dump is created in the list 
  directory to allow restoring the list).
 
@@ -556,7 +556,7 @@ Here is a sample command to close a list family (same as an orphan list) :
 <P>
 Modifies a family list without instantiating the whole family. The list (installed under the indicated robot) 
  is modified as if it was modified during an instantiation. The XML file
- describes the list and the root element is <A NAME="10752"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
+ describes the list and the root element is <A NAME="10755"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
  <A HREF="node20.html#list-creation-sympa">19.3</A>, page&nbsp;<A HREF="node20.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -572,7 +572,7 @@ Here is a sample command to modify a list to a family :
 <BR>
 20.2.8 List parameters edition in a family context
 </H2>
-According to file <A NAME="10755"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
+According to file <A NAME="10758"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
 See <A HREF="node20.html#list-edition">19.4.4</A>, page&nbsp;<A HREF="node20.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. But in a family context, constraints parameters are 
 added to edition right as it is summarized in this array :
 <BR>
@@ -580,7 +580,7 @@ added to edition right as it is summarized in this array :
 array
 <BR>
 <P>
-Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the <A NAME="10758"></A><TT>config_changes</TT> file. 
+Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the <A NAME="10761"></A><TT>config_changes</TT> file. 
 
 <P>
 
@@ -615,7 +615,7 @@ Note : In order to preserve list customization for instantiation, every modified
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-09-11
+2006-09-15
 </ADDRESS>
 </BODY>
 </HTML>

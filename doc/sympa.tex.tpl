@@ -9465,6 +9465,8 @@ With these informations, the automatic bounce management is possible:
 
 \end {itemize}
   
+Bouncing list members entries get expired after a given period of time. The default period is 10 days but it can 
+be customized if you write a new \textbf {expire\_bounce} task (see \ref {kw-expire-bounce-task} ,page~\pageref {kw-expire-bounce-task}).
 
 \item
   You can define the limit between each level via the \textbf {List configuration pannel}, 
@@ -9472,7 +9474,7 @@ With these informations, the automatic bounce management is possible:
   associating a score interval with a level.
 
 \item 
-  You can also define wich action must be applied on each category of user.(see \ref {action})
+  You can also define which action must be applied on each category of user.(see \ref {action})
   Each time an action will be done, a notification email will be send to the person of your choice.
   (see \ref {notification})
 
