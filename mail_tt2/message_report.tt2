@@ -61,10 +61,6 @@ Warning : this message may already have been sent by one of the list's editor.[%
 [% ELSIF entry == 'wrong_format_message' -%]
 
 [%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format.[%END%]
-[% ELSIF entry == 'message_rejected' -%]
-
-[%|loc(key,listname)%]Message %1 for list '%2' has been rejected.
-[%END%]
 [% END -%]
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 
@@ -105,6 +101,10 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF entry == 'message_in_distribution_spool' -%]
 
 [%|loc(key,listname)%]Message %1 for list '%2' has been validated ; it will be distributed soon.[%END%]
+
+[% ELSIF entry == 'message_rejected' -%]
+
+[%|loc(key,listname)%]Message %1 for list '%2' has been rejected.[%END%]
 
 [% ELSIF entry == 'message_confirmed' -%]
 

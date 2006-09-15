@@ -2329,11 +2329,17 @@ sub reject {
 	$context{'rejected_by'} = $sender;
 	&do_log('debug2', 'message %s by %s rejected sender %s',$context{'subject'},$context{'rejected_by'},$rejected_sender);
 
+	## Notify author of message
 	unless ($list->send_file('reject', $rejected_sender, $robot, \%context)){
 	    &do_log('notice',"Unable to send template 'reject' to $rejected_sender");
-	    &report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'}},$robot,'',$list);
-	    
+	    &report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'}},$robot,'',$list);	    
 	}
+
+	## Notify list moderator
+	unless (&report::notice_report_msg('message_rejected', $sender, {'listname' => $which,'key' => $key}, $robot, $list)) {
+	    &do_log('err',"Commands::reject(): Unable to send template 'message_report', entry 'message_rejected' to $sender");
+	}
+
     }
     
     close(IN);
