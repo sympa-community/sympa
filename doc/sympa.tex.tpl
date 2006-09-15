@@ -4798,6 +4798,9 @@ Rules are defined as follows :
 
 [topic-needed] ::= the message has not got any topic and message topic are required for the list
 
+/perl_regexp/ ::= a perl regular expression. Don't forget to escape special characters (^, $, \{, \(, ...) 
+Check http://perldoc.perl.org/perlre.html for regular expression syntax.
+
 <date> ::= '<date_element> [ +|- <date_element>]'
 
 <date_element> ::= <epoch_date> | <var> | <date_expr>
@@ -5004,6 +5007,7 @@ order to facilitate the administration of common rules.
 
 You can define a set of common scenario rules, used by all lists.
 include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
+Note that you will need to restart Sympa processes to force reloading of list config files.
 
 \section {blacklist implicit rule}
 
