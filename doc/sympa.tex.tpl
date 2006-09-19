@@ -7230,9 +7230,9 @@ giving details regarding the owner(s) included characteristics:
 
     \item  \lparam {source myfile}
       
-        This is an mandatory field : it indicates the data inclusion file 
-	myfile.incl (but declared myfile). This file can be a template. In this case, it will be interpreted
-	with values given by subparameter \lparam {source\_parameter}.
+        This is an mandatory field : it indicates the data inclusion file myfile.incl. This file can be a template. In this case, it will be interpreted
+	with values given by subparameter \lparam {source\_parameter}. 
+	Note that the \lparam {source} parameter should NOT include the \textit {.incl} file extension ; the myfile.incl file should be located in the \dir {data\_sources} directory.
 
     \item \lparam {source\_parameters a,b,c}
 
