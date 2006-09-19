@@ -22,6 +22,8 @@
 package List;
 
 use strict;
+use Datasource;
+use SQLSource qw(create_db %date_format);
 require Fetch;
 require Exporter;
 #require Encode;
@@ -237,23 +239,6 @@ my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count, $includ
 
 my %list_cache;
 my %persistent_cache;
-
-my %date_format = (
-		   'read' => {
-		       'Pg' => 'date_part(\'epoch\',%s)',
-		       'mysql' => 'UNIX_TIMESTAMP(%s)',
-		       'Oracle' => '((to_number(to_char(%s,\'J\')) - to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) * 86400) +to_number(to_char(%s,\'SSSSS\'))',
-		       'Sybase' => 'datediff(second, "01/01/1970",%s)',
-		       'SQLite' => 'strftime(\'%%s\',%s,\'utc\')'
-		       },
-		   'write' => {
-		       'Pg' => '\'epoch\'::timestamp with time zone + \'%d sec\'',
-		       'mysql' => 'FROM_UNIXTIME(%d)',
-		       'Oracle' => 'to_date(to_char(round(%s/86400) + to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) || \':\' ||to_char(mod(%s,86400)), \'J:SSSSS\')',
-		       'Sybase' => 'dateadd(second,%s,"01/01/1970")',
-		       'SQLite' => 'datetime(%d,\'unixepoch\',\'localtime\')'
-		       }
-	       );
 
 ## DB fields with numeric type
 ## We should not do quote() for these while inserting data
@@ -1301,122 +1286,15 @@ sub db_connect {
 
     my $connect_string;
 
-    unless (eval "require DBI") {
-	do_log('info',"Unable to use DBI library, install DBI (CPAN) first");
-	return undef;
-    }
-    require DBI;
-    
     ## Check if already connected
     if ($dbh && $dbh->ping()) {
 	&do_log('notice', 'List::db_connect(): Db handle already available');
 	return 1;
     }
-    
-    ## Do we have db_xxx required parameters
-    foreach my $db_param ('db_type','db_name') {
-	unless ($Conf{$db_param}) {
-	    do_log('info','Missing parameter %s for DBI connection', $db_param);
-	    return undef;
-	}
+    unless ( $dbh = &SQLSource::connect(\%Conf, {'keep_trying'=>($option eq 'just_try' || ( !$db_connected && !$ENV{'HTTP_HOST'})),
+    	'warn'=>1 } )) {
+    	return undef;
     }
-    
-    ## SQLite just need a db_name
-    unless ($Conf{'db_type'} eq 'SQLite') {
-	foreach my $db_param ('db_type','db_name','db_host','db_user') {
-	    unless ($Conf{$db_param}) {
-		do_log('info','Missing parameter %s for DBI connection', $db_param);
-		return undef;
-	    }
-	}
-    }
-
-    ## Check if DBD is installed
-     unless (eval "require DBD::$Conf{'db_type'}") {
-	do_log('err',"No Database Driver installed for $Conf{'db_type'} ; you should download and install DBD::$Conf{'db_type'} from CPAN");
-	&send_notify_to_listmaster('missing_dbd', $Conf{'domain'},{'db_type' => $Conf{'db_type'}});
-	return undef;
-    }   
-
-    ## Used by Oracle (ORACLE_HOME)
-    if ($Conf{'db_env'}) {
-	foreach my $env (split /;/, $Conf{'db_env'}) {
-	    my ($key, $value) = split /=/, $env;
-	    $ENV{$key} = $value if ($key);
-	}
-    }
-
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## Oracle uses sids instead of dbnames
-	$connect_string = sprintf 'DBI:%s:sid=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
-
-    }elsif ($Conf{'db_type'} eq 'Sybase') {
-	$connect_string = sprintf 'DBI:%s:database=%s;server=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
-
-    }elsif ($Conf{'db_type'} eq 'SQLite') {
-	$connect_string = sprintf 'DBI:%s:dbname=%s', $Conf{'db_type'}, $Conf{'db_name'};
-
-    }else {
-	$connect_string = sprintf 'DBI:%s:dbname=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
-    }
-
-    if ($Conf{'db_port'}) {
-	$connect_string .= ';port=' . $Conf{'db_port'};
-    }
-
-    if ($Conf{'db_options'}) {
-	$connect_string .= ';' . $Conf{'db_options'};
-    }
-
-    unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
-
-	return undef if ($option eq 'just_try');
-
-	do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $Conf{'db_user'});
-
-	unless (&send_notify_to_listmaster('no_db', $Conf{'domain'},{})) {
-	    &do_log('notice',"Unable to send notify 'no_db' to listmaster");
-	}
-
-	## Die if first connect and not in web context
-	unless ($db_connected || $ENV{'HTTP_HOST'}) {
-	    &fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
-	}
-
-	## Loop until connect works
-	my $sleep_delay = 60;
-	while (1) {
-	    sleep $sleep_delay;
-	    $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'});
-	    last if ($dbh && $dbh->ping());
-	    $sleep_delay += 10;
-	}
-	
-	do_log('notice','Connection to Database %s restored.', $connect_string);
-	unless (&send_notify_to_listmaster('db_restored', $Conf{'domain'},{})) {
-	    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
-	}
-
-#	return undef;
-    }
-
-    if ($Conf{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates
-       $dbh->do ("SET DATESTYLE TO 'ISO';");
-    }
-
-    ## added sybase support
-    if ($Conf{'db_type'} eq 'Sybase') { # Configure to use sympa database 
-	my $dbname;
-	$dbname="use $Conf{'db_name'}";
-        $dbh->do ($dbname);
-    }
-
-    if ($Conf{'db_type'} eq 'SQLite') { # Configure to use sympa database
-        $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
-	if(defined $Conf{'db_timeout'}) { $dbh->func( $Conf{'db_timeout'}, 'busy_timeout' ); }
-	else { $dbh->func( 5000, 'busy_timeout' ); }
-    }
-
     do_log('debug3','Connected to Database %s',$Conf{'db_name'});
     $db_connected = 1;
 
@@ -8355,7 +8233,7 @@ sub _include_users_remote_sympa_list {
     my $path = $param->{'path'};
     my $cert = $param->{'cert'} || 'list';
 
-    my $id = _get_datasource_id($param);
+    my $id = Datasource::_get_datasource_id($param);
 
     do_log('debug', 'List::_include_users_remote_sympa_list(%s) https://%s:%s/%s using cert %s,', $self->{'name'}, $host, $port, $path, $cert);
     
@@ -8480,7 +8358,7 @@ sub _include_users_list {
 	return undef;
     }
     
-    my $id = _get_datasource_id($includelistname);
+    my $id = Datasource::_get_datasource_id($includelistname);
 
     for (my $user = $includelist->get_first_user(); $user; $user = $includelist->get_next_user()) {
 	my %u;
@@ -8556,7 +8434,7 @@ sub _include_users_file {
     }
     do_log('debug2','including file %s' , $filename);
 
-    my $id = _get_datasource_id($filename);
+    my $id = Datasource::_get_datasource_id($filename);
     
     while (<INCLUDE>) {
 	next if /^\s*$/;
@@ -8614,7 +8492,7 @@ sub _include_users_remote_file {
     do_log('debug', "List::_include_users_remote_file($url)");
 
     my $total = 0;
-    my $id = _get_datasource_id($param);
+    my $id = Datasource::_get_datasource_id($param);
 
     ## WebAgent package is part of Fetch.pm and inherites from LWP::UserAgent
 
@@ -8699,7 +8577,7 @@ sub _include_users_ldap {
     }
     require Net::LDAP;
     
-    my $id = _get_datasource_id($param);
+    my $id = Datasource::_get_datasource_id($param);
 
     my $host;
     @{$host} = split(/,/, $param->{'host'});
@@ -8858,7 +8736,7 @@ sub _include_users_ldap_2level {
     }
     require Net::LDAP;
 
-    my $id = _get_datasource_id($param);
+    my $id = Datasource::_get_datasource_id($param);
 
     my $host;
     @{$host} = split(/,/, $param->{'host'});
@@ -9050,92 +8928,18 @@ sub _include_users_sql {
 
     &do_log('debug2','List::_include_users_sql()');
 
-    unless ( eval "require DBI" ){
-	do_log('err',"Intall module DBI (CPAN) before using include_sql_query");
-	return undef ;
-    }
-    require DBI;
-
-    my $id = _get_datasource_id($param);
-
-    my $db_type = $param->{'db_type'};
-    my $db_name = $param->{'db_name'};
-    my $host = $param->{'host'};
-    my $port = $param->{'db_port'};
-    my $user = $param->{'user'};
-    my $passwd = $param->{'passwd'};
-    my $sql_query = $param->{'sql_query'};
-
-    ## For CSV (Comma Separated Values) 
-    my $f_dir = $param->{'f_dir'}; 
-
-    my ($dbh, $sth);
-    my $connect_string;
-
-    unless (eval "require DBD::$db_type") {
-	do_log('err',"No Database Driver installed for $db_type ; you should download and install DBD::$db_type from CPAN");
-	&send_notify_to_listmaster('missing_dbd', $Conf{'domain'},{'db_type' => $db_type});
-	return undef;
-    }
-
-    if ($f_dir) {
-	$connect_string = "DBI:CSV:f_dir=$f_dir";
-    }elsif ($db_type eq 'Oracle') {
-	$connect_string = "DBI:Oracle:";
-	if ($host && $db_name) {
-	    $connect_string .= "host=$host;sid=$db_name";
-	}
-	if (defined $port) {
-	    $connect_string .= ';port=' . $port;
-	}
-    }elsif ($db_type eq 'Pg') {
-	$connect_string = "DBI:Pg:dbname=$db_name;host=$host";
-    }elsif ($db_type eq 'Sybase') {
-	$connect_string = "DBI:Sybase:database=$db_name;server=$host";
-    }elsif ($db_type eq 'SQLite') {
-	$connect_string = "DBI:SQLite:dbname=$db_name";
-    }else {
-	$connect_string = "DBI:$db_type:$db_name:$host";
-    }
-
-    if ($param->{'connect_options'}) {
-	$connect_string .= ';' . $param->{'connect_options'};
-    }
-    if (defined $port) {
-	$connect_string .= ';port=' . $port;
-    }
- 
-    ## Set environment variables
-    ## Used by Oracle (ORACLE_HOME)
-    if ($param->{'db_env'}) {
-	foreach my $env (split /;/,$param->{'db_env'}) {
-	    my ($key, $value) = split /=/, $env;
-	    $ENV{$key} = $value if ($key);
-	}
-    }
-
-    unless ($dbh = DBI->connect($connect_string, $user, $passwd)) {
-	do_log('err','Can\'t connect to Database %s',$db_name);
-	return undef;
-    }
-    do_log('debug2','Connected to Database %s',$db_name);
-    
-    unless ($sth = $dbh->prepare($sql_query)) {
-        do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
+    my $id = Datasource::_get_datasource_id($param);
+    my $ds = new Datasource('SQL', $param);
+    unless ($ds->connect && $ds->query($param->{'sql_query'})) {
         return undef;
     }
-    unless ($sth->execute) {
-        do_log('err','Unable to perform SQL query %s : %s ',$sql_query, $dbh->errstr);
-        return undef;
-    }
-    
     ## Counters.
     my $total = 0;
     
     ## Process the SQL results
     # my $rows = $sth->rows;
     # foreach (1..$rows) { ## This way we don't stop at the first NULL entry found
-    while (defined (my $row = $sth->fetchrow_arrayref)) {
+    while (defined (my $row = $ds->fetch)) {
 	
 	my $email = $row->[0]; ## only get first field
 	## Empty value
@@ -9172,9 +8976,8 @@ sub _include_users_sql {
 	    $users->{$email} = \%u;
 	}
     }
-    $sth->finish ;
-    $dbh->disconnect();
-
+    $ds->disconnect();
+    
     do_log('debug2','%d included users from SQL query', $total);
     return $total;
 }
@@ -10908,7 +10711,7 @@ sub probe_db {
     }
     unless ($dbh and $dbh->ping) {
 	unless (&db_connect('just_try')) {
-	    unless (&create_db()) {
+	    unless (&SQLSource::create_db()) {
 		return undef;
 	    }
 	    if ($ENV{'HTTP_HOST'}) { ## Web context
@@ -11240,56 +11043,6 @@ sub probe_db {
     
     ## Notify listmaster
     &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
-
-    return 1;
-}
-
-## Try to create the database
-sub create_db {
-    &do_log('debug3', 'List::create_db()');    
-
-    &do_log('notice','Trying to create %s database...', $Conf{'db_name'});
-
-    unless ($Conf{'db_type'} eq 'mysql') {
-	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
-	return undef;
-    }
-
-    my $drh;
-    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
-	&do_log('err', 'Cannot connect as root to database');
-	return undef;
-    }
-
-    ## Create DB
-    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc) {
-	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    ## Re-connect to DB (to prevent "MySQL server has gone away" error)
-    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
-	&do_log('err', 'Cannot connect as root to database');
-	return undef;
-    }
-
-    ## Grant privileges
-    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO $Conf{'db_user'}\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
-	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    &do_log('notice', 'Database %s created', $Conf{'db_name'});
-
-    ## Reload MysqlD to take changes into account
-    my $rc = $drh->func("reload", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc) {
-	&do_log('err', 'Cannot reload mysqld : %s', $drh->errstr);
-	return undef;
-    }
-
-    $drh->disconnect();
 
     return 1;
 }
@@ -13299,18 +13052,6 @@ sub get_arc_size {
 }
 
 
-## Returns a unique ID for an include datasource
-sub _get_datasource_id {
-    my ($source) = shift;
-
-    if (ref ($source)) {
-	return substr(Digest::MD5::md5_hex(join('/', %{$source})), -8);
-    }else {
-	return substr(Digest::MD5::md5_hex($source), -8);
-    }
-	
-}
-
 ## Searches the include datasource corresponding to the provided ID
 sub search_datasource {
     my ($self, $id) = @_;
@@ -13322,7 +13063,7 @@ sub search_datasource {
 	
 	## Go through sources
 	foreach my $s (@{$self->{'admin'}{$p}}) {
-	    if (&_get_datasource_id($s) eq $id) {
+	    if (&Datasource::_get_datasource_id($s) eq $id) {
 		if (ref($s)) {
  		    return $s->{'name'} || $s->{'host'};
 		}else{
