@@ -52,7 +52,7 @@ sub new {
     &do_log('debug2', 'Datasource::new(%s)',$type);
     
     # import the desirable subs
-    eval "use ${type}Source qw(connect query disconnect fetch)";
+    eval "use ${type}Source qw(connect query disconnect fetch ping quote)";
     return undef if ($@);
 
     $datasrc->{'param'} = $param_ref;
