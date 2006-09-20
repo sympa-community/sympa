@@ -7458,14 +7458,13 @@ sub search{
     # &do_log('info', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
     
     if ($filter_file =~ /\.ldap$/) {	
+	## Determine full path of the filter file
 	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
 	
-	## Raise an error except for blacklist.txt
-	if ($filter_file ne 'blacklist.txt' && ! $file) {
+	unless ($file) {
 	    &do_log('err', 'Could not find search filter %s', $filter_file);
 	    return undef;
 	}   
-
 	my $timeout = 3600;	
 	my $var;
 	my $time = time;
@@ -7531,11 +7530,16 @@ sub search{
 	}
     }elsif($filter_file =~ /\.txt$/){ 
 	# &do_log('info', 'List::search: eval %s', $filter_file);
-	my @files ; 
-	unless (@files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list)) {
-	    &do_log('err', 'Could not find search filter %s', $filter_file);
-	    return undef;
+	my @files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list); 
+
+	## Raise an error except for blacklist.txt
+	unless ($filter_file eq 'blacklist.txt') {
+	    unless (@files) {
+		&do_log('err', 'Could not find search filter %s', $filter_file);
+		return undef;
+	    }
 	}
+
 	my $sender = lc($sender);
 	foreach my $file (@files) {
 	    &do_log('debug3', 'List::search: found file  %s', $file);

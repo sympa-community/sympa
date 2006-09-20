@@ -1719,7 +1719,7 @@ sub get_filename {
 	foreach my $f (@try) {
 	    &do_log('debug3','get_filname : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
-		if ($options->{'order'} == 'all') {
+		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
 		}
 		return $f;
