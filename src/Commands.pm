@@ -2043,7 +2043,7 @@ sub distribute {
 	} 
 	&do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $hdr->get('Message-Id'), $bytes);
 
-	unless ($quiet || ($action =~ /quiet/i )) {
+	unless ($quiet)) {
 	    unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $which,'key' => $key},$robot,$list)) {
 		&do_log('notice',"Commands::distribute(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 	    }
@@ -2058,7 +2058,7 @@ sub distribute {
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
 	    return undef;
 	}
-	unless ($quiet || ($action =~ /quiet/i )) {
+	unless ($quiet) {
 	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
 	}
 	&do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
