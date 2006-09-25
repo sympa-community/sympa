@@ -1,14 +1,15 @@
 <!-- $Id$ -->
 
 <h2>[%|loc%]Result of your search in the archive[%END%] 
-<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="color: [% dark_color %];">[% list %]</span></a> : </h2>
+<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span class="color_dark">[% list %]</span></a> : </h2>
 
 <p>[%|loc%]Search field :[%END%] 
 [% FOREACH u = directories %]
- <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span style="color: [% dark_color %];">[% u %]</font></a> - 
+ <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span class="color_dark">[% u %]</font></a> - 
 [% END %]
 </p>
-[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%]:<br> 
+<p>
+[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%] 
 <em>
 
 [% IF how == 'phrase' %]
@@ -19,13 +20,13 @@
 	[%|loc%](Each of this words,[%END%] 
 [% END %]
 
-[% IF case == 'off' %]
+[% IF case %]
 	[%|loc%]case insensitive[%END%] 
 [% ELSE %]
 	[%|loc%]case sensitive[%END%] 
 [% END %]
 
-[% IF match == 'partial' %]
+[% IF match %]
 	[%|loc%]and checking on part of word)[%END%]
 [% ELSE %]
 	[%|loc%]and checking on entire word)[%END%]
@@ -35,21 +36,21 @@
 
 <hr />
 
-[% IF age == 'new' %]
+[% IF age == new %]
 	<p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
 	<p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
 [% END %]
 
-<ul>
 <dl>
 [% FOREACH u = res %]
-	<dt><li><b><a href=[% u.file %]>[% u.subj %]</b></a> -- <em>[% u.date %]</em><dd>[% u.from %]<pre>[% u.body_string %]</pre></dd>
+	<dt><a href=[% u.file %]>[% u.subj %]</a> -- <em>[% u.date %]</em><dd>[% u.from %]<pre>[% u.body_string %]</pre></dd>
 [% END %]
 </dl>
-</ul>
-<p>
+
 <dl>
+<strong>[%|loc%]Result[%END%]</strong>
+<dt><strong>[%|loc(searched,num)%]%1 messages selected out of %2[%END%]...</strong><br />
 
 [% IF body %]
 	<dd>[%|loc(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
@@ -70,6 +71,7 @@
 </dl>
 
 <form method="post" action="[% path_cgi %]">
+<fieldset>
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="archive_name" value="[% archive_name %]" />
 <input type="hidden" name="key_word" value="[% key_word %]" />
@@ -107,8 +109,9 @@
 [% IF continue %]
 	<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
 [% END %]
-<p>
+
 <input class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
+</fieldset>
 </form>
 <hr />
 <p>[%|loc%]Based on <em><a href="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></em>, search engine of MHonArc archives[%END%]</p>

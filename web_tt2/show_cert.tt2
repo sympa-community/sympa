@@ -1,14 +1,12 @@
 <!-- $Id$ -->
 
 <br />
-<table border="1">
-<tr><td style="text-align: center;"><strong>[%|loc%]HTTPS authentication information[%END%]</strong></td></tr>
-<tr><td>
-<table>
-<tr><td>[%|loc%]User certificate belong to[%END%] </td><td>[% ssl_client_s_dn %]</td></tr>
-<tr><td>[%|loc%]Certificate expiration date[%END%] </td><td>[% ssl_client_v_end %]</td></tr>
-<tr><td>[%|loc%]Certificate issuer[%END%] </td><td>[% ssl_client_i_dn %]</td></tr>
-<tr><td>[%|loc%]Cipher key size used[%END%] </td><td>[% ssl_cipher_usekeysize %]</td></tr>
-</table>
-</td></tr>
-</table>
+<div id="show_cert">
+<ul>
+  <strong>[%|loc%]HTTPS authentication information[%END%]</strong><br />
+  <li>[%|loc%]User certificate belong to[%END%][% ssl_client_s_dn %]</li><br />
+  <li>[%|loc%]Certificate expiration date[%END%][% ssl_client_v_end %]</li><br />
+  <li>[%|loc%]Certificate issuer[%END%][% ssl_client_i_dn %]</li><br />
+  <li>[%|loc%]Cipher key size used[%END%][% ssl_cipher_usekeysize %]</li><br />
+</ul>
+</div>

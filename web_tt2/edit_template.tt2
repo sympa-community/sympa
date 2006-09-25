@@ -20,6 +20,7 @@
 </ul>
 </p><br />
 <form action="[% path_cgi %]/edit_template" method="post">
+<fieldset>
  <textarea wrap="off" name="content" cols="90" rows="[% rows %]" />
 [% template_content %]
 </textarea><br /><br />
@@ -38,5 +39,5 @@
 [% IF saved %]
 [%|loc%]Template saved[%END%] ([% time %]) <br /><br />
 [% END %]
-
+</fieldset>
 </form>

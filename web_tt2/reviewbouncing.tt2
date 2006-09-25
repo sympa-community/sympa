@@ -1,28 +1,29 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<table style="width: auto;" border="0">
-<tr><td>
-    <form action="[% path_cgi %]" method="post"> 
+<a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/bounce">[%|loc%]Dump[%END%]</a>
+
+<form action="[% path_cgi %]" method="post"> 
+<fieldset>
       <input type="hidden" name="previous_action" value="reviewbouncing" />
       <input type="hidden" name="list" value="[% list %]" />
       <input type="hidden" name="action" value="search" />
+  <input size="25" name="filter" value="[% filter %]" />&nbsp;<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+</fieldset>
+</form>
 
-      <input size="25" name="filter" value="[% filter %]" />
-      <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
-    </form>
-</td>
-<td>
-  <form method="post" action="[% path_cgi %]">
+<form method="post" action="[% path_cgi %]">
+<fieldset>
     <input class="MainMenuLinks" type="submit" value="[%|loc%]Remind all subscribers[%END%]" name="action_remind" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers[%END%][%END%]')" />
     <input type="hidden" name="action" value="remind" />
     <input type="hidden" name="list" value="[% list %]" />
-  </form>	
-</td>
+</fieldset>  
+</form>	
+<br />
 
-   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/bounce">[%|loc%]Dump[%END%]</a>
 
-</tr></table>
-  <form action="[% path_cgi %]">
+
+<form action="[% path_cgi %]">
+<fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="reviewbouncing" />
   <input type="hidden" name="list" value="[% list %]" />
@@ -33,26 +34,27 @@
           <option value="100">100</option>
 	  <option value="500">500</option>
   </select>
-  </form>
-   </td>
+</fieldset>  
+</form>
+<br />
 
- <td style="text-align: right;">
+<div class="text_right">
         [% IF prev_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]"></a>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]"></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]"></a>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]"></a>
         [% END %]
-    </td></tr>
-    </table>
+</div>
 
-     <form name="myform" action="[% path_cgi %]" method="post">
+<form name="myform" action="[% path_cgi %]" method="post">
+<fieldset>
      <input type="hidden" name="list" value="[% list %]" /> 	 
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
-     <table class="listOfItems">
+  <table summary="[%|loc%]Table which display list bounces[%END%]" class="listOfItems">
       <tr>
 	<th>X</th>
         <th>[%|loc%]Email[%END%]</th>
@@ -64,21 +66,21 @@
 	[% IF dark == '1' %]
 	  <tr>
 	[% ELSE %]
-	  <tr style="background-color: [% color_0 %];">
+	  <tr class="color0">
 	[% END %]
 
 	  <td>
 	    <input type="checkbox" name="email" value="[% u.escaped_email %]" />
 	  </td>
-	  <td style="white-space: nowrap;">
+	  <td>
 	      <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/reviewbouncing">[% u.email %]</a>
 
 	  </td>
-          <td style="text-align: center;
+          <td class="text_center 
 	  [% IF u.bounce_level == '2' %]
-            background-color: #FF0000;
+            bounce_level2
 	  [% ELSIF u.bounce_level == '1' %]
-	    background-color: #FF8C00;
+	    bounce_level1
 	  [% END %]
 	  ">
   	      [% u.bounce_score %]
@@ -92,34 +94,28 @@
 	[% END %]
 
         [% END %]
-
-
       </table>
-    <table style="width: auto;" border="0">
-    <tr><td style="text-align: left; white-space: nowrap;">
-      [% IF is_owner %]
-        <br />
-        <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-        <input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]
-	<input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" />
-      [% END %]
-    </td><td style="text-align: right; white-space: nowrap;">
+  <div class="text_right">
         [% IF prev_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]" /></a>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
         [% END %]
-    </td></tr>
-    <tr><td><input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
-    </td></tr>
-    </table>
+  </div>
+  [% IF is_owner %]
+  <br />
+  <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+  <input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]<br />
+  <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" /><br />
+        [% END %]
 
-
-      </form>
+  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+</fieldset>
+</form>
 
 
 

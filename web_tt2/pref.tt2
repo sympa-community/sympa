@@ -1,87 +1,74 @@
 <!-- $Id$ -->
 
-          <form action="[% path_cgi %]" method="post">
-         
-	  <table border="0" style="border-spacing: 0.5em;">
-				<tr><th style="text-align: left; font-weight: normal; white-space: nowrap;">[%|loc%]Email[%END%] :</th><td>[% user.email %]</td></tr>
-				<tr><th style="text-align: left; font-weight: normal; white-space: nowrrap;"><label for="gecos">[%|loc%]Name[%END%] :</label></th>
-					<td><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /></td></tr>
-					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="lang">[%|loc%]Language[%END%] :</label></th>
-            <td><select id="lang" name="lang">
+<form action="[% path_cgi %]" method="post">
+  <fieldset>
+    <label>[%|loc%]Email[%END%] :  </label>[% user.email %]<br />
+    <label for="gecos">[%|loc%]Name[%END%] :  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /><br />
+    <label for="lang">[%|loc%]Language[%END%] :  </label><select id="lang" name="lang">
               [% FOREACH l = languages %]
 		<option value='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
-            </select></td></tr>
-						<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="cookie_delay">[%|loc%]Connexion expiration period[%END%] :</label></th>
-            <td><select name="cookie_delay" id="cookie_delay">
+            					        </select><br />
+    <label for="cookie_delay">[%|loc%]Connexion expiration period[%END%] :  </label><select name="cookie_delay" id="cookie_delay">
               [% FOREACH period = cookie_periods %]
                 <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
               [% END %]
-            </select></td></tr>
-	   </table>
+									            </select><br />
             <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
-          </form><br />
+  </fieldset>
+</form>
+<br />
 
 
  [% IF auth == 'classic' %]
-     <h2 class="block">[%|loc%]Changing your email address[%END%]</h2>
-     
-           <form action="[% path_cgi %]" method="post">
+<h2 class="block">[%|loc%]Changing your email address[%END%]</h2>
         
-					 <table border="0" style="border-spacing: 0.5em;"> 
-					 <tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="email">[%|loc%]New email address :[%END%]</label></th>
-            <td><input id="email" name="email" size="15" /></td></tr>
-					 </table>
-            <input class="MainMenuLinks" type="submit" name="action_change_email" value="[%|loc%]Submit[%END%]" />
-            </form><br /> <br /> 
+<form action="[% path_cgi %]" method="post">
+<fieldset>
+<label for="email">[%|loc%]New email address :[%END%]  </label><input id="email" name="email" size="15" /><br />
+<input class="MainMenuLinks" type="submit" name="action_change_email" value="[%|loc%]Submit[%END%]" />
+</fieldset>
+</form>
+<br /> 
 
-           <h2 class="block">[%|loc%]Changing your password[%END%]</h2>
+<h2 class="block">[%|loc%]Changing your password[%END%]</h2>
   
-          <form action="[% path_cgi %]" method="post">
-					<table border="0" style="border-spacing: 0.5em;">
-					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="newpasswd1">[%|loc%]New password :[%END%]</label></th>
-					<td><input type="password" name="newpasswd1" id="newpasswd1" size="15" /></td></tr>
-					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]</label></th>
-            <td><input type="password" name="newpasswd2" id="newpasswd2" size="15" /></td></tr>
-					</table>
-          <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
-            </form><br />
+<form action="[% path_cgi %]" method="post">
+<fieldset>
+<label for="newpasswd1">[%|loc%]New password :[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="15" /><br />
+<label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="15" /><br />
+<input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
+</fieldset>          
+</form>
+<br />
 	    [% END %]
 
 
-           <h2 class="block">[%|loc%]Your other email addresses[%END%]</h2>
+<h2 class="block">[%|loc%]Your other email addresses[%END%]</h2>
 
-
-    <table style="width: auto;" cellpadding="1" cellspacing="0">
       [% IF !unique %]
-      <tr valign="top">
-      <td>  
-            <form action="[% path_cgi %]" method="post"> 
+<form action="[% path_cgi %]" method="post"> 
+<fieldset>
    	    [% FOREACH email = alt_emails %]
 	    <a href="[% path_cgi %]/change_identity/[% email.key %]/pref">[% email.key %]</a>
 	    <input name="email" type="hidden" value="[% email.key %]" />
 	    <br />
 	    [% END %]
-	    </form><br />
-      </td>
-      </tr> 
+</fieldset>
+</form>
+<br />
       [% END %]
-      <tr valign="top">
-      <td>
-	    <form action="[% path_cgi %]" method="post"> 
-			<table border="0" style="border-spacing: 0.5em;">
-			<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="new_alternative_email">[%|loc%]Other email address :[%END%]</label></th>
-	    <td><input name="new_alternative_email" id="new_alternative_email" size="15" /></td></tr>
-			<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="new_password">[%|loc%]Password :[%END%]</label></th>
-	    <td><input type="password" name="new_password" id="new_password" size="15" /></td></tr>
-			</table>
-      <input class="MainMenuLinks" type="submit" name="action_record_email" value="[%|loc%]Submit[%END%]" />
-            </form><br />
-      </td>
-      <td valign="middle">
-      [%|loc%]This other email address, that should be known by Sympa, will be recognized by Sympa as 
+   
+<form action="[% path_cgi %]" method="post"> 
+<fieldset>
+<label for="new_alternative_email">[%|loc%]Other email address :[%END%]  </label><input name="new_alternative_email" id="new_alternative_email" size="15" /><br />
+<label for="new_password">[%|loc%]Password :[%END%]  </label><input type="password" name="new_password" id="new_password" size="15" /><br />
+<input class="MainMenuLinks" type="submit" name="action_record_email" value="[%|loc%]Submit[%END%]" />
+</fieldset>
+</form>
+<br />
+
+<em>[%|loc%]This other email address, that should be known by Sympa, will be recognized by Sympa as 
 	an alternate email address. You will also be able to unify your subscriptions with
 	your main email address.[%END%]  
-      </td>
-      </tr>
-      </table>
+</em>

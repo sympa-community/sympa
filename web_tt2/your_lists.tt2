@@ -4,16 +4,16 @@
 <div class="MenuBlock">
 
 [% IF which_info %]
-<p align=center><strong> [%|loc%]Your Lists[%END%] </strong></p>
+<p class="text_center"><strong> [%|loc%]Your Lists[%END%] </strong></p>
 
  <ul class="listenum" >
  [% FOREACH l = which_info %]
-  <li class="listenum">
-  [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" ><span style="font-size: 10px;">
-[%|loc%]admin[%END%]</span></a>[% END %]
-  <a href="[% path_cgi %]/info/[% l.key %]" ><strong><span style="font-size: 10px;">
-[% hidden_head %][% l.key %][% hidden_end %]</span></strong></a><br />
-  <span style="font-size: 10px;">[% l.value.subject %]</span><br />
+  <li>
+  [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >
+[%|loc%]admin[%END%]</a>[% END %]
+  <a class="list_menu_links" href="[% path_cgi %]/info/[% l.key %]" >
+[% hidden_head %][% l.key %][% hidden_end %]</a><br />
+  <span>[% l.value.subject %]</span><br />
   </li>
  [% END %]
  </ul>

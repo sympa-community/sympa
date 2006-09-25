@@ -20,67 +20,68 @@ If it is not listed or if you don't have any, login using your email and passwor
 [% END %]
 [% ELSE %]
 [% IF use_passwd == '1' %]
-[%|loc%]Login with you email address and password. You can request a password reminder.[%END%]
+[%|loc%]Login with you email address and password. You can request a password reminder.[%END%]<br />
 [% END %]
 [% END %]
 
 [% END %]
 
-
+<br />
 [% IF use_sso %]
 
 [% IF sso_number == 1 %]
-<P>
-    <form action="[% path_cgi %]" method="post"> 
+
+    <form class="bold_label" action="[% path_cgi %]" method="post"> 
+      <fieldset>
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 	<input type="hidden" name="list" value="[% list %]" />
-     	<div id = "FormLabel">[%|loc%]Magic authentification[%END%]</div>
+     	<label for="auth_service_name">[%|loc%]Magic authentification[%END%]</label>
         [% FOREACH server = sso %]
-           <input type="hidden" name="auth_service_name" value="[% server.key %]" />
+           <input id="auth_service_name" type="hidden" name="auth_service_name" value="[% server.key %]" />
         [% END %]
          <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
+      </fieldset>
     </form> 
 [% ELSE %]
-    <form action="[% path_cgi %]" method="post"> 
+    <form class="bold_label" action="[% path_cgi %]" method="post"> 
+      <fieldset>
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
      	<input type="hidden" name="list" value="[% list %]" />
-        <div id = "FormLabel">
-     	[%|loc%]Choose your authentication server[%END%]
-        <select name="auth_service_name" onchange="this.form.submit();">
+        <label for="auth_service_name">[%|loc%]Choose your authentication server[%END%]</label>
+        <select id="auth_service_name" name="auth_service_name" onchange="this.form.submit();">
           [% FOREACH server = sso %]<option value="[% server.key %]">[% server.value %]</option>[% END %]
         </select>
         <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
-        </div>
+      </fieldset>
     </form>
 [% END %] 
 
 [% END %]
 
-  <form action="[% path_cgi %]" method="post"> 
+  <form class="bold_label" action="[% path_cgi %]" method="post"> 
+    <fieldset>
      <input type="hidden" name="previous_action" value="[% previous_action %]" />
      <input type="hidden" name="previous_list" value="[% previous_list %]" />
      <input type="hidden" name="referer" value="[% referer %]" />
      <input type="hidden" name="action" value="login" />
      <input type="hidden" name="nomenu" value="[% nomenu %]" />
      <input type="hidden" name="list" value="[% list %]" />
-     <div id = "FormLabel">
-       <label for="emailadresse">[%|loc%]email address[%END%] : <input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label>&nbsp;&nbsp;&nbsp;
-       <label for="passwd2" >[%|loc%]password[%END%] : <input type="password" name="passwd" id="passwd" size="8" /> </label>&nbsp;&nbsp;
+     <label for="email_login_banner">[%|loc%]email address[%END%] : </label><input id="email_login_banner" type="text" name="email" size="20" value="[% init_email %]" />&nbsp;&nbsp;&nbsp;
+     <label for="passwd_login_banner" >[%|loc%]password[%END%] : </label><input type="password" name="passwd" id="passwd_login_banner" size="8" /> &nbsp;&nbsp;
        <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
-     </div>
+    </fieldset>
   </form> 
-</p>
-<p>
+
+<br />
 [% PROCESS remindpasswd.tt2 %]
-</p>
 
 
 

@@ -1,13 +1,14 @@
 <!-- $Id$ -->
 
 <form action="[% path_cgi %]" method="post">
-
+<fieldset>
 [% IF file %]
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
 <textarea wrap="off" name="content" cols="80" rows="25">
 [% filecontent %]
 </textarea>
+<br />
   <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
 
 [% ELSE %]
@@ -20,9 +21,10 @@
 	        <option value="[% f.key %]" [% f.value.selected %]>[% f.value.complete %]</option>
 	      [% END %]
 	    </select>
-	    <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 </dd></dl>
 [% PROCESS 'help_editfile.tt2' %]
 
 [% END %]
-</form>
+</fieldset>
+</form>	

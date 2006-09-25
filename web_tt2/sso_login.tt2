@@ -4,6 +4,7 @@
       [%|loc%]A confirmation password will be sent to the address you supply, after pressing the button. This will take you to the next screen to confirm that your address is operational.[%END%]
 
       <form action="[% path_cgi %]" method="post">
+	<fieldset>
           <input type="hidden" name="previous_action" value="[% previous_action %]" />
           <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	  <input type="hidden" name="referer" value="[% referer %]" />
@@ -12,15 +13,17 @@
   	  <input type="hidden" name="nomenu" value="[% nomenu %]" />
           <input type="hidden" name="auth_service_name" value="[% server.key %]" />
 
-        <label><strong>[%|loc%]Your e-mail address:[%END%]</strong><br />
+          <label for="email"><strong>[%|loc%]Your e-mail address:[%END%]</strong><br />
         [% IF init_email %]
 	  [% email %]
-          <input type="text" name="email" value="[% init_email %]" />
+            <input id="email" type="text" name="email" value="[% init_email %]" />
 	[% ELSE %]
-	  <input type="text" name="email" value="" />
+	    <input id="email" type="text" name="email" value="" />
 	[% END %]
 	[% END %]
-        </label>&nbsp; &nbsp; &nbsp;<input type="submit" name="action_sso_login" value="[%|loc%]Send me a confirmation password[%END%]"/>
+          </label>&nbsp; &nbsp; &nbsp;
+	  <input type="submit" name="action_sso_login" value="[%|loc%]Send me a confirmation password[%END%]"/>
+	</fieldset>
       </form>
 
 [% ELSIF subaction == 'validateemail' %]
@@ -29,16 +32,8 @@
   [%|loc(init_email)%]A confirmation password has been sent to your email address %1.<br />Please check your e-mail box to provide the confirmation password below.[%END%]
   <br /><br />
 
-<table border="1" style="width: 100%;" cellspacing="0" cellpadding="0">
-<tr>
-
-<td valign="top">
-
-
-<table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-<tr><td>
-
-    <form action="[% path_cgi %]" method="post"> 
+<form action="[% path_cgi %]" method="post"> 
+<fieldset>
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
@@ -47,21 +42,13 @@
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 
-        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-         <tr style="background-color: [% color_4 %];">
-          <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <label><strong><span style="font-size: smaller; ">[%|loc%]email address[%END%] :</span></strong><input type="text" name="email" size="30" value="[% init_email %]" /></label>
-	      <label><strong><span style="font-size: smaller;">[%|loc%]password[%END%] :</span></strong><input type="password" name="passwd" size="8" /></label>
+  <label for="email"><strong>[%|loc%]email address[%END%] :</strong></label>
+    <input id="email" type="text" name="email" size="30" value="[% init_email %]" /><br />
+  <label for="passwd"><strong>[%|loc%]password[%END%] :</strong></label>
+    <input id="passwd"  type="password" name="passwd" size="8" /><br />
 	      &nbsp;&nbsp;
               <input type="submit" name="action_sso_login" value="[%|loc%]Validate Address[%END%]" />
-   	    </td>
-     	  </tr>
-       </table>
- </form> 
-</table>
-</td>
-</tr>
-</table>
-
+</fieldset>
+</form> 
 [% END %]

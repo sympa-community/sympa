@@ -3,18 +3,18 @@
 <br />
 
 <br />
-<table border="0" style="width: auto;">
-<tr style="background-color: [% light_color %];">
+<table summary="" class="preferences">
+<tr class="color_light">
 <td>
-<table border="0" style="width: auto;">
-<tr style="background-color: [% light_color %];">
- <td><strong>[%|loc%]Listname :[%END%]</strong></td><td style="width: 100%;">[% list %]</td>
+<table summary="" class="preferences">
+<tr class="color_light">
+ <td><strong>[%|loc%]Listname :[%END%]</strong></td><td>[% list %]</td>
 </tr>
-<tr style="background-color: [% light_color %];">
- <td><strong>[%|loc%]Subject :[%END%] </strong></td><td style="width: 100%;">[% list_subject %]</td>
+<tr class="color_light">
+ <td><strong>[%|loc%]Subject :[%END%] </strong></td><td>[% list_subject %]</td>
 </tr>
-<tr style="background-color: [% light_color %];">
- <td style="white-space: nowrap;"><strong>[%|loc%]List requested by[%END%] </strong></td><td style="width: 100%;">[% list_request_by %] [%|loc(list_request_date)%]on %1[%END%]</td>
+<tr class="color_light">
+ <td><strong>[%|loc%]List requested by[%END%] </strong></td><td>[% list_request_by %] [%|loc(list_request_date)%]on %1[%END%]</td>
 </tr>
 </table>
 </td>
@@ -25,8 +25,8 @@
 [% IF auto_aliases %]
 [%|loc%]Aliases have been installed.[%END%]
 [% ELSE %]
-<table border="1">
-<tr style="background-color: [% light_color %];"><td style="text-align: center;">[%|loc%]Aliases you should install in your mailer[%END%]</td></tr>
+<table summary="" class="table_style">
+<tr class="color_light"><td class="text_center">[%|loc%]Aliases you should install in your mailer[%END%]</td></tr>
 <tr>
 <td>
 <pre><code>

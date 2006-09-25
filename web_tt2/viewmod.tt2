@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 
  <form action="[% path_cgi %]" method="post" name="moderate_mail">
+ <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="id" value="[% id %]" />
 
@@ -15,15 +16,15 @@
   <br /><br />
  [%|loc%]This list is configured to require topic(s).[%END%]
   <br />
- [%|loc%]Please select one or more topic(s) that corresponds to your message below :[%END%] 
+ <label for="topic_[%t.name%]">[%|loc%]Please select one or more topic(s) that corresponds to your message below :[%END%] 
   <br /><br />
  [% FOREACH t = available_topics %]
-   <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+   <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
   <br />
  [%- END- %]
  <br />
  [%- END -%]
-
+</fieldset>
 </form>
 [% PROCESS 'msg00000.html' %]
 

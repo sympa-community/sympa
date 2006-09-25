@@ -5,8 +5,10 @@
 you received below :[%END%]
 
 <form action="[% path_cgi %]" method="post">
+  <fieldset>
     <input type="hidden" name="email" value="[% email %]" />
-    <label><span style="color: [% dark_color %];">[%|loc(email)%]Password for %1[%END%]: </span>
-    <br />&nbsp;&nbsp;&nbsp;<input type="password" name="password" size="15" /></label>
+    <label for="password"><span class="color_dark">[%|loc(email)%]Password for %1[%END%]: </span></label>
+    <br />&nbsp;&nbsp;&nbsp;<input id ="password" type="password" name="password" size="15" />
     <br /><br /><input type="submit" class="MainMenuLinks" name="action_change_email" value="[%|loc%]Change my email address[%END%]" />
+  </fieldset>
 </form>

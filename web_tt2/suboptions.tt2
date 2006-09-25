@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 
   <form action="[% path_cgi %]" method="post">
+  <fieldset>
    <label for="gecos">[%|loc%]Name :[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
   [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
@@ -12,8 +13,8 @@
         [% END %]
      </select>
 
-      <a class="actionMenuLinks" href="[% path_cgi %]/nomenu/help/user_options" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
-     <span style="font-size: smaller;"><strong>[%|loc%]Help[%END%]</strong></span></a>
+      <a class="actionMenuLinks" href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
+     <span class="smaller"><strong>[%|loc%]Help[%END%]</strong></span></a>
  
      <br /><br />
      [%IF available_topics %]	
@@ -56,7 +57,7 @@
      </select>
 
      <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
-     
+</fieldset>     
 </form><br /><br /> 
 
 [% PROCESS picture_upload.tt2 %]

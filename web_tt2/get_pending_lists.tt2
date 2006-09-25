@@ -2,25 +2,21 @@
 
 
 <form action="[% path_cgi %]" method="post">
-
-<hr style="width: 90%;" />
-
-<table style="border: solid 1px; width: auto; margin: 10px">
- <tr style="background-color: [% color_4 %];">
-   <th style="padding: 10px; border: solid 1px;" colspan="4">[%|loc%]Pending lists[%END%]</td>
- </tr>
- <tr style="background-color: [% color_4 %];">
-   <th style="padding: 3px; border: solid 1px;">[%|loc%]list name[%END%]</th>
-   <th style="padding: 3px; border: solid 1px;">[%|loc%]list subject[%END%]</th>
-   <th style="padding: 3px; border: solid 1px;">[%|loc%]Requested by[%END%]</th>
-   <th style="padding: 3px; border: solid 1px;">[%|loc%]Requested date[%END%]</th>
+<fiedlset>
+<strong>[%|loc%]Pending lists[%END%]</strong>
+<table summary="[%|loc%]Pending lists[%END%]" class="table_style">
+ <tr class="color4">
+   <th>[%|loc%]list name[%END%]</th>
+   <th>[%|loc%]list subject[%END%]</th>
+   <th>[%|loc%]Requested by[%END%]</th>
+   <th>[%|loc%]Requested date[%END%]</th>
  </tr>
 
 [% FOREACH list = pending %]
 [% IF dark == '1' %]
-  <tr valign="top">[% SET dark = 0 %]
+  <tr>[% SET dark = 0 %]
 [% ELSE %]
-  <tr style="background-color: [% color_0 %];" valign="top">[% SET dark = 1 %]
+  <tr class="color0">[% SET dark = 1 %]
 [% END %]
 
 <td><a href="[% path_cgi %]/set_pending_list_request/[% list.key %]">[% list.key %]</a></td>
@@ -30,6 +26,7 @@
 </tr>
 [% END %]
 </table>
+</fieldseT>
 </form>
 
 

@@ -1,15 +1,19 @@
 <!-- $Id$ -->
 
 
-<table style="width: auto;">
- <tr style="background: [% light_color %];">
+<table summary="[%|loc%]Latests Lists[%END%]" class="table_style">
+ <tr class="color_light">
    <th><strong>[%|loc%]Creation date[%END%]</strong></th>
    <th><strong>[%|loc%]Listname[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>
  </tr>
 
 [% FOREACH list = latest_lists %]
-<tr>
+[% IF dark == '1' %]
+  <tr>[% SET dark = 0 %]
+[% ELSE %]
+  <tr class="color0">[% SET dark = 1 %]
+[% END %]
 <td>[% list.creation_date %]</td>
 <td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>

@@ -2,10 +2,10 @@
 
 
 <form action="[% path_cgi %]" method="post">
-
+<fieldset>
 <strong>[%|loc%]Closed lists[%END%]</strong>
-<table style="border: solid 1px; width: auto; margin: 10px">
- <tr style="background-color: [% color_4 %];">
+<table summary="[%|loc%]Closed lists[%END%]" class="table_style">
+ <tr class="color4">
    <th><strong>X</strong></th>
    <th><strong>[%|loc%]list name[%END%]</strong></th>
    <th><strong>[%|loc%]list subject[%END%]</strong></th>
@@ -14,9 +14,9 @@
 
 [% FOREACH list = closed %]
 [% IF dark == '1' %]
-  <tr valign="top">[% SET dark = 0 %]
+  <tr>[% SET dark = 0 %]
 [% ELSE %]
-  <tr style="background-color: [% color_0 %];" valign="top">[% SET dark = 1 %]
+  <tr class="color0">[% SET dark = 1 %]
 [% END %]
 
 <td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
@@ -28,7 +28,7 @@
 </table>
 
 <input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
-
+</fieldset>
 </form>
 
 

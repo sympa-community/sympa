@@ -2,9 +2,10 @@
 
 <h2>[%|loc%]Blacklist management[%END%]</h2><br />
 
-<p>
+<div id="blacklist">
 [%|loc%]Operation requested by users which email is listed in the blacklist file are rejected. The
-blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %]. <br />
+blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %]. 
+<br /><br />
 Syntax :
 <ul>
   <li>[%|loc%]only one email or expression by line[%END%]</li>
@@ -26,6 +27,7 @@ Syntax :
 [% rows = '10' IF rows < 10 %]
 [% rows = rows+2 %]
 <form action="[% path_cgi %]/blacklist" method="post">
+<fieldset>
  <textarea name="blacklist" cols="80" rows="[% rows %]" />
 [% blacklist %]
 </textarea><br />
@@ -38,5 +40,6 @@ Syntax :
 [%|loc%]Template saved[%END%] ([% time %]) <br /><br />
 [% END %]
 
+</fieldset>
 </form>
-</p>
+</div>

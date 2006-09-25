@@ -15,7 +15,8 @@
 
 
 [% IF auth_method == 'md5' %]
-  <form style="text-align: center" action="[% path_cgi %]" method="post">
+  <form class="text_center" action="[% path_cgi %]" method="post">
+  <fieldset>
   <input type="hidden" name="action" value="logout" />
   [% IF referer %]
           <input type="hidden" name="referer" value="[% referer %]" />
@@ -23,6 +24,7 @@
           <input type="hidden" name="previous_action" value="[% home %]" />
   [% END %]
   <input class="MainMenuLinks" type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
+  </fieldset>
   </form>
 [% END %]
 </div>
@@ -34,6 +36,7 @@
   <div class="MenuBlock">    
         [% IF use_sso %]
       <form action="[% path_cgi %]" method="post"> 
+	<fieldset>	
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
@@ -45,29 +48,32 @@
               <input type="hidden" name="auth_service_name" value="[% server.key %]" />
             [% END %]
           [% ELSE %]
-     	    <strong><div class="menuInactive2">[%|loc%]Choose your authentication server[%END%]</div></strong>
-            <select name="auth_service_name" onchange="this.form.submit();">
+     	    <strong><div class="menuInactive2"><label for="auth_service_name">[%|loc%]Choose your authentication server[%END%]</label></div></strong>
+            <select id="auth_service_name" name="auth_service_name" onchange="this.form.submit();">
             [% FOREACH server = sso %]
                <option value="[% server.key %]">[% server.value %]</option>
             [% END %]
             </select>
           [% END %] 
           <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" /><br />
+	</fieldset>
       </form>
      [% END %] 
 
       <form action="[% path_cgi %]" method="post"> 
+	<fieldset>
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
         <input type="hidden" name="list" value="[% list %]" />
 
       <input type="hidden" name="action" value="login" />
-      <label for="email">[%|loc%]email address[%END%] :<br />
-      <input type="text" name="email" id="email" size="18" value="[% init_email %]" /></label><br />
-      <label for="passwd" >[%|loc%]password[%END%] :<br />
-      <input type="password" name="passwd" id="passwd" size="8" /></label> &nbsp;&nbsp;
+      <label for="email_login">[%|loc%]email address[%END%] :</label><br />
+      <input type="text" name="email" id="email_login" size="18" value="[% init_email %]" /><br />
+      <label for="passwd" >[%|loc%]password[%END%] :</label><br />
+      <input type="password" name="passwd" id="passwd" size="8" /> &nbsp;&nbsp;
       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
+	</fieldset>
       </form>
   </div>
   <br />

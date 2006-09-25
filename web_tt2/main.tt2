@@ -8,15 +8,15 @@
 
 <!-- RSS chanel -->
    [% IF list -%] 
-     <link REL="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=20"/>
-     <link REL="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=20"/>
+     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=20"/>
+     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=20"/>
    [% ELSE -%]
      [% IF (action == 'lists') && topic -%]
-       <link REL="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=20"/>
-       <link REL="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% base_url%][% path_cgi %]/rss/active_lists/[%topic%]?count=20"/>
+       <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=20"/>
+       <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% base_url%][% path_cgi %]/rss/active_lists/[%topic%]?count=20"/>
      [% ELSE -%]
-     <link REL="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_lists?count=20"/>
-     <link REL="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% base_url%][% path_cgi %]/rss/active_lists?count=20"/>
+     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_lists?count=20"/>
+     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Active lists[%END%]" href="[% base_url%][% path_cgi %]/rss/active_lists?count=20"/>
      [% END -%]
    [% END -%]
 
@@ -33,16 +33,11 @@
 
 [% IF base %] <base href="[% base %]" /> [% END %]
 <!--[if IE]>
-<style>
-.ContentBlock {
-	margin: -7px 0px 0px 0px;
-}
-</style>
 <![endif]-->
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF cookie_set %] check_cookie();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
-<noscript><p><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></p></noscript>
+<noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 
 [% IF nomenu %]
@@ -61,7 +56,7 @@
     [% PROCESS title.tt2 %]
     [% PROCESS menu.tt2 %]
   </div> <!-- end div Header -->
-  <div class="contenant" id="contenu"> <!-- To hide Menus -->&nbsp;
+  <!-- <div class="contenant" id="contenu"> --> <!-- To hide Menus -->&nbsp;
   <div id="Menus"><!-- Start Menus -->&nbsp;
 	
     [% PROCESS login_menu.tt2 %]
@@ -69,7 +64,7 @@
     [% PROCESS your_lists.tt2 IF !list %]
     [% PROCESS setlang.tt2 %]
   </div><!-- End div Menus -->
-  </div><!-- End div contenant -->
+  <!-- </div> --><!-- End div contenant -->
 	
 
   <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the meneu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
@@ -84,11 +79,10 @@
 
         <div class="ContentBlock"> 
          [% PROCESS "${action}.tt2" IF action %]
-       </div>
+       </div><!-- End div ContentBlock -->
        <a class="dingbat printNone" href="#top" title="Top of Page">&sect;</a>
-     </div><!-- End div= Paint -->
+     </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
-
   [% PROCESS footer.tt2 %]
 </div> <!-- end div canvas -->
 [% END %]

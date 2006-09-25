@@ -2,24 +2,19 @@
 
 
 <form action="[% path_cgi %]" method="post">
- 
-
+<fieldset>
  <br /> 
- <table>
   [% FOREACH f = list_file %]
-   <tr><td>[% f %]</td></tr>
+   [% f %]<br /><br />
   [% END %]
-   <tr><td>&nbsp; </td></tr>
-   <tr><td>[%|loc%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
-   </td></tr>
- <tr>
-  <td><input class="MainMenuLinks" type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
-  <td><input class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
- </tr>
- </table>
+   <label for="mode">[%|loc%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]</label><br />
+
+  <input id="mode" class="MainMenuLinks" type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
+  <input id="mode" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
  <input type="hidden" name="list" value="[% list %]" />
 [% FOREACH elt = id %]
  <input type="hidden" name="id" value="[% elt %]" />
 [% END %]
  <input type="hidden" name="action_d_install_shared" value="1" /> 
+</fieldset>
 </form>  

@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 
-<span style="float: right"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
+<span class="search_form"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
 
 <h2>[%|loc(visible_path)%]Access control for the document %1[%END%]</h2>
 
@@ -13,29 +13,30 @@
 
 <div class="block">
   <form action="[% path_cgi %]" method="post">
+  <fieldset>
 <p>
-  <label><strong>[%|loc%]Read access[%END%]</strong><br />
-  <select name="read_access">
+  <label for="read_access"><strong>[%|loc%]Read access[%END%]</strong></label><br />
+  <select id="read_access" name="read_access">
   [% FOREACH s = scenari_read %]
     <option value='[% s.key %]' [% s.value.selected %]>[% s.value.title %]</option>
   [% END %]
   </select>
-  </label>
+  
 </p>
 <p>
-  <label><strong>[%|loc%]Edit access[%END%]</strong><br />
-  <select name="edit_access">
+  <label for="edit_access"><strong>[%|loc%]Edit access[%END%]</strong></label><br />
+  <select id="edit_access" name="edit_access">
   [% FOREACH s = scenari_edit %]
     <option value='[% s.key %]' [% s.value.selected %]>[% s.value.title %]</option>
   [% END %]
   </select>
-  </label>
 </p>
 <p> 
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% path %]" />
    <input type="hidden" name="serial" value="[% serial_desc %]" />
    <input class="MainMenuLinks" type="submit" name="action_d_change_access" value="[%|loc%]change access[%END%]" />
+   </fieldset>
    </form>
 </p>
 </div>
@@ -44,6 +45,7 @@
    [% IF set_owner %]
      <div class="block">
      <form action="[% path_cgi %]" method="post">
+     <fieldset>
      <p>
      <label for="content"><strong>[%|loc(visible_path)%]Set the owner of the directory %1[%END%]</strong></label><br />
      <input type="hidden" name="list" value="[% list %]" />
@@ -53,6 +55,7 @@
      <input maxlength="50" name="content" id="content" value="[% owner %]" size="30" />
      <input class="MainMenuLinks" type="submit" name="action_d_set_owner" value="[%|loc%]Set owner[%END%]" />
      </P>
+     </fieldset>
      </form>
      </div>
 

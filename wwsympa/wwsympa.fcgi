@@ -12259,16 +12259,16 @@ sub creation_picture_file {
     my($root_dir, $path ,$fname)=@_;
 
     unless(-d $root_dir.'/'.$path) {
- 	&wwslog('notice',"creation_shared_file : Create dir $root_dir/$path/");
+ 	&wwslog('notice',"creation_picture_file : Create dir $root_dir/$path/");
  	
  	unless (mkdir($root_dir.'/'.$path, 0755)){
- 	    &wwslog('err',"creation_shared_file : Unable to create dir $root_dir/$path/");
+ 	    &wwslog('err',"creation_picture_file : Unable to create dir $root_dir/$path/");
  	    return undef;
  	}
 	chmod 0755, $root_dir.'/'.$path;
 
 	unless (open(FF,">$root_dir".'/'.$path.'/index.html')){
-	    &wwslog('err',"creation_shared_file : Unable to create dir $root_dir/$path/index.html");
+	    &wwslog('err',"creation_picture_file : Unable to create dir $root_dir/$path/index.html"); 
 	}
 	chmod 0755, $root_dir.'/'.$path.'/index.html';
 	close FF;
@@ -12277,7 +12277,7 @@ sub creation_picture_file {
     my $fh = $query->upload('uploaded_file');
     unless (open FILE, ">:bytes", "$root_dir/$path/$fname") {
 	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	&wwslog('err',"creation_shared_file : Cannot open file $root_dir/$path/$fname : $!");
+	&wwslog('err',"creation_picture_file : Cannot open file $root_dir/$path/$fname : $!");
 	return undef;
     }
     while (<$fh>) {

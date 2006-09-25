@@ -13,19 +13,20 @@
 
 <div id="ActionHeader">
   <h2 class='block'>[% pname %] [% scenario_name %] </h2>
-  <span style="text-align: center;">(path: [% scenario_path %])</span>
+  <span class="text_center">(path: [% scenario_path %])</span>
 </div>
 <font size="-2">
 
 <form action="[% path_cgi %]" method="post">
+<fieldset>
 <textarea cols="80" rows="10" name="new_scenario_content">[% dumped_scenario %]</textarea><br />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="pname" value="[% pname %]" />
 
 <!-- template is ready for saving scenario with scope limited to the current list or to the current robot but wwsympa 
 [% IF is_listmaster %]
-[%|loc%]scope :[%END%]
-<select name="new_scenario_scope">
+<label for=new_scenario_scope">[%|loc%]scope :[%END%]</label>
+<select id="new_scenario_scope" name="new_scenario_scope">
     <option value="robot">[%|loc(robot)%]robot %1[%END%]</option>
     <option value="list" selected>[%|loc(list)%]list %1[%END%]</option>
 </select>	
@@ -33,6 +34,7 @@
 -->
 [%|loc%]scenario name :[%END%]<input type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
 <input class="MainMenuLinks" type="submit" name="action_dump_scenario" value="[%|loc%]save[%END%]" />
+</fieldset>
 </form>
 </font>
 [% END %]

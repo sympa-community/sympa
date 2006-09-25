@@ -2,39 +2,34 @@
 
 <h2>[%|loc%]Copying template[%END%]</h2><br />
 <p>
-<form action="[% path_cgi %]/copy_template" method="post">
-<table style="border: solid 1px; width: 100%; margin-right: 10px">
-<tr style="background-color: [% color_4 %];">
-<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]Input template[%END%]</th>
-<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]Output template[%END%]</th>
-</tr>
-<tr style="background-color: [% color_0 %];" valign="top">
-<td>[%|loc%]Name : [%END%]<strong> [% template_name %] </strong></td>
-<td>[%|loc%]New template name : [%END%]<input type="text" name="template_name_out" value="[% template_name %]" /></td></tr>
-<tr style="background-color: [% color_0 %];" valign="top">
-<td>[%|loc%]Scope : [%END%]<strong> [% scope %] </strong></td>
-<td>
-[%|loc%]Scope : [%END%]<select name="scope_out">
+<form id="cp_template" action="[% path_cgi %]/copy_template" method="post">
+<fieldset>
+  <legend><strong> [%|loc%]Input template[%END%]</strong> </legend>
+  <label>[%|loc%]Name : [%END%]</label><strong> [% template_name %] </strong><br />
+  <label>[%|loc%]Scope : [%END%]</label><strong> [% scope %] </strong><br />
+  <label for="scope_out">[%|loc%]Scope : [%END%]</label><br />
+  <label>[%|loc%]Language : [%END%]<strong></label> [% tpl_lang %] </strong><br />
+
+</fieldset>
+<fieldset>
+  <legend><strong> [%|loc%]Output template[%END%]</strong> </legend>
+  <label for="template_name_out">[%|loc%]New template name : [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
+  <label for="scope_out">[%|loc%]Scope : [%END%] </label>
+    <select id="scope_out" name="scope_out">
 	<option value="site" [% IF scope == 'site' %]option="selected"[% END %]>[%|loc%]site[%END%]</option>
 	[% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]option="selected"[% END %]>[%|loc%]robot[%END%]</option>[%END%]
         <option value="list" [% IF scope == 'list' %]option="selected"[% END %]>[%|loc%]list[%END%]</option>
-</td></tr>
-<tr style="background-color: [% color_0 %];" valign="top">
-<td>[%|loc%]Language : [%END%]<strong> [% tpl_lang %] </strong></td>
-<td>
-[%|loc%]Language : [%END%]<select name="tpl_lang_out">
+    </select><br />
+  <label for="tpl_lang_out">[%|loc%]Language : [%END%] </label>
+    <select is="tpl_lang_out" name="tpl_lang_out">
 	<option value="default" option="selected">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
         <option value="[%lg.key%]">[%lg.value.complete%]</option>
 	[%END%]
-	</select>
-</td></tr>
-<tr style="background-color: [% color_0 %];" valign="top">
-<td>
+	</select><br />
 [% list %]
-</td>
-<td>[%|loc%]Enter listname : [%END%]<input type="text" name="list_out" size="20" value="[% list %]" /></td></tr>
-</table>
+  <label for="list_out">[%|loc%]Enter listname : [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />
+
     <input type="hidden" name="template_name" value="[% template_name %]" />
     <input type="hidden" name="template_path" value="[% template_path %]" />
     <input type="hidden" name="scope" value="[% scope %]" />
@@ -42,6 +37,7 @@
     [% IF scope == 'list' %]	
       <input type="hidden" name="list" value="[% list %]" />	
     [% END %]
+</fieldset>
 <br/>
 <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]Apply[%END%]">
 </form>

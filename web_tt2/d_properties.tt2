@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 
-<span style="float: right"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
+<span class="search_form"><a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
 
   [% IF url %]
   <h2>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]</h2>
@@ -20,42 +20,44 @@
 <p>
 <div class="block">
   <form action="[% path_cgi %]" method="post">
-  <label>
+  <fieldset>
+  <label for="content">
   <strong>
   [% IF directory %]
   [%|loc(fname)%]Describe directory '%1'[%END%]
   [% ELSE %]
   [%|loc(fname)%]Describe file '%1'[%END%]
   [% END %]
-  </strong><br />
-  <input size="50" maxlength="100" name="content" value="[% desc %]" />
-  </label>
+  </strong></label><br />
+  <input id="content" size="50" maxlength="100" name="content" value="[% desc %]" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_desc %]" />
   <input type="hidden" name="action" value="d_describe" />
   <input class="MainMenuLinks" size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
+  </fieldset>
   </form>
 </div>
 </p><p>
 <div class="block">
   <form action="[% path_cgi %]" method="post">
-  <label>
+  <fieldset>
+  <label for="new_name">
   <strong>
   [% IF directory %]
   [%|loc(fname)%]Rename directory %1[%END%]
   [% ELSE %]
   [%|loc(fname)%]Rename file %1[%END%]
   [% END %]
-  </strong><br />
+  </strong></label><br />
   <input size="50" maxlength="100" name="new_name" />
-  </label>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_desc %]" />
   <input type="hidden" name="action" value="d_rename" />
 
   <input class="MainMenuLinks" size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
+  </fieldset>
   </form>
 </div>
 </p>

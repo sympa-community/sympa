@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 
-<h2> <strong>
+<h2>
  [% IF count %]
    [%|loc(count)%] The %1 latest messages [%END%] 
  [% ELSE %]
@@ -11,11 +11,11 @@
  [% IF for %]
    [%|loc(for)%] for %1 days [%END%] 	
  [% END %]
-</strong> </h2> 	
+</h2> 	
 <br /> 
  
-<table style="width: auto;">
- <tr style="background-color: [% light_color %]">
+<table summary="[%|loc%] The latest messages of this list [%END%]" class="table_style">
+ <tr class="color_light">
    <th><strong>[%|loc%]Date[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>
    <th><strong>[%|loc%]From[%END%]</strong></th>

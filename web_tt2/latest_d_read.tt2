@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 
-<h2> <strong>
+<h2>
  [% IF count %]
    [%|loc(count)%] The %1 latest shared documents [%END%] 
  [% ELSE %]
@@ -11,12 +11,12 @@
  [% IF for %]
    [%|loc(for)%] for %1 days [%END%] 	
  [% END %]
-</strong> </h2> 	
+</h2> 	
 <br /> 
  
-<table style="width: auto;">
- <tr style="background-color: [% light_color %]">
-   <th style="width: 10%;"><strong>[%|loc%]Last update[%END%]</strong></th>
+<table class="table_style" summary="[%|loc%] The latest shared documents of this list [%END%] ">
+ <tr class="color_light">
+   <th><strong>[%|loc%]Last update[%END%]</strong></th>
    <th><strong>[%|loc%]Name[%END%]</strong></th>
    <th><strong>[%|loc%]Author[%END%]</strong></th>
    <th><strong>[%|loc%]Directory[%END%]</strong></th>
@@ -27,14 +27,14 @@
    <td> [% d.last_update %] </td>
    <td>
     [% IF d.html %]
-      <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]" target="html_window">
-      <img style="vertical-align: bottom; border: 0px;" src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
+      <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
+      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
     [% ELSIF d.url %]
-      <a href="[% d.url %]" target="html_window">
-      <img style="vertical-align: bottom; border: 0px;" src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.anchor %] </a>
+      <a href="[% d.url %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
+      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.anchor %] </a>
     [% ELSE %]
       <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]">
-	  <img style="text-align: bottom; border: 0px;" src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
+	  <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
     [% END %] 
 
    <td> [% IF d.author %] 

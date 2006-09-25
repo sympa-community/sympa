@@ -1,42 +1,26 @@
 [%|loc(shortname)%]the file %1 already exists[%END%]
 
- <form action="[% path_cgi %]" method="post">
-
-   <table cellspacing="15">
-    <tr> 
-     <td style="text-align: right;" valign="bottom">
-      [%|loc(shortname)%]Do you want to delete the old file %1 ?[%END%]
-     </td>
-     <td style="text-align: left;" valign="bottom">
-      <input class="MainMenuLinks" type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
-     </td>
-    </tr>
-    <tr>
-     <td style="text-align: right;" valign="bottom">
-      [%|loc(shortname)%]Do you want to rename your file %1 ?[%END%] <br />
-      <input size="50" maxlength="100" name="new_name" />
-     </td>
-     <td style="text-align: left;" valign="bottom">
-      <input  class="MainMenuLinks" size="20" maxlength="50" type="submit" name="mode_rename" value="[%|loc%]Rename[%END%]" />
-     </td>
-    </tr>
-    <tr> 
-     <td style="text-align: right;" valign="bottom">
-      [%|loc%]Do you want to cancel the upload ?[%END%]
-     </td>
-     <td style="text-align: left;" valign="bottom">
-      <input class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" />
-     </td>
-    </tr>
-   </table>
+<form action="[% path_cgi %]" method="post">
+<fieldset>
+  <label for="mode_delete">[%|loc(shortname)%]Do you want to delete the old file %1 ?[%END%]</label>
+    <input id="mode_delete" class="MainMenuLinks" type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
+  <br />
+  <label for="new_name">[%|loc(shortname)%]Do you want to rename your file %1 ?[%END%]</label>
+    <br />
+    <input id="new_name" size="20" maxlength="100" name="new_name" />
+    <input id="new_name" class="MainMenuLinks" type="submit" name="mode_rename" value="[%|loc%]Rename[%END%]" />
+    
+  <br />
+  <label for="mode_cancel">[%|loc%]Do you want to cancel the upload ?[%END%]</label>
+    <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" />
 
    <input type="hidden" name="action_d_upload" value="1" />
    <input type="hidden" name="serial" value="[% serial_file %]" />
    <input type="hidden" name="path" value="[% path %]" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="shortname" value="[% shortname %]" />
-
- </form>
+</fieldset>
+</form>
 
 
 

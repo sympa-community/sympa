@@ -7,16 +7,16 @@
 [%|loc%]The current version doesn't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table.[%END%]
 </p>
 
-<table style="border: dotted 1px">
-<tr>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter[%END%]</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter value[%END%]</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]color lookup[%END%]</th>
-<th style="border: solid 0px; text-align: center; padding: 10px;">&nbsp;</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter[%END%]</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter value[%END%]</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]color effet[%END%]</th>
-<th style="border: solid 0px; text-align: center; padding: 1px;"></th>
+<table summary="[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]" id="color_table">
+<tr id="color_table_title">
+<th>[%|loc%]parameter[%END%]</th>
+<th>[%|loc%]parameter value[%END%]</th>
+<th>[%|loc%]color lookup[%END%]</th>
+<td class="separator">&nbsp;</td>
+<th>[%|loc%]parameter[%END%]</th>
+<th>[%|loc%]parameter value[%END%]</th>
+<th>[%|loc%]color effet[%END%]</th>
+
 </tr>
 
 [% SET colors = ['color_0' 'color_1' 'color_2' 'color_3' 'color_4' 'color_5' 'color_6' 'color_7' 'color_8' 'color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15' 'dark_color' 'light_color' 'text_color' 'bg_color' 'error_color' 'selected_color' 'shaded_color'] %]
@@ -26,9 +26,12 @@
 [% FOREACH row = table.rows %]
 <tr>
   [% FOREACH color = row %]
-     <td style="border: solid 1px; padding-left: 10px;">[% color %]</td>
-     <td style="border: solid 1px; padding-left: 10px;">[% $color %]</td>
-     <th style="background-color: [% $color %]; border: solid 1px;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td></td>
+    [% IF color %]
+     <td>[% color %]</td>
+     <td>[% $color %]</td>
+     <td style="background-color: [% $color %];" >&nbsp;</td>
+     <td class="separator"></td>
+    [% END %]
   [% END %]
 </tr>
 [% END %]
@@ -41,15 +44,18 @@
 <strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong><br /><br />
 [% END %]
 [% IF css_path %]
-<ul><li>[%|loc%]The css_path parameter is defined, value is[%END%] [% css_path %] </li>
+<ul>
+<li>[%|loc%]The css_path parameter is defined, value is[%END%] [% css_path %] </li>
 <li>[%|loc%]the current definition for css location (css_url parameter) is[%END%] <a target="test" href="[% css_url %]">[% css_url %] </a><strong>[% css_warning %]</strong>.</li>
 
 </ul><br />
 
 	<form action="[% path_cgi %]" method="post">
+	<fieldset>
 	<input type="hidden" name="action" value="skinsedit" />
         <input type="hidden" name="installcss" value="1" />
         <input class="MainMenuLinks" type="submit" name="action_skinsedit" value="[%|loc%]install static css[%END%]" />
+	</fieldset>
 	</form>
 
 [% ELSE %]

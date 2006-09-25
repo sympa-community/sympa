@@ -36,7 +36,7 @@ CALENDAR
 
 <DefineVar>
 SEARCH_FORM
-     <div style="float: right">
+     <div class="search_form">
 	<form method="post" action="($tag$% path_cgi %$tag$)">
 	<input name="list" type="hidden" value="($tag$% list %$tag$)" />
 	<input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
@@ -60,7 +60,7 @@ TOP_PANEL
 <div id="ActionHeader">
    $SEARCH_FORM$
    $CALENDAR$
-   <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
+   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 </div>
 </DefineVar>
@@ -179,10 +179,10 @@ IDXPGEND
 <div id="ActionHeader">
    $SEARCH_FORM$
    $CALENDAR$
-   <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
+   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 
-  <span style="float: right">
+  <span class="search_form">
     <a class="ArcMenuLinksCurrentPage" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
     <a class="ArcMenuLinks" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
   </span>  
@@ -291,10 +291,10 @@ TIDXPGEND
 <div id="ActionHeader">
    $SEARCH_FORM$
    $CALENDAR$
-   <div style="text-align: center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
+   <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 
-   <span style="float: right">
+   <span class="search_form">
      <a class="ArcMenuLinks" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
      <a class="ArcMenuLinksCurrentPage" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
    </span>  
@@ -394,8 +394,8 @@ MSGPGEND
 <TOPLINKS>
 
 <div id="ActionHeader">
-   <div style="text-align: center;"><h2>($tag$% subtitle %$tag$)</h2></div><br />
-   <span style="float: right">
+   <div class="text_center"><h2>($tag$% subtitle %$tag$)</h2></div><br />
+   <span class="search_form">
      <a class="ArcMenuLinks" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)chronological($tag$% END %$tag$)</a>
      <a class="ArcMenuLinks" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
    </span>
@@ -433,7 +433,7 @@ $POWERED_BY$
 
 <SUBJECTHEADER>
 ($tag$% IF user.email && action == 'arc' %$tag$)
-<span style="float: right">
+<span class="search_form">
 <form action="($tag$% path_cgi %$tag$)" method="post">
   <input type="hidden" name="in_reply_to" value="$MSGID$" />
   <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />

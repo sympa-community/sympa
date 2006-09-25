@@ -1,8 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 
-<table style="border: solid 1px; width: auto; margin: 10px">
-<tr style="background-color: [% color_4 %];">
+<table summary="[%|loc%]Incatives Lists[%END%]" class="table_style">
+<tr class="color4">
    <th><strong>[%|loc%]Creation date[%END%]</strong></th>
    <th><strong>[%|loc%]Latest message[%END%]</strong></th>
    <th><strong>[%|loc%]Listname[%END%]</strong></th>
@@ -11,9 +11,9 @@
 
 [% FOREACH list = inactive_lists %]
 [% IF dark == '1' %]
-  <tr valign="top">[% SET dark = 0 %]
+  <tr>[% SET dark = 0 %]
 [% ELSE %]
-  <tr style="background-color: [% color_0 %];" valign="top">[% SET dark = 1 %]
+  <tr class="color0">[% SET dark = 1 %]
 [% END %]
 
 <td>[% list.creation_date %]</td>

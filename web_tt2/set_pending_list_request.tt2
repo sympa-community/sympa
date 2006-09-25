@@ -15,15 +15,17 @@
 [% IF list_status == 'pending' %]
 <div>
 <form action="[% path_cgi %]" method="post">
+<fieldset>
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="serial" value="[% list_serial %]" />
 
-<ul style="list-style-type: none; display: inline;">
-<li style="display: inline; margin-right: 1em; margin-left: 1em;"><label><input type="radio" name="status" value="closed" />[%|loc%]Close it[%END%]</label></li>
-<li style="display: inline; margin-right: 1em; margin-left: 1em;"><label><input type="radio" name="status" value="open" />[%|loc%]Install it[%END%]</label></li>
+<ul id="set_pending_radio">
+<li><input id="status" type="radio" name="status" value="closed" /><label for="status">[%|loc%]Close it[%END%]</label></li>
+<li><input id="status2" type="radio" name="status" value="open" /><label for="status2">[%|loc%]Install it[%END%]</label></li>
 </ul>
 <input class="MainMenuLinks" type="submit" name="action_install_pending_list" value="[%|loc%]submit[%END%]" />
-<label><input type="checkbox" name="notify" checked="checked" />[%|loc%]notify owner[%END%]</label>
+<input id="notify" type="checkbox" name="notify" checked="checked" /><label for="notify">[%|loc%]notify owner[%END%]</label>
+</fieldset>
 </form>
 </div>
 <br /><hr /><br />
@@ -36,7 +38,7 @@
    [% IF is_listmaster %]
       ([% list_info %])
    [% END %]
-<pre style="font-family: monospace;">
+<pre class="code">
        [% INSERT 'info' %]
 </pre>
 <hr /><br />
@@ -50,7 +52,7 @@
 
 <hr /><br />
 
-<pre style="font-family: monospace;">
+<pre class="code">
         [% INSERT 'config' %]
 </pre>
 </div>

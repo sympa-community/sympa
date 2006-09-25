@@ -2,34 +2,28 @@
 
 
 <form action="[% path_cgi %]" method="post">
+<fieldset>
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]the list name ; be careful, not its address ![%END%]" />
+  <label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label>
+    <input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
+    <br />
 
-
-<table style="width: auto;">
- <tr>
-   <th style="text-align: left; white-space: nowrap;"><label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label></th>
-   <td><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" /></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]the list name ; be careful, not its address ![%END%]" /></td>
- </tr>
- 
- <tr>
-   <th style="text-align: left; white-space: nowrap;"><strong>[%|loc%]Owner:[%END%]</strong></th>
-   <td><em>[% user.email %]</em></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]You are the privileged owner of this list[%END%]" /></td>
- </tr>
-
- <tr>
-   <th valign="top" style="text-align: left; white-space: nowrap;"><strong>[%|loc%]List type :[%END%]</strong></th>
-   <td>
-     <ul>
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]You are the privileged owner of this list[%END%]" />
+  <label for="owner"><strong>[%|loc%]Owner:[%END%]</strong></label>
+    <em>[% user.email %]</em><br />
+    
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" />
+  <label for="list_type" ><strong>[%|loc%]List type :[%END%]</strong></label>
+    <ul id="list_type">
   [% FOREACH template = list_list_tpl %]
-      <li style="margin: 1em;">
+      <li>
       <dl>
       <dt>
-     <label><input type="radio" name="template" value="[% template.key %]"
+        <input type="radio" name="template" value="[% template.key %]"
      [% IF template.value.selected %]
        checked="checked"
      [% END %]
-     /> [% template.key %]</label>
+       /> [% template.key %]
      </dt>
      [% IF template.value.comment %]
      <dd>
@@ -41,17 +35,16 @@
      </li>
   [% END %]
      </ul>
-    </td>
-    <td valign="top"><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" /></td>
- </tr>
- <tr>
-   <th style="text-align: left; white-space: nowrap;"><label for="subject"><strong>[%|loc%]Subject:[%END%]</strong></label></th>
-   <td><input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" /></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]The list's subject[%END%]" /></td>
- </tr>
- <tr>
-   <th style="text-align: left; white-space: nowrap;"><label for="topics"><strong>[%|loc%]Topics:[%END%]</strong></label></th>
-   <td><select id="topics" name="topics">
+     <br />
+
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]The list's subject[%END%]" /> 
+  <label for="subject"><strong>[%|loc%]Subject:[%END%]</strong></label>
+    <input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
+   <br />
+ 
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]List classification in the directory[%END%]" />
+  <label for="topics"><strong>[%|loc%]Topics:[%END%]</strong></label>
+    <select id="topics" name="topics">
 	<option value="">[%|loc%]--Select a topic--[%END%]</option>
 	[% FOREACH topic = list_of_topics %]
 	  <option value="[% topic.key %]"
@@ -67,29 +60,14 @@
 	[% END %]
 	<option value="other">[%|loc%]Other[%END%]</option>
      </select>
-   </td>
-   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]List classification in the directory[%END%]" /></td>
- </tr>
+     <br />
 
- <tr>
-   <th valign="top" style="text-align: left; white-space: nowrap;"><label for="info"><strong>[%|loc%]Description:[%END%]</strong></label></th>
-   <td><textarea cols="80" rows="10" name="info">[% saved.info %]</textarea></td>
-   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]A few lines describing the list[%END%]" /></td>
- </tr>
+  <img class="align_top" src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]A few lines describing the list[%END%]" />
+  <label for="info" class="align_top"><strong>[%|loc%]Description:[%END%]</strong></label>
+    <textarea class="desc" id="info" name="info" rows="10">[% saved.info %]</textarea><br /><br />
 
- <tr>
-   <td colspan="2" style="text-align: left; text-align: center;">
-    <table>
-     <tr>
-      <td style="background: [% light_color %];">
-<input class="MainMenuLinks" type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
-      </td>
-     </tr></table>
-</td></tr>
-</table>
-
-
-
+  <input class="MainMenuLinks" type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
+</fieldset>
 </form>
 
 

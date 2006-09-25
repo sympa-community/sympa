@@ -3,29 +3,31 @@
 [% PROCESS picture_upload.tt2 %]
 
 [% IF action != 'search' %]
-<div style="float: right;">
-[%|loc%]Page size[%END%]
+<div class="search_form">
   <form action="[% path_cgi %]">
+  <fieldset>
+  <label for="size">[%|loc%]Page size[%END%]</label>
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="review" />
   <input type="hidden" name="list" value="[% list %]" />
-  <select name="size" onchange="this.form.submit();">
+  <select id="size" name="size" onchange="this.form.submit();">
           <option value="[% size %]" selected="selected">[% size %]</option>
 	  <option value="25">25</option>
           <option value="50">50</option>
           <option value="100">100</option>
 	  <option value="500">500</option>
   </select>
+  </fieldset>
   </form>
 <br />
    [% IF prev_page %]
-    <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
      [%|loc%]page[%END%] [% page %] / [% total_page %]
    [% END %]
    [% IF next_page %]
-     <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]" /></a>
+     <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
 </div>
 [% END %]
@@ -49,22 +51,26 @@
 [% IF is_owner %]
   <br /><br />
   <form action="[% path_cgi %]" method="post">
+  <fieldset>
    <input type="hidden" name="previous_action" value="review" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="action" value="add" />
-   <input type="text" name="email" size="35" />
-   <input class="actionMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
+   <label for="email_search"></label>
+   <input id="email_search" type="text" name="email" size="35" />
+   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
    &nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
+  </fieldset>
   </form>
 
 [% END %]
 
 <br />
 <form action="[% path_cgi %]" method="post"> 
+<fieldset>
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
-<input type="text" siZE="18" name="filter" value="[% filter %]" />
+<input alt="[%|loc%]Search user with email[%END%]" type="text" size="18" name="filter" value="[% filter %]" />
 <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
 <br />
 [% IF action == 'search' %]
@@ -73,25 +79,27 @@
 [%|loc%]Selection too wide, can not show selection[%END%]
 [% END %]
 [% END %]
+</fieldset>
 </form>
 <br /><br />
 <form name="myform" action="[% path_cgi %]" method="post">
- <input type="hidden" name="previous_action" value="[% action %]" />
- <input type="hidden" name="previous_list" value="[% list %]" />
- <input type="hidden" name="list" value="[% list %]" />
+<fieldset>
+  <input type="hidden" name="previous_action" value="[% action %]" />
+  <input type="hidden" name="previous_list" value="[% list %]" />
+  <input type="hidden" name="list" value="[% list %]" />
   [% IF is_owner %]
     <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-    <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
+    <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
   [% END %]
 
-    <table class="listOfItems">
+    <table summary="[%|loc%]List of the list subscribers[%END%]" class="listOfItems text_center">
       <tr>
 	[% IF is_owner %]
 	   <th>X</th>
 	[% END %]
 
         [% IF sortby == 'email' %]
-  	    <th style="background-color: [% color_6 %];" colspan="2">
+  	    <th colspan="2" class="sortby">
 	    [%|loc%]Email[%END%]
 	[% ELSE %]
 	    <th colspan="2">	    
@@ -99,7 +107,7 @@
 	[% END %]
 	</th>
         [% IF sortby == 'domain' %]
-  	    <th style="background-color: [% color_6 %];">
+  	    <th class="sortby">
 	    [%|loc%]Domain[%END%]
 	[% ELSE %]
 	    <th>
@@ -108,10 +116,11 @@
 	</th>
 	[% IF pictures_display %]
   	    <th>	    
-  	    [%|loc%]Picture[%END%]</a>
+  	    [%|loc%]Picture[%END%]
+	    </th>
   	[% END %]
 	[% IF sortby == 'name' %]
-	<th style="background-color: [% color_6 %];">
+	<th class="sortby">
 	  [%|loc%]Name[%END%]
 	[% ELSE %]
 	<th>
@@ -119,20 +128,20 @@
 	[% END %] 
 	</th>
         [% IF is_owner %]
-            <th>
-	    [%|loc%]Reception[%END%]
+          <th>
+	  [%|loc%]Reception[%END%]
 	  [% IF list_conf.user_data_source == 'include2' %]
-         [% IF sortby == 'sources' %]
-  	    <th style="background-color: [% color_6 %];">
-	    [%|loc%]Sources[%END%]
-	[% ELSE %]
-	    <th>
-	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >[%|loc%]Sources[%END%]</a>
-	[% END %]
-	</th>
+            [% IF sortby == 'sources' %]
+  	      <th class="sortby">
+	      [%|loc%]Sources[%END%]
+	    [% ELSE %]
+	      <th>
+	      <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >[%|loc%]Sources[%END%]</a>
+	    [% END %]
+	    </th>
           [% END %]
 	  [% IF sortby == 'date' %]
-  	    <th style="background-color: [% color_6 %];">
+  	    <th class="sortby">
 	    [%|loc%]Sub date[%END%]
 	  [% ELSE %]
 	    <th>
@@ -141,7 +150,7 @@
           </th>
 	  <th>[%|loc%]Last update[%END%]</th>
 	  [% IF additional_fields %]
-	  <th>[% additional_fields %]</th>
+	    <th>[% additional_fields %]</th>
 	  [% END %]
         [% END %]
       </tr>
@@ -150,7 +159,7 @@
 	[% IF dark == '1' %]
 	  <tr>
 	[% ELSE %]
-          <tr style="background-color: [% color_0 %];">
+          <tr class="color0">
 	[% END %]
 
 	 [% IF is_owner %]
@@ -163,50 +172,50 @@
           [% END %]
  	 [% END %]
 	 [% IF u.bounce %]
-	  <td colspan="2" style="white-space: nowrap;"><span style="font-size: smaller;">
+	   <td colspan="2" class="text_left">
 	 
-	      [% IF is_owner %]
-		<a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
-	      [% ELSE %]
- 	        [% u.email %]
- 	      [% END %]
-	  </span></td>
-	  [% IF is_owner %]
-            <td style="text-align: right; background-color: [% color_7 %];"><span style="font-size: smaller;"><strong>[%|loc%]bouncing[%END%]</strong></span>
-	    </td>
-	  [% END %]
+	     [% IF is_owner %]
+	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
+	     [% ELSE %]
+ 	       [% u.email %]
+ 	     [% END %]
+	   </td>
+	 [% IF is_owner %]
+           <td class="color7"><strong>[%|loc%]bouncing[%END%]</strong>
+	   </td>
+	 [% END %]
 
 	 [% ELSE %]
-	  <td colspan="3" style="white-space: nowrap"><span style="font-size: smaller;">
-	      [% IF is_owner %]
-		<a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
-	      [% ELSE %]
-	        [% u.email %]
-	      [% END %]
-	  </span></td>
+	   <td colspan="3" class="text_left">
+	     [% IF is_owner %]
+	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
+	     [% ELSE %]
+	       [% u.email %]
+	     [% END %]
+	   </td>
 	 [% END %]
 
   	  [% IF pictures_display %]
   	    [% IF u.pictures_url %]
-  	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
-  	      <a href="[%u.pictures_url%]" title="[%u.pictures_url%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc%][% u.email %]'s picture[%END%]" /></a>   
-  	      </span></td>
+  	      <td>
+  	      <a href="[%u.pictures_url%]" title="[%|loc%]Open in a new window[%END%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc%][% u.email %]'s picture[%END%]" /></a>   
+  	      </td>
   	    [% ELSE %]
-  	      <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
-  	      </span></td>
+  	      <td>
+  	      </td>
   	    [% END %]
   	  [% END %]
 	  <td>
-             <span style="font-size: smaller;">
+             <span class="smaller">
 	        [% u.gecos %]&nbsp;
 	     </span>
           </td>
 	  [% IF is_owner %]
-  	    <td style="text-align: center;"><span style="font-size: smaller;">
+  	    <td>
   	      [% u.reception %]
-	    </span></td>
+	    </td>
           [% IF list_conf.user_data_source == 'include2' %]
-            <td style="text-align: left;"><span style="font-size: smaller;">
+            <td>
             [% IF u.subscribed %]
               [% IF u.included %]
                  subscribed<br />[% u.sources %]
@@ -216,18 +225,18 @@
             [% ELSE %]
               [% u.sources %]
             [% END %]   
-            </span></td>
+            </td>
           [% END %]
-	    <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+	    <td>
 	      [% u.date %]
-	    </span></td>
-	    <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+	    </td>
+	    <td>
 	      [% u.update_date %]
-	    </span></td>
+	    </td>
     	  [% IF additional_fields %]
-	     <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+	     <td>
 	      [% u.additional %]
-	    </span></td>
+	     </td>
 	  [% END %]
        	  [% END %]
         </tr>
@@ -242,34 +251,28 @@
 
 
       </table>
-    <table border="0">
-    <tr><td style="text-align: left;">
-      [% IF is_owner %]
-        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')" /-->
-        <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
-	<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-
-        <input type="checkbox" name="quiet" /> <label>[%|loc%]quiet[%END%]</label>
-      [% END %]
-    </td>
-
    [% IF action != 'search' %]
-    <td style="text-align: right;">
+    <div class="search_form">
        [% IF prev_page %]
-	 <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
+	 <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
        [% END %]
        [% IF page %]
   	  page [% page %] / [% total_page %]
        [% END %]
        [% IF next_page %]
-	  <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]" /></a>
+	  <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
        [% END %]
-    </td>
+    </div>
    [% END %]
-    </tr>
+      [% IF is_owner %]
+        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')" /-->
+        <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" /><br />
+	<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+        <input type="checkbox" name="quiet" />[%|loc%]quiet[%END%]
+      [% END %]
 
-    </table>
-    </form>
+   </fieldset>
+   </form>
 
 
 

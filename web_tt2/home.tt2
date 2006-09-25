@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<p style="text-align: justify;">
+<p class="text_justify">
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
 </p>
@@ -9,10 +9,11 @@ archives, list management and so on.[%END%]
    <h1 class="block">[%|loc%]Mailing lists categories[%END%]</h1>
 <br />
 
-<div style="padding: 10px; margin: 0px; border: 1px dashed [% color_2 %];">
+<div id="home_container">
 
-<div style="padding: 10px; margin-top: 5px; margin-bottom: 5px; margin-left: 25px; margin-right: 25px; float: right;">
-<ul>
+ <div id="global_mailing_lists">
+ 
+      <ul class="mailing_lists_menu">
     [% FOREACH topic = topics %]
       [% IF topic.id == 'topicsless' %]
        <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|loc%]Others[%END%]</strong></a></li>
@@ -21,32 +22,33 @@ archives, list management and so on.[%END%]
       [% END %]
 
       [% IF topic.sub %]
-      <ul style="list-style: none;">
+            <ul class="no_style">
       [% FOREACH subtopic = topic.sub %]
-       <li><span style="font-size: smaller;"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a></span></li>
+              <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a></li>
       [% END %]
       </ul>
       [% END %]
       [% IF topic.next %]
-</ul></div>
-<div style="padding: 10px; margin: 25px; float: left;"><ul>
+       </ul>
+   
+   
+      <ul class="mailing_lists_menu">
       [% END %]
     [% END %]
-</ul>
-</div>
+      </ul>
 
-<div style="clear: both;">
+  </div>
+<div id="home_search_list">
  <form action="[% path_cgi %]" method="post"> 
-    <input size="25" name="filter" value="[% filter %]" />
+ <fieldset>
+    <input type="text" size="25" name="filter" value="[% filter %]" alt="[%|loc%]Enter a list name[%END%]"/>
     <input type="hidden" name="action" value="search_list" />
     <input class="MainMenuLinks" type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
     <br />
- </form>
-</div>
-<div style="float: right;">
- <form action="[% path_cgi %]" method="post"> 
+ </fieldset>
+ <fieldset id="home_rss_news">
     <input class="MainMenuLinks" type="submit" name="action_rss_request" value="[%|loc%]RSS news[%END%]" />
-    <br />
+ </fieldset> 
  </form>
 </div>
 

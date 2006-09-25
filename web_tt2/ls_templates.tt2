@@ -1,6 +1,8 @@
 <!-- $Id$ -->
 
-<h2>[%|loc%]Template edition system[%END%]</h2><br />
+<h2>[%|loc%]Template edition system[%END%]</h2>
+
+<div id="template_editor">
 
 [%|loc%]This page is proposed in order to edit or create mail or web tt2 templates.[%END%]
 
@@ -15,58 +17,64 @@
 [%|loc%]First you may list a category of templates including or not templates specific of a particular list, then you have oportunity to copy and edit templates of the current robot or the named list.[%END%]<br />
 
 <form action="[% path_cgi %]/ls_templates" method="post">
+<fieldset>
 <ul>
-<li>[%|loc%]Select templates type :[%END%]
- <input type="radio" name="webormail" value="web"  [% IF webormail == 'web' %]checked="checked"[% END %] />web
- <input type="radio" name="webormail" value="mail" [% IF webormail == 'mail' %]checked="checked"[% END %] />mail
+<li>[%|loc%]Select templates type :[%END%]  
+  <input type="radio" name="webormail" value="web"  [% IF webormail == 'web' %]checked="checked"[% END %] />web
+  <input type="radio" name="webormail" value="mail" [% IF webormail == 'mail' %]checked="checked"[% END %] />mail
 </li>
-<li>[%|loc%]Select a list : [%END%]<input type="text" name="list" value="[% list %]"/></li>
+<li>[%|loc%]Select a list :[%END%]  <input type="text" name="list" value="[% list %]"/></li>
 <li><input class="MainMenuLinks" type="submit" name="action_ls_templates" value="[%|loc%]Reload[%END%]" /></li>
 </ul>
+</fieldset>
 </form>
+
+</div>
+
 <p>
 
 [% IF templates %]
-<table style="border: solid 1px; width: auto; margin-right: 10px">
-<tr style="background-color: [% color_4 %];">
-<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]template name[%END%]</th>
-<th colspan="[% colspan_per_level.distrib %]" style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]distrib[%END%]</th>
-<th colspan="[% colspan_per_level.site %]" style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]site[%END%]</th>
-<th colspan="[% colspan_per_level.robot %]" style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc%]robot[%END%]</th>
-<th  colspan="[% colspan_per_level.list %]" style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[%|loc(list)%]list %1[%END%]</th>
+<table summary="[%|loc%]This table contain all templates you can copy or see[%END%]" class="ls_template">
+<tr class="color4">
+<th>[%|loc%]template name[%END%]</th>
+<th colspan="[% colspan_per_level.distrib %]">[%|loc%]distrib[%END%]</th>
+<th colspan="[% colspan_per_level.site %]">[%|loc%]site[%END%]</th>
+<th colspan="[% colspan_per_level.robot %]">[%|loc%]robot[%END%]</th>
+<th  colspan="[% colspan_per_level.list %]">[%|loc(list)%]list %1[%END%]</th>
 </tr>
 [% SET dark = 1 %]
 [% END %]
-<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">&nbsp;</th>
+<th>&nbsp;</th>
 
 <!-- print list of languages -->
 [% FOREACH lang = lang_per_level.distrib %]
-    <th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[% lang.key %]</td>
+    <th>[% lang.key %]</th>
 [% END %]
 
 [% FOREACH lang = lang_per_level.site %]
-    <th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[% lang.key %]</td>
+    <th>[% lang.key %]</th>
 [% END %]
 
  [% FOREACH lang = lang_per_level.robot %]
-    <th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[% lang.key %]</td>
+    <th>[% lang.key %]</th>
  [% END %]
 
  [% FOREACH lang = lang_per_level.list %]
-    <th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">[% lang.key %]</td>
+    <th>[% lang.key %]</th>
  [% END %]
 
 [% FOREACH file = templates %]
   [% IF dark == '1' %]
-     <tr valign="top">[% SET dark = 0 %]
+     <tr>[% SET dark = 0 %]
   [% ELSE %]
-     <tr style="background-color: [% color_0 %];" valign="top">[% SET dark=1 %]
+     <tr class="color0">[% SET dark=1 %]
   [% END %]
   <td>[% file.key %]</td>
 
-  <td style="text-align: center;">
+  <td class="text_center">
   [% IF file.value.distrib %]
     <form action="[% path_cgi %]/edit_template" method="post">
+    <fieldset>
       <input type="hidden" name="template_path" value="[% file.value.distrib.default %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="scope" value="distrib" />
@@ -74,15 +82,17 @@
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_view_template" value="[%|loc%]view[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
+    </fieldset>
     </form></li>
     </ul>
   [% END %]
   </td>
 
 [% FOREACH lang = file.value.site %]
-  <td style="text-align: center;">
+  <td class="text_center">
   [% IF lang.value %]
     <form action="[% path_cgi %]/edit_template" method="post">
+    <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="site" />
@@ -91,6 +101,7 @@
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');" />
+    </fieldset>
     </form>	
   [% END %]
   </td>
@@ -100,9 +111,10 @@
   <td></td>
   [% ELSE %]
 [% FOREACH lang = file.value.robot %]
-  <td style="text-align: center;" >
+  <td class="text_center">
   [% IF lang.value %]
     <form action="[% path_cgi %]/edit_template" method="post">
+    <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="robot" />
@@ -111,6 +123,7 @@
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');"/>
+    </fieldset>
     </form>
   [% END %]
   </td>
@@ -118,10 +131,11 @@
   [%END%]
 
   [% IF list %]
-[% FOREACH lang = file.value.list %]
-  <td style="text-align: center;" >
-  [% IF lang.value %]
+    [% FOREACH lang = file.value.list %]
+    <td class="text_center">
+    [% IF lang.value %]
     <form action="[% path_cgi %]/edit_template" method="post">
+    <fieldset>
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="scope" value="list" />
@@ -131,10 +145,13 @@
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');"/>
+    </fieldset>
     </form>
-  [% END %]
-  </td>
- [%END%]
+    [% END %]
+    </td>
+    [%END%]
+  [% ELSE %]
+  <td></td>
   [% END %]
 [% END %]
 [% IF templates %]

@@ -1,12 +1,13 @@
 <!-- $Id$ -->
 
 <form action="[% path_cgi %]" method="post" name="select_topic_msg">
+<fieldset>
 [%|loc%]This list is configured to require topic(s) foreach message.[%END%]
 <br />
-[%|loc%]Please select one or more topic(s) that corresponds to your message below :[%END%] 
+<label for="topic_[%t.name%]">[%|loc%]Please select one or more topic(s) that corresponds to your message below :[%END%] </label>
 <br /><br />
 [% FOREACH t = available_topics %]
-<input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+<input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
 <br/>
 [% END %]
 <br />
@@ -18,6 +19,7 @@
 <input type="hidden" name="message_id" value="[% message_id %]" />
 <input type="hidden" name="authkey" value="[% authkey %]" />
 <input type="hidden" name="list" VALUE="[% list %]" />
+</fieldset>
 </form>
 <br />
 <br />

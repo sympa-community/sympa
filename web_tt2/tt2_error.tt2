@@ -3,54 +3,25 @@
 
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
-
-<style type="text/css" title="style sympa">
-<!--
-a {
-	text-decoration: none;
-}
-a:link {
-	color: [% color_2 %];
-}
-a:visited {
-	color: [% color_2 %];
-}
--->
-</style>
-
+<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Derived from style Blank Canvas by tw3k AT tw3k.tw3k.q3machines.net" />
   <title>[%|loc%]Sympa error - could not display web page[%END%]</title>
 </head>
 
-<body style="background-color: [% color_4 %]; color: [% color_2 %];">
-
-<h2>[%|loc%]Sympa could not deliver the requested page for the following reason : [%END%]<br />
+<body id="error">
+<h1>[%|loc%]Sympa could not deliver the requested page for the following reason : [%END%]</h1><br />
+<br />
 [% IF tt2_error %]
 <em>[% tt2_error %]</em><br /><br />
 [% ELSIF errors %]
-          <table>
-          <tr style="background-color: [% color_4 %];">
-            <td>
-              <span style="color: [% color_4 %];">
-       [% PROCESS error.tt2 %]
-       </span>
-            </td>
-          </tr>
-          </table>
+    [% PROCESS error.tt2 %]
 [% END %]
-[%|loc%]Please contact the listmaster.[%END%]</h2>
+<h2>[%|loc%]Please contact the listmaster.[%END%]</h2>
 
-<div style="text-align: right; margin-left: auto; margin-right: auto;">
- <table border="0" style="text-align: left;">
-  <tr>
-   <td style="width: 100%;">&nbsp;</td>
-    <td style="white-space: nowrap;"><em>[%|loc%]Powered by[%END%]</em></td>
-    <td><a href="http://www.sympa.org/">
-           <img src="[% icons_url %]/logo-s.png" alt="Sympa [% version %]" style="border: 0px;" />
-         </a></td>
-   </tr>
-  </table>
-</div>
+ <div class="search_form">
+   <em>[%|loc%]Powered by[%END%]</em></td>
+   <a href="http://www.sympa.org/">
+     <img src="[% icons_url %]/logo-s.png" alt="Sympa [% version %]" />
+   </a>
 </body>
 </html>
 

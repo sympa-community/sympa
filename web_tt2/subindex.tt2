@@ -1,12 +1,13 @@
+<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
 <form action="[% path_cgi %]" method="post"> 
+<fieldset>
 <input type="hidden" name="list" value="[% list %]" />
-
-    <table style="border: solid 1px; width: auto; margin: 10px">
-      <tr style="background-color: [% color_4 %];">
-          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">X</th>
-          <th style="padding: 3px; white-space: nowrap; border: solid 1px;" colspan="2">[%|loc%]Email[%END%]</th>
-          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">[%|loc%]Name[%END%]</th>
-          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">[%|loc%]Date[%END%]</th>
+    <table summary="[%|loc%]Listing subscription to moderate[%END%]" class="listOfItems">
+      <tr>
+          <th>X</th>
+          <th colspan="2">[%|loc%]Email[%END%]</th>
+          <th>[%|loc%]Name[%END%]</th>
+          <th>[%|loc%]Date[%END%]</th>
       </tr>
       
       [% IF subscriptions %]
@@ -14,24 +15,22 @@
       [% FOREACH sub = subscriptions %]
 
 	[% IF dark == '1' %]
-	  <tr valign="top">
+	  <tr>
 	[% ELSE %]
-          <tr style="background-color: [% color_0 %];" valign="top">
+          <tr class="color0">
 	[% END %]
 	    <td>
            <input type="checkbox" name="pending_email" value="[% sub.key %],[% sub.value.gecos %]" />
 	    </td>
-	  <td colspan="2" style="white-space: nowrap;"><span style="font-size: smaller;">
+	  <td colspan="2">
 	        [% sub.key %]
-	  </span></td>
+	  </td>
 	  <td>
-             <span style="font-size: smaller;">
 	        [% sub.value.gecos %]&nbsp;
-	     </span>
           </td>
-	    <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
+	  <td class="text_center">
 	      [% sub.value.date %]
-	    </span></td>
+	  </td>
         </tr>
 
         [% IF dark == '1' %]
@@ -50,4 +49,5 @@
 <input type="hidden" name="previous_list" value="[% list %]" />
 <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
+</fieldset>
 </form>

@@ -2,21 +2,21 @@
 
 <!-- begin list_panel.tt2 -->
 
-<div class="MenuBlock">
-  <div style="text-align: left; overflow: hidden">
-   [%|loc%]Subscribers:[%END%] <strong>[% total %]</strong><br />
+<div class="list_panel">
+  
+   [%|loc%]Subscribers:[%END%] <span>[% total %]</span><br />
    [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
-   <span style="font-weight: bold; font-size: 10px">[%|loc%]Owners[%END%]</span><br />
+   <span>[%|loc%]Owners[%END%]</span><br />
    [% FOREACH o = owner %]
 	[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %]<br />
    [% END %]
 
-   [% IF editor %]<span style="font-weight: bold; font-size: 10px">[%|loc%]Moderators[%END%]</span><br />[% END %]
+   [% IF editor %]<span>[%|loc%]Moderators[%END%]</span><br />[% END %]
    [% FOREACH e = editor %]
  	[% IF e.value.gecos %][% e.value.gecos %][% ELSE %][% e.value.local %][% END %]<br />
    [% END %]
    [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
-  </div>
+  
 </div>
 
 <!-- end list_panel.tt2 -->
