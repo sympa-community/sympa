@@ -7170,6 +7170,7 @@ sub verify {
 				|
 				\/([^\/\\]+|\\\/|\\)+[^\\]+\/
 				|(\w+)\.ldap
+				|(\w+)\.sql
 				)\s*,?//x) {
 	my $value=$1;
 
@@ -7449,16 +7450,64 @@ sub verify {
     return undef;
 }
 
-## Verify if a given user is part of an LDAP or TXT search filter
+## Verify if a given user is part of an LDAP, SQL or TXT search filter
 sub search{
     my $filter_file = shift;
     my $sender = shift;
     my $robot = shift;
     my $list = shift;
 
-    # &do_log('info', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
+    &do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
     
-    if ($filter_file =~ /\.ldap$/) {	
+    if ($filter_file =~ /\.sql$/) {
+ 
+	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	
+        my $timeout = 3600;
+        my ($sql_conf, $tsth);
+        my $time = time;
+	
+        unless ($sql_conf = &Conf::load_sql_filter($file)) {
+            $list->send_notify_to_owner('named_filter',{'filter' => $filter_file})
+                if (defined $list && ref($list) eq 'List');
+            return undef;
+        }
+	
+        my $statement = $sql_conf->{'sql_named_filter_query'}->{'statement'};
+        my $filter = $statement;
+        $statement =~ s/\[sender\]/%s/g;
+        $filter =~ s/\[sender\]/$sender/g;
+ 
+        if (defined ($persistent_cache{'named_filter'}{$filter_file}{$filter}) &&
+            (time <= $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
+            &do_log('notice', 'Using previous SQL named filter cache');
+            return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
+        }
+	
+        my $ds = new Datasource('SQL', $sql_conf->{'sql_named_filter_query'});
+        unless ($ds->connect() && $ds->ping) {
+            do_log('notice','Unable to connect to the SQL server %s:%d',$sql_conf->{'db_host'}, $sql_conf->{'db_port'});
+            return undef;
+        }
+	
+        $statement = sprintf $statement, $ds->quote($sender);
+        unless ($ds->query($statement)) {
+            do_log('debug','%s named filter cancelled', $file);
+            return undef;
+        }
+ 
+        my $res = $ds->fetch;
+        $ds->disconnect();
+ 
+        if ($res->[0] == 0){
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
+        }else {
+            $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 1;
+       }
+        $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} = time;
+        return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
+ 
+     }elsif ($filter_file =~ /\.ldap$/) {	
 	## Determine full path of the filter file
 	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
 	
@@ -7469,7 +7518,6 @@ sub search{
 	my $timeout = 3600;	
 	my $var;
 	my $time = time;
-	my $value;	
 	my %ldap_conf;
     
 	return undef unless (%ldap_conf = &Ldap::load($file));
@@ -13340,4 +13388,3 @@ sub get_list_id {
 
 ## Packages must return true.
 1;
-

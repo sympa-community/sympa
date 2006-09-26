@@ -2709,6 +2709,7 @@ You should use list config cache if you are managing a big amount of lists (1000
         Available since release 2.3.1.
 
 \section {Database related}
+	\label {database-related}
 
 The following parameters are needed when using an RDBMS, but are otherwise not required:
 
@@ -4765,7 +4766,7 @@ Rules are defined as follows :
                 | all ()
                 | equal (<var>, <var>)
                 | match (<var>, /perl_regexp/)
-		| search (<filter.ldap>,<var>)
+		| search (<named_filter_file>,<var>)
                 | is_subscriber (<listname>, <var>)
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
@@ -4844,7 +4845,9 @@ Check http://perldoc.perl.org/perlre.html for regular expression syntax.
 
 <conf_key_word> ::= domain | email | listmaster | default_list_priority | 
 		      sympa_priority | request_priority | lang | max_size
-	 	      
+
+<named_filter_file> ::= filename ending with .ldap , .sql or .txt
+ 	      
 \end{verbatim}
 \end {quote}
 
@@ -4896,19 +4899,19 @@ subscribe rennes1
 \end{verbatim}
 \end {quote}
 
-\section {LDAP Named Filters}
+\section {Named Filters}
 \label {named-filters}
 
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 	
-As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory thanks to an authorization scenario.
+As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory, an \textindex {SQL} database or an flat text file, thanks to an authorization scenario.
 	
-\subsection {Definition}
+\subsection {LDAP Named Filters Definition}
 
 [STARTPARSE]
-	People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {[ETCDIR]/search\_filters/}.
+       People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'. It is stored in \dir {[ETCDIR]/search\_filters/}.
 	
-	You must give several informations in order to create a Named Filter:
+       You must give several informations in order to create a LDAP Named Filter:
 \begin{itemize}
 
 	\item{host}\\
@@ -4959,6 +4962,63 @@ example.ldap : we want to select the professors of mathematics in the university
 \end{verbatim}
 \end {quote}
 
+k\subsection {SQL Named Filters Definition}
+
+[STARTPARSE]
+       People are selected through an \textindex {SQL filter} defined in a configuration file. This file must have the extension '.sql'. It is stored in \dir {[ETCDIR]/search\_filters/}.
+
+       To create an SQL Named Filter, you have to configure SQL host, database and options, the same way you did it for the main Sympa database in sympa.conf.
+       Of course you can use different database and options. Sympa will open a new Database connection to execute your statement.
+
+       Please refer to section  \ref {database-related}, page~\pageref {database-related} for a detailed explanation of each parameter.
+
+       Here, all database parameters have to be grouped in one \texttt {sql\_named\_filter\_query} paragraph.
+
+\begin{itemize}
+
+       \item{db\_type}\\
+       \texttt {Format: db\_type mysql | SQLite | Pg | Oracle | Sybase}
+       Database management system used. Mandatory and Case sensitive.
+
+       \item{db\_host}\\
+       Database host name. Mandatory.
+
+       \item{db\_name}\\
+       Name of database to query. Mandatory.
+
+       \item{statement}\\
+       Mandatory. The SQL statement to execute to verify authorization. This statement must returns 0 to refuse the action, or anything else to grant privileges.
+       The \texttt {SELECT COUNT(*)...} statement is the perfect query for this parameter.
+       The \texttt {[sender]} keyword in the SQL query will be replaced by the sender's email.
+
+       \item{Optional parameters}\\
+       Please refer to main sympa.conf section for description.
+       \begin{itemize}
+               \item{db\_user}
+               \item{db\_password}
+               \item{db\_options}
+               \item{db\_env}
+               \item{db\_port}
+               \item{db\_timeout}
+       \end{itemize}
+
+\end{itemize}
+
+
+example.sql : we want to select the professors of mathematics in the university of Rennes1 in France
+\begin {quote}
+\begin{verbatim}
+[STOPPARSE]
+       sql_named_filter_query
+       db_type         mysql
+       db_name         people
+       db_host         dbserver.rennes1.fr
+       db_user         sympa
+       db_passwd       pw_sympa_mysqluser
+       statement       SELECT count(*) as c FROM users WHERE mail=[sender] AND EmployeeType='PROFESSOR' AND department='mathematics'
+\end{verbatim}
+\end {quote}
+
 
 \subsection {Search Condition}
 	
@@ -4979,7 +5039,7 @@ The variables used by 'search' are :
 	That is to say the sender email address. 
 \end{itemize}
  
-Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory ; each entry has a lifetime of 1 hour in the cache.
++Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory or SQL server; each entry has a lifetime of 1 hour in the cache.
 
 When using .txt file extention, the file is read looking for a line that match the second parameter (usually the user email address). Each line is a string where the
 char * can be used once to mach any block. This feature is used by the blacklist implicit scenario rule.   (see~\ref {blacklist}) 
@@ -12365,4 +12425,3 @@ N.B.:
 \printindex
 
 \end {document}
-

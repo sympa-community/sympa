@@ -45,7 +45,8 @@ use CPAN;
 	     'Bundle::LWP' => '1.09',
 	     'SOAP::Lite' => '0.60',
 	     'MHonArc::UTF8' => '2.6.0',
-	     'MIME::Base64' => '3.03'
+	     'MIME::Base64' => '3.03',
+	     'Crypt::OpenSSL::X509' => '0.3.1',
 	     );
 
 ### key:left "module" used by SYMPA, 

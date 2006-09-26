@@ -640,6 +640,7 @@ sub load_robots {
 	$url =~ s/^http(s)?:\/\/(.+)$/$2/;
 	$Conf{'robot_by_soap_url'}{$url} = $Conf{'domain'};
     }
+
     return ($robot_conf);
 }
 
@@ -1077,6 +1078,31 @@ sub get_robot_conf {
 
 
 
+## load .sql named filter conf file
+sub load_sql_filter {
+	
+    my $file = shift;
+    my %sql_named_filter_params = (
+	'sql_named_filter_query' => {'occurrence' => '1',
+	'format' => { 
+		'db_type' => {'format' => 'mysql|SQLite|Pg|Oracle|Sybase', },
+		'db_name' => {'format' => '.*', 'occurrence' => '1', },
+		'db_host' => {'format' => '.*', 'occurrence' => '1', },
+		'statement' => {'format' => '.*', 'occurrence' => '1', },
+		'db_user' => {'format' => '.*', 'occurrence' => '0-1',  },
+		'db_passwd' => {'format' => '.*', 'occurrence' => '0-1',},
+		'db_options' => {'format' => '.*', 'occurrence' => '0-1',},
+		'db_env' => {'format' => '.*', 'occurrence' => '0-1',},
+		'db_port' => {'format' => '\d+', 'occurrence' => '0-1',},
+		'db_timeout' => {'format' => '\d+', 'occurrence' => '0-1',},
+	}
+	});
+
+    return undef unless  (-r $file);
+
+    return (&load_generic_conf_file($file,\%sql_named_filter_params, 'abort'));
+}
+
 ## load trusted_application.conf configuration file
 sub load_trusted_application {
     my $robot = shift;
@@ -1097,12 +1123,23 @@ sub load_trusted_application {
 
 }
 
-## load a generic config organized by paragraph syntax
+############################################################
+#  load_generic_conf_file
+############################################################
+#  load a generic config organized by paragraph syntax
+#  
+# IN : -$config_file (+): full path of config file
+#      -$structure_ref (+) : ref(HASH) describing expected syntax
+#      -$on_error : optional. sub returns undef if set to 'abort'
+#          and an error is found in conf file
+# OUT : ref(HASH) of parsed parameters
+#     | undef
 #
-# 
+############################################################## 
 sub load_generic_conf_file {
     my $config_file = shift;
     my $structure_ref = shift;
+    my $on_error = shift;
     my %structure = %$structure_ref;
 
     # printf STDERR "load_generic_file  $config_file \n";
@@ -1169,6 +1206,7 @@ sub load_generic_conf_file {
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
 	    printf STDERR 'Bad paragraph "%s" in %s, ignored', @paragraph, $config_file;
+	    return undef if $on_error eq 'abort';
 	    next;
 	}
 	    
@@ -1176,6 +1214,7 @@ sub load_generic_conf_file {
 	# printf STDERR "xxxxxxxxxxxx parametre pname $pname\n";
 	unless (defined $structure{$pname}) {
 	    printf STDERR 'Unknown parameter "%s" in %s, ignored', $pname, $config_file;
+	    return undef if $on_error eq 'abort';
 	    next;
 	}
 	## Uniqueness
@@ -1183,6 +1222,7 @@ sub load_generic_conf_file {
 	    unless (($structure{$pname}{'occurrence'} eq '0-n') or
 		    ($structure{$pname}{'occurrence'} eq '1-n')) {
 		printf STDERR 'Multiple parameter "%s" in %s', $pname, $config_file;
+		return undef if $on_error eq 'abort';
 	    }
 	}
 	
@@ -1191,6 +1231,7 @@ sub load_generic_conf_file {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
 		printf STDERR 'Expecting a paragraph for "%s" parameter in %s, ignore it\n', $pname, $config_file;
+		return undef if $on_error eq 'abort';
 		next;
 	    }
 	    
@@ -1202,16 +1243,19 @@ sub load_generic_conf_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);		
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
 		    printf STDERR 'Bad line "%s" in %s\n',$paragraph[$i], $config_file;
+		    return undef if $on_error eq 'abort';
 		}		
 		my $key = $1;
 			
 		unless (defined $structure{$pname}{'format'}{$key}) {
 		    printf STDERR 'Unknown key "%s" in paragraph "%s" in %s\n', $key, $pname, $config_file;
+		    return undef if $on_error eq 'abort';
 		    next;
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($structure{$pname}{'format'}{$key}{'format'})\s*$/i) {
 		    printf STDERR 'Bad entry "%s" in paragraph "%s" in %s\n', $paragraph[$i], $key, $pname, $config_file;
+		    return undef if $on_error eq 'abort';
 		    next;
 		}
 
@@ -1234,6 +1278,7 @@ sub load_generic_conf_file {
 		if ($structure{$pname}{'format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
 			printf STDERR 'Missing key %s in param %s in %s\n', $k, $pname, $config_file;
+			return undef if $on_error eq 'abort';
 			$missing_required_field++;
 		    }
 		}
@@ -1254,10 +1299,12 @@ sub load_generic_conf_file {
 	    my $xxxmachin =  $structure{$pname}{'format'};
 	    unless ($#paragraph == 0) {
 		printf STDERR 'Expecting a single line for %s parameter in %sxxxxxx %s\n', $pname, $config_file, $xxxmachin ;
+		return undef if $on_error eq 'abort';
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($structure{$pname}{'format'})\s*$/i) {
 		printf STDERR 'Bad entry "%s" in %s\n', $paragraph[0], $config_file ;
+		return undef if $on_error eq 'abort';
 		next;
 	    }
 
@@ -1275,7 +1322,7 @@ sub load_generic_conf_file {
     }
     
     close CONFIG;
-open TMP2, ">>/tmp/sss"; printf TMP2 "xxxxxxxxxxxxxxxxxxx--------structure admin\n"; &tools::dump_var(\%admin, 0, \*TMP2);printf TMP2 "xxxxxxxxxxxxxxxxxxx--------\n"; close TMP2;
+#open TMP2, ">>/tmp/sss"; printf TMP2 "xxxxxxxxxxxxxxxxxxx--------structure admin\n"; &tools::dump_var(\%admin, 0, \*TMP2);printf TMP2 "xxxxxxxxxxxxxxxxxxx--------\n"; close TMP2;
     return \%admin;
 }
 
