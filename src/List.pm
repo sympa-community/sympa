@@ -568,6 +568,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 },
 	    'host' => {'format' => $tools::regexp{'host'},
 		       'length' => 20,
+		       'default' => {'conf' => 'host'},
 		       'gettext_id' => "Internet domain",
 		       'group' => 'description'
 		   },
