@@ -307,6 +307,9 @@ At the moment Named Filters are only used in authorization scenarios. They enabl
 As a consequence, you can grant privileges in a list to people belonging to an <A NAME="9587"></A>LDAP directory, an <A NAME="9588"></A>SQL database or an flat text file, thanks to an authorization scenario.
 
 <P>
+Note that the only variable available in named filters is [sender] and is set to the email address of the acting user.
+
+<P>
 
 <H2><A NAME="SECTION001521000000000000000">
 14.2.1 LDAP Named Filters Definition</A>
@@ -387,7 +390,7 @@ example.ldap : we want to select the professors of mathematics in the university
 </PRE>
 
 <P>
-k
+
 <H2><A NAME="SECTION001522000000000000000">
 14.2.2 SQL Named Filters Definition</A>
 </H2>
@@ -492,7 +495,7 @@ The variables used by 'search' are :
 <BR></LI>
 <LI>the [sender]
 <BR>
-That is to say the sender email address. 
+That is to say the sender email address.
 </LI>
 </UL>
 

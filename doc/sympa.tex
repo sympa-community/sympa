@@ -5841,6 +5841,8 @@ At the moment Named Filters are only used in authorization scenarios. They enabl
 	
 As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory, an \textindex {SQL} database or an flat text file, thanks to an authorization scenario.
 	
+Note that the only variable available in named filters is [sender] and is set to the email address of the acting user.
+
 \subsection {LDAP Named Filters Definition}
 
        People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'. It is stored in \dir {/usr/local/sympa-os/etc/search\_filters/}.
@@ -5893,7 +5895,7 @@ example.ldap : we want to select the professors of mathematics in the university
 \end{verbatim}
 \end {quote}
 
-k\subsection {SQL Named Filters Definition}
+\subsection {SQL Named Filters Definition}
 
        People are selected through an \textindex {SQL filter} defined in a configuration file. This file must have the extension '.sql'. It is stored in \dir {/usr/local/sympa-os/etc/search\_filters/}.
 
@@ -5965,7 +5967,7 @@ The variables used by 'search' are :
 \begin{itemize}
 	\item{the name of the LDAP Configuration file or a txt matching enumeration}\\
 	\item{the [sender]}\\
-	That is to say the sender email address. 
+	That is to say the sender email address.
 \end{itemize}
  
 +Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory or SQL server; each entry has a lifetime of 1 hour in the cache.
