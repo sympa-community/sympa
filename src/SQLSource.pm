@@ -285,7 +285,7 @@ sub ping {
 }
 
 sub quote {
-    my ($self, $string, $datatype) = shift;
+    my ($self, $string, $datatype) = @_;
     
     return $self->{'dbh'}->quote($string, $datatype); 
 }
