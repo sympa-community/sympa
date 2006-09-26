@@ -4962,7 +4962,7 @@ example.ldap : we want to select the professors of mathematics in the university
 \end{verbatim}
 \end {quote}
 
-k\subsection {SQL Named Filters Definition}
+\subsection {SQL Named Filters Definition}
 
 [STARTPARSE]
        People are selected through an \textindex {SQL filter} defined in a configuration file. This file must have the extension '.sql'. It is stored in \dir {[ETCDIR]/search\_filters/}.
