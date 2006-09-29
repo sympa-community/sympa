@@ -102,7 +102,7 @@ Options:
    --sync_include=listname\@robot        : trigger the list members update
    --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
                                                 authorization scenarios. The list parameter is optional.
-   --upgrade --from=X --to=Y             : runs Sympa maintenance script to upgrade from version X to version Y
+   --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
    --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
    -h, --help                            : print this help
@@ -185,7 +185,7 @@ if ($main::options{'log_level'}) {
 
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
-    unless ($List::use_db = &List::probe_db()) {
+    unless ($List::use_db = &Upgrade::probe_db()) {
 	&fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
     }
 }
@@ -220,6 +220,13 @@ if ($main::options{'service'} eq 'process_message') {
 unless (&Conf::checkfiles_as_root()) {
    fatal_err("output checkfiles_as_root : Missing files. Aborting.");
    ## No return.
+}
+
+## Check that the data structure is uptodate
+unless ($main::options{'upgrade'}) {
+    unless (&Upgrade::data_structure_uptodate()) {
+	&fatal_err("error : data structure was not updated ; you should run sympa.pl --upgrade to run the upgrade process.");
+    }
 }
 
 if ($signal ne 'hup') {
@@ -588,21 +595,26 @@ if ($main::options{'dump'}) {
     exit 0;
 ## Migration from one version to another
 }elsif ($main::options{'upgrade'}) {
+    
+    &do_log('notice', "Upgrade process...");
 
-    unless ($main::options{'from'}) {
- 	print STDERR "Error : missing 'from' parameter\n";
+    $main::options{'from'} ||= &Upgrade::get_previous_version();
+    $main::options{'to'} ||= $Version::Version;
+
+    if ($main::options{'from'} eq $main::options{'to'}) {
+	&do_log('err', "Current version : %s ; no upgrade is required.", $main::options{'to'});
+	exit 0;
+    }else {
+	&do_log('notice', "Upgrading from %s to %s...", $main::options{'from'}, $main::options{'to'});
+    }
+
+    unless (&Upgrade::upgrade($main::options{'from'}, $main::options{'to'})) {
+	&do_log('err',  "Migration from %s to %s failed", $main::options{'from'}, $main::options{'to'});
  	exit 1;
     }
 
-    unless ($main::options{'to'}) {
- 	print STDERR "Error : missing 'to' parameter\n";
- 	exit 1;
-    }
-
-    unless (&List::upgrade($main::options{'from'}, $main::options{'to'})) {
-	printf STDERR "Migration from %s to %s failed\n", $main::options{'from'}, $main::options{'to'};
- 	exit 1;
-    }
+    &do_log('notice', "Upgrade process finished.");    
+    &Upgrade::update_version();
 
     exit 0;
 
@@ -701,10 +713,6 @@ elsif ($main::options{'close_family'}) {
     exit 0;
 }
  
-
-## Maintenance
-## Update DB structure or content if required
-&List::maintenance();
 
 ## Do we have right access in the directory
 if ($main::options{'keepcopy'}) {

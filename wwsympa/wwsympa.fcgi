@@ -589,9 +589,9 @@ my $pinfo = &List::_apply_defaults();
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
-unless (&List::data_structure_uptodate()) {
+unless (&Upgrade::data_structure_uptodate()) {
     $maintenance_mode = 1;
-    &do_log('notice',"Web interface set to maintenance mode");
+    &do_log('err',"Web interface set to maintenance mode ; you should run sympa.pl --upgrade");
 }
 
 &tools::ciphersaber_installed();
@@ -648,7 +648,7 @@ binmode STDIN, ":utf8";
      &List::init_list_cache();
 
      ## If in maintenance mode, check if the data structure is now uptodate
-     if ($maintenance_mode && &List::data_structure_uptodate()) {
+     if ($maintenance_mode && &Upgrade::data_structure_uptodate()) {
 	 $maintenance_mode = undef;
 	 &do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
      }

@@ -86,7 +86,7 @@ unless ($List::use_db = &List::check_db_connect()) {
 }
 
 ## Check that the data structure is uptodate
-unless (&List::data_structure_uptodate()) {
+unless (&Upgrade::data_structure_uptodate()) {
     &fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
 }
 

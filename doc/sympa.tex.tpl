@@ -1509,7 +1509,7 @@ Field user_admin added to table admin_table
 \end {quote}
 
 You might need, for some reason, to make Sympa run the migration procedure from version \textit {X} to version \textit {Y}.
-This procedure is run automatically by \file {sympa.pl} when it detects that \file {[ETCL_DIR]/data\_structure.version} is older 
+This procedure is run automatically by \file {sympa.pl --upgrade} when it detects that \file {[ETCL_DIR]/data\_structure.version} is older 
 than the current version, but you can also run trigger this procedure yourself :
 \begin {quote}
 \begin{verbatim}
@@ -1586,7 +1586,7 @@ database and play with it. When you decide to move the existing service to the n
 \item stop all sympa processus on both servers, 
 \item transfert the database
 \item edit the \file {[ETCL_DIR]/data\_structure.version} on the new server ; change the version value to reflect the old number
-\item start \file {sympa.pl}, it will upgrade the database structure according the hop you do. 
+\item start \file {sympa.pl --upgrade}, it will upgrade the database structure according the hop you do. 
 \end {enumerate}
 
 

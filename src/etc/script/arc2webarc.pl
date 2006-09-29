@@ -85,7 +85,7 @@ unless (&Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
 
-$List::use_db = &List::probe_db();
+$List::use_db = &Upgrade::probe_db();
 
 chdir $Conf::Conf{'home'};
 
