@@ -141,7 +141,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. One possible reason : the welcome message sent to the user has triggered a non-delivery report. The user email address might be incorrect.[%END%]
+[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. [%END%]
+[% IF reason == 'arf' -%]
+ The user complain to abuse service about a message from the list using email feedback reports format.
+[% ELSIF  reason == 'welcome' -%]
+ The welcome message (or a subscription remind) sent to the user has triggered a non-delivery report. The user email address might be incorrect.
+[%END%]
 (no action needed)
 
 [% ELSIF type == 'named_filter' -%]

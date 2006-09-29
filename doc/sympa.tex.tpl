@@ -1634,6 +1634,7 @@ lines must therefore be added to the \unixcmd {sendmail} alias file
 sympa:             "| [MAILERPROGDIR]/queue sympa@\samplerobot"\\
 listmaster: 	   "| [MAILERPROGDIR]/queue listmaster@\samplerobot"\\
 bounce+*:          "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"\\
+abuse-feedback-report:       "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"\\
 sympa-request:     postmaster\\
 sympa-owner:       postmaster\\
 \end {quote}
@@ -1652,6 +1653,9 @@ messages.
 The alias bounce+* is dedicated to collect bounces where VERP (variable envelope return path) was actived. It is useful
 if \texttt { welcome\_return\_path unique } or \texttt { remind\_return\_path unique} or the
 \cfkeyword {verp\_rate} parameter is no null for at least one list.
+
+The alias abuse-feedback-report is used for processing automatically feedback that respect ARF format (Abuse Report Feedback) which is a draft to specify how end user can complain about spam. It is mainly used by AOL.
+
 
 Don't forget to run \unixcmd {newaliases} after any change to
 the \file {/etc/aliases} file!
@@ -1698,7 +1702,7 @@ aliases must be added:
             "|[MAILERPROGDIR]/bouncequeue \samplelist@\samplerobot
             \\
         \mailaddr {\samplelist-subscribe}:   &
-            "|[MAILERPROGDIR]/queue \samplelist-subscribe@\samplerobot@\samplerobot"
+            "|[MAILERPROGDIR]/queue \samplelist-subscribe@\samplerobot"
             \\
         \mailaddr {\samplelist-unsubscribe}: &
             "|[MAILERPROGDIR]/queue \samplelist-unsubscribe@\samplerobot"
@@ -9576,6 +9580,22 @@ Return-Path: <bounce+user==a==userdomain==listname@listdomain>
 \end {quote}
         Note that you need to set a mail alias for the generic bounce+* alias (see \ref {robot-aliases},
 page~\pageref {robot-aliases}).
+
+\section {ARF}
+\label {ARF}
+
+ ARF (Abuse Feedback Reporting Format) is standard for reporting abuse. It is
+implemented mainly in AOL email user interface. Aol server propose to mass mailer to received automatically the users complain by formated messages. Because many subscribers don't want to remind
+how to unsubscribe tey use ARF when provided by user interface. It may usefull to configure the ARF managment in Sympa. It really simple : all what you have to do is to create a new alias for
+each virtual robot as the following :
+
+\begin {quote}
+\begin{verbatim}
+abuse-feedback-report:       "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"\\
+\end{verbatim}
+\end {quote}
+
+Then register this address as your loop back email address with ISP (for exemple AOL). This way messages to that email adress are processed by bounced deamon and opt-out opt-out-list abuse and automatically processed. If bounce service can remove a user the message report feedback is forwarded to the list owner. Unrecognize message are forwarded to the listmaster.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
