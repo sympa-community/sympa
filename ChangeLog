@@ -1,3 +1,270 @@
+2006-09-29 14:30  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  src/Message.pm: Aded examples for family TT2 customization
+
+2006-09-29 11:40  serge.aumont
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, mail_tt2/listowner_notification.tt2,
+	  wwsympa/bounced.pl: Now bounced recognize Abuse Report Feedback
+	  format (ARF). In order to use it, you just need to create a new
+	  alias to redirect message from ARF loop (mainly AOL) to bounced
+	  according to the documentation (section bounces)
+
+2006-09-26 15:18  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/node15.html, html/sympa.ps: Completed doc
+
+2006-09-26 15:18  sympa-authors
+
+	* src/SQLSource.pm: Fixed the quote() subroutine
+
+2006-09-26 13:36  sympa-authors
+
+	* doc/sympa.tex.tpl: typo
+
+2006-09-26 12:07  sympa-authors
+
+	* check_perl_modules.pl, doc/sympa.pdf, doc/sympa.ps,
+	  doc/sympa.tex, doc/sympa.tex.tpl, doc/html/index.html,
+	  doc/html/node1.html, doc/html/node10.html, doc/html/node11.html,
+	  doc/html/node12.html, doc/html/node13.html, doc/html/node14.html,
+	  doc/html/node15.html, doc/html/node16.html, doc/html/node17.html,
+	  doc/html/node18.html, doc/html/node19.html, doc/html/node2.html,
+	  doc/html/node20.html, doc/html/node21.html, doc/html/node22.html,
+	  doc/html/node23.html, doc/html/node24.html, doc/html/node25.html,
+	  doc/html/node26.html, doc/html/node27.html, doc/html/node28.html,
+	  doc/html/node29.html, doc/html/node3.html, doc/html/node30.html,
+	  doc/html/node31.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	  mail_tt2/listowner_notification.tt2, src/Conf.pm, src/List.pm:
+	  [S.Amrani, Gendarmerie Nationale] New feature: SQL named filters
+	  Listmasters can now define SQL search conditions in authorization
+	  scenarios such as :	"search(example.sql, [sender])
+	  smtp,smime,md5    -> do_it" Here is the example.sql named filter
+	  :   sql_named_filter_query   db_type	       mysql   db_name
+	  people  db_host	     dbserver.rennes1.fr     db_user
+	  sympa   db_passwd	   pw_sympa_mysqluser	   statement
+	  SELECT count(*) as c FROM users WHERE mail=[sender] AND
+	  EmployeeType='PROFESSOR' AND department='mathematics'
+
+2006-09-26 11:16  sympa-authors
+
+	* src/List.pm: Fix: 'host' robot.conf parameter was not well
+	  supported. It is now the default value for the list 'host'
+	  parameter.
+
+2006-09-25 16:50  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/active_lists.tt2,
+	  web_tt2/add_request.tt2, web_tt2/admin.tt2,
+	  web_tt2/admin_menu.tt2, web_tt2/arc_manage.tt2,
+	  web_tt2/arc_protect.tt2, web_tt2/arcsearch.tt2,
+	  web_tt2/arcsearch_form.tt2, web_tt2/blacklist.tt2,
+	  web_tt2/change_email.tt2, web_tt2/choosepasswd.tt2,
+	  web_tt2/compose_mail.tt2, web_tt2/copy_template.tt2,
+	  web_tt2/create_list.tt2, web_tt2/create_list_request.tt2,
+	  web_tt2/css.tt2, web_tt2/d_control.tt2, web_tt2/d_editfile.tt2,
+	  web_tt2/d_install_shared.tt2, web_tt2/d_properties.tt2,
+	  web_tt2/d_read.tt2, web_tt2/d_upload.tt2,
+	  web_tt2/dump_scenario.tt2, web_tt2/edit_list_request.tt2,
+	  web_tt2/edit_template.tt2, web_tt2/editfile.tt2,
+	  web_tt2/editsubscriber.tt2, web_tt2/footer.tt2,
+	  web_tt2/get_closed_lists.tt2, web_tt2/get_inactive_lists.tt2,
+	  web_tt2/get_latest_lists.tt2, web_tt2/get_pending_lists.tt2,
+	  web_tt2/help_editfile.tt2, web_tt2/home.tt2,
+	  web_tt2/install_pending_list.tt2, web_tt2/latest_arc.tt2,
+	  web_tt2/latest_d_read.tt2, web_tt2/latest_lists.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/list_panel.tt2, web_tt2/lists.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/loginbanner.tt2,
+	  web_tt2/ls_templates.tt2, web_tt2/main.tt2, web_tt2/modindex.tt2,
+	  web_tt2/picture_upload.tt2, web_tt2/pref.tt2,
+	  web_tt2/remindpasswd.tt2, web_tt2/rename_list_request.tt2,
+	  web_tt2/request_topic.tt2, web_tt2/review.tt2,
+	  web_tt2/review_family.tt2, web_tt2/reviewbouncing.tt2,
+	  web_tt2/rss_request.tt2, web_tt2/scenario_test.tt2,
+	  web_tt2/search_user.tt2, web_tt2/serveradmin.tt2,
+	  web_tt2/set_pending_list_request.tt2, web_tt2/setlang.tt2,
+	  web_tt2/show_cert.tt2, web_tt2/sigrequest.tt2,
+	  web_tt2/skinsedit.tt2, web_tt2/sso_login.tt2,
+	  web_tt2/subindex.tt2, web_tt2/suboptions.tt2,
+	  web_tt2/subrequest.tt2, web_tt2/title.tt2, web_tt2/tt2_error.tt2,
+	  web_tt2/viewlogs.tt2, web_tt2/viewmod.tt2,
+	  web_tt2/your_lists.tt2, wwsympa/wwsympa.fcgi: **** Include work
+	  from A Brard for accessibility in dev branch . A lot of TT2
+	  changes, may break local customization
+
+2006-09-20 11:56  sympa-authors
+
+	* src/: List.pm, tools.pl: Fix: don't raise an error if no
+	  blacklist.txt file was found
+
+2006-09-20 11:48  sympa-authors
+
+	* src/Commands.pm: Fix previous change
+
+2006-09-20 11:11  sympa-authors
+
+	* src/Commands.pm: Fix: no $action var available because scenario
+	  is not evaluated in distribute()
+
+2006-09-20 10:35  sympa-authors
+
+	* src/sympa.pl: [reported by P.Maes, Université Louvain] Fix: Sympa
+	  would improperly detect a loop if the same message is sent to 2
+	  lists with same local part. Now added list robot to %msgid_table
+	  keys.
+
+2006-09-20 10:23  sympa-authors
+
+	* src/Datasource.pm: [S.Amrani] Complete previous patch
+
+2006-09-19 16:22  sympa-authors
+
+	* src/: Datasource.pm, List.pm, Makefile, SQLSource.pm: [S.Amrani,
+	  gendarmerie Nationale] Changes: new Datasource.pm and
+	  SQLSource.pm modules that should contain all DB access
+	  subroutines. An LDAPSource.pm module should be created later.
+
+2006-09-19 14:52  sympa-authors
+
+	* doc/sympa.tex.tpl: Completed documentation for owner_include
+
+2006-09-15 17:22  sympa-authors
+
+	* mail_tt2/message_report.tt2, src/Commands.pm: [reported by
+	  D.Lamballais, IRISA] Fix: moderator was no more notified after
+	  message rejection
+
+2006-09-15 15:35  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Complete doc related to bounce scores
+
+2006-09-15 15:06  sympa-authors
+
+	* doc/sympa.tex.tpl: Complete documentation about scenarios
+
+2006-09-14 17:51  sympa-authors
+
+	* src/List.pm: [S.Amrani, Gend. Nationale] Fix: incorrectly closed
+	  file handle
+
+2006-09-13 16:03  sympa-authors
+
+	* src/List.pm: Fix previous changes
+
+2006-09-13 14:42  sympa-authors
+
+	* src/List.pm: Fix: prevent recursive loop when DB connection
+	  failed : db_connect > send_notify_to_listmaster >
+	  send_global_file > get_user_db > db_connect
+
+2006-09-11 10:29  sympa-authors
+
+	* src/mail.pm: Change: new "charset parameter" to mail::mail_file()
+
+2006-09-11 10:26  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Added documentation about i18n
+
+2006-09-07 17:22  serge.aumont
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+
+
+	  closeList as a new soap service
+
+2006-09-07 17:21  sympa-authors
+
+	* soap/: sympa.wsdl, sympasoap.pm:
+
+	  CloseList as a new soap service
+
+2006-09-06 17:14  serge.aumont
+
+	* doc/: sympa.tex, sympa.tex.tpl, man8/alias_manager.8:
+	  Add documentation for soap server (list of services)
+
+2006-09-06 17:13  sympa-authors
+
+	* soap/: sympa.wsdl, sympa_soap_client.pl, sympasoap.pm:
+
+	  New soap service : add and del
+
+2006-09-06 15:25  sympa-authors
+
+	* mail_tt2/listmaster_notification.tt2, web_tt2/notice.tt2,
+	  wwsympa/wwsympa.fcgi: Fix: renamed lists are set to pending
+	  status but listmaster was not notified
+
+2006-09-06 11:31  sympa-authors
+
+	* .version, ChangeLog, NEWS, doc/sympa.pdf, doc/sympa.ps,
+	  doc/sympa.tex, doc/sympa.tex.tpl, doc/html/index.html,
+	  doc/html/node1.html, doc/html/node10.html, doc/html/node11.html,
+	  doc/html/node12.html, doc/html/node13.html, doc/html/node14.html,
+	  doc/html/node15.html, doc/html/node16.html, doc/html/node17.html,
+	  doc/html/node18.html, doc/html/node19.html, doc/html/node2.html,
+	  doc/html/node20.html, doc/html/node21.html, doc/html/node22.html,
+	  doc/html/node23.html, doc/html/node24.html, doc/html/node25.html,
+	  doc/html/node26.html, doc/html/node27.html, doc/html/node28.html,
+	  doc/html/node29.html, doc/html/node3.html, doc/html/node30.html,
+	  doc/html/node31.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	  src/List.pm, src/tools.pl, web_tt2/modindex.tt2,
+	  wwsympa/wwsympa.fcgi: Preparing 5.3a.8
+
 2006-09-05 13:36  sympa-authors
 
 	* src/Log.pm, src/tools.pl, wwsympa/wwsympa.fcgi: Change: now
