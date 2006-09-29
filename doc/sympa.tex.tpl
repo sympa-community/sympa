@@ -6878,6 +6878,15 @@ shared_doc.d_edit   editor
 	page~\pageref{web-tpl}). \textit{Sympa} looks for these files in the following 
 	level order: list, family, robot, server site or distribution. 
 
+\textit {Example of custom hierarchy :} 
+\begin {quote}
+\begin{verbatim}
+[ETCDIR]/families/myfamily/mail_tt2/
+[ETCDIR]/families/myfamily/mail_tt2/bye.tt2
+[ETCDIR]/families/myfamily/mail_tt2/welcome.tt2
+\end{verbatim}
+\end {quote}
+
 \subsection {Instantiation}
 \label{family-instantiation}
 
