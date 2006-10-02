@@ -372,7 +372,8 @@ while (!$end) {
 		$forward = 'listmaster';
 		do_log ('err','ignoring Feedback Report %s : unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
 	    }
-	    &DoForward($list->{'name'}, $forward, $robot, $entity) if (defined $forward);
+	    $listname |= 'sympa';
+	    &DoForward($listname, $forward, $robot, $entity) if (defined $forward);
 
 	    unlink("$queue/$file");
 	    next;		
