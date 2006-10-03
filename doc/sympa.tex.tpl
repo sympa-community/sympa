@@ -4779,6 +4779,8 @@ Rules are defined as follows :
                 | is_listmaster (<var>)
                 | older (<date>, <date>)    # true if first date is anterior to the second date
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
+                | CustomCondition::<package_name> (<var>*)
+
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
                   | [remote_host] | [remote_addr] | [user_attributes-><user_attributes_keyword>]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [env-><env_var>]
@@ -4853,7 +4855,8 @@ Check http://perldoc.perl.org/perlre.html for regular expression syntax.
 		      sympa_priority | request_priority | lang | max_size
 
 <named_filter_file> ::= filename ending with .ldap , .sql or .txt
- 	      
+
+<package_name> ::= name of a perl package in /etc/custom_conditions/ (small letters)
 \end{verbatim}
 \end {quote}
 
@@ -5088,6 +5091,59 @@ search(blacklist.txt,[sender])  smtp,md5,pgp,smime -> reject,quiet
 	    
 The goal is to block message or other service request from unwanted users. The blacklist can be defined for the robot or for the list. The one at the list level is to
 managed by list owner or list editor  via the web interface.
+
+\section {Custom perl package conditions}
+
+You can use a perl package of your own to evaluate a custom condition. It could be usefull if you have very complex
+tasks to accomplish to evaluate your condition (web services queries...). You write a perl module, place it in the CustomCondition namespace, with one verify fonction that have to return 1 to grant access, undef to throw an error, or anything else to refuse the authorization.
+
+This perl module:
+\begin{itemize}
+	\item{must be placed in a subdirectoy \texttt {'custom\_conditions'} of the \texttt {'etc'} directory of your sympa installation, or of a robot }\\
+	\item{its filename must be lowercase}\\
+	\item{must be placed in the CustomCondition namespace}\\
+	\item{must contains one \texttt {'verify'} static fonction}\\
+	\item{will receive all condition arguments as parameters}\\
+\end{itemize}
+
+For example, lets write the smallest custom condition that always returns 1.
+
+\begin {quote}
+\begin{verbatim}
+  /home/sympa/etc/custom_conditions/yes.pm :
+
+      #!/usr/bin/perl
+
+      package CustomCondition::yes;
+
+      use strict;
+      use Log; # optional : we log parameters
+
+      sub verify {
+        my @args = @_;
+        foreach my $arg (@args) {
+          do_log ('debug3', 'arg: %s', $arg);
+        }
+        # I always say 'yes'
+        return 1;
+      }
+      ## Packages must return true.
+      1;
+\end{verbatim}
+\end {quote}
+
+We can use this custom condition that way :
+
+\begin {quote}
+\begin{verbatim}
+CustomCondition::yes([sender],[list->name],[list->total])      smtp,smime,md5    -> do_it
+true()                               smtp,smime -> reject
+\end{verbatim}
+\end {quote}
+
+Note that the \texttt {[sender],[list->name],[list->total]} are optionnal, but it's the way you can pass information to your package. Our yes.pm will print their values in the logs.
+
+Remember that the package name has to be small letters, but the 'CustomCondition' namespace is case sensitive. If your package return undef, the sender will receive an 'internal error' mail. If it returns anything else but '1', the sender will receive a 'forbidden' error.
 
 \section {Hidding scenario files}
 

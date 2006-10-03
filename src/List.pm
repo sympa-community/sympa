@@ -7147,7 +7147,7 @@ sub verify {
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
 
-    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all|search)\s*\(\s*(.*)\s*\)\s*/i) {
+    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i) {
 	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
     }
@@ -7298,12 +7298,12 @@ sub verify {
 	}
 	# condition that require 2 args
 #
-    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older|search$/i) {
+    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older|search$/o) {
 	unless ($#args == 1) {
 	    do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
 	}
-    }else{
+    }elsif ($condition_key !~ /^customcondition::/o) {
 	do_log('err', "error rule syntaxe : unknown condition $condition_key");
 	return undef;
     }
@@ -7448,7 +7448,56 @@ sub verify {
 	}
 	return -1 * $negation ;
     }
+
+    ## custom perl module
+    if ($condition_key =~ /^customcondition::(\w+)/o ) {
+    	my $condition = $1;
+    	
+    	my $res = &verify_custom($condition, \@args, $robot, $list);
+	return undef unless defined $res;
+	return $res * $negation ;
+    }
     return undef;
+}
+
+# eval a custom perl module to verify a scenario condition
+sub verify_custom {
+	my ($condition, $args_ref, $robot, $list) = @_;
+        my $timeout = 3600;
+	
+	my $filter = join ('*', @{$args_ref});
+	&do_log('debug2', 'List::verify_custom(%s,%s,%s,%s)', $condition, $filter, $robot, $list);
+        if (defined ($persistent_cache{'named_filter'}{$condition}{$filter}) &&
+            (time <= $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
+            &do_log('notice', 'Using previous custom condition cache %s', $filter);
+            return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
+        }
+
+    	# use this if your want per list customization (be sure you know what you are doing)
+	#my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot, $list);
+	my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot);
+	unless ($file) {
+	    &do_log('err', 'No module found for %s custom condition', $condition);
+	    return undef;
+	}
+	&do_log('notice', 'Use module %s for custom condition', $file);
+	eval { require "$file"; };
+	if ($@) {
+	    &do_log('err', 'Error requiring %s : %s (%s)', $condition, "$@", ref($@));
+	    return undef;
+	}
+	my $res;
+	eval "\$res = CustomCondition::${condition}::verify(\@{\$args_ref});";
+	if ($@) {
+	    &do_log('err', 'Error evaluating %s : %s (%s)', $condition, "$@", ref($@));
+	    return undef;
+	}
+
+	return undef unless defined $res;
+	
+        $persistent_cache{'named_filter'}{$condition}{$filter}{'value'} = ($res == 1 ? 1 : 0);
+        $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} = time;
+        return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
 }
 
 ## Verify if a given user is part of an LDAP, SQL or TXT search filter
