@@ -1762,8 +1762,8 @@ sub make_tt2_include_path {
 	$path_robot = "$Conf{'etc'}/".$robot.'/'.$dir if (lc($robot) ne lc($Conf{'host'}));
 	if (ref($list) eq 'List'){
 	    $path_list = $list->{'dir'}.'/'.$dir;
-	    if (defined $self->{'admin'}{'family_name'}) {
-		my $family = $self->get_family();
+	    if (defined $list->{'admin'}{'family_name'}) {
+		my $family = $list->get_family();
 	        $path_family = $family->{'dir'}.'/'.$dir;
 	    }
 	} 
@@ -1773,8 +1773,8 @@ sub make_tt2_include_path {
 	$path_robot = "$Conf{'etc'}/".$robot if (lc($robot) ne lc($Conf{'host'}));
 	if (ref($list) eq 'List') {
 	    $path_list = $list->{'dir'} ;
-	    if (defined $self->{'admin'}{'family_name'}) {
-		my $family = $self->get_family();
+	    if (defined $list->{'admin'}{'family_name'}) {
+		my $family = $list->get_family();
 	        $path_family = $family->{'dir'};
 	    }
 	}
