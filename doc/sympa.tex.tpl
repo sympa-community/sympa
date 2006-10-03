@@ -850,6 +850,8 @@ detail in later sections.
 
     \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{SQLite}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \Sympa and its database section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
+   \item installation of \htmladdnormallinkfoot {libxml 2}{http://xmlsoft.org/}, required by the \textindex {LibXML} perl module.
+
     \item installation of
 	\textindex{CPAN}
         \htmladdnormallinkfoot {CPAN (Comprehensive PERL Archive Network)}
