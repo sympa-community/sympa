@@ -7425,7 +7425,7 @@ sub verify {
  	}else {
  	    $val_search = &search($args[0],$args[1],$robot);
  	}
-
+	return undef unless defined $val_search;
 	if($val_search == 1) { 
 	    return $negation;
 	}else {
@@ -7566,6 +7566,15 @@ sub search{
 	    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
 				     filter => "$filter",
 				     scope => "$ldap_conf{'scope'}");
+	    unless ($mesg) {
+		do_log('err',"Unable to perform LDAP search");
+		return undef;
+	    }    
+	    unless ($mesg->code == 0) {
+		do_log('err','Ldap search failed');
+		return undef;
+	    }
+
 	    if ($mesg->count() == 0){
 		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
 		
@@ -7609,6 +7618,9 @@ sub search{
 	    }
 	}
 	return -1;
+    } else {
+	do_log('err',"Unknown filter file type %s", $filter_file);
+    	return undef;
     }
 }
 
