@@ -2222,7 +2222,7 @@ sub confirm {
 		    &do_log('notice',"Commands::confirm(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 		}
 	    }
-	    &do_log('info', 'CONFIRM %s from %s for list %s accepted (%d seconds)', $key, $sender, $which, time-$time_command);
+	    &do_log('info', 'CONFIRM %s from %s for list %s accepted (%d seconds)', $key, $sender, $list->{'name'}, time-$time_command);
 
 	}else{
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
@@ -2232,7 +2232,7 @@ sub confirm {
 		return undef;
 	    }
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
+		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $list->{'name'},'key' => $key},$robot,$list);
 	    }
 
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
