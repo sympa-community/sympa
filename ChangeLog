@@ -1,3 +1,54 @@
+2006-10-06 09:11  sympa-authors
+
+	* web_tt2/serveradmin.tt2: Changed the bug tracking URL to a more
+	  stable URL
+
+2006-10-05 10:06  sympa-authors
+
+	* src/Commands.pm: [BugID 1071][reported by F.Guilleux, CRU] Fix:
+	  response to message confirmation did not include listname.
+	  Incorrect $which variable was used.
+
+2006-10-03 17:18  sympa-authors
+
+	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node28.html, doc/html/node29.html,
+	  doc/html/node3.html, doc/html/node30.html, doc/html/node31.html,
+	  doc/html/node4.html, doc/html/node5.html, doc/html/node6.html,
+	  doc/html/node7.html, doc/html/node8.html, doc/html/node9.html,
+	  doc/html/sympa.html, doc/html/sympa.ps, src/List.pm: [S.Amrani,
+	  Gend.Nationale] New feature: Custom scenario conditions You can
+	  use a Perl package of your own to evaluate a custom scenario
+	  condition.  The scenario condition will look like this :
+	  CustomCondition::my_custom_condition([sender],[list->name],[list->total])
+	  smtp,smime,md5	 -> do_it
+
+2006-10-03 16:18  sympa-authors
+
+	* src/List.pm: [S.Amrani, Gend. Nationale] Fix: errors were not
+	  properly raised if an error occured while performing a scenario
+	  search()
+
+2006-10-03 14:12  sympa-authors
+
+	* doc/sympa.tex.tpl: Added libxml 2 as a requirement for Sympa
+
+2006-10-03 13:14  sympa-authors
+
+	* src/tools.pl: [BugID 792] Fix: bug in tools.pl prevents per
+	  family customization of scenarios, mail_tt2 and web_tt2
+
+2006-10-02 17:36  serge.aumont
+
+	* wwsympa/bounced.pl: fix : incorrect &doforward
+
 2006-09-29 17:49  olivier.salaun
 
 	* doc/sympa.tex.tpl, src/List.pm, src/Makefile, src/Upgrade.pm,

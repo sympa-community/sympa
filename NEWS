@@ -3,6 +3,82 @@
 
 (See Changelog file for the full changes log)
 
+5.3a.9		6 October 2006
+
+   New features :
+
+	[S.Amrani,Gend.Nationale] Custom scenario conditions You can use a Perl package of your own to evaluate a custom scenario
+	condition.  The scenario condition will look like this :
+	  CustomCondition::my_custom_condition([sender],[list->name],[list->total]) smtp,smime,md5	 -> do_it
+
+	Now bounced recognize Abuse Report Feedback format (ARF). In order to use it, you just need to create a new
+	alias to redirect message from ARF loop (mainly AOL) to bounced according to the documentation (section bounces)
+
+	[S.Amrani, Gendarmerie Nationale] SQL named filters Listmasters can now define SQL search conditions in authorization
+	scenarios such as :	"search(example.sql, [sender]) smtp,smime,md5    -> do_it" 
+	Here is the example.sql named filter  :   
+		sql_named_filter_query
+		   db_type	  mysql
+		   db_name	  people
+		   db_host	  dbserver.rennes1.fr
+		   db_user	  sympa   
+		   db_passwd	  pw_sympa_mysqluser
+		   statement	  SELECT count(*) as c FROM users WHERE mail=[sender] AND EmployeeType='PROFESSOR' AND department='mathematics'
+
+	[A.Brard] Accessibility of the web interface has been enhanced :
+	  - removed styles elements from within web templates
+	  - added ALT tags to images
+	  - all font sizes are expressed in 'em' unit now
+	  - added detailed titles to links
+	  - generalized use of titles (H)
+	  - added "headers" to table/td
+	  - added "label", "id" and "for" attributes to forms
+	  - added alternate to scripts
+	  - other cosmetic / IE compatibility changes
+	The web interface (CSS and HTML) have been validated by the W3C validator
+
+	doc/: Added documentation about i18n
+
+	soap/: New features on the SOAP interface : add, del, closeList
+
+   Changes :
+
+	web_tt2/serveradmin.tt2: Changed the bug tracking URL to a more stable URL
+
+	doc/sympa.tex.tpl: Added libxml 2 as a requirement for Sympa
+
+	sympa.pl --upgrade is now the only way to upgrade Sympa data structure
+
+	[S.Amrani, gendarmerie Nationale] new Datasource.pm and SQLSource.pm modules that should contain all 
+	DB access subroutines. An LDAPSource.pm module should be created later.
+
+
+
+   Bug fixes :
+
+	src/Commands.pm: [BugID 1071][reported by F.Guilleux, CRU]  response to message confirmation did not include listname.
+	Incorrect $which variable was used.
+
+	src/List.pm: [S.Amrani, Gend. Nationale] errors were not properly raised if an error occured while performing 
+	a scenario search()
+
+	src/tools.pl: [BugID 792] bug in tools.pl prevents per family customization of scenarios, mail_tt2 and web_tt2
+
+	src/List.pm: 'host' robot.conf parameter was not well supported. It is now the default value for the list 'host'
+	parameter.
+
+	src/sympa.pl: [reported by P.Maes, Université Louvain] Sympa would improperly detect a loop if the same message 
+	is sent to 2 lists with same local part. Now added list robot to %msgid_table keys.
+
+	mail_tt2/message_report.tt2, src/Commands.pm: [reported by D.Lamballais, IRISA] moderator was no more notified after
+	message rejection
+
+	src/List.pm: [S.Amrani, Gend. Nationale] incorrectly closed file handle
+
+	src/List.pm: prevent recursive loop when DB connection failed : 
+	db_connect > send_notify_to_listmaster > send_global_file > get_user_db > db_connect
+
+
 5.3a.8		6 September 2006
 
    New features :
