@@ -51,6 +51,9 @@ was over the maximum size allowed on this list.[%END%]
 [% ELSIF entry == 'list_unknown' -%]
 
 [%|loc(listname)%]List '%1' does not exist.[%END%]
+[% ELSIF entry == 'dyn_cant_create' -%]
+
+[%|loc(listname)%]The %1 list could not be created.[%END%]
 [% ELSIF entry == 'unfound_message' -%]
 
 [%|loc(listname,key)%]Unable to access the message on list %1 with  key %2.
@@ -62,8 +65,11 @@ Warning : this message may already have been sent by one of the list's editor.[%
 
 [%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format.[%END%]
 [% END -%]
+[% IF list.name %]
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
-
+[% ELSE %]
+[%|loc(conf.host)%]For further information, please contact listmaster@%1[%END%]
+[% END %]
 [%##################### %]
 [%# AUTHORIZATION ERROR %]
 [%##################### %]

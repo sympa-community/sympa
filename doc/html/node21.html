@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1373"
+<A NAME="tex2html1386"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1367"
+<A NAME="tex2html1380"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1361"
+<A NAME="tex2html1374"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1369"
+<A NAME="tex2html1382"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1371"
+<A NAME="tex2html1384"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1374"
+<B> Next:</B> <A NAME="tex2html1387"
   HREF="node22.html">21. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1368"
+<B> Up:</B> <A NAME="tex2html1381"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1362"
+<B> Previous:</B> <A NAME="tex2html1375"
   HREF="node20.html">19. List creation, edition and removal</A>
- &nbsp; <B>  <A NAME="tex2html1370"
+ &nbsp; <B>  <A NAME="tex2html1383"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1372"
+ &nbsp; <B>  <A NAME="tex2html1385"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,33 +60,44 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1375"
+<LI><A NAME="tex2html1388"
   HREF="node21.html#SECTION002110000000000000000">20.1 Family concept</A>
-<LI><A NAME="tex2html1376"
+<LI><A NAME="tex2html1389"
   HREF="node21.html#SECTION002120000000000000000">20.2 Using family</A>
 <UL>
-<LI><A NAME="tex2html1377"
+<LI><A NAME="tex2html1390"
   HREF="node21.html#SECTION002121000000000000000">20.2.1 Definition</A>
-<LI><A NAME="tex2html1378"
+<LI><A NAME="tex2html1391"
   HREF="node21.html#SECTION002122000000000000000">20.2.2 Instantiation</A>
-<LI><A NAME="tex2html1379"
+<LI><A NAME="tex2html1392"
   HREF="node21.html#SECTION002123000000000000000">20.2.3 Modification</A>
-<LI><A NAME="tex2html1380"
+<LI><A NAME="tex2html1393"
   HREF="node21.html#SECTION002124000000000000000">20.2.4 Closure</A>
-<LI><A NAME="tex2html1381"
+<LI><A NAME="tex2html1394"
   HREF="node21.html#SECTION002125000000000000000">20.2.5 Adding one list</A>
-<LI><A NAME="tex2html1382"
+<LI><A NAME="tex2html1395"
   HREF="node21.html#SECTION002126000000000000000">20.2.6 Removing one list</A>
-<LI><A NAME="tex2html1383"
+<LI><A NAME="tex2html1396"
   HREF="node21.html#SECTION002127000000000000000">20.2.7 Modifying one list</A>
-<LI><A NAME="tex2html1384"
+<LI><A NAME="tex2html1397"
   HREF="node21.html#SECTION002128000000000000000">20.2.8 List parameters edition in a family context</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html1398"
+  HREF="node21.html#SECTION002130000000000000000">20.3 Automatic list creation</A>
+<UL>
+<LI><A NAME="tex2html1399"
+  HREF="node21.html#SECTION002131000000000000000">20.3.1 Configuring your MTA</A>
+<LI><A NAME="tex2html1400"
+  HREF="node21.html#SECTION002132000000000000000">20.3.2 Defining the list family</A>
+<LI><A NAME="tex2html1401"
+  HREF="node21.html#SECTION002133000000000000000">20.3.3 Configuring Sympa</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION002100000000000000000"></A>
-    <A NAME="lists-families"></A>    <A NAME="2894"></A>
+    <A NAME="lists-families"></A>    <A NAME="2920"></A>
 <BR>
 20. Lists Families
 </H1>
@@ -170,7 +181,7 @@ Here is a list of operation performed on a family :
 </H2>
 Families can be defined at the robot level, at  the site level or on the distribution level
  (where default families are provided).
-So, you have to create a sub directory named after the family's name in a <A NAME="10765"></A><TT>families</TT> directory  : 
+So, you have to create a sub directory named after the family's name in a <A NAME="10890"></A><TT>families</TT> directory  : 
 
 <P>
 <I>Examples:</I> <PRE>
@@ -180,11 +191,11 @@ So, you have to create a sub directory named after the family's name in a <A NAM
 In this directory you must provide these files :
 
 <UL>
-<LI><A NAME="10768"></A><TT>config.tt2</TT> (mandatory)
+<LI><A NAME="10893"></A><TT>config.tt2</TT> (mandatory)
 </LI>
-<LI><A NAME="10771"></A><TT>param_constraint.conf</TT> (mandatory)
+<LI><A NAME="10896"></A><TT>param_constraint.conf</TT> (mandatory)
 </LI>
-<LI><A NAME="10774"></A><TT>edit_list.conf</TT>
+<LI><A NAME="10899"></A><TT>edit_list.conf</TT>
 </LI>
 <LI>customizable files
 </LI>
@@ -261,7 +272,7 @@ ttl 360
 <P>
 
 <H3><A NAME="SECTION002121200000000000000"></A>
-     <A NAME="2930"></A>
+     <A NAME="2956"></A>
 <BR>
 20.2.1.2 param_constraint.conf
 </H3>
@@ -269,13 +280,13 @@ ttl 360
 	 
 <UL>
 <LI><I>free</I> parameters : no constraint on these parameters, 
-                  they are not written in the <A NAME="10777"></A><TT>param_constraint.conf</TT> file.
+                  they are not written in the <A NAME="10902"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>controlled</I> parameters : these parameters must select their values 
-                  in a set of available values indicated in the <A NAME="10780"></A><TT>param_constraint.conf</TT> file.
+                  in a set of available values indicated in the <A NAME="10905"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>fixed</I> parameters : these parameters must have the imposed value indicated
-	          in the <A NAME="10783"></A><TT>param_constraint.conf</TT> file.
+	          in the <A NAME="10908"></A><TT>param_constraint.conf</TT> file.
 
 <P>
 </LI>
@@ -283,9 +294,9 @@ ttl 360
 	 The parameters constraints will be checked at every list loading.
 
 <P>
-<B>WARNING</B> : Some parameters cannot be constrained, they are : <A NAME="10786"></A><TT>msg_topic.keywords</TT> 
-(see&nbsp;<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),<A NAME="10789"></A><TT>owner_include.source_parameter</TT> 
-(see&nbsp;<A HREF="node22.html#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), <A NAME="10792"></A><TT>editor_include.source_parameter</TT> (see&nbsp;<A HREF="node22.html#par-editor-include">21.1.2</A>, page&nbsp;<A HREF="node22.html#par-editor-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). About <A NAME="10795"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node22.html#par-digest">21.4.9</A>, page&nbsp;<A HREF="node22.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) , just days can be constrained.
+<B>WARNING</B> : Some parameters cannot be constrained, they are : <A NAME="10911"></A><TT>msg_topic.keywords</TT> 
+(see&nbsp;<A HREF="node22.html#par-msg-topic">21.4.13</A>, page&nbsp;<A HREF="node22.html#par-msg-topic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),<A NAME="10914"></A><TT>owner_include.source_parameter</TT> 
+(see&nbsp;<A HREF="node22.html#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), <A NAME="10917"></A><TT>editor_include.source_parameter</TT> (see&nbsp;<A HREF="node22.html#par-editor-include">21.1.2</A>, page&nbsp;<A HREF="node22.html#par-editor-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). About <A NAME="10920"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node22.html#par-digest">21.4.9</A>, page&nbsp;<A HREF="node22.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) , just days can be constrained.
 
 <P>
 <I>Example:</I> <PRE>
@@ -347,8 +358,8 @@ by the set of values for affectation list parameters.
 Here is an sample command to instantiate a family :<PRE>
 sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file /path/to/my\_file.xml
 </PRE>
-This means lists that belong to family <A NAME="10798"></A><TT>my_family</TT> will be created under the robot 
-<A NAME="10801"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="10804"></A><TT>my_file.xml</TT>. Sympa will split this file 
+This means lists that belong to family <A NAME="10923"></A><TT>my_family</TT> will be created under the robot 
+<A NAME="10926"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="10929"></A><TT>my_file.xml</TT>. Sympa will split this file 
 into several xml files describing lists. Each list XML file is put in each list directory.
 <BR>
 <P>
@@ -423,7 +434,7 @@ Each instantiation describes lists. Compared to the previous instantiation, ther
         the XML file or because of changed family's properties.
 </LI>
 <LI>lists removal : lists nomore described by the new instantiation. In this case, the listmaster must 
-        valid his choice on command line. If the list is removed, it is set in status <A NAME="10807"></A><TT>family_closed</TT>, or if the 
+        valid his choice on command line. If the list is removed, it is set in status <A NAME="10932"></A><TT>family_closed</TT>, or if the 
 	list is recovered, the list XML file from the previous instantiation is got back to go on as a list modification then.
 
 <P>
@@ -451,7 +462,7 @@ diagram
 In case of modification (see diagram), allowed customizations can be preserved :
 
 <UL>
-<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="10810"></A><TT>config_changes</TT> 
+<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="10935"></A><TT>config_changes</TT> 
     file, values can be collected in the old list configuration file, according to new family properties :
     
 <UL>
@@ -477,9 +488,9 @@ Notes :
 
 <UL>
 <LI>For each list problem (as family file error, error parameter constraint, error instanciation ...),
-    the list is set in status <A NAME="10813"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
+    the list is set in status <A NAME="10938"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
 </LI>
-<LI>For each list closing in family context, the list is set in status <A NAME="10816"></A><TT>family_closed</TT> and the owner is notified.
+<LI>For each list closing in family context, the list is set in status <A NAME="10941"></A><TT>family_closed</TT> and the owner is notified.
 </LI>
 <LI>For each overwritten list customization, the owner is notified. 
 </LI>
@@ -504,7 +515,7 @@ new family properties and they would be set in status error_config immediately.
 <A NAME="family-closure"></A>
 <P>
 Closes every list (installed under the indicated robot) 
- of this family : lists status are set to <A NAME="10819"></A><TT>family_closed</TT>, aliases are 
+ of this family : lists status are set to <A NAME="10944"></A><TT>family_closed</TT>, aliases are 
  removed and subscribers are removed from DB. (a dump is created in the list 
  directory to allow restoration of the list).
 
@@ -525,7 +536,7 @@ Here is a sample command to close a family :
 <P>
 Adds a list to the family without instantiate all the family. The list is created
  as if it was created during an instantiation, under the indicated robot. The XML file
- describes the list and the root element is <A NAME="10822"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
+ describes the list and the root element is <A NAME="10947"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
  <A HREF="node20.html#list-creation-sympa">19.3</A>, page&nbsp;<A HREF="node20.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -542,7 +553,7 @@ Here is a sample command to add a list to a family :
 
 <P>
 Closes the list  installed under the indicated robot : the list status is set to
-  <A NAME="10825"></A><TT>family_closed</TT>, aliases are 
+  <A NAME="10950"></A><TT>family_closed</TT>, aliases are 
  removed and subscribers are removed from DB. (a dump is created in the list 
  directory to allow restoring the list).
 
@@ -563,7 +574,7 @@ Here is a sample command to close a list family (same as an orphan list) :
 <P>
 Modifies a family list without instantiating the whole family. The list (installed under the indicated robot) 
  is modified as if it was modified during an instantiation. The XML file
- describes the list and the root element is <A NAME="10828"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
+ describes the list and the root element is <A NAME="10953"></A><TT>&lt;list&gt;</TT>. List elements are described in section 
  <A HREF="node20.html#list-creation-sympa">19.3</A>, page&nbsp;<A HREF="node20.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -579,7 +590,7 @@ Here is a sample command to modify a list to a family :
 <BR>
 20.2.8 List parameters edition in a family context
 </H2>
-According to file <A NAME="10831"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
+According to file <A NAME="10956"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
 See <A HREF="node20.html#list-edition">19.4.4</A>, page&nbsp;<A HREF="node20.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. But in a family context, constraints parameters are 
 added to edition right as it is summarized in this array :
 <BR>
@@ -587,42 +598,232 @@ added to edition right as it is summarized in this array :
 array
 <BR>
 <P>
-Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the <A NAME="10834"></A><TT>config_changes</TT> file. 
+Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the <A NAME="10959"></A><TT>config_changes</TT> file. 
+
+<P>
+
+<H1><A NAME="SECTION002130000000000000000"></A>
+ <A NAME="automatic-list-creation"></A>
+<BR>
+20.3 Automatic list creation
+</H1>
+
+<P>
+You can benefit from the family concept to let Sympa automatically create lists for you.
+ Let us suppose that you want to open a list according to specified criteria (age, geographical site...) within your organization.
+ Maybe that would result in too many lists, and many of them would never be used.
+
+<P>
+Automatic list creation allows you to define those potential lists through family parameters,
+ but they won't be created yet. The mailing list creation is trigerred when Sympa receives a
+ message addressed to this list.
+
+<P>
+To enable automatic list creation you'll have to :
+
+<UL>
+<LI>Configure your MTA to queue messages for these lists in an appropriate spool
+
+<P>
+</LI>
+<LI>Define a family associated to such lists
+
+<P>
+</LI>
+<LI>Configure Sympa to enable the feature
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION002131000000000000000">
+20.3.1 Configuring your MTA</A>
+</H2>
+
+<P>
+To do so, we have to configure our MTA for it to add a custom header field to the message. The easiest way
+ is to customize your aliases manager, so mails for automatic lists aren't delivered to the normal 
+ <A NAME="10962"></A><TT>queue</TT> program, but to the <A NAME="10965"></A><TT>familyqueue</TT> dedicated one. For example, you can decide
+ that the name of those lists will start with the <TT>auto-</TT> pattern, so you can process them separately
+ from other lists you are hosting.
+
+<P>
+<A NAME="10968"></A><TT>familyqueue</TT> expects 2 arguments : the list name and the family name (whereas the <A NAME="10971"></A><TT>queue</TT> program
+ only expects the list address).
+
+<P>
+Let's start with a use case : we need to communicate to groups of co-workers, depending on their age
+ and their occupation. We decide that, for example, if I need to write to all CTOs who are fifty years old,
+ I will use the auto-cto.50@lists.domain.com mailing list. The occupation and age informations are stored in our
+ ldap directory (but of course we could use any Sympa data source : sql, files...). We will create the
+ age-occupation family.
+
+<P>
+First of all we configure our MTA to deliver mail to  <TT>'auto-*'</TT> to  <A NAME="10974"></A><TT>familyqueue</TT>
+ for the <TT>age-occupation</TT> family.
+
+<P><PRE>
+/etc/postfix/main.cf
+    ...
+    transport_maps = regexp:/etc/postfix/transport_regexp
+
+/etc/postfix/transport_regexp
+    /^.*+owner\@lists\.domain\.com$/      sympabounce:
+    /^auto-.*\@lists\.domain\.com$/       sympafamily:
+    /^.*\@lists\.domain\.com$/            sympa:
+
+/etc/postfix/master.cf
+    sympa     unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/queue ${recipient}
+    sympabounce  unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/bouncequeue ${user}
+    sympafamily  unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/familyqueue ${user} age-occupation
+</PRE> 
+
+<P>
+A mail addressed to <I>auto-cto.50@lists.domain.com</I> will be queued to the <A NAME="10977"></A><TT>/usr/local/sympa-os/spool/automatic</TT> spool, 
+defined by the <A NAME="10980"></A><TT>queueautomatic</TT> <A NAME="10983"></A><TT>sympa.conf</TT> parameter (see <A HREF="node8.html#kw-queueautomatic">7.6.11</A>, page&nbsp;<A HREF="node8.html#kw-queueautomatic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+The mail will first be processed by an instance of <A NAME="10986"></A><TT>sympa.pl</TT> dedicated to automatic list creation, then the mail
+will be sent to the newly created mailing list.
+
+<P>
+
+<H2><A NAME="SECTION002132000000000000000">
+20.3.2 Defining the list family</A>
+</H2>
+
+<P>
+We need to create the appropriate <A NAME="10989"></A><TT>etc/families/age-occupation/config.tt2</TT>. All the magic comes
+from the TT2 language capabilities. We define on-the-fly the LDAP source, thanks to TT2 macros.
+
+<P><PRE>
+/home/sympa/etc/families/age-occupation/config.tt2
+    ...
+    user_data_source include2
+    
+    [%
+    occupations = {
+        cto = { title=&gt;"chief technical officer", abbr=&gt;"CHIEF TECH OFF" },
+        coo = { title=&gt;"chief operating officer", abbr=&gt;"CHIEF OPER OFF" },
+        cio = { title=&gt;"chief information officer", abbr=&gt;"CHIEF INFO OFF" },
+    }
+    nemes = listname.split('-');
+    THROW autofamily "SYNTAX ERROR : listname must begin with 'auto-' " IF (nemes.size != 2 || nemes.0 != 'auto');
+    tokens = nemes.1.split('\.');
+    THROW autofamily "SYNTAX ERROR : wrong listname syntax" IF (tokens.size != 2 || ! occupations.${tokens.0} || tokens.1 &lt; 20 || tokens.1 &gt; 99 );
+    age = tokens.1 div 10;
+    %]
+
+    custom_subject [[% occupations.${tokens.0}.abbr %] OF [% tokens.1 %]]
+
+    subject Every [% tokens.1 %] years old [% occupations.${tokens.0}.title %]
+
+    include_ldap_query
+    attrs mail
+    filter (&amp;(objectClass=inetOrgPerson)(employeeType=[% occupations.${tokens.0}.abbr %])(personAge=[% age %]*))
+    name ldap
+    port 389
+    host ldap.domain.com
+    passwd ldap_passwd
+    suffix dc=domain,dc=com
+    timeout 30
+    user cn=root,dc=domain,dc=com
+    scope sub
+    select all
+</PRE> 
+
+<P>
+
+<H2><A NAME="SECTION002133000000000000000">
+20.3.3 Configuring Sympa</A>
+</H2>
+
+<P>
+Now we need to enable automatic list creation in Sympa. To do so, we have to 
+
+<UL>
+<LI>set the <A NAME="10992"></A><TT>automatic_list_creation</TT> <A NAME="10995"></A><TT>sympa.conf</TT> parameter to an existing automatic_list_creation scenario,
+
+<P>
+</LI>
+<LI>set the <A NAME="10998"></A><TT>queueautomatic</TT> <A NAME="11001"></A><TT>sympa.conf</TT> parameter to the spool location where we want these messages to
+  be stored (it has to be different from the <A NAME="11004"></A><TT>/usr/local/sympa-os/spool/msg</TT> spool).
+
+<P>
+</LI>
+</UL>
+
+<P>
+You can make Sympa delete automatic lists that were created with zero list members ; to do so
+you shoukd set the <A NAME="11007"></A><TT>automatic_list_empty</TT> parameter to <TT>delete</TT>.
+
+<P><PRE>
+/home/sympa/etc/sympa.conf
+    ...
+    automatic_list_creation public
+    queueautomatic          /usr/local/sympa-os/spool/automatic
+    automatic_list_empty    delete
+</PRE> 
+
+<P>
+While writing your own <A NAME="11010"></A>automatic_list_creation  scenarios, be aware that :
+
+<UL>
+<LI>when the scenario is evaluated, the list is not yet created ; therefore you can't use the list-related
+  variables.
+
+<P>
+</LI>
+<LI>You can only use 'smtp' and 'smime' authentication method in scenario rules (You cannot request the md5 challenge).
+  Moreover only <TT>do_it</TT> and <TT>reject</TT> actions are available.
+
+<P>
+</LI>
+</UL>
+
+<P>
+Now you can send message to auto-cio.40 or auto-cto.50, and the lists will be created on the fly.
+
+<P>
+You will receive an 'unknown list' error if either the syntax is incorrect or the number of subscriber is zero.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1373"
+<A NAME="tex2html1386"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1367"
+<A NAME="tex2html1380"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1361"
+<A NAME="tex2html1374"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1369"
+<A NAME="tex2html1382"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1371"
+<A NAME="tex2html1384"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1374"
+<B> Next:</B> <A NAME="tex2html1387"
   HREF="node22.html">21. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1368"
+<B> Up:</B> <A NAME="tex2html1381"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1362"
+<B> Previous:</B> <A NAME="tex2html1375"
   HREF="node20.html">19. List creation, edition and removal</A>
- &nbsp; <B>  <A NAME="tex2html1370"
+ &nbsp; <B>  <A NAME="tex2html1383"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1372"
+ &nbsp; <B>  <A NAME="tex2html1385"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-03
+2006-10-06
 </ADDRESS>
 </BODY>
 </HTML>

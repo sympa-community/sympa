@@ -1724,7 +1724,7 @@ sub load {
     
     $self->{'domain'} = $robot ;
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
-	&do_log('info', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name) unless ($options->{'just_try'});
+	&do_log('debug2', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name) unless ($options->{'just_try'});
 	return undef ;
     }
 
@@ -7548,6 +7548,7 @@ sub search{
  
         my $res = $ds->fetch;
         $ds->disconnect();
+        do_log('debug2','Result of SQL query : %d = %s', $res->[0], $statement);
  
         if ($res->[0] == 0){
             $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
@@ -12425,12 +12426,12 @@ sub has_include_data_sources {
     return 0
 }
 
-# move a message to distribute spool
+# move a message to a queue or distribute spool
 sub move_message {
-    my ($self, $file) = @_;
-    &do_log('debug2', "tools::move_mesage($file, $self->{'name'})");
+    my ($self, $file, $queue) = @_;
+    &do_log('debug2', "List::move_message($file, $self->{'name'}, $queue)");
 
-    my $dir = $Conf{'queuedistribute'};    
+    my $dir = $queue || $Conf{'queuedistribute'};    
     my $filename = $self->get_list_id().'.'.time.'.'.int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {

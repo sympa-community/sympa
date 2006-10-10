@@ -1222,9 +1222,10 @@ messages distribution.
   information. Each function call is traced. Useful while reporting
   a bug.
 
-\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message}
+\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message} | \textit {process\_creation}
   
-  Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
+  Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command) or to process 
+  list creation requests (process\_creation)
   
 \item \option {- - config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
@@ -2031,6 +2032,34 @@ The maximum size of the uploaded picture file (bytes)
 
         \example {create\_list intranet}
 
+\subsection {\cfkeyword {automatic\_list\_feature}}
+
+ \default {off}
+ \example {automatic\_list\_feature       on}
+
+        If set to \texttt {on}, Sympa will enable automatic list creation through family instantiation
+	(see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
+
+\subsection {\cfkeyword {automatic\_list\_creation}}  
+
+	\label{automatic-list-creation-param}
+
+	 \default {none}
+
+	\scenarized {automatic\_list\_creation}
+
+	If \cfkeyword {automatic\_list\_feature} is activated, this parameter (corresponding to an authorization scenario) 
+	defines who is allowed to use the automatic list creation feature.
+	
+\subsection {\cfkeyword {automatic\_list\_removal}}
+
+ \default {}
+ \example {automatic\_list\_feature       if_empty}
+
+        If set to \texttt {if_empty}, then Sympa will remove automatically created mailing lists just after their creartion, if they contain no list
+	membe (see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
+
+
 \subsection {\cfkeyword {global\_remind}}  
 
 	\label{global-remind}
@@ -2104,6 +2133,17 @@ The maximum size of the uploaded picture file (bytes)
         exist.
 
         \example {pidfile         /var/run/sympa.pid}
+
+\subsection {\cfkeyword {pidfile\_creation}} 
+
+	\default {\file {[PIDDIR]/sympa-creation.pid}}
+
+        The file where the automatic list creation dedicated \file {sympa.pl} daemon stores its
+        process number. Warning: the \texttt {sympa} user must be
+        able to write to this file, and to create it if it doesn't
+        exist.
+
+        \example {pidfile\_creation         /var/run/sympa-creation.pid}
 
 \subsection {\cfkeyword {umask}} 
 
@@ -2369,6 +2409,17 @@ The maximum size of the uploaded picture file (bytes)
         Spool to store task files created by the task manager. This parameter is mandatory
         and must be an absolute path.
 
+\subsection {\cfkeyword {queueautomatic}} 
+    \label {kw-queueautomatic}
+
+	\default {none}
+
+        The absolute path of the directory which contains the queue for automatic list creation, used both by the
+        \file {familyqueue} program and the \file {sympa.pl} daemon. This
+        parameter is mandatory when enabling automatic\_list\_creation.
+
+	\example {\dir {[SPOOLDIR]/msg}}
+
 \subsection {\cfkeyword {tmpdir}}
 
         \default {\dir {[SPOOLDIR]/tmp}}
@@ -2430,6 +2481,18 @@ The maximum size of the uploaded picture file (bytes)
         Delay for keeping message topic files (in days) in the \textindex {topic}
         queue.  Beyond this deadline, files are
         deleted.
+
+\subsection {\cfkeyword {clean\_delay\_queueautomatic}}  
+
+	\default {10}
+
+        Retention period (in days) for ``bad'' messages in
+        \textindex {automatic spool} (as specified by \cfkeyword {queueautomatic}).
+        \Sympa keeps messages rejected for various reasons (badly
+        formatted, looping, etc.) in
+        this directory, with a name prefixed by \texttt {BAD}.
+        This configuration variable controls the number of days
+        these messages are kept.
 
 \section {Internationalization related}    
 
@@ -6383,7 +6446,9 @@ The list creation can be done by two ways, according to listmaster
 needs : 
 \begin{itemize}
   \item instanciation family to create and manage large number of related lists. 
-    In this case, lists are linked to their family all along their life.
+    In this case, lists are linked to their family all along their life (Moreover
+    you can let sympa automatically create lists when needed.
+    See \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}).    
   \item command line creation of individual list with \file {sympa.pl} or on the Web 
 interface according to privileges defined by listmasters. Here lists are free from 
 their model creation.
@@ -7153,7 +7218,159 @@ array\\
 
 Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the \file{config\_changes} file. 
 
+ \section {Automatic list creation}
+ \label{automatic-list-creation}
+ 
+ You can benefit from the family concept to let Sympa automatically create lists for you.
+ Let us suppose that you want to open a list according to specified criteria (age, geographical site...) within your organization.
+ Maybe that would result in too many lists, and many of them would never be used.
+ 
+ Automatic list creation allows you to define those potential lists through family parameters,
+ but they won't be created yet. The mailing list creation is trigerred when Sympa receives a
+ message addressed to this list.
+ 
+ To enable automatic list creation you'll have to : 
+ \begin {itemize} 
 
+   \item Configure your MTA to queue messages for these lists in an appropriate spool
+
+   \item Define a family associated to such lists
+
+   \item Configure Sympa to enable the feature
+
+ \end {itemize}
+
+\subsection {Configuring your MTA}
+
+ To do so, we have to configure our MTA for it to add a custom header field to the message. The easiest way
+ is to customize your aliases manager, so mails for automatic lists aren't delivered to the normal 
+ \file {queue} program, but to the \file {familyqueue} dedicated one. For example, you can decide
+ that the name of those lists will start with the \texttt {auto-} pattern, so you can process them separately
+ from other lists you are hosting.
+ 
+ \file {familyqueue} expects 2 arguments : the list name and the family name (whereas the \file {queue} program
+ only expects the list address).
+ 
+ Let's start with a use case : we need to communicate to groups of co-workers, depending on their age
+ and their occupation. We decide that, for example, if I need to write to all CTOs who are fifty years old,
+ I will use the auto-cto.50@lists.domain.com mailing list. The occupation and age informations are stored in our
+ ldap directory (but of course we could use any Sympa data source : sql, files...). We will create the
+ age-occupation family.
+ 
+ First of all we configure our MTA to deliver mail to  \texttt{'auto-*'} to  \file {familyqueue}
+ for the \texttt{age-occupation} family.
+ 
+ \begin {quote}
+ \begin{verbatim}
+/etc/postfix/main.cf
+    ...
+    transport_maps = regexp:/etc/postfix/transport_regexp
+
+/etc/postfix/transport_regexp
+    /^.*+owner\@lists\.domain\.com$/      sympabounce:
+    /^auto-.*\@lists\.domain\.com$/       sympafamily:
+    /^.*\@lists\.domain\.com$/            sympa:
+
+/etc/postfix/master.cf
+    sympa     unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=[MAILERPROGDIR]/queue ${recipient}
+    sympabounce  unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=[MAILERPROGDIR]/bouncequeue ${user}
+    sympafamily  unix  -       n       n       -       -       pipe
+      flags=R user=sympa argv=[MAILERPROGDIR]/familyqueue ${user} age-occupation
+\end{verbatim}
+\end {quote} 
+
+A mail addressed to \textit {auto-cto.50@lists.domain.com} will be queued to the \dir {[SPOOLDIR]/automatic} spool, 
+defined by the \cfkeyword {queueautomatic} \file {sympa.conf} parameter (see \ref {kw-queueautomatic}, page~\pageref {kw-queueautomatic}).
+The mail will first be processed by an instance of \file {sympa.pl} process dedicated to automatic list creation, then the mail
+will be sent to the newly created mailing list.
+
+\subsection {Defining the list family}
+
+We need to create the appropriate \file {etc/families/age-occupation/config.tt2}. All the magic comes
+from the TT2 language capabilities. We define on-the-fly the LDAP source, thanks to TT2 macros.
+
+ \begin {quote}
+ \begin{verbatim}
+/home/sympa/etc/families/age-occupation/config.tt2
+    ...
+    user_data_source include2
+    
+    [%
+    occupations = {
+        cto = { title=>"chief technical officer", abbr=>"CHIEF TECH OFF" },
+        coo = { title=>"chief operating officer", abbr=>"CHIEF OPER OFF" },
+        cio = { title=>"chief information officer", abbr=>"CHIEF INFO OFF" },
+    }
+    nemes = listname.split('-');
+    THROW autofamily "SYNTAX ERROR : listname must begin with 'auto-' " IF (nemes.size != 2 || nemes.0 != 'auto');
+    tokens = nemes.1.split('\.');
+    THROW autofamily "SYNTAX ERROR : wrong listname syntax" IF (tokens.size != 2 || ! occupations.${tokens.0} || tokens.1 < 20 || tokens.1 > 99 );
+    age = tokens.1 div 10;
+    %]
+
+    custom_subject [[% occupations.${tokens.0}.abbr %] OF [% tokens.1 %]]
+
+    subject Every [% tokens.1 %] years old [% occupations.${tokens.0}.title %]
+
+    include_ldap_query
+    attrs mail
+    filter (&(objectClass=inetOrgPerson)(employeeType=[% occupations.${tokens.0}.abbr %])(personAge=[% age %]*))
+    name ldap
+    port 389
+    host ldap.domain.com
+    passwd ldap_passwd
+    suffix dc=domain,dc=com
+    timeout 30
+    user cn=root,dc=domain,dc=com
+    scope sub
+    select all
+\end{verbatim}
+\end {quote} 
+
+The main variable you get is the name of the current mailing list via the \textbf {listname} variable as used in the example above.
+
+\subsection {Configuring Sympa}
+
+Now we need to enable automatic list creation in Sympa. To do so, we have to 
+\begin {itemize}
+
+  \item set the \cfkeyword {automatic\_list\_feature} parameter to \texttt {on} and define who can create automatic lists via
+  the \cfkeyword {automatic\_list\_creation} (points to an automatic\_list\_creation scenario).
+
+  \item set the \cfkeyword {queueautomatic} \file {sympa.conf} parameter to the spool location where we want these messages to
+  be stored (it has to be different from the \dir {[SPOOLDIR]/msg} spool).
+
+\end {itemize}
+
+You can make Sympa delete automatic lists that were created with zero list members ; to do so
+you shoukd set the \cfkeyword {automatic\_list\_removal} parameter to \texttt {if_empty}.
+
+ \begin {quote}
+ \begin{verbatim}
+/home/sympa/etc/sympa.conf
+    ...
+    automatic_list_creation public
+    queueautomatic          [SPOOLDIR]/automatic
+    automatic_list_empty    delete
+\end{verbatim}
+\end {quote} 
+
+While writing your own \textindex {automatic\_list\_creation} scenarios, be aware that :
+\begin {itemize}
+
+  \item when the scenario is evaluated, the list is not yet created ; therefore you can't use the list-related
+  variables.
+
+  \item You can only use 'smtp' and 'smime' authentication method in scenario rules (You cannot request the md5 challenge).
+  Moreover only \texttt {do\_it} and \texttt {reject} actions are available.
+
+\end {itemize}
+
+Now you can send message to auto-cio.40 or auto-cto.50, and the lists will be created on the fly.
+
+You will receive an 'unknown list' error if either the syntax is incorrect or the number of subscriber is zero.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % List configuration parameters

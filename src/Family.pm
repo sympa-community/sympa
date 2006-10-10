@@ -145,64 +145,71 @@ sub new {
 # (list described by the xml file)
 #  
 # IN : -$self
-#      -$fh : file handle on the xml file
+#      -$data : file handle on an xml file or hash of data
+#      -$abort_on_error : if true won't create list in status error_config
 # OUT : -$return->{'ok'} = 1(pas d'erreur fatale) or undef(erreur fatale)
 #       -$return->{'string'} : string of results 
 #########################################
 sub add_list {
-    my $self = shift;
-    my $fh = shift;
+    my ($self, $data, $abort_on_error) = @_;
+
     &do_log('info','Family::add_list(%s)',$self->{'name'});
 
     $self->{'state'} = 'no_check';
     my $return;
     $return->{'ok'} = undef;
-    $return->{'string_info'} = ""; ## info and simple errors
-    $return->{'string_error'} = ""; ## fatal errors
+    $return->{'string_info'} = undef; ## info and simple errors
+    $return->{'string_error'} = undef; ## fatal errors
 
-    #copy the xml file in another file
-    unless (open (FIC,">$self->{'dir'}/_new_list.xml")) {
-	&do_log('err','Family::add_list(%s) : impossible to create the temp file %s/_new_list.xml : %s',$self->{'name'},$self->{'dir'},$!);
+    my $hash_list;
+
+    if (ref($data) eq "HASH") {
+        $hash_list = {config=>$data};
+    } else {
+	#copy the xml file in another file
+	unless (open (FIC,">$self->{'dir'}/_new_list.xml")) {
+	    &do_log('err','Family::add_list(%s) : impossible to create the temp file %s/_new_list.xml : %s',$self->{'name'},$self->{'dir'},$!);
+	}
+	while (<$data>) {
+	    print FIC ($_);
+	}
+	close FIC;
+	
+	# get list data
+	open (FIC,"$self->{'dir'}/_new_list.xml");
+	my $config = new Config_XML(\*FIC);
+	close FIC;
+	unless (defined $config->createHash()) {
+	    push @{$return->{'string_error'}}, "Error in representation data with these xml data";
+	    return $return;
+	} 
+	
+	$hash_list = $config->getHash();
     }
-    while (<$fh>) {
-	print FIC ($_);
-    }
-    close FIC;
-
-    # get list data
-    open (FIC,"$self->{'dir'}/_new_list.xml");
-    my $config = new Config_XML(\*FIC);
-    close FIC;
-    unless (defined $config->createHash()) {
-	$return->{'string_error'} = "\nError in representation data with these xml data\n";
-	return $return;
-    } 
-
-    my $hash_list = $config->getHash();
-
+ 
     #list creation
-    my $result = &admin::create_list($hash_list->{'config'},$self,,$self->{'robot'});
+    my $result = &admin::create_list($hash_list->{'config'},$self,$self->{'robot'}, $abort_on_error);
     unless (defined $result) {
-	$return->{'string_error'} = "\nError during list creation, see logs for more informations\n";
+	push @{$return->{'string_error'}}, "Error during list creation, see logs for more informations";
 	return $return;
     }
     unless (defined $result->{'list'}) {
-	$return->{'string_error'} = "\nErrors : no created list, see logs for more informations\n";
+	push @{$return->{'string_error'}}, "Errors : no created list, see logs for more informations";
 	return $return;
     }
     my $list = $result->{'list'};
 	    
     ## aliases
     if ($result->{'aliases'} == 1) {
-	$return->{'string_info'} .= "\nList $list->{'name'} has been created in $self->{'name'} family\n";
+	push @{$return->{'string_info'}}, "List $list->{'name'} has been created in $self->{'name'} family";
     }else {
-	$return->{'string_info'} .= "\nList $list->{'name'} has been created in $self->{'name'} family, required aliases :\n $result->{'aliases'} \n";
+	push @{$return->{'string_info'}}, "List $list->{'name'} has been created in $self->{'name'} family, required aliases : $result->{'aliases'} ";
     }
 	    
     # config_changes
     unless (open FILE, ">$list->{'dir'}/config_changes") {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .="\n Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config";
+	push @{$return->{'string_info'}}, "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config";
     }
     close FILE;
  
@@ -222,20 +229,21 @@ sub add_list {
     
     unless (defined $error) {
 	$list->set_status_error_config('no_check_rules_family',$list->{'name'},$self->{'name'});
-	$return->{'string_error'} = "\nImpossible to check parameters constraint, see logs for more informations. The list is set in status error_config\n";
+	push @{$return->{'string_error'}}, "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
 	return $return;
     }
     
     if (ref($error) eq 'ARRAY') {
 	$list->set_status_error_config('no_respect_rules_family',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .= "\The list does not respect the family rules : ".join(", ",@{$error})."\n";
+	push @{$return->{'string_info'}}, "The list does not respect the family rules : ".join(", ",@{$error});
     }
     
     ## copy files in the list directory : xml file
-
+    unless ( ref($data) eq "HASH" ) {
     unless ($self->_copy_files($list->{'dir'},"_new_list.xml")) {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .= "\n Impossible to copy the xml file in the list directory, the list is set in status error_config.\n";
+	push @{$return->{'string_info'}}, "Impossible to copy the xml file in the list directory, the list is set in status error_config.";
+    }
     }
 
     ## END
@@ -265,8 +273,8 @@ sub modify_list {
     $self->{'state'} = 'no_check';
     my $return;
     $return->{'ok'} = undef;
-    $return->{'string_info'} = ""; ## info and simple errors
-    $return->{'string_error'} = ""; ## fatal errors
+    $return->{'string_info'} = undef; ## info and simple errors
+    $return->{'string_error'} = undef; ## fatal errors
 
     #copy the xml file in another file
     unless (open (FIC,">$self->{'dir'}/_mod_list.xml")) {
@@ -282,7 +290,7 @@ sub modify_list {
     my $config = new Config_XML(\*FIC);
     close FIC;
     unless (defined $config->createHash()) {
-	$return->{'string_error'} = "\nError in representation data with these xml data\n";
+	push @{$return->{'string_error'}}, "Error in representation data with these xml data";
 	return $return;
     } 
 
@@ -291,18 +299,18 @@ sub modify_list {
     #getting list
     my $list;
     unless ($list = new List($hash_list->{'config'}{'listname'}, $self->{'robot'})) {
-	$return->{'string_error'} = "\nThe list $hash_list->{'config'}{'listname'} does not exist.\n";
+	push @{$return->{'string_error'}}, "The list $hash_list->{'config'}{'listname'} does not exist.";
 	return $return;
     }
     
     ## check family name
     if (defined $list->{'admin'}{'family_name'}) {
 	unless ($list->{'admin'}{'family_name'} eq $self->{'name'}) {
-	  $return->{'string_error'} = "\nThe list $list->{'name'} already belongs to family $list->{'admin'}{'family_name'}.\n";
+	  push @{$return->{'string_error'}}, "The list $list->{'name'} already belongs to family $list->{'admin'}{'family_name'}.";
 	  return $return;
 	} 
     } else {
-	$return->{'string_error'} = "\nThe orphan list $list->{'name'} already exists.\n";
+	push @{$return->{'string_error'}}, "The orphan list $list->{'name'} already exists.";
 	return $return;
     }
 
@@ -310,7 +318,7 @@ sub modify_list {
     my $custom = $self->_get_customizing($list);
     unless (defined $custom) {
 	&do_log('err','impossible to get list %s customizing',$list->{'name'});
-	$return->{'string_error'} = "\nError during updating list $list->{'name'}, the list is set in status error_config.\n"; 
+	push @{$return->{'string_error'}}, "Error during updating list $list->{'name'}, the list is set in status error_config."; 
 	$list->set_status_error_config('modify_list_family',$list->{'name'},$self->{'name'});
 	return $return;
     }
@@ -321,7 +329,7 @@ sub modify_list {
     my $result = &admin::update_list($list,$hash_list->{'config'},$self,$self->{'robot'});
     unless (defined $result) {
 	&do_log('err','No object list resulting from updating list %s',$list->{'name'});
-	$return->{'string_error'} = "\nError during updating list $list->{'name'}, the list is set in status error_config.\n"; 
+	push @{$return->{'string_error'}}, "Error during updating list $list->{'name'}, the list is set in status error_config."; 
 	$list->set_status_error_config('modify_list_family',$list->{'name'},$self->{'name'});
 	return $return;
     }
@@ -339,7 +347,7 @@ sub modify_list {
 	$hash_list->{'config'}{'description'} =~ s/\015//g;
 	
 	unless (open INFO, ">$list->{'dir'}/info") {
-	    $return->{'string_info'} .= "Impossible to create new $list->{'dir'}/info file : $!";
+	    push @{$return->{'string_info'}}, "Impossible to create new $list->{'dir'}/info file : $!";
 	}
 	print INFO $hash_list->{'config'}{'description'};
 	close INFO; 
@@ -380,13 +388,13 @@ sub modify_list {
     my $result = $self->_set_status_changes($list,$old_status);
 
     if ($result->{'aliases'} == 1) {
-	$return->{'string_info'} .= "\nThe $list->{'name'} list has been modified.\n";
+	push @{$return->{'string_info'}}, "The $list->{'name'} list has been modified.";
     
     }elsif ($result->{'install_remove'} eq 'install') {
-	$return->{'string_info'} .= "\nList $list->{'name'} has been modified, required aliases :\n $result->{'aliases'} \n";
+	push @{$return->{'string_info'}}, "List $list->{'name'} has been modified, required aliases :\n $result->{'aliases'} ";
 	
     }else {
-	$return->{'string_info'} .= "\nList $list->{'name'} has been modified, aliases need to be removed : \n $result->{'aliases'} \n";
+	push @{$return->{'string_info'}}, "List $list->{'name'} has been modified, aliases need to be removed : \n $result->{'aliases'}";
 	
     }
 
@@ -401,7 +409,7 @@ sub modify_list {
 
     unless (open FILE, ">$list->{'dir'}/config_changes") {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .="\n Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config.\n";
+	push @{$return->{'string_info'}}, "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config.";
     }
     close FILE;
 
@@ -426,20 +434,20 @@ sub modify_list {
     
     unless (defined $error) {
 	$list->set_status_error_config('no_check_rules_family',$list->{'name'},$self->{'name'});
-	$return->{'string_error'} .= "\nImpossible to check parameters constraint, see logs for more informations. \nThe list is set in status error_config\n";
+	push @{$return->{'string_error'}}, "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
 	return $return;
     }
     
     if (ref($error) eq 'ARRAY') {
 	$list->set_status_error_config('no_respect_rules_family',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .= "\nThe list does not respect the family rules : ".join(", ",@{$error})."\n";
+	push @{$return->{'string_info'}}, "The list does not respect the family rules : ".join(", ",@{$error});
     }
     
     ## copy files in the list directory : xml file
 
     unless ($self->_copy_files($list->{'dir'},"_mod_list.xml")) {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
-	$return->{'string_info'} .= "\nImpossible to copy the xml file in the list directory, the list is set in status error_config.\n";
+	push @{$return->{'string_info'}}, "Impossible to copy the xml file in the list directory, the list is set in status error_config.";
     }
 
     ## END

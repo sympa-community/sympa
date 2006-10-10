@@ -23,7 +23,7 @@ CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
 sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl sympa_wizard.pl
 
-bin_SRC		=	queue bouncequeue
+bin_SRC		=	queue bouncequeue familyqueue
 
 lib_SRC		=	admin.pm Archive.pm Commands.pm Conf.pm CAS.pm Config_XML.pm \
 			Family.pm Language.pm List.pm Log.pm mail.pm Ldap.pm Upgrade.pm \
@@ -32,7 +32,7 @@ lib_SRC		=	admin.pm Archive.pm Commands.pm Conf.pm CAS.pm Config_XML.pm \
 
 libexec_SRC	=	aliaswrapper virtualwrapper
 
-all:	queue bouncequeue aliaswrapper virtualwrapper
+all:	queue bouncequeue familyqueue aliaswrapper virtualwrapper
 
 clean:
 	@if [ -f ./queue ]; then \
@@ -40,6 +40,9 @@ clean:
 	fi	
 	@if [ -f ./bouncequeue ]; then \
 		rm bouncequeue ; \
+	fi
+	@if [ -f ./familyqueue ]; then \
+		rm familyqueue ; \
 	fi
 	@if [ -f ./aliaswrapper ]; then \
 		rm aliaswrapper ; \
@@ -90,6 +93,10 @@ installlisttemplates:
 	@echo "Installing default list templates ..."
 	cp -pR etc/create_list_templates/* $(DESTDIR)$(ETCBINDIR)/create_list_templates
 
+installfamilies:
+	@echo "Installing default list families ..."
+	cp -pR etc/families/* $(DESTDIR)$(ETCBINDIR)/families
+
 installscenari:
 	@echo "Installing default scenari..."
 	cp etc/scenari/*.* $(DESTDIR)$(ETCBINDIR)/scenari
@@ -100,6 +107,8 @@ installqueue:
 	cp queue $(DESTDIR)$(MAILERPROGDIR)/
 	@echo "Installing BounceQueue binary..."
 	cp bouncequeue $(DESTDIR)$(MAILERPROGDIR)/
+	@echo "Installing FamilyQueue binary..."
+	cp familyqueue $(DESTDIR)$(MAILERPROGDIR)/
 
 installwrapper:
 	@echo "Installing AliasWrapper binary..."
@@ -140,6 +149,10 @@ makedir:
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/create_list_templates"; \
 		mkdir $(DESTDIR)$(ETCBINDIR)/create_list_templates; \
 	fi
+	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/families ]; then \
+		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/families"; \
+		mkdir $(DESTDIR)$(ETCBINDIR)/families; \
+	fi
 	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/list_task_models ]; then \
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/list_task_models"; \
 		mkdir $(DESTDIR)$(ETCBINDIR)/list_task_models; \
@@ -166,6 +179,7 @@ installmod:
 	chmod 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/create_list_templates
+	chmod 755 $(DESTDIR)$(ETCBINDIR)/families
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
 	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
 	@for file in $(bin_SRC) ; do \
@@ -184,6 +198,9 @@ queue: queue.c Makefile ../Makefile
 
 bouncequeue: bouncequeue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o bouncequeue bouncequeue.c
+
+familyqueue: familyqueue.c Makefile ../Makefile
+	$(CC) $(CFLAGS) $(CDEFS) -o familyqueue familyqueue.c
 
 aliaswrapper: aliaswrapper.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -DNEWALIASES=\"${NEWALIASES}\" \
@@ -246,13 +263,13 @@ queue:		queue.c Makefile
 
 bouncequeue:	bouncequeue.c Makefile
 
+familyqueue:	familyqueue.c Makefile
+
 info:
 	@echo ""
 	@echo "If you wish, you can contact the authors sympa-users-request@cru.fr"
 	@echo "Thanks to provide release number, operating system and langage used."
 	@echo ""
-
-
 
 
 

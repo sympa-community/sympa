@@ -32,19 +32,24 @@ require Exporter;
 use Carp;
 
 @ISA = qw(Exporter);
-@EXPORT = qw(%Conf);
+@EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
+
+sub DAEMON_MESSAGE {1};
+sub DAEMON_COMMAND {2};
+sub DAEMON_CREATION {4};
+sub DAEMON_ALL {7};
 
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
 		       cache_list_config
-		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queuetopic default_remind_task
-		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name db_timeout
+		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queueautomatic clean_delay_queuetopic default_remind_task
+		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
 		       global_remind home host domain lang listmaster listmaster_email localedir log_socket_type log_level 
 		       logo_html_definition misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
-		       owner_priority pidfile pidfile_distribute
-		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest 
+		       owner_priority pidfile pidfile_distribute pidfile_creation
+		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
 		       purge_user_table_task purge_logs_table_task purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
@@ -92,11 +97,13 @@ my %Default_Conf =
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
      'pidfile_distribute' => '--PIDDIR--/sympa-distribute.pid',
+     'pidfile_creation' => '--PIDDIR--/sympa-creation.pid',
      'localedir'  => '--LOCALEDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
      'spool'   => '--SPOOLDIR--',
      'queue'   => undef,
      'queuedistribute' => undef,
+     'queueautomatic' => undef,
      'queuedigest'=> undef,
      'queuemod'   => undef,
      'queuetopic' => undef,
@@ -111,6 +118,7 @@ my %Default_Conf =
      'clean_delay_queuemod' => 10,
      'clean_delay_queuetopic' => 7,
      'clean_delay_queuesubscribe' => 10,
+     'clean_delay_queueautomatic' => 10,
      'clean_delay_queueauth' => 3,
      'log_socket_type'      => 'unix',
      'log_smtp'      => '',
@@ -140,6 +148,9 @@ my %Default_Conf =
      'max_size' => 5242880,
      'edit_list' => 'owner',
      'create_list' => 'public_listmaster',
+     'automatic_list_feature' => 'off',
+     'automatic_list_creation' => 'public',
+     'automatic_list_removal' => '', ## Can be 'if_empty'
      'global_remind' => 'listmaster',
      'wwsympa_url' => undef,
      'bounce_warn_rate' => '30',
@@ -300,6 +311,10 @@ sub load {
     }   
 
     my $spool = $o{'spool'}[0] || $Default_Conf{'spool'};
+
+    unless (defined $o{'queueautomatic'}) {
+      $o{'queueautomatic'}[0] = "$spool/automatic";
+    }
 
     unless (defined $o{'queuedigest'}) {
 	$o{'queuedigest'}[0] = "$spool/digest";
@@ -496,6 +511,9 @@ sub load_robots {
 				  log_smtp        => 1,
 				  log_level       => 1,
 				  create_list     => 1,
+				  automatic_list_feature     => 1,
+				  automatic_list_creation     => 1,
+				  automatic_list_removal     => 1,
 				  dark_color      => 1,
 				  light_color     => 1,
 				  text_color      => 1, 
@@ -727,7 +745,7 @@ sub checkfiles {
 	}
     }
     
-    foreach my $qdir ('spool','queue','queuedigest','queuemod','queuetopic','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','queuedistribute','tmpdir')
+    foreach my $qdir ('spool','queue','queueautomatic','queuedigest','queuemod','queuetopic','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','queuedistribute','tmpdir')
     {
 	unless (-d $Conf{$qdir}) {
 	    do_log('info', "creating spool $Conf{$qdir}");
@@ -738,22 +756,17 @@ sub checkfiles {
 	}
     }
 
-    ## Also create msg/bad/
-    unless (-d $Conf{'queue'}.'/bad') {
-	    do_log('info', "creating spool $Conf{'queue'}/bad");
-	    unless ( mkdir ($Conf{'queue'}.'/bad', 0775)) {
-		do_log('err', 'Unable to create spool %s', $Conf{'queue'}.'/bad');
+    ## Also create associated bad/ spools
+    foreach my $qdir ('queue','queuedistribute','queueautomatic')
+    {
+	unless (-d $Conf{$qdir}.'/bad') {
+	    do_log('info', "creating spool $Conf{$qdir}/bad");
+	    unless ( mkdir ($Conf{$qdir}.'/bad', 0775)) {
+		do_log('err', 'Unable to create spool %s', $Conf{$qdir}.'/bad');
 		$config_err++;
 	    }
 	}
-    ## Also create distribute/bad/
-    unless (-d $Conf{'queuedistribute'}.'/bad') {
-	    do_log('info', "creating spool $Conf{'queuedistribute'}/bad");
-	    unless ( mkdir ($Conf{'queuedistribute'}.'/bad', 0775)) {
-		do_log('err', 'Unable to create spool %s', $Conf{'queuedistribute'}.'/bad');
-		$config_err++;
-	    }
-	}
+    }
 
     ## Check cafile and capath access
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
@@ -783,6 +796,15 @@ sub checkfiles {
 	    &do_log('err', 'Unable to send notify "queuebounce_and_bounce_path_are_the_same" to listmaster');	
 	}
 	$config_err++;
+    }
+
+    ## automatic_list_creation enabled but queueautomatic pointing to queue
+    if (($Conf{automatic_list_feature} eq 'on') && $Conf{'queue'} eq $Conf{'queueautomatic'}) {
+        &do_log('err', 'Error in config : queue and queueautomatic parameters pointing to the same directory (%s)', $Conf{'queue'});
+        unless (&List::send_notify_to_listmaster('queue_and_queueautomatic_are_the_same', $Conf{'domain'}, [$Conf{'queue'}])) {
+            &do_log('err', 'Unable to send notify "queue_and_queueautomatic_are_the_same" to listmaster');
+        }
+        $config_err++;
     }
 
     #  create pictures dir if usefull for each robot

@@ -217,6 +217,9 @@ sub create_list_old{
 #              with key source obligatory
 #       - $family : the family object 
 #       - $robot : the list's robot         
+#       - $abort_on_error : won't create the list directory on
+#          tt2 process error (usefull for dynamic lists that
+#          throw exceptions)
 # OUT : - hash with keys :
 #          -list :$list
 #          -aliases : undef if not applicable; 1 (if ok) or
@@ -224,7 +227,7 @@ sub create_list_old{
 #           are not installed or 1(in status open)
 #######################################################
 sub create_list{
-    my ($param,$family,$robot) = @_;
+    my ($param,$family,$robot, $abort_on_error) = @_;
     &do_log('info', 'admin::create_list(%s,%s,%s)',$param->{'listname'},$family->{'name'},$param->{'subject'});
 
     ## mandatory list parameters 
@@ -286,6 +289,14 @@ sub create_list{
 	return undef;
     }
 
+    my $conf;
+    my $tt_result = &tt2::parse_tt2($param, 'config.tt2', \$conf, [$family->{'dir'}]);
+    unless (defined $tt_result || !$abort_on_error) {
+      &do_log('err', 'admin::create_list : abort on tt2 error. List %s from family %s@%s',
+                $param->{'listname'}, $family->{'name'},$robot);
+      return undef;
+    }
+
      ## Create the list directory
      my $list_dir;
 
@@ -301,7 +312,7 @@ sub create_list{
 	$list_dir = $Conf{'home'}.'/'.$param->{'listname'};
     }
 
-     unless (mkdir ($list_dir,0777)) {
+     unless (-r $list_dir || mkdir ($list_dir,0777)) {
 	 &do_log('err', 'admin::create_list : unable to create %s : %s',$list_dir,$?);
 	 return undef;
      }    
@@ -316,7 +327,8 @@ sub create_list{
       
     ## Creation of the config file
     open CONFIG, ">$list_dir/config";
-    &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
+    #&tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
+    print CONFIG $conf;
     close CONFIG;
     
     ## Creation of the info file 

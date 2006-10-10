@@ -208,6 +208,9 @@ case "$1" in
 	if [ -f --PIDDIR--/sympa-distribute.pid ]; then
 		sympa_stop sympa-distribute
 	fi
+	if [ -f --PIDDIR--/sympa-creation.pid ]; then
+		sympa_stop sympa-creation
+	fi
 	sympa_stop task_manager
 	if [ -f --LOCKDIR--/sympa ]; then
 		rm -f --LOCKDIR--/sympa

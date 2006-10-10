@@ -80,7 +80,7 @@ Options:
    -k, --keepcopy=dir                    : keep a copy of incoming message
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
-   --service=process_command|process_message  : process dedicated to messages distribution or to commands (default both)
+   --service=process_command|process_message|process_creation  : process dedicated to messages distribution, commands or to automatic lists creation (default three of them)
    --dump=list\@dom|ALL                  : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
@@ -208,12 +208,15 @@ if (!chdir($Conf{'home'})) {
    fatal_err("Can't chdir to %s: %m", $Conf{'home'});
    ## Function never returns.
 }
+
 if ($main::options{'service'} eq 'process_message') {
-    $main::daemon_usage = 'message';
+    $main::daemon_usage = DAEMON_MESSAGE;
 }elsif ($main::options{'service'} eq 'process_command') {
-    $main::daemon_usage = 'command';
+    $main::daemon_usage = DAEMON_COMMAND;
+}elsif ($main::options{'service'} eq 'process_creation') {
+    $main::daemon_usage = DAEMON_CREATION;
 }else{
-    $main::daemon_usage = 'command_and_message'; # default is to run one sympa.pl server for both commands and message 
+    $main::daemon_usage = DAEMON_ALL; # default is to run one sympa.pl server for commands, messages and automatic lists creation. 
 }
 
 ## Check for several files.
@@ -246,38 +249,77 @@ if ($signal ne 'hup') {
 	setpgrp(0, 0);
 	# start the main sympa.pl daemon
 
-	if (($Conf{'distribution_mode'} eq 'single') || ($main::daemon_usage ne 'command_and_message')){ 
-	    printf STDERR "Starting server for $main::daemon_usage\n";
-	    do_log('debug', "Starting server for $main::daemon_usage");
+	## Fork a new process dedicated to automatic list creation, if required
+	if (($Conf{'automatic_list_feature'} eq 'on') || $main::daemon_usage == DAEMON_CREATION) {
+	    do_log('debug', "Starting server for automatic lists creation");
 	    if ((my $child_pid = fork) != 0) {
-		do_log('debug', "Server for $main::daemon_usage started, pid $child_pid, exiting from initial process");
-		exit(0);
+		do_log('notice', "Server for automatic lists creation started, pid $child_pid");
+		do_log('debug', "Server for automatic lists creation started, pid $child_pid, exiting from initial process");
+	    }else {
+		## We're in the specialized child process
+		$main::daemon_usage = DAEMON_CREATION; # automatic lists creation	    
 	    }
-	}else{
-	    $main::daemon_usage = 'command'; # fork sympa.pl dedicated to commands
-	    do_log('debug', "Starting server for commands");
-	    if ((my $child_pid = fork) != 0) {
-		do_log('info', "Server for commands started, pid $child_pid");
-		$main::daemon_usage = 'message'; # main process continue in order to fork
-		do_log('debug', "Starting server for messages");	    
+	}
+
+	unless ($main::daemon_usage == DAEMON_CREATION) {
+
+	    ## A single process that handles both messages and commands
+	    ## The distribute/ spool is not used
+	    if ($Conf{'distribution_mode'} eq 'single' && 
+		
+		$main::daemon_usage == DAEMON_ALL ) {
+		my $purpose = 'all';
+		&do_log('debug', "Starting server for $purpose purpose");
 		if ((my $child_pid = fork) != 0) {
-		    do_log('debug', "Server for messages started, pid $child_pid, exiting from initial process");
-		    exit(0);	# exit from main process	
-		}	
+		    do_log('info', "Server started for $purpose, pid $child_pid");
+		    do_log('debug', "$purpose server started, pid $child_pid, exiting from initial process");
+		    exit(0);
+		}
+		
+		## Starting a dedicated process if sympa.pl is started with a --service argument
+	    }elsif ($main::daemon_usage == DAEMON_COMMAND ||
+		    $main::daemon_usage == DAEMON_COMMAND){
+		
+		my $purpose;
+		if ($main::daemon_usage == DAEMON_COMMAND) {$purpose = 'command';}
+		elsif ($main::daemon_usage == DAEMON_MESSAGE) {$purpose = 'message';}
+		do_log('debug', "Starting server for $purpose purpose");
+		if ((my $child_pid = fork) != 0) {
+		    do_log('info', "Server started for $purpose, pid $child_pid");
+		    do_log('debug', "$purpose server started, pid $child_pid, exiting from initial process");
+		    exit(0);
+		}
+		
+		## Sympa forks to have 2 dedicated processes for processing commands and messages
+	    }else{
+		$main::daemon_usage = DAEMON_COMMAND; # fork sympa.pl dedicated to commands
+		do_log('debug', "Starting server for commands");
+		if ((my $child_pid = fork) != 0) {
+		    do_log('info', "Server for commands started, pid $child_pid");
+		    $main::daemon_usage = DAEMON_MESSAGE; # main process continue in order to fork
+		    do_log('debug', "Starting server for messages");	    
+		    if ((my $child_pid = fork) != 0) {
+			do_log('notice', "Server for messages started, pid $child_pid");
+			do_log('debug', "Server for messages started, pid $child_pid, exiting from initial process");
+			exit(0);  # exit from main process
+		    }
+		}
 	    }
 	}
     }
 
     my $service = 'sympa';
-    $service .= '(message)' if ($main::daemon_usage eq 'message');
-    $service .= '(command)' if ($main::daemon_usage eq 'command');
+    $service .= '(message)' if ($main::daemon_usage == DAEMON_MESSAGE);
+    $service .= '(command)' if ($main::daemon_usage == DAEMON_COMMAND);
+    $service .= '(creation)' if ($main::daemon_usage == DAEMON_CREATION);
     do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, $service);
 
-    do_log('debug', "Running server $$ with main::daemon_usage = $main::daemon_usage ");
+    do_log('debug', "Running server $$ for $service purpose ");
     unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
 	my $file = $Conf{'pidfile'};
-	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage eq 'message') ;
+	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
+	$file = $Conf{'pidfile_creation'} if ($main::daemon_usage == DAEMON_CREATION) ;
 	&tools::write_pid($file, $$);
     }	
 
@@ -307,11 +349,14 @@ if ($signal ne 'hup') {
 
 ## Check for several files.
 ## Prevent that 2 processes perform checks at the same time...
-if ($main::daemon_usage =~ /command/) {
+if ($main::daemon_usage == DAEMON_COMMAND ||
+    $main::daemon_usage == DAEMON_ALL) {
     unless (&Conf::checkfiles()) {
 	fatal_err("Missing files. Aborting.");
 	## No return.
     }
+}else {
+    sleep 1; ## wait until main process has created required directories
 }
 
 ## Daemon called for dumping subscribers list
@@ -321,7 +366,7 @@ if ($main::options{'dump'}) {
     if ($main::options{'dump'} eq 'ALL') {
 	$all_lists = &List::get_lists('*');
     }else {	
-
+	
 	## The parameter can be a list address
 	unless ($main::options{'dump'} =~ /\@/) {
 	    &do_log('err','Incorrect list address %s', $main::options{'dump'});
@@ -567,15 +612,15 @@ if ($main::options{'dump'}) {
     print STDOUT "\n************************************************************\n";
     
     unless (defined $result->{'ok'}) {
- 	print STDERR "$result->{'string_info'}";
+ 	printf STDERR "\n%s\n", join ("\n", @{$result->{'string_info'}});
  	print STDERR "\n The action has been stopped because of error :\n";
- 	print STDERR "$result->{'string_error'}";
+ 	printf STDERR "\n%s\n", join ("\n", @{$result->{'string_error'}});
  	exit 1;
     }
     
     close INFILE;
 
-    print STDOUT $result->{'string_info'};
+    print STDOUT "\n%s\n", join ("\n", @{$result->{'string_info'}});
     exit 0;
 }elsif ($main::options{'sync_include'}) {
 
@@ -675,15 +720,15 @@ elsif ($main::options{'modify_list'}) {
     print STDOUT "\n************************************************************\n";
     
     unless (defined $result->{'ok'}) {
- 	print STDERR "$result->{'string_info'}";
+ 	printf STDERR "\n%s\n", join ("\n", @{$result->{'string_info'}});
  	print STDERR "\nThe action has been stopped because of error :\n";
- 	print STDERR "$result->{'string_error'}";
+ 	printf STDERR "\n%s\n", join ("\n", @{$result->{'string_error'}});
  	exit 1;
     }
 
     close INFILE;
     
-    print STDOUT $result->{'string_info'};
+    printf STDOUT "\n%s\n", join ("\n", @{$result->{'string_info'}});
     exit 0;
 }
 
@@ -735,10 +780,14 @@ my $index_cleanqueue = 0;
 my @qfile;
 
 my $spool = $Conf{'queue'};
-# if daemon is dedicated to message change the current spool
-$spool = $Conf{'queuedistribute'} if ($main::daemon_usage eq 'message');
+# if daemon is dedicated to message or automatic lists creation, change the current spool
+if ($main::daemon_usage == DAEMON_MESSAGE) {
+    $spool = $Conf{'queuedistribute'};
+}elsif ($main::daemon_usage == DAEMON_CREATION) {
+    $spool = $Conf{'queueautomatic'};
+}
 
-## This is the main loop : look after files in the directory, handles
+## This is the main loop : look for files in the directory, handles
 ## them, sleeps a while and continues the good job.
 while (!$signal) {
 
@@ -759,14 +808,14 @@ while (!$signal) {
     @qfile = sort grep (!/^\./,readdir(DIR));
     closedir(DIR);
 
-    unless ($main::daemon_usage eq 'command')  { # process digest only in distribution mode
+    unless ($main::daemon_usage == DAEMON_COMMAND)  { # process digest only in distribution mode
 	## Scan queuedigest
 	if ($index_queuedigest++ >=$digestsleep){
 	    $index_queuedigest=0;
 	    &SendDigest();
 	}
     }
-    unless ($main::daemon_usage eq 'message') { # process expire and bads only in command mode 
+    unless ($main::daemon_usage == DAEMON_MESSAGE) { # process expire and bads only in command mode 
     
 	## Clean queue (bad)
 	if ($index_cleanqueue++ >= 100){
@@ -777,6 +826,7 @@ while (!$signal) {
 	    &CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
 	    &CleanSpool($Conf{'tmpdir'}, 7);
 	    &CleanSpool($Conf{'queuesubscribe'}, $Conf{'clean_delay_queuesubscribe'});
+	    &CleanSpool($Conf{'queueautomatic'}, $Conf{'clean_delay_queueautomatic'});
 	}
     }
     my $filename;
@@ -784,6 +834,7 @@ while (!$signal) {
     my $robot;
 
     my $highest_priority = 'z'; ## lowest priority
+    my $t_spool = $spool; ## in single mode we may have to supervise automatic spool
     
     ## Scans files in queue
     ## Search file with highest priority
@@ -792,14 +843,14 @@ while (!$signal) {
 	my $type;
 	my $list;
 	my ($t_listname, $t_robot);
-
+	
 	# trying to fix a bug (perl bug ??) of solaris version
 	($*, $/) = @parser_param;
 
 	## test ever if it is an old bad file
 	if ($t_filename =~ /^BAD\-/i){
- 	    if ((stat "$spool/$t_filename")[9] < (time - &Conf::get_robot_conf($robot, 'clean_delay_queue')*86400) ){
- 		unlink ("$spool/$t_filename") ;
+ 	    if ((stat "$t_spool/$t_filename")[9] < (time - &Conf::get_robot_conf($robot, 'clean_delay_queue')*86400) ){
+ 		unlink ("$t_spool/$t_filename") ;
 		&do_log('notice',"Deleting bad message %s because too old", $t_filename);
 	    };
 	    next;
@@ -865,7 +916,7 @@ while (!$signal) {
 	next;
     }
 
-    &do_log('debug', "Processing %s/%s with priority %s", &Conf::get_robot_conf($robot, 'queue'),$filename, $highest_priority) ;
+    &do_log('debug', "Processing %s/%s with priority %s", $t_spool,$filename, $highest_priority) ;
     
     if ($main::options{'mail'} != 1) {
 	$main::options{'mail'} = $robot if (&Conf::get_robot_conf($robot, 'log_smtp'));
@@ -874,28 +925,28 @@ while (!$signal) {
     ## Set NLS default lang for current message
     $Language::default_lang = $main::options{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
-    my $status = &DoFile("$spool/$filename");
+    my $status = &DoFile("$t_spool/$filename");
     
     if (defined($status)) {
-	&do_log('debug', "Finished %s", "$spool/$filename") ;
+	&do_log('debug', "Finished %s", "$t_spool/$filename") ;
 
 	if ($main::options{'keepcopy'}) {
-	    unless (&File::Copy::copy($spool.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
- 		&do_log('notice', 'Could not rename %s to %s: %s', "$spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
+	    unless (&File::Copy::copy($t_spool.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
+ 		&do_log('notice', 'Could not rename %s to %s: %s', "$t_spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
 	    }
 	}
-	unlink("$spool/$filename");
+	unlink("$t_spool/$filename");
     }else {
-	my $bad_dir = "$spool/bad";
+	my $bad_dir = "$t_spool/bad";
 	
 	if (-d $bad_dir) {
-	    unless (rename("$spool/$filename", "$bad_dir/$filename")){
+	    unless (rename("$t_spool/$filename", "$bad_dir/$filename")){
 		&fatal_err("Exiting, unable to rename bad file $filename to $bad_dir/$filename (check directory permission)");
 	    }
 	    do_log('notice', "Moving bad file %s to bad/", $filename);
 	}else{
 	    do_log('notice', "Missing directory '%s'", $bad_dir);
-	    unless (rename("$spool/$filename", "$spool/BAD-$filename")) {
+	    unless (rename("$t_spool/$filename", "$t_spool/BAD-$filename")) {
 		&fatal_err("Exiting, unable to rename bad file $filename to BAD-$filename");
 	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
@@ -1035,6 +1086,21 @@ sub DoFile {
     ## Initialize command report
     &report::init_report_cmd();
 	
+    ## Maybe we are an automatic list
+    #_amr ici on ne doit prendre que la première ligne !
+    my ($dyn_list_family, $dyn_just_created);
+    # we care of fake headers. If we put it, it's the 1st one.
+    if ($hdr->as_string() =~ /^X-Sympa-Family/mo) {
+      $dyn_list_family = $hdr->get('X-Sympa-Family');
+      chomp $dyn_list_family;
+    }
+    if ($main::daemon_usage == DAEMON_CREATION && !$dyn_list_family) {
+        &do_log('err','internal server error : automatic lists creation daemon should never proceed messages without X-Sympa-Family header');
+        &report::global_report_cmd('intern','Automatic lists creation daemon with message without header',{},$sender,$robot,1);
+        return undef;
+    }
+    $hdr->delete('X-Sympa-Family');
+
     my $list_address;
     my $conf_email = &Conf::get_robot_conf($robot, 'email');
     my $conf_host = &Conf::get_robot_conf($robot, 'host');
@@ -1055,11 +1121,66 @@ sub DoFile {
     }else {
 	$list = new List ($listname, $robot);
 	unless (defined $list) {
-	    &do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
-	    &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
-	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	    return undef;
-	}	$host = $list->{'admin'}{'host'};
+	    unless ($dyn_list_family) {
+		&do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
+		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		return undef;
+	    }
+
+	    ## Automatic creation of a mailing list, based on a family
+            my $dyn_family;
+            unless ($dyn_family = new Family($dyn_list_family,$robot)) {
+                &do_log('err', "Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list.");
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list."]);
+		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
+		return undef;
+            }
+            
+	    # check authorization
+	    my $result = &List::request_action('automatic_list_creation',
+	        ($message->{'smime_signed'} ? 'smime' : 'smtp'),$robot,
+		{'sender' => $sender, 'message' => $message });
+	    my $r_action;
+	    unless (defined $result) {
+		&do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $hdr->get('Message-Id'),$listname);
+		&report::reject_report_msg('intern','Message ignored because scenario "automatic_list_creation" cannot be evaluated',$sender,
+					   {'msg_id' => $hdr->get('Message-Id')}, $robot,$message->{'msg_as_string'});
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file"]);
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile',
+			      'parameters' => $hdr->get('Message-Id').",$robot",'target_email' => '','msg_id' => hdr->get('Message-Id'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		return undef ;
+	    }
+	    
+	    if (ref($result) eq 'HASH') {
+		$r_action = $result->{'action'};
+	    }
+	    unless ($r_action =~ /do_it/) {
+		&Log::do_log('info', 'automatic_list_creation %s@%s from %s refused', $listname,$robot,$sender);
+		&report::reject_report_msg('auth',$result->{'reason'},$sender,{'listname' => $listname,
+			'list'=>{'name'=>$listname, 'host'=>$robot}},$robot,$message->{'msg_as_string'},'');
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file"]);
+		return undef;
+	    }
+            
+            my $result = $dyn_family->add_list({listname=>$listname}, 1);
+            unless (defined $result->{'ok'}) {
+		my $details = $result->{'string_error'} || $result->{'string_info'} || [];
+                &do_log('err', "Failed to add a dynamic list to the family %s : ", $dyn_list_family, join(';', @{$details}));
+                &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname}},$robot,$message->{'msg_as_string'},'');
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file."]);
+		return undef;
+            }
+            $list = new List ($listname, $robot);
+            unless (defined $list) {
+                &do_log('err', 'sympa::DoFile() : dynamic list %s could not be created',$listname);
+                &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname}},$robot,$message->{'msg_as_string'},'');
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file."]);
+		return undef;
+            }
+	    $dyn_just_created = 1;
+        }
+	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
 	$list_address = $list->get_list_address();
 	# setting log_level using list config unless it is set by calling option
@@ -1070,7 +1191,7 @@ sub DoFile {
     }
     
     ## Loop prevention
-   my $conf_loop_prevention_regex;
+    my $conf_loop_prevention_regex;
     $conf_loop_prevention_regex = $list->{'admin'}{'loop_prevention_regex'};
     $conf_loop_prevention_regex ||= &Conf::get_robot_conf($robot, 'loop_prevention_regex');
     if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mio) {
@@ -1141,7 +1262,7 @@ sub DoFile {
 	return undef;
     }
   
-    if ($main::daemon_usage eq 'message') {
+    if ($main::daemon_usage == DAEMON_MESSAGE) {
 	if (($rcpt =~ /^$Conf{'listmaster_email'}(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
 	    &do_log('err','internal serveur error : distribution daemon should never proceed with command');
 	    &report::global_report_cmd('intern','Distribution daemon proceed with command',{},$sender,$robot,1);
@@ -1149,7 +1270,54 @@ sub DoFile {
 	    return undef;
 	} 
     }
-    if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
+
+    if ($main::daemon_usage == DAEMON_CREATION || (($Conf{'automatic_list_feature'} eq 'on') && $main::daemon_usage == DAEMON_ALL )) {
+        if ($dyn_list_family && $dyn_just_created) {
+            unless (defined $list->sync_include()) {
+		&do_log('err', 'sympa::DoFile() : Failed to synchronize list members of dynamic list %s from %s family',$listname, $dyn_list_family);
+		&report::reject_report_msg('user','dyn_cant_create',$sender,{'listname' => $listname},$robot,$message->{'msg_as_string'},'');
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'dyn_cant_sync','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		# purge the unwanted empty automatic list
+		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
+		    $list->close(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
+		    # but what about list_of_lists ?
+		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
+		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};
+		      &do_log('err', 'la liste a été trouvée dans la list_of_lists',$listname, $dyn_list_family);
+		    }
+		}
+                return undef;
+            }
+            unless ($list->get_total() > 0) {
+		&do_log('err', 'sympa::DoFile() : Dynamic list %s from %s family has ZERO subscribers',$listname, $dyn_list_family);
+		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname, 'host'=>$robot}},$robot,$message->{'msg_as_string'},'');
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'list_unknown','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		# purge the unwanted empty automatic list
+		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
+		    $list->close(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
+		    # but what about list_of_lists ?
+		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
+		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};
+		      &do_log('err', 'la liste a été trouvée dans la list_of_lists',$listname, $dyn_list_family);
+		    }
+		}
+                return undef;
+            }
+            &do_log('info', 'Successfully create list %s with %s subscribers', $listname, $list->get_total());
+        }
+    }
+    if ($main::daemon_usage == DAEMON_CREATION) {
+        #do not process messages in list creation only mode, move them to main spool
+        unless ($list->move_message($message->{'filename'}, $Conf{'queue'})) {
+            &do_log('err','sympa::DoFile(): Unable to move in spool for processing message to list %s (daemon_usage = creation)', $listname);
+            &report::reject_report_msg('intern','',$sender,{'msg_id' => $hdr->get('Message-ID')},$robot,$message->{'msg_as_string'},$list);
+            return undef;
+        }
+        &do_log('info', ($dyn_just_created ? 'After automatic list creation, ' : '') 
+           . 'Message for %s from %s moved in spool %s for processing message-id=%s', $listname, $sender, $Conf{'queue'},$hdr->get('Message-ID'));
+        $status = 1;
+
+    }elsif ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot, $msg);
 
 	## Mail adressed to the robot and mail 
@@ -1256,6 +1424,7 @@ sub DoSendMessage {
     $hdr->delete('X-Sympa-Checksum');
     $hdr->delete('X-Sympa-To');
     $hdr->delete('X-Sympa-From');
+    $hdr->delete('X-Sympa-Family');
     
     ## Multiple recepients
     my @rcpts = split /,/,$rcpt;
@@ -1332,7 +1501,8 @@ sub DoForward {
     &do_log('info', "Processing message for %s with priority %s, %s", $recepient, $priority, $messageid );
     
     $hdr->add('X-Loop', "$name-$function\@$host");
-    $hdr->delete('X-Sympa-To:');
+    $hdr->delete('X-Sympa-To');
+    $hdr->delete('X-Sympa-Family');
 
     if ($function eq "listmaster") {
 	my $listmasters = &Conf::get_robot_conf($robot, 'listmasters');
@@ -1556,10 +1726,10 @@ sub DoMessage{
 	$action = "editorkey";
     }
 
-    if (($action =~ /^do_it/) || ($main::daemon_usage eq 'message')) {
+    if (($action =~ /^do_it/) || ($main::daemon_usage == DAEMON_MESSAGE)) {
 
 
-	if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
+	if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
 	    my $numsmtp = $list->distribute_msg($message);
 	    
 	    ## Keep track of known message IDs...if any
@@ -1576,8 +1746,8 @@ sub DoMessage{
 	    return 1;
 
 	}else{   
-	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	    unless ($list->move_message($message->{'filename'})) {
+          # this message is to be distributed but this daemon is dedicated to commands or list creation -> move it to distribution spool
+          unless ($list->move_message($message->{'filename'}, $Conf{'queuedistribute'})) {
 		&do_log('err','sympa::DoMessage(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $messageid},$robot,$msg_string,$list);
 		&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
@@ -1910,5 +2080,3 @@ sub CleanSpool {
 
 
 1;
-
-

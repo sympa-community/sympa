@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1173"
+<A NAME="tex2html1186"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1167"
+<A NAME="tex2html1180"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1161"
+<A NAME="tex2html1174"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1169"
+<A NAME="tex2html1182"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1171"
+<A NAME="tex2html1184"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1174"
+<B> Next:</B> <A NAME="tex2html1187"
   HREF="node14.html">13. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1168"
+<B> Up:</B> <A NAME="tex2html1181"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1162"
+<B> Previous:</B> <A NAME="tex2html1175"
   HREF="node12.html">11. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1170"
+ &nbsp; <B>  <A NAME="tex2html1183"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1172"
+ &nbsp; <B>  <A NAME="tex2html1185"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,20 +60,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1175"
+<LI><A NAME="tex2html1188"
   HREF="node13.html#SECTION001310000000000000000">12.1 Introduction</A>
-<LI><A NAME="tex2html1176"
+<LI><A NAME="tex2html1189"
   HREF="node13.html#SECTION001320000000000000000">12.2 Web server setup</A>
-<LI><A NAME="tex2html1177"
+<LI><A NAME="tex2html1190"
   HREF="node13.html#SECTION001330000000000000000">12.3 Sympa setup</A>
-<LI><A NAME="tex2html1178"
+<LI><A NAME="tex2html1191"
   HREF="node13.html#SECTION001340000000000000000">12.4 trust remote application</A>
-<LI><A NAME="tex2html1179"
+<LI><A NAME="tex2html1192"
   HREF="node13.html#SECTION001350000000000000000">12.5 The WSDL service description</A>
-<LI><A NAME="tex2html1180"
+<LI><A NAME="tex2html1193"
   HREF="node13.html#SECTION001360000000000000000">12.6 Client-side programming</A>
 <UL>
-<LI><A NAME="tex2html1181"
+<LI><A NAME="tex2html1194"
   HREF="node13.html#SECTION001361000000000000000">12.6.1 Writting a Java client with Axis</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
@@ -113,7 +113,7 @@ processus where authentication may differ from classic web method. The following
 </LI>
 <LI>The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
          Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
-         a configuration file name  <A NAME="9297"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">12.4</A> page&nbsp;<A HREF="node13.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+         a configuration file name  <A NAME="9422"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">12.4</A> page&nbsp;<A HREF="node13.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 </LI>
 </UL>
 
@@ -137,7 +137,7 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="9300"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+Here is a sample piece of your Apache <A NAME="9425"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
 	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
 	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
@@ -153,8 +153,8 @@ Here is a sample piece of your Apache <A NAME="9300"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only mandatory parameter you need to set in <A NAME="9303"></A><TT>sympa.conf</TT>/<A NAME="9306"></A><TT>robot.conf</TT> files is
-the <A NAME="9309"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in <A NAME="9428"></A><TT>sympa.conf</TT>/<A NAME="9431"></A><TT>robot.conf</TT> files is
+the <A NAME="9434"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -171,26 +171,26 @@ also for the SOAP server to deduce what Virtual Host is concerned by the current
 </H1>
 
 <P>
-The SOAP service <A NAME="9312"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+The SOAP service <A NAME="9437"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
 
 <P>
-This configuration file <A NAME="9315"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9318"></A><TT>etc/</TT> subdirectory or in <A NAME="9321"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9324"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9327"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9330"></A><TT>trusted_application</TT>. A sample <A NAME="9333"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+This configuration file <A NAME="9440"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9443"></A><TT>etc/</TT> subdirectory or in <A NAME="9446"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9449"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9452"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9455"></A><TT>trusted_application</TT>. A sample <A NAME="9458"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
 
 <P>
 
 <UL>
-<LI><A NAME="9336"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9339"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
+<LI><A NAME="9461"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9464"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
 </LI>
-<LI><A NAME="9342"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9345"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
+<LI><A NAME="9467"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9470"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
 </LI>
-<LI><A NAME="9348"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9351"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9354"></A><TT>remote_host</TT> can be listed.
+<LI><A NAME="9473"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9476"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9479"></A><TT>remote_host</TT> can be listed.
 
 <P>
 </LI>
 </UL>
 
 <P>
-You can test your SOAP service using the <A NAME="9357"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
+You can test your SOAP service using the <A NAME="9482"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
 /usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
 
 /usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
@@ -860,36 +860,36 @@ String[] _abonnements = tmp.which();
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1173"
+<A NAME="tex2html1186"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1167"
+<A NAME="tex2html1180"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1161"
+<A NAME="tex2html1174"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1169"
+<A NAME="tex2html1182"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1171"
+<A NAME="tex2html1184"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1174"
+<B> Next:</B> <A NAME="tex2html1187"
   HREF="node14.html">13. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1168"
+<B> Up:</B> <A NAME="tex2html1181"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1162"
+<B> Previous:</B> <A NAME="tex2html1175"
   HREF="node12.html">11. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1170"
+ &nbsp; <B>  <A NAME="tex2html1183"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1172"
+ &nbsp; <B>  <A NAME="tex2html1185"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-03
+2006-10-06
 </ADDRESS>
 </BODY>
 </HTML>

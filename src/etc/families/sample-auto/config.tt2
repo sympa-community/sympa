@@ -1,0 +1,34 @@
+user_data_source include2
+ 
+[%
+occupations = {
+    cto = { title=>"chief technical officer", abbr=>"CHIEF TECH OFF" },
+    coo = { title=>"chief operating officer", abbr=>"CHIEF OPER OFF" },
+    cio = { title=>"chief information officer", abbr=>"CHIEF INFO OFF" },
+}
+nemes = listname.split('-');
+THROW autofamily "SYNTAX ERROR : listname must begin with 'auto-' " IF (nemes.size != 2 || nemes.0 != 'auto');
+tokens = nemes.1.split('\.');
+THROW autofamily "SYNTAX ERROR : wrong listname syntax" IF (tokens.size != 2 || ! occupations.${tokens.0} || tokens.1 < 20 || tokens.1 > 99 );
+age = tokens.1 div 10;
+%]
+
+custom_subject [[% occupations.${tokens.0}.abbr %] OF [% tokens.1 %]]
+
+subject Every [% tokens.1 %] years old [% occupations.${tokens.0}.title %]
+
+owner
+email xx@mydom
+
+include_ldap_query
+attrs mail
+filter (&(objectClass=inetOrgPerson)(employeeType=[% occupations.${tokens.0}.abbr %])(personAge=[% age %]*))
+name ldap
+port 389
+host ldap.domain.com
+passwd ldap_passwd
+suffix dc=domain,dc=com
+timeout 30
+user cn=root,dc=domain,dc=com
+scope sub
+select all

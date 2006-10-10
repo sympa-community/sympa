@@ -9313,7 +9313,7 @@ sub _restrict_values {
      ## Rename files in spools
      ## Auth & Mod  spools
      foreach my $spool ('queueauth','queuemod','queuetask','queuebounce',
-			'queue','queueoutgoing','queuesubscribe') {
+			'queue','queueoutgoing','queuesubscribe','queueautomatic') {
 	 unless (opendir(DIR, $Conf{$spool})) {
 	     &wwslog('info', "Unable to open '%s' spool : %s", $Conf{$spool}, $!);
 	     &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
@@ -16041,4 +16041,3 @@ sub do_maintenance {
     
     return 1;
 }
-

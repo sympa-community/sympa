@@ -2030,7 +2030,7 @@ sub distribute {
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message
-    if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
+    if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
 
 	my $numsmtp =$list->distribute_msg($message);
 	unless (defined $numsmtp) {
@@ -2053,7 +2053,7 @@ sub distribute {
 	
     }else{   
 	# this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	unless ($list->move_message($file)) {
+	unless ($list->move_message($file, $Conf{'queuedistribute'})) {
 	    &do_log('err','COmmands::distribute(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
 	    return undef;
@@ -2208,7 +2208,7 @@ sub confirm {
 	$hdr->add('X-Validation-by', $sender);
 	
 	## Distribute the message
-	if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
+	if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
 	    my $numsmtp = $list->distribute_msg($message);
 
 	    unless (defined $numsmtp) {
@@ -2226,7 +2226,7 @@ sub confirm {
 
 	}else{
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
-	    unless ($list->move_message($file)){
+	    unless ($list->move_message($file, $Conf{'queuedistribute'})){
 		&do_log('err','Commands::confirm(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
 		return undef;
@@ -2601,8 +2601,6 @@ sub get_auth_method {
 
 # end of package
 1;
-
-
 
 
 
