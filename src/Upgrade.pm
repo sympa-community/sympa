@@ -77,13 +77,18 @@ sub update_version {
 sub upgrade {
     my ($previous_version, $new_version) = @_;
 
-    &do_log('notice', 'List::upgrade(%s, %s)', $previous_version, $new_version);
+    &do_log('notice', 'Upgrade::upgrade(%s, %s)', $previous_version, $new_version);
     
     unless (&List::check_db_connect()) {
 	return undef;
     }
 
     my $dbh = &List::db_get_handler();
+
+    if (&tools::lower_version($new_version, $previous_version)) {
+	&do_log('notice', 'Installing  older version of Sympa ; no upgrade operation is required');
+	return 1;
+    }
 
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     if (&tools::lower_version($previous_version, '4.2a')) {
