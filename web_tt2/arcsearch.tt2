@@ -9,7 +9,7 @@
 [% END %]
 </p>
 <p>
-[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%] 
+[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%]:<br> 
 <em>
 
 [% IF how == 'phrase' %]
@@ -20,13 +20,13 @@
 	[%|loc%](Each of this words,[%END%] 
 [% END %]
 
-[% IF case %]
+[% IF case == 'off' %]
 	[%|loc%]case insensitive[%END%] 
 [% ELSE %]
 	[%|loc%]case sensitive[%END%] 
 [% END %]
 
-[% IF match %]
+[% IF match == 'partial' %]
 	[%|loc%]and checking on part of word)[%END%]
 [% ELSE %]
 	[%|loc%]and checking on entire word)[%END%]
@@ -36,21 +36,21 @@
 
 <hr />
 
-[% IF age == new %]
+[% IF age == 'new' %]
 	<p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
 	<p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
 [% END %]
 
+<ul>
 <dl>
 [% FOREACH u = res %]
-	<dt><a href=[% u.file %]>[% u.subj %]</a> -- <em>[% u.date %]</em><dd>[% u.from %]<pre>[% u.body_string %]</pre></dd>
+	<dt><li><b><a href=[% u.file %]>[% u.subj %]</b></a> -- <em>[% u.date %]</em><dd>[% u.from %]<pre>[% u.body_string %]</pre></dd>
 [% END %]
 </dl>
-
+</ul>
+<p>
 <dl>
-<strong>[%|loc%]Result[%END%]</strong>
-<dt><strong>[%|loc(searched,num)%]%1 messages selected out of %2[%END%]...</strong><br />
 
 [% IF body %]
 	<dd>[%|loc(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
@@ -109,7 +109,7 @@
 [% IF continue %]
 	<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
 [% END %]
-
+<p>
 <input class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
 </fieldset>
 </form>
