@@ -11,7 +11,7 @@
 	condition.  The scenario condition will look like this :
 	  CustomCondition::my_custom_condition([sender],[list->name],[list->total]) smtp,smime,md5	 -> do_it
 
-	Now bounced recognize Abuse Report Feedback format (ARF). In order to use it, you just need to create a new
+	Now bounced recognize Abuse Report Feedback forat (ARF). In order to use it, you just need to create a new
 	alias to redirect message from ARF loop (mainly AOL) to bounced according to the documentation (section bounces)
 
 	[S.Amrani, Gendarmerie Nationale] SQL named filters Listmasters can now define SQL search conditions in authorization
@@ -47,7 +47,8 @@
 
 	doc/sympa.tex.tpl: Added libxml 2 as a requirement for Sympa
 
-	sympa.pl --upgrade is now the only way to upgrade Sympa data structure
+*****	sympa.pl --upgrade is now the only way to upgrade Sympa data structure
+*****	YOU NEED TO RUN THIS COMMAND AFTER EACH UPGRADE OF SYMPA
 
 	[S.Amrani, gendarmerie Nationale] new Datasource.pm and SQLSource.pm modules that should contain all 
 	DB access subroutines. An LDAPSource.pm module should be created later.
