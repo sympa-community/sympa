@@ -121,22 +121,22 @@
 	[S.Amrani, Gendarmerie Nat.] alias management can now be disabled.  You should set the 
 	'sendmail_aliases' parameter to 'none'
 
-	***** Change: config.bin files are no more used unless the new cache_list_config sympa.conf parameter 
-	***** is set to 'binary_file'. This mode is only usefull if you manage lots of lists (1000+) to 
-	***** have a faster startup of web processes.
+***** 	Change: config.bin files are no more used unless the new cache_list_config sympa.conf parameter 
+***** 	is set to 'binary_file'. This mode is only usefull if you manage lots of lists (1000+) to 
+***** 	have a faster startup of web processes.
 
-	***** Changes: web pages are now utf-8 encoded, as well as mhonarc HTML 
-	***** archives that can now mix different character sets within a single 
-	***** web archive. Sympa now uses perl's I/O layer to encode/decode characters.  
-	***** The web_recode_to  parameter is now obsolete ; the new 
-	***** filesystem_encoding parameter allows you to define how the configuration 
-	***** files are encoded on disk. A new mhonarc-ressources.tt2 file is provided 
-	***** and should replace any custom one.
-	***** Shared documents filenames are now Q-encoded to prevent any encoding problems.
-	***** An automatic upgrade process will rename existing files according to Q-encoding
+***** 	Changes: web pages are now utf-8 encoded, as well as mhonarc HTML 
+***** 	archives that can now mix different character sets within a single 
+***** 	web archive. Sympa now uses perl's I/O layer to encode/decode characters.  
+***** 	The web_recode_to  parameter is now obsolete ; the new 
+***** 	filesystem_encoding parameter allows you to define how the configuration 
+***** 	files are encoded on disk. A new mhonarc-ressources.tt2 file is provided 
+***** 	and should replace any custom one.
+***** 	Shared documents filenames are now Q-encoded to prevent any encoding problems.
+***** 	An automatic upgrade process will rename existing files according to Q-encoding
 
-	***** Change: default for css_path is now relative to static_content_path.  
-	***** CSS files are now AUTOMATICALLY updated by sympa.pl if a new css.tt2 has been installed.
+***** 	Change: default for css_path is now relative to static_content_path.  
+*****   CSS files are now AUTOMATICALLY updated by sympa.pl if a new css.tt2 has been installed.
 
 	web_tt2/arcsearch.tt2: [A.Bernstein] [ID 899] Minor bugs and cosmetic improvements 
 	in archive search results 
