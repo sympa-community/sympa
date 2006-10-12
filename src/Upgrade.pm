@@ -462,10 +462,18 @@ sub upgrade {
     ## They are Q-encoded therefore easier to store on any filesystem with any encoding
     if (&tools::lower_version($previous_version, '5.3a.8')) {
 	&do_log('notice','Q-Encoding web documents filenames...');
+
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
 	    if (-d $list->{'dir'}.'/shared') {
-		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared');
+		&do_log('notice','  Processing list %s...', $list->get_list_address());
+
+		## Determine default lang for this list
+		## It should tell us what character encoding was used for filenames
+		&Language::SetLang($list->{'admin'}{'lang'});
+		my $list_encoding = &Language::GetCharset();
+
+		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
 
 		if ($count) {
 		    &do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);

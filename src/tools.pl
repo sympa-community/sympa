@@ -33,6 +33,9 @@ use Time::Local;
 use File::Find;
 use Digest::MD5;
 
+use Encode::Guess; ## Usefull when encoding should be guessed
+use Encode::MIME::Header;
+
 ## RCS identification.
 #my $id = '@(#)$Id$';
 
@@ -1011,15 +1014,16 @@ sub escape_chars {
 ## Q-decode it first
 sub escape_docname {
     my $filename = shift;
+    my $except = shift; ## Exceptions
 
     ## Q-decode
     $filename = MIME::Words::decode_mimewords($filename);
 
     ## Decode from FS encoding to utf-8
-    $filename = &Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
+    #$filename = &Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
 
     ## escapesome chars for use in URL
-    return &escape_chars($filename);
+    return &escape_chars($filename, $except);
 }
 
 ## Q-Encode web file name
@@ -1028,8 +1032,21 @@ sub qencode_filename {
 
     ## We don't use MIME::Words here because it does not encode properly Unicode
     ## Check if string is already Q-encoded first
-    unless ($filename =~ /\=\?UTF-8\?/) {
-	$filename = &Encode::encode('MIME-Q', $filename);
+    ## Also check if the string contains 8bit chars
+    unless ($filename =~ /\=\?UTF-8\?/ ||
+	    $filename =~ /^[\x00-\x7f]*$/) {
+
+	## Don't encode elements such as .desc. or .url or .moderate or .extension
+	my $part = $filename;
+	my ($leading, $trailing);
+	$leading = $1 if ($part =~ s/^(\.desc\.)//); ## leading .desc
+	$trailing = $1 if ($part =~ s/((\.\w+)+)$//); ## trailing .xx
+
+	## We use low-level subroutine instead of to prevent Encode::encode('MIME-Q')
+	## Otherwise \n are inserted
+	my $encoded_part = &Encode::MIME::Header::_encode_q($part);
+
+	$filename = $leading.$encoded_part.$trailing;
     }
     
     return $filename;
@@ -1038,11 +1055,11 @@ sub qencode_filename {
 ## Q-Decode web file name
 sub qdecode_filename {
     my $filename = shift;
-
+    
     ## We don't use MIME::Words here because it does not encode properly Unicode
     ## Check if string is already Q-encoded first
     #if ($filename =~ /\=\?UTF-8\?/) {
-	$filename = &Encode::decode('MIME-Q', $filename);
+    $filename = &Encode::decode('MIME-Q', $filename);
     #}
     
     return $filename;
@@ -1837,6 +1854,7 @@ sub find_file {
 sub list_dir {
     my $dir = shift;
     my $all = shift;
+    my $original_encoding = shift; ## Suspected original encoding of filenames
 
     my $size=0;
 
@@ -1845,7 +1863,7 @@ sub list_dir {
 
 	    ## Guess filename encoding
 	    my ($encoding, $guess);
-	    my $decoder = &Encode::Guess::guess_encoding($file);
+	    my $decoder = &Encode::Guess::guess_encoding($file, $original_encoding, 'utf-8');
 	    if (ref $decoder) {
 		$encoding = $decoder->name;
 	    }else {
@@ -1857,7 +1875,7 @@ sub list_dir {
 			 'encoding' => $encoding,
 			 'guess' => $guess};
 	    if (-d "$dir/$file") {
-		&list_dir($dir.'/'.$file, $all);
+		&list_dir($dir.'/'.$file, $all, $original_encoding);
 	    }
 	}
         closedir DIR;
@@ -1869,14 +1887,17 @@ sub list_dir {
 ## Q-encode a complete file hierarchy
 ## Usefull to Q-encode shared documents
 sub qencode_hierarchy {
-    my $dir = shift;
+    my $dir = shift; ## Root directory
+    my $original_encoding = shift; ## Suspected original encoding of filenames
 
     my $count;
     my @all_files;
-    &tools::list_dir($dir, \@all_files);
+    &tools::list_dir($dir, \@all_files, $original_encoding);
 
     foreach my $f_struct (reverse @all_files) {
     
+	next unless ($f_struct->{'filename'} =~ /[^\x00-\x7f]/); ## At least one 8bit char
+
 	my $new_filename = $f_struct->{'filename'};
 	my $encoding = $f_struct->{'encoding'} || 'utf-8';
 	$new_filename = Encode::decode($encoding, $f_struct->{'filename'});
@@ -1884,14 +1905,18 @@ sub qencode_hierarchy {
 	## Q-encode filename to escape chars with accents
 	$new_filename = &tools::qencode_filename($new_filename);
     
-	next if ($new_filename eq $f_struct->{'filename'});
-	
+	my $orig_f = $f_struct->{'directory'}.'/'.$f_struct->{'filename'};
+	my $new_f = $f_struct->{'directory'}.'/'.$new_filename;
+
 	## Rename the file using utf8
-	unless (rename $f_struct->{'directory'}.'/'.$f_struct->{'filename'}, $f_struct->{'directory'}.'/'.$new_filename) {
-	    &do_log('err', "Failed to rename %s to %s : %s", $f_struct->{'directory'}.'/'.$f_struct->{'filename'}, $f_struct->{'directory'}.'/'.$new_filename, $!);
+	&do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
+	unless (rename $orig_f, $new_f) {
+	    &do_log('err', "Failed to rename %s to %s : %s", $orig_f, $new_f, $!);
 	    next;
 	}
+	$count++;
     }
+
     return $count;
 }
 

@@ -1345,6 +1345,7 @@ sub get_header_field {
 	 }
 
 	 my @params = split /\//, $path_info;
+	 
 
  #	foreach my $i(0..$#params) {
  #	    $params[$i] = &tools::unescape_chars($params[$i]);
@@ -1485,8 +1486,12 @@ sub get_header_field {
 
 	 foreach my $p (keys %{$filtering{$in{'action'}}}) {
 	     if ($filtering{$in{'action'}}{$p} eq 'qencode') {
-		 ## Q-decode param
-		 $in{$p} = &tools::qencode_filename($in{$p});
+		 ## Q-encode file path
+		 my @tokens = split /\//, $in{$p};
+		 foreach my $i (0..$#tokens) {
+		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
+		 }
+		 $in{$p} = join '/', @tokens;
 	     }
 	 }
      }
@@ -5330,8 +5335,8 @@ sub do_skinsedit {
 	 my $doc = {};
 	 $doc->{'visible_path'} = $visible_path;
          $doc->{'visible_fname'} = $visible_fname;
-	 $doc->{'escaped_fname'} = &tools::escape_docname($fname);
-	 $doc->{'escaped_path'} = &tools::escape_docname($path);
+	 $doc->{'escaped_fname'} = &tools::escape_docname($fname, '/');
+	 $doc->{'escaped_path'} = &tools::escape_docname($path, '/');
 	 $doc->{'fname'} = $fname;
 	 $doc->{'size'} = (-s $d)/1000; 
 	 $doc->{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
@@ -10218,7 +10223,7 @@ sub do_d_read {
 			 $subdirs{$d}{'icon'} = $icon_table{'folder'};
 			 
 			 $subdirs{$d}{'doc'} = &make_visible_path($d);
-			 $subdirs{$d}{'escaped_doc'} =  &tools::escape_docname($d);
+			 $subdirs{$d}{'escaped_doc'} =  &tools::escape_docname($d, '/');
 			 
 			 # size of the doc
 			 $subdirs{$d}{'size'} = (-s $path_doc)/1000;
@@ -10409,7 +10414,7 @@ sub do_d_read {
 			 } else {
 			     $files{$d}{'doc'} = &make_visible_path($d);
 			 }
-			 $files{$d}{'escaped_doc'} =  &tools::escape_docname($d);
+			 $files{$d}{'escaped_doc'} =  &tools::escape_docname($d, '/');
 
 		       # last update
 		     my @info = stat $path_doc;
@@ -10825,7 +10830,7 @@ sub do_latest_d_read {
 	
 		 ## name of the file
 		 $file_info{'name'} = &make_visible_path($d);
-		 $file_info{'escaped_name'} =  &tools::escape_docname($d);
+		 $file_info{'escaped_name'} =  &tools::escape_docname($d, '/');
 		 
 		 ## content_directory
 		 if ($dir) {

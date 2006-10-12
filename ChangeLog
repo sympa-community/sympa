@@ -1,3 +1,40 @@
+2006-10-10 14:24  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node28.html, doc/html/node29.html, doc/html/node3.html,
+	  doc/html/node30.html, doc/html/node31.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, mail_tt2/message_report.tt2, src/Commands.pm,
+	  src/Conf.pm, src/Family.pm, src/List.pm, src/Makefile,
+	  src/admin.pm, src/familyqueue.c, src/sympa.pl,
+	  src/etc/families/sample-auto/config.tt2,
+	  src/etc/families/sample-auto/param_constraint.conf,
+	  src/etc/scenari/automatic_list_creation.listmaster,
+	  src/etc/scenari/automatic_list_creation.public,
+	  src/etc/script/sympa, wwsympa/wwsympa.fcgi: [S.Amrani,
+	  Gend.Nationale] New feature: automatic list creation This new
+	  feature allows to trigger list creation when a message is sent
+	  for the list. The set of "possible" lists is defined by a generic
+	  mail alias and a list family. New sympa.conf parameter include :
+	  automatic_list_feature, automatic_list_creation,
+	  automatic_list_removal,	    pidfile_creation,
+	  queueautomatic, clean_delay_queueautomatic A new familiqueue.c
+	  binary file is provided.  The list creation job is performed by a
+	  sympa.pl process that forks.	Check the documentation for more
+	  informations.
+
+2006-10-06 09:46  sympa-authors
+
+	* .version, ChangeLog, NEWS: Preparing 5.3a.9
+
 2006-10-06 09:11  sympa-authors
 
 	* web_tt2/serveradmin.tt2: Changed the bug tracking URL to a more

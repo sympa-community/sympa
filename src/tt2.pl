@@ -26,7 +26,6 @@ package Sympa::Template::Compat;
 use strict;
 use base 'Template::Provider';
 use Encode;
-use Encode::Guess; ## Usefull when encoding should be guessed
 
 my @other_include_path;
 my $allow_absolute;
