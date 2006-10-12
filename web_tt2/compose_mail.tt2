@@ -12,10 +12,25 @@
 <input type="hidden" name="list" VALUE="[% list %]" />
 <input type="hidden" name="to" VALUE="[% local_to %] [% domain_to %]" />
 
+ [% IF request_topic %]
+   <br /><br />
+   [%|loc%]This list is configured to require topic(s).[%END%]
+   <br />
+   [%|loc%]Please select one or more topic(s) that corresponds to your message :[%END%]
+   <br /><br /> 
+   [% FOREACH t = available_topics %]
+     <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+     <br />
+   [% END %]
+   <br />
+ [%  END %]
+ 
+
 <textarea name="body" cols="80" rows="25">
 
 </textarea><br />
 
-<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]"/>
+<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]"/
+[%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %] >
 </fieldset>
 </form>

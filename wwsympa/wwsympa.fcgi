@@ -5804,7 +5804,7 @@ sub do_skinsedit {
     
      if (!$list_topics && $list->is_msg_topic_tagging_required()) {
 	 &report::reject_report_web('user','msg_topic_missing',{},$param->{'action'});
-	 &wwslog('info','do_distribute: message(s) without topic topic but in a required list');
+	 &wwslog('info','do_distribute: message(s) without topic but in a required list');
 	 &web_db_log({'parameters' => $in{'id'},
 		      'status' => 'error',
 		      'error_type' => 'no_topic'});
@@ -14409,7 +14409,7 @@ sub make_pictures_url {
 
      if (!$list_topics && $list->is_msg_topic_tagging_required()) {
 	 &report::reject_report_web('user','msg_topic_missing',{},$param->{'action'});
-	 &wwslog('info','do_send_mail: message(s) without topic topic but in a required list');
+	 &wwslog('info','do_send_mail: message(s) without topic but in a required list');
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_topic','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
