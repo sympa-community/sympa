@@ -163,7 +163,7 @@ sub login {
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
 
-    &do_log('notice', 'call check_auth(%s,%s,%s)',$robot,$email,$passwd);
+    &do_log('debug', 'call check_auth(%s,%s)',$robot,$email);
     my $user = &Auth::check_auth($robot,$email,$passwd);
 
     unless($user){
@@ -293,7 +293,7 @@ sub authenticateRemoteAppAndRun {
     my $robot = $ENV{'SYMPA_ROBOT'};
 
 #    open TMP2, ">>/tmp/yy"; printf TMP2 "xxxxxxxxxx  parameters \n"; &tools::dump_var($proxy_vs, 0, \*TMP2);printf TMP2 "--------\n"; close TMP2;
-    &do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s,%s)', $appname, $apppassword, $vars, $service, join(',',@$parameters));
+    &do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s)', $appname, $vars, $service, join(',',@$parameters));
 
     unless ($appname and $apppassword and $service) {
 	die SOAP::Fault->faultcode('Client')
