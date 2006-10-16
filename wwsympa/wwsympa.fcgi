@@ -6031,21 +6031,26 @@ sub do_viewmod {
 	 ## Look for the template
 	 $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot, $list);
 
-	 ## open file and provide filecontent to the parser
-	 ## It allows to us the correct file encoding
-	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
-	     &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_editfile: failed to open file %s: %s', $param->{'filepath'},$!);
-	     &web_db_log({'parameters' => $in{'file'},
-			  'status' => 'error',
-			  'error_type' => 'internal'});
-	     return undef;
+	 ## There might be no matching file if default template not provided with Sympa
+	 if (defined $param->{'filepath'}) {
+	     ## open file and provide filecontent to the parser
+	     ## It allows to us the correct file encoding
+	     unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
+		 &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		 &wwslog('err','do_editfile: failed to open file %s: %s', $param->{'filepath'},$!);
+		 &web_db_log({'parameters' => $in{'file'},
+			      'status' => 'error',
+			      'error_type' => 'internal'});
+		 return undef;
+	     }
+	     
+	     while (<FILE>) {
+		 $param->{'filecontent'} .= $_;
+	     }
+	     close FILE;
+	 }else {
+	     $param->{'filepath'} = $list->{'dir'}.'/'.$subdir.$file;
 	 }
-
-	 while (<FILE>) {
-	     $param->{'filecontent'} .= $_;
-	 }
-	 close FILE;
 	 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
@@ -6075,7 +6080,7 @@ sub do_viewmod {
 	 }
      }
 
-     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
+     if (-f $param->{'filepath'} && (! -r $param->{'filepath'})) {
 	 &report::reject_report_web('intern','cannot_read',{'filepath' => $param->{'filepath'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	 &wwslog('err','do_editfile: cannot read %s', $param->{'filepath'});
 	 &web_db_log({'parameters' => $in{'file'},

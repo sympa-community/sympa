@@ -1675,6 +1675,7 @@ sub duration_conv {
 }
 
 ## Look for a file in the list > robot > server > default locations
+## Possible values for $options : order=all
 sub get_filename {
     my ($type, $options, $name, $robot, $object) = @_;
     my $list;
@@ -1738,14 +1739,17 @@ sub get_filename {
 	    if (-r $f) {
 		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
+		}else {
+		    return $f;
 		}
-		return $f;
 	    }
 	}
-	return (@result) ;
+	if ($options->{'order'} eq 'all') {
+	    return @result ;
+	}
     }
     
-    &do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
+    #&do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
     return undef;
 }
 ####################################################

@@ -7642,8 +7642,10 @@ sub search{
 	my @files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list); 
 
 	## Raise an error except for blacklist.txt
-	unless ($filter_file eq 'blacklist.txt') {
-	    unless (@files) {
+	unless (@files) {
+	    if ($filter_file eq 'blacklist.txt') {
+		return -1;
+	    }else {
 		&do_log('err', 'Could not find search filter %s', $filter_file);
 		return undef;
 	    }
@@ -7653,7 +7655,7 @@ sub search{
 	foreach my $file (@files) {
 	    &do_log('debug3', 'List::search: found file  %s', $file);
 	    unless (open FILE, $file) {
-		&do_log('err', 'Could not openfile %s', $file);
+		&do_log('err', 'Could not open file %s', $file);
 		return undef;
 	    } 
 	    while (<FILE>) {
