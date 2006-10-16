@@ -192,7 +192,7 @@ my @params = ({'title' => 'Directories and file location'},
 	      {'title' => 'Tuning'},
 	      	      
 
-	      {'name' => 'cache\_list\_config',
+	      {'name' => 'cache_list_config',
 	       'default' => 'none',
 	       'query' => 'Use of binary version of the list config structure on disk: none | binary_file',
 	       'file' => 'sympa.conf','edit' => '1',
