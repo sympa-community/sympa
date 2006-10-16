@@ -27,7 +27,7 @@ require Exporter;
 use Sys::Syslog;
 use Carp;
 use POSIX qw/mktime/;
-
+use Encode;
 
 @ISA = qw(Exporter);
 @EXPORT = qw(fatal_err do_log do_openlog $log_level);
