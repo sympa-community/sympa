@@ -4889,8 +4889,8 @@ Check http://perldoc.perl.org/perlre.html for regular expression syntax.
 
 <action> ::=   do_it [,notify]
              | do_it [,quiet]
-	     | reject(reason=<reason_key>)
-	     | reject(tt2=<tpl_name>)
+	     | reject(reason=<reason_key>) [,quiet]
+	     | reject(tt2=<tpl_name>) [,quiet]
              | request_auth
              | owner
 	     | editor
