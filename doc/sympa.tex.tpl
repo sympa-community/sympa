@@ -7351,9 +7351,10 @@ you shoukd set the \cfkeyword {automatic\_list\_removal} parameter to \texttt {i
  \begin{verbatim}
 /home/sympa/etc/sympa.conf
     ...
+    automatic_list_feature  on
     automatic_list_creation public
     queueautomatic          [SPOOLDIR]/automatic
-    automatic_list_empty    delete
+    automatic_list_removal    if_empty
 \end{verbatim}
 \end {quote} 
 
