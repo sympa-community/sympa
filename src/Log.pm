@@ -60,6 +60,7 @@ sub fatal_err {
 sub do_log {
     my $fac = shift;
     my $m = shift;
+    my @param = @_;
 
     my $errno = $!;
     my $debug = 0;
@@ -67,8 +68,8 @@ sub do_log {
     my $level = 0;
 
     ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
-    foreach my $i (0..$#_) {
-	$_[$i] = Encode::encode($Conf::Conf{'filesystem_encoding'}, $_[$i]) if (&Encode::is_utf8($_[$i]));
+    foreach my $i (0..$#param) {
+	$param[$i] = Encode::encode($Conf::Conf{'filesystem_encoding'}, $param[$i]) if (&Encode::is_utf8($param[$i]));
     }
 
     $level = 1 if ($fac =~ /^debug$/) ;
@@ -81,15 +82,15 @@ sub do_log {
     # do not log if log level if too high regarding the log requested by user 
     return if ($level > $log_level);
 
-    unless (syslog($fac, $m, @_)) {
+    unless (syslog($fac, $m, @param)) {
 	&do_connect();
-	    syslog($fac, $m, @_);
+	    syslog($fac, $m, @param);
     }
     if ($main::options{'foreground'}) {
 	if ($main::options{'log_to_stderr'} || 
 	    ($main::options{'batch'} && $fac eq 'err')) {
 	    $m =~ s/%m/$errno/g;
-	    printf STDERR "$m\n", @_;
+	    printf STDERR "$m\n", @param;
 	}
     }    
 }
