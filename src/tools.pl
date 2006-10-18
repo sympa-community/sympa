@@ -1017,7 +1017,7 @@ sub escape_docname {
     my $except = shift; ## Exceptions
 
     ## Q-decode
-    $filename = MIME::Words::decode_mimewords($filename);
+    $filename = MIME::EncWords::decode_mimewords($filename);
 
     ## Decode from FS encoding to utf-8
     #$filename = &Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);

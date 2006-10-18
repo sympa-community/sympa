@@ -88,7 +88,7 @@ my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'fr_FR' => 'iso8859-1',
 		      'hu_HU' => 'iso8859-2',
 		      'it_IT' => 'iso8859-1',
-		      'ja_JP' => 'utf-8',
+		      'ja_JP' => 'eucJP', # Case sensitive.
 		      'nb_NO' => 'utf-8',
 		      'nl_NL' => 'iso8859-1',
 		      'oc_FR' => 'iso8859-1',		      

@@ -29,6 +29,9 @@ use Carp;
 #use strict;
 use POSIX;
 use Mail::Internet;
+use MIME::Charset;
+use MIME::Tools;
+use Version;
 use Conf;
 use Log;
 use Language;
@@ -173,24 +176,42 @@ sub mail_file {
 	}else{
 	    $to = $rcpt;
 	}   
-	$headers .= "To: ".MIME::Words::encode_mimewords($to, ('Encode' => 'Q', 'Charset' => $charset))."\n"; 
+	$headers .= "To: ".MIME::EncWords::encode_mimewords(
+	    $to,
+	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'To'
+	    )."\n"; 
     }     
     unless ($header_ok{'from'}) {
 	if ($data->{'from'} eq 'sympa') {
-	    $headers .= "From: ".MIME::Words::encode_mimewords((sprintf ("SYMPA <%s>",&Conf::get_robot_conf($robot, 'sympa'))), ('Encode' => 'Q', 'Charset' => $charset))."\n";
+	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
+		sprintf("SYMPA <%s>",&Conf::get_robot_conf($robot, 'sympa')),
+		'Encoding' => 'A', 'Charset' => "US-ASCII", 'Field' => 'From'
+		)."\n";
 	} else {
-	    $headers .= "From: ".MIME::Words::encode_mimewords($data->{'from'},('Encode' => 'Q', 'Charset' => $charset))."\n"; 
+	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
+		$data->{'from'},
+		'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'From'
+		)."\n"; 
 	}
    }
     unless ($header_ok{'subject'}) {
-	$headers .= "Subject: ".MIME::Words::encode_mimewords($data->{'subject'},('Encode' => 'Q', 'Charset' => $charset))."\n";
+	$headers .= "Subject: ".MIME::EncWords::encode_mimewords(
+	    $data->{'subject'},
+	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Subject'
+	    )."\n";
    }
     unless ($header_ok{'reply-to'}) { 
-	$headers .= "Reply-to: ".MIME::Words::encode_mimewords($data->{'replyto'},('Encode' => 'Q', 'Charset' => $charset))."\n" if ($data->{'replyto'})
+	$headers .= "Reply-to: ".MIME::EncWords::encode_mimewords(
+	    $data->{'replyto'},
+	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Reply-to'
+	    )."\n" if ($data->{'replyto'})
     }
     if ($data->{'headers'}) {
 	foreach my $field (keys %{$data->{'headers'}}) {
-	    $headers .= $field.': '.MIME::Words::encode_mimewords($data->{'headers'}{$field},('Encode' => 'Q', 'Charset' => $charset))."\n";
+	    $headers .= $field.': '.MIME::EncWords::encode_mimewords(
+		$data->{'headers'}{$field},
+		'Encoding' => 'A', 'Charset' => $charset, 'Field' => $field
+		)."\n";
 	}
     }
     unless ($header_ok{'mime-version'}) {
@@ -208,7 +229,9 @@ sub mail_file {
 	$headers .= "\n";
    }
    
-    $message = "$headers"."$message";
+    unless ($message = &reformat_message("$headers"."$message")) {
+	&do_log('err', "mail::mail_file: Failed to reformat message");
+    }
 
     my $listname = '';
     if (ref($data->{'list'}) eq "HASH") {
@@ -443,8 +466,8 @@ sub sendto {
 
     my $msg;
 
-    ## Encode subject before sending
-    $msg_header->replace('Subject', MIME::Words::encode_mimewords($msg_header->get('Subject')));
+    #XXX## Encode subject before sending
+    #XXX$msg_header->replace('Subject', MIME::Words::encode_mimewords($msg_header->get('Subject')));
 
     if ($encrypt eq 'smime_crypted') {
 	my $email ;
@@ -741,13 +764,110 @@ sub send_in_spool {
 
 #####################################################################
 
+
+####################################################
+# reformat_message
+####################################################
+# Reformat bodies of text parts contained in the message using
+# recommended encoding schema and/or charsets defined by MIME::Charset.
+#
+# MIME-compliant headers are appended / modified.  And custom X-Mailer:
+# header is appended :).
+#
+# IN : $msg: ref(MIME::Entity) | string - message to reformat
+# OUT : string
+#
+####################################################
+
+sub reformat_message($) {
+    my $message = shift;
+    my $msg;
+
+    if (ref($message) eq 'MIME::Entity') {
+	$msg = $message;
+    } else {
+	my $parser = new MIME::Parser;
+
+	unless (defined $parser) {
+	    &do_log('err', "mail::reformat_message: Failed to create MIME parser");
+	    return undef;
+	}
+
+	$parser->output_to_core(1);
+	$parser->ignore_errors(1);
+	eval {
+	    $msg = $parser->parse_data($message);
+	};
+	if ($@) {
+	    &do_log('err', "mail::reformat_message: Failed to parse MIME data");
+	    return undef;
+	}
+    }
+
+    $msg->head->delete("X-Mailer");
+    $msg = &fix_part($msg);
+    $msg->head->add("X-Mailer", sprintf "Sympa %s", $Version::Version);
+    $msg->sync_headers(Length => 'COMPUTE');
+    return $msg->as_string;
+}
+
+sub fix_part($) {
+    my $part = shift;
+    return $part unless $part;
+
+    my $enc = $part->head->mime_attr("Content-Transfer-Encoding");
+    # Parts with nonstandard encodings aren't modified.
+    return $part
+	if $enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i;
+
+    my $eff_type = $part->effective_type;
+
+    if ($part->parts) {
+	my @newparts = ();
+	foreach ($part->parts) {
+	    push @newparts, &fix_part($_);
+	}
+	$part->parts(\@newparts);
+    } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
+	# multipart or message types without subparts.
+	return $part;
+    } elsif (MIME::Tools::textual_type($eff_type)) {
+	my $bodyh = $part->bodyhandle;
+	# Encoded body or null body won't be modified.
+	return $part if !$bodyh or $bodyh->is_encoded;
+
+	my $head = $part->head;
+	my $body = $bodyh->as_string;
+	my $charset = $head->mime_attr("Content-Type.Charset");
+
+	my ($newbody, $newcharset, $newenc) = 
+	    MIME::Charset::body_encode($body, $charset);
+	if ($newenc eq $enc and $newcharset eq $charset and
+	    $newbody eq $body) {
+	    return $part;
+	}
+
+	# Fix headers and body.
+	$head->mime_attr("Content-Type", "TEXT/PLAIN")
+	    unless $head->mime_attr("Content-Type");
+	$head->mime_attr("Content-Type.Charset", $newcharset);
+	$head->mime_attr("Content-Transfer-Encoding", $newenc);
+	$head->add("MIME-Version", "1.0") unless $head->get("MIME-Version"); 
+	my $io = $bodyh->open("w");
+
+	unless (defined $io) {
+	    &do_log('err', "mail::reformat_message: Failed to save message : $!");
+	    return undef;
+	}
+
+	$io->print($newbody);
+	$io->close;
+    } else {
+	# Binary or text with long lines will be suggested to be BASE64.
+	$part->head->mime_attr("Content-Transfer-Encoding",
+			       $part->suggested_encoding);
+    }
+    return $part;
+}
+
 1;
-
-
-
-
-
-
-
-
-

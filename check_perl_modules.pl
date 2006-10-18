@@ -33,7 +33,7 @@ use CPAN;
 	     'DBD::Sybase' => '0.90',
 	     'DBD::mysql' => '2.0407',
 	     'FCGI' => '0.67',
-	     'MIME::Tools' => '5.209',
+	     'MIME::Tools' => '5.419',
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
 	     'CGI' => '2.52',
@@ -47,6 +47,8 @@ use CPAN;
 	     'MHonArc::UTF8' => '2.6.0',
 	     'MIME::Base64' => '3.03',
 	     'Crypt::OpenSSL::X509' => '0.3.1',
+	     'MIME::Charset' => '0.04',
+	     'MIME::EncWords' => '0.02',
 	     );
 
 ### key:left "module" used by SYMPA, 
@@ -71,6 +73,8 @@ use CPAN;
 	     'DBD::mysql' => 'Msql-Mysql-modules',
 	     'Crypt::CipherSaber' => 'CipherSaber',
 	     'Encode' => 'Encode',
+	     'MIME::Charset' => 'MIME-Charset',
+	     'MIME::EncWords' => 'MIME-EncWords',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',

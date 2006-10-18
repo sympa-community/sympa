@@ -35,7 +35,7 @@ use Digest::MD5;
 use Fcntl;
 use DB_File;
 use Time::Local;
-use MIME::Words;
+use MIME::EncWords;
 
 require 'tools.pl';
 
@@ -193,7 +193,7 @@ sub help {
 	$data->{'is_editor'} = 1 if ($#editor > -1);
 	$data->{'user'} =  &List::get_user_db($sender);
 	&Language::SetLang($data->{'user'}{'lang'}) if $data->{'user'}{'lang'};
-	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf gettext("User guide"));
+	$data->{'subject'} = gettext("User guide");
 
 	unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
 	    &do_log('notice',"Unable to send template 'helpfile' to $sender");
@@ -209,7 +209,7 @@ sub help {
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'subject'} = sprintf gettext("User guide");
+	$data->{'subject'} = gettext("User guide");
 	unless (&List::send_global_file("helpfile", $sender, $robot, $data)){
 	    &do_log('notice',"Unable to send template 'helpfile' to $sender");
 	    &report::reject_report_cmd('intern_quiet','',{},$cmd_line,$sender,$robot);

@@ -27,7 +27,7 @@ use SQLSource qw(create_db %date_format);
 use Upgrade;
 require Fetch;
 require Exporter;
-#require Encode;
+require Encode;
 require 'tools.pl';
 require "--LIBDIR--/tt2.pl";
 
@@ -228,7 +228,7 @@ use mail;
 use Ldap;
 use Time::Local;
 use MIME::Entity;
-use MIME::Words;
+use MIME::EncWords;
 use MIME::WordDecoder;
 use MIME::Parser;
 use Message;
@@ -2345,9 +2345,16 @@ sub distribute_msg {
 	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
 	
 	## Search previous subject tagging in Subject
-	my $tag_regexp = $self->{'admin'}{'custom_subject'};
+	my $custom_subject = $self->{'admin'}{'custom_subject'};
+
+	## Should not be useful since config file is loaded as UTF-8
+	#$custom_subject = Encode::decode("UTF-8", $custom_subject)
+	#    unless Encode::is_utf8($custom_subject);
+
+	my $tag_regexp = $custom_subject;
 	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
 	$tag_regexp =~ s/\[\S+\]/\.\+/g;
+	$tag_regexp =~ s/\s+/\\s+/g; ## consider folding
 	
 	## Add subject tag
 	$message->{'msg'}->head->delete('Subject');
@@ -2355,16 +2362,15 @@ sub distribute_msg {
 	&parser::parse_tpl({'list' => {'name' => $self->{'name'},
 				       'sequence' => $self->{'stats'}->[0]
 				       }},
-			   [$self->{'admin'}{'custom_subject'}], \@parsed_tag);
+			   [$custom_subject], \@parsed_tag);
 	
 	## If subject is tagged, replace it with new tag
-	if ($subject_field =~ /\[$tag_regexp\]/) {
-	    $subject_field =~ s/\[$tag_regexp\]/\[$parsed_tag[0]\]/;
-	}else {
-	    $subject_field = '['.$parsed_tag[0].'] '.$subject_field;
-	}
+	$subject_field =~ s/\s*\[$tag_regexp\]//;
  	## Encode subject using initial charset
- 	$subject_field = MIME::Words::encode_mimewords($subject_field, ('Encode' => 'Q', 'Charset' => $message->{'subject_charset'}));
+ 	$subject_field = MIME::EncWords::encode_mimewords([
+	    ['['.$parsed_tag[0].'] ', gettext("_charset_")],
+	    [$subject_field, $message->{'subject_charset'}]
+	    ], Encoding=>'A', Field=>'Subject');
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }
