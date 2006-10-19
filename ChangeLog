@@ -1,3 +1,132 @@
+2006-10-19 15:54  sympa-authors
+
+	* po/fr.po: Fix: changed moderateur to modérateur
+
+2006-10-19 15:44  sympa-authors
+
+	* po/ja.po: [Soji Ikeda] Change: PO file is now EUC-JP encoded
+
+2006-10-19 10:55  sympa-authors
+
+	* web_tt2/login_menu.tt2: Fixed typo
+
+2006-10-19 10:34  sympa-authors
+
+	* web_tt2/: edit_list_request.tt2, login_menu.tt2: [S.Amrani, Gend.
+	  Nationale] Fix typos ; related to accessibility work
+
+2006-10-18 12:07  sympa-authors
+
+	* check_perl_modules.pl, src/Commands.pm, src/Language.pm,
+	  src/List.pm, src/Message.pm, src/mail.pm, src/tools.pl,
+	  src/tt2.pl: [Soji Ikeda] Changes: Sympa now uses new Perl modules
+	  MIME::Charset and MIME::EncWords to encode characters. These
+	  modules are alternatives for MIME::Words with better handling of
+	  multibyte charsets.
+
+2006-10-18 11:29  sympa-authors
+
+	* src/Log.pm: Fix: do_log() would modify parameters by reference,
+	  now using an intermediate variable to preserve original
+	  parameters from being decoded
+
+2006-10-18 11:23  sympa-authors
+
+	* po/en_US.po: Fixed language name
+
+2006-10-17 14:06  sympa-authors
+
+	* doc/sympa.tex.tpl: Added reject,quiet documentation
+
+2006-10-17 10:41  sympa-authors
+
+	* po/fr.po: Removed fuzzy tag
+
+2006-10-17 09:10  sympa-authors
+
+	* doc/sympa.tex.tpl: [S.Amrani] Fixed example for automatic lists
+
+2006-10-16 16:36  sympa-authors
+
+	* mail_tt2/send_auth.tt2: [Reported by M.Larchet, Univ Nancy 2]
+	  Fix: subject of confirmation message was localized
+
+2006-10-16 16:22  sympa-authors
+
+	* src/sympa_wizard.pl: [BugID 1102][reported by R.Roessner] Fix:
+	  sympa_wizard.pl failed because of a typo
+
+2006-10-16 15:29  sympa-authors
+
+	* po/cs.po, po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/it.po, po/ja.po, po/nb_NO.po,
+	  po/nl.po, po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po,
+	  po/sv.po, po/sympa.pot, po/tr.po, po/zh_CN.po, po/zh_TW.po,
+	  web_tt2/pref.tt2: Updated PO files
+
+2006-10-16 15:25  sympa-authors
+
+	* src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi: Fix: could not
+	  edit message.header and message.footer from the admin web
+	  interface The tools::get_filename() sub did not return the right
+	  structure ; it should return an empty array if expected
+
+2006-10-16 10:41  sympa-authors
+
+	* src/Log.pm: Direct inclusion of the Encode module
+
+2006-10-13 08:15  serge.aumont
+
+	* soap/sympasoap.pm: remove logs that include password !
+
+2006-10-12 17:15  sympa-authors
+
+	* po/en_US.po: [J.B.Gemmill, Univ. Alabama at Birmingham] Changes:
+	  Revised version of English translations.
+
+2006-10-12 15:14  sympa-authors
+
+	* web_tt2/compose_mail.tt2, wwsympa/wwsympa.fcgi: [Reported by
+	  P.Farmer] Fix: topics tagging was not proposed from the "Post"
+	  page.
+
+2006-10-12 14:57  sympa-authors
+
+	* NEWS: insist on the new upgrade procedure
+
+2006-10-12 14:17  sympa-authors
+
+	* NEWS: Minor fix
+
+2006-10-12 13:53  sympa-authors
+
+	* aclocal.m4: Updated Makefiles
+
+2006-10-12 12:14  sympa-authors
+
+	* ChangeLog, src/Upgrade.pm, src/tools.pl, src/tt2.pl,
+	  wwsympa/wwsympa.fcgi: Fix: q-encoding of shared documents
+	  filenames has been fixed :  - Encode::Guess now uses list lang  -
+	  prevent problems with Encode (words) ; now using lower layer
+	  subroutine
+
+2006-10-12 11:58  sympa-authors
+
+	* wwsympa/bounced.pl: Fixed typo
+
+2006-10-11 17:14  sympa-authors
+
+	* web_tt2/arcsearch.tt2: Reapply patch lost while merging
+	  Accessibility to main branch
+
+2006-10-10 16:51  sympa-authors
+
+	* src/Upgrade.pm: Fix: if installing older version, nothing to do
+
+2006-10-10 15:43  serge.aumont
+
+	* soap/sympa.wsdl: fix wrong wsdl XML definition
+
 2006-10-10 14:24  sympa-authors
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
