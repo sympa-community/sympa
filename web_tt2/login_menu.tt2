@@ -43,7 +43,7 @@
         <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="action" value="sso_login" />
           [% IF sso_number == 1 %]
-     	    <div class="menuInactive2"><strong>[%|loc%]Magic authentification[%END%]</strong></div>
+     	    <div class="menuInactive2"><strong>[%|loc%]Magic authentication[%END%]</strong></div>
             [% FOREACH server = sso %]
               <input type="hidden" name="auth_service_name" value="[% server.key %]" />
             [% END %]
