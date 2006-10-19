@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {06 October 2006}
+    \date {17 October 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1218,9 +1218,10 @@ messages distribution.
   information. Each function call is traced. Useful while reporting
   a bug.
 
-\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message}
+\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message} | \textit {process\_creation}
   
-  Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
+  Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command) or to process 
+  list creation requests (process\_creation)
   
 \item \option {- - config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
@@ -2027,6 +2028,14 @@ The maximum size of the uploaded picture file (bytes)
 
         \example {create\_list intranet}
 
+\subsection {\cfkeyword {automatic\_list\_feature}}
+
+ \default {off}
+ \example {automatic\_list\_feature       on}
+
+        If set to \texttt {on}, Sympa will enable automatic list creation through family instantiation
+	(see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
+
 \subsection {\cfkeyword {automatic\_list\_creation}}  
 
 	\label{automatic-list-creation-param}
@@ -2035,13 +2044,17 @@ The maximum size of the uploaded picture file (bytes)
 
 	\scenarized {automatic\_list\_creation}
 
-	If set, Sympa will enable automatic list creation thru family instantiation
-	(see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
-	Sympa will use the corresponding authorization scenario.
+	If \cfkeyword {automatic\_list\_feature} is activated, this parameter (corresponding to an authorization scenario) 
+	defines who is allowed to use the automatic list creation feature.
 	
-	Set to \texttt{none} (default) to disable this feature.
+\subsection {\cfkeyword {automatic\_list\_removal}}
 
-        \example {automatic\_list\_creation listmaster}
+ \default {}
+ \example {automatic\_list\_feature       if_empty}
+
+        If set to \texttt {if_empty}, then Sympa will remove automatically created mailing lists just after their creartion, if they contain no list
+	membe (see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
+
 
 \subsection {\cfkeyword {global\_remind}}  
 
@@ -4534,8 +4547,8 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 <message name="addRequest">
 	<part name="list" type="xsd:string"/>		
 	<part name="email" type="xsd:string"/>
-	<part name="gecos" type="xsd:string"  xsd:minOccurs="0"//>	
-	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
+	<part name="gecos" type="xsd:string"  xsd:minOccurs="0"/>	
+	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"/>	
 </message>
 
 
@@ -4546,7 +4559,7 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 <message name="delRequest">
 	<part name="list" type="xsd:string"/>		
 	<part name="email" type="xsd:string"/>
-	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"//>	
+	<part name="quiet" type="xsd:boolean"  xsd:minOccurs="0"/>	
 </message>
 
 
@@ -5813,8 +5826,8 @@ Check http://perldoc.perl.org/perlre.html for regular expression syntax.
 
 <action> ::=   do_it [,notify]
              | do_it [,quiet]
-	     | reject(reason=<reason_key>)
-	     | reject(tt2=<tpl_name>)
+	     | reject(reason=<reason_key>) [,quiet]
+	     | reject(tt2=<tpl_name>) [,quiet]
              | request_auth
              | owner
 	     | editor
@@ -8188,7 +8201,7 @@ Note : In order to preserve list customization for instantiation, every modified
 
 A mail addressed to \textit {auto-cto.50@lists.domain.com} will be queued to the \dir {/usr/local/sympa-os/spool/automatic} spool, 
 defined by the \cfkeyword {queueautomatic} \file {sympa.conf} parameter (see \ref {kw-queueautomatic}, page~\pageref {kw-queueautomatic}).
-The mail will first be processed by an instance of \file {sympa.pl} dedicated to automatic list creation, then the mail
+The mail will first be processed by an instance of \file {sympa.pl} process dedicated to automatic list creation, then the mail
 will be sent to the newly created mailing list.
 
 \subsection {Defining the list family}
@@ -8234,12 +8247,15 @@ from the TT2 language capabilities. We define on-the-fly the LDAP source, thanks
 \end{verbatim}
 \end {quote} 
 
+The main variable you get is the name of the current mailing list via the \textbf {listname} variable as used in the example above.
+
 \subsection {Configuring Sympa}
 
 Now we need to enable automatic list creation in Sympa. To do so, we have to 
 \begin {itemize}
 
-  \item set the \cfkeyword {automatic\_list\_creation} \file {sympa.conf} parameter to an existing automatic\_list\_creation scenario,
+  \item set the \cfkeyword {automatic\_list\_feature} parameter to \texttt {on} and define who can create automatic lists via
+  the \cfkeyword {automatic\_list\_creation} (points to an automatic\_list\_creation scenario).
 
   \item set the \cfkeyword {queueautomatic} \file {sympa.conf} parameter to the spool location where we want these messages to
   be stored (it has to be different from the \dir {/usr/local/sympa-os/spool/msg} spool).
@@ -8247,15 +8263,16 @@ Now we need to enable automatic list creation in Sympa. To do so, we have to
 \end {itemize}
 
 You can make Sympa delete automatic lists that were created with zero list members ; to do so
-you shoukd set the \cfkeyword {automatic\_list\_empty} parameter to \texttt {delete}.
+you shoukd set the \cfkeyword {automatic\_list\_removal} parameter to \texttt {if_empty}.
 
  \begin {quote}
  \begin{verbatim}
 /home/sympa/etc/sympa.conf
     ...
+    automatic_list_feature  on
     automatic_list_creation public
     queueautomatic          /usr/local/sympa-os/spool/automatic
-    automatic_list_empty    delete
+    automatic_list_removal    if_empty
 \end{verbatim}
 \end {quote} 
 
