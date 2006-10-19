@@ -107,10 +107,11 @@
                                           <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                             [% FOREACH enum = key.value %]
                                               <option value="[% enum.key %]"
-                                              [% IF enum.value.selected == '1' %]
+                                              [%- IF enum.value.selected == '1' -%]
                                                 selected="selected"
-                                              [% END %]
+                                              [%- END -%]
                                               >[% enum.key %]
+                                              </option>
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
