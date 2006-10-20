@@ -238,21 +238,24 @@ sub maketext {
 }
 
 sub gettext {
-    &do_log('debug3', 'Language::gettext(%s)', $_[0]);
+    my @param = @_;
+
+    &do_log('debug3', 'Language::gettext(%s)', $param[0]);
 
     ## This prevents meta information to be returned if the string to translate is empty
-    if ($_[0] eq '') {
+    if ($param[0] eq '') {
 	return '';
 	
 	## return meta information on the catalogue (language, charset, encoding,...)
-    }elsif ($_[0] =~ '^_(\w+)_$') {
+    }elsif ($param[0] =~ '^_(\w+)_$') {
 	my $var = $1;
 	foreach (split /\n/,&Locale::Messages::gettext('')) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
 		    my $language = $1;
 		    $language =~ s/\<\S+\>//;
-		    return $language;
+
+		    return &Encode::decode($current_charset, $language);
 		}
 	    }elsif ($var eq 'charset') {
 		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
@@ -267,8 +270,8 @@ sub gettext {
 	return '';
     }
 
-    ## Decode from catalog encoding
-    my $translation = &Encode::decode($current_charset, &Locale::Messages::gettext(@_));
+    ## Decode from catalog encoding    
+    my $translation = &Encode::decode($current_charset, &Locale::Messages::gettext(@param));
 
     return $translation;
 
