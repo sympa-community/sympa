@@ -2044,7 +2044,7 @@ sub distribute {
 	&do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $hdr->get('Message-Id'), $bytes);
 
 	unless ($quiet) {
-	    unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $which,'key' => $key},$robot,$list)) {
+	    unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $which,'key' => $key,'message' => $message},$robot,$list)) {
 		&do_log('notice',"Commands::distribute(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 	    }
 	}
@@ -2059,7 +2059,7 @@ sub distribute {
 	    return undef;
 	}
 	unless ($quiet) {
-	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key},$robot,$list);
+	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key,'message' => $message},$robot,$list);
 	}
 	&do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
     }
@@ -2146,7 +2146,7 @@ sub confirm {
 
     unless (defined $action) {
 	&do_log('err', 'Commands::confirm(): message (%s) ignored because unable to evaluate scenario for list %s',$messageid,$name);
-	&report::reject_report_msg('intern','Message ignored because scenario "send" cannot be evaluated',$sender,{'msg_id' => $msgid},
+	&report::reject_report_msg('intern','Message ignored because scenario "send" cannot be evaluated',$sender,{'msg_id' => $msgid,'message' => $message},
 				  $robot,$msg_string,$list);
 	return undef ;
     }
@@ -2156,14 +2156,14 @@ sub confirm {
 
 	unless (defined $key) {
 	    &do_log('err','Commands::confirm(): Calling to send_to_editor() function failed for user %s in list %s', $sender, $name);
-	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
+	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $msgid,'message' => $message},$robot,$msg_string,$list);
 	    return undef
 	}
 
 	&do_log('info', 'Message with key %s for list %s from %s sent to editors', $key, $name, $sender);
 
 	unless ($2 eq 'quiet') {
-	    unless (&report::notice_report_msg('moderating_message',$sender,{},$robot,$list)) {
+	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&do_log('notice',"Commands::confirm(): Unable to send template 'message_report', entry 'moderating_message' to $sender");
 	    }
 	}
@@ -2174,14 +2174,14 @@ sub confirm {
 
 	unless (defined $key) {
 	    &do_log('err','Commands::confirm(): Calling to send_to_editor() function failed for user %s in list %s', $sender, $name);
-	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
+	    &report::reject_report_msg('intern','The request moderation sending to moderator failed.',$sender,{'msg_id' => $msgid,'message' => $message},$robot,$msg_string,$list);
 	    return undef
 	}
 
 	&do_log('info', 'Message with key %s for list %s from %s sent to editors', $name, $sender);
 	
 	unless ($2 eq 'quiet') {
-	    unless (&report::notice_report_msg('moderating_message',$sender,{},$robot,$list)) {
+	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&do_log('notice',"Commands::confirm(): Unable to send template 'message_report', type 'success', entry 'moderating_message' to $sender");
 	    }
 	}
@@ -2193,10 +2193,10 @@ sub confirm {
 	    if (defined $result->{'tt2'}) {
 		unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
 		    &do_log('notice',"Commands::confirm(): Unable to send template '$result->{'tt2'}' to $sender");
-		    &report::reject_report_msg('auth',$result->{'reason'},$sender,{},$robot,$msg_string,$list);
+		    &report::reject_report_msg('auth',$result->{'reason'},$sender,{'message' => $message},$robot,$msg_string,$list);
 		}
 	    }else {
-		unless (&report::reject_report_msg('auth',$result->{'reason'},$sender,{},$robot,$msg_string,$list)) {
+		unless (&report::reject_report_msg('auth',$result->{'reason'},$sender,{'message' => $message},$robot,$msg_string,$list)) {
 		    &do_log('notice',"Commands::confirm(): Unable to send template 'message_report', type 'auth' to $sender");
 		}
 	    }
@@ -2213,12 +2213,12 @@ sub confirm {
 
 	    unless (defined $numsmtp) {
 		&do_log('err','Commands::confirm(): Unable to send message to list %s', $list->{'name'});
-		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
+		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid,'message' => $message},$robot,$msg_string,$list);
 		return undef;
 	    }
  
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		unless (&report::notice_report_msg('message_confirmed',$sender,{'listname' => $list->{'name'},'key' => $key},$robot,$list)) {
+		unless (&report::notice_report_msg('message_confirmed',$sender,{'listname' => $list->{'name'},'key' => $key,'message' => $message},$robot,$list)) {
 		    &do_log('notice',"Commands::confirm(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 		}
 	    }
@@ -2228,11 +2228,11 @@ sub confirm {
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
 	    unless ($list->move_message($file, $Conf{'queuedistribute'})){
 		&do_log('err','Commands::confirm(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
-		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid},$robot,$msg_string,$list);
+		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid,'message' => $message},$robot,$msg_string,$list);
 		return undef;
 	    }
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $list->{'name'},'key' => $key},$robot,$list);
+		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $list->{'name'},'key' => $key,'message' => $message},$robot,$list);
 	    }
 
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
@@ -2332,11 +2332,11 @@ sub reject {
 	## Notify author of message
 	unless ($list->send_file('reject', $rejected_sender, $robot, \%context)){
 	    &do_log('notice',"Unable to send template 'reject' to $rejected_sender");
-	    &report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'}},$robot,'',$list);	    
+	    &report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'},'message' => $msg},$robot,'',$list);	    
 	}
 
 	## Notify list moderator
-	unless (&report::notice_report_msg('message_rejected', $sender, {'listname' => $which,'key' => $key}, $robot, $list)) {
+	unless (&report::notice_report_msg('message_rejected', $sender, {'listname' => $which,'key' => $key,'message' => $msg}, $robot, $list)) {
 	    &do_log('err',"Commands::reject(): Unable to send template 'message_report', entry 'message_rejected' to $sender");
 	}
 
