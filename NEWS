@@ -138,6 +138,9 @@
 
 ***** 	Change: default for css_path is now relative to static_content_path.  
 *****   CSS files are now AUTOMATICALLY updated by sympa.pl if a new css.tt2 has been installed.
+*****	You NEED to add an Alias directive in your Apache config file, as folows :
+*****		Alias /static-sympa /home/sympa/static_content
+
 
 	web_tt2/arcsearch.tt2: [A.Bernstein] [ID 899] Minor bugs and cosmetic improvements 
 	in archive search results 
