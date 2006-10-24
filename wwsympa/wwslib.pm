@@ -255,20 +255,24 @@ sub load_mime_types {
 ## Returns user information extracted from the cookie
 sub get_email_from_cookie {
 #    &Log::do_log('debug', 'get_email_from_cookie');
+    my $cookie = shift;
     my $secret = shift;
+
     my ($email, $auth) ;
 
-    unless ($secret) {
+    # &Log::do_log('info', "get_email_from_cookie($cookie,$secret)");
+    
+    unless (defined $secret) {
 	&report::reject_report_web('intern','cookie_error',{},'','','',$robot);
-	&Log::do_log('info', 'parameter cookie undefine, authentication failure');
+	&Log::do_log('info', 'parameter cookie undefined, authentication failure');
     }
 
-    unless ($ENV{'HTTP_COOKIE'}) {
-	&report::reject_report_web('intern','cookie_error_env',{'env'=> ENV{HTTP_COOKIE}},'get_email_from_cookie','','',$robot);
-	&Log::do_log('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
+    unless ($cookie) {
+	&report::reject_report_web('intern','cookie_error',$cookie,'get_email_from_cookie','','',$robot);
+	&Log::do_log('info', ' cookie undefined, authentication failure');
     }
 
-    ($email, $auth) = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret);
+    ($email, $auth) = &cookielib::check_cookie ($cookie, $secret);
     unless ( $email) {
 	&report::reject_report_web('user','auth_failed',{},'');
 	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);

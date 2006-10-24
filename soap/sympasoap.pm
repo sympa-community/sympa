@@ -265,22 +265,67 @@ sub authenticateAndRun {
 
     &do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $cookie, $service, join(',',@$parameters));
 
-    unless ($email and $cookie and $service) {
+    unless ($cookie and $service) {
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <email> <cookie> <service>');
     }
+    my $auth ;
+    
+    if ($email == 'unkown') {
+	($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
+	do_log('debug','get email from cookie : %s',$email);
+	unless ($email or ($email eq 'unkown')  ) {
+	    die SOAP::Fault->faultcode('Client')
+		->faultstring('Could not get email from cookie')
+		->faultdetail('');
+	}
+    }
 
-    unless (&cookielib::get_mac($email, $Conf::Conf{'cookie'}) eq $cookie) {
+    my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
+#    unless (&cookielib::get_mac($email, $Conf::Conf{'cookie'}) eq $cookie) {
+    unless ($cookie =~ /$checksum/) {
 	&do_log('notice', "authenticateAndRun(): authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
-	    ->faultdetail("Incorrect cookie $cookie for user $email");
+	    ->faultdetail("Incorrect cookie $cookie for user $email (checksum : $checksum)");
     }
 
     $ENV{'USER_EMAIL'} = $email;
 
     &{$service}($self,@$parameters);
+}
+## request user email from http cookie
+##
+sub getUserEmailByCookie {
+    my ($self, $cookie) = @_;
+
+    &do_log('notice','get_user_attributs_from_cookie(%s)', $cookie);
+    
+    unless ($cookie) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect  parameter')
+	    ->faultdetail('Use : <cookie>');
+    }
+    my $auth,$email ;
+    
+    ($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
+    do_log('debug','getUserEmailByCookie : %s',$email);
+    unless ($email or ($email eq 'unkown')  ) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Could not get email from cookie')
+	    ->faultdetail('');
+    }
+    
+    my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
+    unless ($cookie =~ /$checksum/) {
+	&do_log('notice', "getUserEmailByCookie(): invalid cookie");
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authentification failed')
+	    ->faultdetail("Incorrect cookie $cookie for user $email");
+    }
+    return SOAP::Data->name('result')->type('string')->value($email);
+    
 }
 ## Used to call a service from a remote proxy application
 ## First parameter is the application name as defined in the trusted_applications.conf file
@@ -1225,6 +1270,7 @@ sub subscribe {
       
       return SOAP::Data->name('result')->type('boolean')->value(1);
   }
+
   
   &Log::do_log('info', 'SOAP subscribe : %s from %s aborted, unknown requested action in scenario',$listname,$sender);
   die SOAP::Fault->faultcode('Server')
@@ -1322,9 +1368,7 @@ sub which {
 	}else {
 	    $listInfo = struct_to_soap($result_item, 'as_string');
 	}
-
-	push @result, $listInfo;
-	
+	push @result, $listInfo;	
     }
     
 #    return SOAP::Data->name('return')->type->('ArrayOfString')->value(\@result);
@@ -1350,7 +1394,7 @@ sub struct_to_soap {
 	    ## Decode from the current charset to perl internal charset
 	    ## Then encode strings to UTF-8
 	    if (require "Encode.pm") {
-		$one_data = &Encode::decode(gettext("_charset_"), $one_data);
+		# $one_data = &Encode::decode(gettext("_charset_"), $one_data);
 		$one_data = &Encode::encode('utf-8', $one_data);
 	    }
 

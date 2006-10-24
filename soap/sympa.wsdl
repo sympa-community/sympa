@@ -159,6 +159,14 @@
 	<part name="return" type="xsd:string"/>	
 </message>
 
+<message name="getUserEmailByCookieRequest
+	<part name="cookie" type="xsd:string"/>
+</message>
+
+<message name="getUserEmailByCookieResponse">
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>
+</message>
+
 <message name="authenticateAndRunRequest">
 	<part name="email" type="xsd:string"/>
 	<part name="cookie" type="xsd:string"/>
@@ -167,7 +175,7 @@
 </message>
 
 <message name="authenticateAndRunResponse">
-	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>
 </message>
 
 <message name="authenticateRemoteAppAndRunRequest">
@@ -268,6 +276,10 @@
 	<operation name="casLogin">
 		<input message="tns:casLoginRequest" />
 		<output message="tns:casLoginResponse" />
+	</operation>
+	<operation name="getUserEmailByCookie">
+		<input message="tns:getUserEmailByCookieRequest" />
+		<output message="tns:getUserEmailByCookieResponse" />
 	</operation>
 	<operation name="authenticateAndRun">
 		<input message="tns:authenticateAndRunRequest" />
@@ -415,6 +427,19 @@
 	</operation>
 	<operation name="casLogin">
 		<soap:operation soapAction="urn:sympasoap#casLogin"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="getUserEmailByCookie">
+		<soap:operation soapAction="urn:sympasoap#getUserEmailByCookie"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

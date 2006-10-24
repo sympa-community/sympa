@@ -109,11 +109,14 @@ processus where authentication may differ from classic web method. The following
 <UL>
 <LI>The client first ask for a login and later service request provide the <TT>sympa-user</TT> cookie.
 </LI>
+<LI>The client authenticate the end user providing the <TT>sympa-user</TT> http cookie. This can be used in order to share the an authenticated session betwing Sympa
+and some other application running on the same server as wwsympa. The soap method used is <TT>getUserEmailByCookieRequest</TT>.
+</LI>
 <LI>The client provide user email and password and request a service in a single soap access using the <TT>authenticateAndRun</TT> soap service.
 </LI>
 <LI>The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
          Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in
-         a configuration file name  <A NAME="9448"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">12.4</A> page&nbsp;<A HREF="node13.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+         a configuration file name  <A NAME="9450"></A><TT>trusted_applications.conf</TT>. See <A HREF="#trustedapplications">12.4</A> page&nbsp;<A HREF="node13.html#trustedapplications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 </LI>
 </UL>
 
@@ -137,9 +140,9 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="9451"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
-	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
+Here is a sample piece of your Apache <A NAME="9453"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+	FastCgiServer /usr/local/sympa-sa/bin/sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap /usr/local/sympa-sa/bin/sympa_soap_server.fcgi
 
 	&lt;Location /sympasoap&gt;
    	  SetHandler fastcgi-script
@@ -153,8 +156,8 @@ Here is a sample piece of your Apache <A NAME="9451"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only mandatory parameter you need to set in <A NAME="9454"></A><TT>sympa.conf</TT>/<A NAME="9457"></A><TT>robot.conf</TT> files is
-the <A NAME="9460"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
+The only mandatory parameter you need to set in <A NAME="9456"></A><TT>sympa.conf</TT>/<A NAME="9459"></A><TT>robot.conf</TT> files is
+the <A NAME="9462"></A><TT>soap_url</TT> that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -171,29 +174,29 @@ also for the SOAP server to deduce what Virtual Host is concerned by the current
 </H1>
 
 <P>
-The SOAP service <A NAME="9463"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
+The SOAP service <A NAME="9465"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
 
 <P>
-This configuration file <A NAME="9466"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9469"></A><TT>etc/</TT> subdirectory or in <A NAME="9472"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9475"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9478"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9481"></A><TT>trusted_application</TT>. A sample <A NAME="9484"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+This configuration file <A NAME="9468"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9471"></A><TT>etc/</TT> subdirectory or in <A NAME="9474"></A><TT>/usr/local/sympa-sa/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9477"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9480"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9483"></A><TT>trusted_application</TT>. A sample <A NAME="9486"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
 
 <P>
 
 <UL>
-<LI><A NAME="9487"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9490"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
+<LI><A NAME="9489"></A><TT>name</TT> : the name of the application. Used with password for authentication ; the <A NAME="9492"></A><TT>remote_application_name</TT> variable is set for use in authorization scenarios.
 </LI>
-<LI><A NAME="9493"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9496"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
+<LI><A NAME="9495"></A><TT>md5password</TT> : the MD5 digest of the application password. You can compute the digest as follows :  <A NAME="9498"></A><TT>sympa.pl -md5_digest=&lt;the password&gt;</TT>.
 </LI>
-<LI><A NAME="9499"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9502"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9505"></A><TT>remote_host</TT> can be listed.
+<LI><A NAME="9501"></A><TT>proxy_for_variables</TT> : a comma separated list of variables that can be set by the remote application and that will be used by Sympa SOAP server when evaluating an authorization scenario. If you list <A NAME="9504"></A><TT>USER_EMAIL</TT> in this parameter, then the remote application can act as a user. Any other variable such as  <A NAME="9507"></A><TT>remote_host</TT> can be listed.
 
 <P>
 </LI>
 </UL>
 
 <P>
-You can test your SOAP service using the <A NAME="9508"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
-/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+You can test your SOAP service using the <A NAME="9510"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
+/usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
 
-/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
+/usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
 </PRE>
 
 <P>
@@ -401,6 +404,14 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;part name="return" type="xsd:string"/&gt;	
 &lt;/message&gt;
 
+&lt;message name="getUserEmailByCookieRequest
+	&lt;part name="cookie" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="getUserEmailByCookieResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
+&lt;/message&gt;
+
 &lt;message name="authenticateAndRunRequest"&gt;
 	&lt;part name="email" type="xsd:string"/&gt;
 	&lt;part name="cookie" type="xsd:string"/&gt;
@@ -409,7 +420,7 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 &lt;/message&gt;
 
 &lt;message name="authenticateAndRunResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;	
+	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
 &lt;/message&gt;
 
 &lt;message name="authenticateRemoteAppAndRunRequest"&gt;
@@ -510,6 +521,10 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;operation name="casLogin"&gt;
 		&lt;input message="tns:casLoginRequest" /&gt;
 		&lt;output message="tns:casLoginResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="getUserEmailByCookie"&gt;
+		&lt;input message="tns:getUserEmailByCookieRequest" /&gt;
+		&lt;output message="tns:getUserEmailByCookieResponse" /&gt;
 	&lt;/operation&gt;
 	&lt;operation name="authenticateAndRun"&gt;
 		&lt;input message="tns:authenticateAndRunRequest" /&gt;
@@ -657,6 +672,19 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;/operation&gt;
 	&lt;operation name="casLogin"&gt;
 		&lt;soap:operation soapAction="urn:sympasoap#casLogin"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="getUserEmailByCookie"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#getUserEmailByCookie"/&gt;
 			&lt;input&gt;
 				&lt;soap:body use="encoded" 
 					namespace="urn:sympasoap" 

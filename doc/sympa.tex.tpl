@@ -3912,6 +3912,8 @@ of the important implementation constraint is to provide services for proxy appl
 processus where authentication may differ from classic web method. The following cases can be used to access to the service :
 \begin{itemize}
    \item The client first ask for a login and later service request provide the \texttt{sympa-user} cookie.
+   \item The client authenticate the end user providing the \texttt{sympa-user} http cookie. This can be used in order to share the an authenticated session betwing Sympa
+and some other application running on the same server as wwsympa. The soap method used is \texttt{getUserEmailByCookieRequest}.
    \item The client provide user email and password and request a service in a single soap access using the \texttt{authenticateAndRun} soap service.
    \item The client is a trusted by Sympa as a proxy application and is authorized to set some variables that will be used by 
          Sympa during the authorization scenario evaluation. Trusted application have there own password and the variables they can set are listed in

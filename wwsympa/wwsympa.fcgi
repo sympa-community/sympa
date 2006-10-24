@@ -805,7 +805,7 @@ binmode STDIN, ":utf8";
 	     }
 	     
 	 }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
-	     ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($Conf{'cookie'});
+	     ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($ENV{'HTTP_COOKIE'},$Conf{'cookie'});
 	     
 	 }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
