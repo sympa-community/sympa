@@ -27,31 +27,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1168"
+<A NAME="tex2html1172"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1162"
+<A NAME="tex2html1166"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1156"
+<A NAME="tex2html1160"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1164"
+<A NAME="tex2html1168"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1166"
+<A NAME="tex2html1170"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1169"
+<B> Next:</B> <A NAME="tex2html1173"
   HREF="node13.html">12. Sympa SOAP server</A>
-<B> Up:</B> <A NAME="tex2html1163"
+<B> Up:</B> <A NAME="tex2html1167"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1157"
+<B> Previous:</B> <A NAME="tex2html1161"
   HREF="node11.html">10. Sympa Internationalization</A>
- &nbsp; <B>  <A NAME="tex2html1165"
+ &nbsp; <B>  <A NAME="tex2html1169"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1167"
+ &nbsp; <B>  <A NAME="tex2html1171"
   HREF="node31.html">Index</A></B> 
 <BR>
 <BR>
@@ -60,27 +60,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1170"
+<LI><A NAME="tex2html1174"
   HREF="node12.html#SECTION001210000000000000000">11.1 <TT>latest_lists</TT></A>
-<LI><A NAME="tex2html1171"
+<LI><A NAME="tex2html1175"
   HREF="node12.html#SECTION001220000000000000000">11.2 <TT>active_lists</TT></A>
-<LI><A NAME="tex2html1172"
+<LI><A NAME="tex2html1176"
   HREF="node12.html#SECTION001230000000000000000">11.3 <TT>latest_arc</TT></A>
-<LI><A NAME="tex2html1173"
+<LI><A NAME="tex2html1177"
   HREF="node12.html#SECTION001240000000000000000">11.4 <TT>latest_d_read</TT></A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001200000000000000000"></A>
-<A NAME="rss"></A><A NAME="1680"></A>
+<A NAME="rss"></A><A NAME="1690"></A>
 <BR>
 11. Sympa RSS channel
 </H1>
 
 <P>
-This service is provided by <A NAME="9353"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
-Here is the root of <A NAME="9357"></A><I>WWSympa</I>'s rss channel :
+This service is provided by <A NAME="9379"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
+Here is the root of <A NAME="9383"></A><I>WWSympa</I>'s rss channel :
 <BR>
 <P>
 (Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws/rss</TT>)
@@ -88,23 +88,23 @@ Here is the root of <A NAME="9357"></A><I>WWSympa</I>'s rss channel :
 Example: <TT>https://my.server/wws/rss</TT>
 
 <P>
-The access control of RSS queries proceed on the same way as <A NAME="9364"></A><I>WWSympa</I> actions referred to.
+The access control of RSS queries proceed on the same way as <A NAME="9390"></A><I>WWSympa</I> actions referred to.
 <I>Sympa</I> provides the following RSS features :
 
 <UL>
-<LI>the latest created lists on a robot (<A NAME="9368"></A><TT>latest_lists</TT>) ;
+<LI>the latest created lists on a robot (<A NAME="9394"></A><TT>latest_lists</TT>) ;
 </LI>
-<LI>the most active lists on a robot(<A NAME="9371"></A><TT>active_lists</TT>) ;  
+<LI>the most active lists on a robot(<A NAME="9397"></A><TT>active_lists</TT>) ;  
 </LI>
-<LI>the latest messages of a list (<A NAME="9374"></A><TT>active_arc</TT>) ;   
+<LI>the latest messages of a list (<A NAME="9400"></A><TT>active_arc</TT>) ;   
 </LI>
-<LI>the latest shared documents of a list (<A NAME="9377"></A><TT>latest_d_read</TT>) ; 
+<LI>the latest shared documents of a list (<A NAME="9403"></A><TT>latest_d_read</TT>) ; 
 </LI>
 </UL>
 
 <P>
 
-<H1><A NAME="SECTION001210000000000000000"></A><A NAME="9380"></A>
+<H1><A NAME="SECTION001210000000000000000"></A><A NAME="9406"></A>
 <BR>
 11.1 <TT>latest_lists</TT>
 </H1>
@@ -126,10 +126,10 @@ This provides the 6 latest created lists with topic ``computing''.
 Parameters : 
 
 <UL>
-<LI><A NAME="9385"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9411"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9388"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9414"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 <LI>topic : the topic is indicated in the path info (see example below with topic computing). 
@@ -139,7 +139,7 @@ Parameters :
 
 <P>
 
-<H1><A NAME="SECTION001220000000000000000"></A><A NAME="9391"></A>
+<H1><A NAME="SECTION001220000000000000000"></A><A NAME="9417"></A>
 <BR>
 11.2 <TT>active_lists</TT>
 </H1>
@@ -161,10 +161,10 @@ This provides the 6 most active lists with topic ``computing''.
 Parameters : 
 
 <UL>
-<LI><A NAME="9396"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9422"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9399"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9425"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 <LI>topic : the topic is indicated in the path info (see example below with topic computing). 
@@ -174,7 +174,7 @@ Parameters :
 
 <P>
 
-<H1><A NAME="SECTION001230000000000000000"></A><A NAME="9402"></A>
+<H1><A NAME="SECTION001230000000000000000"></A><A NAME="9428"></A>
 <BR>
 11.3 <TT>latest_arc</TT>
 </H1>
@@ -193,17 +193,17 @@ Parameters :
 <UL>
 <LI>list : the list is indicated in the path info. This parameter is mandatory.
 </LI>
-<LI><A NAME="9406"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9432"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9409"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9435"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 </UL>
 
 <P>
 
-<H1><A NAME="SECTION001240000000000000000"></A><A NAME="9412"></A>
+<H1><A NAME="SECTION001240000000000000000"></A><A NAME="9438"></A>
 <BR>
 11.4 <TT>latest_d_read</TT>
 </H1>
@@ -222,10 +222,10 @@ Parameters :
 <UL>
 <LI>list : the list is indicated in the path info. This parameter is mandatory.
 </LI>
-<LI><A NAME="9416"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9442"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
-<LI><A NAME="9419"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+<LI><A NAME="9445"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
      ``for'' or ``count'' is required.
 </LI>
 </UL>
@@ -234,36 +234,36 @@ Parameters :
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1168"
+<A NAME="tex2html1172"
   HREF="node13.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1162"
+<A NAME="tex2html1166"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1156"
+<A NAME="tex2html1160"
   HREF="node11.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1164"
+<A NAME="tex2html1168"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1166"
+<A NAME="tex2html1170"
   HREF="node31.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1169"
+<B> Next:</B> <A NAME="tex2html1173"
   HREF="node13.html">12. Sympa SOAP server</A>
-<B> Up:</B> <A NAME="tex2html1163"
+<B> Up:</B> <A NAME="tex2html1167"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1157"
+<B> Previous:</B> <A NAME="tex2html1161"
   HREF="node11.html">10. Sympa Internationalization</A>
- &nbsp; <B>  <A NAME="tex2html1165"
+ &nbsp; <B>  <A NAME="tex2html1169"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1167"
+ &nbsp; <B>  <A NAME="tex2html1171"
   HREF="node31.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-06
+2006-10-24
 </ADDRESS>
 </BODY>
 </HTML>

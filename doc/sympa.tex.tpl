@@ -2054,9 +2054,9 @@ The maximum size of the uploaded picture file (bytes)
 \subsection {\cfkeyword {automatic\_list\_removal}}
 
  \default {}
- \example {automatic\_list\_feature       if_empty}
+ \example {automatic\_list\_feature       if\_empty}
 
-        If set to \texttt {if_empty}, then Sympa will remove automatically created mailing lists just after their creartion, if they contain no list
+        If set to \texttt {if\_empty}, then Sympa will remove automatically created mailing lists just after their creartion, if they contain no list
 	membe (see \ref {automatic-list-creation}, page~\pageref {automatic-list-creation}.
 
 
@@ -7345,7 +7345,7 @@ Now we need to enable automatic list creation in Sympa. To do so, we have to
 \end {itemize}
 
 You can make Sympa delete automatic lists that were created with zero list members ; to do so
-you shoukd set the \cfkeyword {automatic\_list\_removal} parameter to \texttt {if_empty}.
+you shoukd set the \cfkeyword {automatic\_list\_removal} parameter to \texttt {if\_empty}.
 
  \begin {quote}
  \begin{verbatim}
