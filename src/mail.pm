@@ -867,7 +867,7 @@ sub fix_part($) {
     } else {
 	# Binary or text with long lines will be suggested to be BASE64.
 	$part->head->mime_attr("Content-Transfer-Encoding",
-			       $part->suggested_encoding);
+			       $part->suggest_encoding);
     }
     return $part;
 }

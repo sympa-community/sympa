@@ -104,7 +104,14 @@ sub _translate {
 package tt2;
 
 use strict;
+
+use vars qw(@ISA @EXPORT_OK);
+use Exporter;
+@ISA = ('Exporter');
+@EXPORT_OK = qw(decode_utf8);
+
 use Template;
+use Template::Directive;
 use CGI::Util;
 use MIME::EncWords;
 use Log;
@@ -170,7 +177,10 @@ sub decode_utf8 {
 
     ## Skip if already internally tagged utf8
     unless (&Encode::is_utf8($string)) {
-	return &Encode::decode_utf8($string);
+	eval {
+	    $string = &Encode::decode_utf8($string, Encode::FB_WARN);
+	};
+	$@ = '';
     }
 
     return $string;
@@ -260,6 +270,7 @@ sub parse_tt2 {
 	$allow_absolute = 0;
     }
 
+    $Template::Directive::OUTPUT = '$output .= tt2::decode_utf8 ';
     my $tt2 = Template->new($config) or die $!;
 
     unless ($tt2->process($template, $data, $output)) {
