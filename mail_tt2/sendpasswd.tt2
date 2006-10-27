@@ -13,14 +13,14 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF action == 'subrequest' -%]
-[%|loc(list)%]You requested a subscription to %1 mailing list.[%END%]
+[%|loc(list)%]You asked to be subscribed to %1 mailing list.[%END%]
 
 [%|loc%]To confirm your subscription, you need to provide the following password[%END%]
 
 	[%|loc(newuser.password)%]password: %1[%END%]
 
 [% ELSIF action == 'sigrequest' -%]
-[%|loc(list)%]You requested unsubscription from %1 mailing list.[%END%]
+[%|loc(list)%]You asked to be unsubscribed from %1 mailing list.[%END%]
 
 [%|loc%]To unsubscribe from the list, you need to provide the following password[%END%]
 

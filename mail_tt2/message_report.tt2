@@ -1,7 +1,7 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'intern_error' -%]
-Subject: [% FILTER qencode %][%|loc%]Message diffusion : Internal server error[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution : Internal server error[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
@@ -20,7 +20,7 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 [%#### USER  ERROR %]
 [%################ %]
 [% ELSIF type == 'user_error' -%]
-Subject: [% FILTER qencode %][%|loc%]Message diffusion : User error[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution : User error[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
@@ -31,14 +31,14 @@ Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
 
 [% IF entry == 'routing_error' -%]
-[%|loc(list.name,conf.sympa,clist.host)%]The following message was sent to list '%1' while it seems to contain
-commands like subscribe, unsubscribe, help, index, get, ...
+[%|loc(list.name,conf.sympa,clist.host)%]The following message was sent to list '%1' and it seems to contain
+one or more commands like subscribe, unsubscribe, help, index, get, ...
 
-If your message effectively contained a command, please notice that 
+If your message contained a command, please notice that 
 commands should never ever be sent to lists. Commands must be sent
 to %2 exclusively.
 
-If your message was effectively addressed to the list, it has been
+If your message was really meant to be sent to the list, it was
 interpreted by the software as a command. Please contact the list owner :  
 %1-request@%3 so that he can take care of your message.
 
@@ -74,7 +74,7 @@ Warning : this message may already have been sent by one of the list's editor.[%
 [%# AUTHORIZATION ERROR %]
 [%##################### %]
 [% ELSIF type == 'authorization_reject' -%]
-Subject: [% FILTER qencode %][%|loc%]Message diffusion : Authorization reject[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution : Authorization denied[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
@@ -91,7 +91,7 @@ You are not allowed to send this message for the following reason :[%END%]
 [%###### SUCCESS NOTICE %]
 [%##################### %]
 [% ELSIF type == 'success' -%]
-Subject: [% FILTER qencode %][%|loc%]Message diffusion[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]

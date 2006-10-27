@@ -27,7 +27,7 @@ owners for approval. You will receive a notification when you have
 been subscribed (or unsubscribed) to the list.[%END-%]
 
 [% ELSIF notice.entry == 'updated_info' -%]
-[%|loc(notice.email,notice.listname)%]Information regarding user %1 have been updated for list %2.[%END%]
+[%|loc(notice.email,notice.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
 
 [% ELSIF notice.entry == 'now_subscriber' -%]
 [%|loc(notice.email,notice.listname)%]User %1 is now subscriber of list %2.[%END%]

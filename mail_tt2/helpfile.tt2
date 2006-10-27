@@ -25,7 +25,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
  [%|loc%]WHICH                       * Displays which lists you are subscribed to[%END%]
  [%|loc%]SUBscribe <list> <name>     * To subscribe or to confirm a subscription to <list>.[%END%]
 
- [%|loc%]UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email address, usefull if different from your "From:" address.[%END%]
+ [%|loc%]UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email address, useful if different from your "From:" address.[%END%]
  [%|loc%]UNSubscribe * <EMAIL>       * To quit all lists.[%END%]
 
  [%|loc%]SET <list>|* NOMAIL         * To suspend the message reception for <list>[%END%]
@@ -42,12 +42,12 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
  [%|loc%]GET <list> <file>           * To get <file> of <list> archive[%END%]
  [%|loc%]LAST <list>                 * Used to received the last message from <list>[%END%]
  [%|loc%]INVITE <list> <email>       * Invite <email> for subscription in <list>[%END%]
- [%|loc%]CONFIRM <key>               * Confirmation for sending a message (depending on the list's configuration)[%END%]
+ [%|loc%]CONFIRM <key>               * Confirmation for sending a message (depending on the list configuration)[%END%]
  [%|loc%]QUIT                        * Indicates the end of the commands (to ignore a signature)[%END%]
 
 [% IF is_owner -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-[%|loc%]The following commands are available only for lists's owners or moderators:[%END%]
+[%|loc%]The following commands are available only for lists owners or moderators:[%END%]
 
  [%|loc%]ADD <list> user@host Full name  * To add a user to a list[%END%]
  [%|loc%]DEL <list> user@host            * To delete a user from a list[%END%]
@@ -59,7 +59,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
  [%|loc%]DISTribute <list> <key>        * Moderation: to validate a message[%END%]
  [%|loc%]REJect <list> <key>            * Moderation: to reject a message[%END%]
- [%|loc%]MODINDEX <list>                 * Moderation: to consult the list of messages to moderate[%END%]
+ [%|loc%]MODINDEX <list>                 * Moderation: to view the list of messages to moderate[%END%]
 [% END %]
 
 [%|loc%]Powered by Sympa[%END%] [% conf.version %] : http://www.sympa.org

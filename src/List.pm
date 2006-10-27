@@ -980,7 +980,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'msg_topic_keywords_apply_on' => { 'format' => ['subject','body','subject_and_body'],
 					       'occurrence' => '0-1',
 					       'default' => 'subject',
-					       'gettext_id' => "On which part of messages, topic keywords are applied",
+					       'gettext_id' => "Defines to which part of messages topic keywords are applied",
 					       'group' => 'sending'
 					     },    
 
@@ -1209,7 +1209,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'pictures_feature' => {'format' => ['on','off'],
 			       'occurence' => '0-1',
 			       'default' => {'conf' => 'pictures_feature'},
-			       'gettext_id' => "Allow pictures display ? (require to be enabled for the current robot)",
+			       'gettext_id' => "Allow picture display ? (must be enabled for the current robot)",
 			       'group' => 'other'
 			       },	    
 	    'visibility' => {'scenario' => 'visibility',

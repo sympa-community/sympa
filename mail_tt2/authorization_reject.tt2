@@ -20,7 +20,7 @@
 [%|loc()%]Adding a user to the list is restricted to list owners.[%END%]
 
 [% ELSIF reason == 'add_closed' -%]
-[%|loc()%]Adding a user to the list is impossible.[%END%]
+[%|loc()%]Adding a user to the list is not allowed.[%END%]
 
 [% ELSIF reason == 'create_list_local_user' -%]
 [%|loc()%]List creation is restricted to local domain users.[%END%]
@@ -35,13 +35,13 @@
 [%|loc()%]Shared document edition is restricted to list owners.[%END%]
 
 [% ELSIF reason == 'd_edit_subscriber_https' -%]
-[%|loc()%]Shared document edition is restricted to list subscribers authenticated with user certificat.[%END%]
+[%|loc()%]Shared document edition is restricted to list subscribers authenticated with user certificate.[%END%]
 
 [% ELSIF reason == 'del_owner' -%]
 [%|loc()%]Deleting a user from the list is restricted to list owners.[%END%]
 
 [% ELSIF reason == 'del_closed' -%]
-[%|loc()%]Deleting a user from the list is impossible.[%END%]
+[%|loc()%]It is not possible to delete a user from the list.[%END%]
 
 [% ELSIF reason == 'd_read_owner' -%]
 [%|loc()%]Shared document reading is restricted to list owners.[%END%]
@@ -53,10 +53,10 @@
 [%|loc()%]Shared document reading is restricted to list subscribers authenticated with user certificat.[%END%]
 
 [% ELSIF reason == 'edit_list_closed' -%]
-[%|loc()%]List parameters edition is impossible.[%END%]
+[%|loc()%]It is not possible to change list parameters.[%END%]
 
 [% ELSIF reason == 'edit_list_owner' -%]
-[%|loc()%]List parameters edition is restricted to list owners.[%END%]
+[%|loc()%]List parameter editing is restricted to list owners.[%END%]
 
 [% ELSIF reason == 'global_remind_listmaster' -%]
 [%|loc()%]The 'global remind' feature is restricted to listmaster.[%END%]
@@ -95,28 +95,28 @@
 [%|loc()%]The 'review' feature is restricted to list subscribers.[%END%]
 
 [% ELSIF reason == 'send_closed' -%]
-[%|loc()%]Message diffusion in the list is impossible.[%END%]
+[%|loc()%]Message distribution in this list is not allowed.[%END%]
 
 [% ELSIF reason == 'send_local_user' -%]
-[%|loc()%]Message diffusion in the list is restricted to local domain users.[%END%]
+[%|loc()%]Message distribution in the list is restricted to local domain users.[%END%]
 
 [% ELSIF reason == 'send_local_user_sub' -%]
-[%|loc()%]Message diffusion in the list is restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]Message distribution for this list is restricted to list subscribers and local domain users.[%END%]
 
 [% ELSIF reason == 'send_editor' -%]
-[%|loc()%]Message diffusion in the list is restricted to list moderators.[%END%]
+[%|loc()%]Message distribution for this list is restricted to list moderators.[%END%]
 
 [% ELSIF reason == 'send_multipart' -%]
-[%|loc()%]Multipart messages diffusion is impossible.[%END%]
+[%|loc()%]Multipart messages are not allowed in this list.[%END%]
 
 [% ELSIF reason == 'send_subscriber' -%]
-[%|loc()%]Message diffusion in the list is restricted to list subscribers.[%END%]
+[%|loc()%]Message distribution in the list is restricted to list subscribers.[%END%]
 
 [% ELSIF reason == 'send_subscriber_smime' -%]
-[%|loc()%]Message diffusion in the list is restricted to list subscribers check S/MIME signature.[%END%]
+[%|loc()%]Message distribution for this list is restricted to list subscribers check S/MIME signature.[%END%]
 
 [% ELSIF reason == 'subscribe_closed' -%]
-[%|loc()%]Subscription to this list is impossible.[%END%]
+[%|loc()%]You are not allowed to subscribe to this list.[%END%]
 
 [% ELSIF reason == 'subscribe_local_user' -%]
 [%|loc()%]Subscription to this list is restricted to local domain users.[%END%]
@@ -131,7 +131,7 @@
 [%|loc()%]Topics visibility is restricted to identified users.[%END%]
 
 [% ELSIF reason == 'unsub_closed' -%]
-[%|loc()%]Unsubscription from this list is impossible.[%END%]
+[%|loc()%]It is not possible to unsubscribe from this list.[%END%]
 
 [% ELSIF reason == 'list_private_no_archive' -%]
 [%|loc%]List is Private : You can not read the archives.[%END%]
@@ -173,10 +173,10 @@
 [%|loc(role,right)%]You need to login.[%END%]
 
 [% ELSIF reason == 'edit_moderated' -%]
-[%|loc(role,right)%]This action is impossible because edition is moderated.[%END%]
+[%|loc(role,right)%]This action is impossible because editing is a moderated function.[%END%]
 
 [% ELSIF reason == 'dir_edit_moderated' -%]
-[%|loc(role,right)%]This action is impossible for directories because edition is moderated.[%END%]
+[%|loc(role,right)%]This action is impossible for directories because editing is a moderated function.[%END%]
 
 [% ELSIF reason == 'list-no-open' -%]
 [%|loc%]The list is closed.[%END%]

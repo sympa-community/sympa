@@ -72,11 +72,6 @@ msgid " : unable to read '%1'."
 msgstr "Kann die Hilfedatei nicht lesen: %s\n"
 
 #. (count)
-#: web_tt2/latest_lists.tt2:6
-msgid " The %1 latest lists "
-msgstr "Die %1 aktuellsten Listen "
-
-#. (count)
 #: web_tt2/latest_arc.tt2:6
 msgid " The %1 latest messages "
 msgstr "Die %1 aktuellsten Nachrichten "
@@ -95,10 +90,6 @@ msgstr "Die %1 aktivsten Listen "
 #: web_tt2/active_lists.tt2:8
 msgid " The active lists "
 msgstr "Die aktiven Listen "
-
-#: web_tt2/latest_lists.tt2:8
-msgid " The latest lists "
-msgstr "Die aktuellsten Listen"
 
 #: web_tt2/latest_lists.tt2:19
 #, fuzzy
@@ -264,10 +255,11 @@ msgstr "%1 Adminstrationsseite"
 
 #. (list.name,list.host,size,conf.host,conf.listmaster_email)
 #: mail_tt2/listowner_notification.tt2:11
+#, fuzzy
 msgid ""
 "%1 archive quota exceeded. \n"
 "Total size used for %1@%2 archive is %3 Bytes. Messages\n"
-"are no more web-archived. Please contact %5@%4. "
+"are no longer being web-archived. Please contact %5@%4. "
 msgstr ""
 "%1 Archiv-Quota überschritten. Die Gesamtgröße des %1@%2 Archives ist %3 "
 "Byte. \n"
@@ -361,8 +353,9 @@ msgstr "%1@%2 -  %3 : %4 Nachrichten"
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:31
+#, fuzzy
 msgid ""
-"%1@%2 is no more an instance of family %3.\n"
+"%1@%2 is no longer an instance of family %3.\n"
 "This list has been closed."
 msgstr ""
 "%1@%2 ist keine Instanz mehr der Familie %3.\n"
@@ -751,8 +744,11 @@ msgid "Add user '%1' in DB failed."
 msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:23
-msgid "Adding a user to the list is impossible."
+#, fuzzy
+msgid "Adding a user to the list is not allowed."
 msgstr ""
+"Das Sendeintervall für Nachrichtenkompilate wird vom Listeneigentümer "
+"definiert."
 
 #: mail_tt2/authorization_reject.tt2:20
 #, fuzzy
@@ -794,7 +790,7 @@ msgid "All commands must be sent to the electronic address %1"
 msgstr "Alle Kommandos müssen an die E-Mail Adresse %1 gesendet werden"
 
 #: src/List.pm:1212
-msgid "Allow pictures display ? (require to be enabled for the current robot)"
+msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
 # nlsref 6,44
@@ -815,10 +811,6 @@ msgstr "Anonymer Absender"
 #: mail_tt2/listmaster_notification.tt2:101
 msgid "Antivirus scan failed"
 msgstr "Virenüberprüfung fehlgeschlagen"
-
-#: mail_tt2/x509-user-cert-missing.tt2:15
-msgid "Any information about this list :"
-msgstr "Weitere Informationen zu der Liste:"
 
 #: web_tt2/copy_template.tt2:42 web_tt2/d_properties.tt2:37
 msgid "Apply"
@@ -1041,9 +1033,10 @@ msgid "Bouncing address"
 msgstr "Unzustellbare Adresse"
 
 #: mail_tt2/helpfile.tt2:45
+#, fuzzy
 msgid ""
 "CONFIRM <key>               * Confirmation for sending a message (depending "
-"on the list's configuration)"
+"on the list configuration)"
 msgstr ""
 "CONFIRM <key>               * Bestätigung zum Senden einer Nachricht "
 "(abhängig von der Konfiguration der Liste)"
@@ -1304,12 +1297,6 @@ msgstr "Konfiguration wurde gespeichert"
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#. (authkey)
-#: mail_tt2/send_auth.tt2:4
-#, fuzzy
-msgid "Confirm %1"
-msgstr "Bestätigen"
-
 #. (db_name)
 #: mail_tt2/listmaster_notification.tt2:76
 msgid "Connection to database %1 restored."
@@ -1490,7 +1477,7 @@ msgstr "Datum"
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
-"A user asked to be deleted from your list. Shall this be fine\n"
+"A user asked to be deleted from your list. If this is OK \n"
 "with you, you should click the following URL :"
 msgstr ""
 "Hallo Verwalter der Liste %s,\n"
@@ -1512,7 +1499,7 @@ msgstr ""
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
-"A user asked to be added as a subscriber to your list. Shall this be fine\n"
+"A user asked to be added as a subscriber to your list. If this is OK \n"
 "with you, you should click the following URL :"
 msgstr ""
 "\n"
@@ -1542,6 +1529,10 @@ msgstr "Standardwert: bounce_halt_rate robot Parameter"
 #: web_tt2/help_editlist.tt2:24
 msgid "Default value: bounce_warn_rate robot parameter"
 msgstr "Standardwert: bounce_warn_rate robot Parameter"
+
+#: src/List.pm:983
+msgid "Defines to which part of messages topic keywords are applied"
+msgstr ""
 
 #: web_tt2/help_editlist.tt2:169
 msgid "Defines who can access the web archive for the list."
@@ -1586,10 +1577,6 @@ msgstr ""
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:306
 msgid "Delete user in DB for old email '%1' failed."
-msgstr ""
-
-#: mail_tt2/authorization_reject.tt2:44
-msgid "Deleting a user from the list is impossible."
 msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:41
@@ -1702,7 +1689,12 @@ msgstr "Wollen Sie %1%2 wirklich löschen ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Wollen Sie die gewählten Archive wirklich löschen?"
 
-#: src/etc/mhonarc-ressources.tt2:217 src/etc/mhonarc-ressources.tt2:333
+#: src/etc/mhonarc-ressources.tt2:217
+#, fuzzy
+msgid "Do you really want to delete these messages ?"
+msgstr "Wollen Sie diese Nachricht wirklich löschen ?"
+
+#: src/etc/mhonarc-ressources.tt2:333
 #, fuzzy
 msgid "Do you really want to delete theses messages ?"
 msgstr "Wollen Sie diese Nachricht wirklich löschen ?"
@@ -2162,6 +2154,13 @@ msgstr ""
 msgid "Folder name"
 msgstr "Name des Ordners"
 
+#: mail_tt2/global_remind.tt2:10
+#, fuzzy
+msgid "For each list here is a mail address to use if you want to unsubscribe."
+msgstr ""
+"Für jede List wird unten ein \"mailto\" Link angegeben, über den Sie sich "
+"abmelden können."
+
 #. (conf.wwsympa_url)
 #: mail_tt2/command_report.tt2:184
 #, fuzzy
@@ -2203,12 +2202,6 @@ msgstr ""
 #: src/List.pm:567
 msgid "Forced reply address"
 msgstr "Erzwungene Antwortadresse"
-
-#: mail_tt2/global_remind.tt2:10
-msgid "Foreach list here is a mailto to use if you want to unsubscribe."
-msgstr ""
-"Für jede List wird unten ein \"mailto\" Link angegeben, über den Sie sich "
-"abmelden können."
 
 #. (stats.byte_sent)
 #: mail_tt2/stats_report.tt2:13
@@ -2282,7 +2275,8 @@ msgstr "Die Abonnenten der Mailingliste %1@%2 :"
 
 #. (conf.email,conf.host)
 #: mail_tt2/lists.tt2:7
-msgid "Here is the list of list from %1@%2"
+#, fuzzy
+msgid "Here is the list of lists from %1@%2"
 msgstr "Hier ist eine Übersicht der Mailinglisten von %1@%2"
 
 #: web_tt2/menu.tt2:20
@@ -2454,7 +2448,7 @@ msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:343
 #, fuzzy
-msgid "Impossible to browse shared for list '%1'."
+msgid "Impossible to browse shared documents for list '%1'."
 msgstr "Freigabe der Nachricht für die Liste %1 von %2"
 
 #. (list.name)
@@ -2504,6 +2498,11 @@ msgstr "Zeitüberschreitung beim Inkludieren"
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 
+#: mail_tt2/x509-user-cert-missing.tt2:15
+#, fuzzy
+msgid "Information about this list :"
+msgstr "Weitere Informationen zu der Liste:"
+
 #: web_tt2/set_pending_list_request.tt2:36
 msgid "Information file"
 msgstr "Informationsdatei"
@@ -2522,7 +2521,7 @@ msgstr "Informationen über die Liste %1@%2"
 #. (notice.email,notice.listname)
 #: mail_tt2/command_report.tt2:30
 #, fuzzy
-msgid "Information regarding user %1 have been updated for list %2."
+msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Informationen zum Benutzer %s wurden für die Liste %s aktualisiert.\n"
 
 # nlsref 15,18
@@ -2585,11 +2584,43 @@ msgstr "Internet-Domäne"
 msgid "Invitation to join list %1"
 msgstr "Einladung zum Abonnement der Liste %1"
 
+#: mail_tt2/authorization_reject.tt2:56
+msgid "It is not possible to change list parameters."
+msgstr ""
+
+#: mail_tt2/authorization_reject.tt2:44
+#, fuzzy
+msgid "It is not possible to delete a user from the list."
+msgstr ""
+"DEL <list> user@host            * Zum Löschen eines Benutzers von einer Liste"
+
+#: mail_tt2/authorization_reject.tt2:134
+#, fuzzy
+msgid "It is not possible to unsubscribe from this list."
+msgstr "Ich bestelle die Liste %1 ab"
+
+#: mail_tt2/your_infected_msg.tt2:17
+#, fuzzy
+msgid ""
+"It may be useful to check your system for viruses.\n"
+"\n"
+"Note, however, that many viruses fake sender's e-mail address, so it is "
+"possible that the virus didn't come from your computer. In that case, please "
+"disregard this message."
+msgstr ""
+"Es kann sinnvoll sein, Ihren Computer auf Viren zu überprüfen.\n"
+"\n"
+"Beachten Sie aber, dass viele Viren die E-Mail Adresse des Absenders "
+"fälschen, sodass es möglich ist, dass der Virus nicht von Ihrem Computer "
+"kam. In diesem Fall ignorieren Sie bitte diese Nachricht."
+
 #. (user.email)
 #: mail_tt2/x509-user-cert-missing.tt2:11
+#, fuzzy
 msgid ""
-"It was not possible to send it to you because the mailing list manager\n"
-"was unable to access to your personal certificat (email %1)."
+"It was not possible to send you the message because the mailing list "
+"manager\n"
+"was unable to access your personal certificate (email %1)."
 msgstr ""
 "Es konnte nicht an Sie gesendet werden,\n"
 "da der Mailinglisten-Verwalter nich auf Ihr persönliches Zertifikat "
@@ -2771,7 +2802,7 @@ msgstr "Liste %1 ist geschlossen"
 #, fuzzy
 msgid ""
 "List %1@%2 has been reinstantiated (family %3). \n"
-"Some of the customizations have been removed because they no more respect "
+"Some of the customizations have been removed because they no longer respect "
 "the family rules :\n"
 "\n"
 "     Parameters : %4\n"
@@ -2948,13 +2979,9 @@ msgstr ""
 "Liste hinzufügen. Dieser Parameter definiert, wie Kopf-/Fußzeile zur "
 "Nachricht hinzugefügt werden."
 
-#: mail_tt2/authorization_reject.tt2:56
-msgid "List parameters edition is impossible."
-msgstr ""
-
 #: mail_tt2/authorization_reject.tt2:59
 #, fuzzy
-msgid "List parameters edition is restricted to list owners."
+msgid "List parameter editing is restricted to list owners."
 msgstr "beschränkt auf Listen-Eigentümer"
 
 #: web_tt2/install_pending_list.tt2:17 web_tt2/set_pending_list_request.tt2:10
@@ -2990,7 +3017,7 @@ msgstr "Auflistung des Hauptordners"
 msgid "Listing subscription to moderate"
 msgstr "Liste der zu moderierenden Nachrichten"
 
-#: web_tt2/login_menu.tt2:8
+#: mail_tt2/listmaster_notification.tt2:2 web_tt2/login_menu.tt2:8
 msgid "Listmaster"
 msgstr "listmaster"
 
@@ -3005,11 +3032,6 @@ msgstr "Interner Fehler des Servers"
 #: mail_tt2/listmaster_notification.tt2:363
 msgid "Listmaster : system error "
 msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:2
-#, fuzzy
-msgid "Listmaster <[% to %]>"
-msgstr "listmaster"
 
 #: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
 #: web_tt2/latest_lists.tt2:21 web_tt2/review_family.tt2:7
@@ -3100,14 +3122,20 @@ msgid "Lost password ?"
 msgstr "Passwort vergessen ?"
 
 #: mail_tt2/helpfile.tt2:62
+#, fuzzy
 msgid ""
-"MODINDEX <list>                 * Moderation: to consult the list of "
-"messages to moderate"
+"MODINDEX <list>                 * Moderation: to view the list of messages "
+"to moderate"
 msgstr ""
 "MODINDEX <list>                 * Moderation: Eine Liste der zu "
 "moderierenden Nachrichten abrufen"
 
-#: web_tt2/login_menu.tt2:46 web_tt2/loginbanner.tt2:42
+#: web_tt2/login_menu.tt2:46
+#, fuzzy
+msgid "Magic authentication"
+msgstr "\"magische\" Authentifizierung"
+
+#: web_tt2/loginbanner.tt2:42
 msgid "Magic authentification"
 msgstr "\"magische\" Authentifizierung"
 
@@ -3178,20 +3206,6 @@ msgstr "Maximale Größe        : %1"
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "Die maximale Größe einer Mitteilung in 8-bit Bytes."
 
-#: mail_tt2/your_infected_msg.tt2:17
-msgid ""
-"Maybe it is usefull to check your system for viruses.\n"
-"\n"
-"Note, however, that many viruses fake sender's e-mail address, so it is "
-"possible that the virus didn't come from your computer. In that case, please "
-"disregard this message."
-msgstr ""
-"Es kann sinnvoll sein, Ihren Computer auf Viren zu überprüfen.\n"
-"\n"
-"Beachten Sie aber, dass viele Viren die E-Mail Adresse des Absenders "
-"fälschen, sodass es möglich ist, dass der Virus nicht von Ihrem Computer "
-"kam. In diesem Fall ignorieren Sie bitte diese Nachricht."
-
 #: web_tt2/list_admin_menu.tt2:82 web_tt2/viewlogs.tt2:81
 msgid "Message"
 msgstr "Nachricht"
@@ -3226,53 +3240,55 @@ msgstr "Nachricht"
 # nlsref 15,4
 #: mail_tt2/message_report.tt2:94
 #, fuzzy
-msgid "Message diffusion"
+msgid "Message distribution"
 msgstr "Nachrichtenzähler"
 
 #: mail_tt2/message_report.tt2:77
-msgid "Message diffusion : Authorization reject"
+msgid "Message distribution : Authorization denied"
 msgstr ""
 
 #: mail_tt2/message_report.tt2:4
 #, fuzzy
-msgid "Message diffusion : Internal server error"
+msgid "Message distribution : Internal server error"
 msgstr "Interner Fehler des Servers"
 
 #: mail_tt2/message_report.tt2:23
-msgid "Message diffusion : User error"
-msgstr ""
-
-#: mail_tt2/authorization_reject.tt2:98
-msgid "Message diffusion in the list is impossible."
-msgstr ""
+#, fuzzy
+msgid "Message distribution : User error"
+msgstr "Interner Fehler des Servers"
 
 #: mail_tt2/authorization_reject.tt2:107
 #, fuzzy
-msgid "Message diffusion in the list is restricted to list moderators."
+msgid "Message distribution for this list is restricted to list moderators."
 msgstr "Newsletter, beschränkt auf Moderatoren"
 
 #: mail_tt2/authorization_reject.tt2:104
 #, fuzzy
 msgid ""
-"Message diffusion in the list is restricted to list subscribers and local "
-"domain users."
+"Message distribution for this list is restricted to list subscribers and "
+"local domain users."
 msgstr "beschränkt auf Abonnenten oder Benutzer der lokalen Domäne"
 
 #: mail_tt2/authorization_reject.tt2:116
 #, fuzzy
 msgid ""
-"Message diffusion in the list is restricted to list subscribers check S/MIME "
-"signature."
+"Message distribution for this list is restricted to list subscribers check S/"
+"MIME signature."
 msgstr "beschränkt auf Abonnenten mit S/MIME-Signatur"
 
 #: mail_tt2/authorization_reject.tt2:113
 #, fuzzy
-msgid "Message diffusion in the list is restricted to list subscribers."
+msgid "Message distribution in the list is restricted to list subscribers."
 msgstr "Moderiert, beschränkt auf Abonnenten"
 
 #: mail_tt2/authorization_reject.tt2:101
 #, fuzzy
-msgid "Message diffusion in the list is restricted to local domain users."
+msgid "Message distribution in the list is restricted to local domain users."
+msgstr "lokale Abonnenten oder lokale Domäne"
+
+#: mail_tt2/authorization_reject.tt2:98
+#, fuzzy
+msgid "Message distribution in this list is not allowed."
 msgstr "lokale Abonnenten oder lokale Domäne"
 
 #: web_tt2/help_editfile.tt2:37
@@ -3327,9 +3343,10 @@ msgstr ""
 
 #. (list.name,to,subscriber.first_bounce)
 #: mail_tt2/user_notification.tt2:11
+#, fuzzy
 msgid ""
 "Messages from list %1 that were sent to your address %2\n"
-"generated non-delivery reports since %3. \n"
+"have generated non-delivery reports since %3. \n"
 "If this problem persists, you will be automatically unsubscribed from the "
 "list."
 msgstr ""
@@ -3415,14 +3432,8 @@ msgid "Moderators defined in an external datasource"
 msgstr "in einer externen Datenquelle definierte Moderatoren"
 
 #. (list.name)
-#: mail_tt2/moderate.tt2:2
+#: mail_tt2/listeditor_notification.tt2:2 mail_tt2/moderate.tt2:2
 msgid "Moderators of list %1"
-msgstr "Moderatoren der Liste %1"
-
-#. (list.name,to)
-#: mail_tt2/listeditor_notification.tt2:2
-#, fuzzy
-msgid "Moderators of list %1 <%2>"
 msgstr "Moderatoren der Liste %1"
 
 #: web_tt2/loginbanner.tt2:13
@@ -3439,7 +3450,7 @@ msgstr ""
 "vermutlich zuerst identifizieren."
 
 #: mail_tt2/authorization_reject.tt2:110
-msgid "Multipart messages diffusion is impossible."
+msgid "Multipart messages are not allowed in this list."
 msgstr ""
 
 #: web_tt2/review.tt2:61
@@ -3494,6 +3505,11 @@ msgstr "Neue E-Mail Adresse :"
 
 #: web_tt2/rename_list_request.tt2:4
 msgid "New list name:"
+msgstr "Neuer Listenname:"
+
+#: web_tt2/latest_lists.tt2:8
+#, fuzzy
+msgid "New lists"
 msgstr "Neuer Listenname:"
 
 #: web_tt2/choosepasswd.tt2:18 web_tt2/pref.tt2:38
@@ -3699,10 +3715,6 @@ msgstr "Alte Datei %1 wurde gelöscht"
 #: web_tt2/arcsearch.tt2:42
 msgid "Oldest messages first"
 msgstr "Älteste Nachricht zuerst"
-
-#: src/List.pm:983
-msgid "On which part of messages, topic keywords are applied"
-msgstr ""
 
 #: web_tt2/help.tt2:32
 msgid ""
@@ -3965,8 +3977,9 @@ msgstr ""
 
 #. (conf.email,conf.host)
 #: mail_tt2/x509-user-cert-missing.tt2:13
+#, fuzzy
 msgid ""
-"Please, in order to receive futur crypted messages send a signed message\n"
+"Please, in order to receive future encrypted messages send a signed message\n"
 "to  %1@%2 ."
 msgstr ""
 "Senden Sie bitte eine signierte Nachricht an %1@%2, um weiter verschlüsselte "
@@ -4177,6 +4190,12 @@ msgstr "Archiv neu aufbauen"
 msgid "Received mega-bytes         :      %1"
 msgstr "Empfangene MB                   :      %1"
 
+#. (available_reception_mode)
+#: mail_tt2/info_report.tt2:25
+#, fuzzy
+msgid "Receiving modes    : %1"
+msgstr "Empfangsmodus         : %1"
+
 #: web_tt2/review.tt2:132
 msgid "Reception"
 msgstr "Empfang"
@@ -4188,11 +4207,6 @@ msgstr "Empfang :"
 #: web_tt2/suboptions.tt2:9
 msgid "Reception mode :"
 msgstr "Empfangsmodus :"
-
-#. (available_reception_mode)
-#: mail_tt2/info_report.tt2:25
-msgid "Reception modes    : %1"
-msgstr "Empfangsmodus         : %1"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:122
@@ -4377,7 +4391,7 @@ msgstr "Gemeinsame Dokumente wiederherstellen"
 # nlsref 4,17
 #: mail_tt2/which.tt2:2
 #, fuzzy
-msgid "Result of your command which"
+msgid "Result of your command"
 msgstr "Ergebnis Ihrer Befehle"
 
 #: web_tt2/arcsearch.tt2:3
@@ -4697,7 +4711,7 @@ msgstr "beschränkt auf Listen-Eigentümer"
 #, fuzzy
 msgid ""
 "Shared document edition is restricted to list subscribers authenticated with "
-"user certificat."
+"user certificate."
 msgstr "beschränkt auf Abonnenten mit Benutzerzertifikat"
 
 #: mail_tt2/authorization_reject.tt2:32
@@ -4916,12 +4930,6 @@ msgstr "Abo-Wunsch für die Liste %s"
 msgid "Subscription summary"
 msgstr "Zusammenfassung des Abonnements"
 
-# nlsref 8,2
-#: mail_tt2/authorization_reject.tt2:119
-#, fuzzy
-msgid "Subscription to this list is impossible."
-msgstr "Abo-Wunsch für die Liste %s"
-
 #: mail_tt2/authorization_reject.tt2:122
 #, fuzzy
 msgid "Subscription to this list is restricted to local domain users."
@@ -5085,7 +5093,7 @@ msgid "Syntax errors with the following parameters : %1"
 msgstr "Syntax-Fehler in folgenden Parametern : %1"
 
 #: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
-#: mail_tt2/get_archive.tt2:11 src/List.pm:2810
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2816
 msgid "Table of contents:"
 msgstr "Inhaltsverzeichnis:"
 
@@ -5204,6 +5212,12 @@ msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
+
+#. (count)
+#: web_tt2/latest_lists.tt2:6
+#, fuzzy
+msgid "The %1 newest lists"
+msgstr "Die %1 aktuellsten Listen "
 
 #: mail_tt2/authorization_reject.tt2:62
 #, fuzzy
@@ -5408,8 +5422,9 @@ msgid "The following address is not a known mailing list :"
 msgstr "Die folgende Adresse ist keine bekannte Verzeilerliste"
 
 #: mail_tt2/helpfile.tt2:50
+#, fuzzy
 msgid ""
-"The following commands are available only for lists's owners or moderators:"
+"The following commands are available only for lists owners or moderators:"
 msgstr ""
 "Die folgenden Kommandos sind nur für Eigentümer oder Moderatoren der Listen "
 "verfügbar:"
@@ -5425,14 +5440,14 @@ msgstr "Alte Datei %1 wurde gelöscht"
 #: mail_tt2/message_report.tt2:46
 #, fuzzy
 msgid ""
-"The following message was sent to list '%1' while it seems to contain\n"
-"commands like subscribe, unsubscribe, help, index, get, ...\n"
+"The following message was sent to list '%1' and it seems to contain\n"
+"one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
 "\n"
-"If your message effectively contained a command, please notice that \n"
+"If your message contained a command, please notice that \n"
 "commands should never ever be sent to lists. Commands must be sent\n"
 "to %2 exclusively.\n"
 "\n"
-"If your message was effectively addressed to the list, it has been\n"
+"If your message was really meant to be sent to the list, it was\n"
 "interpreted by the software as a command. Please contact the list owner :  \n"
 "%1-request@%3 so that he can take care of your message.\n"
 "\n"
@@ -5703,12 +5718,14 @@ msgstr "Dieser FastCGI Prozess (%1) wurde seit %3 %2 mal aufgerufen."
 
 #. (role,right)
 #: mail_tt2/authorization_reject.tt2:176
-msgid "This action is impossible because edition is moderated."
+msgid "This action is impossible because editing is a moderated function."
 msgstr ""
 
 #. (role,right)
 #: mail_tt2/authorization_reject.tt2:179
-msgid "This action is impossible for directories because edition is moderated."
+msgid ""
+"This action is impossible for directories because editing is a moderated "
+"function."
 msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:164
@@ -6452,9 +6469,10 @@ msgid "UNSubscribe * <EMAIL>       * To quit all lists."
 msgstr "UNSubscribe * <EMAIL>       * um alle Listen zu verlassen."
 
 #: mail_tt2/helpfile.tt2:28
+#, fuzzy
 msgid ""
 "UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email "
-"address, usefull if different from your \"From:\" address."
+"address, useful if different from your \"From:\" address."
 msgstr ""
 "UNSubscribe <list> <EMAIL>  * Zum Verlassen von <list>. <EMAIL> ist eine "
 "optionale E-Mail Adresse, falls die abzumeldende E-Mail Adresse sich von "
@@ -6472,7 +6490,7 @@ msgid "URL"
 msgstr "URL"
 
 # nlsref 3,1
-#: src/sympa.pl:1993
+#: src/sympa.pl:1995
 msgid "Unable to access directory %s : %m"
 msgstr "Auf das Verzeichnis %s kann nicht zugegriffen werden: %m"
 
@@ -6546,7 +6564,7 @@ msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
 # nlsref 11,2
-#: src/mail.pm:652
+#: src/mail.pm:677
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "\"smtpto\" konnte keinen Kanal öffnen: %m"
 
@@ -6776,6 +6794,13 @@ msgstr "Abmelden"
 msgid "Unsubscribe the User"
 msgstr "Benutzer abmelden"
 
+# nlsref 6,71
+#. (list.name)
+#: mail_tt2/bye.tt2:2
+#, fuzzy
+msgid "Unsubscribed from %1"
+msgstr "Von der Liste %s abmelden"
+
 #. (unsubscribe)
 #: mail_tt2/info_report.tt2:17
 msgid "Unsubscription     : %1"
@@ -6785,17 +6810,6 @@ msgstr "Abmeldung             : %1"
 #: mail_tt2/remind.tt2:11
 msgid "Unsubscription :"
 msgstr "Abmeldung :"
-
-#. (list.name)
-#: mail_tt2/bye.tt2:2
-msgid "Unsubscription from %1"
-msgstr "Abmeldung von der Mailingliste %1"
-
-# nlsref 8,24
-#: mail_tt2/authorization_reject.tt2:134
-#, fuzzy
-msgid "Unsubscription from this list is impossible."
-msgstr "UNsubscription-Befehl (Abokündigung) für Liste %s"
 
 #: web_tt2/help_editfile.tt2:9
 msgid ""
@@ -6829,7 +6843,7 @@ msgstr "Entpacke Datei in den Ordner der gemeinsamen Dokumente"
 msgid "Up to higher level directory"
 msgstr "Ein Verzeichnis nach oben"
 
-#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:412
+#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:413
 #: web_tt2/editsubscriber.tt2:57 web_tt2/suboptions.tt2:59
 msgid "Update"
 msgstr "Aktualisieren"
@@ -7199,6 +7213,11 @@ msgstr "Sie sind bereits Abonnent der Liste %1"
 msgid "You are already subscriber of list %1"
 msgstr "Sie haben die Liste %1 bereits abonniert."
 
+#: mail_tt2/authorization_reject.tt2:119
+#, fuzzy
+msgid "You are not allowed to subscribe to this list."
+msgstr "Sie sind bereits Abonnent der Liste %1"
+
 #. (u_err.list)
 #: web_tt2/error.tt2:62
 #, fuzzy
@@ -7229,6 +7248,18 @@ msgstr "Ihre E-Mail Adresse (%1) wurde von der Liste %2@%3 entfernt"
 #, fuzzy
 msgid "You asked for your e-mail address to be removed from list '%1'."
 msgstr "Ihre E-Mail Adresse (%1) wurde von der Liste %2@%3 entfernt"
+
+#. (list)
+#: mail_tt2/sendpasswd.tt2:16
+#, fuzzy
+msgid "You asked to be subscribed to %1 mailing list."
+msgstr "Sie haben ein Abonnement der Mailingliste %1 angefordert."
+
+#. (list)
+#: mail_tt2/sendpasswd.tt2:23
+#, fuzzy
+msgid "You asked to be unsubscribed from %1 mailing list."
+msgstr "Sie haben die Abmeldung von der Mailingliste %1 angefordet."
 
 #: web_tt2/edit_list_request.tt2:4
 msgid "You can choose below a subset of parameters to edit :"
@@ -7374,11 +7405,6 @@ msgid ""
 msgstr "Erinnerung versenden an jeden der %d %s Abonnenten\n"
 
 #. (list)
-#: mail_tt2/sendpasswd.tt2:16
-msgid "You requested a subscription to %1 mailing list."
-msgstr "Sie haben ein Abonnement der Mailingliste %1 angefordert."
-
-#. (list)
 #: web_tt2/subrequest.tt2:19
 msgid "You requested a subscription to list %1"
 msgstr "Sie wünschen die Liste %1 zu abonnieren"
@@ -7399,11 +7425,6 @@ msgstr "Sie wünschen die Liste %1 zu abonnieren"
 #: web_tt2/subrequest.tt2:5
 msgid "You requested subscription to list %1"
 msgstr "Sie wünschen die Liste %1 zu abonnieren"
-
-#. (list)
-#: mail_tt2/sendpasswd.tt2:23
-msgid "You requested unsubscription from %1 mailing list."
-msgstr "Sie haben die Abmeldung von der Mailingliste %1 angefordet."
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25 web_tt2/sigrequest.tt2:4
@@ -7693,7 +7714,7 @@ msgid "Your subscriptions"
 msgstr "Ihre Abonnements"
 
 # nlsref 11,1
-#: src/mail.pm:50
+#: src/mail.pm:53
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -7789,12 +7810,24 @@ msgstr "Aktive Listen"
 msgid "add impossible"
 msgstr "Hinzufügen nicht möglich"
 
-#: src/etc/scenari/add.owner:1
+#: src/etc/scenari/add.owner.~1.10.~:1
 msgid "add performed by list owner do not need authentication"
 msgstr "Hinzufügen erfolgt durch Listen-Eigentümer"
 
-#: src/etc/scenari/add.owner_notify:1
+#: src/etc/scenari/add.owner:1
+#, fuzzy
+msgid "add performed by list owner does not need authentication"
+msgstr "Hinzufügen erfolgt durch Listen-Eigentümer"
+
+#: src/etc/scenari/add.owner_notify.~1.9.~:1
 msgid "add performed by owner do not need authentication (notification)"
+msgstr ""
+"Hinzufügen durch Listen-Eigentümer benötigt keine Authentifizierung "
+"(Benachrichtigung)"
+
+#: src/etc/scenari/add.owner_notify:1
+#, fuzzy
+msgid "add performed by owner does not need authentication (notification)"
 msgstr ""
 "Hinzufügen durch Listen-Eigentümer benötigt keine Authentifizierung "
 "(Benachrichtigung)"
@@ -7983,11 +8016,6 @@ msgstr "kontrolliertes Abonnement"
 msgid "cp"
 msgstr ""
 
-#. (list.name,list.host)
-#: mail_tt2/x509-user-cert-missing.tt2:2
-msgid "crypted message for list %1@%2"
-msgstr "Verschlüsselte Nachricht an die Liste %1@%2"
-
 #: src/etc/global_task_models/chk_cert_expiration.daily.task:1
 msgid ""
 "daily certificate expiration date checking ; users are warned when their "
@@ -8037,7 +8065,7 @@ msgstr "Datum"
 msgid "days"
 msgstr "Tage"
 
-#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:404
+#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:405
 msgid "default"
 msgstr "Standard"
 
@@ -8137,6 +8165,12 @@ msgstr "email1@dom1 Name1"
 #: web_tt2/add_request.tt2:8
 msgid "email2@dom2 Name2"
 msgstr "email2@dom2 Name2"
+
+#. (list.name,list.host)
+#: mail_tt2/x509-user-cert-missing.tt2:2
+#, fuzzy
+msgid "encrypted message for list %1@%2"
+msgstr "Verschlüsselte Nachricht an die Liste %1@%2"
 
 #: web_tt2/arcsearch_form.tt2:34
 msgid "entire word"
@@ -8487,11 +8521,16 @@ msgstr "sichtbar"
 msgid "no mail (usefull for vacations)"
 msgstr "kein Mail (nützlich für Urlaube)"
 
+#: src/etc/scenari/review.closed:1
+#, fuzzy
+msgid "no one can review"
+msgstr "niemand darf die Benutzer auflisten"
+
 #: web_tt2/help_editlist.tt2:152
 msgid "no protection against spammer."
 msgstr "Kein Schutz gegen Spammer."
 
-#: src/etc/scenari/review.closed:1
+#: src/etc/scenari/review.closed.~1.9.~:1
 msgid "nobody can review"
 msgstr "niemand darf die Benutzer auflisten"
 
@@ -9178,6 +9217,39 @@ msgstr "Ihre E-Mail Adresse   : %1"
 msgid "your password : %1"
 msgstr "Ihr Passwort : %1"
 
+#~ msgid " The latest lists "
+#~ msgstr "Die aktuellsten Listen"
+
+#, fuzzy
+#~ msgid "Confirm %1"
+#~ msgstr "Bestätigen"
+
+#, fuzzy
+#~ msgid "Listmaster <[% to %]>"
+#~ msgstr "listmaster"
+
+#, fuzzy
+#~ msgid "Moderators of list %1 <%2>"
+#~ msgstr "Moderatoren der Liste %1"
+
+# nlsref 4,17
+#, fuzzy
+#~ msgid "Result of your command which"
+#~ msgstr "Ergebnis Ihrer Befehle"
+
+# nlsref 8,2
+#, fuzzy
+#~ msgid "Subscription to this list is impossible."
+#~ msgstr "Abo-Wunsch für die Liste %s"
+
+#~ msgid "Unsubscription from %1"
+#~ msgstr "Abmeldung von der Mailingliste %1"
+
+# nlsref 8,24
+#, fuzzy
+#~ msgid "Unsubscription from this list is impossible."
+#~ msgstr "UNsubscription-Befehl (Abokündigung) für Liste %s"
+
 #~ msgid "%1 messages selected out of %2"
 #~ msgstr "%1 von %2 Nachrichten ausgewählt"
 
@@ -9579,10 +9651,6 @@ msgstr "Ihr Passwort : %1"
 #~ "%s nicht gefunden.\n"
 #~ "Die Nachricht wurde eventuell schon von einem anderen Editor\n"
 #~ "freigegeben."
-
-# nlsref 6,71
-#~ msgid "Unsubscribe from list %s"
-#~ msgstr "Von der Liste %s abmelden"
 
 # nlsref 6,86
 #~ msgid "User %s is unwanted in list %s.\n"
