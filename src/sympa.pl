@@ -1140,7 +1140,7 @@ sub DoFile {
 	    # check authorization
 	    my $result = &List::request_action('automatic_list_creation',
 	        ($message->{'smime_signed'} ? 'smime' : 'smtp'),$robot,
-		{'sender' => $sender, 'message' => $message });
+		{'sender' => $sender, 'message' => $message, 'family'=>$dyn_list_family, 'automatic_listname'=>$listname });
 	    my $r_action;
 	    unless (defined $result) {
 		&do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $hdr->get('Message-Id'),$listname);
