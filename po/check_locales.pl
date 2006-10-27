@@ -48,7 +48,7 @@ if ($#supported == -1) {
     my $s = $<;
 }elsif ($#not_supported > -1){
     printf "#############################################################################################################\n";
-    printf "## IMPORTANT : Sympa is not able to use all supported because they are not properly configured on this server\n";
+    printf "## IMPORTANT : Sympa is not able to use all supported locales because they are not properly configured on this server\n";
     printf "## Herer is a list on NOT supported locales :\n";
     printf "##     %s\n", join(' ', @not_supported);
     printf "## On Debian you should run the following command : dpkg-reconfigure locales\n";
