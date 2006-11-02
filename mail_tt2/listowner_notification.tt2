@@ -1,5 +1,5 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
-To: [% FILTER qencode %][%|loc%]Listowners[%END%][%END%] <[% to %]>
+To: [% FILTER qencode %][%|loc%]Listowners[%END%] <[% to %]>[%END%]
 [% IF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
 MIME-Version: 1.0

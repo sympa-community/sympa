@@ -404,7 +404,7 @@ Our thanks to all contributors, including:
 
 \begin {itemize}
 
-  \item Virginie Paitrault,Université de Rennes 2, who wrote the excellent online user documentation.
+  \item Virginie Paitrault,Universit\'e de Rennes 2, who wrote the excellent online user documentation.
 
   \item John-Paul Robinson, University of Alabama at Birmingham, who added to email verification procedure to the Shibboleth support.
 
@@ -416,7 +416,7 @@ Our thanks to all contributors, including:
 
   \item David Lewis who corrected this documentation
 
-  \item Philippe Rivière for his persevering in tuning \Sympa for Postfix.
+  \item Philippe Rivi\`ere for his persevering in tuning \Sympa for Postfix.
 
   \item Rapha\"el Hertzog (debian), Jerome Marant (debian) and St\'ephane Poirey (redhat) for
       Linux packages.
@@ -1948,7 +1948,7 @@ see a  nice mailto adresses where others have nothing.
  show every colors in use.
  
  
- \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
+ \subsection {\cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color}}
  
  
  	Deprecated. They are the color definition for previous web interface. These parameters are unused in 5.1 and higher 
@@ -3664,7 +3664,7 @@ The database structure is documented in the \Sympa documentation ;
 scripts for creating it are also provided with the \Sympa distribution
 (in \dir {script}). 
 
-User information (password and preferences) are stored in the «User» table.
+User information (password and preferences) are stored in the ``User'' table.
 User passwords stored in the database are encrypted using reversible
 RC4 encryption controlled with the \cfkeyword {cookie} parameter,
 since \WWSympa might need to remind users of their passwords. 
@@ -4025,7 +4025,7 @@ Note : the \textbf {login()} function maintains a login session using HTTP cooki
 to maintain this session by analysing and sending appropriate cookies under SOAP, then you
 should use the \textbf {authenticateAndRun()} function that does not require cookies to authenticate.
 
-\subsection {Writting a Java client with Axis}
+\subsection {Writing a Java client with Axis}
 
 First, download jakarta-axis (http://ws.apache.org/axis/)\\
 
@@ -4752,7 +4752,7 @@ You can easily trigger a Sympa login from within another web page. The login for
 \begin{verbatim}
 <FORM ACTION="http://listes.cru.fr/sympa" method="post">
       <input type="hidden" name="previous_action" value="arc" />
-      Accès web archives of list
+      Access web archives of list
       <select name="previous_list">
       <option value="sympa-users" >sympa-users</option>
       </select><br/>
@@ -4813,7 +4813,7 @@ Example
 del.auth
 \begin{verbatim}
 title.us deletion performed only by list owners, need authentication
-title.fr suppression réservée au propriétaire avec authentification
+title.fr suppression r\'eserv\'ee au propri\'etaire avec authentification
 title.es eliminacin reservada slo para el propietario, necesita autentificacin
 
 
@@ -5488,7 +5488,7 @@ Here are some aspects regarding templates that are specific to \Sympa :
    use the INCLUDE\_PATH provided by \Sympa to find the relevant file to insert/parse.
 
   \item The \textbf {qencode} filter should be used if a template includes SMTP header fields
-  that should be Q-encoded. \example {[\% FILTER qencode \%]Message à modérer[\%END\%]}
+  that should be Q-encoded. \example {[\% FILTER qencode \%]Message \`a mod\'erer[\%END\%]}
 
   \item You can write different versions of a template file in different language, each of them 
   being located in a subdirectory of the \textbf {tt2} directory. \example {[ETC_DIR]/mail\_tt2/fr\_FR/helpfile.tt2}
@@ -10091,7 +10091,7 @@ named \texttt {send.private\_smime}, and restricts sends to subscribers using an
 \begin{verbatim}
 [STOPPARSE]
 title.us restricted to subscribers check smime signature
-title.fr limité aux abonnés, vérif de la signature smime
+title.fr limit\'e aux abonn\'es, v\'erif de la signature smime
 
 is_subscriber([listname],[sender])             smime  -> do_is_editor([listname],[sender])                 smime  -> do_it
 is_owner([listname],[sender])                  smime  -> do_it
@@ -10105,7 +10105,7 @@ example, \texttt {send.private\_key}, requires either an md5 return key or an S/
 \begin{verbatim}
 [STOPPARSE]
 title.us restricted to subscribers with previous md5 authentication
-title.fr réservé aux abonnés avec authentification MD5 préalable
+title.fr r\'serv\'e aux abonn\'es avec authentification MD5 pr\'ealable
 
 is_subscriber([listname],[sender]) smtp          -> request_auth
 true()                             md5,smime     -> do_it
@@ -10681,7 +10681,7 @@ For sending, a call to sendmail is done or the message is pushed in a spool acco
 \index{mail::set\_send\_spool()}
 
    Used by other processes than sympa.pl to indicate to send message by 
-   writting message in spool instead of calling mail::smtpto() function (see \ref {mail-smtpto}, page~\pageref {mail-smtpto}). 
+   writing message in spool instead of calling mail::smtpto() function (see \ref {mail-smtpto}, page~\pageref {mail-smtpto}). 
    The concerned spool is set in \lparam{\$send\_spool} global variable, used by mail::sending() function
   (see \ref {mail-sending}, page~\pageref {mail-sending}).
 

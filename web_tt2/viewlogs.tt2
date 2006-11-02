@@ -59,8 +59,8 @@
     <input id="target_type" type="text" name="target_searched" value="[% target_searched_s %]" size ="20"/><br />
 
     <label for="date">[%|loc%]Search by date :[%END%]</label>
-      <input id="date" type="text" name="date_from" value="[% date_from_s %]" size ="10"/>&nbsp;to
-      <input id="date"type="text" name="date_to" value="[% date_to_s %]" size ="10"/>&nbsp; <h7>ex: 03/05/2006</h7><br />
+      <input id="date" type="text" name="date_from" value="[% date_from_s %]" size ="10"/>&nbsp;[%|loc%]to[%END%]
+      <input id="date"type="text" name="date_to" value="[% date_to_s %]" size ="10"/>&nbsp; <h7>[%|loc%]ex: 03/05/2006[%END%]</h7><br />
 
     <label for="type_searched">[%|loc%]Search by type :[%END%]</label>
       <select id="type_searched" name="type_searched"/>
@@ -122,7 +122,7 @@
 
    [% IF is_listmaster %]
 
-	<label for="ip_searched">Search by IP :</label>
+	<label for="ip_searched">[%|loc%]Search by IP :[%END%]</label>
 	  <input id="ip_searched" type="text" name="ip_searched" value="[% ip_searched_s %]"/><br />
    [% END %]
 

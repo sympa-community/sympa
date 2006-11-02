@@ -28,7 +28,7 @@
 [% END %]
 
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">Info</a></strong><br />
+<strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">[%|loc%]Info[%END%]</a></strong><br />
 
 [% IF protection_type == 'javascript' %]
 <strong>[% hidden_head %]<a class=\"menuLinks\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]</strong><br />

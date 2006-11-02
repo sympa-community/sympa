@@ -1,5 +1,5 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
-To: [% FILTER qencode %][%|loc%]Listmaster[%END%][%END%] <[% to %]>
+To: [% FILTER qencode %][%|loc%]Listmaster <[% to %]>[%END%][%END%]
 [% IF type == 'request_list_creation' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%][%END%]
 MIME-Version: 1.0
