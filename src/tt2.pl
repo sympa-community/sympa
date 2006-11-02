@@ -270,7 +270,8 @@ sub parse_tt2 {
 	$allow_absolute = 0;
     }
 
-    $Template::Directive::OUTPUT = '$output .= tt2::decode_utf8 ';
+    ## Removed because created some encoding problems with list subjects pinted on the web interface
+    ## $Template::Directive::OUTPUT = '$output .= tt2::decode_utf8 ';
     my $tt2 = Template->new($config) or die $!;
 
     unless ($tt2->process($template, $data, $output)) {
