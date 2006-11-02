@@ -270,7 +270,11 @@ while (!$end) {
 		    if ($list->is_user($who)) {
 			my $u = $list->delete_user($who);
 			$list->save();
-			do_log ('notice',"$who has been removed from $listname because welcome message bounced");			
+			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
+			&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'del',
+				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
+				      'daemon' => 'bounced'});
+
 			if ($action =~ /notify/) {
 			    unless ($list->send_notify_to_owner('automatic_del',
 								{'who' => $who,
