@@ -90,6 +90,11 @@ sub upgrade {
 	return 1;
     }
 
+    ## Always update config.bin files while upgrading
+    ## This is especially useful for character encoding reasons
+    &do_log('notice','Rebuilding config.bin files for ALL lists...it may take a while...');
+    &List::get_lists('*',{'reload_config' => 1});
+
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     if (&tools::lower_version($previous_version, '4.2a')) {
 
