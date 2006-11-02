@@ -1,3 +1,144 @@
+2006-11-02 10:42  sympa-authors
+
+	* doc/sympa.tex.tpl, mail_tt2/digest.tt2,
+	  mail_tt2/digest_plain.tt2, mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/listowner_notification.tt2, mail_tt2/moderate.tt2,
+	  web_tt2/blacklist.tt2, web_tt2/dump_scenario.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/review.tt2, web_tt2/serveradmin.tt2,
+	  web_tt2/viewlogs.tt2: [S.Ikeda] Fix: made some fixes to
+	  documentation and templates :  - TeX file: Some non-ASCII
+	  charcters and a few typos are fixed.	 - Templates: Some mail
+	  headers won't be encoded.  Translatable items are added.
+
+2006-11-02 09:48  sympa-authors
+
+	* wwsympa/bounced.pl: Added db_log for bouncing welcome
+
+2006-11-02 08:25  serge.aumont
+
+	* soap/: sympa.wsdl, sympasoap.pm: better ddefinition of
+	  getUserEmailByCookieRequest parameters
+
+2006-10-30 15:37  serge.aumont
+
+	* soap/sympa.wsdl: Fix bug in wsdl
+
+2006-10-30 14:34  sympa-authors
+
+	* wwsympa/Marc/Search.pm: Fix: No more decode X-Subject from web
+	  archives ; they are already decoded WWSympa.fcgi would die with
+	  the following error : "MIME::Words: unexpected case"
+
+2006-10-27 18:08  olivier.salaun
+
+	* mail_tt2/authorization_reject.tt2, mail_tt2/bye.tt2,
+	  mail_tt2/command_report.tt2, mail_tt2/global_remind.tt2,
+	  mail_tt2/helpfile.tt2, mail_tt2/info_report.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/listowner_notification.tt2, mail_tt2/lists.tt2,
+	  mail_tt2/message_report.tt2, mail_tt2/sendpasswd.tt2,
+	  mail_tt2/user_notification.tt2, mail_tt2/which.tt2,
+	  mail_tt2/x509-user-cert-missing.tt2,
+	  mail_tt2/your_infected_msg.tt2, po/cs.po, po/de.po, po/el.po,
+	  po/en_US.po, po/es.po, po/et.po, po/fi.po, po/fr.po, po/hu.po,
+	  po/it.po, po/ja.po, po/nb_NO.po, po/nl.po, po/oc.po, po/pl.po,
+	  po/pt.po, po/pt_BR.po, po/ro.po, po/sv.po, po/sympa.pot,
+	  po/tr.po, po/zh_CN.po, po/zh_TW.po, src/List.pm,
+	  src/etc/mhonarc-ressources.tt2, src/etc/scenari/add.owner,
+	  src/etc/scenari/add.owner_notify, src/etc/scenari/review.closed,
+	  web_tt2/latest_lists.tt2: Changes: reported changes in en_US.po
+	  (updated by Jill Gemmil) to templates.  Work is half-done.
+
+2006-10-27 16:44  olivier.salaun
+
+	* src/: mail.pm, tt2.pl: [S.Ikeda] Fixes: type for
+	  suggest_encoding() subroutine ; better UTF-8 management with TT2.
+	  Patches: sympa-MAIN-20061021-mail_encoding_fix1.patch +
+	  sympa-MAIN-20061015-tt2_utf8.patch
+
+2006-10-27 16:35  olivier.salaun
+
+	* src/sympa.pl: [S.Amrani, Gend. Nationale] Change: added
+	  'automatic_listname' variable to scenario context.
+
+2006-10-27 09:11  sympa-authors
+
+	* po/check_locales.pl: Fix: missing word
+
+2006-10-24 10:34  serge.aumont
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node28.html, doc/html/node29.html,
+	  doc/html/node3.html, doc/html/node30.html, doc/html/node31.html,
+	  doc/html/node4.html, doc/html/node5.html, doc/html/node6.html,
+	  doc/html/node7.html, doc/html/node8.html, doc/html/node9.html,
+	  doc/html/sympa.ps, soap/sympa.wsdl, soap/sympa_soap_client.pl,
+	  soap/sympasoap.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: new
+	  soap method getUserEmailByCookie
+
+2006-10-24 10:05  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Fixed documentation
+
+2006-10-23 16:36  sympa-authors
+
+	* src/: Commands.pm, report.pm, sympa.pl: [requested by W.Howard]
+	  New feature: original_msg is now available in msg reports
+
+2006-10-23 13:45  sympa-authors
+
+	* NEWS: Add informations about the news static-sympa Alias to
+	  create
+
+2006-10-20 12:16  sympa-authors
+
+	* src/Language.pm: [reported by Soji Ikeda] Fix: Japanese was
+	  incorrectly encoded in the list of languages.  Also changed the
+	  way gettext() handles parameters to prevent unwanted
+	  modifications
+
+2006-10-19 17:50  sympa-authors
+
+	* doc/sympa.tex: updated
+
+2006-10-19 17:18  sympa-authors
+
+	* src/mail.pm: [reported by Soji Ikeda] Fix: mail_file() subroutine
+	  incorrectly detecting folded header fields.
+
+2006-10-19 17:11  sympa-authors
+
+	* ChangeLog: update
+
+2006-10-19 17:10  sympa-authors
+
+	* mail_tt2/: listeditor_notification.tt2,
+	  listmaster_notification.tt2: Fix: now only Q-encoding the gecos,
+	  not the To email address
+
+2006-10-19 17:06  sympa-authors
+
+	* mail_tt2/moderate.tt2: Fix: To header field now also Q-encoded
+
 2006-10-19 15:54  sympa-authors
 
 	* po/fr.po: Fix: changed moderateur to modérateur

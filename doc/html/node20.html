@@ -368,14 +368,14 @@ The list creator has to choose a profile
 for the list and put its name in the XML element <A NAME="10852"></A><TT>&lt;type&gt;</TT>.
 
 <P>
-List profiles are stored in <A NAME="10855"></A><TT>/usr/local/sympa-sa/etc/create_list_templates</TT> or in
-<A NAME="10858"></A><TT>/usr/local/sympa-sa/bin/etc/create_list_templates</TT> (default of distrib).
+List profiles are stored in <A NAME="10855"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> or in
+<A NAME="10858"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> (default of distrib).
 
 <P>
 You might want to hide or modify profiles (not useful, or dangerous 
 for your site). If a profile exists both in the local site directory
-<A NAME="10861"></A><TT>/usr/local/sympa-sa/etc/create_list_templates</TT> and
-<A NAME="10864"></A><TT>/usr/local/sympa-sa/bin/etc/create_list_templates</TT> directory, then the local profile 
+<A NAME="10861"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> and
+<A NAME="10864"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> directory, then the local profile 
 will be used by WWSympa. 
 
 <P>
@@ -448,8 +448,8 @@ these typical list profiles, they are described before, see <A HREF="#typical-li
 You can check available profile. On the Web interface, another way 
 to control publicly available profiles is to
 edit the <A NAME="10894"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="10897"></A><TT>/usr/local/sympa-sa/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="10900"></A><TT>/usr/local/sympa-sa/etc</TT>).
+the <A NAME="10897"></A><TT>/usr/local/sympa-os/bin/etc</TT> directory, and you may create your own customized
+version in <A NAME="10900"></A><TT>/usr/local/sympa-os/etc</TT>).
 This file controls which of the available list templates are to be displayed. Example :<PRE>
 # Do not allow the public_anonymous profile
 public_anonymous hidden
@@ -465,9 +465,9 @@ public_anonymous hidden
 </H2>
 
 <P>
-For each parameter, you may specify (via the <A NAME="10903"></A><TT>/usr/local/sympa-sa/etc/edit_list.conf</TT>
+For each parameter, you may specify (via the <A NAME="10903"></A><TT>/usr/local/sympa-os/etc/edit_list.conf</TT>
 configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="10906"></A><TT>/usr/local/sympa-sa/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="10906"></A><TT>/usr/local/sympa-os/bin/etc/edit_list.conf</TT> is reasonably safe.
 
 <P>
 <PRE>
@@ -609,7 +609,7 @@ can still be restored by the listmaster ; list members are saved in a <A NAME="1
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

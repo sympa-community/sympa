@@ -180,21 +180,21 @@ listname if defined, <TT>&lt;</TT>action<TT>&gt;</TT> is the name of the command
 the preferred language of the user) :
 
 <OL>
-<LI><A NAME="10017"></A><TT>/usr/local/sympa-sa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10017"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10056"></A><TT>/usr/local/sympa-sa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10056"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10089"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10089"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10116"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10116"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10143"></A><TT>/usr/local/sympa-sa/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10143"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10170"></A><TT>/usr/local/sympa-sa/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10170"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10197"></A><TT>/usr/local/sympa-sa/bin/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="10197"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
 </LI>
-<LI><A NAME="10224"></A><TT>/usr/local/sympa-sa/bin/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="10224"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
 </LI>
 </OL>
 
@@ -364,8 +364,8 @@ ones. <A NAME="10248"></A><I>WWSympa</I> first looks for list specific web templ
 site web templates, before falling back on its defaults. 
 
 <P>
-Your list web template files should be placed in the <A NAME="10251"></A><TT>/usr/local/sympa-sa/expl/mylist/web_tt2</TT> 
-directory ; your site web templates in <A NAME="10254"></A><TT>~/usr/local/sympa-sa/etc/web_tt2</TT> directory.
+Your list web template files should be placed in the <A NAME="10251"></A><TT>/usr/local/sympa-os/expl/mylist/web_tt2</TT> 
+directory ; your site web templates in <A NAME="10254"></A><TT>~/usr/local/sympa-os/etc/web_tt2</TT> directory.
 
 <P>
 Note that web colors are defined in <I>Sympa</I>'s main Makefile (see <A HREF="node4.html#makefile">3.3</A>,
@@ -400,7 +400,7 @@ If you are willing to provide Sympa into your native language, please check the 
 <P>
 Every message sent by <I>Sympa</I> to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
-<A NAME="10268"></A><TT>/usr/local/sympa-sa/locale</TT> directory. 
+<A NAME="10268"></A><TT>/usr/local/sympa-os/locale</TT> directory. 
 
 <P>
 To tell <I>Sympa</I> to use a particular message catalog, you can should set 
@@ -451,7 +451,7 @@ used to tag list messages)
 
 <P>
 The list of topics is defined in the <A NAME="10300"></A><TT>topics.conf</TT> configuration
-file, located in the <A NAME="10303"></A><TT>/usr/local/sympa-sa/etc</TT> directory. The format of this file is 
+file, located in the <A NAME="10303"></A><TT>/usr/local/sympa-os/etc</TT> directory. The format of this file is 
 as follows :<PRE>
 &lt;topic1_name&gt;
 title	&lt;topic1 title&gt;
@@ -576,8 +576,8 @@ A task model file name has the following format : <A NAME="10349"></A><TT><TT>&l
 For instance <A NAME="10364"></A><TT>remind.annual.task</TT>  or <A NAME="10367"></A><TT>remind.semestrial.task</TT>.
 
 <P>
-<I>Sympa</I> provides several task models stored in <A NAME="10371"></A><TT>/usr/local/sympa-sa/bin/etc/global_task_models</TT> 
-  and <A NAME="10374"></A><TT>/usr/local/sympa-sa/bin/etc/list_task_models</TT> directories.
+<I>Sympa</I> provides several task models stored in <A NAME="10371"></A><TT>/usr/local/sympa-os/bin/etc/global_task_models</TT> 
+  and <A NAME="10374"></A><TT>/usr/local/sympa-os/bin/etc/list_task_models</TT> directories.
 Others can be designed by the listmaster. 
 
 <P>
@@ -598,11 +598,11 @@ following order :
 <P>
 
 <OL>
-<LI><A NAME="10389"></A><TT>/usr/local/sympa-sa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
+<LI><A NAME="10389"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
 </LI>
-<LI><A NAME="10398"></A><TT>/usr/local/sympa-sa/etc/list_task_models/</TT>
+<LI><A NAME="10398"></A><TT>/usr/local/sympa-os/etc/list_task_models/</TT>
 </LI>
-<LI><A NAME="10401"></A><TT>/usr/local/sympa-sa/bin/etc/list_task_models/</TT>
+<LI><A NAME="10401"></A><TT>/usr/local/sympa-os/bin/etc/list_task_models/</TT>
 </LI>
 </OL>
 
@@ -623,9 +623,9 @@ in the following order :
 <P>
 
 <OL>
-<LI><A NAME="10408"></A><TT>/usr/local/sympa-sa/etc/global_task_models/</TT>
+<LI><A NAME="10408"></A><TT>/usr/local/sympa-os/etc/global_task_models/</TT>
 </LI>
-<LI><A NAME="10411"></A><TT>/usr/local/sympa-sa/bin/etc/global_task_models/</TT>
+<LI><A NAME="10411"></A><TT>/usr/local/sympa-os/bin/etc/global_task_models/</TT>
 </LI>
 </OL>
 
@@ -836,7 +836,7 @@ next ([execution_date] + 1d, ACTION)
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

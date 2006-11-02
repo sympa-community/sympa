@@ -327,7 +327,7 @@ even when several moderators are defined.
 <A NAME="11090"></A><TT>host</TT> <I>fully-qualified-domain-name</I>
 
 <P>
-Domain name of the list, default is the robot domain name set in the related <A NAME="11093"></A><TT>robot.conf</TT> file or in file <A NAME="11096"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT>.
+Domain name of the list, default is the robot domain name set in the related <A NAME="11093"></A><TT>robot.conf</TT> file or in file <A NAME="11096"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>.
 
 <P>
 
@@ -802,7 +802,7 @@ Certificate and private key are located in the list directory.
 <LI><A NAME="11305"></A><TT>cert</TT> <TT>robot</TT> the certificate used is then related to
 sympa itself : the certificate subject distinguished name email look like
 sympa@my.domain and files are located in virtual host etc dir if virtual host
-is used otherwise in <A NAME="11308"></A><TT>/usr/local/sympa-sa/etc</TT>.
+is used otherwise in <A NAME="11308"></A><TT>/usr/local/sympa-os/etc</TT>.
 </LI>
 </UL>
 
@@ -2278,7 +2278,7 @@ apply forced
 
 <P>
 Maximum size of a message in 8-bit bytes. The default value is set in
- the <A NAME="11815"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> file.
+ the <A NAME="11815"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file.
 
 <P>
 
@@ -2416,7 +2416,7 @@ The default value. Sympa will add the
 <P>
 Sympa will not create new MIME parts, but
         will try to append the header/footer to the body of the
-        message. <A NAME="11860"></A><TT>/usr/local/sympa-sa/expl/mylist/message.footer.mime</TT> will be
+        message. <A NAME="11860"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer.mime</TT> will be
         ignored. Headers/footers may be appended to text/plain
         messages only.
 
@@ -2943,7 +2943,7 @@ VERP requires plussed aliases to be supported and the bounce+* alias to be insta
 
 <P>
 Mail archives can be retrieved via a mail command send to the robot,
-they are stored in <A NAME="12071"></A><TT>/usr/local/sympa-sa/expl/mylist/archives/</TT> directory.
+they are stored in <A NAME="12071"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory.
 
 <P>
 Web archives are accessed via the web interface (with access control), they
@@ -2988,7 +2988,7 @@ command (the last message of a list can be consulted using the <A NAME="12093"><
 This parameter specifies how archiving is organized: by <TT>day</TT>, <TT>week</TT>, <TT>month</TT>, <TT>quarter</TT>,
 or <TT>year</TT>.  Generation of automatic list archives requires
 the creation of an archive directory at the root of the list directory 
-(<A NAME="12099"></A><TT>/usr/local/sympa-sa/expl/mylist/archives/</TT>), used to store these documents.
+(<A NAME="12099"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT>), used to store these documents.
 
 <P>
 <A NAME="12102"></A><TT>access</TT>
@@ -3242,7 +3242,7 @@ date_epoch 1090911878
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

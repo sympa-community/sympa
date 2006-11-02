@@ -257,12 +257,12 @@ when the user accesses the web interface. If one CAS server redirect the user to
 </H1>
 
 <P>
-The <A NAME="9561"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> configuration file contains numerous
+The <A NAME="9561"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart wwsympa.fcgi afterwards. 
 
 <P>
-The <A NAME="9565"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
+The <A NAME="9565"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
 service with all required parameters to perform an authentication using this service. Current version of
 <I>Sympa</I> can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
 or Shibboleth), or using internal user_table.
@@ -280,7 +280,7 @@ The segond form in login page contain the list of CAS server so user can choose 
 Each paragraph start with one of the keyword cas, ldap or user_table  
 
 <P>
-The <A NAME="9581"></A><TT>/usr/local/sympa-sa/etc/auth.conf</TT> file contains directives in the following format:
+The <A NAME="9581"></A><TT>/usr/local/sympa-os/etc/auth.conf</TT> file contains directives in the following format:
 
 <P>
 <P>
@@ -977,7 +977,7 @@ further authentication.
 You can easily trigger a Sympa login from within another web page. The login form should look like this :<PRE>
 &lt;FORM ACTION="http://listes.cru.fr/sympa" method="post"&gt;
       &lt;input type="hidden" name="previous_action" value="arc" /&gt;
-      Accès web archives of list
+      Access web archives of list
       &lt;select name="previous_list"&gt;
       &lt;option value="sympa-users" &gt;sympa-users&lt;/option&gt;
       &lt;/select&gt;&lt;br/&gt;
@@ -1028,7 +1028,7 @@ The  <TT>previous_action</TT> and <TT>previous_list</TT> variable define the act
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

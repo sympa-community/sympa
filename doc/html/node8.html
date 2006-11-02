@@ -82,7 +82,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html949"
   HREF="node8.html#SECTION00819000000000000000">7.1.9 <TT>color_0</TT>, <TT>color_1</TT> ..  <TT>color_15</TT></A>
 <LI><A NAME="tex2html950"
-  HREF="node8.html#SECTION008110000000000000000">7.1.10 <TT>dark_color</TT> <TT>light_color</TT> <TT>text_color</TT> <TT>bg_color</TT> <TT>error_color</TT> <TT>selected_color</TT> <TT>shaded_color</TT></A>
+  HREF="node8.html#SECTION008110000000000000000">7.1.10 <TT>dark_color</TT>, <TT>light_color</TT>, <TT>text_color</TT>, <TT>bg_color</TT>, <TT>error_color</TT>, <TT>selected_color</TT>, <TT>shaded_color</TT></A>
 <LI><A NAME="tex2html951"
   HREF="node8.html#SECTION008111000000000000000">7.1.11 <TT>logo_html_definition</TT></A>
 <LI><A NAME="tex2html952"
@@ -381,12 +381,12 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-The <A NAME="8233"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> configuration file contains numerous
+The <A NAME="8233"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="8238"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> file contains directives in the following
+The <A NAME="8238"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file contains directives in the following
 format:
 
 <P>
@@ -580,7 +580,7 @@ Idem <A NAME="8296"></A><TT>spam_protection</TT> but restricted to web archive.
 
 <H2><A NAME="SECTION008110000000000000000"></A><A NAME="8308"></A><A NAME="8311"></A><A NAME="8314"></A><A NAME="8317"></A><A NAME="8320"></A><A NAME="8323"></A><A NAME="8326"></A>
 <BR>
-7.1.10 <TT>dark_color</TT> <TT>light_color</TT> <TT>text_color</TT> <TT>bg_color</TT> <TT>error_color</TT> <TT>selected_color</TT> <TT>shaded_color</TT>
+7.1.10 <TT>dark_color</TT>, <TT>light_color</TT>, <TT>text_color</TT>, <TT>bg_color</TT>, <TT>error_color</TT>, <TT>selected_color</TT>, <TT>shaded_color</TT>
 </H2>
 
 <P>
@@ -802,7 +802,7 @@ Defines who can run a <TT>REMIND *</TT> command.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8418"></A><TT>/usr/local/sympa-sa/expl</TT></TT>)
+(Default value: <TT><A NAME="8418"></A><TT>/usr/local/sympa-os/expl</TT></TT>)
 
 <P>
 The directory whose subdirectories correspond to the different lists.
@@ -818,7 +818,7 @@ Example: <TT>home          /home/sympa/expl</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8427"></A><TT>/usr/local/sympa-sa/etc</TT></TT>)
+(Default value: <TT><A NAME="8427"></A><TT>/usr/local/sympa-os/etc</TT></TT>)
 
 <P>
 This is the local directory for configuration files (such as
@@ -894,7 +894,7 @@ Example: <TT>log_level          2</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8475"></A><TT>/usr/local/sympa-sa/etc/sympa.pid</TT></TT>)
+(Default value: <TT><A NAME="8475"></A><TT>/usr/local/sympa-os/etc/sympa.pid</TT></TT>)
 
 <P>
 The file where the <A NAME="8478"></A><TT>sympa.pl</TT> daemon stores its
@@ -913,7 +913,7 @@ Example: <TT>pidfile         /var/run/sympa.pid</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8487"></A><TT>/usr/local/sympa-sa/etc/sympa-creation.pid</TT></TT>)
+(Default value: <TT><A NAME="8487"></A><TT>/usr/local/sympa-os/etc/sympa-creation.pid</TT></TT>)
 
 <P>
 The file where the automatic list creation dedicated <A NAME="8490"></A><TT>sympa.pl</TT> daemon stores its
@@ -1281,7 +1281,7 @@ The default disk quota (the unit is Kbytes) for lists' web archives.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8637"></A><TT>/usr/local/sympa-sa/spool</TT></TT>)
+(Default value: <TT><A NAME="8637"></A><TT>/usr/local/sympa-os/spool</TT></TT>)
 
 <P>
 The parent directory which contains all the other spools.  
@@ -1299,7 +1299,7 @@ The absolute path of the directory which contains the queue, used both by the
         parameter is mandatory.
 
 <P>
-Example: <TT><A NAME="8651"></A><TT>/usr/local/sympa-sa/spool/msg</TT></TT>
+Example: <TT><A NAME="8651"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
 
 <P>
 
@@ -1311,7 +1311,7 @@ Example: <TT><A NAME="8651"></A><TT>/usr/local/sympa-sa/spool/msg</TT></TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8659"></A><TT>/usr/local/sympa-sa/spool/distribute</TT></TT>)
+(Default value: <TT><A NAME="8659"></A><TT>/usr/local/sympa-os/spool/distribute</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1325,7 +1325,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8667"></A><TT>/usr/local/sympa-sa/spool/moderation</TT></TT>)
+(Default value: <TT><A NAME="8667"></A><TT>/usr/local/sympa-os/spool/moderation</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1350,7 +1350,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8678"></A><TT>/usr/local/sympa-sa/spool/auth</TT></TT>)
+(Default value: <TT><A NAME="8678"></A><TT>/usr/local/sympa-os/spool/auth</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1363,7 +1363,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8686"></A><TT>/usr/local/sympa-sa/spool/outgoing</TT></TT>)
+(Default value: <TT><A NAME="8686"></A><TT>/usr/local/sympa-os/spool/outgoing</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1376,7 +1376,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="8694"></A><TT>/usr/local/sympa-sa/spool/topic</TT></TT>)
+(Default value: <TT><A NAME="8694"></A><TT>/usr/local/sympa-os/spool/topic</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1390,7 +1390,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8702"></A><TT>/usr/local/sympa-sa/spool/bounce</TT></TT>)
+(Default value: <TT><A NAME="8702"></A><TT>/usr/local/sympa-os/spool/bounce</TT></TT>)
 
 <P>
 Spool to store bounces (non-delivery reports) received by the <A NAME="8705"></A><TT>bouncequeue</TT>
@@ -1406,7 +1406,7 @@ Spool to store bounces (non-delivery reports) received by the <A NAME="8705"></A
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8713"></A><TT>/usr/local/sympa-sa/spool/task</TT></TT>)
+(Default value: <TT><A NAME="8713"></A><TT>/usr/local/sympa-os/spool/task</TT></TT>)
 
 <P>
 Spool to store task files created by the task manager. This parameter is mandatory
@@ -1429,7 +1429,7 @@ The absolute path of the directory which contains the queue for automatic list c
         parameter is mandatory when enabling automatic_list_creation.
 
 <P>
-Example: <TT><A NAME="8728"></A><TT>/usr/local/sympa-sa/spool/msg</TT></TT>
+Example: <TT><A NAME="8728"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
 
 <P>
 
@@ -1439,7 +1439,7 @@ Example: <TT><A NAME="8728"></A><TT>/usr/local/sympa-sa/spool/msg</TT></TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="8736"></A><TT>/usr/local/sympa-sa/spool/tmp</TT></TT>)
+(Default value: <TT><A NAME="8736"></A><TT>/usr/local/sympa-os/spool/tmp</TT></TT>)
 
 <P>
 Temporary directory used by OpenSSL and antiviruses.
@@ -1575,7 +1575,7 @@ Retention period (in days) for ``bad'' messages in
 </H2>   
 
 <P>
-(Default value: <TT><A NAME="8794"></A><TT>/usr/local/sympa-sa/locale</TT></TT>)
+(Default value: <TT><A NAME="8794"></A><TT>/usr/local/sympa-os/locale</TT></TT>)
 
 <P>
 The location of multilingual catalog files. Must correspond to	<A NAME="8797"></A><TT>~src/locale/Makefile</TT>.
@@ -2513,7 +2513,7 @@ detected.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

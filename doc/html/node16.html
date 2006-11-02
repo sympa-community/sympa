@@ -123,9 +123,9 @@ messages for the new robot domain. Add mail aliases for the robot :
 
 <P>
 <I>Examples (with sendmail):</I> <PRE>
-sympa@your.virtual.domain:      "| /usr/local/sympa-sa/bin/queue sympa@your.virtual.domain"
-listmaster@your.virtual.domain: "| /usr/local/sympa-sa/bin/queue listmaster@your.virtual.domain"
-bounce+*@your.virtual.domain:          "| /usr/local/sympa-sa/bin/bouncequeue sympa@your.virtual.domain"\\
+sympa@your.virtual.domain:      "| /usr/local/sympa-os/bin/queue sympa@your.virtual.domain"
+listmaster@your.virtual.domain: "| /usr/local/sympa-os/bin/queue listmaster@your.virtual.domain"
+bounce+*@your.virtual.domain:          "| /usr/local/sympa-os/bin/bouncequeue sympa@your.virtual.domain"\\
 </PRE>
 
 <P>
@@ -136,7 +136,7 @@ need to run dedicated fascgi server for each virtual host.
 
 <P>
 <I>Examples:</I> <PRE>
-FastCgiServer /usr/local/sympa-sa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
+FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
 .....
 &lt;VirtualHost 195.215.92.16&gt;
   ServerAdmin webmaster@your.virtual.domain
@@ -147,24 +147,24 @@ FastCgiServer /usr/local/sympa-sa/bin/wwsympa.fcgi -processes 3 -idle-timeout 12
      SetHandler fastcgi-script
   &lt;/Location&gt;
 
-  ScriptAlias /sympa /usr/local/sympa-sa/bin/wwsympa.fcgi
+  ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
 
-  Alias /static-sympa /usr/local/sympa-sa/your.virtual.domain/static_content
+  Alias /static-sympa /usr/local/sympa-os/your.virtual.domain/static_content
 
 &lt;/VirtualHost&gt;
 </PRE>
 
 <P>
 </LI>
-<LI>Create a <A NAME="9795"></A><TT>/usr/local/sympa-sa/etc/your.virtual.domain/robot.conf</TT> configuration file for the virtual host. Its format is a subset of <A NAME="9798"></A><TT>sympa.conf</TT> and is described in the next section ; a sample <A NAME="9801"></A><TT>robot.conf</TT> is provided.
+<LI>Create a <A NAME="9795"></A><TT>/usr/local/sympa-os/etc/your.virtual.domain/robot.conf</TT> configuration file for the virtual host. Its format is a subset of <A NAME="9798"></A><TT>sympa.conf</TT> and is described in the next section ; a sample <A NAME="9801"></A><TT>robot.conf</TT> is provided.
 
 <P>
 </LI>
-<LI>Create a <A NAME="9804"></A><TT>/usr/local/sympa-sa/expl/your.virtual.domain/</TT> directory that will contain the virtual host mailing lists directories. This directory should have the  <I>sympa</I> user as its owner and must have read and write access for this user.
+<LI>Create a <A NAME="9804"></A><TT>/usr/local/sympa-os/expl/your.virtual.domain/</TT> directory that will contain the virtual host mailing lists directories. This directory should have the  <I>sympa</I> user as its owner and must have read and write access for this user.
 
 <P><PRE>
-# su sympa -c 'mkdir /usr/local/sympa-sa/expl/your.virtual.domain'
-# chmod 750 /usr/local/sympa-sa/expl/your.virtual.domain
+# su sympa -c 'mkdir /usr/local/sympa-os/expl/your.virtual.domain'
+# chmod 750 /usr/local/sympa-os/expl/your.virtual.domain
 </PRE>
 
 <P>
@@ -177,8 +177,8 @@ FastCgiServer /usr/local/sympa-sa/bin/wwsympa.fcgi -processes 3 -idle-timeout 12
 15.2 robot.conf</A>
 </H1>
 A robot is named by its domain, let's say my.domain.organd defined by a directory 
-<A NAME="9807"></A><TT>/usr/local/sympa-sa/etc/my.domain.org</TT>. This directory must contain at least a 
-<A NAME="9810"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="9813"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT>
+<A NAME="9807"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>. This directory must contain at least a 
+<A NAME="9810"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="9813"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
 (have a look at robot.conf in the sample dir).
 Only the following parameters can be redefined for a particular robot :
 
@@ -295,7 +295,7 @@ The base URL of Sympa's SOAP server (if it is running ; see&nbsp;<A HREF="node13
 </UL>
 
 <P>
-These settings overwrite the equivalent global parameter defined in <A NAME="9906"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT>
+These settings overwrite the equivalent global parameter defined in <A NAME="9906"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
 for my.domain.orgrobot ; the main <A NAME="9909"></A><TT>listmaster</TT> still has privileges on Virtual
 Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
 environment variable to recognize which robot is in used. 
@@ -313,10 +313,10 @@ In order to customize the web look and feel, you may edit the CSS definition. CS
 In addition, if needed, you can customize each virtual host using its set of templates and authorization scenarios. 
 
 <P>
-<A NAME="9921"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/web_tt2/</TT>,
-<A NAME="9924"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/mail_tt2/</TT>, 
-<A NAME="9927"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/scenari/</TT> directories are searched when
-loading templates or scenari before searching into <A NAME="9930"></A><TT>/usr/local/sympa-sa/etc</TT> and  <A NAME="9933"></A><TT>/usr/local/sympa-sa/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Host.
+<A NAME="9921"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>,
+<A NAME="9924"></A><TT>/usr/local/sympa-os/etc/my.domain.org/mail_tt2/</TT>, 
+<A NAME="9927"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> directories are searched when
+loading templates or scenari before searching into <A NAME="9930"></A><TT>/usr/local/sympa-os/etc</TT> and  <A NAME="9933"></A><TT>/usr/local/sympa-os/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Host.
 
 <P>
 
@@ -326,13 +326,13 @@ loading templates or scenari before searching into <A NAME="9930"></A><TT>/usr/l
 
 <P>
 If you are managing more than 2 virtual hosts, then you might cinsider moving all the mailing lists in the default
-robot to a dedicated virtual host located in the <A NAME="9936"></A><TT>/usr/local/sympa-sa/expl/my.domain.org/</TT> directory. The main benefit of 
+robot to a dedicated virtual host located in the <A NAME="9936"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> directory. The main benefit of 
 this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
 for this robot without inheriting them within other virtual hosts.
 
 <P>
-To create such a virtual host, you need to create <A NAME="9939"></A><TT>/usr/local/sympa-sa/expl/my.domain.org/</TT> and <A NAME="9942"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/</TT> directories ; 
-customize <A NAME="9945"></A><TT>host</TT>, <A NAME="9948"></A><TT>http_host</TT> and <A NAME="9951"></A><TT>wwsympa_url</TT> parameters in the <A NAME="9954"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/robot.conf</TT> 
+To create such a virtual host, you need to create <A NAME="9939"></A><TT>/usr/local/sympa-os/expl/my.domain.org/</TT> and <A NAME="9942"></A><TT>/usr/local/sympa-os/etc/my.domain.org/</TT> directories ; 
+customize <A NAME="9945"></A><TT>host</TT>, <A NAME="9948"></A><TT>http_host</TT> and <A NAME="9951"></A><TT>wwsympa_url</TT> parameters in the <A NAME="9954"></A><TT>/usr/local/sympa-os/etc/my.domain.org/robot.conf</TT> 
 with the same values as the default robot (as defined in <A NAME="9957"></A><TT>sympa.conf</TT> and <A NAME="9960"></A><TT>wwsympa.conf</TT> files).
 
 <P>
@@ -368,7 +368,7 @@ with the same values as the default robot (as defined in <A NAME="9957"></A><TT>
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

@@ -3,6 +3,69 @@
 
 (See Changelog file for the full changes log)
 
+5.3a.10		2 November 2006
+
+   New features :
+
+	soap/: New SOAP method getUserEmailByCookie
+
+	src/: Commands.pm, report.pm, sympa.pl: [requested by W.Howard]: original_msg is now available in msg reports
+
+	[S.Amrani, Gend.Nationale] : Automatic list creation 
+	This new feature allows to trigger list creation when a message is sent for the list. 
+	The set of "possible" lists is defined by a generic mail alias and a list family. 
+	New sympa.conf parameter include :
+	  automatic_list_feature, automatic_list_creation,
+	  automatic_list_removal,	    pidfile_creation,
+	  queueautomatic, clean_delay_queueautomatic 
+	A new familiqueue.c binary file is provided.  The list creation job is performed by a
+	sympa.pl process that forks.	Check the documentation for more informations.
+
+
+   Changes :
+
+	Changes: reported changes in en_US.po (updated by Jill Gemmil) to templates.  
+	Work is half-done.
+
+	[Soji Ikeda] : Sympa now uses new Perl modules MIME::Charset and MIME::EncWords to encode characters. 
+	These modules are alternatives for MIME::Words with better handling of multibyte charsets.
+
+	po/en_US.po: [J.B.Gemmill, Univ. Alabama at Birmingham] Revised version of English translations.
+
+   Bug fixes :
+
+	[S.Ikeda] made some fixes to documentation and templates
+
+	wwsympa/Marc/Search.pm: No more decode X-Subject from web  archives ; they are already decoded WWSympa.fcgi would die with
+	the following error : "MIME::Words: unexpected case"
+
+	src/: mail.pm, tt2.pl: [S.Ikeda] : type for suggest_encoding() subroutine ; better UTF-8 management with TT2.
+	Patches: sympa-MAIN-20061021-mail_encoding_fix1.patch + sympa-MAIN-20061015-tt2_utf8.patch
+
+	src/Language.pm: [reported by Soji Ikeda] Japanese was incorrectly encoded in the list of languages.  
+	Also changed the way gettext() handles parameters to prevent unwanted modifications
+
+	src/mail.pm: [reported by Soji Ikeda] : mail_file() subroutine incorrectly detecting folded header fields.
+
+	mail_tt2/moderate.tt2: To header field now also Q-encoded
+
+	src/Log.pm: do_log() would modify parameters by reference, now using an intermediate variable to preserve original
+	parameters from being decoded
+
+	mail_tt2/send_auth.tt2: [Reported by M.Larchet, Univ Nancy 2]: subject of confirmation message was localized
+
+	src/sympa_wizard.pl: [BugID 1102][reported by R.Roessner] sympa_wizard.pl failed because of a typo
+
+	src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi: could not edit message.header and message.footer from the admin web
+	interface The tools::get_filename() sub did not return the right structure ; it should return an empty array if expected
+
+	web_tt2/compose_mail.tt2, wwsympa/wwsympa.fcgi: [Reported by P.Farmer] topics tagging was not proposed from the "Post" page.
+
+	q-encoding of shared documents filenames has been fixed :  - Encode::Guess now uses list lang  -
+	prevent problems with Encode (words) ; now using lower layer subroutine
+
+
+
 5.3a.9		6 October 2006
 
    New features :

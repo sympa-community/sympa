@@ -258,8 +258,8 @@ sympa.pl --upgrade --from=4.1 --to=5.2
 </H1>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="8020"></A><TT>/usr/local/sympa-sa/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="8023"></A><TT>/usr/local/sympa-sa/etc</TT> directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="8020"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="8023"></A><TT>/usr/local/sympa-os/etc</TT> directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 <P>
@@ -320,7 +320,7 @@ The migration process requires that you move the following data from the old ser
 
 <P>
 </LI>
-<LI>the <A NAME="8050"></A><TT>/usr/local/sympa-sa/expl</TT> directory that contains list config
+<LI>the <A NAME="8050"></A><TT>/usr/local/sympa-os/expl</TT> directory that contains list config
 
 <P>
 </LI>
@@ -328,7 +328,7 @@ The migration process requires that you move the following data from the old ser
 
 <P>
 </LI>
-<LI>the <A NAME="8056"></A> directory and <A NAME="8059"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> and <A NAME="8062"></A><TT>wwsympa.conf</TT>. Sympa new installation create a file <A NAME="8065"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT> (see <A HREF="node8.html#exp-admin">7</A>) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
+<LI>the <A NAME="8056"></A> directory and <A NAME="8059"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> and <A NAME="8062"></A><TT>wwsympa.conf</TT>. Sympa new installation create a file <A NAME="8065"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> (see <A HREF="node8.html#exp-admin">7</A>) and initialize randomly the cookie parameter. Changing this parameter will break all passwords.  When upgrading Sympa on a new server take care that you start with the same value of this parameter, otherwise you will have troubles !
 
 <P>
 </LI>
@@ -387,7 +387,7 @@ database and play with it. When you decide to move the existing service to the n
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

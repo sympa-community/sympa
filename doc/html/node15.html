@@ -95,9 +95,9 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
 For example : the <A NAME="9646"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="9662"></A><TT>/usr/local/sympa-sa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="9671"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9674"></A><TT>/usr/local/sympa-sa/etc/scenari</TT>,
-and finally <A NAME="9677"></A><TT>/usr/local/sympa-sa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="9662"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="9671"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="9674"></A><TT>/usr/local/sympa-os/etc/scenari</TT>,
+and finally <A NAME="9677"></A><TT>/usr/local/sympa-os/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 An authorization scenario is a small configuration language to describe who
@@ -133,7 +133,7 @@ Example
 del.auth
 </BLOCKQUOTE><PRE>
 title.us deletion performed only by list owners, need authentication
-title.fr suppression réservée au propriétaire avec authentification
+title.fr suppression r\'eserv\'ee au propri\'etaire avec authentification
 title.es eliminacin reservada slo para el propietario, necesita autentificacin
 
 
@@ -271,13 +271,13 @@ probably create authorization scenarios for your own need. In this case, don't f
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 <P>
-These standard authorization scenarios are located in the <A NAME="9712"></A><TT>/usr/local/sympa-sa/bin/etc/scenari/</TT>
+These standard authorization scenarios are located in the <A NAME="9712"></A><TT>/usr/local/sympa-os/bin/etc/scenari/</TT>
 directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own authorization scenarios. Store them in the
-<A NAME="9715"></A><TT>/usr/local/sympa-sa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual host (using directory <A NAME="9730"></A><TT>/usr/local/sympa-sa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9757"></A><TT>/usr/local/sympa-sa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ). <B>Sympa will not dynamically detect that a list config should be reloaded after a scenario has been changed on disk.</B>
+<A NAME="9715"></A><TT>/usr/local/sympa-os/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual host (using directory <A NAME="9730"></A><TT>/usr/local/sympa-os/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="9757"></A><TT>/usr/local/sympa-os/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ). <B>Sympa will not dynamically detect that a list config should be reloaded after a scenario has been changed on disk.</B>
 
 <P>
 Example:
@@ -322,7 +322,7 @@ Note that the only variable available in named filters is [sender] and is set to
 </H2>
 
 <P>
-People are selected through an <A NAME="9777"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'. It is stored in <A NAME="9778"></A><TT>/usr/local/sympa-sa/etc/search_filters/</TT>.
+People are selected through an <A NAME="9777"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'. It is stored in <A NAME="9778"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a LDAP Named Filter:
@@ -402,7 +402,7 @@ example.ldap : we want to select the professors of mathematics in the university
 </H2>
 
 <P>
-People are selected through an <A NAME="9782"></A>SQL filter defined in a configuration file. This file must have the extension '.sql'. It is stored in <A NAME="9783"></A><TT>/usr/local/sympa-sa/etc/search_filters/</TT>.
+People are selected through an <A NAME="9782"></A>SQL filter defined in a configuration file. This file must have the extension '.sql'. It is stored in <A NAME="9783"></A><TT>/usr/local/sympa-os/etc/search_filters/</TT>.
 
 <P>
 To create an SQL Named Filter, you have to configure SQL host, database and options, the same way you did it for the main Sympa database in sympa.conf.
@@ -636,7 +636,7 @@ will make it ignored at either a global, robot or list level.
 <P>
 <I>Example :</I> 
 <BLOCKQUOTE>
-/usr/local/sympa-sa/etc/my.domain.org/scenari/send.intranetorprivate:ignore
+/usr/local/sympa-os/etc/my.domain.org/scenari/send.intranetorprivate:ignore
 
 </BLOCKQUOTE>
 
@@ -676,7 +676,7 @@ at the my.domain.orgrobot level only.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

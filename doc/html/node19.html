@@ -147,14 +147,14 @@ page&nbsp;<A HREF="node19.html#list-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT
 
 <P>
 The configuration file for the <TT>mylist</TT> list is named
-<A NAME="10480"></A><TT>/usr/local/sympa-sa/expl/my.domain.org/mylist/config</TT> 
-(or <A NAME="10483"></A><TT>/usr/local/sympa-sa/expl/mylist/config</TT> if no virtual host is defined). 
+<A NAME="10480"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config</TT> 
+(or <A NAME="10483"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT> if no virtual host is defined). 
 <I>Sympa</I> reloads it into memory whenever this file has changed on disk. The file can either be
 edited via the web interface or directly via your favourite text editor. 
 
 <P>
 If you have set the <A NAME="10487"></A><TT>cache_list_config</TT> sympa.conf parameter (see <A HREF="node8.html#cache-list">7.9.1</A>,  
-page&nbsp;<A HREF="node8.html#cache-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), a binary version of the config (<A NAME="10490"></A><TT>/usr/local/sympa-sa/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
+page&nbsp;<A HREF="node8.html#cache-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), a binary version of the config (<A NAME="10490"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
 a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
 
 <P>
@@ -255,7 +255,7 @@ not be use anymore except for testing purpose. <I>Sympa</I> will not use this fi
 with <TT>include</TT> or <TT>database</TT> <A NAME="10500"></A><TT>user_data_source</TT>.
 
 <P>
-The <A NAME="10503"></A><TT>/usr/local/sympa-sa/expl/mylist/subscribers</TT> file is automatically created and
+The <A NAME="10503"></A><TT>/usr/local/sympa-os/expl/mylist/subscribers</TT> file is automatically created and
 populated. It contains information about list
 subscribers.  It is not advisable to edit this file.  Main parameters
 are:
@@ -325,7 +325,7 @@ Special mode which allows the subscriber to remain invisible when
 </H1>
 
 <P>
-<A NAME="10539"></A><TT>/usr/local/sympa-sa/expl/mylist/info</TT> should contain a detailed text
+<A NAME="10539"></A><TT>/usr/local/sympa-os/expl/mylist/info</TT> should contain a detailed text
 description of the list, to be displayed by the <A NAME="10542"></A><TT>INFO</TT> command. 
 It can also be referenced from template files for service messages.
 
@@ -336,7 +336,7 @@ It can also be referenced from template files for service messages.
 </H1>
 
 <P>
-<A NAME="10545"></A><TT>/usr/local/sympa-sa/expl/mylist/homepage</TT> is the HTML text 
+<A NAME="10545"></A><TT>/usr/local/sympa-os/expl/mylist/homepage</TT> is the HTML text 
 on the <A NAME="10548"></A><I>WWSympa</I> info page for the list.
 
 <P>
@@ -358,11 +358,11 @@ This files can be template file.
 Sympa looks for them in the following order :
 
 <OL>
-<LI><A NAME="10572"></A><TT>/usr/local/sympa-sa/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="10572"></A><TT>/usr/local/sympa-os/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="10593"></A><TT>/usr/local/sympa-sa/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="10593"></A><TT>/usr/local/sympa-os/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="10614"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
+<LI><A NAME="10614"></A><TT>/usr/local/sympa-os/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
 </LI>
 </OL> 
 
@@ -446,11 +446,11 @@ page&nbsp;<A HREF="node18.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="
 Sympa looks for these files in the following order :
 
 <OL>
-<LI><A NAME="10680"></A><TT>/usr/local/sympa-sa/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
+<LI><A NAME="10680"></A><TT>/usr/local/sympa-os/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
 </LI>
-<LI><A NAME="10701"></A><TT>/usr/local/sympa-sa/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10701"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10722"></A><TT>/usr/local/sympa-sa/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="10722"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
 </LI>
 </OL>
 
@@ -668,7 +668,7 @@ Template that defines list mail alises. It is used by the alias_manager script.
 </H1>
 
 <P>
-<A NAME="10751"></A><TT>/usr/local/sympa-sa/expl/mylist/stats</TT> is a text file containing 
+<A NAME="10751"></A><TT>/usr/local/sympa-os/expl/mylist/stats</TT> is a text file containing 
 statistics about the list. Data are numerics separated
 by white space within a single line :
 
@@ -741,8 +741,8 @@ Every month <I>Sympa</I> will delete subscribers older than one year who haven't
 </H1>
 
 <P>
-You may create <A NAME="10760"></A><TT>/usr/local/sympa-sa/expl/mylist/message.header</TT> and
-<A NAME="10763"></A><TT>/usr/local/sympa-sa/expl/mylist/message.footer</TT> files. Their content
+You may create <A NAME="10760"></A><TT>/usr/local/sympa-os/expl/mylist/message.header</TT> and
+<A NAME="10763"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer</TT> files. Their content
 is added, respectively at the beginning and at the end of each message 
 before the distribution process. You may also include the content-type
 of the appended part (when <A NAME="10766"></A><TT>footer_type</TT> list parameter s set 
@@ -776,7 +776,7 @@ if message is not multipart/signed
 </H2> 
 
 <P>
-The <A NAME="10778"></A><TT>/usr/local/sympa-sa/expl/mylist/archives/</TT> directory contains the 
+The <A NAME="10778"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory contains the 
 archived messages for lists which are archived; see <A HREF="node22.html#par-archive">21.6.1</A>, 
 page&nbsp;<A HREF="node22.html#par-archive"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. The files are named in accordance with the 
 archiving frequency defined by the <A NAME="10781"></A><TT>archive</TT> parameter.
@@ -814,7 +814,7 @@ archiving frequency defined by the <A NAME="10781"></A><TT>archive</TT> paramete
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

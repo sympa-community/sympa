@@ -334,9 +334,9 @@ Notes that by default parameter family_name is not writable, you should not chan
 
 <P>
 <I>Example of custom hierarchy :</I> <PRE>
-/usr/local/sympa-sa/etc/families/myfamily/mail_tt2/
-/usr/local/sympa-sa/etc/families/myfamily/mail_tt2/bye.tt2
-/usr/local/sympa-sa/etc/families/myfamily/mail_tt2/welcome.tt2
+/usr/local/sympa-os/etc/families/myfamily/mail_tt2/
+/usr/local/sympa-os/etc/families/myfamily/mail_tt2/bye.tt2
+/usr/local/sympa-os/etc/families/myfamily/mail_tt2/welcome.tt2
 </PRE>
 
 <P>
@@ -676,15 +676,15 @@ First of all we configure our MTA to deliver mail to  <TT>'auto-*'</TT> to  <A N
 
 /etc/postfix/master.cf
     sympa     unix  -       n       n       -       -       pipe
-      flags=R user=sympa argv=/usr/local/sympa-sa/bin/queue ${recipient}
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/queue ${recipient}
     sympabounce  unix  -       n       n       -       -       pipe
-      flags=R user=sympa argv=/usr/local/sympa-sa/bin/bouncequeue ${user}
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/bouncequeue ${user}
     sympafamily  unix  -       n       n       -       -       pipe
-      flags=R user=sympa argv=/usr/local/sympa-sa/bin/familyqueue ${user} age-occupation
+      flags=R user=sympa argv=/usr/local/sympa-os/bin/familyqueue ${user} age-occupation
 </PRE> 
 
 <P>
-A mail addressed to <I>auto-cto.50@lists.domain.com</I> will be queued to the <A NAME="11005"></A><TT>/usr/local/sympa-sa/spool/automatic</TT> spool, 
+A mail addressed to <I>auto-cto.50@lists.domain.com</I> will be queued to the <A NAME="11005"></A><TT>/usr/local/sympa-os/spool/automatic</TT> spool, 
 defined by the <A NAME="11008"></A><TT>queueautomatic</TT> <A NAME="11011"></A><TT>sympa.conf</TT> parameter (see <A HREF="node8.html#kw-queueautomatic">7.6.11</A>, page&nbsp;<A HREF="node8.html#kw-queueautomatic"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 The mail will first be processed by an instance of <A NAME="11014"></A><TT>sympa.pl</TT> process dedicated to automatic list creation, then the mail
 will be sent to the newly created mailing list.
@@ -754,7 +754,7 @@ Now we need to enable automatic list creation in Sympa. To do so, we have to
 <P>
 </LI>
 <LI>set the <A NAME="11026"></A><TT>queueautomatic</TT> <A NAME="11029"></A><TT>sympa.conf</TT> parameter to the spool location where we want these messages to
-  be stored (it has to be different from the <A NAME="11032"></A><TT>/usr/local/sympa-sa/spool/msg</TT> spool).
+  be stored (it has to be different from the <A NAME="11032"></A><TT>/usr/local/sympa-os/spool/msg</TT> spool).
 
 <P>
 </LI>
@@ -769,7 +769,7 @@ you shoukd set the <A NAME="11035"></A><TT>automatic_list_removal</TT> parameter
     ...
     automatic_list_feature  on
     automatic_list_creation public
-    queueautomatic          /usr/local/sympa-sa/spool/automatic
+    queueautomatic          /usr/local/sympa-os/spool/automatic
     automatic_list_removal    if_empty
 </PRE> 
 
@@ -828,7 +828,7 @@ You will receive an 'unknown list' error if either the syntax is incorrect or th
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

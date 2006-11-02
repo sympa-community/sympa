@@ -223,7 +223,7 @@ That's why Sympa tests the key usage certificate attribute to known if the certi
 allows both encryption and signature.
 
 <P>
-Certificates are stored as PEM files in the <A NAME="12339"></A><TT>/usr/local/sympa-sa/expl/X509-user-certs/</TT> directory. 
+Certificates are stored as PEM files in the <A NAME="12339"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory. 
 Files are named user@some.domain@enc or user@some.domain@sign  (@enc and @sign suffix 
 are used according to certificates usage.  No other tool is provided by Sympa in order 
 to collect this certificate repository but you can easily imagine your own tool to create 
@@ -255,7 +255,7 @@ This is done using the optional parameters <A NAME="12343"></A><TT>openSSL</TT> 
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
 <LI><A NAME="12355"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="12358"></A><TT>~/usr/local/sympa-sa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+        The file <A NAME="12358"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
 Both the <A NAME="12363"></A><TT>cafile</TT> file and the <A NAME="12366"></A><TT>capath</TT> directory
@@ -301,7 +301,7 @@ named <TT>send.private_smime</TT>, and restricts sends to subscribers using an S
 
 <P><PRE>
 title.us restricted to subscribers check smime signature
-title.fr limité aux abonnés, vérif de la signature smime
+title.fr limit\'e aux abonn\'es, v\'erif de la signature smime
 
 is_subscriber([listname],[sender])             smime  -&gt; do_is_editor([listname],[sender])                 smime  -&gt; do_it
 is_owner([listname],[sender])                  smime  -&gt; do_it
@@ -311,7 +311,7 @@ is_owner([listname],[sender])                  smime  -&gt; do_it
 It as also possible to mix various authentication methods in a single authorization scenario. The following
 example, <TT>send.private_key</TT>, requires either an md5 return key or an S/Mime signature :<PRE>
 title.us restricted to subscribers with previous md5 authentication
-title.fr réservé aux abonnés avec authentification MD5 préalable
+title.fr r\'serv\'e aux abonn\'es avec authentification MD5 pr\'ealable
 
 is_subscriber([listname],[sender]) smtp          -&gt; request_auth
 true()                             md5,smime     -&gt; do_it
@@ -348,7 +348,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="12374"></A><TT>/usr/local/sympa-sa/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="12374"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -362,7 +362,7 @@ the trusted CA's described in the <A NAME="12377"></A><TT>cafile</TT> file or th
 
 <P>
 The list private key must be installed in a file named
-<A NAME="12383"></A><TT>/usr/local/sympa-sa/expl/mylist/private_key</TT>. All the list private
+<A NAME="12383"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
 <A NAME="12386"></A><TT>password</TT> parameter in <A NAME="12389"></A><TT>sympa.conf</TT>.
 
@@ -394,7 +394,7 @@ Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
 <A NAME="12392"></A><TT>cert.pem</TT> and <A NAME="12395"></A><TT>private_key</TT> using
-the <A NAME="12398"></A><TT>/usr/local/sympa-sa/bin/p12topem.pl</TT> script. Use <A NAME="12401"></A><TT>p12topem.pl -help</TT> for details.
+the <A NAME="12398"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="12401"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
 <LI>be sure that <A NAME="12404"></A><TT>cert.pem</TT> and <A NAME="12407"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
@@ -424,7 +424,7 @@ Report to <A HREF="node8.html#certificate-task-config">7.12.4</A>, page&nbsp;<A 
 
 <P>
 A task created with the model <A NAME="12412"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="12415"></A><TT>/usr/local/sympa-sa/expl/X509-user-certs/</TT> directory.
+certificates stored in the <A NAME="12415"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
 The user is warned with the <A NAME="12418"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
@@ -471,7 +471,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

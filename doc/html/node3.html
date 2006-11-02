@@ -108,7 +108,7 @@ a virtual host or for the whole site.
 <P>
 
 <UL>
-<LI><A NAME="7007"></A><TT>/usr/local/sympa-sa</TT>
+<LI><A NAME="7007"></A><TT>/usr/local/sympa-os</TT>
 <BR>
 The root directory of <I>Sympa</I>. You will find almost everything
 	related to <I>Sympa</I> under this directory, except logs and main
@@ -116,76 +116,76 @@ The root directory of <I>Sympa</I>. You will find almost everything
 
 <P>
 </LI>
-<LI><A NAME="7012"></A><TT>/usr/local/sympa-sa/bin</TT>
+<LI><A NAME="7012"></A><TT>/usr/local/sympa-os/bin</TT>
 <BR>
 This directory contains the binaries, including the CGI. It
 	also contains the default authorization scenarios, templates and configuration
-	files as in the distribution.  <A NAME="7015"></A><TT>/usr/local/sympa-sa/bin</TT> may be completely
+	files as in the distribution.  <A NAME="7015"></A><TT>/usr/local/sympa-os/bin</TT> may be completely
         overwritten by the <A NAME="7018"></A><TT>make install</TT> so you must not customize
-        templates and authorization scenarios under  <A NAME="7021"></A><TT>/usr/local/sympa-sa/bin</TT>.
+        templates and authorization scenarios under  <A NAME="7021"></A><TT>/usr/local/sympa-os/bin</TT>.
 
 <P>
 </LI>
-<LI><A NAME="7024"></A><TT>/usr/local/sympa-sa/bin/etc</TT>
+<LI><A NAME="7024"></A><TT>/usr/local/sympa-os/bin/etc</TT>
 <BR>
 Here <I>Sympa</I> stores the default versions of what it will otherwise find
-	in <A NAME="7028"></A><TT>/usr/local/sympa-sa/etc</TT> (task models, authorization scenarios, templates and configuration
+	in <A NAME="7028"></A><TT>/usr/local/sympa-os/etc</TT> (task models, authorization scenarios, templates and configuration
 	files, recognized S/Mime certificates, families).
 
 <P>
 </LI>
-<LI><A NAME="7031"></A><TT>/usr/local/sympa-sa/etc</TT>
+<LI><A NAME="7031"></A><TT>/usr/local/sympa-os/etc</TT>
 <BR>
 This is your site's configuration directory. Consult
-	<A NAME="7034"></A><TT>/usr/local/sympa-sa/bin/etc</TT> when drawing up your own.
+	<A NAME="7034"></A><TT>/usr/local/sympa-os/bin/etc</TT> when drawing up your own.
 
 <P>
 </LI>
-<LI><A NAME="7037"></A><TT>/usr/local/sympa-sa/etc/create_list_templates/</TT>
+<LI><A NAME="7037"></A><TT>/usr/local/sympa-os/etc/create_list_templates/</TT>
 <BR>
 List templates (suggested at list creation time).
 
 <P>
 </LI>
-<LI><A NAME="7040"></A><TT>/usr/local/sympa-sa/etc/scenari/</TT>
+<LI><A NAME="7040"></A><TT>/usr/local/sympa-os/etc/scenari/</TT>
 <BR>
 This directory will contain your authorization scenarios.
 	If you don't know what the hell an authorization scenario is, refer to <A HREF="node15.html#scenarios">14</A>,page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Those authorization scenarios are default scenarios but you may look at
-        <A NAME="7043"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/scenari/</TT> for default scenarios of my.domain.org
-        virtual host and <A NAME="7046"></A><TT>/usr/local/sympa-sa/expl/mylist/scenari</TT> for scenarios
+        <A NAME="7043"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> for default scenarios of my.domain.org
+        virtual host and <A NAME="7046"></A><TT>/usr/local/sympa-os/expl/mylist/scenari</TT> for scenarios
         specific to a particular list 
 
 <P>
 </LI>
-<LI><A NAME="7049"></A><TT>/usr/local/sympa-sa/etc/data_sources/</TT>
+<LI><A NAME="7049"></A><TT>/usr/local/sympa-os/etc/data_sources/</TT>
 <BR>
 This directory will contain your .incl files (see <A HREF="node19.html#data-inclusion-file">18.7</A>, page&nbsp;<A HREF="node19.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 	For the moment it only deals with files requiered by paragraphs <A NAME="7052"></A><TT>owner_include</TT> and <A NAME="7055"></A><TT>editor_include</TT> in the config file.
 
 <P>
 </LI>
-<LI><A NAME="7058"></A><TT>/usr/local/sympa-sa/etc/list_task_models/</TT>
+<LI><A NAME="7058"></A><TT>/usr/local/sympa-os/etc/list_task_models/</TT>
 <BR>
 This directory will store your own list task models (see <A HREF="node18.html#tasks">17.8</A>, page&nbsp;<A HREF="node18.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).	
 
 <P>
 </LI>
-<LI><A NAME="7061"></A><TT>/usr/local/sympa-sa/etc/global_task_models/</TT>
+<LI><A NAME="7061"></A><TT>/usr/local/sympa-os/etc/global_task_models/</TT>
 <BR>
 Contains global task models of yours (see <A HREF="node18.html#tasks">17.8</A>, page&nbsp;<A HREF="node18.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).		
 
 <P>
 </LI>
-<LI><A NAME="7064"></A><TT>/usr/local/sympa-sa/etc/web_tt2/</TT> (used to be <A NAME="7067"></A><TT>/usr/local/sympa-sa/etc/wws_templates/</TT>)
+<LI><A NAME="7064"></A><TT>/usr/local/sympa-os/etc/web_tt2/</TT> (used to be <A NAME="7067"></A><TT>/usr/local/sympa-os/etc/wws_templates/</TT>)
 <BR>
 The web interface (<A NAME="7070"></A><I>WWSympa</I>) is composed of template HTML
 	files parsed by the CGI program. Templates can also 
-        be defined for a particular list in <A NAME="7073"></A><TT>/usr/local/sympa-sa/expl/mylist/web_tt2/</TT>
-        or in <A NAME="7076"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/web_tt2/</TT>
+        be defined for a particular list in <A NAME="7073"></A><TT>/usr/local/sympa-os/expl/mylist/web_tt2/</TT>
+        or in <A NAME="7076"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>
 
 <P>
 </LI>
-<LI><A NAME="7079"></A><TT>/usr/local/sympa-sa/etc/mail_tt2/</TT> (used to be <A NAME="7082"></A><TT>/usr/local/sympa-sa/etc/templates/</TT>)
+<LI><A NAME="7079"></A><TT>/usr/local/sympa-os/etc/mail_tt2/</TT> (used to be <A NAME="7082"></A><TT>/usr/local/sympa-os/etc/templates/</TT>)
 <BR>
 Some of the mail robot's replies are defined by templates
 	(<A NAME="7085"></A><TT>welcome.tt2</TT> for SUBSCRIBE). You can overload
@@ -194,56 +194,56 @@ Some of the mail robot's replies are defined by templates
 
 <P>
 </LI>
-<LI><A NAME="7088"></A><TT>/usr/local/sympa-sa/etc/families/</TT>
+<LI><A NAME="7088"></A><TT>/usr/local/sympa-os/etc/families/</TT>
 <BR>
 Contains family directories of yours (see <A HREF="node20.html#ml-creation">19</A>, page&nbsp;<A HREF="node20.html#ml-creation"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-	Families directories can also be created in <A NAME="7091"></A><TT>/usr/local/sympa-sa/etc/my.domain.org/families/</TT>
+	Families directories can also be created in <A NAME="7091"></A><TT>/usr/local/sympa-os/etc/my.domain.org/families/</TT>
 
 <P>
 </LI>
-<LI><A NAME="7094"></A><TT>/usr/local/sympa-sa/etc/my.domain.org</TT>
+<LI><A NAME="7094"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>
 <BR>
 The directory to define the virtual host my.domain.orgdedicated to
         managment of all lists of this domain (list description of my.domain.orgare stored
-        in <A NAME="7097"></A><TT>/usr/local/sympa-sa/expl/my.domain.org</TT>).
-        Those directories for virtual hosts have the same structure as  <A NAME="7100"></A><TT>/usr/local/sympa-sa/etc</TT> which is
+        in <A NAME="7097"></A><TT>/usr/local/sympa-os/expl/my.domain.org</TT>).
+        Those directories for virtual hosts have the same structure as  <A NAME="7100"></A><TT>/usr/local/sympa-os/etc</TT> which is
         the configuration dir of the default robot. 
 
 <P>
 </LI>
-<LI><A NAME="7103"></A><TT>/usr/local/sympa-sa/expl</TT>
+<LI><A NAME="7103"></A><TT>/usr/local/sympa-os/expl</TT>
 <BR>	<I>Sympa</I>'s working directory.
 
 <P>
 </LI>
-<LI><A NAME="7107"></A><TT>/usr/local/sympa-sa/expl/mylist</TT>
+<LI><A NAME="7107"></A><TT>/usr/local/sympa-os/expl/mylist</TT>
 <BR>
 The list directory (refer to <A HREF="node19.html#ml-definition">18</A>, 
 	page&nbsp;<A HREF="node19.html#ml-definition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
-        can be stored in <A NAME="7110"></A><TT>/usr/local/sympa-sa/expl/my.domain.org/mylist</TT> directory and it
+        can be stored in <A NAME="7110"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist</TT> directory and it
         is managed by my.domain.orgvirtual host.
 
 <P>
 </LI>
-<LI><A NAME="7113"></A><TT>/usr/local/sympa-sa/expl/X509-user-certs</TT>
+<LI><A NAME="7113"></A><TT>/usr/local/sympa-os/expl/X509-user-certs</TT>
 <BR>
 The directory where Sympa stores all user's certificates
 
 <P>
 </LI>
-<LI><A NAME="7116"></A><TT>/usr/local/sympa-sa/locale</TT>
+<LI><A NAME="7116"></A><TT>/usr/local/sympa-os/locale</TT>
 <BR>
 Internationalization directory. It contains message catalogues in the GNU .po format. 
 
 <P>
 </LI>
-<LI><A NAME="7119"></A><TT>/usr/local/sympa-sa/spool</TT>
+<LI><A NAME="7119"></A><TT>/usr/local/sympa-os/spool</TT>
 <BR>	<I>Sympa</I> uses 9 different spools (see <A HREF="#spools">2.4</A>, page&nbsp;<A HREF="node3.html#spools"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="7123"></A><TT>/usr/local/sympa-sa/src/</TT>
+<LI><A NAME="7123"></A><TT>/usr/local/sympa-os/src/</TT>
 <BR>	<I>Sympa</I> sources.
 
 <P>
@@ -342,14 +342,14 @@ Same as <A NAME="7181"></A><TT>queue</TT> for bounces. Stores bounces in
 <P>
 
 <UL>
-<LI><A NAME="7187"></A><TT>/usr/local/sympa-sa/etc/sympa.conf</TT>
+<LI><A NAME="7187"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
 <BR>
 The main configuration file.
 	See <A HREF="node8.html#exp-admin">7</A>, page&nbsp;<A HREF="node8.html#exp-admin"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 </LI>
-<LI><A NAME="7190"></A><TT>/usr/local/sympa-sa/etc/wwsympa.conf</TT>
+<LI><A NAME="7190"></A><TT>/usr/local/sympa-os/etc/wwsympa.conf</TT>
 <BR>	<A NAME="7193"></A><I>WWSympa</I> configuration file.
 	See <A HREF="node2.html#wwsympa">1.2</A>, page&nbsp;<A HREF="node2.html#wwsympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
@@ -420,65 +420,65 @@ in <A NAME="7226"></A><TT>sympa.conf</TT>.
 <P>
 
 <UL>
-<LI><A NAME="7229"></A><TT>/usr/local/sympa-sa/spool/auth/</TT>
+<LI><A NAME="7229"></A><TT>/usr/local/sympa-os/spool/auth/</TT>
 <BR>
 For storing messages until they have been confirmed.
 
 <P>
 </LI>
-<LI><A NAME="7232"></A><TT>/usr/local/sympa-sa/spool/bounce/</TT>
+<LI><A NAME="7232"></A><TT>/usr/local/sympa-os/spool/bounce/</TT>
 <BR>
 For storing incoming bouncing messages.
 
 <P>
 </LI>
-<LI><A NAME="7235"></A><TT>/usr/local/sympa-sa/spool/digest/</TT>
+<LI><A NAME="7235"></A><TT>/usr/local/sympa-os/spool/digest/</TT>
 <BR>
 For storing lists' digests before they are sent.
 
 <P>
 </LI>
-<LI><A NAME="7238"></A><TT>/usr/local/sympa-sa/spool/mod/</TT>
+<LI><A NAME="7238"></A><TT>/usr/local/sympa-os/spool/mod/</TT>
 <BR>
 For storing unmoderated messages.
 
 <P>
 </LI>
-<LI><A NAME="7241"></A><TT>/usr/local/sympa-sa/spool/msg/</TT>
+<LI><A NAME="7241"></A><TT>/usr/local/sympa-os/spool/msg/</TT>
 <BR>
 For storing incoming messages (including commands).
 
 <P>
 </LI>
-<LI><A NAME="7244"></A><TT>/usr/local/sympa-sa/spool/msg/bad/</TT>
+<LI><A NAME="7244"></A><TT>/usr/local/sympa-os/spool/msg/bad/</TT>
 <BR>	<I>Sympa</I> stores rejected messages in this directory
 
 <P>
 </LI>
-<LI><A NAME="7248"></A><TT>/usr/local/sympa-sa/spool/distribute/</TT>
+<LI><A NAME="7248"></A><TT>/usr/local/sympa-os/spool/distribute/</TT>
 <BR>
 For storing message ready for distribution. This spool is used only if the installation run 2 sympa.pl daemon, one for commands, one for messages. 
 
 <P>
 </LI>
-<LI><A NAME="7251"></A><TT>/usr/local/sympa-sa/spool/distribute/bad/</TT>
+<LI><A NAME="7251"></A><TT>/usr/local/sympa-os/spool/distribute/bad/</TT>
 <BR>	<I>Sympa</I> stores rejected messages in this directory
 
 <P>
 </LI>
-<LI><A NAME="7255"></A><TT>/usr/local/sympa-sa/spool/task/</TT>
+<LI><A NAME="7255"></A><TT>/usr/local/sympa-os/spool/task/</TT>
 <BR>
 For storing all created tasks.
 
 <P>
 </LI>
-<LI><A NAME="7258"></A><TT>/usr/local/sympa-sa/spool/outgoing/</TT>
+<LI><A NAME="7258"></A><TT>/usr/local/sympa-os/spool/outgoing/</TT>
 <BR>	<A NAME="7261"></A><TT>sympa.pl</TT> dumps messages in this spool to await archiving
 	by <A NAME="7264"></A><TT>archived.pl</TT>.
 
 <P>
 </LI>
-<LI><A NAME="7267"></A><TT>/usr/local/sympa-sa/spool/topic/</TT>
+<LI><A NAME="7267"></A><TT>/usr/local/sympa-os/spool/topic/</TT>
 <BR>
 For storing topic information files. 
 
@@ -586,7 +586,7 @@ Subscribers are the persons who are member of a mailing list ; they either subsc
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

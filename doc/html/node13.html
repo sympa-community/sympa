@@ -74,7 +74,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node13.html#SECTION001360000000000000000">12.6 Client-side programming</A>
 <UL>
 <LI><A NAME="tex2html1198"
-  HREF="node13.html#SECTION001361000000000000000">12.6.1 Writting a Java client with Axis</A>
+  HREF="node13.html#SECTION001361000000000000000">12.6.1 Writing a Java client with Axis</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
@@ -141,8 +141,8 @@ You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because 
 
 <P>
 Here is a sample piece of your Apache <A NAME="9453"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /usr/local/sympa-sa/bin/sympa_soap_server.fcgi -processes 1
-	ScriptAlias /sympasoap /usr/local/sympa-sa/bin/sympa_soap_server.fcgi
+	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
 
 	&lt;Location /sympasoap&gt;
    	  SetHandler fastcgi-script
@@ -177,7 +177,7 @@ also for the SOAP server to deduce what Virtual Host is concerned by the current
 The SOAP service <A NAME="9465"></A><TT>authenticateRemoteAppAndRun</TT> is used in order to allow some remote application such as a web portal to request Sympa service as a proxy for the end user. In such case, Sympa will not authenticate the end user itself but instead it will trust a particular application to act as a proxy. 
 
 <P>
-This configuration file <A NAME="9468"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9471"></A><TT>etc/</TT> subdirectory or in <A NAME="9474"></A><TT>/usr/local/sympa-sa/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9477"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9480"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9483"></A><TT>trusted_application</TT>. A sample <A NAME="9486"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
+This configuration file <A NAME="9468"></A><TT>trusted_applications.conf</TT> can be created in the robot <A NAME="9471"></A><TT>etc/</TT> subdirectory or in <A NAME="9474"></A><TT>/usr/local/sympa-os/etc</TT> directory depending on the scope you want for it (the source package include a sample of file <A NAME="9477"></A><TT>trusted_applications.conf</TT> in directory <A NAME="9480"></A><TT>soap</TT>). This file is constructed with paragraphs separated by empty line and stating with key word  <A NAME="9483"></A><TT>trusted_application</TT>. A sample <A NAME="9486"></A><TT>trusted_applications.conf</TT> file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs
 
 <P>
 
@@ -194,9 +194,9 @@ This configuration file <A NAME="9468"></A><TT>trusted_applications.conf</TT> ca
 
 <P>
 You can test your SOAP service using the <A NAME="9510"></A><TT>sympa_soap_client.pl</TT> sample script as follows :<PRE>
-/usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
+/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://my.server/sympasoap --service=createList --trusted_application=myTestApp --trusted_application_password=myTestAppPwd --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,listSubject,discussion_list,description,myTopic
 
-/usr/local/sympa-sa/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
+/usr/local/sympa-os/bin/sympa_soap_client.pl --soap_url=http://myserver/sympasoap --service=add --trusted_application=myTestApp --trusted_application_password=myTestAppPwd  --proxy_vars="USER_EMAIL=userProxy@my.server" --service_parameters=listA,someone@some;domain,name
 </PRE>
 
 <P>
@@ -404,12 +404,12 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 	&lt;part name="return" type="xsd:string"/&gt;	
 &lt;/message&gt;
 
-&lt;message name="getUserEmailByCookieRequest
+&lt;message name="getUserEmailByCookieRequest"&gt;
 	&lt;part name="cookie" type="xsd:string"/&gt;
 &lt;/message&gt;
 
 &lt;message name="getUserEmailByCookieResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
+	&lt;part name="return" type="xsd:string"/&gt;
 &lt;/message&gt;
 
 &lt;message name="authenticateAndRunRequest"&gt;
@@ -804,7 +804,7 @@ should use the <B>authenticateAndRun()</B> function that does not require cookie
 <P>
 
 <H2><A NAME="SECTION001361000000000000000">
-12.6.1 Writting a Java client with Axis</A>
+12.6.1 Writing a Java client with Axis</A>
 </H2>
 
 <P>
@@ -917,7 +917,7 @@ String[] _abonnements = tmp.which();
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>

@@ -125,13 +125,13 @@ lines must therefore be added to the <A NAME="8098"></A><TT>sendmail</TT> alias 
 
 <P>
 <BLOCKQUOTE>
-sympa:             "| /usr/local/sympa-sa/bin/queue sympa@my.domain.org"
+sympa:             "| /usr/local/sympa-os/bin/queue sympa@my.domain.org"
 <BR>
-listmaster: 	   "| /usr/local/sympa-sa/bin/queue listmaster@my.domain.org"
+listmaster: 	   "| /usr/local/sympa-os/bin/queue listmaster@my.domain.org"
 <BR>
-bounce+*:          "| /usr/local/sympa-sa/bin/bouncequeue sympa@my.domain.org"
+bounce+*:          "| /usr/local/sympa-os/bin/bouncequeue sympa@my.domain.org"
 <BR>
-abuse-feedback-report:       "| /usr/local/sympa-sa/bin/bouncequeue sympa@my.domain.org"
+abuse-feedback-report:       "| /usr/local/sympa-os/bin/bouncequeue sympa@my.domain.org"
 <BR>
 sympa-request:     postmaster
 <BR>
@@ -201,37 +201,37 @@ aliases must be added:
 <TR><TD ALIGN="LEFT"><TT>
         <TT>mylist</TT>:         </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/queue mylist@my.domain.org"
+            "|/usr/local/sympa-os/bin/queue mylist@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-request</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/queue mylist-request@my.domain.org"
+            "|/usr/local/sympa-os/bin/queue mylist-request@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-editor</TT>:  </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/queue mylist-editor@my.domain.org"
+            "|/usr/local/sympa-os/bin/queue mylist-editor@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-owner</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/bouncequeue mylist@my.domain.org
+            "|/usr/local/sympa-os/bin/bouncequeue mylist@my.domain.org
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-subscribe</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/queue mylist-subscribe@my.domain.org"
+            "|/usr/local/sympa-os/bin/queue mylist-subscribe@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-unsubscribe</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-sa/bin/queue mylist-unsubscribe@my.domain.org"
+            "|/usr/local/sympa-os/bin/queue mylist-unsubscribe@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD></TD>
@@ -244,14 +244,14 @@ The address <TT>mylist-request</TT> should correspond
 to the person responsible for managing <TT>mylist</TT>
 (the <A NAME="8136"></A>owner).  <I>Sympa</I> will forward messages for
 <TT>mylist-request</TT> to the owner of <TT>mylist</TT>,
-as defined in the <A NAME="8140"></A><TT>/usr/local/sympa-sa/expl/mylist/config</TT>
+as defined in the <A NAME="8140"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>
 file.  Using this feature means you would not need to modify the
 alias file if the owner of the list were to change.
 
 <P>
 Similarly, the address <TT>mylist-editor</TT> can be used
 to contact the list editors if any are defined in
-<A NAME="8144"></A><TT>/usr/local/sympa-sa/expl/mylist/config</TT>.  This address definition
+<A NAME="8144"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>.  This address definition
 is not compulsory.
 
 <P>
@@ -296,10 +296,10 @@ The script expects the following arguments :
 <LI><TT>&lt;</TT>list domain<TT>&gt;</TT>
 </LI>
 </OL>
-Example : <A NAME="8165"></A><TT>/usr/local/sympa-sa/bin/alias_manager.pl add mylistcru.fr</TT>
+Example : <A NAME="8165"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl add mylistcru.fr</TT>
 
 <P>
-<A NAME="8168"></A><TT>/usr/local/sympa-sa/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="8171"></A><TT>sympa.conf</TT>)
+<A NAME="8168"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="8171"></A><TT>sympa.conf</TT>)
 by the <A NAME="8174"></A><TT>sendmail_aliases</TT> variable (default is <A NAME="8177"></A><TT>/etc/mail/sympa_aliases</TT>). You must refer to this aliases file in your <A NAME="8180"></A><TT>sendmail.mc</TT> (if using sendmail) :<PRE>
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 </PRE>
@@ -308,7 +308,7 @@ define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 Note that <A NAME="8183"></A><TT>sendmail</TT> has requirements regarding the ownership and rights on both <A NAME="8186"></A><TT>sympa_aliases</TT> and <A NAME="8189"></A><TT>sympa_aliases.db</TT> files (the later being created by sendmail via the <A NAME="8192"></A><TT>newaliases</TT> command). Anyhow these two files should be located in a directory, every path component of which being owned by and writable only by the root user.
 
 <P>
-<A NAME="8195"></A><TT>/usr/local/sympa-sa/bin/alias_manager.pl</TT> runs a <A NAME="8198"></A><TT>newaliases</TT> command (via <A NAME="8201"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
+<A NAME="8195"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> runs a <A NAME="8198"></A><TT>newaliases</TT> command (via <A NAME="8201"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
 
 <P>
 If you manage virtual domains with your mail server, then you might want to change
@@ -348,9 +348,9 @@ With Postfix, you should edit the <A NAME="8227"></A><TT>/etc/postfix/virtual.re
 </BLOCKQUOTE>
  Entries in the 'aliases' file will look like this :
 <BLOCKQUOTE>
-my.domain.org-sympa:   "|/usr/local/sympa-sa/bin/queue sympa@my.domain.org"
+my.domain.org-sympa:   "|/usr/local/sympa-os/bin/queue sympa@my.domain.org"
     .....
-    my.domain.org-listA:   "|/usr/local/sympa-sa/bin/queue listA@my.domain.org"
+    my.domain.org-listA:   "|/usr/local/sympa-os/bin/queue listA@my.domain.org"
 
 </BLOCKQUOTE>
 
@@ -394,7 +394,7 @@ With Sendmail, add the following entry to <A NAME="8230"></A><TT>/etc/mail/virtu
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-10-24
+2006-11-02
 </ADDRESS>
 </BODY>
 </HTML>
