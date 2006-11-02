@@ -10752,7 +10752,7 @@ sub load_topics {
 	    return undef;
 	}
 	
-	unless (open (FILE, $conf_file)) {
+	unless (open (FILE, "<:encoding($Conf{'filesystem_encoding'})", $conf_file)) {
 	    &do_log('err',"Unable to open config file $conf_file");
 	    return undef;
 	}
