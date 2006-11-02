@@ -29,6 +29,7 @@ $sympa_conf_file = '--CONFIG--';
 
 use List;
 use Log;
+use Getopt::Long;
 
 my %month_idx = qw(jan 1 
 		   fev 2
@@ -49,7 +50,6 @@ my %month_idx = qw(jan 1
 		   dec 12
 		   dc  12);
 
-my %nummsg;
 my $msg_count;
 
 my %options;
@@ -62,7 +62,12 @@ my $pinfo = &List::_apply_defaults();
 
 $| = 1;
 
-die "Usage : $ARGV[-1] <listname> [robot]" unless ($#ARGV >= 0);
+my %opt;
+unless (&GetOptions(\%opt, 'input-directory=s')) {
+    die("Unknown options.");
+}
+
+die "Usage : $ARGV[-1] [-input-directory=<directory containing individual messages>] <listname> [robot]" unless ($#ARGV >= 0);
 my $listname = $ARGV[0];
 my $robot = $ARGV[1];
 
@@ -117,41 +122,83 @@ if (-d $dest_dir) {
 }
 
 
-print STDERR "Bursting archives\n";
-foreach my $arc_file (<$home_sympa/$listname/archives/log*>) {
-    my ($first, $new);
-    my $msg = [];
-    my @msgs;
-
-    ## Split the archives file
-    print '.';
-    open ARCFILE, $arc_file;
-    while (<ARCFILE>) {
-	if (/^------- THIS IS A RFC934 (COMPILANT|COMPLIANT) DIGEST/) {
-	    $first = 1;
-	    $new = 1;
-	    next;
-	}elsif (! $first) {
-	    next;
-	}elsif (/^$/ && $new) {
-	    next;
-	}elsif (/^------- CUT --- CUT/) {
-	    push @msgs, $msg;
-	    $msg_count++;
-	    $msg = [];
-	    $new = 1;
-	}else {
-	    push @{$msg}, $_;
-	    undef $new;
-	}
+if ($opts{'input-directory'}) {
+    unless (-d $opts{'input-directory'}) {
+	die "Parameter input-directory (%s) is not a directory", $opts{'input-directory'};
     }
-    close ARCFILE;
 
-    ##Dump
-    #foreach my $i (0..$#msgs) {
-    #    printf "******** Message %d *******\n", $i;
-    #    print @{$msgs[$i]};
-    #}
+    opendir DIR, $opts{'input-directory'} || die;
+    foreach my $file ( sort grep (!/^\.\.?$/,readdir(DIR))) {
+	open ARCFILE, $opts{'input-directory'}.'/'.$file;
+	my @msg = <ARCFILE>;
+	push @msgs, \@msg;
+	$msg_count++;
+	close ARCFILE;
+    }
+    closedir DIR;
+
+}else {
+
+    print STDERR "Bursting archives\n";
+    foreach my $arc_file (<$home_sympa/$listname/archives/log*>) {
+	my ($first, $new);
+	my $msg = [];
+	my @msgs;
+	
+	## Split the archives file
+	print '.';
+	open ARCFILE, $arc_file;
+	while (<ARCFILE>) {
+	    if (/^------- THIS IS A RFC934 (COMPILANT|COMPLIANT) DIGEST/) {
+		$first = 1;
+		$new = 1;
+		next;
+	    }elsif (! $first) {
+		next;
+	    }elsif (/^$/ && $new) {
+		next;
+	    }elsif (/^------- CUT --- CUT/) {
+		push @msgs, $msg;
+		$msg_count++;
+		$msg = [];
+		$new = 1;
+	    }else {
+		push @{$msg}, $_;
+		undef $new;
+	    }
+	}
+	close ARCFILE;
+	
+	##Dump
+	#foreach my $i (0..$#msgs) {
+	#    printf "******** Message %d *******\n", $i;
+	#    print @{$msgs[$i]};
+	#}
+	
+	## Store messages in web arc
+	&store_messages(\@msgs, $dest_dir);      
+	
+    }
+}
+
+print STDERR "\nFound $msg_count messages\n";
+
+
+## Rebuild web archives
+print STDERR "Rebuilding HTML\n";
+my $list_id = $list->get_list_id();
+`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$list_id`;
+
+print STDERR "\nHave a look in $dest_dir/-/ directory for messages dateless
+Now, you should add a web_archive parameter in the config file to make it accessible from the web\n";
+
+
+## Analyze message header fields and store them in web archives
+sub store_messages {
+    my ($list_of_msg, $dest_dir) = @_;
+    my @msgs = @{$list_of_msg};
+
+    my %nummsg;
 
     ## Analyzing Date header fields
     #print STDERR "Analysing Date: header fields\n";
@@ -246,22 +293,7 @@ foreach my $arc_file (<$home_sympa/$listname/archives/log*>) {
 	#    `mv $m $dest_dir/$year-$month/arctxt/$nummsg{$year}{$month}`;
 	$nummsg{$year}{$month}++;
     }
-  
 
+    return 1;
 }
-
-print STDERR "\nFound $msg_count messages\n";
-
-
-## Rebuild web archives
-print STDERR "Rebuilding HTML\n";
-my $list_id = $list->get_list_id();
-`touch $Conf::Conf{'queueoutgoing'}/.rebuild.$list_id`;
-
-print STDERR "\nHave a look in $dest_dir/-/ directory for messages dateless
-Now, you should add a web_archive parameter in the config file to make it accessible from the web\n";
-
-
-
-
 
