@@ -300,7 +300,7 @@ sub authenticateAndRun {
 sub getUserEmailByCookie {
     my ($self, $cookie) = @_;
 
-    &do_log('notice','get_user_attributs_from_cookie(%s)', $cookie);
+    &do_log('notice','xxxx getUserEmailByCookie(%s)', $cookie);
     
     unless ($cookie) {
 	die SOAP::Fault->faultcode('Client')
