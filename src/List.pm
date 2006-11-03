@@ -8744,7 +8744,7 @@ sub _include_users_remote_file {
 	}
     }
     else {
-	do_log ('err',"List::include_users_remote_file: Unable to fetch remote file $url");
+	do_log ('err',"List::include_users_remote_file: Unable to fetch remote file $url : %s", $res->message());
 	return undef; 
     }
 
