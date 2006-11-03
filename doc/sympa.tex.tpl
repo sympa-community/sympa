@@ -4837,7 +4837,7 @@ Rules are defined as follows :
                 | all ()
                 | equal (<var>, <var>)
                 | match (<var>, /perl_regexp/)
-		| search (<named_filter_file>,<var>)
+		| search (<named_filter_file>)
                 | is_subscriber (<listname>, <var>)
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
@@ -4980,7 +4980,7 @@ At the moment Named Filters are only used in authorization scenarios. They enabl
 	
 As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory, an \textindex {SQL} database or an flat text file, thanks to an authorization scenario.
 	
-Note that the only variable available in named filters is [sender] and is set to the email address of the acting user.
+Note that the only a subset of variable available in the scenario context are available here (including [sender] and [listname]).
 
 \subsection {LDAP Named Filters Definition}
 
@@ -5103,17 +5103,12 @@ The search condition is used in authorization scenarios which are defined and de
 The syntax of this rule is:
 \begin {quote}
 \begin{verbatim}
-	search(example.ldap,[sender])      smtp,smime,md5    -> do_it
-	search(blacklist.txt,[sender])     smtp,smime,md5    -> do_it
+	search(example.ldap)      smtp,smime,md5    -> do_it
+	search(blacklist.txt)     smtp,smime,md5    -> do_it
 \end{verbatim}
 \end {quote}
 
-The variables used by 'search' are :
-\begin{itemize}
-	\item{the name of the LDAP Configuration file or a txt matching enumeration}\\
-	\item{the [sender]}\\
-	That is to say the sender email address.
-\end{itemize}
+The variable used by 'search' is the name of the LDAP Configuration file or a txt matching enumeration
  
 +Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory or SQL server; each entry has a lifetime of 1 hour in the cache.
 
@@ -5150,7 +5145,7 @@ Note that you will need to restart Sympa processes to force reloading of list co
 For each service listed in parameter \cfkeyword {use\_blacklist} (see~\ref {useblacklist}), the following implicit scenario rule is added at the beginning of the scenario :
 \begin {quote}
 \begin{verbatim}
-search(blacklist.txt,[sender])  smtp,md5,pgp,smime -> reject,quiet
+search(blacklist.txt)  smtp,md5,pgp,smime -> reject,quiet
 \end{verbatim}
 \end {quote}
 	    

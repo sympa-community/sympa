@@ -7302,9 +7302,14 @@ sub verify {
 	     do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
 	}
+	# condition that require 1 or 2 args (search : historical reasons)
+    }elsif ($condition_key =~ /^search$/o) {
+	unless ($#args == 1 || $#args == 0) {
+	    do_log('err',"error rule syntaxe : Incorrect argument number for condition $condition_key") ; 
+	    return undef ;
+	}
 	# condition that require 2 args
-#
-    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older|search$/o) {
+    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older$/o) {
 	unless ($#args == 1) {
 	    do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
@@ -7426,10 +7431,9 @@ sub verify {
 	my $val_search;
  	# we could search in the family if we got ref on Family object
  	if (defined $list){
-            do_log('debug3',"appel de search($args[0],$args[1],$robot,$list)");
- 	    $val_search = &search($args[0],$args[1],$robot,$list);
+ 	    $val_search = &search($args[0],$context,$robot,$list);
  	}else {
- 	    $val_search = &search($args[0],$args[1],$robot);
+ 	    $val_search = &search($args[0],$context,$robot);
  	}
 	return undef unless defined $val_search;
 	if($val_search == 1) { 
@@ -7509,9 +7513,11 @@ sub verify_custom {
 ## Verify if a given user is part of an LDAP, SQL or TXT search filter
 sub search{
     my $filter_file = shift;
-    my $sender = shift;
+    my $context = shift;
     my $robot = shift;
     my $list = shift;
+
+    my $sender = $context->{'sender'};
 
     &do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
     
@@ -7531,8 +7537,38 @@ sub search{
 	
         my $statement = $sql_conf->{'sql_named_filter_query'}->{'statement'};
         my $filter = $statement;
-        $statement =~ s/\[sender\]/%s/g;
-        $filter =~ s/\[sender\]/$sender/g;
+	my @statement_args; ## Useful to later quote parameters
+	
+	## Minimalist variable parser ; only parse [x] or [x->y]
+	## should be extended with the code from verify()
+	while ($filter =~ /\[(\w+(\-\>[\w\-]+)?)\]/x) {
+	    my ($full_var) = ($1);
+	    my ($var, $key) = split /\-\>/, $full_var;
+	    
+	    unless (defined $context->{$var}) {
+		&do_log('err', "Failed to parse variable '%s' in filter '%s'", $var, $file);
+		return undef;
+	    }
+
+	    if (defined $key) { ## Should be a hash
+		unless (defined $context->{$var}{$key}) {
+		    &do_log('err', "Failed to parse variable '%s.%s' in filter '%s'", $var, $key, $file);
+		    return undef;
+		}
+
+		$filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
+		$statement =~ s/\[$full_var\]/\%s/;
+		push @statement_args, $context->{$var}{$key};
+	    }else { ## Scalar
+		$filter =~ s/\[$full_var\]/$context->{$var}/;
+		$statement =~ s/\[$full_var\]/\%s/;
+		push @statement_args, $context->{$var};
+
+	    }
+	}
+
+#        $statement =~ s/\[sender\]/%s/g;
+#        $filter =~ s/\[sender\]/$sender/g;
  
         if (defined ($persistent_cache{'named_filter'}{$filter_file}{$filter}) &&
             (time <= $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
@@ -7540,13 +7576,18 @@ sub search{
             return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
         }
 	
-        my $ds = new Datasource('SQL', $sql_conf->{'sql_named_filter_query'});
-        unless ($ds->connect() && $ds->ping) {
+	my $ds = new Datasource('SQL', $sql_conf->{'sql_named_filter_query'});
+	unless ($ds->connect() && $ds->ping) {
             do_log('notice','Unable to connect to the SQL server %s:%d',$sql_conf->{'db_host'}, $sql_conf->{'db_port'});
             return undef;
         }
 	
-        $statement = sprintf $statement, $ds->quote($sender);
+	## Quote parameters
+	foreach (@statement_args) {
+	    $_ = $ds->quote($_);
+	}
+
+        $statement = sprintf $statement, @statement_args;
         unless ($ds->query($statement)) {
             do_log('debug','%s named filter cancelled', $file);
             return undef;
@@ -7580,7 +7621,32 @@ sub search{
 	return undef unless (%ldap_conf = &Ldap::load($file));
 
 	my $filter = $ldap_conf{'filter'};	
-	$filter =~ s/\[sender\]/$sender/g;
+
+	## Minimalist variable parser ; only parse [x] or [x->y]
+	## should be extended with the code from verify()
+	while ($filter =~ /\[(\w+(\-\>[\w\-]+)?)\]/x) {
+	    my ($full_var) = ($1);
+	    my ($var, $key) = split /\-\>/, $full_var;
+	    
+	    unless (defined $context->{$var}) {
+		&do_log('err', "Failed to parse variable '%s' in filter '%s'", $var, $file);
+		return undef;
+	    }
+
+	    if (defined $key) { ## Should be a hash
+		unless (defined $context->{$var}{$key}) {
+		    &do_log('err', "Failed to parse variable '%s.%s' in filter '%s'", $var, $key, $file);
+		    return undef;
+		}
+
+		$filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
+	    }else { ## Scalar
+		$filter =~ s/\[$full_var\]/$context->{$var}/;
+
+	    }
+	}
+
+#	$filter =~ s/\[sender\]/$sender/g;
 	
 	if (defined ($persistent_cache{'named_filter'}{$filter_file}{$filter}) &&
 	    (time <= $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
