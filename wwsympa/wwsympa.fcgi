@@ -6944,8 +6944,9 @@ sub do_remove_arc {
      $in{'msgid'} =~ s/\$/\\\$/g;
      $in{'msgid'} =~ s/\*/\\\*/g;
 
-     ## Mhonarc escapes '-' characters (&#45;)
+     ## Mhonarc escapes some characters : '-' (&#45;) and '&' (&#38;)
      $in{'msgid'} =~ s/\-/\&\#45\;/g;
+     $in{'msgid'} =~ s/\&/\&\#38\;/g;
 
      $search->limit (1);
 
