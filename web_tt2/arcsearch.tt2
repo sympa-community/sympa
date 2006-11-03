@@ -15,9 +15,9 @@
 [% IF how == 'phrase' %]
 	[%|loc%](This sentence,[%END%] 
 [% ELSIF how == 'any' %]
-	[%|loc%](All of this words,[%END%] 
+	[%|loc%](All of these words,[%END%] 
 [% ELSE %]
-	[%|loc%](Each of this words,[%END%] 
+	[%|loc%](Each of these words,[%END%] 
 [% END %]
 
 [% IF case == 'off' %]
@@ -53,19 +53,19 @@
 <dl>
 
 [% IF body %]
-	<dd>[%|loc(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
+	<dd>[%|loc(body_count)%]%1 hits on message Body[%END%]<br /></dd>
 [% END %]
 
 [% IF subj %]
-	<dd>[%|loc(subj_count)%]%1 hits on message's Subject field[%END%]<br /></dd>
+	<dd>[%|loc(subj_count)%]%1 hits on message Subject field[%END%]<br /></dd>
 [% END %]
 
 [% IF from %]
-	<dd>[%|loc(from_count)%] %1 hits on message's From field[%END%]<br /></dd>
+	<dd>[%|loc(from_count)%] %1 hits on message From field[%END%]<br /></dd>
 [% END %]
 
 [% IF date %]
-	<dd>[%|loc(date_count)%]%1 hits on message's Date field[%END%]<br /></dd>
+	<dd>[%|loc(date_count)%]%1 hits on message Date field[%END%]<br /></dd>
 [% END %]
 
 </dl>

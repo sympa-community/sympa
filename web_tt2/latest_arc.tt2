@@ -3,9 +3,9 @@
 
 <h2>
  [% IF count %]
-   [%|loc(count)%] The %1 latest messages [%END%] 
+   [%|loc(count)%] The %1 most recent messages [%END%] 
  [% ELSE %]
-   [%|loc%] The latest messages [%END%] 
+   [%|loc%] Recent messages [%END%] 
  [% END %]
 
  [% IF for %]
@@ -14,7 +14,7 @@
 </h2> 	
 <br /> 
  
-<table summary="[%|loc%] The latest messages of this list [%END%]" class="table_style">
+<table summary="[%|loc%] The most recent messages for this list [%END%]" class="table_style">
  <tr class="color_light">
    <th><strong>[%|loc%]Date[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>

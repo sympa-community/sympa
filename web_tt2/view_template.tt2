@@ -12,9 +12,9 @@
   [%|loc(list,robot)%]( this template is defined for list %1@%2 )[%END%]
 [% ELSE %]
   [% IF scope == 'robot' %]
-     [%|loc(robot)%]( this template is defined for all lists of robot %1 unless it is redefined for some particular list )[%END%]
+     [%|loc(robot)%]( this template is the default for all lists of robot %1 unless it is redefined for a specific list )[%END%]
   [% ELSE %]
-     [%|loc%]( this template is defined for all robots unless  it is redefined for some particular robot )[%END%]
+     [%|loc%]( this template is the default used by all robots unless redefined for a specific robot )[%END%]
   [% END %]
 [% END %]
 </li>

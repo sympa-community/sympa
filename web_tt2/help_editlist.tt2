@@ -28,7 +28,7 @@
               [%|loc%]NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.[%END%]<br /><br />
            </li>
            <li>expire_bounce_task ([%|loc%]Default value:[%END%] daily)<br /><br />
-               [%|loc%]Name of the task template use to remove old bounces. Usefull to remove bounces for a subscriber email if some message are distributed without receiving new bounce. In this case, the subscriber email seems to be OK again. Active if task_manager.pl is running.[%END%]
+               [%|loc%]Name of the task template used to remove old bounces. Useful for removing bounced subscriber email. If some messages are distributed without receiving new bounce messages, the subscriber's email seems to be OK again. Active if task_manager.pl is running.[%END%]
            </li>
          </ul>
 
@@ -38,7 +38,7 @@
 
         <ul>
           <li>rate ([%|loc%]Default value:[%END%] 45)<br /><br />
-	      [%|loc%]Each bouncing user have a score (from 0 to 100).This parameter defines lower limit foreach category of bouncing users.for example, level 1 begins from 45 to level_2_treshold.[%END%]<br /><br />
+	      [%|loc%]Each bouncing user have a score (from 0 to 100).[%END%] [%|loc%]This parameter defines a lower limit for each category of bouncing users.For example, level 1 begins from 45 to level_2_treshold.[%END%]<br /><br />
           </li>
           <li> action ([%|loc%]Default value:[%END%] notify_bouncers)<br /><br />
 	       [%|loc%]This parameter defines which task is automaticaly applied on level 1 bouncers.[%END%]<br /><br />
@@ -54,7 +54,7 @@
 
         <ul>
           <li>rate ([%|loc%]Default value:[%END%] 80)<br /><br />
-	      [%|loc%]Each bouncing user have a score (from 0 to 100).This parameter defines limit between each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.[%END%]<br /><br />
+	      [%|loc%]Each bouncing user have a score (from 0 to 100).[%END%] [%|loc%]This parameter defines the score range defining each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.[%END%]<br /><br />
           </li>
           <li>action ([%|loc%]Default value:[%END%] notify_bouncers)<br /><br />
 	       [%|loc%]This parameter defines which task is automaticaly applied on level 2 bouncers.[%END%]<br /><br />
@@ -78,13 +78,13 @@
       [% ELSIF p.key == 'del' %]
         [%|loc%]This parameter specifies who is authorized to use the DEL command.[%END%]
       [% ELSIF p.key == 'digest' %]
-        [%|loc%]Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compilations of messages are sent to subscribers in accordance with the rhythm selected with this parameter.[%END%]
+        [%|loc%]Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter.[%END%]
       [% ELSIF p.key == 'editor' %]
         [%|loc%]Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.[%END%] <br />
         [%|loc%]FYI: Defining editors will not make the list moderated ; you will have to set the "send" parameter.[%END%]<br />
         [%|loc%]FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.[%END%]
       [% ELSIF p.key == 'expire_task' %]
-        [%|loc%]This parameter states which model is used to create a expire task. An expire task regurlaly checks the inscription or reinscription date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
+        [%|loc%]This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
       [% ELSIF p.key == 'footer_type' %]
         [%|loc%]List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.[%END%]<br /><br />
         <ul>
@@ -104,10 +104,10 @@
       [% ELSIF p.key == 'include_ldap_query' %]
         [%|loc%]This paragraph defines parameters for a query returning a list of subscribers. This paragraph is used only if user_data_source is set to include. This feature requires the Net::LDAP (perlldap) PERL module.[%END%]
       [% ELSIF p.key == 'include_list' %]
-        [%|loc%]This parameter will be interpreted only if user_data_source is set to include. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_list listname line for each included list. Any list at all may be included; the user_data_source definition of the included list is irrelevant, and you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise an infinite loop.[%END%]
+        [%|loc%]This parameter will be interpreted only if user_data_source is set to include. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_list listname line for each included list. Any list at all may be included; the user_data_source definition of the included list is irrelevant, and you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise to an infinite loop.[%END%]
       [% ELSIF p.key == 'include_remote_sympa_list' %]
-        [%|loc%]Sympa can contact another Sympa service using https to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise an infinite loop making cross includes.[%END%]<br /><br />
-        [%|loc%]For this operation, one Sympa site act as a server while the other one act as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controled by the review scenario. [%END%]
+        [%|loc%]Sympa can contact another Sympa service using HTTPS to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise to an infinite loop resulting from cross includes.[%END%]<br /><br />
+        [%|loc%]For this operation, one Sympa site acts as a server while the other one acs as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controlled by the review scenario.[%END%]
       [% ELSIF p.key == 'include_sql_query' %]
         [%|loc%]This parameter will be interpreted only if the user_data_source value is set to include, and is used to begin a paragraph defining the SQL query parameters. [%END%]
       [% ELSIF p.key == 'lang' %]
@@ -123,7 +123,7 @@
       [% ELSIF p.key == 'remind_return_path' %]
         [%|loc%]Same as welcome_return_path, but applied to remind messages.[%END%]
       [% ELSIF p.key == 'remind_task' %]
-        [%|loc%]This parameter states which model is used to create a remind task. A remind task regurlaly sends to the subscribers a message which reminds them their subscription to list.[%END%]
+        [%|loc%]This parameter states which model is used to create a remind task. A remind task regularly sends  subscribers a message which reminds them of their list subscriptions.[%END%]
       [% ELSIF p.key == 'reply_to_header' %]
         [%|loc%]The reply_to_header parameter starts a paragraph defining what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.[%END%]<br /><br />
         <ul>
@@ -145,9 +145,9 @@
       [% ELSIF p.key == 'shared_doc' %]
         [%|loc%]This paragraph defines read and edit access to the shared document repository.[%END%]
       [% ELSIF p.key == 'spam_protection' %]
-        [%|loc%]There is a need to protect Sympa web site against spambot which collect email address in public web site. Various methods are available in Sympa and you can choose it with spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<br /><br />
+        [%|loc%]There is a need to protect Sympa web sites against spambots which collect email addresses from public web sites. Various methods are available in Sympa and you can choose to use them with the spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<br /><br />
         <ul>
-          <li>javascript: [%|loc%]the address is hidden using a javascript. User who enable javascript can see a nice mailto address where others have nothing.[%END%]</li>
+          <li>javascript: [%|loc%]the address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing.[%END%]</li>
           <li>at: [%|loc%]the @ char is replaced by the string " AT ".[%END%]</li>
           <li>none : [%|loc%]no protection against spammer.[%END%]</li>
         </ul>
@@ -168,7 +168,7 @@
       [% ELSIF p.key == 'web_archive' %]
         [%|loc%]Defines who can access the web archive for the list.[%END%]
       [% ELSIF p.key == 'web_archive_spam_protection' %]
-        [%|loc%]Idem spam_protection but restricted to web archive. A additional value is available: cookie which mean that users must submit a small form in order to receive a cookie before browsing archives. This block all robot, even google and co.[%END%]
+        [%|loc%]Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co.[%END%]
       [% ELSIF p.key == 'welcome_return_path' %]
         [%|loc%]If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce.[%END%]
       [% ELSIF p.key == 'msg_topic' %]

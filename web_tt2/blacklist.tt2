@@ -17,9 +17,9 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
 </p>
 <p>
 [% IF rows == '0' %]
- [%|loc%]Current blacklist is empty[%END%]
+ [%|loc%]The current blacklist is empty[%END%]
 [% ELSE %]
- [%|loc(rows)%]Current blacklist contain %1 line(s)[%END%]
+ [%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]
 [% END %]
 </p>
 <p>

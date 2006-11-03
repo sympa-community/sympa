@@ -4,17 +4,17 @@
 
 <div id="template_editor">
 
-[%|loc%]This page is proposed in order to edit or create mail or web tt2 templates.[%END%]
+[%|loc%]This page is suggested in order to edit or create mail or web tt2 templates.[%END%]
 
 [%|loc%]Priority rules for template selection :
 <ul>
-<li>IF list context defined apply list template if exist</li>
+<li>IF list context defined, apply list template if exist</li>
 <li>ELSE apply robot defined template if exist</li>
-<li>ELSE apply localy defined template if exist</li>
-<li>ELSE apply template include in the distribution (theses must not be edited because Sympa's update will overright theses files)</li>
+<li>ELSE apply locally defined template if exist</li>
+<li>ELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)</li>
 </ul>[%END%]
 <br />
-[%|loc%]First you may list a category of templates including or not templates specific of a particular list, then you have oportunity to copy and edit templates of the current robot or the named list.[%END%]<br />
+[%|loc%]First you may list a category of templates; the list should include a default template and may include any templates designated for a particular list. You will then have an oportunity to copy and edit templates for the current robot or the named list.[%END%]<br />
 
 <form action="[% path_cgi %]/ls_templates" method="post">
 <fieldset>

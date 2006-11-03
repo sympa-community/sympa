@@ -40,7 +40,7 @@ use Conf;
 		   'txt' => {'gettext_id' => 'text only mode'},
 		   'html'=> {'gettext_id' => 'html only mode'},
 		   'urlize' => {'gettext_id' => 'urlize mode'},
-		   'nomail' => {'gettext_id' => 'no mail (usefull for vacations)'},
+		   'nomail' => {'gettext_id' => 'no mail (useful for vacations)'},
 		   'not_me' => {'gettext_id' => 'you do not receive your own posts'}
 		   );
 
@@ -59,7 +59,7 @@ use Conf;
 
 ## Filenames with corresponding entry in NLS set 15
 %filenames = ('welcome.tt2'             => {'gettext_id' => "welcome message"},
-	      'bye.tt2'                 => {'gettext_id' => "unsubscription message"},
+	      'bye.tt2'                 => {'gettext_id' => "unsubscribe message"},
 	      'removed.tt2'             => {'gettext_id' => "deletion message"},
 	      'message.footer'          => {'gettext_id' => "message footer"},
 	      'message.header'          => {'gettext_id' => "message header"},

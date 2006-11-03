@@ -7,16 +7,16 @@
 <li>[%|loc%]Type[%END%] : <strong> [% webormail %] </strong></li>
 <li>[%|loc%]Path[%END%] : <strong> [% template_path %] </strong></li>
 <li>[%|loc%]Scope[%END%] : <strong> [% scope %] </strong>.[% IF scope == 'list' %]
-  ( [%|loc(list,robot)%]this template is defined for list %1@%2[%END%] )
+  ( [%|loc(list,robot)%]This template is defined for list %1@%2[%END%] )
 [% ELSE %]
   [% IF scope == 'robot' %]
-     ( [%|loc(robot)%]this template is defined for all lists of robot %1 unless it is redefined for some particular list[%END%] )
+     ( [%|loc(robot)%]This template is default for all lists of robot %1 unless it is redefined for some particular list[%END%] )
   [% ELSE %]
-     ( [%|loc%]this template is defined for all robots unless  it is redefined for some particular robot[%END%] )
+     ( [%|loc%]This template is default for all robots unless  it is redefined for some particular robot[%END%] )
   [% END %]
 [% END %]
 </li>
-<li>[%|loc%]language : [%END%]<strong> [% tpl_lang %] </strong>.[% IF subdir == 'default' %][%|loc%](this template is used for any language unless it is redefined for a specific language)[%END%][% END %]
+<li>[%|loc%]language : [%END%]<strong> [% tpl_lang %] </strong>.[% IF subdir == 'default' %][%|loc%](This template is the default for all languages unless it is redefined for a specific language.)[%END%][% END %]
 </ul>
 </p><br />
 <form action="[% path_cgi %]/edit_template" method="post">

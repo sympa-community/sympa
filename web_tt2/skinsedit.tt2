@@ -60,7 +60,7 @@
 
 [% ELSE %]
 
-[%|loc(cssurl)%]Currently you didn't define css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot sympa.conf) and set this parameter so you could use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="%1">%1</a>).[%END%]
+[%|loc(cssurl)%]Currently you have not defined the css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot, the sympa.conf file). Setting this parameter allows you to use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="%1">%1</a>).[%END%]
 
 [% END %]
 </p><br /><br />

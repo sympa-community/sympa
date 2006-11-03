@@ -311,9 +311,9 @@
     <fieldset>
     <strong>
     [% IF path %]
-      [%|loc(visible_path)%]Create a new folder inside the folder %1[%END%]
+      [%|loc(visible_path)%]Create a new folder inside folder %1[%END%]
     [% ELSE %]
-      [%|loc%]Create a new folder inside the root folder[%END%]
+      [%|loc%]Create a new folder inside root folder[%END%]
     [% END %]
     </strong> <br />
     <label for="name_doc">[%|loc%]Folder name[%END%]</label> <input id="name_doc" maxlength="30" type="text" name="name_doc" />
@@ -363,9 +363,9 @@
    <label for="uploaded_file">
    <strong>
    [% IF path %]
-     [%|loc(visible_path)%]Upload a file inside the folder %1[%END%]
+     [%|loc(visible_path)%]Upload a file inside folder %1[%END%]
    [% ELSE %]
-     <strong> [%|loc%]Upload a file inside the folder SHARED[%END%]
+     <strong> [%|loc%]Upload a file inside folder SHARED[%END%]
    [% END %]
    </strong></label><br />
    <input id="uploaded_file" type="file" name="uploaded_file"/>

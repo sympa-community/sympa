@@ -6,10 +6,10 @@ as possible. This task may be performed in a few minutes.[%END%]
 [% ELSIF status == 'no_msgid' %]
 [%|loc%]Unable to find the message to delete, probably this message
 was received without Message-Id. Please refer to listmaster with
-complete URL of the concerned message[%END%]
+complete URL of the message concerned[%END%]
 [% ELSIF status == 'not_found' %]
 [%|loc%]Unable to find the message to delete[%END%]
 [% ELSE %]
-[%|loc%]Error while deleting this message, please refer to listmaster with
-complete URL of the concerned message.[%END%]
+[%|loc%]rror while deleting this message, please refer to listmaster with
+complete URL of the message concerned.[%END%]
 [% END %]

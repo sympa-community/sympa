@@ -6,7 +6,7 @@
   [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
-     [%|loc%]Reception mode :[%END%] 
+     [%|loc%]Receiving mode :[%END%] 
      <select name="reception">
         [% FOREACH r = reception %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
@@ -44,7 +44,7 @@
  	  [%END%]
        	
         [%ELSE%]
- 	 <BLOCKQUOTE><i>Only possible in "normal" reception mode</i></BLOCKQUOTE>
+ 	 <BLOCKQUOTE><i>[%|loc%]Only possible in "normal" receiving mode[%END%]</i></BLOCKQUOTE>
         [%END%]
       [%END%]	
  	 

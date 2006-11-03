@@ -8,7 +8,7 @@
 
 <form name="zip_form" method="post" action="[% path_cgi %]">
 <fieldset>
-<label for="directories">[%|loc%]Archives Selection:[%END%]</label><br />
+<label for="directories">[%|loc%]Archive Selection:[%END%]</label><br />
 <select name="directories" id="directories" multiple="multiple" size="4">    
 
 	[% FOREACH u = yyyymm %]
@@ -20,7 +20,7 @@
 <input name="list" type="hidden" value="[% list %]" />
 <input name="zip" type="hidden" value="0" /><br />
 <input class="MainMenuLinks" type="submit" name="action_arc_download" value="[%|loc%]DownLoad ZipFile[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_arc_delete" value="[%|loc%]Delete Selected Month(s)[%END%]" onclick="return dbl_confirm(this.form,'[% FILTER escape_quote %][%|loc%]Do you really want to delete Selected Archives?[%END%][%END%]','[% FILTER escape_quote %][%|loc%]Do you want to DownLoad a Zip of the selected Archives before?[%END%][%END%]')" />
+<input class="MainMenuLinks" type="submit" name="action_arc_delete" value="[%|loc%]Delete Selected Month(s)[%END%]" onclick="return dbl_confirm(this.form,'[% FILTER escape_quote %][%|loc%]Do you really want to delete Selected Archives?[%END%][%END%]','[% FILTER escape_quote %][%|loc%]Do you want to DownLoad a Zip of the selected Archives?[%END%][%END%]')" />
 </fieldset>
 </form>
 

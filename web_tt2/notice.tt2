@@ -11,10 +11,10 @@
 [%|loc(notice.total)%]%1 addresses have been removed[%END%]
 
 [% ELSIF notice.msg == 'performed' %]
-[%|loc(notice.action)%]%1 : action succeeded[%END%]
+[%|loc(notice.action)%]%1: action completed[%END%]
 
 [% ELSIF notice.msg == 'performed_soon' %]
-[%|loc(notice.action)%]%1 : action succeeded soon[%END%]
+[%|loc(notice.action)%]%1: action will complete soon[%END%]
 
 [% ELSIF notice.msg == 'list_config_updated' %]
 [%|loc%]Configuration file has been updated[%END%]
@@ -59,7 +59,7 @@
 [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
 
 [% ELSIF notice.msg == 'subscribers_noticed_deleted_topics' %]
-[%|loc%]Concerned subscribers have been noticed about deleted topics[%END%]
+[%|loc%]Concerned subscribers have been notified about deleted topics.[%END%]
 
 [% ELSIF notice.msg == 'add_performed' %]
 [%|loc(notice.total)%]%1 addresses have been subscribed[%END%]
