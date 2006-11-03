@@ -7,6 +7,8 @@
 
    New features :
 
+	src/etc/script/arc2webarc.pl: arc2webarc.pl can use an input directory containing individual messages files
+
 	soap/: New SOAP method getUserEmailByCookie
 
 	src/: Commands.pm, report.pm, sympa.pl: [requested by W.Howard]: original_msg is now available in msg reports
@@ -24,7 +26,10 @@
 
    Changes :
 
-	Changes: reported changes in en_US.po (updated by Jill Gemmil) to templates.  
+	src/Upgrade.pm: regenerate all config.bin files while
+	  upgrading ; required for character encoding problems
+
+	reported changes in en_US.po (updated by Jill Gemmil) to templates.  
 	Work is half-done.
 
 	[Soji Ikeda] : Sympa now uses new Perl modules MIME::Charset and MIME::EncWords to encode characters. 
@@ -33,6 +38,8 @@
 	po/en_US.po: [J.B.Gemmill, Univ. Alabama at Birmingham] Revised version of English translations.
 
    Bug fixes :
+
+	src/List.pm: load topics.conf using filesystem_encoding
 
 	[S.Ikeda] made some fixes to documentation and templates
 
