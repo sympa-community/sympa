@@ -26,6 +26,7 @@ use strict;
 ## Sympa API
 use List;
 use Conf;
+use Language;
 use Log;
 
 require "--LIBDIR--/tools.pl";
@@ -154,7 +155,7 @@ sub create_list_old{
       
     ## Creation of the config file
     my $host = &Conf::get_robot_conf($robot, 'host');
-    $param->{'creation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
+    $param->{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
     $param->{'creation'}{'date_epoch'} = time;
     $param->{'creation_email'} = "listmaster\@$host" unless ($param->{'creation_email'});
     $param->{'status'} = 'open'  unless ($param->{'status'});
@@ -355,7 +356,7 @@ sub create_list{
 	$list->create_shared();
     }   
     
-    $list->{'admin'}{'creation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
+    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
@@ -441,7 +442,7 @@ sub update_list{
 	return undef;
     }
 ############## ? update
-    $list->{'admin'}{'creation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
+    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};

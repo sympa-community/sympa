@@ -1669,7 +1669,7 @@ sub save_config {
     $self->{'admin'}{'serial'}++;
     $self->{'admin'}{'update'} = {'email' => $email,
 				  'date_epoch' => time,
-				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time))
+				  'date' => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time)),
 				  };
 
     unless (&_save_admin_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
@@ -2915,8 +2915,8 @@ sub send_msg_digest {
     }
     
     my @now  = localtime(time);
-    $param->{'datetime'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y %H:%M:%S", @now);
-    $param->{'date'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y", @now);
+    $param->{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
+    $param->{'date'} = gettext_strftime "%a, %d %b %Y", @now;
 
     ## Split messages into groups of digest_max_size size
     my @group_of_msg;
@@ -3099,12 +3099,12 @@ sub send_file {
 	$data->{'subscriber'} = $self->get_subscriber($who);
 	
 	if ($data->{'subscriber'}) {
-	    $data->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
-	    $data->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
+	    $data->{'subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($data->{'subscriber'}{'date'});
+	    $data->{'subscriber'}{'update_date'} = gettext_strftime "%d %b %Y", localtime($data->{'subscriber'}{'update_date'});
 	    if ($data->{'subscriber'}{'bounce'}) {
 		$data->{'subscriber'}{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 		
-		$data->{'subscriber'}{'first_bounce'} =  &POSIX::strftime("%d %b %Y",localtime($1));
+		$data->{'subscriber'}{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($1);
 	    }
 	}
 	

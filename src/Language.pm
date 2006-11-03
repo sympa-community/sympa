@@ -24,7 +24,7 @@ package Language;
 require Exporter;
 use Carp;
 @ISA = qw(Exporter);
-@EXPORT = qw(&gettext);
+@EXPORT = qw(&gettext gettext_strftime);
 
 use strict;
 use Log;
@@ -275,6 +275,15 @@ sub gettext {
 
     return $translation;
 
+}
+
+sub gettext_strftime {
+    my $format = shift;
+    return &POSIX::strftime($format, @_) unless $current_charset;
+    return Encode::decode($current_charset,
+			  &POSIX::strftime(Encode::encode($current_charset,
+							  gettext($format)),
+					   @_));
 }
 
 1;

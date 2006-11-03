@@ -733,8 +733,8 @@ binmode STDIN, ":utf8";
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
      $param->{'version'} = $Version::Version;
-     $param->{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
-     $param->{'time'} = &POSIX::strftime("%H:%M:%S", localtime(time));
+     $param->{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
+     $param->{'time'} = gettext_strftime "%H:%M:%S", localtime(time);
 
      my $tmp_lang = &Language::GetLang();
      &Language::SetLang('en_US');
@@ -4019,8 +4019,8 @@ sub do_remindpasswd {
 
      $s->{'reception'} ||= 'mail';
      $s->{'visibility'} ||= 'noconceal';
-     $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
-     $s->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'update_date'}));
+     $s->{'date'} = gettext_strftime "%d %b %Y", localtime($s->{'date'});
+     $s->{'update_date'} = gettext_strftime "%d %b %Y", localtime($s->{'update_date'});
 
      foreach $m (keys %wwslib::reception_mode) {
        if ($list->is_available_reception_mode($m)) {
@@ -5339,7 +5339,7 @@ sub do_skinsedit {
 	 $doc->{'escaped_path'} = &tools::escape_docname($path, '/');
 	 $doc->{'fname'} = $fname;
 	 $doc->{'size'} = (-s $d)/1000; 
-	 $doc->{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
+	 $doc->{'date'} = gettext_strftime "%d %b %Y", localtime($info[9]);
 	 $doc->{'author'} = $desc_hash{'email'};
          $doc->{'path'} = $path;
 	
@@ -6532,7 +6532,7 @@ sub do_viewmod {
 		 $msg_info{'date_smtp'} = $date;
 		 $msg_info{'date_epoch'} = &get_timelocal_from_date(@array_date[1..$#array_date]);
 
-		 $msg_info{'date'} = &POSIX::strftime("%d %b %Y",localtime($msg_info{'date_epoch'}) );
+		 $msg_info{'date'} = gettext_strftime "%d %b %Y", localtime($msg_info{'date_epoch'});
 		 if ($msg_info{'date_epoch'} < $oldest_day) {
 		     $stop_search = 1;
 		     last;
@@ -7003,7 +7003,7 @@ sub do_remove_arc {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
 	     $param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
-	     $param->{'pending'}{$list->{'name'}}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'}));
+	     $param->{'pending'}{$list->{'name'}}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
 	 }
      }
 
@@ -7068,7 +7068,7 @@ sub do_remove_arc {
 
      foreach my $l (sort {$b->{'creation_date'} <=> $a->{'creation_date'}} @unordered_lists) {
 	 push @{$param->{'latest_lists'}}, $l;
-	 $l->{'creation_date'} = &POSIX::strftime("%d %b %Y", localtime($l->{'creation_date'}));
+	 $l->{'creation_date'} = gettext_strftime "%d %b %Y", localtime($l->{'creation_date'});
      }
 
      return 1;
@@ -7118,9 +7118,9 @@ sub do_get_inactive_lists {
 	 push @unordered_lists, {'name' => $list->{'name'},
 				 'subject' => $list->{'admin'}{'subject'},
 				 'last_message_epoch' => $last_message,
-				 'last_message_date' => &POSIX::strftime("%d %b %Y", localtime($last_message*86400)),
+				 'last_message_date' => (gettext_strftime "%d %b %Y", localtime($last_message*86400)),
 				 'creation_date_epoch' => $list->{'admin'}{'creation'}{'date_epoch'},
-				 'creation_date' => &POSIX::strftime("%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'}))
+				 'creation_date' => (gettext_strftime "%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'})),
 				 };
      }
 
@@ -7529,8 +7529,8 @@ sub do_set_pending_list_request {
      $param->{'current_subscriber'} = $user;
      $param->{'current_subscriber'}{'escaped_email'} = &tools::escape_html($param->{'current_subscriber'}{'email'});
      $param->{'current_subscriber'}{'escaped_bounce_address'} = &tools::escape_html($param->{'current_subscriber'}{'bounce_address'});
-     $param->{'current_subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
-     $param->{'current_subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
+     $param->{'current_subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($user->{'date'});
+     $param->{'current_subscriber'}{'update_date'} = gettext_strftime "%d %b %Y", localtime($user->{'update_date'});
      $param->{'current_subscriber'}{'pictures_url'} = &make_pictures_url($user->{'email'});
 
      ## Prefs
@@ -7559,8 +7559,8 @@ sub do_set_pending_list_request {
      ## Bounces
      if ($user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
 	 my @bounce = ($1, $2, $3, $5);
-	 $param->{'current_subscriber'}{'first_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[0]));
-	 $param->{'current_subscriber'}{'last_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[1]));
+	 $param->{'current_subscriber'}{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($bounce[0]);
+	 $param->{'current_subscriber'}{'last_bounce'} = gettext_strftime "%d %b %Y", localtime($bounce[1]);
 	 $param->{'current_subscriber'}{'bounce_count'} = $bounce[2];
 	 if ($bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
 	    $user->{'bounce_code'} = $1;
@@ -7769,8 +7769,8 @@ sub do_set_pending_list_request {
 
 	 next if ($record <= ( ($param->{'page'} - 1) *  $size));
 
-	 $i->{'first_bounce'} = &POSIX::strftime("%d %b %Y", localtime($i->{'first_bounce'}));
-	 $i->{'last_bounce'} = &POSIX::strftime("%d %b %Y", localtime($i->{'last_bounce'}));
+	 $i->{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'first_bounce'});
+	 $i->{'last_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'last_bounce'});
 
 	 ## Escape some weird chars
 	 $i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
@@ -8815,7 +8815,7 @@ sub _prepare_edit_form {
 		 next unless ($v->{'name'} eq 'days');
 
 		 foreach my $day (keys %{$v->{'value'}}) {
-		     $v->{'value'}{$day}{'title'} = &POSIX::strftime("%A", localtime(0 + ($day +3) * (3600 * 24)));
+		     $v->{'value'}{$day}{'title'} = gettext_strftime "%A", localtime(0 + ($day +3) * (3600 * 24));
 		 }
 	     }
 	 }elsif ($pname eq 'lang') {
@@ -10153,7 +10153,7 @@ sub do_d_read {
 	     $param->{'doc_title'} = $desc_hash{'title'};
 	 }
 	 my @info = stat $doc;
-	 $param->{'doc_date'} =  &POSIX::strftime("%d %b %Y", localtime($info[9]));
+	 $param->{'doc_date'} =  gettext_strftime "%d %b %Y", localtime($info[9]);
 
 
 	 # listing of all the shared documents of the directory
@@ -10222,7 +10222,7 @@ sub do_d_read {
 			  ($action =~ /do_it/i)) {
 			 
 			 $subdirs{$d}{'date_epoch'} = $info[9];
-			 $subdirs{$d}{'date'} = &POSIX::strftime("%d %b %Y", localtime($info[9]));
+			 $subdirs{$d}{'date'} = gettext_strftime "%d %b %Y", localtime($info[9]);
 			 
 			 # Case read authorized : fill the hash 
 			 $subdirs{$d}{'icon'} = $icon_table{'folder'};
@@ -10424,7 +10424,7 @@ sub do_d_read {
 		       # last update
 		     my @info = stat $path_doc;
 		     $files{$d}{'date_epoch'} = $info[9];
-		     $files{$d}{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
+		     $files{$d}{'date'} = gettext_strftime "%d %b %Y", localtime($info[9]);
 		       # size
 		     $files{$d}{'size'} = (-s $path_doc)/1000; 
 		 }
@@ -10763,7 +10763,7 @@ sub do_latest_d_read {
 		 next;
 	     }
 
-	     $file_info{'last_update'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
+	     $file_info{'last_update'} = gettext_strftime "%d %b %Y", localtime($info[9]);
 	     
              ## exception of index.html
 	     if ($d =~ /^(index\.html?)$/i) {
@@ -10997,7 +10997,7 @@ sub do_latest_d_read {
      my @info = stat "$shareddir/$path";
      $param->{'serial_file'} = $info[9];
      ## parameters of the current directory
-     $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
+     $param->{'doc_date'} =  gettext_strftime "%d %b %y  %H:%M", localtime($info[9]);
 
      &tt2::allow_absolute_path();
 
@@ -11140,7 +11140,7 @@ sub do_latest_d_read {
      my @info = stat "$shareddir/$path";
      $param->{'serial_file'} = $info[9];
      ## parameters of the current directory
-     $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
+     $param->{'doc_date'} = gettext_strftime "%d %b %y  %H:%M", localtime($info[9]);
 
      &tt2::allow_absolute_path();
 
@@ -13533,7 +13533,7 @@ sub d_test_existing_and_rights {
 
      ## other info
      my @info = stat "$shareddir/$path";
-     $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
+     $param->{'doc_date'} = gettext_strftime "%d %b %y  %H:%M", localtime($info[9]);
 
      # template parameters
      $param->{'list'} = $list_name;
@@ -14794,7 +14794,7 @@ sub make_pictures_url {
 
      my $subscriptions = $list->get_subscription_requests();
      foreach my $sub (keys %{$subscriptions}) {
-	 $subscriptions->{$sub}{'date'} = &POSIX::strftime("%d %b %Y", localtime($subscriptions->{$sub}{'date'}));
+	 $subscriptions->{$sub}{'date'} = gettext_strftime "%d %b %Y", localtime($subscriptions->{$sub}{'date'});
      }
 
      $param->{'subscriptions'} = $subscriptions;
@@ -15229,8 +15229,8 @@ sub do_viewlogs {
     my $sortby = $in{'sortby'} || 'email';
     my @date = &Log::get_log_date();
        
-    $param->{'date_from'} = &POSIX::strftime("%d %b %Y %H:%M:%S",localtime($date[0]));
-    $param->{'date_to'} = &POSIX::strftime("%d %b %Y %H:%M:%S",localtime($date[1]));
+    $param->{'date_from'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($date[0]);
+    $param->{'date_to'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($date[1]);
     
 
     $param->{'total'} = '17';
@@ -15371,7 +15371,7 @@ sub do_viewlogs {
 
 	do {
 	    last unless (defined $line->{'date'}); ## Means an empty entry
-	    $line->{'date'} = &POSIX::strftime("%d %b %Y %H:%M:%S",localtime($line->{'date'}));
+	    $line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($line->{'date'});
 	    push @{$param->{'log_entries'}}, $line;	    
 	} while ($line = &Log::get_next_db_log());
 
@@ -15735,8 +15735,8 @@ sub _prepare_subscriber {
     my $sources = shift;
 
     ## Add user
-    $user->{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
-    $user->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
+    $user->{'date'} = gettext_strftime "%d %b %Y", localtime($user->{'date'});
+    $user->{'update_date'} = gettext_strftime "%d %b %Y", localtime($user->{'update_date'});
     
     ## Reception mode and topics
     $user->{'reception'} ||= 'mail';
