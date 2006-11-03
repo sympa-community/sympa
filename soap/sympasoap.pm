@@ -272,7 +272,7 @@ sub authenticateAndRun {
     }
     my $auth ;
     
-    if ($email == 'unkown') {
+    if ($email eq 'unkown') {
 	($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
 	do_log('debug','get email from cookie : %s',$email);
 	unless ($email or ($email eq 'unkown')  ) {
