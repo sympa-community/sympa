@@ -154,11 +154,17 @@ sub _get_msg_as_hash {
     }
     
     my $head = $msg_entity->head;
+    my $body_handle = $msg_entity->bodyhandle;
+    my $body_as_string;
     
+    if (defined $body_handle) {
+	$body_as_string = $body_handle->as_lines();
+    }
+
     ## TODO : we should also decode headers + remove trailing \n + use these variables in default mail templates
 
     $msg_hash = {'full' => $msg_entity->as_string, 
-		 'body' => $msg_entity->bodyhandle->as_lines(),
+		 'body' => $body_as_string,
 		 'from' => $head->get('From'),
 		 'subject' => $head->get('Subject'),
 		 'message_id' => $head->get('Message-Id')
