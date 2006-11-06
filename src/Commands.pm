@@ -916,7 +916,7 @@ sub info {
 	}
 
 	foreach my $p ('subscribe','unsubscribe','send','review') {
-	    $data->{$p} = $list->{'admin'}{$p}{'title'}{'gettext'}; 
+	    $data->{$p} = gettext($list->{'admin'}{$p}{'title'}{'gettext'}); 
 	}
 
 	## Digest

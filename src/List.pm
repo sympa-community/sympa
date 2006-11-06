@@ -3902,7 +3902,7 @@ sub archive_send_last {
    my $subject = 'File '.$self->{'name'}.'.last_message' ;
    my $param = {'to' => $who,
 		'subject' => $subject,
-		'msg_list' => @msglist } ;
+		'msg_list' => \@msglist } ;
 
 
    $param->{'boundary1'} = &tools::get_message_id($self->{'domain'});

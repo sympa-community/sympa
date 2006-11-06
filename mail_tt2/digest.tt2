@@ -25,12 +25,13 @@ This is a multi-part message in MIME format...
 --[% boundary2 %]
 Content-Type: message/rfc822
 Content-Disposition: inline
+X-Sympa-Attach: yes
 
 [% m.full_msg %]
 
 [% END %]
 --[% boundary2 %]
-Content-Type: text/plain
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 Content-Disposition: inline
 

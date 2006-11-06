@@ -34,6 +34,7 @@ REJECT [% list.name %] [% modkey %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding:  [%|loc%]_encoding_[%END%]
 Content-Disposition: inline
+X-Sympa-Attach: yes
 
 [% INSERT $msg IF msg %]
 

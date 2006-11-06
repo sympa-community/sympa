@@ -231,7 +231,17 @@ sub mail_file {
 	$headers .= "\n";
    }
    
-    unless ($message = &reformat_message("$headers"."$message")) {
+    my @msgs = ();
+    if (ref($data->{'msg_list'}) eq 'ARRAY') {
+	@msgs = map {$_->{'msg'} || $_->{'full_msg'}} @{$data->{'msg_list'}};
+    } elsif ($data->{'msg'} and open IN, '<'.$data->{'msg'}) {
+	push @msgs, join('', <IN>);
+	close IN;
+    } elsif ($data->{'file'} and open IN, '<'.$data->{'file'}) {
+	push @msgs, join('', <IN>);
+	close IN;
+    }
+    unless ($message = &reformat_message("$headers"."$message", \@msgs)) {
 	&do_log('err', "mail::mail_file: Failed to reformat message");
     }
 
@@ -777,26 +787,29 @@ sub send_in_spool {
 # header is appended :).
 #
 # IN : $msg: ref(MIME::Entity) | string - message to reformat
+#      $attachments: ref(ARRAY) - messages to be attached as subparts.
 # OUT : string
 #
 ####################################################
 
-sub reformat_message($) {
+sub reformat_message($;$) {
     my $message = shift;
+    my $attachments = shift || [];
     my $msg;
+
+    my $parser = new MIME::Parser;
+    unless (defined $parser) {
+	&do_log('err', "mail::reformat_message: Failed to create MIME parser");
+	return undef;
+    }
+    $parser->output_to_core(1);
 
     if (ref($message) eq 'MIME::Entity') {
 	$msg = $message;
     } else {
-	my $parser = new MIME::Parser;
-
-	unless (defined $parser) {
-	    &do_log('err', "mail::reformat_message: Failed to create MIME parser");
-	    return undef;
-	}
-
-	$parser->output_to_core(1);
-	$parser->ignore_errors(1);
+	# Turn off utf8 flag so that message will be safely passed to
+	# MIME::Parser::parse_data that breaks Unicode strings.
+	$message = Encode::encode_utf8($message);
 	eval {
 	    $msg = $parser->parse_data($message);
 	};
@@ -807,14 +820,15 @@ sub reformat_message($) {
     }
 
     $msg->head->delete("X-Mailer");
-    $msg = &fix_part($msg);
+    $msg = &fix_part($msg, $parser, $attachments);
     $msg->head->add("X-Mailer", sprintf "Sympa %s", $Version::Version);
-    $msg->sync_headers(Length => 'COMPUTE');
     return $msg->as_string;
 }
 
-sub fix_part($) {
+sub fix_part($$$) {
     my $part = shift;
+    my $parser = shift;
+    my $attachments = shift || [];
     return $part unless $part;
 
     my $enc = $part->head->mime_attr("Content-Transfer-Encoding");
@@ -823,11 +837,26 @@ sub fix_part($) {
 	if $enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i;
 
     my $eff_type = $part->effective_type;
+    return $part if $eff_type =~ m{^multipart/(signed|encrypted)$};
 
-    if ($part->parts) {
+    if ($part->head->get('X-Sympa-Attach')) { # Need re-attaching data.
+	my $data = shift @{$attachments};
+	if (ref($data) ne 'MIME::Entity') {
+	    eval {
+		$data = $parser->parse_data($data);
+	    };
+	    if ($@) {
+		&do_log('warn',
+			"mail::reformat_message: Failed to parse MIME data");
+		$data = $parser->parse_data('');
+	    }
+	}
+	$part->head->delete('X-Sympa-Attach');
+	$part->parts([$data]);
+    } elsif ($part->parts) {
 	my @newparts = ();
 	foreach ($part->parts) {
-	    push @newparts, &fix_part($_);
+	    push @newparts, &fix_part($_, $parser, $attachments);
 	}
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
@@ -843,7 +872,8 @@ sub fix_part($) {
 	my $charset = $head->mime_attr("Content-Type.Charset");
 
 	my ($newbody, $newcharset, $newenc) = 
-	    MIME::Charset::body_encode($body, $charset);
+	    MIME::Charset::body_encode(Encode::decode_utf8($body), $charset,
+				       Replacement => 'FALLBACK');
 	if ($newenc eq $enc and $newcharset eq $charset and
 	    $newbody eq $body) {
 	    return $part;
@@ -864,10 +894,12 @@ sub fix_part($) {
 
 	$io->print($newbody);
 	$io->close;
+	$part->sync_headers(Length => 'COMPUTE');
     } else {
 	# Binary or text with long lines will be suggested to be BASE64.
 	$part->head->mime_attr("Content-Transfer-Encoding",
 			       $part->suggest_encoding);
+	$part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
 }
