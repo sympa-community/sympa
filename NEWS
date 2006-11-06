@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-5.3a.10		2 November 2006
+5.3a.10		6 November 2006
 
    New features :
 
@@ -26,6 +26,10 @@
 
    Changes :
 
+	src/List.pm: [requested by S.Peterson] Extended available parameters for search filters
+
+	web_tt2/ : applied revisions from Jill Gemmill to templates
+
 	src/Upgrade.pm: regenerate all config.bin files while
 	  upgrading ; required for character encoding problems
 
@@ -38,6 +42,13 @@
 	po/en_US.po: [J.B.Gemmill, Univ. Alabama at Birmingham] Revised version of English translations.
 
    Bug fixes :
+
+	src/List.pm: print error message if include_remote_file failed
+
+	[S.Ikeda] : strftime() accepts/returns a string encoded by charset that is determined by current system locale. 
+	Therefore date strings needed to be decoded according to current charset.
+
+	wwsympa/wwsympa.fcgi: arcsearch_id would fail if message-id contained '&' because mhonarc encodes it in HTML messages.
 
 	src/List.pm: load topics.conf using filesystem_encoding
 

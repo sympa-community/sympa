@@ -1,3 +1,71 @@
+2006-11-06 09:47  sympa-authors
+
+	* doc/sympa.tex.tpl: Rephrased openssl documentation
+
+2006-11-06 09:29  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: Escape '&' first in do_arcsearch_id(),
+	  otherwise - is double-escaped
+
+2006-11-03 17:08  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: arcsearch_id would fail if message-id
+	  contained '&' because mhonarc encodes it in HTML messages.
+
+2006-11-03 16:17  sympa-authors
+
+	* src/Commands.pm, src/Family.pm, src/Language.pm, src/List.pm,
+	  src/admin.pm, wwsympa/wwsympa.fcgi: [S.Ikeda] Fix: strftime()
+	  accepts/returns a string encoded by charset that is determined by
+	  current system locale. Therefore date strings needed to be
+	  decoded according to current charset.
+
+2006-11-03 15:57  sympa-authors
+
+	* src/report.pm: Fix: related to latest changes ; sympa.pl would
+	  die if message body is empty
+
+2006-11-03 15:22  sympa-authors
+
+	* src/List.pm: print error message if include_remote_file failed
+
+2006-11-03 15:11  sympa-authors
+
+	* soap/sympasoap.pm: Fix typo: == instead og eq
+
+2006-11-03 14:43  sympa-authors
+
+	* web_tt2/active_lists.tt2, web_tt2/admin.tt2,
+	  web_tt2/admin_menu.tt2, web_tt2/arc_manage.tt2,
+	  web_tt2/arcsearch.tt2, web_tt2/blacklist.tt2,
+	  web_tt2/close_list.tt2, web_tt2/d_read.tt2,
+	  web_tt2/edit_list_request.tt2, web_tt2/edit_template.tt2,
+	  web_tt2/editfile.tt2, web_tt2/editsubscriber.tt2,
+	  web_tt2/error.tt2, web_tt2/get_inactive_lists.tt2,
+	  web_tt2/help.tt2, web_tt2/help_editfile.tt2,
+	  web_tt2/help_editlist.tt2, web_tt2/help_user_options.tt2,
+	  web_tt2/javascript.tt2, web_tt2/latest_arc.tt2,
+	  web_tt2/latest_d_read.tt2, web_tt2/lists.tt2,
+	  web_tt2/ls_templates.tt2, web_tt2/modindex.tt2,
+	  web_tt2/notice.tt2, web_tt2/pref.tt2, web_tt2/remove_arc.tt2,
+	  web_tt2/review.tt2, web_tt2/reviewbouncing.tt2, web_tt2/rss.tt2,
+	  web_tt2/rss_request.tt2, web_tt2/scenario_test.tt2,
+	  web_tt2/serveradmin.tt2, web_tt2/sigrequest.tt2,
+	  web_tt2/skinsedit.tt2, web_tt2/sso_login.tt2,
+	  web_tt2/suboptions.tt2, web_tt2/subrequest.tt2,
+	  web_tt2/view_template.tt2, web_tt2/viewlogs.tt2,
+	  wwsympa/wwslib.pm: Fix: applied revisions from Jill Gemmill to
+	  templates
+
+2006-11-03 12:03  sympa-authors
+
+	* doc/sympa.tex.tpl, src/List.pm: [requested by S.Peterson]
+	  Extended available parameters for search filters
+
+2006-11-03 09:45  sympa-authors
+
+	* ChangeLog, NEWS: finishing 5.3a.10
+
 2006-11-03 09:39  sympa-authors
 
 	* src/tt2.pl: [S.Ikeda] Fix: restore FB_CROAK to preserve data if
