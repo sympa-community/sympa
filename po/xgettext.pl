@@ -18,6 +18,11 @@ use constant PAR  => 2;
 use constant QUO1 => 3;
 use constant QUO2 => 4;
 use constant QUO3 => 5;
+use constant BEGM => 6;
+use constant PARM => 7;
+use constant QUOM1 => 8;
+use constant QUOM2 => 9;
+use constant COMM => 10;
 
 =head1 NAME
 
@@ -212,13 +217,22 @@ foreach my $file (@ARGV) {
       my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
       # maketext or loc or _
       $state == NUL &&
-        m/\b(translate|gettext|maketext|__?|loc|x)/gcx && do { $state = BEG;  redo; };
-      $state == BEG && m/^([\s\t\n]*)/gcx && do { redo; };
+        m/\b(translate|gettext(?:_strftime)?|maketext|__?|loc|x)/gcx && do {
+          if ($& eq 'gettext_strftime') {
+            $state = BEGM;
+          } else {
+            $state = BEG;
+          }
+          redo;
+        };
+      ($state == BEG || $state == BEGM) && m/^([\s\t\n]*)/gcx && do { redo; };
       # begin ()
       $state == BEG && m/^([\S\(]) /gcx && do {
 	$state = ( ($1 eq '(') ? PAR : NUL) ;
 	redo;
       };
+      $state == BEGM && m/^([\(])  /gcx && do { $state = PARM; redo };
+
       # begin or end of string
       $state == PAR  && m/^(\')  /gcx     && do { $state = QUO1; redo; };
       $state == QUO1 && m/^([^\']+)/gcx && do { $str.=$1; redo; };
@@ -232,8 +246,18 @@ foreach my $file (@ARGV) {
       $state == QUO3 && m/^([^\`]*)/gcx && do { $str.=$1; redo; };
       $state == QUO3 && m/^\`  /gcx     && do { $state = PAR;  redo; };
 
+      $state == BEGM && m/^(\') /gcx     && do { $state = QUOM1; redo; };
+      $state == PARM && m/^(\') /gcx     && do { $state = QUOM1; redo; };
+      $state == QUOM1 && m/^([^\']+)/gcx && do { $str.=$1; redo; };
+      $state == QUOM1 && m/^\'  /gcx     && do { $state = COMM;  redo; };
+
+      $state == BEGM && m/^(\") /gcx     && do { $state = QUOM2; redo; };
+      $state == PARM && m/^(\") /gcx     && do { $state = QUOM2; redo; };
+      $state == QUOM2 && m/^([^\"]+)/gcx && do { $str.=$1; redo; };
+      $state == QUOM2 && m/^\"  /gcx     && do { $state = COMM;  redo; };
+
       # end ()
-      $state == PAR && m/^[\)]/gcx
+      ($state == PAR && m/^[\)]/gcx || $state == COMM && m/^,/gcx)
 	&& do {
 	  $state = NUL;	
 	  $vars =~ s/[\n\r]//g if ($vars);
