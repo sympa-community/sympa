@@ -10052,7 +10052,7 @@ This is done using the optional parameters \unixcmd {openSSL} and
         The file \tildefile {[ETCBINDIR]/ca\-bundle.crt} included in Sympa distribution can be used.
 
 	The \cfkeyword  {cafile} file (or the \cfkeyword {capath} directory) should be shared with your Apache+mod\_ssl configuration. 
-	This is required because Sympa's web interface gets user certificates information from Apache mod_ssl module.
+	This is required because Sympa's web interface gets user certificates information from Apache mod\_ssl module.
 
   \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
 \end{itemize}
