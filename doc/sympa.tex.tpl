@@ -10046,14 +10046,13 @@ This is done using the optional parameters \unixcmd {openSSL} and
 
 \begin{itemize}
 
-  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
+  \item \cfkeyword {openssl} : the path for the OpenSSL binary file,
          usually \texttt {/usr/local/ssl/bin/openSSL}
-  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
+  \item \cfkeyword {cafile} (or \cfkeyword {capath}) : the path of a bundle (or path of the directory) of trusted CA certificates 
         The file \tildefile {[ETCBINDIR]/ca\-bundle.crt} included in Sympa distribution can be used.
 
-	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
-        should be shared with your Apache+mod\_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+	The \cfkeyword  {cafile} file (or the \cfkeyword {capath} directory) should be shared with your Apache+mod\_ssl configuration. 
+	This is required because Sympa's web interface gets user certificates information from Apache mod_ssl module.
 
   \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
 \end{itemize}
