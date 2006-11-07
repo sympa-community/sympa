@@ -321,7 +321,7 @@
                                         <!-- Enum -->
                                         [% IF key.may_edit == 'write' %]
                                           [% IF key.occurrence == 'multiple' %]
-                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name">
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
                                           [% ELSE %]
                                             <select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name">
                                           [% END %]
