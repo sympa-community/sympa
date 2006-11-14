@@ -24,13 +24,13 @@
 	<p>Pour s'abonner à une liste, la procédure est très simple&#160;:</p>
 	<ol>
 		<li><strong>Choisissez l'adresse</strong> avec laquelle vous souhaitez vous abonner à la liste.<br />
-			<p class="retraitita">Choisissez de préférence une adresse que vous pouvez consulter fréquemment et qui vous offre une bonne capacité de stockage&#160;: certaines listes voient passer de très nombreux messages, parfois accompagnés de pièces jointes volumineuses.</p>
-			<p class="retraitita">Vous pouvez choisir de vous abonner à la même liste avec plusieurs adresses différentes. Pour cela, vous devrez recommencer la procédure d'abonnement avec votre client de messagerie, mais en utilisant un autre compte de messagerie.</p></li>
+			<span class="retraitita">Choisissez de préférence une adresse que vous pouvez consulter fréquemment et qui vous offre une bonne capacité de stockage&#160;: certaines listes voient passer de très nombreux messages, parfois accompagnés de pièces jointes volumineuses.</span>
+			<span class="retraitita">Vous pouvez choisir de vous abonner à la même liste avec plusieurs adresses différentes. Pour cela, vous devrez recommencer la procédure d'abonnement avec votre client de messagerie, mais en utilisant un autre compte de messagerie.</span></li>
 			<li>Envoyez un <strong>message à [% conf.email %]@[% conf.host %]</strong> avec l'adresse à partir de laquelle vous souhaitez vous abonner.<br />
-			<p class="retraitita">Sympa n'est pas une personne mais un automate de gestion de listes de diffusion. Inutile donc de lui envoyer des mots doux&#160;! ;-)</p></li>
+			<span class="retraitita">Sympa n'est pas une personne mais un automate de gestion de listes de diffusion. Inutile donc de lui envoyer des mots doux&#160;! ;-)</span></li>
 		<li>En objet du message, écrivez&#160;: <strong>subscribe nomdelaliste Prénom Nom</strong> (remplacez 'nomdelaliste' par le nom de la liste à laquelle vous souhaitez vous abonner et indiquez vos propres prénom et nom).</li>
 		<li><strong>Laissez le corps du message vide</strong>.<br />
-			<p class="retraitita">Vous pouvez également envoyer plusieurs commandes dans le même message pour gagner du temps. Pour cela, procédez comme indiqué dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</p></li>
+			<span class="retraitita">Vous pouvez également envoyer plusieurs commandes dans le même message pour gagner du temps. Pour cela, procédez comme indiqué dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</span></li>
 	</ol>
 
 	<p><strong>Vous recevrez ensuite un message vous informant que votre demande a été acceptée ou rejetée</strong>&#160;: si l'inscription à la liste est soumise à approbation, le propriétaire peut choisir de ne pas vous abonner. Dans ce cas, il est inutile de renvoyer plusieurs demandes d'abonnement, car le résultat sera toujours le même. Vous pouvez éventuellement envoyer un message directement au propriétaire de la liste (nomdelaliste-request@[% conf.host %]) en justifiant le pourquoi de votre demande d'abonnement.</p>
@@ -51,7 +51,7 @@
 	</ol>
 
 	<h3><a name="sympa_auth"></a>Se connecter sur l'environnement de listes</h3>
-	<p>Une zone d'authentification est présente dans la colonne gauche (en haut) de l'interface web. Si vous êtes déjà authentifié, y aparaissent votre adresse email et votre profil (abonné propriétaire). Dans le cas contraire, un formulaire d'authentification vous est proposé.<br />
+	<p>Pour vous connecter sur l'environnement de liste, utilisez la zone d'authentification située dans la colonne gauche de l'interface web. Si vous êtes déjà authentifié, votre adresse e-mail et votre profil (abonné, modérateur ou propriétaire) s'affichent à cet endroit. Dans le cas contraire, un formulaire d'authentification vous est proposé.</p>
 
 	<p>En fonction de votre situation personnelle, la procédure d'authentification varie&#160;:</p>
 	<ul>
@@ -63,7 +63,7 @@
 		<li><strong>Si vous n'êtes pas concerné par une procédure d'authentification unique et que vous ne possédez pas encore de mot de passe de listes</strong>, cliquez sur '<strong>Premier login</strong>' puis indiquez votre adresse e-mail. Votre nouveau mot de passe sera envoyé à cette adresse. Vous pourrez alors vous connecter en entrant votre <strong>adresse e-mail</strong> comme identifiant et votre <strong>mot de passe de listes</strong> dans le champ 'Mot de passe'.
 
 	</ul>
-	<p class="retraitita">Attention&#160;: le mot de passe de listes est un mot de passe spécial qui ne vous sert que pour les listes&#160;.</p>
+	<p class="retraitita">Attention&#160;: le mot de passe de listes est un mot de passe spécial qui ne vous sert que pour les listes.</p>
 
 	<h3>Consulter ses abonnements</h3>
 	<p>Pour voir toutes les listes auxquelles vous êtes abonné, vous devez tout d'abord être <a href="#sympa_auth">authentifié</a>. Vous voyez apparaître dans la boîte 'Vos listes' de la colonne de gauche, le nom de toutes les listes auxquelles vous êtes abonné, suivi chacun d'une brève description de la liste.</p>

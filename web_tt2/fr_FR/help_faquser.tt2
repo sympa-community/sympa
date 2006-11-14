@@ -11,12 +11,12 @@
 		<h4>Vous n'arrivez pas à vous authentifier sur l'interface web du serveur de listes</h4>
 		<p>Ce problème peut être dû aux raisons suivantes&#160;:</p>
 		<ul>
-			<li><strong>Vous n'avez pas de mot de passe</strong>. Pour vous faire allouer un mot de passe, suivez le lien <a href="[% path_cgi %]/sendpasswd">Premier login</a> depuis la page d'accueil. Vous recevrez ce mot de passe par email.</li>
-			<li><strong>Vous avez saisi un mot de passe incorrect</strong>. Si vous avez oublié votre mot de passe, vous pouvez en recevoir un rappel par email. Pour celà, suivez le lien <a href="[% path_cgi %]/remindpasswd"></a> depuis la page d'accueil.</li>
+			<li><strong>Vous n'avez pas de mot de passe</strong>. Pour vous faire allouer un mot de passe, suivez le lien <a href="[% path_cgi %]/sendpasswd">Premier login</a> depuis la page d'accueil. Vous recevrez ce mot de passe par e-mail.</li>
+			<li><strong>Vous avez saisi un mot de passe incorrect</strong>. Si vous avez oublié votre mot de passe, vous pouvez en recevoir un rappel par e-mail. Pour cela, suivez le lien <a href="[% path_cgi %]/remindpasswd">Mot de passe perdu ?</a> depuis la page d'accueil.</li>
 
 			<li><strong>Vous n'utilisez pas le bon identifiant</strong> (l'adresse e-mail avec laquelle vous êtes abonné).</li>
 		</ul>
-<p class="retraitita">Afin d'éviter toute erreur dans la saisie de votre mot de passe, effectuer une opération de copier/coller entre votre logiciel de messagerie et votre navigateur web.</p>
+<p class="retraitita">Afin d'éviter toute erreur dans la saisie de votre mot de passe, effectuez une opération de copier/coller entre votre logiciel de messagerie et votre navigateur web.</p>
 
 		<h4>Vous ne recevez pas (tous) les messages diffusés sur une liste</h4>
 		<p>Les raisons du problème peuvent être multiples&#160;:</p>
@@ -39,7 +39,7 @@
 			<li><strong>Votre boîte de réception est affectée par certaines restrictions</strong>&#160;: elle ne vous permet pas de recevoir les messages avec pièces jointes, interdit certains types de pièces jointes ou limite la taille des messages entrants&#160;; dans ce cas, nous vous conseillons de choisir le <a href="[% path_cgi %]/help/user#deliverymode">mode de réception Urlize</a>.</li>
 		</ul>
 		
-		<p class="red">Vérifier systèmes anti-virus, anti-spam</p>
+		<!--Vérifier systèmes anti-virus, anti-spam-->
 
 		<h4>Vous n'arrivez pas à envoyer des messages sur une liste</h4>
 		<p>Les raisons du problème peuvent être multiples&#160;:</p>
@@ -48,7 +48,7 @@
 			<li><strong>Vous n'êtes <a href="#notsubscribedanymore">plus abonné</a></strong> à la liste.</li>
 			<li><strong>Vous utilisez une autre adresse</strong> que celle avec laquelle vous êtes abonné à la liste.</li>
 			<li><strong>Si la liste est une liste modérée, la diffusion du message dépend de la disponibilité des modérateurs</strong>&#160;: ceux-ci ne peuvent pas surveiller nuit et jour la liste de diffusion&#160;! La diffusion du message peut donc prendre un peu de retard.</li>
-			<li><strong>Si la liste est une liste modérée, il est possible que votre message ait été rejeté par un modérateur</strong>. Si vous n'avez reçu aucune notification, vous pouvez éventuellement écrire à nomdelaliste-request@nomdedomaine pour obtenir des explications.</li>
+			<li><strong>Si la liste est une liste modérée, il est possible que votre message ait été rejeté par un modérateur</strong>. Si vous n'avez reçu aucune notification, vous pouvez éventuellement écrire à nomdelaliste-request@[% conf.host %] pour obtenir des explications.</li>
 			<li class="red"><strong>Le message que vous essayez d'envoyer ne remplit pas les critères de diffusion</strong> sur la liste&#160;: il peut être trop volumineux, contenir des pièces jointes d'un type interdit ou tout simplement contenir des pièces jointes, quelles qu'elles soient (si les pièces jointes sont interdites sur la liste).</li>
 			<li><strong>Le problème peut également venir de votre compte de messagerie</strong>&#160;:
 			<ul>
@@ -68,4 +68,4 @@
 		</ul>
 
 		<h4><a name="contactadmin"></a>Vous souhaitez contacter les responsables d'une liste</h4>
-		<p>Les noms des propriétaires et des modérateurs des listes sont indiqués dans le menu de gauche. Néanmoins, n'écrivez jamais directement à un propriétaire ou à un modérateur de liste&#160;: d'une part la personne à qui vous écrivez peut être absente, d'autre part, il est mieux d'informer tous les responsables de votre requête. Lorsque vous avez une question ou une remarque, <strong>l'adresse que vous devez utiliser est : nomdelaliste-request@nomdedomaine</strong> (remplacez 'nomdelaliste' par le nom de la liste en question et 'nomdedomaine' par le nom de domaine du service de listes).
+		<p>Les noms des propriétaires et des modérateurs des listes sont indiqués dans le menu de gauche. Néanmoins, n'écrivez jamais directement à un propriétaire ou à un modérateur de liste&#160;: d'une part la personne à qui vous écrivez peut être absente, d'autre part, il est mieux d'informer tous les responsables de votre requête. Lorsque vous avez une question ou une remarque, <strong>l'adresse que vous devez utiliser est&#160;: nomdelaliste-request@[% conf.host %]</strong> (remplacez 'nomdelaliste' par le nom de la liste en question).
