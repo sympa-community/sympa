@@ -12,8 +12,9 @@ font-size: 62.5%;
 background: [% color_4 %];
 }
 
-ul { margin: 0 0 0 1em }
-ol { margin: 0 0 0 1em }
+ul { margin: 0 0 0 4em }
+ol { margin: 0 0 0 4em }
+dl { margin: 0 0 0 1em }
 
 /* ########## Blocks, id and class ########## */
 
@@ -604,12 +605,19 @@ clear: both;
 code {font-weight: bold;}
 
 .retraitita {
-	background-color: [% color_13 %];
+    background-color: [% color_13 %];
         border: 1px dashed [% color_1 %];
         padding: 2px 2px 2px 2px;
         margin: 5px 5px 5px 5px;
 }
 
+span.retraitita {
+    background-color: [% color_13 %];
+        border: 1px dashed [% color_1 %];
+        padding: 5px 10px 5px 10px;
+        margin: 5px 5px 5px 5px;
+    display: block;
+}
 h1 {text-indent: 0px; margin-top: 10px; font-size: 1.8em;}
 h2 {color: [% color_11 %]; text-indent: 0px; margin-top: 10px; font-size: 1.4em;}
 h3 {color: [% color_11 %]; text-indent: 10px; margin-top: 10px; font-size: 1.2em;}
