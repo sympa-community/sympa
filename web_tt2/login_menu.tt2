@@ -77,8 +77,10 @@
       </form>
   </div>
   <br />
+[% IF use_passwd == '1' %]
   <a class="menuLinks" href="[% path_cgi %]/sendpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
   <a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a>
+[% END %]
 [% END %]
 
 </div><!-- end div=MenuBlock -->
