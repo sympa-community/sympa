@@ -1,0 +1,71 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+	<h2>List of the commands of the Sympa mail interface</h2>
+
+<p>All commands are to be sent at [% conf.email %]@[% conf.host %].</p>
+
+<p>It is possible to send several commands in a single message. Commands are to be entered in the message body (one command per line).</p>
+
+	<h3>Commands for users</h3>
+
+<p>
+<dl>
+<dd><code>HELP</code>: receive a list of all available commands</dd>
+<dd><code>LISTS</code>: receive a list of all lists managed on the server</dd>
+<dd><code>WHICH</code>: receive a list of all lists to which you are subscribed</dd>
+<dd><code>CONFIRM <em>key</em></code>: confirm sending of a message (according to the way the list is configured)</dd>
+<dd><code>QUIT</code>: indicates the end of the commands (used to ignore a signature)</em>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>INFO <em>list</em></code>: get information about the list</dd>
+<dd><code>REVIEW <em>list</em></code>: receive a list of all list members</dd>
+<dd><code>SUBSCRIBE <em>list name</em></code>: subscription (or subscription confirmation) to the list</dd>
+<dd><code>INVITE <em>list email</em></code>: invite someone to subscribe to the list</dd>
+<dd><code>UNSUBSCRIBE <em>list email</em></code>: unsubscribe from the list. The email address is required only if you want to unsubscribe with an address other than the address with which you send the message</dd>
+<dd><code>UNSUBSCRIBE * <em>email</em></code>: unsubscribe from all the lists to which you are subscribed</dd>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>SET <em>list</em> NOMAIL</code>: suspend receipt of the list's messages</dd>
+<dd><code>SET <em>list</em> DIGEST</code>: receive messages in digest mode</dd>
+<dd><code>SET <em>list</em> DIGESTPLAIN</code>: receive messages in digest mode (plain text)</dd>
+<dd><code>SET <em>list</em> SUMMARY</code>: only receive the message list</dd>
+<dd><code>SET <em>list</em> NOTICE</code>: only receive the message subjects</dd>
+<dd><code>SET <em>list</em> MAIL</code>: normal message delivery mode</dd>
+<dd><code>SET <em>list</em> CONCEAL</code>: become unlisted (hidden subscriber address)</dd>
+<dd><code>SET <em>list</em> NOCONCEAL</code>: subscriber address visible via REView</dd>
+</dl>
+
+<br/>
+
+<dl>
+<dd><code>INDEX <em>list</em></code>: receive the list of the archive files</dd>
+<dd><code>GET <em>list file</em></code>: receive a file of the list archive</dd>
+<dd><code>LAST <em>list</em></code>: receive the list's most recent message</dd>
+</dl>
+</p>
+
+	<h3>Commands for list owners</h3>
+
+<p>
+<dl>
+<dd><code>ADD <em>list email name</em></code>: add a member to the list</dd>
+<dd><code>DEL <em>list email</em></code>: remove a subscriber from the list</dd>
+<dd><code>STATS <em>list</em></code>: check the statistics for the list</dd>
+<dd><code>REMIND <em>list</em></code>: send to all subscribers a personalized reminder with the address with which he/she is subscribed to the list</dd>
+</dl>
+</p>
+
+	<h3>Commands for list moderators</h3>
+
+<p>
+<dl>
+<dd><code>DISTRIBUTE <em>list key</em></code>: approve of a message</dd>
+<dd><code>REJECT <em>list key</em></code>: reject a message to be moderated</dd>
+<dd><code>MODINDEX <em>list</em></code>: check the list of messages to be moderated</dd>
+</dl>
+</p>
