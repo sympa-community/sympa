@@ -202,7 +202,7 @@ sub install_module {
     my $answer = <STDIN>; chomp $answer;
     $answer ||= $default;
     next unless ($answer =~ /^y$/i);
-  CPAN::Shell->conf('inactivity_timeout', 4);
+    $CPAN::Config->{'inactivity_timeout'} = 4;
     CPAN::Shell->install($module);
 
     ## Restore lang
