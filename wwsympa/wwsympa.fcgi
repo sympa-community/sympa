@@ -2861,6 +2861,13 @@ sub do_remindpasswd {
 	 }
      }
 
+     ## Check auth.conf before creating/sending a password
+     unless (&Auth::may_use_sympa_native_auth($robot, $in{'email'})) {
+	 ## TODO: Error handling
+	 &report::reject_report_web('user','passwd_reminder_not_allowed',{},$param->{'action'});
+	 return undef
+     }
+
      if ($param->{'newuser'} =  &List::get_user_db($in{'email'})) {
 	 &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
 	 ## Create a password if none

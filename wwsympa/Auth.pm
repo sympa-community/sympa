@@ -70,6 +70,27 @@ use Digest::MD5;
      }
  }
 
+## This subroutine if Sympa may use its native authentication for a given user
+## It might not if no user_table paragraph is found in auth.conf or if the regexp or
+## negative_regexp exclude this user
+## IN : robot, user email
+## OUT : boolean
+sub may_use_sympa_native_auth {
+    my ($robot, $user_email) = @_;
+
+    my $ok = 0;
+    ## check each auth.conf paragrpah
+    foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
+	next unless ($auth_service->{'auth_type'} eq 'user_table');
+
+	next if ($auth_service->{'regexp'} && ($user_email !~ /$auth_service->{'regexp'}/i));
+	next if ($auth_service->{'negative_regexp'} && ($user_email =~ /$auth_service->{'negative_regexp'}/i));
+	
+	$ok = 1; last;
+    }
+    
+    return $ok;
+}
 
 sub authentication {
     my ($robot, $email,$pwd) = @_;

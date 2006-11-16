@@ -45,6 +45,7 @@
   [% ELSIF u_err.msg == 'unknown_robot' %][%|loc(u_err.new_robot)%]%1 : unknown robot[%END%]
   [% ELSIF u_err.msg == 'unknown_family' %][%|loc(u_err.family)%]%1 : unknown family[%END%]
   [% ELSIF u_err.msg == 'already_login' %][%|loc(u_err.email)%]You are already logged in as %1[%END%]
+  [% ELSIF u_err.msg == 'passwd_reminder_not_allowed' %][%|loc%]You can not get a password reminder ; probably because your password is managed outside Sympa (Single Sign-On system or LDAP directory).[%END%]
   [% ELSIF u_err.msg == 'no_email' %][%|loc%]Please provide email address[%END%]
   [% ELSIF u_err.msg == 'missing_arg' %][%|loc(u_err.argument)%]Missing argument %1[%END%]
   [% ELSIF u_err.msg == 'wrong_value' %][%|loc(u_err.argument)%]Wrong value for parameter %1[%END%]
