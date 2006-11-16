@@ -203,7 +203,9 @@ sub install_module {
     $answer ||= $default;
     next unless ($answer =~ /^y$/i);
     $CPAN::Config->{'inactivity_timeout'} = 4;
-    CPAN::Shell->install($module);
+    CPAN::Shell->make($module);
+    CPAN::Shell->test($module);
+    CPAN::Shell->install($module); ## Could use CPAN::Shell->force('install') if make test failed
 
     ## Restore lang
     $ENV{'LANG'} = $lang if (defined $lang);
