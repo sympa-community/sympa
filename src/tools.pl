@@ -1026,6 +1026,45 @@ sub escape_docname {
     return &escape_chars($filename, $except);
 }
 
+## Convert from Perl unicode encoding to UTF8
+sub unicode_to_utf8 {
+    my $s = shift;
+    
+    if (&Encode::is_utf8($s)) {
+	return &Encode::encode_utf8($s);
+    }
+
+    return $s;
+}
+
+## This applies recursively to a data structure
+## The transformation subroutine is passed as a ref
+sub recursive_transformation {
+    my ($var, $subref) = @_;
+    
+    return unless (ref($var));
+
+    if (ref($var) eq 'ARRAY') {
+	foreach my $index (0..$#{$var}) {
+	    if (ref($var->[$index])) {
+		&recursive_transformation($var->[$index], $subref);
+	    }else {
+		$var->[$index] = &{$subref}($var->[$index]);
+	    }
+	}
+    }elsif (ref($var) eq 'HASH') {
+	foreach my $key (sort keys %{$var}) {
+	    if (ref($var->{$key})) {
+		&recursive_transformation($var->{$key}, $subref);
+	    }else {
+		$var->{$key} = &{$subref}($var->{$key});
+	    }
+	}    
+    }
+    
+    return;
+}
+
 ## Q-Encode web file name
 sub qencode_filename {
     my $filename = shift;

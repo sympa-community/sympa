@@ -1938,6 +1938,15 @@ sub prepare_report_user {
 
      $param->{'robot'} = $robot;
 
+     ## If parameter has the Unicode Perl flag, then switch to utf-8
+     ## this switch is applied recursively
+     &tools::recursive_transformation($param, \&tools::unicode_to_utf8);
+
+#     foreach my $k (keys %{$param}) {
+#	 next if (ref $param->{$k});
+#	 $param->{$k} = &Encode::encode_utf8($param->{$k}) if (&Encode::is_utf8($param->{$k}));
+#     }
+
  }
 
  ## Login WWSympa
