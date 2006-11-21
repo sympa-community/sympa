@@ -105,15 +105,9 @@ package tt2;
 
 use strict;
 
-use vars qw(@ISA @EXPORT_OK);
-use Exporter;
-@ISA = ('Exporter');
-@EXPORT_OK = qw(decode_utf8);
-
 use Template;
-use Template::Directive;
 use CGI::Util;
-use MIME::EncWords;
+use MIME::EncWords; 
 use Log;
 use Language;
 
@@ -124,7 +118,7 @@ sub qencode {
     my $string = shift;
     # We are not able to determine the name of header field, so assume
     # longest (maybe) one.    
-    return MIME::EncWords::encode_mimewords($string,
+    return MIME::EncWords::encode_mimewords(Encode::decode_utf8($string),
 					    Encoding=>'A',
 					    Charset=>gettext("_charset_"),
 					    Field=>"message-id");
@@ -253,6 +247,7 @@ sub parse_tt2 {
 	# ABSOLUTE => 1,
 	INCLUDE_PATH => $include_path,
 #	PRE_CHOMP  => 1,
+	UNICODE => 0, # Prevent BOM auto-detection
 	
 	FILTERS => {
 	    unescape => \&CGI::Util::unescape,
@@ -272,7 +267,6 @@ sub parse_tt2 {
 	$allow_absolute = 0;
     }
 
-    $Template::Directive::OUTPUT = '$output .= tt2::decode_utf8 ';
     my $tt2 = Template->new($config) or die $!;
 
     unless ($tt2->process($template, $data, $output)) {

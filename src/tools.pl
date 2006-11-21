@@ -1044,7 +1044,7 @@ sub qencode_filename {
 
 	## We use low-level subroutine instead of to prevent Encode::encode('MIME-Q')
 	## Otherwise \n are inserted
-	my $encoded_part = &Encode::MIME::Header::_encode_q($part);
+	my $encoded_part = &Encode::MIME::Header::_encode_q(Encode::decode_utf8($part));
 
 	$filename = $leading.$encoded_part.$trailing;
     }
@@ -1059,7 +1059,7 @@ sub qdecode_filename {
     ## We don't use MIME::Words here because it does not encode properly Unicode
     ## Check if string is already Q-encoded first
     #if ($filename =~ /\=\?UTF-8\?/) {
-    $filename = &Encode::decode('MIME-Q', $filename);
+    $filename = Encode::encode_utf8(&Encode::decode('MIME-Q', $filename));
     #}
     
     return $filename;
@@ -1903,8 +1903,8 @@ sub qencode_hierarchy {
 	next unless ($f_struct->{'filename'} =~ /[^\x00-\x7f]/); ## At least one 8bit char
 
 	my $new_filename = $f_struct->{'filename'};
-	my $encoding = $f_struct->{'encoding'} || 'utf-8';
-	$new_filename = Encode::decode($encoding, $f_struct->{'filename'});
+	my $encoding = $f_struct->{'encoding'};
+	Encode::from_to($new_filename, $encoding, 'utf8') if $encoding;
     
 	## Q-encode filename to escape chars with accents
 	$new_filename = &tools::qencode_filename($new_filename);

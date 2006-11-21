@@ -47,8 +47,8 @@ use CPAN;
 	     'MHonArc::UTF8' => '2.6.0',
 	     'MIME::Base64' => '3.03',
 	     'Crypt::OpenSSL::X509' => '0.3.1',
-	     'MIME::Charset' => '0.04',
-	     'MIME::EncWords' => '0.02',
+	     'MIME::Charset' => '0.04.1',
+	     'MIME::EncWords' => '0.040',
 	     );
 
 ### key:left "module" used by SYMPA, 

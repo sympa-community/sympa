@@ -172,14 +172,14 @@ sub mail_file {
 	if (ref ($rcpt)) {
 	    if ($data->{'to'}) {
 		$to = $data->{'to'};
-   }else {
+	    }else {
 		$to = join(",\n   ", @{$rcpt});
 	    }
 	}else{
 	    $to = $rcpt;
 	}   
 	$headers .= "To: ".MIME::EncWords::encode_mimewords(
-	    $to,
+	    Encode::decode_utf8($to),
 	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'To'
 	    )."\n"; 
     }     
@@ -191,27 +191,27 @@ sub mail_file {
 		)."\n";
 	} else {
 	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
-		$data->{'from'},
+		Encode::decode_utf8($data->{'from'}),
 		'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'From'
 		)."\n"; 
 	}
    }
     unless ($header_ok{'subject'}) {
 	$headers .= "Subject: ".MIME::EncWords::encode_mimewords(
-	    $data->{'subject'},
+	    Encode::decode_utf8($data->{'subject'}),
 	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Subject'
 	    )."\n";
    }
     unless ($header_ok{'reply-to'}) { 
 	$headers .= "Reply-to: ".MIME::EncWords::encode_mimewords(
-	    $data->{'replyto'},
+	    Encode::decode_utf8($data->{'replyto'}),
 	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Reply-to'
 	    )."\n" if ($data->{'replyto'})
     }
     if ($data->{'headers'}) {
 	foreach my $field (keys %{$data->{'headers'}}) {
 	    $headers .= $field.': '.MIME::EncWords::encode_mimewords(
-		$data->{'headers'}{$field},
+		Encode::decode_utf8($data->{'headers'}{$field}),
 		'Encoding' => 'A', 'Charset' => $charset, 'Field' => $field
 		)."\n";
 	}
@@ -807,9 +807,6 @@ sub reformat_message($;$) {
     if (ref($message) eq 'MIME::Entity') {
 	$msg = $message;
     } else {
-	# Turn off utf8 flag so that message will be safely passed to
-	# MIME::Parser::parse_data that breaks Unicode strings.
-	$message = Encode::encode_utf8($message);
 	eval {
 	    $msg = $parser->parse_data($message);
 	};

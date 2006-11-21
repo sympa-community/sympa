@@ -104,7 +104,7 @@ sub new {
 	$message->{'subject_charset'} ||= $token->[1];
     }
     $message->{'decoded_subject'} = MIME::EncWords::decode_mimewords(
-	$hdr->get('Subject'), Charset=>"_UNICODE_");
+	$hdr->get('Subject'), Charset=>'utf8');
     chomp $message->{'decoded_subject'};
 
     ## Extract recepient address (X-Sympa-To)

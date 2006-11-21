@@ -181,7 +181,8 @@ sub SetLang {
     ## Define what catalog is used
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
-    #bind_textdomain_codeset sympa => 'iso-8859-1';
+    # Get translations by internal encoding.
+    bind_textdomain_codeset sympa => 'utf-8';
 
     $current_lang = $lang;
     $current_locale = $locale;
@@ -255,7 +256,7 @@ sub gettext {
 		    my $language = $1;
 		    $language =~ s/\<\S+\>//;
 
-		    return &Encode::decode($current_charset, $language);
+		    return $language;
 		}
 	    }elsif ($var eq 'charset') {
 		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
@@ -270,20 +271,19 @@ sub gettext {
 	return '';
     }
 
-    ## Decode from catalog encoding    
-    my $translation = &Encode::decode($current_charset, &Locale::Messages::gettext(@param));
-
-    return $translation;
+    return &Locale::Messages::gettext(@param);
 
 }
 
 sub gettext_strftime {
     my $format = shift;
     return &POSIX::strftime($format, @_) unless $current_charset;
-    return Encode::decode($current_charset,
-			  &POSIX::strftime(Encode::encode($current_charset,
-							  gettext($format)),
-					   @_));
+
+    $format = gettext($format);
+    Encode::from_to($format, 'utf8', $current_charset);
+    my $datestr = &POSIX::strftime($format, @_);
+    Encode::from_to($datestr, $current_charset, 'utf8');
+    return $datestr;
 }
 
 1;

@@ -608,12 +608,13 @@ if ($wwsconf->{'use_fast_cgi'}) {
     my $all_lists = &List::get_lists('*') unless ($maintenance_mode);
 }
 
-## Set output encoding
-## All outgoing strings will be recoded transparently using this charset
-binmode STDOUT, ":utf8";
+# Now internal encoding is same as input/output.
+#XXX## Set output encoding
+#XXX## All outgoing strings will be recoded transparently using this charset
+#XXXbinmode STDOUT, ":utf8";
 
-## Incoming data is utf8-encoded
-binmode STDIN, ":utf8";
+#XXX## Incoming data is utf8-encoded
+#XXXbinmode STDIN, ":utf8";
 
  ## Main loop
  my $loop_count;
@@ -1449,8 +1450,8 @@ sub get_header_field {
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
 	 $in{$p} =~ s/\015//g;	 
 
-	 ## Convert from the web encoding to unicode string
-	 $in{$p} = Encode::decode('utf8', $in{$p});
+	 #XXX## Convert from the web encoding to unicode string
+	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
@@ -1506,7 +1507,9 @@ sub send_html {
 
     ## Send HTML
     if ($param->{'date'}) {
+	Language::PushLang("en_US");
 	printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
+	Language::PopLang();
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n\n";
@@ -3228,7 +3231,7 @@ sub do_remindpasswd {
      ## Get List Description
      if (-r $list->{'dir'}.'/homepage') {
 	 my $file_path = $list->{'dir'}.'/homepage';
-	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $file_path) {
+	 unless (open FILE, "<", $file_path) {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_info: failed to open file %s: %s', $file_path,$!);
 	     &web_db_log({'parameters' => $file_path,
@@ -3237,6 +3240,7 @@ sub do_remindpasswd {
 	     return undef;
 	 }
 	 while (<FILE>) {
+	     Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 	     $param->{'homepage_content'} .= $_;
 	 }
 	 close FILE;
@@ -3245,7 +3249,7 @@ sub do_remindpasswd {
 	 $param->{'homepage'} = 1;
      }elsif (-r $list->{'dir'}.'/info') {
 	 my $file_path = $list->{'dir'}.'/info';
-	 unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $file_path) {
+	 unless (open FILE, "<", $file_path) {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_info: failed to open file %s: %s', $file_path,$!);
 	     &web_db_log({'parameters' => $file_path,
@@ -3254,6 +3258,7 @@ sub do_remindpasswd {
 	     return undef;
 	 }
 	 while (<FILE>) {
+	     Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 	     $param->{'info_content'} .= $_;
 	 }
 	 close FILE;
@@ -5295,10 +5300,10 @@ sub do_skinsedit {
 
 
 	 $param->{'spool'}{$id}{'size'} = int( (-s "$Conf{'queuemod'}/$msg") / 1024 + 0.5);
-	 $param->{'spool'}{$id}{'subject'} =  &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('Subject'));
+	 $param->{'spool'}{$id}{'subject'} =  &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Subject'), Charset=>'utf8');
 	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$id}{'date'} = $mail->{'msg'}->head->get('Date');
-	 $param->{'spool'}{$id}{'from'} = &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('From'));
+	 $param->{'spool'}{$id}{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
+	 $param->{'spool'}{$id}{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
 	 foreach my $field ('subject','date','from') {
 	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/;
 	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;
@@ -5705,7 +5710,8 @@ sub do_skinsedit {
 		 my $rejected_sender = $sender_hdr[0]->address;
 		 unless ($in{'quiet'}) {
 		     my %context;
-		     $context{'subject'} = &MIME::Words::decode_mimewords($msg->head->get('subject'));
+		     $context{'subject'} = &MIME::EncWords::decode_mimewords($msg->head->get('subject'), Charset=>'utf8');
+		     chomp $context{'subject'};
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     unless ($list->send_file('reject', $rejected_sender, $robot, \%context)) {
 			 &wwslog('notice',"Unable to send template 'reject' to $rejected_sender");
@@ -6042,7 +6048,7 @@ sub do_viewmod {
 	 if (defined $param->{'filepath'}) {
 	     ## open file and provide filecontent to the parser
 	     ## It allows to us the correct file encoding
-	     unless (open FILE, "<:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
+	     unless (open FILE, "<", $param->{'filepath'}) {
 		 &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('err','do_editfile: failed to open file %s: %s', $param->{'filepath'},$!);
 		 &web_db_log({'parameters' => $in{'file'},
@@ -6052,6 +6058,7 @@ sub do_viewmod {
 	     }
 	     
 	     while (<FILE>) {
+		 Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 		 $param->{'filecontent'} .= $_;
 	     }
 	     close FILE;
@@ -6219,7 +6226,7 @@ sub do_viewmod {
 	 }
      
 	 ## Save new file
-	 unless (open FILE, ">:encoding($Conf{'filesystem_encoding'})", $param->{'filepath'}) {
+	 unless (open FILE, ">", $param->{'filepath'}) {
 	     &report::reject_report_web('intern','cannot_open_file',{'file' => $param->{'filepath'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_savefile: failed to save file %s: %s', $param->{'filepath'},$!);
 	     &web_db_log({'parameters' => $in{'file'},
@@ -6227,7 +6234,9 @@ sub do_viewmod {
 			  'error_type' => 'internal'});
 	     return undef;
 	 }
-	 print FILE $in{'content'};
+	 my $e = $in{'content'};
+	 Encode::from_to($e, 'utf8', $Conf{'filesystem_encoding'});
+	 print FILE $e;
 	 close FILE;
      }elsif (-f $param->{'filepath'}) {
 	 &wwslog('info', 'do_savefile: deleting %s', $param->{'filepath'});
@@ -6343,7 +6352,7 @@ sub do_viewmod {
 
 	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
 	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
-	     open (FILE, '<:utf8', $arc_file_path);
+	     open (FILE, "<", $arc_file_path);
 	     while (<FILE>) {
 		 if (/<!--X-Subject: (.+) -->/) {
 		     $param->{'subtitle'} = $1;
@@ -6355,7 +6364,7 @@ sub do_viewmod {
 	 
 	 ## Provide a filehandle to the TT2 parser (instead of a filename previously)
 	 ## It allows to set the appropriate utf8 binmode on the FH
-	 open $param->{'file_handle'}, '<:utf8', $arc_file_path;
+	 open $param->{'file_handle'}, "<", $arc_file_path;
 
 	 &tt2::add_include_path($arc_month_path);
      }else {
@@ -6522,7 +6531,7 @@ sub do_viewmod {
  			 
  			 $msg_info{'year_month'} = $year_month;			 
  		     }else {	     
-			 $msg_info{$var} =   &MIME::Words::decode_mimewords($msg_info{$var});
+			 $msg_info{$var} = &MIME::EncWords::decode_mimewords($msg_info{$var}, Charset=>'utf8');
  			 $msg_info{$var} = &tools::escape_html($msg_info{$var});
  		     }
  		 }		
@@ -6892,7 +6901,7 @@ sub do_remove_arc {
 
      ## Decode subject header fields
      foreach my $m (@{$param->{'res'}}) {
-	 $m->{'subj'} = &MIME::Words::decode_mimewords($m->{'subj'});
+	 $m->{'subj'} = &MIME::EncWords::decode_mimewords($m->{'subj'}, Charset=>'utf8');
      }
 
      return 1;
@@ -14333,7 +14342,9 @@ sub make_pictures_url {
      ($param->{'local_to'},$param->{'domain_to'}) = split ('@',$param->{'to'});
 
      $param->{'mailto'}= &mailto($list,$param->{'to'});
-     $param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
+     # headers will be encoded later.
+     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
+     $param->{'subject'} = $in{'subject'};
      $param->{'in_reply_to'}= $in{'in_reply_to'};
      $param->{'message_id'} = &tools::get_message_id($robot);
 
@@ -14402,7 +14413,7 @@ sub make_pictures_url {
 
      my $from = $param->{'user'}{'email'};
      if (defined $param->{'subscriber'}) {
-	 $from = $param->{'subscriber'}{'gecos'}.'<'.$from.'>';
+	 $from = $param->{'subscriber'}{'gecos'}.' <'.$from.'>';
      }
 
      ## TOPICS
@@ -14520,7 +14531,10 @@ sub make_pictures_url {
      }
      my $msg = $parser->parse(\*FILE);
      my $head = $msg->head();
-     $param->{'subject'}= &MIME::Words::encode_mimewords($head->get('subject'));
+     # headers will be encoded later.
+     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($head->get('subject'));
+     $param->{'subject'} = MIME::EncWords::decode_mimewords($head->get('subject'), Charset=>'utf8');
+     chomp $param->{'subject'};
      $param->{'message_id'} = &tools::clean_msg_id($head->get('Message-Id'));
 
      my $body = $msg->bodyhandle();

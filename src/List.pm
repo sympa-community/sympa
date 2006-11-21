@@ -218,6 +218,7 @@ currently selected descriptor.
 
 use Carp;
 
+use IO::Scalar;
 use Storable;
 use Mail::Header;
 use Archive;
@@ -2346,11 +2347,6 @@ sub distribute_msg {
 	
 	## Search previous subject tagging in Subject
 	my $custom_subject = $self->{'admin'}{'custom_subject'};
-
-	## Should not be useful since config file is loaded as UTF-8
-	#$custom_subject = Encode::decode("UTF-8", $custom_subject)
-	#    unless Encode::is_utf8($custom_subject);
-
 	my $tag_regexp = $custom_subject;
 	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
 	$tag_regexp =~ s/\[\S+\]/\.\+/g;
@@ -2368,8 +2364,8 @@ sub distribute_msg {
 	$subject_field =~ s/\s*\[$tag_regexp\]//;
  	## Encode subject using initial charset
  	$subject_field = MIME::EncWords::encode_mimewords([
-	    ['['.$parsed_tag[0].'] ', gettext("_charset_")],
-	    [$subject_field, $message->{'subject_charset'}]
+	    [Encode::decode_utf8('['.$parsed_tag[0].'] '), gettext("_charset_")],
+	    [Encode::decode_utf8($subject_field), $message->{'subject_charset'}]
 	    ], Encoding=>'A', Field=>'Subject');
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
@@ -2882,17 +2878,18 @@ sub send_msg_digest {
     my @all_msg;
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
-	my $subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'));
+	my $subject = &MIME::EncWords::decode_mimewords($mail->head->get('Subject'), Charset=>'utf8');
 	chomp $subject;
-	my $from = &MIME::Words::decode_mimewords($mail->head->get('From'));
+	my $from = &MIME::EncWords::decode_mimewords($mail->head->get('From'), Charset=>'utf8');
 	chomp $from;    
+	my $date = &MIME::EncWords::decode_mimewords($mail->head->get('Date'), Charset=>'utf8');
+	chomp $date;    
 	
         my $msg = {};
 	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
 	$msg->{'from'} = $from;
-	$msg->{'date'} = $mail->head->get('Date');
-	chomp $msg->{'date'};
+	$msg->{'date'} = $date;
 	
 	#$mail->tidy_body;
 	
@@ -3888,11 +3885,11 @@ sub archive_send_last {
    my $msg = {};
    $msg->{'id'} = 1;
    
-   $msg->{'subject'}  = &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('Subject'));
+   $msg->{'subject'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Subject'), Charset=>'utf8');
    chomp $msg->{'subject'};   
-   $msg->{'from'}= &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('From'));
+   $msg->{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
    chomp $msg->{'from'};    	        	
-   $msg->{'date'} = $mail->{'msg'}->head->get('Date');
+   $msg->{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
    chomp $msg->{'date'};
    
    $msg->{'full_msg'} = $mail->{'msg'}->as_string;
@@ -10818,7 +10815,7 @@ sub load_topics {
 	    return undef;
 	}
 	
-	unless (open (FILE, "<:encoding($Conf{'filesystem_encoding'})", $conf_file)) {
+	unless (open (FILE, "<", $conf_file)) {
 	    &do_log('err',"Unable to open config file $conf_file");
 	    return undef;
 	}
@@ -10827,6 +10824,7 @@ sub load_topics {
 	my $index = 0;
 	my (@raugh_data, $topic);
 	while (<FILE>) {
+	    Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 	    if (/^([\w\/]+)\s*$/) {
 		$index++;
 		$topic = {'name' => $1,
@@ -11072,31 +11070,31 @@ sub _save_list_param {
         defined ($::pinfo{$key}{'task'}) ) {
 	return 1 if ($p->{'name'} eq 'default');
 
-	printf $fd "%s %s\n", $key, $p->{'name'};
-	print $fd "\n";
+	$fd->print(sprintf "%s %s\n", $key, $p->{'name'});
+	$fd->print("\n");
 
     }elsif (ref($::pinfo{$key}{'file_format'})) {
-	printf $fd "%s\n", $key;
+	$fd->print(sprintf "%s\n", $key);
 	foreach my $k (keys %{$p}) {
 
 	    if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'}) ) {
 		## Skip if empty value
 		next if ($p->{$k}{'name'} =~ /^\s*$/);
 
-		printf $fd "%s %s\n", $k, $p->{$k}{'name'};
+		$fd->print(sprintf "%s %s\n", $k, $p->{$k}{'name'});
 
 	    }elsif (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
 		    && $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
 		
-		printf $fd "%s %s\n", $k, join($::pinfo{$key}{'file_format'}{$k}{'split_char'}, @{$p->{$k}});
+		$fd->print(sprintf "%s %s\n", $k, join($::pinfo{$key}{'file_format'}{$k}{'split_char'}, @{$p->{$k}}));
 	    }else {
 		## Skip if empty value
 		next if ($p->{$k} =~ /^\s*$/);
 
-		printf $fd "%s %s\n", $k, $p->{$k};
+		$fd->print(sprintf "%s %s\n", $k, $p->{$k});
 	    }
 	}
-	print $fd "\n";
+	$fd->print("\n");
 
     }else {
 	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
@@ -11105,15 +11103,15 @@ sub _save_list_param {
  	    my $string = join($::pinfo{$key}{'split_char'}, @{$p});
  	    $string =~ s/\,\s*$//;
 	    
- 	    printf $fd "%s %s\n\n", $key, $string;
+ 	    $fd->print(sprintf "%s %s\n\n", $key, $string);
 	}elsif ($key eq 'digest') {
 	    my $value = sprintf '%s %d:%d', join(',', @{$p->{'days'}})
 		,$p->{'hour'}, $p->{'minute'};
-	    printf $fd "%s %s\n\n", $key, $value;
+	    $fd->print(sprintf "%s %s\n\n", $key, $value);
 ##	}elsif (($key eq 'user_data_source') && $defaults && $List::use_db) {
 ##	    printf $fd "%s %s\n\n", $key,  'database';
 	}else {
-	    printf $fd "%s %s\n\n", $key, $p;
+	    $fd->print(sprintf "%s %s\n\n", $key, $p);
 	}
     }
     
@@ -11245,13 +11243,14 @@ sub _load_admin_file {
 	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
     }
 
-    unless (open CONFIG, "<:encoding($Conf{'filesystem_encoding'})", $config_file) {
+    unless (open CONFIG, "<", $config_file) {
 	&do_log('info', 'Cannot open %s', $config_file);
     }
 
     ## Split in paragraphs
     my $i = 0;
     while (<CONFIG>) {
+	Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 	if (/^\s*$/) {
 	    $i++ if $paragraphs[$i];
 	}else {
@@ -11542,15 +11541,17 @@ sub _save_admin_file {
 	return undef;
     }
 
-    unless (open CONFIG, , ">:encoding($Conf{'filesystem_encoding'})", "$config_file") {
+    unless (open CONFIG, ">", $config_file) {
 	&do_log('info', 'Cannot open %s', $config_file);
 	return undef;
     }
+    my $config = '';
+    my $fd = new IO::Scalar \$config;
     
     foreach my $c (@{$admin->{'comment'}}) {
-	printf CONFIG "%s\n", $c;
+	$fd->print(sprintf "%s\n", $c);
     }
-    print CONFIG "\n";
+    $fd->print("\n");
 
     foreach my $key (sort by_order keys %{$admin}) {
 
@@ -11561,13 +11562,15 @@ sub _save_admin_file {
 	if ((ref ($admin->{$key}) eq 'ARRAY') &&
 	    ! $::pinfo{$key}{'split_char'}) {
 	    foreach my $elt (@{$admin->{$key}}) {
-		&_save_list_param($key, $elt, $admin->{'defaults'}{$key}, \*CONFIG);
+		&_save_list_param($key, $elt, $admin->{'defaults'}{$key}, $fd);
 	    }
 	}else {
-	    &_save_list_param($key, $admin->{$key}, $admin->{'defaults'}{$key}, \*CONFIG);
+	    &_save_list_param($key, $admin->{$key}, $admin->{'defaults'}{$key}, $fd);
 	}
 
     }
+    Encode::from_to($config, 'utf8', $Conf{'filesystem_encoding'});
+    print CONFIG $config;
     close CONFIG;
 
     return 1;

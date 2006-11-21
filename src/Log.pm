@@ -69,7 +69,7 @@ sub do_log {
 
     ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
     foreach my $i (0..$#param) {
-	$param[$i] = Encode::encode($Conf::Conf{'filesystem_encoding'}, $param[$i]) if (&Encode::is_utf8($param[$i]));
+	Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
     }
 
     $level = 1 if ($fac =~ /^debug$/) ;
