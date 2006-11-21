@@ -144,7 +144,7 @@ sub mail_file {
 	foreach my $line (split(/\n/,$message)) {
 	    last if ($line=~/^\s*$/);
        
-	    if ($line=~/^[\w-]+:\s+\S/) { ## A header field
+	    if ($line=~/^[\w-]+:\s*/) { ## A header field
 		$existing_headers=1;
 	    }elsif ($existing_headers && ($line =~ /^\s/)) { ## Following of a header field
 		next;
