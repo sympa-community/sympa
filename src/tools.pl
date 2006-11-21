@@ -1044,7 +1044,7 @@ sub qencode_filename {
 
 	## We use low-level subroutine instead of to prevent Encode::encode('MIME-Q')
 	## Otherwise \n are inserted
-	my $encoded_part = &Encode::MIME::Header::_encode_q(Encode::decode_utf8($part));
+	my $encoded_part = &Encode::encode_utf8(&Encode::MIME::Header::_encode_q($part));
 
 	$filename = $leading.$encoded_part.$trailing;
     }
