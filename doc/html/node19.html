@@ -127,8 +127,8 @@ This chapter describes what a mailing list is made of within Sympa environment.
 <P>
 
 <H1><A NAME="SECTION001910000000000000000"></A>
-    <A NAME="list-aliases"></A>    <A NAME="2591"></A>
-    <A NAME="2592"></A>
+    <A NAME="list-aliases"></A>    <A NAME="2587"></A>
+    <A NAME="2588"></A>
 <BR>
 18.1 Mail aliases
 </H1>
@@ -147,21 +147,21 @@ page&nbsp;<A HREF="node19.html#list-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT
 
 <P>
 The configuration file for the <TT>mylist</TT> list is named
-<A NAME="10480"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config</TT> 
-(or <A NAME="10483"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT> if no virtual host is defined). 
+<A NAME="10477"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config</TT> 
+(or <A NAME="10480"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT> if no virtual host is defined). 
 <I>Sympa</I> reloads it into memory whenever this file has changed on disk. The file can either be
 edited via the web interface or directly via your favourite text editor. 
 
 <P>
-If you have set the <A NAME="10487"></A><TT>cache_list_config</TT> sympa.conf parameter (see <A HREF="node8.html#cache-list">7.9.1</A>,  
-page&nbsp;<A HREF="node8.html#cache-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), a binary version of the config (<A NAME="10490"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
+If you have set the <A NAME="10484"></A><TT>cache_list_config</TT> sympa.conf parameter (see <A HREF="node8.html#cache-list">7.9.1</A>,  
+page&nbsp;<A HREF="node8.html#cache-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), a binary version of the config (<A NAME="10487"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist/config.bin</TT> is maintained to allow 
 a faster restart of daemons (this is especialy usefull for sites managing lots of lists). 
 
 <P>
 Be careful to provide read access for <I>Sympa</I> user to this file !
 
 <P>
-You will find a few configuration files in the <A NAME="10494"></A><TT>sample</TT> directory. 
+You will find a few configuration files in the <A NAME="10491"></A><TT>sample</TT> directory. 
 
 <P>
 List configuration parameters are described in the list creation section, <A HREF="node22.html#list-configuration-param">21</A>, page&nbsp;<A HREF="node22.html#list-configuration-param"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
@@ -190,8 +190,8 @@ review public
 
 <P>
 The second example is for a moderated list with authenticated subscription:
-<A NAME="2612"></A>
-<A NAME="2613"></A>
+<A NAME="2608"></A>
+<A NAME="2609"></A>
 
 <P><PRE>
 subject Second example (a moderated list)
@@ -219,7 +219,7 @@ cookie 142cleliste
 <P>
 The third example is for a moderated list, with subscription
 controlled by the owner, and running in digest mode. Subscribers
-who are in <A NAME="10497"></A>digest mode receive messages on Mondays and
+who are in <A NAME="10494"></A>digest mode receive messages on Mondays and
 Thursdays.
 
 <P><PRE>
@@ -244,7 +244,7 @@ digest 1,4 12:00
 <P>
 
 <H1><A NAME="SECTION001940000000000000000"></A>
-    <A NAME="file-subscribers"></A>    <A NAME="2625"></A>
+    <A NAME="file-subscribers"></A>    <A NAME="2621"></A>
 <BR>
 18.4 Subscribers file
 </H1>
@@ -252,10 +252,10 @@ digest 1,4 12:00
 <P>
 <B>Be carefull</B>: Since version 3.3.6 of <I>Sympa</I>, a RDBMS is required for internal data storage. Flat file should
 not be use anymore except for testing purpose. <I>Sympa</I> will not use this file if the list is configured
-with <TT>include</TT> or <TT>database</TT> <A NAME="10500"></A><TT>user_data_source</TT>.
+with <TT>include</TT> or <TT>database</TT> <A NAME="10497"></A><TT>user_data_source</TT>.
 
 <P>
-The <A NAME="10503"></A><TT>/usr/local/sympa-os/expl/mylist/subscribers</TT> file is automatically created and
+The <A NAME="10500"></A><TT>/usr/local/sympa-os/expl/mylist/subscribers</TT> file is automatically created and
 populated. It contains information about list
 subscribers.  It is not advisable to edit this file.  Main parameters
 are:
@@ -263,14 +263,14 @@ are:
 <P>
 
 <UL>
-<LI><A NAME="10506"></A><TT>email</TT> <I>address</I>
+<LI><A NAME="10503"></A><TT>email</TT> <I>address</I>
 
 <P>
 E-mail address of subscriber.
 
 <P>
 </LI>
-<LI><A NAME="10509"></A><TT>gecos</TT> <I>data</I> 
+<LI><A NAME="10506"></A><TT>gecos</TT> <I>data</I> 
 
 <P>
 Information about subscriber (last name, first name,
@@ -278,7 +278,7 @@ Information about subscriber (last name, first name,
 
 <P>
 </LI>
-<LI><A NAME="10512"></A><TT>reception</TT>
+<LI><A NAME="10509"></A><TT>reception</TT>
             <TT>nomail</TT> <TT>|</TT>
             <TT>digest</TT> <TT>|</TT>
             <TT>summary</TT> <TT>|</TT>
@@ -295,23 +295,23 @@ Special receive modes which the subscriber may select.
         <I>html</I>, <I>urlize</I>, <I>not_me</I> .
         In normal receive mode, the receive attribute
         for a subscriber is not displayed. In this mode subscription to message topics is available.
-        See the <A NAME="10515"></A><TT>SET&nbsp;LISTNAME&nbsp;SUMMARY</TT> (<A HREF="node29.html#cmd-setsummary">28.1</A>, 
+        See the <A NAME="10512"></A><TT>SET&nbsp;LISTNAME&nbsp;SUMMARY</TT> (<A HREF="node29.html#cmd-setsummary">28.1</A>, 
         page&nbsp;<A HREF="node29.html#cmd-setsummary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
-        the <A NAME="10518"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="node29.html#cmd-setnomail">28.1</A>,
-        page&nbsp;<A HREF="node29.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and the <A NAME="10521"></A><TT>digest</TT>
+        the <A NAME="10515"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="node29.html#cmd-setnomail">28.1</A>,
+        page&nbsp;<A HREF="node29.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and the <A NAME="10518"></A><TT>digest</TT>
         parameter (<A HREF="node22.html#par-digest">21.4.9</A>, page&nbsp;<A HREF="node22.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="10524"></A><TT>visibility</TT> <TT>conceal</TT>  
+<LI><A NAME="10521"></A><TT>visibility</TT> <TT>conceal</TT>  
         <A NAME="par-visibility-conceal"></A>
 <P>
 Special mode which allows the subscriber to remain invisible when
-        a <A NAME="10527"></A><TT>REVIEW</TT> command is issued for the list.  If this
+        a <A NAME="10524"></A><TT>REVIEW</TT> command is issued for the list.  If this
         parameter is not declared, the subscriber will be visible
-        for <A NAME="10530"></A><TT>REVIEW</TT>.  Note: this option does not affect
-        the results of a <A NAME="10533"></A><TT>REVIEW</TT> command issued by an
-        owner.  See the <A NAME="10536"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="node29.html#cmd-setconceal">28.1</A>, page&nbsp;<A HREF="node29.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for
+        for <A NAME="10527"></A><TT>REVIEW</TT>.  Note: this option does not affect
+        the results of a <A NAME="10530"></A><TT>REVIEW</TT> command issued by an
+        owner.  See the <A NAME="10533"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="node29.html#cmd-setconceal">28.1</A>, page&nbsp;<A HREF="node29.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for
         details.
 
 <P>
@@ -325,8 +325,8 @@ Special mode which allows the subscriber to remain invisible when
 </H1>
 
 <P>
-<A NAME="10539"></A><TT>/usr/local/sympa-os/expl/mylist/info</TT> should contain a detailed text
-description of the list, to be displayed by the <A NAME="10542"></A><TT>INFO</TT> command. 
+<A NAME="10536"></A><TT>/usr/local/sympa-os/expl/mylist/info</TT> should contain a detailed text
+description of the list, to be displayed by the <A NAME="10539"></A><TT>INFO</TT> command. 
 It can also be referenced from template files for service messages.
 
 <P>
@@ -336,21 +336,21 @@ It can also be referenced from template files for service messages.
 </H1>
 
 <P>
-<A NAME="10545"></A><TT>/usr/local/sympa-os/expl/mylist/homepage</TT> is the HTML text 
-on the <A NAME="10548"></A><I>WWSympa</I> info page for the list.
+<A NAME="10542"></A><TT>/usr/local/sympa-os/expl/mylist/homepage</TT> is the HTML text 
+on the <A NAME="10545"></A><I>WWSympa</I> info page for the list.
 
 <P>
 
 <H1><A NAME="SECTION001970000000000000000"></A>
-<A NAME="data-inclusion-file"></A><A NAME="2688"></A>
+<A NAME="data-inclusion-file"></A><A NAME="2684"></A>
 <BR>
 18.7 Data inclusion file
 </H1>
 
 <P>
-Sympa will use these files only if the list is configured in <TT>include2</TT> <A NAME="10551"></A><TT>user_data_source</TT> mode.
+Sympa will use these files only if the list is configured in <TT>include2</TT> <A NAME="10548"></A><TT>user_data_source</TT> mode.
 Every file has the .incl extension. 
-More over, these files must be declared in paragraphs <A NAME="10554"></A><TT>owner_include</TT> or <A NAME="10557"></A><TT>editor_inlude</TT> in the list configuration file 
+More over, these files must be declared in paragraphs <A NAME="10551"></A><TT>owner_include</TT> or <A NAME="10554"></A><TT>editor_inlude</TT> in the list configuration file 
 without the .incl extension (see <A HREF="node22.html#list-configuration-param">21</A>, page&nbsp;<A HREF="node22.html#list-configuration-param"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 This files can be template file.
 
@@ -358,28 +358,28 @@ This files can be template file.
 Sympa looks for them in the following order :
 
 <OL>
-<LI><A NAME="10572"></A><TT>/usr/local/sympa-os/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="10569"></A><TT>/usr/local/sympa-os/expl/mylist/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="10593"></A><TT>/usr/local/sympa-os/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
+<LI><A NAME="10590"></A><TT>/usr/local/sympa-os/etc/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>. 
 </LI>
-<LI><A NAME="10614"></A><TT>/usr/local/sympa-os/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
+<LI><A NAME="10611"></A><TT>/usr/local/sympa-os/etc/my.domain.org/data_sources/<TT>&lt;</TT>file<TT>&gt;</TT>.incl</TT>.
 </LI>
 </OL> 
 
 <P>
 These files are used by Sympa to load administrative data in a relational database :
 Owners or editors are defined <I>intensively</I> (definition of criteria owners or editors must satisfy).  
-Includes can be performed by extracting e-mail addresses using an <A NAME="10623"></A>SQL or <A NAME="10624"></A>LDAP query, or 
+Includes can be performed by extracting e-mail addresses using an <A NAME="10620"></A>SQL or <A NAME="10621"></A>LDAP query, or 
 by including other mailing lists.
 
 <P>
 A data inclusion file is composed of paragraphs separated by blank lines and introduced by a keyword.
-Valid paragraphs are <A NAME="10625"></A><TT>include_file</TT>, <A NAME="10628"></A><TT>include_list</TT>, <A NAME="10631"></A><TT>include_remote_sympa_list</TT>, 
-<A NAME="10634"></A><TT>include_sql_query</TT> and <A NAME="10637"></A><TT>include_ldap_query</TT>. They are described in the list configuration parameters chapitre, <A HREF="node22.html#list-configuration-param">21</A>, page&nbsp;<A HREF="node22.html#list-configuration-param"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+Valid paragraphs are <A NAME="10622"></A><TT>include_file</TT>, <A NAME="10625"></A><TT>include_list</TT>, <A NAME="10628"></A><TT>include_remote_sympa_list</TT>, 
+<A NAME="10631"></A><TT>include_sql_query</TT> and <A NAME="10634"></A><TT>include_ldap_query</TT>. They are described in the list configuration parameters chapitre, <A HREF="node22.html#list-configuration-param">21</A>, page&nbsp;<A HREF="node22.html#list-configuration-param"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
-When this file is a template, used variables are array elements (<A NAME="10640"></A><TT>param</TT> array). This array is instantiated by values contained in the subparameter 
-<A NAME="10643"></A><TT>source_parameter</TT> of <A NAME="10646"></A><TT>owner_include</TT> or <A NAME="10649"></A><TT>editor_inlude</TT>.
+When this file is a template, used variables are array elements (<A NAME="10637"></A><TT>param</TT> array). This array is instantiated by values contained in the subparameter 
+<A NAME="10640"></A><TT>source_parameter</TT> of <A NAME="10643"></A><TT>owner_include</TT> or <A NAME="10646"></A><TT>editor_inlude</TT>.
 
 <P>
 <I>Example :</I> 
@@ -430,14 +430,14 @@ When this file is a template, used variables are array elements (<A NAME="10640"
 <P>
 
 <H1><A NAME="SECTION001980000000000000000"></A>
-<A NAME="list-tpl"></A><A NAME="2734"></A>
+<A NAME="list-tpl"></A><A NAME="2730"></A>
 <BR>
 18.8 List template files
 </H1>
 
 <P>
 These files are used by Sympa as service messages for commands such as
-<A NAME="10652"></A><TT>SUB</TT>, <A NAME="10655"></A><TT>ADD</TT>, <A NAME="10658"></A><TT>SIG</TT>, <A NAME="10661"></A><TT>DEL</TT>, <A NAME="10664"></A><TT>REJECT</TT>. 
+<A NAME="10649"></A><TT>SUB</TT>, <A NAME="10652"></A><TT>ADD</TT>, <A NAME="10655"></A><TT>SIG</TT>, <A NAME="10658"></A><TT>DEL</TT>, <A NAME="10661"></A><TT>REJECT</TT>. 
 These files are interpreted (parsed) by <I>Sympa</I> and respect the template 
 format ; every file has the .tt2 extension. See <A HREF="node18.html#tpl-format">17.1</A>, 
 page&nbsp;<A HREF="node18.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
@@ -446,11 +446,11 @@ page&nbsp;<A HREF="node18.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="
 Sympa looks for these files in the following order :
 
 <OL>
-<LI><A NAME="10680"></A><TT>/usr/local/sympa-os/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
+<LI><A NAME="10677"></A><TT>/usr/local/sympa-os/expl/mylist/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT> 
 </LI>
-<LI><A NAME="10701"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="10698"></A><TT>/usr/local/sympa-os/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="10722"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="10719"></A><TT>/usr/local/sympa-os/bin/etc/mail_tt2/<TT>&lt;</TT>file<TT>&gt;</TT>.tt2</TT>.
 </LI>
 </OL>
 
@@ -480,7 +480,7 @@ The following variables may be used in list template files :
 <P>
 </DD>
 <DT>-</DT>
-<DD>[% conf.wwsympa_url %] : <A NAME="10731"></A><I>WWSympa</I> root URL
+<DD>[% conf.wwsympa_url %] : <A NAME="10728"></A><I>WWSympa</I> root URL
 
 <P>
 </DD>
@@ -587,7 +587,7 @@ mail command received.
 </H2> 
 
 <P>
-This message is sent to users who have been deleted (using the <A NAME="10735"></A><TT>DELETE</TT> 
+This message is sent to users who have been deleted (using the <A NAME="10732"></A><TT>DELETE</TT> 
 command) from the list by the list owner.
 
 <P>
@@ -598,7 +598,7 @@ command) from the list by the list owner.
 
 <P>
 <I>Sympa</I> will send a reject message to the senders of messages rejected
-by the list editor. If the editor prefixes her <A NAME="10739"></A><TT>REJECT</TT> with the
+by the list editor. If the editor prefixes her <A NAME="10736"></A><TT>REJECT</TT> with the
 keyword QUIET, the reject message will not be sent.
 
 <P>
@@ -608,7 +608,7 @@ keyword QUIET, the reject message will not be sent.
 </H2> 
 
 <P>
-This message is sent to users who have been invited (using the <A NAME="10742"></A><TT>INVITE</TT> 
+This message is sent to users who have been invited (using the <A NAME="10739"></A><TT>INVITE</TT> 
 command) to subscribe to a list. 
 
 <P>
@@ -616,7 +616,7 @@ You may use additional variables
 <DL COMPACT>
 <DT>-</DT>
 <DD>[% requested_by %] : e-mail of the person who sent the 
-		<A NAME="10745"></A><TT>INVITE</TT> command
+		<A NAME="10742"></A><TT>INVITE</TT> command
 
 <P>
 </DD>
@@ -635,7 +635,7 @@ You may use additional variables
 
 <P>
 This file contains a message sent to each subscriber
-when one of the list owners sends the <A NAME="10748"></A><TT>REMIND</TT> command
+when one of the list owners sends the <A NAME="10745"></A><TT>REMIND</TT> command
  (see&nbsp;<A HREF="node29.html#cmd-remind">28.2</A>, page&nbsp;<A HREF="node29.html#cmd-remind"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -662,13 +662,13 @@ Template that defines list mail alises. It is used by the alias_manager script.
 <P>
 
 <H1><A NAME="SECTION001990000000000000000"></A>
-    <A NAME="stats-file"></A>    <A NAME="2779"></A>
+    <A NAME="stats-file"></A>    <A NAME="2775"></A>
 <BR>
 18.9 Stats file
 </H1>
 
 <P>
-<A NAME="10751"></A><TT>/usr/local/sympa-os/expl/mylist/stats</TT> is a text file containing 
+<A NAME="10748"></A><TT>/usr/local/sympa-os/expl/mylist/stats</TT> is a text file containing 
 statistics about the list. Data are numerics separated
 by white space within a single line :
 
@@ -720,7 +720,7 @@ by the task manager and respect the task format. See <A HREF="node18.html#tasks"
 </H2>
 
 <P>
-Every year <I>Sympa</I> will send a message (the template <A NAME="10756"></A><TT>remind.tt2</TT>) 
+Every year <I>Sympa</I> will send a message (the template <A NAME="10753"></A><TT>remind.tt2</TT>) 
 to all subscribers of the list to remind them of their subscription.
 
 <P>
@@ -741,16 +741,16 @@ Every month <I>Sympa</I> will delete subscribers older than one year who haven't
 </H1>
 
 <P>
-You may create <A NAME="10760"></A><TT>/usr/local/sympa-os/expl/mylist/message.header</TT> and
-<A NAME="10763"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer</TT> files. Their content
+You may create <A NAME="10757"></A><TT>/usr/local/sympa-os/expl/mylist/message.header</TT> and
+<A NAME="10760"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer</TT> files. Their content
 is added, respectively at the beginning and at the end of each message 
 before the distribution process. You may also include the content-type
-of the appended part (when <A NAME="10766"></A><TT>footer_type</TT> list parameter s set 
-to <B>mime</B>) by renaming the files to <A NAME="10769"></A><TT>message.header.mime</TT> 
-and <A NAME="10772"></A><TT>message.footer.mime</TT>.
+of the appended part (when <A NAME="10763"></A><TT>footer_type</TT> list parameter s set 
+to <B>mime</B>) by renaming the files to <A NAME="10766"></A><TT>message.header.mime</TT> 
+and <A NAME="10769"></A><TT>message.footer.mime</TT>.
 
 <P>
-The <A NAME="10775"></A><TT>footer_type</TT> list parameter defines whether to attach the 
+The <A NAME="10772"></A><TT>footer_type</TT> list parameter defines whether to attach the 
 header/footer content as a MIME part (except for multipart/alternative 
 messages), or to append them to the message body (for text/plain messages).
 
@@ -776,10 +776,10 @@ if message is not multipart/signed
 </H2> 
 
 <P>
-The <A NAME="10778"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory contains the 
+The <A NAME="10775"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory contains the 
 archived messages for lists which are archived; see <A HREF="node22.html#par-archive">21.6.1</A>, 
 page&nbsp;<A HREF="node22.html#par-archive"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. The files are named in accordance with the 
-archiving frequency defined by the <A NAME="10781"></A><TT>archive</TT> parameter.
+archiving frequency defined by the <A NAME="10778"></A><TT>archive</TT> parameter.
 
 <P>
 
@@ -814,7 +814,7 @@ archiving frequency defined by the <A NAME="10781"></A><TT>archive</TT> paramete
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-11-02
+2006-11-21
 </ADDRESS>
 </BODY>
 </HTML>

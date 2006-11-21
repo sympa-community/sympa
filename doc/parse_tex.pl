@@ -24,6 +24,7 @@ use lib "../wwsympa/";
 use Log;
 use Conf;
 use POSIX;
+require 'tools.pl';
 require "parser.pl";
 
 my $in_file = $ARGV[0];
@@ -54,7 +55,7 @@ foreach my $k (keys %ENV) {
 
 ## scenari
 foreach my $file (<../src/etc/scenari/*.*>) {
-    $file =~ /\/(\w+)\.(\w+)$/;
+    $file =~ /\/(\w+)\.($tools::regexp{'scenario'})$/;
     my ($action, $name) = ($1, $2);
     my $title;
     open SCENARIO, $file;

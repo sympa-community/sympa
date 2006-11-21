@@ -83,16 +83,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-<A NAME="7605"></A><TT>sympa.pl</TT> is the main daemon ; it processes mail commands and is in charge of
+<A NAME="7602"></A><TT>sympa.pl</TT> is the main daemon ; it processes mail commands and is in charge of
 messages distribution.
 
 <P>
-<A NAME="7608"></A><TT>sympa.pl</TT> recognizes the following command line arguments:
+<A NAME="7605"></A><TT>sympa.pl</TT> recognizes the following command line arguments:
 
 <P>
 
 <UL>
-<LI><A NAME="7611"></A><TT>- - debug</TT> | <A NAME="7614"></A><TT>-d</TT> 
+<LI><A NAME="7608"></A><TT>- - debug</TT> | <A NAME="7611"></A><TT>-d</TT> 
 
 <P>
 Sets <I>Sympa</I> in debug mode and keeps it attached to the terminal. 
@@ -102,7 +102,7 @@ Sets <I>Sympa</I> in debug mode and keeps it attached to the terminal.
 
 <P>
 </LI>
-<LI><A NAME="7618"></A><TT>service</TT>  <I>process_command</I> | <I>process_message</I> | <I>process_creation</I>
+<LI><A NAME="7615"></A><TT>service</TT>  <I>process_command</I> | <I>process_message</I> | <I>process_creation</I>
 
 <P>
 Sets <I>Sympa</I> daemon in way it process only message distribution (process_message) or in way it process only command (process_command) or to process 
@@ -110,7 +110,7 @@ Sets <I>Sympa</I> daemon in way it process only message distribution (process_me
 
 <P>
 </LI>
-<LI><A NAME="7631"></A><TT>- - config <I>config_file</I></TT> | <A NAME="7646"></A><TT>-f <I>config_file</I></TT>
+<LI><A NAME="7628"></A><TT>- - config <I>config_file</I></TT> | <A NAME="7643"></A><TT>-f <I>config_file</I></TT>
 
 <P>
 Forces <I>Sympa</I> to use an alternative configuration file. Default behavior is
@@ -118,7 +118,7 @@ Forces <I>Sympa</I> to use an alternative configuration file. Default behavior i
 
 <P>
 </LI>
-<LI><A NAME="7653"></A><TT>- - mail</TT> | <A NAME="7656"></A><TT>-m</TT> 
+<LI><A NAME="7650"></A><TT>- - mail</TT> | <A NAME="7653"></A><TT>-m</TT> 
 
 <P>
 <I>Sympa</I> will log calls to sendmail, including recipients. Useful for
@@ -126,16 +126,16 @@ Forces <I>Sympa</I> to use an alternative configuration file. Default behavior i
 
 <P>
 </LI>
-<LI><A NAME="7669"></A><TT>- - lang <I>catalog</I></TT> | <A NAME="7684"></A><TT>-l <I>catalog</I></TT>
+<LI><A NAME="7666"></A><TT>- - lang <I>catalog</I></TT> | <A NAME="7681"></A><TT>-l <I>catalog</I></TT>
 
 <P>
 Set this option to use a language catalog for <I>Sympa</I>. 
-  The corresponding catalog file must be located in <A NAME="7691"></A><TT>~sympa/locale</TT>
+  The corresponding catalog file must be located in <A NAME="7688"></A><TT>~sympa/locale</TT>
   directory. 
 
 <P>
 </LI>
-<LI><A NAME="7705"></A><TT>- - keepcopy <I>recipient_directory</I></TT> | <A NAME="7720"></A><TT>-k <I>recipient_directory</I></TT>
+<LI><A NAME="7702"></A><TT>- - keepcopy <I>recipient_directory</I></TT> | <A NAME="7717"></A><TT>-k <I>recipient_directory</I></TT>
 
 <P>
 This option tells Sympa to keep a copy of every incoming message,
@@ -148,7 +148,7 @@ This option tells Sympa to keep a copy of every incoming message,
 
 <P>
 </LI>
-<LI><A NAME="7738"></A><TT>- - create_list - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+<LI><A NAME="7735"></A><TT>- - create_list - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
 
 <P>
 Create the list described by the xml file, see <A HREF="node20.html#list-creation-sympa">19.3</A>, 
@@ -156,7 +156,7 @@ page&nbsp;<A HREF="node20.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER=
 
 <P>
 </LI>
-<LI><A NAME="7756"></A><TT>- - close_list <I>listname@robot</I></TT>
+<LI><A NAME="7753"></A><TT>- - close_list <I>listname@robot</I></TT>
 
 <P>
 Close the list (changing its status to closed), remove aliases (if sendmail_aliases
@@ -167,36 +167,36 @@ are in a family context.
 
 <P>
 </LI>
-<LI><A NAME="7774"></A><TT>- - dump <I>listname <TT>|</TT> ALL</I></TT>
+<LI><A NAME="7771"></A><TT>- - dump <I>listname <TT>|</TT> ALL</I></TT>
 
 <P>
 Dumps subscribers of a list or all lists. Subscribers are dumped
-  in <A NAME="7783"></A><TT>subscribers.db.dump</TT>.
+  in <A NAME="7780"></A><TT>subscribers.db.dump</TT>.
 
 <P>
 </LI>
-<LI><A NAME="7795"></A><TT>- - import <I>listname</I></TT>
+<LI><A NAME="7792"></A><TT>- - import <I>listname</I></TT>
 
 <P>
 Import subscribers in the <I>listname</I> list. Data are read from STDIN.
 
 <P>
 </LI>
-<LI><A NAME="7801"></A><TT>- - lowercase</TT>
+<LI><A NAME="7798"></A><TT>- - lowercase</TT>
 
 <P>
 Lowercases e-mail addresses in database.
 
 <P>
 </LI>
-<LI><A NAME="7804"></A><TT>- - help</TT> | <A NAME="7807"></A><TT>-h</TT>
+<LI><A NAME="7801"></A><TT>- - help</TT> | <A NAME="7804"></A><TT>-h</TT>
 
 <P>
 Print usage of sympa.pl.
 
 <P>
 </LI>
-<LI><A NAME="7810"></A><TT>- - make_alias_file</TT>
+<LI><A NAME="7807"></A><TT>- - make_alias_file</TT>
 
 <P>
 Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list_aliases.tt2
@@ -204,14 +204,14 @@ template.
 
 <P>
 </LI>
-<LI><A NAME="7813"></A><TT>- - version</TT> | <A NAME="7816"></A><TT>-v</TT>
+<LI><A NAME="7810"></A><TT>- - version</TT> | <A NAME="7813"></A><TT>-v</TT>
 
 <P>
 Print current version of <I>Sympa</I>.
 
 <P>
 </LI>
-<LI><A NAME="7835"></A><TT>- - instanciate_family <I>familyname</I> <I>robotname</I> - - input_file <I>/path/to/family_file.xml</I></TT>
+<LI><A NAME="7832"></A><TT>- - instanciate_family <I>familyname</I> <I>robotname</I> - - input_file <I>/path/to/family_file.xml</I></TT>
 
 <P>
 Instantiate the family <I>familyname</I>. See <A HREF="node21.html#lists-families">20</A>, 
@@ -219,7 +219,7 @@ page&nbsp;<A HREF="node21.html#lists-families"><IMG  ALIGN="BOTTOM" BORDER="1" A
 
 <P>
 </LI>
-<LI><A NAME="7859"></A><TT>- - close_family <I>familyname</I> - - robot <I>robotname</I></TT>
+<LI><A NAME="7856"></A><TT>- - close_family <I>familyname</I> - - robot <I>robotname</I></TT>
 
 <P>
 Close the <I>familyname</I> family. See <A HREF="node21.html#family-closure">20.2.4</A>, 
@@ -227,7 +227,7 @@ Close the <I>familyname</I> family. See <A HREF="node21.html#family-closure">20.
 
 <P>
 </LI>
-<LI><A NAME="7883"></A><TT>- - add_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+<LI><A NAME="7880"></A><TT>- - add_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
 
 <P>
 Add the list described in the XML file to the <I>familyname</I> family. See <A HREF="node21.html#family-add-list">20.2.5</A>, 
@@ -235,7 +235,7 @@ Add the list described in the XML file to the <I>familyname</I> family. See <A H
 
 <P>
 </LI>
-<LI><A NAME="7910"></A><TT>- - modify_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+<LI><A NAME="7907"></A><TT>- - modify_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
 
 <P>
 Modify the existing family list, with description contained in the XML file. See <A HREF="node21.html#family-modify-list">20.2.7</A>, 
@@ -243,7 +243,7 @@ Modify the existing family list, with description contained in the XML file. See
 
 <P>
 </LI>
-<LI><A NAME="7931"></A><TT>- - sync_include <I>listaddress</I> </TT>
+<LI><A NAME="7928"></A><TT>- - sync_include <I>listaddress</I> </TT>
 
 <P>
 Trigger an update of list members, usefull if the list uses
@@ -251,17 +251,17 @@ Trigger an update of list members, usefull if the list uses
 
 <P>
 </LI>
-<LI><A NAME="7937"></A><TT>- - upgrade - - from=X - -to=Y </TT>
+<LI><A NAME="7934"></A><TT>- - upgrade - - from=X - -to=Y </TT>
 
 <P>
 Runs Sympa maintenance script to upgrate from version X to version Y
 
 <P>
 </LI>
-<LI><A NAME="7940"></A><TT>- - reload_list_config - -list=mylist@dom </TT>
+<LI><A NAME="7937"></A><TT>- - reload_list_config - -list=mylist@dom </TT>
 
 <P>
-Recreates all <A NAME="7943"></A><TT>configbin</TT> files. You should run this command if you edit authorization scenarios. The list parameter is optional.
+Recreates all <A NAME="7940"></A><TT>configbin</TT> files. You should run this command if you edit authorization scenarios. The list parameter is optional.
 
 <P>
 </LI>
@@ -276,11 +276,11 @@ Recreates all <A NAME="7943"></A><TT>configbin</TT> files. You should run this c
 </H1>
 
 <P>
-The <A NAME="7946"></A><TT>make install</TT> step should have installed a sysV init script in
- your <A NAME="7949"></A><TT>/etc/rc.d/init.d/</TT> directory (you can change this at <A NAME="7952"></A><TT>configure</TT>
- time with the <A NAME="7955"></A><TT>-with-initdir</TT> option). You should edit your runlevels to make
- sure <I>Sympa</I> starts after Apache and MySQL. Note that <A NAME="7959"></A>MySQL should
- also start before <A NAME="7960"></A>Apache because of <A NAME="7961"></A><TT>wwsympa.fcgi</TT>.
+The <A NAME="7943"></A><TT>make install</TT> step should have installed a sysV init script in
+ your <A NAME="7946"></A><TT>/etc/rc.d/init.d/</TT> directory (you can change this at <A NAME="7949"></A><TT>configure</TT>
+ time with the <A NAME="7952"></A><TT>-with-initdir</TT> option). You should edit your runlevels to make
+ sure <I>Sympa</I> starts after Apache and MySQL. Note that <A NAME="7956"></A>MySQL should
+ also start before <A NAME="7957"></A>Apache because of <A NAME="7958"></A><TT>wwsympa.fcgi</TT>.
 
 <P>
 This script starts these deamons : sympa.pl, task_manager.pl, archived.pl and bounced.pl.
@@ -295,25 +295,25 @@ This script starts these deamons : sympa.pl, task_manager.pl, archived.pl and bo
 
 <P>
 
-<H3><A NAME="SECTION00530100000000000000"></A><A NAME="7965"></A>
+<H3><A NAME="SECTION00530100000000000000"></A><A NAME="7962"></A>
 <BR>
 4.3.0.1 <TT>kill -TERM</TT>
 </H3>
 
 <P>
-When this signal is sent to sympa.pl (<A NAME="7968"></A><TT>kill -TERM</TT>), the daemon is stopped ending message distribution in progress 
- and this can be long (for big lists). If <A NAME="7971"></A><TT>kill -TERM</TT> is used, sympa.pl will stop immediatly whatever a distribution 
+When this signal is sent to sympa.pl (<A NAME="7965"></A><TT>kill -TERM</TT>), the daemon is stopped ending message distribution in progress 
+ and this can be long (for big lists). If <A NAME="7968"></A><TT>kill -TERM</TT> is used, sympa.pl will stop immediatly whatever a distribution 
  message is in progress. In this case, when sympa.pl restart, message will distributed many times.
 
 <P>
 
-<H3><A NAME="SECTION00530200000000000000"></A><A NAME="7974"></A>
+<H3><A NAME="SECTION00530200000000000000"></A><A NAME="7971"></A>
 <BR>
 4.3.0.2 <TT>kill -HUP</TT>
 </H3>
 
 <P>
-When this signal is sent to sympa.pl (<A NAME="7977"></A><TT>kill -HUP</TT>), it switchs of the <A NAME="7980"></A><TT>-mail</TT> logging option
+When this signal is sent to sympa.pl (<A NAME="7974"></A><TT>kill -HUP</TT>), it switchs of the <A NAME="7977"></A><TT>-mail</TT> logging option
  and continues current task.
 
 <P>
@@ -349,7 +349,7 @@ When this signal is sent to sympa.pl (<A NAME="7977"></A><TT>kill -HUP</TT>), it
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-11-02
+2006-11-21
 </ADDRESS>
 </BODY>
 </HTML>

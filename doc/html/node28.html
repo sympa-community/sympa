@@ -223,7 +223,7 @@ That's why Sympa tests the key usage certificate attribute to known if the certi
 allows both encryption and signature.
 
 <P>
-Certificates are stored as PEM files in the <A NAME="12339"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory. 
+Certificates are stored as PEM files in the <A NAME="12336"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory. 
 Files are named user@some.domain@enc or user@some.domain@sign  (@enc and @sign suffix 
 are used according to certificates usage.  No other tool is provided by Sympa in order 
 to collect this certificate repository but you can easily imagine your own tool to create 
@@ -245,22 +245,21 @@ feel at home, and there may even be changes you will wish to suggest to us.
 <P>
 The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
 and the certificates of the trusted certificate authority. 
-This is done using the optional parameters <A NAME="12343"></A><TT>openSSL</TT> and
-<A NAME="12346"></A><TT>capath</TT> and / or <A NAME="12349"></A><TT>cafile</TT>.
+This is done using the optional parameters <A NAME="12340"></A><TT>openSSL</TT> and
+<A NAME="12343"></A><TT>capath</TT> and / or <A NAME="12346"></A><TT>cafile</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="12352"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+<LI><A NAME="12349"></A><TT>openssl</TT> : the path for the OpenSSL binary file,
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
-<LI><A NAME="12355"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+<LI><A NAME="12352"></A><TT>cafile</TT> (or <A NAME="12355"></A><TT>capath</TT>) : the path of a bundle (or path of the directory) of trusted CA certificates 
         The file <A NAME="12358"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
-Both the <A NAME="12363"></A><TT>cafile</TT> file and the <A NAME="12366"></A><TT>capath</TT> directory
-        should be shared with your Apache+mod_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+The <A NAME="12363"></A><TT>cafile</TT> file (or the <A NAME="12366"></A><TT>capath</TT> directory) should be shared with your Apache+mod_ssl configuration. 
+	This is required because Sympa's web interface gets user certificates information from Apache mod_ssl module.
 
 <P>
 </LI>
@@ -471,7 +470,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-11-02
+2006-11-21
 </ADDRESS>
 </BODY>
 </HTML>

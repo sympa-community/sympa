@@ -132,7 +132,7 @@ Instructions for translating Sympa are maintained on Sympa web site :
 <P>
 The default Sympa templates are language independant, refering to catalogue entries for translations. 
 When customizing either web or mail templates, you can define different templates for different languages. 
-The template should be located in a ll_CC subdirectory of <A NAME="9363"></A><TT>web_tt2</TT> or <A NAME="9366"></A><TT>mail_tt2</TT> with the language code.
+The template should be located in a ll_CC subdirectory of <A NAME="9360"></A><TT>web_tt2</TT> or <A NAME="9363"></A><TT>mail_tt2</TT> with the language code.
 
 <P>
 Example :<PRE>
@@ -142,7 +142,7 @@ Example :<PRE>
 </PRE>
 
 <P>
-This mecanism also applies to <A NAME="9369"></A><TT>comment.tt2</TT> files used by create list templates.
+This mecanism also applies to <A NAME="9366"></A><TT>comment.tt2</TT> files used by create list templates.
 
 <P>
 Web templates can also make use of the <TT>locale</TT> variable to make templates multi-lingual :
@@ -163,7 +163,7 @@ Customization
 </H1>
 
 <P>
-Topics are defined in a <A NAME="9372"></A><TT>topics.conf</TT> file. In this file, each entry can be given a title in different languages, see
+Topics are defined in a <A NAME="9369"></A><TT>topics.conf</TT> file. In this file, each entry can be given a title in different languages, see
 <A HREF="node18.html#topics">17.5</A>, page&nbsp;<A HREF="node18.html#topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -176,13 +176,13 @@ Topics are defined in a <A NAME="9372"></A><TT>topics.conf</TT> file. In this fi
 Until version 5.3, Sympa web pages were encoded in each language's
 encoding (iso-8859-1 for French, utf-8 for Japanese,...) whereas every
 web page is now encoded in utf-8. Thanks to
-the <A NAME="9375"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
+the <A NAME="9372"></A><TT>Encode</TT> Perl module, Sympa can now juggle with the
 filesystem encoding, each message catalog's encoding and its web
 encoding (utf-8).
 
 <P>
 If your operating system uses a character encoding different from
-utf-8, then you should declare it using the <A NAME="9378"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
+utf-8, then you should declare it using the <A NAME="9375"></A><TT>filesystem_encoding</TT> sympa.conf parameter (see 
 <A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#filesystem-encoding"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). It is required to do so
 because Sympa has no way to find out what encoding is used for its
 configuration files. Once this encoding is known, every template or
@@ -227,7 +227,7 @@ for the end-users.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-11-02
+2006-11-21
 </ADDRESS>
 </BODY>
 </HTML>

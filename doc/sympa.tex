@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.3a.9}
+    \newcommand {\version} {5.3a.10}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.3a.9\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.3a.10\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {27 October 2006}
+    \date {21 November 2006}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -4803,8 +4803,47 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</output>
 	</operation>
+	<operation name="add">
+		<soap:operation soapAction="urn:sympasoap#add"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="del">
+		<soap:operation soapAction="urn:sympasoap#del"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
 	<operation name="createList">
 		<soap:operation soapAction="urn:sympasoap#createList"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="closeList">
+		<soap:operation soapAction="urn:sympasoap#closeList"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -5799,7 +5838,7 @@ Rules are defined as follows :
                 | all ()
                 | equal (<var>, <var>)
                 | match (<var>, /perl_regexp/)
-		| search (<named_filter_file>,<var>)
+		| search (<named_filter_file>)
                 | is_subscriber (<listname>, <var>)
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
@@ -5940,7 +5979,7 @@ At the moment Named Filters are only used in authorization scenarios. They enabl
 	
 As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory, an \textindex {SQL} database or an flat text file, thanks to an authorization scenario.
 	
-Note that the only variable available in named filters is [sender] and is set to the email address of the acting user.
+Note that the only a subset of variable available in the scenario context are available here (including [sender] and [listname]).
 
 \subsection {LDAP Named Filters Definition}
 
@@ -6057,17 +6096,12 @@ The search condition is used in authorization scenarios which are defined and de
 The syntax of this rule is:
 \begin {quote}
 \begin{verbatim}
-	search(example.ldap,[sender])      smtp,smime,md5    -> do_it
-	search(blacklist.txt,[sender])     smtp,smime,md5    -> do_it
+	search(example.ldap)      smtp,smime,md5    -> do_it
+	search(blacklist.txt)     smtp,smime,md5    -> do_it
 \end{verbatim}
 \end {quote}
 
-The variables used by 'search' are :
-\begin{itemize}
-	\item{the name of the LDAP Configuration file or a txt matching enumeration}\\
-	\item{the [sender]}\\
-	That is to say the sender email address.
-\end{itemize}
+The variable used by 'search' is the name of the LDAP Configuration file or a txt matching enumeration
  
 +Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory or SQL server; each entry has a lifetime of 1 hour in the cache.
 
@@ -6103,7 +6137,7 @@ Note that you will need to restart Sympa processes to force reloading of list co
 For each service listed in parameter \cfkeyword {use\_blacklist} (see~\ref {useblacklist}), the following implicit scenario rule is added at the beginning of the scenario :
 \begin {quote}
 \begin{verbatim}
-search(blacklist.txt,)  smtp,md5,pgp,smime -> reject,quiet
+search(blacklist.txt)  smtp,md5,pgp,smime -> reject,quiet
 \end{verbatim}
 \end {quote}
 	    
@@ -9815,9 +9849,9 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
-     \item \lparam {d\_read} \texttt {p} 
+     \item \lparam {d\_read} \texttt {private-https} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.p})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.private-https})
 	\end {htmlonly}\\
 	
 
@@ -9861,9 +9895,9 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
-     \item \lparam {d\_edit} \texttt {p} 
+     \item \lparam {d\_edit} \texttt {private-https} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.p})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.private-https})
 	\end {htmlonly}\\
 	
 
@@ -11344,14 +11378,13 @@ This is done using the optional parameters \unixcmd {openSSL} and
 
 \begin{itemize}
 
-  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
+  \item \cfkeyword {openssl} : the path for the OpenSSL binary file,
          usually \texttt {/usr/local/ssl/bin/openSSL}
-  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
+  \item \cfkeyword {cafile} (or \cfkeyword {capath}) : the path of a bundle (or path of the directory) of trusted CA certificates 
         The file \tildefile {/usr/local/sympa-os/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
 
-	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
-        should be shared with your Apache+mod\_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+	The \cfkeyword  {cafile} file (or the \cfkeyword {capath} directory) should be shared with your Apache+mod\_ssl configuration. 
+	This is required because Sympa's web interface gets user certificates information from Apache mod\_ssl module.
 
   \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
 \end{itemize}

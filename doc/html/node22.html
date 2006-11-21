@@ -232,7 +232,7 @@ lines and introduced by a keyword.
 
 <P>
 Even though there are a very large number of possible parameters, the minimal list
-definition is very short. The only required parameters are <A NAME="11039"></A><TT>owner</TT> (or <A NAME="11042"></A><TT>owner_include</TT>) and <A NAME="11045"></A><TT>subject</TT>.
+definition is very short. The only required parameters are <A NAME="11036"></A><TT>owner</TT> (or <A NAME="11039"></A><TT>owner_include</TT>) and <A NAME="11042"></A><TT>subject</TT>.
 All other parameters have a default value.
 
 <P>
@@ -254,14 +254,14 @@ blank lines and BLANK LINES ONLY !
 <P>
 
 <H2><A NAME="SECTION002211000000000000000"></A>
-    <A NAME="par-editor"></A>    <A NAME="3152"></A>
+    <A NAME="par-editor"></A>    <A NAME="3148"></A>
 <BR>
 21.1.1 editor
 </H2>
 
 <P>
-The <A NAME="11048"></A><TT>config</TT> file contains one <A NAME="11051"></A><TT>editor</TT> paragraph
-per <A NAME="11054"></A>moderator (or editor).
+The <A NAME="11045"></A><TT>config</TT> file contains one <A NAME="11048"></A><TT>editor</TT> paragraph
+per <A NAME="11051"></A>moderator (or editor).
 It concerns static editor definition. For dynamic definition and more information about editors see&nbsp;<A HREF="#par-editor-include">21.1.2</A>, 
 page&nbsp;<A HREF="node22.html#par-editor-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
@@ -276,25 +276,25 @@ gecos Pierre (Universite de Versailles St Quentin)
 
 <P>
 Only the editor of a list is authorized to send messages
-to the list when the <A NAME="11055"></A><TT>send</TT> parameter (see&nbsp;<A HREF="#par-send">21.3.8</A>,
-page&nbsp;<A HREF="node22.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) is set to either <A NAME="11058"></A><TT>editor</TT>, <A NAME="11061"></A><TT>editorkey</TT>, or <A NAME="11064"></A><TT>editorkeyonly</TT>.
-The <A NAME="11067"></A><TT>editor</TT> parameter is also consulted in certain other cases
-( <A NAME="11070"></A><TT>privateoreditorkey</TT> ).
+to the list when the <A NAME="11052"></A><TT>send</TT> parameter (see&nbsp;<A HREF="#par-send">21.3.8</A>,
+page&nbsp;<A HREF="node22.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) is set to either <A NAME="11055"></A><TT>editor</TT>, <A NAME="11058"></A><TT>editorkey</TT>, or <A NAME="11061"></A><TT>editorkeyonly</TT>.
+The <A NAME="11064"></A><TT>editor</TT> parameter is also consulted in certain other cases
+( <A NAME="11067"></A><TT>privateoreditorkey</TT> ).
 
 <P>
-The syntax of this directive is the same as that of the <A NAME="11073"></A><TT>owner</TT> parameter (see&nbsp;<A HREF="#par-owner">21.1.5</A>, page&nbsp;<A HREF="node22.html#par-owner"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
+The syntax of this directive is the same as that of the <A NAME="11070"></A><TT>owner</TT> parameter (see&nbsp;<A HREF="#par-owner">21.1.5</A>, page&nbsp;<A HREF="node22.html#par-owner"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
 even when several moderators are defined.
 
 <P>
 
 <H2><A NAME="SECTION002212000000000000000"></A>
-    <A NAME="par-editor-include"></A>    <A NAME="3176"></A>
+    <A NAME="par-editor-include"></A>    <A NAME="3172"></A>
 <BR>
 21.1.2 editor_include
 </H2>
 
 <P>
-The <A NAME="11076"></A><TT>config</TT> file contains one <A NAME="11079"></A><TT>editor_include</TT> paragraph
+The <A NAME="11073"></A><TT>config</TT> file contains one <A NAME="11076"></A><TT>editor_include</TT> paragraph
 per data inclusion file (see&nbsp;<A HREF="node19.html#data-inclusion-file">18.7</A>, page&nbsp;<A HREF="node19.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 It concerns dynamic editor definition : inclusion of external data. For static editor definition and more information about moderation see&nbsp;<A HREF="#par-editor">21.1.1</A>, page&nbsp;<A HREF="node22.html#par-editor"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
@@ -309,25 +309,25 @@ source_parameters a,b,c
 </PRE>
 
 <P>
-The syntax of this directive is the same as that of the <A NAME="11082"></A><TT>owner_include</TT> parameter (see&nbsp;<A HREF="#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
+The syntax of this directive is the same as that of the <A NAME="11079"></A><TT>owner_include</TT> parameter (see&nbsp;<A HREF="#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
 even when several moderators are defined.
 
 <P>
 
 <H2><A NAME="SECTION002213000000000000000"></A>
- <A NAME="par-host"></A> <A NAME="3193"></A>
+ <A NAME="par-host"></A> <A NAME="3189"></A>
 <BR>
 21.1.3 host
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11087"></A><TT>domain</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11084"></A><TT>domain</TT> robot parameter</TT>)
 
 <P>
-<A NAME="11090"></A><TT>host</TT> <I>fully-qualified-domain-name</I>
+<A NAME="11087"></A><TT>host</TT> <I>fully-qualified-domain-name</I>
 
 <P>
-Domain name of the list, default is the robot domain name set in the related <A NAME="11093"></A><TT>robot.conf</TT> file or in file <A NAME="11096"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>.
+Domain name of the list, default is the robot domain name set in the related <A NAME="11090"></A><TT>robot.conf</TT> file or in file <A NAME="11093"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>.
 
 <P>
 
@@ -338,7 +338,7 @@ Domain name of the list, default is the robot domain name set in the related <A 
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11101"></A><TT>lang</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11098"></A><TT>lang</TT> robot parameter</TT>)
 
 <P>
 <I>Example:</I> 
@@ -365,7 +365,7 @@ for available languages.
 </H2>
 
 <P>
-The <A NAME="11105"></A><TT>config</TT> file contains one <A NAME="11108"></A><TT>owner</TT> paragraph per owner. 
+The <A NAME="11102"></A><TT>config</TT> file contains one <A NAME="11105"></A><TT>owner</TT> paragraph per owner. 
 It concerns static owner definition. For dynamic definition see&nbsp;<A HREF="#par-owner-include">21.1.6</A>, page&nbsp;<A HREF="node22.html#par-owner-include"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
@@ -381,55 +381,55 @@ reception nomail
 
 <P>
 The list owner is usually the person who has the authorization to send
-<A NAME="11111"></A><TT>ADD</TT> (see&nbsp;<A HREF="node29.html#cmd-add">28.2</A>, page&nbsp;<A HREF="node29.html#cmd-add"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-<A NAME="11114"></A><TT>DELETE</TT> (see&nbsp;<A HREF="node29.html#cmd-delete">28.2</A>, page&nbsp;<A HREF="node29.html#cmd-delete"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+<A NAME="11108"></A><TT>ADD</TT> (see&nbsp;<A HREF="node29.html#cmd-add">28.2</A>, page&nbsp;<A HREF="node29.html#cmd-add"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+<A NAME="11111"></A><TT>DELETE</TT> (see&nbsp;<A HREF="node29.html#cmd-delete">28.2</A>, page&nbsp;<A HREF="node29.html#cmd-delete"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 commands on behalf of other users.
 
 <P>
-When the <A NAME="11117"></A><TT>subscribe</TT> parameter (see&nbsp;<A HREF="#par-subscribe">21.3.1</A>,
+When the <A NAME="11114"></A><TT>subscribe</TT> parameter (see&nbsp;<A HREF="#par-subscribe">21.3.1</A>,
 page&nbsp;<A HREF="node22.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) specifies a restricted list, it is
 the owner who has the exclusive right to subscribe users, and
-it is therefore to the owner that <A NAME="11120"></A><TT>SUBSCRIBE</TT> requests
+it is therefore to the owner that <A NAME="11117"></A><TT>SUBSCRIBE</TT> requests
 will be forwarded.
 
 <P>
 There may be several owners of a single list; in this case, each
-owner is declared in a paragraph starting with the <A NAME="11123"></A><TT>owner</TT>
+owner is declared in a paragraph starting with the <A NAME="11120"></A><TT>owner</TT>
 keyword.
 
 <P>
-The <A NAME="11126"></A><TT>owner</TT> directive is followed by one or several lines
+The <A NAME="11123"></A><TT>owner</TT> directive is followed by one or several lines
 giving details regarding the owner's characteristics:
 
 <P>
 
 <UL>
-<LI><A NAME="11129"></A><TT>email</TT> <I>address</I>
+<LI><A NAME="11126"></A><TT>email</TT> <I>address</I>
 
 <P>
 Owner's e-mail address
 
 <P>
 </LI>
-<LI><A NAME="11132"></A><TT>reception nomail</TT>
+<LI><A NAME="11129"></A><TT>reception nomail</TT>
 
 <P>
 Optional attribute for an owner who does not wish to receive
         mails.  Useful to define an owner with multiple e-mail
         addresses: they are all recognized when <I>Sympa</I> receives
-        mail, but thanks to <A NAME="11136"></A><TT>reception nomail</TT>, not all of
+        mail, but thanks to <A NAME="11133"></A><TT>reception nomail</TT>, not all of
 	these addresses need receive administrative mail from <I>Sympa</I>.
 
 <P>
 </LI>
-<LI><A NAME="11140"></A><TT>gecos</TT> <I>data</I>
+<LI><A NAME="11137"></A><TT>gecos</TT> <I>data</I>
 
 <P>
 Public information on the owner
 
 <P>
 </LI>
-<LI><A NAME="11143"></A><TT>info</TT> <I>data</I>
+<LI><A NAME="11140"></A><TT>info</TT> <I>data</I>
 
 <P>
 Available since release 2.3
@@ -439,7 +439,7 @@ Private information on the owner
 
 <P>
 </LI>
-<LI><A NAME="11146"></A><TT>profile</TT> <TT>privileged</TT> <TT>|</TT>
+<LI><A NAME="11143"></A><TT>profile</TT> <TT>privileged</TT> <TT>|</TT>
 	                    <TT>normal</TT>
 
 <P>
@@ -457,13 +457,13 @@ Profile of the owner. This is currently used to restrict
 <P>
 
 <H2><A NAME="SECTION002216000000000000000"></A>
-    <A NAME="par-owner-include"></A>    <A NAME="3248"></A>
+    <A NAME="par-owner-include"></A>    <A NAME="3244"></A>
 <BR>
 21.1.6 owner_include
 </H2>
 
 <P>
-The <A NAME="11149"></A><TT>config</TT> file contains one <A NAME="11152"></A><TT>owner_include</TT> paragraph per data inclusion file 
+The <A NAME="11146"></A><TT>config</TT> file contains one <A NAME="11149"></A><TT>owner_include</TT> paragraph per data inclusion file 
 (see&nbsp;<A HREF="node19.html#data-inclusion-file">18.7</A>, page&nbsp;<A HREF="node19.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 It concerns dynamic owner definition : inclusion of external data. For static owner definition and more information 
 about owners see&nbsp;<A HREF="#par-owner">21.1.5</A>, page&nbsp;<A HREF="node22.html#par-owner"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
@@ -480,30 +480,30 @@ profile normal
 </PRE>
 
 <P>
-The <A NAME="11155"></A><TT>owner_include</TT> directive is followed by one or several lines
+The <A NAME="11152"></A><TT>owner_include</TT> directive is followed by one or several lines
 giving details regarding the owner(s) included characteristics:
 
 <P>
 
 <UL>
-<LI><A NAME="11158"></A><TT>source myfile</TT>
+<LI><A NAME="11155"></A><TT>source myfile</TT>
 
 <P>
 This is an mandatory field : it indicates the data inclusion file myfile.incl. This file can be a template. In this case, it will be interpreted
-	with values given by subparameter <A NAME="11161"></A><TT>source_parameter</TT>. 
-	Note that the <A NAME="11164"></A><TT>source</TT> parameter should NOT include the <I>.incl</I> file extension ; the myfile.incl file should be located in the <A NAME="11167"></A><TT>data_sources</TT> directory.
+	with values given by subparameter <A NAME="11158"></A><TT>source_parameter</TT>. 
+	Note that the <A NAME="11161"></A><TT>source</TT> parameter should NOT include the <I>.incl</I> file extension ; the myfile.incl file should be located in the <A NAME="11164"></A><TT>data_sources</TT> directory.
 
 <P>
 </LI>
-<LI><A NAME="11170"></A><TT>source_parameters a,b,c</TT>
+<LI><A NAME="11167"></A><TT>source_parameters a,b,c</TT>
 
 <P>
-It contains values enumeration that will be affected to the <A NAME="11173"></A><TT>param</TT> array used in the template file (see&nbsp;<A HREF="node19.html#data-inclusion-file">18.7</A>, page&nbsp;<A HREF="node19.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+It contains values enumeration that will be affected to the <A NAME="11170"></A><TT>param</TT> array used in the template file (see&nbsp;<A HREF="node19.html#data-inclusion-file">18.7</A>, page&nbsp;<A HREF="node19.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 	This parameter is uncompellable.
 
 <P>
 </LI>
-<LI><A NAME="11176"></A><TT>reception nomail</TT>
+<LI><A NAME="11173"></A><TT>reception nomail</TT>
 
 <P>
 Optional attribute for owner(s) who does not wish to receive
@@ -511,7 +511,7 @@ Optional attribute for owner(s) who does not wish to receive
 
 <P>
 </LI>
-<LI><A NAME="11179"></A><TT>profile</TT> <TT>privileged</TT> <TT>|</TT>
+<LI><A NAME="11176"></A><TT>profile</TT> <TT>privileged</TT> <TT>|</TT>
 	                    <TT>normal</TT>
 
 <P>
@@ -530,11 +530,11 @@ Profile of the owner(s).
 </H2>
 
 <P>
-<A NAME="11182"></A><TT>subject</TT> <I>subject-of-the-list</I>
+<A NAME="11179"></A><TT>subject</TT> <I>subject-of-the-list</I>
 
 <P>
 This parameter indicates the subject of the list, which is sent in
-response to the <A NAME="11185"></A><TT>LISTS</TT> mail command. The subject is
+response to the <A NAME="11182"></A><TT>LISTS</TT> mail command. The subject is
 a free form text limited to one line.
 
 <P>
@@ -546,12 +546,12 @@ a free form text limited to one line.
 </H2>
 
 <P>
-<A NAME="11188"></A><TT>topics</TT> computing/internet,education/university
+<A NAME="11185"></A><TT>topics</TT> computing/internet,education/university
 
 <P>
 This parameter allows the classification of lists. You may define multiple 
-topics as well as hierarchical ones. <A NAME="11191"></A><I>WWSympa</I>'s list of public lists 
-uses this parameter. This parameter is different from (<A NAME="11194"></A><TT>msg_topic</TT>)
+topics as well as hierarchical ones. <A NAME="11188"></A><I>WWSympa</I>'s list of public lists 
+uses this parameter. This parameter is different from (<A NAME="11191"></A><TT>msg_topic</TT>)
 parameter used to tag mails.
 
 <P>
@@ -570,33 +570,33 @@ parameter used to tag mails.
 
 <P>
 This parameter indicates whether the list should feature in the
-output generated in response to a <A NAME="11201"></A><TT>LISTS</TT> command.
+output generated in response to a <A NAME="11198"></A><TT>LISTS</TT> command.
 
 <P>
 
 <UL>
-<LI><A NAME="11204"></A><TT>visibility</TT> <TT>conceal</TT>
+<LI><A NAME="11201"></A><TT>visibility</TT> <TT>conceal</TT>
 	(<A NAME="tex2html40"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/visibility.conceal">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11207"></A><TT>visibility</TT> <TT>intranet</TT>
+<LI><A NAME="11204"></A><TT>visibility</TT> <TT>intranet</TT>
 	(<A NAME="tex2html41"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/visibility.intranet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11210"></A><TT>visibility</TT> <TT>noconceal</TT>
+<LI><A NAME="11207"></A><TT>visibility</TT> <TT>noconceal</TT>
 	(<A NAME="tex2html42"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/visibility.noconceal">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11213"></A><TT>visibility</TT> <TT>secret</TT>
+<LI><A NAME="11210"></A><TT>visibility</TT> <TT>secret</TT>
 	(<A NAME="tex2html43"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/visibility.secret">view</A>)
 
@@ -618,13 +618,13 @@ output generated in response to a <A NAME="11201"></A><TT>LISTS</TT> command.
 </H2>
 
 <P>
-<A NAME="par-user-data-source"></A>	<A NAME="3312"></A>
+<A NAME="par-user-data-source"></A>	<A NAME="3308"></A>
 
 <P>
 (Default value: <TT>file|database, if using an RDBMS</TT>)
 
 <P>
-<A NAME="11217"></A><TT>user_data_source</TT>
+<A NAME="11214"></A><TT>user_data_source</TT>
    <TT>file</TT> <TT>|</TT>
    <TT>database</TT> <TT>|</TT>
    <TT>include</TT> <TT>|</TT>
@@ -634,21 +634,21 @@ output generated in response to a <A NAME="11201"></A><TT>LISTS</TT> command.
 Sympa allows the mailing list manager to choose how <I>Sympa</I> loads
 subscriber and administartive data. User information can be stored in a text 
 file or relational database, or included from various external
-sources (list, flat file, result of <A NAME="11221"></A>LDAP or <A NAME="11222"></A>SQL query).
+sources (list, flat file, result of <A NAME="11218"></A>LDAP or <A NAME="11219"></A>SQL query).
 
 <P>
 
 <UL>
-<LI><A NAME="11223"></A><TT>user_data_source</TT> <TT>file</TT>
+<LI><A NAME="11220"></A><TT>user_data_source</TT> <TT>file</TT>
 
 <P>
 When this value is used, subscriber data
        are stored in a file whose name is defined by the
-       <A NAME="11226"></A><TT>subscribers</TT> parameter in <A NAME="11229"></A><TT>sympa.conf</TT>. This is maintained for backward compatibility.
+       <A NAME="11223"></A><TT>subscribers</TT> parameter in <A NAME="11226"></A><TT>sympa.conf</TT>. This is maintained for backward compatibility.
 
 <P>
 </LI>
-<LI><A NAME="11232"></A><TT>user_data_source</TT> <TT>database</TT> 
+<LI><A NAME="11229"></A><TT>user_data_source</TT> <TT>database</TT> 
 
 <P>
 This mode was been introduced to enable data to be stored
@@ -658,31 +658,31 @@ This mode was been introduced to enable data to be stored
        tested with MySQL, using a list of 200 000 subscribers. 
        We strongly recommend the use of a database in place of text files.
        It will improve performance, and solve possible conflicts between
-       <I>Sympa</I> and <A NAME="11236"></A><I>WWSympa</I>. Please refer to the 
+       <I>Sympa</I> and <A NAME="11233"></A><I>WWSympa</I>. Please refer to the 
        &#168;<I>Sympa</I> and its databasesection
        (<A HREF="node9.html#sec-rdbms">8</A>, page&nbsp;<A HREF="node9.html#sec-rdbms"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="11240"></A><TT>user_data_source</TT> <TT>include</TT> 
+<LI><A NAME="11237"></A><TT>user_data_source</TT> <TT>include</TT> 
 <A NAME="user-data-source"></A>       
 
 <P>
 Here, subscribers are not defined <I>extensively</I> (enumeration
        of their e-mail addresses) but <I>intensively</I> (definition of criteria
        subscribers must satisfy). Includes can be performed 
-       by extracting e-mail addresses using an <A NAME="11243"></A>SQL or <A NAME="11244"></A>LDAP query, or 
+       by extracting e-mail addresses using an <A NAME="11240"></A>SQL or <A NAME="11241"></A>LDAP query, or 
        by including other mailing lists. At least one include 
        paragraph, defining a data source, is needed. Valid include paragraphs (see
-       below) are <A NAME="11245"></A><TT>include_file</TT>, <A NAME="11248"></A><TT>include_list</TT>, <A NAME="11251"></A><TT>include_remote_sympa_list</TT>, 
-	<A NAME="11254"></A><TT>include_sql_query</TT> and <A NAME="11257"></A><TT>include_ldap_query</TT>. 
+       below) are <A NAME="11242"></A><TT>include_file</TT>, <A NAME="11245"></A><TT>include_list</TT>, <A NAME="11248"></A><TT>include_remote_sympa_list</TT>, 
+	<A NAME="11251"></A><TT>include_sql_query</TT> and <A NAME="11254"></A><TT>include_ldap_query</TT>. 
 
 <P>
 </LI>
-<LI><A NAME="11260"></A><TT>user_data_source</TT> <TT>include2</TT> 
+<LI><A NAME="11257"></A><TT>user_data_source</TT> <TT>include2</TT> 
 
 <P>
-This is a replacement for the <A NAME="11263"></A>include mode. In this mode, the members cache is no more maitained in
+This is a replacement for the <A NAME="11260"></A>include mode. In this mode, the members cache is no more maitained in
        a DB FIle but in the main database instead. The behavior of the cache is detailed in the database chapter 
        (see&nbsp;<A HREF="node9.html#include2-cache">8.6</A>, page&nbsp;<A HREF="node9.html#include2-cache"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). This is the only mode that run the database for administrative data 
        in the database
@@ -698,13 +698,13 @@ This is a replacement for the <A NAME="11263"></A>include mode. In this mode, th
 </H2>
 
 <P>
-<A NAME="ttl"></A>	<A NAME="3353"></A>
+<A NAME="ttl"></A>	<A NAME="3349"></A>
 
 <P>
 (Default value: <TT>3600</TT>)
 
 <P>
-<A NAME="11265"></A><TT>ttl</TT> <TT>delay_in_seconds</TT> 
+<A NAME="11262"></A><TT>ttl</TT> <TT>delay_in_seconds</TT> 
 
 <P>
 <I>Sympa</I> caches user data extracted using the include parameter.
@@ -718,18 +718,18 @@ parameter. The default value is 3600.
 </H2>
 
 <P>
-<A NAME="include-list"></A>	<A NAME="3359"></A>
+<A NAME="include-list"></A>	<A NAME="3355"></A>
 
 <P>
-<A NAME="11270"></A><TT>include_list</TT> <TT>listname</TT>
+<A NAME="11267"></A><TT>include_list</TT> <TT>listname</TT>
 
 <P>
 This parameter will be interpreted only if 
-<A NAME="11273"></A><TT>user_data_source</TT> is set to <TT>include</TT> or <TT>include2</TT>.
+<A NAME="11270"></A><TT>user_data_source</TT> is set to <TT>include</TT> or <TT>include2</TT>.
 All subscribers of list <TT>listname</TT> become members 
 of the current list. You may include as many lists as required, using one
-<A NAME="11276"></A><TT>include_list</TT> <TT>listname</TT> line for each included
-list. Any list at all may be included ; the <A NAME="11279"></A><TT>user_data_source</TT> definition
+<A NAME="11273"></A><TT>include_list</TT> <TT>listname</TT> line for each included
+list. Any list at all may be included ; the <A NAME="11276"></A><TT>user_data_source</TT> definition
 of the included list is irrelevant, and you may therefore
 include lists which are also defined by the inclusion of other lists. 
 Be careful, however, not to include list <TT>A</TT> in list <TT>B</TT> and
@@ -749,16 +749,16 @@ Example: <TT>include_list  other-local-list@other-local-robot</TT>
 </H2>
 
 <P>
-<A NAME="include-remote-sympa-list"></A><A NAME="3377"></A>
+<A NAME="include-remote-sympa-list"></A><A NAME="3373"></A>
 
 <P>
-<A NAME="11284"></A><TT>include_remote_sympa_list</TT>
+<A NAME="11281"></A><TT>include_remote_sympa_list</TT>
 
 <P>
 Sympa can contact another <I>Sympa</I> service using https to fetch
 a remote list in order to include each member of a remote list
 as subscriber. You may include as many lists as required, using one
-<A NAME="11288"></A><TT>include_remote_sympa_list</TT> paragraph for each included
+<A NAME="11285"></A><TT>include_remote_sympa_list</TT> paragraph for each included
 list. Be careful, however, not to give rise an infinite loop making cross includes.
 
 <P>
@@ -773,15 +773,15 @@ From the client side you must define the remote list dump URI.
 <P>
 
 <UL>
-<LI><A NAME="remote-host"></A><A NAME="11293"></A><TT>remote_host</TT> <I>remote_host_name</I> 
+<LI><A NAME="remote-host"></A><A NAME="11290"></A><TT>remote_host</TT> <I>remote_host_name</I> 
 
 <P>
 </LI>
-<LI><A NAME="port"></A><A NAME="11296"></A><TT>port</TT> <I>port</I> (Default 443) 
+<LI><A NAME="port"></A><A NAME="11293"></A><TT>port</TT> <I>port</I> (Default 443) 
 
 <P>
 </LI>
-<LI><A NAME="path"></A><A NAME="11299"></A><TT>path</TT> <I>absolute path</I> (In most cases, for a list name foo /sympa/dump/foo ) 
+<LI><A NAME="path"></A><A NAME="11296"></A><TT>path</TT> <I>absolute path</I> (In most cases, for a list name foo /sympa/dump/foo ) 
 
 <P>
 </LI>
@@ -795,14 +795,14 @@ certificate (and the private key) to be used :
 <P>
 
 <UL>
-<LI><A NAME="11302"></A><TT>cert</TT> <TT>list</TT> the certificate to be use is the list
+<LI><A NAME="11299"></A><TT>cert</TT> <TT>list</TT> the certificate to be use is the list
 certificate (the certificate subject distinguished name email is the list adress).
 Certificate and private key are located in the list directory.
 </LI>
-<LI><A NAME="11305"></A><TT>cert</TT> <TT>robot</TT> the certificate used is then related to
+<LI><A NAME="11302"></A><TT>cert</TT> <TT>robot</TT> the certificate used is then related to
 sympa itself : the certificate subject distinguished name email look like
 sympa@my.domain and files are located in virtual host etc dir if virtual host
-is used otherwise in <A NAME="11308"></A><TT>/usr/local/sympa-os/etc</TT>.
+is used otherwise in <A NAME="11305"></A><TT>/usr/local/sympa-os/etc</TT>.
 </LI>
 </UL>
 
@@ -815,17 +815,17 @@ is used otherwise in <A NAME="11308"></A><TT>/usr/local/sympa-os/etc</TT>.
 </H2>
 
 <P>
-<A NAME="11311"></A><TT>include_sql_query</TT>
+<A NAME="11308"></A><TT>include_sql_query</TT>
 
 <P>
 This parameter will be interpreted only if the
-<A NAME="11314"></A><TT>user_data_source</TT> value is set to  <TT>include</TT>, and
+<A NAME="11311"></A><TT>user_data_source</TT> value is set to  <TT>include</TT>, and
 is used to begin a paragraph defining the SQL query parameters :
 
 <P>
 
 <UL>
-<LI><A NAME="db-type"></A><A NAME="11317"></A><TT>db_type</TT> <I>dbd_name</I> 
+<LI><A NAME="db-type"></A><A NAME="11314"></A><TT>db_type</TT> <I>dbd_name</I> 
 
 <P>
 The database type (mysql, SQLite, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
@@ -833,48 +833,48 @@ DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 
 <P>
 </LI>
-<LI><A NAME="host"></A><A NAME="11320"></A><TT>host</TT> <I>hostname</I>
+<LI><A NAME="host"></A><A NAME="11317"></A><TT>host</TT> <I>hostname</I>
 
 <P>
 The Database Server <I>Sympa</I> will try to connect to.
 
 <P>
 </LI>
-<LI><A NAME="db-port"></A><A NAME="11324"></A><TT>db_port</TT> <I>port</I>
+<LI><A NAME="db-port"></A><A NAME="11321"></A><TT>db_port</TT> <I>port</I>
 
 <P>
 If not using the default RDBMS port, you can specify it.
 
 <P>
 </LI>
-<LI><A NAME="db-name"></A><A NAME="11327"></A><TT>db_name</TT> <I>sympa_db_name</I>
+<LI><A NAME="db-name"></A><A NAME="11324"></A><TT>db_name</TT> <I>sympa_db_name</I>
 
 <P>
 The hostname of the database system.
 
 <P>
 </LI>
-<LI><A NAME="user"></A><A NAME="11330"></A><TT>user</TT> <I>user_id</I>
+<LI><A NAME="user"></A><A NAME="11327"></A><TT>user</TT> <I>user_id</I>
 
 <P>
 The user id to be used when connecting to the database.
 
 <P>
 </LI>
-<LI><A NAME="passwd"></A><A NAME="11333"></A><TT>passwd</TT> <I>some secret</I>
+<LI><A NAME="passwd"></A><A NAME="11330"></A><TT>passwd</TT> <I>some secret</I>
 
 <P>
-The user passwd for <A NAME="11336"></A><TT>user</TT>.
+The user passwd for <A NAME="11333"></A><TT>user</TT>.
 
 <P>
 </LI>
-<LI><A NAME="sql-query"></A><A NAME="11339"></A><TT>sql_query</TT> <I>a query string</I>
+<LI><A NAME="sql-query"></A><A NAME="11336"></A><TT>sql_query</TT> <I>a query string</I>
 The SQL query string. No fields other than e-mail addresses should be returned
 by this query!
 
 <P>
 </LI>
-<LI><A NAME="connect-options"></A><A NAME="11342"></A><TT>connect_options</TT> <I>option1=x;option2=y</I>
+<LI><A NAME="connect-options"></A><A NAME="11339"></A><TT>connect_options</TT> <I>option1=x;option2=y</I>
 
 <P>
 This parameter is optional and specific to each RDBMS.
@@ -901,7 +901,7 @@ Connexion timeout is set to 5 seconds.
 
 <P>
 </LI>
-<LI><A NAME="11345"></A><TT>db_env</TT> <I>list_of_var_def</I>
+<LI><A NAME="11342"></A><TT>db_env</TT> <I>list_of_var_def</I>
 
 <P>
 This parameter is optional ; it is needed for some RDBMS (Oracle).
@@ -917,7 +917,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 
 <P>
 </LI>
-<LI><A NAME="sql-name"></A><A NAME="11348"></A><TT>name</TT> <I>short name</I>
+<LI><A NAME="sql-name"></A><A NAME="11345"></A><TT>name</TT> <I>short name</I>
 
 <P>
 This parameter is optional.
@@ -928,7 +928,7 @@ each list member comes from (usefull when having multiple data sources).
 
 <P>
 </LI>
-<LI><A NAME="sql-fdir"></A><A NAME="11351"></A><TT>f_dir</TT> <I>/var/csvdir</I>
+<LI><A NAME="sql-fdir"></A><A NAME="11348"></A><TT>f_dir</TT> <I>/var/csvdir</I>
 
 <P>
 This parameter is optional, only used when accessing a CSV datasource.
@@ -962,17 +962,17 @@ include_sql_query
 </H2>
 
 <P>
-<A NAME="11354"></A><TT>include_ldap_query</TT>
+<A NAME="11351"></A><TT>include_ldap_query</TT>
 
 <P>
-This paragraph defines parameters for a <A NAME="11357"></A>LDAP query returning a
-list of subscribers. This paragraph is used only if <A NAME="11358"></A><TT>user_data_source</TT> is set to <TT>include</TT>. This feature
-requires the <A NAME="11361"></A><TT>Net::LDAP</TT> (perlldap) PERL module.
+This paragraph defines parameters for a <A NAME="11354"></A>LDAP query returning a
+list of subscribers. This paragraph is used only if <A NAME="11355"></A><TT>user_data_source</TT> is set to <TT>include</TT>. This feature
+requires the <A NAME="11358"></A><TT>Net::LDAP</TT> (perlldap) PERL module.
 
 <P>
 
 <UL>
-<LI><A NAME="host"></A><A NAME="11364"></A><TT>host</TT> <I>ldap_directory_hostname</I> 
+<LI><A NAME="host"></A><A NAME="11361"></A><TT>host</TT> <I>ldap_directory_hostname</I> 
 
 <P>
 Name of the LDAP directory host or a comma separated list of host:port. The
@@ -987,35 +987,35 @@ Example :
 
 <P>
 </LI>
-<LI><A NAME="port"></A><A NAME="11367"></A><TT>port</TT> <I>ldap_directory_port</I> (OBSOLETE) 
+<LI><A NAME="port"></A><A NAME="11364"></A><TT>port</TT> <I>ldap_directory_port</I> (OBSOLETE) 
 
 <P>
 Port on which the Directory accepts connections.
 
 <P>
 </LI>
-<LI><A NAME="user"></A><A NAME="11370"></A><TT>user</TT> <I>ldap_user_name</I>
+<LI><A NAME="user"></A><A NAME="11367"></A><TT>user</TT> <I>ldap_user_name</I>
 
 <P>
 Username with read access to the LDAP directory.
 
 <P>
 </LI>
-<LI><A NAME="passwd"></A><A NAME="11373"></A><TT>passwd</TT> <I>LDAP_user_password</I>
+<LI><A NAME="passwd"></A><A NAME="11370"></A><TT>passwd</TT> <I>LDAP_user_password</I>
 
 <P>
-Password for <A NAME="11376"></A><TT>user</TT>.
+Password for <A NAME="11373"></A><TT>user</TT>.
 
 <P>
 </LI>
-<LI><A NAME="11379"></A><TT>use_ssl</TT> <I>yes|no</I>
+<LI><A NAME="11376"></A><TT>use_ssl</TT> <I>yes|no</I>
 
 <P>
 If set to yes, LDAPS protocol is used.
 
 <P>
 </LI>
-<LI><A NAME="11382"></A><TT>ssl_version</TT> <I>sslv2|sslv3|tls</I>
+<LI><A NAME="11379"></A><TT>ssl_version</TT> <I>sslv2|sslv3|tls</I>
 (Default value: <TT>sslv3</TT>)
 
 <P>
@@ -1023,7 +1023,7 @@ If using SSL, this parameter define if SSL or TLS is used.
 
 <P>
 </LI>
-<LI><A NAME="11386"></A><TT>ssl_version</TT> <I>ciphers used</I>
+<LI><A NAME="11383"></A><TT>ssl_version</TT> <I>ciphers used</I>
 (Default value: <TT>ALL</TT>)
 
 <P>
@@ -1031,7 +1031,7 @@ If using SSL, this parameter specifies which subset of cipher suites are permiss
 
 <P>
 </LI>
-<LI><A NAME="suffix"></A><A NAME="11390"></A><TT>suffix</TT> <I>directory name</I>
+<LI><A NAME="suffix"></A><A NAME="11387"></A><TT>suffix</TT> <I>directory name</I>
 
 <P>
 Defines the naming space covered by the search (optional, depending on
@@ -1039,21 +1039,21 @@ the LDAP server).
 
 <P>
 </LI>
-<LI><A NAME="timeout"></A><A NAME="11393"></A><TT>timeout</TT> <I>delay_in_seconds</I>
+<LI><A NAME="timeout"></A><A NAME="11390"></A><TT>timeout</TT> <I>delay_in_seconds</I>
 
 <P>
 Timeout when connecting the remote server.
 
 <P>
 </LI>
-<LI><A NAME="filter"></A><A NAME="11396"></A><TT>filter</TT> <I>search_filter</I>
+<LI><A NAME="filter"></A><A NAME="11393"></A><TT>filter</TT> <I>search_filter</I>
 
 <P>
 Defines the LDAP search filter (RFC 2254 compliant).
 
 <P>
 </LI>
-<LI><A NAME="attrs"></A><A NAME="11399"></A><TT>attrs</TT> <I>mail_attribute</I> 
+<LI><A NAME="attrs"></A><A NAME="11396"></A><TT>attrs</TT> <I>mail_attribute</I> 
 (Default value: <TT>mail</TT>)
 
 <P>
@@ -1061,7 +1061,7 @@ The attribute containing the e-mail address(es) in the returned object.
 
 <P>
 </LI>
-<LI><A NAME="select"></A><A NAME="11403"></A><TT>select</TT> <I>first <TT>|</TT> all</I>
+<LI><A NAME="select"></A><A NAME="11400"></A><TT>select</TT> <I>first <TT>|</TT> all</I>
 (Default value: <TT>first</TT>)
 
 <P>
@@ -1070,7 +1070,7 @@ cases where multiple values are returned.
 
 <P>
 </LI>
-<LI><A NAME="scope"></A><A NAME="11407"></A><TT>scope</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
+<LI><A NAME="scope"></A><A NAME="11404"></A><TT>scope</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
 (Default value: <TT>sub</TT>)
 
 <P>
@@ -1123,19 +1123,19 @@ Example :
 </H2>
 
 <P>
-<A NAME="11411"></A><TT>include_ldap_2level_query</TT>
+<A NAME="11408"></A><TT>include_ldap_2level_query</TT>
 
 <P>
-This paragraph defines parameters for a two-level <A NAME="11414"></A>LDAP query returning a
+This paragraph defines parameters for a two-level <A NAME="11411"></A>LDAP query returning a
 list of subscribers. Usually the first-level query returns a list of DNs
 and the second-level queries convert the DNs into e-mail addresses.
-This paragraph is used only if <A NAME="11415"></A><TT>user_data_source</TT> is set to <TT>include</TT>. This feature
-requires the <A NAME="11418"></A><TT>Net::LDAP</TT> (perlldap) PERL module.
+This paragraph is used only if <A NAME="11412"></A><TT>user_data_source</TT> is set to <TT>include</TT>. This feature
+requires the <A NAME="11415"></A><TT>Net::LDAP</TT> (perlldap) PERL module.
 
 <P>
 
 <UL>
-<LI><A NAME="host"></A><A NAME="11421"></A><TT>host</TT> <I>ldap_directory_hostname</I> 
+<LI><A NAME="host"></A><A NAME="11418"></A><TT>host</TT> <I>ldap_directory_hostname</I> 
 
 <P>
 Name of the LDAP directory host or a comma separated list of host:port. The
@@ -1150,35 +1150,35 @@ Example :
 
 <P>
 </LI>
-<LI><A NAME="port"></A><A NAME="11424"></A><TT>port</TT> <I>ldap_directory_port</I> (OBSOLETE) 
+<LI><A NAME="port"></A><A NAME="11421"></A><TT>port</TT> <I>ldap_directory_port</I> (OBSOLETE) 
 
 <P>
 Port on which the Directory accepts connections (this parameter is ignored if host definition include port specification).
 
 <P>
 </LI>
-<LI><A NAME="user"></A><A NAME="11427"></A><TT>user</TT> <I>ldap_user_name</I>
+<LI><A NAME="user"></A><A NAME="11424"></A><TT>user</TT> <I>ldap_user_name</I>
 
 <P>
 Username with read access to the LDAP directory.
 
 <P>
 </LI>
-<LI><A NAME="passwd"></A><A NAME="11430"></A><TT>passwd</TT> <I>LDAP_user_password</I>
+<LI><A NAME="passwd"></A><A NAME="11427"></A><TT>passwd</TT> <I>LDAP_user_password</I>
 
 <P>
-Password for <A NAME="11433"></A><TT>user</TT>.
+Password for <A NAME="11430"></A><TT>user</TT>.
 
 <P>
 </LI>
-<LI><A NAME="11436"></A><TT>use_ssl</TT> <I>yes|no</I>
+<LI><A NAME="11433"></A><TT>use_ssl</TT> <I>yes|no</I>
 
 <P>
 If set to yes, LDAPS protocol is used.
 
 <P>
 </LI>
-<LI><A NAME="11439"></A><TT>ssl_version</TT> <I>sslv2|sslv3|tls</I>
+<LI><A NAME="11436"></A><TT>ssl_version</TT> <I>sslv2|sslv3|tls</I>
 (Default value: <TT>sslv3</TT>)
 
 <P>
@@ -1186,7 +1186,7 @@ If using SSL, this parameter define if SSL or TLS is used.
 
 <P>
 </LI>
-<LI><A NAME="11443"></A><TT>ssl_version</TT> <I>ciphers used</I>
+<LI><A NAME="11440"></A><TT>ssl_version</TT> <I>ciphers used</I>
 (Default value: <TT>ALL</TT>)
 
 <P>
@@ -1194,7 +1194,7 @@ If using SSL, this parameter specifies which subset of cipher suites are permiss
 
 <P>
 </LI>
-<LI><A NAME="suffix1"></A><A NAME="11447"></A><TT>suffix1</TT> <I>directory name</I>
+<LI><A NAME="suffix1"></A><A NAME="11444"></A><TT>suffix1</TT> <I>directory name</I>
 
 <P>
 Defines the naming space covered by the first-level search (optional, depending
@@ -1202,21 +1202,21 @@ on the LDAP server).
 
 <P>
 </LI>
-<LI><A NAME="timeout1"></A><A NAME="11450"></A><TT>timeout1</TT> <I>delay_in_seconds</I>
+<LI><A NAME="timeout1"></A><A NAME="11447"></A><TT>timeout1</TT> <I>delay_in_seconds</I>
 
 <P>
 Timeout for the first-level query when connecting to the remote server.
 
 <P>
 </LI>
-<LI><A NAME="filter1"></A><A NAME="11453"></A><TT>filter1</TT> <I>search_filter</I>
+<LI><A NAME="filter1"></A><A NAME="11450"></A><TT>filter1</TT> <I>search_filter</I>
 
 <P>
 Defines the LDAP search filter for the first-level query (RFC 2254 compliant).
 
 <P>
 </LI>
-<LI><A NAME="attrs1"></A><A NAME="11456"></A><TT>attrs1</TT> <I>attribute</I> 
+<LI><A NAME="attrs1"></A><A NAME="11453"></A><TT>attrs1</TT> <I>attribute</I> 
 
 <P>
 The attribute containing the data in the returned object that will be used for
@@ -1224,7 +1224,7 @@ the second-level query.  This data is referenced using the syntax ``[attrs1]''.
 
 <P>
 </LI>
-<LI><A NAME="select1"></A><A NAME="11459"></A><TT>select1</TT> <I>first <TT>|</TT> all <TT>|</TT> regex</I>
+<LI><A NAME="select1"></A><A NAME="11456"></A><TT>select1</TT> <I>first <TT>|</TT> all <TT>|</TT> regex</I>
 (Default value: <TT>first</TT>)
 
 <P>
@@ -1233,7 +1233,7 @@ those values matching a regular expression.
 
 <P>
 </LI>
-<LI><A NAME="regex1"></A><A NAME="11463"></A><TT>regex1</TT> <I>regular_expression</I>
+<LI><A NAME="regex1"></A><A NAME="11460"></A><TT>regex1</TT> <I>regular_expression</I>
 (Default value: )
 
 <P>
@@ -1241,7 +1241,7 @@ The Perl regular expression to use if ``select1'' is set to ``regex''.
 
 <P>
 </LI>
-<LI><A NAME="scope1"></A><A NAME="11467"></A><TT>scope1</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
+<LI><A NAME="scope1"></A><A NAME="11464"></A><TT>scope1</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
 (Default value: <TT>sub</TT>)
 
 <P>
@@ -1269,7 +1269,7 @@ with one of the following values.
 
 <P>
 </LI>
-<LI><A NAME="suffix2"></A><A NAME="11471"></A><TT>suffix2</TT> <I>directory name</I>
+<LI><A NAME="suffix2"></A><A NAME="11468"></A><TT>suffix2</TT> <I>directory name</I>
 
 <P>
 Defines the naming space covered by the second-level search (optional, depending
@@ -1278,14 +1278,14 @@ from the first-level query into this parameter.
 
 <P>
 </LI>
-<LI><A NAME="timeout2"></A><A NAME="11474"></A><TT>timeout2</TT> <I>delay_in_seconds</I>
+<LI><A NAME="timeout2"></A><A NAME="11471"></A><TT>timeout2</TT> <I>delay_in_seconds</I>
 
 <P>
 Timeout for the second-level queries when connecting to the remote server.
 
 <P>
 </LI>
-<LI><A NAME="filter2"></A><A NAME="11477"></A><TT>filter2</TT> <I>search_filter</I>
+<LI><A NAME="filter2"></A><A NAME="11474"></A><TT>filter2</TT> <I>search_filter</I>
 
 <P>
 Defines the LDAP search filter for the second-level queries
@@ -1294,7 +1294,7 @@ substitute data from the first-level query into this parameter.
 
 <P>
 </LI>
-<LI><A NAME="attrs2"></A><A NAME="11480"></A><TT>attrs2</TT> <I>mail_attribute</I> 
+<LI><A NAME="attrs2"></A><A NAME="11477"></A><TT>attrs2</TT> <I>mail_attribute</I> 
 (Default value: <TT>mail</TT>)
 
 <P>
@@ -1303,7 +1303,7 @@ second-level queries.
 
 <P>
 </LI>
-<LI><A NAME="select2"></A><A NAME="11484"></A><TT>select2</TT> <I>first <TT>|</TT> all <TT>|</TT> regex</I>
+<LI><A NAME="select2"></A><A NAME="11481"></A><TT>select2</TT> <I>first <TT>|</TT> all <TT>|</TT> regex</I>
 (Default value: <TT>first</TT>)
 
 <P>
@@ -1312,7 +1312,7 @@ those addresses matching a regular expression in the second-level queries.
 
 <P>
 </LI>
-<LI><A NAME="regex2"></A><A NAME="11488"></A><TT>regex2</TT> <I>regular_expression</I>
+<LI><A NAME="regex2"></A><A NAME="11485"></A><TT>regex2</TT> <I>regular_expression</I>
 (Default value: )
 
 <P>
@@ -1320,7 +1320,7 @@ The Perl regular expression to use if ``select2'' is set to ``regex''.
 
 <P>
 </LI>
-<LI><A NAME="scope2"></A><A NAME="11492"></A><TT>scope2</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
+<LI><A NAME="scope2"></A><A NAME="11489"></A><TT>scope2</TT> <I>base <TT>|</TT> one <TT>|</TT> sub</I>
 (Default value: <TT>sub</TT>)
 
 <P>
@@ -1378,11 +1378,11 @@ Example : (cn=testgroup,dc=cru,dc=fr should be a groupOfUniqueNames here)
 </H2>
 
 <P>
-<A NAME="11496"></A><TT>include_file</TT>    <TT>path_to_file</TT> 
+<A NAME="11493"></A><TT>include_file</TT>    <TT>path_to_file</TT> 
 
 <P>
 This parameter will be interpreted only if the
-<A NAME="11499"></A><TT>user_data_source</TT> value is set to  <TT>include</TT>.
+<A NAME="11496"></A><TT>user_data_source</TT> value is set to  <TT>include</TT>.
 The file should contain one e-mail address per line with an optional user description, separated from the email address by spaces (lines beginning with a "#" are ignored).
 
 <P>
@@ -1403,32 +1403,32 @@ sarah.hanrahan@sample.edu  Sarah Hanrahan - physics department
 </H2>
 
 <P>
-<A NAME="11502"></A><TT>include_remote_file</TT>
+<A NAME="11499"></A><TT>include_remote_file</TT>
 
 <P>
-This parameter (organized as a paragraph) does the same as the <A NAME="11505"></A><TT>include_file</TT> parameter, except that
-it gets a remote file. This paragraph is used only if <A NAME="11508"></A><TT>user_data_source</TT> is set to <TT>include</TT>. 
+This parameter (organized as a paragraph) does the same as the <A NAME="11502"></A><TT>include_file</TT> parameter, except that
+it gets a remote file. This paragraph is used only if <A NAME="11505"></A><TT>user_data_source</TT> is set to <TT>include</TT>. 
 Using this method you should be able to include any <I>exotic</I> data source that is not supported by Sympa.
 The paragraph is made of the following entries :
 
 <P>
 
 <UL>
-<LI><A NAME="url"></A><A NAME="11511"></A><TT>url</TT> <I>url_of_remote_file</I> 
+<LI><A NAME="url"></A><A NAME="11508"></A><TT>url</TT> <I>url_of_remote_file</I> 
 
 <P>
 This is the URL of the remote file to include.
 
 <P>
 </LI>
-<LI><A NAME="user"></A><A NAME="11514"></A><TT>user</TT> <I>user_name</I> 
+<LI><A NAME="user"></A><A NAME="11511"></A><TT>user</TT> <I>user_name</I> 
 
 <P>
 This entry is optional, only used if HTTP basic authentication is required to access the remote file.
 
 <P>
 </LI>
-<LI><A NAME="passwd"></A><A NAME="11517"></A><TT>passwd</TT> <I>user_passwd</I> 
+<LI><A NAME="passwd"></A><A NAME="11514"></A><TT>passwd</TT> <I>user_passwd</I> 
 
 <P>
 This entry is optional, only used if HTTP basic authentication is required to access the remote file.
@@ -1468,90 +1468,90 @@ passwd  john_passwd
 <TT>subscribe</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
-The <A NAME="11524"></A><TT>subscribe</TT> parameter defines the rules for subscribing to the list. 
+The <A NAME="11521"></A><TT>subscribe</TT> parameter defines the rules for subscribing to the list. 
 Predefined authorization scenarios are :
 
 <P>
 
 <UL>
-<LI><A NAME="11527"></A><TT>subscribe</TT> <TT>auth</TT>
+<LI><A NAME="11524"></A><TT>subscribe</TT> <TT>auth</TT>
 	(<A NAME="tex2html44"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11530"></A><TT>subscribe</TT> <TT>auth_notify</TT>
+<LI><A NAME="11527"></A><TT>subscribe</TT> <TT>auth_notify</TT>
 	(<A NAME="tex2html45"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth_notify">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11533"></A><TT>subscribe</TT> <TT>auth_owner</TT>
+<LI><A NAME="11530"></A><TT>subscribe</TT> <TT>auth_owner</TT>
 	(<A NAME="tex2html46"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth_owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11536"></A><TT>subscribe</TT> <TT>closed</TT>
+<LI><A NAME="11533"></A><TT>subscribe</TT> <TT>closed</TT>
 	(<A NAME="tex2html47"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11539"></A><TT>subscribe</TT> <TT>intranet</TT>
+<LI><A NAME="11536"></A><TT>subscribe</TT> <TT>intranet</TT>
 	(<A NAME="tex2html48"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.intranet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11542"></A><TT>subscribe</TT> <TT>intranetorowner</TT>
+<LI><A NAME="11539"></A><TT>subscribe</TT> <TT>intranetorowner</TT>
 	(<A NAME="tex2html49"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.intranetorowner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11545"></A><TT>subscribe</TT> <TT>open</TT>
+<LI><A NAME="11542"></A><TT>subscribe</TT> <TT>open</TT>
 	(<A NAME="tex2html50"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11548"></A><TT>subscribe</TT> <TT>open_notify</TT>
+<LI><A NAME="11545"></A><TT>subscribe</TT> <TT>open_notify</TT>
 	(<A NAME="tex2html51"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open_notify">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11551"></A><TT>subscribe</TT> <TT>open_quiet</TT>
+<LI><A NAME="11548"></A><TT>subscribe</TT> <TT>open_quiet</TT>
 	(<A NAME="tex2html52"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open_quiet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11554"></A><TT>subscribe</TT> <TT>owner</TT>
+<LI><A NAME="11551"></A><TT>subscribe</TT> <TT>owner</TT>
 	(<A NAME="tex2html53"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11557"></A><TT>subscribe</TT> <TT>smime</TT>
+<LI><A NAME="11554"></A><TT>subscribe</TT> <TT>smime</TT>
 	(<A NAME="tex2html54"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.smime">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11560"></A><TT>subscribe</TT> <TT>smimeorowner</TT>
+<LI><A NAME="11557"></A><TT>subscribe</TT> <TT>smimeorowner</TT>
 	(<A NAME="tex2html55"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.smimeorowner">view</A>)
 
@@ -1583,42 +1583,42 @@ Predefined authorization scenarios are :
 <P>
 
 <UL>
-<LI><A NAME="11567"></A><TT>unsubscribe</TT> <TT>auth</TT> 
+<LI><A NAME="11564"></A><TT>unsubscribe</TT> <TT>auth</TT> 
 	(<A NAME="tex2html56"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.auth">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11570"></A><TT>unsubscribe</TT> <TT>auth_notify</TT> 
+<LI><A NAME="11567"></A><TT>unsubscribe</TT> <TT>auth_notify</TT> 
 	(<A NAME="tex2html57"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.auth_notify">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11573"></A><TT>unsubscribe</TT> <TT>closed</TT> 
+<LI><A NAME="11570"></A><TT>unsubscribe</TT> <TT>closed</TT> 
 	(<A NAME="tex2html58"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11576"></A><TT>unsubscribe</TT> <TT>open</TT> 
+<LI><A NAME="11573"></A><TT>unsubscribe</TT> <TT>open</TT> 
 	(<A NAME="tex2html59"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.open">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11579"></A><TT>unsubscribe</TT> <TT>open_notify</TT> 
+<LI><A NAME="11576"></A><TT>unsubscribe</TT> <TT>open_notify</TT> 
 	(<A NAME="tex2html60"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.open_notify">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11582"></A><TT>unsubscribe</TT> <TT>owner</TT> 
+<LI><A NAME="11579"></A><TT>unsubscribe</TT> <TT>owner</TT> 
 	(<A NAME="tex2html61"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.owner">view</A>)
 
@@ -1642,34 +1642,34 @@ Predefined authorization scenarios are :
 <TT>add</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
-This parameter specifies who is authorized to use the <A NAME="11589"></A><TT>ADD</TT> command.
+This parameter specifies who is authorized to use the <A NAME="11586"></A><TT>ADD</TT> command.
 Predefined authorization scenarios are :
 
 <P>
 
 <UL>
-<LI><A NAME="11592"></A><TT>add</TT> <TT>auth</TT>
+<LI><A NAME="11589"></A><TT>add</TT> <TT>auth</TT>
 	(<A NAME="tex2html62"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/add.auth">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11595"></A><TT>add</TT> <TT>closed</TT>
+<LI><A NAME="11592"></A><TT>add</TT> <TT>closed</TT>
 	(<A NAME="tex2html63"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/add.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11598"></A><TT>add</TT> <TT>owner</TT>
+<LI><A NAME="11595"></A><TT>add</TT> <TT>owner</TT>
 	(<A NAME="tex2html64"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/add.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11601"></A><TT>add</TT> <TT>owner_notify</TT>
+<LI><A NAME="11598"></A><TT>add</TT> <TT>owner_notify</TT>
 	(<A NAME="tex2html65"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/add.owner_notify">view</A>)
 
@@ -1693,34 +1693,34 @@ Predefined authorization scenarios are :
 <TT>del</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
-This parameter specifies who is authorized to use the <A NAME="11608"></A><TT>DEL</TT> command.
+This parameter specifies who is authorized to use the <A NAME="11605"></A><TT>DEL</TT> command.
 Predefined authorization scenarios are :
 
 <P>
 
 <UL>
-<LI><A NAME="11611"></A><TT>del</TT> <TT>auth</TT> 
+<LI><A NAME="11608"></A><TT>del</TT> <TT>auth</TT> 
 	(<A NAME="tex2html66"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/del.auth">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11614"></A><TT>del</TT> <TT>closed</TT> 
+<LI><A NAME="11611"></A><TT>del</TT> <TT>closed</TT> 
 	(<A NAME="tex2html67"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/del.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11617"></A><TT>del</TT> <TT>owner</TT> 
+<LI><A NAME="11614"></A><TT>del</TT> <TT>owner</TT> 
 	(<A NAME="tex2html68"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/del.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11620"></A><TT>del</TT> <TT>owner_notify</TT> 
+<LI><A NAME="11617"></A><TT>del</TT> <TT>owner_notify</TT> 
 	(<A NAME="tex2html69"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/del.owner_notify">view</A>)
 
@@ -1744,20 +1744,20 @@ Predefined authorization scenarios are :
 <TT>remind</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node15.html#scenarios">14</A>, page&nbsp;<A HREF="node15.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
-This parameter specifies who is authorized to use the <A NAME="11627"></A><TT>remind</TT> command.
+This parameter specifies who is authorized to use the <A NAME="11624"></A><TT>remind</TT> command.
 Predefined authorization scenarios are :
 
 <P>
 
 <UL>
-<LI><A NAME="11630"></A><TT>remind</TT> <TT>listmaster</TT> 
+<LI><A NAME="11627"></A><TT>remind</TT> <TT>listmaster</TT> 
 	(<A NAME="tex2html70"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/remind.listmaster">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11633"></A><TT>remind</TT> <TT>owner</TT> 
+<LI><A NAME="11630"></A><TT>remind</TT> <TT>owner</TT> 
 	(<A NAME="tex2html71"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/remind.owner">view</A>)
 
@@ -1827,147 +1827,147 @@ parameter are pointers to <I>scenarios</I>.
 <P>
 
 <UL>
-<LI><A NAME="11642"></A><TT>send</TT> <TT>closed</TT> 
+<LI><A NAME="11639"></A><TT>send</TT> <TT>closed</TT> 
 	(<A NAME="tex2html72"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11645"></A><TT>send</TT> <TT>editorkey</TT> 
+<LI><A NAME="11642"></A><TT>send</TT> <TT>editorkey</TT> 
 	(<A NAME="tex2html73"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11648"></A><TT>send</TT> <TT>editorkeyonly</TT> 
+<LI><A NAME="11645"></A><TT>send</TT> <TT>editorkeyonly</TT> 
 	(<A NAME="tex2html74"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkeyonly">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11651"></A><TT>send</TT> <TT>editorkeyonlyauth</TT> 
+<LI><A NAME="11648"></A><TT>send</TT> <TT>editorkeyonlyauth</TT> 
 	(<A NAME="tex2html75"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkeyonlyauth">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11654"></A><TT>send</TT> <TT>intranet</TT> 
+<LI><A NAME="11651"></A><TT>send</TT> <TT>intranet</TT> 
 	(<A NAME="tex2html76"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.intranet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11657"></A><TT>send</TT> <TT>intranetorprivate</TT> 
+<LI><A NAME="11654"></A><TT>send</TT> <TT>intranetorprivate</TT> 
 	(<A NAME="tex2html77"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.intranetorprivate">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11660"></A><TT>send</TT> <TT>newsletter</TT> 
+<LI><A NAME="11657"></A><TT>send</TT> <TT>newsletter</TT> 
 	(<A NAME="tex2html78"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.newsletter">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11663"></A><TT>send</TT> <TT>newsletterkeyonly</TT> 
+<LI><A NAME="11660"></A><TT>send</TT> <TT>newsletterkeyonly</TT> 
 	(<A NAME="tex2html79"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.newsletterkeyonly">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11666"></A><TT>send</TT> <TT>private</TT> 
+<LI><A NAME="11663"></A><TT>send</TT> <TT>private</TT> 
 	(<A NAME="tex2html80"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.private">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11669"></A><TT>send</TT> <TT>private_smime</TT> 
+<LI><A NAME="11666"></A><TT>send</TT> <TT>private_smime</TT> 
 	(<A NAME="tex2html81"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.private_smime">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11672"></A><TT>send</TT> <TT>privateandeditorkey</TT> 
+<LI><A NAME="11669"></A><TT>send</TT> <TT>privateandeditorkey</TT> 
 	(<A NAME="tex2html82"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privateandeditorkey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11675"></A><TT>send</TT> <TT>privateandnomultipartoreditorkey</TT> 
+<LI><A NAME="11672"></A><TT>send</TT> <TT>privateandnomultipartoreditorkey</TT> 
 	(<A NAME="tex2html83"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privateandnomultipartoreditorkey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11678"></A><TT>send</TT> <TT>privatekey</TT> 
+<LI><A NAME="11675"></A><TT>send</TT> <TT>privatekey</TT> 
 	(<A NAME="tex2html84"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privatekey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11681"></A><TT>send</TT> <TT>privatekeyandeditorkeyonly</TT> 
+<LI><A NAME="11678"></A><TT>send</TT> <TT>privatekeyandeditorkeyonly</TT> 
 	(<A NAME="tex2html85"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privatekeyandeditorkeyonly">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11684"></A><TT>send</TT> <TT>privateoreditorkey</TT> 
+<LI><A NAME="11681"></A><TT>send</TT> <TT>privateoreditorkey</TT> 
 	(<A NAME="tex2html86"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privateoreditorkey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11687"></A><TT>send</TT> <TT>privateorpublickey</TT> 
+<LI><A NAME="11684"></A><TT>send</TT> <TT>privateorpublickey</TT> 
 	(<A NAME="tex2html87"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.privateorpublickey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11690"></A><TT>send</TT> <TT>public</TT> 
+<LI><A NAME="11687"></A><TT>send</TT> <TT>public</TT> 
 	(<A NAME="tex2html88"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.public">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11693"></A><TT>send</TT> <TT>public_nobcc</TT> 
+<LI><A NAME="11690"></A><TT>send</TT> <TT>public_nobcc</TT> 
 	(<A NAME="tex2html89"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.public_nobcc">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11696"></A><TT>send</TT> <TT>publickey</TT> 
+<LI><A NAME="11693"></A><TT>send</TT> <TT>publickey</TT> 
 	(<A NAME="tex2html90"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.publickey">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11699"></A><TT>send</TT> <TT>publicnoattachment</TT> 
+<LI><A NAME="11696"></A><TT>send</TT> <TT>publicnoattachment</TT> 
 	(<A NAME="tex2html91"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.publicnoattachment">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11702"></A><TT>send</TT> <TT>publicnomultipart</TT> 
+<LI><A NAME="11699"></A><TT>send</TT> <TT>publicnomultipart</TT> 
 	(<A NAME="tex2html92"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/send.publicnomultipart">view</A>)
 
@@ -1992,7 +1992,7 @@ parameter are pointers to <I>scenarios</I>.
 
 <P>
 This parameter specifies who can use
-<A NAME="11709"></A><TT>REVIEW</TT> (see&nbsp;<A HREF="node29.html#cmd-review">28.1</A>, page&nbsp;<A HREF="node29.html#cmd-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
+<A NAME="11706"></A><TT>REVIEW</TT> (see&nbsp;<A HREF="node29.html#cmd-review">28.1</A>, page&nbsp;<A HREF="node29.html#cmd-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>),
 administrative requests. 
 
 <P>
@@ -2001,42 +2001,42 @@ Predefined authorization scenarios are :
 <P>
 
 <UL>
-<LI><A NAME="11712"></A><TT>review</TT> <TT>closed</TT> 
+<LI><A NAME="11709"></A><TT>review</TT> <TT>closed</TT> 
 	(<A NAME="tex2html93"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11715"></A><TT>review</TT> <TT>intranet</TT> 
+<LI><A NAME="11712"></A><TT>review</TT> <TT>intranet</TT> 
 	(<A NAME="tex2html94"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.intranet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11718"></A><TT>review</TT> <TT>listmaster</TT> 
+<LI><A NAME="11715"></A><TT>review</TT> <TT>listmaster</TT> 
 	(<A NAME="tex2html95"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.listmaster">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11721"></A><TT>review</TT> <TT>owner</TT> 
+<LI><A NAME="11718"></A><TT>review</TT> <TT>owner</TT> 
 	(<A NAME="tex2html96"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11724"></A><TT>review</TT> <TT>private</TT> 
+<LI><A NAME="11721"></A><TT>review</TT> <TT>private</TT> 
 	(<A NAME="tex2html97"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.private">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11727"></A><TT>review</TT> <TT>public</TT> 
+<LI><A NAME="11724"></A><TT>review</TT> <TT>public</TT> 
 	(<A NAME="tex2html98"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/review.public">view</A>)
 
@@ -2048,7 +2048,7 @@ Predefined authorization scenarios are :
 <P>
 
 <H2><A NAME="SECTION0022310000000000000000"></A>
-    <A NAME="par-shared"></A>    <A NAME="3935"></A>
+    <A NAME="par-shared"></A>    <A NAME="3931"></A>
 <BR>
 21.3.10 shared_doc
 </H2>
@@ -2071,7 +2071,7 @@ repository.
 
 <P>
 This parameter specifies who can read shared documents
-(access the contents of a list's <A NAME="11734"></A><TT>shared</TT> directory).
+(access the contents of a list's <A NAME="11731"></A><TT>shared</TT> directory).
 
 <P>
 Predefined authorization scenarios are :
@@ -2079,28 +2079,28 @@ Predefined authorization scenarios are :
 <P>
 
 <UL>
-<LI><A NAME="11737"></A><TT>d_read</TT> <TT>owner</TT> 
+<LI><A NAME="11734"></A><TT>d_read</TT> <TT>owner</TT> 
 	(<A NAME="tex2html99"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_read.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11740"></A><TT>d_read</TT> <TT>private</TT> 
+<LI><A NAME="11737"></A><TT>d_read</TT> <TT>private</TT> 
 	(<A NAME="tex2html100"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_read.private">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11743"></A><TT>d_read</TT> <TT>p</TT> 
+<LI><A NAME="11740"></A><TT>d_read</TT> <TT>private-https</TT> 
 	(<A NAME="tex2html101"
-  HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_read.p">view</A>)
+  HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_read.private-https">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11746"></A><TT>d_read</TT> <TT>public</TT> 
+<LI><A NAME="11743"></A><TT>d_read</TT> <TT>public</TT> 
 	(<A NAME="tex2html102"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_read.public">view</A>)
 
@@ -2123,7 +2123,7 @@ Predefined authorization scenarios are :
 
 <P>
 This parameter specifies who can perform changes
-within a list's <A NAME="11753"></A><TT>shared</TT> directory (i.e. upload files
+within a list's <A NAME="11750"></A><TT>shared</TT> directory (i.e. upload files
 and create subdirectories).
 
 <P>
@@ -2132,35 +2132,35 @@ Predefined authorization scenarios are :
 <P>
 
 <UL>
-<LI><A NAME="11756"></A><TT>d_edit</TT> <TT>editor</TT> 
+<LI><A NAME="11753"></A><TT>d_edit</TT> <TT>editor</TT> 
 	(<A NAME="tex2html103"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.editor">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11759"></A><TT>d_edit</TT> <TT>owner</TT> 
+<LI><A NAME="11756"></A><TT>d_edit</TT> <TT>owner</TT> 
 	(<A NAME="tex2html104"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11762"></A><TT>d_edit</TT> <TT>private</TT> 
+<LI><A NAME="11759"></A><TT>d_edit</TT> <TT>private</TT> 
 	(<A NAME="tex2html105"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.private">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11765"></A><TT>d_edit</TT> <TT>p</TT> 
+<LI><A NAME="11762"></A><TT>d_edit</TT> <TT>private-https</TT> 
 	(<A NAME="tex2html106"
-  HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.p">view</A>)
+  HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.private-https">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="11768"></A><TT>d_edit</TT> <TT>public</TT> 
+<LI><A NAME="11765"></A><TT>d_edit</TT> <TT>public</TT> 
 	(<A NAME="tex2html107"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.public">view</A>)
 
@@ -2183,7 +2183,7 @@ d_edit		private
 </H3>
 
 <P>
-<A NAME="11771"></A><TT>quota</TT> <I>number-of-Kbytes</I>
+<A NAME="11768"></A><TT>quota</TT> <I>number-of-Kbytes</I>
 
 <P>
 This parameter specifies the disk quota (the unit is Kbytes) for the document repository, in kilobytes.
@@ -2204,25 +2204,25 @@ If quota is exceeded, file uploads fail.
 </H2>
 
 <P>
-The <A NAME="11774"></A><TT>reply_to_header</TT> parameter starts a paragraph defining
-	what <I>Sympa</I> will place in the <A NAME="11778"></A><TT>Reply-To:</TT> SMTP header field of
+The <A NAME="11771"></A><TT>reply_to_header</TT> parameter starts a paragraph defining
+	what <I>Sympa</I> will place in the <A NAME="11775"></A><TT>Reply-To:</TT> SMTP header field of
 	the messages it distributes.
 
 <P>
 
 <UL>
-<LI><A NAME="11781"></A><TT>value</TT>   <TT>sender</TT> <TT>|</TT>
+<LI><A NAME="11778"></A><TT>value</TT>   <TT>sender</TT> <TT>|</TT>
     			<TT>list</TT>   <TT>|</TT>
     			<TT>all</TT>    <TT>|</TT>
     			<TT>other_email</TT>
 	(Default value: <TT>sender</TT>)
 
 <P>
-This parameter indicates whether the <A NAME="11785"></A><TT>Reply-To:</TT> field
+This parameter indicates whether the <A NAME="11782"></A><TT>Reply-To:</TT> field
 	should indicate the sender of the message (<TT>sender</TT>),
 	the list itself (<TT>list</TT>), both list and sender (<TT>all</TT>)
         or an arbitrary e-mail address (defined by the
-	<A NAME="11788"></A><TT>other_email</TT> parameter).
+	<A NAME="11785"></A><TT>other_email</TT> parameter).
 
 <P>
 Note: it is inadvisable to change this parameter, and particularly inadvisable to
@@ -2233,21 +2233,21 @@ to more serious consequences.
 
 <P>
 </LI>
-<LI><A NAME="11791"></A><TT>other_email</TT> <I>an_email_address</I>
+<LI><A NAME="11788"></A><TT>other_email</TT> <I>an_email_address</I>
 
 <P>
-If <A NAME="11794"></A><TT>value</TT> was set to <TT>other_email</TT>, this parameter
+If <A NAME="11791"></A><TT>value</TT> was set to <TT>other_email</TT>, this parameter
 	defines the e-mail address used.
 
 <P>
 </LI>
-<LI><A NAME="11797"></A><TT>apply</TT>   <TT>respect</TT> <TT>|</TT>
+<LI><A NAME="11794"></A><TT>apply</TT>   <TT>respect</TT> <TT>|</TT>
     			<TT>forced</TT>  
 	(Default value: <TT>respect</TT>)
 
 <P>
-The default is to respect (preserve) the existing <A NAME="11801"></A><TT>Reply-To:</TT> SMTP header field
-	in incoming messages. If set to <TT>forced</TT>, <A NAME="11804"></A><TT>Reply-To:</TT> SMTP header
+The default is to respect (preserve) the existing <A NAME="11798"></A><TT>Reply-To:</TT> SMTP header field
+	in incoming messages. If set to <TT>forced</TT>, <A NAME="11801"></A><TT>Reply-To:</TT> SMTP header
 	field will be overwritten.
 
 <P>
@@ -2265,49 +2265,49 @@ apply forced
 <P>
 
 <H2><A NAME="SECTION002242000000000000000"></A>
- <A NAME="par-max-size"></A> <A NAME="4031"></A>
+ <A NAME="par-max-size"></A> <A NAME="4027"></A>
 <BR>
 21.4.2 max_size
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11809"></A><TT>max_size</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11806"></A><TT>max_size</TT> robot parameter</TT>)
 
 <P>
-<A NAME="11812"></A><TT>max_size</TT> <I>number-of-bytes</I>
+<A NAME="11809"></A><TT>max_size</TT> <I>number-of-bytes</I>
 
 <P>
 Maximum size of a message in 8-bit bytes. The default value is set in
- the <A NAME="11815"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file.
+ the <A NAME="11812"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file.
 
 <P>
 
 <H2><A NAME="SECTION002243000000000000000"></A>
-    	<A NAME="par-anonymous-sender"></A>    	<A NAME="4038"></A>
+    	<A NAME="par-anonymous-sender"></A>    	<A NAME="4034"></A>
 <BR>
 21.4.3 anonymous_sender
 </H2>
 
 <P>
-<A NAME="11818"></A><TT>anonymous_sender</TT> <I>value</I>
+<A NAME="11815"></A><TT>anonymous_sender</TT> <I>value</I>
 
 <P>
 If this parameter is set for a list, all messages distributed via the list are
 rendered anonymous. SMTP <TT>From:</TT> headers in distributed messages are altered
-to contain the value of the <A NAME="11821"></A><TT>anonymous_sender</TT> parameter. Various other
+to contain the value of the <A NAME="11818"></A><TT>anonymous_sender</TT> parameter. Various other
 fields are removed (<TT>Received:, Reply-To:, Sender:, 
 X-Sender:, Message-id:, Resent-From:</TT>
 
 <P>
 
 <H2><A NAME="SECTION002244000000000000000"></A>
-    	<A NAME="par-custom-header"></A>    	<A NAME="4046"></A>
+    	<A NAME="par-custom-header"></A>    	<A NAME="4042"></A>
 <BR>
 21.4.4 custom_header
 </H2>
 
 <P>
-<A NAME="11824"></A><TT>custom_header</TT> <I>header-field</I><TT>:</TT> <I>value</I>
+<A NAME="11821"></A><TT>custom_header</TT> <I>header-field</I><TT>:</TT> <I>value</I>
 
 <P>
 This parameter is optional. The headers specified
@@ -2321,14 +2321,14 @@ Example: <TT>custom_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.
 <P>
 
 <H2><A NAME="SECTION002245000000000000000"></A>
-    	<A NAME="par-rfc2369-header-fields"></A>    	<A NAME="4054"></A>
+    	<A NAME="par-rfc2369-header-fields"></A>    	<A NAME="4050"></A>
 <BR>
 21.4.5 rfc2369_header_fields
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11831"></A><TT>rfc2369_header_fields</TT> sympa.conf parameter</TT>)
-	<A NAME="11834"></A><TT>rfc2369_header_fields</TT> <I>help,archive</I>
+(Default value: <TT><A NAME="11828"></A><TT>rfc2369_header_fields</TT> sympa.conf parameter</TT>)
+	<A NAME="11831"></A><TT>rfc2369_header_fields</TT> <I>help,archive</I>
 
 <P>
 RFC2369 compliant header fields (List-xxx) to be added to distributed messages. 
@@ -2337,14 +2337,14 @@ These header-fields should be implemented by MUA's, adding menus.
 <P>
 
 <H2><A NAME="SECTION002246000000000000000"></A>
-    	<A NAME="par-loop-prevention-regex"></A>    	<A NAME="4060"></A>
+    	<A NAME="par-loop-prevention-regex"></A>    	<A NAME="4056"></A>
 <BR>
 21.4.6 loop_prevention_regex
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11839"></A><TT>loop_prevention_regex</TT> sympa.conf parameter</TT>)
-	<A NAME="11842"></A><TT>loop_prevention_regex</TT> <I>mailer-daemon|sympa|listserv|majordomo|smartlist|mailman</I>
+(Default value: <TT><A NAME="11836"></A><TT>loop_prevention_regex</TT> sympa.conf parameter</TT>)
+	<A NAME="11839"></A><TT>loop_prevention_regex</TT> <I>mailer-daemon|sympa|listserv|majordomo|smartlist|mailman</I>
 
 <P>
 This regular expression is applied to messages sender address. If the sender address matches the regular expression, then
@@ -2357,10 +2357,10 @@ the message is rejected. The goal of this parameter is to prevent loops between 
 </H2>
 
 <P>
-<A NAME="par-custom-subject"></A>	<A NAME="4066"></A>
+<A NAME="par-custom-subject"></A>	<A NAME="4062"></A>
 
 <P>
-<A NAME="11845"></A><TT>custom_subject</TT> <I>value</I>
+<A NAME="11842"></A><TT>custom_subject</TT> <I>value</I>
 
 <P>
 This parameter is optional. It specifies a string which is
@@ -2380,7 +2380,7 @@ Example: <TT>custom_subject newsletter num [list-&gt;sequence]</TT>.
 <P>
 
 <H2><A NAME="SECTION002248000000000000000"></A>
-    	<A NAME="par-footer-type"></A>	<A NAME="4073"></A>
+    	<A NAME="par-footer-type"></A>	<A NAME="4069"></A>
 <BR>
 21.4.8 footer_type
 </H2>
@@ -2389,7 +2389,7 @@ Example: <TT>custom_subject newsletter num [list-&gt;sequence]</TT>.
 (Default value: <TT>mime</TT>)
 
 <P>
-<A NAME="11851"></A><TT>footer_type (optional, default value is mime)</TT>
+<A NAME="11848"></A><TT>footer_type (optional, default value is mime)</TT>
    <TT>mime</TT> <TT>|</TT>
    <TT>append</TT>
 
@@ -2401,7 +2401,7 @@ added to a message.
 <P>
 
 <UL>
-<LI><A NAME="11854"></A><TT>footer_type</TT> <TT>mime</TT>
+<LI><A NAME="11851"></A><TT>footer_type</TT> <TT>mime</TT>
 
 <P>
 The default value. Sympa will add the
@@ -2411,12 +2411,12 @@ The default value. Sympa will add the
 
 <P>
 </LI>
-<LI><A NAME="11857"></A><TT>footer_type</TT> <TT>append</TT> 
+<LI><A NAME="11854"></A><TT>footer_type</TT> <TT>append</TT> 
 
 <P>
 Sympa will not create new MIME parts, but
         will try to append the header/footer to the body of the
-        message. <A NAME="11860"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer.mime</TT> will be
+        message. <A NAME="11857"></A><TT>/usr/local/sympa-os/expl/mylist/message.footer.mime</TT> will be
         ignored. Headers/footers may be appended to text/plain
         messages only.
 
@@ -2431,13 +2431,13 @@ Sympa will not create new MIME parts, but
 </H2>
 
 <P>
-<A NAME="par-digest"></A>    	<A NAME="4088"></A>
+<A NAME="par-digest"></A>    	<A NAME="4084"></A>
 
 <P>
-<A NAME="11863"></A><TT>digest</TT> <I>daylist</I> <I>hour</I><TT>:</TT><I>minutes</I>
+<A NAME="11860"></A><TT>digest</TT> <I>daylist</I> <I>hour</I><TT>:</TT><I>minutes</I>
 
 <P>
-Definition of <A NAME="11866"></A><TT>digest</TT> mode. If this parameter is present,
+Definition of <A NAME="11863"></A><TT>digest</TT> mode. If this parameter is present,
 subscribers can select the option of receiving messages in multipart/digest
 MIME format.  Messages are then grouped together, and compilations of messages
 are sent to subscribers in accordance with the rythm selected
@@ -2459,11 +2459,11 @@ be able to process it in time. Therefore do not setuse a digest time
 later than 23:00.
 
 <P>
-N.B.: In family context, <A NAME="11872"></A><TT>digest</TT> can be constrainted only on days.
+N.B.: In family context, <A NAME="11869"></A><TT>digest</TT> can be constrainted only on days.
 
 <P>
 
-<H2><A NAME="SECTION0022410000000000000000"></A><A NAME="11875"></A>
+<H2><A NAME="SECTION0022410000000000000000"></A><A NAME="11872"></A>
 <BR>
 21.4.10 <TT>digest_max_size</TT>
 </H2> 
@@ -2482,19 +2482,19 @@ Maximum number of messages in a digest. If the number of messages exceeds this l
 </H2>
 
 <P>
-<A NAME="par-available-user-options"></A>	<A NAME="4103"></A>
+<A NAME="par-available-user-options"></A>	<A NAME="4099"></A>
 
 <P>
-The <A NAME="11879"></A><TT>available_user_options</TT> parameter starts a paragraph to
+The <A NAME="11876"></A><TT>available_user_options</TT> parameter starts a paragraph to
 	define available options for the subscribers of the list.
 
 <P>
 
 <UL>
-<LI><A NAME="11882"></A><TT>reception</TT> <I>modelist</I>
+<LI><A NAME="11879"></A><TT>reception</TT> <I>modelist</I>
 
 <P>
-(Default value: <TT><A NAME="11887"></A><TT>reception</TT> mail,notice,digest,summary,nomail</TT>)
+(Default value: <TT><A NAME="11884"></A><TT>reception</TT> mail,notice,digest,summary,nomail</TT>)
 
 <P>
 <I>modelist</I> is a list of modes (mail, notice, digest, summary, nomail),
@@ -2520,16 +2520,16 @@ reception  	digest,mail
 </H2>
 
 <P>
-<A NAME="par-default-user-options"></A>	<A NAME="4118"></A>
+<A NAME="par-default-user-options"></A>	<A NAME="4114"></A>
 
 <P>
-The <A NAME="11890"></A><TT>default_user_options</TT> parameter starts a paragraph to
+The <A NAME="11887"></A><TT>default_user_options</TT> parameter starts a paragraph to
 	define a default profile for the subscribers of the list.
 
 <P>
 
 <UL>
-<LI><A NAME="11893"></A><TT>reception</TT>
+<LI><A NAME="11890"></A><TT>reception</TT>
             <TT>notice</TT> <TT>|</TT>
             <TT>digest</TT> <TT>|</TT>
             <TT>summary</TT> <TT>|</TT>
@@ -2541,12 +2541,12 @@ Mail reception mode.
 
 <P>
 </LI>
-<LI><A NAME="11896"></A><TT>visibility</TT>
+<LI><A NAME="11893"></A><TT>visibility</TT>
             <TT>conceal</TT> <TT>|</TT>
             <TT>noconceal</TT> 
 
 <P>
-Visibility of the subscriber with the <A NAME="11899"></A><TT>REVIEW</TT>
+Visibility of the subscriber with the <A NAME="11896"></A><TT>REVIEW</TT>
         command.
 
 <P>
@@ -2567,10 +2567,10 @@ visibility	noconceal
 </H2>
 
 <P>
-<A NAME="par-msg-topic"></A>	<A NAME="4143"></A>
+<A NAME="par-msg-topic"></A>	<A NAME="4139"></A>
 
 <P>
-The <A NAME="11902"></A><TT>msg_topic</TT> parameter starts a paragraph to
+The <A NAME="11899"></A><TT>msg_topic</TT> parameter starts a paragraph to
 	define a message topic used to tag a message. Foreach message topic, 
         you have to define a new paragraph.(See <A HREF="node23.html#msg-topics">22.1</A>, page&nbsp;<A HREF="node23.html#msg-topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
@@ -2583,12 +2583,12 @@ title Operating System
 </PRE>
 
 <P>
-Parameter <A NAME="11905"></A><TT>msg_topic.name</TT> and <A NAME="11908"></A><TT>msg_topic.title</TT> are mandatory. <A NAME="11911"></A><TT>msg_topic.title</TT> is used
-on the web interface (``other'' is not allowed for msg_topic.name parameter). The <A NAME="11914"></A><TT>msg_topic.keywords</TT> parameter allows to select automatically message topic by searching 
+Parameter <A NAME="11902"></A><TT>msg_topic.name</TT> and <A NAME="11905"></A><TT>msg_topic.title</TT> are mandatory. <A NAME="11908"></A><TT>msg_topic.title</TT> is used
+on the web interface (``other'' is not allowed for msg_topic.name parameter). The <A NAME="11911"></A><TT>msg_topic.keywords</TT> parameter allows to select automatically message topic by searching 
 keywords in the message. 
 
 <P>
-N.B.: In a family context, <A NAME="11917"></A><TT>msg_topic.keywords</TT> parameter is uncompellable.
+N.B.: In a family context, <A NAME="11914"></A><TT>msg_topic.keywords</TT> parameter is uncompellable.
 
 <P>
 
@@ -2597,10 +2597,10 @@ N.B.: In a family context, <A NAME="11917"></A><TT>msg_topic.keywords</TT> param
 </H2>
 
 <P>
-<A NAME="par-msg-topic-key-apply-on"></A>	<A NAME="4159"></A>
+<A NAME="par-msg-topic-key-apply-on"></A>	<A NAME="4155"></A>
 
 <P>
-The <A NAME="11920"></A><TT>msg_topic_keywords_apply_on</TT> parameter defines on which part of the message is used to perform
+The <A NAME="11917"></A><TT>msg_topic_keywords_apply_on</TT> parameter defines on which part of the message is used to perform
 	automatic tagging.(See <A HREF="node23.html#msg-topics">22.1</A>, page&nbsp;<A HREF="node23.html#msg-topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
@@ -2616,10 +2616,10 @@ Its values can be : subject  body subject_and_body.
 </H2>
 
 <P>
-<A NAME="par-msg-topic-tagging"></A>	<A NAME="4170"></A>
+<A NAME="par-msg-topic-tagging"></A>	<A NAME="4166"></A>
 
 <P>
-The <A NAME="11923"></A><TT>msg_topic_tagging</TT> parameter indicates if the tagging is optional or required for a list.
+The <A NAME="11920"></A><TT>msg_topic_tagging</TT> parameter indicates if the tagging is optional or required for a list.
 	(See <A HREF="node23.html#msg-topics">22.1</A>, page&nbsp;<A HREF="node23.html#msg-topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
@@ -2635,13 +2635,13 @@ Its values can be : optional  required
 </H2>
 
 <P>
-<A NAME="par-pictures"></A>	<A NAME="4181"></A>
+<A NAME="par-pictures"></A>	<A NAME="4177"></A>
 
 <P>
-(Default value: <TT><A NAME="11928"></A><TT>pictures_feature</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11925"></A><TT>pictures_feature</TT> robot parameter</TT>)
 
 <P>
-<A NAME="11931"></A><TT>pictures_feature</TT> <I>on | off</I>
+<A NAME="11928"></A><TT>pictures_feature</TT> <I>on | off</I>
 
 <P>
 This enables the feature that allows list members to upload a picture that will be shown on review page.
@@ -2653,20 +2653,20 @@ This enables the feature that allows list members to upload a picture that will 
 </H2>
 
 <P>
-<A NAME="par-cookie"></A>	<A NAME="4187"></A>
+<A NAME="par-cookie"></A>	<A NAME="4183"></A>
 
 <P>
-(Default value: <TT><A NAME="11936"></A><TT>cookie</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11933"></A><TT>cookie</TT> robot parameter</TT>)
 
 <P>
-<A NAME="11939"></A><TT>cookie</TT> <I>random-numbers-or-letters</I>
+<A NAME="11936"></A><TT>cookie</TT> <I>random-numbers-or-letters</I>
 
 <P>
-This parameter is a confidential item for generating <A NAME="11942"></A>authentication keys for administrative commands (<A NAME="11943"></A><TT>ADD</TT>,
-<A NAME="11946"></A><TT>DELETE</TT>, etc.).  This parameter should remain concealed,
+This parameter is a confidential item for generating <A NAME="11939"></A>authentication keys for administrative commands (<A NAME="11940"></A><TT>ADD</TT>,
+<A NAME="11943"></A><TT>DELETE</TT>, etc.).  This parameter should remain concealed,
 even for owners. The cookie is applied to all list owners, and is
-only taken into account when the owner has the <A NAME="11949"></A><TT>auth</TT>
-parameter (<A NAME="11952"></A><TT>owner</TT> parameter, see&nbsp;<A HREF="#par-owner">21.1.5</A>,
+only taken into account when the owner has the <A NAME="11946"></A><TT>auth</TT>
+parameter (<A NAME="11949"></A><TT>owner</TT> parameter, see&nbsp;<A HREF="#par-owner">21.1.5</A>,
 page&nbsp;<A HREF="node22.html#par-owner"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -2681,10 +2681,10 @@ Example: <TT>cookie secret22</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="11958"></A><TT>default_list_priority</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11955"></A><TT>default_list_priority</TT> robot parameter</TT>)
 
 <P>
-<A NAME="11961"></A><TT>priority</TT> <I>0-9</I>
+<A NAME="11958"></A><TT>priority</TT> <I>0-9</I>
 
 <P>
 The priority with which <I>Sympa</I> will process messages for this list.
@@ -2719,10 +2719,10 @@ This paragraph defines bounce management parameters :
 <P>
 
 <UL>
-<LI><A NAME="warn-rate"></A><A NAME="11965"></A><TT>warn_rate</TT> 
+<LI><A NAME="warn-rate"></A><A NAME="11962"></A><TT>warn_rate</TT> 
 
 <P>
-(Default value: <TT><A NAME="11970"></A><TT>bounce_warn_rate</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11967"></A><TT>bounce_warn_rate</TT> robot parameter</TT>)
 
 <P>
 The list owner receives a warning whenever a message is distributed and
@@ -2730,10 +2730,10 @@ The list owner receives a warning whenever a message is distributed and
 
 <P>
 </LI>
-<LI><A NAME="halt-rate"></A><A NAME="11973"></A><TT>halt_rate</TT> 
+<LI><A NAME="halt-rate"></A><A NAME="11970"></A><TT>halt_rate</TT> 
 
 <P>
-(Default value: <TT><A NAME="11978"></A><TT>bounce_halt_rate</TT> robot parameter</TT>)
+(Default value: <TT><A NAME="11975"></A><TT>bounce_halt_rate</TT> robot parameter</TT>)
 
 <P>
 <TT>NOT USED YET</TT>
@@ -2746,7 +2746,7 @@ If bounce rate reaches the <TT>halt_rate</TT>, messages
 
 <P>
 </LI>
-<LI><A NAME="expire-bounce-task"></A><A NAME="11981"></A><TT>expire_bounce_task</TT> 
+<LI><A NAME="expire-bounce-task"></A><A NAME="11978"></A><TT>expire_bounce_task</TT> 
 
 <P>
 (Default value: <TT>d</TT>)aily
@@ -2784,20 +2784,20 @@ halt_rate	20
 <P>
 
 <UL>
-<LI><A NAME="rate"></A><A NAME="11985"></A><TT>rate</TT> 
+<LI><A NAME="rate"></A><A NAME="11982"></A><TT>rate</TT> 
 
 <P>
-(Default value: <TT><A NAME="11990"></A><TT>bouncers_level1_rate</TT> config parameter</TT>)
+(Default value: <TT><A NAME="11987"></A><TT>bouncers_level1_rate</TT> config parameter</TT>)
 
 <P>
 Each bouncing user have a score (from 0 to 100).This parameter define the lower score 
 	 for a user to be a level1 bouncing user. For example, with default values : Users with a score
 	 between 45 and 80 are level1 bouncers.
 </LI>
-<LI><A NAME="action"></A><A NAME="11993"></A><TT>action</TT> 
+<LI><A NAME="action"></A><A NAME="11990"></A><TT>action</TT> 
 
 <P>
-(Default value: <TT><A NAME="11998"></A><TT>bouncers_level1_action</TT> config parameter</TT>)
+(Default value: <TT><A NAME="11995"></A><TT>bouncers_level1_action</TT> config parameter</TT>)
 
 <P>
 This parameter define which task is automaticaly applied on level 1 bouncing
@@ -2805,7 +2805,7 @@ This parameter define which task is automaticaly applied on level 1 bouncing
 
 <P>
 </LI>
-<LI><A NAME="notification"></A><A NAME="12001"></A><TT>Notification</TT> 
+<LI><A NAME="notification"></A><A NAME="11998"></A><TT>Notification</TT> 
 
 <P>
 (Default value: <TT>owner</TT>)
@@ -2830,20 +2830,20 @@ When automatic task is executed on level 1 bouncers, a notification
 <P>
 
 <UL>
-<LI><A NAME="rate2"></A><A NAME="12005"></A><TT>rate</TT> 
+<LI><A NAME="rate2"></A><A NAME="12002"></A><TT>rate</TT> 
 
 <P>
-(Default value: <TT><A NAME="12010"></A><TT>bouncers_level2_rate</TT> config parameter</TT>)
+(Default value: <TT><A NAME="12007"></A><TT>bouncers_level2_rate</TT> config parameter</TT>)
 
 <P>
 Each bouncing user have a score (from 0 to 100).This parameter define the lower score 
 	 for a user to be a level 2 bouncing user. For example, with default values : Users with a score
 	 between 75 and 100 are level 2 bouncers.
 </LI>
-<LI><A NAME="action2"></A><A NAME="12013"></A><TT>action</TT> 
+<LI><A NAME="action2"></A><A NAME="12010"></A><TT>action</TT> 
 
 <P>
-(Default value: <TT><A NAME="12018"></A><TT>bouncers_level1_action</TT> config parameter</TT>)
+(Default value: <TT><A NAME="12015"></A><TT>bouncers_level1_action</TT> config parameter</TT>)
 
 <P>
 This parameter define which task is automaticaly applied on level 2 bouncing
@@ -2851,7 +2851,7 @@ This parameter define which task is automaticaly applied on level 2 bouncing
 
 <P>
 </LI>
-<LI><A NAME="Notification2"></A><A NAME="12021"></A><TT>Notification</TT> 
+<LI><A NAME="Notification2"></A><A NAME="12018"></A><TT>Notification</TT> 
 
 <P>
 (Default value: <TT>owner</TT>)
@@ -2886,13 +2886,13 @@ When automatic task is executed on level 2 bouncers, a notification
 </H2>
 
 <P>
-(Default value: <TT><A NAME="12027"></A><TT>welcome_return_path</TT> robot parameter</TT>)
-	<A NAME="12030"></A><TT>welcome_return_path</TT> unique <TT>|</TT> owner
+(Default value: <TT><A NAME="12024"></A><TT>welcome_return_path</TT> robot parameter</TT>)
+	<A NAME="12027"></A><TT>welcome_return_path</TT> unique <TT>|</TT> owner
 
 <P>
-If set to <A NAME="12033"></A><TT>unique</TT>, the welcome message is sent using
+If set to <A NAME="12030"></A><TT>unique</TT>, the welcome message is sent using
         a unique return path in order to remove the subscriber immediately in
-	the case of a bounce. See <A NAME="12036"></A><TT>welcome_return_path</TT> <A NAME="12039"></A><TT>sympa.conf</TT>
+	the case of a bounce. See <A NAME="12033"></A><TT>welcome_return_path</TT> <A NAME="12036"></A><TT>sympa.conf</TT>
 	parameter (<A HREF="node8.html#kw-welcome-return-path">7.8.2</A>, page&nbsp;<A HREF="node8.html#kw-welcome-return-path"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -2904,12 +2904,12 @@ If set to <A NAME="12033"></A><TT>unique</TT>, the welcome message is sent using
 </H2>
 
 <P>
-(Default value: <TT><A NAME="12044"></A><TT>remind_return_path</TT> robot parameter</TT>)
-	<A NAME="12047"></A><TT>remind_return_path</TT> unique <TT>|</TT> owner
+(Default value: <TT><A NAME="12041"></A><TT>remind_return_path</TT> robot parameter</TT>)
+	<A NAME="12044"></A><TT>remind_return_path</TT> unique <TT>|</TT> owner
 
 <P>
-Same as <A NAME="12050"></A><TT>welcome_return_path</TT>, but applied to remind
-        messages. See <A NAME="12053"></A><TT>remind_return_path</TT> <A NAME="12056"></A><TT>sympa.conf</TT>
+Same as <A NAME="12047"></A><TT>welcome_return_path</TT>, but applied to remind
+        messages. See <A NAME="12050"></A><TT>remind_return_path</TT> <A NAME="12053"></A><TT>sympa.conf</TT>
 	parameter (<A HREF="node8.html#kw-remind-return-path">7.8.3</A>, page&nbsp;<A HREF="node8.html#kw-remind-return-path"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -2921,13 +2921,13 @@ Same as <A NAME="12050"></A><TT>welcome_return_path</TT>, but applied to remind
 </H2>
 
 <P>
-(Default value: <TT><A NAME="12061"></A><TT>verp_rate</TT> host parameter</TT>)
+(Default value: <TT><A NAME="12058"></A><TT>verp_rate</TT> host parameter</TT>)
 
 <P>
 See <A HREF="node25.html#verp">24.1</A>,page&nbsp;<A HREF="node25.html#verp"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for more information on VERP in Sympa.
 
 <P>
-When <A NAME="12064"></A><TT>verp_rate</TT> is null VERP is not used ; if  <A NAME="12067"></A><TT>verp_rate</TT> is 100% VERP is alway in use.
+When <A NAME="12061"></A><TT>verp_rate</TT> is null VERP is not used ; if  <A NAME="12064"></A><TT>verp_rate</TT> is 100% VERP is alway in use.
 
 <P>
 VERP requires plussed aliases to be supported and the bounce+* alias to be installed.
@@ -2943,22 +2943,22 @@ VERP requires plussed aliases to be supported and the bounce+* alias to be insta
 
 <P>
 Mail archives can be retrieved via a mail command send to the robot,
-they are stored in <A NAME="12071"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory.
+they are stored in <A NAME="12068"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT> directory.
 
 <P>
 Web archives are accessed via the web interface (with access control), they
-are stored in a directory defined in <A NAME="12074"></A><TT>wwsympa.conf</TT>.
+are stored in a directory defined in <A NAME="12071"></A><TT>wwsympa.conf</TT>.
 
 <P>
 
 <H2><A NAME="SECTION002261000000000000000"></A>
-    <A NAME="par-archive"></A>    <A NAME="4289"></A>
+    <A NAME="par-archive"></A>    <A NAME="4285"></A>
 <BR>
 21.6.1 archive
 </H2>
 
 <P>
-If the <A NAME="12077"></A><TT>config</TT> file contains an <A NAME="12080"></A><TT>archive</TT> paragraph
+If the <A NAME="12074"></A><TT>config</TT> file contains an <A NAME="12077"></A><TT>archive</TT> paragraph
 <I>Sympa</I> will manage an archive for this list.
 
 <P>
@@ -2971,13 +2971,13 @@ access private
 </PRE>
 
 <P>
-If the <A NAME="12084"></A><TT>archive</TT> parameter is specified, archives are
-accessible to users through the <A NAME="12087"></A><TT>GET</TT> command, 
-and the index of the list archives is provided in reply to the <A NAME="12090"></A><TT>INDEX</TT>
-command (the last message of a list can be consulted using the <A NAME="12093"></A><TT>LAST</TT> command).
+If the <A NAME="12081"></A><TT>archive</TT> parameter is specified, archives are
+accessible to users through the <A NAME="12084"></A><TT>GET</TT> command, 
+and the index of the list archives is provided in reply to the <A NAME="12087"></A><TT>INDEX</TT>
+command (the last message of a list can be consulted using the <A NAME="12090"></A><TT>LAST</TT> command).
 
 <P>
-<A NAME="12096"></A><TT>period</TT>
+<A NAME="12093"></A><TT>period</TT>
     <TT>day</TT> <TT>|</TT>
     <TT>week</TT> <TT>|</TT>
     <TT>month</TT> <TT>|</TT>
@@ -2988,28 +2988,28 @@ command (the last message of a list can be consulted using the <A NAME="12093"><
 This parameter specifies how archiving is organized: by <TT>day</TT>, <TT>week</TT>, <TT>month</TT>, <TT>quarter</TT>,
 or <TT>year</TT>.  Generation of automatic list archives requires
 the creation of an archive directory at the root of the list directory 
-(<A NAME="12099"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT>), used to store these documents.
+(<A NAME="12096"></A><TT>/usr/local/sympa-os/expl/mylist/archives/</TT>), used to store these documents.
 
 <P>
-<A NAME="12102"></A><TT>access</TT>
+<A NAME="12099"></A><TT>access</TT>
     <TT>private</TT> <TT>|</TT>
     <TT>public</TT> <TT>|</TT>
     <TT>owner</TT> <TT>|</TT>
     <TT>closed</TT> <TT>|</TT>
 
 <P>
-This parameter specifies who is authorized to use the <A NAME="12105"></A><TT>GET</TT>, <A NAME="12108"></A><TT>LAST</TT> and <A NAME="12111"></A><TT>INDEX</TT> commands.
+This parameter specifies who is authorized to use the <A NAME="12102"></A><TT>GET</TT>, <A NAME="12105"></A><TT>LAST</TT> and <A NAME="12108"></A><TT>INDEX</TT> commands.
 
 <P>
 
 <H2><A NAME="SECTION002262000000000000000"></A>
-    <A NAME="par-web-archive"></A>    <A NAME="4331"></A>
+    <A NAME="par-web-archive"></A>    <A NAME="4327"></A>
 <BR>
 21.6.2 web_archive
 </H2>
 
 <P>
-If the <A NAME="12114"></A><TT>config</TT> file contains a <A NAME="12117"></A><TT>web_archive</TT> paragraph
+If the <A NAME="12111"></A><TT>config</TT> file contains a <A NAME="12114"></A><TT>web_archive</TT> paragraph
 <I>Sympa</I> will copy all messages distributed via the list to the
 "queueoutgoing"  spool. It is intended to be used with WWSympa html
 archive tools. This paragraph must contain at least the access
@@ -3039,42 +3039,42 @@ Predefined authorization scenarios are :
 <P>
 
 <UL>
-<LI><A NAME="12124"></A><TT>access</TT> <TT>closed</TT> 
+<LI><A NAME="12121"></A><TT>access</TT> <TT>closed</TT> 
 	(<A NAME="tex2html108"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.closed">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="12127"></A><TT>access</TT> <TT>intranet</TT> 
+<LI><A NAME="12124"></A><TT>access</TT> <TT>intranet</TT> 
 	(<A NAME="tex2html109"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.intranet">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="12130"></A><TT>access</TT> <TT>listmaster</TT> 
+<LI><A NAME="12127"></A><TT>access</TT> <TT>listmaster</TT> 
 	(<A NAME="tex2html110"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.listmaster">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="12133"></A><TT>access</TT> <TT>owner</TT> 
+<LI><A NAME="12130"></A><TT>access</TT> <TT>owner</TT> 
 	(<A NAME="tex2html111"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.owner">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="12136"></A><TT>access</TT> <TT>private</TT> 
+<LI><A NAME="12133"></A><TT>access</TT> <TT>private</TT> 
 	(<A NAME="tex2html112"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.private">view</A>)
 
 <BR>
 <P>
 </LI>
-<LI><A NAME="12139"></A><TT>access</TT> <TT>public</TT> 
+<LI><A NAME="12136"></A><TT>access</TT> <TT>public</TT> 
 	(<A NAME="tex2html113"
   HREF="http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.public">view</A>)
 
@@ -3090,11 +3090,11 @@ Predefined authorization scenarios are :
 </H3>
 
 <P>
-<A NAME="12142"></A><TT>quota</TT> <I>number-of-Kbytes</I>
+<A NAME="12139"></A><TT>quota</TT> <I>number-of-Kbytes</I>
 
 <P>
 This parameter specifies the disk quota for the list's web archives, in kilobytes. This parameter's default is
-<A NAME="12145"></A><TT>default_archive_quota</TT> <A NAME="12148"></A><TT>sympa.conf</TT> parameter. If quota is exceeded, messages are no more 
+<A NAME="12142"></A><TT>default_archive_quota</TT> <A NAME="12145"></A><TT>sympa.conf</TT> parameter. If quota is exceeded, messages are no more 
 archived, list owner is notified. When archives are 95% full, the list owner is warned.
 
 <P>
@@ -3109,7 +3109,7 @@ archived, list owner is notified. When archives are 95% full, the list owner is 
 (Default value: <TT>cleartext</TT>)
 
 <P>
-<A NAME="12152"></A><TT>archive_crypted_msg</TT> cleartext <TT>|</TT> decrypted
+<A NAME="12149"></A><TT>archive_crypted_msg</TT> cleartext <TT>|</TT> decrypted
 
 <P>
 This parameter defines Sympa behavior while archiving S/MIME crypted messages.
@@ -3131,14 +3131,14 @@ This parameter defines Sympa behavior while archiving S/MIME crypted messages.
 </H2>  
 
 <P>
-<A NAME="4381"></A>
-	(Default value: <TT><A NAME="12157"></A><TT>spam_protection</TT> robot parameter</TT>)
+<A NAME="4377"></A>
+	(Default value: <TT><A NAME="12154"></A><TT>spam_protection</TT> robot parameter</TT>)
 
 <P>
 There is a need to protection Sympa web site against spambot which collect
         email adresse in public web site. Various method are available into Sympa
-        and you can choose it with <A NAME="12160"></A><TT>spam_protection</TT> and
-        <A NAME="12163"></A><TT>web_archive_spam_protection</TT> parameters.
+        and you can choose it with <A NAME="12157"></A><TT>spam_protection</TT> and
+        <A NAME="12160"></A><TT>web_archive_spam_protection</TT> parameters.
         Possible value are :
 
 <UL>
@@ -3156,10 +3156,10 @@ see a  nice mailto adresses where others have nothing.
 <H2><A NAME="SECTION002272000000000000000">
 21.7.2 web_archive_spam_protection</A>
 </H2>
-	(Default value: <TT><A NAME="12168"></A><TT>web_archive_spam_protection</TT> robot parameter</TT>)
+	(Default value: <TT><A NAME="12165"></A><TT>web_archive_spam_protection</TT> robot parameter</TT>)
 
 <P>
-Idem <A NAME="12171"></A><TT>spam_protection</TT> but restricted to web archive.
+Idem <A NAME="12168"></A><TT>spam_protection</TT> but restricted to web archive.
         A additional value is available : cookie which mean that users
         must submit a small form in order to receive a cookie before
         browsing archives. This block all robot, even google and co.
@@ -3173,7 +3173,7 @@ Idem <A NAME="12171"></A><TT>spam_protection</TT> but restricted to web archive.
 <P>
 
 <H2><A NAME="SECTION002281000000000000000"></A>
-     <A NAME="par-family-name"></A>     <A NAME="4393"></A>
+     <A NAME="par-family-name"></A>     <A NAME="4389"></A>
 <BR>
 21.8.1 family_name
 </H2>
@@ -3191,7 +3191,7 @@ family_name my_family
 <P>
 
 <H2><A NAME="SECTION002282000000000000000"></A>
-     <A NAME="par-latest-instantiation"></A>     <A NAME="4401"></A>
+     <A NAME="par-latest-instantiation"></A>     <A NAME="4397"></A>
 <BR>
 21.8.2 latest_instantiation
 </H2>
@@ -3242,7 +3242,7 @@ date_epoch 1090911878
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2006-11-02
+2006-11-21
 </ADDRESS>
 </BODY>
 </HTML>
