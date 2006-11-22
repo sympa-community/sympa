@@ -9,7 +9,7 @@ S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
       S<[ B<-l, --lang>=I<catalog> ]> [ B<-m, --mail> ]
       S<[ B<-h, --help> ]> [ B<-v, --version> ]
       S<>
-      S<[ B<--import>=I<listname> ]> [ B<--close_list>=I<list[@robot]>]
+      S<[ B<--import>=I<listname> ]> [ B<--close_list>=I<list[@robot]>][ B<--purge_list>=I<list[@robot]>]
       S<[ B<--lowercase> ] [ B<--make_alias_file> ]>
       S<[ B<--dump>=I<listname> | ALL]>
 
@@ -88,6 +88,10 @@ Sample :
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow restoring
 the list)
+
+=item B<--purge_list>=I<list[@robot]>
+
+Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
 
 =item B<--lowercase>
 

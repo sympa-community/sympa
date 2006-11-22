@@ -99,6 +99,7 @@ Options:
                                          : close lists of family_name family under robot_name.      
 
    --close_list=listname\@robot          : close a list
+   --purge_list=listname\@robot          : remove a list no backup is possible
    --sync_include=listname\@robot        : trigger the list members update
    --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
                                                 authorization scenarios. The list parameter is optional.
@@ -118,7 +119,7 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
-		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
+		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
 		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s')) {
     &fatal_err("Unknown options.");
 }
@@ -134,6 +135,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'make_alias_file'} ||
 				$main::options{'lowercase'} ||
 				$main::options{'close_list'} ||
+				$main::options{'purge_list'} ||
 				$main::options{'create_list'} ||
 				$main::options{'instantiate_family'} ||
 				$main::options{'add_list'} ||
@@ -496,6 +498,31 @@ if ($main::options{'dump'}) {
     } else {
 	unless ($list->close()) {
 	    print STDERR "Could not close list $main::options{'close_list'}\n";
+	    exit 1;	
+	}
+    }
+
+    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
+    
+    exit 0;
+}elsif ($main::options{'purge_list'}) {
+
+    my ($listname, $robotname) = split /\@/, $main::options{'purge_list'};
+    my $list = new List ($listname, $robotname);
+
+    unless (defined $list) {
+	print STDERR "Incorrect list name $main::options{'purge_list'}\n";
+	exit 1;
+    }
+
+    if ($list->{'admin'}{'family_name'}) {
+ 	unless($list->set_status_family_closed('purge_list',$list->{'name'})) {
+ 	    print STDERR "Could not purge list $main::options{'purge_list'}\n";
+ 	    exit 1;	
+ 	}
+    } else {
+	unless ($list->purge()) {
+	    print STDERR "Could not purge list $main::options{'close_list'}\n";
 	    exit 1;	
 	}
     }

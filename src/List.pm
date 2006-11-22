@@ -338,14 +338,21 @@ my %alias = ('reply-to' => 'reply_to',
 				    'group' => 'archives'
 				    },
            'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','digestplain','summary','nomail','txt','html','urlize','not_me'],
-								      'occurrence' => '1-n',
-								      'split_char' => ',',
-                                      'default' => 'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me',
-								      'gettext_id' => "reception mode"
-								      }
-						  },
+								     'occurrence' => '1-n',
+								     'split_char' => ',',
+								     'default' => 'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me',
+								     'gettext_id' => "reception mode"
+								     },
+						     },
 					 'gettext_id' => "Available subscription options",
 					 'group' => 'sending'
+				     },
+	    'available_user_options2' => {'format' => ['mail','notice','digest','digestplain','summary','nomail','txt','html','urlize','not_me'],
+					 'occurrence' => '1-n',
+					 'split_char' => ',',
+					 'default' => 'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me',					 
+					 'gettext_id' => "Available subscription options2",
+	                                 'group' => 'sending'
 				     },
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
