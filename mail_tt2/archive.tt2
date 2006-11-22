@@ -2,7 +2,7 @@ From: [% fromlist %]
 To: [% to %]
 Subject: [% FILTER qencode %][%subject%][%END%]
 Mime-version: 1.0
-Content-Type: multipart/mixed; charset=[%|loc%]_charset_[%END%]; boundary="[% boundary%]"
+Content-Type: multipart/mixed; charset=[% charset %]; boundary="[% boundary%]"
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 --[% boundary %]

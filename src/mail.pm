@@ -125,6 +125,9 @@ sub mail_file {
 	}
     }
 
+    ## Charset for encoding
+    $data->{'charset'} ||= &Language::GetCharset();
+
     ## TT2 file parsing 
     if ($filename =~ /\.tt2$/) {
 	my $output;
@@ -161,9 +164,6 @@ sub mail_file {
 	}
    }
    
-   ## Charset for encoding
-   my $charset = $data->{'charset'} || sprintf (gettext("_charset_"));
-
     ## ADD MISSING HEADERS
     my $headers="";
 
@@ -180,7 +180,7 @@ sub mail_file {
 	}   
 	$headers .= "To: ".MIME::EncWords::encode_mimewords(
 	    Encode::decode_utf8($to),
-	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'To'
+	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'To'
 	    )."\n"; 
     }     
     unless ($header_ok{'from'}) {
@@ -192,27 +192,27 @@ sub mail_file {
 	} else {
 	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
 		Encode::decode_utf8($data->{'from'}),
-		'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'From'
+		'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'From'
 		)."\n"; 
 	}
    }
     unless ($header_ok{'subject'}) {
 	$headers .= "Subject: ".MIME::EncWords::encode_mimewords(
 	    Encode::decode_utf8($data->{'subject'}),
-	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Subject'
+	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'Subject'
 	    )."\n";
    }
     unless ($header_ok{'reply-to'}) { 
 	$headers .= "Reply-to: ".MIME::EncWords::encode_mimewords(
 	    Encode::decode_utf8($data->{'replyto'}),
-	    'Encoding' => 'A', 'Charset' => $charset, 'Field' => 'Reply-to'
+	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'Reply-to'
 	    )."\n" if ($data->{'replyto'})
     }
     if ($data->{'headers'}) {
 	foreach my $field (keys %{$data->{'headers'}}) {
 	    $headers .= $field.': '.MIME::EncWords::encode_mimewords(
 		Encode::decode_utf8($data->{'headers'}{$field}),
-		'Encoding' => 'A', 'Charset' => $charset, 'Field' => $field
+		'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => $field
 		)."\n";
 	}
     }
@@ -220,7 +220,7 @@ sub mail_file {
 	$headers .= "MIME-Version: 1.0\n";
     }
     unless ($header_ok{'content-type'}) {
-	$headers .= "Content-Type: text/plain; charset=$charset\n";
+	$headers .= "Content-Type: text/plain; charset=$data->{'charset'}\n";
     }
     unless ($header_ok{'content-transfer-encoding'}) {
 	$headers .= "Content-Transfer-Encoding:"; 

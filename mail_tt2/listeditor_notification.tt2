@@ -3,7 +3,7 @@ To: [% FILTER qencode %][%|loc(list.name)%]Moderators of list %1[%END%][%END%] <
 [% IF type == 'shared_moderated' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved for %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF many_files %]
@@ -26,7 +26,7 @@ To moderate this document :
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]Moderators List %1 / %2[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]

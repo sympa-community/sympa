@@ -120,7 +120,7 @@ sub qencode {
     # longest (maybe) one.    
     return MIME::EncWords::encode_mimewords(Encode::decode_utf8($string),
 					    Encoding=>'A',
-					    Charset=>gettext("_charset_"),
+					    Charset=>&Language::GetCharset(),
 					    Field=>"message-id");
 }
 

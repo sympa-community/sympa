@@ -77,7 +77,8 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
 
-## Used to perform setlocale on FreeBSD / Solaris
+## Used to define encoding for service messages sent by Sympa
+## Also used to perform setlocale on FreeBSD / Solaris
 my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'de_DE' => 'iso8859-1',
 		      'el_GR' => 'utf-8',
@@ -186,7 +187,7 @@ sub SetLang {
 
     $current_lang = $lang;
     $current_locale = $locale;
-    $current_charset = gettext("_charset_");
+    $current_charset = $locale2charset{$locale};
 
     return $locale;
 }#SetLang

@@ -3,7 +3,7 @@ To: [% to %]
 [% IF type == 'auto_notify_bouncers' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
@@ -16,7 +16,7 @@ If this problem persists, you will be automatically unsubscribed from the list.[
 [% ELSIF type == 'deleted_msg_topics' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Topics udpating in list %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name)%]Some of the topics you are subscribed to in the list '%1' have been deleted.
@@ -32,7 +32,7 @@ Deleted topic(s) is(are) :[%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]

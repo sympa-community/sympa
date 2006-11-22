@@ -5,7 +5,7 @@ Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Table of contents:[%END%]
@@ -30,7 +30,7 @@ X-Sympa-Attach: yes
 
 [% END %]
 --[% boundary2 %]
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 Content-Disposition: inline
 

@@ -2364,7 +2364,7 @@ sub distribute_msg {
 	$subject_field =~ s/\s*\[$tag_regexp\]//;
  	## Encode subject using initial charset
  	$subject_field = MIME::EncWords::encode_mimewords([
-	    [Encode::decode_utf8('['.$parsed_tag[0].'] '), gettext("_charset_")],
+	    [Encode::decode_utf8('['.$parsed_tag[0].'] '), &Language::GetCharset()],
 	    [Encode::decode_utf8($subject_field), $message->{'subject_charset'}]
 	    ], Encoding=>'A', Field=>'Subject');
 

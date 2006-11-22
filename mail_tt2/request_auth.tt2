@@ -2,7 +2,7 @@ From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 Subject: [% FILTER qencode %][%command%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF list_context -%]

@@ -3,7 +3,7 @@ To: [% FILTER qencode %][%|loc%]Listmaster[%END%] <[% to %]>[%END%]
 [% IF type == 'request_list_creation' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(email,list.name)%]%1 requested creation of list "%2"[%END%]
@@ -19,7 +19,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'request_list_renaming' -%]
 Subject: [% FILTER qencode %][%|loc(listname)%]List "%1" renaming request[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(email,listname,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
@@ -30,7 +30,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'no_db' -%]
 Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(db_name)%]Cannot connect to database %1, still trying...[%END%]
@@ -39,7 +39,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'missing_dbd' -%]
 Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(db_type)%]No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN.[%END%]
@@ -48,7 +48,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'upgrade_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Sympa encountered the following error while running upgrade procedures : [%END%]
@@ -59,7 +59,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(db_name)%]The database structure has been updated ; check log file for further details : [%END%]
@@ -70,7 +70,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(db_name)%]Connection to database %1 restored.[%END%]
@@ -79,7 +79,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'loop_command' -%]
 Subject: [% FILTER qencode %][%|loc%]Loop detected[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: multipart/mixed; charset=[%|loc%]_charset_[%END%]; boundary="[% boundary %]"
+Content-Type: multipart/mixed; charset=[% charset %]; boundary="[% boundary %]"
 
 --[% boundary %]
 Content-Type: text/plain
@@ -101,7 +101,7 @@ X-Sympa-Attach: yes
 [% ELSIF type == 'virus_scan_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]The antivirus scan has failed while processing the following file:[%END%]
@@ -114,7 +114,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]edit_list.conf format has changed :
@@ -127,7 +127,7 @@ default configuration will be used.[%END%]
 [% ELSIF type == 'sync_include_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Sympa could not include subscribers from external data sources ; the
@@ -138,7 +138,7 @@ database or LDAP directory might be unreachable.[%END%]
 [% ELSIF type == 'sync_include_admin_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
@@ -147,7 +147,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'no_owner_defined' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]No owner is defined for list %1.[%END%]
@@ -158,7 +158,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
@@ -169,7 +169,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'no_respect_rules_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]List %1 configuration does not respect family %2 rules.[%END%]
@@ -179,7 +179,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'no_check_rules_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not check family %2 rules with list %1 param_constraint.conf file.[%END%]
@@ -190,7 +190,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'param_constraint_conf_error' -%]
 Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]Error(s) found in the file %1.[%END%]
@@ -200,7 +200,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'param_constraint_conf_error' -%]
 Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]Error(s) found in the file %1.[%END%]
@@ -209,7 +209,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'file_removed' -%]
 Subject: [% FILTER qencode %][%|loc%]File removed[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]The following file has been removed : %1[%END%]
@@ -219,7 +219,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'no_list_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not load family %2 for list %1.[%END%]
@@ -229,7 +229,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'instantiation_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Failed to instantiate family %2 for list %1[%END%]
@@ -239,7 +239,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'modify_list_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not modify list %1 (Family %2)[%END%]
@@ -250,7 +250,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF action == 'notify_bouncers' -%]
@@ -274,7 +274,7 @@ selected by Sympa as severe bouncing addresses:[%END%]
 [% ELSIF type == 'mail_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
@@ -289,7 +289,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'web_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
@@ -363,7 +363,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSIF type == 'web_system_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : system error [%END%][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(who)%] User %1 has encountered a system error[%END%]
@@ -378,7 +378,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %]Listmaster / [% type %][%END%]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]
