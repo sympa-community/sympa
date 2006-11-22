@@ -12405,9 +12405,8 @@ sub purge {
 	}
 	$self->delete_admin_user($role, @admin_users);
     }
-
-   # purge should remove alias but in most case aliases of thoses lists are undefined
-   # $self->remove_aliases();    
+   
+    $self->remove_aliases();    
     
     return 1;
 }
