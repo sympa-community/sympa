@@ -1,3 +1,221 @@
+2006-11-22 10:28  olivier.salaun
+
+	* web_tt2/rss.tt2: Fix: RSS feed encoding was incorrect
+
+2006-11-21 17:53  olivier.salaun
+
+	* src/Log.pm: Change: Skip transcoding if filesystem_encoding is
+	  not defined
+
+2006-11-21 17:53  olivier.salaun
+
+	* doc/: parse_tex.pl, sympa.pdf, sympa.ps, sympa.tex,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node28.html, html/node29.html, html/node3.html,
+	  html/node30.html, html/node31.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Fixed incorrect d_read scenario
+
+2006-11-21 17:27  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: shift all wwsympa outgoing parameters
+	  to utf8 if they were Perl unicode
+
+2006-11-21 17:24  olivier.salaun
+
+	* src/tools.pl: Fix: shift all wwsympa outgoing parameters to utf8
+	  if they were Perl unicode
+
+2006-11-21 15:44  olivier.salaun
+
+	* src/tools.pl: Fix: when encoding shared filenames, tranform the
+	  qencoded strings from Unicode to uf-8.  This is required
+	  otherwise output HTML mixes encodings and breaks all encoded
+	  strings
+
+2006-11-21 12:01  olivier.salaun
+
+	* check_perl_modules.pl, src/Archive.pm, src/Commands.pm,
+	  src/Language.pm, src/List.pm, src/Log.pm, src/Message.pm,
+	  src/mail.pm, src/tools.pl, src/tt2.pl, src/etc/topics.conf,
+	  wwsympa/wwsympa.fcgi: [ID 1271][S.Ikeda] [patch
+	  sympa-MAIN-20061118-unicode_to_utf8.patch] Change: changes have
+	  been made to switch from Perl Unicode to UTF-8: - read raw config
+	  files then to convert them to UTF-8.	- change
+	  Language::gettext()'s output from Unicode to UTF-8.  - remove
+	  Template::Directive::OUTPUT hack (see src/tt2.pl).  - disable
+	  PerlIO layer on wwsympa.fcgi.
+
+	  - Message headers should be decoded to UTF-8 for templates.  -
+	  Following functions accept Unicode string so that they determine
+	   appropriate charset / encoding:
+	  MIME::EncWords::encode_mimewords()
+	  MIME::Charset::body_encode() - Log content should be encoded to
+	  be filesystem encoding.  - Shared file names should be handled by
+	  UTF-8.  - Miscelaneous: - Perl module updates (for bug fixes).  -
+	  Now topics.conf may also be encoded to UTF-8.  - HTTP Date:
+	  header should be formatted by neutral locale.  - Archive subjects
+	  had been encoded to UTF-8 by MHonArc.
+
+	  Other changes :   - Perl module updates (for bug fixes).    - Now
+	  topics.conf may also be encoded to UTF-8.    - HTTP Date: header
+	  should be formatted by neutral locale.    - Archive subjects had
+	  been encoded to UTF-8 by MHonArc.
+
+2006-11-21 10:47  olivier.salaun
+
+	* src/mail.pm: Fix: Incorrect handling of empty header fields,
+	  could result in duplicate header fields
+
+2006-11-17 11:19  olivier.salaun
+
+	* soap/sympa.wsdl: [BugID 1262][O.Duval] Fix: missing sections in
+	  Binding for add, del and closeList
+
+2006-11-16 12:11  olivier.salaun
+
+	* web_tt2/error.tt2, wwsympa/Auth.pm, wwsympa/wwsympa.fcgi: [BugID
+	  285][reported by M.Verove, Atos Origin]Fix: no more allow
+	  password reminder if regexp doesn't match user email
+
+2006-11-16 11:19  olivier.salaun
+
+	* check_perl_modules.pl: Change: replaced install with 3 operations
+	  make, test and install
+
+2006-11-16 10:47  olivier.salaun
+
+	* check_perl_modules.pl: Fix: inactivity_timeout was not set
+
+2006-11-15 14:00  olivier.salaun
+
+	* web_tt2/help.tt2: Fixed buggy template (merge problem + ^M)
+
+2006-11-15 10:44  olivier.salaun
+
+	* po/en_US.po: Based on sympa.pot
+
+2006-11-15 10:38  olivier.salaun
+
+	* web_tt2/sso_login.tt2: Fix: removed one [% END %]
+
+2006-11-14 17:47  olivier.salaun
+
+	* web_tt2/login_menu.tt2: [reported by R.Cadwell] Fix: "forgot
+	  password" and "first password" buttons were shown regardless of
+	  auth.conf
+
+2006-11-14 14:06  olivier.salaun
+
+	* po/en_US.po: Update: revision from Jill Gemmill have been
+	  reported down to templates. en_US.po has been reset (with
+	  sympa.pot)
+
+2006-11-14 12:03  olivier.salaun
+
+	* web_tt2/: help_admin.tt2, help_arc.tt2, help_faqadmin.tt2,
+	  help_faquser.tt2, help_introduction.tt2, help_listconfig.tt2,
+	  help_mail_commands.tt2, help_sendmsg.tt2, help_shared.tt2,
+	  help_user.tt2: [V.Paitrault, CRU] New feature: translated online
+	  user/admin help to English
+
+2006-11-14 12:00  olivier.salaun
+
+	* web_tt2/css.tt2: [V.Paitrault, CRU]Fixed a few problems with CSS
+	  and online help
+
+2006-11-14 11:34  olivier.salaun
+
+	* web_tt2/fr_FR/: help_admin.tt2, help_arc.tt2, help_faqadmin.tt2,
+	  help_faquser.tt2, help_listconfig.tt2, help_mail_commands.tt2,
+	  help_shared.tt2, help_user.tt2: [V.Paitrault, CRU] Updated online
+	  help
+
+2006-11-14 10:31  olivier.salaun
+
+	* src/etc/script/load_subscribers.pl: Removed obsolete script
+
+2006-11-13 15:40  olivier.salaun
+
+	* src/List.pm: [A.Zamboni, Univ Strasbourg] Fix: sort by subscriber
+	  name failed with Pg
+
+2006-11-07 15:44  serge.aumont
+
+	* web_tt2/edit_list_request.tt2: Fix missing form input attribut
+	  'multiple'. Because of this bug parameter digest and
+	  avalaible_user_option may habe been corrupted
+
+2006-11-06 14:15  sympa-authors
+
+	* po/xgettext.pl: [Soji Ikeda] Modification on xgettext.pl aims to
+	  pick up format arguments  of gettext_strftime, a new function
+	  introduced by remainder of the patch, and to take it into PO
+	  catalogs.  It may recognize following patterns in Perl sources
+	  ---
+
+	      gettext_strftime "FORMAT", ARRAY...
+	      gettext_strftime("FORMAT", ARRAY...)
+
+2006-11-06 14:11  sympa-authors
+
+	* mail_tt2/archive.tt2, mail_tt2/digest.tt2,
+	  mail_tt2/get_archive.tt2, mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/moderate.tt2, mail_tt2/request_auth.tt2,
+	  mail_tt2/send_auth.tt2, src/Commands.pm, src/List.pm,
+	  src/mail.pm: [Soji Ikeda] Fix: Some paths of message processing
+	  in Sympa can't recognize Unicode strings.  At least
+	  MIME::Parser::parse_data() and Template::proccess(): these
+	  methods occationalily break strings containing Unicode
+	  characters.
+
+	  My mail_utf8 patch expects the behavior as following ---
+
+	  Sub-messages to be attached (into digests, moderation notices
+	  etc.) will passed to mail::reformat_message() separately then
+	  attached to reformatted parent message again.  As a result,
+	  sub-messages won't be broken.  Since they won't cause mixture of
+	  Unicode string (parent message generated by tt2::parse_tt2()) and
+	  byte string (sub-messages).
+
+	  Note: For compatibility with old style, data passed to
+	  mail::reformat_message() already includes sub-message(s).  Then:
+	  - When a part has an `X-Sympa-Attach:' header field for internal
+	  use, new style, mail::reformat_message() attaches raw sub-message
+	  to reformatted parent message again; - When a part doesn't have
+	  any `X-Sympa-Attach:' header fields, sub-messages generated by [%
+	  INSERT %] directive(s) in the template will be used.	See
+	  src/mail.pm hunk #4.
+
+	  More Note: Latter behavior above will give expected result only
+	  if contents of sub-messages are US-ASCII or ISO-8859-1.  In other
+	  cases customized templates (if any) should be modified so that
+	  they have appropriate `X-Sympa-Attach:' header fileds.
+
+	  Sub-messages are gathered from template context paramenters.
+	  See src/mail.pm hunk #1.
+
+	  Other trivial fixes:	 mail_tt2/listmaster_notification.tt2 hunk
+	  #1   mail_tt2/request_auth.tt2   src/Commands.pm: informations of
+	  list in INFO message will be translated.    src/mail.pm hunk #5:
+	  fallback to UTF-8 when locale of user  was not same as that of
+	  list.
+
+2006-11-06 11:01  sympa-authors
+
+	* doc/sympa.tex.tpl: typo
+
+2006-11-06 10:59  sympa-authors
+
+	* ChangeLog, NEWS: release 5.3a.10
+
 2006-11-06 09:47  sympa-authors
 
 	* doc/sympa.tex.tpl: Rephrased openssl documentation
