@@ -79,7 +79,8 @@ my %lang2locale = ('cz' => 'cs_CZ',
 
 ## Used to define encoding for service messages sent by Sympa
 ## Also used to perform setlocale on FreeBSD / Solaris
-my %locale2charset = ('cs_CZ' => 'utf-8',
+my %locale2charset = ('bg_BG' => 'utf-8',
+		      'cs_CZ' => 'utf-8',
 		      'de_DE' => 'iso8859-1',
 		      'el_GR' => 'utf-8',
 		      'en_US' => 'utf-8',
@@ -97,6 +98,7 @@ my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'pt_BR' => 'utf-8',
 		      'pt_PT' => 'iso8859-1',
 		      'ro_RO' => 'iso8859-2',
+		      'ru_RU' => 'utf-8',
 		      'sv_SE' => 'utf-8',
 		      'tr_TR' => 'utf-8',
 		      'zh_CN' => 'utf-8',
