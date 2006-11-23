@@ -12336,8 +12336,10 @@ sub close {
     return undef 
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
-    ## Dump subscribers
-    $self->_save_users_file("$self->{'dir'}/subscribers.closed.dump");
+    ## Dump subscribers, unless list is already closed
+    unless ($self->{'admin'}{'status'} eq 'closed') {
+	$self->_save_users_file("$self->{'dir'}/subscribers.closed.dump");
+    }
 
     ## Delete users
     my @users;
@@ -12384,29 +12386,16 @@ sub purge {
     return undef 
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
-    &tools::remove_dir($self->{'dir'});
+    ## Close the list first, just in case...
+    $self->close();
 
     if ($self->{'name'}) {
 	my $arc_dir = &Conf::get_robot_conf($self->{'domain'},'arc_path');
 	&tools::remove_dir($arc_dir.'/'.$self->get_list_id());
 	&tools::remove_dir($self->get_bounce_dir());
     }
-    my @users;
-    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
-	push @users, $user->{'email'};
-    }
-    $self->delete_user(@users);
-    
-    ## Remove entries from admin_table
-    foreach my $role ('owner','editor') {
-	my @admin_users;
-	for ( my $user = $self->get_first_admin_user($role); $user; $user = $self->get_next_admin_user() ){
-	    push @admin_users, $user->{'email'};
-	}
-	$self->delete_admin_user($role, @admin_users);
-    }
-   
-    $self->remove_aliases();    
+
+    &tools::remove_dir($self->{'dir'});
     
     return 1;
 }
