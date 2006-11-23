@@ -832,7 +832,7 @@ while (!$signal) {
     if (!opendir(DIR, $spool)) {
 	fatal_err("Can't open dir %s: %m", $spool); ## No return.
     }
-    @qfile = sort grep (!/^\./,readdir(DIR));
+    @qfile = sort tools::by_date grep (!/^\./,readdir(DIR));
     closedir(DIR);
 
     unless ($main::daemon_usage == DAEMON_COMMAND)  { # process digest only in distribution mode

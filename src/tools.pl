@@ -76,6 +76,19 @@ sub sortbydomain {
    $x cmp $y;
 }
 
+## Sort subroutine to order files in sympa spool by date
+sub by_date {
+    my @a_tokens = split /\./, $a;
+    my @b_tokens = split /\./, $b;
+
+    ## File format : list@dom.date.pid
+    my $a_time = $a_tokens[$#a_tokens -1];
+    my $b_time = $b_tokens[$#b_tokens -1];
+
+    return $a_time <=> $b_time;
+
+}
+
 ## Safefork does several tries before it gives up.
 ## Do 3 trials and wait 10 seconds * $i between each.
 ## Exit with a fatal error is fork failed after all
