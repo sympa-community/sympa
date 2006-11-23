@@ -137,8 +137,8 @@
 
 
 
-<h7>[%|loc(date_from,date_to)%]Logs have been created between <strong>%1</strong> and  <strong>%2</strong>.[%END%]</h7><br />
-<h7>[%|loc(current_list)%]Research was carried out in the list <strong>%1</strong>.[%END%]</h7><br />
+<h7>[%|loc(date_from,date_to)%]Logs have been searched between <strong>%1</strong> and  <strong>%2</strong>.[%END%]</h7><br />
+<h7>[%|loc(current_list)%]Research was carried out in list <strong>%1</strong>.[%END%]</h7><br />
 [% IF is_listmaster %]
   <h7>[%|loc(current_robot)%]Research was carried out in the robot <strong>%1</strong>.[%END%]</h7>
 [% END %]
@@ -187,7 +187,7 @@
 	</th>
 
 	<th>
-	  [%|loc%]Message Id[%END%]
+	  [%|loc%]Message ID[%END%]
 	</th>
 
 	<th>
@@ -209,12 +209,12 @@
 
 	[% IF is_listmaster || is_owner %]
 	<th>
-	  [%|loc%]Client[%END%]
+	  [%|loc%]User IP[%END%]
 	</th>
 	[% END %]
 
 	<th>
-	  [%|loc%]Daemon[%END%]
+	  [%|loc%]Service[%END%]
 	</th>
         
       </tr>

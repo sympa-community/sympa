@@ -53,7 +53,7 @@
 [%|loc()%]Shared document reading is restricted to list subscribers authenticated with user certificat.[%END%]
 
 [% ELSIF reason == 'edit_list_closed' -%]
-[%|loc()%]It is not possible to change list parameters.[%END%]
+[%|loc()%]you are not allowed to edit list parameters.[%END%]
 
 [% ELSIF reason == 'edit_list_owner' -%]
 [%|loc()%]List parameter editing is restricted to list owners.[%END%]

@@ -70,7 +70,7 @@
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
-<input alt="[%|loc%]Search user with email[%END%]" type="text" size="18" name="filter" value="[% filter %]" />
+<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" name="filter" value="[% filter %]" />
 <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
 <br />
 [% IF action == 'search' %]
@@ -92,7 +92,7 @@
     <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
   [% END %]
 
-    <table summary="[%|loc%]List of the list subscribers[%END%]" class="listOfItems text_center">
+    <table summary="[%|loc%]List members[%END%]" class="listOfItems text_center">
       <tr>
 	[% IF is_owner %]
 	   <th>X</th>
@@ -198,7 +198,7 @@
   	  [% IF pictures_display %]
   	    [% IF u.pictures_url %]
   	      <td>
-  	      <a href="[%u.pictures_url%]" title="[%|loc%]Open in a new window[%END%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc%][% u.email %]'s picture[%END%]" /></a>   
+  	      <a href="[%u.pictures_url%]" title="[%|loc%]Open in a new window[%END%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc(u.email)%]%1's picture[%END%]" /></a>   
   	      </td>
   	    [% ELSE %]
   	      <td>

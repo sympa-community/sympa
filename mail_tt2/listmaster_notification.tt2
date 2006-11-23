@@ -17,7 +17,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 
 [% ELSIF type == 'request_list_renaming' -%]
-Subject: [% FILTER qencode %][%|loc(listname)%]List "%1" renaming request[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(listname)%]List "%1" renaming[%END%][%END%]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=[% charset %];
 Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
