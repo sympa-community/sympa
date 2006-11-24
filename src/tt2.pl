@@ -186,8 +186,15 @@ sub decode_utf8 {
 sub maketext {
     my ($context, @arg) = @_;
 
+    my $stash = $context->stash();
+    my $component = $stash->get('component');
+    my $template_name = $component->{'name'};
+
+    ## Sample code to dump the STASH
+    # my $s = $stash->_dump();    
+
     return sub {
-	&Language::maketext($_[0], @arg);
+	&Language::maketext($template_name, $_[0],  @arg);
     }	
 }
 

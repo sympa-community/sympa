@@ -32,7 +32,8 @@ checklocales:
 pot:
 	echo "Updating sympa.pot template file..."
 	cd .. ;\
-	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? web_tt2/*.tt2 mail_tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/* src/etc/global_task_models/* src/etc/list_task_models/* src/etc/create_list_templates/*/*
+	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? web_tt2/*.tt2 mail_tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/* src/etc/global_task_models/* src/etc/list_task_models/* src/etc/create_list_templates/*/*; \
+	$(XGETTEXT) -o po/web_help.pot web_tt2/help*.tt2
 
 install: $(MOFILES)
 	@( \
