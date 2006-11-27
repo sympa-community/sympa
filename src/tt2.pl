@@ -189,6 +189,12 @@ sub maketext {
     my $stash = $context->stash();
     my $component = $stash->get('component');
     my $template_name = $component->{'name'};
+    my ($provider) = grep { $_->{HEAD}[2] eq $component } @{ $context->{LOAD_TEMPLATES} };
+    my $path = $provider->{HEAD}[1] if $provider;
+
+    ## Strangely the path is sometimes empty...
+    ## TODO : investigate
+#    &do_log('notice', "PATH: $path ; $template_name");
 
     ## Sample code to dump the STASH
     # my $s = $stash->_dump();    
