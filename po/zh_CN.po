@@ -46,37 +46,45 @@ msgstr "可能要占用很大的 CPU 时间，小心使用!"
 
 #. (from_count)
 #: web_tt2/arcsearch.tt2:64
-msgid " %1 hits on message's From field"
+msgid " %1 hits on message From field"
 msgstr ""
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:302
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:305
 msgid " (old email : %1)"
 msgstr ""
 
 # nlsref 6,2
 #. (dir)
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:321
 #: mail_tt2/listmaster_notification.tt2:322
 #: mail_tt2/listmaster_notification.tt2:323
+#: mail_tt2/listmaster_notification.tt2:324
 #, fuzzy
 msgid " : unable to read '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
-#. (count)
-#: web_tt2/latest_arc.tt2:6
+#: web_tt2/active_lists.tt2:8
 #, fuzzy
-msgid " The %1 latest messages "
-msgstr "最新邮件优先"
+msgid " Active lists "
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
 
 # nlsref 16,70
-#. (count)
-#: web_tt2/latest_d_read.tt2:6
+#: web_tt2/latest_d_read.tt2:8
 #, fuzzy
-msgid " The %1 latest shared documents "
+msgid " Most recent shared documents "
 msgstr "¹²ÏíÎÄµµ"
+
+#: web_tt2/latest_arc.tt2:8
+#, fuzzy
+msgid " Recent messages "
+msgstr "最新邮件优先"
 
 #. (count)
 #: web_tt2/active_lists.tt2:18 web_tt2/active_lists.tt2:6
@@ -89,15 +97,18 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/active_lists.tt2:8
+#. (count)
+#: web_tt2/latest_arc.tt2:6
 #, fuzzy
-msgid " The active lists "
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
+msgid " The %1 most recent messages "
+msgstr "最新邮件优先"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/latest_d_read.tt2:6
+#, fuzzy
+msgid " The %1 most recent shared documents "
+msgstr "¹²ÏíÎÄµµ"
 
 #: web_tt2/latest_lists.tt2:19
 #, fuzzy
@@ -109,36 +120,19 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/latest_arc.tt2:8
-#, fuzzy
-msgid " The latest messages "
-msgstr "最新邮件优先"
-
 #: web_tt2/latest_arc.tt2:17
 #, fuzzy
-msgid " The latest messages of this list "
+msgid " The most recent messages for this list "
 msgstr "最新邮件优先"
 
-# nlsref 16,70
-#: web_tt2/latest_d_read.tt2:8
-#, fuzzy
-msgid " The latest shared documents "
-msgstr "¹²ÏíÎÄµµ"
-
-# nlsref 16,70
-#: web_tt2/latest_d_read.tt2:17
-#, fuzzy
-msgid " The latest shared documents of this list "
-msgstr "¹²ÏíÎÄµµ"
-
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:368
+#: mail_tt2/listmaster_notification.tt2:369
 msgid " User %1 has encountered a system error"
 msgstr ""
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:279
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:295
 #, fuzzy
 msgid " User %1 has encountered an internal server error"
 msgstr "重置错误计数"
@@ -163,23 +157,18 @@ msgstr ""
 # nlsref 16,70
 #: web_tt2/rss.tt2:9
 #, fuzzy
-msgid " latest documents "
+msgid " most recent documents "
 msgstr "¹²ÏíÎÄµµ"
-
-#: web_tt2/rss.tt2:6
-#, fuzzy
-msgid " latest lists "
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
 
 #: web_tt2/rss.tt2:8
 #, fuzzy
-msgid " latest messages "
+msgid " most recent messages "
 msgstr "最新邮件优先"
+
+#: web_tt2/rss.tt2:6
+#, fuzzy
+msgid " new lists "
+msgstr "邮递表名"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -191,6 +180,14 @@ msgstr ",A<DVA(B: %1<"
 #: mail_tt2/listowner_notification.tt2:134
 msgid " validated by %1 "
 msgstr ""
+
+#. (total)
+#: web_tt2/review.tt2:40
+#, fuzzy
+msgid ""
+" you really want to send a subscription reminder message to the %1 "
+"subscribers?"
+msgstr "您确定要给全部的%1个订阅者发送订阅提醒邮件吗?"
 
 #: web_tt2/active_lists.tt2:21
 #, fuzzy
@@ -213,30 +210,19 @@ msgid "%1 / your environment"
 msgstr "您的 %1 环境设置"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 #, fuzzy
 msgid "%1 : No such file or directory"
 msgstr "%1: 没有此文件或目录"
 
-#. (notice.action)
-#: web_tt2/notice.tt2:14
-msgid "%1 : action succeeded"
-msgstr "配置文件已经被更新"
-
-#. (notice.action)
-#: web_tt2/notice.tt2:17
-#, fuzzy
-msgid "%1 : action succeeded soon"
-msgstr "配置文件已经被更新"
-
 #. (u_err.file)
-#: web_tt2/error.tt2:65
+#: web_tt2/error.tt2:66
 #, fuzzy
 msgid "%1 : file not editable"
 msgstr "%1: 文件不可编辑"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "%1 : incorrect name"
 msgstr "%1: 不正确的名字"
 
@@ -299,28 +285,29 @@ msgstr ""
 
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
-msgid "%1 hits on message's Body"
-msgstr ""
+#, fuzzy
+msgid "%1 hits on message Body"
+msgstr "邮递表的别名已删除。"
 
 #. (date_count)
 #: web_tt2/arcsearch.tt2:68
-msgid "%1 hits on message's Date field"
+msgid "%1 hits on message Date field"
 msgstr ""
 
 #. (subj_count)
 #: web_tt2/arcsearch.tt2:60
-msgid "%1 hits on message's Subject field"
+msgid "%1 hits on message Subject field"
 msgstr ""
 
 #. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 #, fuzzy
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 已经订阅了邮递表 %2"
 
 # nlsref 16,19
 #. (u_err.reception_mode)
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 #, fuzzy
 msgid "%1 is not an available reception mode"
 msgstr "½ÓÊÕÄ£Ê½"
@@ -342,7 +329,7 @@ msgid "%1 message(s)"
 msgstr "重置错误计数"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:6 web_tt2/review.tt2:77
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:77
 msgid "%1 occurrence(s) found"
 msgstr "找到 %1 个匹配项"
 
@@ -362,6 +349,24 @@ msgstr "结果"
 #: web_tt2/notice.tt2:8
 msgid "%1 subscribers added"
 msgstr "[% notice.action %]: 操作成功"
+
+#. (u.email)
+#: web_tt2/review.tt2:201
+#, fuzzy
+msgid "%1's picture"
+msgstr "监管"
+
+#. (notice.action)
+#: web_tt2/notice.tt2:14
+#, fuzzy
+msgid "%1: action completed"
+msgstr "%1: 操作失败"
+
+#. (notice.action)
+#: web_tt2/notice.tt2:17
+#, fuzzy
+msgid "%1: action will complete soon"
+msgstr "配置文件已经被更新"
 
 #. (l.name,l.host,l.subject,l.msg_count)
 #: web_tt2/rss.tt2:72
@@ -390,18 +395,63 @@ msgstr ""
 msgid "%2@%3 archives use %4% of allowed disk quota."
 msgstr ""
 
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:8844
+msgid "%A"
+msgstr ""
+
+#: wwsympa/wwsympa.fcgi:738
+msgid "%H:%M:%S"
+msgstr ""
+
 #: src/PlainDigest.pm:353
 msgid "%Image(%s)"
 msgstr ""
 
+#: src/List.pm:2923
+msgid "%a, %d %b %Y"
+msgstr ""
+
+#: src/List.pm:2922
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr ""
+
+#: src/List.pm:3106 src/List.pm:3107 src/List.pm:3111
+#: wwsympa/wwsympa.fcgi:10182 wwsympa/wwsympa.fcgi:10251
+#: wwsympa/wwsympa.fcgi:10453 wwsympa/wwsympa.fcgi:10792
+#: wwsympa/wwsympa.fcgi:14828 wwsympa/wwsympa.fcgi:15769
+#: wwsympa/wwsympa.fcgi:15770 wwsympa/wwsympa.fcgi:4043
+#: wwsympa/wwsympa.fcgi:4044 wwsympa/wwsympa.fcgi:5363
+#: wwsympa/wwsympa.fcgi:6560 wwsympa/wwsympa.fcgi:7097
+#: wwsympa/wwsympa.fcgi:7147 wwsympa/wwsympa.fcgi:7149
+#: wwsympa/wwsympa.fcgi:7558 wwsympa/wwsympa.fcgi:7559
+#: wwsympa/wwsympa.fcgi:7588 wwsympa/wwsympa.fcgi:7589
+#: wwsympa/wwsympa.fcgi:7798 wwsympa/wwsympa.fcgi:7799
+msgid "%d %b %Y"
+msgstr ""
+
+#: wwsympa/wwsympa.fcgi:15263 wwsympa/wwsympa.fcgi:15264
+#: wwsympa/wwsympa.fcgi:15405
+msgid "%d %b %Y %H:%M:%S"
+msgstr ""
+
+#: src/Family.pm:1572 src/Family.pm:221 src/Family.pm:426 src/List.pm:1680
+#: src/admin.pm:158 src/admin.pm:359 src/admin.pm:445 wwsympa/wwsympa.fcgi:737
+msgid "%d %b %Y at %H:%M:%S"
+msgstr ""
+
+#: wwsympa/wwsympa.fcgi:11026 wwsympa/wwsympa.fcgi:11169
+#: wwsympa/wwsympa.fcgi:13562 wwsympa/wwsympa.fcgi:7032
+msgid "%d %b %y  %H:%M"
+msgstr ""
+
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 #, fuzzy
 msgid "'%1' : bad listname"
 msgstr "“[% error.listname %]”: 错误的邮递表名"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 #, fuzzy
 msgid "'%1' list already exists"
 msgstr ""
@@ -411,27 +461,28 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#. (robot)
-#: web_tt2/view_template.tt2:15
-msgid ""
-"( this template is defined for all lists of robot %1 unless it is redefined "
-"for some particular list )"
-msgstr ""
-
-#: web_tt2/view_template.tt2:17
-msgid ""
-"( this template is defined for all robots unless  it is redefined for some "
-"particular robot )"
-msgstr ""
-
 #. (list,robot)
 #: web_tt2/view_template.tt2:12
 #, fuzzy
 msgid "( this template is defined for list %1@%2 )"
 msgstr "无法更改 %1 的电邮位址"
 
+#. (robot)
+#: web_tt2/view_template.tt2:15
+msgid ""
+"( this template is the default for all lists of robot %1 unless it is "
+"redefined for a specific list )"
+msgstr ""
+
+#: web_tt2/view_template.tt2:17
+msgid ""
+"( this template is the default used by all robots unless redefined for a "
+"specific robot )"
+msgstr ""
+
 #: web_tt2/arcsearch.tt2:18
-msgid "(All of this words,"
+#, fuzzy
+msgid "(All of these words,"
 msgstr "(所有的词，"
 
 #: web_tt2/help_editlist.tt2:17
@@ -440,7 +491,8 @@ msgid ""
 msgstr ""
 
 #: web_tt2/arcsearch.tt2:20
-msgid "(Each of this words,"
+#, fuzzy
+msgid "(Each of these words,"
 msgstr "(每个词，"
 
 #. (subject)
@@ -454,13 +506,9 @@ msgstr "(本句话，"
 
 #: web_tt2/edit_template.tt2:19
 msgid ""
-"(this template is used for any language unless it is redefined for a "
-"specific language)"
+"(This template is the default for all languages unless it is redefined for a "
+"specific language.)"
 msgstr ""
-
-#: web_tt2/help.tt2:28
-msgid "), provide your email address and associated password."
-msgstr ")时，请提供您的 Email 地址和相应的口令。"
 
 #: src/PlainDigest.pm:238
 msgid ""
@@ -558,23 +606,6 @@ msgstr ""
 msgid "6 hours"
 msgstr ""
 
-#: web_tt2/help.tt2:22
-msgid ": Login / Logout from WWSympa."
-msgstr ": 从 WWSympa 上登录或退出。"
-
-#: web_tt2/help.tt2:18
-msgid ": directory of lists available on the server"
-msgstr ": 服务器上提供的公开邮递表。"
-
-#: web_tt2/help.tt2:16
-#, fuzzy
-msgid ": user preferences. This is proposed to identified users only."
-msgstr ": 用户首选项。仅提供给确认身份的用户。"
-
-#: web_tt2/help.tt2:20
-msgid ": your environment as a subscriber or as owner"
-msgstr ": 您作为订阅者或拥有者的环境。"
-
 #: web_tt2/help_editlist.tt2:18
 msgid ""
 "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
@@ -585,7 +616,7 @@ msgid ""
 msgstr ""
 
 #. (email)
-#: web_tt2/lists.tt2:8 web_tt2/search_user.tt2:3
+#: web_tt2/lists.tt2:7 web_tt2/search_user.tt2:3
 #, fuzzy
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<B>%1</B> 已订阅下列邮递表"
@@ -616,18 +647,18 @@ msgstr ""
 
 #: web_tt2/admin.tt2:4
 msgid ""
-"<strong>Edit list config</strong>:  must be used with care : it allows to "
-"modify some of the list parameters. The list of parameters you can modify "
+"<strong>Edit list config</strong>:  must be used with care : it allows you "
+"to modify some of the list parameters. The list of parameters you can modify "
 "depends on your privilege."
 msgstr ""
 
 #: web_tt2/admin.tt2:8
-msgid "<strong>Logs</strong> : Make a search on Sympa logs."
+msgid "<strong>Logs</strong> : Search the list logs."
 msgstr ""
 
 #: web_tt2/admin.tt2:6
 msgid ""
-"<strong>Manage Archives</strong>  : Allow you to download and delete list "
+"<strong>Manage Archives</strong>  : Allows you to download and delete list "
 "archives."
 msgstr ""
 
@@ -639,16 +670,17 @@ msgid ""
 msgstr "完全删除当前邮递表。需要邮递表管理员特权来"
 
 #. (param1)
-#: mail_tt2/listmaster_notification.tt2:215
+#: mail_tt2/listmaster_notification.tt2:216
 msgid "A backup of the file has been made : %1"
 msgstr ""
 
 #. (init_email)
-#: web_tt2/sso_login.tt2:32
+#: web_tt2/sso_login.tt2:31
 #, fuzzy
 msgid ""
 "A confirmation password has been sent to your email address %1.<br />Please "
-"check your e-mail box to provide the confirmation password below."
+"check your e-mail box for the message containing the confirmation password "
+"needed below."
 msgstr "请检查您的 Email 邮件箱获得您的口令，并输入到下面。"
 
 #: web_tt2/sso_login.tt2:4
@@ -659,7 +691,7 @@ msgid ""
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 #, fuzzy
 msgid "A directory named '%1' already exists"
 msgstr ""
@@ -686,7 +718,7 @@ msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
 
 #. (auth.action)
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:125
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
@@ -701,7 +733,7 @@ msgid "Access control for the document %1"
 msgstr "文档 %1 的访问权限"
 
 # nlsref 16,1
-#: src/List.pm:309
+#: src/List.pm:310
 msgid "Account"
 msgstr "ÕÊºÅ"
 
@@ -723,7 +755,7 @@ msgid "Add selected addresses"
 msgstr ",APBTvQ!H!N;V7(B"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Add subscriber '%1' in DB failed."
 msgstr ""
 
@@ -732,7 +764,7 @@ msgid "Add subscribers"
 msgstr "添加订阅者"
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:302
 msgid "Add user '%1' in DB failed."
 msgstr ""
 
@@ -745,14 +777,19 @@ msgid "Adding a user to the list is restricted to list owners."
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:52
+#: web_tt2/error.tt2:53
 #, fuzzy
 msgid "Address \"%1\" is incorrect"
 msgstr "地址“%1”是错误的"
 
 #: web_tt2/editsubscriber.tt2:68
-msgid "Address detected via VERP technologie"
+msgid "Address detected via VERP technology"
 msgstr ""
+
+#: web_tt2/list_admin_menu.tt2:6
+#, fuzzy
+msgid "Admin"
+msgstr "管理"
 
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
@@ -776,7 +813,7 @@ msgstr ""
 msgid "All commands must be sent to the electronic address %1"
 msgstr ""
 
-#: src/List.pm:1212
+#: src/List.pm:1220
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
@@ -790,11 +827,19 @@ msgid ""
 msgstr "ÓÊ¼þ %s (·¢ÍùÓÊµÝ±í %s)±»·Ö·¢¡£\n"
 
 # nlsref 16,3
-#: src/List.pm:317
+#: src/List.pm:318
 msgid "Anonymous sender"
 msgstr "ÄäÃû·¢ËÍÕß"
 
-#: mail_tt2/listmaster_notification.tt2:101
+#: web_tt2/pref.tt2:71
+msgid ""
+"Another email address, that should be known by Sympa and will be recognized "
+"by Sympa as an alternate email address for you. All your email addressed "
+"will also be grouped by Sympa with your primary email address to unify your "
+"subscriptions"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:102
 msgid "Antivirus scan failed"
 msgstr ""
 
@@ -817,8 +862,13 @@ msgstr ""
 "#-#-#-#-#  zh_CN.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "Bounces management"
 
+#: web_tt2/arc_manage.tt2:11
+#, fuzzy
+msgid "Archive Selection:"
+msgstr "切换选取"
+
 # nlsref 16,212
-#: src/List.pm:336
+#: src/List.pm:337
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
@@ -836,12 +886,7 @@ msgstr ""
 msgid "Archives"
 msgstr "Archives setup"
 
-#: web_tt2/arc_manage.tt2:11
-#, fuzzy
-msgid "Archives Selection:"
-msgstr "切换选取"
-
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 msgid "Archives are empty for this list"
 msgstr ""
 
@@ -880,7 +925,7 @@ msgid "Article to be tagged for list %1 from %2"
 msgstr "邮递表 %1 的摘要结束 - %2"
 
 # nlsref 16,31
-#: src/List.pm:563
+#: src/List.pm:571
 msgid "Attachment type"
 msgstr "¸½¼þÀàÐÍ"
 
@@ -897,7 +942,7 @@ msgstr ""
 "\n"
 
 # nlsref 6,15
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 #, fuzzy
 msgid "Authentication failed"
 msgstr ""
@@ -914,8 +959,14 @@ msgid "Available commands are:"
 msgstr ""
 
 # nlsref 16,88
-#: src/List.pm:346
+#: src/List.pm:347
 msgid "Available subscription options"
+msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
+
+# nlsref 16,88
+#: src/List.pm:354
+#, fuzzy
+msgid "Available subscription options2"
 msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
 
 #: web_tt2/active_lists.tt2:22
@@ -929,7 +980,7 @@ msgid ""
 msgstr ""
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:257
+#: mail_tt2/listmaster_notification.tt2:258
 #: mail_tt2/listowner_notification.tt2:63
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -938,7 +989,7 @@ msgid ""
 msgstr ""
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:260
+#: mail_tt2/listmaster_notification.tt2:261
 #: mail_tt2/listowner_notification.tt2:66
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -947,7 +998,7 @@ msgid ""
 msgstr ""
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:263
+#: mail_tt2/listmaster_notification.tt2:264
 #: mail_tt2/listowner_notification.tt2:69
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
@@ -989,6 +1040,22 @@ msgstr "设定书签网址"
 msgid "Bounce Settings"
 msgstr ""
 
+#: web_tt2/editsubscriber.tt2:71
+#, fuzzy
+msgid "Bounce count :"
+msgstr "退信计数: %1"
+
+# #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#: web_tt2/edit_list_request.tt2:10 web_tt2/viewlogs.tt2:79
+#, fuzzy
+msgid "Bounce management"
+msgstr ""
+"#-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"ÍËÐÅ¹ÜÀí\n"
+"#-#-#-#-#  zh_CN.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Bounces management"
+
 # nlsref 8,27
 #. (list.name,rate,conf.wwsympa_url,list.name)
 #: mail_tt2/listowner_notification.tt2:125
@@ -1010,14 +1077,9 @@ msgstr ""
 msgid "Bounces"
 msgstr "退信地址"
 
-#: web_tt2/editsubscriber.tt2:71
-#, fuzzy
-msgid "Bounces count :"
-msgstr "退信计数: %1"
-
 # #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: src/List.pm:365 web_tt2/edit_list_request.tt2:10 web_tt2/viewlogs.tt2:79
+#: src/List.pm:373
 #, fuzzy
 msgid "Bounces management"
 msgstr ""
@@ -1046,56 +1108,56 @@ msgid "Cannot connect to database %1, still trying..."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:340
+#: mail_tt2/listmaster_notification.tt2:341
 #, fuzzy
 msgid "Cannot create shared for list '%1'."
 msgstr "无法建立目录 %1"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:342
+#: mail_tt2/listmaster_notification.tt2:343
 #, fuzzy
 msgid "Cannot delete shared for list '%1'."
 msgstr "无法更改 %1 的电邮位址"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 #, fuzzy
 msgid "Cannot open file '%1'"
 msgstr "无法上传文件 %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 #, fuzzy
 msgid "Cannot overwrite file %1"
 msgstr "无法覆盖文件 %1"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:341
+#: mail_tt2/listmaster_notification.tt2:342
 #, fuzzy
 msgid "Cannot restore shared for list '%1'."
 msgstr "无法上传文件 %1"
 
 # nlsref 16,77
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:326
+#: mail_tt2/listmaster_notification.tt2:327
 #, fuzzy
 msgid "Cannot save config file for list '%1'."
 msgstr "ÅäÖÃµÄ×îºó¸üÐÂÊ±¼ä"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:345 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:346 web_tt2/error.tt2:17
 #, fuzzy
 msgid "Cannot unzip file '%1'."
 msgstr "无法上传文件 %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 #, fuzzy
 msgid "Cannot upload file %1"
 msgstr "无法上传文件 %1"
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:344
+#: mail_tt2/listmaster_notification.tt2:345
 #, fuzzy
 msgid "Cannot upload file '%1'."
 msgstr "无法上传文件 %1"
@@ -1143,20 +1205,20 @@ msgstr "检查"
 msgid "Check %1 list usage :"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:134
-#: mail_tt2/listmaster_notification.tt2:144
+#: mail_tt2/listmaster_notification.tt2:135
+#: mail_tt2/listmaster_notification.tt2:145
 msgid "Check Sympa log files for more precise information"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:154
-#: mail_tt2/listmaster_notification.tt2:165
-#: mail_tt2/listmaster_notification.tt2:176
-#: mail_tt2/listmaster_notification.tt2:186
-#: mail_tt2/listmaster_notification.tt2:196
-#: mail_tt2/listmaster_notification.tt2:206
-#: mail_tt2/listmaster_notification.tt2:226
-#: mail_tt2/listmaster_notification.tt2:236
-#: mail_tt2/listmaster_notification.tt2:246
+#: mail_tt2/listmaster_notification.tt2:155
+#: mail_tt2/listmaster_notification.tt2:166
+#: mail_tt2/listmaster_notification.tt2:177
+#: mail_tt2/listmaster_notification.tt2:187
+#: mail_tt2/listmaster_notification.tt2:197
+#: mail_tt2/listmaster_notification.tt2:207
+#: mail_tt2/listmaster_notification.tt2:227
+#: mail_tt2/listmaster_notification.tt2:237
+#: mail_tt2/listmaster_notification.tt2:247
 msgid "Check Sympa log files for more precise information."
 msgstr ""
 
@@ -1171,18 +1233,21 @@ msgid ""
 msgstr ""
 
 #. (list)
-#: web_tt2/sigrequest.tt2:33
+#: web_tt2/subrequest.tt2:26
 msgid ""
-"Check your mailbox for new messages and enter below the\n"
-"\tpassword given in the message Sympa sent you. This will\n"
-"\tconfirm your unsubscription from list %1."
+"Check your mailbox for new messages and examine the message from Sympa to "
+"find your password.\n"
+"  Enter that password, below. This wil confirm your request to be subscribed "
+"from list %1."
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:26
+#: web_tt2/sigrequest.tt2:32
 msgid ""
-"Check your mailbox for new messages and enter below the\n"
-"\tpassword. This will confirm your subscription to list %1"
+"Check your mailbox for new messages and examine the message from Sympa to "
+"find your password.\n"
+"  Enter that password, below. This wil confirm your request to be "
+"unsubscribed from list %1."
 msgstr ""
 
 #: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:58
@@ -1193,11 +1258,6 @@ msgstr "在验证身份("
 #: web_tt2/show_cert.tt2:10
 msgid "Cipher key size used"
 msgstr ",A<SC\\=p3W3$6H(B"
-
-#: web_tt2/viewlogs.tt2:212
-#, fuzzy
-msgid "Client"
-msgstr "恢复"
 
 #: web_tt2/set_pending_list_request.tt2:23
 #, fuzzy
@@ -1256,11 +1316,11 @@ msgstr "ÃüÁîÓï·¨´íÎó¡£\n"
 # nlsref 4,26
 #: web_tt2/notice.tt2:62
 #, fuzzy
-msgid "Concerned subscribers have been noticed about deleted topics"
+msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "ÕâÐ©¶©»§ÊÇ:\n"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 #, fuzzy
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "配置文件已经被 %1 修改。无法应用您的修改"
@@ -1277,14 +1337,15 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: web_tt2/pref.tt2:12
+#, fuzzy
+msgid "Connection expiration period"
+msgstr "连接过期时间"
+
 #. (db_name)
 #: mail_tt2/listmaster_notification.tt2:76
 msgid "Connection to database %1 restored."
 msgstr ""
-
-#: web_tt2/pref.tt2:12
-msgid "Connexion expiration period"
-msgstr "连接过期时间"
 
 #: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
 #, fuzzy
@@ -1296,7 +1357,7 @@ msgid "Continue search"
 msgstr "继续查找"
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:356
+#: mail_tt2/listmaster_notification.tt2:357
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
@@ -1306,7 +1367,7 @@ msgid "Copying template"
 msgstr "自订模块"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:127
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -1329,12 +1390,13 @@ msgstr "建立新的文件"
 
 #. (visible_path)
 #: web_tt2/d_read.tt2:314
-msgid "Create a new folder inside the folder %1"
+#, fuzzy
+msgid "Create a new folder inside folder %1"
 msgstr "在文件夹 %1 里建立新文件夹"
 
 #: web_tt2/d_read.tt2:316
 #, fuzzy
-msgid "Create a new folder inside the root folder"
+msgid "Create a new folder inside root folder"
 msgstr "在文件夹 %1 里建立新文件夹"
 
 #: web_tt2/menu.tt2:8
@@ -1347,18 +1409,9 @@ msgid "Creation date"
 msgstr ""
 
 # nlsref 16,12
-#: src/List.pm:438
+#: src/List.pm:446
 msgid "Creation of the list"
 msgstr "´´½¨ÓÊµÝ±í"
-
-#. (rows)
-#: web_tt2/blacklist.tt2:22
-msgid "Current blacklist contain %1 line(s)"
-msgstr ""
-
-#: web_tt2/blacklist.tt2:20
-msgid "Current blacklist is empty"
-msgstr ""
 
 #: web_tt2/choosepasswd.tt2:14
 msgid "Current password :"
@@ -1367,16 +1420,16 @@ msgstr "当前口令:"
 #. (cssurl)
 #: web_tt2/skinsedit.tt2:63
 msgid ""
-"Currently you didn't define css_path parameter. <strong>You should edit the "
-"robot.conf configuration file </strong> (or if not using virtual robot sympa."
-"conf) and set this parameter so you could use this page to install static "
-"CSS and <strong>make sympa faster</strong>. Don't forget to set parameter "
-"css_url, it must be the URL for the directory where css are stored (current "
-"value is <a target=\"test\" href=\"%1\">%1</a>)."
+"Currently you have not defined the css_path parameter. <strong>You should "
+"edit the robot.conf configuration file </strong> (or if not using virtual "
+"robot, the sympa.conf file). Setting this parameter allows you to use this "
+"page to install static CSS and <strong>make sympa faster</strong>. Don't "
+"forget to set parameter css_url, it must be the URL for the directory where "
+"css are stored (current value is <a target=\"test\" href=\"%1\">%1</a>)."
 msgstr ""
 
 # nlsref 16,16
-#: src/List.pm:447
+#: src/List.pm:455
 msgid "Custom header field"
 msgstr "¶¨ÖÆÓÊ¼þÍ·"
 
@@ -1397,11 +1450,6 @@ msgstr ""
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
 msgstr ""
 
-#: web_tt2/viewlogs.tt2:217
-#, fuzzy
-msgid "Daemon"
-msgstr ",AHUFZ(B"
-
 #: src/etc/global_task_models/eval_bouncers.daily.task:1
 #, fuzzy
 msgid "Daily evaluation of bouncing users"
@@ -1411,9 +1459,9 @@ msgstr "邮递表没有被退信的订阅者"
 msgid "Data Source"
 msgstr "size=\"-1\"><b>定制</b"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 #, fuzzy
-msgid "Data have changed on disk. Cannot apply your changes"
+msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "磁盘数据已经改变。无法应用您的修改"
 
 #: web_tt2/edit_list_request.tt2:11
@@ -1496,7 +1544,7 @@ msgstr ""
 msgid "Default value: bounce_warn_rate robot parameter"
 msgstr ""
 
-#: src/List.pm:983
+#: src/List.pm:991
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 
@@ -1508,9 +1556,9 @@ msgstr ""
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compilations "
-"of messages are sent to subscribers in accordance with the rhythm selected "
-"with this parameter."
+"as a plain text digest. Messages are then grouped together, and compiled "
+"messages are sent to subscribers according to the frequency selected with "
+"this parameter."
 msgstr ""
 
 #: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:6 web_tt2/picture_upload.tt2:12
@@ -1531,12 +1579,12 @@ msgid "Delete selected email addresses"
 msgstr "删除选中的邮件地址"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "Delete subscriber '%1' in DB failed."
 msgstr ""
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:306
+#: mail_tt2/listmaster_notification.tt2:307
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
@@ -1590,11 +1638,11 @@ msgid "Digest for list %1"
 msgstr "邮递表 %1 的摘要"
 
 # nlsref 16,22
-#: src/List.pm:493
+#: src/List.pm:501
 msgid "Digest frequency"
 msgstr "ÕªÒªÆµ¶È"
 
-#: src/List.pm:501
+#: src/List.pm:509
 msgid "Digest maximum number of messages"
 msgstr ""
 
@@ -1607,12 +1655,12 @@ msgid "Directory"
 msgstr ""
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "文件 %1 已保存"
 
-#: src/List.pm:898
+#: src/List.pm:906
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -1676,16 +1724,10 @@ msgstr "Do you really want to subscribe to list %1"
 
 #. (total)
 #: web_tt2/reviewbouncing.tt2:16
+#, fuzzy
 msgid ""
-"Do you really want to send a subscription remind message to the %1 "
-"subscribers"
-msgstr "您确定要给发送订阅提醒到所有的%1个订阅者吗 ?"
-
-#. (total)
-#: web_tt2/review.tt2:40
-msgid ""
-"Do you really want to send a subscription remind message to the %1 "
-"subscribers ?"
+"Do you really want to send a subscription reminder message to the %1 "
+"subscribers?"
 msgstr "您确定要给全部的%1个订阅者发送订阅提醒邮件吗?"
 
 #. (list)
@@ -1699,8 +1741,9 @@ msgid "Do you really want to unsubscribe from list %1?"
 msgstr "您确定要从 %1 退订?"
 
 #: web_tt2/arc_manage.tt2:23
-msgid "Do you want to DownLoad a Zip of the selected Archives before?"
-msgstr ""
+#, fuzzy
+msgid "Do you want to DownLoad a Zip of the selected Archives?"
+msgstr "确定要删除 %1 ?"
 
 #: web_tt2/d_upload.tt2:14
 #, fuzzy
@@ -1753,18 +1796,8 @@ msgstr "ÓÊ¼þµØÖ· %s ²»ÔÚÓÊµÝ±íÖÐ¡£\n"
 msgid "ERROR (%1) "
 msgstr ""
 
-#: web_tt2/help_editlist.tt2:57
-msgid ""
-"Each bouncing user have a score (from 0 to 100).This parameter defines limit "
-"between each category of bouncing users.For example, level 2 is for users "
-"with a score between 80 and 100."
-msgstr ""
-
-#: web_tt2/help_editlist.tt2:41
-msgid ""
-"Each bouncing user have a score (from 0 to 100).This parameter defines lower "
-"limit foreach category of bouncing users.for example, level 1 begins from 45 "
-"to level_2_treshold."
+#: web_tt2/help_editlist.tt2:41 web_tt2/help_editlist.tt2:57
+msgid "Each bouncing user have a score (from 0 to 100)."
 msgstr ""
 
 #: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:24 web_tt2/serveradmin.tt2:73
@@ -1829,7 +1862,7 @@ msgid "End of %1 Digest %2"
 msgstr "邮递表 %1 的摘要结束 - %2"
 
 #. (list.name,date)
-#: mail_tt2/digest.tt2:37 mail_tt2/get_archive.tt2:36
+#: mail_tt2/digest.tt2:38 mail_tt2/get_archive.tt2:37
 msgid "End of digest for list %1 - %2"
 msgstr "邮递表 %1 的摘要结束 - %2"
 
@@ -1860,26 +1893,20 @@ msgstr "´íÎó·¢ÉúÔÚµÚ %d ÐÐ: %s"
 msgid "Error type"
 msgstr "´íÎó·¢ÉúÔÚµÚ %d ÐÐ: %s"
 
-#: web_tt2/remove_arc.tt2:14
-msgid ""
-"Error while deleting this message, please refer to listmaster with\n"
-"complete URL of the concerned message."
-msgstr ""
-
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:195
-#: mail_tt2/listmaster_notification.tt2:205
+#: mail_tt2/listmaster_notification.tt2:196
+#: mail_tt2/listmaster_notification.tt2:206
 #, fuzzy
 msgid "Error(s) found in the file %1."
 msgstr "%1 文件的编修"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:163
+#: mail_tt2/listmaster_notification.tt2:164
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:346
+#: mail_tt2/listmaster_notification.tt2:347
 #, fuzzy
 msgid "Errors while unzipping file '%1'."
 msgstr "%1 文件的编修"
@@ -1893,13 +1920,13 @@ msgstr ""
 msgid "Everything about this list:"
 msgstr ""
 
-#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16
+#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16 web_tt2/help_shared.tt2:24
 #, fuzzy
 msgid "Expert mode"
 msgstr "空文件夹"
 
 # nlsref 16,10
-#: src/List.pm:414
+#: src/List.pm:422
 msgid "Expiration of unmoderated messages"
 msgstr "Î´Í¨¹ý¼à¹ÜµÄÓÊ¼þ¹ýÆÚÊ±¼ä"
 
@@ -1948,12 +1975,12 @@ msgid "FYI: automatic removal of user %1"
 msgstr ""
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 #, fuzzy
 msgid "Failed : %1 not empty"
 msgstr "失败: %1 不为空"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 #, fuzzy
 msgid "Failed : your content is empty"
 msgstr "错误: 您提供的内容是空的"
@@ -1964,7 +1991,7 @@ msgid "Failed to include list admins"
 msgstr "新增使用者 %1 失败"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:336
+#: mail_tt2/listmaster_notification.tt2:337
 #, fuzzy
 msgid "Failed to include list admins for list '%1'"
 msgstr "无法更改 %1 的电邮位址"
@@ -1975,30 +2002,30 @@ msgid "Failed to inlude members"
 msgstr "新增使用者 %1 失败"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:335
+#: mail_tt2/listmaster_notification.tt2:336
 #, fuzzy
 msgid "Failed to inlude members for list '%1'"
 msgstr "新增使用者 %1 失败"
 
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:328
 #, fuzzy
 msgid "Failed to install aliases."
 msgstr "新增使用者 %1 失败"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:234
+#: mail_tt2/listmaster_notification.tt2:235
 #, fuzzy
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "无法更改 %1 的电邮位址"
 
 # nlsref 4,38
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 #, fuzzy
 msgid ""
-"Failed to moderate a message ; it was probably moderated by another moderatir"
+"Failed to moderate a message ; it was probably moderated by another moderator"
 msgstr "Äú·¢µ½ÓÊµÝ±í %s µÄÓÊ¼þÒÑ¾­×ª·¢¸ø±à¼­\n"
 
-#: mail_tt2/listmaster_notification.tt2:328
+#: mail_tt2/listmaster_notification.tt2:329
 #, fuzzy
 msgid "Failed to remove aliases."
 msgstr "新增使用者 %1 失败"
@@ -2021,7 +2048,7 @@ msgstr "新增使用者 %1 失败"
 msgid "Families"
 msgstr "ÎÄ¼þ"
 
-#: src/List.pm:557
+#: src/List.pm:565
 #, fuzzy
 msgid "Family name"
 msgstr "邮递表名"
@@ -2030,12 +2057,6 @@ msgstr "邮递表名"
 #: web_tt2/notice.tt2:71
 msgid "File %1 has been renamed to %2"
 msgstr ""
-
-#. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:107
-#, fuzzy
-msgid "File %1 is not copied : %2 "
-msgstr "文件 %1 已保存"
 
 #. (notice.path)
 #: web_tt2/notice.tt2:44
@@ -2059,8 +2080,14 @@ msgstr "文件 %1 已保存"
 msgid "File %1 waiting for moderation"
 msgstr ""
 
+#. (u_err.name,u_err.reason)
+#: web_tt2/error.tt2:108
+#, fuzzy
+msgid "File %1 was not copied : %2 "
+msgstr "文件 %1 已保存"
+
 # nlsref 16,34
-#: src/List.pm:579
+#: src/List.pm:587
 msgid "File inclusion"
 msgstr "ÎÄ¼þ°üº¬"
 
@@ -2071,25 +2098,26 @@ msgstr "邮递表名"
 
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:353 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:354 web_tt2/error.tt2:19
 #, fuzzy
 msgid "File not found."
 msgstr "切换选取"
 
-#: mail_tt2/listmaster_notification.tt2:209
+#: mail_tt2/listmaster_notification.tt2:210
 #, fuzzy
 msgid "File removed"
 msgstr "邮递表名"
 
-#: web_tt2/login_menu.tt2:80
+#: web_tt2/login_menu.tt2:81
 msgid "First login ?"
 msgstr ""
 
 #: web_tt2/ls_templates.tt2:17
 msgid ""
-"First you may list a category of templates including or not templates "
-"specific of a particular list, then you have oportunity to copy and edit "
-"templates of the current robot or the named list."
+"First you may list a category of templates; the list should include a "
+"default template and may include any templates designated for a particular "
+"list. You will then have an oportunity to copy and edit templates for the "
+"current robot or the named list."
 msgstr ""
 
 #: web_tt2/d_read.tt2:319
@@ -2124,14 +2152,14 @@ msgstr ""
 
 #: web_tt2/help_editlist.tt2:110
 msgid ""
-"For this operation, one Sympa site act as a server while the other one act "
+"For this operation, one Sympa site acts as a server while the other one acs "
 "as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controled by the review "
-"scenario. "
+"to the remote Sympa to review the list. This is controlled by the review "
+"scenario."
 msgstr ""
 
 # nlsref 16,32
-#: src/List.pm:567
+#: src/List.pm:575
 msgid "Forced reply address"
 msgstr "Ö¸¶¨µÄ»Ø¸´µØÖ·"
 
@@ -2148,13 +2176,6 @@ msgstr "根据邮件<i>发件人</i>有 <B>[% from_count %]</b> 个命中"
 #: web_tt2/compose_mail.tt2:5 web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr ",A@4WT(B: %1"
-
-#: web_tt2/help.tt2:13
-msgid ""
-"Functions, equivalent to Sympa robot commands, are accessible in\n"
-"the higher part of the user interface's banner. WWSympa provides \n"
-"a customized environment with access to the following functions :"
-msgstr ""
 
 #: mail_tt2/helpfile.tt2:42
 msgid "GET <list> <file>           * To get <file> of <list> archive"
@@ -2218,21 +2239,9 @@ msgstr ""
 msgid "Hotline mailing list"
 msgstr "邮递表"
 
-#: web_tt2/help.tt2:41
-msgid "I am not a list subscriber"
-msgstr "我不是邮递表的订阅者"
-
 #: web_tt2/arc_protect.tt2:7
 msgid "I am not a spammer"
 msgstr "我不是垃圾邮件制造者"
-
-#: web_tt2/help.tt2:46
-msgid "I am subscriber to at least one list but I have no password"
-msgstr "我是至少一个邮递表的订阅者，但是我没有口令"
-
-#: web_tt2/help.tt2:51
-msgid "I forgot my password"
-msgstr "我忘记了口令"
 
 #. (list)
 #: web_tt2/subrequest.tt2:13
@@ -2268,10 +2277,10 @@ msgstr ""
 
 #: web_tt2/help_editlist.tt2:171
 msgid ""
-"Idem spam_protection but restricted to web archive. A additional value is "
-"available: cookie which mean that users must submit a small form in order to "
-"receive a cookie before browsing archives. This block all robot, even google "
-"and co."
+"Idem spam_protection is provided but it can be used only for web archives. "
+"Access requires a cookie, and users must submit a small form in order to "
+"receive a cookie before browsing the archives. This blocks all robot, even "
+"google and co."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:173
@@ -2298,7 +2307,7 @@ msgid "If you don't want to subscribe just ignore this message."
 msgstr ""
 
 # nlsref 6,260
-#. (conf.sympa)-)
+#. (conf.sympa,command)-)
 #: mail_tt2/request_auth.tt2:38
 #, fuzzy
 msgid ""
@@ -2328,7 +2337,7 @@ msgstr ""
 msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
 
-#: web_tt2/sigrequest.tt2:78
+#: web_tt2/sigrequest.tt2:76
 #, fuzzy
 msgid ""
 "If you've never had a password from that server or if you don't remember it :"
@@ -2348,7 +2357,7 @@ msgstr ""
 "ºöÂÔ²»ÊÇ´¿ÎÄ×Ö(text/plain)µÄÓÊ¼þÄÚÈÝ£¬ÇëÖ»ÓÃ´¿ÎÄ×Ö\n"
 "(»ò½«ÃüÁî·ÅÔÚ±êÌâÖÐ)¡£\n"
 
-#: mail_tt2/listmaster_notification.tt2:343
+#: mail_tt2/listmaster_notification.tt2:344
 #, fuzzy
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "无法上传文件 %1"
@@ -2375,9 +2384,18 @@ msgid ""
 msgstr ""
 
 #: web_tt2/picture_upload.tt2:24
+msgid "In the members page"
+msgstr ""
+
+#: web_tt2/get_inactive_lists.tt2:4
 #, fuzzy
-msgid "In the subscribers list"
-msgstr "我订阅邮递表 %1"
+msgid "Inactive Lists"
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
 
 #: web_tt2/serveradmin.tt2:37
 #, fuzzy
@@ -2389,24 +2407,18 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/get_inactive_lists.tt2:4
-#, fuzzy
-msgid "Incatives Lists"
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
-
 # nlsref 16,75
-#: src/List.pm:1175
+#: src/List.pm:1183
 msgid "Inclusions timeout"
 msgstr "°üº¬²Ù×÷³¬Ê±Öµ"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "Incorrect listname '%1' : matches one of service aliases"
+msgstr ""
+
+#: web_tt2/list_menu.tt2:31
+msgid "Info"
 msgstr ""
 
 # nlsref 16,12
@@ -2474,12 +2486,12 @@ msgid ""
 "the multipart/digest MIME format."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:329
+#: mail_tt2/listmaster_notification.tt2:330
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
 # nlsref 16,33
-#: src/List.pm:573
+#: src/List.pm:581
 msgid "Internet domain"
 msgstr "ÓÊ¼þÁÐ±íÖ÷»úÃû"
 
@@ -2489,10 +2501,6 @@ msgstr "ÓÊ¼þÁÐ±íÖ÷»úÃû"
 #, fuzzy
 msgid "Invitation to join list %1"
 msgstr "¼ÓÈëÓÊµÝ±í %s µÄÑûÇë"
-
-#: mail_tt2/authorization_reject.tt2:56
-msgid "It is not possible to change list parameters."
-msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:44
 msgid "It is not possible to delete a user from the list."
@@ -2533,12 +2541,12 @@ msgid ""
 msgstr ""
 
 # nlsref 16,135
-#: src/List.pm:812
+#: src/List.pm:820
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
 # nlsref 16,35
-#: src/List.pm:689
+#: src/List.pm:697
 msgid "LDAP query inclusion"
 msgstr "LDAP ²éÑ¯ÄÚÈÝ"
 
@@ -2561,7 +2569,7 @@ msgid "Language : "
 msgstr "语言"
 
 # nlsref 16,55
-#: src/List.pm:923
+#: src/List.pm:931
 msgid "Language of the list"
 msgstr "ÓÊµÝ±íµÄÓïÑÔ"
 
@@ -2582,7 +2590,7 @@ msgid "Last update : %1"
 msgstr "最后更新: %1"
 
 # nlsref 16,77
-#: src/List.pm:1200
+#: src/List.pm:1208
 msgid "Last update of config"
 msgstr "ÅäÖÃµÄ×îºó¸üÐÂÊ±¼ä"
 
@@ -2590,23 +2598,9 @@ msgstr "ÅäÖÃµÄ×îºó¸üÐÂÊ±¼ä"
 msgid "Last update:"
 msgstr ""
 
-#: src/List.pm:941
+#: src/List.pm:949
 msgid "Latest family instantiation"
 msgstr ""
-
-#: web_tt2/serveradmin.tt2:36
-msgid "Latest lists"
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
-
-#: web_tt2/get_inactive_lists.tt2:7
-#, fuzzy
-msgid "Latest message"
-msgstr "最新邮件优先"
 
 #: web_tt2/get_latest_lists.tt2:4
 #, fuzzy
@@ -2666,7 +2660,7 @@ msgstr ""
 # #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:250
+#: mail_tt2/listmaster_notification.tt2:251
 #: mail_tt2/listowner_notification.tt2:56
 #, fuzzy
 msgid "List %1 automatic bounce management"
@@ -2677,7 +2671,7 @@ msgstr ""
 "Bounces management"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:174
+#: mail_tt2/listmaster_notification.tt2:175
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
 
@@ -2749,7 +2743,7 @@ msgstr "邮递表的别名已删除。"
 #. (listname)
 #: mail_tt2/listmaster_notification.tt2:20
 #, fuzzy
-msgid "List \"%1\" renaming request"
+msgid "List \"%1\" renaming"
 msgstr "提交您的创建请求"
 
 #. (list.name,rate)
@@ -2805,12 +2799,12 @@ msgid ""
 "List has been set to the pending status ; listmaster need to validate it"
 msgstr ""
 
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 #, fuzzy
 msgid "List has no bouncing subscribers"
 msgstr "邮递表没有被退信的订阅者"
 
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 #, fuzzy
 msgid "List has no subscribers"
 msgstr "邮递表没有订阅者"
@@ -2823,7 +2817,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,44
-#: src/List.pm:817
+#: src/List.pm:825
 msgid "List inclusion"
 msgstr "°üº¬ÓÊµÝ±í"
 
@@ -2844,6 +2838,11 @@ msgstr "ÓÊµÝ±íÊÇ²»¹«¿ªµÄ: Äú²»ÄÜä¯ÀÀ¹²ÏíµÄÎÄ¼
 msgid "List is Private : You can not read the archives."
 msgstr "ÓÊµÝ±íÊÇ²»¹«¿ªµÄ: Äú²»ÄÜÔÄ¶ÁËüµÄ´æµµ¡£\n"
 
+#: web_tt2/review.tt2:95
+#, fuzzy
+msgid "List members"
+msgstr "邮递表名字:"
+
 #: web_tt2/active_lists.tt2:20
 #, fuzzy
 msgid "List name"
@@ -2852,11 +2851,6 @@ msgstr "邮递表名字:"
 #: web_tt2/create_list_request.tt2:7
 msgid "List name:"
 msgstr "邮递表名字:"
-
-#: web_tt2/review.tt2:95
-#, fuzzy
-msgid "List of the list subscribers"
-msgstr "邮递表没有订阅者"
 
 #: web_tt2/help_editlist.tt2:89
 msgid ""
@@ -2890,7 +2884,7 @@ msgstr ""
 msgid "Listing messages to moderate"
 msgstr "没有邮件要监管"
 
-#: web_tt2/modindex.tt2:103 web_tt2/modindex.tt2:97
+#: web_tt2/modindex.tt2:103
 #, fuzzy
 msgid "Listing of documents shared to moderate"
 msgstr "没有邮件要监管"
@@ -2916,14 +2910,14 @@ msgid "Listmaster"
 msgstr "邮递表名"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:274
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:275
+#: mail_tt2/listmaster_notification.tt2:290
 #, fuzzy
 msgid "Listmaster : internal server error "
 msgstr "重置错误计数"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:363
+#: mail_tt2/listmaster_notification.tt2:364
 msgid "Listmaster : system error "
 msgstr ""
 
@@ -2975,14 +2969,9 @@ msgstr ""
 msgid "Load certificate"
 msgstr "载入凭证"
 
-#: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
 #: web_tt2/login_menu.tt2:75 web_tt2/loginbanner.tt2:79
 msgid "Login"
 msgstr "登录"
-
-#: web_tt2/help.tt2:39
-msgid "Login issues"
-msgstr "登录问题"
 
 #: web_tt2/loginbanner.tt2:23
 #, fuzzy
@@ -2991,7 +2980,7 @@ msgid ""
 "reminder."
 msgstr ")时，请提供您的 Email 地址和相应的口令。"
 
-#: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:26
+#: web_tt2/login_menu.tt2:26
 msgid "Logout"
 msgstr "注销"
 
@@ -3003,14 +2992,14 @@ msgstr "登录"
 #. (date_from,date_to)
 #: web_tt2/viewlogs.tt2:140
 msgid ""
-"Logs have been created between <strong>%1</strong> and  <strong>%2</strong>."
+"Logs have been searched between <strong>%1</strong> and  <strong>%2</strong>."
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:80
 msgid "Loop detected"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:81
+#: web_tt2/login_menu.tt2:82
 #, fuzzy
 msgid "Lost password ?"
 msgstr "我的口令 ?"
@@ -3068,26 +3057,26 @@ msgstr "Archives setup"
 msgid "Manage Subscribers"
 msgstr "订阅者"
 
-#: src/List.pm:386
+#: src/List.pm:394
 msgid "Management of bouncers, 1st level"
 msgstr ""
 
-#: src/List.pm:407
+#: src/List.pm:415
 msgid "Management of bouncers, 2nd level"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:270
+#: mail_tt2/listmaster_notification.tt2:271
 #: mail_tt2/listowner_notification.tt2:76
 #, fuzzy
 msgid "Managing bouncing subscribers:"
 msgstr "邮递表没有被退信的订阅者"
 
 # nlsref 16,56
-#: src/List.pm:955
+#: src/List.pm:963
 msgid "Maximum message size"
 msgstr "×î´óÓÊ¼þ´óÐ¡"
 
-#: src/List.pm:1234
+#: src/List.pm:1242
 msgid "Maximum number of month archived"
 msgstr ""
 
@@ -3127,7 +3116,12 @@ msgid ""
 "Message %1 for list '%2' has been validated ; it will be distributed soon."
 msgstr "ÓÊ¼þ %s (·¢ÍùÓÊµÝ±í %s)±»·Ö·¢¡£\n"
 
-#: web_tt2/viewlogs.tt2:190 web_tt2/viewlogs.tt2:49 web_tt2/viewlogs.tt2:55
+#: web_tt2/viewlogs.tt2:190
+#, fuzzy
+msgid "Message ID"
+msgstr "重置错误计数"
+
+#: web_tt2/viewlogs.tt2:49 web_tt2/viewlogs.tt2:55
 #, fuzzy
 msgid "Message Id"
 msgstr "重置错误计数"
@@ -3200,21 +3194,21 @@ msgid ""
 msgstr ""
 
 # nlsref 15,4
-#: src/List.pm:990
+#: src/List.pm:998
 #, fuzzy
 msgid "Message tagging"
 msgstr "ÓÊ¼þ½Ç×¢"
 
-#: src/List.pm:966
+#: src/List.pm:974
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:961
+#: src/List.pm:969
 #, fuzzy
 msgid "Message topic name"
 msgstr "要监管的邮件:"
 
-#: src/List.pm:972
+#: src/List.pm:980
 #, fuzzy
 msgid "Message topic title"
 msgstr "要监管的邮件:"
@@ -3244,12 +3238,12 @@ msgid "Miscellaneous"
 msgstr "Other parameters"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:49
+#: web_tt2/error.tt2:50
 #, fuzzy
 msgid "Missing argument %1"
 msgstr "缺少参数 %1"
 
-#: web_tt2/error.tt2:59
+#: web_tt2/error.tt2:60
 #, fuzzy
 msgid "Missing filter"
 msgstr "缺少过滤"
@@ -3308,7 +3302,7 @@ msgstr ""
 
 # #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: src/List.pm:527 web_tt2/list_panel.tt2:14
+#: src/List.pm:535 web_tt2/list_panel.tt2:14
 #, fuzzy
 msgid "Moderators"
 msgstr ""
@@ -3323,7 +3317,7 @@ msgstr ""
 msgid "Moderators List %1 / %2"
 msgstr "第%1页，共%2页"
 
-#: src/List.pm:548
+#: src/List.pm:556
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
@@ -3340,6 +3334,29 @@ msgid ""
 "probably need to identify yourself first."
 msgstr ""
 
+# nlsref 16,70
+#: web_tt2/latest_d_read.tt2:17
+#, fuzzy
+msgid "Most recent documents for this list "
+msgstr "¹²ÏíÎÄµµ"
+
+# nlsref 16,68
+#: web_tt2/get_inactive_lists.tt2:7
+#, fuzzy
+msgid "Most recent message"
+msgstr "Ë­¿ÉÒÔ·¢ËÍÓÊ¼þ"
+
+#: web_tt2/rss.tt2:40
+#, fuzzy
+msgid "Most recent messages"
+msgstr "最新邮件优先"
+
+# nlsref 16,70
+#: web_tt2/rss.tt2:49
+#, fuzzy
+msgid "Most recent shared documents"
+msgstr "¹²ÏíÎÄµµ"
+
 #: mail_tt2/authorization_reject.tt2:110
 msgid "Multipart messages are not allowed in this list."
 msgstr ""
@@ -3348,7 +3365,7 @@ msgstr ""
 msgid "Multiple add"
 msgstr ""
 
-#: web_tt2/subrequest.tt2:72
+#: web_tt2/subrequest.tt2:71
 msgid "My password ?"
 msgstr "我的口令 ?"
 
@@ -3374,10 +3391,10 @@ msgstr "名字:"
 
 #: web_tt2/help_editlist.tt2:31
 msgid ""
-"Name of the task template use to remove old bounces. Usefull to remove "
-"bounces for a subscriber email if some message are distributed without "
-"receiving new bounce. In this case, the subscriber email seems to be OK "
-"again. Active if task_manager.pl is running."
+"Name of the task template used to remove old bounces. Useful for removing "
+"bounced subscriber email. If some messages are distributed without receiving "
+"new bounce messages, the subscriber's email seems to be OK again. Active if "
+"task_manager.pl is running."
 msgstr ""
 
 #: web_tt2/pref.tt2:28
@@ -3389,7 +3406,7 @@ msgstr "新的邮件地址 :"
 msgid "New list name:"
 msgstr "邮递表名"
 
-#: web_tt2/latest_lists.tt2:8
+#: web_tt2/latest_lists.tt2:8 web_tt2/rss.tt2:20 web_tt2/serveradmin.tt2:36
 #, fuzzy
 msgid "New lists"
 msgstr "邮递表名"
@@ -3449,11 +3466,11 @@ msgid ""
 msgstr ""
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:320
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "No SOAP service"
 msgstr ""
 
@@ -3462,14 +3479,14 @@ msgid "No Virtual Robot defined on this server"
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 #, fuzzy
 msgid "No bounce for user  %1"
 msgstr "用户 %1 没有退信"
 
 # nlsref 16,74
 #. (u_err.directory)
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 #, fuzzy
 msgid "No certificate for this list"
 msgstr "ÓÊµÝ±í»°Ìâ"
@@ -3480,18 +3497,18 @@ msgstr "ÓÊµÝ±í»°Ìâ"
 msgid "No command found in message."
 msgstr "ÓÊ¼þÖÐÃ»ÓÐ·¢ÏÖÃüÁî"
 
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 #, fuzzy
 msgid "No description specified"
 msgstr "没有指定描述"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 #, fuzzy
 msgid "No entry for user '%1'"
 msgstr "用户 %1 没有退信"
 
-#: web_tt2/lists.tt2:69 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
+#: web_tt2/lists.tt2:68 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
 msgstr ""
 
@@ -3502,17 +3519,17 @@ msgid "No message and no document to moderate for list %1"
 msgstr "没有邮件要监管"
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:325
+#: mail_tt2/listmaster_notification.tt2:326
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 #, fuzzy
 msgid "No name specified"
 msgstr "没有指定名字"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:152
+#: mail_tt2/listmaster_notification.tt2:153
 #, fuzzy
 msgid "No owner is defined for list %1."
 msgstr "无法更改 %1 的电邮位址"
@@ -3522,13 +3539,13 @@ msgstr "无法更改 %1 的电邮位址"
 msgid "No owner is defined for the list"
 msgstr "无法更改 %1 的电邮位址"
 
-#: mail_tt2/listmaster_notification.tt2:337
+#: mail_tt2/listmaster_notification.tt2:338
 #, fuzzy
 msgid "No owner is defined for the list '%1'"
 msgstr "无法更改 %1 的电邮位址"
 
 #. (u_err.page)
-#: web_tt2/error.tt2:58
+#: web_tt2/error.tt2:59
 #, fuzzy
 msgid "No page %1"
 msgstr "没有页 %1"
@@ -3542,7 +3559,7 @@ msgid "No subscription requests"
 msgstr ",AC;SP6)TDR*Gs(B"
 
 #. (user.email)
-#: web_tt2/lists.tt2:26
+#: web_tt2/lists.tt2:25
 #, fuzzy
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "没有来自 <B>%1</B> 的订阅!</"
@@ -3552,7 +3569,7 @@ msgid "Nomail"
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:61
+#: web_tt2/error.tt2:62
 #, fuzzy
 msgid "Not subscribed: %1"
 msgstr "并非订阅者: %1"
@@ -3596,11 +3613,8 @@ msgstr ""
 msgid "Oldest messages first"
 msgstr "最旧邮件优先"
 
-#: web_tt2/help.tt2:32
-msgid ""
-"Once you have been authenticated, a <em>cookie</em> containing your login \n"
-"information make your connection to WWSympa last. The lifetime of this\n"
-"<em>cookie</em> is customizeable through your <strong>Preferences</strong>"
+#: web_tt2/suboptions.tt2:47
+msgid "Only possible in \"normal\" receiving mode"
 msgstr ""
 
 #: web_tt2/d_read.tt2:171 web_tt2/d_read.tt2:173 web_tt2/d_read.tt2:179
@@ -3676,7 +3690,7 @@ msgstr "自订模块"
 
 # #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
-#: src/List.pm:1022 web_tt2/login_menu.tt2:10
+#: src/List.pm:1030 web_tt2/login_menu.tt2:10
 #, fuzzy
 msgid "Owner"
 msgstr ""
@@ -3713,7 +3727,7 @@ msgid ""
 "Privileged owners may edit a few more options than other owners. "
 msgstr ""
 
-#: src/List.pm:1047
+#: src/List.pm:1055
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -3722,16 +3736,16 @@ msgid "Page size"
 msgstr "页面大小"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr ""
 
 #. (u_err.param)
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 msgid "Parameter '%1' must have values"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:355
+#: mail_tt2/listmaster_notification.tt2:356
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
@@ -3781,13 +3795,13 @@ msgid "Period :"
 msgstr "间隔"
 
 # nlsref 16,88
-#: src/List.pm:552
+#: src/List.pm:560
 #, fuzzy
 msgid "Periodical subscription expiration task"
 msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
 
 # nlsref 16,88
-#: src/List.pm:1066
+#: src/List.pm:1074
 #, fuzzy
 msgid "Periodical subscription reminder task"
 msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
@@ -3808,25 +3822,25 @@ msgstr ""
 msgid "Please contact the listmaster."
 msgstr ""
 
-#: web_tt2/error.tt2:48
+#: web_tt2/error.tt2:49
 #, fuzzy
 msgid "Please provide email address"
 msgstr "请输入您的电子邮件地址"
 
 #. (list)
-#: web_tt2/sigrequest.tt2:50
+#: web_tt2/sigrequest.tt2:48
 #, fuzzy
 msgid ""
 "Please provide your email address for your unsubscription request from list %"
 "1."
 msgstr "请给出退订邮递表 %1 所用的邮件地址。"
 
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 #, fuzzy
 msgid "Please provide your password"
 msgstr "请输入您的口令"
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 #, fuzzy
 msgid "Please select archive months"
 msgstr "删除选中的用户"
@@ -3869,17 +3883,13 @@ msgstr ""
 msgid "Prefer"
 msgstr "优先"
 
-#: web_tt2/help.tt2:16
-msgid "Preferences"
-msgstr "首选项"
-
 #: web_tt2/review.tt2:24 web_tt2/review.tt2:257 web_tt2/reviewbouncing.tt2:100
 #: web_tt2/reviewbouncing.tt2:43 web_tt2/viewlogs.tt2:22
 msgid "Previous page"
 msgstr "前一页"
 
 # nlsref 16,63
-#: src/List.pm:1053
+#: src/List.pm:1061
 msgid "Priority"
 msgstr "ÓÅÏÈ¼¶"
 
@@ -3887,11 +3897,11 @@ msgstr "ÓÅÏÈ¼¶"
 msgid ""
 "Priority rules for template selection :\n"
 "<ul>\n"
-"<li>IF list context defined apply list template if exist</li>\n"
+"<li>IF list context defined, apply list template if exist</li>\n"
 "<li>ELSE apply robot defined template if exist</li>\n"
-"<li>ELSE apply localy defined template if exist</li>\n"
-"<li>ELSE apply template include in the distribution (theses must not be "
-"edited because Sympa's update will overright theses files)</li>\n"
+"<li>ELSE apply locally defined template if exist</li>\n"
+"<li>ELSE apply template included in the distribution (these must not be "
+"edited because Sympa's update will over write these files)</li>\n"
 "</ul>"
 msgstr ""
 
@@ -3948,13 +3958,13 @@ msgstr "%1 目录的编修"
 msgid "Properties of the file %1"
 msgstr "%1 文件的编修"
 
-#: web_tt2/error.tt2:53
+#: web_tt2/error.tt2:54
 #, fuzzy
 msgid "Provided password is incorrect"
 msgstr "输入的口令不正确"
 
 #. (u_err.tpl)
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 #, fuzzy
 msgid "Provided path is incorrect for template '%1'"
 msgstr "输入的口令不正确"
@@ -3965,7 +3975,7 @@ msgstr ""
 
 # #-#-#-#-#  cn.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 6,82
-#: mail_tt2/lists.tt2:2 web_tt2/help.tt2:18
+#: mail_tt2/lists.tt2:2
 #, fuzzy
 msgid "Public lists"
 msgstr ""
@@ -4004,7 +4014,7 @@ msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr ""
 
 # nlsref 16,16
-#: src/List.pm:1104
+#: src/List.pm:1112
 #, fuzzy
 msgid "RFC 2369 Header fields"
 msgstr "¶¨ÖÆÓÊ¼þÍ·"
@@ -4078,6 +4088,16 @@ msgstr "重建归档"
 msgid "Received mega-bytes         :      %1"
 msgstr ""
 
+#: web_tt2/editsubscriber.tt2:17
+#, fuzzy
+msgid "Receiving :"
+msgstr "接收:"
+
+#: web_tt2/suboptions.tt2:9
+#, fuzzy
+msgid "Receiving mode :"
+msgstr "接收模式:"
+
 #. (available_reception_mode)
 #: mail_tt2/info_report.tt2:25
 #, fuzzy
@@ -4088,20 +4108,12 @@ msgstr "接收模式:"
 msgid "Reception"
 msgstr "接收"
 
-#: web_tt2/editsubscriber.tt2:17
-msgid "Reception :"
-msgstr "接收:"
-
-#: web_tt2/suboptions.tt2:9
-msgid "Reception mode :"
-msgstr "接收模式:"
-
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:122
+#: mail_tt2/listmaster_notification.tt2:123
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: src/List.pm:948
+#: src/List.pm:956
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
@@ -4156,7 +4168,7 @@ msgid "Remote IP address"
 msgstr "远程地址"
 
 # nlsref 16,34
-#: src/List.pm:606
+#: src/List.pm:614
 #, fuzzy
 msgid "Remote file inclusion"
 msgstr "ÎÄ¼þ°üº¬"
@@ -4214,7 +4226,7 @@ msgid "Reply"
 msgstr ""
 
 # nlsref 16,66
-#: src/List.pm:1072 src/List.pm:1092
+#: src/List.pm:1080 src/List.pm:1100
 msgid "Reply address"
 msgstr "»Ø¸´µØÖ·"
 
@@ -4249,7 +4261,7 @@ msgstr "ÐèÒªµÄÎÄ¼þ²»´æÔÚ¡£\n"
 #. (current_list)
 #: web_tt2/viewlogs.tt2:141
 #, fuzzy
-msgid "Research was carried out in the list <strong>%1</strong>."
+msgid "Research was carried out in list <strong>%1</strong>."
 msgstr "没有来自 <B>%1</B> 的订阅!</"
 
 #. (current_robot)
@@ -4300,7 +4312,7 @@ msgstr "ÄúµÄÃüÁîÖ´ÐÐµÄ½á¹û"
 msgid "Return to archive %1"
 msgstr "回到归档 %1"
 
-#: src/List.pm:1062
+#: src/List.pm:1070
 msgid "Return-path of the REMIND command"
 msgstr ""
 
@@ -4359,22 +4371,22 @@ msgid ""
 msgstr ""
 
 # nlsref 16,51
-#: src/List.pm:894
+#: src/List.pm:902
 msgid "SQL query"
 msgstr "SQL ²éÑ¯"
 
 # nlsref 16,45
-#: src/List.pm:909
+#: src/List.pm:917
 msgid "SQL query inclusion"
 msgstr "SQL ²éÑ¯ÄÚÈÝ"
 
-#: src/List.pm:681 src/List.pm:806
+#: src/List.pm:689 src/List.pm:814
 #, fuzzy
 msgid "SSL ciphers used"
 msgstr ",A<SC\\=p3W3$6H(B"
 
 # nlsref 16,45
-#: src/List.pm:676 src/List.pm:801
+#: src/List.pm:684 src/List.pm:809
 #, fuzzy
 msgid "SSL version"
 msgstr "SQL ²éÑ¯ÄÚÈÝ"
@@ -4409,7 +4421,8 @@ msgid "Save"
 msgstr "保存"
 
 #: web_tt2/scenario_test.tt2:7
-msgid "Scenari name"
+#, fuzzy
+msgid "Scenario name"
 msgstr "情景名"
 
 #: web_tt2/scenario_test.tt2:3
@@ -4444,6 +4457,11 @@ msgstr "查找域"
 msgid "Search by :"
 msgstr "查找域:"
 
+#: web_tt2/viewlogs.tt2:125
+#, fuzzy
+msgid "Search by IP :"
+msgstr "查找域:"
+
 #: web_tt2/viewlogs.tt2:61
 #, fuzzy
 msgid "Search by date :"
@@ -4470,21 +4488,21 @@ msgstr "ÓÊµÝ±íÖ÷Ìâ"
 
 #: web_tt2/review.tt2:73
 #, fuzzy
-msgid "Search user with email"
+msgid "Search user by email"
 msgstr "查找使用者"
 
 # nlsref 16,11
-#: src/List.pm:420
+#: src/List.pm:428
 msgid "Secret string for generating unique keys"
 msgstr "Éú³ÉÃÜÔ¿Ê¹ÓÃµÄÃØÃÜ×Ö·û´®"
 
-#: mail_tt2/listmaster_notification.tt2:285
-#: mail_tt2/listmaster_notification.tt2:359
-#: mail_tt2/listmaster_notification.tt2:374
+#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:360
+#: mail_tt2/listmaster_notification.tt2:375
 msgid "See logs for more details."
 msgstr ""
 
-#: web_tt2/lists.tt2:32
+#: web_tt2/lists.tt2:31
 msgid "See your subscriptions with the following email addresses"
 msgstr "以底下的电邮位址查看您的订阅状况"
 
@@ -4512,12 +4530,12 @@ msgstr "自订模块"
 msgid "Selection too wide, can not show selection"
 msgstr "选择范围太宽，无法显示选择"
 
-#: web_tt2/sso_login.tt2:25
+#: web_tt2/sso_login.tt2:24
 #, fuzzy
 msgid "Send me a confirmation password"
 msgstr "给我发送口令"
 
-#: web_tt2/remindpasswd.tt2:14 web_tt2/sigrequest.tt2:78
+#: web_tt2/remindpasswd.tt2:14 web_tt2/sigrequest.tt2:76
 msgid "Send me my password"
 msgstr "给我发送口令"
 
@@ -4535,15 +4553,17 @@ msgid "Sending messages   : %1"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:144
-msgid "Sending/Reception"
+#, fuzzy
+msgid "Sending/Receiving"
 msgstr "><b>监管</b"
 
 #: web_tt2/edit_list_request.tt2:7
-msgid "Sending/reception setup"
+#, fuzzy
+msgid "Sending/receiving setup"
 msgstr "Sending/reception setup"
 
 # nlsref 16,69
-#: src/List.pm:1115
+#: src/List.pm:1123
 msgid "Serial number of the config"
 msgstr "ÅäÖÃµÄÐòÁÐºÅ"
 
@@ -4551,6 +4571,11 @@ msgstr "ÅäÖÃµÄÐòÁÐºÅ"
 #, fuzzy
 msgid "Server error"
 msgstr "重置错误计数"
+
+#: web_tt2/viewlogs.tt2:217
+#, fuzzy
+msgid "Service"
+msgstr "查找"
 
 #: web_tt2/help_editfile.tt2:3
 msgid "Service messages description :"
@@ -4621,7 +4646,7 @@ msgid "Shared document to be approved for %1"
 msgstr ""
 
 # nlsref 16,70
-#: src/List.pm:1135 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
+#: src/List.pm:1143 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr "¹²ÏíÎÄµµ"
 
@@ -4676,7 +4701,7 @@ msgid "Status :"
 msgstr "状态: %1"
 
 # nlsref 16,71
-#: src/List.pm:1151
+#: src/List.pm:1159
 msgid "Status of the list"
 msgstr "ÓÊµÝ±í×´Ì¬"
 
@@ -4708,12 +4733,12 @@ msgid "Subject : %1"
 msgstr "主题:"
 
 # nlsref 16,72
-#: src/List.pm:1158
+#: src/List.pm:1166
 msgid "Subject of the list"
 msgstr "ÓÊµÝ±íÖ÷Ìâ"
 
 # nlsref 16,17
-#: src/List.pm:452
+#: src/List.pm:460
 msgid "Subject tagging"
 msgstr "±êÌâ±ê¼Ç"
 
@@ -4737,7 +4762,7 @@ msgid "Submitting a bug, a feature request"
 msgstr "提交您的创建请求"
 
 #: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:37
-#: web_tt2/subrequest.tt2:71
+#: web_tt2/subrequest.tt2:70
 msgid "Subscribe"
 msgstr "订阅"
 
@@ -4751,7 +4776,7 @@ msgid "Subscriber"
 msgstr "订阅者"
 
 #. (email,listname)
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:308
 #, fuzzy
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "邮递表订阅者信息"
@@ -4774,8 +4799,8 @@ msgstr "订阅: 共"
 
 #: web_tt2/help_editfile.tt2:21
 msgid ""
-"Subscribing invitation message : it is sent to a person if some user  \n"
-"use the INVITE command to invite someone for subscription."
+"Subscribing invitation message : sent to a person if someone  \n"
+"uses the INVITE command to invite someone to subscribe."
 msgstr ""
 
 #. (subscribe)
@@ -4784,7 +4809,7 @@ msgid "Subscription       : %1"
 msgstr ""
 
 # nlsref 16,18
-#: src/List.pm:466
+#: src/List.pm:474
 msgid "Subscription profile"
 msgstr "¶©ÔÄÃèÊö"
 
@@ -4865,15 +4890,15 @@ msgstr ""
 
 #: web_tt2/help_editlist.tt2:109
 msgid ""
-"Sympa can contact another Sympa service using https to fetch a remote list "
+"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
 "include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise an "
-"infinite loop making cross includes."
+"paragraph for each included list. Be careful, however, not to give rise to "
+"an infinite loop resulting from cross includes."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:184
+#: mail_tt2/listmaster_notification.tt2:185
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -4883,33 +4908,33 @@ msgstr ""
 msgid "Sympa could not deliver the requested page for the following reason : "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:143
+#: mail_tt2/listmaster_notification.tt2:144
 msgid ""
 "Sympa could not include admins from external data sources ; the database or "
 "LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:133
+#: mail_tt2/listmaster_notification.tt2:134
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:224
+#: mail_tt2/listmaster_notification.tt2:225
 #, fuzzy
 msgid "Sympa could not load family %2 for list %1."
 msgstr "无法更改 %1 的电邮位址"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:244
+#: mail_tt2/listmaster_notification.tt2:245
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
 #: web_tt2/javascript.tt2:147
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should configure your browser to accept cookies"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:54
@@ -4940,6 +4965,11 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr ""
 
+#: web_tt2/blacklist.tt2:9
+#, fuzzy
+msgid "Syntax :"
+msgstr "状态: %1"
+
 #. (u_err.params)
 #: web_tt2/error.tt2:43
 #, fuzzy
@@ -4947,7 +4977,7 @@ msgid "Syntax errors with the following parameters : %1"
 msgstr "下列参数语法错误: %1"
 
 #: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
-#: mail_tt2/get_archive.tt2:11 src/List.pm:2816
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2819
 #, fuzzy
 msgid "Table of contents:"
 msgstr "目录:"
@@ -4960,7 +4990,7 @@ msgstr ""
 msgid "Table which display list bounces"
 msgstr ""
 
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
@@ -4980,7 +5010,7 @@ msgstr ",AKM3vSJ<~(B"
 msgid "Tag your message for list %1"
 msgstr "邮递表 %1 的摘要"
 
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "Tagging message is required for this list"
 msgstr ""
 
@@ -5014,14 +5044,15 @@ msgid "Templates"
 msgstr ""
 
 # nlsref 16,4
-#: src/List.pm:331
+#: src/List.pm:332
 msgid "Text archives"
 msgstr "ÎÄ±¾´æµµ"
 
-#: web_tt2/lists.tt2:53
+#: web_tt2/lists.tt2:52
+#, fuzzy
 msgid ""
-"That is to say using a unique email address in Sympa for your subscriptions "
-"and preferences"
+"That is to say you are using a unique email address in Sympa for your "
+"subscriptions and preferences"
 msgstr "也就是说, 以单一的电邮位址统一管理您的 Sympa 订阅及设定</FONT"
 
 #. (file_name)
@@ -5030,30 +5061,6 @@ msgid ""
 "The %1 file that was initially attached to this message has been stored on "
 "the mailing lists server:"
 msgstr ""
-
-#. (count)
-#: web_tt2/rss.tt2:18
-#, fuzzy
-msgid "The %1 latest created lists"
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
-
-#. (count)
-#: web_tt2/rss.tt2:38
-#, fuzzy
-msgid "The %1 latest messages"
-msgstr "最新邮件优先"
-
-# nlsref 16,70
-#. (count)
-#: web_tt2/rss.tt2:47
-#, fuzzy
-msgid "The %1 latest shared documents"
-msgstr "¹²ÏíÎÄµµ"
 
 #. (listname)
 #: mail_tt2/message_report.tt2:56
@@ -5077,12 +5084,36 @@ msgstr ""
 "\n"
 "      <TR><"
 
+#. (count)
+#: web_tt2/rss.tt2:38
+#, fuzzy
+msgid "The %1 most recent messages"
+msgstr "最新邮件优先"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/rss.tt2:47
+#, fuzzy
+msgid "The %1 most recent shared documents"
+msgstr "¹²ÏíÎÄµµ"
+
 #. (filter,list.name)
 #: mail_tt2/listowner_notification.tt2:158
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
+
+#. (count)
+#: web_tt2/rss.tt2:18
+#, fuzzy
+msgid "The %1 new lists"
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
 
 #. (count)
 #: web_tt2/latest_lists.tt2:6
@@ -5185,7 +5216,7 @@ msgstr ""
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "ÓÃ»§¡°%s¡±ÒÑ¾­ÊÇ¡°%s¡±µÄ¶©»§\n"
 
-#: mail_tt2/listmaster_notification.tt2:106
+#: mail_tt2/listmaster_notification.tt2:107
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr ""
 
@@ -5201,7 +5232,7 @@ msgstr ""
 "Äú¿ÉÄÜÊ¹ÓÃÁËºÍÉêÇëÊ±ÓÃµÄÓÊ¼þµØÖ·²»Í¬µÄµØÖ·½øÐÐ¶©ÔÄÈ·ÈÏ¡£\n"
 "Çë³¢ÊÔÊ¹ÓÃÖ÷ÒªµÄÓÊ¼þµØÖ·À´¶©ÔÄ¡£"
 
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:299
 #, fuzzy
 msgid "The authentication server name is not defined."
 msgstr "在验证身份("
@@ -5231,6 +5262,17 @@ msgstr ""
 "      </TR>\n"
 "\n"
 "      <TR><"
+
+#. (rows)
+#: web_tt2/blacklist.tt2:22
+msgid "The current blacklist contains %1 line(s)"
+msgstr ""
+
+# nlsref 16,70
+#: web_tt2/blacklist.tt2:20
+#, fuzzy
+msgid "The current blacklist is empty"
+msgstr "¹²ÏíÎÄµµ"
 
 #: web_tt2/skinsedit.tt2:7
 msgid ""
@@ -5264,18 +5306,18 @@ msgid ""
 "profile for the subscribers of the list."
 msgstr ""
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "The document repository exceed disk quota."
 msgstr ""
 
 #. (i_err.listname)
 #: web_tt2/error.tt2:16
 #, fuzzy
-msgid "The exporation failed for list '%1'"
+msgid "The exportation failed for list '%1'"
 msgstr "%1: 操作失败"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:338
+#: mail_tt2/listmaster_notification.tt2:339
 #, fuzzy
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "%1: 操作失败"
@@ -5294,7 +5336,7 @@ msgstr ""
 "Äú²»ÊÇÓÊµÝ±í %s µÄ¼à¹ÜÈË¡£\n"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:214
+#: mail_tt2/listmaster_notification.tt2:215
 msgid "The following file has been removed : %1"
 msgstr ""
 
@@ -5334,36 +5376,15 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
-#: web_tt2/rss.tt2:20
-#, fuzzy
-msgid "The latest created lists"
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
-
-#: web_tt2/rss.tt2:40
-#, fuzzy
-msgid "The latest messages"
-msgstr "最新邮件优先"
-
-# nlsref 16,70
-#: web_tt2/rss.tt2:49
-#, fuzzy
-msgid "The latest shared documents"
-msgstr "¹²ÏíÎÄµµ"
-
 # nlsref 16,70
 #. (u_err.listname)
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 #, fuzzy
 msgid "The list '%1' is already closed"
 msgstr "¹²ÏíÎÄµµ"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 #, fuzzy
 msgid "The list '%1' is not closed"
 msgstr "文件 %1 已保存"
@@ -5394,13 +5415,13 @@ msgid ""
 "number (percentage) of bounces exceeds this value."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:153
-#: mail_tt2/listmaster_notification.tt2:164
-#: mail_tt2/listmaster_notification.tt2:175
-#: mail_tt2/listmaster_notification.tt2:185
-#: mail_tt2/listmaster_notification.tt2:225
-#: mail_tt2/listmaster_notification.tt2:235
-#: mail_tt2/listmaster_notification.tt2:245
+#: mail_tt2/listmaster_notification.tt2:154
+#: mail_tt2/listmaster_notification.tt2:165
+#: mail_tt2/listmaster_notification.tt2:176
+#: mail_tt2/listmaster_notification.tt2:186
+#: mail_tt2/listmaster_notification.tt2:226
+#: mail_tt2/listmaster_notification.tt2:236
+#: mail_tt2/listmaster_notification.tt2:246
 msgid "The list status has been set to error_config."
 msgstr ""
 
@@ -5425,7 +5446,7 @@ msgid ""
 "The mailing list server requires a working email address. Please provide "
 "your email address below. <p><i>Please note:</i> the email field may be pre-"
 "populated.  If it is, then your authentication server has supplied an email "
-"address it associates with you.  Wether you enter an address manually or "
+"address it associates with you.  Whether you enter an address manually or "
 "accept the one provided, you will still need to confirm that this is a "
 "working email address by entering a confirmation password that will be sent "
 "to you.  Please press the \"Send me a confirmation password\" to continue to "
@@ -5442,13 +5463,13 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 #, fuzzy
 msgid "The passwords you typed do not match"
 msgstr "两个口令不一致"
 
 #. (u_err.nb_days)
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 msgid "The period is too long (%1 days)"
 msgstr ""
 
@@ -5465,7 +5486,7 @@ msgid ""
 "place in the Reply-To: SMTP header field of the messages it distributes."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:109
+#: mail_tt2/listmaster_notification.tt2:110
 msgid "The returned error message :"
 msgstr ""
 
@@ -5473,12 +5494,12 @@ msgstr ""
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 msgid "The shared directory cannot have any description"
 msgstr ""
 
 # nlsref 16,70
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 #, fuzzy
 msgid "The shared document space is empty"
 msgstr "¹²ÏíÎÄµµ"
@@ -5487,7 +5508,7 @@ msgstr "¹²ÏíÎÄµµ"
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "The upload failed, try it again"
 msgstr ""
 
@@ -5517,10 +5538,10 @@ msgstr ""
 
 #: web_tt2/help_editlist.tt2:148
 msgid ""
-"There is a need to protect Sympa web site against spambot which collect "
-"email address in public web site. Various methods are available in Sympa and "
-"you can choose it with spam_protection and web_archive_spam_protection "
-"parameters. Possible value are:"
+"There is a need to protect Sympa web sites against spambots which collect "
+"email addresses from public web sites. Various methods are available in "
+"Sympa and you can choose to use them with the spam_protection and "
+"web_archive_spam_protection parameters. Possible value are:"
 msgstr ""
 
 #. (list.name,filename,who,conf.wwsympa_url)
@@ -5541,7 +5562,7 @@ msgid "There is no message to moderate for list '%1'."
 msgstr "没有邮件要监管"
 
 # nlsref 16,70
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "¹²ÏíÎÄµµ"
@@ -5643,14 +5664,14 @@ msgstr "这个按钮是为了保护邮递表存档不被垃圾邮件地址收集
 
 #: web_tt2/help_user_options.tt2:3
 msgid ""
-"This is a description of the reception modes available in Sympa. These "
+"This is a description of the receivie modes available in Sympa. These "
 "options are mutually exclusive, which means that you can't set two different "
-"reception modes at the same time. Only some of the modes might be available "
-"for specific mailing lists."
+"receive modes at the same time. Only some of the modes might be available to "
+"specific mailing lists."
 msgstr ""
 
 #. (u_err.name)
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "This is an already existing document : '%1'"
 msgstr ""
 
@@ -5668,7 +5689,7 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 #, fuzzy
 msgid "This list has no message topic"
 msgstr "邮递表的别名已删除。"
@@ -5730,16 +5751,9 @@ msgid ""
 "the list."
 msgstr ""
 
-#: web_tt2/pref.tt2:71
-msgid ""
-"This other email address, that should be known by Sympa, will be recognized "
-"by Sympa as an alternate email address. You will also be able to unify your "
-"subscriptions withyour main email address."
-msgstr ""
-
 #: web_tt2/ls_templates.tt2:7
 msgid ""
-"This page is proposed in order to edit or create mail or web tt2 templates."
+"This page is suggested in order to edit or create mail or web tt2 templates."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:175
@@ -5783,11 +5797,23 @@ msgid ""
 "this parameter."
 msgstr ""
 
+#: web_tt2/help_editlist.tt2:41
+msgid ""
+"This parameter defines a lower limit for each category of bouncing users.For "
+"example, level 1 begins from 45 to level_2_treshold."
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:114
 msgid ""
 "This parameter defines the language used for the list. It is used to "
 "initialize a user's language preference; Sympa command reports are extracted "
 "from the associated message catalog."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:57
+msgid ""
+"This parameter defines the score range defining each category of bouncing "
+"users.For example, level 2 is for users with a score between 80 and 100."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:44
@@ -5884,18 +5910,19 @@ msgstr ""
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr ""
 
-#: web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create a expire task. An expire "
-"task regurlaly checks the inscription or reinscription date of subscribers "
-"and asks them to renew their subscription. If they don't they are deleted."
-msgstr ""
-
 #: web_tt2/help_editlist.tt2:126
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
-"task regurlaly sends to the subscribers a message which reminds them their "
-"subscription to list."
+"task regularly sends  subscribers a message which reminds them of their list "
+"subscriptions."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:87
+msgid ""
+"This parameter states which model is used to create an expire task. An "
+"expire task regularly checks the subscription or resubscription  date of "
+"subscribers and asks them to renew their subscription. If they don't they "
+"are deleted."
 msgstr ""
 
 #: web_tt2/help_editlist.tt2:112
@@ -5921,18 +5948,24 @@ msgid ""
 "user_data_source definition of the included list is irrelevant, and you may "
 "therefore include lists which are also defined by the inclusion of other "
 "lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise an infinite loop."
+"in list A, since this will give rise to an infinite loop."
 msgstr ""
 
-#: web_tt2/sigrequest.tt2:47 web_tt2/subrequest.tt2:42
+#: web_tt2/subrequest.tt2:41
 msgid ""
-"This password, associated to your email address, will\n"
-"\tallow you to access your custom environment."
+"This password, associated with your email address, willallow you to access "
+"your custom environment."
+msgstr ""
+
+#: web_tt2/sigrequest.tt2:45
+msgid ""
+"This password, associated with your email address, willtallow you to access "
+"your custom environment."
 msgstr ""
 
 #: web_tt2/rss_request.tt2:5
 msgid ""
-"This server provide various news via RSS. Choose parameters and pickup the "
+"This server provides various news via RSS. Choose parameters and pickup the "
 "RSS url"
 msgstr ""
 
@@ -5953,6 +5986,25 @@ msgstr ""
 msgid ""
 "This table display every colors used in Sympa, with their hexadecimal code "
 msgstr ""
+
+#. (robot)
+#: web_tt2/edit_template.tt2:13
+msgid ""
+"This template is default for all lists of robot %1 unless it is redefined "
+"for some particular list"
+msgstr ""
+
+#: web_tt2/edit_template.tt2:15
+msgid ""
+"This template is default for all robots unless  it is redefined for some "
+"particular robot"
+msgstr ""
+
+#. (list,robot)
+#: web_tt2/edit_template.tt2:10
+#, fuzzy
+msgid "This template is defined for list %1@%2"
+msgstr "无法更改 %1 的电邮位址"
 
 #: src/etc/mhonarc-ressources.tt2:187 src/etc/mhonarc-ressources.tt2:299
 #: src/etc/mhonarc-ressources.tt2:400
@@ -6019,7 +6071,7 @@ msgid ""
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:60
+#: web_tt2/subrequest.tt2:59
 #, fuzzy
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
@@ -6032,16 +6084,12 @@ msgid ""
 msgstr "要确认您的订阅，您需要使用以下的口令"
 
 #. (list)
-#: web_tt2/sigrequest.tt2:66
+#: web_tt2/sigrequest.tt2:64
 #, fuzzy
 msgid ""
 "To confirm your unsubscription from list %1, please enter\n"
 "\tyour password below :"
 msgstr "要确认您的订阅，您需要使用以下的口令"
-
-#: web_tt2/help.tt2:58
-msgid "To contact this service administrator :"
-msgstr "如果要联系服务器管理员:"
 
 # nlsref 8,12
 #. (list.name)
@@ -6087,10 +6135,6 @@ msgid ""
 "click : "
 msgstr ""
 
-#: web_tt2/help.tt2:47
-msgid "To receive your password :"
-msgstr "要收到口令:"
-
 #: mail_tt2/moderate.tt2:25
 msgid "To reject it (it will be removed):"
 msgstr ""
@@ -6133,7 +6177,7 @@ msgstr ",A<DVA(B: %1<"
 msgid "Toggle Selection"
 msgstr "切换选取"
 
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 msgid "Topic \"other\" is a reserved word"
 msgstr ""
 
@@ -6144,13 +6188,13 @@ msgid "Topic subscription :"
 msgstr "ÍË¶©ÏûÏ¢"
 
 # nlsref 16,74
-#: src/List.pm:977
+#: src/List.pm:985
 #, fuzzy
 msgid "Topics for message categorization"
 msgstr "ÓÊµÝ±í»°Ìâ"
 
 # nlsref 16,74
-#: src/List.pm:1168
+#: src/List.pm:1176
 msgid "Topics for the list"
 msgstr "ÓÊµÝ±í»°Ìâ"
 
@@ -6220,7 +6264,7 @@ msgid "URL"
 msgstr "title"
 
 # nlsref 3,1
-#: src/sympa.pl:1995
+#: src/sympa.pl:2022
 msgid "Unable to access directory %s : %m"
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
@@ -6249,7 +6293,7 @@ msgstr "ÓÃ %s ÑéÖ¤ºóÎÞ·¨·ÃÎÊÓÊ¼þ¡£\n"
 
 # nlsref 6,68
 #. (key,listname)
-#: mail_tt2/listmaster_notification.tt2:349
+#: mail_tt2/listmaster_notification.tt2:350
 #, fuzzy
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr "ÓÃ %s ÑéÖ¤ºóÎÞ·¨·ÃÎÊÓÊ¼þ¡£\n"
@@ -6268,74 +6312,74 @@ msgstr ""
 
 # nlsref 6,2
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:351
+#: mail_tt2/listmaster_notification.tt2:352
 #, fuzzy
 msgid "Unable to add file '%1' to archives."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 3,1
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:298
 #, fuzzy
 msgid "Unable to change directory."
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 11,2
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:339
+#: mail_tt2/listmaster_notification.tt2:340
 #, fuzzy
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "ÎÞ·¨ÔÚ smtpto ´´½¨Í¨µÀ: %m"
 
 #. (path,listname)
-#: mail_tt2/listmaster_notification.tt2:354
+#: mail_tt2/listmaster_notification.tt2:355
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
 # nlsref 11,2
-#: src/mail.pm:677
+#: src/mail.pm:687
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "ÎÞ·¨ÔÚ smtpto ´´½¨Í¨µÀ: %m"
 
 # nlsref 3,1
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:313
 #, fuzzy
 msgid "Unable to create directory '%1'."
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 3,1
-#: mail_tt2/listmaster_notification.tt2:330
+#: mail_tt2/listmaster_notification.tt2:331
 #, fuzzy
 msgid "Unable to create list."
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 8,24
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:350
+#: mail_tt2/listmaster_notification.tt2:351
 #, fuzzy
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "ÍË¶©ÓÊµÝ±í %s ÇëÇó"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr ""
 
 # nlsref 6,2
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:318
 #, fuzzy
 msgid "Unable to erase file '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 #. (arc_file,listname,path)
-#: mail_tt2/listmaster_notification.tt2:322
+#: mail_tt2/listmaster_notification.tt2:323
 #, fuzzy
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "无法更改 %1 的电邮位址"
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:323
+#: mail_tt2/listmaster_notification.tt2:324
 #, fuzzy
 msgid "Unable to find archive for list '%1'"
 msgstr "无法更改 %1 的电邮位址"
@@ -6349,7 +6393,7 @@ msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 6,2
 #. (month,listname)
-#: mail_tt2/listmaster_notification.tt2:321
+#: mail_tt2/listmaster_notification.tt2:322
 #, fuzzy
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
@@ -6362,135 +6406,135 @@ msgstr "无法找到要删除的邮件"
 msgid ""
 "Unable to find the message to delete, probably this message\n"
 "was received without Message-Id. Please refer to listmaster with\n"
-"complete URL of the concerned message"
+"complete URL of the message concerned"
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:333
+#: mail_tt2/listmaster_notification.tt2:334
 #, fuzzy
 msgid "Unable to get family for list '%1'."
 msgstr "无法更改 %1 的电邮位址"
 
 #. (msg)
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:315
 #, fuzzy
 msgid "Unable to get message '%1'."
 msgstr "无法找到要删除的邮件"
 
 # nlsref 6,2
-#: mail_tt2/listmaster_notification.tt2:332 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:333 web_tt2/error.tt2:12
 #, fuzzy
 msgid "Unable to load create_list templates."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 6,2
-#: mail_tt2/listmaster_notification.tt2:331 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:332 web_tt2/error.tt2:11
 #, fuzzy
 msgid "Unable to load list topics."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 3,1
 #. (directory)
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:312
 #, fuzzy
 msgid "Unable to open directory '%1'."
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 6,2
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:311
 #, fuzzy
 msgid "Unable to open file '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 6,2
 #. (spool)
-#: mail_tt2/listmaster_notification.tt2:313
+#: mail_tt2/listmaster_notification.tt2:314
 #, fuzzy
 msgid "Unable to open spool '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 #, fuzzy
 msgid "Unable to read %1 : empty document"
 msgstr "无法读取 %1 : 空的文档"
 
 # nlsref 6,2
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:309
 #, fuzzy
 msgid "Unable to read file : '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 3,1
-#: mail_tt2/listmaster_notification.tt2:334
+#: mail_tt2/listmaster_notification.tt2:335
 #, fuzzy
 msgid "Unable to reload list"
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 6,2
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:334
+#: mail_tt2/listmaster_notification.tt2:335
 #, fuzzy
 msgid "Unable to reload list with new listname '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 3,1
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:317
 #, fuzzy
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "ÎÞ·¨·ÃÎÊÄ¿Â¼ %s : %m"
 
 # nlsref 6,2
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:316
 #, fuzzy
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
-#: mail_tt2/listmaster_notification.tt2:324
+#: mail_tt2/listmaster_notification.tt2:325
 #, fuzzy
 msgid "Unable to send archive : no message id found."
 msgstr "无法找到要删除的邮件"
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:319
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:347
+#: mail_tt2/listmaster_notification.tt2:348
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (from,listname)
-#: mail_tt2/listmaster_notification.tt2:348
+#: mail_tt2/listmaster_notification.tt2:349
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
 #. (listname)
-#: mail_tt2/listmaster_notification.tt2:320
+#: mail_tt2/listmaster_notification.tt2:321
 #, fuzzy
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "无法更改 %1 的电邮位址"
 
 # nlsref 6,2
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:310
 #, fuzzy
 msgid "Unable to write file : '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
 # nlsref 6,2
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:352
+#: mail_tt2/listmaster_notification.tt2:353
 #, fuzzy
 msgid "Unable to write file zip '%1'."
 msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 
-#: web_tt2/lists.tt2:52
+#: web_tt2/lists.tt2:51
 msgid "Unify your subscriptions with the email"
 msgstr "以电邮位址"
 
@@ -6504,15 +6548,21 @@ msgid "Unknown action"
 msgstr "%1 : 未知操作"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:301
 #, fuzzy
 msgid "Unkown authentication service %1."
 msgstr "在验证身份("
 
-#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:42
-#: web_tt2/sigrequest.tt2:58 web_tt2/sigrequest.tt2:75
+#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:41
+#: web_tt2/sigrequest.tt2:56 web_tt2/sigrequest.tt2:73
 msgid "Unsubscribe"
 msgstr "退订"
+
+#: web_tt2/help_editfile.tt2:9
+msgid ""
+"Unsubscribe message : This message is sent when users leave the list\n"
+"using the UNSUBSCRIBE command."
+msgstr ""
 
 #: web_tt2/editsubscriber.tt2:58
 msgid "Unsubscribe the User"
@@ -6537,14 +6587,8 @@ msgstr ""
 msgid "Unsubscription :"
 msgstr "ÍË¶©ÏûÏ¢"
 
-#: web_tt2/help_editfile.tt2:9
-msgid ""
-"Unsubscription message : This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:124
+#: mail_tt2/listmaster_notification.tt2:125
 msgid ""
 "Until then we recommend your remove %1 ;\n"
 "default configuration will be used."
@@ -6581,12 +6625,12 @@ msgid "Update of list members based on the TTL"
 msgstr ""
 
 #. (sub,old_email)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:303
 #, fuzzy
 msgid "Update user '%1' in DB failed"
 msgstr "更新"
@@ -6597,11 +6641,13 @@ msgstr ""
 
 #. (visible_path)
 #: web_tt2/d_read.tt2:366
-msgid "Upload a file inside the folder %1"
+#, fuzzy
+msgid "Upload a file inside folder %1"
 msgstr "上传一个文件到文件夹 %1 中"
 
 #: web_tt2/d_read.tt2:368
-msgid "Upload a file inside the folder SHARED"
+#, fuzzy
+msgid "Upload a file inside folder SHARED"
 msgstr "上传一个文件到文件夹 SHARED 中"
 
 # nlsref 6,85
@@ -6623,6 +6669,12 @@ msgstr "%s ÒÑ¾­ÊÇÓÊµÝ±í %s µÄ¶©»§¡£\n"
 msgid "User Email"
 msgstr "发件人邮件"
 
+# nlsref 6,81
+#: web_tt2/viewlogs.tt2:212
+#, fuzzy
+msgid "User IP"
+msgstr "ÓÃ»§Ö¸ÄÏ"
+
 # nlsref 6,38
 #. (who,list.name)
 #: mail_tt2/listowner_notification.tt2:144
@@ -6635,7 +6687,7 @@ msgid "User certificate belong to"
 msgstr ",ASC;'F>V$Jtl6(B"
 
 # nlsref 16,81
-#: src/List.pm:1206
+#: src/List.pm:1214
 msgid "User data source"
 msgstr "ÓÃ»§Êý¾ÝÔ´"
 
@@ -6674,12 +6726,12 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: web_tt2/lists.tt2:59
+#: web_tt2/lists.tt2:58
 #, fuzzy
 msgid "Validate"
 msgstr "确定"
 
-#: web_tt2/sso_login.tt2:51
+#: web_tt2/sso_login.tt2:50
 #, fuzzy
 msgid "Validate Address"
 msgstr "确定"
@@ -6706,7 +6758,7 @@ msgid "Visibility :"
 msgstr ""
 
 # nlsref 16,82
-#: src/List.pm:1218
+#: src/List.pm:1226
 msgid "Visibility of the list"
 msgstr "ÓÊµÝ±íµÄ¿É¼ûÐÔ"
 
@@ -6742,20 +6794,12 @@ msgid ""
 "WHICH                       * Displays which lists you are subscribed to"
 msgstr ""
 
-#: web_tt2/help.tt2:53
-msgid "WWSympa can remind you your password by email :"
-msgstr ""
-
-#: web_tt2/help.tt2:8
-msgid "WWSympa provides  you access to your environment on mailing list server"
-msgstr "您可以在这里访问邮件邮递表服务器"
-
 #: mail_tt2/your_infected_msg.tt2:13
 msgid "We stopped delivery of this email."
 msgstr ""
 
 # nlsref 16,83
-#: src/List.pm:1239
+#: src/List.pm:1247
 msgid "Web archives"
 msgstr "Ò³Ãæ´æµµ"
 
@@ -6801,8 +6845,8 @@ msgstr ""
 msgid "Web forum ML"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:295
-#: mail_tt2/listmaster_notification.tt2:369
+#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:370
 msgid "Web interface"
 msgstr ""
 
@@ -6817,7 +6861,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,85
-#: src/List.pm:1245
+#: src/List.pm:1253
 msgid "Welcome return-path"
 msgstr "»¶Ó­ÐÅÏ¢µÄ·µ»ØÂ·¾¶(return-path)"
 
@@ -6830,10 +6874,6 @@ msgstr ""
 #: mail_tt2/welcome.tt2:10 mail_tt2/welcome.tt2:27 mail_tt2/welcome.tt2:30
 msgid "Welcome to list %1@%2"
 msgstr ""
-
-#: web_tt2/help.tt2:28
-msgid "When authenticating ("
-msgstr "在验证身份("
 
 #: web_tt2/help_editlist.tt2:47
 msgid ""
@@ -6848,57 +6888,57 @@ msgid ""
 msgstr ""
 
 # nlsref 16,2
-#: src/List.pm:313
+#: src/List.pm:314
 msgid "Who can add subscribers"
 msgstr "Ë­¿ÉÒÔÌí¼Ó¶©»§"
 
 # nlsref 16,21
-#: src/List.pm:470
+#: src/List.pm:478
 msgid "Who can delete subscribers"
 msgstr "Ë­¿ÉÒÔÍË¶©¶©»§"
 
 # nlsref 16,87
-#: src/List.pm:1124
+#: src/List.pm:1132
 msgid "Who can edit"
 msgstr "Ë­¿ÉÒÔ±à¼­"
 
 # nlsref 16,54
-#: src/List.pm:917
+#: src/List.pm:925
 msgid "Who can invite people"
 msgstr "Ë­¿ÉÒÔÑûÇë±ðÈË¼ÓÈë"
 
 # nlsref 16,67
-#: src/List.pm:1097
+#: src/List.pm:1105
 msgid "Who can review subscribers"
 msgstr "Ë­¿ÉÒÔ²é¿´¶©»§"
 
 # nlsref 16,68
-#: src/List.pm:1108
+#: src/List.pm:1116
 msgid "Who can send messages"
 msgstr "Ë­¿ÉÒÔ·¢ËÍÓÊ¼þ"
 
 # nlsref 16,64
-#: src/List.pm:1057
+#: src/List.pm:1065
 msgid "Who can start a remind process"
 msgstr "Ë­¿ÉÒÔÆô¶¯ÌáÐÑ¹ý³Ì"
 
 # nlsref 16,73
-#: src/List.pm:1162
+#: src/List.pm:1170
 msgid "Who can subscribe to the list"
 msgstr "Ë­¿ÉÒÔ¶©ÔÄÓÊµÝ±í"
 
 # nlsref 16,76
-#: src/List.pm:1179
+#: src/List.pm:1187
 msgid "Who can unsubscribe"
 msgstr "Ë­¿ÉÒÔÍË¶©ÓÊµÝ±í"
 
 # nlsref 16,86
-#: src/List.pm:1120
+#: src/List.pm:1128
 msgid "Who can view"
 msgstr "Ë­¿ÉÒÔ²é¿´"
 
 # nlsref 16,53
-#: src/List.pm:913
+#: src/List.pm:921
 msgid "Who can view list information"
 msgstr "Ë­¿ÉÒÔ²é¿´ÓÊµÝ±íÐÅÏ¢"
 
@@ -6908,7 +6948,7 @@ msgid "Wrong parameters"
 msgstr "Data sources setup"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:50
+#: web_tt2/error.tt2:51
 #, fuzzy
 msgid "Wrong value for parameter %1"
 msgstr "Data sources setup"
@@ -6920,13 +6960,13 @@ msgid "You are already logged in as %1"
 msgstr "您已经以 %1 登录"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 #, fuzzy
 msgid "You are already subscribed to the list %1"
 msgstr "您已经订阅了邮递表 %1"
 
 #. (list)
-#: web_tt2/subrequest.tt2:78
+#: web_tt2/subrequest.tt2:77
 msgid "You are already subscriber of list %1"
 msgstr "您已经订阅了邮递表 %1。"
 
@@ -6936,7 +6976,7 @@ msgid "You are not allowed to subscribe to this list."
 msgstr "您已经订阅了邮递表 %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:62
+#: web_tt2/error.tt2:63
 #, fuzzy
 msgid "You are not subscribed to list %1"
 msgstr "您不是邮递表 %1 的订阅者"
@@ -6974,6 +7014,12 @@ msgid "You asked to be subscribed to %1 mailing list."
 msgstr "您请求订阅邮递表 %1。"
 
 #. (list)
+#: web_tt2/sigrequest.tt2:4
+#, fuzzy
+msgid "You asked to be unsubscribed  from list %1"
+msgstr "您请求退订邮递表 %1。"
+
+#. (list)
 #: mail_tt2/sendpasswd.tt2:23
 #, fuzzy
 msgid "You asked to be unsubscribed from %1 mailing list."
@@ -6992,14 +7038,14 @@ msgid "You can contact list owner:"
 msgstr ""
 
 #: web_tt2/editfile.tt2:15
-msgid "You can edit several messages/files associated to your list :"
+msgid "You can edit several messages/files associated with your list :"
 msgstr ""
 
-#: web_tt2/help.tt2:37
-#, fuzzy
+#: web_tt2/error.tt2:48
 msgid ""
-"You can logout (deletion of the cookie) at any time using logout button."
-msgstr "您可以在任何时候使用"
+"You can not get a password reminder ; probably because your password is "
+"managed outside Sympa (Single Sign-On system or LDAP directory)."
+msgstr ""
 
 #: mail_tt2/helpfile.tt2:17
 msgid ""
@@ -7022,13 +7068,13 @@ msgid ""
 "its size should not exceed 100 Kb."
 msgstr ""
 
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 #, fuzzy
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "您并未选取口令, 请要求一份原先口令的提醒"
 
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 msgid "You did not select an action to perform"
 msgstr ""
 
@@ -7067,7 +7113,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/error.tt2:130 web_tt2/error.tt2:51
+#: web_tt2/error.tt2:131 web_tt2/error.tt2:52
 msgid "You need to login"
 msgstr "您需要先登录"
 
@@ -7083,7 +7129,7 @@ msgstr ""
 msgid "You need to login."
 msgstr "您需要先登录"
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 #, fuzzy
 msgid "You need to provide list name"
 msgstr "您需要先登录"
@@ -7129,7 +7175,7 @@ msgid "You requested subscription to list %1"
 msgstr "您请求订阅邮递表 %1。"
 
 #. (list)
-#: web_tt2/sigrequest.tt2:25 web_tt2/sigrequest.tt2:4
+#: web_tt2/sigrequest.tt2:25
 msgid "You requested unsubscription from list %1"
 msgstr "您请求退订邮递表 %1。"
 
@@ -7146,7 +7192,7 @@ msgid "You won't receive the signed messages from your lists."
 msgstr ""
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 #, fuzzy
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "您没有被授权上传一个 INDEX.HTML 到 %1"
@@ -7178,13 +7224,6 @@ msgstr ""
 #, fuzzy
 msgid "Your are subscriber of list %1@%2 with  email %3"
 msgstr "ÄúÊÇÓÊµÝ±í %s µÄ³ÉÔ±£¬Ê¹ÓÃµÄ¶©ÔÄÓÊ¼þÊÇ %s\n"
-
-#: web_tt2/help.tt2:43
-msgid ""
-"Your are therefore not registered in Sympa user database and you can't "
-"login.\n"
-"If you subscribe to a list, WWSympa will give you an initial password."
-msgstr ""
 
 #. (expiration_date)
 #: mail_tt2/certif_warning.tt2:7
@@ -7233,7 +7272,7 @@ msgstr "别名已成功设定。"
 msgid "Your document has been rejected."
 msgstr "Äú·¢µ½ %s µÄÓÊ¼þÒÑ¾­±»¾Ü¾ø"
 
-#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:48
+#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:47
 msgid "Your e-mail address"
 msgstr "您的电子邮件地址"
 
@@ -7246,7 +7285,7 @@ msgid ""
 "you subscribed from a different e-mail address ?"
 msgstr "ÄúµÄÓÊ¼þµØÖ·²»ÔÚÓÊµÝ±í %s ÄÚ¡£»òÐíÄúÊ¹ÓÃÁíÍâµÄÓÊ¼þµØÖ·¶©ÔÄµÄ ?\n"
 
-#: web_tt2/sigrequest.tt2:54
+#: web_tt2/sigrequest.tt2:52
 msgid "Your e-mail address :"
 msgstr "您的邮件地址:"
 
@@ -7352,7 +7391,7 @@ msgid ""
 "e-mail box to provide your password below."
 msgstr "请检查您的 Email 邮件箱获得您的口令，并输入到下面。"
 
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -7388,10 +7427,6 @@ msgstr ""
 msgid "Your subscription email is %1"
 msgstr ""
 
-#: web_tt2/help.tt2:20
-msgid "Your subscriptions"
-msgstr "您订阅的邮递表"
-
 # nlsref 11,1
 #: src/mail.pm:53
 msgid ""
@@ -7410,10 +7445,6 @@ msgstr ""
 
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
-msgstr ""
-
-#: web_tt2/review.tt2:201
-msgid "[% u.email %]'s picture"
 msgstr ""
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
@@ -7459,11 +7490,11 @@ msgid "access"
 msgstr "存取"
 
 # nlsref 16,6
-#: src/List.pm:1222 src/List.pm:327
+#: src/List.pm:1230 src/List.pm:328
 msgid "access right"
 msgstr "·ÃÎÊÈ¨ÏÞ"
 
-#: src/List.pm:377 src/List.pm:398
+#: src/List.pm:385 src/List.pm:406
 msgid "action for this population"
 msgstr ""
 
@@ -7481,29 +7512,21 @@ msgstr ""
 msgid "add impossible"
 msgstr ""
 
-#: src/etc/scenari/add.owner.~1.10.~:1
-msgid "add performed by list owner do not need authentication"
-msgstr ""
-
 #: src/etc/scenari/add.owner:1
 #, fuzzy
 msgid "add performed by list owner does not need authentication"
 msgstr "在验证身份("
 
-#: src/etc/scenari/add.owner_notify.~1.9.~:1
-msgid "add performed by owner do not need authentication (notification)"
-msgstr ""
-
 #: src/etc/scenari/add.owner_notify:1
 msgid "add performed by owner does not need authentication (notification)"
 msgstr ""
 
-#: web_tt2/lists.tt2:15 web_tt2/your_lists.tt2:13
+#: web_tt2/lists.tt2:14 web_tt2/your_lists.tt2:13
 msgid "admin"
 msgstr "管理"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:138
+#: mail_tt2/listmaster_notification.tt2:139
 #, fuzzy
 msgid "admins update failed for list %1"
 msgstr "无法更改 %1 的电邮位址"
@@ -7565,7 +7588,7 @@ msgstr "»¶Ó­´Ç"
 msgid "anyone, notification is sent to list owner"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:300
 msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
@@ -7613,7 +7636,7 @@ msgid "case sensitive"
 msgstr "区分大小写"
 
 # nlsref 16,208
-#: src/List.pm:839
+#: src/List.pm:847
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
@@ -7628,7 +7651,7 @@ msgstr ""
 #: web_tt2/blacklist.tt2:13
 msgid ""
 "char * match any string. Example : \"*@spammer-domain.com\" match any sender "
-"from that exact domai"
+"from that exact domain"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:186 src/etc/mhonarc-ressources.tt2:298
@@ -7674,12 +7697,12 @@ msgid "concealed"
 msgstr ""
 
 # nlsref 16,94
-#: src/List.pm:874
+#: src/List.pm:882
 msgid "connection options"
 msgstr ""
 
 # nlsref 16,98
-#: src/List.pm:661
+#: src/List.pm:669
 msgid "connection timeout"
 msgstr ""
 
@@ -7708,38 +7731,38 @@ msgstr ""
 msgid "daily update of the certificate revocation list"
 msgstr ""
 
-#: src/List.pm:583
+#: src/List.pm:591
 msgid "data location URL"
 msgstr ""
 
 # nlsref 16,48
-#: src/List.pm:870
+#: src/List.pm:878
 msgid "database name"
 msgstr "Êý¾Ý¿âÃû"
 
 # nlsref 16,46
-#: src/List.pm:865
+#: src/List.pm:873
 #, fuzzy
 msgid "database port"
 msgstr "Êý¾Ý¿âÀàÐÍ"
 
 # nlsref 16,46
-#: src/List.pm:856
+#: src/List.pm:864
 msgid "database type"
 msgstr "Êý¾Ý¿âÀàÐÍ"
 
-#: src/List.pm:1032 src/List.pm:537
+#: src/List.pm:1040 src/List.pm:545
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Data sources setup"
 
-#: src/List.pm:1190 src/List.pm:932
+#: src/List.pm:1198 src/List.pm:940
 #, fuzzy
 msgid "date"
 msgstr "更新"
 
 # nlsref 16,23
-#: src/List.pm:477
+#: src/List.pm:485
 msgid "days"
 msgstr "Ìì"
 
@@ -7792,8 +7815,8 @@ msgstr "ÓÊµÝ±íÄ¿Â¼"
 msgid "distrib"
 msgstr "分发"
 
-#: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:70
-#: web_tt2/subrequest.tt2:30 web_tt2/subrequest.tt2:64
+#: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
+#: web_tt2/subrequest.tt2:30 web_tt2/subrequest.tt2:63
 msgid "e-mail address"
 msgstr "电子邮件地址"
 
@@ -7808,7 +7831,7 @@ msgstr "edit"
 msgid "edit blacklist"
 msgstr "恢复"
 
-#: mail_tt2/listmaster_notification.tt2:120
+#: mail_tt2/listmaster_notification.tt2:121
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
@@ -7825,12 +7848,12 @@ msgid "editor rejection message"
 msgstr "±à¼­¾Ü¾øÏûÏ¢"
 
 # nlsref 16,27
-#: src/List.pm:507 src/List.pm:997 web_tt2/login_menu.tt2:71
-#: web_tt2/loginbanner.tt2:77 web_tt2/sso_login.tt2:46
+#: src/List.pm:1005 src/List.pm:515 web_tt2/login_menu.tt2:71
+#: web_tt2/loginbanner.tt2:77 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "µç×ÓÓÊ¼þµØÖ·"
 
-#: src/List.pm:1140 src/List.pm:1145
+#: src/List.pm:1148 src/List.pm:1153
 msgid "email address protection method"
 msgstr ""
 
@@ -7854,17 +7877,17 @@ msgid "entire word"
 msgstr "整个"
 
 # nlsref 16,148
-#: src/List.pm:879
+#: src/List.pm:887
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:1185 src/List.pm:928
+#: src/List.pm:1193 src/List.pm:936
 #, fuzzy
 msgid "epoch date"
 msgstr "更新"
 
-#: mail_tt2/listmaster_notification.tt2:190
-#: mail_tt2/listmaster_notification.tt2:200
+#: mail_tt2/listmaster_notification.tt2:191
+#: mail_tt2/listmaster_notification.tt2:201
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
@@ -7874,52 +7897,56 @@ msgstr ""
 msgid "everyone can post"
 msgstr "Ë­¿ÉÒÔ±à¼­"
 
+#: web_tt2/viewlogs.tt2:63
+msgid "ex: 03/05/2006"
+msgstr ""
+
 #: src/etc/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
 msgstr ""
 
 # nlsref 16,42
-#: src/List.pm:645
+#: src/List.pm:653
 msgid "extracted attribute"
 msgstr "ÌáÈ¡µÄÊôÐÔ"
 
 # nlsref 16,41
-#: src/List.pm:639
+#: src/List.pm:647
 msgid "filter"
 msgstr "¹ýÂË¹æÔò"
 
 # nlsref 16,198
-#: src/List.pm:742
+#: src/List.pm:750
 msgid "first-level connection timeout"
 msgstr ""
 
 # nlsref 16,142
-#: src/List.pm:726
+#: src/List.pm:734
 msgid "first-level extracted attribute"
 msgstr ""
 
 # nlsref 16,141
-#: src/List.pm:721
+#: src/List.pm:729
 msgid "first-level filter"
 msgstr ""
 
 # nlsref 16,201
-#: src/List.pm:748
+#: src/List.pm:756
 msgid "first-level regular expression"
 msgstr ""
 
 # nlsref 16,197
-#: src/List.pm:736
+#: src/List.pm:744
 msgid "first-level search scope"
 msgstr ""
 
 # nlsref 16,143
-#: src/List.pm:731
+#: src/List.pm:739
 msgid "first-level selection"
 msgstr ""
 
 # nlsref 16,140
-#: src/List.pm:715
+#: src/List.pm:723
 msgid "first-level suffix"
 msgstr ""
 
@@ -7942,7 +7969,7 @@ msgid "for anyone without authentication"
 msgstr ""
 
 # nlsref 16,5
-#: src/List.pm:322
+#: src/List.pm:323
 msgid "frequency"
 msgstr "Æµ¶È"
 
@@ -7963,7 +7990,7 @@ msgid "global remind message"
 msgstr "È«¾ÖÌáÐÑÏûÏ¢"
 
 # nlsref 16,9
-#: src/List.pm:361
+#: src/List.pm:369
 msgid "halt rate"
 msgstr "Í£Ö¹±ÈÂÊ"
 
@@ -7977,7 +8004,7 @@ msgid "homepage"
 msgstr ""
 
 # nlsref 16,24
-#: src/List.pm:483
+#: src/List.pm:491
 msgid "hour"
 msgstr "Ð¡Ê±"
 
@@ -7989,7 +8016,7 @@ msgstr ""
 msgid "impossible"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:114
+#: mail_tt2/listmaster_notification.tt2:115
 msgid "incorrect format of edit_list.conf"
 msgstr ""
 
@@ -8010,6 +8037,11 @@ msgstr "修改权限"
 #: src/etc/scenari/invite.owner:1
 msgid "invite perform by list owner do not need authentication"
 msgstr ""
+
+#: web_tt2/modindex.tt2:97
+#, fuzzy
+msgid "isting of shared documents to moderate"
+msgstr "没有邮件要监管"
 
 #: web_tt2/remindpasswd.tt2:6
 msgid "it will be sent to you by email :"
@@ -8058,13 +8090,13 @@ msgid "list %1"
 msgstr "第%1页，共%2页"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:147
-#: mail_tt2/listmaster_notification.tt2:158
-#: mail_tt2/listmaster_notification.tt2:169
-#: mail_tt2/listmaster_notification.tt2:179
-#: mail_tt2/listmaster_notification.tt2:219
-#: mail_tt2/listmaster_notification.tt2:229
-#: mail_tt2/listmaster_notification.tt2:239
+#: mail_tt2/listmaster_notification.tt2:148
+#: mail_tt2/listmaster_notification.tt2:159
+#: mail_tt2/listmaster_notification.tt2:170
+#: mail_tt2/listmaster_notification.tt2:180
+#: mail_tt2/listmaster_notification.tt2:220
+#: mail_tt2/listmaster_notification.tt2:230
+#: mail_tt2/listmaster_notification.tt2:240
 msgid "list %1 in status error_config"
 msgstr ""
 
@@ -8091,7 +8123,7 @@ msgstr "ÓÊµÝ±íÃèÊö"
 #: web_tt2/close_list.tt2:4
 msgid ""
 "list has been closed. Its subscribers have been deleted from\n"
-"the subscriber database. The list is no more public on the site."
+"the subscriber database. The list is no longer public on the site."
 msgstr ""
 
 # nlsref 15,14
@@ -8157,7 +8189,7 @@ msgid "message header"
 msgstr "ÓÊ¼þÍ·"
 
 # nlsref 16,25
-#: src/List.pm:489
+#: src/List.pm:497
 msgid "minute"
 msgstr "·ÖÖÓ"
 
@@ -8172,7 +8204,7 @@ msgid "moderated for subscribers"
 msgstr "邮递表没有订阅者"
 
 # nlsref 16,29
-#: src/List.pm:1007 src/List.pm:517
+#: src/List.pm:1015 src/List.pm:525
 msgid "name"
 msgstr "Ãû×Ö"
 
@@ -8210,7 +8242,7 @@ msgid "no conceal"
 msgstr ""
 
 #: wwsympa/wwslib.pm:43
-msgid "no mail (usefull for vacations)"
+msgid "no mail (useful for vacations)"
 msgstr ""
 
 # nlsref 16,86
@@ -8223,18 +8255,12 @@ msgstr "Ë­¿ÉÒÔ²é¿´"
 msgid "no protection against spammer."
 msgstr ""
 
-# nlsref 16,86
-#: src/etc/scenari/review.closed.~1.9.~:1
-#, fuzzy
-msgid "nobody can review"
-msgstr "Ë­¿ÉÒÔ²é¿´"
-
 #: wwsympa/wwslib.pm:39
 #, fuzzy
 msgid "notice mode"
 msgstr "整个"
 
-#: src/List.pm:382 src/List.pm:403
+#: src/List.pm:390 src/List.pm:411
 msgid "notification"
 msgstr ""
 
@@ -8285,8 +8311,12 @@ msgstr "请求于"
 msgid "open with mail confirmation, owner is notified"
 msgstr ""
 
+#: web_tt2/serveradmin.tt2:58
+msgid "or "
+msgstr ""
+
 # nlsref 16,92
-#: src/List.pm:1083
+#: src/List.pm:1091
 msgid "other email address"
 msgstr ""
 
@@ -8305,7 +8335,7 @@ msgstr ""
 msgid "owners approval"
 msgstr ""
 
-#: web_tt2/review.tt2:27 web_tt2/viewlogs.tt2:25
+#: web_tt2/review.tt2:260 web_tt2/review.tt2:27 web_tt2/viewlogs.tt2:25
 #, fuzzy
 msgid "page"
 msgstr "后一页"
@@ -8336,9 +8366,9 @@ msgid "part of word"
 msgstr "口令"
 
 #: web_tt2/login_menu.tt2:73 web_tt2/loginbanner.tt2:78
-#: web_tt2/sigrequest.tt2:38 web_tt2/sigrequest.tt2:71
-#: web_tt2/sso_login.tt2:48 web_tt2/subrequest.tt2:31
-#: web_tt2/subrequest.tt2:65
+#: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
+#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:31
+#: web_tt2/subrequest.tt2:64
 msgid "password"
 msgstr "口令"
 
@@ -8347,7 +8377,11 @@ msgstr "口令"
 msgid "password: %1"
 msgstr "口令: %1"
 
-#: src/List.pm:1250
+#: web_tt2/dump_scenario.tt2:16
+msgid "path:"
+msgstr ""
+
+#: src/List.pm:1258
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
@@ -8359,17 +8393,17 @@ msgid "private archives"
 msgstr "Ò³Ãæ´æµµ"
 
 # nlsref 16,30
-#: src/List.pm:522
+#: src/List.pm:530
 msgid "private information"
 msgstr "Ë½ÈËÐÅÏ¢"
 
 # nlsref 16,61
-#: src/List.pm:1012
+#: src/List.pm:1020
 msgid "private informations"
 msgstr "Ë½ÈËÐÅÏ¢"
 
 # nlsref 16,62
-#: src/List.pm:1017 src/List.pm:1042
+#: src/List.pm:1025 src/List.pm:1050
 msgid "profile"
 msgstr "ÃèÊö"
 
@@ -8441,7 +8475,7 @@ msgid "quiet"
 msgstr "安静"
 
 # nlsref 16,203
-#: src/List.pm:1131 src/List.pm:1229
+#: src/List.pm:1139 src/List.pm:1237
 msgid "quota"
 msgstr ""
 
@@ -8451,8 +8485,8 @@ msgid "reception"
 msgstr "接收"
 
 # nlsref 16,19
-#: src/List.pm:1002 src/List.pm:1037 src/List.pm:343 src/List.pm:457
-#: src/List.pm:512 src/List.pm:542
+#: src/List.pm:1010 src/List.pm:1045 src/List.pm:344 src/List.pm:465
+#: src/List.pm:520 src/List.pm:550
 msgid "reception mode"
 msgstr "½ÓÊÕÄ£Ê½"
 
@@ -8474,32 +8508,32 @@ msgid "remind message sent to subscribers every year"
 msgstr ""
 
 # nlsref 16,36
-#: src/List.pm:612 src/List.pm:694 src/List.pm:822 src/List.pm:861
+#: src/List.pm:620 src/List.pm:702 src/List.pm:830 src/List.pm:869
 msgid "remote host"
 msgstr "Ô¶³ÌÖ÷»ú"
 
 # nlsref 16,206
-#: src/List.pm:851
+#: src/List.pm:859
 msgid "remote list inclusion"
 msgstr ""
 
 # nlsref 16,39
-#: src/List.pm:596 src/List.pm:629 src/List.pm:711 src/List.pm:888
+#: src/List.pm:604 src/List.pm:637 src/List.pm:719 src/List.pm:896
 msgid "remote password"
 msgstr "Ô¶³Ì¿ÚÁî"
 
 # nlsref 16,207
-#: src/List.pm:834
+#: src/List.pm:842
 msgid "remote path of sympa list dump"
 msgstr ""
 
 # nlsref 16,37
-#: src/List.pm:618 src/List.pm:700 src/List.pm:828
+#: src/List.pm:626 src/List.pm:708 src/List.pm:836
 msgid "remote port"
 msgstr "Ô¶³Ì¶Ë¿Ú"
 
 # nlsref 16,38
-#: src/List.pm:589 src/List.pm:623 src/List.pm:705 src/List.pm:883
+#: src/List.pm:597 src/List.pm:631 src/List.pm:713 src/List.pm:891
 msgid "remote user"
 msgstr "Ô¶³ÌÓÃ»§"
 
@@ -8521,7 +8555,7 @@ msgid "requires authentication then owner approval"
 msgstr ""
 
 # nlsref 16,93
-#: src/List.pm:1088
+#: src/List.pm:1096
 msgid "respect of existing header field"
 msgstr ""
 
@@ -8613,6 +8647,12 @@ msgstr ",A@4WT(B: %1"
 msgid "role"
 msgstr "ÃèÊö"
 
+#: web_tt2/remove_arc.tt2:14
+msgid ""
+"rror while deleting this message, please refer to listmaster with\n"
+"complete URL of the message concerned."
+msgstr ""
+
 #: web_tt2/blacklist.tt2:38 web_tt2/dump_scenario.tt2:36
 #: web_tt2/edit_template.tt2:37
 #, fuzzy
@@ -8638,47 +8678,47 @@ msgid "scope :"
 msgstr ""
 
 # nlsref 16,97
-#: src/List.pm:655
+#: src/List.pm:663
 msgid "search scope"
 msgstr ""
 
 # nlsref 16,200
-#: src/List.pm:780
+#: src/List.pm:788
 msgid "second-level connection timeout"
 msgstr ""
 
 # nlsref 16,146
-#: src/List.pm:764
+#: src/List.pm:772
 msgid "second-level extracted attribute"
 msgstr ""
 
 # nlsref 16,145
-#: src/List.pm:758
+#: src/List.pm:766
 msgid "second-level filter template"
 msgstr ""
 
 # nlsref 16,202
-#: src/List.pm:786
+#: src/List.pm:794
 msgid "second-level regular expression"
 msgstr ""
 
 # nlsref 16,199
-#: src/List.pm:774
+#: src/List.pm:782
 msgid "second-level search scope"
 msgstr ""
 
 # nlsref 16,147
-#: src/List.pm:769
+#: src/List.pm:777
 msgid "second-level selection"
 msgstr ""
 
 # nlsref 16,144
-#: src/List.pm:752
+#: src/List.pm:760
 msgid "second-level suffix template"
 msgstr ""
 
 # nlsref 16,43
-#: src/List.pm:650
+#: src/List.pm:658
 msgid "selection (if multiple)"
 msgstr "Ñ¡Ôñ(Èç¹ûÓÐ¶à¸ö)"
 
@@ -8701,8 +8741,8 @@ msgid "session"
 msgstr ""
 
 # nlsref 16,209
-#: src/List.pm:601 src/List.pm:665 src/List.pm:790 src/List.pm:844
-#: src/List.pm:902
+#: src/List.pm:609 src/List.pm:673 src/List.pm:798 src/List.pm:852
+#: src/List.pm:910
 msgid "short name for this source"
 msgstr ""
 
@@ -8721,7 +8761,7 @@ msgid ""
 "logs  to be sure that static css a really in use."
 msgstr ""
 
-#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:52
+#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:51
 msgid "submit"
 msgstr "提交"
 
@@ -8741,7 +8781,7 @@ msgid "subscribers only"
 msgstr "订阅者"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:127
+#: mail_tt2/listmaster_notification.tt2:128
 msgid "subscribers update failed for list %1"
 msgstr ""
 
@@ -8756,7 +8796,7 @@ msgid "subscription request confirmed"
 msgstr ",AC;SP6)TDR*Gs(B"
 
 # nlsref 16,40
-#: src/List.pm:633
+#: src/List.pm:641
 msgid "suffix"
 msgstr "ºó×º"
 
@@ -8792,8 +8832,8 @@ msgstr ""
 
 #: web_tt2/help_editlist.tt2:150
 msgid ""
-"the address is hidden using a javascript. User who enable javascript can see "
-"a nice mailto address where others have nothing."
+"the address is hidden using a javascript. A user who enables javascript can "
+"see a nice mailto address where others have nothing."
 msgstr ""
 
 #: web_tt2/skinsedit.tt2:49
@@ -8801,7 +8841,7 @@ msgid "the current definition for css location (css_url parameter) is"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:1027 src/List.pm:532
+#: src/List.pm:1035 src/List.pm:540
 #, fuzzy
 msgid "the datasource"
 msgstr "ÓÃ»§Êý¾ÝÔ´"
@@ -8820,36 +8860,21 @@ msgstr "邮递表名；注意，不是它的地址!"
 msgid "this sentence"
 msgstr "(本句话，"
 
-#. (robot)
-#: web_tt2/edit_template.tt2:13
-msgid ""
-"this template is defined for all lists of robot %1 unless it is redefined "
-"for some particular list"
-msgstr ""
-
-#: web_tt2/edit_template.tt2:15
-msgid ""
-"this template is defined for all robots unless  it is redefined for some "
-"particular robot"
-msgstr ""
-
-#. (list,robot)
-#: web_tt2/edit_template.tt2:10
-#, fuzzy
-msgid "this template is defined for list %1@%2"
-msgstr "无法更改 %1 的电邮位址"
-
 #: src/etc/mhonarc-ressources.tt2:403
 msgid "thread"
 msgstr ""
 
-#: src/List.pm:372 src/List.pm:393
+#: src/List.pm:380 src/List.pm:401
 msgid "threshold"
 msgstr ""
 
 #: web_tt2/d_read.tt2:350
 msgid "title"
 msgstr "URL"
+
+#: web_tt2/viewlogs.tt2:62
+msgid "to"
+msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:443
 #, fuzzy
@@ -8868,7 +8893,8 @@ msgstr "话题:"
 
 # nlsref 15,2
 #: wwsympa/wwslib.pm:62
-msgid "unsubscription message"
+#, fuzzy
+msgid "unsubscribe message"
 msgstr "ÍË¶©ÏûÏ¢"
 
 # nlsref 6,81
@@ -8877,12 +8903,12 @@ msgstr "ÍË¶©ÏûÏ¢"
 msgid "urlize mode"
 msgstr "ÓÃ»§Ö¸ÄÏ"
 
-#: src/List.pm:671 src/List.pm:796
+#: src/List.pm:679 src/List.pm:804
 msgid "use SSL (LDAPS)"
 msgstr ""
 
 # nlsref 16,91
-#: src/List.pm:1078 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1086 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr ""
 
@@ -8904,12 +8930,12 @@ msgid "virus infection message"
 msgstr ""
 
 # nlsref 16,20
-#: src/List.pm:462
+#: src/List.pm:470
 msgid "visibility"
 msgstr "¿É¼ûÐÔ"
 
 # nlsref 16,8
-#: src/List.pm:354
+#: src/List.pm:362
 msgid "warn rate"
 msgstr "¾¯¸æ±ÈÂÊ"
 
@@ -8919,16 +8945,21 @@ msgid "welcome message"
 msgstr "»¶Ó­´Ç"
 
 # nlsref 16,53
-#: src/List.pm:937
+#: src/List.pm:945
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Ë­¿ÉÒÔ²é¿´ÓÊµÝ±íÐÅÏ¢"
 
 # nlsref 16,77
-#: src/List.pm:1196
+#: src/List.pm:1204
 #, fuzzy
 msgid "who updated the config"
 msgstr "ÅäÖÃµÄ×îºó¸üÐÂÊ±¼ä"
+
+#: mail_tt2/authorization_reject.tt2:56
+#, fuzzy
+msgid "you are not allowed to edit list parameters."
+msgstr "%1: 您不被允许进行这个操作"
 
 #: mail_tt2/authorization_reject.tt2:185
 #, fuzzy
@@ -8949,6 +8980,160 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:33 mail_tt2/sendssopasswd.tt2:11
 msgid "your password : %1"
 msgstr "口令: %1"
+
+#, fuzzy
+#~ msgid " The active lists "
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#, fuzzy
+#~ msgid " The latest messages "
+#~ msgstr "最新邮件优先"
+
+#, fuzzy
+#~ msgid " latest lists "
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#~ msgid "%1 : action succeeded"
+#~ msgstr "配置文件已经被更新"
+
+#~ msgid "), provide your email address and associated password."
+#~ msgstr ")时，请提供您的 Email 地址和相应的口令。"
+
+#~ msgid ": Login / Logout from WWSympa."
+#~ msgstr ": 从 WWSympa 上登录或退出。"
+
+#~ msgid ": directory of lists available on the server"
+#~ msgstr ": 服务器上提供的公开邮递表。"
+
+#, fuzzy
+#~ msgid ": user preferences. This is proposed to identified users only."
+#~ msgstr ": 用户首选项。仅提供给确认身份的用户。"
+
+#~ msgid ": your environment as a subscriber or as owner"
+#~ msgstr ": 您作为订阅者或拥有者的环境。"
+
+#, fuzzy
+#~ msgid "Client"
+#~ msgstr "恢复"
+
+#, fuzzy
+#~ msgid "Daemon"
+#~ msgstr ",AHUFZ(B"
+
+#~ msgid ""
+#~ "Do you really want to send a subscription remind message to the %1 "
+#~ "subscribers"
+#~ msgstr "您确定要给发送订阅提醒到所有的%1个订阅者吗 ?"
+
+#~ msgid "I am not a list subscriber"
+#~ msgstr "我不是邮递表的订阅者"
+
+#~ msgid "I am subscriber to at least one list but I have no password"
+#~ msgstr "我是至少一个邮递表的订阅者，但是我没有口令"
+
+#~ msgid "I forgot my password"
+#~ msgstr "我忘记了口令"
+
+#, fuzzy
+#~ msgid "In the subscribers list"
+#~ msgstr "我订阅邮递表 %1"
+
+#, fuzzy
+#~ msgid "Incatives Lists"
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#~ msgid "Latest lists"
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#, fuzzy
+#~ msgid "Latest message"
+#~ msgstr "最新邮件优先"
+
+#, fuzzy
+#~ msgid "List of the list subscribers"
+#~ msgstr "邮递表没有订阅者"
+
+#~ msgid "Login issues"
+#~ msgstr "登录问题"
+
+#~ msgid "Preferences"
+#~ msgstr "首选项"
+
+#~ msgid "Reception mode :"
+#~ msgstr "接收模式:"
+
+#, fuzzy
+#~ msgid "The %1 latest created lists"
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#, fuzzy
+#~ msgid "The latest created lists"
+#~ msgstr ""
+#~ "/FORM>\n"
+#~ "\t</TD>\n"
+#~ "      </TR>\n"
+#~ "\n"
+#~ "      <TR><"
+
+#, fuzzy
+#~ msgid "The latest messages"
+#~ msgstr "最新邮件优先"
+
+# nlsref 16,70
+#, fuzzy
+#~ msgid "The latest shared documents"
+#~ msgstr "¹²ÏíÎÄµµ"
+
+#~ msgid "To contact this service administrator :"
+#~ msgstr "如果要联系服务器管理员:"
+
+#~ msgid "To receive your password :"
+#~ msgstr "要收到口令:"
+
+#~ msgid ""
+#~ "WWSympa provides  you access to your environment on mailing list server"
+#~ msgstr "您可以在这里访问邮件邮递表服务器"
+
+#~ msgid "When authenticating ("
+#~ msgstr "在验证身份("
+
+#, fuzzy
+#~ msgid ""
+#~ "You can logout (deletion of the cookie) at any time using logout button."
+#~ msgstr "您可以在任何时候使用"
+
+#~ msgid "Your subscriptions"
+#~ msgstr "您订阅的邮递表"
+
+# nlsref 16,86
+#, fuzzy
+#~ msgid "nobody can review"
+#~ msgstr "Ë­¿ÉÒÔ²é¿´"
 
 #, fuzzy
 #~ msgid " The latest lists "
@@ -9129,9 +9314,6 @@ msgstr "口令: %1"
 
 #~ msgid "%1 : No such file"
 #~ msgstr "%1 : 没有此文件"
-
-#~ msgid "%1: action failed"
-#~ msgstr "%1: 操作失败"
 
 # nlsref 6,52
 #~ msgid "%s did not receive confirmation for the following addresses :\n"
@@ -9532,10 +9714,6 @@ msgstr "口令: %1"
 #~ msgstr "共享页面"
 
 #, fuzzy
-#~ msgid "Admin"
-#~ msgstr "管理"
-
-#, fuzzy
 #~ msgid "Last"
 #~ msgstr "布局"
 
@@ -9599,11 +9777,6 @@ msgstr "口令: %1"
 #, fuzzy
 #~ msgid "May not create the deleted directory"
 #~ msgstr "无法建立目录 %1"
-
-# nlsref 16,68
-#, fuzzy
-#~ msgid "May not send the message"
-#~ msgstr "Ë­¿ÉÒÔ·¢ËÍÓÊ¼þ"
 
 #, fuzzy
 #~ msgid "No SOAP service available on this server"
