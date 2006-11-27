@@ -1,3 +1,115 @@
+2006-11-27 17:00  olivier.salaun
+
+	* po/: bg.po, cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po,
+	  fr.po, hu.po, it.po, ja.po, nb_NO.po, nl.po, oc.po, pl.po, pt.po,
+	  pt_BR.po, ro.po, ru.po, sv.po, sympa.pot, tr.po, zh_CN.po:
+	  Updated POT and PO files
+
+2006-11-27 10:06  olivier.salaun
+
+	* src/tt2.pl: Added code to determine the current template full
+	  path in maketext()
+
+2006-11-24 14:25  olivier.salaun
+
+	* po/Makefile, src/Language.pm, src/tt2.pl: Prepare code to split
+	  catalog into many (mail_user, mail_admin,
+	  web_user,web_admin,web_help)
+
+2006-11-24 09:40  olivier.salaun
+
+	* src/Upgrade.pm: [reported by J.Schmalenbach] Fix: qualify
+	  send_notify_to_listmaster() call
+
+2006-11-23 17:59  olivier.salaun
+
+	* po/fr.po: Change: renamed vignette ti avatar
+
+2006-11-23 17:04  olivier.salaun
+
+	* po/fr.po: Updated French translations
+
+2006-11-23 15:07  olivier.salaun
+
+	* mail_tt2/authorization_reject.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  web_tt2/get_inactive_lists.tt2, web_tt2/picture_upload.tt2,
+	  web_tt2/review.tt2, web_tt2/viewlogs.tt2: Fixed a few strings
+
+2006-11-23 15:07  olivier.salaun
+
+	* src/: sympa.pl, tools.pl: Fix: files in the msg/ spool were
+	  processed according to the file name (abbb before zbbb). now use
+	  the date as the sort criteria
+
+2006-11-23 09:39  olivier.salaun
+
+	* src/List.pm: Change: call to close() from purge()
+
+2006-11-22 15:28  olivier.salaun
+
+	* po/: Makefile, de.po, es.po, et.po, fi.po, fr.po, hu.po, it.po,
+	  nl.po, oc.po, pl.po, ro.po, zh_TW.po: Change: remove
+	  Chinese/Taiwan catalog that was out of date and could not be
+	  transformed to UTF-8
+
+2006-11-22 15:17  serge.aumont
+
+	* src/List.pm:
+
+	  purge_list now try to remove aliases
+
+2006-11-22 15:06  olivier.salaun
+
+	* po/: bg.po, de.po, en_US.po, es.po, ja.po, nb_NO.po, pt.po,
+	  pt_BR.po, ru.po: Merged PO filed with POT
+
+2006-11-22 15:02  serge.aumont
+
+	* doc/man8/sympa.pod, src/List.pm, src/sympa.pl:
+	  new Sympa.pl option : sympa.pl --purge_list <list>@<robot>
+
+2006-11-22 14:59  olivier.salaun
+
+	* po/Makefile, po/bg.po, po/de.po, po/es.po, po/ja.po, po/nb_NO.po,
+	  po/pt.po, po/pt_BR.po, po/ru.po, src/Language.pm: Updated
+	  translations from Rosetta ; added Russian and Bulgarian PO files
+
+2006-11-22 13:48  olivier.salaun
+
+	* mail_tt2/archive.tt2, mail_tt2/bye.tt2,
+	  mail_tt2/certif_warning.tt2, mail_tt2/command_report.tt2,
+	  mail_tt2/d_install_shared.tt2, mail_tt2/d_reject_shared.tt2,
+	  mail_tt2/digest.tt2, mail_tt2/digest_plain.tt2,
+	  mail_tt2/expire_deletion.tt2, mail_tt2/expire_warning1.tt2,
+	  mail_tt2/expire_warning2.tt2, mail_tt2/get_archive.tt2,
+	  mail_tt2/global_remind.tt2, mail_tt2/helpfile.tt2,
+	  mail_tt2/index_archive.tt2, mail_tt2/info_report.tt2,
+	  mail_tt2/invite.tt2, mail_tt2/list_created.tt2,
+	  mail_tt2/list_rejected.tt2, mail_tt2/list_unknown.tt2,
+	  mail_tt2/listeditor_notification.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/listowner_notification.tt2, mail_tt2/lists.tt2,
+	  mail_tt2/message_report.tt2, mail_tt2/moderate.tt2,
+	  mail_tt2/modindex.tt2, mail_tt2/reject.tt2, mail_tt2/remind.tt2,
+	  mail_tt2/removed.tt2, mail_tt2/request_auth.tt2,
+	  mail_tt2/review.tt2, mail_tt2/send_auth.tt2,
+	  mail_tt2/sendpasswd.tt2, mail_tt2/stats_report.tt2,
+	  mail_tt2/summary.tt2, mail_tt2/user_notification.tt2,
+	  mail_tt2/welcome.tt2, mail_tt2/which.tt2,
+	  mail_tt2/x509-user-cert-missing.tt2,
+	  mail_tt2/your_infected_msg.tt2, soap/sympasoap.pm,
+	  src/Language.pm, src/List.pm, src/mail.pm, src/tt2.pl: Change: no
+	  more use encoding defined in PO files to determine charset for
+	  messages.  We now use the charsets defined in Language.pm
+	  instead.  We now use [% charset %] in mail_tt2 files and
+	  &Language::GetCharset() in the code These changes will make it
+	  easier to mode all PO files to UTF-8
+
+2006-11-22 13:45  olivier.salaun
+
+	* ChangeLog: update
+
 2006-11-22 10:28  olivier.salaun
 
 	* web_tt2/rss.tt2: Fix: RSS feed encoding was incorrect
