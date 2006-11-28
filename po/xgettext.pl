@@ -217,7 +217,7 @@ foreach my $file (@ARGV) {
       my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
       # maketext or loc or _
       $state == NUL &&
-        m/\b(translate|gettext(?:_strftime)?|maketext|__?|loc|x)/gcx && do {
+        m/\b(translate|gettext?|maketext|__?|loc|x)/gcx && do {
           if ($& eq 'gettext_strftime') {
             $state = BEGM;
           } else {
