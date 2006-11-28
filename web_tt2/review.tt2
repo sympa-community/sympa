@@ -37,7 +37,7 @@
      <a class="actionMenuLinks" href="[% path_cgi %]/sync_include/[% list %]" >[%|loc%]Synchronize members with data sources[%END%]</a>
    [% END %]
    <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
-   <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[% FILTER escape_quote %][%|loc(total)%] you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]'); return false;">[%|loc%]Remind all[%END%]</a>
+   <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]'); return false;">[%|loc%]Remind all[%END%]</a>
    [% IF conf.use_blacklist != 'none' %]
      <a class="actionMenuLinks" href="[% path_cgi %]/blacklist/[% list %]">[%|loc%]Blacklist[%END%]</a>
    [% END %]
@@ -265,7 +265,7 @@
     </div>
    [% END %]
       [% IF is_owner %]
-        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')" /-->
+        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
         <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" /><br />
 	<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
         <input type="checkbox" name="quiet" />[%|loc%]quiet[%END%]
