@@ -141,7 +141,9 @@ foreach my $file (@ARGV) {
 		my ($self, $text, $is_cdata) = @_;
 		my $sentences = Lingua::EN::Sentence::get_sentences($text) or return;
 		$text =~ s/\n/ /g; $text =~ s/^\s+//; $text =~ s/\s+$//;
-		push @{$file{$text}}, [ $filename, $line ];
+		&add_expression({'expression' => $text,
+				 'filename' => $filename,
+				 'line' => $line});
 	    }
 	}   
 
@@ -159,8 +161,11 @@ foreach my $file (@ARGV) {
     while (m!\G.*?<&\|/l(?:oc)?(.*?)&>(.*?)</&>!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-	$str =~ s/\\'/\'/g; 
-	push @{$file{$str}}, [ $filename, $line, $vars ];
+	$str =~ s/\\\'/\'/g; 
+	&add_expression({'expression' => $str,
+			 'filename' => $filename,
+			 'line' => $line,
+			 'vars' => $vars});
     }
 
     # Template Toolkit
@@ -168,10 +173,13 @@ foreach my $file (@ARGV) {
     while (m!\G.*?\[%\s*\|l(?:oc)?(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-	$str =~ s/\\'/\'/g; 
+	$str =~ s/\\\'/\'/g; 
 	$vars =~ s/^\s*\(//;
 	$vars =~ s/\)\s*$//;
-	push @{$file{$str}}, [ $filename, $line, $vars ];
+	&add_expression({'expression' => $str,
+			 'filename' => $filename,
+			 'line' => $line,
+			 'vars' => $vars});
     }
 	    
     # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in archives
@@ -179,10 +187,13 @@ foreach my $file (@ARGV) {
     while (m!\G.*?\(\$tag\$%\s*\|l(?:oc)?(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-	$str =~ s/\\'/\'/g; 
+	$str =~ s/\\\'/\'/g; 
 	$vars =~ s/^\s*\(//;
 	$vars =~ s/\)\s*$//;
-	push @{$file{$str}}, [ $filename, $line, $vars ];
+	&add_expression({'expression' => $str,
+			 'filename' => $filename,
+			 'line' => $line,
+			 'vars' => $vars});
     }	    
 
 	    # Sympa variables (gettext_id)
@@ -190,14 +201,18 @@ foreach my $file (@ARGV) {
 	    while (/\G.*?\'gettext_id\'\s*=>\s*\"([^\"]+)\"/sg) {
 		my $str = $1;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-		push @{$file{$str}}, [ $filename, $line];
+		&add_expression({'expression' => $str,
+				 'filename' => $filename,
+				 'line' => $line});
 	    }
 
 	    $line = 1; pos($_) = 0;
 	    while (/\G.*?\'gettext_id\'\s*=>\s*\'([^\']+)\'/sg) {
 		my $str = $1;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-		push @{$file{$str}}, [ $filename, $line];
+		&add_expression({'expression' => $str,
+				 'filename' => $filename,
+				 'line' => $line});
 	    }
 
 	    # Sympa scenarios variables (title.gettext)
@@ -205,7 +220,9 @@ foreach my $file (@ARGV) {
 	    while (/\G.*?title.gettext\s*([^\n]+)/sg) {
 		my $str = $1;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
-		push @{$file{$str}}, [ $filename, $line];
+		&add_expression({'expression' => $str,
+				 'filename' => $filename,
+				 'line' => $line});
 	    }
 
     # Perl source file
@@ -261,7 +278,12 @@ foreach my $file (@ARGV) {
 	&& do {
 	  $state = NUL;	
 	  $vars =~ s/[\n\r]//g if ($vars);
-	  push @{$file{$str}}, [ $filename, $line - (() = $str =~ /\n/g), $vars] if ($str);
+	  if ($str) {
+	      &add_expression({'expression' => $str,
+			       'filename' => $filename,
+			       'line' => $line - (() = $str =~ /\n/g),
+			       'vars' => $vars});
+	  }
 	  undef $str; undef $vars;
 	  redo;
 	};
@@ -345,6 +367,15 @@ foreach my $entry (sort keys %Lexicon) {
     print "#, maketext-format" if $opts{g} and /%(?:\d|\w+\([^\)]*\))/;
     print "msgid "; output($entry);
     print "msgstr "; output($Lexicon{$entry});
+}
+
+## Add expressions to list of expressions to translate
+## parameters : expression, filename, line, vars
+sub add_expression {
+    my $param = shift;
+
+    push @{$file{$param->{'expression'}}}, [ $param->{'filename'}, $param->{'line'}, $param->{'vars'} ];
+
 }
 
 sub output {
