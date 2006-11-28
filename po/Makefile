@@ -55,6 +55,23 @@ update-po: potfile
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
 	done
 
+## Prepare a tar.gz with a structure adapted to Pootle
+## ie made of subdirectories (ll/sympa.po...templates/sympa.pot
+export:
+	echo "Building /tmp/sympa-po.tar.gz..."; \
+	if [ -d  /tmp/sympa-po ]; then \
+		rm -rf /tmp/sympa-po; \
+	fi
+	mkdir /tmp/sympa-po; \
+	languages='$(LINGUAS)'; \
+	for lang in $$languages; do \
+		mkdir /tmp/sympa-po/$$lang; \
+		cp $$lang.po /tmp/sympa-po/$$lang/sympa.po; \
+	done
+	mkdir /tmp/sympa-po/templates; \
+	cp sympa.pot /tmp/sympa-po/templates/sympa.pot; \
+	(cd /tmp/sympa-po; tar -zcvf /tmp/sympa-po.tar.gz *)
+
 ## Check translations, coming from Rosetta for instance
 ## These PO files are supposed to gathered in a directory
 check:
