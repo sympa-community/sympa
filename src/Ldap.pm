@@ -64,11 +64,24 @@ sub load {
 	&Log::do_log('err','Unable to open %s: %s', $config, $!);
 	return undef;
     }
-    while (<IN>) {
-	$line_num++;
-	next if (/^\s*$/o || /^[\#\;]/o);
 
-	if (/^(\S+)\s+(.+)$/io) {
+    my $folded_line;
+    while (my $current_line = <IN>) {
+	$line_num++;
+	next if ($current_line =~ /^\s*$/o || $current_line =~ /^[\#\;]/o);
+
+	## Cope with folded line (ending with '\')
+	if ($current_line =~ /\\\s*$/) {
+	    $current_line =~ s/\\\s*$//; ## remove trailing \
+	    chomp $current_line;
+	    $folded_line .= $current_line;
+	    next;
+	}elsif (defined $folded_line) {
+	    $current_line = $folded_line.$current_line;
+	    $folded_line = undef;
+	}
+
+	if ($current_line =~ /^(\S+)\s+(.+)$/io) {
 	    my($keyword, $value) = ($1, $2);
 	    $value =~ s/\s*$//;
 	
