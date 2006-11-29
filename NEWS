@@ -3,6 +3,84 @@
 
 (See Changelog file for the full changes log)
 
+5.3b.1		29 November 2006
+
+   New features :
+
+	src/Ldap.pm: [requested by E.Beliveau] allow folded lines in ldap filters (using '\')
+
+	src/List.pm, src/sympa.pl: new Sympa.pl option : sympa.pl --purge_list <list>@<robot>
+	
+	web_tt2/: [V.Paitrault, CRU] translated online user/admin help to English
+
+	doc/sympa.tex.tpl, src/List.pm: [requested by S.Peterson] Extended available parameters for search filters
+
+	src/etc/script/arc2webarc.pl: can use an input directory containing individual messages files
+
+   Changes :
+	
+	po/fr.po: Updated French translations
+
+	src/: sympa.pl, tools.pl: files in the msg/ spool were processed according to the file name (abbb before zbbb). 
+	now use the date as the sort criteria
+
+	po/: remove Chinese/Taiwan catalog that was out of date and could not be transformed to UTF-8
+
+	po/, src/Language.pm: Updated translations from Rosetta ; added Russian and Bulgarian PO files
+
+	mail_tt2/, soap/sympasoap.pm, src/Language.pm, src/List.pm, src/mail.pm, src/tt2.pl: 
+	no more use encoding defined in PO files to determine charset for messages.  
+	We now use the charsets defined in Language.pm instead.  We now use [% charset %] in mail_tt2 files and
+	&Language::GetCharset() in the code These changes will make it easier to mode all PO files to UTF-8
+
+	mail_tt2/, src/: [Soji Ikeda] changes have been made to switch from Perl Unicode to UTF-8: 
+	  - read raw config files then to convert them to UTF-8.
+	  - change Language::gettext()'s output from Unicode to UTF-8.
+	  - remove Template::Directive::OUTPUT hack (see src/tt2.pl).
+	  - disable PerlIO layer on wwsympa.fcgi.
+
+	web_tt2/, po/en_US.po: revision from Jill Gemmill have been reported down to templates. en_US.po has been reset (with
+	  sympa.pot)
+
+	src/Upgrade.pm: regenerate all config.bin files while upgrading ; required for character encoding problems
+
+
+   Bug fixes :
+
+	src/Upgrade.pm: [reported by J.Schmalenbach] qualify send_notify_to_listmaster() call
+
+	web_tt2/rss.tt2: RSS feed encoding was incorrect
+
+	src/mail.pm: Incorrect handling of empty header fields, could result in duplicate header fields
+
+	soap/sympa.wsdl: [BugID 1262][O.Duval] missing sections in Binding for add, del and closeList
+
+	web_tt2/error.tt2, wwsympa/Auth.pm, wwsympa/wwsympa.fcgi: [BugID 285][reported by M.Verove, Atos Origin]
+	no more allow password reminder if regexp doesn't match user email
+
+	check_perl_modules.pl: inactivity_timeout was not set
+
+	web_tt2/login_menu.tt2: [reported by R.Cadwell] "forgot password" and "first password" buttons were shown regardless of
+ 	auth.conf
+
+	src/List.pm: [A.Zamboni, Univ Strasbourg] sort by subscriber name failed with Pg
+
+	eb_tt2/edit_list_request.tt2: missing form input attribut 'multiple'. Because of this bug parameter digest and
+	avalaible_user_option may habe been corrupted
+
+	wwsympa/wwsympa.fcgi: arcsearch_id would fail if message-id contained '&' because mhonarc encodes it in HTML messages.
+
+	src/, wwsympa/wwsympa.fcgi: [S.Ikeda] strftime() accepts/returns a string encoded by charset that is determined by
+	current system locale. Therefore date strings needed to be decoded according to current charset.
+
+	src/List.pm: print error message if include_remote_file failed
+
+	soap/sympasoap.pm: fixed typo in authenticateAndRun()
+
+	src/List.pm: load topics.conf using filesystem_encoding
+
+	
+
 5.3a.10		6 November 2006
 
    New features :
