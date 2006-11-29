@@ -67,13 +67,6 @@ sub do_log {
 
     my $level = 0;
 
-    ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
-    if (defined $Conf::Conf{'filesystem_encoding'}) {
-	foreach my $i (0..$#param) {
-	    Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
-	  }
-    }
-
     $level = 1 if ($fac =~ /^debug$/) ;
 
     if ($fac =~ /debug(\d)/ ) {
@@ -84,7 +77,15 @@ sub do_log {
     # do not log if log level if too high regarding the log requested by user 
     return if ($level > $log_level);
 
-    unless (syslog($fac, $m, @param)) {
+    ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
+    ## We perform this check after ensuring we need to log because Encode::from_to() is an expensive call
+    if (defined $Conf::Conf{'filesystem_encoding'}) {
+	foreach my $i (0..$#param) {
+	    Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
+	  }
+    }
+
+   unless (syslog($fac, $m, @param)) {
 	&do_connect();
 	    syslog($fac, $m, @param);
     }
