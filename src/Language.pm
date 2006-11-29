@@ -256,7 +256,7 @@ sub maketext {
     my $textdomain = $template2textdomain{$template_file};
     
 #    if ($textdomain) {
-#	$translation = &dgettext ($textdomain, $msg);
+#	$translation = &sympa_dgettext ($textdomain, $msg);
 #    }else {
 #	$translation = &gettext ($msg);
 #    }
@@ -271,7 +271,7 @@ sub maketext {
 }
 
 
-sub dgettext {
+sub sympa_dgettext {
     my $textdomain = shift;
     my @param = @_;
 
