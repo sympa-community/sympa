@@ -1,149 +1,149 @@
 	<h2 class="block">Les listes de diffusion - Guide de l'utilisateur</h2>
 
 	<h3><a name="howitworks"></a>Fonctionnement du service de listes</h3>
-	<p>Le service de listes fonctionne grâce à un <strong>logiciel de gestion de listes&#160;: Sympa</strong>. Ce logiciel est <strong>associé à une interface web d'environnement de listes</strong>.</p>
-	<p><strong>Pour effectuer des actions relatives aux listes</strong> (vous abonner, changer vos options, etc.), vous avez deux possibilités&#160;:</p>
+	<p>Le service de listes fonctionne grÃ¢ce Ã  un <strong>logiciel de gestion de listes&#160;: Sympa</strong>. Ce logiciel est <strong>associÃ© Ã  une interface web d'environnement de listes</strong>.</p>
+	<p><strong>Pour effectuer des actions relatives aux listes</strong> (vous abonner, changer vos options, etc.), vous avez deux possibilitÃ©s&#160;:</p>
 	<ul>
 		<li><strong>passer par l'interface web du serveur de listes</strong>&#160;;</li>
-		<li><strong>envoyer des commandes par e-mail</strong> à l'automate Sympa à l'adresse <strong>[% conf.email %]@[% conf.host %]</strong>.</li>
+		<li><strong>envoyer des commandes par e-mail</strong> Ã  l'automate Sympa Ã  l'adresse <strong>[% conf.email %]@[% conf.host %]</strong>.</li>
 	</ul>
-	<p><strong>Pour envoyer des commandes à Sympa</strong>, procédez comme suit&#160;:</p>
+	<p><strong>Pour envoyer des commandes Ã  Sympa</strong>, procÃ©dez comme suit&#160;:</p>
 	<ul>
 		<li><strong>Si vous n'envoyez qu'une seule commande</strong>, inscrivez-la dans l'objet de votre message et laissez le corps du message vide.</li>
-		<li><strong>Si vous envoyez plusieurs commandes</strong>, laissez l'objet de votre message vide et tapez les différentes commandes dans le corps du message. <strong>Attention</strong>&#160;: Sympa ne traitera pas votre message si vous ne respectez pas scrupuleusement les règles suivantes&#160;:
+		<li><strong>Si vous envoyez plusieurs commandes</strong>, laissez l'objet de votre message vide et tapez les diffÃ©rentes commandes dans le corps du message. <strong>Attention</strong>&#160;: Sympa ne traitera pas votre message si vous ne respectez pas scrupuleusement les rÃ¨gles suivantes&#160;:
 		<ul>
-			<li>Chaque commande doit être placée seule sur une ligne.</li>
-			<li>Le message doit être envoyé en texte brut et non en <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> (aucun formatage).</li>
+			<li>Chaque commande doit Ãªtre placÃ©e seule sur une ligne.</li>
+			<li>Le message doit Ãªtre envoyÃ© en texte brut et non en <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> (aucun formatage).</li>
 			<li>Le message ne doit rien contenir d'autre que des commandes reconnaissables par Sympa (pas de signature automatique).</li>
 		</ul></li>
 	</ul>
 
-	<p>Vous pouvez consulter l'<a href="[% path_cgi %]/help/mail_commands">ensemble des commandes que vous pouvez envoyer par mail à Sympa</a>. 
+	<p>Vous pouvez consulter l'<a href="[% path_cgi %]/help/mail_commands">ensemble des commandes que vous pouvez envoyer par mail Ã  Sympa</a>. 
 
-	<h3><a name="abbo"></a>S'abonner à des listes</h3>
-	<p>Pour s'abonner à une liste, la procédure est très simple&#160;:</p>
+	<h3><a name="abbo"></a>S'abonner Ã  des listes</h3>
+	<p>Pour s'abonner Ã  une liste, la procÃ©dure est trÃ¨s simple&#160;:</p>
 	<ol>
-		<li><strong>Choisissez l'adresse</strong> avec laquelle vous souhaitez vous abonner à la liste.<br />
-			<span class="retraitita">Choisissez de préférence une adresse que vous pouvez consulter fréquemment et qui vous offre une bonne capacité de stockage&#160;: certaines listes voient passer de très nombreux messages, parfois accompagnés de pièces jointes volumineuses.</span>
-			<span class="retraitita">Vous pouvez choisir de vous abonner à la même liste avec plusieurs adresses différentes. Pour cela, vous devrez recommencer la procédure d'abonnement avec votre client de messagerie, mais en utilisant un autre compte de messagerie.</span></li>
-			<li>Envoyez un <strong>message à [% conf.email %]@[% conf.host %]</strong> avec l'adresse à partir de laquelle vous souhaitez vous abonner.<br />
+		<li><strong>Choisissez l'adresse</strong> avec laquelle vous souhaitez vous abonner Ã  la liste.<br />
+			<span class="retraitita">Choisissez de prÃ©fÃ©rence une adresse que vous pouvez consulter frÃ©quemment et qui vous offre une bonne capacitÃ© de stockage&#160;: certaines listes voient passer de trÃ¨s nombreux messages, parfois accompagnÃ©s de piÃ¨ces jointes volumineuses.</span>
+			<span class="retraitita">Vous pouvez choisir de vous abonner Ã  la mÃªme liste avec plusieurs adresses diffÃ©rentes. Pour cela, vous devrez recommencer la procÃ©dure d'abonnement avec votre client de messagerie, mais en utilisant un autre compte de messagerie.</span></li>
+			<li>Envoyez un <strong>message Ã  [% conf.email %]@[% conf.host %]</strong> avec l'adresse Ã  partir de laquelle vous souhaitez vous abonner.<br />
 			<span class="retraitita">Sympa n'est pas une personne mais un automate de gestion de listes de diffusion. Inutile donc de lui envoyer des mots doux&#160;! ;-)</span></li>
-		<li>En objet du message, écrivez&#160;: <strong>subscribe nomdelaliste Prénom Nom</strong> (remplacez 'nomdelaliste' par le nom de la liste à laquelle vous souhaitez vous abonner et indiquez vos propres prénom et nom).</li>
+		<li>En objet du message, Ã©crivez&#160;: <strong>subscribe nomdelaliste PrÃ©nom Nom</strong> (remplacez 'nomdelaliste' par le nom de la liste Ã  laquelle vous souhaitez vous abonner et indiquez vos propres prÃ©nom et nom).</li>
 		<li><strong>Laissez le corps du message vide</strong>.<br />
-			<span class="retraitita">Vous pouvez également envoyer plusieurs commandes dans le même message pour gagner du temps. Pour cela, procédez comme indiqué dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</span></li>
+			<span class="retraitita">Vous pouvez Ã©galement envoyer plusieurs commandes dans le mÃªme message pour gagner du temps. Pour cela, procÃ©dez comme indiquÃ© dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</span></li>
 	</ol>
 
-	<p><strong>Vous recevrez ensuite un message vous informant que votre demande a été acceptée ou rejetée</strong>&#160;: si l'inscription à la liste est soumise à approbation, le propriétaire peut choisir de ne pas vous abonner. Dans ce cas, il est inutile de renvoyer plusieurs demandes d'abonnement, car le résultat sera toujours le même. Vous pouvez éventuellement envoyer un message directement au propriétaire de la liste (nomdelaliste-request@[% conf.host %]) en justifiant le pourquoi de votre demande d'abonnement.</p>
-	<p class="retraitita">Note&#160;: dans certains cas, on vous demandera au préalable de confirmer votre demande d'abonnement. Conformez-vous aux instructions contenues dans le message expédié le cas échéant.</p>
-	<p>En fonction du type de liste (liste à inscription soumise à conditions ou non) et de la disponibilité du propriétaire, <strong>le délai de réception de la notification peut varier</strong>. Il est inutile d'envoyer plusieurs demandes.</p>
-	<p><strong>Si votre demande a été acceptée, le message que vous recevez confirme votre inscription à la liste. Ce message</strong> (la Charte des abonnés de la liste) <strong>contient plusieurs informations capitales&#160;:</strong></p>
+	<p><strong>Vous recevrez ensuite un message vous informant que votre demande a Ã©tÃ© acceptÃ©e ou rejetÃ©e</strong>&#160;: si l'inscription Ã  la liste est soumise Ã  approbation, le propriÃ©taire peut choisir de ne pas vous abonner. Dans ce cas, il est inutile de renvoyer plusieurs demandes d'abonnement, car le rÃ©sultat sera toujours le mÃªme. Vous pouvez Ã©ventuellement envoyer un message directement au propriÃ©taire de la liste (nomdelaliste-request@[% conf.host %]) en justifiant le pourquoi de votre demande d'abonnement.</p>
+	<p class="retraitita">Note&#160;: dans certains cas, on vous demandera au prÃ©alable de confirmer votre demande d'abonnement. Conformez-vous aux instructions contenues dans le message expÃ©diÃ© le cas Ã©chÃ©ant.</p>
+	<p>En fonction du type de liste (liste Ã  inscription soumise Ã  conditions ou non) et de la disponibilitÃ© du propriÃ©taire, <strong>le dÃ©lai de rÃ©ception de la notification peut varier</strong>. Il est inutile d'envoyer plusieurs demandes.</p>
+	<p><strong>Si votre demande a Ã©tÃ© acceptÃ©e, le message que vous recevez confirme votre inscription Ã  la liste. Ce message</strong> (la Charte des abonnÃ©s de la liste) <strong>contient plusieurs informations capitales&#160;:</strong></p>
 	<ul>
-		<li>votre <strong>mot de passe de listes</strong>. Ce mot de passe sera le même pour l'ensemble des listes auxquelles vous serez abonné avec la même adresse. Vous pouvez le <a href="#global_pref" title="Comment modifier son mot de passe">modifier en ligne</a> en vous connectant sur l'environnement de listes&#160;;</li>
-		<li>des <strong>informations détaillées sur la liste</strong>&#160;: son objet, l'adresse web où aller consulter les archives, etc&#160;;</li>
-		<li>les <strong>conditions d'utilisation de la liste</strong>&#160;: sujets de discussion autorisés et exclus, nétiquette, informations légales, politique de confidentialité, etc&#160;;</li>
+		<li>votre <strong>mot de passe de listes</strong>. Ce mot de passe sera le mÃªme pour l'ensemble des listes auxquelles vous serez abonnÃ© avec la mÃªme adresse. Vous pouvez le <a href="#global_pref" title="Comment modifier son mot de passe">modifier en ligne</a> en vous connectant sur l'environnement de listes&#160;;</li>
+		<li>des <strong>informations dÃ©taillÃ©es sur la liste</strong>&#160;: son objet, l'adresse web oÃ¹ aller consulter les archives, etc&#160;;</li>
+		<li>les <strong>conditions d'utilisation de la liste</strong>&#160;: sujets de discussion autorisÃ©s et exclus, nÃ©tiquette, informations lÃ©gales, politique de confidentialitÃ©, etc&#160;;</li>
 	</ul>
-	<p><strong>Conservez précieusement votre notification de confirmation d'inscription</strong>&#160;: vous pourriez en avoir besoin ultérieurement pour vous rappeler votre mot de passe ou pour envoyer une commande précise à Sympa (exemple&#160;: commande de désabonnement). D'une manière générale, <strong>nous vous conseillons d'archiver toutes les notifications de confirmation d'inscription à une liste de diffusion</strong>.</p>
-	<p>Il est <strong>également possible de s'abonner à une liste via l'interface web</strong> du serveur de listes. Pour cela, procédez comme suit&#160;:</p>
+	<p><strong>Conservez prÃ©cieusement votre notification de confirmation d'inscription</strong>&#160;: vous pourriez en avoir besoin ultÃ©rieurement pour vous rappeler votre mot de passe ou pour envoyer une commande prÃ©cise Ã  Sympa (exemple&#160;: commande de dÃ©sabonnement). D'une maniÃ¨re gÃ©nÃ©rale, <strong>nous vous conseillons d'archiver toutes les notifications de confirmation d'inscription Ã  une liste de diffusion</strong>.</p>
+	<p>Il est <strong>Ã©galement possible de s'abonner Ã  une liste via l'interface web</strong> du serveur de listes. Pour cela, procÃ©dez comme suit&#160;:</p>
 	<ol>
 		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <a href="#sympa_auth"><strong>authentifiez-vous</strong></a>.</li>
-		<li><strong>Allez sur la page d'information de la liste</strong> à laquelle vous souhaitez vous abonner.</li>
+		<li><strong>Allez sur la page d'information de la liste</strong> Ã  laquelle vous souhaitez vous abonner.</li>
 		<li>Dans le menu de gauche, <strong>cliquez sur le lien 'Abonnement'</strong>.</li>
 	</ol>
 
 	<h3><a name="sympa_auth"></a>Se connecter sur l'environnement de listes</h3>
-	<p>Pour vous connecter sur l'environnement de liste, utilisez la zone d'authentification située dans la colonne gauche de l'interface web. Si vous êtes déjà authentifié, votre adresse e-mail et votre profil (abonné, modérateur ou propriétaire) s'affichent à cet endroit. Dans le cas contraire, un formulaire d'authentification vous est proposé.</p>
+	<p>Pour vous connecter sur l'environnement de liste, utilisez la zone d'authentification situÃ©e dans la colonne gauche de l'interface web. Si vous Ãªtes dÃ©jÃ  authentifiÃ©, votre adresse e-mail et votre profil (abonnÃ©, modÃ©rateur ou propriÃ©taire) s'affichent Ã  cet endroit. Dans le cas contraire, un formulaire d'authentification vous est proposÃ©.</p>
 
-	<p>En fonction de votre situation personnelle, la procédure d'authentification varie&#160;:</p>
+	<p>En fonction de votre situation personnelle, la procÃ©dure d'authentification varie&#160;:</p>
 	<ul>
-		<li><strong>Si l'entité qui propose le service de listes utilise un système de compte et d'authentification unique</strong> (<acronym lang="en" xml:lang="en" title="single sign-on">SSO</acronym>, <em class="altralingua">single sign-on</em>, par exemple via le système <acronym lang="en" xml:lang="en" title="Central Authentication Service">CAS</acronym>), le mieux est de vous authentifier à l'aide de votre compte unique. Pour cela, cliquez sur le bouton 'Go' situé à côté du texte '<strong>Authentification [nom du système en place]</strong>'. Entrez ensuite votre identifiant et votre mot de passe auprès du serveur d'authentification.<br />
-		<p class="retraitita">Si vous êtes déjà authentifié sur un autre service utilisant le système d'authentification unique, votre authentification est immédiate. Rechargez la page si nécessaire.</p>
-		<li><strong>Si vous n'êtes pas concerné par une procédure d'authentification unique mais que vous êtes déjà abonné à des listes</strong>, vous possédez un mot de passe de listes (inscrit dans la Charte des abonnés que vous avez reçue lors de votre abonnement). Dans ce cas, authentifiez-vous via la méthode classique&#160;: entrez l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> comme identifiant et votre <strong>mot de passe de listes</strong> dans le champ 'Mot de passe'.<br />
-		<p class="retraitita">Si vous ne vous souvenez plus de votre mot de passe de listes, cliquez sur 'Mot de passe perdu ?'. Vous devrez ensuite indiquer votre adresse e-mail, et votre mot de passe sera envoyé à cette adresse.</p>
+		<li><strong>Si l'entitÃ© qui propose le service de listes utilise un systÃ¨me de compte et d'authentification unique</strong> (<acronym lang="en" xml:lang="en" title="single sign-on">SSO</acronym>, <em class="altralingua">single sign-on</em>, par exemple via le systÃ¨me <acronym lang="en" xml:lang="en" title="Central Authentication Service">CAS</acronym>), le mieux est de vous authentifier Ã  l'aide de votre compte unique. Pour cela, cliquez sur le bouton 'Go' situÃ© Ã  cÃ´tÃ© du texte '<strong>Authentification [nom du systÃ¨me en place]</strong>'. Entrez ensuite votre identifiant et votre mot de passe auprÃ¨s du serveur d'authentification.<br />
+		<p class="retraitita">Si vous Ãªtes dÃ©jÃ  authentifiÃ© sur un autre service utilisant le systÃ¨me d'authentification unique, votre authentification est immÃ©diate. Rechargez la page si nÃ©cessaire.</p>
+		<li><strong>Si vous n'Ãªtes pas concernÃ© par une procÃ©dure d'authentification unique mais que vous Ãªtes dÃ©jÃ  abonnÃ© Ã  des listes</strong>, vous possÃ©dez un mot de passe de listes (inscrit dans la Charte des abonnÃ©s que vous avez reÃ§ue lors de votre abonnement). Dans ce cas, authentifiez-vous via la mÃ©thode classique&#160;: entrez l'<strong>adresse e-mail avec laquelle vous Ãªtes abonnÃ©</strong> comme identifiant et votre <strong>mot de passe de listes</strong> dans le champ 'Mot de passe'.<br />
+		<p class="retraitita">Si vous ne vous souvenez plus de votre mot de passe de listes, cliquez sur 'Mot de passe perdu ?'. Vous devrez ensuite indiquer votre adresse e-mail, et votre mot de passe sera envoyÃ© Ã  cette adresse.</p>
 
-		<li><strong>Si vous n'êtes pas concerné par une procédure d'authentification unique et que vous ne possédez pas encore de mot de passe de listes</strong>, cliquez sur '<strong>Premier login</strong>' puis indiquez votre adresse e-mail. Votre nouveau mot de passe sera envoyé à cette adresse. Vous pourrez alors vous connecter en entrant votre <strong>adresse e-mail</strong> comme identifiant et votre <strong>mot de passe de listes</strong> dans le champ 'Mot de passe'.
+		<li><strong>Si vous n'Ãªtes pas concernÃ© par une procÃ©dure d'authentification unique et que vous ne possÃ©dez pas encore de mot de passe de listes</strong>, cliquez sur '<strong>Premier login</strong>' puis indiquez votre adresse e-mail. Votre nouveau mot de passe sera envoyÃ© Ã  cette adresse. Vous pourrez alors vous connecter en entrant votre <strong>adresse e-mail</strong> comme identifiant et votre <strong>mot de passe de listes</strong> dans le champ 'Mot de passe'.
 
 	</ul>
-	<p class="retraitita">Attention&#160;: le mot de passe de listes est un mot de passe spécial qui ne vous sert que pour les listes.</p>
+	<p class="retraitita">Attention&#160;: le mot de passe de listes est un mot de passe spÃ©cial qui ne vous sert que pour les listes.</p>
 
 	<h3>Consulter ses abonnements</h3>
-	<p>Pour voir toutes les listes auxquelles vous êtes abonné, vous devez tout d'abord être <a href="#sympa_auth">authentifié</a>. Vous voyez apparaître dans la boîte 'Vos listes' de la colonne de gauche, le nom de toutes les listes auxquelles vous êtes abonné, suivi chacun d'une brève description de la liste.</p>
+	<p>Pour voir toutes les listes auxquelles vous Ãªtes abonnÃ©, vous devez tout d'abord Ãªtre <a href="#sympa_auth">authentifiÃ©</a>. Vous voyez apparaÃ®tre dans la boÃ®te 'Vos listes' de la colonne de gauche, le nom de toutes les listes auxquelles vous Ãªtes abonnÃ©, suivi chacun d'une brÃ¨ve description de la liste.</p>
 
-	<p><strong>Pour aller consulter la page d'information d'une liste, cliquez sur son nom</strong>. La page d'information comporte une description plus ou moins détaillée de la liste (son objet, les usages en vigueur pour l'envoi de messages, etc.).</p>
-	<p>À partir de cette page d'information, vous pourrez&#160;:</p>
+	<p><strong>Pour aller consulter la page d'information d'une liste, cliquez sur son nom</strong>. La page d'information comporte une description plus ou moins dÃ©taillÃ©e de la liste (son objet, les usages en vigueur pour l'envoi de messages, etc.).</p>
+	<p>Ã€ partir de cette page d'information, vous pourrez&#160;:</p>
 	<ul>
-		<li>modifier vos <a href="#options">options d'abonné</a>&#160;;</li>
+		<li>modifier vos <a href="#options">options d'abonnÃ©</a>&#160;;</li>
 		<li><a href="[% path_cgi %]/help/arc">lire les archives</a> de la liste&#160;;</li>
 		<li>effectuer une <a href="[% path_cgi %]/help/arc#search">recherche dans les archives</a>&#160;;</li>
 		<li><a href="[% path_cgi %]/help/sendmsg">envoyer des messages</a>&#160;;</li>
-		<li><a href="[% path_cgi %]/help/shared#downloaddoc">télécharger des documents</a> à partir de l'espace partagé&#160;;</li>
-		<li><a href="[% path_cgi %]/help/shared#publishdoc">publier des documents</a> dans l'espace partagé&#160;;</li>
-		<li>accéder à la <a href="#subscribers">liste des abonnés</a> (lorsqu'elle est disponible)&#160;;</li>
-		<li><a href="#unsubscribe">vous désabonner</a> de la liste.</li>
-	</ul>	<p><a name="subscribers"></a>Le <strong>nombre de personnes abonnées</strong> à la liste est affiché de manière permanente dans le <strong>menu de gauche</strong>. <strong>Pour accéder à la liste des abonnés, cliquez sur le lien 'Voir les abonnés'</strong> dans le menu de gauche (si le propriétaire de la liste n'a pas autorisé l'accès à la liste des abonnés, ce bouton n'apparaît pas). La liste des abonnés s'affiche et vous présente l'<strong>adresse e-mail</strong> et le <strong>nom</strong> de chacun des abonnés (la mention ou non du nom dépend de la méthode employée lors de l'abonnement).</p>
-	<p class="retraitita">Par défaut, 25&#160;abonnés sont affichés sur chaque page. Vous pouvez naviguer entre les pages au moyen des flèches de navigation ou choisir d'afficher davantage d'abonnés sur chaque page. Vous pouvez également trier les abonnés en fonction de leur adresse e-mail, de leur domaine ou de leur nom en cliquant sur l'intitulé de la colonne correspondante.</p>
-	<p><strong>Les noms des propriétaires et des modérateurs de la liste sont indiqués dans le menu de gauche</strong>. N'écrivez jamais directement à un propriétaire ou à un modérateur de liste. Lorsque vous avez une question ou une remarque, l'adresse que vous devez utiliser est&#160;: <strong>nomdelaliste-request@[% conf.host %]</strong> (remplacez 'nomdelaliste' par le nom de la liste en question).</p>
-	<p>Pour voir la <strong>date de votre inscription à la liste</strong> et la <strong>date de dernière mise à jour de vos options d'abonné</strong>, <strong>cliquez sur le lien 'Options d'abonné'</strong> dans le menu de gauche.</p>
+		<li><a href="[% path_cgi %]/help/shared#downloaddoc">tÃ©lÃ©charger des documents</a> Ã  partir de l'espace partagÃ©&#160;;</li>
+		<li><a href="[% path_cgi %]/help/shared#publishdoc">publier des documents</a> dans l'espace partagÃ©&#160;;</li>
+		<li>accÃ©der Ã  la <a href="#subscribers">liste des abonnÃ©s</a> (lorsqu'elle est disponible)&#160;;</li>
+		<li><a href="#unsubscribe">vous dÃ©sabonner</a> de la liste.</li>
+	</ul>	<p><a name="subscribers"></a>Le <strong>nombre de personnes abonnÃ©es</strong> Ã  la liste est affichÃ© de maniÃ¨re permanente dans le <strong>menu de gauche</strong>. <strong>Pour accÃ©der Ã  la liste des abonnÃ©s, cliquez sur le lien 'Voir les abonnÃ©s'</strong> dans le menu de gauche (si le propriÃ©taire de la liste n'a pas autorisÃ© l'accÃ¨s Ã  la liste des abonnÃ©s, ce bouton n'apparaÃ®t pas). La liste des abonnÃ©s s'affiche et vous prÃ©sente l'<strong>adresse e-mail</strong> et le <strong>nom</strong> de chacun des abonnÃ©s (la mention ou non du nom dÃ©pend de la mÃ©thode employÃ©e lors de l'abonnement).</p>
+	<p class="retraitita">Par dÃ©faut, 25&#160;abonnÃ©s sont affichÃ©s sur chaque page. Vous pouvez naviguer entre les pages au moyen des flÃ¨ches de navigation ou choisir d'afficher davantage d'abonnÃ©s sur chaque page. Vous pouvez Ã©galement trier les abonnÃ©s en fonction de leur adresse e-mail, de leur domaine ou de leur nom en cliquant sur l'intitulÃ© de la colonne correspondante.</p>
+	<p><strong>Les noms des propriÃ©taires et des modÃ©rateurs de la liste sont indiquÃ©s dans le menu de gauche</strong>. N'Ã©crivez jamais directement Ã  un propriÃ©taire ou Ã  un modÃ©rateur de liste. Lorsque vous avez une question ou une remarque, l'adresse que vous devez utiliser est&#160;: <strong>nomdelaliste-request@[% conf.host %]</strong> (remplacez 'nomdelaliste' par le nom de la liste en question).</p>
+	<p>Pour voir la <strong>date de votre inscription Ã  la liste</strong> et la <strong>date de derniÃ¨re mise Ã  jour de vos options d'abonnÃ©</strong>, <strong>cliquez sur le lien 'Options d'abonnÃ©'</strong> dans le menu de gauche.</p>
 
-	<h3><a name="pref"></a>Gérer ses préférences</h3>
-	<p>Pour une <strong>plus grande souplesse</strong> dans votre utilisation des listes, <strong>il vous est possible de définir certaines préférences personnelles</strong>. Ces préférences se décomposent en deux volets&#160;:</p>
+	<h3><a name="pref"></a>GÃ©rer ses prÃ©fÃ©rences</h3>
+	<p>Pour une <strong>plus grande souplesse</strong> dans votre utilisation des listes, <strong>il vous est possible de dÃ©finir certaines prÃ©fÃ©rences personnelles</strong>. Ces prÃ©fÃ©rences se dÃ©composent en deux volets&#160;:</p>
 	<ul>
-		<li>vos <strong>options d'abonné</strong>, qui sont à choisir liste par liste&#160;;</li>
-		<li>vos <strong>préférences générales</strong>, valables pour tout l'environnement de listes Sympa.</li>
+		<li>vos <strong>options d'abonnÃ©</strong>, qui sont Ã  choisir liste par liste&#160;;</li>
+		<li>vos <strong>prÃ©fÃ©rences gÃ©nÃ©rales</strong>, valables pour tout l'environnement de listes Sympa.</li>
 	</ul>
 
-	<h4><a name="options"></a>Modifier ses options d'abonné</h4>
-	<p><strong>Les options d'abonné sont relatives à chaque liste</strong> et peuvent donc différer d'une liste à l'autre. Pour modifier vos options d'abonné, procédez comme suit&#160;:</p>
+	<h4><a name="options"></a>Modifier ses options d'abonnÃ©</h4>
+	<p><strong>Les options d'abonnÃ© sont relatives Ã  chaque liste</strong> et peuvent donc diffÃ©rer d'une liste Ã  l'autre. Pour modifier vos options d'abonnÃ©, procÃ©dez comme suit&#160;:</p>
 	<ol>
 		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <strong>authentifiez-vous</strong>.</li>
-		<li><strong>Allez sur la page d'information de la liste</strong> pour laquelle vous souhaitez modifier vos options d'abonné.</li>
-		<li>Dans le menu de gauche, <strong>cliquez sur le lien 'Options d'abonné'</strong>.</li>
-		<li><a name="deliverymode"></a><strong>Choisissez un mode de réception des messages</strong> (ces options sont exclusives, vous ne pouvez donc pas en sélectionner deux différentes)&#160;:
+		<li><strong>Allez sur la page d'information de la liste</strong> pour laquelle vous souhaitez modifier vos options d'abonnÃ©.</li>
+		<li>Dans le menu de gauche, <strong>cliquez sur le lien 'Options d'abonnÃ©'</strong>.</li>
+		<li><a name="deliverymode"></a><strong>Choisissez un mode de rÃ©ception des messages</strong> (ces options sont exclusives, vous ne pouvez donc pas en sÃ©lectionner deux diffÃ©rentes)&#160;:
 		<ul>
-			<li><strong>Compilation au format MIME</strong>&#160;: au lieu de recevoir régulièrement les messages de la liste, vous en recevrez périodiquement une compilation. Cette compilation regroupe un ensemble de messages de la liste au sein d'un message au format <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extension">MIME</acronym> multipart/digest. La périodicité d'envoi des compilations est définie par le gestionnaire de la liste.</li>
-			<li><strong>Résumé des messages</strong>&#160;: comme pour le mode digest, vous recevrez périodiquement une compilation, excepté qu'il s'agit cette fois uniquement d'un index des messages. Si vous souhaitez les lire dans leur entier, vous devrez aller consulter les archives de la liste en ligne.</li>
-			<li><strong>Interrompre la réception des messages</strong>&#160;: ce mode permet de ne plus recevoir les messages de la liste tout en y restant abonné. Cela évite par exemple de devoir se désabonner d'une liste pendant une période d'absence puis de se réabonner lorsque l'on revient.</li>
-			<li><strong>Réception au format texte uniquement</strong>&#160;: ce mode permet de ne recevoir que la version texte (text/plain) des messages postés aux deux formats (texte et <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym>).</li>
-			<li><strong>Réception au format HTML</strong>&#160;: ce mode permet de ne recevoir que la version <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> (text/html) des messages postés aux deux formats (texte et <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym>).</li>
-			<li><strong>Attachements stockés sur le serveur</strong>&#160;: ce mode permet de ne pas recevoir les documents attachés. Ceux-ci sont remplacés dans le message par une <acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym> pointant vers l'interface web.</li>
+			<li><strong>Compilation au format MIME</strong>&#160;: au lieu de recevoir rÃ©guliÃ¨rement les messages de la liste, vous en recevrez pÃ©riodiquement une compilation. Cette compilation regroupe un ensemble de messages de la liste au sein d'un message au format <acronym lang="en" xml:lang="en" title="Multipurpose Internet Mail Extension">MIME</acronym> multipart/digest. La pÃ©riodicitÃ© d'envoi des compilations est dÃ©finie par le gestionnaire de la liste.</li>
+			<li><strong>RÃ©sumÃ© des messages</strong>&#160;: comme pour le mode digest, vous recevrez pÃ©riodiquement une compilation, exceptÃ© qu'il s'agit cette fois uniquement d'un index des messages. Si vous souhaitez les lire dans leur entier, vous devrez aller consulter les archives de la liste en ligne.</li>
+			<li><strong>Interrompre la rÃ©ception des messages</strong>&#160;: ce mode permet de ne plus recevoir les messages de la liste tout en y restant abonnÃ©. Cela Ã©vite par exemple de devoir se dÃ©sabonner d'une liste pendant une pÃ©riode d'absence puis de se rÃ©abonner lorsque l'on revient.</li>
+			<li><strong>RÃ©ception au format texte uniquement</strong>&#160;: ce mode permet de ne recevoir que la version texte (text/plain) des messages postÃ©s aux deux formats (texte et <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym>).</li>
+			<li><strong>RÃ©ception au format HTML</strong>&#160;: ce mode permet de ne recevoir que la version <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym> (text/html) des messages postÃ©s aux deux formats (texte et <acronym lang="en" xml:lang="en" title="HyperText Markup Language">HTML</acronym>).</li>
+			<li><strong>Attachements stockÃ©s sur le serveur</strong>&#160;: ce mode permet de ne pas recevoir les documents attachÃ©s. Ceux-ci sont remplacÃ©s dans le message par une <acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym> pointant vers l'interface web.</li>
 			<li><strong>Pour ne pas recevoir ses propres messages</strong>&#160;: ce mode permet de ne pas recevoir une copie de ses propres messages.</li>
-			<li><strong>Normal</strong>&#160;: ce mode est le mode de réception par défaut&#160;; il permet d'annuler les autres modes d'abonnement.</li>
+			<li><strong>Normal</strong>&#160;: ce mode est le mode de rÃ©ception par dÃ©faut&#160;; il permet d'annuler les autres modes d'abonnement.</li>
 		</ul></li>
-		<li><strong>Choisissez une option de visibilité</strong>&#160;:
+		<li><strong>Choisissez une option de visibilitÃ©</strong>&#160;:
 		<ul>
-			<li><strong>Référencé dans la liste des abonnés</strong>&#160;: vous serez visible dans la liste des abonnés (si l'accès à celle-ci est autorisé).</li>
-			<li><strong>Non visible</strong>&#160;: vous ne serez plus visible dans la liste des abonnés. Votre adresse e-mail sera néanmoins visible dans les archives des messages si vous en avez envoyé.</li>
+			<li><strong>RÃ©fÃ©rencÃ© dans la liste des abonnÃ©s</strong>&#160;: vous serez visible dans la liste des abonnÃ©s (si l'accÃ¨s Ã  celle-ci est autorisÃ©).</li>
+			<li><strong>Non visible</strong>&#160;: vous ne serez plus visible dans la liste des abonnÃ©s. Votre adresse e-mail sera nÃ©anmoins visible dans les archives des messages si vous en avez envoyÃ©.</li>
 		</ul></li>
-		<li><strong>Cliquez sur le bouton 'Mise à jour'</strong>.</li>
+		<li><strong>Cliquez sur le bouton 'Mise Ã  jour'</strong>.</li>
 	</ol>
 
-	<h4><a name="global_pref"></a>Modifier ses préférences générales</h4>
-	<p>Les préférences générales sont relatives à l'ensemble de vos abonnements et à la manière dont se présente votre interface de listes Sympa. Pour modifier vos préférences, procédez comme suit&#160;:</p>
+	<h4><a name="global_pref"></a>Modifier ses prÃ©fÃ©rences gÃ©nÃ©rales</h4>
+	<p>Les prÃ©fÃ©rences gÃ©nÃ©rales sont relatives Ã  l'ensemble de vos abonnements et Ã  la maniÃ¨re dont se prÃ©sente votre interface de listes Sympa. Pour modifier vos prÃ©fÃ©rences, procÃ©dez comme suit&#160;:</p>
 	<ol>
 		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <strong>authentifiez-vous</strong>.</li>
-		<li>Dans la boîte en haut de la colonne de gauche, <strong>cliquez sur le lien 'Vos préférences'</strong>.</li>
-		<li><strong>Modifiez vos préférences</strong>.</li>
+		<li>Dans la boÃ®te en haut de la colonne de gauche, <strong>cliquez sur le lien 'Vos prÃ©fÃ©rences'</strong>.</li>
+		<li><strong>Modifiez vos prÃ©fÃ©rences</strong>.</li>
 		<li><strong>Cliquez sur 'Valider' pour chaque option</strong> que vous modifiez.</li>
 	</ol>
 	<p>Vous pouvez modifier&#160;:</p>
 	<ul>
-		<li>votre <strong>nom</strong>&#160;; si vous vous abonnez à une liste depuis l'interface web du serveur de listes, le champ 'Nom' sera automatiquement renseigné dans la liste des abonnés&#160;;</li>
-		<li>la <strong>langue de l'interface de listes Sympa</strong> (le choix de la langue est disponible sur toutes les pages de l'interface de listes&#160;; votre choix sera conservé même si vous modifiez la langue de l'interface sans passer par la page 'Préférences'&#160;;</li>
-		<li>la <strong>durée de vie du cookie stocké sur votre ordinateur par Sympa</strong> ('Expiration de la connexion'). Par défaut, la session expire lorsque vous fermez votre navigateur&#160;; si vous utilisez les listes de manière intensive, nous vous conseillons de choisir une durée plus longue&#160;;<br />
-		<p class="retraitita">Un cookie est un petit fichier qu'un serveur web enregistre, le plus souvent temporairement, sur votre disque dur, pour vous identifier sur son service. Il contient quelques informations de référence vous concernant&#160;: nom, adresse e-mail, date de dernière connexion, etc.</p></li>
-		<li>l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> aux listes (si vous êtes abonné aux listes avec plusieurs adresses, l'adresse remplacée sera celle avec laquelle vous êtes authentifié)&#160;;<br />
-		<p class="retraitita">Attention&#160;: ceci modifiera vos abonnements à l'ensemble des listes. Si vous ne souhaitez changer d'adresse e-mail que pour une seule liste, il vaut mieux vous désabonner de cette liste et vous y réabonner avec l'adresse idoine.</p></li>
+		<li>votre <strong>nom</strong>&#160;; si vous vous abonnez Ã  une liste depuis l'interface web du serveur de listes, le champ 'Nom' sera automatiquement renseignÃ© dans la liste des abonnÃ©s&#160;;</li>
+		<li>la <strong>langue de l'interface de listes Sympa</strong> (le choix de la langue est disponible sur toutes les pages de l'interface de listes&#160;; votre choix sera conservÃ© mÃªme si vous modifiez la langue de l'interface sans passer par la page 'PrÃ©fÃ©rences'&#160;;</li>
+		<li>la <strong>durÃ©e de vie du cookie stockÃ© sur votre ordinateur par Sympa</strong> ('Expiration de la connexion'). Par dÃ©faut, la session expire lorsque vous fermez votre navigateur&#160;; si vous utilisez les listes de maniÃ¨re intensive, nous vous conseillons de choisir une durÃ©e plus longue&#160;;<br />
+		<p class="retraitita">Un cookie est un petit fichier qu'un serveur web enregistre, le plus souvent temporairement, sur votre disque dur, pour vous identifier sur son service. Il contient quelques informations de rÃ©fÃ©rence vous concernant&#160;: nom, adresse e-mail, date de derniÃ¨re connexion, etc.</p></li>
+		<li>l'<strong>adresse e-mail avec laquelle vous Ãªtes abonnÃ©</strong> aux listes (si vous Ãªtes abonnÃ© aux listes avec plusieurs adresses, l'adresse remplacÃ©e sera celle avec laquelle vous Ãªtes authentifiÃ©)&#160;;<br />
+		<p class="retraitita">Attention&#160;: ceci modifiera vos abonnements Ã  l'ensemble des listes. Si vous ne souhaitez changer d'adresse e-mail que pour une seule liste, il vaut mieux vous dÃ©sabonner de cette liste et vous y rÃ©abonner avec l'adresse idoine.</p></li>
 		<li>votre <strong>mot de passe de listes</strong>.</li>
 	</ul>
-	<p>La section '<strong>Vos autres adresses e-mail</strong>' équivaut à un changement d'adresse e-mail.</p>
+	<p>La section '<strong>Vos autres adresses e-mail</strong>' Ã©quivaut Ã  un changement d'adresse e-mail.</p>
 
 		<h3>Rechercher une liste de diffusion</h3>
-		<p>Vous pouvez avoir besoin de rechercher une liste. Pour cela, vous avez trois possibilités&#160;:</p>
+		<p>Vous pouvez avoir besoin de rechercher une liste. Pour cela, vous avez trois possibilitÃ©s&#160;:</p>
 		<ul>
-			<li><strong>parcourir les différentes rubriques</strong> listées en <a href="[% path_cgi %]/home">page d'accueil du serveur de listes</a>&#160;;</li>
-			<li>rechercher une liste grâce au <strong>champ de recherche</strong>&#160;: la chaîne recherchée renverra tous les résultats trouvés dans les noms et les descriptions des listes (les descriptions des listes se résument généralement à une courte phrase)&#160;;</li>
-			<li>cliquer sur l'onglet '<a href="[% path_cgi %]/lists">Liste des listes</a>' en haut de page pour <strong>afficher l'intégralité des listes</strong>.</li>
+			<li><strong>parcourir les diffÃ©rentes rubriques</strong> listÃ©es en <a href="[% path_cgi %]/home">page d'accueil du serveur de listes</a>&#160;;</li>
+			<li>rechercher une liste grÃ¢ce au <strong>champ de recherche</strong>&#160;: la chaÃ®ne recherchÃ©e renverra tous les rÃ©sultats trouvÃ©s dans les noms et les descriptions des listes (les descriptions des listes se rÃ©sument gÃ©nÃ©ralement Ã  une courte phrase)&#160;;</li>
+			<li>cliquer sur l'onglet '<a href="[% path_cgi %]/lists">Liste des listes</a>' en haut de page pour <strong>afficher l'intÃ©gralitÃ© des listes</strong>.</li>
 		</ul>
-		<p class="retraitita">En fonction du domaine auquel appartient votre adresse (exemple&#160;: <em class="example">cru.fr</em>, <em class="example">fai.com</em>, etc.) et de l'endroit à partir duquel vous vous connectez, vous n'aurez pas accès aux mêmes listes. Vous pouvez malgré tout vous abonner aux listes qui vous sont cachées si vous connaissez leur nom. Pour cela, <a href="#abbo">utilisez votre client de messagerie</a>.</p>
+		<p class="retraitita">En fonction du domaine auquel appartient votre adresse (exemple&#160;: <em class="example">cru.fr</em>, <em class="example">fai.com</em>, etc.) et de l'endroit Ã  partir duquel vous vous connectez, vous n'aurez pas accÃ¨s aux mÃªmes listes. Vous pouvez malgrÃ© tout vous abonner aux listes qui vous sont cachÃ©es si vous connaissez leur nom. Pour cela, <a href="#abbo">utilisez votre client de messagerie</a>.</p>
 
 	<h3><a name="archives"></a>Lire les archives d'une liste en ligne</h3>
 	<p>Consultez la <a href="[% path_cgi %]/help/arc"><strong>documentation des archives</strong></a>.</p>
@@ -151,21 +151,21 @@
 	<h3><a name="sendmsg"></a>Envoyer un message</h3>
 	<p>Consultez la <a href="[% path_cgi %]/help/sendmsg"><strong>documentation pour l'envoi de messages</strong></a>.</p>
 
-	<h3><a name="shared"></a>Utiliser l'espace de stockage partagé</h3>
+	<h3><a name="shared"></a>Utiliser l'espace de stockage partagÃ©</h3>
 	<p>Consultez la <a href="[% path_cgi %]/help/shared"><strong>documentation de l'espace de stockage</strong></a>.</p>
 
-	<h3><a name="unsubscribe"></a>Se désabonner des listes</h3>
-	<p>Pour vous désabonner d'une liste, procédez comme suit&#160;:</p>
+	<h3><a name="unsubscribe"></a>Se dÃ©sabonner des listes</h3>
+	<p>Pour vous dÃ©sabonner d'une liste, procÃ©dez comme suit&#160;:</p>
 	<ol>
-		<li>À partir de l'adresse avec laquelle vous êtes abonné à la liste, envoyez un <strong>message à [% conf.email %]@[% conf.host %]</strong>.</li>
-		<li>En objet du message, écrivez&#160;: <strong>unsubscribe nomdelaliste</strong> (remplacez 'nomdelaliste' par le nom de la liste dont vous souhaitez vous désabonner).</li>
+		<li>Ã€ partir de l'adresse avec laquelle vous Ãªtes abonnÃ© Ã  la liste, envoyez un <strong>message Ã  [% conf.email %]@[% conf.host %]</strong>.</li>
+		<li>En objet du message, Ã©crivez&#160;: <strong>unsubscribe nomdelaliste</strong> (remplacez 'nomdelaliste' par le nom de la liste dont vous souhaitez vous dÃ©sabonner).</li>
 		<li><strong>Laissez le corps du message vide</strong>.<br />
-		<p class="retraitita">Vous pouvez également envoyer plusieurs commandes dans le même message pour gagner du temps. Pour cela, procédez comme indiqué dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</p></li>
+		<p class="retraitita">Vous pouvez Ã©galement envoyer plusieurs commandes dans le mÃªme message pour gagner du temps. Pour cela, procÃ©dez comme indiquÃ© dans la section <a href="#howitworks">Fonctionnement du service de listes</a>.</p></li>
 	</ol>	
-	<p>Vous pouvez également vous désabonner à partir de l'interface de listes (vous devrez répéter l'opération pour chaque liste dont vous souhaitez vous désabonner)&#160;:</p>
+	<p>Vous pouvez Ã©galement vous dÃ©sabonner Ã  partir de l'interface de listes (vous devrez rÃ©pÃ©ter l'opÃ©ration pour chaque liste dont vous souhaitez vous dÃ©sabonner)&#160;:</p>
 	<ol>
 		<li>Allez sur la <strong><a href="[% path_cgi %]/home">page d'accueil</a></strong> de l'environnement de listes et <strong>authentifiez-vous</strong>.</li>
-		<li><strong>Allez sur la page d'information de la liste</strong> dont vous souhaitez vous désabonner.</li>
-		<li><strong>Dans le menu de gauche, cliquez sur le lien 'Désabonnement'</strong>.</li>
+		<li><strong>Allez sur la page d'information de la liste</strong> dont vous souhaitez vous dÃ©sabonner.</li>
+		<li><strong>Dans le menu de gauche, cliquez sur le lien 'DÃ©sabonnement'</strong>.</li>
 	</ol>
 	<hr />
