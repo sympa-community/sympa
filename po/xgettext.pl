@@ -170,30 +170,34 @@ foreach my $file (@ARGV) {
 
     # Template Toolkit
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\[%\s*\|l(?:oc(?:dt)?)?(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
-	my ($vars, $str) = ($1, $2);
+    while (m!\G.*?\[%\s*\|(locdt|loc)(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
+	my ($this_tag, $vars, $str) = ($1, $2, $3);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\\'/\'/g; 
 	$vars =~ s/^\s*\(//;
 	$vars =~ s/\)\s*$//;
-	&add_expression({'expression' => $str,
-			 'filename' => $filename,
-			 'line' => $line,
-			 'vars' => $vars});
+	my $expression = {'expression' => $str,
+			  'filename' => $filename,
+			  'line' => $line,
+			  'vars' => $vars};       
+	$expression->{'type'} = 'date' if ($this_tag eq 'locdt');
+	&add_expression($expression);
     }
 	    
     # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in archives
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\(\$tag\$%\s*\|l(?:oc(?:dt)?)?(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
-	my ($vars, $str) = ($1, $2);
+    while (m!\G.*?\(\$tag\$%\s*\|(locdt|loc)(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
+	my ($this_tag, $vars, $str) = ($1, $2, $3);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\\'/\'/g; 
 	$vars =~ s/^\s*\(//;
 	$vars =~ s/\)\s*$//;
-	&add_expression({'expression' => $str,
-			 'filename' => $filename,
-			 'line' => $line,
-			 'vars' => $vars});
+	my $expression = {'expression' => $str,
+			  'filename' => $filename,
+			  'line' => $line,
+			  'vars' => $vars};       
+	$expression->{'type'} = 'date' if ($this_tag eq 'locdt');
+	&add_expression($expression);
     }	    
 
 	    # Sympa variables (gettext_id)
