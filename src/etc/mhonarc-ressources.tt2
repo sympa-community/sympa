@@ -61,17 +61,13 @@ TOP_PANEL
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
+   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
 </div>
 </DefineVar>
 
 <DefineVar>
 PRINTABLE_MONTH
-($tag$% IF lang == 'fr' %$tag$)
-$mois$/$yyyy$
-($tag$% ELSE %$tag$)
-$yyyy$/$mois$
-($tag$% END %$tag$)
+($tag$%|locdt("$yyyy$/$mois$")%$tag$)%Y/%m($tag$%END%$tag$)
 </DefineVar>
 
 <DefineVar>
@@ -307,15 +303,15 @@ TIDXPGEND
 </THEAD>
 
 <TSINGLETXT>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSINGLETXT>
 
 <TTOPBEGIN>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TTOPBEGIN>
 
 <TLITXT>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, $MMDDYYYY$</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TLITXT>
 
 <TTOPEND>
@@ -524,15 +520,15 @@ Subject:strong
 </TSLICEBEG>
 
 <TSLICETOPBEGINCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, $MMDDYYYY$</EM>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
 </TSLICETOPBEGINCUR>
 
 <TSLICELITXTCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, $MMDDYYYY$</EM>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
 </TSLICELITXTCUR>
 
 <TSLICESINGLETXTCUR>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, $MMDDYYYY$</EM>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</EM>
 </TSLICESINGLETXTCUR>
 
 <TSLICEEND>
@@ -577,11 +573,7 @@ Subject:strong
 <!-- ============================================================== -->
 
 <DAYBEGIN>
-($tag$% IF lang == 'fr' %$tag$)
-<LI><STRONG>$DDMMYY$</STRONG>
-($tag$% ELSE %$tag$)
-<LI><STRONG>$YYMMDD$</STRONG>
-($tag$% END %$tag$)
+<LI><STRONG>($tag$%|locdt("$YYYYMMDD$")%$tag$)%y/%m/%d($tag$%END%$tag$)</STRONG>
 <UL>
 </DAYBEGIN>
 

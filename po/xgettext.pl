@@ -68,7 +68,7 @@ C<E<lt>&|/locE<gt>I<...>E<lt>/&E<gt>> will be extracted.
 
 =item Template Toolkit
 
-Texts inside C<[%|l%]...[%END%]> or C<[%|loc%]...[%END%]>
+Texts inside C<[%|l%]...[%END%]>, C<[%|loc%]...[%END%]> or C<[%|locdt%]...[%END%]>
 are extracted.
 
 =item Text::Template
@@ -170,7 +170,7 @@ foreach my $file (@ARGV) {
 
     # Template Toolkit
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\[%\s*\|l(?:oc)?(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
+    while (m!\G.*?\[%\s*\|l(?:oc(?:dt)?)?(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\\'/\'/g; 
@@ -184,7 +184,7 @@ foreach my $file (@ARGV) {
 	    
     # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in archives
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\(\$tag\$%\s*\|l(?:oc)?(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
+    while (m!\G.*?\(\$tag\$%\s*\|l(?:oc(?:dt)?)?(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\\'/\'/g; 

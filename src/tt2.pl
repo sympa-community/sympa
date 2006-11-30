@@ -204,6 +204,22 @@ sub maketext {
     }	
 }
 
+# IN:
+#    $fmt: strftime() style format string.
+#    $arg: a string representing date/time:
+#          "YYYY/MM", "YYYY/MM/DD", "YYYY/MM/DD/HH/MM", "YYYY/MM/DD/HH/MM/SS"
+# OUT:
+#    Subref to generate formatted (i18n'ized) date/time.
+sub locdatetime {
+    my ($fmt, $arg) = @_;
+    if ($arg !~ /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/) {
+	return sub { gettext("(unknown date)"); };
+    } else {
+	my @arg = ($6+0, $5+0, $4+0, $3+0 || 1, $2-1, $1-1900, 0,0,0);
+        return sub { gettext_strftime($_[0], @arg); };
+    }
+}
+
 ## To add a directory to the TT2 include_path
 sub add_include_path {
     my $path = shift;
@@ -266,6 +282,7 @@ sub parse_tt2 {
 	    unescape => \&CGI::Util::unescape,
 	    l => [\&tt2::maketext, 1],
 	    loc => [\&tt2::maketext, 1],
+	    locdt => [\&tt2::locdatetime, 1],
 	    qencode => [\&qencode, 0],
  	    escape_xml => [\&escape_xml, 0],
 	    escape_url => [\&escape_url, 0],
