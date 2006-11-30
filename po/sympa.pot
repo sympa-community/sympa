@@ -330,6 +330,13 @@ msgstr ""
 msgid "%Image(%s)"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:70
+#. ("$yyyy$/$mois$")
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+msgid "%Y/%m"
+msgstr ""
+
 #: src/List.pm:2916
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -364,6 +371,20 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %y  %H:%M"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:306 src/etc/mhonarc-ressources.tt2:310 src/etc/mhonarc-ressources.tt2:314 src/etc/mhonarc-ressources.tt2:523 src/etc/mhonarc-ressources.tt2:527 src/etc/mhonarc-ressources.tt2:531
+#. ("$YYYYMMDD$")
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+msgid "%m/%d/%Y"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:576
+#. ("$YYYYMMDD$")
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+msgid "%y/%m/%d"
 msgstr ""
 
 #: web_tt2/error.tt2:86
@@ -413,6 +434,10 @@ msgstr ""
 
 #: web_tt2/edit_template.tt2:19
 msgid "(This template is the default for all languages unless it is redefined for a specific language.)"
+msgstr ""
+
+#: src/tt2.pl:216
+msgid "(unknown date)"
 msgstr ""
 
 #: src/PlainDigest.pm:238
@@ -709,7 +734,7 @@ msgstr ""
 msgid "Archive of %1, file %2"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:90
+#: src/etc/mhonarc-ressources.tt2:86
 msgid "Archive powered by"
 msgstr ""
 
@@ -1351,15 +1376,15 @@ msgstr ""
 msgid "Do you really want to delete Selected Archives?"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:217
+#: src/etc/mhonarc-ressources.tt2:213
 msgid "Do you really want to delete these messages ?"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:333
+#: src/etc/mhonarc-ressources.tt2:329
 msgid "Do you really want to delete theses messages ?"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:452
+#: src/etc/mhonarc-ressources.tt2:448
 msgid "Do you really want to delete this message ?"
 msgstr ""
 
@@ -2025,7 +2050,7 @@ msgid ""
 "was unable to access your personal certificate (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:612
+#: src/etc/mhonarc-ressources.tt2:604
 msgid "January:February:March:April:May:June:July:August:September:October:November:December"
 msgstr ""
 
@@ -3010,6 +3035,10 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:64
+msgid "Pages navigation : "
+msgstr ""
+
 #: web_tt2/error.tt2:83
 #. (u_err.param,u_err.val)
 msgid "Parameter '%1' has got wrong value : '%2'"
@@ -3417,7 +3446,7 @@ msgstr ""
 msgid "Replace the file %1 with your file"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:445
+#: src/etc/mhonarc-ressources.tt2:441
 msgid "Reply"
 msgstr ""
 
@@ -3430,7 +3459,7 @@ msgstr ""
 msgid "Reply to           : %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:441
+#: src/etc/mhonarc-ressources.tt2:437
 msgid "Reply to sender"
 msgstr ""
 
@@ -3964,7 +3993,7 @@ msgstr ""
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:594
+#: src/etc/mhonarc-ressources.tt2:586
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -4064,7 +4093,7 @@ msgstr ""
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:217 src/etc/mhonarc-ressources.tt2:333
+#: src/etc/mhonarc-ressources.tt2:213 src/etc/mhonarc-ressources.tt2:329
 msgid "Tag messages for deletion"
 msgstr ""
 
@@ -4766,7 +4795,7 @@ msgstr ""
 msgid "This template is defined for list %1@%2"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:187 src/etc/mhonarc-ressources.tt2:299 src/etc/mhonarc-ressources.tt2:400
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295 src/etc/mhonarc-ressources.tt2:396
 msgid "Thread"
 msgstr ""
 
@@ -4908,7 +4937,7 @@ msgstr ""
 msgid "To: %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:216 src/etc/mhonarc-ressources.tt2:332 web_tt2/review.tt2:269 web_tt2/reviewbouncing.tt2:116
+#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328 web_tt2/review.tt2:269 web_tt2/reviewbouncing.tt2:116
 msgid "Toggle Selection"
 msgstr ""
 
@@ -6110,7 +6139,7 @@ msgstr ""
 msgid "char * match any string. Example : \"*@spammer-domain.com\" match any sender from that exact domain"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:186 src/etc/mhonarc-ressources.tt2:298 src/etc/mhonarc-ressources.tt2:399 src/etc/mhonarc-ressources.tt2:403
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294 src/etc/mhonarc-ressources.tt2:395 src/etc/mhonarc-ressources.tt2:399
 msgid "chronological"
 msgstr ""
 
@@ -6536,7 +6565,7 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294 src/etc/mhonarc-ressources.tt2:63
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:290 src/etc/mhonarc-ressources.tt2:63
 msgid "mails"
 msgstr ""
 
@@ -6669,7 +6698,7 @@ msgstr ""
 msgid "page"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:189 src/etc/mhonarc-ressources.tt2:301
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:297
 #. ($PAGENUM$,$NUMOFPAGES$)
 msgid "page # %1/%2"
 msgstr ""
@@ -6966,7 +6995,7 @@ msgstr ""
 msgid "selection (if multiple)"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:446
+#: src/etc/mhonarc-ressources.tt2:442
 #. (user.email)
 msgid "send it back to %1"
 msgstr ""
@@ -7040,7 +7069,7 @@ msgstr ""
 msgid "summary mode"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:452
+#: src/etc/mhonarc-ressources.tt2:448
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -7081,7 +7110,7 @@ msgstr ""
 msgid "this sentence"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:403
+#: src/etc/mhonarc-ressources.tt2:399
 msgid "thread"
 msgstr ""
 
@@ -7097,7 +7126,7 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:443
+#: src/etc/mhonarc-ressources.tt2:439
 msgid "to list"
 msgstr ""
 
