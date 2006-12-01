@@ -163,7 +163,14 @@ sub create_list_old{
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
 
     open CONFIG, ">$list_dir/config";
-    &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, $tt2_include_path);
+
+    ## Use an intermediate handler to encode to filesystem_encoding
+    my $config = '';
+    my $fd = new IO::Scalar \$config;    
+    &tt2::parse_tt2($param, 'config.tt2', $fd, $tt2_include_path);
+    Encode::from_to($config, 'utf8', $Conf{'filesystem_encoding'});
+    print CONFIG $config;
+
     close CONFIG;
     
     ## Creation of the info file 
@@ -174,7 +181,7 @@ sub create_list_old{
 	&do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
     }
     if (defined $param->{'description'}) {
-	print INFO $param->{'description'};
+	print INFO Encode::from_to($param->{'description'}, 'utf8', $Conf{'filesystem_encoding'});
     }
     close INFO;
     
