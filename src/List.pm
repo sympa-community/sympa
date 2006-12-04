@@ -4514,6 +4514,7 @@ sub delete_user {
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$self->{'domain'}}{$name}{$who} = undef;    
+	    $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$who} = undef;    
 	    
 	    ## Delete record in SUBSCRIBER
 	    $statement = sprintf "DELETE FROM subscriber_table WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber=%s)",
