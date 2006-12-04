@@ -3593,6 +3593,7 @@ sub send_to_editor {
    @rcpt = $self->get_editors_email();
    unless (@rcpt) {
        do_log('notice','Warning : no editor defined for list %s, contacting owners', $name );
+       @rcpt = $self->get_owners_email();
    }
 
    my $param = {'modkey' => $modkey,
@@ -11896,7 +11897,7 @@ sub load_msg_topic_file {
     my $file = "$list_id.$msg_id";
     
     unless (open (FILE, "$queuetopic/$file")) {
-	&do_log('info','Unable to open info msg_topic file %s/%s : %s', $queuetopic,$file, $!);
+	&do_log('debug','No topic define ; unable to open %s/%s : %s', $queuetopic,$file, $!);
 	return undef;
     }
     
