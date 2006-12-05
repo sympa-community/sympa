@@ -11794,6 +11794,8 @@ sub compute_topic {
 	if (defined $msg->bodyhandle) {
 	    $mail_string = $msg->bodyhandle->as_string();
 	}
+
+	## Default : search in both subject and message body
     }else {
 	$mail_string = $msg->head->get('subject');
 
@@ -11802,12 +11804,9 @@ sub compute_topic {
 	}
     }
 
-    $mail_string =~ s/\-/\\-/;
-    $mail_string =~ s/\./\\./;
-
     # parsing
-
     foreach my $keyw (keys %keywords) {
+	$keyw = &tools::escape_regexp($keyw);
 	if ($mail_string =~ /$keyw/i){
 	    my $k = $keywords{$keyw};
 	    $topic_hash{$k} = 1;

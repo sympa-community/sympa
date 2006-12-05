@@ -6826,14 +6826,7 @@ sub do_remove_arc {
 	 return undef;
      }
 
-     $param->{'key_word'} = $in{'key_word'};
-     $in{'key_word'} =~ s/\@/\\\@/g;
-     $in{'key_word'} =~ s/\[/\\\[/g;
-     $in{'key_word'} =~ s/\]/\\\]/g;
-     $in{'key_word'} =~ s/\(/\\\(/g;
-     $in{'key_word'} =~ s/\)/\\\)/g;
-     $in{'key_word'} =~ s/\$/\\\$/g;
-     $in{'key_word'} =~ s/\'/\\\'/g;
+     $param->{'key_word'} = &tools::escape_regexp($in{'key_word'});
 
      $search->limit ($in{'limit'});
 
