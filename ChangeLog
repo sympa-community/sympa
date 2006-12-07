@@ -1,3 +1,86 @@
+2006-12-05 13:36  olivier.salaun
+
+	* src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi: Change: New
+	  tools::escape_regexp() subroutine.  Now escaping topics keywords
+	  before searching messages
+
+2006-12-04 14:04  olivier.salaun
+
+	* src/List.pm: Fixes: topics related, remove unuseful error logs ;
+	  contact owners if no owner was defined
+
+2006-12-04 13:25  olivier.salaun
+
+	* src/List.pm: [J.Schmalenbach, Barrett] Fix: empty
+	  'get_subscriber' when removing a list member
+
+2006-12-01 15:57  olivier.salaun
+
+	* src/admin.pm: Fix: use filesystem_encoding when creating new list
+	  config and info files
+
+2006-12-01 09:31  olivier.salaun
+
+	* web_tt2/fr_FR/help_listconfig.tt2: Fix link to help/admin
+
+2006-12-01 09:21  olivier.salaun
+
+	* po/ja.po: [S.Ikeda] Updated Japanese catalog
+
+2006-11-30 17:35  olivier.salaun
+
+	* po/sympa.pot: Updated with new date formats
+
+2006-11-30 17:34  olivier.salaun
+
+	* po/xgettext.pl: Chnage: add date comment if locdt
+
+2006-11-30 16:51  olivier.salaun
+
+	* po/xgettext.pl, src/tt2.pl, src/etc/mhonarc-ressources.tt2: [ID
+	  1338][S.Ikeda] New feature: A new filter [%|locdt()%] is added
+	  for TT2 templates to format date/time according to language
+	  context.  It takes a format string to be gettext'ized as main
+	  argument, and an extra argument representing date/time.  MHonArc
+	  resource file was modified so that it may generate output
+	  including this filter spec as nessessity.
+
+	  Note that this spec will be available for newly-updated archives.
+	   To apply this improvement to all past archives, it is nessessary
+	  that all archives are rebuilt.
+
+2006-11-30 14:10  olivier.salaun
+
+	* po/sympa.pot: Updated with date format entries
+
+2006-11-30 14:09  olivier.salaun
+
+	* po/xgettext.pl: Changes: restored collecting of date format
+	  entries Added a developer comment about date formats for
+	  translators
+
+2006-11-29 17:41  olivier.salaun
+
+	* src/Language.pm: Change: renamed dgettext() to sympa_dgettext()
+	  to prevent conflicts with the orignal one
+
+2006-11-29 17:31  olivier.salaun
+
+	* src/Log.pm: Fix: moved calls to Encode::from_to() deaper in the
+	  subroutine to prevent unneeded calls.  Otherwise this could
+	  degrade performences
+
+2006-11-29 15:58  olivier.salaun
+
+	* web_tt2/fr_FR/: help.tt2, help_arc.tt2, help_faqadmin.tt2,
+	  help_faquser.tt2, help_introduction.tt2, help_listconfig.tt2,
+	  help_mail_commands.tt2, help_sendmsg.tt2, help_shared.tt2,
+	  help_user.tt2: Fix: recoded all files to UTF-8
+
+2006-11-29 14:57  olivier.salaun
+
+	* .version, ChangeLog, NEWS: Preparing sympa 5.3b.1
+
 2006-11-29 11:42  olivier.salaun
 
 	* src/Ldap.pm: [requested by E.Beliveau] New feature: allow folded
