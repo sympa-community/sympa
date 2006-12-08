@@ -2363,10 +2363,18 @@ sub distribute_msg {
 	## If subject is tagged, replace it with new tag
 	$subject_field =~ s/\s*\[$tag_regexp\]//;
  	## Encode subject using initial charset
- 	$subject_field = MIME::EncWords::encode_mimewords([
-	    [Encode::decode_utf8('['.$parsed_tag[0].'] '), &Language::GetCharset()],
-	    [Encode::decode_utf8($subject_field), $message->{'subject_charset'}]
-	    ], Encoding=>'A', Field=>'Subject');
+
+ 	## Don't try to encode the subject if it was not originaly encoded
+	if ($message->{'subject_charset'}) {
+	    $subject_field = MIME::EncWords::encode_mimewords([
+							       [Encode::decode_utf8('['.$parsed_tag[0].'] '), &Language::GetCharset()],
+							       [Encode::decode_utf8($subject_field), $message->{'subject_charset'}]
+							       ], Encoding=>'A', Field=>'Subject');
+	}else {
+	    $subject_field = MIME::EncWords::encode_mimewords([
+							       [Encode::decode_utf8('['.$parsed_tag[0].'] '), &Language::GetCharset()]
+							       ], Encoding=>'A', Field=>'Subject') . $subject_field;
+	}
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }
