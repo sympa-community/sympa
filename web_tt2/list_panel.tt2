@@ -16,7 +16,12 @@
  	[% IF e.value.gecos %][% e.value.gecos %][% ELSE %][% e.value.local %][% END %]<br />
    [% END %]
    [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
-  
+  <br/>
+  [% IF protection_type == 'javascript' %]
+   <strong>[% hidden_head %]<a class=\"smalltext\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]</strong>
+  [% ELSE %]
+   <strong><a class="smalltext" href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a></strong>
+  [% END %]
 </div>
 
 <!-- end list_panel.tt2 -->
