@@ -118,7 +118,7 @@ sub qencode {
     my $string = shift;
     # We are not able to determine the name of header field, so assume
     # longest (maybe) one.    
-    return MIME::EncWords::encode_mimewords(Encode::decode_utf8($string),
+    return MIME::EncWords::encode_mimewords(Encode::decode('utf8', $string),
 					    Encoding=>'A',
 					    Charset=>&Language::GetCharset(),
 					    Field=>"message-id");
@@ -174,7 +174,7 @@ sub decode_utf8 {
 	## Wrapped with eval to prevent Sympa process from dying
 	## FB_CROAK is used instead of FB_WARN to pass $string intact to succeeding processes it operation fails
 	eval {
-	    $string = &Encode::decode_utf8($string, Encode::FB_CROAK);
+	    $string = &Encode::decode('utf8', $string, Encode::FB_CROAK);
 	};
 	$@ = '';
     }

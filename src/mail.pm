@@ -179,7 +179,7 @@ sub mail_file {
 	    $to = $rcpt;
 	}   
 	$headers .= "To: ".MIME::EncWords::encode_mimewords(
-	    Encode::decode_utf8($to),
+	    Encode::decode('utf8', $to),
 	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'To'
 	    )."\n"; 
     }     
@@ -191,27 +191,27 @@ sub mail_file {
 		)."\n";
 	} else {
 	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
-		Encode::decode_utf8($data->{'from'}),
+		Encode::decode('utf8', $data->{'from'}),
 		'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'From'
 		)."\n"; 
 	}
    }
     unless ($header_ok{'subject'}) {
 	$headers .= "Subject: ".MIME::EncWords::encode_mimewords(
-	    Encode::decode_utf8($data->{'subject'}),
+	    Encode::decode('utf8', $data->{'subject'}),
 	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'Subject'
 	    )."\n";
    }
     unless ($header_ok{'reply-to'}) { 
 	$headers .= "Reply-to: ".MIME::EncWords::encode_mimewords(
-	    Encode::decode_utf8($data->{'replyto'}),
+	    Encode::decode('utf8', $data->{'replyto'}),
 	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'Reply-to'
 	    )."\n" if ($data->{'replyto'})
     }
     if ($data->{'headers'}) {
 	foreach my $field (keys %{$data->{'headers'}}) {
 	    $headers .= $field.': '.MIME::EncWords::encode_mimewords(
-		Encode::decode_utf8($data->{'headers'}{$field}),
+		Encode::decode('utf8', $data->{'headers'}{$field}),
 		'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => $field
 		)."\n";
 	}
@@ -869,7 +869,7 @@ sub fix_part($$$) {
 	my $charset = $head->mime_attr("Content-Type.Charset");
 
 	my ($newbody, $newcharset, $newenc) = 
-	    MIME::Charset::body_encode(Encode::decode_utf8($body), $charset,
+	    MIME::Charset::body_encode(Encode::decode('utf8', $body), $charset,
 				       Replacement => 'FALLBACK');
 	if ($newenc eq $enc and $newcharset eq $charset and
 	    $newbody eq $body) {
