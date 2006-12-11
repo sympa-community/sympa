@@ -176,7 +176,7 @@ IDXPGEND
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
+   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
 
   <span class="search_form">
     <a class="ArcMenuLinksCurrentPage" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
@@ -288,7 +288,7 @@ TIDXPGEND
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
+   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
 
    <span class="search_form">
      <a class="ArcMenuLinks" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
@@ -326,7 +326,7 @@ TIDXPGEND
 <input type="hidden" name="action" value="remove_arc" />
 <input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
 <input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.myform.msgid)" />
-<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete theses messages ?($tag$%END%$tag$)')"/><br />
+<input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete these messages ?($tag$%END%$tag$)')"/><br />
 <br />
 </form>
 ($tag$%END%$tag$)<br />
@@ -336,6 +336,18 @@ TIDXPGEND
 $POWERED_BY$
 ($tag$%TAGS [% %]%$tag$)
 </TIDXPGEND>
+
+<TCONTBEGIN>
+<li><strong>$SUBJECTNA$</strong>($tag$%|loc%$tag$), <em>(continued)</em>($tag$%END%$tag$)
+</TCONTBEGIN>
+
+<TSUBJECTBEG>
+<li>($tag$%|loc%$tag$)&lt;Possible follow-up(s)&gt;($tag$%END%$tag$)</li>
+</TSUBJECTBEG>
+
+<TLINONE>
+<li>($tag$%|loc%$tag$)<em>Message not available</em>($tag$%END%$tag$)
+</TLINONE>
 
 <!-- links definition -->
 <TPrevPgLink chop>
