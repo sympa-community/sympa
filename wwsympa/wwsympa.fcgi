@@ -2881,9 +2881,9 @@ sub do_remindpasswd {
      }
 
      if ($param->{'newuser'} =  &List::get_user_db($in{'email'})) {
-	 &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
 	 ## Create a password if none
 	 unless ($param->{'newuser'}{'password'}) {
+	     &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
 	     unless ( &List::update_user_db($in{'email'},
 					    {'password' => &tools::tmp_passwd($in{'email'}) 
 					     })) {
