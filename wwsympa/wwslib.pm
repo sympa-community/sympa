@@ -314,7 +314,7 @@ sub ciphersaber_installed {
 sub crypt_passwd {
     my $inpasswd = shift ;
 
-    unless (define($cipher)){
+    unless (defined($cipher)){
 	$cipher = ciphersaber_installed();
     }
     return $inpasswd if ($cipher eq 'no_cipher') ;
@@ -328,7 +328,7 @@ sub decrypt_passwd {
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
     $inpasswd = $1;
 
-    unless (define($cipher)){
+    unless (defined($cipher)){
 	$cipher = ciphersaber_installed();
     }
     if ($cipher eq 'no_cipher') {
