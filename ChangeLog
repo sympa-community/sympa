@@ -1,3 +1,84 @@
+2006-12-12 14:48  olivier.salaun
+
+	* wwsympa/wwslib.pm: Removed dead code (encyrpt_password() and
+	  decrypt_password() were duplicated)
+
+2006-12-12 14:45  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Moved log at the right place ; about
+	  password allocation
+
+2006-12-12 14:29  olivier.salaun
+
+	* wwsympa/wwslib.pm: Fix typo
+
+2006-12-12 13:43  olivier.salaun
+
+	* po/eu.po: Update, based on POT file
+
+2006-12-12 13:42  olivier.salaun
+
+	* po/: Makefile, eu.po: [Piarres Beobide]Strarting Basque
+	  translation
+
+2006-12-11 11:48  olivier.salaun
+
+	* src/List.pm: [S.Ikeda] [ID 1396] Fix: A bug relating this patch:
+	  ASCII-only subjects are unfolded then can become one long line.
+
+2006-12-11 11:01  olivier.salaun
+
+	* po/sympa.pot: Updated POT file
+
+2006-12-11 10:50  olivier.salaun
+
+	* src/etc/mhonarc-ressources.tt2: [S.Ikeda] [ID 1393] Fix: added
+	  more translatable items to mhonarc-resources.tt2
+
+2006-12-11 10:41  olivier.salaun
+
+	* src/: List.pm, mail.pm, tt2.pl: [S.Ikeda] [ID 1396] Fix: Body or
+	  subject header were occationally empty.  Reproduced by: Sympa CVS
+	  HEAD with Encode 2.08.  Not reproduced by: Sympa CVS HEAD with
+	  Encode 2.12, 2.18.
+
+	  - Body of service message is removed at all when its source
+	  contains non-UTF-8-compliant sequence.  - Subject body of
+	  distributed message is removed when original subject contains
+	  unencoded non-ASCII sequence.
+
+	  It may be caused by a bug in Encode module, RT#8872:
+	  http://rt.cpan.org/Public/Bug/Display.html?id=8872
+
+2006-12-08 17:49  olivier.salaun
+
+	* web_tt2/: css.tt2, list_menu.tt2, list_panel.tt2: Change: moved
+	  "contact owners" link into the list_panel
+
+2006-12-08 15:33  olivier.salaun
+
+	* src/List.pm: Fix: Sympa would fail encoding mail subjects that
+	  were not originaly encoded. The bug only appeared while using
+	  custom_subject.  MUA should encode mail subject but don't all do
+	  it (home-made scripts or user agents like Eudora 6). In such
+	  situations Sympa should either leave the subject uncoded OR
+	  encode it. Encoding such header fields is not an easy job because
+	  we don't know what encoding was used by the mail client.
+
+2006-12-08 15:09  olivier.salaun
+
+	* po/fr.po: [O.Lacroix, Ciril] Fixed a few French typos
+
+2006-12-07 17:30  olivier.salaun
+
+	* src/SQLSource.pm: Fix: set SQL client preference regarding
+	  character encoding to UTF8. Otherwise we can't determine how data
+	  got from SQL is encoded.
+
+2006-12-07 14:28  olivier.salaun
+
+	* ChangeLog: Updated
+
 2006-12-05 13:36  olivier.salaun
 
 	* src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi: Change: New
