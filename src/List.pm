@@ -12141,7 +12141,8 @@ sub _urlize_part {
 
     &tt2::parse_tt2({'file_name' => $file_name,
 		     'file_url'  => $file_url,
-		     'file_size' => $size },
+		     'file_size' => $size ,
+		     'charset' => &Language::GetCharset()},
 		    'urlized_part.tt2',
 		    \$new_part,
 		    $tt2_include_path);
