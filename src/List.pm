@@ -1470,8 +1470,20 @@ sub savestats {
     my $dir = $self->{'dir'};
     return undef unless ($list_of_lists{$self->{'domain'}}{$name});
     
+    ## Lock file
+    my $lock = new Lock ($dir.'/stats');
+    $lock->set_timeout(2); 
+    unless ($lock->lock('write')) {
+	return undef;
+    }   
+
    _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'}, $self->{'last_sync_admin_user'});
     
+    ## Release the lock
+    unless ($lock->unlock()) {
+	return undef;
+    }
+
     ## Changed on disk
     $self->{'mtime'}[2] = time;
 
