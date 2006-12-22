@@ -25,6 +25,7 @@ use strict;
 use Datasource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
+use Lock;
 require Fetch;
 require Exporter;
 require Encode;
@@ -33,6 +34,11 @@ require "--LIBDIR--/tt2.pl";
 
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
+
+sub LOCK_SH {1};
+sub LOCK_EX {2};
+sub LOCK_NB {4};
+sub LOCK_UN {8};
 
 =head1 CONSTRUCTOR
 
@@ -237,7 +243,7 @@ use Family;
 use PlainDigest;
 
 ## Database and SQL statement handlers
-my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count, $include_admin_user_lock_count);
+my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 
 my %list_cache;
 my %persistent_cache;
@@ -1266,7 +1272,6 @@ my %list_of_lists = ();
 my %list_of_robots = ();
 my %list_of_topics = ();
 my %edit_list_conf = ();
-my %list_of_fh = ();
 
 ## Last modification times
 my %mtime;
@@ -1275,11 +1280,6 @@ use Fcntl;
 use DB_File;
 
 $DB_BTREE->{compare} = \&_compare_addresses;
-
-sub LOCK_SH {1};
-sub LOCK_EX {2};
-sub LOCK_NB {4};
-sub LOCK_UN {8};
 
 ## Connect to Database
 sub db_connect {
@@ -1658,13 +1658,21 @@ sub save_config {
     my ($self, $email) = @_;
     do_log('debug3', 'List::save_config(%s,%s)', $self->{'name'}, $email);
 
-    my $name = $self->{'name'};    
-    my $old_serial = $self->{'admin'}{'serial'};
-    my $config_file_name = "$self->{'dir'}/config";
-    my $old_config_file_name = "$self->{'dir'}/config.$old_serial";
-
     return undef 
 	unless ($self);
+
+    my $config_file_name = "$self->{'dir'}/config";
+
+    ## Lock file
+    my $lock = new Lock ($self->{'dir'}.'/config');
+    $lock->set_timeout(5); 
+    unless ($lock->lock('write')) {
+	return undef;
+    }
+
+    my $name = $self->{'name'};    
+    my $old_serial = $self->{'admin'}{'serial'};
+    my $old_config_file_name = "$self->{'dir'}/config.$old_serial";
 
     ## Update management info
     $self->{'admin'}{'serial'}++;
@@ -1675,6 +1683,7 @@ sub save_config {
 
     unless (&_save_admin_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
+	$lock->unlock();
 	return undef;
     }
     
@@ -1687,6 +1696,11 @@ sub save_config {
 
 #    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
     
+    ## Release the lock
+    unless ($lock->unlock()) {
+	return undef;
+    }
+
     return 1;
 }
 
@@ -1734,6 +1748,13 @@ sub load {
     my ($m1, $m2, $m3) = (0, 0, 0);
     ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
 
+    ## Get a shared lock on config file first 
+    my $lock = new Lock ($self->{'dir'}.'/config');
+    $lock->set_timeout(5); 
+    unless ($lock->lock('read')) {
+	return undef;
+    }
+
     my $time_config = (stat("$self->{'dir'}/config"))[9];
     my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
     my $time_subscribers; 
@@ -1749,6 +1770,7 @@ sub load {
 	## unless config is more recent than config.bin
 	unless ($admin = &Storable::retrieve("$self->{'dir'}/config.bin")) {
 	    &do_log('err', 'Failed to load the binary config %s', "$self->{'dir'}/config.bin");
+	    $lock->unlock();
 	    return undef;
 	}
 
@@ -1769,12 +1791,18 @@ sub load {
  	unless (defined $admin) {
  	    &do_log('err', 'Impossible to load list config file for list % set in status error_config',$self->{'name'});
  	    $self->set_status_error_config('load_admin_file_error',$self->{'name'});
+	    $lock->unlock();
  	    return undef;	    
  	}
 
 	$m1 = $time_config;
     }
     
+    ## Release lock
+    unless ($lock->unlock()) {
+	return undef;
+    }
+
      if ($admin) {
  	$self->{'admin'} = $admin;
  	
@@ -5014,6 +5042,9 @@ sub get_first_user {
     $offset = $data->{'offset'};
     $rows = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
+    
+    my $lock = new Lock ($self->{'dir'}.'/include');
+    $lock->set_timeout(10*60); 
 
     do_log('debug2', 'List::get_first_user(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
         
@@ -5021,25 +5052,10 @@ sub get_first_user {
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
 
 	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-	    ## Get an Shared lock
-	    $include_lock_count++;
 
-	    ## first lock
-	    if ($include_lock_count == 1) {
-		my $lock_file = $self->{'dir'}.'/include.lock';
-		
-		## Create include.lock if needed
-		unless (-f $lock_file) {
-		    unless (open FH, ">>$lock_file") {
-			&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
-			return undef;
-		    }
-		}
-		close FH;
-
-		unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
-		    return undef;
-		}
+	    ## Get an Shared lock	    
+	    unless ($lock->lock('read')) {
+		return undef;
 	    }
 	}
 
@@ -5285,16 +5301,10 @@ sub get_first_user {
 	    $sth = pop @sth_stack;
 	    	    
 	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-		## Release the Shared lock
-		$include_lock_count--;
 
-		## Last lock
-		if ($include_lock_count == 0) {
-		    my $lock_file = $self->{'dir'}.'/include.lock';
-		    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
-			return undef;
-		    }
-		    delete $list_of_fh{$lock_file};
+		## Release the Shared lock
+		unless ($lock->unlock()) {
+		    return undef;
 		}
 	    }
 	}
@@ -5339,6 +5349,7 @@ sub get_first_admin_user {
     $offset = $data->{'offset'};
     $rows = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
+    my $fh;
 
     &do_log('debug2', 'List::get_first_admin_user(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
 
@@ -5348,28 +5359,13 @@ sub get_first_admin_user {
 	return undef;
     }
    
-  
-    ## Get an Shared lock
-    $include_admin_user_lock_count++;
-    
-    ## first lock
-    if ($include_admin_user_lock_count == 1) {
-	my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
-	
-	## Create include_admin_user.lock if needed
-	unless (-f $lock_file) {
-	    unless (open FH, ">>$lock_file") {
-		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
-		return undef;
-	    }
-	}
-	
-	close FH;
-	
-	unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
-		return undef;
-	    }
-	}
+    my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
+    $lock->set_timeout(20); 
+
+    ## Get a shared lock
+    unless ($fh = $lock->lock('read')) {
+	return undef;
+    }
           
     my $name = $self->{'name'};
     my $statement;
@@ -5605,6 +5601,13 @@ sub get_first_admin_user {
     }else {
 	$sth->finish;
         $sth = pop @sth_stack;
+
+	## Release the Shared lock
+	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
+	
+	unless ($lock->unlock()) {
+	    return undef;
+	}
     }
 
     return $admin_user;
@@ -5643,16 +5646,11 @@ sub get_next_user {
 	    $sth = pop @sth_stack;
 	    	    
 	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-		## Release the Shared lock
-		$include_lock_count--;
 
-		## Last lock
-		if ($include_lock_count == 0) {
-		    my $lock_file = $self->{'dir'}.'/include.lock';
-		    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
-			return undef;
-		    }
-		    delete $list_of_fh{$lock_file};
+		## Release lock
+		my $lock = new Lock ($self->{'dir'}.'/include');
+		unless ($lock->unlock()) {
+		    return undef;
 		}
 	    }
 	}
@@ -5717,18 +5715,13 @@ sub get_next_admin_user {
 	$sth = pop @sth_stack;
 	
 	## Release the Shared lock
-	$include_admin_user_lock_count--;
+	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
 	
-	## Last lock
-	if ($include_admin_user_lock_count == 0) {
-	    my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
-	    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
-		return undef;
-	    }
-	    delete $list_of_fh{$lock_file};
+	unless ($lock->unlock()) {
+	    return undef;
 	}
     }
-   return $admin_user;
+    return $admin_user;
 }
 
 
@@ -5739,6 +5732,9 @@ sub get_first_bouncing_user {
     my $self = shift;
     do_log('debug2', 'List::get_first_bouncing_user');
 
+    my $lock = new Lock ($self->{'dir'}.'/include');
+    $lock->set_timeout(10*60); 
+
     unless (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	&do_log('info', "Function get_first_bouncing_user not available for list  $self->{'name'} because not in database mode");
@@ -5747,25 +5743,8 @@ sub get_first_bouncing_user {
     
     if ($self->{'admin'}{'user_data_source'} eq 'include2') {
 	## Get an Shared lock
-	$include_lock_count++;
-	
-	## first lock
-	if ($include_lock_count == 1) {
-	    my $lock_file = $self->{'dir'}.'/include.lock';
-
-	    ## Create include.lock if needed
-	    unless (-f $lock_file) {
-		unless (open FH, ">>$lock_file") {
-		    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
-		    return undef;
-		}
-	    }
-	    close FH;
-	    
-
-	    unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
-		return undef;
-	    }
+	unless ($lock->lock('read')) {
+	    return undef;
 	}
     }
 
@@ -5830,15 +5809,8 @@ sub get_first_bouncing_user {
 	
 	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
 	    ## Release the Shared lock
-	    $include_lock_count--;
-	    
-	    ## Last lock
-	    if ($include_lock_count == 0) {
-		my $lock_file = $self->{'dir'}.'/include.lock';
-		unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
-		    return undef;
-		}
-		delete $list_of_fh{$lock_file};
+	    unless ($lock->unlock()) {
+		return undef;
 	    }
 	}
     }
@@ -5877,15 +5849,9 @@ sub get_next_bouncing_user {
 	
 	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
 	    ## Release the Shared lock
-	    $include_lock_count--;
-	    
-	    ## Last lock
-	    if ($include_lock_count == 0) {
-		my $lock_file = $self->{'dir'}.'/include.lock';
-		unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
-		    return undef;
-		}
-		delete $list_of_fh{$lock_file};
+	    my $lock = new Lock ($self->{'dir'}.'/include');
+	    unless ($lock->unlock()) {
+		return undef;
 	    }
 	}
     }
@@ -9719,8 +9685,10 @@ sub sync_include {
     my $users_updated = 0;
 
     ## Get an Exclusive lock
-    my $lock_file = $self->{'dir'}.'/include.lock';
-    unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'write')) {
+    my $lock = new Lock ($self->{'dir'}.'/include');
+    $lock->set_timeout(10*60); 
+
+    unless ($lock->lock('write')) {
 	return undef;
     }
 
@@ -9821,10 +9789,9 @@ sub sync_include {
     &do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
     ## Release lock
-    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+    unless ($lock->unlock()) {
 	return undef;
     }
-    delete $list_of_fh{$lock_file};
 
     ## Get and save total of subscribers
     $self->{'total'} = $self->_load_total_db('nocache');
@@ -9887,15 +9854,11 @@ sub sync_include_admin {
 	my $admin_users_updated = 0;
 	
 	## Get an Exclusive lock
-	
-	my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
-	unless (open FH, ">>$lock_file") {
-	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
+	$lock->set_timeout(20); 
+	unless ($lock->lock('write')) {
 	    return undef;
 	}
-	unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'write')) {
-		return undef;
-	    }
 	
 	## Go through new admin_users_include
 	foreach my $email (keys %{$new_admin_users_include}) {
@@ -10062,10 +10025,9 @@ sub sync_include_admin {
 	}
 
 	## Release lock
-	unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+	unless ($lock->unlock()) {
 	    return undef;
 	}
-	delete $list_of_fh{$lock_file};
     }	
    
     $self->{'last_sync_admin_user'} = time;
