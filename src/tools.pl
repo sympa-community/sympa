@@ -1010,7 +1010,7 @@ sub escape_regexp {
     my @escaped = ('@','$','[',']','(',')',"'");
 
     foreach my $escaped_char (@escaped) {
-	$s =~ s/$escaped_char/\\$escaped_char/g;
+	$s =~ s/\$escaped_char/\\\$escaped_char/g;
     }
 
     return $s;
