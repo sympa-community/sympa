@@ -30,6 +30,10 @@ my @EXPORT = qw();
 
 use Carp;
 use Log;
+use Conf;
+
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB);
+use FileHandle;
 
 sub LOCK_SH {1};
 sub LOCK_EX {2};
@@ -116,12 +120,20 @@ sub lock {
 	
 	return $list_of_locks{$self->{'lock_filename'}}{'fh'};
     }else {
+	my ($fh, $nfs_lock);
+	if ($Conf::Conf{'lock_method'} eq 'nfs') {
+	    ($fh, $nfs_lock) = _lock_nfs($self->{'lock_filename'}, $mode, $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout);
+	    return undef unless (defined $fh && defined $nfs_lock);
+	    
+	    $list_of_locks{$self->{'lock_filename'}} = {'fh' => $fh, 'count' => 1, 'mode' => $mode, 'nfs_lock' => $nfs_lock};
 
-	my $fh = _lock_file($self->{'lock_filename'}, $mode, $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout);
-	return undef unless (defined $fh);
-	
-	$list_of_locks{$self->{'lock_filename'}} = {'fh' => $fh, 'count' => 1, 'mode' => $mode};
-    
+	}else {
+	    $fh = _lock_file($self->{'lock_filename'}, $mode, $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout);
+	    return undef unless (defined $fh);
+	    
+	    $list_of_locks{$self->{'lock_filename'}} = {'fh' => $fh, 'count' => 1, 'mode' => $mode};
+	}
+
 	return $fh;
     }
 }
@@ -141,12 +153,25 @@ sub unlock {
     }else {
 	my $fh = $list_of_locks{$self->{'lock_filename'}}{'fh'};
 
-	unless (defined $fh && &_unlock_file($self->{'lock_filename'}, $fh)) {
-	    &do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
+	if ($Conf::Conf{'lock_method'} eq 'nfs') {
+	    my $nfs_lock = $list_of_locks{$self->{'lock_filename'}}{'nfs_lock'};
 
-	    $list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
+	    unless (defined $fh && defined $nfs_lock && &_unlock_nfs($self->{'lock_filename'}, $fh, $nfs_lock)) {
+		&do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
+		
+		$list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
+		
+		return undef;
+	    }
 
-	    return undef;
+	}else {
+	    unless (defined $fh && &_unlock_file($self->{'lock_filename'}, $fh)) {
+		&do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
+		
+		$list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
+		
+		return undef;
+	    }
 	}
 	
 	$list_of_locks{$self->{'lock_filename'}} = undef;
@@ -235,6 +260,69 @@ sub _unlock_file {
 	return undef;
     }
     close $fh;
+    &do_log('debug2', 'Release lock on %s', $lock_file);
+    
+    return 1;
+}
+
+# lock on NFS
+sub _lock_nfs {
+    my $lock_file = shift;
+    my $mode = shift; ## read or write
+    my $timeout = shift;
+    &do_log('debug2', "Lock::_lock_nfs($lock_file, $mode, $timeout)");
+    
+    ## TODO should become a configuration parameter, used with or without NFS
+    my $hold = 30; 
+    my ($open_mode, $operation);
+    
+    if ($mode eq 'read') {
+	$operation = LOCK_SH;
+    }else {
+	$operation = LOCK_EX;
+	$open_mode = '>>';
+    }
+    
+    my $nfs_lock = undef;
+    my $FH = undef;
+    
+    if ($nfs_lock = new File::NFSLock {
+	file      => $lock_file,
+	lock_type => $operation|LOCK_NB,
+	blocking_timeout   => $hold,
+	stale_lock_timeout => $timeout,
+    }) {
+	## Read access to prevent "Bad file number" error on Solaris
+	$FH = new FileHandle;
+	unless (open $FH, $open_mode.$lock_file) {
+	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	    return undef;
+	}
+	
+	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+	return ($FH, $nfs_lock);
+    } else {
+	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+	close($FH);
+	return undef;
+	}
+        
+    return undef;
+}
+
+# unlock on NFS
+sub _unlock_nfs {
+    my $lock_file = shift;
+    my $fh = shift;
+    my $nfs_lock = shift;
+    do_log('debug2', "Lock::_unlock_nfs($lock_file, $fh)");
+    
+    unless (defined $nfs_lock and $nfs_lock->unlock()) {
+	&do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
+	return undef;
+    }
+    close $fh;
+    
     &do_log('debug2', 'Release lock on %s', $lock_file);
     
     return 1;

@@ -50,7 +50,7 @@ my @valid_options = qw(
 		       logo_html_definition misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile pidfile_distribute pidfile_creation
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
-		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir
+		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
 		       purge_user_table_task purge_logs_table_task purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
@@ -236,6 +236,7 @@ my %Default_Conf =
      'static_content_path' => '--DIR--/static_content',
      'filesystem_encoding' => 'utf-8',
      'cache_list_config' => 'none', ## none | binary_file
+     'lock_method' => 'flock' ## flock | nfs
      );
    
 
@@ -376,6 +377,16 @@ sub load {
     
     unless ($Conf{'css_path'}) {
 	$Conf{'css_path'} = $Conf{'static_content_path'}.'/css';
+    }
+
+    ## Some parameters require CPAN modules
+    if ($Conf{'lock_method'} eq 'nfs') {
+	if (eval "require File::NFSLock") {
+	    require File::NFSLock;
+	}else {
+	    &do_log('err', "Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'");
+	    $Conf{'lock_method'} = 'flock';
+	}
     }
 
     ## Load robot.conf files
