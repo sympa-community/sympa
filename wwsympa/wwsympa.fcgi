@@ -1754,6 +1754,16 @@ sub prepare_report_user {
 	 undef $param->{'is_listmaster'};
      }
 
+     ## Reset $list variable if it is not expected for the current action
+     ## To prevent the list panel from being printed in a non list context
+     ## Only check if the corresponding entry exists in %action_args
+     if (defined $param->{'action'} && defined $action_args{$param->{'action'}}) {
+	 unless (grep /^list$/, @{$action_args{$param->{'action'}}}) {
+	     $param->{'list'} = undef;
+	     $list = undef;
+	 }
+     }
+
      if ($list->{'name'}) {
 	 &wwslog('debug2', "list-name $list->{'name'}");
 
