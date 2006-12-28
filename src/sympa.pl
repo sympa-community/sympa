@@ -669,6 +669,9 @@ if ($main::options{'dump'}) {
 }elsif ($main::options{'upgrade'}) {
     
     &do_log('notice', "Upgrade process...");
+    &do_log('notice', "If you did not set the 'filesystem_encoding' sympa.conf parameter, you should do so before running this script...hit <return> to continue");
+
+    my $wait = <STDIN>;
 
     $main::options{'from'} ||= &Upgrade::get_previous_version();
     $main::options{'to'} ||= $Version::Version;
