@@ -4278,7 +4278,7 @@ sub do_remindpasswd {
      $param->{'is_subscriber'} = 0;
      $param->{'may_signoff'} = 0;
 
-     return 'info';
+     return 'home';
  }
 
  ## Unsubscription request (user not authenticated)
