@@ -4,6 +4,11 @@
 
 <div class="list_panel">
   
+   [% IF list_status == 'closed' %]
+   <span class="bg_color_error">[%|loc%]Closed list[%END%]</span><br/>
+   [% ELSIF list_status == 'pending' %]
+   <span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span><br/>
+   [% END %]
    [%|loc%]Subscribers:[%END%] <span>[% total %]</span><br />
    [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
    <span>[%|loc%]Owners[%END%]</span><br />

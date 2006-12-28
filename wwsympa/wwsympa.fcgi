@@ -1894,6 +1894,7 @@ sub prepare_report_user {
 	 $param->{'may_suboptions'} = 1 unless ($list->{'admin'}{'user_data_source'} eq 'include');
 	 $param->{'total'} = $list->get_total();
 	 $param->{'may_review'} = 1 if ($r_action =~ /do_it/);
+	 $param->{'list_status'} = $list->{'admin'}{'status'};
 
 	## (Un)Subscribing 
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
