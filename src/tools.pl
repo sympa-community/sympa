@@ -1004,10 +1004,10 @@ sub as_singlepart {
 }
 
 ## Escape characters before using a string within a regexp parameter
-## Escaped characters are : @ $ [ ] ( ) '
+## Escaped characters are : @ $ [ ] ( ) ' ! \
 sub escape_regexp {
     my $s = shift;
-    my @escaped = ('@','$','[',']','(',')',"'");
+    my @escaped = ('@','$','[',']','(',')',"'",'!','\');
 
     foreach my $escaped_char (@escaped) {
 	$s =~ s/\$escaped_char/\\\$escaped_char/g;
