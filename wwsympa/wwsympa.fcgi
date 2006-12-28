@@ -6954,13 +6954,7 @@ sub do_remove_arc {
      }
 
      $param->{'msgid'} = &tools::unescape_chars($in{'msgid'});
-     $in{'msgid'} =~ s/\@/\\\@/g;
-     $in{'msgid'} =~ s/\[/\\\[/g;
-     $in{'msgid'} =~ s/\]/\\\]/g;
-     $in{'msgid'} =~ s/\(/\\\(/g;
-     $in{'msgid'} =~ s/\)/\\\)/g;
-     $in{'msgid'} =~ s/\$/\\\$/g;
-     $in{'msgid'} =~ s/\*/\\\*/g;
+     $in{'msgid'} = &tools::escape_regexp($in{'msgid'});
 
      ## Mhonarc escapes some characters : '-' (&#45;) and '&' (&#38;)
      $in{'msgid'} =~ s/\&/\&\#38\;/g;
