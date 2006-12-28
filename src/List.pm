@@ -4639,6 +4639,29 @@ sub delete_admin_user {
     return (-1 * $total);
 }
 
+## Delete all admin_table entries
+sub delete_admin_all {
+    &do_log('debug2', 'List::delete_admin_all()'); 
+	    
+    my $total = 0;
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    
+    my $statement;
+    
+    ## Delete record in ADMIN
+    $statement = sprintf "DELETE FROM admin_table";
+    
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement %s : %s', $statement, $dbh->errstr);
+	return undef;
+    }   
+    
+    return 1;
+}
 
 
 ## Returns the cookie for a list, if any.

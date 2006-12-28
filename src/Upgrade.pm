@@ -93,7 +93,14 @@ sub upgrade {
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     &do_log('notice','Rebuilding config.bin files for ALL lists...it may take a while...');
-    &List::get_lists('*',{'reload_config' => 1});
+    my $all_lists = &List::get_lists('*',{'reload_config' => 1});
+
+    ## Empty the admin_table entries and recreate them
+    &do_log('notice','Rebuilding the admin_table...');
+    &List::delete_admin_all();
+    foreach my $list (@$all_lists) {
+	$list->sync_include_admin();
+    }
 
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
     if (&tools::lower_version($previous_version, '4.2a')) {
