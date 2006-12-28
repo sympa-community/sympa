@@ -7511,7 +7511,7 @@ sub do_set_pending_list_request {
  sub do_editsubscriber {
      &wwslog('info', 'do_editsubscriber(%s)', $in{'email'});
 
-     my $user;
+     my $subscriber;
 
      unless ($param->{'is_owner'}) {
 	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
@@ -7533,22 +7533,27 @@ sub do_set_pending_list_request {
 
      $in{'email'} = &tools::unescape_chars($in{'email'});
 
-     unless($user = $list->get_subscriber($in{'email'})) {
+     unless($subscriber = $list->get_subscriber($in{'email'})) {
 	 &report::reject_report_web('intern','subscriber_not_found',{'email' => $in{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_editsubscriber: subscriber %s not found', $in{'email'});
 	 return undef;
      }
 
-     $param->{'current_subscriber'} = $user;
+     $param->{'current_subscriber'} = $subscriber;
      $param->{'current_subscriber'}{'escaped_email'} = &tools::escape_html($param->{'current_subscriber'}{'email'});
      $param->{'current_subscriber'}{'escaped_bounce_address'} = &tools::escape_html($param->{'current_subscriber'}{'bounce_address'});
-     $param->{'current_subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($user->{'date'});
-     $param->{'current_subscriber'}{'update_date'} = gettext_strftime "%d %b %Y", localtime($user->{'update_date'});
-     $param->{'current_subscriber'}{'pictures_url'} = &make_pictures_url($user->{'email'});
+     $param->{'current_subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($subscriber->{'date'});
+     $param->{'current_subscriber'}{'update_date'} = gettext_strftime "%d %b %Y", localtime($subscriber->{'update_date'});
+     $param->{'current_subscriber'}{'pictures_url'} = &make_pictures_url($subscriber->{'email'});
 
      ## Prefs
      $param->{'current_subscriber'}{'reception'} ||= 'mail';
      $param->{'current_subscriber'}{'visibility'} ||= 'noconceal';
+
+     ## Get language from user_table
+     my $user = &List::get_user_db($in{'email'});
+     $param->{'current_subscriber'}{'lang'} = &Language::GetLangName($user->{'lang'});
+
      foreach my $m (keys %wwslib::reception_mode) {		
        if ($list->is_available_reception_mode($m)) {
 	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
@@ -7570,14 +7575,14 @@ sub do_set_pending_list_request {
      }
 
      ## Bounces
-     if ($user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
+     if ($subscriber->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
 	 my @bounce = ($1, $2, $3, $5);
 	 $param->{'current_subscriber'}{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($bounce[0]);
 	 $param->{'current_subscriber'}{'last_bounce'} = gettext_strftime "%d %b %Y", localtime($bounce[1]);
 	 $param->{'current_subscriber'}{'bounce_count'} = $bounce[2];
 	 if ($bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
-	    $user->{'bounce_code'} = $1;
-	    $user->{'bounce_status'} = $wwslib::bounce_status{$2};
+	    $subscriber->{'bounce_code'} = $1;
+	    $subscriber->{'bounce_status'} = $wwslib::bounce_status{$2};
 	 }	
 
 	 $param->{'previous_action'} = $in{'previous_action'};
@@ -7607,11 +7612,11 @@ sub do_set_pending_list_request {
 		 }
 		 $data{$field}{'type'} = 'enum';
 
-		 $data{$field}{'enum'}{$user->{$field}} = 'selected="selected"'
-		     if (defined $user->{$field});
+		 $data{$field}{'enum'}{$subscriber->{$field}} = 'selected="selected"'
+		     if (defined $subscriber->{$field});
 	     }else {
 		 $data{$field}{'type'} = 'string';
-		 $data{$field}{'value'} = $user->{$field};
+		 $data{$field}{'value'} = $subscriber->{$field};
 	     } 
 	 }
 	 $param->{'additional_fields'} = \%data;

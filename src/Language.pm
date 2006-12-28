@@ -214,6 +214,19 @@ sub SetLang {
     return $locale;
 }#SetLang
 
+
+## Get the name of the language, ie the one defined in the catalog
+sub GetLangName {
+    my $lang = shift;
+
+    my $saved_lang = $current_lang;
+    &SetLang($lang);
+    my $name = gettext('_language_');
+    &SetLang($saved_lang);
+    
+    return $name;
+}
+
 sub GetLang {
 ############
 
