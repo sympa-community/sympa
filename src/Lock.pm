@@ -52,7 +52,7 @@ my $default_timeout = 60 * 20; ## After this period a lock can be stolen
 ## Creates a new object
 sub new {
     my($pkg, $filepath) = @_;
-    &do_log('debug2', 'Lock::new(%s,%s)',$filepath);
+    &do_log('debug', 'Lock::new(%s,%s)',$filepath);
     
     my $lock_filename = $filepath.'.lock';
     my $lock = {'lock_filename' => $lock_filename};
@@ -98,7 +98,7 @@ sub get_file_handle {
 sub lock {
     my $self = shift;
     my $mode = shift; ## read | write
-    &do_log('debug2', 'Lock::lock(%s,%s)',$self->{'lock_filename'}, $mode);
+    &do_log('debug', 'Lock::lock(%s,%s)',$self->{'lock_filename'}, $mode);
 
     ## Check if file was already locked by this process
     if ($list_of_locks{$self->{'lock_filename'}}{'fh'}) {
@@ -116,7 +116,7 @@ sub lock {
 	}
 
 	$list_of_locks{$self->{'lock_filename'}}{'count'}++;
-	&do_log('debug2', "Lock again %s ; total %d", $self->{'lock_filename'}, $list_of_locks{$self->{'lock_filename'}}{'count'});
+	&do_log('debug', "Lock again %s ; total %d", $self->{'lock_filename'}, $list_of_locks{$self->{'lock_filename'}}{'count'});
 	
 	return $list_of_locks{$self->{'lock_filename'}}{'fh'};
     }else {
@@ -140,7 +140,7 @@ sub lock {
 
 sub unlock {
     my $self = shift;
-    &do_log('debug2', 'Lock::unlock(%s)',$self->{'lock_filename'});
+    &do_log('debug', 'Lock::unlock(%s)',$self->{'lock_filename'});
 
     unless (defined $list_of_locks{$self->{'lock_filename'}}) {
 	&do_log('err', "Failed to unlock file %s ; file is not locked", $self->{'lock_filename'});
@@ -185,7 +185,7 @@ sub _lock_file {
     my $lock_file = shift;
     my $mode = shift; ## read or write
     my $timeout = shift;
-    &do_log('debug2', 'Lock::_lock_file(%s,%s,%d)',$lock_file, $mode,$timeout);
+    &do_log('debug', 'Lock::_lock_file(%s,%s,%d)',$lock_file, $mode,$timeout);
 
     my $operation;
     my $open_mode;
@@ -235,7 +235,7 @@ sub _lock_file {
     }
  
     if ($got_lock) {
-	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+	&do_log('debug', 'Got lock for %s on %s', $mode, $lock_file);
 
 	## Keep track of the locking PID
 	if ($mode eq 'write') {
@@ -253,14 +253,14 @@ sub _lock_file {
 sub _unlock_file {
     my $lock_file = shift;
     my $fh = shift;
-    &do_log('debug2', 'Lock::_unlock_file(%s)',$lock_file);
+    &do_log('debug', 'Lock::_unlock_file(%s, %s)',$lock_file, $fh);
    
     unless (flock($fh,LOCK_UN)) {
 	&do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
 	return undef;
     }
     close $fh;
-    &do_log('debug2', 'Release lock on %s', $lock_file);
+    &do_log('debug', 'Release lock on %s', $lock_file);
     
     return 1;
 }
@@ -270,7 +270,7 @@ sub _lock_nfs {
     my $lock_file = shift;
     my $mode = shift; ## read or write
     my $timeout = shift;
-    &do_log('debug2', "Lock::_lock_nfs($lock_file, $mode, $timeout)");
+    &do_log('debug', "Lock::_lock_nfs($lock_file, $mode, $timeout)");
     
     ## TODO should become a configuration parameter, used with or without NFS
     my $hold = 30; 
@@ -299,7 +299,7 @@ sub _lock_nfs {
 	    return undef;
 	}
 	
-	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+	&do_log('debug', 'Got lock for %s on %s', $mode, $lock_file);
 	return ($FH, $nfs_lock);
     } else {
 	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
@@ -315,7 +315,7 @@ sub _unlock_nfs {
     my $lock_file = shift;
     my $fh = shift;
     my $nfs_lock = shift;
-    do_log('debug2', "Lock::_unlock_nfs($lock_file, $fh)");
+    do_log('debug', "Lock::_unlock_nfs($lock_file, $fh)");
     
     unless (defined $nfs_lock and $nfs_lock->unlock()) {
 	&do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
@@ -323,7 +323,7 @@ sub _unlock_nfs {
     }
     close $fh;
     
-    &do_log('debug2', 'Release lock on %s', $lock_file);
+    &do_log('debug', 'Release lock on %s', $lock_file);
     
     return 1;
 }
