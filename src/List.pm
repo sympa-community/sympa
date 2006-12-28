@@ -6388,6 +6388,11 @@ sub update_user_db {
 	return undef unless &db_connect();
     }	   
     
+    ## Crypt password if it was not crypted
+    if ($values->{'password'} && ($values->{'password'} !~ /^crypt/)) {
+	$values->{'password'} = &tools::crypt_password($values->{'password'});
+    }
+
     ## Update each table
     my @set_list;
     while (($field, $value) = each %{$values}) {
@@ -6513,6 +6518,11 @@ sub add_user {
 	    my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
 	    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
 	    
+	    ## Crypt password if it was not crypted
+	    unless ($new_user->{'password'} =~ /^crypt/) {
+		$new_user->{'password'} = &tools::crypt_password($new_user->{'password'});
+	    }
+
 	    $list_cache{'is_user'}{$self->{'domain'}}{$name}{$who} = undef;
 	    
 	    my $statement;
