@@ -3451,12 +3451,7 @@ sub do_remindpasswd {
 
      ## Regexp
      $param->{'filter'} = $in{'filter'};
-     my $regexp = $param->{'filter'};
-     $regexp =~ s/\\/\\\\/g;
-     $regexp =~ s/\./\\\./g;
-     $regexp =~ s/\*/\.\*/g;
-     $regexp =~ s/\+/\\\+/g;
-     $regexp =~ s/\?/\\\?/g;
+     my $regexp = &tools::escape_regexp($param->{'filter'});
 
      my $sql_regexp;
      if ($list->{'admin'}{'user_data_source'} eq 'database') {
@@ -8019,16 +8014,7 @@ sub do_set_pending_list_request {
 
      ## Regexp
      $param->{'filter'} = $in{'filter'};
-     $param->{'regexp'} = $param->{'filter'};
-     $param->{'regexp'} =~ s/\\/\\\\/g;
-     $param->{'regexp'} =~ s/\./\\\./g;
-     $param->{'regexp'} =~ s/\*/\.\*/g;
-     $param->{'regexp'} =~ s/\+/\\\+/g;
-     $param->{'regexp'} =~ s/\?/\\\?/g;
-     $param->{'regexp'} =~ s/\[/\\\[/g;
-     $param->{'regexp'} =~ s/\]/\\\]/g;
-     $param->{'regexp'} =~ s/\(/\\\)/g;
-     $param->{'regexp'} =~ s/\)/\\\)/g;
+     $param->{'regexp'} = &tools::escape_regexp($param->{'filter'});
 
      ## Members list
      my $record = 0;
