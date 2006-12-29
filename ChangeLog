@@ -1,3 +1,136 @@
+2006-12-29 10:37  olivier.salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Change: extend
+	  tools::escape_regexp ; use it in 2 more subroutines
+
+2006-12-29 10:33  olivier.salaun
+
+	* doc/parse_tex.pl, src/Commands.pm, src/Family.pm, src/List.pm,
+	  src/Task.pm, src/admin.pm, src/tools.pl, wwsympa/archived.pl,
+	  wwsympa/bounced.pl, wwsympa/wwsympa.fcgi: Change: added "use
+	  strict" to tools.pl
+
+2006-12-28 16:51  olivier.salaun
+
+	* web_tt2/list_panel.tt2, wwsympa/wwsympa.fcgi: Added the status of
+	  the list to the listpanel if closed or pending
+
+2006-12-28 16:11  olivier.salaun
+
+	* src/etc/mhonarc-ressources.tt2: [ID 160] Fixed case
+
+2006-12-28 15:37  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [ID 106] Change: after unsubscription, no
+	  more bring the user back to the list page. He might not be
+	  allowed to see the info page.
+
+2006-12-28 15:10  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [ID 106] Change: after unsubscribing, a
+	  user is directed to the service home page (instead of the list
+	  info page)
+
+2006-12-28 15:01  olivier.salaun
+
+	* src/List.pm: [ID 117][reported by M.Bernard, univ St.Etienne]
+	  Fix: user initial passwords were not crypted when subscribed by
+	  list owners. Moved encrypting logic to lower layers.
+
+2006-12-28 13:51  olivier.salaun
+
+	* src/Lock.pm: Changed debug2 log calls with debug
+
+2006-12-28 12:05  olivier.salaun
+
+	* src/sympa.pl: Added a warning about filesystem_encoding during
+	  the upgrade process
+
+2006-12-28 11:58  olivier.salaun
+
+	* Makefile.in: update
+
+2006-12-28 11:57  olivier.salaun
+
+	* src/: List.pm, Upgrade.pm: Change: rebuilding the admin_table
+	  while upgrading  to prevent "duplicate entries" errors
+
+2006-12-28 11:34  olivier.salaun
+
+	* src/Language.pm, wwsympa/wwsympa.fcgi: [reported by E.Beliveau]
+	  made the user lang available in the editsubscriber page
+
+2006-12-28 10:45  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Use tools::escape::regexp() in
+	  do_arc_search_id()
+
+2006-12-28 10:44  olivier.salaun
+
+	* src/tools.pl: Also escape '*' in regexp
+
+2006-12-28 10:41  olivier.salaun
+
+	* src/tools.pl: Added '!' and '\' to escaped sequences in regexp
+
+2006-12-22 17:24  olivier.salaun
+
+	* src/tools.pl: Fix: missing '\'s ; sympa.pl would die with error
+	  "Unmatched [ in regex; marked by <-- HERE in m/[ <-- HERE / at -
+	  line 4."
+
+2006-12-22 17:05  olivier.salaun
+
+	* check_perl_modules.pl, src/Conf.pm, src/Lock.pm: [ID 435] [patch
+	  provided by Moriwaka] New feature: added support for NFS locking,
+	  using File::NFSLock perl module. A new 'lock_method' sympa.conf
+	  parameter can be set to 'nfs'.
+
+2006-12-22 16:03  olivier.salaun
+
+	* src/List.pm: Now lock 'stats' file
+
+2006-12-22 15:39  olivier.salaun
+
+	* src/: List.pm, Lock.pm, Makefile: Changes: reorganized the file
+	  locking procedures. A new perl module does the locking.  Now also
+	  perform lock on list 'config' files.
+
+2006-12-21 10:09  olivier.salaun
+
+	* mail_tt2/Makefile: [requested by S.Hornburg] Fix: Debian
+	  packaging requires that symbolic links are not absolute links
+	  because of DESTDIR use.
+
+2006-12-20 14:49  olivier.salaun
+
+	* mail_tt2/urlized_part.tt2, src/List.pm: Added header fields to
+	  the urlize part
+
+2006-12-20 14:49  olivier.salaun
+
+	* ChangeLog: updated
+
+2006-12-19 15:17  olivier.salaun
+
+	* mail_tt2/: sendpasswd.tt2, sendssopasswd.tt2: [ID 13] no more use
+	  sympa-request reply address
+
+2006-12-19 11:57  olivier.salaun
+
+	* web_tt2/modindex.tt2: [ID 444] [requested by A.Lund, Uninnett]
+	  New feature: added "toggle" button in moderation page
+
+2006-12-18 17:25  olivier.salaun
+
+	* web_tt2/subindex.tt2: Better sentence
+
+2006-12-12 16:45  olivier.salaun
+
+	* src/etc/mhonarc-ressources.tt2: [G.Youger, Univ Newcastle] Fix:
+	  archive template was inappropriate for email addresses that
+	  include an apostrophe (').
+
 2006-12-12 14:48  olivier.salaun
 
 	* wwsympa/wwslib.pm: Removed dead code (encyrpt_password() and
