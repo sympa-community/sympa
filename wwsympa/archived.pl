@@ -208,8 +208,11 @@ while (!$end) {
 	        do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
 		   next;
 	       }
+
+	   my $email_regexp = &tools::get_regexp('email');
+
 	   foreach my $removeorder (<REMOVE>) { 
-	       unless($removeorder =~ /(.*)\|\|($tools::regexp{'email'})/){
+	       unless($removeorder =~ /(.*)\|\|($email_regexp)/){
 		   do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
 		   next;
 	       }

@@ -436,7 +436,7 @@ my %alias = ('reply-to' => 'reply_to',
 						   'gettext_id' => "",
 						   'order' => 2
 						   },
-					'email' => {'format' => $tools::regexp{'email'},
+					'email' => {'format' => &tools::get_regexp('email'),
 						    'occurrence' => '1',
 						    'gettext_id' => "",
 						    'order' => 1
@@ -508,7 +508,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'gettext_id' => "Digest maximum number of messages",
 				  'group' => 'sending'
 		       },	    
-	    'editor' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
+	    'editor' => {'format' => {'email' => {'format' => &tools::get_regexp('email'),
 						  'length' => 30,
 						  'occurrence' => '1',
 						  'gettext_id' => "email address",
@@ -559,7 +559,7 @@ my %alias = ('reply-to' => 'reply_to',
 			      'gettext_id' => "Periodical subscription expiration task",
 			      'group' => 'other'
 			 },
- 	    'family_name' => {'format' => $tools::regexp{'family_name'},
+ 	    'family_name' => {'format' => &tools::get_regexp('family_name'),
  			      'occurrence' => '0-1',
  			      'gettext_id' => 'Family name',
 			      'internal' => 1,
@@ -574,7 +574,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'gettext_id' => "Forced reply address",
 				  'obsolete' => 1
 			 },
-	    'host' => {'format' => $tools::regexp{'host'},
+	    'host' => {'format' => &tools::get_regexp('host'),
 		       'length' => 20,
 		       'default' => {'conf' => 'host'},
 		       'gettext_id' => "Internet domain",
@@ -614,7 +614,7 @@ my %alias = ('reply-to' => 'reply_to',
 				      'occurrence' => '0-n',
 				      'group' => 'data_source'
 				      },				  
-	    'include_ldap_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
+	    'include_ldap_query' => {'format' => {'host' => {'format' => &tools::get_regexp('multiple_host_with_port'),
 							     'occurrence' => '1',
 							     'gettext_id' => "remote host",
 							     'order' => 2
@@ -696,7 +696,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'gettext_id' => "LDAP query inclusion",
 				     'group' => 'data_source'
 				     },
-	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
+	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => &tools::get_regexp('multiple_host_with_port'),
 							     'occurrence' => '1',
 							     'gettext_id' => "remote host",
 							     'order' => 1
@@ -819,12 +819,12 @@ my %alias = ('reply-to' => 'reply_to',
 				     'gettext_id' => "LDAP 2-level query inclusion",
 				     'group' => 'data_source'
 				     },
-	    'include_list' => {'format' => "$tools::regexp{'listname'}(\@$tools::regexp{'host'})?",
+	    'include_list' => {'format' => &tools::get_regexp('listname').'(\@'.&tools::get_regexp('host').')?',
 			       'occurrence' => '0-n',
 			       'gettext_id' => "List inclusion",
 			       'group' => 'data_source'
 			       },
-	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => $tools::regexp{'host'},
+	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => &tools::get_regexp('host'),
 							    'occurrence' => '1',
 							    'gettext_id' => "remote host",
 							    'order' => 1
@@ -863,7 +863,7 @@ my %alias = ('reply-to' => 'reply_to',
 							       'gettext_id' => "database type",
 							       'order' => 1
 							       },
-						 'host' => {'format' => $tools::regexp{'host'},
+						 'host' => {'format' => &tools::get_regexp('host'),
 							    'occurrence' => '1',
 							    'gettext_id' => "remote host",
 							    'order' => 2
@@ -895,7 +895,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      'gettext_id' => "remote password",
 							      'order' => 7
 							      },
-						 'sql_query' => {'format' => $tools::regexp{'sql_query'},
+						 'sql_query' => {'format' => &tools::get_regexp('sql_query'),
 								 'length' => 50,
 								 'occurrence' => '1',
 								 'gettext_id' => "SQL query",
@@ -939,7 +939,7 @@ my %alias = ('reply-to' => 'reply_to',
  							       'gettext_id' => 'date',
  							       'order' => 2
  							       },
- 						    'email' => {'format' => $tools::regexp{'email'},
+ 						    'email' => {'format' => &tools::get_regexp('email'),
  								'occurrence' => '0-1',
  								'gettext_id' => 'who ran the instantiation',
  								'order' => 1
@@ -998,7 +998,7 @@ my %alias = ('reply-to' => 'reply_to',
 				      'group' => 'sending'
 				      },    
 						   
-	    'owner' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
+	    'owner' => {'format' => {'email' => {'format' => &tools::get_regexp('email'),
 						 'length' =>30,
 						 'occurrence' => '1',
 						 'gettext_id' => "email address",
@@ -1086,7 +1086,7 @@ my %alias = ('reply-to' => 'reply_to',
 							   'occurrence' => '1',
 							   'order' => 1
 							   },
-					       'other_email' => {'format' => $tools::regexp{'email'},
+					       'other_email' => {'format' => &tools::get_regexp('email'),
 								 'gettext_id' => "other email address",
 								 'order' => 2
 								 },
@@ -1197,7 +1197,7 @@ my %alias = ('reply-to' => 'reply_to',
 						 'gettext_id' => 'date',
 						 'order' => 2
 						 },
-				      'email' => {'format' => $tools::regexp{'email'},
+				      'email' => {'format' => &tools::get_regexp('email'),
 						  'length' => 30,
 						  'occurrence' => '1',
 						  'gettext_id' => 'who updated the config',
@@ -1348,7 +1348,8 @@ sub new {
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
-    unless ($name and ($name =~ /^$tools::regexp{'listname'}$/io) ) {
+    my $listname_regexp = &tools::get_regexp('listname');
+    unless ($name and ($name =~ /^$listname_regexp$/io) ) {
 	&do_log('err', 'Incorrect listname "%s"',  $name) unless ($options->{'just_try'});
 	return undef;
     }
@@ -2891,7 +2892,7 @@ sub send_msg_digest {
     }
 
     my $old = $/;
-    $/ = "\n\n" . $tools::separator . "\n\n";
+    $/ = "\n\n" . &tools::get_separator() . "\n\n";
     
     ## Digest split in individual messages
     open DIGEST, $filename or return undef;
@@ -6355,7 +6356,6 @@ sub update_admin_user {
 
 
 
-
 ## Sets new values for the given user in the Database
 sub update_user_db {
     my($who, $values) = @_;
@@ -8206,16 +8206,18 @@ sub load_scenario_list {
     foreach my $dir ("$directory/scenari", "$Conf{'etc'}/$robot/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
 
 	next unless (-d $dir);
+	
+	my $scenario_regexp = &tools::get_regexp('scenario');
 
 	while (<$dir/$action.*:ignore>) {
-	    if (/$action\.($tools::regexp{'scenario'}):ignore$/) {
+	    if (/$action\.($scenario_regexp):ignore$/) {
 		my $name = $1;
 		$skip_scenario{$name} = 1;
 	    }
 	}
 
 	while (<$dir/$action.*>) {
-	    next unless (/$action\.($tools::regexp{'scenario'})$/);
+	    next unless (/$action\.($scenario_regexp)$/);
 	    my $name = $1;
 	    
 	    next if (defined $list_of_scenario{$name});
@@ -8648,7 +8650,8 @@ sub _include_users_file {
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
-	unless (/^\s*($tools::regexp{'email'})(\s*(\S.*))?\s*$/) {
+	my $email_regexp = &tools::get_regexp('email');
+	unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
 	    &do_log('notice', 'Not an email address: %s', $_);
 	}
 
@@ -8723,7 +8726,8 @@ sub _include_users_remote_file {
 	    next if ($line =~ /^\s*$/);
 	    next if ($line =~ /^\s*\#/);
 
-	    unless ( $line =~ /^\s*($tools::regexp{'email'})(\s*(\S.*))?\s*$/) {
+	    my $email_regexp = &tools::get_regexp('email');
+	    unless ( $line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
 		&do_log('err', 'Not an email address: %s', $_);
 	    }     
 	    my $email = &tools::clean_email($1);
@@ -10269,7 +10273,7 @@ sub store_digest {
     do_log('debug3', 'List::store_digest');
 
     my($filename, $newfile);
-    my $separator = $tools::separator;  
+    my $separator = &tools::get_separator();  
 
     unless ( -d "$Conf{'queuedigest'}") {
 	return;
@@ -10293,13 +10297,13 @@ sub store_digest {
 	printf OUT "\nThis digest for list has been created on %s\n\n",
       POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
 	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
-	printf OUT "\n%s\n\n", $tools::separator;
+	printf OUT "\n%s\n\n", &tools::get_separator();
 
        # send the date of the next digest to the users
     }
     #$msg->head->delete('Received') if ($msg->head->get('received'));
     $msg->print(\*OUT);
-    printf OUT "\n%s\n\n", $tools::separator;
+    printf OUT "\n%s\n\n", &tools::get_separator();
     close(OUT);
     
     #replace the old time
@@ -10978,18 +10982,18 @@ sub _apply_defaults {
 
 	## Scenario format
 	if ($::pinfo{$p}{'scenario'}) {
-	    $::pinfo{$p}{'format'} = $tools::regexp{'scenario'};
+	    $::pinfo{$p}{'format'} = &tools::get_regexp('scenario');
 	    $::pinfo{$p}{'default'} = 'default';
 	}
 
 	## Task format
 	if ($::pinfo{$p}{'task'}) {
-	    $::pinfo{$p}{'format'} = $tools::regexp{'task'};
+	    $::pinfo{$p}{'format'} = &tools::get_regexp('task');
 	}
 
 	## Datasource format
 	if ($::pinfo{$p}{'datasource'}) {
-	    $::pinfo{$p}{'format'} = $tools::regexp{'datasource'};
+	    $::pinfo{$p}{'format'} = &tools::get_regexp('datasource');
 	}
 
 	## Enumeration
@@ -11023,18 +11027,18 @@ sub _apply_defaults {
 	    
 	    ## Scenario format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'scenario'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'scenario'};
+		$::pinfo{$p}{'format'}{$k}{'format'} = &tools::get_regexp('scenario');
 		$::pinfo{$p}{'format'}{$k}{'default'} = 'default' unless (($p eq 'web_archive') && ($k eq 'access'));
 	    }
 
 	    ## Task format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'task'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'task'};
+		$::pinfo{$p}{'format'}{$k}{'format'} = &tools::get_regexp('task');
 	    }
 
 	    ## Datasource format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'datasource'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'datasource'};
+		$::pinfo{$p}{'format'}{$k}{'format'} = &tools::get_regexp('datasource');
 	    }
 
 	    ## Enumeration
@@ -12252,7 +12256,8 @@ sub delete_subscription_request {
 	    return undef;
 	}
 	my $line = <REQUEST>;
-	unless ($line =~ /^($tools::regexp{'email'})\s*/ &&
+	my $email_regexp = &tools::get_regexp('email');
+	unless ($line =~ /^($email_regexp)\s*/ &&
 		($1 eq $email)) {
 	    next;
 	}

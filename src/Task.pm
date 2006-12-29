@@ -50,9 +50,11 @@ sub new {
     ## Extract filename from path
     my @path = split /\//, $file;
     $task->{'filename'} = $path[$#path];
+    my $listname_regexp = &tools::get_regexp('listname');
+    my $host_regexp = &tools::get_regexp('host');
 
     ## File including the list domain
-    if ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)\@($tools::regexp{'host'})$/) {
+    if ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($listname_regexp|_global)\@($host_regexp)$/) {
 	$task->{'date'} = $1;
 	$task->{'label'} = $2;
 	$task->{'model'} = $3;
@@ -64,7 +66,7 @@ sub new {
 	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
 
-    }elsif ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
+    }elsif ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($listname_regexp|_global)$/) {
 	$task->{'date'} = $1;
 	$task->{'label'} = $2;
 	$task->{'model'} = $3;

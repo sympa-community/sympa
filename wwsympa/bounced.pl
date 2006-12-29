@@ -310,7 +310,8 @@ while (!$end) {
 			    $feedback_type = $1;
 			}
 
-			if ($line =~ /Original\-Rcpt\-To\:\s*($tools::regexp{'email'})\s*$/i) {
+			my $email_regexp = &tools::get_regexp('email');
+			if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
 			    $original_rcpt = $1;
 			    chomp $original_rcpt;
 			}

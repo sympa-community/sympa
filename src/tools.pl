@@ -23,6 +23,8 @@
 
 package tools;
 
+use strict;
+
 use POSIX;
 use Mail::Internet;
 use Mail::Header;
@@ -42,12 +44,12 @@ use Encode::MIME::Header;
 ## global var to store a CipherSaber object 
 my $cipher;
 
-$separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
+my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
 
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
-%regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
+my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	   'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
 	   'host' => '[\w\.\-]+',
 	   'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
@@ -172,7 +174,7 @@ sub load_edit_list_conf {
     }
 
     my $error_in_conf;
-    $roles_regexp = 'listmaster|privileged_owner|owner|editor|subscriber|default';
+    my $roles_regexp = 'listmaster|privileged_owner|owner|editor|subscriber|default';
     while (<FILE>) {
 	next if /^\s*(\#.*|\s*)$/;
 
@@ -445,7 +447,7 @@ sub get_template_path {
     my $lang = shift || 'default';
     my $list = shift;
 
-    do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
+    do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,%s)", $list->{'name'});
 
     my $listdir;
     if (defined $list) {
@@ -1465,7 +1467,7 @@ sub virus_infected {
 
     ## F-Secure
     } elsif($Conf{'antivirus_path'} =~  /\/fsav$/) {
-	$dbdir=$` ;
+	my $dbdir=$` ;
 
 	# impossible to look for viruses with no option set
 	unless ($Conf{'antivirus_args'}) {
@@ -1751,8 +1753,8 @@ sub get_filename {
  	$list = $object;
  	if ($list->{'admin'}{'family_name'}) {
  	    unless ($family = $list->get_family()) {
- 		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
- 		$list->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
+ 		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$list->{'name'},$list->{'admin'}{'family_name'});
+ 		$list->set_status_error_config('no_list_family',$list->{'name'}, $list->{'admin'}{'family_name'});
  		return undef;
  	    }  
  	}
@@ -1835,8 +1837,8 @@ sub make_tt2_include_path {
 
     my @include_path;
 
-    my $path_etcbin;
-    my $path_etc;
+    my $path_etcbindir;
+    my $path_etcdir;
     my $path_robot;  ## optional
     my $path_list;   ## optional
     my $path_family; ## optional
@@ -2060,7 +2062,7 @@ sub get_dir_size {
 sub valid_email {
     my $email = shift;
     
-    unless ($email =~ /^$tools::regexp{'email'}$/) {
+    unless ($email =~ /^$regexp{'email'}$/) {
 	do_log('err', "Invalid email address '%s'", $email);
 	return undef;
     }
@@ -2225,7 +2227,7 @@ sub smime_parse_cert {
 	@cert = ($arg->{'text'});
     }elsif ($arg->{file}) {
 	unless (open(PSC, "$arg->{file}")) {
-	    &Log::do_log('err', "smime_parse_cert: open $file: $!");
+	    &Log::do_log('err', "smime_parse_cert: open %s: $!", $arg->{file});
 	    return undef;
 	}
 	@cert = <PSC>;
@@ -2545,7 +2547,7 @@ sub higher_version {
     my $max = $#tab1;
     $max = $#tab2 if ($#tab2 > $#tab1);
 
-    for $i (0..$max) {
+    for my $i (0..$max) {
     
         if ($tab1[0] =~ /^(\d*)a$/) {
             $tab1[0] = $1 - 0.5;
@@ -2582,7 +2584,7 @@ sub lower_version {
     my $max = $#tab1;
     $max = $#tab2 if ($#tab2 > $#tab1);
 
-    for $i (0..$max) {
+    for my $i (0..$max) {
     
         if ($tab1[0] =~ /^(\d*)a$/) {
             $tab1[0] = $1 - 0.5;
@@ -2766,5 +2768,20 @@ sub md5_fingerprint {
     return (unpack("H*", $digestmd5->digest));
 }
 
+sub get_separator {
+    return $separator;
+}
+
+## Return the Sympa regexp corresponding to the input param
+sub get_regexp {
+    my $type = shift;
+
+    if (defined $regexp{$type}) {
+	return $regexp{$type};
+    }else {
+	return '\w+'; ## default is a very strict regexp
+    }
+
+}
 
 1;

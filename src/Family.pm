@@ -102,8 +102,10 @@ sub new {
     bless $self, $class;
     $list_of_families{$robot}{$name} = $self;
 
+    my $family_name_regexp = &tools::get_regexp('family_name');
+
     ## family name
-    unless ($name && ($name =~ /^$tools::regexp{'family_name'}$/io) ) {
+    unless ($name && ($name =~ /^$family_name_regexp$/io) ) {
 	&do_log('err', 'Incorrect family name "%s"',  $name);
 	return undef;
     }

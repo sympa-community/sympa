@@ -508,7 +508,7 @@ my %in_regexp = (
 		 
 
 		 ## List names
-		 'list' => '[\w\-\.\+]*', ## $tools::regexp{'listname'} + uppercase
+		 'list' => '[\w\-\.\+]*', ## &tools::get_regexp('listname') + uppercase
 		 'previous_list' => '[\w\-\.\+]*',
 		 'new_list' =>  '[\w\-\.\+]*',
 		 'listname' => '[\w\-\.\+]*',
@@ -516,26 +516,26 @@ my %in_regexp = (
 		 'selected_lists' => '[\w\-\.\+]*',
 
 		 ## Family names
-		 'family_name' => $tools::regexp{'family_name'},
+		 'family_name' => &tools::get_regexp('family_name'),
 
 		 ## Email addresses
-		 'email' => $tools::regexp{'email'}.'|'.$tools::regexp{'uid'},
-		 'init_email' => $tools::regexp{'email'},
-		 'new_alternative_email' => $tools::regexp{'email'},
-		 'new_email' => $tools::regexp{'email'},
-		 'pending_email' => $tools::regexp{'email'}.',.*', # Email address is followed by ',' + gecos data
-		 'sender' => $tools::regexp{'email'},
+		 'email' => &tools::get_regexp('email').'|'.&tools::get_regexp('uid'),
+		 'init_email' => &tools::get_regexp('email'),
+		 'new_alternative_email' => &tools::get_regexp('email'),
+		 'new_email' => &tools::get_regexp('email'),
+		 'pending_email' => &tools::get_regexp('email').',.*', # Email address is followed by ',' + gecos data
+		 'sender' => &tools::get_regexp('email'),
 		 'to' => '([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+',
 
 		 ## Host
-		 'new_robot' => $tools::regexp{'host'},
-		 'remote_host' => $tools::regexp{'host'},
-		 'remote_addr' => $tools::regexp{'host'},
+		 'new_robot' => &tools::get_regexp('host'),
+		 'remote_host' => &tools::get_regexp('host'),
+		 'remote_addr' => &tools::get_regexp('host'),
 
 		 ## Scenario name
-		 'scenario' => $tools::regexp{'scenario'},
-		 'read_access' => $tools::regexp{'scenario'},
-		 'edit_access' => $tools::regexp{'scenario'},
+		 'scenario' => &tools::get_regexp('scenario'),
+		 'read_access' => &tools::get_regexp('scenario'),
+		 'edit_access' => &tools::get_regexp('scenario'),
                  ## RSS URL or blank
                  'active_lists' => '.*',
                  'latest_lists' => '.*',
@@ -4963,15 +4963,16 @@ sub do_skinsedit {
 	 return 'loginrequest';
      }
 
+     my $email_regexp = &tools::get_regexp('email');
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {
-	     if (/^($tools::regexp{'email'})(\s+(.*))?\s*$/) {
+	     if (/^($email_regexp)(\s+(.*))?\s*$/) {
 		 $user{&tools::get_canonical_email($1)} = $5;
 	     }
 	 }
      }elsif ($in{'email'} =~ /,/) {
 	 foreach my $pair (split /\0/, $in{'email'}) {
-	     if ($pair =~ /^($tools::regexp{'email'})(,(.*))?\s*$/) {
+	     if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
 		 $user{&tools::get_canonical_email($1)} = $5;
 	     }
 	 }
@@ -4980,7 +4981,7 @@ sub do_skinsedit {
      }elsif ($in{'pending_email'}) {
 	 foreach my $pair (split /\0/, $in{'pending_email'}) {
 	     my ($email, $gecos);
-	     if ($pair =~ /^($tools::regexp{'email'})(,(.*))?\s*$/) {
+	     if ($pair =~ /^($email_regexp)(,(.*))?\s*$/) {
 		 ($email, $gecos) = ($1,$5);
 		 $user{&tools::get_canonical_email($email)} = $gecos;
 	     }
@@ -9151,7 +9152,8 @@ sub _restrict_values {
 
      # check new listname syntax
      $in{'new_listname'} = lc ($in{'new_listname'});
-     unless ($in{'new_listname'} =~ /^$tools::regexp{'listname'}$/i) {
+     my $listname_regexp = &tools::get_regexp('listname');
+     unless ($in{'new_listname'} =~ /^$listname_regexp$/i) {
 	 &report::reject_report_web('user','incorrect_listname', {'bad_listname' => $in{'new_listname'}},$param->{'action'},$list);
 	 &wwslog('info','do_rename_list: incorrect listname %s', $in{'new_listname'});
 	 &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",

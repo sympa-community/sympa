@@ -54,8 +54,9 @@ foreach my $k (keys %ENV) {
 }
 
 ## scenari
+my $scenario_regexp = &tools::get_regexp('scenario');
 foreach my $file (<../src/etc/scenari/*.*>) {
-    $file =~ /\/(\w+)\.($tools::regexp{'scenario'})$/;
+    $file =~ /\/(\w+)\.($scenario_regexp)$/;
     my ($action, $name) = ($1, $2);
     my $title;
     open SCENARIO, $file;
