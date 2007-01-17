@@ -231,10 +231,15 @@ sub mail_file {
 	$headers .= "\n";
    }
    
+    ## All these data provide mail attachements in service messages
     my @msgs = ();
     if (ref($data->{'msg_list'}) eq 'ARRAY') {
 	@msgs = map {$_->{'msg'} || $_->{'full_msg'}} @{$data->{'msg_list'}};
-    } elsif ($data->{'msg'} and open IN, '<'.$data->{'msg'}) {
+    } elsif ($data->{'spool'}) {
+	@msgs = @{$data->{'spool'}};
+    } elsif ($data->{'msg'}) {
+	push @msgs, $data->{'msg'};
+    } elsif ($data->{'msg_path'} and open IN, '<'.$data->{'msg_path'}) {
 	push @msgs, join('', <IN>);
 	close IN;
     } elsif ($data->{'file'} and open IN, '<'.$data->{'file'}) {

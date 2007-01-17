@@ -2650,7 +2650,7 @@ sub send_msg {
 	} else {
 	    @selected_tabrcpt = @tabrcpt;
 	}
-
+	
 	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@tabrcpt_verp);
 
 
@@ -3677,7 +3677,7 @@ sub send_to_editor {
 	   close CRYPTED;
 	   
 
-	   $param->{'msg'} = $crypted_file;
+	   $param->{'msg_path'} = $crypted_file;
 
 	   &tt2::allow_absolute_path();
 	   unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
@@ -3686,7 +3686,7 @@ sub send_to_editor {
 	   }
        }
    }else{
-       $param->{'msg'} = $file;
+       $param->{'msg_path'} = $file;
 
        &tt2::allow_absolute_path();
        unless ($self->send_file('moderate', \@rcpt, $self->{'domain'}, $param)) {
