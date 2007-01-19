@@ -559,6 +559,11 @@ sub sending {
 	    $all_rcpt = $$rcpt;
 	}
 	
+	unless ($all_rcpt && $from) {
+	    &do_log('err', 'mail::sending: missing required parameter, cannot send message');
+	    return undef;
+	}
+
 	unless (open TMP, ">$sympa_file") {
 	    &do_log('notice', 'mail::sending : Cannot create %s : %s', $sympa_file, $!);
 	    return undef;
