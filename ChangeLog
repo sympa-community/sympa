@@ -1,3 +1,33 @@
+2007-01-17 17:04  olivier.salaun
+
+	* mail_tt2/moderate.tt2, src/List.pm, src/mail.pm: Fix: Renamed
+	  'msg' parameter to 'msg_path' in moderate.tt2.  Take 'spool'
+	  parameter into account (for 'modindex' template) in the
+	  reformat_message() process
+
+2007-01-17 17:02  olivier.salaun
+
+	* doc/man8/sympa.8: Updated
+
+2007-01-17 15:41  olivier.salaun
+
+	* mail_tt2/: message_report.tt2, modindex.tt2: Fix: X-Attach header
+	  field was not set for tha message/rfc822 parts. As a result
+	  attached messages encoding was corrupted.
+
+2007-01-16 15:47  olivier.salaun
+
+	* web_tt2/fr_FR/help_admin.tt2: Fixed encoding, now set to utf-8
+
+2007-01-15 14:26  olivier.salaun
+
+	* mail_tt2/remind.tt2: [reported by O.Lacroix] Fix type for
+	  transfert_encoding
+
+2006-12-29 17:19  olivier.salaun
+
+	* ChangeLog: Update
+
 2006-12-29 10:37  olivier.salaun
 
 	* src/tools.pl, wwsympa/wwsympa.fcgi: Change: extend
