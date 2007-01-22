@@ -256,7 +256,10 @@ sub mail_file {
     } elsif ($data->{'list'}) {
 	$listname = $data->{'list'};
     }
-       
+     
+    ## Set it in case it was not set
+    $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
+  
     ## SENDING
     if (ref($rcpt)) {
 	unless (defined &sending($message,$rcpt,$data->{'return_path'},$robot,$listname,$sign_mode)) {
@@ -541,7 +544,7 @@ sub sending {
     my $sympa_file;
     my $fh;
     my $signed_msg; # if signing
-    
+
  
     ## FILE HANDLER
     ## Don't fork if used by a CGI (FastCGI problem)
