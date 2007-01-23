@@ -1009,10 +1009,11 @@ sub as_singlepart {
 ## Escaped characters are : @ $ [ ] ( ) ' ! '\' * . + ?
 sub escape_regexp {
     my $s = shift;
-    my @escaped = ('@','$','[',']','(',')',"'",'!',"\\",'*','.','+','?');
+    my @escaped = ("\\",'@','$','[',']','(',')',"'",'!','*','.','+','?');
+    my $backslash = "\\"; ## required in regexp
 
     foreach my $escaped_char (@escaped) {
-	$s =~ s/\$escaped_char/\\\$escaped_char/g;
+	$s =~ s/$backslash$escaped_char/\\$escaped_char/g;
     }
 
     return $s;
