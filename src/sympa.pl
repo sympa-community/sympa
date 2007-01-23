@@ -1756,7 +1756,7 @@ sub DoMessage{
     ## message topic context	
     if (($action =~ /^do_it/) && ($context->{'topic_needed'})) {
         $action = 'editorkey' if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_moderator');
-	$action = 'request_auth' if ($self->{'admin'}{'msg_topic_tagging'} eq 'required_sender');
+	$action = 'request_auth' if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_sender');
     }
 
     if (($action =~ /^do_it/) || ($main::daemon_usage == DAEMON_MESSAGE)) {
