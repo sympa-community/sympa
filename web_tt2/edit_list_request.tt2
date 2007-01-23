@@ -15,7 +15,6 @@
   <form class="bold_label"  action="[% path_cgi %]" method="post">
   <fieldset>
     <input type="hidden" name="serial" value="[% serial %]" />
-
         [% FOREACH p = param %]
 
         [% IF p.may_edit != 'hidden' %]
@@ -189,7 +188,7 @@
                           [% IF p.type == 'scenario' %]
                             <!-- Scenario -->
                             [% IF p.may_edit == 'write' %]
-                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name">
+                              <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" OnChange="this.form.submit();">
                                 [% FOREACH scenario = p.value %]
                                   <option value="[% scenario.value.name %]"
                                   [% IF scenario.value.selected == '1' %]
@@ -410,6 +409,8 @@
         [% END %]
 
     <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="group" value="[% group %]" />
+    <input type="hidden" name="action" value="edit_list" />
     <input class="MainMenuLinks" type="submit" name="action_edit_list" value="[%|loc%]Update[%END%]" />
   </fieldset>
   </form>
