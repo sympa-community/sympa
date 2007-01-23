@@ -991,7 +991,7 @@ my %alias = ('reply-to' => 'reply_to',
 					       'group' => 'sending'
 					     },    
 
-	    'msg_topic_tagging' => { 'format' => ['required','optional'],
+	    'msg_topic_tagging' => { 'format' => ['required_sender','required_moderator','optional'],
 				      'occurrence' => '0-1',
 				      'default' => 'optional',
 				      'gettext_id' => "Message tagging",
@@ -6959,6 +6959,7 @@ sub request_action {
     $context->{'msg_encrypted'} = 'smime' if (defined $context->{'message'} && 
 					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
 
+    do_log('info',"xxxxxxxxxxxxxxxxxx  auth_method='$auth_method'");
     unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
 	do_log('info',"fatal error : unknown auth method $auth_method in List::get_action");
 	return undef;
@@ -6972,6 +6973,7 @@ sub request_action {
 	}
     
 	my @operations = split /\./, $operation;
+	do_log('info',"xxxxxxxxxxxxxxxxxx  operation='$operation'");
 	my $data_ref;
 	if ($#operations == 0) {
 	    $data_ref = $list->{'admin'}{$operation};
@@ -7013,6 +7015,7 @@ sub request_action {
 	$name = $data_ref->{'name'};
 
     }elsif ($context->{'topicname'}) {
+	do_log('info',"xxxxxxxxxxxxxxxxxx topicname defined");
 	my $scenario = $list_of_topics{$robot}{$context->{'topicname'}}{'visibility'};
 	@rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
@@ -7022,7 +7025,7 @@ sub request_action {
 	my $p;
 	
 	$p = &Conf::get_robot_conf($robot, $operation);
-
+	do_log('info',"xxxxxxxxxxxxxxxxxx  _load_scenario_file ($operation, $robot, $p)");
 	return undef 
 	    unless ($scenario = &_load_scenario_file ($operation, $robot, $p));
         @rules = @{$scenario->{'rules'}};
@@ -7036,10 +7039,13 @@ sub request_action {
 
     my $return = {};
     foreach my $rule (@rules) {
+	do_log('info',"xxxxxxxxxxxxxxx   new rule");
 	next if ($rule eq 'scenario');
 	# &do_log('info', 'List::request_action : verify rule %s',$rule->{'condition'});
 
 	if ($auth_method eq $rule->{'auth_method'}) {
+	    do_log('info',"xxxxxxxxxxxxxxx   authmethod match : $auth_method ");
+	    do_log('info',"xxxxxxxxxxxxxxx   check condition : $rule->{'condition'}");
 	    my $result =  &verify ($context,$rule->{'condition'});
 	    if (! defined ($result)) {
 		do_log('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
@@ -7062,11 +7068,13 @@ sub request_action {
 		return undef;
 	    }
 	    if ($result == -1) {
+		do_log('info',"xxxxxxxxxxxxxxxxxxxxxxxxxx rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
 		do_log('debug3',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
 		next;
 	    }
 	    
 	    my $action = $rule->{'action'};
+	    do_log('info',"xxxxxxxxxxxxxx action: $action");
 
             ## reject : get parameters
 	    if ($action =~/^reject(\((.+)\))?(\s?,\s?(quiet))?/) {
@@ -11712,7 +11720,7 @@ sub get_available_msg_topic {
 sub is_msg_topic_tagging_required {
     my ($self) = @_;
     
-    if ($self->{'admin'}{'msg_topic_tagging'} eq 'required') {
+    if ($self->{'admin'}{'msg_topic_tagging'} =~ /required/) {
 	return 1;
     } else {
 	return 0;
