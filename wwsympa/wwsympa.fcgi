@@ -14477,11 +14477,11 @@ sub make_pictures_url {
  sub do_request_topic {
      &wwslog('info', 'do_request_topic(%s)', $in{'authkey'});
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_request_topic: no user');
-	 return 'loginrequest';
-     }
+#     unless ($param->{'user'}{'email'}) {
+#	 &report::reject_report_web('user','no_user',{},$param->{'action'});
+#	 &wwslog('info','do_request_topic: no user');
+#	 return 'loginrequest';
+#     }
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -14521,7 +14521,12 @@ sub make_pictures_url {
 	 last if (-f $filename);
      }
 
-     my $parser = new MIME::Parser;
+     my $parser;
+     unless ($parser = new MIME::Parser) {
+	  &report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('notice', 'Cannot parse message %s', $filename);
+	 return undef;
+     }
      $parser->output_to_core(1);
 
      unless (open FILE, "$filename") {
@@ -14535,11 +14540,21 @@ sub make_pictures_url {
      #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($head->get('subject'));
      $param->{'subject'} = MIME::EncWords::decode_mimewords($head->get('subject'), Charset=>'utf8');
      chomp $param->{'subject'};
+     $param->{'subject'} = &tools::escape_html($param->{'subject'});
+     $param->{'from'} = MIME::EncWords::decode_mimewords($head->get('from'), Charset=>'utf8');
+     chomp  $param->{'from'};
+     $param->{'from'} = &tools::escape_html($param->{'from'});
+     $param->{'date'} = MIME::EncWords::decode_mimewords($head->get('date'), Charset=>'utf8');
+     chomp  $param->{'date'};
+     $param->{'date'} =  &tools::escape_html($param->{'date'});
      $param->{'message_id'} = &tools::clean_msg_id($head->get('Message-Id'));
 
      my $body = $msg->bodyhandle();
-     $param->{'body'} = $body->as_string();
-
+     if ($body) {
+	 $param->{'body'} = $body->as_string();
+     }else{
+	 $param->{'body'} = '';
+     }
      $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
 
      return 1;
