@@ -14574,18 +14574,32 @@ sub make_pictures_url {
  sub do_tag_topic_by_sender {
      &wwslog('info', 'do_tag_topic_by_sender');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_tag_topic_by_sender: no user');
-	 $param->{'previous_action'} = 'request_topic';
-	 return 'loginrequest';
+#     unless ($param->{'user'}{'email'}) {
+#	 &report::reject_report_web('user','no_user',{},$param->{'action'});
+#	 &wwslog('info','do_tag_topic_by_sender: no user');
+#	 $param->{'previous_action'} = 'request_topic';
+#	 return 'loginrequest';
+#     }
+
+     my $parser;
+     my $listname = $list->{'name'};
+     my $authqueue = &Conf::get_robot_conf($robot,'queueauth');
+     my $filename = "$authqueue\/$listname".'@'."$robot\_$in{'authkey'}";
+
+     my $mail ;
+     unless($mail  = new Message($filename,'noxsympato')) {
+	 &report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'});
+	 &wwslog('info','do_tag_topic_by_sender: cannot parse message %s',$filename);
+	 return undef;
      }
+     my $sender = $mail->{'sender'};
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	 &wwslog('info','do_tag_topic_by_sender: no list');
 	 return undef;
      }
+
 
      unless ($list->is_there_msg_topic()) {
 	 &report::reject_report_web('user','no_topic',{},$param->{'action'},$list);
@@ -14614,7 +14628,7 @@ sub make_pictures_url {
      ## CONFIRM
      my $time = time;
      my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
-		 'from'=> $param->{'user'}{'email'}};
+		 'from'=> $sender};
 
      $data->{'body'} = sprintf ("QUIET CONFIRM %s\n",$in{'authkey'});
 
@@ -14628,7 +14642,7 @@ sub make_pictures_url {
      }
 
      unless ($filemsg && (-r $filemsg)) {
-	 &report::reject_report_web('intern','update_subscriber_db_failed',{'key' => $in{'authkey'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('intern','tag_topic_by_sender_failed',{'key' => $in{'authkey'}},$param->{'action'},$robot);
 	 &wwslog('err', 'do_tag_topic_by_sender: Unable to find message %s from %s, auth failed', $in{'authkey'},$param->{'user'}{'email'});
 	 return undef;
      }
