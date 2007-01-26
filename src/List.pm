@@ -12515,7 +12515,9 @@ sub has_include_data_sources {
 
     foreach my $type ('include_file','include_list','include_remote_sympa_list','include_sql_query','include_remote_file',
 		      'include_ldap_query','include_ldap_2level_query','include_admin','owner_include','editor_include') {
-	return 1 if (defined $self->{'admin'}{$type});
+	if (ref($self->{'admin'}{$type}) eq 'ARRAY' && $#{$self->{'admin'}{$type}} >= 0) {
+	    return 1;
+	}
     }
     
     return 0
