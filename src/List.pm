@@ -11171,7 +11171,13 @@ sub _load_list_param {
     if (defined $p->{'synonym'}{$value}) {
 	$value = $p->{'synonym'}{$value};
     }
-    
+
+    ## Include mode should not be used anymore
+    ## Change value to include2 to shift to new behavior
+    if ($key eq 'user_data_source' && $value eq 'include') {
+	$value = 'include2';
+    }
+
     ## Scenario
     if ($p->{'scenario'}) {
 	$value =~ y/,/_/;

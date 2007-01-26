@@ -1,3 +1,57 @@
+2007-01-23 18:18  serge.aumont
+
+	* src/sympa.pl: incorrect var definition (msg_topic and mederation)
+
+2007-01-23 17:56  serge.aumont
+
+	* src/: List.pm, sympa.pl: New value possible for
+	  msg_topic_required to adpat it both for moderated list and un
+	  moderated lists
+
+2007-01-23 17:52  serge.aumont
+
+	* web_tt2/edit_list_request.tt2: submit form when changing a
+	  scenario name
+
+2007-01-23 12:13  olivier.salaun
+
+	* src/tools.pl: Fix: escape_regexp would not work.  This would
+	  break arcsearch_id used in RSS context
+
+2007-01-22 16:18  olivier.salaun
+
+	* .version: Preparing 5.3b.2
+
+2007-01-22 16:12  olivier.salaun
+
+	* src/mail.pm: Fix: Some service messages (moderation, topics
+	  tagging and reminder) delegated by wwsympa to sympa.pl would have
+	  missing X-Sympa-From header field.  Now setting a default value
+	  for the return-path in mail.pm
+
+2007-01-22 16:09  olivier.salaun
+
+	* ChangeLog: Update
+
+2007-01-22 16:09  olivier.salaun
+
+	* po/: bg.po, cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po,
+	  fr.po, hu.po, it.po, ja.po, nb_NO.po, nl.po, oc.po, pt.po,
+	  pt_BR.po, ro.po, ru.po, sv.po, tr.po, zh_CN.po: updated POs with
+	  POT
+
+2007-01-22 16:09  olivier.salaun
+
+	* po/pl.po: Merged translations with POT file
+
+2007-01-19 16:29  olivier.salaun
+
+	* src/mail.pm: Added a parameter check in mail::sending()
+
+2007-01-19 15:15  olivier.salaun
+
+	* po/pl.po: [Lukasz Zygmanski] Updated Polish translations
+
 2007-01-17 17:04  olivier.salaun
 
 	* mail_tt2/moderate.tt2, src/List.pm, src/mail.pm: Fix: Renamed

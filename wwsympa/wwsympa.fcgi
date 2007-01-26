@@ -8843,6 +8843,9 @@ sub _prepare_edit_form {
 		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
 	     }
 	     &Language::SetLang($saved_lang);
+	 }elsif ($pname eq 'user_data_source') {
+	     ## Skip old 'include' and mode
+	     delete $p->{'value'}{'include'};
 	 }
 
 	 push @{$param->{'param'}}, $p;	
