@@ -46,8 +46,7 @@ my $opt_d;
 my $opt_F;
 my %options;
 
-&GetOptions(\%main::options, 'dump=s', 'debug|d', 'log_level=s', 'foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
+&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground');
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
@@ -55,12 +54,8 @@ if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
 # Some option force foreground mode
-$main::options{'foreground'} = 1 if ($main::options{'debug'} ||
-                                     $main::options{'version'} || 
-				     $main::options{'import'} ||
-				     $main::options{'help'} ||
-				     $main::options{'lowercase'} || 
-				     $main::options{'dump'});
+$main::options{'foreground'} = 1 if ($main::options{'debug'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
 my $Version = '0.1';
 

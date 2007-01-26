@@ -58,6 +58,7 @@ if ($main::options{'debug'}) {
 }
 
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
 $wwsympa_conf = "--WWSCONFIG--";
 $sympa_conf_file = '--CONFIG--';
