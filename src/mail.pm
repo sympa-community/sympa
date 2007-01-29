@@ -246,9 +246,6 @@ sub mail_file {
 	push @msgs, join('', <IN>);
 	close IN;
     }
-    unless ($message = &reformat_message("$headers"."$message", \@msgs)) {
-	&do_log('err', "mail::mail_file: Failed to reformat message");
-    }
 
     my $listname = '';
     if (ref($data->{'list'}) eq "HASH") {
@@ -257,6 +254,10 @@ sub mail_file {
 	$listname = $data->{'list'};
     }
      
+    unless ($message = &reformat_message("$headers"."$message", \@msgs)) {
+	&do_log('err', "mail::mail_file: Failed to reformat message");
+    }
+
     ## Set it in case it was not set
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
   
