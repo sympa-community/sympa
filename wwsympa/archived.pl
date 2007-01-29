@@ -339,7 +339,7 @@ while (!$end) {
    }
 }
 do_log('notice', 'archived exited normally due to signal');
-unlink("$wwsconf->{'archived_pidfile'}");
+&tools::remove_pid($wwsconf->{'archived_pidfile'}, $$);
 
 exit(0);
 

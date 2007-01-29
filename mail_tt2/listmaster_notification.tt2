@@ -45,6 +45,22 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%|loc(db_type)%]No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN.[%END%]
 
 
+[% ELSIF type == 'crash' -%]
+Subject: [% FILTER qencode %][%|loc%]Process crashed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[% charset %];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]Previous process has died unexpectedly.[%END%]
+[%|loc(crash_date)%]Date of crash : %1[%END%]
+[%|loc%]Errors:[%END%]
+
+[% FOREACH err IN crash_err%]
+[% err %]
+[% END %]
+
+[%|loc%]Check log file for further details.[%END%]
+
 [% ELSIF type == 'upgrade_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 MIME-Version: 1.0

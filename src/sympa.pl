@@ -246,8 +246,9 @@ if ($signal ne 'hup') {
 	    close(TTY);
 	}
 	open(STDIN, ">> /dev/null");
-	open(STDERR, ">> /dev/null");
 	open(STDOUT, ">> /dev/null");
+	open(STDERR, ">> /dev/null");
+
 	setpgrp(0, 0);
 	# start the main sympa.pl daemon
 
@@ -318,6 +319,7 @@ if ($signal ne 'hup') {
 
     do_log('debug', "Running server $$ for $service purpose ");
     unless ($main::options{'batch'} ) {
+
 	## Create and write the pidfile
 	my $file = $Conf{'pidfile'};
 	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
@@ -994,10 +996,8 @@ List::db_disconnect if ($List::dbh);
 } #end of block while ($signal ne 'term'){
 
 do_log('notice', 'Sympa exited normally due to signal');
-unless (unlink $Conf{'pidfile'}) {
-    fatal_err("Could not delete %s, exiting", $Conf{'pidfile'});
-    ## No return.
-}
+&tools::remove_pid($Conf{'pidfile'}, $$);
+
 exit(0);
 
 

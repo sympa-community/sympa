@@ -492,7 +492,7 @@ while (!$end) {
 
 }
 do_log('notice', 'bounced exited normally due to signal');
-unlink("$wwsconf->{'bounced_pidfile'}");
+&tools::remove_pid($wwsconf->{'bounced_pidfile'}, $$);
 
 exit(0);
 
