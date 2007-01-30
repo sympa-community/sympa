@@ -2075,7 +2075,8 @@ sub write_pid {
 
     ## Error output is stored in a file with PID-based name
     ## Usefull if process crashes
-    open(STDERR, '>>',  $Conf{'tmpdir'}.'/'.$pid.'.stderr');
+    open(STDERR, '>>',  $Conf{'tmpdir'}.'/'.$pid.'.stderr') unless ($main::options{'foreground'});
+    chown $uid, $gid, $Conf{'tmpdir'}.'/'.$pid.'.stderr';
 
     return 1;
 }
