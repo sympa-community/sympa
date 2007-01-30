@@ -255,12 +255,19 @@ sub search
 		# think, a good argument in favor of open source code!
 		while (<FH>)
 		{
-			if (/^<!--X-Subject: (.*) -->/)
+		        ## Next line is appended to the subject
+			if (defined $subj) {
+			    $subj .= $1 if (/\s(.*)( -->|$)/);
+					    if (/-->$/) {
+						$subj =~ s/ -->$//;
+						last;
+					    }
+			    } elsif (/^<!--X-Subject: (.*)( -->|$)/)
 			{
 			    ## No more need to decode header fields
 			    # $subj = &MIME::Words::decode_mimewords($1); 
 			    $subj = $1;
-			    last;
+			    last if (/-->/);
 			} 
 		} 
 		($from = <FH>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
