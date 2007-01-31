@@ -240,7 +240,7 @@ sub search
 	foreach $file (@MSGFILES) 
 	{
 		my ($subj,$from,$date,$id,$body_ref);
-		unless (open FH, ,'<:utf8',  $file)
+		unless (open FH, ,'<:bytes',  $file)
 		{
 #			$self->error("Couldn't open file $file, $!");
 		}
