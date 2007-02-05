@@ -1,3 +1,115 @@
+2007-02-05 15:59  olivier.salaun
+
+	* src/Upgrade.pm: [ID 1500][S.Ikeda] Change: converting mail
+	  templates to UTF8.  The script has been integrated into
+	  Upgrade.pm and has been extended to convert other configuration
+	  files
+
+2007-02-05 15:55  olivier.salaun
+
+	* src/mail.pm: Change: made UTF-8 the default charset
+
+2007-02-05 15:54  olivier.salaun
+
+	* mail_tt2/: archive.tt2, bye.tt2, certif_warning.tt2,
+	  command_report.tt2, d_install_shared.tt2, d_reject_shared.tt2,
+	  digest.tt2, digest_plain.tt2, expire_deletion.tt2,
+	  expire_warning1.tt2, expire_warning2.tt2, get_archive.tt2,
+	  global_remind.tt2, helpfile.tt2, index_archive.tt2,
+	  info_report.tt2, invite.tt2, list_created.tt2, list_rejected.tt2,
+	  list_unknown.tt2, listeditor_notification.tt2,
+	  listmaster_notification.tt2, listowner_notification.tt2,
+	  lists.tt2, message_report.tt2, moderate.tt2, modindex.tt2,
+	  reject.tt2, remind.tt2, removed.tt2, request_auth.tt2,
+	  review.tt2, send_auth.tt2, sendpasswd.tt2, stats_report.tt2,
+	  summary.tt2, urlized_part.tt2, user_notification.tt2,
+	  welcome.tt2, which.tt2, x509-user-cert-missing.tt2,
+	  your_infected_msg.tt2: Change: all service messages are now UTF8
+	  Also made the templates structure simpler
+
+2007-02-05 15:52  olivier.salaun
+
+	* src/Log.pm: Fix: db_logs were expired too early (parameter
+	  expressed in days instead of months)
+
+2007-02-05 15:50  olivier.salaun
+
+	* src/List.pm: Change: trigger sync_include before distributing a
+	  message to a list, unless it was performed during the last 5 min.
+	  Fix: $self->{'last_sync'} was never loaded
+
+2007-01-31 18:11  olivier.salaun
+
+	* web_tt2/error.tt2: [requested by C.Andrews, Boston College] Added
+	  an error message for list creation failure.  It is required when
+	  an existing listname has been used ; we cannot get the error
+	  diagnostic from admin::create_list_old() though
+
+2007-01-31 09:52  olivier.salaun
+
+	* wwsympa/Marc/Search.pm: Fix: wwsympa might die with error "Cannot
+	  decode string with wide characters".	Now opening archives as
+	  bytes (not utf8) to prevent decoding
+
+2007-01-30 17:34  olivier.salaun
+
+	* src/tools.pl: Fix: don't redirect stderr to a file if process
+	  runs in foreground.  Also changed the owner of the ;stderr file
+
+2007-01-30 17:16  olivier.salaun
+
+	* wwsympa/Marc/Search.pm: Fix: arcsearch_id would fail on some
+	  messages.  Marc::Search expectes mhonarc to add X-Subject data to
+	  generated HTML files. Some examples were found with X-Subject
+	  value split among 2 lines.  Marc::Search::search() is now able to
+	  parse split X-Subject entries.
+
+2007-01-29 17:37  olivier.salaun
+
+	* src/mail.pm: Change order
+
+2007-01-29 10:15  olivier.salaun
+
+	* mail_tt2/listmaster_notification.tt2, src/sympa.pl,
+	  src/task_manager.pl, src/tools.pl, wwsympa/archived.pl,
+	  wwsympa/bounced.pl: New feature: STDERR of daemons is redirected
+	  to a file. If process crashes, next process started will detect
+	  the failure and send a notice to listmaster.
+
+2007-01-26 13:20  serge.aumont
+
+	* src/List.pm: Remove scenario traces
+
+2007-01-26 12:05  olivier.salaun
+
+	* ChangeLog, src/List.pm, wwsympa/wwsympa.fcgi: Change: 'include'
+	  mode is now obsolete. Now performing a mapping while to
+	  'include2' while loading the parameter.
+
+2007-01-26 11:55  olivier.salaun
+
+	* src/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl:
+	  Fix: debug mode would not work with task_manager.pl, archived.pl
+	  and bounced.pl
+
+2007-01-26 11:47  olivier.salaun
+
+	* src/List.pm: [reported by F.Lachapelle] Fix: sync_include tasks
+	  were created for all lists, including those with no external data
+	  sources The List::has_include_data_source() subroutine has been
+	  fixed to correctly check owner_include
+
+2007-01-24 16:14  serge.aumont
+
+	* wwsympa/wwsympa.fcgi: remove authentication request for
+	  do_tag_topic_by_sender and do_request_topic, autehntication is
+	  done because of the md5 key of the message.
+
+2007-01-24 11:46  serge.aumont
+
+	* web_tt2/request_topic.tt2, wwsympa/wwsympa.fcgi: Internal error
+	  with message that can't be parsed solved in request_topic action.
+
 2007-01-23 18:18  serge.aumont
 
 	* src/sympa.pl: incorrect var definition (msg_topic and mederation)
