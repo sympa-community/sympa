@@ -220,12 +220,10 @@ sub mail_file {
 	$headers .= "MIME-Version: 1.0\n";
     }
     unless ($header_ok{'content-type'}) {
-	$headers .= "Content-Type: text/plain; charset=$data->{'charset'}\n";
+	$headers .= "Content-Type: text/plain; charset=UTF-8\n";
     }
     unless ($header_ok{'content-transfer-encoding'}) {
-	$headers .= "Content-Transfer-Encoding:"; 
-        $headers .= gettext("_encoding_");
-	$headers .= "\n";
+	$headers .= "Content-Transfer-Encoding: 8bit\n"; 
     }
     unless ($existing_headers) {
 	$headers .= "\n";
