@@ -1,13 +1,11 @@
 From: [% fromlist %]
 To: [% to %]
 Subject: [% FILTER qencode %][%subject%][%END%]
-Mime-version: 1.0
-Content-Type: multipart/mixed; charset=[% charset %]; boundary="[% boundary%]"
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: multipart/mixed; boundary="[% boundary%]"
 
 --[% boundary %]
 Content-Type: message/rfc822
-Content-Transfer-Encoding:  [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding:  8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 

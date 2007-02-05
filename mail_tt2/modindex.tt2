@@ -1,18 +1,17 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Moderation spool for list %1[%END%][%END%]
-Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: text/plain; charset="UTF-8";
+Content-Transfer-Encoding: 8bit
 
 [%|loc(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
 [% IF spool %]
 --[% boundary1 %]
 Content-Type: multipart/digest; boundary="[% boundary2 %]"
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 
 This is a multi-part message in MIME format...
@@ -20,7 +19,7 @@ This is a multi-part message in MIME format...
 [% FOREACH msg = spool %]
 --[% boundary2 %]
 Content-Type: message/rfc822
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 

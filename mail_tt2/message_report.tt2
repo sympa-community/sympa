@@ -2,12 +2,11 @@ From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'intern_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution : Internal server error[%END%][%END%]
-MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset=[% charset %];
+Content-Type: text/plain; charset="UTF-8";
 
 [% IF entry == 'forward' %]
 [%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
@@ -21,12 +20,11 @@ Content-Type: text/plain; charset=[% charset %];
 [%################ %]
 [% ELSIF type == 'user_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution : User error[%END%][%END%]
-MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset=[% charset %];
+Content-Type: text/plain; charset="UTF-8";
 
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
 
@@ -75,12 +73,11 @@ Warning : this message may already have been sent by one of the list's editor.[%
 [%##################### %]
 [% ELSIF type == 'authorization_reject' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution : Authorization denied[%END%][%END%]
-MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset=[% charset %];
+Content-Type: text/plain; charset="UTF-8";
 
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected. 
 You are not allowed to send this message for the following reason :[%END%]
@@ -92,9 +89,8 @@ You are not allowed to send this message for the following reason :[%END%]
 [%##################### %]
 [% ELSIF type == 'success' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: text/plain; charset="UTF-8";
+Content-Transfer-Encoding: 8bit
 
 [% IF entry == 'moderating_message' -%]
 
@@ -128,7 +124,7 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [%- IF msg -%]
 --[% boundary %]
 Content-Type: message/rfc822
-Content-Transfer-Encoding:  [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 

@@ -4,12 +4,11 @@ To: [% FILTER qencode %][%|loc(list.name)%]Moderators of list %1[%END%] <[% list
 [% ELSE -%]Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Article to be approved for list %1 from %2[%END%][%END%]
 [% END -%]
 Reply-To: [% conf.email %]@[% conf.host %]
-Mime-Version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
 --[% boundary %]
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: text/plain; charset="UTF-8";
+Content-Transfer-Encoding: 8bit
 
 [% IF method == 'md5' -%]
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,modkey)%]To tag the attached message in list %1 go to the following page :
@@ -32,7 +31,7 @@ REJECT [% list.name %] [% modkey %]
 [%|loc(mod_spool_size)%]Number of messages awaiting moderation for this list : %1[%END%]
 --[% boundary %]
 Content-Type: message/rfc822
-Content-Transfer-Encoding:  [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 

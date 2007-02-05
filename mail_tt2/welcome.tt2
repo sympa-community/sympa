@@ -1,11 +1,10 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
-Mime-version: 1.0
 Content-Type: multipart/alternative; boundary="===Sympa==="
 
 --===Sympa===
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: text/plain; charset="UTF-8";
+Content-Transfer-Encoding: 8bit
 
 [%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]
@@ -19,8 +18,8 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
 --===Sympa===
-Content-Type: text/html; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+Content-Type: text/html; charset="UTF-8";
+Content-Transfer-Encoding: 8bit
 
 <HTML>
 <HEAD>

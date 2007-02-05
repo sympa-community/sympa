@@ -2,9 +2,6 @@ From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% FILTER qencode %][%|loc%]Listowners[%END%] <[% to %]>[%END%]
 [% IF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages
@@ -12,9 +9,6 @@ are no longer being web-archived. Please contact %5@%4. [%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
@@ -23,27 +17,18 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% ELSIF type == 'closed_during_instantiation_family' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,param0)%]%1@%2 is no longer an instance of family %3.
 This list has been closed.[%END%]
 
 [% ELSIF type == 'warn-signoff' -%]
 Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2" from %3 %4[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(who,gecos,list.name)%]WARNING : %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
 (You may help this person).[%END%]
  
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
 Some of the customizations have been removed because they no longer respect the family rules :
@@ -54,9 +39,6 @@ Some of the customizations have been removed because they no longer respect the 
 
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
   [% IF action == 'notify_bouncers' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
@@ -77,9 +59,6 @@ selected by Sympa as severe bouncing addresses:[%END%]
 
 [% ELSIF type == 'subrequest' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name)-%]Dear owner of list %1,
  
@@ -95,9 +74,6 @@ AUTH %2 ADD %3 %4 %5
 
 [% ELSIF type == 'sigrequest' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name)-%]Dear owner of list %1,
 
@@ -114,9 +90,6 @@ AUTH %2 DEL %3 %4
 
 [% ELSIF type == 'bounce_rate' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in list %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,rate,conf.wwsympa_url,list.name)%]Bounce rate in list %1 is %2.
 
@@ -127,9 +100,6 @@ You should delete bouncing subscribers :
 
 [% ELSIF type == 'notice' -%]
 Subject: [% FILTER qencode %][%|loc(command,list.name,who,gecos)%]FYI: %1 list %2 from %3 %4[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(command,list.name,who,gecos)%]FYI command %1 list %2 from %3 %4[%END%][% IF by -%][%|loc(by)%] validated by %1 [%END%]
 (no action needed)
@@ -137,9 +107,6 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% ELSIF type == 'automatic_del' -%]
 Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. [%END%]
 [% IF reason == 'arf' -%]
@@ -151,17 +118,11 @@ Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% ELSIF type == 'named_filter' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 : Named filter error[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(filter,list.name)%]The %1 named filter could not be evaluated. The list %2 is using it for some authorization scenario.[%END%]
 
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]
 [% END %]

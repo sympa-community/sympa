@@ -1,8 +1,5 @@
 From: [% conf.email %]@[% conf.host %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]resubscription to %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,user.email)%]You have been subscriber of list %1@%2 with email %3 for 1 year or more;[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=sub%20[% list.name %]

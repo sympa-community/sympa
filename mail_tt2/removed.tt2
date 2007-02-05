@@ -1,8 +1,5 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Removed from %1[%END%][%END%]
-MIME-Version: 1.0
-Content-Type: text/plain; charset=[% charset %];
-Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(user.email,list.name,list.host)%]Your address (%1) has been removed from list
 %2@%3, probably because we received

@@ -1,13 +1,12 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
-Mime-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
 
 --[% boundary %]
 Content-Description: Notification
-Content-Type: text/plain; charset=[% charset %];
+Content-Type: text/plain; charset="UTF-8";
 
 [%|loc%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
 
