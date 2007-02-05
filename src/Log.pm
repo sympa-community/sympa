@@ -239,7 +239,7 @@ sub db_log {
 # delete logs in RDBMS
 sub db_log_del {
     my $exp = &Conf::get_robot_conf($Conf{'host'},'logs_expiration_period');
-    my $date = time - ($exp * 24 * 60 * 60);
+    my $date = time - ($exp * 30 * 24 * 60 * 60);
 
     my $dbh = &List::db_get_handler();
 
