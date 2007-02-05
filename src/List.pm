@@ -2496,7 +2496,15 @@ sub distribute_msg {
     if (($self->is_digest()) and ($message->{'smime_crypted'} ne 'smime_crypted')) {
 	$self->archive_msg_digest($msgtostore);
     }
-    
+
+    ## Synchronize list members, required if list uses include sources
+    ## unless sync_include has been performed withi last 5 minutes
+    if ($self->has_include_data_sources() &&
+	($self->{'last_sync'} < time - 60*5)) { 
+	&do_log('notice', "Synchronizing list members...");
+	$self->sync_include();
+    }
+
     ## Blindly send the message to all users.
     my $numsmtp = $self->send_msg($message);
     unless (defined ($numsmtp)) {
@@ -8370,7 +8378,7 @@ sub _load_stats_file {
    }
 
    ## Return the array.
-   return ($stats, $total);
+   return ($stats, $total, $last_sync, $last_sync_admin_user);
 }
 
 ## Loads the list of subscribers as a tied hash
