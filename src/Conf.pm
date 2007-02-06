@@ -71,7 +71,12 @@ my @valid_options = qw(
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
 		   'msgcat' => 'localedir',
 		   'queueexpire' => '',
-		   'web_recode_to' => 'filesystem_encoding');
+		   'web_recode_to' => 'filesystem_encoding',
+		   );
+## These parameters now have a hard-coded value
+## Customized value can be accessed though as %Ignored_Conf
+%Ignored_Conf;
+my %hardcoded_options = ('filesystem_encoding' => 'utf8');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -295,6 +300,12 @@ sub load {
 	}
     }
     close(IN);
+
+    ## Hardcoded values
+    foreach my $p (keys %hardcoded_options) {
+	$Ignored_Conf{$p} = $o{$p}[0] if (defined $o{$p});
+	$o{$p}[0] = $hardcoded_options{$p};
+    }
 
     ## Defaults
     unless (defined $o{'wwsympa_url'}) {

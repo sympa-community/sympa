@@ -496,15 +496,17 @@ sub upgrade {
     }    
 
     ## We now support UTF-8 only for custom templates, config files, headers and footers, info files
-    ## + web_tt2, scenari, create_list, families
+    ## + web_tt2, scenari, create_list_templatee, families
     if (&tools::lower_version($previous_version, '5.3b.2')) {
 	&do_log('notice','Encoding all custom files to UTF-8...');
 
 	my (@directories, @files);
 
 	## Site level
-	if (-d "$Conf{'etc'}/mail_tt2") {
-	    push @directories, ["$Conf{'etc'}/mail_tt2", $Conf{'lang'}];
+	foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
+	    if (-d $Conf{'etc'}.'/'.$type) {
+		push @directories, [$Conf{'etc'}.'/'.$type, $Conf{'lang'}];
+	    }
 	}
 	foreach my $f ('topics.conf','auth.conf') {
 	    if (-f $Conf{'etc'}.'/'.$f) {
@@ -514,9 +516,10 @@ sub upgrade {
 
 	## Go through Virtual Robots
 	foreach my $vr (keys %{$Conf{'robots'}}) {
-	    if (-d "$Conf{'etc'}/$vr/mail_tt2") {
-		push @directories, ["$Conf{'etc'}/$vr/mail_tt2",
-				    &Conf::get_robot_conf($vr, 'lang')];
+	    foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
+		if (-d $Conf{'etc'}.'/'.$vr.'/'.$type) {
+		    push @directories, [$Conf{'etc'}.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
+		}
 	    }
 
 	    foreach my $f ('topics.conf','auth.conf') {
@@ -535,10 +538,12 @@ sub upgrade {
 		}
 	    }
 
-	    if (-d "$list->{'dir'}/mail_tt2") {
-		push @directories, ["$list->{'dir'}/mail_tt2",
-				    $list->{'admin'}{'lang'}];
-	    }	    
+	    foreach my $type ('mail_tt2','web_tt2','scenari') {
+		my $directory = $list->{'dir'}.'/'.$type;
+		if (-d $directory) {
+		    push @directories, [$directory, $list->{'admin'}{'lang'}];
+		}	    
+	    }
 	}
 
 	## Search language directories
@@ -547,12 +552,23 @@ sub upgrade {
 	    unless (opendir DIR, $d) {
 		next;
 	    }
-	    foreach my $s (grep(/^[a-z]{2}(_[A-Z]{2})?$/, readdir DIR)) {
-		if (-d "$d/$s") {
-		    push @directories, ["$d/$s", $s];
+
+	    if ($d =~ /(mail_tt2|web_tt2)$/) {
+		foreach my $subdir (grep(/^[a-z]{2}(_[A-Z]{2})?$/, readdir DIR)) {
+		    if (-d "$d/$subdir") {
+			push @directories, ["$d/$subdir", $subdir];
+		    }
 		}
+		closedir DIR;
+
+	    }elsif ($d =~ /(create_list_templates|families)$/) {
+		foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
+		    if (-d "$d/$subdir") {
+			push @directories, ["$d/$subdir", $subdir];
+		    }
+		}
+		closedir DIR;
 	    }
-	    closedir DIR;
 	}
 
 	foreach my $pair (@directories) {
@@ -560,8 +576,10 @@ sub upgrade {
 	    unless (opendir DIR, $d) {
 		next;
 	    }
-	    foreach my $tt2 (grep(/^.+\.tt2$/, readdir DIR)) {
-		push @files, ["$d/$tt2", $lang];
+	    foreach my $file (readdir DIR) {
+		next unless (($d =~ /mail_tt2|web_tt2|create_list_templates|families/ && $file =~ /\.tt2$/) ||
+			     ($d =~ /scenari$/ && $file =~ /\w+\.\w+$/));
+		push @files, [$d.'/'.$file, $lang];
 	    }
 	    closedir DIR;
 	}
@@ -1118,8 +1136,8 @@ sub to_utf8 {
 
 	## If filesystem_encoding is set, files are supposed to be encoded according to it
 	my $charset;
-	if ($Conf{'filesystem_encoding'} ne 'utf-8') {
-	    $charset = $Conf{'filesystem_encoding'};
+	if ($Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
+	    $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
 	}else {	    
 	    &Language::PushLang($lang);
 	    $charset = &Language::GetCharset;
@@ -1127,7 +1145,7 @@ sub to_utf8 {
 	}
 	
 	# Add X-Sympa-Attach: headers if required.
-	if ($file =~ /\/($with_attachments)$/) {
+	if (($file =~ /mail_tt2/) && ($file =~ /\/($with_attachments)$/)) {
 	    while (<TEMPLATE>) {
 		$text .= $_;
 		if (m/^Content-Type:\s*message\/rfc822/i) {
