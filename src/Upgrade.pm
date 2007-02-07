@@ -532,7 +532,7 @@ sub upgrade {
 	## Search in Lists
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
-	    foreach my $f ('config','info','message.header','message.footer') {
+	    foreach my $f ('config','info','homepage','message.header','message.footer') {
 		if (-f $list->{'dir'}.'/'.$f){
 		    push @files, [$list->{'dir'}.'/'.$f, $list->{'admin'}{'lang'}];
 		}
