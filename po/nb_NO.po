@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2006-06-21 14:58+0000\n"
-"Last-Translator: Jørgen H. Fjeld <jhf@linpro.no>\n"
+"PO-Revision-Date: 2006-11-29 13:06+0100\n"
+"Last-Translator: Anders Lund <anders.lund@uninett.no>\n"
 "Language-Team: <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Rosetta-Version: 0.1\n"
-"X-Generator: KBabel 1.10.2\n"
+"X-Generator: Pootle 0.10.1\n"
 
 #. (replyto,keyauth,list.name,who,gecos)-)
 #: mail_tt2/listowner_notification.tt2:94
@@ -26,6 +26,9 @@ msgid ""
 "or send an email to %1 with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
+"\n"
+"eller send en epost til %1 med følgende emne :\n"
+"AUTH %2 ADD %3 %4 %5\n"
 
 #. (sympa,keyauth,list.name,who)-)
 #: mail_tt2/listowner_notification.tt2:112
@@ -34,6 +37,9 @@ msgid ""
 "or send an email to %1 with the following subject :\n"
 "AUTH %2 DEL %3 %4\n"
 msgstr ""
+"\n"
+"eller send en epost til %1 med følgende emne :\n"
+"AUTH %2 DEL %3 %4\n"
 
 #: web_tt2/serveradmin.tt2:58
 msgid "  May take a lot of CPU time,  be careful !"
@@ -185,7 +191,7 @@ msgstr "%1 : feil navn"
 #. (u_err.family)
 #: web_tt2/error.tt2:46
 msgid "%1 : unknown family"
-msgstr ""
+msgstr "%1 : ukjent familie"
 
 #. (u_err.list)
 #: web_tt2/error.tt2:44
@@ -195,7 +201,7 @@ msgstr "%1 : ukjent liste"
 #. (u_err.new_robot)
 #: web_tt2/error.tt2:45
 msgid "%1 : unknown robot"
-msgstr "%1 : Ukjent robot"
+msgstr "%1 : ukjent robot"
 
 #. (list.name,date)
 #: mail_tt2/digest_plain.tt2:4 mail_tt2/digest_plain.tt2:9
@@ -237,7 +243,7 @@ msgstr "%1 per dag "
 #. (email,listname,new_listname)
 #: mail_tt2/listmaster_notification.tt2:25
 msgid "%1 has renamed list \"%2\" to \"%3\""
-msgstr ""
+msgstr "%1 har endret navn på liste \"%2\" til \"%3\""
 
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
@@ -294,9 +300,8 @@ msgstr "%1 ba om at epostlisten \"%2\" skal lages"
 
 #. (rows_nb)
 #: web_tt2/viewlogs.tt2:147
-#, fuzzy
 msgid "%1 results"
-msgstr "Resultat"
+msgstr "%1 resultat"
 
 #. (notice.total)
 #: web_tt2/notice.tt2:8
@@ -306,19 +311,17 @@ msgstr "%1 abonnenter lagt til"
 #. (u.email)
 #: web_tt2/review.tt2:201
 msgid "%1's picture"
-msgstr ""
+msgstr "%1 sitt bilde"
 
 #. (notice.action)
 #: web_tt2/notice.tt2:14
-#, fuzzy
 msgid "%1: action completed"
-msgstr "%1 : handling misslyktes"
+msgstr "%1 : handling fullført"
 
 #. (notice.action)
 #: web_tt2/notice.tt2:17
-#, fuzzy
 msgid "%1: action will complete soon"
-msgstr "%1 : Handling straks utført"
+msgstr "%1 : handling straks utført"
 
 #. (l.name,l.host,l.subject,l.msg_count)
 #: web_tt2/rss.tt2:72
@@ -327,7 +330,6 @@ msgstr "%1@%2 - %3 : %4 meldinger"
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:31
-#, fuzzy
 msgid ""
 "%1@%2 is no longer an instance of family %3.\n"
 "This list has been closed."
@@ -352,7 +354,7 @@ msgstr "%2@%3 arkiver bruker %4% av tillatt størrelsesbegrensning."
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:8837
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:8844
 msgid "%A"
 msgstr ""
 
@@ -375,50 +377,50 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2924
+#: src/List.pm:2916
 msgid "%a, %d %b %Y"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2923
+#: src/List.pm:2915
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:3107 src/List.pm:3108 src/List.pm:3112
-#: wwsympa/wwsympa.fcgi:10175 wwsympa/wwsympa.fcgi:10244
-#: wwsympa/wwsympa.fcgi:10446 wwsympa/wwsympa.fcgi:10785
-#: wwsympa/wwsympa.fcgi:14821 wwsympa/wwsympa.fcgi:15762
-#: wwsympa/wwsympa.fcgi:15763 wwsympa/wwsympa.fcgi:4043
+#: src/List.pm:3099 src/List.pm:3100 src/List.pm:3104
+#: wwsympa/wwsympa.fcgi:10182 wwsympa/wwsympa.fcgi:10251
+#: wwsympa/wwsympa.fcgi:10453 wwsympa/wwsympa.fcgi:10792
+#: wwsympa/wwsympa.fcgi:14828 wwsympa/wwsympa.fcgi:15769
+#: wwsympa/wwsympa.fcgi:15770 wwsympa/wwsympa.fcgi:4043
 #: wwsympa/wwsympa.fcgi:4044 wwsympa/wwsympa.fcgi:5363
-#: wwsympa/wwsympa.fcgi:6560 wwsympa/wwsympa.fcgi:7090
-#: wwsympa/wwsympa.fcgi:7140 wwsympa/wwsympa.fcgi:7142
-#: wwsympa/wwsympa.fcgi:7551 wwsympa/wwsympa.fcgi:7552
-#: wwsympa/wwsympa.fcgi:7581 wwsympa/wwsympa.fcgi:7582
-#: wwsympa/wwsympa.fcgi:7791 wwsympa/wwsympa.fcgi:7792
+#: wwsympa/wwsympa.fcgi:6560 wwsympa/wwsympa.fcgi:7097
+#: wwsympa/wwsympa.fcgi:7147 wwsympa/wwsympa.fcgi:7149
+#: wwsympa/wwsympa.fcgi:7558 wwsympa/wwsympa.fcgi:7559
+#: wwsympa/wwsympa.fcgi:7588 wwsympa/wwsympa.fcgi:7589
+#: wwsympa/wwsympa.fcgi:7798 wwsympa/wwsympa.fcgi:7799
 msgid "%d %b %Y"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15256 wwsympa/wwsympa.fcgi:15257
-#: wwsympa/wwsympa.fcgi:15398
+#: wwsympa/wwsympa.fcgi:15263 wwsympa/wwsympa.fcgi:15264
+#: wwsympa/wwsympa.fcgi:15405
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:1572 src/Family.pm:221 src/Family.pm:426 src/List.pm:1673
-#: src/admin.pm:158 src/admin.pm:366 src/admin.pm:452 wwsympa/wwsympa.fcgi:737
+#: src/admin.pm:158 src/admin.pm:359 src/admin.pm:445 wwsympa/wwsympa.fcgi:737
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:11019 wwsympa/wwsympa.fcgi:11162
-#: wwsympa/wwsympa.fcgi:13555 wwsympa/wwsympa.fcgi:7025
+#: wwsympa/wwsympa.fcgi:11026 wwsympa/wwsympa.fcgi:11169
+#: wwsympa/wwsympa.fcgi:13562 wwsympa/wwsympa.fcgi:7032
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
@@ -426,36 +428,32 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/etc/mhonarc-ressources.tt2:306 src/etc/mhonarc-ressources.tt2:310
-#: src/etc/mhonarc-ressources.tt2:314 src/etc/mhonarc-ressources.tt2:535
-#: src/etc/mhonarc-ressources.tt2:539 src/etc/mhonarc-ressources.tt2:543
+#: src/etc/mhonarc-ressources.tt2:314 src/etc/mhonarc-ressources.tt2:523
+#: src/etc/mhonarc-ressources.tt2:527 src/etc/mhonarc-ressources.tt2:531
 msgid "%m/%d/%Y"
 msgstr ""
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/etc/mhonarc-ressources.tt2:588
+#: src/etc/mhonarc-ressources.tt2:576
 msgid "%y/%m/%d"
-msgstr ""
-
-#: src/etc/mhonarc-ressources.tt2:345
-msgid "&lt;Possible follow-up(s)&gt;"
 msgstr ""
 
 #. (u_err.bad_listname)
 #: web_tt2/error.tt2:86
 msgid "'%1' : bad listname"
-msgstr "'%1': ugyldig navn navn på epostliste"
+msgstr "'%1': ugyldig listenavn"
 
 #. (u_err.new_listname)
 #: web_tt2/error.tt2:87
 msgid "'%1' list already exists"
-msgstr "'%1': epostlisten finnes allerede"
+msgstr "'%1': listen finnes allerede"
 
 #. (list,robot)
 #: web_tt2/view_template.tt2:12
 msgid "( this template is defined for list %1@%2 )"
-msgstr ""
+msgstr "( denne templaten er definert for liste %1@%2 )"
 
 #. (robot)
 #: web_tt2/view_template.tt2:15
@@ -463,15 +461,18 @@ msgid ""
 "( this template is the default for all lists of robot %1 unless it is "
 "redefined for a specific list )"
 msgstr ""
+"( denne templaten er standard for alle lister under robot %1 dersom den ikke "
+"er redefinert for en spesifikk liste )"
 
 #: web_tt2/view_template.tt2:17
 msgid ""
 "( this template is the default used by all robots unless redefined for a "
 "specific robot )"
 msgstr ""
+"( denne templaten er standard brukt av alle roboter dersom den ikke er "
+"redefinert for en spesifikk robot )"
 
 #: web_tt2/arcsearch.tt2:18
-#, fuzzy
 msgid "(All of these words,"
 msgstr "(Alle disse ord,"
 
@@ -482,7 +483,6 @@ msgstr ""
 "(Standardverdier: reception mail,notice,digest,digestplain,summary,nomail)"
 
 #: web_tt2/arcsearch.tt2:20
-#, fuzzy
 msgid "(Each of these words,"
 msgstr "(Hver av disse ordene,"
 
@@ -500,6 +500,8 @@ msgid ""
 "(This template is the default for all languages unless it is redefined for a "
 "specific language.)"
 msgstr ""
+"(Denne templaten er standard for alle språk dersom den ikke er redefinert "
+"for et spesifikt språk.)"
 
 #: src/tt2.pl:216
 #, fuzzy
@@ -519,10 +521,6 @@ msgstr ""
 #: mail_tt2/your_infected_msg.tt2:7
 msgid "***** V I R U S    A L E R T *****"
 msgstr "***** V I R U S A L A R M *****"
-
-#: src/etc/mhonarc-ressources.tt2:341
-msgid ", <em>(continued)</em>"
-msgstr ""
 
 #: src/PlainDigest.pm:258
 msgid "-----End of Delivery Status Report-----\n"
@@ -546,7 +544,7 @@ msgstr "-Arkiver"
 
 #: web_tt2/list_admin_menu.tt2:36
 msgid "-Blacklist"
-msgstr ""
+msgstr "-Svarteliste"
 
 #: web_tt2/list_admin_menu.tt2:18
 msgid "-Bounces"
@@ -596,10 +594,6 @@ msgstr "30 minutter"
 msgid "6 hours"
 msgstr "6 timer"
 
-#: src/etc/mhonarc-ressources.tt2:349
-msgid "<em>Message not available</em>"
-msgstr ""
-
 #: web_tt2/help_editlist.tt2:18
 msgid ""
 "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
@@ -608,10 +602,10 @@ msgid ""
 "the list, sympa uses the mode specified in the default_user_options "
 "paragraph."
 msgstr ""
-"<em>modusliste</em> er in liste med modi (mail, notice, digest, digestplain, "
-"summary, nomail), adskilt med komma. Bare de nevnte modi er tillat for denne "
-"listen. Dersom en bruker har valgt ugyldig modus, så vil sympa bruke modusen "
-"angitt i default_user_options."
+"<em>modusliste</em> er en liste med modi (mail, notice, digest, digestplain, "
+"summary, nomail), adskilt med komma. Bare de nevnte modi er tillatt for "
+"påmeldte på denne listen. Dersom en bruker har valgt ugyldig modus vil sympa "
+"bruke modusen angitt i default_user_options."
 
 #. (email)
 #: web_tt2/lists.tt2:7 web_tt2/search_user.tt2:3
@@ -853,7 +847,7 @@ msgstr "Antivirus scan feilet"
 msgid "Apply"
 msgstr "Utfør"
 
-#: web_tt2/list_menu.tt2:38 web_tt2/list_menu.tt2:40
+#: web_tt2/list_menu.tt2:44 web_tt2/list_menu.tt2:46
 msgid "Archive"
 msgstr "Arkiv"
 
@@ -1269,7 +1263,7 @@ msgstr ""
 msgid "Connection to database %1 restored."
 msgstr ""
 
-#: web_tt2/list_panel.tt2:21 web_tt2/list_panel.tt2:23
+#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
 msgid "Contact owners"
 msgstr ""
 
@@ -1594,12 +1588,16 @@ msgstr ""
 msgid "Do you really want to delete Selected Archives?"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:213 src/etc/mhonarc-ressources.tt2:329
+#: src/etc/mhonarc-ressources.tt2:213
 #, fuzzy
 msgid "Do you really want to delete these messages ?"
 msgstr "Er du sikker på at du ønsker å slette delte dokumenter ?"
 
-#: src/etc/mhonarc-ressources.tt2:460
+#: src/etc/mhonarc-ressources.tt2:329
+msgid "Do you really want to delete theses messages ?"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:448
 msgid "Do you really want to delete this message ?"
 msgstr ""
 
@@ -1628,7 +1626,7 @@ msgstr ""
 #: web_tt2/review.tt2:268
 #, fuzzy
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
-msgstr "Er du sikker på at du ønsker å slette delte dokumenter ?"
+msgstr " ønsker du virkelig å sende påminnelse om påmelding til %1 påmeldte?"
 
 #. (list)
 #: web_tt2/list_menu.tt2:15
@@ -2333,7 +2331,7 @@ msgid ""
 "was unable to access your personal certificate (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:616
+#: src/etc/mhonarc-ressources.tt2:604
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -3395,7 +3393,6 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:179 src/etc/mhonarc-ressources.tt2:291
 #: src/etc/mhonarc-ressources.tt2:64
 msgid "Pages navigation : "
 msgstr ""
@@ -3518,7 +3515,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:46 web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:52 web_tt2/list_menu.tt2:54
 msgid "Post"
 msgstr ""
 
@@ -3652,7 +3649,7 @@ msgstr ""
 msgid "RFC 2369 Header fields"
 msgstr ""
 
-#: web_tt2/list_menu.tt2:52
+#: web_tt2/list_menu.tt2:58
 msgid "RSS"
 msgstr ""
 
@@ -3833,7 +3830,7 @@ msgstr "Bytt navn på denne listen"
 msgid "Replace the file %1 with your file"
 msgstr "Skift ut filen %1 med din fil"
 
-#: src/etc/mhonarc-ressources.tt2:453
+#: src/etc/mhonarc-ressources.tt2:441
 msgid "Reply"
 msgstr "Svar"
 
@@ -3846,7 +3843,7 @@ msgstr "Svaradresse"
 msgid "Reply to           : %1"
 msgstr "Svar til           : %1"
 
-#: src/etc/mhonarc-ressources.tt2:449
+#: src/etc/mhonarc-ressources.tt2:437
 msgid "Reply to sender"
 msgstr "Svar til avsender"
 
@@ -3924,7 +3921,7 @@ msgstr ""
 msgid "Review lists from this family"
 msgstr "Gjennomgang av lister tilhørende denne familien"
 
-#: web_tt2/list_menu.tt2:65
+#: web_tt2/list_menu.tt2:71
 msgid "Review members"
 msgstr ""
 
@@ -4219,7 +4216,7 @@ msgstr ""
 msgid "Shared document to be approved for %1"
 msgstr ""
 
-#: src/List.pm:1136 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
+#: src/List.pm:1136 web_tt2/list_menu.tt2:63 web_tt2/list_menu.tt2:65
 msgid "Shared documents"
 msgstr ""
 
@@ -4413,7 +4410,7 @@ msgstr ""
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:598
+#: src/etc/mhonarc-ressources.tt2:586
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -4522,7 +4519,7 @@ msgid "Syntax errors with the following parameters : %1"
 msgstr ""
 
 #: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:11
-#: mail_tt2/get_archive.tt2:11 src/List.pm:2820
+#: mail_tt2/get_archive.tt2:11 src/List.pm:2812
 msgid "Table of contents:"
 msgstr ""
 
@@ -5416,7 +5413,7 @@ msgid "This template is defined for list %1@%2"
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:295
-#: src/etc/mhonarc-ressources.tt2:408
+#: src/etc/mhonarc-ressources.tt2:396
 msgid "Thread"
 msgstr ""
 
@@ -6838,7 +6835,7 @@ msgid ""
 msgstr ""
 
 #: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294
-#: src/etc/mhonarc-ressources.tt2:407 src/etc/mhonarc-ressources.tt2:411
+#: src/etc/mhonarc-ressources.tt2:395 src/etc/mhonarc-ressources.tt2:399
 msgid "chronological"
 msgstr ""
 
@@ -7736,7 +7733,7 @@ msgid "selection (if multiple)"
 msgstr ""
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:454
+#: src/etc/mhonarc-ressources.tt2:442
 msgid "send it back to %1"
 msgstr ""
 
@@ -7813,7 +7810,7 @@ msgstr ""
 msgid "summary mode"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:460
+#: src/etc/mhonarc-ressources.tt2:448
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -7856,7 +7853,7 @@ msgstr ""
 msgid "this sentence"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:411
+#: src/etc/mhonarc-ressources.tt2:399
 msgid "thread"
 msgstr ""
 
@@ -7872,7 +7869,7 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:451
+#: src/etc/mhonarc-ressources.tt2:439
 msgid "to list"
 msgstr ""
 
