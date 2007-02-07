@@ -3,6 +3,119 @@
 
 (See Changelog file for the full changes log)
 
+5.3b.3		7 February 2007
+
+   New features :
+
+	STDERR of daemons is redirected to a file. If process crashes, next process started will detect the failure and send a notice to listmaster.
+
+	src/Language.pm, wwsympa/wwsympa.fcgi: [reported by E.Beliveau] made the user lang available in the editsubscriber page
+
+	check_perl_modules.pl, src/Conf.pm, src/Lock.pm: [ID 435] [patch provided by Moriwaka] added support for NFS locking,
+	using File::NFSLock perl module. A new 'lock_method' sympa.conf parameter can be set to 'nfs'.
+
+	web_tt2/modindex.tt2: [ID 444] [requested by A.Lund, Uninnett] added "toggle" button in moderation page
+
+	po/xgettext.pl, src/tt2.pl, src/etc/mhonarc-ressources.tt2: [ID 1338][S.Ikeda] A new filter [%|locdt()%] is added
+	for TT2 templates to format date/time according to language context.  It takes a format string to be gettext'ized as main
+	argument, and an extra argument representing date/time.  MHonArc resource file was modified so that it may generate output
+	including this filter spec as nessessity.
+
+	  Note that this spec will be available for newly-updated archives. To apply this improvement to all past archives, it is nessessary
+	  that all archives are rebuilt.
+
+   Changes :
+
+	po/ Translations updatfs from pootle.sympa.org
+
+*****	src/Upgrade.pm: [ID 1500][S.Ikeda] converting mail templates to UTF8. The script has been integrated 
+*****	into Upgrade.pm and has been extended to convert other configuration files
+
+*****	mail_tt2/, src/mail.pm: all service messages are now UTF8.
+*****	Also made the templates structure simpler.
+
+	src/List.pm: trigger sync_include before distributing a message to a list, unless it was performed during the last 5 min.
+	Fix: $self->{'last_sync'} was never loaded
+
+*****	src/List.pm, wwsympa/wwsympa.fcgi: 'include' mode is now obsolete. 
+*****	Now performing a mapping while to 'include2' while loading the parameter.
+
+	wwsympa/wwsympa.fcgi: remove authentication request for do_tag_topic_by_sender and do_request_topic, autehntication is
+	done because of the md5 key of the message.
+
+	src/: List.pm, sympa.pl: New value possible for msg_topic_required to adpat it both for moderated list and unmoderated lists
+
+	po/pl.po: [Lukasz Zygmanski] Updated Polish translations
+
+	mail_tt2/moderate.tt2, src/List.pm, src/mail.pm: Renamed 'msg' parameter to 'msg_path' in moderate.tt2.  
+	Take 'spool' parameter into account (for 'modindex' template) in the reformat_message() process
+
+	src/: added "use strict" to tools.pl
+
+	wwsympa/wwsympa.fcgi: [ID 106] after unsubscription, no more bring the user back to the list page. He might not be
+	allowed to see the info page.
+
+	po/ja.po: [S.Ikeda] Updated Japanese catalog
+
+   Bug fixes :
+
+	src/Log.pm: db_logs were expired too early (parameter expressed in days instead of months)
+
+	web_tt2/error.tt2: [requested by C.Andrews, Boston College] Added an error message for list creation failure.  It is required when
+	an existing listname has been used ; we cannot get the error diagnostic from admin::create_list_old() though
+
+	wwsympa/Marc/Search.pm: wwsympa might die with error "Cannot decode string with wide characters".	
+	Now opening archives as bytes (not utf8) to prevent decoding
+
+	wwsympa/Marc/Search.pm: arcsearch_id would fail on some  messages.  
+	Marc::Search expects mhonarc to add X-Subject data to generated HTML files. Some examples were found with X-Subject
+	value split among 2 lines.  Marc::Search::search() is now able to parse split X-Subject entries.
+
+	src/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl: debug mode would not work with task_manager.pl, archived.pl
+	and bounced.pl
+
+	src/List.pm: [reported by F.Lachapelle] sync_include tasks were created for all lists, including those with no external data
+	sources The List::has_include_data_source() subroutine has been fixed to correctly check owner_include
+
+	web_tt2/request_topic.tt2, wwsympa/wwsympa.fcgi: Internal error with message that can't be parsed solved in request_topic action.
+
+	src/sympa.pl: incorrect var definition (msg_topic and moderation)
+
+	src/tools.pl: escape_regexp would not work.  This would break arcsearch_id used in RSS context
+
+	src/mail.pm: Some service messages (moderation, topics tagging and reminder) delegated by wwsympa to sympa.pl would have
+	missing X-Sympa-From header field.  Now setting a default value for the return-path in mail.pm
+
+	mail_tt2/remind.tt2: [reported by O.Lacroix] Fix type for transfert_encoding
+
+	src/List.pm: [ID 117][reported by M.Bernard, univ St.Etienne] user initial passwords were not crypted when subscribed by
+	list owners. Moved encrypting logic to lower layers.
+
+	mail_tt2/Makefile: [requested by S.Hornburg] Debian packaging requires that symbolic links are not absolute links
+	because of DESTDIR use.
+
+	src/etc/mhonarc-ressources.tt2: [G.Youger, Univ Newcastle] archive template was inappropriate for email addresses that
+	include an apostrophe (').
+
+	src/List.pm: [S.Ikeda] [ID 1396] A bug relating this patch: ASCII-only subjects are unfolded then can become one long line.
+
+	src/etc/mhonarc-ressources.tt2: [S.Ikeda] [ID 1393] added more translatable items to mhonarc-resources.tt2
+
+	src/: List.pm, mail.pm, tt2.pl: [S.Ikeda] [ID 1396] Body or subject header were occationally empty.  Reproduced by: Sympa CVS
+	HEAD with Encode 2.08.  Not reproduced by: Sympa CVS HEAD with Encode 2.12, 2.18.
+
+	  - Body of service message is removed at all when its source contains non-UTF-8-compliant sequence.  - Subject body of
+	  distributed message is removed when original subject contains  unencoded non-ASCII sequence.
+
+	  It may be caused by a bug in Encode module, RT#8872:  http://rt.cpan.org/Public/Bug/Display.html?id=8872
+
+	src/SQLSource.pm: set SQL client preference regarding character encoding to UTF8. Otherwise we can't determine how data
+	got from SQL is encoded.
+
+	src/List.pm: [J.Schmalenbach, Barrett] empty 'get_subscriber' when removing a list member
+
+
+
 5.3b.1		29 November 2006
 
    New features :
