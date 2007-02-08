@@ -1192,7 +1192,7 @@ sub to_utf8 {
 	next unless $modified;
 	
 	my $date = &POSIX::strftime("%Y.%m.%d-%H.%M.%S", localtime(time));
-	unless (rename $file, $file.'.'.$date) {
+	unless (rename $file, $file.'@'.$date) {
 	    do_log('err', "Cannot rename old template %s", $file);
 	    next;
 	}
@@ -1204,7 +1204,7 @@ sub to_utf8 {
 	close TEMPLATE;
 	chown $uid, $gid, $file;
 	chmod 0644, $file;
-	&do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'.'.$date);
+	&do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'@'.$date);
 	
 	$total++;
     }
