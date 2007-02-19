@@ -208,7 +208,7 @@ sub create_list_old{
 
     $return->{'aliases'} = 1;
 
-     ## Synchronize list members if required
+    ## Synchronize list members if required
     if ($list->has_include_data_sources()) {
 	&do_log('notice', "Synchronizing list members...");
 	$list->sync_include();
@@ -395,6 +395,13 @@ sub create_list{
     }
 
     $return->{'aliases'} = 1;
+
+    ## Synchronize list members if required
+    if ($list->has_include_data_sources()) {
+	&do_log('notice', "Synchronizing list members...");
+	$list->sync_include();
+    }
+
     return $return;
 }
 
@@ -471,6 +478,12 @@ sub update_list{
 	$list->{'admin'}{'status'} = 'open';
     }
     $list->{'admin'}{'family_name'} = $family->{'name'};
+
+    ## Synchronize list members if required
+    if ($list->has_include_data_sources()) {
+	&do_log('notice', "Synchronizing list members...");
+	$list->sync_include();
+    }
 
     return $list;
 }
