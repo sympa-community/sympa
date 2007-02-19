@@ -462,37 +462,37 @@ my %in_regexp = (
 
 		 ## Free data
 		 'subject' => '.*',
-		 'gecos' => '[^<>\\\*\$]+',
-		 'additional_field' => '[^<>\\\*\$]+',
-		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
+		 'gecos' => '[^<>\\\*\$\n]+',
+		 'additional_field' => '[^<>\\\*\$\n]+',
+		 'dump' => '[^<>\\\*\$\n]+', # contents email + gecos
 
 		 ## Search
-		 'filter' => '[^<>\\\[\]\(\)\$]+', # search list
-		 'key_word' => '[^<>\\\*\[\]\(\)\$]+',
-		 'format' => '[^<>\\\$]+', # dump format/filter string
+		 'filter' => '[^<>\\\[\]\(\)\$\n]+', # search list
+		 'key_word' => '[^<>\\\*\[\]\(\)\$\n]+',
+		 'format' => '[^<>\\\$\n]+', # dump format/filter string
 
 		 ## File names
-		 'file' => '[^<>\*\$]+',
+		 'file' => '[^<>\*\$\n]+',
 		 'template_path' => '[\w\-\.\/_]+',
-		 'arc_file' => '[^<>\\\*\$]+',
-		 'path' => '[^<>\\\*\$]+',
-		 'uploaded_file' => '[^<>\*\$]+', # Could be precised (use of "'")
-		 'unzipped_file' => '[^<>\*\$]+',
-		 'dir' => '[^<>\\\*\$]+',
-		 'name_doc' => '[^<>\\\*\$]+',
-		 'shortname' => '[^<>\\\*\$]+',
-		 'new_name' => '[^<>\\\*\$]+',
-		 'id' => '[^<>\\\*\$]+',
+		 'arc_file' => '[^<>\\\*\$\n]+',
+		 'path' => '[^<>\\\*\$\n]+',
+		 'uploaded_file' => '[^<>\*\$\n]+', # Could be precised (use of "'")
+		 'unzipped_file' => '[^<>\*\$\n]+',
+		 'dir' => '[^<>\\\*\$\n]+',
+		 'name_doc' => '[^<>\\\*\$\n]+',
+		 'shortname' => '[^<>\\\*\$\n]+',
+		 'new_name' => '[^<>\\\*\$\n]+',
+		 'id' => '[^<>\\\*\$\n]+',
 
 		 ## URL
-		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>]+',
-		 'failure_referer' => '[^\\\$\*\"\'\`\^\|\<\>]+',
-		 'url' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
+		 'failure_referer' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
+		 'url' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
 
 		 ## Msg ID
-		 'msgid' => '[^\\\*\"\'\`\^\|]+',
-		 'in_reply_to' => '[^\\\*\"\'\`\^\|]+',
-		 'message_id' => '[^\\\*\"\'\`\^\|]+',
+		 'msgid' => '[^\\\*\"\'\`\^\|\n]+',
+		 'in_reply_to' => '[^\\\*\"\'\`\^\|\n]+',
+		 'message_id' => '[^\\\*\"\'\`\^\|\n]+',
 
 		 ## Password
 		 'passwd' => '.+',
@@ -1464,7 +1464,7 @@ sub get_header_field {
 		 $regexp = $in_regexp{'*'};
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
-	     unless ($one_p =~ /^$regexp$/m) {
+	     unless ($one_p =~ /^$regexp$/s) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
 		 unless (open DUMP, ">$dump_file") {
