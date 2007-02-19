@@ -230,7 +230,7 @@ sub add_list {
     my $error = $self->check_param_constraint($list);
     $self->{'state'} = 'no_check';
     
-    unless (defined $error) {
+    if (defined $error) {
 	$list->set_status_error_config('no_check_rules_family',$list->{'name'},$self->{'name'});
 	push @{$return->{'string_error'}}, "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
 	return $return;
@@ -251,11 +251,8 @@ sub add_list {
 
     ## Synchronize list members if required
     if ($list->has_include_data_sources()) {
-	print STDERR "INC\n";
 	&do_log('notice', "Synchronizing list members...");
 	$list->sync_include();
-    }else {
-	print STDERR "PAS INC\n";
     }
 
     ## END
