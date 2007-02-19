@@ -249,6 +249,15 @@ sub add_list {
     }
     }
 
+    ## Synchronize list members if required
+    if ($list->has_include_data_sources()) {
+	print STDERR "INC\n";
+	&do_log('notice', "Synchronizing list members...");
+	$list->sync_include();
+    }else {
+	print STDERR "PAS INC\n";
+    }
+
     ## END
     $self->{'state'} = 'normal';
     $return->{'ok'} = 1;
@@ -451,6 +460,12 @@ sub modify_list {
     unless ($self->_copy_files($list->{'dir'},"_mod_list.xml")) {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
 	push @{$return->{'string_info'}}, "Impossible to copy the xml file in the list directory, the list is set in status error_config.";
+    }
+
+    ## Synchronize list members if required
+    if ($list->has_include_data_sources()) {
+	&do_log('notice', "Synchronizing list members...");
+	$list->sync_include();
     }
 
     ## END

@@ -207,6 +207,13 @@ sub create_list_old{
     }
 
     $return->{'aliases'} = 1;
+
+     ## Synchronize list members if required
+    if ($list->has_include_data_sources()) {
+	&do_log('notice', "Synchronizing list members...");
+	$list->sync_include();
+    }   
+
     return $return;
 }
 
@@ -331,7 +338,6 @@ sub create_list{
     if (defined $param->{'topics'}){
 	unless (&check_topics($param->{'topics'},$robot)){
 	    &do_log('err', 'admin::create_list : topics param %s not defined in topics.conf',$param->{'topics'});
-	    return undef;
 	}
     }
       
@@ -435,7 +441,6 @@ sub update_list{
     if (defined $param->{'topics'}){
 	unless (&check_topics($param->{'topics'},$robot)){
 	    &do_log('err', 'admin::update_list : topics param %s not defined in topics.conf',$param->{'topics'});
-	    return undef;
 	}
     }
 
