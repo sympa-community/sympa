@@ -543,13 +543,11 @@ my %in_regexp = (
                  'latest_d_read' => '.*',
 
 		 ##Logs
-		 'target_type' => '[\w\-\.\:]+', 
-		 'target_searched' => '[\w\-\.\@\:]+',
+		 'target_type' => '[\w\-\.\:]*', 
+		 'target' => &tools::get_regexp('email'),
 		 'date_from' => '[\d\/]+',
 		 'date_to' => '[\d\/]+',
-		 'list_searched' => '[\w\-\.\@\:]+',
-		 'robot_searched' => '[\w\-\.\@\:]+',
-		 'ip_searched' => '[\d\.]+',
+		 'ip' => &tools::get_regexp('host'),
 		 );
 
 ## List some required filtering of incoming parameters, depending on current action
@@ -15276,16 +15274,26 @@ sub get_protected_email_address {
  ## of there robot or there is real problems with privacy policy and law in such services.
  ## 
 sub do_viewlogs {
-    &wwslog('info', 'do_viewlogs(%d,%d)',$in{'page'}, $in{'all'});
+    &wwslog('info', 'do_viewlogs(%d)',$in{'page'});
 
+    unless ($list) {
+	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
+	&wwslog('info','do_iviewlogs: no list');
+	return undef;
+    }
+
+    unless ($param->{'is_editor'} || $param->{'is_owner'} || $param->{'is_listmaster'}) {
+	&report::reject_report_web('auth','action_editor',{},$param->{'action'});
+	&wwslog('info','do_viewlogs may_not from %s in list %s', $param->{'user'}{'email'}, $param->{'list'});
+	return undef;
+    }
 
     my $size = $in{'size'} || $wwsconf->{'viewlogs_page_size'};
     my $sortby = $in{'sortby'} || 'email';
     my @date = &Log::get_log_date();
        
-    $param->{'date_from'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($date[0]);
-    $param->{'date_to'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($date[1]);
-    
+    $param->{'date_from_formated'} = gettext_strftime "%Y/%m/%d/%H/%M/%S", localtime($date[0]);
+    $param->{'date_to_formated'} = gettext_strftime "%Y/%m/%d/%H/%M/%S", localtime($date[1]);
 
     $param->{'total'} = '17';
     
@@ -15315,104 +15323,18 @@ sub do_viewlogs {
     }
     
     
-    unless ($param->{'is_editor'} || $param->{'is_owner'} || $param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_editor',{},$param->{'action'});
-	 &wwslog('info','do_viewlogs may_not from %s in list %s', $param->{'user'}{'email'}, $param->{'list'});
-	 return undef;
-     }
-
-    my @alllists_owner;
-    #display all the lists belonging to the user.
-    foreach my $list_of_lists (&List::get_which($param->{'user'}{'email'},$robot,'owner')) {
-	push @{$param->{'owner_lists'}}, $list_of_lists;
-	push @alllists_owner, $list_of_lists->{'name'};
-    }
-    
-    #display all the lists.
-    my @alllists;
-    my $all_lists = &List::get_lists($robot);
-    foreach my $list_of_lists (@$all_lists) {
-	unless($list_of_lists == $param->{'list'}) {
-	    push @{$param->{'list_of_lists'}}, $list_of_lists;
-	    push @alllists, $list_of_lists->{'name'};
-	}
-    }
-
-     my @lines;
+    my @lines;
 
     #display and search parameters preparation
     my $select = {};
 
     $select->{'robot'} = $robot;
-    $param->{'current_robot'} = $robot;
-
-    if ($in{'all'} == 1) {
-	if($param->{'is_editor'}) {
-	    $param->{'current_list'} = $param->{'list'}; ;
-     }
-	else {$param->{'current_list'} = 'all_list';}
-	$select->{'all'} = 'on';
-    }else {
-	$select->{'current_list'} = $param->{'list'};
-
-	if($in{'list_searched'} eq 'current_list') {
-	    $select->{'list'} = $param->{'list'};
-	    $param->{'list_searched_s'} = $select->{'list'};
-	    $param->{'current_list'} = $param->{'list'};
-	}
-	else {
-	    $select->{'list'} = $in{'list_searched'};
-	    $param->{'list_searched_s'} = $select->{'list'} || undef;
-	}
-	
-	if($select->{'list'} eq 'none') {
-	    $param->{'current_list'} = undef;
-	}
-	else{$param->{'current_list'} = $select->{'list'};}
-	
-	#display the current list above the table for editor
-	if($param->{'is_editor'}) {
-	    $param->{'current_list'} = $param->{'list'};
-	}
-	
-	
-    }	
-
-    $param->{'type_target_s'} = $in{'target_type'};
-    $select->{'type_target'} = $in{'target_type'};
-    $param->{'target_searched_s'} = $in{'target_searched'};
-    $select->{'target'} = $in{'target_searched'};
-    $param->{'date_from_s'} = $in{'date_from'};
-    $select->{'date_from'} = $in{'date_from'};
-    $param->{'date_to_s'} = $in{'date_to'};
-    $select->{'date_to'} = $in{'date_to'};
-    $param->{'type_searched_s'} = $in{'type_searched'};
-    $select->{'type'} = $in{'type_searched'};
-    $param->{'ip_searched_s'} = $in{'ip_searched'};
-    $select->{'ip'} = $in{'ip_searched'};
-    $select->{'alllists'} = \@alllists;
-    $select->{'alllists_owner'} =  \@alllists_owner;
-    $select->{'current_user'} = $param->{'user'}{'email'};
+    $select->{'list'} = $param->{'list'};
     
-    if ($param->{'list_searched_s'} eq 'none') {
-	$param->{'list_searched_s'} = undef;
+    foreach my $p ('target_type','target','date_from','date_to','type','ip') {
+	$param->{$p} = $in{$p};
+	$select->{$p} = $in{$p};
     }
-    if ($param->{'type_searched_s'} eq 'none') {
-	$param->{'type_searched_s'} = undef;
-    }	
-
-    #privileges
-    if($param->{'is_editor'}) {
-	$select->{'privilege'} = 'editor';
-    }
-    if(($param->{'is_owner'}) || ($param->{'is_privileged_owner'})) {
-	$select->{'privilege'} = 'owner';
- }
-
-    if($param->{'is_listmaster'}) {
-	$select->{'privilege'} = 'listmaster';
-    }
-    
 
     unless ($in{'first'}) {
 	#sending of search parameters for the query
@@ -15431,37 +15353,12 @@ sub do_viewlogs {
 
 
 	#display the number of rows of the query.
-	if(&Log::return_rows_nb() != 0) {
+	if (&Log::return_rows_nb() != 0) {
 	    $param->{'rows_nb'} = &Log::return_rows_nb();
+	}else {
+	    $param->{'rows_nb'} = undef;
 	}
-	else {$param->{'rows_nb'} = undef;}
 
-	if($param->{'rows_nb'}) {
-	    if($select->{'list'} eq 'none') {
-		#if there is a search with a robot and without list, display 'All' in the 'select' and 'all_list' above the table.
-		if($select->{'robot'} ne 'none') {
-		    $param->{'list_searched_s'} = 'all_list';
-		    $param->{'current_list'} = 'all_list';
-		}
-		#else display the current list on the 'select' and above the table.
-		else {
-		    if($param->{'is_editor'}) {
-			$param->{'list_searched_s'} = $param->{'list'};
-			$param->{'current_list'} = $param->{'list'};
-		    }
-		    elsif($param->{'is_owner'} || $param->{'is_listmaster'}) {
-			$param->{'list_searched_s'} = 'all_list';
-			$param->{'current_list'} = 'all_list';
-		    }
-		}
-	    }
-	    #if there is a search without robot, display the current on the 'select' and above the table.
-	    if($select->{'robot'} eq 'none') {
-		$param->{'robot_searched_s'} = $robot;
-		$param->{'current_robot'} = $robot;
-	    }
-	}
-	
 	if ($param->{'page'} > 1) {
 	    $param->{'prev_page'} = $param->{'page'} - 1;
 	}

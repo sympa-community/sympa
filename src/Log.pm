@@ -295,132 +295,69 @@ sub get_first_db_log {
 
     my $statement = sprintf "SELECT date_logs AS date, robot_logs AS robot, list_logs AS list, action_logs AS action, parameters_logs AS parameters, target_email_logs AS target_email,msg_id_logs AS msg_id, status_logs AS status, error_type_logs AS error_type, user_email_logs AS user_email, client_logs AS client, daemon_logs AS daemon FROM logs_table WHERE robot_logs=%s ", $dbh->quote($select->{'robot'});	
 
-    #If the checkbox is checked, the other parameters of research are not taken into account.
-    unless ($select->{'all'} eq 'on') {
-	my $list_selected = 'false'; #like $robot_selected, for a list.
-	
-        
-	#if a type of target and a target are specified
-	if (($select->{'type_target'}) && ($select->{'type_target'} ne 'none')) {
-	    if($select->{'target'}) {
-		$select->{'type_target'} = lc ($select->{'type_target'});
-		$select->{'target'} = lc ($select->{'target'});
-		$statement .= 'AND ' . $select->{'type_target'} . '_logs = ' . $dbh->quote($select->{'target'}).' ';
-	    }
+    #if a type of target and a target are specified
+    if (($select->{'target_type'}) && ($select->{'target_type'} ne 'none')) {
+	if($select->{'target'}) {
+	    $select->{'target_type'} = lc ($select->{'target_type'});
+	    $select->{'target'} = lc ($select->{'target'});
+	    $statement .= 'AND ' . $select->{'target_type'} . '_logs = ' . $dbh->quote($select->{'target'}).' ';
 	}
-
-	#if the search is between two date
-	if ($select->{'date_from'}) {
-	    my @tab_date_from = split(/\//,$select->{'date_from'});
-	    my $date_from = &POSIX::mktime(0,0,-1,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
-	    unless($select->{'date_to'}) {
-		my $date_from2 = &POSIX::mktime(0,0,25,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
-		$statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_from2;
-	    }
-	    if($select->{'date_to'}) {
-		my @tab_date_to = split(/\//,$select->{'date_to'});
-		my $date_to = &POSIX::mktime(0,0,25,$tab_date_to[0],$tab_date_to[1]-1,$tab_date_to[2]-1900);
-		
-		$statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_to;
-	    }
-	}
-
-	#if the search is on a precise type
-	if ($select->{'type'}) {
-	    if(($select->{'type'} ne 'none') && ($select->{'type'} ne 'all_actions')) {
-		my $first = 'false';
-		foreach my $type(@{$action_type{$select->{'type'}}}) {
-		    if($first eq 'false') {
-			#if it is the first action, put AND on the statement
-			$statement .= sprintf "AND (logs_table.action_logs = '%s' ",$type;
-			$first = 'true';
-		    }
-		    #else, put OR
-		    else {
-			$statement .= sprintf "OR logs_table.action_logs = '%s' ",$type;
-		    }
-		}
-		$statement .= ')';
-	    }
-	    
-	}
-
-	#if the listmaster want to make a search by an IP adress.
-	if($select->{'ip'}) {
-	    $statement .= sprintf "AND client_logs = '%s'",$select->{'ip'};
-	}
-	
-	## Currently not used
-	#if the search is on the actor of the action
-	if ($select->{'user_email'}) {
-	    $select->{'user_email'} = lc ($select->{'user_email'});
-	    $statement .= sprintf "AND user_email_logs = '%s' ",$select->{'user_email'}; 
-	}
-
-	#if a list is specified -just for owner or above-
-	if($select->{'list'}) {
-	    if($select->{'list'} eq 'all_list') {
-		my $first = 'false';
-		my $which_list;
-		if($select->{'privilege'} eq 'owner') {
-		    $which_list = 'alllists_owner';
-		}
-		if($select->{'privilege'} eq 'listmaster') {
-		    $statement .= sprintf "AND (list_logs = '' ";
-		    $which_list = 'alllists';
-		    $first = 'true';
-		}
-		foreach my $alllists(@{$select->{$which_list}}) {
-		    #if it is the first list, put AND on the statement
-		    if($first eq 'false') {
-			$statement .= sprintf "AND (list_logs = '%s' ",$alllists;
-			$first = 'true';
-		    }
-		    #else, put OR
-		    else {
-			$statement .= sprintf "OR list_logs = '%s' ",$alllists;
-		    }
-		}
-		$statement .= sprintf ")";
-		$list_selected = 'true';
-	    }
-	    else {
-		if($select->{'list'} ne 'none') {
-		    $select->{'list'} = lc ($select->{'list'});
-		    $statement .= sprintf "AND list_logs = '%s' ",$select->{'list'};
-		    $list_selected = 'true';
-		}
-	    }
-	}
-	
     }
-    #If the checkbox is checked
-    else {
-	#an editor has just an access on the current list and robot
-	if($select->{'privilege'} eq 'editor') {
-	    $statement .= sprintf "AND list_logs = '%s' ",$select->{'current_list'}; 
+
+    #if the search is between two date
+    if ($select->{'date_from'}) {
+	my @tab_date_from = split(/\//,$select->{'date_from'});
+	my $date_from = &POSIX::mktime(0,0,-1,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
+	unless($select->{'date_to'}) {
+	    my $date_from2 = &POSIX::mktime(0,0,25,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
+	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_from2;
 	}
-	if($select->{'privilege'} eq 'owner') {
+	if($select->{'date_to'}) {
+	    my @tab_date_to = split(/\//,$select->{'date_to'});
+	    my $date_to = &POSIX::mktime(0,0,25,$tab_date_to[0],$tab_date_to[1]-1,$tab_date_to[2]-1900);
+	    
+	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_to;
+	}
+    }
+    
+    #if the search is on a precise type
+    if ($select->{'type'}) {
+	if(($select->{'type'} ne 'none') && ($select->{'type'} ne 'all_actions')) {
 	    my $first = 'false';
-	    foreach my $alllists(@{$select->{'alllists_owner'}}) {
-		#if it is the first list, put AND on the statement
+	    foreach my $type(@{$action_type{$select->{'type'}}}) {
 		if($first eq 'false') {
-		    $statement .= sprintf "AND (list_logs = '%s' ",$alllists;
+		    #if it is the first action, put AND on the statement
+		    $statement .= sprintf "AND (logs_table.action_logs = '%s' ",$type;
 		    $first = 'true';
 		}
 		#else, put OR
 		else {
-		    $statement .= sprintf "OR list_logs = '%s' ",$alllists;
+		    $statement .= sprintf "OR logs_table.action_logs = '%s' ",$type;
 		}
 	    }
-	    $statement .= sprintf ")";
-
-	}
-	#on the current robot to the listmaster
-	if($select->{'privilege'} eq 'listmaster') {
-	    $statement .= sprintf "AND robot_logs = '%s' ",$select->{'robot'};
-	}
+	    $statement .= ')';
+	    }
+	
     }
+    
+    #if the listmaster want to make a search by an IP adress.
+    if($select->{'ip'}) {
+	$statement .= sprintf "AND client_logs = '%s'",$select->{'ip'};
+    }
+    
+    ## Currently not used
+    #if the search is on the actor of the action
+    if ($select->{'user_email'}) {
+	$select->{'user_email'} = lc ($select->{'user_email'});
+	$statement .= sprintf "AND user_email_logs = '%s' ",$select->{'user_email'}; 
+    }
+    
+    #if a list is specified -just for owner or above-
+    if($select->{'list'}) {
+	$select->{'list'} = lc ($select->{'list'});
+	$statement .= sprintf "AND list_logs = '%s' ",$select->{'list'};
+    }
+    
     $statement .= sprintf "GROUP BY date_logs "; 
 
     push @sth_stack, $sth;
