@@ -464,7 +464,7 @@ my %in_regexp = (
 		 'subject' => '.*',
 		 'gecos' => '[^<>\\\*\$\n]+',
 		 'additional_field' => '[^<>\\\*\$\n]+',
-		 'dump' => '[^<>\\\*\$\n]+', # contents email + gecos
+		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
 
 		 ## Search
 		 'filter' => '[^<>\\\[\]\(\)\$\n]+', # search list
