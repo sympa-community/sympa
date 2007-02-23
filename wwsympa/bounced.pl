@@ -585,6 +585,7 @@ sub update_subscriber_bounce_history {
 		      'daemon' => 'bounced'});
     }else{
 	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status"});
+	&do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list->{'name'});
 	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce',
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
