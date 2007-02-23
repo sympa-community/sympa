@@ -993,7 +993,10 @@ List::db_disconnect if ($List::dbh);
 } #end of block while ($signal ne 'term'){
 
 do_log('notice', 'Sympa exited normally due to signal');
-&tools::remove_pid($Conf{'pidfile'}, $$);
+my $file = $Conf{'pidfile'};
+$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
+$file = $Conf{'pidfile_creation'} if ($main::daemon_usage == DAEMON_CREATION) ;
+&tools::remove_pid($file, $$);
 
 exit(0);
 
