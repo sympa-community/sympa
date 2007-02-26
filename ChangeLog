@@ -1,3 +1,86 @@
+2007-02-23 16:43  olivier.salaun
+
+	* mail_tt2/listmaster_notification.tt2, src/sympa.pl: Fix: sympa.pl
+	  processes dedicated to message distribution or automatic list
+	  creation would not remove their pid file properly
+
+2007-02-23 11:44  olivier.salaun
+
+	* wwsympa/bounced.pl: Added log for standard bounce processing
+
+2007-02-23 11:40  olivier.salaun
+
+	* src/Log.pm: Fix: increase entropy for logs table ID.	It was
+	  required to prevent "duplicate entries" errors.
+
+2007-02-22 11:18  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: allow \n for "dump" parameter,
+	  required for mutliple add
+
+2007-02-22 11:03  olivier.salaun
+
+	* src/etc/script/: Makefile, mysql_alias_manager.pl: [Bea,
+	  Cartables.net] NEw feature: added an alias_manager that is MySQL
+	  enabled.
+
+2007-02-21 17:50  olivier.salaun
+
+	* src/Log.pm, web_tt2/viewlogs.tt2, wwsympa/wwsympa.fcgi: Fix: list
+	  owner could view db logs of other lists.  Changed the feature so
+	  that only the current list logs can be viewed. Also simplified
+	  the code. Fixed the resize feature. The sortby feature is still
+	  buggy
+
+2007-02-19 16:26  olivier.salaun
+
+	* src/admin.pm: Added sync_include after list creation/update
+	  (family context)
+
+2007-02-19 14:53  olivier.salaun
+
+	* src/Family.pm: Remove traces
+
+2007-02-19 14:38  olivier.salaun
+
+	* src/: Family.pm, admin.pm: Changes: trigger a sync_include after
+	  list creation/update Also made list topics problems non blocking
+
+2007-02-19 11:28  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: arcsearch would crash wwsympa process
+	  if provided a search expression with both invalid expression and
+	  \n, because tools::escape_regexp() does not apply on multi-line.
+	  Changed the allowed regexp for wwsympa incoming parameters to
+	  forbid \n in most of them.
+
+2007-02-08 14:19  olivier.salaun
+
+	* src/Upgrade.pm: Fix: replaced the '.date' extension of backup
+	  files with '@date' to prevent problems with scenario files.
+
+2007-02-07 17:53  olivier.salaun
+
+	* src/List.pm: Fix: set the charset to UTF-8 while attaching a
+	  header / footer
+
+2007-02-07 15:29  olivier.salaun
+
+	* src/Upgrade.pm: Homeapge files also needed to be UTF8 converted
+
+2007-02-07 15:04  olivier.salaun
+
+	* po/fi.po: Fix: `msgid' and `msgstr' entries do not both end with
+	  '\n'
+
+2007-02-07 14:58  olivier.salaun
+
+	* Makefile.in: preparing 5.3b.3
+
+2007-02-07 14:56  olivier.salaun
+
+	* .version, ChangeLog, NEWS, src/Upgrade.pm: Preparing 5.3b.3
+
 2007-02-07 14:23  olivier.salaun
 
 	* po/: bg.po, cs.po, de.po, el.po, es.po, et.po, fi.po, fr.po,

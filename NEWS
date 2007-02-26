@@ -3,6 +3,34 @@
 
 (See Changelog file for the full changes log)
 
+5.3b.4		26 February 2007
+
+   New features :
+
+	src/etc/script/: Makefile, mysql_alias_manager.pl: [Bea, Cartables.net] added an alias_manager that is MySQL enabled.
+
+   Changes :
+
+	src/admin.pm: Added sync_include after list creation/update (family context)
+
+	src/: Family.pm, admin.pm: trigger a sync_include after list creation/update Also made list topics problems non blocking
+
+   Bug fixes :
+
+	mail_tt2/listmaster_notification.tt2, src/sympa.pl: sympa.pl processes dedicated to message distribution or automatic list
+	creation would not remove their pid file properly
+
+	src/Log.pm: increase entropy for logs table ID. It was required to prevent "duplicate entries" errors.
+
+	src/Log.pm, web_tt2/viewlogs.tt2, wwsympa/wwsympa.fcgi: list owner could view db logs of other lists.  Changed the feature so
+	that only the current list logs can be viewed. Also simplified the code. Fixed the resize feature. The sortby feature is still
+	buggy
+
+	wwsympa/wwsympa.fcgi: arcsearch would crash wwsympa process if provided a search expression with both invalid expression and
+	\n, because tools::escape_regexp() does not apply on multi-line. Changed the allowed regexp for wwsympa incoming parameters to
+	forbid \n in most of them.
+
+
 5.3b.3		7 February 2007
 
    New features :
