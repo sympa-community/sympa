@@ -183,7 +183,8 @@ sub db_log {
     my $daemon = $arg->{'daemon'};
     my $date=time;
     my $random = int(rand(1000000));
-    my $id = $date*1000000+$random;
+#    my $id = $date*1000000+$random;
+    my $id = $date.$random;
 
     unless($user_email) {
 	$user_email = 'anonymous';
