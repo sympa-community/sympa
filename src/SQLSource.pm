@@ -1,4 +1,4 @@
-# Message.pm - This module includes SQL DB related functions
+# SQLSource.pm - This module includes SQL DB related functions
 #<!-- RCS Identication ; $Revision$ --> 
 
 #
