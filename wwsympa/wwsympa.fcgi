@@ -27,6 +27,17 @@
 ## Authors :
 ##           Serge Aumont <sa AT cru.fr>
 ##           Olivier Salaün <os AT cru.fr>
+=pod 
+
+=head1 NAME 
+
+I<wwsympa.fcgi> - Sympa web interface 
+
+=head1 DESCRIPTION 
+
+This fcgi script completely handles all aspects of the Sympa web interface
+
+=cut 
 
 ## Change this to point to your Sympa bin directory
 use lib '--LIBDIR--';
@@ -8570,6 +8581,46 @@ sub do_edit_list {
      return $newvar;
  }
 
+=pod 
+
+=head2 sub do_edit_list_request 
+
+Sends back the list config edition form. 
+
+=head3 Arguments 
+
+=over 
+
+=item * I<None>
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1>, if no problem is encountered
+
+=item * I<undef>, if anything goes wrong
+
+=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * wwslog
+
+=item * _prepare_edit_form
+
+=item * report::reject_report_web
+
+=back 
+
+=cut 
+
  ## Send back the list config edition form
  sub do_edit_list_request {
      &wwslog('info', 'do_edit_list_request(%s)', $in{'group'});
@@ -8684,13 +8735,69 @@ sub _check_new_values {
     }
 }
 
-## Prepare config data to be send in the
+=pod 
+
+=head2 sub _prepare_edit_form(LIST)
+
+Prepares config data to be sent in the edition form. Adds to the parameters array a hash for each parameter to be edited.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$list>, a List object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1>, if no problem is encountered
+
+=item * I<undef>, if anything goes wrong
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * _prepare_data
+
+=item * _restrict_values
+
+=item * wwslog
+
+=item * List::by_order
+
+=item * List::get_family
+
+=item * List::load_topics
+
+=item * List::may_edit
+
+=item * Language::GetLang
+
+=item * Language::SetLang
+
+=item * report::reject_report_web
+
+=item * tools::dup_var
+
+=back 
+
+=cut
+
+## Prepare config data to be sent in the
 ## edition form
 sub _prepare_edit_form {
     my $list = shift;
     my $list_config = &tools::dup_var($list->{'admin'});
     my $family;
+    my $is_form_editable = '0';
 
+    ## If the list belongs to a family, check if the said family can be retrieved.
     if (defined $list_config->{'family_name'}) {
 	unless ($family = $list->get_family()) {
 	    &report::reject_report_web('intern','unable_get_family',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -8699,17 +8806,33 @@ sub _prepare_edit_form {
 	}          
     }
 
+    ## For each parameter defined in List.pm, retrieve and prepare for editing
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
+	 
+	 ## Skip comments and default values.
 	 next if ($pname =~ /^comment|defaults$/);
+	 
+	 ## Skip parameters belonging to another group.
 	 next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
 	 
-	 ## Skip obsolete parameters
+	 ## Skip obsolete parameters.
 	 next if $pinfo->{$pname}{'obsolete'};
 
+	 ## Check whether the parameter can be edited by the logged user.
 	 my $may_edit = $list->may_edit($pname,$param->{'user'}{'email'});
+
+	 ## Valid form global edit status as soon as at least one editable parameter is found.
+	 if ($may_edit eq 'write') {
+	     $is_form_editable = '1';
+	 }
+
+	 ## Store in $p a reference to the hash containing the informations relative to the parameter editing.
 	 my $p = &_prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname},$may_edit,$family);
 
+	 ## Store if the parameter is still at its default value or not.
 	 $p->{'default'} = $list_config->{'defaults'}{$pname};
+
+	 ## Store the change state of this parameter, taken from the global variable %changed_params.
 	 $p->{'changed'} = $::changed_params{$pname};
 
 	 ## Exceptions...too many
@@ -8768,10 +8891,69 @@ sub _prepare_edit_form {
 
 	 push @{$param->{'param'}}, $p;	
      }
-     return 1; 
+    
+    ## If at least one param was editable, make the update button appear in the form.
+    $param->{'is_form_editable'} = $is_form_editable;
+    return 1; 
  }
 
-sub _prepare_data {
+=pod 
+
+=head2 sub _prepare_data(STRING,HASH_Ref,LIST_Ref,STRING,FAMILY,STRING)
+
+Returns a reference to a hash containing the data used to edit the parameter (of name $name, corresponding to the structure $struct in pinfo, with the $may_edit editing status) containing the data in the Sympa web interface.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$name> (STRING), the name of the parameter processed
+
+=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %List::pinfo
+
+=item * I<$data> (), the value(s) taken by this parameter in the current list.
+
+=item * I<$may_edit> (STRING), the editing status of this parameter in the current context.
+
+=item * I<$family> (FAMILY), the family the list belongs to.
+
+=item * I<$main_p> (STRING), the prefix composing the complete name of the parameter.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$p_glob>, a reference to a hash containing the data used to edit the parameter.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * _restrict_values
+
+=item * _prepare_data
+
+=item * load_data_sources_list
+
+=item * Family::get_param_constraint
+
+=item * List::load_scenario_list
+
+=item * List::load_task_list
+
+=item * List::may_edit
+
+=item * tools::escape_html
+
+=back 
+
+=cut
+
+ sub _prepare_data {
     my ($name, $struct,$data,$may_edit,$family,$main_p) = @_;
     #    &wwslog('debug2', '_prepare_data(%s, %s)', $name, $data);
     # $family and $main_p (recursive call) are optionnal
@@ -8783,7 +8965,7 @@ sub _prepare_data {
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
 
-    ## family_constraint
+    ## Check if some family constraint modify the editing rights.
     my $restrict = 0;
     my $constraint;
     if ((ref($family) eq 'Family') && ($may_edit eq 'write')) {
@@ -8812,13 +8994,19 @@ sub _prepare_data {
  	$p_glob->{'may_edit'} = $may_edit;
     }        
     
+    ## Naming the parameter.
     if ($struct->{'gettext_id'}) {
 	$p_glob->{'title'} = gettext($struct->{'gettext_id'});
     }else {
 	$p_glob->{'title'} = $name;
     }
 
-     ## Occurrences
+    ## Occurrences : if the parameter can have multiple occurences,
+    ## its values are transfered into the array pointed by $data2
+    ## if they were given in arguments (if not, an empty array is created).
+    ## if it is a single occurence parameter, an array is created with
+    ## its single value.
+
      my $data2;
      if ($struct->{'occurrence'} =~ /n$/) {
 	 $p_glob->{'occurrence'} = 'multiple';
@@ -15922,3 +16110,16 @@ sub do_maintenance {
     
     return 1;
 }
+=pod 
+
+=head1 AUTHORS 
+
+=over 
+
+=item * Serge Aumont <sa AT cru.fr> 
+
+=item * Olivier Salaun <os AT cru.fr> 
+
+=back 
+
+=cut 

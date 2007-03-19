@@ -411,7 +411,9 @@
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="group" value="[% group %]" />
     <input type="hidden" name="action" value="edit_list" />
-    <input class="MainMenuLinks" type="submit" name="action_edit_list" value="[%|loc%]Update[%END%]" />
+    [% IF is_form_editable == '1' %]
+	<input class="MainMenuLinks" type="submit" name="action_edit_list" value="[%|loc%]Update[%END%]" />
+    [% END %]
   </fieldset>
   </form>
 [% END %]
