@@ -51,6 +51,7 @@ You need to enumerate levels :
 	local1.info,local1.notice,local1.debug /var/log/sympa
 
 3/ MySQL setup
+Your MySQL version MUST be at least 4.1 in order to run correctly with Sympa.
 db_xxx parameters in sympa.conf refer to your local database. 
 Sympa.pl should be able to create this database at runtime ; if it does not you'll
 have to create it yourself with the provided create_db.xxx scripts and provide
