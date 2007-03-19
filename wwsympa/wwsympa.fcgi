@@ -2556,19 +2556,20 @@ sub do_sso_login_succeeded {
      }
      require Net::LDAP;
 
-     my ($ldap_anonymous,$host,$filter);
+     my ($ldap_anonymous,$filter);
 
      foreach my $ldap (@ldap_servers){
 
 	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
 	 next unless ($auth =~ /$ldap->{'regexp'}/i);
 
-	 foreach $host (split(/,/,$ldap->{'host'})){
-	     unless($host){
-		 last;
-	     }
+	 my $param = &tools::dup_var($ldap);
+	 my $ds = new Datasource('LDAP', $param);
 
-	     &wwslog('debug4','Host: %s', $host);
+	 unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+	     &do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});
+	     next;
+	 }
 
 	     my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 	     my $attrs = $ldap->{'email_attribute'};
@@ -2582,53 +2583,22 @@ sub do_sso_login_succeeded {
 
 	     ## !! une fonction get_dn_by_email/uid
 
-	     my $ldap_anonymous;
-	     if ($ldap->{'use_ssl'}) {
-		 unless (eval "require Net::LDAPS") {
-		     &wwslog ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		     return undef;
-		 } 
-		 require Net::LDAPS;
-
-		 my %param;
-		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
-		 $param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
-		 $param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
-
-		 $ldap_anonymous = Net::LDAPS->new($host,%param);
-	     }else {
-		 $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	     }
-
-
-	     unless ($ldap_anonymous ){
-		 &wwslog ('err','Unable to connect to the LDAP server %s',$host);
-		 next;
-	     }
-
-	     my $status = $ldap_anonymous->bind;
-	     unless(defined($status) && ($status->code == 0)){
-		 &wwslog('err', 'Bind failed on  %s', $host);
-		 last;
-	     }
-
 	     my $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'} ,
 						filter => "$filter",
 						scope => $ldap->{'scope'}, 
 						timeout => $ldap->{'timeout'} );
 
 	     unless($mesg->count() != 0) {
-		 &wwslog('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
-		 $ldap_anonymous->unbind;
+	     &wwslog('notice','No entry in the Ldap Directory Tree of %s for %s',$ldap->{'host'},$auth);
+	     $ds->disconnect();
 		 last;
 	     } 
 
-	     $ldap_anonymous->unbind;
+	 $ds->disconnect();
 	     my $redirect = $ldap->{'authentication_info_url'};
 	     return $redirect || 1;
-	 }
+
 	 next unless ($ldap_anonymous);
-	 next unless ($host);
      }
  }
 
@@ -8051,25 +8021,6 @@ sub do_set_pending_list_request {
      }
      $param->{'occurrence'} = $record;
 
-     ##Lists stored in ldap directories
-     my %lists;
-     if($in{'extended'}){
-	 foreach my $directory (keys %{$Conf{'ldap_export'}}){
-	     next unless(%lists = &Ldap::get_exported_lists($param->{'regexp'},$directory));
-	     
-	     foreach my $list_name (keys %lists) {
-		 $param->{'occurrence'}++ unless($param->{'which'}{$list_name});
-		 next if($param->{'which'}{$list_name});
-		 $param->{'which'}{$list_name} = {'host' => "$lists{$list_name}{'host'}",
-						  'subject' => "$lists{$list_name}{'subject'}",
-						  'urlinfo' => "$lists{$list_name}{'urlinfo'}",
-						  'list_address' => "$lists{$list_name}{'list_address'}",
-						  'export' => 'yes',
-					      };
-	     }  
-	 }
-     } 
-     
      return 1;
  }
 
@@ -8454,21 +8405,6 @@ sub do_edit_list {
 	    $list->savestats();
 	}
 	
-	#If no directory, delete the entry
-	if($pname eq 'export'){
-	    foreach my $old_directory (@{$list->{'admin'}{'export'}}){
-		my $var = 0;
-		foreach my $new_directory (@{$new_admin->{'export'}}){
-		    next unless($new_directory eq $old_directory);
-		    $var = 1;
-		}
-		
-		if(!$var || $new_admin->{'status'} ne 'open'){
-		    &Ldap::delete_list($old_directory,$list);
-		}
-	    }
-	}
-	
 	$list->{'admin'}{$pname} = $new_admin->{$pname};
 	if (defined $new_admin->{$pname} || $pinfo->{$pname}{'internal'}) {
 	    delete $list->{'admin'}{'defaults'}{$pname};
@@ -8566,22 +8502,6 @@ sub do_edit_list {
 	 }
      }
 
-
-     ##Exportation to an Ldap directory
-     if(($list->{'admin'}{'status'} eq 'open')){
-	 if($list->{'admin'}{'export'}){
-	     foreach my $directory (@{$list->{'admin'}{'export'}}){
-		 if($directory){
-		     unless(&Ldap::export_list($directory,$list)){
-			 &report::reject_report_web('intern','exportation_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-			 &wwslog('info','do_edit_list: The exportation failed');
-			 &web_db_log({'status' => 'error',
-				      'error_type' => 'internal'});
-		     }
-		 }
-	     }
-	 }
-     }
 
      ## Tag changed parameters
      foreach my $pname (keys %changed) {

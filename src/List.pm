@@ -1258,13 +1258,6 @@ my %alias = ('reply-to' => 'reply_to',
 			     'group' => 'bounces'
 			     },
 
-	    'export' => {'format' => '\w+',
-			 'split_char' => ',',
-			 'occurrence' => '0-n',
-			 'default' =>'',
-			 'group' => 'data_source'
-		     }
-	    
 	    );
 
 ## This is the generic hash which keeps all lists in memory.
@@ -7690,35 +7683,13 @@ sub search{
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
 	}
 	
-	unless (eval "require Net::LDAP") {
-	    do_log('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
+	my $ldap;
+	my $param = &tools::dup_var(\%ldap_conf);
+	my $ds = new Datasource('LDAP', $param);
+	    
+	unless (defined $ds && ($ldap = $ds->connect())) {
+	    &do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'ldap_host'});
 	    return undef;
-	}
-	require Net::LDAP;
-	
-	## There can be replicates
-	foreach my $host_entry (split(/,/,$ldap_conf{'host'})) {
-	    
-	    $host_entry =~ s/^\s*(\S.*\S)\s*$/$1/;
-	    my ($host,$port) = split(/:/,$host_entry);	    
-	    ## If port a 'port' entry was defined, use it as default
-	    $port = $port || $ldap_conf{'port'} || 389;	    
-	    my $ldap = Net::LDAP->new($host, port => $port );	    
-	    unless ($ldap) {	
-		do_log('notice','Unable to connect to the LDAP server %s:%d',$host, $port);
-		next;
-	    }	    
-	    my $status; 
-
-	    if (defined $ldap_conf{'bind_dn'} && defined $ldap_conf{'bind_password'}) {
-		$status = $ldap->bind($ldap_conf{'bind_dn'}, password =>$ldap_conf{'bind_password'});
-	    }else {
-		$status = $ldap->bind();
-	    }
-	    
-	    unless ($status && ($status->code == 0)) {
-		do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
-		next;
 	    }
 	    
 	    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
@@ -7740,11 +7711,11 @@ sub search{
 		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 1;
 	    }
 	    
-	    $ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
+	$ds->disconnect() or do_log('notice','List::search_ldap.Unbind impossible');
 	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} = time;
 	    
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
-	}
+
     }elsif($filter_file =~ /\.txt$/){ 
 	# &do_log('info', 'List::search: eval %s', $filter_file);
 	my @files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list); 
@@ -8801,17 +8772,8 @@ sub _include_users_ldap {
     my ($users, $param, $default_user_options, $tied) = @_;
     do_log('debug2', 'List::_include_users_ldap');
     
-    unless (eval "require Net::LDAP") {
-	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
-	return undef;
-    }
-    require Net::LDAP;
-    
     my $id = Datasource::_get_datasource_id($param);
 
-    my $host;
-    @{$host} = split(/,/, $param->{'host'});
-    my $port = $param->{'port'} || '389';
     my $user = $param->{'user'};
     my $passwd = $param->{'passwd'};
     my $ldap_suffix = $param->{'suffix'};
@@ -8828,51 +8790,19 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    if ($param->{'use_ssl'} eq 'yes' ) {
-	unless (eval "require Net::LDAPS") {
-	    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-	    return undef;
-	} 
-	
-	my %new_param = (async => 1);
-	$new_param{'timeout'} = $param->{'timeout'} if ($param->{'timeout'});
-	$new_param{'sslversion'} = $param->{'ssl_version'} if ($param->{'ssl_version'});
-	$new_param{'ciphers'} = $param->{'ssl_ciphers'} if ($param->{'ssl_ciphers'});
-
-	unless ($ldaph = Net::LDAPS->new($host, %new_param)) {
-	    
-	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
-	    return undef;
-	}	
-	
-    }else { 
-	unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
-	    
-	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
-	    return undef;
-	}
-	
+    my $param2 = &tools::dup_var($param);
+    my $ds = new Datasource('LDAP', $param2);
+    if (defined $user) {
+	$param2->{'bind_dn'} = $user;
+	$param2->{'bind_password'} = $passwd;
     }
-    do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
-    my $status;
     
-    if ( defined $user ) {
-	$status = $ldaph->bind ($user, password => "$passwd");
-	unless (defined($status) && ($status->code == 0)) {
-	    do_log('notice',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
+    unless (defined $ds && ($ldaph = $ds->connect())) {
+	&do_log('err',"Unable to connect to the LDAP server '%s'", $param2->{'host'});
 	    return undef;
 	}
-    }else {
-	$status = $ldaph->bind;
-	unless (defined($status) && ($status->code == 0)) {
-	    do_log('notice',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
-	    return undef;
-	}
-    }
-
-    do_log('debug2', "Binded to LDAP server %s ; user : '$user'", join(',',@{$host})) ;
     
-    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $ldap_suffix, $ldap_filter, $ldap_attrs);
+    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $fetch = $ldaph->search ( base => "$ldap_suffix",
                                       filter => "$ldap_filter",
 				      attrs => "$ldap_attrs",
@@ -8884,7 +8814,7 @@ sub _include_users_ldap {
     
     unless ($fetch->code == 0) {
 	do_log('err','Ldap search failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
-	       $fetch->error(), join(',',@{$host}), $ldap_suffix, $ldap_filter, $ldap_attrs);
+	       $fetch->error(), $param->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
         return undef;
     }
     
@@ -8908,8 +8838,8 @@ sub _include_users_ldap {
 	}
     }
     
-    unless ($ldaph->unbind) {
-	do_log('notice','Can\'t unbind from  LDAP server %s', join(',',@{$host}));
+    unless ($ds->disconnect()) {
+	do_log('notice','Can\'t unbind from  LDAP server %s', $param->{'host'});
 	return undef;
     }
     
@@ -8948,7 +8878,7 @@ sub _include_users_ldap {
 	}
     }
 
-    do_log('debug2',"unbinded from LDAP server %s ", join(',',@{$host}));
+    do_log('debug2',"unbinded from LDAP server %s ", $param->{'host'});
     do_log('debug2','%d new users included from LDAP query',$total);
 
     return $total;
@@ -8968,9 +8898,6 @@ sub _include_users_ldap_2level {
 
     my $id = Datasource::_get_datasource_id($param);
 
-    my $host;
-    @{$host} = split(/,/, $param->{'host'});
-    my $port = $param->{'port'} || '389';
     my $user = $param->{'user'};
     my $passwd = $param->{'passwd'};
     my $ldap_suffix1 = $param->{'suffix1'};
@@ -8992,53 +8919,19 @@ sub _include_users_ldap_2level {
     ## LDAP and query handler
     my ($ldaph, $fetch);
 
-    ## Connection timeout (default is 120)
-    #my $timeout = 30; 
-    
-    if ($param->{'use_ssl'} eq 'yes' ) {
-	unless (eval "require Net::LDAPS") {
-	    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-	    return undef;
-	} 
-	
-	my %new_param = (async => 1);
-	$new_param{'timeout'} = $param->{'timeout'} if ($param->{'timeout'});
-	$new_param{'sslversion'} = $param->{'ssl_version'} if ($param->{'ssl_version'});
-	$new_param{'ciphers'} = $param->{'ssl_ciphers'} if ($param->{'ssl_ciphers'});
-
-	unless ($ldaph = Net::LDAPS->new($host, %new_param)) {
-	    
-	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
-	    return undef;
-	}	
-	
-    }else { 
-	unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
-	    do_log('notice',"Can\'t connect to LDAP server '%s' : $@",join(',',@{$host}) );
-	    return undef;
-	}
+    my $param2 = &tools::dup_var($param);
+    my $ds = new Datasource('LDAP', $param2);
+    if (defined $user) {
+	$param2->{'bind_dn'} = $user;
+	$param2->{'bind_password'} = $passwd;
     }
     
-    do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
-    my $status;
-    
-    if ( defined $user ) {
-	$status = $ldaph->bind ($user, password => "$passwd");
-	unless (defined($status) && ($status->code == 0)) {
-	    do_log('err',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
+    unless (defined $ds && ($ldaph = $ds->connect())) {
+	&do_log('err',"Unable to connect to the LDAP server '%s'", $param2->{'host'});
 	    return undef;
 	}
-    }else {
-	$status = $ldaph->bind;
-	unless (defined($status) && ($status->code == 0)) {
-	    do_log('err',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
-	    return undef;
-	}
-    }
-
-    do_log('debug2', "Binded to LDAP server %s ; user : '$user'", join(',',@{$host})) ;
     
-    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $ldap_suffix1, $ldap_filter1, $ldap_attrs1) ;
+    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1) ;
     unless ($fetch = $ldaph->search ( base => "$ldap_suffix1",
                                       filter => "$ldap_filter1",
 				      attrs => "$ldap_attrs1",
@@ -9077,7 +8970,7 @@ sub _include_users_ldap_2level {
 	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
 	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
 
-	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $suffix2, $filter2, $ldap_attrs2);
+	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	unless ($fetch = $ldaph->search ( base => "$suffix2",
 					filter => "$filter2",
 					attrs => "$ldap_attrs2",
@@ -9106,8 +8999,8 @@ sub _include_users_ldap_2level {
 	}
     }
     
-    unless ($ldaph->unbind) {
-	do_log('err','Can\'t unbind from  LDAP server %s',join(',',@{$host}));
+    unless ($ds->disconnect()) {
+	do_log('err','Can\'t unbind from  LDAP server %s', $param->{'host'});
 	return undef;
     }
     
@@ -9146,7 +9039,7 @@ sub _include_users_ldap_2level {
 	}
     }
 
-    do_log('debug2',"unbinded from LDAP server %s ",join(',',@{$host})) ;
+    do_log('debug2',"unbinded from LDAP server %s ", $param->{'host'}) ;
     do_log('debug2','%d new users included from LDAP query',$total);
 
     return $total;
@@ -9160,7 +9053,7 @@ sub _include_users_sql {
 
     my $id = Datasource::_get_datasource_id($param);
     my $ds = new Datasource('SQL', $param);
-    unless ($ds->connect && $ds->query($param->{'sql_query'})) {
+    unless ($ds->connect && ($ds->query($param->{'sql_query'}))) {
         return undef;
     }
     ## Counters.
