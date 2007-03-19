@@ -1,4 +1,4 @@
-# wwslib.pm - This module includes functions used by wwsympa.fcgi
+# Auth.pm - This module provides web authentication functions
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -199,8 +199,6 @@ sub ldap_authentication {
 	 # and this email address does not match the corresponding regexp 
 	 next if ($auth =~ /@/ && $auth !~ /$ldap->{'regexp'}/i);
   
-	 foreach $host (split(/,/,$ldap->{'host'})){
-
 	     my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 	     my $attrs = $ldap->{'email_attribute'};
 	     my $filter = $ldap->{'get_dn_by_uid_filter'} if($whichfilter eq 'uid_filter');
@@ -209,42 +207,14 @@ sub ldap_authentication {
 
 	     ##anonymous bind in order to have the user's DN
 	     my $ldap_anonymous;
-	     if ($ldap->{'use_ssl'}) {
-		 unless (eval "require Net::LDAPS") {
-		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		     return undef;
-		 } 
-		 require Net::LDAPS;
+	 my $param = &tools::dup_var($ldap);
+	 my $ds = new Datasource('LDAP', $param);
 
-		 my %param;
-		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
-		 $param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
-		 $param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
-
-		 $ldap_anonymous = Net::LDAPS->new($host,%param);
-	     }else {
-		 $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	     }
-
-	     unless ($ldap_anonymous ){
-		 do_log ('err','Unable to connect to the LDAP server %s',$host);
+	 unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+	     &do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'host'});
 		 next;
 	     }
 
-	     my $cnx;
-	     ## Not always anonymous...
-	     if (defined ($ldap->{'bind_dn'}) && defined ($ldap->{'bind_password'})) {
-		 $cnx = $ldap_anonymous->bind($ldap->{'bind_dn'}, password =>$ldap->{'bind_password'});
-	     }else {
-		 $cnx = $ldap_anonymous->bind;
-	     }
-
-	     unless(defined($cnx) && ($cnx->code() == 0)){
-		 do_log('notice',"Can\'t bind to LDAP server $host");
-		 last;
-		 #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		 #$ldap_anonymous->unbind;
-	     }
 
 	     $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'},
 					     filter => "$filter",
@@ -252,49 +222,31 @@ sub ldap_authentication {
 					     timeout => $ldap->{'timeout'});
 
 	     if ($mesg->count() == 0) {
-		 do_log('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
-		 $ldap_anonymous->unbind;
+	     do_log('notice','No entry in the Ldap Directory Tree of %s for %s',$ldap->{'host'},$auth);
+	     $ds->disconnect();
 		 last;
 	     }
 
 	     my $refhash=$mesg->as_struct();
 	     my (@DN) = keys(%$refhash);
-	     $ldap_anonymous->unbind;
+	 $ds->disconnect();
 
 	     ##  bind with the DN and the pwd
 	     my $ldap_passwd;
-	     if ($ldap->{'use_ssl'}) {
-		 unless (eval "require Net::LDAPS") {
-		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		     return undef;
-		 } 
-		 require Net::LDAPS;
 
-		 my %param;
-		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
-		 $param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
-		 $param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
+	 ## Duplicate structure first
+	 ## Then set the bind_dn and password according to the current user
+	 my $param = &tools::dup_var($ldap);
+	 $param->{'ldap_bind_dn'} = $DN[0];
+	 $param->{'ldap_bind_password'} = $pwd;
 
-		 $ldap_passwd = Net::LDAPS->new($host,%param);
-	     }else {
-		 $ldap_passwd = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	     }
+	 my $ds = new Datasource('LDAP', $param);
 
-	     unless ($ldap_passwd) {
-		 do_log('err','Unable to (re) connect to the LDAP server %s', $host);
-		 do_log ('err','Ldap Error : %s, Ldap server error : %s',$ldap_passwd->error,$ldap_passwd->server_error);
+	 unless (defined $ds && ($ldap_passwd = $ds->connect())) {
+	     do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'host'});
 		 next;
 	     }
 
-	     $cnx = $ldap_passwd->bind($DN[0], password => $pwd);
-	     unless(defined($cnx) && ($cnx->code() == 0)){
-		 do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
-		 #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		 $ldap_passwd->unbind;
-		 last;
-	     }
-	     # this bind is anonymous and may return 
-	     # $ldap_passwd->bind($DN[0]);
 	     $mesg= $ldap_passwd->search ( base => $ldap->{'suffix'},
 					   filter => "$filter",
 					   scope => $ldap->{'scope'},
@@ -302,8 +254,8 @@ sub ldap_authentication {
 					   );
 
 	     if ($mesg->count() == 0) {
-		 do_log('notice',"No entry in the Ldap Directory Tree of %s", $host);
-		 $ldap_passwd->unbind;
+	     do_log('notice',"No entry in the Ldap Directory Tree of %s", $ldap->{'host'});
+	     $ds->disconnect();
 		 last;
 	     }
 
@@ -337,17 +289,15 @@ sub ldap_authentication {
 		 $param->{'alt_emails'}{$alt} = $previous->{$alt};
 	     }
 
-	     $ldap_passwd->unbind or do_log('notice', "unable to unbind");
-	     do_log('debug3',"canonic: $canonic_email[0]");
+	 $ds->disconnect() or &do_log('notice', "unable to unbind");
+	 &do_log('debug3',"canonic: $canonic_email[0]");
 	     return lc($canonic_email[0]);
-	 }
 
 	 next unless ($ldap_anonymous);
 	 next unless ($ldap_passwd);
 	 next unless (defined($cnx) && ($cnx->code() == 0));
 	 next if($mesg->count() == 0);
 	 next if($mesg->code() != 0);
-	 next unless ($host);
      }
  }
 
@@ -372,75 +322,22 @@ sub get_email_by_net_id {
 	return $email;
     }
  
-    unless (eval "require Net::LDAP") {
-	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
-	return undef;
-    }
-    require Net::LDAP;
-
-    unless (eval "require Net::LDAP::Entry") {
-	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
-	return undef;
-    }
-    require Net::LDAP::Entry;
-    
-    unless (eval "require Net::LDAP::Message") {
-	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
-	return undef;
-    }
-    require Net::LDAP::Message;
-
     my $ldap = @{$Conf{'auth_services'}{$robot}}[$auth_id];
+
+    my $param = &tools::dup_var($ldap);
+    my $ds = new Datasource('LDAP', $param);
+    my $ldap_anonymous;
+    
+    unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
+	&do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});
+	return undef;
+    }
+
     my $filter = $ldap->{'ldap_get_email_by_uid_filter'} ;
-
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
-
-    foreach my $host (split(/,/,$ldap->{'ldap_host'})){
 
 #	my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 		
-	my $ldap_anonymous;
-
-	my %param;
-	$param{'timeout'} = $ldap->{'ldap_timeout'} || 3;
-	$param{'async'} = 1;
-	
-	if ($ldap->{'ldap_use_ssl'}) {
-	    $param{'sslversion'} = $ldap->{'ldap_ssl_version'} if ($ldap->{'ldap_ssl_version'});
-	    $param{'ciphers'} = $ldap->{'ldap_ssl_ciphers'} if ($ldap->{'ldap_ssl_ciphers'});
-
-	    unless (eval "require Net::LDAPS") {
-		do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		return undef;
-	    } 
-	    require Net::LDAPS;
-	    
-	    $ldap_anonymous = Net::LDAPS->new($host,%param);
-	}else {
-	    $ldap_anonymous = Net::LDAP->new($host,%param);
-	}
-	
-	unless ($ldap_anonymous ){
-	    do_log ('err','Unable to connect to the LDAP server %s',$host);
-	    next;
-	}
-	
-	my $cnx;
-	## Not always anonymous...
-	if (defined ($ldap->{'ldap_bind_dn'}) && defined ($ldap->{'ldap_bind_password'})) {
-	    $cnx = $ldap_anonymous->bind($ldap->{'ldap_bind_dn'}, password =>$ldap->{'ldap_bind_password'});
-	}else {
-	    $cnx = $ldap_anonymous->bind;
-	}
-	
-	unless(defined($cnx) && ($cnx->code() == 0)){
-	    do_log('notice',"Can\'t bind to LDAP server $host");
-	    last;
-	    #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-	    #$ldap_anonymous->unbind;
-	}
-	do_log ('debug',"Binded to LDAP host $host, search base=$ldap->{'ldap_suffix'},filter=$filter,scope=$ldap->{'ldap_scope'},attrs=$ldap->{'ldap_email_attribute'}");
-	
 	my $emails= $ldap_anonymous->search ( base => $ldap->{'ldap_suffix'},
 				      filter => $filter,
 				      scope => $ldap->{'ldap_scope'},
@@ -451,24 +348,17 @@ sub get_email_by_net_id {
 
 	if ($emails->count() == 0) {
 	    do_log('notice',"No entry in the Ldap Directory Tree of %s", $host);
-	    $ldap_anonymous->unbind;
-	    last;
+	$ds->disconnect();
+	return undef;
 	}
 
+    $ds->disconnect();
+    
+    ## return only the first attribute
 	my @results = $emails->entries;
 	foreach my $result (@results){
 	    return (lc($result->get_value($ldap->{'ldap_email_attribute'})));
 	}
-
-	
-	## return only the first attribute
-			
-	my $entry = $emails->entry(0);
-	my @canonic_email = $entry->get_value($ldap->{'ldap_email_attribute'},alloptions);
-	foreach my $email (@canonic_email){
-	    return(lc($email));
-	}
-    }
 
  }
 
