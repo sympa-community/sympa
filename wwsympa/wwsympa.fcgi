@@ -1561,6 +1561,77 @@ sub prepare_report_user {
     
 
 
+=pod 
+
+=head2 sub check_param_in
+
+Checks parameters contained in the global variable $in. It is the process used to analyze the incoming parameters.
+Use it to create a List object and initialize output parameters.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<None>
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<undef> if the process encounters problems.
+
+=item * I<1> if everything goes well
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * d_access_control
+
+=item * make_pictures_url
+
+=item * wwslog
+
+=item * Language::SetLang
+
+=item * List::am_i
+
+=item * List::check_list_authz
+
+=item * List::get_mod_spool_size
+
+=item * List::get_shared_moderated
+
+=item * List::get_subscriber
+
+=item * List::get_subscription_request_count
+
+=item * List::get_total
+
+=item * List::get_total_bouncing
+
+=item * List::is_listmaster
+
+=item * List::is_moderated
+
+=item * List::is_shared_open
+
+=item * List::is_user
+
+=item * List::new
+
+=item * List::request_action
+
+=item * report::reject_report_web
+
+=back 
+
+=cut 
+
  ## Analysis of incoming parameters
  sub check_param_in {
      &wwslog('debug2', 'check_param_in');
@@ -1572,6 +1643,7 @@ sub prepare_report_user {
      if ($in{'list'} =~ /^(\S+)\0/) {
 	 $in{'list'} = $1;
 
+	 ## Create a new List instance.
 	 unless ($list = new List ($in{'list'}, $robot)) {
 	     &report::reject_report_web('user','unknown_list',{'list' => $in{'list'}},$param->{'action'},'');
 	     &wwslog('info','check_param_in: unknown list %s', $in{'list'});
@@ -1587,19 +1659,21 @@ sub prepare_report_user {
 	 $param->{'is_listmaster'} = 1;
      }
 
-    if ($in{'list'}) {
+     if ($in{'list'}) {
+	## Create a new List instance.
 	unless ($list = new List ($in{'list'}, $robot, {})) {
 	    &report::reject_report_web('user','unknown_list',{'list' => $in{'list'}},$param->{'action'},'');
 	    &wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	    return undef;
 	}
 
+	## Gather list configuration informations for further output.
 	$param->{'list'} = $in{'list'};
 	$param->{'subtitle'} = $list->{'admin'}{'subject'};
 	$param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
 	$param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
 
-	# pictures are not avilible unless it is configured for the list and the robot
+	# Pictures are not available unless it is configured for the list and the robot
  	if ($list->{'admin'}{'pictures_feature'} eq 'off') {
  	    $param->{'pictures_display'} = undef;
  	}
@@ -1607,15 +1681,20 @@ sub prepare_report_user {
  	    $param->{'pictures_display'} = 'on';
  	}
  	
+	## Get the total number of subscribers to the list.
 	if (defined $param->{'total'}) {
 	    $param->{'total'} = $list->get_total();
 	}else {
 	    $param->{'total'} = $list->get_total('nocache');
 	}
+
+	## Check if the current list has a public key X.509 certificate.
 	$param->{'list_as_x509_cert'} = $list->{'as_x509_cert'};
+
+	## Stores to output the whole list's admin configuration.
 	$param->{'listconf'} = $list->{'admin'};
 
-	## privileges
+	## If an user is logged in, checks this user's privileges.
 	if ($param->{'user'}{'email'}) {
 	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
 	    $param->{'subscriber'} = $list->get_subscriber($param->{'user'}{'email'})
@@ -1625,7 +1704,8 @@ sub prepare_report_user {
 	    $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	    $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
 	    $param->{'pictures_url'} = &make_pictures_url($param->{'user'}{'email'});
-	    #May post:
+
+	    ## Checks if the user can post in this list.
 	    my $result = $list->check_list_authz('send',$param->{'auth_method'},
 						 {'sender' => $param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
@@ -1634,17 +1714,20 @@ sub prepare_report_user {
 	    $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 	    $param->{'may_post'} = 1 if ($r_action !~ /reject/);
 
+	## If no user logged in, the output can ask for authentification.
 	}else {
 	    $param->{'user'}{'email'} = undef;
 	    $param->{'need_login'} = 1;
 
 	}
 
+	## Check if this list's messages must be moderated.
 	$param->{'is_moderated'} = $list->is_moderated();
+
+	## Check if a shared directory exists for this list.
 	$param->{'is_shared_open'} =$list->is_shared_open();
 
-	## Privileged info
-
+	## If the user logged in is a privileged user, gather informations relative to administration tasks
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_message'} = $list->get_mod_spool_size();
 
@@ -1663,11 +1746,15 @@ sub prepare_report_user {
 	    $param->{'mod_total'} = $param->{'mod_total_shared'}+$param->{'mod_message'}+$param->{'mod_subscription'};
 	}
 
-	## (Un)Subscribing 
+	## If the subscription/unsubscription are defined by a set of rules, there is no permanent user list
+	## in which subscribe or from which unsubscribe, thus removing any sense from those operations.
+	## They are consequently forbidden...
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
 	    $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
+	
+	## ... otherwise, we must check the (un)subscription authorization scenarios.
 	}else {
-	    ## May signoff
+	    ## Check unsubscription authorization for the current user and list.
 	    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
 						 {'sender' =>$param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
@@ -1683,7 +1770,7 @@ sub prepare_report_user {
 		$param->{'may_suboptions'} = 1;
 	    }
 	    
-	    ## May Subscribe
+	    ## Check subscription authorization for the current user and list.
 	    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
 						 {'sender' =>$param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
@@ -1693,12 +1780,13 @@ sub prepare_report_user {
 	    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
 	}
 	
-    	## Shared documents
+    	## Check if the current user can read the shared documents.
 	my %mode;
 	$mode{'read'} = 1;
 	my %access = &d_access_control(\%mode,"");
 	$param->{'may_d_read'} = $access{'may'}{'read'};
 
+	## Check the status (exists, deleted, doesn't exist) of the shared directory
 	if (-e $list->{'dir'}.'/shared') {
 	    $param->{'shared'}='exist';
 	}elsif (-e $list->{'dir'}.'/pending.shared') {
@@ -1708,6 +1796,7 @@ sub prepare_report_user {
 	}
     }
 
+     ## Check if the current user can create a list.
      my $result = &List::request_action ('create_list',$param->{'auth_method'},$robot,
 					 {'sender' => $param->{'user'}{'email'},
 					  'remote_host' => $param->{'remote_host'},
@@ -8899,7 +8988,7 @@ sub _prepare_edit_form {
 
 =pod 
 
-=head2 sub _prepare_data(STRING,HASH_Ref,LIST_Ref,STRING,FAMILY,STRING)
+=head2 sub _prepare_data(STRING $name, HASH_Ref $struct, SCALAR $data, STRING $may_edit, FAMILY $family, STRING $main_p)
 
 Returns a reference to a hash containing the data used to edit the parameter (of name $name, corresponding to the structure $struct in pinfo, with the $may_edit editing status) containing the data in the Sympa web interface.
 
@@ -8911,7 +9000,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 =item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %List::pinfo
 
-=item * I<$data> (), the value(s) taken by this parameter in the current list.
+=item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
 
 =item * I<$may_edit> (STRING), the editing status of this parameter in the current context.
 
@@ -9089,7 +9178,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 	 }elsif ((ref ($struct->{'format'}) eq 'ARRAY') || ($restrict && ($main_p eq 'msg_topic' && $name eq 'keywords'))) {
 	     $p_glob->{'type'} = 'enum';
-
+	     
 	     unless (defined $p_glob->{'value'}) {
 		 ## Initialize
 		 foreach my $elt (@{$struct->{'format'}}) {

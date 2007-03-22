@@ -11350,22 +11350,22 @@ sub _load_admin_file {
 		$admin{$p} = &_load_list_param($robot,$p, $::pinfo{$p}{'default'}, $::pinfo{$p}, $directory);
 
 	    }elsif ((ref $::pinfo{$p}{'format'} eq 'HASH')
-		    && ($::pinfo{$p}{'occurrence'} !~ /n$/)) {
+		    && ($::pinfo{$p}{'occurrence'} =~ /1$/)) {
 		## If the paragraph is not defined, try to apply defaults
 		my $hash = {};
 		
 		foreach my $key (keys %{$::pinfo{$p}{'format'}}) {
 
-		    ## Only if all keys have defaults
+		    ## Skip keys without default value.
 		    unless (defined $::pinfo{$p}{'format'}{$key}{'default'}) {
-			undef $hash;
-			last;
+			next;
 		    }
 		    
 		    $hash->{$key} = &_load_list_param($robot,$key, $::pinfo{$p}{'format'}{$key}{'default'}, $::pinfo{$p}{'format'}{$key}, $directory);
 		}
 
 		$admin{$p} = $hash if (defined $hash);
+
 	    }
 
 #	    $admin{'defaults'}{$p} = 1;
