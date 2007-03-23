@@ -230,7 +230,7 @@ sub add_list {
     my $error = $self->check_param_constraint($list);
     $self->{'state'} = 'no_check';
     
-    if (defined $error) {
+    unless (defined $error) {
 	$list->set_status_error_config('no_check_rules_family',$list->{'name'},$self->{'name'});
 	push @{$return->{'string_error'}}, "Impossible to check parameters constraint, see logs for more informations. The list is set in status error_config";
 	return $return;
