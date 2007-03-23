@@ -4096,8 +4096,8 @@ sub send_notify_to_owner {
     my $robot = $self->{'domain'};
 
     unless (@to) {
-	do_log('notice', 'Warning : no owner defined or all of them use nomail option in list %s', $self->{'name'} );
-	return undef;
+	do_log('warn', 'No owner defined or all of them use nomail option in list %s ; using listmasters as default', $self->{'name'} );
+	@to = split /,/, &Conf::get_robot_conf($robot, 'listmaster');
     }
     unless (defined $operation) {
 	&do_log('err','List::send_notify_to_owner(%s) : missing incoming parameter "$operation"', $self->{'name'});
