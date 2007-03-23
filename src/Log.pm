@@ -85,10 +85,18 @@ sub do_log {
 	  }
     }
 
-   unless (syslog($fac, $m, @param)) {
+    ## Determine calling function and parameters
+    my @call = caller(1);
+    ## wwslog already adds this information
+    unless ($call[3] =~ /wwslog$/) {
+	$m = $call[3].'() ' . $m if ($call[3]);
+    }
+
+    unless (syslog($fac, $m, @param)) {
 	&do_connect();
 	    syslog($fac, $m, @param);
     }
+
     if ($main::options{'foreground'}) {
 	if ($main::options{'log_to_stderr'} || 
 	    ($main::options{'batch'} && $fac eq 'err')) {

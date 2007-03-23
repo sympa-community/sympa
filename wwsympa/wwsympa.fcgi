@@ -1248,6 +1248,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
 
+     ## Determine calling function and parameters
+     my @call = caller(1);
+     $msg = $call[3].'() ' . $msg if ($call[3]);
+
      $msg = "[list $param->{'list'}] " . $msg
 	 if $param->{'list'};
 
