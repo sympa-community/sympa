@@ -87,9 +87,7 @@ sub do_log {
     ## We perform this check after ensuring we need to log because Encode::from_to() is an expensive call
     if (defined $Conf::Conf{'filesystem_encoding'}) {
 	foreach my $i (0..$#param) {
-	    unless($param[$i] =~ /^MIME::Entity/){
-		Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
-	    }
+	    Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
 	}
     }
 
