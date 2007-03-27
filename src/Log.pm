@@ -77,12 +77,20 @@ sub do_log {
     # do not log if log level if too high regarding the log requested by user 
     return if ($level > $log_level);
 
+    ## Do not display variables which are references.
+    foreach my $i (0..$#param) {
+	if(ref($param[$i])){
+	    $param[$i]=ref($param[$i])
+	}
+    }
     ## Encode parameters to FS encoding to prevent "Wide character in syswrite" errors
     ## We perform this check after ensuring we need to log because Encode::from_to() is an expensive call
     if (defined $Conf::Conf{'filesystem_encoding'}) {
 	foreach my $i (0..$#param) {
-	    Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
-	  }
+	    unless($param[$i] =~ /^MIME::Entity/){
+		Encode::from_to($param[$i], 'utf8', $Conf::Conf{'filesystem_encoding'});
+	    }
+	}
     }
 
     ## Determine calling function and parameters
