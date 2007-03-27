@@ -228,7 +228,7 @@ unless (&Conf::checkfiles_as_root()) {
 }
 
 ## Check that the data structure is uptodate
-unless ($main::options{'upgrade'}) {
+unless ($main::options{'upgrade'} || $main::options{'help'}) {
     unless (&Upgrade::data_structure_uptodate()) {
 	&fatal_err("error : data structure was not updated ; you should run sympa.pl --upgrade to run the upgrade process.");
     }
