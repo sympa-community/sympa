@@ -2,42 +2,6 @@
 
  
 
-<h2>[%|loc%]Colors[%END%]</h2>
-<p>
-[%|loc%]The current version doesn't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table.[%END%]
-</p>
-
-<table summary="[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]" id="color_table">
-<tr id="color_table_title">
-<th>[%|loc%]parameter[%END%]</th>
-<th>[%|loc%]parameter value[%END%]</th>
-<th>[%|loc%]color lookup[%END%]</th>
-<td class="separator">&nbsp;</td>
-<th>[%|loc%]parameter[%END%]</th>
-<th>[%|loc%]parameter value[%END%]</th>
-<th>[%|loc%]color effet[%END%]</th>
-
-</tr>
-
-[% SET colors = ['color_0' 'color_1' 'color_2' 'color_3' 'color_4' 'color_5' 'color_6' 'color_7' 'color_8' 'color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15' 'dark_color' 'light_color' 'text_color' 'bg_color' 'error_color' 'selected_color' 'shaded_color'] %]
-
-[% USE table(colors, cols=2) %]
-
-[% FOREACH row = table.rows %]
-<tr>
-  [% FOREACH color = row %]
-    [% IF color %]
-     <td>[% color %]</td>
-     <td>[% $color %]</td>
-     <td style="background-color: [% $color %];" >&nbsp;</td>
-     <td class="separator"></td>
-    [% END %]
-  [% END %]
-</tr>
-[% END %]
-</table>
-
-<br /><br />
 <h2>[%|loc%]Cascading Style Sheet[%END%]</h2>
 <p>
 [% IF css_result %]
@@ -66,3 +30,153 @@
 </p><br /><br />
 <a class="actionMenuLinks" href="http://jigsaw.w3.org/css-validator/check?uri=referer">[%|loc%]W3C CSS validation tools[%END%]</a>
 
+<br /><br />
+
+<h2>[%|loc%]Colors[%END%]</h2>
+<p>
+[%|loc%]The current version doesn't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table.[%END%]
+</p>
+
+<table summary="[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]" id="color_table">
+<tr id="color_table_title">
+<th>[%|loc%]parameter[%END%]</th>
+<th>[%|loc%]parameter value[%END%]</th>
+<th>[%|loc%]color lookup[%END%]</th>
+<th>[%|loc%]parameter usage[%END%]</th>
+
+</tr>
+
+<tr>
+     <td>color_0</td>
+     <td>[% color_0 %]</td>
+     <td style="background-color: [% color_0 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI> one out of two lines in tables, alternated with color_5. It is intended to be the darkest shade, as color_5 has other uses.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_1</td>
+     <td>[% color_1 %]</td>
+     <td style="background-color: [% color_1 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>main navigation tabs;</LI><LI> most of the buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_2</td>
+     <td>[% color_2 %]</td>
+     <td style="background-color: [% color_2 %];" >&nbsp;</td>
+     <td>[%|loc%]font and border color of:<UL><LI> almost everything. Exceptions for borders are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some titles.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_3</td>
+     <td>[% color_3 %]</td>
+     <td style="background-color: [% color_3 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>top box;</LI><LI>footer box.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_4</td>
+     <td>[% color_4 %]</td>
+     <td style="background-color: [% color_4 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>page;</LI><LI>table headers;</LI><LI>the rest of the buttons (which are in fact hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_5</td>
+     <td>[% color_5 %]</td>
+     <td style="background-color: [% color_5 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>all the main interface boxes;</LI><LI>the lightest color for the table lines, contrasting with color_0.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_6</td>
+     <td>[% color_6 %]</td>
+     <td style="background-color: [% color_6 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>active action (for example, the section of the admin options which is currently viewed, or the header corresponding to the data following which an array is currently sorted);</LI><LI>hovered actions;</LI><LI>hovered buttons corresponding to the actionMenuLinks CSS class;</LI><LI>hovered navigation tabs.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_7</td>
+     <td>[% color_7 %]</td>
+     <td style="background-color: [% color_7 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>error messages;</LI><LI>just edited area in the administrative management section.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_8</td>
+     <td>[% color_8 %]</td>
+     <td style="background-color: [% color_8 %];" >&nbsp;</td>
+     <td>[%|loc%]doted underscore color of:<UL><LI>hyperlinks.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_9</td>
+     <td>[% color_9 %]</td>
+     <td style="background-color: [% color_9 %];" >&nbsp;</td>
+     <td>[%|loc%]<UL><LI>border color for active action (for example, the section of the admin options which is currently viewed, or the header corresponding to the data following which an array is currently sorted);</LI><LI>border color for hovered hyperlinks corresponding to actions;</LI><LI>background color for clicked links (corresponding to the .active state in a CSS).</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_10</td>
+     <td>[% color_10 %]</td>
+     <td style="background-color: [% color_10 %];" >&nbsp;</td>
+     <td>[%|loc%]inactive buttons color. Rarely used.[%END%]</td>
+</tr>
+<tr>
+     <td>color_11</td>
+     <td>[% color_11 %]</td>
+     <td style="background-color: [% color_11 %];" >&nbsp;</td>
+     <td>[%|loc%]font color for:<UL><LI>active navigation tab;</LI><LI>&lt;H2/&gt; titles;</LI><LI>hovered links;</LI><LI>some hovered buttons action(which are in fact hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_12</td>
+     <td>[% color_12 %]</td>
+     <td style="background-color: [% color_12 %];" >&nbsp;</td>
+     <td>[%|loc%]font color for:<UL><LI>the class smallblack. Not sure it is used.</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_13</td>
+     <td>[% color_13 %]</td>
+     <td style="background-color: [% color_13 %];" >&nbsp;</td>
+     <td>[%|loc%]background color of:<UL><LI>editable form areas (text areas, selection lists, ...);</LI><LI>the rest of hovered buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>[%END%]</td>
+</tr>
+<tr>
+     <td>color_14</td>
+     <td>[% color_14 %]</td>
+     <td style="background-color: [% color_14 %];" >&nbsp;</td>
+     <td>[%|loc%]unused[%END%]</td>
+</tr>
+<tr>
+     <td>color_15</td>
+     <td>[% color_15 %]</td>
+     <td style="background-color: [% color_15 %];" >&nbsp;</td>
+     <td>[%|loc%]unused[%END%]</td>
+</tr>
+<tr>
+     <td>dark_color</td>
+     <td>[% dark_color %]</td>
+     <td style="background-color: [% dark_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+<tr>
+     <td>light_color</td>
+     <td>[% light_color %]</td>
+     <td style="background-color: [% light_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+<tr>
+     <td>text_color</td>
+     <td>[% text_color %]</td>
+     <td style="background-color: [% text_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+<tr>
+     <td>bg_color</td>
+     <td>[% bg_color %]</td>
+     <td style="background-color: [% bg_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+<tr>
+     <td>selected_color</td>
+     <td>[% selected_color %]</td>
+     <td style="background-color: [% selected_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+<tr>
+     <td>shaded_color</td>
+     <td>[% shaded_color %]</td>
+     <td style="background-color: [% shaded_color %];" >&nbsp;</td>
+     <td>[%|loc%]deprecated[%END%]</td>
+</tr>
+
+</table>
