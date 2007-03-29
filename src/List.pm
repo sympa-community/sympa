@@ -6954,6 +6954,7 @@ sub request_action {
     my $debug = shift;
     do_log('debug', 'List::request_action %s,%s,%s',$operation,$auth_method,$robot);
 
+    ## Defining default values for parameters.
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host' ;
@@ -6963,12 +6964,15 @@ sub request_action {
 					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
 
     # do_log('info',"xxxxxxxxxxxxxxxxxx  auth_method='$auth_method'");
+    ## Check that authorization method is one of those known by Sympa
     unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
 	do_log('info',"fatal error : unknown auth method $auth_method in List::get_action");
 	return undef;
     }
     my (@rules, $name) ;
     my $list;
+
+    ## if we know which list we're working on
     if ($context->{'listname'}) {
         unless ( $list = new List ($context->{'listname'}, $robot) ){
 	    do_log('info',"request_action :  unable to create object $context->{'listname'}");

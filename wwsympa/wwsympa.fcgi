@@ -7401,11 +7401,58 @@ sub do_set_pending_list_request {
     return undef;
  }
 
+=pod 
+
+=head2 sub do_create_list
+
+Creates a list using a list template
+
+=head3 Arguments 
+
+=over 
+
+=item * I<None>
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1>, if no problem is encountered
+
+=item * I<undef>, if anything goes wrong
+
+=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * web_db_log
+
+=item * wwslog
+
+=item * admin::create_list_old
+
+=item * check_param_in
+
+=item * List::send_notify_to_listmaster
+
+=item * report::reject_report_web
+
+=back 
+
+=cut 
+
 ## create a liste using a list template. 
  sub do_create_list {
 
      &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
 
+     ## Check that all the needed arguments are present.
      foreach my $arg ('listname','subject','template','info','topics') {
 	 unless ($in{$arg}) {
 	     &report::reject_report_web('user','missing_arg',{'argument' => $arg},$param->{'action'});
@@ -7417,6 +7464,7 @@ sub do_set_pending_list_request {
 	     return undef;
 	 }
      }
+     ## Check that a user is logged in
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_create_list :  no user');
@@ -7426,11 +7474,12 @@ sub do_set_pending_list_request {
 		      'error_type' => 'no_user'});	     
 	 return 'loginrequest';
      }
-
+     
      $param->{'create_action'} = $param->{'create_list'};
 
      &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
 
+     ## If the action is forbidden, stop here.
      if ($param->{'create_action'} =~ /reject/) {
 	 &report::reject_report_web('auth',$param->{'reason'},{},$param->{'action'},$list);
 	 &wwslog('info','do_create_list: not allowed');
@@ -7439,10 +7488,16 @@ sub do_set_pending_list_request {
 		      'status' => 'error',
 		      'error_type' => 'authorization'});	     
 	 return undef;
+
+     ## If the action is reserved to listmaster, note that it will have to be moderated
      }elsif ($param->{'create_action'} =~ /listmaster/i) {
 	 $param->{'status'} = 'pending' ;
+
+     ## If the action is plainly authorized, note that it will be excuted.
      }elsif  ($param->{'create_action'} =~ /do_it/i) {
 	 $param->{'status'} = 'open' ;
+
+     ## If the action hasn't an authorization status, stop here.
      }else{
 	 &report::reject_report_web('intern','internal_scenario_error_create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_create_list: internal error in scenario create_list');
@@ -7455,7 +7510,8 @@ sub do_set_pending_list_request {
 
      ## 'other' topic means no topic
      $in{'topics'} = undef if ($in{'topics'} eq 'other');
-  
+
+     ## Store creation parameters.
      my %owner;
      $owner{'email'} = $param->{'user'}{'email'};
      $owner{'gecos'} = $param->{'user'}{'gecos'};
@@ -7516,6 +7572,54 @@ sub do_set_pending_list_request {
      $param->{'listname'} = $resul->{'list'}{'name'};
      return 1;
  }
+
+=pod 
+
+=head2 sub do_create_list_request 
+
+Sends back the list creation edition form. 
+
+=head3 Arguments 
+
+=over 
+
+=item * I<None>
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1>, if no problem is encountered
+
+=item * I<undef>, if anything goes wrong
+
+=item * I<'loginrequest'> if no user is logged in at the time the function is called.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * wwslog
+
+=item * _prepare_edit_form
+
+=item * List::request_action
+
+=item * List::load_topics
+
+=item * tools::get_list_list_tpl
+
+=item * tt2::allow_absolute_path
+
+=item * report::reject_report_web
+
+=back 
+
+=cut 
 
  ## Return the creation form
  sub do_create_list_request {
