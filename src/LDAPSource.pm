@@ -140,6 +140,22 @@ sub connect {
 	return undef;
     }
 
+    ## Using startçtls() will convert the existing connection to using Transport Layer Security (TLS), which pro-
+    ## vides an encrypted connection. This is only possible if the connection uses LDAPv3, and requires that the
+    ## server advertizes support for LDAP_EXTENSION_START_TLS. Use "supported_extension" in Net::LDAP::RootDSE to
+    ## check this.
+    if ($param->{'use_start_tls'}) {
+	my %tls_param;
+	$tls_param{'sslversion'} = $param->{'ssl_version'} if ($param->{'ssl_version'});
+	$tls_param{'ciphers'} = $param->{'ssl_ciphers'} if ($param->{'ssl_ciphers'});
+	$tls_param{'verify'} = $param->{'ca_verify'} || "optional";
+	$tls_param{'capath'} = $param->{'ca_path'} || "/etc/ssl";
+	$tls_param{'cafile'} = $param->{'ca_file'} if ($param->{'ca_file'});
+	$tls_param{'clientcert'} = $param->{'ssl_cert'} if ($param->{'ssl_cert'});
+	$tls_param{'clientkey'} = $param->{'ssl_key'} if ($param->{'ssl_key'});
+	$ldap_handler->start_tls(%tls_param);
+    }
+
     my $cnx;
     ## Not always anonymous...
     if (defined ($param->{'ldap_bind_dn'}) && defined ($param->{'ldap_bind_password'})) {
