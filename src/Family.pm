@@ -533,11 +533,13 @@ sub close {
 #  
 # IN : -$self
 #      -$xml_fh : file handle on the xml file
+#      -$close_unknown : true if must close old lists undefined in new instantiation
 # OUT : -1 or undef
 #########################################
 sub instantiate {
     my $self = shift;
     my $xml_file = shift;
+    my $close_unknown = shift;
     &do_log('debug2','Family::instantiate(%s)',$self->{'name'});
 
     # initialize vars
@@ -647,6 +649,7 @@ sub instantiate {
 	}
 	
 	my $answer;
+	unless ($close_unknown) {
 #	while (($answer ne 'y') && ($answer ne 'n')) {
 	    print STDOUT "The list $l isn't defined in the new instantiation family, do you want to close it ? (y or n)";
 	    $answer = <STDIN>;
@@ -654,7 +657,8 @@ sub instantiate {
 #######################
 	    $answer ||= 'y';
 	#}
-	if ($answer eq 'y'){
+	}
+	if ($close_unknown || $answer eq 'y'){
 
 	    unless ($list->set_status_family_closed('close_list',$self->{'name'})) {
 		push (@{$self->{'family_closed'}{'impossible'}},$list->{'name'});
@@ -702,98 +706,112 @@ sub instantiate {
 # OUT : -$string
 #########################################
 sub get_instantiation_results {
-    my $self = shift;
+    my ($self, $result) = @_;
     &do_log('debug4','Family::get_instantiation_results(%s)',$self->{'name'});
-    my $string = "\n\n******************************************************************************\n"; 
-    $string .= "\n******************** INSTANTIATION of $self->{'name'} FAMILY ********************\n";
-    $string .= "\n******************************************************************************\n\n"; 
+ 
+    $result->{'errors'} = ();
+    $result->{'warn'} = ();
+    $result->{'info'} = ();
+    my $string;
 
     unless ($#{$self->{'errors'}{'create_hash'}} <0) {
-	$string .= "\nImpossible list generation because errors in xml file for : \n  ".join(", ",@{$self->{'errors'}{'create_hash'}})."\n";    }
+        push(@{$result->{'errors'}}, "\nImpossible list generation because errors in xml file for : \n  ".join(", ",@{$self->{'errors'}{'create_hash'}})."\n");    }
         
     unless ($#{$self->{'errors'}{'create_list'}} <0) {
-	$string .= "\nImpossible list creation for : \n  ".join(", ",@{$self->{'errors'}{'create_list'}})."\n";
+        push(@{$result->{'errors'}}, "\nImpossible list creation for : \n  ".join(", ",@{$self->{'errors'}{'create_list'}})."\n");
     }
     
     unless ($#{$self->{'errors'}{'listname_already_used'}} <0) {
-	$string .= "\nImpossible list creation because listname is already used (orphan list or in another family) for : \n  ".join(", ",@{$self->{'errors'}{'listname_already_used'}})."\n";
+        push(@{$result->{'errors'}}, "\nImpossible list creation because listname is already used (orphelan list or in another family) for : \n  ".join(", ",@{$self->{'errors'}{'listname_already_used'}})."\n");
     }
     
     unless ($#{$self->{'errors'}{'update_list'}} <0) {
-	$string .= "\nImpossible list updating for : \n  ".join(", ",@{$self->{'errors'}{'update_list'}})."\n";
+        push(@{$result->{'errors'}}, "\nImpossible list updating for : \n  ".join(", ",@{$self->{'errors'}{'update_list'}})."\n");
     }
     
     unless ($#{$self->{'errors'}{'previous_list'}} <0) {
-	$string .= "\nExisted lists from the lastest instantiation impossible to get and not anymore defined in the new instantiation : \n  ".join(", ",@{$self->{'errors'}{'previous_list'}})."\n";
+        push(@{$result->{'errors'}}, "\nExisted lists from the lastest instantiation impossible to get and not anymore defined in the new instantiation : \n  ".join(", ",@{$self->{'errors'}{'previous_list'}})."\n");
     }
     
-    $string .= "\n****************************************\n";    
+    # $string .= "\n****************************************\n";    
     
     unless ($#{$self->{'created_lists'}{'with_aliases'}} <0) {
-	$string .= "\nThese lists have been created and aliases are ok :\n  ".join(", ",@{$self->{'created_lists'}{'with_aliases'}})."\n";
+       push(@{$result->{'info'}}, "\nThese lists have been created and aliases are ok :\n  ".join(", ",@{$self->{'created_lists'}{'with_aliases'}})."\n");
     }
     
     my $without_aliases =  $self->{'created_lists'}{'without_aliases'};
     if (ref $without_aliases) {
 	if (scalar %{$without_aliases}) {
-	    $string .= "\nThese lists have been created but aliases need to be installed : \n";
+            $string = "\nThese lists have been created but aliases need to be installed : \n";
 	    foreach my $l (keys %{$without_aliases}) {
 		$string .= " $without_aliases->{$l}";
 	    }
+            push(@{$result->{'warn'}}, $string);
 	}
     }
     
     unless ($#{$self->{'updated_lists'}{'aliases_ok'}} <0) {
-	$string .= "\nThese lists have been updated and aliases are ok :\n  ".join(", ",@{$self->{'updated_lists'}{'aliases_ok'}})."\n";
+        push(@{$result->{'info'}}, "\nThese lists have been updated and aliases are ok :\n  ".join(", ",@{$self->{'updated_lists'}{'aliases_ok'}})."\n");
     }
     
     my $aliases_to_install =  $self->{'updated_lists'}{'aliases_to_install'};
     if (ref $aliases_to_install) {
 	if (scalar %{$aliases_to_install}) {
-	    $string .= "\nThese lists have been updated but aliases need to be installed : \n";
+            $string = "\nThese lists have been updated but aliases need to be installed : \n";
 	    foreach my $l (keys %{$aliases_to_install}) {
 		$string .= " $aliases_to_install->{$l}";
 	    }
+            push(@{$result->{'warn'}}, $string);
 	}
     }
     
     my $aliases_to_remove =  $self->{'updated_lists'}{'aliases_to_remove'};
     if (ref $aliases_to_remove) {
 	if (scalar %{$aliases_to_remove}) {
-	    $string .= "\nThese lists have been updated but aliases need to be removed : \n";
+            $string = "\nThese lists have been updated but aliases need to be removed : \n";
 	    foreach my $l (keys %{$aliases_to_remove}) {
 		$string .= " $aliases_to_remove->{$l}";
 	    }
+            push(@{$result->{'warn'}}, $string);
 	}
     }
 	    
-    $string .= "\n****************************************\n";    
+    # $string .= "\n****************************************\n";    
     
     unless ($#{$self->{'generated_lists'}{'file_error'}} <0) {
-	$string.= "\nThese lists have been generated but they are in status error_config because of errors while creating list config files :\n  ".join(", ",@{$self->{'generated_lists'}{'file_error'}})."\n";
+        push(@{$result->{'errors'}}, "\nThese lists have been generated but they are in status error_config because of errors while creating list config files :\n  ".join(", ",@{$self->{'generated_lists'}{'file_error'}})."\n");
     }
 
     my $constraint_error = $self->{'generated_lists'}{'constraint_error'};
     if (ref $constraint_error) {
 	if (scalar %{$constraint_error}) {
-	    $string .="\nThese lists have been generated but there are in status error_config because of errors on parameter constraint :\n";
+            $string ="\nThese lists have been generated but there are in status error_config because of errors on parameter constraint :\n";
 	    foreach my $l (keys %{$constraint_error}) {
 		$string .= " $l : ".$constraint_error->{$l}."\n";
 	    }
+            push(@{$result->{'errors'}}, $string);
 	}
     }
 
-    $string .= "\n****************************************\n";    	
+    # $string .= "\n****************************************\n";    	
     
     unless ($#{$self->{'family_closed'}{'ok'}} <0) {
-	$string.= "\nThese lists don't belong anymore to the family, they are in status family_closed :\n  ".join(", ",@{$self->{'family_closed'}{'ok'}})."\n";
+        push(@{$result->{'info'}}, "\nThese lists don't belong anymore to the family, they are in status family_closed :\n  ".join(", ",@{$self->{'family_closed'}{'ok'}})."\n");
     }
 
     unless ($#{$self->{'family_closed'}{'impossible'}} <0){
-	$string.= "\nThese lists don't belong anymore to the family, but they can't be set in status family_closed :\n  ".join(", ",@{$self->{'family_closed'}{'impossible'}})."\n";
+        push(@{$result->{'warn'}}, "\nThese lists don't belong anymore to the family, but they can't be set in status family_closed :\n  ".join(", ",@{$self->{'family_closed'}{'impossible'}})."\n");
     }
 
-    return $string
+    unshift @{$result->{'errors'}}, "\n********** ERRORS IN INSTANTIATION of $self->{'name'} FAMILY ********************\n"       if ($#{$result->{'errors'}} > 0);
+    unshift @{$result->{'warn'}}, "\n********** WARNINGS IN INSTANTIATION of $self->{'name'} FAMILY ********************\n"       if ($#{$result->{'warn'}} > 0);
+    unshift @{$result->{'info'}},
+          "\n\n******************************************************************************\n"
+        . "\n******************** INSTANTIATION of $self->{'name'} FAMILY ********************\n"
+        . "\n******************************************************************************\n\n";
+
+    return $#{$result->{'errors'}};
+
 }
 
 

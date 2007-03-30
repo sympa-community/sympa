@@ -86,9 +86,11 @@ Options:
    --lowercase                           : lowercase email addresses in database
    --create_list --robot=robot_name --input_file=/path/to/file.xml 
                                          : create a list with the xml file under robot_name
-   --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml       
+   --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml [--close_unknown] [--quiet]
                                          : instantiate family_name lists described in the file.xml under robot_name,
-                                           the family directory must exist
+                                           the family directory must exist ;
+                                           automatically close undefined lists in a new instantation if --close_unknown specified,
+                                           do not print report if --quiet specified.
   --add_list=family_name --robot=robot_name --input_file=/path/to/file.xml
                                          : add the list described by the file.xml under robot_name, to the family
                                            family_name.
@@ -120,7 +122,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
-		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s')) {
+		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s','quiet','close_unknown')) {
     &fatal_err("Unknown options.");
 }
 
@@ -594,14 +596,22 @@ if ($main::options{'dump'}) {
  	exit 1;	
     }
 
-    unless ($family->instantiate($main::options{'input_file'})) {
+    unless ($family->instantiate($main::options{'input_file'}, $main::options{'close_unknown'})) {
  	print STDERR "\nImpossible family instantiation : action stopped \n";
  	exit 1;
     } 
         
-    my $string = $family->get_instantiation_results();
+    my %result;
+    my $err = $family->get_instantiation_results(\%result);
     close INFILE;
-    print STDERR $string;
+
+    unless ($main::options{'quiet'}) {
+        print STDOUT "@{$result{'info'}}";
+        print STDOUT "@{$result{'warn'}}";
+    }
+    if ($err) {
+        print STDERR "@{$result{'errors'}}";
+    }
     
     exit 0;
 }elsif ($main::options{'add_list'}) {
