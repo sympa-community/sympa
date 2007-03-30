@@ -258,6 +258,12 @@ sub db_log_del {
 
     my $dbh = &List::db_get_handler();
 
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+
     my $statement =  sprintf "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", $dbh->quote($date);
 
     unless ($dbh->do($statement)) {
@@ -270,6 +276,7 @@ sub db_log_del {
 # Scan log_table with appropriate select 
 sub get_first_db_log {
     my $dbh = &List::db_get_handler();
+
     my $select = shift;
 
     ## Dump vars
