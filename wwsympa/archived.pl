@@ -39,7 +39,6 @@ use Digest::MD5;
 
 use wwslib;
 use mail;
-use report;
 use Version;
 
 require 'tt2.pl';
@@ -145,7 +144,6 @@ unless ((-r $wwsconf->{'arc_path'}) && (-w $wwsconf->{'arc_path'})) {
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
     &do_log('err','unable to change directory');
     exit (-1);
 }

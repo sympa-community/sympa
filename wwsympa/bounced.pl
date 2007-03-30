@@ -43,7 +43,6 @@ use List;
 use Conf;
 use Log;
 use mail;
-use report;
 #use Getopt::Std;
 use Getopt::Long;
 use POSIX;
@@ -167,8 +166,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &report::reject_report_web('intern','chdir_error',{},'','','',$Conf{'host'});
-    &do_log('info','Unable to change directory');
+     &do_log('info','Unable to change directory');
     exit (-1);
 }
 
