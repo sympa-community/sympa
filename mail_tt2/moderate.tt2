@@ -1,5 +1,5 @@
 From: [% fromlist %]
-To: [% FILTER qencode %][%|loc(list.name)%]Moderators of list %1[%END%] <[% list.name %]-editor@[% list.host %]>[%END%]
+To: [% list.name %]-editor@[% list.host %]
 [% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Article to be tagged for list %1 from %2[%END%][%END%]
 [% ELSE -%]Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Article to be approved for list %1 from %2[%END%][%END%]
 [% END -%]
