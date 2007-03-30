@@ -7696,9 +7696,12 @@ sub search{
 	    return undef;
 	    }
 	    
+	## The 1.1 OID correponds to DNs ; it prevents the LDAP server from 
+	## preparing/providing too much data
 	    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
 				     filter => "$filter",
-				     scope => "$ldap_conf{'scope'}");
+				 scope => "$ldap_conf{'scope'}",
+				 attrs => ['1.1']);
 	    unless ($mesg) {
 		do_log('err',"Unable to perform LDAP search");
 		return undef;
