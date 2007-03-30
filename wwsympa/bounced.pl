@@ -43,6 +43,7 @@ use List;
 use Conf;
 use Log;
 use mail;
+use report;
 #use Getopt::Std;
 use Getopt::Long;
 use POSIX;

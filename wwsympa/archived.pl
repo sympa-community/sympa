@@ -39,6 +39,7 @@ use Digest::MD5;
 
 use wwslib;
 use mail;
+use report;
 use Version;
 
 require 'tt2.pl';
