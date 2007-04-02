@@ -128,7 +128,15 @@ sub escape_url {
 
     my $string = shift;
     
-    $string =~ s/ /%20/g;
+    $string =~ s/[\s+]/sprintf('%%%02x', ord($&))/eg;
+    # Some MUAs aren't able to decode ``%40'' (escaped ``@'') in e-mail 
+    # address of mailto: URL, or take ``@'' in query component for a 
+    # delimiter to separate URL from the rest.
+    my ($body, $query) = split(/\?/, $string, 2);
+    if (defined $query) {
+	$query =~ s/\@/sprintf('%%%02x', ord($&))/eg;
+	$string = $body.'?'.$query;
+    }
     
     return $string;
 }
