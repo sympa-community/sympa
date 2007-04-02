@@ -3115,6 +3115,7 @@ sub do_remindpasswd {
 	 $list_info->{'host'} = $list->{'admin'}{'host'};
 	 $list_info->{'date_epoch'} = $list->{'admin'}{'creation'}{'date_epoch'};
 	 $list_info->{'date'} = $list->{'admin'}{'creation'}{'date'};
+	 $list_info->{'topics'} = $list->{'admin'}{'topics'};
 	 if ($param->{'user'}{'email'} &&
 	     ($list->am_i('owner',$param->{'user'}{'email'}) ||
 	      $list->am_i('editor',$param->{'user'}{'email'})) ) {
