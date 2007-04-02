@@ -34,6 +34,8 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
 
+require 'tools.pl';
+
 sub DAEMON_MESSAGE {1};
 sub DAEMON_COMMAND {2};
 sub DAEMON_CREATION {4};
