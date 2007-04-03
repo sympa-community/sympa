@@ -12867,8 +12867,9 @@ sub d_unzip_shared_file {
 	}
     }		 
 
-    ## Change 8bit filenames afterward    
-    &tools::qencode_hierarchy($zip_abs_dir.'/zip');
+    ## Qencode 8bit filenames afterward
+    ## The suspected charset is the one that is associated to the user's language
+    &tools::qencode_hierarchy($zip_abs_dir.'/zip', &Language::GetCharset());
 
     return $status;
 }

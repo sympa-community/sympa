@@ -1991,6 +1991,14 @@ sub qencode_hierarchy {
     return $count;
 }
 
+## Dumps the value of each character of the inuput string
+sub dump_encoding {
+    my $out = shift;
+
+    $out =~ s/./sprintf('%02x', ord($&)).' '/eg;
+    return $out;
+}
+
 ## Remove PID file and STDERR output
 sub remove_pid {
     my ($pidfile, $pid) = @_;
