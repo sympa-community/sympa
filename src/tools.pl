@@ -1802,7 +1802,7 @@ sub get_filename {
 	}
 	my @result;
 	foreach my $f (@try) {
-	    &do_log('debug3','get_filname : name: %s ; dir %s', $name, $f  );
+	    &do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
 		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
