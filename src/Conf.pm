@@ -565,6 +565,7 @@ sub load_robots {
 				  default_shared_quota => 1,
 				  verp_rate => 1,
 				  loop_prevention_regex => 1,
+				  max_size => 1,
 				  );
 
     ## Load wwsympa.conf
