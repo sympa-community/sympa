@@ -19,6 +19,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+=pod 
+
+=head1 NAME 
+
+I<Family.pm> - Handles list families
+
+=head1 DESCRIPTION 
+
+Sympa allows lists creation and management by sets. These are the families, sets of lists sharing common properties. This module gathers all the family-specific operations.
+
+=cut 
+
 package Family;
 
 use strict;
@@ -36,8 +48,56 @@ use File::Copy;
 my %list_of_families;
 my @uncompellable_param = ('msg_topic.keywords','owner_include.source_parameters', 'editor_include.source_parameters');
 
+=pod 
+
+=head1 SUBFUNCTIONS 
+
+This is the description of the subfunctions contained by Family.pm
+
+=cut 
+
+=pod 
+
+=head1 Class methods 
+
+=cut 
+
 ## Class methods
 ################
+
+=pod 
+
+=head2 sub get_available_families(STRING $robot)
+
+Returns the list of existing families in the Sympa installation.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$robot>, the name of the robot the family list of which we want to get.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<an array> containing all the robot's families names.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * Log::do_log
+
+=item * Family::new
+
+=back 
+
+=cut
 
 sub get_available_families {
     my $robot = shift;
@@ -54,6 +114,8 @@ sub get_available_families {
 	    next;
 	}
 
+	## If we can create a Family object with what we find in the family
+	## directory, then it is worth being added to the list.
 	foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
 	    if (my $family = new Family($subdir, $robot)) { 
 		$families{$subdir} = 1;
@@ -64,8 +126,56 @@ sub get_available_families {
     return keys %families;
 }
 
+=pod 
+
+=head1 Instance methods 
+
+=cut 
+
 ## Instance methods
 ###################
+
+=pod 
+
+=head2 sub new(STRING $name, STRING $robot)
+
+Creates a new Family object of name $name, belonging to the robot $robot.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$class>, the class in which we're supposed to create the object (namely "Family"),
+
+=item * I<$name>, a character string containing the family name,
+
+=item * I<$robot>, a character string containing the name of the robot which the family is/will be installed in.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$self>, the Family object 
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * Family::_check_obligatory_files
+
+=item * Family::_get_directory
+
+=item * Log::do_log
+
+=item * tools::get_regexp
+
+=back 
+
+=cut
 
 #########################################
 # new                                   
@@ -87,6 +197,7 @@ sub new {
     
     my $self = {};
 
+    
     if ($list_of_families{$robot}{$name}) {
         # use the current family in memory and update it
 	$self = $list_of_families{$robot}{$name};
@@ -141,6 +252,58 @@ sub new {
     return $self;
 }
      
+=pod 
+
+=head2 sub add_list(FILE_HANDLE $data, BOOLEAN $abort_on_error)
+
+Adds a list to the family. List description can be passed either through a hash of data or through a file handle.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object,
+
+=item * I<$data>, a file handle on an XML B<list> description file or a hash of data,
+
+=item * I<$abort_on_error>: if true, the function won't create lists in status error_config.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$return>, a hash containing the execution state of the method. If everything went well, the "ok" key must be associated to the value "1".
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * admin::create_list
+
+=item * Conf::get_robot_conf
+
+=item * Family::_copy_files
+
+=item * Family::check_param_constraint
+
+=item * List::has_include_data_sources
+
+=item * List::save_config
+
+=item * List::set_status_error_config
+
+=item * List::sync_include
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # add_list                                
 #########################################
@@ -262,12 +425,78 @@ sub add_list {
     return $return;
 }
 
+=pod 
+
+=head2 sub modify_list(FILE_HANDLE $fh)
+
+Adds a list to the family.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object,
+
+=item * I<$fh>, a file handle on the XML B<list> configuration file.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$return>, a ref to a hash containing the execution state of the method. If everything went well, the "ok" key must be associated to the value "1".
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * admin::update_list
+
+=item * Conf::get_robot_conf
+
+=item * Config_XML::new
+
+=item * Config_XML::createHash
+
+=item * Config_XML::getHash
+
+=item * Family::_copy_files
+
+=item * Family::_get_customizing
+
+=item * Family::_set_status_changes
+
+=item * Family::check_param_constraint
+
+=item * List::has_include_data_sources
+
+=item * List::new
+
+=item * List::save_config
+
+=item * List::send_notify_to_owner
+
+=item * List::set_status_error_config
+
+=item * List::sync_include
+
+=item * List::update_config_changes
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # modify_list                                
 #########################################
 # modify a list that belongs to the family
 #  under to current robot:
-# (the list is new described by the xml file)
+# (the list modifications are described by the xml file)
 #  
 # IN : -$self
 #      -$fh : file handle on the xml file
@@ -472,6 +701,42 @@ sub modify_list {
     return $return;
 }
 
+=pod 
+
+=head2 sub close()
+
+Closes every list family.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$string>, a character string containing a message to display describing the results of the sub.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Family::get_family_lists
+
+=item * List::set_status_family_closed
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # close                                 
 #########################################
@@ -524,6 +789,66 @@ sub close {
 
 
 
+=pod 
+
+=head2 sub instantiate(FILEHANDLE $fh, BOOLEAN $close_unknown)
+
+Creates family lists or updates them if they exist already.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object corresponding to the family to create / update
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$string>, a character string containing a message to display describing the results of the sub,
+
+=item * I<$fh>, a file handle on the B<family> XML file,
+
+=item * I<$close_unknown>: if true, the function will close old lists undefined in the new instantiation.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * admin::create_list
+
+=item * Config_XML::createHash
+
+=item * Config_XML::getHash
+
+=item * Config_XML::new
+
+=item * Family::_end_update_list
+
+=item * Family::_initialize_instantiation
+
+=item * Family::_split_xml_file
+
+=item * Family::_update_existing_list
+
+=item * Family::get_hash_family_lists
+
+=item * List::new
+
+=item * List::set_status_error_config
+
+=item * List::set_status_family_closed
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # instantiate                                   
 #########################################
@@ -542,15 +867,17 @@ sub instantiate {
     my $close_unknown = shift;
     &do_log('debug2','Family::instantiate(%s)',$self->{'name'});
 
-    # initialize vars
+    ## all the description variables are emptied.
     $self->_initialize_instantiation();
     
-    # set impossible checking (used by list->load)
+    ## set impossible checking (used by list->load)
     $self->{'state'} = 'no_check';
 	
+    ## get the currently existing lists in the family
     my $previous_family_lists = $self->get_hash_family_lists();
 
-    ## xml instantiation data
+    ## Splits the family description XML file into a set of list description xml files
+    ## and collects lists to be created in $self->{'list_to_generate'}.
     unless ($self->_split_xml_file($xml_file)) {
 	&do_log('err','Errors during the parsing of family xml file');
 	return undef;
@@ -561,7 +888,7 @@ sub instantiate {
 
 	my $list = new List($listname, $self->{'robot'});
 	
-        ## get data from list xml file
+        ## get data from list XML file. Stored into $config (class Config_XML).
 	my $xml_fh;
 	open $xml_fh,"$self->{'dir'}"."/".$listname.".xml";
 	my $config = new Config_XML($xml_fh);
@@ -573,6 +900,8 @@ sub instantiate {
  	    }
 	    next;
 	} 
+
+	## stores the list config into the hash referenced by $hash_list.
 	my $hash_list = $config->getHash();
 
 	## LIST ALREADY EXISTING
@@ -593,6 +922,7 @@ sub instantiate {
 		next;
 	    }
 
+	    ## Update list config
 	    my $result = $self->_update_existing_list($list,$hash_list);
 	    unless (defined $result) {
 		push (@{$self->{'errors'}{'update_list'}},$list->{'name'});
@@ -604,6 +934,7 @@ sub instantiate {
 	## FIRST LIST CREATION    
 	} else{
 
+	    ## Create the list
 	    my $result = &admin::create_list($hash_list->{'config'},$self,$self->{'robot'});
 	    unless (defined $result) {
 		push (@{$self->{'errors'}{'create_list'}}, $hash_list->{'config'}{'listname'});
@@ -695,6 +1026,38 @@ sub instantiate {
     $self->{'state'} = 'normal';
     return 1;
 }
+
+=pod 
+
+=head2 sub get_instantiation_results()
+
+Returns a string with informations summarizing the instantiation results.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$string>, a character string containing a message to display.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
 
 #########################################
 # get_instantiation_results
@@ -816,6 +1179,50 @@ sub get_instantiation_results {
 
 
 
+=pod 
+
+=head2 sub check_param_constraint(LIST $list)
+
+Checks the parameter constraints taken from param_constraint.conf file for the List object $list.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list>, a List object corresponding to the list to chek.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1> if everything goes well,
+
+=item * I<undef> if something goes wrong,
+
+=item * I<\@error>, a ref on an array containing parameters conflicting with constraints.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Family::check_values
+
+=item * Family::get_constraints
+
+=item * List::get_param_value
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # check_param_constraint                                   
 #########################################
@@ -889,6 +1296,40 @@ sub check_param_constraint {
     }
 }
 
+=pod 
+
+=head2 sub get_constraints()
+
+Returns a hash containing the values found in the param_constraint.conf file.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$self->{'param_constraint_conf'}>, a hash containing the values found in the param_constraint.conf file.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Family::_load_param_constraint_conf
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # get_constraints
 #########################################
@@ -916,6 +1357,42 @@ sub get_constraints {
     return $self->{'param_constraint_conf'};
 }
 
+=pod 
+
+=head2 sub check_values(SCALAR $param_value, SCALAR $constraint_value)
+
+Returns 0 if all the value(s) found in $param_value appear also in $constraint_value. Otherwise the function returns an array containing the unmatching values.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the family
+
+=item * I<$param_value>, a scalar or a ref to a list (which is also a scalar after all)
+
+=item * I<$constraint_value>, a scalar or a ref to a list
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<\@error>, a ref to an array containing the values in $param_value which don't match those in $constraint_value.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # check_values                                  
 #########################################
@@ -924,7 +1401,7 @@ sub get_constraints {
 #  
 # IN  : -$self
 #       -$param_value 
-#       -constraint_value
+#       -$constraint_value
 # OUT : -\@error (ref on array of forbidden values) 
 #        or '0' for free parameters
 #########################################
@@ -988,6 +1465,46 @@ sub check_values {
 }
 
 
+=pod 
+
+=head2 sub get_param_constraint(STRING $param)
+
+Gets the constraints on parameter $param from the 'param_constraint.conf' file.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$param>, a character string corresponding to the name of the parameter for which we want to gather constraints.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<0> if there are no constraints on the parameter,
+
+=item * I<a scalar> containing the allowed value if the parameter has a fixed value,
+
+=item * I<a ref to a hash> containing the allowed values if the parameter is controlled,
+
+=item * I<undef> if something went wrong.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #########################################
 # get_param_constraint                                   
 #########################################
@@ -1021,6 +1538,40 @@ sub get_param_constraint {
     }
 }
 	
+=pod 
+
+=head2 sub get_family_lists()
+
+Returns a ref to an array whose values are the family lists' names.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<\@list_of_lists>, a ref to the array containing the family lists' names.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=item * List::get_lists
+
+=back 
+
+=cut
+
 #########################################
 # get_family_lists                                 
 #########################################
@@ -1043,6 +1594,39 @@ sub get_family_lists {
     return \@list_of_lists;
 }
 
+=pod 
+
+=head2 sub get_hash_family_lists()
+
+Returns a ref to a hash whose keys are this family's lists' names. They are associated to the value "1".
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<\%list_of_list>, a ref to a hash the keys of which are the family's lists' names.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=item * List::get_lists
+
+=back 
+
+=cut
+
 #########################################
 # get_hash_family_lists                                 
 #########################################
@@ -1064,6 +1648,38 @@ sub get_hash_family_lists {
     }
     return \%list_of_lists;
 }
+
+=pod 
+
+=head2 sub get_uncompellable_param()
+
+Returns a reference to hash whose keys are the uncompellable parameters.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<none>
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<\%list_of_param> a ref to a hash the keys of which are the uncompellable parameters names.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
 
 #########################################
 # get_uncompellable_param
@@ -1091,8 +1707,47 @@ sub get_uncompellable_param {
     return \%list_of_param;
 }
 
+=pod
+
+=head1 Private methods
+
+=cut
 
 ############################# PRIVATE METHODS ##############################
+
+=pod 
+
+=head2 sub _get_directory()
+
+Gets the family directory, look for it in the robot, then in the site and finally in the distrib.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<a string> containing the family directory name
+
+=item * I<undef> if no directory is found.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
 
 #####################################################
 # _get_directory                                   
@@ -1122,13 +1777,47 @@ sub _get_directory {
 }
 
 
+=pod 
+
+=head2 sub _check_obligatory_files()
+
+Checks the existence of the mandatory files (param_constraint.conf and config.tt2) in the family directory.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the family
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$string>, a character string containing the missing file(s)' name(s), separated by white spaces.
+
+=item * I<0> if all the files are found.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #####################################################
 # _check_obligatory_files                                   
 #####################################################
-# check existence of obligatory files in the family
+# check existence of mandatory files in the family
 # directory:
 #  - param_constraint.conf
-#  - config.tpl
+#  - config.tt2
 #
 # IN  : -$self
 # OUT : -0 (if OK) or 
@@ -1154,6 +1843,38 @@ sub _check_obligatory_files {
 }
 
 
+
+=pod 
+
+=head2 sub _initialize_instantiation()
+
+Initializes all the values used for instantiation and results description to empty values.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1>
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * I<none>
+
+=back 
+
+=cut
 
 #####################################################
 # _initialize_instantiation                                   
@@ -1214,6 +1935,72 @@ sub _initialize_instantiation() {
     return 1;
 }
 
+
+=pod 
+
+=head2 sub _split_xml_file(FILE_HANDLE $xml_fh)
+
+Splits the XML family file into XML list files. New list names are put in the array referenced by $self->{'list_to_generate'} and new files are put in the family directory.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$xml_fh>, a handle to the XML B<family> description file.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1> if everything goes well
+
+=item * I<0> if something goes wrong
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=item * XML::LibXML::new
+
+=item * XML::LibXML::Document::createDocument
+
+=item * XML::LibXML::Document::documentElement
+
+=item * XML::LibXML::Document::encoding
+
+=item * XML::LibXML::Document::setDocumentElement
+
+=item * XML::LibXML::Document::toFile
+
+=item * XML::LibXML::Document::version
+
+=item * XML::LibXML::Node::childNodes
+
+=item * XML::LibXML::Node::getChildrenByTagName
+
+=item * XML::LibXML::Node::line_number
+
+=item * XML::LibXML::Node::nodeName
+
+=item * XML::LibXML::Node::nodeType
+
+=item * XML::LibXML::Node::textContent
+
+=item * XML::LibXML::Parser::line_numbers
+
+=item * XML::LibXML::Parser::parse_file
+
+=back 
+
+=cut
 
 #####################################################
 # _split_xml_file                                   
@@ -1301,6 +2088,42 @@ sub _split_xml_file {
     }
     return 1;
 }
+
+=pod 
+
+=head2 sub _update_existing_list()
+
+Updates an already existing list in the new family context
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list>, a List object corresponding to the list to update
+
+=item * I<$hash_list>, a reference to a hash containing data to create the list config file.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$list>, the updated List object, if everything goes well
+
+=item * I<undef>, if something goes wrong.
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=back 
+
+=cut
 
 #####################################################
 # _update_existing_list
@@ -1426,6 +2249,60 @@ sub _update_existing_list {
     return $list;
 }
 
+=pod 
+
+=head2 sub _get_customizing()
+
+Gets list customizations from the config_changes file and keeps on changes allowed by param_constraint.conf
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list>, a List object corresponding to the list we want to check
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$result>, a reference to a hash containing:
+
+=over 4
+
+=item * $result->{'config_changes'} : the list config_changes
+
+=item * $result->{'allowed'}, a hash of allowed parameters: ($param,$values)
+
+=item * $result->{'forbidden'}{'param'} = \@
+
+=item * $result->{'forbidden'}{'file'} = \@ (not working)
+
+=back
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Family::check_values
+
+=item * Family::get_constraints
+
+=item * List::get_config_changes
+
+=item * List::_get_param_value_anywhere
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #####################################################
 # _get_customizing                                   
 #####################################################
@@ -1516,6 +2393,58 @@ sub _get_customizing {
     return $result;
 }
 
+=pod 
+
+=head2 sub _set_status_changes()
+
+Sets changes (loads the users, installs or removes the aliases); deals with the new and old_status (for already existing lists).
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list>, a List object corresponding to the list the changes of which we want to set.
+
+=item * I<$old_status>, a character string corresponding to the list status before family instantiation.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$result>, a reference to a hash containing:
+
+=over 4
+
+=item * $result->{'install_remove'} = "install" or "remove"
+
+=item * $result->{'aliases'} = 1 if install or remove is done or a string of aliases needed to be installed or removed
+
+=back
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * admin::install_aliases
+
+=item * admin::remove_aliases
+
+=item * List::add_user
+
+=item * List::_load_users_file
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #####################################################
 # _set_status_changes
 #####################################################
@@ -1524,7 +2453,6 @@ sub _get_customizing {
 # already existing lists)
 # IN : -$self
 #      -$list : the new list
-#      -$robot
 #      -$old_status : the list status before instantiation
 #                     family
 #
@@ -1582,6 +2510,62 @@ sub _set_status_changes {
 
 
 
+=pod 
+
+=head2 sub _end_update_list()
+
+Finishes to generate a list in a family context (for a new or an already existing list). This means: checking that the list config respects the family constraints and copying its XML description file into the 'instance.xml' file contained in the list directory.  If errors occur, the list is set in status error_config.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list>, a List object corresponding to the list we want to finish the update.
+
+=item * I<$xml_file>, a boolean:
+
+=over 4
+
+=item * if = 0, don't copy XML file (into instance.xml),
+
+=item *  if = 1, copy XML file
+
+=back
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1> if everything goes well
+
+=item * I<undef>, if something goes wrong
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Conf::get_robot_conf
+
+=item * Family::_copy_files
+
+=item * Family::check_param_constraint
+
+=item * List::save_config
+
+=item * List::set_status_error_config
+
+=item * Log::do_log
+
+=back 
+
+=cut
+
 #####################################################
 # _end_update_list
 #####################################################
@@ -1632,6 +2616,46 @@ sub _end_update_list {
     return 1;
 }
 
+=pod 
+
+=head2 sub _copy_files()
+
+Copies the instance.xml file into the list directory. This file contains the current list description.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=item * I<$list_dir>, a character string corresponding to the list directory
+
+=item * I<$file>, a character string corresponding to an XML file name (optional)
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<1> if everything goes well
+
+=item * I<undef>, if something goes wrong
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=item * File::Copy::copy
+
+=back 
+
+=cut
+
 #####################################################
 # _copy_files                                   
 #####################################################
@@ -1640,7 +2664,7 @@ sub _end_update_list {
 #
 # IN : -$self
 #      -$list_dir list directory
-#      -$file : xml file : optionnal
+#      -$file : xml file : optional
 # OUT : -1 or undef 
 #####################################################
 sub _copy_files {
@@ -1662,6 +2686,42 @@ sub _copy_files {
 
     return 1;
 }
+
+=pod 
+
+=head2 sub _load_param_constraint_conf()
+
+Loads the param_constraint.conf file into a hash
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$self>, the Family object
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<$constraint>, a ref to a hash containing the data found in param_constraint.conf
+
+=item * I<undef> if something went wrong
+
+=back 
+
+=head3 Calls
+
+=over 
+
+=item * Log::do_log
+
+=item * List::send_notify_to_listmaster
+
+=back 
+
+=cut
 
 #########################################
 # _load_param_constraint_conf()                                   
@@ -1739,6 +2799,20 @@ sub _load_param_constraint_conf {
 }
 
 
+
+=pod 
+
+=head1 AUTHORS 
+
+=over 
+
+=item * Serge Aumont <sa AT cru.fr> 
+
+=item * Olivier Salaun <os AT cru.fr> 
+
+=back 
+
+=cut
 
 ###################################
 return 1;

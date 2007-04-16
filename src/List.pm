@@ -2073,6 +2073,7 @@ sub get_family {
 }
 
 ## return the config_changes hash
+## Used ONLY with lists belonging to a family.
 sub get_config_changes {
     my $self = shift;
     &do_log('debug3', 'List::get_config_changes(%s)', $self->{'name'});
