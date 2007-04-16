@@ -27,7 +27,11 @@ if [ -f /etc/debian_version ] ; then
     OSTYPE='Debian'
 fi
 
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
+if [ -f /etc/slackware-version ] ; then
+    OSTYPE='Slack'
+fi
+
+if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
     # Source function library.
     . --INITDIR--/functions
 
@@ -60,7 +64,8 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0"  -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
+    if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0"  -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
+
       status $1.pl
 
     else
@@ -96,7 +101,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
+	if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
 		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
 	else
 		$sympadir/$1.pl $startparam && success || failure
@@ -154,7 +159,7 @@ sympa_stop() {
 		pid=`head -1 --PIDDIR--/$1.pid`
 		running=`ps -A | grep "$pid"`
 		if [ "$running" != "" ]; then
-		if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
+		if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
 		    else
 			kill -TERM $pid && success || failure
@@ -170,7 +175,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
+if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
