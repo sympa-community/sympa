@@ -190,7 +190,7 @@ IDXPGEND
 <!-- top of message list -->
 <LISTBEGIN>
 <br />
-($tag$% IF is_owner %$tag$)<form  action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
+($tag$% IF is_owner %$tag$)<form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
 <ul>
 </LISTBEGIN>
 
@@ -209,7 +209,7 @@ IDXPGEND
 <input type="hidden" name="month" value="$mois$" />
 <input type="hidden" name="action" value="remove_arc" />
 <input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
-<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.myform.msgid)" />
+<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.forms['msglist'].msgid)" />
 <input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete these messages ?($tag$%END%$tag$)')"/><br />
 <br />
 
@@ -298,7 +298,7 @@ TIDXPGEND
 </div>
 <!-- end header -->
 
-($tag$% IF is_owner %$tag$)<form  action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
+($tag$% IF is_owner %$tag$)<form id="msglist" action="($tag$% path_cgi %$tag$)" method="post">($tag$%END%$tag$)
 <ul>
 </THEAD>
 
@@ -325,7 +325,7 @@ TIDXPGEND
 <input type="hidden" name="month" value="$mois$" />
 <input type="hidden" name="action" value="remove_arc" />
 <input type="hidden" name="list" value ="($tag$% list %$tag$)" />  
-<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.myform.msgid)" />
+<input class="MainMenuLinks" type="button" value="($tag$%|loc%$tag$)Toggle Selection($tag$%END%$tag$)" onclick="toggle_selection(document.forms['msglist'].msgid)" />
 <input type="submit" class="MainMenuLinks" name="action_remove_arc" value="($tag$%|loc%$tag$)Tag messages for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete these messages ?($tag$%END%$tag$)')"/><br />
 <br />
 </form>
