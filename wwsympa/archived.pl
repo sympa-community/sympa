@@ -515,6 +515,11 @@ sub mail2arc {
 
     my $list = new List($listname, $hostname);
 
+    unless (defined $list) {
+	&do_log('err', 'Unknown list %s@%s', $listname, $hostname);
+	return undef;
+    }
+
     my $tag = &get_tag($listname);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
