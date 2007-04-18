@@ -15410,7 +15410,7 @@ sub do_dump_scenario {
 	 &wwslog('info','do_dump_scenario: missing scenario name');
 	 return undef;
      }
-     unless (&List::is_listmaster($param->{'user'}{'email'})) {
+     unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
 	 &wwslog('info','do_dump_scenario: reject because not listmaster');
 	 return undef;
