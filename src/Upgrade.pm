@@ -798,13 +798,14 @@ sub probe_db {
 
 	    #	    unless ($sth = $dbh->table_info) {
 	    #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
-	    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $t")) {
-		do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
+	    my $sql_query = "SHOW FIELDS FROM $t";
+	    unless ($sth = $dbh->prepare($sql_query)) {
+		do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
 		return undef;
 	    }
 	    
 	    unless ($sth->execute) {
-		do_log('err','Unable to execute SQL query : %s', $dbh->errstr);
+		do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
 		return undef;
 	    }
 	    
