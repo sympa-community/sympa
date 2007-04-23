@@ -939,7 +939,7 @@ sub _load_auth {
     
     my $robot = shift;
     my $config = shift;
-    &do_log('notice', 'Conf::_load_auth(%s)', $config);
+    &do_log('debug', 'Conf::_load_auth(%s)', $config);
 
     my $line_num = 0;
     my $config_err = 0;
