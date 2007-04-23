@@ -11234,7 +11234,7 @@ sub _load_admin_file {
 	
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    &do_log('info', 'Bad paragraph "%s" in %s, ignore it', @paragraph, $config_file);
+	    &do_log('err', 'Bad paragraph "%s" in %s, ignore it', @paragraph, $config_file);
 	    next;
 	}
 	    
@@ -11247,7 +11247,7 @@ sub _load_admin_file {
 	}
 	
 	unless (defined $::pinfo{$pname}) {
-	    &do_log('info', 'Unknown parameter "%s" in %s, ignore it', $pname, $config_file);
+	    &do_log('err', 'Unknown parameter "%s" in %s, ignore it', $pname, $config_file);
 	    next;
 	}
 
@@ -11255,7 +11255,7 @@ sub _load_admin_file {
 	if (defined $admin{$pname}) {
 	    unless (($::pinfo{$pname}{'occurrence'} eq '0-n') or
 		    ($::pinfo{$pname}{'occurrence'} eq '1-n')) {
-		&do_log('info', 'Multiple parameter "%s" in %s', $pname, $config_file);
+		&do_log('err', 'Multiple occurences of a unique parameter "%s" in %s', $pname, $config_file);
 	    }
 	}
 	
@@ -11263,7 +11263,7 @@ sub _load_admin_file {
 	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s, ignore it', $pname, $config_file);
+		&do_log('err', 'Expecting a paragraph for "%s" parameter in %s, ignore it', $pname, $config_file);
 		next;
 	    }
 	    
@@ -11275,18 +11275,18 @@ sub _load_admin_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);
 		
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-		    &do_log('info', 'Bad line "%s" in %s',$paragraph[$i], $config_file);
+		    &do_log('err', 'Bad line "%s" in %s',$paragraph[$i], $config_file);
 		}
 		
 		my $key = $1;
 		
 		unless (defined $::pinfo{$pname}{'file_format'}{$key}) {
-		    &do_log('info', 'Unknown key "%s" in paragraph "%s" in %s', $key, $pname, $config_file);
+		    &do_log('err', 'Unknown key "%s" in paragraph "%s" in %s', $key, $pname, $config_file);
 		    next;
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
-		    &do_log('info', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
+		    &do_log('err', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
 		    next;
 		}
 
@@ -11354,9 +11354,12 @@ sub _load_admin_file {
 
 	## Defaults
 	unless (defined $admin{$p}) {
+
+	    ## Simple (versus structured) parameter case
 	    if (defined $::pinfo{$p}{'default'}) {
 		$admin{$p} = &_load_list_param($robot,$p, $::pinfo{$p}{'default'}, $::pinfo{$p}, $directory);
 
+	    ## Sructured parameters case : the default values are defined at the next level
 	    }elsif ((ref $::pinfo{$p}{'format'} eq 'HASH')
 		    && ($::pinfo{$p}{'occurrence'} =~ /1$/)) {
 		## If the paragraph is not defined, try to apply defaults
