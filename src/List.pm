@@ -11363,7 +11363,7 @@ sub _load_admin_file {
 	    }elsif ((ref $::pinfo{$p}{'format'} eq 'HASH')
 		    && ($::pinfo{$p}{'occurrence'} =~ /1$/)) {
 		## If the paragraph is not defined, try to apply defaults
-		my $hash = {};
+		my $hash;
 		
 		foreach my $key (keys %{$::pinfo{$p}{'format'}}) {
 
