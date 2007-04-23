@@ -3,6 +3,80 @@
 
 (See Changelog file for the full changes log)
 
+5.3b.5		23 April 2007
+
+   New features :
+
+	src/etc/script/sympa: Startup script now works with Slackware distributions.
+
+	src/LDAPSource.pm: [#934] [reported by A.Powers, DigiPen] added support for start_tls().
+
+	src/Family.pm, src/sympa.pl: [submitted by S.Amrani, Gendarmerie Nationale] made the family instanciation process quiet 
+	(required when run from a crontab). New sympa.pl options : --quiet and --close_unknown
+
+	web_tt2/skinsedit.tt2: Added color_* parameters usage in the skin administration page.
+
+   Changes :
+
+	src/Conf.pm: [#724] max_size parameter can now be used in robot.conf
+
+	src/List.pm: [requested by S.Amrani, Gend.Nationale] Specify the searched attribute 1.1 (the DN) in List::search()
+
+	src/List.pm: [#2932] [reported by R.Gilbert, Univ Sheffield] Use listmaster as default in List::send_notify_to_owner(), in case no owner is defined.
+
+
+   Bug fixes :
+
+	po/Makefile, src/Language.pm: [reported by L.Garnier, CNRS] complete locale ID for Basque is eu_ES
+
+	src/aliaswrapper.c, src/virtualwrapper.c: [reported by L.Garnier, CNRS] added missing include of stdlib.h
+
+	src/etc/mhonarc-ressources.tt2, wwsympa/archived.pl: [#3013][submitted by P. Timmons, Ec. Polytechnique Montreal] : The button "toggle selection" 
+	did not trigger its action and produced a javascript error instead. Plus added some pod documentation.
+
+	web_tt2/css.tt2: [#2975]removed a '{' in excess at the end of file which would cause two javascript errors at each page loading 
+	("Selector expected. Invalid rule set ignored." and "unexpected end of file while looking for closing } of an invalid rule set."). 
+	Leaving IE proprietary "zoom" property. Must be useful in some way.
+
+	wwsympa/wwsympa.fcgi: [#3012][submitted by P. Timmons, Ec. Polytechnique Montreal] Robot listmaster couldn't edit scenarios due to the $robot parameter not being called by is_listmaster() function in do_dump_scenario().
+
+	wwsympa/archived.pl: archived.pl would die while processing a message for an unknown list. Error message : "Can't call method "get_list_id" on 
+	unblessed reference at /home/sympa/bin/archived.pl line 526."
+
+	soap/sympasoap.pm: [#1325][#2969] [submitted by *both* O. Duval and O. Berger (INT Evry)] topics parameter wasn't used while creating a list with SOAP.
+
+	src/Language.pm, src/tools.pl, wwsympa/wwsympa.fcgi: wwsympa.fcgi would die when a ZIP archive was uploaded (d_unzip). 
+	Added the missing parameter to &tools::qencode_hierarchy()
+
+	src/tt2.pl: [#1464][submitted by S. Ikeda] [patch sympa-MAIN-20070103-escape_url.patch] Some MUAs aren't able to decode ``%40'' (escaped ``@'') 
+	in e-mail address of mailto: URL, or take ``@'' in query component for a delimiter to separate URL from the rest.
+	
+	src/Log.pm: [#1222] [submitted by G.Donnini, Univ Milano] check DB connectivity in Log::db_log_del()
+
+	src/List.pm, src/admin.pm, wwsympa/wwsympa.fcgi: [#2957] Stored Encode::from_to() return value (string length) instead 
+	of string value in info file at list creation time.
+
+	src/Log.pm: [#2930][Reported by T. Berry, Nasa] do_log sub don't apply Encode::from_to() function to reference variables anymore.
+
+	wwsympa/wwsympa.fcgi: [reported by Univ. Rennes 1] Prevent problems with URLS containing '//'. It would break navigations that uses relative URLs. 
+
+	src/Family.pm: [reported by T.Berry, Nasa] [fixed by S.Amrani, Gendarmerie nationale] automatic list creation failure was 
+	incorrectly handled and message could be lost.
+	
+	src/Lock.pm: [#2930][reported by T.Berry, Nasa] sympa processes would print binary data to the TTY. 
+	It was due to a File Handler variable that was logged. Also fixed a bug related to file unlocking.
+
+	src/List.pm, src/Task.pm: [#2940] [reported by T.Berry, Nasa] remove list-related task when purging a closed list
+
+	src/List.pm, wwsympa/wwsympa.fcgi: [#1075] Default values for parameter 'reply_to_header' are now correctly loaded.
+
+	web_tt2/edit_list_request.tt2, wwsympa.fcgi: [#985]: Hide "update" button whenever no parameter can be edited in the current page
+
+	[reported by R.Caldwelr, Franklin university] wwsympa::is_ldap_user() would not use provided bind_dn and bind_password.
+	Change: New LDAPSource module to gather all LDAP-related code. Currently only connect() and disconnect() have been implemented.
+	Change: removed obsolete export_list() functions (+related)
+
+
 5.3b.4		13 March 2007
 
    New features :
