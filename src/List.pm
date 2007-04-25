@@ -26,6 +26,7 @@ use Datasource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
 use Lock;
+use Task;
 require Fetch;
 require Exporter;
 require Encode;
