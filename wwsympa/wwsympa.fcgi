@@ -2249,8 +2249,8 @@ sub do_sso_login {
 	}
 	
     }elsif (defined (my $sso_id = $Conf{'generic_sso_id'}{$robot}{$in{'auth_service_name'}})) {
-	## Generic SSO
-	
+	## Generic SSO       	
+
 	## If contacted via POST, then redirect the user to the URL for the access control to apply
 	if ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	    my $path = '';
@@ -2454,7 +2454,6 @@ sub do_sso_login {
 	foreach my $k (keys %ENV) {
 	    if ($k =~ /^$prefix/) {
 		push @sso_attr, "$k=$ENV{$k}";
-		&wwslog('notice', 'Var : %s = %s', $k, $ENV{$k});
 	    }
 	}
 	
@@ -2485,6 +2484,14 @@ sub do_sso_login {
 	}
 	
 	&report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
+	
+	## Set a cookie to keep track of the SSO used to login
+	## Required to provide logout feature if available
+	&cookielib::generic_set_cookie(name => 'sympa_sso_id',
+				       value => $in{'auth_service_name'},
+				       domain => $wwsconf->{'cookie_domain'},
+				       expires => '+1y',
+				       path => '/');
 	
 	return 'home';
     }else {
@@ -2778,6 +2785,7 @@ sub do_redirect {
      $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
      my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
+     my $sso_id = &cookielib::generic_get_cookie($ENV{'HTTP_COOKIE'}, 'sympa_sso_id');
      if (defined $cas_id && (defined $Conf{'auth_services'}{$robot}[$cas_id])) {
 	 # this user was logged using CAS
 	 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
@@ -2791,7 +2799,33 @@ sub do_redirect {
 	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id, 'now');
 	 return 'redirect';
-     }
+     } elsif (defined $sso_id) {
+	 # this user was logged using a generic_sso
+	 
+	 ## Check if logout_url is known for this SSO
+	 my $sso;
+	 unless ($sso = &Conf::get_sso_by_id(robot => $robot, service_id => $sso_id)) {
+	     &wwslog('info','unknown SSO service_id');
+	     return undef;
+	 }
+
+	 ## Remove cookies
+	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
+	 &cookielib::generic_set_cookie(name => 'sympa_sso_id',
+					value => $in{'auth_service_name'},
+					domain => $wwsconf->{'cookie_domain'},
+					expires => '-10y',
+					path => '/');
+
+	 if ($sso->{'logout_url'}) {	     
+
+	     $in{'action'} = 'redirect';
+	     $param->{'redirect_to'} = $sso->{'logout_url'};
+	     
+	     return 'redirect';
+	 }
+     } 
+     
      &wwslog('info','do_logout: logout performed');
      &web_db_log({'parameters' => $param->{'user'}{'email'},
 		  'target_email' => $in{'email'},

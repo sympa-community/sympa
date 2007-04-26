@@ -932,6 +932,25 @@ sub checkfiles {
     return 1;
 }
 
+## Returns the SSO record correponding to the provided sso_id
+## return undef if none was found
+sub get_sso_by_id {
+    my %param = @_;
+
+    unless (defined $param{'service_id'} && defined $param{'robot'}) {
+	return undef;
+    }
+
+    foreach my $sso (@{$Conf{'auth_services'}{$param{'robot'}}}) {
+	&do_log('notice', "SSO: $sso->{'service_id'}");
+	next unless ($sso->{'service_id'} eq $param{'service_id'});
+
+	return $sso;
+    }
+    
+    return undef;
+}
+
 ## Loads and parses the authentication configuration file.
 ##########################################
 
@@ -992,6 +1011,7 @@ sub _load_auth {
 					    'service_id' => '\S+',
 					    'http_header_prefix' => '\w+',
 					    'email_http_header' => '\w+',
+					    'logout_url' => '.+',
 					    'ldap_host' => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
 					    'ldap_bind_dn' => '.+',
 					    'ldap_bind_password' => '.+',
