@@ -301,7 +301,8 @@ while (!$end) {
 			create ($current_date, 'INIT', $model, 'ttl', \%data);
 			
 		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
-			    defined $list->{'admin'}{$model_task_parameter}{'name'}) {
+			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
+			    ($list->{'admin'}{'status'} eq 'open')) {
 			
 			create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
 		    }
@@ -333,7 +334,7 @@ while (!$end) {
 	    
 	    ## Skip closed lists
 	    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-		&do_log('notice','Removing task file %s', $task_file);
+		&do_log('notice','Removing task file %s because the list is not opened', $task_file);
 		unless (unlink $task_file) {
 		    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 		    next;
