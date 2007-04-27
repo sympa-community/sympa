@@ -909,7 +909,7 @@ sub probe_db {
     }
     
     ## Check tables structure if we could get it
-    ## Currently only performed with mysql
+    ## Only performed with mysql and SQLite
     if (%real_struct) {
 	foreach my $t (keys %{$db_struct{$Conf{'db_type'}}}) {
 	    unless ($real_struct{$t}) {
@@ -954,7 +954,8 @@ sub probe_db {
 		
 		## Change DB types if different and if update_db_types enabled
 		if ($Conf{'update_db_field_types'} eq 'auto') {
-		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
+		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
+						 required_format => $db_struct{$Conf{'db_type'}}{$t}{$f})) {
 			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
 					      $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
 			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
@@ -1112,6 +1113,29 @@ sub data_structure_uptodate {
 
      return 1;
  }
+
+## Compare required DB field type
+## Input : required_format, effective_format
+## Output : return 1 if field type is appropriate AND size >= required size
+sub check_db_field_type {
+    my %param = @_;
+
+    my ($required_type, $required_size, $effective_type, $effective_size);
+
+    if ($param{'required_format'} =~ /^(\w+)(\((\d+)\))?$/) {
+	($required_type, $required_size) = ($1, $3);
+    }
+
+    if ($param{'effective_format'} =~ /^(\w+)(\((\d+)\))?$/) {
+	($effective_type, $effective_size) = ($1, $3);
+    }
+
+    if (($effective_type eq $required_type) && ($effective_size >= $required_size)) {
+	return 1;
+    }
+
+    return 0;
+}
 
 ## used to encode files to UTF-8
 ## also add X-Attach header field if template requires it
