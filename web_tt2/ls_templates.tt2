@@ -71,11 +71,12 @@
   [% END %]
   <td>[% file.key %]</td>
 
-  <td class="text_center">
-  [% IF file.value.distrib %]
+ [% FOREACH lang = file.value.distrib %]
+ <td class="text_center">
+  [% IF lang.value %]
     <form action="[% path_cgi %]/edit_template" method="post">
     <fieldset>
-      <input type="hidden" name="template_path" value="[% file.value.distrib.default %]" />
+      <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="scope" value="distrib" />
       <input type="hidden" name="tpl_lang" value="default" />
@@ -87,6 +88,7 @@
     </ul>
   [% END %]
   </td>
+[% END %]
 
 [% FOREACH lang = file.value.site %]
   <td class="text_center">
