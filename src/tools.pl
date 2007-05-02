@@ -350,7 +350,7 @@ sub shift_file {
     my @date = localtime (time);
     my $file_extention = POSIX::strftime ("%Y:%m:%d:%H:%M:%S", @date);
     
-    unless (rename ($file,$file.'\.'.$file_extention)) {
+    unless (rename ($file,$file.'.'.$file_extention)) {
 	&do_log('err', "shift_file : Cannot rename file $file to $file.$file_extention" );
 	return undef;
     }
@@ -360,7 +360,7 @@ sub shift_file {
 
 	unless (opendir(DIR, $dir)) {
 	    &do_log('err', "shift_file : Cannot read dir $dir" );
-	    return ($file.'\.'.$file_extention);
+	    return ($file.'.'.$file_extention);
 	}
 	my $i = 0 ;
 	foreach my $oldfile (reverse (sort (grep (/^$file\./,readdir(DIR))))) {
@@ -374,7 +374,7 @@ sub shift_file {
 	    }
 	}
     }
-    return ($file.'\.'.$file_extention);
+    return ($file.'.'.$file_extention);
 }
 
 sub get_templates_list {
