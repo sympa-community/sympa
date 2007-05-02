@@ -11195,7 +11195,6 @@ sub _load_admin_file {
     ## Split in paragraphs
     my $i = 0;
     while (<CONFIG>) {
-	Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
 	if (/^\s*$/) {
 	    $i++ if $paragraphs[$i];
 	}else {
@@ -11517,7 +11516,6 @@ sub _save_admin_file {
 	}
 
     }
-    Encode::from_to($config, 'utf8', $Conf{'filesystem_encoding'});
     print CONFIG $config;
     close CONFIG;
 
