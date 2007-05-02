@@ -508,9 +508,10 @@ sub upgrade {
 		push @directories, [$Conf{'etc'}.'/'.$type, $Conf{'lang'}];
 	    }
 	}
-	foreach my $f ('topics.conf','auth.conf') {
-	    if (-f $Conf{'etc'}.'/'.$f) {
-		push @files, [$Conf{'etc'}.'/'.$f, $Conf{'lang'}];
+
+	foreach my $f ('--CONFIG--','--WWSCONFIG--',$Conf{'etc'}.'/'.'topics.conf',$Conf{'etc'}.'/'.'auth.conf') {
+	    if (-f $f) {
+		push @files, [$f, $Conf{'lang'}];
 	    }
 	}
 
@@ -522,7 +523,7 @@ sub upgrade {
 		}
 	    }
 
-	    foreach my $f ('topics.conf','auth.conf') {
+	    foreach my $f ('robot.conf','topics.conf','auth.conf') {
 		if (-f $Conf{'etc'}.'/'.$vr.'/'.$f) {
 		    push @files, [$Conf{'etc'}.'/'.$vr.'/'.$f, $Conf{'lang'}];
 		}
