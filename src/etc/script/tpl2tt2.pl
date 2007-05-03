@@ -107,7 +107,9 @@ if (-d $Conf::Conf{'etc'}.'/create_list_templates') {
 ## Go through Virtual Robots
 foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     ## Search in etc/
-    push @directories, "$Conf::Conf{'etc'}/$vr";
+    if ( -d "$Conf::Conf{'etc'}/$vr") {
+	push @directories, "$Conf::Conf{'etc'}/$vr";
+    }
 
     if (-d "$Conf::Conf{'etc'}/$vr/templates") {
 	push @directories, "$Conf::Conf{'etc'}/$vr/templates";
@@ -128,8 +130,9 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
 
     ## Search in V. Robot Lists
-    foreach my $list ( &List::get_lists($vr) ) {
-	
+    my $listOfLists = &List::get_lists($vr);
+    foreach my $list ( @$listOfLists ) {
+
 	push @directories, $list->{'dir'};
 	
 	if (-d "$list->{'dir'}/templates") {
@@ -143,8 +146,9 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 
 ## List .tpl files
 foreach my $d (@directories) {
+
     unless (opendir DIR, $d) {
-	printf STDERR "Error: Cannot read %s directory : %s", $d, $!;
+	printf STDERR "Error: Cannot read %s directory : %s\n", $d, $!;
 	next;
     }
     
