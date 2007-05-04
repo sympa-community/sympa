@@ -734,6 +734,8 @@ sub probe_db {
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
 		   'logs_table' => ['id_logs']
 		   );
+
+    my @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index');
     
     ## Report changes to listmaster
     my @report;
@@ -952,7 +954,6 @@ sub probe_db {
 		    next;
 		}
 		
-		
 		## Change DB types if different and if update_db_types enabled
 		if ($Conf{'update_db_field_types'} eq 'auto') {
 		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
@@ -975,8 +976,8 @@ sub probe_db {
 			    return undef;
 			}
 			
-			push @report, sprintf('Field %s in table %s, structur updated', $f, $t);
-			&do_log('info', 'Field %s in table %s, structur updated', $f, $t);
+			push @report, sprintf('Field %s in table %s, structure updated', $f, $t);
+			&do_log('info', 'Field %s in table %s, structure updated', $f, $t);
 		    }
 		}else {
 		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
@@ -987,7 +988,7 @@ sub probe_db {
 		}
 	    }
 
-	    ## Create required INDEX and PRIMARY KEY
+	    ## Create required PRIMARY KEY. Removes useless INDEX.
 	    my $should_update;
 	    foreach my $field (@{$primary{$t}}) {		
 		if ($added_fields{$field}) {
@@ -998,13 +999,14 @@ sub probe_db {
 	    
 	    if ($should_update) {
 		my $fields = join ',',@{$primary{$t}};
-
-		## drop previous primary key
-		unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
-		    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
-		}
+		if($dbh->do('SHOW COLUMNS FROM '.$t.' WHERE `Key`= "PRI"')>0){
+		    ## drop previous primary key
+		    unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
+			&do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
+		    }
 		push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
 		&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+		}
 
 		## Add primary key
 		&do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
@@ -1015,35 +1017,37 @@ sub probe_db {
 		push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
 		&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
 
-
-		## drop previous index, but we don't know the index name
-		my $success;
-		foreach my $field (@{$primary{$t}}) {		
-		    unless ($dbh->do("ALTER TABLE $t DROP INDEX $field")) {
-			next;
+	    }
+	    
+	    ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
+	    my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t.' WHERE `Key_name` != "PRIMARY"','Key_name');
+	    
+	    foreach my $idx ( keys %$test_request_result ) {
+		
+		## Check whether the index found was defined by Sympa
+		my $index_name_is_known = 0;
+		foreach my $known_index ( @former_indexes ) {
+		    if ( $idx eq $known_index ) {
+			$index_name_is_known = 1;
+			last;
 		    }
-		    $success = 1; last;
 		}
-
-		if ($success) {
-		    push @report, sprintf('Table %s, INDEX dropped', $t);
-		    &do_log('info', 'Table %s, INDEX dropped', $t);
-		}else {
-		    &do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
+		## If index was defined by Sympa, drop it.
+		if( $index_name_is_known ) {
+		    if ($dbh->do("ALTER TABLE $t DROP INDEX $idx")) {
+			push @report, sprintf('Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
+			&do_log('info', 'Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
+		    }
+		    else {
+			&do_log('err', 'Could not drop deprecated INDEX \'%s\' in table \'%s\'.', $idx, $t);
+		    }
+		    
 		}
-
-		## Add INDEX
-		unless ($dbh->do("ALTER TABLE $t ADD INDEX $t\_index ($fields)")) {
-		    &do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
-		    return undef;
-		}
-		push @report, sprintf('Table %s, INDEX set on %s', $t, $fields);
-		&do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
-
+		
 	    }
 	    
 	}
-
+	
 	## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
 	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf{'db_type'}") {
