@@ -10229,6 +10229,7 @@ sub store_digest {
 }
 
 ## List of lists hosted a robot
+## Returns a ref to an array of List objects
 sub get_lists {
     my $robot_context = shift || '*';
     my $options = shift;
@@ -10241,7 +10242,6 @@ sub get_lists {
     }else{
 	push @robots, $robot_context ;
     }
-
     
     foreach my $robot (@robots) {
     
