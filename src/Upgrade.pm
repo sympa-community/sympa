@@ -999,7 +999,15 @@ sub probe_db {
 	    
 	    if ($should_update) {
 		my $fields = join ',',@{$primary{$t}};
-		if($dbh->do('SHOW COLUMNS FROM '.$t.' WHERE `Key`= "PRI"')>0){
+		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
+		my $previousKeyFound = 0;
+		foreach my $scannedResult ( keys %$test_request_result ) {
+		    if ( $scannedResult eq "PRI" ) {
+			$previousKeyFound = 1;
+			last;
+		    }
+		}
+		if( $previousKeyFound ){
 		    ## drop previous primary key
 		    unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
 			&do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
@@ -1020,9 +1028,16 @@ sub probe_db {
 	    }
 	    
 	    ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
-	    my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t.' WHERE `Key_name` != "PRIMARY"','Key_name');
+	    my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'Key_name');
+	    my %index_columns;
 	    
-	    foreach my $idx ( keys %$test_request_result ) {
+	    foreach my $indexName ( keys %$test_request_result ) {
+		unless ( $indexName eq "PRIMARY" ) {
+		    $index_columns{$indexName} = 1;
+		}
+	    }
+
+	    foreach my $idx ( keys %index_columns ) {
 		
 		## Check whether the index found was defined by Sympa
 		my $index_name_is_known = 0;
