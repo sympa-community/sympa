@@ -988,8 +988,23 @@ sub probe_db {
 		}
 	    }
 
-	    ## Create required PRIMARY KEY. Removes useless INDEX.
+	    ## Check that primary key has the right structure.
 	    my $should_update;
+	    my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
+	    my %primaryKeyFound;
+	    foreach my $scannedResult ( keys %$test_request_result ) {
+		if ( $scannedResult eq "PRI" ) {
+		    $primaryKeyFound{$scannedResult} = 1;
+		}
+	    }
+	    foreach my $field (@{$primary{$t}}) {		
+		unless ($primaryKeyFound{$field}) {
+		    $should_update = 1;
+		    last;
+		}
+	    }
+		
+	    ## Create required PRIMARY KEY. Removes useless INDEX.
 	    foreach my $field (@{$primary{$t}}) {		
 		if ($added_fields{$field}) {
 		    $should_update = 1;
