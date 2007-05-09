@@ -3353,9 +3353,12 @@ sub do_remindpasswd {
 	 return undef;
      }
 
-     ## Access control
-     return undef unless (defined &check_authz('do_info', 'info'));
-
+     ## Access control    
+	 unless (defined &check_authz('do_info', 'info')) {
+	     delete $param->{'list'};
+	     return undef;
+	 }
+     
      ## Get List Description
      if (-r $list->{'dir'}.'/homepage') {
 	 my $file_path = $list->{'dir'}.'/homepage';
