@@ -85,7 +85,7 @@ main(int argn, char **argv)
    char	*bouncedir;
    char        *listname;
    unsigned int		priority;
-   int			firstfrom = 0;
+   int			firstline = 1;
 
    /* Usage : bouncequeue list-name */
    if (argn != 2) {
@@ -110,10 +110,11 @@ main(int argn, char **argv)
    write(fd, listname, strlen(listname));
    write(fd, "\n", 1);
    while (fgets(buf, sizeof buf, stdin) != NULL) {
-      if (firstfrom == 0 && strncmp(buf, "From ", 5) == 0) {
-         firstfrom = 1;
+      if (firstline == 1 && strncmp(buf, "From ", 5) == 0) {
+         firstline = 0;
          continue;
       }
+      firstline = 0;
       write(fd, buf, strlen(buf));
    }
    while ((i = read(fileno(stdin), buf, sizeof buf)) > 0)

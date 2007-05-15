@@ -87,7 +87,7 @@ main(int argn, char **argv)
    char	*queuedir;
    char        *listname, *familyname;
    unsigned int		priority;
-   int			firstfrom = 0;
+   int			firstline = 1;
 
    /* Usage : queue list-name family-name */
    if ((argn != 3)) {
@@ -132,10 +132,11 @@ main(int argn, char **argv)
    fprintf(stderr,"list-name:%s, family-name:%s\n",listname, familyname);
    write(fd, "\n", 1);
    while (fgets(buf, sizeof buf, stdin) != NULL) {
-      if (firstfrom == 0 && strncmp(buf, "From ", 5) == 0) {
-         firstfrom = 1;
+      if (firstline == 1 && strncmp(buf, "From ", 5) == 0) {
+         firstline = 0;
          continue;
       }
+      firstline = 0;
       write(fd, buf, strlen(buf));
    }
    while ((i = read(fileno(stdin), buf, sizeof buf)) > 0)
