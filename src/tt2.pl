@@ -305,7 +305,7 @@ sub parse_tt2 {
 	$allow_absolute = 0;
     }
 
-    my $tt2 = Template->new($config) or die $!;
+    my $tt2 = Template->new($config) or die "Template error: ".Template->error();
 
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
