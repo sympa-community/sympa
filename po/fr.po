@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-05-18 10:32+0200\n"
-"Last-Translator: Bruno GALLART <pibol@aprene.org>\n"
+"PO-Revision-Date: 2007-05-22 11:56+0200\n"
+"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,7 +371,7 @@ msgstr "%m/%Y"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/wwsympa.fcgi:15640 wwsympa/wwsympa.fcgi:15641
 msgid "%Y/%m/%d/%H/%M/%S"
-msgstr ""
+msgstr "%d/%m/%Y/%H/%M/%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -441,7 +441,7 @@ msgstr "%d/%m/%y"
 
 #: src/etc/mhonarc-ressources.tt2:345
 msgid "&lt;Possible follow-up(s)&gt;"
-msgstr ""
+msgstr "&lt;Suite(s) possible(s)&gt;"
 
 #. (u_err.bad_listname)
 #: web_tt2/error.tt2:87
@@ -526,7 +526,7 @@ msgstr "**** A L E R T E    V I R U S ****"
 
 #: src/etc/mhonarc-ressources.tt2:341
 msgid ", <em>(continued)</em>"
-msgstr ""
+msgstr ", <em>(suite)</em>"
 
 #: src/PlainDigest.pm:258
 msgid "-----End of Delivery Status Report-----\n"
@@ -613,10 +613,17 @@ msgid ""
 "hovered hyperlinks corresponding to actions;</LI><LI>background color for "
 "clicked links (corresponding to the .active state in a CSS).</LI></UL>"
 msgstr ""
+"<UL><LI>couleur de bordure pour une action active (exemple d'action active : "
+"la section des options d'administration que vous êtes en train de consulter "
+"ou bien la bordure de l'en-tête de colonne suivant les valeurs de laquelle "
+"un tableau est trié) ;</LI><LI>couleur que prend la bordure des liens "
+"hypertextes correspondant à des actions quand le curseur de souris les "
+"parcourt ;</LI><LI>couleur de fond pour les liens cliqués (correspondant à "
+"l'état \".active\" de la feuille CSS).</LI></UL>"
 
 #: src/etc/mhonarc-ressources.tt2:349
 msgid "<em>Message not available</em>"
-msgstr ""
+msgstr "<em>Message indisponible</em>"
 
 #: web_tt2/help_editlist.tt2:18
 msgid ""
@@ -1256,7 +1263,6 @@ msgstr "Sélectionnez votre serveur d'authentification"
 
 #: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294
 #: src/etc/mhonarc-ressources.tt2:407 src/etc/mhonarc-ressources.tt2:411
-#, fuzzy
 msgid "Chronological"
 msgstr "Chronologique"
 
@@ -1269,9 +1275,8 @@ msgid "Close it"
 msgstr "Fermer la liste"
 
 #: web_tt2/list_panel.tt2:8
-#, fuzzy
 msgid "Closed list"
-msgstr "Listes fermées"
+msgstr "Liste fermée"
 
 #: web_tt2/get_closed_lists.tt2:6 web_tt2/get_closed_lists.tt2:7
 #: web_tt2/serveradmin.tt2:38
@@ -1494,14 +1499,13 @@ msgstr "Date"
 
 #. (date)
 #: web_tt2/request_topic.tt2:29
-#, fuzzy
 msgid "Date : %1"
-msgstr "Type d'erreur : %1"
+msgstr "Date : %1"
 
 #. (crash_date)
 #: mail_tt2/listmaster_notification.tt2:40
 msgid "Date of crash : %1"
-msgstr ""
+msgstr "Date du crash : %1"
 
 # nlsref 8,25
 #. (list.name)-)
@@ -1919,9 +1923,8 @@ msgstr "Problème de décompression du fichier '%1'."
 
 # nlsref 1,3
 #: mail_tt2/listmaster_notification.tt2:41
-#, fuzzy
 msgid "Errors:"
-msgstr "Taux d'erreurs : "
+msgstr "Erreurs : "
 
 #: mail_tt2/expire_warning1.tt2:7 mail_tt2/expire_warning2.tt2:7
 #: mail_tt2/remind.tt2:6
@@ -2003,6 +2006,8 @@ msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
 msgstr ""
+"Échec de la création de la liste « %1 ». Cette liste existe peut-être déjà "
+"ou bien son nom contient des caractères interdits."
 
 #: web_tt2/error.tt2:14
 msgid "Failed to include list admins"
@@ -2856,13 +2861,12 @@ msgstr "Nom de liste :"
 
 #: web_tt2/list_panel.tt2:10
 msgid "List not yet activated"
-msgstr ""
+msgstr "Cette liste n'a pas été activée."
 
 # nlsref 15,10
 #: web_tt2/menu.tt2:17
-#, fuzzy
 msgid "List of lists"
-msgstr "liste des listes"
+msgstr "Liste des listes"
 
 #: web_tt2/help_editlist.tt2:89
 msgid ""
@@ -2915,7 +2919,6 @@ msgid "Listing subscription to moderate"
 msgstr "Liste des abonnements à valider"
 
 #: web_tt2/subindex.tt2:1
-#, fuzzy
 msgid "Listing subscriptions to validate"
 msgstr "Liste des abonnements à valider"
 
@@ -3449,7 +3452,7 @@ msgstr "Aucun robot virtuel défini sur ce serveur"
 
 #: mail_tt2/listowner_notification.tt2:105
 msgid "No action is needed on your side."
-msgstr ""
+msgstr "Aucune action n'est nécessaire de votre part."
 
 #. (u_err.email)
 #: web_tt2/error.tt2:79
@@ -3861,13 +3864,12 @@ msgid "Previous page"
 msgstr "Page précédente"
 
 #: mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
 msgid "Previous process crashed"
-msgstr "Page précédente"
+msgstr "Le processus précédent s'est terminé brutalement."
 
 #: mail_tt2/listmaster_notification.tt2:39
 msgid "Previous process has died unexpectedly."
-msgstr ""
+msgstr "Le processus précédent est mort de manière inattendue."
 
 # nlsref 16,63
 #: src/List.pm:1059
@@ -4451,9 +4453,8 @@ msgid "Search lists"
 msgstr "Chercher une liste"
 
 #: web_tt2/viewlogs.tt2:109
-#, fuzzy
 msgid "Search period: "
-msgstr "Rechercher un utilisateur"
+msgstr "Période explorée :"
 
 #: web_tt2/review.tt2:73
 msgid "Search user by email"
@@ -7685,6 +7686,10 @@ msgid ""
 "color_5. It is intended to be the darkest shade, as color_5 has other uses.</"
 "LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants :<UL><LI> une ligne sur deux dans les "
+"tableaux, alternée avec color_5. C'est censé être la plus sombre des deux "
+"car color_5 a d'autres usages plus appropriés pour une couleur claire.</LI></"
+"UL>"
 
 #: web_tt2/skinsedit.tt2:89
 msgid ""
@@ -7694,12 +7699,22 @@ msgid ""
 "</LI><LI>hovered buttons corresponding to the actionMenuLinks CSS class;</"
 "LI><LI>hovered navigation tabs.</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>action active (par exemple, "
+"le nom de la section des options d'administration que vous êtes en train de "
+"consulter ou l'en-tête de colonne selon les valeurs de laquelle un tableau "
+"est trié) ; </LI><LI>actions survolées par le curseur de souris ; </"
+"LI><LI>boutons correspondant à la classe CSS actionMenuLinks quand ils sont "
+"survolés par le curseur de souris ; </LI><LI>onglets de navigation survolés "
+"par la souris.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:83
 msgid ""
 "background color of:<UL><LI>all the main interface boxes;</LI><LI>the "
 "lightest color for the table lines, contrasting with color_0.</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>toutes les boîtes de "
+"l'interface principale ; </LI><LI>la plus claire des couleurs de lignes des "
+"tableaux, qui sera alternée avec color_0.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:131
 msgid ""
@@ -7707,18 +7722,28 @@ msgid ""
 "lists, ...);</LI><LI>the rest of hovered buttons (those corresponding to the "
 "MainMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>zones éditables des "
+"formulaires (zones de texte, menus déroulants, ...) ; </LI><LI>le reste des "
+"boutons quand ils sont survolés par la souris (ceux qui correspondent à la "
+"classe CSS MainMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:95
 msgid ""
 "background color of:<UL><LI>error messages;</LI><LI>just edited area in the "
 "administrative management section.</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>messages d'erreur ;</"
+"LI><LI>attributs dont la configuration a été modifiée dans la section "
+"d'administration.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:59
 msgid ""
 "background color of:<UL><LI>main navigation tabs;</LI><LI> most of the "
 "buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>onglets de navigation "
+"principale ; </LI><LI>la plupart des boutons (ceux correspondant à la classe "
+"CSS MainMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:77
 msgid ""
@@ -7726,14 +7751,19 @@ msgid ""
 "the buttons (which are in fact hyperlinks, corresponding to the "
 "actionMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>page ; </LI><LI>en-tête de "
+"colonne des tableaux ; </LI><LI>le reste des boutons (qui sont en fait des "
+"liens hypertextes, correspondant à la classe CSS actionMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:71
 msgid "background color of:<UL><LI>top box;</LI><LI>footer box.</LI></UL>"
 msgstr ""
+"couleur de fond des éléments suivants : <UL><LI>en-tête de page ;</"
+"LI><LI>pied de page.</LI></UL>"
 
 #: web_tt2/search_user.tt2:15
 msgid "bounce"
-msgstr "en erreur"
+msgstr "erreur"
 
 #: web_tt2/reviewbouncing.tt2:61
 msgid "bounce score"
@@ -7757,11 +7787,11 @@ msgstr "Au revoir !"
 
 #: web_tt2/arcsearch.tt2:24
 msgid "case insensitive"
-msgstr "pas de distinction majuscules/minuscules"
+msgstr "insensible à la casse"
 
 #: web_tt2/arcsearch.tt2:26
 msgid "case sensitive"
-msgstr "distinction majuscules/minuscules activée"
+msgstr "sensible à la casse"
 
 # nlsref 16,208
 #: src/List.pm:845
@@ -7917,9 +7947,8 @@ msgstr "suppression réservée au propriétaire avec authentification"
 #: web_tt2/skinsedit.tt2:149 web_tt2/skinsedit.tt2:155
 #: web_tt2/skinsedit.tt2:161 web_tt2/skinsedit.tt2:167
 #: web_tt2/skinsedit.tt2:173 web_tt2/skinsedit.tt2:179
-#, fuzzy
 msgid "deprecated"
-msgstr "Modérée"
+msgstr "obsolète"
 
 #: wwsympa/wwslib.pm:36
 msgid "digest MIME format"
@@ -7941,6 +7970,7 @@ msgstr "distrib"
 #: web_tt2/skinsedit.tt2:101
 msgid "doted underscore color of:<UL><LI>hyperlinks.</LI></UL>"
 msgstr ""
+"couleur du soulignement pointillé des : <UL><LI>liens hypertextes.</LI></UL>"
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
 #: web_tt2/subrequest.tt2:30 web_tt2/subrequest.tt2:63
@@ -8021,9 +8051,8 @@ msgid "everyone can post"
 msgstr "droit de poster des messages ouvert à tous"
 
 #: web_tt2/viewlogs.tt2:69
-#, fuzzy
 msgid "ex: 24/05/2006"
-msgstr "ex: 03/05/2006"
+msgstr "ex : 24/05/2006"
 
 #: src/etc/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
@@ -8080,6 +8109,10 @@ msgid ""
 "are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some "
 "titles.</LI></UL>"
 msgstr ""
+"couleur de police de caractère et de bordure pour les éléments suivants : "
+"<UL><LI> Presque tout. Les seules bordures faisant exception sont celles des "
+"éléments &lt;TD/&gt; ; les polices faisant exception sont celles des liens "
+"hypertextes, des boutons et de certains titres.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:119
 msgid ""
@@ -8087,11 +8120,18 @@ msgid ""
 "LI><LI>hovered links;</LI><LI>some hovered buttons action(which are in fact "
 "hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"couleur de police de caractère pour les éléments suivants :<UL><LI>onglet de "
+"navigation actif ; </LI><LI>balises de titre &lt;H2/&gt; ; </LI><LI>liens "
+"hypertextes survolés par la souris ; </LI><LI>certains boutons d'action "
+"quand ils sont survolés par la souris (qui sont en fait des liens "
+"hypertextes correspondant à la classe CSS actionMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:125
 msgid ""
 "font color for:<UL><LI>the class smallblack. Not sure it is used.</LI></UL>"
 msgstr ""
+"couleur de police de caractère pour les éléments suivants : <UL><LI>La "
+"classe CSS smallblack. Est-elle seulement utilisée ? </LI></UL>"
 
 #. (for)
 #: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
@@ -8159,7 +8199,7 @@ msgstr "impossible"
 
 #: web_tt2/skinsedit.tt2:113
 msgid "inactive buttons color. Rarely used."
-msgstr ""
+msgstr "couleur de fond des boutons inactifs. Rarement utilisée."
 
 #: mail_tt2/listmaster_notification.tt2:104
 msgid "incorrect format of edit_list.conf"
@@ -8454,9 +8494,8 @@ msgid "parameter"
 msgstr "paramètre"
 
 #: web_tt2/skinsedit.tt2:45
-#, fuzzy
 msgid "parameter usage"
-msgstr "valeur du paramètre"
+msgstr "rôle du paramètre"
 
 #: web_tt2/skinsedit.tt2:43
 msgid "parameter value"
@@ -8951,7 +8990,7 @@ msgstr "message de désabonnement"
 
 #: web_tt2/skinsedit.tt2:137 web_tt2/skinsedit.tt2:143
 msgid "unused"
-msgstr ""
+msgstr "inutilisé"
 
 # nlsref 6,81
 #: wwsympa/wwslib.pm:42
