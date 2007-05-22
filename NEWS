@@ -11,12 +11,21 @@
 
    Changes :
 
+	/trunk/po/pt_BR.po: [submitted by Prof. P.E.M. Almeida] Updated brazilian translation.
+
+	po/: Several improvment in translations. Main changes are found in Spanish, Italian and Occitan.
+
 	/trunk/src/Upgrade.pm: During upgrade process, if an existing primary key is incomplete, it is completed.
 
 	/trunk/src/Upgrade.pm: [requested by S.Amrani, Gendarmerie Nationale] Change: probe_db() would previously alter DB field format if different from the expected format. Now accept fields with a size larger than expected.
 
    Bug fixes :
 	
+	/trunk/src/bouncequeue.c, /trunk/src/familyqueue.c, /trunk/src/queue.c: [#2945][D.Jahnke-Zumbusch] queue, bouncequeue and familyqueue scripts were removing the first "From xx" line found even though it was not part of SMTP headers. This caused problems with Postif if the 'F' flag was not set in master.cf, because postfix would not add the expected "From xx" Header field to the delivered message.
+The code has been fixed to look for the "From xx" in the first line of the message only.
+
+	/trunk/src/tt2.pl: [#3086 Submitted by S. Hornburg, linuxia.de] When Sympa failed to create a template object, the last system error was displayed instead of the last Template error.
+
 	/trunk/wwsympa/wwsympa.fcgi: [reported by L.Sousa, univ. do Algarve] Change: don't print the list_menu if info scenario forbid access to list info.
 
 	/trunk/src/Upgrade.pm: [Reported by T. Davis, Metaphor studios] Useless warnings regarding PRIMARY KEY and INDEX at upgrade no longer appear.

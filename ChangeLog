@@ -1,4 +1,95 @@
 ------------------------------------------------------------------------
+r4405 | david.verdin | 2007-05-22 14:03:59 +0200 (Tue, 22 May 2007) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Updated to verdion 5.3
+
+------------------------------------------------------------------------
+r4404 | david.verdin | 2007-05-22 13:53:04 +0200 (Tue, 22 May 2007) | 2 lines
+Changed paths:
+   M /trunk/po/cs.po
+   M /trunk/po/es.po
+   M /trunk/po/fr.po
+   M /trunk/po/it.po
+   M /trunk/po/oc.po
+
+Fix: Somes "\n" string in translations were generating fatal errors during install.
+
+------------------------------------------------------------------------
+r4403 | david.verdin | 2007-05-21 12:28:41 +0200 (Mon, 21 May 2007) | 2 lines
+Changed paths:
+   M /trunk/po/bg.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/zh_CN.po
+
+Updated sympa.pot and then PO files
+
+------------------------------------------------------------------------
+r4402 | david.verdin | 2007-05-21 12:20:57 +0200 (Mon, 21 May 2007) | 2 lines
+Changed paths:
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/it.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+
+Updated several translations from pootle. Main changes are found in Spanish, Italian and Occitan.
+
+------------------------------------------------------------------------
+r4401 | david.verdin | 2007-05-21 12:02:33 +0200 (Mon, 21 May 2007) | 2 lines
+Changed paths:
+   M /trunk/po/pt_BR.po
+
+[submitted by Prof. P.E.M. Almeida] Updated brazilian translation.
+
+------------------------------------------------------------------------
+r4399 | olivier.salaun | 2007-05-15 14:01:14 +0200 (Tue, 15 May 2007) | 4 lines
+Changed paths:
+   M /trunk/src/bouncequeue.c
+   M /trunk/src/familyqueue.c
+   M /trunk/src/queue.c
+
+[#2945][D.Jahnke-Zumbusch] Fix: queue, bouncequeue and familiqueue scripts were removing the first "From xx" line found even though it was not part of SMTP headers. This caused problems with Postif if the 'F' flag was not set in master.cf, because postfix would not add the expected "From xx" Header field to the delivered message.
+
+The code has been fixed to look for the "From xx" in the first line of the message only.
+
+------------------------------------------------------------------------
+r4398 | david.verdin | 2007-05-15 10:44:47 +0200 (Tue, 15 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/tt2.pl
+
+[#3086 Submitted by S. Hornburg, linuxia.de] Fix: When Sympa failed to create a template object, the last system error was displayed instead of the last Template error.
+
+------------------------------------------------------------------------
 r4397 | david.verdin | 2007-05-09 18:07:37 +0200 (Wed, 09 May 2007) | 2 lines
 Changed paths:
    M /trunk/.version
