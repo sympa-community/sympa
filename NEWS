@@ -3,6 +3,41 @@
 
 (See Changelog file for the full changes log)
 
+5.3		22 May 2007
+
+   New features :
+
+	/trunk/src/Conf.pm, /trunk/wwsympa/wwsympa.fcgi,/trunk/wwsympa/cookielib.pm : [proposed by P.Schober, Univ Vienna] added logout feature to generic_sso. This required adding a new sympa_sso_id HTTP cookie to keep track of which SSO was used to login. Also reorganized the cookielib subroutines.
+
+   Changes :
+
+	/trunk/src/Upgrade.pm: During upgrade process, if an existing primary key is incomplete, it is completed.
+
+	/trunk/src/Upgrade.pm: [requested by S.Amrani, Gendarmerie Nationale] Change: probe_db() would previously alter DB field format if different from the expected format. Now accept fields with a size larger than expected.
+
+   Bug fixes :
+	
+	/trunk/wwsympa/wwsympa.fcgi: [reported by L.Sousa, univ. do Algarve] Change: don't print the list_menu if info scenario forbid access to list info.
+
+	/trunk/src/Upgrade.pm: [Reported by T. Davis, Metaphor studios] Useless warnings regarding PRIMARY KEY and INDEX at upgrade no longer appear.
+
+	/trunk/src/Upgrade.pm: [Reported by X. Moghrabi, Objectweb] Former indexes are removed if necessary to avoid double indexing of primary keys.
+
+	/trunk/src/tools.pl: [#3075] file were renamed with a parasite '\'
+
+	/trunk/src/List.pm: [Submitted by M. Gaudet, EHESS] Encoding problems when upgrading from versions of pre-all-UTF-8 era. config files were saved into UTF-8 without character conversion which messed list subjects and some admin values.
+
+	/trunk/src/Upgrade.pm: [Reported by M. Gaudet, EHESS] Resolves encoding problems for lists' info files when upgrading from version 4.1.5 in lists where no 'filesystem_encoding' parameter was set.
+
+	/trunk/src/List.pm: Definition of a default LDAP port (389) for include_ldap_xxx was leeding Sympa to use 389 port for LDAPS (instead of 636 port)
+
+	/trunk/src/Upgrade.pm: [deb#418836][Reported by O. Berger, INT] Fix: SHOW FIELDS failed while upgrading. Now removing the dbname part in the tables() return value.
+
+	/trunk/src/List.pm: [T.Berry, NASA] "Undefined subroutine &Task::list_tasks called at /usr/local/jpl/msg/list/sympa/bin/List.pm line 12333". The new version of List::purge() uses Task::list_tasks() subroutine but a "use Task" pragma is missing in List.pm.
+
+	/trunk/src/List.pm: Error "Can't use an undefined value as an ARRAY reference" while processing digests. Fixed the parameter loading procedure to handle correctly defaults (structured parameter with no default in subentries)
+
+
 5.3b.5		23 April 2007
 
    New features :

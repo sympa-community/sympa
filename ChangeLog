@@ -1,4 +1,167 @@
 ------------------------------------------------------------------------
+r4397 | david.verdin | 2007-05-09 18:07:37 +0200 (Wed, 09 May 2007) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/src/Upgrade.pm
+
+Change : During upgrade process, if an existing primary key is incomplete, it is completed.
+
+------------------------------------------------------------------------
+r4396 | david.verdin | 2007-05-09 17:12:34 +0200 (Wed, 09 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+Fix: Found new index names to remove from previous installs.
+
+------------------------------------------------------------------------
+r4392 | olivier.salaun | 2007-05-09 15:20:09 +0200 (Wed, 09 May 2007) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[reported by L.Sousa, univ do Algarve] Change: don't print the list_menu if info scenario forbid access to list info.
+
+------------------------------------------------------------------------
+r4391 | david.verdin | 2007-05-09 14:58:13 +0200 (Wed, 09 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+Fix: A problem between 5.0 MySQL (in test environment) and 4.1 MySQL (in production) : MySQL 4.1 doesn't support "WHERE" clauses in "SHOW" statements.
+
+------------------------------------------------------------------------
+r4389 | david.verdin | 2007-05-04 12:13:27 +0200 (Fri, 04 May 2007) | 3 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[Reported by T. Davis, Metaphor studios] Fix: Useless warnings regarding PRIMARY KEY and INDEX at upgrade no longer appear.
+[Reported by X. Moghrabi, Objectweb] Fix: Former indexes are removed if necessary to avoid double indexing of primary keys.
+
+------------------------------------------------------------------------
+r4388 | david.verdin | 2007-05-04 10:51:01 +0200 (Fri, 04 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+Just added some comments.
+
+------------------------------------------------------------------------
+r4387 | olivier.salaun | 2007-05-03 16:35:59 +0200 (Thu, 03 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/etc/script/tpl2tt2.pl
+
+Fix: an error occurred during upgrade caused by a List object being considered an array ("coercing array into hash").
+
+------------------------------------------------------------------------
+r4386 | olivier.salaun | 2007-05-02 17:52:19 +0200 (Wed, 02 May 2007) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/copy_template.tt2
+   M /trunk/web_tt2/ls_templates.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3074] Fix: Could not list templates for a given list.
+Also fixed a presentation problems (columns were shifted)
+
+------------------------------------------------------------------------
+r4385 | olivier.salaun | 2007-05-02 17:04:45 +0200 (Wed, 02 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+[#3075]Fix: file were renamed with a parasite '\'
+
+------------------------------------------------------------------------
+r4384 | david.verdin | 2007-05-02 14:15:13 +0200 (Wed, 02 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[Submitted by M. Gaudet, EHESS] Fix: Encoding problems when upgrading from versions of pre-all-UTF-8 era. config files were saved into UTF-8 without character conversion which messed list subjects and some admin values.
+
+------------------------------------------------------------------------
+r4383 | olivier.salaun | 2007-05-02 09:41:32 +0200 (Wed, 02 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+Fix: some files (sympa.conf, wwsympa.conf, robot.conf) were not converted to UTF-8
+
+------------------------------------------------------------------------
+r4382 | olivier.salaun | 2007-04-27 18:11:16 +0200 (Fri, 27 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+
+Fix: don't create list task if list status is not 'open'.
+
+------------------------------------------------------------------------
+r4381 | olivier.salaun | 2007-04-27 12:19:05 +0200 (Fri, 27 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[requested by S.Amrani, Gendarmerie Nationale] Change: probe_db() would previously alter DB field format if different from the expected format. Now accept fields with a size larger than expected.
+
+------------------------------------------------------------------------
+r4380 | david.verdin | 2007-04-27 09:46:07 +0200 (Fri, 27 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[Reported by M. Gaudet, EHESS] Resolves encoding problems for lists' info files when upgrading from version 4.1.5 in lists where no 'filesystem_encoding' parameter was set.
+
+------------------------------------------------------------------------
+r4379 | olivier.salaun | 2007-04-26 16:54:39 +0200 (Thu, 26 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/wwsympa/cookielib.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[proposed by P.Schober, Univ Vienna] New feature: added logout feature to generic_sso. This required adding a new sympa_sso_id HTTP cookie to keep track of which SSO was used to login. Also reorganized the cookielib subroutines.
+
+------------------------------------------------------------------------
+r4378 | olivier.salaun | 2007-04-26 12:06:03 +0200 (Thu, 26 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+Fix: Definition of a default LDAP port (389) for include_ldap_xxx was leeding Sympa to use 389 port for LDAPS (instead of 636 port)
+
+------------------------------------------------------------------------
+r4376 | david.verdin | 2007-04-25 17:02:40 +0200 (Wed, 25 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[deb#418836][Reported by O. Berger, INT] Fix: SHOW FIELDS failed while upgrading. Now removing the dbname part in the tables() return value.
+
+------------------------------------------------------------------------
+r4375 | olivier.salaun | 2007-04-25 09:46:19 +0200 (Wed, 25 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[T.Berry, NASA] Fix: "Undefined subroutine &Task::list_tasks called at /usr/local/jpl/msg/list/sympa/bin/List.pm line 12333". The new version of List::purge() uses Task::list_tasks() subroutine but a "use Task" pragma is missing in List.pm.
+
+------------------------------------------------------------------------
+r4373 | olivier.salaun | 2007-04-23 17:03:45 +0200 (Mon, 23 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+Fix: Error "Can't use an undefined value as an ARRAY reference" while processing digests. Fixed the parameter loading procedure to handle correctly defaults (structured parameter with no default in subentries)
+
+------------------------------------------------------------------------
+r4372 | olivier.salaun | 2007-04-23 17:01:08 +0200 (Mon, 23 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+Set log level to 'err' when required
+
+------------------------------------------------------------------------
+r4238 | olivier.salaun | 2007-04-23 13:36:27 +0200 (Mon, 23 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+
+Move log entry to debug
+
+------------------------------------------------------------------------
+r4236 | olivier.salaun | 2007-04-23 12:59:03 +0200 (Mon, 23 Apr 2007) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Preparing 5.3b.5
+
+------------------------------------------------------------------------
 r4235 | olivier.salaun | 2007-04-20 16:51:01 +0200 (Fri, 20 Apr 2007) | 2 lines
 Changed paths:
    M /trunk/src/Upgrade.pm
