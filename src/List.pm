@@ -2413,6 +2413,13 @@ sub distribute_msg {
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }
     
+    ## Remove unwanted headers if present.
+    if ($Conf{'remove_headers'}) {
+        foreach my $field (@{$Conf{'remove_headers'}}) {
+            $hdr->delete($field);
+        }
+    }
+    
     ## Archives
     my $msgtostore = $message->{'msg'};
     if (($message->{'smime_crypted'} eq 'smime_crypted') &&
@@ -2440,13 +2447,6 @@ sub distribute_msg {
 	    
 	    $hdr->add('Reply-To',$reply) if $reply;
 	}
-    }
-    
-    ## Remove unwanted headers if present.
-    if ($Conf{'remove_headers'}) {
-        foreach my $field (@{$Conf{'remove_headers'}}) {
-            $hdr->delete($field);
-        }
     }
     
     ## Add useful headers
