@@ -180,13 +180,21 @@ sub new {
     }
 
     ## Store decoded subject
-    my @decoded_subject = MIME::EncWords::decode_mimewords($hdr->get('Subject'));
+    my $subject = $hdr->get('Subject');
+    my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
     foreach my $token (@decoded_subject) {
 	$message->{'subject_charset'} ||= $token->[1];
     }
-    $message->{'decoded_subject'} = MIME::EncWords::decode_mimewords(
-	$hdr->get('Subject'), Charset=>'utf8');
-    chomp $message->{'decoded_subject'};
+    
+    ## Don't try to decode if subject is empty to prevent a bug of 
+    ## decode_mimeords that would set the subject to 'Charset'
+    ## Strangely the problem disappeared when using $subject instead of $hdr->get('Subject')
+    ## as parameter to deocde_mimewords()
+    unless ($subject =~ /^$/) {
+	$message->{'decoded_subject'} = MIME::EncWords::decode_mimewords(
+									 $subject, Charset=>'utf8');
+	chomp $message->{'decoded_subject'};
+    }
 
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
