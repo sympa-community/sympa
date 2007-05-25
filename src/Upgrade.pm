@@ -1014,32 +1014,54 @@ sub probe_db {
 	    
 	    if ($should_update) {
 		my $fields = join ',',@{$primary{$t}};
-		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
-		my $previousKeyFound = 0;
-		foreach my $scannedResult ( keys %$test_request_result ) {
-		    if ( $scannedResult eq "PRI" ) {
-			$previousKeyFound = 1;
-			last;
-		    }
+		my %definedPrimaryKey;
+		foreach my $definedKeyPart (@{$primary{$t}}) {
+		    $definedPrimaryKey{$definedKeyPart} = 1;
 		}
-		if( $previousKeyFound ){
+		my $searchedKeys = ['Field','Key'];
+		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,$searchedKeys);
+		my $expectedKeyMissing = 0;
+		my $unExpectedKey = 0;
+		my $primaryKeyFound = 0;
+		my $primaryKeyDropped = 0;
+		foreach my $scannedResult ( keys %$test_request_result ) {
+		    if ( $$test_request_result{$scannedResult}{"PRI"} ) {
+			$primaryKeyFound = 1;
+			if ( !$definedPrimaryKey{$scannedResult}) {
+			    &do_log('info','Unexpected primary key : %s',$scannedResult);
+			    $unExpectedKey = 1;
+			    next;
+			}
+		    }
+		    else {
+			if ( $definedPrimaryKey{$scannedResult}) {
+			    &do_log('info','Missing expected primary key : %s',$scannedResult);
+			    $expectedKeyMissing = 1;
+			    next;
+			}
+		    }
+		    
+		}
+		if( $primaryKeyFound && ( $unExpectedKey || $expectedKeyMissing ) ) {
 		    ## drop previous primary key
 		    unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
 			&do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
 		    }
-		push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
-		&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+		    push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
+		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+		    $primaryKeyDropped = 1;
 		}
 
 		## Add primary key
-		&do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
-		unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
-		    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
-		    return undef;
+		if ( $primaryKeyDropped || !$primaryKeyFound ) {
+		    &do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
+		    unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
+			&do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
+			return undef;
+		    }
+		    push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
+		    &do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
 		}
-		push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
-		&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
-
 	    }
 	    
 	    ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
