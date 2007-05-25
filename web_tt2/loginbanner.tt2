@@ -39,11 +39,10 @@ If it is not listed or if you don't have any, login using your email and passwor
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 	<input type="hidden" name="list" value="[% list %]" />
-     	<label for="auth_service_name">[%|loc%]Magic authentification[%END%]</label>
         [% FOREACH server = sso %]
            <input id="auth_service_name" type="hidden" name="auth_service_name" value="[% server.key %]" />
+           <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[% server.value %]" />
         [% END %]
-         <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
       </fieldset>
     </form> 
 [% ELSE %]
