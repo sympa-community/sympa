@@ -103,7 +103,7 @@ sub upgrade {
     }
 
     ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
-    if (&tools::lower_version($previous_version, '4.2a')) {
+    if (&tools::lower_version($previous_version, '5.0')) {
 
 	my $statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
 	
