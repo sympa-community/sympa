@@ -1,4 +1,45 @@
 ------------------------------------------------------------------------
+r4412 | olivier.salaun | 2007-05-25 14:41:54 +0200 (Fri, 25 May 2007) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/login_menu.tt2
+   M /trunk/web_tt2/loginbanner.tt2
+
+Change: replaced the "magic authentication" with the SSO service name, defined in auth.conf
+
+------------------------------------------------------------------------
+r4411 | david.verdin | 2007-05-25 13:39:56 +0200 (Fri, 25 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+probe_db() now updates primary key only if it is not fair to its definition in Sympa. This prevents us from removing and recreating perfectly compliant primary keys anytime the function is called.
+
+------------------------------------------------------------------------
+r4410 | olivier.salaun | 2007-05-24 18:05:21 +0200 (Thu, 24 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[#3097] Change: moved the code that remove SMTP header fields (defined by the remove_headers parameter) before the archiving code.
+
+------------------------------------------------------------------------
+r4409 | olivier.salaun | 2007-05-24 15:21:54 +0200 (Thu, 24 May 2007) | 5 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/src/Message.pm
+
+[reported by T.Berry, NASA] Fix: empty Subject field were replaced with
+'Charset'. This seems to be a MIME::EncWords::decode_mimewords() bug.
+Also fixed problems with custom subject parsing that was still using the old
+parser::parse_tpl().
+
+------------------------------------------------------------------------
+r4407 | david.verdin | 2007-05-22 16:15:53 +0200 (Tue, 22 May 2007) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Added missing informations in Changelog and NEWS.
+
+------------------------------------------------------------------------
 r4405 | david.verdin | 2007-05-22 14:03:59 +0200 (Tue, 22 May 2007) | 2 lines
 Changed paths:
    M /trunk/.version

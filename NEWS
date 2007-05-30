@@ -11,6 +11,10 @@
 
    Changes :
 
+	/trunk/web_tt2/login_menu.tt2, /trunk/web_tt2/loginbanner.tt2:  replaced the "magic authentication" with the SSO service name, defined in auth.conf.
+
+	/trunk/src/List.pm: [#3097]: moved the code that remove SMTP header fields (defined by the remove_headers parameter) before the archiving code.
+
 	/trunk/po/pt_BR.po: [submitted by Prof. P.E.M. Almeida] Updated brazilian translation.
 
 	po/: Several improvment in translations. Main changes are found in Spanish, Italian and Occitan.
@@ -21,6 +25,9 @@
 
    Bug fixes :
 	
+	/trunk/src/List.pm, /trunk/src/Message.pm: [reported by T.Berry, NASA] Empty Subject field were replaced with 'Charset'. This seems to be a MIME::EncWords::decode_mimewords() bug. Also fixed problems with custom subject parsing that was still using the old
+parser::parse_tpl().
+
 	/trunk/src/bouncequeue.c, /trunk/src/familyqueue.c, /trunk/src/queue.c: [#2945][D.Jahnke-Zumbusch] queue, bouncequeue and familyqueue scripts were removing the first "From xx" line found even though it was not part of SMTP headers. This caused problems with Postif if the 'F' flag was not set in master.cf, because postfix would not add the expected "From xx" Header field to the delivered message.
 The code has been fixed to look for the "From xx" in the first line of the message only.
 
