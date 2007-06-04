@@ -25,6 +25,8 @@
 
    Bug fixes :
 	
+	/trunk/check_perl_modules.pl : [#3107][E.Koblinger, uhulinux] DBI 1.48 is required by use of selectall_hashref()
+
 	/trunk/src/List.pm, /trunk/src/Message.pm: [reported by T.Berry, NASA] Empty Subject field were replaced with 'Charset'. This seems to be a MIME::EncWords::decode_mimewords() bug. Also fixed problems with custom subject parsing that was still using the old
 parser::parse_tpl().
 

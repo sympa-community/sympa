@@ -1,4 +1,95 @@
 ------------------------------------------------------------------------
+r4429 | david.verdin | 2007-06-04 11:23:05 +0200 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/po/bg.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/zh_CN.po
+
+Updated magyar translation. Also regenerated po files to be sure thay are up-to-date.
+
+------------------------------------------------------------------------
+r4428 | david.verdin | 2007-06-04 09:50:48 +0200 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/INSTALL
+
+[#3110][reported by E. Koblinger, uhulinux.hu] "sympa-static" was used instead of "static-sympa" in the INSTALL file.
+
+------------------------------------------------------------------------
+r4427 | david.verdin | 2007-06-04 09:46:35 +0200 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/main.tt2
+
+[#3108] [reported by E. Koblinger, uhulinux.hu] Inverts order between "<meta charset.../>" and "<title/>" tags in order to prevent misinterpretation of title in case of loading lags.
+
+------------------------------------------------------------------------
+r4425 | olivier.salaun | 2007-06-01 17:01:55 +0200 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/check_perl_modules.pl
+
+[#3107][E.Koblinger, uhulinux] Fix: DBI 1.48 is required by use of selectall_hashref()
+
+------------------------------------------------------------------------
+r4420 | olivier.salaun | 2007-05-31 10:34:15 +0200 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /trunk/doc/Makefile
+   D /trunk/doc/auto
+   D /trunk/doc/html
+   D /trunk/doc/html.sty
+   D /trunk/doc/latex2htmlicons
+   D /trunk/doc/parse_tex.pl
+   D /trunk/doc/pocket.tex
+   D /trunk/doc/sympa.ps
+   D /trunk/doc/sympa.tex
+   D /trunk/doc/sympa.tex.tpl
+   D /trunk/doc/treesed
+
+Documentation is now only in PDF format. It is extracted from the sympa.org wiki
+
+------------------------------------------------------------------------
+r4417 | david.verdin | 2007-05-30 11:12:59 +0200 (Wed, 30 May 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+Avoiding subscriber vanishing when updating from older Sympa version. Modified version number control to be sure to include any version likely to have neither "included_subscriber" nor "subscribed_subscriber" set.
+
+------------------------------------------------------------------------
+r4414 | david.verdin | 2007-05-30 10:27:43 +0200 (Wed, 30 May 2007) | 2 lines
+Changed paths:
+   M /trunk/doc/sympa.pdf
+
+Updated PDF documentation.
+
+------------------------------------------------------------------------
+r4413 | david.verdin | 2007-05-30 09:47:53 +0200 (Wed, 30 May 2007) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Modified infos for version 5.3
+
+------------------------------------------------------------------------
 r4412 | olivier.salaun | 2007-05-25 14:41:54 +0200 (Fri, 25 May 2007) | 2 lines
 Changed paths:
    M /trunk/web_tt2/login_menu.tt2
