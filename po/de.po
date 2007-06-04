@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-03-12 17:58+0100\n"
-"Last-Translator: noah <hertner@riseup.net>\n"
+"PO-Revision-Date: 2007-05-25 08:39+0200\n"
+"Last-Translator: Buxul Timbal <buxul@web.de>\n"
 "Language-Team: Deutsch\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,13 +117,13 @@ msgstr " Die neuesten Nachrichten "
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:307
 msgid " User %1 has encountered a system error"
-msgstr " Bei dem Benutzer %1 trat ein Fehler auf"
+msgstr " Bei Benutzer %1 trat ein Fehler auf"
 
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:224
 #: mail_tt2/listmaster_notification.tt2:236
 msgid " User %1 has encountered an internal server error"
-msgstr " Bei dem Benutzer %1 trat ein interner Server Fehler auf"
+msgstr " Bei Benutzer %1 trat ein interner Server-Fehler auf"
 
 #: web_tt2/rss.tt2:7
 msgid " active lists "
@@ -1271,7 +1271,7 @@ msgstr ""
 "das \tPasswort ein, das Sie von Sympa erhalten haben. \tDadurch wird die "
 "Abmeldung von der Liste %1 bestätigt."
 
-#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:58
+#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:57
 msgid "Choose your authentication server"
 msgstr "Wählen Sie Ihren Authentifizierungsserver"
 
@@ -2211,8 +2211,7 @@ msgstr ""
 "GET <list> <file>           * Datei <file> des Archivs der Liste <list> "
 "anfordern"
 
-#: web_tt2/login_menu.tt2:58 web_tt2/loginbanner.tt2:46
-#: web_tt2/loginbanner.tt2:62
+#: web_tt2/login_menu.tt2:57 web_tt2/loginbanner.tt2:61
 msgid "Go"
 msgstr "Los"
 
@@ -2969,7 +2968,7 @@ msgstr ""
 msgid "Load certificate"
 msgstr "Lade Zertifikat"
 
-#: web_tt2/login_menu.tt2:75 web_tt2/loginbanner.tt2:79
+#: web_tt2/login_menu.tt2:75 web_tt2/loginbanner.tt2:78
 msgid "Login"
 msgstr "Anmelden"
 
@@ -3007,15 +3006,6 @@ msgid ""
 msgstr ""
 "MODINDEX <list>                 * Moderation: Eine Liste der zu "
 "moderierenden Nachrichten abrufen"
-
-#: web_tt2/login_menu.tt2:46
-#, fuzzy
-msgid "Magic authentication"
-msgstr "\"magische\" Authentifizierung"
-
-#: web_tt2/loginbanner.tt2:42
-msgid "Magic authentification"
-msgstr "\"magische\" Authentifizierung"
 
 #: web_tt2/help_editlist.tt2:75
 msgid "Mail reception mode."
@@ -3984,19 +3974,19 @@ msgstr "RFC 2369 Kopfzeilen"
 msgid "RSS"
 msgstr ""
 
-#: web_tt2/main.tt2:16 web_tt2/main.tt2:19
+#: web_tt2/main.tt2:19 web_tt2/main.tt2:22
 msgid "RSS Active lists"
 msgstr ""
 
-#: web_tt2/main.tt2:12
+#: web_tt2/main.tt2:15
 msgid "RSS Latest documents"
 msgstr ""
 
-#: web_tt2/main.tt2:15 web_tt2/main.tt2:18
+#: web_tt2/main.tt2:18 web_tt2/main.tt2:21
 msgid "RSS Latest lists"
 msgstr ""
 
-#: web_tt2/main.tt2:11
+#: web_tt2/main.tt2:14
 msgid "RSS Latest messages"
 msgstr ""
 
@@ -7765,7 +7755,7 @@ msgid "editor rejection message"
 msgstr "Editor-Ablehnungsnachricht"
 
 #: src/List.pm:1003 src/List.pm:515 web_tt2/login_menu.tt2:71
-#: web_tt2/loginbanner.tt2:77 web_tt2/sso_login.tt2:45
+#: web_tt2/loginbanner.tt2:76 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "E-Mail Adresse"
 
@@ -8231,7 +8221,7 @@ msgstr ""
 msgid "part of word"
 msgstr "Teil des Wortes"
 
-#: web_tt2/login_menu.tt2:73 web_tt2/loginbanner.tt2:78
+#: web_tt2/login_menu.tt2:73 web_tt2/loginbanner.tt2:77
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
 #: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:31
 #: web_tt2/subrequest.tt2:64
@@ -8743,21 +8733,28 @@ msgstr "Sie sind bereits Abonnent der Liste %1"
 
 #: mail_tt2/authorization_reject.tt2:185
 msgid "you are not allowed to perform this action."
-msgstr ""
+msgstr "Sie haben dafür keine Rechte."
 
 #: wwsympa/wwslib.pm:44
 msgid "you do not receive your own posts"
-msgstr ""
+msgstr "Ihre eigenen Posts werden nicht an Sie versandt."
 
 #. (newuser.email)
 #: mail_tt2/sendpasswd.tt2:28 mail_tt2/sendssopasswd.tt2:9
 msgid "your email address    : %1"
-msgstr "Ihre E-Mail Adresse   : %1"
+msgstr "Ihre E-Mail-Adresse   : %1"
 
 #. (newuser.password)
 #: mail_tt2/sendpasswd.tt2:29 mail_tt2/sendssopasswd.tt2:10
 msgid "your password : %1"
 msgstr "Ihr Passwort : %1"
+
+#, fuzzy
+#~ msgid "Magic authentication"
+#~ msgstr "\"magische\" Authentifizierung"
+
+#~ msgid "Magic authentification"
+#~ msgstr "\"magische\" Authentifizierung"
 
 #~ msgid "Listowners"
 #~ msgstr "Eigentümer der Liste"

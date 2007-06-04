@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oc\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-05-22 11:41+0200\n"
+"PO-Revision-Date: 2007-05-23 15:54+0200\n"
 "Last-Translator: Bruno GALLART <pibol@aprene.org>\n"
 "Language-Team: occitan <asso.oc@abuledu.org>\n"
 "MIME-Version: 1.0\n"
@@ -105,7 +105,7 @@ msgstr "Los messatges novèls d'aquesta lista"
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:307
 msgid " User %1 has encountered a system error"
-msgstr "Usancièr %1  a encontrat una error dins lo sistèma "
+msgstr "Usancièr %1 a encontrat una error dins lo sistèma "
 
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:224
@@ -372,7 +372,7 @@ msgstr "%m/%Y"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/wwsympa.fcgi:15640 wwsympa/wwsympa.fcgi:15641
 msgid "%Y/%m/%d/%H/%M/%S"
-msgstr ""
+msgstr "%d/%m/%Y/%H/%M/%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -442,7 +442,7 @@ msgstr "%d/%m/%y"
 
 #: src/etc/mhonarc-ressources.tt2:345
 msgid "&lt;Possible follow-up(s)&gt;"
-msgstr ""
+msgstr "&lt;Seguida(s) possibla(s)&gt;"
 
 #. (u_err.bad_listname)
 #: web_tt2/error.tt2:87
@@ -528,7 +528,7 @@ msgstr "**** A L È R T A    V I R U S ****"
 
 #: src/etc/mhonarc-ressources.tt2:341
 msgid ", <em>(continued)</em>"
-msgstr ""
+msgstr ",<em>(seguida)</em>"
 
 #: src/PlainDigest.pm:258
 msgid "-----End of Delivery Status Report-----\n"
@@ -615,10 +615,16 @@ msgid ""
 "hovered hyperlinks corresponding to actions;</LI><LI>background color for "
 "clicked links (corresponding to the .active state in a CSS).</LI></UL>"
 msgstr ""
+"<UL><LI>color de bòrd per una accion activa (exemple : la seccion de las "
+"opcions d'administracion que sètz de consultar o lo bòrd de cap de colomna "
+"seguent las valors qu'amb elas lo taulador es triat) ;</LI><LI>color que "
+"pren lo bòrd dels ligams ipertèxts correspondent a d'accions quora la mirga "
+"los subrevola;</LI><LI>color de fons per los ligams qu'avètz clicats dessús "
+"(correspondent à l'estat \".active\" del fuèlh CSS).</LI></UL>"
 
 #: src/etc/mhonarc-ressources.tt2:349
 msgid "<em>Message not available</em>"
-msgstr ""
+msgstr "<em>Messatge pas disponible</em>"
 
 #: web_tt2/help_editlist.tt2:18
 msgid ""
@@ -1246,13 +1252,12 @@ msgstr ""
 "\t mot de santa Clara qu'avètz recebut. Aquò confirmarà\n"
 "vòstra demanda de desabonament de la tièra %1."
 
-#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:58
+#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:57
 msgid "Choose your authentication server"
 msgstr "Causir vòstre servidor d'autentificacion"
 
 #: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:294
 #: src/etc/mhonarc-ressources.tt2:407 src/etc/mhonarc-ressources.tt2:411
-#, fuzzy
 msgid "Chronological"
 msgstr "Cronologic"
 
@@ -1265,9 +1270,8 @@ msgid "Close it"
 msgstr "Tancar la tièra"
 
 #: web_tt2/list_panel.tt2:8
-#, fuzzy
 msgid "Closed list"
-msgstr "Tièras tancadas"
+msgstr "Tièra tancada"
 
 #: web_tt2/get_closed_lists.tt2:6 web_tt2/get_closed_lists.tt2:7
 #: web_tt2/serveradmin.tt2:38
@@ -1485,14 +1489,13 @@ msgstr "Data"
 
 #. (date)
 #: web_tt2/request_topic.tt2:29
-#, fuzzy
 msgid "Date : %1"
-msgstr "A : %1"
+msgstr "Data : %1"
 
 #. (crash_date)
 #: mail_tt2/listmaster_notification.tt2:40
 msgid "Date of crash : %1"
-msgstr ""
+msgstr "Data del fracàs : %1"
 
 # nlsref 8,25
 #. (list.name)-)
@@ -1920,9 +1923,8 @@ msgstr "problèmas en descomprimir lo fichièr %1"
 
 # nlsref 1,3
 #: mail_tt2/listmaster_notification.tt2:41
-#, fuzzy
 msgid "Errors:"
-msgstr "Taus d'error:"
+msgstr "Errors:"
 
 #: mail_tt2/expire_warning1.tt2:7 mail_tt2/expire_warning2.tt2:7
 #: mail_tt2/remind.tt2:6
@@ -2003,6 +2005,8 @@ msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
 msgstr ""
+"La creacion de la lista '%1' es pas possible. Aqueste lista benlèu existís "
+"ja o son nom conten caractèrs interdits."
 
 #: web_tt2/error.tt2:14
 msgid "Failed to include list admins"
@@ -2191,8 +2195,7 @@ msgstr ""
 "GET <liste> <fichier>           * Obténer lo fichièr <fichier> dels archius "
 "de la tièra <liste>"
 
-#: web_tt2/login_menu.tt2:58 web_tt2/loginbanner.tt2:46
-#: web_tt2/loginbanner.tt2:62
+#: web_tt2/login_menu.tt2:57 web_tt2/loginbanner.tt2:61
 msgid "Go"
 msgstr "Validar"
 
@@ -2534,7 +2537,9 @@ msgid ""
 "It was not possible to send you the message because the mailing list "
 "manager\n"
 "was unable to access your personal certificate (email %1)."
-msgstr "Èra pas possible de mandar lo vòstr"
+msgstr ""
+"Èra pas possible de mandar lo vòstre messatge perque l'administrator de la "
+"lista es pas capable de legir lo vòstre certificat (corrièr electronic %1)."
 
 #: src/etc/mhonarc-ressources.tt2:616
 msgid ""
@@ -2847,11 +2852,10 @@ msgstr "Nom de la tièra :"
 
 #: web_tt2/list_panel.tt2:10
 msgid "List not yet activated"
-msgstr ""
+msgstr "La lista es pas, ara, activada"
 
 # nlsref 15,10
 #: web_tt2/menu.tt2:17
-#, fuzzy
 msgid "List of lists"
 msgstr "lista de las tièras"
 
@@ -2906,9 +2910,8 @@ msgid "Listing subscription to moderate"
 msgstr "Tièra dels messatges en espèra d'aprobacion"
 
 #: web_tt2/subindex.tt2:1
-#, fuzzy
 msgid "Listing subscriptions to validate"
-msgstr "Tièra dels messatges en espèra d'aprobacion"
+msgstr "Tièra dels abonamants de validar"
 
 #: mail_tt2/listmaster_notification.tt2:2 web_tt2/login_menu.tt2:8
 msgid "Listmaster"
@@ -2959,7 +2962,7 @@ msgstr "Vaquí les tièras que ne sètz proprietari :"
 msgid "Load certificate"
 msgstr "Cargar lo certificat"
 
-#: web_tt2/login_menu.tt2:75 web_tt2/loginbanner.tt2:79
+#: web_tt2/login_menu.tt2:75 web_tt2/loginbanner.tt2:78
 msgid "Login"
 msgstr "S'identificar"
 
@@ -2995,14 +2998,6 @@ msgid ""
 msgstr ""
 "MODINDEX <liste>                 * Moderacion: consultar de la tièra dels "
 "messatges de moderar"
-
-#: web_tt2/login_menu.tt2:46
-msgid "Magic authentication"
-msgstr "Autentificacion magica"
-
-#: web_tt2/loginbanner.tt2:42
-msgid "Magic authentification"
-msgstr "Autentificacion magica"
 
 # nlsref 16,19
 #: web_tt2/help_editlist.tt2:75
@@ -3187,7 +3182,7 @@ msgid ""
 "Messages can either be read via email (subscription) or\n"
 "via the web (web archives)"
 msgstr ""
-"Los messatges se pòdon consultar per corrièr elecronic (abonament) oper "
+"Los messatges se pòdon consultar per corrièr electronic (abonament) o per "
 "l'interfàcia web (archius)"
 
 #. (list.name,to,subscriber.first_bounce)
@@ -3435,7 +3430,7 @@ msgstr "Pas cap de robòt virtual definit sus aquel servidor"
 
 #: mail_tt2/listowner_notification.tt2:105
 msgid "No action is needed on your side."
-msgstr ""
+msgstr "Avètz pas besonh de faire quicòm"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:79
@@ -3847,13 +3842,12 @@ msgid "Previous page"
 msgstr "Pagina precedenta"
 
 #: mail_tt2/listmaster_notification.tt2:37
-#, fuzzy
 msgid "Previous process crashed"
-msgstr "Pagina precedenta"
+msgstr "Lo processús s'es acabat d'un biais brutal."
 
 #: mail_tt2/listmaster_notification.tt2:39
 msgid "Previous process has died unexpectedly."
-msgstr ""
+msgstr "Lo processús s'es acabat d'un biais imprevist."
 
 # nlsref 16,63
 #: src/List.pm:1059
@@ -3990,20 +3984,20 @@ msgstr "Camps d'encap compatibles RFC 2369"
 msgid "RSS"
 msgstr "RSS"
 
-#: web_tt2/main.tt2:16 web_tt2/main.tt2:19
+#: web_tt2/main.tt2:19 web_tt2/main.tt2:22
 msgid "RSS Active lists"
 msgstr "RSS : las tièras activas"
 
 # nlsref 16,70
-#: web_tt2/main.tt2:12
+#: web_tt2/main.tt2:15
 msgid "RSS Latest documents"
 msgstr "RSS : los documents darrièrs"
 
-#: web_tt2/main.tt2:15 web_tt2/main.tt2:18
+#: web_tt2/main.tt2:18 web_tt2/main.tt2:21
 msgid "RSS Latest lists"
 msgstr "RSS : las tièras nòvas"
 
-#: web_tt2/main.tt2:11
+#: web_tt2/main.tt2:14
 msgid "RSS Latest messages"
 msgstr "RSS : los darrièrs messatges"
 
@@ -4423,9 +4417,8 @@ msgid "Search lists"
 msgstr "Cercar una tièra"
 
 #: web_tt2/viewlogs.tt2:109
-#, fuzzy
 msgid "Search period: "
-msgstr "Recercar un usancièr"
+msgstr "Recercar dins un periòde"
 
 #: web_tt2/review.tt2:73
 msgid "Search user by email"
@@ -4909,7 +4902,7 @@ msgstr ""
 
 #: web_tt2/review.tt2:37
 msgid "Synchronize members with data sources"
-msgstr "Sincronizar los membres amb las sorças de donadas"
+msgstr "Sincronizar los sòcis amb las sorças de donadas"
 
 #: web_tt2/blacklist.tt2:9
 msgid "Syntax :"
@@ -7661,6 +7654,9 @@ msgid ""
 "color_5. It is intended to be the darkest shade, as color_5 has other uses.</"
 "LI></UL>"
 msgstr ""
+"color del fons dels elements seguents :<UL><LI> una linha sus doas dins las "
+"taulas, alterna amb la color_5. Es normalament la mai  escura de las doas "
+"perque la color_5 a d'usatges mai appropriats per una color clara.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:89
 msgid ""
@@ -7670,12 +7666,21 @@ msgid ""
 "</LI><LI>hovered buttons corresponding to the actionMenuLinks CSS class;</"
 "LI><LI>hovered navigation tabs.</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents :<UL><LI>accion activa (per exemple, "
+"lo nom de la seccion de las opcions d'administracion que sètz a consultar o "
+"lo cap de colomna seguent las valors qu'amb elas un taulador es triat) ; </"
+"LI><LI>accions subrevoladas per lo cursor de la mirga ; </LI><LI>botons "
+"correspondent a la classa CSS actionMenuLinks subrevolats per la mirga; </"
+"LI><LI>onglets de navigacion subrevolats per la mirga.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:83
 msgid ""
 "background color of:<UL><LI>all the main interface boxes;</LI><LI>the "
 "lightest color for the table lines, contrasting with color_0.</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents :<UL><LI>las brustias totas de "
+"l'interfàcia principala ; </LI><LI>la mai clara de las  colors de linhas del "
+"taulador serà alternada amb color_0.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:131
 msgid ""
@@ -7683,18 +7688,28 @@ msgid ""
 "lists, ...);</LI><LI>the rest of hovered buttons (those corresponding to the "
 "MainMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents : <UL><LI>zònas modificablas dels "
+"formularis (zònas de tèxt, quadre de lista desrotlanta, ...) ; </LI><LI>çò "
+"que daissa dels botons quora son subrevolats par la mirga (los que "
+"correspondon a la classa CSS MainMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:95
 msgid ""
 "background color of:<UL><LI>error messages;</LI><LI>just edited area in the "
 "administrative management section.</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents :<UL><LI>messatges d'error ;</"
+"LI><LI>zòna  que la configuracion foguèt modificada dins la seccion "
+"d'administracion.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:59
 msgid ""
 "background color of:<UL><LI>main navigation tabs;</LI><LI> most of the "
 "buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents : <UL><LI>onglets de navigacion "
+"principala ; </LI><LI>la magèr part dels botons (los que  correspondent a la "
+"classa CSS MainMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:77
 msgid ""
@@ -7702,18 +7717,22 @@ msgid ""
 "the buttons (which are in fact hyperlinks, corresponding to the "
 "actionMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"color del fons dels elements seguents : <UL><LI>pagina ; </LI><LI>cap de "
+"colomna del taulador; </LI><LI>çò que daissa son botons (sont en fach de "
+"ligams ipertèxts, correspondent a la classa CSS actionMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:71
 msgid "background color of:<UL><LI>top box;</LI><LI>footer box.</LI></UL>"
 msgstr ""
+"color del fons de :<UL><LI>cap de pagina;</LI><LI>pè de pagina.</LI></UL>"
 
 #: web_tt2/search_user.tt2:15
 msgid "bounce"
-msgstr "Errors"
+msgstr "error"
 
 #: web_tt2/reviewbouncing.tt2:61
 msgid "bounce score"
-msgstr "Taus d'errors"
+msgstr "taus d'error"
 
 #: web_tt2/review.tt2:184
 msgid "bouncing"
@@ -7896,9 +7915,8 @@ msgstr ""
 #: web_tt2/skinsedit.tt2:149 web_tt2/skinsedit.tt2:155
 #: web_tt2/skinsedit.tt2:161 web_tt2/skinsedit.tt2:167
 #: web_tt2/skinsedit.tt2:173 web_tt2/skinsedit.tt2:179
-#, fuzzy
 msgid "deprecated"
-msgstr "Moderada"
+msgstr "tresanat (ada)"
 
 #: wwsympa/wwslib.pm:36
 msgid "digest MIME format"
@@ -7919,7 +7937,7 @@ msgstr "distribuar"
 
 #: web_tt2/skinsedit.tt2:101
 msgid "doted underscore color of:<UL><LI>hyperlinks.</LI></UL>"
-msgstr ""
+msgstr "color del soslinhament del puntejat :<UL><LI>hyperlinks.</LI></UL>"
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
 #: web_tt2/subrequest.tt2:30 web_tt2/subrequest.tt2:63
@@ -7955,7 +7973,7 @@ msgstr "messatge de refús pel moderator"
 
 # nlsref 16,27
 #: src/List.pm:1003 src/List.pm:515 web_tt2/login_menu.tt2:71
-#: web_tt2/loginbanner.tt2:77 web_tt2/sso_login.tt2:45
+#: web_tt2/loginbanner.tt2:76 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "adreiça de messatjariá"
 
@@ -8000,7 +8018,6 @@ msgid "everyone can post"
 msgstr "qual se vòl pòt mandar de messatges"
 
 #: web_tt2/viewlogs.tt2:69
-#, fuzzy
 msgid "ex: 24/05/2006"
 msgstr "per exemple: 03/05/2006"
 
@@ -8059,6 +8076,10 @@ msgid ""
 "are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some "
 "titles.</LI></UL>"
 msgstr ""
+"color de polissa de caractèr e de bordadura per los elements seguents : "
+"<UL><LI> Quasi tot. Los sols bòrds que fan excepcion son los dels elements "
+"&lt;TD/&gt; ; las polissas que fan excepcion son las dels ligams ipertèxts, "
+"dels botons e de certans títols.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:119
 msgid ""
@@ -8066,11 +8087,18 @@ msgid ""
 "LI><LI>hovered links;</LI><LI>some hovered buttons action(which are in fact "
 "hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"color de polissa de caractèr per los elements seguents :<UL><LI>onglet de "
+"navigacion actiu ; </LI><LI>balisas de títol &lt;H2/&gt; ; </LI><LI>ligams "
+"ipertèxts subrevolats per la mirga ; </LI><LI>certans botons d'accion quora "
+"son subrevolats per la mirga (son en vertat ligams ipertèxts correspondent a "
+"la classa CSS actionMenuLinks).</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:125
 msgid ""
 "font color for:<UL><LI>the class smallblack. Not sure it is used.</LI></UL>"
 msgstr ""
+"color de polissa de caractèr per los elements seguents : <UL><LI>La classa "
+"CSS smallblack. Es utilizada ? </LI></UL>"
 
 #. (for)
 #: web_tt2/rss.tt2:23 web_tt2/rss.tt2:33
@@ -8138,7 +8166,7 @@ msgstr "es pas possible"
 
 #: web_tt2/skinsedit.tt2:113
 msgid "inactive buttons color. Rarely used."
-msgstr ""
+msgstr "color de fons dels botons inactius. Rarament emplegada."
 
 #: mail_tt2/listmaster_notification.tt2:104
 msgid "incorrect format of edit_list.conf"
@@ -8436,9 +8464,8 @@ msgid "parameter"
 msgstr "paramètre"
 
 #: web_tt2/skinsedit.tt2:45
-#, fuzzy
 msgid "parameter usage"
-msgstr "valor del paramètre"
+msgstr "ròtle del paramètre"
 
 #: web_tt2/skinsedit.tt2:43
 msgid "parameter value"
@@ -8448,7 +8475,7 @@ msgstr "valor del paramètre"
 msgid "part of word"
 msgstr "partida de mot"
 
-#: web_tt2/login_menu.tt2:73 web_tt2/loginbanner.tt2:78
+#: web_tt2/login_menu.tt2:73 web_tt2/loginbanner.tt2:77
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
 #: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:31
 #: web_tt2/subrequest.tt2:64
@@ -8939,7 +8966,7 @@ msgstr "messatge de desabonament"
 
 #: web_tt2/skinsedit.tt2:137 web_tt2/skinsedit.tt2:143
 msgid "unused"
-msgstr ""
+msgstr "inutilizat"
 
 #: wwsympa/wwslib.pm:42
 msgid "urlize mode"
@@ -9017,6 +9044,12 @@ msgstr "vòstra adreiça electronica : %1"
 #: mail_tt2/sendpasswd.tt2:29 mail_tt2/sendssopasswd.tt2:10
 msgid "your password : %1"
 msgstr "vòstre mot de santa Clara : %1"
+
+#~ msgid "Magic authentication"
+#~ msgstr "Autentificacion magica"
+
+#~ msgid "Magic authentification"
+#~ msgstr "Autentificacion magica"
 
 #~ msgid "Do you really want to delete theses messages ?"
 #~ msgstr "Sètz segur(a) de voler suprimir aquels messatges ?"
