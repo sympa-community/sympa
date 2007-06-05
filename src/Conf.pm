@@ -716,7 +716,7 @@ sub checkfiles_as_root {
 	if ($dir ne '' && ! -d $dir){
 	    unless ( mkdir ($dir, 0775)) {
 		&do_log('err', 'Unable to create directory %s : %s', $dir, $!);
-		printf STDERR 'Unable to create directory %s : $!',$dir, $!;
+		printf STDERR 'Unable to create directory %s : %s',$dir, $!;
 		$config_err++;
 	    }
 
