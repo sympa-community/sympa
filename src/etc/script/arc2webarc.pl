@@ -52,7 +52,6 @@ my %month_idx = qw(jan 1
 
 my $msg_count;
 
-my %options;
 # load options ?
 #$main::options{'debug'} = 1;
 #$main::options{'debug2'} = 1 if ($main::options{'debug'});
@@ -122,14 +121,14 @@ if (-d $dest_dir) {
 }
 
 
-if ($opts{'input-directory'}) {
-    unless (-d $opts{'input-directory'}) {
-	die "Parameter input-directory (%s) is not a directory", $opts{'input-directory'};
+if ($opt{'input-directory'}) {
+    unless (-d $opt{'input-directory'}) {
+	die "Parameter input-directory (%s) is not a directory", $opt{'input-directory'};
     }
 
-    opendir DIR, $opts{'input-directory'} || die;
+    opendir DIR, $opt{'input-directory'} || die;
     foreach my $file ( sort grep (!/^\.\.?$/,readdir(DIR))) {
-	open ARCFILE, $opts{'input-directory'}.'/'.$file;
+	open ARCFILE, $opt{'input-directory'}.'/'.$file;
 	my @msg = <ARCFILE>;
 	push @msgs, \@msg;
 	$msg_count++;
