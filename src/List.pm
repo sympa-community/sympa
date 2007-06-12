@@ -1286,8 +1286,8 @@ sub db_connect {
 	&do_log('notice', 'List::db_connect(): Db handle already available');
 	return 1;
     }
-    unless ( $dbh = &SQLSource::connect(\%Conf, {'keep_trying'=>($option eq 'just_try' || ( !$db_connected && !$ENV{'HTTP_HOST'})),
-    	'warn'=>1 } )) {
+    unless ( $dbh = &SQLSource::connect(\%Conf, {'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
+						 'warn'=>1 } )) {
     	return undef;
     }
     do_log('debug3','Connected to Database %s',$Conf{'db_name'});
