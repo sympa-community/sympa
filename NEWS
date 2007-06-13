@@ -3,6 +3,17 @@
 
 (See Changelog file for the full changes log)
 
+5.3.2		13 June 2007
+
+   Bug fixes :
+
+	/trunk/src/List.pm : logic for setting 'keep_trying' option to SQLSource::connect() was upside down. As a result, initial DB creation could not happen.
+
+	/trunk/src/etc/mhonarc-ressources.tt2 : [#3126][Reported by E. Koblinger, uhulinux.hu] Removed "keepspace" option from MIME options to avoid inclusion of useless "&nbsp;" sequences.
+
+	/trunk/web_tt2/home.tt2 : [reported by R.Touchais] No more refer to a URL on the front page
+
+
 5.3		22 May 2007
 
    New features :

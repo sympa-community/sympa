@@ -1,4 +1,97 @@
 ------------------------------------------------------------------------
+r4449 | david.verdin | 2007-06-13 09:17:39 +0200 (Wed, 13 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/po/de.po
+   M /trunk/po/es.po
+   M /trunk/po/hu.po
+
+Updated translations.
+
+------------------------------------------------------------------------
+r4448 | david.verdin | 2007-06-12 14:42:47 +0200 (Tue, 12 Jun 2007) | 2 lines
+Changed paths:
+   R /trunk/wwsympa/icons/back.png
+   R /trunk/wwsympa/icons/begin.png
+   R /trunk/wwsympa/icons/binary.png
+   R /trunk/wwsympa/icons/down.png
+   R /trunk/wwsympa/icons/end.png
+   R /trunk/wwsympa/icons/folder.open.png
+   R /trunk/wwsympa/icons/folder.png
+   R /trunk/wwsympa/icons/image2.png
+   R /trunk/wwsympa/icons/left.png
+   R /trunk/wwsympa/icons/link.png
+   R /trunk/wwsympa/icons/locked.png
+   R /trunk/wwsympa/icons/logo-s-lock.png
+   R /trunk/wwsympa/icons/logo-s.png
+   R /trunk/wwsympa/icons/movie.png
+   R /trunk/wwsympa/icons/right.png
+   R /trunk/wwsympa/icons/sound1.png
+   R /trunk/wwsympa/icons/text.png
+   R /trunk/wwsympa/icons/unknown.png
+
+[#1758] [reported by E.Koblinger, uhulunux.hu]Fix: CVS2SVN migration made all PNG images 1 byte shorter.
+
+------------------------------------------------------------------------
+r4446 | olivier.salaun | 2007-06-12 11:38:01 +0200 (Tue, 12 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/SQLSource.pm
+
+Fix: while granting DB privileges, db_user was not quoted. It could lead to errors if db_user contained special caracters ('-' for example).
+
+------------------------------------------------------------------------
+r4444 | olivier.salaun | 2007-06-12 11:35:14 +0200 (Tue, 12 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+Fix: logic for setting 'keep_trying' option to SQLSource::connect() was upside down. As a result, initial DB creation could not happen.
+
+------------------------------------------------------------------------
+r4442 | david.verdin | 2007-06-08 12:34:46 +0200 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/etc/mhonarc-ressources.tt2
+
+[#3126][Reported by E. Koblinger, uhulinux.hu] Removed "keepspace" option from MIME options to avoid inclusion of useless "&nbsp;" sequences.
+
+------------------------------------------------------------------------
+r4441 | olivier.salaun | 2007-06-06 19:06:47 +0200 (Wed, 06 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/home.tt2
+
+[reported by R.Touchais] No more refer to a URL on the front page
+
+------------------------------------------------------------------------
+r4440 | olivier.salaun | 2007-06-06 18:16:52 +0200 (Wed, 06 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+   M /trunk/wwsympa/archived.pl
+   M /trunk/wwsympa/bounced.pl
+
+[#3132]Fix: updated the message regarding unreachable database. RDBMS is now mandatory.
+
+------------------------------------------------------------------------
+r4438 | olivier.salaun | 2007-06-06 10:59:57 +0200 (Wed, 06 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/etc/script/arc2webarc.pl
+
+[R.Touchais, U.Paris Sud] Fix: orguments to arc2webarc.pl were ignored
+
+------------------------------------------------------------------------
+r4437 | olivier.salaun | 2007-06-05 11:15:09 +0200 (Tue, 05 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+
+[#3115] Fix: typo in error message
+
+------------------------------------------------------------------------
+r4430 | david.verdin | 2007-06-04 13:16:10 +0200 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Preparing version 5.3.1
+
+------------------------------------------------------------------------
 r4429 | david.verdin | 2007-06-04 11:23:05 +0200 (Mon, 04 Jun 2007) | 2 lines
 Changed paths:
    M /trunk/po/bg.po
