@@ -342,7 +342,7 @@ sub get_my_url {
     my $return_url;
     
     ## Mod_ssl sets SSL_PROTOCOL ; apache-ssl sets SSL_PROTOCOL_VERSION
-    if ($ENV{SSL_PROTOCOL} || $ENV{SSL_PROTOCOL_VERSION}) {
+    if ($ENV{'HTTPS'} eq 'on') {
 	$return_url = 'https';
     }else{
 	$return_url = 'http';	
