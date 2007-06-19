@@ -836,7 +836,7 @@ sub rm_file {
 sub stop {
     
     my ($task, $context) = @_;
-    my $task_file = $spool_task.'/'.$task->{'file'};
+    my $task_file = $spool_task.'/'.$task->{'filename'};
 
     &do_log ('notice', "$context->{'line_number'} : stop $task_file");
     
