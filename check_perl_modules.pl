@@ -46,7 +46,6 @@ use CPAN;
 	     'SOAP::Lite' => '0.60',
 	     'MHonArc::UTF8' => '2.6.0',
 	     'MIME::Base64' => '3.03',
-	     'Crypt::OpenSSL::X509' => '0.3.1',
 	     'MIME::Charset' => '0.04.1',
 	     'MIME::EncWords' => '0.040',
 	     );
@@ -88,7 +87,6 @@ use CPAN;
 	     'Net::SSLeay' => 'NET-SSLeay',
 	     'Bundle::LWP' => 'LWP',
 	     'SOAP::Lite' => 'SOAP-Lite',
-	     'Crypt::OpenSSL::X509' => 'Crypt-OpenSSL-X509',
 	     'File::NFSLock' => 'File-NFSLock');
 
 %opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
@@ -107,7 +105,6 @@ use CPAN;
 		 'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
 		 'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
 		 'SOAP::Lite' => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
-		 'Crypt::OpenSSL::X509' => 'required for HTTP x509 authentication (when using Email in SubjAltName)',
 		 'File::NFSLock' => 'required to perform NFS lock ; see also lock_method sympa.conf parameter'
 		 );
 
