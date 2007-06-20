@@ -283,7 +283,7 @@ sub authenticateAndRun {
     }
 
     my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
-    unless ($cookie eq $checksum) {
+    unless (($cookie eq $checksum)||($checksum == $cookie)) {
 	&do_log('notice', "authenticateAndRun(): authentication failed Incorrect cookie $cookie <> $checksum)");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
@@ -317,7 +317,7 @@ sub getUserEmailByCookie {
     }
     
     my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
-    unless ($cookie eq $checksum) {
+    unless (($cookie eq $checksum)||($checksum == $cookie)) {
 	&do_log('notice', "getUserEmailByCookie(): invalid cookie ($cookie <> $checksum)");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
