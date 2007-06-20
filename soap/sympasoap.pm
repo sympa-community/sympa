@@ -283,6 +283,10 @@ sub authenticateAndRun {
     }
 
     my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
+    ## This test's purpose is to ensure that we are presented the right cookie. In addition, we avoid the following
+    ## problem: if the cookie is composed of digits only ([0-9]) AND it starts with at least one zero character, 
+    ## it is treated as a number and the leading zeros are ignored. When tested against checksum, it is not the same
+    ## character string as the leading zeros are missing. We add a number comparison to avoid it. Example: 00785136 becomes 785136.
     unless (($cookie eq $checksum)||($checksum == $cookie)) {
 	&do_log('notice', "authenticateAndRun(): authentication failed Incorrect cookie $cookie <> $checksum)");
 	die SOAP::Fault->faultcode('Server')
@@ -317,6 +321,10 @@ sub getUserEmailByCookie {
     }
     
     my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
+    ## This test's purpose is to ensure that we are presented the right cookie. In addition, we avoid the following
+    ## problem: if the cookie is composed of digits only ([0-9]) AND it starts with at least one zero character, 
+    ## it is treated as a number and the leading zeros are ignored. When tested against checksum, it is not the same
+    ## character string as the leading zeros are missing. We add a number comparison to avoid it. Example: 00785136 becomes 785136.
     unless (($cookie eq $checksum)||($checksum == $cookie)) {
 	&do_log('notice', "getUserEmailByCookie(): invalid cookie ($cookie <> $checksum)");
 	die SOAP::Fault->faultcode('Server')
