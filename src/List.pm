@@ -270,7 +270,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to * 
 		      verp_rate welcome_return_path remind_return_path user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
-                      include_ldap_2level_query include_sql_query include_admin ttl creation update 
+                      include_ldap_2level_query include_sql_query include_admin ttl distribution_ttl creation update 
 		      status serial);
 
 ## List parameters aliases
@@ -509,6 +509,14 @@ my %alias = ('reply-to' => 'reply_to',
 				  'gettext_id' => "Digest maximum number of messages",
 				  'group' => 'sending'
 		       },	    
+
+	    'distribution_ttl' => {'format' => '\d+',
+		      'length' => 6,
+		      'unit' => 'seconds',
+		      'gettext_id' => "Inclusions timeout for message distribution",
+		      'group' => 'data_source'
+		      },
+
 	    'editor' => {'format' => {'email' => {'format' => &tools::get_regexp('email'),
 						  'length' => 30,
 						  'occurrence' => '1',
