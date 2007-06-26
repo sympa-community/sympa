@@ -1,11 +1,11 @@
-Please refer to the documentation for full installation notes : doc/html/node4.html
+Please refer to the documentation for full installation notes : doc/sympa.pdf
 
 Reference manual
 ===============
 This document is only a quick start.
 For detailed installation / setup information, refer to the reference manual :
 
-	http://www.sympa.org/doc/html/
+	http://www.sympa.org/wiki/manual
 
 
 Installing Sympa from sources
@@ -25,14 +25,16 @@ Requirements
 =============================
 
 Sympa requires other applications to run :
-  * perl and suidperl (needed to run the web insterface with sufficient privileges)
+  * perl and gcc
+  * suidperl or sudo (needed to run the web interface with sufficient privileges)
   * sendmail or another MTA (postfix, exim and qmail supported)
   * mysql or another relational database (postgresql, oracle and sybase supported)
   * apache (or another web server)
-  * mod_fastcgi is required to provide good web perf
+  * mod_fastcgi or mod_fcgid
   * many perl modules : they are automatically installed at 'make' time
-  * antivirus : it is highly recommended that you plug an antivirus with Sympa
-    (ClamAv is free antivirus that works with Sympa : http://www.clamav.net/)
+  * some Perl modules require additionnal libraries :
+    - XML::LibXML requires libxml2 and libxml2 sources
+    - Net::SSLeay requires openssl sources
 
 Setup
 ==========
@@ -72,16 +74,12 @@ You should also create the main Sympa aliases ; they will look like this :
 5/ Web setup
 You should add these lines to your httpd.conf file :
 
-	Alias /static-sympa /home/sympa/static_content
+   Alias /static-sympa /home/sympa/static_content 
+   ScriptAlias /sympa /home/sympa/bin/wwsympa_sudo_wrapper.fcgi
 
-	ScriptAlias /sympa /wwsympa.fcgi
-
-	## Running FastCGI will provide much faster responses from your server and reduce load 
-	## (to understand why, read http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm)
-	#FastCgiServer /wwsympa.fcgi -processes 2
-	#<Location /sympa>
-   	#  SetHandler fastcgi-script
-	#</Location>
+   <IfModule mod_fcgid.c>
+     AddHandler fcgid-script .fcgi
+   </IfModule>
 
 To login with listmaster privileges, you should login on the web
 interface with the email address you declared in sympa.conf. To get an
