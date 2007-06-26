@@ -2500,10 +2500,8 @@ sub distribute_msg {
 
     ## Synchronize list members, required if list uses include sources
     ## unless sync_include has been performed withi last 5 minutes
-    if ($self->has_include_data_sources() &&
-	($self->{'last_sync'} < time - 60*5)) { 
-	&do_log('notice', "Synchronizing list members...");
-	$self->sync_include();
+    if ($self->has_include_data_sources()) {
+	$self->on_the_fly_sync_include($self->{'admin'}{'distribution_ttl'}||$self->{'admin'}{'ttl'});
     }
 
     ## Blindly send the message to all users.
@@ -12504,6 +12502,15 @@ sub get_list_id {
     my $self = shift;
 
     return $self->{'name'}.'@'.$self->{'domain'};
+}
+
+sub on_the_fly_sync_include {
+    my ($self,$pertinent_ttl) = @_;
+    &do_log('debug2','List::on_the_fly_sync_include(%s)',$pertinent_ttl);
+    if ($self->{'last_sync'} < time - $pertinent_ttl) { 
+	&do_log('notice', "Synchronizing list members...");
+	$self->sync_include();
+    }
 }
 
 #################################################################
