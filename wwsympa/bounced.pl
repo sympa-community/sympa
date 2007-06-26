@@ -113,12 +113,7 @@ unless (Conf::load($sympa_conf_file)) {
 unshift @INC, $wwsconf->{'wws_path'};
 
 ## Check databse connectivity
-unless ($List::use_db = &List::check_db_connect()) {
-    print STDERR "Sympa not setup to use DBI, unable to manage bounces\n";
-    exit (-1);
-}
-## Check databse connectivity
-unless ($List::use_db = &List::check_db_connect()) {
+unless (&List::check_db_connect()) {
     &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
 }
 

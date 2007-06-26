@@ -761,7 +761,7 @@ sub add {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to update user allready subscribed', $listname,$robot,$email,$sender);
 	    my $error = "Unable to update user $user in list $listname";
 	    die SOAP::Fault->faultcode('Server')
-		->faultstring('Unable to update user allreadu subscribed')
+		->faultstring('Unable to update user allready subscribed')
 		->faultdetail($error);
 	}
     }else {
@@ -769,7 +769,7 @@ sub add {
 	my $defaults = $list->get_default_user_options();
 	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
-	$u->{'gecos'} = $comment;
+	$u->{'gecos'} = $gecos;
 	$u->{'date'} = $u->{'update_date'} = time;
 	
 	unless ($list->add_user($u)) {

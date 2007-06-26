@@ -10683,6 +10683,9 @@ sub check_db_connect {
 	}
     }
 
+    ## Used by List subroutines to check that the DB is available
+    $List::use_db = 1;
+
     return 1;
 }
 

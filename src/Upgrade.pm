@@ -1135,6 +1135,9 @@ sub probe_db {
 	return undef;
     }
     
+    ## Used by List subroutines to check that the DB is available
+    $List::use_db = 1;
+
     ## Notify listmaster
     &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
 

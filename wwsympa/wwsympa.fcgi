@@ -591,7 +591,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 $Language::default_lang = $Conf{'lang'};	 
 
 ## Important to leave this there because it defined defaults for user_data_source
-$List::use_db = &List::check_db_connect();
+&List::check_db_connect();
 
 my $pinfo = &List::_apply_defaults();
 
@@ -650,7 +650,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
      }
 
-     unless ($List::use_db = &List::check_db_connect()) {
+     unless (&List::check_db_connect()) {
 	 &report::reject_report_web('system_quiet','no_database',{},'','');
 	 &do_log('info','WWSympa requires a RDBMS to run');
      }

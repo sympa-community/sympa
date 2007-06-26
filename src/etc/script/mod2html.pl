@@ -15,7 +15,7 @@ unless (Conf::load('--CONFIG--')) {
 &do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
-    unless ($List::use_db = &Upgrade::probe_db()) {
+    unless (&Upgrade::probe_db()) {
 	die "Sympa can't connect to database";
     }
 } #  to check availabity of Sympa database
