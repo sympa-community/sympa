@@ -987,6 +987,13 @@ sub review {
     }
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
+	
+	## Members list synchronization if include is in use
+	if ($list->has_include_data_sources()) {
+	    unless ($list->on_the_fly_sync_include('use_ttl'=>1)) {
+		&Log::do_log('notice','Unable to synchronize list %s.', $listname);
+	    }
+	}
 	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
 	    &Log::do_log('err', "SOAP : no subscribers in list '%s'", $list->{'name'});
 	    push @resultSoap, SOAP::Data->name('result')->type('string')->value('no_subscribers');

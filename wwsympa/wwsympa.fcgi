@@ -3481,6 +3481,15 @@ sub do_remindpasswd {
      ## Additional DB fields
      my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
 
+     ## Members list synchronization if list has included data sources.
+     if ($list->has_include_data_sources()) {
+	 if ($list->on_the_fly_sync_include('use_ttl'=>1)) {
+	     &report::notice_report_web('subscribers_updated',{},$param->{'action'});
+	 }else {
+	     &report::reject_report_web('intern','sync_include_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 }
+     }
+
      ## Members list
      $count = -1;
      for (my $i = $list->get_first_user({'sortby' => $sortby, 
@@ -8715,11 +8724,9 @@ sub do_edit_list {
  	  return undef;
       }
 
-     ## remove existing sync_include task
-     ## to start a new one
-     if ($data_source_updated && ($list->{'admin'}{'user_data_source'} eq 'include2')) {
-	 $list->remove_task('sync_include');
-	 if ($list->sync_include()) {
+     ## If list has included data sources, update them and delete sync_include task.
+     if ($data_source_updated && ($list->has_include_data_sources())) {
+	 if ($list->on_the_fly_sync_include('use_ttl'=>0)) {
 	     &report::notice_report_web('subscribers_updated',{},$param->{'action'});
 	 }else {
 	     &report::reject_report_web('intern','sync_include_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);

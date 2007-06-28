@@ -563,6 +563,8 @@ sub review {
 
     &Language::SetLang($list->{'admin'}{'lang'});
 
+    $list->on_the_fly_sync_include('use_ttl' => 1);
+
     my $auth_method = &get_auth_method('review','',{'type'=>'auth_failed',
 						    'data'=>{},
 						    'msg'=> "REVIEW $listname from $sender"},$sign_mod,$list);

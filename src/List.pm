@@ -2499,9 +2499,9 @@ sub distribute_msg {
     }
 
     ## Synchronize list members, required if list uses include sources
-    ## unless sync_include has been performed withi last 5 minutes
+    ## unless sync_include has been performed recently.
     if ($self->has_include_data_sources()) {
-	$self->on_the_fly_sync_include($self->{'admin'}{'distribution_ttl'}||$self->{'admin'}{'ttl'});
+	$self->on_the_fly_sync_include('use_ttl' => 1);
     }
 
     ## Blindly send the message to all users.
@@ -9774,7 +9774,29 @@ sub sync_include {
     return 1;
 }
 
+## The previous function (sync_include) is to be called by the task_manager.
+## This one is to be called from anywhere else. This function deletes the scheduled
+## sync_include task. If this deletion happened in sync_include(), it would disturb
+## the normal task_manager.pl functionning.
 
+sub on_the_fly_sync_include {
+    my $self = shift;
+    my %options = @_;
+
+    my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}||$self->{'admin'}{'ttl'};
+    &do_log('debug2','List::on_the_fly_sync_include(%s)',$pertinent_ttl);
+    if ( $options{'use_ttl'} != 1 || $self->{'last_sync'} < time - $pertinent_ttl) { 
+	&do_log('notice', "Synchronizing list members...");
+	if ($self->sync_include()) {
+	    $self->remove_task('sync_include');
+	    return 1;
+	}
+	else {
+	    return undef;
+	}
+    }
+    return 1;
+}
 
 sub sync_include_admin {
     my ($self) = shift;
@@ -12266,7 +12288,7 @@ sub remove_task {
     closedir DIR;
 
     foreach my $task_file (@tasks) {
-	if ($task_file =~ /^(\d+)\.\w*\.$task\.$self->{'name'}$/) {
+	if ($task_file =~ /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
 	    unless (unlink("$Conf{'queuetask'}/$task_file")) {
 		&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 		return undef;
@@ -12502,15 +12524,6 @@ sub get_list_id {
     my $self = shift;
 
     return $self->{'name'}.'@'.$self->{'domain'};
-}
-
-sub on_the_fly_sync_include {
-    my ($self,$pertinent_ttl) = @_;
-    &do_log('debug2','List::on_the_fly_sync_include(%s)',$pertinent_ttl);
-    if ($self->{'last_sync'} < time - $pertinent_ttl) { 
-	&do_log('notice', "Synchronizing list members...");
-	$self->sync_include();
-    }
 }
 
 #################################################################
