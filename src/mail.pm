@@ -855,7 +855,7 @@ sub fix_part($$$) {
 		$data = $parser->parse_data($data);
 	    };
 	    if ($@) {
-		&do_log('warn',
+		&do_log('warning',
 			"mail::reformat_message: Failed to parse MIME data");
 		$data = $parser->parse_data('');
 	    }
