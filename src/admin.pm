@@ -266,13 +266,13 @@ sub create_list_old{
        
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
 
-    open CONFIG, ">$list_dir/config";
+    open CONFIG, '>:utf8', "$list_dir/config";
 
     ## Use an intermediate handler to encode to filesystem_encoding
     my $config = '';
     my $fd = new IO::Scalar \$config;    
     &tt2::parse_tt2($param, 'config.tt2', $fd, $tt2_include_path);
-    Encode::from_to($config, 'utf8', $Conf{'filesystem_encoding'});
+#    Encode::from_to($config, 'utf8', $Conf{'filesystem_encoding'});
     print CONFIG $config;
 
     close CONFIG;
@@ -281,7 +281,7 @@ sub create_list_old{
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
     $param->{'description'} =~ s/\015//g;
 
-    unless (open INFO, ">$list_dir/info") {
+    unless (open INFO, '>:utf8', "$list_dir/info") {
 	&do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
     }
     if (defined $param->{'description'}) {
@@ -446,7 +446,7 @@ sub create_list{
     }
       
     ## Creation of the config file
-    open CONFIG, ">$list_dir/config";
+    open CONFIG, '>:utf8', "$list_dir/config";
     #&tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
     print CONFIG $conf;
     close CONFIG;
@@ -455,7 +455,7 @@ sub create_list{
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
     $param->{'description'} =~ s/\015//g;
     
-    unless (open INFO, ">$list_dir/info") {
+    unless (open INFO, '>:utf8', "$list_dir/info") {
 	&do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
     }
     if (defined $param->{'description'}) {
@@ -556,7 +556,7 @@ sub update_list{
     }
 
     ## Creation of the config file
-    open CONFIG, ">$list->{'dir'}/config";
+    open CONFIG, '>:utf8', "$list->{'dir'}/config";
     &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
     close CONFIG;
 
