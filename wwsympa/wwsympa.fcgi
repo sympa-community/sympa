@@ -1474,7 +1474,7 @@ sub get_header_field {
 	     $regexp = $in_regexp{'additional_field'};
 	 }elsif ($in_regexp{$pname}) {
 	     $regexp = $in_regexp{$pname};
-	     }else {
+	 }else {
 		 $regexp = $in_regexp{'*'};
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
