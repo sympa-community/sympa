@@ -1332,96 +1332,95 @@ sub get_header_field {
     }
 }
 
- sub get_parameters {
- #    &wwslog('debug4', 'get_parameters');
-
-     ## CGI URL
-     if ($ENV{'HTTPS'} eq 'on') {
-	 $param->{'base_url'} = sprintf 'https://%s', &get_header_field('HTTP_HOST');
-	 $param->{'use_ssl'} = 1;
-     }else {
-	 $param->{'base_url'} = sprintf 'http://%s', &get_header_field('HTTP_HOST');
-	 $param->{'use_ssl'} = 0;
-     }
-
-     $param->{'path_info'} = $ENV{'PATH_INFO'};
-     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
-
-
-     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
-	 my $path_info = $ENV{'PATH_INFO'};
-	 &do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
-
-	 $path_info =~ s+^/++;
-
-	 my $ending_slash = 0;
-	 if ($path_info =~ /\/$/) {
-	     $ending_slash = 1;
-	 }
-
-	 my @params = split /\//, $path_info;
-	 
-
- #	foreach my $i(0..$#params) {
- #	    $params[$i] = &tools::unescape_chars($params[$i]);
- #	}
-
-	 if ($params[0] eq 'nomenu') {
-	     $param->{'nomenu'} = 1;
-	     shift @params;
-	 }
-
-	 ## debug mode
-	 if ($params[0] =~ /debug(\d)?/) {
-	     shift @params;
-	     if ($1) { 
-		 $main::options{'debug_level'} = $1 if ($1);
-	     }else{
-		 $main::options{'debug_level'} = 1 ;
-	     }
-	 }else{
-	     $main::options{'debug_level'} = 0 ;
-	 } 
-	 do_log ('debug2', "debug level $main::options{'debug_level'}");
-
-
-
-	 ## rss mode
+sub get_parameters {
+    #    &wwslog('debug4', 'get_parameters');
+    
+    ## CGI URL
+    if ($ENV{'HTTPS'} eq 'on') {
+	$param->{'base_url'} = sprintf 'https://%s', &get_header_field('HTTP_HOST');
+	$param->{'use_ssl'} = 1;
+    }else {
+	$param->{'base_url'} = sprintf 'http://%s', &get_header_field('HTTP_HOST');
+	$param->{'use_ssl'} = 0;
+    }
+    
+    $param->{'path_info'} = $ENV{'PATH_INFO'};
+    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
+    
+    if ($ENV{'REQUEST_METHOD'} eq 'GET') {
+	my $path_info = $ENV{'PATH_INFO'};
+	&do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+	
+	$path_info =~ s+^/++;
+	
+	my $ending_slash = 0;
+	if ($path_info =~ /\/$/) {
+	    $ending_slash = 1;
+	}
+	
+	my @params = split /\//, $path_info;
+	
+	
+	#	foreach my $i(0..$#params) {
+	#	    $params[$i] = &tools::unescape_chars($params[$i]);
+	#	}
+	
+	if ($params[0] eq 'nomenu') {
+	    $param->{'nomenu'} = 1;
+	    shift @params;
+	}
+	
+	## debug mode
+	if ($params[0] =~ /debug(\d)?/) {
+	    shift @params;
+	    if ($1) { 
+		$main::options{'debug_level'} = $1 if ($1);
+	    }else{
+		$main::options{'debug_level'} = 1 ;
+	    }
+	}else{
+	    $main::options{'debug_level'} = 0 ;
+	} 
+	do_log ('debug2', "debug level $main::options{'debug_level'}");
+	
+	
+	
+	## rss mode
 ########### /^rss$/ ???
-	 if ($params[0] eq 'rss') {
-	     shift @params;
-	     $rss = 1;
-	 } 
-
-	 if ($#params >= 0) {
-	     $in{'action'} = $params[0];
-
-	     my $args;
-	     if (defined $action_args{$in{'action'}}) {
-		 $args = $action_args{$in{'action'}};
-	     }else {
-		 $args = $action_args{'default'};
-	     }
-
-	     my $i = 1;
-	     foreach my $p (@$args) {
-		 my $pname;
-		 ## More than 1 param
-		 if ($p =~ /^\@(\w+)$/) {
-		     $pname = $1;
-
-		     $in{$pname} = join '/', @params[$i..$#params];
-		     $in{$pname} .= '/' if $ending_slash;
-		     last;
-		 }else {
-		     $pname = $p;
-		     $in{$pname} = $params[$i];
-		 }
-		 $i++;
-	     }
-	 }
-     }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
-	 ## POST
+	if ($params[0] eq 'rss') {
+	    shift @params;
+	    $rss = 1;
+	} 
+	
+	if ($#params >= 0) {
+	    $in{'action'} = $params[0];
+	    
+	    my $args;
+	    if (defined $action_args{$in{'action'}}) {
+		$args = $action_args{$in{'action'}};
+	    }else {
+		$args = $action_args{'default'};
+	    }
+	    
+	    my $i = 1;
+	    foreach my $p (@$args) {
+		my $pname;
+		## More than 1 param
+		if ($p =~ /^\@(\w+)$/) {
+		    $pname = $1;
+		    $in{$pname} = join '/', @params[$i..$#params];
+		    $in{$pname} .= '/' if $ending_slash;
+		    last;
+		}
+		else {
+		    $pname = $p;
+		    $in{$pname} = $params[$i];
+		}
+		$i++;
+	    }
+	}
+    }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
+	    ## POST
 
 	 if ($in{'javascript_action'}) { 
 	     ## because of incompatibility javascript
@@ -1475,8 +1474,8 @@ sub get_header_field {
 	 }elsif ($in_regexp{$pname}) {
 	     $regexp = $in_regexp{$pname};
 	 }else {
-		 $regexp = $in_regexp{'*'};
-	     }
+	     $regexp = $in_regexp{'*'};
+	 }
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     unless ($one_p =~ /^$regexp$/s) {
 		 ## Dump parameters in a tmp file for later analysis
@@ -1486,12 +1485,40 @@ sub get_header_field {
 		 }
 		 &tools::dump_var(\%in, 0, \*DUMP);
 		 close DUMP;
-
+		 
 		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
 		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp /^%s$/ ; dumped vars in %s', $pname, $one_p, $regexp,  $dump_file);
 		 $in{$p} = '';
 		 next;
 	     }
+	     #### Starting XSS check
+	     ## Check if parameter can legitimately use HTML. This selects the regexp used.
+	     my %htmlAllowedParams = ('content' => 1,);
+	     
+	     my $xssregexp;
+	     if ($htmlAllowedParams{$p}) {
+		 $xssregexp = &tools::get_regexp('xss-free');
+	     }
+	     else {
+		 $xssregexp = &tools::get_regexp('html-free');
+	     }
+	     ## Checking if parameter value matches the XSS regexp. If yes, its value is ignored in further processing.
+	     if (lc($one_p) =~ /$xssregexp/) {
+		 &wwslog('err','%s part of parameter %s matched regexp. Rejecting.',$&,$p);
+		 ## Dump parameters in a tmp file for later analysis
+		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
+		 unless (open DUMP, ">$dump_file") {
+		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
+		 }
+		 &tools::dump_var(\%in, 0, \*DUMP);
+		 close DUMP;
+		 
+		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
+		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' showing signs of potential XSS threat ; dumped vars in %s', $pname, $one_p, $dump_file);
+		 $in{$p} = '';
+		 next;
+	     }
+	     #### End of XSS check
 	 }
      }
 

@@ -46,20 +46,29 @@ my $cipher;
 
 my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
 
+## Sub-regexps to be used within html-free ans xss-free below.
+my $tags = 'script|img|.frame.|style|body|input|layer|bgsound|link|meta|base|object|embed|applet';
+my $attributes = 'style=|dynsrc=|lowsrc=|on.*=|javascript:';
+my $dividers = '\s|&+#+x*0*(9|a|d|10|13)+\;*';
+my $encodedChars = '(&+('."$dividers".')*#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
+my $infSign = '(<|%3c|(&+('."$dividers".')*(l('."$dividers".')*t|#+x*0*(60|3c)+)+\;*)|x*0*(60|3c))';
+
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
 my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
-	   'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
-	   'host' => '[\w\.\-]+',
-	   'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
-	   'listname' => '[a-z0-9][a-z0-9\-\.\+_]*',
-	   'sql_query' => '(SELECT|select).*',
-	   'scenario' => '[\w,\.\-]+',
-	   'task' => '\w+',
-	   'datasource' => '[\w-]+',
-	   'uid' => '[\w\-\.\+]+',
-	   );
+	      'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
+	      'host' => '[\w\.\-]+',
+	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+	      'listname' => '[a-z0-9][a-z0-9\-\.\+_]*',
+	      'sql_query' => '(SELECT|select).*',
+	      'scenario' => '[\w,\.\-]+',
+	      'task' => '\w+',
+	      'datasource' => '[\w-]+',
+	      'uid' => '[\w\-\.\+]+',
+	      'html-free' => $infSign,# Brutal XSS filter : rejects anything that contains "<"
+	      'xss-free' => "($infSign)+($dividers)*((($tags)|.*($attributes))+|($encodedChars)+)",# Smoother XSS filter
+	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      2 => 'one of the input files could not be read',
