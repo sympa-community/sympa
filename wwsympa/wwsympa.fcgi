@@ -495,6 +495,9 @@ my %in_regexp = (
 		 'new_name' => '[^<>\\\*\$\n]+',
 		 'id' => '[^<>\\\*\$\n]+',
 
+		 ## Archives
+		 'month' => '\d{4}\-\d{2}',
+
 		 ## URL
 		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
 		 'failure_referer' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
@@ -560,6 +563,13 @@ my %in_regexp = (
 		 'date_to' => '[\d\/]+',
 		 'ip' => &tools::get_regexp('host'),
 		 );
+
+## Regexp applied on incoming parameters (%in)
+## This regular expression defines forbidden expressions applied on all incoming parameters
+## Note that you can use the ^ and $ expressions to match beginning and ending of expressions
+my %in_negative_regexp = (
+			  'arc_file' => '^(arctxt|\.)'
+			  );
 
 ## List some required filtering of incoming parameters, depending on current action
 ## Like Q-encoding
@@ -1468,6 +1478,9 @@ sub get_parameters {
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
+
+	 ## Regular expressions applied on parameters
+
 	 my $regexp;
 	 if ($pname =~ /^additional_field/) {
 	     $regexp = $in_regexp{'additional_field'};
@@ -1476,8 +1489,30 @@ sub get_parameters {
 	 }else {
 	     $regexp = $in_regexp{'*'};
 	 }
+
+	 my $negative_regexp;
+	 if ($pname =~ /^additional_field/) {
+	     $negative_regexp = $in_negative_regexp{'additional_field'};
+	 }elsif ($in_negative_regexp{$pname}) {
+	     $negative_regexp = $in_negative_regexp{$pname};
+	 }
+
+	 ## Check if parameter can legitimately use HTML. This selects the regexp used.
+	 my %htmlAllowedParams = ('content' => 1,);
+	 
+	 my $xssregexp;
+	 if ($htmlAllowedParams{$p}) {
+	     $xssregexp = &tools::get_regexp('xss-free');
+	 }
+	 else {
+	     $xssregexp = &tools::get_regexp('html-free');
+	 }
+
+
 	 foreach my $one_p (split /\0/, $in{$p}) {
-	     unless ($one_p =~ /^$regexp$/s) {
+	     if ($one_p !~ /^$regexp$/s ||
+		 lc($one_p) =~ /$xssregexp/ ||
+		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
 		 unless (open DUMP, ">$dump_file") {
@@ -1491,34 +1526,6 @@ sub get_parameters {
 		 $in{$p} = '';
 		 next;
 	     }
-	     #### Starting XSS check
-	     ## Check if parameter can legitimately use HTML. This selects the regexp used.
-	     my %htmlAllowedParams = ('content' => 1,);
-	     
-	     my $xssregexp;
-	     if ($htmlAllowedParams{$p}) {
-		 $xssregexp = &tools::get_regexp('xss-free');
-	     }
-	     else {
-		 $xssregexp = &tools::get_regexp('html-free');
-	     }
-	     ## Checking if parameter value matches the XSS regexp. If yes, its value is ignored in further processing.
-	     if (lc($one_p) =~ /$xssregexp/) {
-		 &wwslog('err','%s part of parameter %s matched regexp. Rejecting.',$&,$p);
-		 ## Dump parameters in a tmp file for later analysis
-		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
-		 unless (open DUMP, ">$dump_file") {
-		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
-		 }
-		 &tools::dump_var(\%in, 0, \*DUMP);
-		 close DUMP;
-		 
-		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
-		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' showing signs of potential XSS threat ; dumped vars in %s', $pname, $one_p, $dump_file);
-		 $in{$p} = '';
-		 next;
-	     }
-	     #### End of XSS check
 	 }
      }
 
