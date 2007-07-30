@@ -1522,7 +1522,7 @@ sub get_parameters {
 		 close DUMP;
 		 
 		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
-		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp /^%s$/ ; dumped vars in %s', $pname, $one_p, $regexp,  $dump_file);
+		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp ; dumped vars in %s', $pname, $one_p, $dump_file);
 		 $in{$p} = '';
 		 next;
 	     }
