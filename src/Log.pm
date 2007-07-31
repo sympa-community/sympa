@@ -35,7 +35,7 @@ use Encode;
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
 
 
-local $log_level |= 0;
+my $log_level = 0;
 
 sub fatal_err {
     my $m  = shift;
@@ -405,6 +405,10 @@ sub get_next_db_log {
 	$sth = pop @sth_stack;
     }
     return $log;
+}
+
+sub set_log_level {
+    $log_level = shift;
 }
 
 1;

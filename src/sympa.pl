@@ -53,7 +53,6 @@ require 'parser.pl';
 # durty global variables
 my $is_signed = {}; 
 my $is_crypted ;
-# log_level is a global var, can be set by sympa.conf, robot.conf, list/config, --log_level or $PATHINFO  
 
 
 ## Internal tuning
@@ -155,8 +154,6 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'});
 
-$log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
-
 my @parser_param = ($*, $/);
 my %loop_info;
 my %msgid_table;
@@ -180,12 +177,12 @@ do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    do_log('info', "Configuration file read, log level set using options : $log_level"); 
+    &Log::set_log_level($main::options{'log_level'});
+    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
 }else{
-    $log_level = $Conf{'log_level'};
-    do_log('info', "Configuration file read, default log level  $log_level"); 
+    &Log::set_log_level($Conf{'log_level'});
+    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
-
 
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
@@ -830,13 +827,6 @@ if ($main::daemon_usage == DAEMON_MESSAGE) {
 ## them, sleeps a while and continues the good job.
 while (!$signal) {
 
-    # setting log_level using conf unless it is set by calling option
-    unless ($main::options{'log_level'}) {
-	$log_level = $Conf{'log_level'};
-	# do_log('notice', "Reset default log level  $log_level"); 
-    }
-    
-
     &Language::SetLang($Language::default_lang);
 
     &List::init_list_cache();
@@ -1107,8 +1097,8 @@ sub DoFile {
     
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
-	$log_level =  &Conf::get_robot_conf($robot,'log_level');
-	&do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : $log_level"); 
+	&Log::set_log_level(&Conf::get_robot_conf($robot,'log_level'));
+	&do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : %d", &Conf::get_robot_conf($robot,'log_level')); 
     }
     
     ## Ignoring messages with no sender
@@ -1225,8 +1215,8 @@ sub DoFile {
 	$list_address = $list->get_list_address();
 	# setting log_level using list config unless it is set by calling option
 	unless ($main::options{'log_level'}) {
-	    $log_level = $list->{'log_level'};
-	    &do_log('debug', "Setting log level with list configuration : $log_level"); 
+	    &Log::set_log_level($list->{'log_level'});
+	    &do_log('debug', "Setting log level with list configuration : %d", $list->{'log_level'}); 
 	}
     }
     

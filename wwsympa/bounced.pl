@@ -138,7 +138,13 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 ## Create and write the pidfile
 &tools::write_pid($wwsconf->{'bounced_pidfile'}, $$);
 
-$log_level = $main::options{'log_level'} || $Conf{'log_level'};
+if ($main::options{'log_level'}) {
+    &Log::set_log_level($main::options{'log_level'});
+    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+}else{
+    &Log::set_log_level($Conf{'log_level'});
+    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+}
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');

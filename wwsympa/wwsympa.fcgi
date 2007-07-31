@@ -104,7 +104,7 @@ unless (&Conf::load( $sympa_conf_file )) {
     &fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
 }
 
-$log_level = $Conf{'log_level'} if ($Conf{'log_level'});
+&Log::set_log_level($Conf{'log_level'}) if ($Conf{'log_level'});
 
 &mail::set_send_spool($Conf{'queue'});
 
@@ -648,10 +648,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      undef $ip;
      undef $rss;
 
-     undef $log_level;
-     $log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
-     $log_level ||= 0;
-
      &Language::SetLang($Language::default_lang);
 
      ## Check effective ID
@@ -724,7 +720,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $param->{'cookie_domain'} = $http_host;
      }
 
-     $log_level = $Conf{'robots'}{$robot}{'log_level'};
+     &Log::set_log_level($Conf{'robots'}{$robot}{'log_level'});
 
      ## Sympa parameters in $param->{'conf'}
      $param->{'conf'} = {};

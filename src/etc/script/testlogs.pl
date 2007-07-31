@@ -23,10 +23,10 @@ do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    do_log('info', "Logs seems OK, log level set using options : $log_level"); 
+    do_log('info', "Logs seems OK, log level set using options : $main::options{'log_level'}"); 
 }else{
-    $log_level = $Conf{'log_level'};
-    do_log('info', "Logs seems OK, default log level  $log_level"); 
+    &Log::set_log_level($Conf{'log_level'});
+    do_log('info', "Logs seems OK, default log level $Conf{'log_level'}"); 
 }
 printf "Ok, now check logs \n";
 
