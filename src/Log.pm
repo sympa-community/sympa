@@ -411,6 +411,10 @@ sub set_log_level {
     $log_level = shift;
 }
 
+sub get_log_level {
+    return $log_level;
+}
+
 1;
 
 
