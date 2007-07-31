@@ -3466,7 +3466,7 @@ sub do_remindpasswd {
      my %sources;
 
      unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'})
+	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	 &wwslog('info','do_review: no list');
 	 return undef;
      }
@@ -3475,7 +3475,7 @@ sub do_remindpasswd {
      return undef unless (defined &check_authz('do_review', 'review'));
 
      unless ($param->{'total'}) {
-	 &report::reject_report_web('user','no_subscriber',{},$param->{'action'},$list)
+	 &report::reject_report_web('user','no_subscriber',{},$param->{'action'},$list);
 	 &wwslog('info','do_review: no subscriber');
 	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
 	 return 1;
