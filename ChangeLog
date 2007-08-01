@@ -1,3 +1,56 @@
+2007-08-01 13:51  olivier.salaun
+
+	* src/List.pm: Change: optimizations to lower the List::new() calls
+	  and perform locks on list config files only if reloading is
+	  required
+
+2007-08-01 12:30  olivier.salaun
+
+	* src/Log.pm, subst.pl: Change: optimizations to save most calls to
+	  do_log()
+
+2007-08-01 11:16  olivier.salaun
+
+	* src/task_manager.pl: Change: check the $end variable before
+	  processing each task, thus making a kill -TERM more quickly
+	  processed
+
+2007-07-31 15:51  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: Add missing ';'
+
+2007-07-31 14:50  olivier.salaun
+
+	* src/Log.pm: Added a get_log_level() sub
+
+2007-07-31 14:47  olivier.salaun
+
+	* soap/sympa_soap_server.fcgi, src/Log.pm,
+	  src/etc/script/testlogs.pl, src/sympa.pl, src/task_manager.pl,
+	  wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi:
+	  Change: turned $log_level into a class variable
+
+2007-07-31 14:18  olivier.salaun
+
+	* src/Log.pm: Optimized do_log to return earlier if log_level is
+	  low
+
+2007-07-31 14:18  olivier.salaun
+
+	* ChangeLog: updated
+
+2007-07-30 13:16  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fixed log to remove regexp parameter
+
+2007-07-30 13:07  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Alessio] Fix: a security
+	  problem would allow a user to directly access arctxt/* files or
+	  .mhonarc.db files. A %in_negative_regexp hash has been added to
+	  define forbidden expressions in parameters. XSS-related code has
+	  also been changed.
+
 2007-07-03 17:48  david.verdin
 
 	* src/tools.pl, wwsympa/wwsympa.fcgi: [#2960][Reported by L.
