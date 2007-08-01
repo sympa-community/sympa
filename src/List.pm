@@ -1761,13 +1761,6 @@ sub load {
     my ($m1, $m2, $m3) = (0, 0, 0);
     ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
 
-    ## Get a shared lock on config file first 
-    my $lock = new Lock ($self->{'dir'}.'/config');
-    $lock->set_timeout(5); 
-    unless ($lock->lock('read')) {
-	return undef;
-    }
-
     my $time_config = (stat("$self->{'dir'}/config"))[9];
     my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
     my $time_subscribers; 
@@ -1779,6 +1772,14 @@ sub load {
 	$time_config_bin > $self->{'mtime'}->[0] &&
 	$time_config <= $time_config_bin &&
 	! $options->{'reload_config'}) { 
+
+	## Get a shared lock on config file first 
+	my $lock = new Lock ($self->{'dir'}.'/config');
+	$lock->set_timeout(5); 
+	unless ($lock->lock('read')) {
+	    return undef;
+	}
+
 	## Load a binary version of the data structure
 	## unless config is more recent than config.bin
 	unless ($admin = &Storable::retrieve("$self->{'dir'}/config.bin")) {
@@ -1788,10 +1789,18 @@ sub load {
 	}
 
 	$m1 = $time_config_bin;
+	$lock->unlock();
 
     }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0] ||
 	    $options->{'reload_config'}) {	
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
+
+	## Get a shared lock on config file first 
+	my $lock = new Lock ($self->{'dir'}.'/config');
+	$lock->set_timeout(5); 
+	unless ($lock->lock('write')) {
+	    return undef;
+	}
 
 	## update the binary version of the data structure
 	if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file') {
@@ -1809,13 +1818,9 @@ sub load {
  	}
 
 	$m1 = $time_config;
+	$lock->unlock();
     }
     
-    ## Release lock
-    unless ($lock->unlock()) {
-	return undef;
-    }
-
      if ($admin) {
  	$self->{'admin'} = $admin;
  	
@@ -6920,7 +6925,7 @@ sub check_list_authz {
     my $debug = shift;
     &do_log('debug', 'List::check_list_authz %s,%s',$operation,$auth_method);
 
-    $context->{'listname'} = $self->{'name'};
+    $context->{'list_object'} = $self;
 
     return &request_action($operation, $auth_method, $self->{'domain'}, $context, $debug);
 }
@@ -6976,15 +6981,18 @@ sub request_action {
 	return undef;
     }
     my (@rules, $name) ;
-    my $list;
 
-    ## if we know which list we're working on
     if ($context->{'listname'}) {
-        unless ( $list = new List ($context->{'listname'}, $robot) ){
+        unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
 	    do_log('info',"request_action :  unable to create object $context->{'listname'}");
 	    return undef ;
 	}
-    
+    }    
+
+    ## if we know which list we're working on
+    if (defined $context->{'list_object'}) {
+	my $list = $context->{'list_object'};
+
 	my @operations = split /\./, $operation;
 	# do_log('info',"xxxxxxxxxxxxxxxxxx  operation='$operation'");
 	my $data_ref;
@@ -7182,12 +7190,15 @@ sub verify {
 	
     }
     my $list;
-    if (defined ($context->{'listname'})) {
-	$list = new List ($context->{'listname'}, $robot);
-	unless ($list) {
-	    do_log('err','Unable to create list object %s', $context->{'listname'});
-	    return undef;
+    if ($context->{'listname'} && ! defined $context->{'list_object'}) {
+        unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
+	    do_log('info',"Unable to create object $context->{'listname'}");
+	    return undef ;
 	}
+    }    
+
+    if (defined ($context->{'list_object'})) {
+	$list = $context->{'list_object'};
 
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
