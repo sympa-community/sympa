@@ -324,6 +324,9 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &do_log ('debug3', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
+	
+	last if $end;
+
 	my $task_file = $task->{'filepath'};
 
 	&do_log ('debug3', "procesing %s", $task_file);
