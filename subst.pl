@@ -59,7 +59,22 @@ foreach $src (@ARGV) {
 #   }
 
    while (<IN>) {
+       ## Instantiate variables --VAR--
        s/--(\w+)--/$ENV{$1}/g;
+
+       ## Conditional logging, for performances concerns
+       if (/^\s*(\&?(Log::)?(do_log|wwslog)\s*\(\'(\w+)\').*$/) {
+	   my $facility = $4;
+	   my $level = 0;
+	   if ($facility =~ /^debug(\d+)?$/) {
+	       $level = $1 || 1;
+	   }
+	   
+	   my $condition = '($Log::log_level >= '.$level.') && ';
+
+	   s/^(\s*)/$1$condition/;
+       }
+
        print OUT $_;
    }
    close(OUT);
