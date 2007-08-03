@@ -789,8 +789,6 @@ sub add {
 				       });
     }
     
-    $list->save();
-    
     ## Now send the welcome file to the user if it exists.
     unless ($quiet || ($action =~ /quiet/i )) {
 	unless ($list->send_file('welcome', $email, $robot,{})) {
@@ -905,7 +903,6 @@ sub del {
 		->faultdetail('Database access failed');	  
 	}
     }
-    $list->save();
     
     ## Send a notice to the removed user, unless the owner indicated
     ## quiet del.
@@ -1121,8 +1118,6 @@ sub signoff {
 	    &Log::do_log('err',"Unable to send template 'bye' to $sender");
 	}
 	
-	$list->save();
-
 	&Log::do_log('info', 'SOAP : sign off %s from %s accepted', $listname, $sender);
 	
 	return SOAP::Data->name('result')->type('boolean')->value(1);
@@ -1264,8 +1259,6 @@ sub subscribe {
 					  });
       }
       
-      $list->save();
-
       ## Now send the welcome file to the user
       unless ($quiet || ($action =~ /quiet/i )) {
 	  unless ($list->send_file('welcome', $sender, $robot,{})) {

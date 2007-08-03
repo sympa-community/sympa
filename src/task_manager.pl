@@ -1030,7 +1030,6 @@ sub delete_subs_cmd {
 	    error ($task->{'filepath'}, "error in delete_subs command : deletion of $email not allowed");
 	} else {
 	    my $u = $list->delete_user ($email) if (!$log);
-	    $list->save() if (!$log);;
 	    &do_log ('notice', "--> $email deleted");
 	    $selection{$email} = {};
 	}

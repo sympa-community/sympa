@@ -818,8 +818,6 @@ sub subscribe {
 					    });
 	}
 	
-	$list->save();
-	
 	## Now send the welcome file to the user
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    unless ($list->send_file('welcome', $sender, $robot,{})) {
@@ -1129,8 +1127,6 @@ sub signoff {
 	    } 
 	}
 	
-	$list->save();
-
 	unless ($quiet || ($action =~ /quiet/i)) {
 	    ## Send bye file to subscriber
 	    unless ($list->send_file('bye', $email, $robot, {})) {
@@ -1269,8 +1265,6 @@ sub add {
 					    });
 	}
 
-	$list->save();
-    
 	## Now send the welcome file to the user if it exists.
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    unless ($list->send_file('welcome', $email, $robot,{})) {
@@ -1792,8 +1786,6 @@ sub del {
 	    }
 	}
 
-	$list->save();
-	
 	## Send a notice to the removed user, unless the owner indicated
 	## quiet del.
 	unless ($quiet || ($action =~ /quiet/i )) {
@@ -1936,7 +1928,6 @@ sub set {
 	    &do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
 	}
-	$list->save();
 	
 	&report::notice_report_cmd('config_updated',{'listname' => $which},$cmd_line);  
 
@@ -1950,7 +1941,6 @@ sub set {
 	    &do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
 	}
-	$list->save();
 	
 	&report::notice_report_cmd('config_updated',{'listname' => $which},$cmd_line);  
 	&do_log('info', 'SET %s %s from %s accepted (%d seconds)', $which, $mode, $sender, time-$time_command);

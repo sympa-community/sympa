@@ -3871,7 +3871,6 @@ sub do_remindpasswd {
 	 return undef;
      }
 
-     $list->save();
      &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
 		  'status' => 'success',
@@ -4086,7 +4085,6 @@ sub do_remindpasswd {
 			      'error_type' => 'internal'});		      
 		 return undef;
 	     }
-	     $list->save();
 	 }
 
 	 unless ($sub_is =~ /quiet/i ) {
@@ -4411,7 +4409,6 @@ sub do_remindpasswd {
 		 return undef;
 	     }
 
-	     $list->save();
 	 }
 
 	 if ($sig_is =~ /notify/) {
@@ -5239,7 +5236,6 @@ sub do_skinsedit {
 	 return undef;
      }
 
-     $list->save();
      &report::notice_report_web('add_performed', {'total' => $total},$param->{'action'});
      &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
 		  'status' => 'success'});
@@ -5386,7 +5382,6 @@ sub do_skinsedit {
 		      'error_type' => 'internal'});
 	 return undef;
      }
-     $list->save();
 
      &report::notice_report_web('del_performed',{'total' => $total},$param->{'action'});
      &web_db_log({'target_email' => $in{'email'},
@@ -9897,7 +9892,6 @@ sub _restrict_values {
 
      if ($list->{'admin'}{'user_data_source'} eq 'file') {
 	 $list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
-	 $list->save();
      }elsif ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
 	 unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 	     &wwslog('notice', 'No subscribers to restore');

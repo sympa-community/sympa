@@ -1643,32 +1643,6 @@ sub dump {
     return 1;
 }
 
-## Saves a copy of the list to disk. Does not remove the
-## data.
-sub save {
-    my $self = shift;
-    do_log('debug3', 'List::save');
-
-    my $name = $self->{'name'};    
- 
-    return undef 
-	unless ($list_of_lists{$self->{'domain'}}{$name});
- 
-    my $user_file_name;
-
-    if ($self->{'admin'}{'user_data_source'} eq 'file') {
-	$user_file_name = "$self->{'dir'}/subscribers";
-
-        unless ($self->_save_users_file($user_file_name)) {
-	    &do_log('info', 'unable to save user file %s', $user_file_name);
-	    return undef;
-	}
-        $self->{'mtime'} = [ (stat("$self->{'dir'}/config"))[9], (stat("$self->{'dir'}/subscribers"))[9], (stat("$self->{'dir'}/stats"))[9] ];
-    }
-    
-    return 1;
-}
-
 ## Saves the configuration file to disk
 sub save_config {
     my ($self, $email) = @_;
