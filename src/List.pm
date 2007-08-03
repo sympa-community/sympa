@@ -9951,29 +9951,37 @@ sub get_lists {
     
     foreach my $robot (@robots) {
     
-	my $robot_dir =  $Conf{'home'}.'/'.$robot ;
-	$robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
-	
-	unless (-d $robot_dir) {
-	    do_log('err',"unknown robot $robot, Unable to open $robot_dir");
-	    return undef ;
-	}
-	
-	unless (opendir(DIR, $robot_dir)) {
-	    do_log('err',"Unable to open $robot_dir");
-	    return undef;
-	}
-	foreach my $l (sort readdir(DIR)) {
-	    next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
-
-	    my $list = new List ($l, $robot, $options);
-
-	    next unless (defined $list);
-
-	    push @lists, $list;
+	## Check cache first
+	if (defined $list_cache{'get_lists'}{$robot}) {
+	    push @lists, @{$list_cache{'get_lists'}{$robot}};
+	}else {
+	    my $robot_dir =  $Conf{'home'}.'/'.$robot ;
+	    $robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
 	    
+	    unless (-d $robot_dir) {
+		do_log('err',"unknown robot $robot, Unable to open $robot_dir");
+		return undef ;
+	    }
+	    
+	    unless (opendir(DIR, $robot_dir)) {
+		do_log('err',"Unable to open $robot_dir");
+		return undef;
+	    }
+	    foreach my $l (sort readdir(DIR)) {
+		next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
+		
+		my $list = new List ($l, $robot, $options);
+		
+		next unless (defined $list);
+		
+		push @lists, $list;
+		
+		## Also feed the cache
+		push @{$list_cache{'get_lists'}{$robot}}, $list;
+		
+	    }
+	    closedir DIR;
 	}
-	closedir DIR;
     }
     return \@lists;
 }
@@ -10174,7 +10182,9 @@ sub get_which {
 	$db_which = &get_which_db($email,  $function);
     }
 
+    ## This call is required to 
     my $all_lists = &get_lists($robot);
+
     foreach my $list (@$all_lists){
  
 	my $l = $list->{'name'};
@@ -12187,7 +12197,58 @@ sub get_list_id {
     return $self->{'name'}.'@'.$self->{'domain'};
 }
 
-#################################################################
+###### END of the List package ######
+
+## This package handles Sympa virtual robots
+## It should :
+##   * provide access to global conf parameters,
+##   * deliver the list of lists
+##   * determine the current robot, given a host
+package Robot;
+
+use Conf;
+
+## Constructor of a Robot instance
+sub new {
+    my($pkg, $name) = @_;
+
+    my $robot = {'name' => $name};
+    &do_log('debug2', '');
+    
+    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
+	&do_log('err',"Unknown robot '$name'");
+	return undef;
+    }
+
+    ## The default robot
+    if ($name eq $Conf::Conf{'host'}) {
+	$robot->{'home'} = $Conf{'home'};
+    }else {
+	$robot->{'home'} = $Conf{'home'}.'/'.$name;
+	unless (-d $robot->{'home'}) {
+	    &do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
+	    return undef;
+	}
+    }
+
+    ## Initialize internal list cache
+    undef %list_cache;
+
+    # create a new Robot object
+    bless $robot, $pkg;
+
+    return $robot;
+}
+
+## load all lists belonging to this robot
+sub get_lists {
+    my $self = shift;
+
+    return &List::get_lists($self->{'name'});
+}
+
+
+###### END of the Robot package ######
 
 ## Packages must return true.
 1;

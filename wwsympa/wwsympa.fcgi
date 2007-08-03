@@ -89,7 +89,7 @@ my $sympa_conf_file = '--CONFIG--';
 my $loop = 0;
 my $list;
 my $param = {};
-my $robot ;
+my ($robot, $robot_object);
 my $ip ; 
 my $rss ;
 
@@ -645,6 +645,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      undef $param;
      undef $list;
      undef $robot;
+     undef $robot_object;
      undef $ip;
      undef $rss;
 
@@ -660,8 +661,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 &report::reject_report_web('system_quiet','no_database',{},'','');
 	 &do_log('info','WWSympa requires a RDBMS to run');
      }
-
-     &List::init_list_cache();
 
      ## If in maintenance mode, check if the data structure is now uptodate
      if ($maintenance_mode && &Upgrade::data_structure_uptodate()) {
@@ -700,6 +699,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
      
      $robot = $Conf{'host'} unless $robot;
+
+     ## Create Robot object
+     $robot_object = new Robot $robot;
 
      ## Default robot
      if ($robot eq $Conf{'host'}) {
@@ -912,12 +914,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     unless (defined $param->{'user'}{'cookie_delay'}) {
 		 $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
 	     }
-	     ## get sub crition using cookie and set param for use in templates
-	     #@{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
-	     
-	     # if no cookie was received, look for subscriptions
-#         unless (defined $param->{'get_which'}) {
-	     
 	     
 	     ## Skip get_which if either in a list context or accessing the CSS
 	     unless ($in{'action'} eq 'css' || defined $in{'list'}) {
