@@ -307,6 +307,8 @@ my %alias = ('reply-to' => 'reply_to',
 ## group :       Group of parameters
 ## obsolete :    Obsolete parameter ; should not be displayed 
 ##               nor saved
+## obsolete_values : defined obsolete values for a parameter
+##                   these values should not get proposed on the web interface edition form
 ## order :       Order of parameters within paragraph
 ## internal :    Indicates that the parameter is an internal parameter
 ##               that should always be saved in the config file
@@ -1217,6 +1219,7 @@ my %alias = ('reply-to' => 'reply_to',
 		     },
 	    'user_data_source' => {'format' => ['database','file','include','include2'],
 				   'default' => 'include2',
+				   'obsolete_values'=> ['database','file','include'],
 				   'gettext_id' => "User data source",
 				   'group' => 'data_source'
 				   },

@@ -19,6 +19,9 @@
 
    Changes :
 
+*****	user_data_source values of 'file' and 'database' are no more supported. A migration precedure is run during the upgrade process
+*****	This change will allow to optimize the code where 'file' user_data_source still had to be supported
+
 	check_perl_modules.pl: [reported by S.Hornburg] remove unuseful dependency for Crypt::OpenSSL::X50 perl module. It was
 	introduced in revision 3754.
 

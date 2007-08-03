@@ -9157,9 +9157,6 @@ sub _prepare_edit_form {
 		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
 	     }
 	     &Language::SetLang($saved_lang);
-	 }elsif ($pname eq 'user_data_source') {
-	     ## Skip old 'include' and mode
-	     delete $p->{'value'}{'include'};
 	 }
 
 	 push @{$param->{'param'}}, $p;	
@@ -9365,8 +9362,15 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 	     
 	     unless (defined $p_glob->{'value'}) {
 		 ## Initialize
-		 foreach my $elt (@{$struct->{'format'}}) {
+		 foreach my $elt (@{$struct->{'format'}}) {		    
 		     $p_glob->{'value'}{$elt}{'selected'} = 0;
+		 }
+
+		 ## Check obsolete values ; they should not be printed
+		 if (defined $struct->{'obsolete_values'}) {
+		     foreach my $elt (@{$struct->{'obsolete_values'}}) {		     
+			 delete $p_glob->{'value'}{$elt};
+		     }		     
 		 }
 	     }
 	     if (ref ($d)) {

@@ -591,6 +591,54 @@ sub upgrade {
 	&do_log('notice','%d files have been modified', $total);
     }
 
+    ## giving up subscribers flat files ; moving subscribers to the DB
+    ## Also giving up old 'database' mode
+    if (&tools::lower_version($previous_version, '5.4a.1')) {
+	
+	&do_log('notice','Looking for lists with user_data_source parameter set to file or database...');
+
+	my $all_lists = &List::get_lists('*');
+	foreach my $list ( @$all_lists ) {
+
+	    if ($list->{'admin'}{'user_data_source'} eq 'file') {
+
+		&do_log('notice','List %s ; changing user_data_source from file to include2...', $list->{'name'});
+		
+		my @users = &List::_load_users_file("$list->{'dir'}/subscribers");
+		
+		$list->{'admin'}{'user_data_source'} = 'include2';
+		$list->{'total'} = 0;
+		
+		## Add users to the DB
+		my $total = $list->add_user(@users);
+		unless (defined $total) {
+		    &do_log('err', 'Failed to add users');
+		    next;
+		}
+		
+		&do_log('notice','%d subscribers have been loaded into the database', $total);
+		
+		unless ($list->save_config('listmaster')) {
+		    &do_log('err', 'Failed to save config file for list %s', $list->{'name'});
+		}
+	    }elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
+
+		&do_log('notice','List %s ; changing user_data_source from database to include2...', $list->{'name'});
+
+		unless ($list->update_user('*', {'subscribed' => 1})) {
+		    &do_log('err', 'Failed to update subscribed DB field');
+		}
+
+		$list->{'admin'}{'user_data_source'} = 'include2';
+
+		unless ($list->save_config('listmaster')) {
+		    &do_log('err', 'Failed to save config file for list %s', $list->{'name'});
+		}
+	    }
+	}
+    }
+
+
     return 1;
 }
 
