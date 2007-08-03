@@ -621,12 +621,6 @@ my (%in, $query);
 
 my $birthday = time ;
 
-## If using fast_cgi, it is usefull to initialize all list context
-if ($wwsconf->{'use_fast_cgi'}) {
-
-    my $all_lists = &List::get_lists('*') unless ($maintenance_mode);
-}
-
 # Now internal encoding is same as input/output.
 #XXX## Set output encoding
 #XXX## All outgoing strings will be recoded transparently using this charset
