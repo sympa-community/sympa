@@ -194,14 +194,14 @@
                                   [% IF scenario.value.selected == '1' %]
                                     selected="selected"
                                   [% END %]
-                                  >[% scenario.value.title %] ([% scenario.value.name %])</option>
+                                  >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
                                 [% END %]
                               </select>
 			      <br />
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH scenario = p.value %]
                                 [% IF scenario.value.selected == '1' %]
-                                  [% scenario.value.title %] ([% scenario.value.name %])
+                                  [% scenario.value.web_title %] ([% scenario.value.name %])
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -266,14 +266,14 @@
                                               [% IF scenario.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
-                                              >[% scenario.value.title %] ([% scenario.value.name %])</option>
+                                              >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
                                             [% END %]
                                           </select>
 					  <br />
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH scenario = key.value %]
                                             [% IF scenario.value.selected == '1' %]
-                                              [% scenario.value.title %] ([% scenario.value.name %])
+                                              [% scenario.value.web_title %] ([% scenario.value.name %])
                                             [% END %]
                                           [% END %]
                                         [% END %]

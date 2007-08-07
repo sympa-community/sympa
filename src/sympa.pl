@@ -1168,7 +1168,7 @@ sub DoFile {
             }
             
 	    # check authorization
-	    my $result = &List::request_action('automatic_list_creation',
+	    my $result = &Scenario::request_action('automatic_list_creation',
 	        ($message->{'smime_signed'} ? 'smime' : 'smtp'),$robot,
 		{'sender' => $sender, 'message' => $message, 'family'=>$dyn_list_family, 'automatic_listname'=>$listname });
 	    my $r_action;

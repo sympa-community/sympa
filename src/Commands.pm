@@ -1504,7 +1504,7 @@ sub remind {
 
     if ($listname eq '*') {
 
-	$result = &List::request_action('global_remind',$auth_method,$robot,
+	$result = &Scenario::request_action('global_remind',$auth_method,$robot,
 					{'sender' => $sender });
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	

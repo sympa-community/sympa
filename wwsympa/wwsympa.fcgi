@@ -1822,7 +1822,7 @@ Use it to create a List object and initialize output parameters.
     }
 
      ## Check if the current user can create a list.
-     my $result = &List::request_action ('create_list',$param->{'auth_method'},$robot,
+     my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot,
 					 {'sender' => $param->{'user'}{'email'},
 					  'remote_host' => $param->{'remote_host'},
 					  'remote_addr' => $param->{'remote_addr'}}); 
@@ -3157,7 +3157,8 @@ sub do_remindpasswd {
 	 my $result = $list->check_list_authz('visibility',$param->{'auth_method'},
 					      {'sender' => $sender, 
 					       'remote_host' => $param->{'remote_host'},
-					       'remote_addr' => $param->{'remote_addr'}});
+					       'remote_addr' => $param->{'remote_addr'},
+					       'options' => {'dont_reload_scenario' => 1}});
 
 	 my $r_action;
 	 $r_action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -7694,7 +7695,7 @@ Sends back the list creation edition form.
 	 return 'loginrequest';
      }
 
-     my $result = &List::request_action('create_list',$param->{'auth_method'},$robot,
+     my $result = &Scenario::request_action('create_list',$param->{'auth_method'},$robot,
 						       {'sender' => $param->{'user'}{'email'},
 							'remote_host' => $param->{'remote_host'},
 							'remote_addr' => $param->{'remote_addr'}});
@@ -7945,7 +7946,7 @@ Sends back the list creation edition form.
 	 my $operation = $in{'scenario'};
 	 &wwslog('debug4', 'do_scenario_test: perform scenario_test');
 
-	 my $result = &List::request_action ($operation,$in{'auth_method'},$robot,
+	 my $result = &Scenario::request_action ($operation,$in{'auth_method'},$robot,
 					     {'listname' => $in{'listname'},
 					      'sender' => $in{'sender'},
 					      'email' => $in{'email'},
@@ -9455,7 +9456,7 @@ sub _restrict_values {
 	 &wwslog('info','do_rename_list_request: not owner');
 	 return undef;
      }  
-     my $result = &List::request_action ('create_list',$param->{'auth_method'},$robot,
+     my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot,
 					 {'sender' => $param->{'user'}{'email'},
 					  'remote_host' => $param->{'remote_host'},
 					  'remote_addr' => $param->{'remote_addr'}});
@@ -9528,7 +9529,7 @@ sub _restrict_values {
 		      'error_type' => 'missing_parameter'});
 	 return 'rename_list_request';
      }
-     my $result = &List::request_action ('create_list',$param->{'auth_method'},$in{'new_robot'},
+     my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$in{'new_robot'},
 					{'sender' => $param->{'user'}{'email'},
 					 'remote_host' => $param->{'remote_host'},
 					 'remote_addr' => $param->{'remote_addr'}});
@@ -13935,34 +13936,9 @@ sub d_test_existing_and_rights {
      $param->{'scenari_read'} = $list->load_scenario_list('d_read', $robot);
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
-#     my $read_scenario_list = $list->load_scenario_list('d_read', $robot);
-#     $param->{'read'}{'scenario_name'} = $read;
-#     $param->{'read'}{'label'} = $read_scenario_list->{$read}{'title'}{$lang};
-#
-#     foreach my $key (keys %{$read_scenario_list}) {
-#	 $param->{'scenari_read'}{$key}{'scenario_name'} = $read_scenario_list->{$key}{'name'};
-#	 $param->{'scenari_read'}{$key}{'scenario_label'} = $read_scenario_list->{$key}{'title'}{$lang};
-#	 if ($key eq $read) {
-#	     $param->{'scenari_read'}{$key}{'selected'} = 'selected="selected"';
-#	 }
-#     }
-
      ## Scenario list for EDIT
      $param->{'scenari_edit'} = $list->load_scenario_list('d_edit', $robot);
      $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
-
-
-#     my $edit_scenario_list = $list->load_scenario_list('d_edit', $robot);
-#     $param->{'edit'}{'scenario_name'} = $edit;
-#     $param->{'edit'}{'label'} = $edit_scenario_list->{$edit}{'title'}{$lang};
-#
-#     foreach my $key (keys %{$edit_scenario_list}) {
-#	 $param->{'scenari_edit'}{$key}{'scenario_name'} = $edit_scenario_list->{$key}{'name'};
-#	 $param->{'scenari_edit'}{$key}{'scenario_label'} = $edit_scenario_list->{$key}{'title'}{$lang};
-#	 if ($key eq $edit) {
-#	     $param->{'scenari_edit'}{$key}{'selected'} = 'selected="selected"';
-#	 }
-#     }
 
      ## father directory
      if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
@@ -15354,7 +15330,7 @@ sub export_topics {
 
      my $total = 0;
      foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
-	 my $result = &List::request_action ('topics_visibility', $param->{'auth_method'},$robot,
+	 my $result = &Scenario::request_action ('topics_visibility', $param->{'auth_method'},$robot,
 					     {'topicname' => $t, 
 					      'sender' => $param->{'user'}{'email'},
 					      'remote_host' => $param->{'remote_host'},
@@ -15478,7 +15454,16 @@ sub do_dump_scenario {
 	 return undef;
      }
 
-     ($param->{'dumped_scenario'}, $param->{'scenario_path'}) =  &List::_load_scenario_file($in{'pname'},$robot,$list->{'admin'}{$in{'pname'}}{'name'},$list->{'dir'},'flush');
+     my $scenario = new Scenario ('function' => $in{'pname'},
+				  'robot' => $robot,
+				  'name' => $list->{'admin'}{$in{'pname'}}{'name'},
+				  'directory' => $list->{'dir'});
+     unless (defined $scenario) {
+	 &report::reject_report_web('intern','cannot_open_file',{},$param->{'action'},$list);
+	 &wwslog('info','failed to load scenario');
+	 return undef;
+     }
+     ($param->{'dumped_scenario'}, $param->{'scenario_path'}) = ($scenario->{'data'}, $scenario->{'file_path'});
      $param->{'pname'} = $in{'pname'};
      $param->{'scenario_name'} = $list->{'admin'}{$in{'pname'}}{'name'};
      
