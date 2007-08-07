@@ -88,7 +88,7 @@ sub new {
 	}
 	
 	## Use cache unless file has changed on disk
-	if (($scenario->{'date'} >= stat($scenario->{'file_path'}))[9]) {
+	if ($all_scenarios{$scenario->{'file_path'}}{'date'} >= (stat($scenario->{'file_path'}))[9]) {
 	    return $all_scenarios{$scenario->{'file_path'}};
 	}
     }
@@ -108,10 +108,13 @@ sub new {
 	$scenario->{'data'} = $data;
 
 	$scenario_struct = &_parse_scenario($parameters{'function'}, $parameters{'robot'}, $parameters{'name'}, $data, $parameters{'directory'});
+    }elsif ($parameters{'function'} eq 'include') {
+	## include.xx not found will not raise an error message
+	return undef;
+	
     }else {
 	## Default rule is 'true() smtp -> reject'
-	&do_log('err',"Unable to find scenario file '$parameters{'function'}.$parameters{'name'}', please report to listmaster") 
-	    unless ($parameters{'function'} eq 'include') ;	
+	&do_log('err',"Unable to find scenario file '$parameters{'function'}.$parameters{'name'}', please report to listmaster"); 
 	$scenario_struct = &_parse_scenario($parameters{'function'}, $parameters{'robot'}, $parameters{'name'}, 'true() smtp -> reject', $parameters{'directory'});
 	$scenario->{'file_path'} = 'INLINE'; ## special value
 	$scenario->{'data'} = 'true() smtp -> reject';
@@ -142,7 +145,8 @@ sub new {
 ## Parse scenario rules
 sub _parse_scenario {
     my ($function, $robot, $scenario_name, $paragraph, $directory ) = @_;
-
+    &do_log('debug2', "($function, $scenario_name, $robot)");
+    
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
     my @scenario;
