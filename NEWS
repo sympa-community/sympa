@@ -3,7 +3,9 @@
 
 (See Changelog file for the full changes log)
 
-5.4a.1		1st Auhust 2007
+
+
+5.4a.2		7 August 2007
 
    New features :
 
@@ -18,6 +20,16 @@
 	Review actions on list using includes trigger a user's list synchronization.
 
    Changes :
+
+	src/List.pm, wwsympa/wwsympa.fcgi: added a new Robot package inside List.pm. Also optimized List::get_lists() to cache
+	the results within a session and prevent multiple browsing of the expl/ directory
+
+	soap/sympasoap.pm, src/Commands.pm, src/List.pm, src/Makefile,src/Scenario.pm, src/sympa.pl, web_tt2/d_control.tt2,
+	web_tt2/edit_list_request.tt2, wwsympa/wwsympa.fcgi: new Scenario.pm module. The way autorization are loaded has changed :
+	they are now stored in a central place, ie a single copy of a scenario is stored if 2 lists use it. This should make the sympa
+	processes consume less memory when running lots of lists. The scenario are now reloaded whenever they change on disk, except
+	for operations that require good performances (like the 'lists' command). Inclusion of third party scenarios is now performed at
+	evaluation time (in request_action()) and not while loading the scenario as it used to be.
 
 *****	user_data_source values of 'file' and 'database' are no more supported. A migration precedure is run during the upgrade process
 *****	This change will allow to optimize the code where 'file' user_data_source still had to be supported

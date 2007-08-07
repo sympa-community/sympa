@@ -1,3 +1,56 @@
+2007-08-07 08:38  olivier.salaun
+
+	* src/Scenario.pm: Fix: scenario cache was not used
+
+2007-08-07 07:39  olivier.salaun
+
+	* soap/sympasoap.pm, src/Commands.pm, src/List.pm, src/Makefile,
+	  src/Scenario.pm, src/sympa.pl, web_tt2/d_control.tt2,
+	  web_tt2/edit_list_request.tt2, wwsympa/wwsympa.fcgi: Change: new
+	  Scenario.pm module. The way autorization are loaded has changed :
+	  they are now stored in a central place, ie a single copy of a
+	  scenario is stored if 2 lists use it. This should make the sympa
+	  processes consume less memory when running lots of lists. The
+	  scenario are now reloaded whenever they change on disk, except
+	  for operations that require good performances (like the 'lists'
+	  command). Inclusion of third party scenarios is now performed at
+	  evaluation time (in request_action()) and not while loading the
+	  scenario as it used to be.
+
+2007-08-03 12:29  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Change: give up the pre-load of lists using
+	  get_lists()
+
+2007-08-03 12:15  olivier.salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Change: added a new Robot
+	  package inside List.pm. Also optimized List::get_lists() to cache
+	  the results within a session and prevent multiple browsing of the
+	  expl/ directory
+
+2007-08-03 08:23  olivier.salaun
+
+	* src/List.pm: Change: removed some obsolete code since
+	  user_data_source now has a single value
+
+2007-08-03 08:00  olivier.salaun
+
+	* soap/sympasoap.pm, src/Commands.pm, src/Family.pm, src/List.pm,
+	  src/task_manager.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi:
+	  Change: removed obsolete List::save() subroutine and calls to it
+
+2007-08-03 07:48  olivier.salaun
+
+	* NEWS, src/List.pm, src/Upgrade.pm, wwsympa/wwsympa.fcgi: Change:
+	  merging any value of user_data_source to 'include2'. This change
+	  should help simplifying and optimizing the code. Later the
+	  user_data_source parameter could be removed.
+
+2007-08-01 15:48  olivier.salaun
+
+	* .version, ChangeLog, NEWS: preparing 5.4a.1
+
 2007-08-01 13:51  olivier.salaun
 
 	* src/List.pm: Change: optimizations to lower the List::new() calls
