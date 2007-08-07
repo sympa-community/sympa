@@ -1486,13 +1486,15 @@ sub get_parameters {
 	 ## Check if parameter can legitimately use HTML. This selects the regexp used.
 	 my %htmlAllowedParams = ('content' => 1,);
 	 
-	 my $xssregexp;
-	 if ($htmlAllowedParams{$p}) {
-	     $xssregexp = &tools::get_regexp('xss-free');
-	 }
-	 else {
-	     $xssregexp = &tools::get_regexp('html-free');
-	 }
+	 ## 07/08/07 : no more use the buggy regexp $tools::regexp{'html-free'}
+	 ## It would regexp any string containing '60' or '3c'
+	 my $xssregexp = &tools::get_regexp('xss-free');
+#	 if ($htmlAllowedParams{$p}) {
+#	     $xssregexp = &tools::get_regexp('xss-free');
+#	 }
+#	 else {
+#	     $xssregexp = &tools::get_regexp('html-free');
+#	 }
 
 
 	 foreach my $one_p (split /\0/, $in{$p}) {
