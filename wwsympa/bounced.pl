@@ -420,7 +420,7 @@ while (!$end) {
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
-		    &List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list create bounce directory $bounce_dir"})
+		    &List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list create bounce directory $bounce_dir"});
 		    &do_log('err', 'Could not create %s: %s bounced die, check bounce-path in wwsympa.conf', $bounce_dir, $!);
 		    exit;
 		} 
