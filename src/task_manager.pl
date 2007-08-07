@@ -244,7 +244,7 @@ while (!$end) {
 
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
-	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"})
+	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
 	&do_log ('err', "Failed to list task files in %s", $spool_task);
 	exit -1;
     }
@@ -316,7 +316,7 @@ while (!$end) {
     ## Execute existing tasks
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
-	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"})
+	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
 	&do_log ('err', "Failed to list task files in %s", $spool_task);
 	exit -1;
     }
