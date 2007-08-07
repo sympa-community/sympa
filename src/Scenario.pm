@@ -489,7 +489,7 @@ sub request_action {
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;
-    &do_log('notice', '(%s)', $condition);
+    &do_log('debug2e', '(%s)', $condition);
 
     my $robot = $context->{'robot_domain'};
 
