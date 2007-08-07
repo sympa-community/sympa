@@ -489,7 +489,7 @@ sub request_action {
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;
-    # do_log('info', 'xxx  List::verify(%s)', $condition);
+    &do_log('notice', '(%s)', $condition);
 
     my $robot = $context->{'robot_domain'};
 
@@ -517,13 +517,14 @@ sub verify {
     my $list;
     if ($context->{'listname'} && ! defined $context->{'list_object'}) {
         unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
-	    do_log('info',"Unable to create object $context->{'listname'}");
+	    &do_log('info',"Unable to create object $context->{'listname'}");
 	    return undef ;
 	}
     }    
 
     if (defined ($context->{'list_object'})) {
 	$list = $context->{'list_object'};
+	$context->{'listname'} = $list->{'name'};
 
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
@@ -653,7 +654,7 @@ sub verify {
 	    if (defined ($context->{$1})) {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    }else{
-		do_log('debug',"undefine variable context $value in rule $condition");
+		&do_log('debug',"undefine variable context $value in rule $condition");
 		# a condition related to a undefined context variable is always false
 		return -1 * $negation;
  #		return undef;
@@ -693,6 +694,7 @@ sub verify {
 	do_log('err', "error rule syntaxe : unknown condition $condition_key");
 	return undef;
     }
+
     ## Now eval the condition
     ##### condition : true
     if ($condition_key =~ /\s*(true|any|all)\s*/i) {
@@ -730,7 +732,6 @@ sub verify {
 
     ##### condition is_owner, is_subscriber and is_editor
     if ($condition_key =~ /is_owner|is_subscriber|is_editor/i) {
-
 	my ($list2);
 
 	if ($args[1] eq 'nobody') {
@@ -1102,6 +1103,12 @@ sub verify_custom {
         $persistent_cache{'named_filter'}{$condition}{$filter}{'value'} = ($res == 1 ? 1 : 0);
         $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} = time;
         return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
+}
+
+sub dump_all_scenarios {
+    open TMP, ">/tmp/all_scenarios";
+    &tools::dump_var(\%all_scenarios, 0, \*TMP);
+    close TMP;
 }
 
 
