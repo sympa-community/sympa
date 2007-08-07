@@ -78,34 +78,6 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
 
-## Used to define encoding for service messages sent by Sympa
-## Also used to perform setlocale on FreeBSD / Solaris
-my %locale2charset = ('bg_BG' => 'utf-8',
-		      'cs_CZ' => 'utf-8',
-		      'de_DE' => 'iso-8859-1',
-		      'el_GR' => 'utf-8',
-		      'en_US' => 'utf-8',
-		      'es_ES' => 'iso-8859-1',
-		      'et_EE' => 'iso-8859-4',
-		      'fi_FI' => 'iso-8859-1',
-		      'fr_FR' => 'iso-8859-1',
-		      'hu_HU' => 'iso-8859-2',
-		      'it_IT' => 'iso-8859-1',
-		      'ja_JP' => 'eucJP', # Case sensitive.
-		      'nb_NO' => 'utf-8',
-		      'nl_NL' => 'iso-8859-1',
-		      'oc_FR' => 'iso-8859-1',		      
-		      'pl_PL' => 'iso-8859-2',
-		      'pt_BR' => 'utf-8',
-		      'pt_PT' => 'iso-8859-1',
-		      'ro_RO' => 'iso-8859-2',
-		      'ru_RU' => 'utf-8',
-		      'sv_SE' => 'utf-8',
-		      'tr_TR' => 'utf-8',
-		      'zh_CN' => 'utf-8',
-		      'zh_TW' => 'big5',
-		      );
-
 ## We use different catalog/textdomains depending on the template that requests translations
 my %template2textdomain = ('help_admin.tt2' => 'web_help',
 			   'help_arc.tt2' => 'web_help',
@@ -178,12 +150,12 @@ sub SetLang {
     }
    
     ## Set Locale::Messages context
-    my $locale_dashless = $locale.'.'.$locale2charset{$locale}; 
+    my $locale_dashless = $locale.'.utf-8';
     $locale_dashless =~ s/-//g;
     foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
 	my $success;
-	foreach my $try ($locale.'.'.$locale2charset{$locale},
-			 $locale.'.'.uc($locale2charset{$locale}),  ## UpperCase required for FreeBSD
+	foreach my $try ($locale.'.utf-8',
+			 $locale.'.UTF-8',  ## UpperCase required for FreeBSD
 			 $locale_dashless, ## Required on HPUX
 			 $locale,
 			 $lang
@@ -210,7 +182,7 @@ sub SetLang {
 
     $current_lang = $lang;
     $current_locale = $locale;
-    $current_charset = $locale2charset{$locale};
+    $current_charset = 'utf-8';
 
     return $locale;
 }#SetLang
