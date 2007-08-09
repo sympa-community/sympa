@@ -1368,15 +1368,19 @@ sub new {
 	}
     }
 
+    my $status ;
     if ($list_of_lists{$robot}{$name}){
 	# use the current list in memory and update it
 	$list=$list_of_lists{$robot}{$name};
+	
+	$status = $list->load($name, $robot, $options);
     }else{
 	# create a new object list
 	bless $list, $pkg;
-    }
-    
-    my $status = $list->load($name, $robot, $options);
+
+	$options->{'first_access'} = 1;
+	$status = $list->load($name, $robot, $options);
+    }   
     
     unless (defined $status) {
 	return undef;
@@ -1701,39 +1705,47 @@ sub load {
     
     my $users;
 
-    ## Search robot if none was provided
-    unless ($robot) {
-	foreach my $r (keys %{$Conf{'robots'}}) {
-	    if (-d "$Conf{'home'}/$r/$name") {
-		$robot=$r;
-		last;
+    ## Set of initializations ; only performed when the config is first loaded
+    if ($options->{'first_access'}) {
+
+	## Search robot if none was provided
+	unless ($robot) {
+	    foreach my $r (keys %{$Conf{'robots'}}) {
+		if (-d "$Conf{'home'}/$r/$name") {
+		    $robot=$r;
+		    last;
+		}
+	    }
+	    
+	    ## Try default robot
+	    unless ($robot) {
+		if (-d "$Conf{'home'}/$name") {
+		    $robot = $Conf{'host'};
+		}
 	    }
 	}
 	
-	## Try default robot
-	unless ($robot) {
-	    if (-d "$Conf{'home'}/$name") {
-		$robot = $Conf{'host'};
-	    }
+	if ($robot && (-d "$Conf{'home'}/$robot")) {
+	    $self->{'dir'} = "$Conf{'home'}/$robot/$name";
+	}elsif (lc($robot) eq lc($Conf{'host'})) {
+	    $self->{'dir'} = "$Conf{'home'}/$name";
+	}else {
+	    &do_log('err', 'No such robot (virtual domain) %s', $robot) unless ($options->{'just_try'});
+	    return undef ;
 	}
+	
+	$self->{'domain'} = $robot ;
+
+	# default list host is robot domain
+	$self->{'admin'}{'host'} ||= $self->{'domain'};
+
+	$self->{'name'}  = $name ;
     }
 
-    if ($robot && (-d "$Conf{'home'}/$robot")) {
-	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
-    }elsif (lc($robot) eq lc($Conf{'host'})) {
- 	$self->{'dir'} = "$Conf{'home'}/$name";
-    }else {
-	&do_log('err', 'No such robot (virtual domain) %s', $robot) unless ($options->{'just_try'});
-	return undef ;
-    }
-    
-    $self->{'domain'} = $robot ;
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
 	&do_log('debug2', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name) unless ($options->{'just_try'});
 	return undef ;
     }
-
-    $self->{'name'}  = $name ;
 
     my ($m1, $m2, $m3) = (0, 0, 0);
     ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
@@ -1745,7 +1757,7 @@ sub load {
     my $config_reloaded = 0;
     my $admin;
     
-    if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file' &&
+    if (&Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq 'binary_file' &&
 	$time_config_bin > $self->{'mtime'}->[0] &&
 	$time_config <= $time_config_bin &&
 	! $options->{'reload_config'}) { 
@@ -1765,6 +1777,7 @@ sub load {
 	    return undef;
 	}
 
+	$config_reloaded = 1;
 	$m1 = $time_config_bin;
 	$lock->unlock();
 
@@ -1780,7 +1793,7 @@ sub load {
 	}
 
 	## update the binary version of the data structure
-	if (&Conf::get_robot_conf($self->{'robot'}, 'cache_list_config') eq 'binary_file') {
+	if (&Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq 'binary_file') {
 		unless (&Storable::store($admin,"$self->{'dir'}/config.bin")) {
 		    &do_log('err', 'Failed to save the binary config %s', "$self->{'dir'}/config.bin");
 		}
@@ -1798,7 +1811,8 @@ sub load {
 	$lock->unlock();
     }
     
-     if ($admin) {
+    ## If config was reloaded...
+    if ($admin) {
  	$self->{'admin'} = $admin;
  	
  	## check param_constraint.conf if belongs to a family and the config has been loaded
@@ -1820,14 +1834,6 @@ sub load {
  	    }
  	}
      } 
-
-    # default list host is robot domain
-    $self->{'admin'}{'host'} ||= $self->{'domain'};
-    # uncomment the following line if you want virtual robot to overwrite list->host
-    # $self->{'admin'}{'host'} = $self->{'domain'} if ($self->{'domain'} ne $Conf{'host'});
- 
-    # Would make sympa same 'dir' as a parameter
-    #$self->{'admin'}{'dir'} ||= $self->{'dir'};
 
     $self->{'as_x509_cert'} = 1  if ((-r "$self->{'dir'}/cert.pem") || (-r "$self->{'dir'}/cert.pem.enc"));
     
@@ -1903,9 +1909,8 @@ sub load {
 	return undef;
     }
     
-## Load stats file if first new() or stats file changed
+    ## Load stats file if first new() or stats file changed
     my ($stats, $total);
-
     if (! $self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
 	($stats, $total, $self->{'last_sync'}, $self->{'last_sync_admin_user'}) = _load_stats_file("$self->{'dir'}/stats");
 	$m3 = $time_stats;
