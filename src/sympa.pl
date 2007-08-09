@@ -311,7 +311,7 @@ if ($signal ne 'hup') {
     }
 
     my $service = 'sympa';
-    $service .= '(message)' if ($main::daemon_usage == DAEMON_MESSAGE);
+    $service .= '(distribute)' if ($main::daemon_usage == DAEMON_MESSAGE);
     $service .= '(command)' if ($main::daemon_usage == DAEMON_COMMAND);
     $service .= '(creation)' if ($main::daemon_usage == DAEMON_CREATION);
     do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, $service);
