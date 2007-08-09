@@ -266,6 +266,13 @@ sub create_list_old{
        
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
 
+    ## Lock config before openning the config file
+    my $lock = new Lock ($list_dir.'/config');
+    $lock->set_timeout(5); 
+    unless ($lock->lock('write')) {
+	return undef;
+    }
+
     open CONFIG, '>:utf8', "$list_dir/config";
 
     ## Use an intermediate handler to encode to filesystem_encoding
@@ -277,6 +284,9 @@ sub create_list_old{
 
     close CONFIG;
     
+    ## Unlock config file
+    $lock->unlock();
+
     ## Creation of the info file 
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
     $param->{'description'} =~ s/\015//g;
@@ -445,12 +455,22 @@ sub create_list{
 	}
     }
       
+    ## Lock config before openning the config file
+    my $lock = new Lock ($list_dir.'/config');
+    $lock->set_timeout(5); 
+    unless ($lock->lock('write')) {
+	return undef;
+    }
+
     ## Creation of the config file
     open CONFIG, '>:utf8', "$list_dir/config";
     #&tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
     print CONFIG $conf;
     close CONFIG;
     
+    ## Unlock config file
+    $lock->unlock();
+
     ## Creation of the info file 
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
     $param->{'description'} =~ s/\015//g;
@@ -555,10 +575,20 @@ sub update_list{
 	}
     }
 
+    ## Lock config before openning the config file
+    my $lock = new Lock ($list->{'dir'}.'/config');
+    $lock->set_timeout(5); 
+    unless ($lock->lock('write')) {
+	return undef;
+    }
+
     ## Creation of the config file
     open CONFIG, '>:utf8', "$list->{'dir'}/config";
     &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
     close CONFIG;
+
+    ## Unlock config file
+    $lock->unlock();
 
     ## Create list object
     my $list;
