@@ -565,7 +565,7 @@ sub upgrade {
 	    }elsif ($d =~ /(create_list_templates|families)$/) {
 		foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
 		    if (-d "$d/$subdir") {
-			push @directories, ["$d/$subdir", $subdir];
+			push @directories, ["$d/$subdir", $Conf{'lang'}];
 		    }
 		}
 		closedir DIR;
