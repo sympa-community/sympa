@@ -496,7 +496,7 @@ my %in_regexp = (
 		 'id' => '[^<>\\\*\$\n]+',
 
 		 ## Archives
-		 'month' => '\d{4}\-\d{2}',
+		 'month' => '\d{2}|\d{4}\-\d{2}', ## format is yyyy-mm for 'arc' and mm for 'send_me'
 
 		 ## URL
 		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
