@@ -635,6 +635,9 @@ sub load_robots {
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
 
+	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'static_content_url'};
+	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'static_content_path'};
+
 	## CSS
 	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css';
 	$robot_conf->{$robot}{'css_path'} ||= $Conf{'static_content_path'}.'/css/'.$robot;
@@ -646,8 +649,6 @@ sub load_robots {
 	$robot_conf->{$robot}{'verp_rate'} ||= $Conf{'verp_rate'};
 	$robot_conf->{$robot}{'use_blacklist'} ||= $Conf{'use_blacklist'};
 
-	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'static_content_url'};
-	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'static_content_path'};
 	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_url'}) ;
 	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'static_content_path'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_path'});
 	$robot_conf->{$robot}{'pictures_feature'} ||= $Conf{'pictures_feature'};
