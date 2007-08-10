@@ -639,7 +639,7 @@ sub load_robots {
 	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'static_content_path'};
 
 	## CSS
-	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css';
+	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css/'.$robot;
 	$robot_conf->{$robot}{'css_path'} ||= $Conf{'static_content_path'}.'/css/'.$robot;
 
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
