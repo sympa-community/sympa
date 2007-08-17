@@ -102,19 +102,6 @@ sub upgrade {
 	$list->sync_include_admin();
     }
 
-    ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
-    if (&tools::lower_version($previous_version, '5.0')) {
-
-	my $statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
-	
-	&do_log('notice','Updating subscribed field of the subscriber table...');
-	my $rows = $dbh->do($statement);
-	unless (defined $rows) {
-	    &fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
-	}
-	&do_log('notice','%d rows have been updated', $rows);
-    }    
-
     ## Migration to tt2
     if (&tools::lower_version($previous_version, '4.2b')) {
 
@@ -361,6 +348,17 @@ sub upgrade {
 		    &do_log('notice', 'Updated %d rows', $rows);		    
 
 		}
+
+		## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set		
+		my $statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
+		
+		&do_log('notice','Updating subscribed field of the subscriber table...');
+		my $rows = $dbh->do($statement);
+		unless (defined $rows) {
+		    &fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
+		}
+		&do_log('notice','%d rows have been updated', $rows);
+				
 	    }
 	}
     }
