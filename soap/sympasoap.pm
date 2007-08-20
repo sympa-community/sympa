@@ -24,11 +24,13 @@ package SOAP::XMLSchema1999::Serializer;
 
 package sympasoap;
 
+use strict;
+
 use Exporter;
 use HTTP::Cookies;
 
-@ISA = ('Exporter');
-@EXPORT = ();
+my @ISA = ('Exporter');
+my @EXPORT = ();
 
 use Conf;
 use Log;
@@ -173,7 +175,7 @@ sub login {
 	    ->faultdetail("Incorrect password for user $email or bad login");
     } 
 
-    my $expire = $param->{'user'}{'cookie_delay'} || $wwsconf->{'cookie_expire'};
+    my $expire =  &Conf::get_robot_conf($robot,'cookie_expire');
 
     unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
 	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
@@ -243,7 +245,7 @@ sub casLogin {
 	    ->faultdetail("Could not get email address from LDAP directory");
     }
 
-    my $expire = $param->{'user'}{'cookie_delay'} || $wwsconf->{'cookie_expire'};
+    my $expire = &Conf::get_robot_conf($robot,'cookie_expire');
 
     unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
 	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
@@ -310,7 +312,7 @@ sub getUserEmailByCookie {
 	    ->faultstring('Incorrect  parameter')
 	    ->faultdetail('Use : <cookie>');
     }
-    my $auth,$email ;
+    my ($auth,$email) ;
     
     ($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
     do_log('debug','getUserEmailByCookie : %s',$email);
@@ -548,8 +550,8 @@ sub createList {
     unless ($template) {	
 	$reject .= ', template'; 
     }
-    unless ($info) {	
-	$reject .= ', info'; 
+    unless ($description) {	
+	$reject .= ', description'; 
     }
     unless ($topics) {	
 	$reject .= 'topics'; 
@@ -723,8 +725,8 @@ sub add {
     my $result = $list->check_list_authz('add','md5',
 					 {'sender' => $sender, 
 					  'email' => $email,
-					  'remote_host' => $param->{'remote_host'},
-					  'remote_addr' => $param->{'remote_addr'},
+					  'remote_host' => $ENV{'REMOTE_HOST'},
+					  'remote_addr' => $ENV{'REMOTE_ADDR'},
 					  'remote_application_name' => $ENV{'remote_application_name'}} );
 
     
@@ -774,7 +776,7 @@ sub add {
 	
 	unless ($list->add_user($u)) {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
-	    my $error = "Unable to add user $user in list $listname";
+	    my $error = "Unable to add user $email in list $listname";
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Unable to update user allreadu subscribed')
 		->faultdetail($error);
@@ -796,10 +798,10 @@ sub add {
 	}
     }
     
-    &do_log('info', 'ADD %s %s from %s accepted (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
+    &do_log('info', 'ADD %s %s from %s accepted (%d subscribers)', $list->{'name'}, $email, $sender, $list->get_total() );
     if ($action =~ /notify/i) {
 	unless ($list->send_notify_to_owner('notice',{'who' => $email, 
-						      'gecos' => $comment,
+						      'gecos' => $gecos,
 						      'command' => 'add',
 						      'by' => $sender})) {
 	    &do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
@@ -848,8 +850,8 @@ sub del {
     my $result = $list->check_list_authz('del','md5',
 					 {'sender' => $sender, 
 					  'email' => $email,
-					  'remote_host' => $param->{'remote_host'},
-					  'remote_addr' => $param->{'remote_addr'},
+					  'remote_host' => $ENV{'REMOTE_HOST'},
+					  'remote_addr' => $ENV{'REMOTE_ADDR'},
 					  'remote_application_name' => $ENV{'remote_application_name'}} );
 
     
@@ -869,7 +871,7 @@ sub del {
 
     unless ($action =~ /do_it/) {
 	my $reason_string = &get_reason_string($reason,$robot);
-	&Log::do_log('info', 'SOAP : del %s@%s %s from %s by %srefused (not allowed)',  $listname,$robot,$email,$sende,$ENV{'remote_application_name'});
+	&Log::do_log('info', 'SOAP : del %s@%s %s from %s by %srefused (not allowed)',  $listname,$robot,$email,$sender,$ENV{'remote_application_name'});
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Not allowed')
 	    ->faultdetail($reason_string);
@@ -896,7 +898,7 @@ sub del {
 	## Really delete and rewrite to disk.
 	my $u;
 	unless ($u = $list->delete_user($email)){
-	    my $error = "Unable to delete user $who from list $which for command 'del'";
+	    my $error = "Unable to delete user $email from list $listname for command 'del'";
 	    &do_log('info', 'DEL %s %s from %s failed, '.$error);
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Unable to remove subscriber informations')
@@ -1099,7 +1101,7 @@ sub signoff {
 	    }
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Not allowed.')
-		->faultdetail("Email address $email has not been found on the list $list{'name'}. You did perhaps subscribe using a different address ?");
+		->faultdetail("Email address $sender has not been found on the list $list->{'name'}. You did perhaps subscribe using a different address ?");
 	}
 	
 	## Really delete and rewrite to disk.
@@ -1199,15 +1201,14 @@ sub subscribe {
       }
 
 #      $list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $gecos);
-      $list->store_susbscription_request($sender, $gecos);
-      &Log::do_log('info', 'SOAP subscribe : %s from %s forwarded to the owners of the list (%d seconds)',$listname,$sender,time-$time_command);
+      $list->store_subscription_request($sender, $gecos);
+      &Log::do_log('info', '%s from %s forwarded to the owners of the list',$listname,$sender);
       return SOAP::Data->name('result')->type('boolean')->value(1);
   }
   if ($action =~ /request_auth/i) {
       my $cmd = 'subscribe';
-      $cmd = "quiet $cmd" if $quiet;
       $list->request_auth ($sender, $cmd, $robot, $gecos );
-      &Log::do_log('info', 'SOAP subscribe :  %s from %s, auth requested (%d seconds)',$listname,$sender,time-$time_command);
+      &Log::do_log('info', 'SOAP subscribe :  %s from %s, auth requested',$listname,$sender);
       return SOAP::Data->name('result')->type('boolean')->value(1);
   }
   if ($action =~ /do_it/i) {
@@ -1242,7 +1243,6 @@ sub subscribe {
 	  %{$u} = %{$defaults};
 	  $u->{'email'} = $sender;
 	  $u->{'gecos'} = $gecos;
-	  $u->{'password'} = &tools::crypt_password($password);
 	  $u->{'date'} = $u->{'update_date'} = time;
 	  
 	  die SOAP::Fault->faultcode('Server')
@@ -1254,13 +1254,12 @@ sub subscribe {
       if ($List::use_db) {
 	  my $u = &List::get_user_db($sender);
 	  
-	  &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
-					  'password' => $u->{'password'} || &tools::tmp_passwd($sender)
+	  &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'}
 					  });
       }
       
       ## Now send the welcome file to the user
-      unless ($quiet || ($action =~ /quiet/i )) {
+      unless ($action =~ /quiet/i ) {
 	  unless ($list->send_file('welcome', $sender, $robot,{})) {
 	      &Log::do_log('err',"Unable to send template 'bye' to $sender");
 	  }
