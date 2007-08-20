@@ -2380,7 +2380,9 @@ sub smime_extract_certs {
 ## Dump a variable's content
 sub dump_var {
     my ($var, $level, $fd) = @_;
-    
+
+    return undef unless ($fd);
+
     if (ref($var)) {
 	if (ref($var) eq 'ARRAY') {
 	    foreach my $index (0..$#{$var}) {
@@ -2402,6 +2404,80 @@ sub dump_var {
 	    print $fd "\t"x$level."UNDEF\n";
 	}
     }
+}
+
+## Dump a variable's content
+sub dump_html_var {
+    my ($var) = shift;
+	my $html = '';
+
+    
+    if (ref($var)) {
+
+	if (ref($var) eq 'ARRAY') {
+	    $html .= '<ul>';
+	    foreach my $index (0..$#{$var}) {
+		$html .= '<li> '.$index.':';
+		$html .= &dump_html_var($var->[$index]);
+		$html .= '</li>';
+	    }
+	    $html .= '</ul>';
+	}elsif (ref($var) eq 'HASH' || ref($var) eq 'Scenario' || ref($var) eq 'List') {
+	    $html .= '<ul>';
+	    foreach my $key (sort keys %{$var}) {
+		$html .= '<li>'.$key.'=' ;
+		$html .=  &dump_html_var($var->{$key});
+		$html .= '</li>';
+	    }
+	    $html .= '</ul>';
+	}else {
+	    $html .= 'EEEEEEEEEEEEEEEEEEEEE'.ref($var);
+	}
+    }else{
+	if (defined $var) {
+	    $html .= $var;
+	}else {
+	    $html .= 'UNDEF';
+	}
+    }
+    return $html;
+}
+
+## Dump a variable's content
+sub dump_html_var2 {
+    my ($var) = shift;
+
+    my $html = '' ;
+    
+    if (ref($var)) {
+	if (ref($var) eq 'ARRAY') {
+	    $html .= 'ARRAY <ul>';
+	    foreach my $index (0..$#{$var}) {
+		$html .= '<li> '.$index;
+		$html .= &dump_html_var($var->[$index]);
+		$html .= '</li>'
+	    }
+	    $html .= '</ul>';
+	}elsif (ref($var) eq 'HASH' || ref($var) eq 'Scenario' || ref($var) eq 'List') {
+	    #$html .= " (".ref($var).') <ul>';
+	    $html .= '<ul>';
+	    foreach my $key (sort keys %{$var}) {
+		$html .= '<li>'.$key.'=' ;
+		$html .=  &dump_html_var($var->{$key});
+		$html .= '</li>'
+	    }    
+	    $html .= '</ul>';
+	}else {
+	    $html .= "<li>'%s'"."</li>", ref($var);
+	}
+    }else{
+	if (defined $var) {
+	    $html .= '<li>'.$var.'</li>';
+	}else {
+	    $html .= '<li>UNDEF</li>';
+	}
+    }
+    return $html;
 }
 
 sub remove_empty_entries {
@@ -2852,6 +2928,34 @@ sub get_regexp {
 	return '\w+'; ## default is a very strict regexp
     }
 
+}
+
+## convert a string formated as var1="value1";var2="value2"; into a hash.
+## Used when extracting from session table some session properties or when extracting users preference from user table
+## Current encoding is NOT compatible with encoding of values with '"'
+##
+sub string_2_hash {
+    my $data = shift;
+    my %hash ;
+    
+    while ($data =~ /^(\;?(\w+)\=\"([^\"]*)\")/) {
+	$hash{$2} = $3; 
+	$data =~ s/$1// ;
+    }    
+    return (%hash);
+
+}
+## convert a hash into a string formated as var1="value1";var2="value2"; into a hash
+sub hash_2_string {
+    my $refhash = shift;
+    
+    my $data_string ;
+    foreach my $var (keys %$refhash ) {
+	next unless ($var);
+	$data_string .= ';'.$var.'="'.$refhash->{$var}.'"';
+	# do_log('info', 'SympaSession::store() : ---%s--- = ---%s---',$var, $refhash->{$var});
+    }
+    return ($data_string);
 }
 
 1;

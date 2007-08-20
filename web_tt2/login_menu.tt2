@@ -5,6 +5,12 @@
 [% IF user.email %]
 <div class="MenuBlock">
 <div id="Identity">[% user.email %]<br />
+[% IF restore_email %]
+  <form class="text_center" action="[% path_cgi %]" method="post">
+  <fieldset><input class="MainMenuLinks" type="submit" name="action_restore_email" value="[%|loc%]Restore identity[%END%]" />
+  </fieldset>
+  </form>	
+[%END%]
 [% IF is_listmaster %][%|loc%]Listmaster[%END%]
 [% ELSIF is_privileged_owner %][%|loc%]Privileged owner[%END%]
 [% ELSIF is_owner %][%|loc%]Owner[%END%]

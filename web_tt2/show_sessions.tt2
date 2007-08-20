@@ -1,0 +1,8 @@
+<table summary="[%|loc%]Sessions list[%END%]" class="listOfItems text_center">
+ <tr> <th>last hit date</th><th>start date</th><th>hit count</th><th>remote address</th><th>robot</th><th>User email</th></tr>
+  [% FOREACH session = sessions %]
+   [% IF dark == '1' %]<tr>[% SET dark = '0' %][% ELSE %]<tr class="color0">[% SET dark = '1' %][% END %]
+    <td>[% session.formated_date %]</td><td>[% session.formated_start_date %]</td><td>[% session.hit_session %]</td><td>[% session.remote_addr_session %]</td><td>[% session.robot_session %]</td><td>[% session.email_session %]</td>
+   </tr>
+  [% END %]  
+</table>

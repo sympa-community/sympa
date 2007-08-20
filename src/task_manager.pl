@@ -35,6 +35,7 @@ use Log;
 use Getopt::Long;
 use Time::Local;
 use Digest::MD5;
+use SympaSession;
 use mail;
 use wwslib;
  
@@ -170,6 +171,7 @@ my %global_models = (#'crl_update_task' => 'crl_update',
 		     'expire_bounce_task' => 'expire_bounce',
 		     'purge_user_table_task' => 'purge_user_table',
 		     'purge_logs_table_task' => 'purge_logs_table',
+		     'purge_session_table_task' => 'purge_session_table',
 		     'purge_orphan_bounces_task' => 'purge_orphan_bounces',
 		     'eval_bouncers_task' => 'eval_bouncers',
 		     'process_bouncers_task' =>'process_bouncers',
@@ -206,6 +208,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'sync_include'          => [],
 		'purge_user_table'      => [],
 		'purge_logs_table'      => [],
+		'purge_session_table'   => [],
 		'purge_orphan_bounces'  => [],
 		'eval_bouncers'         => [],
 		'process_bouncers'      => []
@@ -795,6 +798,7 @@ sub cmd_process {
     return expire_bounce ($task, $Rarguments, \%context) if ($command eq 'expire_bounce');
     return purge_user_table ($task, \%context) if ($command eq 'purge_user_table');
     return purge_logs_table ($task, \%context) if ($command eq 'purge_logs_table');
+    return purge_session_table ($task, \%context) if ($command eq 'purge_session_table');
     return sync_include($task, \%context) if ($command eq 'sync_include');
     return purge_orphan_bounces ($task, \%context) if ($command eq 'purge_orphan_bounces');
     return eval_bouncers ($task, \%context) if ($command eq 'eval_bouncers');
@@ -1090,6 +1094,7 @@ sub exec_cmd {
     
     return 1;
 }
+
 sub purge_logs_table {
     # If a log is older then $list->get_latest_distribution_date()-$delai expire the log
     my ($task, $Rarguments, $context) = @_;
@@ -1102,6 +1107,20 @@ sub purge_logs_table {
 	return undef;
     }
     &do_log('notice','purge_logs_table(): logs purged');
+    return 1;
+}
+
+## remove sessions from session_table if older than $Conf{'session_expiration_period'}
+sub purge_session_table {    
+
+    do_log('info','xxxxxxxxxxx ZZ task_manager::purge_session_table()');
+    my $removed = &SympaSession::purge_old_sessions();
+    unless(defined $removed) {
+	do_log('info','xxxxxxxxxxx echec');
+	&do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
+	return undef;
+    }
+    &do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
     return 1;
 }
 

@@ -23,7 +23,6 @@
 ## Copyright 1999 Comité Réseaux des Universités
 ## web interface to Sympa mailing lists manager
 ## Sympa: http://www.sympa.org/
-
 ## Authors :
 ##           Serge Aumont <sa AT cru.fr>
 ##           Olivier Salaün <os AT cru.fr>
@@ -63,6 +62,7 @@ use Auth;
 use admin;
 use SharedDocument;
 use report;
+use SympaSession;
 
 #use open ':utf8'; ## Default is to consider files utf8 
 
@@ -92,7 +92,7 @@ my $param = {};
 my ($robot, $robot_object);
 my $ip ; 
 my $rss ;
-
+my $session;
 
 ## Load config 
 unless ($wwsconf = &wwslib::load_config($conf_file)) {
@@ -211,6 +211,12 @@ my %comm = ('home' => 'do_home',
 	 'arc_download' => 'do_arc_download',
 	 'arc_delete' => 'do_arc_delete',
 	 'serveradmin' => 'do_serveradmin',
+	 'set_loglevel' => 'do_set_loglevel',
+	 'set_dumpvars' => 'do_set_dumpvars',
+	 'show_sessions' => 'do_show_sessions',
+	 'unset_dumpvars' => 'do_unset_dumpvars',
+	 'set_session_email' => 'do_set_session_email',
+	 'restore_email' => 'do_restore_email',
 	 'skinsedit' => 'do_skinsedit',
 	 'css' => 'do_css',
 	 'help' => 'do_help',
@@ -351,6 +357,7 @@ my %action_args = ('default' => ['list'],
 		'sigrequest' => ['list','email'],
 		'set' => ['list','email','reception','gecos'],
 		'serveradmin' => [],
+		'set_session_email' => ['email'],
 		'skinsedit' => [],
 		'get_pending_lists' => [],
 		'get_closed_lists' => [],
@@ -427,10 +434,7 @@ my %action_type = ('editfile' => 'admin',
 		'd_admin' => 'admin',
 		'd_reject_shared' =>'admin',
 		'd_install_shared' =>'admin',
-
-
                 'dump_scenario' => 'admin',
-## 
 		'dump' => 'admin',
 		'remind' => 'admin',
 #		'subindex' => 'admin',
@@ -642,7 +646,9 @@ my $birthday = time ;
      undef $robot_object;
      undef $ip;
      undef $rss;
+     undef $session;
 
+     &Log::set_log_level($Conf{'log_level'});
      &Language::SetLang($Language::default_lang);
 
      ## Check effective ID
@@ -790,6 +796,15 @@ my $birthday = time ;
      
      &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
+     $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
+     unless ($session) {
+	 &wwslog('err','unable to initialyse session');
+	 next;
+     }
+     &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
+     $param->{'restore_email'} = $session->{'restore_email'};
+     $param->{'dumpvars'} = $session->{'dumpvars'};
+    
      ## RSS does not require user authentication
      unless ($rss) {
 	 
@@ -809,17 +824,18 @@ my $birthday = time ;
 	     }
 	     
 	     if($param->{user}{email}) {
+		 $session->{'email'}= $param->{user}{email};
+
 		 $param->{'auth_method'} = 'smime';
-		 $param->{'auth'} = 'x509';
+		 $session->{'auth'} = 'x509';
 		 $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
 		 $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
 		 $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
 		 $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
 	     }
 	     
-	 }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
-	     ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($ENV{'HTTP_COOKIE'},$Conf{'cookie'});
-	     
+	 }elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
+	     $param->{'user'}{'email'} = $session->{'email'};	     	     
 	 }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
 	     # select the cas server that redirect the user to sympa and check the ticket
@@ -837,7 +853,7 @@ my $birthday = time ;
 		 if(defined $net_id) { # the ticket is valid net-id
 		     do_log('notice',"login CAS OK server netid=$net_id" );
 		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $net_id}));
-		     $param->{'auth'} = 'cas';
+		     $session->{'auth'} = 'cas';
 		     
 		     &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
 		     
@@ -917,10 +933,6 @@ my $birthday = time ;
 	     }
 #         }
 	     
-	 }else{
-	     
-	     ## Get lang from cookie
-	     $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
 	 }
      } ## END if RSS
 
@@ -958,11 +970,8 @@ my $birthday = time ;
 	     
 	     ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	     $param->{'list_lang'} = $list->{'admin'}{'lang'} if (ref($list) eq 'List');
-	     $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});
-	     
-	     
-	     $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user_lang'} || 
-		 $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');	     
+	     $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});	     
+	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');	     
 
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
 	     
@@ -1010,10 +1019,10 @@ my $birthday = time ;
      &check_param_out();
 
      ## Params 
+     $param->{'refparam'} = ref($param);
      $param->{'action_type'} = $action_type{$param->{'action'}};
      $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
 
-     $param->{'lang'} ||= $param->{'cookie_lang'};
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
 
@@ -1033,11 +1042,29 @@ my $birthday = time ;
      }
      $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
+     ## store in session table this session contexte
+     $session->store;
+
      ## Do not manage cookies at this level if content was already sent
      unless ($param->{'bypass'} eq 'extreme' || 
 	     $param->{'action'} eq 'css' || 
 	     $maintenance_mode ||
 	     $rss) {
+
+
+	 my $delay = $param->{'user'}{'cookie_delay'};
+	 unless (defined $delay) {
+	     $delay = $wwsconf->{'cookie_expire'};
+	 }
+		 
+	 if ($delay == 0) {
+	     $delay = 'session';
+	 }
+	 
+	 unless ($session->set_cookie($param->{'cookie_domain'},$delay)) {
+	     &wwslog('notice', 'Could not set HTTP cookie');
+	     exit -1;
+	 }
 
 	 ## Set cookies "your_subscribtions" unless in one list page
 	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
@@ -1060,14 +1087,12 @@ my $birthday = time ;
 		 next unless (ref($result) eq 'HASH' && $result->{'action'} eq 'do_it');
 
 		 my $l = $list->{'name'};
-
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
 	     }
 	     foreach my $list (@{$param->{'get_which_owner'}}) {
 		 my $l = $list->{'name'};
-
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
@@ -1085,24 +1110,25 @@ my $birthday = time ;
 	 ## Set cookies unless client use https authentication
 	 if ($param->{'user'}{'email'}) {
 	     if ($param->{'user'}{'email'} ne 'x509') {
-		 my $delay = $param->{'user'}{'cookie_delay'};
-		 unless (defined $delay) {
-		     $delay = $wwsconf->{'cookie_expire'};
-		 }
-		 
-		 if ($delay == 0) {
-		     $delay = 'session';
-		 }
-		 
-		 $param->{'auth'} ||= 'classic';
-		 
-		 unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay, $param->{'auth'} )) {
-		     &wwslog('notice', 'Could not set HTTP cookie');
-		     exit -1;
-		 }
+		 #my $delay = $param->{'user'}{'cookie_delay'};
+		 #unless (defined $delay) {
+		 #    $delay = $wwsconf->{'cookie_expire'};
+		 #}
+		 #
+		 #if ($delay == 0) {
+		 #    $delay = 'session';
+		 #}
+		 # 
+		 $session->{'auth'} ||= 'classic';
+		 #
+		 #unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay, $param->{'auth'} )) {
+		 #    &wwslog('notice', 'Could not set HTTP cookie');
+		 #    exit -1;
+		 #}
 		 $param->{'cookie_set'} = 1;
 		 
-		 ##Cookie extern : sympa_altemails
+	
+		 ###Cookie extern : sympa_altemails
 		 my $number = 0;
 		 foreach my $element (keys %{$param->{'alt_emails'}}){
 		     $number ++ if ($element);
@@ -1115,9 +1141,9 @@ my $birthday = time ;
 		     }
 		 }
 	     }
-	 }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
-	     &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
-	 }
+	 } #elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
+	  #   &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
+	  #}
      }
 	 
      ## Available languages
@@ -1141,6 +1167,8 @@ my $birthday = time ;
      }
 
      &Language::SetLang($saved_lang);
+
+     $param->{'html_dumpvars'} = &tools::dump_html_var($param) if ($session->{'dumpvars'});
 
      # if bypass is defined select the content-type from various vars
      if ($param->{'bypass'}) {
@@ -2078,11 +2106,6 @@ Use it to create a List object and initialize output parameters.
      ## this switch is applied recursively
      &tools::recursive_transformation($param, \&tools::unicode_to_utf8);
 
-#     foreach my $k (keys %{$param}) {
-#	 next if (ref $param->{$k});
-#	 $param->{$k} = &Encode::encode_utf8($param->{$k}) if (&Encode::is_utf8($param->{$k}));
-#     }
-
  }
 
  ## Login WWSympa
@@ -2173,8 +2196,10 @@ Use it to create a List object and initialize output parameters.
 	 }
      } 
      $param->{'user'} = $data->{'user'};
-     $param->{'auth'} = $data->{'auth'};
-
+     $session->{'auth'} = $data->{'auth'};
+     my $email = lc($param->{'user'}{'email'});
+     $session->{'email'} = $email;
+     
      ## Set alt_email
      if ($data->{'alt_emails'}) {
 	 foreach my $k (keys %{$data->{'alt_emails'}}) {
@@ -2182,7 +2207,7 @@ Use it to create a List object and initialize output parameters.
 	 }
      }
 
-     my $email = lc($param->{'user'}{'email'});
+
      unless($param->{'alt_emails'}{$email}){
 	 unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	     &wwslog('notice', 'Could not set HTTP cookie for external_auth');
@@ -2197,10 +2222,18 @@ Use it to create a List object and initialize output parameters.
      ## Current authentication mode
      #$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
-     $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
-     $param->{'cookie_lang'} = undef;    
 
-     if (($param->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
+     if ($session->{'lang'}) {   #  user did choose a specific language before being logued. Apply it as a user pref.
+	 &wwslog('notice', 'xxxx apply session pref to user pref : %s',$session->{'lang'});
+	 &List::update_user_db($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
+	 $param->{'lang'} = $session->{'lang'};
+     }else{                      # user did not choose a specific language, apply user pref for this session. 
+	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+	 $session->{'lang'} = $param->{'lang'};
+	 &wwslog('notice', 'xxxx apply user pref to session : %s',$session->{'lang'});
+     }
+
+     if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
 	 &report::notice_report_web('you_should_choose_a_password',{},$param->{'action'});
      }
      
@@ -2330,7 +2363,7 @@ sub do_sso_login {
 	    if ($in{'subaction'} eq 'init' &&
 		($email_is_trusted == 0 || ! $email)) {
 		&wwslog('info', 'do_sso_login(): return request email');
-		$param->{'auth'} = 'generic_sso';	
+		$session->{'auth'} = 'generic_sso';	
 		$param->{'server'}{'key'} = $in{'auth_service_name'};
 		$param->{'subaction'} = 'requestemail';
 		$param->{'init_email'} = $email;
@@ -2343,7 +2376,7 @@ sub do_sso_login {
 	    
 	    ## Send a confirmation email and request it on the web interface
 	    if ($in{'subaction'} eq 'validateemail') {
-		$param->{'auth'} = 'generic_sso';	
+		$session->{'auth'} = 'generic_sso';	
 		$param->{'server'}{'key'} = $in{'auth_service_name'};
 		$param->{'init_email'} = $email;
 
@@ -2358,7 +2391,7 @@ sub do_sso_login {
 	    }
 	    
 	    if ($in{'subaction'} eq 'confirmemail') {
-		$param->{'auth'} = 'generic_sso';	
+		$session->{'auth'} = 'generic_sso';	
 		$param->{'server'}{'key'} = $in{'auth_service_name'};
 		$param->{'init_email'} = $email;
 		$in{'email'} = $email;
@@ -2467,7 +2500,7 @@ sub do_sso_login {
 	}
 	
 	$param->{'user'}{'email'} = $email;
-	$param->{'auth'} = 'generic_sso';
+	$session->{'auth'} = 'generic_sso';
 	
 	&wwslog('notice', 'User identified as %s', $email);
 	my $prefix = $Conf{'auth_services'}{$robot}[$sso_id]{'http_header_prefix'};
@@ -2804,7 +2837,14 @@ sub do_redirect {
      }
 
      delete $param->{'user'};
-     $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+     $session->{'email'} = 'nobody';
+
+
+     &wwslog('info','xxxxxxxx dologout : lang = %s',$session->{'lang'});
+
+
+     # no reason to alter the lang because user perform logout
+     # $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
      my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
      my $sso_id = &cookielib::generic_get_cookie($ENV{'HTTP_COOKIE'}, 'sympa_sso_id');
@@ -3673,7 +3713,7 @@ sub do_remindpasswd {
  sub do_choosepasswd {
      &wwslog('info', 'do_choosepasswd');
 
-     if($param->{'auth'} eq 'ldap'){
+     if($session->{'auth'} eq 'ldap'){
 	 &report::reject_report_web('auth','',{'login'=> $param->{'need_login'}},$param->{'action'});
 	 &wwslog('notice', "do_choosepasswd : user not authorized\n");
 	 &web_db_log({'parameters' => $in{'email'},
@@ -4595,6 +4635,7 @@ sub do_remindpasswd {
  ## Server admin page
  sub do_serveradmin {
      &wwslog('info', 'do_serveradmin');
+     &wwslog('info', 'xxxxxxxxxxxxxx do_serveradmin : dumpavars param %s session %s',$param->{'dumpvars'},$session->{'dumpvars'});
      my $f;
 
      unless ($param->{'user'}{'email'}) {
@@ -4641,10 +4682,97 @@ sub do_remindpasswd {
 	 $param->{'server_files'}{$f}{'selected'} = '';
      }
      $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'selected="selected"';
+     $param->{'log_level'} = $session->{'log_level'};
 
      return 1;
  }
 
+
+## Change log_level for the current session
+sub do_set_loglevel {
+    &wwslog('info', 'do_set_loglevel');
+    
+    unless ($param->{'is_listmaster'}) {
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
+	&wwslog('info','do_set_loglevel: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    $session->{'log_level'} = $in{'log_level'};
+    return 'serveradmin';
+}
+
+## activate dump var feature
+sub do_set_dumpvars {
+    &wwslog('info', 'do_set_dumpvars');
+    
+    unless ($param->{'is_listmaster'}) {
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
+	&wwslog('info','do_set_dumpvers: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+    $session->{'dumpvars'} = 'true';
+    $param->{'dumpavars'} = $session->{'dumpvars'};
+    $param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'}.'/serveradmin';
+    return '1';
+}
+## un-activate dump var feature
+sub do_unset_dumpvars {
+    &wwslog('info', 'do_unset_dumpvars');
+    
+    $session->{'dumpvars'} = '';
+    $param->{'dumpavars'} = '';
+    $param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'}.'/serveradmin';
+    return '1';
+}
+## un-activate dump var feature
+sub do_show_sessions {
+    &wwslog('info', 'do_show_sessions');
+	
+    $in{'session_delay'} = 10 unless ($in{'session_delay'});
+    my $delay = 60 * $in{'session_delay'};
+    $param->{'sessions'} = &SympaSession::list_sessions($delay,$robot);        
+    return '1';
+}
+
+
+## Change user email
+sub do_set_session_email {
+    &wwslog('info', 'do_set_session_email');
+    
+    
+    unless ($param->{'is_listmaster'}) {
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
+	&wwslog('info','do_set_session_email: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    if ($in{'email'}){
+	$session->{'restore_email'} = $param->{'user'}{'email'};
+	$session->{'email'} = $in{'email'};
+	$param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'};
+	return '1';
+    }else{
+	&report::reject_report_web('user','wrong_param',{},$param->{'action'},$list);
+	return 'serveradmin';
+    }
+}
+
+## Change user email
+sub do_restore_email {
+    &wwslog('info', 'do_restore_email');
+    &wwslog('debug2', 'do_restore_email from %s to %s',$session->{'email'},$session->{'restore_email'} );
+
+    if ($param->{'restore_email'}){
+	$session->{'email'} = $session->{'restore_email'};	
+	$param->{'restore_email'}= $session->{'restore_email'} = '';
+	$param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'};
+    }else{
+	&wwslog('info','do_restore_email from %s no restore_email attached to current session', $param->{'user'}{'email'});
+	&report::reject_report_web('user','wrong_param',{},$param->{'action'},$list);
+    }
+    return 'home';
+}
 
 ## list availible templates
 sub do_ls_templates  {
@@ -6432,9 +6560,11 @@ sub do_viewmod {
 
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
 	 ## Reject Email Sniffers
-	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+#	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+	 if ($session->{'archive_sniffer'} eq 'false') {
 	     if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-		 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+		 $session->{'archive_sniffer'} = 'false';
+		 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
 	     }else {
 		 return 'arc_protect';
 	     }
@@ -6539,7 +6669,8 @@ sub do_viewmod {
      $param->{'archive_name'} = $in{'month'};
 
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+	 $session->{'archive_sniffer'} = 'false';
+	 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
      }
 
      return 1;
@@ -6724,7 +6855,8 @@ sub do_viewmod {
      @{$param->{'archives'}} = sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @archives);
 
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+	 $session->{'archive_sniffer'} = 'false';
+	 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
      }
 
      return 1;
@@ -7752,6 +7884,8 @@ Sends back the list creation edition form.
 ## WWSympa Home-Page
  sub do_home {
      &wwslog('info', 'do_home');
+
+     &wwslog('info', 'xxxxxxxxxx do_home lang = %s',$session->{'lang'});
      # all variables are set in export_topics
 
      return 1;
@@ -10900,14 +11034,17 @@ sub do_d_read {
 
     # set the page mode
     if ($in{'show_expert_page'} && $param->{'has_dir_rights'}) {
+	$session->{'shared_mode'}='expert';
 	$param->{'expert_page'} = 1;
-	&cookielib::set_expertpage_cookie(1,$param->{'cookie_domain'});
+	#  &cookielib::set_expertpage_cookie(1,$param->{'cookie_domain'});
  
     } elsif ($in{'show_user_page'}) {
+	$session->{'shared_mode'}='basic';
 	$param->{'expert_page'} = 0;
-	&cookielib::set_expertpage_cookie(0,$param->{'cookie_domain'});
+	# &cookielib::set_expertpage_cookie(0,$param->{'cookie_domain'});
     } else {
-	if (&cookielib::check_expertpage_cookie($ENV{'HTTP_COOKIE'}) && $param->{'has_dir_rights'}) {
+	if ( $session->{'shared_mode'} eq 'expert' && $param->{'has_dir_rights'}) {
+	#if (&cookielib::check_expertpage_cookie($ENV{'HTTP_COOKIE'}) && $param->{'has_dir_rights'}) {
 	    $param->{'expert_page'} = 1; 
 	} else {
 	    $param->{'expert_page'} = 0;
@@ -15081,8 +15218,8 @@ sub make_pictures_url {
  sub do_set_lang {
      &wwslog('info', 'do_set_lang(%s)', $in{'lang'});
 
-     $param->{'lang'} = $param->{'cookie_lang'} = $in{'lang'};
-     &cookielib::set_lang_cookie($in{'lang'},$param->{'cookie_domain'});
+     $session->{'lang'} = $in{'lang'};
+     $param->{'lang'} = $in{'lang'};
 
      if ($param->{'user'}{'email'}) {
 	 if (&List::is_user_db($param->{'user'}{'email'})) {
@@ -15280,7 +15417,7 @@ sub do_change_identity {
      }
     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      $param->{'user'}{'email'} = $in{'email'};
-     $param->{'auth'} = $param->{'alt_emails'}{$in{'email'}};
+     $session->{'auth'} = $param->{'alt_emails'}{$in{'email'}};
 
      return $in{'previous_action'};
 }

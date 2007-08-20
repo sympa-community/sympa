@@ -84,4 +84,16 @@ CREATE TABLE logs_table (
 	CONSTRAINT ind_logs PRIMARY KEY (id_logs)
 );
 
+
+CREATE TABLE session_table (
+	id_session			number NOT NULL,
+	start_date_session		number NOT NULL,
+	date_session		        number NOT NULL,
+	remote_addr_session		varchar2(60),
+	robot_session		        varchar2(80),
+	email_session		        varchar2(100),
+	hit_session     	        number,
+	data_session		        varchar(10000),
+	CONSTRAINT ind_session PRIMARY KEY (id_session)
+);
 !

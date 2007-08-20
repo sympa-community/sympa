@@ -68,7 +68,7 @@ sub do_log {
     }    
 
     # do not log if log level if too high regarding the log requested by user 
-    return if ($level > $log_level);
+    return if ($level > $log_level)  ;
 
     my $m = shift;
     my @param = @_;

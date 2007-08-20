@@ -683,6 +683,14 @@ sub probe_db {
 						      'serviceid_netidmap' => 'varchar(100)',
 						      'email_netidmap' => 'varchar(100)',
 						      'robot_netidmap' => 'varchar(80)'},
+				 'session_table' => {'id_session' => 'int(11)',
+						     'start_date_session' => 'int(11)',
+						     'date_session' => 'int(11)',
+						     'remote_addr_session' => 'varchar(60)',
+						     'robot_session'  => 'varchar(80)',
+						     'email_session'  => 'varchar(100)',
+						     'int_session' => 'int(11)',
+						     'data_session'  => 'varchar(10000)'},
 				 'logs_table' => {'id_logs' => 'bigint(20)',
 						  'date_logs' => 'int(11)',
 						  'robot_logs' => 'varchar(80)',
@@ -736,6 +744,14 @@ sub probe_db {
 						       'serviceid_netidmap' => 'varchar(100)',
 						       'email_netidmap' => 'varchar(100)',
 						       'robot_netidmap' => 'varchar(80)'},
+				  'session_table' => {'id_session' => 'integer',
+						     'start_date_session' => 'integer',
+						     'date_session' => 'int(11)',
+						     'remote_addr_session' => 'varchar(60)',
+						     'robot_session'  => 'varchar(80)',
+						     'email_session'  => 'varchar(100)',
+						     'int_session' => 'integer',
+						     'data_session'  => 'varchar(10000)'},
 				  'logs_table' => {'id_logs' => 'integer',
 						   'date_logs' => 'integer',
 						   'robot_logs' => 'varchar(80)',
@@ -771,16 +787,20 @@ sub probe_db {
 		    'date_logs' => 1,
 		    'action_logs' => 1,
 		    'status_logs' => 1,
-		    'daemon_logs' => 1
+		    'daemon_logs' => 1,
+		    'id_session' => 1,
+		    'start_date_session' => 1,
+		    'date_session' => 1,
 		    );
     
     my %primary = ('user_table' => ['email_user'],
 		   'subscriber_table' => ['list_subscriber','robot_subscriber','user_subscriber'],
 		   'admin_table' => ['list_admin','robot_admin','user_admin','role_admin'],
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
-		   'logs_table' => ['id_logs']
+		   'logs_table' => ['id_logs'],
+		   'session_table' => ['id_session']
 		   );
-
+    # table indexes that can be removed during upgrade process
     my @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index');
     
     ## Report changes to listmaster

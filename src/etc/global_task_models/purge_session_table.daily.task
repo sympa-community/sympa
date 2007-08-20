@@ -1,0 +1,5 @@
+title.gettext daily delete sessions older than sympa.conf/session_expiration_period parameter
+
+/ACTION
+purge_session_table ()
+next ([execution_date]+1d, ACTION)

@@ -143,7 +143,7 @@ function hide(div){
 
   function check_cookie() {
  
-     if (GetCookie('sympauser') == null) {
+     if (GetCookie('sympa_session') == null) {
         alert("[%|loc%]Sympa could not set a cookie for login.\n Your should configure your browser to accept cookies[%END%]");
      }
   }

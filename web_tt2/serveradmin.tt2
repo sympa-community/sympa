@@ -47,8 +47,19 @@
 	  <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
 	</fieldset>
 	</form>
- </p>
+</p>
 <p>
+<a class="actionMenuLinks" href="[% path_cgi %]/show_connected_users">[%|loc%]Connected users[%END%]</a>
+<form class="bold_label" action="[% path_cgi %]" method="post">
+<fieldset>
+<label for="session_delay">[%|loc%]Delay for active user sessions (minutes)[%END%]</label>
+<input type="text" name="session_delay" size="2" value="10" /> <input class="MainMenuLinks" type="submit" name="action_show_sessions" value="[%|loc%]Show sessions[%END%]" />
+</fieldset>
+</form>
+</p>
+<p>
+
+
 <h2>[%|loc%]Archives[%END%]</h2><br />
 
 [%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br />
@@ -61,6 +72,29 @@
 
 </p>
 <p>
+<h2>[%|loc%]Change identity[%END%]</h2><br />
+[%|loc%]As listmaster, you can change your identity and act as someone else. This is may be usefull when providing assistance or to test users privileges[%END%]. The new identity is attached to the current session</br>
+
+<form class="bold_label" action="[% path_cgi %]" method="post">
+<input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]change identity as : [%END%]" />
+<input id="session_email" type="text" name="email" size="50"/> 
+</form>
+</p>
+<p>
+<h2>[%|loc%]Logs[%END%]</h2><br />
+[%|loc%]You can increase the log level specified by configuration only for your current session. On a production server, this allow to keep logs rather small and to test some features with the maximum log level. [%END%]</br>
+
+<form class="bold_label" action="[% path_cgi %]" method="post">
+[%|loc%]Log level[%END%] : 
+0 <input id="log_level" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> |
+1 <input id="log_level" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> |
+2 <input id="log_level" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> |
+3 <input id="log_level" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/> |
+4 <input id="log_level" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/>   
+<input class="MainMenuLinks" type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" />
+</form>
+</p>
+<p>
 <h2>[%|loc%]Templates[%END%]</h2><br />
 
 <!-- 
@@ -71,8 +105,10 @@
     [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
   </select>
   <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
-  </fieldset>
-  </form>
+<br />
+
+</fieldset>
+</form>
 <br />
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
@@ -90,6 +126,16 @@
 	
 <a class="actionMenuLinks" href="http://pootle.sympa.org/">[%|loc%]view translations[%END%]</a>
 <a class="actionMenuLinks" href="[% path_cgi %]/ls_templates">[%|loc%]Customize templates[%END%]</a>
+</p>
+<p>
+<form class="bold_label" action="[% path_cgi %]" method="post">
+[%|loc%]When customizing Sympa web templates, it is needed to known which variables can be processed by the tt2 parser.This button is for controlling tt2 vars dump feature : [%END%]
+
+[% IF dumpvars == 'true' %]
+  <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Unset template vars dump[%END%]" />
+[% ELSE %]
+  <input class="MainMenuLinks" type="submit" name="action_set_dumpvars" value="[%|loc%]Set template vars dump[%END%]" />
+[% END %]
 
 </p>
 <p>

@@ -84,3 +84,16 @@ CREATE TABLE logs_table (
         CONSTRAINT ind_logs PRIMARY KEY (id_logs)
 );
 CREATE	INDEX logs_idx ON logs_table(id_logs);
+
+CREATE TABLE session_table (
+	id_session			int4 NOT NULL,
+	start_date_session		int4 NOT NULL,
+	date_session		        int4 NOT NULL,
+	remote_addr_session		varchar(60),
+	robot_session		        varchar(80),
+	email_session		        varchar(100),
+	hit_session     	        int4,
+	data_session		        varchar(10000),
+	CONSTRAINT ind_session PRIMARY KEY (id_session)
+);
+CREATE	INDEX session_idx ON session_table(id_session);

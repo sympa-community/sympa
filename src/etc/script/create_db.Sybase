@@ -122,3 +122,19 @@ go
 
 create index id_logs_fk on logs_table (id_logs)
 go
+
+CREATE TABLE session_table (
+	id_session			numeric NOT NULL,
+	start_date_session		numeric NOT NULL,
+	date_session		        numeric NOT NULL,
+	remote_addr_session		varchar(60),
+	robot_session		        varchar(80),
+	email_session		        varchar(100),
+	hit_session     	        numeric,
+	data_session		        varchar(10000),
+	constraint ind_session primary key (id_session)
+)
+go
+
+create index id_session_fk on session_table (id_session)
+go

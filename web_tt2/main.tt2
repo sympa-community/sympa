@@ -84,8 +84,8 @@
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
   [% PROCESS footer.tt2 %]
+  [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
 </div> <!-- end div canvas -->
 [% END %]
-
 </body>
 </html>

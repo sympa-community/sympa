@@ -78,3 +78,15 @@ CREATE TABLE logs_table (
 	PRIMARY KEY (id_logs)					  
 );
 
+
+CREATE TABLE session_table (
+	id_session			numeric NOT NULL,
+	start_date_session		numeric NOT NULL,
+	date_session		        numeric NOT NULL,
+	remote_addr_session		varchar(60),
+	robot_session		        varchar(80),
+	email_session		        varchar(100),
+	hit_session     	        numeric,
+	data_session		        varchar(10000),
+	PRIMARY KEY (id_session)
+);

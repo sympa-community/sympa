@@ -1,0 +1,350 @@
+# SympaSession.pm - This module includes functions managing HTTP sessions in Sympa
+#
+# Sympa - SYsteme de Multi-Postage Automatique
+# Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
+# Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+
+package SympaSession;
+
+use Exporter;
+@ISA = ('Exporter');
+@EXPORT = ();
+
+
+use Digest::MD5;
+use POSIX;
+use CGI::Cookie;
+use Log;
+use Conf;
+use Time::Local;
+use Text::Wrap;
+
+use strict ;
+
+
+# this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
+my %session_hard_attributes = ('id_session' => 1, 'date' => 1, 'remote_addr'  => 1,'robot'  => 1,'email' => 1, 'start_date' => 1, 'hit' => 1);
+
+
+
+sub new {
+    my ($pkg, $robot, $cookie) = @_;
+
+    do_log('debug', 'SympaSession::new(%s,%s)', $robot,$cookie);
+
+    my $session={};
+    bless $session, $pkg;
+    
+
+    unless ($robot) {
+	&do_log('err', 'Missing robot parameter, cannot create session object') ;
+	return undef;
+    }
+
+#    my $cookie = &get_session_cookie($ENV{'HTTP_COOKIE'});
+    
+    # if a session cookie exist, try to restore an existing session
+    if ($cookie) {
+	my $status = $session->load($cookie);
+	unless (defined $status) {
+	    return undef;
+	}
+	if ($status eq 'not_found') {
+	    do_log('info','SympaSession::new ignoring unknown session cookie'); # start a new session (may ne a fake cookie)
+	    return (new SympaSession ($robot));
+	}
+	if($session->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
+	    do_log('info','SympaSession::new ignoring session cookie because remote host %s is not the original host %s', $ENV{'REMOTE_ADDR'},$session->{'remote_addr'}); # start a new session
+	    return (new SympaSession ($robot));
+	}
+    }else{
+	# create a new session context
+        $session->{'id_session'} = &get_random();
+	#do_log('info', 'xxxxxxxxxxx SympaSession::new(%s) : nouvelle session : cookie = %s', $robot,$session->{'id_session'});
+	$session->{'email'} = 'nobody';
+        $session->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
+	$session->{'date'} = time;
+	$session->{'start_date'} = time;
+	$session->{'hit'} = 1;
+	$session->{'robot'} = $robot; 
+	$session->{'data'} = '';
+    }
+    
+    return $session;
+}
+
+sub load {
+    my $self = shift;
+    my $cookie = shift;
+
+    do_log('debug', 'SympaSession::load(%s)', $cookie);
+
+    unless ($cookie) {
+	do_log('err', 'SympaSession::load() : internal error, SympaSession::load called with undef id_session');
+	return undef;
+    }
+    
+    my $statement ;
+
+    if ($Conf{'db_type'} eq 'Oracle') {
+	## "AS" not supported by Oracle
+	$statement = sprintf "SELECT id_session \"id_session\", date_session \"date\", remote_addr_session \"remote_addr\", robot_session \"robot\", email_session \"email\", data_session \"data\", hit_session \"hit\", start_date_session \"start_date\" FROM session_table WHERE id_session = %s", $cookie;
+    }else {
+	$statement = sprintf "SELECT id_session AS id_session, date_session AS date, remote_addr_session AS remote_addr, robot_session AS robot, email_session AS email, data_session AS data, hit_session AS hit, start_date_session AS start_date FROM session_table WHERE id_session = %s", $cookie;
+    }    
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }    
+    my $session = $sth->fetchrow_hashref;
+    $sth->finish();
+    
+    unless ($session) {
+	do_log('info',"xxxxxxxxxxxx cookie from http client not found in session_table");
+	return 'not_found';
+    }
+    
+    my %datas= &tools::string_2_hash($session->{'data'});
+    foreach my $key (keys %datas) {$self->{$key} = $datas{$key};} 
+
+    $self->{'id_session'} = $session->{'id_session'};
+    $self->{'date'} = $session->{'date'};
+    $self->{'start_date'} = $session->{'start_date'};
+    $self->{'hit'} = $session->{'hit'} +1 ;
+    $self->{'remote_addr'} = $session->{'remote_addr'};
+    $self->{'robot'} = $session->{'robot'};
+    $self->{'email'} = $session->{'email'};
+
+    return ($self);
+}
+
+
+sub store {
+
+    my $self = shift;
+    do_log('debug', 'SympaSession::store()');
+
+    return undef unless ($self->{'id_session'});
+
+    my %hash ;    
+    foreach my $var (keys %$self ) {
+	next if ($session_hard_attributes{$var});
+	next unless ($var);
+	$hash{$var} = $self->{$var};
+    }
+    my $data_string = &tools::hash_2_string (\%hash);
+    my $dbh = &List::db_get_handler();
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+
+    my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
+    do_log('debug3', 'SympaSession::store() : del_statement = %s',$del_statement);
+
+    $dbh->do($del_statement);
+    my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",$self->{'id_session'},time,$ENV{'REMOTE_ADDR'},$self->{'robot'},$self->{'email'},$self->{'start_date'},$self->{'hit'}, $data_string;
+    #do_log('info', 'xxxxxxxx SympaSession::store() : add_statement = %s',$add_statement);
+
+    unless ($dbh->do($add_statement)) {
+	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
+	return undef;
+    }    
+}
+
+## remove old sessions from a particular robot or from all robots. delay is a parameter in seconds
+## 
+sub purge_old_sessions {
+
+    my $robot = shift;
+
+    do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
+
+    my $delay = $Conf{'session_expiration_period'} * 31* 24 * 3600 ; # 1 mounth
+    unless ($delay) { do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
+
+    my @sessions ;
+    my ($robot_condition, $delay_condition, $and, $sth);
+
+    my $dbh = &List::db_get_handler();
+
+    $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
+    $delay_condition = time-$delay.' > date_session' if ($delay);
+    $and = ' AND ' if (($delay_condition) && ($robot_condition));
+
+    my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $and $delay_condition";
+    my $statement = sprintf "DELETE FROM session_table WHERE $robot_condition $and $delay_condition";
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    unless ($sth = $dbh->prepare($count_statement)) {
+	do_log('err','Unable to prepare SQL statement %s : %s',$count_statement, $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }    
+    my $total =  $sth->fetchrow;
+    if ($total == 0) {
+	do_log('debug','SympaSession::purge_old_sessions no sessions to expire');
+	return $total ;
+    }
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }    
+    return $total;
+}
+sub list_sessions {
+    my $delay = shift;
+    my $robot = shift;
+
+    do_log('debug', 'SympaSession::list_session(%s,%s)',$delay,$robot);
+
+    my @sessions ;
+    my ($robot_condition, $delay_condition, $and, $sth);
+
+    my $dbh = &List::db_get_handler();
+
+    $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
+    $delay_condition = time-$delay.' < date_session' if ($delay);
+    $and = ' AND ' if (($delay_condition) && ($robot_condition));
+
+    my $statement = sprintf "SELECT remote_addr_session, email_session, robot_session, date_session, start_date_session, hit_session FROM session_table WHERE $robot_condition $and $delay_condition";
+    do_log('debug', 'SympaSession::list_session() : statement = %s',$statement);
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    while (my $session = ($sth->fetchrow_hashref)) {
+
+	$session->{'formated_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'date_session'}));
+	$session->{'formated_start_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'start_date_session'}));
+
+	# do_log('debug', 'SympaSession::list_session() DUMP : %s,%s,%s,%s',$session->{'remote_addr_session'}, $session->{'email_session'}, $session->{'robot_session'}, $session->{'formated_date'});
+
+	push @sessions, $session;
+    }
+
+    $sth->finish();
+    return \@sessions;
+}
+
+###############################
+# Subroutines to read cookies #
+###############################
+
+## Generic subroutine to get a cookie value
+sub get_session_cookie {
+    my $http_cookie = shift;
+
+    my %cookies = parse CGI::Cookie($http_cookie);
+        
+    foreach (keys %cookies) {
+	my $cookie = $cookies{$_};
+	next unless ($cookie->name eq 'sympa_session');
+	return ($cookie->value);
+    }
+
+    return (undef);
+}
+
+
+## Generic subroutine to set a cookie
+## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
+sub set_cookie {
+    my ($self, $http_domain, $expires) = @_ ;
+    do_log('debug','Session::set_cookie(%s,%s)',$http_domain, $expires);
+
+    my $expiration;
+    if ($expires =~ /now/i) {
+	## 10 years ago
+	$expiration = '-10y';
+    }else{
+	$expiration = '+'.$expires.'m';
+    }
+
+    if ($http_domain eq 'localhost') {
+	$http_domain="";
+    }
+
+    my $cookie;
+    if ($expires =~ /session/i) {
+	$cookie = new CGI::Cookie (-name    => 'sympa_session',
+				   -value   => $self->{'id_session'},
+				   -domain  => $http_domain,
+				   -path    => '/'
+				   );
+    }else {
+	$cookie = new CGI::Cookie (-name    => 'sympa_session',
+				   -value   => $self->{'id_session'},
+				   -expires => $expiration,
+				   -domain  => $http_domain,
+				   -path    => '/'
+				   );
+    }
+
+    ## Send cookie to the client
+    printf "Set-Cookie: %s\n", $cookie->as_string;
+    return 1;
+}
+    
+
+sub get_random {
+    do_log('debug', 'SympaSession::random ');
+     my $random = rand();
+     $random =~ s/^0(\.|\,)//;
+     #do_log('info', 'xxxxxxxxxxx SympaSession::random : %s',$random);
+     return ($random)
+}
+
+1;
+

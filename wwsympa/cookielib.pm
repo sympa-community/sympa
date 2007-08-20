@@ -58,21 +58,21 @@ sub generic_set_cookie {
     
 
 ## Set cookie for accessing web archives
-sub set_arc_cookie {
-    my ($domain);
-
-    my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
-				  -value   => 'Let_Me_In',
-				  -expires => '+1y',
-				  -domain  => $domain,
-				  -path    => '/'
-				  );
-    
-    ## Send cookie to the client
-    printf "Set-Cookie:  %s\n", $cookie->as_string;
-   
-    return 1;
-}
+#sub set_arc_cookie {
+#    my ($domain);
+#
+#    my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
+#				  -value   => 'Let_Me_In',
+#				  -expires => '+1y',
+#				  -domain  => $domain,
+#				  -path    => '/'
+#				  );
+#    
+#    ## Send cookie to the client
+#    printf "Set-Cookie:  %s\n", $cookie->as_string;
+#   
+#    return 1;
+#}
     
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
@@ -121,28 +121,28 @@ sub set_cookie {
 }
     
 
-## Set cookie with lang pref
-sub set_lang_cookie {
-    my ($lang,$domain) = @_;
-
-    if ($domain eq 'localhost') {
-	$domain="";
-    }
-
-    my $cookie = new CGI::Cookie (-name    => 'sympalang',
-				  -value   => $lang,
-				  -expires => '+1M',
-				  -domain  => $domain,
-				  -path    => '/'
-				  );
+### Set cookie with lang pref
+#sub set_lang_cookie {
+#    my ($lang,$domain) = @_;
+#
+#    if ($domain eq 'localhost') {
+#	$domain="";
+#    }
+#
+#    my $cookie = new CGI::Cookie (-name    => 'sympalang',
+#				  -value   => $lang,
+#				  -expires => '+1M',
+#				  -domain  => $domain,
+#				  -path    => '/'
+#				  );
+#    
+#    ## Send cookie to the client
+#    printf "Set-Cookie:  %s\n", $cookie->as_string;
+#   
+#    return 1;
+#}
     
-    ## Send cookie to the client
-    printf "Set-Cookie:  %s\n", $cookie->as_string;
-   
-    return 1;
-}
-    
-## Sets an HTTP cookie to be sent to a SOAP client
+# Sets an HTTP cookie to be sent to a SOAP client
 sub set_cookie_soap {
     my ($email,$secret,$http_domain,$expire) = @_ ;
     my $cookie;
@@ -228,32 +228,32 @@ sub set_cookie_extern {
 
 
 ## Set cookie for expert_page mode in the shared
-sub set_expertpage_cookie {
-    my ($put,$domain) = @_;
-    
-    if ($domain eq 'localhost') {
-	$domain="";
-    }
-    
-    my $expire;
-    if ($put == 1) {
-	$expire = '+1y';
-    } else {
-	$expire = '-10y';
-    }
-    
-    my $cookie = new CGI::Cookie (-name    => 'sympaexpertpage',
-				  -value   => '1',
-				  -expires => $expire,
-				  -domain  => $domain,
-				  -path    => '/'
-				  );
-    
-    ## Send cookie to the client
-    printf "Set-Cookie:  %s\n", $cookie->as_string;
-    
-    return 1;
-}
+# sub set_expertpage_cookie {
+#    my ($put,$domain) = @_;
+#    
+#    if ($domain eq 'localhost') {
+#	$domain="";
+#    }
+#    
+#    my $expire;
+#    if ($put == 1) {
+#	$expire = '+1y';
+#    } else {
+#	$expire = '-10y';
+#    }
+#    
+#    my $cookie = new CGI::Cookie (-name    => 'sympaexpertpage',
+#				  -value   => '1',
+#				  -expires => $expire,
+#				  -domain  => $domain,
+#				  -path    => '/'
+#				  );
+#    
+#    ## Send cookie to the client
+#    printf "Set-Cookie:  %s\n", $cookie->as_string;
+#    
+#    return 1;
+#}
 
 ## Set cookie for accessing web archives
 sub set_which_cookie {
@@ -327,11 +327,11 @@ sub check_cookie {
 }
 
 ## Check cookie for accessing web archives
-sub check_arc_cookie {
-    my $http_cookie = shift;
-    
-    return &generic_get_cookie($http_cookie, 'I_Am_Not_An_Email_Sniffer');
-}
+# sub check_arc_cookie {
+#    my $http_cookie = shift;
+#    
+#    return &generic_get_cookie($http_cookie, 'I_Am_Not_An_Email_Sniffer');
+#}
 
 ## get cookie for list of subscribtion
 sub get_which_cookie {    
@@ -396,11 +396,11 @@ sub check_expertpage_cookie {
 }
 
 ## Check cookie for lang pref
-sub check_lang_cookie {
-    my $http_cookie = shift;
-    
-    return &generic_get_cookie($http_cookie, 'sympalang');
-}
+#sub check_lang_cookie {
+#    my $http_cookie = shift;
+#    
+#    return &generic_get_cookie($http_cookie, 'sympalang');
+#}
 
 ## Set cookie for accessing web archives
 sub set_do_not_use_cas {
