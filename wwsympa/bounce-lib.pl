@@ -72,7 +72,7 @@ sub rfc1891 {
 	    while (<BODY>) {
 
 		my ($status, $recipient);
-		if (/^Status:\s*(\d+\.\d+\.\d+)$/mi) {
+		if (/^Status:\s*(\d+\.\d+\.\d+)(\s|$)/mi) {
 		    $status = $1;
 		}
 		
