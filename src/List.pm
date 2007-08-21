@@ -8225,7 +8225,7 @@ sub _load_include_admin_user_file {
 	
 	$pname = $1;   
 	
-	unless(($pname eq 'include_list')||($pname eq 'include_remote_sympa_list')||($pname eq 'include_file')||
+	unless(($pname eq 'include_list')||($pname eq 'include_remote_sympa_list')||($pname eq 'include_file')||($pname eq 'include_remote_file')||
 	       ($pname eq 'include_ldap_query')||($pname eq 'include_ldap_2level_query')||($pname eq 'include_sql_query'))   {
 	    &do_log('info', 'Unknown parameter "%s" in %s', $pname, $file);
 	    next;
