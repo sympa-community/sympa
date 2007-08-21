@@ -1332,7 +1332,7 @@ sub to_utf8 {
 		    &Encode::from_to($t, $charset, "UTF-8", Encode::FB_CROAK);
 		};
 		if ($@) {
-		    &do_log('err',"Template %s cannot be converted to UTF-8", $file);
+		    &do_log('err',"Template %s cannot be converted from %s to UTF-8", $charset, $file);
 		} else {
 		    $text = $t;
 		    $modified = 1;
