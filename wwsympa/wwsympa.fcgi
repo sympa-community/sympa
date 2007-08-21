@@ -14698,7 +14698,7 @@ sub make_pictures_url {
 	 foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
 	     my $l = $list->{'name'};
 	     
-	     my $result_sub = $list->check_list_authz('subscribe',$param->{'auth_method'}
+	     my $result_sub = $list->check_list_authz('subscribe',$param->{'auth_method'},
 						      {'sender' => $in{'email'}, 
 						       'previous_email' => $param->{'user'}{'email'},
 						       'remote_host' => $param->{'remote_host'},
