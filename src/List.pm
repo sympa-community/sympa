@@ -8092,7 +8092,7 @@ sub _load_admin_users_include {
 	} else {
 	    $include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file);
 	}
-	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	    last unless (defined $total);
 	    
 	    foreach my $incl (@{$include_admin_user->{$type}}) {
@@ -8118,6 +8118,8 @@ sub _load_admin_users_include {
 		    }
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%admin_users, $incl, \%option);
+		}elsif ($type eq 'include_remote_file') {
+		    $included = _include_users_remote_file (\%admin_users, $incl, \%option);
 		}
 		unless (defined $included) {
 		    &do_log('err', 'Inclusion %s %s failed in list %s', $role, $type, $name);
