@@ -8079,9 +8079,10 @@ sub _load_admin_users_include {
 	    
 	    my $name = "$entry->{'source'}\.incl";
 	    
-	    if ($include_file =~ s/$name$//) {
-		$parsing{'include_path'} = $include_file;
-		$include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file,\%parsing);	
+	    my $include_path = $include_file;
+	    if ($include_path =~ s/$name$//) {
+		$parsing{'include_path'} = $include_path;
+		$include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_path,\%parsing);	
 	    } else {
 		&do_log('err', '_load_admin_users_include : errors to get path of the the file %s.incl',$entry->{'source'});
 		return undef;
