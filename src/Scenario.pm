@@ -54,7 +54,11 @@ sub new {
     }
 
     ## Determine the file path of the scenario
-	    
+	
+    if ($parameters{'file_path'} eq 'ERROR') {
+	return $all_scenarios{$scenario->{'file_path'}};
+    }
+
     if (defined $parameters{'file_path'}) {
 	$scenario->{'file_path'} = $parameters{'file_path'};
 	my @tokens = split /\//, $parameters{'file_path'};
@@ -116,7 +120,7 @@ sub new {
 	## Default rule is 'true() smtp -> reject'
 	&do_log('err',"Unable to find scenario file '$parameters{'function'}.$parameters{'name'}', please report to listmaster"); 
 	$scenario_struct = &_parse_scenario($parameters{'function'}, $parameters{'robot'}, $parameters{'name'}, 'true() smtp -> reject', $parameters{'directory'});
-	$scenario->{'file_path'} = 'INLINE'; ## special value
+	$scenario->{'file_path'} = 'ERROR'; ## special value
 	$scenario->{'data'} = 'true() smtp -> reject';
     }
 
