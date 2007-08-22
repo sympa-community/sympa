@@ -15,6 +15,7 @@ create table user_table
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
     attributes_user	   varchar(255)           null    ,
+    data_user              varchar(10000)         null    ,
     constraint ind_user primary key (email_user)
 )
 go

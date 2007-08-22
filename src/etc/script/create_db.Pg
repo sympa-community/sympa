@@ -13,6 +13,7 @@ CREATE TABLE user_table (
         password_user		varchar (40),
         lang_user               varchar (10),
 	attributes_user		varchar (255),
+	data_user	        varchar(10000),
 	CONSTRAINT ind_user PRIMARY KEY (email_user)
 );
 

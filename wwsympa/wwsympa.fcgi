@@ -2239,13 +2239,13 @@ Use it to create a List object and initialize output parameters.
 
 
      if ($session->{'lang'}) {   #  user did choose a specific language before being logued. Apply it as a user pref.
-	 &wwslog('notice', 'xxxx apply session pref to user pref : %s',$session->{'lang'});
+	 # &wwslog('notice', 'xxxx apply session pref to user pref : %s',$session->{'lang'});
 	 &List::update_user_db($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
 	 $param->{'lang'} = $session->{'lang'};
      }else{                      # user did not choose a specific language, apply user pref for this session. 
 	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 	 $session->{'lang'} = $param->{'lang'};
-	 &wwslog('notice', 'xxxx apply user pref to session : %s',$session->{'lang'});
+	 # &wwslog('notice', 'xxxx apply user pref to session : %s',$session->{'lang'});
      }
 
      if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
@@ -2855,7 +2855,7 @@ sub do_redirect {
      $session->{'email'} = 'nobody';
 
 
-     &wwslog('info','xxxxxxxx dologout : lang = %s',$session->{'lang'});
+     # &wwslog('info','xxxxxxxx dologout : lang = %s',$session->{'lang'});
 
 
      # no reason to alter the lang because user perform logout
@@ -4650,16 +4650,14 @@ sub do_remindpasswd {
  ## Server admin page
  sub do_serveradmin {
      &wwslog('info', 'do_serveradmin');
-     &wwslog('info', 'xxxxxxxxxxxxxx do_serveradmin : dumpavars param %s session %s',$param->{'dumpvars'},$session->{'dumpvars'});
-     my $f;
 
+     my $f;
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
 	 &wwslog('info','do_serveradmin: no user');
 	 $param->{'previous_action'} = 'serveradmin';
 	 return 'loginrequest';
      }
-
      unless ($param->{'is_listmaster'}) {
 	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
 	 &wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
@@ -4723,7 +4721,7 @@ sub do_set_dumpvars {
     
     unless ($param->{'is_listmaster'}) {
 	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_set_dumpvers: %s not listmaster', $param->{'user'}{'email'});
+	&wwslog('info','do_set_dumpvars: %s not listmaster', $param->{'user'}{'email'});
 	return undef;
     }
     $session->{'dumpvars'} = 'true';
@@ -4743,6 +4741,12 @@ sub do_unset_dumpvars {
 ## un-activate dump var feature
 sub do_show_sessions {
     &wwslog('info', 'do_show_sessions');
+
+    unless ($param->{'is_listmaster'}) {
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
+	&wwslog('info','do_show_sessions: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
 	
     $in{'session_delay'} = 10 unless ($in{'session_delay'});
     my $delay = 60 * $in{'session_delay'};

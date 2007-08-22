@@ -160,19 +160,36 @@ sub store {
     }
     my $data_string = &tools::hash_2_string (\%hash);
     my $dbh = &List::db_get_handler();
+    my $sth;
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
     }	   
 
-    my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
-    do_log('debug3', 'SympaSession::store() : del_statement = %s',$del_statement);
+    my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
 
-    $dbh->do($del_statement);
+    unless ($sth = $dbh->prepare($count_statement)) {
+	do_log('err','Unable to prepare SQL statement %s : %s',$count_statement, $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $count_statement, $dbh->errstr);
+	return undef;
+    }    
+    my $total =  $sth->fetchrow;
+    if ($total != 0) {
+	my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
+	do_log('debug3', 'SympaSession::store() : removing existing Session del_statement = %s',$del_statement);	
+	unless ($dbh->do($del_statement)) {
+	    do_log('info','SympaSession::store unable to remove existing session %s to update it',$self->{'id_session'});
+	    return undef;
+	}	
+    }
+
     my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",$self->{'id_session'},time,$ENV{'REMOTE_ADDR'},$self->{'robot'},$self->{'email'},$self->{'start_date'},$self->{'hit'}, $data_string;
     #do_log('info', 'xxxxxxxx SympaSession::store() : add_statement = %s',$add_statement);
-
     unless ($dbh->do($add_statement)) {
 	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
 	return undef;
