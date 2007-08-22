@@ -806,17 +806,20 @@ my $birthday = time ;
      
      &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
-     $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
-     unless ($session) {
-	 &wwslog('err','unable to initialyse session');
-	 next;
-     }
-     &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
-     $param->{'restore_email'} = $session->{'restore_email'};
-     $param->{'dumpvars'} = $session->{'dumpvars'};
-    
+     unless ($maintenance_mode) {
+	 $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
+	 unless ($session) {
+	     &wwslog('err','unable to initialize session');
+	     next;
+	 }
+
+	 &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
+	 $param->{'restore_email'} = $session->{'restore_email'};
+	 $param->{'dumpvars'} = $session->{'dumpvars'};
+     }    
+
      ## RSS does not require user authentication
-     unless ($rss) {
+     unless ($rss || $maintenance_mode) {
 	 
 	 if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	     ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
@@ -1058,7 +1061,9 @@ my $birthday = time ;
      $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
      ## store in session table this session contexte
-     $session->store;
+     unless ($maintenance_mode) {
+	 $session->store;
+     }
 
      ## Do not manage cookies at this level if content was already sent
      unless ($param->{'bypass'} eq 'extreme' || 
