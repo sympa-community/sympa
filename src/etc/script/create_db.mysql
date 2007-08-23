@@ -11,8 +11,8 @@ CREATE TABLE user_table (
   	password_user		varchar (40),
 	cookie_delay_user	int,
 	lang_user		varchar (10),
-	attributes_user		varchar(255),
-	data_user		varchar(10000),
+	attributes_user		text,
+	data_user		text,
 	PRIMARY KEY (email_user)
 );
 
@@ -88,6 +88,6 @@ CREATE TABLE session_table (
 	robot_session		        varchar(80),
 	email_session		        varchar(100),
 	hit_session     	        numeric,
-	data_session		        varchar(10000),
+	data_session		        text,
 	PRIMARY KEY (id_session)
 );

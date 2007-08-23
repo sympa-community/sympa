@@ -15,7 +15,7 @@ create table user_table
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
     attributes_user	   varchar(255)           null    ,
-    data_user              varchar(10000)         null    ,
+    data_user              varchar(255)         null    ,
     constraint ind_user primary key (email_user)
 )
 go
@@ -125,14 +125,14 @@ create index id_logs_fk on logs_table (id_logs)
 go
 
 CREATE TABLE session_table (
-	id_session			numeric NOT NULL,
+	id_session			varchar(30) NOT NULL,
 	start_date_session		numeric NOT NULL,
 	date_session		        numeric NOT NULL,
 	remote_addr_session		varchar(60),
 	robot_session		        varchar(80),
 	email_session		        varchar(100),
 	hit_session     	        numeric,
-	data_session		        varchar(10000),
+	data_session		        varchar(255),
 	constraint ind_session primary key (id_session)
 )
 go

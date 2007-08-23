@@ -22,7 +22,7 @@ CREATE TABLE user_table (
         cookie_delay_user       number,
         lang_user               varchar2(10),
 	attributes_user		varchar2(500),
-	data_user	        varchar(10000),	
+	data_user	        varchar2(500),	
         CONSTRAINT ind_user PRIMARY KEY (email_user)
 );
 CREATE TABLE subscriber_table (
@@ -94,7 +94,7 @@ CREATE TABLE session_table (
 	robot_session		        varchar2(80),
 	email_session		        varchar2(100),
 	hit_session     	        number,
-	data_session		        varchar(10000),
+	data_session		        varchar2(500),
 	CONSTRAINT ind_session PRIMARY KEY (id_session)
 );
 !

@@ -6,7 +6,7 @@ CREATE TABLE user_table (
 	cookie_delay_user	integer,
 	lang_user		varchar (10),
 	attributes_user		varchar(255),
-	data_user	        varchar(10000),
+	data_user	        varchar(5000),
 	PRIMARY KEY (email_user)
 );
 
@@ -76,14 +76,14 @@ CREATE TABLE logs_table (
 CREATE	INDEX logs_idx ON logs_table(id_logs);
 
 CREATE TABLE session_table (
-	id_session			integer NOT NULL,
+	id_session			varchar(30) NOT NULL,
 	start_date_session		integer NOT NULL,
 	date_session		        integer NOT NULL,
 	remote_addr_session		varchar(60),
 	robot_session		        varchar(80),
 	email_session		        varchar(100),
 	hit_session     	        integer,
-	data_session		        varchar(10000),
+	data_session		        varchar(5000),
 	constraint ind_session primary key (id_session)
 )
 CREATE INDEX session_idx ON session_table(id_session)
