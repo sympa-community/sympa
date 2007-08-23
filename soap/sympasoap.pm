@@ -24,7 +24,7 @@ package SOAP::XMLSchema1999::Serializer;
 
 package sympasoap;
 
-use strict;
+use strict vars;
 
 use Exporter;
 use HTTP::Cookies;
