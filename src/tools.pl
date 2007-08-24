@@ -51,7 +51,7 @@ my $tags = 'script|img|.frame.|style|body|input|layer|bgsound|link|meta|base|obj
 my $attributes = 'style=|dynsrc=|lowsrc=|on.*=|javascript:';
 my $dividers = '\s|&+#+x*0*(9|a|d|10|13)+\;*';
 my $encodedChars = '(&+('."$dividers".')*#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
-my $infSign = '(<|%3c|(&+('."$dividers".')*(l('."$dividers".')*t|#+x*0*(60|3c)+)+\;*)|x*0*(60|3c))';
+my $infSign = '(<|%3c|(&+('."$dividers".')*(l('."$dividers".')*t|#+x*0*(60|3c)+)+\;*)|&+('."$dividers".')*x*0*(60|3c))';
 
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 

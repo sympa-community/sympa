@@ -1537,12 +1537,12 @@ sub get_parameters {
 	 ## 07/08/07 : no more use the buggy regexp $tools::regexp{'html-free'}
 	 ## It would regexp any string containing '60' or '3c'
 	 my $xssregexp = &tools::get_regexp('xss-free');
-#	 if ($htmlAllowedParams{$p}) {
-#	     $xssregexp = &tools::get_regexp('xss-free');
-#	 }
-#	 else {
-#	     $xssregexp = &tools::get_regexp('html-free');
-#	 }
+	 if ($htmlAllowedParams{$p}) {
+	     $xssregexp = &tools::get_regexp('xss-free');
+	 }
+	 else {
+	     $xssregexp = &tools::get_regexp('html-free');
+	 }
 
 
 	 foreach my $one_p (split /\0/, $in{$p}) {
