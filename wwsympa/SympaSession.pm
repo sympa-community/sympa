@@ -249,22 +249,30 @@ sub purge_old_sessions {
     }    
     return $total;
 }
+
+# list sessions for $robot where last access is newer then $delay. List is limited to connected users if $connected_only
 sub list_sessions {
     my $delay = shift;
     my $robot = shift;
+    my $connected_only = shift;
 
-    do_log('debug', 'SympaSession::list_session(%s,%s)',$delay,$robot);
+    do_log('debug', 'SympaSession::list_session(%s,%s,%s)',$delay,$robot,$connected_only);
 
     my @sessions ;
-    my ($robot_condition, $delay_condition, $and, $sth);
+    my $sth;
 
     my $dbh = &List::db_get_handler();
 
-    $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
-    $delay_condition = time-$delay.' < date_session' if ($delay);
-    $and = ' AND ' if (($delay_condition) && ($robot_condition));
+    my $condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
+    my $condition2 = time-$delay.' < date_session ' if ($delay);
+    my $and = ' AND ' if (($condition) && ($condition2));
+    $condition = $condition.$and.$condition2 ;
 
-    my $statement = sprintf "SELECT remote_addr_session, email_session, robot_session, date_session, start_date_session, hit_session FROM session_table WHERE $robot_condition $and $delay_condition";
+    my $condition3 =  " email_session != 'nobody' " if ($connected_only eq 'on');
+    my $and2 = ' AND '  if (($condition) && ($condition3));
+    $condition = $condition.$and2.$condition3 ;
+
+    my $statement = sprintf "SELECT remote_addr_session, email_session, robot_session, date_session, start_date_session, hit_session FROM session_table WHERE $condition";
     do_log('debug', 'SympaSession::list_session() : statement = %s',$statement);
 
     ## Check database connection

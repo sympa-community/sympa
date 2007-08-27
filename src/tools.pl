@@ -53,6 +53,7 @@ my $dividers = '\s|&+#+x*0*(9|a|d|10|13)+\;*';
 my $encodedChars = '(&+('."$dividers".')*#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
 my $infSign = '(<|%3c|(&+('."$dividers".')*(l('."$dividers".')*t|#+x*0*(60|3c)+)+\;*)|&+('."$dividers".')*x*0*(60|3c))';
 
+
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
@@ -2761,8 +2762,6 @@ sub LOCK_EX {2};
 sub LOCK_NB {4};
 sub LOCK_UN {8};
 
-
-
 ## lock a file 
 sub lock {
     my $lock_file = shift;
@@ -2872,8 +2871,7 @@ sub add_in_blacklist {
 	    }	
 	}
 	close BLACKLIST;
-    }
-    
+    }   
     unless (open BLACKLIST, ">> $file"){
 	&do_log('info','do_blacklist : append to file %s',$file);
 	return undef;
@@ -2882,8 +2880,6 @@ sub add_in_blacklist {
     close BLACKLIST;
 
 }
-
-
 
 ## unlock a file 
 sub unlock {
@@ -2942,18 +2938,20 @@ sub string_2_hash {
 	$hash{$2} = $3; 
 	$data =~ s/$1// ;
     }    
+
     return (%hash);
 
 }
 ## convert a hash into a string formated as var1="value1";var2="value2"; into a hash
-sub hash_2_string {
+sub hash_2_string { 
     my $refhash = shift;
-    
+
+    return undef unless ((ref($refhash))&& (ref($refhash) eq 'HASH')) ;
+
     my $data_string ;
     foreach my $var (keys %$refhash ) {
 	next unless ($var);
 	$data_string .= ';'.$var.'="'.$refhash->{$var}.'"';
-	# do_log('info', 'SympaSession::store() : ---%s--- = ---%s---',$var, $refhash->{$var});
     }
     return ($data_string);
 }

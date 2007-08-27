@@ -57,22 +57,6 @@ sub generic_set_cookie {
 }
     
 
-## Set cookie for accessing web archives
-#sub set_arc_cookie {
-#    my ($domain);
-#
-#    my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
-#				  -value   => 'Let_Me_In',
-#				  -expires => '+1y',
-#				  -domain  => $domain,
-#				  -path    => '/'
-#				  );
-#    
-#    ## Send cookie to the client
-#    printf "Set-Cookie:  %s\n", $cookie->as_string;
-#   
-#    return 1;
-#}
     
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {

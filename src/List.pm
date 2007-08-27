@@ -4670,6 +4670,8 @@ sub get_user_db {
     my $who = &tools::clean_email(shift);
     do_log('debug2', 'List::get_user_db(%s)', $who);
 
+    do_log('info', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx List::get_user_db(%s)', $who);
+
     my $statement;
  
     unless ($List::use_db) {
@@ -4726,6 +4728,12 @@ sub get_user_db {
 	    my ($key, $value) = split /=/, $attr;
 	    $user->{'attributes'}{$key} = $value;
 	}    
+	## Turn data_user into a hash
+	 if ($user->{'data'}) {
+	     &do_log('info',"xxxxxxxxxxxxxx appel de string_2_hash($user->{'data'})");
+	     my %prefs = &tools::string_2_hash($user->{'data'});
+	     $user->{'prefs'} = \%prefs;
+	 }
     }
 
     return $user;
@@ -6142,6 +6150,7 @@ sub update_admin_user {
 sub update_user_db {
     my($who, $values) = @_;
     do_log('debug2', 'List::update_user_db(%s)', $who);
+
     $who = &tools::clean_email($who);
 
     unless ($List::use_db) {
@@ -6162,7 +6171,8 @@ sub update_user_db {
 		      cookie_delay => 'cookie_delay_user',
 		      lang => 'lang_user',
 		      attributes => 'attributes_user',
-		      email => 'email_user'
+		      email => 'email_user',
+		      data => 'data_user'
 		      );
     
     ## Check database connection
@@ -6187,7 +6197,6 @@ sub update_user_db {
 	}else { 
 	    $set = sprintf '%s=%s', $map_field{$field}, $dbh->quote($value);
 	}
-
 	push @set_list, $set;
     }
     
@@ -6199,6 +6208,7 @@ sub update_user_db {
     $statement = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)"
 	    , join(',', @set_list), $dbh->quote($who); 
     
+    do_log('debug3', 'List::update_user_db()   statement : %s', $statement);
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;

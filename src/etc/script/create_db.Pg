@@ -13,7 +13,7 @@ CREATE TABLE user_table (
         password_user		varchar (40),
         lang_user               varchar (10),
 	attributes_user		varchar (255),
-	data_user	        varchar (500),
+	data_user	        varchar (255),
 	CONSTRAINT ind_user PRIMARY KEY (email_user)
 );
 
@@ -94,7 +94,7 @@ CREATE TABLE session_table (
 	robot_session		        varchar(80),
 	email_session		        varchar(100),
 	hit_session     	        int4,
-	data_session		        varchar(500),
+	data_session		        varchar(255),
 	CONSTRAINT ind_session PRIMARY KEY (id_session)
 );
 CREATE	INDEX session_idx ON session_table(id_session);

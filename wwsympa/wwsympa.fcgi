@@ -806,20 +806,17 @@ my $birthday = time ;
      
      &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
-     unless ($maintenance_mode) {
-	 $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
-	 unless ($session) {
-	     &wwslog('err','unable to initialize session');
-	     next;
-	 }
-
-	 &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
-	 $param->{'restore_email'} = $session->{'restore_email'};
-	 $param->{'dumpvars'} = $session->{'dumpvars'};
-     }    
-
+     $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
+     unless ($session) {
+	 &wwslog('err','unable to initialyse session');
+	 next;
+     }
+     &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
+     $param->{'restore_email'} = $session->{'restore_email'};
+     $param->{'dumpvars'} = $session->{'dumpvars'};
+    
      ## RSS does not require user authentication
-     unless ($rss || $maintenance_mode) {
+     unless ($rss) {
 	 
 	 if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	     ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
@@ -1061,9 +1058,7 @@ my $birthday = time ;
      $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
      ## store in session table this session contexte
-     unless ($maintenance_mode) {
-	 $session->store;
-     }
+     $session->store;
 
      ## Do not manage cookies at this level if content was already sent
      unless ($param->{'bypass'} eq 'extreme' || 
@@ -1532,10 +1527,7 @@ sub get_parameters {
 	 }
 
 	 ## Check if parameter can legitimately use HTML. This selects the regexp used.
-	 my %htmlAllowedParams = ('content' => 1,);
-	 
-	 ## 07/08/07 : no more use the buggy regexp $tools::regexp{'html-free'}
-	 ## It would regexp any string containing '60' or '3c'
+	 my %htmlAllowedParams = ('content' => 1,);	 
 	 my $xssregexp = &tools::get_regexp('xss-free');
 	 if ($htmlAllowedParams{$p}) {
 	     $xssregexp = &tools::get_regexp('xss-free');
@@ -2251,6 +2243,10 @@ Use it to create a List object and initialize output parameters.
 	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 	 $session->{'lang'} = $param->{'lang'};
 	 # &wwslog('notice', 'xxxx apply user pref to session : %s',$session->{'lang'});
+     }
+
+     if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
+	 &List::update_user_db($param->{'user'}{'email'},{prefs=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }
 
      if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
@@ -3514,7 +3510,7 @@ sub do_remindpasswd {
      &wwslog('info', 'do_review(%d)', $in{'page'});
      my $record;
      my @users;
-     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
+     my $size ;
      my $sortby = $in{'sortby'} || 'email';
      my %sources;
 
@@ -3527,6 +3523,18 @@ sub do_remindpasswd {
      ## Access control
      return undef unless (defined &check_authz('do_review', 'review'));
 
+     if($in{'size'}){
+	 $size =  $session->{'review_page_size'} = $in{'size'}; 
+	 if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
+	     # update user pref  as soon as connected user change page size
+	     $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};	     
+	     &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 }
+     }else{
+	 $size = $param->{'user'}{'prefs'}{'review_page_size'} || $session->{'review_page_size'} || $wwsconf->{'review_page_size'};
+     }
+     $param->{'review_page_size'} = $size;
+     
      unless ($param->{'total'}) {
 	 &report::reject_report_web('user','no_subscriber',{},$param->{'action'},$list);
 	 &wwslog('info','do_review: no subscriber');
@@ -4755,7 +4763,7 @@ sub do_show_sessions {
 	
     $in{'session_delay'} = 10 unless ($in{'session_delay'});
     my $delay = 60 * $in{'session_delay'};
-    $param->{'sessions'} = &SympaSession::list_sessions($delay,$robot);        
+    $param->{'sessions'} = &SympaSession::list_sessions($delay,$robot,$in{'connected_only'});        
     return '1';
 }
 
@@ -6582,17 +6590,9 @@ sub do_viewmod {
 	 return undef;
      }
 
+     $session->{'archive_sniffer'} = 'false' if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) ;
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 ## Reject Email Sniffers
-#	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
-	 if ($session->{'archive_sniffer'} eq 'false') {
-	     if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-		 $session->{'archive_sniffer'} = 'false';
-		 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
-	     }else {
-		 return 'arc_protect';
-	     }
-	 }
+	 return 'arc_protect'  unless ($session->{'archive_sniffer'} eq 'false') ;
      }
 
      my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
@@ -6692,10 +6692,10 @@ sub do_viewmod {
 
      $param->{'archive_name'} = $in{'month'};
 
-     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 $session->{'archive_sniffer'} = 'false';
-	 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
-     }
+#     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+#	 $session->{'archive_sniffer'} = 'false';
+#	 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
+#     }
 
      return 1;
  }
@@ -6877,11 +6877,6 @@ sub do_viewmod {
      }
 
      @{$param->{'archives'}} = sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @archives);
-
-     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 $session->{'archive_sniffer'} = 'false';
-	 # &cookielib::set_arc_cookie($param->{'cookie_domain'});
-     }
 
      return 1;
  }
@@ -8147,13 +8142,9 @@ Sends back the list creation edition form.
 
      ## Owner
      $param->{'page'} = $in{'page'} || 1;
-     if ($size eq 'all') {
-	 $param->{'total_page'} = $param->{'bounce_total'};
-     }else {
-	 $param->{'total_page'} = int ( $param->{'bounce_total'} / $size);
-	 $param->{'total_page'} ++
-	     if ($param->{'bounce_total'} % $size);
-     }
+     $param->{'total_page'} = int ( $param->{'bounce_total'} / $size);
+     $param->{'total_page'} ++
+	 if ($param->{'bounce_total'} % $size);
 
      if ($param->{'page'} > $param->{'total_page'}) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
@@ -8191,12 +8182,12 @@ Sends back the list creation edition form.
 		    @users) {
 	 $record++;
 
-	 if (($size ne 'all') && ($record > ( $size * ($param->{'page'} ) ) ) ) {
+	 if ($record > ( $size * ($param->{'page'} ) ) ) {
 	     $param->{'next_page'} = $param->{'page'} + 1;
 	     last;
 	 }
 
-	 next if (($size ne 'all') && ($record <= ( ($param->{'page'} - 1) *  $size)));
+	 next if ($record <= ( ($param->{'page'} - 1) *  $size));
 
 	 $i->{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'first_bounce'});
 	 $i->{'last_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'last_bounce'});
@@ -15719,12 +15710,11 @@ sub do_dump_scenario {
 	 }
 
 	 if ($in{'format'} eq 'bounce') {
-	     $in{'size'} = 'all';
 	     do_reviewbouncing();
 	     print DUMP "# Exported bouncing subscribers\n";
-	     print DUMP "# Email\t\tName\tBounce score\tBounce count\tFirst bounce\tLast bounce\n";
+	     print DUMP "# Email\t\tName\tBounce score\tFirst bounce\tLast bounce\n";
 	     foreach my $user (@{$param->{'members'}}){
-		 print DUMP "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'bounce_count'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
+		 print DUMP "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
 	     }
 	 }
 	 else {
