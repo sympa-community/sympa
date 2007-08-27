@@ -543,10 +543,10 @@ sub rebuild {
 	&unset_hidden_mode();
     }
 
-    do_log('notice','Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s',$ENV{'M2H_ADDRESSMODIFYCODE'});
+    &do_log('notice',"Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s",$ENV{'M2H_ADDRESSMODIFYCODE'});
 
     if ($arc) {
-        do_log('notice',"Rebuilding  $arc of $adrlist archive");
+        &do_log('notice',"Rebuilding  $arc of $adrlist archive");
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
@@ -555,13 +555,22 @@ sub rebuild {
 	my $arcdir = $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm ;
 	my $arctxt = $arcdir.'/arctxt' ;
 	if (opendir (DIR,$arctxt)) {
-	    my @files = (grep /^\d+$/,(readdir DIR ));
+	    my @files = (grep(/^\d+$/,(readdir DIR )));
 	    close (DIR);
 	    if ($#files == -1) { 
 		do_log('notice', "Removing empty directory $arcdir");
 		&tools::remove_dir ($arcdir);
 		next ;	 
 	    } 
+
+	    ## index file was removed ; recreate it
+	    my $index = $files[$#files];
+	    &save_idx($arcdir.'/index', $index+1);
+	}
+	
+	## recreate index file if needed
+	unless (-f $arcdir.'/index') {
+	    &create_idx($arcdir);
 	}
 
 	## Remove .mhonarc.db
@@ -609,25 +618,32 @@ sub rebuild {
 	    my $yyyy = $1 ;
 	    my $mm = $2 ;
 
+	    my $arcdir = $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm;
+
 	    ## Remove .mhonarc.db
-	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
+	    unlink $arcdir.'/.mhonarc.db';
 	    
 	    ## Remove existing HTML files
-	    opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
+	    opendir HTML, $arcdir;
 	    ## Skip arctxt/ . and ..
 	    foreach my $html_file (grep !/^arctxt$|^index$|\.+$/, readdir(HTML)) {
-		unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
+		unlink $arcdir.'/'.$html_file;
 	    }	
 	    closedir HTML;	
 
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	    ## recreate index file if needed
+	    unless (-f $arcdir.'/index') {
+		&create_idx($arcdir);
+	    }
+
+	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;
 
 	    ## Remove lock if required
 	    if ($exitcode == 75) {
-		&do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
-		rmdir $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+		&do_log('notice', 'Removing lock directory %s', $arcdir.'/.mhonarc.lck');
+		rmdir $arcdir.'/.mhonarc.lck';
 		
 		$exitcode = system($cmd);
 		$exitcode = $exitcode / 256;	    
@@ -809,12 +825,8 @@ sub mail2arc {
      }
      else
      {
-	do_log('debug',"indexing $listname archive");
-	opendir (DIR, arctxtdir);
-	my @files = (sort { $a <=> $b;}  readdir(DIR)) ;
-	my $index = $files[$#files];
-	$index +=1;
-	$newfile = $index;
+	 ## recreate index file if needed and update it
+	 $newfile = $index = &create_idx($monthdir) + 1;
      }
     
     my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
@@ -965,11 +977,32 @@ Saves the archives index file
 
 sub save_idx {
     my ($index,$lst) = @_;
+#    &do_log('notice', "save_idx($index,$lst)");
     
     open(INDEXF,">$index") || fatal_err("couldn't overwrite index $index");
     print INDEXF "$lst\n";
     close INDEXF;
     #   do_log('debug',"last arc entry for $index is $lst");
+}
+
+## Create the 'index' file for one archive subdir
+sub create_idx {
+    my $arc_dir = shift; ## corresponds to the yyyy-mm directory
+
+    my $arc_txt_dir = $arc_dir.'/arctxt';
+
+    unless (opendir (DIR, $arc_txt_dir)) {
+	&do_log('err', "Failed to open directory '$arc_txt_dir'");
+	return undef;
+    }
+
+    my @files = (sort { $a <=> $b;}  grep(/^\d+$/,(readdir DIR ))) ;
+    my $index = $files[$#files];
+    &save_idx($arc_dir.'/index', $index);
+
+    closedir DIR;
+
+    return $index;
 }
 
 =pod 
