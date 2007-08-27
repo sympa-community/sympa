@@ -1110,13 +1110,12 @@ sub purge_logs_table {
     return 1;
 }
 
-## remove sessions from session_table if older than $Conf{'session_expiration_period'}
+## remove sessions from session_table if older than $Conf{'session_table_ttl'}
 sub purge_session_table {    
 
-    do_log('info','xxxxxxxxxxx ZZ task_manager::purge_session_table()');
+    do_log('info','task_manager::purge_session_table()');
     my $removed = &SympaSession::purge_old_sessions();
     unless(defined $removed) {
-	do_log('info','xxxxxxxxxxx echec');
 	&do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
 	return undef;
     }

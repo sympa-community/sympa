@@ -54,7 +54,7 @@ my @valid_options = qw(
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
-		       purge_user_table_task purge_logs_table_task purge_session_table_task session_expiration_period
+		       purge_user_table_task purge_logs_table_task purge_session_table_task session_session_ttl
                        purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
@@ -214,7 +214,9 @@ my %Default_Conf =
      'purge_logs_table_task' => 'daily',
      'logs_expiration_period' => 3, #3 months
      'purge_session_table_task' => 'daily',
-     'session_expiration_period' => 1, # 1 month
+     'session_table_ttl' => 2d, #
+     'purge_chalenge_table_task' => 'daily',
+     'chalenge_table_ttl' => 5d, # 
      'purge_orphan_bounces_task' => 'monthly',
      'eval_bouncers_task' => 'daily',
      'process_bouncers_task' => 'weekly',

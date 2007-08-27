@@ -204,7 +204,7 @@ sub purge_old_sessions {
 
     do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
 
-    my $delay = $Conf{'session_expiration_period'} * 31* 24 * 3600 ; # 1 mounth
+    my $delay = &tools::duration_conv($Conf{'session_table_ttl'}) ; 
     unless ($delay) { do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
 
     my @sessions ;
