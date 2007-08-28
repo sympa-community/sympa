@@ -205,19 +205,30 @@ sub purge_old_sessions {
     do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
 
     my $delay = &tools::duration_conv($Conf{'session_table_ttl'}) ; 
+    my $anonymous_delay = &tools::duration_conv($Conf{'anonymous_session_table_ttl'}) ; 
+
     unless ($delay) { do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
+    unless ($anonymous_delay) { do_log('info', 'SympaSession::purge_old_session(%s) exit with anonymous delay null',$robot); return;}
 
     my @sessions ;
-    my ($robot_condition, $delay_condition, $and, $sth);
+    my  $sth;
 
     my $dbh = &List::db_get_handler();
 
-    $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
-    $delay_condition = time-$delay.' > date_session' if ($delay);
-    $and = ' AND ' if (($delay_condition) && ($robot_condition));
+    my $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
+
+    my $delay_condition = time-$delay.' > date_session' if ($delay);
+    my $anonymous_delay_condition = time-$anonymous_delay.' > date_session' if ($anonymous_delay);
+
+    my $and = ' AND ' if (($delay_condition) && ($robot_condition));
+    my $anonymous_and = ' AND ' if (($anonymous_delay_condition) && ($robot_condition));
 
     my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $and $delay_condition";
+    my $anonymous_count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session == 'nobody' AND hit_session == '1'";
+
+
     my $statement = sprintf "DELETE FROM session_table WHERE $robot_condition $and $delay_condition";
+    my $anonymous_statement = sprintf "DELETE FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session == 'nobody' AND hit_session == '1'";
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -237,17 +248,36 @@ sub purge_old_sessions {
 	do_log('debug','SympaSession::purge_old_sessions no sessions to expire');
 	return $total ;
     }
-
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
-    
     unless ($sth->execute) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }    
-    return $total;
+    unless ($sth = $dbh->prepare($anonymous_count_statement)) {
+	do_log('err','Unable to prepare SQL statement %s : %s',$anonymous_count_statement, $dbh->errstr);
+	return undef;
+    }
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $anonymous_statement, $dbh->errstr);
+	return undef;
+    }    
+    my $anonymous_total =  $sth->fetchrow;
+    if ($anonymous_total == 0) {
+	do_log('debug','SympaSession::purge_old_sessions no anonymous sessions to expire');
+	return $total ;
+    }
+    unless ($sth = $dbh->prepare($anonymous_statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $anonymous_statement, $dbh->errstr);
+	return undef;
+    }    
+    return $total+$anonymous_total;
 }
 
 # list sessions for $robot where last access is newer then $delay. List is limited to connected users if $connected_only
