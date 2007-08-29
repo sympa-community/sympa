@@ -395,7 +395,7 @@ sub set_cookie {
 
 sub get_random {
     do_log('debug', 'SympaSession::random ');
-     my $random = rand();
+     my $random = int(rand(10**7)).int(rand(10**7)); ## Concatenates 2 integers for a better entropy
      $random =~ s/^0(\.|\,)//;
      #do_log('info', 'xxxxxxxxxxx SympaSession::random : %s',$random);
      return ($random)
