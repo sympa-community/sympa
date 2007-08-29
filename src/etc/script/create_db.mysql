@@ -32,8 +32,8 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	int(1),
 	included_subscriber 	int(1),
 	include_sources_subscriber varchar(50),
-	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber),
-	INDEX (user_subscriber,list_subscriber,robot_subscriber)
+	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber),
+	INDEX user_index (user_subscriber)
 );
 
 CREATE TABLE admin_table (
@@ -50,8 +50,8 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		enum('privileged','normal'),
-	PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin),
-	INDEX (list_admin, user_admin,robot_admin,role_admin)
+	PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin),
+	INDEX user_index (user_admin)
 );
  
 CREATE TABLE netidmap_table (
@@ -81,13 +81,13 @@ CREATE TABLE logs_table (
 
 
 CREATE TABLE session_table (
-	id_session			numeric NOT NULL,
-	start_date_session		numeric NOT NULL,
-	date_session		        numeric NOT NULL,
+	id_session			varchar(30) NOT NULL,
+	start_date_session		int(11) NOT NULL,
+	date_session		        int(11) NOT NULL,
 	remote_addr_session		varchar(60),
 	robot_session		        varchar(80),
 	email_session		        varchar(100),
-	hit_session     	        numeric,
+	hit_session     	        int(11),
 	data_session		        text,
 	PRIMARY KEY (id_session)
 );

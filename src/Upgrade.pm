@@ -635,7 +635,7 @@ sub upgrade {
 	    }
 	}
     }
-
+    
 
     return 1;
 }
@@ -796,12 +796,21 @@ sub probe_db {
 		    );
     
     my %primary = ('user_table' => ['email_user'],
-		   'subscriber_table' => ['list_subscriber','robot_subscriber','user_subscriber'],
-		   'admin_table' => ['list_admin','robot_admin','user_admin','role_admin'],
+		   'subscriber_table' => ['robot_subscriber','list_subscriber','user_subscriber'],
+		   'admin_table' => ['robot_admin','list_admin','role_admin','user_admin'],
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
 		   'logs_table' => ['id_logs'],
 		   'session_table' => ['id_session']
 		   );
+
+    ## List the required INDEXES
+    ##   1st key is the concerned table
+    ##   2nd key is the index name
+    ##   the table lists the field on which the index applies
+    my %indexes = ('admin_table' => {'user_index' => ['user_admin']},
+		   'subscriber_table' => {'user_index' => ['user_subscriber']}				     
+		   );
+
     # table indexes that can be removed during upgrade process
     my @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index');
     
@@ -1141,10 +1150,10 @@ sub probe_db {
 		    $index_columns{$indexName} = 1;
 		}
 	    }
-
+	    
 	    foreach my $idx ( keys %index_columns ) {
-		
-		## Check whether the index found was defined by Sympa
+
+		## Check whether the index found should be removed
 		my $index_name_is_known = 0;
 		foreach my $known_index ( @former_indexes ) {
 		    if ( $idx eq $known_index ) {
@@ -1152,13 +1161,12 @@ sub probe_db {
 			last;
 		    }
 		}
-		## If index was defined by Sympa, drop it.
+		## Drop indexes
 		if( $index_name_is_known ) {
 		    if ($dbh->do("ALTER TABLE $t DROP INDEX $idx")) {
 			push @report, sprintf('Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
 			&do_log('info', 'Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
-		    }
-		    else {
+		    }else {
 			&do_log('err', 'Could not drop deprecated INDEX \'%s\' in table \'%s\'.', $idx, $t);
 		    }
 		    
@@ -1166,9 +1174,21 @@ sub probe_db {
 		
 	    }
 	    
-	}
+	    ## Create required indexes
+	    foreach my $idx (keys %{$indexes{$t}}){ 
+
+		unless ($index_columns{$idx}) {
+		    my $columns = join ',', @{$indexes{$t}{$idx}};
+		    if ($dbh->do("ALTER TABLE $t ADD INDEX $idx ($columns)")) {
+			&do_log('info', 'Added INDEX \'%s\' in table \'%s\'', $idx, $t);
+		    }else {
+			&do_log('err', 'Could not add INDEX \'%s\' in table \'%s\'.', $idx, $t);
+		    }
+		}
+	    }	 
+	}   
 	
-	## Try to run the create_db.XX script
+    ## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
 	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf{'db_type'}") {
 	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $!);
