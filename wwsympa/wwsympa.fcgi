@@ -7084,16 +7084,14 @@ sub do_remove_arc {
      unless (defined($in{'directories'})) {
 	 # by default search in current month and in the previous none empty one
 	 my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
-	 my $previous_active_dir ;
 	 opendir ARC, "$search_base";
 	 foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
-	     if (($dir =~ /^(\d{4})-(\d{2})$/) && ($dir lt $search->archive_name)) {
-		 $previous_active_dir = $dir;
-		 last;
+	     if ($dir =~ /^(\d{4})-(\d{2})$/) {
+		 push @{$param->{'yyyymm'}}, $dir;
 	     }
 	 }
 	 closedir ARC;
-	 $in{'directories'} = $search->archive_name."\0".$previous_active_dir ;
+	 $in{'directories'} = join "\0",@{$param->{'yyyymm'}} ;
      }
 
      if (defined($in{'directories'})) {
