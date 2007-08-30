@@ -655,8 +655,8 @@ sub load_robots {
 	$robot_conf->{$robot}{'verp_rate'} ||= $Conf{'verp_rate'};
 	$robot_conf->{$robot}{'use_blacklist'} ||= $Conf{'use_blacklist'};
 
-	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_url'}) ;
-	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'static_content_path'}.'/pictures/' if ($robot_conf->{$robot}{'static_content_path'});
+	$robot_conf->{$robot}{'pictures_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/pictures/';
+	$robot_conf->{$robot}{'pictures_path'} ||= $robot_conf->{$robot}{'static_content_path'}.'/pictures/';
 	$robot_conf->{$robot}{'pictures_feature'} ||= $Conf{'pictures_feature'};
 
 	# split action list for blacklist usage
