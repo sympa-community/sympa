@@ -47,7 +47,7 @@ my $cipher;
 my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
 
 ## Sub-regexps to be used within html-free ans xss-free below.
-my $tags = 'script|\w*frame\w*|style|input|layer|bgsound|link|meta|base|object|embed|applet';
+my $tags = 'script|\w*frame\w*|layer|bgsound|link|meta|base|object|embed|applet';
 my $attributes = 'style=|dynsrc=|lowsrc=|on\w*=|javascript:';
 my $dividers = '\s|&+#+x*0*(9|a|d|10|13)+\;*';
 my $encodedChars = '(&+('."$dividers".')*#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
