@@ -1527,19 +1527,26 @@ sub get_parameters {
 	 }
 
 	 ## Check if parameter can legitimately use HTML. This selects the regexp used.
-	 my %htmlAllowedParams = ('content' => 1,);	 
+	 my $htmlControlNeeded = 1;	 
 	 my $xssregexp = &tools::get_regexp('xss-free');
-	 if ($htmlAllowedParams{$p}) {
+	 # If we are editing an HTML file in the shared, no control is performed
+	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
+	     $htmlControlNeeded = 0;
+	 }
+	 # If we are posting a message, editing a template or the list homepage, allow HTML but prevent XSS.
+	 elsif ($pname eq 'body' && $in{'action'} eq 'send_mail'
+		||$pname eq 'content' && $in{'action'} eq 'savefile' && $in{'file'} =~ /homepage$/
+		||$pname eq 'content' && $in{'action'} eq 'edit_template') {
 	     $xssregexp = &tools::get_regexp('xss-free');
 	 }
+	 # In any other case, forbid anything that could look like HTML.
 	 else {
 	     $xssregexp = &tools::get_regexp('html-free');
 	 }
 
-
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     if ($one_p !~ /^$regexp$/s ||
-		 lc($one_p) =~ /$xssregexp/ ||
+		 ($htmlControlNeeded && lc($one_p) =~ /$xssregexp/) ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
