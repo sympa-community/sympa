@@ -67,8 +67,8 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'task' => '\w+',
 	      'datasource' => '[\w-]+',
 	      'uid' => '[\w\-\.\+]+',
-	      'html-free' => $infSign,# Brutal XSS filter : rejects anything that contains "<"
-	      'xss-free' => "($infSign)+($dividers)*((($tags)|.*($attributes))+|($encodedChars)+)",# Smoother XSS filter
+	      'html-free' => "($infSign)+($dividers)*(script|meta|.*javascript:)+",# Simple XSS filter
+	      'xss-free' => "($infSign)+($dividers)*((($tags)|.*($attributes))+|($encodedChars)+)",# Smoother complex XSS filter
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
