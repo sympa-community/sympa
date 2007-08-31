@@ -48,10 +48,13 @@ my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -----
 
 ## Sub-regexps to be used within html-free ans xss-free below.
 my $tags = 'script|frame|iframe|frameset|layer|bgsound|object|embed|applet';
+my $htmltags = 'a|abbr|acronym|address|applet|area|b|base|uri|basefont|bdo|big|blockquote|body|br|button|caption|center|cite|code|col|colgroup|dd|del|dfn|dir|div|dl|dt|em|fieldset|font|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|hr|html|i|iframe|img|input|ins|isindex|kbd|label|legend|li|link|map|menu|meta|noframes|noscript|object||ol|optgroup|option|p|param|pre|q|s|samp|script|select|small|span|strike|strong|style|sub|sup|table|tbody|td|textarea|tfoot|th|thead|title|tr|tt|u|ul|var';
 my $attributes = 'dynsrc=|lowsrc=|javascript:';
+my $htmlattributes = 'abbr=|accept=|accept-charset=|accesskey=|action=|align=|alink=|alt=|archive=|axis=|background=|bgcolor=|border=|cellpadding=|cellspacing=|char=|charoff=|charset=|checked=|cite=|class=|classid=|clear=|code=|codebase=|codetype=|color=|cols=|colspan=|compact=|content=|coords=|data=|datetime=|declare=|defer=|dir=|disabled=|enctype=|face=|for=|frame=|frameborder=|headers=|height=|href=|hreflang=|hspace=|http-equiv=|id=|ismap=|label=|lang=|language=|link=|longdesc=|marginheight=|marginwidth=|maxlength=|me=|media=|method=|multiple=|name=|nohref=|noresize=|noshade=|nowrap=|object=|onblur=|onchange=|onclick=|ondblclick=|onfocus=|onkeydown=|onkeypress=|onkeyup=|onload=|onmousedown=|onmousemove=|onmouseout=|onmouseover=|onmouseup=|onreset=|onselect=|onsubmit=|onunload=|profile=|prompt=|readonly=|rel=|rev=|rows=|rowspan=|rules=|scheme=|scope=|scrolling=|selected=|shape=|size=|span=|src=|standby=|start=|style=|summary=|tabindex=|target=|text=|title=|type=|usemap=|valign=|value=|valuetype=|version=|vlink=|vspace=|width=';
 my $dividers = '\s|&+#+x*0*(9|a|d|10|13)+\;*';
 my $encodedChars = '(&+('."$dividers".')*#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
 my $infSign = '(<|%3c|(&+('."$dividers".')*(l('."$dividers".')*t|#+x*0*(60|3c)+)+\;*)|&+('."$dividers".')*x*0*(60|3c))';
+my $supSign = '(>|%3e|(&+('."$dividers".')*(g('."$dividers".')*t|#+x*0*(62|3e)+)+\;*)|&+('."$dividers".')*x*0*(62|3e))';
 
 
 ## Regexps for list params
@@ -67,8 +70,8 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'task' => '\w+',
 	      'datasource' => '[\w-]+',
 	      'uid' => '[\w\-\.\+]+',
-	      'html-free' => "($infSign)+($dividers)*(script|meta|.*javascript:)+",# Simple XSS filter
-	      'xss-free' => "($infSign)+($dividers)*((($tags)|.*($attributes))+|($encodedChars)+)",# Smoother complex XSS filter
+	      'html-free' => "($infSign)+($dividers)*((($htmltags)+(\/)*((($dividers)+($htmlattributes)+)|(($dividers)*($supSign)+))+)|(\.+($dividers)*($htmlattributes)+(\"*javascript:)*))",# HTML filter
+	      'xss-free' => "($infSign)+($dividers)*((($tags)|.*($attributes))+|($encodedChars)+)",# XSS filter
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
