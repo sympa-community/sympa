@@ -907,10 +907,12 @@ sub checkfiles {
 		## Keep copy of previous file
 		rename $dir.'/'.$css, $dir.'/'.$css.'.'.time;
 
-		unless (open (CSS,">$dir/$css")) {
-		    &List::send_notify_to_listmaster('cannot_open_file',  $robot, ["Could not open file $dir/$css : $!"]);
-		    &do_log('err','Failed to open (write) file %s',$dir.'/'.$css);
-		    return undef;
+		if (-f $dir.'/'.$css) {
+		    unless (open (CSS,">$dir/$css")) {
+			&List::send_notify_to_listmaster('cannot_open_file',  $robot, ["Could not open file $dir/$css : $!"]);
+			&do_log('err','Failed to open (write) file %s',$dir.'/'.$css);
+			return undef;
+		    }
 		}
 		
 		unless (&tt2::parse_tt2($param,'css.tt2' ,\*CSS, $tt2_include_path)) {
