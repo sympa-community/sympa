@@ -35,6 +35,7 @@ use Log;
 use Getopt::Long;
 use Time::Local;
 use Digest::MD5;
+use Scenario;
 use SympaSession;
 use mail;
 use wwslib;
@@ -985,7 +986,7 @@ sub select_subs {
 	}
     }
     
-    # parameter of subroutine List::verify
+    # parameter of subroutine Scenario::verify
     my $verify_context = {'sender' => 'nobody',
 			  'email' => 'nobody',
 			  'remote_host' => 'unknown_host',
@@ -999,7 +1000,7 @@ sub select_subs {
 	# condition rewriting for older and newer
 	$new_condition = "$1($user->{'update_date'}, $2)" if ($condition =~ /(older|newer)\((\d+)\)/ );
 	
-	if (&List::verify ($verify_context, $new_condition) == 1) {
+	if (&Scenario::verify ($verify_context, $new_condition) == 1) {
 	    $selection{$user->{'email'}} = undef;
 	    &do_log ('notice', "--> user $user->{'email'} has been selected");
 	}
@@ -1473,7 +1474,7 @@ sub purge_orphan_bounces {
 	 my $verify_context;
 	 $verify_context->{'sender'} = 'nobody';
 
-	 if (&List::verify ($verify_context, $condition) == 1) {
+	 if (&Scenario::verify ($verify_context, $condition) == 1) {
 	     unlink ($file);
 	     &do_log ('notice', "--> updating of the $file crl file");
 	     my $cmd = "wget -O \'$file\' \'$url\'";
