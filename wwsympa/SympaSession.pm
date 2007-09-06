@@ -215,7 +215,7 @@ sub purge_old_sessions {
 
     my $dbh = &List::db_get_handler();
 
-    my $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless ($robot eq '*');
+    my $robot_condition = sprintf "robot_session = %s", $dbh->quote($robot) unless (($robot eq '*')||($robot));
 
     my $delay_condition = time-$delay.' > date_session' if ($delay);
     my $anonymous_delay_condition = time-$anonymous_delay.' > date_session' if ($anonymous_delay);
@@ -224,11 +224,11 @@ sub purge_old_sessions {
     my $anonymous_and = ' AND ' if (($anonymous_delay_condition) && ($robot_condition));
 
     my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $and $delay_condition";
-    my $anonymous_count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session == 'nobody' AND hit_session == '1'";
+    my $anonymous_count_statement = sprintf "SELECT count(*) FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session = 'nobody' AND hit_session = '1'";
 
 
     my $statement = sprintf "DELETE FROM session_table WHERE $robot_condition $and $delay_condition";
-    my $anonymous_statement = sprintf "DELETE FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session == 'nobody' AND hit_session == '1'";
+    my $anonymous_statement = sprintf "DELETE FROM session_table WHERE $robot_condition $anonymous_and $anonymous_delay_condition AND email_session = 'nobody' AND hit_session = '1'";
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -246,16 +246,16 @@ sub purge_old_sessions {
     my $total =  $sth->fetchrow;
     if ($total == 0) {
 	do_log('debug','SympaSession::purge_old_sessions no sessions to expire');
-	return $total ;
+    }else{
+	unless ($sth = $dbh->prepare($statement)) {
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    return undef;
+	}
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}    
     }
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }    
     unless ($sth = $dbh->prepare($anonymous_count_statement)) {
 	do_log('err','Unable to prepare SQL statement %s : %s',$anonymous_count_statement, $dbh->errstr);
 	return undef;

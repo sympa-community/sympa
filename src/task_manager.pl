@@ -1115,7 +1115,7 @@ sub purge_logs_table {
 sub purge_session_table {    
 
     do_log('info','task_manager::purge_session_table()');
-    my $removed = &SympaSession::purge_old_sessions();
+    my $removed = &SympaSession::purge_old_sessions('*');
     unless(defined $removed) {
 	&do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
 	return undef;
