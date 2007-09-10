@@ -2865,7 +2865,7 @@ sub send_msg_digest {
     }
 
     my $old = $/;
-    $/ = "\n\n" . &tools::get_separator() . "\n\n";
+    local $/ = "\n\n" . &tools::get_separator() . "\n\n";
     
     ## Digest split in individual messages
     open DIGEST, $filename or return undef;
@@ -2891,7 +2891,7 @@ sub send_msg_digest {
 	push @list_of_mail, $mail;
     }
     close DIGEST;
-    $/ = $old;
+    local $/ = $old;
 
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
@@ -8185,7 +8185,7 @@ sub _load_include_admin_user_file {
 	}
 	
 	## Just in case...
-	$/ = "\n";
+	local $/ = "\n";
 	
 	## Split in paragraphs
 	my $i = 0;
@@ -9933,7 +9933,7 @@ sub _load_admin_file {
     my (@paragraphs);
 
     ## Just in case...
-    $/ = "\n";
+    local $/ = "\n";
 
     ## Set defaults to 1
     foreach my $pname (keys %::pinfo) {       

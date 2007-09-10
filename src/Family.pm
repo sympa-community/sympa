@@ -2746,7 +2746,7 @@ sub _load_param_constraint_conf {
     my $error = 0;
 
     ## Just in case...
-    $/ = "\n";
+    local $/ = "\n";
 
     while (<FILE>) {
 	next if /^\s*(\#.*|\s*)$/;

@@ -1227,7 +1227,7 @@ sub load_generic_conf_file {
     my (@paragraphs);
     
     ## Just in case...
-    $/ = "\n";
+    local $/ = "\n";
     
     ## Set defaults to 1
     foreach my $pname (keys %structure) {       

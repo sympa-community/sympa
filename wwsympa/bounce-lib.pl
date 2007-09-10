@@ -27,7 +27,7 @@ use strict;
 sub rfc1891 {
     my ($fic, $result, $from) = @_;
   
-    $/ = "\n";
+    local $/ = "\n";
 
     my $nbrcpt;
     my $parser = new MIME::Parser;
@@ -67,7 +67,7 @@ sub rfc1891 {
 	    exit;
 	}else {
 	    ## Multiline paragraph separator
-	    $/ = '';
+	    local $/ = '';
 
 	    while (<BODY>) {
 
@@ -91,7 +91,7 @@ sub rfc1891 {
 		    $nbrcpt++;
 		}
 	    }
-	    $/ = "\n";
+	    local $/ = "\n";
 	    close BODY;
 	}
     }
@@ -162,7 +162,7 @@ sub anabounce {
 
     ## Le champ separateur de paragraphe est un ensemble
     ## de lignes vides
-    $/ = '';
+    local $/ = '';
 
     ## Parcour du bounce, paragraphe par paragraphe
     foreach (<$fic>) {
@@ -175,7 +175,7 @@ sub anabounce {
 
 	    ## Parcour du paragraphe
 	    my @paragraphe = split /\n/, $_;
-	    $/ = "\n";
+	    local $/ = "\n";
 	    my ($champ_courant, %champ);
 	    foreach (@paragraphe) {
 
@@ -194,7 +194,7 @@ sub anabounce {
 		$$from = $1;
 		
 	    }
-	    $/ = '';
+	    local $/ = '';
 	    
 	    $champ{from} =~ s/^.*<(.+)[\>]$/$1/;
 	    $champ{from} =~  y/[A-Z]/[a-z]/;
@@ -225,7 +225,7 @@ sub anabounce {
 	    
 	    ## Parcour du paragraphe
 	    my @paragraphe = split /\n/, $_;
-	    $/ = "\n";
+	    local $/ = "\n";
 	    foreach (@paragraphe) {
 		
 		if (/^(\S[^\(]*)/) {
@@ -242,7 +242,7 @@ sub anabounce {
 		    $info{$adr}{expanded} =~ s/^[\"\<](.+)[\"\>]$/$1/;
 	        }
 	    }
-	    $/ = '';
+	    local $/ = '';
 
 	}elsif (/^\s+-+\sTranscript of session follows\s-+/m) {
 
@@ -250,7 +250,7 @@ sub anabounce {
 
 	    ## Parcour du paragraphe
 	    my @paragraphe = split /\n/, $_;
-	    $/ = "\n";
+	    local $/ = "\n";
 	    foreach (@paragraphe) {
 		
 		if (/^(\d{3}\s)?(\S+|\".*\")\.{3}\s(.+)$/) {
@@ -291,21 +291,21 @@ sub anabounce {
 		    }
 		}
 	    }
-	    $/ = '';
+	    local $/ = '';
 
         ## Rapport Compuserve	    
 	}elsif (/^Receiver not found:/m) {
 
 	    ## Parcour du paragraphe
 	    my @paragraphe = split /\n/, $_;
-	    $/ = "\n";
+	    local $/ = "\n";
 	    foreach (@paragraphe) {
 	    
 		$info{$2}{error} = $1 if /^(.*): (\S+)/;
 		$type = 3;
 
 	    }
-	    $/ = '';
+	    local $/ = '';
 
 	}elsif (/^\s*-+ Special condition follows -+/m) {
 
@@ -313,7 +313,7 @@ sub anabounce {
 	    
 	    ## Parcour du paragraphe
 	    my @paragraphe = split /\n/, $_;
-	    $/ = "\n";
+	    local $/ = "\n";
 	    foreach (@paragraphe) {
 	    
 		if (/^(Unknown QuickMail recipient\(s\)):/) {
@@ -329,7 +329,7 @@ sub anabounce {
 
 		}
 	    }
-	    $/ = '';
+	    local $/ = '';
 
 	}elsif (/^Your message adressed to .* couldn\'t be delivered/m) {
 
@@ -337,7 +337,7 @@ sub anabounce {
 	    
             ## Parcour du paragraphe
  	    my @paragraphe = split /\n/, $_;
- 	    $/ = "\n";
+ 	    local $/ = "\n";
 	    foreach (@paragraphe) {
 	    
 		if (/^Your message adressed to (.*) couldn\'t be delivered, for the following reason :/) {
@@ -353,7 +353,7 @@ sub anabounce {
 
 		}
              }
-             $/ = '';
+             local $/ = '';
 
          ## Rapport X400
          }elsif (/^Your message was not delivered to:\s+(\S+)\s+for the following reason:\s+(.+)$/m) {
@@ -406,7 +406,7 @@ sub anabounce {
 		 $type = 8;
 
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 ## Sendmail
 	 }elsif (/^Your message was not delivered to the following recipients:/m) {
@@ -496,7 +496,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 		 
 		 if (/^Rejected-For: (\S+),/) {
@@ -511,7 +511,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^\s*-+Message not delivered to the following:/) {
 
@@ -523,7 +523,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 		 
 		 if (/^\s*(\S+)\s+(.*)$/) {
@@ -533,13 +533,13 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/unable to deliver following mail to recipient\(s\):/m) {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 		 
 		 if (/^\d+ <(\S+)>\.{3} (.+)$/) {
@@ -549,7 +549,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 ## Rapport de Yahoo dans paragraphe suivant
 	 }elsif (/^Unable to deliver message to the following address\(es\)/m) {
@@ -579,7 +579,7 @@ sub anabounce {
 	     
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 		 
 		 if (/<(\S+)>\.{3} (.*)$/) {
@@ -589,7 +589,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^Your message has encountered delivery problems\s+to local user \S+\.\s+\(Originally addressed to (\S+)\)/m or /^Your message has encountered delivery problems\s+to (\S+)\.$/m or /^Your message has encountered delivery problems\s+to the following recipient\(s\):\s+(\S+)$/m) {
 
@@ -650,7 +650,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/<(\S+)>\s+(.*)$/) {
@@ -659,7 +659,7 @@ sub anabounce {
 		     $type = 26;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 ## Rapport de AltaVista Mail dans paragraphe suivant
 	 }elsif (/unable to deliver mail to the following recipient\(s\):/m) {
@@ -711,7 +711,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/<(\S+)>\s+(.*)$/) {
@@ -720,7 +720,7 @@ sub anabounce {
 		     $type = 30;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^The following recipients haven\'t received this message:/m) {
 
@@ -732,7 +732,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/(\S+)$/) {
@@ -741,7 +741,7 @@ sub anabounce {
 		     $type = 31;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^The following destination addresses were unknown/m) {
 
@@ -753,7 +753,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/<(\S+)>/) {
@@ -762,13 +762,13 @@ sub anabounce {
 		     $type = 32;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^-+Transcript of session follows\s-+$/m) {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/^(\S+)$/) {
@@ -783,7 +783,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 ## Rapport Bigfoot
 	  }elsif (/^The message you tried to send to <(\S+)>/m) {
@@ -813,7 +813,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/(\S+)/) {
@@ -822,7 +822,7 @@ sub anabounce {
 		     $type = 37;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/^This Message was undeliverable due to the following reason:/m) {
 
@@ -834,7 +834,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/\s+Recipient:\s+<(\S+)>/) {
@@ -849,7 +849,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
 	 }elsif (/Your message could not be delivered to:/m) {
 
@@ -902,7 +902,7 @@ sub anabounce {
 
 	     ## Parcour du paragraphe
 	     my @paragraphe = split /\n/, $_;
-	     $/ = "\n";
+	     local $/ = "\n";
 	     foreach (@paragraphe) {
 
 		 if (/\s+Recipient address:\s+(\S+)/) {
@@ -918,7 +918,7 @@ sub anabounce {
 
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 
          ## Rapport MDaemon
 	 }elsif (/^(\S+) - (no such user here)\.$/m) {
@@ -946,7 +946,7 @@ sub anabounce {
 		     $info{$addr}{error} = $error;
 		 }
 	     }
-	     $/ = '';
+	     local $/ = '';
 	 ## Wanadoo    
 	 }elsif (/^(\S+); Action: Failed; Status: \d.\d.\d \((.*)\)/m) {
 	     $info{$1}{error} = $2;
