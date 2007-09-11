@@ -447,11 +447,6 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'wwsympa.conf','edit' => '1',
 	       'advice' =>''},
 
-	      {'name' => 'icons_url',
-	       'default' => '/icons',
-	       'query' => 'Icons directory (web) location for Sympa',
-	       'file' => 'wwsympa.conf'},
-
 	      {'name' => 'default_home',
 	       'sample' => 'lists',
 	       'query' => 'Main page type (lists | home)',

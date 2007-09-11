@@ -138,7 +138,8 @@ sub load_config {
 
     ## Old params
     my %old_param = ('alias_manager' => 'No more used, using --SBINDIR--/alias_manager.pl',
-		     'wws_path' => 'No more used');
+		     'wws_path' => 'No more used',
+		     'icons_url' => 'No more used. Using static_content/icons instead.');
 
     ## Valid params
     my %default_conf = (arc_path => '/home/httpd/html/arc',
@@ -148,7 +149,6 @@ sub load_config {
 			bounced_pidfile => '--PIDDIR--/bounced.pid',
 			cookie_domain => 'localhost',
 			cookie_expire => 0,
-			icons_url => '/icons',
 			mhonarc => '/usr/bin/mhonarc',
 			review_page_size => 25,
 			viewlogs_page_size => 25,

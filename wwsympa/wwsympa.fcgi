@@ -140,20 +140,20 @@ my $mime_types = &wwslib::load_mime_types();
 my %icon_table;
 
   # application file
-$icon_table{'unknown'} = $wwsconf->{'icons_url'}.'/unknown.png';
-$icon_table{'folder'} = $wwsconf->{'icons_url'}.'/folder.png';
-$icon_table{'current_folder'} = $wwsconf->{'icons_url'}.'/folder.open.png';
-$icon_table{'application'} = $wwsconf->{'icons_url'}.'/unknown.png';
-$icon_table{'octet-stream'} = $wwsconf->{'icons_url'}.'/binary.png';
-$icon_table{'audio'} = $wwsconf->{'icons_url'}.'/sound1.png';
-$icon_table{'image'} = $wwsconf->{'icons_url'}.'/image2.png';
-$icon_table{'text'} = $wwsconf->{'icons_url'}.'/text.png';
-$icon_table{'video'} = $wwsconf->{'icons_url'}.'/movie.png';
-$icon_table{'father'} = $wwsconf->{'icons_url'}.'/back.png';
-$icon_table{'sort'} = $wwsconf->{'icons_url'}.'/down.png';
-$icon_table{'url'} = $wwsconf->{'icons_url'}.'/link.png';
-$icon_table{'left'} = $wwsconf->{'icons_url'}.'/left.png';
-$icon_table{'right'} = $wwsconf->{'icons_url'}.'/right.png';
+$icon_table{'unknown'} = $Conf{'static_content_url'}.'/icons/unknown.png';
+$icon_table{'folder'} = $Conf{'static_content_url'}.'/icons/folder.png';
+$icon_table{'current_folder'} = $Conf{'static_content_url'}.'/icons/folder.open.png';
+$icon_table{'application'} = $Conf{'static_content_url'}.'/icons/unknown.png';
+$icon_table{'octet-stream'} = $Conf{'static_content_url'}.'/icons/binary.png';
+$icon_table{'audio'} = $Conf{'static_content_url'}.'/icons/sound1.png';
+$icon_table{'image'} = $Conf{'static_content_url'}.'/icons/image2.png';
+$icon_table{'text'} = $Conf{'static_content_url'}.'/icons/text.png';
+$icon_table{'video'} = $Conf{'static_content_url'}.'/icons/movie.png';
+$icon_table{'father'} = $Conf{'static_content_url'}.'/icons/back.png';
+$icon_table{'sort'} = $Conf{'static_content_url'}.'/icons/down.png';
+$icon_table{'url'} = $Conf{'static_content_url'}.'/icons/link.png';
+$icon_table{'left'} = $Conf{'static_content_url'}.'/icons/left.png';
+$icon_table{'right'} = $Conf{'static_content_url'}.'/icons/right.png';
 ## Shared directory and description file
 
 #$shared = 'shared';
@@ -1238,7 +1238,7 @@ my $birthday = time ;
  	 print "Content-Type: application/rss+xml; charset=utf-8\n\n";
  
  	 ## Icons
- 	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
+ 	 $param->{'icons_url'} = $Conf{'static_content_url'}.'/icons';
  
  	 ## Retro compatibility concerns
  	 $param->{'active'} = 1;
@@ -1598,7 +1598,7 @@ sub send_html {
     print "Content-Type: text/html\n\n";
     
     ## Icons
-    $param->{'icons_url'} = $wwsconf->{'icons_url'};
+    $param->{'icons_url'} =  $Conf{'static_content_url'}.'/icons';
     
     
     ## Retro compatibility concerns

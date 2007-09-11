@@ -92,9 +92,6 @@ WWSBINDIR	=	$(BINDIR)
 
 ## Web interface colors are now defined in sympa.conf
 
-## Target directory for installing Icons
-ICONSDIR	=	@ICONSDIR@
-
 ## Settings used in src/etc/scripts/sympa
 PIDPRE		=	pidof -x
 PIDPOST		=	
@@ -145,7 +142,6 @@ CFLAGS	=	-g
 #	PIDPRE	= 	ps -ax | grep
 #	PIDPOST	= 	| grep perl | head -n 1 | cut -f 2 -d " "
 #	LOCKDIR	= 	/var/spool/lock
-#	ICONSDIR	=	/usr/local/www/icons
 #	RPMTOPDIR	=	/usr/local/src/redhat
 #	OPENSSL	=	/usr/bin/openssl
 #endif
@@ -337,7 +333,7 @@ installwws:
 	USER='${USER}' GROUP='${GROUP}' SUDO='${SUDO}' enable_secure='${enable_secure}' \
 	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installwebtt2:
 	@(cd web_tt2 && echo "making in web_tt2..." && \
@@ -346,7 +342,7 @@ installwebtt2:
 	USER='${USER}' GROUP='${GROUP}' \
 	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installmailtt2:
 	@(cd mail_tt2 && echo "making in mail_tt2..." && \
@@ -355,7 +351,7 @@ installmailtt2:
 	USER='${USER}' GROUP='${GROUP}' \
 	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installsoap:
 	@(cd soap && echo "making in soap/..." && \
@@ -364,7 +360,7 @@ installsoap:
 	USER='${USER}' GROUP='${GROUP}' SCRIPTDIR='${SCRIPTDIR}' \
 	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installsample:
 	@(cd src/etc/sample && echo "making in src/etc/sample..." && \
@@ -374,7 +370,7 @@ installsample:
 	EXPL_DIR='${EXPL_DIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	COOKIE='${COOKIE}' OPENSSL='@OPENSSL@' SSLCERTDIR='${SSLCERTDIR}' \
-	SPOOLDIR='${SPOOLDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' PIDDIR='${PIDDIR}' install) || exit 1;
+	SPOOLDIR='${SPOOLDIR}' USER='${USER}' GROUP='${GROUP}' PIDDIR='${PIDDIR}' install) || exit 1;
 
 
 installman:
@@ -395,12 +391,12 @@ installscript:
 	MAILERPROGDIR='${MAILERPROGDIR}' PIDDIR='${PIDDIR}' \
 	COOKIE='${COOKIE}' INITDIR='${INITDIR}' \
 	PIDPRE='${PIDPRE}' PIDPOST='${PIDPOST}' LOCKDIR='${LOCKDIR}' \
-	OPENSSL='@OPENSSL@' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' install) || exit 1;
+	OPENSSL='@OPENSSL@' USER='${USER}' GROUP='${GROUP}' install) || exit 1;
 
 
 installdir:
 	@echo "Creating required directories"
-	@for dir in $(DIR) $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) $(ETCDIR) $(BINDIR) $(LOCALEDIR) $(DOCDIR) ; do \
+	@for dir in $(DIR) $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) $(ETCDIR) $(BINDIR) $(LOCALEDIR) $(DOCDIR) $(DIR)/static_content $(DIR)/static_content/icons ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			mkdir -p $(DESTDIR)$$dir; \
@@ -494,7 +490,6 @@ build_rh_rpm: clean
 		APPGROUP='System Environment/Daemons'; export APPGROUP; \
 		MTA='smtpdaemon'; export MTA; \
 		HOMEDIR='/var/sympa'; export HOMEDIR; \
-		ICONSDIR='/var/www/icons/sympa'; export ICONSDIR; \
 		PIDDIR='/var/run/sympa'; export PIDDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
                 CONFDIR='/etc'; export CONFDIR; \
@@ -542,7 +537,6 @@ build_mdk_rpm: clean
                 PIDDIR='/var/run/sympa'; export PIDDIR; \
 		INITDIR='/etc/rc.d/init.d';  export INITDIR; \
                 SPOOLDIR='/var/spool/sympa'; export SPOOLDIR; \
-		ICONSDIR='/var/www/icons/sympa'; export ICONSDIR; \
                 BINDIR='/usr/lib/sympa/bin'; export BINDIR; \
                 SBINDIR='/usr/lib/sympa/bin'; export SBINDIR; \
                 DATADIR='/usr/share/sympa'; export DATADIR; \
