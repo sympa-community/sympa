@@ -4,6 +4,14 @@
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this web page, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
 </p>
+ <form action="[% path_cgi %]" method="post"> 
+ <fieldset>
+    <input type="text" size="25" name="filter" value="[% filter %]" alt="[%|loc%]Enter a list name[%END%]"/>
+    <input type="hidden" name="action" value="search_list" />
+    <input class="MainMenuLinks" type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
+    <br />
+ </fieldset>
+</form>
 <br />
 
    <h1 class="block">[%|loc%]Mailing lists categories[%END%]</h1>
@@ -41,11 +49,6 @@ archives, list management and so on.[%END%]
 <div id="home_search_list">
  <form action="[% path_cgi %]" method="post"> 
  <fieldset>
-    <input type="text" size="25" name="filter" value="[% filter %]" alt="[%|loc%]Enter a list name[%END%]"/>
-    <input type="hidden" name="action" value="search_list" />
-    <input class="MainMenuLinks" type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
-    <br />
- </fieldset>
  <fieldset id="home_rss_news">
     <input class="MainMenuLinks" type="submit" name="action_rss_request" value="[%|loc%]RSS news[%END%]" />
  </fieldset> 
