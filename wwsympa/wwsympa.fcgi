@@ -14915,6 +14915,15 @@ sub make_pictures_url {
 	 $to = $list->get_list_address();
      }
 
+     ## Message body should not be empty
+     if ($in{'body'} =~ /^\s*$/) {
+	 &report::reject_report_web('user','missing_arg',{'argument' => 'body'},$param->{'action'});
+	 &wwslog('info','Missing body');
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	 return undef;		
+     }
+     
+
      $Text::Wrap::columns = 80;
      $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
 
