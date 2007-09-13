@@ -174,6 +174,7 @@ sub SetLang {
 #    &Locale::Messages::bindtextdomain('web_help','--LOCALEDIR--');
 #    bind_textdomain_codeset web_help => 'utf-8';
 
+    $ENV{'LANGUAGE'}=$locale;
     ## Define what catalog is used
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
