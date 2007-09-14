@@ -33,13 +33,11 @@ use Log;
 use Conf;
 use Time::Local;
 use Text::Wrap;
-
 use strict ;
 
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
 my %session_hard_attributes = ('id_session' => 1, 'date' => 1, 'remote_addr'  => 1,'robot'  => 1,'email' => 1, 'start_date' => 1, 'hit' => 1);
-
 
 
 sub new {
@@ -50,7 +48,6 @@ sub new {
     my $session={};
     bless $session, $pkg;
     
-
     unless ($robot) {
 	&do_log('err', 'Missing robot parameter, cannot create session object') ;
 	return undef;
@@ -58,9 +55,14 @@ sub new {
 
 #    my $cookie = &get_session_cookie($ENV{'HTTP_COOKIE'});
     
-    # if a session cookie exist, try to restore an existing session
-    if ($cookie) {
-	my $status = $session->load($cookie);
+    if (&tools::is_a_crawler($robot,{'user_agent_string' => $ENV{'HTTP_USER_AGENT'}})) {
+	$session->{'is_a_crawler'} = 1;
+    }
+
+    # if a session cookie exist, try to restore an existing session, don't store sessions from bots
+    if (($cookie)&&($session->{'is_a_crawler'} != 1)){
+	my $status ;
+	$status = $session->load($cookie) ;
 	unless (defined $status) {
 	    return undef;
 	}
@@ -75,7 +77,6 @@ sub new {
     }else{
 	# create a new session context
         $session->{'id_session'} = &get_random();
-	#do_log('info', 'xxxxxxxxxxx SympaSession::new(%s) : nouvelle session : cookie = %s', $robot,$session->{'id_session'});
 	$session->{'email'} = 'nobody';
         $session->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
 	$session->{'date'} = time;
@@ -84,7 +85,6 @@ sub new {
 	$session->{'robot'} = $robot; 
 	$session->{'data'} = '';
     }
-    
     return $session;
 }
 
@@ -151,6 +151,7 @@ sub store {
     do_log('debug', 'SympaSession::store()');
 
     return undef unless ($self->{'id_session'});
+    return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
 
     my %hash ;    
     foreach my $var (keys %$self ) {

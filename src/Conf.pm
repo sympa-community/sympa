@@ -270,6 +270,7 @@ my %trusted_applications = ('trusted_application' => {'occurrence' => '0-n',
 					    }
 			    );
 
+
 my $wwsconf;
 %Conf = ();
 
@@ -479,6 +480,9 @@ sub load {
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     $Conf{'trusted_applications'} = &load_trusted_application (); 
+    $Conf{'crawlers_detection'} = &load_crawlers_detection (); 
+
+    #  open (TMP, ">> /tmp/dump1"); printf TMP "dump de la conf dans conf.pm\n" ; &tools::dump_var($Conf{'crawlers_detection'}, 0,\*TMP);     close TMP;
 
     $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
     $Conf{'pictures_path'}  = $Conf{'static_content_path'}.'/pictures/';
@@ -680,6 +684,7 @@ sub load_robots {
 	}
 	# printf STDERR "load trusted de $robot";
 	$robot_conf->{$robot}{'trusted_applications'} = &load_trusted_application($robot);
+	$robot_conf->{$robot}{'crawlers_detection'} = &load_crawlers_detection($robot);
 	close (ROBOT_CONF);
     }
     closedir(DIR);
@@ -1194,7 +1199,40 @@ sub load_trusted_application {
     # open TMP, ">/tmp/dump1";&tools::dump_var(&load_generic_conf_file($config,\%trusted_applications);, 0,\*TMP);close TMP;
     return (&load_generic_conf_file($config,\%trusted_applications));
 
+}
 
+
+## load trusted_application.conf configuration file
+sub load_crawlers_detection {
+    my $robot = shift;
+
+    my %crawlers_detection_conf = ('user_agent_string' => {'occurrence' => '0-n',
+						  'format' => '.+'
+						  } );
+        
+    my $config ;
+    if (defined $robot) {
+	$config = $Conf{'etc'}.'/'.$robot.'/crawlers_detection.conf';
+    }else{
+	$config = $Conf{'etc'}.'/crawlers_detection.conf' ;
+	$config = '--ETCBINDIR--/crawlers_detection.conf' unless (-f $config);
+    }
+
+    print STDERR "crawlers_detection $config ($robot)\n";
+    return undef unless  (-r $config);
+    my $hashtab = &load_generic_conf_file($config,\%crawlers_detection_conf);
+    my $hashhash ;
+
+
+    foreach my $kword (keys %{$hashtab}) {
+	next unless ($crawlers_detection_conf{$kword});  # ignore comments and default
+	foreach my $value (@{$hashtab->{$kword}}) {
+	    $hashhash->{$kword}{$value} = 'true';
+	}
+    }
+   # open (TMP, ">> /tmp/dump1");printf TMP "retour de load_crawlers_detection : \n";  &tools::dump_var($hashhash, 0,\*TMP);     close TMP; # xxxxxxxx
+    
+    return $hashhash;
 }
 
 ############################################################
@@ -1368,11 +1406,11 @@ sub load_generic_conf_file {
 	    }else {
 		$admin{$pname} = \%hash;
 	    }
-	}else {
+	}else{
 	    ## This should be a single line
 	    my $xxxmachin =  $structure{$pname}{'format'};
 	    unless ($#paragraph == 0) {
-		printf STDERR 'Expecting a single line for %s parameter in %sxxxxxx %s\n', $pname, $config_file, $xxxmachin ;
+		printf STDERR 'Expecting a single line for %s parameter in %s %s\n', $pname, $config_file, $xxxmachin ;
 		return undef if $on_error eq 'abort';
 	    }
 
