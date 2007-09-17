@@ -112,7 +112,7 @@ sub load {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
@@ -165,7 +165,7 @@ sub store {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }	   
 
     my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
@@ -233,7 +233,7 @@ sub purge_old_sessions {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }	   
     unless ($sth = $dbh->prepare($count_statement)) {
 	do_log('err','Unable to prepare SQL statement %s : %s',$count_statement, $dbh->errstr);
@@ -308,7 +308,7 @@ sub list_sessions {
 
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }	   
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
