@@ -272,12 +272,6 @@ sub parse_tt2 {
 	$template = \join('', @$template);
     }
 
-    # quick hack! wrong layer!
-#    s|^/home/sympa/bin/etc/wws_templates/(.*?)(\...)?(\.tpl)|$1.tt2|
-#	for values %$data;
-
-#    &do_log('notice', 'TPL: %s ; LANG: %s', $template, $data->{lang});
-
     &Language::SetLang($data->{lang}) if ($data->{'lang'});
 
     my $config = {
@@ -292,7 +286,7 @@ sub parse_tt2 {
 	    loc => [\&tt2::maketext, 1],
 	    locdt => [\&tt2::locdatetime, 1],
 	    qencode => [\&qencode, 0],
- 	    escape_xml => [\&escape_xml, 0],
+ 	    escape_xml => [\&escape_xml, 1],
 	    escape_url => [\&escape_url, 0],
 	    escape_quote => [\&escape_quote, 0],
 	    decode_utf8 => [\&decode_utf8, 0],
