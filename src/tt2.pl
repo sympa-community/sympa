@@ -286,7 +286,7 @@ sub parse_tt2 {
 	    loc => [\&tt2::maketext, 1],
 	    locdt => [\&tt2::locdatetime, 1],
 	    qencode => [\&qencode, 0],
- 	    escape_xml => [\&escape_xml, 1],
+ 	    escape_xml => [\&escape_xml, 0],
 	    escape_url => [\&escape_url, 0],
 	    escape_quote => [\&escape_quote, 0],
 	    decode_utf8 => [\&decode_utf8, 0],
