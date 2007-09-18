@@ -808,6 +808,8 @@ my $birthday = time ;
 
      $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
 
+     $param->{'session'} = $session;
+     
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
@@ -1534,7 +1536,7 @@ sub get_parameters {
 	     &wwslog('notice','Parameter value: %s',$one_p);
 	     &wwslog('notice','stripped parameter value: %s',$no_blanks_one_p);
 	     if ($one_p !~ /^$regexp$/s ||
-		 ($htmlControlNeeded && $no_blanks_one_p =~ /$xssregexp/) ||
+#		 ($htmlControlNeeded && $no_blanks_one_p =~ /$xssregexp/) ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
@@ -1599,7 +1601,6 @@ sub send_html {
     my $lang = &Language::Lang2Locale($param->{'lang'});
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
     
-
     unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
@@ -10513,11 +10514,6 @@ sub merge_edit{
      return 'admin';
  }
 
- #*******************************************
-# Function : do_d_read
- # Description : reads a file or a directory
- #******************************************
-
  # Function which sorts a hash of documents
  # Sort by various parameters
  sub by_order {
@@ -10547,6 +10543,10 @@ sub merge_edit{
  }
 
 
+ #*******************************************
+# Function : do_d_read
+ # Description : reads a file or a directory
+ #******************************************
 ##
 ## Function do_d_read
 sub do_d_read {

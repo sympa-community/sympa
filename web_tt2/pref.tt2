@@ -20,7 +20,7 @@
 <br />
 
 
- [% IF auth == 'classic' %]
+ [% IF session.auth == 'classic' %]
 <h2 class="block">[%|loc%]Changing your email address[%END%]</h2>
         
 <form action="[% path_cgi %]" method="post">
