@@ -4670,8 +4670,6 @@ sub get_user_db {
     my $who = &tools::clean_email(shift);
     do_log('debug2', 'List::get_user_db(%s)', $who);
 
-    do_log('info', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx List::get_user_db(%s)', $who);
-
     my $statement;
  
     unless ($List::use_db) {
@@ -4730,7 +4728,6 @@ sub get_user_db {
 	}    
 	## Turn data_user into a hash
 	 if ($user->{'data'}) {
-	     &do_log('info',"xxxxxxxxxxxxxx appel de string_2_hash($user->{'data'})");
 	     my %prefs = &tools::string_2_hash($user->{'data'});
 	     $user->{'prefs'} = \%prefs;
 	 }
