@@ -1218,7 +1218,6 @@ sub load_crawlers_detection {
 	$config = '--ETCBINDIR--/crawlers_detection.conf' unless (-f $config);
     }
 
-    print STDERR "crawlers_detection $config ($robot)\n";
     return undef unless  (-r $config);
     my $hashtab = &load_generic_conf_file($config,\%crawlers_detection_conf);
     my $hashhash ;
