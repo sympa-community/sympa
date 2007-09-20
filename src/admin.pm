@@ -148,7 +148,8 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 #         $param->{'owner_include'} array of hash :
 #              with key source obligatory
 #       - $template : the create list template 
-#       - $robot : the list's robot         
+#       - $robot : the list's robot       
+#       - $origin : the source of the command : web, soap or command_line  
 # OUT : - hash with keys :
 #          -list :$list
 #          -aliases : undef if not applicable; 1 (if ok) or
@@ -156,8 +157,8 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 #           are not installed or 1(in status open)
 #######################################################
 sub create_list_old{
-    my ($param,$template,$robot) = @_;
-    &do_log('debug', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot);
+    my ($param,$template,$robot,$origin) = @_;
+    &do_log('debug', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot,$origin);
 
      ## obligatory list parameters 
     foreach my $arg ('listname','subject') {
@@ -272,9 +273,12 @@ sub create_list_old{
     unless ($lock->lock('write')) {
 	return undef;
     }
-
-    open CONFIG, '>:utf8', "$list_dir/config";
-
+    if($origin eq "command_line") {
+	open CONFIG, '>:utf8', "$list_dir/config";
+    }
+    else {
+	open CONFIG, '>:bytes', "$list_dir/config";
+    }
     ## Use an intermediate handler to encode to filesystem_encoding
     my $config = '';
     my $fd = new IO::Scalar \$config;    
@@ -291,8 +295,16 @@ sub create_list_old{
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
     $param->{'description'} =~ s/\015//g;
 
-    unless (open INFO, '>:utf8', "$list_dir/info") {
-	&do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
+    ## info file creation. Use UTF-8 for command line orgigin only.
+    if($origin eq "command_line") {
+	unless (open INFO, '>:utf8', "$list_dir/info") {
+	    &do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
+	}
+    }
+    else {
+	unless (open INFO, '>:bytes', "$list_dir/info") {
+	    &do_log('err','Impossible to create %s/info : %s',$list_dir,$!);
+	}
     }
     if (defined $param->{'description'}) {
 	Encode::from_to($param->{'description'}, 'utf8', $Conf{'filesystem_encoding'});

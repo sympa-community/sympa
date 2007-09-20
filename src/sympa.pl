@@ -555,7 +555,7 @@ if ($main::options{'dump'}) {
     
     close INFILE;
 
-    my $resul = &admin::create_list_old($hash->{'config'},$hash->{'type'},$robot);
+    my $resul = &admin::create_list_old($hash->{'config'},$hash->{'type'},$robot,"command_line");
     unless (defined $resul) {
  	print STDERR "Could not create list with these xml data\n";
  	exit 1;

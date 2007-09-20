@@ -7715,7 +7715,7 @@ Creates a list using a list template
 
 
      ## create liste
-     my $resul = &admin::create_list_old($parameters,$in{'template'},$robot);
+     my $resul = &admin::create_list_old($parameters,$in{'template'},$robot,"web");
      unless(defined $resul) {
 	 &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_create_list: unable to create list %s for %s',$in{'listname'},$param->{'user'}{'email'});

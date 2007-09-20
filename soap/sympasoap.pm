@@ -607,7 +607,7 @@ sub createList {
     }
     
      ## create liste
-     my $resul = &admin::create_list_old($parameters,$template,$robot);
+     my $resul = &admin::create_list_old($parameters,$template,$robot,"soap");
      unless(defined $resul) {
 	 &Log::do_log('info', 'unable to create list %s@%s from %s ', $listname,$robot,$sender);
 	 die SOAP::Fault->faultcode('Server')
