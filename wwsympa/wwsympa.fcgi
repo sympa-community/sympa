@@ -1510,33 +1510,21 @@ sub get_parameters {
 	     $negative_regexp = $in_negative_regexp{$pname};
 	 }
 
-	 ## Check if parameter can legitimately use HTML. This selects the regexp used.
-	 my $htmlControlNeeded = 1;	 
-	 my $xssregexp = &tools::get_regexp('xss-free');
-	 # If we are editing an HTML file in the shared, no control is performed
-	 if ($pname eq 'content' && $in{'action'} eq 'edit_template') {
-	     $htmlControlNeeded = 0;
-	 }
-	 # If we are posting a message, editing a template or the list homepage, allow HTML but prevent XSS.
-	 elsif ($pname eq 'body' && $in{'action'} eq 'send_mail'
-		||$pname eq 'content' && $in{'action'} eq 'savefile' && $in{'file'} =~ /homepage$/
-		||$pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
-	     $xssregexp = &tools::get_regexp('xss-free');
-	 }
-	 # In any other case, forbid anything that could look like HTML.
-	 else {
-	     $xssregexp = &tools::get_regexp('xss-free');
+	 # If we are editing an HTML file in the shared, allow HTML but prevent XSS.
+	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
+	     my $tmpparam = $in{$p};
+	     $tmpparam = &tools::sanitize_html('robot' => $robot,
+					       'string' => $in{$p});
+	     if (defined $tmpparam) {
+		 $in{$p} = $tmpparam;
+	     }
+	     else {
+		 &do_log('err','Unable to sanitize parameter %s',$pname);
+	     }
 	 }
 
 	 foreach my $one_p (split /\0/, $in{$p}) {
-	     my $blank_regexp = &tools::get_regexp('html-dividers');
-	     &wwslog('notice','Blank regexp: %s',$blank_regexp);
-	     my $no_blanks_one_p = lc($one_p);
-	     $no_blanks_one_p =~ s/($blank_regexp)//g;
-	     &wwslog('notice','Parameter value: %s',$one_p);
-	     &wwslog('notice','stripped parameter value: %s',$no_blanks_one_p);
 	     if ($one_p !~ /^$regexp$/s ||
-#		 ($htmlControlNeeded && $no_blanks_one_p =~ /$xssregexp/) ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
@@ -12838,6 +12826,7 @@ sub creation_shared_file {
     }
     
     my $fh = $query->upload('uploaded_file');
+
     unless (open FILE, ">:bytes", "$shareddir/$path/$fname") {
 	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('err',"creation_shared_file : Cannot open file $shareddir/$path/$fname : $!");
@@ -12848,6 +12837,21 @@ sub creation_shared_file {
 	print FILE;
     }
     close FILE;
+
+    ## XSS Protection for HTML files.
+    if (lc($fname) =~ /\.html?/) {
+	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+							'file' => "$shareddir/$path/$fname");
+	if (defined $sanitized_file) {
+	    open HTMLFILE,  ">:bytes", "$shareddir/$path/$fname";
+	    print HTMLFILE $sanitized_file;
+	    close HTMLFILE;
+	}
+	else {
+	    &do_log('err','Unable to sanitize file %s',$fname);
+	}
+    }
+    
 }
 
 ## Creation of the description file
@@ -13413,7 +13417,20 @@ sub d_copy_file {
 	close FROM_FILE;
 	close DEST_FILE;
 
-
+	## XSS Protection for HTML files.
+	if (lc($fname) =~ /\.html?/) {
+	    my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+							    'file' => "$dest_dir/$fname");
+	    if (defined $sanitized_file) {
+		open HTMLFILE,  ">:bytes", "$dest_dir/$fname";
+		print HTMLFILE $sanitized_file;
+		close HTMLFILE;
+	    }
+	    else {
+		&do_log('err','Unable to sanitize file %s',$fname);
+	    }
+	}
+	
 	## desc file creation
 	unless (open (DESC,">$dest_dir/.desc.$fname")) {
 	    &wwslog('err',"d_copy_file: cannot create description file $dest_dir/.desc.$fname");

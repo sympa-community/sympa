@@ -33,6 +33,7 @@ use CPAN;
 	     'DBD::Sybase' => '0.90',
 	     'DBD::mysql' => '2.0407',
 	     'FCGI' => '0.67',
+	     'HTML::StripScripts::Parser' => '1.0',
 	     'MIME::Tools' => '5.419',
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
@@ -74,6 +75,7 @@ use CPAN;
 	     'Encode' => 'Encode',
 	     'MIME::Charset' => 'MIME-Charset',
 	     'MIME::EncWords' => 'MIME-EncWords',
+	     'HTML::StripScripts::Parser' => 'HTML-StripScripts-Parser',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',

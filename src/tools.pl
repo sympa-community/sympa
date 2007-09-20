@@ -34,6 +34,7 @@ use Log;
 use Time::Local;
 use File::Find;
 use Digest::MD5;
+use HTML::StripScripts::Parser;
 
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
@@ -45,18 +46,6 @@ use Encode::MIME::Header;
 my $cipher;
 
 my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
-
-## Sub-regexps to be used within html-free ans xss-free below.
-my $forbiddenTags = 'script|frame|iframe|frameset|layer|bgsound|object|embed|applet|meta';
-my $forbiddenAttributes = 'on(\w)*=';
-my $htmltags = 'a|abbr|acronym|address|applet|area|b|base|uri|basefont|bdo|big|blockquote|body|br|button|caption|center|cite|code|col|colgroup|dd|del|dfn|dir|div|dl|dt|em|fieldset|font|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|hr|html|i|iframe|img|input|ins|isindex|kbd|label|legend|li|link|map|menu|meta|noframes|noscript|object||ol|optgroup|option|p|param|pre|q|s|samp|script|select|small|span|strike|strong|style|sub|sup|table|tbody|td|textarea|tfoot|th|thead|title|tr|tt|u|ul|var';
-my $attributes = 'dynsrc=|lowsrc=';
-my $htmlattributes = 'abbr=|accept=|accept-charset=|accesskey=|action=|align=|alink=|alt=|archive=|axis=|background=|bgcolor=|border=|cellpadding=|cellspacing=|char=|charoff=|charset=|checked=|cite=|class=|classid=|clear=|code=|codebase=|codetype=|color=|cols=|colspan=|compact=|content=|coords=|data=|datetime=|declare=|defer=|dir=|disabled=|enctype=|face=|for=|frame=|frameborder=|headers=|height=|href=|hreflang=|hspace=|http-equiv=|id=|ismap=|label=|lang=|language=|link=|longdesc=|marginheight=|marginwidth=|maxlength=|me=|media=|method=|multiple=|name=|nohref=|noresize=|noshade=|nowrap=|object=|onblur=|onchange=|onclick=|ondblclick=|onfocus=|onkeydown=|onkeypress=|onkeyup=|onload=|onmousedown=|onmousemove=|onmouseout=|onmouseover=|onmouseup=|onreset=|onselect=|onsubmit=|onunload=|profile=|prompt=|readonly=|rel=|rev=|rows=|rowspan=|rules=|scheme=|scope=|scrolling=|selected=|shape=|size=|span=|src=|standby=|start=|style=|summary=|tabindex=|target=|text=|title=|type=|usemap=|valign=|value=|valuetype=|version=|vlink=|vspace=|width=';
-my $scriptIntroducers = '(text/)?(javascript:?|moz-binding:?|behavior:?|vbscript:?|mocha:?|livescript:?)|expression\(|&\{';
-my $encodedChars = '(&+#+x*0*[0-9a-f]+\;*|%+x*0*[0-9a-f]+\;*)';
-my $infSign = '(<|%3c|\+adw-|(&+(lt|#+x*0*(60|3c)+)+\;*)|&+x*0*(60|3c))';
-my $supSign = '(>|%3e|\+ad4-|(&+(gt|#+x*0*(62|3e)+)+\;*)|&+x*0*(62|3e))';
-
 
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
@@ -71,9 +60,6 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'task' => '\w+',
 	      'datasource' => '[\w-]+',
 	      'uid' => '[\w\-\.\+]+',
-	      'html-free' => "($infSign)+((($htmltags)+((($htmlattributes)+)|(($supSign)+))+)|(\.+($htmlattributes)+($scriptIntroducers*)))+",# HTML filter
-	      'xss-free' => "($infSign)+((($forbiddenTags)|.*(($htmlattributes).*($scriptIntroducers|($encodedChars)+)))+|.*($forbiddenAttributes+)+|.+($supSign)+.*($scriptIntroducers*)+)",# XSS filter
-	      'html-dividers' => '\s|&+#+x*0*(9|a|d|10|13)+\;*;|\/|\\\\|\"|\'', #Characters that can obfuscate XSS character strings
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
@@ -81,6 +67,145 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
+
+## Replaces "<" and ">" by their HTML encoding in $string.
+sub escape_html {
+    my $string = shift;
+    &do_log('debug3','tools::escape_html(%s)',$string);
+    
+    $string =~ s/</&lt;/g;
+    $string =~ s/>/&gt;/g;
+    
+    return $string;
+}
+
+## Returns an HTML::StripScripts::Parser object built with  the parameters provided as arguments.
+sub _create_xss_parser {
+    my %parameters = @_;
+    &do_log('debug3','tools::_create_xss_parser(%s)',$parameters{'robot'});
+    my $hss = HTML::StripScripts::Parser->new({ Context => 'Document',
+						AllowSrc        => 1,
+						AllowHref       => 1,
+						AllowRelURL     => 1,
+						EscapeFiltered  => 1,
+						Rules => {
+						    '*' => {
+							src => '^http://'.&Conf::get_robot_conf($parameters{'robot'},'http_host'),
+						    },
+						},
+					    });
+    return $hss;
+}
+
+## Returns sanitized version (using StripScripts) of the string provided as argument.
+sub sanitize_html {
+    my %parameters = @_;
+    &do_log('debug3','tools::sanitize_html(%s,%s)',$parameters{'string'},$parameters{'robot'});
+
+    unless (defined $parameters{'string'}) {
+	&do_log('err',"No string provided.");
+	return undef;
+    }
+
+    my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
+    unless (defined $hss) {
+	&do_log('err',"Can't create StripScript parser.");
+	return undef;
+    }
+    my $string = $hss -> filter_html($parameters{'string'});
+    return $string;
+}
+
+## Returns sanitized version (using StripScripts) of the content of the file whose path is provided as argument.
+sub sanitize_html_file {
+    my %parameters = @_;
+    &do_log('debug3','tools::sanitize_html_file(%s)',$parameters{'robot'});
+
+    unless (defined $parameters{'file'}) {
+	&do_log('err',"No path to file provided.");
+	return undef;
+    }
+
+    my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
+    unless (defined $hss) {
+	&do_log('err',"Can't create StripScript parser.");
+	return undef;
+    }
+    $hss -> parse_file($parameters{'file'});
+    return $hss -> filtered_document;
+}
+
+## Sanitize all values in the hash $var, starting from $level
+sub sanitize_var {
+    my %parameters = @_;
+    &do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
+    unless (defined $parameters{'var'}){
+	&do_log('err','Missing var to sanitize.');
+	return undef;
+    }
+    my $level = $parameters{'level'};
+    $level |= 0;
+    
+    ## Hash defining the parameters where no control is performed (because they are supposed to contain javascript).
+    my %htmlAllowedParam = (
+			    'title' => 1,
+			    'hidden_head' => 1,
+			    'hidden_end' => 1,
+			    'hidden_at' => 1,
+			    'list_protected_email' => 1,
+			    'selected' => 1,
+			    'author_mailto' =>1,
+			    'mailto' =>1,
+			    );
+    ## Hash defining the parameters where HTML must be filtered.
+    my %htmlToFilter = (
+			'homepage_content' => 1,
+			'html_dumpvars' => 1,
+			);
+    
+    if(ref($parameters{'var'})) {
+	if(ref($parameters{'var'}) eq 'ARRAY') {
+	    foreach my $index (0..$#{$parameters{'var'}}) {
+		if ((ref($parameters{'var'}->[$index]) eq 'ARRAY') || (ref($parameters{'var'}->[$index]) eq 'HASH')) {
+		    &sanitize_var('var' => $parameters{'var'}->[$index],
+				  'level' => $level+1,
+				  'robot' => $parameters{'robot'});
+		}
+		else {
+		    if (defined $parameters{'var'}->[$index]) {
+			$parameters{'var'}->[$index] = &escape_html($parameters{'var'}->[$index]);
+		    }
+		}
+	    }
+	}
+	elsif(ref($parameters{'var'}) eq 'HASH') {
+	    foreach my $key (keys %{$parameters{'var'}}) {
+		if ((ref($parameters{'var'}->{$key}) eq 'ARRAY') || (ref($parameters{'var'}->{$key}) eq 'HASH')) {
+		    &sanitize_var('var' => $parameters{'var'}->{$key},
+				  'level' => $level+1,
+				  'robot' => $parameters{'robot'});
+		}
+		else {
+		    if (defined $parameters{'var'}->{$key}) {
+			unless ($htmlAllowedParam{$key}||$htmlToFilter{$key}) {
+			    $parameters{'var'}->{$key} = &escape_html($parameters{'var'}->{$key});
+			}
+			if ($htmlToFilter{$key}) {
+			    $parameters{'var'}->{$key} = &sanitize_html('string' => $parameters{'var'}->{$key},
+									'robot' =>$parameters{'robot'} );
+			}
+		    }
+		}
+		
+	    }
+	}
+    }
+    else {
+	&do_log('err','Variable is neither a hash nor an array.');
+	return undef;
+    }
+    return 1;
+}
 
 ## Sorts the list of adresses by domain name
 ## Input : users hash
