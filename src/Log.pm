@@ -65,7 +65,7 @@ sub do_log {
     if ($fac =~ /debug(\d)?/ ) {
 	$level = $1 || 1;
 	$fac = 'debug';
-    }    
+    }
 
     # do not log if log level if too high regarding the log requested by user 
     return if ($level > $log_level)  ;
@@ -88,6 +88,11 @@ sub do_log {
     ## wwslog already adds this information
     unless ($call[3] =~ /wwslog$/) {
 	$m = $call[3].'() ' . $m if ($call[3]);
+    }
+
+    if ($fac eq 'trace' ) {
+	$m = "###### TRACE MESSAGE ######:  " . $m;
+	$fac = 'notice';
     }
 
     unless (syslog($fac, $m, @param)) {
