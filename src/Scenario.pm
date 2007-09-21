@@ -666,6 +666,9 @@ sub verify {
 	push (@args,$value);
 	
     }
+    # Getting rid of spaces.
+    $condition_key =~ s/^\s*//g;
+    $condition_key =~ s/\s*$//g;
     # condition that require 0 argument
     if ($condition_key =~ /^true|all$/i) {
 	unless ($#args == -1){ 
@@ -697,7 +700,7 @@ sub verify {
 
     ## Now eval the condition
     ##### condition : true
-    if ($condition_key =~ /\s*(true|any|all)\s*/i) {
+    if ($condition_key =~ /^true|any|all$/i) {
 	return $negation;
     }
     ##### condition is_listmaster
@@ -715,7 +718,7 @@ sub verify {
     }
 
     ##### condition older
-    if ($condition_key =~ /older|newer/) {
+    if ($condition_key =~ /^older|newer$/) {
 	 
 	$negation *= -1 if ($condition_key eq 'newer');
  	my $arg0 = &tools::epoch_conv($args[0]);
@@ -731,7 +734,7 @@ sub verify {
 
 
     ##### condition is_owner, is_subscriber and is_editor
-    if ($condition_key =~ /is_owner|is_subscriber|is_editor/i) {
+    if ($condition_key =~ /^is_owner|is_subscriber|is_editor$/i) {
 	my ($list2);
 
 	if ($args[1] eq 'nobody') {
