@@ -305,7 +305,7 @@ sub authenticateAndRun {
 sub getUserEmailByCookie {
     my ($self, $cookie) = @_;
 
-    &do_log('notice','xxxx getUserEmailByCookie(%s)', $cookie);
+    &do_log('debug3','getUserEmailByCookie(%s)', $cookie);
     
     unless ($cookie) {
 	die SOAP::Fault->faultcode('Client')
@@ -346,7 +346,6 @@ sub authenticateRemoteAppAndRun {
     my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
     my $robot = $ENV{'SYMPA_ROBOT'};
 
-#    open TMP2, ">>/tmp/yy"; printf TMP2 "xxxxxxxxxx  parameters \n"; &tools::dump_var($proxy_vs, 0, \*TMP2);printf TMP2 "--------\n"; close TMP2;
     &do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s)', $appname, $vars, $service, join(',',@$parameters));
 
     unless ($appname and $apppassword and $service) {

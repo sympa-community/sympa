@@ -268,7 +268,6 @@ while (!$end) {
 	       &tools::remove_dir ($url_dir);
 
 	       unless (-d "$arcpath/deleted"){
-		   # do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  $arcpath/deleted");
 		   unless (mkdir ("$arcpath/deleted",0777)) {
 		       do_log('info',"remove_arc: unable to create $arcpath/deleted : $!");
 		       last;
@@ -285,14 +284,11 @@ while (!$end) {
 		   do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
 		   next;
 	       }
-	       # do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  test emptydir");
 	       my @files = grep(/^\d+$/, readdir( DIR ));
 	       closedir (DIR);
 	       if ($#files == -1) {
-		   # do_log('info','remove_dir   xxxxxxxxxxxxxxxxxxx %s',$arcpath);
 		   &tools::remove_dir ($arcpath); 
 	       }else{			
-		   # do_log('info', "xxxxxxxxxxxxxxxxxxx $arcpath/arctxt not empty");
 	       }
 	   }
 	   close REMOVE;

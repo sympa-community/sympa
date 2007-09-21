@@ -126,7 +126,6 @@ sub load {
     $sth->finish();
     
     unless ($session) {
-	do_log('info',"xxxxxxxxxxxx cookie from http client not found in session_table");
 	return 'not_found';
     }
     
@@ -190,7 +189,6 @@ sub store {
     }
 
     my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",$self->{'id_session'},time,$ENV{'REMOTE_ADDR'},$self->{'robot'},$self->{'email'},$self->{'start_date'},$self->{'hit'}, $data_string;
-    #do_log('info', 'xxxxxxxx SympaSession::store() : add_statement = %s',$add_statement);
     unless ($dbh->do($add_statement)) {
 	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
 	return undef;
@@ -398,7 +396,6 @@ sub get_random {
     do_log('debug', 'SympaSession::random ');
      my $random = int(rand(10**7)).int(rand(10**7)); ## Concatenates 2 integers for a better entropy
      $random =~ s/^0(\.|\,)//;
-     #do_log('info', 'xxxxxxxxxxx SympaSession::random : %s',$random);
      return ($random)
 }
 

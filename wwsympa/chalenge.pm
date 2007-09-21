@@ -109,7 +109,6 @@ sub load {
     $sth->finish();
     
     unless ($chalenge) {
-	do_log('info',"xxxxxxxxxxxx chalenge from client not found in chalenge_table");
 	return 'not_found';
     }
     my $chalenge_datas
@@ -157,7 +156,6 @@ sub store {
     }	   
 
     my $add_statement = sprintf "INSERT INTO chalenge_table (id_chalenge, date_chalenge, robot_chalenge, email_chalenge, data_chalenge) VALUES ('%s','%s','%s','%s','%s'')",$chalenge->{'id_chalenge'},$chalenge->{'date'},$chalenge->{'robot'},$chalenge->{'email'},$data_string;
-    do_log('info', 'xxxxxxxx Chalenge::store() : add_statement = %s',$add_statement);
     unless ($dbh->do($add_statement)) {
 	do_log('err','Unable to store chalenge information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
 	return undef;

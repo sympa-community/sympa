@@ -211,7 +211,6 @@ sub search_msgid {
     chomp $msgid ;
 
     foreach my $file (grep (!/\./,readdir ARC)) {
-	#  do_log('info',"xxxxxxxxxxxxxxxxxxxxxxx  scan $arcpath/arctxt");
 	next unless (open MAIL,"$dir/$file") ;
 	while (<MAIL>) {
 	    last if /^$/ ; #stop parse after end of headers
@@ -245,9 +244,9 @@ sub last_path {
     my $list = shift;
 
     &do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
-  my $file = $list->{'dir'}.'/archives/last_message';  &do_log('info', 'yyyyyyyyyyyyyyyyyyy file %s', $file);
+  my $file = $list->{'dir'}.'/archives/last_message';
     return undef unless ($list->is_archived());
-    my $file = $list->{'dir'}.'/archives/last_message';  &do_log('info', 'xxxxxxxxxxxxxx file %s', $file);
+    my $file = $list->{'dir'}.'/archives/last_message';
 
     return ($list->{'dir'}.'/archives/last_message') if (-f $list->{'dir'}.'/archives/last_message'); 
     return undef;

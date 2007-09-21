@@ -1229,7 +1229,6 @@ sub load_crawlers_detection {
 	    $hashhash->{$kword}{$value} = 'true';
 	}
     }
-   # open (TMP, ">> /tmp/dump1");printf TMP "retour de load_crawlers_detection : \n";  &tools::dump_var($hashhash, 0,\*TMP);     close TMP; # xxxxxxxx
     
     return $hashhash;
 }
@@ -1280,17 +1279,15 @@ sub load_generic_conf_file {
 	if (/^\s*$/) {
 	    $i++ if $paragraphs[$i];
 	}else {
-	    push @{$paragraphs[$i]}, $_; # printf STDERR "xxxxxxxxxxxxxxxxxxx detected paragraph $_\n";
+	    push @{$paragraphs[$i]}, $_;
 	}
     }
-   # printf STDERR "xxxxxxxxxxxxxxxxxxx #detected paragraph $i\n";
 
     for my $index (0..$#paragraphs) {
 	my @paragraph = @{$paragraphs[$index]};
 
 	my $pname;
 
-	# printf STDERR "xxxxxxxxxxxxxxxxxxx paragraph $index\n";
 	## Clean paragraph, keep comments
 	for my $i (0..$#paragraph) {
 	    my $changed = undef;
@@ -1322,7 +1319,6 @@ sub load_generic_conf_file {
 	}
 	    
 	$pname = $1;	
-	# printf STDERR "xxxxxxxxxxxx parametre pname $pname\n";
 	unless (defined $structure{$pname}) {
 	    printf STDERR 'Unknown parameter "%s" in %s, ignored', $pname, $config_file;
 	    return undef if $on_error eq 'abort';
@@ -1433,7 +1429,6 @@ sub load_generic_conf_file {
     }
     
     close CONFIG;
-#open TMP2, ">>/tmp/sss"; printf TMP2 "xxxxxxxxxxxxxxxxxxx--------structure admin\n"; &tools::dump_var(\%admin, 0, \*TMP2);printf TMP2 "xxxxxxxxxxxxxxxxxxx--------\n"; close TMP2;
     return \%admin;
 }
 
@@ -1442,7 +1437,6 @@ sub load_generic_conf_file {
 # 
 sub _load_a_param {
     my ($key, $value, $p) = @_;
-    # print STDERR 'xxxxxxxxxxxxx _load_list_param(%s,\'%s\',\'%s\')\n', $robot,$key, $value;
     
     ## Empty value
     if ($value =~ /^\s*$/) {

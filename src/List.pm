@@ -4793,7 +4793,6 @@ sub get_subscriber {
     
     ## Use session cache
     if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email}) {
-	# &do_log('debug3', 'xxx Use cache(get_subscriber, %s,%s)', $name, $email);
 	return $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email};
     }
     
@@ -4926,7 +4925,6 @@ sub get_admin_user {
 
     ## Use session cache
     if (defined $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email}) {
-	# &do_log('debug3', 'xxx Use cache(get_admin_user, %s,%s,%s)', $name, $role, $email);
 	return $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email};
     }
 
@@ -8809,15 +8807,9 @@ sub _inclusion_loop {
     my $name = shift;
     my $incl = shift;
     my $depend_on = shift;
-    # do_log('debug2', 'xxxxxxxxxxx _inclusion_loop(%s,%s)',$name,$incl);
-    # do_log('debug2', 'xxxxxxxxxxx DEPENDANCE :');
-    # foreach my $dpe (keys  %{$depend_on}) {
-    #   do_log('debug2', "xxxxxxxxxxx ----$dpe----");
-    # }
 
     return 1 if ($depend_on->{$incl}) ; 
     
-    # do_log('notice', 'xxxxxxxx pas de PB pour inclure %s dans %s %s',$incl, $name);
     return undef;
 }
 
@@ -8833,7 +8825,6 @@ sub _load_total_db {
     
     ## Use session cache
     if (($option ne 'nocache') && (defined $list_cache{'load_total_db'}{$self->{'domain'}}{$self->{'name'}})) {
-#	&do_log('debug3', 'xxx Use cache(load_total_db, %s)', $self->{'name'});
 	return $list_cache{'load_total_db'}{$self->{'domain'}}{$self->{'name'}};
     }
 
@@ -9093,8 +9084,6 @@ sub get_which_db {
 	    $which{$robot}{$name}{'included'} = $l->{'included_subscriber'};
 	    $which{$robot}{$name}{'subscribed'} = $l->{'subscribed_subscriber'};
 	    $which{$robot}{$name}{'include_sources'} = $l->{'include_sources_subscriber'};
-	    # do_log('info','xxxxx reception : %s bounce: %s topic : %s include_source : %s subscribed : %s inclueded : %s ', $which{$robot}{$name}{'reception'}, $which{$robot}{$name}{'bounce'}, $which{$robot}{$name}{'topic'}, $which{$robot}{$name}{'include_sources'},$which{$robot}{$name}{'subscribed'},$which{$robot}{$name}{'included'});
-
 	}	
 	$sth->finish();	
 	$sth = pop @sth_stack;

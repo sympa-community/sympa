@@ -380,7 +380,6 @@ sub remote_app_check_password {
     }else{
  	@trusted_apps = @{$Conf::Conf{'trusted_applications'}{'trusted_application'}};
     }
-    # open TMP2, ">>/tmp/yy"; printf TMP2 "xxxxxxxxxxx\@ trusted_apps \n"; &tools::dump_var(\@trusted_apps, 0, \*TMP2);printf TMP2 "--------\n"; close TMP2;
     
     foreach my $application (@trusted_apps){
 	

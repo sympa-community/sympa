@@ -2171,11 +2171,6 @@ sub is_a_crawler {
 #	return ($Conf{$robot}{'crawlers_detection'}{'user_agent_string'}{$context->{'user_agent_string'}});
 #    }
 
-    foreach my $xx (keys %{$context}){
-	&do_log ('info',"xxxxxxxxxxx is_a_crawler $xx = '$context->{$xx}'");
-	&do_log ('info',"yyyyyyyyyyy = $Conf{'crawlers_detection'}{'user_agent_string'}{$xx}");
-    }
-
     # open (TMP, ">> /tmp/dump1"); printf TMP "dump de la conf dans is_a_crawler : \n"; &tools::dump_var($Conf{'crawlers_detection'}, 0,\*TMP);     close TMP;
     return $Conf{'crawlers_detection'}{'user_agent_string'}{$context->{'user_agent_string'}};
 }

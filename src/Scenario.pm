@@ -255,7 +255,6 @@ sub request_action {
     $context->{'msg_encrypted'} = 'smime' if (defined $context->{'message'} && 
 					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
 
-    # do_log('info',"xxxxxxxxxxxxxxxxxx  auth_method='$auth_method'");
     ## Check that authorization method is one of those known by Sympa
     unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
 	do_log('info',"fatal error : unknown auth method $auth_method in List::get_action");
@@ -425,13 +424,10 @@ sub request_action {
 
 	    ## Rule returned false
 	    if ($result == -1) {
-		# do_log('info',"xxxxxxxxxxxxxxxxxxxxxxxxxx rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
-		# do_log('debug3',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
 		next;
 	    }
 	    
 	    my $action = $rule->{'action'};
-	    # do_log('info',"xxxxxxxxxxxxxx action: $action");
 
             ## reject : get parameters
 	    if ($action =~/^reject(\((.+)\))?(\s?,\s?(quiet))?/) {

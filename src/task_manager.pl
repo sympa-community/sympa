@@ -267,7 +267,6 @@ while (!$end) {
 	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
-		#printf "xxxxxxxxxxxxx appel 1\n";
 		create ($current_date, '', $global_models{$key}, $Conf{$key}, \%data);
 		$used_models{$1} = 1;
 	    }
@@ -1074,7 +1073,6 @@ sub create_cmd {
 	$data{'list'}{'name'} = $list->{'name'};
     }
     $type = '_global';
-    #printf "xxxxxxxxxxxxx appel 3\n";
     unless (create ($task->{'date'}, '', $model, $model_choice, \%data)) {
 	error ($task->{'filepath'}, "error in create command : creation subroutine failure");
 	return undef;
