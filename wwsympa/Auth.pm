@@ -112,6 +112,9 @@ sub authentication {
     foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
+
+	## Only 'user_table' and 'ldap' backends will need that Sympa collects the user passwords
+	## Other backends are Single Sign-On solutions
 	if ($auth_service->{'auth_type'} eq 'user_table') {
 	    
 	    if(((&Conf::get_robot_conf('*','password_case') eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || 
