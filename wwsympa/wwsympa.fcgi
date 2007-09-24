@@ -9417,7 +9417,15 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 	 ## Type of data
 	 if ($struct->{'scenario'}) {
 	     $p_glob->{'type'} = 'scenario';
-	     my $list_of_scenario = $list->load_scenario_list($struct->{'scenario'},$robot);
+	     my $list_of_scenario;
+
+	     my $tmp_list_of_scenario = $list->load_scenario_list($struct->{'scenario'},$robot);
+	     
+	     ## Only get required scenario attributes
+	     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
+		 $list_of_scenario->{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+						   'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+	     }
 
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
 	     
@@ -14087,11 +14095,24 @@ sub d_test_existing_and_rights {
 
      ## Scenario list for READ
 
-     $param->{'scenari_read'} = $list->load_scenario_list('d_read', $robot);
+     my $tmp_list_of_scenario = $list->load_scenario_list('d_read',$robot);
+	     
+     ## Only get required scenario attributes
+     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
+	 $param->{'scenari_read'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+     }
+
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
      ## Scenario list for EDIT
-     $param->{'scenari_edit'} = $list->load_scenario_list('d_edit', $robot);
+     my $tmp_list_of_scenario = $list->load_scenario_list('d_edit',$robot);
+	     
+     ## Only get required scenario attributes
+     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
+	 $param->{'scenari_edit'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+     }
      $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
      ## father directory

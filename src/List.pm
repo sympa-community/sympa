@@ -6964,7 +6964,8 @@ sub load_scenario_list {
 	}
     }
 
-    return \%list_of_scenario;
+    ## Return a copy of the data to prevent unwanted changes in the central scenario data structure
+    return &tools::dup_var(\%list_of_scenario);
 }
 
 sub load_task_list {
