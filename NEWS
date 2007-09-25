@@ -5,6 +5,132 @@
 
 
 
+5.4a.4		25 September 2007
+
+   
+   New features :
+
+	New session management : introduction of http session in order to replace a lot of cookies, for better user interface and security.
+	  -new table session_table
+	  -new module SympaSession.pm
+	  -new features
+	  - from admin page set log level for the current session
+	  - from admin page list active sessions
+	  - from admin page change user email identity
+	  -new task to purge old sessions from table (inactive delay to remove session is set by the sympa.conf parameter session_expiration_period (defaul 1 month)
+	  -session start at first hit usually with an anonymous user. The session continue when the user logging.
+	  -cookie lang replaced by a session parameter
+	  -cookie sympa-user removed
+	  -Crawler detection is controled by /etc/crawlers_detection.conf.
+
+	src/Log.pm: Added "trace" log facility to facilitate development messages insertion, visualization and deletion.
+
+   Changes :
+
+	check_perl_modules.pl, src/tools.pl, src/tt2.pl, wwsympa/wwsympa.fcgi: XSS protection: Any output web parameter is filtered 
+	to avoid creation of XSS vector. Change:Additionnaly, any HTML file put in the shared directory is filtered using StripScripts.
+	Change:HTML::StripScripts::Parser CPAN module is now mandatory.
+
+	src/Conf.pm: [requested by JM.Martins da Cruz] Added X-Sympa-To and X-Family-To header fields to those header that should be
+	removed by Sympa for outgoing mails
+
+	web_tt2/home.tt2: Moved the search list form to the top of the Sympa home page.
+
+	Makefile.am, Makefile.in, configure, configure.in, src/sympa_wizard.pl, wwsympa/Makefile, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi: icons are now included in the sympa static content directory. Consequently, the
+	"--with-iconsdir" configure option and the "icons_url" wwsympa.conf parameter are no longer used. The default path to
+	icons is now {sympa home}/static_content/icons and the default icons URL is http://host/icons/.
+
+	src/tools.pl: refined Simple XSS filter. Don't ding on simple "<" only, but on <script, <meta and <fdfds javascript:
+
+	wwsympa/wwsympa.fcgi: Web archive search is now performed by default in the whole archive instead of just the current month.
+
+	src/Upgrade.pm, src/etc/script/create_db.Pg, src/etc/script/create_db.mysql: added indexs on email
+	column in both admin_table and subscriber_table. Also changed the order of column in CREATE INDEX directives.
+
+	src/Conf.pm, wwsympa/SympaSession.pm: taskmanager remove anonymous sessions if older then anonymous_session_table Sympa
+	conf parameter
+
+	wwsympa/wwsympa.fcgi: [M.Massar, univ Kaiserslautern] : Sympa is now able to get the Email in SubjAltName. As I
+	was not able to find the mentioned patch to mod_ssl to get SSL_CLIENT_S_EMAIL exported, I wrote another patch based on SSL_CLIENT_CERT 
+	from "SSLOptions +ExportCertData". REAPPLY the patch that had been removed.
+
+	src/Conf.pm: css_url default value is now static_content/css/current_robot. This make it possible to set a
+	single Apache Alias directive for static_content, shared by all virtual hosts.
+
+	src/List.pm: optimization to skip some code in List::load()
+
+	src/sympa.pl: [suggested by T.Berry, NASA] Changed the process identifier in the logs from (message) to (distribute)
+
+   Bug fixes :
+
+	src/List.pm, wwsympa/wwsympa.fcgi: changes of scenario from the admin web interface did not seem to work because the
+	'selected' attributes were cumulated in %Scenario::all_scenarios. Now only pass the required scenario attributes (name and web_title) 
+	to the TT2 web parser.
+	
+	src/Scenario.pm: [#3306][Reported by C. Andrews, boston College] The List::verify resolution of the true test would be applied for
+	all custom conditions that have "true", "any" or "all" in them. Fix: Checks that condiotn starts and ends with the serached condition name.
+
+	soap/sympasoap.pm, src/admin.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: info and config files were not properly encoded 
+	when a list was created using the web or SOAP. fixed by adding the declaration of origin in create_list_old call
+	and then testing this value to know how to handle encoding.
+
+	wwsympa/Auth.pm: [#3183][] : Trusted application name check was case sensitive, xhreas it is not supposed to be the case.
+	Fixed by lowercasing comparison in remote_app_check_password().
+
+	src/Language.pm: [#3269][Submitted by J. Ã–stman, Helsinki univ.of technology]: sympa would take the LANGUAGE environment
+	variable as its default instead of its lang parameter value, because this is Gettext default behaviour.
+
+	src/Conf.pm, src/Family.pm, src/List.pm, wwsympa/bounce-lib.pl: [#3271][Reported by M. Anderson, riseup.net] 
+	"$/" value was changed in several places without using a proper "local" operator to prevent system-wide field seperator contamination.
+
+	src/Conf.pm: robot-specific 'static_content_path' parameter was never used to build 'css_path' parameter value.
+
+	wwsympa/archived.pl: [reported by Alaxa]: rebuild() subroutine did not include code to create index file if missing
+
+	soap/sympasoap.pm: "use strict" into "use strict vars" to prevent "Can't use string xx as a subroutine ref while strict
+	refs" error
+
+	wwsympa/wwsympa.fcgi: [reported by C.Peck, wm.edu] dump of bouncers would only return the first 25 entries
+
+	src/List.pm: [reported by Y.Blusseau]: include_remote_file feature was not supported to include owners or editors.
+
+	src/List.pm: [reported by Y.Blusseau]: $include_file was altered before _load_include_admin_user_file() calls.
+
+	wwsympa/wwsympa.fcgi: missing ',' in check_list_authz() call. The change_email action could therefore never succeed.
+
+	wwsympa/bounce-lib.pl: [reported by R.Levo, J.Hopkins university]: some rfc1891 compliant bounces were not correctly parsed,
+	whenever the "Status" line included the status code + additional comments. The regular expression has been extended.
+
+	soap/sympasoap.pm: [reported by O.Berger, INT]: typo in List::store_susbscription_request() would make
+	sympa_soap_server.fcgi die while receiving a subscription request with moderated subscription.
+	The "use strict" pragma has been added and many other typos have been fixed.
+
+	src/Upgrade.pm: [reported by C.Peck, William and Mary university]: Upgrade process could make subscribers
+	unsubscribeable. The subscribed_subscriber DB field was first set to 1 but then turned into 0 (because of an old enum2int problem).
+	Changed the order of the upgrade processes.
+
+	src/Conf.pm: [A.Hicks, Persistent Objects]: css_url and css_path are not being set from the main config if they do not
+	exist in the robot config as they are being set before the static_content_* checks
+
+	wwsympa/wwsympa.fcgi: 'send_me' feature was broken because of an incorrect regexp on 'month' parameter
+
+	src/Upgrade.pm: [reported by J.M.Martins de Cruz]: incorrect Language::SetLang() calls while migrating create_list_templates
+	and families to UTF-8
+
+	src/etc/script/create_db.Oracle: [reported by F.Lachapelle,Sophos]: incorrect index name
+
+	src/admin.pm: [#3229][reported by T.Berry, NASA]: Sympa did not perform a lock before list config file was created/updated.
+	This could leed to corrupted config files
+
+	wwsympa/wwsympa.fcgi: no more use the buggy regexp $tools::regexp{'html-free'}. It would regexp any string
+	containing '60' or '3c'
+
+	po/check_locales.pl, src/Language.pm: [reported by JG.Pailloncy, O.Girard and JMM. da Cruz] : setlocale() failed on FreeBSD
+	because locales syntax were not standard (ll_CC.ISO8859-N instead of ll_CC.ISO-8859-N). Now using utf-8 as encoding, thus solving
+	the problem. Also changed the algorithm used by check_locales.pl to be the same as Language::SetLang()
+
+
 5.4a.2		7 August 2007
 
    New features :

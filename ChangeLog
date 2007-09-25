@@ -1,3 +1,461 @@
+2007-09-24 09:16  david.verdin
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: changes of scenario from
+	  the admin web interface did not seem to work because the
+	  'selected' attributes were cumulated
+	  in %Scenario::all_scenarios. Now only pass the required scenario
+	  attributes (name and web_title) to the TT2 web parser.
+
+2007-09-24 09:15  david.verdin
+
+	* wwsympa/Auth.pm: Added comment
+
+2007-09-21 14:08  david.verdin
+
+	* src/Scenario.pm: [#3306][Reported by C. Andrews, boston College]
+	  The List::verify resolution of the true test would be applied for
+	  all custom conditions that have "true", "any" or "all" in them.
+	  Fix: Checks that condiotn starts and ends with the serached
+	  condition name.
+
+2007-09-21 12:51  david.verdin
+
+	* soap/sympasoap.pm, src/Archive.pm, src/Conf.pm, src/List.pm,
+	  src/Scenario.pm, src/task_manager.pl, src/tools.pl,
+	  wwsympa/Auth.pm, wwsympa/SympaSession.pm, wwsympa/archived.pl,
+	  wwsympa/chalenge.pm: Removing various development traces.
+
+2007-09-20 15:48  david.verdin
+
+	* src/Log.pm: Feature: Added "trace" log facility to facilitate
+	  development messages insertion, visualization and deletion.
+
+2007-09-20 15:13  david.verdin
+
+	* soap/sympasoap.pm, src/admin.pm, src/sympa.pl,
+	  wwsympa/wwsympa.fcgi: Fix: info and config files were not
+	  properly encoded when a list was created using the web or SOAP.
+	  fixed by adding the declaration of origin in create_list_old call
+	  and then testing this value to know how to handle encoding.
+
+2007-09-20 14:43  david.verdin
+
+	* check_perl_modules.pl, src/tools.pl, src/tt2.pl,
+	  wwsympa/wwsympa.fcgi: Change: XSS protection: Any output web
+	  parameter is filtered to avoid creation of XSS vector.
+	  Change:Additionnaly, any HTML file put in the shared directory is
+	  filtered using StripScripts.
+	  Change:HTML::StripScripts::Parser CPAN module is now mandatory.
+
+2007-09-19 06:42  serge.aumont
+
+	* src/Conf.pm: remove unwanted traces
+
+2007-09-19 06:15  serge.aumont
+
+	* src/List.pm: Remove dev traces
+
+2007-09-18 15:05  david.verdin
+
+	* web_tt2/pref.tt2, wwsympa/wwsympa.fcgi: Change: Session object is
+	  now included in $param hash.
+	  Fix: Changing password and email address was no longer possible
+	  in WWSympa.
+
+2007-09-17 13:23  serge.aumont
+
+	* wwsympa/SympaSession.pm: fix location of db_connect
+
+2007-09-17 09:14  david.verdin
+
+	* src/tt2.pl: Remove non validated change.
+
+2007-09-17 09:12  david.verdin
+
+	* src/tt2.pl: Removed commented code.
+
+2007-09-14 07:31  david.verdin
+
+	* src/Conf.pm, src/etc/crawlers_detection.conf, src/tools.pl,
+	  wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi: Now session from
+	  crawlers are stored in sessiontable. Crawler detection is
+	  controled by /etc/crawlers_detection.conf.
+	  
+	  Currently this file only list user_agent strings. In the futur it
+	  could detect crawlers by ip adress and later we could detect
+	  crawlers by analysing automatically the session table
+
+2007-09-13 15:12  david.verdin
+
+	* wwsympa/Auth.pm: [#3183][] Fix: Trusted application name check
+	  was case sensitive, xhreas it is not supposed to be the case.
+	  Fixed by lowercasing comparison in remote_app_check_password().
+
+2007-09-13 14:23  david.verdin
+
+	* src/Language.pm: [#3269][Submitted by J. Östman, Helsinki univ.
+	  of technology] Fix: sympa would take the LANGUAGE environment
+	  variable as its default instead of its lang parameter value,
+	  because this is Gettext default behaviour.
+
+2007-09-13 14:14  david.verdin
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Reinstantiating the XSS
+	  regexp protection.
+
+2007-09-13 13:41  david.verdin
+
+	* src/Conf.pm: [requested by JM.Martins da Cruz] Added X-Sympa-To
+	  and X-Family-To header fields to those header that should be
+	  removed by Sympa for outgoing mails
+
+2007-09-13 10:24  david.verdin
+
+	* wwsympa/wwsympa.fcgi: Change: make the 'body' parameter required
+	  while composing a message. This is especially usefull because the
+	  XSS code may erase the body parameter.
+
+2007-09-13 09:24  david.verdin
+
+	* web_tt2/home.tt2: [Change:] Moved the search list form to the top
+	  of the Sympa home page.
+
+2007-09-11 15:34  david.verdin
+
+	* Makefile.am, Makefile.in, configure, configure.in,
+	  src/sympa_wizard.pl, wwsympa/Makefile, wwsympa/wwslib.pm,
+	  wwsympa/wwsympa.fcgi: [Change] icons are now included in the
+	  sympa static content directory. Consequently, the
+	  "--with-iconsdir" configure option and the "icons_url"
+	  wwsympa.conf parameter are no longer used. The default path to
+	  icons is now {sympa home}/static_content/icons and the default
+	  icons URL is http://host/icons/.
+
+2007-09-10 15:37  david.verdin
+
+	* src/Conf.pm, src/Family.pm, src/List.pm, wwsympa/bounce-lib.pl:
+	  [#3271][Reported by M. Anderson, riseup.net] Fix: "$/" value was
+	  changed in several places without using a proper "local" operator
+	  to prevent system-wide field seperator contamination.
+
+2007-09-06 10:10  serge.aumont
+
+	* src/task_manager.pl, wwsympa/SympaSession.pm: Fix
+	  purge_session_table task : it mandatory to remove unused session
+	  because many bots do not manage http cookies
+
+2007-09-04 11:45  serge.aumont
+
+	* src/task_manager.pl: Fix a bug related to subroutine verify who
+	  moved from List.pm to Scenario.pm
+
+2007-09-03 12:20  olivier.salaun
+
+	* src/Conf.pm: Revert previous change
+
+2007-09-03 12:16  olivier.salaun
+
+	* src/Conf.pm: Fix: prevent CSS updates problems if no css file
+	  exists
+
+2007-08-31 16:23  david.verdin
+
+	* src/tools.pl: Change: new try to improve XSS control. Now, in
+	  areas where HTML is not allowed, the parameters is tested against
+	  W3C compliant tags and attributes, or attributes containing
+	  javascript.
+
+2007-08-30 13:00  david.verdin
+
+	* src/tools.pl: Change: refined Simple XSS filter. Don't ding on
+	  simple "<" only, but on <script, <meta and <fdfds javascript:
+
+2007-08-30 12:23  david.verdin
+
+	* src/tools.pl: Change: Removed too restrictive XSS filter
+	  parameters.
+
+2007-08-30 10:46  david.verdin
+
+	* src/tools.pl: Change: allow "input" and "style" tags in the
+	  content of XSS-filtered parameter.
+
+2007-08-30 10:45  david.verdin
+
+	* wwsympa/wwsympa.fcgi: Change: Performs anti-XSS control regarding
+	  the context in which a parameter is being edited.
+
+2007-08-30 08:44  david.verdin
+
+	* wwsympa/wwsympa.fcgi: Change: Web archive search is now performed
+	  by default in the whole archive instead of just the current
+	  month.
+
+2007-08-30 06:26  david.verdin
+
+	* src/Conf.pm: Removed useless tests.
+
+2007-08-29 14:39  olivier.salaun
+
+	* wwsympa/SympaSession.pm: Changed the algorithm to compute session
+	  ids
+
+2007-08-29 14:22  olivier.salaun
+
+	* src/Upgrade.pm, src/etc/script/create_db.Pg,
+	  src/etc/script/create_db.mysql: Changes: added indexs on email
+	  column in both admin_table and subscriber_table. Also changed the
+	  order of column in CREATE
+	  INDEX directives.
+
+2007-08-29 14:09  david.verdin
+
+	* src/tools.pl: Removed bugs in XSS filter regexp.
+
+2007-08-28 12:20  serge.aumont
+
+	* src/Conf.pm, wwsympa/SympaSession.pm: taskmanager remove
+	  anonymous sessions if older then anonymous_session_table Sympa
+	  conf parameter
+
+2007-08-28 09:16  david.verdin
+
+	* src/Conf.pm: Fix: robot-specific 'static_content_path' parameter
+	  was never used to build 'css_path' parameter value.
+
+2007-08-27 11:54  serge.aumont
+
+	* src/Conf.pm, src/task_manager.pl, wwsympa/SympaSession.pm,
+	  wwsympa/chalenge.pm: Change sympa.conf paremeter from
+	  session_expiration_period to session_table-ttl
+	  Create chalenge.pm
+
+2007-08-27 10:07  olivier.salaun
+
+	* wwsympa/archived.pl: [reported by Alaxa]Fix: rebuild() subroutine
+	  did not include code to create index file if missing
+
+2007-08-27 08:24  serge.aumont
+
+	* src/List.pm, src/etc/script/create_db.Pg, src/tools.pl,
+	  web_tt2/serveradmin.tt2, wwsympa/SympaSession.pm,
+	  wwsympa/cookielib.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: .
+	  fix arc protection by "I am not a spammeur" form
+	  . store review page size in user_table and session_table
+
+2007-08-24 13:39  david.verdin
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Removed bug in XSS protection
+	  preventing any character string containing "60" or "3c" from
+	  being typed.
+
+2007-08-23 08:40  olivier.salaun
+
+	* soap/sympasoap.pm: Change "use strict" into "use strict vars" to
+	  prevent "Can't use string xx as a subroutine ref while strict
+	  refs" error
+
+2007-08-23 07:29  serge.aumont
+
+	* src/Upgrade.pm, src/etc/script/create_db.Oracle,
+	  src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite,
+	  src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql:
+	  Fix session_table creation and description for upgrade
+
+2007-08-22 14:44  olivier.salaun
+
+	* src/Scenario.pm: Fix: better handling of unknown authorization
+	  scenarios
+
+2007-08-22 14:36  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: prevent SympaSession::new() to be run
+	  if in maintenance mode.
+
+2007-08-22 09:25  serge.aumont
+
+	* KNOWNBUGS: Remove an old unsued file KNOWNBUGS
+
+2007-08-22 08:03  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by C.Peck, wm.edu]Fix: dump of
+	  bouncers would only return the first 25 entries
+
+2007-08-22 07:03  serge.aumont
+
+	* src/Upgrade.pm, src/etc/script/create_db.Oracle,
+	  src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite,
+	  src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql,
+	  wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi: Fix description of
+	  new table session_table for upgrade process
+	  More test and logs in SympaSession::store
+
+2007-08-21 14:45  olivier.salaun
+
+	* src/List.pm: [Y.Blusseau]Fix: complete previous patch to enable
+	  include_remote_file for admin.
+
+2007-08-21 14:44  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [M.Massar, univ Kaiserslautern] New
+	  feature: Sympa is now able to get the Email in SubjAltName. As I
+	  was not able to fi
+	  nd the mentioned patch to mod_ssl to get SSL_CLIENT_S_EMAIL
+	  exported, I wrote another patch based on SSL_CLIENT_CERT fr
+	  om "SSLOptions +ExportCertData". REAPPLY the patch that had been
+	  removed.
+
+2007-08-21 14:43  olivier.salaun
+
+	* src/List.pm: [reported by Y.Blusseau] Fix: include_remote_file
+	  feature was not supported to include owners or editors.
+
+2007-08-21 14:42  olivier.salaun
+
+	* src/List.pm: [reported by Y.Blusseau]Fix: $include_file was
+	  altered before _load_include_admin_user_file() calls.
+
+2007-08-21 14:42  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: missing ',' in check_list_authz()
+	  call. The change_email action could therefore never succeed.
+
+2007-08-21 14:41  olivier.salaun
+
+	* wwsympa/bounce-lib.pl: [reported by R.Levo, J.Hopkins university]
+	  Fix: some rfc1891 compliant bounces were not correctly parsed,
+	  whenever the
+	  "Status" line included the status code + additional comments. The
+	  regular expression has been extended.
+
+2007-08-21 14:31  olivier.salaun
+
+	* src/Upgrade.pm: Added $charset to do_log()
+
+2007-08-21 12:20  david.verdin
+
+	* .version: 5.4a3 (first test with sessionning)
+
+2007-08-20 13:19  serge.aumont
+
+	* src/Conf.pm, src/Language.pm, src/List.pm, src/Log.pm,
+	  src/Upgrade.pm,
+	  src/etc/global_task_models/purge_session_table.daily.task,
+	  src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	  src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase,
+	  src/etc/script/create_db.mysql, src/task_manager.pl,
+	  src/tools.pl, web_tt2/dumpvars.tt2, web_tt2/javascript.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/main.tt2,
+	  web_tt2/serveradmin.tt2, web_tt2/show_sessions.tt2,
+	  wwsympa/Makefile, wwsympa/SympaSession.pm, wwsympa/cookielib.pm,
+	  wwsympa/wwsympa.fcgi: Introduction of http session in ordre to
+	  replace a lot of cookies, for better user interface and security.
+	  -new table session_table
+	  -new module SympaSession.pm
+	  -new features
+	  - from admin page set log level for the current session
+	  - from admin page list active sessions
+	  - from admin page change user email identity
+	  -new task to purge old sessions from table (inactive delay to
+	  remove session is set by the sympa.conf parameter
+	  session_expiration_period (defaul 1 month)
+	  -session start at first hit usually with an anonymous user. The
+	  session continue when the user logging.
+	  -cookie lang replaced by a session parameter
+	  -cookie sympa-user removed
+	  
+	  TODO : introduce user pref based obn session for review page
+	  length and archive thread/chrono view . Need to introduce a
+	  structure data varchar column in user_table
+	  
+	  
+
+2007-08-20 08:29  olivier.salaun
+
+	* soap/sympasoap.pm: [reported by O.Berger, INT] Fix: typo in
+	  List::store_susbscription_request() would make
+	  sympa_soap_server.fcgi die while receiving a subscription request
+	  with moderated subscription.
+	  The "use strict" pragma has been added and many other typos have
+	  been fixed.
+
+2007-08-17 14:56  olivier.salaun
+
+	* src/Upgrade.pm: [reported by C.Peck, William and Mary
+	  university]Fix: Upgrade process could make subscribers
+	  unsubscribeable. The subscribed_subscriber DB field was first set
+	  to 1 but then turned into 0 (because of an old enum2int problem).
+	  Changed the order of the upgrade processes.
+
+2007-08-10 15:04  olivier.salaun
+
+	* src/Conf.pm: Change: css_url default value is now
+	  static_content/css/current_robot. This make it possible to set a
+	  single Apache Alias directive for static_content, shared by all
+	  virtual hosts.
+
+2007-08-10 13:41  olivier.salaun
+
+	* src/Conf.pm: [A.Hicks, Persistent Objects] Fix: css_url and
+	  css_path are not being set from the main config if they do not
+	  exist in the robot config as they are being set before the
+	  static_content_* checks
+
+2007-08-09 15:01  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: 'send_me' feature was broken because
+	  of an incorrect regexp on 'month' parameter
+
+2007-08-09 14:38  olivier.salaun
+
+	* src/Upgrade.pm: [reported by J.M.Martins de Cruz] Fix: incorrect
+	  Language::SetLang() calls while migrating create_list_templates
+	  and families to UTF-8
+
+2007-08-09 14:05  olivier.salaun
+
+	* src/etc/script/create_db.Oracle: [reported by F.Lachapelle,
+	  Sophos]Fix: incorrect index name
+
+2007-08-09 13:10  olivier.salaun
+
+	* src/admin.pm: [#3229][reported by T.Berry, NASA] Fix: Sympa did
+	  not perform a lock before list config file was created/updated.
+	  This could leed to corrupted config files
+
+2007-08-09 10:17  olivier.salaun
+
+	* src/List.pm: Change: optimization to skip some code in
+	  List::load()
+
+2007-08-09 08:47  olivier.salaun
+
+	* src/sympa.pl: [suggested by T.Berry, NASA] Changed the process
+	  identifier in the logs from (message) to (distribute)
+
+2007-08-07 15:28  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: no more use the buggy regexp
+	  $tools::regexp{'html-free'}. It would regexp any string
+	  containing '60' or '3c'
+
+2007-08-07 13:52  david.verdin
+
+	* po/check_locales.pl, src/Language.pm: [reported by JG.Pailloncy,
+	  O.Girard and JMM. da Cruz] Fix: setlocale() failed on FreeBSD
+	  because locales syntax were not standard (ll_CC.ISO8859-N instead
+	  of ll_CC.ISO-8859-N). Now using utf-8 as encoding, thus solving
+	  the problem. Also changed the algorithm used by check_locales.pl
+	  to be the same as Language::SetLang()
+
+2007-08-07 11:52  olivier.salaun
+
+	* src/Scenario.pm: Fix: remove trace
+
+2007-08-07 11:49  olivier.salaun
+
+	* ChangeLog: Update
+
 2007-08-07 11:48  olivier.salaun
 
 	* src/Scenario.pm, src/tools.pl: Fix: (related to latest scenario
