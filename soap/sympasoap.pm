@@ -555,7 +555,7 @@ sub createList {
     unless ($topics) {	
 	$reject .= 'topics'; 
     }
-    unless ($reject){
+    if ($reject){
 	&Log::do_log('info', 'create_list %s@%s from %s refused, missing parameter(s) %s', $listname,$robot,$sender,$reject);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Missing parameter')
