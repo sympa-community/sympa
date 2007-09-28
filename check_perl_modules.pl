@@ -34,7 +34,7 @@ use CPAN;
 	     'DBD::mysql' => '2.0407',
 	     'FCGI' => '0.67',
 	     'HTML::StripScripts::Parser' => '1.0',
-	     'MIME::Tools' => '5.419',
+	     'MIME::Tools' => '5.423',
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
 	     'CGI' => '2.52',
