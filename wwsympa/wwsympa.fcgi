@@ -603,6 +603,9 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'd_control' => {'path' => 'qencode'},
 		 'd_change_access' => {'path' => 'qencode'},
 		 'd_set_owner' => {'path' => 'qencode'},
+		 'sendpasswd' => {'email' => 'fix_escape_uri'},
+		 'viewbounce' => {'email' => 'fix_escape_uri'},
+		 'editsubscriber' => {'email' => 'fix_escape_uri'},
 		 );
 
 ## Open log
@@ -1571,6 +1574,10 @@ sub get_parameters {
 		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
 		 }
 		 $in{$p} = join '/', @tokens;
+		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
+		 ## This should be transformed into a '/' again
+	     }elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
+		 $in{$p} =~ s/\xa5/\//g;
 	     }
 	 }
      }
