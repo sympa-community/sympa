@@ -68,17 +68,6 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 
-## Replaces "<" and ">" by their HTML encoding in $string.
-sub escape_html {
-    my $string = shift;
-    &do_log('debug3','tools::escape_html(%s)',$string);
-    
-    $string =~ s/</&lt;/g;
-    $string =~ s/>/&gt;/g;
-    
-    return $string;
-}
-
 ## Returns an HTML::StripScripts::Parser object built with  the parameters provided as arguments.
 sub _create_xss_parser {
     my %parameters = @_;
@@ -143,25 +132,12 @@ sub sanitize_var {
 	&do_log('err','Missing var to sanitize.');
 	return undef;
     }
+    unless (defined $parameters{'htmlAllowedParam'} && $parameters{'htmlToFilter'}){
+	&do_log('trace','Missing var *** %s *** %s *** to ignore.',$parameters{'htmlAllowedParam'},$parameters{'htmlToFilter'});
+	return undef;
+    }
     my $level = $parameters{'level'};
     $level |= 0;
-    
-    ## Hash defining the parameters where no control is performed (because they are supposed to contain javascript).
-    my %htmlAllowedParam = (
-			    'title' => 1,
-			    'hidden_head' => 1,
-			    'hidden_end' => 1,
-			    'hidden_at' => 1,
-			    'list_protected_email' => 1,
-			    'selected' => 1,
-			    'author_mailto' =>1,
-			    'mailto' =>1,
-			    );
-    ## Hash defining the parameters where HTML must be filtered.
-    my %htmlToFilter = (
-			'homepage_content' => 1,
-			'html_dumpvars' => 1,
-			);
     
     if(ref($parameters{'var'})) {
 	if(ref($parameters{'var'}) eq 'ARRAY') {
@@ -169,7 +145,10 @@ sub sanitize_var {
 		if ((ref($parameters{'var'}->[$index]) eq 'ARRAY') || (ref($parameters{'var'}->[$index]) eq 'HASH')) {
 		    &sanitize_var('var' => $parameters{'var'}->[$index],
 				  'level' => $level+1,
-				  'robot' => $parameters{'robot'});
+				  'robot' => $parameters{'robot'},
+				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
+				  'htmlToFilter' => $parameters{'htmlToFilter'},
+				  );
 		}
 		else {
 		    if (defined $parameters{'var'}->[$index]) {
@@ -183,14 +162,17 @@ sub sanitize_var {
 		if ((ref($parameters{'var'}->{$key}) eq 'ARRAY') || (ref($parameters{'var'}->{$key}) eq 'HASH')) {
 		    &sanitize_var('var' => $parameters{'var'}->{$key},
 				  'level' => $level+1,
-				  'robot' => $parameters{'robot'});
+				  'robot' => $parameters{'robot'},
+				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
+				  'htmlToFilter' => $parameters{'htmlToFilter'},
+				  );
 		}
 		else {
 		    if (defined $parameters{'var'}->{$key}) {
-			unless ($htmlAllowedParam{$key}||$htmlToFilter{$key}) {
+			unless ($parameters{'htmlAllowedParam'}{$key}||$parameters{'htmlToFilter'}{$key}) {
 			    $parameters{'var'}->{$key} = &escape_html($parameters{'var'}->{$key});
 			}
-			if ($htmlToFilter{$key}) {
+			if ($parameters{'htmlToFilter'}{$key}) {
 			    $parameters{'var'}->{$key} = &sanitize_html('string' => $parameters{'var'}->{$key},
 									'robot' =>$parameters{'robot'} );
 			}
@@ -2582,7 +2564,7 @@ sub dump_html_var {
 	}
     }else{
 	if (defined $var) {
-	    $html .= $var;
+	    $html .= &escape_html($var);
 	}else {
 	    $html .= 'UNDEF';
 	}

@@ -301,15 +301,6 @@ sub parse_tt2 {
 
     my $tt2 = Template->new($config) or die "Template error: ".Template->error();
 
-    # XSS escaping applied to all outgoing parameters.
-    if(defined $data) {
-	unless(&tools::sanitize_var('var' => $data,
-				    'level' => 0,
-				    'robot' => $data->{'robot'})) {
-	    &do_log('err','Failed to sanitize $data in host %s', $data->{'robot'});
-	}
-    }
-
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());

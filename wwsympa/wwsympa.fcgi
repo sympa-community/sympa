@@ -743,7 +743,6 @@ my $birthday = time ;
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
 
-
      foreach my $auth (keys  %{$Conf{'cas_id'}{$robot}}) {
 	 &do_log('debug2', "cas authentication service $auth");
 	 $param->{'sso'}{$auth} = $auth;
@@ -765,6 +764,25 @@ my $birthday = time ;
      $param->{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
      $param->{'time'} = gettext_strftime "%H:%M:%S", localtime(time);
 
+     ## Hash defining the parameters where no control is performed (because they are supposed to contain html and/or javascript).
+     $param->{'htmlAllowedParam'} = {
+				     'title' => 1,
+				     'hidden_head' => 1,
+				     'hidden_end' => 1,
+				     'hidden_at' => 1,
+				     'list_protected_email' => 1,
+				     'selected' => 1,
+				     'author_mailto' =>1,
+				     'mailto' =>1,
+				     'logo_html_definition' => 1,
+				     'template_content' => 1,
+				     'html_dumpvars' => 1,
+				     };
+     ## Hash defining the parameters where HTML must be filtered.
+     $param->{'htmlToFilter'} = {
+				 'homepage_content' => 1,
+				 };
+     
      my $tmp_lang = &Language::GetLang();
      &Language::SetLang('en_US');
      $param->{'RFC822_date'} = &POSIX::strftime("%a, %d %b %Y %H:%M:%S %z", localtime(time));
@@ -1027,10 +1045,10 @@ my $birthday = time ;
 	     undef $action if ($action == 1);
 	 }
      }
-
+     
      ## Prepare outgoing params
      &check_param_out();
-
+     
      ## Params 
      $param->{'refparam'} = ref($param);
      $param->{'action_type'} = $action_type{$param->{'action'}};
@@ -1522,7 +1540,6 @@ sub get_parameters {
 		 &do_log('err','Unable to sanitize parameter %s',$pname);
 	     }
 	 }
-
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     if ($one_p !~ /^$regexp$/s ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
@@ -1588,6 +1605,20 @@ sub send_html {
     
     my $lang = &Language::Lang2Locale($param->{'lang'});
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
+    
+    # XSS escaping applied to all outgoing parameters.
+    if(defined $param) {
+	unless(&tools::sanitize_var('var' => $param,
+				    'level' => 0,
+				    'robot' => $robot,
+				    'htmlAllowedParam' => $param->{'htmlAllowedParam'} ,
+				    'htmlToFilter' => $param->{'htmlToFilter'} ,
+				    )
+	       )
+	{
+	    &do_log('err','Failed to sanitize $param in host %s', $robot);
+	}
+    }
     
     unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
 	my $error = &tt2::get_error();
@@ -4937,6 +4968,7 @@ sub do_view_template {
     $param->{'template_content'} = &tools::escape_html($param->{'template_content'});
     close TPL;
 
+
     $param->{'webormail'} = $in{'webormail'};
     $param->{'template_name'} = $in{'template_name'};
     $param->{'template_path'} = $template_path;
@@ -5051,14 +5083,12 @@ sub do_edit_template  {
 		      'error_type' => 'missing_parameter'});
 	 return undef;
      }
-
     ## Load original template
     &do_view_template; 
 
     unless ($in{'content'}) {
 	return 1;
     }
-
     if ($in{'scope'} eq 'list') { 
 	if ($in{'list'}) {
 	    $param->{'template_path'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope'},$in{'template_name'},$in{'tpl_lang'},$list);
