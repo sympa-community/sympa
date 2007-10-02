@@ -33,7 +33,10 @@ use Encode;
 @EXPORT = qw(fatal_err do_log do_openlog $log_level);
 
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
-
+# When logs are not available, period of time to wait before sending another warning to listmaster.
+my $warning_timeout = 600;
+# Date of the last time a message was sent to warn the listmaster that the logs are unavailable.
+my $warning_date = 0;
 
 our $log_level = 0;
 
@@ -44,6 +47,12 @@ sub fatal_err {
     eval {
 	syslog('err', $m, @_);
 	syslog('err', "Exiting.");
+    };
+    if($@ && ($warning_date < time - $warning_timeout)) {
+	$warning_date = time + $warning_timeout;
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
+	    print STDERR "No logs available, can't send warning message";
+	}
     };
     $m =~ s/%m/$errno/g;
 
@@ -101,7 +110,12 @@ sub do_log {
 	    &do_connect();
 	    syslog($fac, $m, @param);
 	}
-      };
+    };
+    if($@ && ($warning_date < time - $warning_timeout)) {
+	$warning_date = time + $warning_timeout;
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
+	}
+    };
 
     if ($main::options{'foreground'}) {
 	if ($main::options{'log_to_stderr'} || 
@@ -133,6 +147,12 @@ sub do_connect {
     # close log may be usefull : if parent processus did open log child process inherit the openlog with parameters from parent process 
     closelog ; 
     eval {openlog("$log_service\[$$\]", 'ndelay', $log_facility)};
+    if($@ && ($warning_date < time - $warning_timeout)) {
+	$warning_date = time + $warning_timeout;
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
+	    print STDERR "No logs available, can't send warning message";
+	}
+    };
 }
 
 # return the name of the used daemon

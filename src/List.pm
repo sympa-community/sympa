@@ -3955,22 +3955,36 @@ sub archive_send_last {
 sub send_notify_to_listmaster {
 
     my ($operation, $robot, $param) = @_;
-    &do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
-
-    unless (defined $operation) {
-	&do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
-	return undef;
-    }
-    unless (defined $robot) {
-	&do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"');
-	return undef;
+    unless ($operation eq 'logs_failed') {
+	&do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
     }
 
-
+    unless ($operation eq 'logs_failed') {
+	unless (defined $operation) {
+	    &do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
+	    return undef;
+	}
+	unless (defined $robot) {
+	    &do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"');
+	    return undef;
+	}
+    }
     my $host = &Conf::get_robot_conf($robot, 'host');
     my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
     my $to = "$Conf{'listmaster_email'}\@$host";
     my $options = {}; ## options for send_global_file()
+
+    if ($operation eq 'logs_failed') {
+	my $data = {'to' => $to,
+		    'type' => $operation};
+	for my $i(0..$#{$param}) {
+	    $data->{"param$i"} = $param->[$i];
+	}
+	unless (&send_global_file('listmaster_notification', $listmaster, $robot, $data, $options)) {
+	    return undef;
+	}
+	return 1;
+    }
 
     if (ref($param) eq 'HASH') {
 
