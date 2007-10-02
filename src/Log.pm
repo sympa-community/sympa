@@ -41,8 +41,10 @@ sub fatal_err {
     my $m  = shift;
     my $errno  = $!;
     
-    syslog('err', $m, @_);
-    syslog('err', "Exiting.");
+    eval {
+	syslog('err', $m, @_);
+	syslog('err', "Exiting.");
+    };
     $m =~ s/%m/$errno/g;
 
     my $full_msg = sprintf $m,@_;
@@ -94,11 +96,12 @@ sub do_log {
 	$m = "###### TRACE MESSAGE ######:  " . $m;
 	$fac = 'notice';
     }
-
-    unless (syslog($fac, $m, @param)) {
-	&do_connect();
+    eval {
+	unless (syslog($fac, $m, @param)) {
+	    &do_connect();
 	    syslog($fac, $m, @param);
-    }
+	}
+      };
 
     if ($main::options{'foreground'}) {
 	if ($main::options{'log_to_stderr'} || 
@@ -129,7 +132,7 @@ sub do_connect {
     }
     # close log may be usefull : if parent processus did open log child process inherit the openlog with parameters from parent process 
     closelog ; 
-    openlog("$log_service\[$$\]", 'ndelay', $log_facility);
+    eval {openlog("$log_service\[$$\]", 'ndelay', $log_facility)};
 }
 
 # return the name of the used daemon
