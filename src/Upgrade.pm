@@ -50,7 +50,7 @@ sub get_previous_version {
 	    last;
 	}
 	close VFILE;
-
+	
 	return $previous_version;
     }
     
@@ -643,7 +643,7 @@ sub upgrade {
 sub probe_db {
     &do_log('debug3', 'List::probe_db()');    
     my (%checked, $table);
-
+    
     ## Database structure
     my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
 						  'gecos_user' => 'varchar(150)',
@@ -822,12 +822,12 @@ sub probe_db {
 	&do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
-
+    
     unless (&List::check_db_connect()) {
 	unless (&SQLSource::create_db()) {
 	    return undef;
 	}
-
+	
 	if ($ENV{'HTTP_HOST'}) { ## Web context
 	    return undef unless &List::db_connect('just_try');
 	}else {
@@ -836,7 +836,7 @@ sub probe_db {
     }
     
     my $dbh = &List::db_get_handler();
-
+    
     my (@tables, $fields, %real_struct);
     if ($Conf{'db_type'} eq 'mysql') {
 	
@@ -871,11 +871,11 @@ sub probe_db {
 		$real_struct{$t1} = {};
 	    }
 	}
-
+	
 	## Get fields
 	foreach my $t (@tables) {
 	    my $sth;
-
+	    
 	    #	    unless ($sth = $dbh->table_info) {
 	    #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
 	    my $sql_query = "SHOW FIELDS FROM $t";
@@ -892,12 +892,12 @@ sub probe_db {
 	    while (my $ref = $sth->fetchrow_hashref()) {
 		$real_struct{$t}{$ref->{'Field'}} = $ref->{'Type'};
 	    }
-
+	    
 	    $sth->finish();
 	}
 	
     }elsif ($Conf{'db_type'} eq 'Pg') {
-		
+	
 	unless (@tables = $dbh->tables) {
 	    &do_log('err', 'Can\'t load tables list from database %s', $Conf{'db_name'});
 	    return undef;
@@ -915,7 +915,7 @@ sub probe_db {
 	
 	foreach my $t (@tables) {
 	    next unless (defined $db_struct{$Conf{'db_type'}}{$t});
-
+	    
 	    my $res = $dbh->selectall_arrayref("PRAGMA table_info($t)");
 	    unless (defined $res) {
 		&do_log('err','Failed to check DB tables structure : %s', $dbh->errstr);
@@ -925,7 +925,7 @@ sub probe_db {
 		$real_struct{$t}{$field->[1]} = $field->[2];
 	    }
 	}
-
+	
 	# Une simple requête sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
 	# La liste retournée est composée d'un N°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par défaut,Clé primaire (1 ou 0)
 	
@@ -974,7 +974,7 @@ sub probe_db {
 	
 	$sth->finish();
     }
-
+    
     foreach $table ( @tables ) {
 	$checked{$table} = 1;
     }
@@ -1009,7 +1009,7 @@ sub probe_db {
 		    if ($not_null{$f}) {
 			$options .= 'NOT NULL';
 		    }
-
+		    
 		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
 			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
@@ -1019,7 +1019,7 @@ sub probe_db {
 		    push @report, sprintf('Field %s added to table %s', $f, $t);
 		    &do_log('info', 'Field %s added to table %s', $f, $t);
 		    $added_fields{$f} = 1;
-
+		    
 		    ## Remove temporary DB field
 		    if ($real_struct{$t}{'temporary'}) {
 			unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
@@ -1044,7 +1044,7 @@ sub probe_db {
 			if ($not_null{$f}) {
 			    $options .= 'NOT NULL';
 			}
-
+			
 			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
 			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
 			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
@@ -1064,73 +1064,150 @@ sub probe_db {
 		    }
 		}
 	    }
-
-	    ## Check that primary key has the right structure.
-	    my $should_update;
-	    my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
-	    my %primaryKeyFound;
-	    foreach my $scannedResult ( keys %$test_request_result ) {
-		if ( $scannedResult eq "PRI" ) {
-		    $primaryKeyFound{$scannedResult} = 1;
-		}
-	    }
-	    foreach my $field (@{$primary{$t}}) {		
-		unless ($primaryKeyFound{$field}) {
-		    $should_update = 1;
-		    last;
-		}
-	    }
-		
-	    ## Create required PRIMARY KEY. Removes useless INDEX.
-	    foreach my $field (@{$primary{$t}}) {		
-		if ($added_fields{$field}) {
-		    $should_update = 1;
-		    last;
-		}
-	    }
-	    
-	    if ($should_update) {
-		my $fields = join ',',@{$primary{$t}};
-		my %definedPrimaryKey;
-		foreach my $definedKeyPart (@{$primary{$t}}) {
-		    $definedPrimaryKey{$definedKeyPart} = 1;
-		}
-		my $searchedKeys = ['Field','Key'];
-		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,$searchedKeys);
-		my $expectedKeyMissing = 0;
-		my $unExpectedKey = 0;
-		my $primaryKeyFound = 0;
-		my $primaryKeyDropped = 0;
+	    if ($Conf{'db_type'} eq 'mysql') {
+		## Check that primary key has the right structure.
+		my $should_update;
+		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
+		my %primaryKeyFound;
 		foreach my $scannedResult ( keys %$test_request_result ) {
-		    if ( $$test_request_result{$scannedResult}{"PRI"} ) {
-			$primaryKeyFound = 1;
-			if ( !$definedPrimaryKey{$scannedResult}) {
-			    &do_log('info','Unexpected primary key : %s',$scannedResult);
-			    $unExpectedKey = 1;
-			    next;
+		    if ( $scannedResult eq "PRI" ) {
+			$primaryKeyFound{$scannedResult} = 1;
+		    }
+		}
+		foreach my $field (@{$primary{$t}}) {		
+		    unless ($primaryKeyFound{$field}) {
+			$should_update = 1;
+			last;
+		    }
+		}
+		
+		## Create required PRIMARY KEY. Removes useless INDEX.
+		foreach my $field (@{$primary{$t}}) {		
+		    if ($added_fields{$field}) {
+			$should_update = 1;
+			last;
+		    }
+		}
+		
+		if ($should_update) {
+		    my $fields = join ',',@{$primary{$t}};
+		    my %definedPrimaryKey;
+		    foreach my $definedKeyPart (@{$primary{$t}}) {
+			$definedPrimaryKey{$definedKeyPart} = 1;
+		    }
+		    my $searchedKeys = ['Field','Key'];
+		    my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,$searchedKeys);
+		    my $expectedKeyMissing = 0;
+		    my $unExpectedKey = 0;
+		    my $primaryKeyFound = 0;
+		    my $primaryKeyDropped = 0;
+		    foreach my $scannedResult ( keys %$test_request_result ) {
+			if ( $$test_request_result{$scannedResult}{"PRI"} ) {
+			    $primaryKeyFound = 1;
+			    if ( !$definedPrimaryKey{$scannedResult}) {
+				&do_log('info','Unexpected primary key : %s',$scannedResult);
+				$unExpectedKey = 1;
+				next;
+			    }
+			}
+			else {
+			    if ( $definedPrimaryKey{$scannedResult}) {
+				&do_log('info','Missing expected primary key : %s',$scannedResult);
+				$expectedKeyMissing = 1;
+				next;
+			    }
+			}
+			
+		    }
+		    if( $primaryKeyFound && ( $unExpectedKey || $expectedKeyMissing ) ) {
+			## drop previous primary key
+			unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
+			    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
+			}
+			push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
+			&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
+			$primaryKeyDropped = 1;
+		    }
+		    
+		    ## Add primary key
+		    if ( $primaryKeyDropped || !$primaryKeyFound ) {
+			&do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
+			    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
+			    return undef;
+			}
+			push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
+			&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
+		    }
+		}
+		
+		## drop previous index if this index is not a primary key and was defined by a previous Sympa version
+		my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'Key_name');
+		my %index_columns;
+		
+		foreach my $indexName ( keys %$test_request_result ) {
+		    unless ( $indexName eq "PRIMARY" ) {
+			$index_columns{$indexName} = 1;
+		    }
+		}
+		
+		foreach my $idx ( keys %index_columns ) {
+		    
+		    ## Check whether the index found should be removed
+		    my $index_name_is_known = 0;
+		    foreach my $known_index ( @former_indexes ) {
+			if ( $idx eq $known_index ) {
+			    $index_name_is_known = 1;
+			    last;
 			}
 		    }
-		    else {
-			if ( $definedPrimaryKey{$scannedResult}) {
-			    &do_log('info','Missing expected primary key : %s',$scannedResult);
-			    $expectedKeyMissing = 1;
-			    next;
+		    ## Drop indexes
+		    if( $index_name_is_known ) {
+			if ($dbh->do("ALTER TABLE $t DROP INDEX $idx")) {
+			    push @report, sprintf('Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
+			    &do_log('info', 'Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
+			}else {
+			    &do_log('err', 'Could not drop deprecated INDEX \'%s\' in table \'%s\'.', $idx, $t);
 			}
+			
 		    }
 		    
 		}
-		if( $primaryKeyFound && ( $unExpectedKey || $expectedKeyMissing ) ) {
+		
+		## Create required indexes
+		foreach my $idx (keys %{$indexes{$t}}){ 
+		    
+		    unless ($index_columns{$idx}) {
+			my $columns = join ',', @{$indexes{$t}{$idx}};
+			if ($dbh->do("ALTER TABLE $t ADD INDEX $idx ($columns)")) {
+			    &do_log('info', 'Added INDEX \'%s\' in table \'%s\'', $idx, $t);
+			}else {
+			    &do_log('err', 'Could not add INDEX \'%s\' in table \'%s\'.', $idx, $t);
+			}
+		    }
+		}	 
+	    }   
+	    elsif ($Conf{'db_type'} eq 'sqlite') {
+		## Create required INDEX and PRIMARY KEY
+		my $should_update;
+		foreach my $field (@{$primary{$t}}) {
+		    if ($added_fields{$field}) {
+			$should_update = 1;
+			last;
+		    }
+		}
+		
+		if ($should_update) {
+		    my $fields = join ',',@{$primary{$t}};
+		    
 		    ## drop previous primary key
 		    unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
 			&do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
 		    }
 		    push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
 		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
-		    $primaryKeyDropped = 1;
-		}
-
-		## Add primary key
-		if ( $primaryKeyDropped || !$primaryKeyFound ) {
+		    
+		    ## Add primary key
 		    &do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
 		    unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
 			&do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
@@ -1138,57 +1215,36 @@ sub probe_db {
 		    }
 		    push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
 		    &do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
-		}
-	    }
-	    
-	    ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
-	    my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'Key_name');
-	    my %index_columns;
-	    
-	    foreach my $indexName ( keys %$test_request_result ) {
-		unless ( $indexName eq "PRIMARY" ) {
-		    $index_columns{$indexName} = 1;
-		}
-	    }
-	    
-	    foreach my $idx ( keys %index_columns ) {
-
-		## Check whether the index found should be removed
-		my $index_name_is_known = 0;
-		foreach my $known_index ( @former_indexes ) {
-		    if ( $idx eq $known_index ) {
-			$index_name_is_known = 1;
-			last;
-		    }
-		}
-		## Drop indexes
-		if( $index_name_is_known ) {
-		    if ($dbh->do("ALTER TABLE $t DROP INDEX $idx")) {
-			push @report, sprintf('Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
-			&do_log('info', 'Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
-		    }else {
-			&do_log('err', 'Could not drop deprecated INDEX \'%s\' in table \'%s\'.', $idx, $t);
+		    
+		    
+		    ## drop previous index
+		    my $success;
+		    foreach my $field (@{$primary{$t}}) {
+			unless ($dbh->do("ALTER TABLE $t DROP INDEX $field")) {
+			    next;
+			}
+			$success = 1; last;
 		    }
 		    
-		}
-		
-	    }
-	    
-	    ## Create required indexes
-	    foreach my $idx (keys %{$indexes{$t}}){ 
-
-		unless ($index_columns{$idx}) {
-		    my $columns = join ',', @{$indexes{$t}{$idx}};
-		    if ($dbh->do("ALTER TABLE $t ADD INDEX $idx ($columns)")) {
-			&do_log('info', 'Added INDEX \'%s\' in table \'%s\'', $idx, $t);
+		    if ($success) {
+			push @report, sprintf('Table %s, INDEX dropped', $t);
+			&do_log('info', 'Table %s, INDEX dropped', $t);
 		    }else {
-			&do_log('err', 'Could not add INDEX \'%s\' in table \'%s\'.', $idx, $t);
+			&do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
 		    }
+		    
+		    ## Add INDEX
+		    unless ($dbh->do("ALTER TABLE $t ADD INDEX $t\_index ($fields)")) {
+			&do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
+			return undef;
+		    }
+		    push @report, sprintf('Table %s, INDEX set on %s', $t, $fields);
+		    &do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
+		    
 		}
-	    }	 
-	}   
-	
-    ## Try to run the create_db.XX script
+	    }
+	}
+	## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
 	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf{'db_type'}") {
 	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $!);
