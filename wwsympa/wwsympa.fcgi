@@ -1593,9 +1593,9 @@ sub send_html {
     ## Send HTML
     if ($param->{'date'}) {
 	Language::PushLang("en_US");
-	printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
-	Language::PopLang();
-    }
+	  printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime(time));
+	  Language::PopLang();
+      }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n\n";
     
