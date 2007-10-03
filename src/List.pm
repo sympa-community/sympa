@@ -1480,6 +1480,10 @@ sub savestats {
     
     ## Lock file
     my $lock = new Lock ($dir.'/stats');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(2); 
     unless ($lock->lock('write')) {
 	return undef;
@@ -1659,6 +1663,10 @@ sub save_config {
 
     ## Lock file
     my $lock = new Lock ($self->{'dir'}.'/config');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(5); 
     unless ($lock->lock('write')) {
 	return undef;
@@ -1764,6 +1772,10 @@ sub load {
 
 	## Get a shared lock on config file first 
 	my $lock = new Lock ($self->{'dir'}.'/config');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	$lock->set_timeout(5); 
 	unless ($lock->lock('read')) {
 	    return undef;
@@ -1787,6 +1799,10 @@ sub load {
 
 	## Get a shared lock on config file first 
 	my $lock = new Lock ($self->{'dir'}.'/config');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	$lock->set_timeout(5); 
 	unless ($lock->lock('write')) {
 	    return undef;
@@ -5014,6 +5030,10 @@ sub get_first_user {
     $sql_regexp = $data->{'sql_regexp'};
     
     my $lock = new Lock ($self->{'dir'}.'/include');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(10*60); 
 
     do_log('debug2', 'List::get_first_user(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
@@ -5301,6 +5321,10 @@ sub get_first_admin_user {
     &do_log('debug2', 'List::get_first_admin_user(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
 
     my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(20); 
 
     ## Get a shared lock
@@ -5545,6 +5569,10 @@ sub get_first_admin_user {
 
 	## Release the Shared lock
 	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	
 	unless ($lock->unlock()) {
 	    return undef;
@@ -5587,6 +5615,10 @@ sub get_next_user {
 	    
 	    ## Release lock
 	    my $lock = new Lock ($self->{'dir'}.'/include');
+	    unless (defined $lock) {
+		&do_log('err','Could not create new lock');
+		return undef;
+	    }
 	    unless ($lock->unlock()) {
 		return undef;
 	    }
@@ -5626,6 +5658,10 @@ sub get_next_admin_user {
 	
 	## Release the Shared lock
 	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	
 	unless ($lock->unlock()) {
 	    return undef;
@@ -5643,6 +5679,10 @@ sub get_first_bouncing_user {
     do_log('debug2', 'List::get_first_bouncing_user');
 
     my $lock = new Lock ($self->{'dir'}.'/include');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(10*60); 
 
     ## Get an Shared lock
@@ -5743,6 +5783,10 @@ sub get_next_bouncing_user {
 	
 	## Release the Shared lock
 	my $lock = new Lock ($self->{'dir'}.'/include');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	unless ($lock->unlock()) {
 	    return undef;
 	}
@@ -8393,6 +8437,10 @@ sub sync_include {
 
     ## Get an Exclusive lock
     my $lock = new Lock ($self->{'dir'}.'/include');
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock');
+	return undef;
+    }
     $lock->set_timeout(10*60); 
 
     unless ($lock->lock('write')) {
@@ -8579,6 +8627,10 @@ sub sync_include_admin {
 	
 	## Get an Exclusive lock
 	my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
+	}
 	$lock->set_timeout(20); 
 	unless ($lock->lock('write')) {
 	    return undef;
