@@ -542,6 +542,8 @@ sub verify {
     my $arguments = $3;
     my @args;
 
+    ## The expression for regexp is tricky because we don't allow the '/' character (that indicates the end of the regexp
+    ## but we allow any number of \/ escape sequence
     while ($arguments =~ s/^\s*(
 				\[\w+(\-\>[\w\-]+)?\]
 				|
@@ -551,7 +553,7 @@ sub verify {
 				|
 				"[^,)]*"
 				|
-				\/([^\/\\]+|\\\/|\\)+[^\\]+\/
+				\/([^\/]*((\\\/)*[^\/]+))*\/
 				|(\w+)\.ldap
 				|(\w+)\.sql
 				)\s*,?//x) {
@@ -690,7 +692,7 @@ sub verify {
 	# condition that require 2 args
     }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older$/o) {
 	unless ($#args == 1) {
-	    do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
+	    do_log('err',"error rule syntaxe : incorrect argument number (%d instead of %d) for condition $condition_key", $#args+1, 2) ; 
 	    return undef ;
 	}
     }elsif ($condition_key !~ /^customcondition::/o) {
