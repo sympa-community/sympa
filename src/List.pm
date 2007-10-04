@@ -2375,10 +2375,14 @@ sub distribute_msg {
 	
 	## Search previous subject tagging in Subject
 	my $custom_subject = $self->{'admin'}{'custom_subject'};
+
+	## tag_regexp will be used to remove the custom subject if it is already present in the message subject.
+	## Remember that the value of custom_subject can be "dude number [%list.sequence"%]" whereas the actual
+	## subject will contain "dude number 42".
 	my $tag_regexp = $custom_subject;
 	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
-	$tag_regexp =~ s/\[\S+\]/\.\+/g;
-	$tag_regexp =~ s/\s+/\\s+/g; ## consider folding
+	$tag_regexp =~ s/\\\[%\S+%\\\]/[^\]]\+/g; ## Replaces variables declarations by "[^\]]+"
+	$tag_regexp =~ s/\s+/\\s+/g; ## Takes spaces into account
 	
 	## Add subject tag
 	$message->{'msg'}->head->delete('Subject');
@@ -2387,21 +2391,35 @@ sub distribute_msg {
 				    'sequence' => $self->{'stats'}->[0]
 				    }},
 			[$custom_subject], \$parsed_tag);
-	
+
 	## If subject is tagged, replace it with new tag
-	$subject_field =~ s/\s*\[$tag_regexp\]//;
+	## Splitting the subject in two parts :
+	##   - what is before the custom subject (probably some "Re:")
+	##   - what is after it : the orginal subject sent to the list.
+	## The custom subject is not kept.
+	my $before_tag = '';
+	my $after_tag = $subject_field;
+	$after_tag =~ s/.*\[$tag_regexp\]//;
+
+	if($subject_field =~ /(.*)\s*\[$tag_regexp\](.*)/) {
+	    $before_tag = $1;
+	    $after_tag = $2;
+	    $after_tag =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
+	}
+	
  	## Encode subject using initial charset
 
 	## Don't try to encode the subject if it was not originaly encoded non-ASCII.
 	if ($message->{'subject_charset'} or $subject_field !~ /[^\x00-\x7E]/) {
 	    $subject_field = MIME::EncWords::encode_mimewords([
+							       [Encode::decode('utf8', $before_tag), $message->{'subject_charset'}],
 							       [Encode::decode('utf8', '['.$parsed_tag.'] '), &Language::GetCharset()],
-							       [Encode::decode('utf8', $subject_field), $message->{'subject_charset'}]
+							       [Encode::decode('utf8', $after_tag), $message->{'subject_charset'}]
 							       ], Encoding=>'A', Field=>'Subject');
 	}else {
-	    $subject_field = MIME::EncWords::encode_mimewords([
-							       [Encode::decode('utf8', '['.$parsed_tag.']'), &Language::GetCharset()]
-							       ], Encoding=>'A', Field=>'Subject') . ' ' . $subject_field;
+	    $subject_field = $before_tag . ' ' .  MIME::EncWords::encode_mimewords([
+										    [Encode::decode('utf8', '['.$parsed_tag.']'), &Language::GetCharset()]
+										    ], Encoding=>'A', Field=>'Subject') . ' ' . $after_tag;
 	}
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
@@ -2967,7 +2985,6 @@ sub send_msg {
 	    &do_log('err','Skipping user with no email address in list %s', $name);
 	    next;
 	}
-#	&do_log('debug','trace distribution VERP email %s,reception %s,bounce_address %s',$user->{'email'},$user->{'reception'},$user->{'bounce_address'} );
 	if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
 	    next;
 	} elsif ($user->{'reception'} eq 'notice') {
