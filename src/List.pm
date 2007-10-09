@@ -7646,9 +7646,12 @@ sub _load_users_include {
 	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	    last unless (defined $total);
 	    
-	    foreach my $incl (@{$admin->{$type}}) {
+	    foreach my $tmp_incl (@{$admin->{$type}}) {
 		my $included;
 		
+		## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
+		my $incl = &tools::dup_var($tmp_incl);
+
 		## get the list of users
 		if ($type eq 'include_sql_query') {
 		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'}, 'tied');
@@ -7758,8 +7761,10 @@ sub _load_users_include2 {
     foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	last unless (defined $total);
 	    
-	foreach my $incl (@{$admin->{$type}}) {
+	foreach my $tmp_incl (@{$admin->{$type}}) {
 	    my $included;
+	    ## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
+	    my $incl = &tools::dup_var($tmp_incl);
 
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
@@ -7859,9 +7864,12 @@ sub _load_admin_users_include {
 	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	    last unless (defined $total);
 	    
-	    foreach my $incl (@{$include_admin_user->{$type}}) {
+	    foreach my $tmp_incl (@{$include_admin_user->{$type}}) {
 		my $included;
 		
+		## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
+		my $incl = &tools::dup_var($tmp_incl);
+
 		## get the list of admin users
 		## does it need to define a 'default_admin_user_option' ?
 		if ($type eq 'include_sql_query') {
