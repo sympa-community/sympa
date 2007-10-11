@@ -8147,9 +8147,13 @@ Sends back the list creation edition form.
 
      ## Owner
      $param->{'page'} = $in{'page'} || 1;
-     $param->{'total_page'} = int ( $param->{'bounce_total'} / $size);
-     $param->{'total_page'} ++
-	 if ($param->{'bounce_total'} % $size);
+     if ($size eq 'all') {
+	 $param->{'total_page'} = $param->{'bounce_total'};
+     }else {
+	 $param->{'total_page'} = int ( $param->{'bounce_total'} / $size);
+	 $param->{'total_page'} ++
+	     if ($param->{'bounce_total'} % $size);
+     }
 
      if ($param->{'page'} > $param->{'total_page'}) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
@@ -8187,12 +8191,12 @@ Sends back the list creation edition form.
 		    @users) {
 	 $record++;
 
-	 if ($record > ( $size * ($param->{'page'} ) ) ) {
+	 if (($size ne 'all') && ($record > ( $size * ($param->{'page'} ) ) ) ) {
 	     $param->{'next_page'} = $param->{'page'} + 1;
 	     last;
 	 }
 
-	 next if ($record <= ( ($param->{'page'} - 1) *  $size));
+	 next if (($size ne 'all') && ($record <= ( ($param->{'page'} - 1) *  $size)));
 
 	 $i->{'first_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'first_bounce'});
 	 $i->{'last_bounce'} = gettext_strftime "%d %b %Y", localtime($i->{'last_bounce'});
@@ -15773,11 +15777,12 @@ sub do_dump_scenario {
 	 }
 
 	 if ($in{'format'} eq 'bounce') {
+	     $in{'size'} = 'all';
 	     do_reviewbouncing();
 	     print DUMP "# Exported bouncing subscribers\n";
-	     print DUMP "# Email\t\tName\tBounce score\tFirst bounce\tLast bounce\n";
+	     print DUMP "# Email\t\tName\tBounce score\tBounce count\tFirst bounce\tLast bounce\n";
 	     foreach my $user (@{$param->{'members'}}){
-		 print DUMP "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
+		 print DUMP "$user->{'email'}\t$user->{'gecos'}\t$user->{'bounce_score'}\t$user->{'bounce_count'}\t$user->{'first_bounce'}\t$user->{'last_bounce'}\n";
 	     }
 	 }
 	 else {
