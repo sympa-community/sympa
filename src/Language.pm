@@ -54,7 +54,10 @@ my %language_equiv = ( 'zh_CN' => 'cn',
 
 ## Supported languages are defined by 'supported_lang' sympa.conf parameter
 
-my %lang2locale = ('cz' => 'cs_CZ',
+my %lang2locale = ('ar' => 'ar_SA',
+		   'br' => 'br_FR',
+		   'bg' => 'bg_BG',
+		   'cz' => 'cs_CZ',
 		   'de' => 'de_DE',
 		   'us' => 'en_US',
 		   'el' => 'el_GR',
@@ -72,9 +75,9 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'pl' => 'pl_PL',
 		   'pt' => 'pt_PT',
 		   'ro' => 'ro_RO',
+		   'ru' => 'ru_RU',
 		   'sv' => 'sv_SE',
 		   'cn' => 'zh_CN',
-		   'cs' => 'cs_CZ',
 		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
 
