@@ -271,7 +271,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      verp_rate welcome_return_path remind_return_path user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
                       include_ldap_2level_query include_sql_query include_admin ttl distribution_ttl creation update 
-		      status serial);
+		      status serial custom_attribute);
 
 ## List parameters aliases
 my %alias = ('reply-to' => 'reply_to',
@@ -451,6 +451,52 @@ my %alias = ('reply-to' => 'reply_to',
 			   'group' => 'other'
 
 		       },
+	'custom_attribute' => {
+		'format' => {
+			'id' => {
+				'format' => '\w+',
+				'length' => 20,
+				'gettext_id' => "internal identifier",
+				'occurrence' => '1',
+				'order' =>1
+			},
+			'name' => {
+				'format' => '.+',
+				'length' =>30,
+				'occurrence' => '1',
+				'gettext_id' => "label",
+				'order' => 2
+			},
+			'comment' => {
+				'format' => '.+',
+				'length' => 100,
+				'gettext_id' => "additional comment",
+				'order' => 3
+			},
+			'type' => {
+				'format' => ['string','text','integer','enum'],
+				'default' => 'string',
+				'occurence' => 1,
+				'gettext_id' => "type",
+				'order' => 4
+			},
+			'enum_values' => {
+				'format' => '.+',
+				'length' => 100,
+				'gettext_id' => "possible attribute values (if enum is used)",
+				'order' => 5
+			},
+			'optional' => {
+				'format' => ['required','optional'],
+				'gettext_id' => "is the attribute optionnal ?",
+				'order' => 6
+			}
+		
+		},
+		'occurrence' => '0-n',
+		'gettext_id' => "Custom user attributes",
+		'group' => 'other'
+	},
 	    'custom_header' => {'format' => '\S+:\s+.*',
 				'length' => 30,
 				'occurrence' => '0-n',
@@ -4452,8 +4498,8 @@ sub get_user_db {
 	## Turn user_attributes into a hash
 	my $attributes = $user->{'attributes'};
 	$user->{'attributes'} = undef;
-	foreach my $attr (split /;/, $attributes) {
-	    my ($key, $value) = split /=/, $attr;
+	foreach my $attr (split (/\;/, $attributes)) {
+	    my ($key, $value) = split (/\=/, $attr);
 	    $user->{'attributes'}{$key} = $value;
 	}    
 	## Turn data_user into a hash
@@ -4539,7 +4585,7 @@ sub get_subscriber {
     
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
+	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute \"custom_attribute\  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4547,7 +4593,7 @@ sub get_subscriber {
 	$dbh->quote($name),
 	$dbh->quote($self->{'domain'});
     }else {
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4581,6 +4627,17 @@ sub get_subscriber {
 	$user->{'subscribed'} = 1
 	    if ($self->{'admin'}{'user_data_source'} eq 'database');
 	
+	do_log('debug2', 'List::get_subscriber custom_attribute  = (%s)', $user->{custom_attribute});
+	if (defined $user->{custom_attribute}) {
+	    do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
+	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+	    $user->{'custom_attribute'} = \%custom_attr ;
+	    do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
+	    	do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
+	    my @k = sort keys %custom_attr ;
+	    do_log('debug2', "keys custom_attribute  = @k");
+	}
+
     }
     
     $sth->finish();
@@ -4769,7 +4826,7 @@ sub get_first_user {
     ## Oracle
     if ($Conf{'db_type'} eq 'Oracle') {
 	
-	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4779,7 +4836,7 @@ sub get_first_user {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute \"custom_attribute\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -4802,7 +4859,7 @@ sub get_first_user {
 	## Sybase
     }elsif ($Conf{'db_type'} eq 'Sybase'){
 	
-	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4812,7 +4869,7 @@ sub get_first_user {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute \"custom_attribute\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -4836,7 +4893,7 @@ sub get_first_user {
 	## mysql
     }elsif ($Conf{'db_type'} eq 'mysql') {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4848,7 +4905,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -4877,7 +4934,7 @@ sub get_first_user {
 	## SQLite
     }elsif ($Conf{'db_type'} eq 'SQLite') {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4889,7 +4946,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -4918,7 +4975,7 @@ sub get_first_user {
 	## Pg    
     }else {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -4930,7 +4987,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute AS custom_attribute, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -4979,6 +5036,15 @@ sub get_first_user {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1
 	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+
+	############################################################################	    
+	if (defined $user->{custom_attribute}) {
+	    do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
+	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+	    $user->{'custom_attribute'} = \%custom_attr ;
+	}
+
+
     }
     else {
 	$sth->finish;
@@ -5003,6 +5069,45 @@ sub get_first_user {
     }
     
     return $user;
+}
+
+# Create a custom attribute from an XML description
+# IN : string, XML formed data as stored in database
+# OUT : HASH data storing custome attributes.
+sub parseCustomAttribute {
+	my $xmldoc = shift ;
+	return undef if ($xmldoc eq '') ;
+	do_log('debug2',"xxxxxxxxxxxxxxxxxxx #custom_attribute XML = $xmldoc");
+	my $parser = XML::LibXML->new();
+	my $tree = $parser->parse_string($xmldoc);
+	my $doc = $tree->getDocumentElement;
+	
+	my @custom_attr = $doc->getChildrenByTagName('custom_attribute') ;
+	my %ca ;
+	foreach my $ca (@custom_attr) {
+	        my $id = $ca->getAttribute('id');
+	        my $value = $ca->getElementsByTagName('value');
+		$ca{$id} = {value=>$value} ;
+		do_log('debug2',"xxxxxxxxxxxxxxxxxxx #custom_attribute  = {$id} = {value=>$value}");
+	}
+	return %ca ;
+}
+
+# Create an XML Custom attribute to be stored into data base.
+# IN : HASH data storing custome attributes
+# OUT : string, XML formed data to be stored in database
+sub createXMLCustomAttribute {
+	my $custom_attr = shift ;
+	return '<custom_attributes></custom_attributes>' if (not defined $custom_attr) ;
+	do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute=$custom_attr");
+	my $XMLstr = '<custom_attributes>';
+	foreach my $k (sort keys %{$custom_attr} ) {
+		$XMLstr .= "<custom_attribute id=\"$k\"><value>".$custom_attr->{$k}{value}."</value></custom_attribute>";
+		do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute $k : $custom_attr->{$k}{value}");
+	}
+	$XMLstr .= "</custom_attributes>";
+	
+	return $XMLstr ;
 }
 
 ## Returns the first admin_user with $role for the list.
@@ -5263,6 +5368,7 @@ sub get_first_admin_user {
 	## In case it was not set in the database
 	$admin_user->{'subscribed'} = 1
 	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+
     }else {
 	$sth->finish;
         $sth = pop @sth_stack;
@@ -5306,6 +5412,17 @@ sub get_next_user {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1
 	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+
+	do_log('debug2', '(email = %s)', $user->{'email'});
+	if (defined $user->{custom_attribute}) {
+	    do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
+	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+	    $user->{'custom_attribute'} = \%custom_attr ;
+	    do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
+	    do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
+	    my @k = sort keys %custom_attr ;
+	    do_log('debug2', "keys custom_attribute  = @k");
+	}
     }
     else {
 	$sth->finish;
@@ -5476,6 +5593,21 @@ sub get_next_bouncing_user {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1
 	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
+	if (defined $user->{custom_attribute}) {
+	    	do_log('trace', 'custom_attribute  = (%s)', $user->{custom_attribute});
+	    	my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+	    	$user->{'custom_attribute'} = \%custom_attr ;
+	    }
+##	do_log('trace', 'List::get_next_bouncing_user (email = %s)', $user->{'email'});
+##	if (defined $user->{custom_attribute}) {
+##		do_log('trace', '1. custom_attribute  = (%s)', $user->{custom_attribute});
+##		my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+##		$user->{'custom_attribute'} = %custom_attr ;
+##		do_log('trace', '2. custom_attribute  = (%s)', %custom_attr);
+##		do_log('trace', '3. custom_attribute  = (%s)', $user->{custom_attribute});
+##		my @k = sort keys %custom_attr ;
+##		do_log('trace', "keys custom_attribute  = @k");
+##	}
 
     }else {
 	$sth->finish;
@@ -5666,7 +5798,8 @@ sub update_user {
 		      subscribed => 'subscribed_subscriber',
 		      included => 'included_subscriber',
 		      id => 'include_sources_subscriber',
-		      bounce_address => 'bounce_address_subscriber'
+		      bounce_address => 'bounce_address_subscriber',
+		      custom_attribute => 'custom_attribute'
 		      );
     
     ## mapping between var and tables
@@ -5683,7 +5816,8 @@ sub update_user {
 		      subscribed => 'subscriber_table',
 		      included => 'subscriber_table',
 		      id => 'subscriber_table',
-		      bounce_address => 'subscriber_table'
+		      bounce_address => 'subscriber_table',
+		      custom_attribute => 'subscriber_table'
 		      );
     
     ## additional DB fields
@@ -5701,6 +5835,14 @@ sub update_user {
 	}
     }
     
+    do_log('debug2', " custom_attribute id: $Conf{'custom_attribute'}");
+    ## custom attributes
+    if (defined $Conf{'custom_attribute'}){
+	foreach my $f (sort keys %{$Conf{'custom_attribute'}}){
+	    do_log('debug2', "List::update_user custom_attribute id: $Conf{'custom_attribute'}{id} name: $Conf{'custom_attribute'}{name} type: $Conf{'custom_attribute'}{type} ");
+	    	
+	}
+    }
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -5993,6 +6135,7 @@ sub add_user_db {
     ## mapping between var and field names
     my %map_field = ( email => 'email_user',
 		      gecos => 'gecos_user',
+		      custom_attribute => 'custom_attribute',
 		      password => 'password_user',
 		      cookie_delay => 'cookie_delay_user',
 		      lang => 'lang_user',
@@ -6044,6 +6187,8 @@ sub add_user {
     my $name = $self->{'name'};
     my $total = 0;
     
+    my $subscriptions = $self->get_subscription_requests();
+
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
@@ -6057,6 +6202,10 @@ sub add_user {
 	$new_user->{'date'} ||= time;
 	$new_user->{'update_date'} ||= $new_user->{'date'};
 	
+	my %custom_attr = %{ $subscriptions->{$who}{'custom_attribute'} } if (defined $subscriptions->{$who}{'custom_attribute'} );
+	$new_user->{'custom_attribute'} ||= &createXMLCustomAttribute(\%custom_attr) ;
+	do_log('debug2', 'List::add_user custom_attribute = %s', $new_user->{'custom_attribute'});
+
 	my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
 	my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
 	
@@ -6092,7 +6241,7 @@ sub add_user {
 	$new_user->{'included'} ||= 0;
 	
 	## Update Subscriber Table
-	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 	$dbh->quote($who), 
 	$dbh->quote($new_user->{'gecos'}), 
 	$dbh->quote($name), 
@@ -6104,7 +6253,8 @@ sub add_user {
 	$dbh->quote($new_user->{'visibility'}), 
 	$new_user->{'subscribed'}, 
 	$new_user->{'included'}, 
-	$dbh->quote($new_user->{'id'});
+	$dbh->quote($new_user->{'id'}),
+	$dbh->quote($new_user->{'custom_attribute'});
 	
 	unless ($dbh->do($statement)) {
 	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
@@ -9683,7 +9833,7 @@ sub get_cert {
     return @cert;
 }
 
-## Load a config file
+## Load a config file of a list
 sub _load_admin_file {
     my ($directory,$robot, $file) = @_;
     do_log('debug3', 'List::_load_admin_file(%s, %s, %s)', $directory, $robot, $file);
@@ -10602,8 +10752,8 @@ sub _urlize_part {
 }
 
 sub store_subscription_request {
-    my ($self, $email, $gecos) = @_;
-    do_log('debug2', 'List::store_subscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
+    my ($self, $email, $gecos, $custom_attr) = @_;
+    do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos, $custom_attr);
 
     my $filename = $Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
     
@@ -10612,7 +10762,7 @@ sub store_subscription_request {
 	return undef;
     }
 
-    printf REQUEST "$email\t$gecos\n";
+    printf REQUEST "$email\t$gecos\t$custom_attr\n";
     close REQUEST;
 
     return 1;
@@ -10636,14 +10786,19 @@ sub get_subscription_requests {
 	    next;
 	}
 	my $line = <REQUEST>;
-	$line =~ /^((\S+|\".*\")\@\S+)\s*(.*)$/;
+	$line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/;
 	my $email = $1;
-	$subscriptions{$email} = {'gecos' => $3};
+	my %xml = &parseCustomAttribute($4) ;
+	$subscriptions{$email} = {'gecos' => $3,
+				'custom_attribute' => \%xml};
+	&do_log('info', 'get_subscription_requests %s : email',$email);
+        &do_log('info', "get_subscription_requests ".join(', ', (sort keys %xml))." : keys custom_attribute");
+	&do_log('info', 'get_subscription_requests %s : custom_attribute',$4);
 	
 	unless($subscriptions{$email}{'gecos'}) {
 		my $user = get_user_db($email);
 		if ($user->{'gecos'}) {
-			$subscriptions{$email} = {'gecos' => $user->{'gecos'}};
+			$subscriptions{$email}{'gecos'} = $user->{'gecos'};
 #			&do_log('info', 'get_user_db %s : no gecos',$email);
 		}
 	}

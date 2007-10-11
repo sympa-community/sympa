@@ -301,6 +301,7 @@ my %comm = ('home' => 'do_home',
 	 'rss_request' => 'do_rss_request',
 	 'maintenance' => 'do_maintenance',
 	 'blacklist' => 'do_blacklist',
+	 'edit_attributes' => 'do_edit_attributes'
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -341,7 +342,8 @@ my %action_args = ('default' => ['list'],
 		'add' => ['list','email'],
 		'add_request' => ['list'],
 		'del' => ['list','email'],
-		'editsubscriber' => ['list','email','previous_action'],
+		'editsubscriber' => ['list','email','previous_action','custom_attribute'],
+#		'editsubscriber' => ['list','email','previous_action'],
 		'viewbounce' => ['list','email'],
 		'resetbounce' => ['list','email'],
 		'review' => ['list','page','size','sortby'],
@@ -480,10 +482,13 @@ my %in_regexp = (
 		 'info' => '.+',
 		 'new_scenario_content' => '.+',
                  'blacklist' => '.*',
+                 'text' => '.+',
+                 'string' => '.+',
 
 		 ## Integer
 		 'page' => '\d+',
 		 'size' => '\d+',
+		 'integer' => '\d+',
 
 		 ## Free data
 		 'subject' => '.*',
@@ -559,7 +564,7 @@ my %in_regexp = (
 		 'new_robot' => &tools::get_regexp('host'),
 		 'remote_host' => &tools::get_regexp('host'),
 		 'remote_addr' => &tools::get_regexp('host'),
-
+    
 		 ## Scenario name
 		 'scenario' => &tools::get_regexp('scenario'),
 		 'read_access' => &tools::get_regexp('scenario'),
@@ -576,6 +581,9 @@ my %in_regexp = (
 		 'date_from' => '[\d\/]+',
 		 'date_to' => '[\d\/]+',
 		 'ip' => &tools::get_regexp('host'),
+    
+                 ## Custom attribute
+                 'custom_attribute' => '.*',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1498,6 +1506,9 @@ sub get_parameters {
 	 $in{'list'} = $lists[0];
      }
 
+
+     my $custom_attribute ;
+     
      ## Check parameters format
      foreach my $p (keys %in) {
 
@@ -1510,7 +1521,7 @@ sub get_parameters {
 	 #XXX## Convert from the web encoding to unicode string
 	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
 
-	 my @tokens = split /\./, $p;
+	 my @tokens = split (/\./, $p);
 	 my $pname = $tokens[0];
 
 	 ## Regular expressions applied on parameters
@@ -1518,6 +1529,13 @@ sub get_parameters {
 	 my $regexp;
 	 if ($pname =~ /^additional_field/) {
 	     $regexp = $in_regexp{'additional_field'};
+	 }elsif ($pname =~ /^custom_attribute(.*)$/) {
+	     my $key = $tokens[1] ;
+	     $regexp = $in_regexp{'custom_attribute'};
+	     do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} $Conf{$key}{type}");
+	     $custom_attribute->{$key} = {value=>$in{$p}} ;
+	     undef $in{$p} ;
+
 	 }elsif ($in_regexp{$pname}) {
 	     $regexp = $in_regexp{$pname};
 	 }else {
@@ -1561,7 +1579,9 @@ sub get_parameters {
 	     }
 	 }
      }
-
+     
+     $in{custom_attribute} = $custom_attribute ;
+     
      ## For shared-related actions, Q-encode filenames
      ## This required for filenames that include non ascii characters
      if (defined $filtering{$in{'action'}}) {
@@ -3093,9 +3113,9 @@ sub do_remindpasswd {
      }
 
      if ($param->{'newuser'} =  &List::get_user_db($in{'email'})) {
+	 &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
 	 ## Create a password if none
 	 unless ($param->{'newuser'}{'password'}) {
-	     &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
 	     unless ( &List::update_user_db($in{'email'},
 					    {'password' => &tools::tmp_passwd($in{'email'}) 
 					     })) {
@@ -3823,6 +3843,13 @@ sub do_remindpasswd {
 		      'error_type' => 'missing_parameter'});		      
 	 return undef;
      }
+     
+     if ($in{custom_attribute}){
+       return undef if ( &check_custom_attribute() != 1) ;
+       my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
+       do_log ('trace', "custom_attribute xml = $xml");
+       $in{custom_attribute} = $xml ;
+      }
 
      if ($in{'email'}) {
 	 unless ($param->{'is_owner'}) {
@@ -3939,6 +3966,7 @@ sub do_remindpasswd {
      }
 
      $update->{'gecos'} = $in{'gecos'} if $in{'gecos'};
+     $update->{'custom_attribute'} = $in{'custom_attribute'} if $in{'custom_attribute'};
 
      unless ( $list->update_user($email, $update) ) {
 	 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -3955,6 +3983,46 @@ sub do_remindpasswd {
 	      });
      return $in{'previous_action'} || 'suboptions';
  }
+ 
+
+## checks if each element of the custom attribute is conform to the list's
+## definition
+sub check_custom_attribute {
+
+        my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
+        my $isOK = 1 ;
+
+        &do_log('trace', "custom_attribute $in{custom_attribute} !!!(keys=".(sort keys (%{$in{custom_attribute}} )).")");
+        foreach my $ca (@custom_attributes){
+                my $value = $in{custom_attribute}{$ca->{id}}{value} ;
+                &do_log('trace', "custom_attribute ($ca) id=$ca->{id}, type=$ca->{type}, value=".$value." r/o=$ca->{optional}, regexp=$in_regexp{$ca->{type}}." );
+                if ($ca->{optional} eq 'required' && $value eq '') {
+                        &report::reject_report_web('user','missing_arg',{'argument' => "\"$ca->{name}\" is required"},$param->{'action'});
+                        &wwslog('info','do_set: missing parameter');
+                        &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
+                        'status' => 'error',
+                        'error_type' => 'missing_parameter'});
+                        $isOK = undef;
+                        next ;
+                }
+                &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." values=$ca->{enum_values} (".@{split(/,/ , $ca->{enum_values})}.") ");
+                my @values = split(/,/ , $ca->{enum_values}) ;
+                &do_log('trace', "custom_attribute enum values ".@values." VLAUES:".(join(';', @values))." (values=$ca->{enum_values})") ;
+                if ($ca->{type} eq 'enum' && (grep (/$value/, @values) == 1) ) {
+                        &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." values=$ca->{enum_values} [".@values."] OK");
+                }
+                elsif (defined $value && $value ne '' && $value !~ /^$in_regexp{$ca->{type}}$/) {
+                        &report::reject_report_web('user','syntax_errors',{'params' => $ca->{name}},$param->{'action'});
+                        &wwslog('info','do_set: syntax error');
+                        &web_db_log({'parameters' => $ca->{name}, 'status' => 'error',  'error_type' => 'missing_parameter'});
+                        $isOK = undef;
+                        next ;
+                }
+                &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." OK");
+       }
+        return $isOK ;
+}
+
 
  ## Update of user preferences
  sub do_setpref {
@@ -4059,7 +4127,7 @@ sub do_remindpasswd {
 ####################################################
  ## TOTO: accepter nouveaux users
  sub do_subscribe {
-     &wwslog('info', 'do_subscribe(%s)', $in{'email'});
+     &wwslog('info', 'do_subscribe(%s)(custom_attrbute=%s)', $in{'email'},$in{'custom_attribute'});
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -4098,6 +4166,18 @@ sub do_remindpasswd {
 		      'error_type' => 'already_subscriber'});		      
 	 return undef;
      }
+     
+     my @keys = sort keys (%{$list->{'admin'}}) ;
+     my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
+     if ($list->{'admin'}{'custom_attribute'} ) {
+     	if (&check_custom_attribute() != 1) {
+     		&do_log('trace', "subscribe custom_attribute required to be set by the user in{'previous_action'} = '".$in{'previous_action'}."' !!!") ;
+     		return 'subrequest';
+     	}
+     	my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
+     	do_log ('trace', "custom_attribute xml = $xml");
+     	$in{custom_attribute} = $xml ;
+     }
 
      my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
 					  {'sender' => $param->{'user'}{'email'}, 
@@ -4128,7 +4208,7 @@ sub do_remindpasswd {
 	     &wwslog('notice',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
 	 }
 
-	 $list->store_subscription_request($param->{'user'}{'email'});
+	 $list->store_subscription_request($param->{'user'}{'email'}, "", $in{'custom_attribute'});
 	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
 	 &wwslog('info', 'do_subscribe: subscribe sent to owner');
 
@@ -4153,6 +4233,7 @@ sub do_remindpasswd {
 	     $u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
 	     $u->{'date'} = $u->{'update_date'} = time;
 	     $u->{'password'} = $param->{'user'}{'password'};
+	     $u->{'custom_attribute'} = $in{'custom_attribute'} if (defined $in{'custom_attribute'});
 	     $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
 
 	     unless ($list->add_user($u)) {
@@ -4323,7 +4404,12 @@ sub do_remindpasswd {
 ## Subscription request (user not authenticated)
  sub do_subrequest {
      &wwslog('info', 'do_subrequest(%s)', $in{'email'});
-
+     &wwslog('info', "do_subrequest custom_attribute ($in{'custom_attribute'})");
+     
+     if (defined $in{'custom_attribute'}) {
+     	$param->{'custom_attribute'} = $in{'custom_attribute'};
+     }
+     
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	 &wwslog('info','do_subrequest: no list');
@@ -4363,21 +4449,33 @@ sub do_remindpasswd {
 	 my $user;
 	 $user = &List::get_user_db($in{'email'})
 	     if &List::is_user_db($in{'email'});
-
+	
 	 ## Need to send a password by email
 	 if ((!&List::is_user_db($in{'email'}) || 
 	      !$user->{'password'} || 
 	      ($user->{'password'} =~ /^INIT/i)) &&
 	     !$ldap_user) {
-
+	     if ( &check_custom_attribute() != 1) {
+	     	$param->{'status'} = $in{status} ;
+	     	&report::reject_report_web('user','custom_attribute', {'list' => $list->{'name'}},$param->{'action'},$list);
+	     	&wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
+	     	&web_db_log({'status' => 'error',
+	     		'error_type' => 'custom_attribute'});
+	     	return undef ;
+	     }
 	     &do_sendpasswd();
 	     $param->{'status'} = 'notauth_passwordsent';
+	     
+#	     my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
+#	     do_log ('trace', "custom_attribute xml = $xml");
+#	     $param->{custom_attribute} = $xml ;
 	     return 1;
 	 }
 
 	 $param->{'email'} = $in{'email'};
 	 $param->{'status'} = 'notauth';
      }
+     
 
      return 1;
  }
@@ -5253,6 +5351,7 @@ sub do_skinsedit {
 ## TODO: vérifier validité email
  sub do_add {
      &wwslog('info', 'do_add(%s)', $in{'email'}||$in{'pending_email'});
+     my $subscriptions = $list->get_subscription_requests();
 
      my %user;
 
@@ -5309,6 +5408,11 @@ sub do_skinsedit {
      my ($total, @new_users );
      my $comma_emails ;
      foreach my $email (keys %user) {
+	&wwslog('debug', "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})" );
+        if (ref($subscriptions->{$email}{'custom_attribute'}) eq 'HASH') {
+                my $xml = List::createXMLCustomAttribute($subscriptions->{$email}{'custom_attribute'}) ;
+                &wwslog('debug', "do_add subscription XML \$subscriptions->{$email}{custom_attribute} = $xml;");
+        }
 
 	 my $result = $list->check_list_authz('add',$param->{'auth_method'},
 					      {'sender' => $param->{'user'}{'email'}, 
@@ -6009,7 +6113,7 @@ sub do_skinsedit {
      }
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
-     foreach my $id (split /,/, $in{'id'}) {
+     foreach my $id (split (/,/, $in{'id'})) {
 
 	 ## For compatibility concerns
 	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
@@ -6156,7 +6260,7 @@ sub do_skinsedit {
 
 
      ## messages
-     foreach my $id (split /,/, $in{'id'}) {
+     foreach my $id (split (/,/, $in{'id'})) {
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} .= $mail_command;
 
@@ -8403,6 +8507,13 @@ Sends back the list creation edition form.
  }
 
  ## Search among lists
+ sub do_edit_attributes {
+     &wwslog('info', 'do_edit_attributes(%s)', $in{'filter'});
+     
+     return 1;
+ }     
+ 
+ ## Search among lists
  sub do_search_list {
      &wwslog('info', 'do_search_list(%s)', $in{'filter'});
 
@@ -8516,7 +8627,7 @@ sub do_edit_list {
 	    $value = \@values;
 	}
 	
-	my @token = split /\./, $name;
+	my @token = split (/\./, $name);
 	
 	## make it an entry in $new_admin
 	my $var = &_shift_var(0, $new_admin, @token);

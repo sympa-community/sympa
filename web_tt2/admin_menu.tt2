@@ -165,5 +165,13 @@
        <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Data Source[%END%]</strong></span></a>
     </td>                             
     [% END %] 
+    [% IF action == 'edit_attributes' %]
+    </tr>
+    <tr>
+    <td style="background: [% selected_color %]; text-align: center;">
+       <a href="[% path_cgi %]/edit_list_request/[% list %]/description">
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Attribute optionnal/required[%END%]</strong></span></a>
+    </td>
+    [% END %] 
 <!-- end menu_admin.tt2 -->
 

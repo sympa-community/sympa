@@ -58,7 +58,7 @@ selected by Sympa as severe bouncing addresses:[%END%]
 [%|loc%]Managing bouncing subscribers:[%END%] [% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
 
 [% ELSIF type == 'subrequest' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1 [% user.custom_attribute %][%END%][%END%]
 
 [%|loc(list.name)-%]Dear owner of list %1,
  

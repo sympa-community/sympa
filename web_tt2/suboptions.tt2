@@ -3,6 +3,7 @@
   <form action="[% path_cgi %]" method="post">
   <fieldset>
    <label for="gecos">[%|loc%]Name :[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
+[% PROCESS edit_attributes.tt2 %]
   [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
@@ -56,8 +57,10 @@
         [% END %]
      </select>
 
+
      <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
 </fieldset>     
 </form><br /><br /> 
 
 [% PROCESS picture_upload.tt2 %]
+

@@ -28,6 +28,7 @@ create table subscriber_table
 (
     list_subscriber        varchar(50)            not null,
     user_subscriber        varchar(100)           not null,
+    custom_attribute       varchar (500)          null    ,
     robot_subscriber       varchar(80)           not null,
     date_subscriber        datetime               not null,
     update_subscriber      datetime               null,

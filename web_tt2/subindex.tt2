@@ -1,4 +1,4 @@
-<h2>[%|loc%]Listing subscriptions to validate[%END%]</h2>
+<h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
@@ -8,6 +8,7 @@
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>
+          <th>[%|loc%]Additional information[%END%]</th>
       </tr>
       
       [% IF subscriptions %]
@@ -31,6 +32,9 @@
 	  <td class="text_center">
 	      [% sub.value.date %]
 	  </td>
+          <td class="text_left">
+              [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %] : </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
+          </td>
         </tr>
 
         [% IF dark == '1' %]

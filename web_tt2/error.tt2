@@ -63,6 +63,7 @@
     [% IF u_err.email %]  [%|loc(u_err.email)%]Not subscribed: %1[%END%]
     [% ELSE %][%|loc(u_err.list)%]You are not subscribed to list %1[%END%]
     [% END %]
+  [% ELSIF u_err.msg == 'custom_attribute' %][%|loc(u_err.reception_mode)%]Check the additional information[%END%]
   [% ELSIF u_err.msg == 'not_available_reception_mode' %][%|loc(u_err.reception_mode)%]%1 is not an available reception mode[%END%]
   [% ELSIF u_err.msg == 'file_not_editable' %][%|loc(u_err.file)%]%1 : file not editable[%END%]
   [% ELSIF u_err.msg == 'already_subscriber' %][%|loc(u_err.list)%]You are already subscribed to the list %1[%END%]
