@@ -14978,6 +14978,7 @@ sub make_pictures_url {
      
 
      $Text::Wrap::columns = 80;
+     $Text::Wrap::huge = 'overflow';
      $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
 
 
