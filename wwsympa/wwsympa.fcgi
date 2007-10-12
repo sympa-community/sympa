@@ -1550,17 +1550,17 @@ sub get_parameters {
 	 }
 
 	 # If we are editing an HTML file in the shared, allow HTML but prevent XSS.
-	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
-	     my $tmpparam = $in{$p};
-	     $tmpparam = &tools::sanitize_html('robot' => $robot,
-					       'string' => $in{$p});
-	     if (defined $tmpparam) {
-		 $in{$p} = $tmpparam;
-	     }
-	     else {
-		 &do_log('err','Unable to sanitize parameter %s',$pname);
-	     }
-	 }
+#	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
+#	     my $tmpparam = $in{$p};
+#	     $tmpparam = &tools::sanitize_html('robot' => $robot,
+#					       'string' => $in{$p});
+#	     if (defined $tmpparam) {
+#		 $in{$p} = $tmpparam;
+#	     }
+#	     else {
+#		 &do_log('err','Unable to sanitize parameter %s',$pname);
+#	     }
+#	 }
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     if ($one_p !~ /^$regexp$/s ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
@@ -12999,18 +12999,18 @@ sub creation_shared_file {
     close FILE;
 
     ## XSS Protection for HTML files.
-    if (lc($fname) =~ /\.html?/) {
-	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
-							'file' => "$shareddir/$path/$fname");
-	if (defined $sanitized_file) {
-	    open HTMLFILE,  ">:bytes", "$shareddir/$path/$fname";
-	    print HTMLFILE $sanitized_file;
-	    close HTMLFILE;
-	}
-	else {
-	    &do_log('err','Unable to sanitize file %s',$fname);
-	}
-    }
+#    if (lc($fname) =~ /\.html?/) {
+#	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+#							'file' => "$shareddir/$path/$fname");
+#	if (defined $sanitized_file) {
+#	    open HTMLFILE,  ">:bytes", "$shareddir/$path/$fname";
+#	    print HTMLFILE $sanitized_file;
+#	    close HTMLFILE;
+#	}
+#	else {
+#	    &do_log('err','Unable to sanitize file %s',$fname);
+#	}
+#    }
     
 }
 
@@ -13578,18 +13578,18 @@ sub d_copy_file {
 	close DEST_FILE;
 
 	## XSS Protection for HTML files.
-	if (lc($fname) =~ /\.html?/) {
-	    my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
-							    'file' => "$dest_dir/$fname");
-	    if (defined $sanitized_file) {
-		open HTMLFILE,  ">:bytes", "$dest_dir/$fname";
-		print HTMLFILE $sanitized_file;
-		close HTMLFILE;
-	    }
-	    else {
-		&do_log('err','Unable to sanitize file %s',$fname);
-	    }
-	}
+#	if (lc($fname) =~ /\.html?/) {
+#	    my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+#							    'file' => "$dest_dir/$fname");
+#	    if (defined $sanitized_file) {
+#		open HTMLFILE,  ">:bytes", "$dest_dir/$fname";
+#		print HTMLFILE $sanitized_file;
+#		close HTMLFILE;
+#	    }
+#	    else {
+#		&do_log('err','Unable to sanitize file %s',$fname);
+#	    }
+#	}
 	
 	## desc file creation
 	unless (open (DESC,">$dest_dir/.desc.$fname")) {
