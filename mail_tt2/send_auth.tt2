@@ -11,7 +11,7 @@ Content-Type: text/plain; charset=[% charset %];
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,authkey)%]List %1 allows you to tag your messages, using a set of defined topics. To tag the attached message go to the following page :[%END%]
 
 [%conf.wwsympa_url%]/request_topic/[%list.name%]/[%authkey%]
-[%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, folow the link below :[%END%]
+[%- ELSE -%][%|loc(list.name)%]To distribute the attached message in list %1, follow the link below :[%END%]
 
 [% FILTER escape_url %]mailto:[%conf.sympa%]?subject=CONFIRM [%authkey%][% END %]
 
