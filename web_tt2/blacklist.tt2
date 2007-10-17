@@ -4,7 +4,7 @@
 
 <div id="blacklist">
 [%|loc%]Operation requested by users which email is listed in the blacklist file are rejected. The
-blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %]. 
+blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %].
 <br /><br />
 [%|loc%]Syntax :[%END%]
 <ul>
@@ -19,12 +19,12 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
 [% IF rows == '0' %]
  [%|loc%]The current blacklist is empty[%END%]
 [% ELSE %]
- [%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]
+ [%|loc(rows)%]The current blacklist contains [% rows %] line(s)[%END%]
 [% END %]
 </p>
 <p>
-[% rows = '20' IF rows > 20 %]
-[% rows = '10' IF rows < 10 %]
+[% IF rows < '10' %] [% rows = '10' %] [% END %]
+[% IF rows > '20' %] [% rows = '20' %] [% END %]
 [% rows = rows+2 %]
 <form action="[% path_cgi %]/blacklist" method="post">
 <fieldset>
@@ -33,8 +33,8 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
 </textarea><br />
 <input type="hidden" name="action" value="blacklist" />
 [% IF list %]
-	<input type="hidden" name="list" value="[% list %]" /> 
-[% END %] 
+        <input type="hidden" name="list" value="[% list %]" />
+[% END %]
 <br /><input type="submit" class="MainMenuLinks" name="action_blacklist" value="[%|loc%]save[%END%]" />
 [% IF saved %]
 [%|loc%]Template saved[%END%] ([% time %]) <br /><br />
@@ -43,3 +43,4 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
 </fieldset>
 </form>
 </div>
+
