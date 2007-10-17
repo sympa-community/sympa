@@ -83,12 +83,64 @@ my ($PO, $out);
 
 # options as above. Values in %opts
 getopts('hugo:', \%opts)
-  or pod2usage( -verbose => 1, -exitval => 1 );
+    or pod2usage( -verbose => 1, -exitval => 1 );
 $opts{h} and pod2usage( -verbose => 2, -exitval => 0 );
 
 $PO = $opts{o} || "messages.po";
 
 @ARGV = ('-') unless @ARGV;
+
+## Ordering files to present the most interresting strings to translate first.
+my %files_to_parse;
+foreach my $file_to_parse (@ARGV) {
+    $files_to_parse{$file_to_parse} = 1;
+}
+my %favoured_files;
+my @ordered_files;
+my @planned_ordered_files = ("web_tt2/home.tt2","web_tt2/login.tt2","web_tt2/main.tt2","web_tt2/title.tt2","web_tt2/menu.tt2","web_tt2/login_menu.tt2",
+			     "web_tt2/your_lists.tt2","web_tt2/footer.tt2","web_tt2/list_menu.tt2","web_tt2/list_panel.tt2","web_tt2/admin.tt2","web_tt2/list_admin_menu.tt2");
+foreach my $file (@planned_ordered_files) {
+    if ($files_to_parse{$file}) {
+	@ordered_files = (@ordered_files,$file);
+    }
+}
+my @ordered_directories = ("web_tt2","mail_tt2","src/etc/scenari","src/etc");
+
+foreach my $file (@ordered_files) {
+    $favoured_files{$file} = 1;
+}
+## Sorting by directories
+foreach my $dir (@ordered_directories) {
+    foreach my $file (@ARGV) {
+	unless ($favoured_files{$file}) {
+	    if ($file =~ /^$dir/g) {
+		@ordered_files = (@ordered_files,$file);
+		$favoured_files{$file} = 1;
+	    }
+	}
+    }
+}
+    
+## Sorting by files
+foreach my $file (@ARGV) {
+    unless ( $favoured_files{$file} ) {
+	@ordered_files = (@ordered_files,$file);
+    }
+}
+
+open DUMP, ">/tmp/d1";
+foreach (@ARGV) {
+    print DUMP;
+    print DUMP"\n";
+}
+close DUMP;
+
+open DUMP, ">/tmp/d2";
+foreach (@ordered_files) {
+    print DUMP;
+    print DUMP"\n";
+}
+close DUMP;
 
 if (-r $PO) {
     open LEXICON, $PO or die $!;
@@ -96,9 +148,9 @@ if (-r $PO) {
 	if (1 .. /^$/) { $out .= $_; next }
 	last;
     }
-
+    
     1 while chomp $out;
-
+    
     require Locale::Maketext::Lexicon::Gettext;
     %Lexicon = map {
 	if ($opts{u}) {
@@ -118,7 +170,8 @@ open PO, ">$PO" or die "Can't write to $PO:$!\n";
 select PO;
 
 undef $/;
-foreach my $file (@ARGV) {
+
+foreach my $file (@ordered_files) {
     next if ($file=~/\.po$/i); # Don't parse po files
     my $filename = $file;
     printf STDOUT "Processing $file...\n";	    
@@ -331,7 +384,7 @@ foreach my $str (sort keys %file) {
     delete $file{$ostr}; delete $Lexicon{$ostr};
     $file{$str} = $entry;
 }
-
+#				     &dump_var(\%file,0,\*STDOUT);
 exit unless %Lexicon;
 
 print $out ? "$out\n" : (<< '.');
@@ -352,8 +405,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 .
+my @Lexicon;
+my %Lexiconbis;
 
-foreach my $entry (sort keys %Lexicon) {
+foreach my $o_file (@ordered_files) {
+    foreach my $entry (keys %Lexicon) {
+	unless ($Lexiconbis{$entry}){
+	    my %f = (map { ( "$_->[0]" => 1 ) } @{$file{$entry}});
+	    if ($f{$o_file}) {
+		@Lexicon = (@Lexicon,$entry);
+		$Lexiconbis{$entry} = 1;
+	    }
+	}
+    }
+}
+
+foreach my $entry (@Lexicon) {
     my %f = (map { ( "$_->[0]:$_->[1]" => 1 ) } @{$file{$entry}});
     my $f = join(' ', sort keys %f);
     $f = " $f" if length $f;
@@ -387,6 +454,8 @@ foreach my $entry (sort keys %Lexicon) {
     print "msgid "; output($entry);
     print "msgstr "; output($Lexicon{$entry});
 }
+
+open DUMP, ">/tmp/dump2"; &dump_var(\%Lexicon,0,\*DUMP);close DUMP;
 
 ## Add expressions to list of expressions to translate
 ## parameters : expression, filename, line, vars
@@ -451,6 +520,37 @@ sub escape {
     $text =~ s/\b_(\d+)/%$1/;
     return $text;
 }
+
+## Dump a variable's content
+sub dump_var {
+    my ($var, $level, $fd) = @_;
+
+    return undef unless ($fd);
+
+    if (ref($var)) {
+	if (ref($var) eq 'ARRAY') {
+	    foreach my $index (0..$#{$var}) {
+		print $fd "\t"x$level.$index."\n";
+		&dump_var($var->[$index], $level+1, $fd);
+	    }
+	}elsif (ref($var) eq 'HASH' || ref($var) eq 'Scenario' || ref($var) eq 'List') {
+	    foreach my $key (sort keys %{$var}) {
+		print $fd "\t"x$level.'_'.$key.'_'."\n";
+		&dump_var($var->{$key}, $level+1, $fd);
+	    }    
+	}else {
+	    printf $fd "\t"x$level."'%s'"."\n", ref($var);
+	}
+    }else {
+	if (defined $var) {
+	    print $fd "\t"x$level."'$var'"."\n";
+	}else {
+	    print $fd "\t"x$level."UNDEF\n";
+	}
+    }
+}
+
+
 
 1;
 
