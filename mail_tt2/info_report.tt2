@@ -5,10 +5,14 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]INFO %1[%END%][%END%]
 
 [%|loc(list.subject)%]Subject            : %1[%END%]
 [% FOREACH o = owner -%]
+[% IF o.visibility != 'conceal' %]
 [%|loc(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
 [% END %]
+[% END %]
 [% FOREACH e = editor -%]
+[% IF o.visibility != 'conceal' %]
 [%|loc(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
+[% END %]
 [% END %]
 [%|loc(subscribe)%]Subscription       : %1[%END%]
 [%|loc(unsubscribe)%]Unsubscription     : %1[%END%]
