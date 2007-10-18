@@ -2003,6 +2003,7 @@ Use it to create a List object and initialize output parameters.
 	 foreach my $o (@{$owners}) {
 	     next unless $o->{'email'};
 	     $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
+	     $param->{'owner'}{$o->{'email'}}{'visibility'} = $o->{'visibility'};
 	     $param->{'owner'}{$o->{'email'}}{'mailto'} = &mailto($list,$o->{'email'},$o->{'gecos'});
 	     ($param->{'owner'}{$o->{'email'}}{'local'},$param->{'owner'}{$o->{'email'}}{'domain'}) = split ('@',$o->{'email'});
 	     my $masked_email = $o->{'email'};
@@ -2016,6 +2017,7 @@ Use it to create a List object and initialize output parameters.
 	     foreach my $e (@{$editors}) {
 		 next unless $e->{'email'};
 		 $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
+		 $param->{'editor'}{$e->{'email'}}{'visibility'} = $e->{'visibility'};
 		 $param->{'editor'}{$e->{'email'}}{'mailto'} = &mailto($list,$e->{'email'},$e->{'gecos'});
 		 ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
 		 my $masked_email = $e->{'email'};

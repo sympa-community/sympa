@@ -52,6 +52,7 @@ CREATE TABLE admin_table (
 	date_admin 		date NOT NULL,
 	update_admin 		date,
 	reception_admin 	varchar2(20),
+	visibility_admin 	varchar2(20),
 	comment_admin 		varchar2(150),
 	subscribed_admin  	number NULL    constraint  cons_subscribed_admin CHECK (subscribed_admin in (0,1)),
 	included_admin  	number NULL    constraint  cons_included_admin CHECK (included_admin in (0,1)),

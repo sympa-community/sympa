@@ -576,6 +576,11 @@ my %alias = ('reply-to' => 'reply_to',
 						      'gettext_id' => "reception mode",
 						      'order' => 4
 						      },
+				      'visibility' => {'format' => ['conceal','noconceal'],
+						      'default' => 'noconceal',
+						      'gettext_id' => "visibility",
+						      'order' => 5
+						      },
 				      'gecos' => {'format' => '.+',
 						  'length' => 30,
 						  'gettext_id' => "name",
@@ -605,7 +610,12 @@ my %alias = ('reply-to' => 'reply_to',
 							      'default' => 'mail',
 							      'gettext_id' => 'reception mode',
 							       'order' => 3
-							      }
+							      },
+				              'visibility' => {'format' => ['conceal','noconceal'],
+							       'default' => 'noconceal',
+							       'gettext_id' => "visibility",
+							       'order' => 5
+					                      }
 					      
 					      },
 				  'occurrence' => '0-n',
@@ -1064,6 +1074,11 @@ my %alias = ('reply-to' => 'reply_to',
 						     'gettext_id' => "reception mode",
 						     'order' =>5
 						     },
+				     'visibility' => {'format' => ['conceal','noconceal'],
+						      'default' => 'noconceal',
+						      'gettext_id' => "visibility",
+						      'order' => 6
+				                     },
 				     'gecos' => {'format' => '.+',
 						 'length' => 30,
 						 'gettext_id' => "name",
@@ -1099,6 +1114,11 @@ my %alias = ('reply-to' => 'reply_to',
 							     'gettext_id' => 'reception mode',
 							     'order' => 4
 							 },
+				             'visibility' => {'format' => ['conceal','noconceal'],
+							      'default' => 'noconceal',
+							      'gettext_id' => "visibility",
+							      'order' => 5
+				                             },
 					     'profile' => {'format' => ['privileged','normal'],
 							   'default' => 'normal',
 							   'gettext_id' => 'profile',
@@ -4722,7 +4742,7 @@ sub get_admin_user {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\",  subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\"  FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND robot_admin = %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\",%s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\",  subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\"  FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND robot_admin = %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($email), 
@@ -4730,7 +4750,7 @@ sub get_admin_user {
 	$dbh->quote($self->{'domain'}),
  	$dbh->quote($role);
     }else {
-	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND robot_admin = %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND robot_admin = %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($email), 
@@ -5159,7 +5179,7 @@ sub get_first_admin_user {
 # and ok ?
     if ($Conf{'db_type'} eq 'Oracle') {
 	
-	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($name), 
@@ -5169,7 +5189,7 @@ sub get_first_admin_user {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substr(user_admin,instr(user_admin,'\@')+1) \"dom\"  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substr(user_admin,instr(user_admin,'\@')+1) \"dom\"  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5192,7 +5212,7 @@ sub get_first_admin_user {
 	## Sybase
     }elsif ($Conf{'db_type'} eq 'Sybase'){
 	
-	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($name), 
@@ -5201,7 +5221,7 @@ sub get_first_admin_user {
 	$dbh->quote($role);
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substring(user_admin,charindex('\@',user_admin)+1,100) \"dom\" FROM admin_table WHERE (list_admin = %s  AND robot_admin = %s AND role_admin = %s) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substring(user_admin,charindex('\@',user_admin)+1,100) \"dom\" FROM admin_table WHERE (list_admin = %s  AND robot_admin = %s AND role_admin = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5225,7 +5245,7 @@ sub get_first_admin_user {
 	## mysql
     }elsif ($Conf{'db_type'} eq 'mysql') {
 	
-	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($name), 
@@ -5237,7 +5257,7 @@ sub get_first_admin_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5266,7 +5286,7 @@ sub get_first_admin_user {
 	## SQLite
     }elsif ($Conf{'db_type'} eq 'SQLite') {
 	
-	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($name), 
@@ -5278,7 +5298,7 @@ sub get_first_admin_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, substr(user_admin,func_index(user_admin,'\@')+1,50) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, substr(user_admin,func_index(user_admin,'\@')+1,50) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5307,7 +5327,7 @@ sub get_first_admin_user {
 	## Pg    
     }else {
 	
-	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
 	$update_field, 
 	$dbh->quote($name), 
@@ -5319,7 +5339,7 @@ sub get_first_admin_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50) AS dom  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50) AS dom  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5364,7 +5384,7 @@ sub get_first_admin_user {
 	    if (! $admin_user->{'email'});
 	$admin_user->{'reception'} ||= 'mail';
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
-	
+
 	## In case it was not set in the database
 	$admin_user->{'subscribed'} = 1
 	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
@@ -5929,6 +5949,7 @@ sub update_admin_user {
     
     ## mapping between var and field names
     my %map_field = ( reception => 'reception_admin',
+		      visibility => 'visibility_admin',
 		      date => 'date_admin',
 		      update_date => 'update_admin',
 		      gecos => 'comment_admin',
@@ -5944,6 +5965,7 @@ sub update_admin_user {
     
     ## mapping between var and tables
     my %map_table = ( reception => 'admin_table',
+		      visibility => 'admin_table',
 		      date => 'admin_table',
 		      update_date => 'admin_table',
 		      gecos => 'admin_table',
@@ -6321,7 +6343,7 @@ sub add_admin_user {
  	$new_admin_user->{'included'} ||= 0;
 
 	## Update Admin Table
-	$statement = sprintf "INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin,subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+	$statement = sprintf "INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin, visibility_admin, subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 	$dbh->quote($who), 
 	$dbh->quote($new_admin_user->{'gecos'}), 
 	$dbh->quote($name), 
@@ -6329,6 +6351,7 @@ sub add_admin_user {
 	$date_field, 
 	$update_field, 
 	$dbh->quote($new_admin_user->{'reception'}), 
+	$dbh->quote($new_admin_user->{'visibility'}), 
 	$new_admin_user->{'subscribed'}, 
 	$new_admin_user->{'included'}, 
 	$dbh->quote($new_admin_user->{'id'}), 
@@ -7161,6 +7184,7 @@ sub _include_users_remote_sympa_list {
  	$u{'visibility'} = $user{'visibility'};delete $user{'visibility'};
 	
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7227,6 +7251,7 @@ sub _include_users_list {
  	$u{'visibility'} = $user->{'visibility'};
 
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7310,6 +7335,7 @@ sub _include_users_file {
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7386,6 +7412,7 @@ sub _include_users_remote_file {
 	    $u{'id'} = join (',', split(',', $u{'id'}), $id);
 	    
 	    if ($default_user_options->{'mode_force'}) {
+		$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 		$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 		$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 		$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7510,6 +7537,7 @@ sub _include_users_ldap {
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7671,6 +7699,7 @@ sub _include_users_ldap_2level {
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7732,6 +7761,7 @@ sub _include_users_sql {
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
 	if ($default_user_options->{'mode_force'}) {
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
 	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
 	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
@@ -7978,6 +8008,7 @@ sub _load_admin_users_include {
 	my %option;
 	$option{'mode_force'} = 1; # to force option values in _include_..._query
 	$option{'reception'} = $entry->{'reception'} if (defined $entry->{'reception'});
+	$option{'visibility'} = $entry->{'visibility'} if (defined $entry->{'visibility'});
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
 	
 
@@ -8500,7 +8531,7 @@ sub sync_include_admin {
 	    # included and subscribed
 	    if (defined $new_admin_users_config->{$email}) {
 		my $param;
-		foreach my $p ('reception','gecos','info','profile') {
+		foreach my $p ('reception','visibility','gecos','info','profile') {
 		    #  config parameters have priority on include parameters in case of conflict
 		    $param->{$p} = $new_admin_users_config->{$email}{$p} if (defined $new_admin_users_config->{$email}{$p});
 		    $param->{$p} ||= $new_admin_users_include->{$email}{$p};
@@ -8685,6 +8716,7 @@ sub _load_admin_users_config {
   
 	$u{'email'} = $email;
 	$u{'reception'} = $entry->{'reception'};
+	$u{'visibility'} = $entry->{'visibility'};
 	$u{'gecos'} = $entry->{'gecos'};
 	$u{'info'} = $entry->{'info'};
 	$u{'profile'} = $entry->{'profile'} if ($role eq 'owner');
@@ -8705,7 +8737,7 @@ sub is_update_param {
 
     &do_log('debug2', 'List::is_update_param ');  
 
-    foreach my $p ('reception','gecos','info','profile','id','included','subscribed') {
+    foreach my $p ('reception','visibility','gecos','info','profile','id','included','subscribed') {
 	if (defined $new_param->{$p}) {
 	    if ($new_param->{$p} ne $old_param->{$p}) {
 		$resul->{$p} = $new_param->{$p};
@@ -9219,7 +9251,7 @@ sub get_mod_spool_size {
 # return the status of the shared
 sub get_shared_status {
     my $self = shift;
-    do_log('debug3', '(%s)', $self->{'name'});  
+    do_log('debug3', '(%s)', $self->{'name'});
     
     if (-e $self->{'dir'}.'/shared') {
 	return 'exist';
