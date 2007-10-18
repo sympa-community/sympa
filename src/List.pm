@@ -9219,7 +9219,7 @@ sub get_mod_spool_size {
 # return the status of the shared
 sub get_shared_status {
     my $self = shift;
-    do_log('debug3', '($self->{'name'})');  
+    do_log('debug3', '(%s)', $self->{'name'});  
     
     if (-e $self->{'dir'}.'/shared') {
 	return 'exist';
