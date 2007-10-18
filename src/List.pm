@@ -9216,13 +9216,18 @@ sub get_mod_spool_size {
 
 ### moderation for shared
 
-# return 1 if the shared is open
-sub is_shared_open {
+# return the status of the shared
+sub get_shared_status {
     my $self = shift;
-    do_log('debug3', 'List::is_shared_open()');  
-    my $dir = $self->{'dir'}.'/shared';
+    do_log('debug3', '($self->{'name'})');  
     
-    return (-e "$dir/shared");
+    if (-e $self->{'dir'}.'/shared') {
+	return 'exist';
+    }elsif (-e $self->{'dir'}.'/pending.shared') {
+	return 'deleted';
+    }else{
+	return 'none';
+    }
 }
 
 # return the list of documents shared waiting for moderation 

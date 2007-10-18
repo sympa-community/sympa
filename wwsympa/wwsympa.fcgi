@@ -1727,8 +1727,6 @@ Use it to create a List object and initialize output parameters.
 
 =item * List::is_moderated
 
-=item * List::is_shared_open
-
 =item * List::is_user
 
 =item * List::new
@@ -1833,9 +1831,6 @@ Use it to create a List object and initialize output parameters.
 	## Check if this list's messages must be moderated.
 	$param->{'is_moderated'} = $list->is_moderated();
 
-	## Check if a shared directory exists for this list.
-	$param->{'is_shared_open'} =$list->is_shared_open();
-
 	## If the user logged in is a privileged user, gather informations relative to administration tasks
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_message'} = $list->get_mod_spool_size();
@@ -1896,13 +1891,7 @@ Use it to create a List object and initialize output parameters.
 	$param->{'may_d_read'} = $access{'may'}{'read'};
 
 	## Check the status (exists, deleted, doesn't exist) of the shared directory
-	if (-e $list->{'dir'}.'/shared') {
-	    $param->{'shared'}='exist';
-	}elsif (-e $list->{'dir'}.'/pending.shared') {
-	    $param->{'shared'}='deleted';
-	}else{
-	    $param->{'shared'}='none';
-	}
+	$param->{'shared'} = $list->get_shared_status();
     }
 
      ## Check if the current user can create a list.
