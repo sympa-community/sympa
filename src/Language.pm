@@ -55,6 +55,7 @@ my %language_equiv = ( 'zh_CN' => 'cn',
 ## Supported languages are defined by 'supported_lang' sympa.conf parameter
 
 my %lang2locale = ('ar' => 'ar_SY',
+		   'af' => 'af_ZA',
 		   'br' => 'br_FR',
 		   'bg' => 'bg_BG',
 		   'cz' => 'cs_CZ',
@@ -79,7 +80,8 @@ my %lang2locale = ('ar' => 'ar_SY',
 		   'sv' => 'sv_SE',
 		   'cn' => 'zh_CN',
 		   'tr' => 'tr_TR',
-		   'tw' => 'zh_TW');
+		   'tw' => 'zh_TW',
+		   'vi' => 'vi_VN',);
 
 ## We use different catalog/textdomains depending on the template that requests translations
 my %template2textdomain = ('help_admin.tt2' => 'web_help',
