@@ -1271,9 +1271,9 @@ sub unescape_chars {
 sub escape_html {
     my $s = shift;
 
-    $s =~ s/\"/\&quot\;/g;
-    $s =~ s/\</&lt\;/g;
-    $s =~ s/\>/&gt\;/g;
+    $s =~ s/\"/\&quot\;/gm;
+    $s =~ s/\</&lt\;/gm;
+    $s =~ s/\>/&gt\;/gm;
     
     return $s;
 }

@@ -482,13 +482,10 @@ my %in_regexp = (
 		 'info' => '.+',
 		 'new_scenario_content' => '.+',
                  'blacklist' => '.*',
-                 'text' => '.+',
-                 'string' => '.+',
 
 		 ## Integer
 		 'page' => '\d+',
 		 'size' => '\d+',
-		 'integer' => '\d+',
 
 		 ## Free data
 		 'subject' => '.*',
@@ -1596,6 +1593,7 @@ sub get_parameters {
 		 $in{$p} = join '/', @tokens;
 		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
 		 ## This should be transformed into a '/' again
+
 	     }elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
 		 $in{$p} =~ s/\xa5/\//g;
 	     }
@@ -3983,34 +3981,36 @@ sub check_custom_attribute {
         my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
         my $isOK = 1 ;
 
-        &do_log('trace', "custom_attribute $in{custom_attribute} !!!(keys=".(sort keys (%{$in{custom_attribute}} )).")");
         foreach my $ca (@custom_attributes){
                 my $value = $in{custom_attribute}{$ca->{id}}{value} ;
-                &do_log('trace', "custom_attribute ($ca) id=$ca->{id}, type=$ca->{type}, value=".$value." r/o=$ca->{optional}, regexp=$in_regexp{$ca->{type}}." );
                 if ($ca->{optional} eq 'required' && $value eq '') {
                         &report::reject_report_web('user','missing_arg',{'argument' => "\"$ca->{name}\" is required"},$param->{'action'});
                         &wwslog('info','do_set: missing parameter');
                         &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
-                        'status' => 'error',
-                        'error_type' => 'missing_parameter'});
+				     'status' => 'error',
+				     'error_type' => 'missing_parameter'});
                         $isOK = undef;
                         next ;
                 }
-                &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." values=$ca->{enum_values} (".@{split(/,/ , $ca->{enum_values})}.") ");
-                my @values = split(/,/ , $ca->{enum_values}) ;
-                &do_log('trace', "custom_attribute enum values ".@values." VLAUES:".(join(';', @values))." (values=$ca->{enum_values})") ;
-                if ($ca->{type} eq 'enum' && (grep (/$value/, @values) == 1) ) {
-                        &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." values=$ca->{enum_values} [".@values."] OK");
+
+		## No further checking if attribute if empty
+		next if ($value =~ /^$/);
+
+                my @values = split(/,/ , $ca->{'enum_values'}) if (defined $ca->{'enum_values'});
+
+		## Check that the parameter has the correct format
+                unless (($ca->{'type'} eq 'enum' && grep(/^$value$/, @values)) ||
+			($ca->{'type'} eq 'integer' && $value =~ /^\d+$/) ||
+			($ca->{'type'} eq 'string' && $value =~ /^.+$/) ||
+			($ca->{'type'} eq 'text' && $value =~ /^.+$/m)
+		    ) {
+		    &report::reject_report_web('user','syntax_errors',{'params' => $ca->{name}},$param->{'action'});
+		    &wwslog('info','do_set: syntax error');
+		    &web_db_log({'parameters' => $ca->{name}, 'status' => 'error',  'error_type' => 'missing_parameter'});
+		    $isOK = undef;
+		    next ;
                 }
-                elsif (defined $value && $value ne '' && $value !~ /^$in_regexp{$ca->{type}}$/) {
-                        &report::reject_report_web('user','syntax_errors',{'params' => $ca->{name}},$param->{'action'});
-                        &wwslog('info','do_set: syntax error');
-                        &web_db_log({'parameters' => $ca->{name}, 'status' => 'error',  'error_type' => 'missing_parameter'});
-                        $isOK = undef;
-                        next ;
-                }
-                &do_log('trace', "custom_attribute id=$ca->{id}, type=$ca->{type}, value=".$value." OK");
-       }
+	}
         return $isOK ;
 }
 

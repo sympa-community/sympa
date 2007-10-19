@@ -5092,14 +5092,27 @@ sub get_first_user {
 }
 
 # Create a custom attribute from an XML description
-# IN : string, XML formed data as stored in database
+# IN : File handle or a string, XML formed data as stored in database
 # OUT : HASH data storing custome attributes.
 sub parseCustomAttribute {
 	my $xmldoc = shift ;
 	return undef if ($xmldoc eq '') ;
-	do_log('debug2',"xxxxxxxxxxxxxxxxxxx #custom_attribute XML = $xmldoc");
+
 	my $parser = XML::LibXML->new();
-	my $tree = $parser->parse_string($xmldoc);
+	my $tree;
+
+	## We use eval to parse to prevent the program to crash if it fails
+	if (ref($xmldoc) eq 'GLOB') {
+	    $tree = $parser->parse_fh($xmldoc);
+	}else {
+	    $tree = $parser->parse_string($xmldoc);
+	}
+
+	if ($@) {
+	    &do_log('err', "Failed to parse XML data");
+	    return undef;
+	}
+
 	my $doc = $tree->getDocumentElement;
 	
 	my @custom_attr = $doc->getChildrenByTagName('custom_attribute') ;
@@ -5108,7 +5121,6 @@ sub parseCustomAttribute {
 	        my $id = $ca->getAttribute('id');
 	        my $value = $ca->getElementsByTagName('value');
 		$ca{$id} = {value=>$value} ;
-		do_log('debug2',"xxxxxxxxxxxxxxxxxxx #custom_attribute  = {$id} = {value=>$value}");
 	}
 	return %ca ;
 }
@@ -5118,11 +5130,11 @@ sub parseCustomAttribute {
 # OUT : string, XML formed data to be stored in database
 sub createXMLCustomAttribute {
 	my $custom_attr = shift ;
-	return '<custom_attributes></custom_attributes>' if (not defined $custom_attr) ;
+	return '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes></custom_attributes>' if (not defined $custom_attr) ;
 	do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute=$custom_attr");
-	my $XMLstr = '<custom_attributes>';
+	my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
 	foreach my $k (sort keys %{$custom_attr} ) {
-		$XMLstr .= "<custom_attribute id=\"$k\"><value>".$custom_attr->{$k}{value}."</value></custom_attribute>";
+		$XMLstr .= "<custom_attribute id=\"$k\"><value>".&tools::escape_html($custom_attr->{$k}{value})."</value></custom_attribute>";
 		do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute $k : $custom_attr->{$k}{value}");
 	}
 	$XMLstr .= "</custom_attributes>";
@@ -10799,7 +10811,12 @@ sub store_subscription_request {
 	return undef;
     }
 
-    printf REQUEST "$email\t$gecos\t$custom_attr\n";
+    ## First line of the file contains the user email address + his/her name
+    printf REQUEST "$email\t$gecos\n";
+
+    ## Following lines may contain custom attributes in an XML format
+    printf REQUEST "$custom_attr\n";
+
     close REQUEST;
 
     return 1;
@@ -10817,26 +10834,32 @@ sub get_subscription_requests {
     }
 
     foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+	unless (open REQUEST, "<:bytes", "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('err', 'Could not open %s', $filename);
 	    closedir SPOOL;
 	    next;
 	}
+
+	## First line of the file contains the user email address + his/her name
 	my $line = <REQUEST>;
-	$line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/;
-	my $email = $1;
-	my %xml = &parseCustomAttribute($4) ;
-	$subscriptions{$email} = {'gecos' => $3,
-				'custom_attribute' => \%xml};
-	&do_log('info', 'get_subscription_requests %s : email',$email);
-        &do_log('info', "get_subscription_requests ".join(', ', (sort keys %xml))." : keys custom_attribute");
-	&do_log('info', 'get_subscription_requests %s : custom_attribute',$4);
+	my ($email, $gecos);
+	if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
+	    ($email, $gecos) = ($1, $3); 
+	    
+	}else {
+	    &do_log('err', "Failed to parse subscription request %s",$filename);
+	    next;
+	}
+
+	## Following lines may contain custom attributes in an XML format
+	my %xml = &parseCustomAttribute(\*REQUEST) ;
 	
+	$subscriptions{$email} = {'gecos' => $gecos,
+				  'custom_attribute' => \%xml};
 	unless($subscriptions{$email}{'gecos'}) {
 		my $user = get_user_db($email);
 		if ($user->{'gecos'}) {
 			$subscriptions{$email}{'gecos'} = $user->{'gecos'};
-#			&do_log('info', 'get_user_db %s : no gecos',$email);
 		}
 	}
 
