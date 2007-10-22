@@ -439,7 +439,7 @@ my %alias = ('reply-to' => 'reply_to',
 						   'gettext_id' => "",
 						   'order' => 2
 						   },
-					'email' => {'format' => &tools::get_regexp('email'),
+					'email' => {'format' => 'listmaster|'.&tools::get_regexp('email'),
 						    'occurrence' => '1',
 						    'gettext_id' => "",
 						    'order' => 1
@@ -1004,7 +1004,7 @@ my %alias = ('reply-to' => 'reply_to',
  							       'gettext_id' => 'date',
  							       'order' => 2
  							       },
- 						    'email' => {'format' => &tools::get_regexp('email'),
+ 						    'email' => {'format' => 'listmaster|'.&tools::get_regexp('email'),
  								'occurrence' => '0-1',
  								'gettext_id' => 'who ran the instantiation',
  								'order' => 1
