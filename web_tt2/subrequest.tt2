@@ -11,6 +11,8 @@
           <input type="hidden" name="list" value="[% list %]" />
           <input type="hidden" name="email" value="[% user.email %]" />
           [% PROCESS edit_attributes.tt2 %]
+
+	  <input type="hidden" name="via_subrequest" value="1" />
           <input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
         </fieldset>
         </form>

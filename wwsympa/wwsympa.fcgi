@@ -4161,13 +4161,21 @@ sub check_custom_attribute {
      my @keys = sort keys (%{$list->{'admin'}}) ;
      my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
      if ($list->{'admin'}{'custom_attribute'} ) {
-     	if (&check_custom_attribute() != 1) {
-     		&do_log('trace', "subscribe custom_attribute required to be set by the user in{'previous_action'} = '".$in{'previous_action'}."' !!!") ;
-     		return 'subrequest';
-     	}
-     	my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-     	do_log ('trace', "custom_attribute xml = $xml");
-     	$in{custom_attribute} = $xml ;
+
+	 ## This variable is set in the subrequest form
+	 ## If not set, it means that the user has not been prompted to provide custom_attributes
+	 unless ($in{'via_subrequest'}) {
+	     &wwslog('notice', 'Returning subrequest form');
+	     return "subrequest";	     
+	 }
+	 
+	 if (&check_custom_attribute() != 1) {
+	     &wwslog('trace', "subscribe custom_attribute required to be set by the user in{'previous_action'} = '".$in{'previous_action'}."' !!!") ;
+	     return 'subrequest';
+	 }
+	 my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
+	 do_log ('trace', "custom_attribute xml = $xml");
+	 $in{custom_attribute} = $xml ;
      }
 
      my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
