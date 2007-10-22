@@ -19,7 +19,7 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
 [% IF rows == '0' %]
  [%|loc%]The current blacklist is empty[%END%]
 [% ELSE %]
- [%|loc(rows)%]The current blacklist contains [% rows %] line(s)[%END%]
+ [%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]
 [% END %]
 </p>
 <p>
