@@ -4,7 +4,8 @@
 <i>[%|loc%]Additional information[%END%]</i>
 <table>
 [% FOREACH k IN list_conf.custom_attribute.sort %]
-<tr><td  class="text_right"><label for="custom_attribute.[% k.id %]">[%|loc%][% k.name %] :[% END %]
+<tr><td  class="text_right"><label for="custom_attribute.[% k.id %]">[%|loc%][% k.name %] :[% END %]<br/>
+<i>[% k.comment %]</i>
 </label></td><td>
 [% SET m = subscriber.custom_attribute.item(k.id).value %]
 [% IF k.type == 'string' %]<input type="text" name="custom_attribute.[% k.id %]" id="custom_attribute.[% k.id %]" value="[% subscriber.custom_attribute.item(k.id).value %]" size="40" />
