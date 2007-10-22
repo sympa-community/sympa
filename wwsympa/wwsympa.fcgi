@@ -4119,7 +4119,7 @@ sub check_custom_attribute {
 ####################################################
  ## TOTO: accepter nouveaux users
  sub do_subscribe {
-     &wwslog('info', 'do_subscribe(%s)(custom_attrbute=%s)', $in{'email'},$in{'custom_attribute'});
+     &wwslog('info', 'do_subscribe(%s)', $in{'email'});
 
      unless ($param->{'list'}) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -4427,7 +4427,7 @@ sub check_custom_attribute {
 	 ## Subscriber ?
 	 if ($param->{'is_subscriber'}) {
 	     &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
-	     &wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
+	     &wwslog('info','%s already subscriber', $param->{'user'}{'email'});
 	     &web_db_log({'status' => 'error',
 			  'error_type' => 'already_subscriber'});
 	     return undef;
@@ -4456,14 +4456,7 @@ sub check_custom_attribute {
 	      !$user->{'password'} || 
 	      ($user->{'password'} =~ /^INIT/i)) &&
 	     !$ldap_user) {
-	     if ( &check_custom_attribute() != 1) {
-	     	$param->{'status'} = $in{status} ;
-	     	&report::reject_report_web('user','custom_attribute', {'list' => $list->{'name'}},$param->{'action'},$list);
-	     	&wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
-	     	&web_db_log({'status' => 'error',
-	     		'error_type' => 'custom_attribute'});
-	     	return undef ;
-	     }
+
 	     &do_sendpasswd();
 	     $param->{'status'} = 'notauth_passwordsent';
 	     

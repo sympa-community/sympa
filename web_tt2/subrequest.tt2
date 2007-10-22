@@ -41,6 +41,7 @@
           <input type="hidden" name="email" value="[% email %]" />
           <input type="hidden" name="previous_list" value="[% list %]" />
           <input type="hidden" name="previous_action" value="subrequest" />
+	  <input type="hidden" name="via_subrequest" value="1" />
         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
         </fieldset>
         </form>
@@ -53,10 +54,10 @@
         <fieldset>
           <label for="email">[%|loc%]Your e-mail address[%END%]</label>
           <input type="text" name="email" size="30" /><br />
-          [% PROCESS edit_attributes.tt2 %]
           <input type="hidden" name="list" value="[% list %]" />
           <input type="hidden" name="action" value="subrequest" />
-          <input class="MainMenuLinks" type="submit" name="action_subrequest" value="[%|loc%]submit[%END%]" />
+  	  <input type="hidden" name="via_subrequest" value="1" />
+        <input class="MainMenuLinks" type="submit" name="action_subrequest" value="[%|loc%]submit[%END%]" />
         </fieldset>
          </form>
 
@@ -69,17 +70,16 @@
          <form action="[% path_cgi %]" METHOD=POST>
         <fieldset>
           <label><b>[%|loc%]e-mail address[%END%]</b></label> [% email %]<br />
-          [% FOREACH k IN list_conf.custom_attribute.sort %]
-          <label><b>[% k.name %]</b></label> [% custom_attribute.item(k.id).value %]<br />
-          <input type="hidden" name="custom_attribute.[% k.id %]" id="custom_attribute.[% k.id %]" value="[% custom_attribute.item(k.id).value %]" />
-          [% END %]
           <label for="passwd">[%|loc%]password[%END%]</label>
-          <input id="passwd" type="password" name="passwd" size="20" />
+         <input id="passwd" type="password" name="passwd" size="20" /><br />
+
+         [% PROCESS edit_attributes.tt2 %]
           <input type="hidden" name="list" value="[% list %]" />
           <input type="hidden" name="email" value="[% email %]" />
           <input type="hidden" name="previous_list" value="[% list %]" />
           <input type="hidden" name="previous_action" value="subrequest" />
-         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
+ 	  <input type="hidden" name="via_subrequest" value="1" />
+        &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
         <input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]My password ?[%END%]" />
         </fieldset>
          </form>
