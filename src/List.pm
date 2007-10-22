@@ -10882,8 +10882,8 @@ sub get_subscription_request_count {
 } 
 
 sub delete_subscription_request {
-    my ($self, $email) = @_;
-    do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, $email);
+    my ($self, @list_of_email) = @_;
+    do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, join(',',@list_of_email));
 
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
 	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
@@ -10891,31 +10891,35 @@ sub delete_subscription_request {
     }
 
     my $removed_file = 0;
-    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
-	    do_log('notice', 'Could not open %s', $filename);
-	    closedir SPOOL;
-	    return undef;
-	}
-	my $line = <REQUEST>;
-	my $email_regexp = &tools::get_regexp('email');
-	unless ($line =~ /^($email_regexp)\s*/ &&
-		($1 eq $email)) {
-	    next;
-	}
-	    
-	close REQUEST;
 
-	unless (unlink "$Conf{'queuesubscribe'}/$filename") {
-	    do_log('err', 'Could not delete file %s', $filename);
-	    next;
+    foreach my $email (@list_of_email) {
+
+	foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
+	    unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+		do_log('notice', 'Could not open %s', $filename);
+		closedir SPOOL;
+		return undef;
+	    }
+	    my $line = <REQUEST>;
+	    my $email_regexp = &tools::get_regexp('email');
+	    unless ($line =~ /^($email_regexp)\s*/ &&
+		    ($1 eq $email)) {
+		next;
+	    }
+	    
+	    close REQUEST;
+	    
+	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+		do_log('err', 'Could not delete file %s', $filename);
+		next;
+	    }
+	    $removed_file++;
 	}
-	$removed_file++;
     }
     closedir SPOOL;
     
     unless ($removed_file > 0) {
-	do_log('err', 'No pending subscription was found for user %s', $email);
+	do_log('err', 'No pending subscription was found for users %s', join(',',@list_of_email));
 	return undef;
     }
 

@@ -5400,7 +5400,7 @@ sub do_skinsedit {
 	 return undef;
      }
 
-     my ($total, @new_users );
+     my ($total, @new_users, @added_users );
      my $comma_emails ;
      foreach my $email (keys %user) {
 	&wwslog('debug', "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})" );
@@ -5482,10 +5482,8 @@ sub do_skinsedit {
 
 	     ##
 	     push @new_users, $u;
+	     push @added_users, $email; ## List only email addresses ; used later to remove pending subrequests
 	 }
-
-	 ## Delete subscription request if any
-	 $list->delete_subscription_request($email);
 
 	 unless ($in{'quiet'} || ($add_is =~ /quiet/i )) {
 	     unless ($list->send_file('welcome', $email, $robot,{})) {
@@ -5503,6 +5501,9 @@ sub do_skinsedit {
 		      'error_type' => 'internal'});
 	 return undef;
      }
+
+     ## Delete subscription request if any
+     $list->delete_subscription_request(@added_users);
 
      &report::notice_report_web('add_performed', {'total' => $total},$param->{'action'});
      &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
