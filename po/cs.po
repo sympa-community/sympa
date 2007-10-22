@@ -120,7 +120,7 @@ msgstr "Správce"
 msgid "Restore identity"
 msgstr "Obnov konferenci"
 
-#: src/List.pm:1059 src/List.pm:571 web_tt2/login_menu.tt2:77
+#: src/List.pm:1069 src/List.pm:571 web_tt2/login_menu.tt2:77
 #: web_tt2/loginbanner.tt2:76 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "emailová adresa"
@@ -143,8 +143,8 @@ msgstr "Odhlášení"
 
 #: web_tt2/login_menu.tt2:79 web_tt2/loginbanner.tt2:77
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:36
-#: web_tt2/subrequest.tt2:74
+#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:38
+#: web_tt2/subrequest.tt2:76
 msgid "password"
 msgstr "heslo"
 
@@ -164,7 +164,7 @@ msgstr "Editor"
 msgid "Privileged owner"
 msgstr "Správce"
 
-#: src/List.pm:1084 web_tt2/login_menu.tt2:16
+#: src/List.pm:1099 web_tt2/login_menu.tt2:16
 msgid "Owner"
 msgstr "Vlastník"
 
@@ -207,8 +207,8 @@ msgstr "Nastavení člena"
 msgid "Unsubscribe"
 msgstr "Odhlásit z konference"
 
-#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:42
-#: web_tt2/subrequest.tt2:80
+#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:44
+#: web_tt2/subrequest.tt2:82
 msgid "Subscribe"
 msgstr "Přihlásit se"
 
@@ -226,7 +226,7 @@ msgstr "Příspěvek"
 msgid "Review members"
 msgstr "Uživatelé konference"
 
-#: src/List.pm:1197 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
+#: src/List.pm:1217 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
 msgid "Shared documents"
 msgstr "Sdílené dokumenty"
 
@@ -239,15 +239,15 @@ msgstr "Celkem členů:"
 msgid "Closed list"
 msgstr "Uzavřené konference"
 
-#: web_tt2/list_panel.tt2:23
+#: web_tt2/list_panel.tt2:27
 msgid "Load certificate"
 msgstr "Nahraj certifikát"
 
-#: web_tt2/list_panel.tt2:26 web_tt2/list_panel.tt2:28
+#: web_tt2/list_panel.tt2:30 web_tt2/list_panel.tt2:32
 msgid "Contact owners"
 msgstr "Kontaktovat správce"
 
-#: src/List.pm:591 web_tt2/list_panel.tt2:19
+#: src/List.pm:596 web_tt2/list_panel.tt2:21
 msgid "Moderators"
 msgstr "Moderátoři"
 
@@ -774,11 +774,6 @@ msgstr "(Věta,"
 msgid "New search"
 msgstr "Nové hledání"
 
-#. (rows)
-#: web_tt2/blacklist.tt2:22
-msgid "The current blacklist contains %1 line(s)"
-msgstr ""
-
 #: web_tt2/blacklist.tt2:40 web_tt2/edit_template.tt2:40
 #, fuzzy
 msgid "Template saved"
@@ -800,6 +795,12 @@ msgid ""
 "rejected. The\n"
 "blacklist is in use for the following operation"
 msgstr ""
+
+#. (rows)
+#: web_tt2/blacklist.tt2:22
+#, fuzzy
+msgid "The current blacklist contains [% rows %] line(s)"
+msgstr "Poslední sdílené dokumenty"
 
 #: web_tt2/blacklist.tt2:9
 #, fuzzy
@@ -1449,7 +1450,7 @@ msgstr "Opravdu se chcete přihlásit do konference %1"
 msgid "Do you want to delete the old file %1 ?"
 msgstr "Opravdu chcete smazat %1%2 ?"
 
-#: web_tt2/edit_attributes.tt2:22
+#: web_tt2/edit_attributes.tt2:23
 #, fuzzy
 msgid "Required element"
 msgstr "Vyžadované aliasy"
@@ -2145,7 +2146,6 @@ msgstr "Poskytnuté údaje je nesprávné"
 msgid "A directory named '%1' already exists"
 msgstr "soubor %1 již existuje"
 
-#. (u_err.reception_mode)
 #: web_tt2/error.tt2:66
 #, fuzzy
 msgid "Check the additional information"
@@ -2425,7 +2425,7 @@ msgid ""
 "default value is 3600"
 msgstr ""
 
-#: src/List.pm:1140 web_tt2/help_editlist.tt2:130
+#: src/List.pm:1160 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "hodnota"
 
@@ -3412,7 +3412,7 @@ msgstr "Zapomněl jste Vaše heslo, nebo jste zde žádné heslo neměl."
 msgid "it will be sent to you by email :"
 msgstr "bude Vám zasláno na e-mail :"
 
-#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:52
+#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:54
 msgid "Your e-mail address"
 msgstr "Vaše e-mailová adresa"
 
@@ -4017,7 +4017,7 @@ msgstr "sezení"
 msgid "notify owner"
 msgstr "upozorni vlastníka"
 
-#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:57
+#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:59
 msgid "submit"
 msgstr "Odeslat"
 
@@ -4069,7 +4069,7 @@ msgid "Sessions list"
 msgstr "Čekající konference"
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:31 web_tt2/subrequest.tt2:69
+#: web_tt2/subrequest.tt2:33 web_tt2/subrequest.tt2:71
 msgid "e-mail address"
 msgstr "e-mailová adresa"
 
@@ -4441,7 +4441,7 @@ msgid "Disable topics subscription"
 msgstr "Přihlášení konference"
 
 #. (list)
-#: web_tt2/subrequest.tt2:65
+#: web_tt2/subrequest.tt2:67
 #, fuzzy
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
@@ -4451,20 +4451,20 @@ msgstr ""
 "\tVaše heslo:\n"
 
 #. (list)
-#: web_tt2/subrequest.tt2:14
+#: web_tt2/subrequest.tt2:16
 msgid "I subscribe to list %1"
 msgstr "Přihlašuji se do konference %1"
 
-#: web_tt2/subrequest.tt2:81
+#: web_tt2/subrequest.tt2:83
 msgid "My password ?"
 msgstr "Moje heslo ?"
 
 #. (list)
-#: web_tt2/subrequest.tt2:20
+#: web_tt2/subrequest.tt2:22
 msgid "You requested a subscription to list %1"
 msgstr "Požadoval jste přihlášení do konference %1"
 
-#: web_tt2/subrequest.tt2:46
+#: web_tt2/subrequest.tt2:48
 #, fuzzy
 msgid ""
 "This password, associated with your email address, willallow you to access "
@@ -4474,7 +4474,7 @@ msgstr ""
 "\tpro přístup do webového prostředí konferenčního serveru Gappa.\n"
 
 #. (list)
-#: web_tt2/subrequest.tt2:27
+#: web_tt2/subrequest.tt2:29
 #, fuzzy
 msgid ""
 "Check your mailbox for new messages and examine the message from Sympa to "
@@ -4500,7 +4500,7 @@ msgstr ""
 "Je vyžadováno\n"
 "      potvrzení Vašeho požadavku :\n"
 
-#: web_tt2/subrequest.tt2:24
+#: web_tt2/subrequest.tt2:26
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
@@ -4512,7 +4512,7 @@ msgstr ""
 "\tkteré zadáte zde zadáte.\n"
 
 #. (list)
-#: web_tt2/subrequest.tt2:87
+#: web_tt2/subrequest.tt2:89
 msgid "You are already subscriber of list %1"
 msgstr "Jste již členem konference %1."
 
@@ -4541,7 +4541,7 @@ msgstr "Chybové hlášení"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16043
+#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16042
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -5297,7 +5297,7 @@ msgid "End of %1 Digest %2"
 msgstr "Konec souhrnu konference %1 - %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2597
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2617
 msgid "Table of contents:"
 msgstr "Obsah:"
 
@@ -5607,7 +5607,7 @@ msgid "Archives index of list %1"
 msgstr "Shrnuti konference %1"
 
 #. (url)
-#: mail_tt2/info_report.tt2:23
+#: mail_tt2/info_report.tt2:27
 msgid "Homepage           : %1"
 msgstr "Domovská stránka           : %1"
 
@@ -5617,22 +5617,22 @@ msgid "INFO %1"
 msgstr ""
 
 #. (reply_to)
-#: mail_tt2/info_report.tt2:17
+#: mail_tt2/info_report.tt2:21
 msgid "Reply to           : %1"
 msgstr "Odpověz na         : %1"
 
 #. (unsubscribe)
-#: mail_tt2/info_report.tt2:14
+#: mail_tt2/info_report.tt2:18
 msgid "Unsubscription     : %1"
 msgstr "Odhlaseni             : %1"
 
 #. (subscribe)
-#: mail_tt2/info_report.tt2:13
+#: mail_tt2/info_report.tt2:17
 msgid "Subscription       : %1"
 msgstr "Přihlášení            : %1"
 
 #. (digest)
-#: mail_tt2/info_report.tt2:20
+#: mail_tt2/info_report.tt2:24
 #, fuzzy
 msgid "Digest             : %1"
 msgstr "Přehled       : %1"
@@ -5648,32 +5648,32 @@ msgid "Information regarding list %1@%2"
 msgstr "Informace o konferenci %1@%2"
 
 #. (review)
-#: mail_tt2/info_report.tt2:16
+#: mail_tt2/info_report.tt2:20
 msgid "Review subscribers : %1"
 msgstr "Seznam len          : %1"
 
 #. (e.gecos)
-#: mail_tt2/info_report.tt2:11
+#: mail_tt2/info_report.tt2:14
 msgid "Moderator          : %1"
 msgstr "Moderátor             : %1"
 
 #. (max_size)
-#: mail_tt2/info_report.tt2:18
+#: mail_tt2/info_report.tt2:22
 msgid "Maximum size       : %1"
 msgstr "Maximální velikost    : %1"
 
 #. (o.gecos)
-#: mail_tt2/info_report.tt2:8
+#: mail_tt2/info_report.tt2:9
 msgid "Owner              : %1"
 msgstr "Vlastník              : %1"
 
 #. (send)
-#: mail_tt2/info_report.tt2:15
+#: mail_tt2/info_report.tt2:19
 msgid "Sending messages   : %1"
 msgstr "Zaslání zpráv        : %1"
 
 #. (available_reception_mode)
-#: mail_tt2/info_report.tt2:22
+#: mail_tt2/info_report.tt2:26
 #, fuzzy
 msgid "Receiving modes    : %1"
 msgstr "Způsob příjmu      : %1"
@@ -6436,29 +6436,35 @@ msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:122
+#: mail_tt2/listowner_notification.tt2:129
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:102
+#: mail_tt2/listowner_notification.tt2:109
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:105
+#: mail_tt2/listowner_notification.tt2:112
 msgid "No action is needed on your side."
 msgstr ""
 
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:61
+#, fuzzy
+msgid "Subscription request to list %1"
+msgstr "Odhlášení z konference %1"
+
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:118
 #, fuzzy
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "Uživatel %s byl odstraněn ze seznamu %s/\n"
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:98
+#: mail_tt2/listowner_notification.tt2:105
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6479,7 +6485,7 @@ msgstr ""
 "nyní nejsou archivovány. Prosím kontaktujte %5@%4. \n"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:88
+#: mail_tt2/listowner_notification.tt2:95
 #, fuzzy
 msgid ""
 "\n"
@@ -6493,7 +6499,7 @@ msgid "List %1 is closed"
 msgstr "Konference %1 je uzavřena"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:104
+#: mail_tt2/listowner_notification.tt2:111
 #, fuzzy
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr ""
@@ -6523,12 +6529,12 @@ msgstr ""
 "Tato konference byla uzavřena. \n"
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:125
+#: mail_tt2/listowner_notification.tt2:132
 msgid "List %1 / %2"
 msgstr "Konference %1 / %2"
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:109
+#: mail_tt2/listowner_notification.tt2:116
 msgid "FYI: automatic removal of user %1"
 msgstr ""
 
@@ -6538,7 +6544,7 @@ msgid "%2@%3 archives use %4% of allowed disk quota."
 msgstr "%2@%3 archívy využívají %4% povoleného místa na disku."
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:104
+#: mail_tt2/listowner_notification.tt2:111
 msgid " validated by %1 "
 msgstr ""
 
@@ -6559,8 +6565,12 @@ msgid "List \"%1\" customizations have been removed"
 msgstr "Úpravy konference \"%1\" byly odstraněny"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:127
 msgid "List %1 : Named filter error"
+msgstr ""
+
+#: mail_tt2/listowner_notification.tt2:76
+msgid "The user has provided the following informations:"
 msgstr ""
 
 #. (type,list.name,who,gecos)
@@ -6578,7 +6588,7 @@ msgid ""
 msgstr "Nebo zaslete zpravu na %1@%2 s timto predmetem :"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:76
+#: mail_tt2/listowner_notification.tt2:83
 #, fuzzy
 msgid "UNsubscription request from list %1"
 msgstr "Odhlášení z konference %1"
@@ -6589,13 +6599,7 @@ msgid "Messages are still archived but you should contact %2@%1"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:61
-#, fuzzy
-msgid "Subscription request to list %1 [% user.custom_attribute %]"
-msgstr "Požadavek na přihlášení do konference %s"
-
-#. (list.name)
-#: mail_tt2/listowner_notification.tt2:92
+#: mail_tt2/listowner_notification.tt2:99
 msgid "WARNING: bounce rate too high in list %1"
 msgstr ""
 
@@ -6624,7 +6628,7 @@ msgid "Total size used for %1@%2 Bytes."
 msgstr ""
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:81
+#: mail_tt2/listowner_notification.tt2:88
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -7847,7 +7851,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9409
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9408
 msgid "%A"
 msgstr ""
 
@@ -7857,16 +7861,16 @@ msgstr "Chyba na řádku %d : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2587 src/Family.pm:386 src/Family.pm:663 src/List.pm:1729
-#: wwsympa/wwsympa.fcgi:775
+#: src/Family.pm:2587 src/Family.pm:386 src/Family.pm:663 src/List.pm:1749
+#: wwsympa/wwsympa.fcgi:772
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/List.pm:739 src/List.pm:863
+#: src/List.pm:749 src/List.pm:873
 msgid "SSL version"
 msgstr ""
 
-#: src/List.pm:1003
+#: src/List.pm:1013
 msgid "Latest family instantiation"
 msgstr ""
 
@@ -7876,27 +7880,27 @@ msgstr "limit"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2700
+#: src/List.pm:2720
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr ""
 
-#: src/List.pm:616
+#: src/List.pm:626
 msgid "Periodical subscription expiration task"
 msgstr "Periodická expirace přihlášení"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2884 src/List.pm:2885 src/List.pm:2889
-#: wwsympa/wwsympa.fcgi:10826 wwsympa/wwsympa.fcgi:10895
-#: wwsympa/wwsympa.fcgi:11097 wwsympa/wwsympa.fcgi:11439
-#: wwsympa/wwsympa.fcgi:15532 wwsympa/wwsympa.fcgi:16382
-#: wwsympa/wwsympa.fcgi:16383 wwsympa/wwsympa.fcgi:4356
-#: wwsympa/wwsympa.fcgi:4357 wwsympa/wwsympa.fcgi:5788
-#: wwsympa/wwsympa.fcgi:6974 wwsympa/wwsympa.fcgi:7492
-#: wwsympa/wwsympa.fcgi:7542 wwsympa/wwsympa.fcgi:7544
-#: wwsympa/wwsympa.fcgi:8056 wwsympa/wwsympa.fcgi:8057
-#: wwsympa/wwsympa.fcgi:8091 wwsympa/wwsympa.fcgi:8092
-#: wwsympa/wwsympa.fcgi:8305 wwsympa/wwsympa.fcgi:8306
+#: src/List.pm:2904 src/List.pm:2905 src/List.pm:2909
+#: wwsympa/wwsympa.fcgi:10825 wwsympa/wwsympa.fcgi:10894
+#: wwsympa/wwsympa.fcgi:11096 wwsympa/wwsympa.fcgi:11438
+#: wwsympa/wwsympa.fcgi:15531 wwsympa/wwsympa.fcgi:16381
+#: wwsympa/wwsympa.fcgi:16382 wwsympa/wwsympa.fcgi:4357
+#: wwsympa/wwsympa.fcgi:4358 wwsympa/wwsympa.fcgi:5787
+#: wwsympa/wwsympa.fcgi:6973 wwsympa/wwsympa.fcgi:7491
+#: wwsympa/wwsympa.fcgi:7541 wwsympa/wwsympa.fcgi:7543
+#: wwsympa/wwsympa.fcgi:8055 wwsympa/wwsympa.fcgi:8056
+#: wwsympa/wwsympa.fcgi:8090 wwsympa/wwsympa.fcgi:8091
+#: wwsympa/wwsympa.fcgi:8304 wwsympa/wwsympa.fcgi:8305
 msgid "%d %b %Y"
 msgstr ""
 
@@ -7904,7 +7908,7 @@ msgstr ""
 msgid "is the attribute optionnal ?"
 msgstr ""
 
-#: src/List.pm:1017
+#: src/List.pm:1027
 msgid "Maximum message size"
 msgstr "Maximální velikost zprávy"
 
@@ -7913,7 +7917,7 @@ msgstr "Maximální velikost zprávy"
 msgid "type"
 msgstr "typ"
 
-#: src/List.pm:1182
+#: src/List.pm:1202
 msgid "Who can view"
 msgstr "Kdo může zobrazit"
 
@@ -7921,7 +7925,7 @@ msgstr "Kdo může zobrazit"
 msgid "internal identifier"
 msgstr ""
 
-#: src/List.pm:814
+#: src/List.pm:824
 msgid "second-level suffix template"
 msgstr ""
 
@@ -7929,16 +7933,16 @@ msgstr ""
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivuj šifrované zprávy jako:"
 
-#: src/List.pm:1128
+#: src/List.pm:1148
 #, fuzzy
 msgid "Periodical subscription reminder task"
 msgstr "Periodická expirace přihlášení"
 
-#: src/List.pm:627
+#: src/List.pm:637
 msgid "Attachment type"
 msgstr "Typ přílohy"
 
-#: src/List.pm:960
+#: src/List.pm:970
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
@@ -7946,35 +7950,35 @@ msgstr ""
 msgid "Text archives"
 msgstr "Nastavení archívu"
 
-#: src/List.pm:941
+#: src/List.pm:951
 msgid "environment variables for database connexion"
 msgstr "nastavení prostředí pro databázové připojení"
 
-#: src/List.pm:681 src/List.pm:762 src/List.pm:890
+#: src/List.pm:691 src/List.pm:772 src/List.pm:900
 msgid "remote port"
 msgstr "vzdálený port"
 
-#: src/List.pm:1262
+#: src/List.pm:1282
 msgid "Last update of config"
 msgstr "Poslední změna konfigurace"
 
-#: src/List.pm:836
+#: src/List.pm:846
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:979
+#: src/List.pm:989
 msgid "Who can invite people"
 msgstr "Kdo smí pozvat nové uživatele"
 
-#: src/List.pm:936
+#: src/List.pm:946
 msgid "connection options"
 msgstr "možnosti připojení"
 
-#: src/List.pm:1193 src/List.pm:1292
+#: src/List.pm:1213 src/List.pm:1312
 msgid "quota"
 msgstr "Kapacita"
 
-#: src/List.pm:637
+#: src/List.pm:647
 msgid "Internet domain"
 msgstr "Doména"
 
@@ -7982,23 +7986,23 @@ msgstr "Doména"
 msgid "hour"
 msgstr "Hodina"
 
-#: src/List.pm:660 src/List.pm:692 src/List.pm:773 src/List.pm:950
+#: src/List.pm:670 src/List.pm:702 src/List.pm:783 src/List.pm:960
 msgid "remote password"
 msgstr "Heslo vzdáleného systému"
 
-#: src/List.pm:1237
+#: src/List.pm:1257
 msgid "Inclusions timeout"
 msgstr ""
 
-#: src/List.pm:1213
+#: src/List.pm:1233
 msgid "Status of the list"
 msgstr "Stav konference"
 
-#: src/List.pm:676 src/List.pm:757 src/List.pm:884 src/List.pm:923
+#: src/List.pm:686 src/List.pm:767 src/List.pm:894 src/List.pm:933
 msgid "remote host"
 msgstr "vzdálený host"
 
-#: src/List.pm:1094 src/List.pm:601
+#: src/List.pm:1109 src/List.pm:606
 #, fuzzy
 msgid "datasource parameters"
 msgstr "Špatný parameter"
@@ -8007,23 +8011,23 @@ msgstr "Špatný parameter"
 msgid "halt rate"
 msgstr "úroveň blokování"
 
-#: src/List.pm:1202 src/List.pm:1207
+#: src/List.pm:1222 src/List.pm:1227
 msgid "email address protection method"
 msgstr "ochrana e-mailových adres"
 
-#: src/List.pm:1150
+#: src/List.pm:1170
 msgid "respect of existing header field"
 msgstr "zachování existující hlavičky zprávy"
 
-#: src/List.pm:918
+#: src/List.pm:928
 msgid "database type"
 msgstr "typ databáze"
 
-#: src/List.pm:1297
+#: src/List.pm:1317
 msgid "Maximum number of month archived"
 msgstr ""
 
-#: src/List.pm:1308
+#: src/List.pm:1328
 msgid "Welcome return-path"
 msgstr ""
 
@@ -8031,7 +8035,7 @@ msgstr ""
 msgid "label"
 msgstr ""
 
-#: src/List.pm:724
+#: src/List.pm:734
 msgid "connection timeout"
 msgstr "spojení vypršelo"
 
@@ -8039,7 +8043,7 @@ msgstr "spojení vypršelo"
 msgid "Management of bouncers, 1st level"
 msgstr "Správa vrácených adres, první krok"
 
-#: src/List.pm:975
+#: src/List.pm:985
 msgid "Who can view list information"
 msgstr "Kdo smí vidět informace o konferenci"
 
@@ -8047,7 +8051,7 @@ msgstr "Kdo smí vidět informace o konferenci"
 msgid "Available subscription options"
 msgstr "Dostupné možnosti odběru zpráv"
 
-#: src/List.pm:1302
+#: src/List.pm:1322
 msgid "Web archives"
 msgstr "Webové archívy"
 
@@ -8055,7 +8059,7 @@ msgstr "Webové archívy"
 msgid "Anonymous sender"
 msgstr "Anonymní odesilatel"
 
-#: src/List.pm:1258
+#: src/List.pm:1278
 #, fuzzy
 msgid "who updated the config"
 msgstr "Poslední změna konfigurace"
@@ -8065,7 +8069,7 @@ msgstr "Poslední změna konfigurace"
 msgid "Inclusions timeout for message distribution"
 msgstr "Počet zpráv"
 
-#: src/List.pm:631
+#: src/List.pm:641
 msgid "Forced reply address"
 msgstr "Vynucená adresa odpovědi"
 
@@ -8075,7 +8079,7 @@ msgstr "Vypršení nemoderované zprávy"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2701
+#: src/List.pm:2721
 msgid "%a, %d %b %Y"
 msgstr ""
 
@@ -8083,46 +8087,47 @@ msgstr ""
 msgid "warn rate"
 msgstr "úroveň upozornění"
 
-#: src/List.pm:826
+#: src/List.pm:836
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:999
+#: src/List.pm:1009
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Kdo smí vidět informace o konferenci"
 
-#: src/List.pm:985
+#: src/List.pm:995
 msgid "Language of the list"
 msgstr "Jazyk konference"
 
-#: src/List.pm:848
+#: src/List.pm:858
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:1052
+#: src/List.pm:1062
 #, fuzzy
 msgid "Message tagging"
 msgstr "Počet zpráv"
 
-#: src/List.pm:518
+#: src/List.pm:1079 src/List.pm:1119 src/List.pm:518 src/List.pm:581
+#: src/List.pm:616
 msgid "visibility"
 msgstr "zobrazení - dostupnost"
 
-#: src/List.pm:1166
+#: src/List.pm:1186
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 Hlavička zprávy"
 
-#: src/List.pm:744 src/List.pm:868
+#: src/List.pm:754 src/List.pm:878
 #, fuzzy
 msgid "SSL ciphers used"
 msgstr "Délka použité šifry"
 
-#: src/List.pm:1275
+#: src/List.pm:1295
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
-#: src/List.pm:1170
+#: src/List.pm:1190
 msgid "Who can send messages"
 msgstr "Typ konference, práva pro zasílání zpráv"
 
@@ -8130,32 +8135,32 @@ msgstr "Typ konference, práva pro zasílání zpráv"
 msgid "Secret string for generating unique keys"
 msgstr ""
 
-#: src/List.pm:1045
+#: src/List.pm:1055
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 
-#: src/List.pm:1134 src/List.pm:1154
+#: src/List.pm:1154 src/List.pm:1174
 msgid "Reply address"
 msgstr "Adresa odpovědi"
 
-#: src/List.pm:665 src/List.pm:728 src/List.pm:852 src/List.pm:906
-#: src/List.pm:964
+#: src/List.pm:675 src/List.pm:738 src/List.pm:862 src/List.pm:916
+#: src/List.pm:974
 msgid "short name for this source"
 msgstr "zkratka pro tento zdroj"
 
-#: src/List.pm:643
+#: src/List.pm:653
 msgid "File inclusion"
 msgstr "Vložení souboru"
 
-#: src/List.pm:1159
+#: src/List.pm:1179
 msgid "Who can review subscribers"
 msgstr "Kdo může prohlížet seznam členů"
 
-#: src/List.pm:708
+#: src/List.pm:718
 msgid "extracted attribute"
 msgstr "získané atributy"
 
-#: src/List.pm:702
+#: src/List.pm:712
 msgid "filter"
 msgstr "filtr"
 
@@ -8167,15 +8172,15 @@ msgstr "Správa vrácených adres, druhý krok"
 msgid "frequency"
 msgstr "perioda archivace"
 
-#: src/List.pm:1115
+#: src/List.pm:1135
 msgid "Priority"
 msgstr "Priorita"
 
-#: src/List.pm:810
+#: src/List.pm:820
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:1220
+#: src/List.pm:1240
 msgid "Subject of the list"
 msgstr "Předmět konference"
 
@@ -8183,7 +8188,7 @@ msgstr "Předmět konference"
 msgid "Subject tagging"
 msgstr "Předmět :"
 
-#: src/List.pm:1252 src/List.pm:994
+#: src/List.pm:1004 src/List.pm:1272
 #, fuzzy
 msgid "date"
 msgstr "Změň"
@@ -8196,24 +8201,24 @@ msgstr "Upravení hlavičky"
 msgid "Digest maximum number of messages"
 msgstr ""
 
-#: src/List.pm:1145
+#: src/List.pm:1165
 msgid "other email address"
 msgstr "další e-mail adresa"
 
-#: src/List.pm:820
+#: src/List.pm:830
 msgid "second-level filter template"
 msgstr "Nastavení šablon serveru"
 
-#: src/List.pm:1089 src/List.pm:596
+#: src/List.pm:1104 src/List.pm:601
 #, fuzzy
 msgid "the datasource"
 msgstr "Uživatelský zdroj dat"
 
-#: src/List.pm:1285 src/List.pm:337
+#: src/List.pm:1305 src/List.pm:337
 msgid "access right"
 msgstr "přístupová práva"
 
-#: src/List.pm:927
+#: src/List.pm:937
 #, fuzzy
 msgid "database port"
 msgstr "typ databáze"
@@ -8222,11 +8227,11 @@ msgstr "typ databáze"
 msgid "Who can delete subscribers"
 msgstr "Kdo smí mazat členy"
 
-#: src/List.pm:612
+#: src/List.pm:622
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
-#: src/List.pm:734 src/List.pm:858
+#: src/List.pm:744 src/List.pm:868
 msgid "use SSL (LDAPS)"
 msgstr ""
 
@@ -8238,11 +8243,11 @@ msgstr "zaslat upozornění"
 msgid "Digest frequency"
 msgstr "Frekvence zasílání"
 
-#: src/List.pm:1241
+#: src/List.pm:1261
 msgid "Who can unsubscribe"
 msgstr "Kdo se smí odhlásit"
 
-#: src/List.pm:1313
+#: src/List.pm:1333
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
@@ -8250,19 +8255,19 @@ msgstr ""
 msgid "Who can add subscribers"
 msgstr "Kdo smí přidat členy"
 
-#: src/List.pm:647
+#: src/List.pm:657
 msgid "data location URL"
 msgstr "umístění dat - URL"
 
-#: src/List.pm:901
+#: src/List.pm:911
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: src/List.pm:804
+#: src/List.pm:814
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:621
+#: src/List.pm:631
 #, fuzzy
 msgid "Family name"
 msgstr "Jméno souboru"
@@ -8271,15 +8276,15 @@ msgstr "Jméno souboru"
 msgid "Account"
 msgstr "Účet"
 
-#: src/List.pm:696
+#: src/List.pm:706
 msgid "suffix"
 msgstr "přípona"
 
-#: src/List.pm:1269
+#: src/List.pm:1289
 msgid "User data source"
 msgstr "Uživatelský zdroj dat"
 
-#: src/List.pm:793
+#: src/List.pm:803
 msgid "first-level selection"
 msgstr ""
 
@@ -8287,7 +8292,7 @@ msgstr ""
 msgid "Subscription profile"
 msgstr "Přihlašovací profil"
 
-#: src/List.pm:718
+#: src/List.pm:728
 msgid "search scope"
 msgstr "Kde hledat"
 
@@ -8295,15 +8300,15 @@ msgstr "Kde hledat"
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/List.pm:874
+#: src/List.pm:884
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:1124
+#: src/List.pm:1144
 msgid "Return-path of the REMIND command"
 msgstr ""
 
-#: src/List.pm:1023
+#: src/List.pm:1033
 #, fuzzy
 msgid "Message topic name"
 msgstr "Počet zpráv k moderování :"
@@ -8312,7 +8317,7 @@ msgstr "Počet zpráv k moderování :"
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/List.pm:653 src/List.pm:686 src/List.pm:767 src/List.pm:945
+#: src/List.pm:663 src/List.pm:696 src/List.pm:777 src/List.pm:955
 msgid "remote user"
 msgstr "vzdálený uživatel"
 
@@ -8320,7 +8325,7 @@ msgstr "vzdálený uživatel"
 msgid "minute"
 msgstr "Minuta"
 
-#: src/List.pm:783
+#: src/List.pm:793
 msgid "first-level filter"
 msgstr ""
 
@@ -8328,69 +8333,69 @@ msgstr ""
 msgid "additional comment"
 msgstr ""
 
-#: src/List.pm:831
+#: src/List.pm:841
 msgid "second-level selection"
 msgstr "výběr druhé úrovně"
 
-#: src/List.pm:1186
+#: src/List.pm:1206
 msgid "Who can edit"
 msgstr "Kdo může editovat"
 
-#: src/List.pm:1224
+#: src/List.pm:1244
 msgid "Who can subscribe to the list"
 msgstr "Kdo se smí přihlásit do konference"
 
-#: src/List.pm:1177
+#: src/List.pm:1197
 msgid "Serial number of the config"
 msgstr "Seriové číslo konfigurace"
 
-#: src/List.pm:913
+#: src/List.pm:923
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:1074
+#: src/List.pm:1089
 msgid "private informations"
 msgstr "soukromé informace"
 
-#: src/List.pm:670
+#: src/List.pm:680
 msgid "Remote file inclusion"
 msgstr "List info"
 
-#: src/List.pm:1039
+#: src/List.pm:1049
 #, fuzzy
 msgid "Topics for message categorization"
 msgstr "Téma konference"
 
-#: src/List.pm:798
+#: src/List.pm:808
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:1230
+#: src/List.pm:1250
 msgid "Topics for the list"
 msgstr "Téma konference"
 
-#: src/List.pm:788
+#: src/List.pm:798
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:1028
+#: src/List.pm:1038
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:842
+#: src/List.pm:852
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:1064 src/List.pm:1099 src/List.pm:353 src/List.pm:513
-#: src/List.pm:576 src/List.pm:606
+#: src/List.pm:1074 src/List.pm:1114 src/List.pm:353 src/List.pm:513
+#: src/List.pm:576 src/List.pm:611
 msgid "reception mode"
 msgstr "způsob příjmu :"
 
-#: src/List.pm:1119
+#: src/List.pm:1139
 msgid "Who can start a remind process"
 msgstr "Kdo může spustit připomínací proces"
 
-#: src/List.pm:1109
+#: src/List.pm:1129
 msgid "Owners defined in an external datasource"
 msgstr ""
 
@@ -8398,23 +8403,23 @@ msgstr ""
 msgid "Creation of the list"
 msgstr "Vytvoření konference"
 
-#: src/List.pm:1010
+#: src/List.pm:1020
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
-#: src/List.pm:896
+#: src/List.pm:906
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:586
+#: src/List.pm:591
 msgid "private information"
 msgstr "další údaje"
 
-#: src/List.pm:971
+#: src/List.pm:981
 msgid "SQL query inclusion"
 msgstr ""
 
-#: src/List.pm:956
+#: src/List.pm:966
 msgid "SQL query"
 msgstr ""
 
@@ -8426,7 +8431,7 @@ msgstr "Dny"
 msgid "action for this population"
 msgstr "akce při této úrovni"
 
-#: src/List.pm:1281
+#: src/List.pm:1301
 msgid "Visibility of the list"
 msgstr "Zobrazení konference"
 
@@ -8434,41 +8439,41 @@ msgstr "Zobrazení konference"
 msgid "Bounces management"
 msgstr "Správa chybných adres"
 
-#: src/List.pm:879
+#: src/List.pm:889
 msgid "List inclusion"
 msgstr "Informace o konferenci"
 
-#: src/List.pm:713
+#: src/List.pm:723
 msgid "selection (if multiple)"
 msgstr "výběr (i vícenásobný)"
 
-#: src/List.pm:1069 src/List.pm:581
+#: src/List.pm:1084 src/List.pm:586
 msgid "name"
 msgstr "Jméno"
 
-#: src/List.pm:1079 src/List.pm:1104
+#: src/List.pm:1094 src/List.pm:1124
 msgid "profile"
 msgstr "profil"
 
-#: src/List.pm:752
+#: src/List.pm:762
 msgid "LDAP query inclusion"
 msgstr ""
 
-#: src/List.pm:932
+#: src/List.pm:942
 msgid "database name"
 msgstr "název databáze"
 
-#: src/List.pm:1247 src/List.pm:990
+#: src/List.pm:1000 src/List.pm:1267
 #, fuzzy
 msgid "epoch date"
 msgstr "Změň"
 
-#: src/List.pm:1034
+#: src/List.pm:1044
 #, fuzzy
 msgid "Message topic title"
 msgstr "Počet zpráv k moderování :"
 
-#: src/List.pm:777
+#: src/List.pm:787
 msgid "first-level suffix"
 msgstr ""
 
@@ -8566,21 +8571,21 @@ msgstr "%1 : je neznámý příkaz"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15988 wwsympa/wwsympa.fcgi:15989
+#: wwsympa/wwsympa.fcgi:15987 wwsympa/wwsympa.fcgi:15988
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:776
+#: wwsympa/wwsympa.fcgi:773
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:323 wwsympa/SympaSession.pm:324
-#: wwsympa/wwsympa.fcgi:11673 wwsympa/wwsympa.fcgi:11816
-#: wwsympa/wwsympa.fcgi:14239 wwsympa/wwsympa.fcgi:7427
+#: wwsympa/wwsympa.fcgi:11672 wwsympa/wwsympa.fcgi:11815
+#: wwsympa/wwsympa.fcgi:14238 wwsympa/wwsympa.fcgi:7426
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
@@ -8738,6 +8743,10 @@ msgstr "soubor nápovědy"
 #: wwsympa/wwslib.pm:68
 msgid "subscribing invitation message"
 msgstr "zpráva pro pozvané"
+
+#, fuzzy
+#~ msgid "Subscription request to list %1 [% user.custom_attribute %]"
+#~ msgstr "Požadavek na přihlášení do konference %s"
 
 #, fuzzy
 #~ msgid "Listing subscriptions to validate"
