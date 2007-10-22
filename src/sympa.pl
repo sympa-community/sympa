@@ -887,7 +887,7 @@ while (!$signal) {
 
 	## z and Z are a null priority, so file stay in queue and are processed
 	## only if renamed by administrator
-	next unless ($t_filename =~ /^(\S+)\.\d+\.\d+$/);
+	next unless ($t_filename =~ /^(\S+)\.\d+\.\w+$/);
 
 	## Don't process temporary files created by queue (T.xxx)
 	next if ($t_filename =~ /^T\./);
