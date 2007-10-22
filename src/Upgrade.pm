@@ -667,7 +667,7 @@ sub probe_db {
 							'include_sources_subscriber' => 'varchar(50)',
 							'bounce_score_subscriber' => 'smallint(6)',
 							'bounce_address_subscriber' => 'varchar(100)',
-							'custom_attribute' => 'varchar(500)'},
+							'custom_attribute_subscriber' => 'text'},
 				 'admin_table' => {'list_admin' => 'varchar(50)',
 						   'user_admin' => 'varchar(100)',
 						   'robot_admin' => 'varchar(80)',
