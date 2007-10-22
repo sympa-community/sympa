@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-10-11 16:47+0200\n"
-"Last-Translator: Olivier Salaün <os@cru.fr>\n"
+"PO-Revision-Date: 2007-10-17 14:59+0200\n"
+"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,9 +116,8 @@ msgid "Listmaster"
 msgstr "listmaster"
 
 #: web_tt2/login_menu.tt2:10
-#, fuzzy
 msgid "Restore identity"
-msgstr "Restaurer la liste"
+msgstr "Restaurer l'identité"
 
 # nlsref 16,27
 #: src/List.pm:1059 src/List.pm:571 web_tt2/login_menu.tt2:77
@@ -518,7 +517,7 @@ msgstr "Définition de la liste"
 
 #: web_tt2/admin_menu.tt2:173
 msgid "Attribute optionnal/required"
-msgstr ""
+msgstr "Attribut optionnel/obligatoire"
 
 #: web_tt2/admin_menu.tt2:156
 msgid "Bounce Settings"
@@ -1434,20 +1433,18 @@ msgid "Do you want to delete the old file %1 ?"
 msgstr "Voulez-vous supprimer l'ancien fichier %1 ?"
 
 #: web_tt2/edit_attributes.tt2:22
-#, fuzzy
 msgid "Required element"
-msgstr "Les alias à installer"
+msgstr "Information obligatoire"
 
 # nlsref 16,30
 #: web_tt2/edit_attributes.tt2:4 web_tt2/review.tt2:156
 #: web_tt2/subindex.tt2:11
-#, fuzzy
 msgid "Additional information"
-msgstr "informations privées"
+msgstr "informations supplémentaires"
 
 #: web_tt2/edit_attributes.tt2:7
 msgid "[% k.name %] :"
-msgstr ""
+msgstr "[% k.name %] :"
 
 #: web_tt2/editfile.tt2:12
 msgid "Save"
@@ -2082,9 +2079,8 @@ msgstr "Le dossier '%1' existe déjà"
 
 #. (u_err.reception_mode)
 #: web_tt2/error.tt2:66
-#, fuzzy
 msgid "Check the additional information"
-msgstr "Information d'authentification HTTPS"
+msgstr "Vérifiez vos informations supplémentaires"
 
 #: web_tt2/error.tt2:98
 msgid "Data has changed on disk. Cannot apply your changes"
@@ -4007,7 +4003,7 @@ msgstr "profil"
 
 #: web_tt2/serveradmin.tt2:56
 msgid "Delay for active sessions (minutes)"
-msgstr ""
+msgstr "Montrer les sessions actives depuis un délais de (min) :"
 
 #: web_tt2/serveradmin.tt2:68
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
@@ -4023,6 +4019,9 @@ msgid ""
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
 "dump feature : "
 msgstr ""
+"Quand vous personnalisez l'interface web de Sympa, il est utile de savoir "
+"quels paramètres sont disponibles pour les parseurs TT2. Ce bouton vous "
+"permet d'afficher / cacher ces paramètres."
 
 #: web_tt2/serveradmin.tt2:34
 msgid "Lists"
@@ -4030,7 +4029,7 @@ msgstr "Les listes"
 
 #: web_tt2/serveradmin.tt2:97
 msgid "Set log level"
-msgstr ""
+msgstr "Définir le niveau de log"
 
 #: web_tt2/serveradmin.tt2:5
 msgid "Virtual Robots"
@@ -4067,7 +4066,7 @@ msgstr "Skins, feuilles de style et couleurs"
 
 #: web_tt2/serveradmin.tt2:58
 msgid "Show only connected users"
-msgstr ""
+msgstr "Ne montrer que les utilisateurs connectés"
 
 #: web_tt2/serveradmin.tt2:163
 msgid "You can submit a problem or request a new feature : "
@@ -4083,6 +4082,10 @@ msgid ""
 "current session. On a production server, this allow to keep logs rather "
 "small and to test some features with the maximum log level. "
 msgstr ""
+"Vous pouvez augmenter le niveau de log spécifié dans la configuration pour "
+"la durée de votre session. Sur un serveur en production, cela permet de "
+"garder des quantités de logs faibles en général et de les augmenter "
+"ponctuellement pour tester une fonctionnalité."
 
 #: web_tt2/serveradmin.tt2:101
 msgid "Templates"
@@ -4093,14 +4096,18 @@ msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges"
 msgstr ""
+"En tant que listmaster, vous pouvez changer votre identité pour celle d'un "
+"autre utilisateur. Toute l'interface réagira de la même manière que pour "
+"cette personne. Cela peut être utile lors des demandes d'assistance ou pour "
+"tester les privilèges des utilisateurs."
 
 #: web_tt2/serveradmin.tt2:138
 msgid "Unset template vars dump"
-msgstr ""
+msgstr "Désactiver l'affichage des paramètres"
 
 #: web_tt2/serveradmin.tt2:91
 msgid "Log level"
-msgstr ""
+msgstr "Niveau de log"
 
 #: web_tt2/serveradmin.tt2:156
 msgid ""
@@ -4117,7 +4124,7 @@ msgstr "Traduire Sympa"
 
 #: web_tt2/serveradmin.tt2:78
 msgid "Change identity"
-msgstr ""
+msgstr "Changer d'identité"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:170
@@ -4165,9 +4172,8 @@ msgstr "Reconstruire TOUTES les archives"
 
 # nlsref 15,18
 #: web_tt2/serveradmin.tt2:140
-#, fuzzy
 msgid "Set template vars dump"
-msgstr "Sélectionnez un type de templates :"
+msgstr "Activer l'affichage des paramètres"
 
 #: web_tt2/serveradmin.tt2:146
 msgid "Skins administration page"
@@ -4175,7 +4181,7 @@ msgstr "Administration des skins "
 
 #: web_tt2/serveradmin.tt2:82
 msgid "change identity as : "
-msgstr ""
+msgstr "Endosser l'identité de :"
 
 #: web_tt2/serveradmin.tt2:71
 msgid "listname : "
@@ -4187,9 +4193,8 @@ msgstr "Ci-dessous la liste des robots virtuels gérés sur ce serveur :"
 
 # nlsref 17,1
 #: web_tt2/serveradmin.tt2:55
-#, fuzzy
 msgid "Show sessions"
-msgstr "la session"
+msgstr "Afficher les sessions"
 
 #: web_tt2/set_pending_list_request.tt2:27
 msgid "notify owner"
@@ -4241,9 +4246,8 @@ msgid "Certificate issuer"
 msgstr "Certificat émis par"
 
 #: web_tt2/show_sessions.tt2:1
-#, fuzzy
 msgid "Sessions list"
-msgstr "Listes en attente"
+msgstr "Liste des sessions"
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
 #: web_tt2/subrequest.tt2:31 web_tt2/subrequest.tt2:69
@@ -4685,13 +4689,12 @@ msgstr "Desactiver l'abonnement par thèmes"
 
 #. (list)
 #: web_tt2/subrequest.tt2:65
-#, fuzzy
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below :"
 msgstr ""
-"Pour valider votre demande d'abonnement à %1, merci de rentrer votre mot de "
-"passe :"
+"Pour valider votre demande d'abonnement à %1, merci de saisir\n"
+" votre mot de passe :"
 
 #. (list)
 #: web_tt2/subrequest.tt2:14
@@ -4733,14 +4736,12 @@ msgid "You requested subscription to list %1"
 msgstr "Vous avez demandé un abonnement à la liste %1"
 
 #: web_tt2/subrequest.tt2:6
-#, fuzzy
 msgid ""
 "To confirm\n"
 "        your request, please click the button below :"
-msgstr "merci de confirmer cette demande :"
+msgstr "Pour confirmer votre demande, merci de cliquer sur ce bouton :"
 
 #: web_tt2/subrequest.tt2:24
-#, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
 "        this list against your will, a message containing your password\n"
@@ -6867,9 +6868,8 @@ msgstr ""
 # nlsref 8,2
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:61
-#, fuzzy
 msgid "Subscription request to list %1 [% user.custom_attribute %]"
-msgstr "Demande d'abonnement à la liste %1"
+msgstr "Demande d'abonnement à la liste %1 [% user.custom_attribute %]"
 
 # nlsref 8,28
 #. (list.name)
@@ -7321,7 +7321,6 @@ msgstr ""
 
 #. (list.name)
 #: mail_tt2/send_auth.tt2:14
-#, fuzzy
 msgid "To distribute the attached message in list %1, follow the link below :"
 msgstr ""
 "Pour diffuser le message ci-joint dans la liste %1, suivez le lien ci-"
@@ -8059,6 +8058,8 @@ msgid ""
 "daily delete sessions older than sympa.conf/session_expiration_period "
 "parameter"
 msgstr ""
+"Supprime chaque jour les sessions plus vieilles que la valeur du paramètre "
+"sympa.conf/session_expiration_period"
 
 #: src/etc/global_task_models/purge_user_table.monthly.task:1
 msgid "purge of orphan entries in user table every month"
@@ -8227,7 +8228,7 @@ msgstr "%d %b %Y"
 
 #: src/List.pm:491
 msgid "is the attribute optionnal ?"
-msgstr ""
+msgstr "L'attribut est-il optionnel ?"
 
 # nlsref 16,56
 #: src/List.pm:1017
@@ -8235,7 +8236,6 @@ msgid "Maximum message size"
 msgstr "Taille maximum des messages"
 
 #: src/List.pm:480
-#, fuzzy
 msgid "type"
 msgstr "Type"
 
@@ -8246,7 +8246,7 @@ msgstr "droit de consultation"
 
 #: src/List.pm:459
 msgid "internal identifier"
-msgstr ""
+msgstr "Identifiant interne"
 
 # nlsref 16,144
 #: src/List.pm:814
@@ -8378,7 +8378,7 @@ msgstr "Return-path d'abonnement"
 
 #: src/List.pm:467
 msgid "label"
-msgstr ""
+msgstr "Nom"
 
 # nlsref 16,98
 #: src/List.pm:724
@@ -8416,9 +8416,10 @@ msgstr "qui a mis à jour le fichier de configuration"
 
 # nlsref 15,4
 #: src/List.pm:564
-#, fuzzy
 msgid "Inclusions timeout for message distribution"
-msgstr "Diffusion des messages"
+msgstr ""
+"Délais maximum depuis la dernière synchronisation avant que celle-ci ne soit "
+"déclenchée par l'envoi d'un message"
 
 # nlsref 16,32
 #: src/List.pm:631
@@ -8682,7 +8683,7 @@ msgstr "portée de la recherche"
 
 #: src/List.pm:497
 msgid "Custom user attributes"
-msgstr ""
+msgstr "Attributs d'utilisateur personnalisés"
 
 # nlsref 16,135
 #: src/List.pm:874
@@ -8699,7 +8700,7 @@ msgstr "Nom du thème"
 
 #: src/List.pm:486
 msgid "possible attribute values (if enum is used)"
-msgstr ""
+msgstr "Liste des valeurs possibles (si enum est employé)"
 
 # nlsref 16,38
 #: src/List.pm:653 src/List.pm:686 src/List.pm:767 src/List.pm:945
@@ -8718,7 +8719,7 @@ msgstr "filtre (1er niveau)"
 
 #: src/List.pm:473
 msgid "additional comment"
-msgstr ""
+msgstr "Commentaire"
 
 # nlsref 16,147
 #: src/List.pm:831
