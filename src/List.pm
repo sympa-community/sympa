@@ -5101,14 +5101,14 @@ sub parseCustomAttribute {
 	my $parser = XML::LibXML->new();
 	my $tree;
 
-	## We use eval to parse to prevent the program to crash if it fails
+	## We should use eval to parse to prevent the program to crash if it fails
 	if (ref($xmldoc) eq 'GLOB') {
 	    $tree = $parser->parse_fh($xmldoc);
 	}else {
 	    $tree = $parser->parse_string($xmldoc);
 	}
 
-	if ($@) {
+	unless (defined $tree) {
 	    &do_log('err', "Failed to parse XML data");
 	    return undef;
 	}
