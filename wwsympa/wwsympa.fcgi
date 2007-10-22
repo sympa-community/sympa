@@ -3833,11 +3833,12 @@ sub do_remindpasswd {
 	 return undef;
      }
      
+     my $xml_custom_attribute;
      if ($in{custom_attribute}){
        return undef if ( &check_custom_attribute() != 1) ;
        my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
 
-       $in{custom_attribute} = $xml ;
+       $xml_custom_attribute = $xml ;
       }
 
      if ($in{'email'}) {
@@ -3955,7 +3956,7 @@ sub do_remindpasswd {
      }
 
      $update->{'gecos'} = $in{'gecos'} if $in{'gecos'};
-     $update->{'custom_attribute'} = $in{'custom_attribute'} if $in{'custom_attribute'};
+     $update->{'custom_attribute'} = $xml_custom_attribute if $xml_custom_attribute;
 
      unless ( $list->update_user($email, $update) ) {
 	 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -4160,6 +4161,7 @@ sub check_custom_attribute {
      
      my @keys = sort keys (%{$list->{'admin'}}) ;
      my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
+     my $xml_custom_attribute;
      if ($list->{'admin'}{'custom_attribute'} ) {
 
 	 ## This variable is set in the subrequest form
@@ -4174,7 +4176,7 @@ sub check_custom_attribute {
 	     return 'subrequest';
 	 }
 	 my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-	 $in{custom_attribute} = $xml ;
+	 $xml_custom_attribute = $xml ;
      }
 
      my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
@@ -4202,11 +4204,12 @@ sub check_custom_attribute {
 	 unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
 							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
 							   'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
+							   'custom_attribute' => $in{custom_attribute},
 							   'gecos' => $param->{'user'}{'gecos'}})) {
 	     &wwslog('notice',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
 	 }
 
-	 $list->store_subscription_request($param->{'user'}{'email'}, "", $in{'custom_attribute'});
+	 $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
 	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
 	 &wwslog('info', 'do_subscribe: subscribe sent to owner');
 
@@ -4231,7 +4234,7 @@ sub check_custom_attribute {
 	     $u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
 	     $u->{'date'} = $u->{'update_date'} = time;
 	     $u->{'password'} = $param->{'user'}{'password'};
-	     $u->{'custom_attribute'} = $in{'custom_attribute'} if (defined $in{'custom_attribute'});
+	     $u->{'custom_attribute'} = $xml_custom_attribute if (defined $xml_custom_attribute);
 	     $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
 
 	     unless ($list->add_user($u)) {
