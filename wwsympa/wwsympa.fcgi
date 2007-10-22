@@ -4386,7 +4386,7 @@ sub check_custom_attribute {
 
      #msg_topic
      $param->{'sub_user_topic'} = 0;
-     foreach my $user_topic (split /,/,$s->{'topics'}) {
+     foreach my $user_topic (split (/,/,$s->{'topics'})) {
 	 $param->{'topic_checked'}{$user_topic} = 1;
 	 $param->{'sub_user_topic'}++;
      }
