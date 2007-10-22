@@ -5626,20 +5626,9 @@ sub get_next_bouncing_user {
 	$user->{'subscribed'} = 1
 	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 	if (defined $user->{custom_attribute}) {
-	    	do_log('trace', 'custom_attribute  = (%s)', $user->{custom_attribute});
 	    	my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
 	    	$user->{'custom_attribute'} = \%custom_attr ;
 	    }
-##	do_log('trace', 'List::get_next_bouncing_user (email = %s)', $user->{'email'});
-##	if (defined $user->{custom_attribute}) {
-##		do_log('trace', '1. custom_attribute  = (%s)', $user->{custom_attribute});
-##		my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-##		$user->{'custom_attribute'} = %custom_attr ;
-##		do_log('trace', '2. custom_attribute  = (%s)', %custom_attr);
-##		do_log('trace', '3. custom_attribute  = (%s)', $user->{custom_attribute});
-##		my @k = sort keys %custom_attr ;
-##		do_log('trace', "keys custom_attribute  = @k");
-##	}
 
     }else {
 	$sth->finish;

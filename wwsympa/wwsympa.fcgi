@@ -3836,7 +3836,7 @@ sub do_remindpasswd {
      if ($in{custom_attribute}){
        return undef if ( &check_custom_attribute() != 1) ;
        my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-       do_log ('trace', "custom_attribute xml = $xml");
+
        $in{custom_attribute} = $xml ;
       }
 
@@ -4170,11 +4170,10 @@ sub check_custom_attribute {
 	 }
 	 
 	 if (&check_custom_attribute() != 1) {
-	     &wwslog('trace', "subscribe custom_attribute required to be set by the user in{'previous_action'} = '".$in{'previous_action'}."' !!!") ;
+	     &wwslog('notice', "Missing required custom attributes") ;
 	     return 'subrequest';
 	 }
 	 my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-	 do_log ('trace', "custom_attribute xml = $xml");
 	 $in{custom_attribute} = $xml ;
      }
 
@@ -4465,9 +4464,6 @@ sub check_custom_attribute {
 	     &do_sendpasswd();
 	     $param->{'status'} = 'notauth_passwordsent';
 	     
-#	     my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-#	     do_log ('trace', "custom_attribute xml = $xml");
-#	     $param->{custom_attribute} = $xml ;
 	     return 1;
 	 }
 
