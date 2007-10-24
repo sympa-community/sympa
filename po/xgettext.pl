@@ -128,20 +128,6 @@ foreach my $file (@ARGV) {
     }
 }
 
-open DUMP, ">/tmp/d1";
-foreach (@ARGV) {
-    print DUMP;
-    print DUMP"\n";
-}
-close DUMP;
-
-open DUMP, ">/tmp/d2";
-foreach (@ordered_files) {
-    print DUMP;
-    print DUMP"\n";
-}
-close DUMP;
-
 if (-r $PO) {
     open LEXICON, $PO or die $!;
     while (<LEXICON>) {
@@ -454,8 +440,6 @@ foreach my $entry (@Lexicon) {
     print "msgid "; output($entry);
     print "msgstr "; output($Lexicon{$entry});
 }
-
-open DUMP, ">/tmp/dump2"; &dump_var(\%Lexicon,0,\*DUMP);close DUMP;
 
 ## Add expressions to list of expressions to translate
 ## parameters : expression, filename, line, vars
