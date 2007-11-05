@@ -9,6 +9,11 @@ eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
 ##                        Extract gettext_id entries from List.pm
 ##                        Extract title.gettext entries from scenarios
 
+## [D. Verdin] 05/11/2007 : 
+##                        Strings ordered following the order in which files are read and
+##                        the order in which they appear in the files.
+
+
 use strict;
 use Getopt::Std;
 use Pod::Usage;
@@ -78,8 +83,16 @@ extracted.
 
 =cut
 
-my (%file, %type_of_entries, %Lexicon, %opts);
-my ($PO, $out);
+## A hash that will contain 
+my %file;
+my %type_of_entries;
+my %Lexicon;
+my %opts;
+my $PO;
+my $out;
+my @ordered_strings = ();
+my @unique_keys = ();
+my %unique_keys;
 
 # options as above. Values in %opts
 getopts('hugo:', \%opts)
@@ -128,13 +141,14 @@ foreach my $file (@ARGV) {
     }
 }
 
+## Initializes %Lexicon.
 if (-r $PO) {
     open LEXICON, $PO or die $!;
     while (<LEXICON>) {
 	if (1 .. /^$/) { $out .= $_; next }
 	last;
     }
-    
+
     1 while chomp $out;
     
     require Locale::Maketext::Lexicon::Gettext;
@@ -156,6 +170,9 @@ open PO, ">$PO" or die "Can't write to $PO:$!\n";
 select PO;
 
 undef $/;
+
+## Gathering strings in the source files.
+## They will finally be stored into %file
 
 foreach my $file (@ordered_files) {
     next if ($file=~/\.po$/i); # Don't parse po files
@@ -341,7 +358,11 @@ foreach my $file (@ordered_files) {
     }
 }
 
-foreach my $str (sort keys %file) {
+## Transfers all data from %file to %Lexicon, removing duplicates in the process.
+my $index = 0;
+my @ordered_bis;
+my %ordered_hash;
+foreach my $str (@ordered_strings) {
     my $ostr = $str;
     my $entry = $file{$str};
     my $lexi = $Lexicon{$ostr};
@@ -349,7 +370,6 @@ foreach my $str (sort keys %file) {
     ## Skip meta information (specific to Sympa)
     next if ($str =~ /^_\w+\_$/);
 
-#    $str =~ s/\\/\\\\/g;
     $str =~ s/\"/\\"/g;
     $lexi =~ s/\\/\\\\/g;
     $lexi =~ s/\"/\\"/g;
@@ -363,6 +383,11 @@ foreach my $str (sort keys %file) {
 	$lexi =~ s/~([\~\[\]])/$1/g;
     }
 
+    unless ($ordered_hash{$str}){
+    $ordered_bis[$index] = $str;
+    $index++;
+    $ordered_hash{$str} = 1;
+    }
     $Lexicon{$str} ||= '';
     next if $ostr eq $str;
 
@@ -370,7 +395,6 @@ foreach my $str (sort keys %file) {
     delete $file{$ostr}; delete $Lexicon{$ostr};
     $file{$str} = $entry;
 }
-#				     &dump_var(\%file,0,\*STDOUT);
 exit unless %Lexicon;
 
 print $out ? "$out\n" : (<< '.');
@@ -391,22 +415,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 .
-my @Lexicon;
-my %Lexiconbis;
 
-foreach my $o_file (@ordered_files) {
-    foreach my $entry (keys %Lexicon) {
-	unless ($Lexiconbis{$entry}){
-	    my %f = (map { ( "$_->[0]" => 1 ) } @{$file{$entry}});
-	    if ($f{$o_file}) {
-		@Lexicon = (@Lexicon,$entry);
-		$Lexiconbis{$entry} = 1;
-	    }
-	}
-    }
-}
-
-foreach my $entry (@Lexicon) {
+foreach my $entry (@ordered_bis) {
     my %f = (map { ( "$_->[0]:$_->[1]" => 1 ) } @{$file{$entry}});
     my $f = join(' ', sort keys %f);
     $f = " $f" if length $f;
@@ -445,8 +455,9 @@ foreach my $entry (@Lexicon) {
 ## parameters : expression, filename, line, vars
 sub add_expression {
     my $param = shift;
-
+    
     push @{$file{$param->{'expression'}}}, [ $param->{'filename'}, $param->{'line'}, $param->{'vars'} ];
+    @ordered_strings = (@ordered_strings,$param->{'expression'});
     $type_of_entries{$param->{'expression'}} = $param->{'type'} if ($param->{'type'});
 
 }
