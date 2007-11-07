@@ -1082,6 +1082,11 @@ sub as_singlepart {
     my $done = 0;
     $loops++;
     
+    unless (defined $msg) {
+	&do_log('err', "Undefined message parameter");
+	return undef;
+    }
+
     if ($loops > 4) {
 	do_log('err', 'Could not change multipart to singlepart');
 	return undef;
@@ -1107,13 +1112,16 @@ sub as_singlepart {
 	my @parts = $msg->parts();
 	## Only keep the first part
 	$msg->parts([$parts[0]]);
-	$msg->make_singlepart();
-	
+	$msg->make_singlepart();       
+
 	$done ||= &as_singlepart($msg, $preferred_type, $loops);
 
     }elsif ($msg->effective_type() =~ /^multipart/) {
 	my @parts = $msg->parts();
 	foreach my $index (0..$#parts) {
+            
+            next unless (defined $parts[$index]); ## Skip empty parts
+ 
 	    if ($parts[$index]->effective_type() =~ /^multipart\/alternative/) {
 		if (&as_singlepart($parts[$index], $preferred_type, $loops)) {
 		    $msg->parts([$parts[$index]]);
