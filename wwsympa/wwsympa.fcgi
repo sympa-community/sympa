@@ -834,6 +834,12 @@ my $birthday = time ;
 
      $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
 
+     unless (defined $session) {
+	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
+	 &wwslog('info','Failed to create session');
+	 exit (-1);
+     }
+
      $param->{'session'} = $session;
      
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
