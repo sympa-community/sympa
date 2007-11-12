@@ -789,6 +789,7 @@ my $birthday = time ;
      ## Hash defining the parameters where HTML must be filtered.
      $param->{'htmlToFilter'} = {
 				 'homepage_content' => 1,
+				 'info_content' => 1,
 				 };
      
      my $tmp_lang = &Language::GetLang();
