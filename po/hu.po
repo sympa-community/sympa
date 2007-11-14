@@ -1232,7 +1232,7 @@ msgstr "Átnevezés"
 msgid "User mode"
 msgstr "Felhasználói mód"
 
-#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16 web_tt2/help_shared.tt2:24
+#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16
 msgid "Expert mode"
 msgstr "Haladó mód"
 
@@ -2243,958 +2243,6 @@ msgstr "Engedélyezésre váró listák"
 #, fuzzy
 msgid "Requested date"
 msgstr "Kérelmező"
-
-#: web_tt2/help_editfile.tt2:3
-msgid "Service messages description :"
-msgstr ""
-"Az űrlapon a listához kapcsolódó számos mező beállításáról lehet olvasni:"
-
-#: web_tt2/help_editfile.tt2:6
-msgid ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-msgstr ""
-"Üdvözlő szöveg: Az új tagoknak elküldésre kerülő szöveg. Ez a levél\n"
-"MIME felépítésű is lehet (csak MIME guruknak)."
-
-#: web_tt2/help_editfile.tt2:9
-#, fuzzy
-msgid ""
-"Unsubscribe message : This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-"Leiratkozási üzenet: Az üzenet elküldésre kerül, ha a tag az UNSUBSCRIBE\n"
-"paranccsal leiratkozik a listáról."
-
-#: web_tt2/help_editfile.tt2:13
-msgid ""
-"Deletion message : This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-msgstr ""
-"Értesítés leiratkozásról: Ezt az üzenetet azok a tagok kapják meg,\n"
-"akiket DEL parancs töröl (kivéve akkor, ha a nincs értesítés gombot \n"
-"használja)."
-
-#: web_tt2/help_editfile.tt2:18
-msgid ""
-"Remind message : This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-msgstr ""
-"Emlékeztető üzenet: Minden feliratkozott tagnak az emlékeztető (REMIND) "
-"parancs\n"
-"hatására elküldésre kerül ez az üzenet. Segíthet azoknak a tagoknak,\n"
-"akik nem biztosak a feliratkozási címükben, vagy akik nem tudnak\n"
-"valamiért leiratkozni."
-
-#: web_tt2/help_editfile.tt2:21
-#, fuzzy
-msgid ""
-"Subscribing invitation message : sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-msgstr ""
-"Felkérő levél a feliratkozásra: elküldésre kerül, ha feliratkozásra\n"
-"kérünk fel valakit az INVITE paranccsal."
-
-#: web_tt2/help_editfile.tt2:24
-msgid "Other files/pages description :"
-msgstr "További állományok/oldalak ismertetése:"
-
-#: web_tt2/help_editfile.tt2:28
-msgid ""
-"List homepage : HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-msgstr ""
-"Lista honlapja: A listát bemutató HTML szöveg. A lista főlapjának\n"
-"jobb oldalán jelenik meg (az alapértelmezett lista leírása)."
-
-#: web_tt2/help_editfile.tt2:31
-msgid ""
-"List description : This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the"
-msgstr ""
-"Lista leírása: Az itt megadott szöveg a válasz az INFO email\n"
-"parancsra. Ezenfelül megjelenhet még az alábbi helyen:"
-
-#: web_tt2/help_editfile.tt2:31
-msgid "Welcome message"
-msgstr "Üdvözlő szöveg"
-
-#: web_tt2/help_editfile.tt2:34
-msgid ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-msgstr ""
-"Üzenet fejléce: Ha ez az állomány nem üres, akkor MIME kódolással a listára "
-"érkező\n"
-"összes levél elejére beszúrásra kerül ez a szöveg."
-
-#: web_tt2/help_editfile.tt2:37
-msgid ""
-"Message footer : same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-msgstr ""
-"Üzenet lábléce: hasonló az <em>Üzenet fejlécéhez</em>, de azzal ellentétben\n"
-"a levelek végére kerül beszúrásra."
-
-# nlsref 16,73
-#: web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Ki vehet fel tagokat (ADD parancs) a listára"
-
-#: web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-"Akkor használja, ha el akarja rejteni a feladó e-mail címét az üzenet "
-"szétküldése előtt. A feladó címe a megadott e-mail címmel lesz helyettesítve."
-
-#: web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr ""
-"Jogosultság a levelezési archívum és az archiválási gyakoriság megtekintésére"
-
-#: web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"Az available_user_options paraméter egy bekezdést kezd, ahol megadhatók a "
-"lista tagjai számára elérhető beállítások."
-
-#: web_tt2/help_editlist.tt2:17
-msgid ""
-"(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
-msgstr ""
-"(Alapértelmezett érték: összegző levél, értesítés, kivonat, sima kivonat, "
-"összefoglaló, nincs kézbesítés)"
-
-#: web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<en>módlista</em> módok listája (levél, értesítés, kivonat, sima kivonat, "
-"összefoglaló, nincs kézbesítés), vesszővel elválasztva. Csak ezek a módok "
-"engedélyezettek a lista tagjainak. Ha egy tagnak olyan kézbesítési mód van "
-"beállítva, ami nincs a listában, akkor a sympa azt a módot használja, ami a "
-"default_user_options bekezdésben található."
-
-#: web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "Ez a bekezdés a visszapattanás-kezelés paramétereit adja meg:"
-
-#: web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "Alapértelmezett érték: bounce_warn_rate robot paraméter"
-
-#: web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"A lista tulajdonosa figyelmeztetést kap, valahányszor egy üzenet "
-"szétküldésekor a visszapattanások száma (százalékban) meghaladja ezt az "
-"értéket."
-
-#: web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "Alapértelmezett érték: bounce_halt_rate robot paraméter"
-
-#: web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-"MÉG NINCS HASZNÁLVA. Ha a visszapattanási ráta eléri a megállási rátát "
-"(halt_rate), a listára küldött üzenetek meg fognak állni, azaz vissza "
-"lesznek tartva későbbi moderálásig. Ha a visszapattanások száma túllépi ezt "
-"az értéket, az erre a listára küldött üzenetek nem lesznek szétküldve."
-
-#: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
-#: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
-#: web_tt2/help_editlist.tt2:43 web_tt2/help_editlist.tt2:46
-#: web_tt2/help_editlist.tt2:56 web_tt2/help_editlist.tt2:59
-#: web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "Alapértelmezett érték: "
-
-#: web_tt2/help_editlist.tt2:31
-#, fuzzy
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"Annak a feladat sablonnak (task template) a neve, ami a régi "
-"visszapattanások törlését végzi. Hasznos törölni egy tag e-mail címének "
-"visszapattanásait, ha néhány üzenetet sikerült elküldeni új visszapattanás "
-"nélkül. Ebben az esetben a tag e-mail címe ismét jónak tűnik. Aktív, ha a "
-"task_manager.pl fut."
-
-#: web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"A bouncers_level1 bekezdés a visszapattanások automatikus kezelését adja meg."
-"<br />\n"
-"\tAz egyes szint a visszapattanások legalacsonyabb szintje."
-
-#: web_tt2/help_editlist.tt2:41 web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr ""
-
-#: web_tt2/help_editlist.tt2:41
-#, fuzzy
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). Ez "
-"a paraméter határozza meg az alsó határokat a visszapattanó felhasználók "
-"kategóriái között. Például: az 1-es szint 45-től a 2-es szint határáig "
-"(level_2_treshold) tart."
-
-#: web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-"Ez a paraméter megadja, melyik feladat lesz automatikusan alkalmazva az "
-"egyes szintű visszapattanások kezelésére."
-
-#: web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Ha automatikus feladat lett végrehajtva első szintű visszapattanásokon, egy "
-"értesítő e-mailt lehet küldeni a lista tulajdonosának vagy a listmasternek."
-
-#: web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"A bouncers_levelX bekezdés a visszapattanások automatikus kezelését adja meg."
-"<br />\n"
-"\tAz kettes szint a visszapattanások legmagasabb szintje."
-
-#: web_tt2/help_editlist.tt2:57
-#, fuzzy
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). Ez "
-"a paraméter határozza meg a határokat a visszapattanó felhasználók "
-"kategóriái között. Például: a kettes szint azoké a felhasználóké, akiknek 80 "
-"és 100 közötti pontszáma van."
-
-#: web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-"Ez a paraméter megadja, melyik feladat lesz automatikusan alkalmazva a "
-"kettes szintű visszapattanások kezelésére."
-
-#: web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Ha automatikus feladat lett végrehajtva kettes szintű visszapattanásokon, "
-"egy értesítő e-mailt lehet küldeni a lista tulajdonosának vagy a "
-"listmasternek."
-
-#: web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-"Ez a paraméter bizalmas információ, amivel az adminisztrációs parancsokhoz "
-"(ADD, DELETE, etc.) szükséges azonosító kulcsok generálásához kell. Ennek a "
-"paraméternek rejtve kell maradnia, még a tulajdonosok számára is. Ez a süti "
-"(cookie) minden listatulajdonosra alkalmazva lesz, és csak akkor lesz "
-"figyelembe véve, ha a tulajdonosnak van auth paramétere."
-
-#: web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-"Ez a paraméter opcionális. A megadott fejlécek hozzá lesznek adva a listán "
-"keresztül szétküldött üzenetek fejlécéhez. Az 1.2.2-es Sympától kezdve "
-"egyszerre több egyéni fejlécet is meg lehet adni a konfigurációs állományban."
-
-#: web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-"Ez a paraméter opcionális. Egy rövid szöveget ad meg, ami hozzá lesz adva a "
-"szétküldött üzenetek tárgy részéhez (ezáltal segítve azoknak a "
-"felhasználóknak, akik nem használ automatikus eszközöket a bejövő üzenetek "
-"szétválogatására). Ez a szöveg [] karakterekkel lesz körülvéve."
-
-#: web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"A default_user_options paraméter egy bekezdést kezd, ahol megadhatóak a "
-"lista tagjai számára alapértelmezett értékek."
-
-# nlsref 16,19
-#: web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "Levélkézbesítési mód."
-
-#: web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr "A tag láthatósága megtekintés (REVIEW) parancs esetén."
-
-#: web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr "Ez a paraméter megadja, ki használhatja a törlés (DEL) parancsot."
-
-#: web_tt2/help_editlist.tt2:81
-#, fuzzy
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"A kivonat (digest) mód leírása. Ha ez a paraméter adott, a tagoknak "
-"lehetősége van az üzeneteket többrészes/kivonat (multipart/digest) MIME "
-"formában, vagy sima szöveges kivonatként megkapni. Az üzenetek csoportokba "
-"lesznek fűzve, és ezt kapják meg a tagok paraméter által beállított "
-"ütemezésnek megfelelően."
-
-#: web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"A szerkesztők felelnek az üzenetek moderálásáért. Ha egy levelezési lista "
-"moderált, akkor egy listára küldött üzenet először a szerkesztőkhöz kerül, "
-"akik eldöntik, hogy engedélyezik, vagy elutasítják."
-
-#: web_tt2/help_editlist.tt2:84
-msgid ""
-"FYI: Defining editors will not make the list moderated ; you will have to "
-"set the \"send\" parameter."
-msgstr ""
-"Figyelem: szerkesztők beállítása nem teszi a listát automatikusan "
-"moderálttá; megfelelően be kell állítania a küldés (send) paramétert."
-
-#: web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"Figyelem: ha egy lista moderált, bármely szerkesztő elfogadhat vagy "
-"elutasíthat egy üzenetet a többi szerkesztő tudomása vagy jóváhagyása "
-"nélkül. Azok az üzenetek, amelyeket nem fogadnak vagy utasítanak el, a "
-"moderálási sorban maradnak beavatkozásig."
-
-#: web_tt2/help_editlist.tt2:87
-#, fuzzy
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-"Ez a paraméter megadja, melyik modell használatos elavulási feladat (expire "
-"task) létrehozásakor. Egy elavulási feladat időnként megvizsgálja a tagok "
-"fel- vagy újrafeliratkozási dátumát, és megkéri őket, hogy frissítsék a "
-"tagságukat. Aki ezt nem teszi meg, az törölve lesz."
-
-#: web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"A listatulajdonosok dönthetnek úgy, hogy a listán keresztül küldött "
-"üzenetekhez fejléceket vagy lábléceket csatolnak. Ez a paraméter adja meg, "
-"hogy milyen formában adják hozzá a fejlécet/láblécet az üzenethez."
-
-#: web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr ""
-"Alapértelmezett érték. A Sympa a fejlécet/láblécet új MIME részként fogja "
-"hozzáadni."
-
-#: web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"A Sympa nem fog létrehozni új MIME részeket, ehelyett a fejlécet/láblécet a "
-"levél törzséhez próbálja hozzáfűzni. Az előre definiált üzenet láblécek "
-"mellőzve lesznek. Fejlécek/láblécek csak egyszerű szöveges (text/plain) "
-"üzenetekhez fűzhetők."
-
-#: web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"A lista tartományneve, alapértelmezett a robot tartományneve, ami a "
-"megfelelő robot.conf állományban vagy az /etc/sympa.conf-ban van beállítva."
-
-#: web_tt2/help_editlist.tt2:101
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include. The file should contain one e-mail address per line (lines "
-"beginning with a \"#\" are ignored)."
-msgstr ""
-"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
-"include (beágyazás). A állománynak soronként egy e-mail címet kell "
-"tartalmaznia (a \"#\"-tel kezdődő sorok figyelmen kívül lesznek hagyva)."
-
-#: web_tt2/help_editlist.tt2:103
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This paragraph "
-"is used only if user_data_source is set to include. This feature requires "
-"the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Ez a bekezdés egy kétszintű lekérdezés paramétereit adja meg, ami tagok egy "
-"listáját adja vissza. Általában az első szintű lekérdezés DN-ek listáját "
-"adja vissza, és a második szintű lekérdezések átalakítják ezeket a DN-eket e-"
-"mail címekké. Ez a bekezdés csak akkor használatos, ha a user_data_source "
-"include-ra (beágyazás) van állítva. Ehhez az opcióhoz a Net::LDAP (perlldap) "
-"PERL modul szükséges."
-
-#: web_tt2/help_editlist.tt2:105
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This paragraph is used only if user_data_source is set to "
-"include. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Ez a bekezdés egy lekérdezés paramétereit adja meg, ami tagok egy listáját "
-"adja vissza. Ez a bekezdés csak akkor használatos, ha a user_data_source "
-"include-ra (beágyazás) van állítva. Ehhez az opcióhoz a Net::LDAP (perlldap) "
-"PERL modul szükséges."
-
-#: web_tt2/help_editlist.tt2:107
-#, fuzzy
-msgid ""
-"This parameter will be interpreted only if user_data_source is set to "
-"include. All subscribers of list listname become subscribers of the current "
-"list. You may include as many lists as required, using one include_list "
-"listname line for each included list. Any list at all may be included; the "
-"user_data_source definition of the included list is irrelevant, and you may "
-"therefore include lists which are also defined by the inclusion of other "
-"lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise to an infinite loop."
-msgstr ""
-"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
-"include (beágyazás). A listanév lista minden tagja az aktuális lista tagja "
-"lesz. Annyi listát ágyazhat be, amennyit csak akar, egy include_list "
-"listanév sort használva minden beágyazott listánál. Bármilyen lista "
-"beágyazható, a beágyazott lista user_data_source beállítása nem számít, így "
-"beágyazhat olyan listát, ami más listák beágyazásával jött létre. Ugyanakkor "
-"vigyázzon, ne ágyazza be A listába B listát, és B listába A listát, mivel ez "
-"végtelen ciklushoz vezet."
-
-#: web_tt2/help_editlist.tt2:109
-#, fuzzy
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"A Sympa képes kapcsolódni egy másik Sympa szolgáltatóhoz https-en keresztül, "
-"hogy letöltsön egy távoli listát azért, hogy a távoli lista minden tagját "
-"felvegye tagnak. Annyi listát bevehet, amennyit csak akar, egy "
-"include_remote_sympa bekezdést használva minden beágyazott listához. "
-"Ugyanakkor vigyázzon, ne csináljon végtelen ciklust kereszt beágyazásokkal."
-
-#: web_tt2/help_editlist.tt2:110
-#, fuzzy
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"Ennél a műveletnél az egyik Sympa szerverként, a másik kliensként "
-"viselkedik. A szerver oldalán az az egyetlen szükséges beállítás, hogy "
-"engedélyezni kell  a kapcsolódó Sympának a lista megtekintését. Ezt a "
-"megtekintés (review) scenario szabályozza."
-
-#: web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include, and is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr ""
-"Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
-"include (beágyazás), és egy bekezdést nyit, ami megadja egy SQL lekérdezés "
-"paramétereit."
-
-#: web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-"Ez a paraméter megadja a listán használt nyelvet. Arra használatos, hogy a "
-"felhasználók nyelvi beállításának kezdeti értéket adjon; a Sympa parancsokra "
-"adott válaszok a hozzárendelt üzenetkatalógusból lesznek kiválasztva."
-
-#: web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "Egy üzenet maximális mérete 8-bites byte-okban."
-
-#: web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-"A tulajdonosok a lista tagjait felügyelik. Megtekinthetik a tagokat és "
-"felvehetnek vagy törölhetnek e-mail címeket a listáról. A lista kiemelt "
-"tulajdonosa felvehet más tulajdonosokat a listára. A kiemelt tulajdonosok "
-"állíthatnak  néhány olyan beállítást is, amit a többi tulajdonos nem."
-
-#: web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"A prioritás, amivel a Sympa a listára küldött leveleket feldolgozza. Ez a "
-"prioritás akkor számít, amikor az üzenet keresztül halad a feldolgozási "
-"soron. A z prioritás az üzenetet a sorba fagyasztja."
-
-#: web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr ""
-"Ez a paraméter megadja, ki használhatja az emlékeztető (remind) parancsot."
-
-#: web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr ""
-"Ugyanaz, mint a welcome_return_path, de emlékeztető üzenetekre alkalmazva."
-
-#: web_tt2/help_editlist.tt2:126
-#, fuzzy
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-"Ez a paraméter megadja, melyik modell használatos emlékeztető feladat "
-"(remind task) létrehozásakor. Egy emlékeztető feladat időnként üzenetet küld "
-"minden tagnak, melyben emlékezteti őket listatagságukra."
-
-#: web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"A reply_to_header paraméter egy bekezdést kezd, ahol megadható, hogy a Sympa "
-"mit írjon a Reply-To: (Válaszcím) SMTP fejlécbe az általa szétküldött "
-"üzenetekben."
-
-# nlsref 16,91
-#: src/List.pm:1160 web_tt2/help_editlist.tt2:130
-msgid "value"
-msgstr "Érték"
-
-#: web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-"Ez a paraméter megadja, hogy a Reply-To: (válaszcím) mező az üzenet küldőjét "
-"(sender), magát a listát (list), a küldőt és a listát is (all), vagy egy "
-"tetszőleges e-mail címet (amit az other_email paraméter ad meg) tartalmazza."
-
-#: web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"Megjegyzés: nem ajánlott megváltoztatni ezt a paramétert, és különösen nem "
-"ajánlott listre állítani. A tapasztalat azt mutatja, hogy szinte "
-"elkerülhetetlen, hogy felhasználók, akik tévesen azt hiszik, hogy csak a "
-"feladónak válaszolnak, személyes üzenteket küldenek listákra. Ez legalábbis "
-"bocsánatkéréshez, de időnként súlyosabb következményekhez vezethet."
-
-# nlsref 16,27
-#: web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr "E-mail cím"
-
-#: web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"Ha az érték other_email, ez a paraméter megadja a használt e-mail címet."
-
-#: web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"Alapértelmezett  a Reply-To:(válaszcím) SMTP fejléc figyelembe vétele "
-"(megőrzése) a bejövő üzeneteknél. Ha kényszerítésre van állítva, a Reply-To: "
-"SMTP fejléc felül lesz írva."
-
-#: web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-"Ez a paraméter megadja ki érheti el a tagok listáját. Mivel a tagok címeit "
-"eláraszthatják reklámlevelek küldői, erősen ajánlott csak a tulajdonosoknak "
-"vagy a tagoknak megadni a hozzáférést a tagok listájához."
-
-#: web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr "Ez a paraméter megadja, ki küldhet üzeneteket a listára."
-
-#: web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-"Ez a bekezdés a megosztott dokumentumok olvasási és szerkesztési "
-"jogosultságait adja meg."
-
-#: web_tt2/help_editlist.tt2:148
-#, fuzzy
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"A Sympa honlapot védeni kell a spambotok ellen, amik e-mail címeket "
-"gyűjtenek a nyilvános honlapokon. Különféle módszerek adottak a Sympában, és "
-"a spam_protection és web_archive_spam_protection paraméterekkel választhatja "
-"ki a megfelelőt. A lehetséges értékek:"
-
-#: web_tt2/help_editlist.tt2:150
-#, fuzzy
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-"a cím javascripttel lesz elrejtve. Azok a felhasználók, akik engedélyezik a "
-"javascriptet egy levélcímet láthatnak ott, ahol mások semmit"
-
-#: web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr "a @ karakter fel lesz cserélve az \" AT \" szöveggel"
-
-#: web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr "nincs védelem reklámlevél-küldők ellen"
-
-#: web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-"Ez a paraméter a lista tárgyát mutatja, ami a LISTS levél parancsra lesz "
-"válaszként elküldve. A tárgy egysoros, kötetlen formájú szöveg."
-
-#: web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr ""
-"A feliratkozás (subscribe) paraméter a listára való feliratkozás szabályait "
-"adja meg."
-
-#: web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-"Ez a paraméter a listák osztályozását teszi lehetővé. Megadhat többszörös és "
-"hierarchikus témaköröket is. A WWSympa publikus listák listája ezt a "
-"paramétert használja."
-
-#: web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"A Sympa az include paraméterrel gyűjtött felhasználói adatokat "
-"gyorsítótárban tárolja. A Sympán belüli élettartamuk (TTL, time-to-live) "
-"ezzel a paraméterrel szabályozható. Az alapértelmezett érték 3600"
-
-#: web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-"Ez a paraméter megadja a lista leiratkozási módját. Ha azt szeretné, hogy a "
-"tulajdonosok minden leiratkozási parancsról értesítést kapjanak, használja "
-"az open_notify-t vagy auth_notify-t."
-
-#: web_tt2/help_editlist.tt2:165
-msgid ""
-"Sympa allows the list owner to choose how Sympa loads list member data. "
-"Subscriber information can be stored in a text file or relational database, "
-"or included from various external sources (list, flat file, result of or "
-"query)."
-msgstr ""
-"A Sympa lehetővé teszi a lista tulajdonosának, hogy megválassza, a Sympa "
-"honnan tölti be a tagok adatait. Ez tárolható szöveges állományban vagy "
-"relációs adatbázisban, vagy beágyazhatóak különféle külső források (lista, "
-"sima állomány, vagy egy lekérdezés eredménye)."
-
-#: web_tt2/help_editlist.tt2:167
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-"Ez a paraméter megadja, hogy a lista megjelenjen-e egy LISTS parancsra adott "
-"válasz kimenetében, vagy a webes felületen megjelenjen-e a listák "
-"áttekintésénél."
-
-#: web_tt2/help_editlist.tt2:169
-msgid "Defines who can access the web archive for the list."
-msgstr "Megadja, hogy ki férhet hozzá a lista webes archívumához."
-
-#: web_tt2/help_editlist.tt2:171
-#, fuzzy
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"Ugyanaz, mint a spam_protection, de csak a webes archívumra korlátozva. Egy "
-"másik érték is választható: süti (cookie), ahol a felhasználóknak egy kis "
-"űrlapot kell kitölteni, és a kapott sütivel lehet böngészni az archívumot. "
-"Ez blokkol minden robotot, még a google-t és társait is."
-
-#: web_tt2/help_editlist.tt2:173
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Ha egyedi értékre van állítva, akkor az üdvözlő üzenet válaszcíme egy egyedi "
-"cím, így a tag azonnal törölve lesz a listáról, ha visszapattan a levél."
-
-#: web_tt2/help_editlist.tt2:175
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-
-#: web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-
-#: web_tt2/help_editlist.tt2:179
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
-msgstr ""
-
-#: web_tt2/help_editlist.tt2:181
-msgid "No Comment"
-msgstr "Nincs megjegyzés"
-
-#: web_tt2/help_user_options.tt2:3
-#, fuzzy
-msgid ""
-"This is a description of the receivie modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"A következőkben bemutatjuk a Sympánál használható különböző levélfogadási "
-"módokat. Ezek a beállítások kizárják egymást, vagyis egyszerre két különböző "
-"fogadási módot nem lehet megadni. Lehet, hogy némelyik listán nem "
-"engedélyezett az összes bemutatott fogadási mód."
-
-#: web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Digest (kivonat)"
-
-#: web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
-"elérhető, hogy a leveleket\n"
-"adott időközönként összefűzve, egyben, kivonatként (digest) kaphassuk meg.A "
-"kivonatforma\n"
-"a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
-"tartalmazza."
-
-#: web_tt2/help_user_options.tt2:12 web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"A digest levelek küldésének gyakoriságát a lista tulajdonosa határozza meg."
-
-#: web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "Digestplain (sima kivonat)"
-
-#: web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
-"összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat sima "
-"szöveg\n"
-"formájában lesz kézbesítve, minden csatolmány nélkül. A digestplain "
-"hasznos,\n"
-"ha az e-mail programja nem kezeli rendesen a többrészes/kivonat (multipart/"
-"digest) formátumú leveleket."
-
-#: web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Summary (összegzés)"
-
-#: web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a beállítással "
-"elérhető, hogy a továbbiakban \n"
-"csak a levelek listáját kapjuk meg adott időközönként. Ez a mód nagyon "
-"hasonlít\n"
-"a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
-"listája kerül kézbesítésre."
-
-#: web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Nomail (nincs levél)"
-
-#: web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha egy tag a listáról a továbbiakban nem akar "
-"leveleket kapni, de a listára mégis szeretne leveleket küldeni. Ezzel a "
-"beállítással a felhasználónak nem kell leiratkoznia listáról azért, hogy a "
-"leveleket ne kapja meg, és nem kell később feliratkoznia, hogy leveleket "
-"küldhessen a listára."
-
-#: web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
-"formátumban szeretné megkapni az üzeneteket\n"
-"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
-"érkeztek."
-
-#: web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
-"szeretné megkapni az üzeneteket\n"
-"függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL formátumban "
-"érkeztek."
-
-#: web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
-"állományokat fogadni.\n"
-"Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
-"csatolmányhoz vezet."
-
-#: web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a listára "
-"küldött, tőle származó levelekről."
-
-#: web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
-"megszüntetni. Ha a felhasználó\n"
-"nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
-"kapnia lista leveleit."
 
 #: web_tt2/install_pending_list.tt2:11 web_tt2/set_pending_list_request.tt2:7
 msgid "Listname :"
@@ -4931,7 +3979,7 @@ msgstr "Felhasználó keresése"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16035
+#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16042
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -8419,7 +7467,7 @@ msgstr "A(z) --CONFIG-- konfigurációs állomány hibás.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9401
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9408
 msgid "%A"
 msgstr ""
 
@@ -8938,6 +7986,11 @@ msgstr "Az emlékeztető (REMIND) parancs visszatérési útvonala"
 msgid "Reply address"
 msgstr "Válaszcím"
 
+# nlsref 16,91
+#: src/List.pm:1160
+msgid "value"
+msgstr "Érték"
+
 # nlsref 16,92
 #: src/List.pm:1165
 msgid "other email address"
@@ -9135,16 +8188,16 @@ msgstr "%Y. %b. %-d., %A"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2904 src/List.pm:2905 src/List.pm:2909
-#: wwsympa/wwsympa.fcgi:10818 wwsympa/wwsympa.fcgi:10887
-#: wwsympa/wwsympa.fcgi:11089 wwsympa/wwsympa.fcgi:11431
-#: wwsympa/wwsympa.fcgi:15524 wwsympa/wwsympa.fcgi:16374
-#: wwsympa/wwsympa.fcgi:16375 wwsympa/wwsympa.fcgi:4357
-#: wwsympa/wwsympa.fcgi:4358 wwsympa/wwsympa.fcgi:5780
-#: wwsympa/wwsympa.fcgi:6966 wwsympa/wwsympa.fcgi:7484
-#: wwsympa/wwsympa.fcgi:7534 wwsympa/wwsympa.fcgi:7536
-#: wwsympa/wwsympa.fcgi:8048 wwsympa/wwsympa.fcgi:8049
-#: wwsympa/wwsympa.fcgi:8083 wwsympa/wwsympa.fcgi:8084
-#: wwsympa/wwsympa.fcgi:8297 wwsympa/wwsympa.fcgi:8298
+#: wwsympa/wwsympa.fcgi:10825 wwsympa/wwsympa.fcgi:10894
+#: wwsympa/wwsympa.fcgi:11096 wwsympa/wwsympa.fcgi:11438
+#: wwsympa/wwsympa.fcgi:15531 wwsympa/wwsympa.fcgi:16381
+#: wwsympa/wwsympa.fcgi:16382 wwsympa/wwsympa.fcgi:4364
+#: wwsympa/wwsympa.fcgi:4365 wwsympa/wwsympa.fcgi:5787
+#: wwsympa/wwsympa.fcgi:6973 wwsympa/wwsympa.fcgi:7491
+#: wwsympa/wwsympa.fcgi:7541 wwsympa/wwsympa.fcgi:7543
+#: wwsympa/wwsympa.fcgi:8055 wwsympa/wwsympa.fcgi:8056
+#: wwsympa/wwsympa.fcgi:8090 wwsympa/wwsympa.fcgi:8091
+#: wwsympa/wwsympa.fcgi:8304 wwsympa/wwsympa.fcgi:8305
 msgid "%d %b %Y"
 msgstr "%Y. %b. %-d."
 
@@ -9274,14 +8327,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:323 wwsympa/SympaSession.pm:324
-#: wwsympa/wwsympa.fcgi:11665 wwsympa/wwsympa.fcgi:11808
-#: wwsympa/wwsympa.fcgi:14231 wwsympa/wwsympa.fcgi:7419
+#: wwsympa/wwsympa.fcgi:11672 wwsympa/wwsympa.fcgi:11815
+#: wwsympa/wwsympa.fcgi:14238 wwsympa/wwsympa.fcgi:7426
 msgid "%d %b %y  %H:%M"
 msgstr "%Y. %b. %-d., %H.%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15980 wwsympa/wwsympa.fcgi:15981
+#: wwsympa/wwsympa.fcgi:15987 wwsympa/wwsympa.fcgi:15988
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -9462,6 +8515,847 @@ msgstr "nincs kézbesítés (hasznos szabadság esetén)"
 #: wwsympa/wwslib.pm:44
 msgid "you do not receive your own posts"
 msgstr "nem kapja meg a saját leveleit"
+
+#~ msgid "Service messages description :"
+#~ msgstr ""
+#~ "Az űrlapon a listához kapcsolódó számos mező beállításáról lehet olvasni:"
+
+#~ msgid ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+#~ msgstr ""
+#~ "Üdvözlő szöveg: Az új tagoknak elküldésre kerülő szöveg. Ez a levél\n"
+#~ "MIME felépítésű is lehet (csak MIME guruknak)."
+
+#, fuzzy
+#~ msgid ""
+#~ "Unsubscribe message : This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+#~ msgstr ""
+#~ "Leiratkozási üzenet: Az üzenet elküldésre kerül, ha a tag az UNSUBSCRIBE\n"
+#~ "paranccsal leiratkozik a listáról."
+
+#~ msgid ""
+#~ "Deletion message : This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+#~ msgstr ""
+#~ "Értesítés leiratkozásról: Ezt az üzenetet azok a tagok kapják meg,\n"
+#~ "akiket DEL parancs töröl (kivéve akkor, ha a nincs értesítés gombot \n"
+#~ "használja)."
+
+#~ msgid ""
+#~ "Remind message : This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+#~ msgstr ""
+#~ "Emlékeztető üzenet: Minden feliratkozott tagnak az emlékeztető (REMIND) "
+#~ "parancs\n"
+#~ "hatására elküldésre kerül ez az üzenet. Segíthet azoknak a tagoknak,\n"
+#~ "akik nem biztosak a feliratkozási címükben, vagy akik nem tudnak\n"
+#~ "valamiért leiratkozni."
+
+#, fuzzy
+#~ msgid ""
+#~ "Subscribing invitation message : sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+#~ msgstr ""
+#~ "Felkérő levél a feliratkozásra: elküldésre kerül, ha feliratkozásra\n"
+#~ "kérünk fel valakit az INVITE paranccsal."
+
+#~ msgid "Other files/pages description :"
+#~ msgstr "További állományok/oldalak ismertetése:"
+
+#~ msgid ""
+#~ "List homepage : HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+#~ msgstr ""
+#~ "Lista honlapja: A listát bemutató HTML szöveg. A lista főlapjának\n"
+#~ "jobb oldalán jelenik meg (az alapértelmezett lista leírása)."
+
+#~ msgid ""
+#~ "List description : This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the"
+#~ msgstr ""
+#~ "Lista leírása: Az itt megadott szöveg a válasz az INFO email\n"
+#~ "parancsra. Ezenfelül megjelenhet még az alábbi helyen:"
+
+#~ msgid "Welcome message"
+#~ msgstr "Üdvözlő szöveg"
+
+#~ msgid ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+#~ msgstr ""
+#~ "Üzenet fejléce: Ha ez az állomány nem üres, akkor MIME kódolással a "
+#~ "listára érkező\n"
+#~ "összes levél elejére beszúrásra kerül ez a szöveg."
+
+#~ msgid ""
+#~ "Message footer : same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+#~ msgstr ""
+#~ "Üzenet lábléce: hasonló az <em>Üzenet fejlécéhez</em>, de azzal "
+#~ "ellentétben\n"
+#~ "a levelek végére kerül beszúrásra."
+
+# nlsref 16,73
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "Ki vehet fel tagokat (ADD parancs) a listára"
+
+#~ msgid ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+#~ msgstr ""
+#~ "Akkor használja, ha el akarja rejteni a feladó e-mail címét az üzenet "
+#~ "szétküldése előtt. A feladó címe a megadott e-mail címmel lesz "
+#~ "helyettesítve."
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr ""
+#~ "Jogosultság a levelezési archívum és az archiválási gyakoriság "
+#~ "megtekintésére"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "Az available_user_options paraméter egy bekezdést kezd, ahol megadhatók a "
+#~ "lista tagjai számára elérhető beállítások."
+
+#~ msgid ""
+#~ "(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+#~ msgstr ""
+#~ "(Alapértelmezett érték: összegző levél, értesítés, kivonat, sima kivonat, "
+#~ "összefoglaló, nincs kézbesítés)"
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<en>módlista</em> módok listája (levél, értesítés, kivonat, sima kivonat, "
+#~ "összefoglaló, nincs kézbesítés), vesszővel elválasztva. Csak ezek a módok "
+#~ "engedélyezettek a lista tagjainak. Ha egy tagnak olyan kézbesítési mód "
+#~ "van beállítva, ami nincs a listában, akkor a sympa azt a módot használja, "
+#~ "ami a default_user_options bekezdésben található."
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr "Ez a bekezdés a visszapattanás-kezelés paramétereit adja meg:"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "Alapértelmezett érték: bounce_warn_rate robot paraméter"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "A lista tulajdonosa figyelmeztetést kap, valahányszor egy üzenet "
+#~ "szétküldésekor a visszapattanások száma (százalékban) meghaladja ezt az "
+#~ "értéket."
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "Alapértelmezett érték: bounce_halt_rate robot paraméter"
+
+#~ msgid ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+#~ msgstr ""
+#~ "MÉG NINCS HASZNÁLVA. Ha a visszapattanási ráta eléri a megállási rátát "
+#~ "(halt_rate), a listára küldött üzenetek meg fognak állni, azaz vissza "
+#~ "lesznek tartva későbbi moderálásig. Ha a visszapattanások száma túllépi "
+#~ "ezt az értéket, az erre a listára küldött üzenetek nem lesznek szétküldve."
+
+#~ msgid "Default value:"
+#~ msgstr "Alapértelmezett érték: "
+
+#, fuzzy
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "Annak a feladat sablonnak (task template) a neve, ami a régi "
+#~ "visszapattanások törlését végzi. Hasznos törölni egy tag e-mail címének "
+#~ "visszapattanásait, ha néhány üzenetet sikerült elküldeni új "
+#~ "visszapattanás nélkül. Ebben az esetben a tag e-mail címe ismét jónak "
+#~ "tűnik. Aktív, ha a task_manager.pl fut."
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "A bouncers_level1 bekezdés a visszapattanások automatikus kezelését adja "
+#~ "meg.<br />\n"
+#~ "\tAz egyes szint a visszapattanások legalacsonyabb szintje."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). "
+#~ "Ez a paraméter határozza meg az alsó határokat a visszapattanó "
+#~ "felhasználók kategóriái között. Például: az 1-es szint 45-től a 2-es "
+#~ "szint határáig (level_2_treshold) tart."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, melyik feladat lesz automatikusan alkalmazva az "
+#~ "egyes szintű visszapattanások kezelésére."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Ha automatikus feladat lett végrehajtva első szintű visszapattanásokon, "
+#~ "egy értesítő e-mailt lehet küldeni a lista tulajdonosának vagy a "
+#~ "listmasternek."
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "A bouncers_levelX bekezdés a visszapattanások automatikus kezelését adja "
+#~ "meg.<br />\n"
+#~ "\tAz kettes szint a visszapattanások legmagasabb szintje."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "Minden visszapattanó felhasználónak van egy pontszáma (0 és 100 között). "
+#~ "Ez a paraméter határozza meg a határokat a visszapattanó felhasználók "
+#~ "kategóriái között. Például: a kettes szint azoké a felhasználóké, akiknek "
+#~ "80 és 100 közötti pontszáma van."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, melyik feladat lesz automatikusan alkalmazva a "
+#~ "kettes szintű visszapattanások kezelésére."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Ha automatikus feladat lett végrehajtva kettes szintű visszapattanásokon, "
+#~ "egy értesítő e-mailt lehet küldeni a lista tulajdonosának vagy a "
+#~ "listmasternek."
+
+#~ msgid ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+#~ msgstr ""
+#~ "Ez a paraméter bizalmas információ, amivel az adminisztrációs "
+#~ "parancsokhoz (ADD, DELETE, etc.) szükséges azonosító kulcsok "
+#~ "generálásához kell. Ennek a paraméternek rejtve kell maradnia, még a "
+#~ "tulajdonosok számára is. Ez a süti (cookie) minden listatulajdonosra "
+#~ "alkalmazva lesz, és csak akkor lesz figyelembe véve, ha a tulajdonosnak "
+#~ "van auth paramétere."
+
+#~ msgid ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+#~ msgstr ""
+#~ "Ez a paraméter opcionális. A megadott fejlécek hozzá lesznek adva a "
+#~ "listán keresztül szétküldött üzenetek fejlécéhez. Az 1.2.2-es Sympától "
+#~ "kezdve egyszerre több egyéni fejlécet is meg lehet adni a konfigurációs "
+#~ "állományban."
+
+#~ msgid ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+#~ msgstr ""
+#~ "Ez a paraméter opcionális. Egy rövid szöveget ad meg, ami hozzá lesz adva "
+#~ "a szétküldött üzenetek tárgy részéhez (ezáltal segítve azoknak a "
+#~ "felhasználóknak, akik nem használ automatikus eszközöket a bejövő "
+#~ "üzenetek szétválogatására). Ez a szöveg [] karakterekkel lesz körülvéve."
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "A default_user_options paraméter egy bekezdést kezd, ahol megadhatóak a "
+#~ "lista tagjai számára alapértelmezett értékek."
+
+# nlsref 16,19
+#~ msgid "Mail reception mode."
+#~ msgstr "Levélkézbesítési mód."
+
+#~ msgid "Visibility of the subscriber with the REVIEW command."
+#~ msgstr "A tag láthatósága megtekintés (REVIEW) parancs esetén."
+
+#~ msgid "This parameter specifies who is authorized to use the DEL command."
+#~ msgstr "Ez a paraméter megadja, ki használhatja a törlés (DEL) parancsot."
+
+#, fuzzy
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "A kivonat (digest) mód leírása. Ha ez a paraméter adott, a tagoknak "
+#~ "lehetősége van az üzeneteket többrészes/kivonat (multipart/digest) MIME "
+#~ "formában, vagy sima szöveges kivonatként megkapni. Az üzenetek "
+#~ "csoportokba lesznek fűzve, és ezt kapják meg a tagok paraméter által "
+#~ "beállított ütemezésnek megfelelően."
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "A szerkesztők felelnek az üzenetek moderálásáért. Ha egy levelezési lista "
+#~ "moderált, akkor egy listára küldött üzenet először a szerkesztőkhöz "
+#~ "kerül, akik eldöntik, hogy engedélyezik, vagy elutasítják."
+
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated ; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "Figyelem: szerkesztők beállítása nem teszi a listát automatikusan "
+#~ "moderálttá; megfelelően be kell állítania a küldés (send) paramétert."
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "Figyelem: ha egy lista moderált, bármely szerkesztő elfogadhat vagy "
+#~ "elutasíthat egy üzenetet a többi szerkesztő tudomása vagy jóváhagyása "
+#~ "nélkül. Azok az üzenetek, amelyeket nem fogadnak vagy utasítanak el, a "
+#~ "moderálási sorban maradnak beavatkozásig."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, melyik modell használatos elavulási feladat "
+#~ "(expire task) létrehozásakor. Egy elavulási feladat időnként megvizsgálja "
+#~ "a tagok fel- vagy újrafeliratkozási dátumát, és megkéri őket, hogy "
+#~ "frissítsék a tagságukat. Aki ezt nem teszi meg, az törölve lesz."
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "A listatulajdonosok dönthetnek úgy, hogy a listán keresztül küldött "
+#~ "üzenetekhez fejléceket vagy lábléceket csatolnak. Ez a paraméter adja "
+#~ "meg, hogy milyen formában adják hozzá a fejlécet/láblécet az üzenethez."
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr ""
+#~ "Alapértelmezett érték. A Sympa a fejlécet/láblécet új MIME részként fogja "
+#~ "hozzáadni."
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "A Sympa nem fog létrehozni új MIME részeket, ehelyett a fejlécet/láblécet "
+#~ "a levél törzséhez próbálja hozzáfűzni. Az előre definiált üzenet láblécek "
+#~ "mellőzve lesznek. Fejlécek/láblécek csak egyszerű szöveges (text/plain) "
+#~ "üzenetekhez fűzhetők."
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "A lista tartományneve, alapértelmezett a robot tartományneve, ami a "
+#~ "megfelelő robot.conf állományban vagy az /etc/sympa.conf-ban van "
+#~ "beállítva."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include. The file should contain one e-mail address per line "
+#~ "(lines beginning with a \"#\" are ignored)."
+#~ msgstr ""
+#~ "Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+#~ "include (beágyazás). A állománynak soronként egy e-mail címet kell "
+#~ "tartalmaznia (a \"#\"-tel kezdődő sorok figyelmen kívül lesznek hagyva)."
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "paragraph is used only if user_data_source is set to include. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Ez a bekezdés egy kétszintű lekérdezés paramétereit adja meg, ami tagok "
+#~ "egy listáját adja vissza. Általában az első szintű lekérdezés DN-ek "
+#~ "listáját adja vissza, és a második szintű lekérdezések átalakítják ezeket "
+#~ "a DN-eket e-mail címekké. Ez a bekezdés csak akkor használatos, ha a "
+#~ "user_data_source include-ra (beágyazás) van állítva. Ehhez az opcióhoz a "
+#~ "Net::LDAP (perlldap) PERL modul szükséges."
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This paragraph is used only if user_data_source is set to "
+#~ "include. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Ez a bekezdés egy lekérdezés paramétereit adja meg, ami tagok egy "
+#~ "listáját adja vissza. Ez a bekezdés csak akkor használatos, ha a "
+#~ "user_data_source include-ra (beágyazás) van állítva. Ehhez az opcióhoz a "
+#~ "Net::LDAP (perlldap) PERL modul szükséges."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter will be interpreted only if user_data_source is set to "
+#~ "include. All subscribers of list listname become subscribers of the "
+#~ "current list. You may include as many lists as required, using one "
+#~ "include_list listname line for each included list. Any list at all may be "
+#~ "included; the user_data_source definition of the included list is "
+#~ "irrelevant, and you may therefore include lists which are also defined by "
+#~ "the inclusion of other lists. Be careful, however, not to include list A "
+#~ "in list B and then list B in list A, since this will give rise to an "
+#~ "infinite loop."
+#~ msgstr ""
+#~ "Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+#~ "include (beágyazás). A listanév lista minden tagja az aktuális lista "
+#~ "tagja lesz. Annyi listát ágyazhat be, amennyit csak akar, egy "
+#~ "include_list listanév sort használva minden beágyazott listánál. "
+#~ "Bármilyen lista beágyazható, a beágyazott lista user_data_source "
+#~ "beállítása nem számít, így beágyazhat olyan listát, ami más listák "
+#~ "beágyazásával jött létre. Ugyanakkor vigyázzon, ne ágyazza be A listába B "
+#~ "listát, és B listába A listát, mivel ez végtelen ciklushoz vezet."
+
+#, fuzzy
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "A Sympa képes kapcsolódni egy másik Sympa szolgáltatóhoz https-en "
+#~ "keresztül, hogy letöltsön egy távoli listát azért, hogy a távoli lista "
+#~ "minden tagját felvegye tagnak. Annyi listát bevehet, amennyit csak akar, "
+#~ "egy include_remote_sympa bekezdést használva minden beágyazott listához. "
+#~ "Ugyanakkor vigyázzon, ne csináljon végtelen ciklust kereszt "
+#~ "beágyazásokkal."
+
+#, fuzzy
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "Ennél a műveletnél az egyik Sympa szerverként, a másik kliensként "
+#~ "viselkedik. A szerver oldalán az az egyetlen szükséges beállítás, hogy "
+#~ "engedélyezni kell  a kapcsolódó Sympának a lista megtekintését. Ezt a "
+#~ "megtekintés (review) scenario szabályozza."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include, and is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+#~ msgstr ""
+#~ "Ez a paraméter csak akkor lesz értelmezve, ha a user_data_source értéke "
+#~ "include (beágyazás), és egy bekezdést nyit, ami megadja egy SQL "
+#~ "lekérdezés paramétereit."
+
+#~ msgid ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+#~ msgstr ""
+#~ "Ez a paraméter megadja a listán használt nyelvet. Arra használatos, hogy "
+#~ "a felhasználók nyelvi beállításának kezdeti értéket adjon; a Sympa "
+#~ "parancsokra adott válaszok a hozzárendelt üzenetkatalógusból lesznek "
+#~ "kiválasztva."
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "Egy üzenet maximális mérete 8-bites byte-okban."
+
+#~ msgid ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+#~ msgstr ""
+#~ "A tulajdonosok a lista tagjait felügyelik. Megtekinthetik a tagokat és "
+#~ "felvehetnek vagy törölhetnek e-mail címeket a listáról. A lista kiemelt "
+#~ "tulajdonosa felvehet más tulajdonosokat a listára. A kiemelt tulajdonosok "
+#~ "állíthatnak  néhány olyan beállítást is, amit a többi tulajdonos nem."
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "A prioritás, amivel a Sympa a listára küldött leveleket feldolgozza. Ez a "
+#~ "prioritás akkor számít, amikor az üzenet keresztül halad a feldolgozási "
+#~ "soron. A z prioritás az üzenetet a sorba fagyasztja."
+
+#~ msgid ""
+#~ "This parameter specifies who is authorized to use the remind command."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, ki használhatja az emlékeztető (remind) parancsot."
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr ""
+#~ "Ugyanaz, mint a welcome_return_path, de emlékeztető üzenetekre alkalmazva."
+
+#, fuzzy
+#~ msgid ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, melyik modell használatos emlékeztető feladat "
+#~ "(remind task) létrehozásakor. Egy emlékeztető feladat időnként üzenetet "
+#~ "küld minden tagnak, melyben emlékezteti őket listatagságukra."
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "A reply_to_header paraméter egy bekezdést kezd, ahol megadható, hogy a "
+#~ "Sympa mit írjon a Reply-To: (Válaszcím) SMTP fejlécbe az általa "
+#~ "szétküldött üzenetekben."
+
+#~ msgid ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, hogy a Reply-To: (válaszcím) mező az üzenet "
+#~ "küldőjét (sender), magát a listát (list), a küldőt és a listát is (all), "
+#~ "vagy egy tetszőleges e-mail címet (amit az other_email paraméter ad meg) "
+#~ "tartalmazza."
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "Megjegyzés: nem ajánlott megváltoztatni ezt a paramétert, és különösen "
+#~ "nem ajánlott listre állítani. A tapasztalat azt mutatja, hogy szinte "
+#~ "elkerülhetetlen, hogy felhasználók, akik tévesen azt hiszik, hogy csak a "
+#~ "feladónak válaszolnak, személyes üzenteket küldenek listákra. Ez "
+#~ "legalábbis bocsánatkéréshez, de időnként súlyosabb következményekhez "
+#~ "vezethet."
+
+# nlsref 16,27
+#~ msgid "an_email_address"
+#~ msgstr "E-mail cím"
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "Ha az érték other_email, ez a paraméter megadja a használt e-mail címet."
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "Alapértelmezett  a Reply-To:(válaszcím) SMTP fejléc figyelembe vétele "
+#~ "(megőrzése) a bejövő üzeneteknél. Ha kényszerítésre van állítva, a Reply-"
+#~ "To: SMTP fejléc felül lesz írva."
+
+#~ msgid ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+#~ msgstr ""
+#~ "Ez a paraméter megadja ki érheti el a tagok listáját. Mivel a tagok "
+#~ "címeit eláraszthatják reklámlevelek küldői, erősen ajánlott csak a "
+#~ "tulajdonosoknak vagy a tagoknak megadni a hozzáférést a tagok listájához."
+
+#~ msgid "This parameter specifies who can send messages to the list."
+#~ msgstr "Ez a paraméter megadja, ki küldhet üzeneteket a listára."
+
+#~ msgid ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+#~ msgstr ""
+#~ "Ez a bekezdés a megosztott dokumentumok olvasási és szerkesztési "
+#~ "jogosultságait adja meg."
+
+#, fuzzy
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "A Sympa honlapot védeni kell a spambotok ellen, amik e-mail címeket "
+#~ "gyűjtenek a nyilvános honlapokon. Különféle módszerek adottak a Sympában, "
+#~ "és a spam_protection és web_archive_spam_protection paraméterekkel "
+#~ "választhatja ki a megfelelőt. A lehetséges értékek:"
+
+#, fuzzy
+#~ msgid ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+#~ msgstr ""
+#~ "a cím javascripttel lesz elrejtve. Azok a felhasználók, akik engedélyezik "
+#~ "a javascriptet egy levélcímet láthatnak ott, ahol mások semmit"
+
+#~ msgid "the @ char is replaced by the string \" AT \"."
+#~ msgstr "a @ karakter fel lesz cserélve az \" AT \" szöveggel"
+
+#~ msgid "no protection against spammer."
+#~ msgstr "nincs védelem reklámlevél-küldők ellen"
+
+#~ msgid ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+#~ msgstr ""
+#~ "Ez a paraméter a lista tárgyát mutatja, ami a LISTS levél parancsra lesz "
+#~ "válaszként elküldve. A tárgy egysoros, kötetlen formájú szöveg."
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr ""
+#~ "A feliratkozás (subscribe) paraméter a listára való feliratkozás "
+#~ "szabályait adja meg."
+
+#~ msgid ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+#~ msgstr ""
+#~ "Ez a paraméter a listák osztályozását teszi lehetővé. Megadhat többszörös "
+#~ "és hierarchikus témaköröket is. A WWSympa publikus listák listája ezt a "
+#~ "paramétert használja."
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "A Sympa az include paraméterrel gyűjtött felhasználói adatokat "
+#~ "gyorsítótárban tárolja. A Sympán belüli élettartamuk (TTL, time-to-live) "
+#~ "ezzel a paraméterrel szabályozható. Az alapértelmezett érték 3600"
+
+#~ msgid ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+#~ msgstr ""
+#~ "Ez a paraméter megadja a lista leiratkozási módját. Ha azt szeretné, hogy "
+#~ "a tulajdonosok minden leiratkozási parancsról értesítést kapjanak, "
+#~ "használja az open_notify-t vagy auth_notify-t."
+
+#~ msgid ""
+#~ "Sympa allows the list owner to choose how Sympa loads list member data. "
+#~ "Subscriber information can be stored in a text file or relational "
+#~ "database, or included from various external sources (list, flat file, "
+#~ "result of or query)."
+#~ msgstr ""
+#~ "A Sympa lehetővé teszi a lista tulajdonosának, hogy megválassza, a Sympa "
+#~ "honnan tölti be a tagok adatait. Ez tárolható szöveges állományban vagy "
+#~ "relációs adatbázisban, vagy beágyazhatóak különféle külső források "
+#~ "(lista, sima állomány, vagy egy lekérdezés eredménye)."
+
+#~ msgid ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+#~ msgstr ""
+#~ "Ez a paraméter megadja, hogy a lista megjelenjen-e egy LISTS parancsra "
+#~ "adott válasz kimenetében, vagy a webes felületen megjelenjen-e a listák "
+#~ "áttekintésénél."
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "Megadja, hogy ki férhet hozzá a lista webes archívumához."
+
+#, fuzzy
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "Ugyanaz, mint a spam_protection, de csak a webes archívumra korlátozva. "
+#~ "Egy másik érték is választható: süti (cookie), ahol a felhasználóknak egy "
+#~ "kis űrlapot kell kitölteni, és a kapott sütivel lehet böngészni az "
+#~ "archívumot. Ez blokkol minden robotot, még a google-t és társait is."
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Ha egyedi értékre van állítva, akkor az üdvözlő üzenet válaszcíme egy "
+#~ "egyedi cím, így a tag azonnal törölve lesz a listáról, ha visszapattan a "
+#~ "levél."
+
+#~ msgid "No Comment"
+#~ msgstr "Nincs megjegyzés"
+
+#, fuzzy
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "A következőkben bemutatjuk a Sympánál használható különböző levélfogadási "
+#~ "módokat. Ezek a beállítások kizárják egymást, vagyis egyszerre két "
+#~ "különböző fogadási módot nem lehet megadni. Lehet, hogy némelyik listán "
+#~ "nem engedélyezett az összes bemutatott fogadási mód."
+
+#~ msgid "Digest"
+#~ msgstr "Digest (kivonat)"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a "
+#~ "beállítással elérhető, hogy a leveleket\n"
+#~ "adott időközönként összefűzve, egyben, kivonatként (digest) kaphassuk meg."
+#~ "A kivonatforma\n"
+#~ "a listára érkezett leveleket összefűzve multipart/digest MIME formátumban "
+#~ "tartalmazza."
+
+#~ msgid "The sending interval for these Digests is defined by the list owner."
+#~ msgstr ""
+#~ "A digest levelek küldésének gyakoriságát a lista tulajdonosa határozza "
+#~ "meg."
+
+#~ msgid "DigestPlain"
+#~ msgstr "Digestplain (sima kivonat)"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Hasonlít a kivonat választáshoz abban, hogy a tag időszakosan\n"
+#~ "összefűzött üzeneteket kap kivonat formájában. Digestplainnel a kivonat "
+#~ "sima szöveg\n"
+#~ "formájában lesz kézbesítve, minden csatolmány nélkül. A digestplain "
+#~ "hasznos,\n"
+#~ "ha az e-mail programja nem kezeli rendesen a többrészes/kivonat "
+#~ "(multipart/digest) formátumú leveleket."
+
+#~ msgid "Summary"
+#~ msgstr "Summary (összegzés)"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "Ahelyett, hogy a listáról a leveleket egyenként kapnánk meg, a "
+#~ "beállítással elérhető, hogy a továbbiakban \n"
+#~ "csak a levelek listáját kapjuk meg adott időközönként. Ez a mód nagyon "
+#~ "hasonlít\n"
+#~ "a kivonat (digest) küldési módra, de attól eltérően itt csak a levelek "
+#~ "listája kerül kézbesítésre."
+
+#~ msgid "Nomail"
+#~ msgstr "Nomail (nincs levél)"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha egy tag a listáról a továbbiakban nem "
+#~ "akar leveleket kapni, de a listára mégis szeretne leveleket küldeni. "
+#~ "Ezzel a beállítással a felhasználónak nem kell leiratkoznia listáról "
+#~ "azért, hogy a leveleket ne kapja meg, és nem kell később feliratkoznia, "
+#~ "hogy leveleket küldhessen a listára."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a felhasználó csak sima szöveges "
+#~ "formátumban szeretné megkapni az üzeneteket\n"
+#~ "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL "
+#~ "formátumban érkeztek."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a felhasználó csak HTML formátumban "
+#~ "szeretné megkapni az üzeneteket\n"
+#~ "függetlenül attól, hogy azok a listára sima szöveges, vagy HMTL "
+#~ "formátumban érkeztek."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha a egy tag nem akar a listáról csatolt "
+#~ "állományokat fogadni.\n"
+#~ "Ilyenkor az állomány helyett egy URL jelenik meg, ami az eredeti "
+#~ "csatolmányhoz vezet."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "Ez a mód akkor lehet hasznos, ha egy tag nem akar másolatot kapni a "
+#~ "listára küldött, tőle származó levelekről."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "Ezzel a beállítással a nomail, summary vagy digest módokat lehet "
+#~ "megszüntetni. Ha a felhasználó\n"
+#~ "nomail módban volt, akkor ezzel a beállítással ismét egyenként meg fogja "
+#~ "kapnia lista leveleit."
 
 #~ msgid ""
 #~ "\n"

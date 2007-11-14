@@ -176,15 +176,14 @@ sub SetLang {
 	}
     }
     
-#    &Locale::Messages::bindtextdomain('web_help','--LOCALEDIR--');
-#    bind_textdomain_codeset web_help => 'utf-8';
-
     $ENV{'LANGUAGE'}=$locale;
-    ## Define what catalog is used
+    ## Define what catalogs are used
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--LOCALEDIR--');
+    &Locale::Messages::bindtextdomain('web_help','--LOCALEDIR--');
     # Get translations by internal encoding.
     bind_textdomain_codeset sympa => 'utf-8';
+    bind_textdomain_codeset web_help => 'utf-8';
 
     $current_lang = $lang;
     $current_locale = $locale;
@@ -247,12 +246,12 @@ sub maketext {
     my $translation;
     my $textdomain = $template2textdomain{$template_file};
     
-#    if ($textdomain) {
-#	$translation = &sympa_dgettext ($textdomain, $msg);
-#    }else {
-#	$translation = &gettext ($msg);
-#    }
-    $translation = &gettext ($msg);
+    if ($textdomain) {
+	$translation = &sympa_dgettext ($textdomain, $msg);
+    }else {
+	$translation = &gettext ($msg);
+    }
+#    $translation = &gettext ($msg);
 
     ## replace parameters in string
     $translation =~ s/\%\%/'_ESCAPED_'.'%_'/eg; ## First escape '%%'

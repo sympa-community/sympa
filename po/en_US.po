@@ -1177,7 +1177,7 @@ msgstr "Rename"
 msgid "User mode"
 msgstr "User mode"
 
-#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16 web_tt2/help_shared.tt2:24
+#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16
 msgid "Expert mode"
 msgstr "Expert mode"
 
@@ -2080,919 +2080,6 @@ msgstr "Pending lists"
 #: web_tt2/get_pending_lists.tt2:12
 msgid "Requested date"
 msgstr "Requested date"
-
-#: web_tt2/help_editfile.tt2:3
-msgid "Service messages description :"
-msgstr "Service messages description :"
-
-#: web_tt2/help_editfile.tt2:6
-msgid ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-msgstr ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-
-#: web_tt2/help_editfile.tt2:9
-msgid ""
-"Unsubscribe message : This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-"Unsubscribe message : This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-
-#: web_tt2/help_editfile.tt2:13
-msgid ""
-"Deletion message : This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-msgstr ""
-"Deletion message : This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-
-#: web_tt2/help_editfile.tt2:18
-msgid ""
-"Remind message : This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-msgstr ""
-"Remind message : This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-
-#: web_tt2/help_editfile.tt2:21
-msgid ""
-"Subscribing invitation message : sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-msgstr ""
-"Subscribing invitation message : sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-
-#: web_tt2/help_editfile.tt2:24
-msgid "Other files/pages description :"
-msgstr "Other files/pages description :"
-
-#: web_tt2/help_editfile.tt2:28
-msgid ""
-"List homepage : HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-msgstr ""
-"List homepage : HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-
-#: web_tt2/help_editfile.tt2:31
-msgid ""
-"List description : This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the"
-msgstr ""
-"List description : This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the"
-
-#: web_tt2/help_editfile.tt2:31
-msgid "Welcome message"
-msgstr "Welcome message"
-
-#: web_tt2/help_editfile.tt2:34
-msgid ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-msgstr ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-
-#: web_tt2/help_editfile.tt2:37
-msgid ""
-"Message footer : same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-msgstr ""
-"Message footer : same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-
-#: web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Privilege for adding (ADD command) a subscriber to the list"
-
-#: web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-
-#: web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr "Privilege for reading mail archives and frequency of archiving"
-
-#: web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-
-#: web_tt2/help_editlist.tt2:17
-msgid ""
-"(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
-msgstr ""
-"(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
-
-#: web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-
-#: web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "This paragraph defines bounce management parameters:"
-
-#: web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "Default value: bounce_warn_rate robot parameter"
-
-#: web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-
-#: web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "Default value: bounce_halt_rate robot parameter"
-
-#: web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-
-#: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
-#: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
-#: web_tt2/help_editlist.tt2:43 web_tt2/help_editlist.tt2:46
-#: web_tt2/help_editlist.tt2:56 web_tt2/help_editlist.tt2:59
-#: web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "Default value:"
-
-#: web_tt2/help_editlist.tt2:31
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-
-#: web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-
-#: web_tt2/help_editlist.tt2:41 web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr "Each bouncing user have a score (from 0 to 100)."
-
-#: web_tt2/help_editlist.tt2:41
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-
-#: web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-
-#: web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-
-#: web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-
-#: web_tt2/help_editlist.tt2:57
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-
-#: web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-
-#: web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-
-#: web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-
-#: web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-
-#: web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-
-#: web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-
-#: web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "Mail reception mode."
-
-#: web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr "Visibility of the subscriber with the REVIEW command."
-
-#: web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr "This parameter specifies who is authorized to use the DEL command."
-
-#: web_tt2/help_editlist.tt2:81
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-
-#: web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-
-#: web_tt2/help_editlist.tt2:84
-msgid ""
-"FYI: Defining editors will not make the list moderated ; you will have to "
-"set the \"send\" parameter."
-msgstr ""
-"FYI: Defining editors will not make the list moderated ; you will have to "
-"set the \"send\" parameter."
-
-#: web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-
-#: web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-
-#: web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-
-#: web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr ""
-"The default value. Sympa will add the footer/header as a new MIME part."
-
-#: web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-
-#: web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-
-#: web_tt2/help_editlist.tt2:101
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include. The file should contain one e-mail address per line (lines "
-"beginning with a \"#\" are ignored)."
-msgstr ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include. The file should contain one e-mail address per line (lines "
-"beginning with a \"#\" are ignored)."
-
-#: web_tt2/help_editlist.tt2:103
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This paragraph "
-"is used only if user_data_source is set to include. This feature requires "
-"the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This paragraph "
-"is used only if user_data_source is set to include. This feature requires "
-"the Net::LDAP (perlldap) PERL module."
-
-#: web_tt2/help_editlist.tt2:105
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This paragraph is used only if user_data_source is set to "
-"include. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This paragraph is used only if user_data_source is set to "
-"include. This feature requires the Net::LDAP (perlldap) PERL module."
-
-#: web_tt2/help_editlist.tt2:107
-msgid ""
-"This parameter will be interpreted only if user_data_source is set to "
-"include. All subscribers of list listname become subscribers of the current "
-"list. You may include as many lists as required, using one include_list "
-"listname line for each included list. Any list at all may be included; the "
-"user_data_source definition of the included list is irrelevant, and you may "
-"therefore include lists which are also defined by the inclusion of other "
-"lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise to an infinite loop."
-msgstr ""
-"This parameter will be interpreted only if user_data_source is set to "
-"include. All subscribers of list listname become subscribers of the current "
-"list. You may include as many lists as required, using one include_list "
-"listname line for each included list. Any list at all may be included; the "
-"user_data_source definition of the included list is irrelevant, and you may "
-"therefore include lists which are also defined by the inclusion of other "
-"lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise to an infinite loop."
-
-#: web_tt2/help_editlist.tt2:109
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-
-#: web_tt2/help_editlist.tt2:110
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-
-#: web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include, and is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include, and is used to begin a paragraph defining the SQL query "
-"parameters. "
-
-#: web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-
-#: web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "Maximum size of a message in 8-bit bytes."
-
-#: web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-
-#: web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-
-#: web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr "This parameter specifies who is authorized to use the remind command."
-
-#: web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr "Same as welcome_return_path, but applied to remind messages."
-
-#: web_tt2/help_editlist.tt2:126
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-
-#: web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-
-#: src/List.pm:1160 web_tt2/help_editlist.tt2:130
-msgid "value"
-msgstr "value"
-
-#: web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-
-#: web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-
-#: web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr "an_email_address"
-
-#: web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-
-#: web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-
-#: web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-
-#: web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr "This parameter specifies who can send messages to the list."
-
-#: web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-
-#: web_tt2/help_editlist.tt2:148
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-
-#: web_tt2/help_editlist.tt2:150
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-
-#: web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr "the @ char is replaced by the string \" AT \"."
-
-#: web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr "no protection against spammer."
-
-#: web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-
-#: web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr "The subscribe parameter defines the rules for subscribing to the list."
-
-#: web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-
-#: web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-
-#: web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-
-#: web_tt2/help_editlist.tt2:165
-msgid ""
-"Sympa allows the list owner to choose how Sympa loads list member data. "
-"Subscriber information can be stored in a text file or relational database, "
-"or included from various external sources (list, flat file, result of or "
-"query)."
-msgstr ""
-"Sympa allows the list owner to choose how Sympa loads list member data. "
-"Subscriber information can be stored in a text file or relational database, "
-"or included from various external sources (list, flat file, result of or "
-"query)."
-
-#: web_tt2/help_editlist.tt2:167
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-
-#: web_tt2/help_editlist.tt2:169
-msgid "Defines who can access the web archive for the list."
-msgstr "Defines who can access the web archive for the list."
-
-#: web_tt2/help_editlist.tt2:171
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-
-#: web_tt2/help_editlist.tt2:173
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-
-#: web_tt2/help_editlist.tt2:175
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-
-#: web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-
-#: web_tt2/help_editlist.tt2:179
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
-msgstr ""
-"This parameter indicates if the tagging is optional or required for a list."
-
-#: web_tt2/help_editlist.tt2:181
-msgid "No Comment"
-msgstr "No Comment"
-
-#: web_tt2/help_user_options.tt2:3
-msgid ""
-"This is a description of the receivie modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"This is a description of the receivie modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-
-#: web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Digest"
-
-#: web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-
-#: web_tt2/help_user_options.tt2:12 web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr "The sending interval for these Digests is defined by the list owner."
-
-#: web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "DigestPlain"
-
-#: web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-
-#: web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Summary"
-
-#: web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-
-#: web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Nomail"
-
-#: web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-
-#: web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-
-#: web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-
-#: web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-
-#: web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-
-#: web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
 
 #: web_tt2/install_pending_list.tt2:11 web_tt2/set_pending_list_request.tt2:7
 msgid "Listname :"
@@ -4712,7 +3799,7 @@ msgstr "Search period: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16035
+#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16042
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -6578,7 +5665,7 @@ msgstr ""
 
 #: mail_tt2/listowner_notification.tt2:76
 msgid "The user has provided the following informations:"
-msgstr ""
+msgstr "The user has provided the following informations:"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:83
@@ -7903,7 +6990,7 @@ msgstr "The configuration file --CONFIG-- contains errors.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9401
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9408
 msgid "%A"
 msgstr "%A"
 
@@ -8333,6 +7420,10 @@ msgstr "Return-path of the REMIND command"
 msgid "Reply address"
 msgstr "Reply address"
 
+#: src/List.pm:1160
+msgid "value"
+msgstr "value"
+
 #: src/List.pm:1165
 msgid "other email address"
 msgstr "other email address"
@@ -8500,16 +7591,16 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2904 src/List.pm:2905 src/List.pm:2909
-#: wwsympa/wwsympa.fcgi:10818 wwsympa/wwsympa.fcgi:10887
-#: wwsympa/wwsympa.fcgi:11089 wwsympa/wwsympa.fcgi:11431
-#: wwsympa/wwsympa.fcgi:15524 wwsympa/wwsympa.fcgi:16374
-#: wwsympa/wwsympa.fcgi:16375 wwsympa/wwsympa.fcgi:4357
-#: wwsympa/wwsympa.fcgi:4358 wwsympa/wwsympa.fcgi:5780
-#: wwsympa/wwsympa.fcgi:6966 wwsympa/wwsympa.fcgi:7484
-#: wwsympa/wwsympa.fcgi:7534 wwsympa/wwsympa.fcgi:7536
-#: wwsympa/wwsympa.fcgi:8048 wwsympa/wwsympa.fcgi:8049
-#: wwsympa/wwsympa.fcgi:8083 wwsympa/wwsympa.fcgi:8084
-#: wwsympa/wwsympa.fcgi:8297 wwsympa/wwsympa.fcgi:8298
+#: wwsympa/wwsympa.fcgi:10825 wwsympa/wwsympa.fcgi:10894
+#: wwsympa/wwsympa.fcgi:11096 wwsympa/wwsympa.fcgi:11438
+#: wwsympa/wwsympa.fcgi:15531 wwsympa/wwsympa.fcgi:16381
+#: wwsympa/wwsympa.fcgi:16382 wwsympa/wwsympa.fcgi:4364
+#: wwsympa/wwsympa.fcgi:4365 wwsympa/wwsympa.fcgi:5787
+#: wwsympa/wwsympa.fcgi:6973 wwsympa/wwsympa.fcgi:7491
+#: wwsympa/wwsympa.fcgi:7541 wwsympa/wwsympa.fcgi:7543
+#: wwsympa/wwsympa.fcgi:8055 wwsympa/wwsympa.fcgi:8056
+#: wwsympa/wwsympa.fcgi:8090 wwsympa/wwsympa.fcgi:8091
+#: wwsympa/wwsympa.fcgi:8304 wwsympa/wwsympa.fcgi:8305
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8634,14 +7725,14 @@ msgstr "%H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:323 wwsympa/SympaSession.pm:324
-#: wwsympa/wwsympa.fcgi:11665 wwsympa/wwsympa.fcgi:11808
-#: wwsympa/wwsympa.fcgi:14231 wwsympa/wwsympa.fcgi:7419
+#: wwsympa/wwsympa.fcgi:11672 wwsympa/wwsympa.fcgi:11815
+#: wwsympa/wwsympa.fcgi:14238 wwsympa/wwsympa.fcgi:7426
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15980 wwsympa/wwsympa.fcgi:15981
+#: wwsympa/wwsympa.fcgi:15987 wwsympa/wwsympa.fcgi:15988
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8792,6 +7883,827 @@ msgstr "no mail (useful for vacations)"
 #: wwsympa/wwslib.pm:44
 msgid "you do not receive your own posts"
 msgstr "you do not receive your own posts"
+
+#~ msgid "Service messages description :"
+#~ msgstr "Service messages description :"
+
+#~ msgid ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+#~ msgstr ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+
+#~ msgid ""
+#~ "Unsubscribe message : This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+#~ msgstr ""
+#~ "Unsubscribe message : This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+
+#~ msgid ""
+#~ "Deletion message : This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+#~ msgstr ""
+#~ "Deletion message : This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+
+#~ msgid ""
+#~ "Remind message : This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+#~ msgstr ""
+#~ "Remind message : This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+
+#~ msgid ""
+#~ "Subscribing invitation message : sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+#~ msgstr ""
+#~ "Subscribing invitation message : sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+
+#~ msgid "Other files/pages description :"
+#~ msgstr "Other files/pages description :"
+
+#~ msgid ""
+#~ "List homepage : HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+#~ msgstr ""
+#~ "List homepage : HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+
+#~ msgid ""
+#~ "List description : This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the"
+#~ msgstr ""
+#~ "List description : This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the"
+
+#~ msgid "Welcome message"
+#~ msgstr "Welcome message"
+
+#~ msgid ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+#~ msgstr ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+
+#~ msgid ""
+#~ "Message footer : same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+#~ msgstr ""
+#~ "Message footer : same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "Privilege for adding (ADD command) a subscriber to the list"
+
+#~ msgid ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+#~ msgstr ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr "Privilege for reading mail archives and frequency of archiving"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+
+#~ msgid ""
+#~ "(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+#~ msgstr ""
+#~ "(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr "This paragraph defines bounce management parameters:"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "Default value: bounce_warn_rate robot parameter"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "Default value: bounce_halt_rate robot parameter"
+
+#~ msgid ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+#~ msgstr ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+
+#~ msgid "Default value:"
+#~ msgstr "Default value:"
+
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+
+#~ msgid "Each bouncing user have a score (from 0 to 100)."
+#~ msgstr "Each bouncing user have a score (from 0 to 100)."
+
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+
+#~ msgid ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+#~ msgstr ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+
+#~ msgid ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+#~ msgstr ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+
+#~ msgid ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+#~ msgstr ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+
+#~ msgid "Mail reception mode."
+#~ msgstr "Mail reception mode."
+
+#~ msgid "Visibility of the subscriber with the REVIEW command."
+#~ msgstr "Visibility of the subscriber with the REVIEW command."
+
+#~ msgid "This parameter specifies who is authorized to use the DEL command."
+#~ msgstr "This parameter specifies who is authorized to use the DEL command."
+
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated ; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "FYI: Defining editors will not make the list moderated ; you will have to "
+#~ "set the \"send\" parameter."
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+#~ msgstr ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include. The file should contain one e-mail address per line "
+#~ "(lines beginning with a \"#\" are ignored)."
+#~ msgstr ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include. The file should contain one e-mail address per line "
+#~ "(lines beginning with a \"#\" are ignored)."
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "paragraph is used only if user_data_source is set to include. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "paragraph is used only if user_data_source is set to include. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This paragraph is used only if user_data_source is set to "
+#~ "include. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This paragraph is used only if user_data_source is set to "
+#~ "include. This feature requires the Net::LDAP (perlldap) PERL module."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if user_data_source is set to "
+#~ "include. All subscribers of list listname become subscribers of the "
+#~ "current list. You may include as many lists as required, using one "
+#~ "include_list listname line for each included list. Any list at all may be "
+#~ "included; the user_data_source definition of the included list is "
+#~ "irrelevant, and you may therefore include lists which are also defined by "
+#~ "the inclusion of other lists. Be careful, however, not to include list A "
+#~ "in list B and then list B in list A, since this will give rise to an "
+#~ "infinite loop."
+#~ msgstr ""
+#~ "This parameter will be interpreted only if user_data_source is set to "
+#~ "include. All subscribers of list listname become subscribers of the "
+#~ "current list. You may include as many lists as required, using one "
+#~ "include_list listname line for each included list. Any list at all may be "
+#~ "included; the user_data_source definition of the included list is "
+#~ "irrelevant, and you may therefore include lists which are also defined by "
+#~ "the inclusion of other lists. Be careful, however, not to include list A "
+#~ "in list B and then list B in list A, since this will give rise to an "
+#~ "infinite loop."
+
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include, and is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+#~ msgstr ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include, and is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+
+#~ msgid ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+#~ msgstr ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "Maximum size of a message in 8-bit bytes."
+
+#~ msgid ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+#~ msgstr ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+
+#~ msgid ""
+#~ "This parameter specifies who is authorized to use the remind command."
+#~ msgstr ""
+#~ "This parameter specifies who is authorized to use the remind command."
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr "Same as welcome_return_path, but applied to remind messages."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+#~ msgstr ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+
+#~ msgid ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+#~ msgstr ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+
+#~ msgid "an_email_address"
+#~ msgstr "an_email_address"
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+
+#~ msgid ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+#~ msgstr ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+
+#~ msgid "This parameter specifies who can send messages to the list."
+#~ msgstr "This parameter specifies who can send messages to the list."
+
+#~ msgid ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+#~ msgstr ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+
+#~ msgid ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+#~ msgstr ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+
+#~ msgid "the @ char is replaced by the string \" AT \"."
+#~ msgstr "the @ char is replaced by the string \" AT \"."
+
+#~ msgid "no protection against spammer."
+#~ msgstr "no protection against spammer."
+
+#~ msgid ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+#~ msgstr ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+
+#~ msgid ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+#~ msgstr ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+
+#~ msgid ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+#~ msgstr ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+
+#~ msgid ""
+#~ "Sympa allows the list owner to choose how Sympa loads list member data. "
+#~ "Subscriber information can be stored in a text file or relational "
+#~ "database, or included from various external sources (list, flat file, "
+#~ "result of or query)."
+#~ msgstr ""
+#~ "Sympa allows the list owner to choose how Sympa loads list member data. "
+#~ "Subscriber information can be stored in a text file or relational "
+#~ "database, or included from various external sources (list, flat file, "
+#~ "result of or query)."
+
+#~ msgid ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+#~ msgstr ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "Defines who can access the web archive for the list."
+
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+
+#~ msgid ""
+#~ "This paragraph defines a topic used to tag a message of a list, named by "
+#~ "msg_topic.name (\"other\" is a reserved word), its title is msg_topic."
+#~ "title. The msg_topic.keywords entry is optional and allows automatic "
+#~ "tagging. This should be a list of keywords, separated by ','."
+#~ msgstr ""
+#~ "This paragraph defines a topic used to tag a message of a list, named by "
+#~ "msg_topic.name (\"other\" is a reserved word), its title is msg_topic."
+#~ "title. The msg_topic.keywords entry is optional and allows automatic "
+#~ "tagging. This should be a list of keywords, separated by ','."
+
+#~ msgid ""
+#~ "This parameter indicates which part of the message is used to perform "
+#~ "automatic tagging."
+#~ msgstr ""
+#~ "This parameter indicates which part of the message is used to perform "
+#~ "automatic tagging."
+
+#~ msgid ""
+#~ "This parameter indicates if the tagging is optional or required for a "
+#~ "list."
+#~ msgstr ""
+#~ "This parameter indicates if the tagging is optional or required for a "
+#~ "list."
+
+#~ msgid "No Comment"
+#~ msgstr "No Comment"
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+
+#~ msgid "Digest"
+#~ msgstr "Digest"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+
+#~ msgid "The sending interval for these Digests is defined by the list owner."
+#~ msgstr ""
+#~ "The sending interval for these Digests is defined by the list owner."
+
+#~ msgid "DigestPlain"
+#~ msgstr "DigestPlain"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+
+#~ msgid "Summary"
+#~ msgstr "Summary"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+
+#~ msgid "Nomail"
+#~ msgstr "Nomail"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+#~ msgstr ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
 
 #~ msgid ""
 #~ "\n"

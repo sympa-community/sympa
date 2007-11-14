@@ -1200,7 +1200,7 @@ msgstr "Cambiar nombre"
 msgid "User mode"
 msgstr "Modo de usuario"
 
-#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16 web_tt2/help_shared.tt2:24
+#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16
 msgid "Expert mode"
 msgstr "Modo Experto"
 
@@ -2114,941 +2114,6 @@ msgstr "Listas pendientes"
 #: web_tt2/get_pending_lists.tt2:12
 msgid "Requested date"
 msgstr "Fecha solicitada"
-
-#: web_tt2/help_editfile.tt2:3
-msgid "Service messages description :"
-msgstr "Descripción del servicio de mensajes:"
-
-#: web_tt2/help_editfile.tt2:6
-msgid ""
-"Welcome message: This message is sent to new subscribers. It can be\n"
-"a full MIME structured message (only for MIME gurus)."
-msgstr ""
-"Mensaje de bienvenida: Se envía este mensaje a los recién suscritos. Puede "
-"ser un mensaje estructuradado en full MIME (sólo para los gurús de MIME)."
-
-#: web_tt2/help_editfile.tt2:9
-msgid ""
-"Unsubscribe message : This message is sent when users leave the list\n"
-"using the UNSUBSCRIBE command."
-msgstr ""
-"Mensaje de supresión: se envía este mensaje a los usuarios cuando\n"
-"se dan de baja de la lista usando el comando UNSUBSCRIBE."
-
-#: web_tt2/help_editfile.tt2:13
-msgid ""
-"Deletion message : This message is sent to users when you\n"
-"remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
-msgstr ""
-"Mensaje de eliminación: Se manda este mensaje a los usuarios cuando\n"
-"se los saca de la lista usando el comando DEL (a menos que se seleccione la "
-"opción \n"
-"\"Silencioso\")"
-
-#: web_tt2/help_editfile.tt2:18
-msgid ""
-"Remind message : This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
-"confused about their own subscription emails or people who are not able to\n"
-"unsubscribe themselves."
-msgstr ""
-"Recordatorio: es un mensaje enviado a cada suscriptor cuando se utiliza el "
-"comando REMIND. Esto es útil para aclarar a las personas a cuales de las "
-"listas se encuentran suscritas."
-
-#: web_tt2/help_editfile.tt2:21
-msgid ""
-"Subscribing invitation message : sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
-msgstr ""
-"Mensaje de invitación de suscripción: enviado a una persona si alguien\n"
-"utiliza el comando INVITEpara invitarlo a suscribirse."
-
-#: web_tt2/help_editfile.tt2:24
-msgid "Other files/pages description :"
-msgstr "Descripción de otros ficheros/páginas:"
-
-#: web_tt2/help_editfile.tt2:28
-msgid ""
-"List homepage : HTML text to describe the list. It is printed on the\n"
-"right-hand side of the main list page. (default for this is the list "
-"description)"
-msgstr ""
-"Paguina principal: texto HTML describe la lista de correo. Este es ubicado a "
-"la izquierda de la pantalla.(por defecto para esta descripcion de la lista)"
-
-#: web_tt2/help_editfile.tt2:31
-msgid ""
-"List description : This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the"
-msgstr ""
-"Descripción de la lista: Se puede obtener enviando un mensaje con el asunto "
-"\"INFO\" a la lista. y solo puede ser incluido en el"
-
-#: web_tt2/help_editfile.tt2:31
-msgid "Welcome message"
-msgstr "Mensaje de bienvenida"
-
-#: web_tt2/help_editfile.tt2:34
-msgid ""
-"Message header: If this file is not empty, it is added as a MIME\n"
-"attachment at the beginning of each message distributed to the list."
-msgstr ""
-"mensaje de cabecera: si este archivo no esta vacío, es agregado como MIME\n"
-"al comienzo de cada mensaje distribuido en la lista."
-
-#: web_tt2/help_editfile.tt2:37
-msgid ""
-"Message footer : same as <em>Message header,</em> but attached at the\n"
-"end of the message."
-msgstr ""
-"mensaje al pie :algunos son <em> Mensajes de cabecera,</em> pero puestos en "
-"el\n"
-"fin de el mensaje "
-
-#: web_tt2/help_editlist.tt2:9
-msgid "Privilege for adding (ADD command) a subscriber to the list"
-msgstr "Prvilegio para añadir (comando ADD) un suscriptor a la lista"
-
-#: web_tt2/help_editlist.tt2:11
-msgid ""
-"To hide the sender's email address before distributing the message. It is "
-"replaced by the provided email address."
-msgstr ""
-"Para ocultar la dirección de correo del remitente antes de distribuir el "
-"mensaje. Es reemplazada por la dirección de correo provista."
-
-#: web_tt2/help_editlist.tt2:13
-msgid "Privilege for reading mail archives and frequency of archiving"
-msgstr "Privilegio para leer los archivos de correo y frecuencia de archivado"
-
-#: web_tt2/help_editlist.tt2:15
-msgid ""
-"The available_user_options parameter starts a paragraph to define available "
-"options for the subscribers of the list."
-msgstr ""
-"El parámetro available_user_options empieza un párrafo para definir "
-"lasopciones disponibles para los suscriptores de la lista."
-
-#: web_tt2/help_editlist.tt2:17
-msgid ""
-"(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
-msgstr ""
-"Valor predeterminado: recepción de correo, aviso, resumen, resumen "
-"detallado, listado,sin mail)"
-
-#: web_tt2/help_editlist.tt2:18
-msgid ""
-"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
-"summary, nomail), separated by commas. Only these modes will be allowed for "
-"the subscribers of this list. If a subscriber has a reception mode not in "
-"the list, sympa uses the mode specified in the default_user_options "
-"paragraph."
-msgstr ""
-"<em>lista de modos</em> es una lista de modos(correo, noticias, resumen, "
-"planes de resumen, sumario, nocorreo), separados por comas. Solamente estos "
-"modos se permitiran a los suscriptores para esta lista. Si un suscriptor "
-"tiene un modo de recepcion que no esta en la lista, sympa usa el mode "
-"especificado en el parametro default_user_options."
-
-#: web_tt2/help_editlist.tt2:22
-msgid "This paragraph defines bounce management parameters:"
-msgstr "Este párrafo define los parámetros de gestión de rebotes:"
-
-#: web_tt2/help_editlist.tt2:24
-msgid "Default value: bounce_warn_rate robot parameter"
-msgstr "Valor por omisión: parámetro de robot bounce_warn_rate"
-
-#: web_tt2/help_editlist.tt2:25
-msgid ""
-"The list owner receives a warning whenever a message is distributed and the "
-"number (percentage) of bounces exceeds this value."
-msgstr ""
-"El dueño de la lista recibe una advertencia cada ver que un mensaje se "
-"distribuye y que el n&umero (porcentaje) de rebotes sobrepasa este valor. "
-
-#: web_tt2/help_editlist.tt2:27
-msgid "Default value: bounce_halt_rate robot parameter"
-msgstr "Valor por omisión: parámetro de robot bounce_halt_rate"
-
-#: web_tt2/help_editlist.tt2:28
-msgid ""
-"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation."
-msgstr ""
-"TODAVIA NO USADO. si la cantidad de errores  alcansados al halt_rate, los "
-"mensajes para la lista pueden ser cortados, i.e. ellos son retenidos para su "
-"subsecuente moderacion  "
-
-#: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
-#: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
-#: web_tt2/help_editlist.tt2:43 web_tt2/help_editlist.tt2:46
-#: web_tt2/help_editlist.tt2:56 web_tt2/help_editlist.tt2:59
-#: web_tt2/help_editlist.tt2:62
-msgid "Default value:"
-msgstr "Valor por omisión:"
-
-#: web_tt2/help_editlist.tt2:31
-msgid ""
-"Name of the task template used to remove old bounces. Useful for removing "
-"bounced subscriber email. If some messages are distributed without receiving "
-"new bounce messages, the subscriber's email seems to be OK again. Active if "
-"task_manager.pl is running."
-msgstr ""
-"El nombre de las tareas de la planillas usadas para remover viejos errores. "
-"Usadas para errores de email de los subscriptores removiendolos. si algunois "
-"mensajes son distribuidos si haber recibido nuevos mensajes de error, los "
-"email de los subscriptores   "
-
-#: web_tt2/help_editlist.tt2:37
-msgid ""
-"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 1 is the lower level of bouncing users"
-msgstr ""
-"Los párrafos Bouncers_level1 definen el comportamiento automático de gestion "
-"de rebotes.<br />\n"
-"\tEl nivel 1 es el nivel más bajo de usuarios en rebote"
-
-#: web_tt2/help_editlist.tt2:41 web_tt2/help_editlist.tt2:57
-msgid "Each bouncing user have a score (from 0 to 100)."
-msgstr "Cada usuario en rrebote tiene un puntaje (de 0 a 100)."
-
-#: web_tt2/help_editlist.tt2:41
-msgid ""
-"This parameter defines a lower limit for each category of bouncing users.For "
-"example, level 1 begins from 45 to level_2_treshold."
-msgstr ""
-"Este parámetro define un límite inferior para cada categoría de usuarios en "
-"rebote. Por ejemplo, el nivel 1 empieza por 45 hasta level_2_treshold."
-
-#: web_tt2/help_editlist.tt2:44
-msgid ""
-"This parameter defines which task is automaticaly applied on level 1 "
-"bouncers."
-msgstr ""
-"Este parámetro define que medidas se aplican automáticamente para los "
-"usuarios en rebote de nivel 1. "
-
-#: web_tt2/help_editlist.tt2:47
-msgid ""
-"When automatic task is executed on level 1 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Cuando se ejecuta una tarea automática en los rebotados de nivel uno, se "
-"puede mandar un correo de notificación al dueño de lista o al listmaster.  "
-
-#: web_tt2/help_editlist.tt2:53
-msgid ""
-"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<br />\n"
-"\tLevel 2 is the highest level of bouncing users"
-msgstr ""
-"Los párrafos Bouncers_levelX definen el comportamiento automático de gestión "
-"de rebotes.<br />\n"
-"\tEl nivel 2 es el nivel más alto de usuarios en rebote"
-
-#: web_tt2/help_editlist.tt2:57
-msgid ""
-"This parameter defines the score range defining each category of bouncing "
-"users.For example, level 2 is for users with a score between 80 and 100."
-msgstr ""
-"Este parámetro define el rango de puntaje que clasifica cada categoría de "
-"uruarios en rebote. Por ejemplo, el nivel 2 es para unsuarios con un puntaje "
-"entre 80 y 100."
-
-#: web_tt2/help_editlist.tt2:60
-msgid ""
-"This parameter defines which task is automaticaly applied on level 2 "
-"bouncers."
-msgstr ""
-"Este parámetro define que medidas se aplican automáticamente para los "
-"usuarios en rebote de nivel 2."
-
-#: web_tt2/help_editlist.tt2:63
-msgid ""
-"When automatic task is executed on level 2 bouncers, a notification email "
-"can be send to listowner or listmaster."
-msgstr ""
-"Cuando se ejecuta una tarea automática en los rebotados de nivel 2, se puede "
-"mandar un correo de notificación al dueño de lista o al listmaster.  "
-
-#: web_tt2/help_editlist.tt2:67
-msgid ""
-"This parameter is a confidential item for generating authentication keys for "
-"administrative commands (ADD, DELETE, etc.). This parameter should remain "
-"concealed, even for owners. The cookie is applied to all list owners, and is "
-"only taken into account when the owner has the auth parameter."
-msgstr ""
-"Este parámetro es un item confidencial para generar las claves de "
-"autentificación para comandos administrativos (ADD, DELETE, etc.). Este "
-"parámetro debe manenerse oculto, incluso respecto a los dueños de listas. El "
-"cookie se aplica a todos los dueños de listas, y sólo se lo toma en cuenta "
-"cuando el dueño tuenen el parámetro auth.  "
-
-#: web_tt2/help_editlist.tt2:69
-msgid ""
-"This parameter is optional. The headers specified will be added to the "
-"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
-"it is possible to put several custom header lines in the configuration file "
-"at the same time."
-msgstr ""
-"Este parámetro es opcional. El encabezado especificado será añadido al "
-"encabezado de los mensajes distribuidos a través de la lista. Desde el "
-"release 1.2.2 de Sympa, es posible poner simultáneamente varias líneas de "
-"encabezados personalizados en el fichero de configuración.  "
-
-#: web_tt2/help_editlist.tt2:71
-msgid ""
-"This parameter is optional. It specifies a string which is added to the "
-"subject of distributed messages (intended to help users who do not use "
-"automatic tools to sort incoming messages). This string will be surrounded "
-"by [] characters."
-msgstr ""
-"Este parámetro es opcional. Especifica una cadena que se agrega al asunto de "
-"los mensajes distribuidos (destinado a ayudar a los usuarios que no utilizan "
-"herramoentas automatizadas para clasificar sus mensajes). Esta cadena será "
-"rodeada por los caracteres []. "
-
-#: web_tt2/help_editlist.tt2:73
-msgid ""
-"The default_user_options parameter starts a paragraph to define a default "
-"profile for the subscribers of the list."
-msgstr ""
-"El parámetro default_user_options empieza un párrafopara definir un perfil "
-"por omisión de los suscriptores de la lista. "
-
-#: web_tt2/help_editlist.tt2:75
-msgid "Mail reception mode."
-msgstr "Modo de recepción de correo"
-
-#: web_tt2/help_editlist.tt2:76
-msgid "Visibility of the subscriber with the REVIEW command."
-msgstr "Visibilidad de los suscriptores utilizando el comando REVIEW."
-
-#: web_tt2/help_editlist.tt2:79
-msgid "This parameter specifies who is authorized to use the DEL command."
-msgstr ""
-"Este parámetro especifica quien está autorizado a utilizar el comando DEL."
-
-#: web_tt2/help_editlist.tt2:81
-msgid ""
-"Definition of digest mode. If this parameter is present, subscribers can "
-"select the option of receiving messages in multipart/digest MIME format, or "
-"as a plain text digest. Messages are then grouped together, and compiled "
-"messages are sent to subscribers according to the frequency selected with "
-"this parameter."
-msgstr ""
-"Definición del modo resumido. Si este parámetro esta presente , los "
-"suscriptores pueden seleccionar la opción de recibir mensajes en el formato "
-"MIME multipart/digest, o como texto plano. Mensajes se agrupan  y las "
-"compilaciones de los mensajes son enviadas a los suscriptores de acuerdo con "
-"el ritmo seleccionado con este parametro."
-
-#: web_tt2/help_editlist.tt2:83
-msgid ""
-"Editors are responsible for moderating messages. If the mailing list is "
-"moderated, messages posted to the list will first be passed to the editors, "
-"who will decide whether to distribute or reject it."
-msgstr ""
-"Los editores son los responsables de moderar los mensajes. Si la lista es "
-"moderada; los mensajes puestos para la lista son los primeros en ser pasados "
-"al editor, quien decide cuales son para distribuir o rechazarlos."
-
-#: web_tt2/help_editlist.tt2:84
-msgid ""
-"FYI: Defining editors will not make the list moderated ; you will have to "
-"set the \"send\" parameter."
-msgstr ""
-"FYI: Definir editores no implica que la lista sea moderada; para ello de "
-"debe completar el parametro \"envio\""
-
-#: web_tt2/help_editlist.tt2:85
-msgid ""
-"FYI: If the list is moderated, any editor can distribute or reject a message "
-"without the knowledge or consent of the other editors. Messages that have "
-"not been distributed or rejected will remain in the moderation spool until "
-"they are acted on."
-msgstr ""
-"FYI: si una lista es moderada; cualquier editor puede distribuir o rechazar "
-"un mensaje sin el  conocimiento o consentimiento de los demás editores. Los "
-"mensajes que no fueron distribuidos ni rechazados permanecerán en el spool "
-"hasta que alguien tome una decisión."
-
-#: web_tt2/help_editlist.tt2:87
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-"Este parámetro especifica que modelo se usa para crear una tarea de "
-"expiración. Una tarea de expiración verifica regularmente las fechas de  "
-"suscripción o de re-suscripción de los suscriptores y les solicita renovar "
-"su suscripción. De lo contrario, se los borra de la lista."
-
-#: web_tt2/help_editlist.tt2:89
-msgid ""
-"List owners may decide to add message headers or footers to messages sent "
-"via the list. This parameter defines the way a footer/header is added to a "
-"message."
-msgstr ""
-"Los dueños de la lista tienen la posibilidad de definir mensajes al comienzo "
-"y/o al final de todos los mails enviados a la lista.este parametro define el "
-"camino en final/comienzo es agregado al mensaje"
-
-#: web_tt2/help_editlist.tt2:92
-msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr ""
-"El valor por omisión. Sympa añadirá el encabezado/pié de mensaje como una "
-"nueva parte MIME. "
-
-#: web_tt2/help_editlist.tt2:95
-msgid ""
-"Sympa will not create new MIME parts, but will try to append the header/"
-"footer to the body of the message. Predefined message-footers will be "
-"ignored. Headers/footers may be appended to text/plain messages only."
-msgstr ""
-"Sympa no creará nuevas partes MIME, sino que intentará agregar el encabezado/"
-"pie de página al cuerpo del mensaje. Los piés de mensajes predefinidos serán "
-"ignorados. Encabezados/piés de página sólo pueden ser agregados a los "
-"mensajes en texto pleno. "
-
-#: web_tt2/help_editlist.tt2:99
-msgid ""
-"Domain name of the list, default is the robot domain name set in the related "
-"robot.conf file or in file /etc/sympa.conf."
-msgstr ""
-"Nombre de dominio de la lista, por omisión se  utiliza el que se define en "
-"el fichero robot.conf correspondiente o en el fichero /etc/sympa.conf"
-
-#: web_tt2/help_editlist.tt2:101
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include. The file should contain one e-mail address per line (lines "
-"beginning with a \"#\" are ignored)."
-msgstr ""
-"Este parámetro será interpretado sólo si el valor de user_data_source es "
-"<i>include</i>. El fichero debe contener una dirección de correo por línea "
-"(y se ignoran las líneas que empiezan por un \"#\")"
-
-#: web_tt2/help_editlist.tt2:103
-msgid ""
-"This paragraph defines parameters for a two-level query returning a list of "
-"subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This paragraph "
-"is used only if user_data_source is set to include. This feature requires "
-"the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Este párrafo define parámetros para una solicitud a dos niveles que devuelve "
-"una lista de suscriptores.Habitualmente la solicitud de primer nivel "
-"devuelve una lista de DNs y la de segundo nivel convierte los DNs en "
-"direcciones de correo. Este párrafo se utiliza sólo si user_data_source "
-"tiene por valor <i>include</i>. Esta funcionalidad requiere el módulo PERL "
-"Net::LDAP (perlldap). "
-
-#: web_tt2/help_editlist.tt2:105
-msgid ""
-"This paragraph defines parameters for a query returning a list of "
-"subscribers. This paragraph is used only if user_data_source is set to "
-"include. This feature requires the Net::LDAP (perlldap) PERL module."
-msgstr ""
-"Este párrafo define los parámetros para una solicitud que devuelve una lista "
-"de suscriptores. Este párrafo se utiliza sólo si user_data_source tiene por "
-"valor <i>include</i>. Esta funcionalidad requiere el módulo PERL Net::LDAP "
-"(perlldap)."
-
-#: web_tt2/help_editlist.tt2:107
-msgid ""
-"This parameter will be interpreted only if user_data_source is set to "
-"include. All subscribers of list listname become subscribers of the current "
-"list. You may include as many lists as required, using one include_list "
-"listname line for each included list. Any list at all may be included; the "
-"user_data_source definition of the included list is irrelevant, and you may "
-"therefore include lists which are also defined by the inclusion of other "
-"lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise to an infinite loop."
-msgstr ""
-"Este parámetro será interpretado sólo si el valor de user_data_source es "
-"<i>include</i>. Todos los suscriptores de la lista \"listname\" se vuelven   "
-"suscriptores de la lista corriente. Puedes incluir tantas listas como "
-"necesario, utilizando una línea \"include_list listname\" para cada lista "
-"incluída.  Cualquier lista puede ser incluída; la definición del   "
-"user_data_source de la lista incluidano es relevalte, por lo cual se pueden "
-"incluir listas definidas por la inclusi&on de otras listas. Cuidado, sin "
-"embargo, a no incuir la lista A en la lista B y la  lista B en la lista A, "
-"ya que eso daría lugar a un bucle infinito."
-
-#: web_tt2/help_editlist.tt2:109
-msgid ""
-"Sympa can contact another Sympa service using HTTPS to fetch a remote list "
-"in order to include each member of a remote list as subscriber. You may "
-"include as many lists as required, using one include_remote_sympa_list "
-"paragraph for each included list. Be careful, however, not to give rise to "
-"an infinite loop resulting from cross includes."
-msgstr ""
-"Sympa puede contactar a otro servicio Sympa utilizando HTTPS para recuperar "
-"una lista distante de manera a incuir cada uno de los miembros de la lista "
-"distante como suscriptor. Se pueden incluir tantas listas como necesario, "
-"utilizando un párrafo include_remote_sympa_list para cada lista incluída. "
-"Cuidado, sin embargo, en no dar lugar a un bucle infinito resultante de "
-"inclusiones cruzadas.  "
-
-#: web_tt2/help_editlist.tt2:110
-msgid ""
-"For this operation, one Sympa site acts as a server while the other one acs "
-"as client. On the server side, the only setting needed is to give permission "
-"to the remote Sympa to review the list. This is controlled by the review "
-"scenario."
-msgstr ""
-"Para esta operación, un sitio Sympa actúa como servidor mientras que el otro "
-"actúa como cliente. Del lado del servidor, lo único que se necesita "
-"configurar es el permiso al Sympa remoto de revisar la lista. Esto está "
-"conotrolado por el escenario 'review'."
-
-#: web_tt2/help_editlist.tt2:112
-msgid ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include, and is used to begin a paragraph defining the SQL query "
-"parameters. "
-msgstr ""
-"Este parámetro será interpretado sólo si el valor de user_data_source es "
-"<i>include</i>, y se lo usa para empezar un párrafo que define los "
-"parámetros de la solicitud SQL. "
-
-#: web_tt2/help_editlist.tt2:114
-msgid ""
-"This parameter defines the language used for the list. It is used to "
-"initialize a user's language preference; Sympa command reports are extracted "
-"from the associated message catalog."
-msgstr ""
-"Este parámetro define el idioma usado para la lista. Se usa para inicializar "
-"la preferencia de idioma del usuario; los informes de comandos de Sympa son "
-"extraidos del catálogo de mensajes asociado."
-
-#: web_tt2/help_editlist.tt2:116
-msgid "Maximum size of a message in 8-bit bytes."
-msgstr "tamaño maximo de un mensaje en 8-bit bytes"
-
-#: web_tt2/help_editlist.tt2:118
-msgid ""
-"Owners are managing subscribers of the list. They may review subscribers and "
-"add or delete email addresses from the mailing list. If you are a privileged "
-"owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. "
-msgstr ""
-"L@s dueñ@s administran los suscriptores de la lista. Pueden revisar los "
-"suscriptores, agregar o borrar direcciones de la lista de correo. Si eres "
-"dueño privilegiado de la lista, puedes agregar o suprimir otros dueños de la "
-"lista. Los dueños privilegiados pueden edirar algunas otras opciones que no "
-"pueden los otros dueños.   "
-
-#: web_tt2/help_editlist.tt2:120
-msgid ""
-"The priority with which Sympa will process messages for this list. This "
-"level of priority is applied while the message is going through the spool. "
-"The z priority will freeze the message in the spool."
-msgstr ""
-"La priodidad con la que Sypa va a procesar los mensajes de esta lista.El "
-"nivel de prioridad se aplica cuando el mensaje pasa por el <i>spool</i>. La "
-"prioridad z dejará el mensaje congelado en el <i>spool</i>."
-
-#: web_tt2/help_editlist.tt2:122
-msgid "This parameter specifies who is authorized to use the remind command."
-msgstr ""
-"Este parámetro especifica quien está autorizado a utilizar el comando REMIND "
-"(recordatorio)."
-
-#: web_tt2/help_editlist.tt2:124
-msgid "Same as welcome_return_path, but applied to remind messages."
-msgstr ""
-"Igual que welcome_return_path, pero aplicado a los mensajes de recordatorio."
-
-#: web_tt2/help_editlist.tt2:126
-msgid ""
-"This parameter states which model is used to create a remind task. A remind "
-"task regularly sends  subscribers a message which reminds them of their list "
-"subscriptions."
-msgstr ""
-"Este parámetro especifica que modelo se usa para crear una tarea de "
-"recordatorio. Una tarea de recordatorio manda regularmente a los "
-"suscriptores un recordatorio acerca de sus suscripciones a listas. "
-
-#: web_tt2/help_editlist.tt2:128
-msgid ""
-"The reply_to_header parameter starts a paragraph defining what Sympa will "
-"place in the Reply-To: SMTP header field of the messages it distributes."
-msgstr ""
-"El parámetro reply_to_header da comienzo a un párrafo en el que se define lo "
-"que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
-"mensajes que distribuye."
-
-#: src/List.pm:1160 web_tt2/help_editlist.tt2:130
-msgid "value"
-msgstr "valor"
-
-#: web_tt2/help_editlist.tt2:131
-msgid ""
-"This parameter indicates whether the Reply-To: field should indicate the "
-"sender of the message (sender), the list itself (list), both list and sender "
-"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
-msgstr ""
-"Este parámetro indica si el campo Reply-To: debe indicar el remitente del "
-"mensaje (remitente), la propia lista (lista), ambos lista y remitente "
-"(todos) o una dirección de correo arbitraria (definida por el parámetro "
-"other_email)."
-
-#: web_tt2/help_editlist.tt2:132
-msgid ""
-"Note: it is inadvisable to change this parameter, and particularly "
-"inadvisable to set it to list. Experience has shown it to be almost "
-"inevitable that users, mistakenly believing that they are replying only to "
-"the sender, will send private messages to a list. This can lead, at the very "
-"least, to embarrassment, and sometimes to more serious consequences."
-msgstr ""
-"Nota: no es recomendable cambiar este parámetro, y aún menos recomendable "
-"que sea la lista. La experiencia demuestra que es casi inevitable que los "
-"usuarios, creyendo por error que le responden sólo al remitente, manden un "
-"mensaje privado a la lista. Esto puede llevar, como mínimo a malentendidos, "
-"y a veces puede llegar a tener serias consecuencias. "
-
-#: web_tt2/help_editlist.tt2:134
-msgid "an_email_address"
-msgstr "an_email_address (dirección de correo)"
-
-#: web_tt2/help_editlist.tt2:135
-msgid ""
-"If value was set to other_email, this parameter defines the e-mail address "
-"used."
-msgstr ""
-"Si el valor es \"other_email\"; este parámetro define la direcci&on de "
-"correo que se utiliza."
-
-#: web_tt2/help_editlist.tt2:138
-msgid ""
-"The default is to respect (preserve) the existing Reply-To: SMTP header "
-"field in incoming messages. If set to forced, Reply-To: SMTP header field "
-"will be overwritten."
-msgstr ""
-"Por omisión se respeta (se conserva) el campo de encabezado SMTP Reply-To: "
-"para los mensajes que llegan. Si se lo configura a 'forzado' (forced), el "
-"valor del encabezado SMTP Reply-To: será remplazado. "
-
-#: web_tt2/help_editlist.tt2:142
-msgid ""
-"This parameter specifies who can access the list of members. Since "
-"subscriber addresses can be abused by spammers, it is strongly recommended "
-"that you only authorize owners or subscribers to access the subscriber list. "
-msgstr ""
-"Este parámetro especifica quien tiene acceso a la lista de miembors. Como "
-"las direcciones de los suscriptores pueden ser utilizadas abusivamente por "
-"spammers, se recomienda fuertemente sólo autorizar a los dueños o a los "
-"suscriptores acceder a la lista de suscriptores.  "
-
-#: web_tt2/help_editlist.tt2:144
-msgid "This parameter specifies who can send messages to the list."
-msgstr "Este parámetro especifica quien puede mandar mensajes a la lista. "
-
-#: web_tt2/help_editlist.tt2:146
-msgid ""
-"This paragraph defines read and edit access to the shared document "
-"repository."
-msgstr ""
-"Este párrafo define el acceso de lectura y edición al repositorio de "
-"documentos compartidos."
-
-#: web_tt2/help_editlist.tt2:148
-msgid ""
-"There is a need to protect Sympa web sites against spambots which collect "
-"email addresses from public web sites. Various methods are available in "
-"Sympa and you can choose to use them with the spam_protection and "
-"web_archive_spam_protection parameters. Possible value are:"
-msgstr ""
-"Es necesario proteger los websites de Sympa contra los robots de spam que "
-"recopilan direcciones de correo electrónico de websites públicos. Hay varios "
-"métodos disponibles en Sympa y puedes elegir usarlos con los parámetros "
-"spam_protection y web_archive_spam_protection. Los valores posibles son:"
-
-#: web_tt2/help_editlist.tt2:150
-msgid ""
-"the address is hidden using a javascript. A user who enables javascript can "
-"see a nice mailto address where others have nothing."
-msgstr ""
-"se esconde la dirección utilizando un javascript. Un usuario que activa "
-"javascript verá unabonita dirección mailto mientras que los demás no verán "
-"nada."
-
-#: web_tt2/help_editlist.tt2:151
-msgid "the @ char is replaced by the string \" AT \"."
-msgstr "se remplaza el carácter @ por la cadena \" AT \"."
-
-#: web_tt2/help_editlist.tt2:152
-msgid "no protection against spammer."
-msgstr "sin protección contra spammers."
-
-#: web_tt2/help_editlist.tt2:155
-msgid ""
-"This parameter indicates the subject of the list, which is sent in response "
-"to the LISTS mail command. The subject is a free form text limited to one "
-"line."
-msgstr ""
-"Este parámetro indica el tema de la lista, que es enviado en respuesta al "
-"comando de correo LISTS. El tema es un campo de texto libre limitado a una "
-"línea."
-
-#: web_tt2/help_editlist.tt2:157
-msgid "The subscribe parameter defines the rules for subscribing to the list."
-msgstr ""
-"El parámetro de suscripción define las reglas para suscribirse a la lista."
-
-#: web_tt2/help_editlist.tt2:159
-msgid ""
-"This parameter allows the classification of lists. You may define multiple "
-"topics as well as hierarchical ones. WWSympa's list of public lists uses "
-"this parameter."
-msgstr ""
-"Este parámetro permite clasificar las listas. Puedes definir múltiples temas "
-"y también jerárquicos. La lista WWSympa de listas publicas usa este "
-"parámetro."
-
-#: web_tt2/help_editlist.tt2:161
-msgid ""
-"Sympa caches user data extracted using the include parameter. Their TTL "
-"(time-to-live) within Sympa can be controlled using this parameter. The "
-"default value is 3600"
-msgstr ""
-"Sympa maneja una cache de los datos extrídos utilizando el parámetro "
-"include. Su TTL (time-to-live) en Sympa puede ser controlado definiendo este "
-"parámetro (en segundos). Su valor por omisión es de 3600."
-
-#: web_tt2/help_editlist.tt2:163
-msgid ""
-"This parameter specifies the unsubscription method for the list. Use "
-"open_notify or auth_notify to allow owner notification of each unsubscribe "
-"command."
-msgstr ""
-"Este parámetro especifica el método para anular la suscripción a la lista. "
-"Utiliza  open_notify o auth_notify para generar una notificación al dueño de "
-"cada comando de anulación de suscripción. "
-
-#: web_tt2/help_editlist.tt2:165
-msgid ""
-"Sympa allows the list owner to choose how Sympa loads list member data. "
-"Subscriber information can be stored in a text file or relational database, "
-"or included from various external sources (list, flat file, result of or "
-"query)."
-msgstr ""
-"Sympa permite ak dueño de la lista elegir como Sympa carga los datos de la "
-"lista de miembros. La información de suscriptores puede ser almacenada en un "
-"fichero texto o en una base de datos relacional, o incluida de diversas "
-"fuentes externas (lista, fichero plano, resultado de una solicitud). "
-
-#: web_tt2/help_editlist.tt2:167
-msgid ""
-"This parameter indicates whether the list should feature in the output "
-"generated in response to a LISTS command or should be shown in the list "
-"overview of the web-interface."
-msgstr ""
-"Este parámetro indica si la lista debe aparecer en la respuesta generada a "
-"un comando LISTS y si debe ser mostrada el el listado de la interface web. "
-
-#: web_tt2/help_editlist.tt2:169
-msgid "Defines who can access the web archive for the list."
-msgstr "Define quien puede acceder a los archivos web de la lista"
-
-#: web_tt2/help_editlist.tt2:171
-msgid ""
-"Idem spam_protection is provided but it can be used only for web archives. "
-"Access requires a cookie, and users must submit a small form in order to "
-"receive a cookie before browsing the archives. This blocks all robot, even "
-"google and co."
-msgstr ""
-"Igual que spam_protection pero puede limitarse a los archivos web. El acceso "
-"requiere un  \"cookie\", y los usuarios deben someter un pequeño formulario "
-"para recibir este cookie antes de poder recorrer los archivos. Esto blquea "
-"todos los robots, inclusive Google y cia."
-
-#: web_tt2/help_editlist.tt2:173
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Si el valor es \"unique\", se envía el mensaje de bienvenida  utilizando una "
-"dirección de respuesta única generada específicamente, de manera a suprimir "
-"inmediatamente al suscriptor en caso de rebote."
-
-#: web_tt2/help_editlist.tt2:175
-msgid ""
-"This paragraph defines a topic used to tag a message of a list, named by "
-"msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. "
-"The msg_topic.keywords entry is optional and allows automatic tagging. This "
-"should be a list of keywords, separated by ','."
-msgstr ""
-"Este párrafo define un tema usado para etiquetar un mensaje de la lista, "
-"llamado msg_topic.name (\"other\" es una palabra reservada), su título es "
-"msg_topic.title. El campo msg_topic.keywords es opcional y permite "
-"etiquetado automático. Éste debería contener una lista de palabras clave, "
-"separadas por ','."
-
-#: web_tt2/help_editlist.tt2:177
-msgid ""
-"This parameter indicates which part of the message is used to perform "
-"automatic tagging."
-msgstr ""
-"Este parámetro indica que parte del mensaje es usada para llevar a cabo el "
-"etiquetado automático."
-
-#: web_tt2/help_editlist.tt2:179
-msgid ""
-"This parameter indicates if the tagging is optional or required for a list."
-msgstr ""
-"Este parámetro indica si el etiquetado es opcional o obligatorio para una "
-"lista."
-
-#: web_tt2/help_editlist.tt2:181
-msgid "No Comment"
-msgstr "Sin comentarios"
-
-#: web_tt2/help_user_options.tt2:3
-msgid ""
-"This is a description of the receivie modes available in Sympa. These "
-"options are mutually exclusive, which means that you can't set two different "
-"receive modes at the same time. Only some of the modes might be available to "
-"specific mailing lists."
-msgstr ""
-"Esta es una descipción de los modos de recepción disponibles en Sympa. Estas "
-"opciones se excluyen mutuamente, lo que significa que no puedes configurar "
-"dos modos de recepción simultaneamente. Puede que sólo algunos de los modos "
-"de recepción estés disponibles para tal o tal lista. "
-
-#: web_tt2/help_user_options.tt2:7
-msgid "Digest"
-msgstr "Resumen"
-
-#: web_tt2/help_user_options.tt2:10
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive batched messages in a Digest. This Digest compiles a group of "
-"messages from the list, using\n"
-"the multipart/digest MIME format."
-msgstr ""
-"en ves derecibir mensajes individuales de la lista, el receptro puede "
-"recibir periodicamente  un lote de mensajes en un resumen. Este resumen "
-"compila un grupo de mensajes de la lista, usando\n"
-" el formato multipart/resumen  MIME.    "
-
-#: web_tt2/help_user_options.tt2:12 web_tt2/help_user_options.tt2:20
-msgid "The sending interval for these Digests is defined by the list owner."
-msgstr ""
-"La periodicidad de envío de estos resúmenes la define el dueño de la lista."
-
-#: web_tt2/help_user_options.tt2:14
-msgid "DigestPlain"
-msgstr "Resumen completp"
-
-#: web_tt2/help_user_options.tt2:18
-msgid ""
-"Similar to the Digest option in that the subscriber will periodically \n"
-"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
-"a plain text \n"
-"format, with all attachments stripped out. DigestPlain is useful if your "
-"email software doesn't\n"
-"display multipart/digest format messages well."
-msgstr ""
-"Similar a la opción de resumen (Digest) en que el usuario recibirá "
-"periódicamente\n"
-" los mensajes recopilados en un resumen. Con DigestPlain se manda el resumen "
-"en formato de texto pleno,\n"
-" con todos los documentos adjuntos extraídos. DigestPlain es útil\n"
-" si tu software de correo no permite ver correctamente los mensajes al "
-"formato multipartes/digest."
-
-#: web_tt2/help_user_options.tt2:22
-msgid "Summary"
-msgstr "Sumario"
-
-#: web_tt2/help_user_options.tt2:26
-msgid ""
-"Instead of receiving individual mail messages from the list, the subscriber "
-"will periodically \n"
-"receive a list of messages. This mode is very close to the Digest reception "
-"mode but the \n"
-"subscriber receives only the list of messages."
-msgstr ""
-"En vez de recibir mensajes individuales de la lista, el subscriptor puede "
-"recibir periódicamente la lista de mensajes. Este modo es mas cerrado a  "
-"modo de recibir resumenes pero le permite al suscriptor recibir solo una "
-"lista de los mensajes recibidos."
-
-#: web_tt2/help_user_options.tt2:29
-msgid "Nomail"
-msgstr "Nomail"
-
-#: web_tt2/help_user_options.tt2:31
-msgid ""
-"This mode is used when a subscriber no longer wishes to receive mail from "
-"the list, but nevertheless wishes to retain the ability to post to the list. "
-"This mode therefore prevents the subscriber from unsubscribing and "
-"subscribing later on."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere seguir recibiendo correo de "
-"la lista, pero sin embargo desea mantener la posibilidad de enviar mensajes "
-"a la lista. Este modo por lo tanto evita al subscriptor tener que cancelar "
-"la subscripción y darse de alta nuevamente más tarde."
-
-#: web_tt2/help_user_options.tt2:36
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in plain text format."
-msgstr ""
-"Este modo se usa cuando un subscriptor desea recibir los correos enviados en "
-"los formatos HTML y texto plano\n"
-"solo en formato de texto plano."
-
-#: web_tt2/help_user_options.tt2:41
-msgid ""
-"This mode is used when a subscriber wishes to receive mails sent in both "
-"HTML and plain text formats\n"
-"only in HTML format."
-msgstr ""
-"Este modo se usa cuando un subscriptor desea recibir los correos enviados en "
-"los formatos HTML y texto plano\n"
-"solo en formato HTML."
-
-#: web_tt2/help_user_options.tt2:46
-msgid ""
-"This mode is used when a subscriber does not want to receive attached files. "
-"The attached files are \n"
-"replaced by a URL leading to the file stored on the list site."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere recibir ficheros adjuntos. "
-"Los ficheros adjuntos son\n"
-"reemplazados por una URL que apunta al fichero compartido en la web de la "
-"lista."
-
-#: web_tt2/help_user_options.tt2:51
-msgid ""
-"This mode is used when a subscriber does not want to receive copies of "
-"messages that he or she has sent to \n"
-"the list."
-msgstr ""
-"Este modo se usa cuando un subscriptor no quiere recibir copias de los "
-"mensajes que él/ella ha enviado a \n"
-"la lista."
-
-#: web_tt2/help_user_options.tt2:56
-msgid ""
-"This option is used mainly to cancel the nomail, summary or digest modes. If "
-"the subscriber was \n"
-"in nomail mode, he or she will again receive individual mail messages from "
-"the list."
-msgstr ""
-"Esta opción se usa principalmente para cancelar los modos nomail, resumen "
-"(summary) o resumen (digest). Si el/la subscriptor/a estaba en modo nomail, "
-"él/ella volverá a recibir correos individuales de la lista."
 
 #: web_tt2/install_pending_list.tt2:11 web_tt2/set_pending_list_request.tt2:7
 msgid "Listname :"
@@ -4781,7 +3846,7 @@ msgstr "Período de b&usqueda:"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16035
+#: web_tt2/viewlogs.tt2:109 wwsympa/wwsympa.fcgi:16042
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -8046,7 +7111,7 @@ msgstr "El fichero de configuración --CONFIG-- contiene errores.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9401
+#: src/Commands.pm:927 wwsympa/wwsympa.fcgi:9408
 msgid "%A"
 msgstr "%A"
 
@@ -8481,6 +7546,10 @@ msgstr "Dirección de respuesta para el comando \"REMIND\""
 msgid "Reply address"
 msgstr "Dirección de respuesta"
 
+#: src/List.pm:1160
+msgid "value"
+msgstr "valor"
+
 #: src/List.pm:1165
 msgid "other email address"
 msgstr "otra dirección electrónica"
@@ -8649,16 +7718,16 @@ msgstr "%a, %d/%b/%Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2904 src/List.pm:2905 src/List.pm:2909
-#: wwsympa/wwsympa.fcgi:10818 wwsympa/wwsympa.fcgi:10887
-#: wwsympa/wwsympa.fcgi:11089 wwsympa/wwsympa.fcgi:11431
-#: wwsympa/wwsympa.fcgi:15524 wwsympa/wwsympa.fcgi:16374
-#: wwsympa/wwsympa.fcgi:16375 wwsympa/wwsympa.fcgi:4357
-#: wwsympa/wwsympa.fcgi:4358 wwsympa/wwsympa.fcgi:5780
-#: wwsympa/wwsympa.fcgi:6966 wwsympa/wwsympa.fcgi:7484
-#: wwsympa/wwsympa.fcgi:7534 wwsympa/wwsympa.fcgi:7536
-#: wwsympa/wwsympa.fcgi:8048 wwsympa/wwsympa.fcgi:8049
-#: wwsympa/wwsympa.fcgi:8083 wwsympa/wwsympa.fcgi:8084
-#: wwsympa/wwsympa.fcgi:8297 wwsympa/wwsympa.fcgi:8298
+#: wwsympa/wwsympa.fcgi:10825 wwsympa/wwsympa.fcgi:10894
+#: wwsympa/wwsympa.fcgi:11096 wwsympa/wwsympa.fcgi:11438
+#: wwsympa/wwsympa.fcgi:15531 wwsympa/wwsympa.fcgi:16381
+#: wwsympa/wwsympa.fcgi:16382 wwsympa/wwsympa.fcgi:4364
+#: wwsympa/wwsympa.fcgi:4365 wwsympa/wwsympa.fcgi:5787
+#: wwsympa/wwsympa.fcgi:6973 wwsympa/wwsympa.fcgi:7491
+#: wwsympa/wwsympa.fcgi:7541 wwsympa/wwsympa.fcgi:7543
+#: wwsympa/wwsympa.fcgi:8055 wwsympa/wwsympa.fcgi:8056
+#: wwsympa/wwsympa.fcgi:8090 wwsympa/wwsympa.fcgi:8091
+#: wwsympa/wwsympa.fcgi:8304 wwsympa/wwsympa.fcgi:8305
 msgid "%d %b %Y"
 msgstr "%d/%b/%Y"
 
@@ -8783,14 +7852,14 @@ msgstr "%H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:323 wwsympa/SympaSession.pm:324
-#: wwsympa/wwsympa.fcgi:11665 wwsympa/wwsympa.fcgi:11808
-#: wwsympa/wwsympa.fcgi:14231 wwsympa/wwsympa.fcgi:7419
+#: wwsympa/wwsympa.fcgi:11672 wwsympa/wwsympa.fcgi:11815
+#: wwsympa/wwsympa.fcgi:14238 wwsympa/wwsympa.fcgi:7426
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y    %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15980 wwsympa/wwsympa.fcgi:15981
+#: wwsympa/wwsympa.fcgi:15987 wwsympa/wwsympa.fcgi:15988
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8941,6 +8010,850 @@ msgstr "no mail (útil para las vacaciones)"
 #: wwsympa/wwslib.pm:44
 msgid "you do not receive your own posts"
 msgstr "no recibes tus propios mensajes"
+
+#~ msgid "Service messages description :"
+#~ msgstr "Descripción del servicio de mensajes:"
+
+#~ msgid ""
+#~ "Welcome message: This message is sent to new subscribers. It can be\n"
+#~ "a full MIME structured message (only for MIME gurus)."
+#~ msgstr ""
+#~ "Mensaje de bienvenida: Se envía este mensaje a los recién suscritos. "
+#~ "Puede ser un mensaje estructuradado en full MIME (sólo para los gurús de "
+#~ "MIME)."
+
+#~ msgid ""
+#~ "Unsubscribe message : This message is sent when users leave the list\n"
+#~ "using the UNSUBSCRIBE command."
+#~ msgstr ""
+#~ "Mensaje de supresión: se envía este mensaje a los usuarios cuando\n"
+#~ "se dan de baja de la lista usando el comando UNSUBSCRIBE."
+
+#~ msgid ""
+#~ "Deletion message : This message is sent to users when you\n"
+#~ "remove them from the list using the DEL command (unless you hit the\n"
+#~ "Quiet button."
+#~ msgstr ""
+#~ "Mensaje de eliminación: Se manda este mensaje a los usuarios cuando\n"
+#~ "se los saca de la lista usando el comando DEL (a menos que se seleccione "
+#~ "la opción \n"
+#~ "\"Silencioso\")"
+
+#~ msgid ""
+#~ "Remind message : This message is sent to each subscriber\n"
+#~ "when using the command  REMIND. It's very useful to help people who are\n"
+#~ "confused about their own subscription emails or people who are not able "
+#~ "to\n"
+#~ "unsubscribe themselves."
+#~ msgstr ""
+#~ "Recordatorio: es un mensaje enviado a cada suscriptor cuando se utiliza "
+#~ "el comando REMIND. Esto es útil para aclarar a las personas a cuales de "
+#~ "las listas se encuentran suscritas."
+
+#~ msgid ""
+#~ "Subscribing invitation message : sent to a person if someone  \n"
+#~ "uses the INVITE command to invite someone to subscribe."
+#~ msgstr ""
+#~ "Mensaje de invitación de suscripción: enviado a una persona si alguien\n"
+#~ "utiliza el comando INVITEpara invitarlo a suscribirse."
+
+#~ msgid "Other files/pages description :"
+#~ msgstr "Descripción de otros ficheros/páginas:"
+
+#~ msgid ""
+#~ "List homepage : HTML text to describe the list. It is printed on the\n"
+#~ "right-hand side of the main list page. (default for this is the list "
+#~ "description)"
+#~ msgstr ""
+#~ "Paguina principal: texto HTML describe la lista de correo. Este es "
+#~ "ubicado a la izquierda de la pantalla.(por defecto para esta descripcion "
+#~ "de la lista)"
+
+#~ msgid ""
+#~ "List description : This text is sent as an answer to the mail command\n"
+#~ "INFO. It can also be included in the"
+#~ msgstr ""
+#~ "Descripción de la lista: Se puede obtener enviando un mensaje con el "
+#~ "asunto \"INFO\" a la lista. y solo puede ser incluido en el"
+
+#~ msgid "Welcome message"
+#~ msgstr "Mensaje de bienvenida"
+
+#~ msgid ""
+#~ "Message header: If this file is not empty, it is added as a MIME\n"
+#~ "attachment at the beginning of each message distributed to the list."
+#~ msgstr ""
+#~ "mensaje de cabecera: si este archivo no esta vacío, es agregado como "
+#~ "MIME\n"
+#~ "al comienzo de cada mensaje distribuido en la lista."
+
+#~ msgid ""
+#~ "Message footer : same as <em>Message header,</em> but attached at the\n"
+#~ "end of the message."
+#~ msgstr ""
+#~ "mensaje al pie :algunos son <em> Mensajes de cabecera,</em> pero puestos "
+#~ "en el\n"
+#~ "fin de el mensaje "
+
+#~ msgid "Privilege for adding (ADD command) a subscriber to the list"
+#~ msgstr "Prvilegio para añadir (comando ADD) un suscriptor a la lista"
+
+#~ msgid ""
+#~ "To hide the sender's email address before distributing the message. It is "
+#~ "replaced by the provided email address."
+#~ msgstr ""
+#~ "Para ocultar la dirección de correo del remitente antes de distribuir el "
+#~ "mensaje. Es reemplazada por la dirección de correo provista."
+
+#~ msgid "Privilege for reading mail archives and frequency of archiving"
+#~ msgstr ""
+#~ "Privilegio para leer los archivos de correo y frecuencia de archivado"
+
+#~ msgid ""
+#~ "The available_user_options parameter starts a paragraph to define "
+#~ "available options for the subscribers of the list."
+#~ msgstr ""
+#~ "El parámetro available_user_options empieza un párrafo para definir "
+#~ "lasopciones disponibles para los suscriptores de la lista."
+
+#~ msgid ""
+#~ "(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+#~ msgstr ""
+#~ "Valor predeterminado: recepción de correo, aviso, resumen, resumen "
+#~ "detallado, listado,sin mail)"
+
+#~ msgid ""
+#~ "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
+#~ "summary, nomail), separated by commas. Only these modes will be allowed "
+#~ "for the subscribers of this list. If a subscriber has a reception mode "
+#~ "not in the list, sympa uses the mode specified in the "
+#~ "default_user_options paragraph."
+#~ msgstr ""
+#~ "<em>lista de modos</em> es una lista de modos(correo, noticias, resumen, "
+#~ "planes de resumen, sumario, nocorreo), separados por comas. Solamente "
+#~ "estos modos se permitiran a los suscriptores para esta lista. Si un "
+#~ "suscriptor tiene un modo de recepcion que no esta en la lista, sympa usa "
+#~ "el mode especificado en el parametro default_user_options."
+
+#~ msgid "This paragraph defines bounce management parameters:"
+#~ msgstr "Este párrafo define los parámetros de gestión de rebotes:"
+
+#~ msgid "Default value: bounce_warn_rate robot parameter"
+#~ msgstr "Valor por omisión: parámetro de robot bounce_warn_rate"
+
+#~ msgid ""
+#~ "The list owner receives a warning whenever a message is distributed and "
+#~ "the number (percentage) of bounces exceeds this value."
+#~ msgstr ""
+#~ "El dueño de la lista recibe una advertencia cada ver que un mensaje se "
+#~ "distribuye y que el n&umero (porcentaje) de rebotes sobrepasa este valor. "
+
+#~ msgid "Default value: bounce_halt_rate robot parameter"
+#~ msgstr "Valor por omisión: parámetro de robot bounce_halt_rate"
+
+#~ msgid ""
+#~ "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+#~ "will be halted, i.e. they are retained for subsequent moderation."
+#~ msgstr ""
+#~ "TODAVIA NO USADO. si la cantidad de errores  alcansados al halt_rate, los "
+#~ "mensajes para la lista pueden ser cortados, i.e. ellos son retenidos para "
+#~ "su subsecuente moderacion  "
+
+#~ msgid "Default value:"
+#~ msgstr "Valor por omisión:"
+
+#~ msgid ""
+#~ "Name of the task template used to remove old bounces. Useful for removing "
+#~ "bounced subscriber email. If some messages are distributed without "
+#~ "receiving new bounce messages, the subscriber's email seems to be OK "
+#~ "again. Active if task_manager.pl is running."
+#~ msgstr ""
+#~ "El nombre de las tareas de la planillas usadas para remover viejos "
+#~ "errores. Usadas para errores de email de los subscriptores removiendolos. "
+#~ "si algunois mensajes son distribuidos si haber recibido nuevos mensajes "
+#~ "de error, los email de los subscriptores   "
+
+#~ msgid ""
+#~ "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 1 is the lower level of bouncing users"
+#~ msgstr ""
+#~ "Los párrafos Bouncers_level1 definen el comportamiento automático de "
+#~ "gestion de rebotes.<br />\n"
+#~ "\tEl nivel 1 es el nivel más bajo de usuarios en rebote"
+
+#~ msgid "Each bouncing user have a score (from 0 to 100)."
+#~ msgstr "Cada usuario en rrebote tiene un puntaje (de 0 a 100)."
+
+#~ msgid ""
+#~ "This parameter defines a lower limit for each category of bouncing users."
+#~ "For example, level 1 begins from 45 to level_2_treshold."
+#~ msgstr ""
+#~ "Este parámetro define un límite inferior para cada categoría de usuarios "
+#~ "en rebote. Por ejemplo, el nivel 1 empieza por 45 hasta level_2_treshold."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 1 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Este parámetro define que medidas se aplican automáticamente para los "
+#~ "usuarios en rebote de nivel 1. "
+
+#~ msgid ""
+#~ "When automatic task is executed on level 1 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Cuando se ejecuta una tarea automática en los rebotados de nivel uno, se "
+#~ "puede mandar un correo de notificación al dueño de lista o al "
+#~ "listmaster.  "
+
+#~ msgid ""
+#~ "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+#~ "management.<br />\n"
+#~ "\tLevel 2 is the highest level of bouncing users"
+#~ msgstr ""
+#~ "Los párrafos Bouncers_levelX definen el comportamiento automático de "
+#~ "gestión de rebotes.<br />\n"
+#~ "\tEl nivel 2 es el nivel más alto de usuarios en rebote"
+
+#~ msgid ""
+#~ "This parameter defines the score range defining each category of bouncing "
+#~ "users.For example, level 2 is for users with a score between 80 and 100."
+#~ msgstr ""
+#~ "Este parámetro define el rango de puntaje que clasifica cada categoría de "
+#~ "uruarios en rebote. Por ejemplo, el nivel 2 es para unsuarios con un "
+#~ "puntaje entre 80 y 100."
+
+#~ msgid ""
+#~ "This parameter defines which task is automaticaly applied on level 2 "
+#~ "bouncers."
+#~ msgstr ""
+#~ "Este parámetro define que medidas se aplican automáticamente para los "
+#~ "usuarios en rebote de nivel 2."
+
+#~ msgid ""
+#~ "When automatic task is executed on level 2 bouncers, a notification email "
+#~ "can be send to listowner or listmaster."
+#~ msgstr ""
+#~ "Cuando se ejecuta una tarea automática en los rebotados de nivel 2, se "
+#~ "puede mandar un correo de notificación al dueño de lista o al "
+#~ "listmaster.  "
+
+#~ msgid ""
+#~ "This parameter is a confidential item for generating authentication keys "
+#~ "for administrative commands (ADD, DELETE, etc.). This parameter should "
+#~ "remain concealed, even for owners. The cookie is applied to all list "
+#~ "owners, and is only taken into account when the owner has the auth "
+#~ "parameter."
+#~ msgstr ""
+#~ "Este parámetro es un item confidencial para generar las claves de "
+#~ "autentificación para comandos administrativos (ADD, DELETE, etc.). Este "
+#~ "parámetro debe manenerse oculto, incluso respecto a los dueños de listas. "
+#~ "El cookie se aplica a todos los dueños de listas, y sólo se lo toma en "
+#~ "cuenta cuando el dueño tuenen el parámetro auth.  "
+
+#~ msgid ""
+#~ "This parameter is optional. The headers specified will be added to the "
+#~ "headers of messages distributed via the list. As of release 1.2.2 of "
+#~ "Sympa, it is possible to put several custom header lines in the "
+#~ "configuration file at the same time."
+#~ msgstr ""
+#~ "Este parámetro es opcional. El encabezado especificado será añadido al "
+#~ "encabezado de los mensajes distribuidos a través de la lista. Desde el "
+#~ "release 1.2.2 de Sympa, es posible poner simultáneamente varias líneas de "
+#~ "encabezados personalizados en el fichero de configuración.  "
+
+#~ msgid ""
+#~ "This parameter is optional. It specifies a string which is added to the "
+#~ "subject of distributed messages (intended to help users who do not use "
+#~ "automatic tools to sort incoming messages). This string will be "
+#~ "surrounded by [] characters."
+#~ msgstr ""
+#~ "Este parámetro es opcional. Especifica una cadena que se agrega al asunto "
+#~ "de los mensajes distribuidos (destinado a ayudar a los usuarios que no "
+#~ "utilizan herramoentas automatizadas para clasificar sus mensajes). Esta "
+#~ "cadena será rodeada por los caracteres []. "
+
+#~ msgid ""
+#~ "The default_user_options parameter starts a paragraph to define a default "
+#~ "profile for the subscribers of the list."
+#~ msgstr ""
+#~ "El parámetro default_user_options empieza un párrafopara definir un "
+#~ "perfil por omisión de los suscriptores de la lista. "
+
+#~ msgid "Mail reception mode."
+#~ msgstr "Modo de recepción de correo"
+
+#~ msgid "Visibility of the subscriber with the REVIEW command."
+#~ msgstr "Visibilidad de los suscriptores utilizando el comando REVIEW."
+
+#~ msgid "This parameter specifies who is authorized to use the DEL command."
+#~ msgstr ""
+#~ "Este parámetro especifica quien está autorizado a utilizar el comando DEL."
+
+#~ msgid ""
+#~ "Definition of digest mode. If this parameter is present, subscribers can "
+#~ "select the option of receiving messages in multipart/digest MIME format, "
+#~ "or as a plain text digest. Messages are then grouped together, and "
+#~ "compiled messages are sent to subscribers according to the frequency "
+#~ "selected with this parameter."
+#~ msgstr ""
+#~ "Definición del modo resumido. Si este parámetro esta presente , los "
+#~ "suscriptores pueden seleccionar la opción de recibir mensajes en el "
+#~ "formato MIME multipart/digest, o como texto plano. Mensajes se agrupan  y "
+#~ "las compilaciones de los mensajes son enviadas a los suscriptores de "
+#~ "acuerdo con el ritmo seleccionado con este parametro."
+
+#~ msgid ""
+#~ "Editors are responsible for moderating messages. If the mailing list is "
+#~ "moderated, messages posted to the list will first be passed to the "
+#~ "editors, who will decide whether to distribute or reject it."
+#~ msgstr ""
+#~ "Los editores son los responsables de moderar los mensajes. Si la lista es "
+#~ "moderada; los mensajes puestos para la lista son los primeros en ser "
+#~ "pasados al editor, quien decide cuales son para distribuir o rechazarlos."
+
+#~ msgid ""
+#~ "FYI: Defining editors will not make the list moderated ; you will have to "
+#~ "set the \"send\" parameter."
+#~ msgstr ""
+#~ "FYI: Definir editores no implica que la lista sea moderada; para ello de "
+#~ "debe completar el parametro \"envio\""
+
+#~ msgid ""
+#~ "FYI: If the list is moderated, any editor can distribute or reject a "
+#~ "message without the knowledge or consent of the other editors. Messages "
+#~ "that have not been distributed or rejected will remain in the moderation "
+#~ "spool until they are acted on."
+#~ msgstr ""
+#~ "FYI: si una lista es moderada; cualquier editor puede distribuir o "
+#~ "rechazar un mensaje sin el  conocimiento o consentimiento de los demás "
+#~ "editores. Los mensajes que no fueron distribuidos ni rechazados "
+#~ "permanecerán en el spool hasta que alguien tome una decisión."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create an expire task. An "
+#~ "expire task regularly checks the subscription or resubscription  date of "
+#~ "subscribers and asks them to renew their subscription. If they don't they "
+#~ "are deleted."
+#~ msgstr ""
+#~ "Este parámetro especifica que modelo se usa para crear una tarea de "
+#~ "expiración. Una tarea de expiración verifica regularmente las fechas de  "
+#~ "suscripción o de re-suscripción de los suscriptores y les solicita "
+#~ "renovar su suscripción. De lo contrario, se los borra de la lista."
+
+#~ msgid ""
+#~ "List owners may decide to add message headers or footers to messages sent "
+#~ "via the list. This parameter defines the way a footer/header is added to "
+#~ "a message."
+#~ msgstr ""
+#~ "Los dueños de la lista tienen la posibilidad de definir mensajes al "
+#~ "comienzo y/o al final de todos los mails enviados a la lista.este "
+#~ "parametro define el camino en final/comienzo es agregado al mensaje"
+
+#~ msgid ""
+#~ "The default value. Sympa will add the footer/header as a new MIME part."
+#~ msgstr ""
+#~ "El valor por omisión. Sympa añadirá el encabezado/pié de mensaje como una "
+#~ "nueva parte MIME. "
+
+#~ msgid ""
+#~ "Sympa will not create new MIME parts, but will try to append the header/"
+#~ "footer to the body of the message. Predefined message-footers will be "
+#~ "ignored. Headers/footers may be appended to text/plain messages only."
+#~ msgstr ""
+#~ "Sympa no creará nuevas partes MIME, sino que intentará agregar el "
+#~ "encabezado/pie de página al cuerpo del mensaje. Los piés de mensajes "
+#~ "predefinidos serán ignorados. Encabezados/piés de página sólo pueden ser "
+#~ "agregados a los mensajes en texto pleno. "
+
+#~ msgid ""
+#~ "Domain name of the list, default is the robot domain name set in the "
+#~ "related robot.conf file or in file /etc/sympa.conf."
+#~ msgstr ""
+#~ "Nombre de dominio de la lista, por omisión se  utiliza el que se define "
+#~ "en el fichero robot.conf correspondiente o en el fichero /etc/sympa.conf"
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include. The file should contain one e-mail address per line "
+#~ "(lines beginning with a \"#\" are ignored)."
+#~ msgstr ""
+#~ "Este parámetro será interpretado sólo si el valor de user_data_source es "
+#~ "<i>include</i>. El fichero debe contener una dirección de correo por "
+#~ "línea (y se ignoran las líneas que empiezan por un \"#\")"
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a two-level query returning a list "
+#~ "of subscribers. Usually the first-level query returns a list of DNs and "
+#~ "the second-level queries convert the DNs into e-mail addresses. This "
+#~ "paragraph is used only if user_data_source is set to include. This "
+#~ "feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Este párrafo define parámetros para una solicitud a dos niveles que "
+#~ "devuelve una lista de suscriptores.Habitualmente la solicitud de primer "
+#~ "nivel devuelve una lista de DNs y la de segundo nivel convierte los DNs "
+#~ "en direcciones de correo. Este párrafo se utiliza sólo si "
+#~ "user_data_source tiene por valor <i>include</i>. Esta funcionalidad "
+#~ "requiere el módulo PERL Net::LDAP (perlldap). "
+
+#~ msgid ""
+#~ "This paragraph defines parameters for a query returning a list of "
+#~ "subscribers. This paragraph is used only if user_data_source is set to "
+#~ "include. This feature requires the Net::LDAP (perlldap) PERL module."
+#~ msgstr ""
+#~ "Este párrafo define los parámetros para una solicitud que devuelve una "
+#~ "lista de suscriptores. Este párrafo se utiliza sólo si user_data_source "
+#~ "tiene por valor <i>include</i>. Esta funcionalidad requiere el módulo "
+#~ "PERL Net::LDAP (perlldap)."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if user_data_source is set to "
+#~ "include. All subscribers of list listname become subscribers of the "
+#~ "current list. You may include as many lists as required, using one "
+#~ "include_list listname line for each included list. Any list at all may be "
+#~ "included; the user_data_source definition of the included list is "
+#~ "irrelevant, and you may therefore include lists which are also defined by "
+#~ "the inclusion of other lists. Be careful, however, not to include list A "
+#~ "in list B and then list B in list A, since this will give rise to an "
+#~ "infinite loop."
+#~ msgstr ""
+#~ "Este parámetro será interpretado sólo si el valor de user_data_source es "
+#~ "<i>include</i>. Todos los suscriptores de la lista \"listname\" se "
+#~ "vuelven   suscriptores de la lista corriente. Puedes incluir tantas "
+#~ "listas como necesario, utilizando una línea \"include_list listname\" "
+#~ "para cada lista incluída.  Cualquier lista puede ser incluída; la "
+#~ "definición del   user_data_source de la lista incluidano es relevalte, "
+#~ "por lo cual se pueden incluir listas definidas por la inclusi&on de otras "
+#~ "listas. Cuidado, sin embargo, a no incuir la lista A en la lista B y la  "
+#~ "lista B en la lista A, ya que eso daría lugar a un bucle infinito."
+
+#~ msgid ""
+#~ "Sympa can contact another Sympa service using HTTPS to fetch a remote "
+#~ "list in order to include each member of a remote list as subscriber. You "
+#~ "may include as many lists as required, using one "
+#~ "include_remote_sympa_list paragraph for each included list. Be careful, "
+#~ "however, not to give rise to an infinite loop resulting from cross "
+#~ "includes."
+#~ msgstr ""
+#~ "Sympa puede contactar a otro servicio Sympa utilizando HTTPS para "
+#~ "recuperar una lista distante de manera a incuir cada uno de los miembros "
+#~ "de la lista distante como suscriptor. Se pueden incluir tantas listas "
+#~ "como necesario, utilizando un párrafo include_remote_sympa_list para cada "
+#~ "lista incluída. Cuidado, sin embargo, en no dar lugar a un bucle infinito "
+#~ "resultante de inclusiones cruzadas.  "
+
+#~ msgid ""
+#~ "For this operation, one Sympa site acts as a server while the other one "
+#~ "acs as client. On the server side, the only setting needed is to give "
+#~ "permission to the remote Sympa to review the list. This is controlled by "
+#~ "the review scenario."
+#~ msgstr ""
+#~ "Para esta operación, un sitio Sympa actúa como servidor mientras que el "
+#~ "otro actúa como cliente. Del lado del servidor, lo único que se necesita "
+#~ "configurar es el permiso al Sympa remoto de revisar la lista. Esto está "
+#~ "conotrolado por el escenario 'review'."
+
+#~ msgid ""
+#~ "This parameter will be interpreted only if the user_data_source value is "
+#~ "set to include, and is used to begin a paragraph defining the SQL query "
+#~ "parameters. "
+#~ msgstr ""
+#~ "Este parámetro será interpretado sólo si el valor de user_data_source es "
+#~ "<i>include</i>, y se lo usa para empezar un párrafo que define los "
+#~ "parámetros de la solicitud SQL. "
+
+#~ msgid ""
+#~ "This parameter defines the language used for the list. It is used to "
+#~ "initialize a user's language preference; Sympa command reports are "
+#~ "extracted from the associated message catalog."
+#~ msgstr ""
+#~ "Este parámetro define el idioma usado para la lista. Se usa para "
+#~ "inicializar la preferencia de idioma del usuario; los informes de "
+#~ "comandos de Sympa son extraidos del catálogo de mensajes asociado."
+
+#~ msgid "Maximum size of a message in 8-bit bytes."
+#~ msgstr "tamaño maximo de un mensaje en 8-bit bytes"
+
+#~ msgid ""
+#~ "Owners are managing subscribers of the list. They may review subscribers "
+#~ "and add or delete email addresses from the mailing list. If you are a "
+#~ "privileged owner of the list, you can choose other owners for the mailing "
+#~ "list. Privileged owners may edit a few more options than other owners. "
+#~ msgstr ""
+#~ "L@s dueñ@s administran los suscriptores de la lista. Pueden revisar los "
+#~ "suscriptores, agregar o borrar direcciones de la lista de correo. Si eres "
+#~ "dueño privilegiado de la lista, puedes agregar o suprimir otros dueños de "
+#~ "la lista. Los dueños privilegiados pueden edirar algunas otras opciones "
+#~ "que no pueden los otros dueños.   "
+
+#~ msgid ""
+#~ "The priority with which Sympa will process messages for this list. This "
+#~ "level of priority is applied while the message is going through the "
+#~ "spool. The z priority will freeze the message in the spool."
+#~ msgstr ""
+#~ "La priodidad con la que Sypa va a procesar los mensajes de esta lista.El "
+#~ "nivel de prioridad se aplica cuando el mensaje pasa por el <i>spool</i>. "
+#~ "La prioridad z dejará el mensaje congelado en el <i>spool</i>."
+
+#~ msgid ""
+#~ "This parameter specifies who is authorized to use the remind command."
+#~ msgstr ""
+#~ "Este parámetro especifica quien está autorizado a utilizar el comando "
+#~ "REMIND (recordatorio)."
+
+#~ msgid "Same as welcome_return_path, but applied to remind messages."
+#~ msgstr ""
+#~ "Igual que welcome_return_path, pero aplicado a los mensajes de "
+#~ "recordatorio."
+
+#~ msgid ""
+#~ "This parameter states which model is used to create a remind task. A "
+#~ "remind task regularly sends  subscribers a message which reminds them of "
+#~ "their list subscriptions."
+#~ msgstr ""
+#~ "Este parámetro especifica que modelo se usa para crear una tarea de "
+#~ "recordatorio. Una tarea de recordatorio manda regularmente a los "
+#~ "suscriptores un recordatorio acerca de sus suscripciones a listas. "
+
+#~ msgid ""
+#~ "The reply_to_header parameter starts a paragraph defining what Sympa will "
+#~ "place in the Reply-To: SMTP header field of the messages it distributes."
+#~ msgstr ""
+#~ "El parámetro reply_to_header da comienzo a un párrafo en el que se define "
+#~ "lo que Sympa pondrá en el campo de encabezamiento Reply-To: SMTP de los "
+#~ "mensajes que distribuye."
+
+#~ msgid ""
+#~ "This parameter indicates whether the Reply-To: field should indicate the "
+#~ "sender of the message (sender), the list itself (list), both list and "
+#~ "sender (all) or an arbitrary e-mail address (defined by the other_email "
+#~ "parameter)."
+#~ msgstr ""
+#~ "Este parámetro indica si el campo Reply-To: debe indicar el remitente del "
+#~ "mensaje (remitente), la propia lista (lista), ambos lista y remitente "
+#~ "(todos) o una dirección de correo arbitraria (definida por el parámetro "
+#~ "other_email)."
+
+#~ msgid ""
+#~ "Note: it is inadvisable to change this parameter, and particularly "
+#~ "inadvisable to set it to list. Experience has shown it to be almost "
+#~ "inevitable that users, mistakenly believing that they are replying only "
+#~ "to the sender, will send private messages to a list. This can lead, at "
+#~ "the very least, to embarrassment, and sometimes to more serious "
+#~ "consequences."
+#~ msgstr ""
+#~ "Nota: no es recomendable cambiar este parámetro, y aún menos recomendable "
+#~ "que sea la lista. La experiencia demuestra que es casi inevitable que los "
+#~ "usuarios, creyendo por error que le responden sólo al remitente, manden "
+#~ "un mensaje privado a la lista. Esto puede llevar, como mínimo a "
+#~ "malentendidos, y a veces puede llegar a tener serias consecuencias. "
+
+#~ msgid "an_email_address"
+#~ msgstr "an_email_address (dirección de correo)"
+
+#~ msgid ""
+#~ "If value was set to other_email, this parameter defines the e-mail "
+#~ "address used."
+#~ msgstr ""
+#~ "Si el valor es \"other_email\"; este parámetro define la direcci&on de "
+#~ "correo que se utiliza."
+
+#~ msgid ""
+#~ "The default is to respect (preserve) the existing Reply-To: SMTP header "
+#~ "field in incoming messages. If set to forced, Reply-To: SMTP header field "
+#~ "will be overwritten."
+#~ msgstr ""
+#~ "Por omisión se respeta (se conserva) el campo de encabezado SMTP Reply-"
+#~ "To: para los mensajes que llegan. Si se lo configura a "
+#~ "'forzado' (forced), el valor del encabezado SMTP Reply-To: será "
+#~ "remplazado. "
+
+#~ msgid ""
+#~ "This parameter specifies who can access the list of members. Since "
+#~ "subscriber addresses can be abused by spammers, it is strongly "
+#~ "recommended that you only authorize owners or subscribers to access the "
+#~ "subscriber list. "
+#~ msgstr ""
+#~ "Este parámetro especifica quien tiene acceso a la lista de miembors. Como "
+#~ "las direcciones de los suscriptores pueden ser utilizadas abusivamente "
+#~ "por spammers, se recomienda fuertemente sólo autorizar a los dueños o a "
+#~ "los suscriptores acceder a la lista de suscriptores.  "
+
+#~ msgid "This parameter specifies who can send messages to the list."
+#~ msgstr "Este parámetro especifica quien puede mandar mensajes a la lista. "
+
+#~ msgid ""
+#~ "This paragraph defines read and edit access to the shared document "
+#~ "repository."
+#~ msgstr ""
+#~ "Este párrafo define el acceso de lectura y edición al repositorio de "
+#~ "documentos compartidos."
+
+#~ msgid ""
+#~ "There is a need to protect Sympa web sites against spambots which collect "
+#~ "email addresses from public web sites. Various methods are available in "
+#~ "Sympa and you can choose to use them with the spam_protection and "
+#~ "web_archive_spam_protection parameters. Possible value are:"
+#~ msgstr ""
+#~ "Es necesario proteger los websites de Sympa contra los robots de spam que "
+#~ "recopilan direcciones de correo electrónico de websites públicos. Hay "
+#~ "varios métodos disponibles en Sympa y puedes elegir usarlos con los "
+#~ "parámetros spam_protection y web_archive_spam_protection. Los valores "
+#~ "posibles son:"
+
+#~ msgid ""
+#~ "the address is hidden using a javascript. A user who enables javascript "
+#~ "can see a nice mailto address where others have nothing."
+#~ msgstr ""
+#~ "se esconde la dirección utilizando un javascript. Un usuario que activa "
+#~ "javascript verá unabonita dirección mailto mientras que los demás no "
+#~ "verán nada."
+
+#~ msgid "the @ char is replaced by the string \" AT \"."
+#~ msgstr "se remplaza el carácter @ por la cadena \" AT \"."
+
+#~ msgid "no protection against spammer."
+#~ msgstr "sin protección contra spammers."
+
+#~ msgid ""
+#~ "This parameter indicates the subject of the list, which is sent in "
+#~ "response to the LISTS mail command. The subject is a free form text "
+#~ "limited to one line."
+#~ msgstr ""
+#~ "Este parámetro indica el tema de la lista, que es enviado en respuesta al "
+#~ "comando de correo LISTS. El tema es un campo de texto libre limitado a "
+#~ "una línea."
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr ""
+#~ "El parámetro de suscripción define las reglas para suscribirse a la lista."
+
+#~ msgid ""
+#~ "This parameter allows the classification of lists. You may define "
+#~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
+#~ "lists uses this parameter."
+#~ msgstr ""
+#~ "Este parámetro permite clasificar las listas. Puedes definir múltiples "
+#~ "temas y también jerárquicos. La lista WWSympa de listas publicas usa este "
+#~ "parámetro."
+
+#~ msgid ""
+#~ "Sympa caches user data extracted using the include parameter. Their TTL "
+#~ "(time-to-live) within Sympa can be controlled using this parameter. The "
+#~ "default value is 3600"
+#~ msgstr ""
+#~ "Sympa maneja una cache de los datos extrídos utilizando el parámetro "
+#~ "include. Su TTL (time-to-live) en Sympa puede ser controlado definiendo "
+#~ "este parámetro (en segundos). Su valor por omisión es de 3600."
+
+#~ msgid ""
+#~ "This parameter specifies the unsubscription method for the list. Use "
+#~ "open_notify or auth_notify to allow owner notification of each "
+#~ "unsubscribe command."
+#~ msgstr ""
+#~ "Este parámetro especifica el método para anular la suscripción a la "
+#~ "lista. Utiliza  open_notify o auth_notify para generar una notificación "
+#~ "al dueño de cada comando de anulación de suscripción. "
+
+#~ msgid ""
+#~ "Sympa allows the list owner to choose how Sympa loads list member data. "
+#~ "Subscriber information can be stored in a text file or relational "
+#~ "database, or included from various external sources (list, flat file, "
+#~ "result of or query)."
+#~ msgstr ""
+#~ "Sympa permite ak dueño de la lista elegir como Sympa carga los datos de "
+#~ "la lista de miembros. La información de suscriptores puede ser almacenada "
+#~ "en un fichero texto o en una base de datos relacional, o incluida de "
+#~ "diversas fuentes externas (lista, fichero plano, resultado de una "
+#~ "solicitud). "
+
+#~ msgid ""
+#~ "This parameter indicates whether the list should feature in the output "
+#~ "generated in response to a LISTS command or should be shown in the list "
+#~ "overview of the web-interface."
+#~ msgstr ""
+#~ "Este parámetro indica si la lista debe aparecer en la respuesta generada "
+#~ "a un comando LISTS y si debe ser mostrada el el listado de la interface "
+#~ "web. "
+
+#~ msgid "Defines who can access the web archive for the list."
+#~ msgstr "Define quien puede acceder a los archivos web de la lista"
+
+#~ msgid ""
+#~ "Idem spam_protection is provided but it can be used only for web "
+#~ "archives. Access requires a cookie, and users must submit a small form in "
+#~ "order to receive a cookie before browsing the archives. This blocks all "
+#~ "robot, even google and co."
+#~ msgstr ""
+#~ "Igual que spam_protection pero puede limitarse a los archivos web. El "
+#~ "acceso requiere un  \"cookie\", y los usuarios deben someter un pequeño "
+#~ "formulario para recibir este cookie antes de poder recorrer los archivos. "
+#~ "Esto blquea todos los robots, inclusive Google y cia."
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Si el valor es \"unique\", se envía el mensaje de bienvenida  utilizando "
+#~ "una dirección de respuesta única generada específicamente, de manera a "
+#~ "suprimir inmediatamente al suscriptor en caso de rebote."
+
+#~ msgid ""
+#~ "This paragraph defines a topic used to tag a message of a list, named by "
+#~ "msg_topic.name (\"other\" is a reserved word), its title is msg_topic."
+#~ "title. The msg_topic.keywords entry is optional and allows automatic "
+#~ "tagging. This should be a list of keywords, separated by ','."
+#~ msgstr ""
+#~ "Este párrafo define un tema usado para etiquetar un mensaje de la lista, "
+#~ "llamado msg_topic.name (\"other\" es una palabra reservada), su título es "
+#~ "msg_topic.title. El campo msg_topic.keywords es opcional y permite "
+#~ "etiquetado automático. Éste debería contener una lista de palabras clave, "
+#~ "separadas por ','."
+
+#~ msgid ""
+#~ "This parameter indicates which part of the message is used to perform "
+#~ "automatic tagging."
+#~ msgstr ""
+#~ "Este parámetro indica que parte del mensaje es usada para llevar a cabo "
+#~ "el etiquetado automático."
+
+#~ msgid ""
+#~ "This parameter indicates if the tagging is optional or required for a "
+#~ "list."
+#~ msgstr ""
+#~ "Este parámetro indica si el etiquetado es opcional o obligatorio para una "
+#~ "lista."
+
+#~ msgid "No Comment"
+#~ msgstr "Sin comentarios"
+
+#~ msgid ""
+#~ "This is a description of the receivie modes available in Sympa. These "
+#~ "options are mutually exclusive, which means that you can't set two "
+#~ "different receive modes at the same time. Only some of the modes might be "
+#~ "available to specific mailing lists."
+#~ msgstr ""
+#~ "Esta es una descipción de los modos de recepción disponibles en Sympa. "
+#~ "Estas opciones se excluyen mutuamente, lo que significa que no puedes "
+#~ "configurar dos modos de recepción simultaneamente. Puede que sólo algunos "
+#~ "de los modos de recepción estés disponibles para tal o tal lista. "
+
+#~ msgid "Digest"
+#~ msgstr "Resumen"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive batched messages in a Digest. This Digest compiles a group of "
+#~ "messages from the list, using\n"
+#~ "the multipart/digest MIME format."
+#~ msgstr ""
+#~ "en ves derecibir mensajes individuales de la lista, el receptro puede "
+#~ "recibir periodicamente  un lote de mensajes en un resumen. Este resumen "
+#~ "compila un grupo de mensajes de la lista, usando\n"
+#~ " el formato multipart/resumen  MIME.    "
+
+#~ msgid "The sending interval for these Digests is defined by the list owner."
+#~ msgstr ""
+#~ "La periodicidad de envío de estos resúmenes la define el dueño de la "
+#~ "lista."
+
+#~ msgid "DigestPlain"
+#~ msgstr "Resumen completp"
+
+#~ msgid ""
+#~ "Similar to the Digest option in that the subscriber will periodically \n"
+#~ "receive batched messages in a Digest. With DigestPlain the Digest is sent "
+#~ "in a plain text \n"
+#~ "format, with all attachments stripped out. DigestPlain is useful if your "
+#~ "email software doesn't\n"
+#~ "display multipart/digest format messages well."
+#~ msgstr ""
+#~ "Similar a la opción de resumen (Digest) en que el usuario recibirá "
+#~ "periódicamente\n"
+#~ " los mensajes recopilados en un resumen. Con DigestPlain se manda el "
+#~ "resumen en formato de texto pleno,\n"
+#~ " con todos los documentos adjuntos extraídos. DigestPlain es útil\n"
+#~ " si tu software de correo no permite ver correctamente los mensajes al "
+#~ "formato multipartes/digest."
+
+#~ msgid "Summary"
+#~ msgstr "Sumario"
+
+#~ msgid ""
+#~ "Instead of receiving individual mail messages from the list, the "
+#~ "subscriber will periodically \n"
+#~ "receive a list of messages. This mode is very close to the Digest "
+#~ "reception mode but the \n"
+#~ "subscriber receives only the list of messages."
+#~ msgstr ""
+#~ "En vez de recibir mensajes individuales de la lista, el subscriptor puede "
+#~ "recibir periódicamente la lista de mensajes. Este modo es mas cerrado a  "
+#~ "modo de recibir resumenes pero le permite al suscriptor recibir solo una "
+#~ "lista de los mensajes recibidos."
+
+#~ msgid "Nomail"
+#~ msgstr "Nomail"
+
+#~ msgid ""
+#~ "This mode is used when a subscriber no longer wishes to receive mail from "
+#~ "the list, but nevertheless wishes to retain the ability to post to the "
+#~ "list. This mode therefore prevents the subscriber from unsubscribing and "
+#~ "subscribing later on."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere seguir recibiendo correo "
+#~ "de la lista, pero sin embargo desea mantener la posibilidad de enviar "
+#~ "mensajes a la lista. Este modo por lo tanto evita al subscriptor tener "
+#~ "que cancelar la subscripción y darse de alta nuevamente más tarde."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in plain text format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor desea recibir los correos enviados "
+#~ "en los formatos HTML y texto plano\n"
+#~ "solo en formato de texto plano."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber wishes to receive mails sent in both "
+#~ "HTML and plain text formats\n"
+#~ "only in HTML format."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor desea recibir los correos enviados "
+#~ "en los formatos HTML y texto plano\n"
+#~ "solo en formato HTML."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive attached "
+#~ "files. The attached files are \n"
+#~ "replaced by a URL leading to the file stored on the list site."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir ficheros "
+#~ "adjuntos. Los ficheros adjuntos son\n"
+#~ "reemplazados por una URL que apunta al fichero compartido en la web de la "
+#~ "lista."
+
+#~ msgid ""
+#~ "This mode is used when a subscriber does not want to receive copies of "
+#~ "messages that he or she has sent to \n"
+#~ "the list."
+#~ msgstr ""
+#~ "Este modo se usa cuando un subscriptor no quiere recibir copias de los "
+#~ "mensajes que él/ella ha enviado a \n"
+#~ "la lista."
+
+#~ msgid ""
+#~ "This option is used mainly to cancel the nomail, summary or digest modes. "
+#~ "If the subscriber was \n"
+#~ "in nomail mode, he or she will again receive individual mail messages "
+#~ "from the list."
+#~ msgstr ""
+#~ "Esta opción se usa principalmente para cancelar los modos nomail, resumen "
+#~ "(summary) o resumen (digest). Si el/la subscriptor/a estaba en modo "
+#~ "nomail, él/ella volverá a recibir correos individuales de la lista."
 
 #~ msgid ""
 #~ "\n"

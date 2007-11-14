@@ -284,6 +284,7 @@ sub parse_tt2 {
 	    unescape => \&CGI::Util::unescape,
 	    l => [\&tt2::maketext, 1],
 	    loc => [\&tt2::maketext, 1],
+	    helploc => [\&tt2::maketext, 1],
 	    locdt => [\&tt2::locdatetime, 1],
 	    qencode => [\&qencode, 0],
  	    escape_xml => [\&escape_xml, 0],
