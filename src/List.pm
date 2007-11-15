@@ -11232,10 +11232,10 @@ sub new {
     my($pkg, $name) = @_;
 
     my $robot = {'name' => $name};
-    &do_log('debug2', '');
+    &Log::do_log('debug2', '');
     
     unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-	&do_log('err',"Unknown robot '$name'");
+	&Log::do_log('err',"Unknown robot '$name'");
 	return undef;
     }
 
@@ -11245,7 +11245,7 @@ sub new {
     }else {
 	$robot->{'home'} = $Conf{'home'}.'/'.$name;
 	unless (-d $robot->{'home'}) {
-	    &do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
+	    &Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
 	    return undef;
 	}
     }
