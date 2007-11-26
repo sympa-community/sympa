@@ -48,7 +48,7 @@ my @valid_options = qw(
 		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
-		       global_remind home host domain lang listmaster listmaster_email localedir log_socket_type log_level 
+		       global_remind home host ignore_x_no_archive_header_feature domain lang listmaster listmaster_email localedir log_socket_type log_level 
 		       logo_html_definition misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile pidfile_distribute pidfile_creation
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
@@ -60,7 +60,7 @@ my @valid_options = qw(
 		       default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority return_path_suffix rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority supported_lang syslog log_smtp umask verp_rate welcome_return_path wwsympa_url
-                       openssl capath cafile  key_passwd ssl_cert_dir remove_headers
+                       openssl capath cafile  key_passwd ssl_cert_dir remove_headers remove_outgoing_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       color_0 color_1 color_2 color_3 color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11 color_12 color_13 color_14 color_15
@@ -172,6 +172,7 @@ my %Default_Conf =
      'loop_prevention_regex' => 'mailer-daemon|sympa|listserv|majordomo|smartlist|mailman',
      'rfc2369_header_fields' => 'help,subscribe,unsubscribe,post,owner,archive',
      'remove_headers' => 'X-Sympa-To,X-Family-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
+     'remove_outgoing_headers' => 'none',
      'antivirus_path' => '',
      'antivirus_args' => '',
      'antivirus_notify' => 'sender',
@@ -249,7 +250,8 @@ my %Default_Conf =
      'static_content_path' => '--DIR--/static_content',
      'filesystem_encoding' => 'utf-8',
      'cache_list_config' => 'none', ## none | binary_file
-     'lock_method' => 'flock' ## flock | nfs
+     'lock_method' => 'flock', ## flock | nfs
+     'ignore_x_no_archive_header_feature' => 'off'
      );
    
 
@@ -447,26 +449,19 @@ sub load {
 	return undef;
     }
 
-    if ($Conf{'rfc2369_header_fields'} eq 'none') {
-	delete $Conf{'rfc2369_header_fields'};
-    }else {
-	$Conf{'rfc2369_header_fields'} = [split(/,/, $Conf{'rfc2369_header_fields'})];
+    ## Parameters made of comma-separated list
+    foreach my $parameter ('rfc2369_header_fields','anonymous_header_fields','remove_headers','remove_outgoing_headers') {
+	if ($Conf{$parameter} eq 'none') {
+	    delete $Conf{$parameter};
+	}else {
+	    $Conf{$parameter} = [split(/,/, $Conf{$parameter})];
+	}
     }
+
     foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
 	$Conf{'blacklist'}{$action} = 1;
     }
 
-    if ($Conf{'anonymous_header_fields'} eq 'none') {
-	delete $Conf{'anonymous_header_fields'};
-    }else {
-	$Conf{'anonymous_header_fields'} = [split(/,/, $Conf{'anonymous_header_fields'})];
-    }
-
-    if ($Conf{'remove_headers'} eq 'none') {
-	delete $Conf{'remove_headers'};
-    }else {
-	$Conf{'remove_headers'} = [split(/,/, $Conf{'remove_headers'})];
-    }
     $Conf{'listmaster'} =~ s/\s//g ;
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
 

@@ -15,8 +15,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
+# You should have received a copy of the GNU General Public License# along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package List;
@@ -1149,6 +1148,20 @@ my %alias = ('reply-to' => 'reply_to',
 			      'default' => {'conf' => 'default_remind_task'},
 			      'group' => 'other'
 			      },
+	    'remove_headers' => {'format' => '\S+',
+				 'gettext_id' => 'Incoming SMTP headers fields to be removed',
+				 'default' => {'conf' => 'remove_headers'},
+				 'group' => 'sending',
+				 'occurrence' => '0-n',
+				 'split_char' => ',',
+				 },
+	    'remove_outgoing_headers' => {'format' => '\S+',
+					  'gettext_id' => 'Outgoing SMTP headers fields to be removed',
+					  'default' => {'conf' => 'remove_outgoing_headers'},
+					  'group' => 'sending',
+					  'occurrence' => '0-n',
+					  'split_char' => ',',
+					  },
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
 			   'gettext_id' => "Reply address",
@@ -2492,8 +2505,8 @@ sub distribute_msg {
     }
     
     ## Remove unwanted headers if present.
-    if ($Conf{'remove_headers'}) {
-        foreach my $field (@{$Conf{'remove_headers'}}) {
+    if ($self->{'admin'}{'remove_headers'}) {
+        foreach my $field (@{$self->{'admin'}{'remove_headers'}}) {
             $hdr->delete($field);
         }
     }
@@ -2562,6 +2575,14 @@ sub distribute_msg {
 	    }
 	}
     }
+
+    ## Remove outgoing header fileds
+    ## Useful to remove some header fields that Sympa has set
+    if ($self->{'admin'}{'remove_outgoing_headers'}) {
+        foreach my $field (@{$self->{'admin'}{'remove_outgoing_headers'}}) {
+            $hdr->delete($field);
+        }
+    }   
     
     ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
     if (($self->is_digest()) and ($message->{'smime_crypted'} ne 'smime_crypted')) {
