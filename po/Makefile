@@ -1,7 +1,7 @@
 
 
-LINGUAS = af ar br bg ca cs de el en_US es et eu fi fr hu id it ja ko nb_NO nl oc pl pt pt_BR ro ru sv tr vi zh_CN
-SYMPA_LOCALES = af_ZA ar_SY br_FR bg_BG ca_ES cs_CZ de_DE el_GR en_US es_ES et_EE eu_ES fi_FI fr_FR hu_HU id_ID it_IT ja_JP ko_KR nb_NO nl_NL oc_FR pl_PL pt_BR pt_PT ro_RO ru_RU sv_SE tr_TR vi_VN zh_CN
+LINGUAS = af ar br bg ca cs de el en_US es et eu fi fr hu id it ja ko ml nb_NO nl oc pl pt pt_BR ro ru sv tr vi zh_CN
+SYMPA_LOCALES = af_ZA ar_SY br_FR bg_BG ca_ES cs_CZ de_DE el_GR en_US es_ES et_EE eu_ES fi_FI fr_FR hu_HU id_ID it_IT ja_JP ko_KR ml_IN nb_NO nl_NL oc_FR pl_PL pt_BR pt_PT ro_RO ru_RU sv_SE tr_TR vi_VN zh_CN
 MOBASICFILES = $(addsuffix .mo, $(LINGUAS))
 MOHELPFILES = $(addprefix web_help_, $(MOBASICFILES))
 MOFILES = $(MOBASICFILES) $(MOHELPFILES)
