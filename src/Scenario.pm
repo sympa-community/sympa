@@ -496,7 +496,7 @@ sub request_action {
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;
-    &do_log('debug2e', '(%s)', $condition);
+    &do_log('debug2', '(%s)', $condition);
 
     my $robot = $context->{'robot_domain'};
 
@@ -566,8 +566,13 @@ sub verify {
 				)\s*,?//x) {
 	my $value=$1;
 
+	## Custom vars
+	if ($value =~ /\[custom_vars\-\>([\w\-]+)\]/i) {
+	    $value =~ s/\[custom_vars\-\>([\w\-]+)\]/$context->{'custom_vars'}{$1}/;
+	}
+	
 	## Config param
-	if ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
+	elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
 	    if (my $conf_value = &Conf::get_robot_conf($robot, $1)) {
 		
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
