@@ -306,6 +306,13 @@ sub request_action {
 	    return $return;
 	}
 
+	## Prepares custom_vars in $context
+	if (defined $list->{'admin'}{'custom_vars'}) {
+	    foreach my $var (@{$list->{'admin'}{'custom_vars'}}) {
+		$context->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
+	    }
+	}
+	
 	## Create Scenario object
 	$scenario = new Scenario ('robot' => $robot, 
 				  'directory' => $list->{'dir'},
@@ -323,7 +330,7 @@ sub request_action {
 		return $return;
 	    }
 	}
-
+	
 	### the following lines are used by the document sharing action 
 	if (defined $context->{'scenario'}) { 
 	    

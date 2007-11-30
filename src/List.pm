@@ -2,7 +2,7 @@
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
-# Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
+# Copyrigh (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
 # Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel
 #
 # This program is free software; you can redistribute it and/or modify
@@ -137,7 +137,7 @@ Returns a hash to the first user on the list.
 
 =item get_first_admin_user ( ROLE )
 
-Returns a hash to the first admin user with predifined role on the list.
+Returns a hash to the first admin user with predefined role on the list.
 
 =item get_next_user ()
 
@@ -507,6 +507,22 @@ my %alias = ('reply-to' => 'reply_to',
 				 'gettext_id' => "Subject tagging",
 				 'group' => 'sending'
 				 },
+	    'custom_vars' => {'format' => {'name' => {'format' => '\S+',
+						      'occurrence' => '1',
+						      'gettext_id' => 'var name',
+						      'order' => 1
+						      },
+					   'value' => {'format' => '\S+',
+						       'occurrence' => '1',
+						       'gettext_id' => 'var value',
+						       'order' => 2
+						       }
+				       },
+			      'gettext_id' => "custom parameters",
+			      'occurrence' => '0-n',
+			      'group' => 'other'
+			      },			      
+
         'default_user_options' => {'format' => {'reception' => {'format' => ['digest','digestplain','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
 								    'gettext_id' => "reception mode",
@@ -2510,7 +2526,7 @@ sub distribute_msg {
             $hdr->delete($field);
         }
     }
-    
+
     ## Archives
     my $msgtostore = $message->{'msg'};
     if (($message->{'smime_crypted'} eq 'smime_crypted') &&
@@ -2952,6 +2968,13 @@ sub send_file {
     ## Lang
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
+    ## Trying to use custom_vars
+    if (defined $self->{'admin'}{'custom_vars'}) {
+	foreach my $var (@{$self->{'admin'}{'custom_vars'}}) {
+ 	    $data->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
+	}
+    }
+    
     ## What file   
     my $lang = &Language::Lang2Locale($data->{'lang'});
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$self);
@@ -9906,7 +9929,7 @@ sub _load_admin_file {
     local $/ = "\n";
 
     ## Set defaults to 1
-    foreach my $pname (keys %::pinfo) {       
+    foreach my $pname (keys %::pinfo) {
 	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
     }
 
