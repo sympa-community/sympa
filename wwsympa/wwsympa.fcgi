@@ -12943,11 +12943,10 @@ sub creation_picture_file {
     unless(-d $root_dir.'/'.$path) {
  	&wwslog('notice',"creation_picture_file : Create dir $root_dir/$path/");
  	
- 	unless (mkdir($root_dir.'/'.$path, 0755)){
+ 	unless (&tools::mkdir_all($root_dir.'/'.$path, 0755)){
  	    &wwslog('err',"creation_picture_file : Unable to create dir $root_dir/$path/");
  	    return undef;
  	}
-	chmod 0755, $root_dir.'/'.$path;
 
 	unless (open(FF,">$root_dir".'/'.$path.'/index.html')){
 	    &wwslog('err',"creation_picture_file : Unable to create dir $root_dir/$path/index.html"); 
