@@ -1815,7 +1815,7 @@ Use it to create a List object and initialize output parameters.
 	    $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
 	    $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	    $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
-	    $param->{'pictures_url'} = &make_pictures_url($param->{'user'}{'email'});
+	    $param->{'pictures_url'} = &tools::make_pictures_url('email' => $param->{'user'}{'email'}, 'list' => $list);
 
 	    ## Checks if the user can post in this list.
 	    my $result = $list->check_list_authz('send',$param->{'auth_method'},
@@ -6779,23 +6779,20 @@ sub do_viewmod {
      if ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
 
 	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
-	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
-	     open (FILE, "<", $arc_file_path);
-	     while (<FILE>) {
-		 if (/<!--X-Subject: (.+) -->/) {
-		     $param->{'subtitle'} = $1;
-		     last;
-		 }
-	     }
-	     close FILE;
+	     ## If the file is a message, load the metadata to find out who is the author of the message
+	     my $metadata = &Archive::load_html_message('file_path' => $arc_file_path);
+	     $param->{'include_picture'} = &tools::make_pictures_url('email' => $metadata->{'X-From'}, 'list' => $list);
+	     
+	     $param->{'subtitle'} = $metadata->{'X-Subject'};
 	 }
-	 
+
 	 ## Provide a filehandle to the TT2 parser (instead of a filename previously)
 	 ## It allows to set the appropriate utf8 binmode on the FH
 	 open $param->{'file_handle'}, "<", $arc_file_path;
-
+	 
 	 &tt2::add_include_path($arc_month_path);
      }else {
+
 	 if ($in{'arc_file'} =~ /\.(\w+)$/) {
 	     $param->{'file_extension'} = $1;
 	 }
@@ -8054,7 +8051,7 @@ Sends back the list creation edition form.
      $param->{'current_subscriber'}{'escaped_bounce_address'} = &tools::escape_html($param->{'current_subscriber'}{'bounce_address'});
      $param->{'current_subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($subscriber->{'date'});
      $param->{'current_subscriber'}{'update_date'} = gettext_strftime "%d %b %Y", localtime($subscriber->{'update_date'});
-     $param->{'current_subscriber'}{'pictures_url'} = &make_pictures_url($subscriber->{'email'});
+     $param->{'current_subscriber'}{'pictures_url'} = &tools::make_pictures_url('email' => $subscriber->{'email'}, 'list' => $list);
 
      ## Prefs
      $param->{'current_subscriber'}{'reception'} ||= 'mail';
@@ -14670,27 +14667,6 @@ sub d_test_existing_and_rights {
      return 1;
  }
 
-#*******************************************
-# Function : pictures_filename
-# Description : return the type of a pictures
-#               according to the user
-#*******************************************
-
-sub pictures_filename {
-    my ($login) = shift;
-    $login = &tools::md5_fingerprint($login);
-    
-    my $filetype;
-    my $filename = undef;
-    foreach my $ext ('.gif','.jpg','.jpeg','.png') {
- 	if(-f &Conf::get_robot_conf($robot,'pictures_path').'/'.$in{'list'}.'@'.$robot.'/'.$login.$ext) {
- 	    my $file = $login.$ext;
- 	    $filename = $file;
- 	    last;
- 	}
-    }
-    return $filename;
-}
 
 #*******************************************
 # Function : do_upload_pictures
@@ -14801,15 +14777,15 @@ sub do_delete_pictures {
     }
     
     #deleted file must exist 
-    unless(&pictures_filename($email)) {
+    unless(&tools::pictures_filename('email' => $email, 'list' => $list)) {
  	&report::reject_report_web('user','no_name',{},$param->{'action'},$list);
  	&wwslog('err',"do_delete_pictures : No file exists to delete");
  	return 'suboptions';
     }
     
     unless($list->delete_user_picture($email)) { 
- 	&report::reject_report_web('intern','erase_file',{'file' => &pictures_filename($email)},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
- 	&wwslog('err',"do_delete_pictures : Failed to erase ".&pictures_filename($email));
+ 	&report::reject_report_web('intern','erase_file',{'file' => &tools::pictures_filename('email' => $email, 'list' => $list)},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+ 	&wwslog('err',"do_delete_pictures : Failed to erase ".&tools::pictures_filename('email' => $email, 'list' => $list));
  	return undef;  
     }
     else {
@@ -14818,20 +14794,6 @@ sub do_delete_pictures {
     }
 }
 
-
-## Creation of pictures url
-sub make_pictures_url {
-    my $email = shift;
-    
-    my $url;
-    if(&pictures_filename($email)) {
- 	$url =  &Conf::get_robot_conf($robot, 'pictures_url').$in{'list'}.'@'.$robot.'/'.&pictures_filename($email);
-    }
-    else {
- 	$url = undef;
-    }
-    return $url;
-}
 
 
 ####################################################
@@ -16388,7 +16350,7 @@ sub _prepare_subscriber {
     
     $user->{'email'} =~ /\@(.+)$/;
     $user->{'domain'} = $1;
-    $user->{'pictures_url'} = &make_pictures_url($user->{'email'});
+    $user->{'pictures_url'} = &tools::make_pictures_url('email' => $user->{'email'}, 'list' => $list);
 
     ## Escape some weird chars
     $user->{'escaped_email'} = &tools::escape_chars($user->{'email'});

@@ -254,6 +254,39 @@ sub last_path {
     return undef;
 
 }
+
+## Load an archived message, returns the mhonarc metadata
+## IN : file_path
+sub load_html_message {
+    my %parameters = @_;
+
+    &do_log ('info',$parameters{'file_path'});
+    my %metadata;
+
+    unless (open ARC, $parameters{'file_path'}) {
+	&do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
+	return undef;
+    }
+
+    while (<ARC>) {
+	last if /^\s*$/; ## Metadata end with an emtpy line
+
+	if (/^<!--(\S+): (.*) -->$/) {
+	    my ($key, $value) = ($1, $2);
+	    if ($key eq 'X-From-R13') {
+		$metadata{'X-From'} = $value;
+		$metadata{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/; ## Mhonarc protection of email addresses
+		$metadata{'X-From'} =~ s/^.*<(.*)>/$1/g; ## Remove the gecos
+	    }
+	    $metadata{$key} = $value;
+	}
+    }
+
+    close ARC;
+    
+    return \%metadata;
+}
+
 1;
 
 

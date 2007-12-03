@@ -411,6 +411,7 @@ MSGPGEND
      $PREVBUTTON$ ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$) $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$TPREVBUTTON$  ($tag$%|loc%$tag$)Thread($tag$%END%$tag$) $TNEXTBUTTON$
    </ul>
 </div>
+<div>
 
 <!-- end header -->
 
@@ -440,6 +441,13 @@ $POWERED_BY$
 </MSGPGSSMARKUP>
 
 <SUBJECTHEADER>
+($tag$% IF user.email && include_picture %$tag$)
+<div id="pictures_block" style="float: left; padding: 0em; margin: 0em;">
+<div id="large">
+<img src="($tag$% include_picture %$tag$)" alt="($tag$%|loc%$tag$)picture($tag$%END%$tag$)" />
+</div>
+</div>
+($tag$% END %$tag$)
 ($tag$% IF user.email && action == 'arc' %$tag$)
 <span class="search_form">
 <form action="($tag$% path_cgi %$tag$)" method="post">
@@ -465,6 +473,8 @@ $POWERED_BY$
 ($tag$% END %$tag$)
 
 <div class="block">
+
+
 </SUBJECTHEADER>
 
 <!-- Message itself -->
