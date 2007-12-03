@@ -1635,6 +1635,13 @@ sub send_html {
 	$param->{'list_conf'} = $list->{'admin'};
     }
     
+    ## Trying to use custom_vars
+    if (defined $list->{'admin'}{'custom_vars'}) {
+	foreach my $var (@{$list->{'admin'}{'custom_vars'}}) {
+ 	    $param->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
+	}
+    }
+    
     my $lang = &Language::Lang2Locale($param->{'lang'});
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
     
