@@ -1,4 +1,162 @@
 ------------------------------------------------------------------------
+r4711 | david.verdin | 2007-12-03 16:57:21 +0100 (Mon, 03 Dec 2007) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/css.tt2
+
+Fix: lists were indented too much in admin menu.
+
+------------------------------------------------------------------------
+r4710 | david.verdin | 2007-12-03 14:25:47 +0100 (Mon, 03 Dec 2007) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+End of custom_vars reintroduction: now taken into account in the web templates.
+
+------------------------------------------------------------------------
+r4709 | olivier.salaun | 2007-12-03 12:20:43 +0100 (Mon, 03 Dec 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Archive.pm
+   M /trunk/src/etc/mhonarc-ressources.tt2
+   M /trunk/src/tools.pl
+   M /trunk/web_tt2/picture_upload.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+New feature: user pictures are now showed (if available) in the web archives. Pictures are showed to authenticated users only, to prevent web harvesters to get them.
+
+------------------------------------------------------------------------
+r4708 | david.verdin | 2007-11-30 17:25:34 +0100 (Fri, 30 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Scenario.pm
+
+Fix: Custom vars were not used in scenario...
+
+------------------------------------------------------------------------
+r4707 | david.verdin | 2007-11-30 15:33:05 +0100 (Fri, 30 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/src/Scenario.pm
+
+Feature: custom_vars. Users can define custom parameters in lists and use them in scenarios and mail templates.
+
+------------------------------------------------------------------------
+r4706 | olivier.salaun | 2007-11-30 14:15:48 +0100 (Fri, 30 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Fix: sympa was not able to create missing picture directory in a recursive way
+
+------------------------------------------------------------------------
+r4705 | olivier.salaun | 2007-11-30 14:14:21 +0100 (Fri, 30 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+
+Change default value for pictures_feature to 'on'
+
+------------------------------------------------------------------------
+r4704 | david.verdin | 2007-11-29 17:08:25 +0100 (Thu, 29 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/po
+
+Starting to ignore mo files in version control.
+
+------------------------------------------------------------------------
+r4703 | david.verdin | 2007-11-29 17:06:21 +0100 (Thu, 29 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+   M /trunk/src/Language.pm
+
+Finishing to add Malayalam to version control.
+
+------------------------------------------------------------------------
+r4702 | david.verdin | 2007-11-29 16:42:46 +0100 (Thu, 29 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/po/ca.po
+   M /trunk/po/es.po
+   M /trunk/po/id.po
+   M /trunk/po/ko.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/web_help_ca.po
+   M /trunk/po/web_help_id.po
+   M /trunk/po/web_help_ko.po
+
+Updating with newest translations.
+
+------------------------------------------------------------------------
+r4701 | david.verdin | 2007-11-29 16:42:18 +0100 (Thu, 29 Nov 2007) | 2 lines
+Changed paths:
+   A /trunk/po/ml.po
+   A /trunk/po/web_help_ml.po
+
+Adding Malayalam to version control.
+
+------------------------------------------------------------------------
+r4700 | david.verdin | 2007-11-28 18:09:05 +0100 (Wed, 28 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+   A /trunk/po/ca.po
+   A /trunk/po/id.po
+   A /trunk/po/ko.po
+   M /trunk/po/nb_NO.po
+   A /trunk/po/web_help_ca.po
+   M /trunk/po/web_help_de.po
+   M /trunk/po/web_help_es.po
+   M /trunk/po/web_help_fr.po
+   A /trunk/po/web_help_id.po
+   A /trunk/po/web_help_ko.po
+   M /trunk/src/Language.pm
+   M /trunk/web_tt2/help_listconfig.tt2
+
+Adding Catalan, Indonesian and Korean to Sympa (also some updates for web help in Spanish and German).
+
+------------------------------------------------------------------------
+r4698 | david.verdin | 2007-11-27 11:11:46 +0100 (Tue, 27 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/web_help_cs.po
+   M /trunk/po/web_help_fr.po
+   M /trunk/po/zh_CN.po
+
+Preparing version 5.4a.7
+
+------------------------------------------------------------------------
+r4697 | david.verdin | 2007-11-27 10:58:00 +0100 (Tue, 27 Nov 2007) | 2 lines
+Changed paths:
+   M /trunk/po/web_help_fr.po
+
+Updating translations.
+
+------------------------------------------------------------------------
 r4694 | olivier.salaun | 2007-11-26 09:42:51 +0100 (Mon, 26 Nov 2007) | 10 lines
 Changed paths:
    M /trunk/src/Archive.pm
