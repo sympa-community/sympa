@@ -115,8 +115,6 @@ sub pictures_filename {
 sub make_pictures_url {
     my %parameters = @_;
 
-    &do_log('notice', "$parameters{'email'},$parameters{'list'}{'name'}");
-
     my ($listname, $robot) = ($parameters{'list'}{'name'}, $parameters{'list'}{'domain'});
 
     my $url;
