@@ -620,7 +620,14 @@ sub verify {
 	    if (defined ($context->{'msg'})) {
 		my $header = $context->{'msg'}->head;
 		my @fields = $header->get($field_name);
-
+		## Defaulting empty or missing fields to '', so that we can test
+		## their value in Scenario, considering that, for an incoming message,
+		## a missing field is equivalent to an empty field : the information it
+		## is supposed to contain isn't available.
+		unless (@fields) {
+		    @fields = ('');
+		}
+		
 		$value = \@fields;
 	    }else {
 		return -1 * $negation;
