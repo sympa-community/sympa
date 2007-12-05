@@ -21,21 +21,26 @@
 
 cgi_SUBST	=	sympa_soap_server.fcgi 
 
+cgi_SRC		= 	sympa_soap_server-wrapper.fcgi
+
 script_SUBST	=	sympa_soap_client.pl
 
 lib_SUBST	=	sympasoap.pm SympaTransport.pm
 
 SRC		=	sympa.wsdl
 
-default: none
+all:	sympa_soap_server-wrapper.fcgi
 
 clean: 
 	rm -rf $(DESTDIR)$(SBINDIR)
+	@if [ -f ./sympa_soap_server-wrapper.fcgi ]; then \
+		rm -f sympa_soap_server-wrapper.fcgi ; \
+	fi
 
 install: 
 	echo "Please use the main Makefile for installing soapSympa."
 
-newinstall: makedir $(cgi_SUBST) $(lib_SUBST) substcgi substlib substscript installsrc installmod
+newinstall: makedir $(cgi_SUBST) $(lib_SUBST) substcgi substlib substscript installsrc installwrapper installmod
 
 installmod:
 	@for i in $(SRC) ; do \
@@ -51,9 +56,13 @@ installmod:
 	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
 	done
-	@echo "Setting SetUID bit on sympa_soap_server.fcgi..."
-	chmod u+s $(DESTDIR)$(CGIDIR)/sympa_soap_server.fcgi
-	chmod g+s $(DESTDIR)$(CGIDIR)/sympa_soap_server.fcgi
+	@for i in $(cgi_SRC) ; do \
+	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
+	done
+	@echo "Setting SetUID bit on sympa_soap_server-wrapper.fcgi..."
+	chmod u+s $(DESTDIR)$(CGIDIR)/sympa_soap_server-wrapper.fcgi
+	chmod g+s $(DESTDIR)$(CGIDIR)/sympa_soap_server-wrapper.fcgi
 	@for i in $(lib_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(LIBDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(LIBDIR)/$$i; \
@@ -86,6 +95,10 @@ installsrc:
 	@echo
 	@echo "Installing sources..."
 	cp $(SRC) $(DESTDIR)$(ETCBINDIR)
+
+installwrapper:
+	@echo "Installing sympa_soap_server-wrapper binary..."
+	cp sympa_soap_server-wrapper.fcgi $(DESTDIR)$(CGIDIR)/
 
 substlib:
 	@echo "Doing multiple substitutions while installing librairies..."
@@ -144,3 +157,5 @@ substcgi:
 		$(PERL) ../subst.pl $(cgi_SUBST) \
 	)
 
+sympa_soap_server-wrapper.fcgi: sympa_soap_server-wrapper.fcgi.c Makefile ../Makefile
+	$(CC) $(CFLAGS) -DSYMPASOAP=\"$(SYMPASOAP)\" -o sympa_soap_server-wrapper.fcgi sympa_soap_server-wrapper.fcgi.c
