@@ -160,7 +160,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	warning checkperl checkcpan sources man locale
+all:	warning checkperl checkcpan sources wrapper man locale
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -227,6 +227,11 @@ sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	NEWALIASES='${NEWALIASES}' NEWALIASES_ARG='${NEWALIASES_ARG}' \
 	POSTMAP='${POSTMAP}' POSTMAP_ARG='${POSTMAP_ARG}' \
 	PIDPRE='${PIDPRE}' PIDPOST='${PIDPOST}' LOCKDIR='${LOCKDIR}');
+
+wrapper: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
+	@echo "Making wwsympa"
+	@(cd wwsympa && echo "making in wwsympa..." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' WWSYMPA='${CGIDIR}/wwsympa.fcgi');
 
 documentation: doc/sympa.tex.tpl doc/Makefile 
 	@echo "Making documentation"

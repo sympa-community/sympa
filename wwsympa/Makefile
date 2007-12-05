@@ -23,19 +23,25 @@ sbin_SUBST	=	bounced.pl archived.pl
 
 cgi_SUBST	=	wwsympa.fcgi wwsympa_sudo_wrapper.pl
 
+cgi_SRC		=	wwsympa-wrapper.fcgi
+
 lib_SUBST	=	wwslib.pm cookielib.pm bounce-lib.pl Marc.pm Auth.pm SharedDocument.pm SympaSession.pm
 
 SRC		=	mime.types 
 
-default: none
+all:	wwsympa-wrapper.fcgi
 
 clean: 
 	rm -rf $(DESTDIR)$(SBINDIR)
+	@if [ -f ./wwsympa-wrapper.fcgi ]; then \
+		rm -f wwsympa-wrapper.fcgi ; \
+	fi
+
 
 install: 
 	echo "Please use the main Makefile for installing WWSympa."
 
-newinstall: makedir $(sbin_SUBST) $(cgi_SUBST) $(lib_SUBST) substcgi substsbin substlib installicons installsrc installmod
+newinstall: makedir $(sbin_SUBST) $(cgi_SUBST) $(cgi_SRC) $(lib_SUBST) substcgi substsbin substlib installicons installsrc installwrapper installmod
 
 installmod:
 	@for i in $(SRC) ; do \
@@ -50,10 +56,14 @@ installmod:
 	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
 	done
+	@for i in $(cgi_SRC) ; do \
+	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
+	done
 	@if [ "$(enable_secure)" != "yes" ]; then \
-		echo "Setting SetUID bit on wwsympa.fcgi..."; \
-		chmod u+s $(DESTDIR)$(CGIDIR)/wwsympa.fcgi; \
-		chmod g+s $(DESTDIR)$(CGIDIR)/wwsympa.fcgi; \
+		echo "Setting SetUID bit on wwsympa-wrapper.fcgi..."; \
+		chmod u+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
+		chmod g+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
 	fi
 	chmod 755 $(DESTDIR)$(LIBDIR)/Marc
 	@for i in $(lib_SUBST) Marc/Search.pm; do \
@@ -94,6 +104,10 @@ installicons:
 	@echo "Installing icons..."
 	@echo $(DIR)/static_content/icons
 	cp icons/*.png $(DIR)/static_content/icons
+
+installwrapper:
+	@echo "Installing wwsympa-wrapper binary..."
+	cp wwsympa-wrapper.fcgi $(DESTDIR)$(CGIDIR)/
 
 substlib:
 	@echo "Doing multiple substitutions while installing librairies..."
@@ -156,3 +170,5 @@ substcgi:
 		$(PERL) ../subst.pl $(cgi_SUBST) \
 	)
 
+wwsympa-wrapper.fcgi: wwsympa-wrapper.fcgi.c Makefile ../Makefile
+	$(CC) $(CFLAGS) -DWWSYMPA=\"$(WWSYMPA)\" -o wwsympa-wrapper.fcgi wwsympa-wrapper.fcgi.c
