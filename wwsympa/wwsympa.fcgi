@@ -671,8 +671,9 @@ my $birthday = time ;
 
      ## Check effective ID
      unless ($> eq (getpwnam('--USER--'))[2]) {
+	 $maintenance_mode = 1;
 	 &report::reject_report_web('intern_quiet','incorrect_server_config',{},'','');
-	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
+	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s). *** Switching to maintenance mode. ***', (getpwnam('--USER--'))[2], $>);
      }
 
      unless (&List::check_db_connect()) {
@@ -681,7 +682,7 @@ my $birthday = time ;
      }
 
      ## If in maintenance mode, check if the data structure is now uptodate
-     if ($maintenance_mode && &Upgrade::data_structure_uptodate()) {
+     if ($maintenance_mode && (&Upgrade::data_structure_uptodate() && ($> eq (getpwnam('--USER--'))[2]))) {
 	 $maintenance_mode = undef;
 	 &do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
      }
