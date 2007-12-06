@@ -400,7 +400,7 @@ sub get_first_db_log {
 	$statement .= sprintf "AND list_logs = '%s' ",$select->{'list'};
     }
     
-    $statement .= sprintf "GROUP BY date_logs "; 
+    $statement .= sprintf "ORDER BY date_logs "; 
 
     push @sth_stack, $sth;
     unless ($sth = $dbh->prepare($statement)) {
