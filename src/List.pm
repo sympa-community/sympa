@@ -3900,7 +3900,7 @@ sub send_notify_to_owner {
     &do_log('debug2', 'List::send_notify_to_owner(%s, %s)', $self->{'name'}, $operation);
 
     my $host = $self->{'admin'}{'host'};
-    my @to = $self->get_owners_email;
+    my @to = $self->get_owners_email();
     my $robot = $self->{'domain'};
 
     unless (@to) {
