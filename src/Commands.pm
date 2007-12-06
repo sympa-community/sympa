@@ -1372,6 +1372,8 @@ sub invite {
     if ($action =~ /do_it/i) {
 	if ($list->is_user($email)) {
 	    &report::reject_report_cmd('user','already_subscriber',{'email'=> $email, 'listname' => $which},$cmd_line); 
+	    &do_log('notice',"INVITE command rejected ; user '%s' already member of list '%'"), $email, $which;
+	    return undef;
 	}else{
             ## Is the guest user allowed to subscribe in this list ?
 
