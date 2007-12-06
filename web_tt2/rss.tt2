@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <channel>
-  <title>[% title_clear_txt %] :
+  <title>[% FILTER escape_xml %][% title_clear_txt %][%END%] :
 [%- IF errors %] [%|loc%]Server error[%END%] [% END -%]
 [%- IF action == 'latest_lists' -%][%|loc%] new lists [%END%]
 [%- ELSIF action == 'active_lists' -%][%|loc%] active lists [%END%]
