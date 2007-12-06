@@ -5378,7 +5378,17 @@ sub do_skinsedit {
 		      'error_type' => 'no_user'});
 	 return 'loginrequest';
      }
-
+     
+     ## If a list is not 'open' and allow_subscribe_if_pending has been set to 'off' returns undef.
+     unless (($list->{'admin'}{'status'} eq 'open') || (&Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')) {
+	 &report::reject_report_web('user','list_not_open',{'status' =>  $list->{'admin'}{'status'}},$param->{'action'});
+	 &wwslog('info','list not open');
+	 &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
+		      'status' => 'error',
+		      'error_type' => 'list_not_open'});
+	 return undef;
+     }
+     
      my $email_regexp = &tools::get_regexp('email');
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {

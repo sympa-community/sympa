@@ -42,7 +42,7 @@ sub DAEMON_CREATION {4};
 sub DAEMON_ALL {7};
 
 my @valid_options = qw(
-		       avg bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
+		       allow_subscribe_if_pending avg bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
 		       cache_list_config
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queueautomatic clean_delay_queuetopic default_remind_task
 		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
@@ -94,6 +94,7 @@ my %Default_Conf =
      'syslog'  => 'LOCAL1',
      'log_level'  => 0,
      'nrcpt'   => 25,
+     'allow_subscribe_if_pending' => 'on',
      'avg'     => 10,
      'maxsmtp' => 20,
      'sendmail'=> '/usr/sbin/sendmail',
@@ -527,7 +528,8 @@ sub load_nrcpt_by_domain {
 sub load_robots {
     
     my %robot_conf ;
-    my %valid_robot_key_words = ( 'http_host'     => 1, 
+    my %valid_robot_key_words = ( 'http_host'     => 1,
+				  'allow_subscribe_if_pending'   => 1,
 				  listmaster      => 1,
 				  email           => 1,
 				  host            => 1,
