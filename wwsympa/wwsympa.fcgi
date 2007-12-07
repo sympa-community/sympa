@@ -988,9 +988,7 @@ my $birthday = time ;
 
      ## Action
      my $action = $in{'action'};
-     $action ||= $Conf{'robots'}{$robot}{'default_home'}
-     if ($Conf{'robots'}{$robot});
-     $action ||= $wwsconf->{'default_home'} ;
+     $action ||= &Conf::get_robot_conf($robot, 'default_home');
  #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
      $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
      $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
@@ -1026,16 +1024,6 @@ my $birthday = time ;
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
 	     
 	     &export_topics ($robot);
-	     
-	     ## use default_home parameter
-	     if ($action eq 'home') {
-		 $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
-		 
-		 if (! &tools::get_filename('etc',{},'topics.conf', $robot) &&
-		     ($action eq 'home')) {
-		     $action = 'lists';
-		 }
-	     }
 	     
 	     unless ($comm{$action}) {
 		 &report::reject_report_web('user','unknown_action',{},$action,$list);
