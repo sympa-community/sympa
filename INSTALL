@@ -75,7 +75,7 @@ You should also create the main Sympa aliases ; they will look like this :
 You should add these lines to your httpd.conf file :
 
    Alias /static-sympa /home/sympa/static_content 
-   ScriptAlias /sympa /home/sympa/bin/wwsympa_sudo_wrapper.fcgi
+   ScriptAlias /sympa /home/sympa/bin/wwsympa-wrapper.fcgi
 
    <IfModule mod_fcgid.c>
      AddHandler fcgid-script .fcgi
