@@ -246,7 +246,10 @@ while (!$end) {
     my $rep = &tools::adate ($current_date);
 
 
-    ## List all tasks
+    ## Empty cache of the List.pm module
+    &List::init_list_cache();
+
+   ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
 	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
 	&do_log ('err', "Failed to list task files in %s", $spool_task);

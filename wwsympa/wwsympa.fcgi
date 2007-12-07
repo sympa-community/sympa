@@ -669,6 +669,9 @@ my $birthday = time ;
      &Log::set_log_level($Conf{'log_level'});
      &Language::SetLang($Language::default_lang);
 
+     ## Empty cache of the List.pm module
+     &List::init_list_cache();
+
      ## Check effective ID
      unless ($> eq (getpwnam('--USER--'))[2]) {
 	 $maintenance_mode = 1;
