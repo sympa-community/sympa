@@ -4040,6 +4040,10 @@ sub check_custom_attribute {
 	 $changes->{$p} = $in{$p} if (defined($in{$p}));
      }
 
+     ## Set session language and user language to new value
+     $session->{'lang'} = $in{'lang'} ;
+     $param->{'lang'} = $in{'lang'};
+
      if (&List::is_user_db($param->{'user'}{'email'})) {
 
 	 unless (&List::update_user_db($param->{'user'}{'email'}, $changes)) {
