@@ -43,12 +43,12 @@
    [% END %]
    <a class="actionMenuLinks" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a>
 [% END %]
+[% IF is_owner %]
   [% IF action == 'search' %]
      <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
   [% ELSE %]
      <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
   [% END %]
-[% IF is_owner %]
   <br /><br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
