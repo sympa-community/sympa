@@ -26,10 +26,14 @@ Content-Transfer-Encoding: 8bit
 --[% boundary %]
 Content-Type: text/plain; charset="UTF-8";
 
+[% IF list.name -%]
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
+[% ELSE -%]
+[%|loc%]Impossible to distribute your message for the following reason :[%END%]
+[% END -%]
 
 [% IF entry == 'routing_error' -%]
-[%|loc(list.name,conf.sympa,clist.host)%]The following message was sent to list '%1' and it seems to contain
+[%|loc(list.name,conf.sympa,list.host)%]The following message was sent to list '%1' and it seems to contain
 one or more commands like subscribe, unsubscribe, help, index, get, ...
 
 If your message contained a command, please notice that 
@@ -58,10 +62,10 @@ was over the maximum size allowed on this list.[%END%]
 Warning : this message may already have been sent by one of the list's editor.[%END%]
 [% ELSIF entry == 'unfound_file_message' -%]
 
-[%|loc(key)%]Unable to access the message authenticated with key %1.[%END%]
+[%|loc(key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
 [% ELSIF entry == 'wrong_format_message' -%]
 
-[%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format.[%END%]
+[%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format. The message may already been confirmed.[%END%]
 [% END -%]
 [% IF list.name %]
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
