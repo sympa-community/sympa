@@ -1392,6 +1392,9 @@ sub db_connect {
 	&do_log('notice', 'List::db_connect(): Db handle already available');
 	return 1;
     }
+
+    ## We keep trying to connect if this is the first attempt
+    ## Unless in a web context, because we can't afford long response time on the web interface
     unless ( $dbh = &SQLSource::connect(\%Conf, {'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
 						 'warn'=>1 } )) {
     	return undef;

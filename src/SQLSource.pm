@@ -53,6 +53,13 @@ our %date_format = (
 		       }
 	       );
 
+## Structure to keep track of active connections/connection status
+## Key : connect_string (includes server+port+dbname+DB type)
+## Values : dbh,status,first_try
+## "status" can have value 'failed'
+## 'first_try' contains an epoch date
+my %db_connections;
+
 ############################################################
 #  connect
 ############################################################
@@ -88,7 +95,7 @@ sub connect {
     $param->{'db_user'} ||= $param->{'user'};
     $param->{'db_passwd'} ||= $param->{'passwd'};
     $param->{'db_options'} ||= $param->{'connect_options'};
-     
+    
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name') {
 	unless ($param->{$db_param}) {
@@ -114,6 +121,7 @@ sub connect {
 	return undef;
     }
 
+    ## Build connect_string
     if ($param->{'f_dir'}) {
 	$connect_string = "DBI:CSV:f_dir=$param->{'f_dir'}";
     }elsif ($param->{'db_type'} eq 'Oracle') {
@@ -141,78 +149,101 @@ sub connect {
 	$connect_string .= ';port=' . $param->{'db_port'};
     }
  
-    ## Set environment variables
-    ## Used by Oracle (ORACLE_HOME)
-    if ($param->{'db_env'}) {
-	foreach my $env (split /;/,$param->{'db_env'}) {
-	    my ($key, $value) = split /=/, $env;
-	    $ENV{$key} = $value if ($key);
-	}
-    }
+    ## First check if we have an active connection with this server
+    if (defined $db_connections{$connect_string} && 
+	defined $db_connections{$connect_string}{'dbh'} && 
+	$db_connections{$connect_string}{'dbh'}->ping()) {
+      
+      &do_log('debug', "Use previous connection");
+      $self->{'dbh'} = $db_connections{$connect_string}{'dbh'} if $self;
+      return $db_connections{$connect_string}{'dbh'};
 
-    my $dbh;
-    unless ($dbh = DBI->connect($connect_string, $param->{'db_user'}, $param->{'db_passwd'})) {
+    }else {
+      
+      ## Set environment variables
+      ## Used by Oracle (ORACLE_HOME)
+      if ($param->{'db_env'}) {
+	foreach my $env (split /;/,$param->{'db_env'}) {
+	  my ($key, $value) = split /=/, $env;
+	  $ENV{$key} = $value if ($key);
+	}
+      }
+      
+      my $dbh;
+      unless ($dbh = DBI->connect($connect_string, $param->{'db_user'}, $param->{'db_passwd'})) {
     	
-	unless (! $options->{'warn'} || &List::send_notify_to_listmaster('no_db', $Conf{'domain'},{})) {
-	    &do_log('notice',"Unable to send notify 'no_db' to listmaster");
+	## Notify listmaster if warn option was set
+	## Unless the 'failed' status was set earlier
+	if ($options->{'warn'}) {
+	  unless (defined $db_connections{$connect_string} &&
+		  $db_connections{$connect_string}{'status'} eq 'failed') { 
+
+	    unless (&List::send_notify_to_listmaster('no_db', $Conf{'domain'},{})) {
+	      &do_log('err',"Unable to send notify 'no_db' to listmaster");
+	    }
+	  }
 	}
 	
 	if ($options->{'keep_trying'}) {
-	    do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $param->{'db_user'});
+	  &do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $param->{'db_user'});
 	} else{
-	    do_log('err','Can\'t connect to Database %s as %s', $connect_string, $param->{'db_user'});
-	    return undef;
+	  do_log('err','Can\'t connect to Database %s as %s', $connect_string, $param->{'db_user'});
+	  $db_connections{$connect_string}{'status'} = 'failed';
+	  $db_connections{$connect_string}{'first_try'} ||= time;
+	  return undef;
 	}
 	
 	## Loop until connect works
 	my $sleep_delay = 60;
 	while (1) {
-	    sleep $sleep_delay;
-	    $dbh = DBI->connect($connect_string, $param->{'db_user'}, $param->{'db_passwd'});
-	    last if ($dbh && $dbh->ping());
-	    $sleep_delay += 10;
+	  sleep $sleep_delay;
+	  $dbh = DBI->connect($connect_string, $param->{'db_user'}, $param->{'db_passwd'});
+	  last if ($dbh && $dbh->ping());
+	  $sleep_delay += 10;
 	}
-
+	
 	if ($options->{'warn'}) {
-	    do_log('notice','Connection to Database %s restored.', $connect_string);
-	    unless (&send_notify_to_listmaster('db_restored', $Conf{'domain'},{})) {
-	        &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
-	    }
+	  do_log('notice','Connection to Database %s restored.', $connect_string);
+	  unless (&send_notify_to_listmaster('db_restored', $Conf{'domain'},{})) {
+	    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
+	  }
 	}
-
-    }
-
-    if ($param->{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates
-       $dbh->do ("SET DATESTYLE TO 'ISO';");
-    }
-
-    ## Set client encoding to UTF8
-    if ($param->{'db_type'} eq 'mysql' ||
-	$param->{'db_type'} eq 'Pg') {
+	
+      }
+      
+      if ($param->{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates
+	$dbh->do ("SET DATESTYLE TO 'ISO';");
+      }
+      
+      ## Set client encoding to UTF8
+      if ($param->{'db_type'} eq 'mysql' ||
+	  $param->{'db_type'} eq 'Pg') {
 	$dbh->do("SET NAMES 'utf8'");
-    }elsif ($param->{'db_type'} eq 'oracle') { 
+      }elsif ($param->{'db_type'} eq 'oracle') { 
 	$ENV{'NLS_LANG'} = 'UTF8';
-    }elsif ($param->{'db_type'} eq 'Sybase') { 
+      }elsif ($param->{'db_type'} eq 'Sybase') { 
 	$ENV{'SYBASE_CHARSET'} = 'utf8';
-    }
-
-    ## added sybase support
-    if ($param->{'db_type'} eq 'Sybase') { 
+      }
+      
+      ## added sybase support
+      if ($param->{'db_type'} eq 'Sybase') { 
 	my $dbname;
 	$dbname="use $param->{'db_name'}";
         $dbh->do ($dbname);
-    }
-
-    if ($param->{'db_type'} eq 'SQLite') { # Configure to use sympa database
+      }
+      
+      if ($param->{'db_type'} eq 'SQLite') { # Configure to use sympa database
         eval { $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' )};
 	eval { if(defined $param->{'db_timeout'}) { $dbh->func( $param->{'db_timeout'}, 'busy_timeout' ); } else { $dbh->func( 5000, 'busy_timeout' ); } };
+      }
+      
+      $self->{'dbh'} = $dbh if $self;
+      $self->{'connect_string'} = $connect_string if $self;     
+      $db_connections{$connect_string}{'dbh'} = $dbh;
+      
+      do_log('debug2','Connected to Database %s',$param->{'db_name'});
+      return $dbh;
     }
-    
-    $self->{'dbh'} = $dbh if $self;
-    
-    do_log('debug2','Connected to Database %s',$param->{'db_name'});
-    return $dbh;
-
 }
 
 sub query {
@@ -237,6 +268,7 @@ sub disconnect {
     my $self = shift;
     $self->{'sth'}->finish if $self->{'sth'};
     $self->{'dbh'}->disconnect;
+    delete $db_connections{$self->{'connect_string'}};
 }
 
 ## Try to create the database
