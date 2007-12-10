@@ -100,6 +100,12 @@ Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
 	[% error_msg %]
 
 
+[% ELSIF type == 'unable_to_create_dir' -%]
+Subject: [% FILTER qencode %][%|loc%]Unable to create directory[%END%][%END%]
+
+[%|loc(dir)%]Sympa could not create directory %1[%END%]
+[%|loc%]See logs for more details.[%END%]
+
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
 

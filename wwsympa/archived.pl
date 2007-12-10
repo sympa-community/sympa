@@ -201,6 +201,7 @@ while (!$end) {
    foreach my $file (@files) {
 
        last if $end;
+       next unless (-f "$queue/$file");
 
        if ($file  =~ /^\.remove\.((.*)\.(\d\d\d\d\-\d\d))\.\d+$/ ) {
 	   my $arclistdir = $1;
@@ -337,12 +338,14 @@ while (!$end) {
 	       return undef;
 	   }
 
-	   do_log('notice',"Archiving $file for list $adrlist");      
-	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) ;
-	   unless (unlink("$queue/$file")) {
-	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
-	       do_log ('err',"exiting because I don't want to loop until file system is full");
-	       last;
+	   do_log('notice',"Archiving $file for list $adrlist");
+	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss);
+	   if (-f "$queue/$file") {
+	       unless (unlink("$queue/$file")) {
+		   do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+		   do_log ('err',"exiting because I don't want to loop until file system is full");
+		   last;
+	       }
 	   }
        }
    }
@@ -750,6 +753,24 @@ sub mail2arc {
     if (! -d $basedir) {
 	unless (mkdir $basedir, 0775) {
 	    &do_log('err', 'Cannot create directory %s', $basedir);
+	    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname,{'dir' => "$basedir"})) {
+		&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+	    }
+	    my $queue = $Conf{'queueoutgoing'};
+	    if (! -d $queue.'/bad') {
+		unless (mkdir $queue.'/bad', 0775) {
+		    &do_log('notice','Unable to create %s/bad/ directory.',$queue);
+		    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname),{'dir' => "$queue/bad"}) {
+			&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+		    }
+		    return undef;
+		}
+		do_log('debug',"mkdir $queue/bad");
+	    }
+	    &do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
+	    unless (rename($queue.'/'.$file ,$queue.'/bad/'.$file) ) {
+ 		&do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
+	    }
 	    return undef;
 	}
 	do_log('debug',"mkdir $basedir");
