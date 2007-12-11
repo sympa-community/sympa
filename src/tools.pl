@@ -3133,6 +3133,77 @@ sub hash_2_string {
     return ($data_string);
 }
 
+=pod 
+
+=head2 sub save_to_bad(STRING $listname)
+
+Saves a message file to the "bad/" spool of a given queue. Creates this directory if not found.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<param> : a hash containing all the arguments, which means:
+
+=over 4
+
+=item * I<file> : the characters string of the path to the file to copy to bad;
+
+=item * I<hostname> : the characters string of the name of the virtual host concerned;
+
+=item * I<queue> : the characters string of the name of the queue.
+
+=back
+
+=back 
+
+=head3 Return 
+
+=over
+
+=item * 1 if the file was correctly savec to the "bad/" directory;
+
+=item * undef if  something went wrong.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * Digest::MD5::md5_hex
+
+=back 
+
+=cut 
+
+sub save_to_bad {
+
+    my $param = shift;
+    
+    my $file = $param->{'file'};
+    my $hostname = $param->{'hostname'};
+    my $queue = $param->{'queue'};
+
+    if (! -d $queue.'/bad') {
+	unless (mkdir $queue.'/bad', 0775) {
+	    &do_log('notice','Unable to create %s/bad/ directory.',$queue);
+	    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname),{'dir' => "$queue/bad"}) {
+		&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+	    }
+	    return undef;
+	}
+	do_log('debug',"mkdir $queue/bad");
+    }
+    &do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
+    unless (rename($queue.'/'.$file ,$queue.'/bad/'.$file) ) {
+	&do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
+	return undef;
+    }
+    
+    return 1;
+}
+
 
 
 
