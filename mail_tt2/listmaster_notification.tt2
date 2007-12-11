@@ -112,6 +112,14 @@ Subject: [% FILTER qencode %][%|loc%]A message archiving failed[%END%][%END%]
 [%|loc(file,bad)%]Sympa could not archive message '%1'. Moving it into directory '%2'.[%END%]
 [%|loc%]See logs for more details.[%END%]
 
+[% ELSIF type == 'bounce_management_failed' -%]
+Subject: [% FILTER qencode %][%|loc%]A bounce management failed[%END%][%END%]
+
+[%|loc(file,bad)%]Sympa could not handle bounce message '%1'. Moving it into directory '%2'.[%END%]
+
+[%|loc(error)%]Error: %1[%END%]
+[%|loc%]See logs for more details.[%END%]
+
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
 

@@ -202,6 +202,7 @@ while (!$end) {
     foreach my $file (@files) {
 
 	last if $end;
+	next unless (-f "$queue/$file");
 	
 	unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
 	    my @s = stat("$queue/$file");
@@ -374,13 +375,16 @@ while (!$end) {
 		}
 	    
 	    }else{
-		$forward = 'listmaster';
 		do_log ('err','ignoring Feedback Report %s : unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
+		&ignore_bounce({'file' => $file,
+				'robot' => $robot,
+				'queue' => $queue,
+				'error' => "Unknown format (feedback_type:$feedback_type, original_rcpt:$original_rcpt, listname:$listname)",
+			    });
 	    }
-	    $listname ||= 'sympa';
-	    &DoForward($listname, $forward, $robot, $entity) if (defined $forward);
-
-	    unlink("$queue/$file");
+	    if (-f "$queue/$file") {
+		unlink("$queue/$file");
+	    }
 	    next;		
 	}
 
@@ -480,8 +484,11 @@ while (!$end) {
 	
 	unless (unlink("$queue/$file")) {
 	    do_log ('err',"Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID");
-	    &do_log('err',"Renaming file to $queue/BAD-$file.");
-	    rename "$queue/$file", "$queue/BAD-$file";
+	    &ignore_bounce({'file' => $file,
+			    'robot' => $robot,
+			    'queue' => $queue,
+			    'error' => "Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID",
+			});
 	    last;
 	}
     }
@@ -591,6 +598,28 @@ sub update_subscriber_bounce_history {
     }
 }
 
+## If bounce can't be handled correctly, saves it to the "bad" subdirectory of the bounce spool and notifies listmaster.
+sub ignore_bounce {
+
+    my $param = shift;
+
+    my $file = $param -> {'file'};
+    my $error = $param -> {'error'};
+    my $queue = $param -> {'queue'};
+    my $robot = $param -> {'robot'};
+
+    &tools::save_to_bad({
+	'file' => $file,
+	'hostname' => $robot,
+	'queue' => $queue,
+    });
+    unless (&List::send_notify_to_listmaster('bounce_management_failed',$robot,{'file' => $file,
+										   'bad' => "$queue/bad",
+										   'error' => $error,
+										   })) {
+	&do_log('notice',"Unable to send notify 'bounce_management_failed' to listmaster");
+    }
+}
 
 
 
