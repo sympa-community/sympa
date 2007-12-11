@@ -339,7 +339,15 @@ while (!$end) {
 	   }
 
 	   do_log('notice',"Archiving $file for list $adrlist");
-	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss);
+	   unless (mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss)) {
+	       &save_to_bad({
+		   'file' => "$file",
+		   'hostname' => "$hostname",
+	       });
+	       unless (&List::send_notify_to_listmaster('archiving_failed',$hostname,{'file' => "$file",'bad' => "$queue/bad"})) {
+		   &do_log('notice',"Unable to send notify 'archiving_failed' to listmaster");
+	       }
+	   }
 	   if (-f "$queue/$file") {
 	       unless (unlink("$queue/$file")) {
 		   do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
@@ -756,22 +764,6 @@ sub mail2arc {
 	    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname,{'dir' => "$basedir"})) {
 		&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
 	    }
-	    my $queue = $Conf{'queueoutgoing'};
-	    if (! -d $queue.'/bad') {
-		unless (mkdir $queue.'/bad', 0775) {
-		    &do_log('notice','Unable to create %s/bad/ directory.',$queue);
-		    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname),{'dir' => "$queue/bad"}) {
-			&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
-		    }
-		    return undef;
-		}
-		do_log('debug',"mkdir $queue/bad");
-	    }
-	    &do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
-	    unless (rename($queue.'/'.$file ,$queue.'/bad/'.$file) ) {
- 		&do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
-	    }
-	    return undef;
 	}
 	do_log('debug',"mkdir $basedir");
     }
@@ -1066,6 +1058,75 @@ sub get_tag {
     my $listname = shift;
     
     return (substr(Digest::MD5::md5_hex(join('/', $Conf{'cookie'}, $listname)), -10)) ;
+}
+
+=pod 
+
+=head2 sub save_to_bad(STRING $listname)
+
+Saves a message file to the "bad/" spool of outgoing. Creates this directory if not found.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<param> : a hash containing all the arguments, which means:
+
+=over 4
+
+=item * I<file> : the characters string of the path to the file to copy to bad;
+
+=item * I<hostname> : the characters string of the name of the virtual host concerned.
+
+=back
+
+=back 
+
+=head3 Return 
+
+=over
+
+=item * 1 if the file was correctly savec to the "bad/" directory;
+
+=item * undef if  something went wrong.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * Digest::MD5::md5_hex
+
+=back 
+
+=cut 
+
+sub save_to_bad {
+
+    my $param = shift;
+    
+    my $file = $param->{'file'};
+    my $hostname = $param->{'hostname'};
+
+    my $queue = $Conf{'queueoutgoing'};
+    if (! -d $queue.'/bad') {
+	unless (mkdir $queue.'/bad', 0775) {
+	    &do_log('notice','Unable to create %s/bad/ directory.',$queue);
+	    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname),{'dir' => "$queue/bad"}) {
+		&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+	    }
+	    return undef;
+	}
+	do_log('debug',"mkdir $queue/bad");
+    }
+    &do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
+    unless (rename($queue.'/'.$file ,$queue.'/bad/'.$file) ) {
+	&do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
+	return undef;
+    }
+    
+    return 1;
 }
 
 =pod 
