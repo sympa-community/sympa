@@ -8973,6 +8973,7 @@ sub store_digest {
 sub get_lists {
     my $robot_context = shift || '*';
     my $options = shift;
+    my $requested_lists = shift; ## Optional parameter to load only a subset of all lists
 
     my(@lists, $l,@robots);
     do_log('debug2', 'List::get_lists(%s)',$robot_context);
@@ -9001,7 +9002,17 @@ sub get_lists {
 		do_log('err',"Unable to open $robot_dir");
 		return undef;
 	    }
-	    foreach my $l (sort readdir(DIR)) {
+
+	    ## Load only requested lists if $requested_list is set
+	    ## otherwise load all lists
+	    my @files;
+	    if ( defined($requested_lists)){
+	      @files = sort @{$requested_lists};
+	    }else {
+	      @files = sort readdir(DIR);
+	    }
+
+	    foreach my $l (@files) {
 		next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
 		
 		my $list = new List ($l, $robot, $options);
@@ -9011,7 +9022,10 @@ sub get_lists {
 		push @lists, $list;
 		
 		## Also feed the cache
-		push @{$list_cache{'get_lists'}{$robot}}, $list;
+		## Unless we only loaded a subset of all lists ($requested_lists parameter used)
+		unless (defined $requested_lists) {
+		  push @{$list_cache{'get_lists'}{$robot}}, $list;
+		}
 		
 	    }
 	    closedir DIR;
@@ -9209,13 +9223,15 @@ sub get_which {
 
     ## WHICH in Database
     my $db_which = {};
+    my $requested_lists;
 
     if (defined $Conf{'db_type'} && $List::use_db) {
 	$db_which = &get_which_db($email,  $function);
+	@{$requested_lists} = keys %{$db_which->{$robot}};
     }
 
     ## This call is required to 
-    my $all_lists = &get_lists($robot);
+    my $all_lists = &get_lists($robot, {}, $requested_lists);
 
     foreach my $list (@$all_lists){
  
