@@ -235,7 +235,10 @@ while (!$end) {
          
 	unless (open BOUNCE, "$queue/$file") {
 	    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-	    rename "$queue/$file", "$queue/BAD-$file";
+	    &ignore_bounce({'file' => $file,
+			    'robot' => $robot,
+			    'queue' => $queue,
+			});
 	    next;
 	}
 	my $parser = new MIME::Parser;
@@ -455,7 +458,10 @@ while (!$end) {
 
 	    unless (open BOUNCE, "$queue/$file") {
 		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-		rename "$queue/$file", "$queue/BAD-$file";
+		&ignore_bounce({'file' => $file,
+				'robot' => $robot,
+				'queue' => $queue,
+			    });
 		next;
 	    }
 
@@ -469,7 +475,10 @@ while (!$end) {
 		close BOUNCE;
 		unless (open BOUNCE, "$queue/$file") {
 		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-		    rename "$queue/$file", "$queue/BAD-$file";
+		    &ignore_bounce({'file' => $file,
+				    'robot' => $robot,
+				    'queue' => $queue,
+				});
 		    next;
 		    }		
 		## Analysis of bounced message
@@ -520,7 +529,10 @@ while (!$end) {
 		    if (-w "$bounce_dir/OTHER") {
 			unless (open BOUNCE, "$queue/$file") {
 			    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-			    rename "$queue/$file", "$queue/BAD-$file";
+			    &ignore_bounce({'file' => $file,
+					    'robot' => $robot,
+					    'queue' => $queue,
+					});
 			    next;
 			}
 			
@@ -580,7 +592,9 @@ sub store_bounce {
     #Store bounce 
     unless (open BOUNCE, "$queue/$file") {
 	&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-	rename "$queue/$file", "$queue/BAD-$file";
+	&ignore_bounce({'file' => $file,
+			'queue' => $queue,
+		    });
 	return undef;
     }
 
