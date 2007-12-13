@@ -7193,15 +7193,6 @@ sub _include_users_remote_sympa_list {
 	    $get_total++;
 	}
 	$user{'gecos'} = $1 if ($line =~ /^\s*gecos\s+(.+)\s*$/o);
-#	$user{'options'} = $1 if ($line =~ /^\s*options\s+(.+)\s*$/o);
-#	$user{'auth'} = $1 if ($line =~ /^\s*auth\s+(\S+)\s*$/o);
-#	$user{'password'} = $1 if ($line =~ /^\s*password\s+(.+)\s*$/o);
-#	$user{'stats'} = "$1 $2 $3" if ($line =~ /^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
-#	$user{'firstbounce'} = $1 if ($line =~ /^\s*firstbounce\s+(\d+)\s*$/o);
-	$user{'date'} = $1 if ($line =~ /^\s*date\s+(\d+)\s*$/o);
-	$user{'update_date'} = $1 if ($line =~ /^\s*update_date\s+(\d+)\s*$/o);
-	$user{'reception'} = $1 if ($line =~ /^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/o);
-	$user{'visibility'} = $1 if ($line =~ /^\s*visibility\s+(conceal|noconceal)\s*$/o);
         
   	next unless ($line =~ /^$/) ;
 	
@@ -7226,18 +7217,12 @@ sub _include_users_remote_sympa_list {
 	$u{'email'} = $user{'email'};
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 	$u{'gecos'} = $user{'gecos'};delete $user{'gecos'};
- 	$u{'date'} = $user{'date'};delete$user{'date'};
-	$u{'update_date'} = $user{'update_date'};delete $user{'update_date'};
- 	$u{'reception'} = $user{'reception'};delete $user{'reception'};
- 	$u{'visibility'} = $user{'visibility'};delete $user{'visibility'};
 	
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
-
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else{
@@ -7293,17 +7278,11 @@ sub _include_users_list {
 	my $email =  $u{'email'} = $user->{'email'};
 	$u{'gecos'} = $user->{'gecos'};
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
- 	$u{'date'} = $user->{'date'};
-	$u{'update_date'} = $user->{'update_date'};
- 	$u{'reception'} = $user->{'reception'};
- 	$u{'visibility'} = $user->{'visibility'};
 
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
@@ -7382,12 +7361,10 @@ sub _include_users_file {
 	$u{'gecos'} = $gecos;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
@@ -7459,12 +7436,10 @@ sub _include_users_remote_file {
 	    $u{'gecos'} = $gecos;
 	    $u{'id'} = join (',', split(',', $u{'id'}), $id);
 	    
-	    if ($default_user_options->{'mode_force'}) {
-		$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-		$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-		$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-		$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	    }
+	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 	    
 	    if ($tied) {
 		$users->{$email} = join("\n", %u);
@@ -7584,12 +7559,10 @@ sub _include_users_ldap {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
@@ -7746,12 +7719,10 @@ sub _include_users_ldap_2level {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
@@ -7808,12 +7779,10 @@ sub _include_users_sql {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	if ($default_user_options->{'mode_force'}) {
-	    $u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
-	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
-	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
-	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
-	}
+	$u{'visibility'} = $default_user_options->{'visibility'} if (defined $default_user_options->{'visibility'});
+	$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
@@ -8054,7 +8023,6 @@ sub _load_admin_users_include {
 	next unless (defined $entry); 
 
 	my %option;
-	$option{'mode_force'} = 1; # to force option values in _include_..._query
 	$option{'reception'} = $entry->{'reception'} if (defined $entry->{'reception'});
 	$option{'visibility'} = $entry->{'visibility'} if (defined $entry->{'visibility'});
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
@@ -8390,28 +8358,19 @@ sub sync_include {
 	if (defined($old_subscribers{$email}) ) {	   
 	    if ($old_subscribers{$email}{'included'}) {
 
-		## Include sources have changed for the user
-		if ($old_subscribers{$email}{'id'} ne $new_subscribers->{$email}{'id'}) {
-		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		    unless( $self->update_user($email,  {'update_date' => time,
-							 'id' => $new_subscribers->{$email}{'id'} }) ) {
-			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
-			next;
-		    }
-		    $users_updated++;
+	      ## If one user attribute has changed, then we should update the user entry
+	      foreach my $attribute ('id','gecos') {
+		if ($old_subscribers{$email}{$attribute} ne $new_subscribers->{$email}{$attribute}) {
+		  &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		  unless( $self->update_user($email,  {'update_date' => time,
+						       $attribute => $new_subscribers->{$email}{$attribute} }) ) {
+		    &do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
+		    next;
+		  }
+		  $users_updated++;
 		}
-
-		## Gecos have changed for the user
-		if ($old_subscribers{$email}{'gecos'} ne $new_subscribers->{$email}{'gecos'}) {
-		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		    unless( $self->update_user($email,  {'update_date' => time,
-							 'gecos' => $new_subscribers->{$email}{'gecos'} }) ) {
-			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
-			next;
-		    }
-		    $users_updated++;
-		}
-
+	      }
+	      
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
@@ -8430,6 +8389,7 @@ sub sync_include {
 	    &do_log('debug3', 'List:sync_include: adding %s to list %s', $email, $name);
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
+	    $u->{'date'} = time;
 	    push @add_tab, $u;
 	}
     }
