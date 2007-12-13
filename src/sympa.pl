@@ -851,9 +851,11 @@ while (!$signal) {
 	    $index_cleanqueue=0;
 	    &CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
 	    &CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
+	    &CleanSpool($Conf{'queueoutgoing'}.'/bad', $Conf{'clean_delay_queueoutgoing'});
+	    &CleanSpool($Conf{'queuebounce'}.'/bad', $Conf{'clean_delay_queuebounce'});
 	    &CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
 	    &CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
-	    &CleanSpool($Conf{'tmpdir'}, 7);
+	    &CleanSpool($Conf{'tmpdir'}, $Conf{'clean_delay_tmpdir'});
 	    &CleanSpool($Conf{'queuesubscribe'}, $Conf{'clean_delay_queuesubscribe'});
 	    &CleanSpool($Conf{'queueautomatic'}, $Conf{'clean_delay_queueautomatic'});
 	}
