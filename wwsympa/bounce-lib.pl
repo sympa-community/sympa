@@ -927,7 +927,7 @@ sub anabounce {
 	     $type = 42;
 
          # Postfix dans le prochain paragraphe
-         }elsif (/^This is the Postfix program/m) {
+         }elsif (/^This is the Postfix program/m || /^This is the mail system at host/m) {
              $postfix = 1;
 	 ## Rapport Postfix
          }elsif ($postfix) {
