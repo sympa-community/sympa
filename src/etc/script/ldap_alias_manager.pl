@@ -1,9 +1,14 @@
 #!--PERL--
-
+#Author: Philippe Baumgart
+#Company: BT
+#License: GPL 
+#Version: 1.0
 ## This version of alias_manager.pl has been customized by Ludovic Marcotte, Kazuo Moriwaka and Francis Lachapelle
-## It has the ability to add/remove list aliases in an LDAP directory
-## To make sympa use this script, you should install it as --SBINDIR--/alias_manager.pl
-## You should edit all the $ldap_xxx below to use your own LDAP directory
+## Modified by Philippe Baumgart:
+## Added  Optional LDAPS support
+## Added LDAP configuration stored in a separate config file --DIR--/etc/ldap_alias_manager.conf
+#Purpose: It has the ability to add/remove list aliases in an LDAP directory
+# You should edit all the --DIR--/etc/ldap_alias_manager.conf to use your own LDAP directory
 
 $ENV{'PATH'} = '';
 
@@ -16,25 +21,36 @@ require "tools.pl";
 require "tt2.pl";
 
 use Net::LDAP;
+use Net::LDAPS;
 
 unless (Conf::load('--CONFIG--')) {
    print gettext("The configuration file --CONFIG-- contains errors.\n");
    exit(1);
 }
 
+my $manager_conf_file = '--DIR--/etc/ldap_alias_manager.conf';
+
 ## LDAP configuration
+my %ldap_params;
+my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclass,$ldap_ssl,$ldap_cachain)=(undef,undef,undef,undef,undef,undef,undef,undef);
+&GetLdapParameter();
+
 my $ldap_connection = undef;
-my $ldap_host = "localhost";
-my $ldap_search_base = "dc=example,dc=com";
-my $ldap_bind_dn = "cn=admin,dc=example,dc=com";
-my $ldap_bind_pw = "password";
-my $ldap_mail_attribute = "mail";
-my $ldap_sample_dn = "uid={ALIAS},ou=list,dc=example,dc=com";
-my %ldap_attributes = ("objectClass" => ["top","person", "organizationalPerson", "inetOrgPerson", "qmailUser"],
+$ldap_host = $ldap_params{'ldap_host'} or print STDERR "Missing required parameter ldap_host the config file $manager_conf_file\n" and exit 0;
+$ldap_base_dn = $ldap_params{'ldap_base_dn'} or print STDERR "Missing required parameter ldap_base_dn the config file $manager_conf_file\n" and exit 0;
+$ldap_bind_dn = $ldap_params{'ldap_bind_dn'} or print STDERR "Missing required parameter ldap_bind_dn the config file $manager_conf_file\n" and exit 0;
+$ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'} or print STDERR "Missing required parameter ldap_bind_pwd the config file $manager_conf_file\n" and exit 0;
+$ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'} or print STDERR "Missing required parameter ldap_mail_attribute the config file $manager_conf_file\n" and exit 0;
+$ldap_objectclass=$ldap_params{'ldap_object_class'} or print STDERR "Missing required parameter ldap_object_class the config file $manager_conf_file\n" and exit 0;
+$ldap_ssl=$ldap_params{'ldap_ssl'} or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) the config file $manager_conf_file\n" and exit 0;
+$ldap_cachain=$ldap_params{'ldap_cachain'} or undef;
+
+
+my $ldap_sample_dn = "uid={ALIAS},$ldap_base_dn";
+my %ldap_attributes = ("objectClass" => ["top","person", "organizationalPerson", $ldap_objectclass],
 		       "cn" => ['{ALIAS}'],
 		       "sn" => ['{ALIAS}'],
-		       "uid" => ['{ALIAS}'],
-		       "deliveryProgramPath" => ['{COMMAND}']
+		       "uid" => ['{ALIAS}'],		       
 		       );
 
 my $default_domain;
@@ -54,10 +70,11 @@ $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases ;
 
-my $tt2_include_path = &tools::make_tt2_include_path($domain,'',,);
+my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
+                        $Conf{'etc'},
+                        '/usr/share/sympa'];
 
 my $aliases_dump;
 &tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
@@ -117,7 +134,7 @@ if ($operation eq 'add') {
 	    foreach my $hash_value (@{$ldap_attributes{$hash_key}}) {
 		$value = $hash_value;
 		$value =~ s/{ALIAS}/$alias_value/;
-		$value =~ s/{COMMAND}/$command_value/;
+		#$value =~ s/{COMMAND}/$command_value/;
 		$entry->add($hash_key, $value);
 	    }
 	}
@@ -176,7 +193,7 @@ sub already_defined {
 	$alias =~ /^([^:]+):/;
 
 	my $source_result = $ldap_connection->search(filter => "(".$ldap_mail_attribute."=".$1."\@".$domain.")",
-						     base => $ldap_search_base);
+						     base => $ldap_base_dn);
 	if ($source_result->count != 0) {
 	    print STRERR "Alias already defined : $1\n";
 	    &finalize_ldap;
@@ -188,14 +205,74 @@ sub already_defined {
     return 0;
 }
 
+## Parse the alias_ldap.conf config file
+sub GetLdapParameter {
+	#read the config file
+	open(LDAPCONFIG,$manager_conf_file) or print STDERR "Can't read the config file $manager_conf_file\n" and return 0;
+	my @ldap_conf=<LDAPCONFIG>;
+	close LDAPCONFIG;
+	foreach(@ldap_conf)
+	{
+        	#we skip the comments
+        	if ($_ =~ /^\#/)
+        	{
+        		next;
+        	}        	
+        	elsif ($_  =~ /^\s*(\w+)\s+(.+)\s*$/)
+        	{
+        		
+        		my ($param_name, $param_value) = ($1, $2);
+        		$ldap_params{$param_name}=$param_value;
+        		#print "$param_name: $ldap_params{$param_name}\n";     		
+        	}
+        	#we skip the blank line
+        	elsif ($_  =~ /^$/)
+        	{
+        		next;
+        	}
+        	else
+        	{
+        		print STDERR "Unknown syntax in config file $manager_conf_file\n" and return 0;
+        	}        
+        
+        }
+         
+}
+	
+
+
 ## Initialize the LDAP connection
 sub initialize_ldap {
-    unless ($ldap_connection = Net::LDAP->new($ldap_host), version => 3) {
-	print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
-	return 0;
+    
+    
+    if ($ldap_ssl eq '1')
+    {
+    	if ($ldap_cachain)
+    	{
+    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'require', sslversion=> 'sslv3',
+        		                  cafile => $ldap_cachain) {
+			print STDERR "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
+			return 0;
+    		}
+    	}
+    	else
+    	{
+    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'none', sslversion=> 'sslv3') {
+			print STDERR "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
+			return 0;
+    		}
+    	}
+    }        
+    else 
+    {
+    	unless ($ldap_connection = Net::LDAP->new($ldap_host), version => 3) {
+		print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
+		return 0;
+    	}
     }
     
-    my $msg = $ldap_connection->bind($ldap_bind_dn, password => $ldap_bind_pw);
+    
+    my $msg = $ldap_connection->bind($ldap_bind_dn, password => $ldap_bind_pwd);
     if ($msg->is_error()) {
 	print STDERR "Can't bind to server $ldap_host: ",$msg->error(),"\n";
 	return 0;

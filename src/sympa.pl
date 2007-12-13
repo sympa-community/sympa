@@ -405,7 +405,7 @@ if ($main::options{'dump'}) {
     printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
     close TMP;
     foreach my $list (@$all_lists) {
-	system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
+	system ("$Conf{'alias_manager'} add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
     }
     printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
     

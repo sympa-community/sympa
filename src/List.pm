@@ -11138,7 +11138,7 @@ sub remove_aliases {
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}})
 		&& ($Conf{'sendmail_aliases'} !~ /^none$/i));
     
-    my $alias_manager = '--SBINDIR--/alias_manager.pl';
+    my $alias_manager = $Conf{'alias_manager'};
     
     unless (-x $alias_manager) {
 	&do_log('err','Cannot run alias_manager %s', $alias_manager);

@@ -137,7 +137,7 @@ sub load_config {
     my $file = pop;
 
     ## Old params
-    my %old_param = ('alias_manager' => 'No more used, using --SBINDIR--/alias_manager.pl',
+    my %old_param = ('alias_manager' => 'No more used, using '.$Conf{'alias_manager'},
 		     'wws_path' => 'No more used',
 		     'icons_url' => 'No more used. Using static_content/icons instead.');
 

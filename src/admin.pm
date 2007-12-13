@@ -812,7 +812,7 @@ sub install_aliases {
 	if ($Conf{'sendmail_aliases'} =~ /^none$/i);
 
     my $alias_installed = 0;
-    my $alias_manager = '--SBINDIR--/alias_manager.pl';
+    my $alias_manager = $Conf{'alias_manager' };
     &do_log('debug2',"admin::install_aliases : $alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
      if (-x $alias_manager) {
 	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
