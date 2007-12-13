@@ -11,10 +11,9 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
   <li>[%|loc%]only one email or expression by line[%END%]</li>
   <li>[%|loc%]char # introduce a comment[%END%]</li>
   <li>[%|loc%]char * match any string. Example : "*@spammer-domain.com" match any sender from that exact domain[%END%]</li>
-  <li>[%|loc%]only one char * is autorized in a line[%END%]
+  <li>[%|loc%]only one char * is autorized in a line[%END%]</li>
 </ul>
 [%end%]
-</p>
 <p>
 [% IF rows == '0' %]
  [%|loc%]The current blacklist is empty[%END%]
@@ -22,15 +21,15 @@ blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %
  [%|loc(rows)%]The current blacklist contains %1 line(s)[%END%]
 [% END %]
 </p>
-<p>
+
 [% IF rows < '10' %] [% rows = '10' %] [% END %]
 [% IF rows > '20' %] [% rows = '20' %] [% END %]
 [% rows = rows+2 %]
 <form action="[% path_cgi %]/blacklist" method="post">
 <fieldset>
- <textarea name="blacklist" cols="80" rows="[% rows %]" />
+ <textarea name="blacklist" cols="80" rows="[% rows %]">
 [% blacklist %]
-</textarea><br />
+ </textarea><br />
 <input type="hidden" name="action" value="blacklist" />
 [% IF list %]
         <input type="hidden" name="list" value="[% list %]" />

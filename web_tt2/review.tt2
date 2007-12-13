@@ -55,9 +55,9 @@
    <input type="hidden" name="previous_action" value="review" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="action" value="add" />
-   <label for="email_search"></label>
+   <label for="email_search">[%|loc%]Add an user: [%END%]</label>
    <input id="email_search" type="text" name="email" size="35" />
-   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
+   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <input id="quietly" type="checkbox" name="quiet" /> <label for="quietly">[%|loc%]quiet[%END%]</label>
    &nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
   </fieldset>
   </form>
@@ -70,7 +70,8 @@
 <input type="hidden" name="previous_action" value="review" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="action" value="search" />
-<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" name="filter" value="[% filter %]" />
+<label for="filter">[%|loc%]Search user by e-mail: [%END%]</label>
+<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
 <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
 <br />
 [% IF action == 'search' %]
@@ -130,6 +131,7 @@
         [% IF is_owner %]
           <th>
 	  [%|loc%]Reception[%END%]
+	  </th>
 	  [% IF list_conf.user_data_source == 'include2' %]
             [% IF sortby == 'sources' %]
   	      <th class="sortby">
@@ -154,7 +156,7 @@
 	  [% END %]
 	  <th>
 	      [%|loc%]Additional information[%END%]
-	</th>
+	  </th>
         [% END %]
       </tr>
       
@@ -242,7 +244,7 @@
 	     </td>
 	  [% END %]
 	  <td class="text_left">
-	  	 [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %] : </b>[% SET id = ca_k.id %][% u.custom_attribute.$id.value %]<br>[% END %]
+	  	 [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %] : </b>[% SET id = ca_k.id %][% u.custom_attribute.$id.value %]<br/>[% END %]
 	</td>
        	  [% END %]
         </tr>

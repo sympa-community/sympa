@@ -15,8 +15,8 @@
 [% SET subscriber = current_subscriber ;
 PROCESS edit_attributes.tt2 ;
 END %]
-<label for="sub_since">[%|loc%]Subscribed since :[%END%]  </label>[% current_subscriber.date %]<br />
-<label for="last_update">[%|loc%]Last update :[%END%]  </label>[% current_subscriber.update_date %]<br />
+[%|loc%]Subscribed since :[%END%] [% current_subscriber.date %]<br />
+[%|loc%]Last update :[%END%] [% current_subscriber.update_date %]<br />
 <label for="reception">[%|loc%]Receiving :[%END%]  </label><select name="reception" id="reception">
 		  [% FOREACH r = reception %]
 		    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
@@ -70,14 +70,13 @@ END %]
 [% IF current_subscriber.escaped_bounce_address  %]
 <label for="verp">[%|loc%]Address detected via VERP technology[%END%]  </label>[% current_subscriber.escaped_bounce_address %]<br />
 [% END %]
-<label for="status">[%|loc%]Status :[%END%]  </label>[% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])<br />
-<label for="bounce_count">[%|loc%]Bounce count :[%END%]  </label>[% current_subscriber.bounce_count %]<br />
-<label for="period">[%|loc%]Period :[%END%]  </label>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]<br />
+[%|loc%]Status :[%END%] [% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])<br />
+[%|loc%]Bounce count :[%END%] [% current_subscriber.bounce_count %]<br />
+[%|loc%]Period :[%END%] [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]<br />
 <a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a><br />
 <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /><br />
 [% END %]
 </fieldset>
 </form>
-
 
 

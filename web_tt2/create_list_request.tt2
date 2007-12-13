@@ -9,7 +9,7 @@
     <br />
 
   <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]You are the privileged owner of this list[%END%]" />
-  <label for="owner"><strong>[%|loc%]Owner:[%END%]</strong></label>
+  <strong>[%|loc%]Owner:[%END%]</strong>
     <em>[% user.email %]</em><br />
     
   <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" />
@@ -64,7 +64,7 @@
 
   <img class="align_top" src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]A few lines describing the list[%END%]" />
   <label for="info" class="align_top"><strong>[%|loc%]Description:[%END%]</strong></label>
-    <textarea class="desc" id="info" name="info" rows="10">[% saved.info %]</textarea><br /><br />
+    <textarea class="desc" id="info" name="info" rows="10" cols="80">[% saved.info %]</textarea><br /><br />
 
   <input class="MainMenuLinks" type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
 </fieldset>

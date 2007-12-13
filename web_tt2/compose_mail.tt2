@@ -9,8 +9,8 @@
 <br />
 <input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
 <input type="hidden" name="message_id" value="[% message_id %]" />
-<input type="hidden" name="list" VALUE="[% list %]" />
-<input type="hidden" name="to" VALUE="[% local_to %] [% domain_to %]" />
+<input type="hidden" name="list" value="[% list %]" />
+<input type="hidden" name="to" value="[% local_to %] [% domain_to %]" />
 
  [% IF request_topic %]
    <br /><br />
@@ -19,7 +19,7 @@
    [%|loc%]Please select one or more topic(s) that corresponds to your message :[%END%]
    <br /><br /> 
    [% FOREACH t = available_topics %]
-     <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+     <input type="checkbox" name="topic_[%t.name%]" value="1"/> [% t.title %]
      <br />
    [% END %]
    <br />
@@ -30,7 +30,7 @@
 
 </textarea><br />
 
-<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]"/
-[%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %] >
+<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]"
+[%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %] />
 </fieldset>
 </form>

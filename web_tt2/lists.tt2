@@ -13,7 +13,7 @@
   <li class="listenum">
   [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >[%|loc%]admin[%END%]</a>[% END %] 
   <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a><br />
-  <span>[% l.value.subject %]<span><br />
+  <span>[% l.value.subject %]</span><br />
   </li>
  [% END %] 
  </ul>

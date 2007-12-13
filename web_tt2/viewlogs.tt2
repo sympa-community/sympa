@@ -45,51 +45,52 @@
   <input type="hidden" name="action" value="viewlogs" />
 
   <label for="target_type">[%|loc%]Search by :[%END%]</label>
-    <select id="target_type" name="target_type"/>
+    <select id="target_type" name="target_type">
 
        [% IF target_type  == 'target_email' %]
-	 <OPTION value="[% target_type %]">[%|loc%]Email[%END%]</OPTION>
-	 <OPTION value="none">-----------</OPTION>
+	 <option value="[% target_type %]">[%|loc%]Email[%END%]</option>
+	 <option value="none">-----------</option>
        [% ELSE %] 
 	 [% IF target_type == 'msg_id' %]
-	   <OPTION value="[% target_type %]">[%|loc%]Message Id[%END%]</OPTION>
-	   <OPTION value="none">-----------</OPTION>
+	   <option value="[% target_type %]">[%|loc%]Message Id[%END%]</option>
+	   <option value="none">-----------</option>
          [% END %]
        [% END %]
 
-       <OPTION value="target_email">[%|loc%]Email[%END%]</OPTION>
-       <OPTION value="msg_id">[%|loc%]Message Id[%END%]</OPTION>
-       <OPTION value="none">-----------</OPTION>
-       </select>
+       <option value="target_email">[%|loc%]Email[%END%]</option>
+       <option value="msg_id">[%|loc%]Message Id[%END%]</option>
+       <option value="none">-----------</option>
+    </select>
        
-    <input id="target_type" type="text" name="target" value="[% target %]" size ="20"/><br />
+    <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
 
-    <label for="date">[%|loc%]Search by date :[%END%]</label>
-      <input id="date" type="text" name="date_from" value="[% date_from %]" size ="10"/>&nbsp;[%|loc%]to[%END%]
-      <input id="date"type="text" name="date_to" value="[% date_to %]" size ="10"/>&nbsp; <h7>[%|loc%]ex: 24/05/2006[%END%]</h7><br />
+    <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
+      <input id="date_from" type="text" name="date_from" value="[% date_from %]" size ="10"/>&nbsp;
+    <label for="date_to">[%|loc%]to:[%END%]</label>
+      <input id="date_to"type="text" name="date_to" value="[% date_to %]" size ="10"/>&nbsp; <em>[%|loc%]ex: 24/05/2006[%END%]</em><br />
 
     <label for="type">[%|loc%]Search by type :[%END%]</label>
-      <select id="type" name="type"/>
+      <select id="type" name="type">
        [% IF type %]
 	 [% IF type == 'all_actions' %]
-	   <OPTION value="all_actions">[%|loc%]All[%END%]</OPTION>
-	   <OPTION value="none">------------</OPTION>
+	   <option value="all_actions">[%|loc%]All[%END%]</option>
+	   <option value="none">------------</option>
 	 [% ELSE %]
-           <OPTION value="[% type %]">[% type %]</OPTION>
-	   <OPTION value="none">------------</OPTION>
+           <option value="[% type %]">[% type %]</option>
+	   <option value="none">------------</option>
 	 [% END %]
        [% END %]
-       <OPTION value="all_actions">[%|loc%]All[%END%]</OPTION>
-       <OPTION value="none">------------</OPTION>
-       <OPTION value="authentication">[%|loc%]Authentication[%END%]</OPTION>
-       <OPTION value="bounced">[%|loc%]Bounce management[%END%]</OPTION>
-       <OPTION value="list_management">[%|loc%]List Management[%END%]</OPTION>
-       <OPTION value="message">[%|loc%]Message[%END%]</OPTION>
-       <OPTION value="preferences">[%|loc%]User preferences[%END%]</OPTION>
-       <OPTION value="subscription">[%|loc%]User management[%END%]</OPTION>
-       <OPTION value="shared">[%|loc%]Web documents management[%END%]</OPTION>
-       <OPTION value="none">------------</OPTION>
-        </select><br />
+       <option value="all_actions">[%|loc%]All[%END%]</option>
+       <option value="none">------------</option>
+       <option value="authentication">[%|loc%]Authentication[%END%]</option>
+       <option value="bounced">[%|loc%]Bounce management[%END%]</option>
+       <option value="list_management">[%|loc%]List Management[%END%]</option>
+       <option value="message">[%|loc%]Message[%END%]</option>
+       <option value="preferences">[%|loc%]User preferences[%END%]</option>
+       <option value="subscription">[%|loc%]User management[%END%]</option>
+       <option value="shared">[%|loc%]Web documents management[%END%]</option>
+       <option value="none">------------</option>
+      </select><br />
        
    [% IF is_listmaster %]
 
@@ -100,17 +101,17 @@
        <label for="submit"></label>
 	 <input id="submit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
        &nbsp;&nbsp;
-         <input id="submit" type="button" value="[%|loc%]Reset[%END%]" OnClick="javascript:clear_log_form()"/>
+         <input id="reset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
 </fieldset>
 </form>
 
 
 
-<h7>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></h7><br />
-<h7>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</h7><br />
+<em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
+<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
 [% IF rows_nb %]
   <br />
-  <h7>[%|loc(rows_nb)%]%1 results[%END%].</h7
+  <em>[%|loc(rows_nb)%]%1 results[%END%].</em>
 [% END %]
 <div id="table_container">
 <table class="listOfItems" summary="logs table">

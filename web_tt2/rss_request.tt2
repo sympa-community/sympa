@@ -14,7 +14,7 @@
 [% END %]
 </select>
 </li>
-<li><label for="for">[%|loc%]Limit the number of days used for the selection[%END%]  : </label><select name="for">
+<li><label for="for">[%|loc%]Limit the number of days used for the selection[%END%]  : </label><select id="for" name="for">
 [% n = [ 1 .. 30 ] %]
 [% FOREACH i = n %]
           <option value="[% i %]" [% IF i== '10' %]selected="selected"[% END %]>[% i %]</option>
@@ -60,6 +60,3 @@
 </fieldset>
 </form>
 [% END %]
-
-</form>
-
