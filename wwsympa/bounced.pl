@@ -317,6 +317,8 @@ while (!$end) {
 	    do_log ('notice',"processing  Email Feedback Report");
 	    my @parts = $entity->parts();
 	    my $original_rcpt;
+	    my $user_agent;
+	    my $version;
 	    my $feedback_type = '';
 	    my $listname, $robot;
 	    foreach my $p (@parts) {
@@ -327,10 +329,16 @@ while (!$end) {
 		    my @report = split(/\n/, $p->bodyhandle->as_string());
 		    foreach my $line (@report) {
 			$feedback_type = 'abuse' if ($line =~ /Feedback\-Type\:\s*abuse/i);
-			if ($line =~ /Feedback\-Type\:\s*(abuse|opt-out|opt-out-list)/i) {
+			if ($line =~ /Feedback\-Type\:\s*(.*)/i) {
 			    $feedback_type = $1;
 			}
 
+			if ($line =~ /User\-Agent\:\s*(.*)/i) {
+			    $user_agent = $1;
+			}
+			if ($line =~ /Version\:\s*(.*)/i) {
+			    $version = $1;
+			}
 			my $email_regexp = &tools::get_regexp('email');
 			if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
 			    $original_rcpt = $1;
@@ -349,57 +357,76 @@ while (!$end) {
 		}
 	    }
 	    my $forward ;
-	    if (($feedback_type =~ /(abuse|opt-out|opt-out-list)/i) && (defined $original_rcpt )) {
+	    ## RFC compliance remark: We do something if there is an abuse or an unsubscribe request.
+	    ## We don't throw an error if we find another kind of feedback (fraud, miscategorized, not-spam, virus or other)
+	    ## but we don't take action if we meet them yet. This is to be done, if relevant.
+	    if (($feedback_type =~ /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i) && (defined $version) && (defined $user_agent)) {
 		
-		do_log ('debug',"Email Feedback Report recognized user : $original_rcpt list : $listname feedback-type: $feedback_type");		
-		my @lists;
-	    
-		if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $listname)) {
-		    $listname = lc($listname);
-		    chomp $listname ;
-		    $listname =~ /(.*)\@(.*)/;
-		    $listname = $1;
-		    $robot = $2;
-		    my $list = new List ($listname, $robot);
-		    unless($list) {
-			do_log('err','Skipping Feedback Report for unknown list %s@%s',$file,$listname,$robot);
+		do_log ('debug',"Email Feedback Report: $listname feedback-type: $feedback_type");
+		if (defined $original_rcpt) {
+		    do_log ('debug',"Recognized user : $original_rcpt list");		
+		    my @lists;
+		    
+		    if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $listname)) {
+			$listname = lc($listname);
+			chomp $listname ;
+			$listname =~ /(.*)\@(.*)/;
+			$listname = $1;
+			$robot = $2;
+			my $list = new List ($listname, $robot);
+			unless($list) {
+			    do_log('err','Skipping Feedback Report for unknown list %s@%s',$file,$listname,$robot);
+			    &ignore_bounce({'file' => $file,
+					    'robot' => $robot,
+					    'queue' => $queue,
+					});
+			    unlink("$queue/$file");
+			    next;
+			}
+			push @lists, $list;
+		    }elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
+			@lists = &List::get_which($original_rcpt,$robot,'member');
+		    }else {
+			&do_log('notice','Ignoring Feedback Report %s : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
 			&ignore_bounce({'file' => $file,
 					'robot' => $robot,
 					'queue' => $queue,
 				    });
-			unlink("$queue/$file");
-			next;
 		    }
-		    push @lists, $list;
-		}elsif( $feedback_type =~ /opt-out/){
-		    @lists = &List::get_which($original_rcpt,$robot,'member');
-		}
-		foreach my $list (@lists){
-		    my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $original_rcpt});
-		    my $action;
-		    $action = $result->{'action'} if (ref($result) eq 'HASH');		    
-		    if ($action =~ /do_it/i) {
-			if ($list->is_user($original_rcpt)) {
-			    my $u = $list->delete_user($original_rcpt);
-
-			    do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
-			    unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {
-				&do_log('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
+		    foreach my $list (@lists){
+			my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $original_rcpt});
+			my $action;
+			$action = $result->{'action'} if (ref($result) eq 'HASH');		    
+			if ($action =~ /do_it/i) {
+			    if ($list->is_user($original_rcpt)) {
+				my $u = $list->delete_user($original_rcpt);
+				
+				do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
+				unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {
+				    &do_log('notice',"Unable to send notify 'automatic_del' to $list->{'name'} list owner");
+				}
+			    }else{
+				do_log('err','Ignore Feedback Report %s for list %s@%s : user %s not subscribed',$file,$list->name,$robot,$original_rcpt);
+				unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
+				    &do_log('notice',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
+				}
 			    }
 			}else{
-			    do_log('err','Ignore Feedback Report %s for list %s@%s : user %s not subscribed',$file,$list->name,$robot,$original_rcpt);
-			    unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
-				&do_log('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
-			    }
+			    $forward = 'request';
+			    do_log('err','Ignore Feedback Report %s for list %s@%s : user %s is not allowed to unsubscribe',$file,$list->name,$robot,$original_rcpt);
 			}
-		    }else{
-			$forward = 'request';
-			do_log('err','Ignore Feedback Report %s for list %s@%s : user %s is not allowed to unsubscribe',$file,$list->name,$robot,$original_rcpt);
 		    }
+		}else{
+		    do_log ('err','Ignoring Feedback Report %s : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$file, $feedback_type, $listname );		
+		    &ignore_bounce({'file' => $file,
+				    'notify' => 1,
+				    'robot' => $robot,
+				    'queue' => $queue,
+				    'error' => "Unknown Original-Rcpt-To field (feedback_type:$feedback_type, listname:$listname)",
+				});
 		}
-	    
 	    }else{
-		do_log ('err','ignoring Feedback Report %s : unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
+		do_log ('err','Ignoring Feedback Report %s : Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
 		&ignore_bounce({'file' => $file,
 				'notify' => 1,
 				'robot' => $robot,
