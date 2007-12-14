@@ -8358,22 +8358,8 @@ Sends back the list creation edition form.
 	 return 'loginrequest';
      }
 
-     ## Require DEL privilege
-
-     my $result = $list->check_list_authz('del',$param->{'auth_method'},
-					  {'sender' => $param->{'user'}{'email'},
-					   'email' => $in{'email'},
-					   'remote_host' => $param->{'remote_host'},
-					   'remote_addr' => $param->{'remote_addr'}});
-     my $del_is;
-     my $reason;
-     if (ref($result) eq 'HASH') {
-	 $del_is = $result->{'action'};
-	 $reason = $result->{'reason'};
-     }
-
-     unless ( $del_is =~ /do_it/) {
-	 &report::reject_report_web('auth',$reason,{},$param->{'action'});
+     unless ( $param->{'is_owner'}) {
+	 &report::reject_report_web('auth','action_owner',{},$param->{'action'});
 	 &wwslog('info','do_resetbounce: %s may not reset', $param->{'user'}{'email'});
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'authorization'});
