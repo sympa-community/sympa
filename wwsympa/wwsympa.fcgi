@@ -14907,20 +14907,31 @@ sub do_delete_pictures {
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		 next;
 	     }
-	     #elsif(($sub_is =~ /owner/) || ($unsub_is =~ /owner/)) {
-	     #    next;
-	     #}
-	     unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}, 'update_date' => time}) ) {
+	     
+	     ## Check if user is already member of the list with his new address
+	     ## then we just need to relove the old address
+	     if ($list->is_user($in{'email'})) {
+	       unless ($list->delete_user($param->{'user'}{'email'}) ) {
+		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$in{'email'}},
+					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		 &wwslog('info', 'do_change_email: could not remove email from list %s', $l);
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	       }
+	       
+	     }else {
+	       
+	       unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}, 'update_date' => time}) ) {
 		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$in{'email'},
 										    'old_email' => $param->{'user'}{'email'}},
 					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		 &wwslog('info', 'do_change_email: could not change email for list %s', $l);
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	       }
 	     }
-	 }
-
+	   }
+	 
 	 &report::notice_report_web('performed',{},$param->{'action'});
-
+	 
 	 ## Update User_table
 	 &List::delete_user_db($in{'email'});
 
