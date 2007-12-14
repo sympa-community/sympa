@@ -753,18 +753,12 @@ sub add {
 
 
     if ($list->is_user($email)) {
-	my $user = {};
-	$user->{'update_date'} = time;
-	$user->{'gecos'} = $gecos if $gecos;
-	$user->{'subscribed'} = 1;
-	
-	unless ($list->update_user($email, $user)){
-	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to update user allready subscribed', $listname,$robot,$email,$sender);
-	    my $error = "Unable to update user $user in list $listname";
-	    die SOAP::Fault->faultcode('Server')
-		->faultstring('Unable to update user allready subscribed')
-		->faultdetail($error);
-	}
+      &Log::do_log('err', 'add %s@%s %s from %s : failed, user already member of the list', $listname,$robot,$email,$sender);
+      my $error = "User already member of list $listname";
+      die SOAP::Fault->faultcode('Server')
+	->faultstring('Unable to add user')
+	  ->faultdetail($error);
+
     }else {
 	my $u;
 	my $defaults = $list->get_default_user_options();
@@ -777,7 +771,7 @@ sub add {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
 	    my $error = "Unable to add user $email in list $listname";
 	    die SOAP::Fault->faultcode('Server')
-		->faultstring('Unable to update user allreadu subscribed')
+		->faultstring('Unable to add user')
 		->faultdetail($error);
 	}
 	$list->delete_subscription_request($email);

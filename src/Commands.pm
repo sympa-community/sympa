@@ -1229,17 +1229,10 @@ sub add {
     }
     if ($action =~ /do_it/i) {
 	if ($list->is_user($email)) {
-	    my $user = {};
-	    $user->{'update_date'} = time;
-	    $user->{'gecos'} = $comment if $comment;
-	    $user->{'subscribed'} = 1;
+	  &report::reject_report_cmd('user','already_subscriber',{'email'=> $email, 'listname' => $which},$cmd_line); 
+	  &do_log('err',"ADD command rejected ; user '%s' already member of list '%s'", $email, $which);
+	  return undef; 
 
-	    unless ($list->update_user($email, $user)){
-		my $error = "Unable to update user $user in list $listname";
-		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
-		return undef; 
-	    }
-	    &report::notice_report_cmd('updated_info',{'email'=> $email,'listname' => $which},$cmd_line);  
 	}else {
 	    my $u;
 	    my $defaults = $list->get_default_user_options();
@@ -1372,7 +1365,7 @@ sub invite {
     if ($action =~ /do_it/i) {
 	if ($list->is_user($email)) {
 	    &report::reject_report_cmd('user','already_subscriber',{'email'=> $email, 'listname' => $which},$cmd_line); 
-	    &do_log('notice',"INVITE command rejected ; user '%s' already member of list '%'"), $email, $which;
+	    &do_log('err',"INVITE command rejected ; user '%s' already member of list '%s'", $email, $which);
 	    return undef;
 	}else{
             ## Is the guest user allowed to subscribe in this list ?
