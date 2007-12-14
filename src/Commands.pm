@@ -264,7 +264,7 @@ sub lists {
 	    &List::send_notify_to_listmaster('intern_error',$robot, {'error' => $error,
 								     'who' => $sender,
 								     'cmd' => $cmd_line,
-								     'listname' => $l,
+								     'list' => $list,
 								     'action' => 'Command process'});
 	    next;
 	}
@@ -1000,7 +1000,7 @@ sub signoff {
 		&List::send_notify_to_listmaster('intern_error',$robot, {'error' => $error,
 									 'who' => $sender,
 									 'cmd' => $cmd_line,
-									 'listname' => $l,
+									 'list' => $list,
 									 'action' => 'Command process'});
 		next;
 	    }
@@ -1620,7 +1620,7 @@ sub remind {
 			&List::send_notify_to_listmaster('intern_error',$robot, {'error' => $error,
 										 'who' => $sender,
 										 'cmd' => $cmd_line,
-										 'listname' => $listname,
+										 'list' => $list,
 										 'action' => 'Command process'});
 			next;
 		    }
@@ -1864,7 +1864,7 @@ sub set {
 		&List::send_notify_to_listmaster('intern_error',$robot, {'error' => $error,
 									 'who' => $sender,
 									 'cmd' => $cmd_line,
-									 'listname' => $l,
+									 'list' => $list,
 									 'action' => 'Command process'});
 		next;
 	    }
@@ -2042,7 +2042,7 @@ sub distribute {
 	&do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $hdr->get('Message-Id'), $bytes);
 
 	unless ($quiet) {
-	    unless (&report::notice_report_msg('message_distributed',$sender,{'listname' => $which,'key' => $key,'message' => $message},$robot,$list)) {
+	    unless (&report::notice_report_msg('message_distributed',$sender,{'key' => $key,'message' => $message},$robot,$list)) {
 		&do_log('notice',"Commands::distribute(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 	    }
 	}
@@ -2057,7 +2057,7 @@ sub distribute {
 	    return undef;
 	}
 	unless ($quiet) {
-	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'listname' => $which,'key' => $key,'message' => $message},$robot,$list);
+	    &report::notice_report_msg('message_in_distribution_spool',$sender,{'key' => $key,'message' => $message},$robot,$list);
 	}
 	&do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
     }
@@ -2216,7 +2216,7 @@ sub confirm {
 	    }
  
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		unless (&report::notice_report_msg('message_confirmed',$sender,{'listname' => $list->{'name'},'key' => $key,'message' => $message},$robot,$list)) {
+		unless (&report::notice_report_msg('message_confirmed',$sender,{'key' => $key,'message' => $message},$robot,$list)) {
 		    &do_log('notice',"Commands::confirm(): Unable to send template 'message_report', entry 'message_distributed' to $sender");
 		}
 	    }
@@ -2230,7 +2230,7 @@ sub confirm {
 		return undef;
 	    }
 	    unless ($quiet || ($action =~ /quiet/i )) {
-		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'listname' => $list->{'name'},'key' => $key,'message' => $message},$robot,$list);
+		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'key' => $key,'message' => $message},$robot,$list);
 	    }
 
 	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
@@ -2305,7 +2305,7 @@ sub reject {
     ## Open the file
     if (!open(IN, $file)) {
 	&do_log('info', 'REJECT %s %s from %s refused, auth failed', $which, $key, $sender);
-	&report::reject_report_msg('user','unfound_message',$sender,{'listname' => $name,'key'=> $key},$robot,'',$list);
+	&report::reject_report_msg('user','unfound_message',$sender,{'key'=> $key},$robot,'',$list);
 	return 'wrong_auth';
     }
     
@@ -2334,7 +2334,7 @@ sub reject {
 	}
 
 	## Notify list moderator
-	unless (&report::notice_report_msg('message_rejected', $sender, {'listname' => $which,'key' => $key,'message' => $msg}, $robot, $list)) {
+	unless (&report::notice_report_msg('message_rejected', $sender, {'key' => $key,'message' => $msg}, $robot, $list)) {
 	    &do_log('err',"Commands::reject(): Unable to send template 'message_report', entry 'message_rejected' to $sender");
 	}
 
@@ -2499,7 +2499,7 @@ sub which {
 	    &List::send_notify_to_listmaster('intern_error',$robot, {'error' => $error,
 								     'who' => $sender,
 								     'cmd' => $cmd_line,
-								     'listname' => $listname,
+								     'list' => $list,
 								     'action' => 'Command process'});
 	    next;
 	}

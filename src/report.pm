@@ -108,17 +108,13 @@ sub reject_report_msg {
     }
     if ($type eq 'intern') {
 	chomp($param->{'msg_id'});
-	my $listname;
-	if (ref($list) ){
-	    $listname = $list->{'name'}; 
-	}
 
 	$param ||= {}; 
 	$param->{'error'} =  &gettext($error);
 	$param->{'who'} = $user;
 	$param->{'action'} = 'message diffusion';
 	$param->{'msg_id'} = $param->{'msg_id'};
-	$param->{'listname'} = $listname;
+	$param->{'list'} = $list if (defined $list);
 	unless (&List::send_notify_to_listmaster('mail_intern_error', $robot, $param)) {
 	    &do_log('notice',"report::reject_report_msg(): Unable to notify_listmaster concerning '$user'");
 	}
@@ -759,7 +755,7 @@ sub reject_report_web {
 	    my $param = $data;
 	    $param ||= {};
 	    $param->{'error'} = &gettext($error);
-	    $param->{'listname'} = $listname;
+	    $param->{'list'} = $list if (defined $list);
 	    $param->{'who'} = $user;
 	    $param->{'action'} ||= 'Command process';
 

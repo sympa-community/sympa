@@ -3824,6 +3824,14 @@ sub send_notify_to_listmaster {
 	$param->{'to'} = $to;
 	$param->{'type'} = $operation;
 
+	## Prepare list-related data
+	if ($param->{'list'} && ref($param->{'list'}) eq 'List') {
+	  my $list = $param->{'list'};
+	  $param->{'list'} = {'name' => $list->{'name'},
+			      'host' => $list->{'domain'},
+			      'subject' => $list->{'admin'}{'subject'}};
+	}
+
 	## Automatic action done on bouncing adresses
 	if ($operation eq 'automatic_bounce_management') {
 	    my $list = new List ($param->{'listname'}, $robot);
@@ -3844,16 +3852,6 @@ sub send_notify_to_listmaster {
 		$param->{'db_name'} = &Conf::get_robot_conf($robot, 'db_name');  
 		$options->{'skip_db'} = 1; ## Skip DB access because DB is not accessible
 		
-	    ## creation list requested
-	    }elsif ($operation eq 'request_list_creation') {
-		my $list = new List ($param->{'listname'}, $robot);
-		unless (defined $list) {
-		    &do_log('err','Parameter %s is not a valid list', $param->{'listname'});
-		    return undef;
-		}
-		$param->{'list'} = {'name' => $list->{'name'},
-				    'host' => $list->{'domain'},
-				    'subject' => $list->{'admin'}{'subject'}};
 				
 	    ## Loop detected in Sympa
 	    }elsif ($operation eq 'loop_command') {

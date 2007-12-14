@@ -616,7 +616,7 @@ sub createList {
      
      ## notify listmaster
      if ($param->{'create_action'} =~ /notify/) {
-         if(&List::send_notify_to_listmaster('request_list_creation',$robot,{'listname' => $listname,'email' => $sender})) {
+         if(&List::send_notify_to_listmaster('request_list_creation',$robot,{'list' => $list,'email' => $sender})) {
 	     &Log::do_log('info','notify listmaster for list creation');
 	 }else{
 	     &Log::do_log('notice',"Unable to send notify 'request_list_creation' to listmaster");

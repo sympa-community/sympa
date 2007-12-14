@@ -7916,10 +7916,11 @@ Creates a list using a list template
      }
 
      ## notify listmaster
+     my $list = new List $in{'listname'};
      if ($param->{'create_action'} =~ /notify/) {
 	 &wwslog('info','notify listmaster');
 	 unless (&List::send_notify_to_listmaster('request_list_creation',$robot, 
-						  {'listname' => $in{'listname'},
+						  {'list' => $list,
 						   'email' => $param->{'user'}{'email'}})) {
 	     &wwslog('notice',"Unable to send notify 'request_list_creation' to listmaster");
 	 }
@@ -9924,7 +9925,7 @@ sub _restrict_values {
      if ($r_action =~ /listmaster/) {
 	 $list->{'admin'}{'status'} = 'pending' ;
 	 &List::send_notify_to_listmaster('request_list_renaming',$robot, 
-					  {'listname' => $list->{'name'},
+					  {'list' => $list,
 					   'new_listname' => $in{'new_listname'},
 					   'email' => $param->{'user'}{'email'}});
 	 &report::notice_report_web('pending_list',{},$param->{'action'},$list);
@@ -14867,7 +14868,7 @@ sub do_delete_pictures {
 	     return undef;
 	 }
 
-	 ## Change email
+	 ## Change email as list MEMBER
 	 foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
 	     my $l = $list->{'name'};
 	     
@@ -14932,6 +14933,33 @@ sub do_delete_pictures {
 	 
 	 &report::notice_report_web('performed',{},$param->{'action'});
 	 
+	 ## Change email as list OWNER/MODERATOR
+	 my %updated_lists;
+	 foreach my $role ('owner', 'editor') {
+	   foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, $role) ) {
+	     ## Go through owners/editors of the list
+	     foreach my $admin (@{$list->{'admin'}{$role}}) {
+	       next unless ($admin->{'email'} eq $param->{'user'}{'email'});
+	       
+	       ## Update entry with new email address
+	       $admin->{'email'} = $in{'email'};
+	       &wwslog('notice', "Updated %s in list %s ;new email to '%s'", $role, $list->{'name'}, $in{'email'});
+	       $updated_lists{$list->{'name'}}++;
+	     }
+	     
+	     ## Update Db cache for the list
+	     $list->sync_include_admin();
+	     $list->save_config();
+	   }
+	 }
+	 ## Notify listmasters that list owners/moderators email have changed
+	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
+					  {'list' => $list,
+					   'previous_email' => $param->{'user'}{'email'},
+					   'new_email' => $in{'email'},
+					   'updated_lists' => keys %updated_lists})
+	 
+
 	 ## Update User_table
 	 &List::delete_user_db($in{'email'});
 

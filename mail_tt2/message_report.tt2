@@ -58,7 +58,7 @@ was over the maximum size allowed on this list.[%END%]
 [%|loc(listname)%]The %1 list could not be created.[%END%]
 [% ELSIF entry == 'unfound_message' -%]
 
-[%|loc(listname,key)%]Unable to access the message on list %1 with  key %2.
+[%|loc(list.name,key)%]Unable to access the message on list %1 with  key %2.
 Warning : this message may already have been sent by one of the list's editor.[%END%]
 [% ELSIF entry == 'unfound_file_message' -%]
 
@@ -102,23 +102,23 @@ Content-Transfer-Encoding: 8bit
 
 [% ELSIF entry == 'message_distributed' -%]
 
-[%|loc(key,listname)%]Message %1 for list '%2' has been distributed.[%END%]
+[%|loc(key,list.name)%]Message %1 for list '%2' has been distributed.[%END%]
 
 [% ELSIF entry == 'message_in_distribution_spool' -%]
 
-[%|loc(key,listname)%]Message %1 for list '%2' has been validated ; it will be distributed soon.[%END%]
+[%|loc(key,list.name)%]Message %1 for list '%2' has been validated ; it will be distributed soon.[%END%]
 
 [% ELSIF entry == 'message_rejected' -%]
 
-[%|loc(key,listname)%]Message %1 for list '%2' has been rejected.[%END%]
+[%|loc(key,list.name)%]Message %1 for list '%2' has been rejected.[%END%]
 
 [% ELSIF entry == 'message_confirmed' -%]
 
-[%|loc(key,listname)%]Your message for list '%2' with the %1 ID has been confirmed and distributed.[%END%]
+[%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed and distributed.[%END%]
 
 [% ELSIF entry == 'message_confirmed_and_in_distribution_spool' -%]
 
-[%|loc(key,listname)%]Your message for list '%2' with the %1 ID has been confirmed ; it will be distributed soon.[%END%]
+[%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed ; it will be distributed soon.[%END%]
 
 [% END -%]
 [% END %]

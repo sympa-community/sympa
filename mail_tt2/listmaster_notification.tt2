@@ -14,9 +14,9 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%
 
 
 [% ELSIF type == 'request_list_renaming' -%]
-Subject: [% FILTER qencode %][%|loc(listname)%]List "%1" renaming[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 
-[%|loc(email,listname,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
+[%|loc(email,list.name,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
 
 [%|loc%]To activate/delete this mailing list :[%END%]
 [% conf.wwsympa_url %]/get_pending_lists
@@ -159,6 +159,15 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
 
+[% ELSIF type == 'listowner_email_changed' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%END%][%END%]
+
+[%|loc(previous_email,new_email)%]User %1 has changed his owner/editor email address to %2. This changed has been performed to the following lists :[%END%]
+[% FOREACH updated_list = updated_lists -%]
+[% updated_list %]
+[% END %]
+
+
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 
@@ -249,7 +258,7 @@ selected by Sympa as severe bouncing addresses:[%END%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%action%][% IF msg_id %] - MSG_ID : [%msg_id%][%END%][% IF cmd %] - COMMAND : [%cmd%][%END%][% IF listname %] - LIST : [%listname%]@[%conf.host%][%END%]) :
+([%action%][% IF msg_id %] - MSG_ID : [%msg_id%][%END%][% IF cmd %] - COMMAND : [%cmd%][%END%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
 
 [%IF error%][%error%]
 [%END%]  
@@ -261,7 +270,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF listname %] - LIST : [%listname%]@[%conf.host%][%END%]) :
+([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
 
 [%IF error == 'chdir_error' %][%|loc%]Unable to change directory.[%END%]
 [%ELSIF error == 'no_authentication_service_name' %][%|loc%]The authentication server name is not defined.[%END%]
@@ -273,7 +282,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 [%ELSIF error == 'update_subscriber_db_failed' %][%|loc(sub,old_email)%]Update subscriber '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email : %1)[%END%][%END%]
 [%ELSIF error == 'delete_subscriber_db_failed' %][%|loc(sub)%]Delete subscriber '%1' in DB failed.[%END%]
 [%ELSIF error == 'delete_email_failed' %][%|loc(old_email)%]Delete user in DB for old email '%1' failed.[%END%]
-[%ELSIF error == 'subscriber_not_found' %][%|loc(email,listname)%]Subscriber '%1' is not found in list %2.[%END%]
+[%ELSIF error == 'subscriber_not_found' %][%|loc(email,list.name)%]Subscriber '%1' is not found in list %2.[%END%]
 [%ELSIF error == 'cannot_read' %][%|loc(filepath)%]Unable to read file : '%1'.[%END%]
 [%ELSIF error == 'cannot_write' %][%|loc(filepath)%]Unable to write file : '%1'.[%END%]
 [%ELSIF error == 'cannot_open_file' %][%|loc(file)%]Unable to open file '%1'.[%END%]
@@ -284,43 +293,43 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 [%ELSIF error == 'rename_file' %][%|loc(old,new)%]Unable to rename file '%1' into '%2'.[%END%]
 [%ELSIF error == 'rename_dir' %][%|loc(old,new)%]Unable to rename directory '%1' into '%2'.[%END%]
 [%ELSIF error == 'erase_file' %][%|loc(file)%]Unable to erase file '%1'.[%END%]
-[%ELSIF error == 'cannot_send_distribute' %][%|loc(from,listname)%]Unable to send command DISTRIBUTE from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'cannot_send_distribute' %][%|loc(from,list.name)%]Unable to send command DISTRIBUTE from '%1' to list '%2'.[%END%]
 [%ELSIF error == 'no_html_message_available' %][%|loc(dir)%]No HTML version of the message available in '%1'.[%END%]
-[%ELSIF error == 'update_config_changes' %][%|loc(listname)%]Unable to update file config_changes for list '%1'.[%END%]
-[%ELSIF error == 'month_not_found' %][%|loc(month,listname)%]Unable to find month '%1' for list '%2'[%END%][%IF dir%][%|loc(dir)%] : unable to read '%1'.[%END%][%END%]
-[%ELSIF error == 'arc_not_found' %][%|loc(arc_file,listname,path)%]Unable to find archive '%1' for list '%2'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
-[%ELSIF error == 'inaccessible_archive' %][%|loc(listname)%]Unable to find archive for list '%1'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'update_config_changes' %][%|loc(list.name)%]Unable to update file config_changes for list '%1'.[%END%]
+[%ELSIF error == 'month_not_found' %][%|loc(month,list.name)%]Unable to find month '%1' for list '%2'[%END%][%IF dir%][%|loc(dir)%] : unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'arc_not_found' %][%|loc(arc_file,list.name,path)%]Unable to find archive '%1' for list '%2'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'inaccessible_archive' %][%|loc(list.name)%]Unable to find archive for list '%1'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
 [%ELSIF error == 'may_not_send_me'%][%|loc()%]Unable to send archive : no message id found.[%END%]
 [%ELSIF error == 'archive_not_found'%][%|loc(msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
-[%ELSIF error == 'cannot_save_config'%][%|loc(listname)%]Cannot save config file for list '%1'.[%END%]
+[%ELSIF error == 'cannot_save_config'%][%|loc(list.name)%]Cannot save config file for list '%1'.[%END%]
 [%ELSIF error == 'failed_to_install_aliases'%][%|loc%]Failed to install aliases.[%END%]
 [%ELSIF error == 'failed_to_remove_aliases'%][%|loc%]Failed to remove aliases.[%END%]
 [%ELSIF error == 'internal_scenario_error_create_list'%][%|loc%]Internal scenario error for 'create_list'.[%END%]
 [%ELSIF error == 'create_list'%][%|loc%]Unable to create list.[%END%]
 [%ELSIF error == 'unable_to_load_list_of_topics'%][%|loc%]Unable to load list topics.[%END%]
 [%ELSIF error == 'unable_to_load_create_list_templates'%][%|loc%]Unable to load create_list templates.[%END%]
-[%ELSIF error == 'unable_get_family'%][%|loc(listname)%]Unable to get family for list '%1'.[%END%]
-[%ELSIF error == 'list_reload'%][%IF new_listname %][%|loc(new_listname)%]Unable to reload list with new listname '%1'.[%END%][%ELSE%][%|loc%]Unable to reload list[%END%][%END%]
-[%ELSIF error == 'sync_include_failed' %][%|loc(listname)%]Failed to inlude members for list '%1'[%END%] 
-[%ELSIF error == 'sync_include_admin_failed' %][%|loc(listname)%]Failed to include list admins for list '%1'[%END%] 
+[%ELSIF error == 'unable_get_family'%][%|loc(list.name)%]Unable to get family for list '%1'.[%END%]
+[%ELSIF error == 'list_reload'%][%IF new_list.name %][%|loc(new_listname)%]Unable to reload list with new listname '%1'.[%END%][%ELSE%][%|loc%]Unable to reload list[%END%][%END%]
+[%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to inlude members for list '%1'[%END%] 
+[%ELSIF error == 'sync_include_admin_failed' %][%|loc(list.name)%]Failed to include list admins for list '%1'[%END%] 
 [%ELSIF error == 'no_owner_defined' %][%|loc%]No owner is defined for the list '%1'[%END%] 
-[%ELSIF error == 'exportation_failed' %][%|loc(listname)%]The exportation to an Ldap directory failed for list '%1'[%END%] 
+[%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an Ldap directory failed for list '%1'[%END%] 
 [%ELSIF error == 'unable_to_check_list_smtp' %][%|loc(new_listname)%]Unable to check listname '%1' on SMTP server[%END%]
-[%ELSIF error == 'create_shared' %][%|loc(listname)%]Cannot create shared for list '%1'.[%END%]
-[%ELSIF error == 'restore_shared'%][%|loc(listname)%]Cannot restore shared for list '%1'.[%END%]
-[%ELSIF error == 'delete_shared'%][%|loc(listname)%]Cannot delete shared for list '%1'.[%END%]
+[%ELSIF error == 'create_shared' %][%|loc(list.name)%]Cannot create shared for list '%1'.[%END%]
+[%ELSIF error == 'restore_shared'%][%|loc(list.name)%]Cannot restore shared for list '%1'.[%END%]
+[%ELSIF error == 'delete_shared'%][%|loc(list.name)%]Cannot delete shared for list '%1'.[%END%]
 [%ELSIF error == 'browse_shared'%][%|loc%]Impossible to browse shared documents for list '%1'.[%END%]
 [%ELSIF error == 'cannot_upload'%][%|loc(path)%]Cannot upload file '%1'.[%END%]
 [%ELSIF error == 'cannot_unzip' %][%|loc(name)%]Cannot unzip file '%1'.[%END%] 
 [%ELSIF error == 'error_during_unzip' %][%|loc(name)%]Errors while unzipping file '%1'.[%END%] 
-[%ELSIF error == 'cannot_send_remind' %][%|loc(from,listname)%]Unable to send command REMIND from '%1' to list '%2'.[%END%]
-[%ELSIF error == 'cannot_send_mail' %][%|loc(from,listname)%]Unable to send mail from '%1' to list '%2'.[%END%]
-[%ELSIF error == 'auth_msg_failed' %][%|loc(key,listname)%]Unable to access the message authenticated with key '%1' for list '%2'.[%END%]
+[%ELSIF error == 'cannot_send_remind' %][%|loc(from,list.name)%]Unable to send command REMIND from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'cannot_send_mail' %][%|loc(from,list.name)%]Unable to send mail from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'auth_msg_failed' %][%|loc(key,list.name)%]Unable to access the message authenticated with key '%1' for list '%2'.[%END%]
 [%ELSIF error == 'del_sub_request' %][%|loc(sub)%]Unable to delete subscription request for user '%1'.[%END%]
 [%ELSIF error == 'add_file_zip' %][%|loc(file)%]Unable to add file '%1' to archives.[%END%]
 [%ELSIF error == 'write_file_zip' %][%|loc(zipfile)%]Unable to write file zip '%1'.[%END%]
 [%ELSIF error == 'err_404' %][%|loc(zipfile)%]File not found.[%END%]
-[%ELSIF error == 'new_document_failed' %][%|loc(path,listname)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
+[%ELSIF error == 'new_document_failed' %][%|loc(path,list.name)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
 [%ELSIF error == 'cookie_error' %][%|loc%]Parameter cookie undefined, authentication failure.[%END%]
 [%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error : '%1' undefined, authentication failure.[%END%]
 [%ELSIF error%][%error%]
@@ -332,7 +341,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : system error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered a system error[%END%]
-([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF listname %] - LIST : [%listname%]@[%conf.host%][%END%]) :
+([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
 
 [%IF error == 'a' %]
 [%ELSIF error%][% error %]
