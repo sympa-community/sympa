@@ -1710,6 +1710,10 @@ sub extract_verp_rcpt() {
     if ( $percent =~ /^(\d+)\%/ ) {
 	$nbpart = 100/$1;  
     }
+    else {
+	&do_log ('err', 'Wrong format for parameter extract_verp: %s. Can\'t process VERP.',$percent);
+	return undef;
+    }
     
     my $modulo = $xseq % $nbpart ;
     my $lenght = int (($#{$refrcpt} + 1) / $nbpart) + 1;
