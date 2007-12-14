@@ -233,8 +233,8 @@ sub connect {
       }
       
       if ($param->{'db_type'} eq 'SQLite') { # Configure to use sympa database
-        eval { $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' )};
-	eval { if(defined $param->{'db_timeout'}) { $dbh->func( $param->{'db_timeout'}, 'busy_timeout' ); } else { $dbh->func( 5000, 'busy_timeout' ); } };
+        $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
+	if(defined $param->{'db_timeout'}) { $dbh->func( $param->{'db_timeout'}, 'busy_timeout' ); } else { $dbh->func( 5000, 'busy_timeout' ); };
       }
       
       $self->{'dbh'} = $dbh if $self;
