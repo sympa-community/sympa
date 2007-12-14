@@ -2133,7 +2133,7 @@ Use it to create a List object and initialize output parameters.
 	 if (defined $list->{'admin'}{'web_archive'}) {
 	     $param->{'is_archived'} = 1;
 
-	     
+	     ## Check if the current user may access web archives
 	     my $result = $list->check_list_authz('web_archive.access',$param->{'auth_method'},
 						  {'sender' => $param->{'user'}{'email'},
 						   'remote_host' => $param->{'remote_host'},
@@ -2146,7 +2146,33 @@ Use it to create a List object and initialize output parameters.
 	     }else{
 		 undef ($param->{'arc_access'});
 	     }
-	 }	
+
+	     ## Check if web archive is publically accessible (useful information for RSS)
+	     my $result = $list->check_list_authz('web_archive.access',$param->{'auth_method'},
+						  {'sender' => 'nobody'});
+	     my $r_action;
+	     $r_action = $result->{'action'} if (ref($result) eq 'HASH');
+	     
+	     if ($r_action =~ /do_it/i) {
+	       $param->{'arc_public_access'} = 1; 
+	     }
+	   }	
+	 
+	 ## Shared documents access control
+	 if ($list->get_shared_status() eq 'exist') {
+	   ## Check if shared is publically accessible (useful information for RSS)
+	   my $result = $list->check_list_authz('shared_doc.d_read',$param->{'auth_method'},
+						{'sender' => 'nobody'});
+	   my $r_action;
+	    if (ref($result) eq 'HASH') {
+	      $r_action = $result->{'action'};
+	    }
+	   
+	   if ($r_action =~ /do_it/i) {
+	     $param->{'shared_public_access'} = 1; 
+	   }
+
+	 }
      }
 
      $param->{'robot'} = $robot;

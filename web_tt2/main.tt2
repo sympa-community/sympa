@@ -11,8 +11,8 @@
 
 <!-- RSS chanel -->
    [% IF list -%] 
-     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=20"/>
-     <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=20"/>
+     [% IF arc_public_access %]<link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=20"/>[% END -%]
+     [% IF shared_public_access %]<link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest documents[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=20"/>[% END -%]
    [% ELSE -%]
      [% IF (action == 'lists') && topic -%]
        <link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest lists[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=20"/>
