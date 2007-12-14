@@ -849,15 +849,15 @@ while (!$signal) {
 	## Clean queue (bad)
 	if ($index_cleanqueue++ >= 100){
 	    $index_cleanqueue=0;
-	    &CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
-	    &CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
-	    &CleanSpool($Conf{'queueoutgoing'}.'/bad', $Conf{'clean_delay_queueoutgoing'});
-	    &CleanSpool($Conf{'queuebounce'}.'/bad', $Conf{'clean_delay_queuebounce'});
-	    &CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
-	    &CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
-	    &CleanSpool($Conf{'tmpdir'}, $Conf{'clean_delay_tmpdir'});
-	    &CleanSpool($Conf{'queuesubscribe'}, $Conf{'clean_delay_queuesubscribe'});
-	    &CleanSpool($Conf{'queueautomatic'}, $Conf{'clean_delay_queueautomatic'});
+	    &tools::CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
+	    &tools::CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
+	    &tools::CleanSpool($Conf{'queueoutgoing'}.'/bad', $Conf{'clean_delay_queueoutgoing'});
+	    &tools::CleanSpool($Conf{'queuebounce'}.'/bad', $Conf{'clean_delay_queuebounce'});
+	    &tools::CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
+	    &tools::CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
+	    &tools::CleanSpool($Conf{'tmpdir'}, $Conf{'clean_delay_tmpdir'});
+	    &tools::CleanSpool($Conf{'queuesubscribe'}, $Conf{'clean_delay_queuesubscribe'});
+	    &tools::CleanSpool($Conf{'queueautomatic'}, $Conf{'clean_delay_queueautomatic'});
 	}
     }
     my $filename;
@@ -2058,60 +2058,5 @@ sub SendDigest{
 	}
     }
 }
-
-
-############################################################
-#  CleanSpool
-############################################################
-#  Cleans files older than $clean_delay from spool $spool_dir
-#  
-# IN : -$spool_dir (+): the spool directory
-#      -$clean_delay (+): delay in days 
-#
-# OUT : 1
-#
-############################################################## 
-sub CleanSpool {
-    my ($spool_dir, $clean_delay) = @_;
-    &do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
-
-    unless (opendir(DIR, $spool_dir)) {
-	&do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
-	return undef;
-    }
-
-    my @qfile = sort grep (!/^\.+$/,readdir(DIR));
-    closedir DIR;
-    
-    my ($curlist,$moddelay);
-    foreach my $f (sort @qfile) {
-
-	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
-	    if (-f "$spool_dir/$f") {
-		unlink ("$spool_dir/$f") ;
-		&do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
-	    }elsif (-d "$spool_dir/$f") {
-		unless (&tools::remove_dir("$spool_dir/$f")) {
-		    &do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
-		    next;
-		}
-		&do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
-	    }
-	}
-    }
-
-    return 1;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 1;

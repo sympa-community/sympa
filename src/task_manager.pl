@@ -1271,6 +1271,8 @@ sub purge_orphan_bounces {
 	 }
 	 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
 
+	 &tools::CleanSpool($Conf{'queuebounce'}.'/OTHER', $Conf{'clean_delay_queueother'});
+
 	 for (my $u = $list->get_first_bouncing_user(); $u ; $u = $list->get_next_bouncing_user()) {
 	     $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 	     $u->{'last_bounce'} = $2;

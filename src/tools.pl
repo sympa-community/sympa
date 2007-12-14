@@ -3135,7 +3135,7 @@ sub hash_2_string {
 
 =pod 
 
-=head2 sub save_to_bad(STRING $listname)
+=head2 sub save_to_bad(HASH $param)
 
 Saves a message file to the "bad/" spool of a given queue. Creates this directory if not found.
 
@@ -3161,9 +3161,9 @@ Saves a message file to the "bad/" spool of a given queue. Creates this director
 
 =over
 
-=item * 1 if the file was correctly savec to the "bad/" directory;
+=item * 1 if the file was correctly saved to the "bad/" directory;
 
-=item * undef if  something went wrong.
+=item * undef if something went wrong.
 
 =back 
 
@@ -3171,7 +3171,7 @@ Saves a message file to the "bad/" spool of a given queue. Creates this director
 
 =over 
 
-=item * Digest::MD5::md5_hex
+=item * List::send_notify_to_listmaster
 
 =back 
 
@@ -3204,7 +3204,85 @@ sub save_to_bad {
     return 1;
 }
 
+=pod 
 
+=head2 sub CleanSpool(STRING $spool_dir, INT $clean_delay)
 
+Clean all messages in spool $spool_dir older than $clean_delay.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<spool_dir> : a string corresponding to the path to the spool to clean;
+
+=item * I<clean_delay> : the delay between the moment we try to clean spool and the last modification date of a file.
+
+=back
+
+=back 
+
+=head3 Return 
+
+=over
+
+=item * 1 if the spool was cleaned withou troubles.
+
+=item * undef if something went wrong.
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * tools::remove_dir
+
+=back 
+
+=cut 
+
+############################################################
+#  CleanSpool
+############################################################
+#  Cleans files older than $clean_delay from spool $spool_dir
+#  
+# IN : -$spool_dir (+): the spool directory
+#      -$clean_delay (+): delay in days 
+#
+# OUT : 1
+#
+############################################################## 
+sub CleanSpool {
+    my ($spool_dir, $clean_delay) = @_;
+    &do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
+
+    unless (opendir(DIR, $spool_dir)) {
+	&do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
+	return undef;
+    }
+
+    my @qfile = sort grep (!/^\.+$/,readdir(DIR));
+    closedir DIR;
+    
+    my ($curlist,$moddelay);
+    foreach my $f (sort @qfile) {
+
+	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
+	    if (-f "$spool_dir/$f") {
+		unlink ("$spool_dir/$f") ;
+		&do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
+	    }elsif (-d "$spool_dir/$f") {
+		unless (&tools::remove_dir("$spool_dir/$f")) {
+		    &do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
+		    next;
+		}
+		&do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
+	    }
+	}
+    }
+
+    return 1;
+}
 
 1;
