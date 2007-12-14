@@ -126,7 +126,7 @@ sub PushLang {
 }
 
 sub PopLang {
-    &do_log('debug', 'Language::PopLang(%s)');
+    &do_log('debug', '');
 
     my $locale = pop @previous_locale;
     &SetLang($locale);
