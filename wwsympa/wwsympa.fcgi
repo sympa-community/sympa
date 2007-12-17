@@ -1616,6 +1616,12 @@ sub send_html {
 	  printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime(time));
 	  Language::PopLang();
       }
+    ## If we set the header indicating the last time the file to send was modified, add an HTTP header (limitate web harvesting).
+    if ($param->{'header_date'}) {
+	Language::PushLang("en_US");
+	  printf "Last-Modified: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'header_date'}));
+	  Language::PopLang();
+      }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n\n";
     
@@ -6846,6 +6852,7 @@ sub do_viewmod {
 
      my @stat = stat ($arc_file_path);
      $param->{'date'} = $stat[9];
+     $param->{'header_date'} = $stat[9];
      $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
      $param->{'archive_name'} = $in{'month'};
 
