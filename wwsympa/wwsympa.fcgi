@@ -749,6 +749,9 @@ my $birthday = time ;
      ## Sympa parameters in $param->{'conf'}
      $param->{'conf'} = {};
      foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email','logo_html_definition',
+	            'main_menu_custom_button_1_url','main_menu_custom_button_1_title','main_menu_custom_button_1_target',
+	            'main_menu_custom_button_2_url','main_menu_custom_button_2_title','main_menu_custom_button_2_target',
+	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist',
                     'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);

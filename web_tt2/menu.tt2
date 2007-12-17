@@ -21,7 +21,19 @@
 
 [% IF action == 'help' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
   <li> <a class="[% class %]" href="[% path_cgi %]/help" >[%|loc%]Help[%END%]</a></li>
+
+[% IF  conf.main_menu_custom_button_1_title %]
+  <li> <a class="MainMenuLinks"  [% IF  conf.main_menu_custom_button_1_target %] target ="[% conf.main_menu_custom_button_1_target %]"[% END %] href="[% conf.main_menu_custom_button_1_url %]">[% conf.main_menu_custom_button_1_title %]</a></li>
+[%END%]
+[% IF  conf.main_menu_custom_button_2_title %]
+  <li> <a class="MainMenuLinks"  [% IF  conf.main_menu_custom_button_2_target %] target ="[% conf.main_menu_custom_button_2_target %]"[% END %] href="[% conf.main_menu_custom_button_2_url %]">[% conf.main_menu_custom_button_2_title %]</a></li>
+[%END%]
+[% IF  conf.main_menu_custom_button_3_title %]
+  <li> <a class="MainMenuLinks"  [% IF  conf.main_menu_custom_button_3_target %] target ="[% conf.main_menu_custom_button_3_target %]"[% END %] href="[% conf.main_menu_custom_button_3_url %]">[% conf.main_menu_custom_button_3_title %]</a></li>
+[%END%]
+
 </ul>
+
 
 </div>
 <!-- </div> -->

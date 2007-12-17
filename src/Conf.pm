@@ -49,7 +49,11 @@ my @valid_options = qw(
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
 		       global_remind home host ignore_x_no_archive_header_feature domain lang listmaster listmaster_email localedir log_socket_type log_level 
-		       logo_html_definition misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
+		       logo_html_definition 
+                       main_menu_custom_button_1_title main_menu_custom_button_1_url main_menu_custom_button_1_target 
+                       main_menu_custom_button_2_title main_menu_custom_button_2_url main_menu_custom_button_2_target 
+                       main_menu_custom_button_3_title main_menu_custom_button_3_url main_menu_custom_button_3_target  
+                       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile pidfile_distribute pidfile_creation
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir lock_method
@@ -246,6 +250,15 @@ my %Default_Conf =
      'default_remind_task' => '',
      'update_db_field_types' => 'auto',
      'logo_html_definition' => '',
+     'main_menu_custom_button_1_title' => '',
+     'main_menu_custom_button_1_url' => '',
+     'main_menu_custom_button_1_target' => '',
+     'main_menu_custom_button_2_title' => '',
+     'main_menu_custom_button_2_url' => '',
+     'main_menu_custom_button_2_target' => '',
+     'main_menu_custom_button_3_title' => '',
+     'main_menu_custom_button_3_url' => '',
+     'main_menu_custom_button_3_target' => '',
      'return_path_suffix' => '-owner',
      'verp_rate' => '0%', 
      'pictures_max_size' => 102400, ## 100Kb
@@ -541,6 +554,15 @@ sub load_robots {
 				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  logo_html_definition        => 1,
+				  main_menu_custom_button_1_title => 1,
+				  main_menu_custom_button_1_url => 1,
+				  main_menu_custom_button_1_target => 1,
+				  main_menu_custom_button_2_title => 1,
+				  main_menu_custom_button_2_url => 1,
+				  main_menu_custom_button_2_target => 1,
+				  main_menu_custom_button_3_title => 1,
+				  main_menu_custom_button_3_url => 1,
+				  main_menu_custom_button_3_target => 1,
 				  lang            => 1,
 				  default_home    => 1,
 				  cookie_domain   => 1,
