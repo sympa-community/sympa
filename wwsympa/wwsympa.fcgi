@@ -40,6 +40,7 @@ This fcgi script completely handles all aspects of the Sympa web interface
 
 ## Change this to point to your Sympa bin directory
 use lib '--LIBDIR--';
+
 use Getopt::Long;
 use Archive::Zip;
 

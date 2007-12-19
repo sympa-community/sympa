@@ -24,8 +24,8 @@ package Auth;
 use lib '--LIBDIR--';
 
 use Exporter;
-@ISA = ('Exporter');
-@EXPORT = ();
+our @ISA = ('Exporter');
+our @EXPORT = ();
 
 use Log;
 use Conf;

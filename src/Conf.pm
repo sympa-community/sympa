@@ -23,6 +23,8 @@
 
 package Conf;
 
+use strict "vars";
+
 use Log;
 use Language;
 use wwslib;
@@ -31,8 +33,8 @@ use CAS;
 require Exporter;
 use Carp;
 
-@ISA = qw(Exporter);
-@EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
 
 require 'tools.pl';
 
@@ -82,7 +84,7 @@ my %old_options = ('trusted_ca_options' => 'capath,cafile',
 		   );
 ## These parameters now have a hard-coded value
 ## Customized value can be accessed though as %Ignored_Conf
-%Ignored_Conf;
+my %Ignored_Conf;
 my %hardcoded_options = ('filesystem_encoding' => 'utf8');
 
 my %valid_options = ();
@@ -293,7 +295,7 @@ my %trusted_applications = ('trusted_application' => {'occurrence' => '0-n',
 
 
 my $wwsconf;
-%Conf = ();
+our %Conf = ();
 
 ## Loads and parses the configuration file. Reports errors if any.
 sub load {
@@ -509,7 +511,7 @@ sub load_nrcpt_by_domain {
   my $config = $Conf{'etc'}.'/nrcpt_by_domain.conf';
   my $line_num = 0;
   my $config_err = 0;
-  my %nrcpt_by_domain ; 
+  my $nrcpt_by_domain ; 
   my $valid_dom = 0;
 
   
@@ -545,7 +547,7 @@ sub load_nrcpt_by_domain {
 ## load each virtual robots configuration files
 sub load_robots {
     
-    my %robot_conf ;
+    my $robot_conf ;
     my %valid_robot_key_words = ( 'http_host'     => 1,
 				  'allow_subscribe_if_pending'   => 1,
 				  listmaster      => 1,
@@ -617,7 +619,7 @@ sub load_robots {
 	$robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
     }
 
-    foreach $robot (readdir(DIR)) {
+    foreach my $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
 	next unless (-f "$Conf{'etc'}/$robot/robot.conf");
 
@@ -726,6 +728,7 @@ sub load_robots {
 ## Check required files and create them if required
 sub checkfiles_as_root {
 
+  my $config_err = 0;
 
     ## Check aliases file
     unless (-f $Conf{'sendmail_aliases'}) {
@@ -1115,7 +1118,7 @@ sub _load_auth {
 			next;
 		    }
 
-		    my %cas_param = (casUrl => $current_paragraph->{'base_url'});
+		    my $cas_param = {casUrl => $current_paragraph->{'base_url'}};
 
 		    ## Optional parameters
 		    ## We should also cope with X509 CAs
@@ -1130,7 +1133,7 @@ sub _load_auth {
 		    $cas_param->{'proxyValidatePath'} = $current_paragraph->{'proxy_validate_path'} 
 		    if (defined $current_paragraph->{'proxy_validate_path'});
 		    
-		    $current_paragraph->{'cas_server'} = new CAS(%cas_param);
+		    $current_paragraph->{'cas_server'} = new CAS(%{$cas_param});
 		    unless (defined $current_paragraph->{'cas_server'}) {
 			&do_log('err', 'Failed to create CAS object for %s : %s', 
 				$current_paragraph->{'base_url'}, &CAS::get_errors());

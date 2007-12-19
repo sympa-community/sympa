@@ -23,10 +23,12 @@
 
 package WebAgent;
 
+use strict "vars";
+
 use LWP::UserAgent;
 ## Good documentation : http://articles.mongueurs.net/magazines/linuxmag57.html
 
-@ISA = qw (LWP::UserAgent);
+our @ISA = qw (LWP::UserAgent);
 
 my ($web_user, $web_passwd);
 
@@ -43,8 +45,8 @@ sub set_basic_credentials {
 package Fetch;
 
 require Exporter;
-@ISA = qw(Exporter);
-@EXPORT = qw();
+our @ISA = qw(Exporter);
+our @EXPORT = qw();
 
 use Log;
 
@@ -138,9 +140,9 @@ sub get_https2{
 	my $ssl_data= shift;
 
 	my $trusted_ca_file = $ssl_data->{'cafile'};
-	$trusted_ca_file ||= $Conf{'cafile'};
+	$trusted_ca_file ||= $Conf::Conf{'cafile'};
 	my $trusted_ca_path = $ssl_data->{'capath'};
-	$trusted_ca_path ||= $Conf{'capath'};
+	$trusted_ca_path ||= $Conf::Conf{'capath'};
 
 	do_log ('debug','Fetch::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 

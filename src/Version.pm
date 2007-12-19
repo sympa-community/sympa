@@ -21,14 +21,16 @@
 
 package Version;
 
+use strict "vars";
+
 require Exporter;
 use Carp;
 
-@ISA = qw(Exporter);
-@EXPORT = qw($Version);
+our @ISA = qw(Exporter);
+our @EXPORT = qw($Version);
 
 
-$Version = '--SYMPA_VERSION--';
+our $Version = '--SYMPA_VERSION--';
 
 1;
 

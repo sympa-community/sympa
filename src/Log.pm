@@ -23,14 +23,16 @@
 
 package Log;
 
+use strict "vars";
+
 require Exporter;
 use Sys::Syslog;
 use Carp;
 use POSIX qw/mktime/;
 use Encode;
 
-@ISA = qw(Exporter);
-@EXPORT = qw(fatal_err do_log do_openlog $log_level);
+our @ISA = qw(Exporter);
+our @EXPORT = qw(fatal_err do_log do_openlog $log_level);
 
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
 # When logs are not available, period of time to wait before sending another warning to listmaster.
@@ -273,7 +275,7 @@ sub db_log {
 
 # delete logs in RDBMS
 sub db_log_del {
-    my $exp = &Conf::get_robot_conf($Conf{'host'},'logs_expiration_period');
+    my $exp = &Conf::get_robot_conf($Conf::Conf{'host'},'logs_expiration_period');
     my $date = time - ($exp * 30 * 24 * 60 * 60);
 
     my $dbh = &List::db_get_handler();

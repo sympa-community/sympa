@@ -21,12 +21,14 @@
 
 package Ldap;
 
+use strict "vars";
+
 use Conf;
 
 require Exporter;
 
-@ISA = qw(Exporter);
-@EXPORT = qw(%Ldap);
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%Ldap);
 
 my @valid_options = qw(host suffix filter scope bind_dn bind_password);
 my  @required_options = qw(host suffix filter);
@@ -46,7 +48,7 @@ my %Default_Conf =
 	'bind_password' => undef
    );
 
-%Ldap = ();
+my %Ldap = ();
 
 ## Loads and parses the configuration file. Reports errors if any.
 sub load {
