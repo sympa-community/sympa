@@ -2240,12 +2240,18 @@ sub _load_config_changes_file {
     my $self = shift;
     &do_log('debug3', 'List::_load_config_changes_file(%s)', $self->{'name'});
 
+    my $config_changes = {};
+
+    unless (-e "$self->{'dir'}/config_changes") {
+	&do_log('err','No file %s/config_changes. Assuming no changes', $self->{'dir'});
+	return $config_changes;
+    }
+
     unless (open (FILE,"$self->{'dir'}/config_changes")) {
-	&do_log('err','Unable to open file %s/config_changes : %s', $self->{'dir'},$_);
+	&do_log('err','File %s/config_changes exists, but unable to open it: %s', $self->{'dir'},$_);
 	return undef;
     }
     
-    my $config_changes = {};
     while (<FILE>) {
 	
 	next if /^\s*(\#.*|\s*)$/;

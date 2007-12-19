@@ -125,7 +125,6 @@ sub get_available_families {
     
     return keys %families;
 }
-
 =pod 
 
 =head1 Instance methods 
@@ -235,7 +234,7 @@ sub new {
     }
 
     ## family files
-    if (my $file_names = $self->_check_obligatory_files()) {
+    if (my $file_names = $self->_check_mandatory_files()) {
 	&do_log('err','Family::new(%s,%s) : Definition family files are missing : %s',$name,$robot,$file_names);
 	return undef;
     }
@@ -1779,7 +1778,7 @@ sub _get_directory {
 
 =pod 
 
-=head2 sub _check_obligatory_files()
+=head2 sub _check_mandatory_files()
 
 Checks the existence of the mandatory files (param_constraint.conf and config.tt2) in the family directory.
 
@@ -1812,7 +1811,7 @@ Checks the existence of the mandatory files (param_constraint.conf and config.tt
 =cut
 
 #####################################################
-# _check_obligatory_files                                   
+# _check_mandatory_files                                   
 #####################################################
 # check existence of mandatory files in the family
 # directory:
@@ -1823,13 +1822,13 @@ Checks the existence of the mandatory files (param_constraint.conf and config.tt
 # OUT : -0 (if OK) or 
 #        $string containing missing file names
 #####################################################
-sub _check_obligatory_files {
+sub _check_mandatory_files {
     my $self = shift;
     my $dir = $self->{'dir'};
     my $string = "";
-    &do_log('debug3','Family::_check_obligatory_files(%s)',$self->{'name'});
+    &do_log('debug3','Family::_check_mandatory_files(%s)',$self->{'name'});
 
-    foreach my $f ('param_constraint.conf','config.tt2') {
+    foreach my $f ('config.tt2') {
 	unless (-f "$dir/$f") {
 	    $string .= $f." ";
 	}
@@ -2737,12 +2736,18 @@ sub _load_param_constraint_conf {
 
     my $file = "$self->{'dir'}/param_constraint.conf";
     
+    my $constraint = {};
+
+    unless (-e $file) {
+	&do_log('err','No file %s. Assuming no constraints to apply.', $file);
+	return $constraint;
+    }
+
     unless (open (FILE, $file)) {
-	&do_log('err','Unable to open file %s : %s', $file,$_);
+	&do_log('err','File %s exists, but unable to open it: %s', $file,$_);
 	return undef;
     }
 
-    my $constraint = {};
     my $error = 0;
 
     ## Just in case...
