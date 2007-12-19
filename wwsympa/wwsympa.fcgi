@@ -555,7 +555,7 @@ my %in_regexp = (
 		 'new_email' => &tools::get_regexp('email'),
 		 'pending_email' => &tools::get_regexp('email').',.*', # Email address is followed by ',' + gecos data
 		 'sender' => &tools::get_regexp('email'),
-		 'to' => '([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+',
+		 'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
 
 		 ## Host
 		 'new_robot' => &tools::get_regexp('host'),
@@ -1549,17 +1549,17 @@ sub get_parameters {
 	 }
 
 	 # If we are editing an HTML file in the shared, allow HTML but prevent XSS.
-#	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
-#	     my $tmpparam = $in{$p};
-#	     $tmpparam = &tools::sanitize_html('robot' => $robot,
-#					       'string' => $in{$p});
-#	     if (defined $tmpparam) {
-#		 $in{$p} = $tmpparam;
-#	     }
-#	     else {
-#		 &do_log('err','Unable to sanitize parameter %s',$pname);
-#	     }
-#	 }
+	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
+	     my $tmpparam = $in{$p};
+	     $tmpparam = &tools::sanitize_html('robot' => $robot,
+					       'string' => $in{$p});
+	     if (defined $tmpparam) {
+		 $in{$p} = $tmpparam;
+	     }
+	     else {
+		 &do_log('err','Unable to sanitize parameter %s',$pname);
+	     }
+	 }
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     if ($one_p !~ /^$regexp$/s ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
@@ -1572,7 +1572,7 @@ sub get_parameters {
 		 close DUMP;
 		 
 		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
-		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp ; dumped vars in %s', $pname, $one_p, $dump_file);
+		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp:%s ; dumped vars in %s', $pname, $one_p, $regexp, $dump_file);
 		 $in{$p} = '';
 		 next;
 	     }
@@ -13030,18 +13030,18 @@ sub creation_shared_file {
     close FILE;
 
     ## XSS Protection for HTML files.
-#    if (lc($fname) =~ /\.html?/) {
-#	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
-#							'file' => "$shareddir/$path/$fname");
-#	if (defined $sanitized_file) {
-#	    open HTMLFILE,  ">:bytes", "$shareddir/$path/$fname";
-#	    print HTMLFILE $sanitized_file;
-#	    close HTMLFILE;
-#	}
-#	else {
-#	    &do_log('err','Unable to sanitize file %s',$fname);
-#	}
-#    }
+    if (lc($fname) =~ /\.html?/) {
+	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+							'file' => "$shareddir/$path/$fname");
+	if (defined $sanitized_file) {
+	    open HTMLFILE,  ">:bytes", "$shareddir/$path/$fname";
+	    print HTMLFILE $sanitized_file;
+	    close HTMLFILE;
+	}
+	else {
+	    &do_log('err','Unable to sanitize file %s',$fname);
+	}
+    }
     
 }
 
@@ -13609,18 +13609,18 @@ sub d_copy_file {
 	close DEST_FILE;
 
 	## XSS Protection for HTML files.
-#	if (lc($fname) =~ /\.html?/) {
-#	    my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
-#							    'file' => "$dest_dir/$fname");
-#	    if (defined $sanitized_file) {
-#		open HTMLFILE,  ">:bytes", "$dest_dir/$fname";
-#		print HTMLFILE $sanitized_file;
-#		close HTMLFILE;
-#	    }
-#	    else {
-#		&do_log('err','Unable to sanitize file %s',$fname);
-#	    }
-#	}
+	if (lc($fname) =~ /\.html?/) {
+	    my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
+							    'file' => "$dest_dir/$fname");
+	    if (defined $sanitized_file) {
+		open HTMLFILE,  ">:bytes", "$dest_dir/$fname";
+		print HTMLFILE $sanitized_file;
+		close HTMLFILE;
+	    }
+	    else {
+		&do_log('err','Unable to sanitize file %s',$fname);
+	    }
+	}
 	
 	## desc file creation
 	unless (open (DESC,">$dest_dir/.desc.$fname")) {
@@ -15041,14 +15041,15 @@ sub do_delete_pictures {
 	 return undef;
      }
      if ($in{'to'}) {
-	 # In archive we hidde email replacing @ by ' '. Here we must do ther reverse transformation
-	 $in{'to'} =~ s/ /\@/;
+	 # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
+	 $in{'to'} =~ s/ /\@/g;
 	 $param->{'to'} = $in{'to'};
      }else{
 	 $param->{'to'} = $list->get_list_address();
      }
-     ($param->{'local_to'},$param->{'domain_to'}) = split ('@',$param->{'to'});
-
+     foreach my $recipient (split(',',$param->{'to'})) {
+	 ($param->{'recipients'}{$recipient}{'local_to'},$param->{'recipients'}{$recipient}{'domain_to'}) = split ('@',$recipient);
+     }
      $param->{'mailto'}= &mailto($list,$param->{'to'});
      # headers will be encoded later.
      #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
@@ -15094,8 +15095,8 @@ sub do_delete_pictures {
 	 return 'loginrequest';
      }
 
-     # In archive we hidde email replacing @ by ' '. Here we must do ther reverse transformation
-     $in{'to'} =~ s/ /\@/;
+     # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
+     $in{'to'} =~ s/ /\@/g;
      my $to = $in{'to'};
      unless ($in{'to'}) {
 	 unless ($param->{'list'}) {
@@ -15945,37 +15946,61 @@ sub do_dump_scenario {
  }
 
 
- ## returns a mailto according to list spam protection parameter
- sub mailto {
+## returns a mailto according to list spam protection parameter
+sub mailto {
+    
+    my $list = shift;
+    my $email = shift;
+    my $gecos = shift;
+    my $next_one;
+    
+    my $mailto = '';
+    my @addresses;
+    my %recipients;
+    
+    @addresses = split (',',$email);
+    
+    $gecos = $email unless ($gecos);
+    foreach my $address (@addresses) {
 
-     my $list = shift;
-     my $email = shift;
-     my $gecos = shift;
-
-     my $local; 
-     my $domain;
-
-     ($local,$domain) = split ('@',$email);
-
-     $gecos = $email unless ($gecos);
-
-     if ($list->{'admin'}{'spam_protection'} eq 'none') {
-	 return("<A HREF=\"mailto:$email\">$gecos</A>");
-     }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
-
-	 if ($gecos =~ /\@/) {
-	     $gecos = "$`\" + \"@\" + \"$'";
-	 }
-
-	 my $return = "<script type=\"text/javascript\">
+	($recipients{$address}{'local'},$recipients{$address}{'domain'}) = split ('@',$address);	
+    }
+    
+    if ($list->{'admin'}{'spam_protection'} eq 'none') {
+	$mailto .= "<a href=\"mailto:?";
+	foreach my $address (@addresses) {
+	    $mailto .= "&amp;" if ($next_one);
+	    $mailto .= "to=$address";
+	    $next_one = 1;
+	}
+	$mailto .= "\">$gecos</a>";
+    }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
+	
+	if ($gecos =~ /\@/) {
+	    $gecos =~ s/@/\" + \"@\" + \"/;
+	}
+	
+	$mailto .= "<script type=\"text/javascript\">
  <!--
- document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domain\" + \">$gecos<\" + \"/A>\")
+ document.write(\"<a href=\\\"\" + \"mail\" + \"to:?\" + ";
+	foreach my $address (@addresses) {
+	    $mailto .= "\"\&amp\;\" + " if ($next_one);
+	    $mailto .= "\"to=\" + \"$recipients{$address}{'local'}\" + \"@\" + \"$recipients{$address}{'domain'}\" + ";
+	    $next_one = 1;
+	}
+	$mailto .= "\"\\\">$gecos<\" + \"/a>\")
  // --></script>";
-	 return ($return);
-     }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
-	 return ("$local AT $domain");
-     }
- }
+	
+    }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
+	foreach my $address (@addresses) {
+	    $mailto .= " AND " if ($next_one);
+	    $mailto .= "$recipients{$address}{'local'} AT $recipients{$address}{'domain'}";
+	    $next_one = 1;
+	}
+    }
+    return $mailto;
+    
+}
 
 ## Returns a spam-protected form of email address
 sub get_protected_email_address {

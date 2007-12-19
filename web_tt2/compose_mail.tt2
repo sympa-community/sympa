@@ -10,7 +10,17 @@
 <input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
 <input type="hidden" name="message_id" value="[% message_id %]" />
 <input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="to" value="[% local_to %] [% domain_to %]" />
+[% SET counter = 0 %]
+[% SET stringto = '' %]
+[% FOREACH r = recipients %]
+    [% IF counter == 0 %]
+        [% stringto = r.value.local_to _ ' ' _ r.value.domain_to %]
+	[% counter = 1 %]
+    [% ELSE %]
+        [% stringto = stringto _ ',' _ r.value.local_to _ ' ' _ r.value.domain_to %]
+    [% END %]
+[% END %]
+<input type="hidden" name="to" value="[% stringto %]" />
 
  [% IF request_topic %]
    <br /><br />

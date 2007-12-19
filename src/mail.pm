@@ -258,7 +258,7 @@ sub mail_file {
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
-  
+    
     ## SENDING
     if (ref($rcpt)) {
 	unless (defined &sending($message,$rcpt,$data->{'return_path'},$robot,$listname,$sign_mode)) {
