@@ -342,7 +342,7 @@ sub add_list {
 	close FIC;
 	
 	# get list data
-	open (FIC, '<:utf8', "$self->{'dir'}/_new_list.xml");
+	open (FIC, '<:raw', "$self->{'dir'}/_new_list.xml");
 	my $config = new Config_XML(\*FIC);
 	close FIC;
 	unless (defined $config->createHash()) {
@@ -524,7 +524,7 @@ sub modify_list {
     close FIC;
 
     # get list data
-    open (FIC, '<:utf8', "$self->{'dir'}/_mod_list.xml");
+    open (FIC, '<:raw', "$self->{'dir'}/_mod_list.xml");
     my $config = new Config_XML(\*FIC);
     close FIC;
     unless (defined $config->createHash()) {
@@ -890,7 +890,7 @@ sub instantiate {
 	
         ## get data from list XML file. Stored into $config (class Config_XML).
 	my $xml_fh;
-	open $xml_fh, '<:utf8', "$self->{'dir'}"."/".$listname.".xml";
+	open $xml_fh, '<:raw', "$self->{'dir'}"."/".$listname.".xml";
 	my $config = new Config_XML($xml_fh);
 	close $xml_fh;
 	unless (defined $config->createHash()) {
@@ -999,7 +999,7 @@ sub instantiate {
 	} else {
 	    ## get data from list xml file
 	    my $xml_fh;
-	    open $xml_fh, '<:utf8', "$list->{'dir'}/instance.xml";
+	    open $xml_fh, '<:raw', "$list->{'dir'}/instance.xml";
 	    my $config = new Config_XML($xml_fh);
 	    close $xml_fh;
 	    unless (defined $config->createHash()) {
