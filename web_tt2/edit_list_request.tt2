@@ -190,11 +190,13 @@
                             [% IF p.may_edit == 'write' %]
                               <select name="single_param.[% p.name %].name" id="single_param.[% p.name %].name" onchange="this.form.submit();">
                                 [% FOREACH scenario = p.value %]
-                                  <option value="[% scenario.value.name %]"
-                                  [% IF scenario.value.selected == '1' %]
-                                    selected="selected"
-                                  [% END %]
-                                  >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
+				  [% UNLESS scenario.value.name.match('(default)\s*$') %]
+                                    <option value="[% scenario.value.name %]"
+                                    [% IF scenario.value.selected == '1' %]
+                                      selected="selected"
+                                    [% END %]
+                                    >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
+				  [% END %]
                                 [% END %]
                               </select>
 			      <br />
