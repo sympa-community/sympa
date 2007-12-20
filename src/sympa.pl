@@ -1990,9 +1990,9 @@ sub DoCommand {
 		last;
 	    }
 	    
-#	    if ($i =~ /^(qui|quit|end|stop|-)/io) {
-#		last;
-#	    }
+	    if ($i =~ /^(quit|end|stop|-)\s*$/io) {
+		last;
+	    }
 	    
 	    $success ||= $status;
 	}
