@@ -775,7 +775,7 @@ my $birthday = time ;
      $param->{'wwsconf'} = $wwsconf;
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
-     $param->{'path_cgi'} =~ s/\/\//\//g; ## Replace '//' with '/' because it would break navigation
+     $param->{'path_cgi'} =~ s/\/\//\//g; ## Replace '//' with '/' because it would break navigation     
      $param->{'version'} = $Version::Version;
      $param->{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
      $param->{'time'} = gettext_strftime "%H:%M:%S", localtime(time);
@@ -1419,6 +1419,7 @@ sub get_parameters {
 	
 	if ($params[0] eq 'nomenu') {
 	    $param->{'nomenu'} = 1;
+	    $param->{'path_cgi'} .= '/nomenu'; ## other links should keep the nomenu attribute
 	    shift @params;
 	}
 	
