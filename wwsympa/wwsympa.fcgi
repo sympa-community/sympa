@@ -846,7 +846,7 @@ my $birthday = time ;
      unless (defined $session) {
 	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
 	 &wwslog('info','Failed to create session');
-	 exit (-1);
+	 $session->{'email'}= 'nobody'; $session->{'id_session'} = &get_random();
      }
 
      $param->{'session'} = $session;
