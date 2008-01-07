@@ -1,4 +1,94 @@
 ------------------------------------------------------------------------
+r4790 | olivier.salaun | 2008-01-07 16:25:58 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/parser.pl
+
+Fix: changes to introduce "use strict" broke the parsing of tasks
+
+------------------------------------------------------------------------
+r4789 | serge.aumont | 2008-01-07 15:27:27 +0100 (Mon, 07 Jan 2008) | 5 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+
+Reduce SQL queries for sessions. Don't exist if new session abort.
+Also renew the cookie (a random used as session_id) so it make session hijacking much more difficult.
+
+
+------------------------------------------------------------------------
+r4787 | david.verdin | 2008-01-07 14:49:12 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+
+Preparing version 5.4a.9
+
+------------------------------------------------------------------------
+r4786 | david.verdin | 2008-01-07 14:48:25 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/web_help_nn_NO.po
+   M /trunk/po/zh_CN.po
+
+Integrating internationalization catalogues modified according to the latest developments.
+
+------------------------------------------------------------------------
+r4785 | david.verdin | 2008-01-07 14:05:19 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+   A /trunk/po/nn_NO.po
+   A /trunk/po/web_help_nn_NO.po
+   M /trunk/src/Language.pm
+
+[Requested by B.C. Aasgaard, Oslo univ.] Added new Norvegian (nn_NO) to version control.
+
+------------------------------------------------------------------------
+r4784 | david.verdin | 2008-01-07 13:57:19 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/po/ar.po
+   M /trunk/po/ca.po
+   M /trunk/po/es.po
+   M /trunk/po/fr.po
+   M /trunk/po/id.po
+   M /trunk/po/ru.po
+   M /trunk/po/vi.po
+
+Updated translations.
+
+------------------------------------------------------------------------
 r4783 | olivier.salaun | 2007-12-24 09:06:50 +0100 (Mon, 24 Dec 2007) | 2 lines
 Changed paths:
    M /trunk/wwsympa/wwsympa.fcgi
