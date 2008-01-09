@@ -103,7 +103,7 @@ Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
 [% ELSIF type == 'parameter_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Parameter error[%END%][%END%]
 
-[%|loc(par_name,par_value)%]The value for parameter %s was badly defined: %1[%END%]
+[%|loc(par_name,par_value)%]The value for parameter %1 was badly defined: %2[%END%]
 [%|loc(action)%]%1 impossible.[%END%]
 [%|loc%]See logs for more details.[%END%]
 
