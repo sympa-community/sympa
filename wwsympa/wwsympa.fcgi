@@ -14965,12 +14965,13 @@ sub do_delete_pictures {
 	   }
 	 }
 	 ## Notify listmasters that list owners/moderators email have changed
-	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
-					  {'list' => $list,
-					   'previous_email' => $param->{'user'}{'email'},
-					   'new_email' => $in{'email'},
-					   'updated_lists' => keys %updated_lists})
-	 
+	 if (keys %updated_lists) {
+	   &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
+					    {'list' => $list,
+					     'previous_email' => $param->{'user'}{'email'},
+					     'new_email' => $in{'email'},
+					     'updated_lists' => keys %updated_lists})
+	 }
 
 	 ## Update User_table
 	 &List::delete_user_db($in{'email'});
