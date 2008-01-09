@@ -96,7 +96,7 @@ use CPAN;
 		 'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
 		 'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
 		 'DBD::Sybase' => 'Sybase database driver, required if you connect to a Sybase database.',
-		 'DBD::SQLite' => 'Sybase database driver, required if you connect to a SQLite database.',
+		 'DBD::SQLite' => 'SQLite database driver, required if you connect to a SQLite database.',
 		 'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
 		 'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
 		 'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.',
