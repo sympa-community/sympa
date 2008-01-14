@@ -10823,12 +10823,34 @@ sub _urlize_part {
 
 sub store_subscription_request {
     my ($self, $email, $gecos, $custom_attr) = @_;
-    do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos, $custom_attr);
+    &do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos, $custom_attr);
 
     my $filename = $Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
+
+    unless (opendir SUBSPOOL, "$Conf{'queuesubscribe'}") {
+	&do_log('err', 'Could not open %s', $Conf{'queuesubscribe'});
+	return undef;
+    }
     
+    my @req_files = sort grep (!/^\.+$/,readdir(SUBSPOOL));
+    closedir SUBSPOOL;
+
+    foreach my $file (@req_files) {
+	unless (open OLDREQUEST, "$Conf{'queuesubscribe'}/$file") {
+	    &do_log('err', 'Could not open %s for verification', $file);
+	    return undef;
+	}
+	foreach my $line (<OLDREQUEST>) {
+	    if ($line =~ /^$email/i) {
+		&do_log('notice', 'Subscription already requested by %s', $email);
+		return undef;
+	    }
+	}
+	close OLDREQUEST;
+    }
+
     unless (open REQUEST, ">$filename") {
-	do_log('notice', 'Could not open %s', $filename);
+	&do_log('notice', 'Could not open %s', $filename);
 	return undef;
     }
 

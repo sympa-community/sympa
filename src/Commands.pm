@@ -761,8 +761,9 @@ sub subscribe {
 	    &do_log('info',"Unable to send notify 'subrequest' to $list->{'name'} list owner");
 	    &report::reject_report_cmd('intern',"Unable to send subrequest to $list->{'name'} list owner",{'listname'=> $list->{'name'}},$cmd_line,$sender,$robot);
 	}
-	$list->store_subscription_request($sender, $comment);
-	&do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
+	if ($list->store_subscription_request($sender, $comment)) {
+	    &do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);
+	}
 	return 1;
     }
     if ($action =~ /request_auth/i) {
