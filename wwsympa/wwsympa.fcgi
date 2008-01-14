@@ -15057,7 +15057,7 @@ sub do_delete_pictures {
      # headers will be encoded later.
      #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
      $param->{'subject'} = $in{'subject'};
-     $param->{'in_reply_to'}= $in{'in_reply_to'};
+     $param->{'in_reply_to'}= '<'.$in{'in_reply_to'}.'>';
      $param->{'message_id'} = &tools::get_message_id($robot);
 
      if  ($list->is_there_msg_topic()) {
