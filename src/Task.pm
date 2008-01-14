@@ -108,6 +108,7 @@ sub list_tasks {
 
     ## Create Task objects
     foreach my $t (@task_files) {
+	next if ($t =~ /^\./);
 	my $task = new Task ($spool_task.'/'.$t);
 	
 	## Maintain list of tasks
