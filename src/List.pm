@@ -2099,40 +2099,58 @@ sub get_editors {
 }
 
 
-## Returns an array of owners' email addresses (unless reception nomail)
+## Returns an array of owners' email addresses
 sub get_owners_email {
-    my($self) = @_;
-    do_log('debug3', 'List::get_owners_email(%s)', $self->{'name'});
+    my($self,$param) = @_;
+    do_log('debug3', 'List::get_owners_email(%s,%s)', $self->{'name'}, $param -> {'ignore_nomail'});
     
     my @rcpt;
     my $owners = ();
 
     $owners = $self->get_owners();
-    foreach my $o (@{$owners}) {
-	next if ($o->{'reception'} eq 'nomail');
-	push (@rcpt, lc($o->{'email'}));
+
+    if ($param -> {'ignore_nomail'}) {
+	foreach my $o (@{$owners}) {
+	    push (@rcpt, lc($o->{'email'}));
 	}
+    }
+    else {
+	foreach my $o (@{$owners}) {
+	    next if ($o->{'reception'} eq 'nomail');
+	    push (@rcpt, lc($o->{'email'}));
+	}
+    }
+    unless (@rcpt) {
+	&do_log('notice','Warning : no owner found for list %s', $self->{'name'} );
+    }
     return @rcpt;
 }
 
-## Returns an array of editors' email addresses (unless reception nomail)
+## Returns an array of editors' email addresses
 #  or owners if there isn't any editors'email adress
 sub get_editors_email {
-    my($self) = @_;
-    do_log('debug3', 'List::get_editors_email(%s)', $self->{'name'});
+    my($self,$param) = @_;
+    do_log('debug3', 'List::get_editors_email(%s,%s)', $self->{'name'}, $param -> {'ignore_nomail'});
     
     my @rcpt;
     my $editors = ();
 
     $editors = $self->get_editors();
-    foreach my $e (@{$editors}) {
-	next if ($e->{'reception'} eq 'nomail');
-	push (@rcpt, lc($e->{'email'}));
-    }
 
+    if ($param -> {'ignore_nomail'}) {
+	foreach my $e (@{$editors}) {
+	    push (@rcpt, lc($e->{'email'}));
+	}
+    }
+    else {
+	foreach my $e (@{$editors}) {
+	    next if ($e->{'reception'} eq 'nomail');
+	    push (@rcpt, lc($e->{'email'}));
+	}
+    }
     unless (@rcpt) {
-	@rcpt = $self->get_owners_email();
-	do_log('notice','Warning : no editor defined for list %s, getting owners', $self->{'name'} );
+	&do_log('notice','Warning : no editor found for list %s, getting owners', $self->{'name'} );
+	@rcpt = $self->get_owners_email($param);
     }
     return @rcpt;
 }
@@ -3449,11 +3467,28 @@ sub send_to_editor {
    }
 
    @rcpt = $self->get_editors_email();
-   unless (@rcpt) {
-       do_log('notice','Warning : no editor defined for list %s, contacting owners', $name );
-       @rcpt = $self->get_owners_email();
-   }
 
+   ## Did we find a recipient?
+   if ($#rcpt < 0) {
+       &do_log('notice', "No editor found for list %s. Trying to proceed ignoring nomail option", $self->{'name'});
+       my $hdr = $message->{'msg'}->head;
+       my $messageid = $hdr->get('Message-Id');
+
+       @rcpt = $self->get_editors_email({'ignore_nomail',1});
+       
+       &do_log('notice', 'Warning : no owner and editor defined at all in list %s', $name ) 
+	   unless (@rcpt);
+
+       ## Could we find a recipient by ignoring the "nomail" option?
+       if ($#rcpt >= 0) {
+	   &do_log('notice', 'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them.', $messageid, $self->{'name'} );
+       }
+       else {
+	   &do_log ('err','Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',$messageid,$self->{'name'}) ;
+	   return undef;
+       }
+   }
+   
    my $param = {'modkey' => $modkey,
 		'boundary' => $boundary,
 		'msg_from' => $message->{'sender'},

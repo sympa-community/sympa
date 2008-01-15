@@ -1493,7 +1493,7 @@ sub DoSendMessage {
 ############################################################
 sub DoForward {
     my($name, $function, $robot, $msg) = @_;
-    &do_log('debug', 'DoForward(%s, %s, %s, %s)', $name, $function);
+    &do_log('debug', 'DoForward(%s, %s)', $name, $function);
 
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
@@ -1554,21 +1554,44 @@ sub DoForward {
 	&do_log('notice', 'Warning : no owner and editor defined or all of them use nomail option in list %s', $name ) 
 	    unless (@rcpt);
     }
-    
+
+    ## Did we find a recipient?
     if ($#rcpt < 0) {
-	&do_log('err', "sympa::DoForward(): Message for %s-%s ignored, %s undefined in list %s", $name, $function, $function, $name);
-	my $string = sprintf 'Impossible to forward a message to %s-%s : undefined in this list',$name,$function;
-	my $sender = $hdr->get('From');
-	&report::reject_report_msg('intern',$string,$sender,
-			  {'msg_id' => $messageid,
-			   'entry' => 'forward',
-			   'function' => $function,
-			   'message' => $msg }
-			  ,$robot,$msg_string,$list);
-	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-   }
-   
+	if ($function ne "listmaster") {
+	    &do_log('err', "No recipient available for %s-%s in list %s. Trying to proceed ignoring nomail option", $name, $function, $name);
+	    
+	    if ($function eq "request") {
+		@rcpt = $list->get_owners_email({'ignore_nomail',1});
+		
+		&do_log('notice', 'Warning : no owner defined at all in list %s', $name ) 
+		    unless (@rcpt);
+		
+	    }elsif ($function eq "editor") {
+		@rcpt = $list->get_editors_email({'ignore_nomail',1});
+		
+		&do_log('notice', 'Warning : no owner and editor defined at all in list %s', $name ) 
+		    unless (@rcpt);
+	    }
+	}
+        ## Could we find a recipient by ignoring the "nomail" option?
+	if ($#rcpt >= 0) {
+	    &do_log('notice', 'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them.', $messageid, $name );
+	}
+	else {
+	    &do_log('err', "sympa::DoForward(): Message for %s-%s ignored, %s undefined in list %s", $name, $function, $function, $name);
+	    my $string = sprintf 'Impossible to forward a message to %s-%s : undefined in this list',$name,$function;
+	    my $sender = $hdr->get('From');
+	    &report::reject_report_msg('intern',$string,$sender,
+				       {'msg_id' => $messageid,
+					'entry' => 'forward',
+					'function' => $function,
+					'message' => $msg }
+				       ,$robot,$msg_string,$list);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	    return undef;
+	}
+    }
+    
     my $rc;
     my $msg_copy = $msg->dup;
 
