@@ -1939,7 +1939,7 @@ sub DoCommand {
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	&do_log('debug',"processing message for $1-$2");
-	&Commands::parse($sender,$robot,"$2 $1");
+	&Commands::parse($sender,$robot,"$2 $1",,$message);
 	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return 1; 
     }
@@ -1950,7 +1950,7 @@ sub DoCommand {
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 
-    $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'}) ;
+    $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'},$message) ;
 
     unless ($success eq 'unknown_cmd') {
 	$cmd_found = 1;
@@ -2004,7 +2004,7 @@ sub DoCommand {
 	    
 	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
 	    
-	    $status = &Commands::parse($sender, $robot, $i, $is_signed->{'body'});
+	    $status = &Commands::parse($sender, $robot, $i, $is_signed->{'body'},$message);
 	    $cmd_found = 1; # if problem no_cmd_understood is sent here
 	    if ($status eq 'unknown_cmd') {
 		&do_log('notice', "Unknown command found :%s", $i);

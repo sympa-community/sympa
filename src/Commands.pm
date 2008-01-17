@@ -98,8 +98,9 @@ sub parse {
    my $robot = shift;
    my $i = shift;
    my $sign_mod = shift;
+   my $message = shift;
 
-   &do_log('debug2', 'Commands::parse(%s, %s, %s, %s)', $sender, $robot, $i,$sign_mod );
+   &do_log('debug2', 'Commands::parse(%s, %s, %s, %s, %s)', $sender, $robot, $i, $sign_mod, $message );
 
    my $j;
    $cmd_line = '';
@@ -131,7 +132,7 @@ sub parse {
 	   my $status;
 	  
 	   $cmd_line = $i;
-	   $status = & {$comms{$j}}($args, $robot, $sign_mod);
+	   $status = & {$comms{$j}}($args, $robot, $sign_mod, $message);
 
 	   return $status ;
        }
@@ -241,11 +242,13 @@ sub help {
 sub lists {
     shift; 
     my $robot=shift;
+    my $sign_mod = shift;
+    my $message = shift;
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
     my $host = &Conf::get_robot_conf($robot, 'host');
 
-    &do_log('debug', 'Commands::lists for robot %s', $robot);
+    &do_log('debug', 'Commands::lists for robot %s, sign_mod %, message %s', $robot,$sign_mod , $message);
 
     my $data = {};
     my $lists = {};
@@ -255,7 +258,9 @@ sub lists {
 	my $l = $list->{'name'};
 
 	my $result = $list->check_list_authz('visibility','smtp',
-					     {'sender' => $sender });
+					     {'sender' => $sender,
+					      'message' => $message, });
+
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -305,8 +310,9 @@ sub stats {
     my $listname = shift;
     my $robot=shift;
     my $sign_mod=shift;
+    my $message = shift;
 
-    do_log('debug', 'Commands::stats(%s)', $listname);
+    do_log('debug', 'Commands::stats(%s, %s, %s, %s)', $listname, $robot, $sign_mod, $message);
 
     my $list = new List ($listname, $robot);
     unless ($list) {
@@ -322,7 +328,8 @@ sub stats {
 	unless (defined $auth_method);
 
     my $result = $list->check_list_authz('review',$auth_method,
-					 {'sender' => $sender});
+					 {'sender' => $sender,
+					  'message' => $message,});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -379,7 +386,7 @@ sub getfile {
     my($which, $file) = split(/\s+/, shift);
     my $robot=shift;
 
-    do_log('debug', 'Commands::getfile(%s, %s)', $which, $file);
+    do_log('debug', 'Commands::getfile(%s, %s, %s)', $which, $file, $robot);
 
     my $list = new List ($which, $robot);
     unless ($list) {
@@ -440,7 +447,7 @@ sub last {
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
-    do_log('debug', 'Commands::last(%s, %s)', $which);
+    &do_log('debug', 'Commands::last(%s, %s)', $which, $robot);
 
     my $list = new List ($which,$robot);
     unless ($list)  {
@@ -493,8 +500,7 @@ sub index {
     my $which = shift;
     my $robot = shift;
 
-
-    do_log('debug', 'Commands::index(%s) robot (%s)',$which,$robot);
+    &do_log('debug', 'Commands::index(%s) robot (%s)',$which,$robot);
 
     my $list = new List ($which, $robot);
     unless ($list) {
@@ -547,8 +553,9 @@ sub review {
     my $listname  = shift;
     my $robot = shift;
     my $sign_mod = shift ;
+    my $message = shift ;
 
-    do_log('debug', 'Commands::review(%s,%s,%s)', $listname,$robot,$sign_mod );
+    &do_log('debug', 'Commands::review(%s,%s,%s)', $listname,$robot,$sign_mod );
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
@@ -572,7 +579,8 @@ sub review {
 	unless (defined $auth_method);
 
     my $result = $list->check_list_authz('review',$auth_method,
-					 {'sender' => $sender});
+					 {'sender' => $sender,
+					  'message' => $message});
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -657,7 +665,7 @@ sub verify {
     my $robot = shift;
 
     my $sign_mod = shift ;
-    do_log('debug', 'Commands::verify(%s)', $sign_mod );
+    &do_log('debug', 'Commands::verify(%s, %s)', $sign_mod, $robot);
     
     my $user;
     
@@ -691,10 +699,12 @@ sub verify {
 sub subscribe {
     my $what = shift;
     my $robot = shift;
+    my $sign_mod = shift;
+    my $message = shift;
 
     my $sign_mod = shift ;
 
-    &do_log('debug', 'Commands::subscribe(%s,%s)', $what,$sign_mod);
+    &do_log('debug', 'Commands::subscribe(%s,%s, %s, %s)', $what,$robot,$sign_mod,$message);
 
     $what =~ /^(\S+)(\s+(.+))?\s*$/;
     my($which, $comment) = ($1, $3);
@@ -727,7 +737,8 @@ sub subscribe {
     ## query what to do with this subscribtion request
     
     my $result = $list->check_list_authz('subscribe',$auth_method,
-					 {'sender' => $sender });
+					 {'sender' => $sender,
+					  'message' => $message, });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -864,8 +875,9 @@ sub info {
     my $listname = shift;
     my $robot = shift;
     my $sign_mod = shift ;
+    my $message = shift;
 
-    do_log('debug', 'Commands::info(%s,%s)', $listname,$robot);
+    &do_log('debug', 'Commands::info(%s,%s, %s, %s)', $listname,$robot, $sign_mod, $message);
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
@@ -887,7 +899,9 @@ sub info {
 	unless (defined $auth_method);
 
     my $result = $list->check_list_authz('info',$auth_method,
-					 {'sender' => $sender });
+					 {'sender' => $sender,
+					  'message' => $message, });
+
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -969,9 +983,11 @@ sub info {
 sub signoff {
     my $which = shift;
     my $robot = shift;
+    my $sign_mod = shift;
+    my $message = shift;
 
     my $sign_mod = shift ;
-    &do_log('debug', 'Commands::signoff(%s,%s)', $which,$sign_mod);
+    &do_log('debug', 'Commands::signoff(%s,%s, %s, %s)', $which,$robot, $sign_mod, $message);
 
     my ($l,$list,$auth_method);
     my $host = &Conf::get_robot_conf($robot, 'host');
@@ -992,7 +1008,9 @@ sub signoff {
 
 	    ## Skip hidden lists
 	    my $result = $list->check_list_authz('visibility', 'smtp',
-						 {'sender' => $sender}) ;
+						 {'sender' => $sender,
+						  'message' => $message, });
+
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');
 	    
@@ -1035,7 +1053,8 @@ sub signoff {
     
     my $result = $list->check_list_authz('unsubscribe',$auth_method,
 					 {'email' => $email,
-					  'sender' => $sender });
+					  'sender' => $sender,
+					  'message' => $message, });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
    
@@ -1164,10 +1183,12 @@ sub signoff {
 sub add {
     my $what = shift;
     my $robot = shift;
+    my $sign_mod = shift;
+    my $message = shift;
 
     my $sign_mod = shift ;
 
-    do_log('debug', 'Commands::add(%s,%s)', $what,$sign_mod );
+    do_log('debug', 'Commands::add(%s,%s,%s,%s)', $what,$robot, $sign_mod, $message);
 
     my $email_regexp = &tools::get_regexp('email');    
 
@@ -1194,7 +1215,8 @@ sub add {
     
     my $result = $list->check_list_authz('add',$auth_method,
 					 {'email' => $email,
-					  'sender' => $sender });
+					  'sender' => $sender,
+					  'message' => $message, });
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
@@ -1304,7 +1326,9 @@ sub invite {
     my $what = shift;
     my $robot=shift;
     my $sign_mod = shift ;
-    do_log('debug', 'Commands::invite(%s,%s)', $what,$sign_mod);
+    my $message = shift;
+
+    &do_log('debug', 'Commands::invite(%s,%s,%s,%s)', $what, $robot, $sign_mod, $message);
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
@@ -1330,7 +1354,9 @@ sub invite {
 	unless (defined $auth_method);    
     
     my $result = $list->check_list_authz('invite',$auth_method,
-					 {'sender' => $sender });
+					 {'sender' => $sender,
+					  'message' => $message, });
+
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1377,7 +1403,8 @@ sub invite {
 	    $context{'requested_by'} = $sender;
 
 	    my $result = $list->check_list_authz('subscribe','smtp',
-						 {'sender' => $sender });
+						 {'sender' => $sender,
+						  'message' => $message, });
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1454,8 +1481,9 @@ sub remind {
     my $which = shift;
     my $robot = shift;
     my $sign_mod = shift ;
+    my $message = shift;
 
-    do_log('debug', 'Commands::remind(%s,%s)', $which,$sign_mod);
+    do_log('debug', 'Commands::remind(%s,%s,%s,%s)', $which,$robot,$sign_mod,$message);
 
     my $host = &Conf::get_robot_conf($robot, 'host');
     
@@ -1511,7 +1539,9 @@ sub remind {
 	$host = $list->{'admin'}{'host'};
 
 	$result = $list->check_list_authz('remind',$auth_method,
-					  {'sender' => $sender });
+					  {'sender' => $sender,
+					   'message' => $message, });
+
 	$action = $result->{'action'} if (ref($result) eq 'HASH');	
 
     }
@@ -1605,7 +1635,8 @@ sub remind {
 
 		    
 		    my $result = $list->check_list_authz('visibility','smtp',
-							 {'sender' => $email});
+							 {'sender' => $sender,
+							  'message' => $message, });
 		    my $action;
 		    $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -1682,10 +1713,10 @@ sub remind {
 sub del {
     my $what = shift;
     my $robot = shift;
-
     my $sign_mod = shift ;
+    my $message = shift;
 
-    &do_log('debug', 'Commands::del(%s,%s)', $what,$sign_mod);
+    &do_log('debug', 'Commands::del(%s,%s,%s,%s)', $what,$robot,$sign_mod,$message);
 
     my $email_regexp = &tools::get_regexp('email');    
 
@@ -1712,9 +1743,10 @@ sub del {
 
     ## query what to do with this DEL request
     my $result = $list->check_list_authz('del',$auth_method,
-					  {'sender' => $sender,
-					   'email' => $who
-					   });
+					 {'sender' => $sender,
+					  'email' => $who,
+					  'message' => $message, });
+
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');	
     
@@ -1825,8 +1857,10 @@ sub del {
 sub set {
     my $what = shift;
     my $robot = shift;
+    my $sign_mod = shift;
+    my $message = shift;
 
-    &do_log('debug', 'Commands::set(%s)', $what);
+    &do_log('debug', 'Commands::set(%s,%s,%s,%s)', $what, $robot, $sign_mod, $message);
 
     $what =~ /^\s*(\S+)\s+(\S+)\s*$/; 
     my ($which, $mode) = ($1, $2);
@@ -1849,7 +1883,9 @@ sub set {
 
 	    ## Skip hidden lists
 	    my $result = $list->check_list_authz('visibility', 'smtp',
-						 {'sender' => $sender});
+						 {'sender' => $sender,
+						  'message' => $message, });
+
 	    my $action;
 	    $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -2078,7 +2114,7 @@ sub distribute {
 sub confirm {
     my $what = shift;
     my $robot = shift;
-    do_log('debug', 'Commands::confirm(%s)', $what);
+    do_log('debug', 'Commands::confirm(%s,%s)', $what, $robot);
 
     $what =~ /^\s*(\S+)\s*$/;
     my $key = $1;
@@ -2130,8 +2166,9 @@ sub confirm {
     my $msg_string = $message->{'msg'}->as_string;
 
     my $result = $list->check_list_authz('send','md5',
-					 {'sender' => $sender ,
-					  'message' => $message});
+					 {'sender' => $sender,
+					  'message' => $message, });
+
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');	
 
@@ -2252,7 +2289,7 @@ sub reject {
     my $what = shift;
     my $robot = shift;
 
-    &do_log('debug', 'Commands::reject(%s)', $what);
+    &do_log('debug', 'Commands::reject(%s,%s)', $what, $robot);
 
     $what =~ /^(\S+)\s+(.+)\s*$/;
     my($which, $key) = ($1, $2);
@@ -2358,7 +2395,7 @@ sub reject {
 sub modindex {
     my $name = shift;
     my $robot = shift;
-    do_log('debug', 'Commands::modindex(%s)', $name);
+    do_log('debug', 'Commands::modindex(%s,%s)', $name,$robot);
     
     $name =~ y/A-Z/a-z/;
 
@@ -2473,7 +2510,10 @@ sub which {
     my($listname, @which);
     shift;
     my $robot = shift;
-    do_log('debug', 'Commands::which(%s)', $listname);
+    my $sign_mod = shift;
+    my $message = shift;
+
+    do_log('debug', 'Commands::which(%s,%s,%s,%s)', $listname, $robot, $sign_mod, $message);
     
     ## Subscriptions
     my $data;
@@ -2483,7 +2523,8 @@ sub which {
 	$listname = $list->{'name'};
 
 	my $result = $list->check_list_authz('visibility', 'smtp',
-					     {'sender' => $sender});
+					     {'sender' => $sender,
+					      'message' => $message, });
 	
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');

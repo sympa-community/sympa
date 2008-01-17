@@ -3002,6 +3002,7 @@ sub send_file {
 
     ## Trying to use custom_vars
     if (defined $self->{'admin'}{'custom_vars'}) {
+	$data->{'custom_vars'} = {};
 	foreach my $var (@{$self->{'admin'}{'custom_vars'}}) {
  	    $data->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
 	}
