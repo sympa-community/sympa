@@ -849,10 +849,16 @@ while (!$signal) {
 	## Clean queue (bad)
 	if ($index_cleanqueue++ >= 100){
 	    $index_cleanqueue=0;
-	    &tools::CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
+	    if (-e "$spool/bad") {
+		&tools::CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
+	    }
 	    &tools::CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
-	    &tools::CleanSpool($Conf{'queueoutgoing'}.'/bad', $Conf{'clean_delay_queueoutgoing'});
-	    &tools::CleanSpool($Conf{'queuebounce'}.'/bad', $Conf{'clean_delay_queuebounce'});
+	    if (-e $Conf{'queueoutgoing'}.'/bad') {
+		&tools::CleanSpool($Conf{'queueoutgoing'}.'/bad', $Conf{'clean_delay_queueoutgoing'});
+	    }
+	    if (-e $Conf{'queuebounce'}.'/bad') {
+		&tools::CleanSpool($Conf{'queuebounce'}.'/bad', $Conf{'clean_delay_queuebounce'});
+	    }
 	    &tools::CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
 	    &tools::CleanSpool($Conf{'queuetopic'}, $Conf{'clean_delay_queuetopic'});
 	    &tools::CleanSpool($Conf{'tmpdir'}, $Conf{'clean_delay_tmpdir'});
