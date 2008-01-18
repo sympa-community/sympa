@@ -168,7 +168,7 @@ sub sanitize_html_file {
 ## Sanitize all values in the hash $var, starting from $level
 sub sanitize_var {
     my %parameters = @_;
-    &do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
+    &do_log('debug4','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
     unless (defined $parameters{'var'}){
 	&do_log('err','Missing var to sanitize.');
 	return undef;
