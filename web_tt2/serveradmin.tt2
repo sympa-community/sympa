@@ -131,7 +131,7 @@
 </div>
 <div>
 <form class="bold_label" action="[% path_cgi %]" method="post">
-[%|loc%]When customizing Sympa web templates, it is needed to known which variables can be processed by the tt2 parser.This button is for controlling tt2 vars dump feature : [%END%]
+<br/>[%|loc%]When customizing Sympa web templates, it is needed to known which variables can be processed by the tt2 parser.This button is for controlling tt2 vars dump feature :[%END%]<br/>
 
 [% IF dumpvars == 'true' %]
   <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Unset template vars dump[%END%]" />

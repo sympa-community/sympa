@@ -16460,7 +16460,7 @@ sub _prepare_subscriber {
     ## Check data sources
     if ($user->{'id'}) {
 	my @s;
-	     my @ids = split /,/,$user->{'id'};
+	my @ids = split /,/,$user->{'id'};
 	foreach my $id (@ids) {
 	    unless (defined ($sources->{$id})) {
 		$sources->{$id} = $list->search_datasource($id);
