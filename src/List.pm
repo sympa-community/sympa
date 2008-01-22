@@ -7561,6 +7561,7 @@ sub _include_users_ldap {
     my $total = 0;
     my $dn; 
     my @emails;
+    my %emailsViewed;
 
     while (my $e = $fetch->shift_entry) {
 
@@ -7569,11 +7570,18 @@ sub _include_users_ldap {
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $email (@{$entry}) {
-		push @emails, &tools::clean_email($email);
+		my $cleanmail = &tools::clean_email($email);
+		next if ($emailsViewed{$cleanmail});
+		push @emails, $cleanmail;
+		$emailsViewed{$cleanmail} = 1;
 		last if ($ldap_select eq 'first');
 	    }
 	}else {
-	    push @emails, $entry;
+	    my $cleanmail = &tools::clean_email($entry);
+	    unless ($emailsViewed{$cleanmail}) {
+		push @emails, $cleanmail;
+		$emailsViewed{$cleanmail} = 1;
+	    }
 	}
     }
     
@@ -7703,6 +7711,8 @@ sub _include_users_ldap_2level {
 	}
     }
 
+    my %emailsViewed;
+
     my ($suffix2, $filter2);
     foreach my $attr (@attrs) {
 	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
@@ -7719,20 +7729,26 @@ sub _include_users_ldap_2level {
 
 	## returns a reference to a HASH where the keys are the DNs
 	##  the second level hash's hold the attributes
-
+	
 	while (my $e = $fetch->shift_entry) {
 	    my $entry = $e->get_value($ldap_attrs2, asref => 1);
 
 	    ## Multiple values
 	    if (ref($entry) eq 'ARRAY') {
 		foreach my $email (@{$entry}) {
-		    next if (($ldap_select2 eq 'regex') && ($email !~ /$ldap_regex2/));
-		    push @emails, &tools::clean_email($email);
+		    my $cleanmail = &tools::clean_email($email);
+		    next if (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/));
+		    next if ($emailsViewed{$cleanmail});
+		    push @emails, $cleanmail;
+		    $emailsViewed{$cleanmail} = 1;
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
-		push @emails, $entry
-		    unless (($ldap_select2 eq 'regex') && ($entry !~ /$ldap_regex2/));
+		my $cleanmail = &tools::clean_email($entry);
+		unless( (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/))||$emailsViewed{$cleanmail}) {
+		    push @emails, $cleanmail;
+		    $emailsViewed{$cleanmail} = 1;
+		}
 	    }
 	}
     }
