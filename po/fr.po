@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-12-24 12:14+0100\n"
-"Last-Translator: Olivier LACROIX <olivier.lacroix@ciril.fr>\n"
+"PO-Revision-Date: 2008-01-09 08:10+0100\n"
+"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2065,7 +2065,7 @@ msgstr "La phase d'authentification a échoué"
 #. (u_err.status)
 #: web_tt2/error.tt2:119
 msgid "Cannot add subscribers when list status is '%1'"
-msgstr ""
+msgstr "Impossible d'ajouter des abonnés quand la liste a le status '%1'"
 
 #. (auth.action)
 #: web_tt2/error.tt2:128
@@ -2835,16 +2835,15 @@ msgstr "Liste noire"
 
 #: web_tt2/review.tt2:58
 msgid "Add an user: "
-msgstr ""
+msgstr "Ajouter un utilisateur :"
 
 #: web_tt2/review.tt2:61
 msgid "Multiple add"
 msgstr "Abonnements par lots"
 
 #: web_tt2/review.tt2:73
-#, fuzzy
 msgid "Search user by e-mail: "
-msgstr "Rechercher un utilisateur"
+msgstr "Rechercher un utilisateur par e-mail :"
 
 #: web_tt2/review.tt2:74
 msgid "Search user by email"
@@ -3278,9 +3277,8 @@ msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Ce processus FastCGI (%1) a traité %2 requêtes depuis %3."
 
 #: web_tt2/setlang.tt2:9
-#, fuzzy
 msgid "Language selection"
-msgstr "Inverser la sélection"
+msgstr "Sélectionner la langue"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -3867,14 +3865,12 @@ msgid "Message Id"
 msgstr "Message ID"
 
 #: web_tt2/viewlogs.tt2:67
-#, fuzzy
 msgid "Search by date from:"
-msgstr "Recherche par date :"
+msgstr "Recherche par date du :"
 
 #: web_tt2/viewlogs.tt2:69
-#, fuzzy
 msgid "to:"
-msgstr "au"
+msgstr "au :"
 
 #: web_tt2/viewlogs.tt2:70
 msgid "ex: 24/05/2006"
@@ -5032,19 +5028,17 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "Cette liste traite de %1, vous êtes donc sûrement concerné."
 
 #: mail_tt2/invite.tt2:7
-#, fuzzy
 msgid "To subscribe just hit the following mailto url :"
 msgstr ""
-"Pour valider votre abonnement, répondez à ce message ou cliquez sur "
-"l'adresse ci-dessous : "
+"Pour valider votre abonnement, cliquez sur le lien ci-dessous, ce qui "
+"déclenchera l'envoi d'un e-mail de confirmation."
 
 #. (conf.sympa,list.name)
 #: mail_tt2/invite.tt2:10
-#, fuzzy
 msgid "Or send a message to %1 with subject: \"sub %2\""
 msgstr ""
 "ou\n"
-"envoyez un e-mail à %1@%2 avec comme sujet :"
+"envoyez un e-mail à %1 avec comme sujet : \"sub %2\""
 
 #: mail_tt2/invite.tt2:12
 msgid "If you don't want to subscribe just ignore this message."
@@ -5240,9 +5234,8 @@ msgid "The returned error message :"
 msgstr "Le message d'erreur est :"
 
 #: mail_tt2/listmaster_notification.tt2:104
-#, fuzzy
 msgid "Parameter error"
-msgstr "Paramètres"
+msgstr "Erreur dans un paramètre"
 
 #. (par_name,par_value)
 #: mail_tt2/listmaster_notification.tt2:106
@@ -5252,9 +5245,8 @@ msgstr "Valeurs incorrectes du paramètre %1"
 
 #. (action)
 #: mail_tt2/listmaster_notification.tt2:107
-#, fuzzy
 msgid "%1 impossible."
-msgstr "impossible"
+msgstr "%1 impossible"
 
 #: mail_tt2/listmaster_notification.tt2:108
 #: mail_tt2/listmaster_notification.tt2:114
@@ -5268,44 +5260,44 @@ msgstr "Consultez les logs pour plus de détails."
 
 # nlsref 3,1
 #: mail_tt2/listmaster_notification.tt2:111
-#, fuzzy
 msgid "Unable to create directory"
-msgstr "Impossible de créer le répertoire '%1'."
+msgstr "Création de répertoire impossible"
 
 # nlsref 3,1
 #. (dir)
 #: mail_tt2/listmaster_notification.tt2:113
-#, fuzzy
 msgid "Sympa could not create directory %1"
 msgstr "Impossible de créer le répertoire '%1'."
 
 #: mail_tt2/listmaster_notification.tt2:117
 msgid "A message archiving failed"
-msgstr ""
+msgstr "L'archivage d'un message a échoué"
 
 #. (file,bad)
 #: mail_tt2/listmaster_notification.tt2:119
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
+"Sympa n'a pas pu archiver le message '%1'. Celui-ci est déplacé dans le "
+"répertoire '%2'."
 
 # nlsref 16,7
 #: mail_tt2/listmaster_notification.tt2:123
-#, fuzzy
 msgid "A bounce management failed"
-msgstr "Gestion des erreurs"
+msgstr "La gestion d'un message en erreur a échoué"
 
 #. (file,bad)
 #: mail_tt2/listmaster_notification.tt2:125
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
+"Sympa n'a pas pu gérer le message en erreur '%1'. Celui-ci est déplacé dans "
+"le répertoire '%2'."
 
 # nlsref 1,3
 #. (error)
 #: mail_tt2/listmaster_notification.tt2:127
-#, fuzzy
 msgid "Error: %1"
-msgstr "Erreurs : "
+msgstr "Erreurs : %1"
 
 #: mail_tt2/listmaster_notification.tt2:131
 msgid "incorrect format of edit_list.conf"
@@ -5407,7 +5399,7 @@ msgstr "Consultez les logs de Sympa pour plus de précisions."
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:163
 msgid "List owner/editor email changes"
-msgstr ""
+msgstr "Changement d'adresse d'un propriétaire / modérateur"
 
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:165
@@ -5415,6 +5407,8 @@ msgid ""
 "User %1 has changed his owner/editor email address to %2. This changed has "
 "been performed to the following lists :"
 msgstr ""
+"L'utilisateur %1 a modifié son adresse e-mail de propriétaire / modérateur. "
+"Ce changement a été appliqué dans la liste :"
 
 #. (param0,param1)
 #: mail_tt2/listmaster_notification.tt2:174
@@ -6176,9 +6170,10 @@ msgid ""
 msgstr "Problème de diffusion de votre message pour la liste '%1'  : "
 
 #: mail_tt2/message_report.tt2:32
-#, fuzzy
 msgid "Impossible to distribute your message for the following reason :"
-msgstr "Problème de diffusion de votre message pour la liste '%1'  : "
+msgstr ""
+"Il n'a pas été possible de distribuer votre message pour la raison suivante "
+":"
 
 # nlsref 5,3
 #. (list.name,conf.sympa,list.host)
@@ -6242,24 +6237,22 @@ msgstr ""
 # nlsref 6,68
 #. (key)
 #: mail_tt2/message_report.tt2:65
-#, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
 msgstr ""
-"Impossible d'accéder au message authentifié avec la clé %1 à cause d'une "
-"erreur de format."
+"Impossible d'accéder au message authentifié avec la clé %1. Ce message a "
+"peut-être déjà été confirmé."
 
 # nlsref 6,68
 #. (key)
 #: mail_tt2/message_report.tt2:68
-#, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1 because of a wrong "
 "format. The message may already been confirmed."
 msgstr ""
 "Impossible d'accéder au message authentifié avec la clé %1 à cause d'une "
-"erreur de format."
+"erreur de format.. Le message a peut-être déjà été validé."
 
 #. (conf.host)
 #: mail_tt2/message_report.tt2:73
@@ -7186,9 +7179,8 @@ msgid "to list"
 msgstr "à la liste"
 
 #: src/etc/mhonarc-ressources.tt2:473
-#, fuzzy
 msgid "to both"
-msgstr "robot"
+msgstr "au deux"
 
 #: src/etc/mhonarc-ressources.tt2:476
 msgid "Reply"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2007-12-29 11:37+0100\n"
+"PO-Revision-Date: 2008-01-25 07:56+0100\n"
 "Last-Translator: chernysh <chernysh@riseup.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -3105,7 +3105,10 @@ msgstr "Перестроить архив"
 
 #: web_tt2/serveradmin.tt2:69
 msgid "Rebuild all"
-msgstr "Перестроить всё"
+msgstr ""
+"Обладая правами глобального администратора, Вы можете действовать от имени "
+"любого пользователя. Это может оказаться полезным при оказании помощи для "
+"тестировании полномочий пользователя "
 
 #: web_tt2/serveradmin.tt2:69
 msgid "  May take a lot of CPU time,  be careful !"
@@ -3134,34 +3137,39 @@ msgid ""
 "current session. On a production server, this allow to keep logs rather "
 "small and to test some features with the maximum log level. "
 msgstr ""
+"Вы можете увеличить уровень подробности протоколирования событий, указанный "
+"в конфигурации, только для текущей сессии. Это позволяет держать достаточно "
+"маленькие журналы протоколирования событий на работаеющем сервере, но "
+"тестировать необходимые функции с максимальным уровнем подробности "
+"протоколирования событий.  "
 
 #: web_tt2/serveradmin.tt2:90
 msgid "Log level"
-msgstr ""
+msgstr "Уровень подробности протоколирования событий"
 
 #: web_tt2/serveradmin.tt2:96
 msgid "Set log level"
-msgstr ""
+msgstr "Задать уровень подробности протоколирования событий"
 
 #: web_tt2/serveradmin.tt2:100
 msgid "Templates"
-msgstr ""
+msgstr "Шаблоны"
 
 #: web_tt2/serveradmin.tt2:105
 msgid "Setting defaults list templates"
-msgstr ""
+msgstr "Настройка шаблонов рассылки по умолчанию"
 
 #: web_tt2/serveradmin.tt2:118
 msgid "Setting site templates"
-msgstr ""
+msgstr "Настройка шаблонов сайта"
 
 #: web_tt2/serveradmin.tt2:129
 msgid "view translations"
-msgstr ""
+msgstr "просмотреть переводы"
 
 #: web_tt2/serveradmin.tt2:130
 msgid "Customize templates"
-msgstr ""
+msgstr "Настроить шаблоны"
 
 #: web_tt2/serveradmin.tt2:134
 msgid ""
@@ -3169,6 +3177,9 @@ msgid ""
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
 "dump feature : "
 msgstr ""
+"При настройке web-шаблонов Sympa необходимо знать, какие переменные могут "
+"быть обработаны парсером tt2. Эта кнопка обеспечивает функционал дампа "
+"переменных tt2:"
 
 #: web_tt2/serveradmin.tt2:137
 msgid "Unset template vars dump"
@@ -3180,7 +3191,7 @@ msgstr ""
 
 #: web_tt2/serveradmin.tt2:145
 msgid "Skins, CSS and colors"
-msgstr ""
+msgstr "Скины, CSS и цвета"
 
 #: web_tt2/serveradmin.tt2:147
 msgid "Skins administration page"
@@ -3188,7 +3199,7 @@ msgstr ""
 
 #: web_tt2/serveradmin.tt2:150
 msgid "Translating Sympa"
-msgstr ""
+msgstr "Переводим Sympa"
 
 #: web_tt2/serveradmin.tt2:152
 msgid ""
@@ -3197,30 +3208,36 @@ msgid ""
 "are gathered in a single PO file that can be manipulated by standard GNU "
 "gettext tools."
 msgstr ""
+"Sympa создан так, что можно легко интернационализировать его "
+"пользовательский интерфейс (служебные почтовые сообщения и web-интерфейс). "
+"Все переводы для каждого языка собраны в одном PO-файле, с которым можно "
+"легко работать стандартными инструментами GNU gettext. "
 
 #: web_tt2/serveradmin.tt2:156
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language : "
 msgstr ""
+"Если Вы хотите перевести графический интерфейс Sympa на свой родной язык, "
+"прочитайте ответы на частозадаваемые вопросы (FAQ) о переводе: "
 
 #: web_tt2/serveradmin.tt2:159
 msgid "Submitting a bug, a feature request"
-msgstr ""
+msgstr "Рассказать об ошибке, запросить функционал"
 
 #: web_tt2/serveradmin.tt2:161
 msgid "You can submit a problem or request a new feature : "
-msgstr ""
+msgstr "Вы можете рассказать о проблеме или запросить новую функцию :"
 
 #. (process_id,loop_count,start_time)
 #: web_tt2/serveradmin.tt2:167
 msgid "This FastCGI process (%1) has served %2 pages since %3."
-msgstr ""
+msgstr "Этот процесс FastCGI (%1) обслужил %2 страниц с %3."
 
 #: web_tt2/setlang.tt2:9
 #, fuzzy
 msgid "Language selection"
-msgstr "Инвертировать выбор"
+msgstr "Выбор языка"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
@@ -3230,84 +3247,88 @@ msgstr " %1"
 
 #: web_tt2/set_pending_list_request.tt2:23
 msgid "Close it"
-msgstr ""
+msgstr "Закрыть это"
 
 #: web_tt2/set_pending_list_request.tt2:24
 msgid "Install it"
-msgstr ""
+msgstr "Установить это"
 
 #: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:60
 msgid "submit"
-msgstr ""
+msgstr "подтвердить"
 
 #: web_tt2/set_pending_list_request.tt2:27
 msgid "notify owner"
-msgstr ""
+msgstr "известить владельца"
 
 #: web_tt2/set_pending_list_request.tt2:36
 msgid "Information file"
-msgstr ""
+msgstr "Информационный файл"
 
 #: web_tt2/set_pending_list_request.tt2:48
 msgid "Configuration file"
-msgstr ""
+msgstr "Конфигурационный файл"
 
 #: web_tt2/show_cert.tt2:6
 msgid "HTTPS authentication information"
-msgstr ""
+msgstr "Информация об аутентификации HTTPS"
 
 #: web_tt2/show_cert.tt2:7
 msgid "User certificate belong to"
-msgstr ""
+msgstr "Сертификат пользователя принадлежит "
 
 #: web_tt2/show_cert.tt2:8
 msgid "Certificate expiration date"
-msgstr ""
+msgstr "Дата истечения годности сертификата"
 
 #: web_tt2/show_cert.tt2:9
 msgid "Certificate issuer"
-msgstr ""
+msgstr "Поставщик сертификата"
 
 #: web_tt2/show_cert.tt2:10
 msgid "Cipher key size used"
-msgstr ""
+msgstr "Размер использованного ключа шифрования"
 
 #: web_tt2/show_sessions.tt2:1
 msgid "Sessions list"
-msgstr ""
+msgstr "Список сессий"
 
 #. (list)
 #: web_tt2/sigrequest.tt2:4
-#, fuzzy
 msgid "You asked to be unsubscribed  from list %1"
-msgstr "%1 уже подписан на список %2"
+msgstr "Вы запросили отписку    от рассылки %1"
 
 #: web_tt2/sigrequest.tt2:5
 msgid ""
 "To confirm\n"
 "      your request, please click the button below :"
 msgstr ""
+"Чтобы подтвердить\n"
+"             Ваш запрос, нажмите кнопку ниже :"
 
 #. (list)
 #: web_tt2/sigrequest.tt2:12
 msgid "I unsubscribe from list %1"
-msgstr ""
+msgstr "Я отписываюсь от рассылки %1"
 
 #. (list,email)
 #: web_tt2/sigrequest.tt2:18
 msgid "You are not subscribed to list %1 with e-mail address %2"
-msgstr ""
+msgstr "Вы не подписаны на рассылку %1 адресом %2"
 
 #: web_tt2/sigrequest.tt2:21
 msgid ""
 "You might have subscribed with another address.\n"
 "      Please contact the list owner to help you unsubscribe :"
 msgstr ""
+"Возможно, Вы подписаны другим адресом.\n"
+"           Пожалуйста, обратитесь к владельцу рассылки за помощью в отписке. "
+""
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25
 msgid "You requested unsubscription from list %1"
-msgstr ""
+msgstr "Вы запросили отписку от рассылки %1"
 
 #: web_tt2/sigrequest.tt2:29
 msgid ""
@@ -3315,6 +3336,10 @@ msgid ""
 "\tthis list against your will, a message containing an URL\n"
 "\twill be sent to you."
 msgstr ""
+"Чтобы удостоверить Вашу личность и предовратить отписку Вашего адреса от "
+"этой рассылки\n"
+"\tкем-то другим против Вашей воли, Вам будет выслано сообщение,\n"
+"\tсодежащее ссылку (URL)."
 
 #. (list)
 #: web_tt2/sigrequest.tt2:32
@@ -3324,11 +3349,15 @@ msgid ""
 "  Enter that password, below. This wil confirm your request to be "
 "unsubscribed from list %1."
 msgstr ""
+"Проверьте новые сообщения в Вашем почтовом ящике и найдите в нём письмо от "
+"Sympa c паролем.\n"
+"   Введите этот пароль ниже. Это подтвердит Ваш запрос на отписку от "
+"рассылки %1. "
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
 #: web_tt2/subrequest.tt2:33 web_tt2/subrequest.tt2:72
 msgid "e-mail address"
-msgstr ""
+msgstr "электронный адрес"
 
 #: web_tt2/sigrequest.tt2:45
 msgid ""
@@ -3344,10 +3373,11 @@ msgid ""
 "Please provide your email address for your unsubscription request from list %"
 "1."
 msgstr ""
+"Пожалуйста, укажите электронный адрес для запроса на отписку от рассылки %1."
 
 #: web_tt2/sigrequest.tt2:52
 msgid "Your e-mail address :"
-msgstr ""
+msgstr "Ваш электронный адрес :"
 
 #. (list)
 #: web_tt2/sigrequest.tt2:64
@@ -3355,33 +3385,39 @@ msgid ""
 "To confirm your unsubscription from list %1, please enter\n"
 "\tyour password below :"
 msgstr ""
+"Чтобы подтвердить Вашу отписку от рассылки %1, пожалуйста, введите\n"
+"\tВаш пароль ниже :"
 
 #: web_tt2/sigrequest.tt2:76
 msgid ""
 "If you've never had a password from that server or if you don't remember it :"
 msgstr ""
+"Если у Вас никогда не было пароль от этого сервера или Вы не помните его :"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
-msgstr ""
+msgstr "Каскадные таблицы стилей (CSS)"
 
 #: web_tt2/skinsedit.tt2:8
 msgid ""
 "static css installation succeed. Reload the current page and/or check sympa "
 "logs  to be sure that static css a really in use."
 msgstr ""
+"Установка статических CSS удалась. Перезагрузите текущую страницу и/или "
+"проверьте логи Sympa,    чтобы убедиться, что статические CSS действительно "
+"используются. "
 
 #: web_tt2/skinsedit.tt2:12
 msgid "The css_path parameter is defined, value is"
-msgstr ""
+msgstr "Параметр css_path определён, его значение "
 
 #: web_tt2/skinsedit.tt2:13
 msgid "the current definition for css location (css_url parameter) is"
-msgstr ""
+msgstr "текущее значение для расположения CSS (параметр css_url)"
 
 #: web_tt2/skinsedit.tt2:21
 msgid "install static css"
-msgstr ""
+msgstr "установить статические CSS"
 
 #. (cssurl)
 #: web_tt2/skinsedit.tt2:27
@@ -3393,14 +3429,21 @@ msgid ""
 "forget to set parameter css_url, it must be the URL for the directory where "
 "css are stored (current value is <a target=\"test\" href=\"%1\">%1</a>)."
 msgstr ""
+"В настоящий момент Вы не задали параметр css_path. <strong>Вы должны "
+"редактировать конфигурационный файл robot.conf</strong> (если виртуальный "
+"робот не используется, файл sympa.conf). Настройка этого параметра позволит "
+"Вам использовать эту страницу для установки статических CSS <strong>сделать "
+"Sympa быстрее</strong>. Не забудьте настроить параметр css_url, это должен "
+"быть URL директории, в которой хранятся CSS (текущее значение — <a "
+"target=\"test\" href=\"%1\">%1</a>)."
 
 #: web_tt2/skinsedit.tt2:31
 msgid "W3C CSS validation tools"
-msgstr ""
+msgstr "Иструменты валидации W3C CSS"
 
 #: web_tt2/skinsedit.tt2:35
 msgid "Colors"
-msgstr ""
+msgstr "Цвета"
 
 #: web_tt2/skinsedit.tt2:37
 msgid ""
@@ -3409,27 +3452,34 @@ msgid ""
 "for the current robot in robot.conf. If you did install statics CSS files, "
 "the colors in use may differ from this table."
 msgstr ""
+"Текущая версия не включает в себя редактор цветов, поэтому Вам необходимо "
+"редактировать robot.conf (или sympa.conf), чтобы изменить цвета. Вот цвета, "
+"определённые для данного робота в robot.conf. Если Вы установили файлы "
+"статических CSS, используемые цвета могут отличиться от указанных в этой "
+"таблице. "
 
 #: web_tt2/skinsedit.tt2:40
 msgid ""
 "This table display every colors used in Sympa, with their hexadecimal code "
 msgstr ""
+"В этой таблице показаны все цвета, используемые в Sympa c их "
+"шестнадцатиричным кодом"
 
 #: web_tt2/skinsedit.tt2:42
 msgid "parameter"
-msgstr ""
+msgstr "параметр"
 
 #: web_tt2/skinsedit.tt2:43
 msgid "parameter value"
-msgstr ""
+msgstr "значение параметра"
 
 #: web_tt2/skinsedit.tt2:44
 msgid "color lookup"
-msgstr ""
+msgstr "выделение цветом"
 
 #: web_tt2/skinsedit.tt2:45
 msgid "parameter usage"
-msgstr ""
+msgstr "использование параметра"
 
 #: web_tt2/skinsedit.tt2:53
 msgid ""
@@ -3437,6 +3487,9 @@ msgid ""
 "color_5. It is intended to be the darkest shade, as color_5 has other uses.</"
 "LI></UL>"
 msgstr ""
+"цвет фона: <UL><LI> одной из двух линий в таблицах, изменённых color_5. Она "
+"сделана, чтобы быть самой тёмной тенью, т. к. color_5 может использоваться "
+"иначе. </LI></UL>"
 
 #: web_tt2/skinsedit.tt2:59
 msgid ""
@@ -3450,6 +3503,9 @@ msgid ""
 "are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some "
 "titles.</LI></UL>"
 msgstr ""
+"цвет шрифта и границ: <LI><UL> почти всех. Исключениями для границ являются "
+"&lt;TD/&gt; borders; исключения для шрифтов являются ссылки, кнопки и "
+"некоторые заголовки.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:71
 msgid "background color of:<UL><LI>top box;</LI><LI>footer box.</LI></UL>"
@@ -3461,6 +3517,9 @@ msgid ""
 "the buttons (which are in fact hyperlinks, corresponding to the "
 "actionMenuLinks CSS class).</LI></UL>"
 msgstr ""
+"цвет фона: <UL><LI>страницы;</LI><LI>заголовков таблицы;</LI><LI>остальных "
+"кнопок (которые фактически являются гиперссылками в соотвествии с классом "
+"CSS actionMenuLinks.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:83
 msgid ""
@@ -3482,6 +3541,8 @@ msgid ""
 "background color of:<UL><LI>error messages;</LI><LI>just edited area in the "
 "administrative management section.</LI></UL>"
 msgstr ""
+"цвет фона <UL><LI>сообщений об ошибке;</LI><LI>только что отредактированной "
+"области в разделе административного управления.</LI></UL>"
 
 #: web_tt2/skinsedit.tt2:101
 msgid "doted underscore color of:<UL><LI>hyperlinks.</LI></UL>"
@@ -3498,7 +3559,7 @@ msgstr ""
 
 #: web_tt2/skinsedit.tt2:113
 msgid "inactive buttons color. Rarely used."
-msgstr ""
+msgstr "цвет неактивных кнопок. Используется редко."
 
 #: web_tt2/skinsedit.tt2:119
 msgid ""
@@ -3521,7 +3582,7 @@ msgstr ""
 
 #: web_tt2/skinsedit.tt2:137 web_tt2/skinsedit.tt2:143
 msgid "unused"
-msgstr ""
+msgstr "не используется"
 
 #: web_tt2/skinsedit.tt2:149 web_tt2/skinsedit.tt2:155
 #: web_tt2/skinsedit.tt2:161 web_tt2/skinsedit.tt2:167
@@ -3540,6 +3601,15 @@ msgid ""
 "to you.  Please press the \"Send me a confirmation password\" to continue to "
 "the confirmation step."
 msgstr ""
+"Для работы с этим сервером почтовых рассылок необходим работающий адрес "
+"электронной почты. Пожалуйста, укажите Ваш электронный адрес ниже. "
+"<p><i>Обратите внимание:</i> поле для ввода электронного адреса может быть "
+"заполнено предварительно.    Если это так, значит, на Вашем сервере "
+"аутентификации данный адрес уже сопоставлен вам.   Независимо от того, "
+"вводили ли вы адрес или воспользовались заданным заранее, необходимо "
+"подтвердить его работоспособность, введя высланный Вам пароль подтверждения. "
+"  Пожалуйста, нажмите \"Выслать мне пароль подтверждения\", чтобы перейти к "
+"следующему шагу. "
 
 #: web_tt2/sso_login.tt2:4
 msgid ""
@@ -3547,14 +3617,17 @@ msgid ""
 "pressing the button. This will take you to the next screen to confirm that "
 "your address is operational."
 msgstr ""
+"Пароль подтверждения будет выслан на указанный Вами адрес электронной почты "
+"после того, как Вы нажмёте на кнопку. На следующей странице необходимо будет "
+"подтвердить, что Ваш адрес работоспособен. "
 
 #: web_tt2/sso_login.tt2:16
 msgid "Your e-mail address:"
-msgstr ""
+msgstr "Ваш адрес электронной почты:"
 
 #: web_tt2/sso_login.tt2:24
 msgid "Send me a confirmation password"
-msgstr ""
+msgstr "Выслать мне пароль подтверждения"
 
 #. (init_email)
 #: web_tt2/sso_login.tt2:31
@@ -3563,18 +3636,21 @@ msgid ""
 "check your e-mail box for the message containing the confirmation password "
 "needed below."
 msgstr ""
+"Пароль подтверждения был отправлен на Ваш электронный адрес %1.<br "
+"/>Пожалуйста, найдите в своём почтовом ящике письмо с паролем подтверждения, "
+"необходимым ниже. "
 
 #: web_tt2/sso_login.tt2:50
 msgid "Validate Address"
-msgstr ""
+msgstr "Подтвердить адрес"
 
 #: web_tt2/stats.tt2:1
 msgid "Shared document directory size"
-msgstr ""
+msgstr "Размер директории общих документов"
 
 #: web_tt2/stats.tt2:2
 msgid "Web archives size"
-msgstr ""
+msgstr "Размер web-архивов"
 
 #: web_tt2/subindex.tt2:1 web_tt2/subindex.tt2:5
 msgid "Listing subscription to moderate"
@@ -3582,64 +3658,66 @@ msgstr ""
 
 #: web_tt2/subindex.tt2:49
 msgid "No subscription requests"
-msgstr ""
+msgstr "Нет запросов на подписку"
 
 #: web_tt2/subindex.tt2:54
 msgid "Add selected addresses"
-msgstr ""
+msgstr "Добавить выбранные адреса"
 
 #: web_tt2/subindex.tt2:55
 msgid "Reject selected addresses"
-msgstr ""
+msgstr "Отказать выбранным адресам"
 
 #: web_tt2/suboptions.tt2:7
 msgid "You are subscribed since"
-msgstr ""
+msgstr "Вы подписаны с "
 
 #: web_tt2/suboptions.tt2:8
 msgid "Last update:"
-msgstr ""
+msgstr "Последнее обновление: "
 
 #: web_tt2/suboptions.tt2:10
 msgid "Receiving mode :"
-msgstr ""
+msgstr "Режим получения : "
 
 #: web_tt2/suboptions.tt2:22
 msgid "Topic subscription :"
-msgstr ""
+msgstr "Тематическая подписка :"
 
 #: web_tt2/suboptions.tt2:34 web_tt2/suboptions.tt2:36
 msgid "Other (messages not tagged) "
-msgstr ""
+msgstr "Прочее (сообщения без тэгов)"
 
 #: web_tt2/suboptions.tt2:43
 msgid "Disable topics subscription"
-msgstr ""
+msgstr "Отключить тематическую подписку"
 
 #: web_tt2/suboptions.tt2:48
 msgid "Only possible in \"normal\" receiving mode"
-msgstr ""
+msgstr "Возможно только в \"нормальном\" режиме получения"
 
 #. (list)
 #: web_tt2/subrequest.tt2:5
 msgid "You requested subscription to list %1"
-msgstr ""
+msgstr "Вы запросили подписку на рассылку %1"
 
 #: web_tt2/subrequest.tt2:6
 msgid ""
 "To confirm\n"
 "        your request, please click the button below :"
 msgstr ""
+"Чтобы подтвердить\n"
+" Ваш запрос, нажмите на кнопку внизу, пожалуйста : "
 
 #. (list)
 #: web_tt2/subrequest.tt2:16
 msgid "I subscribe to list %1"
-msgstr ""
+msgstr "Я подписываюсь на рассылку %1"
 
 #. (list)
 #: web_tt2/subrequest.tt2:22
 msgid "You requested a subscription to list %1"
-msgstr ""
+msgstr "Вы запросили подписку на рассылку %1"
 
 #: web_tt2/subrequest.tt2:26
 msgid ""
@@ -3647,6 +3725,10 @@ msgid ""
 "        this list against your will, a message containing your password\n"
 "        will be sent to you."
 msgstr ""
+"Чтобы подтвердить Ваш адрес и предотвратить подписку\n"
+"                 на эту рассылку кем-либо против Вашей воли, Вам будет "
+"выслано сообщение, \n"
+"                 содержащее Ваш пароль. "
 
 #. (list)
 #: web_tt2/subrequest.tt2:29
@@ -3656,6 +3738,9 @@ msgid ""
 "  Enter that password, below. This wil confirm your request to be subscribed "
 "from list %1."
 msgstr ""
+"Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
+"   Введите этот пароль ниже. Это подтвердит ваш запрос на подписку на "
+"рассылку %1."
 
 #: web_tt2/subrequest.tt2:49
 msgid ""
@@ -3671,23 +3756,25 @@ msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below :"
 msgstr ""
+"Чтобы подтвердить Вашу подписку на рассылку %1, введите, пожалуйста,\n"
+"            Ваш пароль ниже : "
 
 #: web_tt2/subrequest.tt2:83
 msgid "My password ?"
-msgstr ""
+msgstr "Мой пароль ? "
 
 #. (list)
 #: web_tt2/subrequest.tt2:89
 msgid "You are already subscriber of list %1"
-msgstr ""
+msgstr "Вы уже подписаны на рассылку %1"
 
 #: web_tt2/tt2_error.tt2:7
 msgid "Sympa error - could not display web page"
-msgstr ""
+msgstr "Ошибка Sympa - невозможно отобразить web-страницу"
 
 #: web_tt2/tt2_error.tt2:11
 msgid "Sympa could not deliver the requested page for the following reason : "
-msgstr ""
+msgstr "Sympa не может предоставить запрошенную страницу по следующей причине :"
 
 #: web_tt2/tt2_error.tt2:18
 msgid "Please contact the listmaster."
@@ -3695,25 +3782,23 @@ msgstr "Пожалуйста, обратитесь к глобальному а�
 
 #: web_tt2/tt2_error.tt2:21
 msgid "Powered by"
-msgstr ""
+msgstr "Работает на"
 
 #: web_tt2/viewlogs.tt2:47
 msgid "Search by :"
-msgstr ""
+msgstr "Искать по :"
 
 #: web_tt2/viewlogs.tt2:55 web_tt2/viewlogs.tt2:61
-#, fuzzy
 msgid "Message Id"
-msgstr "# сообщение"
+msgstr "идентификатор сообщения"
 
 #: web_tt2/viewlogs.tt2:67
-#, fuzzy
 msgid "Search by date from:"
-msgstr "Поиск пользователя по электронному адресу"
+msgstr "Искать по дате с: "
 
 #: web_tt2/viewlogs.tt2:69
 msgid "to:"
-msgstr ""
+msgstr "до:"
 
 #: web_tt2/viewlogs.tt2:70
 msgid "ex: 24/05/2006"
@@ -3721,19 +3806,19 @@ msgstr ""
 
 #: web_tt2/viewlogs.tt2:72
 msgid "Search by type :"
-msgstr ""
+msgstr "Искать по типу :"
 
 #: web_tt2/viewlogs.tt2:76 web_tt2/viewlogs.tt2:83
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: web_tt2/viewlogs.tt2:85
 msgid "Authentication"
-msgstr ""
+msgstr "Аутентификация"
 
 #: web_tt2/viewlogs.tt2:87
 msgid "List Management"
-msgstr ""
+msgstr "Управление рассылкой"
 
 #: web_tt2/viewlogs.tt2:89
 msgid "User preferences"
@@ -3741,19 +3826,19 @@ msgstr "Предпочтения пользователя"
 
 #: web_tt2/viewlogs.tt2:90
 msgid "User management"
-msgstr ""
+msgstr "Управление пользователями"
 
 #: web_tt2/viewlogs.tt2:91
 msgid "Web documents management"
-msgstr ""
+msgstr "Управление web-документами"
 
 #: web_tt2/viewlogs.tt2:97
 msgid "Search by IP :"
-msgstr ""
+msgstr "Искать по IP :"
 
 #: web_tt2/viewlogs.tt2:102
 msgid "View"
-msgstr ""
+msgstr "Просмотр"
 
 #: web_tt2/viewlogs.tt2:104
 msgid "Reset"
@@ -3761,7 +3846,7 @@ msgstr ""
 
 #: web_tt2/viewlogs.tt2:110
 msgid "Search period: "
-msgstr ""
+msgstr "Период поиска: "
 
 #. (date_from_formated)
 #. (date_to_formated)
@@ -3769,7 +3854,7 @@ msgstr ""
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:16104
 msgid "%d %b %Y %H:%M:%S"
-msgstr ""
+msgstr "%d %b %Y %H:%M:%S"
 
 #: web_tt2/viewlogs.tt2:110
 msgid "to"
@@ -3783,19 +3868,19 @@ msgstr ""
 #. (rows_nb)
 #: web_tt2/viewlogs.tt2:114
 msgid "%1 results"
-msgstr ""
+msgstr "результаты %1"
 
 #: web_tt2/viewlogs.tt2:129
 msgid "List"
-msgstr ""
+msgstr "Рассылка"
 
 #: web_tt2/viewlogs.tt2:134 web_tt2/viewlogs.tt2:137
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #: web_tt2/viewlogs.tt2:142
 msgid "Parameters"
-msgstr ""
+msgstr "Параметры"
 
 #: web_tt2/viewlogs.tt2:146
 msgid "Target Email"
