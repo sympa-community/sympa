@@ -60,11 +60,9 @@ installmod:
 	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
 	done
-	@if [ "$(enable_secure)" != "yes" ]; then \
-		echo "Setting SetUID bit on wwsympa-wrapper.fcgi..."; \
-		chmod u+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
-		chmod g+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
-	fi
+	echo "Setting SetUID bit on wwsympa-wrapper.fcgi..."; \
+	chmod u+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
+	chmod g+s $(DESTDIR)$(CGIDIR)/wwsympa-wrapper.fcgi; \
 	chmod 755 $(DESTDIR)$(LIBDIR)/Marc
 	@for i in $(lib_SUBST) Marc/Search.pm; do \
 	chown $(USER) $(DESTDIR)$(LIBDIR)/$$i; \
@@ -166,7 +164,7 @@ substcgi:
 		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
 		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
 		CONFIG=$(CONFIG); export CONFIG; \
-		if [ "$(enable_secure)" = "yes" ]; then PERLOPT=""; else PERLOPT="-U"; fi; export PERLOPT; \
+		PERLOPT="-U"; export PERLOPT; \
 		$(PERL) ../subst.pl $(cgi_SUBST) \
 	)
 
