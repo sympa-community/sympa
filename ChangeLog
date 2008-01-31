@@ -1,4 +1,251 @@
 ------------------------------------------------------------------------
+r4819 | david.verdin | 2008-01-30 18:28:31 +0100 (Wed, 30 Jan 2008) | 9 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/src/sympa_wizard.pl
+
+Five new languages supported in Sympa:
+Almost complete:
+- Korean: Mark Smith and Kang Tae-Hee (HP)
+- Simplified Chinese: Mark Smith and Xun Yan (HP)
+- Tradional Chinese: Mark Smith (HP)
+Still partial but on good way:
+- Russian: Chernysh
+- Catalan: Jordi Deu-Pons
+
+------------------------------------------------------------------------
+r4818 | david.verdin | 2008-01-30 18:14:54 +0100 (Wed, 30 Jan 2008) | 3 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+Committing catalogues updated with new pot file.
+
+
+------------------------------------------------------------------------
+r4817 | david.verdin | 2008-01-30 18:10:56 +0100 (Wed, 30 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/Makefile
+
+We need the -U options for perl, having activated the "enable-secure" option or not. We will always give the bit s to wwsympa-wrapper.fcgi, having or not activated the "enable-secure" option.
+
+------------------------------------------------------------------------
+r4816 | david.verdin | 2008-01-30 17:50:03 +0100 (Wed, 30 Jan 2008) | 6 lines
+Changed paths:
+   M /trunk/po/Makefile
+   M /trunk/po/fr.po
+   M /trunk/po/ko.po
+   M /trunk/po/ru.po
+   A /trunk/po/web_help_zh_TW.po
+   M /trunk/po/zh_CN.po
+   A /trunk/po/zh_TW.po
+
+Introducing works from HP's Open Source Review Board:
+- Korean full support: Mark Smith and Kang Tae-Hee
+- Simplified Chinese full support: Mark Smith and Xun Yan
+- Tradional Chinese full support: Mark Smith and iconv ;)
+
+
+------------------------------------------------------------------------
+r4815 | david.verdin | 2008-01-30 17:39:06 +0100 (Wed, 30 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/po/ar.po
+   M /trunk/po/ca.po
+   M /trunk/po/fr.po
+   M /trunk/po/ru.po
+   M /trunk/po/web_help_de.po
+
+Committing latest translations.
+
+------------------------------------------------------------------------
+r4814 | david.verdin | 2008-01-22 16:55:07 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/compose_mail.tt2
+
+[#3683][Submitted by S. Kristoffersen, univ. Oslo] Fix: A carriage return in compose_mail.tt2 inserted a blank line into the text area in which the mails were composed.
+
+------------------------------------------------------------------------
+r4813 | david.verdin | 2008-01-22 16:30:14 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[Reported by C. desmoulins and J. Beretta, Orange] Change: During an LDAP include, we didn't check if an email address was present several times, leading to a database field "include_sources_subscriber" containing the LDAP source id as many times as the address had been found. Fixed by preventing an address to be taken into account if it has been met already in the LDAP query result set.
+
+------------------------------------------------------------------------
+r4812 | david.verdin | 2008-01-22 15:26:28 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Datasource.pm
+
+Fix: In a review, data sources name were not displayed because they were searched by comparing a MD5 hash on their parameters to the value stored in the database. As for complex datasources, these description were stored in hash, the order of the parameters was not fixed, leadinf to different values of MD5 for the same data sources. Fixed by sorting the hashes according to the hash keys, storing the result into an array and computing the MD5 with the array.
+
+------------------------------------------------------------------------
+r4811 | david.verdin | 2008-01-22 12:23:21 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/add_request.tt2
+
+multiple_add : a JS to clear textarea on click
+
+------------------------------------------------------------------------
+r4810 | david.verdin | 2008-01-22 11:32:11 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/serveradmin.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Missing carriage returns.
+
+------------------------------------------------------------------------
+r4809 | david.verdin | 2008-01-22 11:08:52 +0100 (Tue, 22 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/mail_tt2/listowner_notification.tt2
+
+Removed useless ">" character.
+
+------------------------------------------------------------------------
+r4808 | david.verdin | 2008-01-18 16:04:47 +0100 (Fri, 18 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+Change: Switching log level of tools:sanitize_var to debug4 instead of debug3. Faaaaaaaar too much logs generated otherwise.
+
+------------------------------------------------------------------------
+r4807 | david.verdin | 2008-01-18 15:06:26 +0100 (Fri, 18 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/sympa.pl
+
+Fix: Sympa didn't check that a "bad/" spool existed prior to cleaning it, leading to useless attempt to open said directory. Now, the "bad/" spool existence is tested before calling tools::CleanSpool().
+
+------------------------------------------------------------------------
+r4806 | david.verdin | 2008-01-18 14:15:00 +0100 (Fri, 18 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/serveradmin.tt2
+
+Fix: All the radio buttons in the form used by the "set_log_level" action didn't share the same control name, thus preventing the web client from expliting them as a set of buttons. This prevented the value from being correctly processed.
+
+------------------------------------------------------------------------
+r4805 | david.verdin | 2008-01-17 17:24:59 +0100 (Thu, 17 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Scenario.pm
+   M /trunk/src/sympa.pl
+   M /trunk/src/tools.pl
+
+[#3662][Submitted by J. Kirkland, westover.org] Change: Message headers can now be used by any scenario. Admin can use, for example, match([msg_header-><HeaderName>],/someregexp/)       smtp      -> do_it in a scenario, for any message header.
+
+------------------------------------------------------------------------
+r4803 | david.verdin | 2008-01-15 15:48:13 +0100 (Tue, 15 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/copy_template.tt2
+
+[#3032][Submitted by J. Kirkland] Fix: It was impossible to copy a template through wwsympa to a language-specific directory because the lang was no passe as argument to Sympa. Fixed by modifying the template.
+
+------------------------------------------------------------------------
+r4802 | david.verdin | 2008-01-15 13:52:12 +0100 (Tue, 15 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+[Reported by C. Andrews, Boston College] Fix: ampersand character was forbidden in email addresses though it is authorized by the RFC 2822.
+
+------------------------------------------------------------------------
+r4801 | david.verdin | 2008-01-15 13:22:05 +0100 (Tue, 15 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/src/sympa.pl
+
+[#3253][Reported by P. Ferrari, riseup.net] Fix: When all editors and owners have set their reception mode to "nomail", a message is sent to all of them instead of generating an internal server error and sendinf a message to listmaster.
+
+------------------------------------------------------------------------
+r4800 | david.verdin | 2008-01-14 16:04:41 +0100 (Mon, 14 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3661][Reported by S. Kristofferesen, univ. Oslo] Fix: In-Reply-To header did not follow rfc2822 format: opening '<' and closing '>' were missing.
+
+------------------------------------------------------------------------
+r4799 | david.verdin | 2008-01-14 11:41:43 +0100 (Mon, 14 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+   M /trunk/src/List.pm
+
+[#3109] Fix: When an user requests a subscription more than once, spare requests are ignored. That way, subscription requests appear only once in the moderation panel and the list owner receive only one message.
+
+------------------------------------------------------------------------
+r4798 | david.verdin | 2008-01-14 10:36:04 +0100 (Mon, 14 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Task.pm
+
+[Reported by M. Deranek, slonko.net] Change: task_manager now ignores files whose name starts with a dot in the spool directory. this done to avoid errors in distributions (such as gentoo) which add doted (system) files in the file system.
+
+------------------------------------------------------------------------
+r4797 | olivier.salaun | 2008-01-09 10:03:07 +0100 (Wed, 09 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Fix: lismaster was notified about listowner email changes, even when user is not listowner. Added a condition to the notification
+
+------------------------------------------------------------------------
+r4796 | david.verdin | 2008-01-09 09:06:55 +0100 (Wed, 09 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[#3611][Reported by A. Berstein, electricembers.net] Change: Adds a "Precedence:" field with value "bulk" in addition to the preexisting one with the value "list" to let MS exchange autoresponders ignore mails from Sympa.
+
+------------------------------------------------------------------------
+r4795 | david.verdin | 2008-01-09 09:01:55 +0100 (Wed, 09 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/mail_tt2/listmaster_notification.tt2
+
+Fix : improper use of "%s" in template.
+
+------------------------------------------------------------------------
+r4794 | david.verdin | 2008-01-09 08:17:13 +0100 (Wed, 09 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/check_perl_modules.pl
+
+[#3643][Submitted by S. Kristoffersen, univ. Oslo] Fix: wrong description of SQLite driver in perl module verification.
+
+------------------------------------------------------------------------
+r4791 | david.verdin | 2008-01-07 16:39:23 +0100 (Mon, 07 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+
+Preparing version 5.4a.10 (missing sessions update).
+
+------------------------------------------------------------------------
 r4790 | olivier.salaun | 2008-01-07 16:25:58 +0100 (Mon, 07 Jan 2008) | 2 lines
 Changed paths:
    M /trunk/src/parser.pl
