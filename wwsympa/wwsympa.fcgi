@@ -1941,23 +1941,6 @@ Use it to create a List object and initialize output parameters.
      $param->{'start_time'} = $start_time;
      $param->{'process_id'} = $$;
 
-     ## Email addresses protection
-     if (&Conf::get_robot_conf($robot,'spam_protection') eq 'at') {
-	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
-     }elsif(&Conf::get_robot_conf($robot,'spam_protection') eq 'javascript') {
-	 $param->{'protection_type'} = 'javascript';
-	 $param->{'hidden_head'} = '
- <script type="text/javascript">
- <!-- 
- document.write("';
-		 $param->{'hidden_at'} ='" + "@" + "';
-		 $param->{'hidden_end'} ='")
- // -->
- </script>';
-     }else {
-	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
-     }
-
      ## listmaster has owner and editor privileges for the list
      if (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	 $param->{'is_listmaster'} = 1;
@@ -1975,6 +1958,44 @@ Use it to create a List object and initialize output parameters.
 	 }
      }
 
+     ## Email addresses protection
+
+     if (defined $list) {
+         if ($list->{'admin'}{'spam_protection'} eq 'at') {
+      	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+         }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
+	     &wwslog('trace','spam_protection = javascript !');
+	     $param->{'protection_type'} = 'javascript';
+	     $param->{'hidden_head'} = '
+ <script type="text/javascript">
+ <!-- 
+ document.write("';
+	     $param->{'hidden_at'} ='" + "@" + "';
+	     $param->{'hidden_end'} ='")
+ // -->
+ </script>';
+         }else {
+	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
+         }
+     }else {
+         if (&Conf::get_robot_conf($robot,'spam_protection') eq 'at') {
+      	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+         }elsif(&Conf::get_robot_conf($robot,'spam_protection') eq 'javascript') {
+	     &wwslog('trace','spam_protection = javascript !');
+	     $param->{'protection_type'} = 'javascript';
+	     $param->{'hidden_head'} = '
+ <script type="text/javascript">
+ <!-- 
+ document.write("';
+	     $param->{'hidden_at'} ='" + "@" + "';
+	     $param->{'hidden_end'} ='")
+ // -->
+ </script>';
+         }else {
+	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
+         }
+     }
+     
      if ($list->{'name'}) {
 	 &wwslog('debug2', "list-name $list->{'name'}");
 
