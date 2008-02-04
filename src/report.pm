@@ -67,12 +67,12 @@ sub reject_report_msg {
     }
 
     unless ($user){
-	&do_log('err',"report::reject_report_msg(): unable to send template message_report.tt2 : no user to notify");
+	&do_log('err',"report::reject_report_msg(): unable to send template command_report.tt2 : no user to notify");
 	return undef;
     }
  
     unless ($robot){
-	&do_log('err',"report::reject_report_msg(): unable to send template message_report.tt2 : no robot");
+	&do_log('err',"report::reject_report_msg(): unable to send template command_report.tt2 : no robot");
 	return undef;
     }
 

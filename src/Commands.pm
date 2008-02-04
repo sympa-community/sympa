@@ -762,6 +762,16 @@ sub subscribe {
 	&do_log('info', 'SUB %s from %s refused (not allowed)', $which, $sender);
 	return 'not_allowed';
     }
+
+    ## Unless rejected by scenario, don't go further if the user is subscribed already.
+    my $user_entry = $list->get_subscriber($sender);    
+    if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	&report::reject_report_cmd('user','already_subscriber',{'email'=>$sender, 'listname'=>$list->{'name'}},$cmd_line);
+	&do_log('err','User %s is subscribed to %s already. Ignoring subscription request.', $sender, $list->{'name'});
+	return undef;
+    }
+
+    ## Continue checking scenario.
     if ($action =~ /owner/i) {
 	&report::notice_report_cmd('req_forward',{},$cmd_line);  
 	## Send a notice to the owners.

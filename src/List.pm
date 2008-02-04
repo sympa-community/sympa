@@ -10937,6 +10937,7 @@ sub get_subscription_requests {
 
 	## First line of the file contains the user email address + his/her name
 	my $line = <REQUEST>;
+	close REQUEST;
 	my ($email, $gecos);
 	if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
 	    ($email, $gecos) = ($1, $3); 
@@ -10946,6 +10947,15 @@ sub get_subscription_requests {
 	    next;
 	}
 
+	my $user_entry = $self->get_subscriber($email);
+	 
+	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	    &do_log('err','User %s is subscribed to %s already. Deleting subscription request.', $email, $self->{'name'});
+	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+		&do_log('err', 'Could not delete file %s', $filename);
+	    }
+	    next;
+	}
 	## Following lines may contain custom attributes in an XML format
 	my %xml = &parseCustomAttribute(\*REQUEST) ;
 	
@@ -10960,7 +10970,6 @@ sub get_subscription_requests {
 
 	$filename =~ /^$self->{'name'}(\@$self->{'domain'})?\.(\d+)\.\d+$/;
 	$subscriptions{$email}{'date'} = $2;
-	close REQUEST;
     }
     closedir SPOOL;
 
@@ -10989,43 +10998,43 @@ sub get_subscription_request_count {
 
 sub delete_subscription_request {
     my ($self, @list_of_email) = @_;
-    do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, join(',',@list_of_email));
+    &do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, join(',',@list_of_email));
 
+    my $removed_file = 0;
+    my $email_regexp = &tools::get_regexp('email');
+    
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
 	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
 	return undef;
     }
 
-    my $removed_file = 0;
+    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
+	
+	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+	    &do_log('notice', 'Could not open %s', $filename);
+	    next;
+	}
+	my $line = <REQUEST>;
+	close REQUEST;
 
-    foreach my $email (@list_of_email) {
+	foreach my $email (@list_of_email) {
 
-	foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	    unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
-		do_log('notice', 'Could not open %s', $filename);
-		closedir SPOOL;
-		return undef;
-	    }
-	    my $line = <REQUEST>;
-	    my $email_regexp = &tools::get_regexp('email');
-	    unless ($line =~ /^($email_regexp)\s*/ &&
-		    ($1 eq $email)) {
+	    unless ($line =~ /^($email_regexp)\s*/ && ($1 eq $email)) {
 		next;
 	    }
-	    
-	    close REQUEST;
 	    
 	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
-		do_log('err', 'Could not delete file %s', $filename);
-		next;
+		&do_log('err', 'Could not delete file %s', $filename);
+		last;
 	    }
 	    $removed_file++;
 	}
     }
+
     closedir SPOOL;
     
     unless ($removed_file > 0) {
-	do_log('err', 'No pending subscription was found for users %s', join(',',@list_of_email));
+	&do_log('err', 'No pending subscription was found for users %s', join(',',@list_of_email));
 	return undef;
     }
 
