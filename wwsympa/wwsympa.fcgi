@@ -1964,7 +1964,6 @@ Use it to create a List object and initialize output parameters.
          if ($list->{'admin'}{'spam_protection'} eq 'at') {
       	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
          }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
-	     &wwslog('trace','spam_protection = javascript !');
 	     $param->{'protection_type'} = 'javascript';
 	     $param->{'hidden_head'} = '
  <script type="text/javascript">
@@ -1981,7 +1980,6 @@ Use it to create a List object and initialize output parameters.
          if (&Conf::get_robot_conf($robot,'spam_protection') eq 'at') {
       	     $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
          }elsif(&Conf::get_robot_conf($robot,'spam_protection') eq 'javascript') {
-	     &wwslog('trace','spam_protection = javascript !');
 	     $param->{'protection_type'} = 'javascript';
 	     $param->{'hidden_head'} = '
  <script type="text/javascript">
