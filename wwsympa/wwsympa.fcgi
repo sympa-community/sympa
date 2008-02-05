@@ -15911,7 +15911,10 @@ sub do_dump_scenario {
      }
 
      ## Access control
-     return undef unless (defined &check_authz('do_dump', 'review'));
+     unless (defined &check_authz('do_dump', 'review')) {
+	 undef $param->{'bypass'};
+	 return undef;
+     }
 
      $list->dump();
      $param->{'file'} = $list->{'dir'}.'/subscribers.db.dump';
