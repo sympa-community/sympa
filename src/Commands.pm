@@ -1425,20 +1425,11 @@ sub invite {
 	    }
 
             if ($action =~ /request_auth/i) {
-		if ($list->am_i('owner',$sender)) {
-		    my $keyauth = $list->compute_auth ($email, 'subscribe');
-		    my $command = "auth $keyauth sub $which $comment";
-		    $context{'subject'} = $command;
-		    $context{'url'}= "mailto:$sympa?subject=$command";
-		    $context{'url'} =~ s/\s/%20/g;
-		}
-		else {
-		    my $keyauth = $list->compute_auth ($email, 'subscribe');
-		    my $command = "auth $keyauth sub $which $comment";
-		    $context{'subject'} = $command;
-		    $context{'url'}= "mailto:$sympa?subject=$command";
-		    $context{'url'} =~ s/\s/%20/g;
-		}
+		my $keyauth = $list->compute_auth ($email, 'subscribe');
+		my $command = "auth $keyauth sub $which $comment";
+		$context{'subject'} = $command;
+		$context{'url'}= "mailto:$sympa?subject=$command";
+		$context{'url'} =~ s/\s/%20/g;
 		unless ($list->send_file('invite', $email, $robot, \%context)) {
          	    &do_log('notice',"Unable to send template 'invite' to $email");
 		    &report::reject_report_cmd('intern',"Unable to send template 'invite' to $email",{'listname'=> $which},$cmd_line,$sender,$robot);
@@ -1448,16 +1439,9 @@ sub invite {
 		&report::notice_report_cmd('invite',{'email'=> $email, 'listname' => $which},$cmd_line); 
 
 	    }elsif ($action !~ /reject/i) {
-		if ($list->am_i('owner',$sender)) {
-		    $context{'subject'} = "sub $which $comment";
-		    $context{'url'}= "mailto:$sympa?subject=$context{'subject'}";
-		    $context{'url'} =~ s/\s/%20/g;
-		}
-		else {
-		    $context{'subject'} = "sub $which $comment";
-		    $context{'url'}= "mailto:$sympa?subject=$context{'subject'}";
-		    $context{'url'} =~ s/\s/%20/g;
-		}
+		$context{'subject'} = "sub $which $comment";
+		$context{'url'}= "mailto:$sympa?subject=$context{'subject'}";
+		$context{'url'} =~ s/\s/%20/g;
 		unless ($list->send_file('invite', $email, $robot,\%context)) {
 		    &do_log('notice',"Unable to send template 'invite' to $email");
 		    &report::reject_report_cmd('intern',"Unable to send template 'invite' to $email",{'listname'=> $which},$cmd_line,$sender,$robot);
