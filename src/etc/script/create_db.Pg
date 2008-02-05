@@ -91,6 +91,7 @@ CREATE TABLE logs_table (
 );
 CREATE	INDEX logs_idx ON logs_table(id_logs);
 
+DROP TABLE session_table;
 CREATE TABLE session_table (
 	id_session			int8 NOT NULL,
 	start_date_session		int4 NOT NULL,
