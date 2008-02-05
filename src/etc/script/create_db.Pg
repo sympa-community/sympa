@@ -92,7 +92,7 @@ CREATE TABLE logs_table (
 CREATE	INDEX logs_idx ON logs_table(id_logs);
 
 CREATE TABLE session_table (
-	id_session			int4 NOT NULL,
+	id_session			int8 NOT NULL,
 	start_date_session		int4 NOT NULL,
 	date_session		        int4 NOT NULL,
 	remote_addr_session		varchar(60),
