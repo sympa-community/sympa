@@ -158,6 +158,11 @@
   my $topent = shift;
   my $msgent = $topent->parts(0);
   my $wdecode = new MIME::WordDecoder::ISO_8859 (1);
+
+  unless ($msgent->head) {
+      $outstring .= sprintf(gettext("----- Malformed message ignored -----\n\n"));
+      return undef;
+  }
   
   my $from = $msgent->head->get('From');
   my $subject = $msgent->head->get('Subject');
