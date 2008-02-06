@@ -14930,12 +14930,12 @@ sub do_delete_pictures {
 
 	     if ($sub_is !~ /do_it/) {	
 		 &report::reject_report_web('auth',$reason_sub,{'change_email_failed'=> 1},$param->{'action'},$list);
-		 &wwslog('info', 'do_change_email: could not change email for list %s because subscribe not allowed',$list);
+		 &wwslog('info', 'do_change_email: could not change email for list %s because subscribe not allowed',$list->{'name'});
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		 next;
 	     }elsif($unsub_is !~ /do_it/) {	
 		 &report::reject_report_web('auth',$reason_unsub,{'change_email_failed'=> 1},$param->{'action'},$list);
-		 &wwslog('info', 'do_change_email : could not change email for list %s because unsubscribe not allowed',$list);
+		 &wwslog('info', 'do_change_email : could not change email for list %s because unsubscribe not allowed',$list->{'name'});
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		 next;
 	     }
