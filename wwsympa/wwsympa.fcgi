@@ -841,7 +841,9 @@ my $birthday = time ;
      
      &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
-     $session = new SympaSession ($robot,&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}));
+     $session = new SympaSession ($robot,{'cookie'=>&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}),
+					  'action'=>$in{'action'},
+					  'rss'=>$rss});
 
      unless (defined $session) {
 	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
@@ -1087,12 +1089,13 @@ my $birthday = time ;
      ## store in session table this session contexte
      $session->store ;
 
+	 
+
      ## Do not manage cookies at this level if content was already sent
      unless ($param->{'bypass'} eq 'extreme' || 
 	     $param->{'action'} eq 'css' || 
 	     $maintenance_mode ||
 	     $rss) {
-
 
 	 my $delay = $param->{'user'}{'cookie_delay'};
 	 unless (defined $delay) {
@@ -1102,10 +1105,8 @@ my $birthday = time ;
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
-	 
 	 unless ($session->set_cookie($param->{'cookie_domain'},$delay)) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
-	     exit -1;
 	 }
 
 	 ## Set cookies "your_subscribtions" unless in one list page

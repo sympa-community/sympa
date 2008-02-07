@@ -41,9 +41,14 @@ my %session_hard_attributes = ('id_session' => 1, 'date' => 1, 'remote_addr'  =>
 
 
 sub new {
-    my ($pkg, $robot, $cookie) = @_;
+    my $pkg = shift; 
+    my $robot = shift;
+    my $context = shift;
 
-    do_log('debug', 'SympaSession::new(%s,%s)', $robot,$cookie);
+    my $cookie = $context->{'cookie'};
+    my $action = $context->{'action'};
+
+    do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
 
     my $session={};
     bless $session, $pkg;
@@ -53,14 +58,16 @@ sub new {
 	return undef;
     }
 
-#    my $cookie = &get_session_cookie($ENV{'HTTP_COOKIE'});
+#   passive_session are session not stored in the database, they are used for crawler bots and action such as css, wsdl and rss
     
     if (&tools::is_a_crawler($robot,{'user_agent_string' => $ENV{'HTTP_USER_AGENT'}})) {
 	$session->{'is_a_crawler'} = 1;
+	$session->{'passive_session'} = 1;
     }
+    $session->{'passive_session'} = 1 if ($rss||$action eq 'wsdl'||$action eq 'css');
 
     # if a session cookie exist, try to restore an existing session, don't store sessions from bots
-    if (($cookie)&&($session->{'is_a_crawler'} != 1)){
+    if (($cookie)&&($session->{'passive_session'} != 1)){
 	my $status ;
 	$status = $session->load($cookie) ;
 	unless (defined $status) {
@@ -151,6 +158,7 @@ sub store {
 
     return undef unless ($self->{'id_session'});
     return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
+    return if ($self->{'passive_session'}); # do not create a session in session table for action such as RSS or CSS or wsdlthat do not require this sophistication; 
 
     my %hash ;    
     foreach my $var (keys %$self ) {
