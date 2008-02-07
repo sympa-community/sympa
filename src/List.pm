@@ -9236,7 +9236,9 @@ sub set_netidtoemail_db {
     return 1;
 }
 
-## List of lists where $1 (an email) is $3 (owner, editor or subscriber)
+## &get_which(<email>,<robot>,<type>)
+## Get lists of lists where <email> assumes this <type> (owner, editor or member) of
+## function to any list in <robot>.
 sub get_which {
     my $email = shift;
     my $robot =shift;
