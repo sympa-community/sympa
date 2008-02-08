@@ -119,11 +119,9 @@ sub lock {
 	    ## first attempt, it will first try to put a read lock instead. failing that, it will return undef for lock conflicts reasons.
 	    if ($self->add_lock($mode,-1)) {
 		push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, $mode;
-		&do_log('trace','Added lock in %s mode, total: %s locks', $mode, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
 	    }
 	    else {
 		return undef unless ($self->add_lock('read',-1));
-		&do_log('trace','Added lock in %s mode, total: %s locks', 'read', $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
 	    }
 	    return 1;
 	}
@@ -138,7 +136,6 @@ sub lock {
     else {
 	    if ($self->add_lock($mode)) {
 		push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, $mode;
-		&do_log('trace','Added lock in %s mode, total: %s locks', $mode, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
 	    }
 	    else {
 		return undef;
@@ -162,7 +159,6 @@ sub unlock {
     if ($#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} > 0) {
 	$previous_mode = pop @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}};
 	$current_mode = @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}[$#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}];
-	&do_log('trace','Previous state: %s / current state: %s',$previous_mode, $current_mode);
 
 	## If the new lock mode is different from the one we just removed, we need to create a new file lock.
 	if ($previous_mode eq 'write' && $current_mode eq 'read') {
@@ -184,10 +180,7 @@ sub unlock {
     else {
 	return undef unless($self->remove_lock());
 	$previous_mode = pop @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}};
-	&do_log('trace','Last lock removed');
     }
-    &do_log('trace','Removed previous state %s',$previous_mode);
-    &do_log('trace','%s lock(s) remaining',$#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
     return 1;
 }
 
