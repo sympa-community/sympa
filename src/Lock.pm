@@ -87,7 +87,7 @@ sub set_timeout {
 sub get_lock_count {
     my $self = shift;
 
-    return $list_of_locks{$self->{'lock_filename'}}{'count'};
+    return $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1;
 }
 
 sub get_file_handle {
@@ -99,89 +99,155 @@ sub get_file_handle {
 sub lock {
     my $self = shift;
     my $mode = shift; ## read | write
-    &do_log('debug', 'Lock::lock(%s,%s)',$self->{'lock_filename'}, $mode);
+    &do_log('debug', 'Trying to put a lock on %s in mode %s',$self->{'lock_filename'}, $mode);
 
-    ## Check if file was already locked by this process
+    ## If file was already locked by this process, we will add a new lock.
+    ## We will need to create a new lock if the state must change.
     if ($list_of_locks{$self->{'lock_filename'}}{'fh'}) {
-
-	## Check if the mode for this lock if the same as the previous one
-	## if mode is 'write' and was previously 'read' then we unlock and redo a lock
-	if ($mode eq 'write' && $list_of_locks{$self->{'lock_filename'}} eq 'read') {
-	    my $count = $list_of_locks{$self->{'lock_filename'}}{'count'}; ## Save lock count
-
-	    &do_log('debug', "Need to unlock and redo locking on %s", $self->{'lock_filename'});
-	    $self->unlock(); ## unlock first	    
-	    $self->lock($mode);
-	    
-	    $list_of_locks{$self->{'lock_filename'}}{'count'} = $count; ## Restore count
-	}
-
-	$list_of_locks{$self->{'lock_filename'}}{'count'}++;
-	&do_log('debug', "Lock again %s ; total %d", $self->{'lock_filename'}, $list_of_locks{$self->{'lock_filename'}}{'count'});
 	
-	return $list_of_locks{$self->{'lock_filename'}}{'fh'};
-    }else {
-	my ($fh, $nfs_lock);
-	if ($Conf::Conf{'lock_method'} eq 'nfs') {
-	    ($fh, $nfs_lock) = _lock_nfs($self->{'lock_filename'}, $mode, $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout);
-	    return undef unless (defined $fh && defined $nfs_lock);
-	    
-	    $list_of_locks{$self->{'lock_filename'}} = {'fh' => $fh, 'count' => 1, 'mode' => $mode, 'nfs_lock' => $nfs_lock};
-
-	}else {
-	    $fh = _lock_file($self->{'lock_filename'}, $mode, $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout);
-	    return undef unless (defined $fh);
-	    
-	    $list_of_locks{$self->{'lock_filename'}} = {'fh' => $fh, 'count' => 1, 'mode' => $mode};
+	## If the mode for the new lock is 'write' and was previously 'read'
+	## then we unlock and redo a lock
+	if ($mode eq 'write' && $list_of_locks{$self->{'lock_filename'}}{'mode'} eq 'read') {
+	    &do_log('debug', "Need to unlock and redo locking on %s", $self->{'lock_filename'});
+	    ## First release previous lock
+	    return undef unless ($self->remove_lock());
+	    ## Next, lock in write mode
+	    ## WARNING!!! This exact point of the code is a critical point, as any file lock this process could have
+	    ## is currently released. However, we are supposed to have a 'read' lock! If any OTHER process has a read lock on the file, we won't
+	    ## be able to add the new lock. While waiting, the other process can perfectly switch to 'write' mode and start writing
+	    ## in the file THAT OTHER PARTS OF THIS PROCESS ARE CURRENTLY READING. Consequently, if add_lock can't create a lock at its
+	    ## first attempt, it will first try to put a read lock instead. failing that, it will return undef for lock conflicts reasons.
+	    if ($self->add_lock($mode,-1)) {
+		push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, $mode;
+		&do_log('trace','Added lock in %s mode, total: %s locks', $mode, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
+	    }
+	    else {
+		return undef unless ($self->add_lock('read',-1));
+		&do_log('trace','Added lock in %s mode, total: %s locks', 'read', $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
+	    }
+	    return 1;
 	}
-
-	return $fh;
+	## Otherwise, the previous lock was probably a 'read' lock, so no worries, just increase the locks count.
+	&do_log('debug', "No need to change filesystem or NFS lock for %s. Just increasing count.", $self->{'lock_filename'});
+	push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, 'read';
+	&do_log('debug', "Locked %s again; total locks: %d", $self->{'lock_filename'}, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
+	return 1;
     }
+    
+    ## If file was not locked by this process, just *create* the lock.
+    else {
+	    if ($self->add_lock($mode)) {
+		push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, $mode;
+		&do_log('trace','Added lock in %s mode, total: %s locks', $mode, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
+	    }
+	    else {
+		return undef;
+	    }
+    }
+    return 1;
 }
 
 sub unlock {
     my $self = shift;
-    &do_log('debug', 'Lock::unlock(%s)',$self->{'lock_filename'});
+    &do_log('debug', 'Removing lock on %s',$self->{'lock_filename'});
 
     unless (defined $list_of_locks{$self->{'lock_filename'}}) {
 	&do_log('err', "Failed to unlock file %s ; file is not locked", $self->{'lock_filename'});
 	return undef;
     }
+    my $previous_mode;
+    my $current_mode;
 
-    if ($list_of_locks{$self->{'lock_filename'}}{'count'} > 1) {
-	$list_of_locks{$self->{'lock_filename'}}{'count'}--;
+    ## If it is not the last lock on the file, we revert the lock state to the previous lock.
+    if ($#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} > 0) {
+	$previous_mode = pop @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}};
+	$current_mode = @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}[$#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}];
+	&do_log('trace','Previous state: %s / current state: %s',$previous_mode, $current_mode);
 
-    }else {
-	my $fh = $list_of_locks{$self->{'lock_filename'}}{'fh'};
+	## If the new lock mode is different from the one we just removed, we need to create a new file lock.
+	if ($previous_mode eq 'write' && $current_mode eq 'read') {
+	    &do_log('debug', "Need to unlock and redo locking on %s", $self->{'lock_filename'});
 
-	if ($Conf::Conf{'lock_method'} eq 'nfs') {
-	    my $nfs_lock = $list_of_locks{$self->{'lock_filename'}}{'nfs_lock'};
+	    ## First release previous lock
+	    return undef unless($self->remove_lock());
 
-	    unless (defined $fh && defined $nfs_lock && &_unlock_nfs($self->{'lock_filename'}, $fh, $nfs_lock)) {
-		&do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
-		
-		$list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
-		
-		return undef;
-	    }
-
-	}else {
-	    unless (defined $fh && &_unlock_file($self->{'lock_filename'}, $fh)) {
-		&do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
-		
-		$list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
-		
-		return undef;
-	    }
+	    ## Next, lock in write mode
+	    ## WARNING!!! This exact point of the code is a critical point, as any file lock this process could have
+	    ## is currently released. However, we are supposed to have a 'read' lock! If any OTHER process has a read lock on the file, we won't
+	    ## be able to add the new lock. While waiting, the other process can perfectly switch to 'write' mode and start writing
+	    ## in the file THAT OTHER PARTS OF THIS PROCESS ARE CURRENTLY READING. Consequently, if add_lock can't create a lock at its
+	    ## first attempt, it will first try to put a read lock instead. failing that, it will return undef for lock conflicts reasons.
+	    return undef unless ($self->add_lock($current_mode,-1));
 	}
-	
-	$list_of_locks{$self->{'lock_filename'}} = undef;
     }
-
+    ## Otherwise, just delete the last lock.
+    else {
+	return undef unless($self->remove_lock());
+	$previous_mode = pop @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}};
+	&do_log('trace','Last lock removed');
+    }
+    &do_log('trace','Removed previous state %s',$previous_mode);
+    &do_log('trace','%s lock(s) remaining',$#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
     return 1;
 }
 
-## lock a file 
+## Called by lock() or unlock() when these function need to add a lock (i.e. on the file system or NFS).
+sub add_lock {
+    my $self = shift;
+    my $mode = shift;
+    my $timeout = shift;
+
+    ## If the $timeout value is -1, it means that we will try to put a lock only once. This is to be used when we are
+    ## changing the lock mode (from write to read and reverse) and we then  release the file lock to create a new one AND
+    ## we have previous locks pending in the same process on the same file.
+    unless($timeout) {
+	$timeout = $list_of_locks{$self->{'lock_filename'}}{'timeout'} || $default_timeout;
+    }
+    &do_log('debug2', 'Adding lock to file %s in mode %s with a timeout of: %s',$self->{'lock_filename'}, $mode, $timeout);
+    my ($fh, $nfs_lock);
+    if ($Conf::Conf{'lock_method'} eq 'nfs') {
+	($fh, $nfs_lock) = _lock_nfs($self->{'lock_filename'}, $mode, $timeout);
+	return undef unless (defined $fh && defined $nfs_lock);
+	$list_of_locks{$self->{'lock_filename'}}{'fh'} = $fh;
+	$list_of_locks{$self->{'lock_filename'}}{'mode'} = $mode;
+	$list_of_locks{$self->{'lock_filename'}}{'nfs_lock'} = $nfs_lock;
+    }else {
+	$fh = _lock_file($self->{'lock_filename'}, $mode, $timeout);
+	return undef unless (defined $fh);
+	$list_of_locks{$self->{'lock_filename'}}{'fh'} = $fh;
+	$list_of_locks{$self->{'lock_filename'}}{'mode'} = $mode;
+	$list_of_locks{$self->{'lock_filename'}}{'nfs_lock'} = $nfs_lock;
+    }
+    return 1;
+}
+
+## Called by lock() or unlock() when these function need to remove a lock (i.e. on the file system or NFS).
+sub remove_lock {
+    my $self = shift;
+    &do_log('debug2', 'Removing lock from file %s',$self->{'lock_filename'});
+
+    my $fh = $list_of_locks{$self->{'lock_filename'}}{'fh'};
+    my $previous_mode;
+    
+    if ($Conf::Conf{'lock_method'} eq 'nfs') {
+	my $nfs_lock = $list_of_locks{$self->{'lock_filename'}}{'nfs_lock'};
+	unless (defined $fh && defined $nfs_lock && &_unlock_nfs($self->{'lock_filename'}, $fh, $nfs_lock)) {
+	    &do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
+	    $list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
+	    return undef;
+	}
+    }else {
+	unless (defined $fh && &_unlock_file($self->{'lock_filename'}, $fh)) {
+	    &do_log('err', 'Failed to unlock %s', $self->{'lock_filename'});
+	    $list_of_locks{$self->{'lock_filename'}} = undef; ## Clean the list of locks anyway
+	    return undef;
+	}
+    }
+    $list_of_locks{$self->{'lock_filename'}}{'fh'} = undef;
+    return 1
+}
+
+## Locks a file - pure interface with the filesystem
 sub _lock_file {
     my $lock_file = shift;
     my $mode = shift; ## read or write
@@ -195,7 +261,7 @@ sub _lock_file {
 	$operation = LOCK_SH;
     }else {
 	$operation = LOCK_EX;
-	$open_mode = '>>';
+	$open_mode = '>';
     }
     
     ## Read access to prevent "Bad file number" error on Solaris
@@ -207,6 +273,10 @@ sub _lock_file {
     
     my $got_lock = 1;
     unless (flock ($fh, $operation | LOCK_NB)) {
+	if ($timeout == -1) {
+	    &do_log('err','Unable to get a new lock and other locks pending in this process. Cancelling.');
+	    return undef;
+	}
 	&do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
 
 	## If lock was obtained more than 20 minutes ago, then force the lock
@@ -251,7 +321,7 @@ sub _lock_file {
     return $fh;
 }
 
-## unlock a file 
+## Unlocks a file - pure interface with the filesystem
 sub _unlock_file {
     my $lock_file = shift;
     my $fh = shift;
@@ -267,7 +337,7 @@ sub _unlock_file {
     return 1;
 }
 
-# lock on NFS
+# Locks on NFS - pure interface with NFS
 sub _lock_nfs {
     my $lock_file = shift;
     my $mode = shift; ## read or write
@@ -312,7 +382,7 @@ sub _lock_nfs {
     return undef;
 }
 
-# unlock on NFS
+# Unlocks on NFS - pure interface with NFS
 sub _unlock_nfs {
     my $lock_file = shift;
     my $fh = shift;
