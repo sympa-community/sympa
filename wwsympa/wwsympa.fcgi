@@ -13961,9 +13961,9 @@ sub d_test_existing_and_rights {
 
      if (-f $desc_file) {
 	 if ($moderate){
-	     $new_desc_file =~ s/$document/\.$in{'new_name'}\.moderate/;
+	     $new_desc_file =~ s/\Q$document/\.$in{'new_name'}\.moderate/;
 	 }else {
-	     $new_desc_file =~ s/$document/$in{'new_name'}/;   
+	     $new_desc_file =~ s/\Q$document/$in{'new_name'}/;   
 	 }
 	 unless (rename $desc_file, $new_desc_file) {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$desc_file,
