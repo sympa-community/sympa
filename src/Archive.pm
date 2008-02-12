@@ -260,7 +260,7 @@ sub last_path {
 sub load_html_message {
     my %parameters = @_;
 
-    &do_log ('info',$parameters{'file_path'});
+    &do_log ('debug2',$parameters{'file_path'});
     my %metadata;
 
     unless (open ARC, $parameters{'file_path'}) {
