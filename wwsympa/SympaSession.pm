@@ -47,6 +47,7 @@ sub new {
 
     my $cookie = $context->{'cookie'};
     my $action = $context->{'action'};
+    my $rss = $context->{'rss'};
 
     do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
 
@@ -64,7 +65,7 @@ sub new {
 	$session->{'is_a_crawler'} = 1;
 	$session->{'passive_session'} = 1;
     }
-    $session->{'passive_session'} = 1 if ($action eq 'rss'||$action eq 'wsdl'||$action eq 'css');
+    $session->{'passive_session'} = 1 if ($rss||$action eq 'wsdl'||$action eq 'css');
 
     # if a session cookie exist, try to restore an existing session, don't store sessions from bots
     if (($cookie)&&($session->{'passive_session'} != 1)){
