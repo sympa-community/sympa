@@ -73,6 +73,9 @@
 [% ELSIF notice.msg == 'pending_list' %]
 [%|loc%]List has been set to the pending status ; listmaster need to validate it[%END%]
 
+[% ELSIF notice.msg == 'listname_lowercased' %]
+[%|loc%]List name has been lowercased[%END%]
+
 [% ELSE %]
 [% notice.msg %]
 

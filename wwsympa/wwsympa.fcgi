@@ -7859,6 +7859,13 @@ Creates a list using a list template
 	     return undef;
 	 }
      }
+
+     ## Lowercase listname if required
+     if ($in{'listname'} =~ /[A-Z]/) {
+       $in{'listname'} = lc($in{'listname'});
+       &report::notice_report_web('listname_lowercased',{},$param->{'action'});
+     }
+
      ## Check that a user is logged in
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
@@ -7949,6 +7956,12 @@ Creates a list using a list template
 
      ## notify listmaster
      my $list = new List $in{'listname'};
+     unless (defined $list) {
+       &wwslog('info',"failed to create list object for list '%s'",$in{'listname'});
+       &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+       return undef;
+     }
+
      if ($param->{'create_action'} =~ /notify/) {
 	 &wwslog('info','notify listmaster');
 	 unless (&List::send_notify_to_listmaster('request_list_creation',$robot, 
