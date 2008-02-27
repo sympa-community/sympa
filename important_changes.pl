@@ -40,7 +40,7 @@ unless (open VERSION, "$ENV{'DESTDIR'}$ENV{'BINDIR'}/Version.pm") {
 
 unless ($first_install) {
     while (<VERSION>) {
-	if (/^\$Version = \'(\S+)\'\;/) {
+	if (/^our \$Version = \'(\S+)\'\;/) {
 	    $previous_version = $1;
 	    last;
 	}

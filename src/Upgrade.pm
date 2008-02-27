@@ -893,7 +893,7 @@ sub probe_db {
 	    }
 	    
 	    while (my $ref = $sth->fetchrow_hashref()) {
-		$real_struct{$t}{$ref->{'Field'}} = $ref->{'Type'};
+		$real_struct{$t}{$ref->{'field'}} = $ref->{'type'};
 	    }
 	    
 	    $sth->finish();
@@ -1070,7 +1070,7 @@ sub probe_db {
 	    if ($Conf{'db_type'} eq 'mysql') {
 		## Check that primary key has the right structure.
 		my $should_update;
-		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'Key');
+		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'key');
 		my %primaryKeyFound;
 		foreach my $scannedResult ( keys %$test_request_result ) {
 		    if ( $scannedResult eq "PRI" ) {
@@ -1098,7 +1098,7 @@ sub probe_db {
 		    foreach my $definedKeyPart (@{$primary{$t}}) {
 			$definedPrimaryKey{$definedKeyPart} = 1;
 		    }
-		    my $searchedKeys = ['Field','Key'];
+		    my $searchedKeys = ['field','key'];
 		    my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,$searchedKeys);
 		    my $expectedKeyMissing = 0;
 		    my $unExpectedKey = 0;
@@ -1145,7 +1145,7 @@ sub probe_db {
 		}
 		
 		## drop previous index if this index is not a primary key and was defined by a previous Sympa version
-		my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'Key_name');
+		my $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');
 		my %index_columns;
 		
 		foreach my $indexName ( keys %$test_request_result ) {
