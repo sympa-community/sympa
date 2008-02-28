@@ -23,16 +23,10 @@ Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%E
 	[%|loc(newuser.password)%]password: %1[%END%]
 
 [% ELSE -%]
-[%|loc%]To access your personal environment, you need to login first[%END%]
 
-     [%|loc(newuser.email)%]your email address    : %1[%END%]
-     [%|loc(newuser.password)%]your password : %1[%END%]
+[%|loc(conf.host,request_from_host,date)%]Someone, probably you, requested to allocate or renew your password for your list server account %1. (This request cames from host %2 at %3).[%END%]
+[%|loc%]You may ignore this request or hit the following url in order to choose your password. [%END%]: [% base_url %][% path_cgi %]/ticket/[% one_time_ticket %]
 
-[%|loc%]Changing your password[%END%] 
-[% base_url %][% path_cgi %]/choosepasswd/[% newuser.escaped_email %]/[% newuser.password %]
-[% END %]
-
-
-[% conf.title %]: [% base_url %][% path_cgi %] 
+[%END%]
 
 [%|loc(base_url,path_cgi)%]Help on Sympa: %1%2[%END%]/help

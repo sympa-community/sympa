@@ -706,7 +706,14 @@ sub probe_db {
 						  'status_logs' => 'varchar(10)',
 						  'error_type_logs' => 'varchar(150)',
 						  'client_logs' => 'varchar(100)',
-						  'daemon_logs' => 'varchar(10)'						  
+						  'daemon_logs' => 'varchar(10)'},
+				 'one_time_ticket_table' => {'ticket_one_time_ticket' => 'varchar(30)',
+							     'email_one_time_ticket' => 'varchar(100)',
+							     'robot_one_time_ticket' => 'varchar(80)',
+							     'date_one_time_ticket' => 'int(11)',
+							     'data_one_time_ticket' => 'varchar(200)',
+							     'remote_addr_one_time_ticket' => 'varchar(60)',
+							     'status_addr_one_time_ticket' => 'varchar(60)'
 						  },				 
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
@@ -751,7 +758,7 @@ sub probe_db {
 						       'robot_netidmap' => 'varchar(80)'},
 				  'session_table' => {'id_session' => 'varchar(30)',
 						     'start_date_session' => 'integer',
-						     'date_session' => 'int(11)',
+						     'date_session' => 'integer',
 						     'remote_addr_session' => 'varchar(60)',
 						     'robot_session'  => 'varchar(80)',
 						     'email_session'  => 'varchar(100)',
@@ -769,7 +776,14 @@ sub probe_db {
 						   'status_logs' => 'varchar(10)',
 						   'error_type_logs' => 'varchar(150)',
 						   'client_logs' => 'varchar(100)',
-						   'daemon_logs' => 'varchar(10)'						  
+						   'daemon_logs' => 'varchar(10)'},
+				 'one_time_ticket_table' => {'ticket_one_time_ticket' => 'varchar(30)',
+						       'robot_one_time_ticket' => 'varchar(80)',
+						       'email_one_time_ticket' => 'varchar(100)',
+						       'date_one_time_ticket' => 'integer',
+						       'data_one_time_ticket' => 'varchar(200)',
+						       'remote_addr_one_time_ticket' => 'varchar(60)',
+						       'status_addr_one_time_ticket' => 'varchar(60)'						  
 						  },				 
 
 			      },
@@ -803,7 +817,8 @@ sub probe_db {
 		   'admin_table' => ['robot_admin','list_admin','role_admin','user_admin'],
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
 		   'logs_table' => ['id_logs'],
-		   'session_table' => ['id_session']
+		   'session_table' => ['id_session'],
+		   'one_time_ticket_table' => ['ticket_one_time_ticket']
 		   );
 
     ## List the required INDEXES
@@ -1444,5 +1459,71 @@ sub to_utf8 {
     return $total;
 }
 
+
+# md5_encode_password : Version later than 5.4 uses md5 fingerprint instead of symetric crypto to store password.
+#  This require to rewrite paassword in database. This upgrade IS NOT REVERSIBLE
+sub md5_encode_password {
+
+    my $total = 0;
+
+    &do_log('notice', 'Upgrade::md5_encode_password() recoding password using md5 fingerprint');
+    
+    unless (&List::check_db_connect()) {
+	return undef;
+    }
+
+    my $dbh = &List::db_get_handler();
+
+    my $sth;
+    unless ($sth = $dbh->prepare("SELECT email_user,password_user from user_table")) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    my $total = 0;
+    my $total_md5 = 0 ;
+
+    while (my $user = $sth->fetchrow_hashref) {
+
+	my $clear_password ;
+	if ($user->{'password_user'} =~ /^[1-9a-f]{32}/){
+	    do_log('info','password from %s allready encoded as md5 fingerprint',$user->{'password_user'});
+	    $total_md5++ ;
+	    next;
+	}	
+	if ($user->{'password_user'} =~ /^init(.*)$/) {
+	    $clear_password = $1;   
+	}
+	elsif ($user->{'password_user'} =~ /^crypt.(.*)$/) {
+	    $clear_password = &tools::decrypt_password($user->{'password_user'});
+	}else{
+	    $clear_password = $user->{'password_user'};
+	}
+
+	$total++;
+
+	## Updating Db
+	my $statement = sprintf "UPDATE user_table SET password_user='%s' WHERE (email_user='%s')", &tools::md5_fingerprint($clear_password), $user->{'email_user'} ;
+	
+	unless ($dbh->do($statement)) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+    }
+    $sth->finish();
+    
+    do_log('info',"Updating password storage in table user_table using md5 for %d users",$total) ;
+    if ($total_md5) {
+	do_log('info',"Found in table user %d password stored using md5, did you run Sympa before upgrading ?", $total_md5 );
+    }    
+    return $total;
+}
+
+ 
 ## Packages must return true.
 1;

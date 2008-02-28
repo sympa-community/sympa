@@ -3503,11 +3503,8 @@ sub send_to_editor {
        $param->{'request_topic'} = 1;
    }
 
-   if ($encrypt eq 'smime_crypted') {
-
-       ## Send a different crypted message to each moderator
        foreach my $recipient (@rcpt) {
-
+       if ($encrypt eq 'smime_crypted') {	       
 	   ## $msg->body_as_string respecte-t-il le Base64 ??
 	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
 	   unless ($cryptedmsg) {
@@ -3523,25 +3520,67 @@ sub send_to_editor {
 	   }
 	   print CRYPTED $cryptedmsg;
 	   close CRYPTED;
-	   
-
 	   $param->{'msg_path'} = $crypted_file;
 
-	   &tt2::allow_absolute_path();
-	   unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
-	       &do_log('notice',"Unable to send template 'moderate' to $recipient");
-	       return undef;
-	   }
-       }
    }else{
        $param->{'msg_path'} = $file;
+       }
+       # create a one time ticket that will be used as un md5 URL credential
 
+       unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($recipient,$robot,'modindex/'.$name,'mail')){
+	   &do_log('notice',"Unable to create one_time_ticket for $recipient, service modindex/$name");
+       }else{
+	   &do_log('notice',"xxxxxxxxxxxxxx ticket : $param->{'one_time_ticket'}");
+       }
        &tt2::allow_absolute_path();
-       unless ($self->send_file('moderate', \@rcpt, $self->{'domain'}, $param)) {
-	   &do_log('notice',"Unable to send template 'moderate' to $self->{'name'} editors");
+       unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
+	   &do_log('notice',"Unable to send template 'moderate' to $recipient");
 	   return undef;
        }
    }
+#  Old code 5.4 and before to be removed in 5.5
+#   if ($encrypt eq 'smime_crypted') {
+#
+#       ## Send a different crypted message to each moderator
+#       foreach my $recipient (@rcpt) {
+#
+#	   # create a one time ticket that will be used as un md5 URL credential
+#	   $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'modindex/'.$name,$ip)
+#
+#	   ## $msg->body_as_string respecte-t-il le Base64 ??
+#	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
+#	   unless ($cryptedmsg) {
+#	       &do_log('notice', 'Failed encrypted message for moderator');
+#	       # xxxx send a generic error message : X509 cert missing
+#	       return undef;
+#	   }
+#
+#	   my $crypted_file = $Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
+#	   unless (open CRYPTED, ">$crypted_file") {
+#	       &do_log('notice', 'Could not create file %s', $crypted_file);
+#	       return undef;
+#	   }
+#	   print CRYPTED $cryptedmsg;
+#	   close CRYPTED;
+#	   
+#
+#	   $param->{'msg_path'} = $crypted_file;
+#
+#	   &tt2::allow_absolute_path();
+#	   unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
+#	       &do_log('notice',"Unable to send template 'moderate' to $recipient");
+#	       return undef;
+#	   }
+#       }
+#   }else{
+#       $param->{'msg_path'} = $file;
+#
+#       &tt2::allow_absolute_path();
+#       unless ($self->send_file('moderate', \@rcpt, $self->{'domain'}, $param)) {
+#	   &do_log('notice',"Unable to send template 'moderate' to $self->{'name'} editors");
+#	   return undef;
+#       }
+#  }
    return $modkey;
 }
 
@@ -4581,9 +4620,9 @@ sub get_user_db {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\", attributes_user \"attributes\" %s,data_user \"data\" FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\", attributes_user \"attributes\" %s,data_user \"data\", last_login_date_user \"last_login_date\", last_login_host_user \"last_login_host\" FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }else {
-	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }
     
     push @sth_stack, $sth;
@@ -6162,7 +6201,7 @@ sub update_admin_user {
 ## Sets new values for the given user in the Database
 sub update_user_db {
     my($who, $values) = @_;
-    do_log('debug2', 'List::update_user_db(%s)', $who);
+    do_log('debug', 'List::update_user_db(%s)', $who);
 
     $who = &tools::clean_email($who);
 
@@ -6171,8 +6210,8 @@ sub update_user_db {
 	return undef;
     }
 
-    ## encrypt password   
-    $values->{'password'} = &tools::crypt_password($values->{'password'}) if ($values->{'password'});
+    ## use md5 fingerprint to store password   
+    $values->{'password'} = &Auth::password_fingerprint($values->{'password'}) if ($values->{'password'});
 
     my ($field, $value);
     
@@ -6185,7 +6224,9 @@ sub update_user_db {
 		      lang => 'lang_user',
 		      attributes => 'attributes_user',
 		      email => 'email_user',
-		      data => 'data_user'
+		      data => 'data_user',
+		      last_login_date => 'last_login_date_user',
+		      last_login_host => 'last_login_host_user'
 		      );
     
     ## Check database connection
@@ -6193,11 +6234,6 @@ sub update_user_db {
 	return undef unless &db_connect();
     }	   
     
-    ## Crypt password if it was not crypted
-    if ($values->{'password'} && ($values->{'password'} !~ /^crypt/)) {
-	$values->{'password'} = &tools::crypt_password($values->{'password'});
-    }
-
     ## Update each table
     my @set_list;
     while (($field, $value) = each %{$values}) {

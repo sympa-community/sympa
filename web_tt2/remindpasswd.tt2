@@ -2,16 +2,25 @@
 
 <!-- begin remindpasswd.tt2 -->
       <p>
-      [%|loc%]You have forgotten your password, or you've never had any password related to this server[%END%]<br />
-      [%|loc%]it will be sent to you by email :[%END%]
+
+[% IF account_creation %]
+      [%|loc%]You request for an account creation on this list server.[%END%]
+[% ELSIF login_error == 'wrong_password' %]
+      [%|loc%]The password you submit is wrong. May be you forgot it ?[%END%]
+[% ELSIF login_error == 'missing_password' %]
+      [%|loc%]You miss the password, please submit again. May be you forgot it ?[%END%]
+[% ELSE %]
+      [%|loc%]You have forgotten your password, so you have to  renew it.[%END%]
+[% END %]
+      [%|loc%]Please submit your email address, you will receive a message that give you access to the appropriate form in order to choose your password.[%END%]
       </p>
       <form class="bold_label" action="[% path_cgi %]" method="post">
 	<fieldset>
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sendpasswd" />
            <label for="email">[%|loc%]Your e-mail address[%END%] : </label>
-           <input id="email" type="text" name="email" size="20" value="[% email %]" />
-          &nbsp;&nbsp;&nbsp;<input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
+           <input id="email" type="text" name="email" size="20" value="[% unauthenticated_email %]" />
+          &nbsp;&nbsp;&nbsp;<input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]Ask for change password[%END%]" />
 	</fieldset>
       </form>
 

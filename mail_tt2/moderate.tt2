@@ -10,6 +10,9 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Type: text/plain; charset="UTF-8";
 Content-Transfer-Encoding: 8bit
 
+[%|loc(mod_spool_size,list.name)%]they are %1 messages awaiting moderation for list %2.[%END%] 
+[%|loc(conf.wwsympa_url,one_time_ticket) %]You can browse and accept or refuse them by web : %1/ticket/%2[% END %] 
+
 [% IF method == 'md5' -%]
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,modkey)%]To tag the attached message in list %1 go to the following page :
 
@@ -28,7 +31,7 @@ REJECT [% list.name %] [% modkey %]
 [% END %]
 [%- END -%]
 
-[%|loc(mod_spool_size)%]Number of messages awaiting moderation for this list : %1[%END%]
+
 --[% boundary %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit

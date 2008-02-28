@@ -33,6 +33,7 @@ use File::Path;
 use Commands;
 use Conf;
 use Auth;
+use SympaSession;
 use Language;
 use Log;
 use Version;
@@ -83,6 +84,7 @@ Options:
    --dump=list\@dom|ALL                  : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
+   --md5_encode_password                 : rewrite password in database using md5 fingerprint. YOU CAN'T UNDO unless you save this table first
    --create_list --robot=robot_name --input_file=/path/to/file.xml 
                                          : create a list with the xml file under robot_name
    --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml [--close_unknown] [--quiet]
@@ -119,7 +121,7 @@ encryption.
 ## Check --dump option
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
-		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
+		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
 		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
 		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s','quiet','close_unknown')) {
     &fatal_err("Unknown options.");
@@ -135,6 +137,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'import'} || 
 				$main::options{'make_alias_file'} ||
 				$main::options{'lowercase'} ||
+				$main::options{'md5_encode_password'} ||
 				$main::options{'close_list'} ||
 				$main::options{'purge_list'} ||
 				$main::options{'create_list'} ||
@@ -462,6 +465,17 @@ if ($main::options{'dump'}) {
     printf STDERR "Total imported subscribers: %d\n", $total;
 
     exit 0;
+}elsif ($main::options{'md5_encode_password'}) {
+
+    unless ($List::use_db) {
+	&fatal_err("You don't have a database setup, can't lowercase email addresses");
+    }
+    
+    my $total=&Upgrade::md5_encode_password();
+    printf STDERR "Total password re-encoded using md5: %d\n", $total;
+    
+    exit 0;
+    
 }elsif ($main::options{'lowercase'}) {
     
     unless ($List::use_db) {

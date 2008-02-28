@@ -18,7 +18,9 @@
 [% ELSIF is_subscriber %][%|loc%]Subscriber[%END%]
 [% END %]
 </div>
-
+[% IF last_login_date %]
+	<span>[%|loc(last_login_host,last_login_date)%]last login from %1 <br />(%2)</span>[%END%]
+[%END%]
 
 [% IF auth_method == 'md5' %]
   <form class="text_center" action="[% path_cgi %]" method="post">
@@ -75,7 +77,7 @@
 
       <input type="hidden" name="action" value="login" />
       <label for="email_login">[%|loc%]email address[%END%] :</label><br />
-      <input type="text" name="email" id="email_login" size="18" value="[% init_email %]" /><br />
+      <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /><br />
       <label for="passwd" >[%|loc%]password[%END%] :</label><br />
       <input type="password" name="passwd" id="passwd" size="8" /> &nbsp;&nbsp;
       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
@@ -84,8 +86,12 @@
   </div>
   <br />
 [% IF use_passwd == '1' %]
+[% IF authentication_info_url %]
+   <a class="menuLinks" href="[%conf.authentication_info.url%]">[%|loc%]Authentication help[% END %]</a><br />
+[% ELSE %]
   <a class="menuLinks" href="[% path_cgi %]/sendpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
   <a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a>
+[% END %]
 [% END %]
 [% END %]
 

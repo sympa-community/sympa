@@ -99,7 +99,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
      open(STDERR, ">> /dev/null");
      open(STDOUT, ">> /dev/null");
      if (open(TTY, "/dev/tty")) {
-         ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
+         ioctl(TTY, 0x20007471, 0);         #  s/b &TIOCNOTTY
 #       ioctl(TTY, &TIOCNOTTY, 0);                                             
          close(TTY);
      }
@@ -173,6 +173,7 @@ my %global_models = (#'crl_update_task' => 'crl_update',
 		     'purge_user_table_task' => 'purge_user_table',
 		     'purge_logs_table_task' => 'purge_logs_table',
 		     'purge_session_table_task' => 'purge_session_table',
+		     'purge_one_time_ticket_table_task' => 'purge_one_time_ticket_table',
 		     'purge_orphan_bounces_task' => 'purge_orphan_bounces',
 		     'eval_bouncers_task' => 'eval_bouncers',
 		     'process_bouncers_task' =>'process_bouncers',
@@ -210,6 +211,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'purge_user_table'      => [],
 		'purge_logs_table'      => [],
 		'purge_session_table'   => [],
+		'purge_one_time_ticket_table'   => [],
 		'purge_orphan_bounces'  => [],
 		'eval_bouncers'         => [],
 		'process_bouncers'      => []
@@ -266,7 +268,7 @@ while (!$end) {
 			'execution_date' => 'execution_date');
 
     ## global tasks
-    foreach my $key (keys %global_models) {
+    foreach my $key (keys %global_models) {	
 	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
@@ -802,6 +804,7 @@ sub cmd_process {
     return purge_user_table ($task, \%context) if ($command eq 'purge_user_table');
     return purge_logs_table ($task, \%context) if ($command eq 'purge_logs_table');
     return purge_session_table ($task, \%context) if ($command eq 'purge_session_table');
+    return purge_one_time_ticket_table ($task, \%context) if ($command eq 'purge_one_time_ticket_table');
     return sync_include($task, \%context) if ($command eq 'sync_include');
     return purge_orphan_bounces ($task, \%context) if ($command eq 'purge_orphan_bounces');
     return eval_bouncers ($task, \%context) if ($command eq 'eval_bouncers');
@@ -1122,6 +1125,19 @@ sub purge_session_table {
 	return undef;
     }
     &do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
+    return 1;
+}
+
+## remove one time ticket table if older than $Conf{'one_time_ticket_table_ttl'}
+sub purge_one_time_ticket_table {    
+
+    do_log('info','task_manager::purge_one_time_ticket_table()');
+    my $removed = &SympaSession::purge_old_tickets('*');
+    unless(defined $removed) {
+	&do_log('err','&SympaSession::purge_old_tickets(): Failed to remove old tickets');
+	return undef;
+    }
+    &do_log('notice','purge_one_time_ticket_table(): %s row removed in one_time_ticket_table',$removed);
     return 1;
 }
 

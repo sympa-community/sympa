@@ -1,5 +1,10 @@
 <!-- begin notice.tt2 -->
 <div class="ContentBlock"> <strong>
+
+[% IF last_login_date %]
+[%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]
+[%END%]
+
 [% FOREACH notice = notices %]
 [% IF notice.msg == 'sent_to_owner' %]
 [%|loc%]Your request has been forwarded to the list owner[%END%]

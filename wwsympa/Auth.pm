@@ -27,6 +27,7 @@ use Exporter;
 our @ISA = ('Exporter');
 our @EXPORT = ();
 
+use Language;
 use Log;
 use Conf;
 use List;
@@ -36,6 +37,19 @@ use Digest::MD5;
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
 
+
+## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
+sub password_fingerprint{
+
+    do_log('debug', 'Auth::password_fingerprint');
+
+    my $pwd = shift;
+    if(&Conf::get_robot_conf('*','password_case') eq 'insensitive') {
+	return &tools::md5_fingerprint(lc($pwd));
+    }else{
+	return &tools::md5_fingerprint($pwd);
+    }    
+}
 
 
 ## authentication : via email or uid
@@ -99,26 +113,23 @@ sub authentication {
 
 
     unless ($user = &List::get_user_db($email)) {
-	$user = {'email' => $email,
-		 'password' => &tools::tmp_passwd($email)
-		 };
+	$user = {'email' => $email };
     }    
     unless ($user->{'password'}) {
-	$user->{'password'} = &tools::tmp_passwd($email);
+	$user->{'password'} = '';
     }
     
-
-
     foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
+	next if ($auth_service->{'auth_type'} eq 'authentication_info_url');
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 
 	## Only 'user_table' and 'ldap' backends will need that Sympa collects the user passwords
 	## Other backends are Single Sign-On solutions
 	if ($auth_service->{'auth_type'} eq 'user_table') {
+	    my $fingerprint = &password_fingerprint ($pwd);
 	    
-	    if(((&Conf::get_robot_conf('*','password_case') eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || 
-	       ($pwd eq $user->{'password'})) {
+	    if ($fingerprint eq $user->{'password'}) {
 		return {'user' => $user,
 			'auth' => 'classic',
 			'alt_emails' => {$email => 'classic'}
@@ -139,18 +150,19 @@ sub authentication {
 
     ## If web context and password has never been changed
     ## Then prompt user
-    unless ($ENV{'SYMPA_SOAP'}) {
-	foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
-	    next unless ($email !~ /$auth_service->{'regexp'}/i);
-	    next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
-	    if ($auth_service->{'auth_type'} eq 'user_table') {
-		if ($user->{'password'} =~ /^init/i) {
-		    &report::reject_report_web('user','init_passwd',{});
-		    last;
-		}
-	    }
-	}
-    }
+    # xxxxxxxxxxxxx to be removed
+#    unless ($ENV{'SYMPA_SOAP'}) {
+#	foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
+#	    next unless ($email !~ /$auth_service->{'regexp'}/i);
+#	    next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
+#	    if ($auth_service->{'auth_type'} eq 'user_table') {
+#		if ($user->{'password'} =~ /^init/i) {
+#		    &report::reject_report_web('user','init_passwd',{});
+#		    last;
+#		}
+#	    }
+#	}
+#    }
     
     &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
     &do_log('err','authentication: incorrect password for user %s', $email);
@@ -405,7 +417,106 @@ sub remote_app_check_password {
     return undef;
 }
  
-  
+# create new entry in one_time_ticket table using a rand as id so later access is authenticated
+#
+
+sub create_one_time_ticket {
+    my $email = shift;
+    my $robot = shift;
+    my $data_string = shift;
+    my $remote_addr = shift;
+
+    my $ticket = &SympaSession::get_random();
+    do_log('debug', 'Auth::create_one_time_ticket(%s,%s,%s) value = %s',$email,$robot,$context_data,$ticket);
+
+    my $date = time;
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
+    
+    my $statement = sprintf "INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES ('%s','%s','%s','%s','%s','%s','%s')",$ticket,$robot,$email,time,$data_string,$remote_addr,'open';
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to insert in table one_time_ticket_table while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
+	return undef;
+    }   
+    return $ticket;
+}
+
+# read one_time_ticket from table and remove it
+#
+sub get_one_time_ticket {
+    my $ticket_number = shift;
+    my $addr = shift; 
+    
+    do_log('info', 'xxxx Auth::get_one_time_ticket(%s)',$ticket_number);
+    
+    my $dbh = &List::db_get_handler();
+    my $sth;
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return return {'result'=>'error'} unless &List::db_connect();
+    }
+    my $statement;
+    if ($Conf{'db_type'} eq 'Oracle') {
+	## "AS" not supported by Oracle
+	$statement = sprintf "SELECT ticket_one_time_ticket \"ticket\", robot_one_time_ticket \"robot\", email_one_time_ticket \"email\", date_one_time_ticket \"date\", data_one_time_ticket \"data\", remote_addr_one_time_ticket \"remote_addr\", status_one_time_ticket \"status\" FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
+    }else {
+	$statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS date, data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
+    }
+    
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Auth::get_one_time_ticket: Unable to prepare SQL statement : %s', $dbh->errstr);
+	return {'result'=>'error'};
+    }
+    unless ($sth->execute) {
+	do_log('err','Auth::get_one_time_ticket: Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return {'result'=>'error'};
+    }    
+ 
+    my $ticket = $sth->fetchrow_hashref;
+    $sth->finish();
+    
+    unless ($ticket) {	
+	do_log('info','Auth::get_one_time_ticket: Unable to find one time ticket %s (SQL query %s)%s', $ticket,$statement, $dbh->errstr);
+	return {'result'=>'not_found'};
+    }
+    
+    my $result;
+    my $printable_date = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($ticket->{'date'});
+
+    if ($ticket->{'status'} ne 'open') {
+	$result = 'closed';
+	do_log('info','Auth::get_one_time_ticket: ticket %s from %s refused because allready used (%s)',$ticket_number,$ticket->{'email'},$printable_date);
+    }
+    elsif (time - $ticket->{'date'} > 48 * 60 * 60) {
+	do_log('info','Auth::get_one_time_ticket: ticket %s from %s refused because expired (%s)',$ticket_number,$ticket->{'email'},$printable_date);
+	$result = 'expired';
+    }else{
+	$result = 'success';
+    }
+    $statement = sprintf "UPDATE one_time_ticket_table SET status_one_time_ticket = '%s' WHERE (ticket_one_time_ticket='%s')", $addr, $ticket_number;
+    
+    unless ($dbh->do($statement)) {
+    	do_log('err','Auth::get_one_time_ticket  Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    }
+
+    do_log('info', 'xxxx Auth::get_one_time_ticket(%s) : result : %s',$ticket_number,$result);
+    return {'result'=>$result,
+	    'date'=>$ticket->{'date'},
+	    'email'=>$ticket->{'email'},
+	    'remote_addr'=>$ticket->{'remote_addr'},
+	    'robot'=>$ticket->{'robot'},
+	    'data'=>$ticket->{'data'},
+	    'status'=>$ticket->{'status'}
+	};
+}
+    
 1;
 
 

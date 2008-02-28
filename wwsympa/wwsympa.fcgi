@@ -302,7 +302,8 @@ my %comm = ('home' => 'do_home',
 	 'rss_request' => 'do_rss_request',
 	 'maintenance' => 'do_maintenance',
 	 'blacklist' => 'do_blacklist',
-	 'edit_attributes' => 'do_edit_attributes'
+	 'edit_attributes' => 'do_edit_attributes',
+	 'ticket' => 'do_ticket'
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -313,6 +314,7 @@ my %auth_action = ('logout' => 1,
 		   'remindpasswd' => 1,
 		   'choosepasswd' => 1,
 		   'sendssopasswd' => 1,
+		   'ticket' => 1,
 		   );		  
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -414,7 +416,8 @@ my %action_args = ('default' => ['list'],
 		'request_topic' => ['list','authkey'],
 		'tag_topic_by_sender' => ['list'],
 		'multiple_subscribe' => ['lists'],
-		'multiple_signoff' => ['lists']
+		'multiple_signoff' => ['lists'],
+		'ticket' => ['ticket']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -772,6 +775,7 @@ my $birthday = time ;
      $param->{'sso_number'} = $Conf{'cas_number'}{$robot} + $Conf{'generic_sso_number'}{$robot};
      $param->{'use_passwd'} = $Conf{'use_passwd'}{$robot};
      $param->{'use_sso'} = 1 if ($param->{'sso_number'});
+     $param->{'authentication_info_url'} = $Conf{'authentication_info_url'}{$robot}; 
      $param->{'wwsconf'} = $wwsconf;
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
@@ -856,6 +860,7 @@ my $birthday = time ;
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
+     $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
     
      ## RSS does not require user authentication
      unless ($rss) {
@@ -1385,7 +1390,229 @@ sub get_header_field {
     }
 }
 
+
+
+# _split_params is used by get_parameters to split path info in the appropriate parameters list.
+# It is used also by action ticket to prepare the context stored in the one_time_ticket table in string like path_info
+# input ENV{'PATH_INFO'} like string, output in the global $param hash
+sub _split_params {
+    my $args_string = shift;
+
+    &do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+    
+    $args_string =~ s+^/++;
+    
+    my $ending_slash = 0;
+    if ($args_string =~ /\/$/) {
+	$ending_slash = 1;
+    }
+    
+    my @params = split /\//, $args_string;
+        
+    if ($params[0] eq 'nomenu') {
+	$param->{'nomenu'} = 1;
+	$param->{'path_cgi'} .= '/nomenu'; ## other links should keep the nomenu attribute
+	shift @params;
+    }
+    
+    ## debug mode
+    if ($params[0] =~ /debug(\d)?/) {
+	shift @params;
+	if ($1) { 
+	    $main::options{'debug_level'} = $1 if ($1);
+	}else{
+	    $main::options{'debug_level'} = 1 ;
+	}
+    }else{
+	$main::options{'debug_level'} = 0 ;
+    } 
+    do_log ('debug2', "debug level $main::options{'debug_level'}");
+    
+    ## rss mode 
+    if ($params[0] eq 'rss') {
+	shift @params;
+	$rss = 1;
+    } 
+    
+    if ($#params >= 0) {
+	$in{'action'} = $params[0];
+	
+	my $args;
+	if (defined $action_args{$in{'action'}}) {
+	    $args = $action_args{$in{'action'}};
+	}else {
+	    $args = $action_args{'default'};
+	}
+	
+	my $i = 1;
+	foreach my $p (@$args) {
+	    my $pname;
+	    ## More than 1 param
+	    if ($p =~ /^\@(\w+)$/) {
+		$pname = $1;
+		$in{$pname} = join '/', @params[$i..$#params];
+		$in{$pname} .= '/' if $ending_slash;
+		last;
+	    }
+	    else {
+		$pname = $p;
+		$in{$pname} = $params[$i];
+	    }
+	    $i++;
+	}
+    }    
+}
+
 sub get_parameters {
+    #    &wwslog('debug4', 'get_parameters');
+    
+    ## CGI URL
+    if ($ENV{'HTTPS'} eq 'on') {
+	$param->{'base_url'} = sprintf 'https://%s', &get_header_field('HTTP_HOST');
+	$param->{'use_ssl'} = 1;
+    }else {
+	$param->{'base_url'} = sprintf 'http://%s', &get_header_field('HTTP_HOST');
+	$param->{'use_ssl'} = 0;
+    }
+    
+    $param->{'path_info'} = $ENV{'PATH_INFO'};
+    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
+    
+    if ($ENV{'REQUEST_METHOD'} eq 'GET') {
+	&_split_params ($ENV{'PATH_INFO'});
+    }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
+	    ## POST
+
+	 if ($in{'javascript_action'}) { 
+	     ## because of incompatibility javascript
+	     $in{'action'} = $in{'javascript_action'};
+	 }
+	 foreach my $p (keys %in) {
+	     do_log('debug2',"POST key $p value $in{$p}");
+	     if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
+		 
+		 $in{'action'} = $1;
+		 if ($2) {
+		     foreach my $v (split /\./, $2) {
+			 $v =~ s/^\.?(\w+)\.?/$1/;
+			 $in{$v} = 1;
+		     }
+		 }
+		 undef $in{$p};
+	     }
+	 }
+	 $param->{'nomenu'} = $in{'nomenu'};
+     }	
+
+     ## Lowercase email addresses
+     $in{'email'} = lc ($in{'email'});
+
+     ## Don't get multiple listnames
+     if ($in{'list'}) {
+	 my @lists = split /\0/, $in{'list'};
+	 $in{'list'} = $lists[0];
+     }
+
+     my $custom_attribute ;
+     
+     ## Check parameters format
+     foreach my $p (keys %in) {
+
+	 ## Skip empty parameters
+ 	 next if ($in{$p} =~ /^$/);
+
+	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
+	 $in{$p} =~ s/\015//g;	 
+
+	 #XXX## Convert from the web encoding to unicode string
+	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
+
+	 my @tokens = split (/\./, $p);
+	 my $pname = $tokens[0];
+
+	 ## Regular expressions applied on parameters
+
+	 my $regexp;
+	 if ($pname =~ /^additional_field/) {
+	     $regexp = $in_regexp{'additional_field'};
+	 }elsif ($pname =~ /^custom_attribute(.*)$/) {
+	     my $key = $tokens[1] ;
+	     $regexp = $in_regexp{'custom_attribute'};
+	     do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} $Conf{$key}{type}");
+	     $custom_attribute->{$key} = {value=>$in{$p}} ;
+	     undef $in{$p} ;
+
+	 }elsif ($in_regexp{$pname}) {
+	     $regexp = $in_regexp{$pname};
+	 }else {
+	     $regexp = $in_regexp{'*'};
+	 }
+
+	 my $negative_regexp;
+	 if ($pname =~ /^additional_field/) {
+	     $negative_regexp = $in_negative_regexp{'additional_field'};
+	 }elsif ($in_negative_regexp{$pname}) {
+	     $negative_regexp = $in_negative_regexp{$pname};
+	 }
+
+	 # If we are editing an HTML file in the shared, allow HTML but prevent XSS.
+	 if ($pname eq 'content' && $in{'action'} eq 'd_savefile' && $in{'path'} =~ $list->{'dir'}.'/shared' && lc($in{'path'}) =~ /\.html?/) {
+	     my $tmpparam = $in{$p};
+	     $tmpparam = &tools::sanitize_html('robot' => $robot,
+					       'string' => $in{$p});
+	     if (defined $tmpparam) {
+		 $in{$p} = $tmpparam;
+	     }
+	     else {
+		 &do_log('err','Unable to sanitize parameter %s',$pname);
+	     }
+	 }
+	 foreach my $one_p (split /\0/, $in{$p}) {
+	     if ($one_p !~ /^$regexp$/s ||
+		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
+		 ## Dump parameters in a tmp file for later analysis
+		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
+		 unless (open DUMP, ">$dump_file") {
+		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
+		 }
+		 &tools::dump_var(\%in, 0, \*DUMP);
+		 close DUMP;
+		 
+		 &report::reject_report_web('user','syntax_errors',{'params' => $p},'','');
+		 &wwslog('err','get_parameters: syntax error for parameter %s value \'%s\' not conform to regexp:%s ; dumped vars in %s', $pname, $one_p, $regexp, $dump_file);
+		 $in{$p} = '';
+		 next;
+	     }
+	 }
+     }
+     
+     $in{custom_attribute} = $custom_attribute ;
+     
+     ## For shared-related actions, Q-encode filenames
+     ## This required for filenames that include non ascii characters
+     if (defined $filtering{$in{'action'}}) {
+
+	 foreach my $p (keys %{$filtering{$in{'action'}}}) {
+	     if ($filtering{$in{'action'}}{$p} eq 'qencode') {
+		 ## Q-encode file path
+		 my @tokens = split /\//, $in{$p};
+		 foreach my $i (0..$#tokens) {
+		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
+		 }
+		 $in{$p} = join '/', @tokens;
+		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
+		 ## This should be transformed into a '/' again
+
+	     }elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
+		 $in{$p} =~ s/\xa5/\//g;
+	     }
+	 }
+     }
+
+     return 1;
+ }
+# xxxxxxxxxxxxxxxxxxxxxxxx TO BE REMOVE
+sub get_parameters_old {
     #    &wwslog('debug4', 'get_parameters');
     
     ## CGI URL
@@ -2214,6 +2441,30 @@ Use it to create a List object and initialize output parameters.
 
  }
 
+## ticket : this action is used if someone submit a one time ticket (minimum when user lost their password)
+sub do_ticket {
+    &wwslog('info', 'do_ticket(%s)', $in{'ticket'});
+
+    $param->{'ticket_context'} = &Auth::get_one_time_ticket($in{'ticket'}, $ip );
+    $param->{'ticket_context'}{'printable_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($param->{'ticket_context'}{'date'});
+    
+    return 1 unless ($param->{'ticket_context'}{'result'} eq 'success');
+    
+    # if the ricket is related to someone which is not loggued perform sames opération as for a login
+    unless ($session->{'email'} eq lc($param->{'ticket_context'}{'email'})) {
+	$session->{'email'} = lc($param->{'ticket_context'}{'email'});
+	$param->{'user'} =  &List::get_user_db($session->{'email'});
+        $param->{'user'}{'email'} =  $session->{'email'} ;
+	$param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
+	$param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
+	&List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+    }
+    &_split_params($param->{'ticket_context'}{'data'});
+    return $in{'action'} ;
+
+}
+
+
  ## Login WWSympa
  sub do_login {
      &wwslog('info', 'do_login(%s)', $in{'email'});
@@ -2234,7 +2485,7 @@ Use it to create a List object and initialize output parameters.
       $next_action = 'home' if ($in{'next_action'} eq 'logout') ;
 
      if ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','already_login',{'email' => $param->{'user'}{'email'}},$param->{'action'},'');
+	 &report::reject_report_web('user','already_logued',{'email' => $param->{'user'}{'email'}},$param->{'action'},'');
 	 &wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
@@ -2257,7 +2508,9 @@ Use it to create a List object and initialize output parameters.
 		      'error_type' => "no_email"});		      
 	 return $in{'previous_action'} || 'home';
      }
-     
+
+     $session->{'unauthenticated_email'} = $param->{'unauthenticated_email'} = $in{'email'};
+
      unless ($in{'passwd'}) {
 	 my $url_redirect;
 	 #Does the email belongs to an ldap directory?
@@ -2277,20 +2530,22 @@ Use it to create a List object and initialize output parameters.
 			  'target_email' => $in{'email'},
 			  'status' => 'error',
 			  'error_type' => "missing_parameter"});
-	     return $in{'previous_action'} || undef;
+	     $param->{'login_error'} = 'missing_password';
+	     return $in{'previous_action'} || 'remindpasswd';
 	 }
      }
 
      ##authentication of the sender
      my $data;
      unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
-	 &report::reject_report_web('intern_quiet','',{},$param->{'action'},'');
 	 &do_log('notice', "Authentication failed\n");
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
 		      'error_type' => 'authentication'});
 	
+	 $param->{'login_error'} = 'wrong_password';
+
 	 if ($in{'previous_action'}) {
 	     delete $in{'passwd'};
 	     $in{'list'} = $in{'previous_list'};
@@ -2298,13 +2553,18 @@ Use it to create a List object and initialize output parameters.
 	 }elsif ($in{'failure_referer'}) {
 	     $param->{'redirect_to'} = $in{'failure_referer'};	    
 	 }else {
-	     return  'loginrequest';
+	     return  'remindpasswd';
 	 }
      } 
      $param->{'user'} = $data->{'user'};
+     $param->{'last_login_host'} = $data->{'user'}{'last_login_host'};
+     $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($data->{'user'}{'last_login_date'})) if ($data->{'user'}{'last_login_date'});
      $session->{'auth'} = $data->{'auth'};
      my $email = lc($param->{'user'}{'email'});
      $session->{'email'} = $email;
+     $session->{'unauthenticated_email'} = '';
+
+     &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
      
      ## Set alt_email
      if ($data->{'alt_emails'}) {
@@ -2341,9 +2601,10 @@ Use it to create a List object and initialize output parameters.
 	 &List::update_user_db($param->{'user'}{'email'},{prefs=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }
 
-     if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
-	 &report::notice_report_web('you_should_choose_a_password',{},$param->{'action'});
-     }
+     # From version 5.5 password never start with init
+     #if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
+     #	 &report::notice_report_web('you_should_choose_a_password',{},$param->{'action'});
+     #}
      
      if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
 	 my $old_action = $param->{'action'};
@@ -3012,7 +3273,7 @@ sub sendssopasswd {
     
     unless ($email) {
 	&report::reject_report_web('user','no_email',{},$param->{'action'});
-	&wwslog('info','do_sendpasswd: no email');
+	&wwslog('info','do_sendssopasswd: no email');
 	&web_db_log({'parameters' => $email,
 		     'target_email' => $email,
 		     'status' => 'error',
@@ -3022,7 +3283,7 @@ sub sendssopasswd {
     
     unless (&tools::valid_email($email)) {
 	&report::reject_report_web('user','incorrect_email',{'email' => $email},$param->{'action'});
-	&wwslog('info','do_sendpasswd: incorrect email %s', $email);
+	&wwslog('info','do_sendssopasswd: incorrect email %s', $email);
 	&web_db_log({'parameters' => $email,
 		     'target_email' => $email,
 		     'status' => 'error',
@@ -3041,7 +3302,7 @@ sub sendssopasswd {
 					   {'password' => &tools::tmp_passwd($email) 
 					    })) {
 		&report::reject_report_web('intern','db_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-		&wwslog('info','send_passwd: update failed');
+		&wwslog('info','sendssopasswd: update failed');
 		&web_db_log({'parameters' => $email,
 			     'target_email' => $email,
 			     'status' => 'error',
@@ -3123,6 +3384,7 @@ sub do_remindpasswd {
      &wwslog('info', 'do_sendpasswd(%s)', $in{'email'}); 
      my ($passwd, $user);
 
+     $param->{'account_creation'} = 1;
      unless ($in{'email'}) {
 	 &wwslog('info','do_sendpasswd: no email');
 	 return 'remindpasswd';
@@ -3149,10 +3411,8 @@ sub do_remindpasswd {
 			  'status' => 'error',
 			  'error_type' => 'internal'});		      
 	     return 'remindpasswd';
-	 }else {
-	     $param->{'redirect_to'} = $url_redirect
-		 if ($url_redirect && ($url_redirect != 1));
-	    
+	 }else{
+	     $param->{'redirect_to'} = $url_redirect if ($url_redirect && ($url_redirect != 1));	    
 	     return 1;
 	 }
      }
@@ -3163,64 +3423,20 @@ sub do_remindpasswd {
 	 &report::reject_report_web('user','passwd_reminder_not_allowed',{},$param->{'action'});
 	 return undef
      }
-
-     if ($param->{'newuser'} =  &List::get_user_db($in{'email'})) {
-	 &wwslog('info','do_sendpasswd: new password allocation for %s', $in{'email'});
-	 ## Create a password if none
-	 unless ($param->{'newuser'}{'password'}) {
-	     unless ( &List::update_user_db($in{'email'},
-					    {'password' => &tools::tmp_passwd($in{'email'}) 
-					     })) {
-		 &report::reject_report_web('intern','update_user_db_failed',{'user'=>$in{'email'}},$param->{'action'},'',$in{'email'},$robot);
-		 &wwslog('info','send_passwd: update failed');
-		 &web_db_log({'parameters' => $in{'email'},
-			      'target_email' => $in{'email'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});		      
-		 return undef;
-	     }
-	     $param->{'newuser'}{'password'} = &tools::tmp_passwd($in{'email'});
-	 }
-
-	 $param->{'newuser'}{'escaped_email'} =  &tools::escape_chars($param->{'newuser'}{'email'});
-
-     }else {
-	 &wwslog('debug','do_sendpasswd: sending existing password for %s', $in{'email'});
-	 $param->{'newuser'} = {'email' => $in{'email'},
-				'escaped_email' => &tools::escape_chars($in{'email'}),
-				'password' => &tools::tmp_passwd($in{'email'}) 
-				};
-
-     }
-
-     $param->{'init_passwd'} = 1 
-	 if ($param->{'user'}{'password'} =~ /^init/);
-
+     &wwslog('debug','do_sendpasswd: sending one tile ticket for %s', $in{'email'});
+     $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
+     $param->{'request_from_host'} = $ip;
+     if ($param->{'one_time_ticket'}) {
      unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
 	 &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
      }
-     # &List::db_log('wwsympa',$in{'email'},'null',$ip,'sendpasswd','',$robot,'','done');
-
-
-     $param->{'email'} = $in{'email'};
-
- #    if ($in{'previous_action'}) {
- #	$in{'list'} = $in{'previous_list'};
- #	return $in{'previous_action'};
- #
- #    }els
-
-     if ($in{action} eq 'sendpasswd') {
-	 #&message('password_sent');
-	 $param->{'password_sent'} = 1;
-	 $param->{'init_email'} = $in{'email'};
-	 return 'loginrequest';
+     }else{
+	 &wwslog('notice',"Unable to create_one_time_ticket"); 
+	 &report::reject_report_web('user','passwd_reminder_error',{},$param->{'action'});
      }
-     &web_db_log({'parameters' => $in{'email'},
-		  'target_email' => $in{'email'},
-		  'status' => 'success',
-		  });		      
-     return 'loginrequest';
+
+     return 'home' unless ($param->{'previous_action'}) ;
+     return $param->{'previous_action'};
  }
 
  ## Which list the user is subscribed to 
@@ -14883,7 +15099,7 @@ sub do_delete_pictures {
 
      unless ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_change_password: user not logged in');
+	 &wwslog('info','do_change_email: user not logged in');
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }

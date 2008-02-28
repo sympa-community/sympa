@@ -60,7 +60,9 @@ my @valid_options = qw(
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
-		       purge_user_table_task purge_logs_table_task purge_session_table_task session_table_ttl anonymous_session_table_ttl
+		       purge_user_table_task purge_logs_table_task 
+		       purge_session_table_task session_table_ttl anonymous_session_table_ttl 
+                       purge_one_time_ticket_table_task one_time_ticket_table_ttl
                        purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
@@ -227,6 +229,8 @@ my %Default_Conf =
      'logs_expiration_period' => 3, #3 months
      'purge_session_table_task' => 'daily',
      'session_table_ttl' => '2d', #
+     'purge_one_time_ticket_table_task' => 'daily',
+     'one_time_ticket_table_ttl' => '10d', #
      'anonymous_session_table_ttl' => '1h', #
      'purge_challenge_table_task' => 'daily',
      'challenge_table_ttl' => '5d', # 
@@ -1065,7 +1069,8 @@ sub _load_auth {
 					    'force_email_verify' => '1',
 					    'internal_email_by_netid' => '1',
 					    'netid_http_header' => '\w+',
-					}
+					},
+			  'authentication_info_url' => 'http(s)?:/.*'
 			  );
     
 
@@ -1087,7 +1092,10 @@ sub _load_auth {
 	$line_num++;
 	next if (/^\s*[\#\;]/o);		
 
-	if (/^\s*(ldap|cas|user_table|generic_sso)\s*$/io) {
+	if (/^\s*authentication_info_url\s+(.*\S)\s*$/o){
+	    $Conf{'authentication_info_url'}{$robot} = $1;
+	    next;
+	}elsif (/^\s*(ldap|cas|user_table|generic_sso)\s*$/io) {
 	    $current_paragraph->{'auth_type'} = lc($1);
 	}elsif (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    my ($keyword,$value) = ($1,$2);
