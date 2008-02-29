@@ -340,7 +340,7 @@ my %action_args = ('default' => ['list'],
 		'd_reject_shared' => ['list','id'],
 		'd_install_shared' => ['list','id'],
 		'modindex' => ['list'],
-		'viewmod' => ['list','id','file'],
+		'viewmod' => ['list','id','@file'],
 		'viewfile' => ['list','file'],
 		'add' => ['list','email'],
 		'add_request' => ['list'],
@@ -6626,7 +6626,7 @@ sub do_skinsedit {
 #
 ####################################################
 sub do_viewmod {
-     &wwslog('info', 'do_viewmod(%s)', $in{'id'});
+     &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
      my $msg;
 
      unless ($param->{'list'}) {
