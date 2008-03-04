@@ -441,7 +441,7 @@ sub create_one_time_ticket {
     my $statement = sprintf "INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES ('%s','%s','%s','%s','%s','%s','%s')",$ticket,$robot,$email,time,$data_string,$remote_addr,'open';
 
     unless ($dbh->do($statement)) {
-	do_log('err','Unable to insert in table one_time_ticket_table while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
+	do_log('err','Unable to insert in table one_time_ticket_table while execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }   
     return $ticket;
