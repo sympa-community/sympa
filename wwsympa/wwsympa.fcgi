@@ -420,6 +420,182 @@ my %action_args = ('default' => ['list'],
 		'ticket' => ['ticket']
 		);
 
+## Define the required parameters for each action
+## This structure is used to determine if any parameter is missing
+## The list of parameters is not ordered
+## There are some reserved keywards : param.list and param.user.email
+## Alternate parameteres can be defined with the '|' character
+## Limits of this structure : it does not define optional parameters (a or b)
+## Limit : it does not allow to have a specific error message and redirect to a given page if the parameter is missing
+my %required_args = ('active_lists' => ['for|count'],
+		     'admin' => ['param.list','param.user.email'],
+		     'add' => ['param.list','param.user.email'],
+		     'add_request' => ['param.list','param.user.email'],
+		     'arc' => ['param.list'],
+		     'arc_delete' => ['param.user.email','param.list'],
+		     'arc_download' => ['param.user.email','param.list'],
+		     'arc_manage' => ['param.list'],
+		     'arc_protect' => ['param.list'],
+		     'arcsearch' => ['param.list'],
+		     'arcsearch_form' => ['param.list'],
+		     'arcsearch_id' => ['param.list'],
+		     'attach' => ['param.list'],
+		     'blacklist' => ['param.list'],
+		     'change_email' => ['param.user.email','email'],
+		     'change_identity' => ['param.user.email','email'],
+		     'close_list' => ['param.user.email','param.list'],
+		     'close_list_request' => ['param.user.email','param.list'],
+		     'compose_mail' => ['param.user.email','param.list'],
+		     'copy_template' => ['webormail'],
+		     'create_list' => ['param.user.email','listname','subject','template','info','topics'],
+		     'create_list_request' => ['param.user.email'],
+		     'css' => [],
+		     'd_admin' => ['param.list','param.user.email'],
+		     'd_change_access' => ['param.list','param.user.email'],
+		     'd_control' => ['param.list','param.user.email'],
+		     'd_create_dir' => ['param.list','param.user.email','name_doc'],
+		     'd_delete' => ['param.list','param.user.email'],
+		     'd_describe' => ['param.list','param.user.email','content'],
+		     'd_editfile' => ['param.list','param.user.email'],
+		     'd_install_shared' => ['param.list','param.user.email','id'],
+		     'd_overwrite' => ['param.list','param.user.email'],
+		     'd_properties' => ['param.list','param.user.email'],
+		     'd_read' => ['param.list'],
+		     'd_reject_shared' => ['param.list','param.user.email','id'],
+		     'd_rename' => ['param.list','param.user.email','new_name'],
+		     'd_savefile' => ['param.list','param.user.email','content|url'],
+		     'd_set_owner' => ['param.list','param.user.email'],
+		     'd_unzip' => ['param.list','param.user.email'],
+		     'd_upload' => ['param.list','param.user.email'],
+		     'del' => ['param.list','param.user.email','email'],
+		     'delete_pictures' => ['param.list','param.user.email'],
+		     'distribute' => ['param.list','param.user.email','id'],
+		     'dump' => ['param.list'],
+		     'dump_scenario' => ['param.list','pname'],
+		     'edit_list' => ['param.user.email','param.list'],
+		     'edit_list_request' => ['param.user.email','param.list'],
+		     'edit_template' => ['webormail'],
+		     'editfile' => ['param.user.email'],
+		     'editsubscriber' => ['param.list','param.user.email','email'],
+		     'get_closed_lists' => ['param.user.email'],
+		     'get_inactive_lists' => ['param.user.email'],
+		     'get_latest_lists' => ['param.user.email'],
+		     'get_pending_lists' => ['param.user.email'],
+		     'ignoresub' => ['param.list','param.user.email'],
+		     'info' => ['param.list'],
+		     'install_pending_list' => ['param.user.email'],
+		     'latest_arc' => ['param.list','for|count'],
+		     'latest_d_read' => ['param.list','for','count'],
+		     'latest_lists' => ['for|count'],
+		     'load_cert' => ['param.list'],
+		     'logout' => ['param.user.email'],
+		     'modindex' => ['param.list','param.user.email'],
+		     'multiple_subscribe' => ['param.list'],		     
+		     'pref' => ['param.user.email'],
+		     'purge_list' => ['param.user.email','selected_lists'],
+		     'rebuildallarc' => ['param.user.email'],
+		     'rebuildarc' => ['param.user.email','param.list'],
+		     'record_email' => ['param.user.email','new_alternative_email'],
+		     'reject' => ['param.list','param.user.email','id'],
+		     'remind' => ['param.list','param.user.email'],
+		     'remove_arc' => ['param.list'],
+		     'remove_templates' => ['webormail'],
+		     'rename_list' => ['param.user.email','param.list','new_listname','new_robot'],
+		     'rename_list_request' => ['param.user.email','param.list'],
+		     'request_topic' => ['param.list','authkey'],
+		     'resetbounce' => ['param.list','param.user.email','email'],
+		     'restore_list' => ['param.user.email','param.list'],
+		     'review' => ['param.list'],
+		     'review_family' => ['param.user.email','family_name'],
+		     'reviewbouncing' => ['param.list','bounce_total'],
+		     'rss_request' => [],
+		     'savefile' => ['param.user.email','file'],
+		     'search' => ['param.list','filter'],
+		     'search_user' => ['param.user.email','email'],
+		     'send_mail' => ['param.user.email'],
+		     'send_me' => ['param.list'],
+		     'sendpasswd' => ['email'],
+		     'serveradmin' => ['param.user.email'],
+		     'set' => ['param.list','reception|visibility'],
+		     'set_lang' => [],
+		     'set_pending_list_request' => ['param.user.email'],
+		     'setpasswd' => ['param.user.email','newpasswd1','newpasswd2'],
+		     'setpref' => ['param.user.email'],
+		     'signoff' => ['param.list'],
+		     'sigrequest' => ['param.list'],
+		     'skinedit' => ['param.user.email'],
+		     'sso_login' => ['auth_service_name'],
+		     'stats' => ['param.user.email','param.list'],
+		     'subindex' => ['param.list','param.user.email'],
+		     'suboptions' => ['param.list','param.user.email'],
+		     'subrequest' => ['param.list'],
+		     'subscribe' => ['param.list'],
+		     'subscriber_count' => ['param.list'],
+		     'sync_include' => ['param.list','param.user.email'],
+		     'tag_topic_by_sender' => ['param.list'],
+		     'unify_email' => ['param.user.email'],
+		     'upload_pictures' => ['param.user.email','param.list'],
+		     'view_template' => ['webormail'],
+		     'viewbounce' => ['param.list','email'],
+		     'viewfile' => ['file','param.list'],
+		     'viewlogs' => ['param.list'],
+		     'viewmod' => ['param.list','param.user.email','id'],
+		     'wsdl' => [],
+		     'which' => ['param.user.email'],
+		    );
+
+## Defines the required privileges to access privileged actions
+## You can define a set ofequiivalent privileges in the ARRAYREF
+my %required_privileges = ('admin' => ['owner','editor'],
+			   'arc_download' => ['owner'],
+			   'blacklist' => ['owner','editor'],
+			   'close_list' => ['privileged_owner'],
+			   'close_list_request' => ['privileged_owner'],
+			   'copy_template' => ['listmaster'],
+			   'd_install_shared' => ['editor'],
+			   'd_reject_shared' => ['editor'],
+			   'distribute' => ['editor'],
+			   'dump_scenario' => ['listmaster'],
+			   'edit_list' => ['owner'],
+			   'edit_list_request' => ['owner'],
+			   'edit_template' => ['listmaster'],
+			   'editsubscriber' => ['owner'],
+			   'get_closed_lists' => ['listmaster'],
+			   'get_inactive_lists' => ['listmaster'],
+			   'get_latest_lists' => ['listmaster'],
+			   'get_pending_lists' => ['listmaster'],
+			   'ignoresub' => ['owner'],
+			   'install_pending_list' => ['listmaster'],
+			   'ls_templates' => ['listmaster'],
+			   'modindex' => ['editor'],
+			   'purge_list' => ['privileged_owner'],
+			   'rebuildallarc' => ['listmaster'],
+			   'rebuildarc' => ['listmaster'],
+			   'reject' => ['editor'],
+			   'remove_template' => ['listmaster'],
+			   'rename_list' => ['privileged_owner'],
+			   'rename_list_request' => ['privileged_owner'],
+			   'resetbounce' => ['owner'],
+			   'restore_list' => ['listmaster'],
+			   'review_family' => ['listmaster'],
+			   'reviewbouncing' => ['owner'],
+			   'search_user' => ['listmaster'],
+			   'serveradmin' => ['listmaster'],
+			   'set_dumpvars' => ['listmaster'],
+			   'set_loglevel' => ['listmaster'],
+			   'set_pending_list_request' => ['listmaster'],
+			   'set_session_email' => ['listmaster'],
+			   'show_sessions' => ['listmaster'],
+			   'stats' => ['owner'],
+			   'subindex' => ['owner'],
+			   'sync_include' => ['owner'],
+			   'skinedit' => ['listmaster'],
+			   'view_template' => ['listmaster'],
+			   'viewbounce' => ['owner'],
+			   'viewlogs' => ['owner','editor'],
+			   'viewmod' => ['editor'],
+			  );
+
 my %action_type = ('editfile' => 'admin',
 		'review' => 'admin',
 		'search' => 'admin',
@@ -510,7 +686,7 @@ my %in_regexp = (
 		 'uploaded_file' => '[^<>\*\$\n]+', # Could be precised (use of "'")
 		 'unzipped_file' => '[^<>\*\$\n]+',
 		 'dir' => '[^<>\\\*\$\n]+',
-		 'name_doc' => '[^<>\\\*\$\n]+',
+		 'name_doc' => '[^<>\\\*\$\[\]\/\n]+',
 		 'shortname' => '[^<>\\\*\$\n]+',
 		 'new_name' => '[^<>\\\*\$\n]+',
 		 'id' => '[^<>\\\*\$\n]+',
@@ -585,6 +761,9 @@ my %in_regexp = (
     
                  ## Custom attribute
                  'custom_attribute' => '.*',
+		 
+		 ## Templates
+		 'scope' => 'distrib|robot|family|list|site',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1046,10 +1225,29 @@ my $birthday = time ;
 	 
 	     my $old_action = $action;
 	     
+	     ## Check required action parameters
+	     my $check_output = &check_action_parameters($action);
+
+	     if (! defined $check_output ) {
+	       &wwslog('err', "missing required parameters for action '$action'");
+	       delete($param->{'action'});
+	       last;
+	       
+	     }elsif ($check_output != 1) {
+	       ## The output of the check may indicate another action to run first
+	       ## Example : running loginrequest if user is not authenticated
+	       $action = $param->{'action'} = $check_output;
+	     }
+
 	     ## Execute the action ## 
-	     $action = &{$comm{$action}}();
-	 
-	     delete($param->{'action'}) if (! defined $action);
+	     if (defined $action) {
+	       $action = &{$comm{$action}}();
+	     }
+	     
+	     unless (defined $action) {
+	       delete($param->{'action'});
+	       last;
+	     }
 	 
 	     last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
 
@@ -1834,6 +2032,86 @@ sub get_parameters_old {
 
      return 1;
  }
+
+## Check required parameters for an action
+## It compares incoming parameter to those declared as required in %required_args
+## Also check required privileges to perform each action
+sub check_action_parameters {
+  my $action = shift;
+
+  if (defined $required_args{$action}) {
+    foreach my $arg_name (@{$required_args{$action}}) {
+
+      ## Missing list parameter
+      if ($arg_name eq 'param.list') {
+	unless (defined $list) {
+	  &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$action);
+	  &wwslog('info','missing list parameter');
+	  &web_db_log({'status' => 'error',
+		       'error_type' => 'no_list'});		      
+
+	  return undef;
+	}
+
+	## User is not authenticated
+      }elsif ($arg_name eq 'param.user.email') {
+	unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	  &report::reject_report_web('user','no_user',{},$action);
+	  &wwslog('err','user not logged in');
+	  &web_db_log({'status' => 'error',
+		       'error_type' => "not_logged_in"});
+	  
+	  ## User is redirected to the login request form
+	  $param->{'previous_action'} = $action;
+	  $param->{'previous_list'} = $param->{'list'} if (defined $param->{'list'});
+	  return 'loginrequest';
+
+	}
+	## Other incoming parameters
+      }else {
+	## There may be alternate parameters
+	## Then at least one of them MUST be set
+	my @req_parameters = split(/\|/, $arg_name); 
+	my $ok = 0;
+	foreach my $req_param (@req_parameters) {
+	  $ok =1 if ($in{$req_param});
+	}
+	unless ($ok) {
+	  ## Replace \0 and '|' with ',' before logging
+	  $in{$arg_name} =~ s/\0/,/g;
+	  $in{$arg_name} =~ s/\|/,/g;
+	  
+	  &report::reject_report_web('user','missing_arg',{'argument' => $arg_name},$action);
+	  &wwslog('info',"missing parameter '$arg_name'");
+	  &web_db_log({'status' => 'error',
+		       'error_type' => 'missing_parameter'});
+	  return undef;
+	}
+      }
+    }
+  }
+  
+  ## Check required privileges
+  if (defined $required_privileges{$action}) {
+    ## There may be alternate privileges
+    ## Then at least one of them MUST verified
+    my $ok = 0;
+    my $missing_priv;
+    foreach my $req_priv (@{$required_privileges{$action}}) {
+      $ok =1 if ($param->{'is_'.$req_priv});
+      $missing_priv = $req_priv;
+    }
+    unless ($ok) {
+      &report::reject_report_web('auth','action_'.$missing_priv,{},$param->{'action'},$list);
+      &wwslog('info','authorization failed, unsufficient privileges');
+      &web_db_log({'status' => 'error',
+		   'error_type' => 'authorization'});		      
+      return undef;
+    }
+  }
+
+  return 1;
+}
 
 ## Send HTML output
 sub send_html {
@@ -2642,15 +2920,6 @@ sub do_sso_login {
     }
     
     
-    unless ($in{'auth_service_name'}) {
-	&report::reject_report_web('intern','no_authentication_service_name',{},$param->{'action'},'','',$robot);
-	&wwslog('err','do_sso_login: no auth_service_name');
-	&web_db_log({'parameters' => $in{'auth_service_name'},
-		     'status' => 'error',
-		     'error_type' => 'authentication'});		      
-	return 'home';
-    }
-
     ## This is a CAS service
     if (defined (my $cas_id = $Conf{'cas_id'}{$robot}{$in{'auth_service_name'}})) {
 	my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
@@ -2962,11 +3231,6 @@ sub do_sso_login_succeeded {
 
      &wwslog('info', 'do_unify_email');
 
-     unless($param->{'user'}{'email'}){
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('notice',"error email");
-     }
-
      ##Do you want to be considered as one user in user_table and subscriber table?
      foreach my $old_email( keys %{$param->{'alt_emails'}}){
 	 next unless (&List::is_user_db($old_email));
@@ -3015,27 +3279,9 @@ sub do_sso_login_succeeded {
      my $user;
      my $new_email;
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_record_email: no user');
-	 &web_db_log({'parameters' => $in{'new_alternative_email'}, 
-		      'status' => 'error',
-		      'error_type' => "no_email"});		      
-	 return 'pref';
-     }
-
      ##To verify that the user is in User_table 
      ##To verify the associated password 
      ##If not in User table we add him 
-
-     unless(&tools::valid_email($in{'new_alternative_email'})){
-	 &report::reject_report_web('user','incorrect_email',{'email' => $in{'new_alternative_email'}},$param->{'action'});
-	 &wwslog('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
-	 &web_db_log({'parameters' => $in{'new_alternative_email'}, 
-		      'status' => 'error',
-		      'error_type' => "incorrect_email"});		      
-	 return 'pref';
-     }
 
      ## Alt email is the same as main email address
      if ($in{'new_alternative_email'} eq $param->{'user'}{'email'}) {
@@ -3196,14 +3442,6 @@ sub do_redirect {
  ## Logout from WWSympa
  sub do_logout {
      &wwslog('info','do_logout(%s)', $param->{'user'}{'email'});
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_logout: user not logged in');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => "not_logged_in"});		      
-	 return undef;
-     }
 
      delete $param->{'user'};
      $session->{'email'} = 'nobody' ;
@@ -3385,20 +3623,6 @@ sub do_remindpasswd {
      my ($passwd, $user);
 
      $param->{'account_creation'} = 1;
-     unless ($in{'email'}) {
-	 &wwslog('info','do_sendpasswd: no email');
-	 return 'remindpasswd';
-     }
-
-     unless (&tools::valid_email($in{'email'})) {
-	 &report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'});
-	 &wwslog('info','do_sendpasswd: incorrect email %s', $in{'email'});
-	 &web_db_log({'parameters' => $in{'email'},
-		      'target_email' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'incorrect_email'});		      
-	 return 'remindpasswd';
-     }
 
      my $url_redirect;
      if($url_redirect = &is_ldap_user($in{'email'})){
@@ -3446,12 +3670,7 @@ sub do_remindpasswd {
 
      &wwslog('info', 'do_which');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_which: no user');
-	 $param->{'previous_action'} = 'which';
-	 return 'loginrequest';
-     }
+
      $param->{'get_which'} = undef ;
      $param->{'which'} = undef ;
 
@@ -3567,12 +3786,6 @@ sub do_remindpasswd {
  sub do_latest_lists {
      &wwslog('info', "do_latest_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
 
-     unless ($in{'for'} || $in{'count'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => '"for" or "count"'},$param->{'action'});
-	 &wwslog('err','do_latest_lists: missing parameter "count" or "for"');
-	 return undef;
-     }
-
      unless (&do_lists()) {
 	 &wwslog('err','do_latest_lists: error while calling do_lists');
 	 return undef;
@@ -3632,12 +3845,6 @@ sub do_remindpasswd {
  ## The list of the most active lists
  sub do_active_lists {
      &wwslog('info', "do_active_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
-
-     unless ($in{'for'} || $in{'count'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => '"for" or "count"'},$param->{'action'});
-	 &wwslog('err','do_active_lists: missing parameter "count" or "for"');
-	 return undef;
-     }
 
      unless (&do_lists()) {
 	 &wwslog('err','do_active_lists: error while calling do_lists');
@@ -3730,12 +3937,6 @@ sub do_remindpasswd {
  sub do_info {
      &wwslog('info', 'do_info');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_info: no list');
-	 return undef;
-     }
-
      ## Access control    
 	 unless (defined &check_authz('do_info', 'info')) {
 	     delete $param->{'list'};
@@ -3793,13 +3994,6 @@ sub do_remindpasswd {
 	 return undef;
      }
 
-     my $list;
-     unless ($list = new List($param->{'list'},$robot)) {
-	 &report::reject_report_web('user','unknown_list',{'list' => $param->{'list'}},$param->{'action'});
-	 &wwslog('info', 'do_subscriber_coount : impossible to load list %s',$param->{'list'});
-	 return undef;
-     }
-
      print "Content-type: text/plain\n\n";
      print $list->get_total()."\n";
 
@@ -3817,12 +4011,6 @@ sub do_remindpasswd {
      my $size ;
      my $sortby = $in{'sortby'} || 'email';
      my %sources;
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_review: no list');
-	 return undef;
-     }
 
      ## Access control
      return undef unless (defined &check_authz('do_review', 'review'));
@@ -3946,22 +4134,6 @@ sub do_remindpasswd {
      ## Additional DB fields
      my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_search: no list');
-	 return undef;
-     }
-
-     unless ($in{'filter'}) {
-	 &report::reject_report_web('user','no_filter',{},$param->{'action'});
-	 &wwslog('info','do_search: no filter');
-	 return undef;
-     }elsif ($in{'filter'} =~ /[<>\\\*\$]/) {
-	 &report::reject_report_web('user','syntax_errors',{'params' => 'filter'},$param->{'action'});
-	 &wwslog('err','do_search: syntax error');
-	 return undef;
-     }
-
      ## Access control
      return undef unless (defined &check_authz('do_search', 'review'));
 
@@ -4011,13 +4183,6 @@ sub do_remindpasswd {
  ## Access to user preferences
  sub do_pref {
      &wwslog('info', 'do_pref');
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_pref: no user');
-	 $param->{'previous_action'} = 'pref';
-	 return 'loginrequest';
-     }
 
      ## Find nearest expiration period
      my $selected = 0;
@@ -4094,24 +4259,6 @@ sub do_remindpasswd {
      my ($reception, $visibility) = ($in{'reception'}, $in{'visibility'});
      my $email;
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_set: no list');
-	 &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
-		      'status' => 'error',
-		      'error_type' => 'no_list'});		      
-	 return undef;
-     }
-
-     unless ($reception || $visibility) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => '"reception" or "visibility"'},$param->{'action'});
-	 &wwslog('info','do_set: no reception');
-	 &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});		      
-	 return undef;
-     }
-     
      my $xml_custom_attribute;
      if ($in{custom_attribute}){
        return undef if ( &check_custom_attribute() != 1) ;
@@ -4300,15 +4447,6 @@ sub check_custom_attribute {
      &wwslog('info', 'do_setpref');
      my $changes = {};
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_pref: no user');
-	 &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
      foreach my $p ('gecos','lang','cookie_delay') {
 	 $changes->{$p} = $in{$p} if (defined($in{$p}));
      }
@@ -4358,21 +4496,9 @@ sub check_custom_attribute {
  sub do_viewfile {
      &wwslog('info', 'do_viewfile');
 
-     unless ($in{'file'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'file'},$param->{'action'});
-	 &wwslog('info','do_viewfile: no file');
-	 return undef;
-     }
-
      unless (defined $wwslib::filenames{$in{'file'}}) {
 	 &report::reject_report_web('user','file_not_editable',{'file' => $in{'file'}},$param->{'action'});
 	 &wwslog('info','do_viewfile: file %s not editable', $in{'file'});
-	 return undef;
-     }
-
-    unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_viewfile: no list');
 	 return undef;
      }
 
@@ -4403,16 +4529,6 @@ sub check_custom_attribute {
  ## TOTO: accepter nouveaux users
  sub do_subscribe {
      &wwslog('info', 'do_subscribe(%s)', $in{'email'});
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_subscribe: no list');
-	 &web_db_log({'parameters' => $in{'email'},
-		      'target_email' => $in{'email'} || $param->{'user'}{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});		      
-	 return undef;
-     }
 
      ## Not authenticated
      unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
@@ -4576,16 +4692,6 @@ sub check_custom_attribute {
  sub do_multiple_subscribe {
      &wwslog('info', 'do_multiple_subscribe(%s)', $in{'email'});
 
-     unless ($param->{'lists'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'lists'},$param->{'action'});
-	 &wwslog('info','do_multiple_subscribe: no list');
-	 &web_db_log({'parameters' => $in{'email'},
-		      'target_email' => $in{'email'} || $param->{'user'}{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});		      
-	 return undef;
-     }
-     
      ## Not authenticated
      unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
 	 ## no email 
@@ -4608,18 +4714,6 @@ sub check_custom_attribute {
  ## Subscription request (user not authenticated)
  sub do_suboptions {
      &wwslog('info', 'do_suboptions()');
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_suboptions: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_suboptions: user not logged in');
-	 return undef;
-     }
 
      unless($param->{'is_subscriber'} ) {
 	 &report::reject_report_web('user','not_subscriber',{'list'=> $list->{'name'}},$param->{'action'},$list);
@@ -4694,12 +4788,6 @@ sub check_custom_attribute {
      	$param->{'custom_attribute'} = $in{'custom_attribute'};
      }
      
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_subrequest: no list');
-	 return undef;
-     }
-
      my $ldap_user;
      $ldap_user = 1
 	 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
@@ -4766,15 +4854,6 @@ sub check_custom_attribute {
  ## Unsubscribe from list
  sub do_signoff {
      &wwslog('info', 'do_signoff');
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_signoff: no list');
-	 &web_db_log({'target_email' => $in{'email'} || $param->{'user'}{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
 
      unless ($param->{'user'}{'email'}) {
 	 unless ($in{'email'}) {
@@ -4888,12 +4967,6 @@ sub check_custom_attribute {
  sub do_sigrequest {
      &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_sigrequest: no list');
-	 return undef;
-     }
-
      my $ldap_user;
      $ldap_user = 1
 	 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
@@ -4941,26 +5014,9 @@ sub check_custom_attribute {
      &wwslog('info', 'do_setpasswd');
      my $user;
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_setpasswd: no user');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     if ( ! $in{'newpasswd1'} || 
-	     $in{'newpasswd1'} =~ /^\s+$/ ) {
+     if ($in{'newpasswd1'} =~ /^\s+$/ ) {
 	 &report::reject_report_web('user','no_passwd',{},$param->{'action'});
 	 &wwslog('info','do_setpasswd: no newpasswd1');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
-
-     unless ($in{'newpasswd2'}) {
-	 &report::reject_report_web('user','no_passwd',{},$param->{'action'});
-	 &wwslog('info','do_setpasswd: no newpasswd2');
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'missing_parameter'});
 	 return undef;
@@ -5010,26 +5066,6 @@ sub check_custom_attribute {
  sub do_admin {
      &wwslog('info', 'do_admin');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_admin: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_admin: no user');
-	 $param->{'previous_action'} = 'admin';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($param->{'is_owner'} or $param->{'is_editor'}) {
-	 &report::reject_report_web('auth','action_owner_or_editor',{},$param->{'action'},$list);
-	 &wwslog('info','do_admin: %s not private user', $param->{'user'}{'email'});
-	 return undef;
-     }
-
      ## Messages edition
      foreach my $f ('info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2') {
 	 next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
@@ -5054,19 +5090,6 @@ sub check_custom_attribute {
      &wwslog('info', 'do_serveradmin');
 
      my $f;
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_serveradmin: no user');
-	 $param->{'previous_action'} = 'serveradmin';
-	 return 'loginrequest';
-     }
-     unless ($param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
-	 return undef;
-     }
-
- #    $param->{'conf'} = \%Conf;
 
      ## Lists Default files
      foreach my $f ('welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2') {
@@ -5107,12 +5130,6 @@ sub check_custom_attribute {
 sub do_set_loglevel {
     &wwslog('info', 'do_set_loglevel');
     
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_set_loglevel: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-
     $session->{'log_level'} = $in{'log_level'};
     return 'serveradmin';
 }
@@ -5121,11 +5138,6 @@ sub do_set_loglevel {
 sub do_set_dumpvars {
     &wwslog('info', 'do_set_dumpvars');
     
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_set_dumpvars: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
     $session->{'dumpvars'} = 'true' ;
     $param->{'dumpavars'} = $session->{'dumpvars'} ;
     $param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'}.'/serveradmin';
@@ -5144,12 +5156,6 @@ sub do_unset_dumpvars {
 sub do_show_sessions {
     &wwslog('info', 'do_show_sessions');
 
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_show_sessions: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-	
     $in{'session_delay'} = 10 unless ($in{'session_delay'});
     my $delay = 60 * $in{'session_delay'};
     $param->{'sessions'} = &SympaSession::list_sessions($delay,$robot,$in{'connected_only'});        
@@ -5162,12 +5168,6 @@ sub do_set_session_email {
     &wwslog('info', 'do_set_session_email');
     
     
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_set_session_email: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-
     if (($in{'email'})||($session)){
 	$session->{'restore_email'} = $param->{'user'}{'email'}; 
 	$session->{'email'} = $in{'email'};
@@ -5198,12 +5198,6 @@ sub do_restore_email {
 ## list availible templates
 sub do_ls_templates  {
     &wwslog('info', 'do_ls_templates');
-
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_ls_templates: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
 
     $in{'webormail'} ||= 'web';
     
@@ -5246,34 +5240,6 @@ sub do_ls_templates  {
 sub do_remove_template {
     
     &wwslog('info', 'do_remove_template');
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
-	&wwslog('err','do_remove_template: %s not listmaster', $param->{'user'}{'email'});
-	&web_db_log({'parameters' => $in{'webormail'},
-		     'status' => 'error',
-		     'error_type' => 'authentication'});
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'webormail'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
-
-    unless ($in{'webormail'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'webormail'},$param->{'action'});
-	 &wwslog('err','do_remove_template: missing parameter webormail');
-	 &web_db_log({'parameters' => $in{'webormail'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'webormail'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'missing_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-    unless ($in{'scope'} =~ /^distrib|robot|family|list|site$/) {
-	 &report::reject_report_web('user','wrong_value',{'argument' => 'scope'},$param->{'action'});
-	 &wwslog('err','do_remove_template : wrong value for parameter scope');
-	 &web_db_log({'parameters' => $in{'webormail'},
-		      'status' => 'error',
-		      'error_type' => 'bad_parameter'});
-	 return undef;	
-    }
 
     my $template_path ;
 
@@ -5309,24 +5275,6 @@ sub do_view_template {
     
     &wwslog('info', "do_view_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
 
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-    
-    unless ($in{'webormail'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'webormail'},$param->{'action'});
-	 &wwslog('err','do_view_template: missing parameter webormail');
-	 return undef;
-     }
-
-    unless ($in{'scope'} =~ /^distrib|robot|family|list|site$/) {
-	 &report::reject_report_web('user','wrong_value',{'argument' => 'scope'},$param->{'action'});
-	 &wwslog('err','do_remove_template : wrong value for parameter scope');
-	 return undef;	
-    }
-
     my $template_path ;
  
     if ($in{'scope'} eq 'list') { 
@@ -5361,23 +5309,6 @@ sub do_view_template {
 sub do_copy_template  {
     &wwslog('info', 'do_copy_template');
     
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_copy_template: %s not listmaster', $param->{'user'}{'email'});
-	&web_db_log({'parameters' => $in{'webormail'},
- 		     'status' => 'error',
- 		     'error_type' => 'authorization'});
-	return undef;
-    }
-    
-    unless ($in{'webormail'}) {
-	&report::reject_report_web('user','missing_arg',{'argument' => 'webormail'},$param->{'action'});
-	&wwslog('err','do_copy_template: missing parameter webormail');
-	&web_db_log({'parameters' => $in{'webormail'},
- 		     'status' => 'error',
- 		     'error_type' => 'missing_parameter'});
-	return undef;
-    }
     
     ## Load original template
     &do_view_template();
@@ -5445,23 +5376,6 @@ sub do_edit_template  {
 
     &wwslog('info', "do_edit_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
 
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_edit_template: %s not listmaster', $param->{'user'}{'email'});
-	&web_db_log({'parameters' => $in{'template_name'},
-		     'status' => 'error',
-		     'error_type' => 'authorization'});
-	return undef;
-    }
-
-    unless ($in{'webormail'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'webormail'},$param->{'action'});
-	 &wwslog('err','do_edit_template: missing parameter webormail');
-	 &web_db_log({'parameters' => $in{'template_name'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
     ## Load original template
     &do_view_template; 
 
@@ -5515,21 +5429,6 @@ sub do_edit_template  {
 sub do_skinsedit {
     &wwslog('info', 'do_skinsedit');
     my $f;
-    
-    unless ($param->{'user'}{'email'}) {
-	&report::reject_report_web('user','no_user',{},$param->{'action'});
-	&wwslog('info','do_skinsedit: no user');
-	$param->{'previous_action'} = 'skinsedit';
-	return 'loginrequest';
-    }
-    
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-    
-    #    $param->{'conf'} = \%Conf;
     
     my $dir = &Conf::get_robot_conf($robot, 'css_path');
     my $css_url  = &Conf::get_robot_conf($robot, 'css_url');
@@ -5590,20 +5489,6 @@ sub do_skinsedit {
  sub do_add_request {
      &wwslog('info', 'do_add_request(%s)', $in{'email'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_add_request: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_add_request: no user');
-	 $param->{'previous_action'} = 'add_request';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
      ## Access control
      return undef unless (defined &check_authz('do_add_request', 'add'));
 
@@ -5629,24 +5514,6 @@ sub do_skinsedit {
 
      my %user;
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_add: no list');
-	 &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_add: no user');
-	 &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-     
      ## If a list is not 'open' and allow_subscribe_if_pending has been set to 'off' returns undef.
      unless (($list->{'admin'}{'status'} eq 'open') || (&Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')) {
 	 &report::reject_report_web('user','list_not_open',{'status' =>  $list->{'admin'}{'status'}},$param->{'action'});
@@ -5819,35 +5686,8 @@ sub do_skinsedit {
  sub do_del {
      &wwslog('info', 'do_del()');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_del: no list');
-	 &web_db_log({'target_email' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_del: no email');
-	 &web_db_log({'target_email' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_email'});
-	 return undef;
-     }
-
      $in{'email'} = &tools::unescape_chars($in{'email'});
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_del: no user');
-	 &web_db_log({'target_email' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-     
      my $result = $list->check_list_authz('del',$param->{'auth_method'},
 					  {'sender' => $param->{'user'}{'email'},
 					   'email' => $in{'email'},
@@ -5971,26 +5811,6 @@ sub do_skinsedit {
      my $msg;
      my $doc;
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_modindex: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'},$list);
-	 &wwslog('err','do_modindex: no user');
-	 $param->{'previous_action'} = 'modindex';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_modindex: %s not editor', $param->{'user'}{'email'});
-	 return 'admin';
-     }
-
      ## Loads message list
      unless (opendir SPOOL, $Conf{'queuemod'}) {
 	 &report::reject_report_web('intern','cannot_open_spool',{'spool'=>$Conf{'queuemod'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -6089,38 +5909,6 @@ sub do_skinsedit {
 ### installation of moderated documents of shared
  sub do_d_install_shared {
      &wwslog('info', 'do_d_install_shared(%s)', $in{'id'});
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_install_shared: no list');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_d_install_shared: no user');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_d_install_shared: %s not editor', $param->{'user'}{'email'});
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
-
-     unless ($in{'id'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'docid'},$param->{'action'});
-	 &wwslog('err','do_d_install_shared: no docid');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
 
      if ($in{'mode_cancel'}) {
 	 return 'modindex';
@@ -6246,42 +6034,6 @@ sub do_skinsedit {
  sub do_d_reject_shared {
      &wwslog('info', 'do_d_reject_shared(%s)', $in{'id'});
   
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_reject_shared: no list');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_d_reject_shared: no user');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_d_reject_shared: %s not editor', $param->{'user'}{'email'});
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
-
-     unless ($in{'id'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'docid'},$param->{'action'});
-	 &wwslog('err','do_reject: no docid');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
-
      my $shareddir =  $list->{'dir'}.'/shared';
      my $file;
      my $slash_path;
@@ -6361,41 +6113,6 @@ sub do_skinsedit {
     &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_reject: no list');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_reject: no user');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_reject: %s not editor', $param->{'user'}{'email'});
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
-
-     unless ($in{'id'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'msgid'},$param->{'action'});
-	 &wwslog('err','do_reject: no msgid');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_msgid'});
-	 return undef;
-     }
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
      foreach my $id (split (/,/, $in{'id'})) {
@@ -6483,42 +6200,6 @@ sub do_skinsedit {
 
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
      my ($msg, $file);
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_distribute: no list');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_distribute: no user');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_distribute: %s not editor', $param->{'user'}{'email'});
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
-
-     unless ($in{'id'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'msgid'},$param->{'action'});
-	 &wwslog('err','do_distribute: no msgid');
-	 &web_db_log({'parameters' => $in{'id'},
-		      'status' => 'error',
-		      'error_type' => 'no_msgid'});
-	 return undef;
-     }
 
      my $time = time;
      my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot)},
@@ -6629,30 +6310,6 @@ sub do_viewmod {
      &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
      my $msg;
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_viewmod: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_viewmod: no user');
-	 return 'loginrequest';
-     }
-
-     unless ($in{'id'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'msgid'},$param->{'action'});
-	 &wwslog('err','do_viewmod: no msgid');
-	 return undef;
-     }
-
-     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_editor',{},$param->{'action'},$list);
-	 &wwslog('err','do_viewmod: %s not editor', $param->{'user'}{'email'});
-	 return undef;
-     }
-
      my $tmp_dir;
      ## For compatibility concerns
      foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
@@ -6730,15 +6387,6 @@ sub do_viewmod {
 
      $param->{'file'} = $in{'file'};
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_editfile: no user');
-	 &web_db_log({'parameters' => $in{'file'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-     
      my $subdir = '';
      if ($in{'file'} =~ /\.tt2$/) {
 	 $subdir = 'mail_tt2/';
@@ -6839,24 +6487,6 @@ sub do_viewmod {
      &wwslog('info', 'do_savefile(%s)', $in{'file'});
 
      $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
-
-     unless ($in{'file'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_savefile: no file');
-	 &web_db_log({'parameters' => $in{'file'},
-		      'status' => 'error',
-		      'error_type' => 'no_file'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('err','do_savefile: no user');
-	 &web_db_log({'parameters' => $in{'file'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
 
      if ($param->{'list'}) {
 	 unless ($list->am_i('owner', $param->{'user'}{'email'})) {
@@ -6982,12 +6612,6 @@ sub do_viewmod {
 	 delete $in{'arc_file'};
       }
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_arc: no list');
-	 return undef;
-     }
-
      ## Access control
      unless (defined &check_authz('do_arc', 'web_archive.access')) {
 	 $param->{'previous_action'} = 'arc';
@@ -7100,18 +6724,6 @@ sub do_viewmod {
  ## Access to latest web archives
  sub do_latest_arc {
      &wwslog('info', 'do_latest_arc(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_latest_arc: no list');
-	 return undef;
-     }
-
-     unless ($in{'for'} || $in{'count'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => '"for" or "count"'},$param->{'action'});
-	 &wwslog('err','do_latest_arc: missing parameter "count" or "for"');
-	 return undef;
-     }
 
      ## Access control
      return undef unless (defined &check_authz('do_latest_arc', 'web_archive.access'));
@@ -7434,12 +7046,6 @@ sub do_remove_arc {
  sub do_arcsearch_form {
      &wwslog('info', 'do_arcsearch_form(%s)', $param->{'list'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_arcsearch_form: no list');
-	 return undef;
-     }
-
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch_form', 'web_archive.access'));
 
@@ -7461,12 +7067,6 @@ sub do_remove_arc {
  ## Search in web archives
  sub do_arcsearch {
      &wwslog('info', 'do_arcsearch(%s)', $param->{'list'});
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_arcsearch: no list');
-	 return undef;
-     }
 
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch', 'web_archive.access'));
@@ -7604,12 +7204,6 @@ sub do_remove_arc {
  sub do_arcsearch_id {
      &wwslog('info', 'do_arcsearch_id(%s,%s,%s)', $param->{'list'},$in{'archive_name'},$in{'msgid'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_arcsearch_id: no list');
-	 return undef;
-     }
-
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch_id', 'web_archive.access'));
 
@@ -7690,18 +7284,6 @@ sub do_remove_arc {
 
      &wwslog('info', 'get_pending_lists');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','get_pending_lists :  no user');
-	 $param->{'previous_action'} = 'get_pending_lists';
-	 return 'loginrequest';
-     }
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info', 'Incorrect_privilege to get pending');
-	 return undef;
-     } 
-
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
@@ -7719,18 +7301,6 @@ sub do_remove_arc {
 
      &wwslog('info', 'get_closed_lists');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','get_closed_lists :  no user');
-	 $param->{'previous_action'} = 'get_closed_lists';
-	 return 'loginrequest';
-     }
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
-	 &wwslog('info', 'Incorrect_privilege');
-	 return undef;
-     } 
-
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'closed' ||
@@ -7747,19 +7317,6 @@ sub do_remove_arc {
  sub do_get_latest_lists {
 
      &wwslog('info', 'get_latest_lists');
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','get_latest_lists :  no user');
-	 $param->{'previous_action'} = 'get_latest_lists';
-	 return 'loginrequest';
-     }
-
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info', 'Incorrect_privilege');
-	 return undef;
-     } 
 
      my @unordered_lists;
      my $all_lists = &List::get_lists($robot);
@@ -7783,19 +7340,6 @@ sub do_remove_arc {
 sub do_get_inactive_lists {
 
      &wwslog('info', 'get_inactive_lists');
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','get_inactive_lists :  no user');
-	 $param->{'previous_action'} = 'get_inactive_lists';
-	 return 'loginrequest';
-     }
-
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info', 'Incorrect_privilege');
-	 return undef;
-     } 
 
      my @unordered_lists;
      my $all_lists = &List::get_lists($robot);
@@ -7839,17 +7383,6 @@ sub do_get_inactive_lists {
 sub do_set_pending_list_request {
      &wwslog('info', 'set_pending_list(%s)',$in{'list'});
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','set_pending_list:  no user');
-	 return 'loginrequest';
-     }
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info', 'Incorrect_privilege to open pending list %s from %s', $in{'list'},$param->{'user'}{'email'});
-	 return undef;
-     } 
-
      my $list_dir = $list->{'dir'};
 
      $param->{'list_config'} = $list_dir.'/config';
@@ -7868,23 +7401,6 @@ sub do_set_pending_list_request {
  ## show a list parameters
  sub do_install_pending_list {
      &wwslog('info', 'do_install_pending_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_install_pending_list:  no user');
-	 &web_db_log({'parameters' => "$in{'status'},$in{'notify'}",
-		      'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-     unless ( $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info', 'Incorrect_privilege to open pending list %s from %s', $in{'list'},$param->{'user'}{'email'});
-	 &web_db_log({'parameters' => "$in{'status'},$in{'notify'}",
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     } 
 
      unless ($in{'status'} && (($in{'status'} eq 'open') || ($in{'status'} eq 'closed'))) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'status'},$param->{'action'});
@@ -8063,36 +7579,12 @@ Creates a list using a list template
 
      &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
 
-     ## Check that all the needed arguments are present.
-     foreach my $arg ('listname','subject','template','info','topics') {
-	 unless ($in{$arg}) {
-	     &report::reject_report_web('user','missing_arg',{'argument' => $arg},$param->{'action'});
-	     &wwslog('info','do_create_list: missing param %s', $arg);
-	     &web_db_log({'parameters' => $in{'listname'},
-			  'list' => $in{'listname'},
-			  'status' => 'error',
-			  'error_type' => 'missing_parameter'});	     
-	     return undef;
-	 }
-     }
-
      ## Lowercase listname if required
      if ($in{'listname'} =~ /[A-Z]/) {
        $in{'listname'} = lc($in{'listname'});
        &report::notice_report_web('listname_lowercased',{},$param->{'action'});
      }
 
-     ## Check that a user is logged in
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_create_list :  no user');
-	 &web_db_log({'parameters' => $in{'listname'},
-		      'list' => $in{'listname'},
-		      'status' => 'error',
-		      'error_type' => 'no_user'});	     
-	 return 'loginrequest';
-     }
-     
      $param->{'create_action'} = $param->{'create_list'};
 
      &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
@@ -8250,13 +7742,6 @@ Sends back the list creation edition form.
  sub do_create_list_request {
      &wwslog('info', 'do_create_list_request()');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_create_list_request:  no user');
-	 $param->{'previous_action'} = 'create_list_request';
-	 return 'loginrequest';
-     }
-
      my $result = &Scenario::request_action('create_list',$param->{'auth_method'},$robot,
 						       {'sender' => $param->{'user'}{'email'},
 							'remote_host' => $param->{'remote_host'},
@@ -8320,24 +7805,6 @@ Sends back the list creation edition form.
      &wwslog('info', 'do_editsubscriber(%s)', $in{'email'});
 
      my $subscriber;
-
-     unless ($param->{'is_owner'}) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_editsubscriber: may not edit');
-	 return undef;
-     }
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_editsubscriber: no list');
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_editsubscriber: no email');
-	 return undef;
-     }
 
      $in{'email'} = &tools::unescape_chars($in{'email'});
 
@@ -8436,24 +7903,6 @@ Sends back the list creation edition form.
  sub do_viewbounce {
      &wwslog('info', 'do_viewbounce(%s)', $in{'email'});
 
-     unless ($param->{'is_owner'}) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_viewbounce: may not view');
-	 return undef;
-     }
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_viewbounce: no list');
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_viewbounce: no email');
-	 return undef;
-     }
-
      my $escaped_email = &tools::escape_chars($in{'email'});
 
      $param->{'lastbounce_path'} = $list->get_bounce_dir().'/'.$escaped_email;
@@ -8527,24 +7976,6 @@ Sends back the list creation edition form.
  sub do_reviewbouncing {
      &wwslog('info', 'do_reviewbouncing(%d)', $in{'page'});
      my $size = $in{'size'} || $wwsconf->{'review_page_size'};
-
-     unless ($in{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_reviewbouncing: no list');
-	 return undef;
-     }
-
-     unless ($param->{'is_owner'}) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'});
-	 &wwslog('info','do_reviewbouncing: may not review');
-	 return 'admin';
-     }
-
-     unless ($param->{'bounce_total'}) {
-	 &report::reject_report_web('user','no_bounce_user',{},$param->{'action'});
-	 &wwslog('info','do_reviewbouncing: no bouncing subscriber');
-	 return 'admin';
-     }
 
      ## Owner
      $param->{'page'} = $in{'page'} || 1;
@@ -8620,39 +8051,7 @@ Sends back the list creation edition form.
  sub do_resetbounce {
      &wwslog('info', 'do_resetbounce()');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_resetbounce: no list');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_resetbounce: no email');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_email'});
-	 return undef;
-     }
-
      $in{'email'} = &tools::unescape_chars($in{'email'});
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_resetbounce: no user');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ( $param->{'is_owner'}) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'});
-	 &wwslog('info','do_resetbounce: %s may not reset', $param->{'user'}{'email'});
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
 
      my @emails = split /\0/, $in{'email'};
 
@@ -8696,33 +8095,6 @@ Sends back the list creation edition form.
  sub do_rebuildarc {
      &wwslog('info', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_rebuildarc: no list');
-	 &web_db_log({'parameters' => $in{'month'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_rebuildarc: no user');
-	 &web_db_log({'parameters' => $in{'month'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return 'loginrequest';
-     }
-
-     unless ($param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info','do_rebuildarc: not listmaster');
-	 &web_db_log({'parameters' => $in{'month'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
-
      my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 
      unless (open REBUILD, ">$file") {
@@ -8748,22 +8120,6 @@ Sends back the list creation edition form.
  ## Rebuild all archives using arctxt/
  sub do_rebuildallarc {
      &wwslog('info', 'do_rebuildallarc');
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_rebuildallarc: no user');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'no_user'});
-	 return 'loginrequest';
-     }
-
-     unless ($param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
-	 &wwslog('info','do_rebuildallarc: not listmaster');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
 
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
@@ -8856,22 +8212,6 @@ Sends back the list creation edition form.
 
 sub do_edit_list {
     &wwslog('info', 'do_edit_list()');
-    
-    unless ($param->{'user'}{'email'}) {
-	&report::reject_report_web('user','no_user',{},$param->{'action'});
-	&wwslog('info','do_edit_list:  no user');
-	&web_db_log({'status' => 'error',
-		     'error_type' => 'no_user'});
-	return 'loginrequest';
-    }
-    
-    unless ($param->{'is_owner'}) {
-	&report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	&wwslog('info','do_edit_list: not allowed');
-	&web_db_log({'status' => 'error',
-		     'error_type' => 'authorization'});
-	return undef;
-    }
     
     my $family;
     if (defined $list->{'admin'}{'family_name'}) {
@@ -9442,20 +8782,6 @@ Sends back the list config edition form.
  sub do_edit_list_request {
      &wwslog('info', 'do_edit_list_request(%s)', $in{'group'});
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_edit_list_request:  no user');
-	 $param->{'previous_action'} = 'edit_list_request';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($param->{'is_owner'}) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_edit_list: not allowed');
-	 return undef;
-     }
-
      if ($in{'group'}) {
 	 $param->{'group'} = $in{'group'};
 	 &_prepare_edit_form ($list);
@@ -9997,12 +9323,6 @@ sub _restrict_values {
  sub do_close_list_request {
      &wwslog('info', 'do_close_list_request()');
 
-     unless($param->{'is_owner'} || $param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster_or_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_close_list_request: not listmaster or list owner');
-	 return undef;
-     }
-
      if ($list->{'admin'}{'status'} eq 'closed') {
 	 &report::reject_report_web('user','already_closed',{},$param->{'action'},$list);
 	 &wwslog('info','do_close_list_request: already closed');
@@ -10017,11 +9337,6 @@ sub _restrict_values {
  sub do_rename_list_request {
      &wwslog('info', 'do_rename_list_request()');
 
-     unless (($param->{'is_privileged_owner'}) || ($param->{'is_listmaster'})) {
-	 &report::reject_report_web('auth','action_listmaster_or_privileged_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_rename_list_request: not owner');
-	 return undef;
-     }  
      my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot,
 					 {'sender' => $param->{'user'}{'email'},
 					  'remote_host' => $param->{'remote_host'},
@@ -10033,7 +9348,7 @@ sub _restrict_values {
 	 $reason = $result->{'reason'};
      }
  
-     unless ($param->{'user'}{'email'} &&  ($r_action =~ /do_it|listmaster/)) {
+     unless ($r_action =~ /do_it|listmaster/) {
 	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
 	 &wwslog('info','do_rename_list_request: not owner');
 	 return undef;
@@ -10057,21 +9372,6 @@ sub _restrict_values {
  sub do_rename_list {
      &wwslog('info', 'do_rename_list(%s,%s)', $in{'new_listname'}, $in{'new_robot'});
 
-     unless (($param->{'is_privileged_owner'}) || ($param->{'is_listmaster'})) {
-	 &report::reject_report_web('auth','action_listmaster_or_privileged_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_rename_list: not owner');
-	 &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }  
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_rename_list: parameter list missing');
-	 return undef;
-     }  
-
      my $old_listname = $list->{'name'};
 
      # check new listname syntax
@@ -10087,14 +9387,6 @@ sub _restrict_values {
      }
 
      # check new listname syntax
-     unless ($in{'new_robot'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'robot'},$param->{'action'});
-	 &wwslog('info','do_rename_list: missing new_robot parameter');
-	 &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return 'rename_list_request';
-     }
      my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$in{'new_robot'},
 					{'sender' => $param->{'user'}{'email'},
 					 'remote_host' => $param->{'remote_host'},
@@ -10107,7 +9399,7 @@ sub _restrict_values {
 	 $reason = $result->{'reason'};
      }
  
-     unless ($param->{'user'}{'email'} &&  ($r_action =~ /do_it|listmaster/)) {
+     unless ($r_action =~ /do_it|listmaster/) {
 	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
 	 &wwslog('info','do_rename_list: not owner');
 	 &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
@@ -10360,24 +9652,6 @@ sub _restrict_values {
  sub do_purge_list {
      &wwslog('info', 'do_purge_list()');
 
-     unless (($param->{'is_listmaster'}) || ($param->{'is_privileged_owner'})) {
-	 &report::reject_report_web('auth','action_listmaster_or_privileged_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_purge_list: not privileged_owner');
-	 &web_db_log({'parameters' => $in{'selected_lists'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }  
-
-     unless ($in{'selected_lists'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'selected_lists'},$param->{'action'});
-	 &wwslog('info','do_purge_list: no list');
-	 &web_db_log({'parameters' => $in{'selected_lists'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
-
      my @lists = split /\0/, $in{'selected_lists'};
 
      foreach my $l (@lists) {
@@ -10394,14 +9668,6 @@ sub _restrict_values {
 
  sub do_close_list {
      &wwslog('info', "do_close_list($list->{'name'})");
-
-     unless ($param->{'is_privileged_owner'}) {
-	 &report::reject_report_web('auth','action_privileged_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_close_list: not privileged owner');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }  
 
      if ($list->{'admin'}{'status'} eq 'closed') {
 	 &report::reject_report_web('user','already_closed',{},$param->{'action'},$list);
@@ -10427,13 +9693,6 @@ sub _restrict_values {
  sub do_restore_list {
      &wwslog('info', 'do_restore_list()');
 
-     unless ($param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info','do_restore_list: not listmaster');
-	 &web_db_log({'status' => 'error',
-		      'error_type' => 'authorization'});
-	 return undef;
-     }
 
      unless ($list->{'admin'}{'status'} eq 'closed') {
 	 &report::reject_report_web('user','not_closed',{},$param->{'action'},$list);
@@ -10852,15 +10111,6 @@ sub merge_edit{
      my %access = &d_access_control(\%mode,$in{'path'});
 
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_admin : no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
      my $dir = $list->{'dir'};
 
      unless ($access{'may'}{'edit'}) {
@@ -10982,16 +10232,6 @@ sub merge_edit{
 ## Function do_d_read
 sub do_d_read {
      &wwslog('info', 'do_d_read(%s)', $in{'path'});
-
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_read: no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
 
      ### Useful variables
 
@@ -11575,18 +10815,6 @@ sub make_visible_path {
 sub do_latest_d_read {
      &wwslog('info', 'do_latest_d_read(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_latest_d_read: no list');
-	 return undef;
-     }
-
-     unless ($in{'for'} || $in{'count'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => '"for" or "count"'},$param->{'action'});
-	 &wwslog('err','do_latest_d_read: missing parameter "count" or "for"');
-	 return undef;
-     }
-
      ### shared exist ? 
      my $shareddir =  $list->{'dir'}.'/shared';
      unless (-r "$shareddir") {
@@ -11842,16 +11070,6 @@ sub do_latest_d_read {
 
      # Control
 
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_editfile: no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
      unless ($path) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'file name'},$param->{'action'});
 	 &wwslog('err','do_d_editfile: no file name');
@@ -11985,16 +11203,6 @@ sub do_latest_d_read {
 
      # Control
 
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_properties : no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
      unless ($path) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'filename'},$param->{'action'});
 	 &wwslog('err','do_d_properties: no file name');
@@ -12124,15 +11332,6 @@ sub do_latest_d_read {
      my $shareddir =  $list->{'dir'}.'/shared';
 
  ####  Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_d_describe: no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
 
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
@@ -12152,16 +11351,6 @@ sub do_latest_d_read {
 	 &web_db_log({'parameters' => $in{'path'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});
-	 return undef;
-     }
-
-     ## must be existing a content to replace the description
-     unless ($in{'content'}) {
-	 &report::reject_report_web('user','no_description',{'path'=> $visible_path},$param->{'action'},$list);
-	 &wwslog('info',"do_d_describe : cannot describe $shareddir/$path : no content");
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
 	 return undef;
      }
 
@@ -12303,40 +11492,12 @@ sub do_d_savefile {
 	 $moderated = 1;
      }
 
-     if ($in{'name_doc'} =~ /[\[\]\/]/) {
-	 &report::reject_report_web('user','incorrect_name',{'name' => $in{'name_doc'}},$param->{'action'},$list);
-	 &wwslog('err',"do_d_savefile : Unable to create file $path : incorrect name");
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'bad_parameter'});
-	 return undef;
-     }
-
      #my $list_name = $in{'list'};
      my $list_name = $list->{'name'};
 
      my $shareddir =  $list->{'dir'}.'/shared';
 
  ####  Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_savefile : no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
-
-     ## must be existing a content to replace the file
-     unless ($in{'content'} || $in{'url'}) {
-	 &report::reject_report_web('user','no_content',{},$param->{'action'},$list);
-	 &wwslog('err',"do_d_savefile : Cannot save file $shareddir/$path : no content");
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'missing_parameter'});
-	 return undef;
-     }
 
      my $creation = 1 unless (-f "$shareddir/$path");
 
@@ -12561,15 +11722,6 @@ sub do_d_savefile {
      } 
 
  ####### Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_overwrite : no list');
-	 &web_db_log({'parameters' => $in{'path'},
-		      'status' => 'error',
-		      'error_type' => 'no_list'});
-	 return undef;
-     }
 
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
@@ -12777,14 +11929,6 @@ sub do_d_savefile {
 
 
   ## Controls
-     # action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_upload : no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$visible_path,$visible_fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
 
      # uploaded file must have a name 
      unless ($fname) {
@@ -13343,13 +12487,6 @@ sub creation_desc_file {
      $longname =~ s/\/+/\//g;
 
   ## Controls
-     # action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_unzip(%s/%s) : no list',$path,$fname);
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
      
      my $listname = $list->{'name'};
 
@@ -13959,13 +13096,6 @@ sub d_test_existing_and_rights {
      my $shareddir =  $list->{'dir'}.'/shared';
 
  #### Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_d_delete : no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
 
      ## must be something to delete
      unless ($document) {
@@ -14094,13 +13224,6 @@ sub d_test_existing_and_rights {
      my $shareddir =  $list->{'dir'}.'/shared';
 
  #### Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_rename : no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
 
      ## must be something to delete
      unless ($document) {
@@ -14123,14 +13246,6 @@ sub d_test_existing_and_rights {
 	 &wwslog('err',"do_d_rename : $shareddir/$path : no such file or directory");
 	 &report::reject_report_web('user','no_such_document',{'path'=> $visible_path},$param->{'action'},$list);
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_such_document','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     ## New document name
-     unless ($in{'new_name'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'new name'},$param->{'action'});
-	 &wwslog('err',"do_d_rename : new name missing");
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'missing_parameter','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
 
@@ -14238,13 +13353,6 @@ sub d_test_existing_and_rights {
      my $desc_file;
 
  ### Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('err','do_d_create_dir : no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'name_doc'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
 
       # Must be a directory to create (directory name not empty)
      unless ($name_doc) {
@@ -14432,15 +13540,6 @@ sub d_test_existing_and_rights {
      #moderation
      my $visible_path = &make_visible_path($path);
 
-
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_d_control: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
      unless ($path) {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'document'},$param->{'action'});
 	 &wwslog('info','do_d_control: no document name');
@@ -14583,13 +13682,6 @@ sub d_test_existing_and_rights {
      my $shareddir =  $list->{'dir'}.'/shared';
 
  ####  Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_d_change_access: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
 
      ## the path must not be empty (the description file of the shared directory
      #  doesn't exist)
@@ -14711,14 +13803,6 @@ sub d_test_existing_and_rights {
      my $shareddir =  $list->{'dir'}.'/shared';
 
  ####  Controls
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_d_set_owner: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'name_doc'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
 
      ## the path must not be empty (the description file of the shared directory
      #  doesn't exist)
@@ -14862,20 +13946,6 @@ sub d_test_existing_and_rights {
  sub do_remind {
      &wwslog('info', 'do_remind()');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_remind: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_remind: no user');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return 'loginrequest';
-     }
-
      ## Access control
      return undef unless (defined &check_authz('do_remind', 'remind'));
 
@@ -14926,11 +13996,6 @@ sub d_test_existing_and_rights {
  sub do_load_cert {
      &wwslog('info','do_load_cert(%s)', $param->{'list'});
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_load_cert: no list');
-	 return undef;
-     }
      my @cert = $list->get_cert('der');
      unless (@cert) {
 	 &report::reject_report_web('user','missing_cert',{},$param->{'action'},$list);
@@ -14965,18 +14030,6 @@ sub do_upload_pictures {
     # Parameters of the uploaded file (from suboptions.tt2)
     my $fn = $query->param('uploaded_file');
     &wwslog('info', 'do_upload_pictures(%s,%s)',$fn,$param->{'user'}{'email'});
-    
-    # action relative to a list ?
-    unless ($param->{'list'}) {
-	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	&wwslog('err','do_upload_pictures : no list');
-	return undef;
-    }
-    unless ($param->{'user'}{'email'}){
-	&report::reject_report_web('user','missing_arg',{'argument' => 'email'},$param->{'action'}); 
-	&wwslog('err','do_upload_pictures : missing user email');
-	return undef;
-    }
     
     # name of the file, without path
     my $fname;
@@ -15051,18 +14104,6 @@ sub do_delete_pictures {
     
     my $email = $param->{'user'}{'email'};
     
-    # action relative to a list ?
-    unless ($param->{'list'}) {
- 	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
- 	&wwslog('err','do_delete_pictures : no list');
- 	return undef;
-    }
-    unless ($email){
- 	&report::reject_report_web('user','missing_arg',{'argument' => 'email'},$param->{'action'}); 
- 	&wwslog('err','do_delete_pictures : missing user email');
- 	return undef;
-    }
-    
     #deleted file must exist 
     unless(&tools::pictures_filename('email' => $email, 'list' => $list)) {
  	&report::reject_report_web('user','no_name',{},$param->{'action'},$list);
@@ -15096,20 +14137,6 @@ sub do_delete_pictures {
  ## Change a user's email address in Sympa environment
  sub do_change_email {
      &wwslog('info','do_change_email(%s)', $in{'email'});
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_change_email: user not logged in');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_change_email: no email');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'no_email','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
 
      my ($password, $newuser);
 
@@ -15274,19 +14301,6 @@ sub do_delete_pictures {
  sub do_compose_mail {
      &wwslog('info', 'do_compose_mail');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_compose_mail: no user');
-	 $param->{'previous_action'} = 'compose_mail';
-	 return 'loginrequest';
-     }
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_compose_mail: no list');
-	 return undef;
-     }
-
      unless ($param->{'may_post'}) {
 	 &report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
 	 &wwslog('info','do_compose_mail: may not send message');
@@ -15338,14 +14352,6 @@ sub do_delete_pictures {
 ####################################################
  sub do_send_mail {
      &wwslog('info', 'do_send_mail');
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_send_mail: no user');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 $param->{'previous_action'} = 'send_mail';
-	 return 'loginrequest';
-     }
 
      # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
      $in{'to'} =~ s/ /\@/g;
@@ -15448,27 +14454,9 @@ sub do_delete_pictures {
  sub do_request_topic {
      &wwslog('info', 'do_request_topic(%s)', $in{'authkey'});
 
-#     unless ($param->{'user'}{'email'}) {
-#	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-#	 &wwslog('info','do_request_topic: no user');
-#	 return 'loginrequest';
-#     }
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_request_topic: no list');
-	 return undef;
-     }
-
      unless ($list->is_there_msg_topic()) {
 	 &report::reject_report_web('user','no_topic',{},$param->{'action'},$list);
 	 &wwslog('info','do_request_topic: list without topic message');
-	 return undef;
-     }
-
-     unless ($in{'authkey'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'authkey'},$param->{'action'});
-	 &wwslog('info','do_request_topic: no authkey');
 	 return undef;
      }
 
@@ -15545,13 +14533,6 @@ sub do_delete_pictures {
  sub do_tag_topic_by_sender {
      &wwslog('info', 'do_tag_topic_by_sender');
 
-#     unless ($param->{'user'}{'email'}) {
-#	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-#	 &wwslog('info','do_tag_topic_by_sender: no user');
-#	 $param->{'previous_action'} = 'request_topic';
-#	 return 'loginrequest';
-#     }
-
      my $parser;
      my $listname = $list->{'name'};
      my $authqueue = &Conf::get_robot_conf($robot,'queueauth');
@@ -15564,13 +14545,6 @@ sub do_delete_pictures {
 	 return undef;
      }
      my $sender = $mail->{'sender'};
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_tag_topic_by_sender: no list');
-	 return undef;
-     }
-
 
      unless ($list->is_there_msg_topic()) {
 	 &report::reject_report_web('user','no_topic',{},$param->{'action'},$list);
@@ -15634,23 +14608,7 @@ sub do_delete_pictures {
  sub do_search_user {
      &wwslog('info', 'do_search_user');
 
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_search_user: no user');
-	 return 'serveradmin';
-     }
-
-     unless ($param->{'is_listmaster'}) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info','do_search_user: requires listmaster privilege');
-	 return undef;
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'email'},$param->{'action'});
-	 &wwslog('info','do_search_user: no email');
-	 return undef;
-     }elsif ($in{'email'} =~ /[<>\\\*\$]/) {
+     if ($in{'email'} =~ /[<>\\\*\$]/) {
 	 &report::reject_report_web('user','syntax_errors',{'params' => 'email'},$param->{'action'});
 	 &wwslog('err','do_search_user: syntax error');
 	 return undef;
@@ -15736,14 +14694,6 @@ sub do_delete_pictures {
      &wwslog('info', 'do_attach(%s,%s)', $in{'dir'},$in{'file'});
 
 
-     ### action relative to a list ?
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','attach: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'dir'},$in{'file'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
      ### Useful variables
 
      # current list / current shared directory
@@ -15790,30 +14740,6 @@ sub do_delete_pictures {
  sub do_subindex {
      &wwslog('info', 'do_subindex');
 
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_subindex: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'},$list);
-	 &wwslog('info','do_subindex: no user');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 $param->{'previous_action'} = 'modindex';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('owner', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_subindex: %s not owner', $param->{'user'}{'email'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return 'admin';
-     }
-
-
      my $subscriptions = $list->get_subscription_requests();
      foreach my $sub (keys %{$subscriptions}) {
 	 $subscriptions->{$sub}{'date'} = gettext_strftime "%d %b %Y", localtime($subscriptions->{$sub}{'date'});
@@ -15828,29 +14754,6 @@ sub do_delete_pictures {
      &wwslog('info', 'do_ignoresub');
 
      my @users;
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_ignoresub: no list');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'},$list);
-	 &wwslog('info','do_ignoresub: no user');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 $param->{'previous_action'} = 'modindex';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('owner', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_ignoresub: %s not owner', $param->{'user'}{'email'});
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return 'admin';
-     }
 
      foreach my $pair (split /\0/, $in{'pending_email'}) {
 	 if ($pair =~ /,/) {
@@ -15872,20 +14775,6 @@ sub do_delete_pictures {
 
 sub do_change_identity {
      &wwslog('info', 'do_change_identity(%s)', $in{'email'});
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'});
-	 &wwslog('info','do_change_identity: no user');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'no_user','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return $in{'previous_action'};
-     }
-
-     unless ($in{'email'}) {
-	 &report::reject_report_web('user','no_email',{},$param->{'action'});
-	 &wwslog('info','do_change_identity: no email');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'no_email','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return $in{'previous_action'};
-     }
 
      unless (&tools::valid_email($in{'email'})) {
 	 &report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'},$list);
@@ -15909,26 +14798,6 @@ sub do_change_identity {
 
 sub do_stats {
      &wwslog('info', 'do_stats');
-
-     unless ($param->{'list'}) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_stats: no list');
-	 return undef;
-     }
-
-     unless ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','no_user',{},$param->{'action'},$list);
-	 &wwslog('info','do_stats: no user');
-	 $param->{'previous_action'} = 'stats';
-	 $param->{'previous_list'} = $in{'list'};
-	 return 'loginrequest';
-     }
-
-     unless ($list->am_i('owner', $param->{'user'}{'email'})) {
-	 &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	 &wwslog('info','do_stats: %s not owner', $param->{'user'}{'email'});
-	 return 'admin';
-     }
 
      $param->{'shared_size'} = int (($list->get_shared_size + 512)/1024);
      $param->{'arc_size'} = int (($list->get_arc_size($wwsconf->{'arc_path'}) + 512)/1024);
@@ -15988,16 +14857,6 @@ sub export_topics {
 sub do_blacklist {
     &wwslog('info', 'do_blacklist(%d)', $param->{'list'});
 
-    unless ($param->{'list'}){
-	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	&wwslog('info','do_blacklist: no list');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
-    unless($param->{'is_owner'}|| $param->{'is_editor'} || $param->{'is_listmaster'}) {
-	&wwslog('info','do_blacklist : not listmaster or list owner or list editor');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-    }
     my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
     $param->{'rows'} = 0 ;
 
@@ -16062,21 +14921,6 @@ sub do_blacklist {
 # output in text/plain format a scenario
 sub do_dump_scenario {
      &wwslog('info', "do_dump_scenario($param->{'list'}), $in{'pname'}");
-     unless ($param->{'list'}){
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_dump_scenario: no list');
-	 return undef;
-     }
-     unless ($in{'pname'}){
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'pname'},$param->{'action'});
-	 &wwslog('info','do_dump_scenario: missing scenario name');
-	 return undef;
-     }
-     unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
-	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'},$list);
-	 &wwslog('info','do_dump_scenario: reject because not listmaster');
-	 return undef;
-     }
 
      my $scenario = new Scenario ('function' => $in{'pname'},
 				  'robot' => $robot,
@@ -16132,13 +14976,6 @@ sub do_dump_scenario {
      $param->{'bypass'} = 1;
      $param->{'content_type'} = "text/plain";
      $param->{'file'} = undef ; 
-
-     unless ($param->{'list'}) {
-	 # any error message must start with 'err_' in order to allow remote Sympa to catch it
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	 &wwslog('info','do_dump: no list');
-	 return undef;
-     }
 
      ## Access control
      unless (defined &check_authz('do_dump', 'review')) {
@@ -16283,18 +15120,6 @@ sub get_protected_email_address {
 sub do_viewlogs {
     &wwslog('info', 'do_viewlogs(%d)',$in{'page'});
 
-    unless ($list) {
-	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	&wwslog('info','do_iviewlogs: no list');
-	return undef;
-    }
-
-    unless ($param->{'is_editor'} || $param->{'is_owner'} || $param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_editor',{},$param->{'action'});
-	&wwslog('info','do_viewlogs may_not from %s in list %s', $param->{'user'}{'email'}, $param->{'list'});
-	return undef;
-    }
-
     my $size = $in{'size'} || $wwsconf->{'viewlogs_page_size'};
     my $sortby = $in{'sortby'} || 'email';
     my @date = &Log::get_log_date();
@@ -16402,14 +15227,6 @@ sub do_arc_manage {
 sub do_arc_download {
     
     &wwslog('info', "do_arc_download ($in{'list'})");
-    
-    ##check access rights
-    unless($param->{'is_owner'} || $param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster_or_owner',{},$param->{'action'},$list);
-	&wwslog('info','do_arc_download : not listmaster or list owner');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
     
     ##zip file name:listname_archives.zip  
     my $zip_file_name = $in{'list'}.'_archives.zip';
@@ -16617,18 +15434,6 @@ sub do_wsdl {
 sub do_sync_include {
     &wwslog('info', "do_sync_include($in{'list'})");
  
-    unless (defined $list) {
-	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	&wwslog('err','do_sync_include: no list');
-	return undef;
-    }
-
-    unless ($param->{'is_owner'}) {
-	&report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
-	&wwslog('info','do_sync_include: not owner');
-	return undef;
-    }
-    
     unless ($list->sync_include()) {
 	&report::reject_report_web('intern','sync_include_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	return undef;
@@ -16640,25 +15445,6 @@ sub do_sync_include {
 ## Review lists from a family
 sub do_review_family {
     &wwslog('info', 'do_review_family');
-
-    unless ($param->{'user'}{'email'}) {
-	&report::reject_report_web('user','no_user',{},$param->{'action'});
-	&wwslog('info','do_review_family: no user');
-	$param->{'previous_action'} = 'serveradmin';
-	return 'loginrequest';
-     }
-    
-    unless ($param->{'is_listmaster'}) {
-	&report::reject_report_web('auth','action_listmaster_or_owner',{},$param->{'action'},$list);
-	&wwslog('err','do_review_family: %s not listmaster', $param->{'user'}{'email'});
-	return undef;
-    }
-
-    unless ($in{'family_name'}) {
-	&report::reject_report_web('user','missing_arg',{'argument' => 'family name'},$param->{'action'});
-	&wwslog('err','do_review_family: no family');
-	return undef;
-    }
 
     my $family = new Family ($in{'family_name'}, $robot);
     unless (defined $family) {
