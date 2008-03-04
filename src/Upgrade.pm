@@ -715,7 +715,7 @@ sub probe_db {
 							     'date_one_time_ticket' => 'int(11)',
 							     'data_one_time_ticket' => 'varchar(200)',
 							     'remote_addr_one_time_ticket' => 'varchar(60)',
-							     'status_addr_one_time_ticket' => 'varchar(60)'
+							     'status_one_time_ticket' => 'varchar(60)'
 						  },				 
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
@@ -787,7 +787,7 @@ sub probe_db {
 						       'date_one_time_ticket' => 'integer',
 						       'data_one_time_ticket' => 'varchar(200)',
 						       'remote_addr_one_time_ticket' => 'varchar(60)',
-						       'status_addr_one_time_ticket' => 'varchar(60)'						  
+						       'status_one_time_ticket' => 'varchar(60)'						  
 						  },				 
 
 			      },
