@@ -155,12 +155,21 @@ sub new {
     }
     $message->{'msg'} = $msg;
     $message->{'msg_as_string'} = $msg->as_string;
-    
+
     ## Message size
     $message->{'size'} = -s $file;    
 
     my $hdr = $message->{'msg'}->head;
 
+    if ($Conf{'antispam_feature'} =~ /on/i){
+	if ($hdr->get($Conf{'antispam_tag_header_name'}) =~ /$Conf{'antispam_tag_header_spam_regexp'}/i) {
+	    $message->{'spam_status'} = 'spam';
+	}elsif($hdr->get($Conf{'antispam_tag_header_name'}) =~ /$Conf{'antispam_tag_header_ham_regexp'}/i) {
+	    $message->{'spam_status'} = 'ham';
+	}
+    }else{
+	$message->{'spam_status'} = 'not configured';
+    }
 
     ## Extract sender address
     unless ($hdr->get('From')) {

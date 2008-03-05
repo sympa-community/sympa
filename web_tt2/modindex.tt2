@@ -34,8 +34,11 @@
 
  <table summary="[%|loc%]Listing messages to moderate[%END%]" class="listOfItems">
       <tr>
-
+     [%- IF conf.antispam_feature == 'on' -%]
+	<th colspan="2">X</th>	
+     [%- ELSE -%]
 	<th>X</th>
+     [%- END -%]
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
@@ -49,10 +52,16 @@
 	  [% dark = '1' %]
           <tr class="color0">
 	[% END %]
-
          <td>
             <input type="checkbox" name="id" value="[% msg.key %]" />
 	 </td>
+        [%- IF conf.antispam_feature == 'on' -%]	
+	 <td>
+	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
+	  [%- ELSE -%]&nbsp;
+	  [%- END -%]
+	[%- END -%]
+	</td>
 	  <td>
 	    [% IF msg.value.date %]
 	      [% msg.value.date %]

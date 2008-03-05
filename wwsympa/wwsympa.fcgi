@@ -935,7 +935,7 @@ my $birthday = time ;
 	            'main_menu_custom_button_1_url','main_menu_custom_button_1_title','main_menu_custom_button_1_target',
 	            'main_menu_custom_button_2_url','main_menu_custom_button_2_title','main_menu_custom_button_2_target',
 	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
-		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist',
+		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature',
                     'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
@@ -5843,6 +5843,7 @@ sub do_skinsedit {
 	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
 	 $param->{'spool'}{$id}{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
 	 $param->{'spool'}{$id}{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
+	 $param->{'spool'}{$id}{'spam_status'} = $mail->{'spam_status'};
 	 foreach my $field ('subject','date','from') {
 	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/;
 	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;

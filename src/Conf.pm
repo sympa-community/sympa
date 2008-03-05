@@ -76,7 +76,8 @@ my @valid_options = qw(
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes filesystem_encoding spam_protection web_archive_spam_protection soap_url
-		       use_blacklist
+		       use_blacklist 
+		       antispam_feature antispam_tag_header_name antispam_tag_header_spam_regexp antispam_tag_header_ham_regexp
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
@@ -276,7 +277,11 @@ my %Default_Conf =
      'cache_list_config' => 'none', ## none | binary_file
      'lock_method' => 'flock', ## flock | nfs
      'ignore_x_no_archive_header_feature' => 'off',
-     'alias_manager' => '--SBINDIR--/alias_manager.pl'
+     'alias_manager' => '--SBINDIR--/alias_manager.pl',
+     'antispam_feature' => 'off',
+     'antispam_tag_header_name' => 'X-Spam-Status',
+     'antispam_tag_header_spam_regexp' => '^\s*Yes',
+     'antispam_tag_header_ham_regexp' => '^\s*No'
      );
    
 
