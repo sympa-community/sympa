@@ -1518,6 +1518,12 @@ sub DoForward {
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
+
+    if ($msg->{'spam_status'} == 'spam'){
+	&do_log('notice', "Message for %s-%s ignored, because tagued as spam (Message-id: %s)",$name, $function,$messageid);
+	return undef;
+    }
+
     ##  Search for the list
     my ($list, $admin, $host, $recepient, $priority);
 
@@ -1527,7 +1533,7 @@ sub DoForward {
 	$priority = 0;
     }else {
 	unless ($list = new List ($name, $robot)) {
-	    &do_log('notice', "Message for %s-%s ignored, unknown list %s",$name, $function, $name );
+	    &do_log('notice', "Message for %s-%s ignored, unknown list %s (Message-id: %s)",$name, $function, $name,$messageid);
 	    my $sender = $hdr->get('From');
 	    chomp $sender;
 	    my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
@@ -1550,7 +1556,7 @@ sub DoForward {
 
     my @rcpt;
     
-    &do_log('info', "Processing message for %s with priority %s, %s", $recepient, $priority, $messageid );
+    &do_log('info', "Processing message for %s with priority %s, (Message-id:%s)", $recepient, $priority, $messageid );
     
     $hdr->add('X-Loop', "$name-$function\@$host");
     $hdr->delete('X-Sympa-To');
@@ -1578,7 +1584,7 @@ sub DoForward {
     ## Did we find a recipient?
     if ($#rcpt < 0) {
 	if ($function ne "listmaster") {
-	    &do_log('err', "No recipient available for %s-%s in list %s. Trying to proceed ignoring nomail option", $name, $function, $name);
+	    &do_log('err', "No recipient available for %s-%s in list %s. Trying to proceed ignoring nomail option (message-id %s)", $name, $function, $name,$messageid);
 	    
 	    if ($function eq "request") {
 		@rcpt = $list->get_owners_email({'ignore_nomail',1});
@@ -1944,6 +1950,11 @@ sub DoCommand {
     &do_log('debug', "Processing command with priority %s, %s", $Conf{'sympa_priority'}, $messageid );
     
     my $sender = $message->{'sender'};
+
+    if ($msg->{'spam_status'} == 'spam'){
+	&do_log('notice', "Message for robot %s@%s ignored, because tagued as spam (Message-id: %s)",$rcpt,$robot,$messageid);
+	return undef;
+    }
 
     ## Detect loops
     if ($msgid_table{'sympa@'.$robot}{$messageid}) {
