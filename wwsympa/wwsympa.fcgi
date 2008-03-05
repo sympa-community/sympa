@@ -469,7 +469,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'd_upload' => ['param.list','param.user.email'],
 		     'del' => ['param.list','param.user.email','email'],
 		     'delete_pictures' => ['param.list','param.user.email'],
-		     'distribute' => ['param.list','param.user.email','id'],
+		     'distribute' => ['param.list','param.user.email','id|idspam'],
 		     'dump' => ['param.list'],
 		     'dump_scenario' => ['param.list','pname'],
 		     'edit_list' => ['param.user.email','param.list'],
@@ -496,7 +496,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'rebuildallarc' => ['param.user.email'],
 		     'rebuildarc' => ['param.user.email','param.list'],
 		     'record_email' => ['param.user.email','new_alternative_email'],
-		     'reject' => ['param.list','param.user.email','id'],
+		     'reject' => ['param.list','param.user.email','id|idspam'],
 		     'remind' => ['param.list','param.user.email'],
 		     'remove_arc' => ['param.list'],
 		     'remove_templates' => ['webormail'],
@@ -539,7 +539,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'viewbounce' => ['param.list','email'],
 		     'viewfile' => ['file','param.list'],
 		     'viewlogs' => ['param.list'],
-		     'viewmod' => ['param.list','param.user.email','id'],
+		     'viewmod' => ['param.list','param.user.email','id|idspam'],
 		     'wsdl' => [],
 		     'which' => ['param.user.email'],
 		    );
@@ -6109,15 +6109,18 @@ sub do_skinsedit {
 ####################################################
  sub do_reject {
 
+     # toggle selection javascript have a distinction of spam and ham base on the checkbox name . It is not usefull here so join id list and idspam list. 
+     $in{'id'} .= ','.$in{'idspam'} if ($in{'idspam'});
+     $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
-     
+
     &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
 
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
      foreach my $id (split (/,/, $in{'id'})) {
-
+	 
 	 ## For compatibility concerns
 	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
 	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
@@ -6190,13 +6193,15 @@ sub do_skinsedit {
 #  Moderation of messages : distributes moderated 
 #  messages and tag it in message moderation context
 # 
-# IN : -
+# IN : - id of message to distribute. This value can also be in idspam parameter
 #
 # OUT : 'loginrequest' | 'modindex' | undef
 #      
 ###################################################### 
  sub do_distribute {
 
+     $in{'id'} .= ','.$in{'idspam'} if ( in{'idspam'});
+     $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
 
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
@@ -6324,7 +6329,7 @@ sub do_viewmod {
 	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
 	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
 	 return undef;
-     }
+     }     
 
      if ($in{'file'}) {
 	 $in{'file'} =~ /\.(\w+)$/;
@@ -6335,7 +6340,7 @@ sub do_viewmod {
 	 &tt2::add_include_path($tmp_dir) ;
      }
 
-     $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};
+     $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};     
      $param->{'id'} = $in{'id'};
 
      if ($list->is_there_msg_topic()) {

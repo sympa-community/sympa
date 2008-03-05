@@ -53,7 +53,8 @@
           <tr class="color0">
 	[% END %]
          <td>
-            <input type="checkbox" name="id" value="[% msg.key %]" />
+	[%- IF msg.value.spam_status == 'spam' -%][% idname = 'idspam' %][% therissomespam = '1' %][% ELSE %][% idname = 'id' %][% therissomeham = '1' %][% END %]
+            <input type="checkbox" name="[% idname %]" value="[% msg.key %]" />
 	 </td>
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
@@ -94,8 +95,11 @@
 [% END %]
 <br />
 [% END %]
-
-   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_mails.id)" /><br />
+   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_mails.id); toggle_selection(document.moderate_mails.idspam)" />
+[%- IF therissomespam  -%]
+   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle spams[%END%]" onclick="toggle_selection(document.moderate_mails.idspam)" />
+[%- END -%]
+<br />
 
 </fieldset>
 </form>
