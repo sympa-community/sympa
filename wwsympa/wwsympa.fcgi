@@ -6608,124 +6608,139 @@ sub do_viewmod {
  }
 
  ## Access to web archives
- sub do_arc {
-     &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
-     my $latest;
-     my $index = $wwsconf->{'archive_default_index'};
+sub do_arc {
+    &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
+    my $latest;
+    
+    my $index = $session->{'arc_mode'} ;
+    unless ($index) {$index = $wwsconf->{'archive_default_index'};}
 
-     ## Clean arc_file
-     if ($in{'arc_file'} eq '/') {
-	 delete $in{'arc_file'};
-      }
-
-     ## Access control
-     unless (defined &check_authz('do_arc', 'web_archive.access')) {
-	 $param->{'previous_action'} = 'arc';
-	 $param->{'previous_list'} = $list->{'name'};
-	 return undef;
-     }
-
-     $session->{'archive_sniffer'} = 'false' if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) ;
-
-     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
-	 return 'arc_protect'  unless ($session->{'archive_sniffer'} eq 'false') ;
-     }
-
-     my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
-     ## Calendar
-     unless (opendir ARC, $arc_path) {
-	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
-	 &wwslog('err','do_arc: no directory %s', $arc_path);
-	 return undef;
-     }
-     foreach my $dir (sort grep(!/^\./,readdir ARC)) {
-	 if ($dir =~ /^(\d{4})-(\d{2})$/ &&
-	     -d $arc_path.'/'.$dir.'/arctxt') {
-	     $param->{'calendar'}{$1}{$2} = '???';
-	     if (open(IDX, $arc_path.'/'.$dir.'/index')) {
-		 my ($msgs) = <IDX>;
-		 chomp ($msgs);
-		 close IDX;
-		 $param->{'calendar'}{$1}{$2} = $msgs if ($msgs);
-	     }
-	     $latest = $dir;
-	 }
-     }
-     closedir ARC;
-
-     ## Read html file
-     $in{'month'} ||= $latest;
-     my $arc_month_path = $arc_path.'/'.$in{'month'};
-
-     unless ($in{'arc_file'}) {
-	 undef $latest;
-	 unless (opendir ARC, $arc_month_path) {
-	     &wwslog('err',"unable to readdir $arc_month_path");
-	     &report::reject_report_web('user','month_not_found',{'month' => $in{'month'},
-								    'dir' => $arc_month_path,
-								    'listname' => $param->{'list'}},
-					$param->{'action'},
-                                        $list,$param->{'user'}{'email'},
-                                        $robot);
-	 }
-	 foreach my $file (grep(/^$index/,readdir ARC)) {
-	     if ($file =~ /^$index(\d+)\.html$/) {
-		 $latest = $1 if ($latest < $1);
-	     }
-	 }
-	 closedir ARC;
-
-	 $in{'arc_file'} = $index.$latest.".html";
-     }
-
-     ## File exist ?
-     my $arc_file_path = $arc_month_path.'/'.$in{'arc_file'};
-     unless (-r $arc_file_path) {
-	 &wwslog('err',"unable to read $arc_file_path");
-	 &report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
-							      'path' => $arc_file_path,
-							      'listname' => $param->{'list'}},
-				    $param->{'action'},
-				    $list,$param->{'user'}{'email'},
-				    $robot);
-	 return undef;
-     }
-
-     ## File type
-     if ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
-
-	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
-	     ## If the file is a message, load the metadata to find out who is the author of the message
-	     my $metadata = &Archive::load_html_message('file_path' => $arc_file_path);
-	     $param->{'include_picture'} = &tools::make_pictures_url('email' => $metadata->{'X-From'}, 'list' => $list);
-	     
-	     $param->{'subtitle'} = $metadata->{'X-Subject'};
-	 }
-
-	 ## Provide a filehandle to the TT2 parser (instead of a filename previously)
-	 ## It allows to set the appropriate utf8 binmode on the FH
-	 open $param->{'file_handle'}, "<", $arc_file_path;
-	 
-	 &tt2::add_include_path($arc_month_path);
-     }else {
-
-	 if ($in{'arc_file'} =~ /\.(\w+)$/) {
-	     $param->{'file_extension'} = $1;
-	 }
-
-	 $param->{'bypass'} = 1;
-	 	 
-	 $param->{'file'} = $arc_file_path;
-     }
-
-     my @stat = stat ($arc_file_path);
-     $param->{'date'} = $stat[9];
-     $param->{'header_date'} = $stat[9];
-     $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
-     $param->{'archive_name'} = $in{'month'};
-
-     return 1;
- }
+    ## Clean arc_file
+    if ($in{'arc_file'} eq '/') {
+	delete $in{'arc_file'};
+    }
+    
+    ## Access control
+    unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	$param->{'previous_action'} = 'arc';
+	$param->{'previous_list'} = $list->{'name'};
+	return undef;
+    }
+    
+    $session->{'archive_sniffer'} = 'false' if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) ;
+    
+    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+	return 'arc_protect'  unless ($session->{'archive_sniffer'} eq 'false') ;
+    }
+    
+    my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+    ## Calendar
+    unless (opendir ARC, $arc_path) {
+	&report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
+	&wwslog('err','do_arc: no directory %s', $arc_path);
+	return undef;
+    }
+    foreach my $dir (sort grep(!/^\./,readdir ARC)) {
+	if ($dir =~ /^(\d{4})-(\d{2})$/ && -d $arc_path.'/'.$dir.'/arctxt') {
+	    $param->{'calendar'}{$1}{$2} = '???';
+	    if (open(IDX, $arc_path.'/'.$dir.'/index')) {
+		my ($msgs) = <IDX>;
+		chomp ($msgs);
+		close IDX;
+		$param->{'calendar'}{$1}{$2} = $msgs if ($msgs);
+	    }
+	    $latest = $dir;
+	}
+    }
+    closedir ARC;
+    
+    ## Read html file
+    $in{'month'} ||= $latest;
+    my $arc_month_path = $arc_path.'/'.$in{'month'};
+    
+    unless ($in{'arc_file'}) {
+	undef $latest;
+	unless (opendir ARC, $arc_month_path) {
+	    &wwslog('err',"unable to readdir $arc_month_path");
+	    &report::reject_report_web('user','month_not_found',{'month' => $in{'month'},
+								 'dir' => $arc_month_path,
+								 'listname' => $param->{'list'}},
+				       $param->{'action'},
+				       $list,$param->{'user'}{'email'},
+				       $robot);
+	}
+	foreach my $file (grep(/^$index/,readdir ARC)) {
+	    if ($file =~ /^$index(\d+)\.html$/) {
+		$latest = $1 if ($latest < $1);
+	    }
+	}
+	closedir ARC;
+	
+	$in{'arc_file'} = $index.$latest.".html";
+    }
+    
+    ## File exist ?
+    my $arc_file_path = $arc_month_path.'/'.$in{'arc_file'};
+    unless (-r $arc_file_path) {
+	&wwslog('err',"unable to read $arc_file_path");
+	&report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
+							   'path' => $arc_file_path,
+							   'listname' => $param->{'list'}},
+				   $param->{'action'},
+				   $list,$param->{'user'}{'email'},
+				   $robot);
+	return undef;
+    }
+    
+    ## File type
+    if ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
+	
+	if ($in{'arc_file'} =~/^(thrd|mail)\d+\.html/) {
+	    $session->{'arc_mode'} = $1;
+	}
+	if ($param->{'user'}{'email'}){
+	    if ($param->{'user'}{'prefs'}{'arc_mode'} ne $session->{'arc_mode'}) {
+		# update user pref  as soon as connected user change the way he consult archives
+		$param->{'user'}{'prefs'}{'arc_mode'} = $session->{'arc_mode'}; 
+		&List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	    }
+	}
+	
+	if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
+	    ## If the file is a message, load the metadata to find out who is the author of the message
+	    my $metadata = &Archive::load_html_message('file_path' => $arc_file_path);
+	    $param->{'include_picture'} = &tools::make_pictures_url('email' => $metadata->{'X-From'}, 'list' => $list);
+	    
+	    $param->{'subtitle'} = $metadata->{'X-Subject'};
+	}
+	
+	## Provide a filehandle to the TT2 parser (instead of a filename previously)
+	## It allows to set the appropriate utf8 binmode on the FH
+	open $param->{'file_handle'}, "<", $arc_file_path;
+	
+	&tt2::add_include_path($arc_month_path);
+    }else {
+	
+	if ($in{'arc_file'} =~ /\.(\w+)$/) {
+	    $param->{'file_extension'} = $1;
+	}
+	
+	$param->{'bypass'} = 1;
+	
+	$param->{'file'} = $arc_file_path;
+    }
+    
+    my @stat = stat ($arc_file_path);
+    $param->{'date'} = $stat[9];
+    # send page as static if client is a bot. That's prevent crawling all archices every weeks by google, yahoo and others bots
+    if ($session->{'is_a_crawler'}) {       
+	$param->{'header_date'} = $stat[9];
+    }
+    $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
+    $param->{'archive_name'} = $in{'month'};
+    
+    return 1;
+}
 
  ## Access to latest web archives
  sub do_latest_arc {
