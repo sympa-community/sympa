@@ -1866,7 +1866,8 @@ sub DoMessage{
 
 	&do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $listname, $sender, $message->{'filename'});
 	
-	unless ($2 eq 'quiet') {
+	# do not report to the sender if the message was tagued as a spam
+	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
 	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&do_log('notice',"sympa::DoMessage(): Unable to send template 'message_report', entry 'moderating_message' to $sender");
 	    }
@@ -1884,7 +1885,8 @@ sub DoMessage{
 
 	&do_log('info', 'Message for %s from %s sent to editors', $listname, $sender);
 	
-	unless ($2 eq 'quiet') {
+	# do not report to the sender if the message was tagued as a spam
+	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
 	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&do_log('notice',"sympa::DoMessage(): Unable to send template 'message_report', type 'success', entry 'moderating_message' to $sender");
 	    }
@@ -1893,7 +1895,9 @@ sub DoMessage{
     }elsif($action =~ /^reject(,(quiet))?/) {
 
 	&do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $listname, $sender, $result->{'tt2'});
-	unless ($2 eq 'quiet') {
+
+	# do not report to the sender if the message was tagued as a spam
+	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
 	    if (defined $result->{'tt2'}) {
 		unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
 		    &do_log('notice',"sympa::DoMessage(): Unable to send template '$result->{'tt2'}' to $sender");
