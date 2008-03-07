@@ -3471,18 +3471,17 @@ sub send_to_editor {
    }
 
    @rcpt = $self->get_editors_email();
+   
+   my $hdr = $message->{'msg'}->head;
 
    ## Did we find a recipient?
    if ($#rcpt < 0) {
        &do_log('notice', "No editor found for list %s. Trying to proceed ignoring nomail option", $self->{'name'});
-       my $hdr = $message->{'msg'}->head;
        my $messageid = $hdr->get('Message-Id');
-
-       @rcpt = $self->get_editors_email({'ignore_nomail',1});
        
-       &do_log('notice', 'Warning : no owner and editor defined at all in list %s', $name ) 
-	   unless (@rcpt);
-
+       @rcpt = $self->get_editors_email({'ignore_nomail',1});
+       &do_log('notice', 'Warning : no owner and editor defined at all in list %s', $name ) unless (@rcpt);
+       
        ## Could we find a recipient by ignoring the "nomail" option?
        if ($#rcpt >= 0) {
 	   &do_log('notice', 'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them.', $messageid, $self->{'name'} );
@@ -3496,6 +3495,8 @@ sub send_to_editor {
    my $param = {'modkey' => $modkey,
 		'boundary' => $boundary,
 		'msg_from' => $message->{'sender'},
+		'subject' => $hdr->{'subject'},
+		'spam_status' => $message->{'spam_status'},
 		'mod_spool_size' => $self->get_mod_spool_size(),
 		'method' => $method};
 
