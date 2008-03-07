@@ -13,7 +13,7 @@
   <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
  [%- END -%]
   <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject thoses messages with notification ?[%END%]')" />
 [% IF conf.use_blacklist != 'none' %]
   <input class="MainMenuLinks" type="submit" name="action_reject.quiet.blacklist" value="[%|loc%]Reject and blacklist sender[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
