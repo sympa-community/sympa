@@ -59,9 +59,9 @@
 
 	src/Scenario.pm: Now, in scenari using SMTP header fields, if a message exists, the value of the header is defaulted to an empty strings if it is empty or missing.
 
-	***** New C wrapper. We definitely disabled the setuid solution to run wwsympa.fcgi. If the script you used in your web server configuration was wwsympa.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes wwsympa-wrapper.fcgi instead of wwsympa.fcgi.
+***** 	New C wrapper. We definitely disabled the setuid solution to run wwsympa.fcgi. If the script you used in your web server configuration was wwsympa.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes wwsympa-wrapper.fcgi instead of wwsympa.fcgi.
 
-	***** C wrapper now for sympa_soap_server. We definitely disabled the setuid solution to run sympa_soap_server.fcgi. If the script you used in your web server configuration was sympa_soap_server.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes sympa_soap_server-wrapper.fcgi instead of sympa_soap_server.fcgi.
+***** 	C wrapper now for sympa_soap_server. We definitely disabled the setuid solution to run sympa_soap_server.fcgi. If the script you used in your web server configuration was sympa_soap_server.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes sympa_soap_server-wrapper.fcgi instead of sympa_soap_server.fcgi.
 
 	wwsympa/wwsympa.fcgi: Now wwsympa switches to maintenance mode if not run under the right user id. It quits the maintenace mode as soon as the user id is the good one.
 
@@ -83,7 +83,7 @@
 
 	Web mail composer is now able to send messages to several recipients.
 
-	Genralization of "use strict vars"
+	Generalization of "use strict vars"
 
 	wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi: Reduce SQL queries for sessions. Don't exist if new session abort.
 	Also renew the cookie (a random used as session_id) so it make session hijacking much more difficult.
