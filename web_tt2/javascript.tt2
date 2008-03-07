@@ -160,6 +160,30 @@ function hide(div){
   }
 
 [% IF (action == 'modindex' || action == 'request_topic') || (action == 'viewmod' || action == 'compose_mail')%] 
+
+  // check if rejecting quietly spams
+
+ function check_reject_spams(form,my_question) {
+    var checkbox_checked = false;
+
+    for (i = 0; i < form.elements.length; i++) {
+      if (form.elements[i].name == "idspam") { 
+        var box = form.elements[i];
+        if (box.checked == "1" ) {
+ 	 checkbox_checked = true;
+       	 break;	
+        }
+      }
+    }
+    if (checkbox_checked) {
+	if (confirm(my_question)){	
+          return(true);
+	}else{
+	  return(false);
+        }	
+    }
+  }
+
   // To check at least one checkbox checked
   function checkbox_check_topic(form,string) {
  
