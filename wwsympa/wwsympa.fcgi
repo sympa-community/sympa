@@ -214,6 +214,7 @@ my %comm = ('home' => 'do_home',
 	 'arc_manage' => 'do_arc_manage',                             
 	 'remove_arc' => 'do_remove_arc',
 	 'send_me' => 'do_send_me',
+	 'view_source' => 'do_view_source',
 	 'arcsearch_form' => 'do_arcsearch_form',
 	 'arcsearch_id' => 'do_arcsearch_id',
 	 'arcsearch' => 'do_arcsearch',
@@ -514,6 +515,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'search_user' => ['param.user.email','email'],
 		     'send_mail' => ['param.user.email'],
 		     'send_me' => ['param.list'],
+		     'view_source' => ['param.list'],
 		     'sendpasswd' => ['email'],
 		     'serveradmin' => ['param.user.email'],
 		     'set' => ['param.list','reception|visibility'],
@@ -7056,6 +7058,77 @@ sub do_remove_arc {
 
      }else{
 	 &wwslog('info', 'do_send_me : no file match msgid');
+	 $param->{'status'} = 'not_found';
+	 return undef;
+     }
+
+     return 1;
+ }
+
+####################################################
+#  do_view_source                           
+####################################################
+#  Display message as text/plain in archives
+# 
+# IN : -
+#
+# OUT : 'arc' | 1 | undef
+#
+#################################################### 
+ sub do_view_source   {
+     &wwslog('info', 'do_view_source(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+
+
+     ## Access control
+     unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	 $param->{'previous_action'} = 'arc';
+	 $param->{'previous_list'} = $list->{'name'};
+	 return undef;
+     }
+
+     if (! $in{'msgid'} || 
+	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+	 &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('info','view_source: no message id found');
+	 $param->{'status'} = 'no_msgid';
+	 return undef;
+     } 
+     ## 
+     my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
+
+     opendir ARC, "$arcpath/arctxt";
+     my $msgfile;
+     foreach my $file (grep (!/\./,readdir ARC)) {
+	 &wwslog('debug','view_source: scanning %s', $file);
+	 next unless (open MAIL,"$arcpath/arctxt/$file") ;
+	 while (<MAIL>) {
+	     last if /^$/ ;
+	     if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
+		 my $id = $1;
+		 if ($id eq $in{'msgid'}) {
+		     $msgfile = $file ;
+		 }
+		 last ;
+	     }
+	 }
+	 close MAIL ;
+     }
+     if ($msgfile) {
+	 unless (open MSG, "$arcpath/arctxt/$msgfile") {
+	     $param->{'status'} = 'message_err';
+	     &wwslog('info', 'do_view_source : could not read file %s',"$arcpath/arctxt/$msgfile");
+	 }
+
+	 $param->{'bypass'} = 'extreme';
+	 printf "Content-Type: text/plain\n\n";
+	 while (<MSG>){
+	     printf $_ ;
+	 }
+	 close MSG;
+
+
+     }else{
+	 &wwslog('info', 'do_view_source : no file match msgid');
 	 $param->{'status'} = 'not_found';
 	 return undef;
      }
