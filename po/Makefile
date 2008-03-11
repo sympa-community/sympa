@@ -57,18 +57,18 @@ install: $(MOFILES)
 
 update-po: potfile
 	languages='$(LINGUAS)'; \
-	mkdir -p tmp
+	mkdir -p tmp; \
 	for lang in $$languages; do \
 		echo "Updating $$lang.po"; \
-		cp -p "$$lang.po" tmp/ \
+		cp -p "$$lang.po" tmp/; \
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
-		$(MSGCAT) --use-first -o "$$lang.po" "$$lang.po" tmp/"$$lang.po" \
-		rm -f tmp/"$$lang.po" \
+		$(MSGCAT) --use-first -o "$$lang.po" "$$lang.po" tmp/"$$lang.po"; \
+		rm -f tmp/"$$lang.po"; \
 		echo "Updating web_help_$$lang.po"; \
-		cp -p "web_help_$$lang.po" tmp/ \
+		cp -p "web_help_$$lang.po" tmp/; \
 		touch "web_help_$$lang.po"; \
 		$(MSGMERGE) -o "web_help_$$lang.po" "web_help_$$lang.po" web_help.pot; \
-		$(MSGCAT) --use-first -o "web_help_$$lang.po" "web_help_$$lang.po" tmp/"web_help_$$lang.po" \
+		$(MSGCAT) --use-first -o "web_help_$$lang.po" "web_help_$$lang.po" tmp/"web_help_$$lang.po"; \
 		rm -f tmp/"web_help_$$lang.po";\
 	done
 	rm -rf tmp

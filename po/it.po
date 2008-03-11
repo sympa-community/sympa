@@ -139,45 +139,56 @@ msgstr "Moderatore"
 msgid "Subscriber"
 msgstr "Iscritto"
 
-#: web_tt2/login_menu.tt2:32
+#. (last_login_host,last_login_date)
+#: web_tt2/login_menu.tt2:22
+msgid "last login from %1 <br />(%2)</span>"
+msgstr ""
+
+#: web_tt2/login_menu.tt2:34
 msgid "Logout"
 msgstr "Logout"
 
-#: web_tt2/login_menu.tt2:39
+#: web_tt2/login_menu.tt2:41
 #, fuzzy
 msgid "Your preferences"
 msgstr "Preferenze"
 
-#: web_tt2/login_menu.tt2:57 web_tt2/loginbanner.tt2:57
+#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
 msgid "Choose your authentication server"
 msgstr "Scegli il tuo server d'autenticazione"
 
-#: web_tt2/login_menu.tt2:63 web_tt2/loginbanner.tt2:61
+#: web_tt2/login_menu.tt2:65 web_tt2/loginbanner.tt2:57
 msgid "Go"
 msgstr "Va'"
 
 # nlsref 16,27
-#: src/List.pm:1084 src/List.pm:586 web_tt2/login_menu.tt2:77
-#: web_tt2/loginbanner.tt2:76 web_tt2/sso_login.tt2:45
+#: src/List.pm:1084 src/List.pm:586 web_tt2/login_menu.tt2:79
+#: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "indirizzo email "
 
-#: web_tt2/login_menu.tt2:79 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:81 web_tt2/loginbanner.tt2:73
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
 #: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:38
 #: web_tt2/subrequest.tt2:73
 msgid "password"
 msgstr "password"
 
-#: web_tt2/login_menu.tt2:81 web_tt2/loginbanner.tt2:78
+#: web_tt2/login_menu.tt2:83 web_tt2/loginbanner.tt2:74
 msgid "Login"
 msgstr "Login"
 
-#: web_tt2/login_menu.tt2:87
+# nlsref 6,15
+#: web_tt2/login_menu.tt2:90
+#, fuzzy
+msgid "Authentication help"
+msgstr "Autenticazione"
+
+#: web_tt2/login_menu.tt2:92
 msgid "First login ?"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:88
+#: web_tt2/login_menu.tt2:93
 #, fuzzy
 msgid "Lost password ?"
 msgstr "La mia password ?"
@@ -505,7 +516,7 @@ msgstr "Data di creazione"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:45
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:41 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Oggetto:"
 
@@ -695,7 +706,7 @@ msgid "Sender"
 msgstr "Mittente"
 
 #: web_tt2/arcsearch_form.tt2:46 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:39 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Data"
@@ -887,19 +898,15 @@ msgstr ""
 "Devi scegliere una password per il tuo ambiente WWSympa.\n"
 "Hai bisogno della password per compiere azioni privilegiate.\n"
 
-#: web_tt2/choosepasswd.tt2:14
-msgid "Current password :"
-msgstr "Password attuale :"
-
-#: web_tt2/choosepasswd.tt2:18 web_tt2/pref.tt2:38
+#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:38
 msgid "New password :"
 msgstr "Nuova password : "
 
-#: web_tt2/choosepasswd.tt2:19
+#: web_tt2/choosepasswd.tt2:12
 msgid "New password again :"
 msgstr "Nuova password, ancora : "
 
-#: web_tt2/choosepasswd.tt2:20 web_tt2/picture_upload.tt2:11
+#: web_tt2/choosepasswd.tt2:13 web_tt2/picture_upload.tt2:11
 #: web_tt2/pref.tt2:17 web_tt2/pref.tt2:29 web_tt2/pref.tt2:40
 #: web_tt2/pref.tt2:66
 msgid "Submit"
@@ -1296,7 +1303,7 @@ msgid "Listing of root folder"
 msgstr "Elenco del contenuto dello spazio condivisa SHARED"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:40
+#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
 msgid "Author"
 msgstr "Autore"
 
@@ -1652,7 +1659,7 @@ msgstr "Maschera:"
 msgid "Type"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:111
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
 msgid "Path"
 msgstr "Percorso"
 
@@ -2395,26 +2402,17 @@ msgstr ""
 msgid "Validate"
 msgstr "Convalida"
 
-#. (init_email)
-#: web_tt2/loginbanner.tt2:5
+#: web_tt2/loginbanner.tt2:6
 #, fuzzy
 msgid ""
-"Your password has been sent to your email address %1.<br />Please check your "
-"e-mail box to provide your password below."
-msgstr ""
-"La tua password è stata spedita al tuo indirizzo %1 <BR> Controlla la tua "
-"casella di posta per poi inserirla qui sotto."
-
-#: web_tt2/loginbanner.tt2:10
-msgid ""
-"You need to login to access your custom WWSympa environment or to perform a "
-"privileged operation (one that requires your email address)."
+"In order to perform a privileged operation (one that requires your email "
+"address), you need to login."
 msgstr ""
 "Devi entrare per accedere alla personalizzazione dell'ambiente WWSympa o per "
 "eseguire un'operazione privilegiata (una che richieda il tuo indirizzo email)"
 "\t"
 
-#: web_tt2/loginbanner.tt2:13
+#: web_tt2/loginbanner.tt2:9
 #, fuzzy
 msgid ""
 "Most mailing list features require your email. Some mailing lists are hidden "
@@ -2427,7 +2425,7 @@ msgstr ""
 "Per beneficiare dei servizi completi offerti da questo server, devi "
 "primaidentificarti, probabilmente\n"
 
-#: web_tt2/loginbanner.tt2:18
+#: web_tt2/loginbanner.tt2:14
 #, fuzzy
 msgid ""
 "To login, select your organization authentication server below.<br />\n"
@@ -2438,7 +2436,7 @@ msgstr ""
 "Se non è elencato o se non ne hai uno, entra usando la tua email e la tua "
 "password nella colonna a destra.\n"
 
-#: web_tt2/loginbanner.tt2:23
+#: web_tt2/loginbanner.tt2:19
 msgid ""
 "Login with you email address and password. You can request a password "
 "reminder."
@@ -2532,22 +2530,29 @@ msgstr ""
 msgid "Listing messages to moderate"
 msgstr "Elenca i messaggi da moderare"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:77
-#: web_tt2/modindex.tt2:79 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
+#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
 msgid "Distribute"
 msgstr "Distribuisci"
 
-#: web_tt2/modindex.tt2:103 web_tt2/modindex.tt2:139 web_tt2/modindex.tt2:15
-#: web_tt2/modindex.tt2:81 web_tt2/viewmod.tt2:13
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
+#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
 msgid "Reject"
 msgstr "Rifiuta"
 
-#: web_tt2/modindex.tt2:104 web_tt2/modindex.tt2:140 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:82 web_tt2/viewmod.tt2:14
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
+#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
 msgid "Notified reject"
 msgstr "Respingi con notifica"
 
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:84
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
 msgid "Reject and blacklist sender"
 msgstr ""
 
@@ -2562,153 +2567,167 @@ msgid ""
 "to distribute :"
 msgstr ""
 
-#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:42
+#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
 msgid "Size"
 msgstr "Grandezza"
 
-#: web_tt2/modindex.tt2:66
+#: web_tt2/modindex.tt2:76
 msgid "No subject"
 msgstr "Nessun soggetto"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:89 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
 #: web_tt2/reviewbouncing.tt2:116
 msgid "Toggle Selection"
 msgstr "Cambia la selezione"
 
 #: web_tt2/modindex.tt2:100
+msgid "Toggle spams"
+msgstr ""
+
+#: web_tt2/modindex.tt2:113
 #, fuzzy
 msgid "Listing of shared documents to moderate"
 msgstr "Elenca i documenti condivisi da moderare"
 
-#: web_tt2/modindex.tt2:102 web_tt2/modindex.tt2:138
+#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
 msgid "Install"
 msgstr "Installa."
 
-#: web_tt2/modindex.tt2:106
+#: web_tt2/modindex.tt2:119
 msgid "Listing of documents shared to moderate"
 msgstr "Elenca i documenti condivisi da moderare"
 
+#. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
+msgid "last login from %1 (%2)"
+msgstr ""
+
+#: web_tt2/notice.tt2:10
 msgid "Your request has been forwarded to the list owner"
 msgstr "La tua richiesta è stata mandata al proprietario della lista"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:8
+#: web_tt2/notice.tt2:13
 msgid "%1 subscribers added"
 msgstr "Aggiunti %1 iscritti"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:11
+#: web_tt2/notice.tt2:16
 msgid "%1 addresses have been removed"
 msgstr "%1 indirizzi rimossi"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:14
+#: web_tt2/notice.tt2:19
 msgid "%1: action completed"
 msgstr "%1: azione completata"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:17
+#: web_tt2/notice.tt2:22
 msgid "%1: action will complete soon"
 msgstr "%1 : azione in corso"
 
-#: web_tt2/notice.tt2:20
+#: web_tt2/notice.tt2:25
 msgid "Configuration file has been updated"
 msgstr "Il file di configurazione è stato aggiornato."
 
-#: web_tt2/notice.tt2:23
+#: web_tt2/notice.tt2:28
 #, fuzzy
 msgid "List has been purged"
 msgstr "Gli alias per la lista sono stati eliminati"
 
-#: web_tt2/notice.tt2:26
+#: web_tt2/notice.tt2:31
 #, fuzzy
 msgid "List has been closed"
 msgstr "Argomento della lista"
 
-#: web_tt2/notice.tt2:29
+#: web_tt2/notice.tt2:34
 #, fuzzy
 msgid "List has been restored"
 msgstr "Gli alias per la lista sono stati eliminati"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:32
+#: web_tt2/notice.tt2:37
 msgid "File %1 successfully uploaded!"
 msgstr "%1 inserito con successo!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:35
+#: web_tt2/notice.tt2:40
 #, fuzzy
 msgid "File %1 unziped!"
 msgstr "File %1 salvato"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:38
+#: web_tt2/notice.tt2:43
 msgid "Old file %1 has been erased"
 msgstr ""
 
 #. (notice.path)
-#: web_tt2/notice.tt2:41
+#: web_tt2/notice.tt2:46
 msgid "File %1 waiting for moderation"
 msgstr "File %1 in attesa d'essere moderato"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:44
+#: web_tt2/notice.tt2:49
 msgid "File %1 saved"
 msgstr "File %1 salvato"
 
-#: web_tt2/notice.tt2:47
+#: web_tt2/notice.tt2:52
 msgid "Your password has been emailed to you"
 msgstr "La tua password ti è stata spedita"
 
-#: web_tt2/notice.tt2:50
+#: web_tt2/notice.tt2:55
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Per scegliere la password vai alle 'Opzioni' dal menu superiore."
 
 #. (notice.list)
-#: web_tt2/notice.tt2:53
+#: web_tt2/notice.tt2:58
 msgid "No message and no document to moderate for list %1"
 msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
 
-#: web_tt2/notice.tt2:56
+#: web_tt2/notice.tt2:61
 #, fuzzy
 msgid "The list of list members have been built/updated."
 msgstr ""
 "l'elenco dei membri della lista verrà creato/aggiornato presto (pochi minuti)"
 
-#: web_tt2/notice.tt2:59
+#: web_tt2/notice.tt2:64
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 "l'elenco dei membri della lista verrà creato/aggiornato presto (pochi minuti)"
 
 # nlsref 4,26
-#: web_tt2/notice.tt2:62
+#: web_tt2/notice.tt2:67
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
 "Gli gli interessati fra gli iscritti sono stati notificati della "
 "cancellazione dell'argomento."
 
 #. (notice.total)
-#: web_tt2/notice.tt2:65
+#: web_tt2/notice.tt2:70
 msgid "%1 addresses have been subscribed"
 msgstr "%1 indirizzi iscritti"
 
-#: web_tt2/notice.tt2:68
+#: web_tt2/notice.tt2:73
 #, fuzzy
 msgid "You have been authenticated"
 msgstr "aggiunta necessita di autenticazione"
 
 #. (notice.orig_file,notice.new_file)
-#: web_tt2/notice.tt2:71
+#: web_tt2/notice.tt2:76
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Il tuo indirizzo %1 è stato cancellato dalla lista %2@%3"
 
-#: web_tt2/notice.tt2:74
+#: web_tt2/notice.tt2:79
 msgid ""
 "List has been set to the pending status ; listmaster need to validate it"
 msgstr ""
+
+#: web_tt2/notice.tt2:82
+#, fuzzy
+msgid "List name has been lowercased"
+msgstr "Argomento della lista"
 
 #: web_tt2/picture_upload.tt2:4
 #, fuzzy
@@ -2758,7 +2777,7 @@ msgstr "Modifica del tuo indirizzo email"
 msgid "New email address :"
 msgstr "Nuovo indirizzo email:"
 
-#: mail_tt2/sendpasswd.tt2:31 web_tt2/pref.tt2:34
+#: web_tt2/pref.tt2:34
 msgid "Changing your password"
 msgstr "Modifica della password"
 
@@ -2789,26 +2808,40 @@ msgstr ""
 "tuoi indirizzi verranno raggruppati da Sympa sotto il tuo indirizzo email "
 "principale per unificare le tue iscrizioni."
 
-#: web_tt2/remindpasswd.tt2:5
+#: web_tt2/remindpasswd.tt2:7
 #, fuzzy
-msgid ""
-"You have forgotten your password, or you've never had any password related "
-"to this server"
+msgid "You request for an account creation on this list server."
+msgstr "Hai chiesto di iscriverti alla lista %1."
+
+#: web_tt2/remindpasswd.tt2:9
+msgid "The password you submit is wrong. May be you forgot it ?"
+msgstr ""
+
+#: web_tt2/remindpasswd.tt2:11
+msgid "You miss the password, please submit again. May be you forgot it ?"
+msgstr ""
+
+#: web_tt2/remindpasswd.tt2:13
+#, fuzzy
+msgid "You have forgotten your password, so you have to  renew it."
 msgstr ""
 "Se hai dimenticato la password o non ne hai mai ricevuta una relativa a "
 "questo servizio"
 
-#: web_tt2/remindpasswd.tt2:6
-msgid "it will be sent to you by email :"
-msgstr "ti verrà recapitata per email:"
+#: web_tt2/remindpasswd.tt2:15
+msgid ""
+"Please submit your email address, you will receive a message that give you "
+"access to the appropriate form in order to choose your password."
+msgstr ""
 
-#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:55
+#: web_tt2/remindpasswd.tt2:21 web_tt2/subrequest.tt2:55
 msgid "Your e-mail address"
 msgstr "Il tuo indirizzo e-mail"
 
-#: web_tt2/remindpasswd.tt2:14 web_tt2/sigrequest.tt2:76
-msgid "Send me my password"
-msgstr "Mandami la password"
+#: web_tt2/remindpasswd.tt2:23
+#, fuzzy
+msgid "Ask for change password"
+msgstr "Ho dimenticato la mia password"
 
 #: web_tt2/remove_arc.tt2:5
 #, fuzzy
@@ -3442,6 +3475,16 @@ msgstr "questo processo FastCGI (%1) ha servito %2 richieste dal %3"
 msgid "Language selection"
 msgstr "Cambia la selezione"
 
+#: web_tt2/setlang.tt2:17
+#, fuzzy
+msgid "Validate your language selection"
+msgstr "Cambia la selezione"
+
+#: web_tt2/setlang.tt2:17
+#, fuzzy
+msgid "Set language"
+msgstr "Lingua"
+
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
 msgid " on %1"
@@ -3602,6 +3645,10 @@ msgid ""
 "If you've never had a password from that server or if you don't remember it :"
 msgstr ""
 "Se non hai mai ottenuto una password per questo servizio o l'hai dimenticata:"
+
+#: web_tt2/sigrequest.tt2:76
+msgid "Send me my password"
+msgstr "Mandami la password"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -3961,6 +4008,60 @@ msgstr "La mia password ?"
 msgid "You are already subscriber of list %1"
 msgstr "Sei già iscritto alla lista %1."
 
+#: web_tt2/ticket.tt2:1
+msgid "Sorry, this operation can't be performed"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+# nlsref 17,1
+#: web_tt2/ticket.tt2:11
+#, fuzzy
+msgid "reason"
+msgstr "sessione"
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"Someone (may be yourself) has allready used this validation ticket from host "
+"%1 .If this user is not you, you may report a to your mail services "
+"administrator a confidentiality issue : probably someone else can access to "
+"your messages "
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket is expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+#, fuzzy
+msgid "The requested authentication ticket is unrecognized or expired"
+msgstr "con autenticazione e approvazione proprietario"
+
+#: web_tt2/ticket.tt2:26
+#, fuzzy
+msgid "login"
+msgstr "Login"
+
+#: web_tt2/ticket.tt2:28
+#, fuzzy
+msgid "You may request a new authentication url."
+msgstr "aggiunta necessita di autenticazione"
+
 #: web_tt2/tt2_error.tt2:7
 msgid "Sympa error - could not display web page"
 msgstr ""
@@ -4063,7 +4164,7 @@ msgstr "Ricerca utente"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:16105
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15203
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -4804,7 +4905,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Raccolta: %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2686
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2689
 msgid "Table of contents:"
 msgstr "Sommario:"
 
@@ -4907,7 +5008,7 @@ msgid "Archive of %1, file %2"
 msgstr "Archivio di %1, file %2"
 
 # nlsref 6,83
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1623
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1633
 msgid "Subscription summary"
 msgstr "Riassunto delle sue iscrizioni"
 
@@ -5226,10 +5327,10 @@ msgstr "L'argomento di questa lista è %1, probabilmente ne sei interessato."
 msgid "To subscribe just hit the following mailto url :"
 msgstr "Per iscriverti rispondi a questo messaggio o segui questo urlmailto:"
 
-#. (conf.sympa,list.name)
+#. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 #, fuzzy
-msgid "Or send a message to %1 with subject: \"sub %2\""
+msgid "Or send a message to %1 with subject: \"%2\""
 msgstr "O invia un messaggio a %1@%2 con il seguente Subject:"
 
 #: mail_tt2/invite.tt2:12
@@ -6554,42 +6655,60 @@ msgstr "Il messaggio %s per la lista '%s' e' stato distribuito.\n"
 msgid "Article to be tagged for list %1 from %2"
 msgstr "Messaggio marcato da %2 per la lista %1"
 
+# nlsref 6,43
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:4
-msgid "Article to be approved for list %1 from %2"
-msgstr "Messaggio indirizzato a %1 da parte di %2 in attesa di approvazione"
+#, fuzzy
+msgid "Message for list %1 from %2 to be approved"
+msgstr "Il messaggio %s per la lista '%s' è stato respinto.\n"
+
+#. (list.name,msg_from)
+#: mail_tt2/moderate.tt2:15
+#, fuzzy
+msgid "One new message from list %1 from %2 arrived. "
+msgstr "Messaggio crittato per la lista %1@%2"
+
+#: mail_tt2/moderate.tt2:16
+msgid "This message as been tagued as a spam"
+msgstr ""
+
+#. (mod_spool_size)
+#: mail_tt2/moderate.tt2:18
+#, fuzzy
+msgid "They are %1 messages awaiting moderation."
+msgstr "File %1 in attesa d'essere moderato"
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
-#: mail_tt2/moderate.tt2:17
+#: mail_tt2/moderate.tt2:25
 msgid ""
-"To tag the attached message in list %1 go to the following page :\n"
+"To tag the message in list %1 for the appropriate topic, please use the "
+"following link :\n"
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/moderate.tt2:19
+#: mail_tt2/moderate.tt2:31
 msgid "To distribute the attached message in list %1:"
 msgstr ""
 "Per inoltrare il messaggio allegato alla lista '%1' :\n"
 "\""
 
 #. (conf.email,conf.host)
-#: mail_tt2/moderate.tt2:21 mail_tt2/moderate.tt2:26
+#: mail_tt2/moderate.tt2:33 mail_tt2/moderate.tt2:38
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr "O invia un messaggio a %1@%2 con il seguente Subject:"
 
-#: mail_tt2/moderate.tt2:24
+#: mail_tt2/moderate.tt2:36
 msgid "To reject it (it will be removed):"
 msgstr ""
 "Per respingerlo (sarà cancellato) :\n"
 "\""
-
-#. (mod_spool_size)
-#: mail_tt2/moderate.tt2:31
-#, fuzzy
-msgid "Number of messages awaiting moderation for this list : %1"
-msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
 
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
@@ -6806,22 +6925,21 @@ msgid ""
 "To unsubscribe from the list, you need to provide the following password"
 msgstr "Per disiscriverti dalla lista, devi fornire la password seguente:"
 
-#: mail_tt2/sendpasswd.tt2:26
-msgid "To access your personal environment, you need to login first"
-msgstr "Per accedere all'ambiente personale devi prima fare login"
+#. (conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:27
+msgid ""
+"Someone, probably you, requested to allocate or renew your password for your "
+"list server account %1. (This request cames from host %2 at %3)."
+msgstr ""
 
-#. (newuser.email)
-#: mail_tt2/sendpasswd.tt2:28 mail_tt2/sendssopasswd.tt2:9
-msgid "your email address    : %1"
-msgstr "Il tuo indirizzo email     :%1"
-
-#. (newuser.password)
-#: mail_tt2/sendpasswd.tt2:29 mail_tt2/sendssopasswd.tt2:10
-msgid "your password : %1"
-msgstr "La tua password : %1"
+#: mail_tt2/sendpasswd.tt2:28
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
+msgstr ""
 
 #. (base_url,path_cgi)
-#: mail_tt2/sendpasswd.tt2:38 mail_tt2/sendssopasswd.tt2:14
+#: mail_tt2/sendpasswd.tt2:32 mail_tt2/sendssopasswd.tt2:14
 msgid "Help on Sympa: %1%2"
 msgstr "Aiuto su Sympa %1%2"
 
@@ -6832,6 +6950,16 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+
+#. (newuser.email)
+#: mail_tt2/sendssopasswd.tt2:9
+msgid "your email address    : %1"
+msgstr "Il tuo indirizzo email     :%1"
+
+#. (newuser.password)
+#: mail_tt2/sendssopasswd.tt2:10
+msgid "your password : %1"
+msgstr "La tua password : %1"
 
 #. (list.name)
 #: mail_tt2/stats_report.tt2:4
@@ -7514,6 +7642,12 @@ msgstr "Controllo giornaliero degli indirizzi non validi"
 msgid "daily delete logs older than 3 months"
 msgstr ""
 
+#: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
+msgid ""
+"daily delete tickets older than sympa.conf/one_time_ticket_table_ttl "
+"parameter"
+msgstr ""
+
 #: src/etc/global_task_models/purge_orphan_bounces.monthly.task:1
 msgid "delete monthly bounces for unsubscribed addresses"
 msgstr "Eliminazione mensile degli indirizzi errrati degli utenti disiscritti"
@@ -7640,19 +7774,19 @@ msgstr "Il file di configurazione   CONFIG   contiene degli errori.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:942 wwsympa/wwsympa.fcgi:9443
+#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9039
 msgid "%A"
 msgstr "%A"
 
 # nlsref 1,3
-#: src/Conf.pm:330 src/Conf.pm:537
+#: src/Conf.pm:339 src/Conf.pm:546
 msgid "Error at line %d : %s"
 msgstr "Errore alla linea %d : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1785
-#: wwsympa/wwsympa.fcgi:780
+#: wwsympa/Auth.pm:491 wwsympa/wwsympa.fcgi:2727 wwsympa/wwsympa.fcgi:963
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y ore %H:%M:%S"
 
@@ -8387,29 +8521,29 @@ msgstr "Ultimo aggiornamento della configurazione"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2789
+#: src/List.pm:2792
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2790
+#: src/List.pm:2793
 msgid "%a, %d %b %Y"
 msgstr "%a, %d %b %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2973 src/List.pm:2974 src/List.pm:2978
-#: wwsympa/wwsympa.fcgi:10860 wwsympa/wwsympa.fcgi:10929
-#: wwsympa/wwsympa.fcgi:11131 wwsympa/wwsympa.fcgi:11473
-#: wwsympa/wwsympa.fcgi:15570 wwsympa/wwsympa.fcgi:16444
-#: wwsympa/wwsympa.fcgi:16445 wwsympa/wwsympa.fcgi:4404
-#: wwsympa/wwsympa.fcgi:4405 wwsympa/wwsympa.fcgi:5837
-#: wwsympa/wwsympa.fcgi:7021 wwsympa/wwsympa.fcgi:7539
-#: wwsympa/wwsympa.fcgi:7589 wwsympa/wwsympa.fcgi:7591
-#: wwsympa/wwsympa.fcgi:8104 wwsympa/wwsympa.fcgi:8105
-#: wwsympa/wwsympa.fcgi:8139 wwsympa/wwsympa.fcgi:8140
-#: wwsympa/wwsympa.fcgi:8353 wwsympa/wwsympa.fcgi:8354
+#: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
+#: wwsympa/wwsympa.fcgi:10370 wwsympa/wwsympa.fcgi:10439
+#: wwsympa/wwsympa.fcgi:10641 wwsympa/wwsympa.fcgi:10971
+#: wwsympa/wwsympa.fcgi:14766 wwsympa/wwsympa.fcgi:15503
+#: wwsympa/wwsympa.fcgi:15504 wwsympa/wwsympa.fcgi:4734
+#: wwsympa/wwsympa.fcgi:4735 wwsympa/wwsympa.fcgi:5894
+#: wwsympa/wwsympa.fcgi:6890 wwsympa/wwsympa.fcgi:7353
+#: wwsympa/wwsympa.fcgi:7390 wwsympa/wwsympa.fcgi:7392
+#: wwsympa/wwsympa.fcgi:7841 wwsympa/wwsympa.fcgi:7842
+#: wwsympa/wwsympa.fcgi:7876 wwsympa/wwsympa.fcgi:7877
+#: wwsympa/wwsympa.fcgi:8054 wwsympa/wwsympa.fcgi:8055
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8431,7 +8565,17 @@ msgstr ""
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Impossibile creare un canale in smtpto: %m"
 
-#: src/PlainDigest.pm:189
+# nlsref 5,4
+#: src/PlainDigest.pm:163
+#, fuzzy
+msgid ""
+"----- Malformed message ignored -----\n"
+"\n"
+msgstr ""
+"------ Fine del messaggio originario da %s------\n"
+"\n"
+
+#: src/PlainDigest.pm:194
 #, fuzzy
 msgid ""
 "\n"
@@ -8443,7 +8587,7 @@ msgstr ""
 "-----Messaggio Originale     \n"
 
 # nlsref 5,4
-#: src/PlainDigest.pm:199
+#: src/PlainDigest.pm:204
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
@@ -8451,7 +8595,7 @@ msgstr ""
 "------ Fine del messaggio originario da %s------\n"
 "\n"
 
-#: src/PlainDigest.pm:238
+#: src/PlainDigest.pm:243
 msgid ""
 "** Warning: Message part originally used character set %s\n"
 "    Some characters may be lost or incorrect **\n"
@@ -8461,7 +8605,7 @@ msgstr ""
 "   Alcuni caratteri potrebbero esser andati persi o essere sbagliati **\n"
 "\n"
 
-#: src/PlainDigest.pm:250
+#: src/PlainDigest.pm:255
 #, fuzzy
 msgid ""
 "\n"
@@ -8470,7 +8614,7 @@ msgstr ""
 "\n"
 "%Un (allegato di tipo %s era contenuto qui)\n"
 
-#: src/PlainDigest.pm:256
+#: src/PlainDigest.pm:261
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -8478,11 +8622,11 @@ msgstr ""
 "\n"
 "----Rapporto dello stato di consegna----\n"
 
-#: src/PlainDigest.pm:258
+#: src/PlainDigest.pm:263
 msgid "-----End of Delivery Status Report-----\n"
 msgstr "-----Fine della relazione sullo stato di consegna----\n"
 
-#: src/PlainDigest.pm:296 src/PlainDigest.pm:317
+#: src/PlainDigest.pm:301 src/PlainDigest.pm:322
 #, fuzzy
 msgid ""
 "\n"
@@ -8491,7 +8635,7 @@ msgstr ""
 "\n"
 "[ ** Non riesco ad elaborare la parte HTML del messaggio ** ]\n"
 
-#: src/PlainDigest.pm:323
+#: src/PlainDigest.pm:328
 msgid ""
 "\n"
 "[ ** Unable to process HTML message part **]\n"
@@ -8499,11 +8643,11 @@ msgstr ""
 "\n"
 "[ ** Non riesco ad elaborare la parte HTML del messaggio ** ]\n"
 
-#: src/PlainDigest.pm:327
+#: src/PlainDigest.pm:332
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Testo convertito da HTML ]\n"
 
-#: src/PlainDigest.pm:334
+#: src/PlainDigest.pm:339
 msgid ""
 "\n"
 "[ ** Unable to process HTML message part ** ]\n"
@@ -8511,17 +8655,17 @@ msgstr ""
 "\n"
 "[ ** Non riesco ad elaborare la parte HTML del messaggio **] \n"
 
-#: src/PlainDigest.pm:353
+#: src/PlainDigest.pm:358
 msgid "[ Image%s ]"
 msgstr "[ Immagine %s ]"
 
-#: src/PlainDigest.pm:353
+#: src/PlainDigest.pm:358
 #, fuzzy
 msgid "[Image%s]"
 msgstr "[ Immagine %s ]"
 
 # nlsref 3,1
-#: src/sympa.pl:2057
+#: src/sympa.pl:2086
 msgid "Unable to access directory %s : %m"
 msgstr "Impossibile accedere alla directory %s : %m"
 
@@ -8531,21 +8675,21 @@ msgstr "(data non riconosciuta)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:781
+#: wwsympa/wwsympa.fcgi:964
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:330 wwsympa/SympaSession.pm:331
-#: wwsympa/wwsympa.fcgi:11707 wwsympa/wwsympa.fcgi:11850
-#: wwsympa/wwsympa.fcgi:14272 wwsympa/wwsympa.fcgi:7474
+#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
+#: wwsympa/wwsympa.fcgi:11195 wwsympa/wwsympa.fcgi:11328
+#: wwsympa/wwsympa.fcgi:13641 wwsympa/wwsympa.fcgi:7313
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:16050 wwsympa/wwsympa.fcgi:16051
+#: wwsympa/wwsympa.fcgi:15148 wwsympa/wwsympa.fcgi:15149
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8731,6 +8875,62 @@ msgstr ""
 #, fuzzy
 msgid "you do not receive your own posts"
 msgstr "Per ricevere la tua password :"
+
+#: web_tt2/loginbanner.tt2:10
+msgid ""
+"You need to login to access your custom WWSympa environment or to perform a "
+"privileged operation (one that requires your email address)."
+msgstr ""
+"Devi entrare per accedere alla personalizzazione dell'ambiente WWSympa o per "
+"eseguire un'operazione privilegiata (una che richieda il tuo indirizzo email)"
+"\t"
+
+#: web_tt2/remindpasswd.tt2:5
+#, fuzzy
+msgid ""
+"You have forgotten your password, or you've never had any password related "
+"to this server"
+msgstr ""
+"Se hai dimenticato la password o non ne hai mai ricevuta una relativa a "
+"questo servizio"
+
+#. (conf.sympa,list.name)
+#: mail_tt2/invite.tt2:10
+#, fuzzy
+msgid "Or send a message to %1 with subject: \"sub %2\""
+msgstr "O invia un messaggio a %1@%2 con il seguente Subject:"
+
+#. (list.name,conf.wwsympa_url,modkey)
+#: mail_tt2/moderate.tt2:17
+msgid ""
+"To tag the attached message in list %1 go to the following page :\n"
+"\n"
+"%2/viewmod/%1/%3\n"
+msgstr ""
+
+#~ msgid "Current password :"
+#~ msgstr "Password attuale :"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your password has been sent to your email address %1.<br />Please check "
+#~ "your e-mail box to provide your password below."
+#~ msgstr ""
+#~ "La tua password è stata spedita al tuo indirizzo %1 <BR> Controlla la tua "
+#~ "casella di posta per poi inserirla qui sotto."
+
+#~ msgid "it will be sent to you by email :"
+#~ msgstr "ti verrà recapitata per email:"
+
+#~ msgid "Article to be approved for list %1 from %2"
+#~ msgstr "Messaggio indirizzato a %1 da parte di %2 in attesa di approvazione"
+
+#, fuzzy
+#~ msgid "Number of messages awaiting moderation for this list : %1"
+#~ msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
+
+#~ msgid "To access your personal environment, you need to login first"
+#~ msgstr "Per accedere all'ambiente personale devi prima fare login"
 
 # nlsref 6,68
 #, fuzzy
@@ -9745,9 +9945,6 @@ msgstr "Per ricevere la tua password :"
 #~ msgid "I am subscriber to at least one list but I have no password"
 #~ msgstr "Sono iscritto ad almeno una lista ma non ho alcuna password."
 
-#~ msgid "I forgot my password"
-#~ msgstr "Ho dimenticato la mia password"
-
 #, fuzzy
 #~ msgid "Incatives Lists"
 #~ msgstr "Liste non attive"
@@ -9906,10 +10103,6 @@ msgstr "Per ricevere la tua password :"
 #~ "da text/plain, ma anche con client di mail che usano messaggi multipart e "
 #~ "trasformano in text/html ogni messaggio, i comandi nell' Oggetto: sono "
 #~ "riconosciuti."
-
-#, fuzzy
-#~ msgid "language"
-#~ msgstr "Lingua"
 
 #, fuzzy
 #~ msgid "There is not any owner defined for the list"
@@ -10604,10 +10797,6 @@ msgstr "Per ricevere la tua password :"
 #~ msgstr "metodo di protezione degli indirizzi email"
 
 #, fuzzy
-#~ msgid "The document %1 is awaiting moderation1"
-#~ msgstr "File %1 in attesa d'essere moderato"
-
-#, fuzzy
 #~ msgid ""
 #~ "There isn't any message or document waiting for moderation on list %1"
 #~ msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
@@ -10675,3 +10864,14 @@ msgstr "Per ricevere la tua password :"
 
 #~ msgid "page n&#176; %1/%2"
 #~ msgstr "pagina n&#176: %1 / %2"
+
+#~ msgid "I forgot my password"
+#~ msgstr "Ho dimenticato la mia password"
+
+#, fuzzy
+#~ msgid "language"
+#~ msgstr "Lingua"
+
+#, fuzzy
+#~ msgid "The document %1 is awaiting moderation1"
+#~ msgstr "File %1 in attesa d'essere moderato"
