@@ -1519,7 +1519,7 @@ sub DoForward {
     my $messageid = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
 
-    if ($msg->{'spam_status'} == 'spam'){
+    if ($msg->{'spam_status'} eq 'spam'){
 	&do_log('notice', "Message for %s-%s ignored, because tagued as spam (Message-id: %s)",$name, $function,$messageid);
 	return undef;
     }
@@ -1955,7 +1955,7 @@ sub DoCommand {
     
     my $sender = $message->{'sender'};
 
-    if ($msg->{'spam_status'} == 'spam'){
+    if ($msg->{'spam_status'} eq 'spam'){
 	&do_log('notice', "Message for robot %s@%s ignored, because tagued as spam (Message-id: %s)",$rcpt,$robot,$messageid);
 	return undef;
     }
