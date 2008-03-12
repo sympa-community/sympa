@@ -76,6 +76,19 @@ update-po: potfile
 	msgen web_help_en_US.po -o web_help_en_US.po
 
 
+clean-po: potfile
+	languages='$(LINGUAS)'; \
+	for lang in $$languages; do \
+		echo "Updating $$lang.po"; \
+		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
+		echo "Updating web_help_$$lang.po"; \
+		touch "web_help_$$lang.po"; \
+		$(MSGMERGE) -o "web_help_$$lang.po" "web_help_$$lang.po" web_help.pot; \
+	done
+	msgen en_US.po -o en_US.po
+	msgen web_help_en_US.po -o web_help_en_US.po
+
+
 ## Prepare a tar.gz with a structure adapted to Pootle
 ## ie made of subdirectories (ll/sympa.po...templates/sympa.pot
 export:
