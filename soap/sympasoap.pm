@@ -622,7 +622,7 @@ sub createList {
 	     &Log::do_log('notice',"Unable to send notify 'request_list_creation' to listmaster");
 	 }
      }
-     return 1;
+     return ;
 }
 
 sub closeList {
