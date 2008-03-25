@@ -29,12 +29,18 @@
 
 </div>
 [% END %] 
-<h2>[%|loc%]Lists[%END%]</h2><br />
+<h2>[%|loc%]Lists[%END%]</h2>
 <div>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_pending_lists">[%|loc%]Pending lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_latest_lists">[%|loc%]New lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_inactive_lists">[%|loc%]Inactive lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_closed_lists">[%|loc%]Closed lists[%END%]</a>
+    <h3>[%|loc%]Manage lists[%END%]</h3><br/>
+    <div>
+        <a class="actionMenuLinks" href="[% path_cgi %]/get_pending_lists">[%|loc%]Pending lists[%END%]</a>
+        <a class="actionMenuLinks" href="[% path_cgi %]/get_closed_lists">[%|loc%]Closed lists[%END%]</a>
+    </div>
+    <h3>[%|loc%]Consult lists[%END%]</h3><br/>
+    <div>
+         <a class="actionMenuLinks" href="[% path_cgi %]/get_latest_lists">[%|loc%]Lists sorted by creation date[%END%]</a>
+         <a class="actionMenuLinks" href="[% path_cgi %]/get_inactive_lists">[%|loc%]Lists sorted by last message date[%END%]</a>
+    </div>
 </div>
 
 <h2>[%|loc%]Users[%END%]</h2><br />
