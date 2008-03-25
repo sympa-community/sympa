@@ -602,6 +602,9 @@ sub store_bounce {
     
     unless (open ARC, ">$bounce_dir/$filename") {
 	&do_log('notice', "Unable to write $bounce_dir/$filename");
+	&ignore_bounce({'file' => $file,
+			'queue' => $queue,
+		    });
 	return undef;
     }
     print ARC <BOUNCE>;
