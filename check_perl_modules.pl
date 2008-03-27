@@ -24,7 +24,7 @@ use CPAN;
 
 ## assume version = 1.0 if not specified.
 ## 
-%versions = ('perl' => '5.8',
+%versions = ('perl' => '5.008',
              'Net::LDAP' =>, '0.27', 
 	     'perl-ldap' => '0.10',
 	     'Mail::Internet' => '1.51', 
@@ -115,7 +115,7 @@ print "******* Check perl for SYMPA ********\n";
 ### REQ perl version
 print "\nChecking for PERL version:\n-----------------------------\n";
 $rpv = $versions{"perl"};
-if ($] ge $versions{"perl"}){
+if ($] >= $versions{"perl"}){
     print "your version of perl is OK ($]  >= $rpv)\n";
 }else {
     print "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
