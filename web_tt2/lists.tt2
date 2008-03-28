@@ -8,14 +8,30 @@
 [% END %]
 
 [% IF which %]
+[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
+<p align="center">
+[% FOREACH letter IN letters %]
+  [% IF orderedlist.$letter.0 %]
+    <a href="#[%letter%]">[%letter%]</a>&nbsp;
+  [% ELSE %]
+    [%letter%]&nbsp;
+ [% END %] 
+[% END %] 
+</p>
+
  <ul class="listenum" >
- [% FOREACH l = which %]
-  <li class="listenum">
-  [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >[%|loc%]admin[%END%]</a>[% END %] 
-  <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a><br />
-  <span>[% l.value.subject %]</span><br />
+[% FOREACH letter IN letters %]
+ <A name="[%letter%]" />
+ [% FOREACH listname IN  orderedlist.$letter %]
+ <li class="listenum">
+  [% IF which.$listname.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% listname %]" >[%|loc%]admin[%END%]</a>[% END %] 
+  <a href="[% path_cgi %]/info/[% listname %]" ><strong>[% hidden_head %][% listname %][% hidden_at %][% which.$listname.host %][% hidden_end %]</strong></a><br />
+  <span>[% which.$listname.subject %]</span><br />
   </li>
  [% END %] 
+
+</ul>
+[% END %] 
  </ul>
 
  <br />

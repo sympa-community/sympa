@@ -598,6 +598,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'viewmod' => ['editor'],
 			  );
 
+# this definition is used to choose the left side menu type (admin -> listowner admin menu | serveradmin -> server_admin menu | none list or your_list menu)
 my %action_type = ('editfile' => 'admin',
 		'review' => 'admin',
 		'search' => 'admin',
@@ -644,7 +645,23 @@ my %action_type = ('editfile' => 'admin',
 		'copy_template' => 'admin',
 		'edit_template' => 'admin',
 		'blacklist' => 'admin',
-		'viewlogs' => 'admin'
+		'viewlogs' => 'admin',
+		'serveradmin' => 'serveradmin',
+		'get_pending_lists' => 'serveradmin',
+		'get_closed_lists' => 'serveradmin',
+		'get_inactive_lists' => 'serveradmin',
+		'get_latest_lists' => 'serveradmin',
+		'ls_templates' => 'serveradmin',
+		'skinedit' => 'serveradmin',
+		'review_family' => 'serveradmin',
+		'search_user' => 'serveradmin',
+		'show_sessions' => 'serveradmin',
+		'rebuildarc' => 'serveradmin',
+		'set_session_email' => 'serveradmin',
+		'set_loglevel' => 'serveradmin',
+		'editfile' => 'serveradmin',
+		'unset_dumpvars' => 'serveradmin',
+		'set_dumpvars' => 'serveradmin'
 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1270,8 +1287,10 @@ my $birthday = time ;
      ## Params 
      $param->{'refparam'} = ref($param);
      $param->{'action_type'} = $action_type{$param->{'action'}};
-     $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
 
+     &wwslog('info','xxxxxxxxxx action %s action_type = %s', $param->{'action'}, $param->{'action_type'});
+     
+     $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} == 'serveradmin'));
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
 
@@ -3779,6 +3798,13 @@ sub do_remindpasswd {
 	     }
 	 }elsif ($in{'topic'} eq 'topicsless') {
 	     $param->{'which'}{$list->{'name'}} = $list_info;
+	 }
+     }
+     foreach my $listname (sort keys %{$param->{'which'}}) {
+         if ($listname =~ /^([a-z])/){
+	     push @{$param->{'orderedlist'}{$1}}, $listname ;
+	 }else{
+             push @{$param->{'orderedlist'}{'others'}}, $listname ;
 	 }
      }
      return 1;
