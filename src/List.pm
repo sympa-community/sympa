@@ -2494,7 +2494,7 @@ sub distribute_msg {
 	    $info_msg_topic->{'filename'} = "$listname.$new_id";
 	}
 	
-	## xxxxxx Virer eventuelle signature S/MIME
+	## Virer eventuelle signature S/MIME
     }
     
     ## Add Custom Subject
@@ -3531,7 +3531,7 @@ sub send_to_editor {
        unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($recipient,$robot,'modindex/'.$name,'mail')){
 	   &do_log('notice',"Unable to create one_time_ticket for $recipient, service modindex/$name");
        }else{
-	   &do_log('notice',"xxxxxxxxxxxxxx ticket : $param->{'one_time_ticket'}");
+	   &do_log('notice',"ticket : $param->{'one_time_ticket'}");
        }
        &tt2::allow_absolute_path();
        unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
@@ -5266,11 +5266,9 @@ sub parseCustomAttribute {
 sub createXMLCustomAttribute {
 	my $custom_attr = shift ;
 	return '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes></custom_attributes>' if (not defined $custom_attr) ;
-	do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute=$custom_attr");
 	my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
 	foreach my $k (sort keys %{$custom_attr} ) {
 		$XMLstr .= "<custom_attribute id=\"$k\"><value>".&tools::escape_html($custom_attr->{$k}{value})."</value></custom_attribute>";
-		do_log('debug2',"xxxxxxxxxxxxxxxxxxx #createXMLCustomAttribute custom_attribute $k : $custom_attr->{$k}{value}");
 	}
 	$XMLstr .= "</custom_attributes>";
 	

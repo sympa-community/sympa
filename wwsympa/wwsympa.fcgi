@@ -1288,8 +1288,6 @@ my $birthday = time ;
      $param->{'refparam'} = ref($param);
      $param->{'action_type'} = $action_type{$param->{'action'}};
 
-     &wwslog('info','xxxxxxxxxx action %s action_type = %s', $param->{'action'}, $param->{'action_type'});
-     
      $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} == 'serveradmin'));
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
@@ -1830,7 +1828,7 @@ sub get_parameters {
 
      return 1;
  }
-# xxxxxxxxxxxxxxxxxxxxxxxx TO BE REMOVE
+
 sub get_parameters_old {
     #    &wwslog('debug4', 'get_parameters');
     
