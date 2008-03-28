@@ -19,9 +19,11 @@
 [% END %] 
 </p>
 
- <ul class="listenum" >
 [% FOREACH letter IN letters %]
- <A name="[%letter%]" />
+[% IF orderedlist.$letter.0 %]
+<a name="[% letter %]" />
+[% END %] 
+<ul class="listenum" >
  [% FOREACH listname IN  orderedlist.$letter %]
  <li class="listenum">
   [% IF which.$listname.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% listname %]" >[%|loc%]admin[%END%]</a>[% END %] 
@@ -29,10 +31,8 @@
   <span>[% which.$listname.subject %]</span><br />
   </li>
  [% END %] 
-
 </ul>
 [% END %] 
- </ul>
 
  <br />
 
