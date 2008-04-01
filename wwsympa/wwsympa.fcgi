@@ -5380,7 +5380,7 @@ sub do_copy_template  {
 		     'error_type' => 'internal'});
 	return undef;
     }
-    print TPLOUT &tools::escape_html($param->{'template_content'});
+    print TPLOUT &tools::unescape_html($param->{'template_content'});
     close TPLOUT;
     
     if ($in{'list_out'}) {$param->{'list'} = $in{'list'} = $in{'list_out'} ;}		  
