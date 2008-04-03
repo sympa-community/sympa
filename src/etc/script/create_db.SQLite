@@ -88,9 +88,9 @@ CREATE TABLE session_table (
 	email_session		        varchar(100),
 	hit_session     	        integer,
 	data_session		        varchar(5000),
-	constraint ind_session primary key (id_session)
-)
-CREATE INDEX session_idx ON session_table(id_session)
+	PRIMARY KEY (id_session)
+);
+CREATE INDEX session_idx ON session_table(id_session);
 
 CREATE TABLE one_time_ticket_table (
 	ticket_one_time_ticket		varchar(30),

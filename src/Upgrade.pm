@@ -741,7 +741,8 @@ sub probe_db {
 							 'included_subscriber' => "boolean",
 							 'include_sources_subscriber' => 'varchar(50)',
 							 'bounce_score_subscriber' => 'integer',
-							 'bounce_address_subscriber' => 'varchar(100)'},
+							 'bounce_address_subscriber' => 'varchar(100)',
+							 'custom_attribute_subscriber' => 'text'},
 				  'admin_table' => {'list_admin' => 'varchar(50)',
 						    'user_admin' => 'varchar(100)',
 						    'robot_admin' => 'varchar(80)',
@@ -944,6 +945,7 @@ sub probe_db {
 		next;
 	    }
 	    foreach my $field (@$res) {
+	    	$field->[2] =~ s/\s+//g;
 		$real_struct{$t}{$field->[1]} = $field->[2];
 	    }
 	}
