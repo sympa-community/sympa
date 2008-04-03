@@ -742,7 +742,7 @@ sub probe_db {
 							 'include_sources_subscriber' => 'varchar(50)',
 							 'bounce_score_subscriber' => 'integer',
 							 'bounce_address_subscriber' => 'varchar(100)',
-							 'custom_attribute_subscriber' => 'text'},
+							 'custom_attribute_subscriber' => 'varchar(500)'},
 				  'admin_table' => {'list_admin' => 'varchar(50)',
 						    'user_admin' => 'varchar(100)',
 						    'robot_admin' => 'varchar(80)',
