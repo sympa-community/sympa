@@ -875,7 +875,7 @@ sub smime_sign_check {
 	}
     }
     close(BUNDLE);
-    if(!($certs{both} || ($certs{sign} && $certs{enc}))) {
+    if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
 	&do_log('err', "Could not extract certificate for $signer->{email}");
 	return undef;
     }
