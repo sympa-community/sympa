@@ -191,7 +191,7 @@ while (!$end) {
        fatal_err("Can't open dir %s: %m", $queue); ## No return.
    }
 
-   my @files =  (grep(!/^\.{1,2}$/, readdir DIR ));
+   my @files =  (grep(!/^\./, readdir DIR ));
    closedir DIR;
 
    ## this sleep is important to be raisonably sure that sympa is not currently

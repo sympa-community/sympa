@@ -197,7 +197,7 @@ while (!$end) {
 	fatal_err("Can't open dir %s: %m", $queue); ## No return.
     }
 
-    my @files =  (sort grep(!/^(\.{1,2}|T\..*|BAD\-.*)$/, readdir DIR ));
+    my @files =  (sort grep(!/^(\.|T\.|BAD\-)/, readdir DIR ));
     closedir DIR;
     foreach my $file (@files) {
 
