@@ -3163,7 +3163,7 @@ sub send_msg {
 	    }
 	} elsif ($message->{'smime_crypted'} && 
 		 (! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
-		  ! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'.enc' ))) {
+		  ! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
 	    ## Missing User certificate
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
 												     'sender' => $message->{'msg'}->head->get('From')}})) {
