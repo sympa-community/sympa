@@ -121,7 +121,10 @@ AC_SUBST(SPOOLDIR)
 ## to run wwsympa.fcgi without setuidperl
 AC_ARG_ENABLE(
     [secure],
-    [  --enable-secure     install wwsympa to be run in a secure mode, without suidperl (default disabled)]
+    AC_HELP_STRING(
+	[--enable-secure],
+	[install wwsympa to be run in a secure mode, without suidperl (default disabled)]
+    )
 )
 AC_SUBST(enable_secure)
 
@@ -133,7 +136,10 @@ AC_AIX
 AC_PATH_PROG(PERL, perl, /usr/bin/perl)
 AC_ARG_WITH(
     [perl],
-    [  --with-perl=FULLPATH       set full path to Perl interpreter (default /usr/bin/perl)],
+    AC_HELP_STRING(
+	[--with-perl=FULLPATH],
+	[set full path to Perl interpreter (default /usr/bin/perl)]
+    ),
     [PERL="$withval"]
 )
 AC_SUBST(PERL)
@@ -147,7 +153,10 @@ AC_SUBST(SUDO)
 AC_PATH_PROG(MHONARC, mhonarc, /usr/bin/mhonarc)
 AC_ARG_WITH(
     [mhonarc],
-    [  --with-mhonarc=FULLPATH       set full path to MhOnArc mail archiving system (default /usr/bin/mhonarc)],
+    AC_HELP_STRING(
+	[--with-mhonarc=FULLPATH],
+	[set full path to MhOnArc mail archiving system (default /usr/bin/mhonarc)]
+    ),
     [MHONARC="$withval"]
 )
 AC_SUBST(MHONARC)
@@ -155,7 +164,10 @@ AC_SUBST(MHONARC)
 AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
 AC_ARG_WITH(
     [openssl],
-    [  --with-openssl=FULLPATH       set path to OpenSSL (default /usr/local/ssl/bin/openssl)],
+    AC_HELP_STRING(
+	[--with-openssl=FULLPATH],
+	[set path to OpenSSL (default /usr/local/ssl/bin/openssl)]
+    ),
     [OPENSSL="$withval"]
 )
 AC_SUBST(OPENSSL)
@@ -171,7 +183,10 @@ AC_PATH_PROG(SH, sh, /bin/sh)
 USER=sympa
 AC_ARG_WITH(
     [user],
-    [  --with-user=LOGIN       set sympa user name (default sympa)],
+    AC_HELP_STRING(
+	[--with-user=LOGIN],
+	[set sympa user name (default sympa)]
+    ),
     [USER="$withval"]
 )
 AC_SUBST(USER)
@@ -179,7 +194,10 @@ AC_SUBST(USER)
 GROUP=sympa
 AC_ARG_WITH(
     [group],
-    [  --with-group=LOGIN     set sympa group name (default sympa)],
+    AC_HELP_STRING(
+	[--with-group=LOGIN],
+	[set sympa group name (default sympa)]
+    ),
     [GROUP="$withval"]
 )
 AC_SUBST(GROUP)
@@ -187,7 +205,10 @@ AC_SUBST(GROUP)
 SENDMAIL_ALIASES=/etc/mail/sympa_aliases
 AC_ARG_WITH(
     [sendmail_aliases],
-    [  --with-sendmail_aliases=ALIASFILE     set aliases file to be used by Sympa (default /etc/mail/sympa_aliases)],
+    AC_HELP_STRING(
+	[--with-sendmail_aliases=ALIASFILE],
+	[set aliases file to be used by Sympa (default /etc/mail/sympa_aliases)]
+    ),
     [SENDMAIL_ALIASES="$withval"]
 )
 AC_SUBST(SENDMAIL_ALIASES)
@@ -195,7 +216,10 @@ AC_SUBST(SENDMAIL_ALIASES)
 VIRTUAL_ALIASES=/etc/mail/sympa_virtual
 AC_ARG_WITH(
     [virtual_aliases],
-    [  --with-virtual_aliases=ALIASFILE     set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)],
+    AC_HELP_STRING(
+	[--with-virtual_aliases=ALIASFILE],
+	[ set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)]
+    ),
     [VIRTUAL_ALIASES="$withval"]
 )
 AC_SUBST(VIRTUAL_ALIASES)
@@ -203,7 +227,10 @@ AC_SUBST(VIRTUAL_ALIASES)
 NEWALIASES=/usr/bin/newaliases
 AC_ARG_WITH(
     [newaliases],
-    [  --with-newaliases=FULLPATH     set path to newaliases command (default /usr/bin/newaliases)],
+    AC_HELP_STRING(
+	[--with-newaliases=FULLPATH],
+	[set path to newaliases command (default /usr/bin/newaliases)]
+    ),
     [NEWALIASES="$withval"]
 )
 AC_SUBST(NEWALIASES)
@@ -211,7 +238,10 @@ AC_SUBST(NEWALIASES)
 NEWALIASES_ARG=
 AC_ARG_WITH(
     [newaliases_arg],
-    [  --with-newaliases_arg=ARGS     set arguments to newaliases command (default NONE)],
+    AC_HELP_STRING(
+	[--with-newaliases_arg=ARGS],
+	[set arguments to newaliases command (default NONE)]
+    ),
     [NEWALIASES_ARG="$withval"]
 )
 AC_SUBST(NEWALIASES_ARG)
@@ -219,7 +249,10 @@ AC_SUBST(NEWALIASES_ARG)
 POSTMAP=/usr/sbin/postmap
 AC_ARG_WITH(
     [postmap],
-    [  --with-postmap=FULLPATH     set path to postfix postmap command (default /usr/sbin/postmap)],
+    AC_HELP_STRING(
+	[--with-postmap=FULLPATH],
+	[set path to postfix postmap command (default /usr/sbin/postmap)]
+    ),
     [POSTMAP="$withval"]
 )
 AC_SUBST(POSTMAP)
@@ -227,7 +260,10 @@ AC_SUBST(POSTMAP)
 POSTMAP_ARG=${VIRTUAL_ALIASES}
 AC_ARG_WITH(
     [postmap_arg],
-    [  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default [same as virtual_aliases])],
+    AC_HELP_STRING(
+	[--with-postmap_arg=ARGS],
+	[set arguments to postfix postmap command (default [same as virtual_aliases])]
+    ),
     [POSTMAP_ARG="$withval"]
 )
 AC_SUBST(POSTMAP_ARG)
