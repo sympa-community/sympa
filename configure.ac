@@ -19,19 +19,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-AC_INIT(check_perl_modules.pl)
-PACKAGE=sympa
-VERSION=`cat ${srcdir}/.version`
-MAJOR_VERSION=[`expr $VERSION : '\([0-9][0-9]*\)'`]
-AC_SUBST(MAJOR_VERSION)
-MINOR_VERSION=[`expr $VERSION : '[0-9][0-9]*\.\([0-9][0-9]*\)'`]
-AC_SUBST(MINOR_VERSION)
-MICRO_VERSION=[`expr $VERSION : '[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`]
-AC_SUBST(MICRO_VERSION)
-AC_CANONICAL_SYSTEM
-AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE([sympa], $VERSION, nosubst)
-AC_PREREQ(2.13)
+AC_PREREQ(2.59)
+AC_INIT(sympa, 5.4b.1, sympa-authors@cru.fr)
+AM_INIT_AUTOMAKE
 
 AC_PREFIX_DEFAULT(/home/sympa)
 
@@ -198,7 +188,5 @@ AC_SUBST(POSTMAP_ARG)
 dnl Initialize maintainer mode
 AM_MAINTAINER_MODE
 
-AC_OUTPUT(Makefile)
-
-
-
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
