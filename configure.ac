@@ -185,8 +185,5 @@ POSTMAP_ARG=${VIRTUAL_ALIASES}
 AC_ARG_WITH(postmap_arg, [  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default [same as virtual_aliases])], [POSTMAP_ARG="$withval"])
 AC_SUBST(POSTMAP_ARG)
 
-dnl Initialize maintainer mode
-AM_MAINTAINER_MODE
-
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
