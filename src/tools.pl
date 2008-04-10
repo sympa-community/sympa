@@ -74,7 +74,7 @@ sub _set_file_rights {
     my ($name,$passwd,$uid);
     my ($name2,$passwd2,$gid);
     if ($param->{'user'}){
-	unless (($name,$passwd,$uid) = &getpwnam($param->{'user'})) {
+	unless (($name,$passwd,$uid) = getpwnam($param->{'user'})) {
 	    &do_log('err', "User %s can't be found in passwd file",$param->{'user'});
 	    return;
 	}
@@ -82,7 +82,7 @@ sub _set_file_rights {
 	$uid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
     }
     if ($param->{'group'}){
-	unless (($name2,$passwd2,$gid) = &getgrnam($param->{'group'})) {
+	unless (($name2,$passwd2,$gid) = getgrnam($param->{'group'})) {
 	    &do_log('err', "Group %s can't be found",$param->{'group'});
 	    return;
 	}
