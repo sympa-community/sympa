@@ -1295,11 +1295,13 @@ sub probe_db {
 	##           the normal file access permissions of the underlying operating system
 	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
 	    my ($uid,$gid);
-	    unless ($uid = getpwnam('--USER--')[2]) {
+	    my ($name2,$passwd2,$gid);
+	    my ($name,$passwd,$uid);
+	    unless (($name,$passwd,$uid) = &getpwnam('--USER--')) {
 		&do_log('err', "User %s can't be found in passwd file","--USER--");
 		return undef;
 	    }
-	    unless ($gid = getgrnam('--GROUP--')[2]) {
+	    unless (($name2,$passwd2,$gid) = &getgrnam('--GROUP--')) {
 		&do_log('err', "Group %s can't be found","--GROUP--");
 		return undef;
 	    }
