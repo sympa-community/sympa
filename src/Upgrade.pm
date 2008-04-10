@@ -1294,24 +1294,16 @@ sub probe_db {
 	## SQLite :  the only access permissions that can be applied are 
 	##           the normal file access permissions of the underlying operating system
 	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
-	    my ($uid,$gid);
-	    my ($name2,$passwd2,$gid);
-	    my ($name,$passwd,$uid);
-	    unless (($name,$passwd,$uid) = &getpwnam('--USER--')) {
-		&do_log('err', "User %s can't be found in passwd file","--USER--");
-		return undef;
-	    }
-	    unless (($name2,$passwd2,$gid) = &getgrnam('--GROUP--')) {
-		&do_log('err', "Group %s can't be found","--GROUP--");
-		return undef;
-	    }
-	    unless (chown($uid,$gid, $Conf{'db_name'})){
-		&do_log('err', "Can't give ownership of directory % to %s.%s",$Conf{'db_name'},$uid,$gid);
-		return undef;
-	    }
-	    unless (chmod(0664, $Conf{'db_name'})){
-		&do_log('err', "Can't change rights of directory %s.",$Conf{'db_name'});
-		return undef;
+	    unless (&tools::_set_file_rights(
+				{
+				    file => $Conf{'db_name'},
+				    user => '--USER--',
+				    group => '--GROUP--',
+				    mode => 0664,
+				}))
+	    {
+		&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+		return;
 	    }
 	}
 

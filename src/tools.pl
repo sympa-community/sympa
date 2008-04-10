@@ -68,6 +68,40 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 
+## Sets owner and/or access rights on a file.
+sub _set_file_rights {
+    my $param = shift;
+    my ($name,$passwd,$uid);
+    my ($name2,$passwd2,$gid);
+    if ($param->{'user'}){
+	unless (($name,$passwd,$uid) = &getpwnam($param->{'user'})) {
+	    &do_log('err', "User %s can't be found in passwd file",$param->{'user'});
+	    return;
+	}
+    }else {
+	$uid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
+    }
+    if ($param->{'group'}){
+	unless (($name2,$passwd2,$gid) = &getgrnam($param->{'group'})) {
+	    &do_log('err', "Group %s can't be found",$param->{'group'});
+	    return;
+	}
+    }else {
+	$gid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
+    }
+    unless (chown($uid,$gid, $param->{'file'})){
+	&do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param->{'file'},$param->{'user'},$param->{'group'}, $!);
+	return;
+    }
+    if ($param->{'mode'}){
+	unless (chmod($param->{'mode'}, $param->{'file'})){
+	    &do_log('err', "Can't change rights of file %s: %s",$Conf{'db_name'}, $!);
+	    return;
+	}
+    }
+    return 1;
+}
+
 ## Returns an HTML::StripScripts::Parser object built with  the parameters provided as arguments.
 sub _create_xss_parser {
     my %parameters = @_;
