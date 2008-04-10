@@ -1294,19 +1294,17 @@ sub probe_db {
 	## SQLite :  the only access permissions that can be applied are 
 	##           the normal file access permissions of the underlying operating system
 	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
-	    unless (&tools::_set_file_rights(
-				{
-				    file => $Conf{'db_name'},
-				    user => '--USER--',
-				    group => '--GROUP--',
-				    mode => 0664,
-				}))
+	    unless (&tools::set_file_rights(file => $Conf{'db_name'},
+					    user => '--USER--',
+					    group => '--GROUP--',
+					    mode => 0664,
+					    ))
 	    {
 		&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
-		return;
+		return undef;
 	    }
 	}
-
+	
     }elsif ($found_tables < 3) {
 	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf{'db_type'});
 	return undef;
@@ -1382,8 +1380,6 @@ sub to_utf8 {
 
     my $with_attachments = qr{ archive.tt2 | digest.tt2 | get_archive.tt2 | listmaster_notification.tt2 | 
 				   message_report.tt2 | moderate.tt2 |  modindex.tt2 | send_auth.tt2 }x;
-    my $uid = (getpwnam('--USER--'))[2];
-    my $gid = (getgrnam('--GROUP--'))[2];        
     my $total;
     
     foreach my $pair (@{$files}) {
@@ -1464,8 +1460,15 @@ sub to_utf8 {
 	}
 	print TEMPLATE $text;
 	close TEMPLATE;
-	chown $uid, $gid, $file;
-	chmod 0644, $file;
+	unless (&tools::set_file_rights(file => $file,
+					user => '--USER--',
+					group => '--GROUP--',
+					mode => 0644,
+					))
+	{
+	    &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    next;
+	}
 	&do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'@'.$date);
 	
 	$total++;

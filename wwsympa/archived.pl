@@ -81,7 +81,7 @@ $adrlist = {};
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
     print STDERR 'unable to load config file';
-    exit;
+    exit -1;
 }
 
 # Load sympa.conf
@@ -94,7 +94,15 @@ if ($wwsconf->{'arc_path'}) {
     unless (-d $wwsconf->{'arc_path'}) {
 	printf STDERR "Creating missing %s directory\n", $wwsconf->{'arc_path'};
 	mkdir $wwsconf->{'arc_path'}, 0775;
-	chown '--USER--', '--GROUP--', $wwsconf->{'arc_path'};
+	unless (&tools::set_file_rights(file => $wwsconf->{'arc_path'},
+					 user => '--USER--',
+					 group => '--GROUP--',
+					 mode => 0775,
+					 ))
+	{
+	    &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    exit -1;
+	}
     }
 }
 

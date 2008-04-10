@@ -751,10 +751,15 @@ sub checkfiles_as_root {
 	print ALIASES "## You should edit your sendmail.mc or sendmail.cf file to declare it\n";
 	close ALIASES;
 	&do_log('notice', "Created missing file %s", $Conf{'sendmail_aliases'});
-	`chown --USER-- $Conf{'sendmail_aliases'}`;
-	`chgrp --GROUP-- $Conf{'sendmail_aliases'}`;
-	chmod 0644, $Conf{'sendmail_aliases'}
-	
+	unless (&tools::set_file_rights(file => $Conf{'sendmail_aliases'},
+					user => '--USER--',
+					group => '--GROUP--',
+					mode => 0644,
+					))
+	{
+	    &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    return undef;
+	}
     }
 
     foreach my $robot (keys %{$Conf{'robots'}}) {
@@ -768,9 +773,14 @@ sub checkfiles_as_root {
 		$config_err++;
 	    }
 
-	    # printf STDERR 'created directory %s',$Conf{'static_content_path'};
-	    `chown --USER-- $dir`;
-	    `chgrp --GROUP-- $dir`;
+	    unless (&tools::set_file_rights(file => $dir,
+					    user => '--USER--',
+					    group => '--GROUP--',
+					    ))
+	    {
+		&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+		return undef;
+	    }
 	}
     }
 

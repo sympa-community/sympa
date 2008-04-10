@@ -69,34 +69,34 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 
 ## Sets owner and/or access rights on a file.
-sub _set_file_rights {
-    my $param = shift;
-    my ($name,$passwd,$uid);
-    my ($name2,$passwd2,$gid);
-    if ($param->{'user'}){
-	unless (($name,$passwd,$uid) = getpwnam($param->{'user'})) {
-	    &do_log('err', "User %s can't be found in passwd file",$param->{'user'});
-	    return;
+sub set_file_rights {
+    my %param = @_;
+    my ($uid, $gid);
+
+    if ($param{'user'}){
+	unless ($uid = (getpwnam($param{'user'}))[2]) {
+	    &do_log('err', "User %s can't be found in passwd file",$param{'user'});
+	    return undef;
 	}
     }else {
 	$uid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
     }
-    if ($param->{'group'}){
-	unless (($name2,$passwd2,$gid) = getgrnam($param->{'group'})) {
-	    &do_log('err', "Group %s can't be found",$param->{'group'});
-	    return;
+    if ($param{'group'}) {
+	unless ($gid = (getgrnam($param{'group'}))[2]) {
+	    &do_log('err', "Group %s can't be found",$param{'group'});
+	    return undef;
 	}
     }else {
 	$gid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
     }
-    unless (chown($uid,$gid, $param->{'file'})){
-	&do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param->{'file'},$param->{'user'},$param->{'group'}, $!);
-	return;
+    unless (chown($uid,$gid, $param{'file'})){
+	&do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param{'file'},$param{'user'},$param{'group'}, $!);
+	return undef;
     }
-    if ($param->{'mode'}){
-	unless (chmod($param->{'mode'}, $param->{'file'})){
+    if ($param{'mode'}){
+	unless (chmod($param{'mode'}, $param{'file'})){
 	    &do_log('err', "Can't change rights of file %s: %s",$Conf{'db_name'}, $!);
-	    return;
+	    return undef;
 	}
     }
     return 1;
@@ -2243,10 +2243,7 @@ sub is_a_crawler {
 sub write_pid {
     my ($pidfile, $pid) = @_;
 
-    my $uid = (getpwnam('--USER--'))[2];
-    my $gid = (getgrnam('--GROUP--'))[2];
-
-    my $piddir = $pidfile;
+   my $piddir = $pidfile;
     $piddir =~ s/\/[^\/]+$//;
 
     ## Create piddir
@@ -2254,7 +2251,14 @@ sub write_pid {
 	mkdir $piddir, 0755;
     }
     
-    chown $uid, $gid, $piddir;
+    unless (&tools::set_file_rights(file => $piddir,
+				    user => '--USER--',
+				    group => '--GROUP--',
+				    ))
+    {
+	&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	return undef;
+    }
 
     ## If pidfile exists, read the PID and get date
     my ($other_pid);
@@ -2300,12 +2304,26 @@ sub write_pid {
     print LCK "$pid\n";
     close(LCK);
     
-    chown $uid, $gid, $pidfile;
+    unless (&tools::set_file_rights(file => $pidfile,
+				    user => '--USER--',
+				    group => '--GROUP--',
+				    ))
+    {
+	&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	return undef;
+    }
 
     ## Error output is stored in a file with PID-based name
     ## Usefull if process crashes
     open(STDERR, '>>',  $Conf{'tmpdir'}.'/'.$pid.'.stderr') unless ($main::options{'foreground'});
-    chown $uid, $gid, $Conf{'tmpdir'}.'/'.$pid.'.stderr';
+    unless (&tools::set_file_rights(file => $Conf{'tmpdir'}.'/'.$pid.'.stderr',
+				    user => '--USER--',
+				    group => '--GROUP--',
+				    ))
+    {
+	&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	return undef;
+    }
 
     return 1;
 }
