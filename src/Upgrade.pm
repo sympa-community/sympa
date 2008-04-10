@@ -616,7 +616,7 @@ sub upgrade {
 		
 		&do_log('notice','%d subscribers have been loaded into the database', $total);
 		
-		unless ($list->save_config('listmaster')) {
+		unless ($list->save_config('automatic')) {
 		    &do_log('err', 'Failed to save config file for list %s', $list->{'name'});
 		}
 	    }elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
@@ -629,7 +629,7 @@ sub upgrade {
 
 		$list->{'admin'}{'user_data_source'} = 'include2';
 
-		unless ($list->save_config('listmaster')) {
+		unless ($list->save_config('automatic')) {
 		    &do_log('err', 'Failed to save config file for list %s', $list->{'name'});
 		}
 	    }

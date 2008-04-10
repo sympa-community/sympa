@@ -1301,7 +1301,7 @@ my %alias = ('reply-to' => 'reply_to',
 						 'gettext_id' => 'date',
 						 'order' => 2
 						 },
-				      'email' => {'format' => &tools::get_regexp('email'),
+				      'email' => {'format' => '(listmaster|automatic|'.&tools::get_regexp('email').')',
 						  'length' => 30,
 						  'occurrence' => '1',
 						  'gettext_id' => 'who updated the config',
