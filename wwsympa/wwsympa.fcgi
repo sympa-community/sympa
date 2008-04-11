@@ -1113,6 +1113,7 @@ my $birthday = time ;
 		     do_log('notice',"login CAS OK server netid=$net_id" );
 		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $net_id}));
 		     $session->{'auth'} = 'cas';
+		     $session->{'email'}= $param->{user}{email} ;
 		     
 		     &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
 		     
