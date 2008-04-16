@@ -79,7 +79,10 @@ use wwslib;
 #getopts('dF');
 ## Check options
 my %options;
-&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F');
+unless (&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F')) {
+    &fatal_err("Unknown options.");
+}
+
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
 if ($main::options{'debug'}) {

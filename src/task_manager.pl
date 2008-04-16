@@ -48,7 +48,9 @@ my $opt_d;
 my $opt_F;
 my %options;
 
-&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground');
+unless (&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground')) {
+    &fatal_err("Unknown options.");
+}
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
 

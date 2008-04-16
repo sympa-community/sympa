@@ -63,7 +63,9 @@ my $ip = $ENV{'REMOTE_HOST'};
 
 ## Check options
 my %options;
-&GetOptions(\%main::options, 'debug|d', 'foreground|F');
+unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F')) {
+    &fatal_err("Unknown options.");
+}
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
