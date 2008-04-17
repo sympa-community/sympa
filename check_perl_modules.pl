@@ -37,7 +37,7 @@ use CPAN;
 	     'MIME::Tools' => '5.423',
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
-	     'CGI' => '2.52',
+	     'CGI' => '3.35',
 	     'Digest::MD5' => '2.00',
 	     'DB_File' => '1.75',
 	     'IO::Socket::SSL' => '0.90',
