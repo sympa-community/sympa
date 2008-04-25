@@ -178,8 +178,6 @@ AC_SUBST(CVS2CL)
 AC_PATH_PROG(MSGFMT, msgfmt, /usr/bin/msgfmt)
 AC_SUBST(MSGFMT)
 
-AC_PATH_PROG(SH, sh, /bin/sh)
-
 USER=sympa
 AC_ARG_WITH(
     [user],
