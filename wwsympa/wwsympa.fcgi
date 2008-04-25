@@ -1457,9 +1457,9 @@ my $birthday = time ;
 			 printf "ERROR : $err\n";
 		     }
 		 };
-		 if (ref($user) eq 'ARRAY'){
+		 if (ref($auth) eq 'ARRAY'){
 		     foreach my $err (@$auth){
-			 printf "NON UTHORISATION : $err\n";
+			 printf "AUTHORISATION FAILED : $err\n";
 		     }
 		 };
 
@@ -5371,11 +5371,18 @@ sub do_copy_template  {
 	$param->{'template_path_out'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope_out'},$in{'template_name_out'},$in{'tpl_lang_out'});
     }
     
-    &tools::mk_parent_dir($param->{'template_path_out'});
+    unless (&tools::mk_parent_dir($param->{'template_path_out'})) {
+      &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path_out'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+      &wwslog('err',"can't create parent directory for %s : %s", $param->{'template_path_out'}, $!);
+      &web_db_log({'parameters' => $param->{'template_name_out'},
+		   'status' => 'error',
+		   'error_type' => 'internal'});
+      return undef;
+    }
 
     unless (open (TPLOUT,'>'.$param->{'template_path_out'})) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path_out'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	&wwslog('err',"edit_template: can't open file %s", $param->{'template_path_out'});
+	&wwslog('err',"can't open file %s : %s", $param->{'template_path_out'}, $!);
 	&web_db_log({'parameters' => $param->{'template_name_out'},
 		     'status' => 'error',
 		     'error_type' => 'internal'});

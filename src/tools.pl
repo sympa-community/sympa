@@ -493,14 +493,14 @@ sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/ ;
     my $dir = $1;
-    return if (-d $dir);
-    return undef unless (mkdir ($dir, 0755));
+
+    return 1 if (-d $dir);
+    &mkdir_all($dir, 0755);
 }
 
 ## Recursively create directory and all parent directories
 sub mkdir_all {
     my ($path, $mode) = @_;
-
     my $status = 1;
 
     ## Change umask to fully apply modes of mkdir()
