@@ -37,7 +37,6 @@ Requires: perl-Convert-ASN1
 Requires: perl-HTML-Parser
 Requires: perl-HTML-Tagset
 Requires: perl-IO-Socket-SSL
-Requires: perl-Net_SSLeay
 Requires: perl-URI
 Requires: perl-libwww-perl
 Requires: MHonArc >= 2.4.6

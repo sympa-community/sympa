@@ -29,8 +29,6 @@ use Exporter;
 
 use Log;
 use Conf;
-# use Net::SSLeay qw(&get_https);
-# use Net::SSLeay;
 
 %reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
 		   'digest' => {'gettext_id' => 'digest MIME format'},

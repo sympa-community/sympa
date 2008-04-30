@@ -34,10 +34,6 @@ use List;
 use report;
 use Digest::MD5;
 
-# use Net::SSLeay qw(&get_https);
-# use Net::SSLeay;
-
-
 ## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
 sub password_fingerprint{
 
