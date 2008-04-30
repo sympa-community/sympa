@@ -347,7 +347,7 @@ my @params = ({'title' => 'Directories and file location'},
 
 	      {'title' => 'S/MIME pluggin'},
 	      {'name' => 'openssl',
-	       'sample' => '/usr/local/bin/openssl',
+	       'sample' => '--OPENSSL--',
 	       'query' => 'Path to OpenSSL',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>'Sympa knowns S/MIME if openssl is installed'},

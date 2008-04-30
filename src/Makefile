@@ -235,6 +235,7 @@ subst:
 		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES;\
 		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR;\
 		COOKIE=$(COOKIE); export COOKIE;\
+		OPENSSL=$(OPENSSL); export OPENSSL;\
 		$(PERL) ../subst.pl $(sbin_SRC) \
 	)
 	@echo "Doing multiple substitutions while installing libraries ..."
