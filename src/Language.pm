@@ -44,7 +44,7 @@ my %set_comment; #sets-of-messages comment
 ## The lang is the NLS catalogue name ; locale is the locale preference
 ## Ex: lang = fr ; locale = fr_FR
 my ($current_lang, $current_locale, $current_charset, @previous_locale);
-my $default_lang;
+my $default_lang = 'en';
 ## This was the old style locale naming, used for templates, nls, scenario
 my %language_equiv = ( 'zh_CN' => 'cn',
 		       'zh_TW' => 'tw',
@@ -140,7 +140,7 @@ sub SetLang {
     my $locale = shift;
     &do_log('debug2', 'Language::SetLang(%s)', $locale);
 
-    my $lang = $locale;
+    my $lang = $locale || $default_lang;## Use default_lang if an empty parameter
 
     unless ($lang) {
 	&do_log('err','Language::SetLang(), missing locale parameter');
