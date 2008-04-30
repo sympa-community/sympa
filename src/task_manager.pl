@@ -113,7 +113,10 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
      }     
  }
 
-&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
+## If process is running in foreground, don't write STDERR to a dedicated file
+my $options;
+$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$, $options);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');

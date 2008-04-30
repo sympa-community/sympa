@@ -326,7 +326,11 @@ if ($signal ne 'hup') {
 	my $file = $Conf{'pidfile'};
 	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
 	$file = $Conf{'pidfile_creation'} if ($main::daemon_usage == DAEMON_CREATION) ;
-	&tools::write_pid($file, $$);
+
+	## If process is running in foreground, don't write STDERR to a dedicated file
+	my $options;
+	$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+	&tools::write_pid($file, $$, $options);
     }	
 
 

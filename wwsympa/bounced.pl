@@ -138,8 +138,12 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
 }
 
+## If process is running in foreground, don't write STDERR to a dedicated file
+my $options;
+$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+
 ## Create and write the pidfile
-&tools::write_pid($wwsconf->{'bounced_pidfile'}, $$);
+&tools::write_pid($wwsconf->{'bounced_pidfile'}, $$, $options);
 
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});

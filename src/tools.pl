@@ -2241,7 +2241,7 @@ sub is_a_crawler {
 }
 
 sub write_pid {
-    my ($pidfile, $pid) = @_;
+    my ($pidfile, $pid, $options) = @_;
 
    my $piddir = $pidfile;
     $piddir =~ s/\/[^\/]+$//;
@@ -2315,14 +2315,16 @@ sub write_pid {
 
     ## Error output is stored in a file with PID-based name
     ## Usefull if process crashes
-    open(STDERR, '>>',  $Conf{'tmpdir'}.'/'.$pid.'.stderr') unless ($main::options{'foreground'});
-    unless (&tools::set_file_rights(file => $Conf{'tmpdir'}.'/'.$pid.'.stderr',
-				    user => '--USER--',
-				    group => '--GROUP--',
-				    ))
-    {
-	&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
-	return undef;
+    unless ($options->{'stderr_to_tty'}) {
+      open(STDERR, '>>',  $Conf{'tmpdir'}.'/'.$pid.'.stderr') unless ($main::options{'foreground'});
+      unless (&tools::set_file_rights(file => $Conf{'tmpdir'}.'/'.$pid.'.stderr',
+				      user => '--USER--',
+				      group => '--GROUP--',
+				     ))
+	{
+	  &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	  return undef;
+	}
     }
 
     return 1;

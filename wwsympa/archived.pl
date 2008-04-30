@@ -129,8 +129,12 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
 }
 
+## If process is running in foreground, don't write STDERR to a dedicated file
+my $options;
+$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+
 ## Create and write the pidfile
-&tools::write_pid($wwsconf->{'archived_pidfile'}, $$);
+&tools::write_pid($wwsconf->{'archived_pidfile'}, $$, $options);
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
