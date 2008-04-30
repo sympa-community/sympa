@@ -468,5 +468,17 @@ sub get_random {
      return ($random)
 }
 
+## Return the session object content, as a hashref
+sub as_hashref {
+  my $self = shift;
+  my $data;
+  
+  foreach my $key (keys %{$self}) {
+    $data->{$key} = $self->{$key};
+  }
+  
+  return $data;
+}
+
 1;
 

@@ -1053,7 +1053,7 @@ my $birthday = time ;
 	 $session->{'email'}= 'nobody'; $session->{'id_session'} = &get_random();
      }
 
-     $param->{'session'} = $session;
+     $param->{'session'} = $session->as_hashref();
      
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
