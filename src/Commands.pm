@@ -2369,9 +2369,11 @@ sub reject {
 	&do_log('debug2', 'message %s by %s rejected sender %s',$context{'subject'},$context{'rejected_by'},$rejected_sender);
 
 	## Notify author of message
-	unless ($list->send_file('reject', $rejected_sender, $robot, \%context)){
-	    &do_log('notice',"Unable to send template 'reject' to $rejected_sender");
-	    &report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'},'message' => $msg},$robot,'',$list);	    
+	unless ($quiet) {
+	    unless ($list->send_file('reject', $rejected_sender, $robot, \%context)){
+		&do_log('notice',"Unable to send template 'reject' to $rejected_sender");
+		&report::reject_report_msg('intern_quiet','',$sender,{'listname'=> $list->{'name'},'message' => $msg},$robot,'',$list);	    
+	    }
 	}
 
 	## Notify list moderator
