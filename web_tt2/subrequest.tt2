@@ -1,10 +1,16 @@
 <!-- $Id$ -->
 
+
   [% IF status == 'auth' %]
 
-        [%|loc(list)%]You requested subscription to list %1[%END%]. <br />[%|loc%]To confirm
-        your request, please click the button below :[%END%]<br />
-        <br />
+        [% IF listconf.custom_attribute.size == 0 %]
+          [%|loc(list)%]You requested a subscription to list %1[%END%].
+          [%|loc%]To confirm your request, please click the button below :[%END%]<br />
+        [% ELSE %] [%|loc(list)%]You want to subscribe to list %1[%END%].
+          [%|loc%]Please fill in the form below and then click the validation button[%END%]<br />
+          <br />
+	[% END %]
+        <br /><br />
 
         <form action="[% path_cgi %]" method="post">
         <fieldset>
@@ -24,9 +30,8 @@
         [%|loc%]To confirm your identity and prevent anyone from subscribing you to
         this list against your will, a message containing your password
         will be sent to you.[%END%] <br /><br />
-
         [%|loc(list)%]Check your mailbox for new messages and examine the message from Sympa to find your password.
-  Enter that password, below. This wil confirm your request to be subscribed from list %1.[%END%].
+	Enter that password below. This will confirm your subscription to list %1.[%END%]
 
         <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
@@ -64,8 +69,11 @@
 
   [% ELSIF status == 'notauth' %]
 
-        [%|loc(list)%]To confirm your subscription to list %1, please enter
-        your password below :[%END%]
+          [%|loc(list)%]To confirm your subscription to list %1, please enter
+        your password below[%END%]
+        [% IF listconf.custom_attribute.size == 0 %]
+          [%|loc%], in addition to the personnal informations requested.[%END%]
+	[% END %]
 
          <form action="[% path_cgi %]" METHOD=POST>
         <fieldset>

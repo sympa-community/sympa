@@ -10977,7 +10977,6 @@ sub get_subscription_requests {
 
 	## First line of the file contains the user email address + his/her name
 	my $line = <REQUEST>;
-	close REQUEST;
 	my ($email, $gecos);
 	if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
 	    ($email, $gecos) = ($1, $3); 
@@ -10998,6 +10997,7 @@ sub get_subscription_requests {
 	}
 	## Following lines may contain custom attributes in an XML format
 	my %xml = &parseCustomAttribute(\*REQUEST) ;
+	close REQUEST;
 	
 	$subscriptions{$email} = {'gecos' => $gecos,
 				  'custom_attribute' => \%xml};
