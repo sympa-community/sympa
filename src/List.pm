@@ -5253,8 +5253,8 @@ sub parseCustomAttribute {
 	my @custom_attr = $doc->getChildrenByTagName('custom_attribute') ;
 	my %ca ;
 	foreach my $ca (@custom_attr) {
-	        my $id = $ca->getAttribute('id');
-	        my $value = $ca->getElementsByTagName('value');
+	        my $id = Encode::encode_utf8($ca->getAttribute('id'));
+	        my $value = Encode::encode_utf8($ca->getElementsByTagName('value'));
 		$ca{$id} = {value=>$value} ;
 	}
 	return %ca ;
