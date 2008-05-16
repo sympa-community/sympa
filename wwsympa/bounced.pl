@@ -528,6 +528,10 @@ while (!$end) {
 		    if (! -d "$bounce_dir/OTHER") {
 			unless (mkdir  "$bounce_dir/OTHER",0777) {
 			    &do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
+			    &ignore_bounce({'file' => $file,
+					    'robot' => $robot,
+					    'queue' => $queue,
+					});
 			    next;
 			}
 		    }
@@ -545,6 +549,10 @@ while (!$end) {
 			
 			unless (open ARC, ">$bounce_dir/OTHER/$escaped_from") {
 			    &do_log('notice', "Cannot create $bounce_dir/OTHER/$escaped_from");
+			    &ignore_bounce({'file' => $file,
+					    'robot' => $robot,
+					    'queue' => $queue,
+					});
 			    next;
 			}
 			print ARC <BOUNCE>;
