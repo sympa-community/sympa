@@ -793,6 +793,7 @@ my %in_negative_regexp = (
 			  );
 
 ## List some required filtering of incoming parameters, depending on current action
+## Paramater can be '*' or 'param*'
 ## Like Q-encoding
 my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'd_install_shared' => {'id' => 'qencode'},
@@ -813,6 +814,7 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'sendpasswd' => {'email' => 'fix_escape_uri'},
 		 'viewbounce' => {'email' => 'fix_escape_uri'},
 		 'editsubscriber' => {'email' => 'fix_escape_uri'},
+		 'edit_list' => {'*param*' => 'unescape_html'}, ## Required because outgoing parameters have been html-escaped in edit_list_request
 		 );
 
 ## Open log
@@ -1810,8 +1812,23 @@ sub get_parameters {
      ## This required for filenames that include non ascii characters
      if (defined $filtering{$in{'action'}}) {
 
-	 foreach my $p (keys %{$filtering{$in{'action'}}}) {
-	     if ($filtering{$in{'action'}}{$p} eq 'qencode') {
+       my %apply_to; ## Build list of parameters filters apply to
+       foreach my $p (keys %{$filtering{$in{'action'}}}) {
+	 if ($p =~ /\*/) { ## use of wildcar
+	   my $p_regexp = $p; $p_regexp =~ s/\*/\.\*/g; ## Turn wildcar into a regexp
+	   foreach my $in_key (keys %in) {
+	     if ($in_key =~ /^$p_regexp$/) {
+	       $apply_to{$in_key} = $filtering{$in{'action'}}{$p};
+	     }
+	   }
+	 }else {
+	   $apply_to{$p} = $filtering{$in{'action'}}{$p};
+	 }
+       }
+
+	 foreach my $p (keys %apply_to) {
+	   my $filtering_action = $apply_to{$p};
+	     if ($filtering_action eq 'qencode') {
 		 ## Q-encode file path
 		 my @tokens = split /\//, $in{$p};
 		 foreach my $i (0..$#tokens) {
@@ -1821,7 +1838,10 @@ sub get_parameters {
 		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
 		 ## This should be transformed into a '/' again
 
-	     }elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
+	     }elsif ($filtering_action eq 'unescape_html') {
+	       $in{$p} = &tools::unescape_chars($in{$p});
+
+	     }elsif ($filtering_action eq 'fix_escape_uri') {
 		 $in{$p} =~ s/\xa5/\//g;
 	     }
 	 }
