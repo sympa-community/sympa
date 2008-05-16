@@ -523,44 +523,11 @@ while (!$end) {
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
 		    &do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
-		    
-		    ## We keep bounce msg
-		    if (! -d "$bounce_dir/OTHER") {
-			unless (mkdir  "$bounce_dir/OTHER",0777) {
-			    &do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
-			    &ignore_bounce({'file' => $file,
-					    'robot' => $robot,
-					    'queue' => $queue,
-					});
-			    next;
-			}
-		    }
-		     
-		    ## Original msg
-		    if (-w "$bounce_dir/OTHER") {
-			unless (open BOUNCE, "$queue/$file") {
-			    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
-			    &ignore_bounce({'file' => $file,
-					    'robot' => $robot,
-					    'queue' => $queue,
-					});
-			    next;
-			}
-			
-			unless (open ARC, ">$bounce_dir/OTHER/$escaped_from") {
-			    &do_log('notice', "Cannot create $bounce_dir/OTHER/$escaped_from");
-			    &ignore_bounce({'file' => $file,
-					    'robot' => $robot,
-					    'queue' => $queue,
-					});
-			    next;
-			}
-			print ARC <BOUNCE>;
-			close BOUNCE;
-			close ARC;
-		    }else {
-			&do_log('notice', "Failed to write $bounce_dir/OTHER/$escaped_from");
-		    }
+		    &ignore_bounce({'file' => $file,
+				    'robot' => $robot,
+				    'queue' => $queue,
+				   });
+		    next;
 	    	}
 	    }
 	}

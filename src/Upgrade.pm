@@ -636,6 +636,26 @@ sub upgrade {
 	}
     }
     
+    if (&tools::lower_version($previous_version, '5.5a.1')) {
+
+      ## Remove OTHER/ subdirectories in bounces
+      &do_log('notice', "Removing obsolete OTHER/ bounce directories");
+      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf{'host'}, 'bounce_path')) {
+	
+	foreach my $subdir (sort grep (!/^\.+$/,readdir(BOUNCEDIR))) {
+	  my $other_dir = &Conf::get_robot_conf($Conf{'host'}, 'bounce_path').'/'.$subdir.'/OTHER';
+	  if (-d $other_dir) {
+	    &tools::remove_dir($other_dir) && &do_log('notice', "Directory $other_dir removed");
+	  }
+	}
+	
+	close BOUNCEDIR;
+ 
+      }else {
+	&do_log('err', "Failed to open directory $Conf{'queuebounce'} : $!");	
+      }
+
+   }
 
     return 1;
 }

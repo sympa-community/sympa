@@ -46,7 +46,7 @@ sub DAEMON_ALL {7};
 my @valid_options = qw(
 		       allow_subscribe_if_pending avg alias_manager bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
 		       cache_list_config
-		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queueautomatic clean_delay_queuetopic clean_delay_queuebounce clean_delay_queueother clean_delay_queueoutgoing clean_delay_tmpdir default_remind_task
+		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queueautomatic clean_delay_queuetopic clean_delay_queuebounce clean_delay_queueoutgoing clean_delay_tmpdir default_remind_task
 		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
@@ -83,6 +83,7 @@ my @valid_options = qw(
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
 		   'msgcat' => 'localedir',
 		   'queueexpire' => '',
+		   'clean_delay_queueother' => '',
 		   'web_recode_to' => 'filesystem_encoding',
 		   );
 ## These parameters now have a hard-coded value
@@ -138,8 +139,7 @@ my %Default_Conf =
      'clean_delay_queuesubscribe' => 10,
      'clean_delay_queueautomatic' => 10,
      'clean_delay_queueauth' => 3,
-     'clean_delay_queuebounce'   => 1,
-     'clean_delay_queueother'   => 30,
+     'clean_delay_queuebounce'   => 10,
      'clean_delay_queueoutgoing'   => 1,
      'clean_delay_tmpdir'   => 7,
      'log_socket_type'      => 'unix',
