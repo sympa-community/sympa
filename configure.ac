@@ -266,5 +266,16 @@ AC_ARG_WITH(
 )
 AC_SUBST(POSTMAP_ARG)
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([
+    Makefile
+    src/etc/sample/Makefile
+    src/etc/script/Makefile
+    src/Makefile
+    soap/Makefile
+    doc/man8/Makefile
+    doc/Makefile
+    web_tt2/Makefile
+    wwsympa/Makefile
+    mail_tt2/Makefile
+])
 AC_OUTPUT
