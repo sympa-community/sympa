@@ -128,29 +128,26 @@ sub set_cookie {
     
 # Sets an HTTP cookie to be sent to a SOAP client
 sub set_cookie_soap {
-    my ($email,$secret,$http_domain,$expire) = @_ ;
+    my ($session_id,$http_domain,$expire) = @_ ;
     my $cookie;
     my $value;
-    &do_log('debug', 'cookielib::set_cookie_soap(%s,%s,%s,%s)', $email, $secret, $http_domain, $expire);
 
     # WARNING : to check the cookie the SOAP services does not gives
     # all the cookie, only it's value so we need ':'
-    $value = sprintf '%s:%s',$email,&get_mac($email,$secret);
+    $value = $session_id;
   
     ## With set-cookie2 max-age of 0 means removing the cookie
     ## Maximum cookie lifetime is the session
     $expire ||= 600; ## 10 minutes
 
     if ($http_domain eq 'localhost') {
-	$cookie = sprintf "%s=%s; Path=/; Max-Age=%s", 'sympauser', $value, $expire;
+	$cookie = sprintf "%s=%s; Path=/; Max-Age=%s", 'sympa_session', $value, $expire;
     }else {
-	$cookie = sprintf "%s=%s; Domain=%s; Path=/; Max-Age=%s", 'sympauser', $value, $http_domain, $expire;;
+	$cookie = sprintf "%s=%s; Domain=%s; Path=/; Max-Age=%s", 'sympa_session', $value, $http_domain, $expire;;
     }
 
-    $ENV{'SOAP_COOKIE_sympauser'} = $cookie;
-
-    ## Send cookie to the client
-    return 1;
+    ## Return the cookie value
+    return $cookie;
 }
 
 ## returns Message Authentication Check code

@@ -42,6 +42,7 @@ $usage .= "OR usage: $0 <with the following options:>\n\n";
 $usage .= "--soap_url=<soap sympa server url>\n";
 $usage .= "--user_email=<email>\n";
 $usage .= "--user_password=<password>\n";
+$usage .= "--session_id=<sessionid>\n";
 $usage .= "--service=<a sympa service>\n";
 $usage .= "--service_parameters=<value1,value2,value3>\n\n\n";
 $usage .= "OR usage: $0 <with the following options:>\n\n";
@@ -50,7 +51,7 @@ $usage .= "--cookie=<sympauser cookie string>\n\n\n";
 $usage .= "Example: \n\n$0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr%3A8be58b86\n\n";
 
 my %options;
-unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s')) {
+unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s','session_id=s')) {
     printf "";
 }
 
@@ -64,6 +65,7 @@ unless (defined $soap_url){
 
 my $user_email = $main::options{'user_email'};
 my $user_password =$main::options{'user_password'};
+my $session_id = $main::options{'session_id'};
 my $trusted_application =$main::options{'trusted_application'};
 my $trusted_application_password =$main::options{'trusted_application_password'};
 my $proxy_vars=$main::options{'proxy_vars'};
@@ -89,22 +91,28 @@ if (defined $trusted_application) {
     }
 
     &play_soap_as_trusted($soap_url, $trusted_application,  $trusted_application_password, $service, $proxy_vars, $service_parameters);
+}elsif($service eq 'getUserEmailByCookie'){
+  &play_soap(soap_url => $soap_url, 
+	     session_id => $session_id,
+	     service => $service);
+
 }elsif(defined $cookie){
     printf "error : get_email_cookie\n";
      &get_email($soap_url, $cookie);
      exit;
 }else{
-    unless (defined $user_email){
-	printf "error : missing user_email parameter\n";
+    unless (defined $session_id || (defined $user_email && defined  $user_password)){
+	printf "error : missing session_id OR user_email+user_passwors  parameters\n";
 	printf $usage;
 	exit;
     }
-    unless (defined  $user_password) {
-	printf "error : missing user_password parameter\n";
-	printf $usage;
-	exit;
-    }
-    &play_soap($soap_url, $user_email, $user_password, $service, $service_parameters);
+
+    &play_soap(soap_url => $soap_url, 
+	       user_email => $user_email, 
+	       user_password => $user_password, 
+	       session_id => $session_id,
+	       service => $service,
+	       service_parameters => $service_parameters);
 }
 
 sub play_soap_as_trusted{
@@ -157,13 +165,16 @@ exit;
  }
 
 sub play_soap{
-    my $soap_url=shift;
-    my $user_email=shift;
-    my $user_password=shift;
-    my $service=shift;
-    my $service_parameters=shift;
+  my %param = @_;
 
-    my ($reponse, @ret, $val, %fault);
+  my $soap_url = $param{'soap_url'};
+  my $user_email = $param{'user_email'};
+  my $user_password = $param{'user_password'};
+  my $session_id = $param{'session_id'};
+  my $service = $param{'service'};
+  my $service_parameters = $param{'service_paramaters'};  
+  
+  my ($reponse, @ret, $val, %fault);
 
     ## Cookies management
     # my $uri = new URI($soap_url);
@@ -185,22 +196,39 @@ sub play_soap{
     #$reponse = $service->login($user_email,$user_password);
     #my $soap = SOAP::Lite->service($soap_url);
      
-    my $soap = new SOAP::Lite();
+    my $soap = new SOAP::Lite() || die;
     #$soap->on_debug(sub{print@_});
     $soap->uri('urn:sympasoap');
     $soap->proxy($soap_url,
 		 cookie_jar =>$cookies);
 
+  ## Do the login unless a session_id is provided
+  if ($session_id) {
+    print "Using Session_id $session_id\n";
+
+  }else {
     print "LOGIN....\n";
 
     #$reponse = $soap->casLogin($soap_url);
     $reponse = $soap->login($user_email,$user_password);
     $cookies->save;
     &print_result($reponse);
-    my $md5 = $reponse->result;
+    my $session_id = $reponse->result;
+  }    
     
-    printf "\n\nAuthenticateAndRun %s....\n",$service;
-    $reponse = $soap->authenticateAndRun($user_email,$md5,$service,\@parameters);
+  ## Don't use authenticateAndRun for lists command
+    if ($service eq 'lists') {
+      printf "\n\nlists....\n";
+      $reponse = $soap->lists();
+    }elsif ($service eq 'getUserEmailByCookie') {
+      printf "\n\n$service....\n";
+      $reponse = $soap->getUserEmailByCookie($session_id);
+
+    }else {
+      printf "\n\nAuthenticateAndRun %s....\n",$service;
+      $reponse = $soap->authenticateAndRun($user_email,$session_id,$service,\@parameters);
+    }
+
     &print_result($reponse);
     
 }

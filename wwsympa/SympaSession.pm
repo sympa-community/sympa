@@ -70,7 +70,7 @@ sub new {
     # if a session cookie exist, try to restore an existing session, don't store sessions from bots
     if (($cookie)&&($session->{'passive_session'} != 1)){
 	my $status ;
-	$status = $session->load($cookie) ;
+	$status = $session->load($cookie);
 	unless (defined $status) {
 	    return undef;
 	}

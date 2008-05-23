@@ -175,19 +175,17 @@ sub login {
 	    ->faultdetail("Incorrect password for user $email or bad login");
     } 
 
-    my $expire =  &Conf::get_robot_conf($robot,'cookie_expire');
-
-    unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
-	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Cookie not set')
-	    ->faultdetail('Could not set HTTP cookie for external_auth');
-    }
+    ## Create SympaSession object
+    my $session = new SympaSession($robot, {'cookie' => $ENV{'SESSION_ID'}});
+    $ENV{'USER_EMAIL'} = $email;
+    $session->{'email'} = $email;
+    $session->store();
+    
+    ## Note that id_session changes each time it is saved in the DB
+    $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')->value(&cookielib::get_mac($email,$Conf::Conf{'cookie'}));
-
-#    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return SOAP::Data->name('result')->type('string')->value($ENV{'SESSION_ID'});
 }
 
 sub casLogin {
@@ -245,19 +243,17 @@ sub casLogin {
 	    ->faultdetail("Could not get email address from LDAP directory");
     }
 
-    my $expire = &Conf::get_robot_conf($robot,'cookie_expire');
-
-    unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
-	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Cookie not set')
-	    ->faultdetail('Could not set HTTP cookie for external_auth');
-    }
+    ## Create SympaSession object
+    my $session = new SympaSession($robot, {'cookie' => $ENV{'SESSION_ID'}});
+    $ENV{'USER_EMAIL'} = $email;
+    $session->{'email'} = $email;
+    $session->store();
+    
+    ## Note that id_session changes each time it is saved in the DB
+    $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')->value(&cookielib::get_mac($email,$Conf::Conf{'cookie'}));
-
-#    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return SOAP::Data->name('result')->type('string')->value($ENV{'SESSION_ID'});
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
@@ -265,38 +261,30 @@ sub casLogin {
 sub authenticateAndRun {
     my ($self, $email, $cookie, $service, $parameters) = @_;
 
-    &do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $cookie, $service, join(',',@$parameters));
+    my $session_id = $cookie;
+    &do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $session_id, $service, join(',',@$parameters));
 
-    unless ($cookie and $service) {
+    unless ($session_id and $service) {
+      &do_log('err', "Missing parameter");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <email> <cookie> <service>');
     }
     my $auth ;
     
-    if ($email eq 'unkown') {
-	($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
-	do_log('debug','get email from cookie : %s',$email);
-	unless ($email or ($email eq 'unkown')  ) {
-	    die SOAP::Fault->faultcode('Client')
-		->faultstring('Could not get email from cookie')
-		->faultdetail('');
-	}
-    }
 
-    my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
-    ## This test's purpose is to ensure that we are presented the right cookie. In addition, we avoid the following
-    ## problem: if the cookie is composed of digits only ([0-9]) AND it starts with at least one zero character, 
-    ## it is treated as a number and the leading zeros are ignored. When tested against checksum, it is not the same
-    ## character string as the leading zeros are missing. We add a number comparison to avoid it. Example: 00785136 becomes 785136.
-    unless (($cookie eq $checksum)||($checksum == $cookie)) {
-	&do_log('notice', "authenticateAndRun(): authentication failed Incorrect cookie $cookie <> $checksum)");
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Authentification failed')
-	    ->faultdetail("Incorrect cookie $cookie for user $email (checksum : $checksum)");
+    ## Provided email is not trusted, we fetch the user email from the session_table instead
+    my $session = new SympaSession($ENV{'SYMPA_ROBOT'},{'cookie' => $session_id});
+    $email = $session->{'email'} if (defined $session);
+    unless ($email or ($email eq 'unkown')  ) {
+      &do_log('err', "Failed to authenticate user with session ID $session_id");
+      die SOAP::Fault->faultcode('Client')
+	->faultstring('Could not get email from cookie')
+	  ->faultdetail('');
     }
-
+    
     $ENV{'USER_EMAIL'} = $email;
+    $ENV{'SESSION_ID'} = $session_id;
 
     &{$service}($self,@$parameters);
 }
@@ -308,32 +296,23 @@ sub getUserEmailByCookie {
     &do_log('debug3','getUserEmailByCookie(%s)', $cookie);
     
     unless ($cookie) {
-	die SOAP::Fault->faultcode('Client')
-	    ->faultstring('Incorrect  parameter')
-	    ->faultdetail('Use : <cookie>');
+      &do_log('err',"Missing parameter cookie");
+      die SOAP::Fault->faultcode('Client')
+	->faultstring('Missing parameter')
+	  ->faultdetail('Use : <cookie>');
     }
-    my ($auth,$email) ;
     
-    ($email,$auth) = &wwslib::get_email_from_cookie($cookie,$Conf::Conf{'cookie'});
-    do_log('debug','getUserEmailByCookie : %s',$email);
-    unless ($email or ($email eq 'unkown')  ) {
+    my $session = new SympaSession($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+    
+    
+    unless (defined $session && ($session->{'email'} ne 'unkown')  ) {
+      &do_log('err',"Failed to load session for $cookie");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Could not get email from cookie')
 	    ->faultdetail('');
-    }
-    
-    my $checksum=&cookielib::get_mac($email, $Conf::Conf{'cookie'});
-    ## This test's purpose is to ensure that we are presented the right cookie. In addition, we avoid the following
-    ## problem: if the cookie is composed of digits only ([0-9]) AND it starts with at least one zero character, 
-    ## it is treated as a number and the leading zeros are ignored. When tested against checksum, it is not the same
-    ## character string as the leading zeros are missing. We add a number comparison to avoid it. Example: 00785136 becomes 785136.
-    unless (($cookie eq $checksum)||($checksum == $cookie)) {
-	&do_log('notice', "getUserEmailByCookie(): invalid cookie ($cookie <> $checksum)");
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Authentification failed')
-	    ->faultdetail("Incorrect cookie $cookie for user $email");
-    }
-    return SOAP::Data->name('result')->type('string')->value($email);
+    }    
+
+    return SOAP::Data->name('result')->type('string')->value($session->{'email'});
     
 }
 ## Used to call a service from a remote proxy application
@@ -622,7 +601,8 @@ sub createList {
 	     &Log::do_log('notice',"Unable to send notify 'request_list_creation' to listmaster");
 	 }
      }
-     return ;
+     return SOAP::Data->name('result')->type('boolean')->value(1);
+
 }
 
 sub closeList {
