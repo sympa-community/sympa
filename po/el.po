@@ -122,43 +122,53 @@ msgstr "Συντάκτης"
 msgid "Subscriber"
 msgstr "Συνδρομητής"
 
-#: web_tt2/login_menu.tt2:32
+#. (last_login_host,last_login_date)
+#: web_tt2/login_menu.tt2:22
+msgid "last login from %1 <br />(%2)</span>"
+msgstr ""
+
+#: web_tt2/login_menu.tt2:34
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
-#: web_tt2/login_menu.tt2:39
+#: web_tt2/login_menu.tt2:41
 msgid "Your preferences"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:57 web_tt2/loginbanner.tt2:57
+#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
 msgid "Choose your authentication server"
 msgstr "Επιλέξτε τον εξυπηρετητή ταυτοποίησης"
 
-#: web_tt2/login_menu.tt2:63 web_tt2/loginbanner.tt2:61
+#: web_tt2/login_menu.tt2:65 web_tt2/loginbanner.tt2:57
 msgid "Go"
 msgstr "Πήγαινε"
 
-#: src/List.pm:1084 src/List.pm:586 web_tt2/login_menu.tt2:77
-#: web_tt2/loginbanner.tt2:76 web_tt2/sso_login.tt2:45
+#: src/List.pm:1084 src/List.pm:586 web_tt2/login_menu.tt2:80
+#: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "Διεύθυνση αλληλογραφίας"
 
-#: web_tt2/login_menu.tt2:79 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:82 web_tt2/loginbanner.tt2:73
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:38
-#: web_tt2/subrequest.tt2:73
+#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:43
+#: web_tt2/subrequest.tt2:81
 msgid "password"
 msgstr "Κωδικός Πρόσβασης"
 
-#: web_tt2/login_menu.tt2:81 web_tt2/loginbanner.tt2:78
+#: web_tt2/login_menu.tt2:84 web_tt2/loginbanner.tt2:74
 msgid "Login"
 msgstr "Σύνδεση"
 
-#: web_tt2/login_menu.tt2:87
+#: web_tt2/login_menu.tt2:92
+#, fuzzy
+msgid "Authentication help"
+msgstr "Αίτηση ταυτοποίησης"
+
+#: web_tt2/login_menu.tt2:94
 msgid "First login ?"
 msgstr "Πρώτη είσοδος;"
 
-#: web_tt2/login_menu.tt2:88
+#: web_tt2/login_menu.tt2:95
 msgid "Lost password ?"
 msgstr "Aπωλεσθέν συνθηματικό ?"
 
@@ -166,11 +176,11 @@ msgstr "Aπωλεσθέν συνθηματικό ?"
 msgid "Your Lists"
 msgstr "Οι λίστες μου"
 
-#: web_tt2/lists.tt2:14 web_tt2/your_lists.tt2:13
+#: web_tt2/lists.tt2:29 web_tt2/your_lists.tt2:13
 msgid "admin"
 msgstr "Διαχειριστής"
 
-#: web_tt2/lists.tt2:68 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
+#: web_tt2/lists.tt2:84 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
 msgstr "Μη διαθέσιμη λίστα"
 
@@ -193,8 +203,8 @@ msgstr "Διαγραφή από τη λίστα"
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Επιθυμείτε να εγγραφείτε ως μέλος στη λίστα %1;"
 
-#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:45
-#: web_tt2/subrequest.tt2:82
+#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:50
+#: web_tt2/subrequest.tt2:90
 msgid "Subscribe"
 msgstr "Εγγραφή στη λίστα"
 
@@ -379,7 +389,7 @@ msgstr "Διαχείριση Αρχείων"
 msgid "Bounces"
 msgstr "Bounces"
 
-#: web_tt2/list_admin_menu.tt2:51 web_tt2/serveradmin.tt2:85
+#: web_tt2/list_admin_menu.tt2:51 web_tt2/serveradmin.tt2:91
 #, fuzzy
 msgid "Logs"
 msgstr "Σύνδεση"
@@ -477,7 +487,7 @@ msgstr "Δημιουργία ημερομηνίας"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:45
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:41 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Θέμα"
 
@@ -521,7 +531,7 @@ msgid "Privileges"
 msgstr "Προνόμια"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:63
+#: web_tt2/serveradmin.tt2:69
 msgid "Archives"
 msgstr "Αρχείο"
 
@@ -662,7 +672,7 @@ msgid "Sender"
 msgstr "Αποστολέας"
 
 #: web_tt2/arcsearch_form.tt2:46 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:39 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Ημερομηνία"
@@ -849,20 +859,17 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/choosepasswd.tt2:14
-msgid "Current password :"
-msgstr "Τρέχον συνθηματικό"
-
-#: web_tt2/choosepasswd.tt2:18 web_tt2/pref.tt2:38
+#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:38
 msgid "New password :"
 msgstr "Νέο συνθηματικό :"
 
-#: web_tt2/choosepasswd.tt2:19
+#: web_tt2/choosepasswd.tt2:12
 msgid "New password again :"
 msgstr "Επιβεβαίωση νέου συνθηματικού :"
 
-#: web_tt2/choosepasswd.tt2:20 web_tt2/picture_upload.tt2:11
+#: web_tt2/choosepasswd.tt2:13 web_tt2/picture_upload.tt2:11
 #: web_tt2/pref.tt2:17 web_tt2/pref.tt2:29 web_tt2/pref.tt2:40
+#: web_tt2/pref.tt2:66
 msgid "Submit"
 msgstr "Υποβολή"
 
@@ -1227,7 +1234,7 @@ msgid "Listing of root folder"
 msgstr "Κατάλογος του φακέλου ρίζας"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:40
+#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
 msgid "Author"
 msgstr "Συγγραφέας"
 
@@ -1240,8 +1247,8 @@ msgstr "Μέγεθος (Kb)"
 msgid "Last update"
 msgstr "Τελευταία ενημέρωση"
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:24 web_tt2/serveradmin.tt2:109
-#: web_tt2/serveradmin.tt2:122
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:24 web_tt2/serveradmin.tt2:115
+#: web_tt2/serveradmin.tt2:128
 msgid "Edit"
 msgstr "Επεξεργασία"
 
@@ -1567,7 +1574,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:111
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
 msgid "Path"
 msgstr "Διαδρομή"
 
@@ -2131,7 +2138,7 @@ msgid "Latests Lists"
 msgstr "Τελευταίες λίστες"
 
 #: web_tt2/get_pending_lists.tt2:6 web_tt2/get_pending_lists.tt2:7
-#: web_tt2/serveradmin.tt2:34
+#: web_tt2/serveradmin.tt2:36
 msgid "Pending lists"
 msgstr "Εκκρεμείς λίστες"
 
@@ -2223,7 +2230,7 @@ msgstr "Κατάλογος"
 msgid "The %1 newest lists"
 msgstr " Οι %1 πρόσφατες λίστες "
 
-#: web_tt2/latest_lists.tt2:8 web_tt2/rss.tt2:20 web_tt2/serveradmin.tt2:35
+#: web_tt2/latest_lists.tt2:8 web_tt2/rss.tt2:20
 #, fuzzy
 msgid "New lists"
 msgstr "Νέο όνομα λίστας:"
@@ -2246,19 +2253,19 @@ msgstr ""
 "ταχυδρομείου"
 
 #. (user.email)
-#: web_tt2/lists.tt2:25
+#: web_tt2/lists.tt2:41
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Ανύπαρκτες συνδρομές με τη διεύθυνση <strong>%1</strong>!"
 
-#: web_tt2/lists.tt2:31
+#: web_tt2/lists.tt2:47
 msgid "See your subscriptions with the following email addresses"
 msgstr "Παρουσίαση των συνδρομών σας με τις ακόλουθες ηλεκτρονικές διευθύνσεις"
 
-#: web_tt2/lists.tt2:51
+#: web_tt2/lists.tt2:67
 msgid "Unify your subscriptions with the email"
 msgstr ""
 
-#: web_tt2/lists.tt2:52
+#: web_tt2/lists.tt2:68
 #, fuzzy
 msgid ""
 "That is to say you are using a unique email address in Sympa for your "
@@ -2267,24 +2274,17 @@ msgstr ""
 "Η μοναδική αυτή ηλεκτρονική διεύθυνση χρησιμοποιείται από το λογισμικό Sympa "
 "για τις συνδρομές και τις προτιμήσεις σας"
 
-#: web_tt2/lists.tt2:58
+#: web_tt2/lists.tt2:74
 msgid "Validate"
 msgstr ""
 
-#. (init_email)
-#: web_tt2/loginbanner.tt2:5
+#: web_tt2/loginbanner.tt2:6
 msgid ""
-"Your password has been sent to your email address %1.<br />Please check your "
-"e-mail box to provide your password below."
+"In order to perform a privileged operation (one that requires your email "
+"address), you need to login."
 msgstr ""
 
-#: web_tt2/loginbanner.tt2:10
-msgid ""
-"You need to login to access your custom WWSympa environment or to perform a "
-"privileged operation (one that requires your email address)."
-msgstr ""
-
-#: web_tt2/loginbanner.tt2:13
+#: web_tt2/loginbanner.tt2:9
 msgid ""
 "Most mailing list features require your email. Some mailing lists are hidden "
 "to  unidentified persons.<br />\n"
@@ -2296,14 +2296,14 @@ msgstr ""
 "Για την παροχή του συνόλου των υπηρεσιών από το συγκεκριμένο εξυπηρετητή, θα "
 "πρέπει να έχετε προηγουμένως  ταυτοποιηθεί."
 
-#: web_tt2/loginbanner.tt2:18
+#: web_tt2/loginbanner.tt2:14
 msgid ""
 "To login, select your organization authentication server below.<br />\n"
 "If it is not listed or if you don't have any, login using your email and "
 "password on the right column."
 msgstr ""
 
-#: web_tt2/loginbanner.tt2:23
+#: web_tt2/loginbanner.tt2:19
 msgid ""
 "Login with you email address and password. You can request a password "
 "reminder."
@@ -2395,22 +2395,29 @@ msgstr ""
 msgid "Listing messages to moderate"
 msgstr "Κατάσταση μηνυμάτων προς συντονισμό"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:77
-#: web_tt2/modindex.tt2:79 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
+#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
 msgid "Distribute"
 msgstr "Διανομή"
 
-#: web_tt2/modindex.tt2:103 web_tt2/modindex.tt2:139 web_tt2/modindex.tt2:15
-#: web_tt2/modindex.tt2:81 web_tt2/viewmod.tt2:13
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
+#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
 msgid "Reject"
 msgstr "Απόρριψη"
 
-#: web_tt2/modindex.tt2:104 web_tt2/modindex.tt2:140 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:82 web_tt2/viewmod.tt2:14
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
+#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
 msgid "Notified reject"
 msgstr "Ειδοποίηση απόρριψης"
 
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:84
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
 msgid "Reject and blacklist sender"
 msgstr ""
 
@@ -2425,155 +2432,164 @@ msgid ""
 "to distribute :"
 msgstr ""
 
-#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:42
+#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
 msgid "Size"
 msgstr "Μέγεθος"
 
-#: web_tt2/modindex.tt2:66
+#: web_tt2/modindex.tt2:76
 msgid "No subject"
 msgstr "Δεν ορίστηκε θέμα"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:89 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
 #: web_tt2/reviewbouncing.tt2:116
 msgid "Toggle Selection"
 msgstr ""
 
 #: web_tt2/modindex.tt2:100
+msgid "Toggle spams"
+msgstr ""
+
+#: web_tt2/modindex.tt2:113
 #, fuzzy
 msgid "Listing of shared documents to moderate"
 msgstr "Κατάσταση διαμοιραζόμενων εγγράφων προς συντονισμό"
 
-#: web_tt2/modindex.tt2:102 web_tt2/modindex.tt2:138
+#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
 msgid "Install"
 msgstr "Εγκατάσταση"
 
-#: web_tt2/modindex.tt2:106
+#: web_tt2/modindex.tt2:119
 msgid "Listing of documents shared to moderate"
 msgstr "Κατάσταση διαμοιραζόμενων εγγράφων προς συντονισμό"
 
+#. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
+msgid "last login from %1 (%2)"
+msgstr ""
+
+#: web_tt2/notice.tt2:10
 msgid "Your request has been forwarded to the list owner"
 msgstr ""
 
 #. (notice.total)
-#: web_tt2/notice.tt2:8
+#: web_tt2/notice.tt2:13
 msgid "%1 subscribers added"
 msgstr "προστέθηκαν %1 συνδρομητές"
 
 #. (notice.total)
-#: web_tt2/notice.tt2:11
+#: web_tt2/notice.tt2:16
 #, fuzzy
 msgid "%1 addresses have been removed"
 msgstr "%1 διευθύνσεις έχουν εγγραφεί συνδρομητές"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:14
+#: web_tt2/notice.tt2:19
 #, fuzzy
 msgid "%1: action completed"
 msgstr "1%: αποτυχημένη ενέργεια"
 
 #. (notice.action)
-#: web_tt2/notice.tt2:17
+#: web_tt2/notice.tt2:22
 #, fuzzy
 msgid "%1: action will complete soon"
 msgstr "%1 : επιτυχής ενέργεια"
 
-#: web_tt2/notice.tt2:20
+#: web_tt2/notice.tt2:25
 msgid "Configuration file has been updated"
 msgstr "Το αρχείο διαμόρφωσης ενημερώθηκε"
 
-#: web_tt2/notice.tt2:23
+#: web_tt2/notice.tt2:28
 #, fuzzy
 msgid "List has been purged"
 msgstr "Η λίστα δεν έχει συνδρομητές"
 
-#: web_tt2/notice.tt2:26
+#: web_tt2/notice.tt2:31
 #, fuzzy
 msgid "List has been closed"
 msgstr "Η λίστα %1 έχει κλείσει"
 
-#: web_tt2/notice.tt2:29
+#: web_tt2/notice.tt2:34
 #, fuzzy
 msgid "List has been restored"
 msgstr "Τα παρωνύμια της λίστας έχουν αφαιρεθεί."
 
 #. (notice.path)
-#: web_tt2/notice.tt2:32
+#: web_tt2/notice.tt2:37
 msgid "File %1 successfully uploaded!"
 msgstr "Το αρχείο %1 αναβιβάστηκε επιτυχώς!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:35
+#: web_tt2/notice.tt2:40
 msgid "File %1 unziped!"
 msgstr "Το αρχείο %1 αποσυμπιέστηκε!"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:38
+#: web_tt2/notice.tt2:43
 msgid "Old file %1 has been erased"
 msgstr "Διαγραφή παλαιού αρχείου %1"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:41
+#: web_tt2/notice.tt2:46
 msgid "File %1 waiting for moderation"
 msgstr "Το αρχείο %1 βρίσκεται σε αναμονή συντονισμού"
 
 #. (notice.path)
-#: web_tt2/notice.tt2:44
+#: web_tt2/notice.tt2:49
 msgid "File %1 saved"
 msgstr "Το αρχείο %1 αποθηκεύτηκε"
 
-#: web_tt2/notice.tt2:47
+#: web_tt2/notice.tt2:52
 msgid "Your password has been emailed to you"
 msgstr ""
 
-#: web_tt2/notice.tt2:50
+#: web_tt2/notice.tt2:55
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr ""
 
 #. (notice.list)
-#: web_tt2/notice.tt2:53
+#: web_tt2/notice.tt2:58
 msgid "No message and no document to moderate for list %1"
 msgstr "Δεν υπάρχουν μηνύματα ή έγγραφα προς συντονισμό στη λίστα %1"
 
-#: web_tt2/notice.tt2:56
+#: web_tt2/notice.tt2:61
 #, fuzzy
 msgid "The list of list members have been built/updated."
 msgstr ""
 "Τα μέλη της λίστας των λιστών θα δημιουργηθούν/ενημερωθούν σύντομα (σε λίγα "
 "λεπτά)."
 
-#: web_tt2/notice.tt2:59
+#: web_tt2/notice.tt2:64
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 "Τα μέλη της λίστας των λιστών θα δημιουργηθούν/ενημερωθούν σύντομα (σε λίγα "
 "λεπτά)."
 
-#: web_tt2/notice.tt2:62
+#: web_tt2/notice.tt2:67
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
 
 #. (notice.total)
-#: web_tt2/notice.tt2:65
+#: web_tt2/notice.tt2:70
 msgid "%1 addresses have been subscribed"
 msgstr "%1 διευθύνσεις έχουν εγγραφεί συνδρομητές"
 
-#: web_tt2/notice.tt2:68
+#: web_tt2/notice.tt2:73
 msgid "You have been authenticated"
 msgstr ""
 
 #. (notice.orig_file,notice.new_file)
-#: web_tt2/notice.tt2:71
+#: web_tt2/notice.tt2:76
 #, fuzzy
 msgid "File %1 has been renamed to %2"
 msgstr "Διαγραφή παλαιού αρχείου %1"
 
-#: web_tt2/notice.tt2:74
+#: web_tt2/notice.tt2:79
 msgid ""
 "List has been set to the pending status ; listmaster need to validate it"
 msgstr ""
 
-#: web_tt2/notice.tt2:77
+#: web_tt2/notice.tt2:82
 #, fuzzy
 msgid "List name has been lowercased"
 msgstr "Η λίστα %1 έχει κλείσει"
@@ -2626,7 +2642,7 @@ msgstr "Αλλαγή διεύθυνσης ηλεκτρονικού ταχυδρ�
 msgid "New email address :"
 msgstr "Νέα διεύθυνση  ηλεκτρονικού ταχυδρομείου:"
 
-#: mail_tt2/sendpasswd.tt2:31 web_tt2/pref.tt2:34
+#: web_tt2/pref.tt2:34
 msgid "Changing your password"
 msgstr "Αλλαγή συνθηματικού"
 
@@ -2634,23 +2650,32 @@ msgstr "Αλλαγή συνθηματικού"
 msgid "Re-enter your new password :"
 msgstr "Επιβεβαιώστε το νέο σας συνθηματικό :"
 
-#: web_tt2/remindpasswd.tt2:5
+#: web_tt2/pref.tt2:47
+#, fuzzy
+msgid "Your other email addresses"
+msgstr "Άλλη διεύθυνση ηλεκτρονικού ταχυδρομείου :"
+
+#: web_tt2/pref.tt2:64
+msgid "Other email address :"
+msgstr "Άλλη διεύθυνση ηλεκτρονικού ταχυδρομείου :"
+
+#: web_tt2/pref.tt2:65
+msgid "Password :"
+msgstr "Συνθηματικό :"
+
+#: web_tt2/pref.tt2:71
+#, fuzzy
 msgid ""
-"You have forgotten your password, or you've never had any password related "
-"to this server"
+"Another email address, that should be known by Sympa and will be recognized "
+"by Sympa as an alternate email address for you. All your email addressed "
+"will also be grouped by Sympa with your primary email address to unify your "
+"subscriptions"
 msgstr ""
-
-#: web_tt2/remindpasswd.tt2:6
-msgid "it will be sent to you by email :"
-msgstr ""
-
-#: web_tt2/remindpasswd.tt2:12 web_tt2/subrequest.tt2:55
-msgid "Your e-mail address"
-msgstr ""
-
-#: web_tt2/remindpasswd.tt2:14 web_tt2/sigrequest.tt2:76
-msgid "Send me my password"
-msgstr "Αποστολή συνθηματικού"
+"Η άλλη ηλεκτρονική διεύθυνση, η οποία θα πρέπει να είναι γνωστή στο "
+"λογισμικό Sympa, και η οποία θα αναγνωρίζεται ως \n"
+"\tεναλλακτική ηλεκτρονική διεύθυνση. Θα έχετε επίσης τη δυνατότητα να "
+"εννοποιήσετε τις εγγραφές σας με\n"
+"\tτην κύρια ηλεκτρονικής σας διεύθυνση."
 
 #: web_tt2/remove_arc.tt2:5
 msgid ""
@@ -2696,6 +2721,80 @@ msgstr "Μετονομασία της λίστας"
 #: web_tt2/rename_list_request.tt2:16
 msgid "Do you really want to rename this list?"
 msgstr "Επιθυμείτε τη μετονομασία της λίστας;"
+
+#: web_tt2/renewpasswd.tt2:7
+#, fuzzy
+msgid "You request for an account creation on this list server."
+msgstr "Ανανέωση της συνδρομής σας στη λίστα '%s'"
+
+#: web_tt2/renewpasswd.tt2:9
+msgid "The password you submit is wrong. May be you forgot it ?"
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:11
+msgid "You miss the password, please submit again. May be you forgot it ?"
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:13
+msgid "You will receive an email in order to be able to choose your password."
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:16
+msgid "In order to use Sympa, you will need to define a password."
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:18
+msgid "You have forgotten your password, so you have to  renew it."
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:21
+msgid ""
+"Please submit your email address, you will receive a message that give you "
+"access to the appropriate form in order to choose your password."
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:27 web_tt2/subrequest.tt2:60
+msgid "Your e-mail address"
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:31
+#, fuzzy
+msgid "Request first password"
+msgstr "Έχω ξεχάσει το συνθηματικό μου"
+
+#: web_tt2/renewpasswd.tt2:33
+#, fuzzy
+msgid "Request new password"
+msgstr "Επιβεβαιώστε το νέο σας συνθηματικό :"
+
+#: web_tt2/requestpasswd.tt2:4
+#, fuzzy
+msgid "Message sent"
+msgstr "Αριθμός μηνύματος"
+
+#: web_tt2/requestpasswd.tt2:6
+msgid "The system sent you a message, please check your mailbox."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid ""
+"Follow the URL contained  within, it will lead you to a page in which you "
+"can choose your password."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:10
+msgid "The system was not able to send you the appropriate message."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:18
+msgid "Unkown error."
+msgstr ""
 
 #: web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) foreach message."
@@ -3098,131 +3197,145 @@ msgstr "Ανασκόπηση λιστών οικογένειας"
 msgid "Lists"
 msgstr "Λίστες"
 
-#: web_tt2/serveradmin.tt2:36
-msgid "Inactive lists"
-msgstr "Μη-ενεργές λίστες"
+#: web_tt2/serveradmin.tt2:34
+#, fuzzy
+msgid "Manage lists"
+msgstr "Μετονομασία λίστας"
 
-#: web_tt2/serveradmin.tt2:40
-msgid "Users"
+#: web_tt2/serveradmin.tt2:39
+#, fuzzy
+msgid "Consult lists"
+msgstr "Κλειστές λίστες"
+
+#: web_tt2/serveradmin.tt2:41
+msgid "Lists sorted by creation date"
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:42
+msgid "Lists sorted by last message date"
 msgstr ""
 
 #: web_tt2/serveradmin.tt2:46
+msgid "Users"
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:52
 msgid "Search User"
 msgstr "Αναζήτηση Χρήστη"
 
-#: web_tt2/serveradmin.tt2:54
+#: web_tt2/serveradmin.tt2:60
 msgid "Show sessions"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:55
+#: web_tt2/serveradmin.tt2:61
 msgid "Delay for active sessions (minutes)"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:57
+#: web_tt2/serveradmin.tt2:63
 msgid "Show only connected users"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:65
+#: web_tt2/serveradmin.tt2:71
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 "Επαναδημιουργία Αρχείων HTML archives με χρήση καταλόγων \"arctxt\" ως "
 "είσοδο."
 
-#: web_tt2/serveradmin.tt2:68
+#: web_tt2/serveradmin.tt2:74
 #, fuzzy
 msgid "listname : "
 msgstr "Όνομα λίστας :"
 
-#: web_tt2/serveradmin.tt2:68
+#: web_tt2/serveradmin.tt2:74
 msgid "Rebuild archive"
 msgstr "Επαναδημιουργία αρχείου"
 
-#: web_tt2/serveradmin.tt2:69
+#: web_tt2/serveradmin.tt2:75
 msgid "Rebuild all"
 msgstr "Επαναδημιουργία όλων"
 
-#: web_tt2/serveradmin.tt2:69
+#: web_tt2/serveradmin.tt2:75
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "  Προσοχή! Ενδέχεται να απαιτηθεί πολύς χρόνος επεξεργασίας"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:81
 msgid "Change identity"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:77
+#: web_tt2/serveradmin.tt2:83
 msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:86
 msgid "change identity as : "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:87
+#: web_tt2/serveradmin.tt2:93
 msgid ""
 "You can increase the log level specified by configuration only for your "
 "current session. On a production server, this allow to keep logs rather "
 "small and to test some features with the maximum log level. "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:90
+#: web_tt2/serveradmin.tt2:96
 msgid "Log level"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:96
+#: web_tt2/serveradmin.tt2:102
 msgid "Set log level"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:100
+#: web_tt2/serveradmin.tt2:106
 msgid "Templates"
 msgstr "Πρότυπα"
 
-#: web_tt2/serveradmin.tt2:105
+#: web_tt2/serveradmin.tt2:111
 msgid "Setting defaults list templates"
 msgstr "Ρύθμιση προκαθορισμένων προτύπων λιστών"
 
-#: web_tt2/serveradmin.tt2:118
+#: web_tt2/serveradmin.tt2:124
 msgid "Setting site templates"
 msgstr "Ρύθμιση προτύπων ιστότοπου"
 
-#: web_tt2/serveradmin.tt2:129
+#: web_tt2/serveradmin.tt2:135
 msgid "view translations"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:130
+#: web_tt2/serveradmin.tt2:136
 msgid "Customize templates"
 msgstr "Προσαρμογή προτύπων"
 
-#: web_tt2/serveradmin.tt2:134
+#: web_tt2/serveradmin.tt2:140
 msgid ""
 "When customizing Sympa web templates, it is needed to known which variables "
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
 "dump feature :"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:137
+#: web_tt2/serveradmin.tt2:143
 msgid "Unset template vars dump"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:139
+#: web_tt2/serveradmin.tt2:145
 #, fuzzy
 msgid "Set template vars dump"
 msgstr "Πρότυπα"
 
-#: web_tt2/serveradmin.tt2:145
+#: web_tt2/serveradmin.tt2:151
 msgid "Skins, CSS and colors"
 msgstr "Αφαίρεση CCS και χρωμάτων"
 
-#: web_tt2/serveradmin.tt2:147
+#: web_tt2/serveradmin.tt2:153
 msgid "Skins administration page"
 msgstr "Απογύμνωση σελίδας διαχείρισης"
 
-#: web_tt2/serveradmin.tt2:150
+#: web_tt2/serveradmin.tt2:156
 msgid "Translating Sympa"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:152
+#: web_tt2/serveradmin.tt2:158
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service mail messages and web interface). All translations for one language "
@@ -3230,23 +3343,23 @@ msgid ""
 "gettext tools."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:156
+#: web_tt2/serveradmin.tt2:162
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language : "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:159
+#: web_tt2/serveradmin.tt2:165
 #, fuzzy
 msgid "Submitting a bug, a feature request"
 msgstr "Υποβολή αίτησης δημιουργίας"
 
-#: web_tt2/serveradmin.tt2:161
+#: web_tt2/serveradmin.tt2:167
 msgid "You can submit a problem or request a new feature : "
 msgstr ""
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:167
+#: web_tt2/serveradmin.tt2:173
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr ""
 
@@ -3278,7 +3391,7 @@ msgstr "Κλείσιμο"
 msgid "Install it"
 msgstr "Εγκατάσταση"
 
-#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:60
+#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:65
 msgid "submit"
 msgstr ""
 
@@ -3373,7 +3486,7 @@ msgstr ""
 "\tθα επιβεβαιώσει την αποχώρησή σας από συνδρομητής της λίστας %1."
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:33 web_tt2/subrequest.tt2:72
+#: web_tt2/subrequest.tt2:38 web_tt2/subrequest.tt2:80
 msgid "e-mail address"
 msgstr ""
 
@@ -3409,6 +3522,10 @@ msgid ""
 msgstr ""
 "Αν δεν διεθέτετε συνθηματικό από τον συγκεκριμένο εξυπηρετητή ή δεν το "
 "θυμάστε:"
+
+#: web_tt2/sigrequest.tt2:76
+msgid "Send me my password"
+msgstr "Αποστολή συνθηματικού"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -3678,27 +3795,30 @@ msgid "Only possible in \"normal\" receiving mode"
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:5
-msgid "You requested subscription to list %1"
-msgstr ""
-
-#: web_tt2/subrequest.tt2:6
-msgid ""
-"To confirm\n"
-"        your request, please click the button below :"
-msgstr ""
-
-#. (list)
-#: web_tt2/subrequest.tt2:16
-msgid "I subscribe to list %1"
-msgstr "Εγγραφή συνδρομητή στη λίστα %1"
-
-#. (list)
-#: web_tt2/subrequest.tt2:22
+#: web_tt2/subrequest.tt2:28 web_tt2/subrequest.tt2:7
 msgid "You requested a subscription to list %1"
 msgstr ""
 
-#: web_tt2/subrequest.tt2:26
+#: web_tt2/subrequest.tt2:8
+msgid "To confirm your request, please click the button below :"
+msgstr ""
+
+#. (list)
+#: web_tt2/subrequest.tt2:9
+#, fuzzy
+msgid "You want to subscribe to list %1"
+msgstr "Επιθυμείτε να εγγραφείτε ως μέλος στη λίστα %1;"
+
+#: web_tt2/subrequest.tt2:10
+msgid "Please fill in the form below and then click the validation button"
+msgstr ""
+
+#. (list)
+#: web_tt2/subrequest.tt2:22
+msgid "I subscribe to list %1"
+msgstr "Εγγραφή συνδρομητή στη λίστα %1"
+
+#: web_tt2/subrequest.tt2:32
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
 "        this list against your will, a message containing your password\n"
@@ -3706,39 +3826,93 @@ msgid ""
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:29
+#: web_tt2/subrequest.tt2:34
 #, fuzzy
 msgid ""
 "Check your mailbox for new messages and examine the message from Sympa to "
 "find your password.\n"
-"  Enter that password, below. This wil confirm your request to be subscribed "
-"from list %1."
+"\tEnter that password below. This will confirm your subscription to list %1."
 msgstr ""
 "Ελέγξε τη γραμματοθυρίδα σας για νέα μηνύματα και εισάγετε ακολούθως το\n"
 "\tσυνθηματικό που σας έχει αποσταλεί. Αυτό\n"
 "\tθα επιβεβαιώσει την αποχώρησή σας από συνδρομητής της λίστας %1."
 
-#: web_tt2/subrequest.tt2:49
+#: web_tt2/subrequest.tt2:54
 msgid ""
 "This password, associated with your email address, willallow you to access "
 "your custom environment."
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:68
+#: web_tt2/subrequest.tt2:73
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
-"        your password below :"
+"        your password below"
 msgstr ""
 
-#: web_tt2/subrequest.tt2:83
+#: web_tt2/subrequest.tt2:75
+msgid ", in addition to the personnal informations requested."
+msgstr ""
+
+#: web_tt2/subrequest.tt2:91
 msgid "My password ?"
 msgstr "Το συνθηματικό μου;"
 
 #. (list)
-#: web_tt2/subrequest.tt2:89
+#: web_tt2/subrequest.tt2:97
 msgid "You are already subscriber of list %1"
 msgstr ""
+
+#: web_tt2/ticket.tt2:1
+msgid "Sorry, this operation can't be performed"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#: web_tt2/ticket.tt2:11
+msgid "reason"
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"Someone (may be yourself) has allready used this validation ticket from host "
+"%1 .If this user is not you, you may report a to your mail services "
+"administrator a confidentiality issue : probably someone else can access to "
+"your messages "
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket is expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+msgid "The requested authentication ticket is unrecognized or expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:26
+#, fuzzy
+msgid "login"
+msgstr "Σύνδεση"
+
+#: web_tt2/ticket.tt2:28
+#, fuzzy
+msgid "You may request a new authentication url."
+msgstr "Newsletter, περιορισμένο σε συντονιστές μετά από επιβεβαίωση"
 
 #: web_tt2/tt2_error.tt2:7
 msgid "Sympa error - could not display web page"
@@ -3838,7 +4012,7 @@ msgstr "Αναζήτηση Χρήστη"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:16145
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15337
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -4926,7 +5100,7 @@ msgstr "Παρουσίαση των συνδρομών σας με τις ακό
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 #, fuzzy
-msgid "Or send a message to %1 with subject: \"sub %2\""
+msgid "Or send a message to %1 with subject: \"%2\""
 msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #: mail_tt2/invite.tt2:12
@@ -4989,9 +5163,10 @@ msgstr ""
 msgid "Moderators List %1 / %2"
 msgstr "Συντονιστές λίστας %1"
 
-#. (list.name)
+#. (list.name,list.host,email)
 #: mail_tt2/listmaster_notification.tt2:4
-msgid "List \"%1\" creation request"
+#, fuzzy
+msgid "List \"%1@%2\" creation request from %3"
 msgstr "Αίτημα δημιουργίας λίστας \"%1\""
 
 #. (email,list.name)
@@ -6185,35 +6360,53 @@ msgstr "Αποδοχή άρθρου από τη λίστα %1 προς τη λί
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:4
-msgid "Article to be approved for list %1 from %2"
-msgstr "Αποδοχή άρθρου από τη λίστα %1 προς τη λίστα %2"
+#, fuzzy
+msgid "Message for list %1 from %2 to be approved"
+msgstr "Το μήνυμα %s της λίστας %s έχει απορριφθεί.\n"
+
+#. (list.name,msg_from)
+#: mail_tt2/moderate.tt2:15
+#, fuzzy
+msgid "One new message from list %1 from %2 arrived. "
+msgstr "Επισκόπηση λίστας %1"
+
+#: mail_tt2/moderate.tt2:16
+msgid "This message as been tagued as a spam"
+msgstr ""
+
+#. (mod_spool_size)
+#: mail_tt2/moderate.tt2:18
+#, fuzzy
+msgid "They are %1 messages awaiting moderation."
+msgstr "Αριθμός μηνυμάτων που αναμένουν συντονισμός στη λίστα: %1"
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
-#: mail_tt2/moderate.tt2:17
+#: mail_tt2/moderate.tt2:25
 msgid ""
-"To tag the attached message in list %1 go to the following page :\n"
+"To tag the message in list %1 for the appropriate topic, please use the "
+"following link :\n"
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/moderate.tt2:19
+#: mail_tt2/moderate.tt2:31
 msgid "To distribute the attached message in list %1:"
 msgstr ""
 
 #. (conf.email,conf.host)
-#: mail_tt2/moderate.tt2:21 mail_tt2/moderate.tt2:26
+#: mail_tt2/moderate.tt2:33 mail_tt2/moderate.tt2:38
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
-#: mail_tt2/moderate.tt2:24
+#: mail_tt2/moderate.tt2:36
 msgid "To reject it (it will be removed):"
 msgstr ""
-
-#. (mod_spool_size)
-#: mail_tt2/moderate.tt2:31
-msgid "Number of messages awaiting moderation for this list : %1"
-msgstr "Αριθμός μηνυμάτων που αναμένουν συντονισμός στη λίστα: %1"
 
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
@@ -6424,22 +6617,21 @@ msgid ""
 "To unsubscribe from the list, you need to provide the following password"
 msgstr ""
 
-#: mail_tt2/sendpasswd.tt2:26
-msgid "To access your personal environment, you need to login first"
+#. (conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:27
+msgid ""
+"Someone, probably you, requested to allocate or renew your password for your "
+"list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
 
-#. (newuser.email)
-#: mail_tt2/sendpasswd.tt2:28 mail_tt2/sendssopasswd.tt2:9
-msgid "your email address    : %1"
-msgstr ""
-
-#. (newuser.password)
-#: mail_tt2/sendpasswd.tt2:29 mail_tt2/sendssopasswd.tt2:10
-msgid "your password : %1"
+#: mail_tt2/sendpasswd.tt2:28
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
 msgstr ""
 
 #. (base_url,path_cgi)
-#: mail_tt2/sendpasswd.tt2:38 mail_tt2/sendssopasswd.tt2:14
+#: mail_tt2/sendpasswd.tt2:32 mail_tt2/sendssopasswd.tt2:14
 msgid "Help on Sympa: %1%2"
 msgstr "Βοήθεια Sympa: %1%2"
 
@@ -6449,6 +6641,16 @@ msgid ""
 "supplied a working email address.  Please enter the following email and "
 "password\n"
 "in the setup wizard to complete your account configuration."
+msgstr ""
+
+#. (newuser.email)
+#: mail_tt2/sendssopasswd.tt2:9
+msgid "your email address    : %1"
+msgstr ""
+
+#. (newuser.password)
+#: mail_tt2/sendssopasswd.tt2:10
+msgid "your password : %1"
 msgstr ""
 
 #. (list.name)
@@ -7014,8 +7216,8 @@ msgstr "Επιθυμείτε τη διαγραφή του μηνύματος;"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/etc/mhonarc-ressources.tt2:306 src/etc/mhonarc-ressources.tt2:310
-#: src/etc/mhonarc-ressources.tt2:314 src/etc/mhonarc-ressources.tt2:560
-#: src/etc/mhonarc-ressources.tt2:564 src/etc/mhonarc-ressources.tt2:568
+#: src/etc/mhonarc-ressources.tt2:314 src/etc/mhonarc-ressources.tt2:563
+#: src/etc/mhonarc-ressources.tt2:567 src/etc/mhonarc-ressources.tt2:571
 msgid "%m/%d/%Y"
 msgstr ""
 
@@ -7065,18 +7267,22 @@ msgstr ""
 msgid "Do you really want to delete this message ?"
 msgstr "Επιθυμείτε τη διαγραφή του μηνύματος;"
 
+#: src/etc/mhonarc-ressources.tt2:486
+msgid "view source"
+msgstr ""
+
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/etc/mhonarc-ressources.tt2:613
+#: src/etc/mhonarc-ressources.tt2:616
 msgid "%y/%m/%d"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:623
+#: src/etc/mhonarc-ressources.tt2:626
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Κυριακή:Δευτέρα:Τρίτη:Τετάρτη:Πέμπτη:Παρασκευή:Σαββάτο"
 
-#: src/etc/mhonarc-ressources.tt2:641
+#: src/etc/mhonarc-ressources.tt2:644
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -7100,6 +7306,12 @@ msgstr "Ημερήσια αξιολόγηση bouncing χρηστών"
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
 msgid "daily delete logs older than 3 months"
+msgstr ""
+
+#: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
+msgid ""
+"daily delete tickets older than sympa.conf/one_time_ticket_table_ttl "
+"parameter"
 msgstr ""
 
 #: src/etc/global_task_models/purge_orphan_bounces.monthly.task:1
@@ -7219,18 +7431,18 @@ msgstr "Το αρχείο διαμόρφωσης --CONFIG-- περιέχει λ�
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9480
+#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9173
 msgid "%A"
 msgstr ""
 
-#: src/Conf.pm:330 src/Conf.pm:537
+#: src/Conf.pm:339 src/Conf.pm:546
 msgid "Error at line %d : %s"
 msgstr "Σφάλμα στη γραμμή %d : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1785
-#: wwsympa/wwsympa.fcgi:780
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2770 wwsympa/wwsympa.fcgi:987
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
@@ -7850,16 +8062,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10897 wwsympa/wwsympa.fcgi:10966
-#: wwsympa/wwsympa.fcgi:11168 wwsympa/wwsympa.fcgi:11510
-#: wwsympa/wwsympa.fcgi:15607 wwsympa/wwsympa.fcgi:16484
-#: wwsympa/wwsympa.fcgi:16485 wwsympa/wwsympa.fcgi:4425
-#: wwsympa/wwsympa.fcgi:4426 wwsympa/wwsympa.fcgi:5858
-#: wwsympa/wwsympa.fcgi:7045 wwsympa/wwsympa.fcgi:7563
-#: wwsympa/wwsympa.fcgi:7613 wwsympa/wwsympa.fcgi:7615
-#: wwsympa/wwsympa.fcgi:8141 wwsympa/wwsympa.fcgi:8142
-#: wwsympa/wwsympa.fcgi:8176 wwsympa/wwsympa.fcgi:8177
-#: wwsympa/wwsympa.fcgi:8390 wwsympa/wwsympa.fcgi:8391
+#: wwsympa/wwsympa.fcgi:10504 wwsympa/wwsympa.fcgi:10573
+#: wwsympa/wwsympa.fcgi:10775 wwsympa/wwsympa.fcgi:11105
+#: wwsympa/wwsympa.fcgi:14900 wwsympa/wwsympa.fcgi:15637
+#: wwsympa/wwsympa.fcgi:15638 wwsympa/wwsympa.fcgi:4790
+#: wwsympa/wwsympa.fcgi:4791 wwsympa/wwsympa.fcgi:5957
+#: wwsympa/wwsympa.fcgi:6953 wwsympa/wwsympa.fcgi:7487
+#: wwsympa/wwsympa.fcgi:7524 wwsympa/wwsympa.fcgi:7526
+#: wwsympa/wwsympa.fcgi:7975 wwsympa/wwsympa.fcgi:7976
+#: wwsympa/wwsympa.fcgi:8010 wwsympa/wwsympa.fcgi:8011
+#: wwsympa/wwsympa.fcgi:8188 wwsympa/wwsympa.fcgi:8189
 msgid "%d %b %Y"
 msgstr ""
 
@@ -7957,7 +8169,7 @@ msgstr ""
 msgid "[Image%s]"
 msgstr "%Εικόνα(%s)"
 
-#: src/sympa.pl:2057
+#: src/sympa.pl:2090
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -7968,191 +8180,263 @@ msgstr "%1 : άγνωστη ενέργεια"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:781
+#: wwsympa/wwsympa.fcgi:988
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:339 wwsympa/SympaSession.pm:340
-#: wwsympa/wwsympa.fcgi:11744 wwsympa/wwsympa.fcgi:11887
-#: wwsympa/wwsympa.fcgi:14309 wwsympa/wwsympa.fcgi:7498
+#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
+#: wwsympa/wwsympa.fcgi:11329 wwsympa/wwsympa.fcgi:11462
+#: wwsympa/wwsympa.fcgi:13775 wwsympa/wwsympa.fcgi:7447
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:16090 wwsympa/wwsympa.fcgi:16091
+#: wwsympa/wwsympa.fcgi:15282 wwsympa/wwsympa.fcgi:15283
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
-#: wwsympa/wwslib.pm:48
+#: wwsympa/wwslib.pm:46
 msgid "session"
 msgstr ""
 
-#: wwsympa/wwslib.pm:49
+#: wwsympa/wwslib.pm:47
 msgid "10 minutes"
 msgstr "10 λεπτά"
 
-#: wwsympa/wwslib.pm:50
+#: wwsympa/wwslib.pm:48
 msgid "30 minutes"
 msgstr "30 λεπτά"
 
-#: wwsympa/wwslib.pm:51
+#: wwsympa/wwslib.pm:49
 msgid "1 hour"
 msgstr "1 ώρα"
 
-#: wwsympa/wwslib.pm:52
+#: wwsympa/wwslib.pm:50
 msgid "6 hours"
 msgstr "6 ώρες"
 
-#: wwsympa/wwslib.pm:53
+#: wwsympa/wwslib.pm:51
 msgid "1 day"
 msgstr "1 ημέρα"
 
-#: wwsympa/wwslib.pm:54
+#: wwsympa/wwslib.pm:52
 msgid "1 week"
 msgstr "1 εβδομάδα"
 
-#: wwsympa/wwslib.pm:56
+#: wwsympa/wwslib.pm:54
 msgid "listed in the list review page"
 msgstr ""
 
-#: wwsympa/wwslib.pm:57
+#: wwsympa/wwslib.pm:55
 msgid "concealed"
 msgstr ""
 
-#: wwsympa/wwslib.pm:61
+#: wwsympa/wwslib.pm:59
 msgid "welcome message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:62
+#: wwsympa/wwslib.pm:60
 #, fuzzy
 msgid "unsubscribe message"
 msgstr "Αποχώρηση συνδρομητή από τη λίστα %1"
 
-#: wwsympa/wwslib.pm:63
+#: wwsympa/wwslib.pm:61
 msgid "deletion message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:64
+#: wwsympa/wwslib.pm:62
 msgid "message footer"
 msgstr ""
 
-#: wwsympa/wwslib.pm:65
+#: wwsympa/wwslib.pm:63
 msgid "message header"
 msgstr ""
 
-#: wwsympa/wwslib.pm:66
+#: wwsympa/wwslib.pm:64
 msgid "remind message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:67
+#: wwsympa/wwslib.pm:65
 msgid "editor rejection message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:68
+#: wwsympa/wwslib.pm:66
 msgid "subscribing invitation message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:69
+#: wwsympa/wwslib.pm:67
 msgid "help file"
 msgstr ""
 
-#: wwsympa/wwslib.pm:70
+#: wwsympa/wwslib.pm:68
 msgid "directory of lists"
 msgstr ""
 
-#: wwsympa/wwslib.pm:71
+#: wwsympa/wwslib.pm:69
 msgid "global remind message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:72
+#: wwsympa/wwslib.pm:70
 msgid "summary message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:73
+#: wwsympa/wwslib.pm:71
 msgid "list description"
 msgstr ""
 
-#: wwsympa/wwslib.pm:74
+#: wwsympa/wwslib.pm:72
 msgid "list homepage"
 msgstr ""
 
-#: wwsympa/wwslib.pm:75
+#: wwsympa/wwslib.pm:73
 msgid "list creation request message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:76
+#: wwsympa/wwslib.pm:74
 msgid "list creation notification message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:77
+#: wwsympa/wwslib.pm:75
 msgid "virus infection message"
 msgstr ""
 
-#: wwsympa/wwslib.pm:78
+#: wwsympa/wwslib.pm:76
 msgid "list aliases template"
 msgstr ""
 
-#: wwsympa/wwslib.pm:35
+#: wwsympa/wwslib.pm:33
 msgid "standard (direct reception)"
 msgstr ""
 
-#: wwsympa/wwslib.pm:36
+#: wwsympa/wwslib.pm:34
 msgid "digest MIME format"
 msgstr ""
 
-#: wwsympa/wwslib.pm:37
+#: wwsympa/wwslib.pm:35
 msgid "digest plain text format"
 msgstr ""
 
-#: wwsympa/wwslib.pm:38
+#: wwsympa/wwslib.pm:36
 msgid "summary mode"
 msgstr ""
 
-#: wwsympa/wwslib.pm:39
+#: wwsympa/wwslib.pm:37
 msgid "notice mode"
 msgstr ""
 
-#: wwsympa/wwslib.pm:40
+#: wwsympa/wwslib.pm:38
 msgid "text only mode"
 msgstr ""
 
-#: wwsympa/wwslib.pm:41
+#: wwsympa/wwslib.pm:39
 msgid "html only mode"
 msgstr ""
 
-#: wwsympa/wwslib.pm:42
+#: wwsympa/wwslib.pm:40
 msgid "urlize mode"
 msgstr ""
 
-#: wwsympa/wwslib.pm:43
+#: wwsympa/wwslib.pm:41
 msgid "no mail (useful for vacations)"
 msgstr ""
 
-#: wwsympa/wwslib.pm:44
+#: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
 msgstr ""
 
-#~ msgid "Other email address :"
-#~ msgstr "Άλλη διεύθυνση ηλεκτρονικού ταχυδρομείου :"
+#. (init_email)
+#: web_tt2/loginbanner.tt2:5
+msgid ""
+"Your password has been sent to your email address %1.<br />Please check your "
+"e-mail box to provide your password below."
+msgstr ""
 
-#~ msgid "Password :"
-#~ msgstr "Συνθηματικό :"
+#: web_tt2/loginbanner.tt2:10
+msgid ""
+"You need to login to access your custom WWSympa environment or to perform a "
+"privileged operation (one that requires your email address)."
+msgstr ""
 
+#: web_tt2/remindpasswd.tt2:5
+msgid ""
+"You have forgotten your password, or you've never had any password related "
+"to this server"
+msgstr ""
+
+#: web_tt2/remindpasswd.tt2:6
+msgid "it will be sent to you by email :"
+msgstr ""
+
+#. (list)
+#: web_tt2/subrequest.tt2:5
+msgid "You requested subscription to list %1"
+msgstr ""
+
+#: web_tt2/subrequest.tt2:6
+msgid ""
+"To confirm\n"
+"        your request, please click the button below :"
+msgstr ""
+
+#. (list)
+#: web_tt2/subrequest.tt2:29
 #, fuzzy
-#~ msgid ""
-#~ "Another email address, that should be known by Sympa and will be "
-#~ "recognized by Sympa as an alternate email address for you. All your email "
-#~ "addressed will also be grouped by Sympa with your primary email address "
-#~ "to unify your subscriptions"
-#~ msgstr ""
-#~ "Η άλλη ηλεκτρονική διεύθυνση, η οποία θα πρέπει να είναι γνωστή στο "
-#~ "λογισμικό Sympa, και η οποία θα αναγνωρίζεται ως \n"
-#~ "\tεναλλακτική ηλεκτρονική διεύθυνση. Θα έχετε επίσης τη δυνατότητα να "
-#~ "εννοποιήσετε τις εγγραφές σας με\n"
-#~ "\tτην κύρια ηλεκτρονικής σας διεύθυνση."
+msgid ""
+"Check your mailbox for new messages and examine the message from Sympa to "
+"find your password.\n"
+"  Enter that password, below. This wil confirm your request to be subscribed "
+"from list %1."
+msgstr ""
+"Ελέγξε τη γραμματοθυρίδα σας για νέα μηνύματα και εισάγετε ακολούθως το\n"
+"\tσυνθηματικό που σας έχει αποσταλεί. Αυτό\n"
+"\tθα επιβεβαιώσει την αποχώρησή σας από συνδρομητής της λίστας %1."
+
+#. (list)
+#: web_tt2/subrequest.tt2:68
+msgid ""
+"To confirm your subscription to list %1, please enter\n"
+"        your password below :"
+msgstr ""
+
+#. (conf.sympa,subject)
+#: mail_tt2/invite.tt2:10
+#, fuzzy
+msgid "Or send a message to %1 with subject: \"sub %2\""
+msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
+
+#. (list.name)
+#: mail_tt2/listmaster_notification.tt2:4
+msgid "List \"%1\" creation request"
+msgstr "Αίτημα δημιουργίας λίστας \"%1\""
+
+#. (list.name,conf.wwsympa_url,modkey)
+#: mail_tt2/moderate.tt2:17
+msgid ""
+"To tag the attached message in list %1 go to the following page :\n"
+"\n"
+"%2/viewmod/%1/%3\n"
+msgstr ""
+
+#. (mod_spool_size)
+#: mail_tt2/moderate.tt2:31
+msgid "Number of messages awaiting moderation for this list : %1"
+msgstr "Αριθμός μηνυμάτων που αναμένουν συντονισμός στη λίστα: %1"
+
+#: mail_tt2/sendpasswd.tt2:26
+msgid "To access your personal environment, you need to login first"
+msgstr ""
+
+#~ msgid "Current password :"
+#~ msgstr "Τρέχον συνθηματικό"
+
+#~ msgid "Inactive lists"
+#~ msgstr "Μη-ενεργές λίστες"
+
+#~ msgid "Article to be approved for list %1 from %2"
+#~ msgstr "Αποδοχή άρθρου από τη λίστα %1 προς τη λίστα %2"
 
 #~ msgid "Service messages description :"
 #~ msgstr "Υπηρεσία περιγραφής μηνυμάτων  :"
@@ -8848,9 +9132,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Είμαι συνδρομητής σε τουλάχιστον μία λίστα αλλά δε διεθέτω συνθηματικό"
 
-#~ msgid "I forgot my password"
-#~ msgstr "Έχω ξεχάσει το συνθηματικό μου"
-
 #, fuzzy
 #~ msgid "Incatives Lists"
 #~ msgstr "Μη-ενεργές λίστες"
@@ -9183,11 +9464,14 @@ msgstr ""
 #~ msgid "Remote addr"
 #~ msgstr "Απομακρυσμένη διεύθυνση"
 
-#~ msgid "Rename list"
-#~ msgstr "Μετονομασία λίστας"
-
 #~ msgid "Shared web"
 #~ msgstr "Διαμοιραζόμενος ιστότοπος"
 
 #~ msgid "This FastCGI process (%1) has served %2 since %3."
 #~ msgstr "Η διεργασία FastCGI  (%1) έχει εξυπηρετήσει %2 από τις %3."
+
+#~ msgid "I forgot my password"
+#~ msgstr "Έχω ξεχάσει το συνθηματικό μου"
+
+#~ msgid "Rename list"
+#~ msgstr "Μετονομασία λίστας"
