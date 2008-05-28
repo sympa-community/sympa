@@ -3,6 +3,97 @@
 
 (See Changelog file for the full changes log)
 
+5.4.3		05 May 2008
+
+Features:
+
+  po/ja.po, po/web_help_ja.po: Introduction of the huge work in progress by Soji Ikeda to update the Japanese translation of the user interface and translate the online help in Japanese.
+
+  po/ru.po: Updated Russian translation.
+
+  src/Commands.pm: [#3990][Submitted by A. Berstein, electricembers.net] The quiet option has been reactivated for the "reject" mail command.
+
+Bug fixes:
+
+  wwsympa/archived.pl: [Reported by M. Kretchner, INRIA] It was impossible to remove a message from web archives or rebuild these archives. This was due to a regexp to prevent archived.pl from using dot-starting files added by some Linux distribution (as Gentoo). Fixed by extending the regexp.
+
+  check_perl_modules.pl: [Reported by M. Gorecka-Wolniewicz, Nicolaus Copernicus univ., Torun] In some cases, CAS logout didn't work, due to a value of "0" transformed into an empty string in the session cookie. Fixed by upgrading CGI version.
+
+  src/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl: [#3957][Reported by O. Berger, Telecom & Management SudParis] When launching Sympa daemons (other than sympa.pl) with an unknown option, the daemon was still launched instead of failing to launch.
+
+
+5.4.2		14 April 2008
+
+Features:
+
+   po/zh_CN.po: [Submitted by Li Xuejiang, Zhao Yongming, Yahoo!] Simplified Chinese is now fully translated.
+
+Changes:
+
+   src/List.pm, src/Upgrade.pm: [Reported by L. Gentis, IUFM Lorraine]When updating a config file while the upgrade process, the "email" parameter value of the "update" paragraph was set to 'listmaster'. However, this value was validated against a regexp for emails. this produced an error log, as 'listmaster' is not a valid email address. Fixed by allowing 'listamster' and 'automatic' strings in this regexp. 'automatic will be used to designate updates done by processes instead of users.
+
+Bug fixes:
+
+   wwsympa/wwsympa.fcgi: [#3947][Reported by S. costard Univ. Haute Bretagne] In the case of CAS authentication, a CAS ticket was requested for any request in the web interface. Fixed by ensuring that the user email is attached to the session.
+
+   src/List.pm: [Submitted by W. Werner, Fraunhofer-Institut SIT] The path that Sympa used to look for encryption keys had '.enc' instead of a '@enc' in the file name.
+
+   src/List.pm: [Submitted by W. Werner, Fraunhofer-Institut SIT] Message signature verification didn't work if user used different certificate for signing and encrypting AND didn't send both in each message, like Kmail does.
+
+   src/Upgrade.pm, src/etc/script/create_db.SQLite: [#3915][Submitted by M. Deranek, slonko.net] SQLite support was broken for the session table.
+   
+
+5.4.1		01 April 2008
+
+Bug fixes:
+
+  /wwsympa/wwsympa.fcgi: [Reported by J.M. Beuken, univ. cat. Louvain] When copying a template through the web interface, HTML was not unescaped before writing the file. c onsequently, the file used to reload the page for template edition had escaped HTML. for critical files such as main.tt2 or title.tt2, this caused the web page diaply to choke on tt2 parse errors.
+
+Changes:
+
+  src/Lock.pm: Increasing log levels in low level functions of Lock.pm.
+
+5.4		27 March 2008
+
+   Bug fixes :
+
+   /wwsympa/wwsympa.fcgi: While processing a subscription request, first check if user is member of the list
+
+   /wwsympa/bounced.pl: When a bounce file could not be created, nothing was done, so at the next bounced.pl iteration, the faulty report was still present. In such a case, the bounce report is now moved to bad.
+
+   /wwsympa/wwsympa.fcgi: Anybody loading a page from the web archives would presented a HTTP header for the page expiration corresponding to the last time the archive file was modified (this was introduced to limit multiple harvesting of hte same page by web crawlers). The drawback was that, when browsing archives, all the page is not staitc, just the part related to archives. This posed problems for session management. Fixed by testing if a user is a crawler prior to define the expiration header.
+
+   /wwsympa/wwsympa.fcgi: [#3790][Reported by R. Tassoni, National Library of Australia and T. Danel] When displaying a message to moderate in the web interface, if a document was attached to the message, the link to display the message lead to empty documents. This was because we didn't take into account the fact that MHonArc put the file in a subdirectory. Fixed by changing the kind of ergument file passed from scalar to vector.
+
+   src/etc/scenari/access_web_archive.intranet, src/etc/scenari/review.intranet, src/etc/scenari/visibility.intranet: [#3744] [remote_addr] variable might not be available for a scenario. [env->remote_addr] should be used instead
+
+   wwsympa/wwsympa.fcgi: [#1809][Reported by P. von der Hagen, univ. Karlsruhe] Files in the shared directory with regexp special characters could not be renamed. Fixed by using "\Q" escape signal at the beginning of the regexp (s/\Q$strtofind/strtosubst/).
+
+   src/Lock.pm: [#3229][#3237][#3518][Reported by T. Berry, NASA and D. Lalot, univ. Aix-Marseille] Lock failed when two processes were reading the same file, then one of them switched to write mode. It could then modify the file while the other process was reading, leading to uncomplete informations gathered from reading. Fixed by changing behaviour: Now if a process wants to switch to or from write mode, it first release the file lock at the filesystem level, then tries to put a new one. this way, switching to write mode is controlled by the filesystem.
+
+   wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi: Bug related to session lost when RSS access comes from the same browser as web browser.
+
+
+   src/PlainDigest.pm: [#3702][Reported by A. Bernstein, electricembers.net] Some malformed headers caused Sympa to crash by calling a method on an undefined MIME::Entity::head object. Fixed by testing the definition of this object before calling the method.
+
+   src/List.pm: [#3713][Reported by A. Bernstein, electricembers.net] Call to functions in the Storage CPAN module could lead to Sympa processes dying because these functions could issue "croak" message. Fixed by enclosing these call into eval{} blocks.
+
+   src/etc/script/create_db.Pg: [Reported by S. Kristoffersen, univ. Oslo] Missing "DROP TABLE session_table;" line in Pg creation script.  Field id_session in table session_table had the type "int4" which was too small for the size of session id. Fixed by changing type to int8.
+
+   wwsympa/wwsympa.fcgi: [#3479] http://listes.mydomain.fr/sympa/dump/mylist/light returned an error if authentication was required and not satisfied. Now Sympa asks for authentification instead.
+
+   wwsympa/wwsympa.fcgi: [#3596] "spam_protection" list parameter was not used. Just the robot parameter value.
+
+
+   Changes:
+
+   src/SQLSource.pm: [M.Redinger] Reported problems with field names upper cased with Oracle. Now forcing lower cased field names.
+
+   src/Commands.pm, src/List.pm, src/report.pm: [#3636] When accepting multiple subscription requests, the list of pending subscription was not updated. This was due to two loops over email addresses one the one hand and over files on the other hand which were embedded in the wrong order, causing only the first file to be parsed. When an authorized subscription request is received, if the sender is subscribed already, the request is rejected.
+
+
+
+
 5.4b.1		31 January 2008
 
 
@@ -59,9 +150,13 @@
 
 	src/Scenario.pm: Now, in scenari using SMTP header fields, if a message exists, the value of the header is defaulted to an empty strings if it is empty or missing.
 
-***** 	New C wrapper. We definitely disabled the setuid solution to run wwsympa.fcgi. If the script you used in your web server configuration was wwsympa.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes wwsympa-wrapper.fcgi instead of wwsympa.fcgi.
+***** NOTE 1 :YOU MAY HAVE TO CHANGE YOUR WEB SERVER CONFIGURATION! We definitely disabled the setuid solution to run **wwsympa.fcgi**.
+***** If the script you used in your web server configuration was wwsympa.fcgi (to whom you had attributed the "S" bit) you MUST change
+***** your Apache configuration so that the script you use becomes wwsympa-wrapper.fcgi instead of wwsympa.fcgi.
 
-***** 	C wrapper now for sympa_soap_server. We definitely disabled the setuid solution to run sympa_soap_server.fcgi. If the script you used in your web server configuration was sympa_soap_server.fcgi (to whom you had attributed the "S" bit) you MUST change your Apache configuration so that the script you use becomes sympa_soap_server-wrapper.fcgi instead of sympa_soap_server.fcgi.
+***** NOTE 2 :YOU MUST CHANGE YOUR SOAP SERVER CONFIGURATION! We ALSO definitely disabled the setuid solution to run **sympa_soap_server.fcgi**.
+***** If the script you used in your web server configuration was sympa_soap_server.fcgi (to whom you had attributed the "S" bit) you MUST change
+***** your Apache configuration so that the script you use becomes sympa_soap_server-wrapper.fcgi instead of sympa_soap_server.fcgi.
 
 	wwsympa/wwsympa.fcgi: Now wwsympa switches to maintenance mode if not run under the right user id. It quits the maintenace mode as soon as the user id is the good one.
 
@@ -83,7 +178,7 @@
 
 	Web mail composer is now able to send messages to several recipients.
 
-	Generalization of "use strict vars"
+	Genralization of "use strict vars"
 
 	wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi: Reduce SQL queries for sessions. Don't exist if new session abort.
 	Also renew the cookie (a random used as session_id) so it make session hijacking much more difficult.
