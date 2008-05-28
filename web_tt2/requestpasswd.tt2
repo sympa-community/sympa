@@ -1,0 +1,22 @@
+<!-- begin requestpasswd.tt2 -->
+
+[% IF login_error == 'ticket_sent' %]
+      <h3>[%|loc%]Message sent[%END%]</h3>
+      <p>
+      [%|loc%]The system sent you a message, please check your mailbox.[%END%]<br/>[%|loc%]Follow the URL contained  within, it will lead you to a page in which you can choose your password.[%END%]
+      </p>
+[% ELSIF login_error == 'unable_to_send_ticket' %]
+      <p>
+      [%|loc%]The system was not able to send you the appropriate message.[%END%]
+     </p>
+[% ELSIF login_error == 'unable_to_create_ticket' %]
+      <p>
+      [%|loc%]Internal error : could not create a ticket, please contact the service administrator[%END%]
+     </p>
+[% ELSE %]
+      <p>
+      [%|loc%]Unkown error.[%END%]		
+     </p>
+[% END %]
+
+<!-- end requestpasswd.tt2 -->

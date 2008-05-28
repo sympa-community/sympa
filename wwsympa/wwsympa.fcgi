@@ -188,8 +188,9 @@ my %comm = ('home' => 'do_home',
 	 'pref', => 'do_pref',
 	 'setpref' => 'do_setpref',
 	 'setpasswd' => 'do_setpasswd',
-	 'remindpasswd' => 'do_remindpasswd',
-	 'sendpasswd' => 'do_sendpasswd',
+	 'renewpasswd' => 'do_renewpasswd',
+	 'firstpasswd' => 'do_firstpasswd',
+	 'requestpasswd' => 'do_requestpasswd',
 	 'choosepasswd' => 'do_choosepasswd',	
 	 'viewfile' => 'do_viewfile',
 	 'set' => 'do_set',
@@ -312,7 +313,8 @@ my %auth_action = ('logout' => 1,
 		   'login' => 1,
 		   'sso_login' => 1,
 		   'sso_login_succeeded' => 1,
-		   'remindpasswd' => 1,
+		   'renewpasswd' => 1,
+		   'firstpasswd' => 1,
 		   'choosepasswd' => 1,
 		   'sendssopasswd' => 1,
 		   'ticket' => 1,
@@ -322,7 +324,7 @@ my %auth_action = ('logout' => 1,
 my %action_args = ('default' => ['list'],
 		'editfile' => ['list','file'],
 		'viewfile' => ['list','file'],
-		'sendpasswd' => ['email'],
+		'requestpasswd' => ['email'],
 		'choosepasswd' => ['email','passwd'],
 		'lists' => ['topic','subtopic'],
 		'latest_lists' => ['topic','subtopic'],   
@@ -332,7 +334,8 @@ my %action_args = ('default' => ['list'],
 		'sso_login_succeeded' => ['auth_service_name','previous_action','previous_list'],
 		'loginrequest' => ['previous_action','previous_list'],
 		'logout' => ['previous_action','previous_list'],
-		'remindpasswd' => ['previous_action','previous_list'],
+		'renewpasswd' => ['previous_action','previous_list'],
+		'firstpasswd' => ['previous_action','previous_list'],
 		'css' => ['file'],
 		'pref' => ['previous_action','previous_list'],
 		'reject' => ['list','id'],
@@ -516,7 +519,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'send_mail' => ['param.user.email'],
 		     'send_me' => ['param.list'],
 		     'view_source' => ['param.list'],
-		     'sendpasswd' => ['email'],
+		     'requestpasswd' => ['email'],
 		     'serveradmin' => ['param.user.email'],
 		     'set' => ['param.list','reception|visibility'],
 		     'set_lang' => [],
@@ -811,7 +814,7 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'd_control' => {'path' => 'qencode'},
 		 'd_change_access' => {'path' => 'qencode'},
 		 'd_set_owner' => {'path' => 'qencode'},
-		 'sendpasswd' => {'email' => 'fix_escape_uri'},
+		 'requestpasswd' => {'email' => 'fix_escape_uri'},
 		 'viewbounce' => {'email' => 'fix_escape_uri'},
 		 'editsubscriber' => {'email' => 'fix_escape_uri'},
 		 'edit_list' => {'*param*' => 'unescape_html'}, ## Required because outgoing parameters have been html-escaped in edit_list_request
@@ -2849,7 +2852,7 @@ sub do_ticket {
 			  'status' => 'error',
 			  'error_type' => "missing_parameter"});
 	     $param->{'login_error'} = 'missing_password';
-	     return $in{'previous_action'} || 'remindpasswd';
+	     return $in{'previous_action'} || 'renewpasswd';
 	 }
      }
 
@@ -2871,7 +2874,7 @@ sub do_ticket {
 	 }elsif ($in{'failure_referer'}) {
 	     $param->{'redirect_to'} = $in{'failure_referer'};	    
 	 }else {
-	     return  'remindpasswd';
+	     return  'renewpasswd';
 	 }
      } 
      $param->{'user'} = $data->{'user'};
@@ -3614,10 +3617,14 @@ sub sendssopasswd {
     
     return 'validateemail';
 }
-
- ## Remind the password
-sub do_remindpasswd {
-     &wwslog('info', 'do_remindpasswd(%s)', $in{'email'}); 
+sub do_firstpasswd {
+    &wwslog('info', 'do_firstpasswd(%s)', $in{'email'}); 
+    $param->{'requestpasswd_context'} = 'firstpasswd';
+    return 'renewpasswd';
+}
+ ## send a ticket for choosing a new password
+sub do_renewpasswd {
+     &wwslog('info', 'do_renewpasswd(%s)', $in{'email'}); 
 
      my $url_redirect;
      if($in{'email'}){
@@ -3626,7 +3633,7 @@ sub do_remindpasswd {
 		 if ($url_redirect && ($url_redirect != 1));
 	 }elsif (! &tools::valid_email($in{'email'})) {
 	     &report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'});
-	     &wwslog('info','do_remindpasswd: incorrect email \"%s\"', $in{'email'});
+	     &wwslog('info','do_renewpasswd: incorrect email \"%s\"', $in{'email'});
 	     &web_db_log({'parameters' => $in{'email'},
 			  'target_email' => $in{'email'},
 			  'status' => 'error',
@@ -3639,8 +3646,7 @@ sub do_remindpasswd {
 	     &web_db_log({'parameters' => $in{'email'},
 			  'target_email' => $in{'email'},
 			  'status' => 'success',
-
-});		      	    
+		      });		      	    
 
      if ($in{'previous_action'} eq 'referer') {
 	 $param->{'referer'} = &tools::escape_chars($in{'previous_list'});
@@ -3649,17 +3655,17 @@ sub do_remindpasswd {
  }
 
 ####################################################
-# do_sendpasswd                              
+# do_requestpasswd                              
 ####################################################
 #  Sends a message to the user containing user password.
 # 
 # IN : -
 #
-# OUT : 'remindpasswd' |  1 | 'loginrequest' | undef
+# OUT : 'renewpasswd' |  1 | 'loginrequest' | undef
 #
 ####################################################
- sub do_sendpasswd {
-     &wwslog('info', 'do_sendpasswd(%s)', $in{'email'}); 
+ sub do_requestpasswd {
+     &wwslog('info', 'do_requestpasswd(%s)', $in{'email'}); 
      my ($passwd, $user);
 
      $param->{'account_creation'} = 1;
@@ -3669,12 +3675,12 @@ sub do_remindpasswd {
 	 ## There might be no authentication_info_url URL defined in auth.conf
 	 if ($url_redirect == 1) {
 	     &report::reject_report_web('user','ldap_user',{},$param->{'action'});
-	     &wwslog('info','do_sendpasswd: LDAP user %s, cannot remind password', $in{'email'});
+	     &wwslog('info','do_requestpasswd: LDAP user %s, cannot remind password', $in{'email'});
 	     &web_db_log({'parameters' => $in{'email'},
 			  'target_email' => $in{'email'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});		      
-	     return 'remindpasswd';
+	     return 'home';
 	 }else{
 	     $param->{'redirect_to'} = $url_redirect if ($url_redirect && ($url_redirect != 1));	    
 	     return 1;
@@ -3687,19 +3693,22 @@ sub do_remindpasswd {
 	 &report::reject_report_web('user','passwd_reminder_not_allowed',{},$param->{'action'});
 	 return undef
      }
-     &wwslog('debug','do_sendpasswd: sending one tile ticket for %s', $in{'email'});
+     &wwslog('debug','do_requestpasswd: sending one tile ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
      if ($param->{'one_time_ticket'}) {
-     unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
-	 &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
-     }
+	 $param->{'login_error'}='ticket_sent';
+	 unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
+	     &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
+	     $param->{'login_error'}='unable_to_send_ticket';
+	 }
      }else{
 	 &wwslog('notice',"Unable to create_one_time_ticket"); 
 	 &report::reject_report_web('user','passwd_reminder_error',{},$param->{'action'});
+	 $param->{'login_error'}='unable_to_create_ticket';
      }
 
-     return 'home' unless ($param->{'previous_action'}) ;
+     return 1 unless ($param->{'previous_action'}) ;
      return $param->{'previous_action'};
  }
 
@@ -4875,7 +4884,7 @@ sub check_custom_attribute {
 	      ($user->{'password'} =~ /^INIT/i)) &&
 	     !$ldap_user) {
 
-	     &do_sendpasswd();
+	     &do_requestpasswd();
 	     $param->{'status'} = 'notauth_passwordsent';
 	     
 	     return 1;
@@ -5041,7 +5050,7 @@ sub check_custom_attribute {
 	     ($user->{'password'} =~ /^INIT/i)) &&
 	     !$ldap_user) {
 
-	     &do_sendpasswd();
+	     &do_requestpasswd();
 	     $param->{'email'} =$in{'email'};
 	     $param->{'init_passwd'} = 1;
 	     return 1;

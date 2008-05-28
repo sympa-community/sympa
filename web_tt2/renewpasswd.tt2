@@ -1,6 +1,6 @@
-<!-- $Id$ -->
+<!-- $Id: renewpasswd.tt2 4857 2008-02-28 11:09:33Z serge.aumont $ -->
 
-<!-- begin remindpasswd.tt2 -->
+<!-- begin renewpasswd.tt2 -->
       <p>
 
 [% IF account_creation %]
@@ -9,8 +9,14 @@
       [%|loc%]The password you submit is wrong. May be you forgot it ?[%END%]
 [% ELSIF login_error == 'missing_password' %]
       [%|loc%]You miss the password, please submit again. May be you forgot it ?[%END%]
+[% ELSIF login_error == 'ticket_sent' %]
+      [%|loc%]You will receive an email in order to be able to choose your password.[%END%]
+[% ELSE %]
+[% IF requestpasswd_context == 'firstpasswd' %]	
+      [%|loc%]In order to use Sympa, you will need to define a password.[%END%]
 [% ELSE %]
       [%|loc%]You have forgotten your password, so you have to  renew it.[%END%]
+[% END %]
 [% END %]
       [%|loc%]Please submit your email address, you will receive a message that give you access to the appropriate form in order to choose your password.[%END%]
       </p>
@@ -20,8 +26,13 @@
 	<input type="hidden" name="action" value="sendpasswd" />
            <label for="email">[%|loc%]Your e-mail address[%END%] : </label>
            <input id="email" type="text" name="email" size="20" value="[% unauthenticated_email %]" />
-          &nbsp;&nbsp;&nbsp;<input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]Ask for change password[%END%]" />
+          &nbsp;&nbsp;&nbsp;<input class="MainMenuLinks" type="submit" name="action_requestpasswd" 
+[% IF requestpasswd_context == 'firstpasswd' %]
+value="[%|loc%]Request first password[%END%]" />
+[% ELSE %]
+value="[%|loc%]Request new password[%END%]" />
+[% END %]
 	</fieldset>
       </form>
 
-<!-- end remindpasswd.tt2 -->
+<!-- end renewpasswd.tt2 -->

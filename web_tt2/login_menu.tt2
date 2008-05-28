@@ -89,8 +89,8 @@
 [% IF authentication_info_url %]
    <a class="menuLinks" href="[%conf.authentication_info.url%]">[%|loc%]Authentication help[% END %]</a><br />
 [% ELSE %]
-  <a class="menuLinks" href="[% path_cgi %]/sendpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
-  <a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a>
+  <a class="menuLinks" href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
+  <a class="menuLinks" href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password ?[%END%]</a>
 [% END %]
 [% END %]
 [% END %]
