@@ -6279,7 +6279,7 @@ sub add_user_db {
     }
  
     ## encrypt password   
-    $values->{'password'} = &tools::crypt_password($values->{'password'}) if $values->{'password'};
+    $values->{'password'} = &Auth::password_fingerprint($values->{'password'}) if ($values->{'password'});
     
     return undef unless (my $who = &tools::clean_email($values->{'email'}));
     
