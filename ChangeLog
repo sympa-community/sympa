@@ -1,4 +1,1152 @@
 ------------------------------------------------------------------------
+r5023 | olivier.salaun | 2008-05-28 12:15:04 +0200 (Wed, 28 May 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/login_menu.tt2
+
+[bug] login banner was shown even though no user_table entry was listed in auth.conf
+
+------------------------------------------------------------------------
+r5022 | david.verdin | 2008-05-28 11:55:43 +0200 (Wed, 28 May 2008) | 2 lines
+Changed paths:
+   M /trunk/NEWS
+
+[-feature]Updating NEWS file
+
+------------------------------------------------------------------------
+r5021 | david.verdin | 2008-05-28 11:45:26 +0200 (Wed, 28 May 2008) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/web_help_fr.po
+   M /trunk/po/web_help_ja.po
+   M /trunk/po/web_help_pt_BR.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-change]Retrieving updated translations from pootle
+
+------------------------------------------------------------------------
+r5020 | serge.aumont | 2008-05-28 11:25:46 +0200 (Wed, 28 May 2008) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/login_menu.tt2
+   D /trunk/web_tt2/remindpasswd.tt2
+   A /trunk/web_tt2/renewpasswd.tt2
+   A /trunk/web_tt2/requestpasswd.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] Fix web pages in order to give appropriate messages when requesting first password or password renewal. 
+
+
+------------------------------------------------------------------------
+r5019 | serge.aumont | 2008-05-28 10:17:40 +0200 (Wed, 28 May 2008) | 3 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[bug] Fix incorrect password storage when crating a new user (add_user_db did not use password finger print as update_user_db does)
+
+
+------------------------------------------------------------------------
+r5017 | olivier.salaun | 2008-05-23 18:08:48 +0200 (Fri, 23 May 2008) | 5 lines
+Changed paths:
+   M /trunk/soap/SympaTransport.pm
+   M /trunk/soap/sympa_soap_client.pl
+   M /trunk/soap/sympasoap.pm
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/cookielib.pm
+
+[change] Changes regarding SOAP session management :
+ * SOAP session now uses the session DB table
+ * session_id can be validated, checked, used in authenticateAndRun()
+ * sympa_soap_client.pl has been extended : new --session_id option, new supported service --service=getUserEmailByCookie
+
+------------------------------------------------------------------------
+r5016 | olivier.salaun | 2008-05-23 09:06:02 +0200 (Fri, 23 May 2008) | 2 lines
+Changed paths:
+   M /trunk/INSTALL
+
+[-change] remove test
+
+------------------------------------------------------------------------
+r5015 | olivier.salaun | 2008-05-23 08:44:39 +0200 (Fri, 23 May 2008) | 2 lines
+Changed paths:
+   M /trunk/INSTALL
+
+[-change]Test pre-commit hook
+
+------------------------------------------------------------------------
+r5014 | olivier.salaun | 2008-05-21 09:30:39 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[-change] changed version number to 5.5a.1
+
+------------------------------------------------------------------------
+r5013 | olivier.salaun | 2008-05-21 09:22:22 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   M /trunk/doc/Makefile.am
+   M /trunk/doc/man8/Makefile.am
+
+[change] no more install sympa.pdf
+
+------------------------------------------------------------------------
+r5012 | olivier.salaun | 2008-05-21 08:22:29 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[change] [G.Rousse, INRIA] Turned Makefile files into Makefile.am. Added the list of Makefile files to create in configure.ac (via AC_CONFIG_FILES)
+
+------------------------------------------------------------------------
+r5011 | olivier.salaun | 2008-05-21 08:21:23 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/mail_tt2/Makefile
+   A /trunk/mail_tt2/Makefile.am (from /trunk/mail_tt2/Makefile:5010)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5010 | olivier.salaun | 2008-05-21 08:20:57 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/wwsympa/Makefile
+   A /trunk/wwsympa/Makefile.am (from /trunk/wwsympa/Makefile:5009)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5009 | olivier.salaun | 2008-05-21 08:20:35 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/web_tt2/Makefile
+   A /trunk/web_tt2/Makefile.am (from /trunk/web_tt2/Makefile:5008)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5008 | olivier.salaun | 2008-05-21 08:20:11 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/doc/Makefile
+   A /trunk/doc/Makefile.am (from /trunk/doc/Makefile:5007)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5007 | olivier.salaun | 2008-05-21 08:19:54 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/doc/man8/Makefile
+   A /trunk/doc/man8/Makefile.am (from /trunk/doc/man8/Makefile:5006)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5006 | olivier.salaun | 2008-05-21 08:19:27 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/soap/Makefile
+   A /trunk/soap/Makefile.am (from /trunk/soap/Makefile:5005)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5005 | olivier.salaun | 2008-05-21 08:19:01 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/src/etc/script/Makefile
+   A /trunk/src/etc/script/Makefile.am (from /trunk/src/etc/script/Makefile:5004)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5004 | olivier.salaun | 2008-05-21 08:18:33 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/src/etc/sample/Makefile
+   A /trunk/src/etc/sample/Makefile.am (from /trunk/src/etc/sample/Makefile:5003)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5003 | olivier.salaun | 2008-05-21 08:17:55 +0200 (Wed, 21 May 2008) | 2 lines
+Changed paths:
+   D /trunk/src/Makefile
+   A /trunk/src/Makefile.am (from /trunk/src/Makefile:5002)
+
+[change] [G.Rousse, INRIA] Turned Makefile into a Makefile.am
+
+------------------------------------------------------------------------
+r5002 | serge.aumont | 2008-05-20 17:22:01 +0200 (Tue, 20 May 2008) | 3 lines
+Changed paths:
+   M /trunk/mail_tt2/listmaster_notification.tt2
+
+[-feature] bettre subject in notification message for list creation
+
+
+------------------------------------------------------------------------
+r5001 | serge.aumont | 2008-05-20 09:13:10 +0200 (Tue, 20 May 2008) | 2 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+[bug] fix size limit of list name according to database definition (50)
+
+------------------------------------------------------------------------
+r5000 | olivier.salaun | 2008-05-16 17:27:51 +0200 (Fri, 16 May 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/task_manager.pl
+   M /trunk/wwsympa/bounced.pl
+
+[change] no more store unknown bounces in OTHER directories. They are now kept in a bad/ subdirectory in the bounce spool.
+
+------------------------------------------------------------------------
+r4998 | olivier.salaun | 2008-05-16 16:30:36 +0200 (Fri, 16 May 2008) | 3 lines
+Changed paths:
+   M /trunk/wwsympa/bounced.pl
+
+[bug] [reported by H.Rousseau]: bounced.pl would fail to create files in OTHER/ if From contained incorrect chars. The bounced.pl process would loop on these files.
+Now such bounce files are moved to the bad/ subdirectory.
+
+------------------------------------------------------------------------
+r4996 | olivier.salaun | 2008-05-16 13:26:10 +0200 (Fri, 16 May 2008) | 3 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] [#4022]: the anti-XSS mecanism HTML-escape outgoing parameters before web pages are parsed. This leads to quotes '"' replaced with &quot; while editing list parameters. This could break SQL queries for example.
+The fix consists in unescaping HTML characters in edit_list function.
+
+------------------------------------------------------------------------
+r4995 | olivier.salaun | 2008-05-13 10:46:30 +0200 (Tue, 13 May 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[bug] [submitted by A.de Bignicourt, UREC] : fixed a charset problem with custom attributes
+
+------------------------------------------------------------------------
+r4993 | david.verdin | 2008-05-05 16:06:21 +0200 (Mon, 05 May 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/web_tt2/list_menu.tt2
+   M /trunk/web_tt2/subrequest.tt2
+
+[change] When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.
+
+------------------------------------------------------------------------
+r4985 | david.verdin | 2008-05-02 12:06:27 +0200 (Fri, 02 May 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/archived.pl
+
+[bug][Reported by M. Kretchner, INRIA] It was impossible to remove a message from web archvives or to rebuild them. this was due to a regexp to prevent archived.pl from using dot-starting files added by some Linux distribution (as Gentoo). Fixed by extending the regexp.
+
+------------------------------------------------------------------------
+r4983 | david.verdin | 2008-05-02 10:31:43 +0200 (Fri, 02 May 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+
+[#3990][Submitted by A. Berstein, electricembers.net] The quiet option had been deactivated from the "reject" mail command.
+
+------------------------------------------------------------------------
+r4982 | olivier.salaun | 2008-04-30 17:46:24 +0200 (Wed, 30 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/Makefile.am
+   M /trunk/src/Makefile
+   M /trunk/src/sympa_wizard.pl
+
+[#3989][reported by M.Deranek][fix] using OPENSSL variable set by --with-openssl configure switch to initialize openssl sympa.conf variable via the sympa_wizard.pl script
+
+------------------------------------------------------------------------
+r4981 | olivier.salaun | 2008-04-30 17:21:48 +0200 (Wed, 30 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/etc/script/sympa.spec
+   M /trunk/wwsympa/Auth.pm
+   M /trunk/wwsympa/wwslib.pm
+
+[#3989][reported by M.Deranek][fix] No more require Net::SSLeay perl module. Using LWP::UserAgent instead
+
+------------------------------------------------------------------------
+r4980 | olivier.salaun | 2008-04-30 15:54:49 +0200 (Wed, 30 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[fix] session variables were not listed in dump of variables. Now exporting them as a hashref
+
+------------------------------------------------------------------------
+r4979 | olivier.salaun | 2008-04-30 14:31:01 +0200 (Wed, 30 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/sympa.pl
+   M /trunk/src/task_manager.pl
+   M /trunk/src/tools.pl
+   M /trunk/wwsympa/archived.pl
+   M /trunk/wwsympa/bounced.pl
+
+[fix] STDERR is no more directed to a file if process run in foreground
+
+------------------------------------------------------------------------
+r4978 | olivier.salaun | 2008-04-30 14:30:28 +0200 (Wed, 30 Apr 2008) | 5 lines
+Changed paths:
+   M /trunk/src/Language.pm
+
+[#3919][reported by M.Denarek][fix] Error "missing locale parameter" would
+happen whenever a notification is sent to the listmaster before the current
+language et set. Now using the default language when set. Also initialized
+the default language with 'en'.
+
+------------------------------------------------------------------------
+r4977 | olivier.salaun | 2008-04-25 16:21:50 +0200 (Fri, 25 Apr 2008) | 3 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[fix] AC_HELP_STRING is obsolete, replaced with AS_HELP_STRING.
+See http://www.gnu.org/software/autoconf/manual/autoconf.html#index-AC_005fHELP_005fSTRING-1639
+
+------------------------------------------------------------------------
+r4976 | olivier.salaun | 2008-04-25 16:17:15 +0200 (Fri, 25 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/Makefile.am
+   M /trunk/configure.ac
+   M /trunk/src/etc/script/sympa
+   M /trunk/src/etc/script/sympa.generic
+
+[change][G.Rousse, INRIA][patch sympa-trunk-7-dont-search-for-shell.patch] : POSIX defines that /bin/sh is available on every OS, therefore it does not need to be defined via a variable
+
+------------------------------------------------------------------------
+r4975 | olivier.salaun | 2008-04-25 16:06:49 +0200 (Fri, 25 Apr 2008) | 5 lines
+Changed paths:
+   M /trunk/src/tools.pl
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Copy_template failed when multiple directories had to be created
+(mail_tt2/ll_CC for example). Now calling mkdir_all() from
+tools::mk_parent_dir().
+Also fixed a type regarding authz errors handling
+
+------------------------------------------------------------------------
+r4973 | david.verdin | 2008-04-17 08:48:06 +0200 (Thu, 17 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/check_perl_modules.pl
+
+[Reported by M. Gorecka-Wolniewicz, Nicolaus Copernicus univ., Torun] In some cases, CAS logout didn't work, due to a value of "0" trnaformed into an empty string in the session cookie. Fixed by upgrading CGI version.
+
+------------------------------------------------------------------------
+r4971 | david.verdin | 2008-04-16 11:27:36 +0200 (Wed, 16 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+   M /trunk/wwsympa/archived.pl
+   M /trunk/wwsympa/bounced.pl
+
+[#3957][Reported by O. Berger, Telecom & Management SudParis] When launching Sympa daemons (other than sympa.pl) with an unknown option, the daemon was still launched instead of failing to launch.
+
+------------------------------------------------------------------------
+r4962 | david.verdin | 2008-04-11 11:38:27 +0200 (Fri, 11 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug][#3947][Reported by S. costard Univ. Haute Bretagne] In the case of CAS authentication, a CAS ticket was requested for any request in the web interface. Fixed by ensuring that the user email is attached to the session.
+
+------------------------------------------------------------------------
+r4961 | david.verdin | 2008-04-10 17:15:31 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/tpl2tt2.pl
+   M /trunk/src/tools.pl
+   M /trunk/wwsympa/archived.pl
+
+[Change][#3116][Reported by S. Hornburg, C. Cat and M. Deranek]Replacing usage of chmod and chown shell calls by the corresponding perl functions. Usage factorized in tools::_set_file_rights() function.
+
+------------------------------------------------------------------------
+r4960 | david.verdin | 2008-04-10 14:54:51 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+[#3116] Fix bad usage of ampersands in tools.pl.
+
+------------------------------------------------------------------------
+r4959 | david.verdin | 2008-04-10 14:36:10 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/tools.pl
+
+[Change][#3116][Reported by C. Cat] Adds a new function, tools::_set_file_rights(), that sets the ownership and mode for a file. Also fixed some bugs in the setting of owner and mode for SQLite support.
+
+------------------------------------------------------------------------
+r4957 | david.verdin | 2008-04-10 11:26:49 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/src/Upgrade.pm
+
+[change][Reported by L. Gentis, IUFM Lorraine]When updating a config file while the upgrade process, the "email" parameter value of the "update" paragraph was set to 'listmaster'. However, this value was validated against a regexp for emails. this produced an error log, as 'listmaster' is not a valid email address. Fixed by allowing 'listamster' and 'automatic' strings in this regexp. 'automatic will be used to designate updates done by processes instead of users.
+
+------------------------------------------------------------------------
+r4956 | david.verdin | 2008-04-10 10:46:27 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[#3116]Error in bug fix (bad calls to getpwnam and getgrnam).
+
+------------------------------------------------------------------------
+r4955 | olivier.salaun | 2008-04-10 10:13:49 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/INSTALL
+
+added --add-missing arg to automake call
+
+------------------------------------------------------------------------
+r4954 | david.verdin | 2008-04-10 09:29:13 +0200 (Thu, 10 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[Change][#3116][Reported by S. Hornburg, and M. Deranek, slonko.net] Now Upgrade.pm uses chmod and chown perl functions to set the rights to the SQLite database directory.
+
+------------------------------------------------------------------------
+r4953 | olivier.salaun | 2008-04-09 11:31:32 +0200 (Wed, 09 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[change][G.Rousse, INRIA][patch sympa-trunk-9-use-ac_help_macro.patch] use AC_HELP_STRING macro
+
+------------------------------------------------------------------------
+r4952 | olivier.salaun | 2008-04-09 11:27:57 +0200 (Wed, 09 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[change][G.Rousse, INRIA][patch sympa-trunk-8-indent-configure-file.patch] Better indentation of directives
+
+------------------------------------------------------------------------
+r4951 | olivier.salaun | 2008-04-09 11:11:30 +0200 (Wed, 09 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[change][G.Rousse, INRIA][patch sympa-trunk-6-no-maintainer-mode.patch] Remove AM_MAINTAINER_MODE  to prevent automatic makefile rebuild/configure re-invocation
+
+------------------------------------------------------------------------
+r4950 | olivier.salaun | 2008-04-09 09:12:05 +0200 (Wed, 09 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+
+[change][G.Rousse, INRIA][patch sympa-trunk-3-correct-autoconf-prolog-and-epilog.patch] Use the standard autoconf method to declare the software version, instead of using the .version file
+
+------------------------------------------------------------------------
+r4949 | olivier.salaun | 2008-04-09 09:11:47 +0200 (Wed, 09 Apr 2008) | 2 lines
+Changed paths:
+   D /trunk/.version
+
+[change][G.Rousse, INRIA][patch sympa-trunk-3-correct-autoconf-prolog-and-epilog.patch] Use the standard autoconf method to declare the software version, instead of using the .version file
+
+------------------------------------------------------------------------
+r4948 | olivier.salaun | 2008-04-08 17:57:50 +0200 (Tue, 08 Apr 2008) | 2 lines
+Changed paths:
+   A /trunk/configure.ac (from /trunk/configure.in:4947)
+   D /trunk/configure.in
+
+[change][G.Rousse, INRIA][patch sympa-trunk-2-rename-autoconf-configuration-file.patch] Renamed configure.in to configure.ac to adopt new GNU naming convention
+
+------------------------------------------------------------------------
+r4947 | olivier.salaun | 2008-04-08 17:52:43 +0200 (Tue, 08 Apr 2008) | 2 lines
+Changed paths:
+   D /trunk/Makefile.in
+   D /trunk/aclocal.m4
+   D /trunk/config.guess
+   D /trunk/config.sub
+   D /trunk/configure
+   D /trunk/doc/man8/alias_manager.8
+   D /trunk/doc/man8/archived.8
+   D /trunk/doc/man8/bounced.8
+   D /trunk/doc/man8/sympa.8
+   D /trunk/install-sh
+   D /trunk/missing
+
+[change][G.Rousse, INRIA] Remove automake and autoconf generated files
+
+------------------------------------------------------------------------
+r4946 | david.verdin | 2008-04-08 17:31:34 +0200 (Tue, 08 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/archived.pl
+   M /trunk/wwsympa/bounced.pl
+
+[bug][Submitted by M. deranek, slonko.net] The gentoo distribution generates files starting with dots. These files generated error messages from Sympa daemons using spools.
+
+------------------------------------------------------------------------
+r4944 | david.verdin | 2008-04-08 15:19:06 +0200 (Tue, 08 Apr 2008) | 3 lines
+Changed paths:
+   M /trunk/src/tools.pl
+
+[bug][Submitted by W. Werner, Fraunhofer-Institut SIT] Message signature verification didn't work if user used different certificate for signing and encrypting AND didn't send both in each message, like Kmail does.
+
+
+------------------------------------------------------------------------
+r4941 | david.verdin | 2008-04-08 15:06:28 +0200 (Tue, 08 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[bug][Submitted by W. Werner, Fraunhofer-Institut SIT] The path that Sympa used to look for encryption keys had '.enc' instead of a '@enc' in the file name.
+
+------------------------------------------------------------------------
+r4939 | david.verdin | 2008-04-03 14:11:36 +0200 (Thu, 03 Apr 2008) | 3 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+
+[#3915][Submitted by M. Deranek, slonko.net]Fix: inconsistency between Upgrade .pm and create_db.SQLite for custom_attribute_subscriber field.
+
+
+------------------------------------------------------------------------
+r4937 | david.verdin | 2008-04-03 13:51:55 +0200 (Thu, 03 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/create_db.SQLite
+
+[#3915][Submitted by M. Deranek, slonko.net]Fix: SQLite support was broken for the session table.
+
+------------------------------------------------------------------------
+r4935 | david.verdin | 2008-04-02 09:18:31 +0200 (Wed, 02 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+
+[Reported by O. Eyb]Fix: task_manager.pl didn't check that the bounces/OTHER direcory existed prior to clean it, leading to numerous logs from the CleanSpool function cliaming that it couldn't open this directory.
+
+------------------------------------------------------------------------
+r4925 | david.verdin | 2008-04-01 11:52:05 +0200 (Tue, 01 Apr 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[Reported by J.M. Beuken, univ. cat. Louvain] Fix: When copying a template through the web interface, HTML was not unescaped before writing the file. c onsequently, the file used to reload the page for template edition had escaped HTML. for critical files such as main.tt2 or title.tt2, this caused the web page diaply to choke on tt2 parse errors.
+
+------------------------------------------------------------------------
+r4924 | david.verdin | 2008-03-28 11:48:51 +0100 (Fri, 28 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Removing development traces.
+
+------------------------------------------------------------------------
+r4923 | david.verdin | 2008-03-28 11:36:03 +0100 (Fri, 28 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/lists.tt2
+
+Fix: Bad layout of lists in the letter-ordered version. Plus making this page W3C compliant.
+
+------------------------------------------------------------------------
+r4921 | david.verdin | 2008-03-28 11:11:56 +0100 (Fri, 28 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Lock.pm
+
+Increasing log levels in low level functions of Log.pm.
+
+------------------------------------------------------------------------
+r4920 | serge.aumont | 2008-03-28 10:32:09 +0100 (Fri, 28 Mar 2008) | 4 lines
+Changed paths:
+   M /trunk/web_tt2/lists.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+
+Alphabetical index of lists in lists action.
+
+
+------------------------------------------------------------------------
+r4919 | david.verdin | 2008-03-27 17:42:32 +0100 (Thu, 27 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/check_perl_modules.pl
+
+[#3898][Submitted by M. Keisler, mitsein.net] Fix: When checking perl version, Sympa was using human readable version notation (5.8.8 for example) instead of the format returned by $] (5.008008 for example).
+
+------------------------------------------------------------------------
+r4910 | david.verdin | 2008-03-25 12:07:32 +0100 (Tue, 25 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/serveradmin.tt2
+
+Change: Reorganize and rename lists administration button in the admin page.
+
+------------------------------------------------------------------------
+r4907 | david.verdin | 2008-03-25 11:12:19 +0100 (Tue, 25 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/bounced.pl
+
+Fix: When a bounce file could not be created, nothing was done, so at the next bounced.pl iteration, the faulty report was still present. In such a case, the bounce report is now moved to bad.
+
+------------------------------------------------------------------------
+r4906 | david.verdin | 2008-03-25 11:10:11 +0100 (Tue, 25 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+Updated catalogues.
+
+------------------------------------------------------------------------
+r4905 | serge.aumont | 2008-03-14 10:27:51 +0100 (Fri, 14 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/soap/sympasoap.pm
+
+Fix a bug related to the wrong type return when creating a list
+
+
+------------------------------------------------------------------------
+r4904 | david.verdin | 2008-03-12 14:02:11 +0100 (Wed, 12 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+
+New make command: "clean-po". Updates the PO catalogues but doesn't try to save strings that disappeared in this version.
+
+------------------------------------------------------------------------
+r4902 | david.verdin | 2008-03-11 17:19:54 +0100 (Tue, 11 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+Updating internationalization catalogues.
+
+------------------------------------------------------------------------
+r4901 | david.verdin | 2008-03-11 17:04:52 +0100 (Tue, 11 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/po/sympa.pot
+
+Updating sympa.pot.
+
+------------------------------------------------------------------------
+r4900 | david.verdin | 2008-03-11 17:04:06 +0100 (Tue, 11 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/po/Makefile
+
+Change: Now, when performing "make update-po", the catalogue file to update is temporarily saved to avoid losing strings from beta version when updating stable version, or vice-versa. Both updated and saved files are then merged.
+
+------------------------------------------------------------------------
+r4899 | david.verdin | 2008-03-11 17:01:56 +0100 (Tue, 11 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/src/sympa.pl
+
+Fix: spam_status was badly tested.
+
+------------------------------------------------------------------------
+r4898 | david.verdin | 2008-03-11 17:01:13 +0100 (Tue, 11 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Re-de-activating XSS protection for HTML files in the shared, until a better solution is found.
+
+------------------------------------------------------------------------
+r4897 | serge.aumont | 2008-03-10 15:52:54 +0100 (Mon, 10 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/src/etc/mhonarc-ressources.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+New view message source feature if is list owner when viewing archives
+
+
+------------------------------------------------------------------------
+r4893 | david.verdin | 2008-03-07 11:41:22 +0100 (Fri, 07 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/setlang.tt2
+
+The button to submit languages preference was not conform to the button global design. In addition, it must be hidden if javascript is enabled.
+
+------------------------------------------------------------------------
+r4890 | olivier.salaun | 2008-03-07 10:16:10 +0100 (Fri, 07 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/NEWS
+
+removed spaces before ***** in NEWS file, so that the related information is correctly shown during the upgrade process
+
+------------------------------------------------------------------------
+r4889 | serge.aumont | 2008-03-07 08:33:52 +0100 (Fri, 07 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/src/sympa.pl
+
+If a message is tagued as a spam and if it is to be moderated or rejected, do not send a report information to the message sender even if the scenario did not return 'quiet' directive
+ 
+
+------------------------------------------------------------------------
+r4888 | serge.aumont | 2008-03-07 08:00:45 +0100 (Fri, 07 Mar 2008) | 4 lines
+Changed paths:
+   M /trunk/mail_tt2/moderate.tt2
+   M /trunk/src/List.pm
+
+Now message for moderation is not attached in the message sent to the moderator if tagued as spam.
+
+
+
+------------------------------------------------------------------------
+r4887 | serge.aumont | 2008-03-07 07:59:46 +0100 (Fri, 07 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/modindex.tt2
+
+Apply javascript to confirm reject with notification for spam message
+
+
+------------------------------------------------------------------------
+r4886 | serge.aumont | 2008-03-07 07:58:39 +0100 (Fri, 07 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/javascript.tt2
+
+In modindex page, an javascript confirm is requested when validating a set of messages containing one message tagued as spam
+
+
+------------------------------------------------------------------------
+r4885 | serge.aumont | 2008-03-06 11:58:58 +0100 (Thu, 06 Mar 2008) | 6 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Now archives by thread or by chronologie is a session attribute (and a user preference). 
+
+This feature also fix a bug related to the way archives are cached by client. Now page are "static" for robots (as detected by SympaSession) and dynamic for any others.
+ 
+
+
+------------------------------------------------------------------------
+r4878 | serge.aumont | 2008-03-05 14:51:55 +0100 (Wed, 05 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/modindex.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+ New button to toogle select/unselect all spams in modindex page
+
+
+------------------------------------------------------------------------
+r4877 | serge.aumont | 2008-03-05 13:41:43 +0100 (Wed, 05 Mar 2008) | 7 lines
+Changed paths:
+   M /trunk/src/sympa.pl
+
+Now if antispam_feature is configured, sympa robot will ignore incomming command messages if tagued as spam. 
+By the same way, spam messages for listmaster, list-request and list-editor will be ignored.
+
+Such messages are moved in spool bad and message-id is loggued.  
+
+
+
+------------------------------------------------------------------------
+r4876 | serge.aumont | 2008-03-05 11:01:07 +0100 (Wed, 05 Mar 2008) | 11 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/src/Message.pm
+   M /trunk/src/sympa_wizard.pl
+   M /trunk/web_tt2/modindex.tt2
+   A /trunk/wwsympa/icons/junk.png
+   M /trunk/wwsympa/wwsympa.fcgi
+
+New propertie in object message : spam_status .  This feature is used in modindex (listing of message waiting for moderation) to show message tagued as spam.
+
+4 new parameters :
+      antispam_feature default off
+      antispam_tag_header_name default X-Spam-Status 
+      antispam_tag_header_spam_regexp default ^\s*Yes
+      antispam_tag_header_ham_regexp default ^\s*No
+
+If you change antispam_feature to value 'on' the other parameters default are compatible with spamassassin defaults.
+
+
+------------------------------------------------------------------------
+r4875 | olivier.salaun | 2008-03-04 15:16:23 +0100 (Tue, 04 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+New structure %required_args defining required parameters, %required_privileges defines required privileges to run actions and new subroutine check_action_parameters() that does the checking. Removed 1200 lines of code in wwsympa.fcgi
+
+------------------------------------------------------------------------
+r4874 | olivier.salaun | 2008-03-04 11:39:34 +0100 (Tue, 04 Mar 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/Auth.pm
+
+Fix: error log did not refer to the right variable
+
+------------------------------------------------------------------------
+r4873 | serge.aumont | 2008-03-04 08:42:35 +0100 (Tue, 04 Mar 2008) | 4 lines
+Changed paths:
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+
+
+Fix wrong column name dat_one_time_ticket -> date_one_time_ticket
+
+
+------------------------------------------------------------------------
+r4872 | serge.aumont | 2008-03-04 08:37:56 +0100 (Tue, 04 Mar 2008) | 3 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+
+Fix wrong column name in table one_table_ticket : status_addr_one_time_ticket must be replaced by status_one_time_ticket
+
+
+------------------------------------------------------------------------
+r4869 | serge.aumont | 2008-03-04 08:16:29 +0100 (Tue, 04 Mar 2008) | 3 lines
+Changed paths:
+   A /trunk/web_tt2/ticket.tt2
+
+New template
+
+
+------------------------------------------------------------------------
+r4859 | david.verdin | 2008-02-29 12:05:26 +0100 (Fri, 29 Feb 2008) | 4 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3790][Reported by R. Tassoni, National Library of Australia and T. Danel] Fix: When displaying a message to moderate in the web interface, if a document was attached to the message, the link to display the message lead to empty documents.
+This was because we didn't take into account the fact that MHonArc put the file in a subdirectory.
+Fixed by changing the kind of ergument file passed from scalar to vector.
+
+------------------------------------------------------------------------
+r4858 | serge.aumont | 2008-02-29 11:37:00 +0100 (Fri, 29 Feb 2008) | 4 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+
+
+Fix bug related to the new cilumn las_login_date_user and last_login_host_user
+
+
+------------------------------------------------------------------------
+r4857 | serge.aumont | 2008-02-28 12:09:33 +0100 (Thu, 28 Feb 2008) | 16 lines
+Changed paths:
+   M /trunk/mail_tt2/moderate.tt2
+   M /trunk/mail_tt2/sendpasswd.tt2
+   M /trunk/src/Conf.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Upgrade.pm
+   A /trunk/src/etc/global_task_models/purge_one_time_ticket_table.daily.task
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+   M /trunk/src/sympa.pl
+   M /trunk/src/task_manager.pl
+   M /trunk/web_tt2/choosepasswd.tt2
+   M /trunk/web_tt2/login_menu.tt2
+   M /trunk/web_tt2/loginbanner.tt2
+   M /trunk/web_tt2/notice.tt2
+   M /trunk/web_tt2/remindpasswd.tt2
+   M /trunk/wwsympa/Auth.pm
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+***** Replace storage of password with encryption by md5 fingerprint. This 
+***** make remind password impossible. So now a one time ticket table is created
+***** ticket are  sent by email as an authentication token. Ticket can be used 
+***** for lost password, create account, moderation request . It should be
+***** generalized to all operation that need a email chalenge.
+*****
+***** sympa.pl --md5_encode_password change password encoding in the database using md5.So IT IS NOT REVERSIBLE,
+***** so you should save the database (in a safe place to protect password) 
+
+  -  new login method include now "last login from [HOST] at [date]" information  message
+  -  new daily task to remove tickets older than 10d (task parameters in conf.pm): 
+       - purge_one_time_ticket_table_task default daily
+       - one_time_ticket_table_ttl default 10d
+
+
+
+------------------------------------------------------------------------
+r4855 | david.verdin | 2008-02-27 15:02:52 +0100 (Wed, 27 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/important_changes.pl
+   M /trunk/src/Upgrade.pm
+
+Fix: Upgrade process failed to spot version number due to new use of strict vars, and a character cas problem occured while parsing the database structure.
+
+------------------------------------------------------------------------
+r4852 | olivier.salaun | 2008-02-13 16:04:53 +0100 (Wed, 13 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/SQLSource.pm
+
+[M.Redinger]Change: reported problems with field names upper cased with Oracle. Now forcing lower cased field names.
+
+------------------------------------------------------------------------
+r4851 | olivier.salaun | 2008-02-13 15:56:47 +0100 (Wed, 13 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/etc/scenari/access_web_archive.intranet
+   M /trunk/src/etc/scenari/review.intranet
+   M /trunk/src/etc/scenari/visibility.intranet
+
+[#3744]Fix: [remote_addr] variable might not be available for a scenario. [env->remote_addr] should be used instead
+
+------------------------------------------------------------------------
+r4850 | olivier.salaun | 2008-02-13 14:15:20 +0100 (Wed, 13 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+
+[reported by S.Kristoffersen] Fix: The default value for wwsympa_url paramater was still http_host/wws. It has been changed to http_host/sympa
+
+------------------------------------------------------------------------
+r4849 | olivier.salaun | 2008-02-13 10:18:15 +0100 (Wed, 13 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/notice.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Fix: create_list notification failed if listname contained uppercased chars
+
+------------------------------------------------------------------------
+r4848 | olivier.salaun | 2008-02-12 17:52:34 +0100 (Tue, 12 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Archive.pm
+
+Remove trace
+
+------------------------------------------------------------------------
+r4847 | olivier.salaun | 2008-02-12 15:14:23 +0100 (Tue, 12 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+
+Fix: user could get logged out if he subscribed to the RSS feed. Now we skip session management in RSS context
+
+------------------------------------------------------------------------
+r4845 | david.verdin | 2008-02-08 18:05:22 +0100 (Fri, 08 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#1809][Reported by P. von der Hagen, univ. Karlsruhe] Fix: Files in the shared directory with regexp special characters could not be renamed. Fixed by using "\Q" escape signal at the beginning of the regexp (s/\Q$strtofind/strtosubst/).
+
+------------------------------------------------------------------------
+r4843 | david.verdin | 2008-02-08 16:39:58 +0100 (Fri, 08 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/Lock.pm
+
+Removing development traces.
+
+------------------------------------------------------------------------
+r4841 | david.verdin | 2008-02-08 16:22:51 +0100 (Fri, 08 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+
+Fix: "$rss" used instead of "$action eq 'rss'".
+
+------------------------------------------------------------------------
+r4839 | david.verdin | 2008-02-08 16:12:35 +0100 (Fri, 08 Feb 2008) | 3 lines
+Changed paths:
+   M /trunk/src/Lock.pm
+
+[#3229][#3237][#3518][Reported by T. Berry, NASA and D. Lalot, univ. Aix-Marseille] Fix: Lock failed when two processes were reading the same file, then one of them switched to write mode. It could then modify the file while the other process was reading, leading to uncomplete informations gathered from reading. Fixed by changing behaviour: Now if a process wants to switch to or from write mode, it first release the file lock at the filesystem level, then tries to put a new one. this way, switching to write mode is controlled by the filesystem.
+
+
+------------------------------------------------------------------------
+r4838 | serge.aumont | 2008-02-07 17:02:34 +0100 (Thu, 07 Feb 2008) | 4 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Fix a bug related to session lost when RSS access comes from the same browser as web browser.
+
+
+
+------------------------------------------------------------------------
+r4837 | david.verdin | 2008-02-07 10:30:01 +0100 (Thu, 07 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[#3721][Submitted by M.Keisler, mitsein.net] Fix: Misleading comment in List.pm
+
+------------------------------------------------------------------------
+r4836 | david.verdin | 2008-02-06 16:19:28 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3719][Reported by O. Berger, INT] Fix: Used List object insted of list name to display list name in logs.
+
+------------------------------------------------------------------------
+r4835 | david.verdin | 2008-02-06 14:12:56 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/PlainDigest.pm
+
+[#3702][Reported by A. Bernstein, electricembers.net] [CORRECTION TO THE PREVIOUS REVISION (4834)] Fix: Some malformed headers caused Sympa to crash by calling a method on an undefined MIME::Entity object. Fixed by testing the definition of this object before calling the method.
+
+------------------------------------------------------------------------
+r4834 | david.verdin | 2008-02-06 13:57:00 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/PlainDigest.pm
+
+[#3702][Reported by A. Bernstein, electricembers.net] Fix: Some malformed headers caused Sympa to crash by calling a method on an undefined MIME::Entity::head object. Fixed by testing the definition of this object before calling the method.
+
+------------------------------------------------------------------------
+r4833 | david.verdin | 2008-02-06 12:28:42 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[#3713][Reported by A. Bernstein, evil-wire.org]Fix: Call to functions in the Storage CPAN module could lead to Sympa processes dying because these functions could issue "croak" message. Fixed by enclosing these call into eval{} blocks.
+
+------------------------------------------------------------------------
+r4832 | david.verdin | 2008-02-06 10:32:32 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3719][Submitted by O. Berger, INT] Fix: A parameter was missing in logs, leading to uncomplete log message.
+
+------------------------------------------------------------------------
+r4831 | david.verdin | 2008-02-06 09:19:09 +0100 (Wed, 06 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+   M /trunk/src/mail.pm
+
+Changed 'warning' log level to 'notice' in order to be coherent with the rest of the application.
+
+------------------------------------------------------------------------
+r4830 | david.verdin | 2008-02-05 17:03:42 +0100 (Tue, 05 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/etc/script/create_db.Pg
+
+[Reported by S. Kristoffersen, univ. Oslo] Fix: Missing "DROP TABLE session_table;" line in Pg creation script.
+
+------------------------------------------------------------------------
+r4829 | david.verdin | 2008-02-05 16:43:49 +0100 (Tue, 05 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/src/etc/script/create_db.Pg
+
+[Reported by S. Kristoffersen, univ. Oslo] Fix: Field id_session in table session_table had the type "int4" which was too small for the size of session id. Fixed by changing type to int8.
+
+------------------------------------------------------------------------
+r4828 | david.verdin | 2008-02-05 15:49:12 +0100 (Tue, 05 Feb 2008) | 3 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3479]Fix: http://listes.mydomain.fr/sympa/dump/mylist/light returned an error if authentication was required and not satisfied.
+Now Sympa asks for authentification instead.
+
+------------------------------------------------------------------------
+r4827 | david.verdin | 2008-02-05 12:11:02 +0100 (Tue, 05 Feb 2008) | 3 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+
+bug # 3554 finally closed: content incorporated in a feature request.
+Removing preparatory works.
+
+------------------------------------------------------------------------
+r4826 | david.verdin | 2008-02-05 11:46:36 +0100 (Tue, 05 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/mail_tt2/invite.tt2
+   M /trunk/src/Commands.pm
+
+Preparing code for resolving bug #3554.
+
+------------------------------------------------------------------------
+r4825 | david.verdin | 2008-02-04 17:40:06 +0100 (Mon, 04 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+Remove traces.
+
+------------------------------------------------------------------------
+r4824 | david.verdin | 2008-02-04 16:42:16 +0100 (Mon, 04 Feb 2008) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[#3596]Fix: "spam_protection" list parameter was not used. Just the robot parameter value.
+
+------------------------------------------------------------------------
+r4823 | david.verdin | 2008-02-04 15:17:07 +0100 (Mon, 04 Feb 2008) | 3 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+   M /trunk/src/List.pm
+   M /trunk/src/report.pm
+
+[#3636] Fix: When accepting multiple subscription requests, the list of pending subscription was not updated. This was due to two loops over email addresses one the one hand and over files on the other hand which were embedded in the wrong order, causing only the first file to be parsed.
+Change: when an authorized subscription request is received, if the sender is subscribed already, the request is rejected.
+
+------------------------------------------------------------------------
+r4820 | david.verdin | 2008-01-31 12:10:43 +0100 (Thu, 31 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/.version
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+
+Preparing version 5.4b.1
+
+------------------------------------------------------------------------
 r4819 | david.verdin | 2008-01-30 18:28:31 +0100 (Wed, 30 Jan 2008) | 9 lines
 Changed paths:
    M /trunk/src/Conf.pm
@@ -2762,7 +3910,6 @@ Changed paths:
    M /trunk/.version
    M /trunk/ChangeLog
    M /trunk/NEWS
-   M /trunk/doc/sympa.pdf
 
 Preparing new version 5.3.2
 
@@ -2965,13 +4112,6 @@ Changed paths:
    M /trunk/src/Upgrade.pm
 
 Avoiding subscriber vanishing when updating from older Sympa version. Modified version number control to be sure to include any version likely to have neither "included_subscriber" nor "subscribed_subscriber" set.
-
-------------------------------------------------------------------------
-r4414 | david.verdin | 2007-05-30 10:27:43 +0200 (Wed, 30 May 2007) | 2 lines
-Changed paths:
-   M /trunk/doc/sympa.pdf
-
-Updated PDF documentation.
 
 ------------------------------------------------------------------------
 r4413 | david.verdin | 2007-05-30 09:47:53 +0200 (Wed, 30 May 2007) | 2 lines
@@ -5039,7 +6179,6 @@ Changed paths:
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
    M /trunk/doc/parse_tex.pl
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -5526,7 +6665,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -5694,7 +6832,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -5743,7 +6880,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6071,7 +7207,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6163,7 +7298,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6229,7 +7363,6 @@ updated
 ------------------------------------------------------------------------
 r3914 | sympa-authors | 2006-09-29 14:30:21 +0200 (Fri, 29 Sep 2006) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6274,7 +7407,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6288,7 +7420,6 @@ r3912 | sympa-authors | 2006-09-26 15:18:39 +0200 (Tue, 26 Sep 2006) | 2 lines
 Changed paths:
    M /trunk/doc/html/node15.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6347,7 +7478,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6555,7 +7685,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6636,7 +7765,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6680,7 +7808,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6768,7 +7895,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -6879,7 +8005,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -7034,7 +8159,6 @@ Changed paths:
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
    M /trunk/doc/man8/alias_manager.pod
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7105,7 +8229,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7235,7 +8358,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7711,7 +8833,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7803,7 +8924,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7857,7 +8977,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -7916,7 +9035,6 @@ We now use the Encode module (added to the list of required modules) to decode a
 ------------------------------------------------------------------------
 r3758 | sympa-authors | 2006-06-08 14:41:43 +0200 (Thu, 08 Jun 2006) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -8040,7 +9158,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -8114,7 +9231,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -8450,7 +9566,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -8572,7 +9687,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -8805,7 +9919,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -8979,7 +10092,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -9091,7 +10203,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -9225,7 +10336,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -9355,7 +10465,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -9529,7 +10638,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -9637,7 +10745,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -10077,7 +11184,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
 
 Added missing HTML
@@ -10322,7 +11428,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -10484,7 +11589,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -10582,7 +11686,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -11631,7 +12734,6 @@ Changed paths:
    M /branches/sympa-5_1-branch/doc/html/node9.html
    M /branches/sympa-5_1-branch/doc/html/sympa.html
    M /branches/sympa-5_1-branch/doc/html/sympa.ps
-   M /branches/sympa-5_1-branch/doc/sympa.pdf
    M /branches/sympa-5_1-branch/doc/sympa.ps
    M /branches/sympa-5_1-branch/doc/sympa.tex
    M /branches/sympa-5_1-branch/doc/sympa.tex.tpl
@@ -11665,7 +12767,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -12238,7 +13339,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -12298,7 +13398,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -12623,7 +13722,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -12702,7 +13800,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -12991,7 +14088,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -13130,7 +14226,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -13641,7 +14736,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -13707,7 +14801,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -14373,7 +15466,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -14917,7 +16009,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -15243,7 +16334,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -15420,7 +16510,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -15653,7 +16742,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16169,7 +17257,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16214,7 +17301,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -16272,7 +17358,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16422,7 +17507,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16596,7 +17680,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16641,7 +17724,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16761,7 +17843,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16803,7 +17884,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16854,7 +17934,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -16942,7 +18021,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17124,7 +18202,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17206,7 +18283,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17319,7 +18395,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17389,7 +18464,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17468,7 +18542,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17687,7 +18760,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17753,7 +18825,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -17813,7 +18884,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -18082,7 +19152,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -18236,7 +19305,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -18323,7 +19391,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -18334,7 +19401,6 @@ Update documentation for TT2 and PO
 ------------------------------------------------------------------------
 r2520 | sympa-authors | 2004-08-13 12:30:30 +0200 (Fri, 13 Aug 2004) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
 
 Update doc
@@ -19031,7 +20097,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -19171,7 +20236,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -19248,7 +20312,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -19586,7 +20649,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -19862,7 +20924,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -19940,7 +21001,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -20989,7 +22049,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -21280,7 +22339,6 @@ Changed paths:
    M /branches/sympa-4_1-branch/doc/html/node9.html
    M /branches/sympa-4_1-branch/doc/html/sympa.html
    M /branches/sympa-4_1-branch/doc/html/sympa.ps
-   M /branches/sympa-4_1-branch/doc/sympa.pdf
    M /branches/sympa-4_1-branch/doc/sympa.ps
    M /branches/sympa-4_1-branch/doc/sympa.tex
    M /branches/sympa-4_1-branch/doc/sympa.tex.tpl
@@ -21312,7 +22370,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -21378,7 +22435,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -21775,7 +22831,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -21853,7 +22908,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -22054,7 +23108,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22215,7 +23268,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22264,7 +23316,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22382,7 +23433,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22453,7 +23503,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -22552,7 +23601,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22612,7 +23660,6 @@ Changed paths:
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
    M /trunk/doc/parse_tex.pl
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -22885,7 +23932,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23023,7 +24069,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23067,7 +24112,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23153,7 +24197,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23466,7 +24509,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23798,7 +24840,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -23882,7 +24923,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24006,7 +25046,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24170,7 +25209,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24209,7 +25247,6 @@ Changed paths:
    M /trunk/doc/html/sympa.ps
    M /trunk/doc/man8/sympa.8
    M /trunk/doc/man8/sympa.pod
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24289,7 +25326,6 @@ Changed paths:
    M /trunk/doc/html/node8.html
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24330,7 +25366,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24373,7 +25408,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24408,7 +25442,6 @@ Changed paths:
    M /branches/sympa-3_4-branch/doc/html/node9.html
    M /branches/sympa-3_4-branch/doc/html/sympa.html
    M /branches/sympa-3_4-branch/doc/html/sympa.ps
-   M /branches/sympa-3_4-branch/doc/sympa.pdf
    M /branches/sympa-3_4-branch/doc/sympa.ps
    M /branches/sympa-3_4-branch/doc/sympa.tex
    M /branches/sympa-3_4-branch/doc/sympa.tex.tpl
@@ -24436,7 +25469,6 @@ Changed paths:
    M /trunk/doc/html/node9.html
    M /trunk/doc/html/sympa.html
    M /trunk/doc/html/sympa.ps
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -24836,7 +25868,6 @@ Changed paths:
    M /trunk/check_perl_modules.pl
    M /trunk/configure
    M /trunk/configure.in
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25002,7 +26033,6 @@ Reported by sympa_bug_report@nmhq.net , fixe bug when validate a message for a e
 ------------------------------------------------------------------------
 r1803 | salaun | 2003-03-07 17:05:16 +0100 (Fri, 07 Mar 2003) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -25268,7 +26298,6 @@ Fix: get_total() failed with lists in 'include' mode
 ------------------------------------------------------------------------
 r1755 | salaun | 2003-01-27 10:52:27 +0100 (Mon, 27 Jan 2003) | 7 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25367,7 +26396,6 @@ Changed paths:
 ------------------------------------------------------------------------
 r1738 | salaun | 2003-01-22 17:29:05 +0100 (Wed, 22 Jan 2003) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -25465,7 +26493,6 @@ Changed paths:
 ------------------------------------------------------------------------
 r1719 | salaun | 2002-12-24 09:50:24 +0100 (Tue, 24 Dec 2002) | 6 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25583,7 +26610,6 @@ Changed paths:
    M /trunk/Makefile.in
    M /trunk/doc/Makefile
    M /trunk/doc/parse_tex.pl
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25607,7 +26633,6 @@ Changed paths:
    M /trunk/configure
    M /trunk/configure.in
    M /trunk/doc/Makefile
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25776,7 +26801,6 @@ not recently updated.
 ------------------------------------------------------------------------
 r1678 | salaun | 2002-12-06 10:22:09 +0100 (Fri, 06 Dec 2002) | 3 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25789,7 +26813,6 @@ New 'use_ssl', 'ssl_version' and 'ssl_ciphers' parameters in auth.conf
 ------------------------------------------------------------------------
 r1677 | salaun | 2002-12-05 17:06:13 +0100 (Thu, 05 Dec 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25828,7 +26851,6 @@ Fix: only rebuild archives of the current VRobot
 ------------------------------------------------------------------------
 r1671 | salaun | 2002-11-27 16:33:46 +0100 (Wed, 27 Nov 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -25995,7 +27017,6 @@ Add comment
 r1649 | salaun | 2002-11-14 14:40:35 +0100 (Thu, 14 Nov 2002) | 2 lines
 Changed paths:
    M /trunk/Makefile.in
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26039,7 +27060,6 @@ Fix: wwsympa would die under certain circumstances if LDAP Bind failed with erro
 ------------------------------------------------------------------------
 r1640 | salaun | 2002-11-13 11:06:57 +0100 (Wed, 13 Nov 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26116,7 +27136,6 @@ Changes: Require recent Mailtools because of mailx security problems
 ------------------------------------------------------------------------
 r1629 | salaun | 2002-11-05 12:04:24 +0100 (Tue, 05 Nov 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26306,7 +27325,6 @@ missing "you MUST rebuild archives"
 ------------------------------------------------------------------------
 r1596 | salaun | 2002-10-21 11:12:39 +0200 (Mon, 21 Oct 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26599,7 +27617,6 @@ r1553 | salaun | 2002-09-23 14:55:57 +0200 (Mon, 23 Sep 2002) | 2 lines
 Changed paths:
    M /trunk/doc/man8/sympa.8
    M /trunk/doc/man8/sympa.pod
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26609,7 +27626,6 @@ Add documentation for --make_alias_file option
 ------------------------------------------------------------------------
 r1552 | salaun | 2002-09-23 12:15:04 +0200 (Mon, 23 Sep 2002) | 3 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26691,7 +27707,6 @@ Preparing 3.3.6b.4
 ------------------------------------------------------------------------
 r1542 | salaun | 2002-09-19 16:48:14 +0200 (Thu, 19 Sep 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -26795,7 +27810,6 @@ Changes: alias management related
 ------------------------------------------------------------------------
 r1529 | salaun | 2002-09-18 14:20:51 +0200 (Wed, 18 Sep 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -27100,7 +28114,6 @@ Fix log entry
 ------------------------------------------------------------------------
 r1513 | salaun | 2002-09-12 10:20:34 +0200 (Thu, 12 Sep 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -27147,7 +28160,6 @@ Ajust name of vars
 ------------------------------------------------------------------------
 r1507 | salaun | 2002-09-11 11:30:46 +0200 (Wed, 11 Sep 2002) | 3 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -27251,7 +28263,6 @@ as soon as ther use openssl perl module instead of openssl commands.
 r1494 | salaun | 2002-08-26 17:25:25 +0200 (Mon, 26 Aug 2002) | 3 lines
 Changed paths:
    M /trunk/check_perl_modules.pl
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/nls/fr.msg
@@ -27343,7 +28354,6 @@ Changed paths:
    M /trunk/ChangeLog
    M /trunk/Makefile.in
    M /trunk/aclocal.m4
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -27391,7 +28401,6 @@ Serge
 ------------------------------------------------------------------------
 r1483 | salaun | 2002-08-13 15:56:46 +0200 (Tue, 13 Aug 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -27484,7 +28493,6 @@ Correct
 ------------------------------------------------------------------------
 r1471 | salaun | 2002-08-07 10:49:00 +0200 (Wed, 07 Aug 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -28017,7 +29025,6 @@ Fix subroutine names store_susbscription_request(), delete_susbscription_request
 ------------------------------------------------------------------------
 r1403 | salaun | 2002-07-02 11:17:23 +0200 (Tue, 02 Jul 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -28048,7 +29055,6 @@ r1399 | salaun | 2002-06-26 14:07:05 +0200 (Wed, 26 Jun 2002) | 2 lines
 Changed paths:
    M /trunk/ChangeLog
    M /trunk/NEWS
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -28101,7 +29107,6 @@ New feature: Sympa working with Clam antivirus (http://clamav.elektrapro.com/)
 ------------------------------------------------------------------------
 r1393 | salaun | 2002-06-21 14:53:28 +0200 (Fri, 21 Jun 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
    M /trunk/doc/sympa.tex.tpl
@@ -28623,7 +29628,6 @@ log Typo
 ------------------------------------------------------------------------
 r1336 | salaun | 2002-05-15 11:10:08 +0200 (Wed, 15 May 2002) | 2 lines
 Changed paths:
-   M /trunk/doc/sympa.pdf
    M /trunk/doc/sympa.ps
    M /trunk/doc/sympa.tex
 
@@ -28720,7 +29724,6 @@ Do not add 'topics' parameter if not defined
 ------------------------------------------------------------------------
 r1324 | salaun | 2002-05-14 14:38:45 +0200 (Tue, 14 May 2002) | 2 lines
 Changed paths:
-   A /trunk/doc/sympa.pdf
    A /trunk/doc/sympa.ps
    A /trunk/doc/sympa.tex
 
