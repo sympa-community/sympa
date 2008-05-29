@@ -156,7 +156,7 @@ sub load_config {
 			default_home => 'home',
 			log_facility => '',
 			robots => '',
-			password_case => 'insensitive',
+			password_case => 'sensitive',
 			htmlarea_url => '',
 			);
 
