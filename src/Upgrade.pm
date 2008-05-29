@@ -1546,7 +1546,9 @@ sub md5_encode_password {
 	$total++;
 
 	## Updating Db
-	my $statement = sprintf "UPDATE user_table SET password_user='%s' WHERE (email_user='%s')", &tools::md5_fingerprint($clear_password), $user->{'email_user'} ;
+	my $escaped_email =  $user->{'email_user'};
+	$escaped_email =~ s/\'/''/g;
+	my $statement = sprintf "UPDATE user_table SET password_user='%s' WHERE (email_user='%s')", &tools::md5_fingerprint($clear_password), $escaped_email ;
 	
 	unless ($dbh->do($statement)) {
 	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
