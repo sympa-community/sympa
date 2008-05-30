@@ -4012,7 +4012,7 @@ msgstr "Αναζήτηση Χρήστη"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15337
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15338
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -5100,7 +5100,7 @@ msgstr "Παρουσίαση των συνδρομών σας με τις ακό
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 #, fuzzy
-msgid "Or send a message to %1 with subject: \"%2\""
+msgid "Or send a message to %1 with subject: \"sub %2\""
 msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #: mail_tt2/invite.tt2:12
@@ -7431,7 +7431,7 @@ msgstr "Το αρχείο διαμόρφωσης --CONFIG-- περιέχει λ�
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9173
+#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9174
 msgid "%A"
 msgstr ""
 
@@ -8062,16 +8062,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10504 wwsympa/wwsympa.fcgi:10573
-#: wwsympa/wwsympa.fcgi:10775 wwsympa/wwsympa.fcgi:11105
-#: wwsympa/wwsympa.fcgi:14900 wwsympa/wwsympa.fcgi:15637
-#: wwsympa/wwsympa.fcgi:15638 wwsympa/wwsympa.fcgi:4790
-#: wwsympa/wwsympa.fcgi:4791 wwsympa/wwsympa.fcgi:5957
-#: wwsympa/wwsympa.fcgi:6953 wwsympa/wwsympa.fcgi:7487
-#: wwsympa/wwsympa.fcgi:7524 wwsympa/wwsympa.fcgi:7526
-#: wwsympa/wwsympa.fcgi:7975 wwsympa/wwsympa.fcgi:7976
-#: wwsympa/wwsympa.fcgi:8010 wwsympa/wwsympa.fcgi:8011
-#: wwsympa/wwsympa.fcgi:8188 wwsympa/wwsympa.fcgi:8189
+#: wwsympa/wwsympa.fcgi:10505 wwsympa/wwsympa.fcgi:10574
+#: wwsympa/wwsympa.fcgi:10776 wwsympa/wwsympa.fcgi:11106
+#: wwsympa/wwsympa.fcgi:14901 wwsympa/wwsympa.fcgi:15638
+#: wwsympa/wwsympa.fcgi:15639 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:5958
+#: wwsympa/wwsympa.fcgi:6954 wwsympa/wwsympa.fcgi:7488
+#: wwsympa/wwsympa.fcgi:7525 wwsympa/wwsympa.fcgi:7527
+#: wwsympa/wwsympa.fcgi:7976 wwsympa/wwsympa.fcgi:7977
+#: wwsympa/wwsympa.fcgi:8011 wwsympa/wwsympa.fcgi:8012
+#: wwsympa/wwsympa.fcgi:8189 wwsympa/wwsympa.fcgi:8190
 msgid "%d %b %Y"
 msgstr ""
 
@@ -8187,14 +8187,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11329 wwsympa/wwsympa.fcgi:11462
-#: wwsympa/wwsympa.fcgi:13775 wwsympa/wwsympa.fcgi:7447
+#: wwsympa/wwsympa.fcgi:11330 wwsympa/wwsympa.fcgi:11463
+#: wwsympa/wwsympa.fcgi:13776 wwsympa/wwsympa.fcgi:7448
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15282 wwsympa/wwsympa.fcgi:15283
+#: wwsympa/wwsympa.fcgi:15283 wwsympa/wwsympa.fcgi:15284
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8382,35 +8382,11 @@ msgid ""
 msgstr ""
 
 #. (list)
-#: web_tt2/subrequest.tt2:29
-#, fuzzy
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"  Enter that password, below. This wil confirm your request to be subscribed "
-"from list %1."
-msgstr ""
-"Ελέγξε τη γραμματοθυρίδα σας για νέα μηνύματα και εισάγετε ακολούθως το\n"
-"\tσυνθηματικό που σας έχει αποσταλεί. Αυτό\n"
-"\tθα επιβεβαιώσει την αποχώρησή σας από συνδρομητής της λίστας %1."
-
-#. (list)
 #: web_tt2/subrequest.tt2:68
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below :"
 msgstr ""
-
-#. (conf.sympa,subject)
-#: mail_tt2/invite.tt2:10
-#, fuzzy
-msgid "Or send a message to %1 with subject: \"sub %2\""
-msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
-
-#. (list.name)
-#: mail_tt2/listmaster_notification.tt2:4
-msgid "List \"%1\" creation request"
-msgstr "Αίτημα δημιουργίας λίστας \"%1\""
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:17
@@ -8420,14 +8396,30 @@ msgid ""
 "%2/viewmod/%1/%3\n"
 msgstr ""
 
-#. (mod_spool_size)
-#: mail_tt2/moderate.tt2:31
-msgid "Number of messages awaiting moderation for this list : %1"
-msgstr "Αριθμός μηνυμάτων που αναμένουν συντονισμός στη λίστα: %1"
-
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Or send a message to %1 with subject: \"%2\""
+#~ msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "  Enter that password, below. This wil confirm your request to be "
+#~ "subscribed from list %1."
+#~ msgstr ""
+#~ "Ελέγξε τη γραμματοθυρίδα σας για νέα μηνύματα και εισάγετε ακολούθως το\n"
+#~ "\tσυνθηματικό που σας έχει αποσταλεί. Αυτό\n"
+#~ "\tθα επιβεβαιώσει την αποχώρησή σας από συνδρομητής της λίστας %1."
+
+#~ msgid "List \"%1\" creation request"
+#~ msgstr "Αίτημα δημιουργίας λίστας \"%1\""
+
+#~ msgid "Number of messages awaiting moderation for this list : %1"
+#~ msgstr "Αριθμός μηνυμάτων που αναμένουν συντονισμός στη λίστα: %1"
 
 #~ msgid "Current password :"
 #~ msgstr "Τρέχον συνθηματικό"

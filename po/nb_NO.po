@@ -3841,7 +3841,7 @@ msgstr ""
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15337
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15338
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -4817,7 +4817,7 @@ msgstr "<strong>%1</strong> abonnerer på følgende postlister"
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 #, fuzzy
-msgid "Or send a message to %1 with subject: \"%2\""
+msgid "Or send a message to %1 with subject: \"sub %2\""
 msgstr ""
 "\n"
 "eller send en epost til %1 med følgende emne :\n"
@@ -6954,7 +6954,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9173
+#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9174
 msgid "%A"
 msgstr ""
 
@@ -7577,16 +7577,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10504 wwsympa/wwsympa.fcgi:10573
-#: wwsympa/wwsympa.fcgi:10775 wwsympa/wwsympa.fcgi:11105
-#: wwsympa/wwsympa.fcgi:14900 wwsympa/wwsympa.fcgi:15637
-#: wwsympa/wwsympa.fcgi:15638 wwsympa/wwsympa.fcgi:4790
-#: wwsympa/wwsympa.fcgi:4791 wwsympa/wwsympa.fcgi:5957
-#: wwsympa/wwsympa.fcgi:6953 wwsympa/wwsympa.fcgi:7487
-#: wwsympa/wwsympa.fcgi:7524 wwsympa/wwsympa.fcgi:7526
-#: wwsympa/wwsympa.fcgi:7975 wwsympa/wwsympa.fcgi:7976
-#: wwsympa/wwsympa.fcgi:8010 wwsympa/wwsympa.fcgi:8011
-#: wwsympa/wwsympa.fcgi:8188 wwsympa/wwsympa.fcgi:8189
+#: wwsympa/wwsympa.fcgi:10505 wwsympa/wwsympa.fcgi:10574
+#: wwsympa/wwsympa.fcgi:10776 wwsympa/wwsympa.fcgi:11106
+#: wwsympa/wwsympa.fcgi:14901 wwsympa/wwsympa.fcgi:15638
+#: wwsympa/wwsympa.fcgi:15639 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:5958
+#: wwsympa/wwsympa.fcgi:6954 wwsympa/wwsympa.fcgi:7488
+#: wwsympa/wwsympa.fcgi:7525 wwsympa/wwsympa.fcgi:7527
+#: wwsympa/wwsympa.fcgi:7976 wwsympa/wwsympa.fcgi:7977
+#: wwsympa/wwsympa.fcgi:8011 wwsympa/wwsympa.fcgi:8012
+#: wwsympa/wwsympa.fcgi:8189 wwsympa/wwsympa.fcgi:8190
 msgid "%d %b %Y"
 msgstr ""
 
@@ -7700,14 +7700,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11329 wwsympa/wwsympa.fcgi:11462
-#: wwsympa/wwsympa.fcgi:13775 wwsympa/wwsympa.fcgi:7447
+#: wwsympa/wwsympa.fcgi:11330 wwsympa/wwsympa.fcgi:11463
+#: wwsympa/wwsympa.fcgi:13776 wwsympa/wwsympa.fcgi:7448
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15282 wwsympa/wwsympa.fcgi:15283
+#: wwsympa/wwsympa.fcgi:15283 wwsympa/wwsympa.fcgi:15284
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -7918,15 +7918,6 @@ msgid ""
 "        your password below :"
 msgstr ""
 
-#. (conf.sympa,subject)
-#: mail_tt2/invite.tt2:10
-#, fuzzy
-msgid "Or send a message to %1 with subject: \"sub %2\""
-msgstr ""
-"\n"
-"eller send en epost til %1 med følgende emne :\n"
-"AUTH %2 DEL %3 %4\n"
-
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1\" creation request"
@@ -7948,6 +7939,13 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Or send a message to %1 with subject: \"%2\""
+#~ msgstr ""
+#~ "\n"
+#~ "eller send en epost til %1 med følgende emne :\n"
+#~ "AUTH %2 DEL %3 %4\n"
 
 #~ msgid "Article to be approved for list %1 from %2"
 #~ msgstr "Artikkel som må godkjennes for listen %1 fra %2"

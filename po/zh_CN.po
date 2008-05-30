@@ -3889,7 +3889,7 @@ msgstr "查找间隔："
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15337
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15338
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -4885,8 +4885,7 @@ msgstr "要订阅请回复这则邮件或点击以下的mailto URL："
 
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
-#, fuzzy
-msgid "Or send a message to %1 with subject: \"%2\""
+msgid "Or send a message to %1 with subject: \"sub %2\""
 msgstr "或用以下标题 %2 发送一则邮件到 %1"
 
 #: mail_tt2/invite.tt2:12
@@ -7108,7 +7107,7 @@ msgstr "配置文件--CONFIG--包含错误。\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9173
+#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9174
 msgid "%A"
 msgstr "%A"
 
@@ -7729,16 +7728,16 @@ msgstr "%Y年%m月%d日（%a）"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10504 wwsympa/wwsympa.fcgi:10573
-#: wwsympa/wwsympa.fcgi:10775 wwsympa/wwsympa.fcgi:11105
-#: wwsympa/wwsympa.fcgi:14900 wwsympa/wwsympa.fcgi:15637
-#: wwsympa/wwsympa.fcgi:15638 wwsympa/wwsympa.fcgi:4790
-#: wwsympa/wwsympa.fcgi:4791 wwsympa/wwsympa.fcgi:5957
-#: wwsympa/wwsympa.fcgi:6953 wwsympa/wwsympa.fcgi:7487
-#: wwsympa/wwsympa.fcgi:7524 wwsympa/wwsympa.fcgi:7526
-#: wwsympa/wwsympa.fcgi:7975 wwsympa/wwsympa.fcgi:7976
-#: wwsympa/wwsympa.fcgi:8010 wwsympa/wwsympa.fcgi:8011
-#: wwsympa/wwsympa.fcgi:8188 wwsympa/wwsympa.fcgi:8189
+#: wwsympa/wwsympa.fcgi:10505 wwsympa/wwsympa.fcgi:10574
+#: wwsympa/wwsympa.fcgi:10776 wwsympa/wwsympa.fcgi:11106
+#: wwsympa/wwsympa.fcgi:14901 wwsympa/wwsympa.fcgi:15638
+#: wwsympa/wwsympa.fcgi:15639 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:5958
+#: wwsympa/wwsympa.fcgi:6954 wwsympa/wwsympa.fcgi:7488
+#: wwsympa/wwsympa.fcgi:7525 wwsympa/wwsympa.fcgi:7527
+#: wwsympa/wwsympa.fcgi:7976 wwsympa/wwsympa.fcgi:7977
+#: wwsympa/wwsympa.fcgi:8011 wwsympa/wwsympa.fcgi:8012
+#: wwsympa/wwsympa.fcgi:8189 wwsympa/wwsympa.fcgi:8190
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -7866,14 +7865,14 @@ msgstr "%H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11329 wwsympa/wwsympa.fcgi:11462
-#: wwsympa/wwsympa.fcgi:13775 wwsympa/wwsympa.fcgi:7447
+#: wwsympa/wwsympa.fcgi:11330 wwsympa/wwsympa.fcgi:11463
+#: wwsympa/wwsympa.fcgi:13776 wwsympa/wwsympa.fcgi:7448
 msgid "%d %b %y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15282 wwsympa/wwsympa.fcgi:15283
+#: wwsympa/wwsympa.fcgi:15283 wwsympa/wwsympa.fcgi:15284
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8025,64 +8024,51 @@ msgstr "不接收邮件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
 
-#: web_tt2/loginbanner.tt2:10
-msgid ""
-"You need to login to access your custom WWSympa environment or to perform a "
-"privileged operation (one that requires your email address)."
-msgstr ""
-"您需要登录访问定制WWSympa环境或执行一个特许操作（其中一个要求邮件地址）。"
+#, fuzzy
+#~ msgid "Or send a message to %1 with subject: \"%2\""
+#~ msgstr "或用以下标题 %2 发送一则邮件到 %1"
 
-#: web_tt2/remindpasswd.tt2:5
-msgid ""
-"You have forgotten your password, or you've never had any password related "
-"to this server"
-msgstr "也许您忘记了口令，或者您从未有与这台服务器相关的口令"
+#~ msgid ""
+#~ "You need to login to access your custom WWSympa environment or to perform "
+#~ "a privileged operation (one that requires your email address)."
+#~ msgstr ""
+#~ "您需要登录访问定制WWSympa环境或执行一个特许操作（其中一个要求邮件地址）。"
 
-#. (list)
-#: web_tt2/subrequest.tt2:29
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"  Enter that password, below. This wil confirm your request to be subscribed "
-"from list %1."
-msgstr ""
-"检查您邮箱中的新邮件并查看从Sympa发出的邮件来找到您的口令。\n"
-"在下面输入那个口令。这将证实您从邮件列表%1订阅的请求。"
+#~ msgid ""
+#~ "You have forgotten your password, or you've never had any password "
+#~ "related to this server"
+#~ msgstr "也许您忘记了口令，或者您从未有与这台服务器相关的口令"
 
-#. (list)
-#: web_tt2/subrequest.tt2:68
-msgid ""
-"To confirm your subscription to list %1, please enter\n"
-"        your password below :"
-msgstr ""
-"要确认订阅邮件列表%1，请在下面输入\n"
-"\t您的口令："
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "  Enter that password, below. This wil confirm your request to be "
+#~ "subscribed from list %1."
+#~ msgstr ""
+#~ "检查您邮箱中的新邮件并查看从Sympa发出的邮件来找到您的口令。\n"
+#~ "在下面输入那个口令。这将证实您从邮件列表%1订阅的请求。"
 
-#. (conf.sympa,subject)
-#: mail_tt2/invite.tt2:10
-msgid "Or send a message to %1 with subject: \"sub %2\""
-msgstr "或用以下标题 %2 发送一则邮件到 %1"
+#~ msgid ""
+#~ "To confirm your subscription to list %1, please enter\n"
+#~ "        your password below :"
+#~ msgstr ""
+#~ "要确认订阅邮件列表%1，请在下面输入\n"
+#~ "\t您的口令："
 
-#. (list.name)
-#: mail_tt2/listmaster_notification.tt2:4
-msgid "List \"%1\" creation request"
-msgstr "邮件列表＂%1＂创建请求"
+#~ msgid "List \"%1\" creation request"
+#~ msgstr "邮件列表＂%1＂创建请求"
 
-#. (list.name,conf.wwsympa_url,modkey)
-#: mail_tt2/moderate.tt2:17
-msgid ""
-"To tag the attached message in list %1 go to the following page :\n"
-"\n"
-"%2/viewmod/%1/%3\n"
-msgstr ""
-"在邮件列表%1角注附加的邮件去以下页：\n"
-"\n"
-"%2/viewmod/%1/%3\n"
+#~ msgid ""
+#~ "To tag the attached message in list %1 go to the following page :\n"
+#~ "\n"
+#~ "%2/viewmod/%1/%3\n"
+#~ msgstr ""
+#~ "在邮件列表%1角注附加的邮件去以下页：\n"
+#~ "\n"
+#~ "%2/viewmod/%1/%3\n"
 
-#. (mod_spool_size)
-#: mail_tt2/moderate.tt2:31
-msgid "Number of messages awaiting moderation for this list : %1"
-msgstr "这张邮件列表等候监管的邮件数：%1则"
+#~ msgid "Number of messages awaiting moderation for this list : %1"
+#~ msgstr "这张邮件列表等候监管的邮件数：%1则"
 
 #~ msgid "Current password :"
 #~ msgstr "当前口令："
