@@ -6264,7 +6264,7 @@ sub do_skinsedit {
 ###################################################### 
  sub do_distribute {
 
-     $in{'id'} .= ','.$in{'idspam'} if ( in{'idspam'});
+     $in{'id'} .= ','.$in{'idspam'} if ( $in{'idspam'});
      $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
 
