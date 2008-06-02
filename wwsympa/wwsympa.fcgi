@@ -8362,6 +8362,13 @@ Sends back the list creation edition form.
 					       'export' => 'no'};
      }
      $param->{'occurrence'} = $record;
+     foreach my $listname (sort keys %{$param->{'which'}}) {
+         if ($listname =~ /^([a-z])/){
+	     push @{$param->{'orderedlist'}{$1}}, $listname ;
+	 }else{
+             push @{$param->{'orderedlist'}{'others'}}, $listname ;
+	 }
+     }
 
      return 1;
  }
