@@ -423,7 +423,7 @@ sub create_one_time_ticket {
     my $remote_addr = shift;
 
     my $ticket = &SympaSession::get_random();
-    do_log('debug', 'Auth::create_one_time_ticket(%s,%s,%s) value = %s',$email,$robot,$context_data,$ticket);
+    do_log('info', 'Auth::create_one_time_ticket(%s,%s,%s) value = %s',$email,$robot,$context_data,$ticket);
 
     my $date = time;
     my $dbh = &List::db_get_handler();

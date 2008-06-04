@@ -4583,157 +4583,143 @@ sub check_custom_attribute {
 # OUT :'subrequest'|'login'|'info'|$in{'previous_action'}
 #     | undef
 ####################################################
- ## TOTO: accepter nouveaux users
- sub do_subscribe {
-     &wwslog('info', 'do_subscribe(%s)', $in{'email'});
-
-     ## Not authenticated
-     unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
-	 ## no email 
-	 unless ($in{'email'}) {
-	     return 'subrequest';
-	 }
-
-	 ## Perform login
-	 if ($in{'passwd'}) {
-	     $in{'previous_action'} = 'subscribe';
-	     $in{'previous_list'} = $param->{'list'};
-	     return 'login';
-	 }else {
-	     return 'subrequest';
-	 }
-
-     }
-
-     if ($param->{'is_subscriber'} && 
-	      ($param->{'subscriber'}{'subscribed'} == 1)) {
-	 &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
-	 &wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
-	 &web_db_log({'parameters' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'already_subscriber'});		      
-	 return undef;
-     }
-     
-     my @keys = sort keys (%{$list->{'admin'}}) ;
-     my @custom_attributes = @{$list->{'admin'}{'custom_attribute'}} ;
-     my $xml_custom_attribute;
-     if ($list->{'admin'}{'custom_attribute'} ) {
-
-	 ## This variable is set in the subrequest form
-	 ## If not set, it means that the user has not been prompted to provide custom_attributes
-	 unless ($in{'via_subrequest'}) {
-	     &wwslog('notice', 'Returning subrequest form');
-	     return "subrequest";	     
-	 }
-	 
-	 if (&check_custom_attribute() != 1) {
-	     &wwslog('notice', "Missing required custom attributes") ;
-	     return 'subrequest';
-	 }
-	 my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
-	 $xml_custom_attribute = $xml ;
-     }
-
-     my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
-					  {'sender' => $param->{'user'}{'email'}, 
-					   'remote_host' => $param->{'remote_host'},
-					   'remote_addr' => $param->{'remote_addr'}});
-     my $sub_is;
-     my $reason;
-     if (ref($result) eq 'HASH') {
-	 $sub_is = $result->{'action'};
-	 $reason = $result->{'reason'};
-     }
-     if ($sub_is =~ /reject/) {
-	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
-	 &wwslog('info', 'do_subscribe: subscribe closed');
-	 &web_db_log({'parameters' => $in{'email'},
-		      'status' => 'error',
-		      'error_type' => 'authorization'});		      
-	 return undef;
-     }
-
-     $param->{'may_subscribe'} = 1;
-
-     if ($sub_is =~ /owner/) {
-	 unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
-							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
-							   'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
-							   'custom_attribute' => $in{custom_attribute},
-							   'gecos' => $param->{'user'}{'gecos'}})) {
-	     &wwslog('notice',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
-	 }
-
-	 $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
-	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
-	 &wwslog('info', 'do_subscribe: subscribe sent to owner');
-
-	 return 'info';
-     }elsif ($sub_is =~ /do_it/) {
-	 if ($param->{'is_subscriber'}) {
-	     unless ($list->update_user($param->{'user'}{'email'}, 
-					{'subscribed' => 1,
-					 'update_date' => time})) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info', 'do_subscribe: update failed');
-		 &web_db_log({'parameters' => $in{'email'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});		      
-		 return undef;
-	     }
-	 }else {
-	     my $defaults = $list->get_default_user_options();
-	     my $u;
-	     %{$u} = %{$defaults};
-	     $u->{'email'} = $param->{'user'}{'email'};
-	     $u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
-	     $u->{'date'} = $u->{'update_date'} = time;
-	     $u->{'password'} = $param->{'user'}{'password'};
-	     $u->{'custom_attribute'} = $xml_custom_attribute if (defined $xml_custom_attribute);
-	     $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
-
-	     unless ($list->add_user($u)) {
-		 &report::reject_report_web('intern','add_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info', 'do_subscribe: subscribe failed');
-		 &web_db_log({'parameters' => $in{'email'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});		      
-		 return undef;
-	     }
-	 }
-
-	 unless ($sub_is =~ /quiet/i ) {
-	     unless ($list->send_file('welcome', $param->{'user'}{'email'}, $robot,{})) {
-		 &wwslog('notice',"Unable to send template 'welcome' to $param->{'user'}{'email'}");
-	     }
-	 }
-
-	 if ($sub_is =~ /notify/) {
-	     unless ($list->send_notify_to_owner('notice',{'who' => $param->{'user'}{'email'}, 
-					  'gecos' => $param->{'user'}{'gecos'}, 
-							   'command' => 'subscribe'})) {
-		 &wwslog('notice','Unable to send notify "notice" to listmaster');
-	     }
-	 }
-	 ## perform which to update your_subscribtions cookie ;
-	 @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
-	 &report::notice_report_web('performed',{},$param->{'action'});
-	 &web_db_log({'parameters' => $in{'email'},
-		      'status' => 'success',
-		  });
-     }
-
-     if ($in{'previous_action'}) {
-	 return $in{'previous_action'};
-     }
-
- #    return 'suboptions';
-     return 'info';
- }
-
-
-
+## TOTO: accepter nouveaux users
+sub do_subscribe {
+    &wwslog('info', 'do_subscribe(%s)', $in{'email'});
+    
+    if (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	my $xml_custom_attribute;
+	
+	if ($list->{'admin'}{'custom_attribute'} ) {
+	    
+	    ## This variable is set in the subrequest form
+	    ## If not set, it means that the user has not been prompted to provide custom_attributes
+	    unless ($in{'via_subrequest'}) {
+		&wwslog('notice', 'Returning subrequest form');
+		return "subrequest";	     
+	    }
+	    
+	    if (&check_custom_attribute() != 1) {
+		&wwslog('notice', "Missing required custom attributes") ;
+		return 'subrequest';
+	    }
+	    my $xml = &List::createXMLCustomAttribute($in{custom_attribute});
+	    $xml_custom_attribute = $xml ;
+	}
+	
+	if ($param->{'is_subscriber'} && ($param->{'subscriber'}{'subscribed'} == 1)) {
+	    &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
+	    &wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
+	    &web_db_log({'parameters' => $in{'email'},
+			 'status' => 'error',
+			 'error_type' => 'already_subscriber'});		      
+	    return undef;
+	}
+	my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+					     {'sender' => $param->{'user'}{'email'}, 
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});	     
+	my $sub_is;
+	my $reason;
+	if (ref($result) eq 'HASH') {
+	    $sub_is = $result->{'action'};
+	    $reason = $result->{'reason'};
+	}
+	if ($sub_is =~ /reject/) {
+	    &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
+	    &wwslog('info', 'do_subscribe: subscribe closed');
+	    &web_db_log({'parameters' => $in{'email'},
+			 'status' => 'error',
+			 'error_type' => 'authorization'});		      
+	    return undef;
+	}
+	
+	$param->{'may_subscribe'} = 1;	 
+	
+	if ($sub_is =~ /owner/) {
+	    unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
+							      'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
+							      'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
+							      'custom_attribute' => $in{custom_attribute},
+							      'gecos' => $param->{'user'}{'gecos'}})) {
+		&wwslog('notice',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
+	    }
+	    
+	    $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
+	    &report::notice_report_web('sent_to_owner',{},$param->{'action'});
+	    &wwslog('info', 'do_subscribe: subscribe sent to owner');
+	    
+	    return 'info';
+	}elsif ($sub_is =~ /do_it/) {
+	    if ($param->{'is_subscriber'}) {
+		unless ($list->update_user($param->{'user'}{'email'}, 
+					   {'subscribed' => 1,
+					    'update_date' => time})) {
+		    &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		    &wwslog('info', 'do_subscribe: update failed');
+		    &web_db_log({'parameters' => $in{'email'},
+				 'status' => 'error',
+				 'error_type' => 'internal'});		      
+		    return undef;
+		}
+	    }else {
+		my $defaults = $list->get_default_user_options();
+		my $u;
+		%{$u} = %{$defaults};
+		$u->{'email'} = $param->{'user'}{'email'};
+		$u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
+		$u->{'date'} = $u->{'update_date'} = time;
+		$u->{'password'} = $param->{'user'}{'password'};
+		$u->{'custom_attribute'} = $xml_custom_attribute if (defined $xml_custom_attribute);
+		$u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
+		
+		unless ($list->add_user($u)) {
+		    &report::reject_report_web('intern','add_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		    &wwslog('info', 'do_subscribe: subscribe failed');
+		    &web_db_log({'parameters' => $in{'email'},
+				 'status' => 'error',
+				 'error_type' => 'internal'});		      
+		    return undef;
+		}
+	    }
+	    
+	    unless ($sub_is =~ /quiet/i ) {
+		unless ($list->send_file('welcome', $param->{'user'}{'email'}, $robot,{})) {
+		    &wwslog('notice',"Unable to send template 'welcome' to $param->{'user'}{'email'}");
+		}
+	    }
+	    
+	    if ($sub_is =~ /notify/) {
+		unless ($list->send_notify_to_owner('notice',{'who' => $param->{'user'}{'email'}, 
+							      'gecos' => $param->{'user'}{'gecos'}, 
+							      'command' => 'subscribe'})) {
+		    &wwslog('notice','Unable to send notify "notice" to listmaster');
+		}
+	    }
+	    
+	}
+    }else{ # user is not autenticated
+	
+	if ($in{'email'} && $in{'passwd'}) {
+	    $in{'previous_action'} = 'subscribe';
+	    $in{'previous_list'} = $param->{'list'};
+	    return 'login';
+	}else{
+	    return 'subrequest';
+	}
+    }
+    ## perform which to update your_subscriptions cookie ;
+    @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+    &report::notice_report_web('performed',{},$param->{'action'});
+    &web_db_log({'parameters' => $in{'email'},'status' => 'success'});
+    
+    if ($in{'previous_action'}) {
+	return $in{'previous_action'};
+    }
+    
+#    return 'suboptions';
+    return 'info';
+}
 
 
 ####################################################
@@ -4746,158 +4732,152 @@ sub check_custom_attribute {
 # OUT :'subrequest'|'login'|'info'|$in{'previous_action'}
 #     | undef
 ####################################################
- sub do_multiple_subscribe {
-     &wwslog('info', 'do_multiple_subscribe(%s)', $in{'email'});
-
-     ## Not authenticated
-     unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
-	 ## no email 
-	 unless ($in{'email'}) {
-	     return 'lists';
-	 }
-     }
-     
-     my @lists = split /\0/, $in{'lists'};
-     my $total;
-     my %results ;
-
-
-     foreach my $requested_list (@lists) {	 
-	 my $param->{'list'} = new List ($requested_list, $robot);
-	 $results{'requested_list'} = &do_subscribe();
-     }
- }
-
- ## Subscription request (user not authenticated)
- sub do_suboptions {
-     &wwslog('info', 'do_suboptions()');
-
-     unless($param->{'is_subscriber'} ) {
-	 &report::reject_report_web('user','not_subscriber',{'list'=> $list->{'name'}},$param->{'action'},$list);
-	 &wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
-	 return undef;
-     }
-
-     my ($s, $m);
-
-     unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
-	 &report::reject_report_web('intern','subscriber_not_found',{'email' => $param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info', 'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
-	 return undef;
-     }
-
-     $s->{'reception'} ||= 'mail';
-     $s->{'visibility'} ||= 'noconceal';
-     $s->{'date'} = gettext_strftime "%d %b %Y", localtime($s->{'date'});
-     $s->{'update_date'} = gettext_strftime "%d %b %Y", localtime($s->{'update_date'});
-
-     foreach $m (keys %wwslib::reception_mode) {
-       if ($list->is_available_reception_mode($m)) {
-	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
-	 if ($s->{'reception'} eq $m) {
-	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
-
-	     if ($m eq 'mail') {
-		 $param->{'possible_topic'} = 1;
-	     }
-	 }else {
-	     $param->{'reception'}{$m}{'selected'} = '';
-	 }
-       }
-     }
-
-     foreach $m (keys %wwslib::visibility_mode) {
-	 $param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
-	 if ($s->{'visibility'} eq $m) {
-	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
-	 }else {
-	     $param->{'visibility'}{$m}{'selected'} = '';
-	 }
-     }
-
-     $param->{'subscriber'} = $s;
-
-
-     #msg_topic
-     $param->{'sub_user_topic'} = 0;
-     foreach my $user_topic (split (/,/,$s->{'topics'})) {
-	 $param->{'topic_checked'}{$user_topic} = 1;
-	 $param->{'sub_user_topic'}++;
-     }
-     
-     if ($list->is_there_msg_topic()) {
-	 foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
-	     if (defined $top->{'name'}) {
-		 push (@{$param->{'available_topics'}},$top);
-	     }
-	 }
-     }
-     
-     return 1;
- }
+sub do_multiple_subscribe {
+    &wwslog('info', 'do_multiple_subscribe(%s)', $in{'email'});
+    
+    ## Not authenticated
+    unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	## no email 
+	unless ($in{'email'}) {
+	    return 'lists';
+	}
+    }
+    
+    my @lists = split /\0/, $in{'lists'};
+    my $total;
+    my %results ;
+    
+    
+    foreach my $requested_list (@lists) {	 
+	my $param->{'list'} = new List ($requested_list, $robot);
+	$results{'requested_list'} = &do_subscribe();
+    }
+}
 
 ## Subscription request (user not authenticated)
- sub do_subrequest {
-     &wwslog('info', 'do_subrequest(%s)', $in{'email'});
-     &wwslog('info', "do_subrequest custom_attribute ($in{'custom_attribute'})");
-     
-     if (defined $in{'custom_attribute'}) {
+sub do_suboptions {
+    &wwslog('info', 'do_suboptions()');
+    
+    unless($param->{'is_subscriber'} ) {
+	&report::reject_report_web('user','not_subscriber',{'list'=> $list->{'name'}},$param->{'action'},$list);
+	&wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
+	return undef;
+    }
+    
+    my ($s, $m);
+    
+    unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
+	&report::reject_report_web('intern','subscriber_not_found',{'email' => $param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	&wwslog('info', 'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
+	return undef;
+    }
+    
+    $s->{'reception'} ||= 'mail';
+    $s->{'visibility'} ||= 'noconceal';
+    $s->{'date'} = gettext_strftime "%d %b %Y", localtime($s->{'date'});
+    $s->{'update_date'} = gettext_strftime "%d %b %Y", localtime($s->{'update_date'});
+    
+    foreach $m (keys %wwslib::reception_mode) {
+	if ($list->is_available_reception_mode($m)) {
+	    $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
+	    if ($s->{'reception'} eq $m) {
+		$param->{'reception'}{$m}{'selected'} = 'selected="selected"';
+		
+		if ($m eq 'mail') {
+		    $param->{'possible_topic'} = 1;
+		}
+	    }else {
+		$param->{'reception'}{$m}{'selected'} = '';
+	    }
+	}
+    }
+    
+    foreach $m (keys %wwslib::visibility_mode) {
+	$param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+	if ($s->{'visibility'} eq $m) {
+	    $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	}else {
+	    $param->{'visibility'}{$m}{'selected'} = '';
+	}
+    }
+    
+    $param->{'subscriber'} = $s;
+    
+    
+    #msg_topic
+    $param->{'sub_user_topic'} = 0;
+    foreach my $user_topic (split (/,/,$s->{'topics'})) {
+	$param->{'topic_checked'}{$user_topic} = 1;
+	$param->{'sub_user_topic'}++;
+    }
+    
+    if ($list->is_there_msg_topic()) {
+	foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
+	    if (defined $top->{'name'}) {
+		push (@{$param->{'available_topics'}},$top);
+	    }
+	}
+    }
+    
+    return 1;
+}
+
+## Subscription request (user not authenticated)
+sub do_subrequest {
+    &wwslog('info', 'do_subrequest(%s,%s)', $in{'email'},$in{'custom_attribute'});
+    
+    if (defined $in{'custom_attribute'}) {
      	$param->{'custom_attribute'} = $in{'custom_attribute'};
-     }
-     
-     my $ldap_user;
-     $ldap_user = 1
-	 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
-
-     ## Auth ?
-     if ($param->{'user'}{'email'}) {
-
-	 ## Subscriber ?
-	 if ($param->{'is_subscriber'}) {
-	     &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
-	     &wwslog('info','%s already subscriber', $param->{'user'}{'email'});
-	     &web_db_log({'status' => 'error',
-			  'error_type' => 'already_subscriber'});
-	     return undef;
-	 }
-
-	 $param->{'status'} = 'auth';
-     }else {
-	 ## Provided email parameter ?
-	 unless ($in{'email'}) {
-	     $param->{'status'} = 'notauth_noemail';
-	     return 1;
-	 }
-
-	 ## Subscriber ?
-	 if (!$ldap_user && $list->is_user($in{'email'})) {
-	     $param->{'status'} = 'notauth_subscriber';
-	     return 1;
-	 }
-
-	 my $user;
-	 $user = &List::get_user_db($in{'email'})
-	     if &List::is_user_db($in{'email'});
+    }
+    
+    my $ldap_user;
+    $ldap_user = 1 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
+    
+    ## Auth ?
+    if ($param->{'user'}{'email'}) {
+	## Subscriber ?
+	if ($param->{'is_subscriber'}) {
+	    &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
+	    &wwslog('info','%s already subscriber', $param->{'user'}{'email'});
+	    &web_db_log({'status' => 'error',
+			 'error_type' => 'already_subscriber'});
+	    return undef;
+	}
+	$param->{'status'} = 'auth';
+    }else {
+	## Provided email parameter ?
+	unless ($in{'email'}) {
+	    $param->{'status'} = 'notauth_noemail';
+	    return 1;
+	}
+	## Subscriber ?
+	if (!$ldap_user && $list->is_user($in{'email'})) {
+	    $param->{'status'} = 'notauth_subscriber';
+	    return 1;
+	}
+	my $user;
+	$user = &List::get_user_db($in{'email'})
+	    if &List::is_user_db($in{'email'});
 	
-	 ## Need to send a password by email
-	 if ((!&List::is_user_db($in{'email'}) || 
-	      !$user->{'password'} || 
-	      ($user->{'password'} =~ /^INIT/i)) &&
-	     !$ldap_user) {
-
-	     &do_requestpasswd();
-	     $param->{'status'} = 'notauth_passwordsent';
-	     
-	     return 1;
-	 }
-
-	 $param->{'email'} = $in{'email'};
-	 $param->{'status'} = 'notauth';
-     }
-     
-
-     return 1;
- }
+	## Need to send a password by email
+	if ((!&List::is_user_db($in{'email'}) || !$user->{'password'} ) && !$ldap_user) {
+	    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
+	    $param->{'login_error'}='ticket_sent';
+	    unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
+		&wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
+		$param->{'login_error'}='unable_to_send_ticket';
+	    }
+	    # &do_requestpasswd();
+	    $param->{'status'} = 'notauth_passwordsent';
+	    
+	    return 1;
+	}
+	$param->{'email'} = $in{'email'};
+	$param->{'status'} = 'notauth';
+    }
+    
+    return 1;
+}
 ####################################################
 # do_signoff
 ####################################################
