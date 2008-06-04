@@ -647,6 +647,78 @@ sub update_list{
 }
 
 
+
+########################################################
+# clone_list_as_empty {                          
+########################################################  
+# Clone a list config including customization, templates, scenario config
+# but without archives, subscribers and shared
+# 
+# IN  : - $source_list_name : the list to clone
+#       - $source_robot : robot of the list to clone
+#       - $new_listname : the target listname         
+#       - $new_robot : the target list's robot
+#       - $email : the email of the requestor : used in config as admin->last_update->email         
+#
+# OUT : - $list : the updated list or undef
+##
+sub clone_list_as_empty {
+    
+    my $source_list_name =shift;
+    my $source_robot =shift;
+    my $new_listname = shift;
+    my $new_robot = shift;
+    my $email = shift;
+
+    my $list;
+    unless ($list = new List ($source_list_name, $source_robot)) {
+	&dolog('err','Admin::clone_list_as_empty : new list failed %s %s',$source_list_name, $source_robot);
+	return undef;;
+    }    
+    
+    &do_log('info',"Admin::clone_list_as_empty ($source_list_name, $source_robot,$new_listname,$new_robot,$email)");
+    
+    my $new_dir;
+    if (-d $Conf{'home'}.'/'.$new_robot) {
+	$new_dir = $Conf{'home'}.'/'.$new_robot.'/'.$new_listname;
+    }elsif ($new_robot eq $Conf{'host'}) {
+	$new_dir = $Conf{'home'}.'/'.$new_listname;
+    }else {
+	&dolog('err',"Admin::clone_list_as_empty : unknown robot $new_robot");
+	return undef;
+    }
+    
+    unless (mkdir $new_dir, 0775) {
+	&dolog('err','Admin::clone_list_as_empty : failed to create directory %s : %s',$new_dir, $!);
+	return undef;;
+    }
+    chmod 0775, $new_dir;
+    foreach my $subdir ('etc','web_tt2','mail_tt2','data_sources' ) {
+	if (-d $new_dir.'/'.$subdir) {
+	    unless (&tools::copy_dir($list->{'dir'}.'/'.$subdir, $new_dir.'/'.$subdir)) {
+		&dolog('err','Admin::clone_list_as_empty :  failed to copy_directory %s : %s',$new_dir.'/'.$subdir, $!);
+		return undef;
+	    }
+	}
+    }
+    unless (&File::Copy::copy ($list->{'dir'}.'/config', $new_dir.'/config')) {
+	&dolog('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/config', $!);
+	return undef;
+    }
+    # now switch List object to new list, update some values
+    unless (my $list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
+	&dolog('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
+	return undef;
+    }
+    $list->{'admin'}{'serial'} = 0 ;
+    $list->{'admin'}{'creation_email'} = $email if ($email);
+    $list->{'admin'}{'creation'}{'date_epoch'} = time;
+    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
+    $list->save_config($email);
+    return $list;
+}
+
+
 ########################################################
 # check_owner_defined                                     
 ########################################################  

@@ -35,6 +35,7 @@ use Time::Local;
 use File::Find;
 use Digest::MD5;
 use HTML::StripScripts::Parser;
+use File::Copy::Recursive;
 
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
@@ -486,6 +487,18 @@ sub get_list_list_tpl {
     }
 
     return ($list_templates);
+}
+
+
+#copy a directory and it's content
+sub copy_dir {
+    my $dir1 = shift;
+    my $dir2 = shift;
+    &do_log('info','copy_dir %1 %2',$dir1,$dir2);
+
+    return undef unless (-d $dir1) ;
+    #return undef unless (-d $dir2) ;
+    return (&File::Copy::Recursive::dircopy($dir1,$dir2)) ;
 }
 
 #to be used before creating a file in a directory that may not exist already. 
@@ -2893,14 +2906,14 @@ sub change_x_sympa_to {
     
     ## Change X-Sympa-To
     unless (open FILE, $file) {
-	&wwslog('err', "Unable to open '%s' : %s", $file, $!);
+	&do_log('err', "Unable to open '%s' : %s", $file, $!);
 	next;
     }	 
     my @content = <FILE>;
     close FILE;
     
     unless (open FILE, ">$file") {
-	&wwslog('err', "Unable to open '%s' : %s", "$file", $!);
+	&do_log('err', "Unable to open '%s' : %s", "$file", $!);
 	next;
     }	 
     foreach (@content) {
