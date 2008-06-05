@@ -35,11 +35,6 @@ use Conf;
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB);
 use FileHandle;
 
-sub LOCK_SH {1};
-sub LOCK_EX {2};
-sub LOCK_NB {4};
-sub LOCK_UN {8};
-
 my %list_of_locks;
 my $default_timeout = 60 * 20; ## After this period a lock can be stolen
 
