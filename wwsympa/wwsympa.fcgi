@@ -427,6 +427,7 @@ my %action_args = ('default' => ['list'],
 		);
 
 ## Define the required parameters for each action
+## Parameter names refer to the %in structure of to $param if mentionned as 'param.x'
 ## This structure is used to determine if any parameter is missing
 ## The list of parameters is not ordered
 ## There are some reserved keywards : param.list and param.user.email
@@ -514,7 +515,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'restore_list' => ['param.user.email','param.list'],
 		     'review' => ['param.list'],
 		     'review_family' => ['param.user.email','family_name'],
-		     'reviewbouncing' => ['param.list','bounce_total'],
+		     'reviewbouncing' => ['param.list'],
 		     'rss_request' => [],
 		     'savefile' => ['param.user.email','file'],
 		     'search' => ['param.list','filter'],
