@@ -36,7 +36,7 @@ require "--LIBDIR--/tt2.pl";
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
 
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB);
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 
 =head1 CONSTRUCTOR
 
