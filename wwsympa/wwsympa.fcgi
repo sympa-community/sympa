@@ -4643,17 +4643,19 @@ sub do_subscribe {
 	$param->{'may_subscribe'} = 1;	 
 	
 	if ($sub_is =~ /owner/) {
+
 	    unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
 							      'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
 							      'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
 							      'custom_attribute' => $in{custom_attribute},
-							      'gecos' => $param->{'user'}{'gecos'}})) {
+							      'gecos' => $param->{'user'}{'gecos'},
+							      'ip'=>$ip})) {
 		&wwslog('notice',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
 	    }
 	    
 	    $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
 	    &report::notice_report_web('sent_to_owner',{},$param->{'action'});
-	    &wwslog('info', 'do_subscribe: subscribe sent to owner');
+	    &wwslog('info', 'do_subscribe: subscribe sent to owners');
 	    
 	    return 'info';
 	}elsif ($sub_is =~ /do_it/) {

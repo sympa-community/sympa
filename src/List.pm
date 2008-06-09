@@ -4010,19 +4010,25 @@ sub send_notify_to_owner {
 	    $param->{'escaped_gecos'} =~ s/\s/\%20/g;
 	    $param->{'escaped_who'} = $param->{'who'};
 	    $param->{'escaped_who'} =~ s/\s/\%20/g;
-
-	}elsif ($operation eq 'sigrequest') {
-	    $param->{'escaped_who'} = $param->{'who'};
-	    $param->{'escaped_who'} =~ s/\s/\%20/g;
-	    $param->{'sympa'} = &Conf::get_robot_conf($self->{'domain'}, 'sympa');
-
-	}elsif ($operation eq 'bounce_rate') {
-	    $param->{'rate'} = int ($param->{'rate'} * 10) / 10;
-	}
-
-	unless ($self->send_file('listowner_notification',\@to, $robot,$param)) {
-	    &do_log('notice',"Unable to send template 'listowner_notification' to $self->{'name'} list owner");
-	    return undef;
+	    foreach my $owner (@to) {
+		$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($owner,$robot,'subindex/'.$self->{'name'},$param->{'ip'});
+		unless ($self->send_file('listowner_notification',$owner, $robot,$param)) {
+		    &do_log('notice',"Unable to send template 'listowner_notification' to $self->{'name'} list owner $owner");		    
+		}
+	    }
+	}else{
+	    if ($operation eq 'sigrequest') {
+		$param->{'escaped_who'} = $param->{'who'};
+		$param->{'escaped_who'} =~ s/\s/\%20/g;
+		$param->{'sympa'} = &Conf::get_robot_conf($self->{'domain'}, 'sympa');
+		
+	    }elsif ($operation eq 'bounce_rate') {
+		$param->{'rate'} = int ($param->{'rate'} * 10) / 10;
+	    }
+	    unless ($self->send_file('listowner_notification',\@to, $robot,$param)) {
+		&do_log('notice',"Unable to send template 'listowner_notification' to $self->{'name'} list owner");
+		return undef;
+	    }
 	}
 
     }elsif(ref($param) eq 'ARRAY') {	
