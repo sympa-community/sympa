@@ -1705,6 +1705,7 @@ sub get_parameters {
     }
     
     $param->{'path_info'} = $ENV{'PATH_INFO'};
+    $param->{'http_method'} = $ENV{'REQUEST_METHOD'}; ## Usefull to skip previous_action when using POST
     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
     
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
@@ -14856,6 +14857,10 @@ sub do_delete_pictures {
      }
 
      if ($in{'previous_action'}) {
+       ## Some actions don't make sense with GET method, redirecting to other functions
+       if ($in{'previous_action'} eq 'arcsearch') {
+	 $in{'previous_action'} = 'arc';
+       }
 	 $in{'list'} = $in{'previous_list'};
 	 return $in{'previous_action'};
      }
