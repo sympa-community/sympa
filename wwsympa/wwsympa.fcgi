@@ -9521,7 +9521,8 @@ sub _restrict_values {
 
 sub do_copy_list {
     &wwslog('info', 'do_copy_list(%s,%s)', $in{'new_listname'}, $in{'new_robot'});
-    &do_rename_list('copy');
+
+    $in{'new_robot'} = $robot;
 
 }
 
