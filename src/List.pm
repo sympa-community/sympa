@@ -10930,7 +10930,10 @@ sub store_subscription_request {
     my @req_files = sort grep (!/^\.+$/,readdir(SUBSPOOL));
     closedir SUBSPOOL;
 
+    my $listaddr = $self->{'name'}.'@'.$self->{'domain'};
+
     foreach my $file (@req_files) {
+	next unless ($file =~ /$listaddr\..*/) ;
 	unless (open OLDREQUEST, "$Conf{'queuesubscribe'}/$file") {
 	    &do_log('err', 'Could not open %s for verification', $file);
 	    return undef;
