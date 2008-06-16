@@ -246,6 +246,8 @@ sub request_action {
     my $debug = shift;
     do_log('debug', 'List::request_action %s,%s,%s',$operation,$auth_method,$robot);
 
+    my $trace_scenario ;
+
     ## Defining default values for parameters.
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};
@@ -260,6 +262,13 @@ sub request_action {
 	return undef;
     }
     my (@rules, $name, $scenario) ;
+
+    my $log_it ; # this var is defined to control if log scenario is activated or not
+    if ($Conf{'loging_for_module'}{'scenario'} == 1){
+	$log_it = 1 unless ($Conf{'loging_condition'});                                    #activate log if no condition is defined
+	$log_it = 1 if ($Conf{'loging_condition'}{'ip'} =~ /$context->{'remote_addr'}/);   #activate log if ip match
+	$log_it = 1 if ($Conf{'loging_condition'}{'email'}=~ /$context->{'email'}/i);      #activate log if email match
+    }
 
     ## Include a Blacklist rules if configured for this action
     if ($Conf{'blacklist'}{$operation}) {
@@ -276,8 +285,11 @@ sub request_action {
 	    do_log('info',"request_action :  unable to create object $context->{'listname'}");
 	    return undef ;
 	}
-    }    
-
+	$trace_scenario = 'scenario request '.$operation.' for list '.$context->{'listname'}.'@'.$robot.' :';
+    }else{
+	$trace_scenario = 'scenario request '.$operation.' for robot '.$robot.' :';
+    }
+    
     ## The current action relates to a list
     if (defined $context->{'list_object'}) {
 	my $list = $context->{'list_object'};
@@ -294,7 +306,7 @@ sub request_action {
 	    ## Structured parameter
 	    $scenario_path = $list->{'admin'}{$operations[0]}{$operations[1]}{'file_path'} if (defined $list->{'admin'}{$operations[0]});
 	}
-	
+
 	## List parameter might not be defined (example : web_archive.access)
 	unless (defined $scenario_path) {
 	    my $return = {'action' => 'reject',
@@ -302,6 +314,9 @@ sub request_action {
 			  'auth_method' => '',
 			  'condition' => ''
 			  };
+	    if ($log_it){
+		 do_log('info',"$trace_scenario rejected reason parameter not defined");
+	    }
 	    return $return;
 	}
 
@@ -326,6 +341,9 @@ sub request_action {
 			      'auth_method' => '',
 			      'condition' => ''
 			      };
+		if ($log_it){
+		    do_log('info',"$trace_scenario rejected reason list not open");
+		}
 		return $return;
 	    }
 	}
@@ -399,7 +417,7 @@ sub request_action {
 		splice @rules, $index, 1, @{$include_scenario->{'rules'}};
 	    }	    
 	}
-    }    
+    }
 
     my $return = {};
     foreach my $rule (@rules) {
@@ -410,8 +428,7 @@ sub request_action {
 
 	    ## Cope with errors
 	    if (! defined ($result)) {
-		do_log('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
-		
+		&do_log('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
 		&do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
 		
 		if ($debug) {
@@ -427,9 +444,12 @@ sub request_action {
 		}
 		return undef;
 	    }
-
+	    
 	    ## Rule returned false
 	    if ($result == -1) {
+		if ($log_it){
+		    do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} ignored");
+		}
 		next;
 	    }
 	    
@@ -465,11 +485,16 @@ sub request_action {
 
 	    $return->{'action'} = $action;
 	    
+	    if ($log_it){
+		do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} condition applied result : $action");
+	    }	    
+	    
 	    if ($result == 1) {
 		&do_log('debug3',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} accepted");
 		if ($debug) {
 		    $return->{'auth_method'} = $rule->{'auth_method'};
 		    $return->{'condition'} = $rule->{'condition'};
+
 		    return $return;
 		}
 
@@ -483,6 +508,10 @@ sub request_action {
 	}
     }
     &do_log('debug3',"no rule match, reject");
+
+    if ($log_it){
+	do_log('info',"$trace_scenario : no rule match request rejected");
+    }	    
 
     $return = {'action' => 'reject',
 	       'reason' => 'no-rule-match',

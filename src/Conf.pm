@@ -50,7 +50,7 @@ my @valid_options = qw(
 		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
-		       global_remind home host ignore_x_no_archive_header_feature domain lang listmaster listmaster_email localedir log_socket_type log_level 
+		       global_remind home host ignore_x_no_archive_header_feature domain lang listmaster listmaster_email localedir log_socket_type log_level
 		       logo_html_definition 
                        main_menu_custom_button_1_title main_menu_custom_button_1_url main_menu_custom_button_1_target 
                        main_menu_custom_button_2_title main_menu_custom_button_2_url main_menu_custom_button_2_target 
@@ -67,7 +67,7 @@ my @valid_options = qw(
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority return_path_suffix rfc2369_header_fields sendmail sendmail_args sleep 
-		       sort sympa_priority supported_lang syslog log_smtp umask verp_rate welcome_return_path wwsympa_url
+		       sort sympa_priority supported_lang syslog log_smtp log_module log_condition umask verp_rate welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers remove_outgoing_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
@@ -144,6 +144,8 @@ my %Default_Conf =
      'clean_delay_tmpdir'   => 7,
      'log_socket_type'      => 'unix',
      'log_smtp'      => '',
+     'log_module'      => '',
+     'log_condition'      => '',
      'remind_return_path' => 'owner',
      'welcome_return_path' => 'owner',
      'db_type' => '',
@@ -492,6 +494,18 @@ sub load {
 	$Conf{'blacklist'}{$action} = 1;
     }
 
+    foreach my $log_module (split(/,/, $Conf{'log_module'})) {
+	$Conf{'loging_for_module'}{$log_module} = 1;
+    }
+    foreach my $log_condition (split(/,/, $Conf{'log_condition'})) {
+	chomp $log_condition;
+	if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) { 	    
+	    $Conf{'loging_condition'}{$1} = $2;
+	}else{
+	    &do_log('err',"unrecognized log_condition token %s ; ignored",$log_condition);
+	}
+    }    
+
     $Conf{'listmaster'} =~ s/\s//g ;
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
 
@@ -578,6 +592,8 @@ sub load_robots {
 				  default_home    => 1,
 				  cookie_domain   => 1,
 				  log_smtp        => 1,
+				  log_module    => 1,
+				  log_condition    => 1,
 				  log_level       => 1,
 				  create_list     => 1,
 				  automatic_list_feature     => 1,
@@ -677,6 +693,8 @@ sub load_robots {
 	$robot_conf->{$robot}{'lang'} ||= $Conf{'lang'};
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
+	$robot_conf->{$robot}{'log_module'} ||= $Conf{'log_module'};
+	$robot_conf->{$robot}{'log_condition'} ||= $Conf{'log_module'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/sympa';
 
