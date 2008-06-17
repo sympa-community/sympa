@@ -3942,9 +3942,16 @@ sub send_notify_to_listmaster {
 		&tt2::allow_absolute_path();
 	    }
 
-	    unless (&send_global_file('listmaster_notification', $listmaster, $robot, $param, $options)) {
-		&do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
-		return undef;
+
+	    foreach my $email (split (/\,/, $listmaster)) {	
+		if (($operation eq 'request_list_creation')or($operation eq 'request_list_renaming')) {
+		    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($email,$robot,'get_pending_lists',$param->{'ip'});
+		}
+		
+		unless (&send_global_file('listmaster_notification', $email, $robot, $param, $options)) {
+		    &do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
+		    return undef;
+		}
 	    }
 	}
     
@@ -3959,7 +3966,6 @@ sub send_notify_to_listmaster {
 	    &do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
 	    return undef;
 	}
-
     }else {
 	&do_log('err','List::send_notify_to_listmaster(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY', $operation, $robot );
 	return undef;

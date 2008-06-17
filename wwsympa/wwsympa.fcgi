@@ -7817,6 +7817,7 @@ Creates a list using a list template
 
      if ($param->{'create_action'} =~ /notify/) {
 	 &wwslog('info','notify listmaster');
+
 	 unless (&List::send_notify_to_listmaster('request_list_creation',$robot, 
 						  {'list' => $list,
 						   'email' => $param->{'user'}{'email'}})) {
@@ -9522,9 +9523,7 @@ sub _restrict_values {
 
 sub do_copy_list {
     &wwslog('info', 'do_copy_list(%s,%s)', $in{'new_listname'}, $in{'new_robot'});
-
-    $in{'new_robot'} = $robot;
-
+    &do_rename_list('copy');
 }
 
 # in order to rename a list you must be list owner and you must be allowed to create new list
@@ -9567,7 +9566,6 @@ sub do_rename_list {
 		      'error_type' => 'authorization'});
 	 return undef;
      }
-
      ## Check listname on SMTP server
      my $res = list_check_smtp($in{'new_listname'}, $robot);
      unless ( defined($res) ) {
@@ -9605,7 +9603,6 @@ sub do_rename_list {
 	     return 'rename_list_request';
 	 }
      }
-
      unless ($mode eq 'copy') {
          $list->savestats();
 	 
@@ -9633,9 +9630,9 @@ sub do_rename_list {
 	 &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
 		      'status' => 'error',
 		      'error_type' => 'unknown_robot'});
-        return undef;
+	 return undef;
      }
-     if ($mode eq 'copy') {
+     if ($mode eq 'copy') {	 
 	 unless ( $list = &admin::clone_list_as_empty($in{'list'},$robot,$in{'new_listname'},$in{'new_robot'},$param->{'user'}{'email'})){
 	     &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
 	     &report::reject_report_web('intern','clone_list_as_empty',{'new_listname' => $in{'new_listname'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -9652,8 +9649,9 @@ sub do_rename_list {
 	 $list->{'admin'}{'status'} = 'pending' ;
 	 &List::send_notify_to_listmaster('request_list_renaming',$robot, 
 					  {'list' => $list,
-					       'new_listname' => $in{'new_listname'},
-					   'email' => $param->{'user'}{'email'}});
+					   'new_listname' => $in{'new_listname'},
+					   'email' => $param->{'user'}{'email'},
+				           'is_a_copy' => 'true'});
 	 &report::notice_report_web('pending_list',{},$param->{'action'},$list);
      }
      
@@ -14861,8 +14859,8 @@ sub do_delete_pictures {
        if ($in{'previous_action'} eq 'arcsearch') {
 	 $in{'previous_action'} = 'arc';
        }
-	 $in{'list'} = $in{'previous_list'};
-	 return $in{'previous_action'};
+       $in{'list'} = $in{'previous_list'};
+       return $in{'previous_action'};
      }
 
      return 'home';

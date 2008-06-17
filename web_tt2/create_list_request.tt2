@@ -7,13 +7,13 @@
   [%|loc%]After the list is created, you will be able to adjust it's configuration.[%END%] <br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-
   <select name="list">
   [% FOREACH l = get_which_owner %]
      <option value="[% l.name %]">[% l.name %]</option>
   [% END %]
   </select>
   <label for="new_listname">[%|loc%]New list name:[%END%]</label> <input id="new_listname" name="new_listname" value="" />
+  <input type="hidden" name="new_robot" value=[%robot%] />
   <input class="MainMenuLinks" type="submit" name="action_copy_list" value="[%|loc%]copy list configuration[%END%]" />
   </fieldset>
   </form>

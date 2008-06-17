@@ -10,16 +10,19 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [% conf.wwsympa_url %]/info/[% list.name %]
 
 [%|loc%]To activate/delete this mailing list :[%END%]
-[% conf.wwsympa_url %]/get_pending_lists
-
+[% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [% ELSIF type == 'request_list_renaming' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 
+[% IF is_a_copy %]
+[%|loc(email,list.name,new_listname)%]%1 has copied list "%2" as a new list "%3"[%END%]
+[% ELSE %]
 [%|loc(email,list.name,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
+[% END %]
 
 [%|loc%]To activate/delete this mailing list :[%END%]
-[% conf.wwsympa_url %]/get_pending_lists
+[% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [% ELSIF type == 'no_db' -%]
 Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
