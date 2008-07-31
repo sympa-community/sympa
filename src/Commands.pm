@@ -195,6 +195,7 @@ sub help {
 	$data->{'user'} =  &List::get_user_db($sender);
 	&Language::SetLang($data->{'user'}{'lang'}) if $data->{'user'}{'lang'};
 	$data->{'subject'} = gettext("User guide");
+	$data->{'auto_submitted'} = 'auto-replied';
 
 	unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
 	    &do_log('notice',"Unable to send template 'helpfile' to $sender");
@@ -211,6 +212,7 @@ sub help {
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
 	$data->{'subject'} = gettext("User guide");
+	$data->{'auto_submitted'} = 'auto-replied';
 	unless (&List::send_global_file("helpfile", $sender, $robot, $data)){
 	    &do_log('notice',"Unable to send template 'helpfile' to $sender");
 	    &report::reject_report_cmd('intern_quiet','',{},$cmd_line,$sender,$robot);
@@ -270,7 +272,8 @@ sub lists {
 								     'who' => $sender,
 								     'cmd' => $cmd_line,
 								     'list' => $list,
-								     'action' => 'Command process'});
+								     'action' => 'Command process',
+								     'auto_submitted' => 'auto-replied'});
 	    next;
 	}
 
@@ -282,6 +285,7 @@ sub lists {
 
     my $data = {};
     $data->{'lists'} = $lists;
+    $data->{'auto_submitted'} = 'auto-replied';
     
     unless (&List::send_global_file('lists', $sender, $robot, $data)){
 	&do_log('notice',"Unable to send template 'lists' to $sender");
@@ -341,7 +345,7 @@ sub stats {
 
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
-	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
 		&do_log('notice',"Unable to send template '$tpl' to $sender");
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }
@@ -358,7 +362,8 @@ sub stats {
 		     );
 	
 	unless ($list->send_file('stats_report', $sender, $robot, {'stats' => \%stats, 
-								   'subject' => "STATS $list->{'name'}"})) {
+								   'subject' => "STATS $list->{'name'}",
+								   'auto_submitted' => 'auto-replied'})) {
 	    &do_log('notice',"Unable to send template 'stats_reports' to $sender");
 	    &report::reject_report_cmd('intern_quiet','',{'listname'=> $l},$cmd_line,$sender,$robot);
 	}
@@ -526,7 +531,7 @@ sub index {
     }
 
     my @l = $list->archive_ls();
-    unless ($list->send_file('index_archive',$sender,$robot,{'archives' => \@l })) {
+    unless ($list->send_file('index_archive',$sender,$robot,{'archives' => \@l,'auto_submitted' => 'auto-replied' })) {
 	&do_log('notice',"Unable to send template 'index_archive' to $sender");
 	&report::reject_report_cmd('intern_quiet','',{'listname'=> $list->{'name'}},$cmd_line,$sender,$robot);
     }
@@ -602,7 +607,7 @@ sub review {
     }
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
-	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
 		&do_log('notice',"Unable to send template '$tpl' to $sender");
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);  
 	    }
@@ -633,8 +638,9 @@ sub review {
 	    }
 	} while ($user = $list->get_next_user());
 	unless ($list->send_file('review', $sender, $robot, {'users' => \@users, 
-					     'total' => $list->get_total(),
-							     'subject' => "REVIEW $listname"})) {
+							     'total' => $list->get_total(),
+							     'subject' => "REVIEW $listname",
+							     'auto_submitted' => 'auto-replied'})) {
 	    &do_log('notice',"Unable to send template 'review' to $sender");
 	    &report::reject_report_cmd('intern_quiet','',{'listname'=>$listname},$cmd_line,$sender,$robot);
 	}
@@ -752,7 +758,7 @@ sub subscribe {
     
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
-	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
 		&do_log('notice',"Unable to send template '$tpl' to $sender");
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }	    

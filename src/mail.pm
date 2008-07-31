@@ -225,6 +225,15 @@ sub mail_file {
     unless ($header_ok{'content-transfer-encoding'}) {
 	$headers .= "Content-Transfer-Encoding: 8bit\n"; 
     }
+
+    ## Determine what value the Auto-Submitted header field should take
+    ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
+    ## the header filed can have one of the following values : auto-generated, auto-replied, auto-forwarded
+    unless ($header_ok{'auto_submitted'}) {
+      ## Default value is 'auto-generated'
+      my $header_value = $data->{'auto_submitted'} || 'auto-generated';
+	$headers .= "Auto-Submitted: $header_value\n"; 
+    }
     unless ($existing_headers) {
 	$headers .= "\n";
    }
@@ -418,6 +427,11 @@ sub mail_forward {
     my $message;
     if (ref($msg) eq 'Message') {
 	$message = $msg->{'msg'};
+
+	## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
+	if (defined $message and $message->head) {
+	  $message->head->add('Auto-Submitted', 'auto-forwarded');
+	}
    
     } else {
 	$message = $msg;

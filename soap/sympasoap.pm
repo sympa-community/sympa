@@ -766,7 +766,7 @@ sub add {
     
     ## Now send the welcome file to the user if it exists.
     unless ($quiet || ($action =~ /quiet/i )) {
-	unless ($list->send_file('welcome', $email, $robot,{})) {
+	unless ($list->send_file('welcome', $email, $robot,{'auto_submitted' => 'auto-generated'})) {
 	    &do_log('notice',"Unable to send template 'welcome' to $email");
 	}
     }
@@ -882,7 +882,7 @@ sub del {
     ## Send a notice to the removed user, unless the owner indicated
     ## quiet del.
     unless ($quiet || ($action =~ /quiet/i )) {
-	unless ($list->send_file('removed', $email, $robot, {})) {
+	unless ($list->send_file('removed', $email, $robot, {'auto_submitted' => 'auto-generated'})) {
 	    &do_log('notice',"Unable to send template 'removed' to $email");
 	}
     }

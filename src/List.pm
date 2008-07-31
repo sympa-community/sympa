@@ -2805,6 +2805,7 @@ sub send_msg_digest {
 	
 	$param->{'current_group'}++;
 	$param->{'msg_list'} = $group;
+	$param->{'auto_submitted'} = 'auto-forwarded';
 	
 	## Prepare Digest
 	if (@tabrcpt) {
@@ -2857,6 +2858,7 @@ sub send_msg_digest {
 #           -email
 #           -lang
 #           -password
+#         -auto_submitted auto-generated|auto-replied|auto-forwarded
 #         -...
 #      -$options : ref(HASH) - options
 # OUT : 1 | undef
@@ -2939,6 +2941,7 @@ sub send_global_file {
 #           -email
 #           -lang
 #           -password
+#         -auto_submitted auto-generated|auto-replied|auto-forwarded
 #         -...
 # OUT : 1 | undef
 ####################################################
@@ -3163,7 +3166,8 @@ sub send_msg {
 		  ! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
 	    ## Missing User certificate
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
-												     'sender' => $message->{'msg'}->head->get('From')}})) {
+												     'sender' => $message->{'msg'}->head->get('From')},
+											  'auto_submitted' => 'auto-generated'})) {
 	    &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
 	    }
 	}else{
@@ -3531,6 +3535,8 @@ sub send_to_editor {
 	   &do_log('notice',"ticket : $param->{'one_time_ticket'}");
        }
        &tt2::allow_absolute_path();
+       $param->{'auto_submitted'} = 'auto-forwarded';
+
        unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
 	   &do_log('notice',"Unable to send template 'moderate' to $recipient");
 	   return undef;
@@ -3546,7 +3552,7 @@ sub send_to_editor {
 #	   $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'modindex/'.$name,$ip)
 #
 #	   ## $msg->body_as_string respecte-t-il le Base64 ??
-#	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
+#	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); #
 #	   unless ($cryptedmsg) {
 #	       &do_log('notice', 'Failed encrypted message for moderator');
 #	       # xxxx send a generic error message : X509 cert missing
@@ -3646,6 +3652,7 @@ sub send_auth {
    }
 
    &tt2::allow_absolute_path();
+   $param->{'auto_submitted'} = 'auto-replied';
    unless ($self->send_file('send_auth',$sender,$robot,$param)) {
        &do_log('notice',"Unable to send template 'send_auth' to $sender");
        return undef;
@@ -3730,6 +3737,7 @@ sub request_auth {
 	}
 
 	$data->{'command_escaped'} = &tt2::escape_url($data->{'command'});
+	$data->{'auto_submitted'} = 'auto-replied';
 	unless ($self->send_file('request_auth',$email,$robot,$data)) {
 	    &do_log('notice',"Unable to send template 'request_auth' to $email");
 	    return undef;
@@ -3742,7 +3750,7 @@ sub request_auth {
 	    $data->{'command_escaped'} = &tt2::escape_url($data->{'command'});
 	    $data->{'type'} = 'remind';
 	}
-
+	$data->{'auto_submitted'} = 'auto-replied';
 	unless (&send_global_file('request_auth',$email,$robot,$data)) {
 	    &do_log('notice',"Unable to send template 'request_auth' to $email");
 	    return undef;
@@ -3785,7 +3793,7 @@ sub archive_send {
    $param->{'from'} = &Conf::get_robot_conf($self->{'domain'},'sympa');
 
 #    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
-
+$param->{'auto_submitted'} = 'auto-replied';
    unless ($self->send_file('get_archive',$who,$self->{'domain'},$param)) {
 	   &do_log('notice',"Unable to send template 'archive_send' to $who");
 	   return undef;
@@ -3840,7 +3848,7 @@ sub archive_send_last {
    $param->{'boundary1'} = &tools::get_message_id($self->{'domain'});
    $param->{'boundary2'} = &tools::get_message_id($self->{'domain'});
    $param->{'from'} = &Conf::get_robot_conf($self->{'domain'},'sympa');
-
+   $param->{'auto_submitted'} = 'auto-replied';
 #    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
 
    unless ($self->send_file('get_archive',$who,$self->{'domain'},$param)) {
@@ -3892,7 +3900,8 @@ sub send_notify_to_listmaster {
 
     if ($operation eq 'logs_failed') {
 	my $data = {'to' => $to,
-		    'type' => $operation};
+		    'type' => $operation,
+		    'auto_submitted' => 'auto-generated'};
 	for my $i(0..$#{$param}) {
 	    $data->{"param$i"} = $param->[$i];
 	}
@@ -3906,6 +3915,7 @@ sub send_notify_to_listmaster {
 
 	$param->{'to'} = $to;
 	$param->{'type'} = $operation;
+	$param->{'auto_submitted'} = 'auto-generated';
 
 	## Prepare list-related data
 	if ($param->{'list'} && ref($param->{'list'}) eq 'List') {
@@ -3958,7 +3968,8 @@ sub send_notify_to_listmaster {
     }elsif(ref($param) eq 'ARRAY') {
 	
 	my $data = {'to' => $to,
-		    'type' => $operation};
+		    'type' => $operation,
+		    'auto_submitted' => 'auto-generated'};
 	for my $i(0..$#{$param}) {
 	    $data->{"param$i"} = $param->[$i];
 	}
@@ -3996,6 +4007,7 @@ sub send_notify_to_owner {
     my $host = $self->{'admin'}{'host'};
     my @to = $self->get_owners_email();
     my $robot = $self->{'domain'};
+    $param->{'auto_submitted'} = 'auto-generated';
 
     unless (@to) {
 	do_log('notice', 'No owner defined or all of them use nomail option in list %s ; using listmasters as default', $self->{'name'} );
@@ -4115,8 +4127,9 @@ sub send_notify_to_editor {
 
     my @to = $self->get_editors_email();
     my $robot = $self->{'domain'};
-
-    unless (@to) {
+    $param->{'auto_submitted'} = 'auto-generated';
+      
+      unless (@to) {
 	do_log('notice', 'Warning : no editor or owner defined or all of them use nomail option in list %s', $self->{'name'} );
 	return undef;
     }
@@ -4177,7 +4190,8 @@ sub send_notify_to_user{
 
     my $host = $self->{'admin'}->{'host'};
     my $robot = $self->{'domain'};
-    
+    $param->{'auto_submitted'} = 'auto-generated';
+
     unless (defined $operation) {
 	&do_log('err','List::send_notify_to_user(%s) : missing incoming parameter "$operation"', $self->{'name'});
 	return undef;

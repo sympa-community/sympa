@@ -1415,7 +1415,7 @@ sub purge_orphan_bounces {
 	     do_log ('notice', "id : $id");
 	     $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
 	     $tpl_context{'certificate_id'} = $id;
-
+	     $tpl_context{'auto_submitted'} = 'auto-generated';
 	     
 	     if (!$log) {
 		 unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
