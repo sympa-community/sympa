@@ -7414,7 +7414,7 @@ sub do_remove_arc {
      $param->{'res'} = $search->res;
 
      unless ($#{$param->{'res'}} >= 0) {
-	 &report::reject_report_web('intern','archive_not_found',{'msgid'=> $in{'msgid'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('intern_quiet','archive_not_found',{'msgid'=> $in{'msgid'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info','No message found in archives matching Message-ID %s', $in{'msgid'});
 	 return 'arc';
      }
