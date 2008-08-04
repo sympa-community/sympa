@@ -10,22 +10,18 @@
 
 <h3>[%|loc%]reason[%END%]</h3>
 [% IF ticket_context.result == 'closed' -%]
-[%|loc(ticket_context.status)%]Someone (may be yourself) has allready used this validation ticket from host %1 .If this user is not you, you may report a to your mail services administrator a confidentiality issue : probably someone else can access to your messages [%END%] 
+[%|loc(ticket_context.status)%]The validation ticket has already been validated from host %1 .If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
 [%END%]
 
 [% IF ticket_context.result == 'expired' -%]
-[%|loc(ticket_context.printable_date)%]The requested ticket is expired[%END%].
+[%|loc(ticket_context.printable_date)%]The requested ticket has expired[%END%].
 [%|loc%]Please use your password or request a new ticket[%END%]
 [%END%]
 [% IF ticket_context.result == 'not_found' -%]
-[%|loc(ticket_context.printable_date)%]The requested authentication ticket is unrecognized or expired[%END%].
+[%|loc(ticket_context.printable_date)%]The requested authentication ticket has an unknow format or is expired[%END%].
 [%|loc%]Please use your password or request a new ticket[%END%]
 [%END%]
 
 
-<h3>[%|loc%]login[%END%]</h3>
-
-[%|loc%]You may request a new authentication url.[%END%]  
-[% PROCESS remindpasswd.tt2 %]
 
 
