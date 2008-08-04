@@ -8464,27 +8464,53 @@ sub do_edit_list {
 	
 	## Single vs multiple parameter
 	if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
-	    
-	    my $last_index = $#{$new_admin->{$pname}};
-	    
-	    if ($#{$list->{'admin'}{$pname}} < $last_index) {
-		$to_index = $last_index;
+
+	  ## First remove empty entries
+	  ## They were either entries removed by the user or 
+	  ## empty entries added by wwsympa
+	  ## The loop is going backward so we can remove empty entries
+	  my @all = 0..$#{$new_admin->{$pname}};
+	  foreach my $i (reverse @all ) {
+	    ## Multiple parameter
+	    if (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
+	      
+	      foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
+		
+		## Remove record if entry is emtpy and required
+		if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/ &&
+		    $new_admin->{$pname}[$i]{$key} =~ /^\s*$/ ) {
+		  splice(@{$new_admin->{$pname}}, $i, 1);
+		  last;
+		}
+	      }		
 	    }else {
-		$to_index = $#{$list->{'admin'}{$pname}};
+	      
+	      ## Remove if empty
+	      if (! $new_admin->{$pname}[$i] =~ /^\s*$/) {
+		splice(@{$new_admin->{$pname}}, $i, 1);
+		next;
+	      }
 	    }
-	    
-	    if ($#{$list->{'admin'}{$pname}} != $last_index) {
-		$changed{$pname} = 1; 
-		#next;
-	    }
-	    $p = $list->{'admin'}{$pname};
-	    $new_p = $new_admin->{$pname};
-#	     &wwslog('notice',"MULTIPLE param 5 6 7 8: $pname...........................");
+	  }
+	  
+	  my $last_index = $#{$new_admin->{$pname}};
+	  
+	  if ($#{$list->{'admin'}{$pname}} < $last_index) {
+	    $to_index = $last_index;
+	  }else {
+	    $to_index = $#{$list->{'admin'}{$pname}};
+	  }	  
+
+	  $p = $list->{'admin'}{$pname};
+	  $new_p = $new_admin->{$pname};
+	  #	     &wwslog('notice',"MULTIPLE param 5 6 7 8: $pname...........................");
 	}else {
+
 	    $p = [$list->{'admin'}{$pname}];
 	    $new_p = [$new_admin->{$pname}];
 #	     &wwslog('notice',"UNIQUE param 1 2 3 4 : $pname.........................");
 	}
+
 
 	 ## Check changed parameters
 	 ## Also check syntax
@@ -8560,17 +8586,19 @@ sub do_edit_list {
 			}else {
 #			     &wwslog('notice',"......UNIVALUE param 2 6: $pname.$key($new_p->[$i]{$key})");
 			    if (! $new_p->[$i]{$key}) {
-				## If empty and is primary key => delete entry
-				if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/) {
-				    $new_p->[$i] = undef;
-				    
-				    ## Skip the rest of the paragraph
-				    $changed{$pname} = 1; last;
-				    
-				    ## If optionnal parameter
-				}else {
-				    $changed{$pname} = 1; next;
+			      
+			      ## If empty and is primary key => delete entry
+			      if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/) {
+				$new_p->[$i] = undef;
+				
+				if (defined $p->[$i] && $p->[$i]{$key}) {
+				  $changed{$pname} = 1; 
 				}
+
+				## Skip the rest of the paragraph
+				last;
+				
+			      }
 			    }
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
 				
@@ -8592,7 +8620,7 @@ sub do_edit_list {
 		## Ex: 'max_size'
 	    }else {
 #		 &wwslog('notice',"..SIMPLE non SCENARIO non TASK param 1-3-5-7 : $pname($new_p->[$i])");
-		if (! defined($new_p->[$i])) {
+		if (! defined($new_p->[$i]) && defined($p->[$i])) {
 		    push @{$delete{$pname}}, $i;
 		    $changed{$pname} = 1;
 		}elsif ($p->[$i] ne $new_p->[$i]) {
@@ -8603,6 +8631,13 @@ sub do_edit_list {
 		}
 	    }	    
 	}
+    }
+
+    ## Error if no parameter was edited
+    unless (keys %changed) {
+      	 &report::reject_report_web('user','no_parameter_edited',{},$param->{'action'},$list);
+	 &wwslog('info','No parameter was edited by user');
+	 return 'edit_list_request';
     }
 
      ## Syntax errors
