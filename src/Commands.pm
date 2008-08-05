@@ -947,7 +947,12 @@ sub info {
 	}
 
 	foreach my $p ('subscribe','unsubscribe','send','review') {
-	    $data->{$p} = gettext($list->{'admin'}{$p}{'title'}{'gettext'}); 
+	  my $scenario = new Scenario ('robot' => $robot,
+				       'directory' => $list->{'dir'},
+				       'file_path' => $list->{'admin'}{$p}{'file_path'}
+				      );
+	  my $title = $scenario->{'title'}{'gettext'};
+	  $data->{$p} = gettext($title); 
 	}
 
 	## Digest
