@@ -56,10 +56,17 @@
      <input type="hidden" name="previous_action" value="reviewbouncing" /> 	 
   <table summary="[%|loc%]Table which display list bounces[%END%]" class="listOfItems">
       <tr>
-	<th>X</th>
-        <th>[%|loc%]Email[%END%]</th>
-	<th>[%|loc%]bounce score[%END%]</th>
+	<th rowspan="2">X</th>
+        <th rowspan="2">[%|loc%]Email[%END%]</th>
+	<th rowspan="2">[%|loc%]Bounce score[%END%]</th>
+	<th colspan="3">[%|loc%]Details[%END%]</th>
       </tr>
+      <tr>
+	<th>[%|loc%]# of bounces[%END%]</th>
+	<th>[%|loc%]First bounce[%END%]</th>
+	<th>[%|loc%]First bounce[%END%]</th>
+      </tr>
+
       
       [% FOREACH u = members %]
       
@@ -83,9 +90,16 @@
 	    bounce_level1
 	  [% END %]
 	  ">
+             [% IF ! u.bounce_score %]
+              [%|loc%]no score[%END%]
+             [% ELSE %]
   	      [% u.bounce_score %]
+             [% END %]
 	  </td>
-        </tr>
+          <td>[% u.bounce_count %]</td>
+          <td>[% u.first_bounce %]</td>
+          <td>[% u.last_bounce %]</td>
+       </tr>
 
         [% IF dark == '1' %]
 	  [% SET dark = 0 %]
