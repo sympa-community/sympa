@@ -1,10 +1,5 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
-Content-Type: multipart/alternative; boundary="===Sympa==="
-
---===Sympa===
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
 
 [%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]
@@ -14,32 +9,6 @@ Content-Transfer-Encoding: 8bit
 [% CATCH %]
 [% END %]
 
-[%|loc%]Everything about this list:[%END%]
-[% conf.wwsympa_url %]/info/[% list.name %]
+[%|loc(%conf.wwsympa_url,list.name)%]The list homepage: %1/info/%2[%END%]
+[%|loc(%conf.wwsympa_url)%]General informations about mailing lists: %1/help/introduction[%END%]
 
---===Sympa===
-Content-Type: text/html; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
-
-<HTML>
-<HEAD>
-<TITLE>[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]</title>
-<BODY  BGCOLOR=#ffffff>
-
-<B>[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%] </B><BR>
-[%|loc(user.email)%]Your subscription email is %1[%END%] 
-<BR><BR>
-<PRE>
-[% TRY %]
-[% INSERT "info" %]
-[% CATCH %]
-[% END %]
-</PRE>
-
-<HR>
-[%|loc%]Everything about this list:[%END%]
-<A HREF="[% conf.wwsympa_url %]/info/[% list.name %]">[% conf.wwsympa_url %]/info/[% list.name %]</A>
-
-
-</BODY></HTML>
---===Sympa===--
