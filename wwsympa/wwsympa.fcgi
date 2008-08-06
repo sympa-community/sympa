@@ -8784,15 +8784,16 @@ sub do_edit_list {
 	    
 	    $list->get_total();
 	    $list->{'mtime'}[1] = 0;
-	    
-	    if (($pname eq 'owner') || ($pname eq 'owner_include')){
-		$owner_update = 1;
-	    }
-	    
-	    if (($pname eq 'editor') || ($pname eq 'editor_include')){
-		$editor_update = 1;
-	    }
 	}
+	    
+	if (($pname eq 'owner') || ($pname eq 'owner_include')){
+	  $owner_update = 1;
+	}
+	
+	if (($pname eq 'editor') || ($pname eq 'editor_include')){
+	  $editor_update = 1;
+	}
+	
 	# updating config_changes for changed parameters
 	
 	if (ref($family)) {
