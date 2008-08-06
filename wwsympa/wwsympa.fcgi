@@ -9346,8 +9346,25 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 	     if ($may_edit eq 'write') {
 		 ## Add an empty entry
 		 unless (($name eq 'days') || ($name eq 'reception') || ($name eq 'rfc2369_header_fields') || ($name eq 'topics')) {
-		     push @{$data2}, undef;
-		     ## &wwslog('debug2', 'Add 1 %s', $name);
+
+		   my $empty_entry;
+		   ## Structured parameter
+		   if (ref($struct->{'format'}) eq 'HASH') {
+		     foreach my $sub_parameter (keys %{$struct->{'format'}}) {
+
+		       ## Use default value if defined
+		       if ($struct->{'format'}{$sub_parameter}{'default'}) {
+			 $empty_entry->{$sub_parameter} = $struct->{'format'}{$sub_parameter}{'default'};
+		       }
+		     }
+
+		     ## Simpe parameter
+		   }else {
+		     $empty_entry = undef;
+		   }
+		   
+		   push @{$data2}, $empty_entry;
+		   ## &wwslog('debug2', 'Add 1 %s', $name);
 		 }
 	     }
 	 }else {
