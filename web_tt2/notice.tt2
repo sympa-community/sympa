@@ -81,6 +81,9 @@
 [% ELSIF notice.msg == 'listname_lowercased' %]
 [%|loc%]List name has been lowercased[%END%]
 
+[% ELSIF notice.msg == 'user_notified' %]
+[%|loc(notice.notified_user)%]User %1 has been notified[%END%]
+
 [% ELSE %]
 [% notice.msg %]
 

@@ -8732,6 +8732,27 @@ sub do_edit_list {
 	
 	my @users;
 	
+	## If new owners/editors have been added, then notify them	
+	foreach my $admin_type ('owner','editor') {
+	  my (%previous_emails, %new_emails);
+	  
+	  ## Check previous entries
+	  foreach my $entry (@{$list->{'admin'}{$admin_type}}) {	    
+	    $previous_emails{$entry->{'email'}} = 1;
+	  }
+
+	  ## Compare with new entries
+	  foreach my $entry (@{$new_admin->{$admin_type}}) {
+
+	    unless ($previous_emails{$entry->{'email'}}) {
+
+	      ## Notify the new list owner/editor
+	      $list->send_notify_to_user('added_as_listadmin', $entry->{'email'},{'admin_type' => $admin_type, 'delegator' => $param->{'user'}{'email'}});
+	      &report::notice_report_web('user_notified',{'notified_user' => $entry->{'email'}},$param->{'action'});	      
+	    }
+	  }
+	}
+
 	if (defined $check_family{$pname}) { # $pname is CONTROLLED
 	    &_check_new_values(\%check_family,$pname,$new_admin);
 	}	  

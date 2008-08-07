@@ -23,6 +23,19 @@ Deleted topic(s) is(are) :[%END%]
 %1[% END %]
 
 
+[% ELSIF type == 'added_as_listadmin' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%END%]
+
+[% IF admin_type == 'owner' %]
+[%|loc(delegator,list.name,list.host)%]You have been delegate the responsability of list owner by %1 for list %2@%3.[%END%]
+[% ELSE %]
+[%|loc(delegator,list.name,list.host)%]You have been delegate the responsability of list moderator by %1 for list %2@%3.[%END%]
+[% END %]
+
+[%|loc(conf.wwsympa_url,list.name)%]The list homepage: %1/info/%2[%END%]
+[%|loc(conf.wwsympa_url)%]Owner and moderator guide: %1/help/admin[%END%]
+
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
 
