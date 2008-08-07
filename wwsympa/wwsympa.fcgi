@@ -8484,16 +8484,16 @@ sub do_edit_list {
 		}
 	      }		
 	    }else {
-	      
+
 	      ## Remove if empty
-	      if (! $new_admin->{$pname}[$i] =~ /^\s*$/) {
+	      if ($new_admin->{$pname}[$i] =~ /^\s*$/) {
 		splice(@{$new_admin->{$pname}}, $i, 1);
 		next;
 	      }
 	    }
 	  }
 	  
-	  my $last_index = $#{$new_admin->{$pname}};
+	  my $last_index = $#{$new_admin->{$pname}};	  
 	  
 	  if ($#{$list->{'admin'}{$pname}} < $last_index) {
 	    $to_index = $last_index;
@@ -8506,15 +8506,40 @@ sub do_edit_list {
 	  #	     &wwslog('notice',"MULTIPLE param 5 6 7 8: $pname...........................");
 	}else {
 
-	    $p = [$list->{'admin'}{$pname}];
-	    $new_p = [$new_admin->{$pname}];
-#	     &wwslog('notice',"UNIQUE param 1 2 3 4 : $pname.........................");
+	  if (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
+	    
+	    foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
+	      
+	      ## Remove record if entry is emtpy and required
+	      if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/ &&
+		  $new_admin->{$pname}{$key} =~ /^\s*$/ ) {
+		delete $new_admin->{$pname};
+		last;
+	      }
+	    }		
+	  }else {
+	    
+	    ## Remove if empty
+	    if ($new_admin->{$pname} =~ /^\s*$/) {
+	      delete $new_admin->{$pname};
+	      next;
+	    }
+	  }
+	  
+	  $p = [$list->{'admin'}{$pname}];
+	  $new_p = [$new_admin->{$pname}];
+	  #	     &wwslog('notice',"UNIQUE param 1 2 3 4 : $pname.........................");
 	}
 
 
 	 ## Check changed parameters
 	 ## Also check syntax
 	foreach my $i (0..$to_index) {
+
+	  unless (defined $new_p->[$i]) {
+	    push @{$delete{$pname}}, $i;
+	    $changed{$pname} = 1; next;
+	  }
 	    
 	    ## Scenario
 	    ## Eg: 'subscribe'
@@ -8575,6 +8600,7 @@ sub do_edit_list {
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
 				    
 				    if ($new_p->[$i]{$key}[$index] !~ /^$format$/i) {
+					&wwslog('err', "Syntax error : $pname/$i/$key/$index = $new_p->[$i]{$key}[$index]");
 					push @syntax_error, $pname;
 				    }
 				    $changed{$pname} = 1; next;
@@ -8585,21 +8611,6 @@ sub do_edit_list {
 			    ## Ex: 'owner->email'
 			}else {
 #			     &wwslog('notice',"......UNIVALUE param 2 6: $pname.$key($new_p->[$i]{$key})");
-			    if (! $new_p->[$i]{$key}) {
-			      
-			      ## If empty and is primary key => delete entry
-			      if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/) {
-				$new_p->[$i] = undef;
-				
-				if (defined $p->[$i] && $p->[$i]{$key}) {
-				  $changed{$pname} = 1; 
-				}
-
-				## Skip the rest of the paragraph
-				last;
-				
-			      }
-			    }
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
 				
 				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
@@ -8608,6 +8619,7 @@ sub do_edit_list {
 				}
 				
 				if ($new_p->[$i]{$key} !~ /^$format$/i) {
+				  &wwslog('err', "Syntax error : $pname/$i/$key = $new_p->[$i]{$key}");
 				    push @syntax_error, $pname;
 				}
 				
@@ -8620,15 +8632,13 @@ sub do_edit_list {
 		## Ex: 'max_size'
 	    }else {
 #		 &wwslog('notice',"..SIMPLE non SCENARIO non TASK param 1-3-5-7 : $pname($new_p->[$i])");
-		if (! defined($new_p->[$i]) && defined($p->[$i])) {
-		    push @{$delete{$pname}}, $i;
-		    $changed{$pname} = 1;
-		}elsif ($p->[$i] ne $new_p->[$i]) {
-		    unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
-			push @syntax_error, $pname;
-		    }
-		    $changed{$pname} = 1; 
+	      if ($p->[$i] ne $new_p->[$i]) {
+		unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
+		  &wwslog('err', "Syntax error : $pname/$i = $new_p->[$i]");
+		  push @syntax_error, $pname;
 		}
+		$changed{$pname} = 1; 
+	      }
 	    }	    
 	}
     }
@@ -8643,9 +8653,7 @@ sub do_edit_list {
      ## Syntax errors
      if ($#syntax_error > -1) {
 	 &report::reject_report_web('user','syntax_errors',{'params' => 'filter'},$param->{'action'},$list);
-	 foreach my $pname (@syntax_error) {
-	     &wwslog('info','do_edit_list: Syntax errors, param %s=\'%s\'', $pname, $new_admin->{$pname});
-	 }
+	 &wwslog('info','do_edit_list: Syntax errors for parameters %s', join(',', @syntax_error));
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'syntax_errors'});
 	 return undef;
