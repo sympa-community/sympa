@@ -968,7 +968,7 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -994,7 +994,7 @@ msgstr ""
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 
 #: web_tt2/create_list_request.tt2:30
@@ -5703,30 +5703,29 @@ msgid ""
 "pending subscription requests you should click the following URL :"
 msgstr ""
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 msgid "UNsubscription request from list %1"
 msgstr ""
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -5735,7 +5734,7 @@ msgid ""
 msgstr ""
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
@@ -5743,12 +5742,12 @@ msgid ""
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr ""
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -5757,48 +5756,48 @@ msgid ""
 msgstr ""
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr ""
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr ""
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr ""
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr ""
 
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr ""
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr ""
 
@@ -7910,6 +7909,30 @@ msgstr ""
 
 #: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
+msgid ""
+"\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
 
 #: web_tt2/reviewbouncing.tt2:61

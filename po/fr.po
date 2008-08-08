@@ -1007,9 +1007,10 @@ msgid "Copy an existing list."
 msgstr "Copier une liste existante"
 
 #: web_tt2/create_list_request.tt2:6
+#, fuzzy
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -1038,10 +1039,11 @@ msgid "Create a list using a template"
 msgstr "Créer une liste à partir d'un modèle"
 
 #: web_tt2/create_list_request.tt2:25
+#, fuzzy
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 "Vous pouvez demander la création d'une nouvelle liste via le formulaire ci-"
 "dessous. Vous devrez choisir un modèle de liste dont les paramètres sont les "
@@ -4031,8 +4033,7 @@ msgid ""
 "URL was sent to the e-mail address you provided."
 msgstr ""
 "Pour valider votre identité et empêcher un tiers de vous abonner à\n"
-"votre insu, un message vous a été envoyé. Il contient une URL "
-"authentifiante."
+"votre insu, un message vous a été envoyé. Il contient une URL authentifiante."
 
 #. (list)
 #: web_tt2/subrequest.tt2:32
@@ -6276,36 +6277,34 @@ msgstr ""
 "Un utilisateur a demandé à être abonné à votre liste. Pour consulter toutes "
 "les demandes en attente, veuillez cliquer sur ce lien :"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
-"\n"
 "Vous pouvez également valider cette demande en envoyant un message à %1 avec "
 "comme objet :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr "Vous pouvez effectuer l'opération en cliquant sur ce lien :"
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr "L'utilisateur a fourni les informations ci-dessous :"
 
 # nlsref 8,24
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 msgid "UNsubscription request from list %1"
 msgstr "Demande de désabonnement de la liste %1"
 
 # nlsref 8,25
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -6318,7 +6317,7 @@ msgstr ""
 "demande, veuillez cliquer sur ce lien :"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
@@ -6330,13 +6329,13 @@ msgstr ""
 
 # nlsref 8,28
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr "ATTENTION: taux d'erreur trop élevé dans la liste %1"
 
 # nlsref 8,27
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6350,43 +6349,43 @@ msgstr ""
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "Information : %1 liste %2 de %3 %4"
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "Information : %1 liste %2 de %3 %4"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr "validé par %1"
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr "Aucune action n'est nécessaire de votre part."
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr "Information : suppression automatique de l'abonné %1"
 
 # nlsref 6,38
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "L'utilisateur \"%1\" a été supprimé de la liste %2."
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr "Liste %1 : Erreur de filtre nommé"
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
@@ -6395,7 +6394,7 @@ msgstr ""
 "scenario d'autorisation."
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr "Liste %1 / %2"
 
@@ -6688,8 +6687,8 @@ msgstr "Pour refuser sa diffusion (il sera effacé), cliquez ici :"
 #: mail_tt2/moderate.tt2:41 mail_tt2/modindex.tt2:11
 msgid "The messages moderating documentation: %1/help/admin#moderate"
 msgstr ""
-"La documentation relative à la modération des messages : "
-"%1/help/admin#moderate"
+"La documentation relative à la modération des messages : %1/help/"
+"admin#moderate"
 
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
@@ -6873,8 +6872,8 @@ msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
 "came from host %3 at %4)."
 msgstr ""
-"Quelqu'un - sans doute vous - a formulé une demande d'abonnement à la liste "
-"%1@%2. (Cette requête a été effectuée depuis le poste %2 le %3)."
+"Quelqu'un - sans doute vous - a formulé une demande d'abonnement à la liste %"
+"1@%2. (Cette requête a été effectuée depuis le poste %2 le %3)."
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
@@ -8819,64 +8818,88 @@ msgstr "interrompre la réception des messages (utile pendant les vacances)"
 msgid "you do not receive your own posts"
 msgstr "pour ne pas recevoir ses propres messages"
 
-#: web_tt2/reviewbouncing.tt2:61
-msgid "bounce score"
-msgstr "Taux d'erreurs"
-
-#: web_tt2/subrequest.tt2:32
+#: web_tt2/create_list_request.tt2:6
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing your password\n"
-"        will be sent to you."
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
 msgstr ""
-"Pour valider votre identité et empêcher un tiers de vous abonner à\n"
-"votre insu, un message vous a été envoyé. Il contient votre mot de \n"
-"passe et vous permettra de valider cet abonnement."
+"Vous pouvez créer une liste, à partir d'une liste existante ; la "
+"configuration de la liste d'origine sera copié pour initialiser les nouvelle "
+"liste. Il est important de noter que ni les membres de la liste, ni ses "
+"archives, ni encore les documents partagés ne sont dupliqués. Vous ne pouvez "
+"copier une liste que si vous en êtes propriétaire."
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:17
-msgid "The requested ticket is expired"
-msgstr "Le ticket demandé a expiré."
-
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket is unrecognized or expired"
-msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
-
-# nlsref 8,3
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
+#: web_tt2/create_list_request.tt2:25
 msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
 msgstr ""
-"Cher propriétaire de la liste %1,\n"
-"\n"
-"Un utilisateur a demandé à être abonné à votre liste. Pour valider cette\n"
-"demande, veuillez cliquer sur ce lien :"
+"Vous pouvez demander la création d'une nouvelle liste via le formulaire ci-"
+"dessous. Vous devrez choisir un modèle de liste dont les paramètres sont les "
+"plus adaptés à vos besoins."
 
 #. (replyto,keyauth,list.name,who,gecos)-)
 #: mail_tt2/listowner_notification.tt2:73
 msgid ""
 "\n"
-"or send an email to %1 with the following subject :\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
 "\n"
-"ou envoyez un e-mail à %1 avec comme sujet :\n"
+"Vous pouvez également valider cette demande en envoyant un message à %1 avec "
+"comme objet :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
-#. (conf.host,request_from_host,date)
-#: mail_tt2/sendpasswd.tt2:27
-msgid ""
-"Someone, probably you, requested to allocate or renew your password for your "
-"list server account %1. (This request cames from host %2 at %3)."
-msgstr ""
-"Quelqu'un - sans doute vous - a demandé d'allouer ou de renouveler votre mot "
-"de passe pour votre compte sur le serveur %1. Cette requête a été effectuée "
-"depuis l'hôte %2 le %3."
+#~ msgid "bounce score"
+#~ msgstr "Taux d'erreurs"
+
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing your password\n"
+#~ "        will be sent to you."
+#~ msgstr ""
+#~ "Pour valider votre identité et empêcher un tiers de vous abonner à\n"
+#~ "votre insu, un message vous a été envoyé. Il contient votre mot de \n"
+#~ "passe et vous permettra de valider cet abonnement."
+
+#~ msgid "The requested ticket is expired"
+#~ msgstr "Le ticket demandé a expiré."
+
+#~ msgid "The requested authentication ticket is unrecognized or expired"
+#~ msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
+
+# nlsref 8,3
+#~ msgid ""
+#~ "Dear owner of list %1,\n"
+#~ " \n"
+#~ "A user asked to be added as a subscriber to your list. If this is OK \n"
+#~ "with you, you should click the following URL :"
+#~ msgstr ""
+#~ "Cher propriétaire de la liste %1,\n"
+#~ "\n"
+#~ "Un utilisateur a demandé à être abonné à votre liste. Pour valider cette\n"
+#~ "demande, veuillez cliquer sur ce lien :"
+
+#~ msgid ""
+#~ "\n"
+#~ "or send an email to %1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "ou envoyez un e-mail à %1 avec comme sujet :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+
+#~ msgid ""
+#~ "Someone, probably you, requested to allocate or renew your password for "
+#~ "your list server account %1. (This request cames from host %2 at %3)."
+#~ msgstr ""
+#~ "Quelqu'un - sans doute vous - a demandé d'allouer ou de renouveler votre "
+#~ "mot de passe pour votre compte sur le serveur %1. Cette requête a été "
+#~ "effectuée depuis l'hôte %2 le %3."
 
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "

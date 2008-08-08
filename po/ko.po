@@ -989,7 +989,7 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -1016,7 +1016,7 @@ msgstr "리스트 별명 템플렛"
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 
 #: web_tt2/create_list_request.tt2:30
@@ -6002,11 +6002,10 @@ msgstr ""
 "사용자는 리스트에 가입자로 추가되 것을 요청했습니다. 만약 진행 하시려면 아래"
 "의 URL을 클릭하십시요:"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 #, fuzzy
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
@@ -6015,21 +6014,21 @@ msgstr ""
 "또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 msgid "UNsubscription request from list %1"
 msgstr "%1 메일링 리스트 에서 등록취소 요청"
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -6042,7 +6041,7 @@ msgstr ""
 "자신과, 다음과 오는 URL를 눌러야 합니다:"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
@@ -6053,12 +6052,12 @@ msgstr ""
 "AUTH %2 DEL %3 %4\n"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr "경고: 메일링 리스트 %1 에서 반송된 비율 너무 높이"
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6072,41 +6071,41 @@ msgstr ""
 "%3/reviewbouncing/%4\n"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "주: %4 <%3> 에서 %2 리스트의 %1 명령"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "주: %4 <%3> 에서 %2 리스트 %1 명령"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr " (%1 까지 유효 합니다) "
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr "아무 작업 측에 필요로 합니다."
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr "주: %1 의 자동 삭제"
 
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "\"%1\" 를 %2 메일링 리스트에서부터 자동으로 삭제했습니다. "
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr "%1 를 메일링 리스트 : 이름을 댄 필터 에러"
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
@@ -6115,7 +6114,7 @@ msgstr ""
 "해 사용하고 있 그것을허가 시나리오."
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr "%1 메일링 리스트 / %2"
 
@@ -8354,33 +8353,33 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
-#: web_tt2/reviewbouncing.tt2:61
-msgid "bounce score"
-msgstr "반송 점수"
+#: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
 
-#: web_tt2/subrequest.tt2:32
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
 #, fuzzy
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing your password\n"
-"        will be sent to you."
+"\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
-"신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
-"\tthis는 의지에 대해 리스트, 패스워드\n"
-" 를 포함하는 메시지\t능직물 보내집니다."
-
-#. (list)
-#: web_tt2/subrequest.tt2:34
-#, fuzzy
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"\tEnter that password below. This will confirm your subscription to list %1."
-msgstr ""
-"우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾아"
-"내하기.\n"
-"저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스트 %"
-"1 에서."
+"\n"
+"또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
+"AUTH %2 ADD %3 %4 %5\n"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8396,42 +8395,61 @@ msgstr ""
 msgid "The requested ticket is expired"
 msgstr ""
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-#, fuzzy
-msgid "The requested authentication ticket is unrecognized or expired"
-msgstr "요청하는 인증 그 후에 소유자 승인"
-
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-" %1 메일링 리스트 소유자님,\n"
-"\n"
-"사용자는 리스트에 가입자로 추가되 것을 요청했습니다. 만약 진행 하시려면 아래"
-"의 URL을 클릭하십시요:"
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-msgid ""
-"\n"
-"or send an email to %1 with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
-"AUTH %2 ADD %3 %4 %5\n"
-
 #. (conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:27
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid "bounce score"
+#~ msgstr "반송 점수"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing your password\n"
+#~ "        will be sent to you."
+#~ msgstr ""
+#~ "신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
+#~ "\tthis는 의지에 대해 리스트, 패스워드\n"
+#~ " 를 포함하는 메시지\t능직물 보내집니다."
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "\tEnter that password below. This will confirm your subscription to list %"
+#~ "1."
+#~ msgstr ""
+#~ "우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾"
+#~ "아내하기.\n"
+#~ "저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스"
+#~ "트 %1 에서."
+
+#, fuzzy
+#~ msgid "The requested authentication ticket is unrecognized or expired"
+#~ msgstr "요청하는 인증 그 후에 소유자 승인"
+
+#~ msgid ""
+#~ "Dear owner of list %1,\n"
+#~ " \n"
+#~ "A user asked to be added as a subscriber to your list. If this is OK \n"
+#~ "with you, you should click the following URL :"
+#~ msgstr ""
+#~ " %1 메일링 리스트 소유자님,\n"
+#~ "\n"
+#~ "사용자는 리스트에 가입자로 추가되 것을 요청했습니다. 만약 진행 하시려면 아"
+#~ "래의 URL을 클릭하십시요:"
+
+#~ msgid ""
+#~ "\n"
+#~ "or send an email to %1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid ""
 #~ "This password, associated with your email address, willallow you to "

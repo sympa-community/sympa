@@ -1011,7 +1011,7 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -1037,7 +1037,7 @@ msgstr ""
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 
 #: web_tt2/create_list_request.tt2:30
@@ -6068,32 +6068,31 @@ msgstr ""
 "eller skicka ett e-postmeddelande till %s med följande ämnesrad :\n"
 "AUTH %s DEL %s %s\n"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 #, fuzzy
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr "Eller skicka ett meddelande till %1@%2 med följande ämnesrad :"
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 #, fuzzy
 msgid "UNsubscription request from list %1"
 msgstr "Jag avregisterar mig från listan %1"
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 #, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
@@ -6112,7 +6111,7 @@ msgstr ""
 "AUTH %s DEL %s %s\n"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 #, fuzzy
 msgid ""
 "\n"
@@ -6121,12 +6120,12 @@ msgid ""
 msgstr "Eller skicka ett meddelande till %1@%2 med följande ämnesrad :"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr ""
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6135,51 +6134,51 @@ msgid ""
 msgstr ""
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 #, fuzzy
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "FYI: %s lista %s från %s %s"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 #, fuzzy
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "FYI: %s lista %s från %s %s"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr ""
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr ""
 
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 #, fuzzy
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "Användaren %s har tagits bort från listan %s/\n"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr ""
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr "Lista %1 / %2"
 
@@ -8378,6 +8377,31 @@ msgstr "ingen e-post (användbar för semestrar)"
 msgid "you do not receive your own posts"
 msgstr "du kommer inte ta mot dina egna postningar"
 
+#: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
+#, fuzzy
+msgid ""
+"\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
+msgstr "Eller skicka ett meddelande till %1@%2 med följande ämnesrad :"
+
 #: web_tt2/reviewbouncing.tt2:61
 msgid "bounce score"
 msgstr ""
@@ -8388,18 +8412,6 @@ msgid ""
 "        this list against your will, a message containing your password\n"
 "        will be sent to you."
 msgstr ""
-
-#. (list)
-#: web_tt2/subrequest.tt2:34
-#, fuzzy
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"\tEnter that password below. This will confirm your subscription to list %1."
-msgstr ""
-"Kontrollera din e-postlåda efter nya meddelanden och ange\n"
-"\tlösenordet som angetts i meddelandet som Sympa skickades till dig. Detta\n"
-"\tbekräftar din uppsägelse av prenumerationen av listan %1."
 
 #: web_tt2/subrequest.tt2:54
 msgid ""
@@ -8425,40 +8437,6 @@ msgstr ""
 #: web_tt2/ticket.tt2:17
 msgid "The requested ticket is expired"
 msgstr ""
-
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-#, fuzzy
-msgid "The requested authentication ticket is unrecognized or expired"
-msgstr "kräver autentisering sedan ägarens godkännande"
-
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"Kära ägare av listan %s,\n"
-"\n"
-"En användare frågade om att bli borttagen från listan. Är detta OK för dig "
-"bör du klicka på följande URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"eller skicka ett e-postmeddelande till %s med följande ämnesrad :\n"
-"AUTH %s DEL %s %s\n"
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"or send an email to %1 with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr "Eller skicka ett meddelande till %1@%2 med följande ämnesrad :"
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
@@ -8529,6 +8507,46 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "\tEnter that password below. This will confirm your subscription to list %"
+#~ "1."
+#~ msgstr ""
+#~ "Kontrollera din e-postlåda efter nya meddelanden och ange\n"
+#~ "\tlösenordet som angetts i meddelandet som Sympa skickades till dig. "
+#~ "Detta\n"
+#~ "\tbekräftar din uppsägelse av prenumerationen av listan %1."
+
+#, fuzzy
+#~ msgid "The requested authentication ticket is unrecognized or expired"
+#~ msgstr "kräver autentisering sedan ägarens godkännande"
+
+#, fuzzy
+#~ msgid ""
+#~ "Dear owner of list %1,\n"
+#~ " \n"
+#~ "A user asked to be added as a subscriber to your list. If this is OK \n"
+#~ "with you, you should click the following URL :"
+#~ msgstr ""
+#~ "Kära ägare av listan %s,\n"
+#~ "\n"
+#~ "En användare frågade om att bli borttagen från listan. Är detta OK för "
+#~ "dig bör du klicka på följande URL :\n"
+#~ "\n"
+#~ "mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+#~ "\n"
+#~ "eller skicka ett e-postmeddelande till %s med följande ämnesrad :\n"
+#~ "AUTH %s DEL %s %s\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "or send an email to %1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr "Eller skicka ett meddelande till %1@%2 med följande ämnesrad :"
 
 #, fuzzy
 #~ msgid "login"

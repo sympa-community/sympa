@@ -1018,7 +1018,7 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -1045,7 +1045,7 @@ msgstr "Ρύθμιση προτύπων ιστότοπου"
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 
 #: web_tt2/create_list_request.tt2:30
@@ -6152,32 +6152,31 @@ msgstr ""
 "ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
 "AUTH %s DEL %s %s\n"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 #, fuzzy
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 #, fuzzy
 msgid "UNsubscription request from list %1"
 msgstr "Αίτηση συνδρομής στη λίστα %s"
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 #, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
@@ -6196,7 +6195,7 @@ msgstr ""
 "AUTH %s DEL %s %s\n"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 #, fuzzy
 msgid ""
 "\n"
@@ -6205,12 +6204,12 @@ msgid ""
 msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr ""
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 #, fuzzy
 msgid ""
 "Bounce rate in list %1 is %2.\n"
@@ -6224,51 +6223,51 @@ msgstr ""
 "%s/Αναθεώθηση bounces/%s"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 #, fuzzy
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "FYI: %s λίστας %s από %s %s"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 #, fuzzy
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "FYI: %s λίστας %s από %s %s"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr ""
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr ""
 
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 #, fuzzy
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "Ο χρήστης %s έχει αφαιρεθεί από τη λίστα %s/\n"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr ""
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr "Λίστα %1 / %2"
 
@@ -8524,6 +8523,31 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
+#: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
+#, fuzzy
+msgid ""
+"\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
+msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
+
 #: web_tt2/reviewbouncing.tt2:61
 msgid "bounce score"
 msgstr ""
@@ -8564,34 +8588,6 @@ msgstr ""
 #: web_tt2/ticket.tt2:21
 msgid "The requested authentication ticket is unrecognized or expired"
 msgstr ""
-
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
-"\n"
-"Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε την \n"
-"πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
-"AUTH %s DEL %s %s\n"
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"or send an email to %1 with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
@@ -8657,6 +8653,31 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Dear owner of list %1,\n"
+#~ " \n"
+#~ "A user asked to be added as a subscriber to your list. If this is OK \n"
+#~ "with you, you should click the following URL :"
+#~ msgstr ""
+#~ "Αγαπητέ ιδιοκτήτη της λίστας %s,\n"
+#~ "\n"
+#~ "Ένας χρήστης επιθυμεί τη διαγραφή του από τη λίστας σας. Αν επιθυμείτε "
+#~ "την \n"
+#~ "πραγματοποίηση της διαγραφή, επιλέξτε το ακόλουθο URL :\n"
+#~ "\n"
+#~ "mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+#~ "\n"
+#~ "ή αποστείλτε ένα μήνυμα στη %s με το ακόλουθο θέμα:\n"
+#~ "AUTH %s DEL %s %s\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "or send an email to %1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr "Ή αποστολή του μηνύματος στη διεύθυνση %1@%2 με το ακόλουθο θέμα :"
 
 #, fuzzy
 #~ msgid ""

@@ -1024,7 +1024,7 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
+"configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
@@ -1052,7 +1052,7 @@ msgstr "modèl d'àlias de tièra"
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"according to the list usage you plan. "
 msgstr ""
 
 #: web_tt2/create_list_request.tt2:30
@@ -6266,11 +6266,10 @@ msgstr ""
 "siá mandar un corrièr electronic a %s qu'aja coma subjècte :\n"
 "AUTH %s ADD %s %s %s"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
+#. (replyto,keyauth,list.name,who,gecos)
+#: mail_tt2/listowner_notification.tt2:72
 #, fuzzy
 msgid ""
-"\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
@@ -6278,23 +6277,23 @@ msgstr ""
 "\n"
 "o mandatz un corrièr a %1@%2 amb lo subjècte seguent :\n"
 
-#: mail_tt2/listowner_notification.tt2:75
+#: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
 msgstr ""
 
-#: mail_tt2/listowner_notification.tt2:78
+#: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
 msgstr ""
 
 # nlsref 8,24
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:85
+#: mail_tt2/listowner_notification.tt2:84
 msgid "UNsubscription request from list %1"
 msgstr "Demanda de desabonament de la tièra %1"
 
 # nlsref 8,25
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:90
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -6312,7 +6311,7 @@ msgstr ""
 "AUTH %s DEL %s %s"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:97
+#: mail_tt2/listowner_notification.tt2:96
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
@@ -6323,13 +6322,13 @@ msgstr ""
 
 # nlsref 8,28
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:101
+#: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr "ATENCION: taus d'errors tròp naut per la tièra %s"
 
 # nlsref 8,27
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:107
+#: mail_tt2/listowner_notification.tt2:106
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6341,43 +6340,43 @@ msgstr ""
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:110
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "Per informacion %1 tièra %2 de %3 %4"
 
 # nlsref 8,21
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "Per informacion %1 tièra %2 de %3 %4"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:113
+#: mail_tt2/listowner_notification.tt2:112
 msgid " validated by %1 "
 msgstr "validat per %1"
 
-#: mail_tt2/listowner_notification.tt2:114
+#: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
 msgstr "Avètz pas besonh de faire quicòm"
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:117
 msgid "FYI: automatic removal of user %1"
 msgstr "Informacion : suppression automatica de l'usancièr  %1"
 
 # nlsref 6,38
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:120
+#: mail_tt2/listowner_notification.tt2:119
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "L'usancièr %1 es estat quitat de %2"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:128
 msgid "List %1 : Named filter error"
 msgstr "Lista %1 : Error de filtre"
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:131
+#: mail_tt2/listowner_notification.tt2:130
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
@@ -6386,7 +6385,7 @@ msgstr ""
 "dins un scenari d'autorizacion."
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:134
+#: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
 msgstr "Tièra %1 / %2"
 
@@ -8832,20 +8831,32 @@ msgstr "Copar la recepcion dels messatges (es util pendent las vacanças)"
 msgid "you do not receive your own posts"
 msgstr "per recebre pas los vòstres messatges"
 
-#: web_tt2/reviewbouncing.tt2:61
-msgid "bounce score"
-msgstr "taus d'error"
+#: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
 
-#: web_tt2/subrequest.tt2:32
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
 #, fuzzy
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing your password\n"
-"        will be sent to you."
+"\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
-"Per confirmar vòstra identitat e empachar qualqu'un mai de vos inscriure\n"
-"\tsens vòstre acòrdi, un messatge que cap vòstre mot de santa Clara \n"
-"\tvos serà mandat."
+"\n"
+"o mandatz un corrièr a %1@%2 amb lo subjècte seguent :\n"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8861,49 +8872,56 @@ msgstr ""
 msgid "The requested ticket is expired"
 msgstr ""
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-#, fuzzy
-msgid "The requested authentication ticket is unrecognized or expired"
-msgstr ""
-"l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion del "
-"proprietari"
-
-# nlsref 8,3
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"Car proprietari de la tièra %s,\n"
-"\n"
-"Un usancièr a demandat de s'abonar a vòstra tièra. Per validar aquela "
-"demanda,\n"
-"vos cal siá clicar lo ligam seguent :\n"
-"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-"\n"
-"siá mandar un corrièr electronic a %s qu'aja coma subjècte :\n"
-"AUTH %s ADD %s %s %s"
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-msgid ""
-"\n"
-"or send an email to %1 with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"o mandatz un corrièr a %1@%2 amb lo subjècte seguent :\n"
-
 #. (conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:27
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid "bounce score"
+#~ msgstr "taus d'error"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing your password\n"
+#~ "        will be sent to you."
+#~ msgstr ""
+#~ "Per confirmar vòstra identitat e empachar qualqu'un mai de vos inscriure\n"
+#~ "\tsens vòstre acòrdi, un messatge que cap vòstre mot de santa Clara \n"
+#~ "\tvos serà mandat."
+
+#, fuzzy
+#~ msgid "The requested authentication ticket is unrecognized or expired"
+#~ msgstr ""
+#~ "l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion "
+#~ "del proprietari"
+
+# nlsref 8,3
+#~ msgid ""
+#~ "Dear owner of list %1,\n"
+#~ " \n"
+#~ "A user asked to be added as a subscriber to your list. If this is OK \n"
+#~ "with you, you should click the following URL :"
+#~ msgstr ""
+#~ "Car proprietari de la tièra %s,\n"
+#~ "\n"
+#~ "Un usancièr a demandat de s'abonar a vòstra tièra. Per validar aquela "
+#~ "demanda,\n"
+#~ "vos cal siá clicar lo ligam seguent :\n"
+#~ "mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+#~ "\n"
+#~ "siá mandar un corrièr electronic a %s qu'aja coma subjècte :\n"
+#~ "AUTH %s ADD %s %s %s"
+
+#~ msgid ""
+#~ "\n"
+#~ "or send an email to %1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "o mandatz un corrièr a %1@%2 amb lo subjècte seguent :\n"
 
 #, fuzzy
 #~ msgid ""
