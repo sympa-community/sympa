@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-07-08 08:49+0200\n"
-"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
+"PO-Revision-Date: 2008-08-08 15:53+0200\n"
+"Last-Translator: Olivier Salaün <os@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -613,9 +613,8 @@ msgstr ""
 "publicité par messagerie)."
 
 #: web_tt2/arcsearch_form.tt2:3
-#, fuzzy
 msgid "Advanced archive search"
-msgstr "Recherche avancée"
+msgstr "Recherche avancée dans les archives"
 
 #: web_tt2/arcsearch.tt2:6 web_tt2/arcsearch_form.tt2:11
 msgid "Search field :"
@@ -794,9 +793,8 @@ msgstr "Retour dans les archives %1"
 
 # nlsref 16,4
 #: web_tt2/arc.tt2:3
-#, fuzzy
 msgid "List archive"
-msgstr "Archives textuelles"
+msgstr "Archives de la liste"
 
 # nlsref 16,7
 #: web_tt2/blacklist.tt2:3
@@ -917,9 +915,8 @@ msgid "You should remove list aliases manually"
 msgstr "Vous devriez supprimer les alias manuellement"
 
 #: web_tt2/compose_mail.tt2:3
-#, fuzzy
 msgid "Sendind a message to the list"
-msgstr "Envoi de messages  : %1"
+msgstr "Poster un message dans la liste"
 
 #. (user.email)
 #. (from)
@@ -1007,7 +1004,7 @@ msgstr "Appliquer"
 
 #: web_tt2/create_list_request.tt2:4
 msgid "Copy an existing list."
-msgstr ""
+msgstr "Copier une liste existante"
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -1016,11 +1013,16 @@ msgid ""
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
+"Vous pouvez créer une liste, à partir d'une liste existante ; la "
+"configuration de la liste d'origine sera copié pour initialiser les nouvelle "
+"liste. Il est important de noter que ni les membres de la liste, ni ses "
+"archives, ni encore les documents partagés ne sont dupliqués. Vous ne pouvez "
+"copier une liste que si vous en êtes propriétaire."
 
 #: web_tt2/create_list_request.tt2:26 web_tt2/create_list_request.tt2:7
 msgid ""
 "After the list is created, you will be able to adjust it's configuration."
-msgstr ""
+msgstr "Une fois la liste crée, vous pourrez ajuster sa configuration."
 
 #: web_tt2/create_list_request.tt2:15 web_tt2/rename_list_request.tt2:7
 msgid "New list name:"
@@ -1028,13 +1030,12 @@ msgstr "Nouveau nom de liste"
 
 #: web_tt2/create_list_request.tt2:17
 msgid "copy list configuration"
-msgstr ""
+msgstr "effectuer la copie"
 
 # nlsref 15,18
 #: web_tt2/create_list_request.tt2:23
-#, fuzzy
 msgid "Create a list using a template"
-msgstr "modèle d'alias de liste"
+msgstr "Créer une liste à partir d'un modèle"
 
 #: web_tt2/create_list_request.tt2:25
 msgid ""
@@ -1042,6 +1043,9 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plans. "
 msgstr ""
+"Vous pouvez demander la création d'une nouvelle liste via le formulaire ci-"
+"dessous. Vous devrez choisir un modèle de liste dont les paramètres sont les "
+"plus adaptés à vos besoins."
 
 #: web_tt2/create_list_request.tt2:30
 msgid "the list name ; be careful, not its address !"
@@ -1510,9 +1514,8 @@ msgstr "Information obligatoire"
 
 # nlsref 15,18
 #: web_tt2/editfile.tt2:3
-#, fuzzy
 msgid "Edit list templates"
-msgstr "modèle d'alias de liste"
+msgstr "Editer les modèles de liste"
 
 #: web_tt2/editfile.tt2:14
 msgid "Save"
@@ -1527,9 +1530,8 @@ msgstr ""
 
 # nlsref 16,12
 #: web_tt2/edit_list_request.tt2:3
-#, fuzzy
 msgid "Configuring the list"
-msgstr "Création de la liste"
+msgstr "Configurer la liste"
 
 #: web_tt2/edit_list_request.tt2:7
 msgid "You can choose below a subset of parameters to edit :"
@@ -1970,9 +1972,8 @@ msgid "List has no bouncing subscribers"
 msgstr "La liste ne comporte aucun abonné en erreur"
 
 #: web_tt2/error.tt2:82
-#, fuzzy
 msgid "No parameter was edited"
-msgstr "valeur du paramètre"
+msgstr "Aucun paramètre n'a été modifié"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:83
@@ -2679,9 +2680,8 @@ msgstr "Le nom de la liste a été mis en minuscules."
 
 #. (notice.notified_user)
 #: web_tt2/notice.tt2:85
-#, fuzzy
 msgid "User %1 has been notified"
-msgstr "La liste a été fermée"
+msgstr "L'utilisateur %1 a été notifié"
 
 #: web_tt2/picture_upload.tt2:4
 msgid "Setting your picture for this list"
@@ -2801,7 +2801,6 @@ msgstr ""
 
 # nlsref 16,55
 #: web_tt2/rename_list_request.tt2:2
-#, fuzzy
 msgid "Renaming the list"
 msgstr "Renommer cette liste"
 
@@ -2930,7 +2929,6 @@ msgid "Subject : %1"
 msgstr "Objet : %1"
 
 #: web_tt2/reviewbouncing.tt2:3
-#, fuzzy
 msgid "Manage bouncing list members"
 msgstr "Gestion des abonnés en erreur"
 
@@ -2971,29 +2969,24 @@ msgid "Table which display list bounces"
 msgstr "Table listant les abonnés en erreur"
 
 #: web_tt2/reviewbouncing.tt2:64
-#, fuzzy
 msgid "Bounce score"
 msgstr "Taux d'erreurs"
 
 #: web_tt2/reviewbouncing.tt2:65
-#, fuzzy
 msgid "Details"
-msgstr "Messages"
+msgstr "Détails"
 
 #: web_tt2/reviewbouncing.tt2:68
-#, fuzzy
 msgid "# of bounces"
-msgstr "erreur"
+msgstr "# d'erreurs"
 
 #: web_tt2/reviewbouncing.tt2:69 web_tt2/reviewbouncing.tt2:70
-#, fuzzy
 msgid "First bounce"
-msgstr "Dernière erreur"
+msgstr "Première erreur"
 
 #: web_tt2/reviewbouncing.tt2:97
-#, fuzzy
 msgid "no score"
-msgstr "Taux d'erreurs"
+msgstr "indéfini"
 
 #: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
@@ -3016,9 +3009,8 @@ msgid "Instantiation date"
 msgstr "Date d'instantiation"
 
 #: web_tt2/review.tt2:6
-#, fuzzy
 msgid "Manage list members"
-msgstr "Gérer les listes"
+msgstr "Gérer les membres de la liste"
 
 #: web_tt2/review.tt2:13 web_tt2/viewlogs.tt2:5
 msgid "Page size"
@@ -4033,25 +4025,23 @@ msgid "I subscribe to list %1"
 msgstr "Je m'abonne à %1"
 
 #: web_tt2/subrequest.tt2:31
-#, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
 "        this list against your will, a message containing an authentication "
 "URL was sent to the e-mail address you provided."
 msgstr ""
 "Pour valider votre identité et empêcher un tiers de vous abonner à\n"
-"votre insu, un message vous a été envoyé. Il contient votre mot de \n"
-"passe et vous permettra de valider cet abonnement."
+"votre insu, un message vous a été envoyé. Il contient une URL "
+"authentifiante."
 
 #. (list)
 #: web_tt2/subrequest.tt2:32
-#, fuzzy
 msgid ""
 "Check your mailbox for new messages and click this URL. This will confirm "
 "your subscription to list %1."
 msgstr ""
-"Surveillez votre boîte aux lettres et fournissez ce mot de passe\n"
-"ici dès sa réception."
+"Surveillez votre boîte aux lettres et cliquez sur le lien fourni. Ainsi vous "
+"confirmerez votre validerez votre abonnement à la liste %1."
 
 #. (list)
 #: web_tt2/subrequest.tt2:51
@@ -4072,7 +4062,6 @@ msgstr "Envoyez-moi mon mot de passe"
 
 #. (list)
 #: web_tt2/subrequest.tt2:75
-#, fuzzy
 msgid "You are already subscribed to list %1"
 msgstr "Vous êtes déjà abonné à la liste %1"
 
@@ -4102,10 +4091,12 @@ msgid ""
 "not perform this validation, please report this confidentiality issue to "
 "your mail services administrator."
 msgstr ""
+"Le ticket a déjà été validé depuis le poste %1. Si ce comportement vous "
+"semble anormal, veuillez signaler ce problème de confidentialité à votre "
+"administrateur de messagerie."
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-#, fuzzy
 msgid "The requested ticket has expired"
 msgstr "Le ticket demandé a expiré."
 
@@ -4116,7 +4107,6 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-#, fuzzy
 msgid "The requested authentication ticket has an unknow format or is expired"
 msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
 
@@ -5407,9 +5397,8 @@ msgstr "Renommage de la liste \"%1\""
 
 #. (email,list.name,new_listname)
 #: mail_tt2/listmaster_notification.tt2:19
-#, fuzzy
 msgid "%1 has copied list \"%2\" as a new list \"%3\""
-msgstr "%1 a renommé la liste \"%2\" en \"%3\""
+msgstr "%1 a copié la liste \"%2\" en tant que \"%3\""
 
 #. (email,list.name,new_listname)
 #: mail_tt2/listmaster_notification.tt2:21
@@ -6235,37 +6224,34 @@ msgstr ""
 
 #. (total,list.name)
 #: mail_tt2/listowner_notification.tt2:45
-#, fuzzy
 msgid ""
 "Because we received many non-delivery reports, the %1 subscribers listed "
 "below have been\n"
 "notified that they might be removed from list %2:"
 msgstr ""
-"Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les %1 abonnés "
+"Notre serveur ayant reçu de nombreux rapports de non-remise, les %1 abonnés "
 "listés ci-dessous ont été\n"
-"informés qu'ils risquaient d'être désabonnés de la liste %2 :"
+"informés qu'ils risquent d'être désabonnés de la liste %2 :"
 
 #. (total,list.name)
 #: mail_tt2/listowner_notification.tt2:48
-#, fuzzy
 msgid ""
 "Because we received many non-delivery reports, the %1 subscribers listed "
 "below have been\n"
 "removed from list %2:"
 msgstr ""
-"Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les %1 abonnés "
+"Notre serveur ayant reçu de nombreux rapports de non-remise, les %1 abonnés "
 "listés ci-dessous ont été\n"
 "désabonnés de la liste %2 :"
 
 #. (total,list.name)
 #: mail_tt2/listowner_notification.tt2:51
-#, fuzzy
 msgid ""
 "Because we received many non-delivery reports, the %1 subscribers listed "
 "below have been\n"
 "selected by Sympa as severe bouncing addresses:"
 msgstr ""
-"Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les %1 abonnés "
+"Notre serveur ayant reçu de nombreux rapports de non-remise, les %1 abonnés "
 "listés ci-dessous ont été\n"
 "marqués par Sympa comme des adresses gravement en erreur :"
 
@@ -6278,7 +6264,6 @@ msgstr "Demande d'abonnement à la liste %1"
 # nlsref 8,3
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
@@ -6288,12 +6273,11 @@ msgid ""
 msgstr ""
 "Cher propriétaire de la liste %1,\n"
 "\n"
-"Un utilisateur a demandé à être abonné à votre liste. Pour valider cette\n"
-"demande, veuillez cliquer sur ce lien :"
+"Un utilisateur a demandé à être abonné à votre liste. Pour consulter toutes "
+"les demandes en attente, veuillez cliquer sur ce lien :"
 
 #. (replyto,keyauth,list.name,who,gecos)-)
 #: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
 msgid ""
 "\n"
 "If prefered, you can accept this subscription request sending an email to %1 "
@@ -6301,12 +6285,13 @@ msgid ""
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
 "\n"
-"ou envoyez un e-mail à %1 avec comme sujet :\n"
+"Vous pouvez également valider cette demande en envoyant un message à %1 avec "
+"comme objet :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
 #: mail_tt2/listowner_notification.tt2:75
 msgid "That can be done using this mailto link :"
-msgstr ""
+msgstr "Vous pouvez effectuer l'opération en cliquant sur ce lien :"
 
 #: mail_tt2/listowner_notification.tt2:78
 msgid "The user has provided the following informations:"
@@ -6703,6 +6688,8 @@ msgstr "Pour refuser sa diffusion (il sera effacé), cliquez ici :"
 #: mail_tt2/moderate.tt2:41 mail_tt2/modindex.tt2:11
 msgid "The messages moderating documentation: %1/help/admin#moderate"
 msgstr ""
+"La documentation relative à la modération des messages : "
+"%1/help/admin#moderate"
 
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
@@ -6882,23 +6869,20 @@ msgstr "%1 / votre environnement"
 
 #. (list,conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:13
-#, fuzzy
 msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
 "came from host %3 at %4)."
 msgstr ""
-"Quelqu'un - sans doute vous - a demandé d'allouer ou de renouveler votre mot "
-"de passe pour votre compte sur le serveur %1. Cette requête a été effectuée "
-"depuis l'hôte %2 le %3."
+"Quelqu'un - sans doute vous - a formulé une demande d'abonnement à la liste "
+"%1@%2. (Cette requête a été effectuée depuis le poste %2 le %3)."
 
 #: mail_tt2/sendpasswd.tt2:14
-#, fuzzy
 msgid ""
 "You may ignore this subscription request or hit the following url in order "
 "to confirm it "
 msgstr ""
 "Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
-"choisir votre mot de passe."
+"valider votre demande."
 
 #. (list)
 #: mail_tt2/sendpasswd.tt2:17
@@ -6918,14 +6902,13 @@ msgstr "mot de passe : %1"
 
 #. (conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:25
-#, fuzzy
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request came from host %2 at %3)."
 msgstr ""
 "Quelqu'un - sans doute vous - a demandé d'allouer ou de renouveler votre mot "
-"de passe pour votre compte sur le serveur %1. Cette requête a été effectuée "
-"depuis l'hôte %2 le %3."
+"de passe associé à votre compte sur le serveur %1. (Cette requête a été "
+"effectuée depuis le poste %2 le %3)."
 
 #: mail_tt2/sendpasswd.tt2:26
 msgid ""
@@ -7052,34 +7035,32 @@ msgstr ""
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:27
-#, fuzzy
 msgid "Management of list %1"
-msgstr "Gérer les listes"
+msgstr "Gérer la liste %1"
 
 #. (delegator,list.name,list.host)
 #: mail_tt2/user_notification.tt2:30
 msgid ""
 "You have been delegate the responsability of list owner by %1 for list %2@%3."
-msgstr ""
+msgstr "Vous avez été nommé propriétaire de la liste %2@%3 par %1. "
 
 #. (delegator,list.name,list.host)
 #: mail_tt2/user_notification.tt2:32
 msgid ""
 "You have been delegate the responsability of list moderator by %1 for list %"
 "2@%3."
-msgstr ""
+msgstr "Vous avez été nommé modérateur de la liste %2@%3 par %1. "
 
 # nlsref 15,14
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/user_notification.tt2:35 mail_tt2/welcome.tt2:12
-#, fuzzy
 msgid "The list homepage: %1/info/%2"
-msgstr "page d'accueil de la liste"
+msgstr "La page d'accueil de la liste : %1/info/%2"
 
 #. (conf.wwsympa_url)
 #: mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide: %1/help/admin"
-msgstr ""
+msgstr "Le guide de l'administrateur : %1/help/admin"
 
 #. (list.name)
 #: mail_tt2/welcome.tt2:2
@@ -7099,7 +7080,7 @@ msgstr "Votre adresse d'abonné est : %1"
 #. (conf.wwsympa_url)
 #: mail_tt2/welcome.tt2:13
 msgid "General informations about mailing lists: %1/help/introduction"
-msgstr ""
+msgstr "Introduction aux listes de diffusion : %1/help/introduction"
 
 # nlsref 4,17
 #: mail_tt2/which.tt2:2
