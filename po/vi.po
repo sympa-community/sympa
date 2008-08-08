@@ -89,11 +89,18 @@ msgstr "Danh sách hộp thư chung"
 msgid "Home"
 msgstr "Nhà"
 
-#: web_tt2/create_list_request.tt2:11 web_tt2/create_list_request.tt2:15
-#: web_tt2/create_list_request.tt2:40 web_tt2/create_list_request.tt2:45
-#: web_tt2/create_list_request.tt2:6 web_tt2/create_list_request.tt2:65
-#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
-#: web_tt2/suboptions.tt2:18
+#: web_tt2/arc.tt2:3 web_tt2/arc_manage.tt2:3 web_tt2/arcsearch_form.tt2:3
+#: web_tt2/compose_mail.tt2:3 web_tt2/create_list_request.tt2:23
+#: web_tt2/create_list_request.tt2:30 web_tt2/create_list_request.tt2:35
+#: web_tt2/create_list_request.tt2:39 web_tt2/create_list_request.tt2:64
+#: web_tt2/create_list_request.tt2:69 web_tt2/create_list_request.tt2:89
+#: web_tt2/d_control.tt2:6 web_tt2/d_editfile.tt2:12 web_tt2/d_editfile.tt2:14
+#: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
+#: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
+#: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
+#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:8
+#: web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:6
+#: web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
 msgid "Help"
 msgstr "Trợ giúp"
 
@@ -109,7 +116,7 @@ msgstr "Chủ hộp thư chung"
 msgid "Privileged owner"
 msgstr "Người sở hữu có quyền đặc biệt"
 
-#: src/List.pm:1114 web_tt2/login_menu.tt2:16
+#: src/List.pm:1111 web_tt2/login_menu.tt2:16
 msgid "Owner"
 msgstr "Người sở hữu"
 
@@ -142,15 +149,14 @@ msgstr "Chọn máy phục vụ xác thực"
 msgid "Go"
 msgstr "Đi"
 
-#: src/List.pm:1084 src/List.pm:586 web_tt2/login_menu.tt2:80
+#: src/List.pm:1081 src/List.pm:583 web_tt2/login_menu.tt2:80
 #: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "địa chỉ thư"
 
 #: web_tt2/login_menu.tt2:82 web_tt2/loginbanner.tt2:73
 #: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:43
-#: web_tt2/subrequest.tt2:81
+#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:59
 msgid "password"
 msgstr "mật khẩu"
 
@@ -201,8 +207,7 @@ msgstr "Hủy đăng ký"
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Bạn thực sự muốn đăng ký với hộp thư chung %1 không?"
 
-#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:50
-#: web_tt2/subrequest.tt2:90
+#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:68
 msgid "Subscribe"
 msgstr "Đăng ký"
 
@@ -223,7 +228,7 @@ msgstr "Bài viết"
 msgid "RSS"
 msgstr "RSS"
 
-#: src/List.pm:1246 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
+#: src/List.pm:1243 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
 msgid "Shared documents"
 msgstr "Tài liệu dùng chung"
 
@@ -251,7 +256,7 @@ msgstr "Tỷ lệ lỗi:"
 msgid "Owners"
 msgstr "Người sở hữu"
 
-#: src/List.pm:611 web_tt2/list_panel.tt2:21
+#: src/List.pm:608 web_tt2/list_panel.tt2:21
 msgid "Moderators"
 msgstr "Điều tiết viên"
 
@@ -379,7 +384,7 @@ msgid "Manage Archives"
 msgstr "Quản lý kho lưu"
 
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:46 web_tt2/review.tt2:44
+#: web_tt2/list_admin_menu.tt2:46 web_tt2/review.tt2:48
 msgid "Bounces"
 msgstr "Nảy về"
 
@@ -476,7 +481,7 @@ msgstr "Tính trung bình theo ngày"
 msgid "Creation date"
 msgstr "Ngày tạo"
 
-#: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:45
+#: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
 #: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
@@ -498,8 +503,8 @@ msgid "Add subscribers"
 msgstr "Thêm người đăng ký"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:60 web_tt2/review.tt2:93
-#: web_tt2/reviewbouncing.tt2:112
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "im"
 
@@ -519,11 +524,11 @@ msgstr "Xác định hộp"
 msgid "Sending/Receiving"
 msgstr "Gửi/Nhận"
 
-#: web_tt2/admin_menu.tt2:148 web_tt2/edit_list_request.tt2:8
+#: web_tt2/admin_menu.tt2:148 web_tt2/edit_list_request.tt2:11
 msgid "Privileges"
 msgstr "Quyền hạn"
 
-#: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
+#: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:12
 #: web_tt2/serveradmin.tt2:69
 msgid "Archives"
 msgstr "Kho lưu"
@@ -532,7 +537,7 @@ msgstr "Kho lưu"
 msgid "Bounce Settings"
 msgstr "Thiết lập nảy về"
 
-#: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:12
+#: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:15
 msgid "Miscellaneous"
 msgstr "Linh tinh"
 
@@ -547,6 +552,21 @@ msgstr "Thuộc tính tùy chọn/cần thiết"
 #: web_tt2/arc_manage.tt2:3
 msgid "Archive Management"
 msgstr "Quản lý kho lưu"
+
+#: web_tt2/arc.tt2:3 web_tt2/arc_manage.tt2:3 web_tt2/arcsearch_form.tt2:3
+#: web_tt2/compose_mail.tt2:3 web_tt2/create_list_request.tt2:23
+#: web_tt2/d_control.tt2:6 web_tt2/d_editfile.tt2:12 web_tt2/d_editfile.tt2:14
+#: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
+#: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:171 web_tt2/d_read.tt2:173
+#: web_tt2/d_read.tt2:179 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
+#: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
+#: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
+#: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
+#: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
+msgid "Open in a new window"
+msgstr "Mở trong cửa sổ mới"
 
 #: web_tt2/arc_manage.tt2:5
 msgid ""
@@ -585,92 +605,97 @@ msgstr ""
 "Cái nút này thử bảo vệ các kho lưu hộp thư chung chống phần mềm Spam "
 "Harvester (bắt các địa chỉ thư để gửi thư rác)."
 
-#: web_tt2/arcsearch.tt2:6 web_tt2/arcsearch_form.tt2:9
+#: web_tt2/arcsearch_form.tt2:3
+#, fuzzy
+msgid "Advanced archive search"
+msgstr "Kích cỡ kho lưu Web"
+
+#: web_tt2/arcsearch.tt2:6 web_tt2/arcsearch_form.tt2:11
 msgid "Search field :"
 msgstr "Trường tìm kiếm:"
 
-#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:13
-#: web_tt2/arcsearch_form.tt2:16 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:10
+#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Tìm kiếm"
 
-#: web_tt2/arcsearch_form.tt2:17
+#: web_tt2/arcsearch_form.tt2:19
 msgid "this sentence"
 msgstr "câu này"
 
-#: web_tt2/arcsearch_form.tt2:18
+#: web_tt2/arcsearch_form.tt2:20
 msgid "all of these words"
 msgstr "tất cả các từ này"
 
-#: web_tt2/arcsearch_form.tt2:19
+#: web_tt2/arcsearch_form.tt2:21
 msgid "one of these words"
 msgstr "một của những từ này"
 
-#: web_tt2/arcsearch_form.tt2:22
+#: web_tt2/arcsearch_form.tt2:24
 msgid "Prefer"
 msgstr "Thích"
 
-#: web_tt2/arcsearch_form.tt2:23
+#: web_tt2/arcsearch_form.tt2:25
 msgid "newest messages"
 msgstr "các thư mới nhất"
 
-#: web_tt2/arcsearch_form.tt2:24
+#: web_tt2/arcsearch_form.tt2:26
 msgid "oldest messages"
 msgstr "các thư cũ nhất"
 
-#: web_tt2/arcsearch_form.tt2:27
+#: web_tt2/arcsearch_form.tt2:29
 msgid "Case"
 msgstr "Chữ hoa/thường"
 
-#: web_tt2/arcsearch_form.tt2:28
+#: web_tt2/arcsearch_form.tt2:30
 msgid "insensitive"
 msgstr "không phân biệt"
 
-#: web_tt2/arcsearch_form.tt2:29
+#: web_tt2/arcsearch_form.tt2:31
 msgid "sensitive"
 msgstr "phân biệt"
 
-#: web_tt2/arcsearch_form.tt2:32
+#: web_tt2/arcsearch_form.tt2:34
 msgid "Check"
 msgstr "Kiểm tra"
 
-#: web_tt2/arcsearch_form.tt2:33
+#: web_tt2/arcsearch_form.tt2:35
 msgid "part of word"
 msgstr "phần của từ"
 
-#: web_tt2/arcsearch_form.tt2:34
+#: web_tt2/arcsearch_form.tt2:36
 msgid "entire word"
 msgstr "toàn từ"
 
-#: web_tt2/arcsearch_form.tt2:37
+#: web_tt2/arcsearch_form.tt2:39
 msgid "Layout"
 msgstr "Bố trí"
 
-#: web_tt2/arcsearch_form.tt2:38 web_tt2/arcsearch_form.tt2:39
-#: web_tt2/arcsearch_form.tt2:40
+#: web_tt2/arcsearch_form.tt2:40 web_tt2/arcsearch_form.tt2:41
+#: web_tt2/arcsearch_form.tt2:42
 msgid "results by page"
 msgstr "kết quả theo trang"
 
-#: web_tt2/arcsearch_form.tt2:43
+#: web_tt2/arcsearch_form.tt2:45
 msgid "Search area"
 msgstr "Vùng tìm kiếm"
 
-#: web_tt2/arcsearch_form.tt2:44
+#: web_tt2/arcsearch_form.tt2:46
 msgid "Sender"
 msgstr "Người gửi"
 
-#: web_tt2/arcsearch_form.tt2:46 web_tt2/latest_arc.tt2:19
+#: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
 #: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Ngày"
 
-#: web_tt2/arcsearch_form.tt2:47
+#: web_tt2/arcsearch_form.tt2:49
 msgid "Body"
 msgstr "Thân"
 
-#: web_tt2/arcsearch_form.tt2:51
+#: web_tt2/arcsearch_form.tt2:53
 msgid "Extend search field"
 msgstr "Mở rộng trường tìm kiếm"
 
@@ -760,6 +785,11 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr "Trở về kho lưu %1"
 
+#: web_tt2/arc.tt2:3
+#, fuzzy
+msgid "List archive"
+msgstr "Tên hộp"
+
 #: web_tt2/blacklist.tt2:3
 msgid "Blacklist management"
 msgstr "Quản lý danh sách cấm"
@@ -845,7 +875,7 @@ msgstr ""
 "Bạn cần phải chọn một mật khẩu cho môi trường WWSympa của mình.\n"
 "Mật khẩu này yêu cầu để làm thao tác cần quyền đặc biệt."
 
-#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:38
+#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:41
 msgid "New password :"
 msgstr "Mật khẩu mới:"
 
@@ -854,8 +884,8 @@ msgid "New password again :"
 msgstr "Mật khẩu mới lại:"
 
 #: web_tt2/choosepasswd.tt2:13 web_tt2/picture_upload.tt2:11
-#: web_tt2/pref.tt2:17 web_tt2/pref.tt2:29 web_tt2/pref.tt2:40
-#: web_tt2/pref.tt2:66
+#: web_tt2/pref.tt2:20 web_tt2/pref.tt2:32 web_tt2/pref.tt2:43
+#: web_tt2/pref.tt2:69
 msgid "Submit"
 msgstr "Đệ trình"
 
@@ -875,32 +905,37 @@ msgstr "Các biệt hiệu hộp thư chung đã bị gỡ bỏ."
 msgid "You should remove list aliases manually"
 msgstr "Bạn nên gỡ bỏ biệt hiệu của hộp thư chung một cách thủ công."
 
+#: web_tt2/compose_mail.tt2:3
+#, fuzzy
+msgid "Sendind a message to the list"
+msgstr "Gửi thư   : %1"
+
 #. (user.email)
 #. (from)
-#: web_tt2/compose_mail.tt2:5 web_tt2/request_topic.tt2:27
+#: web_tt2/compose_mail.tt2:8 web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "Từ : %1"
 
 #. (mailto)
-#: web_tt2/compose_mail.tt2:6
+#: web_tt2/compose_mail.tt2:9
 msgid "To: %1"
 msgstr "Cho : %1"
 
-#: web_tt2/compose_mail.tt2:7 web_tt2/create_list_request.tt2:41
+#: web_tt2/compose_mail.tt2:10 web_tt2/create_list_request.tt2:65
 msgid "Subject:"
 msgstr "Chủ đề:"
 
-#: web_tt2/compose_mail.tt2:27 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:11
+msgid "Send this mail"
+msgstr "Gửi thư này"
+
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
 msgid "This list is configured to require topic(s)."
 msgstr "Hộp thư chung này được cấu hình để yêu cầu chủ đề."
 
-#: web_tt2/compose_mail.tt2:29
+#: web_tt2/compose_mail.tt2:33
 msgid "Please select one or more topic(s) that corresponds to your message :"
 msgstr "Hãy chọn một hay nhiều chủ đề tương ứng với thư của bạn."
-
-#: web_tt2/compose_mail.tt2:42
-msgid "Send this mail"
-msgstr "Gửi thư này"
 
 #: web_tt2/copy_template.tt2:3
 msgid "Copying template"
@@ -943,7 +978,7 @@ msgstr "rô-bốt"
 msgid "list"
 msgstr "hộp thư chung"
 
-#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:406
+#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:409
 msgid "default"
 msgstr "mặc định"
 
@@ -955,23 +990,60 @@ msgstr "Nhập tên hộp thư chung:"
 msgid "Apply"
 msgstr "Áp dụng"
 
+#: web_tt2/create_list_request.tt2:4
+msgid "Copy an existing list."
+msgstr ""
+
 #: web_tt2/create_list_request.tt2:6
+msgid ""
+"You can create a list, using an existing list as a template ; the list "
+"configuration of the source list will be copied to create the ew one. Note "
+"that neither list members, nor archives or shared documents are duplicated. "
+"The source lists you can use are limited to lists you own."
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:26 web_tt2/create_list_request.tt2:7
+msgid ""
+"After the list is created, you will be able to adjust it's configuration."
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:15 web_tt2/rename_list_request.tt2:7
+msgid "New list name:"
+msgstr "Tên hộp mới:"
+
+#: web_tt2/create_list_request.tt2:17
+msgid "copy list configuration"
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:23
+#, fuzzy
+msgid "Create a list using a template"
+msgstr "Đang đặt các mẫu của địa chỉ Web"
+
+#: web_tt2/create_list_request.tt2:25
+msgid ""
+"You can request a new list creation with the following form.You will have to "
+"choose a list template that will preset most of the list parameters "
+"according to the list usage you plans. "
+msgstr ""
+
+#: web_tt2/create_list_request.tt2:30
 msgid "the list name ; be careful, not its address !"
 msgstr "tên hộp, không phải địa chỉ !"
 
-#: web_tt2/create_list_request.tt2:7
+#: web_tt2/create_list_request.tt2:31
 msgid "List name:"
 msgstr "Tên hộp:"
 
-#: web_tt2/create_list_request.tt2:11
+#: web_tt2/create_list_request.tt2:35
 msgid "You are the privileged owner of this list"
 msgstr "Bạn là chủ của hộp thư chung này"
 
-#: web_tt2/create_list_request.tt2:12
+#: web_tt2/create_list_request.tt2:36
 msgid "Owner:"
 msgstr "Chủ :"
 
-#: web_tt2/create_list_request.tt2:15
+#: web_tt2/create_list_request.tt2:39
 msgid ""
 "The list type is a set of parameters' profile. Parameters will be editable, "
 "once the list created"
@@ -979,39 +1051,39 @@ msgstr ""
 "Kiểu hộp thư chung là một tập hợp hồ sơ tham số. Các tham số cho chỉnh sửa "
 "được, một khi tạo hộp thư chung."
 
-#: web_tt2/create_list_request.tt2:16
+#: web_tt2/create_list_request.tt2:40
 msgid "List type :"
 msgstr "Kiểu hộp:"
 
-#: web_tt2/create_list_request.tt2:40
+#: web_tt2/create_list_request.tt2:64
 msgid "The list's subject"
 msgstr "Chủ đề của hộp thư chung"
 
-#: web_tt2/create_list_request.tt2:45
+#: web_tt2/create_list_request.tt2:69
 msgid "List classification in the directory"
 msgstr "Liệt phân loại trong danh bạ"
 
-#: web_tt2/create_list_request.tt2:46
+#: web_tt2/create_list_request.tt2:70
 msgid "Topics:"
 msgstr "Vấn đề"
 
-#: web_tt2/create_list_request.tt2:48
+#: web_tt2/create_list_request.tt2:72
 msgid "--Select a topic--"
 msgstr "~Chọn vấn đề—"
 
-#: web_tt2/create_list_request.tt2:61 web_tt2/javascript.tt2:93
+#: web_tt2/create_list_request.tt2:85 web_tt2/javascript.tt2:93
 msgid "Other"
 msgstr "Khác"
 
-#: web_tt2/create_list_request.tt2:65
+#: web_tt2/create_list_request.tt2:89
 msgid "A few lines describing the list"
 msgstr "Vài dòng diễn tả hộp thư chung này"
 
-#: web_tt2/create_list_request.tt2:66
+#: web_tt2/create_list_request.tt2:90
 msgid "Description:"
 msgstr "Mô tả:"
 
-#: web_tt2/create_list_request.tt2:69
+#: web_tt2/create_list_request.tt2:93
 msgid "Submit your creation request"
 msgstr "Đệ trình yêu cầu tạo"
 
@@ -1111,7 +1183,7 @@ msgstr "Đạnh dấu URL"
 msgid "Replace the file %1 with your file"
 msgstr "Thay thế tập tin %1 bằng tập tin của bạn."
 
-#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:417
+#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:420
 #: web_tt2/editsubscriber.tt2:60 web_tt2/suboptions.tt2:62
 msgid "Update"
 msgstr "Cập nhật"
@@ -1227,11 +1299,11 @@ msgid "Size (Kb)"
 msgstr "Kích cỡ (KB)"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:153
+#: web_tt2/review.tt2:157
 msgid "Last update"
 msgstr "Cập nhật cuối"
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:24 web_tt2/serveradmin.tt2:115
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:26 web_tt2/serveradmin.tt2:115
 #: web_tt2/serveradmin.tt2:128
 msgid "Edit"
 msgstr "Sửa"
@@ -1264,14 +1336,6 @@ msgstr "Không rõ"
 #: web_tt2/d_read.tt2:116 web_tt2/d_read.tt2:118
 msgid "Do you really want to delete %1%2 ?"
 msgstr "Bạn thực sự muốn xoá %1%2 không?"
-
-#: web_tt2/d_read.tt2:171 web_tt2/d_read.tt2:173 web_tt2/d_read.tt2:179
-#: web_tt2/edit_list_request.tt2:34 web_tt2/editsubscriber.tt2:37
-#: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
-#: web_tt2/picture_upload.tt2:19 web_tt2/review.tt2:206
-#: web_tt2/suboptions.tt2:17
-msgid "Open in a new window"
-msgstr "Mở trong cửa sổ mới"
 
 #: web_tt2/d_read.tt2:211
 msgid "to moderate"
@@ -1329,7 +1393,7 @@ msgstr "tựa đề"
 msgid "URL"
 msgstr "URL"
 
-#: web_tt2/d_read.tt2:352 web_tt2/review.tt2:60
+#: web_tt2/d_read.tt2:352 web_tt2/review.tt2:64
 msgid "Add"
 msgstr "Thêm"
 
@@ -1408,8 +1472,7 @@ msgstr "Bạn có muốn thay đổi tên của tập tin %1 không?"
 msgid "Do you want to cancel the upload ?"
 msgstr "Bạn có muốn thôi tải lên không?"
 
-#: web_tt2/edit_attributes.tt2:4 web_tt2/review.tt2:158
-#: web_tt2/subindex.tt2:11
+#: web_tt2/edit_attributes.tt2:4 web_tt2/subindex.tt2:11
 msgid "Additional information"
 msgstr "Thông tin thêm"
 
@@ -1421,36 +1484,46 @@ msgstr "[% k.name %] :"
 msgid "Required element"
 msgstr "Phần tử cần thiết"
 
-#: web_tt2/editfile.tt2:12
+#: web_tt2/editfile.tt2:3
+#, fuzzy
+msgid "Edit list templates"
+msgstr "Đang đặt các mẫu của địa chỉ Web"
+
+#: web_tt2/editfile.tt2:14
 msgid "Save"
 msgstr "Lưu"
 
-#: web_tt2/editfile.tt2:15
+#: web_tt2/editfile.tt2:17
 msgid "You can edit several messages/files associated with your list :"
 msgstr ""
 "Bạn có thể chỉnh sửa vài thông điệp/tập tin liên quan đến hộp thư chung:"
 
-#: web_tt2/edit_list_request.tt2:4
+#: web_tt2/edit_list_request.tt2:3
+#, fuzzy
+msgid "Configuring the list"
+msgstr "Tập tin cấu hình"
+
+#: web_tt2/edit_list_request.tt2:7
 msgid "You can choose below a subset of parameters to edit :"
 msgstr "Bên dưới bạn có thể chọn tập hợp con các tham số cần chỉnh sửa:"
 
-#: web_tt2/edit_list_request.tt2:6
+#: web_tt2/edit_list_request.tt2:9
 msgid "List definition"
 msgstr "Xác định hộp thư chung"
 
-#: web_tt2/edit_list_request.tt2:7
+#: web_tt2/edit_list_request.tt2:10
 msgid "Sending/receiving setup"
 msgstr "Thiết lập Gửi/Nhận"
 
-#: web_tt2/edit_list_request.tt2:10 web_tt2/viewlogs.tt2:86
+#: web_tt2/edit_list_request.tt2:13 web_tt2/viewlogs.tt2:86
 msgid "Bounce management"
 msgstr "Quản lý thư nảy về"
 
-#: web_tt2/edit_list_request.tt2:11
+#: web_tt2/edit_list_request.tt2:14
 msgid "Data sources setup"
 msgstr "Thiết lập nguồn dữ liệu"
 
-#: web_tt2/edit_list_request.tt2:31
+#: web_tt2/edit_list_request.tt2:34
 msgid "scenario source"
 msgstr "nguồn kịch bản"
 
@@ -1601,11 +1674,11 @@ msgstr "Không tìm thấy tháng « %1 »"
 msgid "Archives from %1 are not accessible"
 msgstr "Không thể truy cập đến kho lưu từ %1"
 
-#: mail_tt2/listmaster_notification.tt2:309 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:312 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr "Không thể nạp các vấn đề hộp thư chung."
 
-#: mail_tt2/listmaster_notification.tt2:310 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:313 web_tt2/error.tt2:12
 msgid "Unable to load create_list templates."
 msgstr "Không thể nạp các mẫu tạo hộp thư chung (create_list)."
 
@@ -1627,7 +1700,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "Lỗi xuất ra hộp thư chung « %1 »"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:323 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:326 web_tt2/error.tt2:17
 msgid "Cannot unzip file '%1'."
 msgstr "Không thể giải nén tập tin « %1 »."
 
@@ -1638,7 +1711,7 @@ msgstr "Không thể truy cập đến thư được xác thực bởi khoá %1"
 
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:331 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:334 web_tt2/error.tt2:19
 msgid "File not found."
 msgstr "Không tìm thấy tập tin."
 
@@ -1730,7 +1803,7 @@ msgstr "Thiếu đối số %1"
 msgid "Wrong value for parameter %1"
 msgstr "Giá trị sai cho tham số %1"
 
-#: web_tt2/error.tt2:134 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Bạn cần phải đăng nhập"
 
@@ -1857,191 +1930,196 @@ msgstr "Người dùng %1 không có thư nảy về"
 msgid "List has no bouncing subscribers"
 msgstr "Hộp thư chung không có người đăng ký có thư nảy về"
 
-#. (u_err.email)
 #: web_tt2/error.tt2:82
+#, fuzzy
+msgid "No parameter was edited"
+msgstr "giá trị tham số"
+
+#. (u_err.email)
+#: web_tt2/error.tt2:83
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Tập tin cấu hình đã bị %1 sửa đổi nên không thể áp dụng thay đổi của bạn."
 
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 msgid "Topic \"other\" is a reserved word"
 msgstr "Vấn đề « other » là một từ dành riêng"
 
 #. (u_err.param)
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 msgid "Parameter '%1' must have values"
 msgstr "Tham số « %1 » phải có giá trị"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr "Tham số « %1 » có giá trị sai: « %2 »"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 msgid "The list '%1' is already closed"
 msgstr "Hộp thư chung « %1 » đã được đóng"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "The list '%1' is not closed"
 msgstr "Hộp thư chung « %1 » không phải được đóng."
 
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "'%1' : bad listname"
 msgstr "« %1 »: tên hộp thư chung sai"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 msgid "'%1' list already exists"
 msgstr "Hộp thư chung « %1 » đã có"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 "Tên hộp thư chung sai « %1 »: tương ứng với một của những biệt hiệu dịch vụ"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "%1 : No such file or directory"
 msgstr "%1 : không có tập tin hay thư mục như vậy"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 msgid "Unable to read %1 : empty document"
 msgstr "Không thể đọc %1 : tài liệu còn rỗng"
 
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "There is no shared documents"
 msgstr "Không có tài liệu chia sẻ"
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "The shared document space is empty"
 msgstr "Vùng tài liệu chia sẻ còn rỗng"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "The shared directory cannot have any description"
 msgstr "Thư mục chia sẻ không thể có mô tả"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "No description specified"
 msgstr "Chưa ghi rõ mô tả"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Không thể diễn tả vì tài liệu « %1 » không tồn tại"
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr ""
 "Dữ liệu bị thay đổi trên đĩa nên không thể áp dụng thay đổi riêng của bạn"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "%1 : incorrect name"
 msgstr "%1 : tên không đúng"
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "Failed : your content is empty"
 msgstr "Lỗi : nội dung của bạn còn rỗng"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "Cannot overwrite file %1"
 msgstr "Không thể ghi đè lên tập tin %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "A directory named '%1' already exists"
 msgstr "Một thư mục tên « %1 » đã có"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "This is an already existing document : '%1'"
 msgstr "Đây là một tài liệu đã có : « %1 »"
 
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "No name specified"
 msgstr "Chưa ghi rõ tên"
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "The document repository exceed disk quota."
 msgstr "Kho lưu tài liệu vượt quá hạn ngạch đĩa."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "Cannot upload file %1"
 msgstr "Không thể tải lên tập tin %1"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "Bạn không có quyền tải lên một tập tin INDEX.HTML trong %1"
 
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "The upload failed, try it again"
 msgstr "Lỗi tải lên, hãy thử lại"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Thư mục %1 và nội dung của nó không thể sao chép được : %2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "File %1 was not copied : %2 "
 msgstr "Tập tin %1 đã không sao chép : %2"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Failed : %1 not empty"
 msgstr "Lỗi : %1 không phải rỗng"
 
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "No certificate for this list"
 msgstr "Hộp thư chung này không có chứng nhận"
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "This list has no message topic"
 msgstr "Hộp thư chung này không có vấn đề thư."
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "Tag message with topic is required for this list"
 msgstr "Hộp thư chung này cần thiết thư thẻ với vấn đề"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "No entry for user '%1'"
 msgstr "Không có mục nhập cho người dùng « %1 »"
 
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "Please select archive months"
 msgstr "Hãy chọn những tháng của kho lưu"
 
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "No SOAP service"
 msgstr "Không có dịch vụ SOAP"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "Authentication failed"
 msgstr "Lỗi xác thực"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 "Không thể thêm người đăng ký khi trạng thái của hộp thư chung là « %1 »"
 
 #. (auth.action)
-#: web_tt2/error.tt2:128
+#: web_tt2/error.tt2:129
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "XÁC THỰC BỊ TỪ CHỐI (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:130
+#: web_tt2/error.tt2:131
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2156,8 +2234,8 @@ msgstr "Tài liệu chia sẻ vừa nhất"
 msgid "Most recent documents for this list "
 msgstr "Tài liệu vừa nhất cho hộp thư chung này"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:6 web_tt2/review.tt2:125
-#: web_tt2/review.tt2:128 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
+#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Tên"
 
@@ -2179,7 +2257,7 @@ msgid " The latest lists of this robot"
 msgstr "Các hộp thư chung mới nhất của rô-bốt này"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:78
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
 msgid "%1 occurrence(s) found"
 msgstr "Tìm thấy %1 lần"
 
@@ -2393,7 +2471,7 @@ msgstr "Không có chủ đề"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
 #: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
-#: web_tt2/reviewbouncing.tt2:116
+#: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "Bật/tắt chọn"
 
@@ -2535,6 +2613,12 @@ msgstr ""
 msgid "List name has been lowercased"
 msgstr "Tên của hộp thư chung đã được chuyển đổi sang chữ thường."
 
+#. (notice.notified_user)
+#: web_tt2/notice.tt2:85
+#, fuzzy
+msgid "User %1 has been notified"
+msgstr "Hộp thư chung đã bị đóng"
+
 #: web_tt2/picture_upload.tt2:4
 msgid "Setting your picture for this list"
 msgstr "Đặt ảnh riêng của bạn cho hộp thư chung này"
@@ -2561,49 +2645,53 @@ msgstr "Ảnh của bạn trong danh sách các người đăng ký"
 msgid "In the members page"
 msgstr "Trên trang thành viên"
 
-#: web_tt2/pref.tt2:5 web_tt2/review.tt2:104 web_tt2/review.tt2:107
-#: web_tt2/reviewbouncing.tt2:60 web_tt2/subindex.tt2:8
+#: web_tt2/pref.tt2:3 web_tt2/viewlogs.tt2:89
+msgid "User preferences"
+msgstr "Tùy thích người dùng"
+
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
 msgstr "Địa chỉ thư"
 
-#: web_tt2/pref.tt2:7
+#: web_tt2/pref.tt2:10
 msgid "Language"
 msgstr "Ngôn ngữ"
 
-#: web_tt2/pref.tt2:12
+#: web_tt2/pref.tt2:15
 msgid "Connection expiration period"
 msgstr "Thời kỳ hết hạn kết nối"
 
-#: web_tt2/pref.tt2:24
+#: web_tt2/pref.tt2:27
 msgid "Changing your email address"
 msgstr "Thay đổi địa chỉ thư điện tử"
 
-#: web_tt2/pref.tt2:28
+#: web_tt2/pref.tt2:31
 msgid "New email address :"
 msgstr "Địa chỉ thư mới :"
 
-#: web_tt2/pref.tt2:34
+#: web_tt2/pref.tt2:37
 msgid "Changing your password"
 msgstr "Thay đổi mật khẩu"
 
-#: web_tt2/pref.tt2:39
+#: web_tt2/pref.tt2:42
 msgid "Re-enter your new password :"
 msgstr "Nhập lại mật khẩu mới :"
 
-#: web_tt2/pref.tt2:47
+#: web_tt2/pref.tt2:50
 msgid "Your other email addresses"
 msgstr "Địa chỉ thư khác của bạn"
 
-#: web_tt2/pref.tt2:64
+#: web_tt2/pref.tt2:67
 msgid "Other email address :"
 msgstr "Địa chỉ thư khác :"
 
-#: web_tt2/pref.tt2:65
+#: web_tt2/pref.tt2:68
 msgid "Password :"
 msgstr "Mật khẩu : "
 
-#: web_tt2/pref.tt2:71
+#: web_tt2/pref.tt2:74
 msgid ""
 "Another email address, that should be known by Sympa and will be recognized "
 "by Sympa as an alternate email address for you. All your email addressed "
@@ -2645,15 +2733,16 @@ msgstr ""
 "Gặp lỗi trong khi xoá thư này. Hãy chuyển tiếp tới chủ hộp với địa chỉ URL "
 "hoàn toàn của thư đó."
 
-#: web_tt2/rename_list_request.tt2:5
-msgid "New list name:"
-msgstr "Tên hộp mới:"
+#: web_tt2/rename_list_request.tt2:2
+#, fuzzy
+msgid "Renaming the list"
+msgstr "Thay tên của hộp thư chung này"
 
-#: web_tt2/rename_list_request.tt2:16
+#: web_tt2/rename_list_request.tt2:19
 msgid "Rename this list"
 msgstr "Thay tên của hộp thư chung này"
 
-#: web_tt2/rename_list_request.tt2:16
+#: web_tt2/rename_list_request.tt2:19
 msgid "Do you really want to rename this list?"
 msgstr "Bạn thực sự muốn thay đổi tên của hộp thư chung này không?"
 
@@ -2690,7 +2779,7 @@ msgstr ""
 "Hãy nhập địa chỉ thư điện tử, để nhận một thư cho bạn truy cập đến đơn thích "
 "hợp để chọn mật khẩu."
 
-#: web_tt2/renewpasswd.tt2:27 web_tt2/subrequest.tt2:60
+#: web_tt2/renewpasswd.tt2:27 web_tt2/subrequest.tt2:38
 msgid "Your e-mail address"
 msgstr "Địa chỉ thư điện tử của bạn"
 
@@ -2760,50 +2849,75 @@ msgstr "Ngày : %1"
 msgid "Subject : %1"
 msgstr "Chủ đề : %1"
 
-#: web_tt2/review.tt2:48 web_tt2/review.tt2:50 web_tt2/reviewbouncing.tt2:3
+#: web_tt2/reviewbouncing.tt2:3
+#, fuzzy
+msgid "Manage bouncing list members"
+msgstr "Đang quản lý các người đăng ký mà gây ra thư nảy về:"
+
+#: web_tt2/review.tt2:52 web_tt2/review.tt2:54 web_tt2/reviewbouncing.tt2:6
 msgid "Dump"
 msgstr "Đổ"
 
-#: web_tt2/reviewbouncing.tt2:16
+#: web_tt2/reviewbouncing.tt2:19
 msgid "Remind all subscribers"
 msgstr "Nhắc nhở mọi người đăng ký"
 
 #. (total)
-#: web_tt2/review.tt2:40 web_tt2/reviewbouncing.tt2:16
+#: web_tt2/review.tt2:44 web_tt2/reviewbouncing.tt2:19
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr ""
 "Bạn thực sự muốn gửi một thư nhắc nhở đăng ký cho %1 người đăng ký không?"
 
-#: web_tt2/review.tt2:24 web_tt2/review.tt2:265 web_tt2/reviewbouncing.tt2:100
-#: web_tt2/reviewbouncing.tt2:43 web_tt2/viewlogs.tt2:28
+#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "Trang trước"
 
 #. (page,total_page)
-#: web_tt2/reviewbouncing.tt2:103 web_tt2/reviewbouncing.tt2:46
+#: web_tt2/reviewbouncing.tt2:120 web_tt2/reviewbouncing.tt2:49
 msgid "page %1 / %2"
 msgstr "trang %1 / %2"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:30 web_tt2/reviewbouncing.tt2:106
-#: web_tt2/reviewbouncing.tt2:49 web_tt2/viewlogs.tt2:34
+#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "Trang kế"
 
-#: web_tt2/reviewbouncing.tt2:57
+#: web_tt2/reviewbouncing.tt2:60
 msgid "Table which display list bounces"
 msgstr "Bảng hiển thị các thư nảy về của hộp thư chung"
 
-#: web_tt2/reviewbouncing.tt2:61
-msgid "bounce score"
+#: web_tt2/reviewbouncing.tt2:64
+#, fuzzy
+msgid "Bounce score"
 msgstr "sổ điểm nảy về"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:92 web_tt2/reviewbouncing.tt2:111
+#: web_tt2/reviewbouncing.tt2:65
+msgid "Details"
+msgstr ""
+
+#: web_tt2/reviewbouncing.tt2:68
+#, fuzzy
+msgid "# of bounces"
+msgstr "nảy về"
+
+#: web_tt2/reviewbouncing.tt2:69 web_tt2/reviewbouncing.tt2:70
+#, fuzzy
+msgid "First bounce"
+msgstr "Xem thư nảy về cuối"
+
+#: web_tt2/reviewbouncing.tt2:97
+#, fuzzy
+msgid "no score"
+msgstr "sổ điểm nảy về"
+
+#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "Xoá các địa chỉ thư đã chọn"
 
-#: web_tt2/reviewbouncing.tt2:113
+#: web_tt2/reviewbouncing.tt2:130
 msgid "Reset errors for selected users"
 msgstr "Đặt lại các lỗi cho những người dùng đã chọn"
 
@@ -2819,80 +2933,85 @@ msgstr "Trạng thái"
 msgid "Instantiation date"
 msgstr "Ngày kích hoạt"
 
-#: web_tt2/review.tt2:9 web_tt2/viewlogs.tt2:5
+#: web_tt2/review.tt2:6
+#, fuzzy
+msgid "Manage list members"
+msgstr "Quản lý hộp thư chung"
+
+#: web_tt2/review.tt2:13 web_tt2/viewlogs.tt2:5
 msgid "Page size"
 msgstr "Kích cỡ trang"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:27 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "trang"
 
-#: web_tt2/review.tt2:37
+#: web_tt2/review.tt2:41
 msgid "Synchronize members with data sources"
 msgstr "Đồng bộ hoá các thành viên với các nguồn dữ liệu"
 
-#: web_tt2/review.tt2:39
+#: web_tt2/review.tt2:43
 msgid "Pending subscriptions"
 msgstr "Sự đăng ký bị hoãn"
 
-#: web_tt2/review.tt2:40
+#: web_tt2/review.tt2:44
 msgid "Remind all"
 msgstr "Nhắc nhở tất cả"
 
-#: web_tt2/review.tt2:42
+#: web_tt2/review.tt2:46
 msgid "Blacklist"
 msgstr "Danh sách cấm"
 
-#: web_tt2/review.tt2:58
+#: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr "Thêm một người dùng:"
 
-#: web_tt2/review.tt2:61
+#: web_tt2/review.tt2:65
 msgid "Multiple add"
 msgstr "Đa thêm"
 
-#: web_tt2/review.tt2:73
+#: web_tt2/review.tt2:77
 msgid "Search user by e-mail: "
 msgstr "Tìm người dùng theo địa chỉ thư :"
 
-#: web_tt2/review.tt2:74
+#: web_tt2/review.tt2:78
 msgid "Search user by email"
 msgstr "Tìm người dùng theo địa chỉ thư điện tử"
 
-#: web_tt2/review.tt2:80
+#: web_tt2/review.tt2:84
 msgid "Selection too wide, can not show selection"
 msgstr "Vùng chọn quá rộng nên không thể hiển thị."
 
-#: web_tt2/review.tt2:96
+#: web_tt2/review.tt2:100
 msgid "List members"
 msgstr "Thành viên của hộp thư chung"
 
-#: web_tt2/review.tt2:112 web_tt2/review.tt2:115
+#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
 msgid "Domain"
 msgstr "Miền"
 
-#: web_tt2/review.tt2:120
+#: web_tt2/review.tt2:124
 msgid "Picture"
 msgstr "Ảnh"
 
-#: web_tt2/review.tt2:133
+#: web_tt2/review.tt2:137
 msgid "Reception"
 msgstr "Thu nhận"
 
-#: web_tt2/review.tt2:138 web_tt2/review.tt2:141
+#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
 msgid "Sources"
 msgstr "Nguồn"
 
-#: web_tt2/review.tt2:147 web_tt2/review.tt2:150 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr "Ngày đăng ký"
 
-#: web_tt2/review.tt2:189
+#: web_tt2/review.tt2:191
 msgid "bouncing"
 msgstr "nảy về"
 
 #. (u.email)
-#: web_tt2/review.tt2:206
+#: web_tt2/review.tt2:208
 msgid "%1's picture"
 msgstr "Ảnh của %1"
 
@@ -3306,7 +3425,7 @@ msgstr "Đóng nó"
 msgid "Install it"
 msgstr "Cài đặt nó."
 
-#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:65
+#: web_tt2/set_pending_list_request.tt2:26 web_tt2/subrequest.tt2:43
 msgid "submit"
 msgstr "gửi"
 
@@ -3406,7 +3525,7 @@ msgstr ""
 "đăng ký với hộp thư chung %1."
 
 #: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:38 web_tt2/subrequest.tt2:80
+#: web_tt2/subrequest.tt2:58
 msgid "e-mail address"
 msgstr "địa chỉ thư điện tử"
 
@@ -3718,9 +3837,9 @@ msgid ""
 "check your e-mail box for the message containing the confirmation password "
 "needed below."
 msgstr ""
-"Một mật khẩu xác nhận đã được gửi cho địa chỉ thư điện tử của bạn "
-"(%1).<br/>Hãy kiểm tra hộp Thư Đến để tìm thư chứa mật khẩu xác nhận đòi hỏi "
-"nhập vào dưới đây."
+"Một mật khẩu xác nhận đã được gửi cho địa chỉ thư điện tử của bạn (%1).<br/"
+">Hãy kiểm tra hộp Thư Đến để tìm thư chứa mật khẩu xác nhận đòi hỏi nhập vào "
+"dưới đây."
 
 #: web_tt2/sso_login.tt2:50
 msgid "Validate Address"
@@ -3801,37 +3920,30 @@ msgstr "Hãy điền vào đơn dưới đây, sau đó bấm nút thẩm tra"
 msgid "I subscribe to list %1"
 msgstr "Tôi đăng ký với hộp thư chung %1"
 
-#: web_tt2/subrequest.tt2:32
+#: web_tt2/subrequest.tt2:31
+#, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing your password\n"
-"        will be sent to you."
+"        this list against your will, a message containing an authentication "
+"URL was sent to the e-mail address you provided."
 msgstr ""
 "Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư chung "
 "này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
 
 #. (list)
-#: web_tt2/subrequest.tt2:34
+#: web_tt2/subrequest.tt2:32
+#, fuzzy
 msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"\tEnter that password below. This will confirm your subscription to list %1."
+"Check your mailbox for new messages and click this URL. This will confirm "
+"your subscription to list %1."
 msgstr ""
 "Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
 "riêng của bạn.\n"
-"\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư chung "
-"%1."
-
-#: web_tt2/subrequest.tt2:54
-msgid ""
-"This password, associated with your email address, willallow you to access "
-"your custom environment."
-msgstr ""
-"Mật khẩu này, liên quan đến địa chỉ thư điện tử của bạn, sẽ cho phép bạn "
-"truy cập đến môi trường riêng."
+"\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư "
+"chung %1."
 
 #. (list)
-#: web_tt2/subrequest.tt2:73
+#: web_tt2/subrequest.tt2:51
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below"
@@ -3839,17 +3951,18 @@ msgstr ""
 "Để xác nhận bạn muốn đăng ký với hộp thư chung %1,\n"
 "hãy nhập mật khẩu dưới đây:"
 
-#: web_tt2/subrequest.tt2:75
+#: web_tt2/subrequest.tt2:53
 msgid ", in addition to the personnal informations requested."
 msgstr ", thêm vào thông tin cá nhân được yêu cầu."
 
-#: web_tt2/subrequest.tt2:91
+#: web_tt2/subrequest.tt2:69
 msgid "My password ?"
 msgstr "Mật khẩu của tôi ?"
 
 #. (list)
-#: web_tt2/subrequest.tt2:97
-msgid "You are already subscriber of list %1"
+#: web_tt2/subrequest.tt2:75
+#, fuzzy
+msgid "You are already subscribed to list %1"
 msgstr "Bạn đã đăng ký với hộp thư chung %1"
 
 #: web_tt2/ticket.tt2:1
@@ -3873,18 +3986,15 @@ msgstr "lý do"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"Someone (may be yourself) has allready used this validation ticket from host "
-"%1 .If this user is not you, you may report a to your mail services "
-"administrator a confidentiality issue : probably someone else can access to "
-"your messages "
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
 msgstr ""
-"Ai đó (có thể là bạn) đã sử dụng vé thẩm tra này từ máy %1. Nếu người dùng "
-"này không phải là bạn, bạn có thể thông báo vấn đề bí mật cho quản trị dịch "
-"vụ thư : rất có thể là người khác có khả năng truy cập đến các thư của bạn."
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-msgid "The requested ticket is expired"
+#, fuzzy
+msgid "The requested ticket has expired"
 msgstr "Vé được yêu cầu đã hết hạn dùng"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
@@ -3893,16 +4003,9 @@ msgstr "Hãy sử dụng mật khẩu hoặc yêu cầu một vé mới"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket is unrecognized or expired"
+#, fuzzy
+msgid "The requested authentication ticket has an unknow format or is expired"
 msgstr "Vé xác thực được yêu cầu không nhận ra được hoặc đã hết hạn dùng"
-
-#: web_tt2/ticket.tt2:26
-msgid "login"
-msgstr "đăng nhập"
-
-#: web_tt2/ticket.tt2:28
-msgid "You may request a new authentication url."
-msgstr "Bạn có thể yêu cầu một địa chỉ URL xác thực mới."
 
 #: web_tt2/tt2_error.tt2:7
 msgid "Sympa error - could not display web page"
@@ -3956,10 +4059,6 @@ msgstr "Xác thực"
 msgid "List Management"
 msgstr "Quản trị Hộp thư chung"
 
-#: web_tt2/viewlogs.tt2:89
-msgid "User preferences"
-msgstr "Tùy thích người dùng"
-
 #: web_tt2/viewlogs.tt2:90
 msgid "User management"
 msgstr "Quản trị người dùng"
@@ -3988,7 +4087,7 @@ msgstr "Kỳ tìm: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15338
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -4119,8 +4218,7 @@ msgstr "Không cho phép thêm người dùng vào hộp thư chung."
 #: mail_tt2/authorization_reject.tt2:26
 msgid "List creation is restricted to local domain users."
 msgstr ""
-"Quyền tạo hộp thư chung thì bị hạn chế thành những người sử dụng miền cục "
-"bộ."
+"Quyền tạo hộp thư chung thì bị hạn chế thành những người sử dụng miền cục bộ."
 
 #: mail_tt2/authorization_reject.tt2:29
 msgid "List creation is restricted to listmaster."
@@ -4182,8 +4280,7 @@ msgstr "bạn không có quyền sửa đổi tham số về hộp thư chung."
 #: mail_tt2/authorization_reject.tt2:59
 msgid "List parameter editing is restricted to list owners."
 msgstr ""
-"Chức năng sửa đổi tham số về hộp thư chung bị hạn chế thành người sở hữu "
-"hộp."
+"Chức năng sửa đổi tham số về hộp thư chung bị hạn chế thành người sở hữu hộp."
 
 #: mail_tt2/authorization_reject.tt2:62
 msgid "The 'global remind' feature is restricted to listmaster."
@@ -4239,8 +4336,7 @@ msgstr "Tính năng « xem lại » bị hạn chế thành người sở hữu 
 #: mail_tt2/authorization_reject.tt2:95
 msgid "The 'review' feature is restricted to list subscribers."
 msgstr ""
-"Tính năng « xem lại » bị hạn chế thành những người đăng ký với hộp thư "
-"chung."
+"Tính năng « xem lại » bị hạn chế thành những người đăng ký với hộp thư chung."
 
 #: mail_tt2/authorization_reject.tt2:98
 msgid "Message distribution in this list is not allowed."
@@ -4296,7 +4392,8 @@ msgstr ""
 
 #: mail_tt2/authorization_reject.tt2:125
 msgid "Subscription to this list requires S/MIME signature."
-msgstr "Chức năng đăng ký với hộp thư chung này cũng đòi hỏi một chữ ký S/MIME."
+msgstr ""
+"Chức năng đăng ký với hộp thư chung này cũng đòi hỏi một chữ ký S/MIME."
 
 #: mail_tt2/authorization_reject.tt2:128
 msgid "Topics visibility is restricted to listmaster."
@@ -4406,7 +4503,8 @@ msgstr "Đã huỷ đăng ký với %1"
 #. (user.email,list.name,list.host)
 #: mail_tt2/bye.tt2:4
 msgid "Your email address (%1) has been removed from list %2@%3"
-msgstr "Địa chỉ thư điện tử của bạn (%1) đã được gỡ bỏ khỏi hộp thư chung %2@%3"
+msgstr ""
+"Địa chỉ thư điện tử của bạn (%1) đã được gỡ bỏ khỏi hộp thư chung %2@%3"
 
 #: mail_tt2/bye.tt2:5
 msgid "bye !"
@@ -4659,7 +4757,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Bó thư %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2689
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2686
 msgid "Table of contents:"
 msgstr "Mục Lục: "
 
@@ -4757,7 +4855,7 @@ msgstr "Huỷ đăng ký: "
 msgid "Archive of %1, file %2"
 msgstr "Kho lưu của %1, tập tin %2"
 
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1633
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1644
 msgid "Subscription summary"
 msgstr "Tóm tắt sự đăng ký"
 
@@ -4768,7 +4866,8 @@ msgstr "Bản tóm tắt về sự đăng ký của bạn (dùng địa chỉ th
 
 #: mail_tt2/global_remind.tt2:5
 msgid "If you want to unsubscribe from some list, please save this mail."
-msgstr "Nếu bạn muốn huỷ đăng ký với một hộp thư chung nào đó, hãy lưu thư này."
+msgstr ""
+"Nếu bạn muốn huỷ đăng ký với một hộp thư chung nào đó, hãy lưu thư này."
 
 #: mail_tt2/global_remind.tt2:7
 msgid "For each list here is a mail address to use if you want to unsubscribe."
@@ -4776,7 +4875,7 @@ msgstr ""
 "Đối với mỗi hộp thư chung có một địa chỉ thư điện tử cụ thể cần dùng nếu bạn "
 "muốn huỷ đăng ký."
 
-#: mail_tt2/helpfile.tt2:2 src/Commands.pm:197 src/Commands.pm:213
+#: mail_tt2/helpfile.tt2:2 src/Commands.pm:197 src/Commands.pm:214
 msgid "User guide"
 msgstr "Sổ tay người dùng"
 
@@ -4858,7 +4957,8 @@ msgstr "UNSubscribe * <địa_chỉ>       * Huỷ đăng ký với mọi hộp 
 #: mail_tt2/helpfile.tt2:28
 msgid ""
 "SET <list>|* NOMAIL         * To suspend the message reception for <list>"
-msgstr "SET <hộp_thư_chung>|* NOMAIL         * Tạm thời dừng nhận thư từ hộp đó"
+msgstr ""
+"SET <hộp_thư_chung>|* NOMAIL         * Tạm thời dừng nhận thư từ hộp đó"
 
 #: mail_tt2/helpfile.tt2:29
 msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
@@ -5036,7 +5136,7 @@ msgstr "Gửi thư   : %1"
 msgid "Review subscribers : %1"
 msgstr "Xem lại các người đăng ký : %1"
 
-#. (reply_to)
+#. (reply_to_header.value)
 #: mail_tt2/info_report.tt2:21
 msgid "Reply to           : %1"
 msgstr "Trả lời cho           : %1"
@@ -5159,36 +5259,42 @@ msgid "%1 requested creation of list \"%2\""
 msgstr "%1 đã yêu cầu tạo hộp thư chung « %2 »."
 
 #: mail_tt2/listmaster_notification.tt2:12
-#: mail_tt2/listmaster_notification.tt2:21
+#: mail_tt2/listmaster_notification.tt2:24
 msgid "To activate/delete this mailing list :"
 msgstr "Để kích hoạt hoặc xoá hộp thư chung:"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:17
+#: mail_tt2/listmaster_notification.tt2:16
 msgid "List \"%1\" renaming"
 msgstr "Thay đổi tên của hộp thư chung « %1 »"
 
 #. (email,list.name,new_listname)
 #: mail_tt2/listmaster_notification.tt2:19
+#, fuzzy
+msgid "%1 has copied list \"%2\" as a new list \"%3\""
+msgstr "%1 đã thay đổi tên của hộp thư chung « %2 » thành « %3 »"
+
+#. (email,list.name,new_listname)
+#: mail_tt2/listmaster_notification.tt2:21
 msgid "%1 has renamed list \"%2\" to \"%3\""
 msgstr "%1 đã thay đổi tên của hộp thư chung « %2 » thành « %3 »"
 
-#: mail_tt2/listmaster_notification.tt2:25
+#: mail_tt2/listmaster_notification.tt2:28
 msgid "No DataBase"
 msgstr "Không có cơ sở dữ liệu"
 
 #. (db_name)
-#: mail_tt2/listmaster_notification.tt2:27
+#: mail_tt2/listmaster_notification.tt2:30
 msgid "Cannot connect to database %1, still trying..."
 msgstr "Không thể kết nối tới cơ sở dữ liệu %1, vẫn còn đang thử..."
 
 #. (db_type)
-#: mail_tt2/listmaster_notification.tt2:31
+#: mail_tt2/listmaster_notification.tt2:34
 msgid "No DataBase Driver for %1"
 msgstr "Không có trình điều khiển cơ sở dữ liệu cho %1"
 
 #. (db_type)
-#: mail_tt2/listmaster_notification.tt2:33
+#: mail_tt2/listmaster_notification.tt2:36
 msgid ""
 "No Database Driver installed for %1 ; you should download and install DBD::%"
 "1 from CPAN."
@@ -5196,43 +5302,43 @@ msgstr ""
 "Chưa cài đặt trình điều khiển cơ sở dữ liệu cho %1. Bạn nên tải xuống và cài "
 "đặt gói « DBD::%1 » thông qua chương trình quản lý gói phần mềm CPAN."
 
-#: mail_tt2/listmaster_notification.tt2:37
+#: mail_tt2/listmaster_notification.tt2:40
 msgid "Previous process crashed"
 msgstr "Tiến trình chạy trước đã sụp đổ."
 
-#: mail_tt2/listmaster_notification.tt2:39
+#: mail_tt2/listmaster_notification.tt2:42
 msgid "Previous process has died unexpectedly."
 msgstr "Tiến trình chạy trước đã chết bất thường."
 
 #. (crash_date)
-#: mail_tt2/listmaster_notification.tt2:40
+#: mail_tt2/listmaster_notification.tt2:43
 msgid "Date of crash : %1"
 msgstr "Ngày sụp đổ : %1"
 
-#: mail_tt2/listmaster_notification.tt2:41
+#: mail_tt2/listmaster_notification.tt2:44
 msgid "Errors:"
 msgstr "Lỗi:"
 
-#: mail_tt2/listmaster_notification.tt2:47
-#: mail_tt2/listmaster_notification.tt2:55
+#: mail_tt2/listmaster_notification.tt2:50
+#: mail_tt2/listmaster_notification.tt2:58
 msgid "Check log file for further details."
 msgstr "Xem bản ghi để tìm thêm chi tiết."
 
-#: mail_tt2/listmaster_notification.tt2:50
+#: mail_tt2/listmaster_notification.tt2:53
 msgid "Upgrade procedures failed"
 msgstr "Thủ tục nâng cấp bị lỗi"
 
-#: mail_tt2/listmaster_notification.tt2:52
+#: mail_tt2/listmaster_notification.tt2:55
 msgid ""
 "Sympa encountered the following error while running upgrade procedures : "
 msgstr "Sympa đã gặp lỗi theo đây trong khi chạy thủ tục nâng cấp:"
 
-#: mail_tt2/listmaster_notification.tt2:58
+#: mail_tt2/listmaster_notification.tt2:61
 msgid "Database structure updated"
 msgstr "Cấu trúc cơ sở dữ liệu đã được cập nhật"
 
 #. (db_name)
-#: mail_tt2/listmaster_notification.tt2:60
+#: mail_tt2/listmaster_notification.tt2:63
 msgid ""
 "The database structure has been updated ; check log file for further "
 "details : "
@@ -5240,85 +5346,85 @@ msgstr ""
 "Cấu trúc cơ sở dữ liệu đã được cập nhật; kiểm tra tập tin ghi lưu để tìm "
 "thêm chi tiết:"
 
-#: mail_tt2/listmaster_notification.tt2:66
+#: mail_tt2/listmaster_notification.tt2:69
 msgid "DataBase connection restored"
 msgstr "Kết nối cơ sở dữ liệu đã được phục hồi"
 
 #. (db_name)
-#: mail_tt2/listmaster_notification.tt2:68
+#: mail_tt2/listmaster_notification.tt2:71
 msgid "Connection to database %1 restored."
 msgstr "Kết nối tới cơ sở dữ liệu %1 đã được phục hồi."
 
-#: mail_tt2/listmaster_notification.tt2:72
+#: mail_tt2/listmaster_notification.tt2:75
 msgid "Loop detected"
 msgstr "Phát hiện một vòng lặp"
 
-#: mail_tt2/listmaster_notification.tt2:80
+#: mail_tt2/listmaster_notification.tt2:83
 msgid "A loop has been detected with the following message"
 msgstr "Phát hiện một vòng lặp với thông điệp theo đây"
 
-#: mail_tt2/listmaster_notification.tt2:94
+#: mail_tt2/listmaster_notification.tt2:97
 msgid "Antivirus scan failed"
 msgstr "Lỗi quét chống vi-rút"
 
-#: mail_tt2/listmaster_notification.tt2:96
+#: mail_tt2/listmaster_notification.tt2:99
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr ""
 "Tiến trình quét chống vi-rút đã bị lỗi trong khi xử lý tập tin theo đây:"
 
-#: mail_tt2/listmaster_notification.tt2:99
+#: mail_tt2/listmaster_notification.tt2:102
 msgid "The returned error message :"
 msgstr "Thông điệp lỗi đã trả về:"
 
-#: mail_tt2/listmaster_notification.tt2:104
+#: mail_tt2/listmaster_notification.tt2:107
 msgid "Parameter error"
 msgstr "Lỗi tham số"
 
 #. (par_name,par_value)
-#: mail_tt2/listmaster_notification.tt2:106
+#: mail_tt2/listmaster_notification.tt2:109
 msgid "The value for parameter %1 was badly defined: %2"
 msgstr "Sai xác định giá trị cho tham số %1: %2"
 
 #. (action)
-#: mail_tt2/listmaster_notification.tt2:107
+#: mail_tt2/listmaster_notification.tt2:110
 msgid "%1 impossible."
 msgstr "%1 không thể làm được."
 
-#: mail_tt2/listmaster_notification.tt2:108
-#: mail_tt2/listmaster_notification.tt2:114
-#: mail_tt2/listmaster_notification.tt2:120
-#: mail_tt2/listmaster_notification.tt2:128
-#: mail_tt2/listmaster_notification.tt2:266
-#: mail_tt2/listmaster_notification.tt2:337
-#: mail_tt2/listmaster_notification.tt2:349
+#: mail_tt2/listmaster_notification.tt2:111
+#: mail_tt2/listmaster_notification.tt2:117
+#: mail_tt2/listmaster_notification.tt2:123
+#: mail_tt2/listmaster_notification.tt2:131
+#: mail_tt2/listmaster_notification.tt2:269
+#: mail_tt2/listmaster_notification.tt2:340
+#: mail_tt2/listmaster_notification.tt2:352
 msgid "See logs for more details."
 msgstr "Xem bản ghi để tìm chi tiết."
 
-#: mail_tt2/listmaster_notification.tt2:111
+#: mail_tt2/listmaster_notification.tt2:114
 msgid "Unable to create directory"
 msgstr "Không thể tạo thư mục"
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:113
+#: mail_tt2/listmaster_notification.tt2:116
 msgid "Sympa could not create directory %1"
 msgstr "Sympa không thể tạo thư mục %1"
 
-#: mail_tt2/listmaster_notification.tt2:117
+#: mail_tt2/listmaster_notification.tt2:120
 msgid "A message archiving failed"
 msgstr "Lỗi lưu thư vào kho"
 
 #. (file,bad)
-#: mail_tt2/listmaster_notification.tt2:119
+#: mail_tt2/listmaster_notification.tt2:122
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
 "Sympa không thể lưu thư « %1 » vào kho nên di chuyển nó vào thư mục « %2 »."
 
-#: mail_tt2/listmaster_notification.tt2:123
+#: mail_tt2/listmaster_notification.tt2:126
 msgid "A bounce management failed"
 msgstr "Lỗi quản lý thư bị nảy về"
 
 #. (file,bad)
-#: mail_tt2/listmaster_notification.tt2:125
+#: mail_tt2/listmaster_notification.tt2:128
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
@@ -5326,15 +5432,15 @@ msgstr ""
 "»."
 
 #. (error)
-#: mail_tt2/listmaster_notification.tt2:127
+#: mail_tt2/listmaster_notification.tt2:130
 msgid "Error: %1"
 msgstr "Lỗi: %1"
 
-#: mail_tt2/listmaster_notification.tt2:131
+#: mail_tt2/listmaster_notification.tt2:134
 msgid "incorrect format of edit_list.conf"
 msgstr "sai định dạng edit_list.conf"
 
-#: mail_tt2/listmaster_notification.tt2:134
+#: mail_tt2/listmaster_notification.tt2:137
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
@@ -5343,12 +5449,12 @@ msgstr ""
 "Không còn chấp nhận « default » (mặc định) cho một dân số."
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:136
+#: mail_tt2/listmaster_notification.tt2:139
 msgid "Refer to documentation to adapt %1."
 msgstr "Xem tài liệu hướng dẫn để thay đổi lại %1 cho phù hợp."
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:138
+#: mail_tt2/listmaster_notification.tt2:141
 msgid ""
 "Until then we recommend your remove %1 ;\n"
 "default configuration will be used."
@@ -5357,11 +5463,11 @@ msgstr ""
 "cấu hình mặc định sẽ được dùng."
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:141
+#: mail_tt2/listmaster_notification.tt2:144
 msgid "subscribers update failed for list %1"
 msgstr "lỗi cập nhật các người đăng ký cho hộp thư chung %1"
 
-#: mail_tt2/listmaster_notification.tt2:144
+#: mail_tt2/listmaster_notification.tt2:147
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
@@ -5369,17 +5475,17 @@ msgstr ""
 "Sympa không thể bao gồm người đăng ký từ nguồn dữ liệu bên ngoài; cơ sở dữ "
 "liệu hay thư mục LDAP có thể không tới được."
 
-#: mail_tt2/listmaster_notification.tt2:145
-#: mail_tt2/listmaster_notification.tt2:152
+#: mail_tt2/listmaster_notification.tt2:148
+#: mail_tt2/listmaster_notification.tt2:155
 msgid "Check Sympa log files for more precise information"
 msgstr "Kiểm tra bản ghi Sympa để tìm thêm thông tin"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:149
+#: mail_tt2/listmaster_notification.tt2:152
 msgid "admins update failed for list %1"
 msgstr "lỗi cập nhật quản trị cho hộp thư chung %1"
 
-#: mail_tt2/listmaster_notification.tt2:151
+#: mail_tt2/listmaster_notification.tt2:154
 msgid ""
 "Sympa could not include admins from external data sources ; the database or "
 "LDAP directory might be unreachable."
@@ -5388,21 +5494,6 @@ msgstr ""
 "liệu hay thư mục LDAP có thể không tới được."
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:155
-#: mail_tt2/listmaster_notification.tt2:172
-#: mail_tt2/listmaster_notification.tt2:180
-#: mail_tt2/listmaster_notification.tt2:187
-#: mail_tt2/listmaster_notification.tt2:215
-#: mail_tt2/listmaster_notification.tt2:222
-#: mail_tt2/listmaster_notification.tt2:229
-msgid "list %1 in status error_config"
-msgstr "hộp thư chung %1 có trạng thái error_config"
-
-#. (param0)
-#: mail_tt2/listmaster_notification.tt2:157
-msgid "No owner is defined for list %1."
-msgstr "Chưa xác định chủ cho hộp thư chung %1."
-
 #: mail_tt2/listmaster_notification.tt2:158
 #: mail_tt2/listmaster_notification.tt2:175
 #: mail_tt2/listmaster_notification.tt2:183
@@ -5410,50 +5501,65 @@ msgstr "Chưa xác định chủ cho hộp thư chung %1."
 #: mail_tt2/listmaster_notification.tt2:218
 #: mail_tt2/listmaster_notification.tt2:225
 #: mail_tt2/listmaster_notification.tt2:232
+msgid "list %1 in status error_config"
+msgstr "hộp thư chung %1 có trạng thái error_config"
+
+#. (param0)
+#: mail_tt2/listmaster_notification.tt2:160
+msgid "No owner is defined for list %1."
+msgstr "Chưa xác định chủ cho hộp thư chung %1."
+
+#: mail_tt2/listmaster_notification.tt2:161
+#: mail_tt2/listmaster_notification.tt2:178
+#: mail_tt2/listmaster_notification.tt2:186
+#: mail_tt2/listmaster_notification.tt2:193
+#: mail_tt2/listmaster_notification.tt2:221
+#: mail_tt2/listmaster_notification.tt2:228
+#: mail_tt2/listmaster_notification.tt2:235
 msgid "The list status has been set to error_config."
 msgstr ""
 "Trạng thái của hộp thư chung đã được đặt thành « error_config » (cấu hình "
 "lỗi)."
 
-#: mail_tt2/listmaster_notification.tt2:159
-#: mail_tt2/listmaster_notification.tt2:176
-#: mail_tt2/listmaster_notification.tt2:184
-#: mail_tt2/listmaster_notification.tt2:191
-#: mail_tt2/listmaster_notification.tt2:198
-#: mail_tt2/listmaster_notification.tt2:205
-#: mail_tt2/listmaster_notification.tt2:219
-#: mail_tt2/listmaster_notification.tt2:226
-#: mail_tt2/listmaster_notification.tt2:233
+#: mail_tt2/listmaster_notification.tt2:162
+#: mail_tt2/listmaster_notification.tt2:179
+#: mail_tt2/listmaster_notification.tt2:187
+#: mail_tt2/listmaster_notification.tt2:194
+#: mail_tt2/listmaster_notification.tt2:201
+#: mail_tt2/listmaster_notification.tt2:208
+#: mail_tt2/listmaster_notification.tt2:222
+#: mail_tt2/listmaster_notification.tt2:229
+#: mail_tt2/listmaster_notification.tt2:236
 msgid "Check Sympa log files for more precise information."
 msgstr "Xem bản ghi Sympa để tìm thông tin chính xác hơn."
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:163
+#: mail_tt2/listmaster_notification.tt2:166
 msgid "List owner/editor email changes"
 msgstr "Đã thay đổi địa chỉ thư của chủ/biên tập hộp thư chung"
 
 #. (previous_email,new_email)
-#: mail_tt2/listmaster_notification.tt2:165
+#: mail_tt2/listmaster_notification.tt2:168
 msgid ""
 "User %1 has changed his owner/editor email address to %2. This changed has "
 "been performed to the following lists :"
 msgstr ""
-"Người dùng %1 đã thay đổi địa chỉ thư điện tử chủ/biên tập của mình thành "
-"%2. Thay đổi này đã được thực hiện với những hộp thư chung này:"
+"Người dùng %1 đã thay đổi địa chỉ thư điện tử chủ/biên tập của mình thành %"
+"2. Thay đổi này đã được thực hiện với những hộp thư chung này:"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:174
+#: mail_tt2/listmaster_notification.tt2:177
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 "Gặp lỗi trong khi sao chép tập tin nhóm %2 vào thư mục hộp thư chung %1."
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:182
+#: mail_tt2/listmaster_notification.tt2:185
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "Cấu hình của hộp thư chung %1 không tùy theo quy tắc của nhóm %2."
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:189
+#: mail_tt2/listmaster_notification.tt2:192
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -5461,55 +5567,54 @@ msgstr ""
 "Sympa không thể kiểm tra các quy tắc của nhóm %2 với tập tin « "
 "param_constraint.conf » của hộp thư chung %1."
 
-#: mail_tt2/listmaster_notification.tt2:195
-#: mail_tt2/listmaster_notification.tt2:202
+#: mail_tt2/listmaster_notification.tt2:198
+#: mail_tt2/listmaster_notification.tt2:205
 msgid "errors in param_constraint.conf file"
 msgstr "lỗi trong tập tin param_constraint.conf"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:197
-#: mail_tt2/listmaster_notification.tt2:204
+#: mail_tt2/listmaster_notification.tt2:200
+#: mail_tt2/listmaster_notification.tt2:207
 msgid "Error(s) found in the file %1."
 msgstr "Gặp lỗi trong tập tin %1."
 
-#: mail_tt2/listmaster_notification.tt2:208
+#: mail_tt2/listmaster_notification.tt2:211
 msgid "File removed"
 msgstr "Tập tin bị gỡ bỏ"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:210
+#: mail_tt2/listmaster_notification.tt2:213
 msgid "The following file has been removed : %1"
 msgstr "Tập tin theo đây đã bị gỡ bỏ : %1"
 
 #. (param1)
-#: mail_tt2/listmaster_notification.tt2:211
+#: mail_tt2/listmaster_notification.tt2:214
 msgid "A backup of the file has been made : %1"
 msgstr "Đã tạo một bản sao lưu của tập tin này: %1"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:217
+#: mail_tt2/listmaster_notification.tt2:220
 msgid "Sympa could not load family %2 for list %1."
 msgstr "Sympa không thể nạp nhóm %2 cho hộp thư chung %1."
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:224
+#: mail_tt2/listmaster_notification.tt2:227
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "Lỗi tạo lần nhóm %2 cho hộp thư chung %1"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:231
+#: mail_tt2/listmaster_notification.tt2:234
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa không thể sửa đổi hộp thư chung %1 (Nhóm %2)"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:237
+#: mail_tt2/listmaster_notification.tt2:240
 #: mail_tt2/listowner_notification.tt2:41
 msgid "List %1 automatic bounce management"
 msgstr "Tự động quản lý thư nảy về hộp thư chung %1"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:241
-#: mail_tt2/listowner_notification.tt2:45
+#: mail_tt2/listmaster_notification.tt2:244
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5520,8 +5625,7 @@ msgstr ""
 "chung %2:"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:244
-#: mail_tt2/listowner_notification.tt2:48
+#: mail_tt2/listmaster_notification.tt2:247
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5531,8 +5635,7 @@ msgstr ""
 "liệt kê dưới đây đã bị gỡ bỏ khỏi hộp thư chung %2:"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:247
-#: mail_tt2/listowner_notification.tt2:51
+#: mail_tt2/listmaster_notification.tt2:250
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5541,37 +5644,37 @@ msgstr ""
 "Do nhận RẤT NHIỀU thông báo về thư không phát được, %1 người đăng ký được "
 "liệt kê dưới đây đã được Sympa phân loại là địa chỉ nảy về nghiêm trọng."
 
-#: mail_tt2/listmaster_notification.tt2:254
+#: mail_tt2/listmaster_notification.tt2:257
 #: mail_tt2/listowner_notification.tt2:58
 msgid "Managing bouncing subscribers:"
 msgstr "Đang quản lý các người đăng ký mà gây ra thư nảy về:"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:258
-#: mail_tt2/listmaster_notification.tt2:270
+#: mail_tt2/listmaster_notification.tt2:261
+#: mail_tt2/listmaster_notification.tt2:273
 msgid "Listmaster : internal server error "
 msgstr "Chủ hộp thư chung: lỗi trình phục vụ nội bộ"
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:260
-#: mail_tt2/listmaster_notification.tt2:272
+#: mail_tt2/listmaster_notification.tt2:263
+#: mail_tt2/listmaster_notification.tt2:275
 msgid " User %1 has encountered an internal server error"
 msgstr "Người dùng %1 đã gặp một lỗi phần mềm nội bộ."
 
-#: mail_tt2/listmaster_notification.tt2:273
-#: mail_tt2/listmaster_notification.tt2:344
+#: mail_tt2/listmaster_notification.tt2:276
+#: mail_tt2/listmaster_notification.tt2:347
 msgid "Web interface"
 msgstr "Giao diện Web"
 
-#: mail_tt2/listmaster_notification.tt2:275
+#: mail_tt2/listmaster_notification.tt2:278
 msgid "Unable to change directory."
 msgstr "Không thể chuyển đổi thư mục."
 
-#: mail_tt2/listmaster_notification.tt2:276
+#: mail_tt2/listmaster_notification.tt2:279
 msgid "The authentication server name is not defined."
 msgstr "Chưa xác định tên máy phục vụ xác thực."
 
-#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:280
 msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
@@ -5580,298 +5683,297 @@ msgstr ""
 "« ldap_host/ldap_get_email_by_uid_filter »."
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:278
+#: mail_tt2/listmaster_notification.tt2:281
 msgid "Unkown authentication service %1."
 msgstr "Không nhận ra dịch vụ xác thực %1."
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:282
 msgid "Add user '%1' in DB failed."
 msgstr "Lỗi thêm người dùng « %1 » vào cơ sở dữ liệu."
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:283
 msgid "Update user '%1' in DB failed"
 msgstr "Lỗi cập nhật người dùng « %1 » trong cơ sở dữ liệu"
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:280
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:285
 msgid " (old email : %1)"
 msgstr " (thư cũ : %1)"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:284
 msgid "Add subscriber '%1' in DB failed."
 msgstr "Lỗi thêm người đăng ký « %1 » vào cơ sở dữ liệu."
 
 #. (sub,old_email)
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:285
 msgid "Update subscriber '%1' in DB failed"
 msgstr "Lỗi cập nhật người đăng ký « %1 » trong cơ sở dữ liệu"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:286
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "Lỗi xoá người đăng ký « %1 » khỏi cơ sở dữ liệu."
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:287
 msgid "Delete user in DB for old email '%1' failed."
 msgstr "Lỗi xoá người dùng khỏi cơ sở dữ liệu đối với thư cũ « %1 »."
 
 #. (email,list.name)
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:288
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "Người đăng ký « %1 » không tìm thấy trong hộp thư chung %2."
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:289
 msgid "Unable to read file : '%1'."
 msgstr "Không thể đọc tập tin: « %1 »."
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:287
+#: mail_tt2/listmaster_notification.tt2:290
 msgid "Unable to write file : '%1'."
 msgstr "Không thể ghi tập tin: « %1 »."
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:291
 msgid "Unable to open file '%1'."
 msgstr "Không thể mở tập tin « %1 »."
 
 #. (directory)
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:292
 msgid "Unable to open directory '%1'."
 msgstr "Không thể mở thư mục « %1 »."
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:290
+#: mail_tt2/listmaster_notification.tt2:293
 msgid "Unable to create directory '%1'."
 msgstr "Không thể tạo thư mục « %1 »."
 
 #. (spool)
-#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:294
 msgid "Unable to open spool '%1'."
 msgstr "Không thể mở hàng đợi ghi « %1 »."
 
 #. (msg)
-#: mail_tt2/listmaster_notification.tt2:292
+#: mail_tt2/listmaster_notification.tt2:295
 msgid "Unable to get message '%1'."
 msgstr "Không thể lấy thư « %1 »."
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:296
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "Không thể thay đổi tên của tập tin « %1 » thành « %2 »."
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:297
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "Không thể thay đổi tên của thư mục « %1 » thành « %2 »."
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:298
 msgid "Unable to erase file '%1'."
 msgstr "Không thể xoá tập tin « %1 »."
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:299
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
-"Không thể gửi lệnh DISTRIBUTE (phát hành) từ « %1 » tới hộp thư chung « %2 "
-"»."
+"Không thể gửi lệnh DISTRIBUTE (phát hành) từ « %1 » tới hộp thư chung « %2 »."
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:300
 msgid "No HTML version of the message available in '%1'."
 msgstr "Không có sẵn phiên bản HTML của thư này trong « %1 »."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:301
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 "Không thể cập nhật tập tin « config_changes » (các thay đổi cấu hình) cho "
 "hộp thư chung « %1 »."
 
 #. (month,list.name)
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:302
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "Không tìm thấy tháng « %1 » cho hộp thư chung « %2 »."
 
 #. (dir)
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:299
-#: mail_tt2/listmaster_notification.tt2:300
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:304
 msgid " : unable to read '%1'."
 msgstr " : không thể đọc « %1 »."
 
 #. (arc_file,list.name,path)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:303
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "Không tìm thấy kho lưu « %1 » cho hộp thư chung « %2 »."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to find archive for list '%1'"
 msgstr "Không tìm thấy kho lưu cho hộp thư chung « %1 »"
 
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Unable to send archive : no message id found."
 msgstr "Không thể gửi kho lưu vì không tìm thấy mã số thư."
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
-"Không tìm thấy thư trong kho lưu mà tương ứng với mã số thư (Message-ID) « "
-"%1 »."
+"Không tìm thấy thư trong kho lưu mà tương ứng với mã số thư (Message-ID) « %"
+"1 »."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:307
 msgid "Cannot save config file for list '%1'."
 msgstr "Không thể lưu tập tin cấu hình cho hộp thư chung « %1 »."
 
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:308
 msgid "Failed to install aliases."
 msgstr "Lỗi cài đặt các bí danh."
 
-#: mail_tt2/listmaster_notification.tt2:306
+#: mail_tt2/listmaster_notification.tt2:309
 msgid "Failed to remove aliases."
 msgstr "Lỗi gỡ bỏ các bí danh."
 
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:310
 msgid "Internal scenario error for 'create_list'."
 msgstr "Lỗi kịch bản nội bộ đối với « create_list » (tạo hộp thư chung)."
 
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:311
 msgid "Unable to create list."
 msgstr "Không thể tạo hộp thư chung."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:314
 msgid "Unable to get family for list '%1'."
 msgstr "Không thể lấy nhóm đối với hộp thư chung « %1 »."
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to reload list with new listname '%1'."
 msgstr "Không thể nạp lại hộp thư chung với tên mới « %1 »."
 
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to reload list"
 msgstr "Không thể nạp lại hộp thư chung"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:313
+#: mail_tt2/listmaster_notification.tt2:316
 msgid "Failed to inlude members for list '%1'"
 msgstr "Lỗi bao gồm các thành viên cho hộp thư chung « %1 »"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:317
 msgid "Failed to include list admins for list '%1'"
 msgstr "Lỗi bao gồm các quản trị cho hộp thư chung « %1 »"
 
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:318
 msgid "No owner is defined for the list '%1'"
 msgstr "Chưa xác định chủ cho hộp thư chung « %1 »"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:319
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "Lỗi xuất tới thư mục LDAP đối với hộp thư chung « %1 »"
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:320
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "Không thể kiểm tra tên hộp thư chung « %1 » trên máy phục vụ SMTP"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:321
 msgid "Cannot create shared for list '%1'."
 msgstr "Không thể tạo vùng chia sẻ đối với hộp thư chung « %1 »."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:322
 msgid "Cannot restore shared for list '%1'."
 msgstr "Không thể phục hồi vùng chia sẻ đối với hộp thư chung « %1 »."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:320
+#: mail_tt2/listmaster_notification.tt2:323
 msgid "Cannot delete shared for list '%1'."
 msgstr "Không thể xoá vùng chia sẻ đối với hộp thư chung « %1 »."
 
-#: mail_tt2/listmaster_notification.tt2:321
+#: mail_tt2/listmaster_notification.tt2:324
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "Không thể duyệt các tài liệu chia sẻ đối với hộp thư chung « %1 »."
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:322
+#: mail_tt2/listmaster_notification.tt2:325
 msgid "Cannot upload file '%1'."
 msgstr "Không thể tải lên tập tin « %1 »."
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:324
+#: mail_tt2/listmaster_notification.tt2:327
 msgid "Errors while unzipping file '%1'."
 msgstr "Gặp lỗi trong khi giải nén tập tin « %1 »."
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:325
+#: mail_tt2/listmaster_notification.tt2:328
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 "Không thể gửi lệnh REMIND (nhắc nhở) từ « %1 » tới hộp thư chung « %2 »."
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:326
+#: mail_tt2/listmaster_notification.tt2:329
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "Không thể gửi thư từ « %1 » tới hộp thư chung « %2 »."
 
 #. (key,list.name)
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:330
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "Không thể truy cập đến thư được xác thực bằng khoá « %1 » đối với hộp thư "
 "chung « %2 »."
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:328
+#: mail_tt2/listmaster_notification.tt2:331
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "Không thể xoá yêu cầu đăng ký của người dùng « %1 »."
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:329
+#: mail_tt2/listmaster_notification.tt2:332
 msgid "Unable to add file '%1' to archives."
 msgstr "Không thể thêm tập tin « %1 » vào kho lưu."
 
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:330
+#: mail_tt2/listmaster_notification.tt2:333
 msgid "Unable to write file zip '%1'."
 msgstr "Không thể ghi tập tin zip « %1 »."
 
 #. (path,list.name)
-#: mail_tt2/listmaster_notification.tt2:332
+#: mail_tt2/listmaster_notification.tt2:335
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 "Không thể tạo một tài liệu chia sẻ SharedDocument với đường dẫn « %1 » cho "
 "hộp thư chung « %2 »."
 
-#: mail_tt2/listmaster_notification.tt2:333
+#: mail_tt2/listmaster_notification.tt2:336
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "Chưa xác định tham số cookie nên không xác thực được."
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:334
+#: mail_tt2/listmaster_notification.tt2:337
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr "Lỗi cookie: chưa xác định « %1 », lỗi xác thực."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:341
+#: mail_tt2/listmaster_notification.tt2:344
 msgid "Listmaster : system error "
 msgstr "Chủ hộp thư chung: lỗi hệ thống"
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:343
+#: mail_tt2/listmaster_notification.tt2:346
 msgid " User %1 has encountered a system error"
 msgstr "Người dùng %1 đã gặp một lỗi hệ thống"
 
@@ -5962,6 +6064,40 @@ msgstr ""
 "     Tham số : %4\n"
 "\n"
 
+#. (total,list.name)
+#: mail_tt2/listowner_notification.tt2:45
+#, fuzzy
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"notified that they might be removed from list %2:"
+msgstr ""
+"Do nhận RẤT NHIỀU thông báo về thư không phát được, %1 người đăng ký được "
+"liệt kê dưới đây đã nhận thư cho biết rằng họ có thể bị gỡ bỏ khỏi hộp thư "
+"chung %2:"
+
+#. (total,list.name)
+#: mail_tt2/listowner_notification.tt2:48
+#, fuzzy
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"removed from list %2:"
+msgstr ""
+"Do nhận RẤT NHIỀU thông báo về thư không phát được, %1 người đăng ký được "
+"liệt kê dưới đây đã bị gỡ bỏ khỏi hộp thư chung %2:"
+
+#. (total,list.name)
+#: mail_tt2/listowner_notification.tt2:51
+#, fuzzy
+msgid ""
+"Because we received many non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"selected by Sympa as severe bouncing addresses:"
+msgstr ""
+"Do nhận RẤT NHIỀU thông báo về thư không phát được, %1 người đăng ký được "
+"liệt kê dưới đây đã được Sympa phân loại là địa chỉ nảy về nghiêm trọng."
+
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:61
 msgid "Subscription request to list %1"
@@ -5969,11 +6105,13 @@ msgstr "Yêu cầu đăng ký với hộp thư chung %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
-"A user asked to be added as a subscriber to your list. If this is OK \n"
-"with you, you should click the following URL :"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
 "Chào chủ hộp thư chung %1,\n"
 "\n"
@@ -5982,26 +6120,32 @@ msgstr ""
 
 #. (replyto,keyauth,list.name,who,gecos)-)
 #: mail_tt2/listowner_notification.tt2:73
+#, fuzzy
 msgid ""
 "\n"
-"or send an email to %1 with the following subject :\n"
+"If prefered, you can accept this subscription request sending an email to %1 "
+"with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
 "\n"
 "Hoặc gửi một thư cho %1 với chủ đề theo đây:\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
-#: mail_tt2/listowner_notification.tt2:76
+#: mail_tt2/listowner_notification.tt2:75
+msgid "That can be done using this mailto link :"
+msgstr ""
+
+#: mail_tt2/listowner_notification.tt2:78
 msgid "The user has provided the following informations:"
 msgstr "Người dùng đã cung cấp thông tin theo đây:"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:83
+#: mail_tt2/listowner_notification.tt2:85
 msgid "UNsubscription request from list %1"
 msgstr "Yêu cầu HUỶ đăng ký với hộp thư chung %1"
 
 #. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:88
+#: mail_tt2/listowner_notification.tt2:90
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -6014,7 +6158,7 @@ msgstr ""
 "thì hãy nhấn vào địa chỉ URL theo đây:"
 
 #. (sympa,keyauth,list.name,who)-)
-#: mail_tt2/listowner_notification.tt2:95
+#: mail_tt2/listowner_notification.tt2:97
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
@@ -6025,12 +6169,12 @@ msgstr ""
 "AUTH %2 DEL %3 %4\n"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:99
+#: mail_tt2/listowner_notification.tt2:101
 msgid "WARNING: bounce rate too high in list %1"
 msgstr "CẢNH BÁO : hộp thư chung %1 có quá nhiều thư bị nảy về"
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
-#: mail_tt2/listowner_notification.tt2:105
+#: mail_tt2/listowner_notification.tt2:107
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
@@ -6043,41 +6187,41 @@ msgstr ""
 "%3/reviewbouncing/%4\n"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:109
+#: mail_tt2/listowner_notification.tt2:111
 msgid "FYI: %1 list %2 from %3 %4"
 msgstr "Ghi chú : %1 hộp thư chung %2 từ %3 %4"
 
 #. (command,list.name,who,gecos)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:113
 msgid "FYI command %1 list %2 from %3 %4"
 msgstr "Ghi chú : lệnh %1 hộp thư chung %2 từ %3 %4"
 
 #. (by)
-#: mail_tt2/listowner_notification.tt2:111
+#: mail_tt2/listowner_notification.tt2:113
 msgid " validated by %1 "
 msgstr " được %1 thầm tra "
 
-#: mail_tt2/listowner_notification.tt2:112
+#: mail_tt2/listowner_notification.tt2:114
 msgid "No action is needed on your side."
 msgstr "Bên này không cần làm gì."
 
 #. (who)
-#: mail_tt2/listowner_notification.tt2:116
+#: mail_tt2/listowner_notification.tt2:118
 msgid "FYI: automatic removal of user %1"
 msgstr "Ghi chú : tự động gỡ bỏ người dùng %1"
 
 #. (who,list.name)
-#: mail_tt2/listowner_notification.tt2:118
+#: mail_tt2/listowner_notification.tt2:120
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "Người dùng « %1 » đã được tự động gỡ bỏ khỏi hộp thư chung %2."
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:127
+#: mail_tt2/listowner_notification.tt2:129
 msgid "List %1 : Named filter error"
 msgstr "Hộp thư chung %1: lỗi lọc đặt tên"
 
 #. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:129
+#: mail_tt2/listowner_notification.tt2:131
 msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
@@ -6086,7 +6230,7 @@ msgstr ""
 "một kịch bản xác thực nào đó."
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:132
+#: mail_tt2/listowner_notification.tt2:134
 msgid "List %1 / %2"
 msgstr "Hộp thư chung %1 / %2"
 
@@ -6228,8 +6372,7 @@ msgid ""
 "editor."
 msgstr ""
 "Không thể truy cập đến thư trong hộp thư chung %1 dùng khoá %2.\n"
-"Cảnh báo : thư này có thể đã được gửi bởi một của những biên tập của hộp "
-"này."
+"Cảnh báo : thư này có thể đã được gửi bởi một của những biên tập của hộp này."
 
 #. (key)
 #: mail_tt2/message_report.tt2:65
@@ -6367,6 +6510,11 @@ msgstr "Hoặc gửi một thư cho %1@%2 với chủ đề này:"
 msgid "To reject it (it will be removed):"
 msgstr "Để từ chối nó (nó sẽ bị xoá):"
 
+#. (conf.wwsympa_url)
+#: mail_tt2/moderate.tt2:41 mail_tt2/modindex.tt2:11
+msgid "The messages moderating documentation: %1/help/admin#moderate"
+msgstr ""
+
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
 msgid "Moderation spool for list %1"
@@ -6426,8 +6574,8 @@ msgstr ""
 #: mail_tt2/request_auth.tt2:7
 msgid "You asked for your e-mail address to be removed from list '%1'."
 msgstr ""
-"Bạn đã yêu cầu địa chỉ thư điện tử của mình được gỡ bỏ khỏi hộp thư chung « "
-"%1 »."
+"Bạn đã yêu cầu địa chỉ thư điện tử của mình được gỡ bỏ khỏi hộp thư chung « %"
+"1 »."
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:10
@@ -6548,43 +6696,54 @@ msgstr "%1 / huỷ đăng ký với %2"
 msgid "%1 / your environment"
 msgstr "%1 / môi trường của bạn"
 
-#. (list)
-#: mail_tt2/sendpasswd.tt2:12
-msgid "You asked to be subscribed to %1 mailing list."
-msgstr "Bạn đã yêu cầu đăng ký với hộp thư chung %1."
-
-#: mail_tt2/sendpasswd.tt2:14
+#. (list,conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:13
+#, fuzzy
 msgid ""
-"To confirm your subscription, you need to provide the following password"
-msgstr "Để xác nhận việc đăng ký, bạn cần phải nhập mật khẩu theo đây"
-
-#. (newuser.password)
-#: mail_tt2/sendpasswd.tt2:16 mail_tt2/sendpasswd.tt2:23
-msgid "password: %1"
-msgstr "mật khẩu: %1"
-
-#. (list)
-#: mail_tt2/sendpasswd.tt2:19
-msgid "You asked to be unsubscribed from %1 mailing list."
-msgstr "Bạn đã yêu cầu huỷ đăng ký với hộp thư chung %1."
-
-#: mail_tt2/sendpasswd.tt2:21
-msgid ""
-"To unsubscribe from the list, you need to provide the following password"
-msgstr ""
-"Để huỷ đăng ký với hộp thư chung này, bạn cần phải nhập mật khẩu theo đây"
-
-#. (conf.host,request_from_host,date)
-#: mail_tt2/sendpasswd.tt2:27
-msgid ""
-"Someone, probably you, requested to allocate or renew your password for your "
-"list server account %1. (This request cames from host %2 at %3)."
+"Someone, probably you, requested to subscribe to list %1@%2. (This request "
+"came from host %3 at %4)."
 msgstr ""
 "Ai đó, rất có thể là bạn, đã yêu cầu cấp phát hoặc tạo lại mật khẩu cho tài "
 "khoản của bạn trên máy phục vụ hộp thư chung %1. (Yêu cầu này đến từ máy %2 "
 "ở %3.)"
 
-#: mail_tt2/sendpasswd.tt2:28
+#: mail_tt2/sendpasswd.tt2:14
+#, fuzzy
+msgid ""
+"You may ignore this subscription request or hit the following url in order "
+"to confirm it "
+msgstr ""
+"Bạn có thể lờ đi yêu cầu này, hoặc nhấn vào địa chỉ URL theo đây để chọn mật "
+"khẩu."
+
+#. (list)
+#: mail_tt2/sendpasswd.tt2:17
+msgid "You asked to be unsubscribed from %1 mailing list."
+msgstr "Bạn đã yêu cầu huỷ đăng ký với hộp thư chung %1."
+
+#: mail_tt2/sendpasswd.tt2:19
+msgid ""
+"To unsubscribe from the list, you need to provide the following password"
+msgstr ""
+"Để huỷ đăng ký với hộp thư chung này, bạn cần phải nhập mật khẩu theo đây"
+
+#. (newuser.password)
+#: mail_tt2/sendpasswd.tt2:21
+msgid "password: %1"
+msgstr "mật khẩu: %1"
+
+#. (conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:25
+#, fuzzy
+msgid ""
+"Someone, probably you, requested to allocate or renew your password for your "
+"list server account %1. (This request came from host %2 at %3)."
+msgstr ""
+"Ai đó, rất có thể là bạn, đã yêu cầu cấp phát hoặc tạo lại mật khẩu cho tài "
+"khoản của bạn trên máy phục vụ hộp thư chung %1. (Yêu cầu này đến từ máy %2 "
+"ở %3.)"
+
+#: mail_tt2/sendpasswd.tt2:26
 msgid ""
 "You may ignore this request or hit the following url in order to choose your "
 "password. "
@@ -6593,7 +6752,7 @@ msgstr ""
 "khẩu."
 
 #. (base_url,path_cgi)
-#: mail_tt2/sendpasswd.tt2:32 mail_tt2/sendssopasswd.tt2:14
+#: mail_tt2/sendpasswd.tt2:30 mail_tt2/sendssopasswd.tt2:14
 msgid "Help on Sympa: %1%2"
 msgstr "Trợ giúp về Sympa: %1%2"
 
@@ -6705,23 +6864,53 @@ msgstr ""
 "%1"
 
 #. (list.name)
+#: mail_tt2/user_notification.tt2:27
+#, fuzzy
+msgid "Management of list %1"
+msgstr "Quản lý hộp thư chung"
+
+#. (delegator,list.name,list.host)
+#: mail_tt2/user_notification.tt2:30
+msgid ""
+"You have been delegate the responsability of list owner by %1 for list %2@%3."
+msgstr ""
+
+#. (delegator,list.name,list.host)
+#: mail_tt2/user_notification.tt2:32
+msgid ""
+"You have been delegate the responsability of list moderator by %1 for list %"
+"2@%3."
+msgstr ""
+
+#. (conf.wwsympa_url,list.name)
+#: mail_tt2/user_notification.tt2:35 mail_tt2/welcome.tt2:12
+msgid "The list homepage: %1/info/%2"
+msgstr ""
+
+#. (conf.wwsympa_url)
+#: mail_tt2/user_notification.tt2:36
+msgid "Owner and moderator guide: %1/help/admin"
+msgstr ""
+
+#. (list.name)
 #: mail_tt2/welcome.tt2:2
 msgid "Welcome to list %1"
 msgstr "Chào mừng đến hộp thư chung %1"
 
 #. (list.name,list.host)
-#: mail_tt2/welcome.tt2:26 mail_tt2/welcome.tt2:29 mail_tt2/welcome.tt2:9
+#: mail_tt2/welcome.tt2:4
 msgid "Welcome to list %1@%2"
 msgstr "Chào mừng đến hộp thư chung %1@%2"
 
 #. (user.email)
-#: mail_tt2/welcome.tt2:10 mail_tt2/welcome.tt2:30
+#: mail_tt2/welcome.tt2:5
 msgid "Your subscription email is %1"
 msgstr "Bạn đã đăng ký từ địa chỉ thư %1"
 
-#: mail_tt2/welcome.tt2:17 mail_tt2/welcome.tt2:40
-msgid "Everything about this list:"
-msgstr "Tất cả thông tin về hộp thư chung này:"
+#. (conf.wwsympa_url)
+#: mail_tt2/welcome.tt2:13
+msgid "General informations about mailing lists: %1/help/introduction"
+msgstr ""
 
 #: mail_tt2/which.tt2:2
 msgid "Result of your command"
@@ -6895,7 +7084,8 @@ msgstr "bị hạn chế thành người đăng ký"
 #: src/etc/scenari/d_edit.private-https:1
 #: src/etc/scenari/d_read.private-https:1
 msgid "restricted to subscribers authenticated with user cert"
-msgstr "bị hạn chế thành người đăng ký được xác thực bằng chứng nhận người dùng"
+msgstr ""
+"bị hạn chế thành người đăng ký được xác thực bằng chứng nhận người dùng"
 
 #: src/etc/scenari/d_edit.public:1 src/etc/scenari/d_read.public:1
 msgid "public documents"
@@ -7382,637 +7572,637 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:952 wwsympa/wwsympa.fcgi:9174
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
 msgid "%A"
 msgstr ""
 
-#: src/Conf.pm:339 src/Conf.pm:546
+#: src/Conf.pm:341 src/Conf.pm:560
 msgid "Error at line %d : %s"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1785
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2770 wwsympa/wwsympa.fcgi:987
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/List.pm:318
+#: src/List.pm:315
 msgid "Account"
 msgstr ""
 
-#: src/List.pm:322
+#: src/List.pm:319
 msgid "Who can add subscribers"
 msgstr ""
 
-#: src/List.pm:326
+#: src/List.pm:323
 msgid "Anonymous sender"
 msgstr ""
 
-#: src/List.pm:331
+#: src/List.pm:328
 msgid "frequency"
 msgstr ""
 
-#: src/List.pm:1334 src/List.pm:336
+#: src/List.pm:1331 src/List.pm:333
 msgid "access right"
 msgstr ""
 
-#: src/List.pm:340
+#: src/List.pm:337
 msgid "Text archives"
 msgstr ""
 
-#: src/List.pm:345
+#: src/List.pm:342
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
-#: src/List.pm:1089 src/List.pm:1129 src/List.pm:352 src/List.pm:528
-#: src/List.pm:591 src/List.pm:626
+#: src/List.pm:1086 src/List.pm:1126 src/List.pm:349 src/List.pm:525
+#: src/List.pm:588 src/List.pm:623
 msgid "reception mode"
 msgstr ""
 
-#: src/List.pm:355
+#: src/List.pm:352
 msgid "Available subscription options"
 msgstr ""
 
-#: src/List.pm:363
+#: src/List.pm:360
 msgid "warn rate"
 msgstr ""
 
-#: src/List.pm:370
+#: src/List.pm:367
 msgid "halt rate"
 msgstr ""
 
-#: src/List.pm:374
+#: src/List.pm:371
 msgid "Bounces management"
 msgstr ""
 
-#: src/List.pm:381 src/List.pm:402
+#: src/List.pm:378 src/List.pm:399
 msgid "threshold"
 msgstr ""
 
-#: src/List.pm:386 src/List.pm:407
+#: src/List.pm:383 src/List.pm:404
 msgid "action for this population"
 msgstr ""
 
-#: src/List.pm:391 src/List.pm:412
+#: src/List.pm:388 src/List.pm:409
 msgid "notification"
 msgstr ""
 
-#: src/List.pm:395
+#: src/List.pm:392
 msgid "Management of bouncers, 1st level"
 msgstr ""
 
-#: src/List.pm:416
+#: src/List.pm:413
 msgid "Management of bouncers, 2nd level"
 msgstr ""
 
-#: src/List.pm:423
+#: src/List.pm:420
 msgid "Expiration of unmoderated messages"
 msgstr ""
 
-#: src/List.pm:429
+#: src/List.pm:426
 msgid "Secret string for generating unique keys"
 msgstr ""
 
-#: src/List.pm:447
+#: src/List.pm:444
 msgid "Creation of the list"
 msgstr ""
 
-#: src/List.pm:458
+#: src/List.pm:455
 msgid "internal identifier"
 msgstr ""
 
-#: src/List.pm:466
+#: src/List.pm:463
 msgid "label"
 msgstr ""
 
-#: src/List.pm:472
+#: src/List.pm:469
 msgid "additional comment"
 msgstr ""
 
-#: src/List.pm:479
+#: src/List.pm:476
 msgid "type"
 msgstr ""
 
-#: src/List.pm:485
+#: src/List.pm:482
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/List.pm:490
+#: src/List.pm:487
 msgid "is the attribute optionnal ?"
 msgstr ""
 
-#: src/List.pm:496
+#: src/List.pm:493
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/List.pm:502
+#: src/List.pm:499
 msgid "Custom header field"
 msgstr ""
 
-#: src/List.pm:507
+#: src/List.pm:504
 msgid "Subject tagging"
 msgstr ""
 
-#: src/List.pm:521
+#: src/List.pm:518
 msgid "custom parameters"
 msgstr ""
 
-#: src/List.pm:1094 src/List.pm:1134 src/List.pm:533 src/List.pm:596
-#: src/List.pm:631
+#: src/List.pm:1091 src/List.pm:1131 src/List.pm:530 src/List.pm:593
+#: src/List.pm:628
 msgid "visibility"
 msgstr ""
 
-#: src/List.pm:537
+#: src/List.pm:534
 msgid "Subscription profile"
 msgstr ""
 
-#: src/List.pm:541
+#: src/List.pm:538
 msgid "Who can delete subscribers"
 msgstr ""
 
-#: src/List.pm:548
+#: src/List.pm:545
 msgid "days"
 msgstr ""
 
-#: src/List.pm:554
+#: src/List.pm:551
 msgid "hour"
 msgstr ""
 
-#: src/List.pm:560
+#: src/List.pm:557
 msgid "minute"
 msgstr ""
 
-#: src/List.pm:564
+#: src/List.pm:561
 msgid "Digest frequency"
 msgstr ""
 
-#: src/List.pm:572
+#: src/List.pm:569
 msgid "Digest maximum number of messages"
 msgstr ""
 
-#: src/List.pm:579
+#: src/List.pm:576
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 
-#: src/List.pm:1099 src/List.pm:601
+#: src/List.pm:1096 src/List.pm:598
 msgid "name"
 msgstr ""
 
-#: src/List.pm:606
+#: src/List.pm:603
 msgid "private information"
 msgstr ""
 
-#: src/List.pm:641
+#: src/List.pm:638
 msgid "Periodical subscription expiration task"
 msgstr ""
 
-#: src/List.pm:652
+#: src/List.pm:649
 msgid "Attachment type"
 msgstr ""
 
-#: src/List.pm:656
+#: src/List.pm:653
 msgid "Forced reply address"
 msgstr ""
 
-#: src/List.pm:662
+#: src/List.pm:659
 msgid "Internet domain"
 msgstr ""
 
-#: src/List.pm:668
+#: src/List.pm:665
 msgid "File inclusion"
 msgstr ""
 
-#: src/List.pm:672
+#: src/List.pm:669
 msgid "data location URL"
 msgstr ""
 
-#: src/List.pm:678 src/List.pm:711 src/List.pm:792 src/List.pm:970
+#: src/List.pm:675 src/List.pm:708 src/List.pm:789 src/List.pm:967
 msgid "remote user"
 msgstr ""
 
-#: src/List.pm:685 src/List.pm:717 src/List.pm:798 src/List.pm:975
+#: src/List.pm:682 src/List.pm:714 src/List.pm:795 src/List.pm:972
 msgid "remote password"
 msgstr ""
 
-#: src/List.pm:690 src/List.pm:753 src/List.pm:877 src/List.pm:931
-#: src/List.pm:989
+#: src/List.pm:687 src/List.pm:750 src/List.pm:874 src/List.pm:928
+#: src/List.pm:986
 msgid "short name for this source"
 msgstr ""
 
-#: src/List.pm:695
+#: src/List.pm:692
 msgid "Remote file inclusion"
 msgstr ""
 
-#: src/List.pm:701 src/List.pm:782 src/List.pm:909 src/List.pm:948
+#: src/List.pm:698 src/List.pm:779 src/List.pm:906 src/List.pm:945
 msgid "remote host"
 msgstr ""
 
-#: src/List.pm:706 src/List.pm:787 src/List.pm:915
+#: src/List.pm:703 src/List.pm:784 src/List.pm:912
 msgid "remote port"
 msgstr ""
 
-#: src/List.pm:721
+#: src/List.pm:718
 msgid "suffix"
 msgstr ""
 
-#: src/List.pm:727
+#: src/List.pm:724
 msgid "filter"
 msgstr ""
 
-#: src/List.pm:733
+#: src/List.pm:730
 msgid "extracted attribute"
 msgstr ""
 
-#: src/List.pm:738
+#: src/List.pm:735
 msgid "selection (if multiple)"
 msgstr ""
 
-#: src/List.pm:743
+#: src/List.pm:740
 msgid "search scope"
 msgstr ""
 
-#: src/List.pm:749
+#: src/List.pm:746
 msgid "connection timeout"
 msgstr ""
 
-#: src/List.pm:777
+#: src/List.pm:774
 msgid "LDAP query inclusion"
 msgstr ""
 
-#: src/List.pm:802
+#: src/List.pm:799
 msgid "first-level suffix"
 msgstr ""
 
-#: src/List.pm:808
+#: src/List.pm:805
 msgid "first-level filter"
 msgstr ""
 
-#: src/List.pm:813
+#: src/List.pm:810
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:818
+#: src/List.pm:815
 msgid "first-level selection"
 msgstr ""
 
-#: src/List.pm:823
+#: src/List.pm:820
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:829
+#: src/List.pm:826
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:835
+#: src/List.pm:832
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:839
+#: src/List.pm:836
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/List.pm:845
+#: src/List.pm:842
 msgid "second-level filter template"
 msgstr ""
 
-#: src/List.pm:851
+#: src/List.pm:848
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:856
+#: src/List.pm:853
 msgid "second-level selection"
 msgstr ""
 
-#: src/List.pm:861
+#: src/List.pm:858
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:867
+#: src/List.pm:864
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:873
+#: src/List.pm:870
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:899
+#: src/List.pm:896
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:904
+#: src/List.pm:901
 msgid "List inclusion"
 msgstr ""
 
-#: src/List.pm:921
+#: src/List.pm:918
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:926
+#: src/List.pm:923
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: src/List.pm:938
+#: src/List.pm:935
 msgid "remote list inclusion"
 msgstr ""
 
-#: src/List.pm:943
+#: src/List.pm:940
 msgid "database type"
 msgstr ""
 
-#: src/List.pm:952
+#: src/List.pm:949
 msgid "database port"
 msgstr ""
 
-#: src/List.pm:957
+#: src/List.pm:954
 msgid "database name"
 msgstr ""
 
-#: src/List.pm:961
+#: src/List.pm:958
 msgid "connection options"
 msgstr ""
 
-#: src/List.pm:966
+#: src/List.pm:963
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:981
+#: src/List.pm:978
 msgid "SQL query"
 msgstr ""
 
-#: src/List.pm:985
+#: src/List.pm:982
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
-#: src/List.pm:996
+#: src/List.pm:993
 msgid "SQL query inclusion"
 msgstr ""
 
-#: src/List.pm:1000
+#: src/List.pm:997
 msgid "Who can view list information"
 msgstr ""
 
-#: src/List.pm:1004
+#: src/List.pm:1001
 msgid "Who can invite people"
 msgstr ""
 
-#: src/List.pm:1010
+#: src/List.pm:1007
 msgid "Language of the list"
 msgstr ""
 
-#: src/List.pm:1035
+#: src/List.pm:1032
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
-#: src/List.pm:1042
+#: src/List.pm:1039
 msgid "Maximum message size"
 msgstr ""
 
-#: src/List.pm:1048
+#: src/List.pm:1045
 msgid "Message topic name"
 msgstr ""
 
-#: src/List.pm:1053
+#: src/List.pm:1050
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:1059
+#: src/List.pm:1056
 msgid "Message topic title"
 msgstr ""
 
-#: src/List.pm:1064
+#: src/List.pm:1061
 msgid "Topics for message categorization"
 msgstr ""
 
-#: src/List.pm:1070
+#: src/List.pm:1067
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 
-#: src/List.pm:1077
+#: src/List.pm:1074
 msgid "Message tagging"
 msgstr ""
 
-#: src/List.pm:1104
+#: src/List.pm:1101
 msgid "private informations"
 msgstr ""
 
-#: src/List.pm:1109 src/List.pm:1139
+#: src/List.pm:1106 src/List.pm:1136
 msgid "profile"
 msgstr ""
 
-#: src/List.pm:1150
+#: src/List.pm:1147
 msgid "Priority"
 msgstr ""
 
-#: src/List.pm:1154
+#: src/List.pm:1151
 msgid "Who can start a remind process"
 msgstr ""
 
-#: src/List.pm:1159
+#: src/List.pm:1156
 msgid "Return-path of the REMIND command"
 msgstr ""
 
-#: src/List.pm:1183 src/List.pm:1203
+#: src/List.pm:1180 src/List.pm:1200
 msgid "Reply address"
 msgstr ""
 
-#: src/List.pm:1189
+#: src/List.pm:1186
 msgid "value"
 msgstr ""
 
-#: src/List.pm:1194
+#: src/List.pm:1191
 msgid "other email address"
 msgstr ""
 
-#: src/List.pm:1199
+#: src/List.pm:1196
 msgid "respect of existing header field"
 msgstr ""
 
-#: src/List.pm:1208
+#: src/List.pm:1205
 msgid "Who can review subscribers"
 msgstr ""
 
-#: src/List.pm:1215
+#: src/List.pm:1212
 msgid "RFC 2369 Header fields"
 msgstr ""
 
-#: src/List.pm:1219
+#: src/List.pm:1216
 msgid "Who can send messages"
 msgstr ""
 
-#: src/List.pm:1226
+#: src/List.pm:1223
 msgid "Serial number of the config"
 msgstr ""
 
-#: src/List.pm:1231
+#: src/List.pm:1228
 msgid "Who can view"
 msgstr ""
 
-#: src/List.pm:1235
+#: src/List.pm:1232
 msgid "Who can edit"
 msgstr ""
 
-#: src/List.pm:1242 src/List.pm:1341
+#: src/List.pm:1239 src/List.pm:1338
 msgid "quota"
 msgstr ""
 
-#: src/List.pm:1251 src/List.pm:1256
+#: src/List.pm:1248 src/List.pm:1253
 msgid "email address protection method"
 msgstr ""
 
-#: src/List.pm:1262
+#: src/List.pm:1259
 msgid "Status of the list"
 msgstr ""
 
-#: src/List.pm:1269
+#: src/List.pm:1266
 msgid "Subject of the list"
 msgstr ""
 
-#: src/List.pm:1273
+#: src/List.pm:1270
 msgid "Who can subscribe to the list"
 msgstr ""
 
-#: src/List.pm:1279
+#: src/List.pm:1276
 msgid "Topics for the list"
 msgstr ""
 
-#: src/List.pm:1286
+#: src/List.pm:1283
 msgid "Inclusions timeout"
 msgstr ""
 
-#: src/List.pm:1290
+#: src/List.pm:1287
 msgid "Who can unsubscribe"
 msgstr ""
 
-#: src/List.pm:1311
+#: src/List.pm:1308
 msgid "Last update of config"
 msgstr ""
 
-#: src/List.pm:1318
+#: src/List.pm:1315
 msgid "User data source"
 msgstr ""
 
-#: src/List.pm:1324
+#: src/List.pm:1321
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
-#: src/List.pm:1330
+#: src/List.pm:1327
 msgid "Visibility of the list"
 msgstr ""
 
-#: src/List.pm:1346
+#: src/List.pm:1343
 msgid "Maximum number of month archived"
 msgstr ""
 
-#: src/List.pm:1351
+#: src/List.pm:1348
 msgid "Web archives"
 msgstr ""
 
-#: src/List.pm:1357
+#: src/List.pm:1354
 msgid "Welcome return-path"
 msgstr ""
 
-#: src/List.pm:1362
+#: src/List.pm:1359
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
-#: src/List.pm:512
+#: src/List.pm:509
 msgid "var name"
 msgstr ""
 
-#: src/List.pm:517
+#: src/List.pm:514
 msgid "var value"
 msgstr ""
 
-#: src/List.pm:1119 src/List.pm:616
+#: src/List.pm:1116 src/List.pm:613
 msgid "the datasource"
 msgstr ""
 
-#: src/List.pm:1124 src/List.pm:621
+#: src/List.pm:1121 src/List.pm:618
 msgid "datasource parameters"
 msgstr ""
 
-#: src/List.pm:637
+#: src/List.pm:634
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
-#: src/List.pm:646
+#: src/List.pm:643
 msgid "Family name"
 msgstr ""
 
-#: src/List.pm:759 src/List.pm:883
+#: src/List.pm:756 src/List.pm:880
 msgid "use SSL (LDAPS)"
 msgstr ""
 
-#: src/List.pm:764 src/List.pm:888
+#: src/List.pm:761 src/List.pm:885
 msgid "SSL version"
 msgstr ""
 
-#: src/List.pm:769 src/List.pm:893
+#: src/List.pm:766 src/List.pm:890
 msgid "SSL ciphers used"
 msgstr ""
 
-#: src/List.pm:1015 src/List.pm:1296
+#: src/List.pm:1012 src/List.pm:1293
 msgid "epoch date"
 msgstr ""
 
-#: src/List.pm:1019 src/List.pm:1301
+#: src/List.pm:1016 src/List.pm:1298
 msgid "date"
 msgstr ""
 
-#: src/List.pm:1024
+#: src/List.pm:1021
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/List.pm:1028
+#: src/List.pm:1025
 msgid "Latest family instantiation"
 msgstr ""
 
-#: src/List.pm:1144
+#: src/List.pm:1141
 msgid "Owners defined in an external datasource"
 msgstr ""
 
-#: src/List.pm:1163
+#: src/List.pm:1160
 msgid "Periodical subscription reminder task"
 msgstr ""
 
-#: src/List.pm:1168
+#: src/List.pm:1165
 msgid "Incoming SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1175
+#: src/List.pm:1172
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1307
+#: src/List.pm:1304
 msgid "who updated the config"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2792
+#: src/List.pm:2789
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2793
+#: src/List.pm:2790
 msgid "%a, %d %b %Y"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10505 wwsympa/wwsympa.fcgi:10574
-#: wwsympa/wwsympa.fcgi:10776 wwsympa/wwsympa.fcgi:11106
-#: wwsympa/wwsympa.fcgi:14901 wwsympa/wwsympa.fcgi:15638
-#: wwsympa/wwsympa.fcgi:15639 wwsympa/wwsympa.fcgi:4791
-#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:5958
-#: wwsympa/wwsympa.fcgi:6954 wwsympa/wwsympa.fcgi:7488
-#: wwsympa/wwsympa.fcgi:7525 wwsympa/wwsympa.fcgi:7527
-#: wwsympa/wwsympa.fcgi:7976 wwsympa/wwsympa.fcgi:7977
-#: wwsympa/wwsympa.fcgi:8011 wwsympa/wwsympa.fcgi:8012
-#: wwsympa/wwsympa.fcgi:8189 wwsympa/wwsympa.fcgi:8190
+#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
+#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
+#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
+#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
+#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
+#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
+#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
+#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
+#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
+#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
 msgid "%d %b %Y"
 msgstr ""
 
@@ -8024,7 +8214,7 @@ msgid ""
 "for variable $max_arg.\n"
 msgstr ""
 
-#: src/mail.pm:699
+#: src/mail.pm:713
 msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
@@ -8100,7 +8290,7 @@ msgstr ""
 msgid "[Image%s]"
 msgstr ""
 
-#: src/sympa.pl:2090
+#: src/sympa.pl:2092
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -8110,21 +8300,21 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:988
+#: wwsympa/wwsympa.fcgi:994
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11330 wwsympa/wwsympa.fcgi:11463
-#: wwsympa/wwsympa.fcgi:13776 wwsympa/wwsympa.fcgi:7448
+#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
+#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15283 wwsympa/wwsympa.fcgi:15284
+#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8276,6 +8466,75 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
+#: web_tt2/reviewbouncing.tt2:61
+msgid "bounce score"
+msgstr "sổ điểm nảy về"
+
+#: web_tt2/subrequest.tt2:32
+msgid ""
+"To confirm your identity and prevent anyone from subscribing you to\n"
+"        this list against your will, a message containing your password\n"
+"        will be sent to you."
+msgstr ""
+"Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư chung "
+"này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
+
+#. (list)
+#: web_tt2/subrequest.tt2:34
+msgid ""
+"Check your mailbox for new messages and examine the message from Sympa to "
+"find your password.\n"
+"\tEnter that password below. This will confirm your subscription to list %1."
+msgstr ""
+"Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
+"riêng của bạn.\n"
+"\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư "
+"chung %1."
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket is expired"
+msgstr "Vé được yêu cầu đã hết hạn dùng"
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+msgid "The requested authentication ticket is unrecognized or expired"
+msgstr "Vé xác thực được yêu cầu không nhận ra được hoặc đã hết hạn dùng"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Chào chủ hộp thư chung %1,\n"
+"\n"
+"một người dùng đã yêu cầu đăng ký với hộp thư chung này. Chủ co phép thì hãy "
+"nhấn vào địa chỉ URL theo đây:"
+
+#. (replyto,keyauth,list.name,who,gecos)-)
+#: mail_tt2/listowner_notification.tt2:73
+msgid ""
+"\n"
+"or send an email to %1 with the following subject :\n"
+"AUTH %2 ADD %3 %4 %5\n"
+msgstr ""
+"\n"
+"Hoặc gửi một thư cho %1 với chủ đề theo đây:\n"
+"AUTH %2 ADD %3 %4 %5\n"
+
+#. (conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:27
+msgid ""
+"Someone, probably you, requested to allocate or renew your password for your "
+"list server account %1. (This request cames from host %2 at %3)."
+msgstr ""
+"Ai đó, rất có thể là bạn, đã yêu cầu cấp phát hoặc tạo lại mật khẩu cho tài "
+"khoản của bạn trên máy phục vụ hộp thư chung %1. (Yêu cầu này đến từ máy %2 "
+"ở %3.)"
+
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 msgid "Or send a message to %1 with subject: \"%2\""
@@ -8334,6 +8593,43 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#~ msgid ""
+#~ "This password, associated with your email address, willallow you to "
+#~ "access your custom environment."
+#~ msgstr ""
+#~ "Mật khẩu này, liên quan đến địa chỉ thư điện tử của bạn, sẽ cho phép bạn "
+#~ "truy cập đến môi trường riêng."
+
+#~ msgid "You are already subscriber of list %1"
+#~ msgstr "Bạn đã đăng ký với hộp thư chung %1"
+
+#~ msgid ""
+#~ "Someone (may be yourself) has allready used this validation ticket from "
+#~ "host %1 .If this user is not you, you may report a to your mail services "
+#~ "administrator a confidentiality issue : probably someone else can access "
+#~ "to your messages "
+#~ msgstr ""
+#~ "Ai đó (có thể là bạn) đã sử dụng vé thẩm tra này từ máy %1. Nếu người "
+#~ "dùng này không phải là bạn, bạn có thể thông báo vấn đề bí mật cho quản "
+#~ "trị dịch vụ thư : rất có thể là người khác có khả năng truy cập đến các "
+#~ "thư của bạn."
+
+#~ msgid "login"
+#~ msgstr "đăng nhập"
+
+#~ msgid "You may request a new authentication url."
+#~ msgstr "Bạn có thể yêu cầu một địa chỉ URL xác thực mới."
+
+#~ msgid "You asked to be subscribed to %1 mailing list."
+#~ msgstr "Bạn đã yêu cầu đăng ký với hộp thư chung %1."
+
+#~ msgid ""
+#~ "To confirm your subscription, you need to provide the following password"
+#~ msgstr "Để xác nhận việc đăng ký, bạn cần phải nhập mật khẩu theo đây"
+
+#~ msgid "Everything about this list:"
+#~ msgstr "Tất cả thông tin về hộp thư chung này:"
 
 #~ msgid ""
 #~ "You need to login to access your custom WWSympa environment or to perform "
