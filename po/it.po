@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-05-29 17:03+0200\n"
+"PO-Revision-Date: 2008-05-30 16:46+0200\n"
 "Last-Translator: Giovanni Casagrande <giov.casagrande@gmail.com>\n"
 "Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
@@ -1640,65 +1640,58 @@ msgstr "Errore interno al server"
 # nlsref 6,2
 #. (i_err.month)
 #: web_tt2/error.tt2:9
-#, fuzzy
 msgid "Unable to find month '%1'"
-msgstr "Il file di guida non è disponibile: %s\n"
+msgstr "Impossibile trovare il mese '%1'"
 
 #. (i_err.year_month)
 #: web_tt2/error.tt2:10
 msgid "Archives from %1 are not accessible"
-msgstr "Non sono accessibili gli archivi di %1"
+msgstr "Gli archivi di %1 non sono accessibili"
 
 # nlsref 6,2
 #: mail_tt2/listmaster_notification.tt2:309 web_tt2/error.tt2:11
-#, fuzzy
 msgid "Unable to load list topics."
-msgstr "Il file di guida non è disponibile: %s\n"
+msgstr "Impossibile caricare gli argomenti di lista."
 
 # nlsref 6,2
 #: mail_tt2/listmaster_notification.tt2:310 web_tt2/error.tt2:12
 #, fuzzy
 msgid "Unable to load create_list templates."
-msgstr "Il file di guida non è disponibile: %s\n"
+msgstr "Impossibile caricare i modelli create_list."
 
 #: web_tt2/error.tt2:13
-#, fuzzy
 msgid "Failed to inlude members"
-msgstr "Fallita l'aggiunta dell'utente %1"
+msgstr "Impossibile includere i membri"
 
 #: web_tt2/error.tt2:14
-#, fuzzy
 msgid "Failed to include list admins"
-msgstr "Fallita l'aggiunta della lista amministratori"
+msgstr "Impossibile aggiungere gli amministratori di lista"
 
 #: web_tt2/error.tt2:15
-#, fuzzy
 msgid "No owner is defined for the list"
-msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
+msgstr "Non è stato definito alcun proprietario per la lista"
 
 #. (i_err.listname)
 #: web_tt2/error.tt2:16
-#, fuzzy
 msgid "The exportation failed for list '%1'"
-msgstr "%1: Azione fallita"
+msgstr "Impossibile esportare la lista '%1'"
 
 #. (name)
 #: mail_tt2/listmaster_notification.tt2:323 web_tt2/error.tt2:17
 msgid "Cannot unzip file '%1'."
-msgstr "Impossibile decomprimere (unzip) il file '%1'."
+msgstr "Impossibile decomprimere il file '%1'."
 
 # nlsref 6,68
 #. (i_err.key)
 #: web_tt2/error.tt2:18
-#, fuzzy
 msgid "Unable to access the message authenticated with key %1"
-msgstr "Accesso impossibile al messaggio identificato dalla chiave %s.\n"
+msgstr "Impossibile accedere al messaggio identificato con chiave %1"
 
 #. (i_err.key)
 #. (zipfile)
 #: mail_tt2/listmaster_notification.tt2:331 web_tt2/error.tt2:19
 msgid "File not found."
-msgstr "file non trovato"
+msgstr "File non trovato."
 
 # nlsref 16,46
 #: web_tt2/error.tt2:20
@@ -1708,12 +1701,12 @@ msgstr "Errore database."
 #. (i_err.key)
 #: web_tt2/error.tt2:21
 msgid "Failed to update database."
-msgstr "Aggiornamento del database fallito"
+msgstr "Aggiornamento del database fallito."
 
 #. (i_err.key)
 #: web_tt2/error.tt2:22
 msgid "Failed to update a file."
-msgstr "aggiornamento del file fallito"
+msgstr "Aggiornamento del file fallito."
 
 #. (i_err.listname)
 #: web_tt2/error.tt2:23
@@ -1721,13 +1714,13 @@ msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
 msgstr ""
-"creazione della lista %1 fallita. La lista potrebbe esistere già o il nome "
+"Creazione della lista '%1' fallita. La lista potrebbe esistere già o il nome "
 "della lista potrebbe contenere dei caratteri non consentiti."
 
 #. (s_err.action)
 #: web_tt2/error.tt2:32
 msgid "SYSTEM ERROR (%1)"
-msgstr ""
+msgstr "ERRORE DI SISTEMA (%1)"
 
 #. (u_err.action)
 #: web_tt2/error.tt2:41
@@ -1735,18 +1728,15 @@ msgid "ERROR (%1) "
 msgstr "ERRORE (%1)"
 
 #: web_tt2/error.tt2:42
-#, fuzzy
 msgid "Wrong parameters"
-msgstr "Configurazione dell'origine dei dati"
+msgstr "Parametri errati"
 
 #: web_tt2/error.tt2:43
-#, fuzzy
 msgid "Unknown action"
-msgstr "%1 : azione sconosciuta"
+msgstr "Azione sconosciuta"
 
 #. (u_err.params)
 #: web_tt2/error.tt2:44
-#, fuzzy
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Errore nella sintassi del parametro : %1"
 
@@ -1767,36 +1757,35 @@ msgstr "%1 : famiglia sconosciuta"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:48
-#, fuzzy
 msgid "You are already logged in as %1"
-msgstr "Già collegato come %1"
+msgstr "Hai già effettuato l'accesso come %1"
 
 #: web_tt2/error.tt2:49
+#, fuzzy
 msgid ""
 "You can not get a password reminder ; probably because your password is "
 "managed outside Sympa (Single Sign-On system or LDAP directory)."
 msgstr ""
+"Impossibile inviare un promemoria della password; probabilmente la tua "
+"password è gestita fuori da Sympa."
 
 #: web_tt2/error.tt2:50
-#, fuzzy
 msgid "Please provide email address"
-msgstr "Indica il tuo indirizzo email"
+msgstr "Inserisci il tuo indirizzo email"
 
 #. (u_err.argument)
 #: web_tt2/error.tt2:51
-#, fuzzy
 msgid "Missing argument %1"
-msgstr "Manca un argomento %1"
+msgstr "Argomento %1 mancante"
 
 #. (u_err.argument)
 #: web_tt2/error.tt2:52
-#, fuzzy
 msgid "Wrong value for parameter %1"
-msgstr "Configurazione dell'origine dei dati"
+msgstr "Valore errato per il parametro %1"
 
 #: web_tt2/error.tt2:134 web_tt2/error.tt2:53
 msgid "You need to login"
-msgstr "Devi fare login"
+msgstr "E' necessario effettuare l'accesso"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:54
@@ -1804,69 +1793,60 @@ msgid "Address \"%1\" is incorrect"
 msgstr "L'indirizzo \"%1\" è errato"
 
 #: web_tt2/error.tt2:55
-#, fuzzy
 msgid "Provided password is incorrect"
 msgstr "La password inserita è sbagliata"
 
 #: web_tt2/error.tt2:56
-#, fuzzy
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
-"Non hai scelto una password, richiedi una copia della password iniziale."
+"Non hai scelto una password, richiedi un promemoria della password iniziale"
 
 #: web_tt2/error.tt2:57
-#, fuzzy
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
 msgstr ""
-"La tua password è memorizzata in un direttorio LDAP, e quindi Sympa non può "
-"spedirti un promemoria."
+"La tua password è memorizzata in una directory LDAP, e quindi Sympa non può "
+"inviarti un promemoria"
 
 #. (u_err.nb_days)
 #: web_tt2/error.tt2:58
 msgid "The period is too long (%1 days)"
-msgstr ""
+msgstr "Il periodo è troppo lungo (%1 giorni)"
 
 #: web_tt2/error.tt2:59
-#, fuzzy
 msgid "List has no subscribers"
-msgstr "La lista non contiene utenti"
+msgstr "La lista non ha iscritti"
 
 #. (u_err.page)
 #: web_tt2/error.tt2:60
-#, fuzzy
 msgid "No page %1"
 msgstr "Nessuna pagina %1"
 
 #: web_tt2/error.tt2:61
-#, fuzzy
 msgid "Missing filter"
 msgstr "Manca il filtro"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:63
-#, fuzzy
 msgid "Not subscribed: %1"
 msgstr "Non iscritto:%1"
 
 #. (u_err.list)
 #: web_tt2/error.tt2:64
-#, fuzzy
 msgid "You are not subscribed to list %1"
 msgstr "Non sei iscritto alla lista %1"
 
 #: web_tt2/error.tt2:66
-#, fuzzy
 msgid "Check the additional information"
-msgstr "Informazioni sull'autenticazione HTTPS"
+msgstr "Controlla le informazioni addizionali"
 
 # nlsref 16,19
 #. (u_err.reception_mode)
 #: web_tt2/error.tt2:67
 msgid "%1 is not an available reception mode"
-msgstr "%1 non è un metodo di ricezione disponibile"
+msgstr "%1 non è una modalità di ricezione disponibile"
 
 #. (u_err.file)
 #: web_tt2/error.tt2:68
@@ -1875,7 +1855,6 @@ msgstr "%1 : file non modificabile"
 
 #. (u_err.list)
 #: web_tt2/error.tt2:69
-#, fuzzy
 msgid "You are already subscribed to the list %1"
 msgstr "Sei già iscritto alla lista %1"
 
@@ -1885,20 +1864,17 @@ msgid "%1 is already subscribed to the list %2"
 msgstr "%1 è già iscritto alla lista %2"
 
 #: web_tt2/error.tt2:71
-#, fuzzy
 msgid "Please provide your password"
-msgstr "Prego indica la tua password"
+msgstr "Inserisci la tua password"
 
 #: web_tt2/error.tt2:72
-#, fuzzy
 msgid "The passwords you typed do not match"
 msgstr "Le due password sono differenti"
 
 #. (u_err.tpl)
 #: web_tt2/error.tt2:73
-#, fuzzy
 msgid "Provided path is incorrect for template '%1'"
-msgstr "La password inserita è sbagliata"
+msgstr "Il percorso inserito per il modello '%1' è errato"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:74
@@ -1906,22 +1882,21 @@ msgid "Cannot open file '%1'"
 msgstr "Impossibile aprire il file '%1'"
 
 #: web_tt2/error.tt2:75
-#, fuzzy
 msgid "You need to provide list name"
-msgstr "Devi fare login"
+msgstr "E' necessario inserire il nome della lista"
 
 # nlsref 4,38
 #: web_tt2/error.tt2:76
-#, fuzzy
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderator"
 msgstr ""
-"Il tuo messaggio per la lista %1@%2 è stato rifiutato da %3, moderatore "
-"della lista.\n"
+"Impossibile moderare il messaggio ; probabilmente è già stato moderato da un "
+"altro moderatore"
 
 #: web_tt2/error.tt2:77
+#, fuzzy
 msgid "Tagging message is required for this list"
-msgstr ""
+msgstr "Questa lista richiede di etichettare il messaggio"
 
 #: web_tt2/error.tt2:78
 msgid "Archives are empty for this list"
@@ -1929,18 +1904,16 @@ msgstr "Gli archivi della lista sono vuoti"
 
 #: web_tt2/error.tt2:79
 msgid "You did not select an action to perform"
-msgstr ""
+msgstr "Non hai selezionato alcuna azione"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:80
-#, fuzzy
 msgid "No bounce for user  %1"
-msgstr "Nessuna mail errata per l'utente  %1"
+msgstr "Nessuna mail respinta per l'utente  %1"
 
 #: web_tt2/error.tt2:81
-#, fuzzy
 msgid "List has no bouncing subscribers"
-msgstr "La lista non ha utenti con indirizzi errati"
+msgstr "La lista non ha indirizzi respinti"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:82
@@ -1951,30 +1924,28 @@ msgstr ""
 
 #: web_tt2/error.tt2:83
 msgid "Topic \"other\" is a reserved word"
-msgstr ""
+msgstr "L'argomento \"altro\" è una parola riservata"
 
 #. (u_err.param)
 #: web_tt2/error.tt2:84
 msgid "Parameter '%1' must have values"
-msgstr ""
+msgstr "Il parametro '%1' deve contenere dei valori"
 
 #. (u_err.param,u_err.val)
 #: web_tt2/error.tt2:85
 msgid "Parameter '%1' has got wrong value : '%2'"
-msgstr ""
+msgstr "Il parametro '%1' contiene valori errati: '%2'"
 
 # nlsref 16,70
 #. (u_err.listname)
 #: web_tt2/error.tt2:86
-#, fuzzy
 msgid "The list '%1' is already closed"
-msgstr "Documenti condivisi"
+msgstr "La lista '%1' è già chiusa"
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:87
-#, fuzzy
 msgid "The list '%1' is not closed"
-msgstr "File %1 salvato"
+msgstr "La lista '%1' non è chiusa"
 
 #. (u_err.bad_listname)
 #: web_tt2/error.tt2:88
@@ -1990,6 +1961,7 @@ msgstr "La lista '%1' è già presente"
 #: web_tt2/error.tt2:90
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
+"Nome di lista '%1' non corretto: corrisponde ad uno degli alias di servizio"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:91
@@ -1998,40 +1970,35 @@ msgstr "%1 : file o directory inesistente"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:92
-#, fuzzy
 msgid "Unable to read %1 : empty document"
-msgstr "Unable to read %1 : documento vuoto"
+msgstr "Impossibile leggere %1 : documento vuoto"
 
 # nlsref 16,70
 #: web_tt2/error.tt2:93
-#, fuzzy
 msgid "There is no shared documents"
-msgstr "Documenti condivisi"
+msgstr "Non ci sono documenti condivisi"
 
 # nlsref 16,70
 #: web_tt2/error.tt2:94
-#, fuzzy
 msgid "The shared document space is empty"
-msgstr "Documenti condivisi"
+msgstr "Lo spazio documenti condivisi è vuoto"
 
 #: web_tt2/error.tt2:95
 msgid "The shared directory cannot have any description"
-msgstr ""
+msgstr "La cartella condivisa non può avere alcuna descrizione"
 
 #: web_tt2/error.tt2:96
-#, fuzzy
 msgid "No description specified"
 msgstr "Nessuna descrizione specificata"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:97
 msgid "Unable to describe, the document '%1' does not exist"
-msgstr ""
+msgstr "Impossibile inserire una descrizione, il documento '%1' non esiste"
 
 #: web_tt2/error.tt2:98
-#, fuzzy
 msgid "Data has changed on disk. Cannot apply your changes"
-msgstr "I dati su disco sono cambiati. Non posso applicare le tue modifiche"
+msgstr "I dati su disco sono cambiati. Impossibile applicare le tue modifiche"
 
 #. (u_err.name)
 #: web_tt2/error.tt2:99
@@ -2039,7 +2006,6 @@ msgid "%1 : incorrect name"
 msgstr "%1 : nome errato"
 
 #: web_tt2/error.tt2:100
-#, fuzzy
 msgid "Failed : your content is empty"
 msgstr "Errore : contenuto vuoto"
 
@@ -2056,17 +2022,15 @@ msgstr "La cartella '%1' è già presente."
 #. (u_err.name)
 #: web_tt2/error.tt2:103
 msgid "This is an already existing document : '%1'"
-msgstr ""
+msgstr "Esiste già un documento '%1'"
 
 #: web_tt2/error.tt2:104
-#, fuzzy
 msgid "No name specified"
 msgstr "Nessun nome specificato"
 
 #: web_tt2/error.tt2:105
-#, fuzzy
 msgid "The document repository exceed disk quota."
-msgstr "Il magazzino dei documenti ha ecceduto la quota disco"
+msgstr "Il repository dei documenti ha ecceduto il limite disco"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:106
@@ -2075,13 +2039,12 @@ msgstr "Impossibile caricare il file %1"
 
 #. (u_err.dir)
 #: web_tt2/error.tt2:107
-#, fuzzy
 msgid "You're not authorized to upload an INDEX.HTML in %1"
-msgstr "Non sei autorizzato a inserire un file INDEX.HTML in %1"
+msgstr "Non sei autorizzato a caricare un file INDEX.HTML in %1"
 
 #: web_tt2/error.tt2:108
 msgid "The upload failed, try it again"
-msgstr ""
+msgstr "Upload fallito, riprova"
 
 #. (u_err.name,u_err.reason)
 #: web_tt2/error.tt2:109
@@ -2091,59 +2054,55 @@ msgstr ""
 
 #. (u_err.name,u_err.reason)
 #: web_tt2/error.tt2:110
-#, fuzzy
 msgid "File %1 was not copied : %2 "
-msgstr "File %1 salvato"
+msgstr "File %1 non copiato: %2"
 
 #. (u_err.directory)
 #: web_tt2/error.tt2:111
-#, fuzzy
 msgid "Failed : %1 not empty"
-msgstr "Fallito:%1 non è vuoto"
+msgstr "Errore : %1 non è vuoto"
 
 #: web_tt2/error.tt2:112
-#, fuzzy
 msgid "No certificate for this list"
-msgstr "Aggiornamento quotidiano dell'elenco delle revoche dei certificati."
+msgstr "Nessun certificato per questa lista"
 
 #: web_tt2/error.tt2:113
-#, fuzzy
 msgid "This list has no message topic"
-msgstr "Gli alias per la lista sono stati eliminati"
+msgstr "Questa lista non ha un argomento per i messaggi"
 
 #: web_tt2/error.tt2:114
+#, fuzzy
 msgid "Tag message with topic is required for this list"
-msgstr ""
+msgstr "Questa lista richiede un messaggio etichetta con argomento"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:115
-#, fuzzy
 msgid "No entry for user '%1'"
-msgstr "Nessuna mail errata per l'utente  %1"
+msgstr "Nessun dato per l'utente '%1'"
 
 #: web_tt2/error.tt2:116
-#, fuzzy
 msgid "Please select archive months"
 msgstr "Seleziona i mesi dall'archivio"
 
 #: web_tt2/error.tt2:117
+#, fuzzy
 msgid "No SOAP service"
-msgstr ""
+msgstr "Nessun servizio SOAP"
 
 # nlsref 6,15
 #: web_tt2/error.tt2:118
 msgid "Authentication failed"
-msgstr "Procedura di autenticazione fallita."
+msgstr "Procedura di autenticazione fallita"
 
 #. (u_err.status)
 #: web_tt2/error.tt2:119
 msgid "Cannot add subscribers when list status is '%1'"
-msgstr ""
+msgstr "Impossibile aggiungere iscritti quando lo stato della lista è '%1'"
 
 #. (auth.action)
 #: web_tt2/error.tt2:128
 msgid "AUTHORIZATION REJECT (%1)"
-msgstr "AUTORIZZAZIONE VIETATA (%1)"
+msgstr "AUTORIZZAZIONE RIFIUTATA (%1)"
 
 #. (auth.listname)
 #: web_tt2/error.tt2:130
