@@ -67,8 +67,7 @@ pending subscription requests you should click the following URL :[%END%]
 
 [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
-[%|loc(replyto,keyauth,list.name,who,gecos)-%]
-If prefered, you can accept this subscription request sending an email to %1 with the following subject :
+[%|loc(replyto,keyauth,list.name,who,gecos)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject :
 AUTH %2 ADD %3 %4 %5
 [%END%]
 
