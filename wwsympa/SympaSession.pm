@@ -151,7 +151,7 @@ sub load {
     return ($self);
 }
 
-
+## This method will both renew the session ID and store it in the database
 sub store {
 
     my $self = shift;
@@ -176,34 +176,16 @@ sub store {
 	return undef unless &List::db_connect();
     }	   
 
-#    my $count_statement = sprintf "SELECT count(*) FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
-#    
-#    unless ($sth = $dbh->prepare($count_statement)) {
-#      	do_log('err','Unable to prepare SQL statement %s : %s',$count_statement, $dbh->errstr);
-#	return undef;
-#    }
-#    
-#    unless ($sth->execute) {
-#	do_log('err','Unable to execute SQL statement "%s" : %s', $count_statement, $dbh->errstr);
-#	return undef;
-#    }    
-#    my $total =  $sth->fetchrow;
-#    if ($total != 0) {
-#	my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
-#	do_log('debug3', 'SympaSession::store() : removing existing Session del_statement = %s',$del_statement);	
-#	unless ($dbh->do($del_statement)) {
-#	    do_log('info','SympaSession::store unable to remove existing session %s to update it',$self->{'id_session'});
-#	    return undef;
-#	}	
-#    }
-
+    ## First remove the DB entry for the previous session ID
     my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
     unless ($dbh->do($del_statement)) {
 	    do_log('debug3','SympaSession::store unable to remove session %s, new session ?',$self->{'id_session'});
 	}	 
-    # in order to prevent session hijacking, the session_id (used as http cookie) is renewed for each clic
+
+    ## Renew the session ID in order to prevent session hijacking
     $self->{'id_session'} = &get_random();
 
+    ## Store the new session ID in the DB
     my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",$self->{'id_session'},time,$ENV{'REMOTE_ADDR'},$self->{'robot'},$self->{'email'},$self->{'start_date'},$self->{'hit'}, $data_string;
     unless ($dbh->do($add_statement)) {
 	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
