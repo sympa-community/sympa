@@ -2,6 +2,10 @@
 
 [% PROCESS picture_upload.tt2 %]
 
+[% IF is_owner %]
+<h3>[%|loc%]Manage list members[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+[% END %]
+
 [% IF action != 'search' %]
 <div class="search_form">
   <form action="[% path_cgi %]">

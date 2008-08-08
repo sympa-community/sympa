@@ -5,7 +5,7 @@
 <form action="[% path_cgi %]" method="post" name="moderate_mails">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
-<h2>[%|loc%]Listing messages to moderate[%END%]</h2>
+<h2>[%|loc%]Listing messages to moderate[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 
  [%- IF topic_required -%]
   <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>

@@ -3,7 +3,7 @@
 [% IF get_which_owner.size > 0 %]
   <h3>[%|loc%]Copy an existing list.[%END%]</h3>
 
-  [%|loc%]You can create a list, using an existing list as a template ; the list configuration of the source list will be copied to create the ew one. Note that neither list members, nor archives or shared documents are duplicated. The source lists you can use are limited to lists you own.[%END%]
+  [%|loc%]You can create a list, using an existing list as a template ; the list configuration of the source list will be copied to create the new one. Note that neither list members, nor archives or shared documents are duplicated. The source lists you can use are limited to lists you own.[%END%]
   [%|loc%]After the list is created, you will be able to adjust it's configuration.[%END%] <br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
@@ -20,9 +20,9 @@
 [% END %]
 
 
-<h3>[%|loc%]Create a list using a template[%END%] </h3>
+<h3>[%|loc%]Create a list using a template[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#create_list" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
 
-[%|loc%]You can request a new list creation with the following form.You will have to choose a list template that will preset most of the list parameters according to the list usage you plans. [%END%]
+[%|loc%]You can request a new list creation with the following form.You will have to choose a list template that will preset most of the list parameters according to the list usage you plan. [%END%]
 [%|loc%]After the list is created, you will be able to adjust it's configuration.[%END%] <br />
 <form action="[% path_cgi %]" method="post">
 <fieldset>

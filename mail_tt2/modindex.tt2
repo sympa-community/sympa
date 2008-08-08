@@ -8,6 +8,8 @@ Content-Transfer-Encoding: 8bit
 
 [%|loc(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
+[%|loc(conf.wwsympa_url)%]The messages moderating documentation: %1/help/admin#moderate[%END%]
+
 [% IF spool %]
 --[% boundary1 %]
 Content-Type: multipart/digest; boundary="[% boundary2 %]"

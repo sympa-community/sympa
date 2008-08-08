@@ -19,7 +19,7 @@
 
 [% IF path %]  
 
-<h1>[%|loc%]Listing of folder[%END%] [% visible_path %]</h1>
+<h1>[%|loc%]Listing of folder[%END%] [% visible_path %] <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h1>
 
     [% IF expert_page %]
     <span class="search_form">
@@ -44,7 +44,7 @@
     <br />  
   [% ELSE %]
      
-  <h1>[%|loc%]Listing of root folder[%END%]</h1>
+  <h1>[%|loc%]Listing of root folder[%END%]  <a class="input" href="[% path_cgi %]/nomenu/help/shared" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h1>
   [% END %]   
 
   <table summary="[%|loc%]Listing of folder[%END%] [% visible_path %]" class="listOfItems">
