@@ -2927,13 +2927,13 @@ sub send_global_file {
 #  Find the tt2 file according to $tpl, set up 
 #  $data for the next parsing (with $context and
 #  configuration)
-#  Message is signed if the list as a key and a 
-#  certificat
+#  Message is signed if the list has a key and a 
+#  certificate
 #  
 # IN : -$self (+): ref(List)
 #      -$tpl (+): template file name (file.tt2),
 #         without tt2 extension
-#      -$who (+): SCALAR |ref(ARRAY) - recepient(s)
+#      -$who (+): SCALAR |ref(ARRAY) - recipient(s)
 #      -$robot (+): robot
 #      -$context : ref(HASH) - for the $data set up 
 #         to parse file tt2, keys can be :
@@ -2954,14 +2954,14 @@ sub send_file {
 
     my $data = $context;
 
-    ## Any recepients
+    ## Any recipients
     if ((ref ($who) && ($#{$who} < 0)) ||
 	(!ref ($who) && ($who eq ''))) {
 	&do_log('err', 'No recipient for sending %s', $tpl);
 	return undef;
     }
     
-    ## Unless multiple recepients
+    ## Unless multiple recipients
     unless (ref ($who)) {
 	unless ($data->{'user'}) {
 	    unless ($data->{'user'} = &get_user_db($who)) {
