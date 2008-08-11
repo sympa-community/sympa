@@ -7,10 +7,18 @@
 ## Modified by Philippe Baumgart:
 ## Added  Optional LDAPS support
 ## Added LDAP configuration stored in a separate config file --DIR--/etc/ldap_alias_manager.conf
+#
+# Modified by Roland Hopferwieser:
+#   Use template for entry definition
+#   Added simulation mode
+#	Bugfix for ldap_ssl = 0
 #Purpose: It has the ability to add/remove list aliases in an LDAP directory
-# You should edit all the --DIR--/etc/ldap_alias_manager.conf to use your own LDAP directory
+# You should edit the --DIR--/etc/ldap_alias_manager.conf to use your own LDAP directory
+# You should edit the --DIR--/etc/ldap_alias_entry.tt2 to use your own entry format.
 
 $ENV{'PATH'} = '';
+
+my $SYMPA_CONF = '--CONFIG--';
 
 ## Load Sympa.conf
 use strict;
@@ -23,16 +31,17 @@ require "tt2.pl";
 use Net::LDAP;
 use Net::LDAPS;
 
-unless (Conf::load('--CONFIG--')) {
-   print gettext("The configuration file --CONFIG-- contains errors.\n");
+unless (Conf::load($SYMPA_CONF)) {
+   print gettext("The configuration file $SYMPA_CONF contains errors.\n");
    exit(1);
 }
 
-my $manager_conf_file = '--DIR--/etc/ldap_alias_manager.conf';
+my $manager_conf_file = $Conf{etc}.'/ldap_alias_manager.conf';
+
 
 ## LDAP configuration
 my %ldap_params;
-my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclass,$ldap_ssl,$ldap_cachain)=(undef,undef,undef,undef,undef,undef,undef,undef);
+my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclasses,$ldap_ssl,$ldap_cachain)=(undef,undef,undef,undef,undef,undef,undef,undef);
 &GetLdapParameter();
 
 my $ldap_connection = undef;
@@ -41,24 +50,24 @@ $ldap_base_dn = $ldap_params{'ldap_base_dn'} or print STDERR "Missing required p
 $ldap_bind_dn = $ldap_params{'ldap_bind_dn'} or print STDERR "Missing required parameter ldap_bind_dn the config file $manager_conf_file\n" and exit 0;
 $ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'} or print STDERR "Missing required parameter ldap_bind_pwd the config file $manager_conf_file\n" and exit 0;
 $ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'} or print STDERR "Missing required parameter ldap_mail_attribute the config file $manager_conf_file\n" and exit 0;
-$ldap_objectclass=$ldap_params{'ldap_object_class'} or print STDERR "Missing required parameter ldap_object_class the config file $manager_conf_file\n" and exit 0;
-$ldap_ssl=$ldap_params{'ldap_ssl'} or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) the config file $manager_conf_file\n" and exit 0;
+(($ldap_ssl = $ldap_params{'ldap_ssl'}) ne '') or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) the config file $manager_conf_file\n" and exit 0;
 $ldap_cachain=$ldap_params{'ldap_cachain'} or undef;
 
-
-my $ldap_sample_dn = "uid={ALIAS},$ldap_base_dn";
-my %ldap_attributes = ("objectClass" => ["top","person", "organizationalPerson", $ldap_objectclass],
-		       "cn" => ['{ALIAS}'],
-		       "sn" => ['{ALIAS}'],
-		       "uid" => ['{ALIAS}'],		       
-		       );
-
 my $default_domain;
-my ($operation, $listname, $domain, $file) = @ARGV;
 
+# Check for simulation mode
+my $simulation_mode = 0;
+if (grep(/^-s$/, @ARGV)) {
+	$simulation_mode = 1;
+	@ARGV = grep(!/^-s$/, @ARGV);
+}
+my ($operation, $listname, $domain, $file) = @ARGV;
 
 if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
     printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
+    printf "\n";
+    printf "  Options:\n";
+    printf "    -s\tSimulation mode. Dump the entries but don't add it to the directory.\n";
     exit(2);
 }
 
@@ -69,12 +78,13 @@ $data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
+$data{'ldap_base_dn'} = $ldap_base_dn;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 my @aliases ;
 
 my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
                         $Conf{'etc'},
-                        '/usr/share/sympa'];
+                        '--ETCBINDIR--'];
 
 my $aliases_dump;
 &tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
@@ -82,75 +92,85 @@ my $aliases_dump;
 @aliases = split /\n/, $aliases_dump;
 
 unless (@aliases) {
-        print STDERR "No aliases defined\n";
-        exit(15);
+	print STDERR "No aliases defined\n";
+	exit(15);
 }
 
 if ($operation eq 'add') {
 
-    ## Check existing aliases
-    if (&already_defined(@aliases)) {
-	print STDERR "some alias already exist\n";
-	exit(13);
-    }
+## Check existing aliases
+if (&already_defined(@aliases)) {
+print STDERR "some alias already exist\n";
+exit(13);
+}
 
-    if (!&initialize_ldap) {
-	print STDERR "Can't bind to LDAP server\n";
-	exit(14);
-    }
+if (!&initialize_ldap) {
+print STDERR "Can't bind to LDAP server\n";
+exit(14);
+}
 
-    foreach my $alias (@aliases) {
-	if ($alias =~ /^\#/) {
-	    next;
+foreach my $alias (@aliases) {
+if ($alias =~ /^\#/) {
+	next;
+}
+
+$alias =~ /^([^:]+):\s*(\".*\")$/;
+my $alias_value = $1;
+my $command_value = $2;
+
+if ($command_value =~ m/bouncequeue/) {
+	$command_value = "sympabounce";
+} else{
+	$command_value = "sympa";
+} 
+
+# We substitute all occurences of + by - for the rest of the attributes, including the dn.
+# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
+$alias_value =~ s/\+/\-/g;
+
+my $ldif_dump;
+$data{'list'}{'alias'} = $alias_value;
+$data{'list'}{'command'} = $command_value;
+&tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
+my @attribute_lines = split /\n/, $ldif_dump;
+
+# We create the new LDAP entry.
+my %ldap_attributes = ();
+my $entry = Net::LDAP::Entry->new;
+foreach my $line (@attribute_lines) {
+	next if ($line =~ /^\s*$/);
+	next if ($line =~ /^\s*#/);
+	$line =~ /^([^:]+):\s*(.+)\s*$/;
+	if ($1 eq 'dn') {
+		$entry->dn($2);
+	} else {
+		push @{$ldap_attributes{$1}}, $2;
 	}
-	
-	$alias =~ /^([^:]+):\s*(\".*\")$/;
-	my $alias_value = $1;
-	my $command_value = $2;
+}
 
-	if ($command_value =~ m/bouncequeue/) {
-	    $command_value = "sympabounce";
-	} else{
-	    $command_value = "sympa";
-	} 
-
-	# We create the new LDAP entry.
-        my $entry = Net::LDAP::Entry->new;
-	
-	# We add the required mail attribute
-	$entry->add($ldap_mail_attribute, $alias_value."\@".$domain);
-	
-	# We substitute all occurences of + by - for the rest of the attributes, including the dn.
-	# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
-	$alias_value =~ s/\+/\-/g;
-
-	# We set the dn
-	my $value = $ldap_sample_dn;
-	$value =~ s/{ALIAS}/$alias_value/;
-	$entry->dn($value);
-
-	# We add the rest of the attributes
+	# We add the the attributes
 	foreach my $hash_key (keys %ldap_attributes) {
 	    foreach my $hash_value (@{$ldap_attributes{$hash_key}}) {
-		$value = $hash_value;
-		$value =~ s/{ALIAS}/$alias_value/;
-		#$value =~ s/{COMMAND}/$command_value/;
-		$entry->add($hash_key, $value);
+			$entry->add($hash_key, $hash_value);
 	    }
 	}
-
-	# We finally add the entry
-	my $msg = $ldap_connection->add($entry);
-	if ($msg->is_error()) {
-	    print STDERR "Can't add entry for $alias_value\@$domain: ",$msg->error(),"\n";
-	    exit(15);
+	
+	if ($simulation_mode) {
+		$entry->dump;
+	} else {
+		# We finally add the entry
+		my $msg = $ldap_connection->add($entry);
+		if ($msg->is_error()) {
+			print STDERR "Can't add entry for $alias_value\@$domain: ",$msg->error(),"\n";
+			exit(15);
+		}
 	}
 	$entry = undef;
-    }
+    } # end foreach aliases
 
     &finalize_ldap;
 
-}
+} # end if add
 elsif ($operation eq 'del') {
     
     if (!&initialize_ldap) {
@@ -167,13 +187,21 @@ elsif ($operation eq 'del') {
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;
 
-	my $value = $ldap_sample_dn;
-	$value =~ s/{ALIAS}/$alias_value/;
-	$ldap_connection->delete($value);
-    }
+	my $ldif_dump;
+	$data{'list'}{'alias'} = $alias_value;
+	&tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump, $tt2_include_path);
+	my $value = (grep(/^dn:/, split(/\n/, $ldif_dump)))[0];
+	$value =~ s/^dn:\s*//;
+
+	if ($simulation_mode) {
+		printf "Would delete dn $value\n";
+	} else {
+		$ldap_connection->delete($value);
+	}
+	} # end foreach aliases
 
     &finalize_ldap;
-}
+} # end if del
 else {
     print STDERR "Action $operation not implemented yet\n";
     exit(2);
@@ -214,7 +242,7 @@ sub GetLdapParameter {
 	foreach(@ldap_conf)
 	{
         	#we skip the comments
-        	if ($_ =~ /^\#/)
+        	if ($_ =~ /^\s*\#/)
         	{
         		next;
         	}        	
@@ -226,7 +254,7 @@ sub GetLdapParameter {
         		#print "$param_name: $ldap_params{$param_name}\n";     		
         	}
         	#we skip the blank line
-        	elsif ($_  =~ /^$/)
+        	elsif ($_  =~ /^\s*$/)
         	{
         		next;
         	}
@@ -239,7 +267,6 @@ sub GetLdapParameter {
          
 }
 	
-
 
 ## Initialize the LDAP connection
 sub initialize_ldap {

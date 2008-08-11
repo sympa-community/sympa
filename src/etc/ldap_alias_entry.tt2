@@ -1,0 +1,13 @@
+# This is the template for ldap entries used by ldap_alias_manager.pl
+
+dn: cn=[% list.alias %],cn=[% list.domain %],[% ldap_base_dn %]
+objectClass: top
+objectClass: mailAlias
+objectClass: mailRecipient
+cn: [% list.alias %]
+mail: [% list.alias %]@[% list.domain %]
+mailTransportMode: [% list.command %]
+mailAccountStatus: active
+mailHost: mail1.example.com
+
+# vim: ft=ldif
