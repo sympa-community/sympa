@@ -486,7 +486,7 @@ msgstr "Opprettelsesdag"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Emne"
 
@@ -503,7 +503,7 @@ msgid "Add subscribers"
 msgstr "Legg til abonnenter"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "stille"
@@ -563,7 +563,7 @@ msgstr "Arkivbehandling"
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
 #: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
-#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr "Åpne i et nytt vindu"
@@ -616,7 +616,7 @@ msgid "Search field :"
 msgstr "Søkefelt:"
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80
 #: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Søk"
@@ -687,7 +687,7 @@ msgid "Sender"
 msgstr "Avsender"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Dato"
@@ -930,7 +930,7 @@ msgstr "Emne:"
 msgid "Send this mail"
 msgstr "Send denne e-posten"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "Denne listen er satt opp til å kreve tema."
 
@@ -1215,6 +1215,7 @@ msgid "Confirm"
 msgstr "Bekreft"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
+#: web_tt2/manage_template.tt2:40
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1295,7 +1296,7 @@ msgid "Listing of root folder"
 msgstr "Visning av rot-mappen"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
 msgid "Author"
 msgstr "Forfatter"
 
@@ -1304,7 +1305,7 @@ msgid "Size (Kb)"
 msgstr "Størrelse (Kb)"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:157
+#: web_tt2/review.tt2:158
 msgid "Last update"
 msgstr "Siste oppdatering"
 
@@ -1622,7 +1623,7 @@ msgstr "Malnavn"
 msgid "Type"
 msgstr "Type"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
 msgid "Path"
 msgstr "Sti"
 
@@ -1811,7 +1812,7 @@ msgstr "Mangler argument %1"
 msgid "Wrong value for parameter %1"
 msgstr "Feil verdi i parameter %1"
 
-#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Du må logge inn"
 
@@ -2123,13 +2124,31 @@ msgstr "Autentisering feilet"
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr "Kan ikke legge til abonnenter når listestatus er '%1'"
 
+#. (u_err.argument)
+#: web_tt2/error.tt2:121
+#, fuzzy
+msgid "This Template '%1' already exists"
+msgstr "filen %1 eksisterer allerede"
+
+#. (u_err.file_del)
+#: web_tt2/error.tt2:122
+#, fuzzy
+msgid "Cannot delete this file '%1'"
+msgstr "Kan ikke åpne filen '%1'"
+
+#. (u_err.filename)
+#: web_tt2/error.tt2:123
+#, fuzzy
+msgid "Invalid filename: '%1'"
+msgstr "Kunne ikke lese filen : '%1'."
+
 #. (auth.action)
-#: web_tt2/error.tt2:129
+#: web_tt2/error.tt2:132
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "AUTORISASJON AVVIST (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:131
+#: web_tt2/error.tt2:134
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2244,8 +2263,8 @@ msgstr " De siste fellesdokumentene "
 msgid "Most recent documents for this list "
 msgstr "De siste fellesdokumentene for denne listen"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
-#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:133 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Navn"
 
@@ -2267,7 +2286,7 @@ msgid " The latest lists of this robot"
 msgstr "De siste listene på denne roboten (domenet)"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:83
 msgid "%1 occurrence(s) found"
 msgstr "%1 treff funnet"
 
@@ -2424,78 +2443,136 @@ msgstr ""
 "Denne e-postlistetjeneren er for øyeblikket i en fase for det blir utført "
 "vedlikehold, ingen handlinger kan utføres under denne perioden."
 
-#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:8
+#: web_tt2/manage_template.tt2:4
+#, fuzzy
+msgid "Modify or Delete existing messages"
+msgstr "slettebeskjed"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "Ønsker du virkelig å slette denne meldingen ?"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Delete Template"
+msgstr "Maler"
+
+#: web_tt2/manage_template.tt2:8
+#, fuzzy
+msgid "Modify Template"
+msgstr "Maler"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr " Nyeste meldinger "
+
+#: web_tt2/manage_template.tt2:30
+#, fuzzy
+msgid "Template Name :"
+msgstr "Malnavn :"
+
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "Input-mal"
+
+#: web_tt2/manage_template.tt2:39
+#, fuzzy
+msgid "Save Template"
+msgstr "Maler"
+
+#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr "Lister opp meldinger som skal modereres"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
-#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Del ut"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
-#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
+#: web_tt2/modindex.tt2:20
+msgid "edit blacklist"
+msgstr "Rediger svarteliste"
+
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
+#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
 msgid "Reject"
 msgstr "Avvis"
 
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
-msgid "Notified reject"
-msgstr "Avvis med varsel til avsender"
-
-#: web_tt2/modindex.tt2:16
+#: web_tt2/modindex.tt2:22
+#, fuzzy
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
-"thoses messages with notification ?"
+"those messages with notification ?"
 msgstr ""
 "Du bør antagligvis ikke avvise meldinger gjenkjent som spam med varsel til "
 "avsender da avsenderadressen antagligvis er forfalsket.  Ønsker du virkelig "
 "å avvise disse meldingene med varsling ?"
 
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
-msgid "Reject and blacklist sender"
-msgstr "Avvis og svartelist avsender"
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "slettebeskjed"
 
-#: web_tt2/modindex.tt2:19
-msgid "edit blacklist"
-msgstr "Rediger svarteliste"
+#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
 
-#: web_tt2/modindex.tt2:26
+#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "Svartelist"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/modindex.tt2:47
+#, fuzzy
 msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
+"Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr ""
 "Vennligst velg en eller flere tema som passer til meldingene du ønsker å "
 "dele ut :"
 
-#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
+#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
 msgid "Size"
 msgstr "Størrelse"
 
-#: web_tt2/modindex.tt2:76
+#: web_tt2/modindex.tt2:97
 msgid "No subject"
 msgstr "Intet emne"
 
+#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+msgid "Notified reject"
+msgstr "Avvis med varsel til avsender"
+
+#: web_tt2/modindex.tt2:115
+msgid "Reject and blacklist sender"
+msgstr "Avvis og svartelist avsender"
+
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr ""
 
-#: web_tt2/modindex.tt2:100
+#: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:113
+#: web_tt2/modindex.tt2:134
 msgid "Listing of shared documents to moderate"
 msgstr "Liste over fellesdokumenter som skal modereres"
 
-#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
+#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
 msgid "Install"
 msgstr "Installer"
 
-#: web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:140
 msgid "Listing of documents shared to moderate"
 msgstr "Liste over fellesdokumenter som skal modereres"
 
@@ -2655,7 +2732,7 @@ msgstr "På medlemsiden"
 msgid "User preferences"
 msgstr "Brukerinnstillinger"
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112
 #: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
@@ -2837,7 +2914,7 @@ msgstr "Ukjent feil."
 msgid "This list is configured to require topic(s) foreach message."
 msgstr "Denne listen er konfigurert til å kreve tema for hver melding."
 
-#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:19
+#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below :"
 msgstr ""
@@ -2883,7 +2960,7 @@ msgid ""
 msgstr ""
 "Ønsker du virkelig å sende abonnementspåminnelse til de %1 abonnentene?"
 
-#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
 #: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "Forrige side"
@@ -2893,7 +2970,7 @@ msgstr "Forrige side"
 msgid "page %1 / %2"
 msgstr "side %1 / %2"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
 #: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "Neste side"
@@ -2927,7 +3004,7 @@ msgstr "Se på siste returmelding"
 msgid "no score"
 msgstr "scenariokilde"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "Slett valgte e-postadresser"
 
@@ -2957,7 +3034,7 @@ msgstr "Administrer lister"
 msgid "Page size"
 msgstr "Sidestørrelse"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "side"
 
@@ -2973,64 +3050,60 @@ msgstr "Abonnementer som venter på godkjennelse"
 msgid "Remind all"
 msgstr "Send påminnelse til alle abonnenter"
 
-#: web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "Svartelist"
-
 #: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr "Legg til en bruker:"
 
-#: web_tt2/review.tt2:65
+#: web_tt2/review.tt2:66
 msgid "Multiple add"
 msgstr "Legg til flere"
 
-#: web_tt2/review.tt2:77
+#: web_tt2/review.tt2:78
 msgid "Search user by e-mail: "
 msgstr "Søk etter bruker via e-postadresse:"
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:79
 msgid "Search user by email"
 msgstr "Søk etter bruker via e-postadresse"
 
-#: web_tt2/review.tt2:84
+#: web_tt2/review.tt2:85
 msgid "Selection too wide, can not show selection"
 msgstr "Utvalget for bredt, kan ikke vise utvalget"
 
-#: web_tt2/review.tt2:100
+#: web_tt2/review.tt2:101
 msgid "List members"
 msgstr "Listemedlemmer"
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
 msgid "Domain"
 msgstr "Domene"
 
-#: web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125
 msgid "Picture"
 msgstr "Bilde"
 
-#: web_tt2/review.tt2:137
+#: web_tt2/review.tt2:138
 msgid "Reception"
 msgstr "Mottak"
 
-#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
+#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
 msgid "Sources"
 msgstr "Kilder"
 
-#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr ""
 
-#: web_tt2/review.tt2:191
+#: web_tt2/review.tt2:192
 msgid "bouncing"
 msgstr "kommer i retur"
 
 #. (u.email)
-#: web_tt2/review.tt2:208
+#: web_tt2/review.tt2:209
 msgid "%1's picture"
 msgstr "%1 sitt bilde"
 
-#: web_tt2/review.tt2:276
+#: web_tt2/review.tt2:277
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Ønsker du virkelig å melde ALLE de valgte  medlemmene ut av listen?"
 
@@ -4092,7 +4165,7 @@ msgstr "Søkeperiode"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -7301,7 +7374,7 @@ msgstr "Konfigurasjonsfilen --CONFIG-- inneholder feil.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
 msgid "%A"
 msgstr "%A"
 
@@ -7312,7 +7385,7 @@ msgstr "Feil på linje %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -7925,16 +7998,16 @@ msgstr "%d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
-#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
-#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
-#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
-#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
-#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
-#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
-#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
-#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
-#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
+#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
+#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
+#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
+#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
+#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
+#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
+#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
+#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
+#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8052,21 +8125,21 @@ msgstr "(ukjent dato)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:994
+#: wwsympa/wwsympa.fcgi:999
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
-#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
+#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
+#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
+#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
+#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8219,6 +8292,24 @@ msgstr "ingen e-post (praktisk ved ferie)"
 msgid "you do not receive your own posts"
 msgstr "du mottar ikke selv dine egne meldinger"
 
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+"Du bør antagligvis ikke avvise meldinger gjenkjent som spam med varsel til "
+"avsender da avsenderadressen antagligvis er forfalsket.  Ønsker du virkelig "
+"å avvise disse meldingene med varsling ?"
+
+#: web_tt2/modindex.tt2:26
+msgid ""
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
+msgstr ""
+"Vennligst velg en eller flere tema som passer til meldingene du ønsker å "
+"dele ut :"
+
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
@@ -8234,19 +8325,6 @@ msgid ""
 "according to the list usage you plans. "
 msgstr ""
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"eller send en e-post til %1 med følgende emne :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-
 #: web_tt2/reviewbouncing.tt2:61
 msgid "bounce score"
 msgstr ""
@@ -8257,6 +8335,17 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "If prefered, you can accept this subscription request sending an email to "
+#~ "%1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "eller send en e-post til %1 med følgende emne :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid ""
 #~ "To confirm your identity and prevent anyone from subscribing you to\n"

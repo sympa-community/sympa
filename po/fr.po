@@ -490,7 +490,7 @@ msgstr "Date de création"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Objet"
 
@@ -507,7 +507,7 @@ msgid "Add subscribers"
 msgstr "Ajout d'abonnés"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "sans prévenir"
@@ -568,7 +568,7 @@ msgstr "Gestion des archives"
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
 #: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
-#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr "Ouvrir dans une nouvelle fenêtre"
@@ -621,7 +621,7 @@ msgid "Search field :"
 msgstr "Recherche sur :"
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80
 #: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Recherche"
@@ -692,7 +692,7 @@ msgid "Sender"
 msgstr "From"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Date"
@@ -937,7 +937,7 @@ msgstr "Objet :"
 msgid "Send this mail"
 msgstr "Envoyer le message"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "Cette liste est configurée pour utiliser les thèmes"
 
@@ -1234,6 +1234,7 @@ msgid "Confirm"
 msgstr "Confirmer"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
+#: web_tt2/manage_template.tt2:40
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1315,7 +1316,7 @@ msgid "Listing of root folder"
 msgstr "Contenu du dossier racine"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
 msgid "Author"
 msgstr "Auteur"
 
@@ -1324,7 +1325,7 @@ msgid "Size (Kb)"
 msgstr "Taille (Ko)"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:157
+#: web_tt2/review.tt2:158
 msgid "Last update"
 msgstr "Mise à jour"
 
@@ -1651,7 +1652,7 @@ msgstr "Nom du modèle"
 msgid "Type"
 msgstr "Type"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
 msgid "Path"
 msgstr "Chemin"
 
@@ -1843,7 +1844,7 @@ msgstr "%1 : paramètre manquant"
 msgid "Wrong value for parameter %1"
 msgstr "Valeurs incorrectes du paramètre %1"
 
-#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Vous devez vous identifier"
 
@@ -2159,13 +2160,32 @@ msgstr "La phase d'authentification a échoué"
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr "Impossible d'ajouter des abonnés quand la liste a le status '%1'"
 
+#. (u_err.argument)
+#: web_tt2/error.tt2:121
+#, fuzzy
+msgid "This Template '%1' already exists"
+msgstr "le fichier %1 existe déjà"
+
+#. (u_err.file_del)
+#: web_tt2/error.tt2:122
+#, fuzzy
+msgid "Cannot delete this file '%1'"
+msgstr "Impossible d'ouvrir le fichier '%1'"
+
+# nlsref 6,2
+#. (u_err.filename)
+#: web_tt2/error.tt2:123
+#, fuzzy
+msgid "Invalid filename: '%1'"
+msgstr "Impossible de lire le fichier : %1."
+
 #. (auth.action)
-#: web_tt2/error.tt2:129
+#: web_tt2/error.tt2:132
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "ACCES REFUSE (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:131
+#: web_tt2/error.tt2:134
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2286,8 +2306,8 @@ msgstr "Les documents partagés les plus récents"
 msgid "Most recent documents for this list "
 msgstr "Les derniers documents partagés de cette liste"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
-#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:133 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Nom"
 
@@ -2309,7 +2329,7 @@ msgid " The latest lists of this robot"
 msgstr "Les nouvelles listes créées"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:83
 msgid "%1 occurrence(s) found"
 msgstr "%1 occurrence(s) trouvée(s)"
 
@@ -2482,78 +2502,139 @@ msgstr ""
 "Le serveur de listes est en mode maintenance, aucune opération ne peut être\n"
 "effectuer pendant cette période."
 
-#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:8
+# nlsref 15,7
+#: web_tt2/manage_template.tt2:4
+#, fuzzy
+msgid "Modify or Delete existing messages"
+msgstr "message de rejet par le modérateur"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "Voulez-vous vraiment supprimer ce message ?"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Delete Template"
+msgstr "Les modèles"
+
+#: web_tt2/manage_template.tt2:8
+#, fuzzy
+msgid "Modify Template"
+msgstr "Les modèles"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr "Les nouveaux messages"
+
+#: web_tt2/manage_template.tt2:30
+#, fuzzy
+msgid "Template Name :"
+msgstr "Nom du modèle"
+
+# nlsref 15,18
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "Modèle source"
+
+#: web_tt2/manage_template.tt2:39
+#, fuzzy
+msgid "Save Template"
+msgstr "Les modèles"
+
+#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr "Liste des messages à modérer"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
-#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Distribuer"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
-#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
-msgid "Reject"
-msgstr "Rejeter sans prévenir l'auteur"
+#: web_tt2/modindex.tt2:20
+msgid "edit blacklist"
+msgstr "éditer la liste noire"
 
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
-msgid "Notified reject"
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
+#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
+msgid "Reject"
 msgstr "Rejeter"
 
-#: web_tt2/modindex.tt2:16
+#: web_tt2/modindex.tt2:22
+#, fuzzy
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
-"thoses messages with notification ?"
+"those messages with notification ?"
 msgstr ""
 "Lorsque vous rejetez un message marqué comme spam, vous ne devriez "
 "probablement pas en notifier l'expéditeur. L'adresse d'expédition du message "
 "est en effet probablement usurpée. Voulez-vous réellement rejeter ces "
 "message avec notification ?"
 
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
-msgid "Reject and blacklist sender"
-msgstr "Rejeter et ajouter l'auteur à la liste noire"
+# nlsref 15,7
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "message de rejet par le modérateur"
 
-#: web_tt2/modindex.tt2:19
-msgid "edit blacklist"
-msgstr "éditer la liste noire"
+#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
 
-#: web_tt2/modindex.tt2:26
+#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "Liste noire"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/modindex.tt2:47
+#, fuzzy
 msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
+"Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr ""
 "Veuillez sélectionner un ou plusieurs thèmes pour décrire votre message :"
 
-#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
+#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
 msgid "Size"
 msgstr "Taille"
 
-#: web_tt2/modindex.tt2:76
+#: web_tt2/modindex.tt2:97
 msgid "No subject"
 msgstr "Sans objet"
 
+#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+msgid "Notified reject"
+msgstr "Rejeter"
+
+#: web_tt2/modindex.tt2:115
+msgid "Reject and blacklist sender"
+msgstr "Rejeter et ajouter l'auteur à la liste noire"
+
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "Inverser la sélection"
 
-#: web_tt2/modindex.tt2:100
+#: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
 msgstr "Basculer la sélection des spams"
 
-#: web_tt2/modindex.tt2:113
+#: web_tt2/modindex.tt2:134
 msgid "Listing of shared documents to moderate"
 msgstr "Liste des documents à modérer"
 
-#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
+#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
 msgid "Install"
 msgstr "L'installer"
 
-#: web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:140
 msgid "Listing of documents shared to moderate"
 msgstr "Liste des documents à modérer"
 
@@ -2716,7 +2797,7 @@ msgstr "Dans la liste des membres"
 msgid "User preferences"
 msgstr "Préférences utilisateurs"
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112
 #: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
@@ -2904,7 +2985,7 @@ msgid "This list is configured to require topic(s) foreach message."
 msgstr ""
 "Cette liste est configurée pour utiliser les thèmes, pour chaque message."
 
-#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:19
+#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below :"
 msgstr ""
@@ -2951,7 +3032,7 @@ msgstr ""
 "Êtes-vous sûr de vouloir envoyer un rappel d'abonnement à chacun des %1 "
 "abonnés ?"
 
-#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
 #: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "Page précédente"
@@ -2961,7 +3042,7 @@ msgstr "Page précédente"
 msgid "page %1 / %2"
 msgstr "page %1 / %2"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
 #: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "Page suivante"
@@ -2990,7 +3071,7 @@ msgstr "Première erreur"
 msgid "no score"
 msgstr "indéfini"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "Désabonner les adresses sélectionnées"
 
@@ -3018,7 +3099,7 @@ msgstr "Gérer les membres de la liste"
 msgid "Page size"
 msgstr "Taille de page"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "page"
 
@@ -3034,64 +3115,60 @@ msgstr "Abonnements en attente"
 msgid "Remind all"
 msgstr "Lancer un rappel"
 
-#: web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "Liste noire"
-
 #: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr "Ajouter un utilisateur :"
 
-#: web_tt2/review.tt2:65
+#: web_tt2/review.tt2:66
 msgid "Multiple add"
 msgstr "Abonnements par lots"
 
-#: web_tt2/review.tt2:77
+#: web_tt2/review.tt2:78
 msgid "Search user by e-mail: "
 msgstr "Rechercher un utilisateur par e-mail :"
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:79
 msgid "Search user by email"
 msgstr "Rechercher un utilisateur"
 
-#: web_tt2/review.tt2:84
+#: web_tt2/review.tt2:85
 msgid "Selection too wide, can not show selection"
 msgstr "La sélection est trop large, impossible d'afficher la sélection"
 
-#: web_tt2/review.tt2:100
+#: web_tt2/review.tt2:101
 msgid "List members"
 msgstr "Voir les abonnés"
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
 msgid "Domain"
 msgstr "Domaine"
 
-#: web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125
 msgid "Picture"
 msgstr "Avatar"
 
-#: web_tt2/review.tt2:137
+#: web_tt2/review.tt2:138
 msgid "Reception"
 msgstr "Réception"
 
-#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
+#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
 msgid "Sources"
 msgstr "Sources"
 
-#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr "Abonné depuis"
 
-#: web_tt2/review.tt2:191
+#: web_tt2/review.tt2:192
 msgid "bouncing"
 msgstr "en erreur"
 
 #. (u.email)
-#: web_tt2/review.tt2:208
+#: web_tt2/review.tt2:209
 msgid "%1's picture"
 msgstr "Avatar de %1"
 
-#: web_tt2/review.tt2:276
+#: web_tt2/review.tt2:277
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Etes-vous sûr de vouloir désabonner TOUS les abonnés sélectionnés ?"
 
@@ -4194,7 +4271,7 @@ msgstr "Période explorée :"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -7750,7 +7827,7 @@ msgstr "Le fichier de configuration --CONFIG-- contient des erreurs.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
 msgid "%A"
 msgstr "%A"
 
@@ -7762,7 +7839,7 @@ msgstr "Erreur ligne %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -8488,16 +8565,16 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
-#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
-#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
-#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
-#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
-#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
-#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
-#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
-#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
-#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
+#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
+#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
+#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
+#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
+#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
+#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
+#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
+#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
+#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8624,21 +8701,21 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:994
+#: wwsympa/wwsympa.fcgi:999
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
-#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
+#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
+#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
+#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
+#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%d/%m/%Y/%H/%M/%S"
 
@@ -8818,41 +8895,55 @@ msgstr "interrompre la réception des messages (utile pendant les vacances)"
 msgid "you do not receive your own posts"
 msgstr "pour ne pas recevoir ses propres messages"
 
-#: web_tt2/create_list_request.tt2:6
+#: web_tt2/modindex.tt2:16
 msgid ""
-"You can create a list, using an existing list as a template ; the list "
-"configuration of the source list will be copied to create the ew one. Note "
-"that neither list members, nor archives or shared documents are duplicated. "
-"The source lists you can use are limited to lists you own."
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
 msgstr ""
-"Vous pouvez créer une liste, à partir d'une liste existante ; la "
-"configuration de la liste d'origine sera copié pour initialiser les nouvelle "
-"liste. Il est important de noter que ni les membres de la liste, ni ses "
-"archives, ni encore les documents partagés ne sont dupliqués. Vous ne pouvez "
-"copier une liste que si vous en êtes propriétaire."
+"Lorsque vous rejetez un message marqué comme spam, vous ne devriez "
+"probablement pas en notifier l'expéditeur. L'adresse d'expédition du message "
+"est en effet probablement usurpée. Voulez-vous réellement rejeter ces "
+"message avec notification ?"
 
-#: web_tt2/create_list_request.tt2:25
+#: web_tt2/modindex.tt2:26
 msgid ""
-"You can request a new list creation with the following form.You will have to "
-"choose a list template that will preset most of the list parameters "
-"according to the list usage you plans. "
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
 msgstr ""
-"Vous pouvez demander la création d'une nouvelle liste via le formulaire ci-"
-"dessous. Vous devrez choisir un modèle de liste dont les paramètres sont les "
-"plus adaptés à vos besoins."
+"Veuillez sélectionner un ou plusieurs thèmes pour décrire votre message :"
 
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-msgid ""
-"\n"
-"If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"Vous pouvez également valider cette demande en envoyant un message à %1 avec "
-"comme objet :\n"
-"AUTH %2 ADD %3 %4 %5\n"
+#~ msgid ""
+#~ "You can create a list, using an existing list as a template ; the list "
+#~ "configuration of the source list will be copied to create the ew one. "
+#~ "Note that neither list members, nor archives or shared documents are "
+#~ "duplicated. The source lists you can use are limited to lists you own."
+#~ msgstr ""
+#~ "Vous pouvez créer une liste, à partir d'une liste existante ; la "
+#~ "configuration de la liste d'origine sera copié pour initialiser les "
+#~ "nouvelle liste. Il est important de noter que ni les membres de la liste, "
+#~ "ni ses archives, ni encore les documents partagés ne sont dupliqués. Vous "
+#~ "ne pouvez copier une liste que si vous en êtes propriétaire."
+
+#~ msgid ""
+#~ "You can request a new list creation with the following form.You will have "
+#~ "to choose a list template that will preset most of the list parameters "
+#~ "according to the list usage you plans. "
+#~ msgstr ""
+#~ "Vous pouvez demander la création d'une nouvelle liste via le formulaire "
+#~ "ci-dessous. Vous devrez choisir un modèle de liste dont les paramètres "
+#~ "sont les plus adaptés à vos besoins."
+
+#~ msgid ""
+#~ "\n"
+#~ "If prefered, you can accept this subscription request sending an email to "
+#~ "%1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Vous pouvez également valider cette demande en envoyant un message à %1 "
+#~ "avec comme objet :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid "bounce score"
 #~ msgstr "Taux d'erreurs"

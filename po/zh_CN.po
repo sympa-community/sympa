@@ -468,7 +468,7 @@ msgstr "建立日期"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "标题"
 
@@ -485,7 +485,7 @@ msgid "Add subscribers"
 msgstr "添加订阅者"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "不通知"
@@ -545,7 +545,7 @@ msgstr "归档管理"
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
 #: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
-#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr "打开一个新窗口"
@@ -594,7 +594,7 @@ msgid "Search field :"
 msgstr "查找字段："
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80
 #: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "查找"
@@ -665,7 +665,7 @@ msgid "Sender"
 msgstr "发送者"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "日期"
@@ -907,7 +907,7 @@ msgstr "标题："
 msgid "Send this mail"
 msgstr "发送这则邮件"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "这张邮件列表配置要求有主题。"
 
@@ -1185,6 +1185,7 @@ msgid "Confirm"
 msgstr "证实"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
+#: web_tt2/manage_template.tt2:40
 msgid "Cancel"
 msgstr "取消"
 
@@ -1264,7 +1265,7 @@ msgid "Listing of root folder"
 msgstr "根文件夹目录"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
 msgid "Author"
 msgstr "作者"
 
@@ -1273,7 +1274,7 @@ msgid "Size (Kb)"
 msgstr "大小（KB）"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:157
+#: web_tt2/review.tt2:158
 msgid "Last update"
 msgstr "最近更新"
 
@@ -1590,7 +1591,7 @@ msgstr "模板名称"
 msgid "Type"
 msgstr "键入"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
 msgid "Path"
 msgstr "路径"
 
@@ -1772,7 +1773,7 @@ msgstr "缺少参量%1"
 msgid "Wrong value for parameter %1"
 msgstr "参量%1的错误值"
 
-#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "您需要登录"
 
@@ -2075,13 +2076,31 @@ msgstr "身份验证过程失败"
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr "列表状态为'%1'时，不能添加订阅者。"
 
+#. (u_err.argument)
+#: web_tt2/error.tt2:121
+#, fuzzy
+msgid "This Template '%1' already exists"
+msgstr "文件%1已经存在"
+
+#. (u_err.file_del)
+#: web_tt2/error.tt2:122
+#, fuzzy
+msgid "Cannot delete this file '%1'"
+msgstr "不能打开文件＂%1＂"
+
+#. (u_err.filename)
+#: web_tt2/error.tt2:123
+#, fuzzy
+msgid "Invalid filename: '%1'"
+msgstr "无法读取文件：＂%1＂。"
+
 #. (auth.action)
-#: web_tt2/error.tt2:129
+#: web_tt2/error.tt2:132
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "授权拒绝（%1）"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:131
+#: web_tt2/error.tt2:134
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2196,8 +2215,8 @@ msgstr "最新共享文档"
 msgid "Most recent documents for this list "
 msgstr "这张邮件列表的最新文件"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
-#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:133 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "名称"
 
@@ -2219,7 +2238,7 @@ msgid " The latest lists of this robot"
 msgstr "这个邮件系统最新的邮件列表"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:83
 msgid "%1 occurrence(s) found"
 msgstr "找到了%1个结果"
 
@@ -2369,73 +2388,130 @@ msgid ""
 "performed during this period."
 msgstr "邮件列表服务器正在维护模式下，在这期间不能执行任何操作。"
 
-#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:8
+#: web_tt2/manage_template.tt2:4
+#, fuzzy
+msgid "Modify or Delete existing messages"
+msgstr "编辑拒绝邮件"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "确定要删除这则邮件吗？"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Delete Template"
+msgstr "模板"
+
+#: web_tt2/manage_template.tt2:8
+#, fuzzy
+msgid "Modify Template"
+msgstr "模板"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr "最近邮件"
+
+#: web_tt2/manage_template.tt2:30
+#, fuzzy
+msgid "Template Name :"
+msgstr "模板名称："
+
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "输入模板"
+
+#: web_tt2/manage_template.tt2:39
+#, fuzzy
+msgid "Save Template"
+msgstr "模板"
+
+#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr "监管的目录邮件"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
-#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "分发"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
-#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
-msgid "Reject"
-msgstr "拒绝"
-
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
-msgid "Notified reject"
-msgstr "通知的拒绝"
-
-#: web_tt2/modindex.tt2:16
-msgid ""
-"You should probably not reject message detected as spam with notification "
-"because the message sender is probably spoofed. Do you really want to reject "
-"thoses messages with notification ?"
-msgstr ""
-
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
-msgid "Reject and blacklist sender"
-msgstr "拒绝并把发送列入黑名单"
-
-#: web_tt2/modindex.tt2:19
+#: web_tt2/modindex.tt2:20
 msgid "edit blacklist"
 msgstr "编辑黑名单"
 
-#: web_tt2/modindex.tt2:26
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
+#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "拒绝"
+
+#: web_tt2/modindex.tt2:22
 msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "编辑拒绝邮件"
+
+#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
+
+#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "黑名单"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/modindex.tt2:47
+#, fuzzy
+msgid ""
+"Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr "请选择一个或多个对应于您想分发的邮件的主题："
 
-#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
+#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
 msgid "Size"
 msgstr "大小"
 
-#: web_tt2/modindex.tt2:76
+#: web_tt2/modindex.tt2:97
 msgid "No subject"
 msgstr "没有标题"
 
+#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+msgid "Notified reject"
+msgstr "通知的拒绝"
+
+#: web_tt2/modindex.tt2:115
+msgid "Reject and blacklist sender"
+msgstr "拒绝并把发送列入黑名单"
+
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "反选"
 
-#: web_tt2/modindex.tt2:100
+#: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:113
+#: web_tt2/modindex.tt2:134
 msgid "Listing of shared documents to moderate"
 msgstr "监管的共享文档目录"
 
-#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
+#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
 msgid "Install"
 msgstr "安装"
 
-#: web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:140
 msgid "Listing of documents shared to moderate"
 msgstr "监管的共享文档目录"
 
@@ -2592,7 +2668,7 @@ msgstr "在成员页"
 msgid "User preferences"
 msgstr "用户首选项"
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112
 #: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
@@ -2766,7 +2842,7 @@ msgstr "未知"
 msgid "This list is configured to require topic(s) foreach message."
 msgstr "这张邮件列表配置要求每个邮件有主题。"
 
-#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:19
+#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below :"
 msgstr "请选项一个或多个对应于如下邮件的主题："
@@ -2810,7 +2886,7 @@ msgid ""
 "subscribers?"
 msgstr "确定要发送订阅提醒邮件到%1订阅者吗？"
 
-#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
 #: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "前页"
@@ -2820,7 +2896,7 @@ msgstr "前页"
 msgid "page %1 / %2"
 msgstr "第%1页 共%2页"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
 #: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "下页"
@@ -2854,7 +2930,7 @@ msgstr "查看上一封退信"
 msgid "no score"
 msgstr "退信的比分"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "删除选中的邮件地址"
 
@@ -2883,7 +2959,7 @@ msgstr "新的邮件列表"
 msgid "Page size"
 msgstr "页面大小"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "页"
 
@@ -2899,64 +2975,60 @@ msgstr "等待订阅"
 msgid "Remind all"
 msgstr "提醒所有订阅者"
 
-#: web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "黑名单"
-
 #: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr "添加一个用户"
 
-#: web_tt2/review.tt2:65
+#: web_tt2/review.tt2:66
 msgid "Multiple add"
 msgstr "批量添加"
 
-#: web_tt2/review.tt2:77
+#: web_tt2/review.tt2:78
 msgid "Search user by e-mail: "
 msgstr "根据邮件查找用户"
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:79
 msgid "Search user by email"
 msgstr "根据邮件查找用户"
 
-#: web_tt2/review.tt2:84
+#: web_tt2/review.tt2:85
 msgid "Selection too wide, can not show selection"
 msgstr "选项范围太宽，无法显示选项"
 
-#: web_tt2/review.tt2:100
+#: web_tt2/review.tt2:101
 msgid "List members"
 msgstr "邮件列表成员"
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
 msgid "Domain"
 msgstr "网域"
 
-#: web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125
 msgid "Picture"
 msgstr "图片"
 
-#: web_tt2/review.tt2:137
+#: web_tt2/review.tt2:138
 msgid "Reception"
 msgstr "接收"
 
-#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
+#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
 msgid "Sources"
 msgstr "来源"
 
-#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr "订阅日期"
 
-#: web_tt2/review.tt2:191
+#: web_tt2/review.tt2:192
 msgid "bouncing"
 msgstr "退信的"
 
 #. (u.email)
-#: web_tt2/review.tt2:208
+#: web_tt2/review.tt2:209
 msgid "%1's picture"
 msgstr "%1的图片"
 
-#: web_tt2/review.tt2:276
+#: web_tt2/review.tt2:277
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "确定要退订所有选中的订阅者吗？"
 
@@ -3990,7 +4062,7 @@ msgstr "查找间隔："
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -7288,7 +7360,7 @@ msgstr "配置文件--CONFIG--包含错误。\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
 msgid "%A"
 msgstr "%A"
 
@@ -7299,7 +7371,7 @@ msgstr "%d：%s行有错误"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H时%M分%S秒"
 
@@ -7909,16 +7981,16 @@ msgstr "%Y年%m月%d日（%a）"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
-#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
-#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
-#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
-#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
-#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
-#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
-#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
-#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
-#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
+#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
+#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
+#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
+#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
+#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
+#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
+#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
+#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
+#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -8039,21 +8111,21 @@ msgstr "（未知日期）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:994
+#: wwsympa/wwsympa.fcgi:999
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
-#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
+#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
+#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
+#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
 msgid "%d %b %y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
+#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8205,6 +8277,19 @@ msgstr "不接收邮件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
 
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:26
+msgid ""
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
+msgstr "请选择一个或多个对应于您想分发的邮件的主题："
+
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
@@ -8219,19 +8304,6 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plans. "
 msgstr ""
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"或用以下标题发邮件到%1：\n"
-"AUTH %2 ADD %3 %4 %5\n"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8253,6 +8325,17 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "If prefered, you can accept this subscription request sending an email to "
+#~ "%1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "或用以下标题发邮件到%1：\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid "bounce score"
 #~ msgstr "退信的比分"

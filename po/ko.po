@@ -481,7 +481,7 @@ msgstr "작성일"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "제목"
 
@@ -498,7 +498,7 @@ msgid "Add subscribers"
 msgstr "가입자 추가"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "자동 모드"
@@ -558,7 +558,7 @@ msgstr "보관(저장) 관리"
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
 #: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
-#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr "새 창구에서 열림"
@@ -607,7 +607,7 @@ msgid "Search field :"
 msgstr "검색 필드 :"
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80
 #: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "검색"
@@ -678,7 +678,7 @@ msgid "Sender"
 msgstr "보낸 사람"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "날짜"
@@ -921,7 +921,7 @@ msgstr "제목:"
 msgid "Send this mail"
 msgstr "이 메일 전송하기"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "이 리스트 화제 를 요청하기 위해 화제 필요합니다."
 
@@ -1203,6 +1203,7 @@ msgid "Confirm"
 msgstr "확인"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
+#: web_tt2/manage_template.tt2:40
 msgid "Cancel"
 msgstr "취소"
 
@@ -1282,7 +1283,7 @@ msgid "Listing of root folder"
 msgstr "루트 폴더의 목록"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
 msgid "Author"
 msgstr "작성자"
 
@@ -1291,7 +1292,7 @@ msgid "Size (Kb)"
 msgstr "크기 (Kb)"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:157
+#: web_tt2/review.tt2:158
 msgid "Last update"
 msgstr "최신 정보"
 
@@ -1610,7 +1611,7 @@ msgstr "템플렛 이름"
 msgid "Type"
 msgstr "유형"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
 msgid "Path"
 msgstr "경로"
 
@@ -1796,7 +1797,7 @@ msgstr "%1 인수 없음"
 msgid "Wrong value for parameter %1"
 msgstr "매개 변수 %1 를 위한 틀린 값"
 
-#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "로그인 필요가 있습니다"
 
@@ -2103,13 +2104,31 @@ msgstr "인증이 실패 되었습니다"
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
+#. (u_err.argument)
+#: web_tt2/error.tt2:121
+#, fuzzy
+msgid "This Template '%1' already exists"
+msgstr "파일 %1 이미 있습니다"
+
+#. (u_err.file_del)
+#: web_tt2/error.tt2:122
+#, fuzzy
+msgid "Cannot delete this file '%1'"
+msgstr "'%1' 파일를 열 수 없습니다"
+
+#. (u_err.filename)
+#: web_tt2/error.tt2:123
+#, fuzzy
+msgid "Invalid filename: '%1'"
+msgstr "파일을 읽을 수 없음 : '%1'."
+
 #. (auth.action)
-#: web_tt2/error.tt2:129
+#: web_tt2/error.tt2:132
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "허가 거부 (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:131
+#: web_tt2/error.tt2:134
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2224,8 +2243,8 @@ msgstr " 가장 최신 공용 문서 "
 msgid "Most recent documents for this list "
 msgstr "리스트의 가장 최신 문서 "
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
-#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:133 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "이름"
 
@@ -2247,7 +2266,7 @@ msgid " The latest lists of this robot"
 msgstr " 이 해당장치(robot)의 최신 리스트들"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:83
 msgid "%1 occurrence(s) found"
 msgstr "%1가 발견 되었습니다"
 
@@ -2411,73 +2430,130 @@ msgstr ""
 "메일링 리스트 서버 유지 관리 모드에 있습니다, 무연산 는일 수 있습니다.이 기"
 "간 동안에 수행했습니다."
 
-#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:8
+#: web_tt2/manage_template.tt2:4
+#, fuzzy
+msgid "Modify or Delete existing messages"
+msgstr "편집자 거부 메시지"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "이 메시지를 삭제하시겠습니까?"
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Delete Template"
+msgstr "템플렛"
+
+#: web_tt2/manage_template.tt2:8
+#, fuzzy
+msgid "Modify Template"
+msgstr "템플렛"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr " 최신 메시지들 "
+
+#: web_tt2/manage_template.tt2:30
+#, fuzzy
+msgid "Template Name :"
+msgstr "템플렛 이름 : "
+
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "입력 템플렛"
+
+#: web_tt2/manage_template.tt2:39
+#, fuzzy
+msgid "Save Template"
+msgstr "템플렛"
+
+#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr "살펴보기 목록 메시지"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
-#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "배포하기"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
-#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
-msgid "Reject"
-msgstr "거부하기"
-
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
-msgid "Notified reject"
-msgstr "거부 통지"
-
-#: web_tt2/modindex.tt2:16
-msgid ""
-"You should probably not reject message detected as spam with notification "
-"because the message sender is probably spoofed. Do you really want to reject "
-"thoses messages with notification ?"
-msgstr ""
-
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
-msgid "Reject and blacklist sender"
-msgstr "거부하고 보낸 사람를 블랙리스트하기"
-
-#: web_tt2/modindex.tt2:19
+#: web_tt2/modindex.tt2:20
 msgid "edit blacklist"
 msgstr "블랙리스트 편집"
 
-#: web_tt2/modindex.tt2:26
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
+#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "거부하기"
+
+#: web_tt2/modindex.tt2:22
 msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "편집자 거부 메시지"
+
+#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
+
+#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "블랙리스트"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/modindex.tt2:47
+#, fuzzy
+msgid ""
+"Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr "한개 이상 바라는 메시지에 대응하는 화제 (s)를 선택하기배포하기 위해:"
 
-#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
+#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
 msgid "Size"
 msgstr "크기"
 
-#: web_tt2/modindex.tt2:76
+#: web_tt2/modindex.tt2:97
 msgid "No subject"
 msgstr "제목"
 
+#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+msgid "Notified reject"
+msgstr "거부 통지"
+
+#: web_tt2/modindex.tt2:115
+msgid "Reject and blacklist sender"
+msgstr "거부하고 보낸 사람를 블랙리스트하기"
+
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "모두 선택/해제"
 
-#: web_tt2/modindex.tt2:100
+#: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:113
+#: web_tt2/modindex.tt2:134
 msgid "Listing of shared documents to moderate"
 msgstr "살펴보기 공용 문서의 목록"
 
-#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
+#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
 msgid "Install"
 msgstr "설치하기"
 
-#: web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:140
 msgid "Listing of documents shared to moderate"
 msgstr "문서의 목록 는 살펴보기 하기 위해 공용됬습니다"
 
@@ -2638,7 +2714,7 @@ msgstr "가입자 페이지"
 msgid "User preferences"
 msgstr "사용자 기본설정"
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112
 #: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
@@ -2818,7 +2894,7 @@ msgstr "확인 불가"
 msgid "This list is configured to require topic(s) foreach message."
 msgstr "이 리스트 화제 for each 메시지를 요청하기 위해 필요합니다."
 
-#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:19
+#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below :"
 msgstr "한개 이상 아래 메시지에 대응하는 화제 (s)를 선택하기:"
@@ -2862,7 +2938,7 @@ msgid ""
 "subscribers?"
 msgstr "%1 구독 미리 알림 메시지를 %1 가입자에게 보내고 싶습까?"
 
-#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
 #: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "이전 페이지"
@@ -2872,7 +2948,7 @@ msgstr "이전 페이지"
 msgid "page %1 / %2"
 msgstr "%2 페이지중 %1 페이지"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
 #: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "다음 페이지"
@@ -2906,7 +2982,7 @@ msgstr "최신 반송된 매시지 보기"
 msgid "no score"
 msgstr "반송 점수"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "선택된 주소을 삭제하기"
 
@@ -2935,7 +3011,7 @@ msgstr " 새로운 리스트들 "
 msgid "Page size"
 msgstr "페이지 크기"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "페이지"
 
@@ -2951,65 +3027,61 @@ msgstr "대기 중 구독들"
 msgid "Remind all"
 msgstr "모든께 알림 보내기"
 
-#: web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "블랙리스트"
-
 #: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr ""
 
-#: web_tt2/review.tt2:65
+#: web_tt2/review.tt2:66
 msgid "Multiple add"
 msgstr "여러 개의 추가"
 
-#: web_tt2/review.tt2:77
+#: web_tt2/review.tt2:78
 #, fuzzy
 msgid "Search user by e-mail: "
 msgstr "이메일으로 사용자 검색"
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:79
 msgid "Search user by email"
 msgstr "이메일으로 사용자 검색"
 
-#: web_tt2/review.tt2:84
+#: web_tt2/review.tt2:85
 msgid "Selection too wide, can not show selection"
 msgstr "선택 너무 넓게, 보여줄 수 없습니다"
 
-#: web_tt2/review.tt2:100
+#: web_tt2/review.tt2:101
 msgid "List members"
 msgstr "리스트 가입자"
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
 msgid "Domain"
 msgstr "도메인"
 
-#: web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125
 msgid "Picture"
 msgstr "그립"
 
-#: web_tt2/review.tt2:137
+#: web_tt2/review.tt2:138
 msgid "Reception"
 msgstr "받기"
 
-#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
+#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
 msgid "Sources"
 msgstr "원본"
 
-#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr "이하 날짜"
 
-#: web_tt2/review.tt2:191
+#: web_tt2/review.tt2:192
 msgid "bouncing"
 msgstr "반송된"
 
 #. (u.email)
-#: web_tt2/review.tt2:208
+#: web_tt2/review.tt2:209
 msgid "%1's picture"
 msgstr "%1 의 그림"
 
-#: web_tt2/review.tt2:276
+#: web_tt2/review.tt2:277
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "모든 선택된 가입자를 등록취소하시겠습니까?"
 
@@ -4031,7 +4103,7 @@ msgstr "검색 기간: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
@@ -7423,7 +7495,7 @@ msgstr "구성 파일 --설치은 에러을 포함합니다.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
 msgid "%A"
 msgstr "%a"
 
@@ -7434,7 +7506,7 @@ msgstr "에러 (%d 행) : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
@@ -8051,16 +8123,16 @@ msgstr "%Y년%m월%d일 (%a)"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
-#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
-#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
-#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
-#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
-#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
-#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
-#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
-#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
-#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
+#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
+#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
+#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
+#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
+#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
+#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
+#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
+#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
+#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
 msgid "%d %b %Y"
 msgstr "%Y년%m월%d일"
 
@@ -8187,21 +8259,21 @@ msgstr "(확인 불가 날짜)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:994
+#: wwsympa/wwsympa.fcgi:999
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
-#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
+#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
+#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
+#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
+#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8353,6 +8425,19 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:26
+msgid ""
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
+msgstr "한개 이상 바라는 메시지에 대응하는 화제 (s)를 선택하기배포하기 위해:"
+
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
@@ -8367,19 +8452,6 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plans. "
 msgstr ""
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
-"AUTH %2 ADD %3 %4 %5\n"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8401,6 +8473,17 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "If prefered, you can accept this subscription request sending an email to "
+#~ "%1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "또는 다음 제목과 함께 %1 에게 이메일을 보내주십시요:\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid "bounce score"
 #~ msgstr "반송 점수"

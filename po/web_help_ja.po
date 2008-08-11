@@ -570,7 +570,7 @@ msgstr ""
 "読者や、読者になるかもしれない人からの<strong>リストに関する問い合わせに答え"
 "る</strong>、"
 
-#: web_tt2/help_admin.tt2:248 web_tt2/help_introduction.tt2:103
+#: web_tt2/help_admin.tt2:285 web_tt2/help_introduction.tt2:103
 msgid "etc."
 msgstr "などです。"
 
@@ -2609,7 +2609,7 @@ msgid ""
 "email addresses</strong>' button."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:180
+#: web_tt2/help_admin.tt2:186
 msgid "Moderating messages sent to the list"
 msgstr "リストに届くメッセージの吟味"
 
@@ -2620,7 +2620,7 @@ msgstr "リストに届くメッセージの吟味"
 # # "Sympa, l'informant que son message va être modéré avant de pouvoir être "
 # # "diffusé. Les modérateurs, quant à eux, reçoivent également un message de "
 # # "Sympa, contenant le message à modérer."
-#: web_tt2/help_admin.tt2:181
+#: web_tt2/help_admin.tt2:187
 msgid ""
 "When a list is moderated, <strong>all messages have to be approved of by one "
 "of the moderators before being distributed to the list</strong>. After "
@@ -2629,54 +2629,138 @@ msgid ""
 "notice message from Sympa, which includes the message to moderate."
 msgstr ""
 
-# # "Vous pouvez <strong>effectuer des tâches de modération</strong> soit "
-# # "<strong>par e-mail</strong>, en répondant aux messages que vous adresse "
-# # "Sympa, soit <strong>via l'interface web du serveur de listes</strong>. "
-# # "Pour cela, il vous suffit d'aller dans le <strong>module d'administration "
-# # "de la liste</strong> et de cliquer sur '<strong>Modérer</strong>' dans le "
-# # "menu supérieur : la page qui s'affiche contient tous les messages en "
-# # "attente de modération (les messages les plus récents sont en haut de la "
-# # "page). <strong>Pour consulter un message, cliquez sur son objet</strong>."
-#: web_tt2/help_admin.tt2:183
+#: web_tt2/help_admin.tt2:189
 msgid ""
 "You can <strong>perform moderating tasks</strong> either <strong>by email</"
 "strong>, by answering the messages received from Sympa, or <strong>through "
 "the mailing list web interface</strong>. To do that, click on the "
 "'<strong>Message</strong>' link in the 'Moderate' submenu: you are brought "
 "to a page that displays all messages to be moderated (the most recent "
-"messages are on top of page). <strong>To read a message, click on its "
+"messages are on top of the table). <strong>To read a message, click on its "
 "subject</strong>."
 msgstr ""
 
-# # "Vous avez <strong>trois possibilités</strong> de modération :"
-#: web_tt2/help_admin.tt2:185
-msgid "You have <strong>three options</strong>:"
+#: web_tt2/help_admin.tt2:192
+msgid "Several actions can also be performed on these messages :"
 msgstr ""
 
-# # "<strong>autoriser la diffusion du message</strong> sur la liste ;"
-#: web_tt2/help_admin.tt2:187
-msgid "<strong>authorize the message distribution</strong> on the list;"
-msgstr ""
-
-# # "<strong>rejeter le message</strong> ;"
-#: web_tt2/help_admin.tt2:188
-msgid "<strong>reject the message</strong>;"
-msgstr ""
-
-# # "<strong>rejeter le message avec notification</strong> : lorsque vous "
-# # "rejetez un message, il est préférable de notifier son expéditeur..."
-#: web_tt2/help_admin.tt2:189
+#: web_tt2/help_admin.tt2:197
 msgid ""
-"<strong>reject the message and notify sender</strong>: when you reject a "
-"message, it is better to notify its sender..."
+"<strong>Distribute :</strong> After one or more messages have been selected "
+"from the main menu, you click this button to distribute them to the mailing "
+"list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:198
+msgid ""
+"<strong>Edit Blacklist : </strong>This button brings up which email "
+"addresses are in the blacklist and allows you to add or remove further "
+"entries"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:199
+msgid ""
+"<strong>Reject (+menu) : </strong>Once you have selected the desired reject "
+"message (from the adjacent menu) this button sends the rejection message to "
+"the sender"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:201
+msgid ""
+"Note : There is an option in the reject message menu 'Do Not Notify' to be "
+"used when you do not wish to notify the sender that you have rejected their "
+"message."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:203
+msgid ""
+"<strong>Blacklist : </strong>This checkbox is used in conjunction with the "
+"list of messages to be moderated, the rejection message menu and the reject "
+"button. First select the messages concerned then check the Blacklist "
+"checkbox then click reject. All the selected messages will be erased, all "
+"the senders emails will be added to the blacklist <strong>without</strong> "
+"notification."
 msgstr ""
 
 # # "Attention : le rejet avec notification n'est disponible que via "
 # # "l'interface web du serveur de listes."
-#: web_tt2/help_admin.tt2:190
+#: web_tt2/help_admin.tt2:205
 msgid ""
 "Be careful: rejecting a message and notifying its sender is only available "
 "through the mailing list web interface."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:208
+msgid ""
+"There is also an option to modify the reject messages which we will discuss "
+"here"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:211
+msgid "<strong>This screen is divided into two parts :</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:212 web_tt2/help_admin.tt2:215
+msgid "<strong>Modify or Delete Existing Messages</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:213 web_tt2/help_admin.tt2:221
+#, fuzzy
+msgid "<strong>Create New Reject Messages</strong>"
+msgstr ""
+"<strong>メッセージの本文は空にしておき</strong>、メッセージを送信する。"
+
+#: web_tt2/help_admin.tt2:216
+msgid ""
+"<strong>Delete Template : </strong>Once a message has been selected from the "
+"menu to the right this button deletes it (will ask for confirmation)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:217
+msgid ""
+"<strong>Modify Template : </strong>Once a message has been selected this "
+"button displays the name and contents of the message in the textfield and "
+"textarea below ('Create New Reject Messages' section) where you can make "
+"changes and then click <strong>save template </strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:219
+msgid ""
+"Note : In the menu the entries 'Default rejection message' and 'Do Not "
+"Notify' are no longer present. This is because they are both default "
+"messages and cannot be modified or erased."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:222
+msgid ""
+"Textfield <strong>Template Name : </strong>This is where you can enter the "
+"name of the template you wish to create or where the name of the template to "
+"be modified will be displayed."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:223
+msgid ""
+"Textarea : This is where you can enter the text of the message you wish to "
+"create or where the content of the template to be modified will be displayed"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:224
+msgid ""
+"<strong>Default Template : </strong> If pressed this button fills the "
+"Textarea with the contents of the 'Default Rejection Message' which can then "
+"be modified and saved"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:225
+msgid ""
+"<strong>Save Template : </strong> After the name and contents of the message "
+"have been created/modified this button saves the message."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:226
+msgid ""
+"<strong>Cancel : </strong> This button returns to the 'list of messages to "
+"moderate' screen."
 msgstr ""
 
 # # "Tous les modérateurs peuvent décider de diffuser ou non un message. "
@@ -2687,7 +2771,7 @@ msgstr ""
 # # "modérateurs, il est <strong>préférable de modérer les messages depuis "
 # # "l'interface web du serveur de listes</strong> : ainsi, vous verrez "
 # # "précisément quels messages restent à modérer."
-#: web_tt2/help_admin.tt2:192
+#: web_tt2/help_admin.tt2:230
 msgid ""
 "All moderators can decide to distribute a message or not. However, "
 "<strong>the first moderator to process the message will carry the day</"
@@ -2702,22 +2786,12 @@ msgstr ""
 # # "et l'heure d'envoi du message ne changent pas</strong>. Si la diffusion "
 # # "du message est autorisée avec beaucoup de retard, il est donc possible de "
 # # "recevoir le 31 décembre un message daté du 1er janvier !"
-#: web_tt2/help_admin.tt2:193
+#: web_tt2/help_admin.tt2:231
 msgid ""
 "<strong>Whatever the date and time of moderation, the date and time of "
 "sending of the message do not change</strong>. Thus, if the distribution of "
 "the message is allowed with a lot of delay, it is possible to receive a "
 "message dated January 1st on December 31st!"
-msgstr ""
-
-# # "En cas de rejet avec notification, l'abonné qui avait envoyé le message "
-# # "rejeté reçoit un message de notification. Vous pouvez <a "
-# # "href=\"#customize\">personnaliser ce message</a>."
-#: web_tt2/help_admin.tt2:194
-msgid ""
-"In case the message was rejected with a notice, the subscriber who had sent "
-"it is notified by email. You can <a href=\"#customize\">customize the "
-"message he/she gets</a>."
 msgstr ""
 
 # # "<strong>Rappel</strong> : vous pouvez <a "
@@ -2727,7 +2801,7 @@ msgstr ""
 # # "'<strong>Admin</strong>', puis sur '<strong>Configurer la "
 # # "liste</strong>', et enfin sur '<strong>Définition de la liste</strong>'."
 #. (path_cgi)
-#: web_tt2/help_admin.tt2:196
+#: web_tt2/help_admin.tt2:233
 msgid ""
 "<strong>Reminder</strong>: you can <a href=\"%1/help/listconfig#description"
 "\">add or remove moderators</a> through the list administration module. To "
@@ -2744,7 +2818,7 @@ msgstr ""
 # # "haut à droite du message. Un message de confirmation s'affiche ; cliquez "
 # # "sur OK."
 #. (path_cgi)
-#: web_tt2/help_admin.tt2:197
+#: web_tt2/help_admin.tt2:234
 msgid ""
 "It is also possible to <strong>process messages after their distribution on "
 "the list</strong>; this can be useful when a list is not moderated. If you "
@@ -2757,7 +2831,7 @@ msgid ""
 "to retrieve it.</strong>"
 msgstr ""
 
-#: web_tt2/help_admin.tt2:200
+#: web_tt2/help_admin.tt2:237
 msgid "Managing the message archive"
 msgstr "投稿保管庫の管理"
 
@@ -2766,7 +2840,7 @@ msgstr "投稿保管庫の管理"
 # # "liste</strong>. Pour télécharger ces archives, <strong>sélectionnez les "
 # # "mois</strong> qui vous intéressent dans la liste et cliquez sur le bouton "
 # # "'<strong>Télécharger le Zip</strong>'."
-#: web_tt2/help_admin.tt2:201
+#: web_tt2/help_admin.tt2:238
 msgid ""
 "The mailing list management robot Sympa can generate <strong>downloadable "
 "compressed archives (.ZIP format) of the messages sent to the list</strong>. "
@@ -2778,7 +2852,7 @@ msgstr ""
 # # "les mois pendant lesquels des messages ont été échangés, cliquez sur le "
 # # "premier mois, maintenez la touche SHIFT (ou « MAJ ») enfoncée et cliquez "
 # # "sur le dernier mois de la liste."
-#: web_tt2/help_admin.tt2:202
+#: web_tt2/help_admin.tt2:239
 msgid ""
 "Tip: in the 'Archive selection' list, to select all months during which "
 "messages have been sent, click on the first month, hold down the SHIFT key "
@@ -2796,7 +2870,7 @@ msgstr ""
 # # "d'extension</strong> ; utilisez l'éditeur de texte de votre choix "
 # # "(Bloc-notes, WordPad, Vim, etc.) pour les ouvrir. <strong>Chaque fichier "
 # # "correspond à un message entier (en-tête détaillé)</strong>."
-#: web_tt2/help_admin.tt2:203
+#: web_tt2/help_admin.tt2:240
 msgid ""
 "You will receive a file of the type '<strong>nameofthelist_archive.zip</"
 "strong>' containing <strong>folders named 'nameofthelist_year-month'</"
@@ -2814,7 +2888,7 @@ msgstr ""
 # # "message par message). Pour cela, <strong>sélectionnez les mois</strong> "
 # # "qui vous intéressent dans la liste et cliquez sur le bouton "
 # # "'<strong>Détruire les mois sélectionnés</strong>'."
-#: web_tt2/help_admin.tt2:204
+#: web_tt2/help_admin.tt2:241
 msgid ""
 "From the 'Manage archive' page, you can also <strong>delete messages</"
 "strong> (deletion month by month and not message by message). To do that, "
@@ -2826,7 +2900,7 @@ msgstr ""
 # # "cliquez sur 'Détruire les mois sélectionnés', gardez bien à l'esprit que "
 # # "vous ne supprimez pas simplement un fichier d'archives, mais bien toutes "
 # # "les archives de messages du mois sélectionné !!!</strong>"
-#: web_tt2/help_admin.tt2:205
+#: web_tt2/help_admin.tt2:242
 msgid ""
 "<strong>Be careful: this operation is irreversible!!! When you click on "
 "'Delete selected months', keep in mind that you are not only deleting an "
@@ -2834,7 +2908,7 @@ msgid ""
 "strong>"
 msgstr ""
 
-#: web_tt2/help_admin.tt2:208
+#: web_tt2/help_admin.tt2:245
 msgid "Renaming the list"
 msgstr "リストの移動"
 
@@ -2842,7 +2916,7 @@ msgstr "リストの移動"
 # # "'<strong>Renommer la liste</strong>'. Entrez le nom de votre choix puis "
 # # "cliquez sur le bouton 'Renommer la liste'. Un message de demande de "
 # # "confirmation s'affiche ; cliquez sur 'OK'."
-#: web_tt2/help_admin.tt2:209
+#: web_tt2/help_admin.tt2:246
 msgid ""
 "In the <strong>list administration module</strong>, click on '<strong>Rename "
 "list</strong>'. Enter the name of your choice and click on the 'Rename this "
@@ -2851,7 +2925,7 @@ msgstr ""
 
 # # "Si vous changez d'avis, il vous suffira d'effectuer la même manipulation "
 # # "pour restaurer l'ancien nom de la liste."
-#: web_tt2/help_admin.tt2:210
+#: web_tt2/help_admin.tt2:247
 msgid ""
 "If you change your mind, you will only have to redo the inverse operation in "
 "order to retrieve the former list name."
@@ -2860,21 +2934,21 @@ msgstr ""
 # # "<strong>ATTENTION : lors du renommage d'une liste, vous devez informer "
 # # "les listmasters, sans quoi le changement de nom ne pourra être "
 # # "effectif</strong>."
-#: web_tt2/help_admin.tt2:211
+#: web_tt2/help_admin.tt2:248
 msgid ""
 "Be careful: when you rename a list, you have to let the listmasters know; "
 "otherwise, the change will not be effective</strong>."
 msgstr ""
 
 # # "Quelques conseils pour le choix des noms de vos listes :"
-#: web_tt2/help_admin.tt2:212
+#: web_tt2/help_admin.tt2:249
 msgid "A few tips to name your lists:"
 msgstr ""
 
 # # "N'utilisez <strong>pas d'espaces, d'accents ni de caractères "
 # # "spéciaux</strong> dans les noms des listes : ces caractères peuvent créer "
 # # "des problèmes."
-#: web_tt2/help_admin.tt2:214
+#: web_tt2/help_admin.tt2:251
 msgid ""
 "<strong>Do not use any spaces, accents or specials characters</strong> in "
 "list names: those characters might cause problems."
@@ -2883,7 +2957,7 @@ msgstr ""
 # # "Choisissez un <strong>nom explicite mais pas trop long</strong> : pensez "
 # # "aux abonnés qui devront taper ce nom à chaque fois qu'ils voudront "
 # # "envoyer un message à la liste !"
-#: web_tt2/help_admin.tt2:215
+#: web_tt2/help_admin.tt2:252
 msgid ""
 "Choose an <strong>explicit yet short name</strong>: think of the subscribers "
 "who will have to type this name every time they will send a message to the "
@@ -2895,7 +2969,7 @@ msgstr ""
 # # "classées à la suite et clairement identifiables par tous (exemple : <em "
 # # "class=\"example\">sympa-users(@)cru.fr, sympa-fr(@)cru.fr</em>, etc.)."
 #. (conf.host)
-#: web_tt2/help_admin.tt2:216
+#: web_tt2/help_admin.tt2:253
 msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
 "a common prefix</strong>; thus they will be sorted together and will be "
@@ -2903,14 +2977,14 @@ msgid ""
 "1.fr</em>, etc.)."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:220
+#: web_tt2/help_admin.tt2:257
 msgid "Deleting the list"
 msgstr "リストの閉鎖"
 
 # # "Dans le <strong>module d'administration</strong> de la liste, cliquez sur "
 # # "'<strong>Supprimer la liste</strong>'. Un message de demande de "
 # # "confirmation s'affiche ; cliquez sur 'OK'."
-#: web_tt2/help_admin.tt2:221
+#: web_tt2/help_admin.tt2:258
 msgid ""
 "In the <strong>list administration module</strong>, click on '<strong>Remove "
 "list</strong>'. A confirmation message displays; click on 'OK'."
@@ -2919,7 +2993,7 @@ msgstr ""
 # # "<strong>Attention : si vous supprimez la liste, vous ne pourrez pas la "
 # # "rouvrir vous-même !!! Si vous désirez rouvrir la liste, il vous faudra "
 # # "faire appel aux listmasters.</strong>"
-#: web_tt2/help_admin.tt2:222
+#: web_tt2/help_admin.tt2:259
 msgid ""
 "<strong>Be careful: if you delete the list, you will not be able to reopen "
 "it yourself!!! If you want to reopen the list, you will have to ask the "
@@ -2928,14 +3002,14 @@ msgstr ""
 
 # # "Concrètement, quelles sont les <strong>conséquences</strong> d'une "
 # # "fermeture de liste ?"
-#: web_tt2/help_admin.tt2:224
+#: web_tt2/help_admin.tt2:261
 msgid ""
 "In real terms, what are the <strong>consequences</strong> of a list deletion?"
 msgstr ""
 
 # # "<strong>Tous les abonnés sont immédiatement désabonnés</strong> de façon "
 # # "automatique (y compris les propriétaires et modérateurs)."
-#: web_tt2/help_admin.tt2:226
+#: web_tt2/help_admin.tt2:263
 msgid ""
 "<strong>All subscribers are immediately unsubscribed</strong> automatically "
 "(including owners and moderators)."
@@ -2943,7 +3017,7 @@ msgstr ""
 
 # # "<strong>Les archives de messages sont préservées</strong> mais plus "
 # # "personne ne peut y accéder."
-#: web_tt2/help_admin.tt2:227
+#: web_tt2/help_admin.tt2:264
 msgid ""
 "<strong>The message archive is preserved</strong> but no one can access it "
 "anymore."
@@ -2951,7 +3025,7 @@ msgstr ""
 
 # # "<strong>Les documents publiés dans l'espace de stockage partagé sont "
 # # "préservés</strong> mais plus personne ne peut y accéder."
-#: web_tt2/help_admin.tt2:228
+#: web_tt2/help_admin.tt2:265
 msgid ""
 "<strong>The documents published in the shared document web space are "
 "preserved</strong> but no one can access them anymore."
@@ -2959,7 +3033,7 @@ msgstr ""
 
 # # "<strong>Seuls les listmasters ont le pouvoir de rouvrir la liste</strong> "
 # # "; tous les anciens abonnés seront réabonnés automatiquement."
-#: web_tt2/help_admin.tt2:229
+#: web_tt2/help_admin.tt2:266
 msgid ""
 "<strong>Only the listmasters have the power to reopen the list</strong>; if "
 "they do, the former list subscribers will automatically be subscribed again."
@@ -2968,7 +3042,7 @@ msgstr ""
 # # "Attention : en raison d'un petit temps de latence, les pages relatives à "
 # # "la liste restent accessibles à quiconque connaît leur adresse pendant un "
 # # "petit moment. Elles deviendront ensuite complètement inaccessibles."
-#: web_tt2/help_admin.tt2:231
+#: web_tt2/help_admin.tt2:268
 msgid ""
 "Be careful: due to a slight latency, the list pages remain accessible for a "
 "while if you know their addresses. Then they will become fully unavailable."
@@ -2977,18 +3051,18 @@ msgstr ""
 # # "<strong>Si vous souhaitez que la liste et tous les fichiers associés "
 # # "soient supprimés définitivement</strong>, vous devrez vous adresser aux "
 # # "listmasters."
-#: web_tt2/help_admin.tt2:233
+#: web_tt2/help_admin.tt2:270
 msgid ""
 "<strong>If you want the list and all the associated files to be deleted "
 "permanently</strong>, you will have to ask the listmasters."
 msgstr ""
 
 # # "Règles de bonne pratique"
-#: web_tt2/help_admin.tt2:235 web_tt2/help_sendmsg.tt2:39
+#: web_tt2/help_admin.tt2:272 web_tt2/help_sendmsg.tt2:39
 msgid "Good practices"
 msgstr ""
 
-#: web_tt2/help_admin.tt2:236
+#: web_tt2/help_admin.tt2:273
 msgid ""
 "In order to have dynamic lists, <strong>you must be deeply involved</strong> "
 "in their exchanges: if a list is neither controlled nor enlivened by its "
@@ -3008,7 +3082,7 @@ msgstr ""
 # # "ainsi que de nombreux liens sur la <a target=\"_blank\" "
 # # "href=\"http://fr.wikipedia.org/wiki/N%C3%A9tiquette\">page de la "
 # # "Wikipédia consacrée à la Nétiquette</a>."
-#: web_tt2/help_admin.tt2:237
+#: web_tt2/help_admin.tt2:274
 msgid ""
 "<strong>The use of email in general and for mailing lists is bound by a set "
 "of precise rules necessary to share pleasant exchanges: the \"Netiquette\"</"
@@ -3018,7 +3092,7 @@ msgid ""
 "wiki/Netiquette\">page of the Wikipedia dedicated to the Netiquette</a>."
 msgstr ""
 
-#: web_tt2/help_admin.tt2:238
+#: web_tt2/help_admin.tt2:275
 msgid ""
 "You should <strong>write a charter for your list</strong> to define all the "
 "rules that apply to its use:"
@@ -3026,11 +3100,11 @@ msgstr ""
 "<strong>リストの利用 charte を制定する</strong>ことをお勧めします。これは、運"
 "営に関わる以下のようなとりきめを集約したものです:"
 
-#: web_tt2/help_admin.tt2:240
+#: web_tt2/help_admin.tt2:277
 msgid "allowed, tolerated and forbidden topics;"
 msgstr "扱える話題、許される話題、許されない話題、"
 
-#: web_tt2/help_admin.tt2:241
+#: web_tt2/help_admin.tt2:278
 msgid ""
 "writing rules (for example to specify the languages in which the subscribers "
 "are to post, to ban \"<acronym lang=\"en\" xml:lang=\"en\" title=\"Short "
@@ -3040,31 +3114,31 @@ msgstr ""
 "<acronym lang=\"en\" xml:lang=\"en\" title=\"Short Message Service\">SMS</"
 "acronym>語の禁止、 -->など)、"
 
-#: web_tt2/help_admin.tt2:242
+#: web_tt2/help_admin.tt2:279
 msgid "rules applying when sending messages (frequency, attachments, etc.);"
 msgstr "メッセージ送信の際のとりきめ (頻度、添付ファイルを許すか、など)、"
 
-#: web_tt2/help_admin.tt2:243
+#: web_tt2/help_admin.tt2:280
 msgid "liabilities of subscribers regarding the netiquette;"
 msgstr "読者がネチケットを尊重すること、"
 
-#: web_tt2/help_admin.tt2:244
+#: web_tt2/help_admin.tt2:281
 msgid "rights and responsibilities of the subscribers;"
 msgstr "読者の権利と義務、"
 
-#: web_tt2/help_admin.tt2:245
+#: web_tt2/help_admin.tt2:282
 msgid "information about retention of the messages sent to the list;"
 msgstr "リストに送ったメッセージの投稿保管庫についての案内、"
 
-#: web_tt2/help_admin.tt2:246
+#: web_tt2/help_admin.tt2:283
 msgid "legal information and privacy policy;"
 msgstr "法的な情報や、情報保護指針についての情報、"
 
-#: web_tt2/help_admin.tt2:247
+#: web_tt2/help_admin.tt2:284
 msgid "sanctions applying to those who would not respect the list charter;"
 msgstr "このリスト利用 charte に従わない人に対する措置、"
 
-#: web_tt2/help_admin.tt2:251
+#: web_tt2/help_admin.tt2:288
 msgid ""
 "In order to have all subscribers read the list charter, you should include "
 "it in the welcome message they get after subscribing. To do that, you need "
@@ -3076,7 +3150,7 @@ msgstr ""
 "す。これは、リスト運営の「リストの設定変更」ページの<a href=\"#customize\">"
 "メッセージ設定</a>で行います。"
 
-#: web_tt2/help_admin.tt2:252
+#: web_tt2/help_admin.tt2:289
 msgid ""
 "When available, the <a target=\"_blank\" title=\"Example of charter aimed at "
 "owners and moderators (French)\" href=\"http://listes.cru.fr/cnil/charte."
@@ -7453,30 +7527,80 @@ msgstr ""
 "読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッセー"
 "ジをまた一通ずつ受け取れるようになります。"
 
-#: web_tt2/help_user.tt2:62
-#, fuzzy
+# # "Vous pouvez <strong>effectuer des tâches de modération</strong> soit "
+# # "<strong>par e-mail</strong>, en répondant aux messages que vous adresse "
+# # "Sympa, soit <strong>via l'interface web du serveur de listes</strong>. "
+# # "Pour cela, il vous suffit d'aller dans le <strong>module d'administration "
+# # "de la liste</strong> et de cliquer sur '<strong>Modérer</strong>' dans le "
+# # "menu supérieur : la page qui s'affiche contient tous les messages en "
+# # "attente de modération (les messages les plus récents sont en haut de la "
+# # "page). <strong>Pour consulter un message, cliquez sur son objet</strong>."
+#: web_tt2/help_admin.tt2:183
 msgid ""
-"If you do not remember your list password, click on 'Lost password ?'. Then "
-"you will need to enter your email address and a mail with a validation URL "
-"will be sent at that address."
+"You can <strong>perform moderating tasks</strong> either <strong>by email</"
+"strong>, by answering the messages received from Sympa, or <strong>through "
+"the mailing list web interface</strong>. To do that, click on the "
+"'<strong>Message</strong>' link in the 'Moderate' submenu: you are brought "
+"to a page that displays all messages to be moderated (the most recent "
+"messages are on top of page). <strong>To read a message, click on its "
+"subject</strong>."
 msgstr ""
-"自分のリスト用パスワードが思い出せないときは、「パスワードを忘れた」をクリッ"
-"クします。そして、自分の電子メールアドレスを入力します。そのアドレスにパス"
-"ワードが送られてきます。"
 
-#: web_tt2/help_user.tt2:64
-#, fuzzy
-msgid ""
-"<strong>If the unique authentication process does not apply to you and you "
-"do no have a list password yet</strong>, click on '<strong>First login ?</"
-"strong>' and type in your email address. A confirmation will be sent at that "
-"address. Then you will be able to choose your password."
+# # "Vous avez <strong>trois possibilités</strong> de modération :"
+#: web_tt2/help_admin.tt2:185
+msgid "You have <strong>three options</strong>:"
 msgstr ""
-"<strong>一括認証の手続きがなく、リストのパスワードもまだもらっていない</"
-"strong>、というときは、「<strong>まだログインしたことがない</strong>」をク"
-"リックし、自分の電子メールアドレスを入れます。すると、新しいパスワードがその"
-"アドレスに届きます。そうしたら、<strong>電子メールアドレス</strong>と<strong>"
-"リスト用のパスワード</strong>を打ち込み、ログインします。"
+
+# # "<strong>autoriser la diffusion du message</strong> sur la liste ;"
+#: web_tt2/help_admin.tt2:187
+msgid "<strong>authorize the message distribution</strong> on the list;"
+msgstr ""
+
+# # "<strong>rejeter le message</strong> ;"
+#: web_tt2/help_admin.tt2:188
+msgid "<strong>reject the message</strong>;"
+msgstr ""
+
+# # "<strong>rejeter le message avec notification</strong> : lorsque vous "
+# # "rejetez un message, il est préférable de notifier son expéditeur..."
+#: web_tt2/help_admin.tt2:189
+msgid ""
+"<strong>reject the message and notify sender</strong>: when you reject a "
+"message, it is better to notify its sender..."
+msgstr ""
+
+# # "En cas de rejet avec notification, l'abonné qui avait envoyé le message "
+# # "rejeté reçoit un message de notification. Vous pouvez <a "
+# # "href=\"#customize\">personnaliser ce message</a>."
+#: web_tt2/help_admin.tt2:194
+msgid ""
+"In case the message was rejected with a notice, the subscriber who had sent "
+"it is notified by email. You can <a href=\"#customize\">customize the "
+"message he/she gets</a>."
+msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "If you do not remember your list password, click on 'Lost password ?'. "
+#~ "Then you will need to enter your email address and a mail with a "
+#~ "validation URL will be sent at that address."
+#~ msgstr ""
+#~ "自分のリスト用パスワードが思い出せないときは、「パスワードを忘れた」をク"
+#~ "リックします。そして、自分の電子メールアドレスを入力します。そのアドレスに"
+#~ "パスワードが送られてきます。"
+
+#, fuzzy
+#~ msgid ""
+#~ "<strong>If the unique authentication process does not apply to you and "
+#~ "you do no have a list password yet</strong>, click on '<strong>First "
+#~ "login ?</strong>' and type in your email address. A confirmation will be "
+#~ "sent at that address. Then you will be able to choose your password."
+#~ msgstr ""
+#~ "<strong>一括認証の手続きがなく、リストのパスワードもまだもらっていない</"
+#~ "strong>、というときは、「<strong>まだログインしたことがない</strong>」をク"
+#~ "リックし、自分の電子メールアドレスを入れます。すると、新しいパスワードがそ"
+#~ "のアドレスに届きます。そうしたら、<strong>電子メールアドレス</strong>と"
+#~ "<strong>リスト用のパスワード</strong>を打ち込み、ログインします。"
 
 #~ msgid ""
 #~ "<strong>If the unique authentication process does not apply to you but "

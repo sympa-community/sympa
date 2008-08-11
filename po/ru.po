@@ -491,7 +491,7 @@ msgstr "Дата создания"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:44 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Тема"
 
@@ -508,7 +508,7 @@ msgid "Add subscribers"
 msgstr "Добавить подписчиков"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:64 web_tt2/review.tt2:97
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98
 #: web_tt2/reviewbouncing.tt2:129
 msgid "quiet"
 msgstr "без подтверждений и сообщений"
@@ -569,7 +569,7 @@ msgstr "Управление архивами"
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
 #: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
-#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:208
+#: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr "Открыть в новом окне"
@@ -623,7 +623,7 @@ msgid "Search field :"
 msgstr "Поле поиска: "
 
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:79
+#: web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80
 #: web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Поиск"
@@ -694,7 +694,7 @@ msgid "Sender"
 msgstr "Отправитель"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:122 web_tt2/modindex.tt2:42 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Дата"
@@ -942,7 +942,7 @@ msgstr "Тема:"
 msgid "Send this mail"
 msgstr "Отправить это письмо"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "Эта рассылка настроена требовать тему (темы) сообщений. "
 
@@ -1230,6 +1230,7 @@ msgid "Confirm"
 msgstr "Подтвердить"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
+#: web_tt2/manage_template.tt2:40
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -1309,7 +1310,7 @@ msgid "Listing of root folder"
 msgstr "Содержимое корневой папки"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:123 web_tt2/modindex.tt2:43
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
 msgid "Author"
 msgstr "Автор"
 
@@ -1318,7 +1319,7 @@ msgid "Size (Kb)"
 msgstr "Размер (Кб)"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
-#: web_tt2/review.tt2:157
+#: web_tt2/review.tt2:158
 msgid "Last update"
 msgstr "Последнее обновление"
 
@@ -1639,7 +1640,7 @@ msgstr "Название шаблона"
 msgid "Type"
 msgstr "Тип"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:124
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
 msgid "Path"
 msgstr "Путь"
 
@@ -1826,7 +1827,7 @@ msgstr "Отсутствует аргумент %1"
 msgid "Wrong value for parameter %1"
 msgstr "Неверное значение для параметра %1"
 
-#: web_tt2/error.tt2:135 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Вам необходимо войти"
 
@@ -2134,13 +2135,30 @@ msgstr "Ошибка авторизации"
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
+#. (u_err.argument)
+#: web_tt2/error.tt2:121
+#, fuzzy
+msgid "This Template '%1' already exists"
+msgstr "файл %1 уже существует"
+
+#. (u_err.file_del)
+#: web_tt2/error.tt2:122
+#, fuzzy
+msgid "Cannot delete this file '%1'"
+msgstr "Невозможно открыть файл '%1'"
+
+#. (u_err.filename)
+#: web_tt2/error.tt2:123
+msgid "Invalid filename: '%1'"
+msgstr ""
+
 #. (auth.action)
-#: web_tt2/error.tt2:129
+#: web_tt2/error.tt2:132
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "ОТКАЗ АВТОРИЗАЦИИ (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:131
+#: web_tt2/error.tt2:134
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2255,8 +2273,8 @@ msgstr " Последние общие документы "
 msgid "Most recent documents for this list "
 msgstr "Последние общие документы в этой рассылке"
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:129
-#: web_tt2/review.tt2:132 web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:9 web_tt2/review.tt2:130
+#: web_tt2/review.tt2:133 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Имя"
 
@@ -2278,7 +2296,7 @@ msgid " The latest lists of this robot"
 msgstr " Последние рассылки этого робота"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:5 web_tt2/review.tt2:82
+#: web_tt2/lists.tt2:5 web_tt2/review.tt2:83
 #, fuzzy
 msgid "%1 occurrence(s) found"
 msgstr "найдено совпадений : %1"
@@ -2448,75 +2466,131 @@ msgstr ""
 "Сервер почтовых рассылок переведён в режим обслуживания, в это время нельзя "
 "производить никаких операций. "
 
-#: web_tt2/modindex.tt2:35 web_tt2/modindex.tt2:8
+#: web_tt2/manage_template.tt2:4
+msgid "Modify or Delete existing messages"
+msgstr ""
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "Вы действительно хотите удалить указанные архивы? "
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Delete Template"
+msgstr "Шаблоны"
+
+#: web_tt2/manage_template.tt2:8
+#, fuzzy
+msgid "Modify Template"
+msgstr "Шаблоны"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr "Новые сообщения"
+
+#: web_tt2/manage_template.tt2:30
+#, fuzzy
+msgid "Template Name :"
+msgstr "Имя шаблона : "
+
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "Ввод шаблона"
+
+#: web_tt2/manage_template.tt2:39
+#, fuzzy
+msgid "Save Template"
+msgstr "Шаблоны"
+
+#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr "Просмотр сообщения для модерирования"
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:13 web_tt2/modindex.tt2:87
-#: web_tt2/modindex.tt2:89 web_tt2/viewmod.tt2:11 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Разослать"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:15 web_tt2/modindex.tt2:152
-#: web_tt2/modindex.tt2:91 web_tt2/viewmod.tt2:13
-msgid "Reject"
-msgstr "Отказать"
-
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:153 web_tt2/modindex.tt2:16
-#: web_tt2/modindex.tt2:92 web_tt2/viewmod.tt2:14
-msgid "Notified reject"
-msgstr "Отказать с уведомлением"
-
-#: web_tt2/modindex.tt2:16
-msgid ""
-"You should probably not reject message detected as spam with notification "
-"because the message sender is probably spoofed. Do you really want to reject "
-"thoses messages with notification ?"
-msgstr ""
-
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:94
-msgid "Reject and blacklist sender"
-msgstr "Отказать и внести отправителя в чёрный список"
-
-#: web_tt2/modindex.tt2:19
+#: web_tt2/modindex.tt2:20
 msgid "edit blacklist"
 msgstr "редактировать чёрный список"
 
-#: web_tt2/modindex.tt2:26
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
+#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "Отказать"
+
+#: web_tt2/modindex.tt2:22
 msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "Сообщение общего напоминания"
+
+#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
+
+#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "Чёрный список"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/modindex.tt2:47
+#, fuzzy
+msgid ""
+"Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr ""
 "Пожалуйста, выберите одну или несколько тем, соответветствующих сообщению, "
 "которое Вы хотите разослать : "
 
-#: web_tt2/modindex.tt2:125 web_tt2/modindex.tt2:45
+#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
 msgid "Size"
 msgstr "Размер"
 
-#: web_tt2/modindex.tt2:76
+#: web_tt2/modindex.tt2:97
 msgid "No subject"
 msgstr "Нет темы"
 
+#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+msgid "Notified reject"
+msgstr "Отказать с уведомлением"
+
+#: web_tt2/modindex.tt2:115
+msgid "Reject and blacklist sender"
+msgstr "Отказать и внести отправителя в чёрный список"
+
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:149 web_tt2/modindex.tt2:98 web_tt2/review.tt2:277
+#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "Инвертировать выбор"
 
-#: web_tt2/modindex.tt2:100
+#: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:113
+#: web_tt2/modindex.tt2:134
 msgid "Listing of shared documents to moderate"
 msgstr "Список общих документов для модерации"
 
-#: web_tt2/modindex.tt2:115 web_tt2/modindex.tt2:151
+#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
 msgid "Install"
 msgstr "Установить"
 
-#: web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:140
 #, fuzzy
 msgid "Listing of documents shared to moderate"
 msgstr "Список общих документов для модерации"
@@ -2681,7 +2755,7 @@ msgstr "На странице участников"
 msgid "User preferences"
 msgstr "Предпочтения пользователя"
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:108 web_tt2/review.tt2:111
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112
 #: web_tt2/reviewbouncing.tt2:63 web_tt2/subindex.tt2:8
 #: web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
@@ -2859,7 +2933,7 @@ msgstr "Неизвестный"
 msgid "This list is configured to require topic(s) foreach message."
 msgstr "Эта рассылка настроена запрашивать тему для каждого сообщения. "
 
-#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:19
+#: web_tt2/request_topic.tt2:7 web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below :"
 msgstr ""
@@ -2907,7 +2981,7 @@ msgstr ""
 "Вы действительно хотите отправить сообщение с напоминанием о подписке %1 "
 "пользователям? "
 
-#: web_tt2/review.tt2:265 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
+#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:117
 #: web_tt2/reviewbouncing.tt2:46 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr "Предыдущая страница"
@@ -2917,7 +2991,7 @@ msgstr "Предыдущая страница"
 msgid "page %1 / %2"
 msgstr "страница %1 / %2"
 
-#: web_tt2/review.tt2:271 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
+#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:123
 #: web_tt2/reviewbouncing.tt2:52 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr "Следующая страница"
@@ -2950,7 +3024,7 @@ msgstr "Просмотреть последнее возвращённое пи�
 msgid "no score"
 msgstr "счёт ошибок"
 
-#: web_tt2/review.tt2:278 web_tt2/review.tt2:96 web_tt2/reviewbouncing.tt2:128
+#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:128
 msgid "Delete selected email addresses"
 msgstr "Удалить выбранные электронные адреса"
 
@@ -2979,7 +3053,7 @@ msgstr " новые рассылки"
 msgid "Page size"
 msgstr "Размер страницы"
 
-#: web_tt2/review.tt2:268 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr "страница"
 
@@ -2995,65 +3069,61 @@ msgstr "Ожидающие подписчики"
 msgid "Remind all"
 msgstr "Напомнить всем"
 
-#: web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "Чёрный список"
-
 #: web_tt2/review.tt2:62
 msgid "Add an user: "
 msgstr ""
 
-#: web_tt2/review.tt2:65
+#: web_tt2/review.tt2:66
 msgid "Multiple add"
 msgstr "Добавить несколько"
 
-#: web_tt2/review.tt2:77
+#: web_tt2/review.tt2:78
 #, fuzzy
 msgid "Search user by e-mail: "
 msgstr "Поиск пользователя по электронному адресу"
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:79
 msgid "Search user by email"
 msgstr "Поиск пользователя по электронному адресу"
 
-#: web_tt2/review.tt2:84
+#: web_tt2/review.tt2:85
 msgid "Selection too wide, can not show selection"
 msgstr "Выборка слишком широка, невозможно отобразить выборку."
 
-#: web_tt2/review.tt2:100
+#: web_tt2/review.tt2:101
 msgid "List members"
 msgstr "Участники рассылки"
 
-#: web_tt2/review.tt2:116 web_tt2/review.tt2:119
+#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
 msgid "Domain"
 msgstr "Домен"
 
-#: web_tt2/review.tt2:124
+#: web_tt2/review.tt2:125
 msgid "Picture"
 msgstr "Аватар"
 
-#: web_tt2/review.tt2:137
+#: web_tt2/review.tt2:138
 msgid "Reception"
 msgstr "Получение"
 
-#: web_tt2/review.tt2:142 web_tt2/review.tt2:145
+#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
 msgid "Sources"
 msgstr "Источники"
 
-#: web_tt2/review.tt2:151 web_tt2/review.tt2:154 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr "Дата подписки"
 
-#: web_tt2/review.tt2:191
+#: web_tt2/review.tt2:192
 msgid "bouncing"
 msgstr "возвраты"
 
 #. (u.email)
-#: web_tt2/review.tt2:208
+#: web_tt2/review.tt2:209
 msgid "%1's picture"
 msgstr "аватар %1 "
 
-#: web_tt2/review.tt2:276
+#: web_tt2/review.tt2:277
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Вы действительно хотитте отписать ВСЕХ выделенных подписчиков? "
 
@@ -4117,7 +4187,7 @@ msgstr "Период поиска: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15442
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -7415,7 +7485,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9238
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
 msgid "%A"
 msgstr ""
 
@@ -7426,7 +7496,7 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2777 wwsympa/wwsympa.fcgi:993
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
@@ -8036,16 +8106,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10605 wwsympa/wwsympa.fcgi:10674
-#: wwsympa/wwsympa.fcgi:10876 wwsympa/wwsympa.fcgi:11206
-#: wwsympa/wwsympa.fcgi:15005 wwsympa/wwsympa.fcgi:15742
-#: wwsympa/wwsympa.fcgi:15743 wwsympa/wwsympa.fcgi:4786
-#: wwsympa/wwsympa.fcgi:4787 wwsympa/wwsympa.fcgi:5947
-#: wwsympa/wwsympa.fcgi:6943 wwsympa/wwsympa.fcgi:7477
-#: wwsympa/wwsympa.fcgi:7514 wwsympa/wwsympa.fcgi:7516
-#: wwsympa/wwsympa.fcgi:7966 wwsympa/wwsympa.fcgi:7967
-#: wwsympa/wwsympa.fcgi:8001 wwsympa/wwsympa.fcgi:8002
-#: wwsympa/wwsympa.fcgi:8181 wwsympa/wwsympa.fcgi:8182
+#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
+#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
+#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
+#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
+#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
+#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
+#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
+#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
+#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
+#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
 msgid "%d %b %Y"
 msgstr ""
 
@@ -8143,21 +8213,21 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:994
+#: wwsympa/wwsympa.fcgi:999
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:392 wwsympa/SympaSession.pm:393
-#: wwsympa/wwsympa.fcgi:11430 wwsympa/wwsympa.fcgi:11563
-#: wwsympa/wwsympa.fcgi:13876 wwsympa/wwsympa.fcgi:7437
+#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
+#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
+#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15387 wwsympa/wwsympa.fcgi:15388
+#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8310,6 +8380,21 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
+#: web_tt2/modindex.tt2:16
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"thoses messages with notification ?"
+msgstr ""
+
+#: web_tt2/modindex.tt2:26
+msgid ""
+"Please select one or more topic(s) that corresponds to the messages you wish "
+"to distribute :"
+msgstr ""
+"Пожалуйста, выберите одну или несколько тем, соответветствующих сообщению, "
+"которое Вы хотите разослать : "
+
 #: web_tt2/create_list_request.tt2:6
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
@@ -8324,19 +8409,6 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plans. "
 msgstr ""
-
-#. (replyto,keyauth,list.name,who,gecos)-)
-#: mail_tt2/listowner_notification.tt2:73
-#, fuzzy
-msgid ""
-"\n"
-"If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject :\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"\n"
-"или отошлите письмо по адресу %1 с такой темой\n"
-"AUTH %2 ADD %3 %4 %5\n"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8404,6 +8476,17 @@ msgstr ""
 #: mail_tt2/moderate.tt2:31
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "If prefered, you can accept this subscription request sending an email to "
+#~ "%1 with the following subject :\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
+#~ msgstr ""
+#~ "\n"
+#~ "или отошлите письмо по адресу %1 с такой темой\n"
+#~ "AUTH %2 ADD %3 %4 %5\n"
 
 #~ msgid "bounce score"
 #~ msgstr "счёт ошибок"
