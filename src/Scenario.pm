@@ -30,6 +30,8 @@ my @EXPORT = qw();
 use List;
 use Log;
 use Conf;
+use Net::Netmask;
+
 
 my %all_scenarios;
 my %persistent_cache;
@@ -38,7 +40,7 @@ my %persistent_cache;
 ## Supported parameters : function, robot, name, directory, file_path, options
 ## Output object has the following entries : name, file_path, rules, date, title, struct, data
 sub new {
-    my($pkg, @args) = @_;
+   my($pkg, @args) = @_;
     my %parameters = @args;
     &do_log('debug2', '');
  
@@ -564,7 +566,7 @@ sub verify {
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
 
-    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i) {
+    unless ($condition =~ /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i) {
 	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
     }
@@ -725,7 +727,7 @@ sub verify {
 	    return undef ;
 	}
 	# condition that require 1 argument
-    }elsif ($condition_key eq 'is_listmaster') {
+    }elsif ($condition_key =~ /^is_listmaster|verify_netmask$/) {
 	unless ($#args == 0) { 
 	     do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
@@ -760,6 +762,26 @@ sub verify {
 	}
 
 	if ( &List::is_listmaster($args[0],$robot)) {
+	    return $negation;
+	}else{
+	    return -1 * $negation;
+	}
+    }
+
+    ##### condition verify_netmask
+    if ($condition_key eq 'verify_netmask') {       	
+
+	## Check that the IP address of the client is available
+	## Means we are in a web context
+	unless (defined $ENV{'REMOTE_ADDR'}) {
+	    return -1; ## always skip this rule because we can't evaluate it
+	}
+	my $block;
+	unless ($block = new2 Net::Netmask ($args[0])) { 
+	    do_log('err', "error rule syntaxe : failed to parse netmask '$args[0]'");
+	    return undef;
+	}
+	if ($block->match ($ENV{'REMOTE_ADDR'})) {
 	    return $negation;
 	}else{
 	    return -1 * $negation;
