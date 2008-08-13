@@ -7,23 +7,44 @@
   <input type="hidden" name="list" value="[% list %]" />
 <h2>[%|loc%]Listing messages to moderate[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 
+<p>
  [%- IF topic_required -%]
+
   <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>
  [%- ELSE -%]
   <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+</p>
+<p>
  [%- END -%]
-  <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject thoses messages with notification ?[%END%]')" />
 [% IF conf.use_blacklist != 'none' %]
-  <input class="MainMenuLinks" type="submit" name="action_reject.quiet.blacklist" value="[%|loc%]Reject and blacklist sender[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
-[% END %]
+<input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+
+ <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%]')" />  
+  <select  name="message_template">
+  <option  value="reject">[%|loc %]Default rejection message[%END%]</option>
+  <option  value="quiet">[%|loc %]Do Not Notify[%END%]</option>	 
+   [% FOREACH file = available_files %]
+  <option  value="reject_[%  file  %]"> [%  file  %]</option> 
+
+ [%- END- %]
+
+ [%- END- %]
+
+   </select>
 <br />
+<input type=checkbox name="blacklist">[%|loc %]Blacklist[%END%]</option>
+</p>
+<p>
+
+If you would like to modify the reject messages 
+ <a  href="[% path_cgi %]/manage_template/[% list %]">[%|loc%]Click Here[%END%]</a> 
+
+
  [%- IF request_topic -%]
  <br />
  [%|loc%]This list is configured to require topic(s).[%END%]
  <br />
- [%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute :[%END%] 
+ [%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute :[%END%] 
  <br />
  [% FOREACH t = available_topics %]
  <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>

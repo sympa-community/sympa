@@ -177,21 +177,58 @@
 	<p>[%|helploc%]You can also <strong>unsubscribe subscribers whose addresses are still bouncing</strong>: too many bouncing addresses cause a considerable load on the mailing list server. To unsubscribe subscribers, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]</p>	
 	<p class="retraitita">[%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]</p>
 
+
+
+
+
+
+
 	<h4><a name="moderate"></a>[%|helploc%]Moderating messages sent to the list[%END%]</h4>
 	<p>[%|helploc%]When a list is moderated, <strong>all messages have to be approved of by one of the moderators before being distributed to the list</strong>. After sending a message to a list, subscribers are automatically notified by email that their message will be moderated. As for moderators, they also receive a notice message from Sympa, which includes the message to moderate.[%END%]</p>
 
-	<p>[%|helploc%]You can <strong>perform moderating tasks</strong> either <strong>by email</strong>, by answering the messages received from Sympa, or <strong>through the mailing list web interface</strong>. To do that, click on the '<strong>Message</strong>' link in the 'Moderate' submenu: you are brought to a page that displays all messages to be moderated (the most recent messages are on top of page). <strong>To read a message, click on its subject</strong>.[%END%]</p>
+	<p>[%|helploc%]You can <strong>perform moderating tasks</strong> either <strong>by email</strong>, by answering the messages received from Sympa, or <strong>through the mailing list web interface</strong>. To do that, click on the '<strong>Message</strong>' link in the 'Moderate' submenu: you are brought to a page that displays all messages to be moderated (the most recent messages are on top of the table). <strong>To read a message, click on its subject</strong>.[%END%]</p>
 
-	<p>[%|helploc%]You have <strong>three options</strong>:[%END%]</p>
+
+	<p>[%|helploc%]Several actions can also be performed on these messages :[%END%]</p>
 	<ul>
-		<li>[%|helploc%]<strong>authorize the message distribution</strong> on the list;[%END%]</li>
-		<li>[%|helploc%]<strong>reject the message</strong>;[%END%]</li>
-		<li>[%|helploc%]<strong>reject the message and notify sender</strong>: when you reject a message, it is better to notify its sender...[%END%]<br />
-		<p class="retraitita">[%|helploc%]Be careful: rejecting a message and notifying its sender is only available through the mailing list web interface.[%END%]</p></li>
+
+
+
+		<li>[%|helploc%]<strong>Distribute :</strong> After one or more messages have been selected from the main menu, you click this button to distribute them to the mailing list.[%END%]</li>
+		<li>[%|helploc%]<strong>Edit Blacklist : </strong>This button brings up which email addresses are in the blacklist and allows you to add or remove further entries[%END%]</li>
+                <li>[%|helploc%]<strong>Reject (+menu) : </strong>Once you have selected the desired reject message (from the adjacent menu) this button sends the rejection message to the sender[%END%]</li>
+
+	<p class="retraitita">[%|helploc%]Note : There is an option in the reject message menu 'Do Not Notify' to be used when you do not wish to notify the sender that you have rejected their message.[%END%]</p></li>
+
+		<li>[%|helploc%]<strong>Blacklist : </strong>This checkbox is used in conjunction with the list of messages to be moderated, the rejection message menu and the reject button. First select the messages concerned then check the Blacklist checkbox then click reject. All the selected messages will be erased, all the senders emails will be added to the blacklist <strong>without</strong> notification.[%END%]</li>
+
+	<p class="retraitita">[%|helploc%]Be careful: rejecting a message and notifying its sender is only available through the mailing list web interface.[%END%]</p></li>
+
+
+	<p>[%|helploc%]There is also an option to modify the reject messages which we will discuss here[%END%]</p>
+	<ul>
+
+<p>[%|helploc%]<strong>This screen is divided into two parts :</strong>[%END%]
+		<li>[%|helploc%]<strong>Modify or Delete Existing Messages</strong>[%END%]</li>
+		<li>[%|helploc%]<strong>Create New Reject Messages</strong>[%END%]</li>
+
+<p>[%|helploc%]<strong>Modify or Delete Existing Messages</strong>[%END%]
+		<li>[%|helploc%]<strong>Delete Template : </strong>Once a message has been selected from the menu to the right this button deletes it (will ask for confirmation).[%END%]</li>
+		<li>[%|helploc%]<strong>Modify Template : </strong>Once a message has been selected this button displays the name and contents of the message in the textfield and textarea below ('Create New Reject Messages' section) where you can make changes and then click <strong>save template </strong>[%END%]</li>
+
+	<p class="retraitita">[%|helploc%]Note : In the menu the entries 'Default rejection message' and 'Do Not Notify' are no longer present. This is because they are both default messages and cannot be modified or erased.[%END%]</p></li>
+
+	<p>[%|helploc%]<strong>Create New Reject Messages</strong>[%END%]
+	<li>[%|helploc%]Textfield <strong>Template Name : </strong>This is where you can enter the name of the template you wish to create or where the name of the template to be modified will be displayed.[%END%]</li>
+	<li>[%|helploc%]Textarea : This is where you can enter the text of the message you wish to create or where the content of the template to be modified will be displayed[%END%]</li>
+	<li>[%|helploc%]<strong>Default Template : </strong> If pressed this button fills the Textarea with the contents of the 'Default Rejection Message' which can then be modified and saved[%END%]</li>
+	<li>[%|helploc%]<strong>Save Template : </strong> After the name and contents of the message have been created/modified this button saves the message.[%END%]</li>
+	<li>[%|helploc%]<strong>Cancel : </strong> This button returns to the 'list of messages to moderate' screen.[%END%]</li>
+
+
 	</ul>
 	<p>[%|helploc%]All moderators can decide to distribute a message or not. However, <strong>the first moderator to process the message will carry the day</strong>. You will be notified by Sympa if you try to process a message that has already been moderated. When there are several moderators, it is <strong>easier to moderate messages from the mailing list web interface</strong>: thus, you will be able to view all messages remaining to be moderated.[%END%]</p>
 	<p class="retraitita">[%|helploc%]<strong>Whatever the date and time of moderation, the date and time of sending of the message do not change</strong>. Thus, if the distribution of the message is allowed with a lot of delay, it is possible to receive a message dated January 1st on December 31st![%END%]</p>
-	<p>[%|helploc%]In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href="#customize">customize the message he/she gets</a>.[%END%]</p>
 
 	<p>[%|helploc(path_cgi)%]<strong>Reminder</strong>: you can <a href="%1/help/listconfig#description">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'.[%END%]</p>
 	<p>[%|helploc(path_cgi)%]It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href="%1/help/arc#arcsearch">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>[%END%]</p>

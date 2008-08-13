@@ -101,7 +101,7 @@
   [% ELSIF u_err.msg == 'no_content' %][%|loc%]Failed : your content is empty[%END%]  
   [% ELSIF u_err.msg == 'cannot_overwrite' %] [%|loc(u_err.path)%]Cannot overwrite file %1[%END%] : [% u_err.reason %]
   [% ELSIF u_err.msg == 'doc_already_a_dir' %] [%|loc(u_err.path)%]A directory named '%1' already exists[%END%] : [% u_err.reason %]
-  [% ELSIF u_err.msg == 'doc_already_exist' %] [%|loc(u_err.name)%]This is an already existing document : '%1'[%END%]
+  [% ELSIF u_err.msg == 'doc_already_exists' %] [%|loc(u_err.name)%]This is an already existing document : '%1'[%END%]
   [% ELSIF u_err.msg == 'no_name' %][%|loc%]No name specified[%END%] 
   [% ELSIF u_err.msg == 'shared_full' %][%|loc%]The document repository exceed disk quota.[%END%]
   [% ELSIF u_err.msg == 'cannot_upload' %] [%|loc(u_err.path)%]Cannot upload file %1[%END%] : [% u_err.reason %]
@@ -118,6 +118,9 @@
   [% ELSIF u_err.msg == 'no_soap_service' %][%|loc%]No SOAP service[%END%]
   [% ELSIF u_err.msg == 'auth_failed' %][%|loc%]Authentication failed[%END%]
   [% ELSIF u_err.msg == 'list_not_open' %][%|loc(u_err.status)%]Cannot add subscribers when list status is '%1'[%END%]
+  [% ELSIF u_err.msg == 'template_exists' %][%|loc(u_err.argument)%]This Template '%1' already exists[%END%]
+  [% ELSIF u_err.msg == 'cannot_delete' %][%|loc(u_err.file_del)%]Cannot delete this file '%1'[%END%]
+  [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]
   [% ELSIF u_err.msg %][%u_err.msg%]
   [% END %]
 <br />		

@@ -4,14 +4,29 @@
  <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="id" value="[% id %]" />
+  <input type="hidden" name="file" value="[% file %]" />
 
  [%- IF topic_required -%]
   <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" onclick="return checkbox_check_topic(moderate_mail)" />
  [%- ELSE -%]
   <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
  [%- END -%]
-  <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" />
+
+  <select  name="message_template">
+  <option  value="reject">[%|loc %]Default rejection message[%END%]</option>
+  <option  value="quiet">[%|loc %]Do Not Notify[%END%]</option>	 
+   [% FOREACH file = available_files %]
+  <option  value="reject_[%  file  %]"> [%  file  %]</option> 
+
+ [%- END- %]
+</select>
+
+<input type="hidden" name="action" value="viewmod"/>
+
+</form>
+
+ <form action="[% path_cgi %]" method="post" name="moderate_mail_2">
  [%- IF request_topic -%]
   <br /><br />
  [%|loc%]This list is configured to require topic(s).[%END%]
@@ -27,4 +42,6 @@
 </fieldset>
 </form>
 [% PROCESS 'msg00000.html' %]
+
+
 

@@ -37,7 +37,15 @@ use strict ;
 
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
-my %session_hard_attributes = ('id_session' => 1, 'date' => 1, 'remote_addr'  => 1,'robot'  => 1,'email' => 1, 'start_date' => 1, 'hit' => 1);
+my %session_hard_attributes = ('id_session' => 1, 
+			       'date' => 1, 
+			       'remote_addr'  => 1,
+			       'robot'  => 1,
+			       'email' => 1, 
+			       'start_date' => 1, 
+			       'hit' => 1,
+			       'new_session' => 1,
+			      );
 
 
 sub new {
@@ -84,6 +92,7 @@ sub new {
 	}
     }else{
 	# create a new session context
+      $session->{'new_session'} = 1; ## Tag this session as new, ie no data in the DB exist
         $session->{'id_session'} = &get_random();
 	$session->{'email'} = 'nobody';
         $session->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
@@ -151,11 +160,11 @@ sub load {
     return ($self);
 }
 
-## This method will both renew the session ID and store it in the database
+## This method will both store the session information in the database
 sub store {
 
     my $self = shift;
-    do_log('debug', 'SympaSession::store()');
+    do_log('debug', '');
 
     return undef unless ($self->{'id_session'});
     return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
@@ -176,21 +185,71 @@ sub store {
 	return undef unless &List::db_connect();
     }	   
 
-    ## First remove the DB entry for the previous session ID
-    my $del_statement = sprintf "DELETE FROM session_table WHERE (id_session=%s)",$self->{'id_session'};
-    unless ($dbh->do($del_statement)) {
-	    do_log('debug3','SympaSession::store unable to remove session %s, new session ?',$self->{'id_session'});
-	}	 
+    ## If this is a new session, then perform an INSERT
+    if ($self->{'new_session'}) {
 
-    ## Renew the session ID in order to prevent session hijacking
-    $self->{'id_session'} = &get_random();
-
-    ## Store the new session ID in the DB
-    my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')",$self->{'id_session'},time,$ENV{'REMOTE_ADDR'},$self->{'robot'},$self->{'email'},$self->{'start_date'},$self->{'hit'}, $data_string;
-    unless ($dbh->do($add_statement)) {
+      ## Store the new session ID in the DB
+      my $add_statement = sprintf "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES (%s,%d,%s,%s,%s,%d,%d,%s)",$dbh->quote($self->{'id_session'}),time,$dbh->quote($ENV{'REMOTE_ADDR'}),$dbh->quote($self->{'robot'}),$dbh->quote($self->{'email'}),$self->{'start_date'},$self->{'hit'}, $dbh->quote($data_string);
+      
+      unless ($dbh->do($add_statement)) {
 	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
 	return undef;
-    }    
+      }    
+
+      ## If the session already exists in DB, then perform an UPDATE
+    }else {
+      
+      ## Update the new session in the DB
+      my $update_statement = sprintf "UPDATE session_table SET date_session=%d, remote_addr_session=%s, robot_session=%s, email_session=%s, start_date_session=%d, hit_session=%d, data_session=%s WHERE (id_session=%s)",time,$dbh->quote($ENV{'REMOTE_ADDR'}),$dbh->quote($self->{'robot'}),$dbh->quote($self->{'email'}),$self->{'start_date'},$self->{'hit'}, $dbh->quote($data_string), $dbh->quote($self->{'id_session'});
+      
+      unless ($dbh->do($update_statement)) {
+	do_log('err','Unable to update session information in database while execute SQL statement "%s" : %s', $update_statement, $dbh->errstr);
+	return undef;
+      }    
+    }
+
+    return 1;
+}
+
+## This method will renew the session ID 
+sub renew {
+
+    my $self = shift;
+    do_log('debug', '');
+
+    return undef unless ($self->{'id_session'});
+    return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
+    return if ($self->{'passive_session'}); # do not create a session in session table for action such as RSS or CSS or wsdlthat do not require this sophistication; 
+
+    my %hash ;    
+    foreach my $var (keys %$self ) {
+	next if ($session_hard_attributes{$var});
+	next unless ($var);
+	$hash{$var} = $self->{$var};
+    }
+    my $data_string = &tools::hash_2_string (\%hash);
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }	   
+
+    ## Renew the session ID in order to prevent session hijacking
+    my $new_id = &get_random();
+
+    ## First remove the DB entry for the previous session ID
+    my $update_statement = sprintf "UPDATE session_table SET id_session=%s WHERE (id_session=%s)",$dbh->quote($new_id), $dbh->quote($self->{'id_session'});
+    unless ($dbh->do($update_statement)) {
+      do_log('err','Unable to renew session ID for session %s',$self->{'id_session'});
+      return undef;
+    }	 
+
+    ## Renew the session ID in order to prevent session hijacking
+    $self->{'id_session'} = $new_id;
+
+    return 1;
 }
 
 ## remove old sessions from a particular robot or from all robots. delay is a parameter in seconds

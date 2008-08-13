@@ -1,0 +1,46 @@
+
+<form action="[% path_cgi %]" method="post" name="select_templates">
+<fieldset>
+<h2>[%|loc%]Modify or Delete existing messages[%END%]</h2>
+<p>
+
+<input class="MainMenuLinks" type="submit" name="subaction_delete" onclick="return request_confirm('[% FILTER escape_quote %][%|loc%]Do you really want to delete this reject message?[%END%][%END%]');"  value="[%|loc%]Delete Template[%END%]" />
+<input class="MainMenuLinks" type="submit" name="subaction_modify" value="[%|loc%]Modify Template[%END%]" />
+
+  <select  name="message_template">
+    [% FOREACH file = available_files %]
+  <option  value="[%  file  %]" [% IF file == message_template %]selected[% END %]> [%  file  %]</option> 
+ [%- END- %]
+
+
+
+   </select>
+
+<input type="hidden" name="action" value="manage_template"/>
+<input type="hidden" name="list" value="[% list %]"/>
+
+</p>
+</form>
+
+<form action="[% path_cgi %]" method="post" name="edit_templates">
+<p>
+<h2>[%|loc%]Create New Reject Messages[%END%]</h2>
+</p>
+<p>
+[%|loc()%]Template Name :[%END%]<input type="text" name="message_template" value="[% message_template %]">
+<input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Template[%END%]" />
+</P>
+<P>
+<textarea NAME="template_content" COLS="50" ROWS="10" WRAP=SOFT>
+[% content %] 
+</TEXTAREA>
+</p>
+<p>
+<input class="MainMenuLinks" type="submit" name="subaction_save" value="[%|loc%]Save Template[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Cancel[%END%]" />
+
+<input type="hidden" name="list" value="[% list %]"/>
+<input type="hidden" name="action" value="manage_template"/>
+</p>
+</fieldset>
+</form>

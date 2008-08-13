@@ -306,7 +306,8 @@ my %comm = ('home' => 'do_home',
 	 'maintenance' => 'do_maintenance',
 	 'blacklist' => 'do_blacklist',
 	 'edit_attributes' => 'do_edit_attributes',
-	 'ticket' => 'do_ticket'
+	 'ticket' => 'do_ticket',
+	 'manage_template' => 'do_manage_template',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -430,10 +431,10 @@ my %action_args = ('default' => ['list'],
 ## Parameter names refer to the %in structure of to $param if mentionned as 'param.x'
 ## This structure is used to determine if any parameter is missing
 ## The list of parameters is not ordered
-## There are some reserved keywards : param.list and param.user.email
-## Alternate parameteres can be defined with the '|' character
-## Limits of this structure : it does not define optional parameters (a or b)
-## Limit : it does not allow to have a specific error message and redirect to a given page if the parameter is missing
+## Some keywords are reserved: param.list and param.user.email
+## Alternate parameters can be defined with the '|' character
+## Limits of this structure: it does not define optional parameters (a or b)
+## Limit : it does not allow to have a specific error message and redirect to a given page if the parameter is missing
 my %required_args = ('active_lists' => ['for|count'],
 		     'admin' => ['param.list','param.user.email'],
 		     'add' => ['param.list','param.user.email'],
@@ -496,6 +497,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'latest_lists' => ['for|count'],
 		     'load_cert' => ['param.list'],
 		     'logout' => ['param.user.email'],
+		     'manage_template' => ['param.list','param.user.email'],
 		     'modindex' => ['param.list','param.user.email'],
 		     'multiple_subscribe' => ['param.list'],		     
 		     'pref' => ['param.user.email'],
@@ -576,6 +578,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'ignoresub' => ['owner'],
 			   'install_pending_list' => ['listmaster'],
 			   'ls_templates' => ['listmaster'],
+			   'manage_template' => ['owner'],
 			   'modindex' => ['editor'],
 			   'purge_list' => ['privileged_owner'],
 			   'rebuildallarc' => ['listmaster'],
@@ -685,6 +688,7 @@ my %in_regexp = (
 		 'multiple_param' => '.+',
 
 		 ## Textarea content
+		 'template_content' => '.+',
 		 'content' => '.+',
 		 'body' => '.+',
 		 'info' => '.+',
@@ -718,6 +722,7 @@ my %in_regexp = (
 		 'shortname' => '[^<>\\\*\$\n]+',
 		 'new_name' => '[^<>\\\*\$\n]+',
 		 'id' => '[^<>\\\*\$\n]+',
+		 'template_name' => &tools::get_regexp('template_name'),
 
 		 ## Archives
 		 'month' => '\d{2}|\d{4}\-\d{2}', ## format is yyyy-mm for 'arc' and mm for 'send_me'
@@ -1107,16 +1112,16 @@ my $birthday = time ;
 	 }elsif (($session->{'email'}) && ($session->{'email'} ne 'nobody')) {
 	     $param->{'user'}{'email'} = $session->{'email'};	     	     
 	 }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
-	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
+	     delete $session->{'do_not_use_cas'}; #reset do_not_use_cas because this client probably use CAS
 	     # select the cas server that redirect the user to sympa and check the ticket
-	     do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
-	     if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
+	     do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}");
+	     if ($session->{'checked_cas'} =~ /^(\d+)\,?/) {
 		 my $cas_id = $1;
 		 my $ticket = $in{'ticket'};
 		 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 		 
 		 my $service_url = &wwslib::get_my_url();
-		 $service_url =~ s/\&ticket\=.+$//;
+		 $service_url =~ s/\?ticket\=.+$//;
 		 
 		 my $net_id = $cas_server->validateST($service_url, $ticket);
 		 
@@ -1126,20 +1131,18 @@ my $birthday = time ;
 		     $session->{'auth'} = 'cas';
 		     $session->{'email'}= $param->{user}{email} ;
 		     
-		     &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
+		     $session->{'cas_server'} = $cas_id;
 		     
 		     
 		 }else{
 		     do_log('err',"CAS ticket validation failed : %s", &CAS::get_errors()); 
 		 }
 	     }else{
-		 do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
+		 do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
 	     }
 	 }elsif(($Conf{'cas_number'}{$robot} > 0) &&
 		($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
-	     if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
-		 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
-	     }else{
+	   unless ($session->{'do_not_use_cas'}) {
 		 # user not taggued as not using cas
 		 do_log ('debug',"no cas ticket detected");
 		 foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
@@ -1149,18 +1152,14 @@ my $birthday = time ;
 		     
 		     ## skip cas server where client as been already redirect to 
 		     ## (redirection carry the list of cas servers already checked
-		     &do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}");
-		     next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/) ;
+		     &do_log ('debug',"check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}");
+		     next if ($session->{'checked_cas'} =~  /$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/) ;
 		     
 		     # before redirect update the list of already checked cas server to prevent loop
 		     my $cas_server = $auth_service->{'cas_server'};
 		     my $return_url = &wwslib::get_my_url();
 		     
-		     if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
-			 $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}},/;
-		     }else{		 
-			 $return_url .= '?checked_cas='.$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
-		     }
+		     $session->{'checked_cas'} = $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
 		     
 		     my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);
 		     
@@ -1174,7 +1173,7 @@ my $birthday = time ;
 			     do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
 			 }
 		 }
-		 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}) unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set the cookie do_not_use_cas because all cas server as been checked without success
+		 $session->{'do_not_use_cas'} = 1 unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set do_not_use_cas because all cas servers have been checked without success
 	     }
 	 }
 	 
@@ -1321,7 +1320,7 @@ my $birthday = time ;
      $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
      ## store in session table this session contexte
-     $session->store ;
+     $session->store();
 
 	 
 
@@ -1339,6 +1338,9 @@ my $birthday = time ;
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
+
+	 $session->renew();
+	 
 	 unless ($session->set_cookie($param->{'cookie_domain'},$delay)) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
 	 }
@@ -1350,9 +1352,6 @@ my $birthday = time ;
 	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') unless (defined $param->{'get_which'}); 
 	     @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner')  unless (defined $param->{'get_which_owner'}); 
 	     @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor')  unless (defined $param->{'get_which_editor'}); 	     
-
-	     # if at least one element defined in get_which tab
-	     &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
 
 	     ## Add lists information to 'which_info'
 	     foreach my $list (@{$param->{'get_which'}}) {
@@ -1566,6 +1565,9 @@ my $birthday = time ;
      $msg = "[client $remote] ".$msg
 	 if $remote;
 
+     $msg = "[session $session->{'id_session'}] ".$msg
+	 if $session;
+
      $msg = "[robot $robot] ".$msg;
 
      return &Log::do_log($facility, $msg, @_);
@@ -1719,11 +1721,11 @@ sub get_parameters {
 	 }
 	 foreach my $p (keys %in) {
 	     do_log('debug2',"POST key $p value $in{$p}");
-	     if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
+	     if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 		 
-		 $in{'action'} = $1;
-		 if ($2) {
-		     foreach my $v (split /\./, $2) {
+		 $in{$1} = $3;
+		 if ($4) {
+		     foreach my $v (split /\./, $4) {
 			 $v =~ s/^\.?(\w+)\.?/$1/;
 			 $in{$v} = 1;
 		     }
@@ -2778,7 +2780,7 @@ sub do_ticket {
     
     return 1 unless ($param->{'ticket_context'}{'result'} eq 'success');
     
-    # if the ricket is related to someone which is not loggued perform sames opération as for a login
+    # if the ricket is related to someone which is not logged perform sames operation as for a login
     unless ($session->{'email'} eq lc($param->{'ticket_context'}{'email'})) {
 	$session->{'email'} = lc($param->{'ticket_context'}{'email'});
 	$param->{'user'} =  &List::get_user_db($session->{'email'});
@@ -2926,8 +2928,12 @@ sub do_ticket {
      }
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
-	 &List::update_user_db($param->{'user'}{'email'},{prefs=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }
+
+     if ($session->{'shared_mode'}) {   #  user did choose a shared expert/standard mode
+	 &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+     }    
 
      # From version 5.5 password never start with init
      #if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
@@ -2957,7 +2963,7 @@ sub do_ticket {
 sub do_sso_login {
     &wwslog('info', 'do_sso_login(%s)', $in{'auth_service_name'});
     
-    &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #when user require CAS login, reset do_not_use_cas cookie
+    delete $session->{'do_not_use_cas'}; #when user require CAS login, reset do_not_use_cas cookie
     my $next_action;     
     
     if ($param->{'user'}{'email'}) {
@@ -2980,7 +2986,8 @@ sub do_sso_login {
 	}
 	$path .= "/sso_login_succeeded/$in{'auth_service_name'}";
 
-	my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
+	$session->{'checked_cas'} = $cas_id;
+	my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path;
 	
 	my $redirect_url = $cas_server->getServerLoginURL($service);
 	&wwslog('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
@@ -3229,13 +3236,9 @@ sub do_sso_login {
 	
 	&report::notice_report_web('you_have_been_authenticated',{},$param->{'action'});
 	
-	## Set a cookie to keep track of the SSO used to login
+	## Keep track of the SSO used to login
 	## Required to provide logout feature if available
-	&cookielib::generic_set_cookie(name => 'sympa_sso_id',
-				       value => $in{'auth_service_name'},
-				       domain => $wwsconf->{'cookie_domain'},
-				       expires => '+1y',
-				       path => '/');
+	$session->{'sso_id'} = $in{'auth_service_name'};
 	
 	return 'home';
     }else {
@@ -3500,11 +3503,9 @@ sub do_redirect {
      # no reason to alter the lang because user perform logout
      # $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
-     my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
-     my $sso_id = &cookielib::generic_get_cookie($ENV{'HTTP_COOKIE'}, 'sympa_sso_id');
-     if (defined $cas_id && (defined $Conf{'auth_services'}{$robot}[$cas_id])) {
+     if (defined $session->{'cas_server'} && (defined $Conf{'auth_services'}{$robot}[$session->{'cas_server'}])) {
 	 # this user was logged using CAS
-	 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
+	 my $cas_server = $Conf{'auth_services'}{$robot}[$session->{'cas_server'}]{'cas_server'};
 
 	 $in{'action'} = 'redirect';
 	 my $return_url = &wwslib::get_my_url();
@@ -3512,26 +3513,20 @@ sub do_redirect {
 	 
 	 $param->{'redirect_to'} = $cas_server->getServerLogoutURL($return_url);
 
-	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
-	 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id, 'now');
+	 delete $session->{'cas_server'};
 	 return 'redirect';
-     } elsif (defined $sso_id) {
+     } elsif (defined $session->{'sso_id'}) {
 	 # this user was logged using a generic_sso
 	 
 	 ## Check if logout_url is known for this SSO
 	 my $sso;
-	 unless ($sso = &Conf::get_sso_by_id(robot => $robot, service_id => $sso_id)) {
+	 unless ($sso = &Conf::get_sso_by_id(robot => $robot, service_id => $session->{'sso_id'})) {
 	     &wwslog('info','unknown SSO service_id');
 	     return undef;
 	 }
 
-	 ## Remove cookies
-	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
-	 &cookielib::generic_set_cookie(name => 'sympa_sso_id',
-					value => $in{'auth_service_name'},
-					domain => $wwsconf->{'cookie_domain'},
-					expires => '-10y',
-					path => '/');
+	 ## Remove sso_id
+	 delete $session->{'sso_id'};
 
 	 if ($sso->{'logout_url'}) {	     
 
@@ -5241,7 +5236,7 @@ sub do_restore_email {
     return 'home';
 }
 
-## list availible templates
+## list available templates
 sub do_ls_templates  {
     &wwslog('info', 'do_ls_templates');
 
@@ -5250,7 +5245,7 @@ sub do_ls_templates  {
     if (defined $list) {
 	$param->{'templates'} = &tools::get_templates_list($in{'webormail'},$robot,$list);
     }else{
-	$param->{'templates'} = &tools::get_templates_list($in{'webormail'},$robot);
+	$param->{'templates'} = &tools::get_templates_list($in{'webormail'},$robot, undef);
     }
     
     ## List of lang per type
@@ -5352,7 +5347,7 @@ sub do_view_template {
 }
 
 ##  template copy
-sub do_copy_template  {
+sub do_copy_template {
     &wwslog('info', 'do_copy_template');
     
     
@@ -5422,6 +5417,121 @@ sub do_copy_template  {
     return ('edit_template');    
 }
 
+
+## manage the rejection templates
+sub do_manage_template {
+    &wwslog('info', '(%s,%s)', $in{'subaction'}, $in{'message_template'});
+    
+    if ($in{'message_template'}) {
+	$param->{'template_path'} = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$in{'message_template'}.'.tt2','',$list);
+    }
+    
+    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2','',$list);
+    my $default_file = &tools::find_file('reject.tt2',@{$tt2_include_path});
+
+    if ($in{'subaction'} eq 'default') {
+	
+	## Check if the file can be accessed
+	unless(open (FILE, $default_file)){
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'subaction'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't open file %s : %s", $default_file, $!);
+	    &web_db_log({'parameters' => $default_file,
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}
+	
+	while (<FILE>){
+	    $param->{'content'} .= $_;
+	}
+	$param->{'content'} = &tools::escape_html($param->{'content'});
+	close FILE;
+   
+    }elsif ($in{'subaction'} eq 'save') {
+
+	## verify that the template name doesn't already exist
+	if (-f $param->{'template_path'}) {
+	     &report::reject_report_web('user','template_exists',{'argument' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	     &wwslog('err',"This template already exists: use 'Modify' function %s ", $param->{'template_path'});
+	     &web_db_log({'parameters' => $param->{'template_name'},
+			  'status' => 'error',
+			  'error_type' => 'user'});
+	    return undef;
+	}
+	
+	## create the parent directory if it doesn't already exist
+	unless (&tools::mk_parent_dir($param->{'template_path'})) {
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't create parent directory for %s : %s", $param->{'template_path'}, $!);
+	    &web_db_log({'parameters' => $param->{'template_name'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}
+	
+	## open the template
+	unless (open (TPLOUT ,'>' ,$param->{'template_path'})) {
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't open file %s : %s", $param->{'template_path'}, $!);
+	    &web_db_log({'parameters' => $in{'template_name'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}
+	
+	##  save template contents
+	print TPLOUT $in{'template_content'};
+	close TPLOUT;
+
+	&report::notice_report_web('performed',{},$in{'subaction'});
+
+	$param->{'content'} = $in{'template_content'};
+	$param->{'message_template'} = $in{'message_template'};
+	
+    }elsif ($in{'subaction'} eq 'modify') {
+	    
+	unless(open (FILE, $param->{'template_path'})){
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't open file %s : %s", $param->{'template_path'}, $!);
+	    &web_db_log({'parameters' => $param->{'template_path'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}
+
+	while (<FILE>){
+	    $param->{'content'} .= $_;
+	}
+	$param->{'content'} = &tools::escape_html($param->{'content'});
+	close FILE;
+
+	$param->{'message_template'} = $in{'message_template'};
+
+    }elsif ($in{'subaction'} eq 'delete') {
+	
+	unless(unlink $param->{'template_path'}) {
+	    &report::reject_report_web('intern','cannot_delete',{'file_del' => $param->{'template_path'}},'','','',$robot);
+	    &wwslog('err',"can't open file %s : %s", $param->{'template_path'}, $!);
+	    &web_db_log({'parameters' => $param->{'template_path'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}
+	&report::notice_report_web('performed',{},$in{'subaction'});
+    }
+
+    ## Build the list of available templates
+    my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
+    foreach my $file (keys %$available_files) {
+	next unless($file =~ /^reject_/);
+	$file =~ s/^reject_//;
+	$file =~ s/.tt2$//;
+	push (@{$param->{'available_files'}},$file);
+    }
+    
+    return 1;
+}
+
 ## online template edition
 sub do_edit_template  {
 
@@ -5478,7 +5588,7 @@ sub do_edit_template  {
 }    
 
 
-   ## Server show colors, and install static css in futur edit colors etc
+   ## Server show colors, and install static css in future edit colors etc
 sub do_skinsedit {
     &wwslog('info', 'do_skinsedit');
     my $f;
@@ -5916,9 +6026,20 @@ sub do_skinsedit {
 	 $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
      }
 
+##     if (defined my $default_file = &tools::get_template_path('mail',$robot,
 
 
-     ##  document shared awaiting for moderation
+
+
+     my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
+     foreach my $file (keys %$available_files) {
+	 next unless($file =~ /^reject_/);
+	 $file =~ s/^reject_//;
+         $file =~ s/.tt2$//;
+	 push (@{$param->{'available_files'}},$file); 
+ }
+
+     ## shared documents awaiting moderation
      foreach my $d (@{$param->{'doc_mod_list'}}) {
 	 
          $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
@@ -6162,11 +6283,22 @@ sub do_skinsedit {
 ####################################################
  sub do_reject {
 
-     # toggle selection javascript have a distinction of spam and ham base on the checkbox name . It is not usefull here so join id list and idspam list. 
+     # toggle selection javascript have a distinction of spam and ham base on the checkbox name . It is not useful here so join id list and idspam list. 
      $in{'id'} .= ','.$in{'idspam'} if ($in{'idspam'});
      $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
+     $in{'message_template'};
 
+     ## The quiet information might either be provided by the 'quiet' variable 
+     ## or by the 'quiet' value of the 'message_template' variable
+     if ($in{'message_template'} eq 'quiet') {
+	 $in{'quiet'} = 1;
+	 delete $in{'message_template'};
+     }
+     if ($in{'blacklist'}) {
+	 $in{'quiet'} = 1;
+     }     
+     
     &wwslog('info', 'do_reject(%s)', $in{'id'});
      my ($msg, $file);
 
@@ -6189,7 +6321,9 @@ sub do_skinsedit {
 			  'error_type' => 'internal'});
 	     next;
 	 }
-         #  extract sender address is needed to report reject to sender and in case the sender is to be added in blacklist
+
+
+         #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
 	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
 	     my $msg;
 	     my $parser = new MIME::Parser;
@@ -6197,7 +6331,8 @@ sub do_skinsedit {
 	     unless ($msg = $parser->read(\*IN)) {
 		 &wwslog('err', 'Unable to parse message %s', $file);
 		 next;
-	     }	     
+	     }	   
+
 	     my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
 	     unless  ($#sender_hdr == -1) {
 		 my $rejected_sender = $sender_hdr[0]->address;
@@ -6206,8 +6341,9 @@ sub do_skinsedit {
 		     $context{'subject'} = &MIME::EncWords::decode_mimewords($msg->head->get('subject'), Charset=>'utf8');
 		     chomp $context{'subject'};
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
-		     unless ($list->send_file('reject', $rejected_sender, $robot, \%context)) {
-			 &wwslog('notice',"Unable to send template 'reject' to $rejected_sender");
+		     $context{'template_used'} = $in{'message_template'};
+		     unless ($list->send_file($in{'message_template'}, $rejected_sender, $robot, \%context)) {
+			 &wwslog('notice',"Unable to send template $in{'message_template'} to $rejected_sender");
 		     }
 		 }		 
 		 if ($in{'blacklist'}) {
@@ -6367,9 +6503,18 @@ sub do_skinsedit {
 ####################################################
 sub do_viewmod {
      &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
-     my $msg;
 
+     my $msg;
      my $tmp_dir;
+
+     my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
+     foreach my $file (keys %$available_files) {
+	 next unless($file =~ /^reject_/);
+	 $file =~ s/^reject_//;
+         $file =~ s/.tt2$//;
+	 push (@{$param->{'available_files'}},$file); 
+     }
+
      ## For compatibility concerns
      foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
 	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
@@ -6656,7 +6801,7 @@ sub do_viewmod {
      &report::notice_report_web('performed',{},$param->{'action'});
 
  #    undef $in{'file'};
- #    undef $param->{'file'};
+ #    undef $param->{'file'};  
      return 'editfile';
  }
 
@@ -7748,7 +7893,7 @@ Creates a list using a list template
      }elsif ($param->{'create_action'} =~ /listmaster/i) {
 	 $param->{'status'} = 'pending' ;
 
-     ## If the action is plainly authorized, note that it will be excuted.
+     ## If the action is plainly authorized, note that it will be executed.
      }elsif  ($param->{'create_action'} =~ /do_it/i) {
 	 $param->{'status'} = 'open' ;
 
@@ -10959,17 +11104,24 @@ sub do_d_read {
 
     # set the page mode
     if ($in{'show_expert_page'} && $param->{'has_dir_rights'}) {
-	$session->{'shared_mode'}='expert';
-	$param->{'expert_page'} = 1;
-	#  &cookielib::set_expertpage_cookie(1,$param->{'cookie_domain'});
+      $session->{'shared_mode'}='expert';
+      if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
+	# update user pref  as soon as connected user change shared mode
+	$param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
+	&List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+      }
+      $param->{'expert_page'} = 1;
  
     } elsif ($in{'show_user_page'}) {
 	$session->{'shared_mode'}='basic';
+	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
+	  # update user pref  as soon as connected user change shared mode
+	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
+	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	}
 	$param->{'expert_page'} = 0;
-	# &cookielib::set_expertpage_cookie(0,$param->{'cookie_domain'});
     } else {
 	if ( $session->{'shared_mode'} eq 'expert' && $param->{'has_dir_rights'}) {
-	#if (&cookielib::check_expertpage_cookie($ENV{'HTTP_COOKIE'}) && $param->{'has_dir_rights'}) {
 	    $param->{'expert_page'} = 1; 
 	} else {
 	    $param->{'expert_page'} = 0;
@@ -12062,7 +12214,7 @@ sub do_d_savefile {
      }
 
      if (-e "$shareddir/$dir.desc.$file"){
-	 # if description file already exists : open it and modify it
+	 # if description file already exists: open it and modify it
 	 my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
 
 	 open DESC,">$shareddir/$dir.desc.$file"; 
@@ -15985,14 +16137,24 @@ sub new_d_read {
 
     # set the page mode
     if ($in{'show_expert_page'} && $param->{'has_dir_rights'}) {
+	$session->{'shared_mode'}='expert';
+	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
+	  # update user pref  as soon as connected user change shared mode
+	  $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
+	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	}
 	$param->{'expert_page'} = 1;
-	&cookielib::set_expertpage_cookie(1,$param->{'cookie_domain'});
  
     } elsif ($in{'show_user_page'}) {
+	$session->{'shared_mode'}='basic';
+	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
+	  # update user pref  as soon as connected user change shared mode
+	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
+	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	}
 	$param->{'expert_page'} = 0;
-	&cookielib::set_expertpage_cookie(0,$param->{'cookie_domain'});
     } else {
-	if (&cookielib::check_expertpage_cookie($ENV{'HTTP_COOKIE'}) && $param->{'has_dir_rights'}) {
+	if ($session->{'shared_mode'} eq 'expert' && $param->{'has_dir_rights'}) {
 	    $param->{'expert_page'} = 1; 
 	} else {
 	    $param->{'expert_page'} = 0;
@@ -16055,6 +16217,7 @@ sub do_maintenance {
     
     return 1;
 }
+
 =pod 
 
 =head1 AUTHORS 

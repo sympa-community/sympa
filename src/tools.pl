@@ -53,6 +53,7 @@ my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -----
 ## also be changed
 my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
+	      'template_name' => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_]*', 
 	      'host' => '[\w\.\-]+',
 	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
 	      'listname' => '[a-z0-9][a-z0-9\-\.\+_]{0,49}',
@@ -592,6 +593,7 @@ sub get_templates_list {
     my $type = shift;
     my $robot = shift;
     my $list = shift;
+    my $options = shift;
 
     my $listdir;
 
@@ -605,10 +607,14 @@ sub get_templates_list {
     my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
 
     my @try;
-    push @try, $distrib_dir ;
-    push @try, $site_dir ;
-    push @try, $robot_dir;
-    
+
+    ## The 'ignore_global' option allows to look for files at list level only
+    unless ($options->{'ignore_global'}) {
+	push @try, $distrib_dir ;
+	push @try, $site_dir ;
+	push @try, $robot_dir;
+    }    
+
     if (defined $list) {
 	$listdir = $list->{'dir'}.'/'.$type.'_tt2';	
 	push @try, $listdir ;
@@ -646,6 +652,7 @@ sub get_templates_list {
     return ($tpl);
 
 }
+
 
 # return the path for a specific template
 sub get_template_path {
