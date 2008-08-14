@@ -83,7 +83,7 @@ sub new {
 	    return undef;
 	}
 	if ($status eq 'not_found') {
-	    do_log('info','SympaSession::new ignoring unknown session cookie'); # start a new session (may ne a fake cookie)
+	    do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a new session (may ne a fake cookie)
 	    return (new SympaSession ($robot));
 	}
 	if($session->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
