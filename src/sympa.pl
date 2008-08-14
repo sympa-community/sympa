@@ -405,16 +405,16 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'make_alias_file'}) {
     my $all_lists = &List::get_lists('*');
-    unless (open TMP, ">/tmp/sympa_aliases.$$") {
-	printf STDERR "Unable to create tmp/sympa_aliases.$$, exiting\n";
+    unless (open TMP, ">$Conf{'tmpdir'}/sympa_aliases.$$") {
+	printf STDERR "Unable to create $Conf{'tmpdir'}/sympa_aliases.$$, exiting\n";
 	exit;
     }
     printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
     close TMP;
     foreach my $list (@$all_lists) {
-	system ("$Conf{'alias_manager'} add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
+	system ("$Conf{'alias_manager'} add $list->{'name'} $list->{'domain'} $Conf{'tmpdir'}/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
     }
-    printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
+    printf ("Sympa aliases file is $Conf{'tmpdir'}/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
     
     exit 0;
 }elsif ($main::options{'version'}) {
