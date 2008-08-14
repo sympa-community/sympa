@@ -8,14 +8,14 @@ use Conf;
 use Log;
 
 
+my %options;
+&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
+
 my $config_file = $main::options{'config'} || '/etc/sympa.conf';
 ## Load configuration file
 unless (Conf::load($config_file)) {
    &fatal_err("Configuration file $config_file has errors.");
 }
-
-my %options;
-&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
 
 
 ## Open the syslog and say we're read out stuff.
