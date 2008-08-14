@@ -33,7 +33,8 @@ sub request {
 	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'}, {'cookie'=>&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})});
 	}else {
 	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'},{});
-	  $session->store() if (defined $session); ## Note that id_session changes each time it is saved in the DB
+	  $session->store() if (defined $session);
+	  $session->renew() if (defined $session);## Note that id_session changes each time it is saved in the DB
 	}
 
 	delete $ENV{'USER_EMAIL'};	
