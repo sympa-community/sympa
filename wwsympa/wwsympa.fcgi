@@ -16161,13 +16161,6 @@ sub new_d_read {
 	}
     }
     
-     open TMP, ">/tmp/dump";
-     $document->dump(\*TMP);
-     close TMP;
-
-     open TMP, ">/tmp/dump2";
-     &tools::dump_var ($param, 0, \*TMP);
-     close TMP;
      &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'path'}",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      return 1;
 }
