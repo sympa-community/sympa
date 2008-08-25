@@ -229,11 +229,11 @@ sub mail_file {
     ## Determine what value the Auto-Submitted header field should take
     ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
     ## the header filed can have one of the following values : auto-generated, auto-replied, auto-forwarded
-    unless ($header_ok{'auto_submitted'}) {
-      ## Default value is 'auto-generated'
-      my $header_value = $data->{'auto_submitted'} || 'auto-generated';
-	$headers .= "Auto-Submitted: $header_value\n"; 
-    }
+    #unless ($header_ok{'auto_submitted'}) {
+    #  ## Default value is 'auto-generated'
+    #  my $header_value = $data->{'auto_submitted'} || 'auto-generated';
+    #	$headers .= "Auto-Submitted: $header_value\n"; 
+    #}
     unless ($existing_headers) {
 	$headers .= "\n";
    }
@@ -433,9 +433,9 @@ sub mail_forward {
     }
 	
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
-    if (defined $message and $message->head) {
-      $message->head->add('Auto-Submitted', 'auto-forwarded');
-    }
+    #if (defined $message and $message->head) {
+    #  $message->head->add('Auto-Submitted', 'auto-forwarded');
+    #}
 
     unless (defined &sending($message,$rcpt,$from,$robot,'','none')) {
 	&do_log('err','mail::mail_forward from %s impossible to send',$from);
