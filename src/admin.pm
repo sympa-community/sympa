@@ -672,7 +672,7 @@ sub clone_list_as_empty {
 
     my $list;
     unless ($list = new List ($source_list_name, $source_robot)) {
-	&dolog('err','Admin::clone_list_as_empty : new list failed %s %s',$source_list_name, $source_robot);
+	&do_log('err','Admin::clone_list_as_empty : new list failed %s %s',$source_list_name, $source_robot);
 	return undef;;
     }    
     
@@ -684,30 +684,43 @@ sub clone_list_as_empty {
     }elsif ($new_robot eq $Conf{'host'}) {
 	$new_dir = $Conf{'home'}.'/'.$new_listname;
     }else {
-	&dolog('err',"Admin::clone_list_as_empty : unknown robot $new_robot");
+	&do_log('err',"Admin::clone_list_as_empty : unknown robot $new_robot");
 	return undef;
     }
     
     unless (mkdir $new_dir, 0775) {
-	&dolog('err','Admin::clone_list_as_empty : failed to create directory %s : %s',$new_dir, $!);
+	&do_log('err','Admin::clone_list_as_empty : failed to create directory %s : %s',$new_dir, $!);
 	return undef;;
     }
     chmod 0775, $new_dir;
     foreach my $subdir ('etc','web_tt2','mail_tt2','data_sources' ) {
 	if (-d $new_dir.'/'.$subdir) {
 	    unless (&tools::copy_dir($list->{'dir'}.'/'.$subdir, $new_dir.'/'.$subdir)) {
-		&dolog('err','Admin::clone_list_as_empty :  failed to copy_directory %s : %s',$new_dir.'/'.$subdir, $!);
+		&do_log('err','Admin::clone_list_as_empty :  failed to copy_directory %s : %s',$new_dir.'/'.$subdir, $!);
 		return undef;
 	    }
 	}
     }
-    unless (&File::Copy::copy ($list->{'dir'}.'/config', $new_dir.'/config')) {
-	&dolog('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/config', $!);
-	return undef;
+    # copy mandatory files
+    foreach my $file ('config','info') {
+	    unless (&File::Copy::copy ($list->{'dir'}.'/'.$file, $new_dir.'/'.$file)) {
+		&do_log('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/'.$file, $!);
+		return undef;
+	    }
     }
+    # copy optional files
+    foreach my $file ('message.footer','message.header') {
+	if (-f $list->{'dir'}.'/'.$file) {
+	    unless (&File::Copy::copy ($list->{'dir'}.'/'.$file, $new_dir.'/'.$file)) {
+		&do_log('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/'.$file, $!);
+		return undef;
+	    }
+	}
+    }
+
     # now switch List object to new list, update some values
     unless (my $list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
-	&dolog('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
+	&do_log('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
 	return undef;
     }
     $list->{'admin'}{'serial'} = 0 ;
