@@ -7735,8 +7735,8 @@ sub do_set_pending_list_request {
  	 if ($aliases == 1) {
  	     $param->{'auto_aliases'} = 1;
  	 }else { 
- 	     $param->{'aliases'} = $aliases;
- 	     $param->{'auto_aliases'} = 0;
+	   &report::reject_report_web('intern','failed_to_install_aliases',{'listname'=> $list->{'name'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	   &wwslog('err','Failed to install list aliases');	   
  	 }
 
      }
@@ -7947,8 +7947,8 @@ Creates a list using a list template
 	 if ($resul->{'aliases'} == 1) {
 	     $param->{'auto_aliases'}  = 1;
 	 }else {
-	     $param->{'aliases'} = $resul->{'aliases'};
-	     $param->{'auto_aliases'} = 0;
+	   &report::reject_report_web('intern','failed_to_install_aliases',{'listname'=> $in{'listname'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	   &wwslog('err','Failed to install list aliases');
 	 }
      }
 

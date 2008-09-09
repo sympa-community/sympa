@@ -89,6 +89,7 @@
   [% ELSIF u_err.msg == 'incorrect_listname' %][%|loc(u_err.bad_listname)%]'%1' : bad listname[%END%]
   [% ELSIF u_err.msg == 'list_already_exists' %][%|loc(u_err.new_listname)%]'%1' list already exists[%END%]
   [% ELSIF u_err.msg == 'listname_matches_aliases' %][%|loc(u_err.new_listname)%]Incorrect listname '%1' : matches one of service aliases[%END%]
+  [% ELSIF u_err.msg == 'failed_to_install_aliases' %][%|loc(u_err.listname)%]Failed to remove list aliases for list %1[%END%] 
   [% ELSIF u_err.msg == 'no_such_document' %][%|loc(u_err.path)%]%1 : No such file or directory[%END%] 
   [% ELSIF u_err.msg == 'empty_document' %] [%|loc(u_err.path)%]Unable to read %1 : empty document[%END%]
   [% ELSIF u_err.msg == 'no_shared' %] [%|loc%]There is no shared documents[%END%]

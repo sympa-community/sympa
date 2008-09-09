@@ -884,9 +884,8 @@ sub check_owner_defined {
 #
 # IN  : - $list : object list
 #       - $robot : the list's robot
-# OUT : - undef if not applicable
+# OUT : - undef if not applicable or aliases not installed
 #         1 (if ok) or
-#         $resul : concated string of alias not installed 
 ##########################################################
 sub install_aliases {
     my $list = shift;
@@ -934,21 +933,7 @@ sub install_aliases {
 	 &do_log('err','admin::install_aliases : Failed to install aliases: %s', $!);
      }
     
-    unless ($alias_installed) {
-	my $aliases ;
-	my %data;
-	$data{'list'}{'domain'} = $data{'robot'} = $robot;
-	$data{'list'}{'name'} = $list->{'name'};
-	$data{'default_domain'} = $Conf{'domain'};
-	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
-	$data{'return_path_suffix'} = &Conf::get_robot_conf($robot, 'return_path_suffix');
-
-	my $tt2_include_path = &tools::make_tt2_include_path($robot,'','','');
-
-	&tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
-	
-	return $aliases;
-    }
+    return undef unless ($alias_installed);
 
     return 1;
 }

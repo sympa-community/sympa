@@ -24,16 +24,5 @@
 [% IF is_listmaster %]
 [% IF auto_aliases %]
 [%|loc%]Aliases have been installed.[%END%]
-[% ELSE %]
-<table summary="" class="table_style">
-<tr class="color_light"><td class="text_center">[%|loc%]Aliases you should install in your mailer[%END%]</td></tr>
-<tr>
-<td>
-<pre><code>
-[% aliases %]
-</code></pre>
-</td>
-</tr>
-</table>
 [% END %]
 [% END %]
