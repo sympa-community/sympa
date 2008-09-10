@@ -2285,7 +2285,7 @@ sub confirm {
 		&report::notice_report_msg('message_confirmed_and_in_distribution_spool',$sender,{'key' => $key,'message' => $message},$robot,$list);
 	    }
 
-	    &do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
+	    &do_log('info', 'Message for list %s from %s confirmed ; file %s moved to spool %s for distribution message-id=%s', $name, $sender, $file, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
 	}
 	unlink($file);
 	
