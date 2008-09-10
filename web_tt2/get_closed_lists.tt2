@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 
-<form action="[% path_cgi %]" method="post">
+<form name="myform" action="[% path_cgi %]" method="post">
 <fieldset>
 <strong>[%|loc%]Closed lists[%END%]</strong>
 <table summary="[%|loc%]Closed lists[%END%]" class="table_style">
@@ -26,7 +26,7 @@
 </tr>
 [% END %]
 </table>
-
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.selected_lists)" />
 <input class="MainMenuLinks" type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
 </fieldset>
 </form>
