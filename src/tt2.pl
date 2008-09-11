@@ -35,17 +35,6 @@ sub _load {
 	my ($data, $error) = $self->SUPER::_load($name, $alias);
 	$data->{text} = _translate($data->{text});
 
-=comment
-
-	my $newname = $name;
-	$newname =~ s|(.*)/([^/]+)$|$2|;
-
-	open my $fh, ">/tmp/tt2/$newname";
-	print $fh $data->{text};
-	close $fh;
-
-=cut
-
 	return ($data, $error);
 }
 
