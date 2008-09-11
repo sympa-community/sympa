@@ -31,9 +31,6 @@ require 'Conf.pm' unless ($ARGV[0] eq '-c');
 
 ## Configuration
 
-my $new_wwsympa_conf = '/tmp/wwsympa.conf';
-my $new_sympa_conf = '/tmp/sympa.conf';
-
 my $wwsconf = {};
 
 ## Change to your wwsympa.conf location
@@ -648,11 +645,11 @@ if ($somechange) {
 
     ## Write new config files
     unless (open (WWSYMPA,"> $wwsympa_conf")){
-	die "unable to open $new_wwsympa_conf : $!";
+	die "unable to open $wwsympa_conf : $!";
     };
 
     unless (open (SYMPA,"> $sympa_conf")){
-	die "unable to open $new_sympa_conf : $!";
+	die "unable to open $sympa_conf : $!";
     };
 
     print SYMPA @new_sympa_conf;
