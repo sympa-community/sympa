@@ -153,7 +153,7 @@
                                             <input type="password" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
                                           [% ELSE %]
                                             <input type="text" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-                                          [% END %]<br />
+                                          [% END %]
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% IF key.field_type == 'password' %]
                                             [% key.hidden_field %]
@@ -162,7 +162,7 @@
                                           [% END %]
                                           <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" />
                                         [% END %]
-                                        [% key.unit %]
+                                        [% key.unit %]<br />
                                       [% END %]
                                    
                                 [% END %]
