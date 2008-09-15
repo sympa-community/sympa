@@ -16172,9 +16172,8 @@ sub new_d_read {
 sub check_authz {
     my ($subname, $action) = @_;
     
-    my $sender = $param->{'user'}{'email'} || 'nobody';
     my $result = $list->check_list_authz($action,$param->{'auth_method'},
-					 {'sender' => $param->{'user'}{'email'},
+					 {'sender' => $param->{'user'}{'email'} || 'nobody',
 					  'remote_host' => $param->{'remote_host'},
 					  'remote_addr' => $param->{'remote_addr'}});
     my $r_action;
