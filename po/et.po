@@ -152,44 +152,6 @@ msgstr "Lahku"
 msgid "Your preferences"
 msgstr "Eelistused"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
-msgid "Choose your authentication server"
-msgstr "Vali identifitseerimise server"
-
-#: web_tt2/login_menu.tt2:65 web_tt2/loginbanner.tt2:57
-msgid "Go"
-msgstr "Mine"
-
-# nlsref 16,27
-#: src/List.pm:1081 src/List.pm:583 web_tt2/login_menu.tt2:80
-#: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
-msgid "email address"
-msgstr "e-posti aadress"
-
-#: web_tt2/login_menu.tt2:82 web_tt2/loginbanner.tt2:73
-#: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:59
-msgid "password"
-msgstr "parool"
-
-#: web_tt2/login_menu.tt2:84 web_tt2/loginbanner.tt2:74
-msgid "Login"
-msgstr "Logi sisse"
-
-# nlsref 6,15
-#: web_tt2/login_menu.tt2:92
-#, fuzzy
-msgid "Authentication help"
-msgstr "Autoriseerima"
-
-#: web_tt2/login_menu.tt2:94
-msgid "First login ?"
-msgstr "Esmane sisselogimine?"
-
-#: web_tt2/login_menu.tt2:95
-msgid "Lost password ?"
-msgstr "Minu parool ?"
-
 #: web_tt2/your_lists.tt2:7
 msgid "Your Lists"
 msgstr "Sinu Listid"
@@ -389,9 +351,10 @@ msgstr "Modereeri"
 msgid "Manage Subscribers"
 msgstr "Manageeri tellijaid"
 
-#: web_tt2/list_admin_menu.tt2:36
-msgid "-Blacklist"
-msgstr "-Mustnimekiri"
+#: web_tt2/list_admin_menu.tt2:36 web_tt2/modindex.tt2:35
+#: web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "Mustnimekiri"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
 #: web_tt2/list_admin_menu.tt2:41
@@ -1123,11 +1086,7 @@ msgstr "Saate listi hallata <b>listi haldamine</b> lingist."
 msgid "Aliases have been installed."
 msgstr "Aliased lisati"
 
-#: web_tt2/create_list.tt2:10 web_tt2/create_list.tt2:12
-msgid "Required aliases"
-msgstr "Vajalikud aliased"
-
-#: web_tt2/create_list.tt2:26
+#: web_tt2/create_list.tt2:13
 msgid ""
 "Your list creation request is registered. You can now  modify its\n"
 "configuration using the admin button but the list will be unusable until the "
@@ -1866,7 +1825,7 @@ msgstr "Puuduv argument: %1"
 msgid "Wrong value for parameter %1"
 msgstr "Valed parameetrid"
 
-#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:139 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Te peate esmalt sisse logima"
 
@@ -2057,176 +2016,182 @@ msgstr "List '%1' on juba olemas"
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 
-#. (u_err.path)
+#. (u_err.listname)
 #: web_tt2/error.tt2:92
+#, fuzzy
+msgid "Failed to remove list aliases for list %1"
+msgstr "Ei saanud lisada listi administraatorit listile '%1'"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:93
 msgid "%1 : No such file or directory"
 msgstr "%1 : Seda faili või kataloogi ei ole"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 #, fuzzy
 msgid "Unable to read %1 : empty document"
 msgstr "Ei saa lugeda faili %1 : tühi dokument"
 
 # nlsref 16,70
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 #, fuzzy
 msgid "There is no shared documents"
 msgstr "Jagatud dokumendid"
 
 # nlsref 16,70
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 #, fuzzy
 msgid "The shared document space is empty"
 msgstr "Jagatud dokumendid"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared directory cannot have any description"
 msgstr ""
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 #, fuzzy
 msgid "No description specified"
 msgstr "Kirjeldust ei ole"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr ""
 
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Salvestatud andmed muutusid. Ei saa rakendada teie muudatusi."
 
 #. (u_err.name)
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "%1 : incorrect name"
 msgstr "%1 : ebakorrektne nimi"
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "Failed : your content is empty"
 msgstr "Sisu ei ole"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Cannot overwrite file %1"
 msgstr "Ei saa faili %1 üle kirjutada"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "A directory named '%1' already exists"
 msgstr "Kaust nimega '%1' juba eksisteerib"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "This is an already existing document : '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 #, fuzzy
 msgid "No name specified"
 msgstr "Nime ei ole"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "The document repository exceed disk quota."
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "Cannot upload file %1"
 msgstr "Ei saa faili %1 üles laadida"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 #, fuzzy
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "Teil ei ole lubatud laadida faili INDEX.HTML kataloogi %1"
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "The upload failed, try it again"
 msgstr ""
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Kataloogi %1 ja selle sisu ei kopeeritud"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "File %1 was not copied : %2 "
 msgstr "Faili %1 ei kopeeritud"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "Failed : %1 not empty"
 msgstr "Ei saa: kataloog %1 ei ole tühi"
 
 # nlsref 16,74
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 #, fuzzy
 msgid "No certificate for this list"
 msgstr "Listi teemad"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 #, fuzzy
 msgid "This list has no message topic"
 msgstr "List taastati"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
 #. (u_err.email)
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 #, fuzzy
 msgid "No entry for user '%1'"
 msgstr "Aadressil %1 ei ole vigu"
 
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 #, fuzzy
 msgid "Please select archive months"
 msgstr "Vali soovitud kuud"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "No SOAP service"
 msgstr ""
 
 # nlsref 6,15
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "Authentication failed"
 msgstr "Autoriseerimine ei õnnestunud"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "Kaust nimega '%1' juba eksisteerib"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "Ei saa avada faili '%1'"
 
 # nlsref 6,2
 #. (u_err.filename)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "Ei saa hakkama abifaili lugemisega : %s\n"
 
 #. (auth.action)
-#: web_tt2/error.tt2:132
+#: web_tt2/error.tt2:133
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "AUTORISEERIMINE EBAÕNNESTUS"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:134
+#: web_tt2/error.tt2:135
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2250,6 +2215,13 @@ msgstr "listi teema"
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:11
 msgid "Requested by"
 msgstr "listi soovis"
+
+#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
+#: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
+#: web_tt2/reviewbouncing.tt2:133
+msgid "Toggle Selection"
+msgstr "Pööra valik ringi"
 
 #: web_tt2/get_closed_lists.tt2:30
 msgid "Purge selected lists"
@@ -2302,10 +2274,6 @@ msgstr "Listi soovis"
 #, fuzzy
 msgid "on %1"
 msgstr "Kellele: %1"
-
-#: web_tt2/install_pending_list.tt2:29
-msgid "Aliases you should install in your mailer"
-msgstr "Aliased, mis tuleks lisada meilisüsteemile"
 
 #: web_tt2/javascript.tt2:147
 msgid ""
@@ -2405,34 +2373,50 @@ msgstr ""
 msgid "Validate"
 msgstr ""
 
-#: web_tt2/loginbanner.tt2:6
+#: web_tt2/loginbanner.tt2:18
+#, fuzzy
+msgid "To login, select your organization authentication server below:"
+msgstr "Vali identifitseerimise server"
+
+#: web_tt2/loginbanner.tt2:24
+msgid "Go"
+msgstr "Mine"
+
+# nlsref 16,27
+#: src/List.pm:1081 src/List.pm:583 web_tt2/loginbanner.tt2:39
+#: web_tt2/sso_login.tt2:45
+msgid "email address"
+msgstr "e-posti aadress"
+
+#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
+#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/subrequest.tt2:59
+msgid "password"
+msgstr "parool"
+
+#: web_tt2/loginbanner.tt2:43
+msgid "Login"
+msgstr "Logi sisse"
+
+# nlsref 6,15
+#: web_tt2/loginbanner.tt2:51
+#, fuzzy
+msgid "Authentication help"
+msgstr "Autoriseerima"
+
+#: web_tt2/loginbanner.tt2:53
+msgid "First login ?"
+msgstr "Esmane sisselogimine?"
+
+#: web_tt2/loginbanner.tt2:54
+msgid "Lost password ?"
+msgstr "Minu parool ?"
+
+#: web_tt2/loginrequest.tt2:3
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
-
-#: web_tt2/loginbanner.tt2:9
-msgid ""
-"Most mailing list features require your email. Some mailing lists are hidden "
-"to  unidentified persons.<br />\n"
-" In order to benefit from the full services provided by this server, you "
-"probably need to identify yourself first."
-msgstr ""
-
-#: web_tt2/loginbanner.tt2:14
-msgid ""
-"To login, select your organization authentication server below.<br />\n"
-"If it is not listed or if you don't have any, login using your email and "
-"password on the right column."
-msgstr ""
-
-#: web_tt2/loginbanner.tt2:19
-msgid ""
-"Login with you email address and password. You can request a password "
-"reminder."
-msgstr ""
-"), siis sisesta kasutajanimeks \n"
-"oma e-posti aadress ning parooliks sellega seotud parool."
 
 #: web_tt2/ls_templates.tt2:7
 msgid ""
@@ -2591,10 +2575,6 @@ msgstr "kiri toimetaja keeldumisest"
 msgid "Do Not Notify"
 msgstr ""
 
-#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "Mustnimekiri"
-
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
 msgstr ""
@@ -2620,12 +2600,6 @@ msgstr "Eemalda teavitusega"
 #: web_tt2/modindex.tt2:115
 msgid "Reject and blacklist sender"
 msgstr ""
-
-#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
-#: web_tt2/reviewbouncing.tt2:133
-msgid "Toggle Selection"
-msgstr "Pööra valik ringi"
 
 #: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
@@ -4234,7 +4208,7 @@ msgstr "Otsi kasutajat"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15594
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -7812,7 +7786,7 @@ msgstr "Seadete fail sisaldab vigu.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9383
 msgid "%A"
 msgstr "%A"
 
@@ -7824,7 +7798,7 @@ msgstr "Viga real %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2779 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -8564,16 +8538,16 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
-#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
-#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
-#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
-#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
-#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
-#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
-#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
-#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
-#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
+#: wwsympa/wwsympa.fcgi:10750 wwsympa/wwsympa.fcgi:10819
+#: wwsympa/wwsympa.fcgi:11021 wwsympa/wwsympa.fcgi:11358
+#: wwsympa/wwsympa.fcgi:15157 wwsympa/wwsympa.fcgi:15894
+#: wwsympa/wwsympa.fcgi:15895 wwsympa/wwsympa.fcgi:4781
+#: wwsympa/wwsympa.fcgi:4782 wwsympa/wwsympa.fcgi:6068
+#: wwsympa/wwsympa.fcgi:7088 wwsympa/wwsympa.fcgi:7622
+#: wwsympa/wwsympa.fcgi:7659 wwsympa/wwsympa.fcgi:7661
+#: wwsympa/wwsympa.fcgi:8111 wwsympa/wwsympa.fcgi:8112
+#: wwsympa/wwsympa.fcgi:8146 wwsympa/wwsympa.fcgi:8147
+#: wwsympa/wwsympa.fcgi:8326 wwsympa/wwsympa.fcgi:8327
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8682,7 +8656,7 @@ msgstr "%Image(%s)"
 msgid "Unable to access directory %s : %m"
 msgstr "Kataloogi %s kasutamine on takistatud: %m"
 
-#: src/tt2.pl:224
+#: src/tt2.pl:213
 msgid "(unknown date)"
 msgstr "(tundamtu kuupäev)"
 
@@ -8694,15 +8668,15 @@ msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
-#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
-#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
+#: wwsympa/SympaSession.pm:433 wwsympa/SympaSession.pm:434
+#: wwsympa/wwsympa.fcgi:11582 wwsympa/wwsympa.fcgi:11715
+#: wwsympa/wwsympa.fcgi:14028 wwsympa/wwsympa.fcgi:7582
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
+#: wwsympa/wwsympa.fcgi:15539 wwsympa/wwsympa.fcgi:15540
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8886,6 +8860,25 @@ msgstr "ei saadeta maile (soovitav puhkuse ajaks)"
 msgid "you do not receive your own posts"
 msgstr "teile ei tule enda saadetud kirjad"
 
+#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
+msgid "Choose your authentication server"
+msgstr "Vali identifitseerimise server"
+
+#: web_tt2/loginbanner.tt2:9
+msgid ""
+"Most mailing list features require your email. Some mailing lists are hidden "
+"to  unidentified persons.<br />\n"
+" In order to benefit from the full services provided by this server, you "
+"probably need to identify yourself first."
+msgstr ""
+
+#: web_tt2/loginbanner.tt2:14
+msgid ""
+"To login, select your organization authentication server below.<br />\n"
+"If it is not listed or if you don't have any, login using your email and "
+"password on the right column."
+msgstr ""
+
 #: web_tt2/modindex.tt2:16
 msgid ""
 "You should probably not reject message detected as spam with notification "
@@ -8967,6 +8960,22 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
+
+#~ msgid "-Blacklist"
+#~ msgstr "-Mustnimekiri"
+
+#~ msgid "Required aliases"
+#~ msgstr "Vajalikud aliased"
+
+#~ msgid "Aliases you should install in your mailer"
+#~ msgstr "Aliased, mis tuleks lisada meilisüsteemile"
+
+#~ msgid ""
+#~ "Login with you email address and password. You can request a password "
+#~ "reminder."
+#~ msgstr ""
+#~ "), siis sisesta kasutajanimeks \n"
+#~ "oma e-posti aadress ning parooliks sellega seotud parool."
 
 #, fuzzy
 #~ msgid ""

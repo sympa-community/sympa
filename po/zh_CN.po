@@ -135,42 +135,6 @@ msgstr "退出"
 msgid "Your preferences"
 msgstr "您的选项"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
-msgid "Choose your authentication server"
-msgstr "选择身份验证服务器"
-
-#: web_tt2/login_menu.tt2:65 web_tt2/loginbanner.tt2:57
-msgid "Go"
-msgstr "去"
-
-#: src/List.pm:1081 src/List.pm:583 web_tt2/login_menu.tt2:80
-#: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
-msgid "email address"
-msgstr "邮件地址"
-
-#: web_tt2/login_menu.tt2:82 web_tt2/loginbanner.tt2:73
-#: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:59
-msgid "password"
-msgstr "口令"
-
-#: web_tt2/login_menu.tt2:84 web_tt2/loginbanner.tt2:74
-msgid "Login"
-msgstr "登录"
-
-#: web_tt2/login_menu.tt2:92
-#, fuzzy
-msgid "Authentication help"
-msgstr "身份验证"
-
-#: web_tt2/login_menu.tt2:94
-msgid "First login ?"
-msgstr "初次登录？"
-
-#: web_tt2/login_menu.tt2:95
-msgid "Lost password ?"
-msgstr "忘了口令？"
-
 #: web_tt2/your_lists.tt2:7
 msgid "Your Lists"
 msgstr "您的邮件列表"
@@ -358,9 +322,10 @@ msgstr "自定义"
 msgid "Manage Subscribers"
 msgstr "处理订阅者"
 
-#: web_tt2/list_admin_menu.tt2:36
-msgid "-Blacklist"
-msgstr "※　黑名单"
+#: web_tt2/list_admin_menu.tt2:36 web_tt2/modindex.tt2:35
+#: web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "黑名单"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
 #: web_tt2/list_admin_menu.tt2:41
@@ -1076,11 +1041,7 @@ msgstr "您可通过旁边的admin按钮配置它。"
 msgid "Aliases have been installed."
 msgstr "别名已成功设定。"
 
-#: web_tt2/create_list.tt2:10 web_tt2/create_list.tt2:12
-msgid "Required aliases"
-msgstr "必须有别名"
-
-#: web_tt2/create_list.tt2:26
+#: web_tt2/create_list.tt2:13
 msgid ""
 "Your list creation request is registered. You can now  modify its\n"
 "configuration using the admin button but the list will be unusable until the "
@@ -1773,7 +1734,7 @@ msgstr "缺少参量%1"
 msgid "Wrong value for parameter %1"
 msgstr "参量%1的错误值"
 
-#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:139 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "您需要登录"
 
@@ -1946,161 +1907,167 @@ msgstr "＂%1＂邮件列表已经存在"
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr "不正确的邮件列表名称＂%1＂：符合一个服务别名"
 
-#. (u_err.path)
+#. (u_err.listname)
 #: web_tt2/error.tt2:92
+#, fuzzy
+msgid "Failed to remove list aliases for list %1"
+msgstr "无法为邮件列表＂%1＂包含管理员"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:93
 msgid "%1 : No such file or directory"
 msgstr "%1：没有此文件或目录"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "Unable to read %1 : empty document"
 msgstr "无法读取%1：空文件"
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "There is no shared documents"
 msgstr "没有共享文档"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "The shared document space is empty"
 msgstr "共享文档空间是空的"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared directory cannot have any description"
 msgstr "共享目录不能有任何描述"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "No description specified"
 msgstr "没有指定的描述"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "无法描述，文档＂%1＂不存在"
 
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "磁盘数据已经改变。无法应用修改"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "%1 : incorrect name"
 msgstr "%1：不正确名称"
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "Failed : your content is empty"
 msgstr "发生了错误：内容是空的"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Cannot overwrite file %1"
 msgstr "无法重写文件%1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "A directory named '%1' already exists"
 msgstr "名为＂%1＂的目录已经存在"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "This is an already existing document : '%1'"
 msgstr "这是一个已经存在的文件：＂%1＂"
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "No name specified"
 msgstr "没有指定名称"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "The document repository exceed disk quota."
 msgstr "文档库超出盘配额。"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "Cannot upload file %1"
 msgstr "无法上传文件＂%1＂"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "您没有被批准在%1上传INDEX.HTML"
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "The upload failed, try it again"
 msgstr "加载出错，再试一次"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "目录%1和它的内容不能被复制：%2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "File %1 was not copied : %2 "
 msgstr "文件%1未被复制：%2"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "Failed : %1 not empty"
 msgstr "发生了错误：%1不空"
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "No certificate for this list"
 msgstr "这张邮件列表没有证书"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "This list has no message topic"
 msgstr "这张邮件列表没有邮件主题"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "Tag message with topic is required for this list"
 msgstr "这张邮件列表要求角注邮件主题"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "No entry for user '%1'"
 msgstr "用户＂%1＂没有词条"
 
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "Please select archive months"
 msgstr "请选择归档月"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "No SOAP service"
 msgstr "没有SOAP服务"
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "Authentication failed"
 msgstr "身份验证过程失败"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr "列表状态为'%1'时，不能添加订阅者。"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "文件%1已经存在"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "不能打开文件＂%1＂"
 
 #. (u_err.filename)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "无法读取文件：＂%1＂。"
 
 #. (auth.action)
-#: web_tt2/error.tt2:132
+#: web_tt2/error.tt2:133
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "授权拒绝（%1）"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:134
+#: web_tt2/error.tt2:135
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2124,6 +2091,13 @@ msgstr "邮件列表主题"
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:11
 msgid "Requested by"
 msgstr "请求者"
+
+#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
+#: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
+#: web_tt2/reviewbouncing.tt2:133
+msgid "Toggle Selection"
+msgstr "反选"
 
 #: web_tt2/get_closed_lists.tt2:30
 msgid "Purge selected lists"
@@ -2172,10 +2146,6 @@ msgstr "邮件列表要求由"
 #: web_tt2/install_pending_list.tt2:17
 msgid "on %1"
 msgstr "在%1"
-
-#: web_tt2/install_pending_list.tt2:29
-msgid "Aliases you should install in your mailer"
-msgstr "您应该安装到邮件服务中的别名"
 
 #: web_tt2/javascript.tt2:147
 msgid ""
@@ -2270,38 +2240,50 @@ msgstr "也就是说为了订阅和参数选择，您在Sympa中要使用一个�
 msgid "Validate"
 msgstr "确认"
 
-#: web_tt2/loginbanner.tt2:6
+#: web_tt2/loginbanner.tt2:18
+#, fuzzy
+msgid "To login, select your organization authentication server below:"
+msgstr "选择身份验证服务器"
+
+#: web_tt2/loginbanner.tt2:24
+msgid "Go"
+msgstr "去"
+
+#: src/List.pm:1081 src/List.pm:583 web_tt2/loginbanner.tt2:39
+#: web_tt2/sso_login.tt2:45
+msgid "email address"
+msgstr "邮件地址"
+
+#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
+#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/subrequest.tt2:59
+msgid "password"
+msgstr "口令"
+
+#: web_tt2/loginbanner.tt2:43
+msgid "Login"
+msgstr "登录"
+
+#: web_tt2/loginbanner.tt2:51
+#, fuzzy
+msgid "Authentication help"
+msgstr "身份验证"
+
+#: web_tt2/loginbanner.tt2:53
+msgid "First login ?"
+msgstr "初次登录？"
+
+#: web_tt2/loginbanner.tt2:54
+msgid "Lost password ?"
+msgstr "忘了口令？"
+
+#: web_tt2/loginrequest.tt2:3
 #, fuzzy
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
 "您需要登录访问定制WWSympa环境或执行一个特许操作（其中一个要求邮件地址）。"
-
-#: web_tt2/loginbanner.tt2:9
-msgid ""
-"Most mailing list features require your email. Some mailing lists are hidden "
-"to  unidentified persons.<br />\n"
-" In order to benefit from the full services provided by this server, you "
-"probably need to identify yourself first."
-msgstr ""
-"多数邮件列表特征需要您的邮件。有些邮件列表对未识别的人隐藏。<br/>\n"
-"为了能获得由这台服务器提供的全部服务，您需要首先证实自己。"
-
-#: web_tt2/loginbanner.tt2:14
-msgid ""
-"To login, select your organization authentication server below.<br />\n"
-"If it is not listed or if you don't have any, login using your email and "
-"password on the right column."
-msgstr ""
-"到登录，选择下面的您的组织身份验证服务器。<br/>\n"
-"如果它不在列表中或您没有，用您的邮件和口令在正确的栏登录。"
-
-#: web_tt2/loginbanner.tt2:19
-msgid ""
-"Login with you email address and password. You can request a password "
-"reminder."
-msgstr "以您的邮件和口令登录。您能请求口令提醒。"
 
 #: web_tt2/ls_templates.tt2:7
 msgid ""
@@ -2462,10 +2444,6 @@ msgstr "编辑拒绝邮件"
 msgid "Do Not Notify"
 msgstr ""
 
-#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "黑名单"
-
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
 msgstr ""
@@ -2492,12 +2470,6 @@ msgstr "通知的拒绝"
 #: web_tt2/modindex.tt2:115
 msgid "Reject and blacklist sender"
 msgstr "拒绝并把发送列入黑名单"
-
-#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
-#: web_tt2/reviewbouncing.tt2:133
-msgid "Toggle Selection"
-msgstr "反选"
 
 #: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
@@ -4062,7 +4034,7 @@ msgstr "查找间隔："
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15594
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -7360,7 +7332,7 @@ msgstr "配置文件--CONFIG--包含错误。\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9383
 msgid "%A"
 msgstr "%A"
 
@@ -7371,7 +7343,7 @@ msgstr "%d：%s行有错误"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2779 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H时%M分%S秒"
 
@@ -7981,16 +7953,16 @@ msgstr "%Y年%m月%d日（%a）"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
-#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
-#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
-#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
-#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
-#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
-#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
-#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
-#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
-#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
+#: wwsympa/wwsympa.fcgi:10750 wwsympa/wwsympa.fcgi:10819
+#: wwsympa/wwsympa.fcgi:11021 wwsympa/wwsympa.fcgi:11358
+#: wwsympa/wwsympa.fcgi:15157 wwsympa/wwsympa.fcgi:15894
+#: wwsympa/wwsympa.fcgi:15895 wwsympa/wwsympa.fcgi:4781
+#: wwsympa/wwsympa.fcgi:4782 wwsympa/wwsympa.fcgi:6068
+#: wwsympa/wwsympa.fcgi:7088 wwsympa/wwsympa.fcgi:7622
+#: wwsympa/wwsympa.fcgi:7659 wwsympa/wwsympa.fcgi:7661
+#: wwsympa/wwsympa.fcgi:8111 wwsympa/wwsympa.fcgi:8112
+#: wwsympa/wwsympa.fcgi:8146 wwsympa/wwsympa.fcgi:8147
+#: wwsympa/wwsympa.fcgi:8326 wwsympa/wwsympa.fcgi:8327
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -8105,7 +8077,7 @@ msgstr "［图象%s］"
 msgid "Unable to access directory %s : %m"
 msgstr "无法访问目录%s：%m"
 
-#: src/tt2.pl:224
+#: src/tt2.pl:213
 msgid "(unknown date)"
 msgstr "（未知日期）"
 
@@ -8117,15 +8089,15 @@ msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
-#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
-#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
+#: wwsympa/SympaSession.pm:433 wwsympa/SympaSession.pm:434
+#: wwsympa/wwsympa.fcgi:11582 wwsympa/wwsympa.fcgi:11715
+#: wwsympa/wwsympa.fcgi:14028 wwsympa/wwsympa.fcgi:7582
 msgid "%d %b %y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
+#: wwsympa/wwsympa.fcgi:15539 wwsympa/wwsympa.fcgi:15540
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8277,18 +8249,16 @@ msgstr "不接收邮件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
 
+#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
+msgid "Choose your authentication server"
+msgstr "选择身份验证服务器"
+
 #: web_tt2/modindex.tt2:16
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
 "thoses messages with notification ?"
 msgstr ""
-
-#: web_tt2/modindex.tt2:26
-msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
-"to distribute :"
-msgstr "请选择一个或多个对应于您想分发的邮件的主题："
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -8325,6 +8295,42 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid "-Blacklist"
+#~ msgstr "※　黑名单"
+
+#~ msgid "Required aliases"
+#~ msgstr "必须有别名"
+
+#~ msgid "Aliases you should install in your mailer"
+#~ msgstr "您应该安装到邮件服务中的别名"
+
+#~ msgid ""
+#~ "Most mailing list features require your email. Some mailing lists are "
+#~ "hidden to  unidentified persons.<br />\n"
+#~ " In order to benefit from the full services provided by this server, you "
+#~ "probably need to identify yourself first."
+#~ msgstr ""
+#~ "多数邮件列表特征需要您的邮件。有些邮件列表对未识别的人隐藏。<br/>\n"
+#~ "为了能获得由这台服务器提供的全部服务，您需要首先证实自己。"
+
+#~ msgid ""
+#~ "To login, select your organization authentication server below.<br />\n"
+#~ "If it is not listed or if you don't have any, login using your email and "
+#~ "password on the right column."
+#~ msgstr ""
+#~ "到登录，选择下面的您的组织身份验证服务器。<br/>\n"
+#~ "如果它不在列表中或您没有，用您的邮件和口令在正确的栏登录。"
+
+#~ msgid ""
+#~ "Login with you email address and password. You can request a password "
+#~ "reminder."
+#~ msgstr "以您的邮件和口令登录。您能请求口令提醒。"
+
+#~ msgid ""
+#~ "Please select one or more topic(s) that corresponds to the messages you "
+#~ "wish to distribute :"
+#~ msgstr "请选择一个或多个对应于您想分发的邮件的主题："
 
 #, fuzzy
 #~ msgid ""

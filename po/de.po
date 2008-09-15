@@ -158,42 +158,6 @@ msgstr "Abmelden"
 msgid "Your preferences"
 msgstr "Ihre Einstellungen"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
-msgid "Choose your authentication server"
-msgstr "Wählen Sie Ihren Authentifizierungsserver"
-
-#: web_tt2/login_menu.tt2:65 web_tt2/loginbanner.tt2:57
-msgid "Go"
-msgstr "Los"
-
-#: src/List.pm:1081 src/List.pm:583 web_tt2/login_menu.tt2:80
-#: web_tt2/loginbanner.tt2:72 web_tt2/sso_login.tt2:45
-msgid "email address"
-msgstr "E-Mail Adresse"
-
-#: web_tt2/login_menu.tt2:82 web_tt2/loginbanner.tt2:73
-#: web_tt2/sigrequest.tt2:37 web_tt2/sigrequest.tt2:69
-#: web_tt2/sso_login.tt2:47 web_tt2/subrequest.tt2:59
-msgid "password"
-msgstr "Passwort"
-
-#: web_tt2/login_menu.tt2:84 web_tt2/loginbanner.tt2:74
-msgid "Login"
-msgstr "Anmelden"
-
-#: web_tt2/login_menu.tt2:92
-#, fuzzy
-msgid "Authentication help"
-msgstr "Authentifizierung"
-
-#: web_tt2/login_menu.tt2:94
-msgid "First login ?"
-msgstr "Erstes Anmeldung ?"
-
-#: web_tt2/login_menu.tt2:95
-msgid "Lost password ?"
-msgstr "Passwort vergessen ?"
-
 #: web_tt2/your_lists.tt2:7
 msgid "Your Lists"
 msgstr "Ihre Verteiler"
@@ -396,9 +360,10 @@ msgstr "Anpassen"
 msgid "Manage Subscribers"
 msgstr "Abonnenten verwalten"
 
-#: web_tt2/list_admin_menu.tt2:36
-msgid "-Blacklist"
-msgstr "-schwarze Liste"
+#: web_tt2/list_admin_menu.tt2:36 web_tt2/modindex.tt2:35
+#: web_tt2/review.tt2:46
+msgid "Blacklist"
+msgstr "schwarze Liste"
 
 #: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
 #: web_tt2/list_admin_menu.tt2:41
@@ -1140,11 +1105,7 @@ msgstr ""
 msgid "Aliases have been installed."
 msgstr "Mail-Aliase wurden installiert."
 
-#: web_tt2/create_list.tt2:10 web_tt2/create_list.tt2:12
-msgid "Required aliases"
-msgstr "Benötigte E-Mail Aliase"
-
-#: web_tt2/create_list.tt2:26
+#: web_tt2/create_list.tt2:13
 msgid ""
 "Your list creation request is registered. You can now  modify its\n"
 "configuration using the admin button but the list will be unusable until the "
@@ -1863,7 +1824,7 @@ msgstr "Fehlendes Argument %1"
 msgid "Wrong value for parameter %1"
 msgstr "Falsche Parameter"
 
-#: web_tt2/error.tt2:138 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:139 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr "Sie müssen sich anmelden"
 
@@ -2046,165 +2007,171 @@ msgstr "'%1' Verteiler existiert bereits"
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr "Falscher Verteilername '%1' : stimmt mit einem Dienst-Alias überein"
 
-#. (u_err.path)
+#. (u_err.listname)
 #: web_tt2/error.tt2:92
+#, fuzzy
+msgid "Failed to remove list aliases for list %1"
+msgstr "Fehler beim Einbinden der Verteiler-Admins für Verteiler '%1'"
+
+#. (u_err.path)
+#: web_tt2/error.tt2:93
 msgid "%1 : No such file or directory"
 msgstr "%1 : Keine solche Datei oder Verzeichnis"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "Unable to read %1 : empty document"
 msgstr "Kann %1 nicht lesen : Leeres Dokument"
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "There is no shared documents"
 msgstr "Es ist kein gemeinsames Dokument vorhanden"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "The shared document space is empty"
 msgstr "Der Ordner der gemeinsamen Dokumente ist leer"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared directory cannot have any description"
 msgstr "Das gemeinsame Verzeichnis kann keine Beschreibung haben"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "No description specified"
 msgstr "Keine Beschreibung angegeben"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Kann Dokument '%1' nicht darstellen, es existiert nicht"
 
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr ""
 "Daten auf Festplatte haben sich geändert. Ihre Änderungen können nicht "
 "gespeichert werden"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "%1 : incorrect name"
 msgstr "%1 : Falscher Name"
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "Failed : your content is empty"
 msgstr "Fehler : Leerer Inhalt"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Cannot overwrite file %1"
 msgstr "Kann Datei %1 nicht überschreiben"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "A directory named '%1' already exists"
 msgstr "Ein Verzeichnis mit dem Namen '%1' existiert bereits"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "This is an already existing document : '%1'"
 msgstr "Dieses Dokument existiert bereits: '%1'"
 
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "No name specified"
 msgstr "Kein Name angegeben"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "The document repository exceed disk quota."
 msgstr "Die Dokumentenablage überschreitet die Disk Quota."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "Cannot upload file %1"
 msgstr "Kann Datei %1 nicht hochladen"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "Sie sind nicht autorisiert die Datei INDEX.HTML in %1 zu ersetzen"
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "The upload failed, try it again"
 msgstr "Das Hochladen schlug fehl, bitte nochmals versuchen"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Verzeichnis %1 und dessen Inhalte konnten nicht kopiert werden : %2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "File %1 was not copied : %2 "
 msgstr "Datei %1 wurde nicht kopiert: %2"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "Failed : %1 not empty"
 msgstr "Fehler : %1 ist nicht leer"
 
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "No certificate for this list"
 msgstr "Kein Zertifikat für diesen Verteiler"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "This list has no message topic"
 msgstr "Dieser Verteiler hat keine Nachrichtenthemen"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "Tag message with topic is required for this list"
 msgstr ""
 "Für diesen Verteiler ist es erforderlich, dass Nachrichten mit einem Thema "
 "markiert werden"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "No entry for user '%1'"
 msgstr "Kein Eintrag für Benutzer '%1'"
 
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "Please select archive months"
 msgstr "Bitte den Archiv-Monat auswählen"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "No SOAP service"
 msgstr "Keine SOAP-Dienste"
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "Authentication failed"
 msgstr "Authentifizierung fehlgeschlagen"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "Die Datei %1 existiert bereits"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "Kann Datei '%1' nicht öffnen"
 
 #. (u_err.filename)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "Kann die Datei nicht lesen : '%1'"
 
 #. (auth.action)
-#: web_tt2/error.tt2:132
+#: web_tt2/error.tt2:133
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "AUTORISIERUNG VERWEIGERT (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:134
+#: web_tt2/error.tt2:135
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2228,6 +2195,13 @@ msgstr "Listentitel"
 #: web_tt2/get_closed_lists.tt2:12 web_tt2/get_pending_lists.tt2:11
 msgid "Requested by"
 msgstr "Beantragt von"
+
+#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
+#: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:119
+#: web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
+#: web_tt2/reviewbouncing.tt2:133
+msgid "Toggle Selection"
+msgstr "Auswahl invertierien"
 
 #: web_tt2/get_closed_lists.tt2:30
 msgid "Purge selected lists"
@@ -2279,10 +2253,6 @@ msgstr "Liste beantragt von"
 #: web_tt2/install_pending_list.tt2:17
 msgid "on %1"
 msgstr "auf %1"
-
-#: web_tt2/install_pending_list.tt2:29
-msgid "Aliases you should install in your mailer"
-msgstr "Aliase, die Sie in Ihrem E-Mail System anlegen sollten"
 
 #: web_tt2/javascript.tt2:147
 #, fuzzy
@@ -2384,7 +2354,44 @@ msgstr ""
 msgid "Validate"
 msgstr "Überprüfen"
 
-#: web_tt2/loginbanner.tt2:6
+#: web_tt2/loginbanner.tt2:18
+#, fuzzy
+msgid "To login, select your organization authentication server below:"
+msgstr "Wählen Sie Ihren Authentifizierungsserver"
+
+#: web_tt2/loginbanner.tt2:24
+msgid "Go"
+msgstr "Los"
+
+#: src/List.pm:1081 src/List.pm:583 web_tt2/loginbanner.tt2:39
+#: web_tt2/sso_login.tt2:45
+msgid "email address"
+msgstr "E-Mail Adresse"
+
+#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
+#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/subrequest.tt2:59
+msgid "password"
+msgstr "Passwort"
+
+#: web_tt2/loginbanner.tt2:43
+msgid "Login"
+msgstr "Anmelden"
+
+#: web_tt2/loginbanner.tt2:51
+#, fuzzy
+msgid "Authentication help"
+msgstr "Authentifizierung"
+
+#: web_tt2/loginbanner.tt2:53
+msgid "First login ?"
+msgstr "Erstes Anmeldung ?"
+
+#: web_tt2/loginbanner.tt2:54
+msgid "Lost password ?"
+msgstr "Passwort vergessen ?"
+
+#: web_tt2/loginrequest.tt2:3
 #, fuzzy
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
@@ -2393,39 +2400,6 @@ msgstr ""
 "Sie müssen sich anmelden, um auf Ihre persönliche WWSympa Umgebung zugreifen "
 "oder privilegierte Operationen (solche, bei denen Ihre E-Mail Adresse "
 "notwendig ist) ausführen zu können."
-
-#: web_tt2/loginbanner.tt2:9
-msgid ""
-"Most mailing list features require your email. Some mailing lists are hidden "
-"to  unidentified persons.<br />\n"
-" In order to benefit from the full services provided by this server, you "
-"probably need to identify yourself first."
-msgstr ""
-"Für die meisten Funktionalitäten der Verteilerlisten ist Ihre E-Mail Adresse "
-"notwendig. Einige Verteilerlisten werden vor nicht identifizierten Personen "
-"versteckt.<br /> \n"
-" Um  alle Funktionenen dieses Servers verwenden zu können, müssen Sie sich "
-"vermutlich zuerst identifizieren."
-
-#: web_tt2/loginbanner.tt2:14
-msgid ""
-"To login, select your organization authentication server below.<br />\n"
-"If it is not listed or if you don't have any, login using your email and "
-"password on the right column."
-msgstr ""
-"Wählen Sie für die Anmeldung den Authentifizierungsserver Ihrer Organisation."
-"<br/> \n"
-"Wenn keiner aufgelistet ist oder Sie keinen haben, melden Sie sich in der "
-"rechten Spalte mit Ihrer E-Mail Adresse und Ihrem Passwort an."
-
-#: web_tt2/loginbanner.tt2:19
-msgid ""
-"Login with you email address and password. You can request a password "
-"reminder."
-msgstr ""
-"Geben Sie Ihre\n"
-"E-Mail Adresse und Ihr Passwort an. Sie können auch eine Passwort-Erinnerung "
-"anfordern."
 
 #: web_tt2/ls_templates.tt2:7
 msgid ""
@@ -2604,10 +2578,6 @@ msgstr "Editor-Ablehnungsnachricht"
 msgid "Do Not Notify"
 msgstr ""
 
-#: web_tt2/modindex.tt2:35 web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr "schwarze Liste"
-
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
 msgstr ""
@@ -2636,12 +2606,6 @@ msgstr "Ablehnen mit Rückmeldung"
 #: web_tt2/modindex.tt2:115
 msgid "Reject and blacklist sender"
 msgstr "Ablehnen und den Absender in die schwarze Liste aufnehmen"
-
-#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/modindex.tt2:119 web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
-#: web_tt2/reviewbouncing.tt2:133
-msgid "Toggle Selection"
-msgstr "Auswahl invertierien"
 
 #: web_tt2/modindex.tt2:121
 msgid "Toggle spams"
@@ -4310,7 +4274,7 @@ msgstr "Benutzer suchen"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15597
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15594
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d. %B %Y %H:%M:%S"
 
@@ -7861,7 +7825,7 @@ msgstr "Die Konfigurationsdatei --CONFIG-- enthält Fehler.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9393
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9383
 msgid "%A"
 msgstr "%A"
 
@@ -7872,7 +7836,7 @@ msgstr "Fehler in Zeile %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2782 wwsympa/wwsympa.fcgi:998
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2779 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %B %Y um %H:%M:%S"
 
@@ -8493,16 +8457,16 @@ msgstr "%a, %d. %B %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
-#: wwsympa/wwsympa.fcgi:10760 wwsympa/wwsympa.fcgi:10829
-#: wwsympa/wwsympa.fcgi:11031 wwsympa/wwsympa.fcgi:11361
-#: wwsympa/wwsympa.fcgi:15160 wwsympa/wwsympa.fcgi:15897
-#: wwsympa/wwsympa.fcgi:15898 wwsympa/wwsympa.fcgi:4791
-#: wwsympa/wwsympa.fcgi:4792 wwsympa/wwsympa.fcgi:6078
-#: wwsympa/wwsympa.fcgi:7098 wwsympa/wwsympa.fcgi:7632
-#: wwsympa/wwsympa.fcgi:7669 wwsympa/wwsympa.fcgi:7671
-#: wwsympa/wwsympa.fcgi:8121 wwsympa/wwsympa.fcgi:8122
-#: wwsympa/wwsympa.fcgi:8156 wwsympa/wwsympa.fcgi:8157
-#: wwsympa/wwsympa.fcgi:8336 wwsympa/wwsympa.fcgi:8337
+#: wwsympa/wwsympa.fcgi:10750 wwsympa/wwsympa.fcgi:10819
+#: wwsympa/wwsympa.fcgi:11021 wwsympa/wwsympa.fcgi:11358
+#: wwsympa/wwsympa.fcgi:15157 wwsympa/wwsympa.fcgi:15894
+#: wwsympa/wwsympa.fcgi:15895 wwsympa/wwsympa.fcgi:4781
+#: wwsympa/wwsympa.fcgi:4782 wwsympa/wwsympa.fcgi:6068
+#: wwsympa/wwsympa.fcgi:7088 wwsympa/wwsympa.fcgi:7622
+#: wwsympa/wwsympa.fcgi:7659 wwsympa/wwsympa.fcgi:7661
+#: wwsympa/wwsympa.fcgi:8111 wwsympa/wwsympa.fcgi:8112
+#: wwsympa/wwsympa.fcgi:8146 wwsympa/wwsympa.fcgi:8147
+#: wwsympa/wwsympa.fcgi:8326 wwsympa/wwsympa.fcgi:8327
 msgid "%d %b %Y"
 msgstr "%d. %B %Y"
 
@@ -8623,7 +8587,7 @@ msgstr "[ Bild%s ]"
 msgid "Unable to access directory %s : %m"
 msgstr "Auf das Verzeichnis %s kann nicht zugegriffen werden: %m"
 
-#: src/tt2.pl:224
+#: src/tt2.pl:213
 msgid "(unknown date)"
 msgstr "(unbekanntes Datum)"
 
@@ -8635,15 +8599,15 @@ msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:374 wwsympa/SympaSession.pm:375
-#: wwsympa/wwsympa.fcgi:11585 wwsympa/wwsympa.fcgi:11718
-#: wwsympa/wwsympa.fcgi:14031 wwsympa/wwsympa.fcgi:7592
+#: wwsympa/SympaSession.pm:433 wwsympa/SympaSession.pm:434
+#: wwsympa/wwsympa.fcgi:11582 wwsympa/wwsympa.fcgi:11715
+#: wwsympa/wwsympa.fcgi:14028 wwsympa/wwsympa.fcgi:7582
 msgid "%d %b %y  %H:%M"
 msgstr "%d. %B %y %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15542 wwsympa/wwsympa.fcgi:15543
+#: wwsympa/wwsympa.fcgi:15539 wwsympa/wwsympa.fcgi:15540
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8796,20 +8760,16 @@ msgstr "keine Nachricht (nützlich für die Urlaube)"
 msgid "you do not receive your own posts"
 msgstr "Sie empfangen Ihre eigenen Nachrichten nicht"
 
+#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
+msgid "Choose your authentication server"
+msgstr "Wählen Sie Ihren Authentifizierungsserver"
+
 #: web_tt2/modindex.tt2:16
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
 "thoses messages with notification ?"
 msgstr ""
-
-#: web_tt2/modindex.tt2:26
-msgid ""
-"Please select one or more topic(s) that corresponds to the messages you wish "
-"to distribute :"
-msgstr ""
-"Bitte wählen ein oder mehrere Themen aus, die auf Ihrer Nachricht, die sie "
-"verteilen möchten, zutreffen :"
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -8841,6 +8801,52 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid "-Blacklist"
+#~ msgstr "-schwarze Liste"
+
+#~ msgid "Required aliases"
+#~ msgstr "Benötigte E-Mail Aliase"
+
+#~ msgid "Aliases you should install in your mailer"
+#~ msgstr "Aliase, die Sie in Ihrem E-Mail System anlegen sollten"
+
+#~ msgid ""
+#~ "Most mailing list features require your email. Some mailing lists are "
+#~ "hidden to  unidentified persons.<br />\n"
+#~ " In order to benefit from the full services provided by this server, you "
+#~ "probably need to identify yourself first."
+#~ msgstr ""
+#~ "Für die meisten Funktionalitäten der Verteilerlisten ist Ihre E-Mail "
+#~ "Adresse notwendig. Einige Verteilerlisten werden vor nicht "
+#~ "identifizierten Personen versteckt.<br /> \n"
+#~ " Um  alle Funktionenen dieses Servers verwenden zu können, müssen Sie "
+#~ "sich vermutlich zuerst identifizieren."
+
+#~ msgid ""
+#~ "To login, select your organization authentication server below.<br />\n"
+#~ "If it is not listed or if you don't have any, login using your email and "
+#~ "password on the right column."
+#~ msgstr ""
+#~ "Wählen Sie für die Anmeldung den Authentifizierungsserver Ihrer "
+#~ "Organisation.<br/> \n"
+#~ "Wenn keiner aufgelistet ist oder Sie keinen haben, melden Sie sich in der "
+#~ "rechten Spalte mit Ihrer E-Mail Adresse und Ihrem Passwort an."
+
+#~ msgid ""
+#~ "Login with you email address and password. You can request a password "
+#~ "reminder."
+#~ msgstr ""
+#~ "Geben Sie Ihre\n"
+#~ "E-Mail Adresse und Ihr Passwort an. Sie können auch eine Passwort-"
+#~ "Erinnerung anfordern."
+
+#~ msgid ""
+#~ "Please select one or more topic(s) that corresponds to the messages you "
+#~ "wish to distribute :"
+#~ msgstr ""
+#~ "Bitte wählen ein oder mehrere Themen aus, die auf Ihrer Nachricht, die "
+#~ "sie verteilen möchten, zutreffen :"
 
 #, fuzzy
 #~ msgid ""
