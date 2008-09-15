@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-04-23 13:12+0200\n"
+"PO-Revision-Date: 2008-09-13 20:43+0200\n"
 "Last-Translator: chernysh <mail33@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,6 @@ msgid "Others"
 msgstr "Прочее"
 
 #: web_tt2/home.tt2:52
-#, fuzzy
 msgid "RSS news"
 msgstr "RSS-лента"
 
@@ -135,7 +134,7 @@ msgstr "Подписчик"
 #. (last_login_host,last_login_date)
 #: web_tt2/login_menu.tt2:22
 msgid "last login from %1 <br />(%2)</span>"
-msgstr ""
+msgstr "последний вход был с %1 <br />(%2)</span>"
 
 #: web_tt2/login_menu.tt2:34
 msgid "Logout"
@@ -169,9 +168,8 @@ msgid "Login"
 msgstr "Войти"
 
 #: web_tt2/login_menu.tt2:92
-#, fuzzy
 msgid "Authentication help"
-msgstr "Аутентификация"
+msgstr "Помощь в аутентификации"
 
 #: web_tt2/login_menu.tt2:94
 msgid "First login ?"
@@ -283,12 +281,11 @@ msgstr ""
 "параметров, которые можно изменить, зависит от Ваших полномочий. "
 
 #: web_tt2/admin.tt2:5
-#, fuzzy
 msgid ""
 "<strong>Customizing</strong> : editing of various files and messages "
 "attached to your list."
 msgstr ""
-"<strong>Настройка</strong> : редактирование различный файлов и сообщений в "
+"<strong>Настройка</strong> : редактирование различных файлов и сообщений в "
 "списке рассылки"
 
 #: web_tt2/admin.tt2:6
@@ -497,11 +494,11 @@ msgstr "Тема"
 
 #: web_tt2/add_request.tt2:6
 msgid "email1@dom1 Name1"
-msgstr ""
+msgstr "адрес1@сервер1.ру Имя1"
 
 #: web_tt2/add_request.tt2:7
 msgid "email2@dom2 Name2"
-msgstr ""
+msgstr "адрес2@сервер2.ру Имя2"
 
 #: web_tt2/add_request.tt2:11
 msgid "Add subscribers"
@@ -539,7 +536,6 @@ msgid "Archives"
 msgstr "Архивы"
 
 #: web_tt2/admin_menu.tt2:156
-#, fuzzy
 msgid "Bounce Settings"
 msgstr "Настройки для возвращаемых сообщений"
 
@@ -606,7 +602,6 @@ msgid "I am not a spammer"
 msgstr "Я не спамер"
 
 #: web_tt2/arc_protect.tt2:11
-#, fuzzy
 msgid ""
 "This button aims at protecting mailing lists archives against Spam Harvester."
 msgstr ""
@@ -614,9 +609,8 @@ msgstr ""
 "адресов для спаммерских баз. "
 
 #: web_tt2/arcsearch_form.tt2:3
-#, fuzzy
 msgid "Advanced archive search"
-msgstr "Размер web-архивов"
+msgstr "Расширенный поиск в архиве"
 
 #: web_tt2/arcsearch.tt2:6 web_tt2/arcsearch_form.tt2:11
 msgid "Search field :"
@@ -713,7 +707,6 @@ msgstr "Результаты Вашего поиска в архиве"
 
 #. (key_word)
 #: web_tt2/arcsearch.tt2:12
-#, fuzzy
 msgid "Parameters of these search make on <strong> &quot;%1&quot;</strong>"
 msgstr "Параметрами этого поиска являются <strong> &quot;%1&quot;</strong>"
 
@@ -1008,7 +1001,7 @@ msgstr "Применить"
 
 #: web_tt2/create_list_request.tt2:4
 msgid "Copy an existing list."
-msgstr ""
+msgstr "Копировать существующую рассылку."
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -1017,11 +1010,16 @@ msgid ""
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
+"Вы можете создать рассылку, использую уже существующую рассылку в качестве "
+"шаблона, конфигурация рассылки-источника будет скопирована для создания "
+"новой. Обратите внимание, что ни список подписчиков, ни архивы, ни общие "
+"документы не будут дублированы. В качестве источников могут буть "
+"использованы только те рассылки, владельцем которых Вы являетесь. "
 
 #: web_tt2/create_list_request.tt2:26 web_tt2/create_list_request.tt2:7
 msgid ""
 "After the list is created, you will be able to adjust it's configuration."
-msgstr ""
+msgstr "После создания рассылки Вы сможете настроить её конфигурацию. "
 
 #: web_tt2/create_list_request.tt2:15 web_tt2/rename_list_request.tt2:7
 msgid "New list name:"
@@ -1029,12 +1027,11 @@ msgstr "Новое название рассылки:"
 
 #: web_tt2/create_list_request.tt2:17
 msgid "copy list configuration"
-msgstr ""
+msgstr "копировать конфигурацию рассылки"
 
 #: web_tt2/create_list_request.tt2:23
-#, fuzzy
 msgid "Create a list using a template"
-msgstr "Настройка шаблонов сайта"
+msgstr "Создать рассылку, используя шаблон"
 
 #: web_tt2/create_list_request.tt2:25
 msgid ""
@@ -1042,6 +1039,9 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plan. "
 msgstr ""
+"Вы можете запросить создание рассылки, заполнив эту форму. Вы должны будете "
+"выбрать шаблон, преварительная настройка параметров которого наиболее близко "
+"отвечает планируемому использованию рассылки. "
 
 #: web_tt2/create_list_request.tt2:30
 msgid "the list name ; be careful, not its address !"
@@ -5347,9 +5347,8 @@ msgstr ""
 
 #. (list.name,list.host,email)
 #: mail_tt2/listmaster_notification.tt2:4
-#, fuzzy
 msgid "List \"%1@%2\" creation request from %3"
-msgstr "Запрос на создание рассылки \"%1\""
+msgstr "Запрос на создание рассылки \"%1@%2\" от  %3"
 
 #. (email,list.name)
 #: mail_tt2/listmaster_notification.tt2:6
@@ -5368,9 +5367,8 @@ msgstr "Переименование рассылки \"%1\""
 
 #. (email,list.name,new_listname)
 #: mail_tt2/listmaster_notification.tt2:19
-#, fuzzy
 msgid "%1 has copied list \"%2\" as a new list \"%3\""
-msgstr "%1 переименовал рассылку \"%2\" в \"%3\""
+msgstr "%1 скопировал рассылку \"%2\" в новую рассылку \"%3\""
 
 #. (email,list.name,new_listname)
 #: mail_tt2/listmaster_notification.tt2:21
@@ -5389,7 +5387,7 @@ msgstr "Невозможно соединиться  с базой данных 
 #. (db_type)
 #: mail_tt2/listmaster_notification.tt2:34
 msgid "No DataBase Driver for %1"
-msgstr ""
+msgstr "Нет драйвера базы данных для %1"
 
 #. (db_type)
 #: mail_tt2/listmaster_notification.tt2:36
@@ -5397,6 +5395,8 @@ msgid ""
 "No Database Driver installed for %1 ; you should download and install DBD::%"
 "1 from CPAN."
 msgstr ""
+"Драйвер базы данных для %1 не установлен; необходимо загрузить и установить "
+"DBD::%1 из CPAN."
 
 #: mail_tt2/listmaster_notification.tt2:40
 msgid "Previous process crashed"
@@ -5413,25 +5413,26 @@ msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:44
 msgid "Errors:"
-msgstr ""
+msgstr "Ошибки:"
 
 #: mail_tt2/listmaster_notification.tt2:50
 #: mail_tt2/listmaster_notification.tt2:58
 msgid "Check log file for further details."
-msgstr ""
+msgstr "Подробнее смотрите в файле журнала работы. "
 
 #: mail_tt2/listmaster_notification.tt2:53
 msgid "Upgrade procedures failed"
-msgstr ""
+msgstr "Процедуры обновления не удались. "
 
 #: mail_tt2/listmaster_notification.tt2:55
 msgid ""
 "Sympa encountered the following error while running upgrade procedures : "
 msgstr ""
+"Во время работы процедур обновления Sympa зафиксировал следующую ошибку : "
 
 #: mail_tt2/listmaster_notification.tt2:61
 msgid "Database structure updated"
-msgstr ""
+msgstr "Структура базы данных обновлена"
 
 #. (db_name)
 #: mail_tt2/listmaster_notification.tt2:63
@@ -5439,19 +5440,21 @@ msgid ""
 "The database structure has been updated ; check log file for further "
 "details : "
 msgstr ""
+"Структура базы данных была обновлена, подробнее смотрите в файле журнала "
+"работы : "
 
 #: mail_tt2/listmaster_notification.tt2:69
 msgid "DataBase connection restored"
-msgstr ""
+msgstr "Подключение к базе данных восстановлено"
 
 #. (db_name)
 #: mail_tt2/listmaster_notification.tt2:71
 msgid "Connection to database %1 restored."
-msgstr ""
+msgstr "Подключение к базе данных %1 восстановлено"
 
 #: mail_tt2/listmaster_notification.tt2:75
 msgid "Loop detected"
-msgstr ""
+msgstr "Обнаружена петля"
 
 #: mail_tt2/listmaster_notification.tt2:83
 msgid "A loop has been detected with the following message"
@@ -5459,31 +5462,29 @@ msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:97
 msgid "Antivirus scan failed"
-msgstr ""
+msgstr "Антивирусное сканирование не удалось"
 
 #: mail_tt2/listmaster_notification.tt2:99
 msgid "The antivirus scan has failed while processing the following file:"
-msgstr ""
+msgstr "Антивирусное сканирование не удалось при обработке следующего файла: "
 
 #: mail_tt2/listmaster_notification.tt2:102
 msgid "The returned error message :"
-msgstr ""
+msgstr "Вернувшееся сообщение об ошибке :"
 
 #: mail_tt2/listmaster_notification.tt2:107
-#, fuzzy
 msgid "Parameter error"
-msgstr "Ошибка сервера"
+msgstr "Ошибка параметра"
 
 #. (par_name,par_value)
 #: mail_tt2/listmaster_notification.tt2:109
-#, fuzzy
 msgid "The value for parameter %1 was badly defined: %2"
-msgstr "Неверное значение для параметра %1"
+msgstr "Значение параметра %1 было неверно задано: %2"
 
 #. (action)
 #: mail_tt2/listmaster_notification.tt2:110
 msgid "%1 impossible."
-msgstr ""
+msgstr "%1 невозможно. "
 
 #: mail_tt2/listmaster_notification.tt2:111
 #: mail_tt2/listmaster_notification.tt2:117
@@ -5493,48 +5494,48 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:340
 #: mail_tt2/listmaster_notification.tt2:352
 msgid "See logs for more details."
-msgstr ""
+msgstr "Подробнее смотрите в журнале работы. "
 
 #: mail_tt2/listmaster_notification.tt2:114
-#, fuzzy
 msgid "Unable to create directory"
-msgstr "Вверх, в директорию высшего уровня"
+msgstr "Невозможно создать директорию. "
 
 #. (dir)
 #: mail_tt2/listmaster_notification.tt2:116
-#, fuzzy
 msgid "Sympa could not create directory %1"
-msgstr "Установить владельца директории %1"
+msgstr "Sympa не может создать директорию %1"
 
 #: mail_tt2/listmaster_notification.tt2:120
 msgid "A message archiving failed"
-msgstr ""
+msgstr "Архивирование сообщения не удалось"
 
 #. (file,bad)
 #: mail_tt2/listmaster_notification.tt2:122
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
+"Sympa не может архивировать сообщение '%1' и перемещает его в директорию "
+"'%2'."
 
 #: mail_tt2/listmaster_notification.tt2:126
-#, fuzzy
 msgid "A bounce management failed"
-msgstr "Обработка возвращаемых писем"
+msgstr "Обработка возвращаемых писем не удалась"
 
 #. (file,bad)
 #: mail_tt2/listmaster_notification.tt2:128
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
+"Sympa не может обработать вернувшееся сообщение '%1' и перемещает его в "
+"директорию '%2'."
 
 #. (error)
 #: mail_tt2/listmaster_notification.tt2:130
-#, fuzzy
 msgid "Error: %1"
-msgstr "От: %1"
+msgstr "Ошибка: %1"
 
 #: mail_tt2/listmaster_notification.tt2:134
 msgid "incorrect format of edit_list.conf"
-msgstr ""
+msgstr "неверный формат файла edit_list.conf"
 
 #: mail_tt2/listmaster_notification.tt2:137
 msgid ""
@@ -5557,18 +5558,20 @@ msgstr ""
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:144
 msgid "subscribers update failed for list %1"
-msgstr ""
+msgstr "Обновление списка подписчиков рассылки %1 не удалось"
 
 #: mail_tt2/listmaster_notification.tt2:147
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
 msgstr ""
+"Sympa не может включить подписчиков из внешнего источника данных; \n"
+" база данных LDAP может быть недоступна. "
 
 #: mail_tt2/listmaster_notification.tt2:148
 #: mail_tt2/listmaster_notification.tt2:155
 msgid "Check Sympa log files for more precise information"
-msgstr ""
+msgstr "Более точную информацию ищите в журналах работы Sympa"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:152
@@ -5590,12 +5593,12 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:225
 #: mail_tt2/listmaster_notification.tt2:232
 msgid "list %1 in status error_config"
-msgstr ""
+msgstr "рассылка %1 имеет статус error_config"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:160
 msgid "No owner is defined for list %1."
-msgstr ""
+msgstr "Для рассылки %1 не задан владелец."
 
 #: mail_tt2/listmaster_notification.tt2:161
 #: mail_tt2/listmaster_notification.tt2:178
@@ -5605,7 +5608,7 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:228
 #: mail_tt2/listmaster_notification.tt2:235
 msgid "The list status has been set to error_config."
-msgstr ""
+msgstr "Статус рассылки изменён на error_config"
 
 #: mail_tt2/listmaster_notification.tt2:162
 #: mail_tt2/listmaster_notification.tt2:179
@@ -5617,12 +5620,12 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:229
 #: mail_tt2/listmaster_notification.tt2:236
 msgid "Check Sympa log files for more precise information."
-msgstr ""
+msgstr "Более точную информацию ищите в журналах работы Sympa."
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:166
 msgid "List owner/editor email changes"
-msgstr ""
+msgstr "Изменение электронного адреса владельца/редактора рассылки"
 
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:168
@@ -5630,6 +5633,8 @@ msgid ""
 "User %1 has changed his owner/editor email address to %2. This changed has "
 "been performed to the following lists :"
 msgstr ""
+"Пользователь %1 изменил свой электронный адрес владельца/редактора рассылки "
+"на %2. Это изменение коснулось следующих рассылок :"
 
 #. (param0,param1)
 #: mail_tt2/listmaster_notification.tt2:177
@@ -5651,27 +5656,27 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:198
 #: mail_tt2/listmaster_notification.tt2:205
 msgid "errors in param_constraint.conf file"
-msgstr ""
+msgstr "ошибки в файле param_constraint.conf"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:200
 #: mail_tt2/listmaster_notification.tt2:207
 msgid "Error(s) found in the file %1."
-msgstr ""
+msgstr "В файле %1 обнаружена(ы) ошибка(и)."
 
 #: mail_tt2/listmaster_notification.tt2:211
 msgid "File removed"
-msgstr ""
+msgstr "Файл удалён"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:213
 msgid "The following file has been removed : %1"
-msgstr ""
+msgstr "Следующий файл был удалён : %1"
 
 #. (param1)
 #: mail_tt2/listmaster_notification.tt2:214
 msgid "A backup of the file has been made : %1"
-msgstr ""
+msgstr "Была создана резервная копия файла : %1"
 
 #. (param0,param1)
 #: mail_tt2/listmaster_notification.tt2:220
@@ -5692,7 +5697,7 @@ msgstr ""
 #: mail_tt2/listmaster_notification.tt2:240
 #: mail_tt2/listowner_notification.tt2:41
 msgid "List %1 automatic bounce management"
-msgstr ""
+msgstr "Автоматическое управление обработкой возвращаемых писем рассылки %1"
 
 #. (total,list.name)
 #: mail_tt2/listmaster_notification.tt2:244
@@ -5701,6 +5706,9 @@ msgid ""
 "below have been\n"
 "notified that they might be removed from list %2:"
 msgstr ""
+"Поскольку мы получили МНОГО отчётов о невозможности доставить почту, "
+"подписчики %1, указанные ниже, были\n"
+" уведомлены, что они могут быть удалены из списка рассылки %2: "
 
 #. (total,list.name)
 #: mail_tt2/listmaster_notification.tt2:247
@@ -5709,6 +5717,9 @@ msgid ""
 "below have been\n"
 "removed from list %2:"
 msgstr ""
+"Поскольку мы получили МНОГО отчётов о невозможности доставить почту, "
+"подписчики %1, указанные ниже, были\n"
+"удалены из списка рассылки %2: "
 
 #. (total,list.name)
 #: mail_tt2/listmaster_notification.tt2:250
@@ -5717,57 +5728,63 @@ msgid ""
 "below have been\n"
 "selected by Sympa as severe bouncing addresses:"
 msgstr ""
+"Поскольку мы получили МНОГО отчётов о невозможности доставить почту, "
+"подписчики %1, указанные ниже, были\n"
+" отобраны Sympa, как имеющие нерабочие адреса: "
 
 #: mail_tt2/listmaster_notification.tt2:257
 #: mail_tt2/listowner_notification.tt2:58
+#, fuzzy
 msgid "Managing bouncing subscribers:"
-msgstr ""
+msgstr "Управление обработкой возвращаемых писем: "
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:261
 #: mail_tt2/listmaster_notification.tt2:273
 msgid "Listmaster : internal server error "
-msgstr ""
+msgstr "Глобальный администратор : внутренняя ошибка сервера"
 
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:263
 #: mail_tt2/listmaster_notification.tt2:275
 msgid " User %1 has encountered an internal server error"
-msgstr ""
+msgstr " Пользователь %1 обнаружил внутреннюю ошибку сервера"
 
 #: mail_tt2/listmaster_notification.tt2:276
 #: mail_tt2/listmaster_notification.tt2:347
 msgid "Web interface"
-msgstr ""
+msgstr "Web-интерфейс"
 
 #: mail_tt2/listmaster_notification.tt2:278
 msgid "Unable to change directory."
-msgstr ""
+msgstr "Невозможно изменить директорию."
 
 #: mail_tt2/listmaster_notification.tt2:279
 msgid "The authentication server name is not defined."
-msgstr ""
+msgstr "Имя сервера аутентификации не задано. "
 
 #: mail_tt2/listmaster_notification.tt2:280
 msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
+"Ошибка auth.conf : необходимо задать email_http_header или "
+"ldap_host/ldap_get_email_by_uid_filter."
 
 #. (name)
 #: mail_tt2/listmaster_notification.tt2:281
 msgid "Unkown authentication service %1."
-msgstr ""
+msgstr "Неизвестный сервис аутентификации %1."
 
 #. (user)
 #: mail_tt2/listmaster_notification.tt2:282
 msgid "Add user '%1' in DB failed."
-msgstr ""
+msgstr "Добавление пользователя '%1' в базу данных не удалось."
 
 #. (user)
 #: mail_tt2/listmaster_notification.tt2:283
 msgid "Update user '%1' in DB failed"
-msgstr ""
+msgstr "Обновление пользователя '%1' в базе данных не удалось."
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:283
@@ -5778,17 +5795,17 @@ msgstr " (старый адрес : %1)"
 #. (sub)
 #: mail_tt2/listmaster_notification.tt2:284
 msgid "Add subscriber '%1' in DB failed."
-msgstr ""
+msgstr "Добавление подписчка '%1' в базу данных не удалось."
 
 #. (sub,old_email)
 #: mail_tt2/listmaster_notification.tt2:285
 msgid "Update subscriber '%1' in DB failed"
-msgstr ""
+msgstr "Обновление подписчика '%1' в базе данных не удалось."
 
 #. (sub)
 #: mail_tt2/listmaster_notification.tt2:286
 msgid "Delete subscriber '%1' in DB failed."
-msgstr ""
+msgstr "Удаление подписчка '%1' из базы данных не удалось."
 
 #. (old_email)
 #: mail_tt2/listmaster_notification.tt2:287
@@ -5798,32 +5815,32 @@ msgstr ""
 #. (email,list.name)
 #: mail_tt2/listmaster_notification.tt2:288
 msgid "Subscriber '%1' is not found in list %2."
-msgstr ""
+msgstr "Подписчик '%1' в рассылке %2 не найден."
 
 #. (filepath)
 #: mail_tt2/listmaster_notification.tt2:289
 msgid "Unable to read file : '%1'."
-msgstr ""
+msgstr "Невозможно прочитать файл : '%1'."
 
 #. (filepath)
 #: mail_tt2/listmaster_notification.tt2:290
 msgid "Unable to write file : '%1'."
-msgstr ""
+msgstr "Невозможно записать файл : '%1'."
 
 #. (file)
 #: mail_tt2/listmaster_notification.tt2:291
 msgid "Unable to open file '%1'."
-msgstr ""
+msgstr "Невозможно открыть файл : '%1'."
 
 #. (directory)
 #: mail_tt2/listmaster_notification.tt2:292
 msgid "Unable to open directory '%1'."
-msgstr ""
+msgstr "Невозможно открыть директорию : '%1'."
 
 #. (dir)
 #: mail_tt2/listmaster_notification.tt2:293
 msgid "Unable to create directory '%1'."
-msgstr ""
+msgstr "Невозможно создать директорию : '%1'."
 
 #. (spool)
 #: mail_tt2/listmaster_notification.tt2:294
@@ -5833,91 +5850,92 @@ msgstr ""
 #. (msg)
 #: mail_tt2/listmaster_notification.tt2:295
 msgid "Unable to get message '%1'."
-msgstr ""
+msgstr "Невозможно получить сообщение : '%1'."
 
 #. (old,new)
 #: mail_tt2/listmaster_notification.tt2:296
 msgid "Unable to rename file '%1' into '%2'."
-msgstr ""
+msgstr "Невозможно переименовать файл '%1' в '%2'."
 
 #. (old,new)
 #: mail_tt2/listmaster_notification.tt2:297
 msgid "Unable to rename directory '%1' into '%2'."
-msgstr ""
+msgstr "Невозможно переименовать директорию '%1' в '%2'."
 
 #. (file)
 #: mail_tt2/listmaster_notification.tt2:298
 msgid "Unable to erase file '%1'."
-msgstr ""
+msgstr "Невозможно удалить файл '%1'."
 
 #. (from,list.name)
 #: mail_tt2/listmaster_notification.tt2:299
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
+"Невозможно отправить команду DISTRIBUTE (распространить) с '%1' в рассылку "
+"'%2'."
 
 #. (dir)
 #: mail_tt2/listmaster_notification.tt2:300
 msgid "No HTML version of the message available in '%1'."
-msgstr ""
+msgstr "Недоступна версия HTML сообщения '%1'."
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:301
 msgid "Unable to update file config_changes for list '%1'."
-msgstr ""
+msgstr "Невозможно обновить файл config_changes для рассылки '%1'."
 
 #. (month,list.name)
 #: mail_tt2/listmaster_notification.tt2:302
 msgid "Unable to find month '%1' for list '%2'"
-msgstr ""
+msgstr "Невозможно найти месяц '%1' для рассылки '%2'"
 
 #. (dir)
 #. (path)
 #: mail_tt2/listmaster_notification.tt2:302
 #: mail_tt2/listmaster_notification.tt2:303
 #: mail_tt2/listmaster_notification.tt2:304
-#, fuzzy
 msgid " : unable to read '%1'."
 msgstr " : невозможно прочитать '%1'."
 
 #. (arc_file,list.name,path)
 #: mail_tt2/listmaster_notification.tt2:303
 msgid "Unable to find archive '%1' for list '%2'"
-msgstr ""
+msgstr "Невозможно найти архив '%1' для рассылки '%2'"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to find archive for list '%1'"
-msgstr ""
+msgstr "Невозможно найти архив для рассылки '%1'"
 
 #: mail_tt2/listmaster_notification.tt2:305
 msgid "Unable to send archive : no message id found."
-msgstr ""
+msgstr "Невозможно отправить архив: не найден идентификатор сообщения. "
 
 #. (msgid)
 #: mail_tt2/listmaster_notification.tt2:306
 msgid "No message found in archives matching Message-ID '%1'."
-msgstr ""
+msgstr "В архивах не найдено сообщение с Message-ID '%1'."
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:307
 msgid "Cannot save config file for list '%1'."
-msgstr ""
+msgstr "Невозможно сохранить конфигурационный файл для рассылки '%1'."
 
 #: mail_tt2/listmaster_notification.tt2:308
 msgid "Failed to install aliases."
-msgstr ""
+msgstr "Не удалось установить алиас."
 
 #: mail_tt2/listmaster_notification.tt2:309
 msgid "Failed to remove aliases."
-msgstr ""
+msgstr "Не удалось удалить алиас."
 
 #: mail_tt2/listmaster_notification.tt2:310
 msgid "Internal scenario error for 'create_list'."
-msgstr ""
+msgstr "Внутренняя ошибка сценария 'create_list'."
 
 #: mail_tt2/listmaster_notification.tt2:311
 msgid "Unable to create list."
-msgstr ""
+msgstr "Невозможно создать рассылку. "
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:314
@@ -5927,69 +5945,69 @@ msgstr ""
 #. (new_listname)
 #: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to reload list with new listname '%1'."
-msgstr ""
+msgstr "Невозможно перезагрузить рассылку с новым названием рассылки '%1'."
 
 #: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to reload list"
-msgstr ""
+msgstr "Невозможно перезагрузить рассылку"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:316
 msgid "Failed to inlude members for list '%1'"
-msgstr ""
+msgstr "Не удалось включить пользователей в рассылку '%1'"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:317
 msgid "Failed to include list admins for list '%1'"
-msgstr ""
+msgstr "Не удалось включить администраторов рассылки в рассылку '%1'"
 
 #: mail_tt2/listmaster_notification.tt2:318
 msgid "No owner is defined for the list '%1'"
-msgstr ""
+msgstr "Для рассылки '%1' не задан владелец"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:319
 msgid "The exportation to an Ldap directory failed for list '%1'"
-msgstr ""
+msgstr "Экспортирование в директорию LDAP рассылки '%1' не удалось"
 
 #. (new_listname)
 #: mail_tt2/listmaster_notification.tt2:320
 msgid "Unable to check listname '%1' on SMTP server"
-msgstr ""
+msgstr "Невозможно проверить название рассылки '%1' на SMTP-сервере. "
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:321
 msgid "Cannot create shared for list '%1'."
-msgstr ""
+msgstr "Невозможно создать общее пространство для рассылки '%1'."
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:322
 msgid "Cannot restore shared for list '%1'."
-msgstr ""
+msgstr "Невозможно восстановить общее пространство для рассылки '%1'."
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:323
 msgid "Cannot delete shared for list '%1'."
-msgstr ""
+msgstr "Невозможно удалить общее пространство для рассылки '%1'."
 
 #: mail_tt2/listmaster_notification.tt2:324
 msgid "Impossible to browse shared documents for list '%1'."
-msgstr ""
+msgstr "Невозможно просмотреть общие документы рассылки '%1'."
 
 #. (path)
 #: mail_tt2/listmaster_notification.tt2:325
 msgid "Cannot upload file '%1'."
-msgstr ""
+msgstr "Невозможно загрузить файл '%1'."
 
 #. (name)
 #: mail_tt2/listmaster_notification.tt2:327
 msgid "Errors while unzipping file '%1'."
-msgstr ""
+msgstr "Ошибки при разархивировании файла '%1'."
 
 #. (from,list.name)
 #: mail_tt2/listmaster_notification.tt2:328
 msgid "Unable to send command REMIND from '%1' to list '%2'."
-msgstr ""
+msgstr "Невозможно отправить команду REMIND c '%1' в рассылку '%2'."
 
 #. (from,list.name)
 #: mail_tt2/listmaster_notification.tt2:329
