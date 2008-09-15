@@ -455,7 +455,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'close_list_request' => ['param.user.email','param.list'],
 		     'compose_mail' => ['param.user.email','param.list'],
 		     'copy_template' => ['webormail'],
-		     'create_list' => ['param.user.email','listname','subject','template','info','topics'],
+		     'create_list' => ['param.user.email'], ## other required parameters are checked in the subroutine
 		     'create_list_request' => ['param.user.email'],
 		     'css' => [],
 		     'd_admin' => ['param.list','param.user.email'],
@@ -7868,6 +7868,20 @@ Creates a list using a list template
  sub do_create_list {
 
      &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
+
+     ## Check that all the needed arguments are present.
+     ## This is checked here because it requires to return the incomplete form to the user
+     foreach my $arg ('listname','subject','template','info','topics') {
+         unless ($in{$arg}) {
+             &report::reject_report_web('user','missing_arg',{'argument' => $arg},$param->{'action'});
+             &wwslog('info','do_create_list: missing param %s', $arg);
+             &web_db_log({'parameters' => $in{'listname'},
+                          'list' => $in{'listname'},
+                          'status' => 'error',
+                          'error_type' => 'missing_parameter'});
+             return 'create_list_request';
+         }
+     }
 
      ## Lowercase listname if required
      if ($in{'listname'} =~ /[A-Z]/) {
