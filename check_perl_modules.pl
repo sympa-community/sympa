@@ -81,7 +81,7 @@ use CPAN;
 	     'File::Copy::Recursive' => 'File-Copy-Recursive',
 	     'Net::Netmask' => 'Net-Netmask',
 	     'HTML::TreeBuilder' => 'HTML-Tree',
-	     'HTML:FormatText' => 'HTML-Format',
+	     'HTML::FormatText' => 'HTML-Format',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',
