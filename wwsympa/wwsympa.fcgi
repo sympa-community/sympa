@@ -9656,7 +9656,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 		 
 		 $p->{'value'}{&tools::escape_html($d)}{'selected'} = 1;
 		 $p->{'length'} = $struct->{'length'};
-		 $p->{'unit'} = $struct->{'unit'};
+		 $p->{'unit'} = gettext($struct->{'gettext_unit'});
 		 
 	     } else {
 		 
@@ -9666,7 +9666,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 		 $p->{'field_type'} = $struct->{'field_type'};
 		 my $l = length($p->{'value'});
 		 $p->{'hidden_field'} = '*' x $l;
-		 $p->{'unit'} = $struct->{'unit'};
+		 $p->{'unit'} = gettext($struct->{'gettext_unit'});
 		 if ($restrict) { # for topics
 		     $p_glob->{'constraint'} = $constraint;
 		 }

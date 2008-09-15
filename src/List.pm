@@ -294,7 +294,8 @@ my %alias = ('reply-to' => 'reply_to',
 ## scenario :    tells that the parameter is a scenario, providing its name
 ## default :     Default value for the param ; may be a configuration parameter (conf)
 ## synonym :     Defines synonyms for parameter values (for compatibility reasons)
-## unit :        Unit of the parameter ; this is used in web forms
+## gettext_unit :Unit of the parameter ; this is used in web forms and refers to translated
+##               strings in PO catalogs
 ## occurrence :  Occurerence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
 ##               example : a list may have multiple owner 
@@ -355,14 +356,14 @@ my %alias = ('reply-to' => 'reply_to',
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
 						      'length' => 3,
-						      'unit' => '%',
+						      'gettext_unit' => '%',
 						      'default' => {'conf' => 'bounce_warn_rate'},
 						      'gettext_id' => "warn rate",
 						      'order' => 1
 						  },
 				      'halt_rate' => {'format' => '\d+',
 						      'length' => 3,
-						      'unit' => '%',
+						      'gettext_unit' => '%',
 						      'default' => {'conf' => 'bounce_halt_rate'},
 						      'gettext_id' => "halt rate",
 						      'order' => 2
@@ -373,7 +374,7 @@ my %alias = ('reply-to' => 'reply_to',
 		     },
 	    'bouncers_level1' => {'format' => {'rate' => {'format' => '\d+',
 								 'length' => 2,
-								 'unit' => 'Points',
+								 'gettext_unit' => 'points',
 								 'default' => {'conf' => 'default_bounce_level1_rate'},
 								 'gettext_id' => "threshold",
 								 'order' => 1
@@ -394,7 +395,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  },
 	     'bouncers_level2' => {'format' => {'rate' => {'format' => '\d+',
 								 'length' => 2,
-								 'unit' => 'Points',
+								 'gettext_unit' => 'points',
 								 'default' => {'conf' => 'default_bounce_level2_rate'},
 								 'gettext_id' => "threshold",
 								 'order' => 1
@@ -415,7 +416,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  },
 	    'clean_delay_queuemod' => {'format' => '\d+',
 				       'length' => 3,
-				       'unit' => 'days',
+				       'gettext_unit' => 'days',
 				       'default' => {'conf' => 'clean_delay_queuemod'},
 				       'gettext_id' => "Expiration of unmoderated messages",
 				       'group' => 'other'
@@ -564,7 +565,7 @@ my %alias = ('reply-to' => 'reply_to',
 
 	    'digest_max_size' => {'format' => '\d+',
 				  'length' => 2,
-				  'unit' => 'messages',
+				  'gettext_unit' => 'messages',
 				  'default' => 25,
 				  'gettext_id' => "Digest maximum number of messages",
 				  'group' => 'sending'
@@ -572,7 +573,7 @@ my %alias = ('reply-to' => 'reply_to',
 
 	    'distribution_ttl' => {'format' => '\d+',
 		      'length' => 6,
-		      'unit' => 'seconds',
+		      'gettext_unit' => 'seconds',
 		      'gettext_id' => "Inclusions timeout for message distribution",
 		      'group' => 'data_source'
 		      },
@@ -742,7 +743,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      },
 						  'timeout' => {'format' => '\w+',
 								'default' => 30,
-								'unit' => 'seconds',
+								'gettext_unit' => 'seconds',
 								'gettext_id' => "connection timeout",
 								'order' => 6
 								},
@@ -822,7 +823,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      },
 						  'timeout1' => {'format' => '\w+',
 								'default' => 30,
-								'unit' => 'seconds',
+								'gettext_unit' => 'seconds',
 								'gettext_id' => "first-level connection timeout",
 								'order' => 6
 								},
@@ -860,7 +861,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      },
 						  'timeout2' => {'format' => '\w+',
 								'default' => 30,
-								'unit' => 'seconds',
+								'gettext_unit' => 'seconds',
 								'gettext_id' => "second-level connection timeout",
 								'order' => 13
 								},
@@ -1034,7 +1035,7 @@ my %alias = ('reply-to' => 'reply_to',
 					},
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
-			   'unit' => 'bytes',
+			   'gettext_unit' => 'bytes',
 			   'default' => {'conf' => 'max_size'},
 			   'gettext_id' => "Maximum message size",
 			   'group' => 'sending'
@@ -1235,7 +1236,7 @@ my %alias = ('reply-to' => 'reply_to',
 					  'quota' => {'format' => '\d+',
 						      'default' => {'conf' => 'default_shared_quota'},
 						      'length' => 8,
-						      'unit' => 'Kbytes',
+						      'gettext_unit' => 'Kbytes',
 						      'gettext_id' => "quota",
 						      'order' => 3
 						      }
@@ -1278,7 +1279,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 },
 	    'ttl' => {'format' => '\d+',
 		      'length' => 6,
-		      'unit' => 'seconds',
+		      'gettext_unit' => 'seconds',
 		      'default' => 3600,
 		      'gettext_id' => "Inclusions timeout",
 		      'group' => 'data_source'
@@ -1334,7 +1335,7 @@ my %alias = ('reply-to' => 'reply_to',
 					    'quota' => {'format' => '\d+',
 							'default' => {'conf' => 'default_archive_quota'},
 							'length' => 8,
-							'unit' => 'Kbytes',
+							'gettext_unit' => 'Kbytes',
 							'gettext_id' => "quota",
 							'order' => 2
 							},
