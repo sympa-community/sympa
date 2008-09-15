@@ -110,7 +110,7 @@ msgstr "邮件列表管理员"
 msgid "Privileged owner"
 msgstr "特权所有者"
 
-#: src/List.pm:1111 web_tt2/login_menu.tt2:16
+#: src/List.pm:1112 web_tt2/login_menu.tt2:16
 msgid "Owner"
 msgstr "所有者"
 
@@ -186,7 +186,7 @@ msgstr "发表"
 msgid "RSS"
 msgstr "RSS"
 
-#: src/List.pm:1243 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
+#: src/List.pm:1244 web_tt2/list_menu.tt2:57 web_tt2/list_menu.tt2:59
 msgid "Shared documents"
 msgstr "共享文档"
 
@@ -214,7 +214,7 @@ msgstr "误差率："
 msgid "Owners"
 msgstr "所有者"
 
-#: src/List.pm:608 web_tt2/list_panel.tt2:21
+#: src/List.pm:609 web_tt2/list_panel.tt2:21
 msgid "Moderators"
 msgstr "监管员"
 
@@ -2249,7 +2249,7 @@ msgstr "选择身份验证服务器"
 msgid "Go"
 msgstr "去"
 
-#: src/List.pm:1081 src/List.pm:583 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
 #: web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "邮件地址"
@@ -4646,7 +4646,7 @@ msgid "%1 Digest %2"
 msgstr "%1邮件摘要%2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2686
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2687
 msgid "Table of contents:"
 msgstr "目录表："
 
@@ -7342,617 +7342,645 @@ msgstr "%d：%s行有错误"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1782
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
 #: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2779 wwsympa/wwsympa.fcgi:998
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H时%M分%S秒"
 
-#: src/List.pm:315
+#: src/List.pm:316
 msgid "Account"
 msgstr "帐号"
 
-#: src/List.pm:319
+#: src/List.pm:320
 msgid "Who can add subscribers"
 msgstr "添加订阅者"
 
-#: src/List.pm:323
+#: src/List.pm:324
 msgid "Anonymous sender"
 msgstr "匿名发送者"
 
-#: src/List.pm:328
+#: src/List.pm:329
 msgid "frequency"
 msgstr "频率"
 
-#: src/List.pm:1331 src/List.pm:333
+#: src/List.pm:1332 src/List.pm:334
 msgid "access right"
 msgstr "访问权限"
 
-#: src/List.pm:337
+#: src/List.pm:338
 msgid "Text archives"
 msgstr "文本归档"
 
-#: src/List.pm:342
+#: src/List.pm:343
 msgid "Archive encrypted mails as cleartext"
 msgstr "保存加密邮件为非加密明文"
 
-#: src/List.pm:1086 src/List.pm:1126 src/List.pm:349 src/List.pm:525
-#: src/List.pm:588 src/List.pm:623
+#: src/List.pm:1087 src/List.pm:1127 src/List.pm:350 src/List.pm:526
+#: src/List.pm:589 src/List.pm:624
 msgid "reception mode"
 msgstr "接收模式"
 
-#: src/List.pm:352
+#: src/List.pm:353
 msgid "Available subscription options"
 msgstr "可提供的订阅选项"
 
-#: src/List.pm:360
+#: src/List.pm:361
 msgid "warn rate"
 msgstr "警告率"
 
-#: src/List.pm:367
+#: src/List.pm:368
 msgid "halt rate"
 msgstr "停止率"
 
-#: src/List.pm:371
+#: src/List.pm:372
 msgid "Bounces management"
 msgstr "退信管理"
 
-#: src/List.pm:378 src/List.pm:399
+#: src/List.pm:379 src/List.pm:400
 msgid "threshold"
 msgstr "下限"
 
-#: src/List.pm:383 src/List.pm:404
+#: src/List.pm:384 src/List.pm:405
 msgid "action for this population"
 msgstr "处理"
 
-#: src/List.pm:388 src/List.pm:409
+#: src/List.pm:389 src/List.pm:410
 msgid "notification"
 msgstr "通知"
 
-#: src/List.pm:392
+#: src/List.pm:393
 msgid "Management of bouncers, 1st level"
 msgstr "退信订阅者管理，最低水平"
 
-#: src/List.pm:413
+#: src/List.pm:414
 msgid "Management of bouncers, 2nd level"
 msgstr "退信订阅者管理，二级水平"
 
-#: src/List.pm:420
+#: src/List.pm:421
 msgid "Expiration of unmoderated messages"
 msgstr "未监管的邮件失效"
 
-#: src/List.pm:426
+#: src/List.pm:427
 msgid "Secret string for generating unique keys"
 msgstr "生成密钥的秘密字符串"
 
-#: src/List.pm:444
+#: src/List.pm:445
 msgid "Creation of the list"
 msgstr "创建邮件列表"
 
-#: src/List.pm:455
+#: src/List.pm:456
 msgid "internal identifier"
 msgstr "内部标识符"
 
-#: src/List.pm:463
+#: src/List.pm:464
 msgid "label"
 msgstr "标签"
 
-#: src/List.pm:469
+#: src/List.pm:470
 msgid "additional comment"
 msgstr "注释"
 
-#: src/List.pm:476
+#: src/List.pm:477
 msgid "type"
 msgstr "类型"
 
-#: src/List.pm:482
+#: src/List.pm:483
 msgid "possible attribute values (if enum is used)"
 msgstr "可能的属性值(如果使用了枚举类型)"
 
-#: src/List.pm:487
+#: src/List.pm:488
 msgid "is the attribute optionnal ?"
 msgstr "属性可选吗？"
 
-#: src/List.pm:493
+#: src/List.pm:494
 msgid "Custom user attributes"
 msgstr "配置用户属性"
 
-#: src/List.pm:499
+#: src/List.pm:500
 msgid "Custom header field"
 msgstr "定制邮件头信息字段"
 
-#: src/List.pm:504
+#: src/List.pm:505
 msgid "Subject tagging"
 msgstr "邮件头信息角注"
 
-#: src/List.pm:518
+#: src/List.pm:519
 msgid "custom parameters"
 msgstr "定制参量"
 
-#: src/List.pm:1091 src/List.pm:1131 src/List.pm:530 src/List.pm:593
-#: src/List.pm:628
+#: src/List.pm:1092 src/List.pm:1132 src/List.pm:531 src/List.pm:594
+#: src/List.pm:629
 msgid "visibility"
 msgstr "可见性"
 
-#: src/List.pm:534
+#: src/List.pm:535
 msgid "Subscription profile"
 msgstr "订阅模式"
 
-#: src/List.pm:538
+#: src/List.pm:539
 msgid "Who can delete subscribers"
 msgstr "删除订阅者"
 
-#: src/List.pm:545
+#: src/List.pm:419 src/List.pm:546
 msgid "days"
 msgstr "星期几"
 
-#: src/List.pm:551
+#: src/List.pm:552
 msgid "hour"
 msgstr "小时"
 
-#: src/List.pm:557
+#: src/List.pm:558
 msgid "minute"
 msgstr "分钟"
 
-#: src/List.pm:561
+#: src/List.pm:562
 msgid "Digest frequency"
 msgstr "摘要频率"
 
-#: src/List.pm:569
+#: src/List.pm:570
 msgid "Digest maximum number of messages"
 msgstr "邮件最大数字摘要"
 
-#: src/List.pm:576
+#: src/List.pm:577
 msgid "Inclusions timeout for message distribution"
 msgstr "包括邮件发送的间歇时间"
 
-#: src/List.pm:1096 src/List.pm:598
+#: src/List.pm:1097 src/List.pm:599
 msgid "name"
 msgstr "名称"
 
-#: src/List.pm:603
+#: src/List.pm:604
 msgid "private information"
 msgstr "不公开的信息"
 
-#: src/List.pm:638
+#: src/List.pm:639
 msgid "Periodical subscription expiration task"
 msgstr "周期性订阅超期任务"
 
-#: src/List.pm:649
+#: src/List.pm:650
 msgid "Attachment type"
 msgstr "附件类型"
 
-#: src/List.pm:653
+#: src/List.pm:654
 msgid "Forced reply address"
 msgstr "强制回复地址"
 
-#: src/List.pm:659
+#: src/List.pm:660
 msgid "Internet domain"
 msgstr "网络域"
 
-#: src/List.pm:665
+#: src/List.pm:666
 msgid "File inclusion"
 msgstr "文件包含"
 
-#: src/List.pm:669
+#: src/List.pm:670
 msgid "data location URL"
 msgstr "数据位置URL"
 
-#: src/List.pm:675 src/List.pm:708 src/List.pm:789 src/List.pm:967
+#: src/List.pm:676 src/List.pm:709 src/List.pm:790 src/List.pm:968
 msgid "remote user"
 msgstr "远程用户"
 
-#: src/List.pm:682 src/List.pm:714 src/List.pm:795 src/List.pm:972
+#: src/List.pm:683 src/List.pm:715 src/List.pm:796 src/List.pm:973
 msgid "remote password"
 msgstr "远程口令"
 
-#: src/List.pm:687 src/List.pm:750 src/List.pm:874 src/List.pm:928
-#: src/List.pm:986
+#: src/List.pm:688 src/List.pm:751 src/List.pm:875 src/List.pm:929
+#: src/List.pm:987
 msgid "short name for this source"
 msgstr "这个来源的缩写名称"
 
-#: src/List.pm:692
+#: src/List.pm:693
 msgid "Remote file inclusion"
 msgstr "远程的文件包含"
 
-#: src/List.pm:698 src/List.pm:779 src/List.pm:906 src/List.pm:945
+#: src/List.pm:699 src/List.pm:780 src/List.pm:907 src/List.pm:946
 msgid "remote host"
 msgstr "远程主机"
 
-#: src/List.pm:703 src/List.pm:784 src/List.pm:912
+#: src/List.pm:704 src/List.pm:785 src/List.pm:913
 msgid "remote port"
 msgstr "远程端口"
 
-#: src/List.pm:718
+#: src/List.pm:719
 msgid "suffix"
 msgstr "词尾"
 
-#: src/List.pm:724
+#: src/List.pm:725
 msgid "filter"
 msgstr "过滤器"
 
-#: src/List.pm:730
+#: src/List.pm:731
 msgid "extracted attribute"
 msgstr "提取的属性"
 
-#: src/List.pm:735
+#: src/List.pm:736
 msgid "selection (if multiple)"
 msgstr "选项（如果有多项）"
 
-#: src/List.pm:740
+#: src/List.pm:741
 msgid "search scope"
 msgstr "查找范围"
 
-#: src/List.pm:746
+#: src/List.pm:747
 msgid "connection timeout"
 msgstr "连接超时"
 
-#: src/List.pm:774
+#: src/List.pm:775
 msgid "LDAP query inclusion"
 msgstr "LDAP查询内容"
 
-#: src/List.pm:799
+#: src/List.pm:800
 msgid "first-level suffix"
 msgstr "第1级词尾"
 
-#: src/List.pm:805
+#: src/List.pm:806
 msgid "first-level filter"
 msgstr "第1级过滤器"
 
-#: src/List.pm:810
+#: src/List.pm:811
 msgid "first-level extracted attribute"
 msgstr "第1级提取的属性"
 
-#: src/List.pm:815
+#: src/List.pm:816
 msgid "first-level selection"
 msgstr "第1级选项"
 
-#: src/List.pm:820
+#: src/List.pm:821
 msgid "first-level search scope"
 msgstr "第1级查找范围"
 
-#: src/List.pm:826
+#: src/List.pm:827
 msgid "first-level connection timeout"
 msgstr "第1级连接超时"
 
-#: src/List.pm:832
+#: src/List.pm:833
 msgid "first-level regular expression"
 msgstr "第1级正规表达式"
 
-#: src/List.pm:836
+#: src/List.pm:837
 msgid "second-level suffix template"
 msgstr "第2级词尾模板"
 
-#: src/List.pm:842
+#: src/List.pm:843
 msgid "second-level filter template"
 msgstr "第2级过滤模板"
 
-#: src/List.pm:848
+#: src/List.pm:849
 msgid "second-level extracted attribute"
 msgstr "第2级提取的属性"
 
-#: src/List.pm:853
+#: src/List.pm:854
 msgid "second-level selection"
 msgstr "第2级选项"
 
-#: src/List.pm:858
+#: src/List.pm:859
 msgid "second-level search scope"
 msgstr "第2级查找范围"
 
-#: src/List.pm:864
+#: src/List.pm:865
 msgid "second-level connection timeout"
 msgstr "第2级连接超时"
 
-#: src/List.pm:870
+#: src/List.pm:871
 msgid "second-level regular expression"
 msgstr "第2级正则表达式"
 
-#: src/List.pm:896
+#: src/List.pm:897
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2-level 查询内容"
 
-#: src/List.pm:901
+#: src/List.pm:902
 msgid "List inclusion"
 msgstr "邮件列表包含"
 
-#: src/List.pm:918
+#: src/List.pm:919
 msgid "remote path of sympa list dump"
 msgstr "sympa邮件列表转储的远程路径"
 
-#: src/List.pm:923
+#: src/List.pm:924
 msgid "certificate for authentication by remote Sympa"
 msgstr "由远程的Sympa身份验证的证书"
 
-#: src/List.pm:935
+#: src/List.pm:936
 msgid "remote list inclusion"
 msgstr "远程邮件列表包含"
 
-#: src/List.pm:940
+#: src/List.pm:941
 msgid "database type"
 msgstr "数据库类型"
 
-#: src/List.pm:949
+#: src/List.pm:950
 msgid "database port"
 msgstr "数据库端口"
 
-#: src/List.pm:954
+#: src/List.pm:955
 msgid "database name"
 msgstr "数据库名称"
 
-#: src/List.pm:958
+#: src/List.pm:959
 msgid "connection options"
 msgstr "连接选项"
 
-#: src/List.pm:963
+#: src/List.pm:964
 msgid "environment variables for database connexion"
 msgstr "数据库连接的环境变量"
 
-#: src/List.pm:978
+#: src/List.pm:979
 msgid "SQL query"
 msgstr "SQL查询"
 
-#: src/List.pm:982
+#: src/List.pm:983
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "数据库被存放的目录（仅限DBD::CSV）"
 
-#: src/List.pm:993
+#: src/List.pm:994
 msgid "SQL query inclusion"
 msgstr "SQL查询包含"
 
-#: src/List.pm:997
+#: src/List.pm:998
 msgid "Who can view list information"
 msgstr "查看邮件列表信息"
 
-#: src/List.pm:1001
+#: src/List.pm:1002
 msgid "Who can invite people"
 msgstr "邀请"
 
-#: src/List.pm:1007
+#: src/List.pm:1008
 msgid "Language of the list"
 msgstr "邮件列表的语言"
 
-#: src/List.pm:1032
+#: src/List.pm:1033
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "运用规则的表达式防止邮件系统循环"
 
-#: src/List.pm:1039
+#: src/List.pm:1040
 msgid "Maximum message size"
 msgstr "最大邮件大小"
 
-#: src/List.pm:1045
+#: src/List.pm:1046
 msgid "Message topic name"
 msgstr "邮件主题名称"
 
-#: src/List.pm:1050
+#: src/List.pm:1051
 msgid "Message topic keywords"
 msgstr "邮件主题关键词"
 
-#: src/List.pm:1056
+#: src/List.pm:1057
 msgid "Message topic title"
 msgstr "邮件主题题目"
 
-#: src/List.pm:1061
+#: src/List.pm:1062
 msgid "Topics for message categorization"
 msgstr "邮件分类的主题"
 
-#: src/List.pm:1067
+#: src/List.pm:1068
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "定义了邮件主题关健词的哪个部分是应用的"
 
-#: src/List.pm:1074
+#: src/List.pm:1075
 msgid "Message tagging"
 msgstr "邮件角注"
 
-#: src/List.pm:1101
+#: src/List.pm:1102
 msgid "private informations"
 msgstr "不公开的信息"
 
-#: src/List.pm:1106 src/List.pm:1136
+#: src/List.pm:1107 src/List.pm:1137
 msgid "profile"
 msgstr "配置"
 
-#: src/List.pm:1147
+#: src/List.pm:1148
 msgid "Priority"
 msgstr "优先级"
 
-#: src/List.pm:1151
+#: src/List.pm:1152
 msgid "Who can start a remind process"
 msgstr "启动提醒过程"
 
-#: src/List.pm:1156
+#: src/List.pm:1157
 msgid "Return-path of the REMIND command"
 msgstr "REMIND命令的返回路径"
 
-#: src/List.pm:1180 src/List.pm:1200
+#: src/List.pm:1181 src/List.pm:1201
 msgid "Reply address"
 msgstr "回复地址"
 
-#: src/List.pm:1186
+#: src/List.pm:1187
 msgid "value"
 msgstr "值"
 
-#: src/List.pm:1191
+#: src/List.pm:1192
 msgid "other email address"
 msgstr "其它邮件"
 
-#: src/List.pm:1196
+#: src/List.pm:1197
 msgid "respect of existing header field"
 msgstr "遵守现有邮件头信息字段"
 
-#: src/List.pm:1205
+#: src/List.pm:1206
 msgid "Who can review subscribers"
 msgstr "查看订阅者"
 
-#: src/List.pm:1212
+#: src/List.pm:1213
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369邮件头信息字段"
 
-#: src/List.pm:1216
+#: src/List.pm:1217
 msgid "Who can send messages"
 msgstr "发送信息"
 
-#: src/List.pm:1223
+#: src/List.pm:1224
 msgid "Serial number of the config"
 msgstr "配置的序列号"
 
-#: src/List.pm:1228
+#: src/List.pm:1229
 msgid "Who can view"
 msgstr "查看"
 
-#: src/List.pm:1232
+#: src/List.pm:1233
 msgid "Who can edit"
 msgstr "编辑"
 
-#: src/List.pm:1239 src/List.pm:1338
+#: src/List.pm:1240 src/List.pm:1339
 msgid "quota"
 msgstr "配额"
 
-#: src/List.pm:1248 src/List.pm:1253
+#: src/List.pm:1249 src/List.pm:1254
 msgid "email address protection method"
 msgstr "邮件地址保护模式"
 
-#: src/List.pm:1259
+#: src/List.pm:1260
 msgid "Status of the list"
 msgstr "邮件列表的状态"
 
-#: src/List.pm:1266
+#: src/List.pm:1267
 msgid "Subject of the list"
 msgstr "邮件列表标题"
 
-#: src/List.pm:1270
+#: src/List.pm:1271
 msgid "Who can subscribe to the list"
 msgstr "订阅邮件列表"
 
-#: src/List.pm:1276
+#: src/List.pm:1277
 msgid "Topics for the list"
 msgstr "这个邮件列表的主题"
 
-#: src/List.pm:1283
+#: src/List.pm:1284
 msgid "Inclusions timeout"
 msgstr "包含操作超时值"
 
-#: src/List.pm:1287
+#: src/List.pm:1288
 msgid "Who can unsubscribe"
 msgstr "退订"
 
-#: src/List.pm:1308
+#: src/List.pm:1309
 msgid "Last update of config"
 msgstr "配置的最近更新"
 
-#: src/List.pm:1315
+#: src/List.pm:1316
 msgid "User data source"
 msgstr "用户数据来源"
 
-#: src/List.pm:1321
+#: src/List.pm:1322
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr "允许图片显示（必须被当前邮件系统激活）"
 
-#: src/List.pm:1327
+#: src/List.pm:1328
 msgid "Visibility of the list"
 msgstr "邮件列表的可见性"
 
-#: src/List.pm:1343
+#: src/List.pm:1344
 msgid "Maximum number of month archived"
 msgstr "月归档最大数"
 
-#: src/List.pm:1348
+#: src/List.pm:1349
 msgid "Web archives"
 msgstr "网页归档"
 
-#: src/List.pm:1354
+#: src/List.pm:1355
 msgid "Welcome return-path"
 msgstr "欢迎返回路径"
 
-#: src/List.pm:1359
+#: src/List.pm:1360
 msgid "percentage of list members in VERP mode"
 msgstr "在VERP模式下邮件列表成员百分比"
 
-#: src/List.pm:509
+#: src/List.pm:359 src/List.pm:366
+#, fuzzy
+msgid "%"
+msgstr "%A"
+
+#: src/List.pm:377 src/List.pm:398
+msgid "points"
+msgstr ""
+
+#: src/List.pm:510
 msgid "var name"
 msgstr "变量名称"
 
-#: src/List.pm:514
+#: src/List.pm:515
 msgid "var value"
 msgstr "变量值"
 
-#: src/List.pm:1116 src/List.pm:613
+#: src/List.pm:568
+#, fuzzy
+msgid "messages"
+msgstr "＃邮件"
+
+#: src/List.pm:1282 src/List.pm:576 src/List.pm:746 src/List.pm:826
+#: src/List.pm:864
+msgid "seconds"
+msgstr ""
+
+#: src/List.pm:1117 src/List.pm:614
 msgid "the datasource"
 msgstr "数据来源"
 
-#: src/List.pm:1121 src/List.pm:618
+#: src/List.pm:1122 src/List.pm:619
 msgid "datasource parameters"
 msgstr "数据来源参量"
 
-#: src/List.pm:634
+#: src/List.pm:635
 msgid "Moderators defined in an external datasource"
 msgstr "外部数据来源监管员"
 
-#: src/List.pm:643
+#: src/List.pm:644
 msgid "Family name"
 msgstr "主页名称"
 
-#: src/List.pm:756 src/List.pm:880
+#: src/List.pm:757 src/List.pm:881
 msgid "use SSL (LDAPS)"
 msgstr "用SSL（LDAPS）"
 
-#: src/List.pm:761 src/List.pm:885
+#: src/List.pm:762 src/List.pm:886
 msgid "SSL version"
 msgstr "SSL版本"
 
-#: src/List.pm:766 src/List.pm:890
+#: src/List.pm:767 src/List.pm:891
 msgid "SSL ciphers used"
 msgstr "使用了SSL暗号"
 
-#: src/List.pm:1012 src/List.pm:1293
+#: src/List.pm:1013 src/List.pm:1294
 msgid "epoch date"
 msgstr "新纪元日期"
 
-#: src/List.pm:1016 src/List.pm:1298
+#: src/List.pm:1017 src/List.pm:1299
 msgid "date"
 msgstr "日期"
 
-#: src/List.pm:1021
+#: src/List.pm:1022
 msgid "who ran the instantiation"
 msgstr "谁运行例证"
 
-#: src/List.pm:1025
+#: src/List.pm:1026
 msgid "Latest family instantiation"
 msgstr "最新的Family例证"
 
-#: src/List.pm:1141
+#: src/List.pm:1038
+#, fuzzy
+msgid "bytes"
+msgstr "再见！"
+
+#: src/List.pm:1142
 msgid "Owners defined in an external datasource"
 msgstr "外在数据来源所有者"
 
-#: src/List.pm:1160
+#: src/List.pm:1161
 msgid "Periodical subscription reminder task"
 msgstr "周期性订阅提醒任务"
 
-#: src/List.pm:1165
+#: src/List.pm:1166
 msgid "Incoming SMTP headers fields to be removed"
 msgstr "SMTP接收头字段将被删除"
 
-#: src/List.pm:1172
+#: src/List.pm:1173
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr "SMTP发送头字段将被移除"
 
-#: src/List.pm:1304
+#: src/List.pm:1239 src/List.pm:1338
+msgid "Kbytes"
+msgstr ""
+
+#: src/List.pm:1305
 msgid "who updated the config"
 msgstr "配置的最近更新人"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2789
+#: src/List.pm:2790
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日（%a）%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2790
+#: src/List.pm:2791
 msgid "%a, %d %b %Y"
 msgstr "%Y年%m月%d日（%a）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2976 src/List.pm:2977 src/List.pm:2981
+#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
 #: wwsympa/wwsympa.fcgi:10750 wwsympa/wwsympa.fcgi:10819
 #: wwsympa/wwsympa.fcgi:11021 wwsympa/wwsympa.fcgi:11358
 #: wwsympa/wwsympa.fcgi:15157 wwsympa/wwsympa.fcgi:15894
@@ -8249,10 +8277,6 @@ msgstr "不接收邮件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:53
-msgid "Choose your authentication server"
-msgstr "选择身份验证服务器"
-
 #: web_tt2/modindex.tt2:16
 msgid ""
 "You should probably not reject message detected as spam with notification "
@@ -8295,6 +8319,9 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid "Choose your authentication server"
+#~ msgstr "选择身份验证服务器"
 
 #~ msgid "-Blacklist"
 #~ msgstr "※　黑名单"
