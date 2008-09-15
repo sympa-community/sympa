@@ -71,8 +71,8 @@ my $listname = $ARGV[0];
 my $robot = $ARGV[1];
 
 ## Check UID
-unless (getlogin() eq '--USER--') {
-    print "You should run this script as user \"sympa\", ignore ? (y/CR)";
+unless ([getpwuid $<]->[0] eq '--USER--') {
+    print "You should run this script as user \"--USER--\", ignore ? (y/CR)";
     my $s = <STDIN>;
     die unless ($s =~ /^y$/i);
 }
