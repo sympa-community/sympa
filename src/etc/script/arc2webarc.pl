@@ -50,7 +50,7 @@ my %month_idx = qw(jan 1
 		   dec 12
 		   dc  12);
 
-my $msg_count;
+my $msg_count = 0;
 
 # load options ?
 #$main::options{'debug'} = 1;
