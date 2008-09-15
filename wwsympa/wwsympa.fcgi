@@ -1720,7 +1720,7 @@ sub get_parameters {
 	     $in{'action'} = $in{'javascript_action'};
 	 }
 	 foreach my $p (keys %in) {
-	     do_log('debug2',"POST key $p value $in{$p}");
+	     do_log('debug2',"POST key $p value $in{$p}") unless ($p =~ /passwd/);
 	     if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 		 
 		 $in{$1} = $3;
@@ -3153,7 +3153,7 @@ sub do_sso_login {
 				     'target_email' => $in{'email'},
 				     'status' => 'error',
 				     'error_type' => 'internal'});		      
-			return home;
+			return 'home';
 		    }
 		    
 		}else {
