@@ -33,7 +33,7 @@
 
 [% IF conf.use_blacklist != 'none' %]
 [% IF action == 'blacklist' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     <li><a class="menuLinks" href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]-Blacklist[%END%]</a></li>
+     <li><a class="menuLinks" href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist[%END%]</a></li>
 [% END %]
 
 [% IF is_archived %]
