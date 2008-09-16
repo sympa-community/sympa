@@ -86,10 +86,12 @@ sub new {
 	    do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a new session (may ne a fake cookie)
 	    return (new SympaSession ($robot));
 	}
-	if($session->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
-	    do_log('info','SympaSession::new ignoring session cookie because remote host %s is not the original host %s', $ENV{'REMOTE_ADDR'},$session->{'remote_addr'}); # start a new session
-	    return (new SympaSession ($robot));
-	}
+	# checking if the client host is unchanged during the session brake sessions when using multiple proxy with
+        # load balancing (round robin, etc). This check is removed until we introduce some other method
+	# if($session->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
+	#    do_log('info','SympaSession::new ignoring session cookie because remote host %s is not the original host %s', $ENV{'REMOTE_ADDR'},$session->{'remote_addr'}); # start a new session
+	#    return (new SympaSession ($robot));
+	#}
     }else{
 	# create a new session context
       $session->{'new_session'} = 1; ## Tag this session as new, ie no data in the DB exist
