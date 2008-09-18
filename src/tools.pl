@@ -1948,9 +1948,7 @@ sub duration_conv {
     $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/i ;
     my @date = ("$1", "$2", "$3", "$4", "$5", "$6", "$7");
     for (my $i = 0; $i < 7; $i++) {
-	chop ($date[$i]);
-	if (($i == 5) || ($i == 6)) {chop ($date[$i]); chop ($date[$i]);}
-	$date[$i] = 0 unless ($date[$i]);
+      $date[$i] =~ s/[a-z]+$//; ## Remove trailing units
     }
     
     my $duration = $date[6]+60*($date[5]+60*($date[4]+24*($date[3]+7*$date[2]+365*$date[0])));
