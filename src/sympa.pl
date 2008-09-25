@@ -77,6 +77,7 @@ Options:
    -d, --debug                           : sets Sympa in debug mode 
    -f, --config=FILE                     : uses an alternative configuration file
    --import=list\@dom                    : import subscribers (read from STDIN)
+   --foreground                          : the process remains attached to the TTY
    -k, --keepcopy=dir                    : keep a copy of incoming message
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
