@@ -42,43 +42,6 @@
    <br />
   [% END %]
 
-  [% IF unique != '1' %]
-   <table summary="">
-   &nbsp;&nbsp;<span class="color_dark">[%|loc%]See your subscriptions with the following email addresses[%END%]</span><br />
-   <br /><br />
-
-   <tr> 
-   <form method="post" action="[% path_cgi %]">
-   <fieldset>  
-   [% FOREACH email = alt_emails %]
-    <input name="email" type="hidden" value="[% email.key %]" />
-    &nbsp;&nbsp;<a href="[% path_cgi %]/change_identity/[% email.key %]/which">[% email.key %]</a> 
-    <br />
-   [% END %]  
-   </fieldset>
-   </form>
-   </tr>
-   </table>
-
-   <br /> 
-
-   <table summary="">
-   <tr>
-   &nbsp;&nbsp;<span class="color_dark">[%|loc%]Unify your subscriptions with the email[%END%] <strong>[% user.email %]</strong></span><br /> 
-   &nbsp;&nbsp;<span class="color_dark">[%|loc%]That is to say you are using a unique email address in Sympa for your subscriptions and preferences[%END%]</span>
-
-   <tr>
-   <td>
-   <form action="[% path_cgi %]" method="post">
-   <fieldset>
-   &nbsp;&nbsp;<input class="MainMenuLinks" type="submit" name="action_unify_email" value="[%|loc%]Validate[%END%]" />
-   </fieldset>
-   </form>
-   </td>
-   </tr>
-   </table>
-   <br />
-  [% END %]
  [% END %]
 [% ELSE %]
 <p>[%|loc%]No mailing list available.[%END%]</p>

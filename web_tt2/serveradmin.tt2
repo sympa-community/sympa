@@ -61,10 +61,27 @@
 <label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
 <input type="text" id="session_delay" name="session_delay" size="2" value="10" /> 
 <label for="connected_only">[%|loc%]Show only connected users[%END%] </label>
-<input type="checkbox" id="connected_only" name="connected_only" />
+<input type="checkbox" id="connected_only" name="connected_only" /><br />
 </fieldset>
 </form>
 </div>
+
+<h3>[%|loc%]You can change your users email address here :[%END%]</h3><br />
+
+[%|loc%]Changing a user's email address will apply the change his memberships but it will also apply to his ownerships if he is owner of some lists.[%END%]<br />
+
+<div>
+<form class="bold_label" action="[% path_cgi %]" method="post">
+<fieldset>
+<label for="old_email">[%|loc%]Current user email address : [%END%]</label><input id="old_email" type="text" name="old_email" size="30" /><br />
+
+<label for="new_email">[%|loc%]New user email address : [%END%]</label><input id="new_email" type="text" name="new_email" size="30" />
+<input type="hidden" name="action" value="change_email">
+<input class="MainMenuLinks" type="submit" name="action_change_email" value="[%|loc%]Update user memberships[%END%]" />
+</fieldset>
+</form>
+</div>
+
 
 <h2>[%|loc%]Archives[%END%]</h2><br />
 <div>

@@ -10,34 +10,38 @@
 <p>
  [%- IF topic_required -%]
 
-  <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>
+<input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>
+</p>
+<p>
+
  [%- ELSE -%]
-  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
 </p>
 <p>
- [%- END -%]
-[% IF conf.use_blacklist != 'none' %]
-<input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 
- <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%]')" />  
+[%- END -%]
+
+ <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%]')" /> 
+
+<input type="hidden" name="from_modindex" value="from_modindex" />
+
   <select  name="message_template">
-  <option  value="reject">[%|loc %]Default rejection message[%END%]</option>
-  <option  value="quiet">[%|loc %]Do Not Notify[%END%]</option>	 
-   [% FOREACH file = available_files %]
-  <option  value="reject_[%  file  %]"> [%  file  %]</option> 
 
- [%- END- %]
-
- [%- END- %]
-
-   </select>
+  <option  value="reject">[%|loc %]Server default rejection message[%END%]</option>
+    [% FOREACH file = available_files %]
+        <option  value="reject_[%  file  %]" [% IF file == default_reject_template %] selected="selected" [%END%] > [%  file  %]</option> 
+    [%- END- %]
+  </select>
 <br />
-<input type=checkbox name="blacklist">[%|loc %]Blacklist[%END%]</option>
+
+
+<input type=checkbox name="quiet">[%|loc %]Reject without notification [%END%]</option>
+<br />
+<input type=checkbox name="blacklist">[%|loc %]Add to blacklist[%END%]</option>
+
+
 </p>
 <p>
-
-If you would like to modify the reject messages 
- <a  href="[% path_cgi %]/manage_template/[% list %]">[%|loc%]Click Here[%END%]</a> 
 
 
  [%- IF request_topic -%]
@@ -112,11 +116,13 @@ If you would like to modify the reject messages
   <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
   <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
 [% IF conf.use_blacklist != 'none' %]
-  <input class="MainMenuLinks" type="submit" name="action_reject.blaclist" value="[%|loc%]Reject and blacklist sender[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject.blacklist" value="[%|loc%]Reject and blacklist sender[%END%]" />
 [% END %]
 <br />
-[% END %]
-   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_mails.id); toggle_selection(document.moderate_mails.idspam)" />
+[%- END- %]
+
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_mails.id); toggle_selection(document.moderate_mails.idspam)" />
+
 [%- IF therissomespam  -%]
    <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle spams[%END%]" onclick="toggle_selection(document.moderate_mails.idspam)" />
 [%- END -%]
@@ -124,6 +130,20 @@ If you would like to modify the reject messages
 
 </fieldset>
 </form>
+
+<h2>[%|loc%]Moderation management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
+
+<p>
+<form action="[% path_cgi %]" method="post" name="moderate_mails">
+<fieldset>
+  <input type="hidden" name="list" value="[% list %]" />
+[% IF conf.use_blacklist != 'none' %]
+   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+[% END %]
+ <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />
+</fieldset></form>
+</p>
+
 [%END%]
 <br />
 <!-- moderation of document shared -->
@@ -167,6 +187,9 @@ If you would like to modify the reject messages
     </table>
 
 <br />
+[% IF conf.use_blacklist != 'none' %]
+   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+[%- END- %]
   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" /><br />
 
   <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />

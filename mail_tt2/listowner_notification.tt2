@@ -124,10 +124,24 @@ Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END
 [%END%]
 (no action needed)
 
-[% ELSIF type == 'named_filter' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 : Named filter error[%END%][%END%]
 
-[%|loc(filter,list.name)%]The %1 named filter could not be evaluated. The list %2 is using it for some authorization scenario.[%END%]
+[% ELSIF type == 'automatic_del' -%]
+Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END%][%END%]
+
+[%|loc(who,list.name)%]User "%1" has been automatically removed from list %2. [%END%]
+[% IF reason == 'arf' -%]
+ The user complain to abuse service about a message from the list using email feedback reports format.
+[% ELSIF  reason == 'welcome' -%]
+ The welcome message (or a subscription remind) sent to the user has triggered a non-delivery report. The user email address might be incorrect.
+[%END%]
+(no action needed)
+
+[% ELSIF type == 'failed_to_change_included_member' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 : Failed to change member email address[%END%][%END%]
+
+[%|loc(current_email,new_email,datasource)%]User %1 could not change his member email address (new email address is %2) because he is included via a the following data sources: %3.
+
+If you are able to do so, you should probably update these data sources with this person's new email address.[%END%]
 
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]

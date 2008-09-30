@@ -53,7 +53,7 @@ my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -----
 ## also be changed
 my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
-	      'template_name' => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_]*', 
+	      'template_name' => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*', ## Allow \s
 	      'host' => '[\w\.\-]+',
 	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
 	      'listname' => '[a-z0-9][a-z0-9\-\.\+_]{0,49}',

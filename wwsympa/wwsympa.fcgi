@@ -43,7 +43,7 @@ use lib '--LIBDIR--';
 
 use Getopt::Long;
 use Archive::Zip;
-
+  
 use strict 'vars';
 use Time::Local;
 use Text::Wrap;
@@ -281,17 +281,15 @@ my %comm = ('home' => 'do_home',
 	 'arc_protect' => 'do_arc_protect',
 	 'remind' => 'do_remind',
 	 'change_email' => 'do_change_email',
+	 'change_email_request' => 'do_change_email_request',
 	 'load_cert' => 'do_load_cert',
 	 'compose_mail' => 'do_compose_mail',
 	 'send_mail' => 'do_send_mail',
 	 'request_topic' => 'do_request_topic',
 	 'tag_topic_by_sender' =>'do_tag_topic_by_sender', 
 	 'search_user' => 'do_search_user',
-	 'unify_email' => 'do_unify_email',
-	 'record_email' => 'do_record_email',	    
 	 'set_lang' => 'do_set_lang',
 	 'attach' => 'do_attach',
-	 'change_identity' => 'do_change_identity',
 	 'stats' => 'do_stats',
 	 'viewlogs'=> 'do_viewlogs',
 	 'wsdl'=> 'do_wsdl',
@@ -405,7 +403,6 @@ my %action_args = ('default' => ['list'],
 		'search_user' => ['email'],
 		'set_lang' => ['lang'],
 		'attach' => ['list','dir','file'],
-		'change_identity' => ['email','previous_action','previous_list'],
 		'edit_list_request' => ['list','group'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'copy_list' => ['list','new_list','new_robot'],
@@ -424,7 +421,9 @@ my %action_args = ('default' => ['list'],
 		'tag_topic_by_sender' => ['list'],
 		'multiple_subscribe' => ['lists'],
 		'multiple_signoff' => ['lists'],
-		'ticket' => ['ticket']
+		'ticket' => ['ticket'],
+		'change_email' => ['email'],
+		'manage_template' => ['subaction','list','message_template'],   
 		);
 
 ## Define the required parameters for each action
@@ -449,8 +448,8 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'arcsearch_id' => ['param.list'],
 		     'attach' => ['param.list'],
 		     'blacklist' => ['param.list'],
-		     'change_email' => ['param.user.email','email'],
-		     'change_identity' => ['param.user.email','email'],
+		     'change_email' => ['param.user.email'],
+		     'change_email_request' => ['param.user.email','new_email'],
 		     'close_list' => ['param.user.email','param.list'],
 		     'close_list_request' => ['param.user.email','param.list'],
 		     'compose_mail' => ['param.user.email','param.list'],
@@ -504,7 +503,6 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'purge_list' => ['param.user.email','selected_lists'],
 		     'rebuildallarc' => ['param.user.email'],
 		     'rebuildarc' => ['param.user.email','param.list'],
-		     'record_email' => ['param.user.email','new_alternative_email'],
 		     'reject' => ['param.list','param.user.email','id|idspam'],
 		     'remind' => ['param.list','param.user.email'],
 		     'remove_arc' => ['param.list'],
@@ -544,7 +542,6 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'subscriber_count' => ['param.list'],
 		     'sync_include' => ['param.list','param.user.email'],
 		     'tag_topic_by_sender' => ['param.list'],
-		     'unify_email' => ['param.user.email'],
 		     'upload_pictures' => ['param.user.email','param.list'],
 		     'view_template' => ['webormail'],
 		     'viewbounce' => ['param.list','email'],
@@ -578,6 +575,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'ignoresub' => ['owner'],
 			   'install_pending_list' => ['listmaster'],
 			   'ls_templates' => ['listmaster'],
+			   'manage_template' => ['owner'],
 			   'manage_template' => ['owner'],
 			   'modindex' => ['editor'],
 			   'purge_list' => ['privileged_owner'],
@@ -723,6 +721,9 @@ my %in_regexp = (
 		 'new_name' => '[^<>\\\*\$\n]+',
 		 'id' => '[^<>\\\*\$\n]+',
 		 'template_name' => &tools::get_regexp('template_name'),
+		 'new_template_name' => &tools::get_regexp('template_name'),
+		 'message_template' => &tools::get_regexp('template_name'),
+		 'new_default' => &tools::get_regexp('template_name'),
 
 		 ## Archives
 		 'month' => '\d{2}|\d{4}\-\d{2}', ## format is yyyy-mm for 'arc' and mm for 'send_me'
@@ -764,7 +765,7 @@ my %in_regexp = (
 		 ## Email addresses
 		 'email' => &tools::get_regexp('email').'|'.&tools::get_regexp('uid'),
 		 'init_email' => &tools::get_regexp('email'),
-		 'new_alternative_email' => &tools::get_regexp('email'),
+		 'old_email' => &tools::get_regexp('email'),
 		 'new_email' => &tools::get_regexp('email'),
 		 'pending_email' => &tools::get_regexp('email').',.*', # Email address is followed by ',' + gecos data
 		 'sender' => &tools::get_regexp('email'),
@@ -1254,6 +1255,7 @@ my $birthday = time ;
 	     $param->{'action'} = $action;
 	 
 	     my $old_action = $action;
+	     my $old_subaction = $in{'subaction'};
 	     
 	     ## Check required action parameters
 	     my $check_output = &check_action_parameters($action);
@@ -1283,9 +1285,12 @@ my $birthday = time ;
 
 	     
 	     if ($action eq $old_action) {
-		 &wwslog('info','Stopping loop with %s action', $action);
-		 #undef $action;
-		 $action = 'home';
+		 # if a subaction is define and change, then it is not a loop
+		 if (! defined ($in{'subaction'})||($in{'subaction'} eq $old_subaction)){
+		     &wwslog('info','Stopping loop with %s action', $action);
+		     #undef $action;
+		     $action = 'home';
+		 }
 	     }
 
 	     undef $action if ($action == 1);
@@ -1395,7 +1400,6 @@ my $birthday = time ;
 		 foreach my $element (keys %{$param->{'alt_emails'}}){
 		     $number ++ if ($element);
 		 }  
-		 $param->{'unique'} = 1 if($number <= 1);
 		 
 		 unless ($number == 0) {
 		     unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
@@ -1959,11 +1963,11 @@ sub get_parameters_old {
 	 }
 	 foreach my $p (keys %in) {
 	     do_log('debug2',"POST key $p value $in{$p}");
-	     if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
+	     if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 		 
-		 $in{'action'} = $1;
-		 if ($2) {
-		     foreach my $v (split /\./, $2) {
+		 $in{$1} = $3;
+		 if ($4) {
+		     foreach my $v (split /\./, $4) {
 			 $v =~ s/^\.?(\w+)\.?/$1/;
 			 $in{$v} = 1;
 		     }
@@ -2040,6 +2044,7 @@ sub get_parameters_old {
 #		 &do_log('err','Unable to sanitize parameter %s',$pname);
 #	     }
 #	 }
+
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     if ($one_p !~ /^$regexp$/s ||
 		 (defined $negative_regexp && $one_p =~ /$negative_regexp/s) ) {
@@ -2155,7 +2160,7 @@ sub check_action_parameters {
     }
     unless ($ok) {
       &report::reject_report_web('auth','action_'.$missing_priv,{},$param->{'action'},$list);
-      &wwslog('info','authorization failed, unsufficient privileges');
+      &wwslog('info','authorization failed, insufficient privileges');
       &web_db_log({'status' => 'error',
 		   'error_type' => 'authorization'});		      
       return undef;
@@ -2771,7 +2776,7 @@ Use it to create a List object and initialize output parameters.
 
  }
 
-## ticket : this action is used if someone submit a one time ticket (minimum when user lost their password)
+## ticket : this action is used if someone submits a one time ticket (minimum when the user has lost their password)
 sub do_ticket {
     &wwslog('info', 'do_ticket(%s)', $in{'ticket'});
 
@@ -2780,7 +2785,7 @@ sub do_ticket {
     
     return 1 unless ($param->{'ticket_context'}{'result'} eq 'success');
     
-    # if the ricket is related to someone which is not logged perform sames operation as for a login
+    # if the ticket is related to someone which is not logged in, the system performs the same operation as for a login
     unless ($session->{'email'} eq lc($param->{'ticket_context'}{'email'})) {
 	$session->{'email'} = lc($param->{'ticket_context'}{'email'});
 	$param->{'user'} =  &List::get_user_db($session->{'email'});
@@ -3280,91 +3285,6 @@ sub do_sso_login_succeeded {
 	return 'home';
     }
 }
-
- sub do_unify_email {
-
-     &wwslog('info', 'do_unify_email');
-
-     ##Do you want to be considered as one user in user_table and subscriber table?
-     foreach my $old_email( keys %{$param->{'alt_emails'}}){
-	 next unless (&List::is_user_db($old_email));
-	 next if($old_email eq $param->{'user'}{'email'});
-
-	 unless ( &List::delete_user_db($old_email) ) {
-	     &report::reject_report_web('intern','delete_email_failed',{'old_email' => $old_email},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	     &wwslog('info','do_unify_email: delete failed for the email %s',$old_email);
-	 }
-     }
-
-     foreach my $role ('member','owner','editor'){
-	 foreach my $email ( keys %{$param->{'alt_emails'}} ){
-	     my @array;	    
-	     foreach my $list (&List::get_which($email,$robot, $role)) {
-		 push @array, $list->{'name'};
-	     }
-	     $param->{'alternative_subscribers_entries'}{$role}{$email} = \@array if($#array > -1);
-	 }
-     }
-
-     foreach my $email(sort keys %{$param->{'alternative_subscribers_entries'}{'member'}}){
-	 foreach my $list_name ( @{ $param->{'alternative_subscribers_entries'}{'member'}{$email} } ){ 
-	     my $newlist = new List ($list_name, $robot);
-
-	     unless ( $newlist->update_user($email,{'email' => $param->{'user'}{'email'} }) ) {
-		 if ($newlist->{'admin'}{'user_data_source'} eq 'include') {
-		 }else{
-		     $newlist->delete_user($email);
-		 }
-	     }
-	     
-	 }
-     }
-
-     $param->{'alt_emails'} = undef;
-
-     return 'which';
- }
-
-
- ## Declare an alternative email
- sub do_record_email{
-
-     &wwslog('info', 'do_record_email');
-     my $user;
-     my $new_email;
-
-     ##To verify that the user is in User_table 
-     ##To verify the associated password 
-     ##If not in User table we add him 
-
-     ## Alt email is the same as main email address
-     if ($in{'new_alternative_email'} eq $param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','incorrect_email',{'email' => $in{'new_alternative_email'}},$param->{'action'});
-	 &wwslog('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
-	 &web_db_log({'parameters' => $in{'new_alternative_email'}, 
-		      'status' => 'error',
-		      'error_type' => "incorrect_email"});		      
-	 return 'pref';
-     }
-
-     my $new_user;
-
-     $user = &List::get_user_db($in{'new_alternative_email'});
-     $user->{'password'} ||= &tools::tmp_passwd($in{'new_alternative_email'});	
-     unless($in{'new_password'} eq $user->{'password'}){
-	 &report::reject_report_web('user','incorrect_passwd',{},$param->{'action'});
-	 &wwslog('info','do_record_email: incorrect password for user %s', $in{'new_alternative_email'});
-	 &web_db_log({'parameters' => $in{'new_alternative_email'}, 
-		      'status' => 'error',
-		      'error_type' => "incorrect_passwd"});		      
-	 return 'pref';
-     }  
-
-     ##To add this alternate email in the cookie sympa_altemails   
-     $param->{'alt_emails'}{$in{'new_alternative_email'}} = 'classic';
-     return 'pref';
-
- }
 
  sub is_ldap_user {
      my $auth = shift; ## User email or UID
@@ -5421,44 +5341,21 @@ sub do_copy_template {
 ## manage the rejection templates
 sub do_manage_template {
     &wwslog('info', '(%s,%s)', $in{'subaction'}, $in{'message_template'});
-    
-    if ($in{'message_template'}) {
-	$param->{'template_path'} = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$in{'message_template'}.'.tt2','',$list);
+ 
+    my $file;   
+
+    $in{'message_template'} =~ s/^reject_//;
+
+    if  ($in{'message_template'}) {		
+	my $escaped_template_path = $in{'message_template'};
+	$escaped_template_path =~ s/\s/_/g ;
+	$param->{'template_path'} = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
     }
-    
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2','',$list);
     my $default_file = &tools::find_file('reject.tt2',@{$tt2_include_path});
 
-    if ($in{'subaction'} eq 'default') {
-	
-	## Check if the file can be accessed
-	unless(open (FILE, $default_file)){
-	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'subaction'},'',$param->{'user'}{'email'},$robot);
-	    &wwslog('err',"can't open file %s : %s", $default_file, $!);
-	    &web_db_log({'parameters' => $default_file,
-			 'status' => 'error',
-			 'error_type' => 'internal'});
-	    return undef;
-	}
-	
-	while (<FILE>){
-	    $param->{'content'} .= $_;
-	}
-	$param->{'content'} = &tools::escape_html($param->{'content'});
-	close FILE;
-   
-    }elsif ($in{'subaction'} eq 'save') {
 
-	## verify that the template name doesn't already exist
-	if (-f $param->{'template_path'}) {
-	     &report::reject_report_web('user','template_exists',{'argument' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	     &wwslog('err',"This template already exists: use 'Modify' function %s ", $param->{'template_path'});
-	     &web_db_log({'parameters' => $param->{'template_name'},
-			  'status' => 'error',
-			  'error_type' => 'user'});
-	    return undef;
-	}
-	
+    if ($in{'subaction'} eq 'save') {
 	## create the parent directory if it doesn't already exist
 	unless (&tools::mk_parent_dir($param->{'template_path'})) {
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -5467,8 +5364,7 @@ sub do_manage_template {
 			 'status' => 'error',
 			 'error_type' => 'internal'});
 	    return undef;
-	}
-	
+	}	
 	## open the template
 	unless (open (TPLOUT ,'>' ,$param->{'template_path'})) {
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -5477,38 +5373,98 @@ sub do_manage_template {
 			 'status' => 'error',
 			 'error_type' => 'internal'});
 	    return undef;
-	}
-	
+	}	
 	##  save template contents
 	print TPLOUT $in{'template_content'};
 	close TPLOUT;
-
 	&report::notice_report_web('performed',{},$in{'subaction'});
 
-	$param->{'content'} = $in{'template_content'};
-	$param->{'message_template'} = $in{'message_template'};
+    }elsif($in{'subaction'} eq 'create_new') {
+
+	$in{'template_new'} = $in{'new_template_name'} ;
 	
+	unless ($in{'new_template_name'}) {
+	    &report::reject_report_web('user','missing template name',{'path' => ''},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    return undef;  
+	}
+	my $escaped_template_path = $in{'new_template_name'};$escaped_template_path =~ s/\s/_/g ;
+	my $new_template_path = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
+
+	if (-f $new_template_path) {
+	    &report::reject_report_web('intern','template already exist',{'path' => $new_template_path},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    return undef;  
+	}
+	## create the parent directory if it doesn't already exist
+	unless (&tools::mk_parent_dir($new_template_path)) {
+
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't create parent directory for %s : %s", $param->{'template_path'}, $!);
+	    &web_db_log({'parameters' => $param->{'template_name'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    return undef;
+	}	
+
+	my $default_file =  &tools::get_template_path('mail',$robot,'robot', ,'reject.tt2','',$list);
+	$default_file = &tools::get_template_path('mail',$robot,'site', ,'reject.tt2','',$list) unless (-f $default_file);
+	$default_file = &tools::get_template_path('mail',$robot,'distrib', ,'reject.tt2','',$list)unless (-f $default_file);
+
+	unless(open (DEFAULT, $default_file)){
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't open file %s : %s", $default_file, $!);
+	    return undef;
+	}
+
+	unless(open (TPL, '> '.$new_template_path)){
+	    &report::reject_report_web('intern','cannot_open_file',{'path' => $new_template_path},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	    &wwslog('err',"can't open file %s : %s", $new_template_path, $!);
+	    return undef;
+	}
+
+	while (<DEFAULT>){
+	    print TPL $_;
+	}
+	close DEFAULT;
+	close TPL;
+	$in{'subaction'}='modify';
+	$in{'message_template'} = $in{'new_template_name'};
+	return 'manage_template';
+
     }elsif ($in{'subaction'} eq 'modify') {
-	    
+	
 	unless(open (FILE, $param->{'template_path'})){
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	    &wwslog('err',"can't open file %s : %s", $param->{'template_path'}, $!);
+	    &wwslog('err',"can't open file MODIFY %s : %s", $param->{'template_path'}, $!);
 	    &web_db_log({'parameters' => $param->{'template_path'},
 			 'status' => 'error',
 			 'error_type' => 'internal'});
 	    return undef;
 	}
-
 	while (<FILE>){
 	    $param->{'content'} .= $_;
 	}
 	$param->{'content'} = &tools::escape_html($param->{'content'});
 	close FILE;
-
 	$param->{'message_template'} = $in{'message_template'};
-
-    }elsif ($in{'subaction'} eq 'delete') {
 	
+    }elsif($in{'subaction'} eq 'setdefault') {
+	# replace existing reject.tt2 file by a symlink to reject_default.tt2 for compatibility with version older than 6.0
+	my $base = $list->{'dir'}.'/mail_tt2/';
+	$in{'new_default'} =~ s/\s/_/g ;
+	my $absolute_file = $base.'reject_'.$in{'new_default'}.'.tt2';
+
+        &do_log('info','Change default by linking %s 2 %s',$base.'reject.tt2',$absolute_file);
+	if (-l $base.'reject.tt2') {
+	    unless (unlink ($base.'reject.tt2')){
+		&wwslog('err','Could not unlink %s',$base.'reject.tt2');
+	    }
+	}
+	unless (symlink ($absolute_file,$base.'reject.tt2')){
+	    &wwslog('err','Could not symlink %s,%s',$absolute_file,$base.'reject.tt2');
+	}
+			
+    }elsif ($in{'subaction'} eq 'delete') {	
+
 	unless(unlink $param->{'template_path'}) {
 	    &report::reject_report_web('intern','cannot_delete',{'file_del' => $param->{'template_path'}},'','','',$robot);
 	    &wwslog('err',"can't open file %s : %s", $param->{'template_path'}, $!);
@@ -5519,16 +5475,48 @@ sub do_manage_template {
 	}
 	&report::notice_report_web('performed',{},$in{'subaction'});
     }
-
     ## Build the list of available templates
     my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
-    foreach my $file (keys %$available_files) {
-	next unless($file =~ /^reject_/);
-	$file =~ s/^reject_//;
-	$file =~ s/.tt2$//;
-	push (@{$param->{'available_files'}},$file);
+    foreach $file (keys %$available_files) { 
+	if ($file eq 'reject.tt2') {
+	    my $base = $list->{'dir'}.'/mail_tt2/';
+	    my $absolute_file = $base.'reject.tt2';
+	    if (-l  $absolute_file){
+		my $default = readlink ($absolute_file);
+		if ((-f $default )||( -f $base.$default )) {
+
+		    $default =~ s/^.*reject_//;
+		    $default =~ s/.tt2$//;
+		    $default =~ s/_/ /g;
+		    $param->{'default_reject_template'} = $default;
+		}else{
+		    # link to no existing file. remove link
+		    &wwslog('err','Link %s point to un no existing file (%s)', $base.'reject.tt2',$default);
+		    unless (unlink ($absolute_file)){
+			&wwslog('err','do_modindex: could not unlink %s',$base.'reject.tt2');
+		    }
+		}
+	    }elsif(-f $absolute_file){
+		# replace existing reject.tt2 file by a symlink to reject_default.tt2 for compatibility with version older than 6.0
+		unless (rename ($absolute_file,$base.'reject_default.tt2')){
+		    &wwslog('err','Could not rename %,%s',$base.'reject.tt2',$base.'reject_default.tt2');
+		}
+		unless (symlink ($base.'reject_default.tt2',$absolute_file)){
+		    &wwslog('err','Could not symlink %s,%s',$base.'reject_default.tt2',$absolute_file);
+		}
+		
+		$param->{'default_reject_template'} = 'default';
+		push (@{$param->{'available_files'}},'default'); 
+	    }
+	}else{  
+	    next unless($file =~ /^reject_/);
+	    $file =~ s/^reject_//;
+	    $file =~ s/.tt2$//;
+	    $file =~ s/_/ /g;
+	    push (@{$param->{'available_files'}},$file);
+	}
     }
-    
+
     return 1;
 }
 
@@ -6026,19 +6014,46 @@ sub do_skinsedit {
 	 $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
      }
 
-##     if (defined my $default_file = &tools::get_template_path('mail',$robot,
-
-
-
-
      my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
      foreach my $file (keys %$available_files) {
-	 next unless($file =~ /^reject_/);
-	 $file =~ s/^reject_//;
-         $file =~ s/.tt2$//;
-	 push (@{$param->{'available_files'}},$file); 
- }
 
+	 if ($file eq 'reject.tt2') {
+
+	     my $base = $list->{'dir'}.'/mail_tt2/';
+	     my $absolute_file = $base.'reject.tt2';
+	     if (-l  $absolute_file){
+
+		 my $default = readlink ($absolute_file);
+    	         if ((-f $default )||( -f $base.$default )) {
+		     $default =~ s/^.*reject_//;
+		     $default =~ s/.tt2$//;
+		     $param->{'default_reject_template'} = $default;
+		 }else{
+		     # link to no existing file. remove link
+		     &wwslog('err','do_modindex: link %s point to un no existing file (%s)', $base.'reject.tt2',$default);
+		     unless (unlink ($absolute_file)){
+			 &wwslog('err','do_modindex: could not unlink %s',$base.'reject.tt2');
+		     }
+		 }
+	     }elsif(-f $absolute_file){
+		 # replace existing reject.tt2 file by a symlink to reject_default.tt2 for compatibility with version older than 6.0
+		 unless (rename ($absolute_file,$base.'reject_default.tt2')){
+		     &wwslog('err','do_modindex: could not rename %,%s',$base.'reject.tt2',$base.'reject_default.tt2');
+		 }
+		 unless (symlink ($base.'reject_default.tt2',$absolute_file)){
+		     &wwslog('err','do_modindex: could not symlink %s,%s',$base.'reject_default.tt2',$absolute_file);
+		 }
+		 
+		 $param->{'default_reject_template'} = 'default';
+		 push (@{$param->{'available_files'}},'default'); 
+	     }
+	 }else{  
+	     next unless($file =~ /^reject_/);
+	     $file =~ s/^reject_//;
+	     $file =~ s/.tt2$//;
+	     push (@{$param->{'available_files'}},$file); 
+	 }
+     }
      ## shared documents awaiting moderation
      foreach my $d (@{$param->{'doc_mod_list'}}) {
 	 
@@ -14545,6 +14560,41 @@ sub do_delete_pictures {
 }
 
 
+####################################################
+#  do_change_email_request                          
+####################################################
+#  Checks a user's new email address and passes it
+#  to 'change_email'
+# 
+# IN : -
+#
+# OUT : '1' | 'change_email' 
+#      
+####################################################
+## Checks a users new email address by sending a ticket to the new email address
+## and demanding that they click it to verify. Leads to 'change_email'
+sub do_change_email_request {
+    &wwslog('info','do_change_email_request(%s)', $in{'new_email'});
+
+    unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'new_email'},$robot,'change_email/'.$param->{'user'}{'email'},$ip)){
+	
+	&do_log('notice',"Unable to create one_time_ticket for $in{'new_email'}, service do_change_email_request");
+    }else{
+	&do_log('notice',"ticket : $param->{'one_time_ticket'}");
+    }
+    
+    $param->{'new_email'} = $in{'new_email'};
+    my $tt2_param = {'type' => 'ticket_to_send', 
+		     'one_time_ticket' => $param->{'one_time_ticket'},
+		     'email' => $param->{'user'}{'email'}};
+    unless (&List::send_global_file('user_notification', $in{'new_email'}, $robot, $tt2_param)) {
+	&do_log('notice',"Unable to send template 'user_notification' to $in{'new_email'}");
+	return undef;
+    }
+    return '1';
+}
+
+
 
 ####################################################
 #  do_change_email                          
@@ -14556,181 +14606,186 @@ sub do_delete_pictures {
 # OUT : '1' | 'pref' | undef
 #      
 ####################################################
- ## Change a user's email address in Sympa environment
- sub do_change_email {
+## Change a user's email address in Sympa environment
+sub do_change_email {
      &wwslog('info','do_change_email(%s)', $in{'email'});
 
-     my ($password, $newuser);
+     my ($old_email, $new_email);
+     my $edited_by_listmaster;
 
-     if ($newuser =  &List::get_user_db($in{'email'})) {
-
-	 $password = $newuser->{'password'};
+     unless ($in{'email'} || ($in{'old_email'} &&  $in{'new_email'})) {
+	 &report::reject_report_web('user','Missing argument',{},$param->{'action'});
+	 &wwslog('err',"Lacking parameter : $in{'email'} or $in{'old_email'} or $in{'new_email'} ");
+	 &web_db_log({'parameters' => $in{'email'},$in{'old_email'},$in{'new_email'},
+			  'status' => 'error',
+		      'error_type' => 'user'});
      }
 
-     $password ||= &tools::tmp_passwd($in{'email'});
-
-     ## Step 2 : checking password
-     if ($in{'password'}) {
-	 unless ($in{'password'} eq $password) {
-	     &report::reject_report_web('user','incorrect_passwd',{},$param->{'action'});
-	     &wwslog('info','do_change_email: incorrect password for user %s', $in{'email'});
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'incorrect_passwd','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+     ##  There are two ways to access this function 'change_email'. One from the preferences page and one from the serveradmin page
+     ## If the process comes from server admin it needs the variables 'old_email' and 'new_email'.
+     if ($in{'old_email'} && $in{'new_email'}) {
+	 ## if variables old_email and new_email are present $edited_by_listmaster is set to one
+	 ## so that at the end of the function we can return to the SympaAdmin page
+	 ## instead of the preferences page
+	 $edited_by_listmaster = 1;
+	 unless  (&List::is_listmaster ($param->{'user'}{'email'})) {
+	     &report::reject_report_web('auth','User is not Listmaster',{},$param->{'action'});
+	     &wwslog('err','do_change_email : not listmaster');
+	     &web_db_log({'parameters' => $in{'email'},
+			  'status' => 'error',
+			  'error_type' => 'authorization'});
 	     return undef;
 	 }
 
-	 ## Change email as list MEMBER
-	 foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
-	     my $l = $list->{'name'};
-	     
-	     my $result_sub = $list->check_list_authz('subscribe',$param->{'auth_method'},
-						      {'sender' => $in{'email'}, 
-						       'previous_email' => $param->{'user'}{'email'},
-						       'remote_host' => $param->{'remote_host'},
-						       'remote_addr' => $param->{'remote_addr'}});
+	 $old_email = $in{'old_email'};
+	 $new_email = $in{'new_email'};
+     }else {
+	 $old_email = $in{'email'};
+	 $new_email = $param->{'user'}{'email'};
+     }
 
-	     my $sub_is;
-	     my $reason_sub;
-	     if (ref($result_sub) eq 'HASH') {
-		 $sub_is = $result_sub->{'action'};
-		 $reason_sub = $result_sub->{'reason'};
-	     }
+     my ($password, $newuser);
 
-	     my $result_unsub = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-						      {'sender' => $param->{'user'}{'email'}, 
-						       'remote_host' => $param->{'remote_host'},
-						       'remote_addr' => $param->{'remote_addr'}});
+     if ($newuser =  &List::get_user_db($old_email)) {
+	 
+	 $password = $newuser->{'password'};
+     }
 
-	     my $unsub_is;
-	     my $reason_unsub;
-	     if (ref($result_unsub) eq 'HASH') {
-		 $unsub_is = $result_unsub->{'action'};
-		 $reason_unsub = $result_unsub->{'reason'};
-	     }
+     ## Change email as list MEMBER
+     foreach my $list ( &List::get_which($old_email,$robot, 'member') ) {
 
-	     if ($sub_is !~ /do_it/) {	
-		 &report::reject_report_web('auth',$reason_sub,{'change_email_failed'=> 1},$param->{'action'},$list);
-		 &wwslog('info', 'do_change_email: could not change email for list %s because subscribe not allowed',$list->{'name'});
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-		 next;
-	     }elsif($unsub_is !~ /do_it/) {	
-		 &report::reject_report_web('auth',$reason_unsub,{'change_email_failed'=> 1},$param->{'action'},$list);
-		 &wwslog('info', 'do_change_email : could not change email for list %s because unsubscribe not allowed',$list->{'name'});
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-		 next;
-	     }
-	     
-	     ## Check if user is already member of the list with his new address
-	     ## then we just need to relove the old address
-	     if ($list->is_user($in{'email'})) {
-	       unless ($list->delete_user($param->{'user'}{'email'}) ) {
-		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$in{'email'}},
-					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 
+	 my $l = $list->{'name'};
+	 
+	 my $user_entry = $list->get_subscriber($old_email);
+	 if ($user_entry->{'included'} == 1) {
+	     ## Notify list owner
+	     $list->send_notify_to_owner('failed_to_change_included_member',{'current_email' => $old_email, 
+									     'new_email' => $new_email,
+									     'datasource' => $list->get_datasource_name($user_entry->{'id'})});
+
+	     &report::reject_report_web('user','change_member_email_failed_included',{'listname'=>$list->{'name'}},
+					$param->{'action'},$list,$old_email,$robot);
+	     &wwslog('err', 'could not change member email for list %s because member is included', $l);
+	     next;
+	 }
+
+	 ## Check if user is already member of the list with his new address
+	 ## then we just need to remove the old address
+	 if ($list->is_user($new_email)) {
+	     unless ($list->delete_user($old_email) ) {
+		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$new_email},
+					    $param->{'action'},$list,$old_email,$robot);
 		 &wwslog('info', 'do_change_email: could not remove email from list %s', $l);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	       }
-	       
-	     }else {
-	       
-	       unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}, 'update_date' => time}) ) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$in{'email'},
-										    'old_email' => $param->{'user'}{'email'}},
-					    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info', 'do_change_email: could not change email for list %s', $l);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	       }
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
 	     }
-	   }
-	 
-	 &report::notice_report_web('performed',{},$param->{'action'});
-	 
-	 ## Change email as list OWNER/MODERATOR
-	 my %updated_lists;
-	 foreach my $role ('owner', 'editor') {
-	   foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, $role) ) {
+	     
+	 }else {
+	     
+	     unless ($list->update_user($old_email, {'email' => $new_email, 'update_date' => time}) ) {
+		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$new_email},
+										    'old_email' => $old_email,
+					    $param->{'action'},$list,$old_email,$robot);
+		 &wwslog('info', 'do_change_email: could not change email for list %s', $l);
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
+	     }
+	 }
+     }
+     
+     &report::notice_report_web('performed',{},$param->{'action'});
+     
+     ## Change email as list OWNER/MODERATOR
+     my %updated_lists;
+     foreach my $role ('owner', 'editor') { 
+	 foreach my $list ( &List::get_which($old_email,$robot, $role) ) {
+
+	     ## Check if admin is include via an external datasource
+	     my $admin_user = $list->get_admin_user($role, $old_email);
+	     if ($admin_user->{'included'}) {
+		 ## Notify listmaster
+		 &List::send_notify_to_listmaster('failed_to_change_included_admin',$robot,{'list' => $list,
+											    'current_email' => $old_email, 
+											    'new_email' => $new_email,
+											    'datasource' => $list->get_datasource_name($admin_user->{'id'})});
+		 
+		 &report::reject_report_web('user','change_admin_email_failed_included',{'listname'=>$list->{'name'}},
+					    $param->{'action'},$list,$old_email,$robot);
+		 &wwslog('err', 'could not change %s email for list %s because admin is included', $role, $list->{'name'});
+		 next;
+	     }
+
 	     ## Go through owners/editors of the list
 	     foreach my $admin (@{$list->{'admin'}{$role}}) {
-	       next unless ($admin->{'email'} eq $param->{'user'}{'email'});
-	       
-	       ## Update entry with new email address
-	       $admin->{'email'} = $in{'email'};
-	       &wwslog('notice', "Updated %s in list %s ;new email to '%s'", $role, $list->{'name'}, $in{'email'});
-	       $updated_lists{$list->{'name'}}++;
+		 next unless ($admin->{'email'} eq $old_email);
+		 
+		 ## Update entry with new email address
+		 $admin->{'email'} = $new_email;
+		 $updated_lists{$list->{'name'}}++;
 	     }
 	     
 	     ## Update Db cache for the list
 	     $list->sync_include_admin();
 	     $list->save_config();
-	   }
 	 }
-	 ## Notify listmasters that list owners/moderators email have changed
-	 if (keys %updated_lists) {
-	   &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
-					    {'list' => $list,
-					     'previous_email' => $param->{'user'}{'email'},
-					     'new_email' => $in{'email'},
-					     'updated_lists' => keys %updated_lists})
+     }
+     ## Notify listmasters that list owners/moderators email have changed
+     if (keys %updated_lists) {
+	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
+					  {'list' => $list,
+					   'previous_email' => $old_email,
+					   'new_email' => $new_email,
+					   'updated_lists' => keys %updated_lists})
 	 }
-
-	 ## Update User_table
-	 &List::delete_user_db($in{'email'});
-
-	 unless ( &List::update_user_db($param->{'user'}{'email'},
-					{'email' => $in{'email'},
-					 'lang' => $param->{'user'}{'lang'},
-					 'cookie_delay' => $param->{'user'}{'cookie_delay'},
-					 'gecos' => $param->{'user'}{'gecos'}
-					    })) {
-	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$in{'email'},
-									  'old_email' => $param->{'user'}{'email'}},
-					$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	     &wwslog('info','change_email: update failed');
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	     return undef;
-	 }
-
-	 ## Change login
-	 $param->{'user'} = &List::get_user_db($in{'email'});
-
-	 return 'pref';
-
-	 ## Step 1 : sending password
-     }else {
-	 $param->{'newuser'} = {'email' => $in{'email'},
-				'password' => $password };
-
-	 unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
-	     &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 }
-
-	 $param->{'email'} = $in{'email'};
-
-	 return '1';
+     
+     ## Update User_table and remove existing entry first (to avoid duplicate entries)
+     &List::delete_user_db($new_email,);
+     
+     unless ( &List::update_user_db($old_email,
+				    {'email' => $new_email,
+				   
+				 })) {
+	 &report::reject_report_web('intern','update_user_db_failed',{'user'=>$new_email,
+								      'old_email' => $old_email},
+				    $param->{'action'},'',$old_email,$robot);
+	 &wwslog('info','change_email: update failed');
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
+	 return undef;
      }
 
-     $param->{'email'} = $in{'email'};
+     ## Update the data structure that tells which lists the current user is member/owner/editor of
+     unless ($edited_by_listmaster == 1) {
+	 @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member');
+	 @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner');
+	 @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor');
+     }
+
+     if ($edited_by_listmaster == 1) {
+	 return 'serveradmin';
+     }
+
 
      if ($in{'previous_action'}) {
 	 $in{'list'} = $in{'previous_list'};
 	 return $in{'previous_action'};
-     }else {
-	 return 'pref';
+     }elsif ($edited_by_listmaster == 1) {
+	 return 'serveradmin';
      }
-     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-
+ 
+     return 'pref';
+    
  }
 
- sub do_compose_mail {
-     &wwslog('info', 'do_compose_mail');
-
-     unless ($param->{'may_post'}) {
-	 &report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
-	 &wwslog('info','do_compose_mail: may not send message');
-	 return undef;
-     }
-     if ($in{'to'}) {
-	 # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
-	 $in{'to'} =~ s/ /\@/g;
+sub do_compose_mail {
+    &wwslog('info', 'do_compose_mail');
+    
+    unless ($param->{'may_post'}) {
+	&report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
+	&wwslog('info','do_compose_mail: may not send message');
+	return undef;
+    }
+    if ($in{'to'}) {
+	# In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
+	$in{'to'} =~ s/ /\@/g;
 	 $param->{'to'} = $in{'to'};
      }else{
 	 $param->{'to'} = $list->get_list_address();
@@ -15198,29 +15253,6 @@ sub do_delete_pictures {
      &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      return 'subindex';
  }
-
-sub do_change_identity {
-     &wwslog('info', 'do_change_identity(%s)', $in{'email'});
-
-     unless (&tools::valid_email($in{'email'})) {
-	 &report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'},$list);
-	 &wwslog('info','do_change_identity: incorrect email %s', $in{'email'});
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'incorrect_email','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return $in{'previous_action'};
-     }
-
-     unless ($param->{'alt_emails'}{$in{'email'}}) {
-	 &report::reject_report_web('auth','',{},$param->{'action'},$list);
-	 &wwslog('info','do_change_identity: may not change email address');
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return $in{'previous_action'};
-     }
-    &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'email'}",'target_email' => "$in{'email'}",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-     $param->{'user'}{'email'} = $in{'email'};
-     $session->{'auth'} = $param->{'alt_emails'}{$in{'email'}} ;
-
-     return $in{'previous_action'};
-}
 
 sub do_stats {
      &wwslog('info', 'do_stats');
@@ -15922,17 +15954,7 @@ sub _prepare_subscriber {
     $user->{'escaped_email'} = &tools::escape_chars($user->{'email'});
     
     ## Check data sources
-    if ($user->{'id'}) {
-	my @s;
-	my @ids = split /,/,$user->{'id'};
-	foreach my $id (@ids) {
-	    unless (defined ($sources->{$id})) {
-		$sources->{$id} = $list->search_datasource($id);
-	    }
-	    push @s, $sources->{$id};
-	}
-	$user->{'sources'} = join ', ', @s;
-    }
+    $user->{'sources'} = $list->get_datasource_name($user->{'id'}) if ($user->{'id'});
     
     if (@{$additional_fields}) {
 	my @fields;

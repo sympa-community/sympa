@@ -2851,7 +2851,7 @@ sub send_msg_digest {
 #  
 # IN : -$tpl (+): template file name (file.tt2),
 #         without tt2 extension
-#      -$who (+): SCALAR |ref(ARRAY) - recepient(s)
+#      -$who (+): SCALAR |ref(ARRAY) - recipient(s)
 #      -$robot (+): robot
 #      -$context : ref(HASH) - for the $data set up 
 #         to parse file tt2, keys can be :
@@ -6086,6 +6086,21 @@ sub update_user {
 	    return undef;
 	}
     }
+
+    ## Rename picture on disk if user email changed
+    if ($values->{'email'}) {
+	my $file_name = &tools::md5_fingerprint($who);
+	my $picture_file_path = &Conf::get_robot_conf($self->{'domain'},'pictures_path').'/'.$self->{'name'}.'@'.$self->{'domain'};
+
+	foreach my $extension ('gif','png','jpg','jpeg') {
+	    if (-f $picture_file_path.'/'.$file_name.'.'.$extension) {
+		my $new_file_name = &tools::md5_fingerprint($values->{'email'});
+		unless (rename $picture_file_path.'/'.$file_name.'.'.$extension, $picture_file_path.'/'.$new_file_name.'.'.$extension) {
+		    &do_log('err', "Failed to rename %s to %s : %s", $picture_file_path.'/'.$file_name.'.'.$extension, $picture_file_path.'/'.$new_file_name.'.'.$extension, $!);
+		}
+	    }
+	}
+    }
     
     ## Reset session cache
     $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$who} = undef;
@@ -9315,7 +9330,7 @@ sub get_which {
 	@{$requested_lists} = keys %{$db_which->{$robot}};
     }
 
-    ## This call is required to 
+    ## This call is required too 
     my $all_lists = &get_lists($robot, {}, $requested_lists);
 
     foreach my $list (@$all_lists){
@@ -11145,6 +11160,26 @@ sub search_datasource {
     }
 
     return undef;
+}
+
+## Return the names of datasources, given a coma-separated list of source ids
+# IN : -$class 
+#      -$id : datasource ids (coma-separated)
+# OUT : -$name : datasources names (scalar)
+sub get_datasource_name {
+    my ($self, $id) = @_;
+    &do_log('debug2','(%s,%s)', $self->{'name'}, $id);
+    my %sources;
+
+    my @ids = split /,/,$id;
+    foreach my $id (@ids) {
+	## User may come twice from the same datasource
+	unless (defined ($sources{$id})) {
+	    $sources{$id} = $self->search_datasource($id);
+	}
+    }
+    
+    return join(', ', values %sources);
 }
 
 ## Remove a task in the tasks spool

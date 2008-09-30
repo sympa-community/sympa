@@ -16,20 +16,19 @@
               [% FOREACH period = cookie_periods %]
                 <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
               [% END %]
-									            </select><br />
-            <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
+									            </select><br />            <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
   </fieldset>
 </form>
 <br />
 
 
- [% IF session.auth == 'classic' %]
 <h2 class="block">[%|loc%]Changing your email address[%END%]</h2>
         
+[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="email">[%|loc%]New email address :[%END%]  </label><input id="email" name="email" size="15" /><br />
-<input class="MainMenuLinks" type="submit" name="action_change_email" value="[%|loc%]Submit[%END%]" />
+<label for="new_email">[%|loc%]New email address :[%END%]  </label><input id="new_email" name="new_email" size="25" />
+<input class="MainMenuLinks" type="submit" name="action_change_email_request" value="[%|loc%]Change Email[%END%]" />
 </fieldset>
 </form>
 <br /> 
@@ -38,38 +37,9 @@
   
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="newpasswd1">[%|loc%]New password :[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="15" /><br />
-<label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="15" /><br />
+<label for="newpasswd1">[%|loc%]New password :[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" /><br />
+<label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" /><br />
 <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
 </fieldset>          
 </form>
 <br />
-	    [% END %]
-
-
-<h2 class="block">[%|loc%]Your other email addresses[%END%]</h2>
-
-      [% IF !unique %]
-<form action="[% path_cgi %]" method="post"> 
-<fieldset>
-   	    [% FOREACH email = alt_emails %]
-	    <a href="[% path_cgi %]/change_identity/[% email.key %]/pref">[% email.key %]</a>
-	    <input name="email" type="hidden" value="[% email.key %]" />
-	    <br />
-	    [% END %]
-</fieldset>
-</form>
-<br />
-      [% END %]
-   
-<form action="[% path_cgi %]" method="post"> 
-<fieldset>
-<label for="new_alternative_email">[%|loc%]Other email address :[%END%]  </label><input name="new_alternative_email" id="new_alternative_email" size="15" /><br />
-<label for="new_password">[%|loc%]Password :[%END%]  </label><input type="password" name="new_password" id="new_password" size="15" /><br />
-<input class="MainMenuLinks" type="submit" name="action_record_email" value="[%|loc%]Submit[%END%]" />
-</fieldset>
-</form>
-<br />
-
-<em>[%|loc%]Another email address, that should be known by Sympa and will be recognized by Sympa as an alternate email address for you. All your email addressed will also be grouped by Sympa with your primary email address to unify your subscriptions[%END%]  
-</em>

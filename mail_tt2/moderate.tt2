@@ -13,7 +13,7 @@ Content-Type: text/plain; charset="UTF-8";
 Content-Transfer-Encoding: 8bit
 
 [%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
-[%- IF spam_status == 'spam' -%][%|loc%]This message as been tagued as a spam[%END%][% END %]
+[%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
 [%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
 [%|loc(conf.wwsympa_url,one_time_ticket) %]You can browse and accept or refuse them by web : %1/ticket/%2[%END%] 
