@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-09-13 20:43+0200\n"
+"PO-Revision-Date: 2008-09-26 11:16+0200\n"
 "Last-Translator: chernysh <mail33@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,6 @@ msgstr "Категории списков рассылки"
 
 # без контекста непонятно
 #: web_tt2/home.tt2:27
-#, fuzzy
 msgid "Others"
 msgstr "Прочее"
 
@@ -754,9 +753,8 @@ msgid "Return to archive %1"
 msgstr "Вернуться к архиву %1"
 
 #: web_tt2/arc.tt2:3
-#, fuzzy
 msgid "List archive"
-msgstr "Название рассылки"
+msgstr "Архив рассылки"
 
 #: web_tt2/blacklist.tt2:3
 msgid "Blacklist management"
@@ -802,7 +800,6 @@ msgstr "Сейчас чёрный список пуст"
 
 #. (rows)
 #: web_tt2/blacklist.tt2:21
-#, fuzzy
 msgid "The current blacklist contains %1 line(s)"
 msgstr "Сейчас чёрный список содержит %1 строк"
 
@@ -837,13 +834,13 @@ msgid "Change my email address"
 msgstr "Изменить мой электронный адрес"
 
 #: web_tt2/choosepasswd.tt2:4
-#, fuzzy
 msgid ""
 "You need to choose a password for your WWSympa environment.\n"
 "You will need this password to perform privileged operations."
 msgstr ""
 "Вы должны выбрать пароль для Вашего окружения WWSympa.\n"
-"Этот пароль понадобится Вам для выполнения некоторых операций. "
+"Этот пароль понадобится Вам для выполнения некоторых операций, требующих "
+"привелегий. "
 
 #: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:41
 msgid "New password :"
@@ -860,14 +857,13 @@ msgid "Submit"
 msgstr "Отправить"
 
 #: web_tt2/close_list.tt2:4
-#, fuzzy
 msgid ""
 "list has been closed. Its subscribers have been deleted from\n"
 "the subscriber database. The list is no longer public on the site."
 msgstr ""
 "рассылка была закрыта. Её подписчики были удалены из\n"
-" базы данных подписчиков. Информация о списке рассылки больше показывается "
-"на сайте. "
+" базы данных подписчиков. Информация о списке рассылки больше не "
+"показывается на сайте. "
 
 #: web_tt2/close_list.tt2:7
 msgid "List aliases have been removed."
@@ -878,9 +874,8 @@ msgid "You should remove list aliases manually"
 msgstr "Вы должны удалить алиасы рассылки вручную"
 
 #: web_tt2/compose_mail.tt2:3
-#, fuzzy
 msgid "Sendind a message to the list"
-msgstr "Отправка сообщений   : %1"
+msgstr "Отправка сообщения в рассылку"
 
 #. (user.email)
 #. (from)
@@ -1076,7 +1071,7 @@ msgstr "Ваша рассылка создана."
 
 #: web_tt2/create_list.tt2:5
 msgid "You can configure it via the admin button beside."
-msgstr "Вы можете настроить её с помощью кнопки администрирования рядом."
+msgstr "Вы можете настроить её с помощью кнопки \"Администрирование\" рядом."
 
 #: web_tt2/create_list.tt2:8 web_tt2/install_pending_list.tt2:26
 msgid "Aliases have been installed."
@@ -1090,12 +1085,11 @@ msgid ""
 msgstr ""
 "Ваш запрос на создание рассылки был зарегистрирован. Теперь Вы можете "
 "изменить\n"
-" её конфигурацию с помощью кнопки администрирования, но рассылка не будет "
+" её конфигурацию с помощью кнопки \"Администрирование\", но рассылка не будет "
 "работать, пока глобальный администратор не одобрит её. "
 
 #: web_tt2/d_control.tt2:4 web_tt2/d_editfile.tt2:6 web_tt2/d_properties.tt2:4
 #: web_tt2/d_read.tt2:7
-#, fuzzy
 msgid "Up to higher level directory"
 msgstr "Вверх, в директорию высшего уровня"
 
@@ -2445,22 +2439,20 @@ msgstr ""
 
 #: web_tt2/manage_template.tt2:4
 msgid "Modify or Delete existing messages"
-msgstr ""
+msgstr "Изменить или удалить существующие сообщения"
 
 #: web_tt2/manage_template.tt2:7
 #, fuzzy
 msgid "Do you really want to delete this reject message?"
-msgstr "Вы действительно хотите удалить указанные архивы? "
+msgstr "Вы действительно хотите удалить это отвергнутое сообщение? "
 
 #: web_tt2/manage_template.tt2:7
-#, fuzzy
 msgid "Delete Template"
-msgstr "Шаблоны"
+msgstr "Удалить шаблон"
 
 #: web_tt2/manage_template.tt2:8
-#, fuzzy
 msgid "Modify Template"
-msgstr "Шаблоны"
+msgstr "Изменить шаблон"
 
 #: web_tt2/manage_template.tt2:27
 #, fuzzy
@@ -2468,23 +2460,20 @@ msgid "Create New Reject Messages"
 msgstr "Новые сообщения"
 
 #: web_tt2/manage_template.tt2:30
-#, fuzzy
 msgid "Template Name :"
-msgstr "Имя шаблона : "
+msgstr "Название шаблона : "
 
 #: web_tt2/manage_template.tt2:31
-#, fuzzy
 msgid "Default Template"
-msgstr "Ввод шаблона"
+msgstr "Шаблон, используемый по умолчанию"
 
 #: web_tt2/manage_template.tt2:39
-#, fuzzy
 msgid "Save Template"
-msgstr "Шаблоны"
+msgstr "Сохранить шаблон"
 
 #: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
-msgstr "Просмотр сообщения для модерирования"
+msgstr "Просмотр сообщений для модерирования"
 
 #: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
 #: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
@@ -2506,27 +2495,31 @@ msgid ""
 "because the message sender is probably spoofed. Do you really want to reject "
 "those messages with notification ?"
 msgstr ""
+"Как правило, не следует отправлять уведомление при запрете распространения "
+"сообщения, считающегося спамом, поскольку отправитель, возможно, поддельный. "
+"Вы действительно хотите отвергнуть эти сообщения с уведомлением "
+"отправителя? "
 
 #: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
 #, fuzzy
 msgid "Default rejection message"
-msgstr "Сообщение общего напоминания"
+msgstr ""
+"Сообщение, по умолчанию используемое при запрете распространения сообщения"
 
 #: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"
-msgstr ""
+msgstr "Не уведомлять"
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
-msgstr ""
+msgstr "Кликните здесь"
 
 #: web_tt2/modindex.tt2:47
-#, fuzzy
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr ""
-"Пожалуйста, выберите одну или несколько тем, соответветствующих сообщению, "
+"Пожалуйста, выберите одну или несколько тем, соответствующих сообщению, "
 "которое Вы хотите разослать : "
 
 #: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
@@ -2558,14 +2551,13 @@ msgid "Install"
 msgstr "Установить"
 
 #: web_tt2/modindex.tt2:140
-#, fuzzy
 msgid "Listing of documents shared to moderate"
 msgstr "Список общих документов для модерации"
 
 #. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
 msgid "last login from %1 (%2)"
-msgstr ""
+msgstr "последний вход с %1 (%2)"
 
 #: web_tt2/notice.tt2:10
 msgid "Your request has been forwarded to the list owner"
@@ -2678,19 +2670,17 @@ msgstr "Файл %1 был переименован в %2"
 msgid ""
 "List has been set to the pending status ; listmaster need to validate it"
 msgstr ""
-"Рассылка была перевелена в состояние ожидания, глобальный администратор "
+"Рассылка была переведена в состояние ожидания, глобальный администратор "
 "должен утвердить её"
 
 #: web_tt2/notice.tt2:82
-#, fuzzy
 msgid "List name has been lowercased"
-msgstr "Список рассылки был закрыт"
+msgstr "Название рассылки было переведено в нижний регистр"
 
 #. (notice.notified_user)
 #: web_tt2/notice.tt2:85
-#, fuzzy
 msgid "User %1 has been notified"
-msgstr "Список рассылки был закрыт"
+msgstr "Пользователь %1 был уведомлен"
 
 #: web_tt2/picture_upload.tt2:4
 msgid "Setting your picture for this list"
@@ -2807,9 +2797,8 @@ msgstr ""
 "администратору, сообшив ему полный URL этого сообщения"
 
 #: web_tt2/rename_list_request.tt2:2
-#, fuzzy
 msgid "Renaming the list"
-msgstr "Переименовать эту рассылку"
+msgstr "Переименование рассылки"
 
 #: web_tt2/rename_list_request.tt2:19
 msgid "Rename this list"
@@ -2820,70 +2809,70 @@ msgid "Do you really want to rename this list?"
 msgstr "Вы действительно хотите переименовать эту рассылку? "
 
 #: web_tt2/renewpasswd.tt2:7
-#, fuzzy
 msgid "You request for an account creation on this list server."
-msgstr "Вы запросили подписку на рассылку %1"
+msgstr "Вы запросили создание аккаунта на этом сервере. "
 
 #: web_tt2/renewpasswd.tt2:9
 msgid "The password you submit is wrong. May be you forgot it ?"
-msgstr ""
+msgstr "Указанный пароль неверен. Может быть, Вы забыли его ? "
 
 #: web_tt2/renewpasswd.tt2:11
 msgid "You miss the password, please submit again. May be you forgot it ?"
 msgstr ""
+"Вы пропустили пароль, пожалуйста, укажите его. Может быть, Вы забыли его ?"
 
 #: web_tt2/renewpasswd.tt2:13
-#, fuzzy
 msgid "You will receive an email in order to be able to choose your password."
-msgstr "Вы получите письмо с напоминанием Вашего пароля. "
+msgstr "Вы примите письмо, чтобы получить возможность сменить пароль. "
 
 #: web_tt2/renewpasswd.tt2:16
 msgid "In order to use Sympa, you will need to define a password."
-msgstr ""
+msgstr "Для того, чтобы использовать Sympa, необходимо задать пароль. "
 
 #: web_tt2/renewpasswd.tt2:18
-#, fuzzy
 msgid "You have forgotten your password, so you have to  renew it."
-msgstr "Вы забыли пароль или никогда не имели его не этом сервере"
+msgstr "Вы забыли свой пароль, поэтому Вам необходимо обновить его. "
 
 #: web_tt2/renewpasswd.tt2:21
 msgid ""
 "Please submit your email address, you will receive a message that give you "
 "access to the appropriate form in order to choose your password."
 msgstr ""
+"Пожалуйста, укажите свой электронный адрес. Вы получите сообщение, которое "
+"даст Вам доступ к странице для выбора пароля. "
 
 #: web_tt2/renewpasswd.tt2:27 web_tt2/subrequest.tt2:38
 msgid "Your e-mail address"
 msgstr "Ваш электронный адрес"
 
 #: web_tt2/renewpasswd.tt2:31
-#, fuzzy
 msgid "Request first password"
-msgstr "Выслать мне пароль подтверждения"
+msgstr "Запросить пароль впервые"
 
 #: web_tt2/renewpasswd.tt2:33
-#, fuzzy
 msgid "Request new password"
-msgstr "Введите Ваш новый пароль ещё раз :"
+msgstr "Запросить новый пароль"
 
 #: web_tt2/requestpasswd.tt2:4
-#, fuzzy
 msgid "Message sent"
-msgstr "Сообщение"
+msgstr "Сообщение отправлено"
 
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
 msgstr ""
+"Система отправила Вам сообщение, пожалуйста, проверьте свой почтовый ящик. "
 
 #: web_tt2/requestpasswd.tt2:6
 msgid ""
 "Follow the URL contained  within, it will lead you to a page in which you "
 "can choose your password."
 msgstr ""
+"Перейдите по ссылке, содержащейся внутри, на страницу, где Вы сможете "
+"выбрать пароль.  "
 
 #: web_tt2/requestpasswd.tt2:10
 msgid "The system was not able to send you the appropriate message."
-msgstr ""
+msgstr "Система не смогла отправить Вам нужное сообщение. "
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
@@ -2892,9 +2881,8 @@ msgid ""
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
-#, fuzzy
 msgid "Unkown error."
-msgstr "Неизвестный"
+msgstr "Неизвестная ошибка. "
 
 #: web_tt2/request_topic.tt2:5
 msgid "This list is configured to require topic(s) foreach message."
@@ -3485,23 +3473,19 @@ msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Этот процесс FastCGI (%1) обслужил %2 страниц с %3."
 
 #: web_tt2/setlang.tt2:9
-#, fuzzy
 msgid "Language selection"
 msgstr "Выбор языка"
 
 #: web_tt2/setlang.tt2:17
-#, fuzzy
 msgid "Validate your language selection"
-msgstr "Выбор языка"
+msgstr "Подтвердите свой выбор языка"
 
 #: web_tt2/setlang.tt2:17
-#, fuzzy
 msgid "Set language"
-msgstr "Язык"
+msgstr "Установить язык"
 
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:10
-#, fuzzy
 msgid " on %1"
 msgstr " %1"
 
@@ -5701,9 +5685,8 @@ msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:257
 #: mail_tt2/listowner_notification.tt2:58
-#, fuzzy
 msgid "Managing bouncing subscribers:"
-msgstr "Управление обработкой возвращаемых писем: "
+msgstr "Управление адресами, с которых возвращаются письма:"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:261
@@ -5979,22 +5962,24 @@ msgstr "Невозможно отправить команду REMIND c '%1' в 
 #. (from,list.name)
 #: mail_tt2/listmaster_notification.tt2:329
 msgid "Unable to send mail from '%1' to list '%2'."
-msgstr ""
+msgstr "Невозможно отправить письмо c '%1' в рассылку '%2'."
 
 #. (key,list.name)
 #: mail_tt2/listmaster_notification.tt2:330
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
+"Невозможно получить доступ к сообщению, подписанному ключом '%1' для "
+"рассылки '%2'."
 
 #. (sub)
 #: mail_tt2/listmaster_notification.tt2:331
 msgid "Unable to delete subscription request for user '%1'."
-msgstr ""
+msgstr "Невозможно удалить запрос на подписку пользователя '%1'."
 
 #. (file)
 #: mail_tt2/listmaster_notification.tt2:332
 msgid "Unable to add file '%1' to archives."
-msgstr ""
+msgstr "Невозможно добавить файл '%1' в архивы. "
 
 #. (zipfile)
 #: mail_tt2/listmaster_notification.tt2:333
@@ -6004,54 +5989,52 @@ msgstr ""
 #. (path,list.name)
 #: mail_tt2/listmaster_notification.tt2:335
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
-msgstr ""
+msgstr "Невозможно создать SharedDocument с адресом '%1' в рассылке '%2'."
 
 #: mail_tt2/listmaster_notification.tt2:336
 msgid "Parameter cookie undefined, authentication failure."
-msgstr ""
+msgstr "Параметр cookie не задан, ошибка аутентификации."
 
 #. (env)
 #: mail_tt2/listmaster_notification.tt2:337
 msgid "Cookie error : '%1' undefined, authentication failure."
-msgstr ""
+msgstr "Ошибка cookie : '%1'  не задан, ошибка аутентификации."
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:344
 msgid "Listmaster : system error "
-msgstr ""
+msgstr "Глобальный администратор : системная ошибка"
 
 #. (who)
 #: mail_tt2/listmaster_notification.tt2:346
 msgid " User %1 has encountered a system error"
-msgstr ""
+msgstr " Пользователь %1 обнаружил системную ошибку. "
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:4
 msgid "List %1 archive quota exceeded"
-msgstr ""
+msgstr "Квота архива рассылки %1 превышена"
 
 #. (list.name,list.host,size,conf.host,conf.listmaster_email)
 #: mail_tt2/listowner_notification.tt2:8
-#, fuzzy
 msgid ""
 "%1 archive quota exceeded. \n"
 "Total size used for %1@%2 archive is %3 Bytes. Messages\n"
 "are no longer being web-archived. Please contact %5@%4. "
 msgstr ""
-"%1 квота архивирования превышена\n"
-"Всего для архива %1@%2 использовано %3 байт.\n"
-"Сообщения более не добавляются в вэб-архив. Пожалуйста,\n"
-"свяжитесь с %5@%4 "
+"%1 квота архива превышена\n"
+"Всего для архива %1@%2 использовано %3 байт. Сообщения\n"
+" более не добавляются в web-архив. Пожалуйста,свяжитесь с %5@%4 "
 
 #. (list.name,rate)
 #: mail_tt2/listowner_notification.tt2:11
 msgid "List \"%1\" warning : archive %2% full"
-msgstr ""
+msgstr "Предупреждение рассылки \"%1\" : архив заполнен на %2%"
 
 #. (rate2,list.name,list.host,rate)
 #: mail_tt2/listowner_notification.tt2:13
 msgid "%2@%3 archives use %4% of allowed disk quota."
-msgstr ""
+msgstr "Архивы %2@%3 используют %4% выделенной дисковой квоты. "
 
 #. (list.name,size)
 #: mail_tt2/listowner_notification.tt2:14
@@ -6061,12 +6044,12 @@ msgstr ""
 #. (conf.host,conf.listmaster_email)
 #: mail_tt2/listowner_notification.tt2:16
 msgid "Messages are still archived but you should contact %2@%1"
-msgstr ""
+msgstr "Сообщения всё ещё архивируются, но Вам следует связаться с %2@%1"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:19
 msgid "List %1 is closed"
-msgstr ""
+msgstr "Рассылка %1 закрыта"
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:22
@@ -6087,11 +6070,14 @@ msgid ""
 "found in the list.\n"
 "(You may help this person)."
 msgstr ""
+"ВНИМАНИЕ: %1 %2 не удалось отписаться от %3, т. к. адрес не был найден в "
+"списке.\n"
+" (Вы можете ему помочь)."
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:31
 msgid "List \"%1\" customizations have been removed"
-msgstr ""
+msgstr "Настройки рассылки \"%1\" были удалены"
 
 #. (list.name,list.host,param0,param1,param2)
 #: mail_tt2/listowner_notification.tt2:38
@@ -6111,6 +6097,9 @@ msgid ""
 "below have been\n"
 "notified that they might be removed from list %2:"
 msgstr ""
+"Поскольку мы получили много отчётов о недоставке сообщений, подписчики %1, "
+"перечисленные ниже, были\n"
+" уведомлены, что они могут быть удалены из списка рассылки %2: "
 
 #. (total,list.name)
 #: mail_tt2/listowner_notification.tt2:48
@@ -6119,6 +6108,9 @@ msgid ""
 "below have been\n"
 "removed from list %2:"
 msgstr ""
+"Поскольку мы получили много отчётов о недоставке сообщений, подписчики %1, "
+"перечисленные ниже, были\n"
+" удалены из списка рассылки %2:"
 
 #. (total,list.name)
 #: mail_tt2/listowner_notification.tt2:51
@@ -6127,11 +6119,14 @@ msgid ""
 "below have been\n"
 "selected by Sympa as severe bouncing addresses:"
 msgstr ""
+"Поскольку мы получили много отчётов о недоставке сообщений, подписчики %1, "
+"перечисленные ниже, были\n"
+" отобраны Sympa, как имеющие некорректные адреса: "
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:61
 msgid "Subscription request to list %1"
-msgstr ""
+msgstr "Запрос подписки на рассылку %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
@@ -6142,31 +6137,35 @@ msgid ""
 "manage\n"
 "pending subscription requests you should click the following URL :"
 msgstr ""
+"Уважаемый владелец рассылки %1,\n"
+" \n"
+" Новый пользователь желает стать подписчиком Вашей рассылки. Чтобы "
+"просмотреть текущие запросы на подписку и принять решение, перейдите по "
+"следующей ссылке :"
 
 #. (replyto,keyauth,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:72
-#, fuzzy
 msgid ""
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 msgstr ""
-"\n"
-"или отошлите письмо по адресу %1 с такой темой\n"
+"Кроме того, Вы можете подтвердить согласие на подписку, отправив письмо по "
+"адресу %1 со следующей темой :\n"
 "AUTH %2 ADD %3 %4 %5\n"
 
 #: mail_tt2/listowner_notification.tt2:74
 msgid "That can be done using this mailto link :"
-msgstr ""
+msgstr "Это можно сделать с помощью данного линка для отправки письма : "
 
 #: mail_tt2/listowner_notification.tt2:77
 msgid "The user has provided the following informations:"
-msgstr ""
+msgstr "Пользователь оставил следующую информацию о себе: "
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:84
 msgid "UNsubscription request from list %1"
-msgstr ""
+msgstr "Запрос отписки от рассылки %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
@@ -6176,23 +6175,26 @@ msgid ""
 "A user asked to be deleted from your list. If this is OK \n"
 "with you, you should click the following URL :"
 msgstr ""
+"Уважаемый владелец рассылки %1,\n"
+" \n"
+" От Вашей рассылки желает отписаться пользователь. Если Вы согласны\n"
+", кликните по следующей ссылке :"
 
 #. (sympa,keyauth,list.name,who)-)
 #: mail_tt2/listowner_notification.tt2:96
-#, fuzzy
 msgid ""
 "\n"
 "or send an email to %1 with the following subject :\n"
 "AUTH %2 DEL %3 %4\n"
 msgstr ""
 "\n"
-"или отошлите письмо по адресу %1 с такой темой\n"
+" или отправьте письмо по адресу %1 со следующей темой :\n"
 "AUTH %2 DEL %3 %4\n"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
-msgstr ""
+msgstr "ВНИМАНИЕ: в рассылке %1 слишком много возвращающихся писем"
 
 #. (list.name,rate,conf.wwsympa_url,list.name)
 #: mail_tt2/listowner_notification.tt2:106
@@ -6202,6 +6204,10 @@ msgid ""
 "You should delete bouncing subscribers : \n"
 "%3/reviewbouncing/%4\n"
 msgstr ""
+"Доля возвращаемых писем в рассылке %1 составляет %2.\n"
+" \n"
+" Необходимо удалить адреса, с которых возвращаются сообщения: \n"
+" %3/reviewbouncing/%4\n"
 
 #. (command,list.name,who,gecos)
 #: mail_tt2/listowner_notification.tt2:110
@@ -6221,7 +6227,7 @@ msgstr " проверено %1 "
 
 #: mail_tt2/listowner_notification.tt2:113
 msgid "No action is needed on your side."
-msgstr ""
+msgstr "С Вашей стороны действий не требуется. "
 
 #. (who)
 #: mail_tt2/listowner_notification.tt2:117
@@ -6231,7 +6237,7 @@ msgstr ""
 #. (who,list.name)
 #: mail_tt2/listowner_notification.tt2:119
 msgid "User \"%1\" has been automatically removed from list %2. "
-msgstr ""
+msgstr "Пользователь \"%1\" был автоматически удалён из списка рассылки %2."
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:128
@@ -6248,47 +6254,49 @@ msgstr ""
 #. (list.name,type)
 #: mail_tt2/listowner_notification.tt2:133
 msgid "List %1 / %2"
-msgstr ""
+msgstr "Рассылка %1 / %2"
 
 #. (list.name,list.host)
 #: mail_tt2/list_rejected.tt2:4
 msgid "%1@%2 mailing list has been rejected by listmaster."
-msgstr ""
+msgstr "Список рассылки %1@%2 был отвергнут глобальным администратором. "
 
 #: mail_tt2/lists.tt2:2
 msgid "Public lists"
-msgstr ""
+msgstr "Публичные рассылки"
 
 #. (conf.email,conf.host)
 #: mail_tt2/lists.tt2:4
 msgid "Here is the list of lists from %1@%2"
-msgstr ""
+msgstr "Вот список рассылок с %1@%2"
 
 #: mail_tt2/list_unknown.tt2:3
 msgid "List unknown"
-msgstr ""
+msgstr "Рассылка неизвестна"
 
 #: mail_tt2/list_unknown.tt2:11
 msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
-msgstr ""
+msgstr "Это автоматический ответ, отправленный менеджером рассылок Sympa. "
 
 #: mail_tt2/list_unknown.tt2:13
 msgid "The following address is not a known mailing list :"
-msgstr ""
+msgstr "Следующий адрес не является списком рассылки : "
 
 #: mail_tt2/list_unknown.tt2:17
 msgid ""
 "To find out the correct listname, ask for this server's lists directory :"
 msgstr ""
+"Чтобы найти правильное название рассылки, ищите его в директории рассылок "
+"сервера :"
 
 #. (conf.listmaster_email,conf.host)
 #: mail_tt2/list_unknown.tt2:21
 msgid "For further information, please contact %1@%2"
-msgstr ""
+msgstr "Чтобы узнать больше, пишите на %1@%2"
 
 #: mail_tt2/message_report.tt2:4
 msgid "Message distribution : Internal server error"
-msgstr ""
+msgstr "Распространение сообщения : Внутренняя ошибка сервера"
 
 #. (list.name,function)
 #: mail_tt2/message_report.tt2:12
@@ -6296,6 +6304,8 @@ msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
 msgstr ""
+"Невозможно переслать Ваше сообщение в '%1-%2' из-за внутренней ошибки "
+"сервера. "
 
 #. (list.name)
 #: mail_tt2/message_report.tt2:14
@@ -6303,16 +6313,18 @@ msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr ""
+"Невозможно распространить Ваше сообщение в рассылке '%1' из-за внутренней "
+"ошибки сервера."
 
 #. (list.name,list.host)
 #: mail_tt2/message_report.tt2:16 mail_tt2/message_report.tt2:71
 #: mail_tt2/message_report.tt2:90
 msgid "For further information, please contact %1-request@%2"
-msgstr ""
+msgstr "Чтобы узнать больше, пишите на %1-request@%2"
 
 #: mail_tt2/message_report.tt2:22
 msgid "Message distribution : User error"
-msgstr ""
+msgstr "Распространение сообщения : Ошибка пользователя"
 
 #. (list.name)
 #: mail_tt2/message_report.tt2:30
@@ -6320,10 +6332,12 @@ msgid ""
 "Impossible to distribute your message for list '%1' for the following "
 "reason :"
 msgstr ""
+"Невозможно распространить Ваше сообщение в рассылке '%1' по следующей "
+"причине :"
 
 #: mail_tt2/message_report.tt2:32
 msgid "Impossible to distribute your message for the following reason :"
-msgstr ""
+msgstr "Невозможно распространить Ваше сообщение по следующей причине :"
 
 #. (list.name,conf.sympa,list.host)
 #: mail_tt2/message_report.tt2:48
@@ -6341,6 +6355,19 @@ msgid ""
 "\n"
 "Thank you for your attention.\n"
 msgstr ""
+"Следующее сообщение было отправлено в рассылку '%1' и, кажется, содержало\n"
+"одну или несколько команд вроде subscribe, unsubscribe, help, index, get, "
+"...\n"
+" \n"
+" Если сообщение содержало команду, имейте в виду, что\n"
+"команды не следует отправлять в рассылки. Команды надо отправлять\n"
+" исключительно на %2.\n"
+" \n"
+" Если Ваше сообщение действительно надо было отправить в рассылку, программа\n"
+" восприняла его как команду. Пожалуйста, свяжитесь с владельцем рассылки\n"
+" %1-request@%3, чтобы он обработал Ваше сообщение. \n"
+"\n"
+"Спасибо за внимание. \n"
 
 #. (list.name)
 #: mail_tt2/message_report.tt2:52
@@ -6348,11 +6375,13 @@ msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list."
 msgstr ""
+"Ваше сообщение не может быть отправлено, поскольку его размер\n"
+" превышает максимально допустимый в этой рассылке. "
 
 #. (listname)
 #: mail_tt2/message_report.tt2:58
 msgid "The %1 list could not be created."
-msgstr ""
+msgstr "Рассылка %1 не может быть создана. "
 
 #. (list.name,key)
 #: mail_tt2/message_report.tt2:62
@@ -6361,31 +6390,36 @@ msgid ""
 "Warning : this message may already have been sent by one of the list's "
 "editor."
 msgstr ""
+"Невозможно получить доступ к сообщению в рассылке %1 с   ключом %2.\n"
+"Внимание : возможно, это сообщение уже было отправлено одним из редакторов "
+"рассылки."
 
 #. (key)
 #: mail_tt2/message_report.tt2:65
-#, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
 "already been confirmed."
-msgstr "Нет доступа к сообщению, аутентифицированному ключом %1"
+msgstr ""
+"Нет доступа к сообщению, аутентифицированному ключом %1. Возможно, сообщение "
+"уже было утверждено."
 
 #. (key)
 #: mail_tt2/message_report.tt2:68
-#, fuzzy
 msgid ""
 "Unable to access the message authenticated with key %1 because of a wrong "
 "format. The message may already been confirmed."
-msgstr "Нет доступа к сообщению, аутентифицированному ключом %1"
+msgstr ""
+"Нет доступа к сообщению, аутентифицированному ключом %1 из-за неверного "
+"формата. Возможно, сообщение уже было утверждено."
 
 #. (conf.host)
 #: mail_tt2/message_report.tt2:73
 msgid "For further information, please contact listmaster@%1"
-msgstr ""
+msgstr "За более подробной информацией обращайтесь по адресу listmaster@%1"
 
 #: mail_tt2/message_report.tt2:79
 msgid "Message distribution : Authorization denied"
-msgstr ""
+msgstr "Распространение сообщения: Авторизация запрещена"
 
 #. (list.name)
 #: mail_tt2/message_report.tt2:87
@@ -6393,37 +6427,43 @@ msgid ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason :"
 msgstr ""
+"Ваше сообщение в рассылку '%1' (прикреплено ниже) было отвергнуто. Вам не "
+"было позволено отправить это сообщение по следующей причине :"
 
 #: mail_tt2/message_report.tt2:95
 msgid "Message distribution"
-msgstr ""
+msgstr "Распространение сообщения"
 
 #. (list.name)
 #: mail_tt2/message_report.tt2:101
 msgid "Your message for list %1 has been forwarded to editor(s)"
-msgstr ""
+msgstr "Ваше сообщение для рассылки %1 было переслано редакторам. "
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:105
 msgid "Message %1 for list '%2' has been distributed."
-msgstr ""
+msgstr "Сообщение %1 для рассылки '%2' было распространено. "
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:109
 msgid ""
 "Message %1 for list '%2' has been validated ; it will be distributed soon."
 msgstr ""
+"Сообщение %1 для рассылки '%2' было утверждено, скоро оно будет "
+"распространено. "
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:113
 msgid "Message %1 for list '%2' has been rejected."
-msgstr ""
+msgstr "Сообщение %1 для рассылки '%2' было отвергнуто. "
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:117
 msgid ""
 "Your message for list '%2' with the %1 ID has been confirmed and distributed."
 msgstr ""
+"Ваше сообщение для рассылки '%2' с идентификатором %1 было подтверждено и "
+"распространено. "
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:121
@@ -6431,6 +6471,8 @@ msgid ""
 "Your message for list '%2' with the %1 ID has been confirmed ; it will be "
 "distributed soon."
 msgstr ""
+"Ваше сообщение для рассылки '%2' с идентификатором %1 было подтверждено и "
+"скоро будет распространено. "
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:3
@@ -6440,27 +6482,28 @@ msgstr ""
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:4
 msgid "Message for list %1 from %2 to be approved"
-msgstr ""
+msgstr "Сообщения, требующий утверждения для рассылки %1 от %2"
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:15
 msgid "One new message from list %1 from %2 arrived. "
-msgstr ""
+msgstr "Поступило одно новое сообщение из рассылки %1 от %2."
 
 #: mail_tt2/moderate.tt2:16
 msgid "This message as been tagued as a spam"
-msgstr ""
+msgstr "Это сообщение получило метку \"Спам\""
 
 #. (mod_spool_size)
 #: mail_tt2/moderate.tt2:18
-#, fuzzy
 msgid "They are %1 messages awaiting moderation."
-msgstr "Файл %1 ожидает модерации"
+msgstr "%1 сообщений ожидает модерации. "
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
 msgstr ""
+"Вы можете просматривать, принимать или отклонять их через web-интерфейс : "
+"%1/ticket/%2"
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:25
@@ -6470,39 +6513,43 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
+"Чтобы поставить соответствующую теме метку на сообщение в рассылке %1, "
+"пожалуйста, воспользуйтесь следующим линком:\n"
+" \n"
+" %2/viewmod/%1/%3\n"
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:31
 msgid "To distribute the attached message in list %1:"
-msgstr ""
+msgstr "Чтобы распространить прикреплённое сообщение в рассылке %1: "
 
 #. (conf.email,conf.host)
 #: mail_tt2/moderate.tt2:33 mail_tt2/moderate.tt2:38
 msgid "Or send a message to %1@%2 with the following subject :"
-msgstr ""
+msgstr "Или отправьте сообщение на %1@%2 со следующей темой :"
 
 #: mail_tt2/moderate.tt2:36
 msgid "To reject it (it will be removed):"
-msgstr ""
+msgstr "Чтобы отвергнуть его (будет удалено):"
 
 #. (conf.wwsympa_url)
 #: mail_tt2/moderate.tt2:41 mail_tt2/modindex.tt2:11
 msgid "The messages moderating documentation: %1/help/admin#moderate"
-msgstr ""
+msgstr "Документация о модерации сообщений: %1/help/admin#moderate"
 
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
 msgid "Moderation spool for list %1"
-msgstr ""
+msgstr "Буфер модерации для рассылки %1"
 
 #. (total,list.name,list.host)
 #: mail_tt2/modindex.tt2:9
 msgid "There are %1 messages to be moderated for list %2@%3"
-msgstr ""
+msgstr "В рассылке %2@%3 необходимо модерировать %1 сообщений"
 
 #: mail_tt2/reject.tt2:2
 msgid "Your message has been rejected."
-msgstr ""
+msgstr "Ваше сообщение было отвергнуто."
 
 #. (list.name,list.host,rejected_by)
 #: mail_tt2/reject.tt2:5
@@ -6510,11 +6557,13 @@ msgid ""
 "Your message for list %1@%2\n"
 "has been rejected by the moderator (%3)."
 msgstr ""
+"Ваше сообщение для рассылки %1@%2\n"
+" было отвергнуто модератором (%3)."
 
 #. (subject)
 #: mail_tt2/reject.tt2:7
 msgid "(Subject of your mail : %1)"
-msgstr ""
+msgstr "(Тема Вашего письма : %1)"
 
 #. (list.name)
 #: mail_tt2/reject.tt2:10
@@ -6524,12 +6573,12 @@ msgstr ""
 #. (list.name)
 #: mail_tt2/remind.tt2:2
 msgid "Reminder of your subscription to %1"
-msgstr ""
+msgstr "Напоминание о Вашей подписке на %1"
 
 #. (list.name,list.host,user.email,user.password)
 #: mail_tt2/remind.tt2:4
 msgid "Your are subscriber of list %1@%2 with  email %3"
-msgstr ""
+msgstr "Вы подписаны на рассылку %1@%2 электронным адресом %3"
 
 #. (user.email,list.name,list.host)
 #: mail_tt2/removed.tt2:6
@@ -6538,26 +6587,29 @@ msgid ""
 "%2@%3, probably because we received\n"
 "non-delivery reports for your address."
 msgstr ""
+"Ваш адрес (%1) был удалён из рассылки\n"
+" %2@%3. Вероятно, это произошло из-за того, что мы получали отчёты о "
+"недоставке сообщений на Ваш адрес. "
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:7
 msgid "You asked for your e-mail address to be removed from list '%1'."
-msgstr ""
+msgstr "Вы запрашивали удаление Вашего электронного адреса из рассылки '%1'. "
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:10
 msgid "You asked for your e-mail address to be added to list '%1'."
-msgstr ""
+msgstr "Вы запрашивали добавление Вашего электронного адреса в рассылку '%1'."
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:13
 msgid "You requested a user subscription in list %1."
-msgstr ""
+msgstr "Вы запрашивали подписку пользователя на рассылку %1."
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:16
 msgid "You requested a user removal from list %1."
-msgstr ""
+msgstr "Вы запрашивали отписку пользователя от рассылки %1."
 
 #. (list.name)-)
 #: mail_tt2/request_auth.tt2:19
@@ -6565,6 +6617,8 @@ msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list %"
 "1"
 msgstr ""
+"Вы запрашивали отправку напоминания о подписке каждому подписчику рассылки "
+"%1. "
 
 #. (-)
 #: mail_tt2/request_auth.tt2:24
@@ -6572,6 +6626,8 @@ msgid ""
 "You requested a subscription reminder to be sent to each subscriber of list "
 "'*'"
 msgstr ""
+"Вы запрашивали отправку напоминания о подписке каждому подписчику рассылки "
+"'*'"
 
 #. (conf.sympa,command)-)
 #: mail_tt2/request_auth.tt2:35
@@ -6585,6 +6641,14 @@ msgid ""
 "OR\n"
 "- hit the following mailto"
 msgstr ""
+"Если Вы хотите, чтобы это произошло, пожалуйста,\n"
+"\n"
+"- ответьте на это письмо, \n"
+"ИЛИ\n"
+"- отправьте сообщение на %1 с темой\n"
+"%2\n"
+"ИЛИ\n"
+"- щёлкните по следующей почтовой ссылке"
 
 #. (-)
 #: mail_tt2/request_auth.tt2:37
@@ -6592,21 +6656,23 @@ msgid ""
 "If you do not want this action to be taken, you can safely ignore this "
 "message."
 msgstr ""
+"Если Вы не хотите, чтобы это произошло, Вы можете просто игнорировать это "
+"сообщение. "
 
 #. (list.name,list.host)
 #: mail_tt2/review.tt2:4
 msgid "Here are the subscribers of %1@%2 mailing list:"
-msgstr ""
+msgstr "Вот список подписчиков рассылки %1@%2:"
 
 #. (total)
 #: mail_tt2/review.tt2:10
 msgid "Total subscribers : %1"
-msgstr ""
+msgstr "Всего подписчиков : %1"
 
 #. (list.name)
 #: mail_tt2/send_auth.tt2:3
 msgid "Tag your message for list %1"
-msgstr ""
+msgstr "Метки Вашего сообщения для рассылки %1"
 
 #. (list.name,conf.wwsympa_url,authkey)
 #: mail_tt2/send_auth.tt2:11
@@ -6614,11 +6680,16 @@ msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page :"
 msgstr ""
+"Рассылка %1 позволяет Вам установить метки на Ваши сообщения, используя "
+"набор предустановленных тем. Чтобы установить метки на прикреплённое "
+"сообщение, перейдите на следующую страницу :"
 
 #. (list.name)
 #: mail_tt2/send_auth.tt2:14
 msgid "To distribute the attached message in list %1, follow the link below :"
 msgstr ""
+"Чтобы распространить прикреплённое сообщение в рассылке %1, перейдите по "
+"ссылке ниже: "
 
 #. (conf.sympa,authkey)
 #: mail_tt2/send_auth.tt2:20
@@ -6626,16 +6697,18 @@ msgid ""
 "Or send a message to %1 with the following subject :\n"
 "CONFIRM %2\n"
 msgstr ""
+"Или отправьте сообщение на %1 со следующей темой: \n"
+"CONFIRM %2\n"
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:4
 msgid "%1 / subscribing to %2"
-msgstr "%1 подписка на %2"
+msgstr "%1 / подписка на %2"
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:6
 msgid "%1 / unsubscribing from %2"
-msgstr "%1 отказ от подписки на %2"
+msgstr "%1 / отказ от подписки на %2"
 
 #. (conf.title)
 #: mail_tt2/sendpasswd.tt2:8 mail_tt2/sendssopasswd.tt2:3
@@ -6648,27 +6721,31 @@ msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
 "came from host %3 at %4)."
 msgstr ""
+"Кто-то, вероятно — Вы, запросил подписку на рассылку %1@%2. (Запрос был с "
+"хоста %3 в %4)."
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
 "You may ignore this subscription request or hit the following url in order "
 "to confirm it "
 msgstr ""
+"Вы можете игнорировать этот запрос подписки или щёлкнуть по следующей "
+"ссылке, чтобы подтвердить его"
 
 #. (list)
 #: mail_tt2/sendpasswd.tt2:17
 msgid "You asked to be unsubscribed from %1 mailing list."
-msgstr ""
+msgstr "Вы запрашивали отписку от рассылки %1. "
 
 #: mail_tt2/sendpasswd.tt2:19
 msgid ""
 "To unsubscribe from the list, you need to provide the following password"
-msgstr ""
+msgstr "Чтобы отписаться от рассылки, Вам необходим следующий пароль"
 
 #. (newuser.password)
 #: mail_tt2/sendpasswd.tt2:21
 msgid "password: %1"
-msgstr ""
+msgstr "пароль: %1"
 
 #. (conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:25
@@ -6676,17 +6753,21 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request came from host %2 at %3)."
 msgstr ""
+"Кто-то, вероятно — Вы, запрашивал установку или изменение пароля для Вашего "
+"аккаунта %1 на сервере почтовых рассылок. (Запрос был с хоста %3 в %4)."
 
 #: mail_tt2/sendpasswd.tt2:26
 msgid ""
 "You may ignore this request or hit the following url in order to choose your "
 "password. "
 msgstr ""
+"Вы можете игнорировать этот запрос или щёлкнуть по следующей ссылке, чтобы "
+"выбрать пароль. "
 
 #. (base_url,path_cgi)
 #: mail_tt2/sendpasswd.tt2:30 mail_tt2/sendssopasswd.tt2:14
 msgid "Help on Sympa: %1%2"
-msgstr ""
+msgstr "Помощь, касающаяся Sympa: %1%2"
 
 #: mail_tt2/sendssopasswd.tt2:7
 msgid ""
@@ -6695,46 +6776,50 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+"Чтобы закончить настройку своего аккаунта, необходимо подтвердить, что Вы \n"
+" указали работающий электронный адрес.  Пожалуйста, введите следующий адрес "
+"электронной почты и пароль,\n"
+" чтобы настройщик закончил конфигурирование Вашего аккаунта. "
 
 #. (newuser.email)
 #: mail_tt2/sendssopasswd.tt2:9
 msgid "your email address    : %1"
-msgstr ""
+msgstr "ваш электронный адрес       : %1"
 
 #. (newuser.password)
 #: mail_tt2/sendssopasswd.tt2:10
 msgid "your password : %1"
-msgstr ""
+msgstr "ваш пароль : %1"
 
 #. (list.name)
 #: mail_tt2/stats_report.tt2:4
 msgid "Information regarding list %1"
-msgstr ""
+msgstr "Информация о рассылке %1"
 
 #. (stats.msg_rcv)
 #: mail_tt2/stats_report.tt2:6
 msgid "Number of received messages :      %1"
-msgstr ""
+msgstr "Количество полученных сообщений :             %1"
 
 #. (stats.msg_sent)
 #: mail_tt2/stats_report.tt2:7
 msgid "Number of forwarded messages:      %1"
-msgstr ""
+msgstr "Количество пересланных сообщений:         %1"
 
 #. (stats.byte_rcv)
 #: mail_tt2/stats_report.tt2:9
 msgid "Received mega-bytes         :      %1"
-msgstr ""
+msgstr "Получено мегабайт        :      %1"
 
 #. (stats.byte_sent)
 #: mail_tt2/stats_report.tt2:10
 msgid "Forwarded mega-bytes        :      %1"
-msgstr ""
+msgstr "Переслано мегабайт        :      %1"
 
 #. (list.name)
 #: mail_tt2/summary.tt2:2
 msgid "Summary of list %1"
-msgstr ""
+msgstr "Отчёт рассылки %1"
 
 #. (file_name)
 #: mail_tt2/urlized_part.tt2:4
@@ -6742,6 +6827,8 @@ msgid ""
 "The %1 file that was initially attached to this message has been stored on "
 "the mailing lists server:"
 msgstr ""
+"Файл %1, изначально прикреплённый к сообщению, был сохранён на сервере "
+"почтовых рассылок: "
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:4
@@ -6756,15 +6843,18 @@ msgid ""
 "If this problem persists, you will be automatically unsubscribed from the "
 "list."
 msgstr ""
+"Сообщения из рассылки %1, которые отсылались на Ваш адрес %2,/n c %3 "
+"возвращали отчёты о недоставке. Если эта проблема сохранится, Вы будете "
+"автоматически отписаны от рассылки. "
 
 #: mail_tt2/user_notification.tt2:10
 msgid "You can contact list owner:"
-msgstr ""
+msgstr "Вы можете связаться с владельцем рассылки: "
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:14
 msgid "Topics udpating in list %1"
-msgstr ""
+msgstr "Обновление тем в рассылке %1"
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:17
@@ -6773,6 +6863,8 @@ msgid ""
 "deleted.\n"
 "Deleted topic(s) is(are) :"
 msgstr ""
+"Некоторые из тем, на которые Вы подписаны в рассылке '%1', были удалены.\n"
+"Удалённые темы: "
 
 #. (url)
 #: mail_tt2/user_notification.tt2:23
@@ -6780,12 +6872,14 @@ msgid ""
 "To update your topics subscription, go to the following page :\n"
 "%1"
 msgstr ""
+"Чтобы обновить список тем, на которые Вы подписаны, перейдите на следующую "
+"страницу :\n"
+"%1"
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:27
-#, fuzzy
 msgid "Management of list %1"
-msgstr " новые рассылки"
+msgstr "Управление рассылкой %1"
 
 #. (delegator,list.name,list.host)
 #: mail_tt2/user_notification.tt2:30
@@ -6803,53 +6897,53 @@ msgstr ""
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/user_notification.tt2:35 mail_tt2/welcome.tt2:12
 msgid "The list homepage: %1/info/%2"
-msgstr ""
+msgstr "Домашняя страница рассылки: %1/info/%2"
 
 #. (conf.wwsympa_url)
 #: mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide: %1/help/admin"
-msgstr ""
+msgstr "Руководство владельца и модератора: %1/help/admin"
 
 #. (list.name)
 #: mail_tt2/welcome.tt2:2
 msgid "Welcome to list %1"
-msgstr ""
+msgstr "Добро пожаловать в рассылку %1"
 
 #. (list.name,list.host)
 #: mail_tt2/welcome.tt2:4
 msgid "Welcome to list %1@%2"
-msgstr ""
+msgstr "Добро пожаловать в рассылку %1@%2"
 
 #. (user.email)
 #: mail_tt2/welcome.tt2:5
 msgid "Your subscription email is %1"
-msgstr ""
+msgstr "Вы подписаны адресом %1"
 
 #. (conf.wwsympa_url)
 #: mail_tt2/welcome.tt2:13
 msgid "General informations about mailing lists: %1/help/introduction"
-msgstr ""
+msgstr "Общая информация о списках рассылки: %1/help/introduction"
 
 #: mail_tt2/which.tt2:2
 msgid "Result of your command"
-msgstr ""
+msgstr "Результат Вашей команды"
 
 #: mail_tt2/which.tt2:4
 msgid "Here are the lists you are currently subscribed to :"
-msgstr ""
+msgstr "Вот рассылки, на которые Вы сейчас подписаны :"
 
 #: mail_tt2/which.tt2:10
 msgid "Lists you are owner of:"
-msgstr ""
+msgstr "Рассылки, владельцем которых Вы являетесь: "
 
 #: mail_tt2/which.tt2:17
 msgid "Lists you are editor of:"
-msgstr ""
+msgstr "Рассылки, редактором которых Вы являетесь: "
 
 #. (list.name,list.host)
 #: mail_tt2/x509-user-cert-missing.tt2:2
 msgid "encrypted message for list %1@%2"
-msgstr ""
+msgstr "криптованное сообщение для рассылки %1@%2"
 
 #. (mail.sender,mail.subject)
 #: mail_tt2/x509-user-cert-missing.tt2:5
@@ -6865,6 +6959,8 @@ msgid ""
 "manager\n"
 "was unable to access your personal certificate (email %1)."
 msgstr ""
+"Не удалось отправить Вам сообщение, поскольку менеджер списка рассылки не "
+"смог получить доступ к Вашему персональному сертификату (адрес — %1)"
 
 #. (conf.email,conf.host)
 #: mail_tt2/x509-user-cert-missing.tt2:10
@@ -6872,18 +6968,20 @@ msgid ""
 "Please, in order to receive future encrypted messages send a signed message\n"
 "to  %1@%2 ."
 msgstr ""
+"Для того, чтобы в будущем получать криптованные сообщения, отправьте, "
+"пожалуйста, подписанное/n письмо на %1@%2 ."
 
 #: mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list :"
-msgstr ""
+msgstr "Информация об этой рассылке :"
 
 #: mail_tt2/your_infected_msg.tt2:2
 msgid "A virus in your email"
-msgstr ""
+msgstr "В Вашем письме вирус "
 
 #: mail_tt2/your_infected_msg.tt2:4
 msgid "***** V I R U S    A L E R T *****"
-msgstr ""
+msgstr "***** В И Р У С Н А Я    Т Р Е В О Г А *****"
 
 #. (virus_name,recipient,from)
 #: mail_tt2/your_infected_msg.tt2:8
@@ -6892,10 +6990,13 @@ msgid ""
 "in a message addressed to %2 and that seems\n"
 "to be yours (From: %3)."
 msgstr ""
+"Наша антивирусная программа обнаружила вирус %1\n"
+" в сообщении, адресованном %2 и кажется,\n"
+" он Ваш (От: %3)."
 
 #: mail_tt2/your_infected_msg.tt2:10
 msgid "We stopped delivery of this email."
-msgstr ""
+msgstr "Мы остановили доставку этого письма. "
 
 #: mail_tt2/your_infected_msg.tt2:14
 msgid ""
@@ -6905,6 +7006,12 @@ msgid ""
 "possible that the virus didn't come from your computer. In that case, please "
 "disregard this message."
 msgstr ""
+"Вероятно, следует проверить Вашу систему на наличие вирусов.\n"
+" \n"
+" Однако имейте в виду, что многие вирусы подставляют фальшивый электронный "
+"адрес в качестве обратного, поэтому, возможно, вирус пришёл не с Вашего "
+"компьютера. В этом случае, пожалуйста, не обращайте внимание на данное "
+"письмо. "
 
 #: src/etc/scenari/access_web_archive.closed:1 src/etc/scenari/invite.closed:1
 #: src/etc/scenari/send.closed:1
