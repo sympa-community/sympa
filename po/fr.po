@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-09-15 11:17+0200\n"
-"Last-Translator: Serge Aumont <serge.aumont@cru.fr>\n"
+"PO-Revision-Date: 2008-09-30 16:55+0200\n"
+"Last-Translator: Olivier Salaün <os@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,13 +19,13 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 "Ce serveur vous propose un accès à votre environnement de listes sur %1@%2. "
-"A partir de cette URL vous pouvez choisir vos options d'abonnement, vous "
+"A partir de cette page vous pouvez choisir vos options d'abonnement, vous "
 "désabonner, accéder aux archives ou gérer les listes dont vous êtes "
 "propriétaire, etc."
 
 #: web_tt2/home.tt2:9
 msgid "Enter a list name"
-msgstr "Entrez le nom d'une liste"
+msgstr "Entrez un nom de liste"
 
 #: web_tt2/home.tt2:11
 msgid "Search lists"
@@ -823,6 +823,8 @@ msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
 "that it is really your email."
 msgstr ""
+"Le changement de votre adresse email est une opération sensible, c'est "
+"pourquoi nous devons authentifier la demande préalablement."
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
@@ -830,20 +832,20 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
+"Dans ce but nous vous avons envoyé un message de validation à l'adresse %1 ; "
+"il contient un ticket de validation de votre demande."
 
 #: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
 msgid ""
 "To confirm your email address change, go to your email account and click on "
 "the ticket"
 msgstr ""
-"Pour confirmer votre changement d'adresse, veuillez saisir ci-dessous\n"
-"le mot de passe reçu par mail :"
+"Pour confirmer votre changement d'adresse, relevez votre boite aux lettres "
+"afin de validez le ticket que nous vous avons envoyé."
 
 #: web_tt2/change_email.tt2:3
-#, fuzzy
 msgid "You will receive an email, with a confirmation ticket."
-msgstr "Vous allez recevoir un e-mail de rappel de votre mot de passe."
+msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -976,7 +978,6 @@ msgid "Copy an existing list."
 msgstr "Copier une liste existante"
 
 #: web_tt2/create_list_request.tt2:6
-#, fuzzy
 msgid ""
 "You can create a list, using an existing list as a template ; the list "
 "configuration of the source list will be copied to create the new one. Note "
@@ -984,7 +985,7 @@ msgid ""
 "The source lists you can use are limited to lists you own."
 msgstr ""
 "Vous pouvez créer une liste, à partir d'une liste existante ; la "
-"configuration de la liste d'origine sera copié pour initialiser les nouvelle "
+"configuration de la liste d'origine sera copié pour initialiser la nouvelle "
 "liste. Il est important de noter que ni les membres de la liste, ni ses "
 "archives, ni encore les documents partagés ne sont dupliqués. Vous ne pouvez "
 "copier une liste que si vous en êtes propriétaire."
@@ -1008,7 +1009,6 @@ msgid "Create a list using a template"
 msgstr "Créer une liste à partir d'un modèle"
 
 #: web_tt2/create_list_request.tt2:25
-#, fuzzy
 msgid ""
 "You can request a new list creation with the following form.You will have to "
 "choose a list template that will preset most of the list parameters "
@@ -1503,23 +1503,20 @@ msgstr ""
 
 #: web_tt2/editfile.tt2:27
 msgid "HTML pages"
-msgstr ""
+msgstr "Pages HTML"
 
 #: web_tt2/editfile.tt2:33
-#, fuzzy
 msgid "Automatic messages"
-msgstr "Messages les plus anciens en tête"
+msgstr "Messages automatiques"
 
 # nlsref 16,68
 #: web_tt2/editfile.tt2:42
-#, fuzzy
 msgid "Added in distributed messages"
-msgstr "Qui peut diffuser des messages"
+msgstr "Ajouts aux messages diffusés"
 
 #: web_tt2/editfile.tt2:47
-#, fuzzy
 msgid "More"
-msgstr "Modérer"
+msgstr "Autres"
 
 # nlsref 16,12
 #: web_tt2/edit_list_request.tt2:3
@@ -2017,9 +2014,8 @@ msgstr ""
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:92
-#, fuzzy
 msgid "Failed to remove list aliases for list %1"
-msgstr "Problème de synchronisation des administrateurs de la liste '%1'"
+msgstr "Problème de suppression des alias pour  la liste '%1'"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:93
@@ -2158,34 +2154,35 @@ msgstr "Impossible d'ajouter des abonnés quand la liste a le status '%1'"
 
 #. (u_err.argument)
 #: web_tt2/error.tt2:122
-#, fuzzy
 msgid "This Template '%1' already exists"
-msgstr "le fichier %1 existe déjà"
+msgstr "Le modèle '%1' existe déjà"
 
 #. (u_err.file_del)
 #: web_tt2/error.tt2:123
-#, fuzzy
 msgid "Cannot delete this file '%1'"
-msgstr "Impossible d'ouvrir le fichier '%1'"
+msgstr "Impossible dsupprimer le fichier '%1'"
 
 # nlsref 6,2
 #. (u_err.filename)
 #: web_tt2/error.tt2:124
-#, fuzzy
 msgid "Invalid filename: '%1'"
-msgstr "Impossible de lire le fichier : %1."
+msgstr "Nom de fichier invalide :' %1'"
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:125
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
+"Problème de mise à jour de l'adresse de membre dans la liste '%1', le "
+"propriétaire a été notifié."
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:126
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
+"Problème de mise à jour de l'adresse d'administrateur dans la liste '%1', le "
+"propriétaire a été notifié."
 
 #. (auth.action)
 #: web_tt2/error.tt2:135
@@ -2355,9 +2352,10 @@ msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Pas d'abonnements avec l'adresse <strong>%1</strong> !"
 
 #: web_tt2/loginbanner.tt2:18
-#, fuzzy
 msgid "To login, select your organization authentication server below:"
-msgstr "Sélectionnez votre serveur d'authentification"
+msgstr ""
+"Pour vous authentifier, sélectionnez votre serveur d'authentification ci-"
+"dessous :"
 
 #: web_tt2/loginbanner.tt2:24
 msgid "Go"
@@ -2501,73 +2499,61 @@ msgstr ""
 
 # nlsref 15,7
 #: web_tt2/manage_template.tt2:3
-#, fuzzy
 msgid "Modify or delete existing rejection messages"
-msgstr "message de rejet par le modérateur"
+msgstr "Modifier ou supprimer les message de rejet"
 
 # nlsref 15,7
 #: web_tt2/manage_template.tt2:9
-#, fuzzy
 msgid "Listing rejection message"
-msgstr "message de rejet par le modérateur"
+msgstr "Les messages de rejet"
 
 # nlsref 15,3
 #: web_tt2/manage_template.tt2:10
-#, fuzzy
 msgid "Rejection message"
-msgstr "message de suppression"
+msgstr "Message de rejet"
 
 #: web_tt2/manage_template.tt2:11
-#, fuzzy
 msgid "Use as default"
-msgstr "défaut"
+msgstr "Définir comme défaut"
 
 #: web_tt2/manage_template.tt2:11
-#, fuzzy
 msgid "Message name"
-msgstr "Nom du thème"
+msgstr "Nom du message"
 
 # nlsref 16,26
 #: web_tt2/manage_template.tt2:11
-#, fuzzy
 msgid "Operation"
-msgstr "Modération"
+msgstr "Opération"
 
 #. (file)
 #: web_tt2/manage_template.tt2:38
-#, fuzzy
 msgid "Do you really want to delete message %1?"
-msgstr "Voulez-vous vraiment supprimer ce message ?"
+msgstr "Voulez-vous vraiment supprimer le message %1 ?"
 
 #: web_tt2/manage_template.tt2:46
 msgid "There are currently no Rejection Messages available"
-msgstr ""
+msgstr "Aucun message de rejet n'est défini actuellement"
 
 #: web_tt2/manage_template.tt2:59
-#, fuzzy
 msgid "Message Name :"
-msgstr "Message envoyé."
+msgstr "Nom du message :"
 
 # nlsref 15,18
 #: web_tt2/manage_template.tt2:60
-#, fuzzy
 msgid "Default Message"
-msgstr "Modèle source"
+msgstr "Modèle par défaut"
 
 #: web_tt2/manage_template.tt2:67
-#, fuzzy
 msgid "Save Message"
-msgstr "Message"
+msgstr "Sauvegarder le message"
 
 #: web_tt2/manage_template.tt2:78
-#, fuzzy
 msgid "Create new rejection messages"
-msgstr "Les nouveaux messages"
+msgstr "Créer un nouveau message de rejet"
 
 #: web_tt2/manage_template.tt2:85
-#, fuzzy
 msgid "create"
-msgstr "Créer"
+msgstr "créer"
 
 #: web_tt2/modindex.tt2:60 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
@@ -2584,35 +2570,29 @@ msgid "Reject"
 msgstr "Rejeter"
 
 #: web_tt2/modindex.tt2:24
-#, fuzzy
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
 "those messages with notification ?"
 msgstr ""
-"Lorsque vous rejetez un message marqué comme spam, vous ne devriez "
-"probablement pas en notifier l'expéditeur. L'adresse d'expédition du message "
-"est en effet probablement usurpée. Voulez-vous réellement rejeter ces "
-"message avec notification ?"
+"Vous ne devriez pas rejetez avec notification les messages marqué comme "
+"spam. L'adresse d'expédition du message est en effet probablement usurpée. "
+"Voulez-vous réellement rejeter ces message avec notification ?"
 
 # nlsref 15,7
 #: web_tt2/modindex.tt2:30
-#, fuzzy
 msgid "Server default rejection message"
-msgstr "message de rejet par le modérateur"
+msgstr "Message de rejet par défaut du serveur"
 
 #: web_tt2/modindex.tt2:38
-#, fuzzy
 msgid "Reject without notification "
-msgstr "autorisé à tous sans authentification"
+msgstr "Rejeter sans notification"
 
 #: web_tt2/modindex.tt2:40
-#, fuzzy
 msgid "Add to blacklist"
-msgstr "éditer la liste noire"
+msgstr "Ajouter à  la liste noire"
 
 #: web_tt2/modindex.tt2:51
-#, fuzzy
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
@@ -2641,9 +2621,8 @@ msgstr "Basculer la sélection des spams"
 
 # nlsref 16,7
 #: web_tt2/modindex.tt2:134
-#, fuzzy
 msgid "Moderation management"
-msgstr "Gestion des membres"
+msgstr "Gestion de la modération"
 
 #: web_tt2/modindex.tt2:141 web_tt2/modindex.tt2:191
 msgid "edit blacklist"
@@ -2651,9 +2630,8 @@ msgstr "éditer la liste noire"
 
 # nlsref 15,7
 #: web_tt2/modindex.tt2:143
-#, fuzzy
 msgid "Manage rejection messages"
-msgstr "message de rejet par le modérateur"
+msgstr "Gestion des messages de rejet"
 
 #: web_tt2/modindex.tt2:154
 msgid "Listing of shared documents to moderate"
@@ -2850,15 +2828,18 @@ msgid ""
 "you are also list owner or list moderator your email address for these roles "
 "will also be updated."
 msgstr ""
+"Vous pouvez mettre votre adresse email à jour, pour tous vos abonnements, en "
+"une seule opération. Si vous assurez également la fonction de propriétaire "
+"de liste ou de modérateur, votre adresse sera également mise à jour pour ces "
+"rôles."
 
 #: web_tt2/pref.tt2:30
 msgid "New email address :"
 msgstr "Nouvelle adresse e-mail :"
 
 #: web_tt2/pref.tt2:31
-#, fuzzy
 msgid "Change Email"
-msgstr "Adresse email cible"
+msgstr "Changement d'adresse email"
 
 #: web_tt2/pref.tt2:36
 msgid "Changing your password"
@@ -3369,9 +3350,8 @@ msgid "bounce"
 msgstr "erreur"
 
 #: web_tt2/search_user.tt2:33
-#, fuzzy
 msgid "member"
-msgstr "Voir les abonnés"
+msgstr "membre"
 
 # nlsref 16,57
 #: web_tt2/search_user.tt2:34
@@ -3445,29 +3425,28 @@ msgid "Show only connected users"
 msgstr "Ne montrer que les utilisateurs connectés"
 
 #: web_tt2/serveradmin.tt2:69
-#, fuzzy
 msgid "You can change your users email address here :"
-msgstr "Changement d'adresse e-mail"
+msgstr "Vous pouvez modifier l'adresse email d'un utilisateur ici :"
 
 #: web_tt2/serveradmin.tt2:71
 msgid ""
 "Changing a user's email address will apply the change his memberships but it "
 "will also apply to his ownerships if he is owner of some lists."
 msgstr ""
+"Le changement d'adresse email s'applique aux abonnements d'un utilisateur "
+"mais également à ses rôles de propriétaire et de modérateur de listes."
 
 #: web_tt2/serveradmin.tt2:76
-#, fuzzy
 msgid "Current user email address : "
-msgstr "Autre adresse e-mail :"
+msgstr "Adresse email courante de l'utilisateur :"
 
 #: web_tt2/serveradmin.tt2:78
-#, fuzzy
 msgid "New user email address : "
-msgstr "Nouvelle adresse e-mail :"
+msgstr "Nouvelle adresse email de l'utilisateur :"
 
 #: web_tt2/serveradmin.tt2:80
 msgid "Update user memberships"
-msgstr ""
+msgstr "Mise à jour des abonnements de l'utilisateur"
 
 #: web_tt2/serveradmin.tt2:88
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
@@ -4380,13 +4359,12 @@ msgstr "Autres évènements"
 
 # nlsref 15,7
 #: web_tt2/viewmod.tt2:17
-#, fuzzy
 msgid "Default rejection message"
-msgstr "message de rejet par le modérateur"
+msgstr "Message de rejet par défaut"
 
 #: web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"
-msgstr ""
+msgstr "Ne pas notifier"
 
 #: web_tt2/view_template.tt2:7
 msgid "Template name : "
@@ -5805,19 +5783,17 @@ msgstr "Changement d'adresse d'un propriétaire / modérateur"
 
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:168
-#, fuzzy
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
 "been performed for the following lists :"
 msgstr ""
-"L'utilisateur %1 a modifié son adresse e-mail de propriétaire / modérateur. "
-"Ce changement a été appliqué dans la liste :"
+"L'utilisateur %1 a modifié son adresse e-mail de propriétaire / modérateur "
+"pour la liste %2. Ce changement a été appliqué aux listes suivantes :"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:175
-#, fuzzy
 msgid "List %1 : Failed to change admin email address"
-msgstr "Valider le changement"
+msgstr "Liste %1 : problème de mise à jour de l'adresse email"
 
 #. (current_email,new_email,datasource)
 #: mail_tt2/listmaster_notification.tt2:179
@@ -5828,6 +5804,12 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
+"L'administrateur %1 n'est pas parvenu à modifier son adresse email (la "
+"nouvelle adresse email est %2) car il est inclus dans la liste via une "
+"source de données externe : %3\n"
+"\n"
+"Dans la mesure du possible, vous devriez mettre à jour cette source de "
+"données avec la nouvelle adresse email."
 
 #. (param0,param1)
 #: mail_tt2/listmaster_notification.tt2:185
@@ -6531,9 +6513,8 @@ msgstr "L'utilisateur \"%1\" a été supprimé de la liste %2."
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:140
-#, fuzzy
 msgid "List %1 : Failed to change member email address"
-msgstr "Valider le changement"
+msgstr "List %1 : erreur de changement d'adresse email "
 
 #. (current_email,new_email,datasource)
 #: mail_tt2/listowner_notification.tt2:144
@@ -6544,6 +6525,12 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
+"L'utilisateur %1 n'est pas parvenu à modifier son adresse email (la nouvelle "
+"adresse email est %2) car il est inclus dans la liste via une source de "
+"données externe : %3\n"
+"\n"
+"Dans la mesure du possible, vous devriez mettre à jour cette source de "
+"données avec la nouvelle adresse email."
 
 #. (list.name,type)
 #: mail_tt2/listowner_notification.tt2:147
@@ -6793,7 +6780,6 @@ msgid "One new message from list %1 from %2 arrived. "
 msgstr "Un nouveau message de %2 pour la liste %1 est arrivé."
 
 #: mail_tt2/moderate.tt2:16
-#, fuzzy
 msgid "This message as been tagged as spam"
 msgstr "Ce message a été marqué comme spam."
 
@@ -7215,15 +7201,17 @@ msgid "Owner and moderator guide: %1/help/admin"
 msgstr "Le guide de l'administrateur : %1/help/admin"
 
 #: mail_tt2/user_notification.tt2:40
-#, fuzzy
 msgid "Changing your subscriber email address"
-msgstr "est votre adresse électronique"
+msgstr "Changer votre adresse d'abonné"
 
 #: mail_tt2/user_notification.tt2:42
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
 "new email address with the SYMPA server, please click the link below :"
 msgstr ""
+"Vous avez demandé le changement de votre adresse d'abonné. Pour confirmer "
+"votre nouvelle adresse email auprès du serveur SYMPA, veuillez cliquer sur "
+"le lien ci-dessous :"
 
 #. (list.name)
 #: mail_tt2/welcome.tt2:2
@@ -8559,13 +8547,12 @@ msgid "percentage of list members in VERP mode"
 msgstr "pourcentage des abonnés en mode VERP"
 
 #: src/List.pm:359 src/List.pm:366
-#, fuzzy
 msgid "%"
-msgstr "%A"
+msgstr "%"
 
 #: src/List.pm:377 src/List.pm:398
 msgid "points"
-msgstr ""
+msgstr "points"
 
 # nlsref 16,29
 #: src/List.pm:510
@@ -8578,9 +8565,8 @@ msgid "var value"
 msgstr "valeur de la variable"
 
 #: src/List.pm:568
-#, fuzzy
 msgid "messages"
-msgstr "# Message"
+msgstr "messages"
 
 #: src/List.pm:1282 src/List.pm:576 src/List.pm:746 src/List.pm:826
 #: src/List.pm:864
@@ -8635,9 +8621,8 @@ msgid "Latest family instantiation"
 msgstr "Dernière instanciation de la famille"
 
 #: src/List.pm:1038
-#, fuzzy
 msgid "bytes"
-msgstr "Au revoir !"
+msgstr "octets"
 
 #: src/List.pm:1142
 msgid "Owners defined in an external datasource"
@@ -8658,7 +8643,7 @@ msgstr "Entêtes SMTP à supprimer dans les messages sortants"
 
 #: src/List.pm:1239 src/List.pm:1338
 msgid "Kbytes"
-msgstr ""
+msgstr "Kilo Octets"
 
 # nlsref 16,77
 #: src/List.pm:1305
@@ -9028,24 +9013,21 @@ msgstr "Valider le changement"
 
 # nlsref 15,7
 #: web_tt2/manage_template.tt2:4
-#, fuzzy
 msgid "Modify or Delete existing messages"
-msgstr "message de rejet par le modérateur"
+msgstr "Modifier ou supprimer les messages existants"
 
 #: web_tt2/manage_template.tt2:27
-#, fuzzy
 msgid "Create New Reject Messages"
-msgstr "Les nouveaux messages"
+msgstr "Creer de nouveaux messages de rejet"
 
 # nlsref 15,18
 #: web_tt2/manage_template.tt2:31
-#, fuzzy
 msgid "Default Template"
-msgstr "Modèle source"
+msgstr "Modèle par défaut"
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
-msgstr ""
+msgstr "Cliquez ici"
 
 #: web_tt2/pref.tt2:67
 msgid "Other email address :"
