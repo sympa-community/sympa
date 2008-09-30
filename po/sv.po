@@ -98,9 +98,9 @@ msgstr "Hem"
 #: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
 #: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
-#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:8
-#: web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:6
-#: web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
+#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:134
+#: web_tt2/modindex.tt2:8 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2
+#: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
 msgid "Help"
 msgstr "Hjälp"
 
@@ -150,7 +150,7 @@ msgstr ""
 msgid "admin"
 msgstr ""
 
-#: web_tt2/lists.tt2:84 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
+#: web_tt2/lists.tt2:47 web_tt2/search_user.tt2:75 web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
 msgstr "Ingen e-postlista tillgänglig."
 
@@ -342,8 +342,7 @@ msgstr "Anpassar"
 msgid "Manage Subscribers"
 msgstr "Prenumerant"
 
-#: web_tt2/list_admin_menu.tt2:36 web_tt2/modindex.tt2:35
-#: web_tt2/review.tt2:46
+#: web_tt2/list_admin_menu.tt2:36 web_tt2/review.tt2:46
 #, fuzzy
 msgid "Blacklist"
 msgstr "till lista"
@@ -358,7 +357,7 @@ msgstr "Hantera arkiv"
 msgid "Bounces"
 msgstr "Studsar"
 
-#: web_tt2/list_admin_menu.tt2:51 web_tt2/serveradmin.tt2:91
+#: web_tt2/list_admin_menu.tt2:51 web_tt2/serveradmin.tt2:108
 #, fuzzy
 msgid "Logs"
 msgstr "Inloggning"
@@ -456,7 +455,7 @@ msgstr "Datum den skapades"
 #: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:47
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:23
-#: web_tt2/modindex.tt2:65 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:69 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Ämne"
 
@@ -500,7 +499,7 @@ msgid "Privileges"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:12
-#: web_tt2/serveradmin.tt2:69
+#: web_tt2/serveradmin.tt2:86
 msgid "Archives"
 msgstr "Arkiv"
 
@@ -533,7 +532,8 @@ msgstr "Arkivhantering"
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
-#: web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
+#: web_tt2/modindex.tt2:134 web_tt2/modindex.tt2:8
+#: web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
 #: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
@@ -656,7 +656,7 @@ msgid "Sender"
 msgstr "Avsändare"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:143 web_tt2/modindex.tt2:63 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:163 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Datum"
@@ -821,24 +821,28 @@ msgstr "spara"
 msgid "Template saved"
 msgstr "Mallen har sparats"
 
-#: web_tt2/change_email.tt2:3
-msgid "You will receive an email, reminding you your password."
-msgstr ""
-
-#: web_tt2/change_email.tt2:5
+#: web_tt2/change_email_request.tt2:3
 msgid ""
-"To confirm your email address change, please enter the password\n"
-"you received below :"
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
 msgstr ""
 
-#. (email)
-#: web_tt2/change_email.tt2:10
-msgid "Password for %1"
-msgstr "Lösenord för %1"
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
 
-#: web_tt2/change_email.tt2:12
-msgid "Change my email address"
-msgstr "Ändra min e-postaddress"
+#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the ticket"
+msgstr ""
+
+#: web_tt2/change_email.tt2:3
+msgid "You will receive an email, with a confirmation ticket."
+msgstr ""
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -846,7 +850,7 @@ msgid ""
 "You will need this password to perform privileged operations."
 msgstr ""
 
-#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:41
+#: web_tt2/choosepasswd.tt2:11 web_tt2/pref.tt2:40
 msgid "New password :"
 msgstr "Nytt lösenord :"
 
@@ -855,8 +859,7 @@ msgid "New password again :"
 msgstr "Nytt lösenord igen :"
 
 #: web_tt2/choosepasswd.tt2:13 web_tt2/picture_upload.tt2:11
-#: web_tt2/pref.tt2:20 web_tt2/pref.tt2:32 web_tt2/pref.tt2:43
-#: web_tt2/pref.tt2:69
+#: web_tt2/pref.tt2:19 web_tt2/pref.tt2:42
 msgid "Submit"
 msgstr "Skicka"
 
@@ -898,7 +901,7 @@ msgstr "Ämne:"
 msgid "Send this mail"
 msgstr "Skicka detta brev"
 
-#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:45 web_tt2/viewmod.tt2:32
+#: web_tt2/compose_mail.tt2:31 web_tt2/modindex.tt2:49 web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr ""
 
@@ -1179,7 +1182,7 @@ msgid "Confirm"
 msgstr "Bekräfta"
 
 #: web_tt2/d_install_shared.tt2:13 web_tt2/d_upload.tt2:15
-#: web_tt2/manage_template.tt2:40
+#: web_tt2/manage_template.tt2:68
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1240,7 +1243,7 @@ msgid "Do you really want to delete %1 ?"
 msgstr "Vill du verkligen radera %1 ?"
 
 #: web_tt2/d_read.tt2:116 web_tt2/d_read.tt2:118 web_tt2/d_read.tt2:253
-#: web_tt2/d_read.tt2:255 web_tt2/d_read.tt2:27
+#: web_tt2/d_read.tt2:255 web_tt2/d_read.tt2:27 web_tt2/search_user.tt2:54
 msgid "delete"
 msgstr ""
 
@@ -1259,7 +1262,7 @@ msgid "Listing of root folder"
 msgstr ""
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:64
+#: web_tt2/modindex.tt2:164 web_tt2/modindex.tt2:68
 msgid "Author"
 msgstr "Författare"
 
@@ -1272,12 +1275,17 @@ msgstr "Storlek (Kb)"
 msgid "Last update"
 msgstr "Senaste uppdateringen"
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:26 web_tt2/serveradmin.tt2:115
-#: web_tt2/serveradmin.tt2:128
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:29 web_tt2/editfile.tt2:30
+#: web_tt2/editfile.tt2:35 web_tt2/editfile.tt2:36 web_tt2/editfile.tt2:37
+#: web_tt2/editfile.tt2:39 web_tt2/editfile.tt2:44 web_tt2/editfile.tt2:45
+#: web_tt2/editfile.tt2:49 web_tt2/editfile.tt2:50
+#: web_tt2/manage_template.tt2:35 web_tt2/manage_template.tt2:56
+#: web_tt2/serveradmin.tt2:132 web_tt2/serveradmin.tt2:145
 msgid "Edit"
 msgstr "Redigera"
 
-#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:6 web_tt2/picture_upload.tt2:12
+#: web_tt2/d_read.tt2:76 web_tt2/d_upload.tt2:6 web_tt2/manage_template.tt2:38
+#: web_tt2/picture_upload.tt2:12
 msgid "Delete"
 msgstr "Radera"
 
@@ -1470,9 +1478,27 @@ msgstr "listmallar"
 msgid "Save"
 msgstr ""
 
-#: web_tt2/editfile.tt2:17
+#: web_tt2/editfile.tt2:22
 msgid "You can edit several messages/files associated with your list :"
 msgstr ""
+
+#: web_tt2/editfile.tt2:27
+msgid "HTML pages"
+msgstr ""
+
+#: web_tt2/editfile.tt2:33
+#, fuzzy
+msgid "Automatic messages"
+msgstr "äldsta meddelandena"
+
+#: web_tt2/editfile.tt2:42
+msgid "Added in distributed messages"
+msgstr ""
+
+#: web_tt2/editfile.tt2:47
+#, fuzzy
+msgid "More"
+msgstr "Moderera"
 
 #: web_tt2/edit_list_request.tt2:3
 #, fuzzy
@@ -1598,7 +1624,7 @@ msgstr "Mallnamn"
 msgid "Type"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:145
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:165
 msgid "Path"
 msgstr "Sökväg"
 
@@ -1651,11 +1677,11 @@ msgstr ""
 msgid "Archives from %1 are not accessible"
 msgstr "Arkiv från %1 är inte tillgängliga"
 
-#: mail_tt2/listmaster_notification.tt2:312 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:320 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:313 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:321 web_tt2/error.tt2:12
 msgid "Unable to load create_list templates."
 msgstr ""
 
@@ -1680,7 +1706,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "Ingen ägare definerad för lista %1."
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:326 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:334 web_tt2/error.tt2:17
 #, fuzzy
 msgid "Cannot unzip file '%1'."
 msgstr "Kan inte packa upp ZIP-filen %1"
@@ -1692,7 +1718,7 @@ msgstr ""
 
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:334 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:19
 #, fuzzy
 msgid "File not found."
 msgstr "Filen %1 är inte kopierad"
@@ -1785,7 +1811,7 @@ msgstr "Saknar argument %1"
 msgid "Wrong value for parameter %1"
 msgstr ""
 
-#: web_tt2/error.tt2:139 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:141 web_tt2/error.tt2:53
 msgid "You need to login"
 msgstr ""
 
@@ -2131,13 +2157,25 @@ msgstr "Kan inte packa upp ZIP-filen %1"
 msgid "Invalid filename: '%1'"
 msgstr "Kan inte skriva över filen %1"
 
+#. (u_err.listname)
+#: web_tt2/error.tt2:125
+msgid ""
+"Failed to update member email in list '%1', list owner has been notified."
+msgstr ""
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:126
+msgid ""
+"Failed to update admin email in list '%1', list owner has been notified."
+msgstr ""
+
 #. (auth.action)
-#: web_tt2/error.tt2:133
+#: web_tt2/error.tt2:135
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
 #. (auth.listname)
-#: web_tt2/error.tt2:135
+#: web_tt2/error.tt2:137
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -2164,8 +2202,8 @@ msgid "Requested by"
 msgstr "Önskad av"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
-#: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:119
-#: web_tt2/modindex.tt2:170 web_tt2/review.tt2:278
+#: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:124
+#: web_tt2/modindex.tt2:193 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr ""
@@ -2304,24 +2342,6 @@ msgstr "<strong>%1</strong> prenumererar på följande e-postlistor"
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr ""
 
-#: web_tt2/lists.tt2:47
-msgid "See your subscriptions with the following email addresses"
-msgstr ""
-
-#: web_tt2/lists.tt2:67
-msgid "Unify your subscriptions with the email"
-msgstr ""
-
-#: web_tt2/lists.tt2:68
-msgid ""
-"That is to say you are using a unique email address in Sympa for your "
-"subscriptions and preferences"
-msgstr ""
-
-#: web_tt2/lists.tt2:74
-msgid "Validate"
-msgstr ""
-
 #: web_tt2/loginbanner.tt2:18
 #, fuzzy
 msgid "To login, select your organization authentication server below:"
@@ -2446,120 +2466,157 @@ msgid ""
 "performed during this period."
 msgstr ""
 
-#: web_tt2/manage_template.tt2:4
-msgid "Modify or Delete existing messages"
-msgstr ""
-
-#: web_tt2/manage_template.tt2:7
+#: web_tt2/manage_template.tt2:3
 #, fuzzy
-msgid "Do you really want to delete this reject message?"
+msgid "Modify or delete existing rejection messages"
 msgstr "Vill du ta bort detta meddelande ?"
 
-#: web_tt2/manage_template.tt2:7
+#: web_tt2/manage_template.tt2:9
 #, fuzzy
-msgid "Delete Template"
-msgstr "Mallar"
+msgid "Listing rejection message"
+msgstr "meddelande om virusinfektion"
 
-#: web_tt2/manage_template.tt2:8
+#: web_tt2/manage_template.tt2:10
 #, fuzzy
-msgid "Modify Template"
-msgstr "Mallar"
+msgid "Rejection message"
+msgstr "meddelande om virusinfektion"
 
-#: web_tt2/manage_template.tt2:27
-#, fuzzy
-msgid "Create New Reject Messages"
-msgstr " De senaste meddelandena "
+#: web_tt2/manage_template.tt2:11
+msgid "Use as default"
+msgstr ""
 
-#: web_tt2/manage_template.tt2:30
+#: web_tt2/manage_template.tt2:11
 #, fuzzy
-msgid "Template Name :"
-msgstr "Mallnamn"
+msgid "Message name"
+msgstr "Meddelande"
 
-#: web_tt2/manage_template.tt2:31
+#: web_tt2/manage_template.tt2:11
 #, fuzzy
-msgid "Default Template"
+msgid "Operation"
+msgstr "Moderation"
+
+#. (file)
+#: web_tt2/manage_template.tt2:38
+#, fuzzy
+msgid "Do you really want to delete message %1?"
+msgstr "Vill du ta bort detta meddelande ?"
+
+#: web_tt2/manage_template.tt2:46
+msgid "There are currently no Rejection Messages available"
+msgstr ""
+
+#: web_tt2/manage_template.tt2:59
+#, fuzzy
+msgid "Message Name :"
+msgstr "Meddelande"
+
+#: web_tt2/manage_template.tt2:60
+#, fuzzy
+msgid "Default Message"
 msgstr "listmallar"
 
-#: web_tt2/manage_template.tt2:39
+#: web_tt2/manage_template.tt2:67
 #, fuzzy
-msgid "Save Template"
-msgstr "Mallar"
+msgid "Save Message"
+msgstr "Meddelande"
 
-#: web_tt2/modindex.tt2:56 web_tt2/modindex.tt2:8
+#: web_tt2/manage_template.tt2:78
+#, fuzzy
+msgid "Create new rejection messages"
+msgstr " De senaste meddelandena "
+
+#: web_tt2/manage_template.tt2:85
+#, fuzzy
+msgid "create"
+msgstr "Skapa"
+
+#: web_tt2/modindex.tt2:60 web_tt2/modindex.tt2:8
 msgid "Listing messages to moderate"
 msgstr ""
 
-#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:110 web_tt2/modindex.tt2:13
-#: web_tt2/modindex.tt2:15 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
+#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:114 web_tt2/modindex.tt2:13
+#: web_tt2/modindex.tt2:18 web_tt2/viewmod.tt2:10 web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Distribuera"
 
-#: web_tt2/modindex.tt2:20
-#, fuzzy
-msgid "edit blacklist"
-msgstr "till lista"
-
-#: web_tt2/modindex.tt2:112 web_tt2/modindex.tt2:137 web_tt2/modindex.tt2:173
-#: web_tt2/modindex.tt2:22 web_tt2/viewmod.tt2:14
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:157 web_tt2/modindex.tt2:196
+#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:14
 msgid "Reject"
 msgstr "Avslå"
 
-#: web_tt2/modindex.tt2:22
+#: web_tt2/modindex.tt2:24
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
 "those messages with notification ?"
 msgstr ""
 
-#: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:17
+#: web_tt2/modindex.tt2:30
 #, fuzzy
-msgid "Default rejection message"
+msgid "Server default rejection message"
 msgstr "meddelande om virusinfektion"
 
-#: web_tt2/modindex.tt2:25 web_tt2/viewmod.tt2:18
-msgid "Do Not Notify"
-msgstr ""
+#: web_tt2/modindex.tt2:38
+#, fuzzy
+msgid "Reject without notification "
+msgstr "notifiering"
 
 #: web_tt2/modindex.tt2:40
-msgid "Click Here"
-msgstr ""
+#, fuzzy
+msgid "Add to blacklist"
+msgstr "till lista"
 
-#: web_tt2/modindex.tt2:47
+#: web_tt2/modindex.tt2:51
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute :"
 msgstr ""
 
-#: web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:66
+#: web_tt2/modindex.tt2:166 web_tt2/modindex.tt2:70
 msgid "Size"
 msgstr "Storlek"
 
-#: web_tt2/modindex.tt2:97
+#: web_tt2/modindex.tt2:101
 msgid "No subject"
 msgstr "Inget ämne"
 
-#: web_tt2/modindex.tt2:113 web_tt2/modindex.tt2:138 web_tt2/modindex.tt2:174
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:158 web_tt2/modindex.tt2:197
 msgid "Notified reject"
 msgstr ""
 
-#: web_tt2/modindex.tt2:115
+#: web_tt2/modindex.tt2:119
 msgid "Reject and blacklist sender"
 msgstr ""
 
-#: web_tt2/modindex.tt2:121
+#: web_tt2/modindex.tt2:127
 msgid "Toggle spams"
 msgstr ""
 
 #: web_tt2/modindex.tt2:134
 #, fuzzy
+msgid "Moderation management"
+msgstr "Hantera studsar"
+
+#: web_tt2/modindex.tt2:141 web_tt2/modindex.tt2:191
+#, fuzzy
+msgid "edit blacklist"
+msgstr "till lista"
+
+#: web_tt2/modindex.tt2:143
+#, fuzzy
+msgid "Manage rejection messages"
+msgstr "meddelande om virusinfektion"
+
+#: web_tt2/modindex.tt2:154
+#, fuzzy
 msgid "Listing of shared documents to moderate"
 msgstr "meddelande för uppsägning av prenumeration"
 
-#: web_tt2/modindex.tt2:136 web_tt2/modindex.tt2:172
+#: web_tt2/modindex.tt2:156 web_tt2/modindex.tt2:195
 msgid "Install"
 msgstr "Installera"
 
-#: web_tt2/modindex.tt2:140
+#: web_tt2/modindex.tt2:160
 msgid "Listing of documents shared to moderate"
 msgstr ""
 
@@ -2742,42 +2799,33 @@ msgstr "Språk"
 msgid "Connection expiration period"
 msgstr "Utlöpsdatum för certfikat"
 
-#: web_tt2/pref.tt2:27
+#: web_tt2/pref.tt2:25
 msgid "Changing your email address"
 msgstr "Ändrar din e-postaddress"
 
-#: web_tt2/pref.tt2:31
+#: web_tt2/pref.tt2:27
+msgid ""
+"You can update your email address for all your list memberships at once. If "
+"you are also list owner or list moderator your email address for these roles "
+"will also be updated."
+msgstr ""
+
+#: web_tt2/pref.tt2:30
 msgid "New email address :"
 msgstr "Ny e-postaddress :"
 
-#: web_tt2/pref.tt2:37
+#: web_tt2/pref.tt2:31
+#, fuzzy
+msgid "Change Email"
+msgstr "Skicka detta brev"
+
+#: web_tt2/pref.tt2:36
 msgid "Changing your password"
 msgstr "Ändrar ditt lösenord"
 
-#: web_tt2/pref.tt2:42
+#: web_tt2/pref.tt2:41
 msgid "Re-enter your new password :"
 msgstr "Repetera ditt nya lösenord :"
-
-#: web_tt2/pref.tt2:50
-#, fuzzy
-msgid "Your other email addresses"
-msgstr "annan e-postaddress"
-
-#: web_tt2/pref.tt2:67
-msgid "Other email address :"
-msgstr "Annan e-postaddress :"
-
-#: web_tt2/pref.tt2:68
-msgid "Password :"
-msgstr "Lösenord :"
-
-#: web_tt2/pref.tt2:74
-msgid ""
-"Another email address, that should be known by Sympa and will be recognized "
-"by Sympa as an alternate email address for you. All your email addressed "
-"will also be grouped by Sympa with your primary email address to unify your "
-"subscriptions"
-msgstr ""
 
 #: web_tt2/remove_arc.tt2:5
 msgid ""
@@ -3284,17 +3332,18 @@ msgstr "Studsar"
 
 #: web_tt2/search_user.tt2:33
 #, fuzzy
-msgid "editor"
-msgstr "Redigerare"
+msgid "member"
+msgstr "Granska"
 
-#: web_tt2/search_user.tt2:35
+#: web_tt2/search_user.tt2:34
 #, fuzzy
 msgid "owner"
 msgstr "Ägare"
 
-#: web_tt2/search_user.tt2:54
-msgid "del"
-msgstr ""
+#: web_tt2/search_user.tt2:35
+#, fuzzy
+msgid "editor"
+msgstr "Redigerare"
 
 #: web_tt2/serveradmin.tt2:4
 msgid "Virtual Robots"
@@ -3360,105 +3409,130 @@ msgstr ""
 msgid "Show only connected users"
 msgstr ""
 
+#: web_tt2/serveradmin.tt2:69
+#, fuzzy
+msgid "You can change your users email address here :"
+msgstr "Ändrar din e-postaddress"
+
 #: web_tt2/serveradmin.tt2:71
+msgid ""
+"Changing a user's email address will apply the change his memberships but it "
+"will also apply to his ownerships if he is owner of some lists."
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:76
+#, fuzzy
+msgid "Current user email address : "
+msgstr "Annan e-postaddress :"
+
+#: web_tt2/serveradmin.tt2:78
+#, fuzzy
+msgid "New user email address : "
+msgstr "Ny e-postaddress :"
+
+#: web_tt2/serveradmin.tt2:80
+msgid "Update user memberships"
+msgstr ""
+
+#: web_tt2/serveradmin.tt2:88
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:91
 #, fuzzy
 msgid "listname : "
 msgstr "Listnamn :"
 
-#: web_tt2/serveradmin.tt2:74
+#: web_tt2/serveradmin.tt2:91
 msgid "Rebuild archive"
 msgstr "Bygg om arkiv"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:92
 msgid "Rebuild all"
 msgstr "Bygga om alla"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:92
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "  Kan använda mycket CPU-kraft, var försiktig!"
 
-#: web_tt2/serveradmin.tt2:81
+#: web_tt2/serveradmin.tt2:98
 msgid "Change identity"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:83
+#: web_tt2/serveradmin.tt2:100
 msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:103
 msgid "change identity as : "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:93
+#: web_tt2/serveradmin.tt2:110
 msgid ""
 "You can increase the log level specified by configuration only for your "
 "current session. On a production server, this allow to keep logs rather "
 "small and to test some features with the maximum log level. "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:96
+#: web_tt2/serveradmin.tt2:113
 msgid "Log level"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:102
+#: web_tt2/serveradmin.tt2:119
 msgid "Set log level"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:106
+#: web_tt2/serveradmin.tt2:123
 msgid "Templates"
 msgstr "Mallar"
 
-#: web_tt2/serveradmin.tt2:111
+#: web_tt2/serveradmin.tt2:128
 msgid "Setting defaults list templates"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:124
+#: web_tt2/serveradmin.tt2:141
 msgid "Setting site templates"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:135
+#: web_tt2/serveradmin.tt2:152
 msgid "view translations"
 msgstr "visa översättningar"
 
-#: web_tt2/serveradmin.tt2:136
+#: web_tt2/serveradmin.tt2:153
 msgid "Customize templates"
 msgstr "Anpassar mallar"
 
-#: web_tt2/serveradmin.tt2:140
+#: web_tt2/serveradmin.tt2:157
 msgid ""
 "When customizing Sympa web templates, it is needed to known which variables "
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
 "dump feature :"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:143
+#: web_tt2/serveradmin.tt2:160
 msgid "Unset template vars dump"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:145
+#: web_tt2/serveradmin.tt2:162
 #, fuzzy
 msgid "Set template vars dump"
 msgstr "listmallar"
 
-#: web_tt2/serveradmin.tt2:151
+#: web_tt2/serveradmin.tt2:168
 msgid "Skins, CSS and colors"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:153
+#: web_tt2/serveradmin.tt2:170
 msgid "Skins administration page"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:156
+#: web_tt2/serveradmin.tt2:173
 msgid "Translating Sympa"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:158
+#: web_tt2/serveradmin.tt2:175
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service mail messages and web interface). All translations for one language "
@@ -3466,22 +3540,22 @@ msgid ""
 "gettext tools."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:162
+#: web_tt2/serveradmin.tt2:179
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language : "
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:165
+#: web_tt2/serveradmin.tt2:182
 msgid "Submitting a bug, a feature request"
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:167
+#: web_tt2/serveradmin.tt2:184
 msgid "You can submit a problem or request a new feature : "
 msgstr ""
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:173
+#: web_tt2/serveradmin.tt2:190
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr ""
 
@@ -4113,7 +4187,7 @@ msgstr "Sök användare"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15594
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15640
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -4184,6 +4258,15 @@ msgstr ""
 #, fuzzy
 msgid "Other events"
 msgstr "Andra"
+
+#: web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "meddelande om virusinfektion"
+
+#: web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr ""
 
 #: web_tt2/view_template.tt2:7
 #, fuzzy
@@ -5394,9 +5477,9 @@ msgstr "omöjlig"
 #: mail_tt2/listmaster_notification.tt2:117
 #: mail_tt2/listmaster_notification.tt2:123
 #: mail_tt2/listmaster_notification.tt2:131
-#: mail_tt2/listmaster_notification.tt2:269
-#: mail_tt2/listmaster_notification.tt2:340
-#: mail_tt2/listmaster_notification.tt2:352
+#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:348
+#: mail_tt2/listmaster_notification.tt2:360
 msgid "See logs for more details."
 msgstr ""
 
@@ -5488,12 +5571,12 @@ msgstr ""
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:158
-#: mail_tt2/listmaster_notification.tt2:175
 #: mail_tt2/listmaster_notification.tt2:183
-#: mail_tt2/listmaster_notification.tt2:190
-#: mail_tt2/listmaster_notification.tt2:218
-#: mail_tt2/listmaster_notification.tt2:225
-#: mail_tt2/listmaster_notification.tt2:232
+#: mail_tt2/listmaster_notification.tt2:191
+#: mail_tt2/listmaster_notification.tt2:198
+#: mail_tt2/listmaster_notification.tt2:226
+#: mail_tt2/listmaster_notification.tt2:233
+#: mail_tt2/listmaster_notification.tt2:240
 msgid "list %1 in status error_config"
 msgstr ""
 
@@ -5503,24 +5586,24 @@ msgid "No owner is defined for list %1."
 msgstr "Ingen ägare definerad för lista %1."
 
 #: mail_tt2/listmaster_notification.tt2:161
-#: mail_tt2/listmaster_notification.tt2:178
 #: mail_tt2/listmaster_notification.tt2:186
-#: mail_tt2/listmaster_notification.tt2:193
-#: mail_tt2/listmaster_notification.tt2:221
-#: mail_tt2/listmaster_notification.tt2:228
-#: mail_tt2/listmaster_notification.tt2:235
+#: mail_tt2/listmaster_notification.tt2:194
+#: mail_tt2/listmaster_notification.tt2:201
+#: mail_tt2/listmaster_notification.tt2:229
+#: mail_tt2/listmaster_notification.tt2:236
+#: mail_tt2/listmaster_notification.tt2:243
 msgid "The list status has been set to error_config."
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:162
-#: mail_tt2/listmaster_notification.tt2:179
 #: mail_tt2/listmaster_notification.tt2:187
-#: mail_tt2/listmaster_notification.tt2:194
-#: mail_tt2/listmaster_notification.tt2:201
-#: mail_tt2/listmaster_notification.tt2:208
-#: mail_tt2/listmaster_notification.tt2:222
-#: mail_tt2/listmaster_notification.tt2:229
-#: mail_tt2/listmaster_notification.tt2:236
+#: mail_tt2/listmaster_notification.tt2:195
+#: mail_tt2/listmaster_notification.tt2:202
+#: mail_tt2/listmaster_notification.tt2:209
+#: mail_tt2/listmaster_notification.tt2:216
+#: mail_tt2/listmaster_notification.tt2:230
+#: mail_tt2/listmaster_notification.tt2:237
+#: mail_tt2/listmaster_notification.tt2:244
 msgid "Check Sympa log files for more precise information."
 msgstr "Kontrollera Sympa's loggfiler för mer information."
 
@@ -5532,78 +5615,94 @@ msgstr ""
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:168
 msgid ""
-"User %1 has changed his owner/editor email address to %2. This changed has "
-"been performed to the following lists :"
+"Member %1 has changed his owner/editor email address to %2. This change has "
+"been performed for the following lists :"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/listmaster_notification.tt2:175
+#, fuzzy
+msgid "List %1 : Failed to change admin email address"
+msgstr "Ändra min e-postaddress"
+
+#. (current_email,new_email,datasource)
+#: mail_tt2/listmaster_notification.tt2:179
+msgid ""
+"Admin %1 could not change his admin email address (new email address is %2) "
+"because he is included via a the following data sources: %3.\n"
+"\n"
+"If you are able to do so, you should probably update these data sources with "
+"this person's new email address."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:177
+#: mail_tt2/listmaster_notification.tt2:185
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 "Det uppstod fel när en fil tillhörande listan %1 i familj %2 skulle kopieras."
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:185
+#: mail_tt2/listmaster_notification.tt2:193
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:192
+#: mail_tt2/listmaster_notification.tt2:200
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:198
-#: mail_tt2/listmaster_notification.tt2:205
+#: mail_tt2/listmaster_notification.tt2:206
+#: mail_tt2/listmaster_notification.tt2:213
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:200
-#: mail_tt2/listmaster_notification.tt2:207
+#: mail_tt2/listmaster_notification.tt2:208
+#: mail_tt2/listmaster_notification.tt2:215
 msgid "Error(s) found in the file %1."
 msgstr "Fel hittades i filen %1."
 
-#: mail_tt2/listmaster_notification.tt2:211
+#: mail_tt2/listmaster_notification.tt2:219
 #, fuzzy
 msgid "File removed"
 msgstr "Filnamn"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:213
+#: mail_tt2/listmaster_notification.tt2:221
 #, fuzzy
 msgid "The following file has been removed : %1"
 msgstr "Gammal fil %1 har tagits bort"
 
 #. (param1)
-#: mail_tt2/listmaster_notification.tt2:214
+#: mail_tt2/listmaster_notification.tt2:222
 msgid "A backup of the file has been made : %1"
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:220
+#: mail_tt2/listmaster_notification.tt2:228
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:227
+#: mail_tt2/listmaster_notification.tt2:235
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:234
+#: mail_tt2/listmaster_notification.tt2:242
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa kunde inte modifiera listan %1 (Familjen %2)"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:240
+#: mail_tt2/listmaster_notification.tt2:248
 #: mail_tt2/listowner_notification.tt2:41
 msgid "List %1 automatic bounce management"
 msgstr ""
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:244
+#: mail_tt2/listmaster_notification.tt2:252
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5611,7 +5710,7 @@ msgid ""
 msgstr ""
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:247
+#: mail_tt2/listmaster_notification.tt2:255
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5621,7 +5720,7 @@ msgstr ""
 "så har de %1 prenumeranter som visas nedan tagits bort från listan %2:"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:250
+#: mail_tt2/listmaster_notification.tt2:258
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5631,341 +5730,341 @@ msgstr ""
 "så har de %1 prenumeranter som visas nedan blivit klassade som återkommande "
 "studsar:"
 
-#: mail_tt2/listmaster_notification.tt2:257
+#: mail_tt2/listmaster_notification.tt2:265
 #: mail_tt2/listowner_notification.tt2:58
 msgid "Managing bouncing subscribers:"
 msgstr "Hantera studsande prenumeranter:"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:261
-#: mail_tt2/listmaster_notification.tt2:273
+#: mail_tt2/listmaster_notification.tt2:269
+#: mail_tt2/listmaster_notification.tt2:281
 msgid "Listmaster : internal server error "
 msgstr ""
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:263
-#: mail_tt2/listmaster_notification.tt2:275
+#: mail_tt2/listmaster_notification.tt2:271
+#: mail_tt2/listmaster_notification.tt2:283
 msgid " User %1 has encountered an internal server error"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:276
-#: mail_tt2/listmaster_notification.tt2:347
+#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:355
 msgid "Web interface"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:278
+#: mail_tt2/listmaster_notification.tt2:286
 #, fuzzy
 msgid "Unable to change directory."
 msgstr "Kan inte skapa mappen %1"
 
-#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:287
 #, fuzzy
 msgid "The authentication server name is not defined."
 msgstr "Välj din autentiseringsserver"
 
-#: mail_tt2/listmaster_notification.tt2:280
+#: mail_tt2/listmaster_notification.tt2:288
 msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:289
 #, fuzzy
 msgid "Unkown authentication service %1."
 msgstr "Välj din autentiseringsserver"
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:282
+#: mail_tt2/listmaster_notification.tt2:290
 msgid "Add user '%1' in DB failed."
 msgstr ""
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:291
 msgid "Update user '%1' in DB failed"
 msgstr ""
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:283
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:293
 msgid " (old email : %1)"
 msgstr ""
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:284
+#: mail_tt2/listmaster_notification.tt2:292
 msgid "Add subscriber '%1' in DB failed."
 msgstr ""
 
 #. (sub,old_email)
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:293
 msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:294
 msgid "Delete subscriber '%1' in DB failed."
 msgstr ""
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:287
+#: mail_tt2/listmaster_notification.tt2:295
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
 #. (email,list.name)
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:296
 msgid "Subscriber '%1' is not found in list %2."
 msgstr ""
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:297
 msgid "Unable to read file : '%1'."
 msgstr ""
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:290
+#: mail_tt2/listmaster_notification.tt2:298
 #, fuzzy
 msgid "Unable to write file : '%1'."
 msgstr "Kan inte skriva över filen %1"
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:299
 msgid "Unable to open file '%1'."
 msgstr ""
 
 #. (directory)
-#: mail_tt2/listmaster_notification.tt2:292
+#: mail_tt2/listmaster_notification.tt2:300
 #, fuzzy
 msgid "Unable to open directory '%1'."
 msgstr "Byt namn på mappen %1"
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:301
 #, fuzzy
 msgid "Unable to create directory '%1'."
 msgstr "Kan inte skapa mappen %1"
 
 #. (spool)
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:302
 msgid "Unable to open spool '%1'."
 msgstr ""
 
 #. (msg)
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:303
 msgid "Unable to get message '%1'."
 msgstr ""
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to rename file '%1' into '%2'."
 msgstr ""
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr ""
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "Unable to erase file '%1'."
 msgstr ""
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:307
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:308
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:309
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 
 #. (month,list.name)
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:310
 msgid "Unable to find month '%1' for list '%2'"
 msgstr ""
 
 #. (dir)
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:302
-#: mail_tt2/listmaster_notification.tt2:303
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:312
 msgid " : unable to read '%1'."
 msgstr ""
 
 #. (arc_file,list.name,path)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:311
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:312
 msgid "Unable to find archive for list '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:313
 msgid "Unable to send archive : no message id found."
 msgstr ""
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:306
+#: mail_tt2/listmaster_notification.tt2:314
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:315
 #, fuzzy
 msgid "Cannot save config file for list '%1'."
 msgstr "Kunde inte ändra e-post för listan %1"
 
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:316
 msgid "Failed to install aliases."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:317
 msgid "Failed to remove aliases."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:318
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:319
 #, fuzzy
 msgid "Unable to create list."
 msgstr "De senaste skapade listorna"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:322
 #, fuzzy
 msgid "Unable to get family for list '%1'."
 msgstr "Kunde inte ändra e-post för listan %1"
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:323
 msgid "Unable to reload list with new listname '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:323
 msgid "Unable to reload list"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:324
 #, fuzzy
 msgid "Failed to inlude members for list '%1'"
 msgstr "Kunde inte ändra e-post för listan %1"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:325
 #, fuzzy
 msgid "Failed to include list admins for list '%1'"
 msgstr "Ingen ägare definerad för lista %1."
 
-#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:326
 #, fuzzy
 msgid "No owner is defined for the list '%1'"
 msgstr "Ingen ägare definerad för lista %1."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:327
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr ""
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:320
+#: mail_tt2/listmaster_notification.tt2:328
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:321
+#: mail_tt2/listmaster_notification.tt2:329
 #, fuzzy
 msgid "Cannot create shared for list '%1'."
 msgstr "Kan inte skapa mappen %1"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:322
+#: mail_tt2/listmaster_notification.tt2:330
 #, fuzzy
 msgid "Cannot restore shared for list '%1'."
 msgstr "Ingen ägare definerad för lista %1."
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:323
+#: mail_tt2/listmaster_notification.tt2:331
 msgid "Cannot delete shared for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:324
+#: mail_tt2/listmaster_notification.tt2:332
 #, fuzzy
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "Artikel som ska godkännas för listan %1 from %2"
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:325
+#: mail_tt2/listmaster_notification.tt2:333
 #, fuzzy
 msgid "Cannot upload file '%1'."
 msgstr "Kan inte ladda upp filen %1"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:335
 #, fuzzy
 msgid "Errors while unzipping file '%1'."
 msgstr "Fel uppstod när uppackning av filen %1 gjordes"
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:328
+#: mail_tt2/listmaster_notification.tt2:336
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:329
+#: mail_tt2/listmaster_notification.tt2:337
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
 #. (key,list.name)
-#: mail_tt2/listmaster_notification.tt2:330
+#: mail_tt2/listmaster_notification.tt2:338
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:331
+#: mail_tt2/listmaster_notification.tt2:339
 msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:332
+#: mail_tt2/listmaster_notification.tt2:340
 msgid "Unable to add file '%1' to archives."
 msgstr ""
 
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:333
+#: mail_tt2/listmaster_notification.tt2:341
 msgid "Unable to write file zip '%1'."
 msgstr ""
 
 #. (path,list.name)
-#: mail_tt2/listmaster_notification.tt2:335
+#: mail_tt2/listmaster_notification.tt2:343
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:336
+#: mail_tt2/listmaster_notification.tt2:344
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:337
+#: mail_tt2/listmaster_notification.tt2:345
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:344
+#: mail_tt2/listmaster_notification.tt2:352
 msgid "Listmaster : system error "
 msgstr ""
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:346
+#: mail_tt2/listmaster_notification.tt2:354
 msgid " User %1 has encountered a system error"
 msgstr ""
 
@@ -6200,29 +6299,35 @@ msgstr ""
 
 #. (who)
 #: mail_tt2/listowner_notification.tt2:117
+#: mail_tt2/listowner_notification.tt2:129
 msgid "FYI: automatic removal of user %1"
 msgstr ""
 
 #. (who,list.name)
 #: mail_tt2/listowner_notification.tt2:119
+#: mail_tt2/listowner_notification.tt2:131
 #, fuzzy
 msgid "User \"%1\" has been automatically removed from list %2. "
 msgstr "Användaren %s har tagits bort från listan %s/\n"
 
 #. (list.name)
-#: mail_tt2/listowner_notification.tt2:128
-msgid "List %1 : Named filter error"
-msgstr ""
+#: mail_tt2/listowner_notification.tt2:140
+#, fuzzy
+msgid "List %1 : Failed to change member email address"
+msgstr "Ändra min e-postaddress"
 
-#. (filter,list.name)
-#: mail_tt2/listowner_notification.tt2:130
+#. (current_email,new_email,datasource)
+#: mail_tt2/listowner_notification.tt2:144
 msgid ""
-"The %1 named filter could not be evaluated. The list %2 is using it for some "
-"authorization scenario."
+"User %1 could not change his member email address (new email address is %2) "
+"because he is included via a the following data sources: %3.\n"
+"\n"
+"If you are able to do so, you should probably update these data sources with "
+"this person's new email address."
 msgstr ""
 
 #. (list.name,type)
-#: mail_tt2/listowner_notification.tt2:133
+#: mail_tt2/listowner_notification.tt2:147
 msgid "List %1 / %2"
 msgstr "Lista %1 / %2"
 
@@ -6437,7 +6542,7 @@ msgid "One new message from list %1 from %2 arrived. "
 msgstr "Samlingsbrev för listan %1"
 
 #: mail_tt2/moderate.tt2:16
-msgid "This message as been tagued as a spam"
+msgid "This message as been tagged as spam"
 msgstr ""
 
 #. (mod_spool_size)
@@ -6829,6 +6934,17 @@ msgstr ""
 #. (conf.wwsympa_url)
 #: mail_tt2/user_notification.tt2:36
 msgid "Owner and moderator guide: %1/help/admin"
+msgstr ""
+
+#: mail_tt2/user_notification.tt2:40
+#, fuzzy
+msgid "Changing your subscriber email address"
+msgstr "Ändrar din e-postaddress"
+
+#: mail_tt2/user_notification.tt2:42
+msgid ""
+"You have requested to change your subscriber email address. To confirm your "
+"new email address with the SYMPA server, please click the link below :"
 msgstr ""
 
 #. (list.name)
@@ -7507,7 +7623,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9383
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9412
 msgid "%A"
 msgstr ""
 
@@ -7518,7 +7634,7 @@ msgstr "Fel på rad %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2779 wwsympa/wwsympa.fcgi:998
+#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
@@ -8162,16 +8278,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10750 wwsympa/wwsympa.fcgi:10819
-#: wwsympa/wwsympa.fcgi:11021 wwsympa/wwsympa.fcgi:11358
-#: wwsympa/wwsympa.fcgi:15157 wwsympa/wwsympa.fcgi:15894
-#: wwsympa/wwsympa.fcgi:15895 wwsympa/wwsympa.fcgi:4781
-#: wwsympa/wwsympa.fcgi:4782 wwsympa/wwsympa.fcgi:6068
-#: wwsympa/wwsympa.fcgi:7088 wwsympa/wwsympa.fcgi:7622
-#: wwsympa/wwsympa.fcgi:7659 wwsympa/wwsympa.fcgi:7661
-#: wwsympa/wwsympa.fcgi:8111 wwsympa/wwsympa.fcgi:8112
-#: wwsympa/wwsympa.fcgi:8146 wwsympa/wwsympa.fcgi:8147
-#: wwsympa/wwsympa.fcgi:8326 wwsympa/wwsympa.fcgi:8327
+#: wwsympa/wwsympa.fcgi:10779 wwsympa/wwsympa.fcgi:10848
+#: wwsympa/wwsympa.fcgi:11050 wwsympa/wwsympa.fcgi:11387
+#: wwsympa/wwsympa.fcgi:15226 wwsympa/wwsympa.fcgi:15940
+#: wwsympa/wwsympa.fcgi:15941 wwsympa/wwsympa.fcgi:4701
+#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6083
+#: wwsympa/wwsympa.fcgi:7103 wwsympa/wwsympa.fcgi:7637
+#: wwsympa/wwsympa.fcgi:7674 wwsympa/wwsympa.fcgi:7676
+#: wwsympa/wwsympa.fcgi:8140 wwsympa/wwsympa.fcgi:8141
+#: wwsympa/wwsympa.fcgi:8175 wwsympa/wwsympa.fcgi:8176
+#: wwsympa/wwsympa.fcgi:8355 wwsympa/wwsympa.fcgi:8356
 msgid "%d %b %Y"
 msgstr ""
 
@@ -8268,7 +8384,7 @@ msgstr ""
 msgid "[Image%s]"
 msgstr "%Bild(%s)"
 
-#: src/sympa.pl:2092
+#: src/sympa.pl:2093
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -8279,21 +8395,21 @@ msgstr "%1 : okänd åtgärd"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:999
+#: wwsympa/wwsympa.fcgi:1000
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/SympaSession.pm:433 wwsympa/SympaSession.pm:434
-#: wwsympa/wwsympa.fcgi:11582 wwsympa/wwsympa.fcgi:11715
-#: wwsympa/wwsympa.fcgi:14028 wwsympa/wwsympa.fcgi:7582
+#: wwsympa/SympaSession.pm:435 wwsympa/SympaSession.pm:436
+#: wwsympa/wwsympa.fcgi:11611 wwsympa/wwsympa.fcgi:11744
+#: wwsympa/wwsympa.fcgi:14057 wwsympa/wwsympa.fcgi:7597
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15539 wwsympa/wwsympa.fcgi:15540
+#: wwsympa/wwsympa.fcgi:15585 wwsympa/wwsympa.fcgi:15586
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8446,6 +8562,100 @@ msgstr "ingen e-post (användbar för semestrar)"
 #: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
 msgstr "du kommer inte ta mot dina egna postningar"
+
+#: web_tt2/change_email.tt2:3
+msgid "You will receive an email, reminding you your password."
+msgstr ""
+
+#: web_tt2/change_email.tt2:5
+msgid ""
+"To confirm your email address change, please enter the password\n"
+"you received below :"
+msgstr ""
+
+#: web_tt2/change_email.tt2:12
+msgid "Change my email address"
+msgstr "Ändra min e-postaddress"
+
+#: web_tt2/lists.tt2:47
+msgid "See your subscriptions with the following email addresses"
+msgstr ""
+
+#: web_tt2/lists.tt2:67
+msgid "Unify your subscriptions with the email"
+msgstr ""
+
+#: web_tt2/lists.tt2:68
+msgid ""
+"That is to say you are using a unique email address in Sympa for your "
+"subscriptions and preferences"
+msgstr ""
+
+#: web_tt2/lists.tt2:74
+msgid "Validate"
+msgstr ""
+
+#: web_tt2/manage_template.tt2:4
+msgid "Modify or Delete existing messages"
+msgstr ""
+
+#: web_tt2/manage_template.tt2:7
+#, fuzzy
+msgid "Do you really want to delete this reject message?"
+msgstr "Vill du ta bort detta meddelande ?"
+
+#: web_tt2/manage_template.tt2:27
+#, fuzzy
+msgid "Create New Reject Messages"
+msgstr " De senaste meddelandena "
+
+#: web_tt2/manage_template.tt2:31
+#, fuzzy
+msgid "Default Template"
+msgstr "listmallar"
+
+#: web_tt2/modindex.tt2:40
+msgid "Click Here"
+msgstr ""
+
+#: web_tt2/pref.tt2:67
+msgid "Other email address :"
+msgstr "Annan e-postaddress :"
+
+#: web_tt2/pref.tt2:74
+msgid ""
+"Another email address, that should be known by Sympa and will be recognized "
+"by Sympa as an alternate email address for you. All your email addressed "
+"will also be grouped by Sympa with your primary email address to unify your "
+"subscriptions"
+msgstr ""
+
+#: web_tt2/search_user.tt2:54
+msgid "del"
+msgstr ""
+
+#. (previous_email,new_email)
+#: mail_tt2/listmaster_notification.tt2:168
+msgid ""
+"User %1 has changed his owner/editor email address to %2. This changed has "
+"been performed to the following lists :"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:128
+msgid "List %1 : Named filter error"
+msgstr ""
+
+#. (filter,list.name)
+#: mail_tt2/listowner_notification.tt2:130
+msgid ""
+"The %1 named filter could not be evaluated. The list %2 is using it for some "
+"authorization scenario."
+msgstr ""
+
+#: mail_tt2/moderate.tt2:16
+msgid "This message as been tagued as a spam"
+msgstr ""
 
 #: web_tt2/list_admin_menu.tt2:36
 msgid "-Blacklist"
@@ -8603,6 +8813,32 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#~ msgid "Password for %1"
+#~ msgstr "Lösenord för %1"
+
+#, fuzzy
+#~ msgid "Delete Template"
+#~ msgstr "Mallar"
+
+#, fuzzy
+#~ msgid "Modify Template"
+#~ msgstr "Mallar"
+
+#, fuzzy
+#~ msgid "Template Name :"
+#~ msgstr "Mallnamn"
+
+#, fuzzy
+#~ msgid "Save Template"
+#~ msgstr "Mallar"
+
+#, fuzzy
+#~ msgid "Your other email addresses"
+#~ msgstr "annan e-postaddress"
+
+#~ msgid "Password :"
+#~ msgstr "Lösenord :"
 
 #~ msgid "Choose your authentication server"
 #~ msgstr "Välj din autentiseringsserver"
