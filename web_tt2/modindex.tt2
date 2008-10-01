@@ -133,17 +133,6 @@
 
 <h2>[%|loc%]Moderation management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 
-<p>
-<form action="[% path_cgi %]" method="post" name="moderate_mails">
-<fieldset>
-  <input type="hidden" name="list" value="[% list %]" />
-[% IF conf.use_blacklist != 'none' %]
-   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
-[% END %]
- <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />
-</fieldset></form>
-</p>
-
 [%END%]
 <br />
 <!-- moderation of document shared -->
@@ -200,10 +189,16 @@
 
 [% END %]
 
-
-
-
-
+<p>
+<form action="[% path_cgi %]" method="post" name="moderate_mails">
+<fieldset>
+  <input type="hidden" name="list" value="[% list %]" />
+[% IF conf.use_blacklist != 'none' %]
+   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
+[% END %]
+ <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />
+</fieldset></form>
+</p>
 
 
 

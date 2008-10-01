@@ -5985,7 +5985,7 @@ sub do_skinsedit {
 	     &report::reject_report_web('intern','cannot_get_msg',{'msg'=>"$Conf{'queuemod'}/$msg"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_modindex: unable to parse msg %s', $msg);
 	     closedir SPOOL;
-	     return 'admin';
+	     next;
 	 }
 
 
@@ -6090,7 +6090,6 @@ sub do_skinsedit {
      unless (($param->{'spool'}) || ($param->{'mod_total_shared'} > 0)) {
 	 &report::notice_report_web('no_msg_document', {'list' => $in{'list'}},$param->{'action'});
 	 &wwslog('err','do_modindex: no message and no document');
-	 return 'admin';
      }
 
      return 1;
