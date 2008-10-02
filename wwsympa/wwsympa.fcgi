@@ -2820,7 +2820,7 @@ sub do_ticket {
       $next_action = 'home' if ($in{'next_action'} eq 'logout') ;
 
      if ($param->{'user'}{'email'}) {
-	 &report::reject_report_web('user','already_logued',{'email' => $param->{'user'}{'email'}},$param->{'action'},'');
+	 &report::reject_report_web('user','already_login',{'email' => $param->{'user'}{'email'}},$param->{'action'},'');
 	 &wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
@@ -2924,7 +2924,7 @@ sub do_ticket {
      #$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
 
-     if ($session->{'lang'}) {   #  user did choose a specific language before being logued. Apply it as a user pref.
+     if ($session->{'lang'}) {   #  user did choose a specific language before being logged. Apply it as a user pref.
 	 &List::update_user_db($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
 	 $param->{'lang'} = $session->{'lang'};
      }else{                      # user did not choose a specific language, apply user pref for this session. 
