@@ -1183,12 +1183,15 @@ sub _load_auth {
 
 		    $Conf{'cas_number'}{$robot}  ++ ;
 		    $Conf{'cas_id'}{$robot}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
+		    $current_paragraph->{'ldap_scope'} ||= 'sub'; ## Force the default scope because '' is interpreted as 'base'
 		}elsif($current_paragraph->{'auth_type'} eq 'generic_sso') {
 		    $Conf{'generic_sso_number'}{$robot}  ++ ;
 		    $Conf{'generic_sso_id'}{$robot}{$current_paragraph->{'service_id'}} =  $#paragraphs+1 ; 
+		    $current_paragraph->{'ldap_scope'} ||= 'sub'; ## Force the default scope because '' is interpreted as 'base'
 		}elsif($current_paragraph->{'auth_type'} eq 'ldap') {
 		    $Conf{'ldap'}{$robot}  ++ ;
 		    $Conf{'use_passwd'}{$robot} = 1;
+		    $current_paragraph->{'scope'} ||= 'sub'; ## Force the default scope because '' is interpreted as 'base'
 		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
 		    $Conf{'use_passwd'}{$robot} = 1;
 		}
