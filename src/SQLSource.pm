@@ -138,6 +138,8 @@ sub connect {
 	$connect_string = "DBI:Sybase:database=$param->{'db_name'};server=$param->{'db_host'}";
     }elsif ($param->{'db_type'} eq 'SQLite') {
 	$connect_string = "DBI:SQLite:dbname=$param->{'db_name'}";
+    }elsif ($param->{'db_type'} eq 'Informix') {
+        $connect_string = "DBI:Informix:".$param->{'db_name'}."@".$param->{'db_host'}; 
     }else {
 	$connect_string = "DBI:$param->{'db_type'}:$param->{'db_name'}:$param->{'db_host'}";
     }
