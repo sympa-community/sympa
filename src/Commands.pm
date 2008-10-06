@@ -133,7 +133,7 @@ sub parse {
 	  
 	   $cmd_line = $i;
 	   $status = & {$comms{$j}}($args, $robot, $sign_mod, $message);
-
+	   
 	   return $status ;
        }
    }
@@ -2309,6 +2309,8 @@ sub confirm {
 sub reject {
     my $what = shift;
     my $robot = shift;
+    shift;
+    my $editor_msg = shift;
 
     &do_log('debug', 'Commands::reject(%s,%s)', $what, $robot);
 
@@ -2377,6 +2379,8 @@ sub reject {
 	$context{'subject'} = &MIME::EncWords::decode_mimewords($message->head->get('subject'), Charset=>'utf8');
 	chomp($context{'subject'});
 	$context{'rejected_by'} = $sender;
+	$context{'editor_msg_body'} = $editor_msg->{'msg'}->body_as_string if ($editor_msg) ;
+	
 	&do_log('debug2', 'message %s by %s rejected sender %s',$context{'subject'},$context{'rejected_by'},$rejected_sender);
 
 	## Notify author of message
