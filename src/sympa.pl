@@ -158,7 +158,6 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'});
 
-my @parser_param = ($*, $/);
 my %loop_info;
 my %msgid_table;
 
@@ -900,9 +899,6 @@ while (!$signal) {
 	my $list;
 	my ($t_listname, $t_robot);
 	
-	# trying to fix a bug (perl bug ??) of solaris version
-	($*, $/) = @parser_param;
-
 	## test ever if it is an old bad file
 	if ($t_filename =~ /^BAD\-/i){
  	    if ((stat "$t_spool/$t_filename")[9] < (time - &Conf::get_robot_conf($robot, 'clean_delay_queue')*86400) ){
