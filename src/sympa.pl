@@ -49,7 +49,6 @@ use File::Copy;
 
 require 'tools.pl';
 require 'tt2.pl';
-require 'parser.pl';
 
 # durty global variables
 my $is_signed = {}; 
