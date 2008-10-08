@@ -41,7 +41,6 @@ use mail;
 use wwslib;
  
 require 'tt2.pl';
-require 'parser.pl';
 require 'tools.pl';
 
 my $opt_d;
@@ -455,7 +454,11 @@ sub create {
 
     ## creation
     open (TASK, ">$task_file");
-    &parser::parse_tpl($Rdata, $model_file, \*TASK);
+    my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
+    unless (defined $tt2 && $tt2->process($model_file, $Rdata, \*TASK)) {
+      &do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
+    }
+    #&parser::parse_tpl($Rdata, $model_file, \*TASK);
     close (TASK);
     
     # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command
