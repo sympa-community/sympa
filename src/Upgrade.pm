@@ -1530,16 +1530,17 @@ sub md5_encode_password {
 
 	my $clear_password ;
 	if ($user->{'password_user'} =~ /^[1-9a-f]{32}/){
-	    do_log('info','password from %s allready encoded as md5 fingerprint',$user->{'password_user'});
+	    do_log('info','password from %s already encoded as md5 fingerprint',$user->{'email_user'});
 	    $total_md5++ ;
 	    next;
 	}	
-	if ($user->{'password_user'} =~ /^init(.*)$/) {
-	    $clear_password = $1;   
-	}
-	elsif ($user->{'password_user'} =~ /^crypt.(.*)$/) {
+	
+	## Ignore empty passwords
+	next if ($user->{'password_user'} =~ /^$/);
+
+	if ($user->{'password_user'} =~ /^crypt.(.*)$/) {
 	    $clear_password = &tools::decrypt_password($user->{'password_user'});
-	}else{
+	}else{ ## Old style cleartext passwords
 	    $clear_password = $user->{'password_user'};
 	}
 
