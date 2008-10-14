@@ -20,14 +20,14 @@
   <option  value="reject_[%  file  %]"> [%  file  %]</option> 
 
  [%- END- %]
+</fieldset>
 </select>
-
-<input type="hidden" name="action" value="viewmod"/>
 
 </form>
 
- <form action="[% path_cgi %]" method="post" name="moderate_mail_2">
  [%- IF request_topic -%]
+ <form action="[% path_cgi %]" method="post" name="moderate_mail_2">
+ <fieldset>
   <br /><br />
  [%|loc%]This list is configured to require topic(s).[%END%]
   <br />
@@ -38,9 +38,9 @@
   <br />
  [%- END- %]
  <br />
- [%- END -%]
 </fieldset>
 </form>
+[%- END -%]
 [% PROCESS 'msg00000.html' %]
 
 
