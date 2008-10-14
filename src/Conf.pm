@@ -58,7 +58,7 @@ my @valid_options = qw(
                        misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile pidfile_distribute pidfile_creation
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
-		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir lock_method
+		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir logs_expiration_period lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
 		       purge_user_table_task purge_logs_table_task 
 		       purge_session_table_task session_table_ttl anonymous_session_table_ttl 
@@ -727,6 +727,12 @@ sub load_robots {
 	}else {
 	    ($host, $path) = ($robot_conf->{$robot}{'http_host'}, '/');
 	}
+
+	## Warn listmaster if another virtual host is defined with the same host+path
+	if (defined $Conf{'robot_by_http_host'}{$host}{$path}) {
+	  printf STDERR "Error: two virtual hosts (%s and %s) are mapped via a single URL '%s%s'", $Conf{'robot_by_http_host'}{$host}{$path}, $robot, $host, $path;
+	}
+
 	$Conf{'robot_by_http_host'}{$host}{$path} = $robot ;
 	
 	## Create a hash to deduce robot from SOAP url
