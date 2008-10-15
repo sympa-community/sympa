@@ -3190,7 +3190,7 @@ sub do_sso_login {
 	}
 	
 	unless ($email) {
-	    &report::reject_report_web('intern_quiet','no_identified_user',{},$param->{'action'},'');
+	    &report::reject_report_web('intern','no_identified_user',{},$param->{'action'},'');
 	    &wwslog('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'});
 	    &web_db_log({'parameters' => $in{'auth_service_name'},
 			 'target_email' => $in{'email'},
