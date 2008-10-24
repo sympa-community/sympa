@@ -792,7 +792,29 @@ my %in_regexp = (
 		 'date_from' => '[\d\/]+',
 		 'date_to' => '[\d\/]+',
 		 'ip' => &tools::get_regexp('host'),
-    
+         
+                ## colors
+                'operation_test' => '.*',
+                'operation_reset' => '.*',
+                'operation_install' => '.*',
+                'custom_color_value' => '\#.*',
+                'custom_color_0' => '.*',
+                'custom_color_1' => '.*',
+                'custom_color_2' => '.*',
+                'custom_color_3' => '.*',
+                'custom_color_4' => '.*',
+                'custom_color_5' => '.*',
+                'custom_color_6' => '.*',
+                'custom_color_7' => '.*',
+                'custom_color_8' => '.*',
+                'custom_color_9' => '.*',
+                'custom_color_10' => '.*',
+                'custom_color_11' => '.*',
+                'custom_color_12' => '.*',
+                'custom_color_13' => '.*',
+                'custom_color_14' => '.*',
+                'custom_color_15' => '.*',
+
                  ## Custom attribute
                  'custom_attribute' => '.*',
 		 
@@ -1076,7 +1098,13 @@ my $birthday = time ;
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
      $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
-    
+     
+     if ($session->{'custom_color'} == 1) {     
+	 foreach my $i (0 .. 15){
+	     $param->{'color_'.$i} = $session->{'color_'.$i} if ($session->{'color_'.$i});
+	 }
+    }
+
      ## RSS does not require user authentication
      unless ($rss) {
 	 
@@ -5577,6 +5605,9 @@ sub do_edit_template  {
 
 
    ## Server show colors, and install static css in future edit colors etc
+
+
+   ## Server show colors, and install static css in futur edit colors etc
 sub do_skinsedit {
     &wwslog('info', 'do_skinsedit');
     my $f;
@@ -5585,25 +5616,52 @@ sub do_skinsedit {
     my $css_url  = &Conf::get_robot_conf($robot, 'css_url');
 	
     $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($css_url =~ /\.css$/);
-    
-    if ($in{'installcss'}) {
+  
+    if(($in{'editcolors'})&&($in{'operation_reset'})){
+	undef $session->{'custom_css'};	
+	undef $param ->{'session'}{'custom_css'};	 
+	undef $param->{'custom_css'};	
+
+	foreach my $colornumber (0..15){
+	    undef $session->{'color_'.$colornumber} ;
+	    undef $param ->{'session'}{'color_'.$colornumber};
+	}
+    }
+
+    if(($in{'editcolors'})&&($in{'operation_test'})){
+	return unless ($in{'custom_color_number'} =~ /color_/);
+	$param->{'custom_color_number'} = $in{'custom_color_number'};
+	$param->{'custom_color_value'} = $in{'custom_color_value'};
+	$param->{'custom_css'} = $css_url.'/'.$param->{'user'}{'email'}.'.style.css';
+	$session->{'custom_css'} = $param->{'custom_css'} ;
+
+	$session->{$in{'custom_color_number'}} =  $in{'custom_color_value'};
+	
+	$param->{$in{'custom_color_number'}} =  $in{'custom_color_value'};
+	foreach my $colornumber (0..15){
+	    if ($session->{'color_'.$colornumber} ) {
+		$param->{'color_'.$colornumber} = $session->{'color_'.$colornumber} ;
+		$param->{'session'}{'color_'.$colornumber} = $session->{'color_'.$colornumber} ;
+	    }
+	}
+
+    }
+    if (($in{'operation_install'})||($in{'installcss'})) {
 
 	my $lang = &Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,'');
 
 	my $date= time;
+	my $style_file;
 	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 	    $param->{'css'} = $css;
-	    
-	    ## Keep a copy of the previous CSS
-	    if (-f "$dir/$css") {
-		unless (rename "$dir/$css", "$dir/$css.$date") {
-		    &report::reject_report_web('intern','cannot_rename_file',{'path' => "$dir/$css.$date"},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-		    &wwslog('err','skinsedit : can\'t open file %s/%s.%s',$dir,$css,$date);
-		    return undef;
-		}
+	    my $css_file;
+	    # if user use editcolor form we must generate a static CSS that used custom colors.
+	    if($in{'operation_test'}){
+		$css_file = "$dir/$param->{'user'}{'email'}.$css";
+	    }else{   
+		$css_file = "$dir/$css";
 	    }
-	    
 	    unless (-d $dir) {
 		unless (mkdir $dir, 0775) {
 		    &report::reject_report_web('intern',"mkdir_failed",{'path' => $dir}, $param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -5614,27 +5672,41 @@ sub do_skinsedit {
  		&wwslog('notice','skinsedit : created missing directory %s',$dir);
  	    }
 	    
-	    unless (open (CSS,">$dir/$css")) {
-		&report::reject_report_web('intern','cannot_open_file',{'path' => "$dir/$css"},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-		&wwslog('err','skinsedit : can\'t open file (write) %s/%s',$dir,$css);
+	    ## Keep a copy of the previous CSS (only if this is not a custom css).
+	    if ((-f "$css_file")&&!($in{'editcolors'})) {
+		unless (rename "$css_file", "$css_file.$date") {
+		    &report::reject_report_web('intern','cannot_rename_file',{'path' => "$css_file.$date"},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+		    &wwslog('err','skinsedit : can\'t open file %s.%s',$css_file,$date);
+		    return undef;
+		}
+	    }
+
+	    if ($in{'operation_install'}) {
+		foreach my $colornumber (0..15){
+		    $param->{'color_'.$colornumber} = $session->{'color_'.$colornumber} if ($session->{'color_'.$colornumber});
+		}
+	    }
+	    	    
+	    unless (open (CSS,">$css_file")) {
+		&report::reject_report_web('intern','cannot_open_file',{'path' => "$css_file"},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+		&wwslog('err','skinsedit : can\'t open file (write) %s',$css_file);
 		return undef;
 	    }
 	    unless (&tt2::parse_tt2($param,'css.tt2' ,\*CSS, $tt2_include_path)) {
 		my $error = &tt2::get_error();
 		$param->{'tt2_error'} = $error;
 		&List::send_notify_to_listmaster('web_tt2_error', $robot,[$error]);
-		&wwslog('info', "do_skinsedit : error while installing $dir/$css");
+		&wwslog('info', "do_skinsedit : error while installing $css_file");
 	    }
 	    close (CSS) ;
 	    
 	    ## Make the CSS readable to anyone
-	    chmod 0775, "$dir/$css";
-	}  
+	    chmod 0775, "$css_file";
+	}
 	$param->{'css_result'} = 1 ;
     }
     return 1;
 }
-
 
  ## Multiple add
  sub do_add_request {
@@ -6335,7 +6407,6 @@ sub do_skinsedit {
 			  'error_type' => 'internal'});
 	     next;
 	 }
-
 
          #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
 	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
