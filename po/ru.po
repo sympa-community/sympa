@@ -100,7 +100,7 @@ msgstr "Домашняя страница"
 #: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
 #: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
-#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:134
+#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:191
 #: web_tt2/modindex.tt2:8 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
 msgid "Help"
@@ -164,8 +164,7 @@ msgstr "Опции подписчика"
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Вы действительно хотите отписаться от списка рассылки %1?"
 
-#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:41
-#: web_tt2/sigrequest.tt2:56 web_tt2/sigrequest.tt2:73
+#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25
 msgid "Unsubscribe"
 msgstr "Отписаться"
 
@@ -528,7 +527,7 @@ msgstr "Управление архивами"
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
-#: web_tt2/modindex.tt2:134 web_tt2/modindex.tt2:8
+#: web_tt2/modindex.tt2:191 web_tt2/modindex.tt2:8
 #: web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
 #: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
@@ -653,7 +652,7 @@ msgid "Sender"
 msgstr "Отправитель"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:163 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:151 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Дата"
@@ -1271,7 +1270,7 @@ msgid "Listing of root folder"
 msgstr "Содержимое корневой папки"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:164 web_tt2/modindex.tt2:68
+#: web_tt2/modindex.tt2:152 web_tt2/modindex.tt2:68
 msgid "Author"
 msgstr "Автор"
 
@@ -1619,7 +1618,7 @@ msgstr "Название шаблона"
 msgid "Type"
 msgstr "Тип"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:165
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:153
 msgid "Path"
 msgstr "Путь"
 
@@ -1712,28 +1711,32 @@ msgstr "Не могу разархивировать файл '%1'"
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Нет доступа к сообщению, аутентифицированному ключом %1"
 
+#: web_tt2/error.tt2:19
+msgid "Failed to get your email address from the authentication service."
+msgstr ""
+
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:20
 msgid "File not found."
 msgstr "Файл не найден. "
 
-#: web_tt2/error.tt2:20
+#: web_tt2/error.tt2:21
 msgid "Database error."
 msgstr "Ошибка базы данных. "
 
 #. (i_err.key)
-#: web_tt2/error.tt2:21
+#: web_tt2/error.tt2:22
 msgid "Failed to update database."
 msgstr "Ошибка при обновлении базы данных."
 
 #. (i_err.key)
-#: web_tt2/error.tt2:22
+#: web_tt2/error.tt2:23
 msgid "Failed to update a file."
 msgstr "Ошибка при обновлении файла."
 
 #. (i_err.listname)
-#: web_tt2/error.tt2:23
+#: web_tt2/error.tt2:24
 msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
@@ -1742,49 +1745,49 @@ msgstr ""
 "её имя содержит запрещённые символы."
 
 #. (s_err.action)
-#: web_tt2/error.tt2:32
+#: web_tt2/error.tt2:33
 msgid "SYSTEM ERROR (%1)"
 msgstr "СИСТЕМНАЯ ОШИБКА (%1)"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:41
+#: web_tt2/error.tt2:42
 msgid "ERROR (%1) "
 msgstr "ОШИБКА (%1)"
 
-#: web_tt2/error.tt2:42
+#: web_tt2/error.tt2:43
 msgid "Wrong parameters"
 msgstr "Неверные параметры"
 
-#: web_tt2/error.tt2:43
+#: web_tt2/error.tt2:44
 msgid "Unknown action"
 msgstr "Неизвестное действие"
 
 #. (u_err.params)
-#: web_tt2/error.tt2:44
+#: web_tt2/error.tt2:45
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Синтаксические ошибки в следующих параметрах : %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:45
+#: web_tt2/error.tt2:46
 msgid "%1 : unknown list"
 msgstr "%1 : неизвестный список"
 
 #. (u_err.new_robot)
-#: web_tt2/error.tt2:46
+#: web_tt2/error.tt2:47
 msgid "%1 : unknown robot"
 msgstr "%1 : неизвестный робот"
 
 #. (u_err.family)
-#: web_tt2/error.tt2:47
+#: web_tt2/error.tt2:48
 msgid "%1 : unknown family"
 msgstr "%1 : неизвестное семейство"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:48
+#: web_tt2/error.tt2:49
 msgid "You are already logged in as %1"
 msgstr "Вы уже вошли как %1"
 
-#: web_tt2/error.tt2:49
+#: web_tt2/error.tt2:50
 msgid ""
 "You can not get a password reminder ; probably because your password is "
 "managed outside Sympa (Single Sign-On system or LDAP directory)."
@@ -1792,39 +1795,39 @@ msgstr ""
 "Вы не можете получить напоминание пароля , возможно это связано с тем, что "
 "пароли хранятся вне Sympa (в системе единого входа или директории LDAP)."
 
-#: web_tt2/error.tt2:50
+#: web_tt2/error.tt2:51
 msgid "Please provide email address"
 msgstr "Пожалуйста, укажите электронный адрес"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:51
+#: web_tt2/error.tt2:52
 msgid "Missing argument %1"
 msgstr "Отсутствует аргумент %1"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:52
+#: web_tt2/error.tt2:53
 msgid "Wrong value for parameter %1"
 msgstr "Неверное значение для параметра %1"
 
-#: web_tt2/error.tt2:141 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:142 web_tt2/error.tt2:54
 msgid "You need to login"
 msgstr "Вам необходимо войти"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 msgid "Address \"%1\" is incorrect"
 msgstr "Адрес \"%1\" некорректный"
 
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid "Provided password is incorrect"
 msgstr "Указанный пароль неверен"
 
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "Вы не выбрали пароль, запросите напоминание начального пароля "
 
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -1833,329 +1836,329 @@ msgstr ""
 "напоминание"
 
 #. (u_err.nb_days)
-#: web_tt2/error.tt2:58
+#: web_tt2/error.tt2:59
 msgid "The period is too long (%1 days)"
 msgstr "Период слишком долгий (%1 дней)"
 
-#: web_tt2/error.tt2:59
+#: web_tt2/error.tt2:60
 msgid "List has no subscribers"
 msgstr "Рассылка не имеет подписчиков"
 
 #. (u_err.page)
-#: web_tt2/error.tt2:60
+#: web_tt2/error.tt2:61
 msgid "No page %1"
 msgstr "Нет страницы %1"
 
-#: web_tt2/error.tt2:61
+#: web_tt2/error.tt2:62
 msgid "Missing filter"
 msgstr "Отсутствует фильтр"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:63
+#: web_tt2/error.tt2:64
 msgid "Not subscribed: %1"
 msgstr "Не подписан: %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 msgid "You are not subscribed to list %1"
 msgstr "Вы не подписаны на рассылку %1"
 
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 msgid "Check the additional information"
 msgstr "Проверьте дополнительную информацию"
 
 #. (u_err.reception_mode)
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 msgid "%1 is not an available reception mode"
 msgstr ""
 
 #. (u_err.file)
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 msgid "%1 : file not editable"
 msgstr "%1 : нередактируемый файл"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 msgid "You are already subscribed to the list %1"
 msgstr "Вы уже подписаны на рассылку %1"
 
 #. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 уже подписан на рассылку %2"
 
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 msgid "Please provide your password"
 msgstr "Пожалуйста, укажите свой пароль"
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 msgid "The passwords you typed do not match"
 msgstr "Пароли, которые Вы напечатали, не совпадают"
 
 #. (u_err.tpl)
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Указанный путь некорректен для шаблона '%1'"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "Cannot open file '%1'"
 msgstr "Невозможно открыть файл '%1'"
 
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 msgid "You need to provide list name"
 msgstr "Необходимо указать имя рассылки"
 
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderator"
 msgstr ""
 "Невозможно модерировать сообщение ; возможно, оно уже модерировано другим "
 "модератором"
 
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 msgid "Tagging message is required for this list"
 msgstr "В этой рассылке необходимо указывать тэги сообщений"
 
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 msgid "Archives are empty for this list"
 msgstr "Архивы этой рассылки пусты"
 
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 msgid "You did not select an action to perform"
 msgstr "Вы не выбрали действие, которое надо произвести"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 msgid "No bounce for user  %1"
 msgstr "Для пользователя %1 возвратов нет"
 
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 msgid "List has no bouncing subscribers"
 msgstr "В рассылке нет подписчиков, которым сообщения не доставляются. "
 
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "значение параметра"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Конфигурационный файл был изменён %1. Невозможно применить Ваши изменения. "
 
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 msgid "Topic \"other\" is a reserved word"
 msgstr "Тема \"other\" зарезервирована"
 
 #. (u_err.param)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 msgid "Parameter '%1' must have values"
 msgstr "Параметр '%1' должен иметь значения"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr "Параметр '%1' должен имеет неверное значение : '%2'"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "The list '%1' is already closed"
 msgstr "Рассылка '%1' уже закрыта"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "The list '%1' is not closed"
 msgstr "Рассылка '%1' ещё не открыта"
 
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 msgid "'%1' : bad listname"
 msgstr "'%1' : неверное название рассылки"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 msgid "'%1' list already exists"
 msgstr "'%1' : рассылка с таким именем уже существует"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr "Неверное имя рассылки '%1' : совпадает с одним из служебных алиасов"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "Не удалось включить администраторов рассылки в рассылку '%1'"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "%1 : No such file or directory"
 msgstr "%1 : Нет такого файла или директории"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "Unable to read %1 : empty document"
 msgstr "Невозможно прочитать %1 : пустой документ"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "There is no shared documents"
 msgstr "Нет общих документов"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared document space is empty"
 msgstr "Пространство общих документов пусто"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "The shared directory cannot have any description"
 msgstr "Общая директория не может иметь описания"
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "No description specified"
 msgstr "Описание на задано"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Невозможно описать, документ '%1' не существует"
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Данные на диске изменились. Невозможно применить Ваши изменения"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "%1 : incorrect name"
 msgstr "%1 : неверное имя"
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Failed : your content is empty"
 msgstr ""
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "Cannot overwrite file %1"
 msgstr "Невозможно перезаписать файл %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "A directory named '%1' already exists"
 msgstr "Директория с именем '%1' уже существует"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "This is an already existing document : '%1'"
 msgstr "Это уже существующий документ : '%1'"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "No name specified"
 msgstr "Имя не указано"
 
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "The document repository exceed disk quota."
 msgstr "Размер хранилища документов превышает дисковую квота. "
 
 #. (u_err.path)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "Cannot upload file %1"
 msgstr "Невозможно загрузить файл %1"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "У Вас нет полномочий загружать INDEX.HTML в %1"
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "The upload failed, try it again"
 msgstr "Загрузка не удалась, повторите снова"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Директория %1 и её содержимое не могут быть скопированы : %2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "File %1 was not copied : %2 "
 msgstr "Файл %1 не был скопирован : %2"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "Failed : %1 not empty"
 msgstr "Ошибка : %1 не пуст"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "No certificate for this list"
 msgstr "Нет сертификата для этой рассылки"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "This list has no message topic"
 msgstr "Эта расслка не имеет темы сообщений"
 
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "Tag message with topic is required for this list"
 msgstr "В этой рассылке необходимо задавать тэги для тем сообщений"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "No entry for user '%1'"
 msgstr "Нет записи для пользователя '%1'"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "Please select archive months"
 msgstr "Пожалуйста, выберите месяцы архива"
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "No SOAP service"
 msgstr "Нет сервиса SOAP"
 
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Authentication failed"
 msgstr "Ошибка авторизации"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "файл %1 уже существует"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "Невозможно открыть файл '%1'"
 
 #. (u_err.filename)
-#: web_tt2/error.tt2:124
-msgid "Invalid filename: '%1'"
-msgstr ""
-
-#. (u_err.listname)
 #: web_tt2/error.tt2:125
-msgid ""
-"Failed to update member email in list '%1', list owner has been notified."
+msgid "Invalid filename: '%1'"
 msgstr ""
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:126
 msgid ""
+"Failed to update member email in list '%1', list owner has been notified."
+msgstr ""
+
+#. (u_err.listname)
+#: web_tt2/error.tt2:127
+msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (auth.action)
-#: web_tt2/error.tt2:135
+#: web_tt2/error.tt2:136
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "ОТКАЗ АВТОРИЗАЦИИ (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:137
+#: web_tt2/error.tt2:138
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2182,7 +2185,7 @@ msgstr "Запрошено"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
 #: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:124
-#: web_tt2/modindex.tt2:193 web_tt2/review.tt2:278
+#: web_tt2/modindex.tt2:181 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "Инвертировать выбор"
@@ -2310,38 +2313,37 @@ msgstr "<strong>%1</strong> подписан на следующие рассы�
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Нет подписок с адресом <strong>%1</strong>! "
 
-#: web_tt2/loginbanner.tt2:18
+#: web_tt2/loginbanner.tt2:19
 msgid "To login, select your organization authentication server below:"
 msgstr "Чтобы войти, выберите Ваш сервер аутентификации ниже:"
 
-#: web_tt2/loginbanner.tt2:24
+#: web_tt2/loginbanner.tt2:25
 msgid "Go"
 msgstr "Перейти"
 
-#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:40
 #: web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "электронный адрес"
 
-#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
-#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/loginbanner.tt2:42 web_tt2/sso_login.tt2:47
 #: web_tt2/subrequest.tt2:59
 msgid "password"
 msgstr "пароль"
 
-#: web_tt2/loginbanner.tt2:43
+#: web_tt2/loginbanner.tt2:44
 msgid "Login"
 msgstr "Войти"
 
-#: web_tt2/loginbanner.tt2:51
+#: web_tt2/loginbanner.tt2:52
 msgid "Authentication help"
 msgstr "Помощь в аутентификации"
 
-#: web_tt2/loginbanner.tt2:53
+#: web_tt2/loginbanner.tt2:54
 msgid "First login ?"
 msgstr "Подключаетесь впервые? "
 
-#: web_tt2/loginbanner.tt2:54
+#: web_tt2/loginbanner.tt2:55
 msgid "Lost password ?"
 msgstr "Забыли пароль? "
 
@@ -2456,15 +2458,9 @@ msgstr ""
 msgid "Modify or delete existing rejection messages"
 msgstr "Изменить или удалить существующие сообщения"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/manage_template.tt2:10 web_tt2/manage_template.tt2:9
 #, fuzzy
-msgid "Listing rejection message"
-msgstr ""
-"Сообщение, по умолчанию используемое при запрете распространения сообщения"
-
-#: web_tt2/manage_template.tt2:10
-#, fuzzy
-msgid "Rejection message"
+msgid "Listing rejection messages"
 msgstr ""
 "Сообщение, по умолчанию используемое при запрете распространения сообщения"
 
@@ -2514,6 +2510,11 @@ msgstr "Новые сообщения"
 
 #: web_tt2/manage_template.tt2:85
 #, fuzzy
+msgid "New message name:"
+msgstr "Сообщение отправлено"
+
+#: web_tt2/manage_template.tt2:85
+#, fuzzy
 msgid "create"
 msgstr "Создать"
 
@@ -2526,7 +2527,7 @@ msgstr "Просмотр сообщений для модерирования"
 msgid "Distribute"
 msgstr "Разослать"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:157 web_tt2/modindex.tt2:196
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:145 web_tt2/modindex.tt2:184
 #: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:14
 msgid "Reject"
 msgstr "Отказать"
@@ -2564,7 +2565,7 @@ msgstr ""
 "Пожалуйста, выберите одну или несколько тем, соответствующих сообщению, "
 "которое Вы хотите разослать : "
 
-#: web_tt2/modindex.tt2:166 web_tt2/modindex.tt2:70
+#: web_tt2/modindex.tt2:154 web_tt2/modindex.tt2:70
 msgid "Size"
 msgstr "Размер"
 
@@ -2572,7 +2573,7 @@ msgstr "Размер"
 msgid "No subject"
 msgstr "Нет темы"
 
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:158 web_tt2/modindex.tt2:197
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:185
 msgid "Notified reject"
 msgstr "Отказать с уведомлением"
 
@@ -2584,32 +2585,32 @@ msgstr "Отказать и внести отправителя в чёрный 
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:134
+#: web_tt2/modindex.tt2:142
+msgid "Listing of shared documents to moderate"
+msgstr "Список общих документов для модерации"
+
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:183
+msgid "Install"
+msgstr "Установить"
+
+#: web_tt2/modindex.tt2:148
+msgid "Listing of documents shared to moderate"
+msgstr "Список общих документов для модерации"
+
+#: web_tt2/modindex.tt2:179 web_tt2/modindex.tt2:198
+msgid "edit blacklist"
+msgstr "редактировать чёрный список"
+
+#: web_tt2/modindex.tt2:191
 #, fuzzy
 msgid "Moderation management"
 msgstr "Управление пользователями"
 
-#: web_tt2/modindex.tt2:141 web_tt2/modindex.tt2:191
-msgid "edit blacklist"
-msgstr "редактировать чёрный список"
-
-#: web_tt2/modindex.tt2:143
+#: web_tt2/modindex.tt2:200
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr ""
 "Сообщение, по умолчанию используемое при запрете распространения сообщения"
-
-#: web_tt2/modindex.tt2:154
-msgid "Listing of shared documents to moderate"
-msgstr "Список общих документов для модерации"
-
-#: web_tt2/modindex.tt2:156 web_tt2/modindex.tt2:195
-msgid "Install"
-msgstr "Установить"
-
-#: web_tt2/modindex.tt2:160
-msgid "Listing of documents shared to moderate"
-msgstr "Список общих документов для модерации"
 
 #. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
@@ -3639,76 +3640,28 @@ msgstr ""
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25
-msgid "You requested unsubscription from list %1"
-msgstr "Вы запросили отписку от рассылки %1"
+msgid ""
+"We need to check your identity before validating your unsubscription request "
+"for list %1. If you have a user account you should login or create an "
+"account. <br/>Otherwise we can send you an email with a validation link "
+"inside ; please provide your email address below to receive this validation "
+"link."
+msgstr ""
 
 #: web_tt2/sigrequest.tt2:29
-msgid ""
-"To confirm your identity and prevent anyone from unsubscribing you from \n"
-"\tthis list against your will, a message containing an URL\n"
-"\twill be sent to you."
-msgstr ""
-"Чтобы удостоверить Вашу личность и предовратить отписку Вашего адреса от "
-"этой рассылки\n"
-"\tкем-то другим против Вашей воли, Вам будет выслано сообщение,\n"
-"\tсодежащее ссылку (URL)."
-
-#. (list)
-#: web_tt2/sigrequest.tt2:32
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"  Enter that password, below. This wil confirm your request to be "
-"unsubscribed from list %1."
-msgstr ""
-"Проверьте новые сообщения в Вашем почтовом ящике и найдите в нём письмо от "
-"Sympa c паролем.\n"
-"   Введите этот пароль ниже. Это подтвердит Ваш запрос на отписку от "
-"рассылки %1. "
-
-#: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:58
-msgid "e-mail address"
-msgstr "электронный адрес"
-
-#: web_tt2/sigrequest.tt2:45
-msgid ""
-"This password, associated with your email address, will allow you to access "
-"your custom environment."
-msgstr ""
-"Этот пароль, связанный с Вашим электронным адресом, позволит Вам получить "
-"доступ к Вашим личным настройкам. "
-
-#. (list)
-#: web_tt2/sigrequest.tt2:48
-msgid ""
-"Please provide your email address for your unsubscription request from list %"
-"1."
-msgstr ""
-"Пожалуйста, укажите электронный адрес для запроса на отписку от рассылки %1."
-
-#: web_tt2/sigrequest.tt2:52
 msgid "Your e-mail address :"
 msgstr "Ваш электронный адрес :"
 
-#. (list)
-#: web_tt2/sigrequest.tt2:64
-msgid ""
-"To confirm your unsubscription from list %1, please enter\n"
-"\tyour password below :"
-msgstr ""
-"Чтобы подтвердить Вашу отписку от рассылки %1, пожалуйста, введите\n"
-"\tВаш пароль ниже :"
+#: web_tt2/sigrequest.tt2:33
+#, fuzzy
+msgid "Send me a validation link"
+msgstr "Выслать мне пароль подтверждения"
 
-#: web_tt2/sigrequest.tt2:76
+#: web_tt2/sigrequest.tt2:40
 msgid ""
-"If you've never had a password from that server or if you don't remember it :"
+"We've sent you an email including a validation link. You should check your "
+"mailbox to read this email and use this validation link."
 msgstr ""
-"Если у Вас никогда не было пароль от этого сервера или Вы не помните его :"
-
-#: web_tt2/sigrequest.tt2:76
-msgid "Send me my password"
-msgstr "Вышлите мне мой пароль"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -4043,8 +3996,8 @@ msgstr "Я подписываюсь на рассылку %1"
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"        this list against your will, a message containing an validation link "
+"was sent to the e-mail address you provided."
 msgstr ""
 "Чтобы подтвердить Ваш адрес и предотвратить подписку\n"
 "                 на эту рассылку кем-либо против Вашей воли, Вам будет "
@@ -4055,7 +4008,7 @@ msgstr ""
 #: web_tt2/subrequest.tt2:32
 #, fuzzy
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
+"Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
 msgstr ""
 "Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
@@ -4075,6 +4028,10 @@ msgstr ""
 #: web_tt2/subrequest.tt2:53
 msgid ", in addition to the personnal informations requested."
 msgstr ""
+
+#: web_tt2/subrequest.tt2:58
+msgid "e-mail address"
+msgstr "электронный адрес"
 
 #: web_tt2/subrequest.tt2:69
 msgid "My password ?"
@@ -4207,7 +4164,7 @@ msgstr "Период поиска: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15640
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15628
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5670,7 +5627,8 @@ msgstr ""
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:175
 msgid "List %1 : Failed to change admin email address"
-msgstr "Рассылка %1 : Изменение электронного адреса администратора не удалось. "
+msgstr ""
+"Рассылка %1 : Изменение электронного адреса администратора не удалось. "
 
 #. (current_email,new_email,datasource)
 #: mail_tt2/listmaster_notification.tt2:179
@@ -5682,8 +5640,8 @@ msgid ""
 "this person's new email address."
 msgstr ""
 "Администратор %1 не может изменить свой электронный адрес администратора "
-"(новый адрес — %2), поскольку он включен через следующие источники данных: "
-"%3.\n"
+"(новый адрес — %2), поскольку он включен через следующие источники данных: %"
+"3.\n"
 "\n"
 "Если возможно, обновите электронный адрес в этих источниках данных. "
 
@@ -6598,7 +6556,7 @@ msgstr "Поступило одно новое сообщение из расс�
 
 #: mail_tt2/moderate.tt2:16
 #, fuzzy
-msgid "This message as been tagged as spam"
+msgid "This message has been tagged as spam"
 msgstr "Это сообщение получило метку \"Спам\""
 
 #. (mod_spool_size)
@@ -7021,6 +6979,19 @@ msgstr "Изменение электронного адреса"
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
 "new email address with the SYMPA server, please click the link below :"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:47
+#, fuzzy
+msgid "Unsubscribing from list %1"
+msgstr "Я отписываюсь от рассылки %1"
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:49
+msgid ""
+"You have requested to removed from list %1. To confirm and get removed from "
+"the list, please click the link below: "
 msgstr ""
 
 #. (list.name)
@@ -7555,8 +7526,8 @@ msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
 msgstr ""
-"январь:февраль:март:апрель:май:июнь:июль:август:сентябрь:октябрь:ноябрь:дека"
-"брь"
+"январь:февраль:март:апрель:май:июнь:июль:август:сентябрь:октябрь:ноябрь:"
+"декабрь"
 
 #: src/etc/global_task_models/chk_cert_expiration.daily.task:1
 msgid ""
@@ -7573,7 +7544,8 @@ msgid "Daily evaluation of bouncing users"
 msgstr ""
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
+#, fuzzy
+msgid "daily delete logs "
 msgstr "ежедневное удаление журналов работы старше 3 месяцев"
 
 #: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
@@ -7613,6 +7585,7 @@ msgid "remind message sent to subscribers every year"
 msgstr ""
 
 #: src/etc/list_task_models/sync_include.ttl.task:1
+#: src/etc/list_task_models/sync_include.ttl.task~:1
 msgid "Update of list members based on the TTL"
 msgstr ""
 
@@ -7652,8 +7625,8 @@ msgid ""
 "Mailing list configuration to be used for a news letter providing both text "
 "plain and HTML formats"
 msgstr ""
-"Конфигурация списка рассылки, используемая для писем в текстовом и "
-"HTML-формате"
+"Конфигурация списка рассылки, используемая для писем в текстовом и HTML-"
+"формате"
 
 #: src/etc/create_list_templates/html-news-letter/comment.tt2:3
 #: src/etc/create_list_templates/news-letter/comment.tt2:3
@@ -7701,7 +7674,7 @@ msgstr "Конфигурационный файл --CONFIG-- содержит о
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9412
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9400
 msgid "%A"
 msgstr "%A"
 
@@ -7712,7 +7685,7 @@ msgstr "Ошибка в строке %d : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
+#: wwsympa/Auth.pm:469 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y в %H:%M:%S"
 
@@ -8061,7 +8034,8 @@ msgstr "SQL-запрос"
 
 #: src/List.pm:983
 msgid "Directory where the database is stored (used for DBD::CSV only)"
-msgstr "Директория, где хранится база данных (используется только для DBD::CSV)"
+msgstr ""
+"Директория, где хранится база данных (используется только для DBD::CSV)"
 
 #: src/List.pm:994
 msgid "SQL query inclusion"
@@ -8349,16 +8323,16 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10779 wwsympa/wwsympa.fcgi:10848
-#: wwsympa/wwsympa.fcgi:11050 wwsympa/wwsympa.fcgi:11387
-#: wwsympa/wwsympa.fcgi:15226 wwsympa/wwsympa.fcgi:15940
-#: wwsympa/wwsympa.fcgi:15941 wwsympa/wwsympa.fcgi:4701
-#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6083
-#: wwsympa/wwsympa.fcgi:7103 wwsympa/wwsympa.fcgi:7637
-#: wwsympa/wwsympa.fcgi:7674 wwsympa/wwsympa.fcgi:7676
-#: wwsympa/wwsympa.fcgi:8140 wwsympa/wwsympa.fcgi:8141
-#: wwsympa/wwsympa.fcgi:8175 wwsympa/wwsympa.fcgi:8176
-#: wwsympa/wwsympa.fcgi:8355 wwsympa/wwsympa.fcgi:8356
+#: wwsympa/wwsympa.fcgi:10767 wwsympa/wwsympa.fcgi:10836
+#: wwsympa/wwsympa.fcgi:11038 wwsympa/wwsympa.fcgi:11375
+#: wwsympa/wwsympa.fcgi:15214 wwsympa/wwsympa.fcgi:15928
+#: wwsympa/wwsympa.fcgi:15929 wwsympa/wwsympa.fcgi:4701
+#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6072
+#: wwsympa/wwsympa.fcgi:7091 wwsympa/wwsympa.fcgi:7625
+#: wwsympa/wwsympa.fcgi:7662 wwsympa/wwsympa.fcgi:7664
+#: wwsympa/wwsympa.fcgi:8128 wwsympa/wwsympa.fcgi:8129
+#: wwsympa/wwsympa.fcgi:8163 wwsympa/wwsympa.fcgi:8164
+#: wwsympa/wwsympa.fcgi:8343 wwsympa/wwsympa.fcgi:8344
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -8461,7 +8435,7 @@ msgstr ""
 msgid "[Image%s]"
 msgstr ""
 
-#: src/sympa.pl:2093
+#: src/sympa.pl:2088
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -8478,14 +8452,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:435 wwsympa/SympaSession.pm:436
-#: wwsympa/wwsympa.fcgi:11611 wwsympa/wwsympa.fcgi:11744
-#: wwsympa/wwsympa.fcgi:14057 wwsympa/wwsympa.fcgi:7597
+#: wwsympa/wwsympa.fcgi:11599 wwsympa/wwsympa.fcgi:11732
+#: wwsympa/wwsympa.fcgi:14045 wwsympa/wwsympa.fcgi:7585
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15585 wwsympa/wwsympa.fcgi:15586
+#: wwsympa/wwsympa.fcgi:15573 wwsympa/wwsympa.fcgi:15574
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8638,21 +8612,43 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
-#: web_tt2/change_email.tt2:3
-msgid "You will receive an email, reminding you your password."
-msgstr "Вы получите письмо с напоминанием Вашего пароля. "
-
-#: web_tt2/change_email.tt2:5
-msgid ""
-"To confirm your email address change, please enter the password\n"
-"you received below :"
+#: web_tt2/manage_template.tt2:9
+#, fuzzy
+msgid "Listing rejection message"
 msgstr ""
-"Чтобы подтвердить изменение адреса, введите пароль,\n"
-" который Вы получили, ниже:"
+"Сообщение, по умолчанию используемое при запрете распространения сообщения"
 
-#: web_tt2/change_email.tt2:12
-msgid "Change my email address"
-msgstr "Изменить мой электронный адрес"
+#: web_tt2/subrequest.tt2:31
+#, fuzzy
+msgid ""
+"To confirm your identity and prevent anyone from subscribing you to\n"
+"        this list against your will, a message containing an authentication "
+"URL was sent to the e-mail address you provided."
+msgstr ""
+"Чтобы подтвердить Ваш адрес и предотвратить подписку\n"
+"                 на эту рассылку кем-либо против Вашей воли, Вам будет "
+"выслано сообщение, \n"
+"                 содержащее Ваш пароль. "
+
+#. (list)
+#: web_tt2/subrequest.tt2:32
+#, fuzzy
+msgid ""
+"Check your mailbox for new messages and click this URL. This will confirm "
+"your subscription to list %1."
+msgstr ""
+"Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
+"   Введите этот пароль ниже. Это подтвердит ваш запрос на подписку на "
+"рассылку %1."
+
+#: mail_tt2/moderate.tt2:16
+#, fuzzy
+msgid "This message as been tagged as spam"
+msgstr "Это сообщение получило метку \"Спам\""
+
+#: src/etc/global_task_models/purge_logs_table.daily.task:1
+msgid "daily delete logs older than 3 months"
+msgstr "ежедневное удаление журналов работы старше 3 месяцев"
 
 #: web_tt2/lists.tt2:67
 msgid "Unify your subscriptions with the email"
@@ -8664,35 +8660,9 @@ msgid ""
 "subscriptions and preferences"
 msgstr ""
 
-#: web_tt2/manage_template.tt2:4
-msgid "Modify or Delete existing messages"
-msgstr "Изменить или удалить существующие сообщения"
-
-#: web_tt2/manage_template.tt2:27
-#, fuzzy
-msgid "Create New Reject Messages"
-msgstr "Новые сообщения"
-
-#: web_tt2/manage_template.tt2:31
-msgid "Default Template"
-msgstr "Шаблон, используемый по умолчанию"
-
-#: web_tt2/pref.tt2:67
-msgid "Other email address :"
-msgstr "Запасной электронный адрес :"
-
 #: web_tt2/search_user.tt2:54
 msgid "del"
 msgstr ""
-
-#. (previous_email,new_email)
-#: mail_tt2/listmaster_notification.tt2:168
-msgid ""
-"User %1 has changed his owner/editor email address to %2. This changed has "
-"been performed to the following lists :"
-msgstr ""
-"Пользователь %1 изменил свой электронный адрес владельца/редактора рассылки "
-"на %2. Это изменение коснулось следующих рассылок :"
 
 #. (list.name)
 #: mail_tt2/listowner_notification.tt2:128
@@ -8705,10 +8675,6 @@ msgid ""
 "The %1 named filter could not be evaluated. The list %2 is using it for some "
 "authorization scenario."
 msgstr ""
-
-#: mail_tt2/moderate.tt2:16
-msgid "This message as been tagued as a spam"
-msgstr "Это сообщение получило метку \"Спам\""
 
 #: web_tt2/install_pending_list.tt2:29
 msgid "Aliases you should install in your mailer"
@@ -8802,6 +8768,101 @@ msgstr ""
 #: mail_tt2/moderate.tt2:31
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Rejection message"
+#~ msgstr ""
+#~ "Сообщение, по умолчанию используемое при запрете распространения сообщения"
+
+#~ msgid "You requested unsubscription from list %1"
+#~ msgstr "Вы запросили отписку от рассылки %1"
+
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from unsubscribing you from \n"
+#~ "\tthis list against your will, a message containing an URL\n"
+#~ "\twill be sent to you."
+#~ msgstr ""
+#~ "Чтобы удостоверить Вашу личность и предовратить отписку Вашего адреса от "
+#~ "этой рассылки\n"
+#~ "\tкем-то другим против Вашей воли, Вам будет выслано сообщение,\n"
+#~ "\tсодежащее ссылку (URL)."
+
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "  Enter that password, below. This wil confirm your request to be "
+#~ "unsubscribed from list %1."
+#~ msgstr ""
+#~ "Проверьте новые сообщения в Вашем почтовом ящике и найдите в нём письмо "
+#~ "от Sympa c паролем.\n"
+#~ "   Введите этот пароль ниже. Это подтвердит Ваш запрос на отписку от "
+#~ "рассылки %1. "
+
+#~ msgid ""
+#~ "This password, associated with your email address, will allow you to "
+#~ "access your custom environment."
+#~ msgstr ""
+#~ "Этот пароль, связанный с Вашим электронным адресом, позволит Вам получить "
+#~ "доступ к Вашим личным настройкам. "
+
+#~ msgid ""
+#~ "Please provide your email address for your unsubscription request from "
+#~ "list %1."
+#~ msgstr ""
+#~ "Пожалуйста, укажите электронный адрес для запроса на отписку от рассылки %"
+#~ "1."
+
+#~ msgid ""
+#~ "To confirm your unsubscription from list %1, please enter\n"
+#~ "\tyour password below :"
+#~ msgstr ""
+#~ "Чтобы подтвердить Вашу отписку от рассылки %1, пожалуйста, введите\n"
+#~ "\tВаш пароль ниже :"
+
+#~ msgid ""
+#~ "If you've never had a password from that server or if you don't remember "
+#~ "it :"
+#~ msgstr ""
+#~ "Если у Вас никогда не было пароль от этого сервера или Вы не помните его :"
+
+#~ msgid "Send me my password"
+#~ msgstr "Вышлите мне мой пароль"
+
+#~ msgid "You will receive an email, reminding you your password."
+#~ msgstr "Вы получите письмо с напоминанием Вашего пароля. "
+
+#~ msgid ""
+#~ "To confirm your email address change, please enter the password\n"
+#~ "you received below :"
+#~ msgstr ""
+#~ "Чтобы подтвердить изменение адреса, введите пароль,\n"
+#~ " который Вы получили, ниже:"
+
+#~ msgid "Change my email address"
+#~ msgstr "Изменить мой электронный адрес"
+
+#~ msgid "Modify or Delete existing messages"
+#~ msgstr "Изменить или удалить существующие сообщения"
+
+#, fuzzy
+#~ msgid "Create New Reject Messages"
+#~ msgstr "Новые сообщения"
+
+#~ msgid "Default Template"
+#~ msgstr "Шаблон, используемый по умолчанию"
+
+#~ msgid "Other email address :"
+#~ msgstr "Запасной электронный адрес :"
+
+#~ msgid ""
+#~ "User %1 has changed his owner/editor email address to %2. This changed "
+#~ "has been performed to the following lists :"
+#~ msgstr ""
+#~ "Пользователь %1 изменил свой электронный адрес владельца/редактора "
+#~ "рассылки на %2. Это изменение коснулось следующих рассылок :"
+
+#~ msgid "This message as been tagued as a spam"
+#~ msgstr "Это сообщение получило метку \"Спам\""
 
 #~ msgid "Password for %1"
 #~ msgstr "Пароль для %1"

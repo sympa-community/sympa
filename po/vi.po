@@ -98,7 +98,7 @@ msgstr "Nhà"
 #: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
 #: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
-#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:134
+#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:191
 #: web_tt2/modindex.tt2:8 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
 msgid "Help"
@@ -162,8 +162,7 @@ msgstr "Tùy chọn người đăng ký"
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Bạn thực sự muốn hủy đăng ký khỏi hộp thư chung %1 không?"
 
-#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:41
-#: web_tt2/sigrequest.tt2:56 web_tt2/sigrequest.tt2:73
+#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25
 msgid "Unsubscribe"
 msgstr "Hủy đăng ký"
 
@@ -527,7 +526,7 @@ msgstr "Quản lý kho lưu"
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
-#: web_tt2/modindex.tt2:134 web_tt2/modindex.tt2:8
+#: web_tt2/modindex.tt2:191 web_tt2/modindex.tt2:8
 #: web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
 #: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
@@ -652,7 +651,7 @@ msgid "Sender"
 msgstr "Người gửi"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:163 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:151 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "Ngày"
@@ -1258,7 +1257,7 @@ msgid "Listing of root folder"
 msgstr "Liệt kê thư mục gốc"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:164 web_tt2/modindex.tt2:68
+#: web_tt2/modindex.tt2:152 web_tt2/modindex.tt2:68
 msgid "Author"
 msgstr "Tác giả"
 
@@ -1608,7 +1607,7 @@ msgstr "Tên mẫu"
 msgid "Type"
 msgstr "Kiểu"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:165
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:153
 msgid "Path"
 msgstr "Đường dẫn"
 
@@ -1700,28 +1699,32 @@ msgstr "Không thể giải nén tập tin « %1 »."
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Không thể truy cập đến thư được xác thực bởi khoá %1"
 
+#: web_tt2/error.tt2:19
+msgid "Failed to get your email address from the authentication service."
+msgstr ""
+
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:20
 msgid "File not found."
 msgstr "Không tìm thấy tập tin."
 
-#: web_tt2/error.tt2:20
+#: web_tt2/error.tt2:21
 msgid "Database error."
 msgstr "Lỗi cơ sở dữ liệu."
 
 #. (i_err.key)
-#: web_tt2/error.tt2:21
+#: web_tt2/error.tt2:22
 msgid "Failed to update database."
 msgstr "Không cập nhật được cơ sở dữ liệu."
 
 #. (i_err.key)
-#: web_tt2/error.tt2:22
+#: web_tt2/error.tt2:23
 msgid "Failed to update a file."
 msgstr "Không cập nhật được một tập tin."
 
 #. (i_err.listname)
-#: web_tt2/error.tt2:23
+#: web_tt2/error.tt2:24
 msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
@@ -1730,49 +1733,49 @@ msgstr ""
 "tự không được phép."
 
 #. (s_err.action)
-#: web_tt2/error.tt2:32
+#: web_tt2/error.tt2:33
 msgid "SYSTEM ERROR (%1)"
 msgstr "LỖI HỆ THỐNG (%1)"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:41
+#: web_tt2/error.tt2:42
 msgid "ERROR (%1) "
 msgstr "LỖI (%1)"
 
-#: web_tt2/error.tt2:42
+#: web_tt2/error.tt2:43
 msgid "Wrong parameters"
 msgstr "Tham số sai"
 
-#: web_tt2/error.tt2:43
+#: web_tt2/error.tt2:44
 msgid "Unknown action"
 msgstr "Hành động không rõ"
 
 #. (u_err.params)
-#: web_tt2/error.tt2:44
+#: web_tt2/error.tt2:45
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Gặp lỗi cú phap trong các tham số này: %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:45
+#: web_tt2/error.tt2:46
 msgid "%1 : unknown list"
 msgstr "%1 : hộp thư chung lạ"
 
 #. (u_err.new_robot)
-#: web_tt2/error.tt2:46
+#: web_tt2/error.tt2:47
 msgid "%1 : unknown robot"
 msgstr "%1: rô-bốt lạ"
 
 #. (u_err.family)
-#: web_tt2/error.tt2:47
+#: web_tt2/error.tt2:48
 msgid "%1 : unknown family"
 msgstr "%1 : nhóm lạ"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:48
+#: web_tt2/error.tt2:49
 msgid "You are already logged in as %1"
 msgstr "Bạn đã đăng nhập dưới %1"
 
-#: web_tt2/error.tt2:49
+#: web_tt2/error.tt2:50
 msgid ""
 "You can not get a password reminder ; probably because your password is "
 "managed outside Sympa (Single Sign-On system or LDAP directory)."
@@ -1780,39 +1783,39 @@ msgstr ""
 "Bạn không thể nhận thư nhắc nhở mật khẩu, rất có thể vì mật khẩu của bạn "
 "được quản lý bên ngoài Sympa (hệ thống đăng nhập đơn hay thư mục LDAP)."
 
-#: web_tt2/error.tt2:50
+#: web_tt2/error.tt2:51
 msgid "Please provide email address"
 msgstr "Hãy cung cấp địa chỉ thư điện tử"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:51
+#: web_tt2/error.tt2:52
 msgid "Missing argument %1"
 msgstr "Thiếu đối số %1"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:52
+#: web_tt2/error.tt2:53
 msgid "Wrong value for parameter %1"
 msgstr "Giá trị sai cho tham số %1"
 
-#: web_tt2/error.tt2:141 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:142 web_tt2/error.tt2:54
 msgid "You need to login"
 msgstr "Bạn cần phải đăng nhập"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 msgid "Address \"%1\" is incorrect"
 msgstr "Địa chỉ « %1 » không đúng"
 
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid "Provided password is incorrect"
 msgstr "Bạn đã cung cấp một mật khẩu sai"
 
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "Bạn chưa chọn mật khẩu, hoặc yêu cầu thư nhắc nhở mật khẩu gốc"
 
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -1821,332 +1824,332 @@ msgstr ""
 "thư nhắc nhở cho bạn"
 
 #. (u_err.nb_days)
-#: web_tt2/error.tt2:58
+#: web_tt2/error.tt2:59
 msgid "The period is too long (%1 days)"
 msgstr "Thời kỳ quá lâu (%1 ngày)"
 
-#: web_tt2/error.tt2:59
+#: web_tt2/error.tt2:60
 msgid "List has no subscribers"
 msgstr "Hộp thư chung này không có người đăng ký nào"
 
 #. (u_err.page)
-#: web_tt2/error.tt2:60
+#: web_tt2/error.tt2:61
 msgid "No page %1"
 msgstr "Không có trang %1"
 
-#: web_tt2/error.tt2:61
+#: web_tt2/error.tt2:62
 msgid "Missing filter"
 msgstr "Bộ lọc bị thiếu"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:63
+#: web_tt2/error.tt2:64
 msgid "Not subscribed: %1"
 msgstr "Chưa đăng ký: %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 msgid "You are not subscribed to list %1"
 msgstr "Bạn chưa đăng ký với hộp thư chung %1"
 
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 msgid "Check the additional information"
 msgstr "Kiểm tra thông tin bổ sung"
 
 #. (u_err.reception_mode)
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 msgid "%1 is not an available reception mode"
 msgstr "%1 không phải là một chế độ nhận sẵn sàng"
 
 #. (u_err.file)
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 msgid "%1 : file not editable"
 msgstr "%1 : tập tin không thể chỉnh sửa được"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 msgid "You are already subscribed to the list %1"
 msgstr "Bạn đã đăng ký với hộp thư chung %1"
 
 #. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 đã đăng ký với hộp thư chung %2"
 
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 msgid "Please provide your password"
 msgstr "Hãy cung cấp mật khẩu"
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 msgid "The passwords you typed do not match"
 msgstr "Bạn đã gõ hai mật khẩu không trùng"
 
 #. (u_err.tpl)
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Bạn đã cung cấp một đường dẫn không đúng cho mẫu « %1 »"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "Cannot open file '%1'"
 msgstr "Không thể mở tập tin « %1 »"
 
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 msgid "You need to provide list name"
 msgstr "Bạn cần phải cung cấp tên hộp thư chung"
 
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderator"
 msgstr ""
 "Lỗi điều tiết một thư ; rất có thể là một điều tiết khác đã điều tiết nó"
 
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 msgid "Tagging message is required for this list"
 msgstr "Thư đặt thẻ cần thiết cho hộp thư chung này"
 
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 msgid "Archives are empty for this list"
 msgstr "Hộp thư chung này có kho lưu vẫn rỗng"
 
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 msgid "You did not select an action to perform"
 msgstr "Chưa chọn hành động cần làm"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 msgid "No bounce for user  %1"
 msgstr "Người dùng %1 không có thư nảy về"
 
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 msgid "List has no bouncing subscribers"
 msgstr "Hộp thư chung không có người đăng ký có thư nảy về"
 
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "giá trị tham số"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Tập tin cấu hình đã bị %1 sửa đổi nên không thể áp dụng thay đổi của bạn."
 
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 msgid "Topic \"other\" is a reserved word"
 msgstr "Vấn đề « other » là một từ dành riêng"
 
 #. (u_err.param)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 msgid "Parameter '%1' must have values"
 msgstr "Tham số « %1 » phải có giá trị"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr "Tham số « %1 » có giá trị sai: « %2 »"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "The list '%1' is already closed"
 msgstr "Hộp thư chung « %1 » đã được đóng"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "The list '%1' is not closed"
 msgstr "Hộp thư chung « %1 » không phải được đóng."
 
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 msgid "'%1' : bad listname"
 msgstr "« %1 »: tên hộp thư chung sai"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 msgid "'%1' list already exists"
 msgstr "Hộp thư chung « %1 » đã có"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 "Tên hộp thư chung sai « %1 »: tương ứng với một của những biệt hiệu dịch vụ"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "Lỗi bao gồm các quản trị cho hộp thư chung « %1 »"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "%1 : No such file or directory"
 msgstr "%1 : không có tập tin hay thư mục như vậy"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "Unable to read %1 : empty document"
 msgstr "Không thể đọc %1 : tài liệu còn rỗng"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "There is no shared documents"
 msgstr "Không có tài liệu chia sẻ"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared document space is empty"
 msgstr "Vùng tài liệu chia sẻ còn rỗng"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "The shared directory cannot have any description"
 msgstr "Thư mục chia sẻ không thể có mô tả"
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "No description specified"
 msgstr "Chưa ghi rõ mô tả"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Không thể diễn tả vì tài liệu « %1 » không tồn tại"
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr ""
 "Dữ liệu bị thay đổi trên đĩa nên không thể áp dụng thay đổi riêng của bạn"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "%1 : incorrect name"
 msgstr "%1 : tên không đúng"
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Failed : your content is empty"
 msgstr "Lỗi : nội dung của bạn còn rỗng"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "Cannot overwrite file %1"
 msgstr "Không thể ghi đè lên tập tin %1"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "A directory named '%1' already exists"
 msgstr "Một thư mục tên « %1 » đã có"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "This is an already existing document : '%1'"
 msgstr "Đây là một tài liệu đã có : « %1 »"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "No name specified"
 msgstr "Chưa ghi rõ tên"
 
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "The document repository exceed disk quota."
 msgstr "Kho lưu tài liệu vượt quá hạn ngạch đĩa."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "Cannot upload file %1"
 msgstr "Không thể tải lên tập tin %1"
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "Bạn không có quyền tải lên một tập tin INDEX.HTML trong %1"
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "The upload failed, try it again"
 msgstr "Lỗi tải lên, hãy thử lại"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "Thư mục %1 và nội dung của nó không thể sao chép được : %2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "File %1 was not copied : %2 "
 msgstr "Tập tin %1 đã không sao chép : %2"
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "Failed : %1 not empty"
 msgstr "Lỗi : %1 không phải rỗng"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "No certificate for this list"
 msgstr "Hộp thư chung này không có chứng nhận"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "This list has no message topic"
 msgstr "Hộp thư chung này không có vấn đề thư."
 
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "Tag message with topic is required for this list"
 msgstr "Hộp thư chung này cần thiết thư thẻ với vấn đề"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "No entry for user '%1'"
 msgstr "Không có mục nhập cho người dùng « %1 »"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "Please select archive months"
 msgstr "Hãy chọn những tháng của kho lưu"
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "No SOAP service"
 msgstr "Không có dịch vụ SOAP"
 
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Authentication failed"
 msgstr "Lỗi xác thực"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 "Không thể thêm người đăng ký khi trạng thái của hộp thư chung là « %1 »"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "tập tin %1 đã có"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "Không thể mở tập tin « %1 »"
 
 #. (u_err.filename)
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:125
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "Không thể đọc tập tin: « %1 »."
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:125
+#: web_tt2/error.tt2:126
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:127
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (auth.action)
-#: web_tt2/error.tt2:135
+#: web_tt2/error.tt2:136
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "XÁC THỰC BỊ TỪ CHỐI (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:137
+#: web_tt2/error.tt2:138
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2173,7 +2176,7 @@ msgstr "Yêu cầu bởi"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
 #: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:124
-#: web_tt2/modindex.tt2:193 web_tt2/review.tt2:278
+#: web_tt2/modindex.tt2:181 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "Bật/tắt chọn"
@@ -2301,39 +2304,38 @@ msgstr "<strong>%1</strong> đã đăng ký với những hộp thư chung theo 
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Không có người đăng ký với địa chỉ <strong>%1</strong> !"
 
-#: web_tt2/loginbanner.tt2:18
+#: web_tt2/loginbanner.tt2:19
 #, fuzzy
 msgid "To login, select your organization authentication server below:"
 msgstr "Chọn máy phục vụ xác thực"
 
-#: web_tt2/loginbanner.tt2:24
+#: web_tt2/loginbanner.tt2:25
 msgid "Go"
 msgstr "Đi"
 
-#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:40
 #: web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "địa chỉ thư"
 
-#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
-#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/loginbanner.tt2:42 web_tt2/sso_login.tt2:47
 #: web_tt2/subrequest.tt2:59
 msgid "password"
 msgstr "mật khẩu"
 
-#: web_tt2/loginbanner.tt2:43
+#: web_tt2/loginbanner.tt2:44
 msgid "Login"
 msgstr "Đăng nhập"
 
-#: web_tt2/loginbanner.tt2:51
+#: web_tt2/loginbanner.tt2:52
 msgid "Authentication help"
 msgstr "Trợ giúp về xác thực"
 
-#: web_tt2/loginbanner.tt2:53
+#: web_tt2/loginbanner.tt2:54
 msgid "First login ?"
 msgstr "Đăng nhập đầu tiên ?"
 
-#: web_tt2/loginbanner.tt2:54
+#: web_tt2/loginbanner.tt2:55
 msgid "Lost password ?"
 msgstr "Mất mật khẩu ?"
 
@@ -2437,14 +2439,9 @@ msgstr ""
 msgid "Modify or delete existing rejection messages"
 msgstr "Bạn có chắc muốn xoá các kho lưu đã chọn không?"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/manage_template.tt2:10 web_tt2/manage_template.tt2:9
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "Thư mới đây"
-
-#: web_tt2/manage_template.tt2:10
-#, fuzzy
-msgid "Rejection message"
+msgid "Listing rejection messages"
 msgstr "Thư mới đây"
 
 #: web_tt2/manage_template.tt2:11
@@ -2494,6 +2491,11 @@ msgstr "Thư vừa nhận"
 
 #: web_tt2/manage_template.tt2:85
 #, fuzzy
+msgid "New message name:"
+msgstr "Thư đã được gửi"
+
+#: web_tt2/manage_template.tt2:85
+#, fuzzy
 msgid "create"
 msgstr "Tạo"
 
@@ -2506,7 +2508,7 @@ msgstr "Đang liệt kê các thư cần điều tiết"
 msgid "Distribute"
 msgstr "Phân phối"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:157 web_tt2/modindex.tt2:196
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:145 web_tt2/modindex.tt2:184
 #: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:14
 msgid "Reject"
 msgstr "Từ chối"
@@ -2545,7 +2547,7 @@ msgid ""
 msgstr ""
 "Hãy chọn một hay nhiều vấn đề tương ứng với những thư bạn muốn phân phối :"
 
-#: web_tt2/modindex.tt2:166 web_tt2/modindex.tt2:70
+#: web_tt2/modindex.tt2:154 web_tt2/modindex.tt2:70
 msgid "Size"
 msgstr "Kích cỡ"
 
@@ -2553,7 +2555,7 @@ msgstr "Kích cỡ"
 msgid "No subject"
 msgstr "Không có chủ đề"
 
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:158 web_tt2/modindex.tt2:197
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:185
 msgid "Notified reject"
 msgstr "Từ chối đã thông báo"
 
@@ -2565,31 +2567,31 @@ msgstr "Từ chối và cấm người gửi"
 msgid "Toggle spams"
 msgstr "Bật/tắt thư rác"
 
-#: web_tt2/modindex.tt2:134
+#: web_tt2/modindex.tt2:142
+msgid "Listing of shared documents to moderate"
+msgstr "Danh sách các tài liệu chia sẻ cần điều tiết"
+
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:183
+msgid "Install"
+msgstr "Cài đặt"
+
+#: web_tt2/modindex.tt2:148
+msgid "Listing of documents shared to moderate"
+msgstr "Danh sách các tài liệu chia sẽ cần điều tiết"
+
+#: web_tt2/modindex.tt2:179 web_tt2/modindex.tt2:198
+msgid "edit blacklist"
+msgstr "Sửa danh sách cấm"
+
+#: web_tt2/modindex.tt2:191
 #, fuzzy
 msgid "Moderation management"
 msgstr "Quản trị người dùng"
 
-#: web_tt2/modindex.tt2:141 web_tt2/modindex.tt2:191
-msgid "edit blacklist"
-msgstr "Sửa danh sách cấm"
-
-#: web_tt2/modindex.tt2:143
+#: web_tt2/modindex.tt2:200
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "Thư mới đây"
-
-#: web_tt2/modindex.tt2:154
-msgid "Listing of shared documents to moderate"
-msgstr "Danh sách các tài liệu chia sẻ cần điều tiết"
-
-#: web_tt2/modindex.tt2:156 web_tt2/modindex.tt2:195
-msgid "Install"
-msgstr "Cài đặt"
-
-#: web_tt2/modindex.tt2:160
-msgid "Listing of documents shared to moderate"
-msgstr "Danh sách các tài liệu chia sẽ cần điều tiết"
 
 #. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
@@ -3609,76 +3611,28 @@ msgstr ""
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25
-msgid "You requested unsubscription from list %1"
-msgstr "Bạn đã yêu cầu hủy đăng ký với hộp thư chung %1"
+msgid ""
+"We need to check your identity before validating your unsubscription request "
+"for list %1. If you have a user account you should login or create an "
+"account. <br/>Otherwise we can send you an email with a validation link "
+"inside ; please provide your email address below to receive this validation "
+"link."
+msgstr ""
 
 #: web_tt2/sigrequest.tt2:29
-msgid ""
-"To confirm your identity and prevent anyone from unsubscribing you from \n"
-"\tthis list against your will, a message containing an URL\n"
-"\twill be sent to you."
-msgstr ""
-"Để xác nhận bạn là ai, và ngăn cản người khác hủy đăng ký bạn\n"
-"với hộp thư chung này trái ý của bạn, một thư chứa một địa chỉ URL\n"
-"sẽ được gửi cho bạn."
-
-#. (list)
-#: web_tt2/sigrequest.tt2:32
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"  Enter that password, below. This wil confirm your request to be "
-"unsubscribed from list %1."
-msgstr ""
-"Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
-"riêng của bạn.\n"
-"Nhập mật khẩu đó vào bên dưới đây. Nó sẽ xác nhận yêu cầu của bạn để hủy "
-"đăng ký với hộp thư chung %1."
-
-#: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:58
-msgid "e-mail address"
-msgstr "địa chỉ thư điện tử"
-
-#: web_tt2/sigrequest.tt2:45
-msgid ""
-"This password, associated with your email address, will allow you to access "
-"your custom environment."
-msgstr ""
-"Mật khẩu này, liên quan đến địa chỉ thư điện tử của bạn, sẽ cho phép bạn "
-"truy cập đến môi trường riêng của mình."
-
-#. (list)
-#: web_tt2/sigrequest.tt2:48
-msgid ""
-"Please provide your email address for your unsubscription request from list %"
-"1."
-msgstr ""
-"Hãy cung cấp địa chỉ thư điện tử của bạn cho yêu cầu hủy đăng ký với hộp thư "
-"chung %1."
-
-#: web_tt2/sigrequest.tt2:52
 msgid "Your e-mail address :"
 msgstr "Địa chỉ thư của bạn:"
 
-#. (list)
-#: web_tt2/sigrequest.tt2:64
-msgid ""
-"To confirm your unsubscription from list %1, please enter\n"
-"\tyour password below :"
-msgstr ""
-"Để xác nhận bạn muốn hủy đăng ký với hộp thư chung %1,\n"
-"hãy nhập mật khẩu bên dưới:"
+#: web_tt2/sigrequest.tt2:33
+#, fuzzy
+msgid "Send me a validation link"
+msgstr "Gửi cho tôi một mật khẩu xác nhận"
 
-#: web_tt2/sigrequest.tt2:76
+#: web_tt2/sigrequest.tt2:40
 msgid ""
-"If you've never had a password from that server or if you don't remember it :"
+"We've sent you an email including a validation link. You should check your "
+"mailbox to read this email and use this validation link."
 msgstr ""
-"Chưa có mật khẩu đối với máy phục vụ này, hoặc nếu bạn đã quên mật khẩu :"
-
-#: web_tt2/sigrequest.tt2:76
-msgid "Send me my password"
-msgstr "Gửi cho tôi mật khẩu của mình"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -4035,8 +3989,8 @@ msgstr "Tôi đăng ký với hộp thư chung %1"
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"        this list against your will, a message containing an validation link "
+"was sent to the e-mail address you provided."
 msgstr ""
 "Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư chung "
 "này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
@@ -4045,7 +3999,7 @@ msgstr ""
 #: web_tt2/subrequest.tt2:32
 #, fuzzy
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
+"Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
 msgstr ""
 "Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
@@ -4065,6 +4019,10 @@ msgstr ""
 #: web_tt2/subrequest.tt2:53
 msgid ", in addition to the personnal informations requested."
 msgstr ", thêm vào thông tin cá nhân được yêu cầu."
+
+#: web_tt2/subrequest.tt2:58
+msgid "e-mail address"
+msgstr "địa chỉ thư điện tử"
 
 #: web_tt2/subrequest.tt2:69
 msgid "My password ?"
@@ -4198,7 +4156,7 @@ msgstr "Kỳ tìm: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15640
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15628
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -6610,7 +6568,7 @@ msgstr "Một thư mới của hộp thư chung %1 đã đến từ %2."
 
 #: mail_tt2/moderate.tt2:16
 #, fuzzy
-msgid "This message as been tagged as spam"
+msgid "This message has been tagged as spam"
 msgstr "Thư này đã bị đánh dấu là thư rác"
 
 #. (mod_spool_size)
@@ -7042,6 +7000,19 @@ msgstr "Thay đổi địa chỉ thư điện tử"
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
 "new email address with the SYMPA server, please click the link below :"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:47
+#, fuzzy
+msgid "Unsubscribing from list %1"
+msgstr "Tôi hủy đăng ký với hộp thư chung %1"
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:49
+msgid ""
+"You have requested to removed from list %1. To confirm and get removed from "
+"the list, please click the link below: "
 msgstr ""
 
 #. (list.name)
@@ -7602,7 +7573,7 @@ msgid "Daily evaluation of bouncing users"
 msgstr ""
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
+msgid "daily delete logs "
 msgstr ""
 
 #: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
@@ -7642,6 +7613,7 @@ msgid "remind message sent to subscribers every year"
 msgstr ""
 
 #: src/etc/list_task_models/sync_include.ttl.task:1
+#: src/etc/list_task_models/sync_include.ttl.task~:1
 msgid "Update of list members based on the TTL"
 msgstr ""
 
@@ -7724,7 +7696,7 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9412
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9400
 msgid "%A"
 msgstr ""
 
@@ -7735,7 +7707,7 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
+#: wwsympa/Auth.pm:469 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
@@ -8372,16 +8344,16 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10779 wwsympa/wwsympa.fcgi:10848
-#: wwsympa/wwsympa.fcgi:11050 wwsympa/wwsympa.fcgi:11387
-#: wwsympa/wwsympa.fcgi:15226 wwsympa/wwsympa.fcgi:15940
-#: wwsympa/wwsympa.fcgi:15941 wwsympa/wwsympa.fcgi:4701
-#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6083
-#: wwsympa/wwsympa.fcgi:7103 wwsympa/wwsympa.fcgi:7637
-#: wwsympa/wwsympa.fcgi:7674 wwsympa/wwsympa.fcgi:7676
-#: wwsympa/wwsympa.fcgi:8140 wwsympa/wwsympa.fcgi:8141
-#: wwsympa/wwsympa.fcgi:8175 wwsympa/wwsympa.fcgi:8176
-#: wwsympa/wwsympa.fcgi:8355 wwsympa/wwsympa.fcgi:8356
+#: wwsympa/wwsympa.fcgi:10767 wwsympa/wwsympa.fcgi:10836
+#: wwsympa/wwsympa.fcgi:11038 wwsympa/wwsympa.fcgi:11375
+#: wwsympa/wwsympa.fcgi:15214 wwsympa/wwsympa.fcgi:15928
+#: wwsympa/wwsympa.fcgi:15929 wwsympa/wwsympa.fcgi:4701
+#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6072
+#: wwsympa/wwsympa.fcgi:7091 wwsympa/wwsympa.fcgi:7625
+#: wwsympa/wwsympa.fcgi:7662 wwsympa/wwsympa.fcgi:7664
+#: wwsympa/wwsympa.fcgi:8128 wwsympa/wwsympa.fcgi:8129
+#: wwsympa/wwsympa.fcgi:8163 wwsympa/wwsympa.fcgi:8164
+#: wwsympa/wwsympa.fcgi:8343 wwsympa/wwsympa.fcgi:8344
 msgid "%d %b %Y"
 msgstr ""
 
@@ -8469,7 +8441,7 @@ msgstr ""
 msgid "[Image%s]"
 msgstr ""
 
-#: src/sympa.pl:2093
+#: src/sympa.pl:2088
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -8486,14 +8458,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:435 wwsympa/SympaSession.pm:436
-#: wwsympa/wwsympa.fcgi:11611 wwsympa/wwsympa.fcgi:11744
-#: wwsympa/wwsympa.fcgi:14057 wwsympa/wwsympa.fcgi:7597
+#: wwsympa/wwsympa.fcgi:11599 wwsympa/wwsympa.fcgi:11732
+#: wwsympa/wwsympa.fcgi:14045 wwsympa/wwsympa.fcgi:7585
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15585 wwsympa/wwsympa.fcgi:15586
+#: wwsympa/wwsympa.fcgi:15573 wwsympa/wwsympa.fcgi:15574
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8645,61 +8617,49 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
-#: web_tt2/change_email.tt2:3
-msgid "You will receive an email, reminding you your password."
-msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở mật khẩu."
+#: web_tt2/manage_template.tt2:9
+#, fuzzy
+msgid "Listing rejection message"
+msgstr "Thư mới đây"
 
-#: web_tt2/change_email.tt2:5
+#: web_tt2/subrequest.tt2:31
+#, fuzzy
 msgid ""
-"To confirm your email address change, please enter the password\n"
-"you received below :"
+"To confirm your identity and prevent anyone from subscribing you to\n"
+"        this list against your will, a message containing an authentication "
+"URL was sent to the e-mail address you provided."
 msgstr ""
-"Để xác nhận thay đổi địa chỉ thư điện tử, hãy nhập mật khẩu bạn đã nhận vào "
-"bên dưới:"
+"Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư chung "
+"này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
 
-#: web_tt2/change_email.tt2:12
-msgid "Change my email address"
-msgstr "Đổi địa chỉ thư điện tử của tôi"
+#. (list)
+#: web_tt2/subrequest.tt2:32
+#, fuzzy
+msgid ""
+"Check your mailbox for new messages and click this URL. This will confirm "
+"your subscription to list %1."
+msgstr ""
+"Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
+"riêng của bạn.\n"
+"\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư "
+"chung %1."
+
+#: mail_tt2/moderate.tt2:16
+#, fuzzy
+msgid "This message as been tagged as spam"
+msgstr "Thư này đã bị đánh dấu là thư rác"
+
+#: src/etc/global_task_models/purge_logs_table.daily.task:1
+msgid "daily delete logs older than 3 months"
+msgstr ""
 
 #: web_tt2/manage_template.tt2:4
 msgid "Modify or Delete existing messages"
 msgstr ""
 
-#: web_tt2/manage_template.tt2:7
-#, fuzzy
-msgid "Do you really want to delete this reject message?"
-msgstr "Bạn có chắc muốn xoá các kho lưu đã chọn không?"
-
-#: web_tt2/manage_template.tt2:27
-#, fuzzy
-msgid "Create New Reject Messages"
-msgstr "Thư vừa nhận"
-
-#: web_tt2/manage_template.tt2:31
-#, fuzzy
-msgid "Default Template"
-msgstr "Nhập mẫu"
-
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
 msgstr ""
-
-#: web_tt2/pref.tt2:67
-msgid "Other email address :"
-msgstr "Địa chỉ thư khác :"
-
-#. (previous_email,new_email)
-#: mail_tt2/listmaster_notification.tt2:168
-msgid ""
-"User %1 has changed his owner/editor email address to %2. This changed has "
-"been performed to the following lists :"
-msgstr ""
-"Người dùng %1 đã thay đổi địa chỉ thư điện tử chủ/biên tập của mình thành %"
-"2. Thay đổi này đã được thực hiện với những hộp thư chung này:"
-
-#: mail_tt2/moderate.tt2:16
-msgid "This message as been tagued as a spam"
-msgstr "Thư này đã bị đánh dấu là thư rác"
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -8774,6 +8734,101 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Rejection message"
+#~ msgstr "Thư mới đây"
+
+#~ msgid "You requested unsubscription from list %1"
+#~ msgstr "Bạn đã yêu cầu hủy đăng ký với hộp thư chung %1"
+
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from unsubscribing you from \n"
+#~ "\tthis list against your will, a message containing an URL\n"
+#~ "\twill be sent to you."
+#~ msgstr ""
+#~ "Để xác nhận bạn là ai, và ngăn cản người khác hủy đăng ký bạn\n"
+#~ "với hộp thư chung này trái ý của bạn, một thư chứa một địa chỉ URL\n"
+#~ "sẽ được gửi cho bạn."
+
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "  Enter that password, below. This wil confirm your request to be "
+#~ "unsubscribed from list %1."
+#~ msgstr ""
+#~ "Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
+#~ "riêng của bạn.\n"
+#~ "Nhập mật khẩu đó vào bên dưới đây. Nó sẽ xác nhận yêu cầu của bạn để hủy "
+#~ "đăng ký với hộp thư chung %1."
+
+#~ msgid ""
+#~ "This password, associated with your email address, will allow you to "
+#~ "access your custom environment."
+#~ msgstr ""
+#~ "Mật khẩu này, liên quan đến địa chỉ thư điện tử của bạn, sẽ cho phép bạn "
+#~ "truy cập đến môi trường riêng của mình."
+
+#~ msgid ""
+#~ "Please provide your email address for your unsubscription request from "
+#~ "list %1."
+#~ msgstr ""
+#~ "Hãy cung cấp địa chỉ thư điện tử của bạn cho yêu cầu hủy đăng ký với hộp "
+#~ "thư chung %1."
+
+#~ msgid ""
+#~ "To confirm your unsubscription from list %1, please enter\n"
+#~ "\tyour password below :"
+#~ msgstr ""
+#~ "Để xác nhận bạn muốn hủy đăng ký với hộp thư chung %1,\n"
+#~ "hãy nhập mật khẩu bên dưới:"
+
+#~ msgid ""
+#~ "If you've never had a password from that server or if you don't remember "
+#~ "it :"
+#~ msgstr ""
+#~ "Chưa có mật khẩu đối với máy phục vụ này, hoặc nếu bạn đã quên mật khẩu :"
+
+#~ msgid "Send me my password"
+#~ msgstr "Gửi cho tôi mật khẩu của mình"
+
+#~ msgid "You will receive an email, reminding you your password."
+#~ msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở mật khẩu."
+
+#~ msgid ""
+#~ "To confirm your email address change, please enter the password\n"
+#~ "you received below :"
+#~ msgstr ""
+#~ "Để xác nhận thay đổi địa chỉ thư điện tử, hãy nhập mật khẩu bạn đã nhận "
+#~ "vào bên dưới:"
+
+#~ msgid "Change my email address"
+#~ msgstr "Đổi địa chỉ thư điện tử của tôi"
+
+#, fuzzy
+#~ msgid "Do you really want to delete this reject message?"
+#~ msgstr "Bạn có chắc muốn xoá các kho lưu đã chọn không?"
+
+#, fuzzy
+#~ msgid "Create New Reject Messages"
+#~ msgstr "Thư vừa nhận"
+
+#, fuzzy
+#~ msgid "Default Template"
+#~ msgstr "Nhập mẫu"
+
+#~ msgid "Other email address :"
+#~ msgstr "Địa chỉ thư khác :"
+
+#~ msgid ""
+#~ "User %1 has changed his owner/editor email address to %2. This changed "
+#~ "has been performed to the following lists :"
+#~ msgstr ""
+#~ "Người dùng %1 đã thay đổi địa chỉ thư điện tử chủ/biên tập của mình thành "
+#~ "%2. Thay đổi này đã được thực hiện với những hộp thư chung này:"
+
+#~ msgid "This message as been tagued as a spam"
+#~ msgstr "Thư này đã bị đánh dấu là thư rác"
 
 #~ msgid "Password for %1"
 #~ msgstr "Mật khẩu cho %1"

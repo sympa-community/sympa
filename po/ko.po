@@ -98,7 +98,7 @@ msgstr "홈"
 #: web_tt2/d_properties.tt2:11 web_tt2/d_properties.tt2:7
 #: web_tt2/d_properties.tt2:9 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
-#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:134
+#: web_tt2/editfile.tt2:3 web_tt2/menu.tt2:23 web_tt2/modindex.tt2:191
 #: web_tt2/modindex.tt2:8 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:2
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:18
 msgid "Help"
@@ -163,8 +163,7 @@ msgstr "가입자 옵션"
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "%1 메일링 리스트에서 등록취소하시겠습니까?"
 
-#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:41
-#: web_tt2/sigrequest.tt2:56 web_tt2/sigrequest.tt2:73
+#: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25
 msgid "Unsubscribe"
 msgstr "등록취소"
 
@@ -521,7 +520,7 @@ msgstr "보관(저장) 관리"
 #: web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37
 #: web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37
 #: web_tt2/latest_d_read.tt2:30 web_tt2/latest_d_read.tt2:33
-#: web_tt2/modindex.tt2:134 web_tt2/modindex.tt2:8
+#: web_tt2/modindex.tt2:191 web_tt2/modindex.tt2:8
 #: web_tt2/picture_upload.tt2:19 web_tt2/pref.tt2:3
 #: web_tt2/rename_list_request.tt2:2 web_tt2/review.tt2:209
 #: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
@@ -643,7 +642,7 @@ msgid "Sender"
 msgstr "보낸 사람"
 
 #: web_tt2/arcsearch_form.tt2:48 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:163 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
+#: web_tt2/modindex.tt2:151 web_tt2/modindex.tt2:67 web_tt2/subindex.tt2:10
 #: web_tt2/viewlogs.tt2:124
 msgid "Date"
 msgstr "날짜"
@@ -1249,7 +1248,7 @@ msgid "Listing of root folder"
 msgstr "루트 폴더의 목록"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:164 web_tt2/modindex.tt2:68
+#: web_tt2/modindex.tt2:152 web_tt2/modindex.tt2:68
 msgid "Author"
 msgstr "작성자"
 
@@ -1601,7 +1600,7 @@ msgstr "템플렛 이름"
 msgid "Type"
 msgstr "유형"
 
-#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:165
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:153
 msgid "Path"
 msgstr "경로"
 
@@ -1693,28 +1692,32 @@ msgstr "파일 '%1' 를 압축(unzip)할 수 없습니다."
 msgid "Unable to access the message authenticated with key %1"
 msgstr "중요한 %1 에 확인된 메시지에 액세스할 수 없습니다."
 
+#: web_tt2/error.tt2:19
+msgid "Failed to get your email address from the authentication service."
+msgstr ""
+
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:19
+#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:20
 msgid "File not found."
 msgstr "파일을 찾을 수 없습니다."
 
-#: web_tt2/error.tt2:20
+#: web_tt2/error.tt2:21
 msgid "Database error."
 msgstr "데이타베이스 에러."
 
 #. (i_err.key)
-#: web_tt2/error.tt2:21
+#: web_tt2/error.tt2:22
 msgid "Failed to update database."
 msgstr "데이타베이스를 업데이트 하기가 실패했습니다."
 
 #. (i_err.key)
-#: web_tt2/error.tt2:22
+#: web_tt2/error.tt2:23
 msgid "Failed to update a file."
 msgstr "파일을 업데이트 하기가 실패했습니다."
 
 #. (i_err.listname)
-#: web_tt2/error.tt2:23
+#: web_tt2/error.tt2:24
 msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
@@ -1723,49 +1726,49 @@ msgstr ""
 "가 특성을 포함할 수도 있습니다."
 
 #. (s_err.action)
-#: web_tt2/error.tt2:32
+#: web_tt2/error.tt2:33
 msgid "SYSTEM ERROR (%1)"
 msgstr "시스템 에러 (%1)"
 
 #. (u_err.action)
-#: web_tt2/error.tt2:41
+#: web_tt2/error.tt2:42
 msgid "ERROR (%1) "
 msgstr "에러 (%1) "
 
-#: web_tt2/error.tt2:42
+#: web_tt2/error.tt2:43
 msgid "Wrong parameters"
 msgstr "틀린 매개 변수"
 
-#: web_tt2/error.tt2:43
+#: web_tt2/error.tt2:44
 msgid "Unknown action"
 msgstr "확인 불가 작업"
 
 #. (u_err.params)
-#: web_tt2/error.tt2:44
+#: web_tt2/error.tt2:45
 msgid "Syntax errors with the following parameters : %1"
 msgstr "다음 매개 변수에 구문 에러: %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:45
+#: web_tt2/error.tt2:46
 msgid "%1 : unknown list"
 msgstr "%1 : 확인 불가 리스트 (확인안됨)"
 
 #. (u_err.new_robot)
-#: web_tt2/error.tt2:46
+#: web_tt2/error.tt2:47
 msgid "%1 : unknown robot"
 msgstr "%1 : 확인 불가 해당장치(robot)"
 
 #. (u_err.family)
-#: web_tt2/error.tt2:47
+#: web_tt2/error.tt2:48
 msgid "%1 : unknown family"
 msgstr "%1 : 확인 불가 종류 (종류 확인안됨)"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:48
+#: web_tt2/error.tt2:49
 msgid "You are already logged in as %1"
 msgstr "%1 로 이미 로그인됩니다."
 
-#: web_tt2/error.tt2:49
+#: web_tt2/error.tt2:50
 msgid ""
 "You can not get a password reminder ; probably because your password is "
 "managed outside Sympa (Single Sign-On system or LDAP directory)."
@@ -1773,39 +1776,39 @@ msgstr ""
 "패스워드 미리 알림를 받올 수 없습니다; 패스워드가 이기 때문에 아마관리했든 외"
 "부 Sympa를 (단 하나 개시 미리 알림 체계 또는 LDAP 디렉토리)."
 
-#: web_tt2/error.tt2:50
+#: web_tt2/error.tt2:51
 msgid "Please provide email address"
 msgstr "이메일 주소 를 임륙하십시오"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:51
+#: web_tt2/error.tt2:52
 msgid "Missing argument %1"
 msgstr "%1 인수 없음"
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:52
+#: web_tt2/error.tt2:53
 msgid "Wrong value for parameter %1"
 msgstr "매개 변수 %1 를 위한 틀린 값"
 
-#: web_tt2/error.tt2:141 web_tt2/error.tt2:53
+#: web_tt2/error.tt2:142 web_tt2/error.tt2:54
 msgid "You need to login"
 msgstr "로그인 필요가 있습니다"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:54
+#: web_tt2/error.tt2:55
 msgid "Address \"%1\" is incorrect"
 msgstr "\"%1\" 주소는 잘 못 되었습니다."
 
-#: web_tt2/error.tt2:55
+#: web_tt2/error.tt2:56
 msgid "Provided password is incorrect"
 msgstr "제공했든 패스워드를 잘못됩니다"
 
-#: web_tt2/error.tt2:56
+#: web_tt2/error.tt2:57
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "패스워드 선택하지 않를, 요청하는 처음 패스워드의 미리 알림"
 
-#: web_tt2/error.tt2:57
+#: web_tt2/error.tt2:58
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -1814,329 +1817,329 @@ msgstr ""
 "알림"
 
 #. (u_err.nb_days)
-#: web_tt2/error.tt2:58
+#: web_tt2/error.tt2:59
 msgid "The period is too long (%1 days)"
 msgstr "기간 너무 깁니다 ( %1 일)"
 
-#: web_tt2/error.tt2:59
+#: web_tt2/error.tt2:60
 msgid "List has no subscribers"
 msgstr "리스트가 가입자 없음"
 
 #. (u_err.page)
-#: web_tt2/error.tt2:60
+#: web_tt2/error.tt2:61
 msgid "No page %1"
 msgstr "%1 란 페이지 없음"
 
-#: web_tt2/error.tt2:61
+#: web_tt2/error.tt2:62
 msgid "Missing filter"
 msgstr "필터 없음"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:63
+#: web_tt2/error.tt2:64
 msgid "Not subscribed: %1"
 msgstr "등록구독되지 않는: %1"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:64
+#: web_tt2/error.tt2:65
 msgid "You are not subscribed to list %1"
 msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
 
-#: web_tt2/error.tt2:66
+#: web_tt2/error.tt2:67
 #, fuzzy
 msgid "Check the additional information"
 msgstr "HTTPS 인증 정보"
 
 #. (u_err.reception_mode)
-#: web_tt2/error.tt2:67
+#: web_tt2/error.tt2:68
 msgid "%1 is not an available reception mode"
 msgstr "%1는 받기 모드(reception mode)가 가능하지 않습니다."
 
 #. (u_err.file)
-#: web_tt2/error.tt2:68
+#: web_tt2/error.tt2:69
 msgid "%1 : file not editable"
 msgstr "%1 : 파일 수정불가"
 
 #. (u_err.list)
-#: web_tt2/error.tt2:69
+#: web_tt2/error.tt2:70
 msgid "You are already subscribed to the list %1"
 msgstr "%1 메일링 리스트를 이미 등록구독됩니다."
 
 #. (u_err.email,u_err.list)
-#: web_tt2/error.tt2:70
+#: web_tt2/error.tt2:71
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1가 이미 %2메일링 리스트에 등록 되었습니다"
 
-#: web_tt2/error.tt2:71
+#: web_tt2/error.tt2:72
 msgid "Please provide your password"
 msgstr "패스워드를 임륙하십시오"
 
-#: web_tt2/error.tt2:72
+#: web_tt2/error.tt2:73
 msgid "The passwords you typed do not match"
 msgstr "입력한 패스워드 일치하지 않습니다"
 
 #. (u_err.tpl)
-#: web_tt2/error.tt2:73
+#: web_tt2/error.tt2:74
 msgid "Provided path is incorrect for template '%1'"
 msgstr "제공했든 경로를 템플렛 '%1'를 위해 잘못됩니다."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:74
+#: web_tt2/error.tt2:75
 msgid "Cannot open file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
-#: web_tt2/error.tt2:75
+#: web_tt2/error.tt2:76
 msgid "You need to provide list name"
 msgstr "리스트 이름 를 입력해야 합니다"
 
-#: web_tt2/error.tt2:76
+#: web_tt2/error.tt2:77
 msgid ""
 "Failed to moderate a message ; it was probably moderated by another moderator"
 msgstr ""
 "메시지를 살펴보기 실패했습니다. 다른 중재자 살펴보기 되었을 수 있습니다니다."
 
-#: web_tt2/error.tt2:77
+#: web_tt2/error.tt2:78
 msgid "Tagging message is required for this list"
 msgstr "메시지를 태그를 붙이는 이 리스트를 위해 요청됩니다"
 
-#: web_tt2/error.tt2:78
+#: web_tt2/error.tt2:79
 msgid "Archives are empty for this list"
 msgstr "보관(저장)이 이 리스트를 위해 비워있습니다"
 
-#: web_tt2/error.tt2:79
+#: web_tt2/error.tt2:80
 msgid "You did not select an action to perform"
 msgstr "수행하기 위해 선택하지 않았 작업을"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:80
+#: web_tt2/error.tt2:81
 msgid "No bounce for user  %1"
 msgstr "%1 가 반송된 메시지 없음"
 
-#: web_tt2/error.tt2:81
+#: web_tt2/error.tt2:82
 msgid "List has no bouncing subscribers"
 msgstr "리스트가 반송된 가입자 없음"
 
-#: web_tt2/error.tt2:82
+#: web_tt2/error.tt2:83
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "매개 변수 값"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:83
+#: web_tt2/error.tt2:84
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "구성 파일은 %1에 의해 변경됐습니다. 변경요청은 적용할 수 없습니다."
 
-#: web_tt2/error.tt2:84
+#: web_tt2/error.tt2:85
 msgid "Topic \"other\" is a reserved word"
 msgstr "화제 \"other\" 은 예약된 단어입니다"
 
 #. (u_err.param)
-#: web_tt2/error.tt2:85
+#: web_tt2/error.tt2:86
 msgid "Parameter '%1' must have values"
 msgstr "매개 변수 '%1' 에는 값 가 있어야 합니다"
 
 #. (u_err.param,u_err.val)
-#: web_tt2/error.tt2:86
+#: web_tt2/error.tt2:87
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr "매개 변수 '%1' 는 틀린 값이 잘못되었습니다 : %2"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 msgid "The list '%1' is already closed"
 msgstr "'%1' 리스트 이미 종료되었습니다"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 msgid "The list '%1' is not closed"
 msgstr "'%1' 리스트 닫히지 않습니다"
 
 #. (u_err.bad_listname)
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 msgid "'%1' : bad listname"
 msgstr "'%1' : 적합하지 않은 리스트 이름"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 msgid "'%1' list already exists"
 msgstr "'%1'리스트는 이미 있습니다"
 
 #. (u_err.new_listname)
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr "잘못된 리스트 이름 '%1' : 서비스 별명 중 하나와 동일함"
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "리스트 '%1' 위한 관리자(들)을 포함하기 실패했습니다"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 msgid "%1 : No such file or directory"
 msgstr "%1 : 다음과 같은 파일 또는 디렉토리 없음"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 msgid "Unable to read %1 : empty document"
 msgstr "%1 를 읽을 수 없음 : 빈 문서"
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 msgid "There is no shared documents"
 msgstr "공용 문서 가 없음"
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "The shared document space is empty"
 msgstr "공용 문서 공간 빕니다"
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "The shared directory cannot have any description"
 msgstr "공용 디렉토리가 묘사 가질 수 없습니다"
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "No description specified"
 msgstr "지정된 묘사 없음"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "기술할 수 없음 는 , 문서 '%1' 존재하지 않습니다"
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "데이터는 디스크에 변경되었습니다. 당신의 변경은 적용할 수 없습니다"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "%1 : incorrect name"
 msgstr "%1 : 잘못된 이름"
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 msgid "Failed : your content is empty"
 msgstr "실패: 내용은 빕니다"
 
 #. (u_err.path)
-#: web_tt2/error.tt2:103
+#: web_tt2/error.tt2:104
 msgid "Cannot overwrite file %1"
 msgstr "파일 %1 를 중복해 쓸 수 없습니다."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:104
+#: web_tt2/error.tt2:105
 msgid "A directory named '%1' already exists"
 msgstr "'%1' 라는 디렉토리 이미 있습니다"
 
 #. (u_err.name)
-#: web_tt2/error.tt2:105
+#: web_tt2/error.tt2:106
 msgid "This is an already existing document : '%1'"
 msgstr "다음 문서가 이미 있습니다 : '%1'"
 
-#: web_tt2/error.tt2:106
+#: web_tt2/error.tt2:107
 msgid "No name specified"
 msgstr "지정된 이름 없음"
 
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "The document repository exceed disk quota."
 msgstr "문서 창고가 디스크 할당량 초과합니다."
 
 #. (u_err.path)
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "Cannot upload file %1"
 msgstr "파일 %1 를 업로드할 수 없습니다."
 
 #. (u_err.dir)
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "%1 에 INDEX.HTML를 업로드하는 인증되지 않았습니다."
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 msgid "The upload failed, try it again"
 msgstr "업로드 실패하고, 다시 시도 그것에 가"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:111
+#: web_tt2/error.tt2:112
 msgid "Directory %1 and its contents could not be copied : %2"
 msgstr "디렉토리 %1 와 내용은 복사할 수 없었습니다 : %2"
 
 #. (u_err.name,u_err.reason)
-#: web_tt2/error.tt2:112
+#: web_tt2/error.tt2:113
 msgid "File %1 was not copied : %2 "
 msgstr "파일 %1 는 복사할 수 없습니다 : %2 "
 
 #. (u_err.directory)
-#: web_tt2/error.tt2:113
+#: web_tt2/error.tt2:114
 msgid "Failed : %1 not empty"
 msgstr "실패: %1 는 비지 않음"
 
-#: web_tt2/error.tt2:114
+#: web_tt2/error.tt2:115
 msgid "No certificate for this list"
 msgstr "리스트의 인증서 없음"
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "This list has no message topic"
 msgstr "이 리스트가 메시지 화제 없습니다"
 
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "Tag message with topic is required for this list"
 msgstr "화제에 태그 메시지 이 리스트를 위해 요청됩니다"
 
 #. (u_err.email)
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "No entry for user '%1'"
 msgstr "사용자 '%1' 를 위한 입장 없음"
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 msgid "Please select archive months"
 msgstr "보관 달 선택하십시오"
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "No SOAP service"
 msgstr "SOAP 서비스 없음"
 
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "Authentication failed"
 msgstr "인증이 실패 되었습니다"
 
 #. (u_err.status)
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "파일 %1 이미 있습니다"
 
 #. (u_err.file_del)
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
 #. (u_err.filename)
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:125
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "파일을 읽을 수 없음 : '%1'."
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:125
+#: web_tt2/error.tt2:126
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (u_err.listname)
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:127
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (auth.action)
-#: web_tt2/error.tt2:135
+#: web_tt2/error.tt2:136
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "허가 거부 (%1)"
 
 #. (auth.listname)
-#: web_tt2/error.tt2:137
+#: web_tt2/error.tt2:138
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe :"
@@ -2163,7 +2166,7 @@ msgstr "요청했습니다에 의해"
 
 #: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328
 #: web_tt2/get_closed_lists.tt2:29 web_tt2/modindex.tt2:124
-#: web_tt2/modindex.tt2:193 web_tt2/review.tt2:278
+#: web_tt2/modindex.tt2:181 web_tt2/review.tt2:278
 #: web_tt2/reviewbouncing.tt2:133
 msgid "Toggle Selection"
 msgstr "모두 선택/해제"
@@ -2292,40 +2295,39 @@ msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr ""
 "<strong>%1</strong> 라는 주소을 위한 사용자 구독 메일링 리스트는 없것 같은데."
 
-#: web_tt2/loginbanner.tt2:18
+#: web_tt2/loginbanner.tt2:19
 #, fuzzy
 msgid "To login, select your organization authentication server below:"
 msgstr "인증 서버를 선택하십시오"
 
-#: web_tt2/loginbanner.tt2:24
+#: web_tt2/loginbanner.tt2:25
 msgid "Go"
 msgstr "시작"
 
-#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:40
 #: web_tt2/sso_login.tt2:45
 msgid "email address"
 msgstr "이메일 주소"
 
-#: web_tt2/loginbanner.tt2:41 web_tt2/sigrequest.tt2:37
-#: web_tt2/sigrequest.tt2:69 web_tt2/sso_login.tt2:47
+#: web_tt2/loginbanner.tt2:42 web_tt2/sso_login.tt2:47
 #: web_tt2/subrequest.tt2:59
 msgid "password"
 msgstr "패스워드"
 
-#: web_tt2/loginbanner.tt2:43
+#: web_tt2/loginbanner.tt2:44
 msgid "Login"
 msgstr "로그인"
 
-#: web_tt2/loginbanner.tt2:51
+#: web_tt2/loginbanner.tt2:52
 #, fuzzy
 msgid "Authentication help"
 msgstr "인증"
 
-#: web_tt2/loginbanner.tt2:53
+#: web_tt2/loginbanner.tt2:54
 msgid "First login ?"
 msgstr "처음 사용하십니까?"
 
-#: web_tt2/loginbanner.tt2:54
+#: web_tt2/loginbanner.tt2:55
 msgid "Lost password ?"
 msgstr "패스워드 찾기"
 
@@ -2434,15 +2436,10 @@ msgstr ""
 msgid "Modify or delete existing rejection messages"
 msgstr "편집자 거부 메시지"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/manage_template.tt2:10 web_tt2/manage_template.tt2:9
 #, fuzzy
-msgid "Listing rejection message"
+msgid "Listing rejection messages"
 msgstr "편집자 거부 메시지"
-
-#: web_tt2/manage_template.tt2:10
-#, fuzzy
-msgid "Rejection message"
-msgstr "삭제 메시지"
 
 #: web_tt2/manage_template.tt2:11
 #, fuzzy
@@ -2491,6 +2488,11 @@ msgstr " 최신 메시지들 "
 
 #: web_tt2/manage_template.tt2:85
 #, fuzzy
+msgid "New message name:"
+msgstr "메시지 화제 이름"
+
+#: web_tt2/manage_template.tt2:85
+#, fuzzy
 msgid "create"
 msgstr "생성하기"
 
@@ -2503,7 +2505,7 @@ msgstr "살펴보기 목록 메시지"
 msgid "Distribute"
 msgstr "배포하기"
 
-#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:157 web_tt2/modindex.tt2:196
+#: web_tt2/modindex.tt2:116 web_tt2/modindex.tt2:145 web_tt2/modindex.tt2:184
 #: web_tt2/modindex.tt2:24 web_tt2/viewmod.tt2:14
 msgid "Reject"
 msgstr "거부하기"
@@ -2537,7 +2539,7 @@ msgid ""
 "to distribute :"
 msgstr "한개 이상 바라는 메시지에 대응하는 화제 (s)를 선택하기배포하기 위해:"
 
-#: web_tt2/modindex.tt2:166 web_tt2/modindex.tt2:70
+#: web_tt2/modindex.tt2:154 web_tt2/modindex.tt2:70
 msgid "Size"
 msgstr "크기"
 
@@ -2545,7 +2547,7 @@ msgstr "크기"
 msgid "No subject"
 msgstr "제목"
 
-#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:158 web_tt2/modindex.tt2:197
+#: web_tt2/modindex.tt2:117 web_tt2/modindex.tt2:146 web_tt2/modindex.tt2:185
 msgid "Notified reject"
 msgstr "거부 통지"
 
@@ -2557,31 +2559,31 @@ msgstr "거부하고 보낸 사람를 블랙리스트하기"
 msgid "Toggle spams"
 msgstr ""
 
-#: web_tt2/modindex.tt2:134
+#: web_tt2/modindex.tt2:142
+msgid "Listing of shared documents to moderate"
+msgstr "살펴보기 공용 문서의 목록"
+
+#: web_tt2/modindex.tt2:144 web_tt2/modindex.tt2:183
+msgid "Install"
+msgstr "설치하기"
+
+#: web_tt2/modindex.tt2:148
+msgid "Listing of documents shared to moderate"
+msgstr "문서의 목록 는 살펴보기 하기 위해 공용됬습니다"
+
+#: web_tt2/modindex.tt2:179 web_tt2/modindex.tt2:198
+msgid "edit blacklist"
+msgstr "블랙리스트 편집"
+
+#: web_tt2/modindex.tt2:191
 #, fuzzy
 msgid "Moderation management"
 msgstr "사용자 관리"
 
-#: web_tt2/modindex.tt2:141 web_tt2/modindex.tt2:191
-msgid "edit blacklist"
-msgstr "블랙리스트 편집"
-
-#: web_tt2/modindex.tt2:143
+#: web_tt2/modindex.tt2:200
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "편집자 거부 메시지"
-
-#: web_tt2/modindex.tt2:154
-msgid "Listing of shared documents to moderate"
-msgstr "살펴보기 공용 문서의 목록"
-
-#: web_tt2/modindex.tt2:156 web_tt2/modindex.tt2:195
-msgid "Install"
-msgstr "설치하기"
-
-#: web_tt2/modindex.tt2:160
-msgid "Listing of documents shared to moderate"
-msgstr "문서의 목록 는 살펴보기 하기 위해 공용됬습니다"
 
 #. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
@@ -3599,72 +3601,28 @@ msgstr ""
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25
-msgid "You requested unsubscription from list %1"
-msgstr "%1 메일링 리스트으로 등록취소 이 요청했습니다."
+msgid ""
+"We need to check your identity before validating your unsubscription request "
+"for list %1. If you have a user account you should login or create an "
+"account. <br/>Otherwise we can send you an email with a validation link "
+"inside ; please provide your email address below to receive this validation "
+"link."
+msgstr ""
 
 #: web_tt2/sigrequest.tt2:29
-msgid ""
-"To confirm your identity and prevent anyone from unsubscribing you from \n"
-"\tthis list against your will, a message containing an URL\n"
-"\twill be sent to you."
-msgstr ""
-"신원을 확인하고 누구나를 자신을에서 등록취소하기에서 막 위해\n"
-"\tthis는 의지에 대해 리스트, URL\n"
-" 를 포함하는 메시지\t능직물 보내집니다."
-
-#. (list)
-#: web_tt2/sigrequest.tt2:32
-msgid ""
-"Check your mailbox for new messages and examine the message from Sympa to "
-"find your password.\n"
-"  Enter that password, below. This wil confirm your request to be "
-"unsubscribed from list %1."
-msgstr ""
-" 패스워드를 찾기 위해서는 당신의 메일박스에서 새로운 메시지나 Sympa 시스템으"
-"로부터 받은 메시지들을 검사하십시요.아래에 패스워드를 입력 하십시요. 이 것은 "
-"요구한 리스트의 구독등록 취소를 확인할 것입니다."
-
-#: web_tt2/sigrequest.tt2:36 web_tt2/sigrequest.tt2:68
-#: web_tt2/subrequest.tt2:58
-msgid "e-mail address"
-msgstr "이메일 주소"
-
-#: web_tt2/sigrequest.tt2:45
-msgid ""
-"This password, associated with your email address, will allow you to access "
-"your custom environment."
-msgstr ""
-"이 패스워드 사용하려면 이메일 주소가 관련된 이 패스워드, 는 액세스하는 것을 "
-"허용할 것 자신이사용자 지정 환경."
-
-#. (list)
-#: web_tt2/sigrequest.tt2:48
-msgid ""
-"Please provide your email address for your unsubscription request from list %"
-"1."
-msgstr "제공하기 메일링 리스트 %1 에서 구독 취소 요청를 이메일 주소."
-
-#: web_tt2/sigrequest.tt2:52
 msgid "Your e-mail address :"
 msgstr "이메일 주소 :"
 
-#. (list)
-#: web_tt2/sigrequest.tt2:64
+#: web_tt2/sigrequest.tt2:33
+#, fuzzy
+msgid "Send me a validation link"
+msgstr "확인 패스워드 전송하기"
+
+#: web_tt2/sigrequest.tt2:40
 msgid ""
-"To confirm your unsubscription from list %1, please enter\n"
-"\tyour password below :"
+"We've sent you an email including a validation link. You should check your "
+"mailbox to read this email and use this validation link."
 msgstr ""
-"%1 메일링 리스트 에서 등록취소를 확인하기 위해, 들어갑니다\n"
-"\t아래 패스워드:"
-
-#: web_tt2/sigrequest.tt2:76
-msgid ""
-"If you've never had a password from that server or if you don't remember it :"
-msgstr "결코 저 서버에서 패스워드가 없거나 만약에 그것을 기억하지 않으면:"
-
-#: web_tt2/sigrequest.tt2:76
-msgid "Send me my password"
-msgstr "나의 패스워드 전송하기"
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -3975,8 +3933,8 @@ msgstr "%1 메일링 리스트를 등록구독합니다"
 #, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"        this list against your will, a message containing an validation link "
+"was sent to the e-mail address you provided."
 msgstr ""
 "신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
 "\tthis는 의지에 대해 리스트, 패스워드\n"
@@ -3986,7 +3944,7 @@ msgstr ""
 #: web_tt2/subrequest.tt2:32
 #, fuzzy
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
+"Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
 msgstr ""
 "우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾아"
@@ -4007,6 +3965,10 @@ msgstr ""
 #: web_tt2/subrequest.tt2:53
 msgid ", in addition to the personnal informations requested."
 msgstr ""
+
+#: web_tt2/subrequest.tt2:58
+msgid "e-mail address"
+msgstr "이메일 주소"
 
 #: web_tt2/subrequest.tt2:69
 msgid "My password ?"
@@ -4143,7 +4105,7 @@ msgstr "검색 기간: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15640
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15628
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
@@ -6488,7 +6450,7 @@ msgstr "메일링 리스트 %1@%2를 위한 암호화된 메시지"
 
 #: mail_tt2/moderate.tt2:16
 #, fuzzy
-msgid "This message as been tagged as spam"
+msgid "This message has been tagged as spam"
 msgstr "기타 (표를 붙이지 않는 메시지) "
 
 #. (mod_spool_size)
@@ -6899,6 +6861,19 @@ msgstr "당신의 이메일 주소 바꾸기"
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
 "new email address with the SYMPA server, please click the link below :"
+msgstr ""
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:47
+#, fuzzy
+msgid "Unsubscribing from list %1"
+msgstr "%1 메일링 리스트에서 등록취소"
+
+#. (list.name)
+#: mail_tt2/user_notification.tt2:49
+msgid ""
+"You have requested to removed from list %1. To confirm and get removed from "
+"the list, please click the link below: "
 msgstr ""
 
 #. (list.name)
@@ -7452,7 +7427,8 @@ msgid "Daily evaluation of bouncing users"
 msgstr "매일 반송된 사용자에대한 평가"
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
+#, fuzzy
+msgid "daily delete logs "
 msgstr "매일 삭제 삭제하는 3 달 더 오래되게"
 
 #: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
@@ -7492,6 +7468,7 @@ msgid "remind message sent to subscribers every year"
 msgstr "매년마다 가입자들에 보내진 알림 메시지"
 
 #: src/etc/list_task_models/sync_include.ttl.task:1
+#: src/etc/list_task_models/sync_include.ttl.task~:1
 msgid "Update of list members based on the TTL"
 msgstr "TTL에 근거하는 리스트 가입자의 업데이트"
 
@@ -7576,7 +7553,7 @@ msgstr "구성 파일 --설치은 에러을 포함합니다.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9412
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9400
 msgid "%A"
 msgstr "%a"
 
@@ -7587,7 +7564,7 @@ msgstr "에러 (%d 행) : %s"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:487 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
+#: wwsympa/Auth.pm:469 wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
@@ -8232,16 +8209,16 @@ msgstr "%Y년%m월%d일 (%a)"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10779 wwsympa/wwsympa.fcgi:10848
-#: wwsympa/wwsympa.fcgi:11050 wwsympa/wwsympa.fcgi:11387
-#: wwsympa/wwsympa.fcgi:15226 wwsympa/wwsympa.fcgi:15940
-#: wwsympa/wwsympa.fcgi:15941 wwsympa/wwsympa.fcgi:4701
-#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6083
-#: wwsympa/wwsympa.fcgi:7103 wwsympa/wwsympa.fcgi:7637
-#: wwsympa/wwsympa.fcgi:7674 wwsympa/wwsympa.fcgi:7676
-#: wwsympa/wwsympa.fcgi:8140 wwsympa/wwsympa.fcgi:8141
-#: wwsympa/wwsympa.fcgi:8175 wwsympa/wwsympa.fcgi:8176
-#: wwsympa/wwsympa.fcgi:8355 wwsympa/wwsympa.fcgi:8356
+#: wwsympa/wwsympa.fcgi:10767 wwsympa/wwsympa.fcgi:10836
+#: wwsympa/wwsympa.fcgi:11038 wwsympa/wwsympa.fcgi:11375
+#: wwsympa/wwsympa.fcgi:15214 wwsympa/wwsympa.fcgi:15928
+#: wwsympa/wwsympa.fcgi:15929 wwsympa/wwsympa.fcgi:4701
+#: wwsympa/wwsympa.fcgi:4702 wwsympa/wwsympa.fcgi:6072
+#: wwsympa/wwsympa.fcgi:7091 wwsympa/wwsympa.fcgi:7625
+#: wwsympa/wwsympa.fcgi:7662 wwsympa/wwsympa.fcgi:7664
+#: wwsympa/wwsympa.fcgi:8128 wwsympa/wwsympa.fcgi:8129
+#: wwsympa/wwsympa.fcgi:8163 wwsympa/wwsympa.fcgi:8164
+#: wwsympa/wwsympa.fcgi:8343 wwsympa/wwsympa.fcgi:8344
 msgid "%d %b %Y"
 msgstr "%Y년%m월%d일"
 
@@ -8358,7 +8335,7 @@ msgstr "[이미지 %s]"
 msgid "[Image%s]"
 msgstr "[이미지 %s]"
 
-#: src/sympa.pl:2093
+#: src/sympa.pl:2088
 msgid "Unable to access directory %s : %m"
 msgstr "디렉토리 %s : %m 에 액세스할 수 없습니다"
 
@@ -8375,14 +8352,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:435 wwsympa/SympaSession.pm:436
-#: wwsympa/wwsympa.fcgi:11611 wwsympa/wwsympa.fcgi:11744
-#: wwsympa/wwsympa.fcgi:14057 wwsympa/wwsympa.fcgi:7597
+#: wwsympa/wwsympa.fcgi:11599 wwsympa/wwsympa.fcgi:11732
+#: wwsympa/wwsympa.fcgi:14045 wwsympa/wwsympa.fcgi:7585
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15585 wwsympa/wwsympa.fcgi:15586
+#: wwsympa/wwsympa.fcgi:15573 wwsympa/wwsympa.fcgi:15574
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8534,44 +8511,46 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
-#: web_tt2/change_email.tt2:3
-msgid "You will receive an email, reminding you your password."
-msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
-
-#: web_tt2/change_email.tt2:5
-msgid ""
-"To confirm your email address change, please enter the password\n"
-"you received below :"
-msgstr ""
-"이메일 주소 변화를 확인하기 위해, 입력하기 패스워드\n"
-"아래와 같이 받았습니다:"
-
-#: web_tt2/change_email.tt2:12
-msgid "Change my email address"
-msgstr "나의 이메일 주소 바꾸기"
-
-#: web_tt2/manage_template.tt2:4
+#: web_tt2/manage_template.tt2:9
 #, fuzzy
-msgid "Modify or Delete existing messages"
+msgid "Listing rejection message"
 msgstr "편집자 거부 메시지"
 
-#: web_tt2/manage_template.tt2:27
+#: web_tt2/subrequest.tt2:31
 #, fuzzy
-msgid "Create New Reject Messages"
-msgstr " 최신 메시지들 "
+msgid ""
+"To confirm your identity and prevent anyone from subscribing you to\n"
+"        this list against your will, a message containing an authentication "
+"URL was sent to the e-mail address you provided."
+msgstr ""
+"신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
+"\tthis는 의지에 대해 리스트, 패스워드\n"
+" 를 포함하는 메시지\t능직물 보내집니다."
 
-#: web_tt2/manage_template.tt2:31
+#. (list)
+#: web_tt2/subrequest.tt2:32
 #, fuzzy
-msgid "Default Template"
-msgstr "입력 템플렛"
+msgid ""
+"Check your mailbox for new messages and click this URL. This will confirm "
+"your subscription to list %1."
+msgstr ""
+"우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾아"
+"내하기.\n"
+"저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스트 %"
+"1 에서."
+
+#: mail_tt2/moderate.tt2:16
+#, fuzzy
+msgid "This message as been tagged as spam"
+msgstr "기타 (표를 붙이지 않는 메시지) "
+
+#: src/etc/global_task_models/purge_logs_table.daily.task:1
+msgid "daily delete logs older than 3 months"
+msgstr "매일 삭제 삭제하는 3 달 더 오래되게"
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
 msgstr ""
-
-#: web_tt2/pref.tt2:67
-msgid "Other email address :"
-msgstr "다른 이메일 주소 :"
 
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:168
@@ -8626,6 +8605,87 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Rejection message"
+#~ msgstr "삭제 메시지"
+
+#~ msgid "You requested unsubscription from list %1"
+#~ msgstr "%1 메일링 리스트으로 등록취소 이 요청했습니다."
+
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from unsubscribing you from \n"
+#~ "\tthis list against your will, a message containing an URL\n"
+#~ "\twill be sent to you."
+#~ msgstr ""
+#~ "신원을 확인하고 누구나를 자신을에서 등록취소하기에서 막 위해\n"
+#~ "\tthis는 의지에 대해 리스트, URL\n"
+#~ " 를 포함하는 메시지\t능직물 보내집니다."
+
+#~ msgid ""
+#~ "Check your mailbox for new messages and examine the message from Sympa to "
+#~ "find your password.\n"
+#~ "  Enter that password, below. This wil confirm your request to be "
+#~ "unsubscribed from list %1."
+#~ msgstr ""
+#~ " 패스워드를 찾기 위해서는 당신의 메일박스에서 새로운 메시지나 Sympa 시스템"
+#~ "으로부터 받은 메시지들을 검사하십시요.아래에 패스워드를 입력 하십시요. 이 "
+#~ "것은 요구한 리스트의 구독등록 취소를 확인할 것입니다."
+
+#~ msgid ""
+#~ "This password, associated with your email address, will allow you to "
+#~ "access your custom environment."
+#~ msgstr ""
+#~ "이 패스워드 사용하려면 이메일 주소가 관련된 이 패스워드, 는 액세스하는 것"
+#~ "을 허용할 것 자신이사용자 지정 환경."
+
+#~ msgid ""
+#~ "Please provide your email address for your unsubscription request from "
+#~ "list %1."
+#~ msgstr "제공하기 메일링 리스트 %1 에서 구독 취소 요청를 이메일 주소."
+
+#~ msgid ""
+#~ "To confirm your unsubscription from list %1, please enter\n"
+#~ "\tyour password below :"
+#~ msgstr ""
+#~ "%1 메일링 리스트 에서 등록취소를 확인하기 위해, 들어갑니다\n"
+#~ "\t아래 패스워드:"
+
+#~ msgid ""
+#~ "If you've never had a password from that server or if you don't remember "
+#~ "it :"
+#~ msgstr "결코 저 서버에서 패스워드가 없거나 만약에 그것을 기억하지 않으면:"
+
+#~ msgid "Send me my password"
+#~ msgstr "나의 패스워드 전송하기"
+
+#~ msgid "You will receive an email, reminding you your password."
+#~ msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
+
+#~ msgid ""
+#~ "To confirm your email address change, please enter the password\n"
+#~ "you received below :"
+#~ msgstr ""
+#~ "이메일 주소 변화를 확인하기 위해, 입력하기 패스워드\n"
+#~ "아래와 같이 받았습니다:"
+
+#~ msgid "Change my email address"
+#~ msgstr "나의 이메일 주소 바꾸기"
+
+#, fuzzy
+#~ msgid "Modify or Delete existing messages"
+#~ msgstr "편집자 거부 메시지"
+
+#, fuzzy
+#~ msgid "Create New Reject Messages"
+#~ msgstr " 최신 메시지들 "
+
+#, fuzzy
+#~ msgid "Default Template"
+#~ msgstr "입력 템플렛"
+
+#~ msgid "Other email address :"
+#~ msgstr "다른 이메일 주소 :"
 
 #~ msgid "Password for %1"
 #~ msgstr "%1 를 위한 패스워드"
