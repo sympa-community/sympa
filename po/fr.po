@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2008-09-30 16:55+0200\n"
+"PO-Revision-Date: 2008-10-27 17:11+0100\n"
 "Last-Translator: Olivier Salaün <os@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "Nouveautés RSS"
 #. (user.email)
 #: web_tt2/login.tt2:3
 msgid "You have logged in with email address %1"
-msgstr "Vous êtes identifié avec l'adresse %1"
+msgstr "Vous êtes connecté avec l'adresse %1"
 
 #: web_tt2/main.tt2:14
 msgid "RSS Latest messages"
@@ -129,11 +129,11 @@ msgstr "Abonné"
 #. (last_login_host,last_login_date)
 #: web_tt2/login_menu.tt2:22
 msgid "last login from %1 <br />(%2)</span>"
-msgstr "Dernière connection depuis %1 <br/>(%2)</span>"
+msgstr "Dernière connexion depuis %1 <br/>(%2)</span>"
 
 #: web_tt2/login_menu.tt2:34
 msgid "Logout"
-msgstr "Logout"
+msgstr "Déconnexion"
 
 #: web_tt2/login_menu.tt2:41
 msgid "Your preferences"
@@ -818,41 +818,37 @@ msgid "Template saved"
 msgstr "Modèle mis à jour"
 
 #: web_tt2/change_email_request.tt2:3
-#, fuzzy
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
 "your email."
 msgstr ""
 "Le changement de votre adresse email est une opération sensible, c'est "
-"pourquoi nous devons authentifier la demande préalablement."
+"pourquoi nous devons vérifier votre adresse email préalablement."
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
-#, fuzzy
 msgid ""
 "To this end we have sent you an email to this address : %1 with a validation "
 "link."
 msgstr ""
-"Dans ce but nous vous avons envoyé un message de validation à l'adresse %1 ; "
-"il contient un ticket de validation de votre demande."
+"Dans ce but nous vous avons envoyé un email à l'adresse %1 ; il contient un "
+"lien de validation de votre demande."
 
 #: web_tt2/change_email_request.tt2:5
 msgid "You shoukd check your mailbox now."
-msgstr ""
+msgstr "Veuillez consulter votre boîte aux lettres."
 
 #: web_tt2/change_email.tt2:3
-#, fuzzy
 msgid "You will receive a n email, with a confirmation link."
-msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
+msgstr "Vous allez recevoir un email comprenant un lien de confirmation."
 
 #: web_tt2/change_email.tt2:4
-#, fuzzy
 msgid ""
 "To confirm your email address change, go to your email account and click on "
 "the provided link"
 msgstr ""
 "Pour confirmer votre changement d'adresse, relevez votre boite aux lettres "
-"afin de validez le ticket que nous vous avons envoyé."
+"et cliquez sur le lien qui vous est fourni."
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -1745,6 +1741,7 @@ msgstr "Impossible d'accéder au message authentifié avec la clé %1."
 #: web_tt2/error.tt2:19
 msgid "Failed to get your email address from the authentication service."
 msgstr ""
+"Votre serveur d'authentification ne nous a pas transmis votre adresse email."
 
 #. (i_err.key)
 #. (zipfile)
@@ -1844,7 +1841,7 @@ msgstr "Valeurs incorrectes du paramètre %1"
 
 #: web_tt2/error.tt2:142 web_tt2/error.tt2:54
 msgid "You need to login"
-msgstr "Vous devez vous identifier"
+msgstr "Vous devez vous connecter"
 
 #. (u_err.email)
 #: web_tt2/error.tt2:55
@@ -2287,7 +2284,7 @@ msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should configure your browser to accept cookies"
 msgstr ""
-"Sympa ne parvient pas à positionner un cookie d'authentification dans votre "
+"Sympa ne parvient pas à positionner un cookie de connexion dans votre "
 "navigateur.\n"
 "Vous devez probablement paramétrer votre navigateur pour qu'il accepte les "
 "cookies."
@@ -2365,8 +2362,8 @@ msgstr "Pas d'abonnements avec l'adresse <strong>%1</strong> !"
 #: web_tt2/loginbanner.tt2:19
 msgid "To login, select your organization authentication server below:"
 msgstr ""
-"Pour vous authentifier, sélectionnez votre serveur d'authentification ci-"
-"dessous :"
+"Pour vous connecter, sélectionnez le serveur d'authentification de votre "
+"organisme ci-dessous :"
 
 #: web_tt2/loginbanner.tt2:25
 msgid "Go"
@@ -2385,7 +2382,7 @@ msgstr "mot de passe"
 
 #: web_tt2/loginbanner.tt2:44
 msgid "Login"
-msgstr "Login"
+msgstr "Connexion"
 
 # nlsref 6,15
 #: web_tt2/loginbanner.tt2:52
@@ -2394,7 +2391,7 @@ msgstr "Aide sur l'authentification"
 
 #: web_tt2/loginbanner.tt2:54
 msgid "First login ?"
-msgstr "Premier login ?"
+msgstr "Première connexion ?"
 
 #: web_tt2/loginbanner.tt2:55
 msgid "Lost password ?"
@@ -2405,8 +2402,8 @@ msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
-"Vous devez vous identifier pour accéder à votre environnement personnalisé "
-"ou effectuer une opération privilégiée (requérant votre adresse email)."
+"Vous devez vous connecter pour accéder à votre environnement personnalisé ou "
+"effectuer une opération privilégiée (requérant votre adresse email)."
 
 #: web_tt2/ls_templates.tt2:7
 msgid ""
@@ -2514,9 +2511,8 @@ msgstr "Modifier ou supprimer les message de rejet"
 
 # nlsref 15,7
 #: web_tt2/manage_template.tt2:10 web_tt2/manage_template.tt2:9
-#, fuzzy
 msgid "Listing rejection messages"
-msgstr "Les messages de rejet"
+msgstr "Voir les messages de rejet"
 
 #: web_tt2/manage_template.tt2:11
 msgid "Use as default"
@@ -2558,9 +2554,8 @@ msgid "Create new rejection messages"
 msgstr "Créer un nouveau message de rejet"
 
 #: web_tt2/manage_template.tt2:85
-#, fuzzy
 msgid "New message name:"
-msgstr "Nom du message"
+msgstr "Nom du nouveau message"
 
 #: web_tt2/manage_template.tt2:85
 msgid "create"
@@ -2659,7 +2654,7 @@ msgstr "Gestion des messages de rejet"
 #. (last_login_host,last_login_date)
 #: web_tt2/notice.tt2:5
 msgid "last login from %1 (%2)"
-msgstr "Dernière connection depuis %1 (%2)"
+msgstr "Dernière connexion depuis %1 (%2)"
 
 #: web_tt2/notice.tt2:10
 msgid "Your request has been forwarded to the list owner"
@@ -2923,10 +2918,10 @@ msgstr ""
 "Peut-être avez-vous oublié votre mot de passe ?"
 
 #: web_tt2/renewpasswd.tt2:13
-#, fuzzy
 msgid "You will receive an email that will allow you to choose your password."
 msgstr ""
-"Vous allez recevoir un e-mail qui vous permettra de choisir un mot de passe."
+"Vous allez recevoir un email qui vous permettra de choisir votre mot de "
+"passe."
 
 #: web_tt2/renewpasswd.tt2:16
 msgid "In order to use Sympa, you will need to define a password."
@@ -2965,21 +2960,21 @@ msgid ""
 "We've sent you an email that will allow you choose your password. Please "
 "check your mailbox."
 msgstr ""
+"Nous vous avons envoyé un email qui vous permettra de définir votre mot de "
+"passe. Veuillez consulter votre boite aux lettres."
 
 # nlsref 6,35
 #: web_tt2/requestpasswd.tt2:10
-#, fuzzy
 msgid "We were not able to send you a validation message."
-msgstr "Le système n'a pas pu vous envoyer l'email approprié."
+msgstr "Le système n'a pas pu vous envoyer un email de validation."
 
 #: web_tt2/requestpasswd.tt2:14
-#, fuzzy
 msgid ""
 "Internal error : could not build a validation link, please contact the "
 "service administrator"
 msgstr ""
-"Erreur interne : impossible de créer un ticket. Veuillez contacter "
-"l'administrateur du service de liste."
+"Erreur interne : impossible de créer un lien de validation. Veuillez "
+"contacter l'administrateur du service de liste."
 
 #: web_tt2/requestpasswd.tt2:18
 msgid "Unkown error."
@@ -3704,21 +3699,28 @@ msgid ""
 "inside ; please provide your email address below to receive this validation "
 "link."
 msgstr ""
+"Nous devons vérifier votre identité avant de valider votre demande de "
+"désabonnement de la liste %1. Si vous disposez d'un compte utilisateur, vous "
+"devez vous connecter avec celui-ci en suivant le lien \"Connexion\".<br/> "
+"Sinon nous pouvons vous envoyer un email contenant un lien de validation. "
+"Veuiilez saisir votre adresse email ci-dessous pour recevoir ce lien de "
+"validation."
 
 #: web_tt2/sigrequest.tt2:29
 msgid "Your e-mail address :"
 msgstr "Votre adresse email :"
 
 #: web_tt2/sigrequest.tt2:33
-#, fuzzy
 msgid "Send me a validation link"
-msgstr "Envoyez-moi un mot de passe de confirmation"
+msgstr "Envoyez-moi un lien de validation"
 
 #: web_tt2/sigrequest.tt2:40
 msgid ""
 "We've sent you an email including a validation link. You should check your "
 "mailbox to read this email and use this validation link."
 msgstr ""
+"Nous vous avons envoyé un email comprenant un lien de validation. Vous "
+"devriez relever votre boite aux lettres afin valider votre demande."
 
 #: web_tt2/skinsedit.tt2:5
 msgid "Cascading Style Sheet"
@@ -4088,24 +4090,22 @@ msgid "I subscribe to list %1"
 msgstr "Je m'abonne à %1"
 
 #: web_tt2/subrequest.tt2:31
-#, fuzzy
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to\n"
 "        this list against your will, a message containing an validation link "
 "was sent to the e-mail address you provided."
 msgstr ""
 "Pour valider votre identité et empêcher un tiers de vous abonner à\n"
-"votre insu, un message vous a été envoyé. Il contient une URL authentifiante."
+"votre insu, un message contenant un lien de validation vous a été envoyé."
 
 #. (list)
 #: web_tt2/subrequest.tt2:32
-#, fuzzy
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
 "your subscription to list %1."
 msgstr ""
-"Surveillez votre boîte aux lettres et cliquez sur le lien fourni. Ainsi vous "
-"confirmerez votre validerez votre abonnement à la liste %1."
+"Veuillez relever votre boite aux lettres et cliquez sur le lien fourni. "
+"Ainsi vous confirmerez votre abonnement à la liste %1."
 
 #. (list)
 #: web_tt2/subrequest.tt2:51
@@ -4140,13 +4140,12 @@ msgstr "Désolé, cette opération n'est pas possible."
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
 msgid "A validation link was sent to you on %1. "
-msgstr ""
+msgstr "Un lien de validation vous a été envoyé à l'adresse %1."
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-#, fuzzy
 msgid "(the validation link was requested from host %1) "
-msgstr "(le ticket a été demandé depuis l'hôte %1)"
+msgstr "(le lien de validation a été demandé depuis le poste %1)"
 
 # nlsref 17,1
 #: web_tt2/ticket.tt2:11
@@ -4155,32 +4154,28 @@ msgstr "raison"
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
-#, fuzzy
 msgid ""
 "The validation link has already been validated from host %1 .If you did not "
 "perform this validation, please report this confidentiality issue to your "
 "mail services administrator."
 msgstr ""
-"Le ticket a déjà été validé depuis le poste %1. Si ce comportement vous "
-"semble anormal, veuillez signaler ce problème de confidentialité à votre "
-"administrateur de messagerie."
+"Le lien de validation a déjà été validé depuis le poste %1. Si ce "
+"comportement vous semble anormal, veuillez signaler ce problème de "
+"confidentialité à votre administrateur de messagerie."
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-#, fuzzy
 msgid "The validation link has expired"
-msgstr "Le ticket demandé a expiré."
+msgstr "Le lien de validation a expiré."
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-#, fuzzy
 msgid "Please login or request a new validation link"
-msgstr "Envoyez-moi un mot de passe de confirmation"
+msgstr "Vous devez vous connecter ou demander un nouveau lien de validation"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-#, fuzzy
 msgid "The validation link has an unknow format or has expired"
-msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
+msgstr "Le lien de validation n'est pas reconnu ou a expiré"
 
 #: web_tt2/tt2_error.tt2:7
 msgid "Sympa error - could not display web page"
@@ -4644,7 +4639,7 @@ msgstr "Les droits sur l'opération : '%2' pour un '%1'"
 #. (role,right)
 #: mail_tt2/authorization_reject.tt2:173
 msgid "You need to login."
-msgstr "Vous devez vous identifier."
+msgstr "Vous devez vous connecter."
 
 #. (role,right)
 #: mail_tt2/authorization_reject.tt2:176
@@ -5375,11 +5370,8 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "Cette liste traite de %1, vous êtes donc sûrement concerné."
 
 #: mail_tt2/invite.tt2:7
-#, fuzzy
 msgid "To subscribe just hit the following link :"
-msgstr ""
-"Pour valider votre abonnement, cliquez sur le lien ci-dessous, ce qui "
-"déclenchera l'envoi d'un e-mail de confirmation."
+msgstr "Pour valider votre abonnement, cliquez sur le lien ci-dessous :"
 
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
@@ -6367,7 +6359,6 @@ msgstr "Demande d'abonnement à la liste %1"
 # nlsref 8,3
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
@@ -6408,7 +6399,6 @@ msgstr "Demande de désabonnement de la liste %1"
 # nlsref 8,25
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -6754,7 +6744,6 @@ msgid "One new message from list %1 from %2 arrived. "
 msgstr "Un nouveau message de %2 pour la liste %1 est arrivé."
 
 #: mail_tt2/moderate.tt2:16
-#, fuzzy
 msgid "This message has been tagged as spam"
 msgstr "Ce message a été marqué comme spam."
 
@@ -6769,6 +6758,8 @@ msgid ""
 "To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
 msgstr ""
+"Pour consulter la liste des messages en attente, veuillez cliquer sur le "
+"lien suivant : %1/ticket/%2"
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:25
@@ -6990,12 +6981,11 @@ msgstr ""
 "1@%2. (Cette requête a été effectuée depuis le poste %2 le %3)."
 
 #: mail_tt2/sendpasswd.tt2:14
-#, fuzzy
 msgid ""
 "You may ignore this subscription request or click on the following link in "
 "order to confirm it "
 msgstr ""
-"Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
+"Vous pouvez ignorer cette requête ou bien cliquer sur le lien suivant pour "
 "valider votre demande."
 
 #. (list)
@@ -7025,12 +7015,11 @@ msgstr ""
 "effectuée depuis le poste %2 le %3)."
 
 #: mail_tt2/sendpasswd.tt2:26
-#, fuzzy
 msgid ""
 "You may ignore this request or click on the following link in order to "
 "choose your password. "
 msgstr ""
-"Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
+"Vous pouvez ignorer cette requête ou bien cliquer sur le lien suivant pour "
 "choisir votre mot de passe."
 
 #. (base_url,path_cgi)
@@ -7192,20 +7181,17 @@ msgstr ""
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:47
-#, fuzzy
 msgid "Unsubscribing from list %1"
-msgstr "Je me désabonne de %1"
+msgstr "Se désabonner de la liste %1"
 
 #. (list.name)
 #: mail_tt2/user_notification.tt2:49
-#, fuzzy
 msgid ""
 "You have requested to removed from list %1. To confirm and get removed from "
 "the list, please click the link below: "
 msgstr ""
-"Vous avez demandé le changement de votre adresse d'abonné. Pour confirmer "
-"votre nouvelle adresse email auprès du serveur SYMPA, veuillez cliquer sur "
-"le lien ci-dessous :"
+"Vous avez demandé votre désabonnement de la liste %1. Pour confirmer votre "
+"demande et être désabonné, veuillez cliquer sur le lien ci-dessous :"
 
 #. (list.name)
 #: mail_tt2/welcome.tt2:2
@@ -7577,7 +7563,7 @@ msgstr "liste cachée sauf aux listmasters"
 
 #: src/etc/scenari/topics_visibility.identified:1
 msgid "conceal unless user is logged in"
-msgstr "liste visible pour les utilisateurs identifiés uniquement"
+msgstr "liste visible pour les utilisateurs connectés uniquement"
 
 #: src/etc/scenari/topics_visibility.noconceal:1
 #: src/etc/scenari/visibility.noconceal:1
@@ -7764,9 +7750,8 @@ msgid "Daily evaluation of bouncing users"
 msgstr "Notation quotidienne des abonnés en erreur"
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
-#, fuzzy
 msgid "daily delete logs "
-msgstr "suppression quotidienne des logs datant de plus de 3 mois"
+msgstr "suppression quotidienne des logs"
 
 #: src/etc/global_task_models/purge_one_time_ticket_table.daily.task:1
 msgid ""
@@ -8992,9 +8977,8 @@ msgid "you do not receive your own posts"
 msgstr "pour ne pas recevoir ses propres messages"
 
 #: web_tt2/change_email.tt2:3
-#, fuzzy
 msgid "You will receive an email, with a confirmation link."
-msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
+msgstr "Vous allez recevoir un mail comprenant un lien de confirmation."
 
 #: mail_tt2/invite.tt2:7
 msgid "To subscribe just hit the following mailto url :"
@@ -9037,6 +9021,8 @@ msgid ""
 "To browse the awaiting messages, yshould click on the following link : %1/"
 "ticket/%2"
 msgstr ""
+"Pour consulter les messages en attente, veuillez cliquer sur le lien suivant "
+": %1/ticket/%2"
 
 #~ msgid ""
 #~ "Changing your email address is a sensitive operation so we need to verify "
