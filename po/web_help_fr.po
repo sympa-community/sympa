@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2008-08-08 16:04+0200\n"
+"PO-Revision-Date: 2008-10-27 18:25+0100\n"
 "Last-Translator: Olivier Salaün <os@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -731,7 +731,8 @@ msgstr ""
 #: web_tt2/help_user.tt2:8
 msgid "<strong>log on to the web environment</strong>;"
 msgstr ""
-"<strong>passer par l'interface web du serveur de listes</strong>&#160;;"
+"<strong>connectez-vous sur l'interface web du serveur de "
+"listes</strong>&#160;;"
 
 #. (conf.email,conf.host)
 #: web_tt2/help_user.tt2:9
@@ -989,7 +990,7 @@ msgid ""
 "and <strong>log on</strong>."
 msgstr ""
 "Allez sur la <strong><a href=\"%1/home\">page d'accueil</a></strong> de "
-"l'environnement de listes et <strong>authentifiez-vous</strong>."
+"l'environnement de listes et <strong>connectez-vous</strong>."
 
 #: web_tt2/help_user.tt2:50
 msgid ""
@@ -1017,9 +1018,9 @@ msgid ""
 msgstr ""
 "Pour vous connecter sur l'environnement de liste, utilisez la zone "
 "d'authentification située dans la colonne gauche de l'interface web. Si vous "
-"êtes déjà authentifié, votre adresse e-mail et votre profil (abonné, "
+"êtes déjà connecté, votre adresse e-mail et votre profil (abonné, "
 "modérateur ou propriétaire) s'affichent à cet endroit. Dans le cas "
-"contraire, un formulaire d'authentification vous est proposé."
+"contraire, un formulaire de connexion vous est proposé."
 
 #: web_tt2/help_user.tt2:57
 msgid "The authentication process varies according to your personal situation:"
@@ -1053,9 +1054,9 @@ msgid ""
 "authentication system, your authentication is automatic. Refresh page if "
 "necessary."
 msgstr ""
-"Si vous êtes déjà authentifié sur un autre service utilisant le système "
-"d'authentification unique, votre authentification est immédiate. Rechargez "
-"la page si nécessaire."
+"Si vous êtes déjà connecté sur un autre service utilisant le système "
+"d'authentification unique, votre connexion est immédiate. Rechargez la page "
+"si nécessaire."
 
 #: web_tt2/help_user.tt2:61
 msgid ""
@@ -1065,10 +1066,10 @@ msgid ""
 "login and your <strong>list password</strong> in the 'Password' field."
 msgstr ""
 "<strong>Si vous n'êtes pas concerné par une procédure d'authentification "
-"unique</strong>. Dans ce cas, authentifiez-vous via la méthode "
-"classique&#160;: entrez l'<strong>adresse e-mail avec laquelle vous êtes "
-"abonné</strong> comme identifiant et votre <strong>mot de passe de listes</"
-"strong> dans le champ 'Mot de passe'.<br />"
+"unique</strong>. Dans ce cas, connectez-vous via la méthode classique&#160;: "
+"entrez l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> "
+"comme identifiant et votre <strong>mot de passe de listes</strong> dans le "
+"champ 'Mot de passe'.<br />"
 
 #: web_tt2/help_user.tt2:62
 #, fuzzy
@@ -1082,7 +1083,6 @@ msgstr ""
 "un mail contenant une URL de validation vous sera envoyé à cette adresse."
 
 #: web_tt2/help_user.tt2:64
-#, fuzzy
 msgid ""
 "<strong>If the unique authentication process does not apply to you and you "
 "do no have a list password yet</strong>, click on '<strong>First login ?</"
@@ -1090,10 +1090,10 @@ msgid ""
 "that address. Then you will be able to choose your password."
 msgstr ""
 "<strong>Si vous n'êtes pas concerné par une procédure d'authentification "
-"unique et que vous ne possédez pas encore de mot de passe de listes</"
-"strong>, cliquez sur '<strong>Premier login</strong>' puis indiquez votre "
-"adresse e-mail. Une URL de confirmation vous sera envoyé à cette adresse. "
-"Par la suite vous pourrez définir votre mot de passe."
+"unique et que vous ne possédez pas encore de mot de passe de "
+"listes</strong>, cliquez sur '<strong>Première connexion</strong>' puis "
+"indiquez votre adresse e-mail. Un lien de confirmation vous sera envoyé à "
+"cette adresse. Par la suite vous pourrez définir votre mot de passe."
 
 #: web_tt2/help_user.tt2:67
 msgid ""
@@ -1115,10 +1115,10 @@ msgid ""
 "the left column."
 msgstr ""
 "Pour voir toutes les listes auxquelles vous êtes abonné, vous devez tout "
-"d'abord être <a href=\"#sympa_auth\">authentifié</a>. Vous voyez apparaître "
-"dans la boîte 'Vos listes' de la colonne de gauche, le nom de toutes les "
-"listes auxquelles vous êtes abonné, suivi chacun d'une brève description de "
-"la liste."
+"d'abord <a href=\"#sympa_auth\">vous connecter</a>. Vous voyez apparaître dans "
+"la boîte 'Vos listes' de la colonne de gauche, le nom de toutes les listes "
+"auxquelles vous êtes abonné, suivi chacun d'une brève description de la "
+"liste."
 
 #: web_tt2/help_user.tt2:72
 msgid ""
@@ -1535,7 +1535,7 @@ msgid ""
 msgstr ""
 "l'<strong>adresse e-mail avec laquelle vous êtes abonné</strong> aux listes "
 "(si vous êtes abonné aux listes avec plusieurs adresses, l'adresse remplacée "
-"sera celle avec laquelle vous êtes authentifié)&#160;;"
+"sera celle avec laquelle vous êtes connecté);"
 
 #: web_tt2/help_user.tt2:138
 msgid ""
@@ -1772,7 +1772,9 @@ msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
 "and <a href=\"%1/help/user#sympa_auth\"><strong>log on</strong></a>."
 msgstr ""
-"<a href=\"%1/help/user#sympa_auth\"><strong>Authentifiez-vous</strong></a>."
+"Consultez la <strong><a href=\"%1/home\">page d'accueil du "
+"service</a></strong> et <a href=\"%1/help/user#sympa_auth\"><strong>Connectez-"
+"vous</strong></a>.."
 
 #: web_tt2/help_admin.tt2:19
 msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
@@ -1977,7 +1979,7 @@ msgid ""
 "1/help/user#sympa_auth\">log on</a></strong>."
 msgstr ""
 "Allez sur la <strong>page d'accueil</strong> de l'environnement de listes et "
-"<strong>authentifiez-vous</strong>."
+"<strong>connectez-vous</strong>."
 
 #: web_tt2/help_admin.tt2:51
 msgid ""
@@ -4657,8 +4659,7 @@ msgstr ""
 #: web_tt2/help_faquser.tt2:11
 msgid "You can not log on to the mailing list web interface"
 msgstr ""
-"Vous n'arrivez pas à vous authentifier sur l'interface web du serveur de "
-"listes"
+"Vous n'arrivez pas à vous connecter sur l'interface web du serveur de listes"
 
 #. (path_cgi)
 #: web_tt2/help_faquser.tt2:14
@@ -4668,7 +4669,7 @@ msgid ""
 "receive your new password by email."
 msgstr ""
 "<strong>Vous n'avez pas de mot de passe</strong>. Pour vous faire allouer un "
-"mot de passe, suivez le lien <a href=\"%1/sendpasswd\">Premier login</a> "
+"mot de passe, suivez le lien <a href=\"%1/sendpasswd\">Première connexion</a> "
 "depuis la page d'accueil. Vous recevrez ce mot de passe par e-mail."
 
 #. (path_cgi)
