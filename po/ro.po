@@ -920,7 +920,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive a n email, with a confirmation link."
+msgid "You will receive an email, with a confirmation link."
 msgstr "Vei primi un email, cu parole ta."
 
 #: web_tt2/change_email.tt2:4
@@ -5751,7 +5751,7 @@ msgstr "[% ELSE %]"
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following link :"
+msgid "To subscribe just hit the following mailto url :"
 msgstr ""
 "Aceasta lista este destinat: [% list.subject %], probabil esti interesat de "
 "acesta."
@@ -6768,7 +6768,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click on the following link :"
+"pending subscription requests you should click the following URL :"
 msgstr ""
 "Draga proprietar al listei %s,\n"
 "\n"
@@ -6815,7 +6815,7 @@ msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click on the following link :"
+"with you, you should click the following URL :"
 msgstr ""
 "Draga proprietar al listei %s,\n"
 "\n"
@@ -7190,7 +7190,7 @@ msgstr "Nu exista mesaje pentru moderare"
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, you should click on the following link : %1/"
+"To browse the awaiting messages, yshould click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -9482,66 +9482,6 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr "Pentru a primi parola:"
 
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation link."
-msgstr "Vei primi un email, cu parole ta."
-
-#: mail_tt2/invite.tt2:7
-#, fuzzy
-msgid "To subscribe just hit the following mailto url :"
-msgstr ""
-"Aceasta lista este destinat: [% list.subject %], probabil esti interesat de "
-"acesta."
-
-# nlsref 8,3
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. In order to list and "
-"manage\n"
-"pending subscription requests you should click the following URL :"
-msgstr ""
-"Draga proprietar al listei %s,\n"
-"\n"
-"Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord, \n"
-"apasa pe urmatorul URL :\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-"\n"
-"sau trimite un mail %s cu urmatorul subiect:\n"
-"AUTH %s ADD %s %s %s \n"
-
-# nlsref 8,25
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:89
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-"\n"
-"A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"Draga proprietar al listei %s,\n"
-"\n"
-"Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord, \n"
-"apasa pe urmatorul URL:\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"sau trimite un email la %s cu urmatorul subiect:\n"
-"AUTH %s DEL %s %s \n"
-
-#. (conf.wwsympa_url,one_time_ticket)
-#: mail_tt2/moderate.tt2:19
-msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
-"ticket/%2"
-msgstr ""
-
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -9561,6 +9501,16 @@ msgid ""
 "the ticket"
 msgstr ""
 
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation ticket."
+msgstr "Vei primi un email, cu parole ta."
+
+#: web_tt2/renewpasswd.tt2:13
+#, fuzzy
+msgid "You will receive an email in order to be able to choose your password."
+msgstr "Vei primi un email, cu parole ta."
+
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
 msgstr ""
@@ -9570,6 +9520,12 @@ msgid ""
 "Follow the URL contained  within, it will lead you to a page in which you "
 "can choose your password."
 msgstr ""
+
+# nlsref 6,35
+#: web_tt2/requestpasswd.tt2:10
+#, fuzzy
+msgid "The system was not able to send you the appropriate message."
+msgstr "Arhiva va fi trimisa intr-un mesaj separat.\n"
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
@@ -9838,20 +9794,6 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
-
-#, fuzzy
-#~ msgid "You will receive an email, with a confirmation ticket."
-#~ msgstr "Vei primi un email, cu parole ta."
-
-#, fuzzy
-#~ msgid ""
-#~ "You will receive an email in order to be able to choose your password."
-#~ msgstr "Vei primi un email, cu parole ta."
-
-# nlsref 6,35
-#, fuzzy
-#~ msgid "The system was not able to send you the appropriate message."
-#~ msgstr "Arhiva va fi trimisa intr-un mesaj separat.\n"
 
 # nlsref 15,7
 #, fuzzy

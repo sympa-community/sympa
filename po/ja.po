@@ -832,7 +832,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive a n email, with a confirmation link."
+msgid "You will receive an email, with a confirmation link."
 msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
 
 #: web_tt2/change_email.tt2:4
@@ -5182,8 +5182,7 @@ msgstr ""
 "思います。"
 
 #: mail_tt2/invite.tt2:7
-#, fuzzy
-msgid "To subscribe just hit the following link :"
+msgid "To subscribe just hit the following mailto url :"
 msgstr "読者登録は、以下の mailto URL をクリックするだけでできます:"
 
 #. (conf.sympa,subject)
@@ -6131,13 +6130,12 @@ msgstr "%1 メーリングリストへの読者登録申し込み"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click on the following link :"
+"pending subscription requests you should click the following URL :"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
 " \n"
@@ -6173,12 +6171,11 @@ msgstr "%1 メーリングリストの登録解除申し込み"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click on the following link :"
+"with you, you should click the following URL :"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
 "\n"
@@ -6513,7 +6510,7 @@ msgstr "このリストで吟味を待っているメッセージが %1 通あ�
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, you should click on the following link : %1/"
+"To browse the awaiting messages, yshould click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -8573,51 +8570,6 @@ msgstr "受け取らない (休暇のときなどに便利)"
 msgid "you do not receive your own posts"
 msgstr "自分が投稿したものは受け取らない"
 
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation link."
-msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
-
-#: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
-msgstr "読者登録は、以下の mailto URL をクリックするだけでできます:"
-
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. In order to list and "
-"manage\n"
-"pending subscription requests you should click the following URL :"
-msgstr ""
-"%1 メーリングリストのオーナーさんへ\n"
-" \n"
-"ある人から、あなたがオーナーをしているリストに読者として追加してほしい \n"
-"との申し出がありました。構わないのであれば、下記の URL をクリックして \n"
-"ください:"
-
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:89
-msgid ""
-"Dear owner of list %1,\n"
-"\n"
-"A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"%1 メーリングリストのオーナーさんへ\n"
-"\n"
-"ある人から、あなたがオーナーをしているリストから削除してほしいとの申し \n"
-"出がありました。構わないのであれば、下記の URL をクリックしてくださ \n"
-"い:"
-
-#. (conf.wwsympa_url,one_time_ticket)
-#: mail_tt2/moderate.tt2:19
-msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
-"ticket/%2"
-msgstr ""
-
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -8630,6 +8582,26 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
+
+#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the ticket"
+msgstr ""
+"読者登録メールアドレスの変更を確認するために、以下にメールで受け取ったパス"
+"ワード\n"
+"を入力してください:"
+
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation ticket."
+msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
+
+#: web_tt2/renewpasswd.tt2:13
+msgid "You will receive an email in order to be able to choose your password."
+msgstr ""
+"あなたに電子メールをお送りします。それを見てパスワードを決めてください。"
 
 #: web_tt2/requestpasswd.tt2:10
 msgid "The system was not able to send you the appropriate message."
@@ -8743,24 +8715,6 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
-
-#, fuzzy
-#~ msgid ""
-#~ "To confirm your email address change, go to your email account and click "
-#~ "on the ticket"
-#~ msgstr ""
-#~ "読者登録メールアドレスの変更を確認するために、以下にメールで受け取ったパス"
-#~ "ワード\n"
-#~ "を入力してください:"
-
-#, fuzzy
-#~ msgid "You will receive an email, with a confirmation ticket."
-#~ msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
-
-#~ msgid ""
-#~ "You will receive an email in order to be able to choose your password."
-#~ msgstr ""
-#~ "あなたに電子メールをお送りします。それを見てパスワードを決めてください。"
 
 #~ msgid "The system sent you a message, please check your mailbox."
 #~ msgstr "あなたにメッセージを送りました。新着メールを確認してください。"

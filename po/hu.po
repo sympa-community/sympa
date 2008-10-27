@@ -857,7 +857,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive a n email, with a confirmation link."
+msgid "You will receive an email, with a confirmation link."
 msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
 
 #: web_tt2/change_email.tt2:4
@@ -5518,7 +5518,7 @@ msgstr "A lista témakörének %1 van megjelölve, amely talán érdekelheti Ön
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following link :"
+msgid "To subscribe just hit the following mailto url :"
 msgstr ""
 "Ha fel szeretne iratkozni a listára, akkor vagy válaszoljon erre a levélre "
 "vagy kattintson erre a címre:"
@@ -6538,7 +6538,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click on the following link :"
+"pending subscription requests you should click the following URL :"
 msgstr ""
 "\n"
 "Tisztelt %s lista tulajdonos!\n"
@@ -6589,7 +6589,7 @@ msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click on the following link :"
+"with you, you should click the following URL :"
 msgstr ""
 "Tisztelt %s lista tulajdonos!\n"
 "\n"
@@ -6958,7 +6958,7 @@ msgstr "A listán moderálásra váró levelek száma: %1"
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, you should click on the following link : %1/"
+"To browse the awaiting messages, yshould click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -9222,71 +9222,6 @@ msgstr "nincs kézbesítés (pl. szabadság esetén)"
 msgid "you do not receive your own posts"
 msgstr "nem kapja meg a saját leveleit"
 
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation link."
-msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
-
-#: mail_tt2/invite.tt2:7
-#, fuzzy
-msgid "To subscribe just hit the following mailto url :"
-msgstr ""
-"Ha fel szeretne iratkozni a listára, akkor vagy válaszoljon erre a levélre "
-"vagy kattintson erre a címre:"
-
-# nlsref 8,3
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:66
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-" \n"
-"A user asked to be added as a subscriber to your list. In order to list and "
-"manage\n"
-"pending subscription requests you should click the following URL :"
-msgstr ""
-"\n"
-"Tisztelt %s lista tulajdonos!\n"
-"\n"
-"Egy felhasználó a lista tagja szeretne lenne. A feliratkozást a\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-"\n"
-"címen, vagy a(z) %s címre küldött e-maillel, melynek a tárgya\n"
-"\n"
-"AUTH %s ADD %s %s %s\n"
-"\n"
-", tudja engedélyezni.\n"
-
-# nlsref 8,25
-#. (list.name)-)
-#: mail_tt2/listowner_notification.tt2:89
-#, fuzzy
-msgid ""
-"Dear owner of list %1,\n"
-"\n"
-"A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
-msgstr ""
-"Tisztelt %s lista tulajdonos!\n"
-"\n"
-"Egy felhasználó le akar iratkozni a listáról. A leiratkozást a\n"
-"\n"
-"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
-"\n"
-"címen, vagy a(z) %s címre küldött e-maillel, melynek tárgya:\n"
-"\n"
-"AUTH %s DEL %s %s\n"
-"\n"
-"tudja engedélyezni.\n"
-
-#. (conf.wwsympa_url,one_time_ticket)
-#: mail_tt2/moderate.tt2:19
-msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
-"ticket/%2"
-msgstr ""
-
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -9299,6 +9234,25 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
+
+#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the ticket"
+msgstr ""
+"E-mail címe sikeres megváltoztatásához, kérem adja meg lent\n"
+"a korábban már megkapott jelszót:"
+
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation ticket."
+msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
+
+#: web_tt2/renewpasswd.tt2:13
+#, fuzzy
+msgid "You will receive an email in order to be able to choose your password."
+msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
 
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
@@ -9338,9 +9292,21 @@ msgid ""
 "your mail services administrator."
 msgstr ""
 
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+#, fuzzy
+msgid "The requested ticket has expired"
+msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
+
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
 msgid "Please use your password or request a new ticket"
 msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+#, fuzzy
+msgid "The requested authentication ticket has an unknow format or is expired"
+msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
@@ -9446,32 +9412,6 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
-
-#, fuzzy
-#~ msgid ""
-#~ "To confirm your email address change, go to your email account and click "
-#~ "on the ticket"
-#~ msgstr ""
-#~ "E-mail címe sikeres megváltoztatásához, kérem adja meg lent\n"
-#~ "a korábban már megkapott jelszót:"
-
-#, fuzzy
-#~ msgid "You will receive an email, with a confirmation ticket."
-#~ msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
-
-#, fuzzy
-#~ msgid ""
-#~ "You will receive an email in order to be able to choose your password."
-#~ msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
-
-#, fuzzy
-#~ msgid "The requested ticket has expired"
-#~ msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
-
-#, fuzzy
-#~ msgid ""
-#~ "The requested authentication ticket has an unknow format or is expired"
-#~ msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
 
 # nlsref 15,7
 #, fuzzy
