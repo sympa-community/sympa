@@ -856,7 +856,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation link."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
 
 #: web_tt2/change_email.tt2:4
@@ -5413,7 +5413,7 @@ msgstr "Diese Liste handelt von %1, könnte Sie somit interessieren."
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr ""
 "Zum Abonnieren antworten Sie bitte auf diese Nachricht oder wählen Sie "
 "folgende \"mailto\" Adresse :"
@@ -6387,7 +6387,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Hallo Inhaber des Verteilers %1,\n"
 "\n"
@@ -6422,11 +6422,12 @@ msgstr "Abmeldeanfrage von Verteiler %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Hallo Inhaber des Verteilers %1,\n"
 "\n"
@@ -6782,7 +6783,7 @@ msgstr "Das Dokument %1 wartet auf Moderierung"
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
+"To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -8877,6 +8878,55 @@ msgstr "keine Nachricht (nützlich für die Urlaube)"
 msgid "you do not receive your own posts"
 msgstr "Sie empfangen Ihre eigenen Nachrichten nicht"
 
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation link."
+msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
+
+#: mail_tt2/invite.tt2:7
+#, fuzzy
+msgid "To subscribe just hit the following mailto url :"
+msgstr ""
+"Zum Abonnieren antworten Sie bitte auf diese Nachricht oder wählen Sie "
+"folgende \"mailto\" Adresse :"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
+msgstr ""
+"Hallo Inhaber des Verteilers %1,\n"
+"\n"
+"Ein Benutzer hat darum gebeten, als Mitglied in den Verteiler aufgenommen zu "
+"werden. Wenn das in Ordnung ist, können Sie ihn durch Klicken auf die "
+"folgende URL zum Verteiler hinzufügen :"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Hallo Inhaber des Verteilers %1,\n"
+"\n"
+"ein Benutzer hat darum gebeten, vom Verteiler abgemeldet zu werden.\n"
+"Wenn das in Ordnung ist, können Sie ihn durch Klicken auf die folgende URL "
+"vom Verteiler löschen : "
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -8889,25 +8939,6 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
-
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
-msgstr ""
-"Um die Änderung Ihrer E-Mail Adresse zu bestätigen, geben Sie bitte unten "
-"das empfangene Passwort ein :"
-
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
-msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
-
-#: web_tt2/renewpasswd.tt2:13
-#, fuzzy
-msgid "You will receive an email in order to be able to choose your password."
-msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
 
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
@@ -8947,21 +8978,9 @@ msgid ""
 "your mail services administrator."
 msgstr ""
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:17
-#, fuzzy
-msgid "The requested ticket has expired"
-msgstr "Die gewünschte Aktion wird in Kürze durchgeführt"
-
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
 msgid "Please use your password or request a new ticket"
 msgstr ""
-
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-#, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
-msgstr "benötigt Authentifikation, dann Bestätigung durch den Eigentümer"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
@@ -9032,6 +9051,32 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "Um die Änderung Ihrer E-Mail Adresse zu bestätigen, geben Sie bitte unten "
+#~ "das empfangene Passwort ein :"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
+
+#, fuzzy
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Sie werden eine E-Mail mit Ihrem Passwort erhalten."
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr "Die gewünschte Aktion wird in Kürze durchgeführt"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "benötigt Authentifikation, dann Bestätigung durch den Eigentümer"
 
 #, fuzzy
 #~ msgid "Listing rejection message"

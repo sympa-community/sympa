@@ -846,7 +846,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation link."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
 
 #: web_tt2/change_email.tt2:4
@@ -5414,7 +5414,7 @@ msgstr "[% ELSE %]"
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr "Tervehdys,"
 
 #. (conf.sympa,subject)
@@ -6404,7 +6404,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Hyvä listan %1 omistaja,\n"
 "\n"
@@ -6441,11 +6441,12 @@ msgstr "Tilauksen päättämispyyntö listalta %s"
 # nlsref 8,25
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Hyvä listan %1 omistaja,\n"
 "\n"
@@ -6802,7 +6803,7 @@ msgstr "Ei viestejä hallittavana"
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
+"To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -9059,6 +9060,53 @@ msgstr "ei postia (hyvä lomilla)"
 msgid "you do not receive your own posts"
 msgstr "et vastaanota lähettämiäsi viestejä"
 
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation link."
+msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
+
+#: mail_tt2/invite.tt2:7
+#, fuzzy
+msgid "To subscribe just hit the following mailto url :"
+msgstr "Tervehdys,"
+
+# nlsref 8,3
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
+msgstr ""
+"Hyvä listan %1 omistaja,\n"
+"\n"
+"Käyttäjä pyysi päästä listallesi. Jos tämä käy,\n"
+"voit hyväksyä liittymisen URLia:"
+
+# nlsref 8,25
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Hyvä listan %1 omistaja,\n"
+"\n"
+"Käyttäjä pyysi, että hänet poistetaan listalta. Jos tämä käy, voit käyttää "
+"seuraavaa URLia:"
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -9078,16 +9126,6 @@ msgid ""
 "the ticket"
 msgstr ""
 
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
-msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
-
-#: web_tt2/renewpasswd.tt2:13
-#, fuzzy
-msgid "You will receive an email in order to be able to choose your password."
-msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
-
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
 msgstr ""
@@ -9097,12 +9135,6 @@ msgid ""
 "Follow the URL contained  within, it will lead you to a page in which you "
 "can choose your password."
 msgstr ""
-
-# nlsref 6,35
-#: web_tt2/requestpasswd.tt2:10
-#, fuzzy
-msgid "The system was not able to send you the appropriate message."
-msgstr "Arkisto lähetetään sinulle erillisessä viestissä.\n"
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
@@ -9315,6 +9347,20 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
+
+#, fuzzy
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Tulet saamaan viestin, joka sisältää salasanasi."
+
+# nlsref 6,35
+#, fuzzy
+#~ msgid "The system was not able to send you the appropriate message."
+#~ msgstr "Arkisto lähetetään sinulle erillisessä viestissä.\n"
 
 # nlsref 15,7
 #, fuzzy

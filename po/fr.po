@@ -842,7 +842,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation link."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
 
 #: web_tt2/change_email.tt2:4
@@ -5375,7 +5375,8 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "Cette liste traite de %1, vous êtes donc sûrement concerné."
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+#, fuzzy
+msgid "To subscribe just hit the following link :"
 msgstr ""
 "Pour valider votre abonnement, cliquez sur le lien ci-dessous, ce qui "
 "déclenchera l'envoi d'un e-mail de confirmation."
@@ -6366,12 +6367,13 @@ msgstr "Demande d'abonnement à la liste %1"
 # nlsref 8,3
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Cher propriétaire de la liste %1,\n"
 "\n"
@@ -6406,11 +6408,12 @@ msgstr "Demande de désabonnement de la liste %1"
 # nlsref 8,25
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Cher propriétaire de la liste %1,\n"
 "\n"
@@ -6763,7 +6766,7 @@ msgstr "IL y a %1 messages en attente de modération."
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
+"To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -8988,94 +8991,126 @@ msgstr "interrompre la réception des messages (utile pendant les vacances)"
 msgid "you do not receive your own posts"
 msgstr "pour ne pas recevoir ses propres messages"
 
-#: web_tt2/change_email_request.tt2:3
-msgid ""
-"Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
-msgstr ""
-"Le changement de votre adresse email est une opération sensible, c'est "
-"pourquoi nous devons authentifier la demande préalablement."
-
-#. (new_email)
-#: web_tt2/change_email_request.tt2:4
-msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
-msgstr ""
-"Dans ce but nous vous avons envoyé un message de validation à l'adresse %1 ; "
-"il contient un ticket de validation de votre demande."
-
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
-msgstr ""
-"Pour confirmer votre changement d'adresse, relevez votre boite aux lettres "
-"afin de validez le ticket que nous vous avons envoyé."
-
 #: web_tt2/change_email.tt2:3
-msgid "You will receive an email, with a confirmation ticket."
+#, fuzzy
+msgid "You will receive an email, with a confirmation link."
 msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
 
-#: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
 msgstr ""
-"Vous allez recevoir un e-mail qui vous permettra de choisir un mot de passe."
+"Pour valider votre abonnement, cliquez sur le lien ci-dessous, ce qui "
+"déclenchera l'envoi d'un e-mail de confirmation."
+
+# nlsref 8,3
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
+msgstr ""
+"Cher propriétaire de la liste %1,\n"
+"\n"
+"Un utilisateur a demandé à être abonné à votre liste. Pour consulter toutes "
+"les demandes en attente, veuillez cliquer sur ce lien :"
+
+# nlsref 8,25
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Cher propriétaire de la liste %1,\n"
+"\n"
+"Un utilisateur a demandé à être désabonné de votre liste. Pour valider cette "
+"demande, veuillez cliquer sur ce lien :"
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
+#~ msgid ""
+#~ "Changing your email address is a sensitive operation so we need to verify "
+#~ "that it is really your email."
+#~ msgstr ""
+#~ "Le changement de votre adresse email est une opération sensible, c'est "
+#~ "pourquoi nous devons authentifier la demande préalablement."
+
+#~ msgid ""
+#~ "To this end we have sent you an email to this address : %1 with a "
+#~ "confirmation ticket."
+#~ msgstr ""
+#~ "Dans ce but nous vous avons envoyé un message de validation à l'adresse %"
+#~ "1 ; il contient un ticket de validation de votre demande."
+
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "Pour confirmer votre changement d'adresse, relevez votre boite aux "
+#~ "lettres afin de validez le ticket que nous vous avons envoyé."
+
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Vous allez recevoir un mail comprenant un ticket de confirmation."
+
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr ""
+#~ "Vous allez recevoir un e-mail qui vous permettra de choisir un mot de "
+#~ "passe."
 
 # nlsref 6,35
-#: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
-msgstr "Le système n'a pas pu vous envoyer l'email approprié."
+#~ msgid "The system was not able to send you the appropriate message."
+#~ msgstr "Le système n'a pas pu vous envoyer l'email approprié."
 
-#: web_tt2/requestpasswd.tt2:14
-msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
-msgstr ""
-"Erreur interne : impossible de créer un ticket. Veuillez contacter "
-"l'administrateur du service de liste."
+#~ msgid ""
+#~ "Internal error : could not create a ticket, please contact the service "
+#~ "administrator"
+#~ msgstr ""
+#~ "Erreur interne : impossible de créer un ticket. Veuillez contacter "
+#~ "l'administrateur du service de liste."
 
-#. (ticket_context.remote_addr)
-#: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
-msgstr "(le ticket a été demandé depuis l'hôte %1)"
+#~ msgid "(the ticket was requested from host %1) "
+#~ msgstr "(le ticket a été demandé depuis l'hôte %1)"
 
-#. (ticket_context.status)
-#: web_tt2/ticket.tt2:13
-msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
-msgstr ""
-"Le ticket a déjà été validé depuis le poste %1. Si ce comportement vous "
-"semble anormal, veuillez signaler ce problème de confidentialité à votre "
-"administrateur de messagerie."
+#~ msgid ""
+#~ "The validation ticket has already been validated from host %1 .If you did "
+#~ "not perform this validation, please report this confidentiality issue to "
+#~ "your mail services administrator."
+#~ msgstr ""
+#~ "Le ticket a déjà été validé depuis le poste %1. Si ce comportement vous "
+#~ "semble anormal, veuillez signaler ce problème de confidentialité à votre "
+#~ "administrateur de messagerie."
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:17
-msgid "The requested ticket has expired"
-msgstr "Le ticket demandé a expiré."
+#~ msgid "The requested ticket has expired"
+#~ msgstr "Le ticket demandé a expiré."
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket has an unknow format or is expired"
-msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "Le ticket d'authentification demandé n'est pas reconnu ou a expiré."
 
-#: mail_tt2/sendpasswd.tt2:14
-msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
-msgstr ""
-"Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
-"valider votre demande."
+#~ msgid ""
+#~ "You may ignore this subscription request or hit the following url in "
+#~ "order to confirm it "
+#~ msgstr ""
+#~ "Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
+#~ "valider votre demande."
 
-#: mail_tt2/sendpasswd.tt2:26
-msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
-msgstr ""
-"Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
-"choisir votre mot de passe."
+#~ msgid ""
+#~ "You may ignore this request or hit the following url in order to choose "
+#~ "your password. "
+#~ msgstr ""
+#~ "Vous pouvez ignorer cette requête ou bien cliquer sur l'URL suivante pour "
+#~ "choisir votre mot de passe."
 
 #~ msgid "The system sent you a message, please check your mailbox."
 #~ msgstr ""

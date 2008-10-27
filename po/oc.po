@@ -850,7 +850,7 @@ msgstr ""
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation link."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
 
 #: web_tt2/change_email.tt2:4
@@ -5366,7 +5366,7 @@ msgstr "Aquela tièra a per tèma %1, alavètz vos concernís probalament."
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr ""
 "Per validar vòstre abonament, respondètz a aquel messatge o clicatz l'url "
 "çai sota : "
@@ -6358,7 +6358,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Car proprietari de la tièra %s,\n"
 "\n"
@@ -6398,11 +6398,12 @@ msgstr "Demanda de desabonament de la tièra %1"
 # nlsref 8,25
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Car(s) proprietari(s) de la tièra %s,\n"
 "\n"
@@ -6763,7 +6764,7 @@ msgstr "Fichièr %1 en espèra de moderacion"
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
-"To browse the awaiting messages, yshould click on the following link : %1/"
+"To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
 msgstr ""
 
@@ -8998,6 +8999,65 @@ msgstr "Copar la recepcion dels messatges (es util pendent las vacanças)"
 msgid "you do not receive your own posts"
 msgstr "per recebre pas los vòstres messatges"
 
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive an email, with a confirmation link."
+msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
+
+#: mail_tt2/invite.tt2:7
+#, fuzzy
+msgid "To subscribe just hit the following mailto url :"
+msgstr ""
+"Per validar vòstre abonament, respondètz a aquel messatge o clicatz l'url "
+"çai sota : "
+
+# nlsref 8,3
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
+msgstr ""
+"Car proprietari de la tièra %s,\n"
+"\n"
+"Un usancièr a demandat de s'abonar a vòstra tièra. Per validar aquela "
+"demanda,\n"
+"vos cal siá clicar lo ligam seguent :\n"
+"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+"\n"
+"siá mandar un corrièr electronic a %s qu'aja coma subjècte :\n"
+"AUTH %s ADD %s %s %s"
+
+# nlsref 8,25
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Car(s) proprietari(s) de la tièra %s,\n"
+"\n"
+"Un usancièr a demandat de se desabonar de la lista. Per validar aquela "
+"admanda,\n"
+"vos cal clicar aquel ligam :\n"
+"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+"\n"
+"O  mandar un corrièr electronic a %s amb coma objècte :\n"
+"AUTH %s DEL %s %s"
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
@@ -9010,25 +9070,6 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
-
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
-msgstr ""
-"Per confirmar vòstre cambiament d'adreiça, mercés de sasir \n"
-"çai jos lo mot de santa Clara qu'avètz recebut per corrièr electronic :"
-
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
-msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
-
-#: web_tt2/renewpasswd.tt2:13
-#, fuzzy
-msgid "You will receive an email in order to be able to choose your password."
-msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
 
 #: web_tt2/requestpasswd.tt2:6
 msgid "The system sent you a message, please check your mailbox."
@@ -9068,25 +9109,9 @@ msgid ""
 "your mail services administrator."
 msgstr ""
 
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:17
-#, fuzzy
-msgid "The requested ticket has expired"
-msgstr ""
-"l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion del "
-"proprietari"
-
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
 msgid "Please use your password or request a new ticket"
 msgstr ""
-
-#. (ticket_context.printable_date)
-#: web_tt2/ticket.tt2:21
-#, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
-msgstr ""
-"l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion del "
-"proprietari"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
@@ -9162,6 +9187,36 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "Per confirmar vòstre cambiament d'adreiça, mercés de sasir \n"
+#~ "çai jos lo mot de santa Clara qu'avètz recebut per corrièr electronic :"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
+
+#, fuzzy
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Anatz recebre un messatge de rampèl de vòstre mot de santa Clara."
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr ""
+#~ "l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion "
+#~ "del proprietari"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr ""
+#~ "l'abonament demanda un messatge certificat (S/MIME) puèi l'autorizacion "
+#~ "del proprietari"
 
 # nlsref 15,7
 #, fuzzy
