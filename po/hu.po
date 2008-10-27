@@ -841,29 +841,33 @@ msgstr "Sablon elmentve"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
-"E-mail címe sikeres megváltoztatásához, kérem adja meg lent\n"
-"a korábban már megkapott jelszót:"
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
+
+#: web_tt2/change_email.tt2:4
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
+msgstr ""
+"E-mail címe sikeres megváltoztatásához, kérem adja meg lent\n"
+"a korábban már megkapott jelszót:"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -3029,7 +3033,7 @@ msgstr ""
 
 #: web_tt2/renewpasswd.tt2:13
 #, fuzzy
-msgid "You will receive an email in order to be able to choose your password."
+msgid "You will receive an email that will allow you to choose your password."
 msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
 
 #: web_tt2/renewpasswd.tt2:16
@@ -3067,23 +3071,19 @@ msgid "Message sent"
 msgstr "Üzenet"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr ""
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+msgid "We were not able to send you a validation message."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
@@ -4203,12 +4203,12 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
+msgid "A validation link was sent to you on %1. "
 msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+msgid "(the validation link was requested from host %1) "
 msgstr ""
 
 # nlsref 17,1
@@ -4220,25 +4220,26 @@ msgstr "a folyamat bezárásakor"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
 #, fuzzy
-msgid "The requested ticket has expired"
+msgid "The validation link has expired"
 msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr ""
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "Küldd el a jelszavamat"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
 #, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
 
 #: web_tt2/tt2_error.tt2:7
@@ -5517,7 +5518,7 @@ msgstr "A lista témakörének %1 van megjelölve, amely talán érdekelheti Ön
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr ""
 "Ha fel szeretne iratkozni a listára, akkor vagy válaszoljon erre a levélre "
 "vagy kattintson erre a címre:"
@@ -6537,7 +6538,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "\n"
 "Tisztelt %s lista tulajdonos!\n"
@@ -6588,7 +6589,7 @@ msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Tisztelt %s lista tulajdonos!\n"
 "\n"
@@ -6956,7 +6957,9 @@ msgstr "A listán moderálásra váró levelek száma: %1"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
@@ -7185,8 +7188,8 @@ msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 
 #. (list)
@@ -7213,10 +7216,11 @@ msgid ""
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
-msgstr ""
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
+msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
 
 #. (base_url,path_cgi)
 #: mail_tt2/sendpasswd.tt2:30 mail_tt2/sendssopasswd.tt2:14
@@ -9218,37 +9222,142 @@ msgstr "nincs kézbesítés (pl. szabadság esetén)"
 msgid "you do not receive your own posts"
 msgstr "nem kapja meg a saját leveleit"
 
-# nlsref 15,7
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "szerkesztői visszautasítás szövege"
+msgid "You will receive an email, with a confirmation link."
+msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
 
-#: web_tt2/subrequest.tt2:31
+#: mail_tt2/invite.tt2:7
+#, fuzzy
+msgid "To subscribe just hit the following mailto url :"
+msgstr ""
+"Ha fel szeretne iratkozni a listára, akkor vagy válaszoljon erre a levélre "
+"vagy kattintson erre a címre:"
+
+# nlsref 8,3
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 #, fuzzy
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"Azonosításához és hogy mások ne tudják akarata ellenére\n"
-"\tfelvenni erre a listára, e-mailben megkapja a jelszavát."
+"\n"
+"Tisztelt %s lista tulajdonos!\n"
+"\n"
+"Egy felhasználó a lista tagja szeretne lenne. A feliratkozást a\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+"\n"
+"címen, vagy a(z) %s címre küldött e-maillel, melynek a tárgya\n"
+"\n"
+"AUTH %s ADD %s %s %s\n"
+"\n"
+", tudja engedélyezni.\n"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
+# nlsref 8,25
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
 #, fuzzy
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
 msgstr ""
-"Kérem ellenőrizze a postaládáját, és lent adja meg a levélben\n"
-"\tfeltüntetett jelszót. Ezzel a lépéssel véglegesítheti a\n"
-"\tfeliratkozását a(z) %1 listára."
+"Tisztelt %s lista tulajdonos!\n"
+"\n"
+"Egy felhasználó le akar iratkozni a listáról. A leiratkozást a\n"
+"\n"
+"mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n"
+"\n"
+"címen, vagy a(z) %s címre küldött e-maillel, melynek tárgya:\n"
+"\n"
+"AUTH %s DEL %s %s\n"
+"\n"
+"tudja engedélyezni.\n"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "A levelét visszautasították."
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid "The system sent you a message, please check your mailbox."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid ""
+"Follow the URL contained  within, it will lead you to a page in which you "
+"can choose your password."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:10
+msgid "The system was not able to send you the appropriate message."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:14
+msgid ""
+"You may ignore this subscription request or hit the following url in order "
+"to confirm it "
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:26
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
+msgstr ""
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
 msgid "daily delete logs older than 3 months"
@@ -9337,6 +9446,59 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "E-mail címe sikeres megváltoztatásához, kérem adja meg lent\n"
+#~ "a korábban már megkapott jelszót:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
+
+#, fuzzy
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Hamarosan kap egy e-mailt, benne a jelszóemlékeztetőjével."
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "azonosítással, amely után a tulajdonos engedélyezése kell"
+
+# nlsref 15,7
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr "szerkesztői visszautasítás szövege"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "Azonosításához és hogy mások ne tudják akarata ellenére\n"
+#~ "\tfelvenni erre a listára, e-mailben megkapja a jelszavát."
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "Kérem ellenőrizze a postaládáját, és lent adja meg a levélben\n"
+#~ "\tfeltüntetett jelszót. Ezzel a lépéssel véglegesítheti a\n"
+#~ "\tfeliratkozását a(z) %1 listára."
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "A levelét visszautasították."
 
 # nlsref 15,3
 #, fuzzy

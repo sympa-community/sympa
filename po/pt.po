@@ -792,24 +792,28 @@ msgstr ""
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
 
 #: web_tt2/change_email.tt2:3
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
+msgstr ""
+
+#: web_tt2/change_email.tt2:4
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
 msgstr ""
 
 #: web_tt2/choosepasswd.tt2:4
@@ -2749,7 +2753,7 @@ msgid "You miss the password, please submit again. May be you forgot it ?"
 msgstr ""
 
 #: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+msgid "You will receive an email that will allow you to choose your password."
 msgstr ""
 
 #: web_tt2/renewpasswd.tt2:16
@@ -2783,23 +2787,19 @@ msgid "Message sent"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr ""
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+msgid "We were not able to send you a validation message."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
@@ -3835,12 +3835,12 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
+msgid "A validation link was sent to you on %1. "
 msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+msgid "(the validation link was requested from host %1) "
 msgstr ""
 
 #: web_tt2/ticket.tt2:11
@@ -3850,23 +3850,23 @@ msgstr ""
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-msgid "The requested ticket has expired"
+msgid "The validation link has expired"
 msgstr ""
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
+msgid "Please login or request a new validation link"
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:7
@@ -4916,7 +4916,7 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr ""
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr ""
 
 #. (conf.sympa,subject)
@@ -5798,7 +5798,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 
 #. (replyto,keyauth,list.name,who,gecos)
@@ -5828,7 +5828,7 @@ msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 
 #. (sympa,keyauth,list.name,who)-)
@@ -6110,7 +6110,9 @@ msgstr ""
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
@@ -6302,8 +6304,8 @@ msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 
 #. (list)
@@ -6330,8 +6332,8 @@ msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
 msgstr ""
 
 #. (base_url,path_cgi)
@@ -8064,10 +8066,135 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
-#: web_tt2/manage_template.tt2:9
-#, fuzzy
-msgid "Listing rejection message"
-msgstr " As ultimas menssagens "
+#: web_tt2/change_email.tt2:3
+msgid "You will receive an email, with a confirmation link."
+msgstr ""
+
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
+msgid ""
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
+msgstr ""
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the ticket"
+msgstr ""
+
+#: web_tt2/change_email.tt2:3
+msgid "You will receive an email, with a confirmation ticket."
+msgstr ""
+
+#: web_tt2/renewpasswd.tt2:13
+msgid "You will receive an email in order to be able to choose your password."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid "The system sent you a message, please check your mailbox."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid ""
+"Follow the URL contained  within, it will lead you to a page in which you "
+"can choose your password."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:10
+msgid "The system was not able to send you the appropriate message."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket has expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+msgid "The requested authentication ticket has an unknow format or is expired"
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:14
+msgid ""
+"You may ignore this subscription request or hit the following url in order "
+"to confirm it "
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:26
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
+msgstr ""
 
 #. (list)
 #: web_tt2/sigrequest.tt2:25
@@ -8515,6 +8642,10 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr " As ultimas menssagens "
 
 #, fuzzy
 #~ msgid "Rejection message"

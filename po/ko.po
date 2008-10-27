@@ -805,29 +805,33 @@ msgstr "저장된 템플렛"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
-"이메일 주소 변화를 확인하기 위해, 입력하기 패스워드\n"
-"아래와 같이 받았습니다:"
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
+
+#: web_tt2/change_email.tt2:4
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
+msgstr ""
+"이메일 주소 변화를 확인하기 위해, 입력하기 패스워드\n"
+"아래와 같이 받았습니다:"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -2842,7 +2846,7 @@ msgstr ""
 
 #: web_tt2/renewpasswd.tt2:13
 #, fuzzy
-msgid "You will receive an email in order to be able to choose your password."
+msgid "You will receive an email that will allow you to choose your password."
 msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
 
 #: web_tt2/renewpasswd.tt2:16
@@ -2882,23 +2886,19 @@ msgid "Message sent"
 msgstr "메시지"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr ""
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+msgid "We were not able to send you a validation message."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
@@ -3986,12 +3986,12 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
+msgid "A validation link was sent to you on %1. "
 msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+msgid "(the validation link was requested from host %1) "
 msgstr ""
 
 #: web_tt2/ticket.tt2:11
@@ -4002,25 +4002,26 @@ msgstr "세션"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
 #, fuzzy
-msgid "The requested ticket has expired"
+msgid "The validation link has expired"
 msgstr "요청하는 인증 그 후에 소유자 승인"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr ""
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "확인 패스워드 전송하기"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
 #, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr "요청하는 인증 그 후에 소유자 승인"
 
 #: web_tt2/tt2_error.tt2:7
@@ -5141,7 +5142,7 @@ msgstr "이 메일링 리스트 %1 에 관하여입니다, 그래서 아마 염�
 
 #: mail_tt2/invite.tt2:7
 #, fuzzy
-msgid "To subscribe just hit the following mailto url :"
+msgid "To subscribe just hit the following link :"
 msgstr ""
 "이 메시지에 정당한 응답을 등록구독하거나 다음과 오는 mailto URL를 명중하기 위"
 "해:"
@@ -6094,7 +6095,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 " %1 메일링 리스트 소유자님,\n"
 "\n"
@@ -6128,11 +6129,12 @@ msgstr "%1 메일링 리스트 에서 등록취소 요청"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 " %1 메일링 리스트 소유자님,\n"
 "\n"
@@ -6461,7 +6463,9 @@ msgstr "리스트의 중재를 기다리는 메시지의 수 : %1 개"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
@@ -6680,8 +6684,8 @@ msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 
 #. (list)
@@ -6707,10 +6711,11 @@ msgid ""
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
-msgstr ""
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
+msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
 
 #. (base_url,path_cgi)
 #: mail_tt2/sendpasswd.tt2:30 mail_tt2/sendssopasswd.tt2:14
@@ -8511,42 +8516,124 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "편집자 거부 메시지"
+msgid "You will receive an email, with a confirmation link."
+msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
 
-#: web_tt2/subrequest.tt2:31
+#: mail_tt2/invite.tt2:7
+#, fuzzy
+msgid "To subscribe just hit the following mailto url :"
+msgstr ""
+"이 메시지에 정당한 응답을 등록구독하거나 다음과 오는 mailto URL를 명중하기 위"
+"해:"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 #, fuzzy
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
-"\tthis는 의지에 대해 리스트, 패스워드\n"
-" 를 포함하는 메시지\t능직물 보내집니다."
+" %1 메일링 리스트 소유자님,\n"
+"\n"
+"사용자는 리스트에 가입자로 추가되 것을 요청했습니다. 만약 진행 하시려면 아래"
+"의 URL을 클릭하십시요:"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
-#, fuzzy
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
 msgstr ""
-"우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾아"
-"내하기.\n"
-"저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스트 %"
-"1 에서."
+" %1 메일링 리스트 소유자님,\n"
+"\n"
+"사용자는 리스트에서 삭제되 것을 요청했습니다. 만약에 이것이이면 OK\n"
+"자신과, 다음과 오는 URL를 눌러야 합니다:"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "기타 (표를 붙이지 않는 메시지) "
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
 
-#: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
-msgstr "매일 삭제 삭제하는 3 달 더 오래되게"
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid "The system sent you a message, please check your mailbox."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:6
+msgid ""
+"Follow the URL contained  within, it will lead you to a page in which you "
+"can choose your password."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:10
+msgid "The system was not able to send you the appropriate message."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:14
+msgid ""
+"You may ignore this subscription request or hit the following url in order "
+"to confirm it "
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:26
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
+msgstr ""
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
@@ -8605,6 +8692,63 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "이메일 주소 변화를 확인하기 위해, 입력하기 패스워드\n"
+#~ "아래와 같이 받았습니다:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
+
+#, fuzzy
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "받을 것 자신을 알림 하는 이메일을 패스워드."
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr "요청하는 인증 그 후에 소유자 승인"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "요청하는 인증 그 후에 소유자 승인"
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr "편집자 거부 메시지"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "신원을 확인하고 누구나를 자신을을 등록구독하기에서 막 위해\n"
+#~ "\tthis는 의지에 대해 리스트, 패스워드\n"
+#~ " 를 포함하는 메시지\t능직물 보내집니다."
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾"
+#~ "아내하기.\n"
+#~ "저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스"
+#~ "트 %1 에서."
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "기타 (표를 붙이지 않는 메시지) "
+
+#~ msgid "daily delete logs older than 3 months"
+#~ msgstr "매일 삭제 삭제하는 3 달 더 오래되게"
 
 #, fuzzy
 #~ msgid "Rejection message"

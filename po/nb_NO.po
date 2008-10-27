@@ -815,29 +815,33 @@ msgstr "Malen er lagret"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
-"For å bekrefte din endring av e-postadresse, vennligst skriv inn passordet "
-"du mottok under:"
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Du vil motta en e-post med passordpåminnelse."
+
+#: web_tt2/change_email.tt2:4
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
+msgstr ""
+"For å bekrefte din endring av e-postadresse, vennligst skriv inn passordet "
+"du mottok under:"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -2861,7 +2865,8 @@ msgstr ""
 "glemt det ?"
 
 #: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+#, fuzzy
+msgid "You will receive an email that will allow you to choose your password."
 msgstr ""
 "Du vil motta en e-post som inneholder informasjon om hvordan du går frem for "
 "å velge et passord."
@@ -2899,25 +2904,21 @@ msgid "Message sent"
 msgstr "Sendt melding"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr "Systemet sendte deg en e-post, vennligst se etter i din postkasse."
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
-"Følg lenken i den, den vil ta deg til en side hvor du kan sette et nytt "
-"passord."
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+#, fuzzy
+msgid "We were not able to send you a validation message."
 msgstr "Systemet greide ikke å sende deg meldingen."
 
 #: web_tt2/requestpasswd.tt2:14
+#, fuzzy
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 "Intern feil : kunne ikke opprette en billett, vennligst kontakt "
 "driftspersonell"
@@ -4045,12 +4046,13 @@ msgstr "Beklager, denne handlingen kan ikke bli utført"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
-msgstr "På %1 så ble en autentiseringsbillett generert og sendt til deg. "
+msgid "A validation link was sent to you on %1. "
+msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+#, fuzzy
+msgid "(the validation link was requested from host %1) "
 msgstr "(forespørselen kom fra %1)"
 
 #: web_tt2/ticket.tt2:11
@@ -4060,25 +4062,26 @@ msgstr "årsak"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
 #, fuzzy
-msgid "The requested ticket has expired"
+msgid "The validation link has expired"
 msgstr "Den etterspurte billetten er utdatert"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr "Vennligst bruk passordet ditt eller be om en ny billett"
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "Send meg et bekreftelsespassord"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
 #, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr "Den etterspurte autentiseringsbillett er ukjent eller utdatert"
 
 #: web_tt2/tt2_error.tt2:7
@@ -5147,7 +5150,8 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr ""
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+#, fuzzy
+msgid "To subscribe just hit the following link :"
 msgstr "For å abonnere trykk på den følgende mailto-urlen :"
 
 #. (conf.sympa,subject)
@@ -6040,7 +6044,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Kjære eier av listen %1,\n"
 " \n"
@@ -6075,11 +6079,12 @@ msgstr ""
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Kjære listeadministrator  av listen %s,\n"
 "\n"
@@ -6374,7 +6379,9 @@ msgstr ""
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
@@ -6571,8 +6578,8 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:14
 #, fuzzy
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 "Du kan ignorere denne henvendelsen eller gå til følgende url for å velge "
 "ditt passord."
@@ -6600,9 +6607,10 @@ msgid ""
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
 msgstr ""
 "Du kan ignorere denne henvendelsen eller gå til følgende url for å velge "
 "ditt passord."
@@ -8376,43 +8384,76 @@ msgstr "ingen e-post (praktisk ved ferie)"
 msgid "you do not receive your own posts"
 msgstr "du mottar ikke selv dine egne meldinger"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "slettebeskjed"
+msgid "You will receive an email, with a confirmation link."
+msgstr "Du vil motta en e-post med passordpåminnelse."
 
-#: web_tt2/subrequest.tt2:31
-#, fuzzy
-msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
-msgstr ""
-"For å bekrefte din identitet og å forhindre andre i å melde deg på \n"
-"\tdenne listen mot din vilje, så vil en e-post som inneholder  passordet "
-"ditt\n"
-"\tbli sendt til deg."
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
+msgstr "For å abonnere trykk på den følgende mailto-urlen :"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 #, fuzzy
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"Se etter nye meldinger i din e-postkasse og les meldingen fra Sympa for å "
-"finne passordet ditt.\n"
-"Skriv inn dette passordet under. Dette vil bekrefte din forespørsel om å bli "
-"meldt på  listen %1."
+"Kjære eier av listen %1,\n"
+" \n"
+"En bruker har bedt om å bli lagt til som abonnent på din liste. Hvis dette "
+"er i orden\n"
+"for deg, så bør du gå til følgende URL :"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "Annet (umerkede meldinger)"
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
+msgid ""
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
+msgstr ""
+"Kjære listeadministrator  av listen %s,\n"
+"\n"
+"En bruker ber om å bli slettet fra din liste. Dersom dette er i orden for "
+"deg bes du om å klikke på følgende URL : "
 
-#: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
-msgstr "slett logger eldre enn 3 måneder daglig"
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
@@ -8463,6 +8504,109 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "For å bekrefte din endring av e-postadresse, vennligst skriv inn "
+#~ "passordet du mottok under:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Du vil motta en e-post med passordpåminnelse."
+
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr ""
+#~ "Du vil motta en e-post som inneholder informasjon om hvordan du går frem "
+#~ "for å velge et passord."
+
+#~ msgid "The system was not able to send you the appropriate message."
+#~ msgstr "Systemet greide ikke å sende deg meldingen."
+
+#~ msgid ""
+#~ "Internal error : could not create a ticket, please contact the service "
+#~ "administrator"
+#~ msgstr ""
+#~ "Intern feil : kunne ikke opprette en billett, vennligst kontakt "
+#~ "driftspersonell"
+
+#~ msgid "(the ticket was requested from host %1) "
+#~ msgstr "(forespørselen kom fra %1)"
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr "Den etterspurte billetten er utdatert"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "Den etterspurte autentiseringsbillett er ukjent eller utdatert"
+
+#, fuzzy
+#~ msgid ""
+#~ "You may ignore this subscription request or hit the following url in "
+#~ "order to confirm it "
+#~ msgstr ""
+#~ "Du kan ignorere denne henvendelsen eller gå til følgende url for å velge "
+#~ "ditt passord."
+
+#~ msgid ""
+#~ "You may ignore this request or hit the following url in order to choose "
+#~ "your password. "
+#~ msgstr ""
+#~ "Du kan ignorere denne henvendelsen eller gå til følgende url for å velge "
+#~ "ditt passord."
+
+#~ msgid "The system sent you a message, please check your mailbox."
+#~ msgstr "Systemet sendte deg en e-post, vennligst se etter i din postkasse."
+
+#~ msgid ""
+#~ "Follow the URL contained  within, it will lead you to a page in which you "
+#~ "can choose your password."
+#~ msgstr ""
+#~ "Følg lenken i den, den vil ta deg til en side hvor du kan sette et nytt "
+#~ "passord."
+
+#~ msgid "On %1 an authentication ticket was generated and sent to you. "
+#~ msgstr "På %1 så ble en autentiseringsbillett generert og sendt til deg. "
+
+#~ msgid "Please use your password or request a new ticket"
+#~ msgstr "Vennligst bruk passordet ditt eller be om en ny billett"
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr "slettebeskjed"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "For å bekrefte din identitet og å forhindre andre i å melde deg på \n"
+#~ "\tdenne listen mot din vilje, så vil en e-post som inneholder  passordet "
+#~ "ditt\n"
+#~ "\tbli sendt til deg."
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "Se etter nye meldinger i din e-postkasse og les meldingen fra Sympa for å "
+#~ "finne passordet ditt.\n"
+#~ "Skriv inn dette passordet under. Dette vil bekrefte din forespørsel om å "
+#~ "bli meldt på  listen %1."
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "Annet (umerkede meldinger)"
+
+#~ msgid "daily delete logs older than 3 months"
+#~ msgstr "slett logger eldre enn 3 måneder daglig"
 
 #, fuzzy
 #~ msgid "Rejection message"

@@ -814,29 +814,33 @@ msgstr "Шаблон сохранён"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
-"Чтобы подтвердить изменение адреса, введите пароль,\n"
-" который Вы получили, ниже:"
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Вы получите письмо с напоминанием Вашего пароля. "
+
+#: web_tt2/change_email.tt2:4
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
+msgstr ""
+"Чтобы подтвердить изменение адреса, введите пароль,\n"
+" который Вы получили, ниже:"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -2868,7 +2872,8 @@ msgstr ""
 "Вы пропустили пароль, пожалуйста, укажите его. Может быть, Вы забыли его ?"
 
 #: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+#, fuzzy
+msgid "You will receive an email that will allow you to choose your password."
 msgstr "Вы примите письмо, чтобы получить возможность сменить пароль. "
 
 #: web_tt2/renewpasswd.tt2:16
@@ -2904,26 +2909,20 @@ msgid "Message sent"
 msgstr "Сообщение отправлено"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr ""
-"Система отправила Вам сообщение, пожалуйста, проверьте свой почтовый ящик. "
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
-"Перейдите по ссылке, содержащейся внутри, на страницу, где Вы сможете "
-"выбрать пароль.  "
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+#, fuzzy
+msgid "We were not able to send you a validation message."
 msgstr "Система не смогла отправить Вам нужное сообщение. "
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
@@ -4049,12 +4048,12 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
+msgid "A validation link was sent to you on %1. "
 msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+msgid "(the validation link was requested from host %1) "
 msgstr ""
 
 #: web_tt2/ticket.tt2:11
@@ -4064,23 +4063,25 @@ msgstr ""
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-msgid "The requested ticket has expired"
-msgstr ""
+#, fuzzy
+msgid "The validation link has expired"
+msgstr "Выслать мне пароль подтверждения"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr ""
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "Выслать мне пароль подтверждения"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:7
@@ -5255,7 +5256,8 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "Эта рассылка о %1, возможно касается и Вас."
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+#, fuzzy
+msgid "To subscribe just hit the following link :"
 msgstr "Чтобы подписаться, просто щёлкните на эту ссылку для отправки письма: "
 
 #. (conf.sympa,subject)
@@ -6188,12 +6190,13 @@ msgstr "Запрос подписки на рассылку %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Уважаемый владелец рассылки %1,\n"
 " \n"
@@ -6227,11 +6230,12 @@ msgstr "Запрос отписки от рассылки %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Уважаемый владелец рассылки %1,\n"
 " \n"
@@ -6566,10 +6570,10 @@ msgstr "%1 сообщений ожидает модерации. "
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
-msgstr ""
-"Вы можете просматривать, принимать или отклонять их через web-интерфейс : %1/"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
 "ticket/%2"
+msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:25
@@ -6791,9 +6795,10 @@ msgstr ""
 "хоста %3 в %4)."
 
 #: mail_tt2/sendpasswd.tt2:14
+#, fuzzy
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 "Вы можете игнорировать этот запрос подписки или щёлкнуть по следующей "
 "ссылке, чтобы подтвердить его"
@@ -6823,9 +6828,10 @@ msgstr ""
 "аккаунта %1 на сервере почтовых рассылок. (Запрос был с хоста %3 в %4)."
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
 msgstr ""
 "Вы можете игнорировать этот запрос или щёлкнуть по следующей ссылке, чтобы "
 "выбрать пароль. "
@@ -8612,43 +8618,100 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr ""
-"Сообщение, по умолчанию используемое при запрете распространения сообщения"
+msgid "You will receive an email, with a confirmation link."
+msgstr "Вы получите письмо с напоминанием Вашего пароля. "
 
-#: web_tt2/subrequest.tt2:31
-#, fuzzy
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
+msgstr "Чтобы подписаться, просто щёлкните на эту ссылку для отправки письма: "
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"Чтобы подтвердить Ваш адрес и предотвратить подписку\n"
-"                 на эту рассылку кем-либо против Вашей воли, Вам будет "
-"выслано сообщение, \n"
-"                 содержащее Ваш пароль. "
+"Уважаемый владелец рассылки %1,\n"
+" \n"
+" Новый пользователь желает стать подписчиком Вашей рассылки. Чтобы "
+"просмотреть текущие запросы на подписку и принять решение, перейдите по "
+"следующей ссылке :"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
-#, fuzzy
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
 msgstr ""
-"Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
-"   Введите этот пароль ниже. Это подтвердит ваш запрос на подписку на "
-"рассылку %1."
+"Уважаемый владелец рассылки %1,\n"
+" \n"
+" От Вашей рассылки желает отписаться пользователь. Если Вы согласны\n"
+", кликните по следующей ссылке :"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "Это сообщение получило метку \"Спам\""
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
 
-#: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
-msgstr "ежедневное удаление журналов работы старше 3 месяцев"
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket has expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+msgid "The requested authentication ticket has an unknow format or is expired"
+msgstr ""
 
 #: web_tt2/lists.tt2:67
 msgid "Unify your subscriptions with the email"
@@ -8768,6 +8831,88 @@ msgstr ""
 #: mail_tt2/moderate.tt2:31
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "Чтобы подтвердить изменение адреса, введите пароль,\n"
+#~ " который Вы получили, ниже:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Вы получите письмо с напоминанием Вашего пароля. "
+
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Вы примите письмо, чтобы получить возможность сменить пароль. "
+
+#~ msgid "The system was not able to send you the appropriate message."
+#~ msgstr "Система не смогла отправить Вам нужное сообщение. "
+
+#~ msgid ""
+#~ "You may ignore this subscription request or hit the following url in "
+#~ "order to confirm it "
+#~ msgstr ""
+#~ "Вы можете игнорировать этот запрос подписки или щёлкнуть по следующей "
+#~ "ссылке, чтобы подтвердить его"
+
+#~ msgid ""
+#~ "You may ignore this request or hit the following url in order to choose "
+#~ "your password. "
+#~ msgstr ""
+#~ "Вы можете игнорировать этот запрос или щёлкнуть по следующей ссылке, "
+#~ "чтобы выбрать пароль. "
+
+#~ msgid "The system sent you a message, please check your mailbox."
+#~ msgstr ""
+#~ "Система отправила Вам сообщение, пожалуйста, проверьте свой почтовый "
+#~ "ящик. "
+
+#~ msgid ""
+#~ "Follow the URL contained  within, it will lead you to a page in which you "
+#~ "can choose your password."
+#~ msgstr ""
+#~ "Перейдите по ссылке, содержащейся внутри, на страницу, где Вы сможете "
+#~ "выбрать пароль.  "
+
+#~ msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+#~ msgstr ""
+#~ "Вы можете просматривать, принимать или отклонять их через web-интерфейс : "
+#~ "%1/ticket/%2"
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr ""
+#~ "Сообщение, по умолчанию используемое при запрете распространения сообщения"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "Чтобы подтвердить Ваш адрес и предотвратить подписку\n"
+#~ "                 на эту рассылку кем-либо против Вашей воли, Вам будет "
+#~ "выслано сообщение, \n"
+#~ "                 содержащее Ваш пароль. "
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
+#~ "   Введите этот пароль ниже. Это подтвердит ваш запрос на подписку на "
+#~ "рассылку %1."
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "Это сообщение получило метку \"Спам\""
+
+#~ msgid "daily delete logs older than 3 months"
+#~ msgstr "ежедневное удаление журналов работы старше 3 месяцев"
 
 #, fuzzy
 #~ msgid "Rejection message"

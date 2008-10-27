@@ -814,29 +814,33 @@ msgstr "Mẫu đã được lưu"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
-#, fuzzy
-msgid ""
-"To confirm your email address change, go to your email account and click on "
-"the ticket"
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
 msgstr ""
-"Để xác nhận thay đổi địa chỉ thư điện tử, hãy nhập mật khẩu bạn đã nhận vào "
-"bên dưới:"
 
 #: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
+msgid "You will receive a n email, with a confirmation link."
 msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở mật khẩu."
+
+#: web_tt2/change_email.tt2:4
+#, fuzzy
+msgid ""
+"To confirm your email address change, go to your email account and click on "
+"the provided link"
+msgstr ""
+"Để xác nhận thay đổi địa chỉ thư điện tử, hãy nhập mật khẩu bạn đã nhận vào "
+"bên dưới:"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -2850,7 +2854,8 @@ msgid "You miss the password, please submit again. May be you forgot it ?"
 msgstr "Bạn đã bỏ sót mật khẩu. Hãy nhập lại. Quên mật khẩu ?"
 
 #: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+#, fuzzy
+msgid "You will receive an email that will allow you to choose your password."
 msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở chọn mật khẩu."
 
 #: web_tt2/renewpasswd.tt2:16
@@ -2887,25 +2892,21 @@ msgid "Message sent"
 msgstr "Thư đã được gửi"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr "Hệ thống vừa mới gửi một thư cho bạn: hãy kiểm tra hộp Thư Đến."
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
-"Hãy theo địa chỉ URL bên trong, mà sẽ dẫn bạn tới một trang cho phép chọn "
-"mật khẩu."
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+#, fuzzy
+msgid "We were not able to send you a validation message."
 msgstr "Hệ thống không thể gửi cho bạn thông điệp thích hợp."
 
 #: web_tt2/requestpasswd.tt2:14
+#, fuzzy
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr "Lỗi nội bộ : không thể tạo vé, hãy liên lạc với quản trị dịch vụ"
 
 #: web_tt2/requestpasswd.tt2:18
@@ -4040,12 +4041,13 @@ msgstr "Tiếc là không thể thực hiện thao tác này"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
-msgstr "Trên %1 một vé xác thực đã được tạo và gửi cho bạn."
+msgid "A validation link was sent to you on %1. "
+msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+#, fuzzy
+msgid "(the validation link was requested from host %1) "
 msgstr "(vé được yêu cầu từ máy %1)"
 
 #: web_tt2/ticket.tt2:11
@@ -4055,25 +4057,26 @@ msgstr "lý do"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
 #, fuzzy
-msgid "The requested ticket has expired"
+msgid "The validation link has expired"
 msgstr "Vé được yêu cầu đã hết hạn dùng"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr "Hãy sử dụng mật khẩu hoặc yêu cầu một vé mới"
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "Gửi cho tôi một mật khẩu xác nhận"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
 #, fuzzy
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr "Vé xác thực được yêu cầu không nhận ra được hoặc đã hết hạn dùng"
 
 #: web_tt2/tt2_error.tt2:7
@@ -5250,7 +5253,8 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "Hộp thư chung này thảo luận %1: bạn tham gia nhé."
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+#, fuzzy
+msgid "To subscribe just hit the following link :"
 msgstr "Để đăng ký, chỉ cần nhấn vào địa chỉ URL mailto này:"
 
 #. (conf.sympa,subject)
@@ -6206,7 +6210,7 @@ msgid ""
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "Chào chủ hộp thư chung %1,\n"
 "\n"
@@ -6240,11 +6244,12 @@ msgstr "Yêu cầu HUỶ đăng ký với hộp thư chung %1"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "Chào chủ hộp thư chung %1,\n"
 "\n"
@@ -6578,9 +6583,10 @@ msgstr "Có %1 thư đang đợi điều tiết."
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
-"Bạn có thể chấp nhận hay từ chối các thư này thông qua Web: %1/ticket/%2"
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:25
@@ -6809,8 +6815,8 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:14
 #, fuzzy
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 "Bạn có thể lờ đi yêu cầu này, hoặc nhấn vào địa chỉ URL theo đây để chọn mật "
 "khẩu."
@@ -6843,9 +6849,10 @@ msgstr ""
 "ở %3.)"
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
 msgstr ""
 "Bạn có thể lờ đi yêu cầu này, hoặc nhấn vào địa chỉ URL theo đây để chọn mật "
 "khẩu."
@@ -8617,37 +8624,70 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "Thư mới đây"
+msgid "You will receive an email, with a confirmation link."
+msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở mật khẩu."
 
-#: web_tt2/subrequest.tt2:31
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
+msgstr "Để đăng ký, chỉ cần nhấn vào địa chỉ URL mailto này:"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 #, fuzzy
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư chung "
-"này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
+"Chào chủ hộp thư chung %1,\n"
+"\n"
+"một người dùng đã yêu cầu đăng ký với hộp thư chung này. Chủ co phép thì hãy "
+"nhấn vào địa chỉ URL theo đây:"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
-#, fuzzy
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
 msgstr ""
-"Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
-"riêng của bạn.\n"
-"\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư "
-"chung %1."
+"Chào chủ hộp thư chung %1,\n"
+"\n"
+"một người dùng đã yêu cầu được gỡ bỏ khỏi hộp thư chung này. Chủ cho phép "
+"thì hãy nhấn vào địa chỉ URL theo đây:"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "Thư này đã bị đánh dấu là thư rác"
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
+
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
 msgid "daily delete logs older than 3 months"
@@ -8734,6 +8774,104 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "Để xác nhận thay đổi địa chỉ thư điện tử, hãy nhập mật khẩu bạn đã nhận "
+#~ "vào bên dưới:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở mật khẩu."
+
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr "Bạn sẽ nhận một thư điện tử nhắc nhở chọn mật khẩu."
+
+#~ msgid "The system was not able to send you the appropriate message."
+#~ msgstr "Hệ thống không thể gửi cho bạn thông điệp thích hợp."
+
+#~ msgid ""
+#~ "Internal error : could not create a ticket, please contact the service "
+#~ "administrator"
+#~ msgstr "Lỗi nội bộ : không thể tạo vé, hãy liên lạc với quản trị dịch vụ"
+
+#~ msgid "(the ticket was requested from host %1) "
+#~ msgstr "(vé được yêu cầu từ máy %1)"
+
+#, fuzzy
+#~ msgid "The requested ticket has expired"
+#~ msgstr "Vé được yêu cầu đã hết hạn dùng"
+
+#, fuzzy
+#~ msgid ""
+#~ "The requested authentication ticket has an unknow format or is expired"
+#~ msgstr "Vé xác thực được yêu cầu không nhận ra được hoặc đã hết hạn dùng"
+
+#, fuzzy
+#~ msgid ""
+#~ "You may ignore this subscription request or hit the following url in "
+#~ "order to confirm it "
+#~ msgstr ""
+#~ "Bạn có thể lờ đi yêu cầu này, hoặc nhấn vào địa chỉ URL theo đây để chọn "
+#~ "mật khẩu."
+
+#~ msgid ""
+#~ "You may ignore this request or hit the following url in order to choose "
+#~ "your password. "
+#~ msgstr ""
+#~ "Bạn có thể lờ đi yêu cầu này, hoặc nhấn vào địa chỉ URL theo đây để chọn "
+#~ "mật khẩu."
+
+#~ msgid "The system sent you a message, please check your mailbox."
+#~ msgstr "Hệ thống vừa mới gửi một thư cho bạn: hãy kiểm tra hộp Thư Đến."
+
+#~ msgid ""
+#~ "Follow the URL contained  within, it will lead you to a page in which you "
+#~ "can choose your password."
+#~ msgstr ""
+#~ "Hãy theo địa chỉ URL bên trong, mà sẽ dẫn bạn tới một trang cho phép chọn "
+#~ "mật khẩu."
+
+#~ msgid "On %1 an authentication ticket was generated and sent to you. "
+#~ msgstr "Trên %1 một vé xác thực đã được tạo và gửi cho bạn."
+
+#~ msgid "Please use your password or request a new ticket"
+#~ msgstr "Hãy sử dụng mật khẩu hoặc yêu cầu một vé mới"
+
+#~ msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+#~ msgstr ""
+#~ "Bạn có thể chấp nhận hay từ chối các thư này thông qua Web: %1/ticket/%2"
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr "Thư mới đây"
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "Để xác nhận bạn là ai, và ngăn cản người khác đăng ký bạn với hộp thư "
+#~ "chung này trái ý của bạn, một thư chứa mật khẩu sẽ được gửi cho bạn."
+
+#, fuzzy
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "Kiểm tra hộp Thư Đến có thư mới chưa, và mở thư từ Sympa để tìm mật khẩu "
+#~ "riêng của bạn.\n"
+#~ "\tNhập mật khẩu đó vào dưới đây. Nó sẽ xác nhận bạn đăng ký với hộp thư "
+#~ "chung %1."
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "Thư này đã bị đánh dấu là thư rác"
 
 #, fuzzy
 #~ msgid "Rejection message"

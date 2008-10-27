@@ -816,30 +816,34 @@ msgstr "テンプレートを保存しました"
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
-"that it is really your email."
+"your email."
 msgstr ""
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
 msgid ""
-"To this end we have sent you an email to this address : %1 with a "
-"confirmation ticket."
+"To this end we have sent you an email to this address : %1 with a validation "
+"link."
 msgstr ""
 
-#: web_tt2/change_email.tt2:4 web_tt2/change_email_request.tt2:5
+#: web_tt2/change_email_request.tt2:5
+msgid "You shoukd check your mailbox now."
+msgstr ""
+
+#: web_tt2/change_email.tt2:3
+#, fuzzy
+msgid "You will receive a n email, with a confirmation link."
+msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
+
+#: web_tt2/change_email.tt2:4
 #, fuzzy
 msgid ""
 "To confirm your email address change, go to your email account and click on "
-"the ticket"
+"the provided link"
 msgstr ""
 "読者登録メールアドレスの変更を確認するために、以下にメールで受け取ったパス"
 "ワード\n"
 "を入力してください:"
-
-#: web_tt2/change_email.tt2:3
-#, fuzzy
-msgid "You will receive an email, with a confirmation ticket."
-msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
 
 #: web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -2850,7 +2854,8 @@ msgstr ""
 "入力したパスワードは間違っています。もしかして、パスワードを忘れたのでは?"
 
 #: web_tt2/renewpasswd.tt2:13
-msgid "You will receive an email in order to be able to choose your password."
+#, fuzzy
+msgid "You will receive an email that will allow you to choose your password."
 msgstr ""
 "あなたに電子メールをお送りします。それを見てパスワードを決めてください。"
 
@@ -2885,25 +2890,19 @@ msgid "Message sent"
 msgstr "メッセージを送りました"
 
 #: web_tt2/requestpasswd.tt2:6
-msgid "The system sent you a message, please check your mailbox."
-msgstr "あなたにメッセージを送りました。新着メールを確認してください。"
-
-#: web_tt2/requestpasswd.tt2:6
 msgid ""
-"Follow the URL contained  within, it will lead you to a page in which you "
-"can choose your password."
+"We've sent you an email that will allow you choose your password. Please "
+"check your mailbox."
 msgstr ""
-"そこに書いてある URL のページを開いてください。そこから、パスワードを決める"
-"ページへ行けます。"
 
 #: web_tt2/requestpasswd.tt2:10
-msgid "The system was not able to send you the appropriate message."
+msgid "We were not able to send you a validation message."
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:14
 msgid ""
-"Internal error : could not create a ticket, please contact the service "
-"administrator"
+"Internal error : could not build a validation link, please contact the "
+"service administrator"
 msgstr ""
 
 #: web_tt2/requestpasswd.tt2:18
@@ -3988,12 +3987,12 @@ msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:5
-msgid "On %1 an authentication ticket was generated and sent to you. "
+msgid "A validation link was sent to you on %1. "
 msgstr ""
 
 #. (ticket_context.remote_addr)
 #: web_tt2/ticket.tt2:7
-msgid "(the ticket was requested from host %1) "
+msgid "(the validation link was requested from host %1) "
 msgstr ""
 
 #: web_tt2/ticket.tt2:11
@@ -4004,23 +4003,25 @@ msgstr "セッション"
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
 msgid ""
-"The validation ticket has already been validated from host %1 .If you did "
-"not perform this validation, please report this confidentiality issue to "
-"your mail services administrator."
+"The validation link has already been validated from host %1 .If you did not "
+"perform this validation, please report this confidentiality issue to your "
+"mail services administrator."
 msgstr ""
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:17
-msgid "The requested ticket has expired"
-msgstr ""
+#, fuzzy
+msgid "The validation link has expired"
+msgstr "確認パスワードを送る"
 
 #: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
-msgid "Please use your password or request a new ticket"
-msgstr ""
+#, fuzzy
+msgid "Please login or request a new validation link"
+msgstr "確認パスワードを送る"
 
 #. (ticket_context.printable_date)
 #: web_tt2/ticket.tt2:21
-msgid "The requested authentication ticket has an unknow format or is expired"
+msgid "The validation link has an unknow format or has expired"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:7
@@ -5181,7 +5182,8 @@ msgstr ""
 "思います。"
 
 #: mail_tt2/invite.tt2:7
-msgid "To subscribe just hit the following mailto url :"
+#, fuzzy
+msgid "To subscribe just hit the following link :"
 msgstr "読者登録は、以下の mailto URL をクリックするだけでできます:"
 
 #. (conf.sympa,subject)
@@ -6129,12 +6131,13 @@ msgstr "%1 メーリングリストへの読者登録申し込み"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:66
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
 "A user asked to be added as a subscriber to your list. In order to list and "
 "manage\n"
-"pending subscription requests you should click the following URL :"
+"pending subscription requests you should click on the following link :"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
 " \n"
@@ -6170,11 +6173,12 @@ msgstr "%1 メーリングリストの登録解除申し込み"
 
 #. (list.name)-)
 #: mail_tt2/listowner_notification.tt2:89
+#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
 "A user asked to be deleted from your list. If this is OK \n"
-"with you, you should click the following URL :"
+"with you, you should click on the following link :"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
 "\n"
@@ -6508,7 +6512,9 @@ msgstr "このリストで吟味を待っているメッセージが %1 通あ�
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
-msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgid ""
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
 
 #. (list.name,conf.wwsympa_url,modkey)
@@ -6740,8 +6746,8 @@ msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
-"You may ignore this subscription request or hit the following url in order "
-"to confirm it "
+"You may ignore this subscription request or click on the following link in "
+"order to confirm it "
 msgstr ""
 
 #. (list)
@@ -6768,10 +6774,12 @@ msgid ""
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
+#, fuzzy
 msgid ""
-"You may ignore this request or hit the following url in order to choose your "
-"password. "
+"You may ignore this request or click on the following link in order to "
+"choose your password. "
 msgstr ""
+"あなたに電子メールをお送りします。それを見てパスワードを決めてください。"
 
 #. (base_url,path_cgi)
 #: mail_tt2/sendpasswd.tt2:30 mail_tt2/sendssopasswd.tt2:14
@@ -8565,39 +8573,122 @@ msgstr "受け取らない (休暇のときなどに便利)"
 msgid "you do not receive your own posts"
 msgstr "自分が投稿したものは受け取らない"
 
-#: web_tt2/manage_template.tt2:9
+#: web_tt2/change_email.tt2:3
 #, fuzzy
-msgid "Listing rejection message"
-msgstr "吟味役が拒否したときのメッセージ"
+msgid "You will receive an email, with a confirmation link."
+msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
 
-#: web_tt2/subrequest.tt2:31
+#: mail_tt2/invite.tt2:7
+msgid "To subscribe just hit the following mailto url :"
+msgstr "読者登録は、以下の mailto URL をクリックするだけでできます:"
+
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:66
 msgid ""
-"To confirm your identity and prevent anyone from subscribing you to\n"
-"        this list against your will, a message containing an authentication "
-"URL was sent to the e-mail address you provided."
+"Dear owner of list %1,\n"
+" \n"
+"A user asked to be added as a subscriber to your list. In order to list and "
+"manage\n"
+"pending subscription requests you should click the following URL :"
 msgstr ""
-"あなたが実在の人物であることを確認するため、また、誰かがあなたの意思に反して"
-"このメーリングリストの登録解除を申し込んでしまうのを防ぐため、これから確認用"
-"の URL を書いたメッセージをあなたに送ります。"
+"%1 メーリングリストのオーナーさんへ\n"
+" \n"
+"ある人から、あなたがオーナーをしているリストに読者として追加してほしい \n"
+"との申し出がありました。構わないのであれば、下記の URL をクリックして \n"
+"ください:"
 
-#. (list)
-#: web_tt2/subrequest.tt2:32
+#. (list.name)-)
+#: mail_tt2/listowner_notification.tt2:89
 msgid ""
-"Check your mailbox for new messages and click this URL. This will confirm "
-"your subscription to list %1."
+"Dear owner of list %1,\n"
+"\n"
+"A user asked to be deleted from your list. If this is OK \n"
+"with you, you should click the following URL :"
 msgstr ""
-"メールボックスの新着メッセージを確認してください。そして下の欄にパスワードを"
-"入力してください。これで、%1 メーリングリストへの読者登録申し込みを確認できま"
-"す。"
+"%1 メーリングリストのオーナーさんへ\n"
+"\n"
+"ある人から、あなたがオーナーをしているリストから削除してほしいとの申し \n"
+"出がありました。構わないのであれば、下記の URL をクリックしてくださ \n"
+"い:"
 
-#: mail_tt2/moderate.tt2:16
-#, fuzzy
-msgid "This message as been tagged as spam"
-msgstr "その他 (トピックの印のないメッセージ) "
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid ""
+"To browse the awaiting messages, yshould click on the following link : %1/"
+"ticket/%2"
+msgstr ""
 
-#: src/etc/global_task_models/purge_logs_table.daily.task:1
-msgid "daily delete logs older than 3 months"
-msgstr "毎日、3ヶ月を過ぎた運用記録を消去する"
+#: web_tt2/change_email_request.tt2:3
+msgid ""
+"Changing your email address is a sensitive operation so we need to verify "
+"that it is really your email."
+msgstr ""
+
+#. (new_email)
+#: web_tt2/change_email_request.tt2:4
+msgid ""
+"To this end we have sent you an email to this address : %1 with a "
+"confirmation ticket."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:10
+msgid "The system was not able to send you the appropriate message."
+msgstr ""
+
+#: web_tt2/requestpasswd.tt2:14
+msgid ""
+"Internal error : could not create a ticket, please contact the service "
+"administrator"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:5
+msgid "On %1 an authentication ticket was generated and sent to you. "
+msgstr ""
+
+#. (ticket_context.remote_addr)
+#: web_tt2/ticket.tt2:7
+msgid "(the ticket was requested from host %1) "
+msgstr ""
+
+#. (ticket_context.status)
+#: web_tt2/ticket.tt2:13
+msgid ""
+"The validation ticket has already been validated from host %1 .If you did "
+"not perform this validation, please report this confidentiality issue to "
+"your mail services administrator."
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:17
+msgid "The requested ticket has expired"
+msgstr ""
+
+#: web_tt2/ticket.tt2:18 web_tt2/ticket.tt2:22
+msgid "Please use your password or request a new ticket"
+msgstr ""
+
+#. (ticket_context.printable_date)
+#: web_tt2/ticket.tt2:21
+msgid "The requested authentication ticket has an unknow format or is expired"
+msgstr ""
+
+#. (conf.wwsympa_url,one_time_ticket)
+#: mail_tt2/moderate.tt2:19
+msgid "You can browse and accept or refuse them by web : %1/ticket/%2"
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:14
+msgid ""
+"You may ignore this subscription request or hit the following url in order "
+"to confirm it "
+msgstr ""
+
+#: mail_tt2/sendpasswd.tt2:26
+msgid ""
+"You may ignore this request or hit the following url in order to choose your "
+"password. "
+msgstr ""
 
 #. (previous_email,new_email)
 #: mail_tt2/listmaster_notification.tt2:168
@@ -8652,6 +8743,62 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "To confirm your email address change, go to your email account and click "
+#~ "on the ticket"
+#~ msgstr ""
+#~ "読者登録メールアドレスの変更を確認するために、以下にメールで受け取ったパス"
+#~ "ワード\n"
+#~ "を入力してください:"
+
+#, fuzzy
+#~ msgid "You will receive an email, with a confirmation ticket."
+#~ msgstr "あなたにパスワードを知らせる電子メールをお送りします。"
+
+#~ msgid ""
+#~ "You will receive an email in order to be able to choose your password."
+#~ msgstr ""
+#~ "あなたに電子メールをお送りします。それを見てパスワードを決めてください。"
+
+#~ msgid "The system sent you a message, please check your mailbox."
+#~ msgstr "あなたにメッセージを送りました。新着メールを確認してください。"
+
+#~ msgid ""
+#~ "Follow the URL contained  within, it will lead you to a page in which you "
+#~ "can choose your password."
+#~ msgstr ""
+#~ "そこに書いてある URL のページを開いてください。そこから、パスワードを決め"
+#~ "るページへ行けます。"
+
+#, fuzzy
+#~ msgid "Listing rejection message"
+#~ msgstr "吟味役が拒否したときのメッセージ"
+
+#~ msgid ""
+#~ "To confirm your identity and prevent anyone from subscribing you to\n"
+#~ "        this list against your will, a message containing an "
+#~ "authentication URL was sent to the e-mail address you provided."
+#~ msgstr ""
+#~ "あなたが実在の人物であることを確認するため、また、誰かがあなたの意思に反し"
+#~ "てこのメーリングリストの登録解除を申し込んでしまうのを防ぐため、これから確"
+#~ "認用の URL を書いたメッセージをあなたに送ります。"
+
+#~ msgid ""
+#~ "Check your mailbox for new messages and click this URL. This will confirm "
+#~ "your subscription to list %1."
+#~ msgstr ""
+#~ "メールボックスの新着メッセージを確認してください。そして下の欄にパスワード"
+#~ "を入力してください。これで、%1 メーリングリストへの読者登録申し込みを確認"
+#~ "できます。"
+
+#, fuzzy
+#~ msgid "This message as been tagged as spam"
+#~ msgstr "その他 (トピックの印のないメッセージ) "
+
+#~ msgid "daily delete logs older than 3 months"
+#~ msgstr "毎日、3ヶ月を過ぎた運用記録を消去する"
 
 #, fuzzy
 #~ msgid "Rejection message"
