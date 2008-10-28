@@ -10,7 +10,7 @@
 [% ELSIF login_error == 'missing_password' %]
       [%|loc%]You miss the password, please submit again. May be you forgot it ?[%END%]
 [% ELSIF login_error == 'ticket_sent' %]
-      [%|loc%]You will receive an email in order to be able to choose your password.[%END%]
+      [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
 [% ELSE %]
 [% IF requestpasswd_context == 'firstpasswd' %]	
       [%|loc%]In order to use Sympa, you will need to define a password.[%END%]

@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-  [% IF status == 'auth' %]
+  [% IF status == 'user.email' %]
       [%|loc(list)%]You asked to be unsubscribed  from list %1[%END%]. <br />[%|loc%]To confirm
       your request, please click the button below :[%END%]<br />
 	<br />
@@ -21,31 +21,8 @@
       Please contact the list owner to help you unsubscribe :[%END%]
       <a href="mailto:[% list %]-request@[% conf.host %]">[% list %]-request@[% conf.host %]</a>
       
-  [% ELSIF init_passwd %]
-    	[%|loc(list)%]You requested unsubscription from list %1[%END%]. 
-	<br /><br />
-	[%|loc%]To confirm your identity and prevent anyone from unsubscribing you from 
-	this list against your will, a message containing an URL
-	will be sent to you.[%END%] <br /><br />
-
-	[%|loc(list)%]Check your mailbox for new messages and examine the message from Sympa to find your password.
-  Enter that password, below. This wil confirm your request to be unsubscribed from list %1.[%END%]
-	
-        <form action="[% path_cgi %]" method="post">
-	<fieldset>
-          <strong>[%|loc%]e-mail address[%END%]</strong> [% email %]<br />
-          <strong><label for="passwd">[%|loc%]password[%END%]</label></strong> 
-  	  <input id="passwd" type="password" name="passwd" size="20" />
-	  <input type="hidden" name="list" value="[% list %]" />
-	  <input type="hidden" name="email" value="[% email %]" />
-        &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
-	</fieldset>
-        </form>
-
-      	[%|loc%]This password, associated with your email address, will allow you to access your custom environment.[%END%]
-
   [% ELSIF ! email %]
-      [%|loc(list)%]Please provide your email address for your unsubscription request from list %1.[%END%]
+      [%|loc(list)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside ; please provide your email address below to receive this validation link.[%END%]
 
       <form action="[% path_cgi %]" method="post">
 	<fieldset>
@@ -53,29 +30,15 @@
           <input id="email" type="text" name="email"><br />
           <input type="hidden" name="action" value="sigrequest" />
 	  <input type="hidden" name="list" value="[% list %]" />
-	  <input class="MainMenuLinks" type="submit" name="action_sigrequest" value="[%|loc%]Unsubscribe[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_sigrequest" value="[%|loc%]Send me a validation link[%END%]" />
 	</fieldset>
          </form>
 
 
   [% ELSE %]
 
-	[%|loc(list)%]To confirm your unsubscription from list %1, please enter
-	your password below :[%END%]
+	[%|loc%]We've sent you an email including a validation link. You should check your mailbox to read this email and use this validation link.[%END%] <br /><br />
 
-         <form action="[% path_cgi %]" method="post">
-	<fieldset>
-          <strong>[%|loc%]e-mail address[%END%]</strong> [% email %]<br />
-          <strong><label for="passwd">[%|loc%]password[%END%]</label></strong> 
-  	  <input id="passwd" type="password" name="passwd" size="20" />
-	  <input type="hidden" name="list" value="[% list %]" />
-	  <input type="hidden" name="email" value="[% email %]" />
-         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
-
-<br /><br />
-<em>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</em>  <input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
-	</fieldset>
-         </form>
 
   [% END %]      
 

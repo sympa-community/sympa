@@ -2,24 +2,24 @@
 
 
 [% IF ticket_context.date %]
- [%|loc(ticket_context.printable_date) %]On %1 an authentication ticket was generated and sent to you. [%END%]
+ [%|loc(ticket_context.printable_date) %]A validation link was sent to you on %1. [%END%]
  [% IF ticket_context.remote_addr %]
-   [%|loc(ticket_context.remote_addr) %](the ticket was requested from host %1) [%END%]
+   [%|loc(ticket_context.remote_addr) %](the validation link was requested from host %1) [%END%]
  [%END%]
 [%END%]
 
 <h3>[%|loc%]reason[%END%]</h3>
 [% IF ticket_context.result == 'closed' -%]
-[%|loc(ticket_context.status)%]The validation ticket has already been validated from host %1 .If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
+[%|loc(ticket_context.status)%]The validation link has already been validated from host %1 .If you did not perform this validation, please report this confidentiality issue to your mail services administrator.[%END%] 
 [%END%]
 
 [% IF ticket_context.result == 'expired' -%]
-[%|loc(ticket_context.printable_date)%]The requested ticket has expired[%END%].
-[%|loc%]Please use your password or request a new ticket[%END%]
+[%|loc(ticket_context.printable_date)%]The validation link has expired[%END%].
+[%|loc%]Please login or request a new validation link[%END%]
 [%END%]
 [% IF ticket_context.result == 'not_found' -%]
-[%|loc(ticket_context.printable_date)%]The requested authentication ticket has an unknow format or is expired[%END%].
-[%|loc%]Please use your password or request a new ticket[%END%]
+[%|loc(ticket_context.printable_date)%]The validation link has an unknow format or has expired[%END%].
+[%|loc%]Please login or request a new validation link[%END%]
 [%END%]
 
 

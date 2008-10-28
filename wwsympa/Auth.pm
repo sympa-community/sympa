@@ -402,7 +402,7 @@ sub create_one_time_ticket {
     my $email = shift;
     my $robot = shift;
     my $data_string = shift;
-    my $remote_addr = shift;
+    my $remote_addr = shift; ## Value may be 'mail' if the IP address is not known
 
     my $ticket = &SympaSession::get_random();
     do_log('info', 'Auth::create_one_time_ticket(%s,%s,%s) value = %s',$email,$robot,$context_data,$ticket);

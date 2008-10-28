@@ -4782,9 +4782,6 @@ sub do_subrequest {
      	$param->{'custom_attribute'} = $in{'custom_attribute'};
     }
     
-    my $ldap_user;
-    $ldap_user = 1 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
-    
     ## Auth ?
     if ($param->{'user'}{'email'}) {
 	## Subscriber ?
@@ -4803,7 +4800,7 @@ sub do_subrequest {
 	    return 1;
 	}
 	## Subscriber ?
-	if (!$ldap_user && $list->is_user($in{'email'})) {
+	if ($list->is_user($in{'email'})) {
 	    $param->{'status'} = 'notauth_subscriber';
 	    return 1;
 	}
@@ -4812,7 +4809,7 @@ sub do_subrequest {
 	    if &List::is_user_db($in{'email'});
 	
 	## Need to send a password by email
-	if ((!&List::is_user_db($in{'email'}) || !$user->{'password'} ) && !$ldap_user) {
+	if ((!&List::is_user_db($in{'email'}) || !$user->{'password'} )) {
 	    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
 	    $param->{'login_error'}='ticket_sent';
 	    unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
@@ -4956,38 +4953,30 @@ sub do_subrequest {
  sub do_sigrequest {
      &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
 
-     my $ldap_user;
-     $ldap_user = 1
-	 if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
-
-     ## Do it
+     ## If user is authenticated then redirect him to the signoff action but 
+     ## get a confirmation (via the sigrequest web page) first
      if ($param->{'user'}{'email'}) {
-	 $param->{'status'} = 'auth';
 	 return 1;
- #	return 'signoff';
      }
 
-     ## Not auth & no email
+     ## Not auth & no email => return the sigrequest web form to get the user email
      unless ($in{'email'}) {
 	 return 1;
      }
 
-     if ($list->is_user($in{'email'}) || $ldap_user) {
-	 my $user;
-	 $user = &List::get_user_db($in{'email'})
-	     if &List::is_user_db($in{'email'});
+     
+     if ($list->is_user($in{'email'})) {
 
-	 ## Need to send a password by email
-	 if ((!&List::is_user_db($in{'email'}) || 
-	     !$user->{'password'} || 
-	     ($user->{'password'} =~ /^INIT/i)) &&
-	     !$ldap_user) {
+       my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
+       
+       my $tt2_param = {'type' => 'ticket_to_signoff', 
+			'one_time_ticket' => $ticket,
+			'email' => $in{'email'}};
+       unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
+	 &do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	 return undef;
+       }
 
-	     &do_requestpasswd();
-	     $param->{'email'} =$in{'email'};
-	     $param->{'init_passwd'} = 1;
-	     return 1;
-	 }
      }else {
 	 $param->{'not_subscriber'} = 1;
      }

@@ -16,7 +16,7 @@ Content-Transfer-Encoding: 8bit
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
 [%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
-[%|loc(conf.wwsympa_url,one_time_ticket) %]You can browse and accept or refuse them by web : %1/ticket/%2[%END%] 
+[%|loc(conf.wwsympa_url,one_time_ticket) %]To browse the awaiting messages, you should click on the following link : %1/ticket/%2[%END%] 
 
 [% IF method == 'md5' -%]
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,modkey)%]To tag the message in list %1 for the appropriate topic, please use the following link :
