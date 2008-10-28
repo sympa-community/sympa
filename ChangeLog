@@ -1,3 +1,190 @@
+2008-10-27 17:27  olivier.salaun
+
+	* po/web_help_fr.po: [change] update French terminology for login
+	  => connexioin
+
+2008-10-27 16:14  olivier.salaun
+
+	* po/fr.po: [change] updated French translations
+
+2008-10-27 14:56  olivier.salaun
+
+	* po/af.po, po/ar.po, po/bg.po, po/br.po, po/ca.po, po/cs.po,
+	  po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po, po/eu.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/id.po, po/it.po, po/ja.po,
+	  po/ko.po, po/ml.po, po/nb_NO.po, po/nl.po, po/nn_NO.po, po/oc.po,
+	  po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/ru.po, po/sv.po,
+	  po/tr.po, po/vi.po, po/zh_CN.po, po/zh_TW.po: [change] Merged
+	  with POT file
+
+2008-10-27 14:54  olivier.salaun
+
+	* po/af.po, po/ar.po, po/bg.po, po/br.po, po/ca.po, po/cs.po,
+	  po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po, po/eu.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/id.po, po/it.po, po/ja.po,
+	  po/ko.po, po/ml.po, po/nb_NO.po, po/nl.po, po/nn_NO.po, po/oc.po,
+	  po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/ru.po, po/sv.po,
+	  po/tr.po, po/vi.po, po/zh_CN.po, po/zh_TW.po: [change] Get
+	  updates from pootle
+
+2008-10-27 14:50  olivier.salaun
+
+	* po/af.po, po/ar.po, po/bg.po, po/br.po, po/ca.po, po/cs.po,
+	  po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po, po/eu.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/id.po, po/it.po, po/ja.po,
+	  po/ko.po, po/ml.po, po/nb_NO.po, po/nl.po, po/nn_NO.po, po/oc.po,
+	  po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/ru.po, po/sv.po,
+	  po/sympa.pot, po/terminology.pot, po/tr.po, po/vi.po,
+	  po/zh_CN.po, po/zh_TW.po: [change] using better terminology
+	  concerning authentication
+
+2008-10-24 08:33  olivier.salaun
+
+	* po/af.po, po/ar.po, po/bg.po, po/br.po, po/ca.po, po/cs.po,
+	  po/de.po, po/el.po, po/en_US.po, po/es.po, po/et.po, po/eu.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/id.po, po/it.po, po/ja.po,
+	  po/ko.po, po/ml.po, po/nb_NO.po, po/nl.po, po/nn_NO.po, po/oc.po,
+	  po/pl.po, po/pt.po, po/pt_BR.po, po/ro.po, po/ru.po, po/sv.po,
+	  po/sympa.pot, po/tr.po, po/vi.po, po/web_help_ja.po, po/zh_CN.po,
+	  po/zh_TW.po: [change] regenerate pot and po files
+
+2008-10-24 08:21  olivier.salaun
+
+	* po/Makefile: [change] adding export of the terminology.pot file
+
+2008-10-24 08:13  olivier.salaun
+
+	* po/ru.po, po/terminology.pot, po/web_help_ja.po: [change] get
+	  updates from Pootle + add the terminology template
+
+2008-10-24 06:30  olivier.salaun
+
+	* web_tt2/css.tt2, web_tt2/javascript.tt2, web_tt2/main.tt2,
+	  web_tt2/skinsedit.tt2, wwsympa/icons/crosshairs.png,
+	  wwsympa/icons/h.png, wwsympa/icons/position.png,
+	  wwsympa/icons/sv.png, wwsympa/wwsympa.fcgi: [feature] New inline
+	  color editor (skin section from "sympa admin")
+
+2008-10-24 06:28  olivier.salaun
+
+	* web_tt2/error.tt2: [bug] fix syntaxique bug
+
+2008-10-15 14:30  olivier.salaun
+
+	* web_tt2/error.tt2, wwsympa/wwsympa.fcgi: [bug]Add an appropriate
+	  error message whenever an identity provider does not provide the
+	  user email address, when using generic_sso authentication method.
+
+2008-10-14 14:26  olivier.salaun
+
+	* src/Conf.pm, src/Log.pm,
+	  src/etc/global_task_models/purge_logs_table.daily.task: [bug]
+	  'logs_expiration_period' sympa.conf parameter was not loaded. As
+	  a result DB logs were expired every day.
+	  Also added an error message if two virtual hosts use the same
+	  URL.
+
+2008-10-14 07:28  olivier.salaun
+
+	* web_tt2/viewmod.tt2: [bug] fixed form parameters
+
+2008-10-09 16:01  olivier.salaun
+
+	* src/Upgrade.pm: [bug] While running sympa.pl
+	  --md5_encode_password, most MD5-encoded passwords were re-encoded
+	  because of a regexp error. Also fixed the
+	  Upgrade::md5_encode_password() code to skip empty passwords
+
+2008-10-08 08:02  olivier.salaun
+
+	* src/Makefile.am: [*change] [reported by Micah Anderson, Riseup]
+	  Micah reported problems with the use of $* instead of /m in the
+	  parser.pl module. It was a good oportunity to remove the old
+	  parser code that was used by the task_manager only. The
+	  task_manager now uses the TT2 parser. It forces us to change the
+	  task template format for structured variables : [x->y] should now
+	  be written [x.y].
+
+2008-10-08 08:02  olivier.salaun
+
+	* src/parser.pl, src/sympa.pl: [*change] [reported by Micah
+	  Anderson, Riseup] Micah reported problems with the use of $*
+	  instead of /m in the parser.pl module. It was a good oportunity
+	  to remove the old parser code that was used by the task_manager
+	  only. The task_manager now uses the TT2 parser. It forces us to
+	  change the task template format for structured variables : [x->y]
+	  should now be written [x.y].
+
+2008-10-08 07:59  olivier.salaun
+
+	* src/etc/list_task_models/sync_include.ttl.task,
+	  src/task_manager.pl: [*change] [reported by Micah Anderson,
+	  Riseup] Micah reported problems with the use of $* instead of /m
+	  in the parser.pl module. It was a good oportunity to remove the
+	  old parser code that was used by the task_manager only. The
+	  task_manager now uses the TT2 parser. It forces us to change the
+	  task template format for structured variables : [x->y] should now
+	  be written [x.y].
+
+2008-10-07 16:00  olivier.salaun
+
+	* src/sympa.pl: [bug] [reported by Micah Anderson, Riseup] No more
+	  force $/ and $* variables. This had been introduced in 1999 to
+	  fix a bug on Solaris platform.
+
+2008-10-06 09:40  sympa-authors
+
+	* src/Commands.pm: [feature] When rejecting a message by email
+	  reject command, the message body is
+	  transmisted to the tt2 parser so it is now possible to print the
+	  message body in the
+	  notification sent to the original message sender. The tt2 var to
+	  use is [editor_msg_body]
+
+2008-10-03 06:06  sympa-authors
+
+	* src/SQLSource.pm: [feature] Thanks to Ryan Fox submit who submit
+	  this patch for informix external data source.
+
+2008-10-02 13:10  olivier.salaun
+
+	* src/Conf.pm, wwsympa/Auth.pm: [bug][#4543] When multiple "ldap"
+	  entries were defined in the auth.conf file, only the first one
+	  was queried.
+	  Also fixed a bug with the default scope being "base", now "sub".
+
+2008-10-02 13:02  olivier.salaun
+
+	* configure.ac: [feature] preparing 6.0a.3
+
+2008-10-02 13:01  olivier.salaun
+
+	* ChangeLog: [change] updated
+
+2008-10-02 09:45  olivier.salaun
+
+	* wwsympa/wwsympa.fcgi: [-bug] fixed typo logued
+
+2008-10-01 13:06  olivier.salaun
+
+	* web_tt2/login_menu.tt2, web_tt2/loginbanner.tt2: [bug] fix
+	  misplaced </div>
+
+2008-10-01 09:28  olivier.salaun
+
+	* web_tt2/manage_template.tt2: [bug] One string not tagged with
+	  [loc]
+
+2008-10-01 09:24  olivier.salaun
+
+	* web_tt2/modindex.tt2: [-bug] moved h2 to the right place
+
+2008-10-01 09:20  olivier.salaun
+
+	* web_tt2/modindex.tt2, wwsympa/wwsympa.fcgi: [change] Allow access
+	  to modindex page even with empty spool. It allows to access the
+	  manage_template link
+
 2008-09-30 15:05  olivier.salaun
 
 	* mail_tt2/listmaster_notification.tt2,
