@@ -852,6 +852,7 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'viewbounce' => {'email' => 'fix_escape_uri'},
 		 'editsubscriber' => {'email' => 'fix_escape_uri'},
 		 'edit_list' => {'*param*' => 'unescape_html'}, ## Required because outgoing parameters have been html-escaped in edit_list_request
+		 'change_email' => {'*email' => 'normalize'}, ## Remove leading/trailing white spaces and lowercase
 		 );
 
 ## Open log
@@ -1887,6 +1888,11 @@ sub get_parameters {
 
 	     }elsif ($filtering_action eq 'fix_escape_uri') {
 		 $in{$p} =~ s/\xa5/\//g;
+
+	     }elsif ($filtering_action eq 'normalize') {
+		 $in{$p} =~ s/^\$+//; ## remove leading \s
+		 $in{$p} =~ s/\$+$//; ## remove trailing \s
+		 $in{$p} = lc($in{$p}); ## lowercase
 	     }
 	 }
      }
