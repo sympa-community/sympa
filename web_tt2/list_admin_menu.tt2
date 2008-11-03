@@ -1,7 +1,5 @@
 <!-- $Id$ -->
 
-<!-- begin list_admin_menu.tt2 -->
-
 [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <strong><a class="[% class %]" href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></strong><br />
 [% IF action == 'admin' || action_type == 'admin' %]

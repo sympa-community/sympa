@@ -1,6 +1,5 @@
 <!-- $Id$ -->
 
-
 [% IF action == 'search_list' %]
   [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
 [% ELSIF action == 'search_user' %]
@@ -46,4 +45,4 @@
 [% ELSE %]
 <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
-
+<!-- end lists.tt2 -->
