@@ -705,7 +705,7 @@ my %in_regexp = (
 
 		 ## Search
 		 'filter' => '[^<>\\\[\]\(\)\$\n]+', # search list
-		 'key_word' => '[^<>\\\*\[\]\(\)\$\n]+',
+		 'key_word' => '.*',
 		 'format' => '[^<>\\\$\n]+', # dump format/filter string
 
 		 ## File names
@@ -7497,7 +7497,7 @@ sub do_remove_arc {
      $search->match (1) 
 	 if (($in{'match'} eq 'partial') or ($in{'match'} eq '1'));
 
-     my @words = split(/\s+/,$in{'key_word'});
+     my @words = split(/\s+/,&tools::escape_regexp($in{'key_word'}));
      $search->words (\@words);
      $search->clean_words ($in{'key_word'});
      my @clean_words = @words;
