@@ -84,12 +84,8 @@ sub load {
     
     my $statement ;
 
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT id_challenge \"id_challenge\", date_challenge \"date\", robot_challenge \"robot\", email_challenge \"email\", data_challenge \"data\" FROM challenge_table WHERE id_challenge = %s", $id_challenge;
-    }else {
-	$statement = sprintf "SELECT id_challenge AS id_challenge, date_challenge AS date, remote_addr_challenge AS remote_addr, robot_challenge AS robot, email_challenge AS email, data_challenge AS data, hit_challenge AS hit, start_date_challenge AS start_date FROM challenge_table WHERE id_challenge = %s", $cookie;
-    }    
+    $statement = sprintf "SELECT id_challenge AS id_challenge, date_challenge AS date, remote_addr_challenge AS remote_addr, robot_challenge AS robot, email_challenge AS email, data_challenge AS data, hit_challenge AS hit, start_date_challenge AS start_date FROM challenge_table WHERE id_challenge = %s", $cookie;
+
     my $dbh = &List::db_get_handler();
     my $sth;
 

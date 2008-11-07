@@ -120,12 +120,8 @@ sub load {
     
     my $statement ;
 
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT id_session \"id_session\", date_session \"date\", remote_addr_session \"remote_addr\", robot_session \"robot\", email_session \"email\", data_session \"data\", hit_session \"hit\", start_date_session \"start_date\" FROM session_table WHERE id_session = %s", $cookie;
-    }else {
-	$statement = sprintf "SELECT id_session AS id_session, date_session AS date, remote_addr_session AS remote_addr, robot_session AS robot, email_session AS email, data_session AS data, hit_session AS hit, start_date_session AS start_date FROM session_table WHERE id_session = %s", $cookie;
-    }    
+    $statement = sprintf "SELECT id_session AS id_session, date_session AS date, remote_addr_session AS remote_addr, robot_session AS robot, email_session AS email, data_session AS data, hit_session AS hit, start_date_session AS start_date FROM session_table WHERE id_session = %s", $cookie;
+
     my $dbh = &List::db_get_handler();
     my $sth;
 

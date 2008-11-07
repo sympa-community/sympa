@@ -441,12 +441,7 @@ sub get_one_time_ticket {
 	return return {'result'=>'error'} unless &List::db_connect();
     }
     my $statement;
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT ticket_one_time_ticket \"ticket\", robot_one_time_ticket \"robot\", email_one_time_ticket \"email\", date_one_time_ticket \"date\", data_one_time_ticket \"data\", remote_addr_one_time_ticket \"remote_addr\", status_one_time_ticket \"status\" FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
-    }else {
-	$statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS date, data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
-    }
+    $statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS date, data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
     
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Auth::get_one_time_ticket: Unable to prepare SQL statement : %s', $dbh->errstr);
