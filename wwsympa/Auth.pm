@@ -376,7 +376,7 @@ sub remote_app_check_password {
     
     foreach my $application (@trusted_apps){
 	
- 	if ($application->{'name'} eq lc($trusted_application_name)) {
+ 	if (lc($application->{'name'}) eq lc($trusted_application_name)) {
  	    if ($md5 eq $application->{'md5password'}) {
  		# &do_log('debug', 'Auth::remote_app_check_password : authentication succeed for %s',$application->{'name'});
  		my %proxy_for_vars ;
