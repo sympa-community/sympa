@@ -1953,7 +1953,7 @@ sub set {
     ## Check if we know this email on the list and remove it. Otherwise
     ## just reject the message.
     unless ($list->is_user($sender) ) {
-	&report::reject_report_cmd('user','email_not_found',{'email'=> $email, 'listname' => $which},$cmd_line); 
+	&report::reject_report_cmd('user','email_not_found',{'email'=> $sender, 'listname' => $which},$cmd_line); 
 	&do_log('info', 'SET %s %s from %s refused, not on list',  $which, $mode, $sender);
 	return 'not allowed';
     }
