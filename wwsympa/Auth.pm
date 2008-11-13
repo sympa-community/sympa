@@ -179,7 +179,8 @@ sub authentication {
 sub ldap_authentication {
      my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
      my ($mesg, $host,$ldap_passwd,$ldap_anonymous);
-     &do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,$pwd,$whichfilter);
+     &do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,'****',$whichfilter);
+     &do_log('debug3','Password used: %s',$pwd);
 
      unless (&tools::get_filename('etc',{},'auth.conf', $robot)) {
 	 return undef;
