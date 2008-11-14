@@ -20,9 +20,11 @@ if [ ! "${OSTYPE}" ]; then
 fi
 
 # OSTYPE *is* defined on Solaris 10! (bug #3149)
-if [ $(echo ${OSTYPE} | grep 'solaris') ]; then
-    OSTYPE='SunOS'
-fi
+case "$OSTYPE" in
+        *solaris*)
+        OSTYPE=SunOS
+        ;;
+esac
 
 if [ -f /etc/SuSE-release ] ; then
     OSTYPE='Suse'
