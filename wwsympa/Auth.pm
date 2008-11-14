@@ -466,7 +466,7 @@ sub get_one_time_ticket {
 
     if ($ticket->{'status'} ne 'open') {
 	$result = 'closed';
-	do_log('info','Auth::get_one_time_ticket: ticket %s from %s refused because allready used (%s)',$ticket_number,$ticket->{'email'},$printable_date);
+	do_log('info','Auth::get_one_time_ticket: ticket %s from %s refused because ticket used already (%s)',$ticket_number,$ticket->{'email'},$printable_date);
     }
     elsif (time - $ticket->{'date'} > 48 * 60 * 60) {
 	do_log('info','Auth::get_one_time_ticket: ticket %s from %s refused because expired (%s)',$ticket_number,$ticket->{'email'},$printable_date);
