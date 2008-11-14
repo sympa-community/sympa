@@ -1040,7 +1040,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'gettext_id' => "Maximum message size",
 			   'group' => 'sending'
 		       },
-	    'msg_topic' => {'format' => {'name' => {'format' => '\w+',
+	    'msg_topic' => {'format' => {'name' => {'format' => '[\-\w]+',
 						    'length' => 15,
 						    'occurrence' => '1',
 						    'gettext_id' => "Message topic name",
