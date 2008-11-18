@@ -8611,7 +8611,7 @@ sub do_edit_list {
     if (defined $list->{'admin'}{'family_name'}) {
 	unless ($family = $list->get_family()) {
 	    &report::reject_report_web('intern','unable_get_family',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);	
-    &wwslog('info','do_edit_list : impossible to get list %s\'s family',$list->{'name'});
+	    &wwslog('info','do_edit_list : impossible to get list %s\'s family',$list->{'name'});
 	    &web_db_log({'status' => 'error',
 			 'error_type' => 'internal'});
 	    return undef;
@@ -8721,7 +8721,7 @@ sub do_edit_list {
 			    splice(@{$new_admin->{$pname}}, $i, 1);
 			    last;
 			}
-		    }		
+		    }
 		}else {
 		    
 		    ## Remove if empty
@@ -8734,6 +8734,14 @@ sub do_edit_list {
 	    
 	    my $last_index = $#{$new_admin->{$pname}};	  
 	    
+	    if ($pinfo->{$pname}{'occurrence'} =~ /^1/ && !($last_index >= 0)){
+		delete $new_admin->{$pname};
+		&wwslog('err','Error: Parameter %s is mandatory.', $pname);
+		&report::reject_report_web('user','mandatory_parameter',{'p_name' => $pname},$param->{'action'},$list);
+		&web_db_log({'status' => 'error',
+			     'error_type' => 'syntax_errors'});
+		next;
+	    }
 	    if ($#{$list->{'admin'}{$pname}} < $last_index) {
 		$to_index = $last_index;
 	    }else {
@@ -8774,7 +8782,6 @@ sub do_edit_list {
 	## Check changed parameters
 	## Also check syntax
 	foreach my $i (0..$to_index) {
-	    
 	    unless (defined $new_p->[$i]) {
 		push @{$delete{$pname}}, $i;
 		$changed{$pname} = 1; next;

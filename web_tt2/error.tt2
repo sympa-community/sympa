@@ -83,6 +83,7 @@
   [% ELSIF u_err.msg == 'no_parameter_edited' %][%|loc%]No parameter was edited[%END%]
   [% ELSIF u_err.msg == 'config_changed' %][%|loc(u_err.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
   [% ELSIF u_err.msg == 'topic_other' %][%|loc%]Topic "other" is a reserved word[%END%]
+  [% ELSIF u_err.msg == 'mandatory_parameter' %][%|loc(u_err.p_name)%]Parameter '%1' is mandatory. Ignoring deletion.[%END%]
   [% ELSIF u_err.msg == 'p_family_controlled' %][%|loc(u_err.param)%]Parameter '%1' must have values[%END%]
   [% ELSIF u_err.msg == 'p_family_wrong' %][%|loc(u_err.param,u_err.val)%]Parameter '%1' has got wrong value : '%2'[%END%]
   [% ELSIF u_err.msg == 'already_closed' %][%|loc(u_err.listname)%]The list '%1' is already closed[%END%]

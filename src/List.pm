@@ -1108,7 +1108,7 @@ my %alias = ('reply-to' => 'reply_to',
 						   'order' => 4
 						   }
 				 },
-			'occurrence' => '0-n',
+			'occurrence' => '1-n',
 			'gettext_id' => "Owner",
 			'group' => 'description'
 			},
