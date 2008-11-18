@@ -746,9 +746,9 @@ my %in_regexp = (
 		 'new_password' => '.+',
 		 
 		 ## Topics
-		 'topic' => '[\w\/]+',
-		 'topics' => '[\w\/]+',
-		 'subtopic' => '[\w\/]+',
+		 'topic' => '[\-\w\/]+',
+		 'topics' => '[\-\w\/]+',
+		 'subtopic' => '[\-\w\/]+',
 		 
 
 		 ## List names

@@ -1271,7 +1271,7 @@ my %alias = ('reply-to' => 'reply_to',
 			    'gettext_id' => "Who can subscribe to the list",
 			    'group' => 'command'
 			    },
-	    'topics' => {'format' => '\w+(\/\w+)?',
+	    'topics' => {'format' => '[\-\w]+(\/[\-\w]+)?',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
 			 'gettext_id' => "Topics for the list",
@@ -9582,7 +9582,7 @@ sub load_topics {
 	my (@raugh_data, $topic);
 	while (<FILE>) {
 	    Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
-	    if (/^([\w\/]+)\s*$/) {
+	    if (/^([\-\w\/]+)\s*$/) {
 		$index++;
 		$topic = {'name' => $1,
 			  'order' => $index
