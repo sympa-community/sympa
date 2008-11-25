@@ -764,8 +764,21 @@ sub add {
 				       });
     }
     
-    ## Now send the welcome file to the user if it exists.
-    unless ($quiet || ($action =~ /quiet/i )) {
+    my $visi_result = $list->check_list_authz('visibility', 'smtp',
+					 {'sender' => $email});
+    
+    my $visible_action;
+    $visible_action = $visi_result->{'action'} if (ref($visi_result) eq 'HASH');
+    
+    unless (defined $visible_action) {
+	my $error = "Unable to evaluate scenario 'visibility' for list $list->{'name'}";
+	&List::send_notify_to_listmaster('intern_error',$list->{'domain'}, {'error' => $error,
+									    'who' => $email,
+									    'list' => $list,
+									    'action' => 'User add'});
+    }
+    ## Now send the welcome file to the user if it exists and notification is supposed to be sent.
+    unless ($quiet || ($action =~ /quiet/i || $visible_action =~ /reject/i)) {
 	unless ($list->send_file('welcome', $email, $robot,{'auto_submitted' => 'auto-generated'})) {
 	    &do_log('notice',"Unable to send template 'welcome' to $email");
 	}
@@ -879,9 +892,22 @@ sub del {
 	}
     }
     
+    my $visi_result = $list->check_list_authz('visibility', 'smtp',
+					      {'sender' => $email});
+    
+    my $visible_action;
+    $visible_action = $visi_result->{'action'} if (ref($visi_result) eq 'HASH');
+    
+    unless (defined $visible_action) {
+	my $error = "Unable to evaluate scenario 'visibility' for list $list->{'name'}";
+	&List::send_notify_to_listmaster('intern_error',$list->{'domain'}, {'error' => $error,
+									    'who' => $email,
+									    'list' => $list,
+									    'action' => 'User del'});
+    }
     ## Send a notice to the removed user, unless the owner indicated
     ## quiet del.
-    unless ($quiet || ($action =~ /quiet/i )) {
+    unless ($quiet || ($action =~ /quiet/i || $visible_action =~ /reject/i)) {
 	unless ($list->send_file('removed', $email, $robot, {'auto_submitted' => 'auto-generated'})) {
 	    &do_log('notice',"Unable to send template 'removed' to $email");
 	}

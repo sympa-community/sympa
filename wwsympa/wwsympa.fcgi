@@ -5859,7 +5859,20 @@ sub do_skinsedit {
 	     push @added_users, $email; ## List only email addresses ; used later to remove pending subrequests
 	 }
 
-	 unless ($in{'quiet'} || ($add_is =~ /quiet/i )) {
+	 my $result = $list->check_list_authz('visibility', 'smtp',
+					      {'sender' => $email});
+	 
+	 my $action;
+	 $action = $result->{'action'} if (ref($result) eq 'HASH');
+	 
+	 unless (defined $action) {
+	     my $error = "Unable to evaluate scenario 'visibility' for list $list->{'name'}";
+	     &List::send_notify_to_listmaster('intern_error',$list->{'domain'}, {'error' => $error,
+										 'who' => $email,
+										 'list' => $list,
+										 'action' => 'User add'});
+	 }
+	 unless ($in{'quiet'} || ($add_is =~ /quiet/i || $action =~ /reject/)) {
 	     unless ($list->send_file('welcome', $email, $robot,{})) {
 		 &wwslog('notice',"Unable to send template 'welcome' to $email");
 	     }
@@ -5981,7 +5994,20 @@ sub do_skinsedit {
 
 	 &wwslog('info','do_del: subscriber %s deleted from list %s', $email, $param->{'list'});
 
-	 unless ($in{'quiet'}) {
+	 my $result = $list->check_list_authz('visibility', 'smtp',
+					      {'sender' => $email});
+	 
+	 my $action;
+	 $action = $result->{'action'} if (ref($result) eq 'HASH');
+	 
+	 unless (defined $action) {
+	     my $error = "Unable to evaluate scenario 'visibility' for list $list->{'name'}";
+	     &List::send_notify_to_listmaster('intern_error',$list->{'domain'}, {'error' => $error,
+										 'who' => $email,
+										 'list' => $list,
+										 'action' => 'User add'});
+	 }
+	 unless ($in{'quiet'} || $action =~ /reject/) {
 	     unless ($list->send_file('removed', $email, $robot,{})) {
 		 &wwslog('notice',"Unable to send template 'removed' to $email");
 	     }

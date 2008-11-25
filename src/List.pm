@@ -8455,6 +8455,7 @@ sub sync_include {
 
     ## Go through new users
     my @add_tab;
+    my $users_added = 0;
     foreach my $email (keys %{$new_subscribers}) {
 	if (defined($old_subscribers{$email}) ) {	   
 	    if ($old_subscribers{$email}{'included'}) {
@@ -8491,24 +8492,44 @@ sub sync_include {
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
 	    $u->{'date'} = time;
-	    push @add_tab, $u;
-	}
-    }
-
-    if ($#add_tab >= 0) {
-	unless( $users_added = $self->add_user( @add_tab ) ) {
-	    &do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
-	    return undef;
+	    @add_tab = ($u);
+	    my $user_added = 0;
+	    unless( $user_added = $self->add_user( @add_tab ) ) {
+		&do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
+		return undef;
+	    }
+	    if ($user_added) {
+		$users_added++;
+		## If list hidden, don't send notification
+		my $result = $self->check_list_authz('visibility', 'smtp',
+						     {'sender' => $u->{'email'}});
+		
+		my $action;
+		$action = $result->{'action'} if (ref($result) eq 'HASH');
+		
+		unless (defined $action) {
+		    my $error = "Unable to evaluate scenario 'visibility' for list $self->{'name'}";
+		    &List::send_notify_to_listmaster('intern_error',$self->{'domain'}, {'error' => $error,
+									     'who' => $u->{'email'},
+									     'list' => $self,
+									     'action' => 'User add'});
+		}
+		unless ($action =~ /reject/) {
+		    unless ($self->send_file('welcome', $u->{'email'}, $self->{'domain'},{})) {
+			&do_log('notice',"Unable to send template 'welcome' to $u->{'email'}");
+		    }
+		}
+	    }
 	}
     }
 
     if ($users_added) {
-        &do_log('notice', 'List:sync_include(%s): %d users added',
-		$name, $users_added);
+        &do_log('notice', 'List:sync_include(%s): %d users added', $name, $users_added);
     }
 
     ## Go though previous list of users
     my $users_removed = 0;
+    my $user_removed;
     my @deltab;
     foreach my $email (keys %old_subscribers) {
 	unless( defined($new_subscribers->{$email}) ) {
@@ -8526,18 +8547,39 @@ sub sync_include {
 
 		## Tag user for deletion
 	    }else {
-		push(@deltab, $email);
+		&do_log('debug3', 'List:sync_include: removing %s from list %s', $email, $name);
+		@deltab = ($email);
+		unless($user_removed = $self->delete_user(@deltab)) {
+		    &do_log('err', 'List:sync_include(%s): Failed to delete %s', $name, $user_removed);
+		    return undef;
+		}
+		if ($user_removed) {
+		    $users_removed++;
+		    ## If list hidden, don't send notification
+		    my $result = $self->check_list_authz('visibility', 'smtp',
+							 {'sender' => $email});
+		    
+		    my $action;
+		    $action = $result->{'action'} if (ref($result) eq 'HASH');
+		    
+		    unless (defined $action) {
+			my $error = "Unable to evaluate scenario 'visibility' for list $self->{'name'}";
+			&List::send_notify_to_listmaster('intern_error',$self->{'domain'}, {'error' => $error,
+											    'who' => $email,
+											    'list' => $self,
+											    'action' => 'User add'});
+		    }
+		    unless ($action =~ /reject/) {
+			unless ($self->send_file('removed', $email, $self->{'domain'},{})) {
+			    &do_log('notice',"Unable to send template 'removed' to $email");
+			}
+		    }
+		}
 	    }
 	}
     }
-    if ($#deltab >= 0) {
-	unless($users_removed = $self->delete_user(@deltab)) {
-	    &do_log('err', 'List:sync_include(%s): Failed to delete %s',
-		    $name, $users_removed);
-	    return undef;
-        }
-        &do_log('notice', 'List:sync_include(%s): %d users removed',
-		$name, $users_removed);
+    if ($users_removed > 0) {
+	&do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_removed);
     }
     &do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
