@@ -3,7 +3,8 @@
     <form action="[% path_cgi %]" method="post" class="add-request" name="multipleadd">
       <fieldset>
       <input type="hidden" name="list" value="[% list %]" />
-        <textarea name="dump" cols="80" rows="25" onclick="document.multipleadd.dump.value='';" >[%|loc%]email1@dom1 Name1[%END%]
+      <input type="hidden" name="used" id="used" value="false" />
+        <textarea name="dump" id="dump" cols="80" rows="25" onclick="empty_field('dump','used');" >[%|loc%]email1@dom1 Name1[%END%]
 [%|loc%]email2@dom2 Name2[%END%]
 ...
         </textarea>

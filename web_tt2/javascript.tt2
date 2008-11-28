@@ -258,6 +258,15 @@ function clear_log_form() {
 	document.log_form.elements["ip_searched"].value='';
 }
 
+//set a form field value to empty string. It uses the value of the field whose id is given
+// as argument as a control to perform this operation or not.
+function empty_field(target_field, control_field) {
+	if (document.getElementById(control_field).value == 'false'){
+		document.getElementById(control_field).value = 'true';
+		document.getElementById(target_field).value = '';
+	}
+}
+
 //to hide menu
 
 function afficheId(baliseId,baliseId2)
