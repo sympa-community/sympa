@@ -2817,16 +2817,25 @@ sub do_ticket {
     $param->{'ticket_context'} = &Auth::get_one_time_ticket($in{'ticket'}, $ip );
     $param->{'ticket_context'}{'printable_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($param->{'ticket_context'}{'date'});
     
-    return 1 unless ($param->{'ticket_context'}{'result'} eq 'success');
+    return 1 unless ($param->{'ticket_context'}{'result'} eq 'success' or $param->{'ticket_context'}{'result'} eq 'closed');
     
     # if the ticket is related to someone which is not logged in, the system performs the same operation as for a login
-    unless ($session->{'email'} eq lc($param->{'ticket_context'}{'email'})) {
-	$session->{'email'} = lc($param->{'ticket_context'}{'email'});
-	$param->{'user'} =  &List::get_user_db($session->{'email'});
-        $param->{'user'}{'email'} =  $session->{'email'} ;
-	$param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
-	$param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
-	&List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+    my $email_regexp = &tools::get_regexp('email');
+    if ($session->{'email'} !~ $email_regexp) {
+	if ($param->{'ticket_context'}{'result'} eq 'success') {
+	    $session->{'email'} = lc($param->{'ticket_context'}{'email'});
+	    $param->{'user'} =  &List::get_user_db($session->{'email'});
+	    $param->{'user'}{'email'} =  $session->{'email'} ;
+	    $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
+	    $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
+	    &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+	}elsif($param->{'ticket_context'}{'result'} eq 'closed'){
+	    &wwslog('info', 'do_ticket(%s) : Refusing to perform login because the ticket has been used before', $in{'ticket'});
+	    return 1;
+	}else{
+	    &wwslog('err', 'do_ticket(%s) : Unable to evaluate the ticket validity (status: %s)', $in{'ticket'}, $param->{'ticket_context'}{'result'});
+	    return 1;
+	}
     }
     &_split_params($param->{'ticket_context'}{'data'});
     return $in{'action'} ;
