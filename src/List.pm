@@ -7583,16 +7583,11 @@ sub _include_users_ldap {
     
     do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $fetch = $ldaph->search ( base => "$ldap_suffix",
-                                      filter => "$ldap_filter",
-				      attrs => "$ldap_attrs",
-				      scope => "$param->{'scope'}");
-    unless ($fetch) {
-        do_log('err',"Unable to perform LDAP search in $ldap_suffix for $ldap_filter : $@");
-        return undef;
-    }
-    
-    unless ($fetch->code == 0) {
-	do_log('err','Ldap search failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+			      filter => "$ldap_filter",
+			      attrs => [ "$ldap_attrs" ],
+			      scope => "$param->{'scope'}");
+    if ($fetch->code()) {
+	do_log('err','Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
 	       $fetch->error(), $param->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
         return undef;
     }
@@ -7718,11 +7713,13 @@ sub _include_users_ldap_2level {
 	}
     
     do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1) ;
-    unless ($fetch = $ldaph->search ( base => "$ldap_suffix1",
-                                      filter => "$ldap_filter1",
-				      attrs => "$ldap_attrs1",
-				      scope => "$ldap_scope1")) {
-        do_log('err',"Unable to perform LDAP search in $ldap_suffix1 for $ldap_filter1 : $@");
+    $fetch = $ldaph->search ( base => "$ldap_suffix1",
+			      filter => "$ldap_filter1",
+			      attrs => [ "$ldap_attrs1" ],
+			      scope => "$ldap_scope1");
+    if ($fetch->code()) {
+	do_log('err','LDAP search (1st level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+	       $fetch->error(), $param2->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
         return undef;
     }
     
@@ -7759,11 +7756,13 @@ sub _include_users_ldap_2level {
 	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
 
 	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
-	unless ($fetch = $ldaph->search ( base => "$suffix2",
-					filter => "$filter2",
-					attrs => "$ldap_attrs2",
-					scope => "$ldap_scope2")) {
-	    do_log('err',"Unable to perform LDAP search in $suffix2 for $filter2 : $@");
+	$fetch = $ldaph->search ( base => "$suffix2",
+				  filter => "$filter2",
+				  attrs => [ "$ldap_attrs2" ],
+				  scope => "$ldap_scope2");
+	if ($fetch->code()) {
+	    do_log('err','LDAP search (2nd level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+		   $fetch->error(), $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	    return undef;
 	}
 
