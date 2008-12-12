@@ -268,6 +268,9 @@ install: importantchanges installdir installsrc installwws installwebtt2 install
 
 nextstep: 
 	@echo ""
+	@echo "** You can find documentation at:"
+	@echo "** http://www.sympa.org/documentation/manual/sympa-$(SYMPA_VERSION).pdf"
+	@echo ""
 	@echo "#########################################################"
 	@echo "# If you install Sympa for the first time on this server"
 	@echo "# you should check the INSTALL file."

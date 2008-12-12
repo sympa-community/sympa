@@ -41,10 +41,6 @@ makedir:
 	fi
 
 install: makedir 
-#	@for f in sympa.pdf; do \
-#		echo "Installing documentation...$(DESTDIR)$(DOCDIR)/$$f"; \
-#		cp $$f $(DESTDIR)$(DOCDIR); \
-#	done
 	@if [  -d $(DESTDIR)$(DOCDIR)/sympa ]; then \
 		rm -rf $(DESTDIR)$(DOCDIR)/sympa; \
 	fi
