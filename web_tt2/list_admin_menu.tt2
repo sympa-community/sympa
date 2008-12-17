@@ -7,7 +7,6 @@
 
 [% IF action == 'edit_list_request' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <li><a class="[% class %]" href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit List Config[%END%]</a></li>
-[% IF action == 'edit_list_request' %]
   <li class="no_style"><ul>
      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]-List definition[%END%]</a></li>
      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]-Sending/reception[%END%]</a></li>
@@ -15,9 +14,8 @@
      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]-Archives[%END%]</a></li>
      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]-Bounces[%END%]</a></li>
      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]-Data sources[%END%]</a></li>
-      <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]-Miscellaneous[%END%]</a></li>
+     <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]-Miscellaneous[%END%]</a></li>
   </ul></li>
-[% END %]
 
 	
 [% IF is_owner %]
@@ -49,27 +47,7 @@
 <li><a class="[% class %]" href="[% path_cgi %]/viewlogs/[% list %]/first" >[%|loc%]Logs[%END%]</a></li>
 [% END %]
 
-[% IF shared == 'none' %]
-<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Create Shared[%END%]</a></li> 
-[% ELSIF shared == 'exist' %]
-<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/delete" onclick="request_confirm_link('[% path_cgi %]/d_admin/[% list %]/delete', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to delete the shared documents ?[%END%][%END%]'); return false;">[%|loc%]Delete Shared[%END%]</a></li> 
-[% ELSIF shared == 'deleted' %]
-<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/restore">[%|loc%]Restore shared[%END%]</a></li> 
-[% END %]
-
-[% IF is_privileged_owner %]        
-  [% IF list_conf.status == 'closed' %]
-     <li><a class="menuLinks" href="[% path_cgi %]/restore_list/[% list %]" >[%|loc%]Restore List[%END%]</a></li> 
-  [% ELSE %]
-     <li><a class="menuLinks" href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list ?[%END%][%END%]'); return false;">[%|loc%]Remove List[%END%]</a></li>
-  [% END %]
-  [% IF may_create_list %]
-      <li><a class="menuLinks" href="[% path_cgi %]/rename_list_request/[% list %]">[%|loc%]Rename List[%END%]</a></li>
-  [% END %]
-[% END %]
 </ul>
-[% END %]
-
 [% IF is_owner ||  is_editor %]
 <span id="list_admin_menu">[%|loc%]Moderate[%END%]</span><br />
 
@@ -90,6 +68,7 @@
   </ul>
 [% END %]
 	
+[% END %]
 <!-- end list_admin_menu.tt2 -->
 
 

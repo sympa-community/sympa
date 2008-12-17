@@ -1,13 +1,74 @@
 <!-- $Id$ -->
 
-<ul class="no_style">
-	  <li>[%|loc%]<strong>Edit list config</strong>:  must be used with care : it allows you to modify some of the list parameters. The list of parameters you can modify depends on your privilege.[%END%]</li>
-          <li>[%|loc%]<strong>Customizing</strong> : editing of various files and messages attached to your list.[%END%]</li>
-          <li>[%|loc%]<strong>Manage Archives</strong>  : Allows you to download and delete list archives.[%END%]</li>
-          <li>[%|loc%]<strong>Bounces</strong>  : Manage non-delivery reports (also called bounces).[%END%]</li>
-          <li>[%|loc%]<strong>Logs</strong> : Search the list logs.[%END%]</li>
-	  <li>[%|loc%]<strong>Remove list</strong> : completely removes the current list. Listmaster privileges are required to Restore a list[%END%].</li>
-          <li>[%|loc%]<strong>Create shared</strong> : initializes the shared document web space.[%END%]</li>
-          <li>[%|loc%]<strong>Delete shared</strong> closes it. It can be restored using "Restore shared" button[%END%].</li>
+<h2>[%|loc%]Casual administration[%END%]</h2>
+
+<ul>
+	  <li><strong><a href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit list config[%END%]</a></strong>:  [%|loc%]Use it with care : it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges.[%END%]</li>
+[% IF is_owner %]
+          <li><strong><a href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing[%END%]</a></strong> : [%|loc%]Editing of various files and messages attached to your list.[%END%]</li>
+          <li><strong><a href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage subscribers[%END%]</a></strong> : [%|loc%]Allows you to add or delete list subscribers, moderate subscriptions and so on.[%END%]</li>
+[% IF conf.use_blacklist != 'none' %]
+     	  <li><strong><a href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist[%END%]</a></strong> : [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]</li>
+[% END %]
+[% IF is_archived %]
+          <li><strong><a href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Manage archives[%END%]</a></strong> : [%|loc%]Allows you to download and delete list archives.[%END%]</li>
+[% END %]
+[% IF is_owner %]
+          <li><strong><a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a></strong> : [%|loc%]Manages non-delivery reports (also called bounces).[%END%]</li>
+[% END %]
+[% IF is_priv || is_listmaster %]
+          <li><strong><a href="[% path_cgi %]/viewlogs/[% list %]/first" >[%|loc%]Logs[%END%]</a></strong> : [%|loc%]A tool for exploring the list logs.[%END%]</li>
+[% END %]
+[% END %]
 </ul>
+
+<h2>[%|loc%]Drastic operations[%END%]</h2>
+
+[% IF is_privileged_owner %]        
+<div>
+<form name="manage_list_status" action="[% path_cgi %]" method="post">
+<fieldset>
+  [% IF list_conf.status == 'closed' %]
+  <input class="MainMenuLinks" type="submit" name="action_restore_list" value="[%|loc%]Restore List[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(list)%]Are you sur you wish to restore list %1?[%END%][%END%]');"/> : [%|loc%]This list is currently closed. Clicking this button will make it active again.[%END%]
+  <input type="hidden" name="list" value="[% list %]"/>
+  [% ELSE %]
+  <input class="MainMenuLinks" type="submit" name="action_close_list" value="[%|loc%]Remove List[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close list %1?[%END%][%END%]');"/> : [%|loc%]Completely removes the current list. Listmaster privileges are required to restore a list.[%END%]
+  <input type="hidden" name="list" value="[% list %]"/>
+  [% END %]
+</fieldset>
+</form>
+</div><br/>
+<div>
+<form name="manage_list_name" action="[% path_cgi %]" method="post">
+<fieldset>
+  [% IF may_create_list %]
+  <input class="MainMenuLinks" type="submit" name="action_rename_list_request" value="[%|loc%]Rename List[%END%]"/> : [%|loc%]Allows you to change this list's name. Everything related to the list will be relabeled according to the new name, including the mail aliases and the web archives.[%END%]
+  <input type="hidden" name="list" value="[% list %]"/>
+  [% END %]
+</fieldset>
+</form>
+</div><br/>
+[% END %]
+
+[% IF is_owner %]
+<div>
+<form name="manage_shared_status" action="[% path_cgi %]" method="post">
+<fieldset>
+[% IF shared == 'none' %]
+  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Create Shared[%END%]"/> : [%|loc%]Initializes the shared document web space.[%END%]
+  <input type="hidden" name="list" value="[% list %]"/>
+  <input type="hidden" name="d_admin" value="create"/>
+[% ELSIF shared == 'exist' %]
+  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Delete Shared[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc%]Are you sure you wish to delete the shared documents ?[%END%][%END%]');"/> : [%|loc%]Closes the shared document web space. It can be restored using "Restore shared" button.[%END%]</li>
+  <input type="hidden" name="list" value="[% list %]"/>
+  <input type="hidden" name="d_admin" value="delete"/>
+[% ELSIF shared == 'deleted' %]
+  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Restore Shared[%END%]"/> : [%|loc%]Restores the previously closed shared document web space.[%END%]</li>
+  <input type="hidden" name="list" value="[% list %]"/>
+  <input type="hidden" name="d_admin" value="restore"/>
+[% END %]
+</fieldset>
+</form>
+</div><br/>
+[% END %]
 <!-- end admin.tt2 -->
