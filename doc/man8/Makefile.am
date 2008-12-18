@@ -1,7 +1,7 @@
 ## Available catalogues (languages)
 MAN8	=	archived.8 bounced.8 alias_manager.8 sympa.8 
 
-SUFFIXES:	.8 .pod
+SUFFIXES =	.8 .pod
 
 .8:	.pod
 
