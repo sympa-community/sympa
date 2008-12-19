@@ -15,30 +15,28 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: web_tt2/home.tt2:5
+#: web_tt2/home.tt2:4
 #. (conf.email,conf.host)
-msgid ""
-"This server provides you access to your environment on mailing list server %1@%2. Starting from this web page, you can perform subscription options, unsubscription,\n"
-"archives, list management and so on."
+msgid "This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration."
 msgstr ""
 
-#: web_tt2/home.tt2:9
+#: web_tt2/home.tt2:8
 msgid "Enter a list name"
 msgstr ""
 
-#: web_tt2/home.tt2:11
+#: web_tt2/home.tt2:10
 msgid "Search lists"
 msgstr ""
 
-#: web_tt2/home.tt2:17
+#: web_tt2/home.tt2:16
 msgid "Mailing lists categories"
 msgstr ""
 
-#: web_tt2/home.tt2:27
+#: web_tt2/home.tt2:26
 msgid "Others"
 msgstr ""
 
-#: web_tt2/home.tt2:52
+#: web_tt2/home.tt2:51
 msgid "RSS news"
 msgstr ""
 
@@ -214,36 +212,130 @@ msgstr ""
 msgid "Contact owners"
 msgstr ""
 
-#: web_tt2/admin.tt2:4
-msgid "<strong>Edit list config</strong>:  must be used with care : it allows you to modify some of the list parameters. The list of parameters you can modify depends on your privilege."
-msgstr ""
-
-#: web_tt2/admin.tt2:5
-msgid "<strong>Customizing</strong> : editing of various files and messages attached to your list."
+#: web_tt2/admin.tt2:3
+msgid "Casual administration"
 msgstr ""
 
 #: web_tt2/admin.tt2:6
-msgid "<strong>Manage Archives</strong>  : Allows you to download and delete list archives."
+msgid "Edit list config"
 msgstr ""
 
-#: web_tt2/admin.tt2:7
-msgid "<strong>Bounces</strong>  : Manage non-delivery reports (also called bounces)."
+#: web_tt2/admin.tt2:6
+msgid "Use it with care : it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges."
+msgstr ""
+
+#: web_tt2/admin.tt2:8 web_tt2/admin_menu.tt2:52 web_tt2/admin_menu.tt2:58 web_tt2/list_admin_menu.tt2:23
+msgid "Customizing"
 msgstr ""
 
 #: web_tt2/admin.tt2:8
-msgid "<strong>Logs</strong> : Search the list logs."
+msgid "Editing of various files and messages attached to your list."
 msgstr ""
 
 #: web_tt2/admin.tt2:9
-msgid "<strong>Remove list</strong> : completely removes the current list. Listmaster privileges are required to Restore a list"
+msgid "Manage subscribers"
 msgstr ""
 
-#: web_tt2/admin.tt2:10
-msgid "<strong>Create shared</strong> : initializes the shared document web space."
+#: web_tt2/admin.tt2:9
+msgid "Allows you to add or delete list subscribers, moderate subscriptions and so on."
+msgstr ""
+
+#: web_tt2/admin.tt2:11 web_tt2/list_admin_menu.tt2:32 web_tt2/review.tt2:43
+msgid "Blacklist"
 msgstr ""
 
 #: web_tt2/admin.tt2:11
-msgid "<strong>Delete shared</strong> closes it. It can be restored using \"Restore shared\" button"
+msgid "Handles the set of black-listed mail addresses for this list."
+msgstr ""
+
+#: web_tt2/admin.tt2:14
+msgid "Manage archives"
+msgstr ""
+
+#: web_tt2/admin.tt2:14
+msgid "Allows you to download and delete list archives."
+msgstr ""
+
+#: web_tt2/admin.tt2:17 web_tt2/admin_menu.tt2:81 web_tt2/admin_menu.tt2:87 web_tt2/list_admin_menu.tt2:42 web_tt2/review.tt2:45
+msgid "Bounces"
+msgstr ""
+
+#: web_tt2/admin.tt2:17
+msgid "Manages non-delivery reports (also called bounces)."
+msgstr ""
+
+#: web_tt2/admin.tt2:20 web_tt2/list_admin_menu.tt2:47 web_tt2/serveradmin.tt2:108
+msgid "Logs"
+msgstr ""
+
+#: web_tt2/admin.tt2:20
+msgid "A tool for exploring the list logs."
+msgstr ""
+
+#: web_tt2/admin.tt2:25
+msgid "Drastic operations"
+msgstr ""
+
+#: web_tt2/admin.tt2:32 web_tt2/admin_menu.tt2:117 web_tt2/admin_menu.tt2:119
+msgid "Restore List"
+msgstr ""
+
+#: web_tt2/admin.tt2:32
+#. (list)
+msgid "Are you sur you wish to restore list %1?"
+msgstr ""
+
+#: web_tt2/admin.tt2:32
+msgid "This list is currently closed. Clicking this button will make it active again."
+msgstr ""
+
+#: web_tt2/admin.tt2:35 web_tt2/admin_menu.tt2:122 web_tt2/admin_menu.tt2:124
+msgid "Remove List"
+msgstr ""
+
+#: web_tt2/admin.tt2:35
+#. (list)
+msgid "Are you sure you wish to close list %1?"
+msgstr ""
+
+#: web_tt2/admin.tt2:35
+msgid "Completely removes the current list. Listmaster privileges are required to restore a list."
+msgstr ""
+
+#: web_tt2/admin.tt2:45 web_tt2/admin_menu.tt2:129 web_tt2/admin_menu.tt2:131
+msgid "Rename List"
+msgstr ""
+
+#: web_tt2/admin.tt2:45
+msgid "Allows you to change this list's name. Everything related to the list will be relabeled according to the new name, including the mail aliases and the web archives."
+msgstr ""
+
+#: web_tt2/admin.tt2:58 web_tt2/admin_menu.tt2:96 web_tt2/admin_menu.tt2:98
+msgid "Create Shared"
+msgstr ""
+
+#: web_tt2/admin.tt2:58
+msgid "Initializes the shared document web space."
+msgstr ""
+
+#: web_tt2/admin.tt2:62 web_tt2/admin_menu.tt2:105
+msgid "Delete Shared"
+msgstr ""
+
+#: web_tt2/admin.tt2:62
+msgid "Are you sure you wish to delete the shared documents ?"
+msgstr ""
+
+#: web_tt2/admin.tt2:62
+msgid "Closes the shared document web space. It can be restored using \"Restore shared\" button."
+msgstr ""
+
+#: web_tt2/admin.tt2:66
+msgid "Restore Shared"
+msgstr ""
+
+#: web_tt2/admin.tt2:66
+msgid "Restores the previously closed shared document web space."
 msgstr ""
 
 #: web_tt2/list_admin_menu.tt2:4
@@ -254,105 +346,55 @@ msgstr ""
 msgid "Edit List Config"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:12
+#: web_tt2/list_admin_menu.tt2:11
 msgid "-List definition"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:13
+#: web_tt2/list_admin_menu.tt2:12
 msgid "-Sending/reception"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:14
+#: web_tt2/list_admin_menu.tt2:13
 msgid "-Privileges"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:15
+#: web_tt2/list_admin_menu.tt2:14
 msgid "-Archives"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:16
+#: web_tt2/list_admin_menu.tt2:15
 msgid "-Bounces"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:17
+#: web_tt2/list_admin_menu.tt2:16
 msgid "-Data sources"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:18
+#: web_tt2/list_admin_menu.tt2:17
 msgid "-Miscellaneous"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:52 web_tt2/admin_menu.tt2:58 web_tt2/list_admin_menu.tt2:25
-msgid "Customizing"
-msgstr ""
-
-#: web_tt2/list_admin_menu.tt2:29
+#: web_tt2/list_admin_menu.tt2:27
 msgid "Manage Subscribers"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:34 web_tt2/review.tt2:46
-msgid "Blacklist"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:67 web_tt2/admin_menu.tt2:73 web_tt2/list_admin_menu.tt2:39
+#: web_tt2/admin_menu.tt2:67 web_tt2/admin_menu.tt2:73 web_tt2/list_admin_menu.tt2:37
 msgid "Manage Archives"
 msgstr ""
 
-#: web_tt2/admin_menu.tt2:81 web_tt2/admin_menu.tt2:87 web_tt2/list_admin_menu.tt2:44 web_tt2/review.tt2:48
-msgid "Bounces"
-msgstr ""
-
-#: web_tt2/list_admin_menu.tt2:49 web_tt2/serveradmin.tt2:108
-msgid "Logs"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:96 web_tt2/admin_menu.tt2:98 web_tt2/list_admin_menu.tt2:53
-msgid "Create Shared"
-msgstr ""
-
-#: web_tt2/list_admin_menu.tt2:55
-#. (list)
-msgid "Are you sure you wish to delete the shared documents ?"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:105 web_tt2/list_admin_menu.tt2:55
-msgid "Delete Shared"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:102 web_tt2/list_admin_menu.tt2:57
-msgid "Restore shared"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:117 web_tt2/admin_menu.tt2:119 web_tt2/list_admin_menu.tt2:62
-msgid "Restore List"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:122 web_tt2/admin_menu.tt2:124 web_tt2/list_admin_menu.tt2:64
-#. (list)
-msgid "Are you sure you wish to close %1 list ?"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:122 web_tt2/admin_menu.tt2:124 web_tt2/list_admin_menu.tt2:64
-msgid "Remove List"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:129 web_tt2/admin_menu.tt2:131 web_tt2/list_admin_menu.tt2:67
-msgid "Rename List"
-msgstr ""
-
-#: web_tt2/admin_menu.tt2:35 web_tt2/admin_menu.tt2:41 web_tt2/admin_menu.tt2:45 web_tt2/list_admin_menu.tt2:74
+#: web_tt2/admin_menu.tt2:35 web_tt2/admin_menu.tt2:41 web_tt2/admin_menu.tt2:45 web_tt2/list_admin_menu.tt2:52
 msgid "Moderate"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:80 web_tt2/viewlogs.tt2:88
+#: web_tt2/list_admin_menu.tt2:58 web_tt2/viewlogs.tt2:88
 msgid "Message"
 msgstr ""
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:82
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:60
 msgid "Document"
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:87
+#: web_tt2/list_admin_menu.tt2:65
 msgid "Subscriptions"
 msgstr ""
 
@@ -390,19 +432,19 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: web_tt2/add_request.tt2:6
+#: web_tt2/add_request.tt2:7
 msgid "email1@dom1 Name1"
 msgstr ""
 
-#: web_tt2/add_request.tt2:7
+#: web_tt2/add_request.tt2:8
 msgid "email2@dom2 Name2"
 msgstr ""
 
-#: web_tt2/add_request.tt2:11
+#: web_tt2/add_request.tt2:12
 msgid "Add subscribers"
 msgstr ""
 
-#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:62 web_tt2/review.tt2:280 web_tt2/review.tt2:65 web_tt2/review.tt2:98 web_tt2/reviewbouncing.tt2:127
+#: web_tt2/add_request.tt2:13 web_tt2/editsubscriber.tt2:62 web_tt2/review.tt2:106 web_tt2/review.tt2:288 web_tt2/review.tt2:73 web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr ""
 
@@ -412,6 +454,15 @@ msgstr ""
 
 #: web_tt2/admin_menu.tt2:10 web_tt2/admin_menu.tt2:16
 msgid "Subscribers"
+msgstr ""
+
+#: web_tt2/admin_menu.tt2:102
+msgid "Restore shared"
+msgstr ""
+
+#: web_tt2/admin_menu.tt2:122 web_tt2/admin_menu.tt2:124
+#. (list)
+msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:139
@@ -450,7 +501,7 @@ msgstr ""
 msgid "Archive Management"
 msgstr ""
 
-#: web_tt2/arc.tt2:3 web_tt2/arc_manage.tt2:3 web_tt2/arcsearch_form.tt2:3 web_tt2/compose_mail.tt2:3 web_tt2/create_list_request.tt2:23 web_tt2/d_control.tt2:5 web_tt2/d_editfile.tt2:12 web_tt2/d_editfile.tt2:14 web_tt2/d_properties.tt2:10 web_tt2/d_properties.tt2:6 web_tt2/d_properties.tt2:8 web_tt2/d_read.tt2:171 web_tt2/d_read.tt2:173 web_tt2/d_read.tt2:179 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47 web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37 web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37 web_tt2/latest_d_read.tt2:29 web_tt2/latest_d_read.tt2:32 web_tt2/modindex.tt2:191 web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:20 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:3 web_tt2/review.tt2:209 web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
+#: web_tt2/arc.tt2:3 web_tt2/arc_manage.tt2:3 web_tt2/arcsearch_form.tt2:3 web_tt2/compose_mail.tt2:3 web_tt2/create_list_request.tt2:23 web_tt2/d_control.tt2:5 web_tt2/d_editfile.tt2:12 web_tt2/d_editfile.tt2:14 web_tt2/d_properties.tt2:10 web_tt2/d_properties.tt2:6 web_tt2/d_properties.tt2:8 web_tt2/d_read.tt2:171 web_tt2/d_read.tt2:173 web_tt2/d_read.tt2:179 web_tt2/d_read.tt2:22 web_tt2/d_read.tt2:47 web_tt2/edit_list_request.tt2:3 web_tt2/edit_list_request.tt2:37 web_tt2/editfile.tt2:3 web_tt2/editsubscriber.tt2:37 web_tt2/latest_d_read.tt2:29 web_tt2/latest_d_read.tt2:32 web_tt2/modindex.tt2:191 web_tt2/modindex.tt2:8 web_tt2/picture_upload.tt2:20 web_tt2/pref.tt2:3 web_tt2/rename_list_request.tt2:3 web_tt2/review.tt2:217 web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:3 web_tt2/suboptions.tt2:17
 msgid "Open in a new window"
 msgstr ""
 
@@ -494,7 +545,7 @@ msgstr ""
 msgid "Search field :"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15 web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:80 web_tt2/reviewbouncing.tt2:13
+#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15 web_tt2/arcsearch_form.tt2:18 web_tt2/review.tt2:88 web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr ""
 
@@ -1116,7 +1167,7 @@ msgstr ""
 msgid "Size (Kb)"
 msgstr ""
 
-#: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:18 web_tt2/review.tt2:158
+#: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:18 web_tt2/review.tt2:166
 msgid "Last update"
 msgstr ""
 
@@ -1207,7 +1258,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: web_tt2/d_read.tt2:352 web_tt2/review.tt2:64
+#: web_tt2/d_read.tt2:352 web_tt2/review.tt2:72
 msgid "Add"
 msgstr ""
 
@@ -1609,7 +1660,7 @@ msgstr ""
 msgid "Wrong value for parameter %1"
 msgstr ""
 
-#: web_tt2/error.tt2:142 web_tt2/error.tt2:54
+#: web_tt2/error.tt2:143 web_tt2/error.tt2:54
 msgid "You need to login"
 msgstr ""
 
@@ -1743,206 +1794,211 @@ msgid "Topic \"other\" is a reserved word"
 msgstr ""
 
 #: web_tt2/error.tt2:86
+#. (u_err.p_name)
+msgid "Parameter '%1' is mandatory. Ignoring deletion."
+msgstr ""
+
+#: web_tt2/error.tt2:87
 #. (u_err.param)
 msgid "Parameter '%1' must have values"
 msgstr ""
 
-#: web_tt2/error.tt2:87
+#: web_tt2/error.tt2:88
 #. (u_err.param,u_err.val)
 msgid "Parameter '%1' has got wrong value : '%2'"
 msgstr ""
 
-#: web_tt2/error.tt2:88
+#: web_tt2/error.tt2:89
 #. (u_err.listname)
 msgid "The list '%1' is already closed"
 msgstr ""
 
-#: web_tt2/error.tt2:89
+#: web_tt2/error.tt2:90
 #. (u_err.listname)
 msgid "The list '%1' is not closed"
 msgstr ""
 
-#: web_tt2/error.tt2:90
+#: web_tt2/error.tt2:91
 #. (u_err.bad_listname)
 msgid "'%1' : bad listname"
 msgstr ""
 
-#: web_tt2/error.tt2:91
+#: web_tt2/error.tt2:92
 #. (u_err.new_listname)
 msgid "'%1' list already exists"
 msgstr ""
 
-#: web_tt2/error.tt2:92
+#: web_tt2/error.tt2:93
 #. (u_err.new_listname)
 msgid "Incorrect listname '%1' : matches one of service aliases"
 msgstr ""
 
-#: web_tt2/error.tt2:93
+#: web_tt2/error.tt2:94
 #. (u_err.listname)
 msgid "Failed to remove list aliases for list %1"
 msgstr ""
 
-#: web_tt2/error.tt2:94
+#: web_tt2/error.tt2:95
 #. (u_err.path)
 msgid "%1 : No such file or directory"
 msgstr ""
 
-#: web_tt2/error.tt2:95
+#: web_tt2/error.tt2:96
 #. (u_err.path)
 msgid "Unable to read %1 : empty document"
 msgstr ""
 
-#: web_tt2/error.tt2:96
+#: web_tt2/error.tt2:97
 msgid "There is no shared documents"
 msgstr ""
 
-#: web_tt2/error.tt2:97
+#: web_tt2/error.tt2:98
 msgid "The shared document space is empty"
 msgstr ""
 
-#: web_tt2/error.tt2:98
+#: web_tt2/error.tt2:99
 msgid "The shared directory cannot have any description"
 msgstr ""
 
-#: web_tt2/error.tt2:99
+#: web_tt2/error.tt2:100
 msgid "No description specified"
 msgstr ""
 
-#: web_tt2/error.tt2:100
+#: web_tt2/error.tt2:101
 #. (u_err.path)
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr ""
 
-#: web_tt2/error.tt2:101
+#: web_tt2/error.tt2:102
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr ""
 
-#: web_tt2/error.tt2:102
+#: web_tt2/error.tt2:103
 #. (u_err.name)
 msgid "%1 : incorrect name"
 msgstr ""
 
-#: web_tt2/error.tt2:103
-msgid "Failed : your content is empty"
-msgstr ""
-
 #: web_tt2/error.tt2:104
-#. (u_err.path)
-msgid "Cannot overwrite file %1"
+msgid "Failed : your content is empty"
 msgstr ""
 
 #: web_tt2/error.tt2:105
 #. (u_err.path)
-msgid "A directory named '%1' already exists"
+msgid "Cannot overwrite file %1"
 msgstr ""
 
 #: web_tt2/error.tt2:106
+#. (u_err.path)
+msgid "A directory named '%1' already exists"
+msgstr ""
+
+#: web_tt2/error.tt2:107
 #. (u_err.name)
 msgid "This is an already existing document : '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:107
+#: web_tt2/error.tt2:108
 msgid "No name specified"
 msgstr ""
 
-#: web_tt2/error.tt2:108
+#: web_tt2/error.tt2:109
 msgid "The document repository exceed disk quota."
 msgstr ""
 
-#: web_tt2/error.tt2:109
+#: web_tt2/error.tt2:110
 #. (u_err.path)
 msgid "Cannot upload file %1"
 msgstr ""
 
-#: web_tt2/error.tt2:110
+#: web_tt2/error.tt2:111
 #. (u_err.dir)
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr ""
 
-#: web_tt2/error.tt2:111
-msgid "The upload failed, try it again"
-msgstr ""
-
 #: web_tt2/error.tt2:112
-#. (u_err.name,u_err.reason)
-msgid "Directory %1 and its contents could not be copied : %2"
+msgid "The upload failed, try it again"
 msgstr ""
 
 #: web_tt2/error.tt2:113
 #. (u_err.name,u_err.reason)
-msgid "File %1 was not copied : %2 "
+msgid "Directory %1 and its contents could not be copied : %2"
 msgstr ""
 
 #: web_tt2/error.tt2:114
+#. (u_err.name,u_err.reason)
+msgid "File %1 was not copied : %2 "
+msgstr ""
+
+#: web_tt2/error.tt2:115
 #. (u_err.directory)
 msgid "Failed : %1 not empty"
 msgstr ""
 
-#: web_tt2/error.tt2:115
+#: web_tt2/error.tt2:116
 msgid "No certificate for this list"
 msgstr ""
 
-#: web_tt2/error.tt2:116
+#: web_tt2/error.tt2:117
 msgid "This list has no message topic"
 msgstr ""
 
-#: web_tt2/error.tt2:117
+#: web_tt2/error.tt2:118
 msgid "Tag message with topic is required for this list"
 msgstr ""
 
-#: web_tt2/error.tt2:118
+#: web_tt2/error.tt2:119
 #. (u_err.email)
 msgid "No entry for user '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:119
+#: web_tt2/error.tt2:120
 msgid "Please select archive months"
 msgstr ""
 
-#: web_tt2/error.tt2:120
+#: web_tt2/error.tt2:121
 msgid "No SOAP service"
 msgstr ""
 
-#: web_tt2/error.tt2:121
+#: web_tt2/error.tt2:122
 msgid "Authentication failed"
 msgstr ""
 
-#: web_tt2/error.tt2:122
+#: web_tt2/error.tt2:123
 #. (u_err.status)
 msgid "Cannot add subscribers when list status is '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:123
+#: web_tt2/error.tt2:124
 #. (u_err.argument)
 msgid "This Template '%1' already exists"
 msgstr ""
 
-#: web_tt2/error.tt2:124
+#: web_tt2/error.tt2:125
 #. (u_err.file_del)
 msgid "Cannot delete this file '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:125
+#: web_tt2/error.tt2:126
 #. (u_err.filename)
 msgid "Invalid filename: '%1'"
 msgstr ""
 
-#: web_tt2/error.tt2:126
+#: web_tt2/error.tt2:127
 #. (u_err.listname)
 msgid "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
-#: web_tt2/error.tt2:127
+#: web_tt2/error.tt2:128
 #. (u_err.listname)
 msgid "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
 
-#: web_tt2/error.tt2:136
+#: web_tt2/error.tt2:137
 #. (auth.action)
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr ""
 
-#: web_tt2/error.tt2:138
+#: web_tt2/error.tt2:139
 #. (auth.listname)
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -1965,7 +2021,7 @@ msgstr ""
 msgid "Requested by"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328 web_tt2/get_closed_lists.tt2:28 web_tt2/modindex.tt2:124 web_tt2/modindex.tt2:181 web_tt2/review.tt2:278 web_tt2/reviewbouncing.tt2:131
+#: src/etc/mhonarc-ressources.tt2:212 src/etc/mhonarc-ressources.tt2:328 web_tt2/get_closed_lists.tt2:28 web_tt2/modindex.tt2:124 web_tt2/modindex.tt2:181 web_tt2/review.tt2:286 web_tt2/reviewbouncing.tt2:131
 msgid "Toggle Selection"
 msgstr ""
 
@@ -2050,7 +2106,7 @@ msgstr ""
 msgid "Most recent documents for this list "
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:19 web_tt2/pref.tt2:9 web_tt2/review.tt2:130 web_tt2/review.tt2:133 web_tt2/subindex.tt2:10
+#: web_tt2/latest_d_read.tt2:19 web_tt2/pref.tt2:9 web_tt2/review.tt2:138 web_tt2/review.tt2:141 web_tt2/subindex.tt2:10
 msgid "Name"
 msgstr ""
 
@@ -2071,7 +2127,7 @@ msgstr ""
 msgid " The latest lists of this robot"
 msgstr ""
 
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:83
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:91
 #. (occurrence)
 msgid "%1 occurrence(s) found"
 msgstr ""
@@ -2461,7 +2517,7 @@ msgstr ""
 msgid "User preferences"
 msgstr ""
 
-#: web_tt2/pref.tt2:8 web_tt2/review.tt2:109 web_tt2/review.tt2:112 web_tt2/reviewbouncing.tt2:61 web_tt2/subindex.tt2:9 web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
+#: web_tt2/pref.tt2:8 web_tt2/review.tt2:117 web_tt2/review.tt2:120 web_tt2/reviewbouncing.tt2:61 web_tt2/subindex.tt2:9 web_tt2/viewlogs.tt2:51 web_tt2/viewlogs.tt2:60
 msgid "Email"
 msgstr ""
 
@@ -2623,7 +2679,7 @@ msgstr ""
 msgid "Manage bouncing list members"
 msgstr ""
 
-#: web_tt2/review.tt2:52 web_tt2/review.tt2:54 web_tt2/reviewbouncing.tt2:6
+#: web_tt2/review.tt2:47 web_tt2/review.tt2:49 web_tt2/reviewbouncing.tt2:6
 msgid "Dump"
 msgstr ""
 
@@ -2631,12 +2687,12 @@ msgstr ""
 msgid "Remind all subscribers"
 msgstr ""
 
-#: web_tt2/review.tt2:44 web_tt2/reviewbouncing.tt2:19
+#: web_tt2/review.tt2:61 web_tt2/reviewbouncing.tt2:19
 #. (total)
 msgid "Do you really want to send a subscription reminder message to the %1 subscribers?"
 msgstr ""
 
-#: web_tt2/review.tt2:266 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:44 web_tt2/viewlogs.tt2:28
+#: web_tt2/review.tt2:274 web_tt2/review.tt2:28 web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:44 web_tt2/viewlogs.tt2:28
 msgid "Previous page"
 msgstr ""
 
@@ -2645,7 +2701,7 @@ msgstr ""
 msgid "page %1 / %2"
 msgstr ""
 
-#: web_tt2/review.tt2:272 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:121 web_tt2/reviewbouncing.tt2:50 web_tt2/viewlogs.tt2:34
+#: web_tt2/review.tt2:280 web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:121 web_tt2/reviewbouncing.tt2:50 web_tt2/viewlogs.tt2:34
 msgid "Next page"
 msgstr ""
 
@@ -2677,7 +2733,7 @@ msgstr ""
 msgid "no score"
 msgstr ""
 
-#: web_tt2/review.tt2:279 web_tt2/review.tt2:97 web_tt2/reviewbouncing.tt2:126
+#: web_tt2/review.tt2:105 web_tt2/review.tt2:287 web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr ""
 
@@ -2705,76 +2761,76 @@ msgstr ""
 msgid "Page size"
 msgstr ""
 
-#: web_tt2/review.tt2:269 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
+#: web_tt2/review.tt2:277 web_tt2/review.tt2:31 web_tt2/viewlogs.tt2:31
 msgid "page"
 msgstr ""
 
 #: web_tt2/review.tt2:41
-msgid "Synchronize members with data sources"
-msgstr ""
-
-#: web_tt2/review.tt2:43
 msgid "Pending subscriptions"
 msgstr ""
 
-#: web_tt2/review.tt2:44
+#: web_tt2/review.tt2:55
+msgid "Synchronize members with data sources"
+msgstr ""
+
+#: web_tt2/review.tt2:61
 msgid "Remind all"
 msgstr ""
 
-#: web_tt2/review.tt2:62
+#: web_tt2/review.tt2:70
 msgid "Add an user: "
 msgstr ""
 
-#: web_tt2/review.tt2:66
+#: web_tt2/review.tt2:74
 msgid "Multiple add"
 msgstr ""
 
-#: web_tt2/review.tt2:78
+#: web_tt2/review.tt2:86
 msgid "Search user by e-mail: "
 msgstr ""
 
-#: web_tt2/review.tt2:79
+#: web_tt2/review.tt2:87
 msgid "Search user by email"
 msgstr ""
 
-#: web_tt2/review.tt2:85
+#: web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr ""
 
-#: web_tt2/review.tt2:101
+#: web_tt2/review.tt2:109
 msgid "List members"
 msgstr ""
 
-#: web_tt2/review.tt2:117 web_tt2/review.tt2:120
+#: web_tt2/review.tt2:125 web_tt2/review.tt2:128
 msgid "Domain"
 msgstr ""
 
-#: web_tt2/review.tt2:125
+#: web_tt2/review.tt2:133
 msgid "Picture"
 msgstr ""
 
-#: web_tt2/review.tt2:138
+#: web_tt2/review.tt2:146
 msgid "Reception"
 msgstr ""
 
-#: web_tt2/review.tt2:143 web_tt2/review.tt2:146
+#: web_tt2/review.tt2:151 web_tt2/review.tt2:154
 msgid "Sources"
 msgstr ""
 
-#: web_tt2/review.tt2:152 web_tt2/review.tt2:155 web_tt2/viewlogs.tt2:121
+#: web_tt2/review.tt2:160 web_tt2/review.tt2:163 web_tt2/viewlogs.tt2:121
 msgid "Sub date"
 msgstr ""
 
-#: web_tt2/review.tt2:192
+#: web_tt2/review.tt2:200
 msgid "bouncing"
 msgstr ""
 
-#: web_tt2/review.tt2:209
+#: web_tt2/review.tt2:217
 #. (u.email)
 msgid "%1's picture"
 msgstr ""
 
-#: web_tt2/review.tt2:277
+#: web_tt2/review.tt2:285
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr ""
 
@@ -3542,39 +3598,47 @@ msgstr ""
 msgid "You are already subscribed to list %1"
 msgstr ""
 
-#: web_tt2/ticket.tt2:3
+#: web_tt2/ticket.tt2:4
+msgid "The link you used is unvalid"
+msgstr ""
+
+#: web_tt2/ticket.tt2:6
 msgid "Sorry, this operation can't be performed"
 msgstr ""
 
-#: web_tt2/ticket.tt2:7
+#: web_tt2/ticket.tt2:10
 #. (ticket_context.printable_date)
 msgid "A validation link was sent to you on %1. "
 msgstr ""
 
-#: web_tt2/ticket.tt2:9
+#: web_tt2/ticket.tt2:12
 #. (ticket_context.remote_addr)
 msgid "(the validation link was requested from host %1) "
 msgstr ""
 
-#: web_tt2/ticket.tt2:13
+#: web_tt2/ticket.tt2:16
 msgid "reason"
 msgstr ""
 
-#: web_tt2/ticket.tt2:15
+#: web_tt2/ticket.tt2:18
 #. (ticket_context.status)
 msgid "The validation link has already been validated from host %1 .If you did not perform this validation, please report this confidentiality issue to your mail services administrator."
 msgstr ""
 
-#: web_tt2/ticket.tt2:19
+#: web_tt2/ticket.tt2:20 web_tt2/ticket.tt2:27 web_tt2/ticket.tt2:36
+msgid "However, as you are logged in already, you can probably perform the action you requested anyway."
+msgstr ""
+
+#: web_tt2/ticket.tt2:25
 #. (ticket_context.printable_date)
 msgid "The validation link has expired"
 msgstr ""
 
-#: web_tt2/ticket.tt2:20 web_tt2/ticket.tt2:24
+#: web_tt2/ticket.tt2:29 web_tt2/ticket.tt2:38
 msgid "Please login or request a new validation link"
 msgstr ""
 
-#: web_tt2/ticket.tt2:23
+#: web_tt2/ticket.tt2:34
 #. (ticket_context.printable_date)
 msgid "The validation link has an unknow format or has expired"
 msgstr ""
@@ -3655,7 +3719,7 @@ msgstr ""
 msgid "Search period: "
 msgstr ""
 
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15705
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15747
 #. (date_from_formated)
 #. (date_to_formated)
 #. This entry is a date/time format
@@ -4319,7 +4383,7 @@ msgstr ""
 msgid "Archive of %1, file %2"
 msgstr ""
 
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1644
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1670
 msgid "Subscription summary"
 msgstr ""
 
@@ -6622,7 +6686,7 @@ msgid ""
 "The configuration file --CONFIG-- contains errors.\n"
 msgstr ""
 
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9477
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9519
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%A"
@@ -6632,7 +6696,7 @@ msgstr ""
 msgid "Error at line %d : %s"
 msgstr ""
 
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783 wwsympa/Auth.pm:469 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2818
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783 wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2818
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y at %H:%M:%S"
@@ -7262,7 +7326,7 @@ msgstr ""
 msgid "%a, %d %b %Y"
 msgstr ""
 
-#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982 wwsympa/wwsympa.fcgi:10844 wwsympa/wwsympa.fcgi:10913 wwsympa/wwsympa.fcgi:11115 wwsympa/wwsympa.fcgi:11452 wwsympa/wwsympa.fcgi:15291 wwsympa/wwsympa.fcgi:16005 wwsympa/wwsympa.fcgi:16006 wwsympa/wwsympa.fcgi:4735 wwsympa/wwsympa.fcgi:4736 wwsympa/wwsympa.fcgi:6150 wwsympa/wwsympa.fcgi:7168 wwsympa/wwsympa.fcgi:7702 wwsympa/wwsympa.fcgi:7739 wwsympa/wwsympa.fcgi:7741 wwsympa/wwsympa.fcgi:8205 wwsympa/wwsympa.fcgi:8206 wwsympa/wwsympa.fcgi:8240 wwsympa/wwsympa.fcgi:8241 wwsympa/wwsympa.fcgi:8420 wwsympa/wwsympa.fcgi:8421
+#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982 wwsympa/wwsympa.fcgi:10886 wwsympa/wwsympa.fcgi:10955 wwsympa/wwsympa.fcgi:11157 wwsympa/wwsympa.fcgi:11494 wwsympa/wwsympa.fcgi:15333 wwsympa/wwsympa.fcgi:16047 wwsympa/wwsympa.fcgi:16048 wwsympa/wwsympa.fcgi:4744 wwsympa/wwsympa.fcgi:4745 wwsympa/wwsympa.fcgi:6185 wwsympa/wwsympa.fcgi:7203 wwsympa/wwsympa.fcgi:7737 wwsympa/wwsympa.fcgi:7774 wwsympa/wwsympa.fcgi:7776 wwsympa/wwsympa.fcgi:8240 wwsympa/wwsympa.fcgi:8241 wwsympa/wwsympa.fcgi:8275 wwsympa/wwsympa.fcgi:8276 wwsympa/wwsympa.fcgi:8455 wwsympa/wwsympa.fcgi:8456
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y"
@@ -7359,13 +7423,13 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr ""
 
-#: wwsympa/SympaSession.pm:435 wwsympa/SympaSession.pm:436 wwsympa/wwsympa.fcgi:11676 wwsympa/wwsympa.fcgi:11809 wwsympa/wwsympa.fcgi:14122 wwsympa/wwsympa.fcgi:7662
+#: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432 wwsympa/wwsympa.fcgi:11718 wwsympa/wwsympa.fcgi:11851 wwsympa/wwsympa.fcgi:14164 wwsympa/wwsympa.fcgi:7697
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
-#: wwsympa/wwsympa.fcgi:15650 wwsympa/wwsympa.fcgi:15651
+#: wwsympa/wwsympa.fcgi:15692 wwsympa/wwsympa.fcgi:15693
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%Y/%m/%d/%H/%M/%S"
