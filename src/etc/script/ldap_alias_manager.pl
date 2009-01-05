@@ -109,10 +109,20 @@ print STDERR "Can't bind to LDAP server\n";
 exit(14);
 }
 
+<<<<<<< .mine
+    foreach my $alias (@aliases) {
+	next if ($alias =~ /^\#/);
+	next if ($alias =~ /^\s*$/);
+	
+	$alias =~ /^([^:]+):\s*(\".*\")$/;
+	my $alias_value = $1;
+	my $command_value = $2;
+=======
 foreach my $alias (@aliases) {
 if ($alias =~ /^\#/) {
 	next;
 }
+>>>>>>> .r5423
 
 $alias =~ /^([^:]+):\s*(\".*\")$/;
 my $alias_value = $1;
