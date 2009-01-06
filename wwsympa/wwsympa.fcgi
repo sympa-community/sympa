@@ -15421,7 +15421,18 @@ sub export_topics {
 # manage blacklist
 sub do_blacklist {
     &wwslog('info', 'do_blacklist(%d)', $param->{'list'});
-
+    
+    unless ($param->{'list'}){
+	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
+	&wwslog('info','do_blacklist: no list');
+	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	return undef;
+    }
+    unless($param->{'is_owner'}|| $param->{'is_editor'} || $param->{'is_listmaster'}) {
+	&wwslog('info','do_blacklist : not listmaster or list owner or list editor');
+	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	return undef;
+    }
     my $file = $list->{'dir'}.'/search_filters/blacklist.txt';
     $param->{'rows'} = 0 ;
 
