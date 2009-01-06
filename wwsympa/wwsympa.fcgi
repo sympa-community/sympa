@@ -9140,7 +9140,7 @@ sub do_edit_list {
       }
 
      ## If list has included data sources, update them and delete sync_include task.
-     if ($data_source_updated && ($list->has_include_data_sources())) {
+     if ($data_source_updated) {
 	 if ($list->on_the_fly_sync_include('use_ttl'=>0)) {
 	     &report::notice_report_web('subscribers_updated',{},$param->{'action'});
 	 }else {
