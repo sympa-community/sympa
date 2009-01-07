@@ -358,9 +358,7 @@ while (!$end) {
 	    
 	    ## Skip if parameter is not defined
 	    if ( $task->{'model'} eq 'sync_include') {
-		unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-			$list->has_include_data_sources() &&
-			($list->{'admin'}{'status'} eq 'open')) {
+		unless ($list->{'admin'}{'status'} eq 'open') {
 		    &do_log('notice','Removing task file %s', $task_file);
 		    unless (unlink $task_file) {
 			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
@@ -766,7 +764,7 @@ sub execute {
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
 	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task, \%vars, $lnb);
-	    last unless defined($status);
+	    last unless (defined($status) && $status >= 0);
 	}
     } 
 
@@ -779,6 +777,13 @@ sub execute {
 	    return undef;
 	}
 	return undef;
+    }
+    unless ($status >= 0) {
+	&do_log('notice', 'The task %s is now useless. Removing it.', $task_file);
+	unless (unlink($task_file)) {
+	    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+	    return undef;
+	}
     }
 
     return 1;
@@ -1783,13 +1788,12 @@ sub sync_include {
 	return undef;                                                          
     }
  
-    if (! $list->has_include_data_sources() &&
-	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {
-	&do_log('notice', "List $list->{'name'} no more require sync_include task");
-	return undef;	
-    }    
-
     $list->sync_include();
     $list->sync_include_admin();
-    }
 
+    if (! $list->has_include_data_sources() &&
+	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {
+	&do_log('debug1', "List $list->{'name'} no more require sync_include task");
+	return -1;	
+    }    
+}
