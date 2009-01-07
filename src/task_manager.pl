@@ -305,8 +305,10 @@ while (!$end) {
 		    my $model_task_parameter = "$model".'_task';
 		    
 		    if ( $model eq 'sync_include') {
-			next unless ($list->{'admin'}{'status'} eq 'open');
-			
+			next unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+				     $list->has_include_data_sources() &&
+				     ($list->{'admin'}{'status'} eq 'open'));
+
 			create ($current_date, 'INIT', $model, 'ttl', \%data);
 			
 		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
