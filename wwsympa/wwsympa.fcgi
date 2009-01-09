@@ -9999,7 +9999,7 @@ sub do_rename_list {
      }
      if ($mode eq 'copy') {	 
 	 unless ( $list = &admin::clone_list_as_empty($in{'list'},$robot,$in{'new_listname'},$in{'new_robot'},$param->{'user'}{'email'})){
-	     &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
+	     &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renaming");
 	     &report::reject_report_web('intern','clone_list_as_empty',{'new_listname' => $in{'new_listname'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
 			  'status' => 'error',

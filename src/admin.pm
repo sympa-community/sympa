@@ -702,14 +702,14 @@ sub clone_list_as_empty {
 	}
     }
     # copy mandatory files
-    foreach my $file ('config','info') {
+    foreach my $file ('config') {
 	    unless (&File::Copy::copy ($list->{'dir'}.'/'.$file, $new_dir.'/'.$file)) {
 		&do_log('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/'.$file, $!);
 		return undef;
 	    }
     }
     # copy optional files
-    foreach my $file ('message.footer','message.header') {
+    foreach my $file ('message.footer','message.header','info') {
 	if (-f $list->{'dir'}.'/'.$file) {
 	    unless (&File::Copy::copy ($list->{'dir'}.'/'.$file, $new_dir.'/'.$file)) {
 		&do_log('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/'.$file, $!);
