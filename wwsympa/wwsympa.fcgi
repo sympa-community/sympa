@@ -8642,6 +8642,7 @@ Sends back the list creation edition form.
 sub do_edit_list {
     &wwslog('info', 'do_edit_list()');
     
+    ## Check if the list belong to a family.
     my $family;
     if (defined $list->{'admin'}{'family_name'}) {
 	unless ($family = $list->get_family()) {
@@ -8650,14 +8651,22 @@ sub do_edit_list {
 	    &web_db_log({'status' => 'error',
 			 'error_type' => 'internal'});
 	    return undef;
-	}          
+	}
     }
     
+    ## This hash will contain all the data gathered from the edit list form.
+    ## The keys are the parameter names.
+    ## The values are either the parameter value or an array containing this value if this is a multiple values parameter.
+    ## The value can be a scalar or a hash.
     my $new_admin = {};
     
-    ## List the parameters editable sent in the format
+    ## This hash contains the names of all the parameters sent by the form to the FCGI.
+    ## The keys are the parameters name, the value is always 1.
+    ## Used only to parse the data.
     my $edited_param = {};
     
+    ## Parse all the data sent from the web interface to the FCGI.
+    ## Fills the $new_admin and $edited_param hashes.
     foreach my $key (sort keys %in) {
 	next unless ($key =~ /^(single_param|multiple_param)\.(\S+)$/);
 	
@@ -8674,6 +8683,7 @@ sub do_edit_list {
 	my $value = $in{$key};
 	next if ($value =~ /^\s*$/);
 	
+	## If the parameter is a multiple values parameter, store the values into an array.
 	if ($type eq 'multiple_param') {
 	    my @values = split /\0/, $value;
 	    $value = \@values;
@@ -8686,10 +8696,8 @@ sub do_edit_list {
 	$$var = $value;
     } 
 
-    #    print "Content-type: text/plain\n\n";
-    #    &tools::dump_var($new_admin,0);
-    
-    ## Did the config changed ?
+    ## Check that the serial number sent by the form is the same as the one we expect.
+    ## Avoid modifying a list previously modified by another way.
     unless ($list->{'admin'}{'serial'} == $in{'serial'}) {
 	&report::reject_report_web('user','config_changed',{'email' => $list->{'admin'}{'update'}{'email'}},$param->{'action'},$list);
 	&wwslog('info','do_edit_list: Config file has been modified(%d => %d) by %s. Cannot apply changes', $in{'single_param.serial'}, $list->{'admin'}{'serial'}, $list->{'admin'}{'update'}{'email'});
@@ -8699,24 +8707,37 @@ sub do_edit_list {
     }
     
     ## Check changes & check syntax
+    ## %changed stores the names of the parameters whose values differs from the value in the config file.
+    ## %stores the name of parameter for which values have been deleted. The keys are the parameter name, the values are the index of the deleted value. 
+    ## @syntax_error stores the list of parameters for which syntax errors wre founs while evaluating the data sent by the form.
     my (%changed, %delete);
     my @syntax_error;
     
-    ## Check family constraint
+    ## Check family constraints.
+    ## %check_family is a hash whose keys are a parameter name and whose values are the constraints
+    ## defined for this parameter.
     my %check_family;
     
     
-    ## getting changes about owners or editors
+    ## Getting changes about owners or editors
+    ## If changes occured in the owner or editor definition, these scalars are set to 1.
     my $owner_update = 0;
     my $editor_update = 0;	
     
+    ######################################################################
+    ## Start of the loop parsing the data sent by the edition form. ##
+    ######################################################################
+
     foreach my $pname (sort List::by_order keys %{$edited_param}) {
 	
+	## $p will contain the values of the current parameter in the previous list config
+	## $new_p  will contain the values sent by the form for the current parameter.
 	my ($p, $new_p);
+
 	## Check privileges first
 	next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
 	
-	## family_constraint : edit control
+	## If the list belongs to a family, gather all the constraints for each edited parameter.
 	if (ref($family) eq 'Family') {
 	    
 	    if ((ref($::pinfo{$pname}{'format'}) ne 'HASH') && (!ref($pname))) { # simple parameter
@@ -8731,34 +8752,34 @@ sub do_edit_list {
 	    }
 	}
 	
-	#next unless (defined $new_admin->{$pname});
+	## Skip the obsolete parameters.
 	next if $pinfo->{$pname}{'obsolete'};
 	
+	## $to_index value will correspond to the number of not empty parameters sent by the form.
 	my $to_index;
 	
-	## Single vs multiple parameter
+	####### Validation, step 1: remove empty entries ###########
+
+	## If the parameter can have multiple values...
 	if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
 	    
-	    ## First remove empty entries
-	    ## They were either entries removed by the user or 
-	    ## empty entries added by wwsympa
+	    ## They were either entries removed by the user or empty entries added by wwsympa
 	    ## The loop is going backward so we can remove empty entries
 	    my @all = 0..$#{$new_admin->{$pname}};
 	    foreach my $i (reverse @all ) {
-		## Multiple parameter
+		## If the parameter has a complex structure
 		if (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
-		    
-		    foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-			
-			## Remove record if entry is emtpy and required
+		    ## Check each component of the complex parameter.
+		    foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {			
+			## As soon as a required component is found missing, the whole parameter instance is removed.
 			if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/ &&
 			    $new_admin->{$pname}[$i]{$key} =~ /^\s*$/ ) {
 			    splice(@{$new_admin->{$pname}}, $i, 1);
 			    last;
 			}
 		    }
-		}else {
-		    
+		## Else if the parameter has only a scalar value
+		}else {		    
 		    ## Remove if empty
 		    if ($new_admin->{$pname}[$i] =~ /^\s*$/) {
 			splice(@{$new_admin->{$pname}}, $i, 1);
@@ -8767,8 +8788,13 @@ sub do_edit_list {
 		}
 	    }
 	    
+	    ## Now, %new_admin contains only entries for which all the mandatory values are accounted for.
+
+	    ## $last_index corresponds to the number of remaining instances of this param sent by the form.
 	    my $last_index = $#{$new_admin->{$pname}};	  
 	    
+	    
+	    ## If a mandatory parameter is missing, issue an error and stop here.
 	    if ($pinfo->{$pname}{'occurrence'} =~ /^1/ && !($last_index >= 0)){
 		delete $new_admin->{$pname};
 		&wwslog('err','Error: Parameter %s is mandatory.', $pname);
@@ -8777,142 +8803,151 @@ sub do_edit_list {
 			     'error_type' => 'syntax_errors'});
 		next;
 	    }
+	    
+	    ## If there are less entries in the config file than were sent by the form,
+	    ## $to_index must correspond to the number of entries sent.
 	    if ($#{$list->{'admin'}{$pname}} < $last_index) {
 		$to_index = $last_index;
+	    ## Otherwise, $to_index must correspond to the number of entries in the config file.
 	    }else {
 		$to_index = $#{$list->{'admin'}{$pname}};
 	    }	  
 	    
 	    $p = $list->{'admin'}{$pname};
 	    $new_p = $new_admin->{$pname};
-	    #	     &wwslog('notice',"MULTIPLE param 5 6 7 8: $pname...........................");
+
+	## If the parameter can't have multiple values...
 	}else {
 	    
+	    ## If the parameter has a complex structure
 	    if (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
 		
+		## Check each component of the complex parameter.
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 		    
-		    ## Remove record if entry is emtpy and required
+		    ## Remove the full record if a component is emtpy and required
 		    if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/ &&
 			$new_admin->{$pname}{$key} =~ /^\s*$/ ) {
 			delete $new_admin->{$pname};
 			last;
 		    }
 		}		
+	    ## If the parameter contains a simple scalar value.
 	    }else {
 		
 		## Remove if empty
 		if ($new_admin->{$pname} =~ /^\s*$/) {
 		    delete $new_admin->{$pname};
-		    next;
+		    next; # Go directly to the next parameter.
 		}
 	    }
 	    
 	    $p = [$list->{'admin'}{$pname}];
 	    $new_p = [$new_admin->{$pname}];
-	    #	     &wwslog('notice',"UNIQUE param 1 2 3 4 : $pname.........................");
 	}
 	
-	
-	## Check changed parameters
-	## Also check syntax
+	####### Validation, step 2: - check if the parameter was modified.             ###########
+	#######                     - check that the new values have the right syntax. ###########
+	####### Note: this step is performed for each occurrence of the parameter.     ###########
+
 	foreach my $i (0..$to_index) {
 	    unless (defined $new_p->[$i]) {
 		push @{$delete{$pname}}, $i;
 		$changed{$pname} = 1; next;
 	    }
-	    
-	    ## Scenario
-	    ## Eg: 'subscribe'
+	    ## If the parameter corresponds to a scenario or a task, mark it as changed if its name was changed.
+	    ## Example: 'subscribe'
 	    if ($pinfo->{$pname}{'scenario'} || 
 		$pinfo->{$pname}{'task'} ) {
 		if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
 		    $changed{$pname} = 1; next;
 		}
-		# &wwslog('notice',"..scenario task, SIMPLE UNIVALUE, param 1-5 : $pname($new_p->[$i]{'name'})");
-		## Hash
-		## Ex: 'owner'
+	    ## If the parameter has a complex structure, we need to check all its components.
+	    ## Example: 'owner'
 	    }elsif (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
-#		 &wwslog('notice',"..COMPOSE param 2 4 6 8 : $pname");
-		## Foreach Keys
-		## Ex: 'owner->email'
+		## Check each parameter component.
+		## Example: 'owner->email'
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 		    
+		    ## Check that the user is allowed to edit this parameter component.
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
 		    
-		    ## family_constraint : edit_control
+		    ## If the list belongs to a family, check the possible constraints on this parameter component.
 		    if (ref($family) eq 'Family') {
-			if ((ref($::pinfo{$pname}{'format'}) eq 'HASH') && !ref($pname) && !ref($key)) {
+			## Test constraints only if the parameter component is not a complex structure.
+			if (!ref($key)) {
 			    my $constraint = $family->get_param_constraint("$pname.$key");
-			    
 			    if (ref($constraint) eq 'HASH') { # controlled parameter        
 				$check_family{$pname}{$key} = $constraint;
 			    } elsif ($constraint ne '0') {    # fixed parameter
-				next;
+				next; # Go to the next parameter component.
 			    }
 			}
 		    }		     
 		    
-		    ## Ex: 'shared_doc->d_read'
+		    ## If the parameter component corresponds to a task or a scenario, mark it as changed if its name was changed.
 		    if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || 
 			$pinfo->{$pname}{'format'}{$key}{'task'} ) {
-			#			 &wwslog('notice',"....scenario task UNIVALUE param 2 6 : $pname.$key($new_p->[$i]{$key}{'name'})");
 			if ($p->[$i]{$key}{'name'} ne $new_p->[$i]{$key}{'name'}) {
-			    $changed{$pname} = 1; next;
+			    $changed{$pname} = 1; next; # Mark as changed and go to the next parameter component.
 			}
+		    ## If the parameter component doesn't correspond to a task or a scenario, we must check its content.
 		    }else{
-			## Multiple param
-			#&wwslog('notice',"....non task non scenario param 2 4 6 8");
+			## Parameter component check, case 1: this parameter component can have multiple occurence.
+			## Example: 'digest->days'
 			if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /n$/) {
-			    #&wwslog('notice',"......MULTIVALUE param 4 8 : $pname.$key(@{$new_p->[$i]{$key}})");
+			    ## If the new value differs from the previous value, mark as changed and go to the next parameter component.
 			    if ($#{$p->[$i]{$key}} != $#{$new_p->[$i]{$key}}) {
 				$changed{$pname} = 1; next;
 			    }
 			    
-			    ## Multiple param, foreach entry
-			    ## Ex: 'digest->days'
+			    ## For each occurrence of this parameter component, check value
 			    foreach my $index (0..$#{$p->[$i]{$key}}) {
-#				 &wwslog('notice',"........($new_p->[$i]{$key}[$index])");
 				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
+
+				## If the format has a complex structure, it is the description of a file format.
 				if (ref ($format)) {
 				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
 				}
-				
+				## If this occurrence of the parameter component differs from the corresponding one in the config
+				## check the syntax and mark as changed.
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
 				    
-				    if ($new_p->[$i]{$key}[$index] !~ /^$format$/i) {
+				    if (defined($new_p->[$i]{$key}[$index]) && $new_p->[$i]{$key}[$index] !~ /^$format$/i) {
 					&wwslog('err', "Syntax error : $pname/$i/$key/$index = $new_p->[$i]{$key}[$index]");
 					push @syntax_error, $pname;
 				    }
-				    $changed{$pname} = 1; next;
+				    $changed{$pname} = 1; next; # Mark as changed and go to the next parameter component.
 				}
 			    }
 			    
-			    ## Single Param
-			    ## Ex: 'owner->email'
+			## Parameter component check, case 2: this component is limited to one occurence.
+			## Example: 'owner->email'
 			}else {
-#			     &wwslog('notice',"......UNIVALUE param 2 6: $pname.$key($new_p->[$i]{$key})");
-			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
-				
+			    ## If the parameter component value differs from the corresponding one in the config, go on.
+			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {				
 				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
+
+				## If the format has a complex structure, it is the description of a file format.
 				if (ref ($format)) {
 				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
 				}
 				
-				if ($new_p->[$i]{$key} !~ /^$format$/i) {
+				## Check the syntax and mark as changed if the syntax is correct.
+				if (defined($new_p->[$i]{$key}) && $new_p->[$i]{$key} !~ /^$format$/i) {
 				    &wwslog('err', "Syntax error : $pname/$i/$key = $new_p->[$i]{$key}");
 				    push @syntax_error, $pname;
 				}
 				
-				$changed{$pname} = 1; next;
+				$changed{$pname} = 1; next; # Mark as changed and go to the next parameter component.
 			    }
 			}
 		    }
 		}
-		## Scalar
-		## Ex: 'max_size'
+	    ## If the parameter has just a scalar value, just check its value.
+	    ## Example: 'max_size'
 	    }else {
-#		 &wwslog('notice',"..SIMPLE non SCENARIO non TASK param 1-3-5-7 : $pname($new_p->[$i])");
+		## If the value differs from the one in the config file, mark parameter as changed if the syntax is correct.
 		if ($p->[$i] ne $new_p->[$i]) {
 		    unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
 			&wwslog('err', "Syntax error : $pname/$i = $new_p->[$i]");
@@ -8923,7 +8958,11 @@ sub do_edit_list {
 	    }	    
 	}
     }
-    
+
+    ######################################################################
+    ## Validation of the form finished. Start of valid data treatments  ##
+    ######################################################################
+
     ## Error if no parameter was edited
     unless (keys %changed) {
       	 &report::reject_report_web('user','no_parameter_edited',{},$param->{'action'},$list);
@@ -8971,11 +9010,6 @@ sub do_edit_list {
 	
 	## Delete ALL entries
 	unless (ref ($delete{$p})) {
-	    #	    if (defined $check_family{$p}) { # $p is family controlled
-	    #		&error_message('failed');
-	    #		&wwslog('info','do_edit_list : parameter %s must have values (family context)',$p);
-	    #		return undef;	
-	    #	    }
 	    undef $new_admin->{$p};
 	    next;
 	}
@@ -9194,7 +9228,7 @@ sub do_edit_list {
  ## entry in $var (recursive)
  sub _shift_var {
      my ($i, $var, @tokens) = @_;
- #    &wwslog('debug2','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
+     &wwslog('debug4','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
      my $newvar;
 
      my $token = shift @tokens;
