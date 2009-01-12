@@ -724,7 +724,7 @@ sub clone_list_as_empty {
 	return undef;
     }
     $list->{'admin'}{'serial'} = 0 ;
-    $list->{'admin'}{'creation_email'} = $email if ($email);
+    $list->{'admin'}{'creation'}{'email'} = $email if ($email);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
     $list->save_config($email);
