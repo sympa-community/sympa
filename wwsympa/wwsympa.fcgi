@@ -7791,6 +7791,9 @@ sub do_set_pending_list_request {
      my $list_dir = $list->{'dir'};
 
      $param->{'list_config'} = $list_dir.'/config';
+     if (-f $list_dir.'/info'){
+	 $param->{'list_info_file_exists'} = 1;
+     }
      $param->{'list_info'} = $list_dir.'/info';
      $param->{'list_subject'} = $list->{'admin'}{'subject'};
      $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};

@@ -39,7 +39,11 @@
       ([% list_info %])
    [% END %]
 <pre class="code">
+   [% IF list_info_file_exists %]
        [% INSERT 'info' %]
+   [% ELSE %]
+	No info file provided.
+   [% END %]
 </pre>
 <hr /><br />
 </div>
