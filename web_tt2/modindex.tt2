@@ -21,7 +21,7 @@
 
 [%- END -%]
 
- <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(moderate_mails,'[%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%]')" /> 
+ <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(document.moderate_mails,'[% FILTER escape_quote %][%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%][%END%]',document.moderate_mails.quiet)" /> 
 
 <input type="hidden" name="from_modindex" value="from_modindex" />
 
@@ -191,7 +191,7 @@
 <h2>[%|loc%]Moderation management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 
 <p>
-<form action="[% path_cgi %]" method="post" name="moderate_mails">
+<form action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
 [% IF conf.use_blacklist != 'none' %]

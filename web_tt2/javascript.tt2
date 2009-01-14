@@ -151,12 +151,20 @@ function hide(div){
 [% END %]
 
   function toggle_selection(myfield) {
-    for (i = 0; i < myfield.length; i++) {
-       if (myfield[i].checked) {
-            myfield[i].checked = false;
+    if (!myfield.length) {
+       if (myfield.checked) {
+            myfield.checked = false;
        }else {
-	    myfield[i].checked = true;
+	    myfield.checked = true;
        }
+    }else if (myfield.length){
+      for (i = 0; i < myfield.length; i++) {
+         if (myfield[i].checked) {
+              myfield[i].checked = false;
+         }else {
+  	    myfield[i].checked = true;
+         }
+      }
     }
   }
 
@@ -164,15 +172,28 @@ function hide(div){
 
   // check if rejecting quietly spams
 
- function check_reject_spams(form,my_question) {
+ function check_reject_spams(form,my_question,prevent_notify) {
     var checkbox_checked = false;
 
-    for (i = 0; i < form.elements.length; i++) {
-      if (form.elements[i].name == "idspam") { 
-        var box = form.elements[i];
+    if (prevent_notify.checked == "1") {
+	return(true);
+    }
+
+    if (!form.elements.length) {
+      if (form.elements.name == "idspam") { 
+        var box = form.elements;
         if (box.checked == "1" ) {
  	 checkbox_checked = true;
-       	 break;	
+        }
+      }
+    }else{
+      for (i = 0; i < form.elements.length; i++) {
+        if (form.elements[i].name == "idspam") { 
+          var box = form.elements[i];
+          if (box.checked == "1" ) {
+            checkbox_checked = true;
+            break;	
+          }
         }
       }
     }
