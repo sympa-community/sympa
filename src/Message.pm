@@ -161,16 +161,6 @@ sub new {
 
     my $hdr = $message->{'msg'}->head;
 
-    if ($Conf{'antispam_feature'} =~ /on/i){
-	if ($hdr->get($Conf{'antispam_tag_header_name'}) =~ /$Conf{'antispam_tag_header_spam_regexp'}/i) {
-	    $message->{'spam_status'} = 'spam';
-	}elsif($hdr->get($Conf{'antispam_tag_header_name'}) =~ /$Conf{'antispam_tag_header_ham_regexp'}/i) {
-	    $message->{'spam_status'} = 'ham';
-	}
-    }else{
-	$message->{'spam_status'} = 'not configured';
-    }
-
     ## Extract sender address
     unless ($hdr->get('From')) {
 	do_log('notice', 'No From found in message %s, skipping.', $file);
@@ -214,10 +204,6 @@ sub new {
 	    return undef;
 	}
 	
-	## Strip of the initial X-Sympa-To field
-	# Used by checksum later
-	#$hdr->delete('X-Sympa-To');
-	
 	## Do not check listname if processing a web message
 	unless ($hdr->get('X-Sympa-From')) {
 	    ## get listname & robot
@@ -241,6 +227,20 @@ sub new {
 		    return undef;
 		}
 		
+	    }
+	    ## Antispam feature.
+	    my $spam_header_name = &Conf::get_robot_conf($robot,'antispam_tag_header_name');
+	    my $spam_regexp = &Conf::get_robot_conf($robot,'antispam_tag_header_spam_regexp');
+	    my $ham_regexp = &Conf::get_robot_conf($robot,'antispam_tag_header_ham_regexp');
+	    
+	    if (&Conf::get_robot_conf($robot,'antispam_feature') =~ /on/i){
+		if ($hdr->get($spam_header_name) =~ /$spam_regexp/i) {
+		    $message->{'spam_status'} = 'spam';
+		}elsif($hdr->get($spam_header_name) =~ /$ham_regexp/i) {
+		    $message->{'spam_status'} = 'ham';
+		}
+	    }else{
+		$message->{'spam_status'} = 'not configured';
 	    }
 	}
     }

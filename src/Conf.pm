@@ -579,6 +579,10 @@ sub load_robots {
 				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  logo_html_definition        => 1,
+				  antispam_feature => 1,
+				  antispam_tag_header_name => 1,
+				  antispam_tag_header_spam_regexp => 1,
+				  antispam_tag_header_ham_regexp => 1,
 				  main_menu_custom_button_1_title => 1,
 				  main_menu_custom_button_1_url => 1,
 				  main_menu_custom_button_1_target => 1,
@@ -696,6 +700,10 @@ sub load_robots {
 	$robot_conf->{$robot}{'log_module'} ||= $Conf{'log_module'};
 	$robot_conf->{$robot}{'log_condition'} ||= $Conf{'log_module'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
+	$robot_conf->{$robot}{'antispam_feature'} ||= $Conf{'antispam_feature'};
+	$robot_conf->{$robot}{'antispam_tag_header_name'} ||= $Conf{'antispam_tag_header_name'};
+	$robot_conf->{$robot}{'antispam_tag_header_spam_regexp'} ||= $Conf{'antispam_tag_header_spam_regexp'};
+	$robot_conf->{$robot}{'antispam_tag_header_ham_regexp'} ||= $Conf{'antispam_tag_header_ham_regexp'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/sympa';
 
 	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'static_content_url'};
