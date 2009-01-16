@@ -7560,9 +7560,6 @@ sub _include_users_ldap {
     my $ldap_attrs = $param->{'attrs'};
     my $ldap_select = $param->{'select'};
     
-#    my $default_reception = $admin->{'default_user_options'}{'reception'};
-#    my $default_visibility = $admin->{'default_user_options'}{'visibility'};
-
     ## LDAP and query handler
     my ($ldaph, $fetch);
 
@@ -7693,10 +7690,8 @@ sub _include_users_ldap_2level {
     my $ldap_select2 = $param->{'select2'};
     my $ldap_scope2 = $param->{'scope2'};
     my $ldap_regex2 = $param->{'regex2'};
+    my @sync_errors = ();
     
-#    my $default_reception = $admin->{'default_user_options'}{'reception'};
-#    my $default_visibility = $admin->{'default_user_options'}{'visibility'};
-
     ## LDAP and query handler
     my ($ldaph, $fetch);
 
@@ -7734,7 +7729,6 @@ sub _include_users_ldap_2level {
  
     while (my $e = $fetch->shift_entry) {
 	my $entry = $e->get_value($ldap_attrs1, asref => 1);
-	
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $attr (@{$entry}) {
@@ -7761,9 +7755,9 @@ sub _include_users_ldap_2level {
 				  attrs => [ "$ldap_attrs2" ],
 				  scope => "$ldap_scope2");
 	if ($fetch->code()) {
-	    do_log('err','LDAP search (2nd level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
-		   $fetch->error(), $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
-	    return undef;
+	    do_log('err','LDAP search (2nd level) failed : %s. Node: %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+		   $fetch->error(), $attr, $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
+	    push @sync_errors, {'error',$fetch->error(), 'host', $param->{'host'}, 'suffix2', $suffix2, 'fliter2', $filter2,'ldap_attrs2', $ldap_attrs2};
 	}
 
 	## returns a reference to a HASH where the keys are the DNs
@@ -7834,7 +7828,10 @@ sub _include_users_ldap_2level {
     do_log('debug2',"unbinded from LDAP server %s ", $param->{'host'}) ;
     do_log('debug2','%d new users included from LDAP query',$total);
 
-    return $total;
+    my $result;
+    $result->{'total'} = $total;
+    if ($#sync_errors > -1) {$result->{'errors'} = \@sync_errors;}
+    return $result;
 }
 
 ## Returns a list of subscribers extracted from an remote Database
@@ -7955,7 +7952,15 @@ sub _load_users_include {
 		}elsif ($type eq 'include_ldap_query') {
 		    $included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_ldap_2level_query') {
-		    $included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'}, 'tied');
+		    my $result = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'}, 'tied');
+		    if (defined $result) {
+			$included = $result->{'total'};
+			if (defined $result->{'errors'}){
+			    &do_log('error', 'Errors occurred during the second LDAP passe for list %s, source "%s"', $self->{'name'}, );
+			}
+		    }else{
+			$included = undef;
+		    }
 		}elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1 ;
 		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
@@ -7974,8 +7979,7 @@ sub _load_users_include {
 		}
 		unless (defined $included) {
 		    &do_log('err', 'Inclusion %s failed in list %s', $type, $name);
-		    $total = undef;
-		    last;
+		    next;
 		}
 		
 		$total += $included;
@@ -8069,7 +8073,15 @@ sub _load_users_include2 {
 	    }elsif ($type eq 'include_ldap_query') {
 		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_ldap_2level_query') {
-		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+		my $result = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+		if (defined $result) {
+		    $included = $result->{'total'};
+		    if (defined $result->{'errors'}){
+			&do_log('err', 'Errors occurred during the second LDAP passe');
+		    }
+		}else{
+		    $included = undef;
+		}
 	    }elsif ($type eq 'include_remote_sympa_list') {
 		$included = $self->_include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
@@ -8082,9 +8094,6 @@ sub _load_users_include2 {
 		}
 	    }elsif ($type eq 'include_file') {
 		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
-#	    }elsif ($type eq 'include_admin') {
-#		$included = _include_users_admin (\\%users, $incl, $admin->{'default_user_options'});
-#	    }
 	    }elsif ($type eq 'include_remote_file') {
 		$included = _include_users_remote_file (\%users, $incl, $admin->{'default_user_options'});
 	    }
@@ -8174,7 +8183,15 @@ sub _load_admin_users_include {
 		}elsif ($type eq 'include_ldap_query') {
 		    $included = _include_users_ldap(\%admin_users, $incl,\%option); 
 		}elsif ($type eq 'include_ldap_2level_query') {
-		    $included = _include_users_ldap_2level(\%admin_users, $incl,\%option); 
+		    my $result = _include_users_ldap_2level(\%admin_users, $incl,\%option); 
+		    if (defined $result) {
+			$included = $result->{'total'};
+			if (defined $result->{'errors'}){
+			    &do_log('err', 'Errors occurred during the second LDAP passe. Please verify your LDAP query.');
+			}
+		    }else{
+			$included = undef;
+		    }
 		}elsif ($type eq 'include_remote_sympa_list') {
 		    $included = $self->_include_users_remote_sympa_list(\%admin_users, $incl, $dir,$list_admin->{'domain'},\%option);
 		}elsif ($type eq 'include_list') {
@@ -8192,8 +8209,7 @@ sub _load_admin_users_include {
 		}
 		unless (defined $included) {
 		    &do_log('err', 'Inclusion %s %s failed in list %s', $role, $type, $name);
-		    $total = undef;
-		    last;
+		    next;
 		}
 		$total += $included;
 	    }
