@@ -169,13 +169,12 @@
                               [% END %]
                             [% ELSE %]
                               <!-- Scalar -->
-                              <br />
                                   [% IF p.may_edit == 'write' %]
                                     <input type="text" name="single_param.[% p.name %].[% o_INDEX %]" id="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% o.value %]" size="[% o.length %]" />
                                   [% ELSIF p.may_edit == 'read' %]
                                     [% o.value %]
                                   [% END %]
-                                  [% o.unit %]
+                                  [% o.unit %]<br />
                             [% END %]
                             [% o_INDEX = o_INDEX + 1 %]
                           [% END %]
@@ -400,7 +399,7 @@
                             [% ELSIF p.may_edit == 'read' %]
                               [% p.value %]
                             [% END %]
-                            [% p.unit %]
+                            [% p.unit %]<br />
                           [% END %]
 
                       [% END %]
