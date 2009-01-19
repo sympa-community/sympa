@@ -2246,12 +2246,13 @@ sub send_html {
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
     
     # XSS escaping applied to all outgoing parameters.
-    if(defined $param) {
-	unless(&tools::sanitize_var('var' => $param,
+    my $param_copy = &tools::dup_var($param); ## Escape parameters on a copy to avoid altering usefull data.
+    if(defined $param_copy) {
+	unless(&tools::sanitize_var('var' => $param_copy,
 				    'level' => 0,
 				    'robot' => $robot,
-				    'htmlAllowedParam' => $param->{'htmlAllowedParam'} ,
-				    'htmlToFilter' => $param->{'htmlToFilter'} ,
+				    'htmlAllowedParam' => $param_copy->{'htmlAllowedParam'} ,
+				    'htmlToFilter' => $param_copy->{'htmlToFilter'} ,
 				    )
 	       )
 	{
@@ -2259,14 +2260,13 @@ sub send_html {
 	}
     }
     
-    unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
+    unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
+	$param_copy->{'tt2_error'} = $error;
 	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
-	&tt2::parse_tt2($param,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
+	&tt2::parse_tt2($param_copy,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
     }
-
-
 }
 
 sub prepare_report_user {
