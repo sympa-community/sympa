@@ -882,7 +882,7 @@ msgstr ""
 msgid "list"
 msgstr ""
 
-#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:409
+#: web_tt2/copy_template.tt2:25 web_tt2/edit_list_request.tt2:408
 msgid "default"
 msgstr ""
 
@@ -1062,7 +1062,7 @@ msgstr ""
 msgid "Replace the file %1 with your file"
 msgstr ""
 
-#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:420 web_tt2/editsubscriber.tt2:60 web_tt2/suboptions.tt2:62
+#: web_tt2/d_editfile.tt2:38 web_tt2/edit_list_request.tt2:419 web_tt2/editsubscriber.tt2:60 web_tt2/suboptions.tt2:62
 msgid "Update"
 msgstr ""
 
@@ -1535,11 +1535,11 @@ msgstr ""
 msgid "Archives from %1 are not accessible"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:320 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:322 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:321 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:323 web_tt2/error.tt2:12
 msgid "Unable to load create_list templates."
 msgstr ""
 
@@ -1560,7 +1560,7 @@ msgstr ""
 msgid "The exportation failed for list '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:334 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:336 web_tt2/error.tt2:17
 #. (name)
 msgid "Cannot unzip file '%1'."
 msgstr ""
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "Failed to get your email address from the authentication service."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:20
+#: mail_tt2/listmaster_notification.tt2:344 web_tt2/error.tt2:20
 #. (i_err.key)
 #. (zipfile)
 msgid "File not found."
@@ -3238,7 +3238,7 @@ msgstr ""
 msgid "Information file"
 msgstr ""
 
-#: web_tt2/set_pending_list_request.tt2:48
+#: web_tt2/set_pending_list_request.tt2:52
 msgid "Configuration file"
 msgstr ""
 
@@ -3719,7 +3719,7 @@ msgstr ""
 msgid "Search period: "
 msgstr ""
 
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15747
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15795
 #. (date_from_formated)
 #. (date_to_formated)
 #. This entry is a date/time format
@@ -4647,8 +4647,9 @@ msgstr ""
 msgid "If you don't want to subscribe just ignore this message."
 msgstr ""
 
-#: mail_tt2/list_created.tt2:2
+#: mail_tt2/list_created.tt2:2 mail_tt2/listmaster_notification.tt2:17
 #. (list.name)
+#. (new_listname)
 msgid "%1 mailing list creation"
 msgstr ""
 
@@ -4706,13 +4707,8 @@ msgstr ""
 msgid "%1 requested creation of list \"%2\""
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:12 mail_tt2/listmaster_notification.tt2:24
+#: mail_tt2/listmaster_notification.tt2:12 mail_tt2/listmaster_notification.tt2:26
 msgid "To activate/delete this mailing list :"
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:16
-#. (list.name)
-msgid "List \"%1\" renaming"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:19
@@ -4721,619 +4717,624 @@ msgid "%1 has copied list \"%2\" as a new list \"%3\""
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:21
+#. (list.name)
+msgid "List \"%1\" renaming"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:23
 #. (email,list.name,new_listname)
 msgid "%1 has renamed list \"%2\" to \"%3\""
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:28
+#: mail_tt2/listmaster_notification.tt2:30
 msgid "No DataBase"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:30
+#: mail_tt2/listmaster_notification.tt2:32
 #. (db_name)
 msgid "Cannot connect to database %1, still trying..."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:34
+#: mail_tt2/listmaster_notification.tt2:36
 #. (db_type)
 msgid "No DataBase Driver for %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:36
+#: mail_tt2/listmaster_notification.tt2:38
 #. (db_type)
 msgid "No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:40
+#: mail_tt2/listmaster_notification.tt2:42
 msgid "Previous process crashed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:42
+#: mail_tt2/listmaster_notification.tt2:44
 msgid "Previous process has died unexpectedly."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:43
+#: mail_tt2/listmaster_notification.tt2:45
 #. (crash_date)
 msgid "Date of crash : %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:44
+#: mail_tt2/listmaster_notification.tt2:46
 msgid "Errors:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:50 mail_tt2/listmaster_notification.tt2:58
+#: mail_tt2/listmaster_notification.tt2:52 mail_tt2/listmaster_notification.tt2:60
 msgid "Check log file for further details."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:53
+#: mail_tt2/listmaster_notification.tt2:55
 msgid "Upgrade procedures failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:55
+#: mail_tt2/listmaster_notification.tt2:57
 msgid "Sympa encountered the following error while running upgrade procedures : "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:61
+#: mail_tt2/listmaster_notification.tt2:63
 msgid "Database structure updated"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:63
+#: mail_tt2/listmaster_notification.tt2:65
 #. (db_name)
 msgid "The database structure has been updated ; check log file for further details : "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:69
+#: mail_tt2/listmaster_notification.tt2:71
 msgid "DataBase connection restored"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:71
+#: mail_tt2/listmaster_notification.tt2:73
 #. (db_name)
 msgid "Connection to database %1 restored."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:75
+#: mail_tt2/listmaster_notification.tt2:77
 msgid "Loop detected"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:83
+#: mail_tt2/listmaster_notification.tt2:85
 msgid "A loop has been detected with the following message"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:97
+#: mail_tt2/listmaster_notification.tt2:99
 msgid "Antivirus scan failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:99
+#: mail_tt2/listmaster_notification.tt2:101
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:102
+#: mail_tt2/listmaster_notification.tt2:104
 msgid "The returned error message :"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:107
+#: mail_tt2/listmaster_notification.tt2:109
 msgid "Parameter error"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:109
+#: mail_tt2/listmaster_notification.tt2:111
 #. (par_name,par_value)
 msgid "The value for parameter %1 was badly defined: %2"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:110
+#: mail_tt2/listmaster_notification.tt2:112
 #. (action)
 msgid "%1 impossible."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:111 mail_tt2/listmaster_notification.tt2:117 mail_tt2/listmaster_notification.tt2:123 mail_tt2/listmaster_notification.tt2:131 mail_tt2/listmaster_notification.tt2:277 mail_tt2/listmaster_notification.tt2:348 mail_tt2/listmaster_notification.tt2:360
+#: mail_tt2/listmaster_notification.tt2:113 mail_tt2/listmaster_notification.tt2:119 mail_tt2/listmaster_notification.tt2:125 mail_tt2/listmaster_notification.tt2:133 mail_tt2/listmaster_notification.tt2:279 mail_tt2/listmaster_notification.tt2:350 mail_tt2/listmaster_notification.tt2:362
 msgid "See logs for more details."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:114
+#: mail_tt2/listmaster_notification.tt2:116
 msgid "Unable to create directory"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:116
+#: mail_tt2/listmaster_notification.tt2:118
 #. (dir)
 msgid "Sympa could not create directory %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:120
+#: mail_tt2/listmaster_notification.tt2:122
 msgid "A message archiving failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:122
+#: mail_tt2/listmaster_notification.tt2:124
 #. (file,bad)
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:126
+#: mail_tt2/listmaster_notification.tt2:128
 msgid "A bounce management failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:128
+#: mail_tt2/listmaster_notification.tt2:130
 #. (file,bad)
 msgid "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:130
+#: mail_tt2/listmaster_notification.tt2:132
 #. (error)
 msgid "Error: %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:134
+#: mail_tt2/listmaster_notification.tt2:136
 msgid "incorrect format of edit_list.conf"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:137
+#: mail_tt2/listmaster_notification.tt2:139
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:139
+#: mail_tt2/listmaster_notification.tt2:141
 #. (param0)
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:141
+#: mail_tt2/listmaster_notification.tt2:143
 #. (param0)
 msgid ""
 "Until then we recommend your remove %1 ;\n"
 "default configuration will be used."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:144
+#: mail_tt2/listmaster_notification.tt2:146
 #. (param0)
 msgid "subscribers update failed for list %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:147
+#: mail_tt2/listmaster_notification.tt2:149
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:148 mail_tt2/listmaster_notification.tt2:155
+#: mail_tt2/listmaster_notification.tt2:150 mail_tt2/listmaster_notification.tt2:157
 msgid "Check Sympa log files for more precise information"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:152
+#: mail_tt2/listmaster_notification.tt2:154
 #. (param0)
 msgid "admins update failed for list %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:154
+#: mail_tt2/listmaster_notification.tt2:156
 msgid "Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:158 mail_tt2/listmaster_notification.tt2:183 mail_tt2/listmaster_notification.tt2:191 mail_tt2/listmaster_notification.tt2:198 mail_tt2/listmaster_notification.tt2:226 mail_tt2/listmaster_notification.tt2:233 mail_tt2/listmaster_notification.tt2:240
+#: mail_tt2/listmaster_notification.tt2:160 mail_tt2/listmaster_notification.tt2:185 mail_tt2/listmaster_notification.tt2:193 mail_tt2/listmaster_notification.tt2:200 mail_tt2/listmaster_notification.tt2:228 mail_tt2/listmaster_notification.tt2:235 mail_tt2/listmaster_notification.tt2:242
 #. (param0)
 msgid "list %1 in status error_config"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:160
+#: mail_tt2/listmaster_notification.tt2:162
 #. (param0)
 msgid "No owner is defined for list %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:161 mail_tt2/listmaster_notification.tt2:186 mail_tt2/listmaster_notification.tt2:194 mail_tt2/listmaster_notification.tt2:201 mail_tt2/listmaster_notification.tt2:229 mail_tt2/listmaster_notification.tt2:236 mail_tt2/listmaster_notification.tt2:243
+#: mail_tt2/listmaster_notification.tt2:163 mail_tt2/listmaster_notification.tt2:188 mail_tt2/listmaster_notification.tt2:196 mail_tt2/listmaster_notification.tt2:203 mail_tt2/listmaster_notification.tt2:231 mail_tt2/listmaster_notification.tt2:238 mail_tt2/listmaster_notification.tt2:245
 msgid "The list status has been set to error_config."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:162 mail_tt2/listmaster_notification.tt2:187 mail_tt2/listmaster_notification.tt2:195 mail_tt2/listmaster_notification.tt2:202 mail_tt2/listmaster_notification.tt2:209 mail_tt2/listmaster_notification.tt2:216 mail_tt2/listmaster_notification.tt2:230 mail_tt2/listmaster_notification.tt2:237 mail_tt2/listmaster_notification.tt2:244
+#: mail_tt2/listmaster_notification.tt2:164 mail_tt2/listmaster_notification.tt2:189 mail_tt2/listmaster_notification.tt2:197 mail_tt2/listmaster_notification.tt2:204 mail_tt2/listmaster_notification.tt2:211 mail_tt2/listmaster_notification.tt2:218 mail_tt2/listmaster_notification.tt2:232 mail_tt2/listmaster_notification.tt2:239 mail_tt2/listmaster_notification.tt2:246
 msgid "Check Sympa log files for more precise information."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:166
+#: mail_tt2/listmaster_notification.tt2:168
 #. (param0)
 msgid "List owner/editor email changes"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:168
+#: mail_tt2/listmaster_notification.tt2:170
 #. (previous_email,new_email)
 msgid "Member %1 has changed his owner/editor email address to %2. This change has been performed for the following lists :"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:175
+#: mail_tt2/listmaster_notification.tt2:177
 #. (list.name)
 msgid "List %1 : Failed to change admin email address"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:179
+#: mail_tt2/listmaster_notification.tt2:181
 #. (current_email,new_email,datasource)
 msgid ""
 "Admin %1 could not change his admin email address (new email address is %2) because he is included via a the following data sources: %3.\n\n"
 "If you are able to do so, you should probably update these data sources with this person's new email address."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:185
+#: mail_tt2/listmaster_notification.tt2:187
 #. (param0,param1)
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:193
+#: mail_tt2/listmaster_notification.tt2:195
 #. (param0,param1)
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:200
+#: mail_tt2/listmaster_notification.tt2:202
 #. (param0,param1)
 msgid "Sympa could not check family %2 rules with list %1 param_constraint.conf file."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:206 mail_tt2/listmaster_notification.tt2:213
+#: mail_tt2/listmaster_notification.tt2:208 mail_tt2/listmaster_notification.tt2:215
 msgid "errors in param_constraint.conf file"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:208 mail_tt2/listmaster_notification.tt2:215
+#: mail_tt2/listmaster_notification.tt2:210 mail_tt2/listmaster_notification.tt2:217
 #. (param0)
 msgid "Error(s) found in the file %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:219
+#: mail_tt2/listmaster_notification.tt2:221
 msgid "File removed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:221
+#: mail_tt2/listmaster_notification.tt2:223
 #. (param0)
 msgid "The following file has been removed : %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:222
+#: mail_tt2/listmaster_notification.tt2:224
 #. (param1)
 msgid "A backup of the file has been made : %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:228
+#: mail_tt2/listmaster_notification.tt2:230
 #. (param0,param1)
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:235
+#: mail_tt2/listmaster_notification.tt2:237
 #. (param0,param1)
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:242
+#: mail_tt2/listmaster_notification.tt2:244
 #. (param0,param1)
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:248 mail_tt2/listowner_notification.tt2:41
+#: mail_tt2/listmaster_notification.tt2:250 mail_tt2/listowner_notification.tt2:41
 #. (list.name)
 msgid "List %1 automatic bounce management"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:252
+#: mail_tt2/listmaster_notification.tt2:254
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "notified that they might be removed from list %2:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:255
+#: mail_tt2/listmaster_notification.tt2:257
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "removed from list %2:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:258
+#: mail_tt2/listmaster_notification.tt2:260
 #. (total,list.name)
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed below have been\n"
 "selected by Sympa as severe bouncing addresses:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:265 mail_tt2/listowner_notification.tt2:58
+#: mail_tt2/listmaster_notification.tt2:267 mail_tt2/listowner_notification.tt2:58
 msgid "Managing bouncing subscribers:"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:269 mail_tt2/listmaster_notification.tt2:281
+#: mail_tt2/listmaster_notification.tt2:271 mail_tt2/listmaster_notification.tt2:283
 #. (list.name)
 msgid "Listmaster : internal server error "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:271 mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:273 mail_tt2/listmaster_notification.tt2:285
 #. (who)
 msgid " User %1 has encountered an internal server error"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:284 mail_tt2/listmaster_notification.tt2:355
+#: mail_tt2/listmaster_notification.tt2:286 mail_tt2/listmaster_notification.tt2:357
 msgid "Web interface"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:286
+#: mail_tt2/listmaster_notification.tt2:288
 msgid "Unable to change directory."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:287
+#: mail_tt2/listmaster_notification.tt2:289
 msgid "The authentication server name is not defined."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:290
 msgid "auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:291
 #. (name)
 msgid "Unkown authentication service %1."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:290
+#: mail_tt2/listmaster_notification.tt2:292
 #. (user)
 msgid "Add user '%1' in DB failed."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:293
 #. (user)
 msgid "Update user '%1' in DB failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:291 mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:293 mail_tt2/listmaster_notification.tt2:295
 #. (old_email)
 msgid " (old email : %1)"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:292
+#: mail_tt2/listmaster_notification.tt2:294
 #. (sub)
 msgid "Add subscriber '%1' in DB failed."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:295
 #. (sub,old_email)
 msgid "Update subscriber '%1' in DB failed"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:296
 #. (sub)
 msgid "Delete subscriber '%1' in DB failed."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:297
 #. (old_email)
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:298
 #. (email,list.name)
 msgid "Subscriber '%1' is not found in list %2."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:299
 #. (filepath)
 msgid "Unable to read file : '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:300
 #. (filepath)
 msgid "Unable to write file : '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:301
 #. (file)
 msgid "Unable to open file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:302
 #. (directory)
 msgid "Unable to open directory '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:303
 #. (dir)
 msgid "Unable to create directory '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:304
 #. (spool)
 msgid "Unable to open spool '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:305
 #. (msg)
 msgid "Unable to get message '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:306
 #. (old,new)
 msgid "Unable to rename file '%1' into '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:307
 #. (old,new)
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:306
+#: mail_tt2/listmaster_notification.tt2:308
 #. (file)
 msgid "Unable to erase file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:309
 #. (from,list.name)
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:310
 #. (dir)
 msgid "No HTML version of the message available in '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:311
 #. (list.name)
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:312
 #. (month,list.name)
 msgid "Unable to find month '%1' for list '%2'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:310 mail_tt2/listmaster_notification.tt2:311 mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:312 mail_tt2/listmaster_notification.tt2:313 mail_tt2/listmaster_notification.tt2:314
 #. (dir)
 #. (path)
 msgid " : unable to read '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:313
 #. (arc_file,list.name,path)
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:314
 #. (list.name)
 msgid "Unable to find archive for list '%1'"
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:313
+#: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to send archive : no message id found."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:316
 #. (msgid)
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:317
 #. (list.name)
 msgid "Cannot save config file for list '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:318
 msgid "Failed to install aliases."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:319
 msgid "Failed to remove aliases."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:320
 msgid "Internal scenario error for 'create_list'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:321
 msgid "Unable to create list."
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:322
-#. (list.name)
-msgid "Unable to get family for list '%1'."
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:323
-#. (new_listname)
-msgid "Unable to reload list with new listname '%1'."
-msgstr ""
-
-#: mail_tt2/listmaster_notification.tt2:323
-msgid "Unable to reload list"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:324
 #. (list.name)
-msgid "Failed to inlude members for list '%1'"
+msgid "Unable to get family for list '%1'."
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:325
-#. (list.name)
-msgid "Failed to include list admins for list '%1'"
+#. (new_listname)
+msgid "Unable to reload list with new listname '%1'."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:325
+msgid "Unable to reload list"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:326
-msgid "No owner is defined for the list '%1'"
+#. (list.name)
+msgid "Failed to inlude members for list '%1'"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:327
 #. (list.name)
-msgid "The exportation to an Ldap directory failed for list '%1'"
+msgid "Failed to include list admins for list '%1'"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:328
-#. (new_listname)
-msgid "Unable to check listname '%1' on SMTP server"
+msgid "No owner is defined for the list '%1'"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:329
 #. (list.name)
-msgid "Cannot create shared for list '%1'."
+msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:330
-#. (list.name)
-msgid "Cannot restore shared for list '%1'."
+#. (new_listname)
+msgid "Unable to check listname '%1' on SMTP server"
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:331
 #. (list.name)
-msgid "Cannot delete shared for list '%1'."
+msgid "Cannot create shared for list '%1'."
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:332
-msgid "Impossible to browse shared documents for list '%1'."
+#. (list.name)
+msgid "Cannot restore shared for list '%1'."
 msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:333
+#. (list.name)
+msgid "Cannot delete shared for list '%1'."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:334
+msgid "Impossible to browse shared documents for list '%1'."
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:335
 #. (path)
 msgid "Cannot upload file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:335
+#: mail_tt2/listmaster_notification.tt2:337
 #. (name)
 msgid "Errors while unzipping file '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:336
+#: mail_tt2/listmaster_notification.tt2:338
 #. (from,list.name)
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:337
+#: mail_tt2/listmaster_notification.tt2:339
 #. (from,list.name)
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:338
+#: mail_tt2/listmaster_notification.tt2:340
 #. (key,list.name)
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:339
+#: mail_tt2/listmaster_notification.tt2:341
 #. (sub)
 msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:340
+#: mail_tt2/listmaster_notification.tt2:342
 #. (file)
 msgid "Unable to add file '%1' to archives."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:341
+#: mail_tt2/listmaster_notification.tt2:343
 #. (zipfile)
 msgid "Unable to write file zip '%1'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:343
+#: mail_tt2/listmaster_notification.tt2:345
 #. (path,list.name)
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:344
+#: mail_tt2/listmaster_notification.tt2:346
 msgid "Parameter cookie undefined, authentication failure."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:345
+#: mail_tt2/listmaster_notification.tt2:347
 #. (env)
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:352
+#: mail_tt2/listmaster_notification.tt2:354
 #. (list.name)
 msgid "Listmaster : system error "
 msgstr ""
 
-#: mail_tt2/listmaster_notification.tt2:354
+#: mail_tt2/listmaster_notification.tt2:356
 #. (who)
 msgid " User %1 has encountered a system error"
 msgstr ""
@@ -6686,7 +6687,7 @@ msgid ""
 "The configuration file --CONFIG-- contains errors.\n"
 msgstr ""
 
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9519
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9556
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%A"
@@ -7326,7 +7327,7 @@ msgstr ""
 msgid "%a, %d %b %Y"
 msgstr ""
 
-#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982 wwsympa/wwsympa.fcgi:10886 wwsympa/wwsympa.fcgi:10955 wwsympa/wwsympa.fcgi:11157 wwsympa/wwsympa.fcgi:11494 wwsympa/wwsympa.fcgi:15333 wwsympa/wwsympa.fcgi:16047 wwsympa/wwsympa.fcgi:16048 wwsympa/wwsympa.fcgi:4744 wwsympa/wwsympa.fcgi:4745 wwsympa/wwsympa.fcgi:6185 wwsympa/wwsympa.fcgi:7203 wwsympa/wwsympa.fcgi:7737 wwsympa/wwsympa.fcgi:7774 wwsympa/wwsympa.fcgi:7776 wwsympa/wwsympa.fcgi:8240 wwsympa/wwsympa.fcgi:8241 wwsympa/wwsympa.fcgi:8275 wwsympa/wwsympa.fcgi:8276 wwsympa/wwsympa.fcgi:8455 wwsympa/wwsympa.fcgi:8456
+#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982 wwsympa/wwsympa.fcgi:10923 wwsympa/wwsympa.fcgi:10992 wwsympa/wwsympa.fcgi:11194 wwsympa/wwsympa.fcgi:11531 wwsympa/wwsympa.fcgi:15370 wwsympa/wwsympa.fcgi:16095 wwsympa/wwsympa.fcgi:16096 wwsympa/wwsympa.fcgi:4744 wwsympa/wwsympa.fcgi:4745 wwsympa/wwsympa.fcgi:6185 wwsympa/wwsympa.fcgi:7203 wwsympa/wwsympa.fcgi:7737 wwsympa/wwsympa.fcgi:7774 wwsympa/wwsympa.fcgi:7776 wwsympa/wwsympa.fcgi:8243 wwsympa/wwsympa.fcgi:8244 wwsympa/wwsympa.fcgi:8278 wwsympa/wwsympa.fcgi:8279 wwsympa/wwsympa.fcgi:8458 wwsympa/wwsympa.fcgi:8459
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y"
@@ -7423,13 +7424,13 @@ msgstr ""
 msgid "%H:%M:%S"
 msgstr ""
 
-#: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432 wwsympa/wwsympa.fcgi:11718 wwsympa/wwsympa.fcgi:11851 wwsympa/wwsympa.fcgi:14164 wwsympa/wwsympa.fcgi:7697
+#: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432 wwsympa/wwsympa.fcgi:11755 wwsympa/wwsympa.fcgi:11888 wwsympa/wwsympa.fcgi:14201 wwsympa/wwsympa.fcgi:7697
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
-#: wwsympa/wwsympa.fcgi:15692 wwsympa/wwsympa.fcgi:15693
+#: wwsympa/wwsympa.fcgi:15740 wwsympa/wwsympa.fcgi:15741
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%Y/%m/%d/%H/%M/%S"
