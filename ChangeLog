@@ -1,4 +1,117 @@
 ------------------------------------------------------------------------
+r5443 | david.verdin | 2009-01-19 17:29:15 +0100 (Mon, 19 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] HTML character escaping was made on reference on the main hash containing all the data, including list config. as a result, after execution of the first action, all the data were HTML escaped, including possible double quotes in SQL queries. Though never saved in the config file, these data were responsible for synchronisation problems. Fixed by using a copy of the $param hash for XSS protection and TT2 parsing.
+
+------------------------------------------------------------------------
+r5441 | david.verdin | 2009-01-16 16:13:13 +0100 (Fri, 16 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[bug][Reported by F. Perrichon, univ. Lille 2 and C. Zimmer, univ. Nice Sophia Antipolis] LDAP 2 level queries failed as soon as one of the queries failed during the second passe. Sympa now just issues a warning in the logs, specifying that a part of the second passe was not successful.
+
+------------------------------------------------------------------------
+r5439 | david.verdin | 2009-01-16 16:08:25 +0100 (Fri, 16 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/edit_list_request.tt2
+
+[bug] Parameters units were not on the right line in the web edition page of the list configuration. Also removed spare "br/> tags.
+
+------------------------------------------------------------------------
+r5438 | david.verdin | 2009-01-14 18:21:15 +0100 (Wed, 14 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/javascript.tt2
+   M /trunk/web_tt2/modindex.tt2
+
+[bug] javascript notifiactions and controls were broken in the moderation page.
+
+------------------------------------------------------------------------
+r5437 | david.verdin | 2009-01-14 09:13:14 +0100 (Wed, 14 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/Conf.pm
+   M /trunk/src/Message.pm
+
+[feature] Making the antispam feature attributes virtual host scale enabled.
+
+------------------------------------------------------------------------
+r5436 | david.verdin | 2009-01-13 09:47:48 +0100 (Tue, 13 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/set_pending_list_request.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] When a list was created, Sympa failed to display the liste activation page to listmaster if an info file didn't exist for this list. Fixed by testing the existence of this file, and, if it isn't found, displaying an informative message instead.
+
+------------------------------------------------------------------------
+r5435 | david.verdin | 2009-01-12 18:19:43 +0100 (Mon, 12 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/mail_tt2/listmaster_notification.tt2
+   M /trunk/src/admin.pm
+
+[bug] error in creation email parameter when copying a list. List copy notification message updated.
+
+------------------------------------------------------------------------
+r5434 | david.verdin | 2009-01-09 18:09:16 +0100 (Fri, 09 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] When editing the list config, any value transferred, even empty, was compared to the regexp used to validate the corresponding parameter. This produced errors when, for example, removing an owner by just deleting its email address. the gecos was then emptied by the validation process and after compared to a regexp in which the string had to contain at least one character. conclusion : it was impossible to remove an owner throught the web interface. fixed by testing existence of a parameter before testing its value against a regexp.
+
+------------------------------------------------------------------------
+r5433 | olivier.salaun | 2009-01-09 09:39:17 +0100 (Fri, 09 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/admin.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[-bug] while copying a list, do not consider the original 'info' file as mandatory
+
+------------------------------------------------------------------------
+r5430 | david.verdin | 2009-01-07 16:33:17 +0100 (Wed, 07 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+
+[bug] When removing the last data source by manual edition of the config file, the task manager didn't do the last synchronization needed to remove the last included subscribers. Fixed by checking if a data source still exist after each synchronization (instead of before).
+
+------------------------------------------------------------------------
+r5428 | david.verdin | 2009-01-07 10:37:34 +0100 (Wed, 07 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/task_manager.pl
+
+[bug] Restoring controls for sync_include task creations to avoid overwhelming number of task creations ins the spools.
+
+------------------------------------------------------------------------
+r5426 | david.verdin | 2009-01-06 15:15:08 +0100 (Tue, 06 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/src/task_manager.pl
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug][Reported by V. Mathieu, univ. Nancy 2] When deleting the last data source, the subscribers list was not correctly updated. Fixed by restoring a faulty test in wwsympa.fcgi.
+------------------------------------------------------------------------
+r5425 | david.verdin | 2009-01-06 10:41:51 +0100 (Tue, 06 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug][#5203][Reported by A. Bendzsák] Fix a bug in blacklist edition.
+
+------------------------------------------------------------------------
+r5424 | sympa-authors | 2009-01-05 16:47:48 +0100 (Mon, 05 Jan 2009) | 3 lines
+Changed paths:
+   M /trunk/src/etc/script/ldap_alias_manager.pl
+
+[bug] fix a bug related to empty alias lines (context LDAP)
+
+
+------------------------------------------------------------------------
+r5420 | david.verdin | 2008-12-19 12:31:19 +0100 (Fri, 19 Dec 2008) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
+
+[-feature] Preparing version 6.0a.5.
+
+------------------------------------------------------------------------
 r5417 | david.verdin | 2008-12-19 12:14:17 +0100 (Fri, 19 Dec 2008) | 2 lines
 Changed paths:
    M /trunk/po/af.po
