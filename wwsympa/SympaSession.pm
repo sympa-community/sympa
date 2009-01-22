@@ -463,8 +463,8 @@ sub get_session_cookie {
 ## Generic subroutine to set a cookie
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
-    my ($self, $http_domain, $expires) = @_ ;
-    do_log('debug','Session::set_cookie(%s,%s)',$http_domain, $expires);
+    my ($self, $http_domain, $expires,$use_ssl) = @_ ;
+    do_log('debug','Session::set_cookie(%s,%s,secure= %s)',$http_domain, $expires,$use_ssl );
 
     my $expiration;
     if ($expires =~ /now/i) {
@@ -483,14 +483,18 @@ sub set_cookie {
 	$cookie = new CGI::Cookie (-name    => 'sympa_session',
 				   -value   => $self->{'id_session'},
 				   -domain  => $http_domain,
-				   -path    => '/'
+				   -path    => '/',
+				   -secure => $use_ssl,
+				   -httponly => 1 
 				   );
     }else {
 	$cookie = new CGI::Cookie (-name    => 'sympa_session',
 				   -value   => $self->{'id_session'},
 				   -expires => $expiration,
 				   -domain  => $http_domain,
-				   -path    => '/'
+				   -path    => '/',
+				   -secure => $use_ssl,
+				   -httponly => 1 
 				   );
     }
 

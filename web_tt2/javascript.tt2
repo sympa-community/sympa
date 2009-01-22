@@ -141,13 +141,6 @@ function hide(div){
       endstr = document.cookie.length;
     return unescape(document.cookie.substring(offset, endstr));
   }
-
-  function check_cookie() {
- 
-     if (GetCookie('sympa_session') == null) {
-        alert("[%|loc%]Sympa could not set a cookie for login.\n Your should configure your browser to accept cookies[%END%]");
-     }
-  }
 [% END %]
 
   function toggle_selection(myfield) {

@@ -1375,7 +1375,7 @@ my $birthday = time ;
 
 	 $session->renew();
 	 
-	 unless ($session->set_cookie($param->{'cookie_domain'},$delay)) {
+	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
 	 }
 
