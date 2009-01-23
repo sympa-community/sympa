@@ -213,7 +213,7 @@ sub store {
 sub renew {
 
     my $self = shift;
-    do_log('debug', '');
+    do_log('debug', 'id_session=(%s)',$self->{'id_session'});
 
     return undef unless ($self->{'id_session'});
     return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 

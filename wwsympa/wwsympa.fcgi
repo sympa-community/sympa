@@ -1170,18 +1170,14 @@ my $birthday = time ;
 	     }else{
 		 do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
 	     }
-	 }elsif(($Conf{'cas_number'}{$robot} > 0) &&
-		($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
-	   unless ($session->{'do_not_use_cas'}) {
+	 }elsif(($Conf{'cas_number'}{$robot} > 0) && ($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
+	     unless ($session->{'do_not_use_cas'}) {
 		 # user not taggued as not using cas
-		 do_log ('debug',"no cas ticket detected");
-		 foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
-		     # skip auth services not related to cas
-		     next unless ($auth_service->{'auth_type'} eq 'cas');
+		 foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){		     
+		     next unless ($auth_service->{'auth_type'} eq 'cas'); # skip auth services not related to cas
 		     next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
 		     
-		     ## skip cas server where client as been already redirect to 
-		     ## (redirection carry the list of cas servers already checked
+		     ## skip cas server where client as been already redirect to the list of cas servers already checked is stored in the session
 		     &do_log ('debug',"check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}");
 		     next if ($session->{'checked_cas'} =~  /$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/) ;
 		     
@@ -1189,13 +1185,14 @@ my $birthday = time ;
 		     my $cas_server = $auth_service->{'cas_server'};
 		     my $return_url = &wwslib::get_my_url();
 		     
-		     $session->{'checked_cas'} = $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
+		     $session->{'checked_cas'} .= $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
 		     
 		     my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);
 		     
 		     if ($redirect_url =~ /http(s)+\:\//i) {
 			 $in{'action'} = 'redirect';
 			 $param->{'redirect_to'} = $redirect_url;
+			 
 			 last
 			 }elsif($redirect_url == -1) { # CAS server auth error
 			     do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
@@ -1356,8 +1353,6 @@ my $birthday = time ;
      ## store in session table this session contexte
      $session->store();
 
-	 
-
      ## Do not manage cookies at this level if content was already sent
      unless ($param->{'bypass'} eq 'extreme' || 
 	     $param->{'action'} eq 'css' || 
@@ -1372,8 +1367,7 @@ my $birthday = time ;
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
-
-	 $session->renew();
+	 $session->renew() unless($param->{'use_ssl'});
 	 
 	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
@@ -3043,6 +3037,7 @@ sub do_sso_login {
 	    $in{'action'} = 'redirect';
 	    $param->{'redirect_to'} = $redirect_url;
 	    $param->{'bypass'} = 'extreme';
+	    $session->set_cookie('localhost','session');
 	    print "Location: $param->{'redirect_to'}\n\n";
 	}
 	
@@ -3451,6 +3446,7 @@ sub do_sso_login_succeeded {
 
 sub do_redirect {
      &wwslog('info','do_redirect(%s)', $param->{'redirect_to'});
+     $session->set_cookie('localhost','session');
      print "Location: $param->{'redirect_to'}\n\n";
      $param->{'bypass'} = 'extreme';
      return 1;
