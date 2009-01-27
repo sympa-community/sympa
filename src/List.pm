@@ -994,6 +994,12 @@ my %alias = ('reply-to' => 'reply_to',
 				    'gettext_id' => "SQL query inclusion",
 				    'group' => 'data_source'
 				    },
+	    'inclusion_notification_feature' => {'format' => ['on','off'],
+						 'occurence' => '0-1',
+						 'default' => 'off',
+						 'gettext_id' => "Notify subscribers when they are subscribed to the list?",
+						 'group' => 'data_source',
+					     },
 	    'info' => {'scenario' => 'info',
 		       'gettext_id' => "Who can view list information",
 		       'group' => 'command'
@@ -8515,23 +8521,10 @@ sub sync_include {
 	    }
 	    if ($user_added) {
 		$users_added++;
-		## If list hidden, don't send notification
-		my $result = $self->check_list_authz('visibility', 'smtp',
-						     {'sender' => $u->{'email'}});
-		
-		my $action;
-		$action = $result->{'action'} if (ref($result) eq 'HASH');
-		
-		unless (defined $action) {
-		    my $error = "Unable to evaluate scenario 'visibility' for list $self->{'name'}";
-		    &List::send_notify_to_listmaster('intern_error',$self->{'domain'}, {'error' => $error,
-									     'who' => $u->{'email'},
-									     'list' => $self,
-									     'action' => 'User add'});
-		}
-		unless ($action =~ /reject/) {
+		## Send notification if the list config authorizes it only.
+		if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
 		    unless ($self->send_file('welcome', $u->{'email'}, $self->{'domain'},{})) {
-			&do_log('notice',"Unable to send template 'welcome' to $u->{'email'}");
+			&do_log('err',"Unable to send template 'welcome' to $u->{'email'}");
 		    }
 		}
 	    }
@@ -8570,23 +8563,10 @@ sub sync_include {
 		}
 		if ($user_removed) {
 		    $users_removed++;
-		    ## If list hidden, don't send notification
-		    my $result = $self->check_list_authz('visibility', 'smtp',
-							 {'sender' => $email});
-		    
-		    my $action;
-		    $action = $result->{'action'} if (ref($result) eq 'HASH');
-		    
-		    unless (defined $action) {
-			my $error = "Unable to evaluate scenario 'visibility' for list $self->{'name'}";
-			&List::send_notify_to_listmaster('intern_error',$self->{'domain'}, {'error' => $error,
-											    'who' => $email,
-											    'list' => $self,
-											    'action' => 'User add'});
-		    }
-		    unless ($action =~ /reject/) {
+		    ## Send notification if the list config authorizes it only.
+		    if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
 			unless ($self->send_file('removed', $email, $self->{'domain'},{})) {
-			    &do_log('notice',"Unable to send template 'removed' to $email");
+			    &do_log('err',"Unable to send template 'removed' to $email");
 			}
 		    }
 		}
