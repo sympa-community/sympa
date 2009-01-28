@@ -116,7 +116,7 @@ msgstr "리스트마스터"
 msgid "Privileged owner"
 msgstr "권한 소유자"
 
-#: src/List.pm:1112 web_tt2/login_menu.tt2:15
+#: src/List.pm:1118 web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "소유자"
 
@@ -191,7 +191,7 @@ msgstr "포스트"
 msgid "RSS"
 msgstr "RSS"
 
-#: src/List.pm:1244 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
+#: src/List.pm:1250 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
 msgid "Shared documents"
 msgstr "공용 문서"
 
@@ -2291,14 +2291,6 @@ msgstr "요청하는 사람"
 msgid "on %1"
 msgstr "(%1)"
 
-#: web_tt2/javascript.tt2:148
-msgid ""
-"Sympa could not set a cookie for login.\n"
-" Your should configure your browser to accept cookies"
-msgstr ""
-"Sympa는 로그인을 위한 과자를 놓을 수 없었습니다.\n"
-"브라우저를 cookies 를 받아들이기 위해 형성해야 합니다."
-
 #. (count)
 #: web_tt2/latest_arc.tt2:6
 msgid " The %1 most recent messages "
@@ -2376,7 +2368,7 @@ msgstr "인증 서버를 선택하십시오"
 msgid "Go"
 msgstr "시작"
 
-#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1088 src/List.pm:584 web_tt2/loginbanner.tt2:39
 #: web_tt2/sso_login.tt2:46
 msgid "email address"
 msgstr "이메일 주소"
@@ -4240,7 +4232,7 @@ msgstr "검색 기간: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15795
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15765
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
@@ -4877,7 +4869,7 @@ msgid "%1 Digest %2"
 msgstr "%1 - 다이제스트 %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2687
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2693
 msgid "Table of contents:"
 msgstr "목차:"
 
@@ -4974,7 +4966,7 @@ msgstr "등록취소 :"
 msgid "Archive of %1, file %2"
 msgstr "%1 의 보관(저장), 파일 %2"
 
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1670
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1644
 msgid "Subscription summary"
 msgstr "구독 개요"
 
@@ -7692,7 +7684,7 @@ msgstr "구성 파일 --설치은 에러을 포함합니다.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9556
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9526
 msgid "%A"
 msgstr "%a"
 
@@ -7702,8 +7694,8 @@ msgstr "에러 (%d 행) : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2818
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1789
+#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2812
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
@@ -7723,7 +7715,7 @@ msgstr "익명의 보낸 사람"
 msgid "frequency"
 msgstr "주파수"
 
-#: src/List.pm:1332 src/List.pm:334
+#: src/List.pm:1338 src/List.pm:334
 msgid "access right"
 msgstr "액세스 권한"
 
@@ -7735,7 +7727,7 @@ msgstr "텍스트 보관"
 msgid "Archive encrypted mails as cleartext"
 msgstr "암호화된 메일을 텍스트로 보관"
 
-#: src/List.pm:1087 src/List.pm:1127 src/List.pm:350 src/List.pm:526
+#: src/List.pm:1093 src/List.pm:1133 src/List.pm:350 src/List.pm:526
 #: src/List.pm:589 src/List.pm:624
 msgid "reception mode"
 msgstr "받기 모드"
@@ -7830,7 +7822,7 @@ msgstr "제목를 태그하기"
 msgid "custom parameters"
 msgstr "틀린 매개 변수"
 
-#: src/List.pm:1092 src/List.pm:1132 src/List.pm:531 src/List.pm:594
+#: src/List.pm:1098 src/List.pm:1138 src/List.pm:531 src/List.pm:594
 #: src/List.pm:629
 msgid "visibility"
 msgstr "시정"
@@ -7868,7 +7860,7 @@ msgstr "다이제스트 메시지의 최대 숫자"
 msgid "Inclusions timeout for message distribution"
 msgstr "메시지 배포"
 
-#: src/List.pm:1097 src/List.pm:599
+#: src/List.pm:1103 src/List.pm:599
 msgid "name"
 msgstr "이름"
 
@@ -8061,173 +8053,178 @@ msgstr "데이타베이스가 저장된 디렉토리 (DBD::CSV 만)"
 msgid "SQL query inclusion"
 msgstr "SQL 쿼리 포함"
 
-#: src/List.pm:998
+#: src/List.pm:1000
+#, fuzzy
+msgid "Notify subscribers when they are subscribed to the list?"
+msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
+
+#: src/List.pm:1004
 msgid "Who can view list information"
 msgstr "리스트 정보 를 보기 권한이 있는 사용자"
 
-#: src/List.pm:1002
+#: src/List.pm:1008
 msgid "Who can invite people"
 msgstr "사람를 초대할 수 있는 사용자"
 
-#: src/List.pm:1008
+#: src/List.pm:1014
 msgid "Language of the list"
 msgstr "리스트의 언어"
 
-#: src/List.pm:1033
+#: src/List.pm:1039
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
 
-#: src/List.pm:1040
+#: src/List.pm:1046
 msgid "Maximum message size"
 msgstr "최대 메시지 크기"
 
-#: src/List.pm:1046
+#: src/List.pm:1052
 msgid "Message topic name"
 msgstr "메시지 화제 이름"
 
-#: src/List.pm:1051
+#: src/List.pm:1057
 msgid "Message topic keywords"
 msgstr "메시지 화제 키워드"
 
-#: src/List.pm:1057
+#: src/List.pm:1063
 msgid "Message topic title"
 msgstr "메시지 화제 제목"
 
-#: src/List.pm:1062
+#: src/List.pm:1068
 msgid "Topics for message categorization"
 msgstr "메시지 분류를 위한 화제"
 
-#: src/List.pm:1068
+#: src/List.pm:1074
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "topic키워드의 어떤 메시지가 적용되었는지 정의 합니다."
 
-#: src/List.pm:1075
+#: src/List.pm:1081
 msgid "Message tagging"
 msgstr "메시지 태그를 붙이기"
 
-#: src/List.pm:1102
+#: src/List.pm:1108
 msgid "private informations"
 msgstr "개인 정보"
 
-#: src/List.pm:1107 src/List.pm:1137
+#: src/List.pm:1113 src/List.pm:1143
 msgid "profile"
 msgstr "프로파일"
 
-#: src/List.pm:1148
+#: src/List.pm:1154
 msgid "Priority"
 msgstr "우선 순위"
 
-#: src/List.pm:1152
+#: src/List.pm:1158
 msgid "Who can start a remind process"
 msgstr "알림 프로세스 를 시작할 수 있는 사용자"
 
-#: src/List.pm:1157
+#: src/List.pm:1163
 msgid "Return-path of the REMIND command"
 msgstr "알림 하 명령의 돌려보내경로"
 
-#: src/List.pm:1181 src/List.pm:1201
+#: src/List.pm:1187 src/List.pm:1207
 msgid "Reply address"
 msgstr "응답 주소"
 
-#: src/List.pm:1187
+#: src/List.pm:1193
 msgid "value"
 msgstr "값"
 
-#: src/List.pm:1192
+#: src/List.pm:1198
 msgid "other email address"
 msgstr "기타 메일 주소"
 
-#: src/List.pm:1197
+#: src/List.pm:1203
 msgid "respect of existing header field"
 msgstr "기존하는 헤더 필드의 존경"
 
-#: src/List.pm:1206
+#: src/List.pm:1212
 msgid "Who can review subscribers"
 msgstr "가입자 를 검토할 수 있는 사용자"
 
-#: src/List.pm:1213
+#: src/List.pm:1219
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 헤더 필드"
 
-#: src/List.pm:1217
+#: src/List.pm:1223
 msgid "Who can send messages"
 msgstr "메세지 를 보낼 권한이 있는 사용자"
 
-#: src/List.pm:1224
+#: src/List.pm:1230
 msgid "Serial number of the config"
 msgstr "설치의 일련 번호"
 
-#: src/List.pm:1229
+#: src/List.pm:1235
 msgid "Who can view"
 msgstr "보기 권한이 있는 사용자"
 
-#: src/List.pm:1233
+#: src/List.pm:1239
 msgid "Who can edit"
 msgstr "편집 권한이 있는 사용자"
 
-#: src/List.pm:1240 src/List.pm:1339
+#: src/List.pm:1246 src/List.pm:1345
 msgid "quota"
 msgstr "할당량"
 
-#: src/List.pm:1249 src/List.pm:1254
+#: src/List.pm:1255 src/List.pm:1260
 msgid "email address protection method"
 msgstr "이메일 주소 보호 방법"
 
-#: src/List.pm:1260
+#: src/List.pm:1266
 msgid "Status of the list"
 msgstr "리스트의 상태"
 
-#: src/List.pm:1267
+#: src/List.pm:1273
 msgid "Subject of the list"
 msgstr "리스트의 제목"
 
-#: src/List.pm:1271
+#: src/List.pm:1277
 msgid "Who can subscribe to the list"
 msgstr "리스트를 등록구독 권한이 있는 분"
 
-#: src/List.pm:1277
+#: src/List.pm:1283
 msgid "Topics for the list"
 msgstr "리스트를 위한 화제"
 
-#: src/List.pm:1284
+#: src/List.pm:1290
 msgid "Inclusions timeout"
 msgstr "포함 타임아웃"
 
-#: src/List.pm:1288
+#: src/List.pm:1294
 msgid "Who can unsubscribe"
 msgstr "등록취소 권한이 있는 사용자"
 
-#: src/List.pm:1309
+#: src/List.pm:1315
 msgid "Last update of config"
 msgstr "설치의 최신 정보"
 
-#: src/List.pm:1316
+#: src/List.pm:1322
 msgid "User data source"
 msgstr "사용자 데이터 원본"
 
-#: src/List.pm:1322
+#: src/List.pm:1328
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 "사진 디스플레이(Display)를 허용합니까? (현재 해당장치(robot)에 활성화 되어야 "
 "합니다)"
 
-#: src/List.pm:1328
+#: src/List.pm:1334
 msgid "Visibility of the list"
 msgstr "리스트의 시정"
 
-#: src/List.pm:1344
+#: src/List.pm:1350
 msgid "Maximum number of month archived"
 msgstr "보관된 달의 최대 숫자"
 
-#: src/List.pm:1349
+#: src/List.pm:1355
 msgid "Web archives"
 msgstr "웹 보관"
 
-#: src/List.pm:1355
+#: src/List.pm:1361
 msgid "Welcome return-path"
 msgstr "환영받은 돌려보내경로"
 
-#: src/List.pm:1360
+#: src/List.pm:1366
 msgid "percentage of list members in VERP mode"
 msgstr "VERP 모드에 리스트 가입자의 백분율"
 
@@ -8255,16 +8252,16 @@ msgstr "값"
 msgid "messages"
 msgstr "# 메시지"
 
-#: src/List.pm:1282 src/List.pm:576 src/List.pm:746 src/List.pm:826
+#: src/List.pm:1288 src/List.pm:576 src/List.pm:746 src/List.pm:826
 #: src/List.pm:864
 msgid "seconds"
 msgstr ""
 
-#: src/List.pm:1117 src/List.pm:614
+#: src/List.pm:1123 src/List.pm:614
 msgid "the datasource"
 msgstr "데이터 원본"
 
-#: src/List.pm:1122 src/List.pm:619
+#: src/List.pm:1128 src/List.pm:619
 msgid "datasource parameters"
 msgstr "데이터 원본 매개 변수"
 
@@ -8288,76 +8285,76 @@ msgstr "SSL 버전"
 msgid "SSL ciphers used"
 msgstr "사용된 SSL 패스워드"
 
-#: src/List.pm:1013 src/List.pm:1294
+#: src/List.pm:1019 src/List.pm:1300
 msgid "epoch date"
 msgstr "Epoch 날짜"
 
-#: src/List.pm:1017 src/List.pm:1299
+#: src/List.pm:1023 src/List.pm:1305
 msgid "date"
 msgstr "날짜"
 
-#: src/List.pm:1022
+#: src/List.pm:1028
 msgid "who ran the instantiation"
 msgstr "인스턴스 를 실행했는 분"
 
-#: src/List.pm:1026
+#: src/List.pm:1032
 msgid "Latest family instantiation"
 msgstr "최신 리스트들의 정보변경 인스턴스 생성"
 
-#: src/List.pm:1038
+#: src/List.pm:1044
 #, fuzzy
 msgid "bytes"
 msgstr "안녕 !"
 
-#: src/List.pm:1142
+#: src/List.pm:1148
 msgid "Owners defined in an external datasource"
 msgstr "외부 데이터 원본에서 정의된 소유자"
 
-#: src/List.pm:1161
+#: src/List.pm:1167
 msgid "Periodical subscription reminder task"
 msgstr "정기적 구독 미리 알림 업무"
 
-#: src/List.pm:1166
+#: src/List.pm:1172
 msgid "Incoming SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1173
+#: src/List.pm:1179
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1239 src/List.pm:1338
+#: src/List.pm:1245 src/List.pm:1344
 msgid "Kbytes"
 msgstr ""
 
-#: src/List.pm:1305
+#: src/List.pm:1311
 msgid "who updated the config"
 msgstr "설치 을 업데이트했는 분"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2790
+#: src/List.pm:2796
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 (%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2791
+#: src/List.pm:2797
 msgid "%a, %d %b %Y"
 msgstr "%Y년%m월%d일 (%a)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10923 wwsympa/wwsympa.fcgi:10992
-#: wwsympa/wwsympa.fcgi:11194 wwsympa/wwsympa.fcgi:11531
-#: wwsympa/wwsympa.fcgi:15370 wwsympa/wwsympa.fcgi:16095
-#: wwsympa/wwsympa.fcgi:16096 wwsympa/wwsympa.fcgi:4744
-#: wwsympa/wwsympa.fcgi:4745 wwsympa/wwsympa.fcgi:6185
-#: wwsympa/wwsympa.fcgi:7203 wwsympa/wwsympa.fcgi:7737
-#: wwsympa/wwsympa.fcgi:7774 wwsympa/wwsympa.fcgi:7776
-#: wwsympa/wwsympa.fcgi:8243 wwsympa/wwsympa.fcgi:8244
-#: wwsympa/wwsympa.fcgi:8278 wwsympa/wwsympa.fcgi:8279
-#: wwsympa/wwsympa.fcgi:8458 wwsympa/wwsympa.fcgi:8459
+#: src/List.pm:2983 src/List.pm:2984 src/List.pm:2988
+#: wwsympa/wwsympa.fcgi:10893 wwsympa/wwsympa.fcgi:10962
+#: wwsympa/wwsympa.fcgi:11164 wwsympa/wwsympa.fcgi:11501
+#: wwsympa/wwsympa.fcgi:15340 wwsympa/wwsympa.fcgi:16065
+#: wwsympa/wwsympa.fcgi:16066 wwsympa/wwsympa.fcgi:4740
+#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6155
+#: wwsympa/wwsympa.fcgi:7173 wwsympa/wwsympa.fcgi:7707
+#: wwsympa/wwsympa.fcgi:7744 wwsympa/wwsympa.fcgi:7746
+#: wwsympa/wwsympa.fcgi:8213 wwsympa/wwsympa.fcgi:8214
+#: wwsympa/wwsympa.fcgi:8248 wwsympa/wwsympa.fcgi:8249
+#: wwsympa/wwsympa.fcgi:8428 wwsympa/wwsympa.fcgi:8429
 msgid "%d %b %Y"
 msgstr "%Y년%m월%d일"
 
@@ -8491,14 +8488,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432
-#: wwsympa/wwsympa.fcgi:11755 wwsympa/wwsympa.fcgi:11888
-#: wwsympa/wwsympa.fcgi:14201 wwsympa/wwsympa.fcgi:7697
+#: wwsympa/wwsympa.fcgi:11725 wwsympa/wwsympa.fcgi:11858
+#: wwsympa/wwsympa.fcgi:14171 wwsympa/wwsympa.fcgi:7667
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15740 wwsympa/wwsympa.fcgi:15741
+#: wwsympa/wwsympa.fcgi:15710 wwsympa/wwsympa.fcgi:15711
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8794,6 +8791,13 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#~ msgid ""
+#~ "Sympa could not set a cookie for login.\n"
+#~ " Your should configure your browser to accept cookies"
+#~ msgstr ""
+#~ "Sympa는 로그인을 위한 과자를 놓을 수 없었습니다.\n"
+#~ "브라우저를 cookies 를 받아들이기 위해 형성해야 합니다."
 
 #, fuzzy
 #~ msgid ""
@@ -9728,10 +9732,6 @@ msgstr ""
 #~ msgstr "리스트 소유자에 의해 이 다이제스트를 위한 보내는 간격 정의됩니다."
 
 #~ msgid ""
-#~ "The subscribe parameter defines the rules for subscribing to the list."
-#~ msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
-
-#~ msgid ""
 #~ "There is a need to protect Sympa web sites against spambots which collect "
 #~ "email addresses from public web sites. Various methods are available in "
 #~ "Sympa and you can choose to use them with the spam_protection and "
@@ -10125,3 +10125,7 @@ msgstr ""
 #~ msgstr ""
 #~ "확인하기 위해\n"
 #~ "\t요청는, 아래 단추를 누릅니다:"
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."

@@ -121,7 +121,7 @@ msgstr "Kiemelt tulajdonos"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
-#: src/List.pm:1112 web_tt2/login_menu.tt2:15
+#: src/List.pm:1118 web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Tulajdonos"
 
@@ -197,7 +197,7 @@ msgid "RSS"
 msgstr "RSS"
 
 # nlsref 16,70
-#: src/List.pm:1244 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
+#: src/List.pm:1250 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
 msgid "Shared documents"
 msgstr "Megosztott dokumentumok"
 
@@ -2458,15 +2458,6 @@ msgstr "A lista létrehozását kérte: "
 msgid "on %1"
 msgstr "dátum: %1"
 
-#: web_tt2/javascript.tt2:148
-#, fuzzy
-msgid ""
-"Sympa could not set a cookie for login.\n"
-" Your should configure your browser to accept cookies"
-msgstr ""
-"A Sympa nem tudott sütit (cookie) beállítani bejelentkezéshez.\n"
-"Engedélyezze böngészőjében a sütik elfogadását."
-
 #. (count)
 #: web_tt2/latest_arc.tt2:6
 msgid " The %1 most recent messages "
@@ -2551,7 +2542,7 @@ msgid "Go"
 msgstr "Mehet"
 
 # nlsref 16,27
-#: src/List.pm:1082 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1088 src/List.pm:584 web_tt2/loginbanner.tt2:39
 #: web_tt2/sso_login.tt2:46
 msgid "email address"
 msgstr "E-mail cím"
@@ -4476,7 +4467,7 @@ msgstr "Felhasználó keresése"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15795
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15765
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -5241,7 +5232,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Kivonat %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2687
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2693
 msgid "Table of contents:"
 msgstr "Tartalomjegyzék:"
 
@@ -5340,7 +5331,7 @@ msgid "Archive of %1, file %2"
 msgstr ""
 
 # nlsref 6,83
-#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1670
+#: mail_tt2/global_remind.tt2:2 src/Commands.pm:1644
 msgid "Subscription summary"
 msgstr "Feliratkozási összesítés"
 
@@ -8248,7 +8239,7 @@ msgstr "A(z) --CONFIG-- konfigurációs állomány hibás.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9556
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9526
 msgid "%A"
 msgstr ""
 
@@ -8259,8 +8250,8 @@ msgstr "Hiba a(z) %d sorban: %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1783
-#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2818
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1789
+#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2812
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -8285,7 +8276,7 @@ msgid "frequency"
 msgstr "Gyakoriság"
 
 # nlsref 16,6
-#: src/List.pm:1332 src/List.pm:334
+#: src/List.pm:1338 src/List.pm:334
 msgid "access right"
 msgstr "Hozzáférési jogosultságok"
 
@@ -8300,7 +8291,7 @@ msgid "Archive encrypted mails as cleartext"
 msgstr "Archiválja a titkosított leveleket sima szöveges formátumban"
 
 # nlsref 16,19
-#: src/List.pm:1087 src/List.pm:1127 src/List.pm:350 src/List.pm:526
+#: src/List.pm:1093 src/List.pm:1133 src/List.pm:350 src/List.pm:526
 #: src/List.pm:589 src/List.pm:624
 msgid "reception mode"
 msgstr "Levélkézbesítési mód"
@@ -8406,7 +8397,7 @@ msgid "custom parameters"
 msgstr "adatforrás paraméterek"
 
 # nlsref 16,20
-#: src/List.pm:1092 src/List.pm:1132 src/List.pm:531 src/List.pm:594
+#: src/List.pm:1098 src/List.pm:1138 src/List.pm:531 src/List.pm:594
 #: src/List.pm:629
 msgid "visibility"
 msgstr "Láthatóság"
@@ -8451,7 +8442,7 @@ msgid "Inclusions timeout for message distribution"
 msgstr "Üzenet"
 
 # nlsref 16,29
-#: src/List.pm:1097 src/List.pm:599
+#: src/List.pm:1103 src/List.pm:599
 msgid "name"
 msgstr "Név"
 
@@ -8690,208 +8681,215 @@ msgstr "A könyvtár, ahol az adatbázis található (csak a DBD::CSV használja
 msgid "SQL query inclusion"
 msgstr "SQL lekérdezés beágyazása"
 
+#: src/List.pm:1000
+#, fuzzy
+msgid "Notify subscribers when they are subscribed to the list?"
+msgstr ""
+"A feliratkozás (subscribe) paraméter a listára való feliratkozás szabályait "
+"adja meg."
+
 # nlsref 16,53
-#: src/List.pm:998
+#: src/List.pm:1004
 msgid "Who can view list information"
 msgstr "Ki tekintheti meg a lista információit"
 
 # nlsref 16,54
-#: src/List.pm:1002
+#: src/List.pm:1008
 msgid "Who can invite people"
 msgstr "Ki hívhat meg embereket"
 
 # nlsref 16,55
-#: src/List.pm:1008
+#: src/List.pm:1014
 msgid "Language of the list"
 msgstr "A lista nyelve"
 
-#: src/List.pm:1033
+#: src/List.pm:1039
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
 # nlsref 16,56
-#: src/List.pm:1040
+#: src/List.pm:1046
 msgid "Maximum message size"
 msgstr "Maximális levélméret"
 
-#: src/List.pm:1046
+#: src/List.pm:1052
 msgid "Message topic name"
 msgstr ""
 
-#: src/List.pm:1051
+#: src/List.pm:1057
 msgid "Message topic keywords"
 msgstr ""
 
 # nlsref 15,4
-#: src/List.pm:1057
+#: src/List.pm:1063
 #, fuzzy
 msgid "Message topic title"
 msgstr "üzenet lábléce"
 
 # nlsref 16,74
-#: src/List.pm:1062
+#: src/List.pm:1068
 #, fuzzy
 msgid "Topics for message categorization"
 msgstr "A lista témái"
 
-#: src/List.pm:1068
+#: src/List.pm:1074
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 
-#: src/List.pm:1075
+#: src/List.pm:1081
 #, fuzzy
 msgid "Message tagging"
 msgstr "Üzenet"
 
 # nlsref 16,61
-#: src/List.pm:1102
+#: src/List.pm:1108
 msgid "private informations"
 msgstr "Személyes adatok"
 
 # nlsref 16,62
-#: src/List.pm:1107 src/List.pm:1137
+#: src/List.pm:1113 src/List.pm:1143
 msgid "profile"
 msgstr "Profil"
 
 # nlsref 16,63
-#: src/List.pm:1148
+#: src/List.pm:1154
 msgid "Priority"
 msgstr "Prioritás"
 
 # nlsref 16,64
-#: src/List.pm:1152
+#: src/List.pm:1158
 msgid "Who can start a remind process"
 msgstr "Ki kezdeményezheti emlékeztető elküldését"
 
-#: src/List.pm:1157
+#: src/List.pm:1163
 msgid "Return-path of the REMIND command"
 msgstr "Az emlékeztető (REMIND) parancs visszatérési útvonala"
 
 # nlsref 16,66
-#: src/List.pm:1181 src/List.pm:1201
+#: src/List.pm:1187 src/List.pm:1207
 msgid "Reply address"
 msgstr "Válaszcím"
 
 # nlsref 16,91
-#: src/List.pm:1187
+#: src/List.pm:1193
 msgid "value"
 msgstr "Érték"
 
 # nlsref 16,92
-#: src/List.pm:1192
+#: src/List.pm:1198
 msgid "other email address"
 msgstr "Másik e-mail cím"
 
 # nlsref 16,93
-#: src/List.pm:1197
+#: src/List.pm:1203
 msgid "respect of existing header field"
 msgstr "Létező fejléc figyelembe véve"
 
 # nlsref 16,67
-#: src/List.pm:1206
+#: src/List.pm:1212
 msgid "Who can review subscribers"
 msgstr "Ki tekintheti meg a tagok listáját"
 
 # nlsref 16,16
-#: src/List.pm:1213
+#: src/List.pm:1219
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 fejléc mezők"
 
 # nlsref 16,68
-#: src/List.pm:1217
+#: src/List.pm:1223
 msgid "Who can send messages"
 msgstr "Ki küldhet levelet"
 
 # nlsref 16,69
-#: src/List.pm:1224
+#: src/List.pm:1230
 msgid "Serial number of the config"
 msgstr "A beállítás sorozatszáma"
 
 # nlsref 16,86
-#: src/List.pm:1229
+#: src/List.pm:1235
 msgid "Who can view"
 msgstr "Ki tekintheti meg"
 
 # nlsref 16,87
-#: src/List.pm:1233
+#: src/List.pm:1239
 msgid "Who can edit"
 msgstr "Ki szerkesztheti"
 
 # nlsref 16,203
-#: src/List.pm:1240 src/List.pm:1339
+#: src/List.pm:1246 src/List.pm:1345
 msgid "quota"
 msgstr "Kvóta"
 
 # nlsref 16,205
-#: src/List.pm:1249 src/List.pm:1254
+#: src/List.pm:1255 src/List.pm:1260
 msgid "email address protection method"
 msgstr "E-mail címek védelmének módja"
 
 # nlsref 16,71
-#: src/List.pm:1260
+#: src/List.pm:1266
 msgid "Status of the list"
 msgstr "A lista állapota"
 
 # nlsref 16,72
-#: src/List.pm:1267
+#: src/List.pm:1273
 msgid "Subject of the list"
 msgstr "A lista tárgya"
 
 # nlsref 16,73
-#: src/List.pm:1271
+#: src/List.pm:1277
 msgid "Who can subscribe to the list"
 msgstr "Ki iratkozhat fel a listára"
 
 # nlsref 16,74
-#: src/List.pm:1277
+#: src/List.pm:1283
 msgid "Topics for the list"
 msgstr "A lista témái"
 
 # nlsref 16,75
-#: src/List.pm:1284
+#: src/List.pm:1290
 msgid "Inclusions timeout"
 msgstr "Beágyazások élettartama"
 
 # nlsref 16,76
-#: src/List.pm:1288
+#: src/List.pm:1294
 msgid "Who can unsubscribe"
 msgstr "Ki iratkozhat le"
 
 # nlsref 16,77
-#: src/List.pm:1309
+#: src/List.pm:1315
 msgid "Last update of config"
 msgstr "Beállítások utolsó módosításának ideje"
 
 # nlsref 16,81
-#: src/List.pm:1316
+#: src/List.pm:1322
 msgid "User data source"
 msgstr "Felhasználók adatainak forrása"
 
-#: src/List.pm:1322
+#: src/List.pm:1328
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
 # nlsref 16,82
-#: src/List.pm:1328
+#: src/List.pm:1334
 msgid "Visibility of the list"
 msgstr "A lista láthatósága"
 
-#: src/List.pm:1344
+#: src/List.pm:1350
 #, fuzzy
 msgid "Maximum number of month archived"
 msgstr "Kivonat esetén az üzenetek maximális száma"
 
 # nlsref 16,83
-#: src/List.pm:1349
+#: src/List.pm:1355
 msgid "Web archives"
 msgstr "Webes archívum"
 
 # nlsref 16,85
-#: src/List.pm:1355
+#: src/List.pm:1361
 msgid "Welcome return-path"
 msgstr "Válaszcím üdvözlésnél"
 
-#: src/List.pm:1360
+#: src/List.pm:1366
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
@@ -8920,17 +8918,17 @@ msgstr "Érték"
 msgid "messages"
 msgstr "# üzenet"
 
-#: src/List.pm:1282 src/List.pm:576 src/List.pm:746 src/List.pm:826
+#: src/List.pm:1288 src/List.pm:576 src/List.pm:746 src/List.pm:826
 #: src/List.pm:864
 msgid "seconds"
 msgstr ""
 
 # nlsref 16,81
-#: src/List.pm:1117 src/List.pm:614
+#: src/List.pm:1123 src/List.pm:614
 msgid "the datasource"
 msgstr "Az adatforrás"
 
-#: src/List.pm:1122 src/List.pm:619
+#: src/List.pm:1128 src/List.pm:619
 msgid "datasource parameters"
 msgstr "adatforrás paraméterek"
 
@@ -8957,80 +8955,80 @@ msgstr "SQL lekérdezés beágyazása"
 msgid "SSL ciphers used"
 msgstr "Felhasznált titkosítási kulcsméret:"
 
-#: src/List.pm:1013 src/List.pm:1294
+#: src/List.pm:1019 src/List.pm:1300
 msgid "epoch date"
 msgstr "epoch dátuma"
 
-#: src/List.pm:1017 src/List.pm:1299
+#: src/List.pm:1023 src/List.pm:1305
 msgid "date"
 msgstr "dátum"
 
 # nlsref 16,53
-#: src/List.pm:1022
+#: src/List.pm:1028
 msgid "who ran the instantiation"
 msgstr "ki végezte a példányosítást"
 
-#: src/List.pm:1026
+#: src/List.pm:1032
 msgid "Latest family instantiation"
 msgstr "Legutolsó osztály példányosítás"
 
-#: src/List.pm:1038
+#: src/List.pm:1044
 #, fuzzy
 msgid "bytes"
 msgstr "Viszlát!"
 
-#: src/List.pm:1142
+#: src/List.pm:1148
 msgid "Owners defined in an external datasource"
 msgstr "Külső adatforrásban megadott tulajdonosok"
 
 # nlsref 16,88
-#: src/List.pm:1161
+#: src/List.pm:1167
 #, fuzzy
 msgid "Periodical subscription reminder task"
 msgstr "Periodikus feliratkozásmegerősítési-feladat"
 
-#: src/List.pm:1166
+#: src/List.pm:1172
 msgid "Incoming SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1173
+#: src/List.pm:1179
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1239 src/List.pm:1338
+#: src/List.pm:1245 src/List.pm:1344
 msgid "Kbytes"
 msgstr ""
 
 # nlsref 16,77
-#: src/List.pm:1305
+#: src/List.pm:1311
 msgid "who updated the config"
 msgstr "ki frissítette a beállításokat"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2790
+#: src/List.pm:2796
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %A, %H.%M.%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2791
+#: src/List.pm:2797
 msgid "%a, %d %b %Y"
 msgstr "%Y. %b. %-d., %A"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2977 src/List.pm:2978 src/List.pm:2982
-#: wwsympa/wwsympa.fcgi:10923 wwsympa/wwsympa.fcgi:10992
-#: wwsympa/wwsympa.fcgi:11194 wwsympa/wwsympa.fcgi:11531
-#: wwsympa/wwsympa.fcgi:15370 wwsympa/wwsympa.fcgi:16095
-#: wwsympa/wwsympa.fcgi:16096 wwsympa/wwsympa.fcgi:4744
-#: wwsympa/wwsympa.fcgi:4745 wwsympa/wwsympa.fcgi:6185
-#: wwsympa/wwsympa.fcgi:7203 wwsympa/wwsympa.fcgi:7737
-#: wwsympa/wwsympa.fcgi:7774 wwsympa/wwsympa.fcgi:7776
-#: wwsympa/wwsympa.fcgi:8243 wwsympa/wwsympa.fcgi:8244
-#: wwsympa/wwsympa.fcgi:8278 wwsympa/wwsympa.fcgi:8279
-#: wwsympa/wwsympa.fcgi:8458 wwsympa/wwsympa.fcgi:8459
+#: src/List.pm:2983 src/List.pm:2984 src/List.pm:2988
+#: wwsympa/wwsympa.fcgi:10893 wwsympa/wwsympa.fcgi:10962
+#: wwsympa/wwsympa.fcgi:11164 wwsympa/wwsympa.fcgi:11501
+#: wwsympa/wwsympa.fcgi:15340 wwsympa/wwsympa.fcgi:16065
+#: wwsympa/wwsympa.fcgi:16066 wwsympa/wwsympa.fcgi:4740
+#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6155
+#: wwsympa/wwsympa.fcgi:7173 wwsympa/wwsympa.fcgi:7707
+#: wwsympa/wwsympa.fcgi:7744 wwsympa/wwsympa.fcgi:7746
+#: wwsympa/wwsympa.fcgi:8213 wwsympa/wwsympa.fcgi:8214
+#: wwsympa/wwsympa.fcgi:8248 wwsympa/wwsympa.fcgi:8249
+#: wwsympa/wwsympa.fcgi:8428 wwsympa/wwsympa.fcgi:8429
 msgid "%d %b %Y"
 msgstr "%Y. %b. %-d."
 
@@ -9170,14 +9168,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432
-#: wwsympa/wwsympa.fcgi:11755 wwsympa/wwsympa.fcgi:11888
-#: wwsympa/wwsympa.fcgi:14201 wwsympa/wwsympa.fcgi:7697
+#: wwsympa/wwsympa.fcgi:11725 wwsympa/wwsympa.fcgi:11858
+#: wwsympa/wwsympa.fcgi:14171 wwsympa/wwsympa.fcgi:7667
 msgid "%d %b %y  %H:%M"
 msgstr "%Y. %b. %-d., %H.%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15740 wwsympa/wwsympa.fcgi:15741
+#: wwsympa/wwsympa.fcgi:15710 wwsympa/wwsympa.fcgi:15711
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -9532,6 +9530,14 @@ msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request cames from host %2 at %3)."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Sympa could not set a cookie for login.\n"
+#~ " Your should configure your browser to accept cookies"
+#~ msgstr ""
+#~ "A Sympa nem tudott sütit (cookie) beállítani bejelentkezéshez.\n"
+#~ "Engedélyezze böngészőjében a sütik elfogadását."
 
 #, fuzzy
 #~ msgid ""
@@ -10706,12 +10712,6 @@ msgstr ""
 #~ "válaszként elküldve. A tárgy egysoros, kötetlen formájú szöveg."
 
 #~ msgid ""
-#~ "The subscribe parameter defines the rules for subscribing to the list."
-#~ msgstr ""
-#~ "A feliratkozás (subscribe) paraméter a listára való feliratkozás "
-#~ "szabályait adja meg."
-
-#~ msgid ""
 #~ "This parameter allows the classification of lists. You may define "
 #~ "multiple topics as well as hierarchical ones. WWSympa's list of public "
 #~ "lists uses this parameter."
@@ -11715,3 +11715,9 @@ msgstr ""
 
 #~ msgid "anyone without authentication"
 #~ msgstr "bárki, azonosítás nélkül"
+
+#~ msgid ""
+#~ "The subscribe parameter defines the rules for subscribing to the list."
+#~ msgstr ""
+#~ "A feliratkozás (subscribe) paraméter a listára való feliratkozás "
+#~ "szabályait adja meg."
