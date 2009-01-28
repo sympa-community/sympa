@@ -1,4 +1,289 @@
 ------------------------------------------------------------------------
+r5457 | david.verdin | 2009-01-28 16:22:08 +0100 (Wed, 28 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature] Committing latest catalogues generated from Sympa source code.
+------------------------------------------------------------------------
+r5456 | david.verdin | 2009-01-28 16:08:37 +0100 (Wed, 28 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/src/List.pm
+
+[-bug] chainging bad parameter description.
+
+------------------------------------------------------------------------
+r5455 | david.verdin | 2009-01-28 16:01:30 +0100 (Wed, 28 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature] Committing latest catalogues generated from Sympa source code.
+------------------------------------------------------------------------
+r5454 | david.verdin | 2009-01-28 15:47:39 +0100 (Wed, 28 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/po/de.po
+   M /trunk/po/en_US.po
+   M /trunk/po/nl.po
+
+[-feature] Integrating latest translations into Sympa.
+
+------------------------------------------------------------------------
+r5453 | david.verdin | 2009-01-27 17:47:01 +0100 (Tue, 27 Jan 2009) | 3 lines
+Changed paths:
+   M /trunk/soap/sympasoap.pm
+   M /trunk/src/Commands.pm
+   M /trunk/src/List.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[feature] New parameter 'inclusion_notification_feature'. If its value is set to 'on', subscribers are notified when they are included in a list through an external datasource.
+[change] We no longer use the visibility to manage this behaviour to avoid confusion for users and an overwhelming number of scenario evaluations.
+
+------------------------------------------------------------------------
+r5452 | sympa-authors | 2009-01-23 14:22:06 +0100 (Fri, 23 Jan 2009) | 4 lines
+Changed paths:
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] solve a bug related to infinite redirection loop when using automatic redirection to CAS server
+[change] now session id cookie is not renewed when using SSL. Renewal of session id cookie is a protection agains session hijacking. It is not usefull if session cookie is use only in a ssl session. Because this method may cause user to lost there session when they hit several links very quickly, we limit it to http.
+
+
+------------------------------------------------------------------------
+r5451 | sympa-authors | 2009-01-22 13:24:24 +0100 (Thu, 22 Jan 2009) | 3 lines
+Changed paths:
+   M /trunk/web_tt2/javascript.tt2
+   M /trunk/web_tt2/main.tt2
+   M /trunk/wwsympa/SympaSession.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[change]  Now sympa_session cookie use secure flag if using https, always use httponly flag ; most navigator block javascript access to cookies with that flag. This is protection agains session hijacking. The javascript "check_cookie" is removed from Sympa.
+
+
+------------------------------------------------------------------------
+r5449 | david.verdin | 2009-01-20 14:25:15 +0100 (Tue, 20 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/configure.ac
+
+[-feature] Preparing version 6.0a.6
+
+------------------------------------------------------------------------
+r5448 | david.verdin | 2009-01-20 14:24:35 +0100 (Tue, 20 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/web_help_af.po
+   M /trunk/po/web_help_ar.po
+   M /trunk/po/web_help_bg.po
+   M /trunk/po/web_help_br.po
+   M /trunk/po/web_help_ca.po
+   M /trunk/po/web_help_cs.po
+   M /trunk/po/web_help_de.po
+   M /trunk/po/web_help_el.po
+   M /trunk/po/web_help_en_US.po
+   M /trunk/po/web_help_es.po
+   M /trunk/po/web_help_et.po
+   M /trunk/po/web_help_eu.po
+   M /trunk/po/web_help_fi.po
+   M /trunk/po/web_help_fr.po
+   M /trunk/po/web_help_hu.po
+   M /trunk/po/web_help_id.po
+   M /trunk/po/web_help_it.po
+   M /trunk/po/web_help_ja.po
+   M /trunk/po/web_help_ko.po
+   M /trunk/po/web_help_ml.po
+   M /trunk/po/web_help_nb_NO.po
+   M /trunk/po/web_help_nl.po
+   M /trunk/po/web_help_nn_NO.po
+   M /trunk/po/web_help_oc.po
+   M /trunk/po/web_help_pl.po
+   M /trunk/po/web_help_pt.po
+   M /trunk/po/web_help_pt_BR.po
+   M /trunk/po/web_help_ro.po
+   M /trunk/po/web_help_ru.po
+   M /trunk/po/web_help_sv.po
+   M /trunk/po/web_help_tr.po
+   M /trunk/po/web_help_vi.po
+   M /trunk/po/web_help_zh_CN.po
+   M /trunk/po/web_help_zh_TW.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature] Saving updated translations.
+
+------------------------------------------------------------------------
+r5447 | david.verdin | 2009-01-20 13:23:36 +0100 (Tue, 20 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/web_help_af.po
+   M /trunk/po/web_help_ar.po
+   M /trunk/po/web_help_bg.po
+   M /trunk/po/web_help_br.po
+   M /trunk/po/web_help_ca.po
+   M /trunk/po/web_help_cs.po
+   M /trunk/po/web_help_de.po
+   M /trunk/po/web_help_el.po
+   M /trunk/po/web_help_en_US.po
+   M /trunk/po/web_help_es.po
+   M /trunk/po/web_help_et.po
+   M /trunk/po/web_help_eu.po
+   M /trunk/po/web_help_fi.po
+   M /trunk/po/web_help_fr.po
+   M /trunk/po/web_help_hu.po
+   M /trunk/po/web_help_id.po
+   M /trunk/po/web_help_it.po
+   M /trunk/po/web_help_ja.po
+   M /trunk/po/web_help_ko.po
+   M /trunk/po/web_help_ml.po
+   M /trunk/po/web_help_nb_NO.po
+   M /trunk/po/web_help_nl.po
+   M /trunk/po/web_help_nn_NO.po
+   M /trunk/po/web_help_oc.po
+   M /trunk/po/web_help_pl.po
+   M /trunk/po/web_help_pt.po
+   M /trunk/po/web_help_pt_BR.po
+   M /trunk/po/web_help_ro.po
+   M /trunk/po/web_help_ru.po
+   M /trunk/po/web_help_sv.po
+   M /trunk/po/web_help_tr.po
+   M /trunk/po/web_help_vi.po
+   M /trunk/po/web_help_zh_CN.po
+   M /trunk/po/web_help_zh_TW.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature] Retrieving latest translations from pootle.
+
+------------------------------------------------------------------------
 r5443 | david.verdin | 2009-01-19 17:29:15 +0100 (Mon, 19 Jan 2009) | 2 lines
 Changed paths:
    M /trunk/wwsympa/wwsympa.fcgi
