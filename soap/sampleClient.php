@@ -56,7 +56,7 @@ if ($_GET['viewSource']) {
     echo "[<A HREF=\"".$_SERVER['PHP_SELF']."?logout=1\">logout</A>]\n";
     
   }else {
-    echo "You need to login first :<BR><BR>\n";
+    echo "You need to login first?\n Use your email address and the password obtained from <a href=\"http://demo.sympa.org/sympa\">demo.sympa.org</a> :<BR><BR>\n";
     echo "<form action=\"".$_SERVER['PHP_SELF']."\" method=\"post\">
     Email:  <input type=\"text\" name=\"email\"><br>
     Password: <input type=\"password\" name=\"pwd\">
