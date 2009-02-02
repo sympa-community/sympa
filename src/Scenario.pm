@@ -250,14 +250,6 @@ sub request_action {
 
     my $trace_scenario ;
 
-# trace trace xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    if ($operation eq 'visibility') { 
-	my $return = {'auth_method' => 'md5','action' => 'do_it','condition' => ''};
-	return $return;
-    }
-# trace trace xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
     ## Defining default values for parameters.
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};

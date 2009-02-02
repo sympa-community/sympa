@@ -37,7 +37,6 @@ use Time::Local;
 use Digest::MD5;
 use Scenario;
 use SympaSession;
-use Bulk;
 use mail;
 use wwslib;
  
@@ -178,7 +177,6 @@ my %global_models = (#'crl_update_task' => 'crl_update',
 		     'purge_user_table_task' => 'purge_user_table',
 		     'purge_logs_table_task' => 'purge_logs_table',
 		     'purge_session_table_task' => 'purge_session_table',
-		     'purge_tables_task' => 'purge_tables',
 		     'purge_one_time_ticket_table_task' => 'purge_one_time_ticket_table',
 		     'purge_orphan_bounces_task' => 'purge_orphan_bounces',
 		     'eval_bouncers_task' => 'eval_bouncers',
@@ -217,7 +215,6 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'purge_user_table'      => [],
 		'purge_logs_table'      => [],
 		'purge_session_table'   => [],
-		'purge_tables'   => [],
 		'purge_one_time_ticket_table'   => [],
 		'purge_orphan_bounces'  => [],
 		'eval_bouncers'         => [],
@@ -820,7 +817,6 @@ sub cmd_process {
     return purge_user_table ($task, \%context) if ($command eq 'purge_user_table');
     return purge_logs_table ($task, \%context) if ($command eq 'purge_logs_table');
     return purge_session_table ($task, \%context) if ($command eq 'purge_session_table');
-    return purge_tables ($task, \%context) if ($command eq 'purge_tables');
     return purge_one_time_ticket_table ($task, \%context) if ($command eq 'purge_one_time_ticket_table');
     return sync_include($task, \%context) if ($command eq 'sync_include');
     return purge_orphan_bounces ($task, \%context) if ($command eq 'purge_orphan_bounces');
@@ -1142,19 +1138,6 @@ sub purge_session_table {
 	return undef;
     }
     &do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
-    return 1;
-}
-
-## remove messages from bulkspool table when no more packet have any pointer to this message
-sub purge_tables {    
-
-    do_log('info','task_manager::purge_tables()');
-    my $removed = &Bulk::purge('*');
-    unless(defined $removed) {
-	&do_log('err','Failed to purge blukspool');
-	return undef;
-    }
-    &do_log('notice','%s row removed in bulkspool_table',$removed);
     return 1;
 }
 

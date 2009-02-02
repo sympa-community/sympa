@@ -26,7 +26,6 @@ package tools;
 use strict;
 
 use POSIX;
-use Sys::Hostname;
 use Mail::Internet;
 use Mail::Header;
 use Conf;
@@ -40,7 +39,6 @@ use File::Copy::Recursive;
 
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
-use Mail::DKIM::Signer;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -703,92 +701,6 @@ sub get_template_path {
 }
 
 # input object msg and listname, output signed message object
-sub dkim_sign {
-    my $in_msg = shift;
-    my $list = shift;
-    my $robot = shift;
-
-    do_log('debug2', 'tools::dkim_sign (%s,%s)',$in_msg,$list);
-
-    my $self = new List($list, $robot);
-
-    my $selector =  &Conf::get_robot_conf($robot, 'dkim_selector');
-    my $keyfile =  &Conf::get_robot_conf($robot, 'dkim_key_file');
-    unless ($selector) {
-	do_log('err',"DKIM selector is undefined, could not sign message");
-	return undef;
-    }
-    unless ($keyfile) {
-	do_log('err',"DKIM key file is undefined, could not sign message");
-	return undef;
-    }
-    unless (-f $keyfile) {
-	do_log('err',"Could not read DKIM key file %s",$keyfile);
-	return undef;
-    }
-
-
-    # create a signer object
-    my $dkim = Mail::DKIM::Signer->new(
-				       Algorithm => "rsa-sha1",
-				       Method => "relaxed",
-				       Domain => $robot,
-				       Selector => $selector,
-				       KeyFile => $keyfile,
-				       );
-    
-    ## dump the incomming message.
-    my $dup_msg = $in_msg->dup;
-    # my $temporary_file = $Conf{'tmpdir'}."/".$self->get_list_id().".dkim.".$$ ;  
-    my $temporary_file = $Conf{'tmpdir'}."/dkim.".$$ ;  
-    if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
-	return undef;
-    }
-    $dup_msg->print(\*MSGDUMP);
-    close(MSGDUMP);
-
-    unless (open (MSGDUMP , $temporary_file)){
-	&do_log('err', 'Can\'t read temporary file %s', $temporary_file);
-	return undef;
-    }
-
-    $dkim->load(\*MSGDUMP);
-
-    # or read an email and pass it into the signer, one line at a time
-#    while (<MSGDUMP>)
-#    {
-#	# remove local line terminators
-#	chomp;
-#	s/\015$//;
-#	
-#	# use SMTP line terminators
-#	$dkim->PRINT("$_\015\012");
-#    }
-
-    close (MSGDUMP);
-    unless ($dkim->CLOSE) {
-	&do_log('err', 'Cannot sign (DKIM) message');
-	return undef;
-    }
-
-    if ($main::options{'debug'}) {
-	do_log('debug',"temporary file is $temporary_file");
-    }else{
-	unlink ($temporary_file);
-    }
-    $dkim->signature->headerlist("Message-ID:Date:From:To:Subject");
-    $dkim->signature->prettify;
-    $in_msg->head->add('DKIM-Signature',$dkim->signature->as_string) ;
-    
-    
-    my $messageasstring = $in_msg->as_string ;
-
-    return $in_msg;
-}
-
-
-# input object msg and listname, output signed message object
 sub smime_sign {
     my $in_msg = shift;
     my $list = shift;
@@ -815,7 +727,7 @@ sub smime_sign {
 
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
+	&do_log('info', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
     $dup_msg->print(\*MSGDUMP);
@@ -826,10 +738,10 @@ sub smime_sign {
 	    do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
-    &do_log('debug', "$Conf{'openssl'} smime -sign -rand $Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file");    
-    unless (open (NEWMSG,"$Conf{'openssl'} smime -sign  -rand $Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
-    	&do_log('notice', 'Cannot sign message (open pipe)');
-	return undef;
+
+     &do_log('debug3', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
+     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
+    	&do_log('notice', 'Cannot sign message');
     }
 
     if ($Conf{'key_passwd'} ne '') {
@@ -849,10 +761,7 @@ sub smime_sign {
 	do_log('notice', 'Unable to parse message');
 	return undef;
     }
-    unless (close NEWMSG){
-	&do_log('notice', 'Cannot sign message (close pipe)');
-	return undef;
-    } 
+    close NEWMSG ;
 
     my $status = $?/256 ;
     unless ($status == 0) {
@@ -871,8 +780,6 @@ sub smime_sign {
     foreach my $header ($in_msg->head->tags) {
 	$signed_msg->head->add($header,$in_msg->head->get($header)) unless $predefined_headers->{$header} ;
     }
-    
-    my $messageasstring = $signed_msg->as_string ;
 
     return $signed_msg;
 }
@@ -3450,9 +3357,4 @@ sub CleanSpool {
     return 1;
 }
 
-
-# return a lockname that is a uniq id of a processus (hostname + pid) ; hostname (20) and pid(10) are truncated in order to store lockname in database varchar(30)
-sub get_lockname (){
-    return substr(substr(hostname(), 0, 20).$$,0,30);   
-}
 1;

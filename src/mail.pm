@@ -591,9 +591,13 @@ sub sending {
 	
 	*SMTP = \*TMP;
 
-    }else{
-	if (($sign_mode =~ /smime/)||($sign_mode =~ /dkim/)) {
+	
+    }else {
+
+
+
 	## SIGNING 
+	if ($sign_mode eq 'smime') {
 	    my $parser = new MIME::Parser;
 	    $parser->output_to_core(1);
 	    my $in_msg;
@@ -608,35 +612,22 @@ sub sending {
 		    return undef;
 		}
 	    }
-	    if ($sign_mode =~ /smime/) {	       		
-		unless ($signed_msg = &tools::smime_sign($in_msg,$listname, $robot)) {
-		    &do_log('notice', 'mail::sending : unable to sign (S/MIME) message from %s', $listname);
-		    return undef;
-		}
-	    }
-	    if ($sign_mode =~ /dkim/) {
-		my $dkim_msg;
-		if (ref($signed_msg)) {
-		    # message must be signed with s/mime AND dkim.
-		    $dkim_msg = &tools::dkim_sign($signed_msg,$listname, $robot);
-		}else{
-		    # message must be sugned only with dkim
-		    $dkim_msg = &tools::dkim_sign($in_msg,$listname, $robot) ;
-		}
-		unless ($dkim_msg){
-		    &do_log('notice', 'mail::sending : unable to sign (DKIM) message from %s', $listname);
-		    return undef;
-		}
-		$signed_msg = $dkim_msg;
+	    
+	    unless ($signed_msg = &tools::smime_sign($in_msg,$listname, $robot)) {
+		&do_log('notice', 'mail::sending : unable to sign message from %s', $listname);
+		return undef;
 	    }
 	}
+	
 	*SMTP = &smtpto($from, $rcpt, $robot);
     }
-    
+
+   
+
     ## WRITING MESSAGE
     if (ref($signed_msg)) {
 	$signed_msg->print(\*SMTP);
-	
+
     }elsif (ref($msg) eq "MIME::Entity") {
 	$msg->print(\*SMTP);
     

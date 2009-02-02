@@ -2919,12 +2919,7 @@ sub send_global_file {
     $data->{'return_path'} = &Conf::get_robot_conf($robot, 'request');
     $data->{'boundary'} = '----------=_'.&tools::get_message_id($robot) unless ($data->{'boundary'});
 
-    my $sign_mode;
-    if (&Conf::get_robot_conf($robot, 'dkim_key_file') && &Conf::get_robot_conf($robot, 'dkim_selector')){
-	$sign_mode = 'dkim';
-    }
-
-    unless (&mail::mail_file($filename, $who, $data, $robot, $sign_mode)) {
+    unless (&mail::mail_file($filename, $who, $data, $robot)) {
 	&do_log('err',"List::send_global_file, could not send template $filename to $who");
 	return undef;
     }
@@ -3056,11 +3051,9 @@ sub send_file {
     $data->{'list'}{'dir'} = $self->{'dir'};
 
     ## Sign mode
-    if ($Conf{'openssl'} && (-r $self->{'dir'}.'/cert.pem') && (-r $self->{'dir'}.'/private_key')) {
+    if ($Conf{'openssl'} &&
+	(-r $self->{'dir'}.'/cert.pem') && (-r $self->{'dir'}.'/private_key')) {
 	$sign_mode = 'smime';
-    }
-    if (&Conf::get_robot_conf($robot, 'dkim_key_file') && &Conf::get_robot_conf($robot, 'dkim_selector')){
-	$sign_mode .= 'dkim';
     }
 
     # if the list have it's private_key and cert sign the message
@@ -3082,6 +3075,7 @@ sub send_file {
 	&do_log('err',"List::send_file, could not send template $filename to $who");
 	return undef;
     }
+
     return 1;
 }
 
@@ -3520,7 +3514,7 @@ sub send_to_editor {
 
        foreach my $recipient (@rcpt) {
        if ($encrypt eq 'smime_crypted') {	       
-	   ## is $msg->body_as_string respect base64 number of char per line ??
+	   ## $msg->body_as_string respecte-t-il le Base64 ??
 	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
 	   unless ($cryptedmsg) {
 	       &do_log('notice', 'Failed encrypted message for moderator');
@@ -4655,7 +4649,7 @@ sub get_user_db {
 	$additional = ',' . $Conf{'db_additional_user_fields'};
     }
 
-    $statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, last_login_host_user AS last_login_host, bad_attempt_count_user AS bad_attempt_count FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+    $statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     
     push @sth_stack, $sth;
 
@@ -6239,8 +6233,7 @@ sub update_user_db {
 		      email => 'email_user',
 		      data => 'data_user',
 		      last_login_date => 'last_login_date_user',
-		      last_login_host => 'last_login_host_user',
-		      bad_attempt_count => 'bad_attempt_count_user'
+		      last_login_host => 'last_login_host_user'
 		      );
     
     ## Check database connection
