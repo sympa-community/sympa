@@ -56,7 +56,7 @@ my @valid_options = qw(
                        main_menu_custom_button_2_title main_menu_custom_button_2_url main_menu_custom_button_2_target 
                        main_menu_custom_button_3_title main_menu_custom_button_3_url main_menu_custom_button_3_target  
                        misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
-		       owner_priority pidfile pidfile_distribute pidfile_creation
+		       owner_priority pidfile pidfile_distribute pidfile_creation pidfile_bulk
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir logs_expiration_period lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
@@ -78,6 +78,7 @@ my @valid_options = qw(
 		       list_check_smtp list_check_suffixes filesystem_encoding spam_protection web_archive_spam_protection soap_url
 		       use_blacklist 
 		       antispam_feature antispam_tag_header_name antispam_tag_header_spam_regexp antispam_tag_header_ham_regexp
+		       dkim_key_file dkim_selector
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
@@ -116,6 +117,7 @@ my %Default_Conf =
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
      'pidfile_distribute' => '--PIDDIR--/sympa-distribute.pid',
+     'pidfile_bulk' => '--PIDDIR--/sympa-bulk.pid',
      'pidfile_creation' => '--PIDDIR--/sympa-creation.pid',
      'localedir'  => '--LOCALEDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
@@ -283,7 +285,9 @@ my %Default_Conf =
      'antispam_feature' => 'off',
      'antispam_tag_header_name' => 'X-Spam-Status',
      'antispam_tag_header_spam_regexp' => '^\s*Yes',
-     'antispam_tag_header_ham_regexp' => '^\s*No'
+     'antispam_tag_header_ham_regexp' => '^\s*No',
+     'dkim_key_file'  => '',
+     'dkim_selector' => '',
      );
    
 
@@ -631,6 +635,8 @@ sub load_robots {
 				  verp_rate => 1,
 				  loop_prevention_regex => 1,
 				  max_size => 1,
+				  dkim_key_file =>1,
+				  dkim_selector =>1,
 				  );
 
     ## Load wwsympa.conf
