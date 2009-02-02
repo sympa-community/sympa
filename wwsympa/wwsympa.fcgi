@@ -1,4 +1,4 @@
-#!--PERL-- --PERLOPT--
+#!--PERL-- -U
 
 # wwsympa.fcgi - This script provides the web interface to Sympa 
 # RCS Identication ; $Revision$ ; $Date$ 

@@ -121,16 +121,6 @@ SPOOLDIR='${prefix}/spool'
 AC_ARG_WITH(spooldir, [  --with-spooldir=DIR     spool directory is DIR  (default ${prefix}/spool)], [SPOOLDIR="$withval"])
 AC_SUBST(SPOOLDIR)
 
-## to run wwsympa.fcgi without setuidperl
-AC_ARG_ENABLE(
-    [secure],
-    AS_HELP_STRING(
-	[--enable-secure],
-	[install wwsympa to be run in a secure mode, without suidperl (default disabled)]
-    )
-)
-AC_SUBST(enable_secure)
-
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_MAKE_SET
