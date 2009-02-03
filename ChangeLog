@@ -1,4 +1,127 @@
 ------------------------------------------------------------------------
+r5481 | serge.aumont | 2009-02-03 10:42:53 +0100 (Tue, 03 Feb 2009) | 3 lines
+Changed paths:
+   M /trunk/src/etc/script/ldap_alias_manager.pl
+
+[bug] fix an old patch conflict...
+
+
+------------------------------------------------------------------------
+r5480 | david.verdin | 2009-02-03 10:10:10 +0100 (Tue, 03 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/soap/sympasoap.pm
+   M /trunk/src/Commands.pm
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] The 'inclusion_notification_feature' parameter was tested for add and del commands. This was wrong because users can always specify the "quiet" option if they like. Additionnally, the test presented errors in some occurences.
+
+------------------------------------------------------------------------
+r5475 | david.verdin | 2009-02-02 17:49:52 +0100 (Mon, 02 Feb 2009) | 1 line
+Changed paths:
+   D /trunk/src/Bulk.pm
+   M /trunk/src/Conf.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Message.pm
+   M /trunk/src/Scenario.pm
+   D /trunk/src/bulk.pl
+   M /trunk/src/mail.pm
+   M /trunk/src/report.pm
+   M /trunk/src/sympa.pl
+   M /trunk/src/task_manager.pl
+   M /trunk/src/tools.pl
+
+[-bug] Undoing changes in revision 5474.
+------------------------------------------------------------------------
+r5474 | david.verdin | 2009-02-02 17:24:57 +0100 (Mon, 02 Feb 2009) | 3 lines
+Changed paths:
+   M /branches/sympa-bulk/check_perl_modules.pl
+   M /branches/sympa-bulk/soap/sympasoap.pm
+   M /branches/sympa-bulk/web_tt2/css.tt2
+   M /branches/sympa-bulk/web_tt2/javascript.tt2
+   M /branches/sympa-bulk/web_tt2/main.tt2
+   M /branches/sympa-bulk/web_tt2/renewpasswd.tt2
+   M /branches/sympa-bulk/web_tt2/skinsedit.tt2
+   M /branches/sympa-bulk/wwsympa/Auth.pm
+   M /branches/sympa-bulk/wwsympa/SympaSession.pm
+   M /branches/sympa-bulk/wwsympa/wwsympa.fcgi
+   A /trunk/src/Bulk.pm
+   M /trunk/src/Conf.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Message.pm
+   M /trunk/src/Scenario.pm
+   A /trunk/src/bulk.pl
+   M /trunk/src/mail.pm
+   M /trunk/src/report.pm
+   M /trunk/src/sympa.pl
+   M /trunk/src/task_manager.pl
+   M /trunk/src/tools.pl
+
+[feature] Committing all the work of Serge about the new bulk mailer.
+
+
+------------------------------------------------------------------------
+r5473 | david.verdin | 2009-02-02 16:53:22 +0100 (Mon, 02 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/Makefile.am
+   M /trunk/configure.ac
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[change] removinf the --enable-secure option. wwsympa.fcgi is always run with th '-U' option.
+
+------------------------------------------------------------------------
+r5471 | olivier.salaun | 2009-01-30 11:30:54 +0100 (Fri, 30 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/soap/sampleClient.php
+
+[-change] add information about the password used
+
+------------------------------------------------------------------------
+r5470 | olivier.salaun | 2009-01-30 11:10:53 +0100 (Fri, 30 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/soap/sampleClient.php
+
+[change] now using the standard php-soap library instead of nusoap
+
+------------------------------------------------------------------------
+r5469 | david.verdin | 2009-01-29 17:24:15 +0100 (Thu, 29 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/css.tt2
+   M /trunk/web_tt2/title.tt2
+
+[change] Make the logo of the web site floating, thus reducing the header's height, even with a big logo. The left menus are pushed down if the logo is really *too* big.
+
+------------------------------------------------------------------------
+r5467 | david.verdin | 2009-01-29 15:05:37 +0100 (Thu, 29 Jan 2009) | 2 lines
+Changed paths:
+   A /trunk/check_perl_modules.pl (from /trunk/check_perl_modules.pl:5465)
+   A /trunk/subst.pl (from /trunk/subst.pl:5465)
+
+[-bug] Restoring dumb deletion.
+
+------------------------------------------------------------------------
+r5466 | david.verdin | 2009-01-29 15:03:55 +0100 (Thu, 29 Jan 2009) | 2 lines
+Changed paths:
+   D /trunk/check_perl_modules.pl
+   D /trunk/subst.pl
+
+[-bug] Dumb file deletion.
+
+------------------------------------------------------------------------
+r5460 | david.verdin | 2009-01-28 16:55:07 +0100 (Wed, 28 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/po/fr.po
+
+[-feature] Committing latest translations.
+
+------------------------------------------------------------------------
+r5458 | david.verdin | 2009-01-28 16:43:18 +0100 (Wed, 28 Jan 2009) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/configure.ac
+
+[-feature] Preparing version 6.0a.7
+
+------------------------------------------------------------------------
 r5457 | david.verdin | 2009-01-28 16:22:08 +0100 (Wed, 28 Jan 2009) | 1 line
 Changed paths:
    M /trunk/po/af.po
