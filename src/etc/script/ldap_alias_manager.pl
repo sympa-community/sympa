@@ -109,54 +109,43 @@ print STDERR "Can't bind to LDAP server\n";
 exit(14);
 }
 
-<<<<<<< .mine
-    foreach my $alias (@aliases) {
-	next if ($alias =~ /^\#/);
-	next if ($alias =~ /^\s*$/);
-	
-	$alias =~ /^([^:]+):\s*(\".*\")$/;
-	my $alias_value = $1;
-	my $command_value = $2;
-=======
 foreach my $alias (@aliases) {
-if ($alias =~ /^\#/) {
-	next;
-}
->>>>>>> .r5423
-
-$alias =~ /^([^:]+):\s*(\".*\")$/;
-my $alias_value = $1;
-my $command_value = $2;
-
-if ($command_value =~ m/bouncequeue/) {
+    next if ($alias =~ /^\#/);
+    next if ($alias =~ /^\s*$/);
+    
+    $alias =~ /^([^:]+):\s*(\".*\")$/;
+    my $alias_value = $1;
+    my $command_value = $2;
+    
+    if ($command_value =~ m/bouncequeue/) {
 	$command_value = "sympabounce";
-} else{
+    } else{
 	$command_value = "sympa";
-} 
+    } 
+    
+    # We substitute all occurences of + by - for the rest of the attributes, including the dn.
+    # The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
+    $alias_value =~ s/\+/\-/g;
+    
+    my $ldif_dump;
+    $data{'list'}{'alias'} = $alias_value;
+    $data{'list'}{'command'} = $command_value;
+    &tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
+    my @attribute_lines = split /\n/, $ldif_dump;
 
-# We substitute all occurences of + by - for the rest of the attributes, including the dn.
-# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
-$alias_value =~ s/\+/\-/g;
-
-my $ldif_dump;
-$data{'list'}{'alias'} = $alias_value;
-$data{'list'}{'command'} = $command_value;
-&tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
-my @attribute_lines = split /\n/, $ldif_dump;
-
-# We create the new LDAP entry.
-my %ldap_attributes = ();
-my $entry = Net::LDAP::Entry->new;
-foreach my $line (@attribute_lines) {
+    # We create the new LDAP entry.
+    my %ldap_attributes = ();
+    my $entry = Net::LDAP::Entry->new;
+    foreach my $line (@attribute_lines) {
 	next if ($line =~ /^\s*$/);
-	next if ($line =~ /^\s*#/);
+	next if ($line =~ /^\s*\#/);
 	$line =~ /^([^:]+):\s*(.+)\s*$/;
 	if ($1 eq 'dn') {
 		$entry->dn($2);
 	} else {
 		push @{$ldap_attributes{$1}}, $2;
 	}
-}
+    }
 
 	# We add the the attributes
 	foreach my $hash_key (keys %ldap_attributes) {
@@ -176,9 +165,9 @@ foreach my $line (@attribute_lines) {
 		}
 	}
 	$entry = undef;
-    } # end foreach aliases
+} # end foreach aliases
 
-    &finalize_ldap;
+&finalize_ldap;
 
 } # end if add
 elsif ($operation eq 'del') {
