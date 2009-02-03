@@ -4820,20 +4820,16 @@ sub do_subrequest {
 	    if &List::is_user_db($in{'email'});
 	
 	## Need to send a password by email
-	if ((!&List::is_user_db($in{'email'}) || !$user->{'password'} )) {
-	    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
-	    $param->{'login_error'}='ticket_sent';
-	    unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
-		&wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
-		$param->{'login_error'}='unable_to_send_ticket';
-	    }
-	    # &do_requestpasswd();
-	    $param->{'status'} = 'notauth_passwordsent';
-	    
-	    return 1;
+	$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
+	$param->{'login_error'}='ticket_sent';
+	unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
+	  &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
+	  $param->{'login_error'}='unable_to_send_ticket';
 	}
-	$param->{'email'} = $in{'email'};
-	$param->{'status'} = 'notauth';
+	# &do_requestpasswd();
+	$param->{'status'} = 'notauth_passwordsent';
+	
+	return 1;
     }
     
     return 1;
