@@ -5864,7 +5864,7 @@ sub do_skinsedit {
 	     push @added_users, $email; ## List only email addresses ; used later to remove pending subrequests
 	 }
 
-	 unless ($in{'quiet'} || $add_is =~ /quiet/i || $list->{'admin'}{'inclusion_notification_feature'} ne 'on') {
+	 unless ($in{'quiet'} || $add_is =~ /quiet/i) {
 	     unless ($list->send_file('welcome', $email, $robot,{})) {
 		 &wwslog('err',"Unable to send template 'welcome' to $email");
 	     }
@@ -5986,7 +5986,7 @@ sub do_skinsedit {
 
 	 &wwslog('info','do_del: subscriber %s deleted from list %s', $email, $param->{'list'});
 
-	 unless ($in{'quiet'} || $list->{'admin'}{'inclusion_notification_feature'} ne 'on') {
+	 unless ($in{'quiet'}) {
 	     unless ($list->send_file('removed', $email, $robot,{})) {
 		 &wwslog('notice',"Unable to send template 'removed' to $email");
 	     }

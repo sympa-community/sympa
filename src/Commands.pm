@@ -1303,7 +1303,7 @@ sub add {
 	}
 	
 	## Now send the welcome file to the user if it exists and notification is supposed to be sent.
-	unless ($quiet || $action =~ /quiet/i || $list->{'admin'}{'inclusion_notification_feature'} ne 'on') {
+	unless ($quiet || $action =~ /quiet/i) {
 	    unless ($list->send_file('welcome', $email, $robot,{})) {
 		&do_log('notice',"Unable to send template 'welcome' to $email");
 	    }
@@ -1574,7 +1574,7 @@ sub remind {
     }
 
 
-    if ($action =~ /reject/i || $list->{'admin'}{'inclusion_notification_feature'} ne 'on') {
+    if ($action =~ /reject/i || $list->{'admin'}{'inclusion_notification_feature'} eq 'off') {
 	&do_log ('info',"Remind for list $listname from $sender refused");
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
@@ -1837,7 +1837,7 @@ sub del {
 
 	## Send a notice to the removed user, unless the owner indicated
 	## quiet del.
-	unless ($quiet || $action =~ /quiet/i || $list->{'admin'}{'inclusion_notification_feature'} ne 'on') {
+	unless ($quiet || $action =~ /quiet/i) {
 	    unless ($list->send_file('removed', $who, $robot, {})) {
 		&do_log('notice',"Unable to send template 'removed' to $who");
 	    }
