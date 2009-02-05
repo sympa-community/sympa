@@ -735,8 +735,20 @@ sub probe_db {
 							     'date_one_time_ticket' => 'int(11)',
 							     'data_one_time_ticket' => 'varchar(200)',
 							     'remote_addr_one_time_ticket' => 'varchar(60)',
-							     'status_one_time_ticket' => 'varchar(60)'
-						  },				 
+							     'status_one_time_ticket' => 'varchar(60)'},
+				 'bulkmailer_table' => {'messagekey_bulkmailer' => 'varchar(80)',
+							'packetid_bulkmailer' => 'varchar(33)',
+							'receipients_bulkmailer' => 'text',
+							'returnpath_bulkmailer' => 'varchar(100)',
+							'robot_bulkmailer' => 'varchar(80)',
+							'listname_bulkmailer' => 'varchar(50)',
+							'verp_bulkmailer' => 'int(1)',
+							'priority_bulkmailer' => 'smallint(10)',
+							'date_bulkmailer' => 'int(11)',
+							'lock_bulkmailer' => 'varchar(30)'},
+				 'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
+						       'message_bulkspool' => 'longtext',
+						       'lock_bulkspool' => 'int(1)',},
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
 						   'gecos_user' => 'varchar(150)',
@@ -808,9 +820,21 @@ sub probe_db {
 						       'date_one_time_ticket' => 'integer',
 						       'data_one_time_ticket' => 'varchar(200)',
 						       'remote_addr_one_time_ticket' => 'varchar(60)',
-						       'status_one_time_ticket' => 'varchar(60)'						  
-						  },				 
-
+						       'status_one_time_ticket' => 'varchar(60)',				  
+							 },				 
+				  'bulkmailer_table' => {'messagekey_bulkmailer' => 'varchar(80)',
+							 'packetid_bulkmailer' => 'varchar(33)',
+							 'receipients_bulkmailer' => 'text',
+							 'returnpath_bulkmailer' => 'varchar(100)',
+							 'robot_bulkmailer' => 'varchar(80)',
+							 'listname_bulkmailer' => 'varchar(50)',
+							 'verp_bulkmailer' => 'integer',
+							 'priority_bulkmailer' => 'integer',
+							 'date_bulkmailer' => 'integer',
+							 'lock_bulkmailer' => 'varchar(30)'},
+				  'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
+							'message_bulkspool' => 'text',
+							'lock_bulkspool' => 'integer',},
 			      },
 		     );
     
@@ -835,6 +859,9 @@ sub probe_db {
 		    'id_session' => 1,
 		    'start_date_session' => 1,
 		    'date_session' => 1,
+		    'messagekey_bulkmailer' => 1,
+		    'packetid_bulkmailer' => 1,
+		    'messagekey_bulkspool' => 1,
 		    );
     
     my %primary = ('user_table' => ['email_user'],
@@ -843,7 +870,9 @@ sub probe_db {
 		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
 		   'logs_table' => ['id_logs'],
 		   'session_table' => ['id_session'],
-		   'one_time_ticket_table' => ['ticket_one_time_ticket']
+		   'one_time_ticket_table' => ['ticket_one_time_ticket'],
+		   'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
+		   'bulkspool_table' => ['messagekey_bulkspool'],
 		   );
 
     ## List the required INDEXES

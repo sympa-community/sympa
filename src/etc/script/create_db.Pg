@@ -120,3 +120,29 @@ CREATE TABLE one_time_ticket_table (
 	CONSTRAINT ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket)
 );
 CREATE	INDEX one_time_ticket_idx ON one_time_ticket_table(ticket_one_time_ticket);
+
+DROP TABLE bulkmailer_table;
+CREATE TABLE bulkmailer_table(
+  	messagekey_bulkmailer  	varchar(80),
+	packetid_bulkmailer 	varchar(33),
+	receipients_bulkmailer 	text,
+	returnpath_bulkmailer 	varchar(100),
+	robot_bulkmailer 	varchar(80),
+	listname_bulkmailer 	varchar(50),
+	verp_bulkmailer 	smallint,
+	priority_bulkmailer 	int4,
+	date_bulkmailer 	int4,
+	lock_bulkmailer 	varchar(30),
+	constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
+);
+CREATE INDEX  messagekey_bulkmailer_idx ON bulkmailer_table(messagekey_bulkmailer);
+CREATE INDEX  packetid_bulkmailer_idx ON bulkmailer_table(packetid_bulkmailer);
+
+DROP TABLE bulkspool_table;
+CREATE TABLE bulkspool_table (
+  	messagekey_bulkspool  	varchar(33),
+	message_bulkspool 	text,
+	lock_bulkspool 	smallint,
+	constraint ind_bulkspool primary key (messagekey_bulkspool)
+)
+CREATE INDEX messagekey_bulkspool_idx ON bulkspool_table(messagekey_bulkspool);

@@ -93,7 +93,7 @@ CREATE TABLE session_table (
 CREATE INDEX session_idx ON session_table(id_session);
 
 CREATE TABLE one_time_ticket_table (
-	ticket_one_time_ticket		varchar(30),
+	ticket_one_time_ticket		varchar(30) NOT NULL,
 	robot_one_time_ticket		varchar(80),
 	email_one_time_ticket		varchar(100),
 	date_one_time_ticket		integer,
@@ -103,3 +103,27 @@ CREATE TABLE one_time_ticket_table (
 	PRIMARY KEY (ticket_one_time_ticket)
 );
 CREATE	INDEX one_time_ticket_idx ON one_time_ticket_table_table(ticket_one_time_ticket);
+
+CREATE TABLE bulkmailer_table(
+  	messagekey_bulkmailer  	varchar(80)) NOT NULL,
+	packetid_bulkmailer 	varchar(33)) NOT NULL,
+	receipients_bulkmailer 	text,
+	returnpath_bulkmailer 	varchar(100),
+	robot_bulkmailer 	varchar(80),
+	listname_bulkmailer 	varchar(50),
+	verp_bulkmailer 	integer,
+	priority_bulkmailer 	integer,
+	date_bulkmailer 	integer,
+	lock_bulkmailer 	varchar(30),
+	constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
+);
+CREATE INDEX  messagekey_bulkmailer_idx ON bulkmailer_table(messagekey_bulkmailer);
+CREATE INDEX  packetid_bulkmailer_idx ON bulkmailer_table(packetid_bulkmailer);
+
+CREATE TABLE bulkspool_table (
+  	messagekey_bulkspool  	varchar(33) NOT NULL,
+	message_bulkspool 	text,
+	lock_bulkspool 	integer,
+	constraint ind_bulkspool primary key (messagekey_bulkspool)
+);
+CREATE INDEX messagekey_bulkspool_idx ON bulkspool_table(messagekey_bulkspool);

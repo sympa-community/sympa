@@ -151,10 +151,39 @@ CREATE TABLE one_time_ticket_table (
 	date_one_time_ticket		int(11),
 	data_one_time_ticket		varchar(200),
 	remote_addr_one_time_ticket	varchar(60),
-	status_one_time_ticket		varchar(60)
+	status_one_time_ticket		varchar(60),
 	constraint ind_one_time_ticket primary key (ticket_one_time_ticket)
 )
 go
 
 create index ticket_one_time_ticket_fk on one_time_ticket_table (ticket_one_time_ticket)
+go
+
+CREATE TABLE bulkmailer_table (
+  	messagekey_bulkmailer  	varchar(80),
+	packetid_bulkmailer 	varchar(33),
+	receipients_bulkmailer 	text,
+	returnpath_bulkmailer 	varchar(100),
+	robot_bulkmailer 	varchar(80),
+	listname_bulkmailer 	varchar(50),
+	verp_bulkmailer 	int(1),
+	priority_bulkmailer 	int(10),
+	date_bulkmailer 	int(11),
+	lock_bulkmailer 	varchar(30),
+	constraint ind_bulkmailer primary key (messagekey_bulkmailer, packetid_bulkmailer)
+)
+
+create index messagekey_bulkmailer_fk on bulkmailer_table (messagekey_bulkmailer)
+go
+create index packetid_bulkmailer_fk on bulkmailer_table (packetid_bulkmailer)
+go
+
+CREATE TABLE bulkspool_table (
+  	messagekey_bulkspool  	varchar(33),
+	message_bulkspool 	text,
+	lock_bulkspool 	int(1),
+	constraint ind_bulkspool primary key (messagekey_bulkspool)
+)
+
+create index messagekey_bulkspool_fk on bulkspool_table (messagekey_bulkspool)
 go

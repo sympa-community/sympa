@@ -106,12 +106,33 @@ CREATE TABLE one_time_ticket_table (
 	ticket_one_time_ticket		varchar2(30),
 	robot_one_time_ticket		varchar2(80),
 	email_one_time_ticket		varchar2(100),
-	dat_one_time_ticket		number,
+	date_one_time_ticket		number,
 	data_one_time_ticket		varchar2(200),
 	remote_addr_one_time_ticket	varchar2(60),
 	status_one_time_ticket	varchar2(60),
 	CONSTRAINT ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket)
 );
 
+
+CREATE TABLE bulkmailer_table(
+  	messagekey_bulkmailer  	varchar2(80)) NOT NULL,
+	packetid_bulkmailer 	varchar2(33)) NOT NULL,
+	receipients_bulkmailer 	long,
+	returnpath_bulkmailer 	varchar2(100),
+	robot_bulkmailer 	varchar2(80),
+	listname_bulkmailer 	varchar2(50),
+	verp_bulkmailer 	number,
+	priority_bulkmailer 	number,
+	date_bulkmailer 	number,
+	lock_bulkmailer 	varchar2(30),
+	CONSTRAINT ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
+);
+
+CREATE TABLE bulkspool_table (
+  	messagekey_bulkspool  	varchar2(33) NOT NULL,
+	message_bulkspool 	long,
+	lock_bulkspool 	number,
+	CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool)
+)
 
 !
