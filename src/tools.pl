@@ -26,6 +26,7 @@ package tools;
 use strict;
 
 use POSIX;
+use Sys::Hostname;
 use Mail::Internet;
 use Mail::Header;
 use Conf;
@@ -738,10 +739,10 @@ sub smime_sign {
 	    do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
-
-     &do_log('debug3', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
-     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
-    	&do_log('notice', 'Cannot sign message');
+    &do_log('debug', "$Conf{'openssl'} smime -sign -rand $Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file");    
+    unless (open (NEWMSG,"$Conf{'openssl'} smime -sign  -rand $Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
+    	&do_log('notice', 'Cannot sign message (open pipe)');
+	return undef;
     }
 
     if ($Conf{'key_passwd'} ne '') {
@@ -761,7 +762,10 @@ sub smime_sign {
 	do_log('notice', 'Unable to parse message');
 	return undef;
     }
-    close NEWMSG ;
+    unless (close NEWMSG){
+	&do_log('notice', 'Cannot sign message (close pipe)');
+	return undef;
+    } 
 
     my $status = $?/256 ;
     unless ($status == 0) {
@@ -780,6 +784,8 @@ sub smime_sign {
     foreach my $header ($in_msg->head->tags) {
 	$signed_msg->head->add($header,$in_msg->head->get($header)) unless $predefined_headers->{$header} ;
     }
+    
+    my $messageasstring = $signed_msg->as_string ;
 
     return $signed_msg;
 }
@@ -3357,4 +3363,9 @@ sub CleanSpool {
     return 1;
 }
 
+
+# return a lockname that is a uniq id of a processus (hostname + pid) ; hostname (20) and pid(10) are truncated in order to store lockname in database varchar(30)
+sub get_lockname (){
+    return substr(substr(hostname(), 0, 20).$$,0,30);   
+}
 1;

@@ -56,11 +56,11 @@ my @valid_options = qw(
                        main_menu_custom_button_2_title main_menu_custom_button_2_url main_menu_custom_button_2_target 
                        main_menu_custom_button_3_title main_menu_custom_button_3_url main_menu_custom_button_3_target  
                        misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
-		       owner_priority pidfile pidfile_distribute pidfile_creation
+		       owner_priority pidfile pidfile_distribute pidfile_creation pidfile_bulk
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest queueautomatic
 		       queuemod queuetopic queuesubscribe queueoutgoing tmpdir logs_expiration_period lock_method
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor loop_prevention_regex
-		       purge_user_table_task purge_logs_table_task 
+		       purge_user_table_task purge_tables_task purge_logs_table_task 
 		       purge_session_table_task session_table_ttl anonymous_session_table_ttl 
                        purge_one_time_ticket_table_task one_time_ticket_table_ttl
                        purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
@@ -116,6 +116,7 @@ my %Default_Conf =
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
      'pidfile_distribute' => '--PIDDIR--/sympa-distribute.pid',
+     'pidfile_bulk' => '--PIDDIR--/sympa-bulk.pid',
      'pidfile_creation' => '--PIDDIR--/sympa-creation.pid',
      'localedir'  => '--LOCALEDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
@@ -228,6 +229,7 @@ my %Default_Conf =
      'list_check_suffixes' => 'request,owner,editor,unsubscribe,subscribe',
      'expire_bounce_task' => 'daily',
      'purge_user_table_task' => 'monthly',
+     'purge_tables_task' => 'daily',
      'purge_logs_table_task' => 'daily',
      'logs_expiration_period' => 3, #3 months
      'purge_session_table_task' => 'daily',

@@ -749,7 +749,6 @@ sub reject_report_web {
 	$listname = $list->{'name'};
     }
 
-
     ## Notify listmaster for internal or system errors
     if ($type eq 'intern'|| $type eq 'system') {
 	if ($robot){

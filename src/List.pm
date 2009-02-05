@@ -3514,7 +3514,7 @@ sub send_to_editor {
 
        foreach my $recipient (@rcpt) {
        if ($encrypt eq 'smime_crypted') {	       
-	   ## $msg->body_as_string respecte-t-il le Base64 ??
+	   ## is $msg->body_as_string respect base64 number of char per line ??
 	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
 	   unless ($cryptedmsg) {
 	       &do_log('notice', 'Failed encrypted message for moderator');

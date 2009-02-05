@@ -131,7 +131,7 @@ sub new {
     if (ref($file) =~ /MIME::Entity/i) {
 	$message->{'msg'} = $file;
 	$message->{'altered'} = '_ALTERED';
-	
+
 	## Bless Message object
 	bless $message, $pkg;
 	

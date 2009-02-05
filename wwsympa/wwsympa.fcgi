@@ -793,27 +793,27 @@ my %in_regexp = (
 		 'date_to' => '[\d\/]+',
 		 'ip' => &tools::get_regexp('host'),
          
-                ## colors
-                'operation_test' => '.*',
-                'operation_reset' => '.*',
-                'operation_install' => '.*',
-                'custom_color_value' => '\#.*',
-                'custom_color_0' => '.*',
-                'custom_color_1' => '.*',
-                'custom_color_2' => '.*',
-                'custom_color_3' => '.*',
-                'custom_color_4' => '.*',
-                'custom_color_5' => '.*',
-                'custom_color_6' => '.*',
-                'custom_color_7' => '.*',
-                'custom_color_8' => '.*',
-                'custom_color_9' => '.*',
-                'custom_color_10' => '.*',
-                'custom_color_11' => '.*',
-                'custom_color_12' => '.*',
-                'custom_color_13' => '.*',
-                'custom_color_14' => '.*',
-                'custom_color_15' => '.*',
+		 ## colors
+		 'sub_action_test' => '.*',
+		 'sub_action_reset' => '.*',
+		 'sub_action_install' => '.*',
+		 'custom_color_value' => '\#.*',
+		 'custom_color_0' => '.*',
+		 'custom_color_1' => '.*',
+		 'custom_color_2' => '.*',
+		 'custom_color_3' => '.*',
+		 'custom_color_4' => '.*',
+		 'custom_color_5' => '.*',
+		 'custom_color_6' => '.*',
+		 'custom_color_7' => '.*',
+		 'custom_color_8' => '.*',
+		 'custom_color_9' => '.*',
+		 'custom_color_10' => '.*',
+		 'custom_color_11' => '.*',
+		 'custom_color_12' => '.*',
+		 'custom_color_13' => '.*',
+		 'custom_color_14' => '.*',
+		 'custom_color_15' => '.*',
 
                  ## Custom attribute
                  'custom_attribute' => '.*',
@@ -999,6 +999,7 @@ my $birthday = time ;
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
+     
 
      foreach my $auth (keys  %{$Conf{'cas_id'}{$robot}}) {
 	 &do_log('debug2', "cas authentication service $auth");
@@ -1076,8 +1077,7 @@ my $birthday = time ;
      $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
      ## If CSS file not found, let Sympa do the job...
      unless (-f $param->{'css_path'}.'/style.css') {
- 	 &wwslog('err','Could not find CSS file %s, using default CSS', $param->{'css_path'}.'/style.css') 
-	     if ($param->{'css_path'}); ## Notice only if path was defined
+ 	 &wwslog('err','Could not find CSS file %s, using default CSS', $param->{'css_path'}.'/style.css') if ($param->{'css_path'}); ## Notice only if path was defined
  	 $param->{'css_url'} = $param->{'base_url'}.$param->{'path_cgi'}.'/css';
      }
      
@@ -1099,12 +1099,12 @@ my $birthday = time ;
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
      $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
-     
-     if ($session->{'custom_color'} == 1) {     
+
+     if ($session->{'custom_color'} == 1) {	 
 	 foreach my $i (0 .. 15){
 	     $param->{'color_'.$i} = $session->{'color_'.$i} if ($session->{'color_'.$i});
 	 }
-    }
+     }
 
      ## RSS does not require user authentication
      unless ($rss) {
@@ -5613,7 +5613,7 @@ sub do_skinsedit {
 	
     $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($css_url =~ /\.css$/);
   
-    if(($in{'editcolors'})&&($in{'operation_reset'})){
+    if(($in{'editcolors'})&&($in{'sub_action_reset'})){
 	undef $session->{'custom_css'};	
 	undef $param ->{'session'}{'custom_css'};	 
 	undef $param->{'custom_css'};	
@@ -5624,7 +5624,8 @@ sub do_skinsedit {
 	}
     }
 
-    if(($in{'editcolors'})&&($in{'operation_test'})){
+    if(($in{'editcolors'})&&($in{'sub_action_test'})){
+
 	return unless ($in{'custom_color_number'} =~ /color_/);
 	$param->{'custom_color_number'} = $in{'custom_color_number'};
 	$param->{'custom_color_value'} = $in{'custom_color_value'};
@@ -5642,7 +5643,7 @@ sub do_skinsedit {
 	}
 
     }
-    if (($in{'operation_install'})||($in{'installcss'})) {
+    if (($in{'sub_action_install'})||($in{'installcss'})) {
 
 	my $lang = &Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,'');
@@ -5653,7 +5654,7 @@ sub do_skinsedit {
 	    $param->{'css'} = $css;
 	    my $css_file;
 	    # if user use editcolor form we must generate a static CSS that used custom colors.
-	    if($in{'operation_test'}){
+	    if($in{'sub_action_test'}){
 		$css_file = "$dir/$param->{'user'}{'email'}.$css";
 	    }else{   
 		$css_file = "$dir/$css";
@@ -5677,7 +5678,7 @@ sub do_skinsedit {
 		}
 	    }
 
-	    if ($in{'operation_install'}) {
+	    if ($in{'sub_action_install'}) {
 		foreach my $colornumber (0..15){
 		    $param->{'color_'.$colornumber} = $session->{'color_'.$colornumber} if ($session->{'color_'.$colornumber});
 		}
@@ -8026,6 +8027,15 @@ Creates a list using a list template
 
 
      ## create liste
+     if (my $testlist = &List::new($in{'listname'})){
+	  &report::reject_report_web('user','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	  &wwslog('info','do_create_list: requested list %s already exist (from %s)',$in{'listname'},$param->{'user'}{'email'});
+	  &web_db_log({'parameters' => $in{'listname'},
+		       'list' => $in{'listname'},
+		       'status' => 'error',
+		       'error_type' => 'user'});
+	  return undef
+      }
      my $resul = &admin::create_list_old($parameters,$in{'template'},$robot,"web");
      unless(defined $resul) {
 	 &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -15933,6 +15943,7 @@ sub do_arc_delete {
     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'list'}",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
     return 'arc_manage';
 }
+
 
 sub do_css {
     &wwslog('debug', "do_css ($in{'file'})");		
