@@ -8024,8 +8024,9 @@ Creates a list using a list template
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
      $parameters->{'description'} = $in{'info'};
-
-
+     foreach my $input (keys \%in) {
+	 $parameters->{'custom_input'}{$input} = $in{$input};
+     }
      ## create liste
      if (my $testlist = &List::new($in{'listname'})){
 	  &report::reject_report_web('user','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
