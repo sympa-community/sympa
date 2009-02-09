@@ -1574,7 +1574,7 @@ sub remind {
     }
 
 
-    if ($action =~ /reject/i || $list->{'admin'}{'inclusion_notification_feature'} eq 'off') {
+    if ($action =~ /reject/i) {
 	&do_log ('info',"Remind for list $listname from $sender refused");
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
