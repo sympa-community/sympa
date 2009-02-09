@@ -8024,7 +8024,7 @@ Creates a list using a list template
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
      $parameters->{'description'} = $in{'info'};
-     foreach my $input (keys \%in) {
+     foreach my $input (keys %in) {
 	 $parameters->{'custom_input'}{$input} = $in{$input};
      }
      ## create liste
