@@ -123,7 +123,8 @@ CREATE TABLE bulkmailer_table(
 	listname_bulkmailer 	varchar2(50),
 	verp_bulkmailer 	number,
 	priority_bulkmailer 	number,
-	date_bulkmailer 	number,
+	reception_date_bulkmailer 	number,
+	delivery_date_bulkmailer 	number,
 	lock_bulkmailer 	varchar2(30),
 	CONSTRAINT ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
 );

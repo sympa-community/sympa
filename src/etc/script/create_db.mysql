@@ -116,7 +116,8 @@ CREATE TABLE bulkmailer_table (
 	listname_bulkmailer varchar(50) default NULL,
 	verp_bulkmailer int(1) NOT NULL,
 	priority_bulkmailer smallint(10) NOT NULL,
-	date_bulkmailer int(11) NOT NULL,
+	reception_date_bulkmailer int(11) NOT NULL,
+	delivery_date_bulkmailer int(11) NOT NULL,
 	lock_bulkmailer varchar(30) default NULL,
 	PRIMARY KEY (messagekey_bulkmailer,packetid_bulkmailer)
 );

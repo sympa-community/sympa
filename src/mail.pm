@@ -270,14 +270,6 @@ sub mail_file {
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
     
     ## SENDING
-    #my $rcpts ;
-    #if (ref($rcpt)) {
-    #	$rcpts = $rcpt;
-    #} else {
-    #	$rcpts = \$rcpt;
-    #}
-    # my @rcpts; push @rcpts, $rcpt;
-
     unless (defined &sending('msg' => $message,
 			     'rcpt' => $rcpt,
 			     'from' => $data->{'return_path'},
@@ -400,6 +392,7 @@ sub mail_message {
 				'rcpt' => \@sendtobypacket,
 				'listname' => $list->{'name'},
 				'priority' => $list->{'priority'},
+				'delivery_date' => $list->get_next_delivery_date,
 				'robot' => $robot,
 				'encrypt' => $message->{'smime_crypted'},
 				'use_bulk' => 1,
@@ -515,8 +508,11 @@ sub sendto {
     my $encrypt = $params{'encrypt'};
     my $verp = $params{'verp'};
     my $use_bulk = $params{'use_bulk'};
-
+    
     do_log('debug2', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s', $from, $listname, $encrypt, $verp);
+    
+    my $delivery_date =  $params{'delivery_date'};
+    $delivery_date = time() unless $delivery_date; # if not specified, delivery tile is right now (used for sympa messages etc)
 
     my $msg;
 
@@ -537,6 +533,7 @@ sub sendto {
 			 'listname' => $listname,
 			 'robot' => $robot,
 			 'priority' => $priority,
+			 'delivery_date' =>  $delivery_date,
 			 'use_bulk' => $use_bulk );
 	    }    
 	}
@@ -550,6 +547,7 @@ sub sendto {
 				  'listname' => $listname,
 				  'robot' => $robot,
 				  'priority' => $priority,
+				  'delivery_date' =>  $delivery_date,
 				  'verp' => $verp,
 				  'use_bulk' => $use_bulk);
 	    return $result;
@@ -590,7 +588,9 @@ sub sending {
     my $listname = $params{'listname'};
     my $sign_mode = $params{'sign_mode'};
     my $sympa_email =  $params{'sympa_email'};
-    my $priority =  $params{'priorityl'};
+    my $priority =  $params{'priority'};
+    my $delivery_date = $params{'delivery_date'};
+    $delivery_date = time() unless ($delivery_date); 
     my $verp  =  $params{'verp'};
     my $use_bulk = $params{'use_bulk'};
 
@@ -640,6 +640,7 @@ sub sending {
 		     'robot' => $robot,
 		     'listname' => $listname,
 		     'priority' => $priority,
+		     'delivery_date' => $delivery_date,
 		     'verp' => $verpfeature);
     }elsif(defined $send_spool) { # in context wwsympa.fcgi do note send message to reciepients but copy it to standard spool 
 	$sympa_email = &Conf::get_robot_conf($robot, 'sympa');	

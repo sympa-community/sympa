@@ -73,18 +73,16 @@ my $message_fingerprint;
 # Next lock the packetb to prevent multiple proccessing of a single packet 
 
 sub next {
-
     &do_log('debug', 'Bulk::next');
-
 
     $dbh = &List::db_get_handler();
 
     # lock next packet
     my $lock = &tools::get_lockname();
-    my $order = 'ORDER BY priority_bulkmailer DESC, date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
-	my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL %s",$dbh->quote($lock), $order ;
+    my $order = 'ORDER BY priority_bulkmailer DESC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
+    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %s %s",$dbh->quote($lock), time(), $order ;
 
-       ## Check database connection
+    ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &List::db_connect();
     }
@@ -95,7 +93,7 @@ sub next {
     }
 
     # select the packet that as been locked previously
-    $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_bulkmailer AS priority, verp_bulkmailer AS verp, date_bulkmailer AS date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
+    $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_bulkmailer AS priority, verp_bulkmailer AS verp, reception_date_bulkmailer AS reception_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
 
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
@@ -155,7 +153,6 @@ sub messageasstring {
 ## 
 sub store { 
     my %data = @_;
-    &do_log('debug', 'Bulk::store');
     
     my $msg = $data{'msg'};
     my $rcpts = $data{'rcpts'};
@@ -163,7 +160,10 @@ sub store {
     my $robot = $data{'robot'};
     my $listname = $data{'listname'};
     my $priority = $data{'priority'};
-    my $verp = $data{'verp'};
+    my $delivery_date = $data{'delivery_date'};
+    my $verp  = $data{'verp'};
+    
+    &do_log('debug', 'Bulk::store(<msg>,<rcpts>,%s,%s,%s,%s,%s,%s)',$from,$robot,$listname,$priority,$delivery_date,$verp);
 
     $dbh = &List::db_get_handler();
 
@@ -248,7 +248,7 @@ sub store {
 	}
 	
 	unless ($packet_already_exist) {
-	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, priority_bulkmailer, date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,'%s','%s','%s')", $dbh->quote($messagekey),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$priority, $current_date;
+	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, priority_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s')", $dbh->quote($messagekey),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$priority, $current_date,$delivery_date;
 	    
 	    unless ($sth = $dbh->do($statement)) {
 		do_log('err','Unable to add packet in bulkmailer_table "%s"; error : %s', $statement, $dbh->errstr);

@@ -21,6 +21,7 @@
 package List;
 
 use strict;
+use POSIX;
 use Datasource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
@@ -261,7 +262,7 @@ my %default = ('occurrence' => '0-1',
 	       );
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner owner_include
-		      send editor editor_include account topics 
+		      send editor editor_include delivery_time account topics 
 		      host lang web_archive archive digest digest_max_size available_user_options 
 		      default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to * 
 		      verp_rate welcome_return_path remind_return_path user_data_source include_file include_remote_file 
@@ -521,7 +522,7 @@ my %alias = ('reply-to' => 'reply_to',
 			      'group' => 'other'
 			      },			      
 
-        'default_user_options' => {'format' => {'reception' => {'format' => ['digest','digestplain','mail','nomail','summary','notice','txt','html','urlize','not_me'],
+            'default_user_options' => {'format' => {'reception' => {'format' => ['digest','digestplain','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
 								    'gettext_id' => "reception mode",
 								    'order' => 1
@@ -538,6 +539,12 @@ my %alias = ('reply-to' => 'reply_to',
 	    'del' => {'scenario' => 'del',
 		      'gettext_id' => "Who can delete subscribers",
 		      'group' => 'command'
+		      },
+	    'delivery_time' => {'format' => '[0-2]?\d\:[0-6]\d',
+				'length' => 5,
+				'gettext_id' => "Delivery time (hh:mm)",
+				'occurrence' => '0-1',
+				'group' => 'sending'
 		      },
 	    'digest' => {'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
 			 'format' => {'days' => {'format' => [0..6],
@@ -11135,6 +11142,38 @@ sub get_arc_size {
     my $dir = shift;
 
     return tools::get_dir_size($dir.'/'.$self->get_list_id());
+}
+
+# return the date epoch for next delivery planified for a list
+sub  get_next_delivery_date {
+    my $self = shift;
+
+    my $dtime = $self->{'admin'}{'delivery_time'} ;
+    unless ($dtime =~ /(\d?\d)\:(\d\d)/ ) {
+	# if delivery _time if not defined, the delivery time right now
+	return time();
+    }
+    my $h = $1;
+    my $m = $2;
+    unless ((($h == 24)&&($m == 0))||(($h <= 23)&&($m <= 60))){
+	&do_log('err',"ignoring wrong parameter format delivery_time, delivery_tile must be smaller than 24:00");
+	return time();
+    }
+    my $date = time();
+
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =  localtime($date);
+
+    my $plannified_time = (($h*60)+$m)*60;       # plannified time in sec
+    my $now_time = ((($hour*60)+$min)*60)+$sec;  # Now #sec since to day 00:00
+    
+    my $result = $date - $now_time + $plannified_time;
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =  localtime($result);
+
+    if ($now_time <= $plannified_time ) {
+	return ( $date - $now_time + $plannified_time) ;
+    }else{
+	return ( $date - $now_time + $plannified_time + (24*3600)); # plannified time is past so report to tomorrow
+    }
 }
 
 
