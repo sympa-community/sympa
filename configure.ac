@@ -20,7 +20,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 AC_PREREQ(2.59)
-AC_INIT(sympa, 6.0a.8, sympa-authors@cru.fr)
+AC_INIT(sympa, 6.0a.9, sympa-authors@cru.fr)
 AM_INIT_AUTOMAKE
 
 # Setup the VERSION variable

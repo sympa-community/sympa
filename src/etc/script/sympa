@@ -200,7 +200,7 @@ case "$1" in
 	if [ ! -f --LOCKDIR--/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_start sympa
-		sympa_stop bulk
+		sympa_start bulk
 		sympa_start archived
 		sympa_start bounced
 		sympa_start task_manager

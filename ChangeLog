@@ -1,4 +1,98 @@
 ------------------------------------------------------------------------
+r5501 | david.verdin | 2009-02-10 14:26:09 +0100 (Tue, 10 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/src/bulk.pl
+   M /trunk/src/etc/script/sympa
+
+[change] sympa start script now launches, stops and gets status for bulk.pl. bulk.pl modified so that it can create and delete a pid file.
+
+------------------------------------------------------------------------
+r5500 | david.verdin | 2009-02-10 13:48:21 +0100 (Tue, 10 Feb 2009) | 3 lines
+Changed paths:
+   M /trunk/src/Bulk.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+   M /trunk/src/mail.pm
+
+[feature] New delivery_time list parameter in order to make distribution at a specified time
+
+
+------------------------------------------------------------------------
+r5492 | david.verdin | 2009-02-09 15:03:10 +0100 (Mon, 09 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[-bug] syntax error in a reference to the in hash.
+
+------------------------------------------------------------------------
+r5491 | david.verdin | 2009-02-09 11:28:17 +0100 (Mon, 09 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/src/Commands.pm
+
+[bug][Reported by Q. Ladonne, AMUE] The inclusion_notification_feature parameter value was tested when a remind command was issued, thus leading to an authorization deined for all the lists where this parameter was set to off (default value). This parameter is now used for add and delete notifications only.
+
+------------------------------------------------------------------------
+r5490 | sympa-authors | 2009-02-06 15:57:19 +0100 (Fri, 06 Feb 2009) | 3 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[feature] Now temlpate of lists created using web interface can use any input from the create_list_request form referenced as [% custom_input.VARNAME %]
+
+
+------------------------------------------------------------------------
+r5489 | david.verdin | 2009-02-05 17:46:28 +0100 (Thu, 05 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/src/Upgrade.pm
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+
+[feature] Added automatic upgrade script for the two new tables used by the bulk mailer. Also updated the database creation scripts for each supported RDMS.
+
+------------------------------------------------------------------------
+r5488 | david.verdin | 2009-02-05 14:54:07 +0100 (Thu, 05 Feb 2009) | 3 lines
+Changed paths:
+   A /trunk/src/Bulk.pm (from /branches/sympa-bulk/src/Bulk.pm:5487)
+   M /trunk/src/Conf.pm
+   M /trunk/src/List.pm
+   M /trunk/src/Makefile.am
+   M /trunk/src/Message.pm
+   A /trunk/src/bulk.pl (from /branches/sympa-bulk/src/bulk.pl:5487)
+   A /trunk/src/etc/global_task_models/purge_tables.daily.task (from /branches/sympa-bulk/src/etc/global_task_models/purge_tables.daily.task:5487)
+   M /trunk/src/mail.pm
+   M /trunk/src/report.pm
+   M /trunk/src/sympa.pl
+   M /trunk/src/task_manager.pl
+   M /trunk/src/tools.pl
+   M /trunk/web_tt2/skinsedit.tt2
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[-change] Merging sympa-bulk branch and the main development trunk.
+
+
+------------------------------------------------------------------------
+r5483 | david.verdin | 2009-02-03 13:45:36 +0100 (Tue, 03 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/configure.ac
+
+[-feature] Preparing version 6.0a.8.
+
+------------------------------------------------------------------------
+r5482 | olivier.salaun | 2009-02-03 13:27:39 +0100 (Tue, 03 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi
+
+[bug] now always using one-time tickets for subscriptions
+
+------------------------------------------------------------------------
 r5481 | serge.aumont | 2009-02-03 10:42:53 +0100 (Tue, 03 Feb 2009) | 3 lines
 Changed paths:
    M /trunk/src/etc/script/ldap_alias_manager.pl
