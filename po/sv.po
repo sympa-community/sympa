@@ -116,7 +116,7 @@ msgstr "Listmästare"
 msgid "Privileged owner"
 msgstr "Priviligerad ägare"
 
-#: src/List.pm:1118 web_tt2/login_menu.tt2:15
+#: src/List.pm:1125 web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Ägare"
 
@@ -191,7 +191,7 @@ msgstr "Post"
 msgid "RSS"
 msgstr "RSS"
 
-#: src/List.pm:1250 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
+#: src/List.pm:1257 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
 msgid "Shared documents"
 msgstr "Delade dokument"
 
@@ -221,7 +221,7 @@ msgstr "Felratio:"
 msgid "Owners"
 msgstr "Ägare"
 
-#: src/List.pm:609 web_tt2/list_panel.tt2:19
+#: src/List.pm:616 web_tt2/list_panel.tt2:19
 msgid "Moderators"
 msgstr "Moderatorer"
 
@@ -2417,7 +2417,7 @@ msgstr "Välj din autentiseringsserver"
 msgid "Go"
 msgstr "Kör"
 
-#: src/List.pm:1088 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1095 src/List.pm:591 web_tt2/loginbanner.tt2:39
 #: web_tt2/sso_login.tt2:46
 msgid "email address"
 msgstr "e-postadress"
@@ -4277,7 +4277,7 @@ msgstr "Sök användare"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15765
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15772
 msgid "%d %b %Y %H:%M:%S"
 msgstr ""
 
@@ -4965,7 +4965,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Samlingsbrev %2"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2693
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2700
 msgid "Table of contents:"
 msgstr "Innehållsförteckning:"
 
@@ -7624,6 +7624,10 @@ msgid ""
 "parameter"
 msgstr ""
 
+#: src/etc/global_task_models/purge_tables.daily.task:1
+msgid "daily delete unusefull item from any table"
+msgstr ""
+
 #: src/etc/global_task_models/purge_user_table.monthly.task:1
 msgid "purge of orphan entries in user table every month"
 msgstr ""
@@ -7729,680 +7733,684 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9526
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9533
 msgid "%A"
 msgstr ""
 
-#: src/Conf.pm:341 src/Conf.pm:560
+#: src/Conf.pm:343 src/Conf.pm:562
 msgid "Error at line %d : %s"
 msgstr "Fel på rad %d : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1789
-#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2812
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1796
+#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1023 wwsympa/wwsympa.fcgi:2812
 msgid "%d %b %Y at %H:%M:%S"
 msgstr ""
 
-#: src/List.pm:316
+#: src/List.pm:317
 msgid "Account"
 msgstr "Konto"
 
-#: src/List.pm:320
+#: src/List.pm:321
 msgid "Who can add subscribers"
 msgstr ""
 
-#: src/List.pm:324
+#: src/List.pm:325
 msgid "Anonymous sender"
 msgstr "Anonym avsändare"
 
-#: src/List.pm:329
+#: src/List.pm:330
 msgid "frequency"
 msgstr ""
 
-#: src/List.pm:1338 src/List.pm:334
+#: src/List.pm:1345 src/List.pm:335
 msgid "access right"
 msgstr ""
 
-#: src/List.pm:338
+#: src/List.pm:339
 msgid "Text archives"
 msgstr "Textarkiv"
 
-#: src/List.pm:343
+#: src/List.pm:344
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arkivera krypterad e-post i klartext"
 
-#: src/List.pm:1093 src/List.pm:1133 src/List.pm:350 src/List.pm:526
-#: src/List.pm:589 src/List.pm:624
+#: src/List.pm:1100 src/List.pm:1140 src/List.pm:351 src/List.pm:527
+#: src/List.pm:596 src/List.pm:631
 msgid "reception mode"
 msgstr ""
 
-#: src/List.pm:353
+#: src/List.pm:354
 msgid "Available subscription options"
 msgstr "Tillgängliga prenumerationsinställningar"
 
-#: src/List.pm:361
+#: src/List.pm:362
 msgid "warn rate"
 msgstr "varningsnivå"
 
-#: src/List.pm:368
+#: src/List.pm:369
 msgid "halt rate"
 msgstr ""
 
-#: src/List.pm:372
+#: src/List.pm:373
 msgid "Bounces management"
 msgstr "Hantera studsar"
 
-#: src/List.pm:379 src/List.pm:400
+#: src/List.pm:380 src/List.pm:401
 msgid "threshold"
 msgstr "tröskelvärde"
 
-#: src/List.pm:384 src/List.pm:405
+#: src/List.pm:385 src/List.pm:406
 msgid "action for this population"
 msgstr ""
 
-#: src/List.pm:389 src/List.pm:410
+#: src/List.pm:390 src/List.pm:411
 msgid "notification"
 msgstr "notifiering"
 
-#: src/List.pm:393
+#: src/List.pm:394
 msgid "Management of bouncers, 1st level"
 msgstr ""
 
-#: src/List.pm:414
+#: src/List.pm:415
 msgid "Management of bouncers, 2nd level"
 msgstr ""
 
-#: src/List.pm:421
+#: src/List.pm:422
 msgid "Expiration of unmoderated messages"
 msgstr ""
 
-#: src/List.pm:427
+#: src/List.pm:428
 msgid "Secret string for generating unique keys"
 msgstr ""
 
-#: src/List.pm:445
+#: src/List.pm:446
 msgid "Creation of the list"
 msgstr "Skande av listan"
 
-#: src/List.pm:456
+#: src/List.pm:457
 msgid "internal identifier"
 msgstr ""
 
-#: src/List.pm:464
+#: src/List.pm:465
 msgid "label"
 msgstr ""
 
-#: src/List.pm:470
+#: src/List.pm:471
 msgid "additional comment"
 msgstr ""
 
-#: src/List.pm:477
+#: src/List.pm:478
 msgid "type"
 msgstr ""
 
-#: src/List.pm:483
+#: src/List.pm:484
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/List.pm:488
+#: src/List.pm:489
 msgid "is the attribute optionnal ?"
 msgstr ""
 
-#: src/List.pm:494
+#: src/List.pm:495
 msgid "Custom user attributes"
 msgstr ""
 
-#: src/List.pm:500
+#: src/List.pm:501
 msgid "Custom header field"
 msgstr "Anpassat huvudfält"
 
-#: src/List.pm:505
+#: src/List.pm:506
 msgid "Subject tagging"
 msgstr ""
 
-#: src/List.pm:519
+#: src/List.pm:520
 #, fuzzy
 msgid "custom parameters"
 msgstr "Föredrar"
 
-#: src/List.pm:1098 src/List.pm:1138 src/List.pm:531 src/List.pm:594
-#: src/List.pm:629
+#: src/List.pm:1105 src/List.pm:1145 src/List.pm:532 src/List.pm:601
+#: src/List.pm:636
 msgid "visibility"
 msgstr "synlighet"
 
-#: src/List.pm:535
+#: src/List.pm:536
 msgid "Subscription profile"
 msgstr ""
 
-#: src/List.pm:539
+#: src/List.pm:540
 msgid "Who can delete subscribers"
 msgstr ""
 
-#: src/List.pm:419 src/List.pm:546
+#: src/List.pm:545
+msgid "Delivery time (hh:mm)"
+msgstr ""
+
+#: src/List.pm:420 src/List.pm:553
 msgid "days"
 msgstr ""
 
-#: src/List.pm:552
+#: src/List.pm:559
 msgid "hour"
 msgstr "timma"
 
-#: src/List.pm:558
+#: src/List.pm:565
 msgid "minute"
 msgstr "minut"
 
-#: src/List.pm:562
+#: src/List.pm:569
 msgid "Digest frequency"
 msgstr "Samlingsbrevfrekvens"
 
-#: src/List.pm:570
+#: src/List.pm:577
 msgid "Digest maximum number of messages"
 msgstr "Max antal meddelande för samlingsbrev"
 
-#: src/List.pm:577
+#: src/List.pm:584
 #, fuzzy
 msgid "Inclusions timeout for message distribution"
 msgstr "Meddelande"
 
-#: src/List.pm:1103 src/List.pm:599
+#: src/List.pm:1110 src/List.pm:606
 msgid "name"
 msgstr "namn"
 
-#: src/List.pm:604
+#: src/List.pm:611
 msgid "private information"
 msgstr "privat information"
 
-#: src/List.pm:639
+#: src/List.pm:646
 msgid "Periodical subscription expiration task"
 msgstr ""
 
-#: src/List.pm:650
+#: src/List.pm:657
 msgid "Attachment type"
 msgstr "Bifogningstyp"
 
-#: src/List.pm:654
+#: src/List.pm:661
 msgid "Forced reply address"
 msgstr "Tvingad svarsaddress"
 
-#: src/List.pm:660
+#: src/List.pm:667
 msgid "Internet domain"
 msgstr "Internetdomän"
 
-#: src/List.pm:666
+#: src/List.pm:673
 msgid "File inclusion"
 msgstr ""
 
-#: src/List.pm:670
+#: src/List.pm:677
 msgid "data location URL"
 msgstr ""
 
-#: src/List.pm:676 src/List.pm:709 src/List.pm:790 src/List.pm:968
+#: src/List.pm:683 src/List.pm:716 src/List.pm:797 src/List.pm:975
 msgid "remote user"
 msgstr "fjärranvändare"
 
-#: src/List.pm:683 src/List.pm:715 src/List.pm:796 src/List.pm:973
+#: src/List.pm:690 src/List.pm:722 src/List.pm:803 src/List.pm:980
 msgid "remote password"
 msgstr "fjärrlösenord"
 
-#: src/List.pm:688 src/List.pm:751 src/List.pm:875 src/List.pm:929
-#: src/List.pm:987
+#: src/List.pm:695 src/List.pm:758 src/List.pm:882 src/List.pm:936
+#: src/List.pm:994
 msgid "short name for this source"
 msgstr "kortnamn för denna källa"
 
-#: src/List.pm:693
+#: src/List.pm:700
 msgid "Remote file inclusion"
 msgstr ""
 
-#: src/List.pm:699 src/List.pm:780 src/List.pm:907 src/List.pm:946
+#: src/List.pm:706 src/List.pm:787 src/List.pm:914 src/List.pm:953
 msgid "remote host"
 msgstr "fjärrsystem"
 
-#: src/List.pm:704 src/List.pm:785 src/List.pm:913
+#: src/List.pm:711 src/List.pm:792 src/List.pm:920
 msgid "remote port"
 msgstr "fjärrport"
 
-#: src/List.pm:719
+#: src/List.pm:726
 msgid "suffix"
 msgstr "suffix"
 
-#: src/List.pm:725
+#: src/List.pm:732
 msgid "filter"
 msgstr ""
 
-#: src/List.pm:731
+#: src/List.pm:738
 msgid "extracted attribute"
 msgstr ""
 
-#: src/List.pm:736
+#: src/List.pm:743
 msgid "selection (if multiple)"
 msgstr ""
 
-#: src/List.pm:741
+#: src/List.pm:748
 msgid "search scope"
 msgstr ""
 
-#: src/List.pm:747
+#: src/List.pm:754
 msgid "connection timeout"
 msgstr ""
 
-#: src/List.pm:775
+#: src/List.pm:782
 msgid "LDAP query inclusion"
 msgstr ""
 
-#: src/List.pm:800
+#: src/List.pm:807
 msgid "first-level suffix"
 msgstr ""
 
-#: src/List.pm:806
+#: src/List.pm:813
 msgid "first-level filter"
 msgstr ""
 
-#: src/List.pm:811
+#: src/List.pm:818
 msgid "first-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:816
+#: src/List.pm:823
 msgid "first-level selection"
 msgstr ""
 
-#: src/List.pm:821
+#: src/List.pm:828
 msgid "first-level search scope"
 msgstr ""
 
-#: src/List.pm:827
+#: src/List.pm:834
 msgid "first-level connection timeout"
 msgstr ""
 
-#: src/List.pm:833
+#: src/List.pm:840
 msgid "first-level regular expression"
 msgstr ""
 
-#: src/List.pm:837
+#: src/List.pm:844
 msgid "second-level suffix template"
 msgstr ""
 
-#: src/List.pm:843
+#: src/List.pm:850
 msgid "second-level filter template"
 msgstr ""
 
-#: src/List.pm:849
+#: src/List.pm:856
 msgid "second-level extracted attribute"
 msgstr ""
 
-#: src/List.pm:854
+#: src/List.pm:861
 msgid "second-level selection"
 msgstr ""
 
-#: src/List.pm:859
+#: src/List.pm:866
 msgid "second-level search scope"
 msgstr ""
 
-#: src/List.pm:865
+#: src/List.pm:872
 msgid "second-level connection timeout"
 msgstr ""
 
-#: src/List.pm:871
+#: src/List.pm:878
 msgid "second-level regular expression"
 msgstr ""
 
-#: src/List.pm:897
+#: src/List.pm:904
 msgid "LDAP 2-level query inclusion"
 msgstr ""
 
-#: src/List.pm:902
+#: src/List.pm:909
 msgid "List inclusion"
 msgstr ""
 
-#: src/List.pm:919
+#: src/List.pm:926
 msgid "remote path of sympa list dump"
 msgstr ""
 
-#: src/List.pm:924
+#: src/List.pm:931
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: src/List.pm:936
+#: src/List.pm:943
 msgid "remote list inclusion"
 msgstr "inkludering av fjärrlista"
 
-#: src/List.pm:941
+#: src/List.pm:948
 msgid "database type"
 msgstr ""
 
-#: src/List.pm:950
+#: src/List.pm:957
 msgid "database port"
 msgstr ""
 
-#: src/List.pm:955
+#: src/List.pm:962
 msgid "database name"
 msgstr ""
 
-#: src/List.pm:959
+#: src/List.pm:966
 msgid "connection options"
 msgstr ""
 
-#: src/List.pm:964
+#: src/List.pm:971
 msgid "environment variables for database connexion"
 msgstr ""
 
-#: src/List.pm:979
+#: src/List.pm:986
 msgid "SQL query"
 msgstr "SQL-fråga"
 
-#: src/List.pm:983
+#: src/List.pm:990
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Katalog där databasen lagras (används enbart för DBD::CSV)"
 
-#: src/List.pm:994
+#: src/List.pm:1001
 msgid "SQL query inclusion"
 msgstr ""
 
-#: src/List.pm:1000
+#: src/List.pm:1007
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "%1 är redan en prenumerant av listan %2"
 
-#: src/List.pm:1004
+#: src/List.pm:1011
 msgid "Who can view list information"
 msgstr ""
 
-#: src/List.pm:1008
+#: src/List.pm:1015
 msgid "Who can invite people"
 msgstr ""
 
-#: src/List.pm:1014
+#: src/List.pm:1021
 msgid "Language of the list"
 msgstr "Listans språk"
 
-#: src/List.pm:1039
+#: src/List.pm:1046
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 
-#: src/List.pm:1046
+#: src/List.pm:1053
 msgid "Maximum message size"
 msgstr "Max meddelandestorlek"
 
-#: src/List.pm:1052
+#: src/List.pm:1059
 msgid "Message topic name"
 msgstr ""
 
-#: src/List.pm:1057
+#: src/List.pm:1064
 msgid "Message topic keywords"
 msgstr ""
 
-#: src/List.pm:1063
+#: src/List.pm:1070
 #, fuzzy
 msgid "Message topic title"
 msgstr "meddelandefot"
 
-#: src/List.pm:1068
+#: src/List.pm:1075
 msgid "Topics for message categorization"
 msgstr ""
 
-#: src/List.pm:1074
+#: src/List.pm:1081
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 
-#: src/List.pm:1081
+#: src/List.pm:1088
 #, fuzzy
 msgid "Message tagging"
 msgstr "Meddelande"
 
-#: src/List.pm:1108
+#: src/List.pm:1115
 msgid "private informations"
 msgstr ""
 
-#: src/List.pm:1113 src/List.pm:1143
+#: src/List.pm:1120 src/List.pm:1150
 msgid "profile"
 msgstr "profil"
 
-#: src/List.pm:1154
+#: src/List.pm:1161
 msgid "Priority"
 msgstr "Prioritet"
 
-#: src/List.pm:1158
+#: src/List.pm:1165
 msgid "Who can start a remind process"
 msgstr ""
 
-#: src/List.pm:1163
+#: src/List.pm:1170
 msgid "Return-path of the REMIND command"
 msgstr ""
 
-#: src/List.pm:1187 src/List.pm:1207
+#: src/List.pm:1194 src/List.pm:1214
 msgid "Reply address"
 msgstr "Svarsaddress"
 
-#: src/List.pm:1193
+#: src/List.pm:1200
 msgid "value"
 msgstr "värde"
 
-#: src/List.pm:1198
+#: src/List.pm:1205
 msgid "other email address"
 msgstr "annan e-postaddress"
 
-#: src/List.pm:1203
+#: src/List.pm:1210
 msgid "respect of existing header field"
 msgstr ""
 
-#: src/List.pm:1212
+#: src/List.pm:1219
 msgid "Who can review subscribers"
 msgstr ""
 
-#: src/List.pm:1219
+#: src/List.pm:1226
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369 fälthuvud"
 
-#: src/List.pm:1223
+#: src/List.pm:1230
 msgid "Who can send messages"
 msgstr ""
 
-#: src/List.pm:1230
+#: src/List.pm:1237
 msgid "Serial number of the config"
 msgstr "Konfigurationens serienummer"
 
-#: src/List.pm:1235
+#: src/List.pm:1242
 msgid "Who can view"
 msgstr ""
 
-#: src/List.pm:1239
+#: src/List.pm:1246
 msgid "Who can edit"
 msgstr ""
 
-#: src/List.pm:1246 src/List.pm:1345
+#: src/List.pm:1253 src/List.pm:1352
 msgid "quota"
 msgstr "kvot"
 
-#: src/List.pm:1255 src/List.pm:1260
+#: src/List.pm:1262 src/List.pm:1267
 msgid "email address protection method"
 msgstr ""
 
-#: src/List.pm:1266
+#: src/List.pm:1273
 msgid "Status of the list"
 msgstr "Liststatus"
 
-#: src/List.pm:1273
+#: src/List.pm:1280
 msgid "Subject of the list"
 msgstr "Ämnet för listan"
 
-#: src/List.pm:1277
+#: src/List.pm:1284
 msgid "Who can subscribe to the list"
 msgstr ""
 
-#: src/List.pm:1283
+#: src/List.pm:1290
 msgid "Topics for the list"
 msgstr ""
 
-#: src/List.pm:1290
+#: src/List.pm:1297
 msgid "Inclusions timeout"
 msgstr ""
 
-#: src/List.pm:1294
+#: src/List.pm:1301
 msgid "Who can unsubscribe"
 msgstr ""
 
-#: src/List.pm:1315
+#: src/List.pm:1322
 msgid "Last update of config"
 msgstr "Senaste uppdateringen av konfigurationen"
 
-#: src/List.pm:1322
+#: src/List.pm:1329
 msgid "User data source"
 msgstr ""
 
-#: src/List.pm:1328
+#: src/List.pm:1335
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr ""
 
-#: src/List.pm:1334
+#: src/List.pm:1341
 msgid "Visibility of the list"
 msgstr ""
 
-#: src/List.pm:1350
+#: src/List.pm:1357
 #, fuzzy
 msgid "Maximum number of month archived"
 msgstr "Max antal meddelande för samlingsbrev"
 
-#: src/List.pm:1355
+#: src/List.pm:1362
 msgid "Web archives"
 msgstr ""
 
-#: src/List.pm:1361
+#: src/List.pm:1368
 msgid "Welcome return-path"
 msgstr ""
 
-#: src/List.pm:1366
+#: src/List.pm:1373
 msgid "percentage of list members in VERP mode"
 msgstr ""
 
-#: src/List.pm:359 src/List.pm:366
+#: src/List.pm:360 src/List.pm:367
 msgid "%"
 msgstr ""
 
-#: src/List.pm:377 src/List.pm:398
+#: src/List.pm:378 src/List.pm:399
 msgid "points"
 msgstr ""
 
-#: src/List.pm:510
+#: src/List.pm:511
 #, fuzzy
 msgid "var name"
 msgstr "namn"
 
-#: src/List.pm:515
+#: src/List.pm:516
 #, fuzzy
 msgid "var value"
 msgstr "värde"
 
-#: src/List.pm:568
+#: src/List.pm:575
 #, fuzzy
 msgid "messages"
 msgstr "# meddelande"
 
-#: src/List.pm:1288 src/List.pm:576 src/List.pm:746 src/List.pm:826
-#: src/List.pm:864
+#: src/List.pm:1295 src/List.pm:583 src/List.pm:753 src/List.pm:833
+#: src/List.pm:871
 msgid "seconds"
 msgstr ""
 
-#: src/List.pm:1123 src/List.pm:614
+#: src/List.pm:1130 src/List.pm:621
 msgid "the datasource"
 msgstr "datakällan"
 
-#: src/List.pm:1128 src/List.pm:619
+#: src/List.pm:1135 src/List.pm:626
 msgid "datasource parameters"
 msgstr ""
 
-#: src/List.pm:635
+#: src/List.pm:642
 msgid "Moderators defined in an external datasource"
 msgstr ""
 
-#: src/List.pm:644
+#: src/List.pm:651
 msgid "Family name"
 msgstr "Familjenamn"
 
-#: src/List.pm:757 src/List.pm:881
+#: src/List.pm:764 src/List.pm:888
 msgid "use SSL (LDAPS)"
 msgstr ""
 
-#: src/List.pm:762 src/List.pm:886
+#: src/List.pm:769 src/List.pm:893
 msgid "SSL version"
 msgstr ""
 
-#: src/List.pm:767 src/List.pm:891
+#: src/List.pm:774 src/List.pm:898
 #, fuzzy
 msgid "SSL ciphers used"
 msgstr "Krypteringsalgoritmens nyckelstorlek"
 
-#: src/List.pm:1019 src/List.pm:1300
+#: src/List.pm:1026 src/List.pm:1307
 msgid "epoch date"
 msgstr ""
 
-#: src/List.pm:1023 src/List.pm:1305
+#: src/List.pm:1030 src/List.pm:1312
 msgid "date"
 msgstr ""
 
-#: src/List.pm:1028
+#: src/List.pm:1035
 msgid "who ran the instantiation"
 msgstr ""
 
-#: src/List.pm:1032
+#: src/List.pm:1039
 msgid "Latest family instantiation"
 msgstr ""
 
-#: src/List.pm:1044
+#: src/List.pm:1051
 msgid "bytes"
 msgstr ""
 
-#: src/List.pm:1148
+#: src/List.pm:1155
 msgid "Owners defined in an external datasource"
 msgstr ""
 
-#: src/List.pm:1167
+#: src/List.pm:1174
 msgid "Periodical subscription reminder task"
 msgstr ""
 
-#: src/List.pm:1172
+#: src/List.pm:1179
 msgid "Incoming SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1179
+#: src/List.pm:1186
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr ""
 
-#: src/List.pm:1245 src/List.pm:1344
+#: src/List.pm:1252 src/List.pm:1351
 msgid "Kbytes"
 msgstr ""
 
-#: src/List.pm:1311
+#: src/List.pm:1318
 msgid "who updated the config"
 msgstr "vem uppdaterade konfigurationen"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2796
+#: src/List.pm:2803
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2797
+#: src/List.pm:2804
 msgid "%a, %d %b %Y"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2983 src/List.pm:2984 src/List.pm:2988
-#: wwsympa/wwsympa.fcgi:10893 wwsympa/wwsympa.fcgi:10962
-#: wwsympa/wwsympa.fcgi:11164 wwsympa/wwsympa.fcgi:11501
-#: wwsympa/wwsympa.fcgi:15340 wwsympa/wwsympa.fcgi:16065
-#: wwsympa/wwsympa.fcgi:16066 wwsympa/wwsympa.fcgi:4740
-#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6155
-#: wwsympa/wwsympa.fcgi:7173 wwsympa/wwsympa.fcgi:7707
-#: wwsympa/wwsympa.fcgi:7744 wwsympa/wwsympa.fcgi:7746
-#: wwsympa/wwsympa.fcgi:8213 wwsympa/wwsympa.fcgi:8214
-#: wwsympa/wwsympa.fcgi:8248 wwsympa/wwsympa.fcgi:8249
-#: wwsympa/wwsympa.fcgi:8428 wwsympa/wwsympa.fcgi:8429
+#: src/List.pm:2990 src/List.pm:2991 src/List.pm:2995
+#: wwsympa/wwsympa.fcgi:10900 wwsympa/wwsympa.fcgi:10969
+#: wwsympa/wwsympa.fcgi:11171 wwsympa/wwsympa.fcgi:11508
+#: wwsympa/wwsympa.fcgi:15347 wwsympa/wwsympa.fcgi:16073
+#: wwsympa/wwsympa.fcgi:16074 wwsympa/wwsympa.fcgi:4740
+#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6152
+#: wwsympa/wwsympa.fcgi:7170 wwsympa/wwsympa.fcgi:7704
+#: wwsympa/wwsympa.fcgi:7741 wwsympa/wwsympa.fcgi:7743
+#: wwsympa/wwsympa.fcgi:8220 wwsympa/wwsympa.fcgi:8221
+#: wwsympa/wwsympa.fcgi:8255 wwsympa/wwsympa.fcgi:8256
+#: wwsympa/wwsympa.fcgi:8435 wwsympa/wwsympa.fcgi:8436
 msgid "%d %b %Y"
 msgstr ""
 
-#: src/mail.pm:53
+#: src/mail.pm:55
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -8410,7 +8418,7 @@ msgid ""
 "for variable $max_arg.\n"
 msgstr ""
 
-#: src/mail.pm:713
+#: src/mail.pm:857
 msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
@@ -8506,21 +8514,21 @@ msgstr "%1 : okänd åtgärd"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:1023
+#: wwsympa/wwsympa.fcgi:1024
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432
-#: wwsympa/wwsympa.fcgi:11725 wwsympa/wwsympa.fcgi:11858
-#: wwsympa/wwsympa.fcgi:14171 wwsympa/wwsympa.fcgi:7667
+#: wwsympa/wwsympa.fcgi:11732 wwsympa/wwsympa.fcgi:11865
+#: wwsympa/wwsympa.fcgi:14178 wwsympa/wwsympa.fcgi:7664
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15710 wwsympa/wwsympa.fcgi:15711
+#: wwsympa/wwsympa.fcgi:15717 wwsympa/wwsympa.fcgi:15718
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
@@ -8673,11 +8681,6 @@ msgstr "ingen e-post (användbar för semestrar)"
 #: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
 msgstr "du kommer inte ta mot dina egna postningar"
-
-#: src/List.pm:1000
-#, fuzzy
-msgid "Notify subscribers when they are subscribed to the list?"
-msgstr "%1 är redan en prenumerant av listan %2"
 
 #: web_tt2/javascript.tt2:148
 msgid ""
@@ -9066,6 +9069,10 @@ msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below :"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Notify subscribers when they are subscribed to the list?"
+#~ msgstr "%1 är redan en prenumerant av listan %2"
 
 #~ msgid "Choose your authentication server"
 #~ msgstr "Välj din autentiseringsserver"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-02-02 01:37+0100\n"
-"Last-Translator: Daniel Viñar Ulriksen <dani@belvil.net>\n"
+"PO-Revision-Date: 2009-02-10 14:51+0100\n"
+"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgid "Privileged owner"
 msgstr "Gestionnaire privilégié"
 
 # nlsref 16,57
-#: src/List.pm:1118 web_tt2/login_menu.tt2:15
+#: src/List.pm:1125 web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Propriétaire"
 
@@ -189,7 +189,7 @@ msgid "RSS"
 msgstr "RSS"
 
 # nlsref 16,70
-#: src/List.pm:1250 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
+#: src/List.pm:1257 web_tt2/list_menu.tt2:55 web_tt2/list_menu.tt2:57
 msgid "Shared documents"
 msgstr "Documents partagés"
 
@@ -219,7 +219,7 @@ msgid "Owners"
 msgstr "Propriétaires"
 
 # nlsref 16,26
-#: src/List.pm:609 web_tt2/list_panel.tt2:19
+#: src/List.pm:616 web_tt2/list_panel.tt2:19
 msgid "Moderators"
 msgstr "Modérateurs"
 
@@ -388,8 +388,7 @@ msgstr "Restaurer l'espace documents"
 #: web_tt2/admin.tt2:66
 msgid "Restores the previously closed shared document web space."
 msgstr ""
-"L'espace de documents partagés est fermé. Cliquer sur ce bouton le "
-"restaurer."
+"L'espace de documents partagés est fermé. Cliquer sur ce bouton le restaurer."
 
 #: web_tt2/list_admin_menu.tt2:4
 msgid "Admin"
@@ -2412,7 +2411,7 @@ msgid "Go"
 msgstr "Valider"
 
 # nlsref 16,27
-#: src/List.pm:1088 src/List.pm:584 web_tt2/loginbanner.tt2:39
+#: src/List.pm:1095 src/List.pm:591 web_tt2/loginbanner.tt2:39
 #: web_tt2/sso_login.tt2:46
 msgid "email address"
 msgstr "adresse email"
@@ -4399,7 +4398,7 @@ msgstr "Période explorée :"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15765
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15772
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5094,7 +5093,7 @@ msgid "%1 Digest %2"
 msgstr "Compilation du %2, liste %1"
 
 #: mail_tt2/digest.tt2:11 mail_tt2/digest_plain.tt2:8
-#: mail_tt2/get_archive.tt2:10 src/List.pm:2693
+#: mail_tt2/get_archive.tt2:10 src/List.pm:2700
 msgid "Table of contents:"
 msgstr "Sommaire :"
 
@@ -7913,6 +7912,10 @@ msgstr ""
 "Supprime chaque jour les sessions plus vieilles que la valeur du paramètre "
 "sympa.conf/session_expiration_period"
 
+#: src/etc/global_task_models/purge_tables.daily.task:1
+msgid "daily delete unusefull item from any table"
+msgstr "Supprime chaque jour les entrées inutiles dans toutes les tables"
+
 #: src/etc/global_task_models/purge_user_table.monthly.task:1
 msgid "purge of orphan entries in user table every month"
 msgstr "suppression des entrées orphelines de la table user tous les mois"
@@ -8022,789 +8025,793 @@ msgstr "Le fichier de configuration --CONFIG-- contient des erreurs.\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9526
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9533
 msgid "%A"
 msgstr "%A"
 
 # nlsref 1,3
-#: src/Conf.pm:341 src/Conf.pm:560
+#: src/Conf.pm:343 src/Conf.pm:562
 msgid "Error at line %d : %s"
 msgstr "Erreur ligne %d : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1789
-#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1022 wwsympa/wwsympa.fcgi:2812
+#: src/Family.pm:2586 src/Family.pm:385 src/Family.pm:662 src/List.pm:1796
+#: wwsympa/Auth.pm:465 wwsympa/wwsympa.fcgi:1023 wwsympa/wwsympa.fcgi:2812
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
 # nlsref 16,1
-#: src/List.pm:316
+#: src/List.pm:317
 msgid "Account"
 msgstr "Compte"
 
 # nlsref 16,2
-#: src/List.pm:320
+#: src/List.pm:321
 msgid "Who can add subscribers"
 msgstr "Qui peut ajouter des abonnés"
 
 # nlsref 16,3
-#: src/List.pm:324
+#: src/List.pm:325
 msgid "Anonymous sender"
 msgstr "Auteur anonyme"
 
 # nlsref 16,5
-#: src/List.pm:329
+#: src/List.pm:330
 msgid "frequency"
 msgstr "périodicité"
 
 # nlsref 16,6
-#: src/List.pm:1338 src/List.pm:334
+#: src/List.pm:1345 src/List.pm:335
 msgid "access right"
 msgstr "droit d'accès"
 
 # nlsref 16,4
-#: src/List.pm:338
+#: src/List.pm:339
 msgid "Text archives"
 msgstr "Archives textuelles"
 
 # nlsref 16,212
-#: src/List.pm:343
+#: src/List.pm:344
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivage des messages cryptés"
 
 # nlsref 16,19
-#: src/List.pm:1093 src/List.pm:1133 src/List.pm:350 src/List.pm:526
-#: src/List.pm:589 src/List.pm:624
+#: src/List.pm:1100 src/List.pm:1140 src/List.pm:351 src/List.pm:527
+#: src/List.pm:596 src/List.pm:631
 msgid "reception mode"
 msgstr "mode de réception"
 
 # nlsref 16,88
-#: src/List.pm:353
+#: src/List.pm:354
 msgid "Available subscription options"
 msgstr "Options d'abonné disponibles"
 
 # nlsref 16,8
-#: src/List.pm:361
+#: src/List.pm:362
 msgid "warn rate"
 msgstr "seuil d'alerte"
 
 # nlsref 16,9
-#: src/List.pm:368
+#: src/List.pm:369
 msgid "halt rate"
 msgstr "seuil d'interruption"
 
 # nlsref 16,7
-#: src/List.pm:372
+#: src/List.pm:373
 msgid "Bounces management"
 msgstr "Gestion des erreurs"
 
-#: src/List.pm:379 src/List.pm:400
+#: src/List.pm:380 src/List.pm:401
 msgid "threshold"
 msgstr "seuil"
 
-#: src/List.pm:384 src/List.pm:405
+#: src/List.pm:385 src/List.pm:406
 msgid "action for this population"
 msgstr "action pour cette population"
 
-#: src/List.pm:389 src/List.pm:410
+#: src/List.pm:390 src/List.pm:411
 msgid "notification"
 msgstr "notification"
 
-#: src/List.pm:393
+#: src/List.pm:394
 msgid "Management of bouncers, 1st level"
 msgstr "Gestion des abonnés en erreur, 1er niveau"
 
-#: src/List.pm:414
+#: src/List.pm:415
 msgid "Management of bouncers, 2nd level"
 msgstr "Gestion des abonnés en erreur, 2nd niveau"
 
 # nlsref 16,10
-#: src/List.pm:421
+#: src/List.pm:422
 msgid "Expiration of unmoderated messages"
 msgstr "Expiration des messages non modérés"
 
 # nlsref 16,11
-#: src/List.pm:427
+#: src/List.pm:428
 msgid "Secret string for generating unique keys"
 msgstr "Secret pour la génération de clefs"
 
 # nlsref 16,12
-#: src/List.pm:445
+#: src/List.pm:446
 msgid "Creation of the list"
 msgstr "Création de la liste"
 
-#: src/List.pm:456
+#: src/List.pm:457
 msgid "internal identifier"
 msgstr "Identifiant interne"
 
-#: src/List.pm:464
+#: src/List.pm:465
 msgid "label"
 msgstr "Nom"
 
-#: src/List.pm:470
+#: src/List.pm:471
 msgid "additional comment"
 msgstr "Commentaire"
 
-#: src/List.pm:477
+#: src/List.pm:478
 msgid "type"
 msgstr "Type"
 
-#: src/List.pm:483
+#: src/List.pm:484
 msgid "possible attribute values (if enum is used)"
 msgstr "Liste des valeurs possibles (si enum est employé)"
 
-#: src/List.pm:488
+#: src/List.pm:489
 msgid "is the attribute optionnal ?"
 msgstr "L'attribut est-il optionnel ?"
 
-#: src/List.pm:494
+#: src/List.pm:495
 msgid "Custom user attributes"
 msgstr "Attributs d'utilisateur personnalisés"
 
 # nlsref 16,16
-#: src/List.pm:500
+#: src/List.pm:501
 msgid "Custom header field"
 msgstr "Champs d'entête personnalisés"
 
 # nlsref 16,17
-#: src/List.pm:505
+#: src/List.pm:506
 msgid "Subject tagging"
 msgstr "Marquage du sujet des messages"
 
-#: src/List.pm:519
+#: src/List.pm:520
 msgid "custom parameters"
 msgstr "Paramètres personnalisés"
 
 # nlsref 16,20
-#: src/List.pm:1098 src/List.pm:1138 src/List.pm:531 src/List.pm:594
-#: src/List.pm:629
+#: src/List.pm:1105 src/List.pm:1145 src/List.pm:532 src/List.pm:601
+#: src/List.pm:636
 msgid "visibility"
 msgstr "visibilité"
 
 # nlsref 16,18
-#: src/List.pm:535
+#: src/List.pm:536
 msgid "Subscription profile"
 msgstr "Profil d'abonnement"
 
 # nlsref 16,21
-#: src/List.pm:539
+#: src/List.pm:540
 msgid "Who can delete subscribers"
 msgstr "Qui peut supprimer des abonnés"
 
+#: src/List.pm:545
+msgid "Delivery time (hh:mm)"
+msgstr "Heure d'expédition (hh:mm)"
+
 # nlsref 16,23
-#: src/List.pm:419 src/List.pm:546
+#: src/List.pm:420 src/List.pm:553
 msgid "days"
 msgstr "jours"
 
 # nlsref 16,24
-#: src/List.pm:552
+#: src/List.pm:559
 msgid "hour"
 msgstr "heure"
 
 # nlsref 16,25
-#: src/List.pm:558
+#: src/List.pm:565
 msgid "minute"
 msgstr "minute"
 
 # nlsref 16,22
-#: src/List.pm:562
+#: src/List.pm:569
 msgid "Digest frequency"
 msgstr "Périodicité des compilations"
 
-#: src/List.pm:570
+#: src/List.pm:577
 msgid "Digest maximum number of messages"
 msgstr "Nombre maximum de messages par compilation"
 
 # nlsref 15,4
-#: src/List.pm:577
+#: src/List.pm:584
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 "Délais maximum depuis la dernière synchronisation avant que celle-ci ne soit "
 "déclenchée par l'envoi d'un message"
 
 # nlsref 16,29
-#: src/List.pm:1103 src/List.pm:599
+#: src/List.pm:1110 src/List.pm:606
 msgid "name"
 msgstr "nom"
 
 # nlsref 16,30
-#: src/List.pm:604
+#: src/List.pm:611
 msgid "private information"
 msgstr "informations privées"
 
 # nlsref 16,88
-#: src/List.pm:639
+#: src/List.pm:646
 msgid "Periodical subscription expiration task"
 msgstr "Tache périodique d'expiration des abonnements"
 
 # nlsref 16,31
-#: src/List.pm:650
+#: src/List.pm:657
 msgid "Attachment type"
 msgstr "Type d'attachement"
 
 # nlsref 16,32
-#: src/List.pm:654
+#: src/List.pm:661
 msgid "Forced reply address"
 msgstr "Adresse de réponse forcée"
 
 # nlsref 16,33
-#: src/List.pm:660
+#: src/List.pm:667
 msgid "Internet domain"
 msgstr "Domaine internet"
 
 # nlsref 16,34
-#: src/List.pm:666
+#: src/List.pm:673
 msgid "File inclusion"
 msgstr "Inclusion d'un fichier"
 
-#: src/List.pm:670
+#: src/List.pm:677
 msgid "data location URL"
 msgstr "URL des données"
 
 # nlsref 16,38
-#: src/List.pm:676 src/List.pm:709 src/List.pm:790 src/List.pm:968
+#: src/List.pm:683 src/List.pm:716 src/List.pm:797 src/List.pm:975
 msgid "remote user"
 msgstr "utilisateur"
 
 # nlsref 16,39
-#: src/List.pm:683 src/List.pm:715 src/List.pm:796 src/List.pm:973
+#: src/List.pm:690 src/List.pm:722 src/List.pm:803 src/List.pm:980
 msgid "remote password"
 msgstr "mot de passe de la source"
 
 # nlsref 16,209
-#: src/List.pm:688 src/List.pm:751 src/List.pm:875 src/List.pm:929
-#: src/List.pm:987
+#: src/List.pm:695 src/List.pm:758 src/List.pm:882 src/List.pm:936
+#: src/List.pm:994
 msgid "short name for this source"
 msgstr "nom court pour cette source"
 
 # nlsref 16,206
-#: src/List.pm:693
+#: src/List.pm:700
 msgid "Remote file inclusion"
 msgstr "Inclusion d'un fichier distant"
 
 # nlsref 16,36
-#: src/List.pm:699 src/List.pm:780 src/List.pm:907 src/List.pm:946
+#: src/List.pm:706 src/List.pm:787 src/List.pm:914 src/List.pm:953
 msgid "remote host"
 msgstr "serveur distant"
 
 # nlsref 16,37
-#: src/List.pm:704 src/List.pm:785 src/List.pm:913
+#: src/List.pm:711 src/List.pm:792 src/List.pm:920
 msgid "remote port"
 msgstr "port"
 
 # nlsref 16,40
-#: src/List.pm:719
+#: src/List.pm:726
 msgid "suffix"
 msgstr "suffixe"
 
 # nlsref 16,41
-#: src/List.pm:725
+#: src/List.pm:732
 msgid "filter"
 msgstr "filtre"
 
 # nlsref 16,42
-#: src/List.pm:731
+#: src/List.pm:738
 msgid "extracted attribute"
 msgstr "attribut à extraire"
 
 # nlsref 16,43
-#: src/List.pm:736
+#: src/List.pm:743
 msgid "selection (if multiple)"
 msgstr "sélection (si multiple)"
 
 # nlsref 16,97
-#: src/List.pm:741
+#: src/List.pm:748
 msgid "search scope"
 msgstr "portée de la recherche"
 
 # nlsref 16,98
-#: src/List.pm:747
+#: src/List.pm:754
 msgid "connection timeout"
 msgstr "délai de connexion"
 
 # nlsref 16,35
-#: src/List.pm:775
+#: src/List.pm:782
 msgid "LDAP query inclusion"
 msgstr "Inclusion d'une requête LDAP"
 
 # nlsref 16,140
-#: src/List.pm:800
+#: src/List.pm:807
 msgid "first-level suffix"
 msgstr "suffixe (1er niveau)"
 
 # nlsref 16,141
-#: src/List.pm:806
+#: src/List.pm:813
 msgid "first-level filter"
 msgstr "filtre (1er niveau)"
 
 # nlsref 16,142
-#: src/List.pm:811
+#: src/List.pm:818
 msgid "first-level extracted attribute"
 msgstr "attribut à extraire (1er niveau)"
 
 # nlsref 16,143
-#: src/List.pm:816
+#: src/List.pm:823
 msgid "first-level selection"
 msgstr "sélection (1er niveau)"
 
 # nlsref 16,197
-#: src/List.pm:821
+#: src/List.pm:828
 msgid "first-level search scope"
 msgstr "portée de la recherche (1er niveau)"
 
 # nlsref 16,198
-#: src/List.pm:827
+#: src/List.pm:834
 msgid "first-level connection timeout"
 msgstr "délai de connexion (1er niveau)"
 
 # nlsref 16,201
-#: src/List.pm:833
+#: src/List.pm:840
 msgid "first-level regular expression"
 msgstr "expression régulière (1er niveau)"
 
 # nlsref 16,144
-#: src/List.pm:837
+#: src/List.pm:844
 msgid "second-level suffix template"
 msgstr "suffixe (2nd niveau)"
 
 # nlsref 16,145
-#: src/List.pm:843
+#: src/List.pm:850
 msgid "second-level filter template"
 msgstr "filtre (2nd niveau)"
 
 # nlsref 16,146
-#: src/List.pm:849
+#: src/List.pm:856
 msgid "second-level extracted attribute"
 msgstr "attribut à extraire (2nd niveau)"
 
 # nlsref 16,147
-#: src/List.pm:854
+#: src/List.pm:861
 msgid "second-level selection"
 msgstr "sélection (2nd niveau)"
 
 # nlsref 16,199
-#: src/List.pm:859
+#: src/List.pm:866
 msgid "second-level search scope"
 msgstr "portée de la recherche (2nd niveau)"
 
 # nlsref 16,200
-#: src/List.pm:865
+#: src/List.pm:872
 msgid "second-level connection timeout"
 msgstr "délai de connexion (2nd niveau)"
 
 # nlsref 16,202
-#: src/List.pm:871
+#: src/List.pm:878
 msgid "second-level regular expression"
 msgstr "expression régulière (2nd niveau)"
 
 # nlsref 16,135
-#: src/List.pm:897
+#: src/List.pm:904
 msgid "LDAP 2-level query inclusion"
 msgstr "Inclusion d'une requête LDAP (2 passes)"
 
 # nlsref 16,44
-#: src/List.pm:902
+#: src/List.pm:909
 msgid "List inclusion"
 msgstr "Inclusion d'une liste"
 
 # nlsref 16,207
-#: src/List.pm:919
+#: src/List.pm:926
 msgid "remote path of sympa list dump"
 msgstr "chemin pour accéder à la fonction dump de la liste distante"
 
 # nlsref 16,208
-#: src/List.pm:924
+#: src/List.pm:931
 msgid "certificate for authentication by remote Sympa"
 msgstr "Certificat pour authentification de la connection"
 
 # nlsref 16,206
-#: src/List.pm:936
+#: src/List.pm:943
 msgid "remote list inclusion"
 msgstr "inclusion de liste distante"
 
 # nlsref 16,46
-#: src/List.pm:941
+#: src/List.pm:948
 msgid "database type"
 msgstr "type de la base"
 
 # nlsref 16,46
-#: src/List.pm:950
+#: src/List.pm:957
 msgid "database port"
 msgstr "port utilisé"
 
 # nlsref 16,48
-#: src/List.pm:955
+#: src/List.pm:962
 msgid "database name"
 msgstr "nom de la base"
 
 # nlsref 16,94
-#: src/List.pm:959
+#: src/List.pm:966
 msgid "connection options"
 msgstr "paramètres de connexion"
 
 # nlsref 16,148
-#: src/List.pm:964
+#: src/List.pm:971
 msgid "environment variables for database connexion"
 msgstr "variable d'environnement pour la connexion"
 
 # nlsref 16,51
-#: src/List.pm:979
+#: src/List.pm:986
 msgid "SQL query"
 msgstr "requête SQL"
 
-#: src/List.pm:983
+#: src/List.pm:990
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 "Le répertoire où est stocké la base de données (uniquement avec DBD::CSV)"
 
 # nlsref 16,45
-#: src/List.pm:994
+#: src/List.pm:1001
 msgid "SQL query inclusion"
 msgstr "Inclusion d'une requête SQL"
 
-#: src/List.pm:1000
+#: src/List.pm:1007
 msgid "Notify subscribers when they are included from a data source?"
 msgstr ""
 "Notifier les abonnés quand ils sont inclus depuis une source de données ?"
 
 # nlsref 16,53
-#: src/List.pm:1004
+#: src/List.pm:1011
 msgid "Who can view list information"
 msgstr "Qui a accès aux informations sur la liste"
 
 # nlsref 16,54
-#: src/List.pm:1008
+#: src/List.pm:1015
 msgid "Who can invite people"
 msgstr "Qui peut inviter à s'abonner"
 
 # nlsref 16,55
-#: src/List.pm:1014
+#: src/List.pm:1021
 msgid "Language of the list"
 msgstr "Langue de la liste"
 
-#: src/List.pm:1039
+#: src/List.pm:1046
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 "Expression régulière appliquée pour prévenir les boucles avec le robot de "
 "listes"
 
 # nlsref 16,56
-#: src/List.pm:1046
+#: src/List.pm:1053
 msgid "Maximum message size"
 msgstr "Taille maximum des messages"
 
-#: src/List.pm:1052
+#: src/List.pm:1059
 msgid "Message topic name"
 msgstr "Nom du thème"
 
-#: src/List.pm:1057
+#: src/List.pm:1064
 msgid "Message topic keywords"
 msgstr "Mots clef pour le marquage des messages"
 
-#: src/List.pm:1063
+#: src/List.pm:1070
 msgid "Message topic title"
 msgstr "Titre du thème"
 
 # nlsref 16,74
-#: src/List.pm:1068
+#: src/List.pm:1075
 msgid "Topics for message categorization"
 msgstr "Thèmes pour la catégorisation des messageCatégorie de la liste"
 
-#: src/List.pm:1074
+#: src/List.pm:1081
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "Sur quelle partie du message les mots clef sont recherchés"
 
 # nlsref 15,4
-#: src/List.pm:1081
+#: src/List.pm:1088
 msgid "Message tagging"
 msgstr "Marquage des messages (thèmes)"
 
 # nlsref 16,61
-#: src/List.pm:1108
+#: src/List.pm:1115
 msgid "private informations"
 msgstr "informations privées"
 
 # nlsref 16,62
-#: src/List.pm:1113 src/List.pm:1143
+#: src/List.pm:1120 src/List.pm:1150
 msgid "profile"
 msgstr "profil"
 
 # nlsref 16,63
-#: src/List.pm:1154
+#: src/List.pm:1161
 msgid "Priority"
 msgstr "Priorité de la liste"
 
 # nlsref 16,64
-#: src/List.pm:1158
+#: src/List.pm:1165
 msgid "Who can start a remind process"
 msgstr "Qui peut déclencher un processus de rappel des abonnements"
 
-#: src/List.pm:1163
+#: src/List.pm:1170
 msgid "Return-path of the REMIND command"
 msgstr "Adresse de retour pour la commande REMIND"
 
 # nlsref 16,66
-#: src/List.pm:1187 src/List.pm:1207
+#: src/List.pm:1194 src/List.pm:1214
 msgid "Reply address"
 msgstr "Adresse de réponse"
 
 # nlsref 16,91
-#: src/List.pm:1193
+#: src/List.pm:1200
 msgid "value"
 msgstr "valeur"
 
 # nlsref 16,92
-#: src/List.pm:1198
+#: src/List.pm:1205
 msgid "other email address"
 msgstr "autre adresse email"
 
 # nlsref 16,93
-#: src/List.pm:1203
+#: src/List.pm:1210
 msgid "respect of existing header field"
 msgstr "respect du champ existant"
 
 # nlsref 16,67
-#: src/List.pm:1212
+#: src/List.pm:1219
 msgid "Who can review subscribers"
 msgstr "Qui a accès à la liste des abonnés"
 
 # nlsref 16,16
-#: src/List.pm:1219
+#: src/List.pm:1226
 msgid "RFC 2369 Header fields"
 msgstr "Champs d'entête compatibles RFC 2369"
 
 # nlsref 16,68
-#: src/List.pm:1223
+#: src/List.pm:1230
 msgid "Who can send messages"
 msgstr "Qui peut diffuser des messages"
 
 # nlsref 16,69
-#: src/List.pm:1230
+#: src/List.pm:1237
 msgid "Serial number of the config"
 msgstr "Numéro de série de la config"
 
 # nlsref 16,86
-#: src/List.pm:1235
+#: src/List.pm:1242
 msgid "Who can view"
 msgstr "droit de consultation"
 
 # nlsref 16,87
-#: src/List.pm:1239
+#: src/List.pm:1246
 msgid "Who can edit"
 msgstr "droit d'édition"
 
 # nlsref 16,203
-#: src/List.pm:1246 src/List.pm:1345
+#: src/List.pm:1253 src/List.pm:1352
 msgid "quota"
 msgstr "quota"
 
 # nlsref 16,205
-#: src/List.pm:1255 src/List.pm:1260
+#: src/List.pm:1262 src/List.pm:1267
 msgid "email address protection method"
 msgstr "methode de protection des adresses (contre le spam)"
 
 # nlsref 16,71
-#: src/List.pm:1266
+#: src/List.pm:1273
 msgid "Status of the list"
 msgstr "Etat de la liste"
 
 # nlsref 16,72
-#: src/List.pm:1273
+#: src/List.pm:1280
 msgid "Subject of the list"
 msgstr "Objet de la liste"
 
 # nlsref 16,73
-#: src/List.pm:1277
+#: src/List.pm:1284
 msgid "Who can subscribe to the list"
 msgstr "Qui peut s'abonner"
 
 # nlsref 16,74
-#: src/List.pm:1283
+#: src/List.pm:1290
 msgid "Topics for the list"
 msgstr "Catégorie de la liste"
 
 # nlsref 16,75
-#: src/List.pm:1290
+#: src/List.pm:1297
 msgid "Inclusions timeout"
 msgstr "Expiration des inclusions"
 
 # nlsref 16,76
-#: src/List.pm:1294
+#: src/List.pm:1301
 msgid "Who can unsubscribe"
 msgstr "Qui peut se désabonner"
 
 # nlsref 16,77
-#: src/List.pm:1315
+#: src/List.pm:1322
 msgid "Last update of config"
 msgstr "Dernière mise à jour de la config"
 
 # nlsref 16,81
-#: src/List.pm:1322
+#: src/List.pm:1329
 msgid "User data source"
 msgstr "Source de données"
 
-#: src/List.pm:1328
+#: src/List.pm:1335
 msgid "Allow picture display ? (must be enabled for the current robot)"
 msgstr "Activer les avatars ? (nécessite d'être activé au niveau du site)"
 
 # nlsref 16,82
-#: src/List.pm:1334
+#: src/List.pm:1341
 msgid "Visibility of the list"
 msgstr "Visibilité de la liste"
 
-#: src/List.pm:1350
+#: src/List.pm:1357
 msgid "Maximum number of month archived"
 msgstr "Nombre maximum de mois d'archives"
 
 # nlsref 16,83
-#: src/List.pm:1355
+#: src/List.pm:1362
 msgid "Web archives"
 msgstr "Archives web"
 
 # nlsref 16,85
-#: src/List.pm:1361
+#: src/List.pm:1368
 msgid "Welcome return-path"
 msgstr "Return-path d'abonnement"
 
-#: src/List.pm:1366
+#: src/List.pm:1373
 msgid "percentage of list members in VERP mode"
 msgstr "pourcentage des abonnés en mode VERP"
 
-#: src/List.pm:359 src/List.pm:366
+#: src/List.pm:360 src/List.pm:367
 msgid "%"
 msgstr "%"
 
-#: src/List.pm:377 src/List.pm:398
+#: src/List.pm:378 src/List.pm:399
 msgid "points"
 msgstr "points"
 
 # nlsref 16,29
-#: src/List.pm:510
+#: src/List.pm:511
 msgid "var name"
 msgstr "nom de la variable"
 
 # nlsref 16,91
-#: src/List.pm:515
+#: src/List.pm:516
 msgid "var value"
 msgstr "valeur de la variable"
 
-#: src/List.pm:568
+#: src/List.pm:575
 msgid "messages"
 msgstr "messages"
 
-#: src/List.pm:1288 src/List.pm:576 src/List.pm:746 src/List.pm:826
-#: src/List.pm:864
+#: src/List.pm:1295 src/List.pm:583 src/List.pm:753 src/List.pm:833
+#: src/List.pm:871
 msgid "seconds"
 msgstr "secondes"
 
 # nlsref 16,81
-#: src/List.pm:1123 src/List.pm:614
+#: src/List.pm:1130 src/List.pm:621
 msgid "the datasource"
 msgstr "la source de données"
 
-#: src/List.pm:1128 src/List.pm:619
+#: src/List.pm:1135 src/List.pm:626
 msgid "datasource parameters"
 msgstr "Paramètres liés aux sources de données"
 
-#: src/List.pm:635
+#: src/List.pm:642
 msgid "Moderators defined in an external datasource"
 msgstr "Modérateurs définis via une source de données externe"
 
-#: src/List.pm:644
+#: src/List.pm:651
 msgid "Family name"
 msgstr "Nom de la famille"
 
-#: src/List.pm:757 src/List.pm:881
+#: src/List.pm:764 src/List.pm:888
 msgid "use SSL (LDAPS)"
 msgstr "utiliser SSL (LDAPS)"
 
 # nlsref 16,45
-#: src/List.pm:762 src/List.pm:886
+#: src/List.pm:769 src/List.pm:893
 msgid "SSL version"
 msgstr "Version SSL"
 
-#: src/List.pm:767 src/List.pm:891
+#: src/List.pm:774 src/List.pm:898
 msgid "SSL ciphers used"
 msgstr "Algorithmes de chiffrement utilisés"
 
-#: src/List.pm:1019 src/List.pm:1300
+#: src/List.pm:1026 src/List.pm:1307
 msgid "epoch date"
 msgstr "date epoch"
 
-#: src/List.pm:1023 src/List.pm:1305
+#: src/List.pm:1030 src/List.pm:1312
 msgid "date"
 msgstr "date"
 
 # nlsref 16,53
-#: src/List.pm:1028
+#: src/List.pm:1035
 msgid "who ran the instantiation"
 msgstr "Qui a instancié la liste"
 
-#: src/List.pm:1032
+#: src/List.pm:1039
 msgid "Latest family instantiation"
 msgstr "Dernière instanciation de la famille"
 
-#: src/List.pm:1044
+#: src/List.pm:1051
 msgid "bytes"
 msgstr "octets"
 
-#: src/List.pm:1148
+#: src/List.pm:1155
 msgid "Owners defined in an external datasource"
 msgstr "Propriétaires définis via une source de données externe"
 
 # nlsref 16,88
-#: src/List.pm:1167
+#: src/List.pm:1174
 msgid "Periodical subscription reminder task"
 msgstr "Tâche périodique de rappel des abonnements"
 
-#: src/List.pm:1172
+#: src/List.pm:1179
 msgid "Incoming SMTP headers fields to be removed"
 msgstr "Entêtes SMTP à supprimer dans les messages entrants"
 
-#: src/List.pm:1179
+#: src/List.pm:1186
 msgid "Outgoing SMTP headers fields to be removed"
 msgstr "Entêtes SMTP à supprimer dans les messages sortants"
 
-#: src/List.pm:1245 src/List.pm:1344
+#: src/List.pm:1252 src/List.pm:1351
 msgid "Kbytes"
 msgstr "Kilo Octets"
 
 # nlsref 16,77
-#: src/List.pm:1311
+#: src/List.pm:1318
 msgid "who updated the config"
 msgstr "qui a mis à jour le fichier de configuration"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2796
+#: src/List.pm:2803
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2797
+#: src/List.pm:2804
 msgid "%a, %d %b %Y"
 msgstr "%a, %d %b %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/List.pm:2983 src/List.pm:2984 src/List.pm:2988
-#: wwsympa/wwsympa.fcgi:10893 wwsympa/wwsympa.fcgi:10962
-#: wwsympa/wwsympa.fcgi:11164 wwsympa/wwsympa.fcgi:11501
-#: wwsympa/wwsympa.fcgi:15340 wwsympa/wwsympa.fcgi:16065
-#: wwsympa/wwsympa.fcgi:16066 wwsympa/wwsympa.fcgi:4740
-#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6155
-#: wwsympa/wwsympa.fcgi:7173 wwsympa/wwsympa.fcgi:7707
-#: wwsympa/wwsympa.fcgi:7744 wwsympa/wwsympa.fcgi:7746
-#: wwsympa/wwsympa.fcgi:8213 wwsympa/wwsympa.fcgi:8214
-#: wwsympa/wwsympa.fcgi:8248 wwsympa/wwsympa.fcgi:8249
-#: wwsympa/wwsympa.fcgi:8428 wwsympa/wwsympa.fcgi:8429
+#: src/List.pm:2990 src/List.pm:2991 src/List.pm:2995
+#: wwsympa/wwsympa.fcgi:10900 wwsympa/wwsympa.fcgi:10969
+#: wwsympa/wwsympa.fcgi:11171 wwsympa/wwsympa.fcgi:11508
+#: wwsympa/wwsympa.fcgi:15347 wwsympa/wwsympa.fcgi:16073
+#: wwsympa/wwsympa.fcgi:16074 wwsympa/wwsympa.fcgi:4740
+#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6152
+#: wwsympa/wwsympa.fcgi:7170 wwsympa/wwsympa.fcgi:7704
+#: wwsympa/wwsympa.fcgi:7741 wwsympa/wwsympa.fcgi:7743
+#: wwsympa/wwsympa.fcgi:8220 wwsympa/wwsympa.fcgi:8221
+#: wwsympa/wwsympa.fcgi:8255 wwsympa/wwsympa.fcgi:8256
+#: wwsympa/wwsympa.fcgi:8435 wwsympa/wwsympa.fcgi:8436
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
 # nlsref 11,1
-#: src/mail.pm:53
+#: src/mail.pm:55
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -8819,7 +8826,7 @@ msgstr ""
 "valeur pour la variable $max_arg.\n"
 
 # nlsref 11,2
-#: src/mail.pm:713
+#: src/mail.pm:857
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Impossible de créer un canal dans smtpto: %m"
 
@@ -8926,21 +8933,21 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:1023
+#: wwsympa/wwsympa.fcgi:1024
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432
-#: wwsympa/wwsympa.fcgi:11725 wwsympa/wwsympa.fcgi:11858
-#: wwsympa/wwsympa.fcgi:14171 wwsympa/wwsympa.fcgi:7667
+#: wwsympa/wwsympa.fcgi:11732 wwsympa/wwsympa.fcgi:11865
+#: wwsympa/wwsympa.fcgi:14178 wwsympa/wwsympa.fcgi:7664
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15710 wwsympa/wwsympa.fcgi:15711
+#: wwsympa/wwsympa.fcgi:15717 wwsympa/wwsympa.fcgi:15718
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%d/%m/%Y/%H/%M/%S"
 
@@ -9120,9 +9127,8 @@ msgstr "interrompre la réception des messages (utile pendant les vacances)"
 msgid "you do not receive your own posts"
 msgstr "pour ne pas recevoir ses propres messages"
 
-#: src/List.pm:1000
-msgid "Notify subscribers when they are subscribed to the list?"
-msgstr "Prévenir les abonnés quand ils sont ajoutés à la liste ?"
+#~ msgid "Notify subscribers when they are subscribed to the list?"
+#~ msgstr "Prévenir les abonnés quand ils sont ajoutés à la liste ?"
 
 #~ msgid ""
 #~ "Sympa could not set a cookie for login.\n"
