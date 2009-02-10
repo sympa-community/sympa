@@ -92,7 +92,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-      print STDOUT "Starting archive daemon, pid $_\n";
+      print STDOUT "Starting bulk daemon, pid $_\n";
 
       exit(0);
    }
@@ -103,7 +103,7 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 # not usefull because several bulk demmon can run without troubles
-# &tools::write_pid($wwsconf->{'bulk_pidfile'}, $$, $options);
+&tools::write_pid($Conf{'pidfile_bulk'}, $$, $options);
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
@@ -187,6 +187,7 @@ while (!$end) {
     &mail::reaper;
 }
 do_log('notice', 'bulkd exited normally due to signal');
+&tools::remove_pid($Conf{'pidfile_bulk'}, $$);
 
 exit(0);
 
