@@ -51,6 +51,7 @@ use MIME::Entity;
 use MIME::EncWords;
 use MIME::WordDecoder;
 use MIME::Parser;
+use MIME::Base64;
 use Message;
 use List;
 
@@ -148,7 +149,7 @@ sub messageasstring {
     my $messageasstring = $sth->fetchrow_hashref ;
     $sth->finish;
 
-    return($messageasstring->{'message'});
+    return( MIME::Base64::decode($messageasstring->{'message'}) );
 }
 ## 
 sub store { 
@@ -173,6 +174,8 @@ sub store {
 	return undef unless &List::db_connect();
     }
     
+    $msg = MIME::Base64::encode($msg);
+
     my $messagekey = &tools::md5_fingerprint($msg);
 
     # first store the message in bulk_message_table (because as soon as packet are created bulk.pl may distribute them).
