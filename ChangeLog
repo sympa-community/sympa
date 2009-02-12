@@ -1,4 +1,85 @@
 ------------------------------------------------------------------------
+r5508 | david.verdin | 2009-02-12 15:35:49 +0100 (Thu, 12 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/wwsympa/Makefile.am
+
+[bug] DIR replaced DESTDIR in installicons directive. If DESTDIR is set, this leads to icons being installed in a default directory instead of DESTDIR.
+
+------------------------------------------------------------------------
+r5507 | david.verdin | 2009-02-12 15:34:48 +0100 (Thu, 12 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/src/bulk.pl
+
+[change] Removing pid file for bulk. allows to create as much bulk.pl processes as we need.
+
+------------------------------------------------------------------------
+r5506 | david.verdin | 2009-02-12 15:22:07 +0100 (Thu, 12 Feb 2009) | 3 lines
+Changed paths:
+   M /trunk/src/Bulk.pm
+
+[bug] encode/decode using base64 before storing a message in spool table. This prevent charset encoding dependence on database
+
+
+------------------------------------------------------------------------
+r5504 | david.verdin | 2009-02-10 16:37:29 +0100 (Tue, 10 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
+   M /trunk/src/etc/script/sympa
+
+[-feature] Preparing version 6.0a.9.
+
+------------------------------------------------------------------------
+r5503 | david.verdin | 2009-02-10 14:53:18 +0100 (Tue, 10 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/po/af.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/nn_NO.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-change] Committing latest translations from Pootle.
+
+------------------------------------------------------------------------
+r5502 | david.verdin | 2009-02-10 14:37:42 +0100 (Tue, 10 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/po/fr.po
+   M /trunk/po/pt_BR.po
+
+[-change] retrieving latest translation from pootle.
+
+------------------------------------------------------------------------
 r5501 | david.verdin | 2009-02-10 14:26:09 +0100 (Tue, 10 Feb 2009) | 2 lines
 Changed paths:
    M /trunk/src/bulk.pl
