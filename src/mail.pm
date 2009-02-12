@@ -391,7 +391,7 @@ sub mail_message {
 				'from' => $from,
 				'rcpt' => \@sendtobypacket,
 				'listname' => $list->{'name'},
-				'priority' => $list->{'priority'},
+				'priority' => $list->{'admin'}{'priority'},
 				'delivery_date' => $list->get_next_delivery_date,
 				'robot' => $robot,
 				'encrypt' => $message->{'smime_crypted'},
@@ -509,7 +509,7 @@ sub sendto {
     my $verp = $params{'verp'};
     my $use_bulk = $params{'use_bulk'};
     
-    do_log('debug2', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s', $from, $listname, $encrypt, $verp);
+    do_log('debug', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s', $from, $listname, $encrypt, $verp, $priority);
     
     my $delivery_date =  $params{'delivery_date'};
     $delivery_date = time() unless $delivery_date; # if not specified, delivery tile is right now (used for sympa messages etc)
