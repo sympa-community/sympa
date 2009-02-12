@@ -182,7 +182,7 @@ while (!$end) {
 	}
 	&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'});
     }else{
-	sleep 2; # scan bulk_mailer table every 2 s waiting for some new packets
+	sleep 1; # scan bulk_mailer table every 1 second waiting for some new packets
     }
     &mail::reaper;
 }
