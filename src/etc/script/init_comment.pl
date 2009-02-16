@@ -42,7 +42,7 @@ $sth->execute || die "Unable to execute SQL statement";
 
 my $user;
 
-while ($user = $sth->fetchrow_hashref) {
+while ($user = $sth->fetchrow_hashref('NAME_lc')) {
     printf "\nUser: %s", $user->{'user_subscriber'};
 
     unless ($user->{'comment_subscriber'}) {

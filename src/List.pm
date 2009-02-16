@@ -4670,7 +4670,7 @@ sub get_user_db {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
  
     $sth->finish();
 
@@ -4790,7 +4790,7 @@ sub get_subscriber {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
     
     if (defined $user) {
 	$user->{'reception'} ||= 'mail';
@@ -4864,7 +4864,7 @@ sub get_subscriber_by_bounce_address {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
-    while (my $subscriber = $sth->fetchrow_hashref) {
+    while (my $subscriber = $sth->fetchrow_hashref('NAME_lc')) {
 	push @subscribers, $subscriber;
     }
     $sth->finish();
@@ -4916,7 +4916,7 @@ sub get_admin_user {
 	return undef;
     }
     
-    my $admin_user = $sth->fetchrow_hashref;
+    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $admin_user) {
 	$admin_user->{'reception'} ||= 'mail';
@@ -5189,7 +5189,7 @@ sub get_first_user {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
 	    if (! $user->{'email'});
@@ -5533,7 +5533,7 @@ sub get_first_admin_user {
 	return undef;
     }
     
-    my $admin_user = $sth->fetchrow_hashref;
+    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $admin_user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
 	    if (! $admin_user->{'email'});
@@ -5573,7 +5573,7 @@ sub get_next_user {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
     
     if (defined $user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
@@ -5632,7 +5632,7 @@ sub get_next_admin_user {
 	return undef;
     }
     
-    my $admin_user = $sth->fetchrow_hashref;
+    my $admin_user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $admin_user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
@@ -5717,7 +5717,7 @@ sub get_first_bouncing_user {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
 	    
     if (defined $user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
@@ -5749,7 +5749,7 @@ sub get_next_bouncing_user {
 	return undef;
     }
     
-    my $user = $sth->fetchrow_hashref;
+    my $user = $sth->fetchrow_hashref('NAME_lc');
     
     if (defined $user) {
 	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
@@ -9198,7 +9198,7 @@ sub get_which_db {
 	    return undef;
 	}
 
-	while ($l = $sth->fetchrow_hashref) {
+	while ($l = $sth->fetchrow_hashref('NAME_lc')) {
 	    my ($name, $robot) = ($l->{'list_subscriber'}, $l->{'robot_subscriber'});
 	    $name =~ s/\s*$//;  ## usefull for PostgreSQL
 	    $which{$robot}{$name}{'member'} = 1;
@@ -9230,7 +9230,7 @@ sub get_which_db {
 	    return undef;
 	}
 	
-	while ($l = $sth->fetchrow_hashref) {
+	while ($l = $sth->fetchrow_hashref('NAME_lc')) {
 	    $which{$l->{'robot_admin'}}{$l->{'list_admin'}}{$l->{'role_admin'}} = 1;
 	}
 	
@@ -9517,7 +9517,7 @@ sub get_db_field_type {
 	return undef;
     }
 	    
-    while (my $ref = $sth->fetchrow_hashref()) {
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
 	next unless ($ref->{'Field'} eq $field);
 
 	return $ref->{'Type'};
@@ -9571,7 +9571,7 @@ sub lowercase_field {
 	return undef;
     }
 
-    while (my $user = $sth->fetchrow_hashref) {
+    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
 	my $lower_cased = lc($user->{$field});
 	next if ($lower_cased eq $user->{$field});
 

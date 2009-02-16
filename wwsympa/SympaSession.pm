@@ -137,7 +137,7 @@ sub load {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }    
-    my $session = $sth->fetchrow_hashref;
+    my $session = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
     
     unless ($session) {
@@ -426,7 +426,7 @@ sub list_sessions {
 	return undef;
     }
     
-    while (my $session = ($sth->fetchrow_hashref)) {
+    while (my $session = ($sth->fetchrow_hashref('NAME_lc'))) {
 
 	$session->{'formated_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'date_session'}));
 	$session->{'formated_start_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'start_date_session'}));

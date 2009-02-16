@@ -421,7 +421,7 @@ sub get_first_db_log {
 	return {};
     }
 
-    my $log = $sth->fetchrow_hashref;
+    my $log = $sth->fetchrow_hashref('NAME_lc');
     ## We can't use the "AS date" directive in the SELECT statement because "date" is a reserved keywork with Oracle
     $log->{date} = $log->{date_logs} if defined($log->{date_logs});
     return $log;
@@ -433,7 +433,7 @@ sub return_rows_nb {
 }
 sub get_next_db_log {
 
-    my $log = $sth->fetchrow_hashref;
+    my $log = $sth->fetchrow_hashref('NAME_lc');
     
     unless (defined $log) {
 	$sth->finish;

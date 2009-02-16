@@ -963,7 +963,7 @@ sub probe_db {
 		return undef;
 	    }
 	    
-	    while (my $ref = $sth->fetchrow_hashref()) {
+	    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
 		$real_struct{$t}{$ref->{'field'}} = $ref->{'type'};
 	    }
 	    
@@ -1557,7 +1557,7 @@ sub md5_encode_password {
     my $total = 0;
     my $total_md5 = 0 ;
 
-    while (my $user = $sth->fetchrow_hashref) {
+    while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
 
 	my $clear_password ;
 	if ($user->{'password_user'} =~ /^[1-9a-f]{32}/){

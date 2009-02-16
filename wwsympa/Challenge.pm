@@ -101,7 +101,7 @@ sub load {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }    
-    my $challenge = $sth->fetchrow_hashref;
+    my $challenge = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
     
     unless ($challenge) {

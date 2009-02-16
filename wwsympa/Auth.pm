@@ -453,7 +453,7 @@ sub get_one_time_ticket {
 	return {'result'=>'error'};
     }    
  
-    my $ticket = $sth->fetchrow_hashref;
+    my $ticket = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
     
     unless ($ticket) {	

@@ -106,7 +106,7 @@ sub next {
 	return undef;
     }
 
-    my $result = $sth->fetchrow_hashref;
+    my $result = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
     return $result;
 
@@ -146,7 +146,7 @@ sub messageasstring {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
-    my $messageasstring = $sth->fetchrow_hashref ;
+    my $messageasstring = $sth->fetchrow_hashref('NAME_lc') ;
     $sth->finish;
 
     return( MIME::Base64::decode($messageasstring->{'message'}) );
@@ -288,7 +288,7 @@ sub purge_bulkspool {
     }
 
     my $count = 0;
-    while (my $key = $sth->fetchrow_hashref) {	
+    while (my $key = $sth->fetchrow_hashref('NAME_lc')) {	
 	if ( &Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
 	    $count++;
 	}else{
