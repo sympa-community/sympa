@@ -718,17 +718,18 @@ sub clone_list_as_empty {
 	}
     }
 
+    my $new_list;
     # now switch List object to new list, update some values
-    unless (my $list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
+    unless ($new_list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
 	&do_log('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
 	return undef;
     }
-    $list->{'admin'}{'serial'} = 0 ;
-    $list->{'admin'}{'creation'}{'email'} = $email if ($email);
-    $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
-    $list->save_config($email);
-    return $list;
+    $new_list->{'admin'}{'serial'} = 0 ;
+    $new_list->{'admin'}{'creation'}{'email'} = $email if ($email);
+    $new_list->{'admin'}{'creation'}{'date_epoch'} = time;
+    $new_list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %y at %H:%M:%S", localtime(time);
+    $new_list->save_config($email);
+    return $new_list;
 }
 
 
