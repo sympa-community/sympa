@@ -58,8 +58,11 @@ my $daemon_name = &Log::set_daemon($0);
 #getopts('dF');
 
 ## Check options
+##  --debug : sets the debug mode
+##  --foreground : prevents the script from beeing daemonized
+##  --mail : logs every sendmail calls
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F')) {
+unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F','mail|m')) {
     &fatal_err("Unknown options.");
 }
 
