@@ -634,14 +634,20 @@ sub sending {
     my $verpfeature = ($verp eq 'on');
 
     if ($use_bulk){ # in that case use bulk tables to prepare message distribution 
-	&Bulk::store('msg' => $messageasstring,
-		     'rcpts' => $rcpt,
-		     'from' => $from,
-		     'robot' => $robot,
-		     'listname' => $listname,
-		     'priority' => $priority,
-		     'delivery_date' => $delivery_date,
-		     'verp' => $verpfeature);
+      my $bulk_code = &Bulk::store('msg' => $messageasstring,
+				   'rcpts' => $rcpt,
+				   'from' => $from,
+				   'robot' => $robot,
+				   'listname' => $listname,
+				   'priority' => $priority,
+				   'delivery_date' => $delivery_date,
+				   'verp' => $verpfeature);
+      unless (defined $bulk_code) {
+	&do_log('err', 'Failed to store message for list %s', $listname);
+	unless (&List::send_notify_to_listmaster('bulk_error',  $robot, {'listname' => $listname});
+	return undef;
+      }
+
     }elsif(defined $send_spool) { # in context wwsympa.fcgi do note send message to reciepients but copy it to standard spool 
 	$sympa_email = &Conf::get_robot_conf($robot, 'sympa');	
 	$sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));

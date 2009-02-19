@@ -73,6 +73,12 @@ Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 [%|loc(db_name)%]Connection to database %1 restored.[%END%]
 
 
+[% ELSIF type == 'bulk_error' -%]
+Subject: [% FILTER qencode %][%|loc%]Bulk mailer error[%END%][%END%]
+
+[%|loc(listname)%]Sympa failed to store a message for list %1 in the bulk mailer. You should check log files !![%END%]
+
+
 [% ELSIF type == 'loop_command' -%]
 Subject: [% FILTER qencode %][%|loc%]Loop detected[%END%][%END%]
 MIME-Version: 1.0
