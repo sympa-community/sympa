@@ -10,7 +10,7 @@ Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%E
 
 [% IF action == 'subrequest' -%]
 
-[%|loc(list,conf.host,request_from_host,date)%]Someone, probably you, requested to subscribe to list %1@%2. (This request came from host %3 at %4).[%END%]
+[%|loc(list,conf.host,request_from_host)%]Someone, probably you, requested to subscribe to list %1@%2. (This request came from host %3).[%END%]
 [%|loc%]You may ignore this subscription request or click on the following link in order to confirm it [%END%]: [% base_url %][% path_cgi %]/ticket/[% one_time_ticket %]
 
 [% ELSIF action == 'sigrequest' -%]
@@ -22,7 +22,7 @@ Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%E
 
 [% ELSE -%]
 
-[%|loc(conf.host,request_from_host,date)%]Someone, probably you, requested to allocate or renew your password for your list server account %1. (This request came from host %2 at %3).[%END%]
+[%|loc(conf.host,request_from_host)%]Someone, probably you, requested to allocate or renew your password for your list server account %1. (This request came from host %2).[%END%]
 [%|loc%]You may ignore this request or click on the following link in order to choose your password. [%END%]: [% base_url %][% path_cgi %]/ticket/[% one_time_ticket %]
 
 [%END%]
