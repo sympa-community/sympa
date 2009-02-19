@@ -644,7 +644,7 @@ sub sending {
 				   'verp' => $verpfeature);
       unless (defined $bulk_code) {
 	&do_log('err', 'Failed to store message for list %s', $listname);
-	unless (&List::send_notify_to_listmaster('bulk_error',  $robot, {'listname' => $listname});
+	&List::send_notify_to_listmaster('bulk_error',  $robot, {'listname' => $listname});
 	return undef;
       }
 
