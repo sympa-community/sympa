@@ -425,6 +425,11 @@ sub mail_forward {
     }elsif(ref($msg) eq "MIME::Entity") {
 	$message = $msg;
 	$messageasstring = $message->as_string;
+    }elsif(ref($msg) eq ''){
+	$messageasstring = $msg;
+    }else{
+	&do_log('err',"Unknown message variable type: '%s'. can't process message forwarding.",ref($msg));
+	return undef;
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
     #if (defined $message and $message->head) {
