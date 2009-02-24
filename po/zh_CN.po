@@ -1701,11 +1701,11 @@ msgstr "找不到＂%1＂月"
 msgid "Archives from %1 are not accessible"
 msgstr "%1归档不能访问"
 
-#: mail_tt2/listmaster_notification.tt2:322 web_tt2/error.tt2:11
+#: mail_tt2/listmaster_notification.tt2:328 web_tt2/error.tt2:11
 msgid "Unable to load list topics."
 msgstr "无法载入邮件列表主题。"
 
-#: mail_tt2/listmaster_notification.tt2:323 web_tt2/error.tt2:12
+#: mail_tt2/listmaster_notification.tt2:329 web_tt2/error.tt2:12
 msgid "Unable to load create_list templates."
 msgstr "无法载入create_list模板。"
 
@@ -1727,7 +1727,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "邮件列表＂%1＂输出失败"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:336 web_tt2/error.tt2:17
+#: mail_tt2/listmaster_notification.tt2:342 web_tt2/error.tt2:17
 msgid "Cannot unzip file '%1'."
 msgstr "无法解压文件%1。"
 
@@ -1742,7 +1742,7 @@ msgstr ""
 
 #. (i_err.key)
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:344 web_tt2/error.tt2:20
+#: mail_tt2/listmaster_notification.tt2:350 web_tt2/error.tt2:20
 msgid "File not found."
 msgstr "没有匹配文件。"
 
@@ -4200,7 +4200,7 @@ msgstr "查找间隔："
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15772
+#: web_tt2/viewlogs.tt2:110 wwsympa/wwsympa.fcgi:15773
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5384,87 +5384,98 @@ msgid "Connection to database %1 restored."
 msgstr "与数据库%1的连接被恢复。"
 
 #: mail_tt2/listmaster_notification.tt2:77
+msgid "Bulk mailer error"
+msgstr ""
+
+#. (listname)
+#: mail_tt2/listmaster_notification.tt2:79
+msgid ""
+"Sympa failed to store a message for list %1 in the bulk mailer. You should "
+"check log files !!"
+msgstr ""
+
+#: mail_tt2/listmaster_notification.tt2:83
 msgid "Loop detected"
 msgstr "检测循环"
 
-#: mail_tt2/listmaster_notification.tt2:85
+#: mail_tt2/listmaster_notification.tt2:91
 msgid "A loop has been detected with the following message"
 msgstr "下列信息被查出了一个死循环"
 
-#: mail_tt2/listmaster_notification.tt2:99
+#: mail_tt2/listmaster_notification.tt2:105
 msgid "Antivirus scan failed"
 msgstr "病毒扫瞄出错"
 
-#: mail_tt2/listmaster_notification.tt2:101
+#: mail_tt2/listmaster_notification.tt2:107
 msgid "The antivirus scan has failed while processing the following file:"
 msgstr "当处理以下文件时抗病毒扫瞄发生了错误："
 
-#: mail_tt2/listmaster_notification.tt2:104
+#: mail_tt2/listmaster_notification.tt2:110
 msgid "The returned error message :"
 msgstr "返回的错误信息："
 
-#: mail_tt2/listmaster_notification.tt2:109
+#: mail_tt2/listmaster_notification.tt2:115
 msgid "Parameter error"
 msgstr "参数错误"
 
 #. (par_name,par_value)
-#: mail_tt2/listmaster_notification.tt2:111
+#: mail_tt2/listmaster_notification.tt2:117
 msgid "The value for parameter %1 was badly defined: %2"
 msgstr "参数%1 赋值错误: %2"
 
 #. (action)
-#: mail_tt2/listmaster_notification.tt2:112
+#: mail_tt2/listmaster_notification.tt2:118
 msgid "%1 impossible."
 msgstr "%1 无效"
 
-#: mail_tt2/listmaster_notification.tt2:113
 #: mail_tt2/listmaster_notification.tt2:119
 #: mail_tt2/listmaster_notification.tt2:125
-#: mail_tt2/listmaster_notification.tt2:133
-#: mail_tt2/listmaster_notification.tt2:279
-#: mail_tt2/listmaster_notification.tt2:350
-#: mail_tt2/listmaster_notification.tt2:362
+#: mail_tt2/listmaster_notification.tt2:131
+#: mail_tt2/listmaster_notification.tt2:139
+#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:356
+#: mail_tt2/listmaster_notification.tt2:368
 msgid "See logs for more details."
 msgstr "查看日志以获得详情。"
 
-#: mail_tt2/listmaster_notification.tt2:116
+#: mail_tt2/listmaster_notification.tt2:122
 msgid "Unable to create directory"
 msgstr "无法创建目录"
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:118
+#: mail_tt2/listmaster_notification.tt2:124
 msgid "Sympa could not create directory %1"
 msgstr "无法创建目录＂%1＂。"
 
-#: mail_tt2/listmaster_notification.tt2:122
+#: mail_tt2/listmaster_notification.tt2:128
 msgid "A message archiving failed"
 msgstr "邮件存档失败"
 
 #. (file,bad)
-#: mail_tt2/listmaster_notification.tt2:124
+#: mail_tt2/listmaster_notification.tt2:130
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr "由于Sympa无法存档邮件 '%1'，现移动到目录 '%2'."
 
-#: mail_tt2/listmaster_notification.tt2:128
+#: mail_tt2/listmaster_notification.tt2:134
 msgid "A bounce management failed"
 msgstr "退信管理失败"
 
 #. (file,bad)
-#: mail_tt2/listmaster_notification.tt2:130
+#: mail_tt2/listmaster_notification.tt2:136
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr "由于Sympa无法处理退回邮件'%1'，现移动到目录'%2'."
 
 #. (error)
-#: mail_tt2/listmaster_notification.tt2:132
+#: mail_tt2/listmaster_notification.tt2:138
 msgid "Error: %1"
 msgstr "错误：%1"
 
-#: mail_tt2/listmaster_notification.tt2:136
+#: mail_tt2/listmaster_notification.tt2:142
 msgid "incorrect format of edit_list.conf"
 msgstr "不正确的edit_list.conf格式"
 
-#: mail_tt2/listmaster_notification.tt2:139
+#: mail_tt2/listmaster_notification.tt2:145
 msgid ""
 "edit_list.conf format has changed :\n"
 "'default' is no more accepted for a population."
@@ -5473,12 +5484,12 @@ msgstr ""
 "缺省不再接收。"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:141
+#: mail_tt2/listmaster_notification.tt2:147
 msgid "Refer to documentation to adapt %1."
 msgstr "参照文件来适应%1。"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:143
+#: mail_tt2/listmaster_notification.tt2:149
 msgid ""
 "Until then we recommend your remove %1 ;\n"
 "default configuration will be used."
@@ -5487,11 +5498,11 @@ msgstr ""
 "默认配置才将被使用。"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:146
+#: mail_tt2/listmaster_notification.tt2:152
 msgid "subscribers update failed for list %1"
 msgstr "订阅者对%1邮件列表的更新失败"
 
-#: mail_tt2/listmaster_notification.tt2:149
+#: mail_tt2/listmaster_notification.tt2:155
 msgid ""
 "Sympa could not include subscribers from external data sources ; the\n"
 "database or LDAP directory might be unreachable."
@@ -5499,67 +5510,67 @@ msgstr ""
 "Sympa不能包含外在数据来源的订阅者；\n"
 "数据库或LDAP目录可能得不到。"
 
-#: mail_tt2/listmaster_notification.tt2:150
-#: mail_tt2/listmaster_notification.tt2:157
+#: mail_tt2/listmaster_notification.tt2:156
+#: mail_tt2/listmaster_notification.tt2:163
 msgid "Check Sympa log files for more precise information"
 msgstr "为更精确的信息检查Sympa日志文件"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:154
+#: mail_tt2/listmaster_notification.tt2:160
 msgid "admins update failed for list %1"
 msgstr "帮助邮件列表%1更新失败"
 
-#: mail_tt2/listmaster_notification.tt2:156
+#: mail_tt2/listmaster_notification.tt2:162
 msgid ""
 "Sympa could not include admins from external data sources ; the database or "
 "LDAP directory might be unreachable."
 msgstr "Sympa不能包含外在数据来源的管理者；数据库或LDAP目录可能得不到。"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:160
-#: mail_tt2/listmaster_notification.tt2:185
-#: mail_tt2/listmaster_notification.tt2:193
-#: mail_tt2/listmaster_notification.tt2:200
-#: mail_tt2/listmaster_notification.tt2:228
-#: mail_tt2/listmaster_notification.tt2:235
-#: mail_tt2/listmaster_notification.tt2:242
+#: mail_tt2/listmaster_notification.tt2:166
+#: mail_tt2/listmaster_notification.tt2:191
+#: mail_tt2/listmaster_notification.tt2:199
+#: mail_tt2/listmaster_notification.tt2:206
+#: mail_tt2/listmaster_notification.tt2:234
+#: mail_tt2/listmaster_notification.tt2:241
+#: mail_tt2/listmaster_notification.tt2:248
 msgid "list %1 in status error_config"
 msgstr "邮件列表%1在error_config状态"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:162
+#: mail_tt2/listmaster_notification.tt2:168
 msgid "No owner is defined for list %1."
 msgstr "邮件列表%1没有所有者为被定义。"
 
-#: mail_tt2/listmaster_notification.tt2:163
-#: mail_tt2/listmaster_notification.tt2:188
-#: mail_tt2/listmaster_notification.tt2:196
-#: mail_tt2/listmaster_notification.tt2:203
-#: mail_tt2/listmaster_notification.tt2:231
-#: mail_tt2/listmaster_notification.tt2:238
-#: mail_tt2/listmaster_notification.tt2:245
+#: mail_tt2/listmaster_notification.tt2:169
+#: mail_tt2/listmaster_notification.tt2:194
+#: mail_tt2/listmaster_notification.tt2:202
+#: mail_tt2/listmaster_notification.tt2:209
+#: mail_tt2/listmaster_notification.tt2:237
+#: mail_tt2/listmaster_notification.tt2:244
+#: mail_tt2/listmaster_notification.tt2:251
 msgid "The list status has been set to error_config."
 msgstr "邮件列表状态被设置成error_config。"
 
-#: mail_tt2/listmaster_notification.tt2:164
-#: mail_tt2/listmaster_notification.tt2:189
-#: mail_tt2/listmaster_notification.tt2:197
-#: mail_tt2/listmaster_notification.tt2:204
-#: mail_tt2/listmaster_notification.tt2:211
-#: mail_tt2/listmaster_notification.tt2:218
-#: mail_tt2/listmaster_notification.tt2:232
-#: mail_tt2/listmaster_notification.tt2:239
-#: mail_tt2/listmaster_notification.tt2:246
+#: mail_tt2/listmaster_notification.tt2:170
+#: mail_tt2/listmaster_notification.tt2:195
+#: mail_tt2/listmaster_notification.tt2:203
+#: mail_tt2/listmaster_notification.tt2:210
+#: mail_tt2/listmaster_notification.tt2:217
+#: mail_tt2/listmaster_notification.tt2:224
+#: mail_tt2/listmaster_notification.tt2:238
+#: mail_tt2/listmaster_notification.tt2:245
+#: mail_tt2/listmaster_notification.tt2:252
 msgid "Check Sympa log files for more precise information."
 msgstr "为更精确的信息检查Sympa日志文件。"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:168
+#: mail_tt2/listmaster_notification.tt2:174
 msgid "List owner/editor email changes"
 msgstr "列出 owner/editor email的变更"
 
 #. (previous_email,new_email)
-#: mail_tt2/listmaster_notification.tt2:170
+#: mail_tt2/listmaster_notification.tt2:176
 #, fuzzy
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
@@ -5567,13 +5578,13 @@ msgid ""
 msgstr "用户 %1 已将他的邮件地址更改为 %2. 变更将应用于如下："
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:177
+#: mail_tt2/listmaster_notification.tt2:183
 #, fuzzy
 msgid "List %1 : Failed to change admin email address"
 msgstr "改变我的邮件地址"
 
 #. (current_email,new_email,datasource)
-#: mail_tt2/listmaster_notification.tt2:181
+#: mail_tt2/listmaster_notification.tt2:187
 msgid ""
 "Admin %1 could not change his admin email address (new email address is %2) "
 "because he is included via a the following data sources: %3.\n"
@@ -5583,70 +5594,70 @@ msgid ""
 msgstr ""
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:187
+#: mail_tt2/listmaster_notification.tt2:193
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr "当复制邮件列表%1中的 %2文件时发生错误。"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:195
+#: mail_tt2/listmaster_notification.tt2:201
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "邮件列表%1配置不符合family%2规则。"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:202
+#: mail_tt2/listmaster_notification.tt2:208
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
 msgstr "Sympa不能用邮件列表%1 param_constraint.conf文件检查Families%2规则。"
 
-#: mail_tt2/listmaster_notification.tt2:208
-#: mail_tt2/listmaster_notification.tt2:215
+#: mail_tt2/listmaster_notification.tt2:214
+#: mail_tt2/listmaster_notification.tt2:221
 msgid "errors in param_constraint.conf file"
 msgstr "param_constraint.conf文件中的错误"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:210
-#: mail_tt2/listmaster_notification.tt2:217
+#: mail_tt2/listmaster_notification.tt2:216
+#: mail_tt2/listmaster_notification.tt2:223
 msgid "Error(s) found in the file %1."
 msgstr "在文件%1中发现错误。"
 
-#: mail_tt2/listmaster_notification.tt2:221
+#: mail_tt2/listmaster_notification.tt2:227
 msgid "File removed"
 msgstr "文件被去除"
 
 #. (param0)
-#: mail_tt2/listmaster_notification.tt2:223
+#: mail_tt2/listmaster_notification.tt2:229
 msgid "The following file has been removed : %1"
 msgstr "以下文件已删除：%1"
 
 #. (param1)
-#: mail_tt2/listmaster_notification.tt2:224
+#: mail_tt2/listmaster_notification.tt2:230
 msgid "A backup of the file has been made : %1"
 msgstr "一个备份文件生成了：%1"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:230
+#: mail_tt2/listmaster_notification.tt2:236
 msgid "Sympa could not load family %2 for list %1."
 msgstr "Sympa不能为邮件列表%1载入Families%2。"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:237
+#: mail_tt2/listmaster_notification.tt2:243
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "无法对邮件列表%1 instantiate family%2"
 
 #. (param0,param1)
-#: mail_tt2/listmaster_notification.tt2:244
+#: mail_tt2/listmaster_notification.tt2:250
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa无法修改邮件列表%1（Families%2）"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:250
+#: mail_tt2/listmaster_notification.tt2:256
 #: mail_tt2/listowner_notification.tt2:41
 msgid "List %1 automatic bounce management"
 msgstr "邮件列表%1自动退信管理"
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:254
+#: mail_tt2/listmaster_notification.tt2:260
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5656,7 +5667,7 @@ msgstr ""
 "表%2中去除："
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:257
+#: mail_tt2/listmaster_notification.tt2:263
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5665,7 +5676,7 @@ msgstr ""
 "由于我们接收到许多未送达报告，以下列出的%1订阅者已经从邮件列表%2中去除："
 
 #. (total,list.name)
-#: mail_tt2/listmaster_notification.tt2:260
+#: mail_tt2/listmaster_notification.tt2:266
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -5673,37 +5684,37 @@ msgid ""
 msgstr ""
 "由于我们接收到许多未送达报告，以下列出的%1订阅者是由Sympa选出经常发生退信："
 
-#: mail_tt2/listmaster_notification.tt2:267
+#: mail_tt2/listmaster_notification.tt2:273
 #: mail_tt2/listowner_notification.tt2:58
 msgid "Managing bouncing subscribers:"
 msgstr "处理退信订阅者："
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:271
-#: mail_tt2/listmaster_notification.tt2:283
+#: mail_tt2/listmaster_notification.tt2:277
+#: mail_tt2/listmaster_notification.tt2:289
 msgid "Listmaster : internal server error "
 msgstr "邮件列表管理员：内部服务器错误"
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:273
-#: mail_tt2/listmaster_notification.tt2:285
+#: mail_tt2/listmaster_notification.tt2:279
+#: mail_tt2/listmaster_notification.tt2:291
 msgid " User %1 has encountered an internal server error"
 msgstr "用户%1遇到了一个内部服务器错误"
 
-#: mail_tt2/listmaster_notification.tt2:286
-#: mail_tt2/listmaster_notification.tt2:357
+#: mail_tt2/listmaster_notification.tt2:292
+#: mail_tt2/listmaster_notification.tt2:363
 msgid "Web interface"
 msgstr "网页界面"
 
-#: mail_tt2/listmaster_notification.tt2:288
+#: mail_tt2/listmaster_notification.tt2:294
 msgid "Unable to change directory."
 msgstr "无法改变目录。"
 
-#: mail_tt2/listmaster_notification.tt2:289
+#: mail_tt2/listmaster_notification.tt2:295
 msgid "The authentication server name is not defined."
 msgstr "身份验证服务器名称没有被定义。"
 
-#: mail_tt2/listmaster_notification.tt2:290
+#: mail_tt2/listmaster_notification.tt2:296
 msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
@@ -5712,287 +5723,287 @@ msgstr ""
 "ldap_get_email_by_uid_filter词条。"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:291
+#: mail_tt2/listmaster_notification.tt2:297
 msgid "Unkown authentication service %1."
 msgstr "未知身份验证服务%1。"
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:292
+#: mail_tt2/listmaster_notification.tt2:298
 msgid "Add user '%1' in DB failed."
 msgstr "在出错误的DB添加用户＂%1＂。"
 
 #. (user)
-#: mail_tt2/listmaster_notification.tt2:293
+#: mail_tt2/listmaster_notification.tt2:299
 msgid "Update user '%1' in DB failed"
 msgstr "在DB中更新用户＂%1＂失败"
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:293
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:301
 msgid " (old email : %1)"
 msgstr "（以前的邮件地址：%1）"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:294
+#: mail_tt2/listmaster_notification.tt2:300
 msgid "Add subscriber '%1' in DB failed."
 msgstr "在出错误的DB添加订阅者＂%1＂。"
 
 #. (sub,old_email)
-#: mail_tt2/listmaster_notification.tt2:295
+#: mail_tt2/listmaster_notification.tt2:301
 msgid "Update subscriber '%1' in DB failed"
 msgstr "在DB中更新用户＂%1＂失败"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:296
+#: mail_tt2/listmaster_notification.tt2:302
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "删除出错DB的订阅者＂%1＂。"
 
 #. (old_email)
-#: mail_tt2/listmaster_notification.tt2:297
+#: mail_tt2/listmaster_notification.tt2:303
 msgid "Delete user in DB for old email '%1' failed."
 msgstr "删除用户在DB为已读邮件＂%1＂发生了错误。"
 
 #. (email,list.name)
-#: mail_tt2/listmaster_notification.tt2:298
+#: mail_tt2/listmaster_notification.tt2:304
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "订阅者＂%1＂在邮件列表%2中没有被找到。"
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:299
+#: mail_tt2/listmaster_notification.tt2:305
 msgid "Unable to read file : '%1'."
 msgstr "无法读取文件：＂%1＂。"
 
 #. (filepath)
-#: mail_tt2/listmaster_notification.tt2:300
+#: mail_tt2/listmaster_notification.tt2:306
 msgid "Unable to write file : '%1'."
 msgstr "无法写文件：＂%1＂。"
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:301
+#: mail_tt2/listmaster_notification.tt2:307
 msgid "Unable to open file '%1'."
 msgstr "无法对打开文件＂%1＂。"
 
 #. (directory)
-#: mail_tt2/listmaster_notification.tt2:302
+#: mail_tt2/listmaster_notification.tt2:308
 msgid "Unable to open directory '%1'."
 msgstr "无法打开目录＂%1＂。"
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:303
+#: mail_tt2/listmaster_notification.tt2:309
 msgid "Unable to create directory '%1'."
 msgstr "无法创建目录＂%1＂。"
 
 #. (spool)
-#: mail_tt2/listmaster_notification.tt2:304
+#: mail_tt2/listmaster_notification.tt2:310
 msgid "Unable to open spool '%1'."
 msgstr "无法打开队列＂%1＂。"
 
 #. (msg)
-#: mail_tt2/listmaster_notification.tt2:305
+#: mail_tt2/listmaster_notification.tt2:311
 msgid "Unable to get message '%1'."
 msgstr "无法收到邮件＂%1＂。"
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:306
+#: mail_tt2/listmaster_notification.tt2:312
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "无法将文件＂%1＂改名成＂%2＂。"
 
 #. (old,new)
-#: mail_tt2/listmaster_notification.tt2:307
+#: mail_tt2/listmaster_notification.tt2:313
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "无法将目录＂%1＂改名成＂%2＂。"
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:308
+#: mail_tt2/listmaster_notification.tt2:314
 msgid "Unable to erase file '%1'."
 msgstr "无法删掉文件＂%1＂。"
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:309
+#: mail_tt2/listmaster_notification.tt2:315
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "无法从＂%1＂发送分发命令到邮件列表＂%2＂。"
 
 #. (dir)
-#: mail_tt2/listmaster_notification.tt2:310
+#: mail_tt2/listmaster_notification.tt2:316
 msgid "No HTML version of the message available in '%1'."
 msgstr "在＂%1＂中没有HTML版本的邮件可用。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:311
+#: mail_tt2/listmaster_notification.tt2:317
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "无法为邮件列表＂%1＂更新文件config_changes。"
 
 #. (month,list.name)
-#: mail_tt2/listmaster_notification.tt2:312
+#: mail_tt2/listmaster_notification.tt2:318
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "找不到邮件列表＂%2＂的＂%1＂月"
 
 #. (dir)
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:312
-#: mail_tt2/listmaster_notification.tt2:313
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:320
 msgid " : unable to read '%1'."
 msgstr "：无法读取＂%1＂。"
 
 #. (arc_file,list.name,path)
-#: mail_tt2/listmaster_notification.tt2:313
+#: mail_tt2/listmaster_notification.tt2:319
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "找不到邮件列表＂%2＂归档＂%1＂"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:314
+#: mail_tt2/listmaster_notification.tt2:320
 msgid "Unable to find archive for list '%1'"
 msgstr "找不到邮件列表＂%1＂归档"
 
-#: mail_tt2/listmaster_notification.tt2:315
+#: mail_tt2/listmaster_notification.tt2:321
 msgid "Unable to send archive : no message id found."
 msgstr "无法发送归档：没找到邮件ID。"
 
 #. (msgid)
-#: mail_tt2/listmaster_notification.tt2:316
+#: mail_tt2/listmaster_notification.tt2:322
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "在归档里没有发现邮件匹配Message-ID＂%1＂。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:317
+#: mail_tt2/listmaster_notification.tt2:323
 msgid "Cannot save config file for list '%1'."
 msgstr "无法保存邮件列表＂%1＂的配置文件。"
 
-#: mail_tt2/listmaster_notification.tt2:318
+#: mail_tt2/listmaster_notification.tt2:324
 msgid "Failed to install aliases."
 msgstr "无法安装别名。"
 
-#: mail_tt2/listmaster_notification.tt2:319
+#: mail_tt2/listmaster_notification.tt2:325
 msgid "Failed to remove aliases."
 msgstr "无法去除别名。"
 
-#: mail_tt2/listmaster_notification.tt2:320
+#: mail_tt2/listmaster_notification.tt2:326
 msgid "Internal scenario error for 'create_list'."
 msgstr "内部情景错误为create_list。"
 
-#: mail_tt2/listmaster_notification.tt2:321
+#: mail_tt2/listmaster_notification.tt2:327
 msgid "Unable to create list."
 msgstr "无法建立邮件列表。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:324
+#: mail_tt2/listmaster_notification.tt2:330
 msgid "Unable to get family for list '%1'."
 msgstr "无法为邮件列表＂%1＂得到Family。"
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:325
+#: mail_tt2/listmaster_notification.tt2:331
 msgid "Unable to reload list with new listname '%1'."
 msgstr "无法通过新的邮件列表名称＂%1＂再装邮件列表。"
 
-#: mail_tt2/listmaster_notification.tt2:325
+#: mail_tt2/listmaster_notification.tt2:331
 msgid "Unable to reload list"
 msgstr "无法再装邮件列表"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:326
+#: mail_tt2/listmaster_notification.tt2:332
 msgid "Failed to inlude members for list '%1'"
 msgstr "无法为邮件列表＂%1＂包含成员"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:327
+#: mail_tt2/listmaster_notification.tt2:333
 msgid "Failed to include list admins for list '%1'"
 msgstr "无法为邮件列表＂%1＂包含管理员"
 
-#: mail_tt2/listmaster_notification.tt2:328
+#: mail_tt2/listmaster_notification.tt2:334
 msgid "No owner is defined for the list '%1'"
 msgstr "邮件列表＂%1＂没有定义所有者"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:329
+#: mail_tt2/listmaster_notification.tt2:335
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "邮件列表＂%1＂输出到Ldap目录失败"
 
 #. (new_listname)
-#: mail_tt2/listmaster_notification.tt2:330
+#: mail_tt2/listmaster_notification.tt2:336
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "无法在SMTP服务器上检查邮件列表名称＂%1＂"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:331
+#: mail_tt2/listmaster_notification.tt2:337
 msgid "Cannot create shared for list '%1'."
 msgstr "无法为邮件列表＂%1＂创建共享。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:332
+#: mail_tt2/listmaster_notification.tt2:338
 msgid "Cannot restore shared for list '%1'."
 msgstr "无法恢复邮件列表＂%1＂的共享。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:333
+#: mail_tt2/listmaster_notification.tt2:339
 msgid "Cannot delete shared for list '%1'."
 msgstr "无法删除邮件列表＂%1＂共享。"
 
-#: mail_tt2/listmaster_notification.tt2:334
+#: mail_tt2/listmaster_notification.tt2:340
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "无法浏览邮件列表＂%1＂共享文档。"
 
 #. (path)
-#: mail_tt2/listmaster_notification.tt2:335
+#: mail_tt2/listmaster_notification.tt2:341
 msgid "Cannot upload file '%1'."
 msgstr "无法上传文件＂%1＂。"
 
 #. (name)
-#: mail_tt2/listmaster_notification.tt2:337
+#: mail_tt2/listmaster_notification.tt2:343
 msgid "Errors while unzipping file '%1'."
 msgstr "当unzip文件＂%1＂时发生错误。"
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:338
+#: mail_tt2/listmaster_notification.tt2:344
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "无法从＂%1＂发送提醒命令到邮件列表＂%2＂。"
 
 #. (from,list.name)
-#: mail_tt2/listmaster_notification.tt2:339
+#: mail_tt2/listmaster_notification.tt2:345
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "无法从＂%1＂发送邮件到邮件列表＂%2＂。"
 
 #. (key,list.name)
-#: mail_tt2/listmaster_notification.tt2:340
+#: mail_tt2/listmaster_notification.tt2:346
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr "无法用邮件列表%2的密钥%1访问证实的邮件。"
 
 #. (sub)
-#: mail_tt2/listmaster_notification.tt2:341
+#: mail_tt2/listmaster_notification.tt2:347
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "无法删除用户＂%1的订阅要求＂。"
 
 #. (file)
-#: mail_tt2/listmaster_notification.tt2:342
+#: mail_tt2/listmaster_notification.tt2:348
 msgid "Unable to add file '%1' to archives."
 msgstr "无法添加文件＂%1＂到归档。"
 
 #. (zipfile)
-#: mail_tt2/listmaster_notification.tt2:343
+#: mail_tt2/listmaster_notification.tt2:349
 msgid "Unable to write file zip '%1'."
 msgstr "无法写文件zip＂%1＂。"
 
 #. (path,list.name)
-#: mail_tt2/listmaster_notification.tt2:345
+#: mail_tt2/listmaster_notification.tt2:351
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr "无法用路径＂%1＂为邮件列表＂%2＂创建SharedDocument。"
 
-#: mail_tt2/listmaster_notification.tt2:346
+#: mail_tt2/listmaster_notification.tt2:352
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "参量 cookie未定义，身份验证失败。"
 
 #. (env)
-#: mail_tt2/listmaster_notification.tt2:347
+#: mail_tt2/listmaster_notification.tt2:353
 msgid "Cookie error : '%1' undefined, authentication failure."
 msgstr "Cookie错误：＂%1＂未定义，身份验证失败。"
 
 #. (list.name)
-#: mail_tt2/listmaster_notification.tt2:354
+#: mail_tt2/listmaster_notification.tt2:360
 msgid "Listmaster : system error "
 msgstr "邮件列表管理员：系统误差"
 
 #. (who)
-#: mail_tt2/listmaster_notification.tt2:356
+#: mail_tt2/listmaster_notification.tt2:362
 msgid " User %1 has encountered a system error"
 msgstr "用户%1遇到了系统误差"
 
@@ -6683,11 +6694,11 @@ msgstr "%1／从%2退订"
 msgid "%1 / your environment"
 msgstr "%1／环境设置"
 
-#. (list,conf.host,request_from_host,date)
+#. (list,conf.host,request_from_host)
 #: mail_tt2/sendpasswd.tt2:13
 msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
-"came from host %3 at %4)."
+"came from host %3)."
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:14
@@ -6711,11 +6722,11 @@ msgstr "从邮件列表退订，您需要提供以下口令"
 msgid "password: %1"
 msgstr "口令：%1"
 
-#. (conf.host,request_from_host,date)
+#. (conf.host,request_from_host)
 #: mail_tt2/sendpasswd.tt2:25
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
-"list server account %1. (This request came from host %2 at %3)."
+"list server account %1. (This request came from host %2)."
 msgstr ""
 
 #: mail_tt2/sendpasswd.tt2:26
@@ -7566,7 +7577,7 @@ msgstr "配置文件--CONFIG--包含错误。\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9533
+#: src/Commands.pm:963 wwsympa/wwsympa.fcgi:9534
 msgid "%A"
 msgstr "%A"
 
@@ -8224,16 +8235,16 @@ msgstr "%Y年%m月%d日（%a）"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2990 src/List.pm:2991 src/List.pm:2995
-#: wwsympa/wwsympa.fcgi:10900 wwsympa/wwsympa.fcgi:10969
-#: wwsympa/wwsympa.fcgi:11171 wwsympa/wwsympa.fcgi:11508
-#: wwsympa/wwsympa.fcgi:15347 wwsympa/wwsympa.fcgi:16073
-#: wwsympa/wwsympa.fcgi:16074 wwsympa/wwsympa.fcgi:4740
-#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6152
-#: wwsympa/wwsympa.fcgi:7170 wwsympa/wwsympa.fcgi:7704
-#: wwsympa/wwsympa.fcgi:7741 wwsympa/wwsympa.fcgi:7743
-#: wwsympa/wwsympa.fcgi:8220 wwsympa/wwsympa.fcgi:8221
-#: wwsympa/wwsympa.fcgi:8255 wwsympa/wwsympa.fcgi:8256
-#: wwsympa/wwsympa.fcgi:8435 wwsympa/wwsympa.fcgi:8436
+#: wwsympa/wwsympa.fcgi:10901 wwsympa/wwsympa.fcgi:10970
+#: wwsympa/wwsympa.fcgi:11172 wwsympa/wwsympa.fcgi:11509
+#: wwsympa/wwsympa.fcgi:15348 wwsympa/wwsympa.fcgi:16074
+#: wwsympa/wwsympa.fcgi:16075 wwsympa/wwsympa.fcgi:4740
+#: wwsympa/wwsympa.fcgi:4741 wwsympa/wwsympa.fcgi:6153
+#: wwsympa/wwsympa.fcgi:7171 wwsympa/wwsympa.fcgi:7705
+#: wwsympa/wwsympa.fcgi:7742 wwsympa/wwsympa.fcgi:7744
+#: wwsympa/wwsympa.fcgi:8221 wwsympa/wwsympa.fcgi:8222
+#: wwsympa/wwsympa.fcgi:8256 wwsympa/wwsympa.fcgi:8257
+#: wwsympa/wwsympa.fcgi:8436 wwsympa/wwsympa.fcgi:8437
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -8248,7 +8259,7 @@ msgstr ""
 "Perl系统在POSIX库中不是不断的定义_SC_ARG_MAXg。为不定的$max_arg配置一个值，\n"
 "您必须修改smtp.pm模块。\n"
 
-#: src/mail.pm:857
+#: src/mail.pm:750
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "无法在smtpto：%m中创建渠道"
 
@@ -8344,7 +8355,7 @@ msgstr "［图象%s］"
 msgid "[Image%s]"
 msgstr "［图象%s］"
 
-#: src/sympa.pl:2088
+#: src/sympa.pl:2100
 msgid "Unable to access directory %s : %m"
 msgstr "无法访问目录%s：%m"
 
@@ -8361,14 +8372,14 @@ msgstr "%H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/SympaSession.pm:431 wwsympa/SympaSession.pm:432
-#: wwsympa/wwsympa.fcgi:11732 wwsympa/wwsympa.fcgi:11865
-#: wwsympa/wwsympa.fcgi:14178 wwsympa/wwsympa.fcgi:7664
+#: wwsympa/wwsympa.fcgi:11733 wwsympa/wwsympa.fcgi:11866
+#: wwsympa/wwsympa.fcgi:14179 wwsympa/wwsympa.fcgi:7665
 msgid "%d %b %y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: wwsympa/wwsympa.fcgi:15717 wwsympa/wwsympa.fcgi:15718
+#: wwsympa/wwsympa.fcgi:15718 wwsympa/wwsympa.fcgi:15719
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -8519,6 +8530,20 @@ msgstr "不接收邮件（用于假期）"
 #: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
+
+#. (list,conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:13
+msgid ""
+"Someone, probably you, requested to subscribe to list %1@%2. (This request "
+"came from host %3 at %4)."
+msgstr ""
+
+#. (conf.host,request_from_host,date)
+#: mail_tt2/sendpasswd.tt2:25
+msgid ""
+"Someone, probably you, requested to allocate or renew your password for your "
+"list server account %1. (This request came from host %2 at %3)."
+msgstr ""
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
