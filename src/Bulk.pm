@@ -326,5 +326,89 @@ sub remove_bulkspool_message {
     return 1;
 }
 
+## 
+# test the maximal message size the database will accept
+sub store_test { 
+    my $maxtest = shift;
+    $maxtest = int($maxtest/100);
+    my $rcpts = 'nobody@cru.fr';
+    my $from = 'sympa-test@notadomain' ;
+    my $robot = 'notarobot' ;
+    my $listname = 'notalist';
+    my $priority = 9;
+    my $delivery_date = time;
+    my $verp  = 1;
+    
+    &do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority = %s,delivery_date= %s,verp = %s)',$from,$robot,$listname,$priority,$delivery_date,$verp);
+
+    $dbh = &List::db_get_handler();
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
+    
+    $priority = 9;
+
+    my $messagekey = &tools::md5_fingerprint(time());
+    my $msg;
+    autoflush STDOUT 1;  
+    
+    for (my $z=1;$z<=$maxtest;$z++){	
+	$msg = MIME::Base64::decode($msg);
+	for(my $i=1;$i<=10240;$i++){
+	    $msg .=  '0123456789';
+	}
+	$msg = MIME::Base64::encode($msg);
+	my $time = time();
+	printf "\rtesting storage of %d Ko ",($z-1)*100;
+	# 
+	my $statement = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",$dbh->quote($messagekey),$dbh->quote($msg);
+	my $statementtrace = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",$dbh->quote($messagekey),$dbh->quote(substr($msg, 0, 100));	    
+	unless ($dbh->do($statement)) {
+	    return (($z-1)*100);
+	}
+	printf "(%d s)        ", time() - $time;
+	unless ( &Bulk::remove_bulkspool_message('bulkspool',$messagekey) ) {
+	    &do_log('err','Unable to remove test message (key = %s) from bulkspool_table',$messagekey);	    
+	}
+	return ($z*100) if ($z == $maxtest);
+    }
+}
+
+## remove file that are not referenced by any packet
+sub purge_bulkspool {
+    &do_log('debug', 'purge_bulkspool');
+
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
+    my $statement = "SELECT messagekey_bulkspool AS messagekey FROM bulkspool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0";
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    my $count = 0;
+    while (my $key = $sth->fetchrow_hashref('NAME_lc')) {	
+	if ( &Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
+	    $count++;
+	}else{
+	    &do_log('err','Unable to remove message (key = %s) from bulkspool_table',$key->{'messagekey'});	    
+	}
+   }
+    $sth->finish;
+    return $count;
+}
+
+
+
 ## Packages must return true.
 1;

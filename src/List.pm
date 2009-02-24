@@ -4800,8 +4800,7 @@ sub get_subscriber {
 	$user->{'update_date'} ||= $user->{'date'};
 	
 	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if ($self->{'admin'}{'user_data_source'} eq 'database');
+	$user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');	
 	
 	do_log('debug2', 'List::get_subscriber custom_attribute  = (%s)', $user->{custom_attribute});
 	if (defined $user->{custom_attribute}) {
@@ -4923,8 +4922,7 @@ sub get_admin_user {
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
 	
 	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1
-	    if ($self->{'admin'}{'user_data_source'} eq 'database');
+	$admin_user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');
     }
     
     $sth->finish();
@@ -5199,8 +5197,7 @@ sub get_first_user {
 	$user->{'update_date'} ||= $user->{'date'};
 	
 	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
 	############################################################################	    
 	if (defined $user->{custom_attribute}) {
@@ -5541,8 +5538,7 @@ sub get_first_admin_user {
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
 
 	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1
-	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+	$admin_user->{'subscribed'} = 1 if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
     }else {
 	$sth->finish;
@@ -5585,8 +5581,7 @@ sub get_next_user {
 	$user->{'update_date'} ||= $user->{'date'};
 	
 	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
 	do_log('debug2', '(email = %s)', $user->{'email'});
 	if (defined $user->{custom_attribute}) {
@@ -5641,8 +5636,7 @@ sub get_next_admin_user {
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
 	
 	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1
-	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+	$admin_user->{'subscribed'} = 1 if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
     }
     else {
 	$sth->finish;
@@ -5724,8 +5718,7 @@ sub get_first_bouncing_user {
 	    if (! $user->{'email'});
 	
 	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
+	$user->{'subscribed'} = 1 if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 
     }else {
 	$sth->finish;
@@ -5756,8 +5749,7 @@ sub get_next_bouncing_user {
 	    if (! $user->{'email'});
 	
 	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
+	$user->{'subscribed'} = 1 if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 	if (defined $user->{custom_attribute}) {
 	    	my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
 	    	$user->{'custom_attribute'} = \%custom_attr ;

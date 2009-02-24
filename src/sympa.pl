@@ -109,6 +109,7 @@ Options:
    --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
    --log_level=LEVEL                     : sets Sympa log level
    --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
+   --test_database_message_buffer        : test the database message buffer size
    -h, --help                            : print this help
    -v, --version                         : print version number
 
@@ -123,7 +124,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
 		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
-		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s','quiet','close_unknown')) {
+		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer')) {
     &fatal_err("Unknown options.");
 }
 
@@ -148,6 +149,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'md5_digest'} || 
 				$main::options{'sync_include'} ||
 				$main::options{'upgrade'} ||
+				$main::options{'test_database_message_buffer'} || 
 				$main::options{'reload_list_config'}
 				 );
 
@@ -155,7 +157,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
-$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'} || $main::options{'test_database_message_buffer'});
 
 my %loop_info;
 my %msgid_table;
@@ -548,8 +550,18 @@ if ($main::options{'dump'}) {
     printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
     
     exit 0;
-}elsif ($main::options{'create_list'}) {
+}elsif ($main::options{'test_database_message_buffer'}) {
+    my $size = 0;   
+    printf "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";
+    $size = &Bulk::store_test(204000);
+    if ($size == 204000) {
+	printf "The maximum message size ($size Ko) testing was successful \n";
+    }else{
+	printf "maximun message size that can be stored in database : $size Ko\n";
+    }
+    exit 1;
     
+}elsif ($main::options{'create_list'}) {    
     my $robot = $main::options{'robot'} || $Conf{'host'};
     
     unless ($main::options{'input_file'}) {
