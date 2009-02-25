@@ -47,6 +47,7 @@ use Family;
 use report;
 use File::Copy;
 
+
 require 'tools.pl';
 require 'tt2.pl';
 
@@ -553,8 +554,8 @@ if ($main::options{'dump'}) {
 }elsif ($main::options{'test_database_message_buffer'}) {
     my $size = 0;   
     printf "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";
-    $size = &Bulk::store_test(204000);
-    if ($size == 204000) {
+    $size = &Bulk::store_test(21000); ## will test message until a 21 Mo message.
+    if ($size == 21000) {
 	printf "The maximum message size ($size Ko) testing was successful \n";
     }else{
 	printf "maximun message size that can be stored in database : $size Ko\n";

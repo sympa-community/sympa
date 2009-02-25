@@ -29,6 +29,7 @@ require Exporter;
 require Encode;
 require 'tools.pl';
 require "--LIBDIR--/tt2.pl";
+use Time::HiRes qw(time);
 
 my @ISA = qw(Exporter);
 
@@ -54,6 +55,9 @@ use MIME::Parser;
 use MIME::Base64;
 use Message;
 use List;
+use Term::ProgressBar;
+use constant MAX => 100_000;
+
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
@@ -326,11 +330,15 @@ sub remove_bulkspool_message {
     return 1;
 }
 
-## 
 # test the maximal message size the database will accept
 sub store_test { 
-    my $maxtest = shift;
-    $maxtest = int($maxtest/100);
+    my $value_test = shift;
+    my $divider = 100;
+    my $steps = 50;
+    my $maxtest = $value_test/$divider;
+    my $size_increment = $divider*$maxtest/$steps;
+    my $barmax = $size_increment*$steps*($steps+1)/2;
+    my $even_part = $barmax/$steps;
     my $rcpts = 'nobody@cru.fr';
     my $from = 'sympa-test@notadomain' ;
     my $robot = 'notarobot' ;
@@ -341,6 +349,11 @@ sub store_test {
     
     &do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority = %s,delivery_date= %s,verp = %s)',$from,$robot,$listname,$priority,$delivery_date,$verp);
 
+    print "maxtest: $maxtest\n";
+    print "barmax: $barmax\n";
+    my $progress = Term::ProgressBar->new({name  => 'Total size transfered',
+                                         count => $barmax,
+                                         ETA   => 'linear', });
     $dbh = &List::db_get_handler();
 
     unless ($dbh and $dbh->ping) {
@@ -351,28 +364,38 @@ sub store_test {
 
     my $messagekey = &tools::md5_fingerprint(time());
     my $msg;
-    autoflush STDOUT 1;  
+    $progress->max_update_rate(1);
+    my $next_update = 0;
+    my $total = 0;
+
+    my $result = 0;
     
-    for (my $z=1;$z<=$maxtest;$z++){	
+    for (my $z=1;$z<=$steps;$z++){	
 	$msg = MIME::Base64::decode($msg);
-	for(my $i=1;$i<=10240;$i++){
-	    $msg .=  '0123456789';
+	for(my $i=1;$i<=1024*$size_increment;$i++){
+	    $msg .=  'a';
 	}
 	$msg = MIME::Base64::encode($msg);
 	my $time = time();
-	printf "\rtesting storage of %d Ko ",($z-1)*100;
+        $progress->message(sprintf "Test storing and removing of a %5d kB message (step %s out of %s)", $z*$size_increment, $z, $steps);
 	# 
 	my $statement = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",$dbh->quote($messagekey),$dbh->quote($msg);
 	my $statementtrace = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",$dbh->quote($messagekey),$dbh->quote(substr($msg, 0, 100));	    
 	unless ($dbh->do($statement)) {
-	    return (($z-1)*100);
+	    return (($z-1)*$size_increment);
 	}
-	printf "(%d s)        ", time() - $time;
 	unless ( &Bulk::remove_bulkspool_message('bulkspool',$messagekey) ) {
 	    &do_log('err','Unable to remove test message (key = %s) from bulkspool_table',$messagekey);	    
 	}
-	return ($z*100) if ($z == $maxtest);
+	$total += $z*$size_increment;
+        $progress->message(sprintf ".........[OK. Done in %.2f sec]", time() - $time);
+	$next_update = $progress->update($total+$even_part)
+	    if $total > $next_update && $total < $barmax;
+	$result = $z*$size_increment;
     }
+    $progress->update($barmax)
+	if $barmax >= $next_update;
+    return $result;
 }
 
 ## remove file that are not referenced by any packet
