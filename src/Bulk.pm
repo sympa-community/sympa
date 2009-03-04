@@ -82,15 +82,17 @@ sub next {
 
     $dbh = &List::db_get_handler();
 
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+
     # lock next packet
     my $lock = &tools::get_lockname();
     my $order = 'ORDER BY priority_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
     my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %s %s",$dbh->quote($lock), time(), $order ;
 
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-    }
     
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to select and lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
@@ -127,7 +129,7 @@ sub remove {
 
     my $statement = sprintf "DELETE FROM bulkmailer_table WHERE packetid_bulkmailer = %s AND messagekey_bulkmailer = %s",$dbh->quote($packetid),$dbh->quote($messagekey),;
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }	   
     return ($dbh->do($statement));
 }
@@ -139,7 +141,7 @@ sub messageasstring {
     my $statement = sprintf "SELECT message_bulkspool AS message FROM bulkspool_table WHERE messagekey_bulkspool = %s",$dbh->quote($messagekey);
     
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	return undef unless &List::db_connect();
     }
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
