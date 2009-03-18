@@ -3368,4 +3368,22 @@ sub CleanSpool {
 sub get_lockname (){
     return substr(substr(hostname(), 0, 20).$$,0,30);   
 }
+
+## compare 2 scalars, string/numeric independant
+sub smart_lessthan {
+    my ($stra, $strb) = @_;
+    $stra =~ s/^\s+//; $stra =~ s/\s+$//;
+    $strb =~ s/^\s+//; $strb =~ s/\s+$//;
+    $! = 0;
+    my($numa, $unparsed) = &POSIX::strtod($stra);
+    my $numb;
+    $numb = &POSIX::strtod($strb)
+    	unless ($! || $unparsed !=0);
+    if (($stra eq '') || ($strb eq '') || ($unparsed != 0) || $!) {
+	return $stra lt $strb;
+    } else {
+        return $stra < $strb;
+    } 
+}
+
 1;
