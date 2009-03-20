@@ -147,6 +147,7 @@ sub load_config {
 			bounced_pidfile => '--PIDDIR--/bounced.pid',
 			cookie_domain => 'localhost',
 			cookie_expire => 0,
+			custom_archiver => '',
 			mhonarc => '/usr/bin/mhonarc',
 			review_page_size => 25,
 			viewlogs_page_size => 25,
