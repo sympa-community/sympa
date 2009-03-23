@@ -772,7 +772,7 @@ sub mail2arc {
     #    chdir($wwsconf->{'arc_path'});
 
     if ($wwsconf->{'custom_archiver'}) {
-	`$wwsconf->{'custom_archiver'}$queue/$file`;
+	`$wwsconf->{'custom_archiver'} --list=$listname\@$hostname --file=$queue/$file`;
 	return 1;
     }else{
 
