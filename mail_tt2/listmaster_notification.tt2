@@ -63,7 +63,7 @@ Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 
 [%|loc(db_name)%]The database structure has been updated ; check log file for further details : [%END%]
-[% FOREACH report_item = report -%]
+[% FOREACH report_item IN report -%]
   [% report_item %]
 [% END %]
 
@@ -174,7 +174,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%END%][%END%]
 
 [%|loc(previous_email,new_email)%]Member %1 has changed his owner/editor email address to %2. This change has been performed for the following lists :[%END%]
-[% FOREACH updated_list = updated_lists -%]
+[% FOREACH updated_list IN updated_lists -%]
 [% updated_list %]
 [% END %]
 
@@ -266,7 +266,7 @@ removed from list %2:[%END%]
 selected by Sympa as severe bouncing addresses:[%END%]
 [%END%]
 
-[% FOREACH user = user_list -%]
+[% FOREACH user IN user_list -%]
 [% user %]
 [% END %]
 

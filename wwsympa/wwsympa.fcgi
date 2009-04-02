@@ -14852,11 +14852,12 @@ sub do_change_email {
      }
      ## Notify listmasters that list owners/moderators email have changed
      if (keys %updated_lists) {
+	 my @u_lists = keys %updated_lists;
 	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
 					  {'list' => $list,
 					   'previous_email' => $old_email,
 					   'new_email' => $new_email,
-					   'updated_lists' => keys %updated_lists})
+					   'updated_lists' => \@u_lists})
 	 }
      
      ## Update User_table and remove existing entry first (to avoid duplicate entries)
