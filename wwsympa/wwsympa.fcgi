@@ -14762,8 +14762,8 @@ sub do_change_email {
 	 $old_email = $in{'old_email'};
 	 $new_email = $in{'new_email'};
      }else {
-	 $old_email = $in{'email'};
-	 $new_email = $param->{'user'}{'email'};
+	 $old_email = $param->{'user'}{'email'};
+	 $new_email = $param->{'ticket_context'}{'email'};
      }
 
      my ($password, $newuser);
