@@ -749,7 +749,10 @@ sub probe_db {
 							'lock_bulkmailer' => 'varchar(30)'},
 				 'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
 						       'message_bulkspool' => 'longtext',
-						       'lock_bulkspool' => 'int(1)',},
+						       'lock_bulkspool' => 'int(1)'},
+				 'conf_table' => {'robot_conf' => 'varchar(80)',
+						  'label_conf' => 'varchar(80)',
+						  'value_conf' => 'varchar(300)'}
 			     },
 		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
 						   'gecos_user' => 'varchar(150)',
@@ -836,7 +839,10 @@ sub probe_db {
 							 'lock_bulkmailer' => 'varchar(30)'},
 				  'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
 							'message_bulkspool' => 'text',
-							'lock_bulkspool' => 'integer',},
+							'lock_bulkspool' => 'integer'},
+				  'conf_table' => {'robot_conf' => 'varchar(80)',
+						   'label_conf' => 'varchar(80)',
+						   'value_conf' => 'varchar(300)'}
 			      },
 		     );
     
@@ -875,6 +881,7 @@ sub probe_db {
 		   'one_time_ticket_table' => ['ticket_one_time_ticket'],
 		   'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
 		   'bulkspool_table' => ['messagekey_bulkspool'],
+		   'conf_table' => ['robot_conf','label_conf']
 		   );
 
     ## List the required INDEXES

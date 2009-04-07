@@ -134,6 +134,13 @@ CREATE TABLE bulkspool_table (
 	message_bulkspool 	long,
 	lock_bulkspool 	number,
 	CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool)
-)
+);
+
+CREATE TABLE conf_table (
+  robot_conf varchar(80),
+  label_conf varchar(80),
+  value_conf varchar(300)
+  CONSTRAINT ind_conf primary key (robot_conf,label_conf)
+);
 
 !

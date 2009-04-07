@@ -794,9 +794,9 @@ my %in_regexp = (
 		 'ip' => &tools::get_regexp('host'),
          
 		 ## colors
-		 'sub_action_test' => '.*',
-		 'sub_action_reset' => '.*',
-		 'sub_action_install' => '.*',
+		 'subaction_test' => '.*',
+		 'subaction_reset' => '.*',
+		 'subaction_install' => '.*',
 		 'custom_color_value' => '\#.*',
 		 'custom_color_0' => '.*',
 		 'custom_color_1' => '.*',
@@ -5613,19 +5613,19 @@ sub do_skinsedit {
     my $css_url  = &Conf::get_robot_conf($robot, 'css_url');
 	
     $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($css_url =~ /\.css$/);
-  
-    if(($in{'editcolors'})&&($in{'sub_action_reset'})){
-	undef $session->{'custom_css'};	
-	undef $param ->{'session'}{'custom_css'};	 
-	undef $param->{'custom_css'};	
+
+    if(($in{'editcolors'})&&($in{'subaction'} eq 'reset')){
+	delete $session->{'custom_css'};	
+	delete $param ->{'session'}{'custom_css'};	 
+	delete $param->{'custom_css'};	
 
 	foreach my $colornumber (0..15){
-	    undef $session->{'color_'.$colornumber} ;
-	    undef $param ->{'session'}{'color_'.$colornumber};
+	    delete $session->{'color_'.$colornumber} ;
+	    delete $param ->{'session'}{'color_'.$colornumber};
 	}
     }
 
-    if(($in{'editcolors'})&&($in{'sub_action_test'})){
+    if(($in{'editcolors'})&&($in{'subaction'} eq 'test')){
 
 	return unless ($in{'custom_color_number'} =~ /color_/);
 	$param->{'custom_color_number'} = $in{'custom_color_number'};
@@ -5644,18 +5644,25 @@ sub do_skinsedit {
 	}
 
     }
-    if (($in{'sub_action_install'})||($in{'installcss'})) {
+    if (($in{'subaction'} eq 'install')||($in{'installcss'})) {
 
 	my $lang = &Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,'');
 
 	my $date= time;
 	my $style_file;
+
+	# update config
+	foreach my $colornumber (0..15){
+	    &Conf::set_robot_conf($robot, 'color_'.$colornumber, $session->{'color_'.$colornumber}) if ($session->{'color_'.$colornumber});
+	}
+	$param->{'conf'}=$Conf::Conf;
+
 	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 	    $param->{'css'} = $css;
 	    my $css_file;
 	    # if user use editcolor form we must generate a static CSS that used custom colors.
-	    if($in{'sub_action_test'}){
+	    if($in{'subaction_test'}){
 		$css_file = "$dir/$param->{'user'}{'email'}.$css";
 	    }else{   
 		$css_file = "$dir/$css";
@@ -5679,7 +5686,7 @@ sub do_skinsedit {
 		}
 	    }
 
-	    if ($in{'sub_action_install'}) {
+	    if ($in{'subaction_install'}) {
 		foreach my $colornumber (0..15){
 		    $param->{'color_'.$colornumber} = $session->{'color_'.$colornumber} if ($session->{'color_'.$colornumber});
 		}
@@ -5700,7 +5707,10 @@ sub do_skinsedit {
 	    
 	    ## Make the CSS readable to anyone
 	    chmod 0775, "$css_file";
+	    
+	    
 	}
+
 	$param->{'css_result'} = 1 ;
     }
     return 1;
@@ -14762,8 +14772,8 @@ sub do_change_email {
 	 $old_email = $in{'old_email'};
 	 $new_email = $in{'new_email'};
      }else {
-	 $old_email = $param->{'user'}{'email'};
-	 $new_email = $param->{'ticket_context'}{'email'};
+	 $old_email = $in{'email'};
+	 $new_email = $param->{'user'}{'email'};
      }
 
      my ($password, $newuser);
@@ -14852,12 +14862,11 @@ sub do_change_email {
      }
      ## Notify listmasters that list owners/moderators email have changed
      if (keys %updated_lists) {
-	 my @u_lists = keys %updated_lists;
 	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
 					  {'list' => $list,
 					   'previous_email' => $old_email,
 					   'new_email' => $new_email,
-					   'updated_lists' => \@u_lists})
+					   'updated_lists' => keys %updated_lists})
 	 }
      
      ## Update User_table and remove existing entry first (to avoid duplicate entries)

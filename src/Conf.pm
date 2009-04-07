@@ -43,6 +43,10 @@ sub DAEMON_COMMAND {2};
 sub DAEMON_CREATION {4};
 sub DAEMON_ALL {7};
 
+## Database and SQL statement handlers
+my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
+
+
 my @valid_options = qw(
 		       allow_subscribe_if_pending avg alias_manager bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
 		       cache_list_config
@@ -93,6 +97,69 @@ my %hardcoded_options = ('filesystem_encoding' => 'utf8');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
+
+# configuration parameters that are defined for each robot. Those who can be defined in the database are tagued 'db'
+my %valid_robot_key_words = ( 'http_host'     => 1,
+			      'allow_subscribe_if_pending'   => 1,
+			      listmaster      => 1,
+			      email           => 1,
+			      host            => 1,
+			      wwsympa_url     => 1,
+			      'title'         => 1,
+			      logo_html_definition        => 1,
+			      antispam_feature => 1,
+			      antispam_tag_header_name => 1,
+			      antispam_tag_header_spam_regexp => 1,
+			      antispam_tag_header_ham_regexp => 1,
+			      main_menu_custom_button_1_title => 1,
+			      main_menu_custom_button_1_url => 1,
+			      main_menu_custom_button_1_target => 1,
+			      main_menu_custom_button_2_title => 1,
+			      main_menu_custom_button_2_url => 1,
+			      main_menu_custom_button_2_target => 1,
+			      main_menu_custom_button_3_title => 1,
+			      main_menu_custom_button_3_url => 1,
+			      main_menu_custom_button_3_target => 1,
+			      lang            => 1,
+			      default_home    => 1,
+			      cookie_domain   => 1,
+			      log_smtp        => 1,
+			      log_module    => 1,
+			      log_condition    => 1,
+			      log_level       => 1,
+			      create_list     => 1,
+			      automatic_list_feature     => 1,
+			      automatic_list_creation     => 1,
+			      automatic_list_removal     => 1,
+			      dark_color      => 'db',
+			      light_color     => 'db',
+			      text_color      => 'db', 
+			      bg_color        => 'db',
+			      error_color     => 'db',
+			      selected_color  => 'db',
+			      shaded_color    => 'db',
+			      list_check_smtp => 1,
+			      list_check_suffixes => 1,
+			      spam_protection => 1,
+			      web_archive_spam_protection => 1,
+			      bounce_level1_rate => 1,
+			      bounce_level2_rate => 1,
+			      use_blacklist => 1,
+			      soap_url => 1,
+			      css_url => 1,
+			      css_path => 1,
+			      static_content_path => 1,
+			      static_content_url => 1,
+			      pictures_max_size => 1,
+			      color_0 => 'db', color_1 => 'db', color_2 => 'db', color_3 => 'db', color_4 => 'db', color_5 => 'db',color_6 => 'db', 
+			      color_7 => 'db', color_8 => 'db', color_9 => 'db',
+			      color_10 => 'db', color_11 => 'db', color_12 => 'db',color_13 => 'db', color_14 => 'db', color_15 => 'db',
+			      supported_lang => 1,
+			      default_shared_quota => 1,
+			      verp_rate => 1,
+			      loop_prevention_regex => 1,
+			      max_size => 1,
+			      );
 
 my %Default_Conf = 
     ('home'    => '--EXPL_DIR--',
@@ -445,27 +512,44 @@ sub load {
 	}
     }
 
+    #load parameter from database if database value as prioprity over conf file
+    foreach my $label (keys %valid_robot_key_words) {
+	next unless ($valid_robot_key_words{$label} eq 'db');
+	my $value = &get_db_conf('*', $label);
+	if ($value) {
+	    $Conf{$label} = $value ;
+	}
+    }
     ## Load robot.conf files
     my $robots_conf = &load_robots ;    
     $Conf{'robots'} = $robots_conf ;
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	foreach my $label (keys %valid_robot_key_words) {
+	    next unless ($valid_robot_key_words{$label} eq 'db');
+	    my $value = &get_db_conf('$robot', $label);
+	    if ($value) {
+		$Conf{'robots'}{$robot}{$label} = $value ;
+	    }
+	}
+    }
 
     my $nrcpt_by_domain =  &load_nrcpt_by_domain ;
     $Conf{'nrcpt_by_domain'} = $nrcpt_by_domain ;
     
     foreach my $robot (keys %{$Conf{'robots'}}) {
-	my $config;
+	my $config;   
 	unless ($config = &tools::get_filename('etc',{},'auth.conf', $robot)) {
 	    &do_log('err',"_load_auth: Unable to find auth.conf");
 	    next;
 	}
-
+	
 	$Conf{'auth_services'}{$robot} = &_load_auth($robot, $config);	
     }
-
+    
     if ($Conf{'ldap_export_name'}) {    
 	##Export
 	$Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
-							   'suffix' => $Conf{'ldap_export_suffix'},
+							       'suffix' => $Conf{'ldap_export_suffix'},
 							       'password' => $Conf{'ldap_export_password'},
 							       'DnManager' => $Conf{'ldap_export_dnmanager'},
 							       'connection_timeout' => $Conf{'ldap_export_connection_timeout'}
@@ -517,19 +601,19 @@ sub load {
 	$Conf{'list_check_regexp'} = $Conf{'list_check_suffixes'};
 	$Conf{'list_check_regexp'} =~ s/,/\|/g;
     }
-
+	
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     $Conf{'trusted_applications'} = &load_trusted_application (); 
     $Conf{'crawlers_detection'} = &load_crawlers_detection (); 
-
-    #  open (TMP, ">> /tmp/dump1"); printf TMP "dump de la conf dans conf.pm\n" ; &tools::dump_var($Conf{'crawlers_detection'}, 0,\*TMP);     close TMP;
-
     $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
     $Conf{'pictures_path'}  = $Conf{'static_content_path'}.'/pictures/';
-    
+	
+
+
+
     return 1;
-}
+}    
 
 ## load nrcpt file (limite receipient par domain
 sub load_nrcpt_by_domain {
@@ -538,9 +622,6 @@ sub load_nrcpt_by_domain {
   my $config_err = 0;
   my $nrcpt_by_domain ; 
   my $valid_dom = 0;
-
-  
-
 
   return undef unless (-f $config) ;
   &do_log('notice',"load_nrcpt: loading $config");
@@ -573,67 +654,6 @@ sub load_nrcpt_by_domain {
 sub load_robots {
     
     my $robot_conf ;
-    my %valid_robot_key_words = ( 'http_host'     => 1,
-				  'allow_subscribe_if_pending'   => 1,
-				  listmaster      => 1,
-				  email           => 1,
-				  host            => 1,
-				  wwsympa_url     => 1,
-				  'title'         => 1,
-				  logo_html_definition        => 1,
-				  antispam_feature => 1,
-				  antispam_tag_header_name => 1,
-				  antispam_tag_header_spam_regexp => 1,
-				  antispam_tag_header_ham_regexp => 1,
-				  main_menu_custom_button_1_title => 1,
-				  main_menu_custom_button_1_url => 1,
-				  main_menu_custom_button_1_target => 1,
-				  main_menu_custom_button_2_title => 1,
-				  main_menu_custom_button_2_url => 1,
-				  main_menu_custom_button_2_target => 1,
-				  main_menu_custom_button_3_title => 1,
-				  main_menu_custom_button_3_url => 1,
-				  main_menu_custom_button_3_target => 1,
-				  lang            => 1,
-				  default_home    => 1,
-				  cookie_domain   => 1,
-				  log_smtp        => 1,
-				  log_module    => 1,
-				  log_condition    => 1,
-				  log_level       => 1,
-				  create_list     => 1,
-				  automatic_list_feature     => 1,
-				  automatic_list_creation     => 1,
-				  automatic_list_removal     => 1,
-				  dark_color      => 1,
-				  light_color     => 1,
-				  text_color      => 1, 
-				  bg_color        => 1,
-				  error_color     => 1,
-				  selected_color  => 1,
-				  shaded_color    => 1,
-				  list_check_smtp => 1,
-				  list_check_suffixes => 1,
-				  spam_protection => 1,
-				  web_archive_spam_protection => 1,
-				  bounce_level1_rate => 1,
-				  bounce_level2_rate => 1,
-				  use_blacklist => 1,
-				  soap_url => 1,
-				  css_url => 1,
- 				  css_path => 1,
-				  static_content_path => 1,
-                                  static_content_url => 1,
-				  pictures_max_size => 1,
- 				  color_0 => 1, color_1 => 1, color_2 => 1, color_3 => 1, color_4 => 1, color_5 => 1,color_6 => 1, 
-				  color_7 => 1, color_8 => 1, color_9 => 1,
-				  color_10 => 1, color_11 => 1, color_12 => 1,color_13 => 1, color_14 => 1, color_15 => 1,
-				  supported_lang => 1,
-				  default_shared_quota => 1,
-				  verp_rate => 1,
-				  loop_prevention_regex => 1,
-				  max_size => 1,
-				  );
 
     ## Load wwsympa.conf
     unless ($wwsconf = &wwslib::load_config('--WWSCONFIG--')) {
@@ -653,6 +673,7 @@ sub load_robots {
     foreach my $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
 	next unless (-f "$Conf{'etc'}/$robot/robot.conf");
+	
 
 	unless (-r "$Conf{'etc'}/$robot/robot.conf") {
 	    printf STDERR "No read access on %s\n", "$Conf{'etc'}/$robot/robot.conf";
@@ -754,7 +775,16 @@ sub load_robots {
 	# printf STDERR "load trusted de $robot";
 	$robot_conf->{$robot}{'trusted_applications'} = &load_trusted_application($robot);
 	$robot_conf->{$robot}{'crawlers_detection'} = &load_crawlers_detection($robot);
+
 	close (ROBOT_CONF);
+
+
+	#load parameter from database if database value as prioprity over conf file
+	#foreach my $label (keys %valid_robot_key_words) {
+	#    next unless ($valid_robot_key_words{$label} eq 'db');
+	#    my $value = &get_db_conf($robot, $label);
+	#    $robot_conf->{$robot}{$label} = $value if ($value);	    
+	#}		
     }
     closedir(DIR);
     
@@ -764,9 +794,110 @@ sub load_robots {
 	$url =~ s/^http(s)?:\/\/(.+)$/$2/;
 	$Conf{'robot_by_soap_url'}{$url} = $Conf{'domain'};
     }
-
     return ($robot_conf);
 }
+
+
+## fetch the value from parameter $label of robot $robot from conf_table
+sub get_db_conf  {
+
+    my $robot = shift;
+    my $label = shift;
+
+    $dbh = &List::db_get_handler();
+    my $sth;
+
+    # if the value is related to a robot that is not explicitly defined, apply it to the default robot.
+    $robot = '*' unless (-f $Conf{'etc'}.'/'.$robot.'/robot.conf') ;
+    unless ($robot) {$robot = '*'};
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }	   
+    my $statement = sprintf "SELECT value_conf AS value FROM conf_table WHERE (robot_conf =%s AND label_conf =%s)", $dbh->quote($robot),$dbh->quote($label); 
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    my $value = $sth->fetchrow;
+    
+    $sth->finish();
+    return $value
+}
+
+
+## store the value from parameter $label of robot $robot from conf_table
+sub set_robot_conf  {
+    my $robot = shift;
+    my $label = shift;
+    my $value = shift;
+	
+    do_log('info','Set config for robot %s , %s="%s"',$robot,$label, $value);
+
+    
+    # set the current config before to update database.    
+    if (-f "$Conf{'etc'}/$robot/robot.conf") {
+	$Conf{'robots'}{$robot}{$label}=$value;
+    }else{
+	$Conf{$label}=$value;	
+	$robot = '*' ;
+    }
+
+    my $dbh = &List::db_get_handler();
+    my $sth;
+    
+    my $statement = sprintf "SELECT count(*) FROM conf_table WHERE (robot_conf=%s AND label_conf =%s)", $dbh->quote($robot),$dbh->quote($label); 
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	next;
+    }
+    my $count = $sth->fetchrow;
+    $sth->finish();
+    
+    if ($count == 0) {
+	$statement = sprintf "INSERT INTO conf_table (robot_conf, label_conf, value_conf) VALUES (%s,%s,%s)",$dbh->quote($robot),$dbh->quote($label), $dbh->quote($value);
+    }else{
+	$statement = sprintf "UPDATE conf_table SET robot_conf=%s, label_conf=%s, value_conf=%s WHERE ( robot_conf  =%s AND label_conf =%s)",$dbh->quote($robot),$dbh->quote($label),$dbh->quote($value),$dbh->quote($robot),$dbh->quote($label); 
+    }
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }    
+}
+
 
 ## Check required files and create them if required
 sub checkfiles_as_root {
@@ -1240,7 +1371,6 @@ sub get_robot_conf {
     ## default
     return $Conf{$param} || $wwsconf->{$param};
 }
-
 
 
 

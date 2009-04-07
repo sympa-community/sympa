@@ -41,7 +41,7 @@
 Be carreful : the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.
 </p>
 <p>
-Use the color editor in orer to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
+Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
 [%END%]
 </p>
 
@@ -53,17 +53,20 @@ Use the color editor in orer to change defined colors. First select the color yo
 <input type="hidden" name="editcolors" value="1">
 <input type="hidden" name="action" value="skinsedit">
 </li>
+
+
 <li>[%|loc%]Select the parameter you want to change : [%END%]
 <select id="custom_color_number" name="custom_color_number">
 [% FOREACH col IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] %]
 <option value="[%col%]" [% IF col == custom_color_number %]selected="selected"[% END %]>[%col%]</option>
 [% END %]
 </select>
+
 </li>
 <li>
-<input class="MainMenuLinks" type="submit" name="sub_action_test" value="[%|loc%]test this color in my session[%END%]" />
-<input class="MainMenuLinks" type="submit" name="sub_action_reset" value="[%|loc%]reset colors in my session[%END%]" />
-<input class="MainMenuLinks" type="submit" name="sub_action_install" value="[%|loc%]Install my session colors in a new static CSS[%END%]" />
+<input class="MainMenuLinks" type="submit" name="subaction_test" value="[%|loc%]test this color in my session[%END%]" />
+<input class="MainMenuLinks" type="submit" name="subaction_reset" value="[%|loc%]reset colors in my session[%END%]" />
+<input class="MainMenuLinks" type="submit" name="subaction_install" value="[%|loc%]Install my session colors in a new static CSS[%END%]" />
 </li>
 </ol>
 
@@ -83,97 +86,97 @@ Use the color editor in orer to change defined colors. First select the color yo
 <tr>
      <td>color_0</td>
      <td>[% color_0 %]</td>
-     <td style="background-color: [% color_0 %];" >&nbsp;</td>
+     <td style="background-color: [% color_0 %];cursor: pointer ;" onclick="chooseColorNumber('color_0')" align="center">&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI> one out of two lines in tables, alternated with color_5. It is intended to be the darkest shade, as color_5 has other uses.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_1</td>
      <td>[% color_1 %]</td>
-     <td style="background-color: [% color_1 %];" >&nbsp;</td>
+     <td style="background-color: [% color_1 %];cursor: pointer ;" onclick="chooseColorNumber('color_1');" align="center" >&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>main navigation tabs;</LI><LI> most of the buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_2</td>
      <td>[% color_2 %]</td>
-     <td style="background-color: [% color_2 %];" >&nbsp;</td>
+     <td style="background-color: [% color_2 %];cursor: pointer ;" onclick="chooseColorNumber('color_2');"  align="center">&nbsp;</td>
      <td>[%|loc%]font and border color of:<UL><LI> almost everything. Exceptions for borders are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some titles.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_3</td>
      <td>[% color_3 %]</td>
-     <td style="background-color: [% color_3 %];" >&nbsp;</td>
+     <td style="background-color: [% color_3 %];cursor: pointer ;" onclick="chooseColorNumber('color_3')"  align="center">&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>top box;</LI><LI>footer box.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_4</td>
      <td>[% color_4 %]</td>
-     <td style="background-color: [% color_4 %];" >&nbsp;</td>
+     <td style="background-color: [% color_4 %];cursor: pointer ;" onclick="chooseColorNumber('color_4')" align="center" >&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>page;</LI><LI>table headers;</LI><LI>the rest of the buttons (which are in fact hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_5</td>
      <td>[% color_5 %]</td>
-     <td style="background-color: [% color_5 %];" >&nbsp;</td>
+     <td style="background-color: [% color_5 %];cursor: pointer ;" onclick="chooseColorNumber('color_5')"  align="center">&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>all the main interface boxes;</LI><LI>the lightest color for the table lines, contrasting with color_0.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_6</td>
      <td>[% color_6 %]</td>
-     <td style="background-color: [% color_6 %];" >&nbsp;</td>
+     <td style="background-color: [% color_6 %];cursor: pointer ;" onclick="chooseColorNumber('color_6')"  align="center">&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>active action (for example, the section of the admin options which is currently viewed, or the header corresponding to the data following which an array is currently sorted);</LI><LI>hovered actions;</LI><LI>hovered buttons corresponding to the actionMenuLinks CSS class;</LI><LI>hovered navigation tabs.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_7</td>
      <td>[% color_7 %]</td>
-     <td style="background-color: [% color_7 %];" >&nbsp;</td>
+     <td style="background-color: [% color_7 %];cursor: pointer ;" onclick="chooseColorNumber('color_7')"  align="center">&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>error messages;</LI><LI>just edited area in the administrative management section.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_8</td>
      <td>[% color_8 %]</td>
-     <td style="background-color: [% color_8 %];" >&nbsp;</td>
+     <td style="background-color: [% color_8 %];cursor: pointer ;" onclick="chooseColorNumber('color_8')"  align="center">&nbsp;</td>
      <td>[%|loc%]doted underscore color of:<UL><LI>hyperlinks.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_9</td>
      <td>[% color_9 %]</td>
-     <td style="background-color: [% color_9 %];" >&nbsp;</td>
+     <td style="background-color: [% color_9 %];cursor: pointer ;" onclick="chooseColorNumber('color_9')"  align="center">&nbsp;</td>
      <td>[%|loc%]<UL><LI>border color for active action (for example, the section of the admin options which is currently viewed, or the header corresponding to the data following which an array is currently sorted);</LI><LI>border color for hovered hyperlinks corresponding to actions;</LI><LI>background color for clicked links (corresponding to the .active state in a CSS).</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_10</td>
      <td>[% color_10 %]</td>
-     <td style="background-color: [% color_10 %];" >&nbsp;</td>
+     <td style="background-color: [% color_10 %];cursor: pointer ;" onclick="chooseColorNumber('color_10')"  align="center">&nbsp;</td>
      <td>[%|loc%]inactive buttons color. Rarely used.[%END%]</td>
 </tr>
 <tr>
      <td>color_11</td>
      <td>[% color_11 %]</td>
-     <td style="background-color: [% color_11 %];" >&nbsp;</td>
+     <td style="background-color: [% color_11 %];cursor: pointer ;" onclick="chooseColorNumber('color_11')"  align="center">&nbsp;</td>
      <td>[%|loc%]font color for:<UL><LI>active navigation tab;</LI><LI>&lt;H2/&gt; titles;</LI><LI>hovered links;</LI><LI>some hovered buttons action(which are in fact hyperlinks, corresponding to the actionMenuLinks CSS class).</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_12</td>
      <td>[% color_12 %]</td>
-     <td style="background-color: [% color_12 %];" >&nbsp;</td>
+     <td style="background-color: [% color_12 %];cursor: pointer ;" onclick="chooseColorNumber('color_12');" align="center" >&nbsp;</td>
      <td>[%|loc%]font color for:<UL><LI>the class smallblack. Not sure it is used.</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_13</td>
      <td>[% color_13 %]</td>
-     <td style="background-color: [% color_13 %];" >&nbsp;</td>
+     <td style="background-color: [% color_13 %];cursor: pointer ;" onclick="chooseColorNumber('color_13')" align="center" >&nbsp;</td>
      <td>[%|loc%]background color of:<UL><LI>editable form areas (text areas, selection lists, ...);</LI><LI>the rest of hovered buttons (those corresponding to the MainMenuLinks CSS class).</LI></UL>[%END%]</td>
 </tr>
 <tr>
      <td>color_14</td>
      <td>[% color_14 %]</td>
-     <td style="background-color: [% color_14 %];" >&nbsp;</td>
+     <td style="background-color: [% color_14 %];cursor: pointer ;" onclick="chooseColorNumber('color_14')"  align="center">&nbsp;</td>
      <td>[%|loc%]unused[%END%]</td>
 </tr>
 <tr>
      <td>color_15</td>
      <td>[% color_15 %]</td>
-     <td style="background-color: [% color_15 %];" >&nbsp;</td>
+     <td style="background-color: [% color_15 %];cursor: pointer ;" onclick="chooseColorNumber('color_15')" align="center">&nbsp;</td>
      <td>[%|loc%]unused[%END%]</td>
 </tr>
 <tr>

@@ -128,3 +128,11 @@ CREATE TABLE bulkspool_table (
 	constraint ind_bulkspool primary key (messagekey_bulkspool)
 );
 CREATE INDEX messagekey_bulkspool_idx ON bulkspool_table(messagekey_bulkspool);
+
+CREATE TABLE conf_table (
+  robot_conf varchar(80),
+  label_conf varchar(80),
+  value_conf varchar(300)
+);
+
+CREATE INDEX robot_conf_idx ON conf_table(robot_conf,label_conf);
