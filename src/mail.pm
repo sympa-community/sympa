@@ -425,7 +425,7 @@ sub mail_forward {
     }elsif(ref($msg) eq "MIME::Entity") {
 	$message = $msg;
 	$messageasstring = $message->as_string;
-    }elsif(ref($msg) eq ''){
+    }elsif(!ref($msg)){
 	$messageasstring = $msg;
     }else{
 	&do_log('err',"Unknown message variable type: '%s'. can't process message forwarding.",ref($msg));
