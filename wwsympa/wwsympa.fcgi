@@ -8067,8 +8067,8 @@ Creates a list using a list template
 	 $parameters->{'custom_input'}{$input} = $in{$input};
      }
      ## create liste
-     if (my $testlist = &List::new($in{'listname'})){
-	  &report::reject_report_web('user','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+     if (my $testlist = new List($in{'listname'},$robot)){
+	  &report::reject_report_web('user','create_list : requested list '.$in{'listname'}.' already exist',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	  &wwslog('info','do_create_list: requested list %s already exist (from %s)',$in{'listname'},$param->{'user'}{'email'});
 	  &web_db_log({'parameters' => $in{'listname'},
 		       'list' => $in{'listname'},
