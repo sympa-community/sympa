@@ -526,7 +526,7 @@ sub load {
     foreach my $robot (keys %{$Conf{'robots'}}) {
 	foreach my $label (keys %valid_robot_key_words) {
 	    next unless ($valid_robot_key_words{$label} eq 'db');
-	    my $value = &get_db_conf('$robot', $label);
+	    my $value = &get_db_conf($robot, $label);
 	    if ($value) {
 		$Conf{'robots'}{$robot}{$label} = $value ;
 	    }
