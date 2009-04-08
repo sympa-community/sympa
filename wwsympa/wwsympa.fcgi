@@ -1294,6 +1294,10 @@ my $birthday = time ;
 	     &export_topics ($robot);
 	     
 	     unless ($comm{$action}) {
+		 if (new List ($action, $robot)){
+		      &do_redirect ($param->{'base_url'}.$param->{'path_cgi'}.'/info/'.$action);   
+		      last;
+		 }
 		 &report::reject_report_web('user','unknown_action',{},$action,$list);
 		 &wwslog('info','unknown action %s', $action);
 		 last;
