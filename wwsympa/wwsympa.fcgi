@@ -674,6 +674,19 @@ my %action_type = ('editfile' => 'admin',
 		'set_dumpvars' => 'serveradmin'
 );
 
+## actions tthat are not used in return of login,
+my %temporary_actions = ( 'logout' => 1,
+ 			  'loginrequest' => 1,
+ 			  'login' => 1,
+ 			  'sso_login' => 1,
+ 			  'sso_login_succeeded' => 1,
+ 			  'ticket' => 1,
+ 			  'css' => 1,
+ 			  'rss' => 1,
+ 			  'wsdl' => 1,
+ 			  'redirect' => 1,
+			  );
+
 ## Regexp applied on incoming parameters (%in)
 ## The aim is not a strict definition of parameter format
 ## but rather a security check
@@ -1235,8 +1248,16 @@ my $birthday = time ;
 
      ## Action
      my $action = $in{'action'};
+
+     ## Store current action in the session in order to redirect after a logi or other temporary actions.
+     ## We should not memorize ULRs that are transitory actions
+     ## POST is not handled
+     ## A lot of other methods where used in the past (before session was introduced in Sympa). We must clean all.
+     unless ($temporary_actions{$action} || $ENV{'REQUEST_METHOD'} ne 'GET') {
+ 	 $session->{'redirect_url'} = $param->{'base_url'}.$param->{'path_cgi'}.$ENV{'PATH_INFO'};
+     }
+
      $action ||= &Conf::get_robot_conf($robot, 'default_home');
- #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
      $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
      $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
      $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
@@ -2804,7 +2825,7 @@ Use it to create a List object and initialize output parameters.
 
  }
 
-## ticket : this action is used if someone submits a one time ticket (minimum when the user has lost their password)
+## ticket : this action is used if someone submits a one time ticket
 sub do_ticket {
     &wwslog('info', 'do_ticket(%s)', $in{'ticket'});
 
@@ -2977,11 +2998,6 @@ sub do_ticket {
 	 &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }    
 
-     # From version 5.5 password never start with init
-     #if (($session->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
-     #	 &report::notice_report_web('you_should_choose_a_password',{},$param->{'action'});
-     #}
-     
      if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
 	 my $old_action = $param->{'action'};
 	 $param->{'action'} = 'setpasswd';
@@ -2996,7 +3012,9 @@ sub do_ticket {
      &web_db_log({'parameters' => $in{'email'},
 		  'target_email' => $in{'email'},
 		  'status' => 'success'});
-     return $next_action;
+
+     &do_redirect ($session->{'redirect_url'});     
+     return ;
 
  }
 
@@ -3284,7 +3302,7 @@ sub do_sso_login {
 	$session->{'sso_id'} = $in{'auth_service_name'};
 	
 	return 'home';
-    }else {
+    }else{
 	## Unknown SSO service
 	&report::reject_report_web('intern','unknown_authentication_service',{'name'=> $in{'auth_service_name'}},$param->{'action'},'','',$robot);
 	&wwslog('err','do_sso_login: unknown authentication service %s', $in{'auth_service_name'});
@@ -3308,7 +3326,7 @@ sub do_sso_login_succeeded {
 	&web_db_log({'parameters' => $in{'auth_service_name'},
 		     'status' => 'success'});		      		
 
-    }else {
+    }else{
 	&report::reject_report_web('user','auth_failed',{},$param->{'action'});
 	&web_db_log({'parameters' => $in{'auth_service_name'},
 		     'status' => 'error',
@@ -3319,8 +3337,9 @@ sub do_sso_login_succeeded {
     if ($param->{'nomenu'}) {
 	$param->{'back_to_mom'} = 1;
 	return 1;
-    }else {
-	return 'home';
+    }else{
+	&do_redirect ($session->{'redirect_url'});  
+	return;
     }
 }
 
@@ -3444,12 +3463,17 @@ sub do_sso_login_succeeded {
      return 1;
  }
 
+# update session cookie and redirect the client to redirect_to parameter or glob var;
 sub do_redirect {
-     &wwslog('info','do_redirect(%s)', $param->{'redirect_to'});
-     $session->set_cookie('localhost','session');
-     print "Location: $param->{'redirect_to'}\n\n";
-     $param->{'bypass'} = 'extreme';
-     return 1;
+
+    my $redirect_to = shift;
+    &wwslog('info','do_redirect(%s)', $redirect_to);
+
+    $redirect_to ||= $param->{'redirect_to'};
+    $session->set_cookie('localhost','session');
+    print "Location: $redirect_to\n\n";
+    $param->{'bypass'} = 'extreme';
+    return 1;
 }
 
  ## Logout from WWSympa
