@@ -25,6 +25,7 @@ package Conf;
 
 use strict "vars";
 
+use List;
 use Log;
 use Language;
 use wwslib;
