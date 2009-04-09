@@ -117,7 +117,7 @@ sub connect {
     ## Check if DBD is installed
     unless (eval "require DBD::$param->{'db_type'}") {
 	do_log('err',"No Database Driver installed for $param->{'db_type'} ; you should download and install DBD::$param->{'db_type'} from CPAN");
-	&List::send_notify_to_listmaster('missing_dbd', $Conf{'domain'},{'db_type' => $param->{'db_type'}});
+	&List::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},{'db_type' => $param->{'db_type'}});
 	return undef;
     }
 
@@ -180,7 +180,7 @@ sub connect {
 	  unless (defined $db_connections{$connect_string} &&
 		  $db_connections{$connect_string}{'status'} eq 'failed') { 
 
-	    unless (&List::send_notify_to_listmaster('no_db', $Conf{'domain'},{})) {
+	    unless (&List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
 	      &do_log('err',"Unable to send notify 'no_db' to listmaster");
 	    }
 	  }
@@ -206,7 +206,7 @@ sub connect {
 	
 	if ($options->{'warn'}) {
 	  do_log('notice','Connection to Database %s restored.', $connect_string);
-	  unless (&send_notify_to_listmaster('db_restored', $Conf{'domain'},{})) {
+	  unless (&send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
 	    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
 	  }
 	}
@@ -281,10 +281,10 @@ sub disconnect {
 sub create_db {
     &do_log('debug3', 'List::create_db()');    
 
-    &do_log('notice','Trying to create %s database...', $Conf{'db_name'});
+    &do_log('notice','Trying to create %s database...', $Conf::Conf{'db_name'});
 
-    unless ($Conf{'db_type'} eq 'mysql') {
-	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
+    unless ($Conf::Conf{'db_type'} eq 'mysql') {
+	&do_log('err', 'Cannot create %s DB', $Conf::Conf{'db_type'});
 	return undef;
     }
 
@@ -295,9 +295,9 @@ sub create_db {
     }
 
     ## Create DB
-    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
+    my $rc = $drh->func("createdb", $Conf::Conf{'db_name'}, 'localhost', $Conf::Conf{'db_user'}, $Conf::Conf{'db_passwd'}, 'admin');
     unless (defined $rc) {
-	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
+	&do_log('err', 'Cannot create database %s : %s', $Conf::Conf{'db_name'}, $drh->errstr);
 	return undef;
     }
 
@@ -308,15 +308,15 @@ sub create_db {
     }
 
     ## Grant privileges
-    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO '$Conf{'db_user'}'\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
-	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
+    unless ($drh->do("GRANT ALL ON $Conf::Conf{'db_name'}.* TO '$Conf::Conf{'db_user'}'\@localhost IDENTIFIED BY '$Conf::Conf{'db_passwd'}'")) {
+	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf::Conf{'db_user'}, $Conf::Conf{'db_name'}, $drh->errstr);
 	return undef;
     }
 
-    &do_log('notice', 'Database %s created', $Conf{'db_name'});
+    &do_log('notice', 'Database %s created', $Conf::Conf{'db_name'});
 
     ## Reload MysqlD to take changes into account
-    my $rc = $drh->func("reload", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
+    my $rc = $drh->func("reload", $Conf::Conf{'db_name'}, 'localhost', $Conf::Conf{'db_user'}, $Conf::Conf{'db_passwd'}, 'admin');
     unless (defined $rc) {
 	&do_log('err', 'Cannot reload mysqld : %s', $drh->errstr);
 	return undef;

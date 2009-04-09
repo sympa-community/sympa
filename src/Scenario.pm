@@ -73,7 +73,7 @@ sub new {
 	
     }else {
 	## We can't use &tools::get_filename() because we don't have a List object yet ; it's being constructed
-	my @dirs = ($Conf{'etc'}.'/'.$parameters{'robot'}, $Conf{'etc'}, '--ETCBINDIR--');
+	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, '--ETCBINDIR--');
 	unshift @dirs, $parameters{'directory'} if (defined $parameters{'directory'});
 	foreach my $dir (@dirs) {
 	    my $tmp_path = $dir.'/scenari/'.$parameters{'function'}.'.'.$parameters{'name'};
@@ -265,14 +265,14 @@ sub request_action {
     my (@rules, $name, $scenario) ;
 
     my $log_it ; # this var is defined to control if log scenario is activated or not
-    if ($Conf{'loging_for_module'}{'scenario'} == 1){
-	$log_it = 1 unless ($Conf{'loging_condition'});                                    #activate log if no condition is defined
-	$log_it = 1 if ($Conf{'loging_condition'}{'ip'} =~ /$context->{'remote_addr'}/);   #activate log if ip match
-	$log_it = 1 if ($Conf{'loging_condition'}{'email'}=~ /$context->{'email'}/i);      #activate log if email match
+    if ($Conf::Conf{'loging_for_module'}{'scenario'} == 1){
+	$log_it = 1 unless ($Conf::Conf{'loging_condition'});                                    #activate log if no condition is defined
+	$log_it = 1 if ($Conf::Conf{'loging_condition'}{'ip'} =~ /$context->{'remote_addr'}/);   #activate log if ip match
+	$log_it = 1 if ($Conf::Conf{'loging_condition'}{'email'}=~ /$context->{'email'}/i);      #activate log if email match
     }
 
     ## Include a Blacklist rules if configured for this action
-    if ($Conf{'blacklist'}{$operation}) {
+    if ($Conf::Conf{'blacklist'}{$operation}) {
 	foreach my $auth ('smtp','md5','pgp','smime'){
 	    my $blackrule = {'condition' => "search('blacklist.txt',[sender])",
 			     'action' => 'reject,quiet',

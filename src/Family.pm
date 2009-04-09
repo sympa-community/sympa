@@ -105,8 +105,8 @@ sub get_available_families {
     my %families;
 
     foreach my $dir ('--ETCBINDIR--/families',
-		     $Conf{'etc'}.'/families',
-		     $Conf{'etc'}.'/'.$robot.'/families') {
+		     $Conf::Conf{'etc'}.'/families',
+		     $Conf::Conf{'etc'}.'/'.$robot.'/families') {
 	next unless (-d $dir);
 
 	unless (opendir FAMILIES, $dir) {
@@ -1763,8 +1763,8 @@ sub _get_directory {
     my $name = $self->{'name'};
     &do_log('debug3','Family::_get_directory(%s)',$name);
 
-    my @try = ("$Conf{'etc'}/$robot".'/families',
-	       $Conf{'etc'}.'/families',
+    my @try = ("$Conf::Conf{'etc'}/$robot".'/families',
+	       $Conf::Conf{'etc'}.'/families',
 	       '--ETCBINDIR--'.'/families');
 
     foreach my $d (@try) {

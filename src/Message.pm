@@ -211,11 +211,11 @@ sub new {
 	    
 	    $robot = lc($robot);
 	    $listname = lc($listname);
-	    $robot ||= $Conf{'host'};
+	    $robot ||= $Conf::Conf{'host'};
 	    
 	    my $conf_email = &Conf::get_robot_conf($robot, 'email');
 	    my $conf_host = &Conf::get_robot_conf($robot, 'host');
-	    unless ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
+	    unless ($listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
 		my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
 	        if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		    $listname = $1;
@@ -246,7 +246,7 @@ sub new {
     }
 
     ## S/MIME
-    if ($Conf{'openssl'}) {
+    if ($Conf::Conf{'openssl'}) {
 
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&

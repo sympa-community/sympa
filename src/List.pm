@@ -241,6 +241,7 @@ use Message;
 use Family;
 use PlainDigest;
 
+
 ## Database and SQL statement handlers
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 
@@ -1406,11 +1407,11 @@ sub db_connect {
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
-    unless ( $dbh = &SQLSource::connect(\%Conf, {'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
+    unless ( $dbh = &SQLSource::connect(\%Conf::Conf, {'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
 						 'warn'=>1 } )) {
     	return undef;
     }
-    do_log('debug3','Connected to Database %s',$Conf{'db_name'});
+    do_log('debug3','Connected to Database %s',$Conf::Conf{'db_name'});
     $db_connected = 1;
 
     return 1;
@@ -1421,7 +1422,7 @@ sub db_disconnect {
     do_log('debug3', 'List::db_disconnect');
 
     unless ($dbh->disconnect()) {
-	do_log('notice','Can\'t disconnect from Database %s : %s',$Conf{'db_name'}, $dbh->errstr);
+	do_log('notice','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $dbh->errstr);
 	return undef;
     }
 
@@ -1523,12 +1524,12 @@ sub search_list_among_robots {
     }
     
     ## Search in default robot
-    if (-d $Conf{'home'}.'/'.$listname) {
- 	return $Conf{'host'};
+    if (-d $Conf::Conf{'home'}.'/'.$listname) {
+ 	return $Conf::Conf{'host'};
     }
     
-     foreach my $r (keys %{$Conf{'robots'}}) {
-	 if (-d $Conf{'home'}.'/'.$r.'/'.$listname) {
+     foreach my $r (keys %{$Conf::Conf{'robots'}}) {
+	 if (-d $Conf::Conf{'home'}.'/'.$r.'/'.$listname) {
 	     return $r;
 	 }
      }
@@ -1832,8 +1833,8 @@ sub load {
 
 	## Search robot if none was provided
 	unless ($robot) {
-	    foreach my $r (keys %{$Conf{'robots'}}) {
-		if (-d "$Conf{'home'}/$r/$name") {
+	    foreach my $r (keys %{$Conf::Conf{'robots'}}) {
+		if (-d "$Conf::Conf{'home'}/$r/$name") {
 		    $robot=$r;
 		    last;
 		}
@@ -1841,16 +1842,16 @@ sub load {
 	    
 	    ## Try default robot
 	    unless ($robot) {
-		if (-d "$Conf{'home'}/$name") {
-		    $robot = $Conf{'host'};
+		if (-d "$Conf::Conf{'home'}/$name") {
+		    $robot = $Conf::Conf{'host'};
 		}
 	    }
 	}
 	
-	if ($robot && (-d "$Conf{'home'}/$robot")) {
-	    $self->{'dir'} = "$Conf{'home'}/$robot/$name";
-	}elsif (lc($robot) eq lc($Conf{'host'})) {
-	    $self->{'dir'} = "$Conf{'home'}/$name";
+	if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
+	    $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
+	}elsif (lc($robot) eq lc($Conf::Conf{'host'})) {
+	    $self->{'dir'} = "$Conf::Conf{'home'}/$name";
 	}else {
 	    &do_log('err', 'No such robot (virtual domain) %s', $robot) unless ($options->{'just_try'});
 	    return undef ;
@@ -2489,7 +2490,7 @@ sub distribute_msg {
     ## Hide the sender if the list is anonymoused
     if ( $self->{'admin'}{'anonymous_sender'} ) {
 
-	foreach my $field (@{$Conf{'anonymous_header_fields'}}) {
+	foreach my $field (@{$Conf::Conf{'anonymous_header_fields'}}) {
 	    $hdr->delete($field);
 	}
 	
@@ -2689,10 +2690,10 @@ sub send_msg_digest {
     
     my $filename;
     ## Backward compatibility concern
-    if (-f "$Conf{'queuedigest'}/$listname") {
- 	$filename = "$Conf{'queuedigest'}/$listname";
+    if (-f "$Conf::Conf{'queuedigest'}/$listname") {
+ 	$filename = "$Conf::Conf{'queuedigest'}/$listname";
     }else {
- 	$filename = $Conf{'queuedigest'}.'/'.$self->get_list_id();
+ 	$filename = $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id();
     }
     
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
@@ -2749,7 +2750,7 @@ sub send_msg_digest {
 	$parser->output_to_core(1);
 	$parser->extract_uuencode(1);  
 	$parser->extract_nested_messages(1);
-#   $parser->output_dir($Conf{'spool'} ."/tmp");    
+#   $parser->output_dir($Conf::Conf{'spool'} ."/tmp");    
 	my $mail = $parser->parse_data(\@text);
 	
 	next unless (defined $mail);
@@ -3005,7 +3006,7 @@ sub send_file {
 	    (($self->{'admin'}{'remind_return_path'} eq 'unique') && ($tpl eq 'remind')))  {
 	    my $escapercpt = $who ;
 	    $escapercpt =~ s/\@/\=\=a\=\=/;
-	    $data->{'return_path'} = "$Conf{'bounce_email_prefix'}+$escapercpt\=\=$name";
+	    $data->{'return_path'} = "$Conf::Conf{'bounce_email_prefix'}+$escapercpt\=\=$name";
 	    $data->{'return_path'} .= '==w' if ($tpl eq 'welcome');
 	    $data->{'return_path'} .= '==r' if ($tpl eq 'remind');
 	    $data->{'return_path'} .= "\@$self->{'domain'}";
@@ -3058,7 +3059,7 @@ sub send_file {
     $data->{'list'}{'dir'} = $self->{'dir'};
 
     ## Sign mode
-    if ($Conf{'openssl'} &&
+    if ($Conf::Conf{'openssl'} &&
 	(-r $self->{'dir'}.'/cert.pem') && (-r $self->{'dir'}.'/private_key')) {
 	$sign_mode = 'smime';
     }
@@ -3176,8 +3177,8 @@ sub send_msg {
 		push @tabrcpt_url, $user->{'email'};
 	    }
 	} elsif ($message->{'smime_crypted'} && 
-		 (! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
-		  ! -r $Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
+		 (! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
+		  ! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
 	    ## Missing User certificate
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
 												     'sender' => $message->{'msg'}->head->get('From')},
@@ -3433,7 +3434,7 @@ sub send_to_editor {
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
    my $robot = $self->{'domain'};
-   my $modqueue = $Conf{'queuemod'};
+   my $modqueue = $Conf::Conf{'queuemod'};
    return unless ($name && $admin);
   
    my @now = localtime(time);
@@ -3481,7 +3482,7 @@ sub send_to_editor {
 	   print MSG <ARCMOD>;
 	   close MSG;
 	   close ARCMOD;
-	   chdir $Conf{'home'};
+	   chdir $Conf::Conf{'home'};
        }
    }
 
@@ -3529,7 +3530,7 @@ sub send_to_editor {
 	       return undef;
 	   }
 
-	   my $crypted_file = $Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
+	   my $crypted_file = $Conf::Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
 	   unless (open CRYPTED, ">$crypted_file") {
 	       &do_log('notice', 'Could not create file %s', $crypted_file);
 	       return undef;
@@ -3573,7 +3574,7 @@ sub send_to_editor {
 #	       return undef;
 #	   }
 #
-#	   my $crypted_file = $Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
+#	   my $crypted_file = $Conf::Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
 #	   unless (open CRYPTED, ">$crypted_file") {
 #	       &do_log('notice', 'Could not create file %s', $crypted_file);
 #	       return undef;
@@ -3632,7 +3633,7 @@ sub send_auth {
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
    my $robot = $self->{'domain'};
-   my $authqueue = $Conf{'queueauth'};
+   my $authqueue = $Conf::Conf{'queueauth'};
    return undef unless ($name && $admin);
   
 
@@ -3909,7 +3910,7 @@ sub send_notify_to_listmaster {
     }
     my $host = &Conf::get_robot_conf($robot, 'host');
     my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
-    my $to = "$Conf{'listmaster_email'}\@$host";
+    my $to = "$Conf::Conf{'listmaster_email'}\@$host";
     my $options = {}; ## options for send_global_file()
 
     if ($operation eq 'logs_failed') {
@@ -4277,9 +4278,9 @@ sub compute_auth {
 
     if ($self){
 	$listname = $self->{'name'};
-        $cookie = $self->get_cookie() || $Conf{'cookie'};
+        $cookie = $self->get_cookie() || $Conf::Conf{'cookie'};
     }else {
-	$cookie = $Conf{'cookie'};
+	$cookie = $Conf::Conf{'cookie'};
     }
     
     $key = substr(Digest::MD5::md5_hex(join('/', $cookie, $listname, $email, $cmd)), -8) ;
@@ -4298,8 +4299,8 @@ sub add_parts {
     my ($header, $headermime);
     foreach my $file ("$listdir/message.header", 
 		      "$listdir/message.header.mime",
-		      "$Conf{'etc'}/mail_tt2/message.header", 
-		      "$Conf{'etc'}/mail_tt2/message.header.mime") {
+		      "$Conf::Conf{'etc'}/mail_tt2/message.header", 
+		      "$Conf::Conf{'etc'}/mail_tt2/message.header.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -4313,8 +4314,8 @@ sub add_parts {
     my ($footer, $footermime);
     foreach my $file ("$listdir/message.footer", 
 		      "$listdir/message.footer.mime",
-		      "$Conf{'etc'}/mail_tt2/message.footer", 
-		      "$Conf{'etc'}/mail_tt2/message.footer.mime") {
+		      "$Conf::Conf{'etc'}/mail_tt2/message.footer", 
+		      "$Conf::Conf{'etc'}/mail_tt2/message.footer.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -4652,8 +4653,8 @@ sub get_user_db {
 
     ## Additional subscriber fields
     my $additional;
-    if ($Conf{'db_additional_user_fields'}) {
-	$additional = ',' . $Conf{'db_additional_user_fields'};
+    if ($Conf::Conf{'db_additional_user_fields'}) {
+	$additional = ',' . $Conf::Conf{'db_additional_user_fields'};
     }
 
     $statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
@@ -4751,8 +4752,8 @@ sub get_subscriber {
 
     my $name = $self->{'name'};
     my $statement;
-    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
-    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
     
     ## Use session cache
     if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email}) {
@@ -4766,8 +4767,8 @@ sub get_subscriber {
     
     ## Additional subscriber fields
     my $additional;
-    if ($Conf{'db_additional_subscriber_fields'}) {
-	$additional = ',' . $Conf{'db_additional_subscriber_fields'};
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
     
     $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
@@ -4882,8 +4883,8 @@ sub get_admin_user {
 
     my $name = $self->{'name'};
     my $statement;
-    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_admin', 'date_admin';
-    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_admin', 'update_admin';	
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_admin', 'date_admin';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_admin', 'update_admin';	
 
     ## Use session cache
     if (defined $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email}) {
@@ -4965,8 +4966,8 @@ sub get_first_user {
     
     my $name = $self->{'name'};
     my $statement;
-    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
-    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -4982,12 +4983,12 @@ sub get_first_user {
     
     ## Additional subscriber fields
     my $additional;
-    if ($Conf{'db_additional_subscriber_fields'}) {
-	$additional = ',' . $Conf{'db_additional_subscriber_fields'};
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
     
     ## Oracle
-    if ($Conf{'db_type'} eq 'Oracle') {
+    if ($Conf::Conf{'db_type'} eq 'Oracle') {
 	
 	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
@@ -5020,7 +5021,7 @@ sub get_first_user {
 	} 
 	
 	## Sybase
-    }elsif ($Conf{'db_type'} eq 'Sybase'){
+    }elsif ($Conf::Conf{'db_type'} eq 'Sybase'){
 	
 	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
@@ -5054,7 +5055,7 @@ sub get_first_user {
 	
 	
 	## mysql
-    }elsif ($Conf{'db_type'} eq 'mysql') {
+    }elsif ($Conf::Conf{'db_type'} eq 'mysql') {
 	
 	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
@@ -5095,7 +5096,7 @@ sub get_first_user {
 	}
 	
 	## SQLite
-    }elsif ($Conf{'db_type'} eq 'SQLite') {
+    }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
 	
 	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
@@ -5312,8 +5313,8 @@ sub get_first_admin_user {
     my $name = $self->{'name'};
     my $statement;
     
-    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_admin', 'date_admin';
-    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_admin', 'update_admin';
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_admin', 'date_admin';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_admin', 'update_admin';
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -5329,7 +5330,7 @@ sub get_first_admin_user {
     
      ## Oracle
 # and ok ?
-    if ($Conf{'db_type'} eq 'Oracle') {
+    if ($Conf::Conf{'db_type'} eq 'Oracle') {
 	
 	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
@@ -5362,7 +5363,7 @@ sub get_first_admin_user {
 	} 
 	
 	## Sybase
-    }elsif ($Conf{'db_type'} eq 'Sybase'){
+    }elsif ($Conf::Conf{'db_type'} eq 'Sybase'){
 	
 	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
@@ -5395,7 +5396,7 @@ sub get_first_admin_user {
 	
 	
 	## mysql
-    }elsif ($Conf{'db_type'} eq 'mysql') {
+    }elsif ($Conf::Conf{'db_type'} eq 'mysql') {
 	
 	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
@@ -5436,7 +5437,7 @@ sub get_first_admin_user {
 	}
 	
 	## SQLite
-    }elsif ($Conf{'db_type'} eq 'SQLite') {
+    }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
 	
 	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
 	$date_field, 
@@ -5678,8 +5679,8 @@ sub get_first_bouncing_user {
 
     my $name = $self->{'name'};
     my $statement;
-    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
-    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
@@ -5688,8 +5689,8 @@ sub get_first_bouncing_user {
 
     ## Additional subscriber fields
     my $additional;
-    if ($Conf{'db_additional_subscriber_fields'}) {
-	$additional = ',' . $Conf{'db_additional_subscriber_fields'};
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
 
     $statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce,bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND bounce_subscriber is not NULL)", 
@@ -5967,25 +5968,25 @@ sub update_user {
 		      );
     
     ## additional DB fields
-    if (defined $Conf{'db_additional_subscriber_fields'}) {
-	foreach my $f (split ',', $Conf{'db_additional_subscriber_fields'}) {
+    if (defined $Conf::Conf{'db_additional_subscriber_fields'}) {
+	foreach my $f (split ',', $Conf::Conf{'db_additional_subscriber_fields'}) {
 	    $map_table{$f} = 'subscriber_table';
 	    $map_field{$f} = $f;
 	}
     }
     
-    if (defined $Conf{'db_additional_user_fields'}) {
-	foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
+    if (defined $Conf::Conf{'db_additional_user_fields'}) {
+	foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
 	    $map_table{$f} = 'user_table';
 	    $map_field{$f} = $f;
 	}
     }
     
-    do_log('debug2', " custom_attribute id: $Conf{'custom_attribute'}");
+    do_log('debug2', " custom_attribute id: $Conf::Conf{'custom_attribute'}");
     ## custom attributes
-    if (defined $Conf{'custom_attribute'}){
-	foreach my $f (sort keys %{$Conf{'custom_attribute'}}){
-	    do_log('debug2', "List::update_user custom_attribute id: $Conf{'custom_attribute'}{id} name: $Conf{'custom_attribute'}{name} type: $Conf{'custom_attribute'}{type} ");
+    if (defined $Conf::Conf{'custom_attribute'}){
+	foreach my $f (sort keys %{$Conf::Conf{'custom_attribute'}}){
+	    do_log('debug2', "List::update_user custom_attribute id: $Conf::Conf{'custom_attribute'}{id} name: $Conf::Conf{'custom_attribute'}{name} type: $Conf::Conf{'custom_attribute'}{type} ");
 	    	
 	}
     }
@@ -6008,11 +6009,11 @@ sub update_user {
 	    
 	    if ($map_table{$field} eq $table) {
 		if ($field eq 'date') {
-		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		    $value = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $value, $value;
 		}elsif ($field eq 'update_date') {
-		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		    $value = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $value, $value;
 		}elsif ($value eq 'NULL'){
-		    if ($Conf{'db_type'} eq 'mysql') {
+		    if ($Conf::Conf{'db_type'} eq 'mysql') {
 			$value = '\N';
 		    }
 		}else {
@@ -6121,8 +6122,8 @@ sub update_admin_user {
 		      );
 #### ??
     ## additional DB fields
-#    if (defined $Conf{'db_additional_user_fields'}) {
-#	foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
+#    if (defined $Conf::Conf{'db_additional_user_fields'}) {
+#	foreach my $f (split ',', $Conf::Conf{'db_additional_user_fields'}) {
 #	    $map_table{$f} = 'user_table';
 #	    $map_field{$f} = $f;
 #	}
@@ -6146,11 +6147,11 @@ sub update_admin_user {
 	    
 	    if ($map_table{$field} eq $table) {
 		if ($field eq 'date') {
-		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		    $value = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $value, $value;
 		}elsif ($field eq 'update_date') {
-		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		    $value = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $value, $value;
 		}elsif ($value eq 'NULL'){
-		    if ($Conf{'db_type'} eq 'mysql') {
+		    if ($Conf::Conf{'db_type'} eq 'mysql') {
 			$value = '\N';
 		    }
 		}else {
@@ -6366,8 +6367,8 @@ sub add_user {
 	$new_user->{'custom_attribute'} ||= &createXMLCustomAttribute(\%custom_attr) ;
 	do_log('debug2', 'List::add_user custom_attribute = %s', $new_user->{'custom_attribute'});
 
-	my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
-	my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
+	my $date_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
+	my $update_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
 	
 	## Crypt password if it was not crypted
 	unless ($new_user->{'password'} =~ /^crypt/) {
@@ -6451,8 +6452,8 @@ sub add_admin_user {
 	$new_admin_user->{'date'} ||= time;
 	$new_admin_user->{'update_date'} ||= $new_admin_user->{'date'};
 	    
-	my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'date'}, $new_admin_user->{'date'};
-	my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'update_date'}, $new_admin_user->{'update_date'};
+	my $date_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_admin_user->{'date'}, $new_admin_user->{'date'};
+	my $update_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_admin_user->{'update_date'}, $new_admin_user->{'update_date'};
 	    
 	$list_cache{'is_admin_user'}{$self->{'domain'}}{$name}{$who} = undef;
 	    
@@ -6565,13 +6566,13 @@ sub is_listmaster {
 
     return 0 unless ($who);
 
-    if ($robot && (defined $Conf{'robots'}{$robot}) && $Conf{'robots'}{$robot}{'listmasters'}) {
-	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
+    if ($robot && (defined $Conf::Conf{'robots'}{$robot}) && $Conf::Conf{'robots'}{$robot}{'listmasters'}) {
+	foreach my $listmaster (@{$Conf::Conf{'robots'}{$robot}{'listmasters'}}){
 	    return 1 if (lc($listmaster) eq lc($who));
 	} 
     }
 	
-    foreach my $listmaster (@{$Conf{'listmasters'}}){
+    foreach my $listmaster (@{$Conf::Conf{'listmasters'}}){
 	    return 1 if (lc($listmaster) eq lc($who));
 	}    
 
@@ -6900,7 +6901,7 @@ sub archive_msg {
     my $is_archived = $self->is_archived();
     Archive::store_last($self, $msg) if ($is_archived);
 
-    Archive::outgoing("$Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
+    Archive::outgoing("$Conf::Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
       if ($self->is_web_archived());
 }
 
@@ -6944,8 +6945,8 @@ sub get_nextdigest {
 
     ## Reverse compatibility concerns
     my $filename;
-    foreach my $f ("$Conf{'queuedigest'}/$listname",
- 		   $Conf{'queuedigest'}.'/'.$self->get_list_id()) {
+    foreach my $f ("$Conf::Conf{'queuedigest'}/$listname",
+ 		   $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id()) {
  	$filename = $f if (-f $f);
     }
     
@@ -6993,7 +6994,7 @@ sub load_scenario_list {
     my %list_of_scenario;
     my %skip_scenario;
 
-    foreach my $dir ("$directory/scenari", "$Conf{'etc'}/$robot/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
+    foreach my $dir ($directory."/scenari", $Conf::Conf{'etc'}."/$robot/scenari", $Conf::Conf{'etc'}."/scenari", "--ETCBINDIR--/scenari") {
 
 	next unless (-d $dir);
 	
@@ -7044,7 +7045,7 @@ sub load_task_list {
     my $directory = "$self->{'dir'}";
     my %list_of_task;
     
-    foreach my $dir ("$directory/list_task_models", "$Conf{'etc'}/$robot/list_task_models", "$Conf{'etc'}/list_task_models", "--ETCBINDIR--/list_task_models") {
+    foreach my $dir ("$directory/list_task_models", "$Conf::Conf{'etc'}/$robot/list_task_models", "$Conf::Conf{'etc'}/list_task_models", "--ETCBINDIR--/list_task_models") {
 
 	next unless (-d $dir);
 
@@ -7106,7 +7107,7 @@ sub load_data_sources_list {
     my $directory = "$self->{'dir'}";
     my %list_of_data_sources;
 
-    foreach my $dir ("$directory/data_sources", "$Conf{'etc'}/$robot/data_sources", "$Conf{'etc'}/data_sources", "--ETCBINDIR--/data_sources") {
+    foreach my $dir ("$directory/data_sources", "$Conf::Conf{'etc'}/$robot/data_sources", "$Conf::Conf{'etc'}/data_sources", "--ETCBINDIR--/data_sources") {
 
 	next unless (-d $dir);
 	
@@ -7266,9 +7267,9 @@ sub _include_users_remote_sympa_list {
     my $email ;
 
 
-    foreach my $line ( &Fetch::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
-                                                                               'cafile'    => $Conf{'cafile'},
-                                                                               'capath' => $Conf{'capath'}})
+    foreach my $line ( &Fetch::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf::Conf{'key_passwd'},
+                                                                               'cafile'    => $Conf::Conf{'cafile'},
+                                                                               'capath' => $Conf::Conf{'capath'}})
 		){	
 	chomp $line;
 
@@ -9030,17 +9031,17 @@ sub store_digest {
     my($filename, $newfile);
     my $separator = &tools::get_separator();  
 
-    unless ( -d "$Conf{'queuedigest'}") {
+    unless ( -d "$Conf::Conf{'queuedigest'}") {
 	return;
     }
     
     my @now  = localtime(time);
 
     ## Reverse compatibility concern
-    if (-f "$Conf{'queuedigest'}/$self->{'name'}") {
-  	$filename = "$Conf{'queuedigest'}/$self->{'name'}";
+    if (-f "$Conf::Conf{'queuedigest'}/$self->{'name'}") {
+  	$filename = "$Conf::Conf{'queuedigest'}/$self->{'name'}";
     }else {
- 	$filename = $Conf{'queuedigest'}.'/'.$self->get_list_id();
+ 	$filename = $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id();
     }
 
     $newfile = !(-e $filename);
@@ -9087,8 +9088,8 @@ sub get_lists {
 	if (defined $list_cache{'get_lists'}{$robot}) {
 	    push @lists, @{$list_cache{'get_lists'}{$robot}};
 	}else {
-	    my $robot_dir =  $Conf{'home'}.'/'.$robot ;
-	    $robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
+	    my $robot_dir =  $Conf::Conf{'home'}.'/'.$robot ;
+	    $robot_dir = $Conf::Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'host'}));
 	    
 	    unless (-d $robot_dir) {
 		do_log('err',"unknown robot $robot, Unable to open $robot_dir");
@@ -9137,20 +9138,20 @@ sub get_robots {
     my(@robots, $r);
     do_log('debug2', 'List::get_robots()');
 
-    unless (opendir(DIR, $Conf{'etc'})) {
-	do_log('err',"Unable to open $Conf{'etc'}");
+    unless (opendir(DIR, $Conf::Conf{'etc'})) {
+	do_log('err',"Unable to open $Conf::Conf{'etc'}");
 	return undef;
     }
     my $use_default_robot = 1 ;
     foreach $r (sort readdir(DIR)) {
-	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r"));
-	next unless (-r "$Conf{'etc'}/$r/robot.conf");
+	next unless (($r !~ /^\./o) && (-d "$Conf::Conf{'home'}/$r"));
+	next unless (-r "$Conf::Conf{'etc'}/$r/robot.conf");
 	push @robots, $r;
-	undef $use_default_robot if ($r eq $Conf{'host'});
+	undef $use_default_robot if ($r eq $Conf::Conf{'host'});
     }
     closedir DIR;
 
-    push @robots, $Conf{'host'} if ($use_default_robot);
+    push @robots, $Conf::Conf{'host'} if ($use_default_robot);
     return @robots ;
 }
 
@@ -9324,7 +9325,7 @@ sub get_which {
     my $db_which = {};
     my $requested_lists;
 
-    if (defined $Conf{'db_type'} && $List::use_db) {
+    if (defined $Conf::Conf{'db_type'} && $List::use_db) {
 	$db_which = &get_which_db($email,  $function);
 	@{$requested_lists} = keys %{$db_which->{$robot}};
     }
@@ -9396,8 +9397,8 @@ sub get_mod_spool_size {
     do_log('debug3', 'List::get_mod_spool_size()');    
     my @msg;
     
-    unless (opendir SPOOL, $Conf{'queuemod'}) {
-	&do_log('err', 'Unable to read spool %s', $Conf{'queuemod'});
+    unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
+	&do_log('err', 'Unable to read spool %s', $Conf::Conf{'queuemod'});
 	return undef;
     }
 
@@ -9487,10 +9488,10 @@ sub sort_dir_to_get_mod {
 sub get_db_field_type {
     my ($table, $field) = @_;
 
-    return undef unless ($Conf{'db_type'} eq 'mysql');
+    return undef unless ($Conf::Conf{'db_type'} eq 'mysql');
 
     ## Is the Database defined
-    unless ($Conf{'db_name'}) {
+    unless ($Conf::Conf{'db_name'}) {
 	&do_log('info', 'No db_name defined in configuration file');
 	return undef;
     }
@@ -9522,7 +9523,7 @@ sub get_db_field_type {
 sub check_db_connect {
     
     ## Is the Database defined
-    unless ($Conf{'db_name'}) {
+    unless ($Conf::Conf{'db_name'}) {
 	&do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
@@ -9617,7 +9618,7 @@ sub load_topics {
 	my $index = 0;
 	my (@raugh_data, $topic);
 	while (<FILE>) {
-	    Encode::from_to($_, $Conf{'filesystem_encoding'}, 'utf8');
+	    Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
 	    if (/^([\-\w\/]+)\s*$/) {
 		$index++;
 		$topic = {'name' => $1,
@@ -9645,7 +9646,7 @@ sub load_topics {
 	$mtime{'topics'}{$robot} = (stat($conf_file))[9];
 
 	unless ($#raugh_data > -1) {
-	    &do_log('notice', 'No topic defined in %s/topics.conf', $Conf{'etc'});
+	    &do_log('notice', 'No topic defined in %s/topics.conf', $Conf::Conf{'etc'});
 	    return undef;
 	}
 
@@ -10017,8 +10018,8 @@ sub get_cert {
 	}
 	close CERT ;
     }elsif ($format eq 'der') {
-	unless (open CERT, "$Conf{'openssl'} x509 -in $certs -outform DER|") {
-	    do_log('err', "$Conf{'openssl'} x509 -in $certs -outform DER|");
+	unless (open CERT, "$Conf::Conf{'openssl'} x509 -in $certs -outform DER|") {
+	    do_log('err', "$Conf::Conf{'openssl'} x509 -in $certs -outform DER|");
 	    do_log('err', "List::get_cert(): Unable to open get $certs in DER format: $!");
 	    return undef;
 	}
@@ -10919,7 +10920,7 @@ sub _urlize_part {
     my $size = (-s $file);
 
     ## Only URLize files with a moderate size
-    if ($size < $Conf{'urlize_min_size'}) {
+    if ($size < $Conf::Conf{'urlize_min_size'}) {
 	unlink "$expl/$dir/$filename";
 	return undef;
     }
@@ -10955,10 +10956,10 @@ sub store_subscription_request {
     my ($self, $email, $gecos, $custom_attr) = @_;
     &do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos, $custom_attr);
 
-    my $filename = $Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
+    my $filename = $Conf::Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
 
-    unless (opendir SUBSPOOL, "$Conf{'queuesubscribe'}") {
-	&do_log('err', 'Could not open %s', $Conf{'queuesubscribe'});
+    unless (opendir SUBSPOOL, "$Conf::Conf{'queuesubscribe'}") {
+	&do_log('err', 'Could not open %s', $Conf::Conf{'queuesubscribe'});
 	return undef;
     }
     
@@ -10969,7 +10970,7 @@ sub store_subscription_request {
 
     foreach my $file (@req_files) {
 	next unless ($file =~ /$listaddr\..*/) ;
-	unless (open OLDREQUEST, "$Conf{'queuesubscribe'}/$file") {
+	unless (open OLDREQUEST, "$Conf::Conf{'queuesubscribe'}/$file") {
 	    &do_log('err', 'Could not open %s for verification', $file);
 	    return undef;
 	}
@@ -11004,13 +11005,13 @@ sub get_subscription_requests {
 
     my %subscriptions;
 
-    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
+    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
 	return undef;
     }
 
     foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	unless (open REQUEST, "<:bytes", "$Conf{'queuesubscribe'}/$filename") {
+	unless (open REQUEST, "<:bytes", "$Conf::Conf{'queuesubscribe'}/$filename") {
 	    do_log('err', 'Could not open %s', $filename);
 	    closedir SPOOL;
 	    next;
@@ -11031,7 +11032,7 @@ sub get_subscription_requests {
 	 
 	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    &do_log('err','User %s is subscribed to %s already. Deleting subscription request.', $email, $self->{'name'});
-	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+	    unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
 		&do_log('err', 'Could not delete file %s', $filename);
 	    }
 	    next;
@@ -11064,8 +11065,8 @@ sub get_subscription_request_count {
     my %subscriptions;
     my $i = 0 ;
 
-    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
+    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
 	return undef;
     }
 
@@ -11084,14 +11085,14 @@ sub delete_subscription_request {
     my $removed_file = 0;
     my $email_regexp = &tools::get_regexp('email');
     
-    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
+    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
 	return undef;
     }
 
     foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
 	
-	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+	unless (open REQUEST, "$Conf::Conf{'queuesubscribe'}/$filename") {
 	    &do_log('notice', 'Could not open %s', $filename);
 	    next;
 	}
@@ -11104,7 +11105,7 @@ sub delete_subscription_request {
 		next;
 	    }
 	    
-	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+	    unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
 		&do_log('err', 'Could not delete file %s', $filename);
 		last;
 	    }
@@ -11218,8 +11219,8 @@ sub remove_task {
     my $self = shift;
     my $task = shift;
 
-    unless (opendir(DIR, $Conf{'queuetask'})) {
-	&do_log ('err', "error : can't open dir %s: %s", $Conf{'queuetask'}, $!);
+    unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
+	&do_log ('err', "error : can't open dir %s: %s", $Conf::Conf{'queuetask'}, $!);
 	return undef;
     }
     my @tasks = grep !/^\.\.?$/, readdir DIR;
@@ -11227,7 +11228,7 @@ sub remove_task {
 
     foreach my $task_file (@tasks) {
 	if ($task_file =~ /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
-	    unless (unlink("$Conf{'queuetask'}/$task_file")) {
+	    unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
 		&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 		return undef;
 	    }
@@ -11296,7 +11297,7 @@ sub purge {
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
     ## Remove tasks for this list
-    &Task::list_tasks($Conf{'queuetask'});
+    &Task::list_tasks($Conf::Conf{'queuetask'});
     foreach my $task (&Task::get_tasks_by_list($self->get_list_id())) {
 	unlink $task->{'filepath'};
     }
@@ -11321,9 +11322,9 @@ sub remove_aliases {
 
     return undef 
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}})
-		&& ($Conf{'sendmail_aliases'} !~ /^none$/i));
+		&& ($Conf::Conf{'sendmail_aliases'} !~ /^none$/i));
     
-    my $alias_manager = $Conf{'alias_manager'};
+    my $alias_manager = $Conf::Conf{'alias_manager'};
     
     unless (-x $alias_manager) {
 	&do_log('err','Cannot run alias_manager %s', $alias_manager);
@@ -11420,7 +11421,7 @@ sub move_message {
     my ($self, $file, $queue) = @_;
     &do_log('debug2', "List::move_message($file, $self->{'name'}, $queue)");
 
-    my $dir = $queue || $Conf{'queuedistribute'};    
+    my $dir = $queue || $Conf::Conf{'queuedistribute'};    
     my $filename = $self->get_list_id().'.'.time.'.'.int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {
@@ -11482,16 +11483,16 @@ sub new {
     my $robot = {'name' => $name};
     &Log::do_log('debug2', '');
     
-    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
+    unless (defined $name && $Conf::Conf::Conf{'robots'}{$name}) {
 	&Log::do_log('err',"Unknown robot '$name'");
 	return undef;
     }
 
     ## The default robot
-    if ($name eq $Conf::Conf{'host'}) {
-	$robot->{'home'} = $Conf{'home'};
+    if ($name eq $Conf::Conf::Conf{'host'}) {
+	$robot->{'home'} = $Conf::Conf{'home'};
     }else {
-	$robot->{'home'} = $Conf{'home'}.'/'.$name;
+	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;
 	unless (-d $robot->{'home'}) {
 	    &Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
 	    return undef;

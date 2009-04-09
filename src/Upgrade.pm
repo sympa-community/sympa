@@ -34,7 +34,7 @@ use Log;
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
-    my $version_file = "$Conf{'etc'}/data_structure.version";
+    my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
     my $previous_version;
     
     if (-f $version_file) {
@@ -58,11 +58,11 @@ sub get_previous_version {
 }
 
 sub update_version {
-    my $version_file = "$Conf{'etc'}/data_structure.version";
+    my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
 
     ## Saving current version if required
     unless (open VFILE, ">$version_file") {
-	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf{'etc'}, $!);
+	do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf::Conf{'etc'}, $!);
 	return undef;
     }
     printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
@@ -118,7 +118,7 @@ sub upgrade {
 	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&do_log('err','Cannot create %s', $file);
@@ -145,15 +145,15 @@ sub upgrade {
 
 	my @directories;
 
-	if (-d "$Conf::Conf{'etc'}/web_tt2") {
-	    push @directories, "$Conf::Conf{'etc'}/web_tt2";
+	if (-d "$Conf::Conf::Conf{'etc'}/web_tt2") {
+	    push @directories, "$Conf::Conf::Conf{'etc'}/web_tt2";
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+	foreach my $vr (keys %{$Conf::Conf::Conf{'robots'}}) {
 
-	    if (-d "$Conf::Conf{'etc'}/$vr/web_tt2") {
-		push @directories, "$Conf::Conf{'etc'}/$vr/web_tt2";
+	    if (-d "$Conf::Conf::Conf{'etc'}/$vr/web_tt2") {
+		push @directories, "$Conf::Conf::Conf{'etc'}/$vr/web_tt2";
 	    }
 	}
 
@@ -222,7 +222,7 @@ sub upgrade {
 	    return undef;
 	}
 
-	foreach my $r (keys %{$Conf{'robots'}}) {
+	foreach my $r (keys %{$Conf::Conf{'robots'}}) {
 	    my $all_lists = &List::get_lists($r, {'skip_sync_admin' => 1});
 	    foreach my $list ( @$all_lists ) {
 		
@@ -237,7 +237,7 @@ sub upgrade {
 		    unless ($dbh->do($statement)) {
 			do_log('err','Unable to execute SQL statement "%s" : %s', 
 			       $statement, $dbh->errstr);
-			&List::send_notify_to_listmaster('upgrade_failed', $Conf{'domain'},{'error' => $dbh->errstr});
+			&List::send_notify_to_listmaster('upgrade_failed', $Conf::Conf{'domain'},{'error' => $dbh->errstr});
 			return undef;
 		    }
 		}
@@ -250,7 +250,7 @@ sub upgrade {
 	## Rename web archive directories using 'domain' instead of 'host'
 	&do_log('notice','Renaming web archive directories with the list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf{'host'},'arc_path');
+	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'host'},'arc_path');
 	unless (opendir ARCDIR, $root_dir) {
 	    do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -292,7 +292,7 @@ sub upgrade {
     ## DB fields of enum type have been changed to int
     if (&tools::lower_version($previous_version, '5.2a.1')) {
 	
-	if ($List::use_db && $Conf{'db_type'} eq 'mysql') {
+	if ($List::use_db && $Conf::Conf{'db_type'} eq 'mysql') {
 	    my %check = ('subscribed_subscriber' => 'subscriber_table',
 			 'included_subscriber' => 'subscriber_table',
 			 'subscribed_admin' => 'admin_table',
@@ -368,7 +368,7 @@ sub upgrade {
 
 	&do_log('notice','Renaming bounce sub-directories adding list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf{'host'},'bounce_path');
+	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'host'},'bounce_path');
 	unless (opendir BOUNCEDIR, $root_dir) {
 	    do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -434,10 +434,10 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.6')) {
 	
 	&do_log('notice','Looking for customized mhonarc-ressources.tt2 files...');
-	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
-	    my $etc_dir = $Conf::Conf{'etc'};
+	foreach my $vr (keys %{$Conf::Conf::Conf{'robots'}}) {
+	    my $etc_dir = $Conf::Conf::Conf{'etc'};
 
-	    if ($vr ne $Conf::Conf{'host'}) {
+	    if ($vr ne $Conf::Conf::Conf{'host'}) {
 		$etc_dir .= '/'.$vr;
 	    }
 
@@ -445,7 +445,7 @@ sub upgrade {
 		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
 		rename $etc_dir.'/mhonarc-ressources.tt2', $new_filename;
 		&do_log('notice', "Custom %s file has been backed up as %s", $etc_dir.'/mhonarc-ressources.tt2', $new_filename);
-		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'host'},
+		&List::send_notify_to_listmaster('file_removed',$Conf::Conf::Conf{'host'},
 						 [$etc_dir.'/mhonarc-ressources.tt2', $new_filename]);
 	    }
 	}
@@ -456,7 +456,7 @@ sub upgrade {
 	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&do_log('err','Cannot create %s', $file);
@@ -502,28 +502,28 @@ sub upgrade {
 
 	## Site level
 	foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
-	    if (-d $Conf{'etc'}.'/'.$type) {
-		push @directories, [$Conf{'etc'}.'/'.$type, $Conf{'lang'}];
+	    if (-d $Conf::Conf{'etc'}.'/'.$type) {
+		push @directories, [$Conf::Conf{'etc'}.'/'.$type, $Conf::Conf{'lang'}];
 	    }
 	}
 
-	foreach my $f ('--CONFIG--','--WWSCONFIG--',$Conf{'etc'}.'/'.'topics.conf',$Conf{'etc'}.'/'.'auth.conf') {
+	foreach my $f ('--CONFIG--','--WWSCONFIG--',$Conf::Conf{'etc'}.'/'.'topics.conf',$Conf::Conf{'etc'}.'/'.'auth.conf') {
 	    if (-f $f) {
-		push @files, [$f, $Conf{'lang'}];
+		push @files, [$f, $Conf::Conf{'lang'}];
 	    }
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{$Conf{'robots'}}) {
+	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 	    foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
-		if (-d $Conf{'etc'}.'/'.$vr.'/'.$type) {
-		    push @directories, [$Conf{'etc'}.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
+		if (-d $Conf::Conf{'etc'}.'/'.$vr.'/'.$type) {
+		    push @directories, [$Conf::Conf{'etc'}.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
 		}
 	    }
 
 	    foreach my $f ('robot.conf','topics.conf','auth.conf') {
-		if (-f $Conf{'etc'}.'/'.$vr.'/'.$f) {
-		    push @files, [$Conf{'etc'}.'/'.$vr.'/'.$f, $Conf{'lang'}];
+		if (-f $Conf::Conf{'etc'}.'/'.$vr.'/'.$f) {
+		    push @files, [$Conf::Conf{'etc'}.'/'.$vr.'/'.$f, $Conf::Conf{'lang'}];
 		}
 	    }
 	}
@@ -563,7 +563,7 @@ sub upgrade {
 	    }elsif ($d =~ /(create_list_templates|families)$/) {
 		foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
 		    if (-d "$d/$subdir") {
-			push @directories, ["$d/$subdir", $Conf{'lang'}];
+			push @directories, ["$d/$subdir", $Conf::Conf{'lang'}];
 		    }
 		}
 		closedir DIR;
@@ -640,10 +640,10 @@ sub upgrade {
 
       ## Remove OTHER/ subdirectories in bounces
       &do_log('notice', "Removing obsolete OTHER/ bounce directories");
-      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf{'host'}, 'bounce_path')) {
+      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf::Conf{'host'}, 'bounce_path')) {
 	
 	foreach my $subdir (sort grep (!/^\.+$/,readdir(BOUNCEDIR))) {
-	  my $other_dir = &Conf::get_robot_conf($Conf{'host'}, 'bounce_path').'/'.$subdir.'/OTHER';
+	  my $other_dir = &Conf::get_robot_conf($Conf::Conf{'host'}, 'bounce_path').'/'.$subdir.'/OTHER';
 	  if (-d $other_dir) {
 	    &tools::remove_dir($other_dir) && &do_log('notice', "Directory $other_dir removed");
 	  }
@@ -652,7 +652,7 @@ sub upgrade {
 	close BOUNCEDIR;
  
       }else {
-	&do_log('err', "Failed to open directory $Conf{'queuebounce'} : $!");	
+	&do_log('err', "Failed to open directory $Conf::Conf{'queuebounce'} : $!");	
       }
 
    }
@@ -899,7 +899,7 @@ sub probe_db {
     my @report;
 
     ## Is the Database defined
-    unless ($Conf{'db_name'}) {
+    unless ($Conf::Conf{'db_name'}) {
 	&do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
@@ -919,7 +919,7 @@ sub probe_db {
     my $dbh = &List::db_get_handler();
     
     my (@tables, $fields, %real_struct);
-    if ($Conf{'db_type'} eq 'mysql') {
+    if ($Conf::Conf{'db_type'} eq 'mysql') {
 	
 	## Get tables
 	@tables = $dbh->tables();
@@ -930,7 +930,7 @@ sub probe_db {
 	}
 	
 	unless (defined $#tables) {
-	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf{'db_name'}, $dbh->errstr);
+	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf::Conf{'db_name'}, $dbh->errstr);
 	    return undef;
 	}
 	
@@ -942,12 +942,12 @@ sub probe_db {
 	    }
 	    unless ($found) {
 		unless ($dbh->do("CREATE TABLE $t1 (temporary INT)")) {
-		    &do_log('err', 'Could not create table %s in database %s : %s', $t1, $Conf{'db_name'}, $dbh->errstr);
+		    &do_log('err', 'Could not create table %s in database %s : %s', $t1, $Conf::Conf{'db_name'}, $dbh->errstr);
 		    next;
 		}
 		
-		push @report, sprintf('Table %s created in database %s', $t1, $Conf{'db_name'});
-		&do_log('notice', 'Table %s created in database %s', $t1, $Conf{'db_name'});
+		push @report, sprintf('Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
+		&do_log('notice', 'Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
 		push @tables, $t1;
 		$real_struct{$t1} = {};
 	    }
@@ -977,16 +977,16 @@ sub probe_db {
 	    $sth->finish();
 	}
 	
-    }elsif ($Conf{'db_type'} eq 'Pg') {
+    }elsif ($Conf::Conf{'db_type'} eq 'Pg') {
 	
 	unless (@tables = $dbh->tables) {
-	    &do_log('err', 'Can\'t load tables list from database %s', $Conf{'db_name'});
+	    &do_log('err', 'Can\'t load tables list from database %s', $Conf::Conf{'db_name'});
 	    return undef;
 	}
-    }elsif ($Conf{'db_type'} eq 'SQLite') {
+    }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
  	
  	unless (@tables = $dbh->tables) {
- 	    &do_log('err', 'Can\'t load tables list from database %s', $Conf{'db_name'});
+ 	    &do_log('err', 'Can\'t load tables list from database %s', $Conf::Conf{'db_name'});
  	    return undef;
  	}
 	
@@ -995,7 +995,7 @@ sub probe_db {
  	}
 	
 	foreach my $t (@tables) {
-	    next unless (defined $db_struct{$Conf{'db_type'}}{$t});
+	    next unless (defined $db_struct{$Conf::Conf{'db_type'}}{$t});
 	    
 	    my $res = $dbh->selectall_arrayref("PRAGMA table_info($t)");
 	    unless (defined $res) {
@@ -1011,7 +1011,7 @@ sub probe_db {
 	# Une simple requête sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
 	# La liste retournée est composée d'un N°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par défaut,Clé primaire (1 ou 0)
 	
-    }elsif ($Conf{'db_type'} eq 'Oracle') {
+    }elsif ($Conf::Conf{'db_type'} eq 'Oracle') {
  	
  	my $statement = "SELECT table_name FROM user_tables";	 
 	
@@ -1034,9 +1034,9 @@ sub probe_db {
 	
      	$sth->finish();
 	
-    }elsif ($Conf{'db_type'} eq 'Sybase') {
+    }elsif ($Conf::Conf{'db_type'} eq 'Sybase') {
 	
-	my $statement = sprintf "SELECT name FROM %s..sysobjects WHERE type='U'",$Conf{'db_name'};
+	my $statement = sprintf "SELECT name FROM %s..sysobjects WHERE type='U'",$Conf::Conf{'db_name'};
 #	my $statement = "SELECT name FROM sympa..sysobjects WHERE type='U'";     
 	
 	my $sth;
@@ -1066,25 +1066,25 @@ sub probe_db {
 	if ($checked{$table} || $checked{'public.' . $table}) {
 	    $found_tables++;
 	}else {
-	    &do_log('err', 'Table %s not found in database %s', $table, $Conf{'db_name'});
+	    &do_log('err', 'Table %s not found in database %s', $table, $Conf::Conf{'db_name'});
 	}
     }
     
     ## Check tables structure if we could get it
     ## Only performed with mysql and SQLite
     if (%real_struct) {
-	foreach my $t (keys %{$db_struct{$Conf{'db_type'}}}) {
+	foreach my $t (keys %{$db_struct{$Conf::Conf{'db_type'}}}) {
 	    unless ($real_struct{$t}) {
-		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf{'db_name'}, $Conf{'db_type'});
+		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf::Conf{'db_name'}, $Conf::Conf{'db_type'});
 		return undef;
 	    }
 	    
 	    my %added_fields;
 	    
-	    foreach my $f (sort keys %{$db_struct{$Conf{'db_type'}}{$t}}) {
+	    foreach my $f (sort keys %{$db_struct{$Conf::Conf{'db_type'}}{$t}}) {
 		unless ($real_struct{$t}{$f}) {
-		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
-		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
+		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf::Conf{'db_name'});
+		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf::Conf{'db_name'});
 		    
 		    my $options;
 		    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
@@ -1092,7 +1092,7 @@ sub probe_db {
 			$options .= 'NOT NULL';
 		    }
 		    
-		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
+		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options")) {
 			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
@@ -1114,22 +1114,22 @@ sub probe_db {
 		}
 		
 		## Change DB types if different and if update_db_types enabled
-		if ($Conf{'update_db_field_types'} eq 'auto') {
+		if ($Conf::Conf{'update_db_field_types'} eq 'auto') {
 		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
-						 required_format => $db_struct{$Conf{'db_type'}}{$t}{$f})) {
+						 required_format => $db_struct{$Conf::Conf{'db_type'}}{$t}{$f})) {
 			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
-					      $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+					      $f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
 			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
-				$f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+				$f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
 			
 			my $options;
 			if ($not_null{$f}) {
 			    $options .= 'NOT NULL';
 			}
 			
-			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
-			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
-			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
+			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options");
+			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options");
+			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options")) {
 			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
 			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
@@ -1139,14 +1139,14 @@ sub probe_db {
 			&do_log('info', 'Field %s in table %s, structure updated', $f, $t);
 		    }
 		}else {
-		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
-			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf::Conf{'db_type'}}{$t}{$f}) {
+			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
 		    }
 		}
 	    }
-	    if ($Conf{'db_type'} eq 'mysql') {
+	    if ($Conf::Conf{'db_type'} eq 'mysql') {
 		## Check that primary key has the right structure.
 		my $should_update;
 		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'key');
@@ -1269,7 +1269,7 @@ sub probe_db {
 		    }
 		}	 
 	    }   
-	    elsif ($Conf{'db_type'} eq 'sqlite') {
+	    elsif ($Conf::Conf{'db_type'} eq 'sqlite') {
 		## Create required INDEX and PRIMARY KEY
 		my $should_update;
 		foreach my $field (@{$primary{$t}}) {
@@ -1328,8 +1328,8 @@ sub probe_db {
 	}
 	## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
-	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf{'db_type'}") {
-	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $!);
+	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}") {
+	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}", $!);
 	    return undef;
 	}
 	my $script;
@@ -1339,32 +1339,32 @@ sub probe_db {
 	close SCRIPT;
 	my @scripts = split /;\n/,$script;
 
-	push @report, sprintf("Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
-	&do_log('notice', "Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
+	push @report, sprintf("Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}");
+	&do_log('notice', "Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}");
 	foreach my $sc (@scripts) {
 	    next if ($sc =~ /^\#/);
 	    unless ($dbh->do($sc)) {
-		&do_log('err', "Failed to run script '%s' : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $dbh->errstr);
+		&do_log('err', "Failed to run script '%s' : %s", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}", $dbh->errstr);
 		return undef;
 	    }
 	}
 
 	## SQLite :  the only access permissions that can be applied are 
 	##           the normal file access permissions of the underlying operating system
-	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
-	    unless (&tools::set_file_rights(file => $Conf{'db_name'},
+	if (($Conf::Conf{'db_type'} eq 'SQLite') &&  (-f $Conf::Conf{'db_name'})) {
+	    unless (&tools::set_file_rights(file => $Conf::Conf{'db_name'},
 					    user => '--USER--',
 					    group => '--GROUP--',
 					    mode => 0664,
 					    ))
 	    {
-		&do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+		&do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 		return undef;
 	    }
 	}
 	
     }elsif ($found_tables < 3) {
-	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf{'db_type'});
+	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf::Conf{'db_type'});
 	return undef;
     }
     
@@ -1372,7 +1372,7 @@ sub probe_db {
     $List::use_db = 1;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
+    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
 
     return 1;
 }
@@ -1380,7 +1380,7 @@ sub probe_db {
 ## Check if data structures are uptodate
 ## If not, no operation should be performed before the upgrade process is run
 sub data_structure_uptodate {
-     my $version_file = "$Conf{'etc'}/data_structure.version";
+     my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
      my $data_structure_version;
 
      if (-f $version_file) {
@@ -1452,8 +1452,8 @@ sub to_utf8 {
 
 	## If filesystem_encoding is set, files are supposed to be encoded according to it
 	my $charset;
-	if ((defined $Conf::Ignored_Conf{'filesystem_encoding'})&&($Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8')) {
-	    $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
+	if ((defined $Conf::Conf::Ignored_Conf{'filesystem_encoding'})&&($Conf::Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8')) {
+	    $charset = $Conf::Conf::Ignored_Conf{'filesystem_encoding'};
 	}else {	    
 	    &Language::PushLang($lang);
 	    $charset = &Language::GetCharset;
@@ -1524,7 +1524,7 @@ sub to_utf8 {
 					mode => 0644,
 					))
 	{
-	    &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    &do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	    next;
 	}
 	&do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'@'.$date);
