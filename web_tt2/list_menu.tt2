@@ -28,7 +28,29 @@
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">[%|loc%]Info[%END%]</a></strong><br />
 
-[% PROCESS 'list_admin_menu.tt2' IF is_priv %]
+[% IF action == 'admin' || action_type == 'admin' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></strong><br />
+
+[% IF is_owner ||  is_editor %]
+<span id="list_admin_menu">[%|loc%]Moderate[%END%]</span><br />
+
+  <ul class="menuLinks">
+  [% IF is_editor %]
+     [% IF action == 'modindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+
+         <li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
+     
+	<li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
+  [% END %]
+  [% IF is_owner %]
+     [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+
+	<li><a class="[% class %]" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
+
+  [% END %]
+  </ul>
+[% END %]
+
 
 [% IF is_archived %]
    [% IF arc_access %]
