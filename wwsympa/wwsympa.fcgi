@@ -578,7 +578,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'manage_template' => ['owner'],
 			   'manage_template' => ['owner'],
 			   'modindex' => ['editor'],
-			   'purge_list' => ['privileged_owner'],
+			   'purge_list' => ['privileged_owner','listmaster'],
 			   'rebuildallarc' => ['listmaster'],
 			   'rebuildarc' => ['listmaster'],
 			   'reject' => ['editor'],
@@ -10253,7 +10253,7 @@ sub do_purge_list {
       &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'parameters' => $in{'selected_lists'},
  		  'status' => 'success'});
-     return 'serveradmin';
+     return 'get_closed_lists';
  }
 
  sub do_close_list {
