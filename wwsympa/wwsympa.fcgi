@@ -11965,7 +11965,7 @@ sub do_latest_d_read {
 	 # Access control
      my %mode;
      $mode{'edit'} = 1;
-     my %access = &d_access_control(\%mode,ath);
+     my %access = &d_access_control(\%mode,$path);
 
      unless ($access{'may'}{'edit'} > 0) {
 	 &report::reject_report_web('auth',$access{'reason'}{'edit'},{},$param->{'action'},$list);
