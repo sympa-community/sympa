@@ -544,7 +544,7 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 }
 
 ## Load sympa config
-unless (&Conf::load( $sympa_conf )) {
+unless (&Conf::load( $sympa_conf,1 )) {
     die('Unable to load sympa config file $sympa_conf');
 }
 

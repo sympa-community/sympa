@@ -381,10 +381,11 @@ our %Conf = ();
 ## Loads and parses the configuration file. Reports errors if any.
 sub load {
     my $config = shift;
+    my $no_db = shift;
     my $line_num = 0;
     my $config_err = 0;
     my($i, %o);
-    
+
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
 	printf STDERR  "load: Unable to open %s: %s\n", $config, $!;
@@ -513,23 +514,26 @@ sub load {
 	}
     }
 
-    #load parameter from database if database value as prioprity over conf file
-    foreach my $label (keys %valid_robot_key_words) {
-	next unless ($valid_robot_key_words{$label} eq 'db');
-	my $value = &get_db_conf('*', $label);
-	if ($value) {
-	    $Conf{$label} = $value ;
-	}
-    }
-    ## Load robot.conf files
-    my $robots_conf = &load_robots ;    
-    $Conf{'robots'} = $robots_conf ;
-    foreach my $robot (keys %{$Conf{'robots'}}) {
+
+    unless ($no_db){
+	#load parameter from database if database value as prioprity over conf file
 	foreach my $label (keys %valid_robot_key_words) {
 	    next unless ($valid_robot_key_words{$label} eq 'db');
-	    my $value = &get_db_conf($robot, $label);
+	    my $value = &get_db_conf('*', $label);
 	    if ($value) {
-		$Conf{'robots'}{$robot}{$label} = $value ;
+		$Conf{$label} = $value ;
+	    }
+	}
+	## Load robot.conf files
+	my $robots_conf = &load_robots ;    
+	$Conf{'robots'} = $robots_conf ;
+	foreach my $robot (keys %{$Conf{'robots'}}) {
+	    foreach my $label (keys %valid_robot_key_words) {
+		next unless ($valid_robot_key_words{$label} eq 'db');
+		my $value = &get_db_conf($robot, $label);
+		if ($value) {
+		    $Conf{'robots'}{$robot}{$label} = $value ;
+		}
 	    }
 	}
     }

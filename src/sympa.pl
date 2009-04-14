@@ -171,8 +171,9 @@ local $main::daemon_usage;
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 my $config_file = $main::options{'config'} || '--CONFIG--';
-## Load configuration file
-unless (Conf::load($config_file)) {
+
+## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
+unless (Conf::load($config_file,1)) {
    &fatal_err("Configuration file $config_file has errors.");
    
 }
@@ -194,6 +195,12 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
     unless (&Upgrade::probe_db()) {
 	&fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf', $Conf{'db_name'});
     }
+}
+
+## Now trying to load full config (including database)
+unless (Conf::load($config_file)) {
+   &fatal_err("Configuration file $config_file has errors.");
+   
 }
 
 ## Apply defaults to %List::pinfo
