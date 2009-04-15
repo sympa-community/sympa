@@ -43,7 +43,6 @@ use lib '--LIBDIR--';
 use Conf;
 use Log;
 use Commands;
-#use Getopt::Std;
 use Getopt::Long;
 
 use mail;
@@ -54,8 +53,8 @@ use List;
 require 'tools.pl';
 
 my $daemon_name = &Log::set_daemon($0);
-
-#getopts('dF');
+my $creation_date = time();
+local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as master daemon.
 
 ## Check options
 ##  --debug : sets the debug mode
@@ -82,7 +81,28 @@ unless (Conf::load($sympa_conf_file)) {
 
 ## Check database connectivity
 unless (&List::check_db_connect()) {
-    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf::Conf{'db_name'});
+}
+
+do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+
+# setting log_level using conf unless it is set by calling option
+if ($main::options{'log_level'}) {
+    &Log::set_log_level($main::options{'log_level'});
+    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+}else{
+    &Log::set_log_level($Conf::Conf{'log_level'});
+    do_log('info', "Configuration file read, default log level $Conf::Conf{'log_level'}"); 
+}
+
+## Set the process as main bulk daemon by default.
+my $is_main_bulk = 0;
+
+if (-f $Conf::Conf{'pidfile_bulk'}){
+    my $p_count = &tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'});
+    if ($p_count > 0) {
+	fatal_err('Some process identifiers remain in %s. Please make sure another bulk is not already running.', $pidfile);	    
+    }
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -95,34 +115,22 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-      print STDOUT "Starting bulk daemon, pid $_\n";
-
-      exit(0);
+       do_log('info',"Starting bulk master daemon, pid %s",$child_pid);
+       exit(0);
    }
 }
-
+do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+$options->{'multiple_process'} = 1;
 
-# not usefull because several bulk demmon can run without troubles
-#&tools::write_pid($Conf{'pidfile_bulk'}, $$, $options);
-
-# setting log_level using conf unless it is set by calling option
-if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
-}else{
-    &Log::set_log_level($Conf{'log_level'});
-    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
-}
-
-do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'bulk');
+# Saves the pid number
+&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam('--GROUP--'))[2];
 $< = $> = (getpwnam('--USER--'))[2];
-
 
 ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
 &POSIX::setuid((getpwnam('--USER--'))[2]);
@@ -134,10 +142,10 @@ unless (($( == (getgrnam('--GROUP--'))[2]) && ($< == (getpwnam('--USER--'))[2]))
 }
 
 ## Sets the UMASK
-umask(oct($Conf{'umask'}));
+umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
-unless (chdir($Conf{'home'})) {
+unless (chdir($Conf::Conf{'home'})) {
     &do_log('err','unable to change directory');
     exit (-1);
 }
@@ -157,8 +165,38 @@ my $fh = 'fh0000000000';	## File handle for the stream.
 my $messagekey;       # the key of the current message in the message_table   
 my $messageasstring;  # the current message as a string
 
+my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
+my $last_check_date = time();
+
 while (!$end) {
     my $bulk;
+    ## Create slave bulks if too much packets are waiting to be sent in the bulk_mailer table.
+    if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
+	if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && !(&tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'}) > 1)){
+	    if($Conf::Conf{'bulk_max_count'} > 1) {
+		&do_log('info','Too much packets in spool (%s). Creating %s slave bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
+		for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
+		    if ((my $child_pid = fork) != 0) {
+			do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+			do_log('info', "Starting bulk slave daemon, pid %s", $child_pid);
+			$creation_date = time();
+                        # Saves the pid number
+			&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+		    }else{
+			## We're in a slave bulk process
+			$main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
+			last;
+		    }
+		}
+	    }
+	}
+	$last_check_date = time();
+    }
+    ## If a slave bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
+    if (($main::daemon_usage eq 'DAEMON_SLAVE') && (time() - $creation_date > $Conf::Conf{'bulk_ttl'}) && !(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
+	&do_log('info', "Process %s too old, exiting.", $$);
+	last;
+    }
     if ($bulk = Bulk::next()) {
 	if ($bulk->{'messagekey'} ne $messagekey) {
 	    # current packet is no related to the same message as the previous packet
@@ -173,11 +211,12 @@ while (!$end) {
 	    foreach my $rcpt (@rcpts) {
 		$return_path = $rcpt;
 		$return_path =~ s/\@/\=\=a\=\=/; 
-		$return_path = "$Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa
+		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa
 		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
 		print SMTP $messageasstring;
 		close SMTP;
 	    }
+
 	}else{
 	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
 	    print SMTP $messageasstring;
@@ -190,7 +229,7 @@ while (!$end) {
     &mail::reaper;
 }
 do_log('notice', 'bulkd exited normally due to signal');
-#&tools::remove_pid($Conf{'pidfile_bulk'}, $$);
+&tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
 
 exit(0);
 

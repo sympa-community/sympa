@@ -223,13 +223,13 @@ sub store {
     # second : create each receipient packet in bulkmailer_table
     my $type = ref $rcpts;
 
-#    foreach my $packet (@{$rcpts}) {
     unless (ref $rcpts) {
 	my @tab = ($rcpts);
 	my @tabtab;
 	push @tabtab, \@tab;
 	$rcpts = \@tabtab;
     }
+
     foreach my $packet (@{$rcpts}) {
 	$type = ref $packet;
 	my $rcptasstring ;
@@ -254,7 +254,6 @@ sub store {
 	    $packet_already_exist = $sth->fetchrow;
 	    $sth->finish();
 	}
-	
 	unless ($packet_already_exist) {
 	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, priority_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s')", $dbh->quote($messagekey),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$priority, $current_date,$delivery_date;
 
@@ -433,7 +432,45 @@ sub purge_bulkspool {
     return $count;
 }
 
+## Return the number of remaining packets in the bulkmailer table.
+sub get_remaining_packets_count {
+    &do_log('debug4', 'get_remaining_packets_count');
 
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    my $m_count = 0;
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
+
+    my $statement = "SELECT COUNT(*) FROM bulkmailer_table WHERE 1";
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement (while trying to count remaining packets in bulkmailer_table) "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    my @result = $sth->fetchrow_array();
+    return $result[0];
+}
+
+## Returns 1 if the number of remaining packets inthe bulkmailer table exceeds
+## the value of the 'bulk_fork_threshold' config parameter.
+sub there_is_too_much_remaining_packets {
+    &do_log('debug4', 'there_is_too_much_remaining_packets');
+    my $remaining_packets = &get_remaining_packets_count();
+    if ($remaining_packets > $Conf::Conf{'bulk_fork_threshold'}) {
+	return $remaining_packets;
+    }else{
+	return 0;
+    }
+}
 
 ## Packages must return true.
 1;

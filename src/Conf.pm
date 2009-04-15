@@ -49,8 +49,9 @@ my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 
 
 my @valid_options = qw(
-		       allow_subscribe_if_pending avg alias_manager bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
-		       cache_list_config
+		       allow_subscribe_if_pending avg alias_manager bounce_warn_rate bounce_halt_rate bounce_email_prefix 
+		       bulk_fork_threshold bulk_max_count bulk_ttl bulk_wait_to_fork
+		       chk_cert_expiration_task expire_bounce_task cache_list_config
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod clean_delay_queuesubscribe clean_delay_queueautomatic clean_delay_queuetopic clean_delay_queuebounce clean_delay_queueoutgoing clean_delay_tmpdir default_remind_task
 		       cookie cookie_cas_expire create_list automatic_list_feature automatic_list_creation automatic_list_removal crl_dir crl_update_task db_host db_env db_name db_timeout
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
@@ -202,6 +203,10 @@ my %Default_Conf =
      'queuesubscribe' => undef,
      'tmpdir'  => undef,     
      'sleep'      => 5,
+     'bulk_fork_threshold' => 100,
+     'bulk_max_count' => 3,
+     'bulk_ttl' => 300,
+     'bulk_wait_to_fork' => 10,
      'clean_delay_queue'    => 1,
      'clean_delay_queuemod' => 10,
      'clean_delay_queuetopic' => 7,
@@ -537,6 +542,8 @@ sub load {
 	    }
 	}
     }
+
+
 
     my $nrcpt_by_domain =  &load_nrcpt_by_domain ;
     $Conf{'nrcpt_by_domain'} = $nrcpt_by_domain ;

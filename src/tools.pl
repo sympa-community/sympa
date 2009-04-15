@@ -2230,21 +2230,54 @@ sub dump_encoding {
 
 ## Remove PID file and STDERR output
 sub remove_pid {
-    my ($pidfile, $pid) = @_;
+    my ($pidfile, $pid, $options) = @_;
 
-    unless (unlink $pidfile) {
-	&do_log('err', "Failed to remove $pidfile: %s", $!);
-	return undef;
-    }
-    
-    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
-    if (-f $err_file) {
-	unless (unlink $err_file) {
-	    &do_log('err', "Failed to remove $err_file: %s", $!);
+    if($options->{'multiple_process'}){
+	my $lock = new Lock ($pidfile);
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
 	    return undef;
 	}
+	unless ($lock->lock('write')) {
+	    return undef;
+	}   
+	
+	unless (open(PFILE, $pidfile)) {
+	    fatal_err('Could not open %s, exiting', $pidfile);
+	}
+	my $previous_pid = <PFILE>; chomp $previous_pid;
+	close PFILE;
+	$previous_pid =~ s/$pid//g;
+	if ($previous_pid =~ /^\s*$/){
+	    ## Release the lock
+	    unless (unlink $pidfile) {
+		&do_log('err', "Failed to remove $pidfile: %s", $!);
+		return undef;
+	    }
+	}else{
+	    unless (open(PFILE, ">$pidfile")) {
+		fatal_err('Could not open %s, exiting', $pidfile);
+	    }
+	    print PFILE "$previous_pid";
+	    close(PFILE);
+	}
+	unless ($lock->unlock()) {
+	    return undef;
+	}
+    }else{
+	unless (unlink $pidfile) {
+	    &do_log('err', "Failed to remove $pidfile: %s", $!);
+	    return undef;
+	}
+	
+	my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
+	if (-f $err_file) {
+	    unless (unlink $err_file) {
+		&do_log('err', "Failed to remove $err_file: %s", $!);
+		return undef;
+	    }
+	}
     }
-
     return 1;
 }
 
@@ -2284,7 +2317,7 @@ sub write_pid {
 	return undef;
     }
 
-    ## If pidfile exists, read the PID and get date
+    ## If pidfile exists, read the PID
     my ($other_pid);
     if (-f $pidfile) {
 	open PFILE, $pidfile;
@@ -2292,42 +2325,63 @@ sub write_pid {
 	close PFILE;	
     }
 
-    ## Create and write the pidfile
-    unless (open(LOCK, "+>> $pidfile")) {
-	 fatal_err('Could not open %s, exiting', $pidfile);
-    } 
-    unless (flock(LOCK, 6)) {
-	fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
-    }
-
-    ## The previous process died suddenly, without pidfile cleanup
-    ## Send a notice to listmaster with STDERR of the previous process
-    if ($other_pid) {
-	&do_log('notice', "Previous process $other_pid died suddenly ; notifying listmaster");
-	my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
-	my (@err_output, $err_date);
-	if (-f $err_file) {
-	    open ERR, $err_file;
-	    @err_output = <ERR>;
-	    close ERR;
-
-	    $err_date = &POSIX::strftime("%d %b %Y  %H:%M", localtime( (stat($err_file))[9]));
+    ## If we can have multiple options for the process.
+    if($options->{'multiple_process'}){
+	my $lock = new Lock ($pidfile);
+	unless (defined $lock) {
+	    &do_log('err','Could not create new lock');
+	    return undef;
 	}
+#	$lock->set_timeout(2);
+	unless ($lock->lock('write')) {
+	    return undef;
+	}   
 
-	&List::send_notify_to_listmaster('crash', $Conf::Conf::Conf{'domain'},
-					 {'crash_err' => \@err_output, 'crash_date' => $err_date});
+	unless (open(LCK, ">> $pidfile")) {
+	    fatal_err('Could not open %s, exiting', $pidfile);
+	}
+	print LCK "$pid ";
+	close(LCK);
+	unless ($lock->unlock()) {
+	    return undef;
+	}
+    }else{
+	## Create and write the pidfile
+	unless (open(LOCK, "+>> $pidfile")) {
+	    fatal_err('Could not open %s, exiting', $pidfile);
+	}
+	unless (flock(LOCK, 6)) {
+	    fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
+	}
+	
+	## The previous process died suddenly, without pidfile cleanup
+	## Send a notice to listmaster with STDERR of the previous process
+	if ($other_pid) {
+	    &do_log('notice', "Previous process $other_pid died suddenly ; notifying listmaster");
+	    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
+	    my (@err_output, $err_date);
+	    if (-f $err_file) {
+		open ERR, $err_file;
+		@err_output = <ERR>;
+		close ERR;
+		
+		$err_date = &POSIX::strftime("%d %b %Y  %H:%M", localtime( (stat($err_file))[9]));
+	    }
+	    
+	    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'},
+					     {'crash_err' => \@err_output, 'crash_date' => $err_date});
+	}
+	
+	unless (open(LCK, "> $pidfile")) {
+	    fatal_err('Could not open %s, exiting', $pidfile);
+	}
+	unless (truncate(LCK, 0)) {
+	    fatal_err('Could not truncate %s, exiting.', $pidfile);
+	}
+	
+	print LCK "$pid\n";
+	close(LCK);
     }
-
-    unless (open(LCK, "> $pidfile")) {
-	fatal_err('Could not open %s, exiting', $pidfile);
-    }
-    unless (truncate(LCK, 0)) {
-	fatal_err('Could not truncate %s, exiting.', $pidfile);
-    }
-    
-    print LCK "$pid\n";
-    close(LCK);
-    
     unless (&tools::set_file_rights(file => $pidfile,
 				    user => '--USER--',
 				    group => '--GROUP--',
@@ -3384,6 +3438,28 @@ sub smart_lessthan {
     } else {
         return $stra < $strb;
     } 
+}
+
+## Returns the number of pid identifiers in the pid file.
+sub get_number_of_pids {
+    my $pidfile = shift;
+    my $p_count = 0;
+    unless (open(PFILE, $pidfile)){
+	fatal_err('Could not open %s, exiting', $pidfile);
+    }
+    while (<PFILE>){
+	$p_count += &count_numbers_in_string($_);
+    }
+    close PFILE;
+    return $p_count;
+}
+
+## Returns the counf of numbers found in the string given as argument.
+sub count_numbers_in_string {
+    my $str = shift;
+    my $count = 0;
+    $count++ while $str =~ /(\d+\s+)/g;
+    return $count;
 }
 
 1;

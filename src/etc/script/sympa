@@ -165,14 +165,23 @@ sympa_stop() {
 		echo $echo_opt "Stopping module $1.pl: "
 		pid=`head -1 --PIDDIR--/$1.pid`
 		running=`ps -A | grep "$pid"`
-		if [ "$running" != "" ]; then
-		if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
+		if [ $1 == 'bulk' ]; then
+		    if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
 		    else
 			kill -TERM $pid && success || failure
 		    fi		    
-		else
-		    echo "died"
+		else 
+		    if [ "$running" != "" ]; then
+			if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
+			    kill -TERM $pid && echo "success" || echo "failure"
+			else
+			    kill -TERM $pid && success || failure
+			fi		    
+
+		    else
+			echo "died"
+		    fi
 		fi
 		echo
 	else
