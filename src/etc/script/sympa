@@ -71,7 +71,7 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0"  -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" -a ${OSTYPE} != "Linux" ]; then
+    if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0"  -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" -a ${OSTYPE} != "linux" -a ${OSTYPE} != "linux-gnu" ]; then
 
       status $1.pl
 
