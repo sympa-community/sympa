@@ -137,7 +137,7 @@ sympa_start() {
 			fi
 			;;
 		1) 
-			echo $echo_opt "Starting $1, overwritting old pid file."
+			echo $echo_opt "Starting $1, overwriting old pid file."
 			sympa_module_start $1
 			if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" ]; then
 				if [ $? -eq 0 ]; then

@@ -8,7 +8,7 @@
 [%|loc(user.email)%]From: %1[%END%]<br />
 [%|loc(mailto)%]To: %1[%END%]<br />
 <label for="subject">[%|loc%]Subject:[%END%] <input id="subject" type="text" size="45" name="subject" value="[% subject %]" /></label>
-<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
 
 <br />
 <input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
@@ -42,8 +42,6 @@
 
 <textarea name="body" cols="80" rows="25">
 </textarea>
-
-[%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]
 </fieldset>
 </form>
 <!-- end compose_mail.tt2 -->

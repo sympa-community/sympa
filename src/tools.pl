@@ -2233,15 +2233,6 @@ sub remove_pid {
     my ($pidfile, $pid, $options) = @_;
 
     if($options->{'multiple_process'}){
-	my $lock = new Lock ($pidfile);
-	unless (defined $lock) {
-	    &do_log('err','Could not create new lock');
-	    return undef;
-	}
-	unless ($lock->lock('write')) {
-	    return undef;
-	}   
-	
 	unless (open(PFILE, $pidfile)) {
 	    fatal_err('Could not open %s, exiting', $pidfile);
 	}
@@ -2255,14 +2246,15 @@ sub remove_pid {
 		return undef;
 	    }
 	}else{
-	    unless (open(PFILE, ">$pidfile")) {
-		fatal_err('Could not open %s, exiting', $pidfile);
+	    if(-f $pidfile){
+		unless (open(PFILE, ">$pidfile")) {
+		    fatal_err('Could not open %s, exiting', $pidfile);
+		}
+		print PFILE "$previous_pid";
+		close(PFILE);
+	    }else{
+		&do_log('notice','pidfile %s does not exist. Nothing to do.',$pidfile);
 	    }
-	    print PFILE "$previous_pid";
-	    close(PFILE);
-	}
-	unless ($lock->unlock()) {
-	    return undef;
 	}
     }else{
 	unless (unlink $pidfile) {
@@ -2327,24 +2319,11 @@ sub write_pid {
 
     ## If we can have multiple options for the process.
     if($options->{'multiple_process'}){
-	my $lock = new Lock ($pidfile);
-	unless (defined $lock) {
-	    &do_log('err','Could not create new lock');
-	    return undef;
-	}
-#	$lock->set_timeout(2);
-	unless ($lock->lock('write')) {
-	    return undef;
-	}   
-
 	unless (open(LCK, ">> $pidfile")) {
 	    fatal_err('Could not open %s, exiting', $pidfile);
 	}
 	print LCK "$pid ";
 	close(LCK);
-	unless ($lock->unlock()) {
-	    return undef;
-	}
     }else{
 	## Create and write the pidfile
 	unless (open(LOCK, "+>> $pidfile")) {
@@ -2379,7 +2358,7 @@ sub write_pid {
 	    fatal_err('Could not truncate %s, exiting.', $pidfile);
 	}
 	
-	print LCK "$pid\n";
+	print LCK "$pid ";
 	close(LCK);
     }
     unless (&tools::set_file_rights(file => $pidfile,

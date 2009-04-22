@@ -53,7 +53,7 @@ use List;
 require 'tools.pl';
 
 my $daemon_name = &Log::set_daemon($0);
-my $creation_date = time();
+my $date_of_last_activity = time();
 local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as master daemon.
 
 ## Check options
@@ -98,13 +98,6 @@ if ($main::options{'log_level'}) {
 ## Set the process as main bulk daemon by default.
 my $is_main_bulk = 0;
 
-if (-f $Conf::Conf{'pidfile_bulk'}){
-    my $p_count = &tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'});
-    if ($p_count > 0) {
-	fatal_err('Some process identifiers remain in %s. Please make sure another bulk is not already running.', $pidfile);	    
-    }
-}
-
 ## Put ourselves in background if not in debug mode. 
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
@@ -123,7 +116,7 @@ do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-$options->{'multiple_process'} = 1;
+$options->{'multiple_process'} = 0;
 
 # Saves the pid number
 &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
@@ -168,6 +161,8 @@ my $messageasstring;  # the current message as a string
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = time();
 
+$options->{'multiple_process'} = 1;
+
 while (!$end) {
     my $bulk;
     ## Create slave bulks if too much packets are waiting to be sent in the bulk_mailer table.
@@ -177,14 +172,15 @@ while (!$end) {
 		&do_log('info','Too much packets in spool (%s). Creating %s slave bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
 		for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
 		    if ((my $child_pid = fork) != 0) {
-			do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 			do_log('info', "Starting bulk slave daemon, pid %s", $child_pid);
-			$creation_date = time();
                         # Saves the pid number
-			&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+			&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
 		    }else{
 			## We're in a slave bulk process
+			$date_of_last_activity = time();
 			$main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
+			do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+			do_log('info', "Bulk slave daemon started with pid %s", $$);
 			last;
 		    }
 		}
@@ -193,7 +189,7 @@ while (!$end) {
 	$last_check_date = time();
     }
     ## If a slave bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
-    if (($main::daemon_usage eq 'DAEMON_SLAVE') && (time() - $creation_date > $Conf::Conf{'bulk_ttl'}) && !(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
+    if (($main::daemon_usage eq 'DAEMON_SLAVE') && (time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && !(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
 	&do_log('info', "Process %s too old, exiting.", $$);
 	last;
     }
@@ -223,8 +219,9 @@ while (!$end) {
 	    close SMTP;
 	}
 	&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'});
+	$date_of_last_activity = time();
     }else{
-	sleep 1; # scan bulk_mailer table every 1 second waiting for some new packets
+	sleep $Conf::Conf{'bulk_sleep'}; # scan bulk_mailer table every bulk_sleep second waiting for some new packets
     }
     &mail::reaper;
 }
@@ -237,6 +234,7 @@ exit(0);
 ## When we catch SIGTERM, just change the value of the loop
 ## variable.
 sub sigterm {
+    &do_log('notice', 'signal TERM received, still processing current task');
     $end = 1;
 }
 
