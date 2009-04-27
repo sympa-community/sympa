@@ -207,7 +207,7 @@ while (!$end) {
 	    foreach my $rcpt (@rcpts) {
 		$return_path = $rcpt;
 		$return_path =~ s/\@/\=\=a\=\=/; 
-		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa
+		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa)
 		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
 		print SMTP $messageasstring;
 		close SMTP;
@@ -219,9 +219,12 @@ while (!$end) {
 	    close SMTP;
 	}
 	&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'});
+	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 1){
+	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date. Now sending VERP.', $bulk->{'messagekey'}, $bulk->{'listname'}, $bulk->{'robot'}, $bulk->{'priority_message'}, time() - $bulk->{'delivery_date'});
+	}
 	$date_of_last_activity = time();
     }else{
-	sleep $Conf::Conf{'bulk_sleep'}; # scan bulk_mailer table every bulk_sleep second waiting for some new packets
+	sleep $Conf::Conf{'bulk_sleep'}; # scan bulk_mailer table every bulk_sleep second(s) waiting for some new packets
     }
     &mail::reaper;
 }

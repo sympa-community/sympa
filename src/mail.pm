@@ -593,7 +593,8 @@ sub sending {
     my $listname = $params{'listname'};
     my $sign_mode = $params{'sign_mode'};
     my $sympa_email =  $params{'sympa_email'};
-    my $priority =  $params{'priority'};
+    my $priority_message =  $params{'priority'};
+    my $priority_packet = $Conf::Conf{'sympa_packet_priority'};
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date); 
     my $verp  =  $params{'verp'};
@@ -644,7 +645,8 @@ sub sending {
 				   'from' => $from,
 				   'robot' => $robot,
 				   'listname' => $listname,
-				   'priority' => $priority,
+				   'priority_message' => $priority_message,
+				   'priority_packet' => $priority_packet,
 				   'delivery_date' => $delivery_date,
 				   'verp' => $verpfeature);
       unless (defined $bulk_code) {

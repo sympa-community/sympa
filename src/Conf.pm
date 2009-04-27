@@ -73,7 +73,7 @@ my @valid_options = qw(
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority return_path_suffix rfc2369_header_fields sendmail sendmail_args sleep 
-		       sort sympa_priority supported_lang syslog log_smtp log_module log_condition umask verp_rate welcome_return_path wwsympa_url
+		       sort sympa_priority sympa_packet_priority supported_lang syslog log_smtp log_module log_condition umask verp_rate welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers remove_outgoing_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
@@ -239,6 +239,7 @@ my %Default_Conf =
      'listmaster_email' => 'listmaster',
      'default_list_priority' => 5,
      'sympa_priority' => 1,
+     'sympa_packet_priority' => 5,
      'request_priority' => 0,
      'owner_priority' => 9,
      'lang' => 'en_US',
