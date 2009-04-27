@@ -6,7 +6,7 @@ Reply-to: [% conf.sympa %]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
 --[% boundary %]
-Content-Type: text/plain; charset=[% charset %];
+Content-Disposition: inline
 
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,authkey)%]List %1 allows you to tag your messages, using a set of defined topics. To tag the attached message go to the following page :[%END%]
 

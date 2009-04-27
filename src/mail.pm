@@ -222,7 +222,7 @@ sub mail_file {
 	$headers .= "MIME-Version: 1.0\n";
     }
     unless ($header_ok{'content-type'}) {
-	$headers .= "Content-Type: text/plain; charset=UTF-8\n";
+	$headers .= "Content-Type: text/plain; charset=".$data->{'charset'}."\n";
     }
     unless ($header_ok{'content-transfer-encoding'}) {
 	$headers .= "Content-Transfer-Encoding: 8bit\n"; 
@@ -262,7 +262,7 @@ sub mail_file {
 	$listname = $data->{'list'};
     }
      
-    unless ($message = &reformat_message("$headers"."$message", \@msgs)) {
+    unless ($message = &reformat_message("$headers"."$message", \@msgs, $data->{'charset'})) {
 	&do_log('err', "mail::mail_file: Failed to reformat message");
     }
 
@@ -890,9 +890,10 @@ sub send_in_spool {
 ##
 ##  Sub-messages are gathered from template context paramenters.
 
-sub reformat_message($;$) {
+sub reformat_message($;$$) {
     my $message = shift;
     my $attachments = shift || [];
+    my $defcharset = shift;
     my $msg;
 
     my $parser = new MIME::Parser;
@@ -915,15 +916,16 @@ sub reformat_message($;$) {
     }
 
     $msg->head->delete("X-Mailer");
-    $msg = &fix_part($msg, $parser, $attachments);
+    $msg = &fix_part($msg, $parser, $attachments, $defcharset);
     $msg->head->add("X-Mailer", sprintf "Sympa %s", $Version::Version);
     return $msg->as_string;
 }
 
-sub fix_part($$$) {
+sub fix_part($$$$) {
     my $part = shift;
     my $parser = shift;
     my $attachments = shift || [];
+    my $defcharset = shift;
     return $part unless $part;
 
     my $enc = $part->head->mime_attr("Content-Transfer-Encoding");
@@ -951,7 +953,7 @@ sub fix_part($$$) {
     } elsif ($part->parts) {
 	my @newparts = ();
 	foreach ($part->parts) {
-	    push @newparts, &fix_part($_, $parser, $attachments);
+	    push @newparts, &fix_part($_, $parser, $attachments, $defcharset);
 	}
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
@@ -964,13 +966,14 @@ sub fix_part($$$) {
 
 	my $head = $part->head;
 	my $body = $bodyh->as_string;
-	my $charset = $head->mime_attr("Content-Type.Charset");
+	my $charset = $head->mime_attr("Content-Type.Charset") || $defcharset;
 
 	my ($newbody, $newcharset, $newenc) = 
 	    MIME::Charset::body_encode(Encode::decode('utf8', $body), $charset,
 				       Replacement => 'FALLBACK');
 	if ($newenc eq $enc and $newcharset eq $charset and
 	    $newbody eq $body) {
+	    $head->add("MIME-Version", "1.0") unless $head->get("MIME-Version");
 	    return $part;
 	}
 

@@ -192,7 +192,8 @@ sub SetLang {
 
     $current_lang = $lang;
     $current_locale = $locale;
-    $current_charset = 'utf-8';
+    my $locale2charset = &Conf::get_robot_conf('', 'locale2charset');
+    $current_charset = $locale2charset->{$locale} || 'utf-8';
 
     return $locale;
 }#SetLang
@@ -347,9 +348,7 @@ sub gettext_strftime {
     return &POSIX::strftime($format, @_) unless $current_charset;
 
     $format = gettext($format);
-    Encode::from_to($format, 'utf8', $current_charset);
     my $datestr = &POSIX::strftime($format, @_);
-    Encode::from_to($datestr, $current_charset, 'utf8');
     return $datestr;
 }
 

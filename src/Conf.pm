@@ -521,6 +521,9 @@ sub load {
 	}
     }
 
+    ## Load charset.conf file
+    my $charset_conf = &load_charset;
+    $Conf{'locale2charset'} = $charset_conf;
 
     unless ($no_db){
 	#load parameter from database if database value as prioprity over conf file
@@ -628,6 +631,41 @@ sub load {
 
     return 1;
 }    
+
+## load charset.conf file (charset mapping for service messages)
+sub load_charset {
+    my $charset = {};
+
+    my $config = $Conf{'etc'}.'/charset.conf' ;
+    $config = '--ETCBINDIR--/charset.conf' unless -f $config;
+    if (-f $config) {
+	unless (open CONFIG, $config) {
+	    printf STDERR 'unable to read configuration file %s: %s\n',$config, $!;
+	    return {};
+	}
+	while (<CONFIG>) {
+	    chomp $_;
+	    s/\s*#.*//;
+	    s/^\s+//;
+	    next unless /\S/;
+	    my ($locale, $cset) = split(/\s+/, $_);
+	    unless ($cset) {
+		printf STDERR 'charset name is missing in configuration file %s line %d\n',$config, $.;
+		next;
+	    }
+	    unless ($locale =~ s/^([a-z]+)_([a-z]+)/lc($1).'_'.uc($2).$'/ei) { #'
+		printf STDERR 'illegal locale name in configuration file %s line %d\n',$config, $.;
+		next;
+	    }
+	    $charset->{$locale} = $cset;
+	
+	}
+	close CONFIG;
+    }
+
+    return $charset;
+}
+
 
 ## load nrcpt file (limite receipient par domain
 sub load_nrcpt_by_domain {

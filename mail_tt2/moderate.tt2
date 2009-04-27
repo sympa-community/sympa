@@ -8,9 +8,8 @@ Reply-To: [% conf.email %]@[% conf.host %]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 
 --[% boundary %]
+Content-Disposition: inline
 [% END -%]
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
 
 [%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]

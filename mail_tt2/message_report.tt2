@@ -6,7 +6,7 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset="UTF-8";
+Content-Disposition: inline
 
 [% IF entry == 'forward' %]
 [%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
@@ -24,7 +24,7 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset="UTF-8";
+Content-Disposition: inline
 
 [% IF list.name -%]
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
@@ -81,7 +81,7 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
 --[% boundary %]
-Content-Type: text/plain; charset="UTF-8";
+Content-Disposition: inline
 
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected. 
 You are not allowed to send this message for the following reason :[%END%]
@@ -93,8 +93,6 @@ You are not allowed to send this message for the following reason :[%END%]
 [%##################### %]
 [% ELSIF type == 'success' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
 
 [% IF entry == 'moderating_message' -%]
 

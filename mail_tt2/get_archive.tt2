@@ -4,8 +4,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Archive of %1, file %2[%END%][%E
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
 [%|loc%]Table of contents:[%END%]
 
@@ -29,8 +28,6 @@ X-Sympa-Attach: yes
 
 [% END %]
 --[% boundary2 %]
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 
 [%|loc(list.name,date)%]End of digest for list %1 - %2[%END%]

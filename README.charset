@@ -1,0 +1,21 @@
+Legacy character set (charset) support for Sympa
+
+    IKEDA Soji <ikeda@conversion.co.jp>
+    16, Mar 2009
+
+In some language environments, legacy encoding (character set) is
+preferred for e-mail messages: for example iso-2022-jp in Japanese
+language.
+
+charset.conf defines mappings between locale and legacy character
+set for service messages.  If you want to disable legacy character
+set support, simply create empty charset.conf onto etc directory:
+
+    # touch /home/sympa/etc/charset.conf
+
+Note: if you are planning to upgrade Sympa earlier than 5.3a.8,
+original charset.conf is required to convert shared documents
+during upgrade process.
+
+
+$$

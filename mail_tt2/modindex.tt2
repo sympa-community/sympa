@@ -3,8 +3,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Moderation spool for list %1[%EN
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain; charset="UTF-8";
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
 [%|loc(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
