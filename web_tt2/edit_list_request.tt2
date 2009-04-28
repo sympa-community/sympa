@@ -6,7 +6,8 @@
 [% IF !group %]
   [%|loc%]You can choose below a subset of parameters to edit :[%END%] 
   <ul>
-    <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]List definition[%END%]</a></li>
+[% IF GROUP == 'description' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+    <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description" class="[% class %] >[%|loc%]List definition[%END%]</a></li>
     <li><a href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]Sending/receiving setup[%END%]</a></li>
     <li><a href="[% path_cgi %]/edit_list_request/[% list %]/command" >[%|loc%]Privileges[%END%]</a></li>
     <li><a href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]Archives[%END%]</a></li>

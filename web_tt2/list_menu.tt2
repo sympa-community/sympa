@@ -3,59 +3,62 @@
 <div class="MenuBlock">
 [% PROCESS 'list_panel.tt2' %]
 
+<div id="list_admin_menu">
+<ul>
 [% IF is_subscriber == '1' %]
   [% IF may_suboptions == '1' %]
       [% IF action == 'suboptions' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-      <strong><a class="[% class %]" href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a></strong><br />
+  <li class="[% class %]"><a href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a></li>
   [% END %]
   [% IF may_signoff == '1' %] 
   [% IF action == 'signoff' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     <strong><a class="[% class %]" href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%][%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a></strong><br />
+  <li class="[% class %]"><a href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%][%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a></li>
   [% END %]
 [% ELSE %]
   [% IF may_subscribe %]
      [% IF action == 'subrequest' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-         <strong><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" [% IF listconf.custom_attribute.size == 0 %]onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to subscribe to list %1?[%END%][%END%]'); return false;"[% END %]>[%|loc%]Subscribe[%END%]</a></strong><br />
+<li ><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" [% IF listconf.custom_attribute.size == 0 %]onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to subscribe to list %1?[%END%][%END%]'); return false;"[% END %]>[%|loc%]Subscribe[%END%]</a></li>
   [% END %]
 
   [% IF ! user.email %]
       [% IF action == 'signoff' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     <strong><a class="[% class %]" href="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</a></li>
   [% END %]
 
 [% END %]
 
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">[%|loc%]Info[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/info/[% list %]">[%|loc%]Info[%END%]</a></li>
 
 [% IF action == 'admin' || action_type == 'admin' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/admin/[% list %]">[%|loc%]Admin[%END%]</a></li>
 
 [% IF is_owner ||  is_editor %]
-<span id="list_admin_menu">[%|loc%]Moderate[%END%]</span><br />
+<li class ="menuLinks" >[%|loc%]Moderate[%END%]
 
   <ul class="menuLinks">
   [% IF is_editor %]
      [% IF action == 'modindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 
-         <li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
+         <li  class="[% class %]">&#187; &nbsp;<a href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
      
-	<li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
+	<li  class="[% class %]">&#187; &nbsp;<a  href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
   [% END %]
   [% IF is_owner %]
      [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 
-	<li><a class="[% class %]" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
+	<li class="[% class %]">&#187; &nbsp;<a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
 
   [% END %]
   </ul>
+</li>
 [% END %]
 
 
 [% IF is_archived %]
    [% IF arc_access %]
       [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' ||  action == 'arc_protect' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-      <strong><a class="[% class %]" href="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</a></li>
    [% ELSE %]
       <div class="menuInactive2">[%|loc%]Archive[%END%]</div><br />
    [% END %]
@@ -63,18 +66,18 @@
 
 [% IF may_post %]
 [% IF action == 'compose_mail' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-          <strong><a class="[% class %]" href="[% path_cgi %]/compose_mail/[% list %]" >[%|loc%]Post[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]" >[%|loc%]Post[%END%]</a></li>
 [% ELSE %]
           <div class="menuInactive2">[%|loc%]Post[%END%]</div><br />
 [% END %]
 
 [% IF action == 'rss_request' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/rss_request/[% list %]" >[%|loc%]RSS[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/rss_request/[% list %]" >[%|loc%]RSS[%END%]</a></li>
 
 [% IF shared == 'exist' %]
     [% IF may_d_read %]
     [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-        <strong><a class="[% class %]" href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared documents[%END%]</a></strong><br />
+<li class="[% class %]"><a href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared documents[%END%]</a></li>
     [% ELSE %]
           <div class="menuInactive2">[%|loc%]Shared documents[%END%]</div><br />
     [% END %]
@@ -82,9 +85,9 @@
 
 [% IF may_review %]
 [% IF action == 'review' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review members[%END%]</a></strong><br />
-<br />
-[% END %]
+<li class="[% class %]"><a href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review members[%END%]</a></li>
 
+[% END %]
+ </div>
 </div>
 <!-- end list_menu.tt2 -->

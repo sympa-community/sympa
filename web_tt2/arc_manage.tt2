@@ -1,12 +1,13 @@
 <!-- $Id$ -->
+<div class="block">
 
-<h3>[%|loc%]Archive Management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_archives" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+<h2>[%|loc%]Archive Management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_archives" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 <br />
 [%|loc%]Select below Archives months you want to delete or download (ZiP format):[%END%]
 
 
 
-<form name="zip_form" method="post" action="[% path_cgi %]">
+<form class="noborder" name="zip_form" method="post" action="[% path_cgi %]">
 <fieldset>
 <label for="directories">[%|loc%]Archive Selection:[%END%]</label><br />
 <select name="directories" id="directories" multiple="multiple" size="4">    
@@ -25,4 +26,6 @@
 </form>
 
 <hr />
+
+</div>
 <!-- end arc_manage.tt2 -->

@@ -32,6 +32,19 @@ function hide(div){
     oDiv = document.getElementById(div);
     oDiv.style.display = "none";
 }
+
+function hideError()
+{
+  document.getElementById('ErrorBlock').style.display = 'none';
+  document.getElementById('ErrorMsg').style.display = 'none';
+}
+
+function hideNotice()
+{
+  document.getElementById('noticeBlock').style.display = 'none';
+  document.getElementById('noticeMsg').style.display = 'none';
+}
+
 </script>
 
 <script type="text/javascript">
@@ -47,7 +60,7 @@ function hide(div){
 	     my_form.zip.value = "1";
 	 }
 	 }else{
-	return false;
+	return false;[% list %]
 	}
   }	
 
@@ -160,14 +173,6 @@ function hide(div){
       }
     }
   }
-
-
-[% IF (action == 'skinsedit') %]
-function chooseColorNumber(cn) {
-   var select = document.getElementById('custom_color_number');
-   if(select) for(var i=0; i<select.options.length; i++) if(select.options[i].value == cn) select.options.selectedIndex = i;
-} 
-[% END %]
 
 [% IF (action == 'modindex' || action == 'request_topic') || (action == 'viewmod' || action == 'compose_mail')%] 
 

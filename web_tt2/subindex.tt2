@@ -1,6 +1,8 @@
 <!-- $Id$ -->
+<div class="block">
+
 <h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
-<form action="[% path_cgi %]" method="post"> 
+<form class="noborder" action="[% path_cgi %]" method="post"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table summary="[%|loc%]Listing subscription to moderate[%END%]" class="listOfItems">
@@ -56,4 +58,6 @@
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
 </fieldset>
 </form>
+
+</div>
 <!-- end subindex.tt2 -->

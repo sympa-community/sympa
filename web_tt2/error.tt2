@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 
-<div class="ErrorBlock"> <strong>
+<div id="ErrorBlock"></div>
+<div id="ErrorMsg">
 [%###################-%]
 [%#### INTERN  ERROR -%]
 [%###################-%]
@@ -24,7 +25,7 @@
   [% ELSIF i_err.msg == 'create_list' %][%|loc(i_err.listname)%]Failed creating list '%1'. The list might already exist or listname might include forbidden characters.[%END%]
 
 [% END %]
-<br />		
+	
 [% END %]
 [%###################-%]
 [%#### SYSTEM  ERROR -%]
@@ -33,7 +34,7 @@
 [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]   
   [% IF s_err.msg == 'a' %]
   [% END %]
-<br />		
+	
 [% END %]
 [%###################-%]
 [%#### USER  ERROR   -%]
@@ -128,7 +129,7 @@
   [% ELSIF u_err.msg == 'change_admin_email_failed_included' %][%|loc(u_err.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
   [% ELSIF u_err.msg %][%u_err.msg%]
   [% END %]
-<br />		
+	
 [% END %]
 [%#####################-%]
 [%# AUTHORIZATION ERROR-%]
@@ -141,9 +142,16 @@
   [% IF reason == 'edit_right' %][% SET role = auth.role -%][% SET right = auth.right -%][% END -%] 	 
   [% PROCESS authorization_reject.tt2 -%]	
   [% IF auth.login %]<br />[%|loc%]You need to login[%END%][% END %]
-<br />	
+
 [% END %]
-</strong>
+
+<form >
+<fieldset>
+<input  class="MainMenuLinks" type="button" value="Close" onclick="hideError();">
+
+</fieldset>
+</form>
+
 </div>
-<br />
+
 <!-- end error.tt2 -->

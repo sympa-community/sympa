@@ -35,6 +35,8 @@
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
 
+<link rel="shortcut icon" href="/lumineau/favicon_sympa.png" />
+
 [% PROCESS javascript.tt2 %]
 
 [% IF base %] <base href="[% base %]" /> [% END %]
@@ -43,8 +45,10 @@
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
-<noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
+<a name="top"></a>
+
+<noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 [% IF nomenu %]
        [% PROCESS error.tt2 IF errors %]
@@ -53,7 +57,13 @@
          [% PROCESS "${action}.tt2" IF action %]
        </div>
 [% ELSE %]
+
+       [% PROCESS error.tt2 IF errors %]
+       [% PROCESS notice.tt2 IF notices %]
+
 <div id="Canvas">
+
+ [% PROCESS login_menu.tt2 %]
   <div id="Header">
     
 	<!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
@@ -65,7 +75,7 @@
   <!-- <div class="contenant" id="contenu"> --> <!-- To hide Menus -->&nbsp;
   <div id="Menus"><!-- Start Menus -->&nbsp;
 	
-    [% PROCESS login_menu.tt2 %]
+    [% PROCESS menu_search.tt2 %]
     [% PROCESS list_menu.tt2 IF list %]
     [% PROCESS your_lists.tt2 IF !list %]
     [% PROCESS setlang.tt2 %]
@@ -73,20 +83,21 @@
   <!-- </div> --><!-- End div contenant -->
 	
 
-  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the meneu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
+  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the menu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
      <div id="Paint">
-       [% PROCESS error.tt2 IF errors %]
-       [% PROCESS notice.tt2 IF notices %]
 
        [% IF list %]
 	<div class="listTitle"><strong><a class="menuLinksCurrentPage" href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a></strong><br />
          [% IF list_title %][% list_title %][% END %]</div><br />
        [% END %]
 
-        <div class="ContentBlock"> 
+	 [% PROCESS nav.tt2 %]
+
+        <div class="ContentBlock">
+	 [% IF action == 'edit_list_request' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
-       <a class="dingbat printNone" href="#top" title="Top of Page">&sect;</a>
+      <div class="top"><a href="#top" title="Top of Page"><img src="/lumineau/top.png" alt="Top of page" /></a></div>
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
   [% PROCESS footer.tt2 %]

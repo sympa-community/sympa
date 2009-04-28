@@ -1,5 +1,7 @@
 <!-- $Id$ -->
-
+<div class="block">
+<h2> [%|loc%]User search result[%END%] :</h2>
+<br/>
   [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%] :
 
 [% IF which %] 
@@ -75,4 +77,5 @@
 <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
 
+</div>
 <!-- end search_user.tt2 (distrib) -->

@@ -8,734 +8,1947 @@
 [% END %]
 [% END %]
 
-@media screen {
+@media screen {  }
 * {
-	border: 0px solid [% color_1 %];
-	color: [% color_2 %];
-	font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana,lucida, arial, helvetica, sans-serif;
-	padding: 0px;
-	margin: 0px;
-}
-body {
-font-size: 62.5%;
-background: [% color_4 %];
-}
+    border: 0px solid [% color_1 %];
+    color: [% color_2 %];
+    font-family:"Trebuchet MS", Myriad, "Gill Sans", "Century Gothic",  "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
+    padding: 0px;
+    margin: 0px;
+    }
 
-ul { margin: 0 0 0 2em }
-ol { margin: 0 0 0 2em }
-dl { margin: 0 0 0 1em }
+body {
+       font-size: 62.5%;
+       background: [% color_9 %];
+       }
+
+ul {
+     margin: 0 0 0 4em;
+     }
+ol {
+     margin: 0 0 0 4em;
+     }
+dl {
+     margin: 0 0 0 1em;
+     }
 
 /* ########## Blocks, id and class ########## */
 
 /*Global container*/
 #Canvas {
-position: absolute;
-width: 98%;
-margin: 7px 7px 0px 7px;
-}
+          position: absolute;
+          width: 98%;
+          margin: 0 7px 0px 7px;
+          }
 
 /* Menus Block*/
 #Menus {
-clear:both;
-float: left;
-width: 240px;
-border: 0px solid [% color_1 %];
-padding-top: 0px;
-text-align: left;
-}
+         float: left;
+         width: 240px;
+         border: 0px solid [% color_1 %];
+         padding-top: 0px;
+         text-align: left;
+         }
 
 /*Content Block*/
 #Stretcher {
-/*position: relative;*/
-margin-left: 260px;
-/*min-width: 500px;*/
-text-align: left;
-}
+             margin-left: 260px;
+             margin-top:0em;
+             text-align: left;
+             }
 
 #Paint {
-	vertical-align:top;
-	text-align: center;
-}
+         vertical-align:top;
+         text-align: center;
+         }
+
 #Header {
-	background: [% color_3 %];
-	border: 1px solid [% color_2 %];
-	font-size: 1em;
-	text-align: left;
+          position:relative;
+          background: none;
+          border: none;
+          margin-top:2.5em;
+          margin-bottom:0em;
+          }
 
-}
 #ActionHeader {
-	background: [% color_4 %];
-	border: 1px solid [% color_2 %];
-	font-size: 1em;
-	text-align: left;
-	vertical-align: top;
-	padding-bottom: 0px; padding-top: 3px; padding-left: 3px; padding-right: 3px; 
-	margin-bottom: 10px;
-}
+                background: [% color_9 %];
+                border: 1px solid [% color_2 %];
+                font-size: 1em;
+                text-align: left;
+                vertical-align: top;
+                padding-bottom: 0px;
+                padding-top: 3px;
+                padding-left: 3px;
+                padding-right: 3px; 
+                margin-bottom: 10px;
+                }
 
-#Clock {float: right; padding-right: 3px; vertical-align:top; font-family: Arial, sans-serif;}
-#Login {text-align: left; padding-left: 5px; vertical-align:top; font-family: Arial, sans-serif;}
-#Search input.textbox {width: 90%;}
-#Logo {text-align: left; padding-top: 5px; padding-left: 5px;}
-#Logo a {font-size: 72px;}
+#Clock {
+         float: right;
+         padding-right: 3px;
+         vertical-align:top;
+         }
+
+#Login {
+         text-align: left;
+         padding-left: 5px;
+         vertical-align:top;
+         }
+#Search input.textbox {
+                        width: 90%;
+                        }
+#logo {
+        position:absolute;
+        top:0.5em;
+        left:4em;
+        z-index:510;
+        }
 /*Robot title*/
 
 #Title {
-text-align: center;
-font-size:1.8em; 
-font-weight: bold;
-padding:10px;
-}
+         position:relative;
+         text-align: center;
+         font-size:1.8em; 
+         font-weight: bold;
+         padding:1em 0;
+         margin-top:1em;
+         text-shadow: 2px 2px 2px [% color_12 %];
+         }
+
 #error { 
-font-size: 1em;
-}
+         font-size: 1em;
+         }
 select { 
-background-color: [% color_13 %];
-max-width: 30em;
-}
+         background-color: [% color_13 %];
+         }
 
-.logo {
-  float: left;
-}
+.menuInactive {
+                padding-left: 20px
+                }
 
-.menuInactive {padding-left: 20px}
-.menuInactive2 {font-size: 1.4em; text-decoration: none;}
-#FormLabel {font-size: 1.2em; font-weight: bold;}
-#ArcCalendar {padding-bottom: 10px;}
-/* #SITELINKS {position: relative; text-align: center;} */
-ul#MainMenuLinks li {list-style: none; display: inline;}
+.menuInactive2 {
+                 font-size: 1.4em;
+                 text-decoration: none;
+                 }
+#FormLabel {
+             font-size: 1.2em;
+             font-weight: bold;
+             }
+#ArcCalendar {
+               padding-bottom: 10px;
+               }
 
-/* #top {height:1px;width:1px;display: none;} */
-#toggleMenu {float: right; padding-right: 3px;}
+ul#MainMenuLinks {
+                   border-bottom:1px solid [% color_8 %];
+                   float:right; width:100% ;
+                   margin-top:1em;
+                   }
 
+ul#MainMenuLinks li {
+                      list-style: none;
+                      display: inline;
+                      }
 
+ul#MainMenuLinks li a.MainMenuLinks {
+                                      background: [% color_8 %];
+                                      color:[% color_9 %];
+                                      }
+
+ul#MainMenuLinks li a.MainMenuLinks:hover{
+                                           background: [% color_6 %];
+                                           color:[% color_8 %];
+                                           }
+
+#toggleMenu {
+              float: right;
+              padding-right: 3px;
+              }
 
 td.adminmenu { 
-background: [% color_4 %]; 
-text-align: center;
-/*colspan="9";*/
-}
+               background: [% color_9 %]; 
+               text-align: center;
+               }
 
 .text_left { 
-text-align: left;
-}
+             text-align: left;
+             }
+
+.text_right { 
+              text-align: right!important;
+              }
+
 td.text_right { 
-text-align: right;
-}
+                text-align: right;
+                }
+
 .text_center { 
-text-align: center;
-}
+               text-align: center;
+               }
+
 .text_justify { 
-text-align: justify;
-}
+                text-align: justify;
+                }
+
 #list_admin_menu { 
-font-size: 1.4em; 
-font-weight: bold;
-}
+                   font-size: 1.4em; 
+                   font-weight: bold;
+                   border: 1px solid [% color_12 %];
+                   padding:0.5em;
+                   -moz-border-radius:4px;
+                   -webkit-border-radius:4px;
+                   -KHTML-border-radius:4px;
+                   -icab-border-radius:4px;
+                   border-radius:4px;
+                   }
+
+#list_admin_menu ul {
+                      list-style-type: none;
+                      margin:0 0.5em
+                      }
+
+#list_admin_menu ul li {
+                         font-size:1em;
+                         line-height:1.4em;
+                         margin-top:0.3em;
+                         }
+
+#list_admin_menu ul li a:hover {
+                                 color:[% color_4 %];
+                                 text-decoration:none;
+                                 }
+
+#list_admin_menu ul li ul {
+                            font-size:0.9em;        
+                            }
+
+#list_admin_menu ul li ul li{
+                              font-size:0.9em;
+                              line-height:1.2em;
+                              margin-top:0em;          
+                              }
+
 /* list type on the list creation page */
 #list_type {
-margin-left: 5em;
-list-style-type: none;
-}
+             margin-left: 5em;
+             list-style-type: none;
+             }
+
 #list_type dd {
-margin-left: 1em;
-}
+                margin-left: 1em;
+                }
 
 img { 
-border: 0px;
-}
+      border: 0px;
+      }
 
 /* Font */
 .smaller { 
-font-size: smaller;
-}
+           font-size: smaller;
+           }
+
 .larger { 
-font-size: larger;
-}
+          font-size: larger;
+          }
 
 span.center { 
-text-align: center;
-}
+              text-align: center;
+              }
 
 /* review.tt2 cels */
 td.review_cels { 
-text-align: center;
-}
+                 text-align: center;
+                 padding:0 0.2em;
+                 }
+
 td.review_cels_mail { 
-text-align: left;
-}
+                      text-align: left;
+                      padding:0 0 0 0.2em;
+                      }
 
 .search_form, .edit_list_request_help { 
-float: right;
-}
-#home_rss_news { 
-float: right;
-}
+                                        float: right;
+                                        }
+#home_rss_news {
+                 float: right;
+                 }
+
 #home_search_list { 
-clear: both;
-}
+                    clear: both;
+                    }
+
 #home_search_list form fieldset { 
-display: inline;
-vertical-align: top;
-}
+                                  display: inline;
+                                  vertical-align: top;
+                                  }
+
 #home_container { 
-padding: 10px;
-margin: 0;
-border: 1px dashed [% color_2 %];
-}
+                  padding: 10px;
+                  margin: 0;
+                  border: 1px dashed [% color_2 %];
+                  -moz-border-radius:4px;
+                  -webkit-border-radius:4px;
+                  -KHTML-border-radius:4px;
+                  -icab-border-radius:4px;
+                  border-radius:4px;
+                  }
+
 .edit_list_request_enum{ 
-margin: 1em;
-padding-left: 1em;
-text-align: left;
-font-size: 1em;
-}
+                         margin: 1em;
+                         padding-left: 1em;
+                         text-align: left;
+                         font-size: 1em;
+                         }
                          
 /* menu button which allowed to manage your list*/ 
 .list_admin { 
-font-size: 1em;
-}
+              font-size: 1em;
+              }
+
 /*colors*/
 .color0 { 
-background-color: [% color_0 %];
-}
+          background-color: [% color_0 %];
+          }
+
 .color4 { 
-background-color: [% color_4 %];
-}
+          background-color: [% color_9 %];
+          }
+
 .color7 { 
-background-color: [% color_7 %];
-}
+          background-color: [% color_7 %];
+          }
+
 .color_light { 
-background-color: [% color_9 %];
-}
+               background-color: [% color_9 %];
+               }
+
 .color_dark { 
-color: [% color_4 %];
-}
+              color: [% color_9 %];
+              }
+
 .bg_color_dark { 
-background-color: [% color_4 %]; 
-}
+                 background-color: [% color_9 %]; 
+                 }
+
 .color_bg { 
-color: [% color_13 %];
-}
+            color: [% color_13 %];
+            }
+
 .bg_color_bg { 
-background-color: [% color_13 %];
-}
+               background-color: [% color_13 %];
+               }
+
 .bg_color_error { 
-background-color: [% color_7 %];
-}
+                  background-color: [% color_7 %];
+                  }
 
 .list_menu_links { 
-font-weight: bold;
-font-size: 1.2em;
-}
+                   font-weight: bold;
+                   font-size: 1.2em;
+                   }
 
+a.list_menu_links:hover { 
+                          color:[% color_4 %];
+                          text-decoration:none;
+                          }
 
 .mailing_lists_menu { 
-padding: 10px;
-margin: 5px 25px 5px 25px;
-float: left;
-font-size: 1.1em;
-text-align: left;
-}
-ul.no_style, li.no_style { 
-list-style: none;
-}
+                      padding: 10px;
+                      margin: 5px 25px 5px 25px;
+                      float: left;
+                      font-size: 1.1em;
+                      text-align: left;
+                      }
+
+ul.no_style { 
+              list-style: none;
+              }
 
 .align_top { 
-vertical-align: top;
-}
-/*explanation bloc of the template "ls_template.tt2"*/
+             vertical-align: top;
+             }
+/*explanation bloc of the template &quot;ls_template.tt2&quot;*/
 #template_editor { 
-margin-top: 10px;
-}
+                   margin-top: 10px;
+                   }
+
 #template_editor ul {
-padding-left: 5px;
-}
+                      padding-left: 5px;
+                      }
 #template_editor li {
-margin: 2px;
-}
+                      margin: 2px;
+                      }
 
 /*block of the color table*/
 #color_table { 
-border: 1px dotted;
-padding-top: 3px;
-padding-left: 3px;
-padding-bottom: 4px;
-}
-#color_table th { 
-border: solid 1px; 
-text-align: center; 
-padding: 1px; 
-}
-#color_table td { 
-border: 1px solid #000;
-padding-left: 10px;
-}
-#color_table .separator { 
-border: none; 
-padding: 0px;
-background-color: #fff;
-}
-#color_table tr#color_table_title th { 
-background-color: [% color_4 %];
-}
-/*ul of the "help.tt2" template*/
-#help {
-padding-left: 10px;
-padding-top: 5px;
-margin-bottom: 20px;
-}
-#help li { 
-padding: 1px;
-}
+               border: 1px dotted;
+               padding-top: 3px;
+               padding-left: 3px;
+               padding-bottom: 4px;
+               }
 
-/** menu "ul" "li" style **/
+#color_table th { 
+                  border: solid 1px; 
+                  text-align: center; 
+                  padding: 1px; 
+                  }
+
+#color_table td { 
+                  border: 1px solid [% color_12 %];
+                  padding-left: 10px;
+                  }
+
+#color_table .separator { 
+                          border: none; 
+                          padding: 0px;
+                          background-color: [% color_5 %];
+                          }
+
+#color_table tr#color_table_title th { 
+                                       background-color: [% color_9 %];
+                                       }
+
+/*ul of the &quot;help.tt2&quot; template*/
+#help {
+        padding-left: 10px;
+        padding-top: 5px;
+        margin-bottom: 20px;
+        }
+
+#help li { 
+           padding: 1px;
+           }
+
+/** menu &quot;ul&quot; &quot;li&quot; style **/
 #help_editfile, #blaklist { 
-margin: 1em;
-}
+                            margin: 1em;
+                            }
+
 #help_editfile ul, #blacklist ul {
-padding-left: 1em;
-margin-top: 0.5em;
-margin-bottom: 0.5em;
-}
+                                   padding-left: 1em;
+                                   margin-top: 0.5em;
+                                   margin-bottom: 0.5em;
+                                   }
 
 /*bounce level color*/
 .bounce_level2 { 
-background-color: #F00;
-}
+                 background-color: #F00;
+                 }
+
 .bounce_level1 { 
-background-color: #FF8C00;
-}
+                 background-color: #FF8C00;
+                 }
 
 /* set_pending_list_request.tt2 template*/
 ul#set_pending_radio { 
-display: inline;
-list-style-type: none;
-}
+                       display: inline;
+                       list-style-type: none;
+                       }
+
 ul#set_pending_radio li {
-display: inline; 
-margin-right: 1em; 
-margin-left: 1em;
-} 
+                          display: inline; 
+                          margin-right: 1em; 
+                          margin-left: 1em;
+                          } 
 
 /* list_panel.tt2 block*/
 .list_panel { 
-font-size: 1.2em;
-background: [% color_5 %];
-padding: 5px;
-border: 1px solid [% color_2 %];
-text-align: left;
-margin-bottom: 10px;
-overflow: hidden;
-}
+              font-size: 1.2em;
+              background: [% color_5 %];
+              padding: 5px;
+              border: 1px solid [% color_2 %];
+              text-align: left;
+              margin-bottom: 10px;
+              overflow: hidden;
+              -moz-border-radius:4px;
+              -webkit-border-radius:4px;
+              -KHTML-border-radius:4px;
+              -icab-border-radius:4px;
+              border-radius:4px;
+              }
+
 .list_panel span { 
-font-weight: bold;
-}
+                   font-weight: bold;
+                   }
 
 form { 
-line-height: 1.8em;
-}
-form input,form textarea,form select {
-margin: 4px 0px;
-padding: 1px;
-font-size: 1em;
-}
+       line-height: 1.8em;
+       }
 
-form#logs_form label,form.bold_label label { 
-font-weight: bold;
-}
+form input,
+form textarea,
+form select {
+              margin: 4px 0px;
+              padding: 1px;
+              font-size: 1em;
+              }
+
+form#logs_form label,
+form.bold_label label { 
+                        font-weight: bold;
+                        }
+
 form#bold_label input { 
-margin-left: 5px;
-margin-top: 5px;
-}
+                        margin-left: 5px;
+                        margin-top: 5px;
+                        }
 
 #global_mailing_lists { 
-text-align: center;
-}
+                        text-align: center;
+                        }
+
 #show_cert { 
-border: 1px solid;
-}
+             border: 1px solid;
+             }
+
 #show_cert ul { 
-list-style-type: none;
-padding-top: 5px;
-margin-bottom: 5px;
-}
+                list-style-type: none;
+                padding-top: 5px;
+                margin-bottom: 5px;
+                }
+
 #show_cert ul li { 
-line-height: 1em;
-padding-left: 3px;
-}
+                   line-height: 1em;
+                   padding-left: 3px;
+                   }
+
 #cp_template { 
-border: 1px solid;
-padding: 3px;
-background-color: [% color_0 %];
-width: 410px;
-}
+               border: 1px solid;
+               padding: 3px;
+               background-color: [% color_0 %];
+               width: 410px;
+               }
+
 #cp_template fieldset { 
-display: inline;
-border: 1px solid;
-vertical-align: top;
-margin-left: 3px;
-}
-#cp_template legend,#cp_template label { 
-padding-left: 3px;
-}
+                        display: inline;
+                        border: 1px solid;
+                        vertical-align: top;
+                        margin-left: 3px;
+                        }
+
+#cp_template legend,
+#cp_template label { 
+                     padding-left: 3px;
+                     }
+
 /* pre */
 pre.code { 
-font-family: monospace;
-}
+           font-family: monospace;
+           }
 
 #Footer {
-background: [% color_3 %];
-border: 1px solid [% color_2 %];
-clear: both;
-font-size: 1.2em;
-padding: 2px 8px;
-text-align: center;
-width: auto;
+          width:100%;
+          height:1.5em;
+          margin-top:0.5em;
+          margin-bottom:0;
+          background: [% color_12 %];
+          clear:both;
+          font-size: 1.1em;
+          text-align: center;
+          padding-top:0.5em;
+          padding-bottom:0.5em;
+          -moz-border-radius:10px 10px 0 0;
+          -webkit-border-top-left-radius: 10px;
+          -webkit-border-top-right-radius: 10px;
+          -webkit-border-bottom-left-radius:0px;
+          -webkit-border-bottom-right-radius:0px;
+          -KHTML-border-radius:10px 10px 0 0;
+          -icab-border-radius:10px 10px 0 0;
+          border-radius:10px 10px 0 0;
 }
 
-#Identity {text-align: left; font-size: 1.2em; font-weight: bold; overflow: hidden;}
+#Footer a {
+            color:[% color_5 %];
+            font-family: serif!important;
+            font-weight:bold;
+            font-variant: small-caps!important;
+            }
 
-.Help {display: none; position: absolute; border: 1px dotted [% color_2 %]; z-index: 1000; background: [% color_13 %]; }
+#Identity {
+            text-align: left;
+            font-size: 1.2em;
+            font-weight: bold;
+            overflow: hidden;
+            }
+
+.Help {
+        display: none;
+        position: absolute;
+        border: 1px dotted [% color_2 %];
+        z-index: 1000;
+        background: [% color_13 %];
+        }
 
 #rows_nb {
-	/*margin-top: 30%;*/
-	/*margin-left: 90%;*/
-	font-size: 0.8em;
-}
+           font-size: 0.8em;
+           }
 
 #page_size {
-	float: right;
-	margin-bottom: 20px;
-	padding-bottom: 20px;
-}
+             float: right;
+             margin-bottom: 20px;
+             padding-bottom: 20px;
+             }
+
+#setlang {
+           background: [% color_5 %];
+           padding: 5px;
+           text-align: left;
+           font-weight: bold;
+           margin-bottom:2em!important;
+           border:1px solid [% color_8 %];
+           border-width: 0 1px 1px 0;           
+           -moz-border-radius:10px;
+           -webkit-border-radius:10px;
+           -KHTML-border-radius:10px;
+           -icab-border-radius:10px;
+           border-radius:10px;
+           }
 
 .MenuBlock {
-background: [% color_5 %];
-padding: 5px;
-border: 1px solid [% color_2 %];
-text-align: left;
-margin-bottom: 10px;
-}
-.MenuBlock p strong { font-size: 1.4em; }
-.MenuBlock h1 {text-indent: 0px; font-size: 1.4em; padding-bottom:10px;}
-.MenuBlock strong {text-indent: 0px; font-size: 1.2em; padding-bottom:10px;}
+             background: [% color_5 %];
+             padding: 5px;
+             text-align: left;
+             margin-bottom: 10px;
+             border:1px solid [% color_8 %];
+             border-width: 0 1px 1px 0;
+             -moz-border-radius:10px;
+             -webkit-border-radius:10px;
+             -KHTML-border-radius:10px;
+             -icab-border-radius:10px;
+             border-radius:10px;
+             }
 
+.MenuBlock p strong {
+                      font-size: 1.4em;
+                      }
+
+.MenuBlock h1 {
+                text-indent: 0px;
+                font-size: 1.4em;
+                padding-bottom:10px;
+                }
+
+.MenuBlock strong {
+                    text-indent: 0px;
+                    font-size: 1.2em;
+                    padding-bottom:10px;
+                    }
 
 .ContentBlock {
-position: relative;
-font-size: 1.1em;
-margin: 0px;
-background: [% color_5 %];
-border: 1px solid [% color_2 %];
-padding: 10px;
-text-align: left;
-display: table;
-width: 97%;
-height: 100%;
-}
-.ContentBlock p {padding: 10px;font-size: 1.1em;}
-.ContentBlock > * {
-	padding: 0px;
-	border-bottom: 0px dotted [% color_1 %];
-	text-align: left;
-}
+                position: relative;
+                font-size: 1.1em;
+                margin: 0;
+                background: [% color_5 %];
+                padding: 10px;
+                text-align: left;
+                height: 100%;
+                border:1px solid [% color_8 %];
+                border-width: 0 1px 1px 0;
+                border-top:1px solid [% color_5 %];
+                z-index:310;
+                clear:right;
+                -moz-border-radius:10px;
+                -webkit-border-radius:10px;
+                -KHTML-border-radius:10px;
+                -icab-border-radius:10px;
+                border-radius:10px;
+                }
+
+.ContentBlock p {
+                  padding: 10px;
+                  font-size: 1.1em;
+                  }
+
+.ContentBlock &gt; * {
+                       padding: 0px;
+                       border-bottom: 0px dotted [% color_1 %];
+                       text-align: left;
+                       }
+
 .ContentBlock * a {
-	border-bottom: 1px dotted [% color_8 %];
-	text-align: left;
-}
-.ContentBlock * a:hover {text-decoration:none;}
-.ContentBlock * a img {border: 0px;}
+                    border-bottom: 1px dotted [% color_8 %];
+                    text-align: left;
+                    }
+
+.ContentBlock * a:hover {
+                          text-decoration:none;
+                          }
+
+.ContentBlock * a img {
+                        border: 0px;
+                        }
 
 a img.Pictures {
-height:30px;
-}
+                 height:30px;
+                 }
 
 a:hover img.Pictures {
-height: 80px;
-}
+                       height: 80px;
+                       }
 .sub_pictures { 
-margin: 2em;
-}
+                margin: 2em;
+                }
 
 /* pictures block on the suboptions form*/
 #pictures_block { 
-text-align: center;
-height: 120px ;
-}
+                  text-align: center;
+                  height: 120px ;
+                  }
+
 #pictures_block div {
-margin: 1em;
-float: left;
-}
+                      margin: 1em;
+                      float: left;
+                      }
+
 #large_picture { 
-height: 80px;
-}
+                 height: 80px;
+                 }
+
 #pictures_block #large img{
-height: 80px;
-}
+                            height: 80px;
+                            }
+
 #pictures_block #small img{
-height: 30px;
-margin-top: 50px;
-}
+                            height: 30px;
+                            margin-top: 50px;
+                            }
 
-.navBar {text-align: center;margin: 0px 0px 0px 0px;font-size: 1.2em;}
+.navBar {
+          position:relative;
+          text-align: center;
+          margin: 1em 0 0 0;
+          font-size: 1.2em;
+          }
 
-.displayNone {display: none;height:0px;width:0px;}
+.navBar .MainMenuLinks {
+                         padding:3px 5px 0px 5px!important;
+                         -moz-border-radius:10px 10px 0 0;
+                         -webkit-border-top-left-radius: 10px;
+                         -webkit-border-top-right-radius: 10px;
+                         -webkit-border-bottom-left-radius:0px;
+                         -webkit-border-bottom-right-radius:0px;
+                         -KHTML-border-radius:10px 10px 0 0;
+                         -icab-border-radius:10px 10px 0 0;
+                         border-radius:10px 10px 0 0;
+                         }
+
+.displayNone {
+               display: none;
+               height:0px;
+               width:0px;
+               }
+
 .printNone {}
-.title {position: absolute; top: 60px; font-size: 1.6em; text-indent: 30px;}
-.customMenu {text-indent: 0px; }
-a.dingbat {text-align: center;}
-.dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
 
-.button { background:[% color_4 %] !important; border: 3px solid; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_6 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_6 %];}
-.button:hover {background: [% color_4 %]; border-top-color: [% color_1 %]; border-right-color: [% color_6 %]; border-bottom-color: [% color_6 %]; border-left-color: [% color_1 %];}
+.title {
+         position: absolute;
+         top: 60px;
+         font-size: 1.6em;
+         text-indent: 30px;
+         }
 
-.smalltext {font-size: 0.8em;}
-.smalltext a {font-size: 0.8em;}
-.smallblacktext {color: [% color_12 %]; font-size: 1.2em;}
-.mediumtext {font-size: 1.2em;}
-.largetext {font-size: 1.6em;}
+.customMenu {
+              text-indent: 0px;
+              }
+
+a.dingbat {
+            text-align: center;
+            }
+
+.dingbat {
+           text-indent: 0px;
+           text-align: center;
+           font-weight: 100;
+           }
+
+.button {
+          background:[% color_9 %] !important;
+          border: 3px solid;
+          padding: 0px  2px  0px 2px;
+          margin:2px;
+          border-top-color: [% color_6 %];
+          border-right-color: [% color_1 %];
+          border-bottom-color: [% color_1 %];
+          border-left-color: [% color_6 %];
+          }
+
+.button:hover {
+                background: [% color_9 %];
+                border-top-color: [% color_1 %];
+                border-right-color: [% color_6 %];
+                border-bottom-color: [% color_6 %];
+                border-left-color: [% color_1 %];
+                }
+
+.smalltext {
+             font-size: 0.8em;
+             }
+
+.smalltext a {
+               font-size: 0.8em;
+               }
+
+.smallblacktext {
+                  color: [% color_12 %];
+                  font-size: 1.2em;
+                  }
+
+.mediumtext {
+              font-size: 1.2em;
+              }
+
+.largetext {
+             font-size: 1.6em;
+}
 
 /* ########## Elements ########## */
 
-.MainMenuLinks {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px; margin-top: 3px;margin-bottom: 0}
-a.MainMenuLinks {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinks:link {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinks:visited {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.MainMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+.MainMenuLinks {
+                 border: 1px solid [% color_8 %];
+                 background: [% color_9 %];
+                 color:[% color_8 %] ;
+                 text-decoration: none;
+                 padding: 0 5px!important;
+                 margin: 0;
+                 height:1.5em;
+                 vertical-align:top;
+                 cursor:pointer;
+                 -moz-border-radius:10px;
+                 -webkit-border-radius:10px;
+                 -KHTML-border-radius:10px;
+                 -icab-border-radius:10px;
+                 border-radius:10px;
+                 }
+
+a.MainMenuLinks {
+                  border: 1px solid [% color_8 %];
+                  background: [% color_8 %];
+                  color:[% color_9 %];
+                  text-decoration: none;
+                  padding: 0px 5px 0px 5px;
+                  }
+
+a.MainMenuLinks:hover {
+                        border: 1px solid [% color_6 %];
+                        border-bottom:[% color_8 %];
+                        background: [% color_6 %]!important;
+                        color: [% color_8 %]!important;
+                        text-decoration: none;
+                        padding: 0px 5px 0px 5px;
+                        }
+
+a.MainMenuLinksCurrentPage {
+                             border: 1px solid [% color_8 %];
+                             background: [% color_9 %];
+                             border-bottom: 1px solid [% color_9 %];
+                             color: [% color_8 %];
+                             text-decoration: none;
+                             padding: 3px 5px 0px 5px;
+                             -moz-border-radius:10px 10px 0 0;
+                             -webkit-border-top-left-radius: 10px;
+                             -webkit-border-top-right-radius: 10px;
+                             -webkit-border-bottom-left-radius:0px;
+                             -webkit-border-bottom-right-radius:0px;
+                             -KHTML-border-radius:10px 10px 0 0;
+                             -icab-border-radius:10px 10px 0 0;
+                             border-radius:10px 10px 0 0;
+                             }
+
+a.MainMenuLinksCurrentPage:hover {
+                                   border: 1px solid [% color_8 %];
+                                   background: [% color_9 %];
+                                   border-bottom: 1px solid [% color_9 %];
+                                   color: [% color_8 %];
+                                   text-decoration: none;
+                                   }
+
 input.MainMenuLinks { 
-font-size: 1em;
-padding: 0px 1px;
-vertical-align: top;
-margin-top: 4px;
+                      padding: 0 1px;
+                      margin-top: 4px;
+                      }
+
+input.MainMenuLinks:hover{ 
+                           background: [% color_8 %]!important;
+                           color: [% color_9 %]!important;
+                           border: none ;
+                           height:1.5em;
+                           vertical-align:top;
+                           }
+
+a.actionMenuLinks {
+                    border: 1px solid [% color_8 %];
+                    background: [% color_9 %];
+                    color:[% color_8 %] ;
+                    text-decoration: none;
+                    padding: 0 5px!important;
+                    margin: 0 0.5em 0 0;
+                    height:1.5em;
+                    vertical-align:top;
+                    cursor:pointer;
+                    -moz-border-radius:10px;
+                    -webkit-border-radius:10px;
+                    -KHTML-border-radius:10px;
+                    -icab-border-radius:10px;
+                    border-radius:10px;
+                    }
+
+a.actionMenuLinks:hover {
+                          background: [% color_8 %];
+                          color: [% color_9 %];
+                          text-decoration: none;
+                          }
+
+a.actionMenuLinksCurrentPage {
+                               border: 1px solid [% color_2 %];
+                               background: [% color_6 %];
+                               color: [% color_8 %];
+                               text-decoration: none;
+                               padding: 0px 10px 0px 10px;
+                               }
+
+a.actionMenuLinksCurrentPage:hover{
+                                    border: 1px solid [% color_2 %];
+                                    background: [% color_6 %];
+                                    text-decoration: none;
+                                    padding: 0px 10px 0px 10px;
+                                    }
+
+a.actionMenuLinksInactive {
+                            border-bottom: 1px solid [% color_2 %];
+                            border-right:  1px solid [% color_10 %];
+                            border-top: 1px solid [% color_10 %];
+                            border-left: 1px solid [% color_10 %];
+                            color: [% color_10 %];
+                            text-decoration: none;
+                            padding: 0px 10px 0px 10px;
+                            }
+
+a.actionMenuLinksInactive:hover {
+                                  border-bottom: 1px solid [% color_2 %];
+                                  border-right:  1px solid [% color_10 %];
+                                  border-top: 1px solid [% color_10 %];
+                                  border-left: 1px solid [% color_10 %];
+                                  color: [% color_10 %];
+                                  text-decoration: none;
+                                  padding: 0px 10px 0px 10px;
+                                  }
+
+ul.listenum li a.actionMenuLinks {
+                                   background: [% color_8 %];
+                                   color: [% color_9 %];
+                                   font-size:1.1em;
+                                   padding:0.2em 5px!important;
+                                   }
+
+ul.listenum li a.actionMenuLinks:hover {
+                                         background: [% color_9 %];
+                                         color: [% color_8 %];
+                                         border: 1px solid [% color_9 %];
+                                         padding:0.2em 5px!important;
+                                         }
+
+#actionnuLinksInactive {
+                         border: 0px solid [% color_2 %];
+                         text-decoration: none;
+                         padding: 0px 0px 0px 3px;
+                         }
+
+a.ArcMenuLinks {
+                 border: 1px solid [% color_2 %];
+                 text-decoration: none;
+                 padding: 0px 10px 0px 10px;
+                 }
+
+a.ArcMenuLinks:link {
+                      border: 1px solid [% color_2 %];
+                      text-decoration: none;
+                      padding: 0px 10px 0px 10px;
+                      }
+
+a.ArcMenuLinks:visited {
+                         border: 1px solid [% color_2 %];
+                         text-decoration: none;
+                         padding: 0px 10px 0px 10px;
+                         }
+
+a.ArcMenuLinks:hover {
+                       border: 1px solid [% color_2 %];
+                       background: [% color_6 %];
+                       color: [% color_8 %];
+                       text-decoration: none;
+                       padding: 0px 10px 0px 10px;
+                       }
+
+a.ArcMenuLinks:active {
+                        border: 1px solid [% color_2 %];
+                        background: [% color_6 %];
+                        color: [% color_8 %];
+                        text-decoration: none;
+                        padding: 0px 10px 0px 10px;
+                        }
+
+a.ArcMenuLinksCurrentPage {
+                            border: 1px solid [% color_2 %];
+                            background: [% color_6 %];
+                            color: [% color_8 %];
+                            text-decoration: none;
+                            padding: 0px 10px 0px 10px;
+                            }
+
+a.ArcMenuLinksCurrentPage:hover {
+                                  border: 1px solid [% color_2 %];
+                                  background: [% color_6 %];
+                                  text-decoration: none;
+                                  padding: 0px 10px 0px 10px;
+                                  }
+
+a.ArcMenuLinksInactive {
+                         border-bottom: 1px solid [% color_2 %];
+                         border-right:  1px solid [% color_10 %];
+                         border-top: 1px solid [% color_10 %];
+                         border-left: 1px solid [% color_10 %];
+                         color: [% color_10 %];
+                         text-decoration: none;
+                         padding: 0px 10px 0px 10px;
+                         }
+
+a.ArcMenuLinksInactive:hover {
+                               border-bottom: 1px solid [% color_2 %];
+                               border-right:  1px solid [% color_10 %];
+                               border-top: 1px solid [% color_10 %];
+                               border-left: 1px solid [% color_10 %];
+                               color: [% color_10 %];
+                               text-decoration: none;
+                               padding: 0px 10px 0px 10px;
+                               }
+
+#ArcMenuLinksInactive {
+                        border: 0px solid [% color_2 %];
+                        text-decoration: none;
+                        padding: 0px 0px 0px 3px;}
+
+.block {
+         border: 1px dotted [% color_2 %];
+         padding: 7px;
+         margin-top:0;
+         -moz-border-radius:4px;
+         -webkit-border-radius:4px;
+         -KHTML-border-radius:4px;
+         -icab-border-radius:4px;
+         border-radius:4px;
+         }
+
+.block form {
+              border:1px solid [% color_11 %];
+              margin:0.5em 0;
+              -moz-border-radius:4px;
+              -webkit-border-radius:4px;
+              -KHTML-border-radius:4px;
+              -icab-border-radius:4px;
+              border-radius:4px;
+
 }
 
-a.ActionMenuLinks {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinks:link {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinks:visited {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_5 %]; border-bottom: 1px solid [% color_5 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ActionMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_5 %]; border-bottom: 1px solid [% color_5 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-ul li.ActionMenuLinksInactive {border: 1px dotted [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+.block form fieldset {
+                       padding:0.5em;
+                       }
 
+h1.block,
+h2.block,
+h3.block,
+h4.block,
+h5.block,
+h6.block {
+           text-align: center;
+           background: [% color_9 %];
+           }
 
-a.ArcMenuLinks {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:link {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:visited {border: 1px solid [% color_2 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.ArcMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-#ArcMenuLinksInactive {border: 0px solid [% color_2 %]; text-decoration: none; padding: 0px 0px 0px 3px;}
-
-a.actionMenuLinks { border: 1px solid [% color_2 %]; background:[% color_4 %] ; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinks:link {border: 1px solid [% color_2 %]; background: [% color_4 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinks:visited {border: 1px solid [% color_2 %]; background: [% color_4 %];  text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_6 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksInactive { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-a.actionMenuLinksInactive:hover { border-bottom: 1px solid [% color_2 %]; border-right:  1px solid [% color_10 %]; border-top: 1px solid [% color_10 %]; border-left: 1px solid [% color_10 %]; color: [% color_10 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
-ul.listenum li a.actionMenuLinks {font-size:1.2em;padding-top:1px;padding-bottom:1px;}
-#actionnuLinksInactive {border: 0px solid [% color_2 %]; text-decoration: none; padding: 0px 0px 0px 3px;}
-
-.block {border: 1px dotted [% color_2 %]; padding: 7px;}
-h1.block {text-align: center; background: [% color_4 %];}
-h2.block {text-align: center; background: [% color_4 %];}
-h3.block {text-align: center; background: [% color_4 %];}
-h4.block {text-align: center; background: [% color_4 %];}
-h5.block {text-align: center; background: [% color_4 %];}
-h6.block {text-align: center; background: [% color_4 %];}
 .block span.default { 
-color: [% color_1 %];
-padding-left: 2em;
-font-weight: bold;
-}
+                      color: [% color_1 %];
+                      padding-left: 2em;
+                      font-weight: bold;
+                      }
+
 h7 {
-	font-size: 0.8em;
-	font-style: italic;
-}
+     font-size: 0.8em;
+     font-style: italic;
+     }
+
 h7 strong {
-	font-size: 1em;
-}	
-.listTitle {height: 1%;text-align: center; border: solid 1px [% color_2 %]; padding: 5px 0px; background: [% color_5 %];font-size:1.3em; }
+            font-size: 1em;
+            }
+	
+.listTitle {
+             height: 1%;
+             text-align: center;
+             border: solid 1px [% color_2 %];
+             padding: 5px 0px;
+             background: [% color_5 %];
+             font-size:1.3em; 
+             margin-top:0em;
+             margin-bottom: 1em 
+             }
 
-.ErrorBlock {border: 1px solid [% color_2 %]; font-size: 1.4em; background: [% color_7 %]; padding: 10px 0px; text-decoration: underline overline; }
+#ErrorBlock {
+              margin:0;
+              padding:0;
+              position:absolute;
+              left:0;
+              top:0;
+              z-index:600;
+              background: [% color_4 %];
+              opacity:0.4;
+              width:100%;
+              height:100%;
+              }
 
-ul.listenum {list-style: none; margin: 0 0 0 1em}
-ul.listenum li {padding : 4px;} 
+#ErrorMsg { 
+            position:absolute;
+            width:70%;
+            margin :20% 15%;
+            z-index:610!important;
+            border: 5px ridge [% color_12 %];
+            font-family:serif;
+            font-size: 2em;
+            font-weight: bold;
+            text-align:center;
+            color:[% color_5 %]!important;
+            background-color: [% color_12 %];
+            padding:1em 0.5em;
+            -moz-border-radius:20px;
+            -webkit-border-radius:20px;
+            -KHTML-border-radius:20px;
+            -icab-border-radius:20px;
+            border-radius:20px;
+            }
+
+#ErrorMsg .MainMenuLinks { 
+                           color:[% color_4 %];
+                           background-color:[% color_5 %];
+                           border:2px outset [% color_4 %];
+                           padding: 0 2em!important;
+                           margin-top:1em;
+                           font-size: 0.8em;
+                           -moz-border-radius:20px;
+                           -webkit-border-radius:20px;
+                           -KHTML-border-radius:20px;
+                           -icab-border-radius:20px;
+                           border-radius:20px;
+ }
+
+#ErrorMsg .MainMenuLinks:hover {
+                                 background-color:[% color_4 %]!important;
+                                 border:2px inset [% color_5 %];
+                                 color:[% color_5 %]!important;
+                                 }
+
+#noticeBlock {
+               margin:0;
+               padding:0;
+               position:absolute;
+               left:0;
+               top:0;
+               z-index:600;
+               background: [% color_8 %];
+               opacity:0.4;
+               width:100%;
+               height:100%;
+               }
+
+#noticeMsg { 
+             position:absolute;
+             width:70%;
+             margin :20% 15%;
+             z-index:610!important;
+             border: 5px ridge [% color_13 %];
+             font-family:serif;
+             font-size: 2em;
+             font-weight: bold;
+             text-align:center;
+             color:[% color_4 %]!important;
+             background-color: [% color_13 %];
+             padding:1em 0.5em;
+             -moz-border-radius:20px;
+             -webkit-border-radius:20px;
+             -KHTML-border-radius:20px;
+             -icab-border-radius:20px;
+             border-radius:20px;
+ }
+
+#noticeMsg .MainMenuLinks { 
+                            color:[% color_12 %];
+                            background-color:[% color_5 %];
+                            border:2px outset [% color_12 %];
+                            padding: 0 2em!important;
+                            margin-top:1em;
+                            font-size: 0.8em;
+                            -moz-border-radius:20px;
+                            -webkit-border-radius:20px;
+                            -KHTML-border-radius:20px;
+                            -icab-border-radius:20px;
+                            border-radius:20px;
+                            }
+
+#noticeMsg .MainMenuLinks:hover {
+                                  background-color:[% color_12 %]!important;
+                                  border:2px inset [% color_5 %];
+                                  color:[% color_5 %]!important;
+                                  }
+
+ul.listenum {
+              list-style: none; margin: 0 0 0 1em
+              }
+
+ul.listenum li {
+                 padding : 4px;
+                 }
+ 
 ul.listenum span { 
-display: block;
-margin-top: 2px;
-}
+                   display: block;
+                   margin-top: 2px;
+                   }
 
-ul.menuLinks {list-style-type: none; font-size: 1.2em;}
-ul.menuLinks li {list-style-type: none;}
-/*ul li.menuLinks {font-size: 1.4em; list-style-type: none;}*/
-a.menuLinks {padding: 0px 10px 0px 0px; text-decoration: none;}
-a.menuLinks:link {text-decoration: none;}
-a.menuLinks:visited {text-decoration: none;}
-a.menuLinks:hover {border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
-a.menuLinks:active {border: 1px solid [% color_6 %]; background: [% color_9 %]; text-decoration: none;}
-a.menuLinksCurrentPage {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 0px; text-decoration: none;}
-a.menuLinksCurrentPage:hover  {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 0px; text-decoration: none;}
+ul.menuLinks {
+               list-style-type: none; font-size: 1.2em;
+               }
 
+ul.menuLinks li {
+                  list-style-type: none;
+                  }
 
-strong a.menuLinks {font-size: 1.2em;}
-strong a.menuLinksCurrentPage {font-size: 1.2em; border: 1px solid [% color_9 %]; background: [% color_6 %];}
-strong a.menuLinksCurrentPage:hover  {font-size: 1.2em; border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
-ul a.menuLinks {padding: 0px 10px 0px 20px;}
-ul a.menuLinksCurrentPage {padding: 0px 10px 0px 20px; font-weight: bold;}
-ul a.menuLinksCurrentPage:hover {padding: 0px 10px 0px 20px; font-weight: bold; text-decoration: none;}
+a.menuLinks {
+              padding: 0px 10px 0px 0px;
+              text-decoration: none;
+              }
 
+a.menuLinks:link {
+                   text-decoration: none;
+                   }
 
-ul.calendar a {font-size: 1em;}
-ul.calendar li {list-style: none; display: inline; padding: 0px 1px 0px 2px; font-size: 1em; text-decoration: none; border: 1px solid [% color_2 %];}
-ul li.calendarLinks {background: [% color_13 %];}
-ul li.calendarLinks:hover {background: [% color_6 %]; color: [% color_11 %]; }
-ul li.calendarLinksCurrentPage {background: [% color_6 %];}
-ul li.calendarLinksCurrentPage:hover {background: [% color_6 %];}
+a.menuLinks:visited {
+                      text-decoration: none;
+                      }
+
+a.menuLinks:hover {
+                    border: 1px solid [% color_9 %];
+                    background: [% color_6 %]; 
+                    text-decoration: none;
+                    }
+
+a.menuLinks:active {
+                     border: 1px solid [% color_6 %];
+                     background: [% color_9 %];
+                     text-decoration: none;
+                     }
+
+a.menuLinksCurrentPage {
+                         border: 1px solid [% color_9 %];
+                         background: [% color_6 %];
+                         padding: 0px 10px 0px 0px;
+                         text-decoration: none;
+                         }
+
+a.menuLinksCurrentPage:hover  {
+                                border: 1px solid [% color_9 %];
+                                background: [% color_6 %]; 
+                                padding: 0px 10px 0px 0px;
+                                text-decoration: none;
+                                }
+
+strong a.menuLinks {
+                     font-size: 1.2em;
+                     }
+strong a.menuLinksCurrentPage {
+                                font-size: 1.2em;
+                                border: 1px solid [% color_9 %];
+                                background: [% color_6 %];
+                                }
+strong a.menuLinksCurrentPage:hover  {
+                                       font-size: 1.2em; 
+                                       border: 1px solid [% color_9 %];
+                                       background: [% color_6 %];
+                                       text-decoration: none;
+                                       }
+
+ul a.menuLinks {
+                 padding: 0px 10px 0px 20px;
+                 }
+
+ul a.menuLinksCurrentPage {
+                            padding: 0px 10px 0px 20px;
+                            font-weight: bold;
+                            }
+
+ul a.menuLinksCurrentPage:hover {
+                                  padding: 0px 10px 0px 20px; 
+                                  font-weight: bold; 
+                                  text-decoration: none;
+                                  }
+
+ul.calendar a {
+                font-size: 1em;
+                }
+
+ul.calendar li {
+                 list-style: none; 
+                 display: inline;
+                 padding: 0px 1px 0px 2px;
+                 font-size: 1em;
+                 text-decoration: none;
+                 border: 1px solid [% color_2 %];
+                 }
+
+ul li.calendarLinks {
+                      background: [% color_13 %];
+                      }
+
+ul li.calendarLinks:hover {
+                            background: [% color_6 %];
+                            color: [% color_8 %]; 
+                            }
+
+ul li.calendarLinksCurrentPage {
+                                 background: [% color_6 %];
+                                 }
+
+ul li.calendarLinksCurrentPage:hover {
+                                       background: [% color_6 %];
+                                       }
+
 ul li.calendarLinksInactive {}
 
+a img {
+        border: 0px;
+        }
 
-a img {border: 0px;}
-a {text-decoration: none;}
-a:link {text-decoration: none;}
-a:visited {text-decoration: none;}
-a:hover {color: [% color_11 %]; text-decoration:underline overline;background:none;}
-abbr, acronym, .info {
-	border-bottom: 1px dotted [% color_8 %];
-	cursor: help;
-}
-h1 a:hover {text-indent: 30px; font-size: 1.6em; padding-bottom:10px;}
-p a:hover {text-indent: 30px;}
-p a:first-letter {font-size: 1.6em; font-weight: bold;}
+a {
+    text-decoration: none;
+    }
+
+a:link {
+         text-decoration: none;
+         }
+a:visited {
+            text-decoration: none;
+            }
+a:hover {
+          color: [% color_8 %]; 
+          text-decoration:underline overline;
+          background:none;
+          }
+abbr,
+acronym,
+.info {
+        border-bottom: 1px dotted [% color_8 %];
+        cursor: help;
+        }
+
+h1 a:hover {
+             text-indent: 30px;
+             font-size: 1.6em;
+             padding-bottom:10px;
+             }
+
+p a:hover {
+            text-indent: 30px;
+            }
+
+p a:first-letter {
+                   font-size: 1.6em;
+                   font-weight: bold;
+                   }
  
-p {text-indent: 0px;}
+p {
+    text-indent: 0px;
+    }
+
 p.spacer { 
-clear: both;
-}
-code {font-weight: bold;}
+           clear: both;
+           }
+
+code {
+       font-weight: bold;
+       }
 
 .retraitita {
-    background-color: [% color_13 %];
-        border: 1px dashed [% color_1 %];
-        padding: 2px 2px 2px 2px;
-        margin: 5px 5px 5px 5px;
-}
+              background-color: [% color_13 %];
+              border: 1px dashed [% color_1 %];
+              padding: 2px 2px 2px 2px;
+              margin: 5px 5px 5px 5px;
+              }
 
 span.retraitita {
-    background-color: [% color_13 %];
-        border: 1px dashed [% color_1 %];
-        padding: 5px 10px 5px 10px;
-        margin: 5px 5px 5px 5px;
-    display: block;
-}
-h1 {text-indent: 0px; margin-top: 10px; font-size: 1.8em;}
-h2 {color: [% color_11 %]; text-indent: 0px; margin-top: 10px; font-size: 1.4em;}
-h3 {color: [% color_11 %]; text-indent: 10px; margin-top: 10px; font-size: 1.2em;}
-h4 {color: [% color_11 %]; text-indent: 20px; margin-top: 10px; font-size: 1.2em;}
-h5 {color: [% color_11 %]; text-indent: 30px; margin-top: 15px; margin-bottom: 2px; font-size: 1em;}
-h6 {color: [% color_11 %]; text-indent: 40px; margin-top: 10px; font-size: 1em;}
-/* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;} */
-/* strong {text-indent: 30px; font-size: 16px;} */
+                  background-color: [% color_13 %];
+                  border: 1px dashed [% color_1 %];
+                  padding: 5px 10px 5px 10px;
+                  margin: 5px 5px 5px 5px;
+                  display: block;
+                  }
+
+h1 {
+     text-indent: 0px; 
+     margin-top: 10px; 
+     font-size: 1.8em;
+     }
+
+h2 {
+     color: [% color_4 %];
+     text-indent: 0px; 
+     margin-top: 10px; 
+     font-size: 1.4em;
+     }
+
+h3 {
+     color: [% color_12 %];
+     text-indent: 10px;
+     margin-top: 10px;
+     font-size: 1.2em;
+     }
+
+h4 {
+     color: [% color_8 %]; 
+     text-indent: 20px;
+     margin-top: 10px;
+     font-size: 1.2em;
+     }
+
+h5 {
+     color: [% color_8 %];
+     text-indent: 30px; 
+     margin-top: 15px;
+     margin-bottom: 2px;
+     font-size: 1em;
+     }
+
+h6 {
+     color: [% color_8 %]; 
+     text-indent: 40px;
+     margin-top: 10px; 
+     font-size: 1em;
+     }
 
 /* input */
 a.input {
-background: [% color_13 %]; 
-border: 1px solid [% color_2 %]; 
-padding: 3px; 
-text-decoration: none;
-font-size: smaller;
-/* if IE zoom:1;*/
-zoom: 1;
+          background: [% color_13 %]; 
+          border: 1px solid [% color_2 %]; 
+          padding: 3px; 
+          text-decoration: none;
+          font-size: smaller;
+          /* if IE zoom:1;*/
+          zoom: 1;
+          }
+
+input {
+        background: [% color_13 %];
+        border: 1px solid [% color_2 %]; 
+        padding: 0px;
+        }
+
+input[type=&quot;radio&quot;],
+input[type=&quot;checkbox&quot;] {
+                                   margin-bottom: 0;
+                                   }
+
+textarea {
+           background: [% color_13 %];
+           border: 1px solid [% color_2 %]; 
+           padding: 3px;
+           }
+
+textarea:hover {
+                 background: [% color_13 %];
+                 }
+
+textarea.desc {
+                width: 75%;
+                max-width: 500px;
+                }
+
+textarea.textbox {
+                   background: [% color_6 %];
+                   border: 1px solid [% color_2 %];
+                   padding: 3px;
+                   }
+
+textarea.textbox:hover {
+                         background: [% color_6 %];
+                         }
+input.textbox {
+                background: [% color_6 %];
+                border: 1px solid [% color_2 %];
+                padding: 3px;
+                }
+
+input.textbox:hover {
+                      background: [% color_6 %];
 }
-input {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 0px;}
-input:hover {background: [% color_13 %];}
-input[type="radio"], input[type="checkbox"] {
-margin-bottom: 0;
-}
 
+input.button { 
+               background:[% color_9 %]!important; 
+               border: 1px solid;
+               padding: 0px  2px  0px 2px;
+               margin:2px; 
+               border-top-color: [% color_6 %];
+               border-right-color: [% color_1 %];
+               border-bottom-color: [% color_1 %];
+               border-left-color: [% color_6 %];
+               }
 
-
-textarea {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 3px;}
-textarea:hover {background: [% color_13 %];}
-textarea.desc { width: 75%;max-width: 500px; }
-
-textarea.textbox {background: [% color_6 %]; border: 1px solid [% color_2 %]; padding: 3px;}
-textarea.textbox:hover {background: [% color_6 %];}
-input.textbox {background: [% color_6 %]; border: 1px solid [% color_2 %]; padding: 3px;}
-input.textbox:hover {background: [% color_6 %];}
-input.button { background:[% color_4 %] !important; border: 1px solid; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_6 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_6 %]; }
-input.button:hover {background: [% color_4 %]; border-top-color: [% color_1 %]; border-right-color: [% color_6 %]; border-bottom-color: [% color_6 %]; border-left-color: [% color_1 %];}
+input.button:hover {
+                     background: [% color_9 %];
+                     border-top-color: [% color_1 %];
+                     border-right-color: [% color_6 %];
+                     border-bottom-color: [% color_6 %]; 
+                     border-left-color: [% color_1 %];
+                     }
 
 /* Tables */
 
 /* default table style */
-table.table_style, table.listOfItems,table.ls_template { 
-border: 1px solid;
-width: auto;
-margin: 10px;
-font-size: 1em;
-}
+table.table_style,
+table.listOfItems,
+table.ls_template { 
+                    border: 1px solid;
+                    border-width: 0 2px 2px 0;
+                    background-color:[% color_14 %];
+                    width: auto;
+                    margin: 10px;
+                    font-size: 1em;
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius:5px;
+                    -KHTML-border-radius:5px;
+                    -icab-border-radius:5px;
+                    border-radius:5px;
+                    }
+
 table.listOfItems { 
-overflow: scroll;
-}
-table.listOfItems td{ 
-font-size: smaller;
-}
+                    overflow: scroll;
+                    }
+
+table.listOfItems td { 
+                       font-size: smaller;
+                       border:1px solid [% color_12 %];
+                       }
+
+table.listOfItems tr { 
+                       border:1px solid [% color_12 %];
+                       }
+
 table.listOfItems th {
-background-color: [% color_4 %];
-padding:0 2px;
-border:solid 1px;
-text-align: center;
-white-space: nowrap;
-}
+                       background-color: [% color_12 %];
+                       color:[% color_5 %];
+                       padding:0 2px;
+                       border:solid 1px;
+                       text-align: center;
+                       white-space: nowrap;
+                       }
+
+table.listOfItems th a {
+                         color:[% color_5 %];
+                         }
+
+table.listOfItems th a:hover {
+                               color: [% color_4 %];
+                               }
 
 table.listOfItems th.sortby { 
-background-color: [% color_6 %];
-}
+                              background-color: [% color_5 %];
+                              color:[% color_12 %];
+                              }
 
 table.pending_lists { 
-border: 1px solid;
-width: auto;
-margin: 10px;
-}
-table.pending_lists th { 
-padding: 3px;
-border: 1px solid;
-}
-table.pending_lists th.title_pending { 
-padding: 10px;
-}
+                      border: 1px solid;
+                      width: auto;
+                      margin: 10px;
+                      }
 
-}
+table.pending_lists th { 
+                         padding: 3px;
+                         border: 1px solid;
+                         }
+
+table.pending_lists th.title_pending { 
+                                       padding: 10px;
+                                       }
+
 table.ls_template th { 
-padding: 3px; 
-border: solid 1px; 
-background: [% color_4 %]; 
-text-align: center;
-}
+                       padding: 3px; 
+                       border: solid 1px; 
+                       background: [% color_9 %]; 
+                       text-align: center;
+                       }
 
 /*pref.tt2 template - maybe to delete*/ 
 table.preferences { 
-border: none;
-border-spacing: 0.5em;
-font-size: 1em;
-}  
+                    border: none;
+                    border-spacing: 0.5em;
+                    font-size: 1em;
+                    }  
 table.preferences th { 
-font-weight: normal;
-white-space: nowrap;
-}             
+                       font-weight: normal;
+                       white-space: nowrap;
+                       }
+             
 #table_container { 
-overflow: auto;
-}
+                   overflow: auto;
+                   }
 
-/* EOF */
+/* test relookage */
+
+#bandeau_top {
+               position: absolute;
+               width:100%;
+               height:2.5em;
+               margin-top:0em;
+               margin-bottom:1em;
+               background: [% color_12 %];
+               clear:both;
+               -moz-border-radius: 0 0 10px 10px;
+               -webkit-border-top-left-radius:0;
+               -webkit-border-top-right-radius:0;
+               -webkit-border-bottom-left-radius:10px;
+               -webkit-border-bottom-right-radius:10px;
+               -KHTML-border-radius:0 0 10px 10px;
+               -icab-border-radius:0 0 10px 10px;
+               border-radius:0 0 10px 10px;
+ }
+
+#bandeau_top #Identity {
+                         float:left;
+                         width:30%;
+                         text-align: left;
+                         font-family:serif!important;
+                         font-size: 1em;
+                         font-weight: bold;
+                         color:[% color_5 %]!important;
+                         overflow: hidden;
+                         margin-left:1em;
+                         }
+
+#bandeau_top #Identity_not_connect {
+                                     float:left;
+                                     width:70%;
+                                     text-align: left;
+                                     font-size: 1em;
+                                     font-weight: bold;
+                                     font-family:serif!important;
+                                     color:[% color_5 %]!important;
+                                     overflow: hidden;
+                                     margin-left:1em;
+                                     }
+
+#bandeau_top #Identity_not_connect label {
+                                           color:[% color_5 %]!important;
+                                           font-family:serif!important;
+                                           }
+
+#bandeau_top #Identity span {
+                              font-size: 0.9em;
+                              font-weight: normal;
+                              color:[% color_5 %]!important;
+                              }
+
+#bandeau_top .prefs { 
+                      float:left;
+                      font-size: 1.1em!important;
+                      font-family:serif!important;
+                      text-align:center;
+                      font-weight: bold;
+                      width:33%;
+                      margin-top:0.3em
+                      }
+
+#bandeau_top a { 
+                 font-weight: bold;
+                 font-family:serif!important;
+                 color:[% color_5 %]!important;
+                 }
+
+#bandeau_top a:hover { 
+                       background:none;
+                       border: none;
+                       color:[% color_4 %]!important;
+                       text-decoration:none;
+                       }
+
+#bandeau_top .login { 
+                      float:right;
+                      text-align:right!important;
+                      font-family:serif!important;
+                      color:[% color_5 %]!important;
+                      width:33%;
+                      }
+
+#bandeau_top .remember { 
+                         float:right;
+                         font-size: 0.9em;
+                         font-family:serif!important;
+                         text-align:right;
+                         font-weight: bold;
+                         color:[% color_5 %]!important;
+                         width:25%;
+                         }
+
+#bandeau_top .remember a { 
+                           margin-right:1em;
+                           }
+
+#bandeau_top .MainMenuLinks {
+                              color:[% color_4 %];
+                              background-color:[% color_5 %];
+                              border:1px solid [% color_4 %];
+                              padding: 0 5px ;
+                              margin-top:0.5em;
+                              margin-right:0.5em;
+                              opacity:1;
+                              -moz-border-radius:10px;
+                              -webkit-border-radius:10px;
+                              -KHTML-border-radius:10px;
+                              -icab-border-radius:10px;
+                              border-radius:10px;
+                              }
+
+#bandeau_top .MainMenuLinks:hover {
+                                    background-color:[% color_4 %]!important;
+                                    border:1px solid [% color_4 %];
+                                    color:[% color_5 %]!important;
+                                    }
+
+/* A modified version of A List Apart - http://alistapart.com/articles/slidingdoors2/ */
+#nav {
+       position:relative;
+       float:left;
+       width:100%;
+       margin:-1.6em 0 0 0.5em;
+       z-index:350;
+       }
+ 
+#nav ul {
+          height:1.4em;
+          margin:0;
+          padding: 0;
+          list-style:none;
+          }
+
+#nav ul li {
+             float:left;
+             display:inline;
+             margin:0 0 0 0.5em;
+             padding:0.1em 0.2em;
+             border:1px solid [% color_8 %];
+             border-width: 0 1px 0 0;
+             border-bottom:1px solid [% color_5 %];
+             -moz-border-radius:10px 10px 0 0;
+             -webkit-border-top-left-radius:10px;
+             -webkit-border-top-right-radius:10px;
+             -webkit-border-bottom-left-radius:0;
+             -webkit-border-bottom-right-radius:0;
+             -KHTML-border-radius:10px 10px 0 0;
+             -icab-border-radius:10px 10px 0 0;
+             border-radius:10px 10px 0 0;
+             }
+
+#nav li.MainMenuLinks {
+                        font-weight:normal;
+                        background-color:[% color_6 %];
+                        border-bottom:1px solid [% color_6 %];
+                        }
+
+#nav li.MainMenuLinks a {
+                          color:[% color_8 %];
+                          padding:0.1em 0.4em; 
+                          border:none;
+                          }
+
+#nav li.MainMenuLinks a:hover {
+                                text-decoration:none!important;
+                                color:[% color_5 %];
+                                }
+
+#nav li.MainMenuLinks:hover {
+                              background-color: [% color_4 %];
+                              border:1px solid [% color_4 %];
+                              border-width: 0 1px 0 0;
+                              border-bottom:1px solid [% color_5 %];
+                              z-index:300;
+                              }
+
+#nav li.MainMenuLinksCurrentPage {
+                                   font-weight:normal;
+                                   background-color: [% color_5 %];
+                                   }
+
+#nav li.MainMenuLinksCurrentPage a{
+                                    color:[% color_8 %];
+                                    padding:0.1em 0.4em; 
+                                    border:none;
+                                    }
+
+#nav li.MainMenuLinksCurrentPage a:hover{
+                                          text-decoration:none!important;
+                                          color:[% color_8 %];
+                                          }
+
+#nav li.MainMenuLinksCurrentPage:hover {
+                                         border:1px solid [% color_5 %];
+                                         border-width: 0 1px 1px 0;
+                                         z-index:300;
+                                         }
+
+#nav li.nolink{
+                background-color: [% color_5 %];
+                color:[% color_12 %];
+                padding:0.1em 0.4em;
+                -moz-border-radius:10px 10px 0 0;
+                -webkit-border-top-left-radius:10px;
+                -webkit-border-top-right-radius:10px;
+                -webkit-border-bottom-left-radius:0;
+                -webkit-border-bottom-right-radius:0;
+                -KHTML-border-radius:10px 10px 0 0;
+                -icab-border-radius:10px 10px 0 0;
+                border-radius:10px 10px 0 0;
+                }
+
+#nav > ul a {width:auto;}
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#nav a {float:none;}
+/* End IE5-Mac hack */
+
+/* not for IE5.x or IE6 */
+
+#subnav {
+          position:relative;
+          float:left;
+          width:100%;
+          margin:1em 0 0 0;
+          z-index:400!important;
+          }
+
+#subnav ul {
+             font-size:0.9em;
+             margin:0 0 0 2em;
+             padding: 0;
+             list-style:none;
+             }
+
+#subnav ul li {
+                height:1.3em;
+                float:left;
+                display:inline;
+                margin:0 0.5em 0 0.2em;
+                background-color:[% color_5 %];
+                -moz-border-radius:10px;
+                -webkit-border-radius:10px;
+                -KHTML-border-radius:10px;
+                -icab-border-radius:10px;
+                border-radius:10px;
+                }
+
+#subnav ul li.MainMenuLinks{
+                             background-color:[% color_9 %];
+                             padding:0 1.5em!important;
+                             border:1px outset [% color_8 %];
+                             }
+
+#subnav ul li.MainMenuLinks a {
+                                text-decoration:none;
+                                color:[% color_2 %];
+                                }
+#subnav ul li.MainMenuLinks a:hover,
+#subnav ul li.MainMenuLinks:hover {
+                                    color:[% color_5 %];
+                                    }
+
+#subnav ul li.MainMenuLinks:hover{
+                                   text-decoration:none;
+                                   background-color:[% color_4 %]!important;
+                                   border:1px outset [% color_4 %];
+                                   }
+
+#subnav ul li.MainMenuLinksCurrentPage{
+                                        background-color:[% color_5 %];
+                                        padding:0 1.5em!important;
+                                        color: [% color_4 %];
+                                        border:1px inset [% color_8 %];
+                                        }
+
+#subnav ul li.MainMenuLinksCurrentPage a {
+                                           color: [% color_4 %];
+                                           text-decoration:none;
+                                           }
+
+.columns {
+           -moz-column-width:40%;
+           -moz-column-count:2;
+           -moz-column-gap:1em;
+           -moz-column-rule: 1px solid black;
+           
+           -webkit-column-width:40%;
+           -webkit-column-count:2;
+           -webkit-column-gap:1em;
+           -webkit-column-rule: 1px solid black;
+ 
+           -icab-column-width:40%;
+           -icab-column-count:2;
+           -icab-column-gap:1em;
+           -icab-column-rule: 1px solid black;
+
+           column-width:40%;
+           column-count:2;
+           column-gap:1em;
+           column-rule: 1px solid black;
+           }
+
+.menu_search { 
+               width:100%;
+               border: 1px solid [% color_8 %];
+               border-width: 0 1px 1px 0;
+               text-align:left;
+               background:[% color_5 %];
+               padding:0.5em 0 0.5em 0;
+               }
+
+.menu_search input {
+                     margin-left:0.5em;
+                     padding: 0 1px;
+                     margin-top: 4px;
+                     }
+
+.menu_search input.MainMenuLinks {
+                                   margin-left:0;
+                                   width:11em;
+                                   border: 1px solid [% color_4 %];
+                                   background: [% color_5 %];
+                                   color:[% color_4 %];
+                                   height:1.5em!important;
+                                   vertical-align:top!important;
+                                   opacity:1;
+                                   -moz-border-radius:10px;
+                                   -webkit-border-radius:10px;
+                                   -KHTML-border-radius:10px;
+                                   -icab-border-radius:10px;
+                                   border-radius:10px;
+                                   }
+
+.menu_search input.MainMenuLinks:hover {
+                                         border: 1px solid [% color_4 %];
+                                         background: [% color_4 %]!important;
+                                         color:[% color_5 %]!important;
+                                         height:1.5em;
+                                         vertical-align:top;
+                                         }
+
+span.bottom_page { 
+                   font-size: 0.8em;
+                   font-weight:bold;
+                   }
+
+.top { 
+       float:right;
+       margin:0.5em 1em;
+       }
+
+.noborder { 
+            border: none!important;
+            }
+
 [% END %]

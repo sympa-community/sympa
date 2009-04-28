@@ -1,6 +1,7 @@
 <!-- $Id$ -->
+<div id="noticeBlock"></div>
 
-<div class="ContentBlock"> <strong>
+<div id="noticeMsg">
 
 [% IF last_login_date %]
 [%|loc(last_login_host,last_login_date)%]last login from %1 (%2)[%END%]<br/>
@@ -89,8 +90,15 @@
 [% notice.msg %]
 
 [% END %]
-<br />
+
 [% END %]
-</strong>
+
+<form >
+<fieldset>
+<input  class="MainMenuLinks" type="button" value="Close" onclick="hideNotice();">
+
+</fieldset>
+</form>
+
 </div>
 <!-- end notice.tt2 -->

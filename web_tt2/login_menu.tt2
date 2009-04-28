@@ -1,28 +1,31 @@
 <!-- $Id$ -->
 
-<div class="MenuBlock">
+<div id="bandeau_top">
 [% IF user.email %]
-<div class="MenuBlock">
-<div id="Identity">[% user.email %]<br />
+
+<div id="Identity">[% user.email %]&nbsp;
 [% IF restore_email %]
   <form class="text_center" action="[% path_cgi %]" method="post">
   <fieldset><input class="MainMenuLinks" type="submit" name="action_restore_email" value="[%|loc%]Restore identity[%END%]" />
   </fieldset>
   </form>	
 [%END%]
-[% IF is_listmaster %][%|loc%]Listmaster[%END%]
-[% ELSIF is_privileged_owner %][%|loc%]Privileged owner[%END%]
-[% ELSIF is_owner %][%|loc%]Owner[%END%]
-[% ELSIF is_editor %][%|loc%]Editor[%END%]
-[% ELSIF is_subscriber %][%|loc%]Subscriber[%END%]
+[% IF is_listmaster %][%|loc%][Listmaster][%END%]
+[% ELSIF is_privileged_owner %][%|loc%][Privileged owner][%END%]
+[% ELSIF is_owner %][%|loc%][Owner][%END%]
+[% ELSIF is_editor %][%|loc%][Editor][%END%]
+[% ELSIF is_subscriber %][%|loc%][Subscriber][%END%]
 [% END %]
-</div>
+<br />
 [% IF last_login_date %]
-	<span>[%|loc(last_login_host,last_login_date)%]last login from %1 <br />(%2)</span>[%END%]
+	<span>[%|loc(last_login_host,last_login_date)%]last login from %1 &nbsp;&nbsp; (%2)</span>[%END%]
 [%END%]
+</div>
+
 
 [% IF auth_method == 'md5' %]
-  <form class="text_center" action="[% path_cgi %]" method="post">
+<div class="login">
+  <form  action="[% path_cgi %]" method="post">
   <fieldset>
   <input type="hidden" name="action" value="logout" />
   [% IF referer %]
@@ -33,11 +36,12 @@
   <input class="MainMenuLinks" type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
   </fieldset>
   </form>
-[% END %]
 </div>
+[% END %]
 
-[% IF action == 'pref' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/pref" >[%|loc%]Your preferences[%END%]</a></strong><br />
+<div class="prefs">
+<a href="[% path_cgi %]/pref" >[%|loc%]Your preferences[%END%]</a>
+</div>
 
 [% ELSE %] 
 [% PROCESS 'loginbanner.tt2' %]

@@ -2,9 +2,16 @@
 [% IF homepage_content %]
      [% homepage_content %]
 [% ELSE %]
-   <pre>
+
+<div class="block">
+
+<h2>[%|loc%]List informations[%END%]</h2>
+
+   <p>
      [% info_content %]
-   </pre>
+   </p>
+
+</div>
 [% END %]
 
 <!-- end info.tt2 -->

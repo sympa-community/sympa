@@ -1,5 +1,8 @@
 <!-- $Id$ -->
 
+[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
+
+
 [% IF action == 'search_list' %]
   [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
 [% ELSIF action == 'search_user' %]
@@ -7,16 +10,10 @@
 [% END %]
 
 [% IF which %]
-[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
-<p align="center">
-[% FOREACH letter IN letters %]
-  [% IF orderedlist.$letter.0 %]
-    <a href="#[%letter%]">[%letter%]</a>&nbsp;
-  [% ELSE %]
-    [%letter%]&nbsp;
- [% END %] 
-[% END %] 
-</p>
+
+
+<div class="block">
+<div class="columns">
 
 [% FOREACH letter IN letters %]
 [% IF orderedlist.$letter.0 %]
@@ -45,4 +42,9 @@
 [% ELSE %]
 <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
+
+</div>
+
+</div>
+
 <!-- end lists.tt2 -->

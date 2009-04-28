@@ -1,19 +1,10 @@
 <!-- $Id$ -->
-
+   <h1>[%|loc%]Mailing lists server[%END%]</h1>
 <p class="text_justify">
 [%|loc(conf.email,conf.host)%]This server provides you access to your mailing list environment. Starting from this web page, you can perform subscription options, unsubscription, archive, list moderation, list configuration.[%END%]
 </p>
- <form action="[% path_cgi %]" method="post"> 
- <fieldset>
-    <input type="text" size="25" name="filter" value="[% filter %]" alt="[%|loc%]Enter a list name[%END%]"/>
-    <input type="hidden" name="action" value="search_list" />
-    <input class="MainMenuLinks" type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
-    <br />
- </fieldset>
-</form>
-<br />
 
-   <h1 class="block">[%|loc%]Mailing lists categories[%END%]</h1>
+<h2>[%|loc%]Mailing lists categories[%END%]</h2>
 <br />
 
 <div id="home_container">

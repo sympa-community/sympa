@@ -1,11 +1,12 @@
 <!-- $Id$ -->
 
+<div class="block">
 
 [% IF help_topic %]
  [% PROCESS "help_${help_topic}.tt2" IF help_topic %]
-
-[% ELSE %]
 <br />
+[% ELSE %]
+
 
 <h2>[%|helploc%]Subscriber, moderator and owner documentation[%END%]</h2>
 
@@ -20,4 +21,7 @@
 [%|helploc(path_cgi)%]If you experience any problem, please refer to the <a href="%1/help/faquser">users <acronym title="Frequently asked questions">FAQ</acronym></a> or to the <a href="%1/help/faqadmin">administrators <acronym title="Frequently asked questions">FAQ</acronym></a>.[%END%]</p>
 
 [% END %]
+
+</div>
+
 <!-- end help.tt2 -->

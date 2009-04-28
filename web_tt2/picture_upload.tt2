@@ -1,12 +1,13 @@
 <!-- $Id$ -->
 [% IF pictures_display %]
-        <div class="block">
-          <strong>
-          [%|loc%]Setting your picture for this list[%END%]
-          </strong><br />
-          <p>[%|loc%]You can upload your picture below ; it will be available in the list review page. The picture should use a standard format (gif, jpp, jpeg or png) and its size should not exceed 100 Kb.[%END%]</p><br />
- 	 
+
+<h4>[%|loc%]Setting your picture for this list[%END%]</h4>
+
+	 
  	 <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+
+<p>[%|loc%]You can upload your picture below ; it will be available in the list review page. The picture should use a standard format (gif, jpp, jpeg or png) and its size should not exceed 100 Kb.[%END%]</p><br />
+
 	 <fieldset>
            <label for="uploaded_file"><input id="uploaded_file" type="file" name="uploaded_file"/></label>
  	   <input class="MainMenuLinks" type="submit" value="[%|loc%]Submit[%END%]" name="action_upload_pictures" />
@@ -27,7 +28,6 @@
 	 <p class="spacer"></p>
 	 </div>
  	 [%END%]
- 	 </div>
- 	   <br />
+  	   <br />
       [% END %]
 <!-- end picture_upload.tt2 -->

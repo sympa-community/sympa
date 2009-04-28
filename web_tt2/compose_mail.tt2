@@ -1,9 +1,10 @@
 <!-- $Id$ -->
+<div class="block">
 
-<h3>[%|loc%]Sendind a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+<h2>[%|loc%]Sendind a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 <br />
 
-<form action="[% path_cgi %]" method="post" name="compose_mail">
+<form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail">
 <fieldset>
 [%|loc(user.email)%]From: %1[%END%]<br />
 [%|loc(mailto)%]To: %1[%END%]<br />
@@ -44,4 +45,6 @@
 </textarea>
 </fieldset>
 </form>
+
+</div>
 <!-- end compose_mail.tt2 -->

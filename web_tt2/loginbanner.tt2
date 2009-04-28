@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-  <div class="MenuBlock">    
+  <div  id="Identity_not_connect">    
         [% IF use_sso %]
       <form action="[% path_cgi %]" method="post"> 
 	<fieldset>	
@@ -12,7 +12,7 @@
           [% IF sso_number == 1 %]
             [% FOREACH server = sso %]
               <input type="hidden" name="auth_service_name" value="[% server.key %]" />
-              <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[% server.value %]" /><br />
+              <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[% server.value %]" />
            [% END %]
           [% ELSE %]
      	    <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:[%END%]</label><br/>
@@ -21,14 +21,14 @@
                <option value="[% server.key %]">[% server.value %]</option>
             [% END %]
             </select>
-          <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" /><br />
-          [% END %] 
+          <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
+          [% END %]
  	</fieldset>
       </form>
      [% END %] 
 
-     [% IF use_passwd == '1' %]     
-      <form action="[% path_cgi %]" method="post"> 
+     [% IF use_passwd == '1' %]
+      <form action="[% path_cgi %]" method="post">
 	<fieldset>
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
@@ -36,22 +36,24 @@
         <input type="hidden" name="list" value="[% list %]" />
 
       <input type="hidden" name="action" value="login" />
-      <label for="email_login">[%|loc%]email address[%END%] :</label><br />
-      <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /><br />
-      <label for="passwd" >[%|loc%]password[%END%] :</label><br />
+      <label for="email_login">[%|loc%]email address[%END%] :</label>
+      <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /> &nbsp;&nbsp;
+      <label for="passwd" >[%|loc%]password[%END%] :</label>
       <input type="password" name="passwd" id="passwd" size="8" /> &nbsp;&nbsp;
       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
 	</fieldset>
       </form>
       [% END %] 
   </div>
-  <br />
+
 [% IF use_passwd == '1' %]
 [% IF authentication_info_url %]
    <a class="menuLinks" href="[%conf.authentication_info.url%]">[%|loc%]Authentication help[% END %]</a><br />
 [% ELSE %]
-  <a class="menuLinks" href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
-  <a class="menuLinks" href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password ?[%END%]</a>
+  <div class="remember">
+  <a href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
+  <a href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password ?[%END%]</a>
+  </div>
 [% END %]
 [% END %]
 <!-- end loginbanner.tt2 -->

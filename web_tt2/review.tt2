@@ -1,14 +1,14 @@
 <!-- $Id$ -->
-
+<div class="block">
 [% PROCESS picture_upload.tt2 %]
 
 [% IF is_owner %]
-<h3>[%|loc%]Manage list members[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+<h2>[%|loc%]Manage list members[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 [% END %]
 
 [% IF action != 'search' %]
 <div class="search_form">
-  <form action="[% path_cgi %]">
+  <form class="noborder" action="[% path_cgi %]">
   <fieldset>
   <label for="size">[%|loc%]Page size[%END%]</label>
   <input type="hidden" name="sortby" value="[% sortby %]" />
@@ -57,7 +57,7 @@
   </form>
   [% END %]
   <br />
-  <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
+  <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
   <input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');"/>
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
@@ -290,4 +290,6 @@
 
    </fieldset>
    </form>
+
+</div>
 <!-- end review.tt2 (distrib) -->
