@@ -1,35 +1,7 @@
 <!-- $Id$ -->
 
 <div class="block">
-[% IF main_robot %]
-<h2>[%|loc%]Virtual Robots[%END%]</h2> <br />
-<div>
-  [% IF robots %]
-    [%|loc%]The following virtual robots are running on this server :[%END%]
-    <ul>
-    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>[% END %]
-    </ul>
-  [% ELSE %]
-    [%|loc%]No Virtual Robot defined on this server[%END%]
-  [% END %]
-</div>
-[% END %]
-
-[% IF families -%]
-<h2>[%|loc%]Families[%END%]</h2><br />
-<div>
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <select name="family_name">
-    [% FOREACH f = families %]
-	<option value='[% f %]'>[% f %]</option>[% END %]
-  </select>
-  <input class="MainMenuLinks" type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
-  </fieldset>
-  </form>     
-
-</div>
-[% END %] 
+[% IF subaction == '' or subaction == 'm_lists' %]
 <h2>[%|loc%]Lists[%END%]</h2>
 <div>
     <h3>[%|loc%]Manage lists[%END%]</h3><br/>
@@ -43,7 +15,42 @@
          <a class="actionMenuLinks" href="[% path_cgi %]/get_inactive_lists">[%|loc%]Lists sorted by last message date[%END%]</a>
     </div>
 </div>
+[% END %] 
 
+[% IF main_robot %]
+  [% IF subaction == 'vhosts' %]
+<h2>[%|loc%]Virtual Robots[%END%]</h2> <br />
+<div>
+  [% IF robots %]
+    [%|loc%]The following virtual robots are running on this server :[%END%]
+    <ul>
+    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>[% END %]
+    </ul>
+  [% ELSE %]
+    [%|loc%]No Virtual Robot defined on this server[%END%]
+  [% END %]
+</div>
+  [% END %]
+[% END %]
+
+[% IF families -%]
+  [% IF subaction == 'families' %]
+<h2>[%|loc%]Families[%END%]</h2><br />
+<div>
+  <form action="[% path_cgi %]" method="post">
+  <fieldset>
+  <select name="family_name">
+    [% FOREACH f = families %]
+	<option value='[% f %]'>[% f %]</option>[% END %]
+  </select>
+  <input class="MainMenuLinks" type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
+  </fieldset>
+  </form>     
+
+</div>
+  [% END %]
+[% END %] 
+[% IF subaction == 'users' %]
 <h2>[%|loc%]Users[%END%]</h2><br />
 <div>
         <form action="[% path_cgi %]" method="post">
@@ -85,7 +92,20 @@
 </form>
 </div>
 
+<h3>[%|loc%]Change identity[%END%]</h3><br />
+<div>
+[%|loc%]As listmaster, you can change your identity and act as someone else. This is may be usefull when providing assistance or to test users privileges[%END%]. The new identity is attached to the current session<br/>
 
+<form class="bold_label" action="[% path_cgi %]" method="post">
+<fieldset>
+<input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]change identity as : [%END%]" />
+<input id="session_email" type="text" name="email" size="50"/> 
+</fieldset>
+</form>
+</div>
+[% END %] 
+
+[% IF subaction == 'archives' %]
 <h2>[%|loc%]Archives[%END%]</h2><br />
 <div>
 [%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br />
@@ -97,19 +117,9 @@
 </form>
 
 </div>
+[% END %] 
 
-<h2>[%|loc%]Change identity[%END%]</h2><br />
-<div>
-[%|loc%]As listmaster, you can change your identity and act as someone else. This is may be usefull when providing assistance or to test users privileges[%END%]. The new identity is attached to the current session<br/>
-
-<form class="bold_label" action="[% path_cgi %]" method="post">
-<fieldset>
-<input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]change identity as : [%END%]" />
-<input id="session_email" type="text" name="email" size="50"/> 
-</fieldset>
-</form>
-</div>
-
+[% IF subaction == 'logs' %]
 <h2>[%|loc%]Logs[%END%]</h2><br />
 <div>
 [%|loc%]You can increase the log level specified by configuration only for your current session. On a production server, this allow to keep logs rather small and to test some features with the maximum log level. [%END%]<br/>
@@ -125,10 +135,11 @@
 <input class="MainMenuLinks" type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" /></fieldset>
 </form>
 </div>
+[% END %] 
 
+[% IF subaction == 'templates' %]
 <h2>[%|loc%]Templates[%END%]</h2><br />
 <div>
-<!-- 
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
   <label for="file">[%|loc%]Setting defaults list templates[%END%]</label><br />
@@ -152,7 +163,6 @@
 </fieldset>
 </form>
 
--->
 
 	
 <a class="actionMenuLinks" href="http://pootle.sympa.org/">[%|loc%]view translations[%END%]</a>
@@ -172,25 +182,31 @@
 </fieldset>
 </form>
 </div>
+[% END %] 
 
+[% IF subaction == 'skins' %]
 <h2>[%|loc%]Skins, CSS and colors[%END%]</h2><br />
 <div>
 <a class="actionMenuLinks" href="[% path_cgi %]/skinsedit">[%|loc%]Skins administration page[%END%]</a>
 </div>
+[% END %] 
 
+[% IF subaction == 'translation' %]
 <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
 <div>
 [%|loc%]Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). All translations for one language are gathered in a single PO file that can be manipulated by standard GNU gettext tools.[%END%]
 </div>
-
 <div>
 [%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language : [%END%] <a href="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</a>
 </div>
+[% END %] 
 
+[% IF subaction == 'tracker' %]
 <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2><br />
 <div>
 [%|loc%]You can submit a problem or request a new feature : [%END%]<a href="http://www.sympa.org/tracking">http://www.sympa.org/tracking</a>
 </div>
+[% END %] 
 
 <br /><br /><br />
 

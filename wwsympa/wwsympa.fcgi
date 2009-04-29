@@ -375,7 +375,7 @@ my %action_args = ('default' => ['list'],
 		'signoff' => ['list','email','passwd'],
 		'sigrequest' => ['list','email'],
 		'set' => ['list','email','reception','gecos'],
-		'serveradmin' => [],
+		'serveradmin' => ['subaction'],
 		'set_session_email' => ['email'],
 		'skinsedit' => [],
 		'get_pending_lists' => [],
@@ -5114,20 +5114,10 @@ sub do_subrequest {
 	 }
 	 $param->{'lists_default_files'}{$f}{'selected'} = '';
      }
-
-     ## All Robots are shown to super listmaster
-     if (&List::is_listmaster($param->{'user'}{'email'})) {
-	 $param->{'main_robot'} = 1;
-	 $param->{'robots'} = $Conf{'robots'};
-     }
-
-     ## Families
-     my @families = &Family::get_available_families($robot);
-
-     if (@families) {
-	 $param->{'families'} = \@families;
-     }
      
+     ## Checking families and other virtual hosts.
+     &get_server_details();
+
      ## Server files
      foreach my $f ('helpfile.tt2','lists.tt2','global_remind.tt2','summary.tt2','create_list_request.tt2','list_created.tt2','list_aliases.tt2') {
 	 $param->{'server_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
@@ -5135,6 +5125,7 @@ sub do_subrequest {
      }
      $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'selected="selected"';
      $param->{'log_level'} = $session->{'log_level'} ;
+     $param->{'subaction'} = $in{'subaction'},
 
      return 1;
  }
@@ -5640,6 +5631,9 @@ sub do_skinsedit {
     my $dir = &Conf::get_robot_conf($robot, 'css_path');
     my $css_url  = &Conf::get_robot_conf($robot, 'css_url');
 	
+    ## Checking families and other virtual hosts.
+    &get_server_details();
+
     $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($css_url =~ /\.css$/);
 
     if(($in{'editcolors'})&&($in{'subaction'} eq 'reset')){
@@ -7695,6 +7689,9 @@ sub do_remove_arc {
 
      &wwslog('info', 'get_pending_lists');
 
+     ## Checking families and other virtual hosts.
+     &get_server_details();
+
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
@@ -7712,6 +7709,9 @@ sub do_remove_arc {
 
      &wwslog('info', 'get_closed_lists');
 
+     ## Checking families and other virtual hosts.
+     &get_server_details();
+
      my $all_lists = &List::get_lists($robot);
      foreach my $list ( @$all_lists ) {
 	 if ($list->{'admin'}{'status'} eq 'closed' ||
@@ -7728,6 +7728,9 @@ sub do_remove_arc {
  sub do_get_latest_lists {
 
      &wwslog('info', 'get_latest_lists');
+
+     ## Checking families and other virtual hosts.
+     &get_server_details();
 
      my @unordered_lists;
      my $all_lists = &List::get_lists($robot);
@@ -7751,6 +7754,9 @@ sub do_remove_arc {
 sub do_get_inactive_lists {
 
      &wwslog('info', 'get_inactive_lists');
+
+     ## Checking families and other virtual hosts.
+     &get_server_details();
 
      my @unordered_lists;
      my $all_lists = &List::get_lists($robot);
@@ -16398,6 +16404,21 @@ sub check_authz {
     }
     
     return 1;
+}
+
+sub get_server_details {
+     ## All Robots are shown to super listmaster
+     if (&List::is_listmaster($param->{'user'}{'email'})) {
+	 $param->{'main_robot'} = 1;
+	 $param->{'robots'} = $Conf{'robots'};
+     }
+
+     ## Families
+     my @families = &Family::get_available_families($robot);
+
+     if (@families) {
+	 $param->{'families'} = \@families;
+     }    
 }
 
 sub get_icon {

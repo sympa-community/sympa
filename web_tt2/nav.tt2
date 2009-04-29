@@ -1,3 +1,4 @@
+<!-- $Id: nav.tt2 5675 2009-04-28 13:59:12Z david.verdin $ -->
 [% IF action == 'create_list_request' %]
 <div id="nav">
   <ul>
@@ -7,24 +8,33 @@
 </div>
 [% END %]
 
-[% IF action == 'serveradmin' %]
+[% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
 <div id="nav">
   <ul>
+[% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/m_lists">[%|loc%]Lists[%END%]</a></li>
+[% IF subaction == 'users' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/users">[%|loc%]Users[%END%]</a></li>
+[% IF subaction == 'archives' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/archives">[%|loc%]Archives[%END%]</a></li>
+[% IF subaction == 'logs' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/logs">[%|loc%]Logs[%END%]</a></li>
+[% IF subaction == 'templates' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/templates">[%|loc%]Templates[%END%]</a></li>
+[% IF action == 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/skinsedit">[%|loc%]Skins, CSS and colors[%END%]</a></li>
 [% IF main_robot %]
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Virtual Robots[%END%]</a></li>
+[% IF subaction == 'vhosts' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/vhosts">[%|loc%]Virtual Robots[%END%]</a></li>
 [% END %]
 [% IF families -%]
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Families[%END%]</a></li>
+[% IF subaction == 'families' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/families">[%|loc%]Families[%END%]</a></li>
 [% END %]
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Lists[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Users[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Archives[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Change identity[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Logs[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Templates[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Skins, CSS and colors[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Translating Sympa[%END%]</a></li>
-    <li class="MainMenuLinksCurrentPage"><a href="#">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
+[% IF subaction == 'translation' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/translation">[%|loc%]Translating Sympa[%END%]</a></li>
+[% IF subaction == 'tracker' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/tracker">[%|loc%]Submitting a bug, a feature request[%END%]</a></li>
   </ul>
 </div>
 [% END %]
@@ -97,3 +107,5 @@
 
 
 [% END %]
+
+<!-- end nav.tt2 -->
