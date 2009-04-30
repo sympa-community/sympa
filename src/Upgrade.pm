@@ -107,8 +107,8 @@ sub upgrade {
 
 	&do_log('notice','Migrating templates to TT2 format...');	
 	
-	unless (open EXEC, '--SCRIPTDIR--/tpl2tt2.pl|') {
-	    &do_log('err','Unable to run --SCRIPTDIR--/tpl2tt2.pl');
+	unless (open EXEC, '--pkgdatadir--/bin/tpl2tt2.pl|') {
+	    &do_log('err','Unable to run --pkgdatadir--/bin/tpl2tt2.pl');
 	    return undef;
 	}
 	close EXEC;
@@ -1330,8 +1330,8 @@ sub probe_db {
 	}
 	## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
-	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}") {
-	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}", $!);
+	unless (open SCRIPT, "--pkgdatadir--/bin/create_db.$Conf::Conf{'db_type'}") {
+	    &do_log('err', "Failed to open '%s' file : %s", "--pkgdatadir--/bin/create_db.$Conf::Conf{'db_type'}", $!);
 	    return undef;
 	}
 	my $script;
@@ -1341,12 +1341,12 @@ sub probe_db {
 	close SCRIPT;
 	my @scripts = split /;\n/,$script;
 
-	push @report, sprintf("Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}");
-	&do_log('notice', "Running the '%s' script...", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}");
+	push @report, sprintf("Running the '%s' script...", "--pkgdatadir--/bin/create_db.$Conf::Conf{'db_type'}");
+	&do_log('notice', "Running the '%s' script...", "--pkgdatadir--/bin/create_db.$Conf::Conf{'db_type'}");
 	foreach my $sc (@scripts) {
 	    next if ($sc =~ /^\#/);
 	    unless ($dbh->do($sc)) {
-		&do_log('err', "Failed to run script '%s' : %s", "--SCRIPTDIR--/create_db.$Conf::Conf{'db_type'}", $dbh->errstr);
+		&do_log('err', "Failed to run script '%s' : %s", "--pkgdatadir--/bin/create_db.$Conf::Conf{'db_type'}", $dbh->errstr);
 		return undef;
 	    }
 	}

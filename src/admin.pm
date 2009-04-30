@@ -41,7 +41,7 @@ use Conf;
 use Language;
 use Log;
 
-require "--LIBDIR--/tools.pl";
+require 'tools.pl';
 
 
 =pod 
@@ -969,11 +969,11 @@ sub install_aliases {
 
 	 ## build a list of required aliases the listmaster should install
 	 $aliases = "#----------------- $list->{'name'}\n";
-	 $aliases .= "$list->{'name'}: \"| --MAILERPROGDIR--/queue $list->{'name'}\"\n";
-	 $aliases .= "$list->{'name'}-request: \"| --MAILERPROGDIR--/queue $list->{'name'}-request\"\n";
-	 $aliases .= "$list->{'name'}$suffix: \"| --MAILERPROGDIR--/bouncequeue $list->{'name'}\"\n";
-	 $aliases .= "$list->{'name'}-unsubscribe: \"| --MAILERPROGDIR--/queue $list->{'name'}-unsubscribe\"\n";
-	 $aliases .= "# $list->{'name'}-subscribe: \"| --MAILERPROGDIR--/queue $list->{'name'}-subscribe\"\n";
+	 $aliases .= "$list->{'name'}: \"| --libexecdir--/queue $list->{'name'}\"\n";
+	 $aliases .= "$list->{'name'}-request: \"| --libexecdir--/queue $list->{'name'}-request\"\n";
+	 $aliases .= "$list->{'name'}$suffix: \"| --libexecdir--/bouncequeue $list->{'name'}\"\n";
+	 $aliases .= "$list->{'name'}-unsubscribe: \"| --libexecdir--/queue $list->{'name'}-unsubscribe\"\n";
+	 $aliases .= "# $list->{'name'}-subscribe: \"| --libexecdir--/queue $list->{'name'}-subscribe\"\n";
 	 
 	 return $aliases;
      }

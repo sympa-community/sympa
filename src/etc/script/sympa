@@ -40,7 +40,7 @@ fi
 
 if [ ${OSTYPE} != "Slack" -a ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suse" ]; then
     # Source function library.
-    . --INITDIR--/functions
+    . --initdir--/functions
 
     # Get config.
     . /etc/sysconfig/network
@@ -48,7 +48,7 @@ fi
 
 # Sympa parameters
 # Sympa binaries directory
-sympadir="--SBINDIR--"
+sympadir="--sbindir--"
 
 # Sympa config files directory
 sympaconf="--CONFIG--"
@@ -77,8 +77,8 @@ sympa_status() {
 
     else
        # First try "/u1/home/sympa/*.pid" files
-       if [ -f --PIDDIR--/$1.pid ] ; then
-             pid=`head -1 --PIDDIR--/$1.pid`
+       if [ -f --piddir--/$1.pid ] ; then
+             pid=`head -1 --piddir--/$1.pid`
              if [ "$pid" != "" ] ; then
                  running=`ps -A | grep "$pid"`
                  if [ "$running" != "" ]; then
@@ -161,9 +161,9 @@ sympa_stop() {
         return 1
     fi
  
-	if [ -f --PIDDIR--/$1.pid ]; then
+	if [ -f --piddir--/$1.pid ]; then
 		echo $echo_opt "Stopping module $1.pl: "
-		pid=`head -1 --PIDDIR--/$1.pid`
+		pid=`head -1 --piddir--/$1.pid`
 		running=`ps -A | grep "$pid"`
 		if [ $1 == 'bulk' ]; then
 		    if [ ${OSTYPE} = "Slack" -o ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
@@ -206,14 +206,14 @@ fi
 # See how we were called.
 case "$1" in
   start)
-	if [ ! -f --LOCKDIR--/sympa ]; then
+	if [ ! -f --lockdir--/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_start sympa
 		sympa_start bulk
 		sympa_start archived
 		sympa_start bounced
 		sympa_start task_manager
-		touch --LOCKDIR--/sympa
+		touch --lockdir--/sympa
 		echo
 	else
 
@@ -228,20 +228,20 @@ case "$1" in
 	sympa_stop archived
 	sympa_stop bulk
 	sympa_stop sympa
-	if [ -f --PIDDIR--/sympa-distribute.pid ]; then
+	if [ -f --piddir--/sympa-distribute.pid ]; then
 		sympa_stop sympa-distribute
 	fi
-	if [ -f --PIDDIR--/sympa-creation.pid ]; then
+	if [ -f --piddir--/sympa-creation.pid ]; then
 		sympa_stop sympa-creation
 	fi
 	sympa_stop task_manager
-	if [ -f --LOCKDIR--/sympa ]; then
-		rm -f --LOCKDIR--/sympa
+	if [ -f --lockdir--/sympa ]; then
+		rm -f --lockdir--/sympa
 	fi
 	;;
   status)
 	echo "Status of Sympa subsystem: "
-	if [ -f --LOCKDIR--/sympa ]; then
+	if [ -f --lockdir--/sympa ]; then
 		echo "Status file for subsystem found."
 	else
 		echo "Status file for subsystem NOT found."

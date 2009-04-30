@@ -30,7 +30,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw($Version);
 
 
-our $Version = '--SYMPA_VERSION--';
+our $Version = '--VERSION--';
 
 1;
 

@@ -31,7 +31,7 @@ $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
 use strict;
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 use Conf;
 use POSIX;
 require "tools.pl";
@@ -45,11 +45,11 @@ unless (Conf::load('--CONFIG--')) {
 my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
 
-my $alias_wrapper = '--MAILERPROGDIR--/aliaswrapper';
-my $lock_file = '--EXPL_DIR--/alias_manager.lock';
+my $alias_wrapper = '--sbindir--/aliaswrapper';
+my $lock_file = '--expldir--/alias_manager.lock';
 my $default_domain;
-my $path_to_queue = '--MAILERPROGDIR--/queue';
-my $path_to_bouncequeue = '--MAILERPROGDIR--/bouncequeue';
+my $path_to_queue = '--libexecdir--/queue';
+my $path_to_bouncequeue = '--libexecdir--/bouncequeue';
 my $sympa_conf_file = '--CONFIG--';
 
 my ($operation, $listname, $domain, $file) = @ARGV;

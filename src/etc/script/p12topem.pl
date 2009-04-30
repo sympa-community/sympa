@@ -26,7 +26,7 @@
 
 use strict;
 
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 use Getopt::Long;
 
 my $sympa_conf_file = '--CONFIG--';

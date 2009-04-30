@@ -35,19 +35,19 @@ Run the program in a debug mode.
 
 =head1 FILES
 
-F<--CONFDIR--/wwsympa.conf> WWSympa configuration file.
+F<--sysconfdir--/wwsympa.conf> WWSympa configuration file.
 
-F<--MAILERPROGDIR--/bouncequeue> bounce spooler, referenced from sendmail alias file
+F<--libexecdir--/bouncequeue> bounce spooler, referenced from sendmail alias file
 
-F<--SPOOLDIR--/bounce> incoming bounces directory
+F<--spooldir--/bounce> incoming bounces directory
 
-F<--PIDDIR--/bounced.pid> this file contains the process ID
+F<--piddir--/bounced.pid> this file contains the process ID
 of F<bounced.pl>.
 
 =head1 MORE DOCUMENTATION
 
-The full documentation in HTML and PostScript formats can be
-found in F</usr/share/doc/sympa/html/>. 
+The full documentation can be
+found in F<--docdir-->. 
 
 The mailing lists (with web archives) can be accessed at
 http://listes.cru.fr/wws/lists/informatique/sympa.

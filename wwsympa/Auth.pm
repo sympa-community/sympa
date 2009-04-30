@@ -21,7 +21,6 @@
 
 
 package Auth;
-use lib '--LIBDIR--';
 
 use Exporter;
 our @ISA = ('Exporter');

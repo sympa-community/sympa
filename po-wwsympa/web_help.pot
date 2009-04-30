@@ -1,0 +1,3716 @@
+# Sympa online help internationalisation.
+# Copyright (C) 2007
+# This file is distributed under the same license as Sympa.
+# FIRST AUTHOR <david.verdin@cru.fr>, 2007.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Sympa 5.3.3\n"
+"POT-Creation-Date: 2007-11-13 14:50+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: web_tt2/help.tt2:9
+msgid "Subscriber, moderator and owner documentation"
+msgstr ""
+
+#: web_tt2/help.tt2:11
+msgid "In this documentation, you will find:"
+msgstr ""
+
+#: web_tt2/help.tt2:13
+#. (path_cgi)
+msgid "a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+
+#: web_tt2/help.tt2:14
+#. (path_cgi)
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+
+#: web_tt2/help.tt2:15
+#. (path_cgi)
+msgid "an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+
+#: web_tt2/help.tt2:18
+#. (path_cgi)
+msgid "If you want to perform a particular task, take a look at the list of all <a href=\"%1/help/introduction#features\">available features</a> in the mailing list management software Sympa."
+msgstr ""
+
+#: web_tt2/help.tt2:19
+#. (path_cgi)
+msgid "If you experience any problem, please refer to the <a href=\"%1/help/faquser\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or to the <a href=\"%1/help/faqadmin\">administrators <acronym title=\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:2
+msgid "Mailing lists - General introduction"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:4
+msgid "What is a mailing list?"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:5
+msgid "A mailing list is a <strong>distribution list allowing a group of subscribers to automatically receive by email all messages sent to the list</strong>: every message sent to the list by a subscriber is received by all the other subscribers. When subscribed to a mailing list, it is possible to send messages, to reply to them or to read them without contributing (i.e. to \"lurk\")."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:6
+msgid "Special cases:</strong>"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:8
+msgid "It is sometimes possible to send messages to a mailing lit without having subscribed to it. However, you need to be subscribed to a list to receive its messages."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:9
+msgid "It is sometimes impossible to send messages to the list even though you are actually subscribed to it: it is the case for announcement lists, which are used to transmit information from a unique sender to a large number of recipients."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:12
+msgid "Interest of mailing lists"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:13
+msgid "People subscribe to a mailing list (sometimes abbreviated in <acronym title=\"Mailing List\">ML</acronym>) to <strong>be informed about a particular topic</strong> and to <strong>take part in exchanges about it</strong>. Examples are:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:15
+msgid "mailing list for all the employees of a company;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:16
+msgid "mailing list reserved to the participants in a project;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:17
+msgid "mailing list dedicated to a class of students;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:18
+msgid "mailing list about the latest news in computer security;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:19
+msgid "mailing list of mutual aid between handymen;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:20
+msgid "mailing list restricted to a family and dedicated to the organization of large family gatherings;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:21
+msgid "and so on!"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:24
+msgid "Types of mailing lists"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:25
+msgid "There are <strong>thousands of mailing lists</strong> of all kinds on the Internet: public or private, free or not, with subscription subject to conditions or not, etc. Those lists may have from a dozen up to several thousand members."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:26
+msgid "According to the way they work, we can distinguish between <strong>two types of lists</strong>:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:28
+msgid "<strong>Announcements lists</strong> allow subscribers to receive messages without being allowed to post some themselves. In fact, those messages are newsletters: electronic magazines, daily services (daily horoscope, daily weather report, daily security alert, etc.), update notices about a website, etc. With this type of mailing list, the information flows from a unique sender to a large number of recipients."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:29
+msgid "<strong>Discussion lists</strong> allow all subscribers to take part in exchanges. Those lists can be moderated or not:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:31
+msgid "In a <strong>moderated discussion list</strong>, messages are transmitted to all subscribers after approval by one of the list moderators. Moderation is a token of quality for the list. For example, it ensures that subscribers will not receive off-topic messages, unsolicited commercial messages (spams), messages containing large attachments, etc."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:32
+msgid "In a <strong>non moderated discussion list</strong>, messages are transmitted to all subscribers as soon as the mailing list management robot receives them."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:36
+msgid "Features"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:37
+msgid "Once subscribed to a mailing list service, you can:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:39
+msgid "search for mailing lists</strong> matching your main interests or your particular situation;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:40
+msgid "manage your subscriptions</strong>:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:42
+#. (path_cgi)
+msgid "<a href=\"%1/help/user#subscribe\">subscribe</a> to lists,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:43
+#. (path_cgi)
+msgid "<a href=\"%1/help/user#unsubscribe\">unsubscribe</a> from lists to which you are subscribed,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:44
+#. (path_cgi)
+msgid "change your <a href=\"%1/help/user#options\">subscriber options</a> list by list,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:45
+#. (path_cgi)
+msgid "change your <a href=\"%1/help/user#pref\">general preferences</a>, which apply to the whole mailing list environment (name, password, language of the mailing list web interface, etc.);"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:47
+msgid "use mailing lists"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:49
+#. (path_cgi)
+msgid "read the <a href=\"%1/help/arc\">online message archive of lists to which you are not subscribed</a> if that archive is public and if your personal rights allow you to access those lists,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:50
+#. (path_cgi)
+msgid "read the <a href=\"%1/help/arc\">archive of lists to which you are subscribed</a>,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:51
+#. (path_cgi)
+msgid "perform <a href=\"%1/help/arc#arcsearch\">searches in the list archive</a>,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:52
+#. (path_cgi)
+msgid "<a href=\"%1/help/sendmsg\">send messages</a> to lists to which you are subscribed,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:53
+#. (path_cgi)
+msgid "<a href=\"%1/help/shared#shared_read\">download documents</a> from the shared document web space,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:54 web_tt2/help_user.tt2:80
+#. (path_cgi)
+msgid "<a href=\"%1/help/shared#shared_upload\">upload documents</a> in the shared document web space;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:56
+msgid "manage mailing lists"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:58
+#. (path_cgi)
+msgid "<a href=\"%1/help/admin#create_list\">create new lists</a> (restricted access) - subject to authorization,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:59
+#. (path_cgi)
+msgid "<a href=\"%1/help/admin#edit_list\">configure lists</a> you own,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:60
+#. (path_cgi)
+msgid "<a href=\"%1/help/admin#manage_members\">manage subscriptions</a>,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:61
+#. (path_cgi)
+msgid "<a href=\"%1/help/admin#manage_shared\">manage the shared document web space</a>,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:62
+#. (path_cgi)
+msgid "<a href=\"%1/help/admin#moderate\">moderate lists</a> for which you are a moderator."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:66
+msgid "How the mailing list service works: roles and responsibilities"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:68
+msgid "A mailing list service involves four types of roles:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:70
+msgid "<strong>listmaster;</strong>"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:71
+msgid "<strong>owner;</strong>"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:72
+msgid "<strong>moderator;</strong>"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:73
+msgid "<strong>subscriber.</strong>"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:75
+msgid "It is possible to have several roles at once (for example, you can be an owner and a moderator of a list and be subscribed to several others)."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:77
+msgid "Listmasters"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:78
+msgid "Listmasters are in charge of the <strong>management of the mailing list service</strong>. Their duties:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:80
+msgid "<strong>manage the mailing list server</strong> (deployment, maintenance, etc.);"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:81
+msgid "<strong>define the general orientations of the mailing list service</strong>:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:83
+msgid "who will be allowed to ask for the creation of a new list,"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:84
+msgid "which options will be available to manage lists (scenario definition),"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:85
+msgid "what the default files will contain (creation of templates),"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:86
+msgid "what will the mailing list web interface look like;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:88
+msgid "<strong>set the way the mailing list service should be used</strong> and <strong>document those rules through providing charters</strong> to subscribers, moderators and owners;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:89
+msgid "<strong>approve of requests of mailing list creations</strong>;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:90
+msgid "<strong>temporarily replace list owners</strong> when necessary; on the other hand, listmasters are not supposed to take the place of moderators."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:92
+msgid "List owners and moderators can turn to listmasters</strong> when they face a problem not dealt with by the documentation or for any comment. However, in order not to flood listmasters with messages, it is recommended that subscribers rather turn to list owners."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:94
+msgid "Owners"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:95
+msgid "The list owner is generally its creator</strong> or, failing him/her, the person who requested the list creation or who became responsible for it. <strong>His/her role</strong>:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:97
+#. (path_cgi)
+msgid "<strong>define the <a href=\"%1/help/admin#edit_list\">way the list will be used</a></strong>;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:98
+#. (path_cgi)
+msgid "<strong> write a <a href=\"%1/help/admin#charter\">list charter</a></strong> aimed at subscribers;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:99
+#. (path_cgi)
+msgid "<strong>appoint one or several <a href=\"%1/help/listconfig#description\">moderators</a></strong>;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:100
+#. (path_cgi)
+msgid "<strong>manage <a href=\"%1/help/admin#manage_members\">subscriptions and unsubscriptions</a></strong>;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:101
+#. (path_cgi)
+msgid "<strong>decide whether it is relevant to put a <a href=\"%1/help/admin#manage_shared\">shared document web space</a></strong> at the subscribers' disposal;"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:102
+msgid "<strong>answer questions from subscribers and potential subscribers about the list;</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:248 web_tt2/help_introduction.tt2:103
+msgid "etc."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:105
+msgid "A list can have several owners. However, the <strong>'Privileged' profile</strong> is reserved to the list's creator; other owners have a 'Normal' profile, which has fewer prerogatives."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:107
+msgid "Moderators"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:109
+#. (path_cgi)
+msgid "<strong>Moderators are appointed by the list owner</strong>. They are <strong>in charge of <a href=\"%1/help/admin#moderate\">controlling the relevancy of the messages</a></strong> sent to the list: after reading them, <strong>they choose to accept or to reject them </strong>. Moderation occurs before the message is actually sent to subscribers. Rejection of a message is possibly followed by a notice to the sender in order to explain the reason for that rejection."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:110
+msgid "A list can have <strong>one or several moderators</strong>; generally, the list owner is also a moderator."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:111
+msgid "This concerns only moderated lists."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:113
+msgid "Regulatory framework"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:114
+msgid "The use of a mailing list service means respecting a number of rules:"
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:116
+msgid "In most mailing list services, subscribers receive a '<a target=\"_blank\" title=\"Example of subscribers charter (French)\" href=\"http://listes.cru.fr/cnil/charte.abonne.html\">List subscribers charter</a>' on subscription. Then they are obliged to respect all the rules contained in that charter."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:117
+msgid "If available, list owners and moderators have to conform to the <a target=\"_blank\" title=\"Example of charter aimed at owners and moderators (French)\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner and moderator charter</a>."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:118
+msgid "The use of mailing lists naturally means respecting the rules of good practices as regards email (the \"Netiquette\")."
+msgstr ""
+
+#: web_tt2/help_introduction.tt2:120
+#. (path_cgi)
+msgid "To know more, refer to the section dedicated to <a href=\"%1/help/sendmsg#rulesuser\">good practices for subscribers</a> and to the section about <a href=\"%1/help/admin#rulesadmin\">good practices for owners and moderators</a>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:2
+msgid "Mailing lists - User Guide"
+msgstr ""
+
+#: web_tt2/help_user.tt2:4
+msgid "How the mailing list service works"
+msgstr ""
+
+#: web_tt2/help_user.tt2:5
+msgid "The mailing-list service is managed by a <strong>mailing-list software: Sympa</strong>. This software comes with a <strong>web mailing list environment</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:6
+msgid "To perform actions related to mailing lists</strong> (subscribe, change your options, etc.), you have two options:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:8
+msgid "<strong>log on to the web environment</strong>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:9
+#. (conf.email,conf.host)
+msgid "<strong>send commands by email</strong> to the Sympa mailing list manager at <strong>%1@%2</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:11
+msgid "<strong>To send a command to Sympa</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:13
+msgid "<strong>If you send a single command</strong>, type it into the subject line of your email and leave its body blank."
+msgstr ""
+
+#: web_tt2/help_user.tt2:14
+msgid "<strong>If you send several commands</strong>, leave the subject line of your email blank and type all the commands in the email body. <strong>Be careful</strong>: Sympa will not process your message unless you respect the following rules:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:16
+msgid "Write every command on a new line."
+msgstr ""
+
+#: web_tt2/help_user.tt2:17
+msgid "Send your message in plain text, not in <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> (no formatting)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:18
+msgid "Your message can not contain anything else than Sympa commands (no signature block)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:22
+#. (path_cgi)
+msgid "A description of all the commands you can send to Sympa is available at <a href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:24
+msgid "Subscribing to mailing lists"
+msgstr ""
+
+#: web_tt2/help_user.tt2:25
+msgid "Subscribing to a mailing list is very simple:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:27
+msgid "Choose the address</strong> with which you want to subscribe to the list."
+msgstr ""
+
+#: web_tt2/help_user.tt2:28
+msgid "You should choose an address you can check frequently and which offers a large storage capacity for your email: some lists distribute many messages, which sometimes contain large attachments."
+msgstr ""
+
+#: web_tt2/help_user.tt2:29
+msgid "Of course you can subscribe to the same list with several email addresses. Then you will need to redo the whole process with a different email address."
+msgstr ""
+
+#: web_tt2/help_user.tt2:30
+#. (conf.email,conf.host)
+msgid "Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list."
+msgstr ""
+
+#: web_tt2/help_user.tt2:31
+msgid "Sympa is not a person but a mailing list management robot. Thus it is useless to send it loving words! ;-)"
+msgstr ""
+
+#: web_tt2/help_user.tt2:32
+msgid "In the subject line of your message, type in: <strong>subscribe nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name of the list you want to subscribe to and indicate your own first name and name)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:166 web_tt2/help_user.tt2:33
+msgid "<strong>Leave the message body blank</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:167 web_tt2/help_user.tt2:34
+msgid "To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href=\"#howitworks\">How the mailing list service works</a> section."
+msgstr ""
+
+#: web_tt2/help_user.tt2:37
+#. (conf.host)
+msgid "<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list..."
+msgstr ""
+
+#: web_tt2/help_user.tt2:38
+msgid "Note: you will sometimes be asked to confirm your subscription request before it can be processed. If so, please conform to the instructions contained in the message you receive."
+msgstr ""
+
+#: web_tt2/help_user.tt2:39
+msgid "According to the type of list (list with subscription subject to conditions or not) and to the availability of the list owner, <strong>you may not receive the notice immediately</strong>. It is useless to send several requests."
+msgstr ""
+
+#: web_tt2/help_user.tt2:40
+msgid "<strong>If your request is accepted, the message you receive confirms your subscription to the list. This message</strong> (the list Charter) <strong>contains several pieces of essential information:</strong>"
+msgstr ""
+
+#: web_tt2/help_user.tt2:42
+msgid "your <strong>list password</strong>. This password is the same for all the lists you subscribed to with a single email address. You can <a href=\"#global_pref\" title=\"How to change your password\">change it online</a> after logging on to the mailing list environment;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:43
+msgid "<strong>detailed information about the list</strong>: its purpose, the Internet address at which the message archive is available, etc."
+msgstr ""
+
+#: web_tt2/help_user.tt2:44
+msgid "the <strong>rules applying to the list and its members</strong>: allowed and forbidden topics, netiquette, legal information, privacy policy, etc."
+msgstr ""
+
+#: web_tt2/help_user.tt2:46
+msgid "<strong>You should keep your subscription notice</strong>: you may need it later to remember your password or to send a precise command to Sympa (example: signoff command). More generally, <strong>we advise you to keep all your subscription notices to mailing lists</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:47
+msgid "<strong>You can also subscribe to a list through the mailing list web interface</strong>. To do that, do as follows:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:11 web_tt2/help_arc.tt2:76 web_tt2/help_arc.tt2:92 web_tt2/help_shared.tt2:8 web_tt2/help_user.tt2:126 web_tt2/help_user.tt2:171 web_tt2/help_user.tt2:49 web_tt2/help_user.tt2:99
+#. (path_cgi)
+msgid "Go to the list environment <strong><a href=\"%1/home\">homepage</a></strong> and <strong>log on</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:50
+msgid "<strong>Go to the information page of the list</strong> you want to subscribe to."
+msgstr ""
+
+#: web_tt2/help_user.tt2:51
+msgid "In the left menu, <strong>click on the 'Subscribe'</strong> link."
+msgstr ""
+
+#: web_tt2/help_user.tt2:54
+msgid "Logging on to the mailing list environment"
+msgstr ""
+
+#: web_tt2/help_user.tt2:55
+msgid "To log on to the mailing list environment, use the authentication form displayed on top of the left column of the web interface. When you are logged on, your email address and user profile (subscriber, moderator or owner) are displayed there."
+msgstr ""
+
+#: web_tt2/help_user.tt2:57
+msgid "The authentication process varies according to your personal situation:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:59
+msgid "<strong>If the organization offering the mailing list service uses single sign-on technology</strong> (unique account and unique authentication, for example through the <acronym lang=\"en\" xml:lang=\"en\" title=\"Central Authentication Service\">CAS</acronym> system), you will preferably log on with your unique account. To do that, click on the 'Go' button next to the text '<strong>Authentication [name of the system used]</strong>'. Then, type in your login and password to log on to the authentication server."
+msgstr ""
+
+#: web_tt2/help_user.tt2:60
+msgid "If you have already logged on to another service using the unique authentication system, your authentication is automatic. Refresh page if necessary."
+msgstr ""
+
+#: web_tt2/help_user.tt2:61
+msgid "<strong>If the unique authentication process does not apply to you but you are already subscribed to lists</strong>, then you have been granted a list password (displayed in the list Charter you got when you susbcribed to the list). In this case, log on through the classic method: enter the <strong>email address with which you subscribed to the list</strong> as a login and your <strong>list password</strong> in the 'Password' field."
+msgstr ""
+
+#: web_tt2/help_user.tt2:62
+msgid "If you do not remember your list password, click on 'Lost password ?'. Then you will need to enter your email address and your password will be sent at that address."
+msgstr ""
+
+#: web_tt2/help_user.tt2:64
+msgid "<strong>If the unique authentication process does not apply to you and you do no have a list password yet</strong>, click on '<strong>First login ?</strong>' and type in your email address. Your new password will be sent at that address. Then you will be able to log on by typing your <strong>email address</strong> as a login and your <strong>list password</strong> in the 'Password' field."
+msgstr ""
+
+#: web_tt2/help_user.tt2:67
+msgid "Remember: the list password is a special password you will only use for the mailing list service."
+msgstr ""
+
+#: web_tt2/help_user.tt2:69
+msgid "Checking your subscriptions"
+msgstr ""
+
+#: web_tt2/help_user.tt2:70
+msgid "To see all the lists you subscribed to, you need to <a href=\"#sympa_auth\">log on</a> first. Then a list of all your lists, including a short description for each of them, will be displayed in the 'Your lists' form on the left column."
+msgstr ""
+
+#: web_tt2/help_user.tt2:72
+msgid "<strong>To look at a list information page, click on its name</strong>. The information page includes a description of the list (object, rules applying when sending a message, etc.), which length varies according to the list."
+msgstr ""
+
+#: web_tt2/help_user.tt2:73
+msgid "Form this information page, you can:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:75
+msgid "change your <a href=\"#options\">subscriber options</a>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:76
+#. (path_cgi)
+msgid "read the <a href=\"%1/help/arc\">list archive</a>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:77
+#. (path_cgi)
+msgid "<a href=\"%1/help/arc#arcsearch\">search in the message archive</a>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:78
+#. (path_cgi)
+msgid "<a href=\"%1/help/sendmsg\">send new messages</a>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:79
+#. (path_cgi)
+msgid "<a href=\"%1/help/shared#shared_read\">download documents</a> from the shared document web space;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:81
+msgid "<a href=\"#subscribers\">review members</a> of the list (if available);"
+msgstr ""
+
+#: web_tt2/help_user.tt2:82
+msgid "<a href=\"#unsubscribe\">unsubscribe</a> from the list."
+msgstr ""
+
+#: web_tt2/help_user.tt2:84
+msgid "The <strong>number of people subscribed</strong> to the list is permanently displayed in the <strong>left menu</strong>. <strong>To review the list members, click on the 'Review members' link</strong> in the left menu (if the list-owner decided to deny access to the members list, this link is not available). The subscribers list displays and shows the <strong>email address</strong> and <strong>name</strong> of each of the subscribers (the indication of the name depends on the subscription method used by the subscribers)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:85
+msgid "By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers per page. You may also wish to sort subscribers according to their email address, domain or name by clicking on the corresponding column header."
+msgstr ""
+
+#: web_tt2/help_user.tt2:86
+#. (conf.host)
+msgid "<strong>The names of the list owners and moderators are displayed in the left menu</strong>. You should never write directly to a list owner or moderator. If you want to ask a question or make a comment, you should use the following address: <strong>nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list in question)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:87
+msgid "To know <strong>when you subscribed to the list</strong> and <strong>when you last updated your subscriber options</strong>, <strong>click on the 'Subscriber options' link</strong> in the left menu."
+msgstr ""
+
+#: web_tt2/help_user.tt2:89
+msgid "Managing your preferences"
+msgstr ""
+
+#: web_tt2/help_user.tt2:90
+msgid "To allow you to <strong>use lists more easily</strong>, <strong>you can define a number of personal preferences</strong>. There are two types of preferences you can change:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:92
+msgid "your <strong>subscriber options</strong>, which can vary according to the list;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:93
+msgid "your <strong>general preferences</strong>, which apply to the entire Sympa mailing list environment."
+msgstr ""
+
+#: web_tt2/help_user.tt2:96
+msgid "Changing your subscriber options"
+msgstr ""
+
+#: web_tt2/help_user.tt2:97
+msgid "<strong>Your subscriber options can vary from a list to another</strong>. To change them, do as follows:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:100
+msgid "<strong>Go to the information page of the list</strong> for which you want to change your subscriber options."
+msgstr ""
+
+#: web_tt2/help_user.tt2:101
+msgid "In the left menu, <strong>click on the 'Subscriber options' link</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:102
+msgid "strong>Choose a message delivery mode</strong> (those options are mutually exclusive, thus you can not select several of them):"
+msgstr ""
+
+#: web_tt2/help_user.tt2:104
+msgid "<strong>digest MIME format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using multipart/digest <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extension\">MIME</acronym> format. The digest frequency is set up by the list owner."
+msgstr ""
+
+#: web_tt2/help_user.tt2:105
+msgid "<strong>digest plain text format</strong>: instead of receiving the list messages in a normal manner, you will get a digest of them on a regular basis. This digest compiles a group of messages from the list, using plain text format. The digest frequency is set up by the list owner."
+msgstr ""
+
+#: web_tt2/help_user.tt2:106
+msgid "<strong>summary mode</strong>: instead of receiving the list messages in a normal manner, you will get a list of them on a regular basis. To read the messages, you will need to browse the online list archive."
+msgstr ""
+
+#: web_tt2/help_user.tt2:107
+msgid "<strong>notice mode</strong>: with this mode, you will receive all the messages with a blank body: this way you are informed of every message sent to the list real time, without risk of flooding your inbox."
+msgstr ""
+
+#: web_tt2/help_user.tt2:108
+msgid "<strong>no mail (useful for vacations)</strong>: this mode makes it possible not to receive the messages of the list. It is especially useful when you have no access to your email for a long time and want to remain subscribed to the list nevertheless."
+msgstr ""
+
+#: web_tt2/help_user.tt2:109
+msgid "<strong>text only mode</strong>: this mode allows you to receive only the text version (text/plain) of messages sent in both formats (plain text and <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym>)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:110
+msgid "<strong>HTML only mode</strong>: this mode allows you to receive only the <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> version (text/html) of messages sent in both formats."
+msgstr ""
+
+#: web_tt2/help_user.tt2:111
+msgid "<strong>urlize mode</strong>: this mode allows you not to receive attached documents. However these documents are available in the list archive and you can access them through a <acronym title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
+msgstr ""
+
+#: web_tt2/help_user.tt2:112
+msgid "<strong>you do not receive your own posts</strong>: this mode allows you not to receive a copy of your own messages."
+msgstr ""
+
+#: web_tt2/help_user.tt2:113
+msgid "<strong>standard (direct reception)</strong>: this mode is the default delivery mode; it cancels any other delivery mode."
+msgstr ""
+
+#: web_tt2/help_user.tt2:115
+msgid "<strong>Choose a visibility option</strong>:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:117
+msgid "<strong>listed in the list review page</strong>: your name and email address will be displayed in the members list (if the list owner allowed subscribers to review the list members)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:118
+msgid "<strong>concealed</strong>: your name and email address will not be displayed in the members list. However you email address will be visible in the list archive if you send messages."
+msgstr ""
+
+#: web_tt2/help_user.tt2:120
+msgid "<strong>Click on the 'Update' button</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:123
+msgid "Changing your general preferences"
+msgstr ""
+
+#: web_tt2/help_user.tt2:124
+msgid "The general preferences apply to all your subscriptions as well as to the way your Sympa mailing list web interface displays. To change your preferences, do as follows:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:127
+msgid "In the form displayed on top of the left column, <strong>click on the 'Your preferences' link</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:128
+msgid "<strong>Change your preferences</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:129
+msgid "<strong>Click on 'Submit' for every option</strong> you change."
+msgstr ""
+
+#: web_tt2/help_user.tt2:131
+msgid "You can change:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:133
+msgid "your <strong>name</strong>; if you subscribe to a list from the mailing list server web interface, the 'Name' field will automatically be filled in in the members list;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:134
+msgid "the <strong>language in which the Sympa web interface is displayed</strong> (you can change language on every page of the web interface; your choice will remain even though you change the interface language on another page than the 'Preferences' page;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:135
+msgid "the <strong>lifetime of the cookie placed on your computer by Sympa</strong> ('Connection expiration period'). By default, the session expires when you close your browser; if you use the mailing list service a lot, we advise you to choose a longer duration;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:136
+msgid "A cookie is a small file a web server stores on your hard disk, most generally temporarily, in order to identify you as a user of its service. It contains a few pieces of personal information about you: name, email address, latest logon time, etc."
+msgstr ""
+
+#: web_tt2/help_user.tt2:137
+msgid "the <strong>email address with which you subscribed</strong> to the lists (if you subscribed with several email addresses, the address to be replaced will be the one you logged on with);"
+msgstr ""
+
+#: web_tt2/help_user.tt2:138
+msgid "Be careful: this will change your subscriptions to all your lists. If you want to change address for a single mailing list, you had better unsubscribe from that list and subscribe again with the right email address."
+msgstr ""
+
+#: web_tt2/help_user.tt2:139
+msgid "your <strong>list password</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:141
+msgid "The '<strong>Your other email addresses</strong>' section acts like an email address change."
+msgstr ""
+
+#: web_tt2/help_user.tt2:143
+msgid "Searching for a mailing list"
+msgstr ""
+
+#: web_tt2/help_user.tt2:144
+msgid "You may need to search for a mailing list. To do that, you have three options:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:146
+#. (path_cgi)
+msgid "<strong>browse the different sections</strong> displayed on the <a href=\"%1/home\">list environment homepage</a>;"
+msgstr ""
+
+#: web_tt2/help_user.tt2:147
+msgid "search for a list via the <strong>search box</strong>: the searched string will return all the lists whose name or description matches your search criteria (descriptions of the lists generally consist of a short sentence);"
+msgstr ""
+
+#: web_tt2/help_user.tt2:148
+#. (path_cgi)
+msgid "click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to <strong>display all available lists</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:150
+msgid "According to the domain to which your email address belongs (example: <em class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and to the location you log on from, you will not have access to the same lists. However you can subscribe to a list that does not display if you know its name. To do this, <a href=\"#subscribe\">use your email client</a>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:152
+msgid "Reading a list archive online"
+msgstr ""
+
+#: web_tt2/help_user.tt2:153
+#. (path_cgi)
+msgid "Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</strong></a>."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:2 web_tt2/help_user.tt2:155
+msgid "Sending a message"
+msgstr ""
+
+#: web_tt2/help_user.tt2:156
+#. (path_cgi)
+msgid "Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about sending messages</strong></a>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:2 web_tt2/help_user.tt2:158
+msgid "Using the shared document web space"
+msgstr ""
+
+#: web_tt2/help_user.tt2:159
+#. (path_cgi)
+msgid "Please refer to the <a href=\"%1/help/shared\"><strong>shared document web space documentation</strong></a>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:161
+msgid "Unsubscribing from lists"
+msgstr ""
+
+#: web_tt2/help_user.tt2:162
+msgid "To unsubscribe from a list, do as follows:"
+msgstr ""
+
+#: web_tt2/help_user.tt2:164
+#. (conf.email,conf.host)
+msgid "From the address with which you subscribed to the list, send a <strong>message to %1@%2</strong>."
+msgstr ""
+
+#: web_tt2/help_user.tt2:165
+msgid "In the subject line of your email, type in: <strong>unsubscribe nameofthelist</strong> (replace 'nameofthelist' by the name of the list you want to unsubscribe from)."
+msgstr ""
+
+#: web_tt2/help_user.tt2:169
+msgid "You can also unsubscribe through the mailing list web interface (you will need to repeat the operation for each list you want to unsubscribe from):"
+msgstr ""
+
+#: web_tt2/help_user.tt2:172
+msgid "<strong>Go to the information page of the list</strong> you want to unsubscribe from."
+msgstr ""
+
+#: web_tt2/help_user.tt2:173
+msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:2
+msgid "Mailing lists - Owner and moderator guide"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:4
+msgid "Introduction: who is in charge of managing mailing lists?"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:5
+msgid "Reminder: a mailing list service involves four types of roles:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:7
+msgid "listmaster;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:8
+msgid "owner;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:9
+msgid "moderator;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:10
+msgid "subscriber."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:12
+#. (path_cgi)
+msgid "Refer to the <a href=\"%1/help/introduction#roles\">description of each role</a> to know more about this."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:14
+msgid "Requesting the creation of a mailing list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:15
+msgid "The <strong>list creation request</strong> can be <strong>subject to conditions</strong>. Even though you meet those conditions, the <strong>list creation</strong> will nevertheless be <strong>subject to approval by the listmasters</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:16
+msgid "To request the creation of a mailing list, do as follows:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:18
+#. (path_cgi,conf.host)
+msgid "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> and <a href=\"%1/help/user#sympa_auth\"><strong>log on</strong></a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:19
+msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:20
+msgid "If this link does not display, it means that you do not have the privileges required to create a list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:21
+#. (conf.host)
+msgid "Give your list a <strong>name</strong> (only enter the name without the '@' and the domain name; example: <em class=\"example\">languages_spanish</em> and not <em class=\"example\">languages_spanish@%2</em>)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:22
+msgid "Do not use any spaces, accents or specials characters in list names: those characters might cause problems."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:23
+msgid "Choose an explicit yet short name: think of the subscribers who will have to type this name every time they will send a message to the list! If you manage a set of lists, you can prefix your lists' names with a common prefix; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:24
+msgid "Choose a <strong>list type</strong> among the predefined types (the predefined types are only examples of typical configurations that can be changed by the list owners after creation; it is even possible to configure the list beyond the options offered in the list administration module, by asking the listmasters)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:25
+msgid "Enter a <strong>subject</strong> for your list. This subject will display as a header for all the list pages, and will also be visible on list index pages (list of lists, list of your subscriptions, etc.) and in the browser title bar."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:27
+msgid "Choose a <strong>topic</strong> in the 'Topics' drop-menu."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:28
+msgid "If no topic suits your needs, you can request the creation of a new topic by asking the listmasters."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:29
+msgid "Enter a <strong>description</strong> for your list. This description will display on the list information page and in the 'Subscribers Charter' sent by email to each new subscriber, under the 'List subject' heading. This description may involve explanations about the following issues:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:31
+msgid "object of the list and targets;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:32
+msgid "topics discussed;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:33
+msgid "operation of the list (liabilities, status of the list, etc.);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:34
+msgid "rules applying;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:35
+msgid "description of the typical subscribers (their occupations, the projects they manage, their nationalities, etc.)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:37
+msgid "You can format your list description with <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags. Be careful: if your description is long, cut it with manual line breaks (ENTER key of your keyboard); otherwise, it might not be entirely visible in your browser window."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:39
+msgid "Click on the '<strong>Submit your creation request</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:42
+msgid "A message displays to inform you that your list creation request has been sent to the listmasters and that from now on, you can modify the list by clicking on the 'Admin' button. However, the message warns you that the list will be actually installed and made visible on the server only after approval by a listmaster."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:43
+msgid "After this, you will have to <strong>wait for the list creation to be approved of by one of the listmasters</strong>. Then you will receive a notice message entitled '<strong>Creation of the nameofthelist list</strong>', informing you that your list was actually created."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:44
+msgid "<strong>Last, subscribe to your list</strong>: creating a list or becoming its owner or moderator does not mean that you are automatically subscribed to it!"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:46
+msgid "Managing a list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:48
+msgid "To manage a list you own, do as follows:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:50
+#. (path_cgi)
+msgid "Go to the <strong>list environment homepage</strong> and <strong><a href=\"%1/help/user#sympa_auth\">log on</a></strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:51
+msgid "If you are subscribed to the list with several addresses, use the address with which you requested the list creation."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:52
+msgid "Go to the information page of the list</strong> you want to manage."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:53
+msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:56
+msgid "To browse the sections of the administration module, click on the links below the 'Admin' link, in the left menu."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:57
+msgid "Those different sections allow you to:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:59
+#. (path_cgi)
+msgid "<a href=\"%1/help/listconfig\">configure the list</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:60
+msgid "<a href=\"#customize\">customize files related to the list</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:61
+msgid "<a href=\"#manage_members\">manage subscribers</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:62
+msgid "<a href=\"#manage_archives\">manage the message archive of the list</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:63
+msgid "<a href=\"#manage_bounces\">manage bounces</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:64
+msgid "<a href=\"#manage_shared\">create, delete or restore the shared document web space</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:65
+msgid "<a href=\"#renamelist\">rename the list</a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:66
+msgid "<a href=\"#supprlist\">delete the list</a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:69
+msgid "The options available in the 'Moderate' submenu allow you to:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:71
+msgid "<a href=\"#moderate\">moderate messages</a> sent to the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:72
+#. (path_cgi)
+msgid "<a href=\"%1/help/shared\">moderate documents</a> available in the shared document web space;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:73
+msgid "<a href=\"#manage_members\">moderate pending subscriptions</a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:76 web_tt2/help_listconfig.tt2:2
+msgid "Configuring the list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:77
+#. (path_cgi)
+msgid "To learn how to configure the list, please refer to the <a href=\"%1/help/listconfig\"><strong>documentation about list configuration</strong></a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:79
+msgid "Customizing the list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:80
+msgid "From this page, you can <strong>edit a number of files relating to your list</strong>, among which:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:82
+msgid "typical messages sent to subscribers in particular occasions:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:84
+msgid "<strong>welcome message</strong>: this message is the notice sent to people who just subscribed. You should write a charter for your list and add it in this welcome message. You can create a structured <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</acronym> message (reserved to the <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</acronym> format experts);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:85
+msgid "<strong>unsubscribe message</strong>: this message is sent to people unsubscribing from the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:86
+msgid "<strong>deletion message</strong>: this message is sent to people you unsubscribe from the list (DEL command), especially because their address caused bounces;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:87
+msgid "<strong>remind message</strong>: this message is sent to subscribers as a personalized reminder when using the REMIND command. This command is essential to the good management of your list since many bounces are due to people whose current address is not their subscription address anymore, or even who forgot that they were subscribed to the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:88
+msgid "<strong>subscribing invitation message</strong>: this message is sent to people you invite to subscribe to the list using the INVITE command;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:89
+msgid "<strong>notice of message rejected by the moderator</strong>: this message is sent to the sender of a message rejected by the moderator;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:90
+msgid "<strong>notice of message rejected because of a virus</strong>: this message is sent to the sender of a message in which a virus was found."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:93
+msgid "miscellaneous files:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:95
+msgid "<strong>list description</strong>: the list description is sent by email in return to the INFO command. By default, it is also included in the welcome message (subscription notice). It is not the same as the list presentation page displayed on the mailing list web interface;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:96
+msgid "<strong>list homepage</strong>: this description is available on the information page of the list. It can be in <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> format. Even though you do not use this format, use <code>&lt;br /&gt;</code> tags to indicate line breaks;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:97
+msgid "<strong>message header</strong>: when available, it is added as a <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</acronym> attachment at the beginning of each message distributed to the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:98
+msgid "<strong>message footer</strong>: when available, it is added as a <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</acronym> attachment at the end of each message distributed to the list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:102
+msgid "By default, Sympa uses default files; in this case, the specific files corresponding to your list are empty. <strong>To edit a file, choose it from the drop-down list and click on the 'Edit' button</strong>. You will have the possibility to change the <strong>'From' field</strong> (sender), the <strong>'Subject' field</strong> (subject line) and the <strong>message body</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:103
+msgid "Be careful: the values between square brackets are variables. Do not change them, unless you really know what you are doing..."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:106
+msgid "Managing the shared document web space"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:107
+msgid "By default, lists have no shared document web space. Thus, you need to create it. To do that, go to the <strong>list administration module</strong> and click on the '<strong>Create shared</strong>' link."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:109
+#. (path_cgi)
+msgid "To allow subscribers to publish documents in the shared document web space, you need to <strong>change default rights</strong>: in the list administration module, click on '<strong>Edit list config</strong>' and then on '<strong>Privileges</strong>'. At the bottom of the page, there is a drop-down list entitled '<a href=\"%1/help/listconfig#docsrights\"><strong>Who can edit</strong></a>'; choose the '<strong>Restricted to subscribers (private)</strong>' option."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:110
+#. (path_cgi)
+msgid "Be careful: if you created folders before changing those rights, the folders will still be unwritable. If you want to make them writable, you will have to <a href=\"%1/help/shared#acces\">change access rights</a> for each folder."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:111
+#. (path_cgi)
+msgid "You might also want to <a href=\"%1/help/listconfig#docsrights\">set up <strong>quotas</strong></a> for the shared document web space on the 'Privileges' page of the 'Edit list config' section."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:113
+#. (path_cgi)
+msgid "To <strong>know everything about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), refer to the '<a href=\"%1/help/shared\">Using the shared document web space</a>' section of the User guide."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:114
+msgid "To <strong>deny access to the shared document web space</strong>, click on '<strong>Delete shared</strong>' in the 'Admin' submenu. Then you will still have the possibility to <strong>reopen it</strong> by clicking on '<strong>Restore shared</strong>'. Deleting and restoring the shared document web space has <strong>no impact on the documents it contains</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:116
+msgid "Managing subscribers"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:118
+msgid "This section lets you browse the <strong>list of all the list subscribers</strong>. For each subscriber, the following information is available:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:120
+msgid "<strong>email address</strong>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:121
+msgid "<strong>domain</strong> of the email address (<em class=\"example\">@cru.fr</em>, <em class=\"example\">@sympa.org</em>, <em class=\"example\">@fai.com</em>, etc.);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:122
+msgid "<strong>picture</strong> (if that feature was activated for the list);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:123
+msgid "<strong>name</strong> (according to the subscription method, it is not always displayed);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:124
+msgid "<a href=\"#deliverymode\"><strong>message delivery mode</strong></a>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:125
+msgid "<strong>data source</strong> indicating the origin in case the subscriber is included in the list and not directly subscribed;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:126
+msgid "<strong>date of subscription</strong> to the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:127
+msgid "<strong>latest update</strong> of the subscriber options."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:130
+msgid "By default, each page displays 25&#160;subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:131
+msgid "To <strong>search a subscriber</strong>, enter all or part of his/her email address or name in the input field and click on the '<strong>Search</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:132
+msgid "You can <strong>subscribe other people to the list</strong> from this page:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:134
+msgid "To add <strong>a single person</strong>, enter his/her email address in the input field and click on the '<strong>Add</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:135
+msgid "To add <strong>several persons</strong>, click on the '<strong>Multiple add</strong>' button. In the input field that displays, enter the email addresses and names of the people you want to subscribe to the list and click on '<strong>Add subscribers</strong>'."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:139
+msgid "If you want to subscribe people without letting them know through a notice, tick the 'Quiet' box. However, it is far better to warn people that you subscribe them!"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:140
+#. (conf.email,conf.host)
+msgid "Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class=\"example\">invite list_example john.doe(@)fai.com</em>)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:141
+msgid "To <strong>accept or reject the subscription requests to the list</strong>, click on '<strong>Pending subscriptions</strong>'. The list of all people who requested subscription to the list displays. To accept or reject a request, tick the box in front of a person's name and click on the button of your choice."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:142
+msgid "To <strong>send a subscription reminder to all subscribers</strong>, click on the '<strong>Remind all</strong>' button. The subscription reminder message contains:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:144
+msgid "the <strong>name of the list</strong> to which the subscriber is subscribed;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:145
+msgid "the <strong>email address</strong> with which the subscriber is subscribed;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:146
+msgid "the subscriber's <strong>list password</strong>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:147
+msgid "a <strong>link to the information page</strong> of the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:148
+msgid "a <strong>clickable address in order to allow subscribers to unsubscribe</strong> from the list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:150
+#. (path_cgi)
+msgid "You can also configure an automatic subscription reminder through the '<a href=\"%1/help/listconfig#other\">Miscellaneous</a>' page of the 'Edit list config' section."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:153
+msgid "To <strong>unsubscribe subscribers</strong> from this page, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:154
+msgid "If you do not want to notify the subscribers, tick the 'Quiet' box. However, this is not advisable, except in the case of bouncing subscribers."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:156 web_tt2/help_admin.tt2:178
+msgid "Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click!"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:158
+msgid "To <strong>change a subscriber's subscriber options</strong>, click on his/her email address."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:159
+msgid "From this page, you can <strong>change the name, email address and message delivery mode of the subscriber</strong>. You can also <strong>unsubscribe him/her</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:161
+msgid "If the subscriber is <a href=\"#manage_bounces\">bouncing</a>, another form displays under the 'Subscriber information' form:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:162
+msgid "The information displayed involves:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:164
+msgid "the type of error (in English);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:165
+msgid "the number or errors;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:166
+msgid "the period during which errors occurred."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:168
+#. (path_cgi)
+msgid "You can <strong>check the latest error</strong> or <strong>reset errors</strong>. If you reset errors, the subscriber's <a href=\"%1/help/listconfig#bouncers\">score</a> will be reset to zero."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:170
+msgid "To manage bouncing addresses more easily, go to the '<a href=\"#manage_bounces\">Bounces</a>' page of the list administration module."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:173
+msgid "Managing bounces"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:174
+msgid "When there is a <strong>problem with subscribers' email addresses</strong> (obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.), the percentage of bouncing addresses displays in the left menu under the text '<strong>Error rate</strong>'. To check the bouncing addresses, go to the '<strong>Bounces</strong>' page of the list administration module."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:175
+msgid "The Sympa software automatically manages bouncing subscribers: according to the number of errors and to the traffic on the list, bouncing subscribers are either notified, unsubscribed, or their score is reset to zero when their address stops bouncing."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:176
+msgid "To <strong>make addresses stop bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:177
+msgid "You can also <strong>unsubscribe subscribers whose addresses are still bouncing</strong>: too many bouncing addresses cause a considerable load on the mailing list server. To unsubscribe subscribers, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:180
+msgid "Moderating messages sent to the list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:181
+msgid "When a list is moderated, <strong>all messages have to be approved of by one of the moderators before being distributed to the list</strong>. After sending a message to a list, subscribers are automatically notified by email that their message will be moderated. As for moderators, they also receive a notice message from Sympa, which includes the message to moderate."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:183
+msgid "You can <strong>perform moderating tasks</strong> either <strong>by email</strong>, by answering the messages received from Sympa, or <strong>through the mailing list web interface</strong>. To do that, click on the '<strong>Message</strong>' link in the 'Moderate' submenu: you are brought to a page that displays all messages to be moderated (the most recent messages are on top of page). <strong>To read a message, click on its subject</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:185
+msgid "You have <strong>three options</strong>:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:187
+msgid "<strong>authorize the message distribution</strong> on the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:188
+msgid "<strong>reject the message</strong>;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:189
+msgid "<strong>reject the message and notify sender</strong>: when you reject a message, it is better to notify its sender..."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:190
+msgid "Be careful: rejecting a message and notifying its sender is only available through the mailing list web interface."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:192
+msgid "All moderators can decide to distribute a message or not. However, <strong>the first moderator to process the message will carry the day</strong>. You will be notified by Sympa if you try to process a message that has already been moderated. When there are several moderators, it is <strong>easier to moderate messages from the mailing list web interface</strong>: thus, you will be able to view all messages remaining to be moderated."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:193
+msgid "<strong>Whatever the date and time of moderation, the date and time of sending of the message do not change</strong>. Thus, if the distribution of the message is allowed with a lot of delay, it is possible to receive a message dated January 1st on December 31st!"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:194
+msgid "In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href=\"#customize\">customize the message he/she gets</a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:196
+#. (path_cgi)
+msgid "<strong>Reminder</strong>: you can <a href=\"%1/help/listconfig#description\">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:197
+#. (path_cgi)
+msgid "It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href=\"%1/help/arc#arcsearch\">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:200
+msgid "Managing the message archive"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:201
+msgid "The mailing list management robot Sympa can generate <strong>downloadable compressed archives (.ZIP format) of the messages sent to the list</strong>. To download those archives, <strong>select the months</strong> that interest you in the list and click on the '<strong>Download Zip file</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:202
+msgid "Tip: in the 'Archive selection' list, to select all months during which messages have been sent, click on the first month, hold down the SHIFT key and click on the last month of the list."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:203
+msgid "You will receive a file of the type '<strong>nameofthelist_archive.zip</strong>' containing <strong>folders named 'nameofthelist_year-month'</strong> (example: <em class=\"example\">list_example_2005-06</em>) for each month. Inside each folder, <strong>the file names are numbers</strong> representing their position in the chronology of the messages sent (example: the file named '1' contains the first message sent in the month). The message files have <strong>no extension</strong>; use the text editor of your choice (Notepad, WordPad, Vim, etc.) to open them. <strong>Each file represents an entire message (full header)</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:204
+msgid "From the 'Manage archive' page, you can also <strong>delete messages</strong> (deletion month by month and not message by message). To do that, <strong>select the months</strong> that interest you in the list and click on the '<strong>Delete selected months</strong>' button."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:205
+msgid "<strong>Be careful: this operation is irreversible!!! When you click on 'Delete selected months', keep in mind that you are not only deleting an archive file, but also the entire message archive of the selected month!!!</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:208
+msgid "Renaming the list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:209
+msgid "In the <strong>list administration module</strong>, click on '<strong>Rename list</strong>'. Enter the name of your choice and click on the 'Rename this list' button. A confirmation message displays; click on 'OK'."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:210
+msgid "If you change your mind, you will only have to redo the inverse operation in order to retrieve the former list name."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:211
+msgid "Be careful: when you rename a list, you have to let the listmasters know; otherwise, the change will not be effective</strong>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:212
+msgid "A few tips to name your lists:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:214
+msgid "<strong>Do not use any spaces, accents or specials characters</strong> in list names: those characters might cause problems."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:215
+msgid "Choose an <strong>explicit yet short name</strong>: think of the subscribers who will have to type this name every time they will send a message to the list!"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:216
+#. (conf.host)
+msgid "If you manage a set of lists, you can <strong>prefix your lists' names with a common prefix</strong>; thus they will be sorted together and will be easily recognizable (example: <em class=\"example\">xx-users@%1, xx-hotline@%1.fr</em>, etc.)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:220
+msgid "Deleting the list"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:221
+msgid "In the <strong>list administration module</strong>, click on '<strong>Remove list</strong>'. A confirmation message displays; click on 'OK'."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:222
+msgid "<strong>Be careful: if you delete the list, you will not be able to reopen it yourself!!! If you want to reopen the list, you will have to ask the listmasters.</strong>"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:224
+msgid "In real terms, what are the <strong>consequences</strong> of a list deletion?"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:226
+msgid "<strong>All subscribers are immediately unsubscribed</strong> automatically (including owners and moderators)."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:227
+msgid "<strong>The message archive is preserved</strong> but no one can access it anymore."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:228
+msgid "<strong>The documents published in the shared document web space are preserved</strong> but no one can access them anymore."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:229
+msgid "<strong>Only the listmasters have the power to reopen the list</strong>; if they do, the former list subscribers will automatically be subscribed again."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:231
+msgid "Be careful: due to a slight latency, the list pages remain accessible for a while if you know their addresses. Then they will become fully unavailable."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:233
+msgid "<strong>If you want the list and all the associated files to be deleted permanently</strong>, you will have to ask the listmasters."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:235 web_tt2/help_sendmsg.tt2:39
+msgid "Good practices"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:236
+msgid "In order to have dynamic lists, <strong>you must be deeply involved</strong> in their exchanges: if a list is neither controlled nor enlivened by its owners, it may result in a loss of quality in its messages and it might even end up vanishing..."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:237
+msgid "<strong>The use of email in general and for mailing lists is bound by a set of precise rules necessary to share pleasant exchanges: the \"Netiquette\"</strong>. As a list owner or moderator, it is your role to have subscribers respect it. You will find the general principles of the Netiquette, as well as many links on the <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/Netiquette\">page of the Wikipedia dedicated to the Netiquette</a>."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:238
+msgid "You should <strong>write a charter for your list</strong> to define all the rules that apply to its use:"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:240
+msgid "allowed, tolerated and forbidden topics;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:241
+msgid "writing rules (for example to specify the languages in which the subscribers are to post, to ban \"<acronym lang=\"en\" xml:lang=\"en\" title=\"Short Message Service\">SMS</acronym> language\", etc.);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:242
+msgid "rules applying when sending messages (frequency, attachments, etc.);"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:243
+msgid "liabilities of subscribers regarding the netiquette;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:244
+msgid "rights and responsibilities of the subscribers;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:245
+msgid "information about retention of the messages sent to the list;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:246
+msgid "legal information and privacy policy;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:247
+msgid "sanctions applying to those who would not respect the list charter;"
+msgstr ""
+
+#: web_tt2/help_admin.tt2:251
+msgid "In order to have all subscribers read the list charter, you should include it in the welcome message they get after subscribing. To do that, you need to <a href=\"#customize\">customize that message</a> through the 'Customize' page of the list administration module."
+msgstr ""
+
+#: web_tt2/help_admin.tt2:252
+msgid "When available, the <a target=\"_blank\" title=\"Example of charter aimed at owners and moderators (French)\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner and moderator charter</a> provides list owners and moderators with all the necessary information to carry out their roles. This Charter involves all the rights and responsibilities of owners and moderators."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:2
+msgid "Reading the list archive online"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:3
+msgid "To read the messages sent to a list</strong>, you have two options:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:5
+msgid "read the messages you receive <strong>in your email inbox</strong>;"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:6
+msgid "read the list archive <strong>online</strong> (through the mailing list web interface)."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:9
+msgid "<strong>To read the list archive online</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:12
+msgid "<strong>Go to the information page of the list</strong> of which you want to read the archive."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:13
+msgid "<strong>In the left menu, click on the 'Archive' link</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:14
+msgid "The message index of the current month displays."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:17
+msgid "Presentation of messages"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:18
+msgid "<strong>The page always displays the latest messages</strong>; thus if the list was idle during the current month, the messages of the latest active month are displayed."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:19
+msgid "When there are <strong>too many messages to be displayed on a single page, only the latest messages display by default</strong>. <strong>To change page, click on the arrow links around the current page's number</strong>:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:21
+msgid "The '<strong>&lt;</strong>' arrow displays older messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:22
+msgid "The '<strong>&gt;</strong>' arrow displays newer messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:23
+msgid "The '<strong>&lt;&lt;</strong>' link displays the oldest messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:24
+msgid "The '<strong>&gt;&gt;</strong>' link displays the latest messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:27
+msgid "Chronological and thread order"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:28
+msgid "<strong>By default, messages are displayed as threads</strong>: they are <strong>gathered according to their subject</strong>. This way, all answers to a given message are displayed just below the thread's first message and are indented for better readability."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:29
+msgid "Be careful: it is possible for two messages to have the same subject without being related; however, they will be displayed as if they belonged to the same thread."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:31
+msgid "<strong>To display messages chronologically, click on the 'Chronological' link</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:32
+msgid "Be careful: this display setting applies as long as you read the messages of a particular month, but if you change month, the default display setting 'Thread' will apply again."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:34
+msgid "Browsing through the messages"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:35
+msgid "<strong>To read a message, click on its subject</strong>. Then you can browse through the messages sent to the list by clicking on the arrows surrounding the words 'Chronological' and 'Thread':"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:37
+msgid "By clicking on the arrows surrounding the word 'Chronological', you read messages according to their chronological order."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:38
+msgid "By clicking on the arrows surrounding the word 'Thread', you read messages as a thread (i.e. gathered according to their subject)."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:39
+msgid "The left arrows let you browse through older messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:40
+msgid "The right arrows let you browse through newer messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:43
+msgid "Other messages belonging to the same thread as the message displayed are listed at its bottom</strong>. Click on their subject to read them."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:45
+msgid "To come back to the messages index, click on 'Chronological' or 'Thread'</strong> according to whether you want to display the index as a chronological history or as a thread. When there are too many messages to be displayed on a single page, <strong>you are brought to the index page displaying the message you just read</strong>, and not to the page displaying the latest messages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:47
+msgid "<strong>To look at another month's archive, click on the number of the month in the calendar</strong> at the top left of your screen. Every month during which  messages have been sent has a clickable number."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:48
+msgid "When you are on a message page, the calendar does not display."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:50
+msgid "Content of the messages: links and attachments"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:51
+msgid "Normally, <strong>every link contained in a message is clickable</strong>: just click on it and it will bring you to the linked resource."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:52
+msgid "Be careful: when you click on a link contained in a message, you leave the mailing list environment. If you do not want to do that, open the link in a new window or tab. Leaving the mailing list environment does not mean that you log out: your logout depends on the value you set for the 'Connection expiration period' option on the 'Your preferences' page."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:53
+msgid "<strong>When a file is attached to a message, it is displayed at the bottom of the message</strong>. To download it, you only have to <strong>click on its name</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:55
+msgid "Replying to a message from the mailing list web interface"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:56
+msgid "You can reply to a message directly from the mailing list web interface. To do this, <strong>click on the 'Reply' button on the top right of the message</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:57
+msgid "Be careful: after clicking on the 'Reply' button, you will not be able to change the recipient anymore; thus be careful when choosing between the message's sender and the list (i.e. all subscribers)!"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:59
+msgid "This method is <strong>not very flexible</strong>: from the mailing list web interface, you can not add or change some recipients, add an attachment or format the messages you send. <strong>Thus you might prefer to use an email client or a webmail</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:64
+msgid "Searching in a list archive"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:65
+msgid "If you want to find a particular message or if you look for information on a topic, <strong>you can perform a search in the list archive</strong>. To do that, you have <strong>two options</strong>:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:67
+msgid "perform a <strong>simple search</strong>;"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:68
+msgid "perform a <strong>search with the advanced search mode</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:72
+msgid "Performing a simple search"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:73
+msgid "Before starting to use the simple search mode, you should know that <a href=\"#advancedsearch\">advanced search</a> is much more flexible than simple search and will suit your needs better if you do not know precisely what you are looking for."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:74
+msgid "To perform a simple search, do as follows:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:77 web_tt2/help_arc.tt2:93
+msgid "<strong>Go to the information page of the list</strong> of your interest."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:78 web_tt2/help_arc.tt2:94
+msgid "It is impossible to perform a search in the archive of several lists at once. If you want to do it nevertheless, you will need to repeat the search for each list."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:79 web_tt2/help_arc.tt2:95
+msgid "In the left menu, <strong>click on the 'Archive' link</strong>. A message index page displays."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:80 web_tt2/help_arc.tt2:96
+msgid "You can perform searches from index pages and from message pages."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:81
+msgid "Go to the message index of the month</strong> in which you want to search. To do that, use the calendar displayed at the top left of your screen."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:82
+msgid "The search will process the messages of the month you chose and of the previous month during which messages have been sent. If you do not know when the message was sent, use the advanced search mode."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:83
+msgid "Enter your keywords</strong> in the search box in the upper right corner of your screen."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:84
+msgid "Be careful: the search engine will process your input as a sentence. If you want to search with several non contiguous words, use the advanced search mode."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:101 web_tt2/help_arc.tt2:85
+msgid "<strong>Click on the 'Search' button</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:103 web_tt2/help_arc.tt2:87
+msgid "The messages matching your search display. To know more, please refer to the <a href=\"#resultsearch\">'Search results'</a> section."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:89
+msgid "Performing a search with the advanced search mode"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:90
+msgid "As the advanced search mode is much more powerful and flexible than the simple search mode, it is much easier to use. To perform an advanced search, do as follows:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:97
+msgid "<strong>Click on the 'Advanced search' button</strong> below the search box."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:98
+msgid "<strong>Enter your keywords</strong> in the search box."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:99
+msgid "Choose your <strong>search options</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:100
+msgid "Tip: in the 'Extend search field' list, to select all months for which an archive is available, click on the first month, hold down the SHIFT key and click on the last month of the list. Although it is not indicated in the list, the current month will of course be processed as well."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:105
+msgid "Search results"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:106
+msgid "<strong>By default, the messages displayed on the results page are sorted from the latest to the oldest and each page displays up to ten results</strong>. With the advanced search mode, you can change these settings to match your preferences."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:107
+msgid "<strong>When there are many results, they are sometimes displayed on several pages</strong>. Do not get caught by this: if you can not find the message you are looking for, make sure that there are no other results page before giving up..."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:108
+msgid "When you specify a large search range, <strong>sometimes only a part of the messages is processed in a first step of search. In this case, a button labeled 'Continue search' displays below results</strong>. Click on it to search in the rest of messages. If messages are very numerous, sometimes you will need to perform this action several times."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:109
+msgid "For each message, the <strong>information displayed on the results page</strong> is the following:"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:111
+msgid "message subject;"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:112
+msgid "sending date;"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:113
+msgid "sender;"
+msgstr ""
+
+#: web_tt2/help_arc.tt2:114
+msgid "a few lines of context containing the searched keywords."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:116
+msgid "To read one of the messages matching your search, you only need to click on its subject</strong>."
+msgstr ""
+
+#: web_tt2/help_arc.tt2:117
+msgid "Be careful: with Internet Explorer, if you go and read a message from the results page, you will not be able to use the 'Back' button of your browser to come back to that page. We advise you to use a modern browser such as Firefox. If you can not use a browser other than Internet Explorer, we advise you to open messages in a new window (right click on links and choose 'Open in New Window') in order to preserve your search results."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:3
+msgid "Service messages description :"
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:6
+msgid ""
+"Welcome message: This message is sent to new subscribers. It can be\n"
+"a full MIME structured message (only for MIME gurus)."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:9
+msgid ""
+"Unsubscribe message : This message is sent when users leave the list\n"
+"using the UNSUBSCRIBE command."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:13
+msgid ""
+"Deletion message : This message is sent to users when you\n"
+"remove them from the list using the DEL command (unless you hit the\n"
+"Quiet button."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:18
+msgid ""
+"Remind message : This message is sent to each subscriber\n"
+"when using the command  REMIND. It's very useful to help people who are\n"
+"confused about their own subscription emails or people who are not able to\n"
+"unsubscribe themselves."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:21
+msgid ""
+"Subscribing invitation message : sent to a person if someone  \n"
+"uses the INVITE command to invite someone to subscribe."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:24
+msgid "Other files/pages description :"
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:28
+msgid ""
+"List homepage : HTML text to describe the list. It is printed on the\n"
+"right-hand side of the main list page. (default for this is the list description)"
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:31
+msgid ""
+"List description : This text is sent as an answer to the mail command\n"
+"INFO. It can also be included in the <em>Welcome message</em>."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:34
+msgid ""
+"Message header: If this file is not empty, it is added as a MIME\n"
+"attachment at the beginning of each message distributed to the list."
+msgstr ""
+
+#: web_tt2/help_editfile.tt2:37
+msgid ""
+"Message footer : same as <em>Message header,</em> but attached at the\n"
+"end of the message."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:9
+msgid "Privilege for adding (ADD command) a subscriber to the list"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:11
+msgid "To hide the sender's email address before distributing the message. It is replaced by the provided email address."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:13
+msgid "Privilege for reading mail archives and frequency of archiving"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:15
+msgid "The available_user_options parameter starts a paragraph to define available options for the subscribers of the list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:17
+msgid "Default value: reception mail,notice,digest,digestplain,summary,nomail"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:18
+msgid "<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated by commas. Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, sympa uses the mode specified in the default_user_options paragraph."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:22
+msgid "This paragraph defines bounce management parameters:"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:24
+msgid "Default value: bounce_warn_rate robot parameter"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:25
+msgid "The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:27
+msgid "Default value: bounce_halt_rate robot parameter"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:28
+msgid "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137 web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40 web_tt2/help_editlist.tt2:43 web_tt2/help_editlist.tt2:46 web_tt2/help_editlist.tt2:56 web_tt2/help_editlist.tt2:59 web_tt2/help_editlist.tt2:62
+msgid "Default value:"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:31
+msgid "Name of the task template used to remove old bounces. Useful for removing bounced subscriber email. If some messages are distributed without receiving new bounce messages, the subscriber's email seems to be OK again. Active if task_manager.pl is running."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:37
+msgid ""
+"The Bouncers_level1 paragraphs defines the automatic behavior of bounce management.<br />\n"
+"	Level 1 is the lower level of bouncing users"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:41 web_tt2/help_editlist.tt2:57
+msgid "Each bouncing user have a score (from 0 to 100)."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:41
+msgid "This parameter defines a lower limit for each category of bouncing users.For example, level 1 begins from 45 to level_2_treshold."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:44
+msgid "This parameter defines which task is automaticaly applied on level 1 bouncers."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:47
+msgid "When automatic task is executed on level 1 bouncers, a notification email can be send to listowner or listmaster."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:53
+msgid ""
+"The Bouncers_levelX paragraphs defines the automatic behavior of bounce management.<br />\n"
+"	Level 2 is the highest level of bouncing users"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:57
+msgid "This parameter defines the score range defining each category of bouncing users.For example, level 2 is for users with a score between 80 and 100."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:60
+msgid "This parameter defines which task is automaticaly applied on level 2 bouncers."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:63
+msgid "When automatic task is executed on level 2 bouncers, a notification email can be send to listowner or listmaster."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:67
+msgid "This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:69
+msgid "This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:71
+msgid "This parameter is optional. It specifies a string which is added to the subject of distributed messages (intended to help users who do not use automatic tools to sort incoming messages). This string will be surrounded by [] characters."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:73
+msgid "The default_user_options parameter starts a paragraph to define a default profile for the subscribers of the list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:75
+msgid "Mail reception mode."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:76
+msgid "Visibility of the subscriber with the REVIEW command."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:79
+msgid "This parameter specifies who is authorized to use the DEL command."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:81
+msgid "Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:83
+msgid "Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:84
+msgid "FYI: Defining editors will not make the list moderated ; you will have to set the \"send\" parameter."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:85
+msgid "FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:87
+msgid "This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:89
+msgid "List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:92
+msgid "The default value. Sympa will add the footer/header as a new MIME part."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:95
+msgid "Sympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:99
+msgid "Domain name of the list, default is the robot domain name set in the related robot.conf file or in file /etc/sympa.conf."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:101
+msgid "This parameter will be interpreted only if the user_data_source value is set to include. The file should contain one e-mail address per line (lines beginning with a \"#\" are ignored)."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:103
+msgid "This paragraph defines parameters for a two-level query returning a list of subscribers. Usually the first-level query returns a list of DNs and the second-level queries convert the DNs into e-mail addresses. This paragraph is used only if user_data_source is set to include. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:105
+msgid "This paragraph defines parameters for a query returning a list of subscribers. This paragraph is used only if user_data_source is set to include. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:107
+msgid "This parameter will be interpreted only if user_data_source is set to include. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_list listname line for each included list. Any list at all may be included; the user_data_source definition of the included list is irrelevant, and you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise to an infinite loop."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:109
+msgid "Sympa can contact another Sympa service using HTTPS to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise to an infinite loop resulting from cross includes."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:110
+msgid "For this operation, one Sympa site acts as a server while the other one acs as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controlled by the review scenario."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:112
+msgid "This parameter will be interpreted only if the user_data_source value is set to include, and is used to begin a paragraph defining the SQL query parameters. "
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:114
+msgid "This parameter defines the language used for the list. It is used to initialize a user's language preference; Sympa command reports are extracted from the associated message catalog."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:116
+msgid "Maximum size of a message in 8-bit bytes."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:118
+msgid "Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. "
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:120
+msgid "The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The z priority will freeze the message in the spool."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:122
+msgid "This parameter specifies who is authorized to use the remind command."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:124
+msgid "Same as welcome_return_path, but applied to remind messages."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:126
+msgid "This parameter states which model is used to create a remind task. A remind task regularly sends  subscribers a message which reminds them of their list subscriptions."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:128
+msgid "The reply_to_header parameter starts a paragraph defining what Sympa will place in the Reply-To: SMTP header field of the messages it distributes."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:131
+msgid "This parameter indicates whether the Reply-To: field should indicate the sender of the message (sender), the list itself (list), both list and sender (all) or an arbitrary e-mail address (defined by the other_email parameter)."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:132
+msgid "Note: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:134
+msgid "an_email_address"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:135
+msgid "If value was set to other_email, this parameter defines the e-mail address used."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:138
+msgid "The default is to respect (preserve) the existing Reply-To: SMTP header field in incoming messages. If set to forced, Reply-To: SMTP header field will be overwritten."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:142
+msgid "This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. "
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:144
+msgid "This parameter specifies who can send messages to the list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:146
+msgid "This paragraph defines read and edit access to the shared document repository."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:148
+msgid "There is a need to protect Sympa web sites against spambots which collect email addresses from public web sites. Various methods are available in Sympa and you can choose to use them with the spam_protection and web_archive_spam_protection parameters. Possible value are:"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:150
+msgid "the address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:151
+msgid "the @ char is replaced by the string \" AT \"."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:152
+msgid "no protection against spammer."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:155
+msgid "This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:157
+msgid "The subscribe parameter defines the rules for subscribing to the list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:159
+msgid "This parameter allows the classification of lists. You may define multiple topics as well as hierarchical ones. WWSympa's list of public lists uses this parameter."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:161
+msgid "Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600"
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:163
+msgid "This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:165
+msgid "Sympa allows the list owner to choose how Sympa loads list member data. Subscriber information can be stored in a text file or relational database, or included from various external sources (list, flat file, result of or query)."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:167
+msgid "This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:169
+msgid "Defines who can access the web archive for the list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:171
+msgid "Idem spam_protection is provided but it can be used only for web archives. Access requires a cookie, and users must submit a small form in order to receive a cookie before browsing the archives. This blocks all robot, even google and co."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:173
+msgid "If set to unique, the welcome message is sent using a unique return path in order to remove the subscriber immediately in the case of a bounce."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:175
+msgid "This paragraph defines a topic used to tag a message of a list, named by msg_topic.name (\"other\" is a reserved word), its title is msg_topic.title. The msg_topic.keywords entry is optional and allows automatic tagging. This should be a list of keywords, separated by ','."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:177
+msgid "This parameter indicates which part of the message is used to perform automatic tagging."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:179
+msgid "This parameter indicates if the tagging is optional or required for a list."
+msgstr ""
+
+#: web_tt2/help_editlist.tt2:181
+msgid "No Comment"
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:2
+msgid "Administrators Frequently Asked Questions"
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:4
+msgid "A subscriber does not receive the list messages"
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:5
+msgid "To find the cause of the problem, do as follows:"
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:7
+msgid "<strong>Check that the user is really subscribed to the list</strong> on the 'Manage subscribers' page."
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:8
+msgid "<strong>Check the subscriber's message delivery mode</strong>; the page about the subscriber is available by clicking on his/her email address from the members list. When the delivery mode is the 'Digest' mode, it is normal that the subscriber does not receive messages as soon as they are sent."
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:9
+msgid "<strong>Check that the subscriber's email address is not bouncing</strong> on the 'Bounces' page. A subscriber email address is considered to be bouncing when messages sent to it generate error logs (called \"bounces\"). These errors can be temporary (inbox full, mail server unavailable) or permanent (no email account for the user). In any case, the mailing list server automatically manages the deletion of addresses generating too many errors."
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:10
+msgid "<strong>Try and send a message yourself to the subscriber</strong> in order to check if he/she receives it."
+msgstr ""
+
+#: web_tt2/help_faqadmin.tt2:11
+msgid "As a last resort, <strong>contact the listmaster</strong>, who will check the mail server logs in order to find the cause of the problem."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:2
+msgid "Users Frequently Asked Questions"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:4
+msgid "You can not subscribe to a list"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:12 web_tt2/help_faquser.tt2:5
+msgid "This problem may be due to the following reasons:"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:7
+msgid "The list owners forgot to process your subscription request</strong>: to err is human, and your request might have been lost among many other messages! Resubmit your request before <a href=\"#contactadmin\">contacting list owners directly</a>."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:8
+msgid "Subscription to the list is reserved to a certain category of people</strong>. To know more, <a href=\"#contactadmin\">contact list owners</a>."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:11
+msgid "You can not log on to the mailing list web interface"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:14
+#. (path_cgi)
+msgid "<strong>You have no password</strong>. To be given a password, follow the <a href=\"%1/sendpasswd\">First login?</a> link from the homepage. You will receive your new password by email."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:15
+#. (path_cgi)
+msgid "<strong>You entered an incorrect password</strong>. If you forgot your password, you can receive a reminder of it by email. To do that, follow the <a href=\"%1/remindpasswd\">Lost password?</a> link from the homepage."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:17
+msgid "<strong>You are not using the correct username</strong> (the email address with which you are subscribed to the list)."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:19
+msgid "In order to avoid any mistake when typing your password, you can type it into another application (such as your email client) and copy and paste it into your web browser."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:21
+msgid "You do not receive (all) messages sent to a list"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:22 web_tt2/help_faquser.tt2:45 web_tt2/help_faquser.tt2:63
+msgid "This problem can have multiple reasons:"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:24
+msgid "You have never been subscribed to the list"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:26
+msgid "Maybe you made a mistake in your email address when you tried to subscribe."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:27
+msgid "Maybe you are subscribed with an email address other than the one you are checking."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:28
+msgid "Maybe your subscription request was rejected by the list owners."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:30
+#. (path_cgi)
+msgid "In any case, try and <a href=\"%1/help/user#subscribe\">subscribe</a> again."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:31
+msgid "You are not subscribed to the list anymore"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:33
+#. (path_cgi)
+msgid "If your address has been bouncing for a while, you might have been automatically unsubscribed by the system (or even by the list owners). Try and <a href=\"%1/help/user#subscribe\">subscribe again</a> after ensuring that your email address will not be in trouble again."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:34
+msgid "If you have not respected the different rules applying to the mailing list, the list owners might have \"banned\" you..."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:35
+#. (path_cgi)
+msgid "You might also have been arbitrarily unsubscribed by an ill-intentioned person, in case the list is not configured to send a confirmation request for any subscription and unsubscription request... In that case, try and <a href=\"%1/help/user#subscribe\">subscribe</a> again."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:37
+#. (path_cgi)
+msgid "<strong>Your <a href=\"%1/help/user#deliverymode\">delivery mode</a> does not allow you to receive messages</strong>: for example, it is the case with the 'Nomail' delivery mode."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:38
+msgid "<strong>Your inbox is full</strong>. Be careful: when your inbox is not completely full, you receive only small messages, which makes it difficult to understand what actually is the problem... Furthermore, if your email address causes trouble on a regular basis, you might be unsubscribed by the list owners or by the system. Thus, you should clean your inbox frequently."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:39
+#. (path_cgi)
+msgid "<strong>Your inbox is subject to some restrictions</strong>: it does not allow you to receive messages with attachments, bans some types of attachments or limits the maximum size of incoming messages; in that case, we advise you to choose the <a href=\"%1/help/user#deliverymode\">Urlize delivery mode</a>."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:44
+msgid "You can not send messages to a list"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:47
+msgid "<strong>You have <a href=\"#notsubscribedyet\">never been subscribed</a></strong> to the list."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:48
+msgid "<strong>You are <a href=\"#notsubscribedanymore\">not subscribed to the list anymore</a></strong>."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:49 web_tt2/help_faquser.tt2:65
+msgid "<strong>You are using another address</strong> than the one with which you are subscribed to the list."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:50
+msgid "<strong>If the list is a moderated list, the distribution of the message depends on the moderators' availability</strong>: they can not monitor the list night and day! Thus the distribution of your message might be a bit delayed."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:51
+#. (conf.host)
+msgid "<strong>If the list is a moderated list, your message might have been rejected by a moderator</strong>. In case you received no notice, you can possibly send a message to nameofthelist-request@%1 to ask for an explanation."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:52
+msgid "<strong>The message you are trying to send does not fulfill the conditions to be distributed</strong> on the list: it may be too large, contain a forbidden type of attachment or even contain any type of attachment (in case attachments are forbidden on the list)."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:53
+msgid "<strong>The problem may also come from your email account</strong>:"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:55
+msgid "The mail server is temporarily unavailable."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:56
+msgid "Your inbox is full and it prevents you from sending new messages."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:57
+msgid "Your inbox is subject to some restrictions: it does not allow you to send messages with attachments, bans some types of attachments or limits the maximum size of outgoing messages."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:59
+msgid "Last, <strong>you might have made a mistake in the list address</strong> when sending your message!"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:62
+msgid "You can not unsubscribe from a list"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:66
+msgid "<strong>You are subscribed through a dynamic data source</strong> (examples: databases, <acronym lang=\"en\" xml:lang=\"en\" title=\"Lightweight Directory Access Protocol\">LDAP</acronym> directories, etc.) which does not allow you to unsubscribe. <a href=\"#contactadmin\">Contact the list owners</a> to know more about this."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:67
+msgid "<strong>The list owners forgot to process your unsubscription request</strong>: to err is human, and your request might have been lost among many other messages! Resubmit your request before <a href=\"#contactadmin\">contacting list owners directly</a>."
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:70
+msgid "You want to contact list owners"
+msgstr ""
+
+#: web_tt2/help_faquser.tt2:71
+#. (conf.host)
+msgid "The list owners and moderators' names are mentioned in the left menu. However, you should never write directly to a list owner or moderator: first, the person to whom you are writing might be absent, and furthermore, it is better to inform all owners and moderators of your request. When you have a question or remark, <strong>the address you should write to is: nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of the list)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:3
+msgid "As the list configuration is quite complex, it is divided in several parts with a separate page for each part:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:5
+msgid "<a href=\"#description\">List definition</a>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:6
+msgid "<a href=\"#sending\">Sending/receiving</a>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:7
+msgid "<a href=\"#command\">Privileges</a>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:8
+msgid "<a href=\"#archives\">Archive</a>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:9
+msgid "<a href=\"#bounces\">Bounces</a>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:10
+msgid "<a href=\"#other\">Miscellaneous</a>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:12
+msgid "We advise you to <strong>make configuration changes very progressively</strong>: thus, if the result does not match your expectations, it will be easier to backtrack."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:13
+msgid "The list administration module offers you <strong>many options to configure your list</strong>. However, these options might not match your own needs perfectly. To cure this problem, you can <strong>ask the listmasters to create new options</strong> (within the limits of what they can do, naturally...): access and/or rights limited to some categories of people according to the place they log on from, the domain of their email address, the user group they belong to, etc."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:15
+msgid "List definition"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:16
+msgid "In the '<strong>Subject of the list</strong>' area, you can change the subject you had chosen when creating the list. This subject displays as a header for all the list pages, and is also be visible on list index pages (list of lists, list of your subscriptions, etc.) and in the browser title bar."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:17
+msgid "You can also change the '<strong>Visibility of the list</strong>'. The options available are the following:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:19
+msgid "conceal except for subscribers (conceal) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:20
+msgid "intranet access (intranet);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:21
+msgid "no conceal (noconceal);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:22
+msgid "subscribers (private);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:23
+msgid "conceal even for subscribers (secret);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:24
+msgid "semipublic (semipublic)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:26
+msgid "If you want to limit the list visibility according to other criteria, you should ask the listmasters: they may be able to create a new option matching your needs (example: list visible only by members of a user group, of an Internet domain, etc.)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:27
+msgid "In the 'Owners' and 'Moderators' areas, you can <strong>add owners and moderators</strong> to the list or <strong>change their personal information</strong>:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:29
+msgid "For each owner/moderator, you have to indicate an <strong>email address</strong> and a <strong>name</strong>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:30
+msgid "You can also add the information of your choice in the '<strong>Private information</strong>' input box (phone number, function, etc.); this information will only be accessible by listmasters and list owners with a 'Privileged' profile."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:31
+msgid "You can change the <strong>message delivery mode</strong> (the only options available on this page are 'mail' and 'nomail')."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:32
+msgid "The 'Profile' parameter can not be changed: the <strong>'Privileged' profile</strong> is reserved to the list creator (other owners have a 'Normal' profile)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:34
+msgid "Be careful: becoming owner or moderator of a list does not mean that you are automatically subscribed to that list. Thus owners and moderators have to subscribe themselves to the list."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:35
+msgid "To <strong>delete owners/moderators</strong>, clear the content of the input boxes relating to the person you want to delete and click on the 'Update' button."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:36
+msgid "You can also change the <strong>list topic</strong> as well as its <strong>language</strong>. If you change the list language, all predefined messages will be sent in the chosen language (be careful: subject to the availability of a translation!)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:37
+msgid "You can not change the <strong>Internet domain</strong> of the list: only the listmasters can change this parameter."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:126 web_tt2/help_listconfig.tt2:178 web_tt2/help_listconfig.tt2:38 web_tt2/help_listconfig.tt2:54
+msgid "<strong>BE CAREFUL: do not forget to click on the 'Update' button</strong> on bottom of page to save all your changes."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:40
+msgid "Sending/receiving"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:41
+msgid "From this page, you can <strong>decide who will be allowed to post messages on the list</strong>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:42
+msgid "In the '<strong>Digest frequency</strong>' area, you can define how frequently compiled messages are sent (Digest and Summary delivery modes): in the list, select all the <strong>days</strong> for which you want digests to be sent. Then choose a <strong>delivery time</strong> for digests (please avoid choosing a time between 11 p.m. and midnight)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:43
+msgid "In the '<strong>Available subscription options</strong>' list, select all the subscriber options you want to offer to your subscribers. By default, all options are selected."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:44
+msgid "The '<strong>Reply address</strong>' area allows you to define the default recipients of any reply to a message sent to the list:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:46
+msgid "With the '<strong>All</strong>' value, the reply is sent to both the <strong>message sender</strong> AND the <strong>list</strong>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:47
+msgid "With the '<strong>List</strong>' value, the reply is sent to the <strong>list</strong>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:48
+msgid "Be careful: use this option carefully! Experience shows that subscribers do not always check the address to which they send their reply. Thus, they might send private messages to the whole list when trying to reply to a single person..."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:49
+msgid "With the '<strong>Other_email</strong>' value, the reply is sent to a <strong>predefined address</strong>. If you choose this option, you will have to <strong>indicate an email address in the 'Other email address' input box</strong>."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:50
+msgid "With the '<strong>Sender</strong>' value, the reply is sent to the <strong>message sender</strong>. This is the option you should probably choose."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:52
+msgid "The '<strong>Respect of existing header field</strong>' drop-down list allows you to choose how the 'Reply-To' SMTP header field will be processed in incoming messages. The '<strong>Respect</strong>' option preserves that field while the '<strong>Forced</strong>' option allows it to be overwritten."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:53
+msgid "Last, the '<strong>Subject tagging</strong>' option lets you choose the <strong>text included before the subject of all messages</strong> sent to the list: this allows subscribers to sort their messages easily, to use message filters on them in order to process messages automatically, etc. By default, this text consists of the <strong>list name surrounded by square brackets</strong> (the square brackets are automatically added by the system, thus it is useless that you add them yourself)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:56
+msgid "Privileges"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:57
+msgid "From this page, you can decide:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:59
+msgid "<strong>who can view list information</strong>. The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:61
+msgid "for anyone (open) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:62
+msgid "restricted to subscribers (private)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:64
+msgid "who can subscribe to the list</strong>. The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:66
+msgid "subscription request confirmed (auth);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:67
+msgid "need authentication (notification is sent to owners) (auth_notify);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:68
+msgid "requires authentication then owner approval (auth_owner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:69
+msgid "subscribe is impossible (closed);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:132 web_tt2/help_listconfig.tt2:70
+msgid "restricted to local domain users (intranet);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:71
+msgid "local domain users or owner approval (intranetorowner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:72
+msgid "for anyone without authentication (open) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:73
+msgid "anyone, notification is sent to list owner (open_notify);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:74
+msgid "anyone, no welcome message (open_quiet);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:75
+msgid "owner approval (owner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:76
+msgid "requires S/MIME signed (smime);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:77
+msgid "requires S/MIME signed or owner approval (smimeorowner)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:78
+msgid "You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the future subscriber by email before subscribing him/her to the list. This avoids subscriptions with invalid email addresses and guarantees that no one can be subscribed to the list without knowing it."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:79
+msgid "<strong>who can unsubscribe from the list</strong>. The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:81
+msgid "need authentication (auth);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:82
+msgid "authentication requested, notification sent to owner (auth_notify);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:83
+msgid "impossible (closed);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:84
+msgid "open (open) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:85
+msgid "open with mail confirmation, owner is notified (open_notify);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:86
+msgid "owner approval (owner)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:87
+msgid "You should always choose an option involving the 'auth' parameter: this way, the system requires confirmation from the subscriber by email before unsubscribing him/her from the list. This prevents ill-intentioned people from unsubscribing others without letting them know."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:89
+msgid "who can invite people to subscribe to the list</strong>. The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:131 web_tt2/help_listconfig.tt2:91
+msgid "closed (closed);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:92
+msgid "list owner, no authentication (owner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:113 web_tt2/help_listconfig.tt2:93
+msgid "restricted to subscribers (private) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:137 web_tt2/help_listconfig.tt2:94
+msgid "public (public)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:96
+msgid "<strong>who can review subscribers</strong>. The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:98
+msgid "no one can review (closed);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:111 web_tt2/help_listconfig.tt2:99
+msgid "restricted to subscribers or local domain users (intranet);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:100
+msgid "listmaster only (listmaster);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:101
+msgid "only owner (and listmaster) (owner) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:102 web_tt2/help_listconfig.tt2:120
+msgid "restricted to subscribers (private);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:103
+msgid "anyone can do it! (public)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:104
+msgid "You should in no case make the members list accessible to anyone. The 'Restricted to subscribers' option may be interesting in order to allow subscribers to communicate with each others without posting messages on the list. However, this is not appropriate in the case of an announcement list involving subscribers having no particular relationship."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:107
+msgid "From this page, you can also <strong>define the access rights applying to the shared document web space</strong> ('Shared documents' section of the list, accessible through a link in the left menu). You can define both the read and write access rights for the documents: "
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:109
+msgid "The following options are available in the '<strong>Who can view</strong>' drop-down list:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:112
+msgid "restricted to list owners (owner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:114 web_tt2/help_listconfig.tt2:121
+msgid "public documents (public)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:116
+msgid "The following options are available in the '<strong>Who can edit</strong>' drop-down list:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:118
+msgid "restricted to list owners (owner) - <em>default option</em>;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:119
+msgid "moderated for subscribers (editor);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:124
+msgid "The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the shared document web space</strong>. This size does not represent the maximum size of <em class=\"caps\">one</em> document published in the shared document web space, but the maximum size for all documents published on the list. It is expressed in kilobytes. When a subscriber tries to publish a too large document regarding the space left, he/she gets an error message."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:125
+#. (path_cgi)
+msgid "To know <strong>more about the management of the shared document web space</strong> (how to organize it, change access rights, name documents, etc.), please refer to the '<a href=\"%1/help/shared\">Using the shared document web space</a>' section of the User guide."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:128
+msgid "Archive"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:129
+msgid "From this page, you can <strong>decide who can access the online list archive</strong> (messages readable on the mailing list web interface). The following options are available:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:133
+msgid "listmaster (listmaster);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:134
+msgid "owner (owner);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:135
+msgid "moderator (moderator);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:136
+msgid "subscribers only (private);"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:139
+msgid "The '<strong>Quota</strong>' input box allows you to define a <strong>maximum size not to be exceeded for the message archive</strong>. This size is expressed in kilobytes. List owners are notified when the archive size reaches 95&#160;% of the allowed size. When the maximum size is reached, later messages are not archived."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:140
+msgid "Even though messages stop being archived, it is naturally still possible to send messages to the list."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:141
+#. (conf.email,conf.host)
+msgid "It is also possible to <strong>access the list archive by email</strong>, by sending <strong>%1@%2</strong> the following command: <span class=\"commande\"><strong>get nameofthelist log.yearmonth</strong></span> (example: <em class=\"example\">get list_example log.200507</em>). Then you receive a compilation of all messages sent during the chosen month. This compilation is sent in plain text and contains <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language\">HTML</acronym> tags instead of the original formatting; it also involves full headers for each message. The '<strong>Text archives</strong>' parameter allows you to define:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:143
+msgid "<strong>who is allowed</strong> to receive the list message archive by email;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:144
+msgid "<strong>how frequently these archive files will be created</strong>. For example, if the frequency is set to 'month', all messages distributed to the list in a month will be gathered in a single archive file."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:146
+msgid "If this parameter is not defined, the list will have no archive accessible by email. Be careful: <strong>only the listmasters have the power to change this parameter.</strong>"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:147
+msgid "It is possible to send <strong>messages encrypted in <acronym lang=\"en\" xml:lang=\"en\" title=\"Secure/Multipurpose Internet Mail Extensions\">S/MIME</acronym></strong> to the list. The '<strong>Archive encrypted mails as cleartext</strong>' option allows you to define how those messages will be archived:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:149
+msgid " The '<strong>Cleartext</strong>' option archives the message under its original crypted form."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:150
+msgid "The '<strong>Decrypted</strong>' option archives the message after removing the encryption."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:151
+msgid "The '<strong>Original</strong>' option archives the message under its original encrypted form."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:153
+msgid "This option applies to both the text archive and the online archive, as well as to the compilations sent to those who chose the 'Digest' delivery mode."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:154 web_tt2/help_listconfig.tt2:171
+msgid "BE CAREFUL: do not forget to click on the 'Update' button</strong> on bottom of page to save all your changes."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:156
+msgid "Bounces"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:157
+msgid "\"<strong>Bounces</strong>\" represent the <strong>subscribers whose address is in error</strong>, i.e. subscribers who can not receive the messages sent to the list. This can be due to many reasons: obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:158
+msgid "The '<strong>Bounce management</strong>' section defines two rates:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:160
+msgid "The <strong>warn rate</strong> indicates the bouncing email addresses rate from which the list owner will receive a <strong>notice entitled 'Bounce rate too high'</strong> inviting him/her to delete bouncing subscribers from the list."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:161
+msgid "The <strong>halt rate</strong> indicates the bouncing email addresses rate from which <strong>the message distribution will automatically be stopped</strong> up to the resolution of the problem (generally through the deletion of bouncing subscribers)."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:163
+msgid "The '<strong>Management of bouncers, 1st level</strong>' and '<strong>Management of bouncers, 2nd level</strong>' sections allow you to perform automatic tasks with regard to bouncing subscribers. You can define:"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:165
+msgid "the <strong>score ranges that define level&#160;1 and level&#160;2 bouncers</strong>. By default, level&#160;1 bouncers have a score comprised between 45 and 74 and level&#160;2 bouncers have a score comprised between 75 and 100;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:166
+msgid "The score depends on the number, type and frequency of errors. If the bouncing time is too short or if there have not been many errors, the bouncer is not given a score."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:167
+msgid "the <strong>task to perform towards the subscribers concerned</strong>: no task, notice, deletion from the list;"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:168
+msgid "the <strong>person to be notified</strong> when a task is carried out: no one, the list owners, the listmasters. The notice sent when a task is carried out involves the names of all the subscribers concerned as well as precise information about the task."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:170
+#. (path_cgi)
+msgid "<strong>To manage bounces</strong> (reset errors for some subscribers, unsubscribe bouncing subscribers, request a subscription reminder, etc.), <strong>go to the '<a href=\"%1/help/admin#manage_bounces\">Bounces</a>' page</strong> of the list administration module."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:173
+msgid "Miscellaneous"
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:174
+msgid "The '<strong>Periodical subscription expiration task</strong>' option allows you to define an <strong>automatic expiration deadline for subscriptions</strong> to the list: on a regular basis (example: once a year), subscribers will receive a message asking them to renew their subscription to the list. If they don't, they will automatically be unsubscribed. This procedure ensures that all people subscribed to the list are really concerned and interested."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:175
+msgid "The '<strong>Periodical subscription reminder task</strong>' option allows you to <strong>send subscription reminders</strong> to list members on a regular basis."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:176
+msgid "The '<strong>email address protection method</strong>' option ensures that the subscribers' email addresses will not be collected by robots for spamming purposes. This option applies to all the list pages."
+msgstr ""
+
+#: web_tt2/help_listconfig.tt2:177
+msgid "On this page, you can also view <strong>information about the last update of the list</strong> (who made it and when), as well as the <strong>number of configuration change</strong> since the list was created."
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:2
+msgid "List of the commands of the Sympa mail interface"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:4
+#. (conf.email ,conf.host)
+msgid "All commands are to be sent at %1@%2."
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:6
+msgid "It is possible to send several commands in a single message. Commands are to be entered in the message body (one command per line)."
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:8
+msgid "Commands for users"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:12
+msgid "<code>HELP</code>: receive a list of all available commands"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:13
+msgid "<code>LISTS</code>: receive a list of all lists managed on the server"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:14
+msgid "<code>WHICH</code>: receive a list of all lists to which you are subscribed"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:15
+msgid "<code>CONFIRM <em>key</em></code>: confirm sending of a message (according to the way the list is configured)"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:16
+msgid "<code>QUIT</code>: indicates the end of the commands (used to ignore a signature)"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:22
+msgid "<code>INFO <em>list</em></code>: get information about the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:23
+msgid "<code>REVIEW <em>list</em></code>: receive a list of all list members"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:24
+msgid "<code>SUBSCRIBE <em>list name</em></code>: subscription (or subscription confirmation) to the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:25
+msgid "<code>INVITE <em>list email</em></code>: invite someone to subscribe to the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:26
+msgid "<code>UNSUBSCRIBE <em>list email</em></code>: unsubscribe from the list. The email address is required only if you want to unsubscribe with an address other than the address with which you send the message"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:27
+msgid "<code>UNSUBSCRIBE * <em>email</em></code>: unsubscribe from all the lists to which you are subscribed"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:33
+msgid "<code>SET <em>list</em> NOMAIL</code>: suspend receipt of the list's messages"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:34
+msgid "<code>SET <em>list</em> DIGEST</code>: receive messages in digest mode"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:35
+msgid "<code>SET <em>list</em> DIGESTPLAIN</code>: receive messages in digest mode (plain text)"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:36
+msgid "<code>SET <em>list</em> SUMMARY</code>: only receive the message list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:37
+msgid "<code>SET <em>list</em> NOTICE</code>: only receive the message subjects"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:38
+msgid "<code>SET <em>list</em> MAIL</code>: normal message delivery mode"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:39
+msgid "<code>SET <em>list</em> CONCEAL</code>: become unlisted (hidden subscriber address)"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:40
+msgid "<code>SET <em>list</em> NOCONCEAL</code>: subscriber address visible via REView"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:46
+msgid "<code>INDEX <em>list</em></code>: receive the list of the archive files"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:47
+msgid "<code>GET <em>list file</em></code>: receive a file of the list archive"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:48
+msgid "<code>LAST <em>list</em></code>: receive the list's most recent message"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:52
+msgid "Commands for list owners"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:56
+msgid "<code>ADD <em>list email name</em></code>: add a member to the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:57
+msgid "<code>DEL <em>list email</em></code>: remove a subscriber from the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:58
+msgid "<code>STATS <em>list</em></code>: check the statistics for the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:59
+msgid "code>REMIND <em>list</em></code>: send to all subscribers a personalized reminder with the address with which he/she is subscribed to the list"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:63
+msgid "Commands for list moderators"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:67
+msgid "<code>DISTRIBUTE <em>list key</em></code>: approve of a message"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:68
+msgid "<code>REJECT <em>list key</em></code>: reject a message to be moderated"
+msgstr ""
+
+#: web_tt2/help_mail_commands.tt2:69
+msgid "<code>MODINDEX <em>list</em></code>: check the list of messages to be moderated"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:3
+msgid "When you are subscribed to a list, you receive all messages subscribers send. You can reply to those messages or send some yourself."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:5
+msgid "Sending a message with an email client"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:6
+#. (conf.host)
+msgid "To send a new message, it is very simple: <strong>from your email client or a webmail, send a message to the list address</strong>. This address consists of the list name followed by the suffix '@%1' (example: <em class=\"example\">psycho_cognitive(@)%1</em>)."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:7
+msgid "Be careful: you need to send the message from the address with which you subscribed to the list, otherwise, your message might be rejected."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:9
+msgid "Sending a message from the mailing list environment"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:10
+msgid "<strong>You can also</strong> log on to the mailing list environment, <strong>go to the information page of the list</strong> to which you want to send a message and <strong>click on the 'Post' link</strong> in the left menu."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:11
+msgid "This method is not very flexible: from the mailing list web interface, you can not add or change some recipients, add an attachment or format the messages you send."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:13
+msgid "Replying to a message"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:14
+msgid "To reply to a message sent to a list, do as for any message that would have been sent to you in private. However, be careful: <strong>some lists are configured to send any reply to the list by default</strong>, i.e. to all the subscribers. If you only want to reply to the message sender, <strong>make sure the recipient of your message is the right one</strong>!"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:15
+msgid "You can also reply to a message directly <a href=\"#answeronline\">from the mailing list environment</a>. However, it is far simpler and more functional to reply using an email client or a webmail..."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:17
+msgid "A few rules"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:18
+msgid "Sending messages to a list makes you liable as an author. Furthermore, if you send a message to a list, it will be read by all the subscribers and you are likely to strike up conversations with them. Thus, to use the mailing list service within the law and share pleasant and respectful exchanges, you have to respect a comprehensive set of rules."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:20
+msgid "Before you start writing to a list"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:21
+msgid "It is better to always <strong>respect an observation period</strong> of a few days after subscribing, prior to sending any message. This will allow you to gather useful information in order not to make a blunder:"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:23
+msgid "Who can send messages to the list?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:24
+msgid "How frequently can you send messages without disturbing the other subscribers?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:25
+msgid "What are the topics discussed?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:26
+msgid "Are off-topic messages tolerated?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:27
+msgid "What is the tone used? Is it allowed to joke or is the list very formal?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:28
+msgid "Is the sending of attachments allowed/tolerated? Within what limits?"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:30
+msgid "<strong>Some lists require subscribers to introduce themselves to the other contributors</strong> at the time of their subscription, others on the first message sent to the list, and a third category (most generally the largest lists) consider this to be useless and annoying... Study the uses and take appropriate action!"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:32
+msgid "Privacy"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:33
+#. (path_cgi)
+msgid "All messages sent to the list are kept in the list archive. <strong>Thus, the simple fact of sending a message constitutes an express authorization of distribution and reproduction in the archive</strong>. However, you can request the deletion of any message you sent, whether directly from the list archive ('Tag this mail for deletion' button) or by <a href=\"%1/help/faquser#contactadmin\">contacting the list owners</a>."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:34
+msgid "If you send a message to the list, <strong>your email address will naturally display in your message header and in the list archive</strong>. However, unless otherwise specified, your email address and the other data you provided when you subscribed will not be disclosed to any other third party without your agreement."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:35
+#. (path_cgi)
+msgid "In most countries, your personal data is protected through a number of laws. For example, in the United States, the Privacy Act of 1974 applies. In the European Union, the \"Directive 95/46/EC of the European Parliament and of the Council of 24 October 1995 on the protection of individuals with regard to the processing of personal data and on the free movement of such data\" and national laws arising from it apply. To know more about this, <a href=\"%1/help/faquser#contactadmin\">please contact the list owners</a>."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:36
+msgid "As for any correspondence, <strong>you must sign your messages</strong>. On professional mailing lists, <strong>it is customary to mention the name of the organization you belong to and your job title alongside your name</strong>. However, <strong>ask yourself whether it is relevant to give your complete details</strong> (address, telephone number, etc.): they will remain available at any time in the list archive..."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:37
+msgid "<strong>Do never send information about other people without their express agreement</strong>."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:40
+msgid "<strong>When asking a question on a list</strong>, it is customary to post a summary of all answers obtained."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:41
+msgid "<strong>When you reply to a message sent on the list</strong>, it is up to you to decide whether you will reply on the list or in private. This might depend on the interest of your reply for the other subscribers..."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:42
+msgid "<strong>Always use descriptive subjects for your messages</strong>. On some lists, typical subjects for messages are even predefined and it is compulsory to \"tag\" messages using one of them (examples of typical objects: <em class=\"example\">[summary]</em>, <em class=\"example\">[urgent]</em>, <em class=\"example\">[administrative]</em>, <em class=\"example\">[question]</em>, etc.)."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:43
+msgid "<strong>Some kinds of messages are not welcome</strong> on mailing lists: advertisement, spamming, commercial messages, virus warnings, test messages, political or religious messages, hoaxes, flaming, privacy invasions, messages damaging, misleading or in any way defamatory, harassing, offensive, abusive, infringing, racist, obscene or profane, promoting discrimination, violence or hatred for any reason, contrary to good morals, or more generally illegal."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:44
+msgid "<strong>Unconstructive and mean-spirited messages</strong> (example: remarks about spelling mistakes) <strong>and other personal attacks towards other contributors are either not welcome</strong> on lists. If you really need to tell unpleasant or offensive things to someone, you had better do it in a private message... On most of the mailing lists, <strong>it is also frowned on to feed the <em class=\"altralingua\">trolls</em></strong> (topics or posts deliberately incorrect, intended to provoke readers)."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:45
+msgid "<strong>Generally, a list uses only one language</strong> for the exchanges between contributors. Respect this rule even though you are not a native speaker of the language used. <strong>Also try to respect the elementary rules of grammar and spelling</strong>, ban \"<acronym lang=\"en\" xml:lang=\"en\" title=\"Short Message Service\">SMS</acronym> language\" and <strong>proofread yourself</strong> before posting your message!"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:46
+msgid "When sending a message, <strong>you may want to add one or several attachments</strong>. However, be careful to respect a few elementary rules:"
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:48
+msgid "<strong>Make sure that attachments are accepted</strong> on the list to which you send your message."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:49
+msgid "When attachments are allowed, <strong>remain reasonable</strong>: too many or too large attachments may disturb the other subscribers, for example by flooding their inboxes."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:51
+#. (path_cgi)
+msgid "If you want to <strong>share documents with other list members</strong>, you had probably better upload them in the <a href=\"%1/help/shared\">'Documents' section of the list</a>."
+msgstr ""
+
+#: web_tt2/help_sendmsg.tt2:52
+msgid "<strong>The use of email in general and for mailing lists is bound by a set of precise rules necessary to share pleasant exchanges: the \"Netiquette\"</strong>. You will find the general principles of the Netiquette, as well as many links on the <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/Netiquette\">page of the Wikipedia dedicated to the Netiquette</a>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:3
+msgid "Some lists have a <strong>shared document web space where subscribers can download and upload documents</strong>: this space is available through the <strong>'Shared documents' section</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:5
+msgid "Presentation of the documents in the shared document web space"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:6
+msgid "To access the 'Shared documents' section of a list, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:9
+msgid "Go to <strong>the information page of the list</strong> of your interest."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:10
+msgid "In the left menu, <strong>click on the 'Shared documents' link</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:13
+msgid "The 'Shared documents' section can contain three types of resources</strong>: <strong>folders</strong>, <strong>files</strong> and <strong>bookmarks</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:15
+#. (icons_url)
+msgid "<strong>Folders</strong> are preceded by the icon <img src=\"%1/folder.png\" style=\"border: 0px;\" title=\"Icon of folder\" />."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:17
+msgid "<strong>To browse a folder, click on its name</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:18
+msgid "<strong>To go back up a level, click on the 'Up to higher level directory' link</strong> in the upper right corner of your screen."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:20
+msgid "<strong>Files</strong> are preceded by icons related to each type of file. You can <a href=\"#shared_read\">download</a> and <a href=\"#shared_upload\">upload</a> some."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:21
+#. (icons_url)
+msgid "<strong>Bookmarks</strong> are preceded by the icon <img src=\"%1/link.png\" style=\"border: 0px;\" title=\"Icon of bookmark\" />. They consist of <strong>shortcuts providing a single-click access to a particular website</strong>. If you click on a bookmark label, the website linked will open in a new window."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:24
+msgid "The functions of editing and creation of documents, when they are available to you, are accessible through the <strong>Expert mode</strong>. To switch to expert mode, click on the <a class=\"actionMenuLinks\">Expert mode</a> button on top of page."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:26
+msgid "<strong>The list owner or the documents authors can choose to restrict the access rights to some files/folders</strong>. Both the reading and writing rights can be restricted:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:28
+msgid "<strong>When a folder is not writable</strong>, you can neither upload nor create documents in it."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:29
+msgid "<strong>When a folder is not readable</strong>, you can not browse it (you get an error message)."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:31
+msgid "<strong>Folders are sorted separately</strong> from files and bookmarks, and display before them. <strong>By default, documents are sorted ascendingly according to the 'Document' column</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:32
+msgid "Be careful: alphanumeric sort distinguishes uppercase from lowercase, thus all documents which have a name starting with an uppercase character display first, sorted in alphabetical order, and then, all documents which have a name starting with a lowercase character, sorted in alphabetical order. It is the same for folders."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:33
+msgid "You can sort documents and folders according to criteria</strong> other than the name of the document/folder: they can also be sorted according to their <strong>author</strong>, their <strong>size</strong> and their <strong>last update date</strong>. To sort documents according to the criterion of your choice, click on the name of the corresponding column."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:36
+msgid "Downloading documents from the shared document web space"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:37
+msgid "To download a document from a list, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:39 web_tt2/help_shared.tt2:61 web_tt2/help_shared.tt2:74 web_tt2/help_shared.tt2:86
+msgid "<strong>Go to the 'Shared documents' section</strong> of the list of your interest."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:40
+msgid "<strong>Browse the folder containing the file you want to download</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:41
+msgid "<strong>Select the 'expert mode'</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:42
+msgid "<strong>Click on the name of the file to save it on your hard disk</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:43
+msgid "Be careful: files available in formats likely to open in a web browser will. To download this type of files, you had rather make a right click on their names and choose 'Save target as...', 'Save link as...', etc., according to your browser. This can affect, among others, files of formats .HTM/HTML, .PDF, .PNG, .TXT, .SWF, etc. (this behavior varies according to your browser and settings)."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:46
+msgid "Uploading documents in the shared document web space"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:48
+msgid "Creating a folder on a list"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:49
+msgid "To create a folder on a list</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:51
+msgid "Go to the 'Shared documents' section</strong> of the list of your interest."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:52
+msgid "Browse the folder in which you want to create a folder</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:53
+msgid "Switch to expert mode</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:54
+msgid "Enter the folder name</strong> in the text field close to the 'Create a new folder inside [name of the current folder]' label."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:55
+msgid "Click on the 'Create' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:58
+msgid "Uploading a file on a list"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:59
+msgid "<strong>To upload a file on a list</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:62
+msgid "<strong>Browse the folder in which you want to upload your file</strong>. Create a new folder if necessary."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:63 web_tt2/help_shared.tt2:76 web_tt2/help_shared.tt2:88
+msgid "<strong>Switch to expert mode</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:64
+msgid "<strong>Click on the 'Browse' button</strong> below the 'Upload a file inside the folder [name of the current folder]' label and <strong>choose the file</strong> you want to upload; after selecting it, click on the 'Open' button. Your file path then displays in the input box close to the 'Browse' button."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:65
+msgid "<strong>Click on the 'Publish' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:67
+msgid "Be careful: list owners may define quotas, that is to say a <strong>maximum size not to be exceeded for the shared document web space</strong>. If you try to upload or create a too large document with regard to the space left, you will get the following error message: \"The document repository exceed disk quota\"."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:69
+msgid "In order to avoid any list overload, try and <strong>delete useless files as you go along</strong>. A good <a href=\"#organize\">organization</a> of the list will allow you to manage the shared document web space more easily. To save some space, you can also publish your files in <strong>compressed formats</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:71
+msgid "Publishing a bookmark on a list"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:72
+msgid "<strong>To publish a bookmark on a list</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:75
+msgid "<strong>Browse the folder in which you want to publish your bookmark</strong>. Create a new folder if necessary."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:77
+msgid "In the <strong>'title' field</strong>, enter a <strong>descriptive name</strong> for the website to be linked through the bookmark."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:78
+msgid "In the <strong>'<acronym title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym>' field</strong>, enter or paste the website's <strong><acronym title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym></strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:79
+msgid "Click on the <strong>'Add'</strong> button."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:82
+msgid "Creating a file on a list"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:84
+msgid "To create a file on a list</strong>, do as follows:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:87
+msgid "<strong>Browse the folder in which you want to create your file</strong>. Create a new folder if necessary."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:89
+msgid "<strong>Enter a file name</strong> in the input box close to the 'Create a new file' label."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:90
+msgid "<strong>Click on the 'Create' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:92
+msgid "You are brought to the file creation page."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:94
+msgid "<strong>Enter or paste the text</strong> you want to put in your file in the 'Edit the file /nameofthefile' text area, and then <strong>click on the 'Publish' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:95
+msgid "<strong>Important: the only files that can be created online on the lists are plain text files. On the other hand, it is impossible to create office documents (.DOC, .XLS, .PPT, .RTF, .ODT, etc.), .PDF, images, etc.</strong>"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:96
+msgid "You can also <strong>replace the file, describe it or rename it</strong>. To know more about these features, refer to the <a href=\"#editsuppr\">'Editing or deleting documents in the shared document web space'</a> section."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:98
+msgid "Editing or deleting documents in the shared document web space"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:99
+msgid "In addition to uploading and downloading documents, you can also act on files and folders that are already online:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:101
+msgid "by changing their access rights (read and right);"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:102
+msgid "by editing them;"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:103
+msgid "by deleting them."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:106
+msgid "Changing access rights"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:107
+msgid "<strong>You can change read and/or write access rights to folders and files</strong>. This has <strong>several advantages</strong>:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:109
+msgid "<strong>Denying write access to a folder</strong> avoids proliferation of files published by unauthorized persons. To keep control of the list, sometimes it is more sensible to deny write access to the root folder of the shared document web space. It is also possible to offer a writable folder and to lock it at a given date or time, for example to control delivery of works by students."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:110
+msgid "<strong>Denying write access to a file</strong> ensures that no one will be able to modify it. For example, this is the most suitable option for teachers willing to put at their students' disposal a set of documents, such as exam questions."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:111
+msgid "<strong>Denying read access to a folder</strong> makes it possible to store several confidential documents without having to change read access rights individually for each of them."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:112
+msgid "<strong>Denying read access to a file</strong> ensures its confidentiality. For example, a teacher can ask his/her students to upload their \"exam copies\" on a list and to restrict read access to their files in order to prevent other students from looking at them."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:114
+msgid "<strong>You are allowed to change access rights only to documents you uploaded or created yourself</strong> on the lists (one exception: list owners can change access rights to any document published on the lists; this does not concern moderators)."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:115
+msgid "<strong>To change access rights for a document, click on the 'Access' text</strong> in front of the document's name, in the 'Access' column. You are brought to the access rights editing page."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:117
+msgid "<strong>Choose options from the drop-down lists 'Read access' and 'Edit access'</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:118
+msgid "Though it isn't mentionned in any of the options, note that the document owner (most of the time the person that published it) keeps the write and read rights on this document whatever happens (unless the list owner changes the document owner)."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:119
+msgid "<strong>You can also change the document's owner</strong>, for example to allow another person to edit it online, or to indicate the actual author of a document if it has been published by someone else."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:121
+msgid "Editing folders, files or bookmarks"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:122
+msgid "<strong>To edit a document, click on the 'Edit' text</strong> in front of the document's name in the 'Edit' column."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:124
+msgid "According to the type of document you edit, you have different possibilities:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:126
+msgid "If the document is a <strong>folder</strong>, you can only <strong>describe</strong> it or <strong>rename</strong> it."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:127
+msgid "The description of a document is visible in the upper left corner when editing it. The description of folders is also visible there when browsing the folder."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:128
+msgid "If the document is a <strong>bookmark</strong>, you can also <strong>change the <acronym title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> specified</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:129
+msgid "If the document is a <strong>file</strong>, you can also <strong>replace the existing file with a file of your choice</strong>. To do that, <strong>click on the 'Browse' button</strong> below the 'Replace the file nameofthefile with your file' text and <strong>choose the file</strong> you want to publish; after selecting it, click on the 'Open' button. Your file path then displays in the input box close to the 'Browse' button. <strong>Click on the 'Publish' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:130
+msgid "Whatever the name of the new file, the file published on the list will keep its original name. If you want the file replacement to be followed by a change of name, you will also have to rename the file published on the list."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:131
+msgid "Last, if the document is a <strong>plain text file</strong>, you can <strong>change its content online</strong>: <strong>enter or paste the text</strong> you want to put in your file in the 'Edit the file /nameofthefile' text area, and then <strong>click on the 'Publish' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:133
+msgid "Any click on a button related to an input box only validates the changes specified in that box. <strong>To make several changes, you need to click on each button corresponding to your choices</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:134
+msgid "Some buttons immediately bring you back to the page of the folder containing the document, while others perform the update without bringing you to another page. <strong>To go back to the folder page without changing anything, click on the 'Up to higher level directory' button</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:136
+msgid "Deleting folders, files or bookmarks"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:137
+msgid "<strong>To delete any type of document, click on the 'Delete'</strong> text in front of the document's name in the 'Delete' column. A confirmation message displays in order to let you go back on your decision: <strong>once deleted, the document will not be retrievable anymore</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:138
+msgid "If there is no 'Delete' text in front of the document's name, you do not have write access rights to the document."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:139
+msgid "<strong>It is impossible to delete a folder which still contains documents</strong>: before deleting a folder, you need to empty it entirely first."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:141
+msgid "A few tips to organize the shared document web space"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:142
+msgid "If you are one of the people likely to organize the list and create files and folders, <strong>be far-sighted: think that the list will maybe develop in a considerable manner and that it will maybe be used for several years</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:143
+msgid "Here are <strong>a few suggestions to prevent a list from developing in an anarchic manner</strong>:"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:145
+msgid "If the list is to contain the same kinds of resources at regular intervals, choose an <strong>organization by month or by year</strong> (or any other duration according to your needs)."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:146
+msgid "Example: if the list is meant to collect student works, those students will attend the same lessons and make the same works from a year to another. Thus, it might be interesting to create a folder for each academic year at the root of the shared document web space: this will allow students to take a look at the previous year's works and lessons (provided that teachers <a href=\"#acces\">restrict access</a> to sensitive resources). This can be completed by subfolders for each lesson or each teacher within each year folder."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:147
+msgid "If the list is a collaborative list destined to all members of a department, you had better choose a <strong>project-based organization</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:148
+msgid "If the list aims at exchanging information, choose a <strong>topic-based organization</strong>."
+msgstr ""
+
+#: web_tt2/help_shared.tt2:149
+msgid "You can also choose an <strong>organization by person, by team, etc.</strong>, and even <strong>combine all those solutions</strong>!"
+msgstr ""
+
+#: web_tt2/help_shared.tt2:151
+msgid "In order to avoid problems, <strong>choose carefully the names of files and folders</strong> you publish on lists: give them <strong>explicit yet short names</strong> and <strong>avoid spaces, accents, hyphens and special characters</strong>."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:3
+msgid "This is a description of the receivie modes available in Sympa. These options are mutually exclusive, which means that you can't set two different receive modes at the same time. Only some of the modes might be available to specific mailing lists."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:7
+msgid "Digest"
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:10
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber will periodically \n"
+"receive batched messages in a Digest. This Digest compiles a group of messages from the list, using\n"
+"the multipart/digest MIME format."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:12 web_tt2/help_user_options.tt2:20
+msgid "The sending interval for these Digests is defined by the list owner."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:14
+msgid "DigestPlain"
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your email software doesn't\n"
+"display multipart/digest format messages well."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:22
+msgid "Summary"
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:26
+msgid ""
+"Instead of receiving individual mail messages from the list, the subscriber will periodically \n"
+"receive a list of messages. This mode is very close to the Digest reception mode but the \n"
+"subscriber receives only the list of messages."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:29
+msgid "Nomail"
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:31
+msgid "This mode is used when a subscriber no longer wishes to receive mail from the list, but nevertheless wishes to retain the ability to post to the list. This mode therefore prevents the subscriber from unsubscribing and subscribing later on."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:36
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats\n"
+"only in plain text format."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:41
+msgid ""
+"This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats\n"
+"only in HTML format."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:46
+msgid ""
+"This mode is used when a subscriber does not want to receive attached files. The attached files are \n"
+"replaced by a URL leading to the file stored on the list site."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:51
+msgid ""
+"This mode is used when a subscriber does not want to receive copies of messages that he or she has sent to \n"
+"the list."
+msgstr ""
+
+#: web_tt2/help_user_options.tt2:56
+msgid ""
+"This option is used mainly to cancel the nomail, summary or digest modes. If the subscriber was \n"
+"in nomail mode, he or she will again receive individual mail messages from the list."
+msgstr ""

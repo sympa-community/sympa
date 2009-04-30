@@ -32,7 +32,7 @@ require Fetch;
 require Exporter;
 require Encode;
 require 'tools.pl';
-require "--LIBDIR--/tt2.pl";
+require 'tt2.pl';
 
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
@@ -6996,8 +6996,7 @@ sub load_scenario_list {
     my %list_of_scenario;
     my %skip_scenario;
 
-    foreach my $dir ($directory."/scenari", $Conf::Conf{'etc'}."/$robot/scenari", $Conf::Conf{'etc'}."/scenari", "--ETCBINDIR--/scenari") {
-
+    foreach my $dir ("$directory/scenari", "$Conf::Conf{'etc'}/$robot/scenari", "$Conf::Conf{'etc'}/scenari", "--pkgdatadir--/etc/scenari") {
 	next unless (-d $dir);
 	
 	my $scenario_regexp = &tools::get_regexp('scenario');
@@ -7047,7 +7046,7 @@ sub load_task_list {
     my $directory = "$self->{'dir'}";
     my %list_of_task;
     
-    foreach my $dir ("$directory/list_task_models", "$Conf::Conf{'etc'}/$robot/list_task_models", "$Conf::Conf{'etc'}/list_task_models", "--ETCBINDIR--/list_task_models") {
+    foreach my $dir ("$directory/list_task_models", "$Conf::Conf{'etc'}/$robot/list_task_models", "$Conf::Conf{'etc'}/list_task_models", "--pkgdatadir--/etc/list_task_models") {
 
 	next unless (-d $dir);
 
@@ -7109,7 +7108,7 @@ sub load_data_sources_list {
     my $directory = "$self->{'dir'}";
     my %list_of_data_sources;
 
-    foreach my $dir ("$directory/data_sources", "$Conf::Conf{'etc'}/$robot/data_sources", "$Conf::Conf{'etc'}/data_sources", "--ETCBINDIR--/data_sources") {
+    foreach my $dir ("$directory/data_sources", "$Conf::Conf{'etc'}/$robot/data_sources", "$Conf::Conf{'etc'}/data_sources", "--pkgdatadir--/etc/data_sources") {
 
 	next unless (-d $dir);
 	

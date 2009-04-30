@@ -9,7 +9,7 @@ $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
 use strict;
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 use Conf;
 use POSIX;
 require "tools.pl";

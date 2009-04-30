@@ -38,7 +38,7 @@ This fcgi script completely handles all aspects of the Sympa web interface
 =cut 
 
 ## Change this to point to your Sympa bin directory
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 
 use Getopt::Long;
 use Archive::Zip;
@@ -52,7 +52,7 @@ use MIME::Lite;
 #use CGI;
 
 ## Template parser
-require "--LIBDIR--/tt2.pl";
+require "tt2.pl";
 
 ## Sympa API
 use List;
@@ -67,14 +67,15 @@ use admin;
 use SharedDocument;
 use report;
 use SympaSession;
+use Log;
 
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
 use Mail::Address;
 
-require "--LIBDIR--/tools.pl";
-require "--LIBDIR--/time_utils.pl";
+require "tools.pl";
+require "time_utils.pl";
 
 my $crypt_openssl_x509_ok;
 BEGIN {
@@ -1590,6 +1591,10 @@ my $birthday = time ;
  ## Write to log
  sub wwslog {
      my $facility = shift;
+
+     # do not log if log level if too high regarding the log requested by user 
+     return if ($Log::levels{$facility} > $Log::log_level);
+
      my $msg = shift;
 
      my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
@@ -8377,9 +8382,9 @@ Sends back the list creation edition form.
      &wwslog('info', 'do_scenario_test');
 
      ## List available scenarii
-     unless (opendir SCENARI, "--ETCBINDIR--/scenari/"){
-	 &report::reject_report_web('intern','cannot_open_dir',{'dir' => "--ETCBINDIR--/scenari/"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info',"do_scenario_test : unable to open --ETCBINDIR--/scenari");
+     unless (opendir SCENARI, "--pkgdatadir--/etc/scenari/"){
+	 &report::reject_report_web('intern','cannot_open_dir',{'dir' => "--pkgdatadir--/etc/scenari/"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('info',"do_scenario_test : unable to open --pkgdatadir--/etc/scenari");
 	 return undef;
      }
 
@@ -16109,7 +16114,7 @@ sub do_rss_request {
 sub do_wsdl {
   
     &wwslog('info', "do_wsdl ()");
-    my $sympawsdl = '--ETCBINDIR--/sympa.wsdl';
+    my $sympawsdl = '--pkgdatadir--/etc/sympa.wsdl';
 
     unless (-r $sympawsdl){
       	&report::reject_report_web('intern','err_404',{},$param->{'action'});
@@ -16129,7 +16134,7 @@ sub do_wsdl {
     
    $param->{'conf'}{'soap_url'}  = $soap_url;
 
-    &tt2::parse_tt2($param, 'sympa.wsdl' , \*STDOUT, ['--ETCBINDIR--']);
+    &tt2::parse_tt2($param, 'sympa.wsdl' , \*STDOUT, ['--pkgdatadir--/etc']);
     
 #    unless (open (WSDL,$sympawsdl)) {
 # 	&error_message('404');

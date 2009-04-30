@@ -19,52 +19,52 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-default: none
+mailtemplate_DATA = authorization_reject.tt2 \
+		    bye.tt2 certif_warning.tt2 \
+		    command_report.tt2 \
+		    digest_plain.tt2 \
+		    digest.tt2 \
+		    d_install_shared.tt2 \
+		    d_reject_shared.tt2 \
+		    expire_deletion.tt2 \
+		    expire_warning1.tt2 \
+		    expire_warning2.tt2 \
+		    get_archive.tt2 \
+		    global_remind.tt2 \
+		    helpfile.tt2 \
+		    index_archive.tt2 \
+		    info_report.tt2 \
+		    invite.tt2 \
+		    list_created.tt2 \
+		    listeditor_notification.tt2 \
+		    listmaster_notification.tt2 \
+		    listowner_notification.tt2 \
+		    list_rejected.tt2 \
+		    lists.tt2 \
+		    list_unknown.tt2 \
+		    message_report.tt2 \
+		    moderate.tt2 \
+		    modindex.tt2 \
+		    reject.tt2 \
+		    remind.tt2 \
+		    removed.tt2 \
+		    request_auth.tt2 \
+		    review.tt2 \
+		    send_auth.tt2 \
+		    sendpasswd.tt2 \
+		    sendssopasswd.tt2 \
+		    stats_report.tt2 \
+		    summary.tt2 \
+		    urlized_part.tt2 \
+		    user_notification.tt2 \
+		    welcome.tt2 \
+		    which.tt2 \
+		    x509-user-cert-missing.tt2 \
+		    your_infected_msg.tt2
 
-install:
-	echo "Please use the main Makefile for installing WWSympa."
+EXTRA_DIST = $(mailtemplate_DATA)
 
-newinstall: makedir installtemplates installmod
-
-installmod:
-	chown $(USER) $(DESTDIR)$(ETCBINDIR)/mail_tt2/*
-	chgrp $(GROUP) $(DESTDIR)$(ETCBINDIR)/mail_tt2/*
-	chmod 755 $(DESTDIR)$(ETCBINDIR)/mail_tt2
-
-makedir:
-	@if [ ! -d $(DESTDIR)$(ETCBINDIR) ]; then \
-		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)"; \
-		mkdir -p $(DESTDIR)$(ETCBINDIR); \
-	fi
-	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/mail_tt2 ]; then \
-		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/mail_tt2"; \
-		mkdir $(DESTDIR)$(ETCBINDIR)/mail_tt2; \
-	fi
-
-installtemplates:
-	@echo
-	@echo "Installing mail templates..."
-		@( \
-		PERL=$(PERL); export PERL; \
-		UMASK=0644; export UMASK; \
-		INSTALLDIR=$(ETCBINDIR)/mail_tt2; export INSTALLDIR; \
-		SBINDIR=$(SBINDIR); export SBINDIR; \
-		CGIDIR=$(CGIDIR); export CGIDIR; \
-		LIBDIR=$(LIBDIR); export LIBDIR; \
-		DESTDIR=$(DESTDIR); export DESTDIR; \
-		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		COL1=5; export COL1; \
-		COL2=40; export COL2; \
-		COL3=30; export COL3; \
-		COL4=40; export COL4; \
-		COL12=45; export COL12; \
-		COL23=70; export COL23; \
-		COL34=70; export COL34; \
-		COL234=110; export COL234; \
-		$(PERL) ../subst.pl *.tt2; \
-		); \
-	$(PERL) ../set_symlinks.pl mail_tt2 $(DESTDIR)$(ETCBINDIR)/mail_tt2
-	find $(DESTDIR)$(ETCBINDIR) -type d -exec chmod 755 {} \;
-	find $(DESTDIR)$(ETCBINDIR) -type f -exec chmod 444 {} \;
-	rm -f $(DESTDIR)$(ETCBINDIR)/web_tt2/authorization_reject.tt2 ; \
-	(cd $(DESTDIR)$(ETCBINDIR)/web_tt2 ; ln -s ../mail_tt2/authorization_reject.tt2 authorization_reject.tt2)
+install-data-hook:
+	(cd $(DESTDIR)$(pkgdatadir)/web_tt2; \
+		rm -f authorization_reject.tt2; \
+		ln -s ../mail_tt2/authorization_reject.tt2)

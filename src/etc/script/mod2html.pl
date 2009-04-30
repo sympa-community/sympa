@@ -4,7 +4,7 @@
 ## It is now created by sympa.pl when the message is received. 
 ## This script will create all missing HTML files in the moderation spool
 
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 use Conf; # to load Sympa conf which is needed by List.pm
 use List;
 use Log; # if you want to get logs of List.pm

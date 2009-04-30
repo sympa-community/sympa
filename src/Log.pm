@@ -1,5 +1,3 @@
-#! --PERL--
-
 # Log.pm - This module includes all Logging-related functions
 # RCS Identication ; $Revision$ ; $Date$ 
 #
@@ -32,7 +30,7 @@ use POSIX qw/mktime/;
 use Encode;
 
 our @ISA = qw(Exporter);
-our @EXPORT = qw(fatal_err do_log do_openlog $log_level);
+our @EXPORT = qw(fatal_err do_log do_openlog $log_level %levels);
 
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
 # When logs are not available, period of time to wait before sending another warning to listmaster.
@@ -41,6 +39,16 @@ my $warning_timeout = 600;
 my $warning_date = 0;
 
 our $log_level = 0;
+
+our %levels = (
+    err    => 0,
+    info   => 0,
+    notice => 0,
+    trace  => 0,
+    debug  => 1,
+    debug2 => 2,
+    debug3 => 3,
+);
 
 sub fatal_err {
     my $m  = shift;
@@ -71,60 +79,60 @@ sub fatal_err {
 }
 
 sub do_log {
-    my $fac = shift;
-
-    my $level = 0;
-
-    if ($fac =~ /debug(\d)?/ ) {
-	$level = $1 || 1;
-	$fac = 'debug';
-    }
+    my $facility = shift;
 
     # do not log if log level if too high regarding the log requested by user 
-    return if ($level > $log_level)  ;
+    return if ($levels{$facility} > $log_level);
 
-    my $m = shift;
+    my $message = shift;
     my @param = @_;
 
     my $errno = $!;
-    my $debug = 0;
 
     ## Do not display variables which are references.
     foreach my $i (0..$#param) {
-	if(ref($param[$i])){
-	    $param[$i]=ref($param[$i])
-	}
+        if (ref($param[$i])){
+            $param[$i] = ref($param[$i])
+        }
     }
 
     ## Determine calling function and parameters
     my @call = caller(1);
     ## wwslog already adds this information
     unless ($call[3] =~ /wwslog$/) {
-	$m = $call[3].'() ' . $m if ($call[3]);
+        $message = $call[3] . '() ' . $message if ($call[3]);
     }
 
-    if ($fac eq 'trace' ) {
-	$m = "###### TRACE MESSAGE ######:  " . $m;
-	$fac = 'notice';
+    # map to standard syslog facility if needed
+    if ($facility eq 'trace' ) {
+        $message = "###### TRACE MESSAGE ######:  " . $message;
+        $facility = 'notice';
+    } elsif ($facility eq 'debug2' || $facility eq 'debug3') {
+        $facility = 'debug';
     }
+
     eval {
-	unless (syslog($fac, $m, @param)) {
-	    &do_connect();
-	    syslog($fac, $m, @param);
-	}
+        unless (syslog($facility, $message, @param)) {
+            &do_connect();
+            syslog($facility, $message, @param);
+        }
     };
-    if($@ && ($warning_date < time - $warning_timeout)) {
-	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
-	}
+
+    if ($@ && ($warning_date < time - $warning_timeout)) {
+        $warning_date = time + $warning_timeout;
+        &List::send_notify_to_listmaster(
+            'logs_failed', $Conf::Conf{'host'}, [$@]
+        );
     };
 
     if ($main::options{'foreground'}) {
-	if ($main::options{'log_to_stderr'} || 
-	    ($main::options{'batch'} && $fac eq 'err')) {
-	    $m =~ s/%m/$errno/g;
-	    printf STDERR "$m\n", @param;
-	}
+        if (
+            $main::options{'log_to_stderr'} ||
+            ($main::options{'batch'} && $facility eq 'err')
+        ) {
+            $message =~ s/%m/$errno/g;
+            printf STDERR "$message\n", @param;
+        }
     }    
 }
 

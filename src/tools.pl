@@ -419,7 +419,7 @@ sub load_create_list_conf {
     
     $file = &tools::get_filename('etc',{}, 'create_list.conf', $robot);
     unless ($file) {
-	&do_log('info','unable to read --ETCBINDIR--/create_list.conf');
+	&do_log('info','unable to read --pkgdatadir--/etc/create_list.conf');
 	return undef;
     }
 
@@ -465,7 +465,7 @@ sub get_list_list_tpl {
 	return undef;
     }
     
-    foreach my $dir ('--ETCBINDIR--/create_list_templates', "$Conf::Conf{'etc'}/create_list_templates",
+    foreach my $dir ('--pkgdatadir--/etc/create_list_templates', "$Conf::Conf{'etc'}/create_list_templates",
 		     "$Conf::Conf{'etc'}/$robot/create_list_templates") {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
@@ -603,7 +603,7 @@ sub get_templates_list {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
-    my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
+    my $distrib_dir = '--pkgdatadir--/etc/'.$type.'_tt2';
     my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
     my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
 
@@ -676,7 +676,7 @@ sub get_template_path {
 	do_log('info', 'get_templates_path () : internal error incorrect parameter');
     }
 
-    my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
+    my $distrib_dir = '--pkgdatadir--/etc/'.$type.'_tt2';
     my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
     $site_dir .= '/'.$lang unless ($lang eq 'default');
     my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
@@ -2004,12 +2004,12 @@ sub get_filename {
 		    "$Conf::Conf{'etc'}/$robot".'/'.$default_name,
 		    $Conf::Conf{'etc'}.'/'.$name,
 		    $Conf::Conf{'etc'}.'/'.$default_name,
-		    '--ETCBINDIR--'.'/'.$name,
-		    '--ETCBINDIR--'.'/'.$default_name);
+		    '--pkgdatadir--/etc/'.$name,
+		    '--pkgdatadir--/etc/'.$default_name);
 	}else {
 	    @try = ("$Conf::Conf{'etc'}/$robot".'/'.$name,
 		    $Conf::Conf{'etc'}.'/'.$name,
-		    '--ETCBINDIR--'.'/'.$name);
+		    '--pkgdatadir--/etc/'.$name);
 	}
 	
 	if ($family) {
@@ -2074,7 +2074,7 @@ sub make_tt2_include_path {
     my $path_family; ## optional
 
     if ($dir) {
-	$path_etcbindir = "--ETCBINDIR--/".$dir;
+	$path_etcbindir = "--pkgdatadir--/etc/".$dir;
 	$path_etcdir = "$Conf::Conf{'etc'}/".$dir;
 	$path_robot = "$Conf::Conf{'etc'}/".$robot.'/'.$dir if (lc($robot) ne lc($Conf::Conf{'host'}));
 	if (ref($list) eq 'List'){
@@ -2085,7 +2085,7 @@ sub make_tt2_include_path {
 	    }
 	} 
     }else {
-	$path_etcbindir = "--ETCBINDIR--";
+	$path_etcbindir = "--pkgdatadir--/etc/";
 	$path_etcdir = "$Conf::Conf{'etc'}";
 	$path_robot = "$Conf::Conf{'etc'}/".$robot if (lc($robot) ne lc($Conf::Conf{'host'}));
 	if (ref($list) eq 'List') {

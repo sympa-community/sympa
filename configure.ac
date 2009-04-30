@@ -20,156 +20,276 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 AC_PREREQ(2.59)
-AC_INIT(sympa, 6.0a.12, sympa-authors@cru.fr)
-AM_INIT_AUTOMAKE
+AC_INIT(sympa, 6.0a.13, sympa-authors@cru.fr)
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+AM_PO_SUBDIRS
 
 # Setup the VERSION variable
 AC_SUBST(VERSION,AC_PACKAGE_VERSION)
 
 AC_PREFIX_DEFAULT(/home/sympa)
 
-## Directories setup
-## for main config files
+# configuration
+AC_ARG_WITH(
+    confdir,
+    AS_HELP_STRING(
+	[--with-confdir=DIR],
+	[obsolete option, use --sysconfdir instead]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-confdir option used])
+	sysconfdir="$withval"
+    ]
+)
 
-## location of main config files
-CONFDIR='/etc'
-AC_ARG_WITH(confdir, [  --with-confdir=DIR     Sympa main configuration files in DIR  (default /etc)], [CONFDIR="$withval"])
-AC_SUBST(CONFDIR)
+AC_ARG_WITH(
+    etcdir,
+    AS_HELP_STRING(
+	[--with-etcdir=DIR],
+	[obsolete option, use --sysconfdir instead]
+    ),
+    [AC_MSG_WARN([obsolete --with-etcdir option used])]
+)
 
-## location of CGIs
-CGIDIR='${prefix}/bin'
-AC_ARG_WITH(cgidir, [  --with-cgidir=DIR     CGIs in DIR  (default ${prefix}/bin)], [CGIDIR="$withval"])
-AC_SUBST(CGIDIR)
+# binaries
+AC_ARG_WITH(
+    bindir,
+    AS_HELP_STRING(
+	[--with-bindir=DIR],
+	[obsolete option, those binaries are now installed in libexecdir]
+    ),
+    [AC_MSG_WARN([obsolete --with-sampledir option used])]
+)
 
-## location of user executables
-BINDIR='${prefix}/bin'
-AC_ARG_WITH(bindir, [  --with-bindir=DIR     user executables in DIR (default ${prefix}/bin). queue and bouncequeue programs will be installed in this directory. If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf), this should point to /etc/smrsh. This is probably the case if you are using Linux], [BINDIR="$withval"])
-AC_SUBST(BINDIR)
+AC_ARG_WITH(
+    sbindir,
+    AS_HELP_STRING(
+	[--with-sbindir=DIR],
+	[obsolete option, use --sbindir instead]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-sbindir option used])
+	sbindir="$withval"
+    ]
+)
 
-## location of system admin executables
-SBINDIR='${prefix}/bin'
-AC_ARG_WITH(sbindir, [  --with-sbindir=DIR     system admin executables in DIR (default ${prefix}/bin)], [SBINDIR="$withval"])
-AC_SUBST(SBINDIR)
+AC_ARG_WITH(
+    libexecdir,
+    AS_HELP_STRING(
+	[--with-libexecdir=DIR],
+	[obsolete option, use --libexecdir instead]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-libexecdir option used])
+	libexecdir="$withval"
+    ]
+)
 
-## location of program executables
-LIBEXECDIR='${prefix}/bin'
-AC_ARG_WITH(libexecdir, [  --with-libexecdir=DIR     program executables in DIR (default ${prefix}/bin)], [LIBEXECDIR="$withval"])
-AC_SUBST(LIBEXECDIR)
+# arch-dependant files
+execcgidir='${libdir}/sympa/cgi'
+AC_ARG_WITH(
+    cgidir,
+    AS_HELP_STRING(
+	[--with-cgidir=DIR],
+	[CGIs in DIR (default ${libdir}/sympa/cgi)]
+    ),
+    [execcgidir="$withval"]
+)
+AC_SUBST(execcgidir)
 
-## location of Perl modules
-LIBDIR='${prefix}/bin'
-AC_ARG_WITH(libdir, [  --with-libdir=DIR     Perl modules in DIR (default ${prefix}/bin)], [LIBDIR="$withval"])
-AC_SUBST(LIBDIR)
+# arch-independant files
+AC_ARG_WITH(
+    datadir,
+    AS_HELP_STRING(
+	[--with-datadir=DIR]
+	[obsolete option, use --datadir instead]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-datadir option used])
+	datadir="$withval"
+    ]
+)
 
-## location of default *read-only* data files
-DATADIR='${prefix}/bin/etc'
-AC_ARG_WITH(datadir, [  --with-datadir=DIR     default *read-only* data files in DIR (default ${prefix}/bin/etc)], [DATADIR="$withval"])
-AC_SUBST(DATADIR)
+AC_ARG_WITH(
+    scriptdir,
+    AS_HELP_STRING(
+	[--with-scriptdir=DIR],
+	[obsolete option, scripts modules are now installed with data]
+    ),
+    [AC_MSG_WARN([obsolete --with-scriptdir option used])]
+)
 
-## location of modifiable data files
-EXPLDIR='${prefix}/expl'
-AC_ARG_WITH(expldir, [  --with-expldir=DIR     modifiable data files in DIR (default ${prefix}/expl)], [EXPLDIR="$withval"])
-AC_SUBST(EXPLDIR)
+AC_ARG_WITH(
+    libdir,
+    AS_HELP_STRING(
+	[--with-libdir=DIR]
+	[obsolete option, perl modules are now installed with data]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-libdir option used])
+    ]
+)
 
-## location of documentation
-MANDIR='/usr/local/man'
-AC_ARG_WITH(mandir, [  --with-mandir=DIR     documentation in DIR (default /usr/local/man)], [MANDIR="$withval"])
-AC_SUBST(MANDIR)
+# locales
+AC_ARG_WITH(
+    localedir,
+    AS_HELP_STRING(
+	[--with-localedir=DIR],
+	[obsolete option, use --localedir instead]
+    ),
+    [
+     AC_MSG_WARN([obsolete --with-localedir option used])
+     localedir="$withval"
+    ]
+)
 
-## SYS V init scripts directory
-INITDIR=/etc/rc.d/init.d
-AC_ARG_WITH(initdir, [  --with-initdir=DIR     install System V init script in DIR  (default /etc/rc.d/init.d)], [INITDIR="$withval"])
-AC_SUBST(INITDIR)
+# documentation
+AC_ARG_WITH(
+    mandir,
+    AS_HELP_STRING(
+	[--with-mandir=DIR],
+	[obsolete option, use --mandir instead]
+    ),
+    [
+     AC_MSG_WARN([obsolete --with-mandir option used])
+     mandir="$withval"
+     ]
+)
 
-## Lock directory
-LOCKDIR=/var/lock/subsys
-AC_ARG_WITH(lockdir, [  --with-lockdir=DIR     create lock files in DIR  (default /var/lock/subsys)], [LOCKDIR="$withval"])
-AC_SUBST(LOCKDIR)
+AC_ARG_WITH(
+    docdir,
+    AS_HELP_STRING(
+	[--with-docdir=DIR],
+	[obsolete option, use --docdir instead]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-docdir option used])
+	docdir="$withval"
+    ]
+)
 
-## directory for storing .pid files
-PIDDIR='${prefix}'
-AC_ARG_WITH(piddir, [  --with-piddir=DIR     create .pid files in DIR  (default ${prefix})], [PIDDIR="$withval"])
-AC_SUBST(PIDDIR)
+AC_ARG_WITH(
+    sampledir,
+    AS_HELP_STRING(
+	[--with-sampledir=DIR],
+	[obsolete option, samples are now installed with documentation]
+    ),
+    [
+	AC_MSG_WARN([obsolete --with-sampledir option used])
+    ]
+)
 
-## directory for Config directories populated by the user
-ETCDIR='${prefix}/etc'
-AC_ARG_WITH(etcdir, [  --with-etcdir=DIR     Config directories populated by the user are in DIR  (default ${prefix}/etc)], [ETCDIR="$withval"])
-AC_SUBST(ETCDIR)
+# variable content
+expldir='${prefix}/expl'
+AC_ARG_WITH(
+    expldir,
+    AS_HELP_STRING(
+	[--with-expldir=DIR],
+	[variable state directory is DIR (default ${prefix}/expl)]
+    ),
+    [expldir="$withval"]
+)
+AC_SUBST(expldir)
 
-## directory for language files
-LOCALEDIR='${prefix}/locale'
-AC_ARG_WITH(localedir, [  --with-localedir=DIR     create language files in DIR  (default ${prefix}/locale)], [LOCALEDIR="$withval"])
-AC_SUBST(LOCALEDIR)
+spooldir='${prefix}/spool'
+AC_ARG_WITH(
+    spooldir,
+    AS_HELP_STRING(
+	[--with-spooldir=DIR],
+	[application spool directory is DIR (default ${prefix}/spool)]
+    ),
+    [spooldir="$withval"]
+)
+AC_SUBST(spooldir)
 
-## directory for Documentation files
-DOCDIR='${prefix}/doc'
-AC_ARG_WITH(docdir, [  --with-docdir=DIR     create documentation files in DIR  (default ${prefix}/doc)], [DOCDIR="$withval"])
-AC_SUBST(DOCDIR)
+initdir='${sysconfdir}/rc.d/init.d'
+AC_ARG_WITH(
+    initdir,
+    AS_HELP_STRING(
+	[--with-initdir=DIR],
+	[install System V init script in DIR  (default ${sysconfdir}/rc.d/init.d)]
+    ),
+    [initdir="$withval"]
+)
+AC_SUBST(initdir)
 
-## directory for script files
-SCRIPTDIR='${prefix}/bin'
-AC_ARG_WITH(scriptdir, [  --with-scriptdir=DIR     create script files in DIR  (default ${prefix}/bin)], [SCRIPTDIR="$withval"])
-AC_SUBST(SCRIPTDIR)
+lockdir='${localstatedir}/lock/subsys'
+AC_ARG_WITH(
+    lockdir,
+    AS_HELP_STRING(
+	[--with-lockdir=DIR],
+	[create lock files in DIR  (default ${localstatedir}/lock/subsys)]
+    ),
+    [lockdir="$withval"]
+)
+AC_SUBST(lockdir)
 
-## directory for sample files
-SAMPLEDIR='${prefix}/sample'
-AC_ARG_WITH(sampledir, [  --with-sampledir=DIR     create sample files in DIR  (default ${prefix}/sample)], [SAMPLEDIR="$withval"])
-AC_SUBST(SAMPLEDIR)
+piddir='${localstatedir}/run'
+AC_ARG_WITH(
+    piddir,
+    AS_HELP_STRING(
+	[--with-piddir=DIR],
+	[create .pid files in DIR (default ${localstatedir}/run)]
+    ),
+    [piddir="$withval"]
+)
+AC_SUBST(piddir)
 
-## directory for sample files
-SPOOLDIR='${prefix}/spool'
-AC_ARG_WITH(spooldir, [  --with-spooldir=DIR     spool directory is DIR  (default ${prefix}/spool)], [SPOOLDIR="$withval"])
-AC_SUBST(SPOOLDIR)
+# various subdirectories
+pkgdatadir=$datadir/sympa
+modulesdir=$pkgdatadir/lib
+defaultdir=$pkgdatadir/etc
+scriptdir=$pkgdatadir/bin
+mailtemplatedir=$pkgdatadir/mail_tt2
+webtemplatedir=$pkgdatadir/web_tt2
+AC_SUBST(modulesdir)
+AC_SUBST(defaultdir)
+AC_SUBST(scriptdir)
+AC_SUBST(mailtemplatedir)
+AC_SUBST(webtemplatedir)
 
-dnl Checks for programs.
+CONFIG=$CONFDIR/sympa.conf
+AC_SUBST(CONFIG)
+WWSCONFIG=$CONFDIR/wwsympa.conf
+AC_SUBST(WWSCONFIG)
+
+AC_PATH_PROG(XGETTEXT_PL, xgettext.pl)
+
 AC_PROG_CC
-AC_PROG_MAKE_SET
-AC_AIX
+# needed for using per-target flags
+AM_PROG_CC_C_O
 
-AC_PATH_PROG(PERL, perl, /usr/bin/perl)
 AC_ARG_WITH(
     [perl],
     AS_HELP_STRING(
 	[--with-perl=FULLPATH],
-	[set full path to Perl interpreter (default /usr/bin/perl)]
+        [set full path to Perl interpreter]
     ),
     [PERL="$withval"]
 )
-AC_SUBST(PERL)
-
-AC_PATH_PROG(SUIDPERL, suidperl, /usr/bin/suidperl)
-AC_SUBST(SUIDPERL)
-
-AC_PATH_PROG(SUDO, sudo, /usr/bin/sudo)
-AC_SUBST(SUDO)
-
-AC_PATH_PROG(MHONARC, mhonarc, /usr/bin/mhonarc)
-AC_ARG_WITH(
-    [mhonarc],
-    AS_HELP_STRING(
-	[--with-mhonarc=FULLPATH],
-	[set full path to MhOnArc mail archiving system (default /usr/bin/mhonarc)]
-    ),
-    [MHONARC="$withval"]
-)
-AC_SUBST(MHONARC)
-
-AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
-AC_ARG_WITH(
-    [openssl],
-    AS_HELP_STRING(
-	[--with-openssl=FULLPATH],
-	[set path to OpenSSL (default /usr/local/ssl/bin/openssl)]
-    ),
-    [OPENSSL="$withval"]
-)
-AC_SUBST(OPENSSL)
-
-AC_PATH_PROG(CVS2CL, cvs2cl.pl, /usr/local/bin)
-AC_SUBST(CVS2CL)
-
-AC_PATH_PROG(MSGFMT, msgfmt, /usr/bin/msgfmt)
-AC_SUBST(MSGFMT)
+if test -n "$PERL"; then
+    # user-supplied value
+    AC_MSG_CHECKING([user-supplied perl interpreter])
+    if test -f "$PERL"; then
+	:
+    else
+	AC_MSG_RESULT([non-existing])
+	AC_MSG_ERROR([invalid value $PERL for perl interpreter])
+    fi
+    if test -x "$PERL"; then
+	:
+    else
+	AC_MSG_RESULT([non-executable])
+	AC_MSG_ERROR([invalid value $PERL for perl interpreter])
+    fi
+    AC_MSG_RESULT([$PERL])
+else
+    # check in PATH
+    AC_PATH_PROG(PERL, perl)
+    if test -z "$PERL"; then
+	AC_MSG_ERROR([perl required])
+    fi
+fi
 
 USER=sympa
 AC_ARG_WITH(
@@ -204,6 +324,10 @@ AC_ARG_WITH(
 )
 AC_SUBST(SENDMAIL_ALIASES)
 
+## The postfix virtual file we use. Better use a seperate one for sympa.
+## Of course an extra alias file must be generated with proper permissions
+## (owner sympa, write access for sympa, no write access for anyone else)
+## and declared in main.cf!
 VIRTUAL_ALIASES=/etc/mail/sympa_virtual
 AC_ARG_WITH(
     [virtual_aliases],
@@ -261,14 +385,17 @@ AC_SUBST(POSTMAP_ARG)
 
 AC_CONFIG_FILES([
     Makefile
-    src/etc/sample/Makefile
-    src/etc/script/Makefile
     src/Makefile
+    src/etc/Makefile
+    src/etc/script/Makefile
     soap/Makefile
-    doc/man8/Makefile
     doc/Makefile
+    doc/man8/Makefile
+    doc/sample/Makefile
     web_tt2/Makefile
     wwsympa/Makefile
     mail_tt2/Makefile
+    po/Makefile.in
+    po-wwsympa/Makefile.in
 ])
 AC_OUTPUT

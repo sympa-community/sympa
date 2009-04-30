@@ -19,78 +19,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-SRC	=	create_db.Pg create_db.mysql create_db.Oracle create_db.Sybase create_db.SQLite 
+scriptdir = $(pkgdatadir)/bin
+script_SCRIPTS = create_db.Pg create_db.mysql create_db.Oracle \
+		 create_db.Sybase create_db.SQLite \
+		 arc2webarc.pl testldap.pl p12topem.pl init_comment.pl \
+		 crypt_passwd.pl testlogs.pl mod2html.pl tpl2tt2.pl \
+		 ldap_alias_manager.pl mysql_alias_manager.pl
+init_SCRIPTS = sympa
 
-SUBSTSRC	=	arc2webarc.pl testldap.pl p12topem.pl init_comment.pl crypt_passwd.pl testlogs.pl mod2html.pl tpl2tt2.pl ldap_alias_manager.pl mysql_alias_manager.pl
+EXTRA_DIST = $(script_SCRIPTS) $(init_SCRIPTS)
 
-INITSRC		=	sympa
-
-#SCRIPTDIR	=	../../../script
-SCRIPTDIR	=	$(SBINDIR)
-
-all:	
-
-install: makedir installsrc installsubstsrc installinit
-
-clean:
-	rm -rf $(DESTDIR)$(SCRIPTDIR)
-
-makedir:
-	@if [ ! -d $(DESTDIR)$(SCRIPTDIR) ]; then \
-		mkdir -p $(DESTDIR)$(SCRIPTDIR); \
-	fi
-
-installsubstsrc:
-	@echo "Doing multiple substitutions while installing ..."
-	@( \
-		PERL=$(PERL); export PERL; \
-		SH=$(SH); export SH; \
-		USER=$(USER); export USER; \
-		UMASK=0755; export UMASK; \
-		DIR=$(DIR); export DIR; \
-		DESTDIR=$(DESTDIR); export DESTDIR; \
-		INITDIR=$(INITDIR); export INITDIR; \
-		INSTALLDIR=$(SCRIPTDIR); export INSTALLDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
-		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		CONFIG=$(CONFIG); export CONFIG; \
-		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
-		COOKIE=$(COOKIE); export COOKIE; \
-		HOST=$(HOST); export HOST; \
-		OPENSSL=$(OPENSSL); export OPENSSL; \
-		PIDPRE='$(PIDPRE)'; export PIDPRE; \
-		PIDPOST='$(PIDPOST)'; export PIDPOST; \
-		LOCKDIR=$(LOCKDIR); export LOCKDIR; \
-		$(PERL) ../../../subst.pl $(SUBSTSRC) \
-	)
-
-installsrc:
-	@for c in $(SRC); do \
-	cp $$c $(DESTDIR)$(SCRIPTDIR); \
-	done
-
-
-installinit:
-	mkdir -p $(DESTDIR)$(INITDIR)
-	@echo "Installing SYSV init script in $(DESTDIR)$(INITDIR)..."
-	@( \
-		PERL=$(PERL); export PERL; \
-		SH=$(SH); export SH; \
-		USER=$(USER); export USER; \
-		UMASK=0755; export UMASK; \
-		DIR=$(DIR); export DIR; \
-		DESTDIR=$(DESTDIR); export DESTDIR; \
-		INITDIR=$(INITDIR); export INITDIR; \
-		INSTALLDIR=$(INITDIR); export INSTALLDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
-		PIDDIR=$(PIDDIR); export PIDDIR; \
-		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		CONFIG=$(CONFIG); export CONFIG; \
-		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
-		COOKIE=$(COOKIE); export COOKIE; \
-		HOST=$(HOST); export HOST; \
-		$(PERL) ../../../subst.pl $(INITSRC) \
-	)
-
-
-
+install-data-hook:
+	sed -i \
+		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--USER--|$(USER)|' \
+		-e 's|--GROUP--|$(GROUP)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
+		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
+		-e 's|--prefix--|$(prefix)|' \
+		-e 's|--piddir--|$(piddir)|' \
+		-e 's|--lockdir--|$(lockdir)|' \
+		-e 's|--initdir--|$(initdir)|' \
+		-e 's|--sbindir--|$(sbindir)|' \
+		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
+		$(addprefix $(DESTDIR)$(datadir)/sympa/bin/, $(script_SCRIPTS)) \
+		$(addprefix $(DESTDIR)$(initdir)/, $(init_SCRIPTS))

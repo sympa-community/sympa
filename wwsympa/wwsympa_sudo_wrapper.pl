@@ -1,3 +1,3 @@
 #!--PERL--
 
-exec '--SUDO--', '-u', '--USER--', '--CGIDIR--/wwsympa.fcgi';
+exec '--SUDO--', '-u', '--USER--', '--execcgidir--/wwsympa.fcgi';

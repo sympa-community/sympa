@@ -21,7 +21,7 @@
 
 
 package wwslib;
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 
 use Exporter;
 @ISA = ('Exporter');
@@ -142,16 +142,16 @@ sub load_config {
     ## Valid params
     my %default_conf = (arc_path => '/home/httpd/html/arc',
 			archive_default_index => 'thrd',
-			archived_pidfile => '--PIDDIR--/archived.pid',		  
+			archived_pidfile => '--piddir--/archived.pid',		  
 			bounce_path => '/var/bounce',
-			bounced_pidfile => '--PIDDIR--/bounced.pid',
+			bounced_pidfile => '--piddir--/bounced.pid',
 			cookie_domain => 'localhost',
 			cookie_expire => 0,
 			custom_archiver => '',
 			mhonarc => '/usr/bin/mhonarc',
 			review_page_size => 25,
 			viewlogs_page_size => 25,
-			task_manager_pidfile => '--PIDDIR--/task_manager.pid',
+			task_manager_pidfile => '--piddir--/task_manager.pid',
 			title => 'Mailing Lists Service',
 			use_fast_cgi => 1,
 			default_home => 'home',
