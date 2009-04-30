@@ -44,7 +44,7 @@ modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm Conf.pm CAS.pm Config_XML
 	       Family.pm Language.pm List.pm Log.pm mail.pm Ldap.pm Upgrade.pm \
 	       Lock.pm Version.pm Fetch.pm Message.pm Task.pm Datasource.pm \
 	       SQLSource.pm LDAPSource.pm Scenario.pm PlainDigest.pm \
-	       tools.pl tt2.pl parser.pl report.pm time_utils.pl
+	       tools.pl tt2.pl report.pm time_utils.pl
 
 EXTRA_DIST = $(modules_DATA) $(sbin_SCRIPTS)
 
