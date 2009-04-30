@@ -53,6 +53,8 @@ use CPAN;
 	     'Net::Netmask' => '1.9015',
 	     'Term::ProgressBar' => '2.09',
 	     'Time::HiRes' => '1.9719',
+	     'MIME::Lite' => '3.024',
+	     'MIME::Lite::HTML' => '1.23',
 	     );
 
 ### key:left "module" used by SYMPA, 
@@ -86,6 +88,8 @@ use CPAN;
 	     'HTML::FormatText' => 'HTML-Format',
 	     'Term::ProgressBar' => 'Term-ProgressBar',
 	     'Time::HiRes' => 'Time-HiRes',
+	     'MIME::Lite' => 'MIME-Lite',
+	     'MIME::Lite::HTML' => 'MIME-Lite-HTML',
 	     );
 
 %opt_CPAN = ('DBD::Pg' => 'DBD-Pg',

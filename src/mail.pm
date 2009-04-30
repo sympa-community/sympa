@@ -109,13 +109,17 @@ sub set_send_spool {
 # OUT : 1 | undef
 ####################################################
 sub mail_file {
-    my ($filename, $rcpt, $data,$robot,$sign_mode) = @_;
+   
+    my ($filename, $rcpt, $data, $robot) = @_;
+    my $header_possible = $data->{'header_possible'};
+    my $sign_mode = $data->{'sign_mode'};
+
     &do_log('debug2', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
 
     my ($to,$message);
 
     ## boolean
-    my $header_possible = 0; # =1 : it is possible there are some headers
+    $header_possible = 0 unless (defined $header_possible);
     my %header_ok;           # hash containing no missing headers
     my $existing_headers = 0;# the message already contains headers
    
@@ -146,6 +150,7 @@ sub mail_file {
        
     ## ## Does the message include headers ?
     if ($header_possible) {
+	
 	foreach my $line (split(/\n/,$message)) {
 	    last if ($line=~/^\s*$/);
        

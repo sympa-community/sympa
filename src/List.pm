@@ -3079,7 +3079,9 @@ sub send_file {
 
     $data->{'boundary'} = '----------=_'.&tools::get_message_id($robot) unless ($data->{'boundary'});
 
-    unless (&mail::mail_file($filename, $who, $data, $self->{'domain'}, $sign_mode)) {
+    $data->{'sign_mode'} = $sign_mode;
+    
+    unless (&mail::mail_file($filename, $who, $data, $self->{'domain'})) {
 	&do_log('err',"List::send_file, could not send template $filename to $who");
 	return undef;
     }

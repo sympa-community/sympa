@@ -1,5 +1,4 @@
 #!--PERL-- -U
-
 # wwsympa.fcgi - This script provides the web interface to Sympa 
 # RCS Identication ; $Revision$ ; $Date$ 
 #
@@ -47,6 +46,10 @@ use Archive::Zip;
 use strict 'vars';
 use Time::Local;
 use Text::Wrap;
+use MIME::Lite::HTML;
+use MIME::Lite;
+#use POSIX;
+#use CGI;
 
 ## Template parser
 require "--LIBDIR--/tt2.pl";
@@ -306,6 +309,7 @@ my %comm = ('home' => 'do_home',
 	 'edit_attributes' => 'do_edit_attributes',
 	 'ticket' => 'do_ticket',
 	 'manage_template' => 'do_manage_template',
+	 'send_newsletter' => 'do_send_newsletter',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -424,6 +428,8 @@ my %action_args = ('default' => ['list'],
 		'ticket' => ['ticket'],
 		'change_email' => ['email'],
 		'manage_template' => ['subaction','list','message_template'],   
+		'send_newsletter' => [],
+		'compose_mail' => ['list','subaction'],
 		);
 
 ## Define the required parameters for each action
@@ -521,6 +527,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'search' => ['param.list','filter'],
 		     'search_user' => ['param.user.email','email'],
 		     'send_mail' => ['param.user.email'],
+		     'send_newsletter' => ['param.list','param.user.email', 'url'],
 		     'send_me' => ['param.list'],
 		     'view_source' => ['param.list'],
 		     'requestpasswd' => ['email'],
@@ -14941,50 +14948,59 @@ sub do_change_email {
     
  }
 
+####################################################
+#  do_compose_mail                           
+####################################################
 sub do_compose_mail {
-    &wwslog('info', 'do_compose_mail');
+
+    &wwslog('info', 'do_compose_mail', $in{'subaction'});
     
     unless ($param->{'may_post'}) {
 	&report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
 	&wwslog('info','do_compose_mail: may not send message');
 	return undef;
     }
+
+    # Set the subaction to html_news_letter or undef
+    $param->{'subaction'} = $in{'subaction'};
     if ($in{'to'}) {
 	# In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
 	$in{'to'} =~ s/ /\@/g;
-	 $param->{'to'} = $in{'to'};
-     }else{
-	 $param->{'to'} = $list->get_list_address();
-     }
-     foreach my $recipient (split(',',$param->{'to'})) {
-	 ($param->{'recipients'}{$recipient}{'local_to'},$param->{'recipients'}{$recipient}{'domain_to'}) = split ('@',$recipient);
-     }
-     $param->{'mailto'}= &mailto($list,$param->{'to'});
-     # headers will be encoded later.
-     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
-     $param->{'subject'} = $in{'subject'};
-     $param->{'in_reply_to'}= '<'.$in{'in_reply_to'}.'>';
-     $param->{'message_id'} = &tools::get_message_id($robot);
-
-     if  ($list->is_there_msg_topic()) {
-
-	 $param->{'request_topic'} = 1;
-
-	 foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
-	     if ($top->{'name'}) {
-		 push (@{$param->{'available_topics'}},$top);
-	     }
-	 }
-	 $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
-     }
-
-     return 1;
+	$param->{'to'} = $in{'to'};
+    }else{
+	$param->{'to'} = $list->get_list_address();
+    }
+    foreach my $recipient (split(',',$param->{'to'})) {
+	($param->{'recipients'}{$recipient}{'local_to'},$param->{'recipients'}{$recipient}{'domain_to'}) = split ('@',$recipient);
+    }
+    $param->{'mailto'}= &mailto($list,$param->{'to'});
+    # headers will be encoded later.
+    #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
+    $param->{'subject'} = $in{'subject'};
+    $param->{'in_reply_to'}= '<'.$in{'in_reply_to'}.'>';
+    $param->{'message_id'} = &tools::get_message_id($robot);
+    
+    if  ($list->is_there_msg_topic()) {
+	
+	$param->{'request_topic'} = 1;
+	
+	foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
+	    if ($top->{'name'}) {
+		push (@{$param->{'available_topics'}},$top);
+	    }
+	}
+	$param->{'topic_required'} = $list->is_msg_topic_tagging_required();
+    }
+    
+    return 1;
  }
 
 ####################################################
 #  do_send_mail                           
 ####################################################
-#  Sends a message to a list by the Web interface.
+#  Sends a message to a list by the Web interface
+#  or an html page getting its url.
+#  Need MIME::Lite - MIME::Lite::HTML - EMAIL::DATE::FORMAT
 #  It uses mail::mail_file() to do it.
 # 
 # IN : -
@@ -14994,49 +15010,50 @@ sub do_compose_mail {
 #
 ####################################################
  sub do_send_mail {
+     
      &wwslog('info', 'do_send_mail');
 
-     # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
-     $in{'to'} =~ s/ /\@/g;
-     my $to = $in{'to'};
-     unless ($in{'to'}) {
-	 unless ($param->{'list'}) {
-	     &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
-	     &wwslog('info','do_send_mail: no list');
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	     return undef;		
+     my $to;
+     # Send the message to the list or to the sender as clicking the send to the list or to me.
+     # First if : send to the list
+     if ($in{'sub_action'} eq 'sendmailtolist'){
+
+	 # In archive we hide email replacing @ by ' '. Here we must do the reverse transformation
+	 $in{'to'} =~ s/ /\@/g;
+	 $to = $in{'to'};
+    
+	 unless ($in{'to'}) {
+	     unless ($param->{'list'}) {
+		 &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
+		 &wwslog('info','do_send_mail: no list');
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_list','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 return undef;		
+	     }
+	     unless ($param->{'may_post'}) {
+		 &report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
+		 &wwslog('info','do_send_mail: may not send message');
+		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		 return undef;
+	     }
+	     $to = $list->get_list_address();
 	 }
-	 unless ($param->{'may_post'}) {
-	     &report::reject_report_web('auth',$param->{'may_post_reason'},{},$param->{'action'},$list);
-	     &wwslog('info','do_send_mail: may not send message');
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	     return undef;
-	 }
-	 $to = $list->get_list_address();
      }
 
-     ## Message body should not be empty
-     if ($in{'body'} =~ /^\s*$/) {
-	 &report::reject_report_web('user','missing_arg',{'argument' => 'body'},$param->{'action'});
-	 &wwslog('info','Missing body');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	 return undef;		
-     }
-     
-
-     $Text::Wrap::columns = 80;
-     $Text::Wrap::huge = 'overflow';
-     $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
-
-
-     my @body = split /\0/, $in{'body'};
-
+     # Take the sender mail
      my $from = $param->{'user'}{'email'};
+
+     # Send the mail to the sender. To test his message
+     # Second if : send to the sender "send to me"
+     if($in{'sub_action'} eq 'sendmailtome') {
+	 #Set the sender mail to the addressee
+	 $to = $from;	 
+     }
+
      if (defined $param->{'subscriber'}) {
 	 $from = $param->{'subscriber'}{'gecos'}.' <'.$from.'>';
      }
 
-     ## TOPICS
+     ##--------------- TOPICS --------------------
      my $list_topics;
      if ($list->is_there_msg_topic()) {
 	 my @msg_topics;
@@ -15057,20 +15074,76 @@ sub do_compose_mail {
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_topic','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
-
+     
      if ($list_topics) {
 	 my $filetopic = $list->tag_topic($in{'message_id'},$list_topics,'sender');
      }
 
-     my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
-			       'Message-ID' => $in{'message_id'}}, 
-	         'subject' => $in{'subject'},
-		 'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
-		 'from'=> $from,
-		 'to' => $to,
-		 'body' => $in{'body'}};
+     ##--------------- send an html page or a message --------------------
+    
+     if ($in{'html_news_letter'}) {
+	 
+	 # url should not be empty -> missing argument
+	 if ($in{'url'} =~ /^\s*$/) {
+	       &report::reject_report_web('user','missing_arg',{'argument' => 'url'},$param->{'action'});
+	       ($Log::log_level >= 0) && &wwslog('info','Missing url');
+	       &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_url','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	       return undef;
+	 }
 
-     unless (&mail::mail_file('',$to,$data,$robot)) {
+	 # Generate a newsletter from an HTML URL and send it to a list by the Web interface.
+	 # Else you must use parse routine of MIME::Lite::HTML and send of MIME::Lite.
+	 my $mailHTML = new MIME::Lite::HTML(
+					 {
+					     From => $from,
+					     To => $to,
+					     Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
+					     'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+					     Subject => $in{'subject'},
+					     HTMLCharset => 'utf-8',
+					     TextCharset => 'utf-8',
+					     TextEncoding => '8bit',
+					     HTMLEncoding => '8bit',
+					     remove_jscript => '1', #delete the scripts in the html
+					 }
+					     );
+	 my $pages_url;
+	 $pages_url = $in{'url'};
+
+	 # parse return the MIME::Lite part to send 
+	 my $MIMEmail = $mailHTML->parse($pages_url); 
+
+	 $in{'body'} = $MIMEmail->as_string;
+
+     } else {
+
+           ## Message body should not be empty
+           if ($in{'body'} =~ /^\s*$/) {
+	       &report::reject_report_web('user','missing_arg',{'argument' => 'body'},$param->{'action'});
+	       ($Log::log_level >= 0) && &wwslog('info','Missing body');
+	       &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	       return undef;
+	   }
+
+	   $Text::Wrap::columns = 80;
+	   $Text::Wrap::huge = 'overflow';
+	   $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
+
+	   my @body = split /\0/, $in{'body'};
+   }
+
+
+    my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
+			       'Message-ID' => $in{'message_id'}}, 
+		'subject' => $in{'subject'},
+		'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+		'from'=> $from,
+		'to' => $to,
+		'body' => $in{'body'},
+		'sign_mode' => '',
+		'header_possible' => '1'};
+
+    unless (&mail::mail_file('', $to, $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err','do_send_mail: failed to send message for $to list');
@@ -15078,9 +15151,11 @@ sub do_compose_mail {
 	 return undef;
      }
 
+
      &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      return 'info';
+
  }
 
 ####################################################

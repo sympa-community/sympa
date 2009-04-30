@@ -104,8 +104,17 @@
   </ul>
 </div>
 [% END %]
+[% END %]
 
-
+[% IF action == 'compose_mail' %]
+<div id="nav">
+  <ul>
+    [% IF subaction == '' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]">[%|loc%]Send a message[%END%]</a></li>
+    [% IF subaction == 'html_news_letter' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/compose_mail/[% list %]/html_news_letter">[%|loc%]Send an html page[%END%]</a></li>
+  </ul>
+</div>
 [% END %]
 
 <!-- end nav.tt2 -->

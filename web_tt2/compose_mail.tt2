@@ -1,49 +1,66 @@
 <!-- $Id$ -->
 <div class="block">
 
-<h2>[%|loc%]Sendind a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
-<br />
+[% IF !subaction %]
+	<h2>[%|loc%]Sendind a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+	<br />
+[% END %]
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail">
-<fieldset>
-[%|loc(user.email)%]From: %1[%END%]<br />
-[%|loc(mailto)%]To: %1[%END%]<br />
-<label for="subject">[%|loc%]Subject:[%END%] <input id="subject" type="text" size="45" name="subject" value="[% subject %]" /></label>
-<input class="MainMenuLinks" type="submit" name="action_send_mail" value="[%|loc%]Send this mail[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
 
-<br />
-<input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
-<input type="hidden" name="message_id" value="[% message_id %]" />
-<input type="hidden" name="list" value="[% list %]" />
-[% SET counter = 0 %]
-[% SET stringto = '' %]
-[% FOREACH r = recipients %]
-    [% IF counter == 0 %]
-        [% stringto = r.value.local_to _ ' ' _ r.value.domain_to %]
-	[% counter = 1 %]
-    [% ELSE %]
-        [% stringto = stringto _ ',' _ r.value.local_to _ ' ' _ r.value.domain_to %]
-    [% END %]
+[% IF subaction == "html_news_letter" %]
+	<h2>[%|loc%]Sending an html page to the list [%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+   	<br />
 [% END %]
-<input type="hidden" name="to" value="[% stringto %]" />
 
- [% IF request_topic %]
-   <br /><br />
-   [%|loc%]This list is configured to require topic(s).[%END%]
-   <br />
-   [%|loc%]Please select one or more topic(s) that corresponds to your message :[%END%]
-   <br /><br /> 
-   [% FOREACH t = available_topics %]
-     <input type="checkbox" name="topic_[%t.name%]" value="1"/> [% t.title %]
-     <br />
-   [% END %]
-   <br />
- [%  END %]
- 
+    <fieldset>
+	[%|loc(user.email)%]From: %1[%END%]<br />
+	[%|loc(mailto)%]To: %1[%END%]<br />
+	<label for="subject">[%|loc%]Subject:[%END%] <input id="subject" type="text" size="45" name="subject" value="[% subject %]" /></label>
+	[% IF subaction == "html_news_letter" %]
+		<input type="hidden" name="html_news_letter" value="[% subaction %]" />
+	[% END %]
+	<input type="hidden" name="action" value="send_mail"/>
+		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="Send to the list" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtome" value="Send to me" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+	<br />
 
-<textarea name="body" cols="80" rows="25">
-</textarea>
-</fieldset>
+	<input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
+	<input type="hidden" name="message_id" value="[% message_id %]" />
+	<input type="hidden" name="list" value="[% list %]" />	
+	[% SET counter = 0 %]
+	[% SET stringto = '' %]
+	[% FOREACH r = recipients %]
+    		[% IF counter == 0 %]
+        		[% stringto = r.value.local_to _ ' ' _ r.value.domain_to %]
+			[% counter = 1 %]
+    		[% ELSE %]
+        		[% stringto = stringto _ ',' _ r.value.local_to _ ' ' _ r.value.domain_to %]
+    		[% END %]
+	[% END %]
+	<input type="hidden" name="to" value="[% stringto %]" />
+
+ 	[% IF request_topic %]
+   		<br />
+   		[%|loc%]This list is configured to require topic(s).[%END%]
+   		<br />
+   		[%|loc%]Please select one or more topic(s) that corresponds to your message :[%END%]
+   		<br />
+   		[% FOREACH t = available_topics %] 
+     			<input type="checkbox" name="topic_[%t.name%]" value="1"/> [% t.title %]
+     			<br />
+   		[% END %]
+   		<br />
+ 	[%  END %]
+
+	[% IF !subaction %]
+  		<textarea name="body" cols="80" rows="25"></textarea>
+	[%  END %]
+	[% IF subaction == "html_news_letter" %]
+   		<label for="url">[%|loc%]Url :[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	
+	<br /><br />
+	[%  END %]
+    </fieldset>
 </form>
 
 </div>
