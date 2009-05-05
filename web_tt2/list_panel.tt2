@@ -1,22 +1,23 @@
 <!-- $Id$ -->
 
 <div class="list_panel">
-  
+
+<ul>
    [% IF list_status == 'closed' %]
-   <span class="bg_color_error">[%|loc%]Closed list[%END%]</span><br/>
+   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
    [% ELSIF list_status == 'pending' %]
-   <span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span><br/>
+   <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
    [% END %]
-   [%|loc%]Subscribers:[%END%] <span>[% total %]</span><br />
-   [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
-   <span>[%|loc%]Owners[%END%]</span><br />
+   <li class="menuLinks">[%|loc%]Subscribers:[%END%] [% total %]</li>
+   <li class="menuLinks">[% IF is_priv %]<span>([%|loc%]Error rate:&nbsp;[%END%][% bounce_rate %] %)</span>[% END %]</li>
+   <li class="menuLinks">[%|loc%]Owners[%END%]</li>
    [% FOREACH o = owner %]
       [% IF o.value.visibility != 'conceal' %]
-	[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %]<br />
+	[% IF o.value.gecos %]<span>[% o.value.gecos %]</span>[% ELSE %]<span>[% o.value.local %]</span>[% END %]<br />
       [% END %]
    [% END %]
 
-   [% IF editor %]<span>[%|loc%]Moderators[%END%]</span><br />[% END %]
+   [% IF editor %]<li class="menuLinks">[%|loc%]Moderators[%END%]</li>[% END %]
    [% FOREACH e = editor %]
       [% IF e.value.visibility != 'conceal' %]
  	[% IF e.value.gecos %][% e.value.gecos %][% ELSE %][% e.value.local %][% END %]<br />
@@ -25,10 +26,12 @@
    [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
   <br/>
   [% IF protection_type == 'javascript' %]
-   <strong>[% hidden_head %]<a class=\"smalltext\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]<\/a>[% hidden_end %]</strong>
+   <li class="menuLinks">[% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]<\/a>[% hidden_end %]</li>
   [% ELSE %]
-   <strong><a class="smalltext" href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a></strong>
+   <li class="menuLinks"><a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a></li>
   [% END %]
+</ul>
+
 </div>
 
 <!-- end list_panel.tt2 -->

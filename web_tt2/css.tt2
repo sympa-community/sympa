@@ -191,6 +191,9 @@ td.text_right {
                 text-align: justify;
                 }
 
+/* list_panel and list_admin_menu .tt2 block*/
+
+.list_panel,
 #list_admin_menu { 
                    font-size: 1.4em; 
                    font-weight: bold;
@@ -203,31 +206,45 @@ td.text_right {
                    border-radius:4px;
                    }
 
+.list_panel { 
+             font-size: 1.2em;
+	     margin-bottom:0.5em
+             }
+
+.list_panel ul,
 #list_admin_menu ul {
-                      list-style-type: none;
-                      margin:0 0.5em
-                      }
+                     list-style-type: none;
+                     margin:0 0.5em
+                     }
 
+.list_panel ul li,
 #list_admin_menu ul li {
-                         font-size:1em;
-                         line-height:1.4em;
-                         margin-top:0.3em;
-                         }
+                        font-size:1em;
+                        line-height:1.4em;
+                        margin-top:0.3em;
+                        }
 
+.list_panel span {
+		  font-weight: normal!important;
+		  }
+
+.list_panel ul li a:hover,
 #list_admin_menu ul li a:hover {
                                  color:[% color_4 %];
                                  text-decoration:none;
                                  }
 
+.list_panel ul li ul,
 #list_admin_menu ul li ul {
-                            font-size:0.9em;        
-                            }
+                           font-size:0.9em;        
+                           }
 
+.list_panel ul li ul li,
 #list_admin_menu ul li ul li{
-                              font-size:0.9em;
-                              line-height:1.2em;
-                              margin-top:0em;          
-                              }
+                             font-size:0.9em;
+                             line-height:1.2em;
+                             margin-top:0em;          
+                             }
 
 /* list type on the list creation page */
 #list_type {
@@ -452,26 +469,6 @@ ul#set_pending_radio li {
                           margin-left: 1em;
                           } 
 
-/* list_panel.tt2 block*/
-.list_panel { 
-              font-size: 1.2em;
-              background: [% color_5 %];
-              padding: 5px;
-              border: 1px solid [% color_2 %];
-              text-align: left;
-              margin-bottom: 10px;
-              overflow: hidden;
-              -moz-border-radius:4px;
-              -webkit-border-radius:4px;
-              -KHTML-border-radius:4px;
-              -icab-border-radius:4px;
-              border-radius:4px;
-              }
-
-.list_panel span { 
-                   font-weight: bold;
-                   }
-
 form { 
        line-height: 1.8em;
        }
@@ -493,6 +490,11 @@ form#bold_label input {
                         margin-left: 5px;
                         margin-top: 5px;
                         }
+
+form input[type="radio"],
+form input[type="checkbox"] {
+                        vertical-align: middle;
+			}
 
 #global_mailing_lists { 
                         text-align: center;
@@ -879,8 +881,6 @@ a.actionMenuLinks {
                     text-decoration: none;
                     padding: 0 5px!important;
                     margin: 0 0.5em 0 0;
-                    height:1.5em;
-                    vertical-align:top;
                     cursor:pointer;
                     -moz-border-radius:10px;
                     -webkit-border-radius:10px;
@@ -1459,14 +1459,29 @@ h6 {
      }
 
 /* input */
+
 a.input {
-          background: [% color_13 %]; 
-          border: 1px solid [% color_2 %]; 
-          padding: 3px; 
+          background: [% color_12 %]; 
+          border: 1px solid [% color_12 %]; 
+          color: [% color_13 %];
+          padding: 3px;
+	  margin-left:0.2em;
           text-decoration: none;
-          font-size: smaller;
+	  vertical-align: middle;
+          font-size: 0.7em;
+	  font-variant:small-caps;
           /* if IE zoom:1;*/
           zoom: 1;
+           -moz-border-radius:10px;
+           -webkit-border-radius:10px;
+           -KHTML-border-radius:10px;
+           -icab-border-radius:10px;
+           border-radius:10px;
+          }
+
+a.input:hover {
+          background: [% color_13 %]; 
+          color: [% color_12 %]; 
           }
 
 input {

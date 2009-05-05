@@ -17,7 +17,7 @@
 [% ELSE %]
   [% IF may_subscribe %]
      [% IF action == 'subrequest' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<li ><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" [% IF listconf.custom_attribute.size == 0 %]onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to subscribe to list %1?[%END%][%END%]'); return false;"[% END %]>[%|loc%]Subscribe[%END%]</a></li>
+<li class="[% class %]"><a  href="[% path_cgi %]/subscribe/[% list %]" [% IF listconf.custom_attribute.size == 0 %]onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Do you really want to subscribe to list %1?[%END%][%END%]'); return false;"[% END %]>[%|loc%]Subscribe[%END%]</a></li>
   [% END %]
 
   [% IF ! user.email %]
