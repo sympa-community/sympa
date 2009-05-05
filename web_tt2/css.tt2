@@ -112,7 +112,9 @@ dl {
          font-weight: bold;
          padding:1em 0;
          margin-top:1em;
-         text-shadow: 2px 2px 2px [% color_12 %];
+         margin-left:5em;
+         text-shadow: 3px 3px 3px [% color_12 %];
+         z-index:520;
          }
 
 #error { 
@@ -809,7 +811,6 @@ a.dingbat {
                  text-decoration: none;
                  padding: 0 5px!important;
                  margin: 0;
-                 height:1.5em;
                  vertical-align:top;
                  cursor:pointer;
                  -moz-border-radius:10px;
@@ -862,7 +863,6 @@ a.MainMenuLinksCurrentPage:hover {
                                    }
 
 input.MainMenuLinks { 
-                      padding: 0 1px;
                       margin-top: 4px;
                       }
 
@@ -870,8 +870,6 @@ input.MainMenuLinks:hover{
                            background: [% color_8 %]!important;
                            color: [% color_9 %]!important;
                            border: none ;
-                           height:1.5em;
-                           vertical-align:top;
                            }
 
 a.actionMenuLinks {
@@ -1079,14 +1077,48 @@ h7 strong {
 	
 .listTitle {
              height: 1%;
+	     width: 100%;
              text-align: center;
-             border: solid 1px [% color_2 %];
-             padding: 5px 0px;
-             background: [% color_5 %];
-             font-size:1.3em; 
-             margin-top:0em;
-             margin-bottom: 1em 
+             border: solid [% color_4 %];
+	     border-width: 0 1px 1px 0;
+             padding: 2px 0px;
+             background: [% color_13 %];
+             font-size:1.3em;
+             margin:0em auto;
+            -moz-border-radius:50px;
+            -webkit-border-radius:20px;
+            -KHTML-border-radius:20px;
+            -icab-border-radius:20px;
+            border-radius:20px;
              }
+
+.listTitle a,
+.listTitle a:hover  {
+	              color:[% color_2 %];
+		      font-weight:bold;
+		      letter-spacing: 0.1em;
+		      text-decoration:none;
+		      background:none!important;
+		      border:none!important;
+        	     }
+
+.listTitle a:hover  {
+	              color:[% color_8 %];
+        	     }
+
+.listTitle.description  {
+		      font-size:1em;
+		      font-weight:bold;
+	              margin-top:0em;
+	              margin-bottom:1.3em;
+	              background:none!important;
+		      border:none;
+        	     }
+
+.listTitle.description span {
+		             color:[% color_4 %];
+
+	        	     }
 
 #ErrorBlock {
               margin:0;
@@ -1751,12 +1783,11 @@ table.preferences th {
                         font-weight:normal;
                         background-color:[% color_6 %];
                         border-bottom:1px solid [% color_6 %];
+                        padding-top:0.2em!important;
                         }
 
 #nav li.MainMenuLinks a {
                           color:[% color_8 %];
-                          padding:0.1em 0.4em; 
-                          border:none;
                           }
 
 #nav li.MainMenuLinks a:hover {
@@ -1766,9 +1797,9 @@ table.preferences th {
 
 #nav li.MainMenuLinks:hover {
                               background-color: [% color_4 %];
-                              border:1px solid [% color_4 %];
+                              border:1px solid [% color_8 %];
                               border-width: 0 1px 0 0;
-                              border-bottom:1px solid [% color_5 %];
+                              border-bottom:1px solid [% color_4 %];
                               z-index:300;
                               }
 
@@ -1797,7 +1828,7 @@ table.preferences th {
 #nav li.nolink{
                 background-color: [% color_5 %];
                 color:[% color_12 %];
-                padding:0.1em 0.4em;
+                padding:0.2em 0.4em 0.1em 0.4em;
                 -moz-border-radius:10px 10px 0 0;
                 -webkit-border-top-left-radius:10px;
                 -webkit-border-top-right-radius:10px;
@@ -1845,7 +1876,7 @@ table.preferences th {
 
 #subnav ul li.MainMenuLinks{
                              background-color:[% color_9 %];
-                             padding:0 1.5em!important;
+                             padding:0 1em!important;
                              border:1px outset [% color_8 %];
                              }
 
@@ -1866,7 +1897,7 @@ table.preferences th {
 
 #subnav ul li.MainMenuLinksCurrentPage{
                                         background-color:[% color_5 %];
-                                        padding:0 1.5em!important;
+                                        padding:0 1em!important;
                                         color: [% color_4 %];
                                         border:1px inset [% color_8 %];
                                         }

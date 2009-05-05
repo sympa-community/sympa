@@ -87,8 +87,9 @@
      <div id="Paint">
 
        [% IF list %]
-	<div class="listTitle"><strong><a class="menuLinksCurrentPage" href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a></strong><br />
-         [% IF list_title %][% list_title %][% END %]</div><br />
+	<div class="listTitle"><a href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a></div>
+        <div class="listTitle description">
+	[% IF list_title %] <span> [% list_title %] </span> [% END %]</div><br />
        [% END %]
 
 	 [% PROCESS nav.tt2 %]
