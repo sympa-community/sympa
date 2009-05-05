@@ -24,7 +24,6 @@
 ## It is based on the NEWS ***** entries
 
 use strict;
-use version;
 use Getopt::Long;
 
 my %options;
@@ -41,9 +40,8 @@ if (!$options{previous}) {
     exit 0;
 }
 
-# use version objects
-my $previous_version = version->new($options{previous});
-my $current_version = version->new($options{current});
+my $previous_version = $options{previous};
+my $current_version = $options{current};
 
 # exit immediatly if previous version is higher or equal
 exit 0 if $previous_version >= $current_version;
@@ -52,26 +50,78 @@ print <<EOF;
 You are upgrading from Sympa $previous_version
 You should read CAREFULLY the changes listed below
 They might be incompatible changes:
+<RETURN>
 EOF
 
+if (($previous_version eq $current_version) ||
+    &higher($previous_version,$current_version)){
+    exit 0;
+}
+
+my $wait = <STDIN>;
+
 ## Extracting Important changes from release notes
-open NEWS, 'NEWS';
+open NOTES, 'NEWS';
 my ($current, $ok);
-while (my $line = <NEWS>) {
-    
-    # extract version tags
-    if (/^([\w.]+)\s/) {
-        my $version = version->new($1);
-        if ($previous_version >= $version) {
-            last;
-        } elsif ($version == $current_version) {
-            $ok = 1;
-        }
+while (<NOTES>) {
+    if (/^([\w_.]+)\s/) {
+	my $v = $1;
+	if ($v eq $previous_version  || 
+	    &higher($previous_version,$v)
+	    ) {
+	    last;
+	}else{
+	    $ok = 1;
+	}
     }
 
-    # start printing lines only after current version
     next unless $ok;
 
-    print $line if $line =~ /^\*{4}/;
+    if (/^\*{4}/) {
+	print "\n" unless $current;
+	$current = 1;
+	print;
+    }else {
+	$current = 0;
+    }
+    
 }
 close NOTES;
+print "<RETURN>";
+my $wait = <STDIN>;
+
+sub higher {
+    my ($v1, $v2) = @_;
+
+    my @tab1 = split /\./,$v1;
+    my @tab2 = split /\./,$v2;
+    
+    
+    my $max = $#tab1;
+    $max = $#tab2 if ($#tab2 > $#tab1);
+
+    for my $i (0..$max) {
+    
+        if ($tab1[0] =~ /^(\d*)a$/) {
+            $tab1[0] = $1 - 0.5;
+        }elsif ($tab1[0] =~ /^(\d*)b$/) {
+            $tab1[0] = $1 - 0.25;
+        }
+
+        if ($tab2[0] =~ /^(\d*)a$/) {
+            $tab2[0] = $1 - 0.5;
+        }elsif ($tab2[0] =~ /^(\d*)b$/) {
+            $tab2[0] = $1 - 0.25;
+        }
+
+        if ($tab1[0] eq $tab2[0]) {
+            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
+            shift @tab1;
+            shift @tab2;
+            next;
+        }
+        return ($tab1[0] > $tab2[0]);
+    }
+
+    return 0;
+}
