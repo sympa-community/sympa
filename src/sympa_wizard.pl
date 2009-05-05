@@ -62,7 +62,6 @@ use POSIX qw(strftime);
 use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
-require 'tools.pl';
 
 ## sympa configuration files
 my $wwsympa_conf = "--WWSCONFIG--";
@@ -90,7 +89,7 @@ if ($options{help}) {
 exit 0;
 
 sub create_configuration {
-    require Conf;
+    use confdef;
 
     my $conf;
     if ($options{create} eq 'sympa.conf') {
@@ -120,7 +119,7 @@ sub create_configuration {
 EOF
     }
 
-    foreach my $param (@Conf::params) {
+    foreach my $param (@confdef::params) {
 
         if ($param->{'title'}) {
             printf NEWF "###\\\\\\\\ %s ////###\n\n", $param->{'title'};
