@@ -61,7 +61,7 @@
 	/src/List.pm: Fix incorrect password storage when crating a new user (add_user_db did not use password finger print as update_user_db does)
 
 	/wwsympa/bounced.pl: [reported by H.Rousseau]: bounced.pl would fail to create files in OTHER/ if From contained incorrect chars. The bounced.pl process would loop on these files.
-Now such bounce files are moved to the bad/ subdirectory.
+	Now such bounce files are moved to the bad/ subdirectory.
 
 	/wwsympa/wwsympa.fcgi: [#4022]: the anti-XSS mecanism HTML-escape outgoing parameters before web pages are parsed. This leads to quotes '"' replaced with &quot; while editing list parameters. This could break SQL queries for example. The fix consists in unescaping HTML characters in edit_list function.
 
@@ -600,7 +600,7 @@ invocation, the functions return undef.
 parser::parse_tpl().
 
 	/src/bouncequeue.c, /src/familyqueue.c, /src/queue.c: [#2945][D.Jahnke-Zumbusch] queue, bouncequeue and familyqueue scripts were removing the first "From xx" line found even though it was not part of SMTP headers. This caused problems with Postif if the 'F' flag was not set in master.cf, because postfix would not add the expected "From xx" Header field to the delivered message.
-The code has been fixed to look for the "From xx" in the first line of the message only.
+	The code has been fixed to look for the "From xx" in the first line of the message only.
 
 	/src/tt2.pl: [#3086 Submitted by S. Hornburg, linuxia.de] When Sympa failed to create a template object, the last system error was displayed instead of the last Template error.
 
