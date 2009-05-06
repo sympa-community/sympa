@@ -28,7 +28,7 @@ require Fetch;
 require Exporter;
 require Encode;
 require 'tools.pl';
-require "--LIBDIR--/tt2.pl";
+require 'tt2.pl';
 use Time::HiRes qw(time);
 
 my @ISA = qw(Exporter);
