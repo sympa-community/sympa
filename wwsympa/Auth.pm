@@ -441,7 +441,7 @@ sub get_one_time_ticket {
 	return return {'result'=>'error'} unless &List::db_connect();
     }
     my $statement;
-    $statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS date, data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", $ticket_number;
+    $statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS date, data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = '%s' ", $ticket_number;
     
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Auth::get_one_time_ticket: Unable to prepare SQL statement : %s', $dbh->errstr);

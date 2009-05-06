@@ -91,9 +91,11 @@ sub next {
 
     # lock next packet
     my $lock = &tools::get_lockname();
-    my $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
+
+    my $order;
     my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %s %s",$dbh->quote($lock), time(), $order ;
 
+    $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
     
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to select and lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
@@ -456,7 +458,7 @@ sub get_remaining_packets_count {
 	return undef unless &List::db_connect();
     }
 
-    my $statement = "SELECT COUNT(*) FROM bulkmailer_table WHERE 1";
+    my $statement = "SELECT COUNT(*) FROM bulkmailer_table";
 
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
