@@ -131,6 +131,7 @@ AC_ARG_WITH(
 )
 
 # locales
+localedir='${prefix}/locale'
 AC_ARG_WITH(
     localedir,
     AS_HELP_STRING(
@@ -142,6 +143,7 @@ AC_ARG_WITH(
      localedir="$withval"
     ]
 )
+AC_SUBST(localedir)
 
 # documentation
 AC_ARG_WITH(
@@ -248,9 +250,9 @@ AC_SUBST(scriptdir)
 AC_SUBST(mailtemplatedir)
 AC_SUBST(webtemplatedir)
 
-CONFIG=$CONFDIR/sympa.conf
+CONFIG=$sysconfdir/sympa.conf
 AC_SUBST(CONFIG)
-WWSCONFIG=$CONFDIR/wwsympa.conf
+WWSCONFIG=$sysconfdir/wwsympa.conf
 AC_SUBST(WWSCONFIG)
 
 AC_PATH_PROG(XGETTEXT_PL, xgettext.pl)

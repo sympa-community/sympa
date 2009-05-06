@@ -359,7 +359,7 @@ our @params = (
     },
     {
         name   => 'legacy_character_support_feature',
-        default => '',
+        default => 'off',
         query  => 'If set to "on", enables support of legacy characters',
         file   => 'sympa.conf',
         advice => '',
@@ -435,10 +435,12 @@ our @params = (
     {
         name    => 'bounce_warn_rate',
         default => '30',
+        file    => 'sympa.conf',
     },
     {
         name    => 'bounce_halt_rate',
         default => '50',
+        file    => 'sympa.conf',
     },
     {
         name    => 'bounce_email_prefix',

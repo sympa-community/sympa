@@ -111,12 +111,12 @@ sub create_configuration {
     };
 
     if ($options{create} eq 'sympa.conf') {
-        print NEWF <<EOF
+#        print NEWF <<EOF
 ## Configuration file for Sympa
 ## many parameters are optional
 ## refer to the documentation for a detailed list of parameters
 
-EOF
+#EOF
     }
 
     foreach my $param (@confdef::params) {

@@ -53,7 +53,7 @@ of commands. Sympa can be linked to an LDAP directory or an RDBMS to create
 dynamic mailing lists. Sympa provides S/MIME-based authentication and
 encryption.
 
-Documentation is available under HTML and Latex (source) formats. 
+Documentation is available under HTML and PDF formats. 
 
 
 %prep
