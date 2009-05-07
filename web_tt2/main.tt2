@@ -60,10 +60,9 @@
 
        [% PROCESS error.tt2 IF errors %]
        [% PROCESS notice.tt2 IF notices %]
-
+ [% PROCESS login_menu.tt2 %]
 <div id="Canvas">
 
- [% PROCESS login_menu.tt2 %]
   <div id="Header">
     
 	<!-- a href="javascript:afficheId('contenu','Stretcher')">ouvrir</a>
@@ -101,9 +100,13 @@
       <div class="top"><a href="#top" title="Top of Page"><img src="/lumineau/top.png" alt="Top of page" /></a></div>
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
-  [% PROCESS footer.tt2 %]
+
+
   [% PROCESS dumpvars.tt2 IF dumpvars == 'true'%]
+
 </div> <!-- end div canvas -->
+
+  [% PROCESS footer.tt2 %]
 [% END %]
 </body>
 <!-- end main.tt2 -->

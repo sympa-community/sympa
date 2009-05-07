@@ -13,9 +13,17 @@
     border: 0px solid [% color_1 %];
     color: [% color_2 %];
     font-family:"Trebuchet MS", Myriad, "Gill Sans", "Century Gothic",  "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     }
+
+
+html,
+body {
+       height:100%;
+       padding: 0;
+       margin: 0;
+       }
 
 body {
        font-size: 62.5%;
@@ -36,24 +44,27 @@ dl {
 
 /*Global container*/
 #Canvas {
-          position: absolute;
+	  min-height: 95%;
+	  position:relative;
           width: 98%;
-          margin: 0 7px 0px 7px;
+          margin: 0 0.8em -5em 0.8em;
           }
 
 /* Menus Block*/
 #Menus {
-         float: left;
-         width: 240px;
+         float:left;
+         width: 23%;
          border: 0px solid [% color_1 %];
+         margin-top:1em;
          padding-top: 0px;
          text-align: left;
          }
 
 /*Content Block*/
-#Stretcher {
-             margin-left: 260px;
-             margin-top:0em;
+#Stretcher { 
+             float:right;
+             width: 75%;
+             margin-top:1em;
              text-align: left;
              }
 
@@ -66,8 +77,6 @@ dl {
           position:relative;
           background: none;
           border: none;
-          margin-top:2.5em;
-          margin-bottom:0em;
           }
 
 #ActionHeader {
@@ -111,9 +120,9 @@ dl {
          font-size:1.8em; 
          font-weight: bold;
          padding:1em 0;
-         margin-top:1em;
+         margin-top:0em;
          margin-left:5em;
-         text-shadow: 3px 3px 3px [% color_12 %];
+         /*text-shadow: 2px 2px 2px [% color_12 %];*/
          z-index:520;
          }
 
@@ -191,6 +200,10 @@ td.text_right {
                 text-align: justify;
                 }
 
+.without_padding {
+		 padding:0!important;
+		 }
+
 /* list_panel and list_admin_menu .tt2 block*/
 
 .list_panel,
@@ -213,20 +226,20 @@ td.text_right {
 
 .list_panel ul,
 #list_admin_menu ul {
-                     list-style-type: none;
-                     margin:0 0.5em
-                     }
+                      list-style-type: none;
+                      margin:0 0.5em
+                      }
 
 .list_panel ul li,
 #list_admin_menu ul li {
-                        font-size:1em;
-                        line-height:1.4em;
-                        margin-top:0.3em;
-                        }
+                         font-size:1em;
+                         line-height:1.4em;
+                         margin-top:0.3em;
+                         }
 
 .list_panel span {
-		  font-weight: normal!important;
-		  }
+			font-weight: normal!important;
+			}
 
 .list_panel ul li a:hover,
 #list_admin_menu ul li a:hover {
@@ -236,15 +249,15 @@ td.text_right {
 
 .list_panel ul li ul,
 #list_admin_menu ul li ul {
-                           font-size:0.9em;        
-                           }
+                            font-size:0.9em;        
+                            }
 
 .list_panel ul li ul li,
 #list_admin_menu ul li ul li{
-                             font-size:0.9em;
-                             line-height:1.2em;
-                             margin-top:0em;          
-                             }
+                              font-size:0.9em;
+                              line-height:1.2em;
+                              margin-top:0em;          
+                              }
 
 /* list type on the list creation page */
 #list_type {
@@ -290,6 +303,30 @@ td.review_cels_mail {
 #home_rss_news {
                  float: right;
                  }
+
+#home_rss_news input {
+ 	              background: [% color_4 %]; 
+	              border: 1px solid [% color_4 %]; 
+        	      color: [% color_5 %];
+	              padding:0.05em 1em;
+               	      margin:0;
+	              text-decoration: none;
+	              font-size: 0.9em;
+		      font-weight: 600;
+		      letter-spacing:0.1em;
+         	      /* if IE zoom:1;*/
+         	      zoom: 1;
+         	      -moz-border-radius:10px;
+     		      -webkit-border-radius:10px;
+ 	              -KHTML-border-radius:10px;
+        	      -icab-border-radius:10px;
+   	              border-radius:10px;
+	              }
+
+#home_rss_news input:hover {
+          background: [% color_5 %]; 
+          color: [% color_4 %]; 
+          }
 
 #home_search_list { 
                     clear: both;
@@ -493,8 +530,10 @@ form#bold_label input {
 
 form input[type="radio"],
 form input[type="checkbox"] {
-                        vertical-align: middle;
-			}
+                              vertical-align: middle;
+			      border:none;
+			      }
+
 
 #global_mailing_lists { 
                         text-align: center;
@@ -540,12 +579,11 @@ pre.code {
            }
 
 #Footer {
-          width:100%;
+          width:98%;
           height:1.5em;
-          margin-top:0.5em;
-          margin-bottom:0;
+	  position:relative;
+          margin: 0 0.8em;
           background: [% color_12 %];
-          clear:both;
           font-size: 1.1em;
           text-align: center;
           padding-top:0.5em;
@@ -566,6 +604,12 @@ pre.code {
             font-weight:bold;
             font-variant: small-caps!important;
             }
+
+.clearfooter {
+height: 3em;
+clear: both;
+}
+
 
 #Identity {
             text-align: left;
@@ -595,7 +639,7 @@ pre.code {
 #setlang {
            background: [% color_5 %];
            padding: 5px;
-           text-align: left;
+           text-align: center;
            font-weight: bold;
            margin-bottom:2em!important;
            border:1px solid [% color_8 %];
@@ -607,11 +651,22 @@ pre.code {
            border-radius:10px;
            }
 
+#setlang form {
+		letter-spacing:0.1em;
+                padding: 0.5em 0;
+                border:1px solid [% color_12 %];    
+               -moz-border-radius:4px;
+               -webkit-border-radius:4px;
+               -KHTML-border-radius:4px;
+               -icab-border-radius:4px;
+                border-radius:4px;
+                }
+
 .MenuBlock {
              background: [% color_5 %];
-             padding: 5px;
+             padding:5px;
              text-align: left;
-             margin-bottom: 10px;
+             margin-bottom: 1em;
              border:1px solid [% color_8 %];
              border-width: 0 1px 1px 0;
              -moz-border-radius:10px;
@@ -626,10 +681,21 @@ pre.code {
                       }
 
 .MenuBlock h1 {
-                text-indent: 0px;
-                font-size: 1.4em;
-                padding-bottom:10px;
-                }
+                background: [% color_12 %];
+		color:[% color_5 %];
+                text-align: center;
+                font-size: 1.2em;
+		letter-spacing:0.1em;
+		padding:0.1em 0;
+		margin:0 0 1em 0;
+	        -moz-border-radius:10px 10px 0 0;
+        	-webkit-border-top-left-radius: 10px;
+	        -webkit-border-top-right-radius: 10px;
+        	-webkit-border-bottom-left-radius:0px;
+	        -webkit-border-bottom-right-radius:0px;
+        	-KHTML-border-radius:10px 10px 0 0;
+	        -icab-border-radius:10px 10px 0 0;
+                 }
 
 .MenuBlock strong {
                     text-indent: 0px;
@@ -649,7 +715,7 @@ pre.code {
                 border-width: 0 1px 1px 0;
                 border-top:1px solid [% color_5 %];
                 z-index:310;
-                clear:right;
+
                 -moz-border-radius:10px;
                 -webkit-border-radius:10px;
                 -KHTML-border-radius:10px;
@@ -871,7 +937,7 @@ input.MainMenuLinks {
 input.MainMenuLinks:hover{ 
                            background: [% color_8 %]!important;
                            color: [% color_9 %]!important;
-                           border: none ;
+                           border: 1px solid [% color_8 %];
                            }
 
 a.actionMenuLinks {
@@ -1043,8 +1109,7 @@ a.ArcMenuLinksInactive:hover {
               -KHTML-border-radius:4px;
               -icab-border-radius:4px;
               border-radius:4px;
-
-}
+	      }
 
 .block form fieldset {
                        padding:0.5em;
@@ -1364,7 +1429,7 @@ a:visited {
             }
 a:hover {
           color: [% color_8 %]; 
-          text-decoration:underline overline;
+          text-decoration:underline;
           background:none;
           }
 abbr,
@@ -1459,7 +1524,6 @@ h6 {
      }
 
 /* input */
-
 a.input {
           background: [% color_12 %]; 
           border: 1px solid [% color_12 %]; 
@@ -1642,11 +1706,10 @@ table.preferences th {
 /* test relookage */
 
 #bandeau_top {
-               position: absolute;
-               width:100%;
+               position: relative;
+               width:98%;
                height:2.5em;
-               margin-top:0em;
-               margin-bottom:1em;
+	       margin: 0 0.8em;
                background: [% color_12 %];
                clear:both;
                -moz-border-radius: 0 0 10px 10px;
@@ -1740,13 +1803,15 @@ table.preferences th {
                            }
 
 #bandeau_top .MainMenuLinks {
+                              font-size:0.9em;
+                              font-weight:600;
+  			      letter-spacing:0.1em;
                               color:[% color_4 %];
                               background-color:[% color_5 %];
                               border:1px solid [% color_4 %];
                               padding: 0 5px ;
                               margin-top:0.5em;
                               margin-right:0.5em;
-                              opacity:1;
                               -moz-border-radius:10px;
                               -webkit-border-radius:10px;
                               -KHTML-border-radius:10px;
@@ -1766,6 +1831,7 @@ table.preferences th {
        float:left;
        width:100%;
        margin:-1.6em 0 0 0.5em;
+       clear:right;
        z-index:350;
        }
  
@@ -1798,7 +1864,7 @@ table.preferences th {
                         font-weight:normal;
                         background-color:[% color_6 %];
                         border-bottom:1px solid [% color_6 %];
-                        padding-top:0.2em!important;
+                        padding-top:0.2em!important; 
                         }
 
 #nav li.MainMenuLinks a {
@@ -1835,8 +1901,8 @@ table.preferences th {
                                           }
 
 #nav li.MainMenuLinksCurrentPage:hover {
-                                         border:1px solid [% color_5 %];
-                                         border-width: 0 1px 1px 0;
+                                         border-bottom:1px solid [% color_5 %];
+                                         border-right:1px solid [% color_8 %];
                                          z-index:300;
                                          }
 
@@ -1862,6 +1928,7 @@ table.preferences th {
 /* not for IE5.x or IE6 */
 
 #subnav {
+          background-color: none;
           position:relative;
           float:left;
           width:100%;
@@ -1877,7 +1944,6 @@ table.preferences th {
              }
 
 #subnav ul li {
-                height:1.3em;
                 float:left;
                 display:inline;
                 margin:0 0.5em 0 0.2em;
@@ -1951,23 +2017,22 @@ table.preferences th {
                text-align:left;
                background:[% color_5 %];
                padding:0.5em 0 0.5em 0;
+text-align:center;
                }
 
 .menu_search input {
-                     margin-left:0.5em;
                      padding: 0 1px;
-                     margin-top: 4px;
                      }
 
 .menu_search input.MainMenuLinks {
                                    margin-left:0;
-                                   width:11em;
+                                   width:10em;
                                    border: 1px solid [% color_4 %];
                                    background: [% color_5 %];
                                    color:[% color_4 %];
-                                   height:1.5em!important;
-                                   vertical-align:top!important;
-                                   opacity:1;
+                                   font-size:0.9em;
+                                   font-weight:600;
+				   letter-spacing:0.1em;
                                    -moz-border-radius:10px;
                                    -webkit-border-radius:10px;
                                    -KHTML-border-radius:10px;
@@ -1979,8 +2044,6 @@ table.preferences th {
                                          border: 1px solid [% color_4 %];
                                          background: [% color_4 %]!important;
                                          color:[% color_5 %]!important;
-                                         height:1.5em;
-                                         vertical-align:top;
                                          }
 
 span.bottom_page { 
