@@ -242,8 +242,8 @@ pkgdatadir=$datadir/sympa
 modulesdir=$pkgdatadir/lib
 defaultdir=$pkgdatadir/etc
 scriptdir=$pkgdatadir/bin
-mailtemplatedir=$pkgdatadir/mail_tt2
-webtemplatedir=$pkgdatadir/web_tt2
+mailtemplatedir=$defaultdir/mail_tt2
+webtemplatedir=$defaultdir/web_tt2
 AC_SUBST(modulesdir)
 AC_SUBST(defaultdir)
 AC_SUBST(scriptdir)
