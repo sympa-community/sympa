@@ -25,12 +25,14 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      list_task_models/sync_include.ttl.task \
 		      global_task_models/chk_cert_expiration.daily.task \
 		      global_task_models/crl_update.daily.task \
+		      global_task_models/eval_bouncers.daily.task \
 		      global_task_models/expire_bounce.daily.task \
 		      global_task_models/process_bouncers.weekly.task \
 		      global_task_models/purge_logs_table.daily.task \
 		      global_task_models/purge_one_time_ticket_table.daily.task \
 		      global_task_models/purge_orphan_bounces.monthly.task \
 		      global_task_models/purge_session_table.daily.task \
+		      global_task_models/purge_tables.daily.task \
 		      global_task_models/purge_user_table.monthly.task \
 		      topics.conf nrcpt_by_domain.conf \
 		      ldap_alias_manager.conf edit_list.conf \
