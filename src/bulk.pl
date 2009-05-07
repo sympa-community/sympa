@@ -38,7 +38,7 @@ This script must be run along with sympa. It regularly checks the bulkmailer_tab
 =cut 
 
 ## Change this to point to your Sympa bin directory
-use lib '--LIBDIR--';
+use lib '--pkgdatadir--/lib';
 
 use Conf;
 use Log;
