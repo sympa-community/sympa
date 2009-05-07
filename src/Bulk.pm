@@ -93,7 +93,7 @@ sub next {
     my $lock = &tools::get_lockname();
 
     my $order;
-    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %s %s",$dbh->quote($lock), time(), $order ;
+    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s",$dbh->quote($lock), time(), $order ;
 
     $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
     

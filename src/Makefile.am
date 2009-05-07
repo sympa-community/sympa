@@ -23,7 +23,7 @@ SUBDIRS = etc
 
 AM_CPPFLAGS = -DCONFIG=\"$(CONFIG)\"
 
-sbin_SCRIPTS = sympa.pl alias_manager.pl task_manager.pl sympa_wizard.pl
+sbin_SCRIPTS = sympa.pl bulk.pl alias_manager.pl task_manager.pl sympa_wizard.pl
 sbin_PROGRAMS = aliaswrapper virtualwrapper
 aliaswrapper_SOURCES = aliaswrapper.c
 aliaswrapper_CPPFLAGS = $(AM_CPPFLAGS) \
