@@ -200,7 +200,7 @@ our @params = (
     },
     {
         name   => 'log_facility',
-        default => 'MAIL',
+        default => 'LOCAL1',
         query  => 'The syslog facility for wwsympa, archived and bounced',
         file   => 'wwsympa.conf',
         edit   => '1',
