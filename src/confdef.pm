@@ -178,7 +178,7 @@ our @params = (
     },	      
     {
         name    => 'static_content_url',
-        default => '--prefix--/static-sympa',
+        default => '/static-sympa',
         query   => 'The URL mapped with the static_content_path directory defined above',
 	vhost   => '1',
         file    => 'sympa.conf',
