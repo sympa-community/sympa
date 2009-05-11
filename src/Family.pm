@@ -1069,7 +1069,7 @@ Returns a string with informations summarizing the instantiation results.
 #########################################
 sub get_instantiation_results {
     my ($self, $result) = @_;
-    &do_log('debug4','Family::get_instantiation_results(%s)',$self->{'name'});
+    &do_log('debug3','Family::get_instantiation_results(%s)',$self->{'name'});
  
     $result->{'errors'} = ();
     $result->{'warn'} = ();
@@ -1886,7 +1886,7 @@ Initializes all the values used for instantiation and results description to emp
 #####################################################
 sub _initialize_instantiation() {
     my $self = shift;
-    &do_log('debug4','Family::_initialize_instantiation(%s)',$self->{'name'});
+    &do_log('debug3','Family::_initialize_instantiation(%s)',$self->{'name'});
 
     ### info vars for instantiate  ###
     ### returned by                ###

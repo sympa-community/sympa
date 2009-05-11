@@ -1759,7 +1759,7 @@ sub _split_params {
 }
 
 sub get_parameters {
-    #    &wwslog('debug4', 'get_parameters');
+    #    &wwslog('debug3', 'get_parameters');
     
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
@@ -1932,7 +1932,7 @@ sub get_parameters {
  }
 
 sub get_parameters_old {
-    #    &wwslog('debug4', 'get_parameters');
+    #    &wwslog('debug3', 'get_parameters');
     
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
@@ -8413,7 +8413,7 @@ Sends back the list creation edition form.
 
      if ($in{'scenario'}) {
 	 my $operation = $in{'scenario'};
-	 &wwslog('debug4', 'do_scenario_test: perform scenario_test');
+	 &wwslog('debug3', 'do_scenario_test: perform scenario_test');
 
 	 my $result = &Scenario::request_action ($operation,$in{'auth_method'},$robot,
 					     {'listname' => $in{'listname'},
@@ -9265,7 +9265,7 @@ sub do_edit_list {
  ## entry in $var (recursive)
  sub _shift_var {
      my ($i, $var, @tokens) = @_;
-     &wwslog('debug4','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
+     &wwslog('debug3','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
      my $newvar;
 
      my $token = shift @tokens;

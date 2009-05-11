@@ -793,7 +793,7 @@ sub verify {
  	my $arg0 = &tools::epoch_conv($args[0]);
  	my $arg1 = &tools::epoch_conv($args[1]);
  
-	&do_log('debug4', '%s(%d, %d)', $condition_key, $arg0, $arg1);
+	&do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
  	if ($arg0 <= $arg1 ) {
  	    return $negation;
  	}else{

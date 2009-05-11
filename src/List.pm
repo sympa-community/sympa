@@ -2401,7 +2401,7 @@ sub get_param_value {
 #  the single value can be a ref on a list when the parameter value is a list
 sub _get_single_param_value {
     my ($p,$key,$k) = @_;
-    &do_log('debug4', 'List::_get_single_value(%s %s)',$key,$k);
+    &do_log('debug3', 'List::_get_single_value(%s %s)',$key,$k);
 
     if (defined ($::pinfo{$key}{'scenario'}) ||
         defined ($::pinfo{$key}{'task'})) {
@@ -7295,14 +7295,14 @@ sub _include_users_remote_sympa_list {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    do_log('debug4',"ignore $email because already member");
+	    do_log('debug3',"ignore $email because already member");
 	    if ($tied) {
 		%u = split "\n",$users->{$email};
 	    }else {
 		%u = %{$users->{$email}};
 	    }
 	}else{
-	    do_log('debug4',"add new subscriber $email");
+	    do_log('debug3',"add new subscriber $email");
 	    %u = %{$default_user_options};
 	    $total++;
 	}	    
@@ -9853,7 +9853,7 @@ sub _apply_defaults {
 ## Save a parameter
 sub _save_list_param {
     my ($key, $p, $defaults, $fd) = @_;
-    &do_log('debug4', '_save_list_param(%s)', $key);
+    &do_log('debug3', '_save_list_param(%s)', $key);
 
     ## Ignore default value
     return 1 if ($defaults == 1);
@@ -9917,7 +9917,7 @@ sub _save_list_param {
 ## Load a single line
 sub _load_list_param {
     my ($robot,$key, $value, $p, $directory) = @_;
-    &do_log('debug4','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
+    &do_log('debug3','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
     
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -10653,7 +10653,7 @@ sub compute_topic {
 ####################################################
 sub tag_topic {
     my ($self,$msg_id,$topic_list,$method) = @_;
-    &do_log('debug4','tag_topic(%s,%s,"%s",%s)',$self->{'name'},$msg_id,$topic_list,$method);
+    &do_log('debug3','tag_topic(%s,%s,"%s",%s)',$self->{'name'},$msg_id,$topic_list,$method);
 
     my $robot = $self->{'domain'};
     my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
@@ -10698,7 +10698,7 @@ sub tag_topic {
 sub load_msg_topic_file {
     my ($self,$msg_id,$robot) = @_;
     $msg_id = &tools::clean_msg_id($msg_id);
-    &do_log('debug4','List::load_msg_topic_file(%s,%s)',$self->{'name'},$msg_id);
+    &do_log('debug3','List::load_msg_topic_file(%s,%s)',$self->{'name'},$msg_id);
     
     my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
     my $list_id = $self->get_list_id();
@@ -10758,7 +10758,7 @@ sub load_msg_topic_file {
 ##################################################### 
 sub modifying_msg_topic_for_subscribers(){
     my ($self,$new_msg_topic) = @_;
-    &do_log('debug4',"List::modifying_msg_topic_for_subscribers($self->{'name'}");
+    &do_log('debug3',"List::modifying_msg_topic_for_subscribers($self->{'name'}");
     my $deleted = 0;
 
     my @old_msg_topic_name;

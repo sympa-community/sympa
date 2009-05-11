@@ -447,7 +447,7 @@ sub purge_bulkspool {
 
 ## Return the number of remaining packets in the bulkmailer table.
 sub get_remaining_packets_count {
-    &do_log('debug4', 'get_remaining_packets_count');
+    &do_log('debug3', 'get_remaining_packets_count');
 
     my $dbh = &List::db_get_handler();
     my $sth;
@@ -476,7 +476,7 @@ sub get_remaining_packets_count {
 ## Returns 1 if the number of remaining packets inthe bulkmailer table exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
-    &do_log('debug4', 'there_is_too_much_remaining_packets');
+    &do_log('debug3', 'there_is_too_much_remaining_packets');
     my $remaining_packets = &get_remaining_packets_count();
     if ($remaining_packets > $Conf::Conf{'bulk_fork_threshold'}) {
 	return $remaining_packets;

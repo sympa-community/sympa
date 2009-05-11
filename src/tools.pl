@@ -205,7 +205,7 @@ sub sanitize_html_file {
 ## Sanitize all values in the hash $var, starting from $level
 sub sanitize_var {
     my %parameters = @_;
-    &do_log('debug4','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
+    &do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
     unless (defined $parameters{'var'}){
 	&do_log('err','Missing var to sanitize.');
 	return undef;
@@ -1884,7 +1884,7 @@ sub epoch_conv {
     my $arg = $_[0]; # argument date to convert
     my $time = $_[1] || time; # the epoch current date
 
-    &do_log('debug4','tools::epoch_conv(%s, %d)', $arg, $time);
+    &do_log('debug3','tools::epoch_conv(%s, %d)', $arg, $time);
 
     my $result;
     
