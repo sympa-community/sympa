@@ -4047,7 +4047,7 @@ sub send_notify_to_owner {
 	    $param->{'escaped_who'} =~ s/\s/\%20/g;
 	    foreach my $owner (@to) {
 		$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($owner,$robot,'subindex/'.$self->{'name'},$param->{'ip'});
-		unless ($self->send_file('listowner_notification',$owner, $robot,$param)) {
+		unless ($self->send_file('listowner_notification',[$owner], $robot,$param)) {
 		    &do_log('notice',"Unable to send template 'listowner_notification' to $self->{'name'} list owner $owner");		    
 		}
 	    }
