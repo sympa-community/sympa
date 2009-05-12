@@ -941,7 +941,7 @@ our @params = (
     },
     {
         name    => 'color_0',
-        default => '#F0F0F0', # very light grey use in tables
+        default => '#ffcd9d', # very light grey use in tables
 	vhost   => '1',
 	db      => 'db_first',
     },
@@ -959,13 +959,13 @@ our @params = (
     },
     {
         name    => 'color_3',
-        default => '#929292', # top boxe and footer box bacground color
+        default => '#ccccff', # top boxe and footer box bacground color
 	vhost   => '1',
 	db      => 'db_first',
     },
     {
         name    => 'color_4',
-        default => 'silver', #  page backgound color
+        default => '#f77d18', #  page backgound color
 	vhost   => '1',
 	db      => 'db_first',
     },
@@ -1007,7 +1007,7 @@ our @params = (
     },
      {
         name    => 'color_11',
-        default => '#3366CC',
+        default => '#ccc',
 	vhost   => '1',
 	db      => 'db_first',
     },
@@ -1019,13 +1019,13 @@ our @params = (
     },
     {
         name    => 'color_13',
-        default => '#ffffcc',  # input backgound  | transparent
+        default => '#ffffce',  # input backgound  | transparent
 	vhost   => '1',
 	db      => 'db_first',
     },
     {
         name    => 'color_14',
-        default => '#000',
+        default => '#f4f4f4',
 	vhost   => '1',
 	db      => 'db_first',
     },
