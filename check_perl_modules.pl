@@ -25,6 +25,7 @@ use CPAN;
 ## assume version = 1.0 if not specified.
 ## 
 %versions = ('perl' => '5.008',
+			 'AuthCAS' => '1.3.1',
              'Net::LDAP' =>, '0.27', 
 	     'perl-ldap' => '0.10',
 	     'Mail::Internet' => '1.51', 
@@ -92,7 +93,8 @@ use CPAN;
 	     'MIME::Lite::HTML' => 'MIME-Lite-HTML',
 	     );
 
-%opt_CPAN = ('DBD::Pg' => 'DBD-Pg',
+%opt_CPAN = ('AuthCAS' => 'AuthCAS',
+	     'DBD::Pg' => 'DBD-Pg',
 	     'DBD::Oracle' => 'DBD-Oracle',
 	     'DBD::Sybase' => 'DBD-Sybase',
 	     'DBD::SQLite' => 'DBD-SQLite',
@@ -107,7 +109,8 @@ use CPAN;
 	     'File::Copy::Recursive' => 'File-Copy-Recursive',
 	     );
 
-%opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
+%opt_features = ('AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
+'DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
 		 'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
 		 'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
 		 'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
@@ -291,5 +294,3 @@ sub test_module {
     return $result;
 }
 ### EOF
-
-

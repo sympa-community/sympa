@@ -1199,6 +1199,7 @@ my $birthday = time ;
 		     next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
 		     
 		     ## skip cas server where client as been already redirect to the list of cas servers already checked is stored in the session
+		     ## the check below works fine as long as we don't have more then 10 CAS servers (because we don't properly split the list of values)
 		     &do_log ('debug',"check_cas checker_cas : $session->{'checked_cas'} current cas_id $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}");
 		     next if ($session->{'checked_cas'} =~  /$Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}}/) ;
 		     
@@ -1206,6 +1207,7 @@ my $birthday = time ;
 		     my $cas_server = $auth_service->{'cas_server'};
 		     my $return_url = &wwslib::get_my_url();
 		     
+		     ## Append the current CAS server ID to the list of checked CAS servers
 		     $session->{'checked_cas'} .= $Conf{'cas_id'}{$robot}{$auth_service->{'auth_service_name'}};
 		     
 		     my $redirect_url = $cas_server->getServerLoginGatewayURL($return_url);

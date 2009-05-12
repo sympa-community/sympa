@@ -29,7 +29,7 @@ use List;
 use Log;
 use Language;
 use wwslib;
-use CAS;
+use AuthCAS;
 use confdef;
 
 require Exporter;
@@ -1093,10 +1093,10 @@ sub _load_auth {
 		    $cas_param->{'proxyValidatePath'} = $current_paragraph->{'proxy_validate_path'} 
 		    if (defined $current_paragraph->{'proxy_validate_path'});
 		    
-		    $current_paragraph->{'cas_server'} = new CAS(%{$cas_param});
+		    $current_paragraph->{'cas_server'} = new AuthCAS(%{$cas_param});
 		    unless (defined $current_paragraph->{'cas_server'}) {
 			&do_log('err', 'Failed to create CAS object for %s : %s', 
-				$current_paragraph->{'base_url'}, &CAS::get_errors());
+				$current_paragraph->{'base_url'}, &AuthCAS::get_errors());
 			next;
 		    }
 

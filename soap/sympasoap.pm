@@ -35,7 +35,7 @@ my @EXPORT = ();
 use Conf;
 use Log;
 use Auth;
-use CAS;
+use AuthCAS;
 use Language;
 
 ## Define types of SOAP type listType
@@ -211,13 +211,13 @@ sub casLogin {
 	my $auth_service = $Conf{'auth_services'}{$robot}[$service_id];
 	next unless ($auth_service->{'auth_type'} eq 'cas'); ## skip non CAS entries
 	
-	my $cas = new CAS(casUrl => $auth_service->{'base_url'}, 
+	my $cas = new AuthCAS(casUrl => $auth_service->{'base_url'}, 
 			  #CAFile => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
 			  );
 	
 	($user, @proxies) = $cas->validatePT(&Conf::get_robot_conf($robot,'soap_url'), $proxyTicket);
 	unless (defined $user) {
-	    &do_log('err', 'CAS ticket %s not validated by server %s : %s', $proxyTicket, $auth_service->{'base_url'}, &CAS::get_errors());
+	    &do_log('err', 'CAS ticket %s not validated by server %s : %s', $proxyTicket, $auth_service->{'base_url'}, &AuthCAS::get_errors());
 	    next;
 	}
 
