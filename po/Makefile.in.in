@@ -52,10 +52,7 @@ MSGFMT_ = @MSGFMT@
 MSGFMT_no = @MSGFMT@
 MSGFMT_yes = @MSGFMT_015@
 MSGFMT = $(MSGFMT_$(USE_MSGCTXT))
-XGETTEXT_ = @XGETTEXT_PL@
-XGETTEXT_no = @XGETTEXT_PL@
-XGETTEXT_yes = @XGETTEXT_PL@
-XGETTEXT = $(XGETTEXT_$(USE_MSGCTXT))
+XGETTEXT = ./xgettext.pl
 MSGMERGE = msgmerge
 MSGMERGE_UPDATE = @MSGMERGE@ --update
 MSGINIT = msginit
@@ -146,11 +143,8 @@ POTFILES.pl: $(srcdir)/POTFILES.in
 $(DOMAIN).pot-update: $(POTFILES) POTFILES.pl remove-potcdate.sed
 	export PERL5LIB=$(top_srcdir)/src:$(PERL5LIB); \
 	$(XGETTEXT) -u \
-	  --default-domain=$(DOMAIN) \
-	  --plugin perl=pl,pm \
-	  --plugin tt2=tt2 \
-	  --plugin Sympa::Extractor='*' \
-	  --files-from=POTFILES.pl
+	  -o $(DOMAIN).pot \
+	  \../src/*.pl ../src/*.pm ../soap/*.pl ../soap/*.pm ../soap/*.fcgi ../wwsympa/wwsympa.fcgi ../wwsympa/*.pl ../wwsympa/*.pm ../web_tt2/*.tt2 ../mail_tt2/*.tt2 ../src/etc/mhonarc-ressources.tt2 ../src/etc/scenari/* ../src/etc/global_task_models/* ../src/etc/list_task_models/* ../src/etc/create_list_templates/*/*;\
 	test ! -f $(DOMAIN).po || { \
 	  if test -f $(srcdir)/$(DOMAIN).pot; then \
 	    sed -f remove-potcdate.sed < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
