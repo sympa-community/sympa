@@ -162,6 +162,7 @@ my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = time();
 
 $options->{'multiple_process'} = 1;
+$Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
 
 while (!$end) {
     my $bulk;
