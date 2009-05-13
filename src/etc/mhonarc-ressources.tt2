@@ -49,7 +49,7 @@ SEARCH_FORM
 	<input name="subj"  type="hidden" value="true" />
 	<input name="key_word"     type="text"   size="12" />
 	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" /><br />
+	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" />
 	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
 	</form>
     </div>
@@ -61,7 +61,7 @@ TOP_PANEL
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
+<!--   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br /> -->
 </div>
 </DefineVar>
 
@@ -176,11 +176,11 @@ IDXPGEND
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
+<!--   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br /> -->
 
   <span class="search_form">
-    <a class="ArcMenuLinksCurrentPage" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
-    <a class="ArcMenuLinks" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
+    <a class="ArcMenuLinksSortActive" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
+    <a class="ArcMenuLinksSortInactive" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
   </span>  
   $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $NEXTPGLINK$   
 </div>
@@ -288,11 +288,11 @@ TIDXPGEND
    $SEARCH_FORM$
    $CALENDAR$
    <div class="text_center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br />
+ <!--  ($tag$%|loc%$tag$)Pages navigation : ($tag$%END%$tag$)<br /> -->
 
    <span class="search_form">
-     <a class="ArcMenuLinks" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
-     <a class="ArcMenuLinksCurrentPage" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
+     <a class="ArcMenuLinksSortInactive" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)</a>
+     <a class="ArcMenuLinksSortActive" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
    </span>  
    $TPREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $TNEXTPGLINK$ 
 </div>
@@ -404,8 +404,8 @@ MSGPGEND
 <div id="ActionHeader">
    <div class="text_center"><h2>($tag$% subtitle %$tag$)</h2></div><br />
    <span class="search_form">
-     <a class="ArcMenuLinks" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Chronological($tag$% END %$tag$)</a>
-     <a class="ArcMenuLinks" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
+     <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Chronological($tag$% END %$tag$)</a>
+     <a class="ArcMenuLinksSortInactive" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
    </span>
    <ul id="MainMenuLinks">
      $PREVBUTTON$ ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$) $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$TPREVBUTTON$  ($tag$%|loc%$tag$)Thread($tag$%END%$tag$) $TNEXTBUTTON$

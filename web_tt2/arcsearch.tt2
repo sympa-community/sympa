@@ -1,4 +1,5 @@
 <!-- $Id$ -->
+<div class="block">
 
 <h2>[%|loc%]Result of your search in the archive[%END%] 
 <a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span class="color_dark">[% list %]</span></a> : </h2>
@@ -70,7 +71,7 @@
 
 </dl>
 
-<form method="post" action="[% path_cgi %]">
+<form method="post" action="[% path_cgi %]" class="noborder">
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="archive_name" value="[% archive_name %]" />
@@ -109,14 +110,17 @@
 [% IF continue %]
 	<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
 [% END %]
-<p>
-<input class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
+<p class="text_center" >
+<input style="padding:0.1em 5em!important;" class="MainMenuLinks" name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
+</p>
 </fieldset>
 </form>
 <hr />
 <p>[%|loc%]Based on <em><a href="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></em>, search engine of MHonArc archives[%END%]</p>
 
 
-<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[%|loc(archive_name)%]Return to archive %1[%END%] 
-</strong></a><br />
+<a class="actionMenuLinks" href="[% path_cgi %]/arc/[% list %]/[% archive_name %]">[%|loc(archive_name)%]Return to archive %1[%END%] 
+</a><br />
+
+</div>
 <!-- end arcsearch.tt2 -->

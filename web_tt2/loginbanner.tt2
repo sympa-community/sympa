@@ -51,8 +51,10 @@
    <a class="menuLinks" href="[%conf.authentication_info.url%]">[%|loc%]Authentication help[% END %]</a><br />
 [% ELSE %]
   <div class="remember">
+  <b>
   <a href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
   <a href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password ?[%END%]</a>
+  </b>
   </div>
 [% END %]
 [% END %]

@@ -80,16 +80,26 @@ dl {
 
 #ActionHeader {
                 background: [% color_9 %];
-                border: 1px solid [% color_2 %];
+                border: 1px solid [% color_4 %]!important;
                 font-size: 1em;
                 text-align: left;
                 vertical-align: top;
                 padding-bottom: 0px;
-                padding-top: 3px;
-                padding-left: 3px;
-                padding-right: 3px; 
-                margin-bottom: 10px;
+                padding-top: 5px;
+                padding-left: 5px;
+                padding-right: 5px; 
+                padding-bottom: 5px; 
+                margin-bottom: 2em;
+                 -moz-border-radius:4px;
+                 -webkit-border-radius:4px;
+                 -KHTML-border-radius:4px;
+                 -icab-border-radius:4px;
+                 border-radius:4px;
                 }
+
+#ActionHeader span.search_form {
+				margin-top:1em;
+				}
 
 #Clock {
          float: right;
@@ -132,20 +142,18 @@ select {
          background-color: [% color_13 %];
          }
 
-.menuInactive {
-                padding-left: 20px
-                }
-
 .menuInactive2 {
-                 font-size: 1.4em;
+                 font-size: 1em;
+                 line-height:1.4em;
                  text-decoration: none;
+		 font-weight:normal;
                  }
 #FormLabel {
              font-size: 1.2em;
              font-weight: bold;
              }
 #ArcCalendar {
-               padding-bottom: 10px;
+               padding: 1em 0;
                }
 
 ul#MainMenuLinks {
@@ -299,6 +307,7 @@ td.review_cels_mail {
 .search_form, .edit_list_request_help { 
                                         float: right;
                                         }
+
 #home_rss_news {
                  float: right;
                  }
@@ -881,8 +890,8 @@ a.dingbat {
                  vertical-align:top;
                  cursor:pointer;
                  -moz-border-radius:10px;
-                 -webkit-border-radius:10px;
                  -KHTML-border-radius:10px;
+                 -webkit-border-radius:8px;
                  -icab-border-radius:10px;
                  border-radius:10px;
                  }
@@ -948,8 +957,8 @@ a.actionMenuLinks {
                     margin: 0 0.5em 0 0;
                     cursor:pointer;
                     -moz-border-radius:10px;
-                    -webkit-border-radius:10px;
                     -KHTML-border-radius:10px;
+                    -webkit-border-radius:8px;
                     -icab-border-radius:10px;
                     border-radius:10px;
                     }
@@ -1021,24 +1030,28 @@ a.ArcMenuLinks {
                  padding: 0px 10px 0px 10px;
                  }
 
+a.ArcMenuLinks,
+a.ArcMenuLinks:visited,
 a.ArcMenuLinks:link {
-                      border: 1px solid [% color_2 %];
-                      text-decoration: none;
-                      padding: 0px 10px 0px 10px;
-                      }
-
-a.ArcMenuLinks:visited {
-                         border: 1px solid [% color_2 %];
+                         border-bottom: 2px solid [% color_8 %];
+                         border-right:  2px solid [% color_8 %];
+                         border-top: 1px solid [% color_8 %];
+                         border-left: 1px solid [% color_8 %];
+			 font-weight:bold;
+                         color: [% color_8 %];
+			 background-color:[% color_13 %];
                          text-decoration: none;
                          padding: 0px 10px 0px 10px;
-                         }
+	                 -moz-border-radius:5px;
+        	         -webkit-border-radius:5px;
+                	 -KHTML-border-radius:5px;
+	                 -icab-border-radius:5px;
+        	         border-radius:5px;
+                      }
 
 a.ArcMenuLinks:hover {
-                       border: 1px solid [% color_2 %];
-                       background: [% color_6 %];
+                       background: none;
                        color: [% color_8 %];
-                       text-decoration: none;
-                       padding: 0px 10px 0px 10px;
                        }
 
 a.ArcMenuLinks:active {
@@ -1055,6 +1068,11 @@ a.ArcMenuLinksCurrentPage {
                             color: [% color_8 %];
                             text-decoration: none;
                             padding: 0px 10px 0px 10px;
+	                    -moz-border-radius:5px;
+        	            -webkit-border-radius:5px;
+                	    -KHTML-border-radius:5px;
+	                    -icab-border-radius:5px;
+        	            border-radius:5px;
                             }
 
 a.ArcMenuLinksCurrentPage:hover {
@@ -1064,25 +1082,49 @@ a.ArcMenuLinksCurrentPage:hover {
                                   padding: 0px 10px 0px 10px;
                                   }
 
-a.ArcMenuLinksInactive {
-                         border-bottom: 1px solid [% color_2 %];
-                         border-right:  1px solid [% color_10 %];
-                         border-top: 1px solid [% color_10 %];
-                         border-left: 1px solid [% color_10 %];
-                         color: [% color_10 %];
-                         text-decoration: none;
-                         padding: 0px 10px 0px 10px;
-                         }
-
+a.ArcMenuLinksInactive,
 a.ArcMenuLinksInactive:hover {
-                               border-bottom: 1px solid [% color_2 %];
-                               border-right:  1px solid [% color_10 %];
-                               border-top: 1px solid [% color_10 %];
-                               border-left: 1px solid [% color_10 %];
-                               color: [% color_10 %];
-                               text-decoration: none;
-                               padding: 0px 10px 0px 10px;
-                               }
+                   	       border-bottom: 2px solid [% color_2 %];
+                       	       border-right:  2px solid [% color_2 %];
+	                       border-top: 1px solid [% color_2 %];
+        	               border-left: 1px solid [% color_2 %];
+                	       color: [% color_2 %];
+                    	       text-decoration: none;
+	                       padding: 0px 10px 0px 10px;
+		               -moz-border-radius:5px;
+        		       -webkit-border-radius:5px;
+		      	       -KHTML-border-radius:5px;
+	              	       -icab-border-radius:5px;
+        	               border-radius:5px;
+	                       }
+
+a.ArcMenuLinksSortActive,
+a.ArcMenuLinksSortActive:hover,
+a.ArcMenuLinksSortInactive:hover  {
+   	                            border: 1px solid [% color_4 %];
+        	                    background: [% color_5 %];
+                	            color: [% color_4 %];
+                        	    text-decoration: none;
+                        	    padding: 0px 10px 0px 10px;
+		                    -moz-border-radius:5px;
+        	     	            -webkit-border-radius:5px;
+                	            -KHTML-border-radius:5px;
+	                            -icab-border-radius:5px;
+        	                    border-radius:5px;
+                                    }
+
+a.ArcMenuLinksSortInactive {
+                         	   border: 1px solid [% color_4 %];
+	                           background: [% color_4 %];
+        	                   color: [% color_5 %];
+                	           text-decoration: none;
+                        	   padding: 0px 10px 0px 10px;
+	         	           -moz-border-radius:5px;
+        	  	           -webkit-border-radius:5px;
+               		 	   -KHTML-border-radius:5px;
+	                  	   -icab-border-radius:5px;
+        	        	   border-radius:5px;
+                           	   }
 
 #ArcMenuLinksInactive {
                         border: 0px solid [% color_2 %];
@@ -1303,82 +1345,13 @@ ul.listenum span {
                    margin-top: 2px;
                    }
 
-ul.menuLinks {
-               list-style-type: none; font-size: 1.2em;
-               }
-
-ul.menuLinks li {
-                  list-style-type: none;
-                  }
-
-a.menuLinks {
-              padding: 0px 10px 0px 0px;
-              text-decoration: none;
-              }
-
-a.menuLinks:link {
-                   text-decoration: none;
-                   }
-
-a.menuLinks:visited {
-                      text-decoration: none;
-                      }
-
-a.menuLinks:hover {
-                    border: 1px solid [% color_9 %];
-                    background: [% color_6 %]; 
-                    text-decoration: none;
-                    }
-
-a.menuLinks:active {
-                     border: 1px solid [% color_6 %];
-                     background: [% color_9 %];
-                     text-decoration: none;
-                     }
-
-a.menuLinksCurrentPage {
-                         border: 1px solid [% color_9 %];
-                         background: [% color_6 %];
-                         padding: 0px 10px 0px 0px;
-                         text-decoration: none;
-                         }
-
-a.menuLinksCurrentPage:hover  {
-                                border: 1px solid [% color_9 %];
-                                background: [% color_6 %]; 
-                                padding: 0px 10px 0px 0px;
-                                text-decoration: none;
-                                }
-
-strong a.menuLinks {
-                     font-size: 1.2em;
-                     }
-strong a.menuLinksCurrentPage {
-                                font-size: 1.2em;
-                                border: 1px solid [% color_9 %];
-                                background: [% color_6 %];
-                                }
-strong a.menuLinksCurrentPage:hover  {
-                                       font-size: 1.2em; 
-                                       border: 1px solid [% color_9 %];
-                                       background: [% color_6 %];
-                                       text-decoration: none;
-                                       }
-
-ul a.menuLinks {
-                 padding: 0px 10px 0px 20px;
-                 }
-
-ul a.menuLinksCurrentPage {
-                            padding: 0px 10px 0px 20px;
-                            font-weight: bold;
-                            }
-
-ul a.menuLinksCurrentPage:hover {
-                                  padding: 0px 10px 0px 20px; 
-                                  font-weight: bold; 
-                                  text-decoration: none;
+ul li.menuLinksCurrentPage a {
+				     color:[% color_4 %]!important;
                                   }
+ul.calendar {
+	      margin-left:0!important;	
+              padding-left:0!important;
+              }
 
 ul.calendar a {
                 font-size: 1em;
@@ -1390,27 +1363,49 @@ ul.calendar li {
                  padding: 0px 1px 0px 2px;
                  font-size: 1em;
                  text-decoration: none;
-                 border: 1px solid [% color_2 %];
+                 border: 1px solid [% color_12 %];
+                 -moz-border-radius:4px;
+                 -webkit-border-radius:4px;
+                 -KHTML-border-radius:4px;
+                 -icab-border-radius:4px;
+                 border-radius:4px;
                  }
 
 ul li.calendarLinks {
-                      background: [% color_13 %];
+                      background: [% color_4 %];
+                      color: [% color_5 %];
+                      border: 1px solid [% color_4 %];
                       }
 
 ul li.calendarLinks:hover {
-                            background: [% color_6 %];
-                            color: [% color_8 %]; 
+                            background: [% color_5 %];
+                            color: [% color_4 %]; 
+                            border: 1px solid [% color_4 %];
                             }
 
-ul li.calendarLinksCurrentPage {
-                                 background: [% color_6 %];
-                                 }
-
+ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage:hover {
-                                       background: [% color_6 %];
-                                       }
+	                               border: 1px solid [% color_4 %]!important;
+				       }
 
-ul li.calendarLinksInactive {}
+ul li.calendarLinksCurrentPage,
+ul li.calendarLinksCurrentPage a {
+                                   background: [% color_5 %];
+                                   color: [% color_4 %]!important;
+				   border-bottom:1px solid [% color_4 %]!important;
+                                   }
+
+ul li.calendarLinksCurrentPage:hover,
+ul li.calendarLinksCurrentPage a:hover  {
+                                          background: [% color_4 %];
+                                          color: [% color_5 %]!important; 
+					  border-bottom:1px solid [% color_4 %]!important; 
+                                          }
+
+ul li.calendarLinksInactive {
+                             background: [% color_12 %];
+                             color: [% color_5 %]; 
+			     }
 
 a img {
         border: 0px;
@@ -1843,6 +1838,7 @@ table.preferences th {
 
 #nav ul li {
              float:left;
+ 	     min-width:0.7em;
              display:inline;
              margin:0 0 0 0.5em;
              padding:0.1em 0.2em;
@@ -1850,8 +1846,8 @@ table.preferences th {
              border-width: 0 1px 0 0;
              border-bottom:1px solid [% color_5 %];
              -moz-border-radius:10px 10px 0 0;
-             -webkit-border-top-left-radius:10px;
-             -webkit-border-top-right-radius:10px;
+             -webkit-border-top-left-radius:9px;
+             -webkit-border-top-right-radius:9px;
              -webkit-border-bottom-left-radius:0;
              -webkit-border-bottom-right-radius:0;
              -KHTML-border-radius:10px 10px 0 0;
@@ -1908,10 +1904,11 @@ table.preferences th {
 #nav li.nolink{
                 background-color: [% color_5 %];
                 color:[% color_12 %];
-                padding:0.2em 0.4em 0.1em 0.4em;
+		min-width:0.9em;
+                padding:0.2em 0.4em 0em 0.4em;
                 -moz-border-radius:10px 10px 0 0;
-                -webkit-border-top-left-radius:10px;
-                -webkit-border-top-right-radius:10px;
+                -webkit-border-top-left-radius:9px;
+                -webkit-border-top-right-radius:9px;
                 -webkit-border-bottom-left-radius:0;
                 -webkit-border-bottom-right-radius:0;
                 -KHTML-border-radius:10px 10px 0 0;
@@ -1948,8 +1945,8 @@ table.preferences th {
                 margin:0 0.5em 0 0.2em;
                 background-color:[% color_5 %];
                 -moz-border-radius:10px;
-                -webkit-border-radius:10px;
-                -KHTML-border-radius:10px;
+                -KTML-border-radius:10px;
+                -webkit-border-radius:8px;
                 -icab-border-radius:10px;
                 border-radius:10px;
                 }
@@ -2016,7 +2013,7 @@ table.preferences th {
                text-align:left;
                background:[% color_5 %];
                padding:0.5em 0 0.5em 0;
-text-align:center;
+	       text-align:center;
                }
 
 .menu_search input {
