@@ -91,14 +91,14 @@
   <ul>
 [% IF group == 'description' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class=[% class %]><a  href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]List definition[%END%]</a></li>
-[% IF group == 'sending' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]Sending/reception[%END%]</a></li>
+[% IF group == 'sending' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]Sending/receiving setup[%END%]</a></li>
 [% IF group == 'command' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/command" >[%|loc%]Privileges[%END%]</a></li>
 [% IF group == 'archives' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]Archives[%END%]</a></li>
 [% IF group == 'bounces' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]Bounces[%END%]</a></li>
 [% IF group == 'data_source' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]Data sources[%END%]</a></li>
+     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]Data sources setup[%END%]</a></li>
 [% IF group == 'other' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]Miscellaneous[%END%]</a></li>
   </ul>
