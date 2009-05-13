@@ -255,8 +255,6 @@ AC_SUBST(CONFIG)
 WWSCONFIG=$sysconfdir/wwsympa.conf
 AC_SUBST(WWSCONFIG)
 
-AC_PATH_PROG(XGETTEXT_PL, xgettext.pl)
-
 AC_PROG_CC
 # needed for using per-target flags
 AM_PROG_CC_C_O
