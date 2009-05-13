@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-02-24 10:48+0100\n"
+"PO-Revision-Date: 2009-02-26 05:41+0100\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2027,9 +2027,8 @@ msgstr ""
 
 #. (u_err.listname)
 #: web_tt2/error.tt2:94
-#, fuzzy
 msgid "Failed to remove list aliases for list %1"
-msgstr "Lỗi gỡ bỏ các bí danh đối với hộp thư chung %1"
+msgstr "Lỗi gỡ bỏ các bí danh hộp thư chung đối với hộp thư chung %1"
 
 #. (u_err.path)
 #: web_tt2/error.tt2:95
@@ -2348,7 +2347,6 @@ msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Không có người đăng ký với địa chỉ <strong>%1</strong> !"
 
 #: web_tt2/loginbanner.tt2:18
-#, fuzzy
 msgid "To login, select your organization authentication server below:"
 msgstr ""
 "Để đăng nhập thì chọn dưới đây máy phục vụ xác thực của tổ chức của bạn:"
@@ -5538,7 +5536,7 @@ msgstr "Kết nối tới cơ sở dữ liệu %1 đã được phục hồi."
 
 #: mail_tt2/listmaster_notification.tt2:77
 msgid "Bulk mailer error"
-msgstr ""
+msgstr "Lỗi trình gửi thư hàng loạt"
 
 #. (listname)
 #: mail_tt2/listmaster_notification.tt2:79
@@ -5546,6 +5544,8 @@ msgid ""
 "Sympa failed to store a message for list %1 in the bulk mailer. You should "
 "check log files !!"
 msgstr ""
+"Sympa không lưu được vào trình gửi thư hàng loạt một thư cho hộp thư chung "
+"%1. Bạn nên kiểm tra tập tin ghi lưu."
 
 #: mail_tt2/listmaster_notification.tt2:83
 msgid "Loop detected"
@@ -6916,13 +6916,12 @@ msgstr "%1 / môi trường của bạn"
 
 #. (list,conf.host,request_from_host)
 #: mail_tt2/sendpasswd.tt2:13
-#, fuzzy
 msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
 "came from host %3)."
 msgstr ""
 "Ai đó, rất có thể là bạn, đã yêu cầu đăng ký với hộp thư chung %1@%2. (Yêu "
-"cầu này đến từ máy %3 ở %4.)"
+"cầu này đến từ máy %3.)"
 
 #: mail_tt2/sendpasswd.tt2:14
 msgid ""
@@ -6950,14 +6949,13 @@ msgstr "mật khẩu: %1"
 
 #. (conf.host,request_from_host)
 #: mail_tt2/sendpasswd.tt2:25
-#, fuzzy
 msgid ""
 "Someone, probably you, requested to allocate or renew your password for your "
 "list server account %1. (This request came from host %2)."
 msgstr ""
 "Ai đó, rất có thể là bạn, đã yêu cầu cấp phát hoặc tạo lại mật khẩu cho tài "
-"khoản của bạn trên máy phục vụ hộp thư chung %1. (Yêu cầu này đến từ máy %2 "
-"ở %3.)"
+"khoản của bạn trên máy phục vụ hộp thư chung %1. (Yêu cầu này đến từ máy "
+"%2.)"
 
 #: mail_tt2/sendpasswd.tt2:26
 msgid ""
@@ -8311,7 +8309,7 @@ msgstr "hạn ngạch"
 
 #: src/List.pm:1262 src/List.pm:1267
 msgid "email address protection method"
-msgstr "phương pháp bảo vệ địa chỉ thư"
+msgstr "phương pháp bảo vế địa chỉ thư"
 
 #: src/List.pm:1273
 msgid "Status of the list"
@@ -8319,166 +8317,164 @@ msgstr "Trạng thái về hộp thư chung"
 
 #: src/List.pm:1280
 msgid "Subject of the list"
-msgstr ""
+msgstr "Đề tài của hộp thư chung"
 
 #: src/List.pm:1284
 msgid "Who can subscribe to the list"
-msgstr ""
+msgstr "Ai có quyền đăng ký với hộp thư chung"
 
 #: src/List.pm:1290
 msgid "Topics for the list"
-msgstr ""
+msgstr "Các chủ đề cho hộp thư chung"
 
 #: src/List.pm:1297
 msgid "Inclusions timeout"
-msgstr ""
+msgstr "Thời hạn bao gồm"
 
 #: src/List.pm:1301
 msgid "Who can unsubscribe"
-msgstr ""
+msgstr "Ai có quyền hủy đăng ký"
 
 #: src/List.pm:1322
 msgid "Last update of config"
-msgstr ""
+msgstr "Lần cuối cập nhật cấu hình"
 
 #: src/List.pm:1329
 msgid "User data source"
-msgstr ""
+msgstr "Nguồn dữ liệu người dùng"
 
 #: src/List.pm:1335
 msgid "Allow picture display ? (must be enabled for the current robot)"
-msgstr ""
+msgstr "Cho phép hiển thị hình ảnh không? (Phải được bật cho rô-bốt hiện thời.)"
 
 #: src/List.pm:1341
 msgid "Visibility of the list"
-msgstr ""
+msgstr "Hiện/ẩn hộp thư chung"
 
 #: src/List.pm:1357
 msgid "Maximum number of month archived"
-msgstr ""
+msgstr "Số tối đa các tháng đã lưu trữ"
 
 #: src/List.pm:1362
 msgid "Web archives"
-msgstr ""
+msgstr "Kho thư Web"
 
 #: src/List.pm:1368
 msgid "Welcome return-path"
-msgstr ""
+msgstr "Đường dẫn trở về Chào mừng"
 
 #: src/List.pm:1373
 msgid "percentage of list members in VERP mode"
-msgstr ""
+msgstr "phần trăm các thành viên hộp thư chung trong chế độ VERP"
 
 #: src/List.pm:360 src/List.pm:367
 msgid "%"
-msgstr ""
+msgstr "%%"
 
 #: src/List.pm:378 src/List.pm:399
 msgid "points"
-msgstr ""
+msgstr "điểm"
 
 #: src/List.pm:511
 msgid "var name"
-msgstr ""
+msgstr "tên biến"
 
 #: src/List.pm:516
 msgid "var value"
-msgstr ""
+msgstr "giá trị biến"
 
 #: src/List.pm:575
-#, fuzzy
 msgid "messages"
-msgstr "# thư"
+msgstr "thư"
 
 #: src/List.pm:1295 src/List.pm:583 src/List.pm:753 src/List.pm:833
 #: src/List.pm:871
 msgid "seconds"
-msgstr ""
+msgstr "giây"
 
 #: src/List.pm:1130 src/List.pm:621
 msgid "the datasource"
-msgstr ""
+msgstr "nguồn dữ liệu"
 
 #: src/List.pm:1135 src/List.pm:626
 msgid "datasource parameters"
-msgstr ""
+msgstr "tham số nguồn dữ liệu"
 
 #: src/List.pm:642
 msgid "Moderators defined in an external datasource"
-msgstr ""
+msgstr "Các điều tiết viên được xác định trong một nguồn dữ liệu bên ngoài"
 
 #: src/List.pm:651
 msgid "Family name"
-msgstr ""
+msgstr "Họ"
 
 #: src/List.pm:764 src/List.pm:888
 msgid "use SSL (LDAPS)"
-msgstr ""
+msgstr "dùng SSL (LDAPS)"
 
 #: src/List.pm:769 src/List.pm:893
 msgid "SSL version"
-msgstr ""
+msgstr "Phiên bản SSL"
 
 #: src/List.pm:774 src/List.pm:898
 msgid "SSL ciphers used"
-msgstr ""
+msgstr "Mật mã SSL dùng"
 
 #: src/List.pm:1026 src/List.pm:1307
 msgid "epoch date"
-msgstr ""
+msgstr "ngày thời điểm"
 
 #: src/List.pm:1030 src/List.pm:1312
 msgid "date"
-msgstr ""
+msgstr "ngày"
 
 #: src/List.pm:1035
 msgid "who ran the instantiation"
-msgstr ""
+msgstr "ai đã chạy hàm tạo lần"
 
 #: src/List.pm:1039
 msgid "Latest family instantiation"
-msgstr ""
+msgstr "Lần cuối tạo nhóm"
 
 #: src/List.pm:1051
-#, fuzzy
 msgid "bytes"
-msgstr "tạm biệt nhé !"
+msgstr "byte"
 
 #: src/List.pm:1155
 msgid "Owners defined in an external datasource"
-msgstr ""
+msgstr "Chủ hộp được xác định trong một nguồn dữ liệu bên ngoài"
 
 #: src/List.pm:1174
 msgid "Periodical subscription reminder task"
-msgstr ""
+msgstr "Công việc định kỳ nhắc nhở về sự đăng ký"
 
 #: src/List.pm:1179
 msgid "Incoming SMTP headers fields to be removed"
-msgstr ""
+msgstr "Các dòng đầu SMTP gửi đến mà cần gỡ bỏ"
 
 #: src/List.pm:1186
 msgid "Outgoing SMTP headers fields to be removed"
-msgstr ""
+msgstr "Các dòng đầu SMTP gửi đi mà cần gỡ bỏ"
 
 #: src/List.pm:1252 src/List.pm:1351
 msgid "Kbytes"
-msgstr ""
+msgstr "Kbyte"
 
 #: src/List.pm:1318
 msgid "who updated the config"
-msgstr ""
+msgstr "ai đã cập nhật cấu hình"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2803
 msgid "%a, %d %b %Y %H:%M:%S"
-msgstr ""
+msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: src/List.pm:2804
 msgid "%a, %d %b %Y"
-msgstr ""
+msgstr "%a, %d %b %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -8494,7 +8490,7 @@ msgstr ""
 #: wwsympa/wwsympa.fcgi:8256 wwsympa/wwsympa.fcgi:8257
 #: wwsympa/wwsympa.fcgi:8436 wwsympa/wwsympa.fcgi:8437
 msgid "%d %b %Y"
-msgstr ""
+msgstr "%d %b %Y"
 
 #: src/mail.pm:55
 msgid ""
@@ -8503,16 +8499,23 @@ msgid ""
 "library. You must modify the smtp.pm module in order to set a value\n"
 "for variable $max_arg.\n"
 msgstr ""
+"Hệ thống này không tuân theo giao thức P1003.1 POSIX,\n"
+"hoặc cấu hình Perl trên máy này không xác định hằng « _SC_ARG_MAX » trong "
+"thư viện POSIX của nó.\n"
+"Người dùng cần phải sửa đổi mô-đun smtp.pm để đặt giá trị của biến « "
+"$max_arg ».\n"
 
 #: src/mail.pm:750
 msgid "Unable to create a channel in smtpto: %m"
-msgstr ""
+msgstr "Không thể tạo một kênh trong smtpto: %m"
 
 #: src/PlainDigest.pm:163
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
 msgstr ""
+"----- Thư bị hỏng thì cũng bị bỏ qua -----\n"
+"\n"
 
 #: src/PlainDigest.pm:194
 msgid ""
@@ -8520,12 +8523,17 @@ msgid ""
 "[Attached message follows]\n"
 "-----Original message-----\n"
 msgstr ""
+"\n"
+"[Thư đính kèm cũng theo đây]\n"
+"-----Thư gốc-----\n"
 
 #: src/PlainDigest.pm:204
 msgid ""
 "-----End of original message from %s-----\n"
 "\n"
 msgstr ""
+"-----Kết thúc thư gốc từ %s-----\n"
+"\n"
 
 #: src/PlainDigest.pm:243
 msgid ""
@@ -8533,66 +8541,79 @@ msgid ""
 "    Some characters may be lost or incorrect **\n"
 "\n"
 msgstr ""
+"** Cảnh báo : phần thư này đầu tiên dùng bộ ký tự %s\n"
+"    Do đó một số ký tự có thể bị mất hay không đúng **\n"
+"\n"
 
 #: src/PlainDigest.pm:255
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
 msgstr ""
+"\n"
+"[Ở đây thì bao gồm một đồ đính kèm dạng %s]\n"
 
 #: src/PlainDigest.pm:261
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
 msgstr ""
+"\n"
+"-----Báo cáo Trạng thái Phát thư-----\n"
 
 #: src/PlainDigest.pm:263
 msgid "-----End of Delivery Status Report-----\n"
-msgstr ""
+msgstr "-----Kết thúc Báo cáo Trạng thái Phát thư-----\n"
 
 #: src/PlainDigest.pm:301 src/PlainDigest.pm:322
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
 msgstr ""
+"\n"
+"[** Không thể xử lý phần thư dạng HTML **]\n"
 
 #: src/PlainDigest.pm:328
 msgid ""
 "\n"
 "[ ** Unable to process HTML message part **]\n"
 msgstr ""
+"\n"
+"[ ** Không thể xử lý phần thư dạng HTML **]\n"
 
 #: src/PlainDigest.pm:332
 msgid "[ Text converted from HTML ]\n"
-msgstr ""
+msgstr "[ Thân thư được chuyển đổi từ HTML ]\n"
 
 #: src/PlainDigest.pm:339
 msgid ""
 "\n"
 "[ ** Unable to process HTML message part ** ]\n"
 msgstr ""
+"\n"
+"[ ** Không thể xử lý phần thư dạng HTML ** ]\n"
 
 #: src/PlainDigest.pm:358
 msgid "[ Image%s ]"
-msgstr ""
+msgstr "[ Ảnh %s ]"
 
 #: src/PlainDigest.pm:358
 msgid "[Image%s]"
-msgstr ""
+msgstr "[Ảnh %s]"
 
 #: src/sympa.pl:2100
 msgid "Unable to access directory %s : %m"
-msgstr ""
+msgstr "Không thể truy cập đến thư mục %s : %m"
 
 #: src/tt2.pl:213
 msgid "(unknown date)"
-msgstr ""
+msgstr "(không rõ ngày tháng)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/wwsympa.fcgi:1024
 msgid "%H:%M:%S"
-msgstr ""
+msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
@@ -8600,161 +8621,161 @@ msgstr ""
 #: wwsympa/wwsympa.fcgi:11733 wwsympa/wwsympa.fcgi:11866
 #: wwsympa/wwsympa.fcgi:14179 wwsympa/wwsympa.fcgi:7665
 msgid "%d %b %y  %H:%M"
-msgstr ""
+msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: wwsympa/wwsympa.fcgi:15718 wwsympa/wwsympa.fcgi:15719
 msgid "%Y/%m/%d/%H/%M/%S"
-msgstr ""
+msgstr "%Y/%m/%d/%H/%M/%S"
 
 #: wwsympa/wwslib.pm:46
 msgid "session"
-msgstr ""
+msgstr "buổi hợp"
 
 #: wwsympa/wwslib.pm:47
 msgid "10 minutes"
-msgstr ""
+msgstr "10 phút"
 
 #: wwsympa/wwslib.pm:48
 msgid "30 minutes"
-msgstr ""
+msgstr "30 phút"
 
 #: wwsympa/wwslib.pm:49
 msgid "1 hour"
-msgstr ""
+msgstr "1 giờ"
 
 #: wwsympa/wwslib.pm:50
 msgid "6 hours"
-msgstr ""
+msgstr "6 giờ"
 
 #: wwsympa/wwslib.pm:51
 msgid "1 day"
-msgstr ""
+msgstr "1 ngày"
 
 #: wwsympa/wwslib.pm:52
 msgid "1 week"
-msgstr ""
+msgstr "1 tuần"
 
 #: wwsympa/wwslib.pm:54
 msgid "listed in the list review page"
-msgstr ""
+msgstr "được liệt kê trên trang xem lại hộp thư chung"
 
 #: wwsympa/wwslib.pm:55
 msgid "concealed"
-msgstr ""
+msgstr "bị ẩn"
 
 #: wwsympa/wwslib.pm:59
 msgid "welcome message"
-msgstr ""
+msgstr "thông điệp chào mừng"
 
 #: wwsympa/wwslib.pm:60
 msgid "unsubscribe message"
-msgstr ""
+msgstr "thông điêp hủy đăng ký"
 
 #: wwsympa/wwslib.pm:61
 msgid "deletion message"
-msgstr ""
+msgstr "thông điệp xoá"
 
 #: wwsympa/wwslib.pm:62
 msgid "message footer"
-msgstr ""
+msgstr "chân thân thư"
 
 #: wwsympa/wwslib.pm:63
 msgid "message header"
-msgstr ""
+msgstr "đầu thân thư"
 
 #: wwsympa/wwslib.pm:64
 msgid "remind message"
-msgstr ""
+msgstr "thông điệp nhắc nhở"
 
 #: wwsympa/wwslib.pm:65
 msgid "editor rejection message"
-msgstr ""
+msgstr "thông điệp từ chối biên tập"
 
 #: wwsympa/wwslib.pm:66
 msgid "subscribing invitation message"
-msgstr ""
+msgstr "thông điệp mời đăng ký"
 
 #: wwsympa/wwslib.pm:67
 msgid "help file"
-msgstr ""
+msgstr "tập tin trợ giúp"
 
 #: wwsympa/wwslib.pm:68
 msgid "directory of lists"
-msgstr ""
+msgstr "thư mục các hộp thư chung"
 
 #: wwsympa/wwslib.pm:69
 msgid "global remind message"
-msgstr ""
+msgstr "thông điệp nhắc nhở toàn cục"
 
 #: wwsympa/wwslib.pm:70
 msgid "summary message"
-msgstr ""
+msgstr "thông điệp tóm tắt"
 
 #: wwsympa/wwslib.pm:71
 msgid "list description"
-msgstr ""
+msgstr "mô tả hộp thư chung"
 
 #: wwsympa/wwslib.pm:72
 msgid "list homepage"
-msgstr ""
+msgstr "trang chủ của hộp thư chung"
 
 #: wwsympa/wwslib.pm:73
 msgid "list creation request message"
-msgstr ""
+msgstr "thông điệp yêu cầu tạo hộp thư chung"
 
 #: wwsympa/wwslib.pm:74
 msgid "list creation notification message"
-msgstr ""
+msgstr "thông điệp báo về hộp thư chung mới tạo"
 
 #: wwsympa/wwslib.pm:75
 msgid "virus infection message"
-msgstr ""
+msgstr "thông điệp sự nhiễm độc vi-rút"
 
 #: wwsympa/wwslib.pm:76
 msgid "list aliases template"
-msgstr ""
+msgstr "mẫu bí danh hộp thư chung"
 
 #: wwsympa/wwslib.pm:33
 msgid "standard (direct reception)"
-msgstr ""
+msgstr "tiêu chuẩn (nhận trực tiếp)"
 
 #: wwsympa/wwslib.pm:34
 msgid "digest MIME format"
-msgstr ""
+msgstr "định dạng bó thư MIME"
 
 #: wwsympa/wwslib.pm:35
 msgid "digest plain text format"
-msgstr ""
+msgstr "định dạng bó thư nhập thô"
 
 #: wwsympa/wwslib.pm:36
 msgid "summary mode"
-msgstr ""
+msgstr "chế độ tóm tắt"
 
 #: wwsympa/wwslib.pm:37
 msgid "notice mode"
-msgstr ""
+msgstr "chế độ thông báo"
 
 #: wwsympa/wwslib.pm:38
 msgid "text only mode"
-msgstr ""
+msgstr "chế độ chỉ nhập thô"
 
 #: wwsympa/wwslib.pm:39
 msgid "html only mode"
-msgstr ""
+msgstr "chế độ chỉ HTML"
 
 #: wwsympa/wwslib.pm:40
 msgid "urlize mode"
-msgstr ""
+msgstr "chế độ urlize"
 
 #: wwsympa/wwslib.pm:41
 msgid "no mail (useful for vacations)"
-msgstr ""
+msgstr "không thư (có ích khi đi nghỉ)"
 
 #: wwsympa/wwslib.pm:42
 msgid "you do not receive your own posts"
-msgstr ""
+msgstr "bạn không nhận bài thư được mình gửi"
 
 #. (list,conf.host,request_from_host,date)
 #: mail_tt2/sendpasswd.tt2:13
@@ -8778,12 +8799,12 @@ msgstr ""
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1\" creation request"
-msgstr ""
+msgstr "Yêu cầu tạo hộp thư chung « %1 »"
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:4
 msgid "Article to be approved for list %1 from %2"
-msgstr ""
+msgstr "Bài cần điều tiết cho hộp thư chung %1 từ %2"
 
 #. (list.name,conf.wwsympa_url,modkey)
 #: mail_tt2/moderate.tt2:17
@@ -8792,32 +8813,37 @@ msgid ""
 "\n"
 "%2/viewmod/%1/%3\n"
 msgstr ""
+"Để đặt thẻ vào thư đính kèm trong hộp thư chung %1, đi tới trang này:\n"
+"\n"
+"%2/viewmod/%1/%3\n"
 
 #. (mod_spool_size)
 #: mail_tt2/moderate.tt2:31
 msgid "Number of messages awaiting moderation for this list : %1"
-msgstr ""
+msgstr "Số các thư đợi điều tiết cho hộp thư chung này: %1"
 
 #: mail_tt2/sendpasswd.tt2:26
 msgid "To access your personal environment, you need to login first"
-msgstr ""
+msgstr "Để truy cập đến môi trường riêng, bạn cần phải đăng nhập"
 
 #: src/etc/global_task_models/purge_logs_table.daily.task:1
 msgid "daily delete logs older than 3 months"
-msgstr ""
+msgstr "hằng ngày xoá mọi bản ghi cũ hơn 3 tháng"
 
 #. (conf.wwsympa_url,one_time_ticket)
 #: mail_tt2/moderate.tt2:19
 msgid ""
 "To browse the awaiting messages, yshould click on the following link : %1/"
 "ticket/%2"
-msgstr ""
+msgstr "Để duyệt qua các thư bị hoãn, nhấn vào liên kết này: %1/ticket/%2"
 
 #: web_tt2/change_email_request.tt2:3
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
 "that it is really your email."
 msgstr ""
+"Thay đổi địa chỉ thư điện tử là một thao tác nhạy cảm: trước tiên cần phải "
+"thẩm tra nó thực sự là địa chỉ thư điện tử của bạn."
 
 #. (new_email)
 #: web_tt2/change_email_request.tt2:4
@@ -8825,6 +8851,8 @@ msgid ""
 "To this end we have sent you an email to this address : %1 with a "
 "confirmation ticket."
 msgstr ""
+"Vì thế chương trình này đã gửi cho bạn ở địa chỉ %1 một thư chứa vé xác "
+"nhận."
 
 #. (ticket_context.status)
 #: web_tt2/ticket.tt2:13
@@ -8833,14 +8861,17 @@ msgid ""
 "not perform this validation, please report this confidentiality issue to "
 "your mail services administrator."
 msgstr ""
+"Vé xác nhận đã được thẩm tra về trước từ máy %1. Nếu bạn đã không làm việc "
+"thẩm tra đó, hãy thông báo vấn đề sự tin tưởng này cho quản trị dịch vụ thư "
+"tín."
 
 #: web_tt2/manage_template.tt2:4
 msgid "Modify or Delete existing messages"
-msgstr ""
+msgstr "Sửa hay Xoá thông điệp đã có"
 
 #: web_tt2/modindex.tt2:40
 msgid "Click Here"
-msgstr ""
+msgstr "Bấm đây"
 
 #: web_tt2/create_list_request.tt2:6
 msgid ""
@@ -8849,6 +8880,10 @@ msgid ""
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
+"Bạn có khả năng tạo một hộp thư chung dùng một hộp thư chung đã tồn tại làm "
+"mẫu. Cấu hình của hộp thư chung nguồn sẽ được sao chép để tạo cái mới. Ghi "
+"chú rằng không sao lại thành viên, kho thư hay tài liệu chia sẻ của hộp thư "
+"chung đó. Chỉ có quyền sử dụng hộp thư chung nguồn sở hữu."
 
 #: web_tt2/create_list_request.tt2:25
 msgid ""
@@ -8856,22 +8891,25 @@ msgid ""
 "choose a list template that will preset most of the list parameters "
 "according to the list usage you plans. "
 msgstr ""
+"Bạn có thể yêu cầu tạo một hộp thư chung, dùng biểu mẫu theo đây. Cũng cần "
+"phải chọn một mẫu hộp thư chung mà đặt sẵn phần lớn các tham số về hộp thư "
+"chung tùy theo sử dụng hộp thư chung dự định."
 
 #. (conf.sympa,subject)
 #: mail_tt2/invite.tt2:10
 msgid "Or send a message to %1 with subject: \"%2\""
-msgstr ""
+msgstr "Hoặc gửi cho %1 một thư có chủ đề: « %2 »"
 
 #. (list)
 #: web_tt2/subrequest.tt2:5
 msgid "You requested subscription to list %1"
-msgstr ""
+msgstr "Bạn đã yêu cầu đăng ký với hộp thư chung %1"
 
 #: web_tt2/subrequest.tt2:6
 msgid ""
 "To confirm\n"
 "        your request, please click the button below :"
-msgstr ""
+msgstr "Để xác nhận yêu cầu này, hãy bấm nút dưới đây:"
 
 #. (list)
 #: web_tt2/subrequest.tt2:29
@@ -8881,6 +8919,11 @@ msgid ""
 "  Enter that password, below. This wil confirm your request to be subscribed "
 "from list %1."
 msgstr ""
+"Kiểm tra hộp Thư Đến có thư mới chưa, có thì mở thư từ Sympa để tìm mật "
+"khẩu.\n"
+"\n"
+"  Hãy nhập mật khẩu đó dưới đây. Việc này sẽ xác nhận yêu cầu của bạn để "
+"đăng ký với %1."
 
 #. (list)
 #: web_tt2/subrequest.tt2:68
@@ -8888,6 +8931,8 @@ msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below :"
 msgstr ""
+"Để xác nhận bạn muốn đăng ký với hộp thư chung %1,\n"
+"hãy nhập mật khẩu vào dưới đây:"
 
 #, fuzzy
 #~ msgid "Notify subscribers when they are subscribed to the list?"

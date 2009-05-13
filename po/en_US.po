@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-01-26 09:42+0100\n"
-"Last-Translator: David Verdin <david.verdin@cru.fr>\n"
+"PO-Revision-Date: 2009-03-03 17:37+0100\n"
+"Last-Translator: Martin Radford <Martin.Radford@bristol.ac.uk>\n"
 "Language-Team: English <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -357,7 +357,8 @@ msgid ""
 "restore a list."
 msgstr ""
 "<strong>Remove list</strong> : completely removes the current list. "
-"Listmaster privileges are required to Restore a list"
+"Listmaster privileges are required to restore a list once it has been "
+"removed."
 
 #: web_tt2/admin.tt2:45 web_tt2/admin_menu.tt2:129 web_tt2/admin_menu.tt2:131
 msgid "Rename List"
@@ -843,11 +844,11 @@ msgstr "Syntax :"
 
 #: web_tt2/blacklist.tt2:11
 msgid "only one email or expression by line"
-msgstr "only one email or expression by line"
+msgstr "only one email or expression per line"
 
 #: web_tt2/blacklist.tt2:12
 msgid "char # introduce a comment"
-msgstr "char # introduce a comment"
+msgstr "char # introduces a comment"
 
 #: web_tt2/blacklist.tt2:13
 msgid ""
@@ -859,7 +860,7 @@ msgstr ""
 
 #: web_tt2/blacklist.tt2:14
 msgid "only one char * is autorized in a line"
-msgstr "only one char * is autorized in a line"
+msgstr "only one * character is permitted in a line"
 
 #: web_tt2/blacklist.tt2:19
 msgid "The current blacklist is empty"
@@ -2895,9 +2896,9 @@ msgid ""
 "was received without Message-Id. Please refer to listmaster with\n"
 "complete URL of the message concerned"
 msgstr ""
-"Unable to find the message to delete, probably this message\n"
-"was received without Message-Id. Please refer to listmaster with\n"
-"complete URL of the message concerned"
+"Unable to find the message to delete; this message\n"
+"was probably received without a Message-Id. Please refer to listmaster with\n"
+"the complete URL of the message concerned"
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -2909,7 +2910,7 @@ msgid ""
 "complete URL of the message concerned."
 msgstr ""
 "Error while deleting this message, please refer to listmaster with\n"
-"complete URL of the message concerned."
+"the complete URL of the message concerned."
 
 #: web_tt2/rename_list_request.tt2:3
 #, fuzzy
@@ -3151,7 +3152,7 @@ msgstr "Remind all"
 
 #: web_tt2/review.tt2:70
 msgid "Add an user: "
-msgstr "Add an user: "
+msgstr "Add a user: "
 
 #: web_tt2/review.tt2:74
 msgid "Multiple add"
@@ -3506,7 +3507,7 @@ msgid ""
 "may be usefull when providing assistance or to test users privileges"
 msgstr ""
 "As listmaster, you can change your identity and act as someone else. This is "
-"may be usefull when providing assistance or to test users privileges"
+"may be useful when providing assistance or to test users' privileges"
 
 #: web_tt2/serveradmin.tt2:103
 msgid "change identity as : "
@@ -3758,16 +3759,16 @@ msgid ""
 "starting a new sympa version, css_path and css_url should not point to the "
 "same directory ."
 msgstr ""
-"When not using css_url parameters, sympa deliver a dynamic CSS which is "
-"created using a template name css.tt2. Usually this template is comming from "
-"Sympa distribution tar. Using this CSS is not a good solution because for "
-"each clic, Sympa fcgi server is requested twice. If you use  css_url "
-"parameters the style sheet are delivered by your http server. When you "
-"install a new Sympa version and start it at the first time, the different "
-"CSS files are installed in the directory specified by css_path parameter. So "
-"if you want to preserve some site customization from being overwriten when "
-"starting a new sympa version, css_path and css_url should not point to the "
-"same directory ."
+"When not using css_url parameters, sympa delivers a dynamic CSS which is "
+"created using a template named css.tt2. Usually this template comes from the "
+"Sympa distribution tar file. Using this CSS is not a good solution because "
+"for each click, the Sympa fcgi server is requested twice. If you use  "
+"css_url parameters the style sheet is delivered by your http server. When "
+"you install a new Sympa version and start it for the first time, the "
+"different CSS files are installed in the directory specified by css_path "
+"parameter. So if you want to preserve some site customizations from being "
+"overwriten when starting a new sympa version, css_path and css_url should "
+"not point to the same directory."
 
 #: web_tt2/skinsedit.tt2:12
 msgid ""
@@ -3839,16 +3840,16 @@ msgid ""
 "them in a new static CSS.\n"
 msgstr ""
 "\n"
-"Be carreful : the CSS file is overwritten using css.tt2 template, usually "
-"this file is comming from Sympa distribution so your CSS customization may "
-"be erased when doing this.\n"
+"Be careful : the CSS file is overwritten using the css.tt2 template. Usually "
+"this file comes from the Sympa distribution; your CSS customization may be "
+"erased when doing this.\n"
 "</p>\n"
 "<p>\n"
-"Use the color editor in orer to change defined colors. First select the "
+"Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
 "button. The new color is not really installed but it is used only for your "
-"own session. When happy with the different colors you choosen, you may save "
-"them in a new static CSS.\n"
+"own session. When happy with the different colors you have chosen, you may "
+"save them in a new static CSS.\n"
 
 #: web_tt2/skinsedit.tt2:51
 msgid " pick the color you want to test. "
@@ -6658,7 +6659,7 @@ msgstr "Message distribution"
 #. (list.name)
 #: mail_tt2/message_report.tt2:101
 msgid "Your message for list %1 has been forwarded to editor(s)"
-msgstr "Your message for list %1 has been forwarded to editor(s)"
+msgstr "Your message to the list '%1' has been forwarded to the moderator(s)"
 
 #. (key,list.name)
 #: mail_tt2/message_report.tt2:105
