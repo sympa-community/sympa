@@ -56,6 +56,7 @@ use CPAN;
 	     'Time::HiRes' => '1.9719',
 	     'MIME::Lite' => '3.024',
 	     'MIME::Lite::HTML' => '1.23',
+	     'Email::Date::Format' => '1.002',
 	     );
 
 ### key:left "module" used by SYMPA, 
@@ -91,6 +92,7 @@ use CPAN;
 	     'Time::HiRes' => 'Time-HiRes',
 	     'MIME::Lite' => 'MIME-Lite',
 	     'MIME::Lite::HTML' => 'MIME-Lite-HTML',
+	     'Email::Date::Format' => 'Email-Date-Format',
 	     );
 
 %opt_CPAN = ('AuthCAS' => 'AuthCAS',
