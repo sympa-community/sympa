@@ -48,7 +48,7 @@ install-data-hook:
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
 		-e 's|--execcgidir--|$(execcgidir)|' \
-		$(addprefix $(DESTDIR)$(datadir)/sympa/lib/, $(nobase_modules_DATA)) \
+		$(addprefix $(DESTDIR)$(modulesdir)/, $(nobase_modules_DATA)) \
 		$(addprefix $(DESTDIR)$(sbindir)/, $(sbin_SCRIPTS)) \
 		$(addprefix $(DESTDIR)$(execcgidir)/, $(execcgi_SCRIPTS))
 
