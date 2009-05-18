@@ -191,6 +191,8 @@ sub check_modules {
 	} elsif ($status eq "pb_retval") {
 	    ### doesn't return 1;
 	    print "$mod doesn't return 1 (check it).\n";
+
+	    &install_module($mod, {'default' => $default});
 	} else {
 	    print "$status\n";
 	}
