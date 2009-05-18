@@ -108,6 +108,7 @@ Options:
    --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
                                                 authorization scenarios. The list parameter is optional.
    --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
+   --upgrade_shared  --[listname=X] --[robot=Y] : rename files in shared.
    --log_level=LEVEL                     : sets Sympa log level
    --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
    --test_database_message_buffer        : test the database message buffer size
@@ -125,7 +126,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
 		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
-		    'input_file=s','sync_include=s','upgrade','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer')) {
+		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer')) {
     &fatal_err("Unknown options.");
 }
 
@@ -150,6 +151,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'md5_digest'} || 
 				$main::options{'sync_include'} ||
 				$main::options{'upgrade'} ||
+				$main::options{'upgrade_shared'} ||
 				$main::options{'test_database_message_buffer'} || 
 				$main::options{'reload_list_config'}
 				 );
@@ -736,7 +738,48 @@ if ($main::options{'dump'}) {
 
     exit 0;
 
-## Reload binary list config files
+## rename file names that may be incorrectly encoded because of previous Sympa versions
+}elsif ($main::options{'upgrade_shared'}) {
+    
+    &do_log('notice', "Upgrade shared process...");
+
+    my $listname; my $robot;
+
+    unless (($main::options{'list'}) || ($main::options{'robot'})){
+	&do_log('err', "listname and domain are required, use --list= --robot= options");
+	exit 0;
+    }
+    $listname = $main::options{'list'} ;
+    $robot = $main::options{'robot'} ;
+
+    &do_log('notice', "Upgrading share for list=%s robot=%s",$listname,$robot);
+    
+
+    my $list = new List ($listname,$robot);
+    
+    unless (defined $list) {
+	printf STDERR "Incorrect list or domain name : %s %s\n",$listname,$robot;
+	exit 1;
+    }
+
+    if (-d $list->{'dir'}.'/shared') {
+	&do_log('notice','  Processing list %s...', $list->get_list_address());
+	
+	## Determine default lang for this list
+	## It should tell us what character encoding was used for filenames
+	&Language::SetLang($list->{'admin'}{'lang'});
+	my $list_encoding = &Language::GetCharset();
+	
+	my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
+	
+	if ($count) {
+	    &do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);
+	}
+    }
+    &do_log('notice', "Upgrade_shared process finished.");    
+
+    exit 0;
+
 }elsif ($main::options{'reload_list_config'}) {
 
     if ($main::options{'list'}) {
