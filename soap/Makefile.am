@@ -45,6 +45,6 @@ install-data-hook:
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
 		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
-		$(addprefix $(DESTDIR)$(datadir)/sympa/lib/, $(modules_DATA)) \
+		$(addprefix $(DESTDIR)$(modulesdir)/, $(modules_DATA)) \
 		$(addprefix $(DESTDIR)$(execcgidir)/, $(execcgi_SCRIPTS)) \
 		$(addprefix $(DESTDIR)$(scriptdir)/, $(script_SCRIPTS))
