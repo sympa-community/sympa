@@ -272,7 +272,7 @@ sub convert {
 
     printf "Template file $in_file has been converted to $out_file\n";
     
-    unless (&tools::set_file_rights(file => $out_file;
+    unless (&tools::set_file_rights(file => $out_file,
 				    user => '--USER--',
 				    group => '--GROUP--',
 				    ))
