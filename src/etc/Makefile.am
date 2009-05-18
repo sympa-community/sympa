@@ -162,8 +162,8 @@ DEFAULT_SCENARIOS = add.owner \
 
 install-data-hook:
 	sed -i -e 's|--libexecdir--|$(libexecdir)|' \
-		$(DESTDIR)$(datadir)/sympa/etc/list_aliases.tt2
-	cd  $(DESTDIR)$(datadir)/sympa/etc/scenari; \
+		$(DESTDIR)$(defaultdir)/list_aliases.tt2
+	cd  $(DESTDIR)$(defaultdir)/scenari; \
 	for file in $(DEFAULT_SCENARIOS); do \
 		ln -sf $$file `echo $$file | sed -e 's/\.[^.]\+$$/.default/'`; \
 	done
