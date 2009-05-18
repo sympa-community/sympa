@@ -87,5 +87,5 @@ install-data-hook:
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
 		-e 's|--expldir--|$(expldir)|' \
 		-e 's|--spooldir--|$(spooldir)|' \
-		$(addprefix $(DESTDIR)$(datadir)/sympa/lib/, $(modules_DATA)) \
+		$(addprefix $(DESTDIR)$(modulesdir)/, $(modules_DATA)) \
 		$(addprefix $(DESTDIR)$(sbindir)/, $(sbin_SCRIPTS))

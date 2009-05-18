@@ -111,15 +111,6 @@ AC_ARG_WITH(
 )
 
 AC_ARG_WITH(
-    scriptdir,
-    AS_HELP_STRING(
-	[--with-scriptdir=DIR],
-	[obsolete option, scripts modules are now installed with data]
-    ),
-    [AC_MSG_WARN([obsolete --with-scriptdir option used])]
-)
-
-AC_ARG_WITH(
     libdir,
     AS_HELP_STRING(
 	[--with-libdir=DIR]
@@ -239,14 +230,44 @@ AC_SUBST(piddir)
 
 # various subdirectories
 pkgdatadir=$datadir/sympa
+
 modulesdir=$pkgdatadir/lib
+AC_ARG_WITH(
+    modulesdir,
+    AS_HELP_STRING(
+	[--with-modulesdir=DIR],
+	[Perl modules file installed with Sympa in DIR (modules $pkgdatadir/etc)]
+    ),
+    [modulesdir="$withval"]
+)
+AC_SUBST(modulesdir)
+
 defaultdir=$pkgdatadir/etc
-scriptdir=$pkgdatadir/bin
+AC_ARG_WITH(
+    defaultdir,
+    AS_HELP_STRING(
+	[--with-defaultdir=DIR],
+	[default configuration files, scenarios and templates in DIR (default $pkgdatadir/etc)]
+    ),
+    [defaultdir="$withval"]
+)
+AC_SUBST(defaultdir)
+
 mailtemplatedir=$defaultdir/mail_tt2
 webtemplatedir=$defaultdir/web_tt2
-AC_SUBST(modulesdir)
-AC_SUBST(defaultdir)
+
+scriptdir=$pkgdatadir/bin
+AC_ARG_WITH(
+    scriptdir,
+    AS_HELP_STRING(
+	[--with-scriptdir=DIR],
+	[application script directory is DIR (default $pkgdatadir/bin)]
+    ),
+    [scriptdir="$withval"]
+)
 AC_SUBST(scriptdir)
+
+
 AC_SUBST(mailtemplatedir)
 AC_SUBST(webtemplatedir)
 
