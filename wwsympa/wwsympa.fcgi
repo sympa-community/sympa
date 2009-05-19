@@ -3031,7 +3031,7 @@ sub do_ticket {
 		  'target_email' => $in{'email'},
 		  'status' => 'success'});
 
-     &do_redirect ($session->{'redirect_url'});     
+     &do_redirect ($session->{'redirect_url'});          
      return ;
 
  }
@@ -3488,6 +3488,9 @@ sub do_redirect {
     &wwslog('info','do_redirect(%s)', $redirect_to);
 
     $redirect_to ||= $param->{'redirect_to'};
+    # because of some bug Sympa did redirection to un empty URL. Next line should prevent it.
+    $redirect_to ||= $param->{'base_url'}.$param->{'path_cgi'};
+
     $session->set_cookie('localhost','session');
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
