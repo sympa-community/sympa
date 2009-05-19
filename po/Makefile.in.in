@@ -102,7 +102,6 @@ all-no:
 check-macro-version:
 	@test "$(GETTEXT_MACRO_VERSION)" = "@GETTEXT_MACRO_VERSION@" \
 	  || { echo "*** warning: gettext infrastructure mismatch: using a Makefile.in.in from gettext version $(GETTEXT_MACRO_VERSION) but the autoconf macros are from gettext version @GETTEXT_MACRO_VERSION@" 1>&2; \
-	       #exit 1; \
 	     }
 
 # $(srcdir)/$(DOMAIN).pot is only created when needed. When xgettext finds no
