@@ -42,6 +42,28 @@
 [% IF base %] <base href="[% base %]" /> [% END %]
 <!--[if IE]>
 <![endif]-->
+
+<noscript>
+<style type="text/css">
+<!--
+#ErrorBlock,
+#noticeBlock {
+	       height:0%!important;
+               position:relative!important;
+               }
+
+#ErrorMsg,
+#noticeMsg { 
+             position:relative!important;
+             width:80%!important;
+             margin :1em auto!important;
+             border:none!important;
+ }
+
+-->
+</style>
+</noscript>
+
 </head>
 
 <body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">

@@ -61,7 +61,7 @@ dl {
          }
 
 /*Content Block*/
-#Stretcher { 
+#Stretcher {
 	     margin-left:25em;
              margin-top:1em;
              text-align: left;
@@ -1182,8 +1182,8 @@ h7 strong {
             }
 	
 .listTitle {
-	     position:relative;
-             height: 1%;
+             position:relative;
+	     height: 1%;
 	     width: 99.5%;
              text-align: center;
              border: solid [% color_4 %];
@@ -1242,12 +1242,12 @@ h7 strong {
 
 #ErrorMsg { 
             position:absolute;
-            width:70%;
-            margin :20% 15%;
+            width:60%;
+            margin :20% 19%;
             z-index:610!important;
             border: 5px ridge [% color_12 %];
             font-family:serif;
-            font-size: 2em;
+            font-size: 1.6em;
             font-weight: bold;
             text-align:center;
             color:[% color_5 %]!important;
@@ -1260,13 +1260,16 @@ h7 strong {
             border-radius:20px;
             }
 
+
+
 #ErrorMsg .MainMenuLinks { 
                            color:[% color_4 %];
                            background-color:[% color_5 %];
                            border:2px outset [% color_4 %];
-                           padding: 0 2em!important;
+                           padding: 0 1.8em!important;
                            margin-top:1em;
-                           font-size: 0.8em;
+                           font-size: 0.7em;
+			   font-weight:bold;
                            -moz-border-radius:20px;
                            -webkit-border-radius:20px;
                            -KHTML-border-radius:20px;
@@ -1287,7 +1290,7 @@ h7 strong {
                left:0;
                top:0;
                z-index:600;
-               background: [% color_8 %];
+               background: [% color_9 %];
                opacity:0.4;
                width:100%;
                height:100%;
@@ -1295,12 +1298,12 @@ h7 strong {
 
 #noticeMsg { 
              position:absolute;
-             width:70%;
-             margin :20% 15%;
+             width:60%;
+             margin :20% 19%;
              z-index:610!important;
-             border: 5px ridge [% color_13 %];
+             border: 5px ridge [% color_12 %];
              font-family:serif;
-             font-size: 2em;
+             font-size: 1.6em;
              font-weight: bold;
              text-align:center;
              color:[% color_4 %]!important;
@@ -1343,12 +1346,13 @@ ul.listenum li {
  
 ul.listenum span { 
                    display: block;
-                   margin-top: 2px;
+                   margin-top: 0.4em;
                    }
 
 ul li.menuLinksCurrentPage a {
-				     color:[% color_4 %]!important;
-                                  }
+			       color:[% color_4 %]!important;
+                               }
+
 ul.calendar {
 	      margin-left:0!important;	
               padding-left:0!important;
@@ -1361,8 +1365,8 @@ ul.calendar a {
 ul.calendar li {
                  list-style: none; 
                  display: inline;
-		 margin-bottom:0.1em;
                  padding: 0px 1px 0px 2px;
+		 margin-bottom:0.1em;
                  font-size: 1em;
                  text-decoration: none;
                  border: 1px solid [% color_12 %];
@@ -1842,7 +1846,7 @@ table.preferences th {
              float:left;
  	     min-width:0.7em;
              display:inline;
-             margin:0 0 0 0.5em;
+             margin:0 0 0.2em 0.5em;
              padding:0.1em 0.2em;
              border:1px solid [% color_8 %];
              border-width: 0 1px 0 0;
@@ -1944,7 +1948,7 @@ table.preferences th {
 #subnav ul li {
                 float:left;
                 display:inline;
-                margin:0 0.5em 0 0.2em;
+                margin:0 0.5em 0.2em 0.2em;
                 background-color:[% color_5 %];
                 -moz-border-radius:10px;
                 -KTML-border-radius:10px;
@@ -2012,7 +2016,6 @@ table.preferences th {
                width:100%;
                border: 1px solid [% color_8 %];
                border-width: 0 1px 1px 0;
-               text-align:left;
                background:[% color_5 %];
                padding:0.5em 0 0.5em 0;
 	       text-align:center;
@@ -2024,13 +2027,13 @@ table.preferences th {
 
 .menu_search input.MainMenuLinks {
                                    margin-left:0;
-                                   width:10em;
                                    border: 1px solid [% color_4 %];
                                    background: [% color_5 %];
                                    color:[% color_4 %];
+				   padding:0!important;
                                    font-size:0.9em;
                                    font-weight:600;
-				   letter-spacing:0.1em;
+				   letter-spacing:0em;
                                    -moz-border-radius:10px;
                                    -webkit-border-radius:10px;
                                    -KHTML-border-radius:10px;
