@@ -35,6 +35,9 @@ use Sympa::Template::Compat;
 
 my $current_lang;
 my $last_error;
+my @other_include_path;
+my $allow_absolute;
+
 
 sub qencode {
     my $string = shift;

@@ -27,9 +27,6 @@ use strict;
 use base 'Template::Provider';
 use Encode;
 
-my @other_include_path;
-my $allow_absolute;
-
 sub _load {
 	my ($self, $name, $alias) = @_;
 	my ($data, $error) = $self->SUPER::_load($name, $alias);
