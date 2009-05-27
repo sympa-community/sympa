@@ -32,19 +32,23 @@ modules_DATA = sympasoap.pm SympaTransport.pm
 default_DATA = sympa.wsdl
 
 EXTRA_DIST = $(default_DATA) $(modules_DATA) \
-	     $(script_SCRIPTS) $(execcgi_SCRIPTS)
+	     sympa_soap_client.pl.in \
+	     sympa_soap_server.fcgi.in
+
+CLEANFILES = $(script_SCRIPTS) $(execcgi_SCRIPTS)
 
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 	-chgrp $(GROUP) $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 	chmod 6755 $(DESTDIR)$(execcgidir)/sympa_soap_server-wrapper.fcgi
 
-install-data-hook:
-	sed -i \
+sympa_soap_client.pl sympa_soap_server.fcgi: Makefile
+	rm -f $@
+	sed \
 		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
-		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
-		$(addprefix $(DESTDIR)$(modulesdir)/, $(modules_DATA)) \
-		$(addprefix $(DESTDIR)$(execcgidir)/, $(execcgi_SCRIPTS)) \
-		$(addprefix $(DESTDIR)$(scriptdir)/, $(script_SCRIPTS))
+		-e 's|--modulesdir--|$(modulesdir)|' \
+		< $(srcdir)/$@.in > $@
+	chmod +x $@
+
+sympa_soap_client.pl: $(srcdir)/sympa_soap_client.pl.in
+sympa_soap_server.fcgi: $(srcdir)/sympa_soap_server.fcgi.in

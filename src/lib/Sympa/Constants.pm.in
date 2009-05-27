@@ -1,0 +1,70 @@
+# Sympa::Constants.pm - This module contains all installation-related variables
+# RCS Identication ; $Revision: 5768 $ ; $Date: 2009-05-21 16:23:23 +0200 (jeu. 21 mai 2009) $ 
+#
+# Sympa - SYsteme de Multi-Postage Automatique
+# Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
+# Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package Sympa::Constants;
+use strict;
+
+use Exporter;
+our @ISA = qw(Exporter);
+our @EXPORT = qw(
+    VERSION
+    USER
+    GROUP
+
+    CONFIG
+    WWSCONFIG
+    SENDMAIL_ALIASES
+
+    EXPLDIR
+    SPOOLDIR
+    SYSCONFDIR
+    PIDDIR
+    LOCALEDIR
+    LIBEXECDIR
+    SBINDIR
+    SCRIPTDIR
+    MODULEDIR
+    DEFAULTDIR
+);
+
+use constant VERSION => '--VERSION--';
+use constant USER    => '--USER--';
+use constant GROUP   => '--GROUP--';
+
+use constant CONFIG           => '--CONFIG--';
+use constant WWSCONFIG        => '--WWSCONFIG--';
+use constant SENDMAIL_ALIASES => '--SENDMAIL_ALIASES--';
+
+use constant PIDDIR     => '--piddir--';
+use constant EXPLDIR    => '--expldir--';
+use constant SPOOLDIR   => '--spooldir--';
+use constant SYSCONFDIR => '--sysconfdir--';
+use constant LOCALEDIR  => '--localedir--';
+use constant LIBEXECDIR => '--libexecdir--';
+use constant SBINDIR    => '--sbindir--';
+use constant SCRIPTDIR  => '--scriptdir--';
+use constant MODULEDIR  => '--modulesdir--';
+use constant DEFAULTDIR => '--defaultdir--';
+use constant STATICDIR  => '--staticdir--';
+use constant ARCCDIR    => '--arcdir--';
+use constant BOUNCEDIR  => '--bouncedir--';
+
+1;

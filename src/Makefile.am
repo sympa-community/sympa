@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-SUBDIRS = etc
+SUBDIRS = etc lib
 
 AM_CPPFLAGS = -DCONFIG=\"$(CONFIG)\"
 
@@ -39,14 +39,14 @@ queue_SOURCES = queue.c
 bouncequeue_SOURCES = bouncequeue.c
 familyqueue_SOURCES = familyqueue.c
 
+EXTRA_DIST = $(modules_DATA) \
+	     bulk.pl.in \
+	     alias_manager.pl.in \
+	     sympa.pl.in \
+	     sympa_wizard.pl.in \
+	     task_manager.pl.in
 
-modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm Conf.pm CAS.pm Config_XML.pm \
-	       Family.pm Language.pm List.pm Log.pm mail.pm Ldap.pm Upgrade.pm \
-	       Lock.pm Version.pm Fetch.pm Message.pm Task.pm Datasource.pm \
-	       SQLSource.pm LDAPSource.pm Scenario.pm PlainDigest.pm \
-	       tools.pl tt2.pl report.pm time_utils.pl
-
-EXTRA_DIST = $(modules_DATA) $(sbin_SCRIPTS)
+CLEANFILES = $(sbin_SCRIPTS)
 
 install-exec-hook:
 	chmod 4755 $(DESTDIR)$(libexecdir)/queue
@@ -69,23 +69,16 @@ install-exec-hook:
 	-chown root $(DESTDIR)$(sbindir)/virtualwrapper
 	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/virtualwrapper
 
-install-data-hook:
-	sed -i \
+alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
+	rm -f $@
+	sed \
 		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--USER--|$(USER)|' \
-		-e 's|--GROUP--|$(GROUP)|' \
-		-e 's|--VERSION--|$(VERSION)|' \
-		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
-		-e 's|--prefix--|$(prefix)|' \
-		-e 's|--piddir--|$(piddir)|' \
-		-e 's|--libexecdir--|$(libexecdir)|' \
-		-e 's|--sbindir--|$(sbindir)|' \
-		-e 's|--localedir--|$(localedir)|' \
-		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
-		-e 's|--sysconfdir--|$(sysconfdir)|' \
-		-e 's|--expldir--|$(expldir)|' \
-		-e 's|--spooldir--|$(spooldir)|' \
-		$(addprefix $(DESTDIR)$(modulesdir)/, $(modules_DATA)) \
-		$(addprefix $(DESTDIR)$(sbindir)/, $(sbin_SCRIPTS))
+		-e 's|--modulesdir--|$(modulesdir)|' \
+		< $(srcdir)/$@.in > $@
+	chmod +x $@
+
+alias_manager.pl: $(srcdir)/alias_manager.pl.in
+bulk.pl: $(srcdir)/bulk.pl.in
+sympa.pl: $(srcdir)/sympa.pl.in
+sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
+task_manager.pl: $(srcdir)/task_manager.pl.in

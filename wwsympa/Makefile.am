@@ -19,40 +19,39 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+SUBDIRS = icons
+
 sbin_SCRIPTS = bounced.pl archived.pl
-execcgi_SCRIPTS = wwsympa.fcgi wwsympa_sudo_wrapper.pl
+execcgi_SCRIPTS = wwsympa.fcgi
 execcgi_PROGRAMS = wwsympa-wrapper.fcgi
 wwsympa_wrapper_fcgi_SOURCES = wwsympa-wrapper.fcgi.c
 wwsympa_wrapper_fcgi_CPPFLAGS = -DWWSYMPA=\"$(execcgidir)/wwsympa.fcgi\"
 
-nobase_modules_DATA = wwslib.pm cookielib.pm bounce-lib.pl Marc.pm Auth.pm \
+nobase_modules_DATA = wwslib.pm cookielib.pm Bounce.pm Marc.pm Auth.pm \
 		      Marc/Search.pm SharedDocument.pm SympaSession.pm
 
 default_DATA = mime.types 
 
 EXTRA_DIST = $(default_DATA) $(nobase_modules_DATA) \
-	     $(sbin_SCRIPTS) $(execcgi_SCRIPTS)
+	     archived.pl.in \
+	     bounced.pl.in \
+	     wwsympa.fcgi.in
+
+CLEANFILES = $(sbin_SCRIPTS) $(execcgi_SCRIPTS)
 
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 	-chgrp $(GROUP) $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 	chmod 6755 $(DESTDIR)$(execcgidir)/wwsympa-wrapper.fcgi
 
-install-data-hook:
-	sed -i \
+archived.pl bounced.pl wwsympa.fcgi: Makefile
+	rm -f $@
+	sed \
 		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--USER--|$(USER)|' \
-		-e 's|--GROUP--|$(GROUP)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
-		-e 's|--piddir--|$(piddir)|' \
-		-e 's|--pkgdatadir--|$(pkgdatadir)|' \
-		-e 's|--execcgidir--|$(execcgidir)|' \
-		$(addprefix $(DESTDIR)$(modulesdir)/, $(nobase_modules_DATA)) \
-		$(addprefix $(DESTDIR)$(sbindir)/, $(sbin_SCRIPTS)) \
-		$(addprefix $(DESTDIR)$(execcgidir)/, $(execcgi_SCRIPTS))
+		-e 's|--modulesdir--|$(modulesdir)|' \
+		< $(srcdir)/$@.in > $@
+	chmod +x $@
 
-installicons:
-	install -d -m 755 $(DESTDIR)$(prefix)/static_content
-	install -d -m 755 $(DESTDIR)$(prefix)/static_content/icons
-	install -m 644 icons/*.png $(DESTDIR)$(prefix)/static_content/icons
+archived.pl: $(srcdir)/archived.pl.in
+bounced.pl: $(srcdir)/bounced.pl.in
+wwsympa.fcgi: $(srcdir)/wwsympa.fcgi.in

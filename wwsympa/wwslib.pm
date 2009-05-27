@@ -21,7 +21,6 @@
 
 
 package wwslib;
-use lib '--pkgdatadir--/lib';
 
 use Exporter;
 @ISA = ('Exporter');
@@ -29,6 +28,7 @@ use Exporter;
 
 use Log;
 use Conf;
+use Sympa::Constants;
 
 %reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
 		   'digest' => {'gettext_id' => 'digest MIME format'},
@@ -142,16 +142,16 @@ sub load_config {
     ## Valid params
     my %default_conf = (arc_path => '/home/httpd/html/arc',
 			archive_default_index => 'thrd',
-			archived_pidfile => '--piddir--/archived.pid',		  
+			archived_pidfile => Sympa::Constants::PIDDIR . '/archived.pid',
 			bounce_path => '/var/bounce',
-			bounced_pidfile => '--piddir--/bounced.pid',
+			bounced_pidfile => Sympa::Constants::PIDDIR . '/bounced.pid',
 			cookie_domain => 'localhost',
 			cookie_expire => 0,
 			custom_archiver => '',
 			mhonarc => '/usr/bin/mhonarc',
 			review_page_size => 25,
 			viewlogs_page_size => 25,
-			task_manager_pidfile => '--piddir--/task_manager.pid',
+			task_manager_pidfile => Sympa::Constants::PIDDIR . '/task_manager.pid',
 			title => 'Mailing Lists Service',
 			use_fast_cgi => 1,
 			default_home => 'home',

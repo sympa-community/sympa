@@ -21,7 +21,10 @@
 
 SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 
-EXTRA_DIST = important_changes.pl
+EXTRA_DIST = important_changes.pl \
+	     sympa.spec.in \
+	     sympa.spec \
+	     README.charset
 
 install-data-hook: installdir installconfig nextstep importantchanges
 
@@ -30,7 +33,7 @@ installdir:
 	@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
 		$(spooldir)/moderation $(spooldir)/expire $(spooldir)/auth \
 		$(spooldir)/outgoing $(spooldir)/tmp $(spooldir)/task \
-		$(prefix)/bounce $(prefix)/arc $(piddir); do \
+		$(bouncedir) $(arcdir) $(piddir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			install -d -m 755 $(DESTDIR)$$dir; \
