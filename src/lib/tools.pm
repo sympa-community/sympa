@@ -606,7 +606,7 @@ sub get_templates_list {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
-    my $distrib_dir = Sympa::Constants::DEFAULTDIR . "/$type_tt2";
+    my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
     my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
     my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
 
@@ -679,7 +679,7 @@ sub get_template_path {
 	do_log('info', 'get_templates_path () : internal error incorrect parameter');
     }
 
-    my $distrib_dir = Sympa::Constants::DEFAULTDIR . "/$type_tt2";
+    my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
     my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
     $site_dir .= '/'.$lang unless ($lang eq 'default');
     my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
