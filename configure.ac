@@ -35,7 +35,7 @@ if test -f /etc/sympa.conf; then
 
     # standard variables
     sbindir=$prefix/bin
-    libexecdir=/etc/smrsh
+    libexecdir=$prefix/bin
 
     # custom variables
     initdir=/etc/rc.d/init.d
