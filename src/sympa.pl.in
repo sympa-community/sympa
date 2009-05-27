@@ -2147,7 +2147,7 @@ sub SendDigest{
     &do_log('debug', 'SendDigest()');
 
     if (!opendir(DIR, $Conf{'queuedigest'})) {
-	fatal_err(gettext("Unable to access directory %s : %m"), $Conf{'queuedigest'}); ## No return.
+	fatal_err("Unable to access directory %s : %m", $Conf{'queuedigest'}); ## No return.
     }
     my @dfile =( sort grep (!/^\./,readdir(DIR)));
     closedir(DIR);
