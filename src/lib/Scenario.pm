@@ -31,7 +31,7 @@ use List;
 use Log;
 use Conf;
 use Net::Netmask;
-
+use Sympa::Constants;
 
 my %all_scenarios;
 my %persistent_cache;
@@ -73,7 +73,7 @@ sub new {
 	
     }else {
 	## We can't use &tools::get_filename() because we don't have a List object yet ; it's being constructed
-	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, '--pkgdatadir--/etc');
+	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, Sympa::Constants::DEFAULTDIR);
 	unshift @dirs, $parameters{'directory'} if (defined $parameters{'directory'});
 	foreach my $dir (@dirs) {
 	    my $tmp_path = $dir.'/scenari/'.$parameters{'function'}.'.'.$parameters{'name'};

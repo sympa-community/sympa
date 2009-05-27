@@ -30,6 +30,7 @@ use strict;
 use Log;
 use POSIX qw (setlocale);
 use Locale::Messages qw (:locale_h :libintl_h !gettext);
+use Sympa::Constants;
 
 BEGIN {
     ## Using the Pure Perl implementation of gettext
@@ -183,8 +184,8 @@ sub SetLang {
     $ENV{'LANGUAGE'}=$locale;
     ## Define what catalogs are used
     &Locale::Messages::textdomain("sympa");
-    &Locale::Messages::bindtextdomain('sympa','--localedir--');
-    &Locale::Messages::bindtextdomain('web_help','--localedir--');
+    &Locale::Messages::bindtextdomain('sympa',Sympa::Constants::LOCALEDIR);
+    &Locale::Messages::bindtextdomain('web_help',Sympa::Constants::LOCALEDIR);
     # Get translations by internal encoding.
     bind_textdomain_codeset sympa => 'utf-8';
     bind_textdomain_codeset web_help => 'utf-8';
