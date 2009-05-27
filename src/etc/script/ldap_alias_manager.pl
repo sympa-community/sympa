@@ -21,7 +21,7 @@ my $SYMPA_CONF = '--CONFIG--';
 
 ## Load Sympa.conf
 use strict;
-use lib '--pkgdatadir--/lib';
+use lib '--modulesdir';
 use Conf;
 use POSIX;
 require "tools.pl";
@@ -35,7 +35,7 @@ unless (Conf::load($SYMPA_CONF)) {
    exit(1);
 }
 
-my $manager_conf_file = '--pkgdatadir--/etc/ldap_alias_manager.conf';
+my $manager_conf_file = $Conf{etc}.'/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
