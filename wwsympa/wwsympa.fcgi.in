@@ -47,15 +47,9 @@ use Time::Local;
 use Text::Wrap;
 use MIME::Lite::HTML;
 use MIME::Lite;
-#use POSIX;
-#use CGI;
-
-## Template parser
-require "tt2.pl";
 
 ## Sympa API
 use List;
-use mail;
 use mail;
 use Conf;
 use Commands;
@@ -67,14 +61,17 @@ use SharedDocument;
 use report;
 use SympaSession;
 use Log;
+use tools;
+use time_utils;
+use Sympa::Constants;
+use wwslib;
+use cookielib;
+use tt2;
 
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
 use Mail::Address;
-
-require "tools.pl";
-require "time_utils.pl";
 
 my $crypt_openssl_x509_ok;
 BEGIN {
@@ -87,8 +84,6 @@ BEGIN {
 };
 
 ## WWSympa librairies
-use wwslib;
-use cookielib;
 my %options;
 
 ## Configuration
