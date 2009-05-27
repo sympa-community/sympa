@@ -40,7 +40,7 @@ use Sympa::Constants;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 unless (Conf::load($sympa_conf_file)) {
-   print STDERR gettext("The configuration file $sympa_conf_file contains errors.\n");
+   print STDERR "The configuration file $sympa_conf_file contains errors.\n";
    exit(1);
 }
 my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
