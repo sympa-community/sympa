@@ -22,6 +22,6 @@
 sampledir = $(docdir)/sample
 nobase_sample_DATA = README \
 		     trusted_applications.conf robot.conf employees.ldap \
-		     test/config test/info test/message.footer test/welcome.tpl
+		     test/config test/info test/message.footer test/web_tt2/welcome.tt2
 
 EXTRA_DIST = $(nobase_sample_DATA)
