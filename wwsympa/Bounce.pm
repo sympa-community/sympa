@@ -26,8 +26,8 @@ use MIME::Parser;
 use strict;
 
 use Exporter;
-@ISA = ('Exporter');
-@EXPORT = qw/rfc1891 corrige anabounce/;
+our @ISA = ('Exporter');
+our @EXPORT = qw/rfc1891 corrige anabounce/;
 
 ## RFC1891 compliance check
 sub rfc1891 {
