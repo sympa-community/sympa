@@ -97,7 +97,7 @@ our @params = (
     },
     {
         name    => 'arc_path',
-        default => Sympa::Constants::ARCDIR . '/arc',
+        default => Sympa::Constants::ARCDIR,
         query   => 'Where to store HTML archives',
         file    => 'wwsympa.conf',edit => '1',
         advice  =>'Better if not in a critical partition',
