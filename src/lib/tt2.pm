@@ -25,6 +25,10 @@ package tt2;
 
 use strict;
 
+use Exporter;
+our @ISA = ('Exporter');
+our @EXPORT = qw//;
+
 use Template;
 use CGI::Util;
 use MIME::EncWords; 
