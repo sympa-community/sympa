@@ -62,11 +62,11 @@ else
     mailtemplatedir=$defaultdir/mail_tt2
     webtemplatedir=$defaultdir/web_tt2
     execcgidir=$libdir/sympa/cgi
-    expldir=$localstatedir/lib/sympa
-    spooldir=$localstatedir/spool/sympa
-    staticdir=$expldir/static_content
-    arcdir=$expldir/arc
-    bouncedir=$expldir/bounce
+    expldir=$localstatedir/list_data
+    spooldir=$localstatedir/spool
+    staticdir=$localstatedir/static_content
+    arcdir=$localstatedir/arc
+    bouncedir=$localstatedir/bounce
 fi
 
 # substitute custom variables
