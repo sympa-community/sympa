@@ -23,6 +23,10 @@ package tools;
 
 use strict;
 
+use Exporter;
+our @ISA = ('Exporter');
+our @EXPORT = qw//;
+
 use POSIX;
 use Sys::Hostname;
 use Mail::Internet;
