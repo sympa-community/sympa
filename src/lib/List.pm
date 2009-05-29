@@ -11500,13 +11500,13 @@ sub new {
     my $robot = {'name' => $name};
     &Log::do_log('debug2', '');
     
-    unless (defined $name && $Conf::Conf::Conf{'robots'}{$name}) {
+    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
 	&Log::do_log('err',"Unknown robot '$name'");
 	return undef;
     }
 
     ## The default robot
-    if ($name eq $Conf::Conf::Conf{'host'}) {
+    if ($name eq $Conf::Conf{'host'}) {
 	$robot->{'home'} = $Conf::Conf{'home'};
     }else {
 	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;

@@ -147,15 +147,15 @@ sub upgrade {
 
 	my @directories;
 
-	if (-d "$Conf::Conf::Conf{'etc'}/web_tt2") {
-	    push @directories, "$Conf::Conf::Conf{'etc'}/web_tt2";
+	if (-d "$Conf::Conf{'etc'}/web_tt2") {
+	    push @directories, "$Conf::Conf{'etc'}/web_tt2";
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{$Conf::Conf::Conf{'robots'}}) {
+	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 
-	    if (-d "$Conf::Conf::Conf{'etc'}/$vr/web_tt2") {
-		push @directories, "$Conf::Conf::Conf{'etc'}/$vr/web_tt2";
+	    if (-d "$Conf::Conf{'etc'}/$vr/web_tt2") {
+		push @directories, "$Conf::Conf{'etc'}/$vr/web_tt2";
 	    }
 	}
 
@@ -436,10 +436,10 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.6')) {
 	
 	&do_log('notice','Looking for customized mhonarc-ressources.tt2 files...');
-	foreach my $vr (keys %{$Conf::Conf::Conf{'robots'}}) {
-	    my $etc_dir = $Conf::Conf::Conf{'etc'};
+	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+	    my $etc_dir = $Conf::Conf{'etc'};
 
-	    if ($vr ne $Conf::Conf::Conf{'host'}) {
+	    if ($vr ne $Conf::Conf{'host'}) {
 		$etc_dir .= '/'.$vr;
 	    }
 
@@ -447,7 +447,7 @@ sub upgrade {
 		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
 		rename $etc_dir.'/mhonarc-ressources.tt2', $new_filename;
 		&do_log('notice', "Custom %s file has been backed up as %s", $etc_dir.'/mhonarc-ressources.tt2', $new_filename);
-		&List::send_notify_to_listmaster('file_removed',$Conf::Conf::Conf{'host'},
+		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'host'},
 						 [$etc_dir.'/mhonarc-ressources.tt2', $new_filename]);
 	    }
 	}
@@ -1385,7 +1385,7 @@ sub probe_db {
     $List::use_db = 1;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
+    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
 
     return 1;
 }

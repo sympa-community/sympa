@@ -1286,7 +1286,7 @@ sub escape_docname {
     $filename = MIME::EncWords::decode_mimewords($filename);
 
     ## Decode from FS encoding to utf-8
-    #$filename = &Encode::decode($Conf::Conf::Conf{'filesystem_encoding'}, $filename);
+    #$filename = &Encode::decode($Conf::Conf{'filesystem_encoding'}, $filename);
 
     ## escapesome chars for use in URL
     return &escape_chars($filename, $except);
