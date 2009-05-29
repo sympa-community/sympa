@@ -34,8 +34,8 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      global_task_models/purge_session_table.daily.task \
 		      global_task_models/purge_tables.daily.task \
 		      global_task_models/purge_user_table.monthly.task \
-		      topics.conf nrcpt_by_domain.conf \
-		      ldap_alias_manager.conf edit_list.conf \
+		      charset.conf topics.conf nrcpt_by_domain.conf \
+		      ldap_alias_entry.tt2 ldap_alias_manager.conf edit_list.conf \
 		      create_list.conf crawlers_detection.conf auth.conf \
 		      ca-bundle.crt mhonarc-ressources.tt2 list_aliases.tt2 \
 		      create_list_templates/discussion_list/comment.tt2 \

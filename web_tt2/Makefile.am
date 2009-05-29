@@ -32,7 +32,8 @@ webtemplate_DATA = active_lists.tt2 \
 		   button_footer.tt2 \
 		   button_header.tt2 \
 		   change_email.tt2 \
-		   choosepasswd.tt2 \
+		   change_email_request.tt2 \
+	     	   choosepasswd.tt2 \
 		   close_list.tt2 \
 		   compose_mail.tt2 \
 		   copy_template.tt2 \
@@ -91,6 +92,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   ls_templates.tt2 \
 		   maintenance.tt2 \
 		   main.tt2 \
+		   manage_template.tt2 \
 		   menu.tt2 \
 		   menu_search.tt2 \
 		   modindex.tt2 \
