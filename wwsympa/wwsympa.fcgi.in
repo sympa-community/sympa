@@ -434,7 +434,7 @@ my %action_args = ('default' => ['list'],
 ## Some keywords are reserved: param.list and param.user.email
 ## Alternate parameters can be defined with the '|' character
 ## Limits of this structure: it does not define optional parameters (a or b)
-## Limit : it does not allow to have a specific error message and redirect to a given page if the parameter is missing
+## Limit: it does not allow to have a specific error message and redirect to a given page if the parameter is missing
 my %required_args = ('active_lists' => ['for|count'],
 		     'admin' => ['param.list','param.user.email'],
 		     'add' => ['param.list','param.user.email'],
