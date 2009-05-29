@@ -52,6 +52,7 @@ if test -f /etc/sympa.conf; then
     staticdir=$prefix/static_content
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
+    confdir=/etc
 else
     initdir=$sysconfdir/rc.d/init.d
     piddir=$localstatedir/run
@@ -67,6 +68,7 @@ else
     staticdir=$localstatedir/static_content
     arcdir=$localstatedir/arc
     bouncedir=$localstatedir/bounce
+    confdir=$sysconfdir
 fi
 
 # substitute custom variables
@@ -90,11 +92,10 @@ AC_ARG_WITH(
     confdir,
     AS_HELP_STRING(
 	[--with-confdir=DIR],
-	[obsolete option, use --sysconfdir instead]
+	[sympa main configuration files (sympa.conf and wwsympa.conf) (SYSCONFDIR)]
     ),
     [
-	AC_MSG_WARN([obsolete --with-confdir option used])
-	sysconfdir="$withval"
+	confdir="$withval"
     ]
 )
 
@@ -104,7 +105,10 @@ AC_ARG_WITH(
 	[--with-etcdir=DIR],
 	[obsolete option, use --sysconfdir instead]
     ),
-    [AC_MSG_WARN([obsolete --with-etcdir option used])]
+    [
+	AC_MSG_WARN([obsolete --with-etcdir option used])
+	sysconfdir="$withval"
+    ]
 )
 
 AC_ARG_WITH(
@@ -291,9 +295,9 @@ AC_ARG_WITH(
     [scriptdir="$withval"]
 )
 
-CONFIG=$sysconfdir/sympa.conf
+CONFIG=$confdir/sympa.conf
 AC_SUBST(CONFIG)
-WWSCONFIG=$sysconfdir/wwsympa.conf
+WWSCONFIG=$confdir/wwsympa.conf
 AC_SUBST(WWSCONFIG)
 
 AC_PROG_CC
