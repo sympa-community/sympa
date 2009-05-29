@@ -171,6 +171,13 @@ our @params = (
         default => 'undef',
     },
     {
+        name    => 'http_host',
+        default => '',
+        query   => 'URL to a virtual host.',
+	vhost   => '1',
+        file    => 'sympa.conf',
+    },	      
+    {
         name    => 'static_content_path',
         default => Sympa::Constants::EXPLDIR . '/static_content',
         query   => 'The directory where Sympa stores static contents (CSS, members pictures, documentation) directly delivered by Apache',
@@ -247,6 +254,7 @@ our @params = (
         default => 'your_email_address@domain.tld',
         query   => 'Listmasters email list comma separated',
         file    => 'sympa.conf',
+        vhost   => '1',
         edit    => '1',
         advice  => 'Sympa will associate listmaster privileges to these email addresses (mail and web interfaces). Some error reports may also be sent to these addresses.',
     },
