@@ -86,6 +86,7 @@ AC_SUBST(spooldir)
 AC_SUBST(staticdir)
 AC_SUBST(arcdir)
 AC_SUBST(bouncedir)
+AC_SUBST(confdir)
 
 # allow user to redefine some of them
 AC_ARG_WITH(
