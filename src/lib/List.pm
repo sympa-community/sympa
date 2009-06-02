@@ -8727,7 +8727,7 @@ sub sync_include_admin {
 		    
 		# add a new included and subscribed admin user 
 		}else {
-		    &do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s',$email,$role, $name);
+		    &do_log('debug2', 'List:sync_include_admin: adding %s %s to list %s',$email,$role, $name);
 		    
 		    foreach my $key (keys %{$param}) {  
 			$new_admin_users_config->{$email}{$key} = $param->{$key};
@@ -8768,7 +8768,7 @@ sub sync_include_admin {
 		    }
 		# add a new included admin user 
 		}else {
-		    &do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
+		    &do_log('debug2', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
 		    
 		    foreach my $key (keys %{$param}) {  
 			$new_admin_users_include->{$email}{$key} = $param->{$key};
@@ -8807,7 +8807,7 @@ sub sync_include_admin {
 		}
 	    # add a new subscribed admin user 
 	    }else {
-		&do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
+		&do_log('debug2', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
 		
 		foreach my $key (keys %{$param}) {  
 		    $new_admin_users_config->{$email}{$key} = $param->{$key};
@@ -8837,7 +8837,7 @@ sub sync_include_admin {
 	
 	foreach my $email (keys %$old_admin_users) {
 	    unless (defined($new_admin_users_include->{$email}) || defined($new_admin_users_config->{$email})) {
-		&do_log('debug2 ', 'List:sync_include_admin: removing %s %s to list %s', $role, $email, $name);
+		&do_log('debug2', 'List:sync_include_admin: removing %s %s to list %s', $role, $email, $name);
 		push(@deltab, $email);
 	    }
 	}
