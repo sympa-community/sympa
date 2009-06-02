@@ -8381,7 +8381,7 @@ Sends back the list creation edition form.
      &wwslog('info', 'do_scenario_test');
 
      ## List available scenarii
-     unless (opendir SCENARI, Sympa::Constants::DEFAULTDIR.'/scenari/"){
+     unless (opendir SCENARI, Sympa::Constants::DEFAULTDIR.'/scenari/'){
 	 &report::reject_report_web('intern','cannot_open_dir',{'dir' => Sympa::Constants::DEFAULTDIR.'/scenari/'},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info',"do_scenario_test : unable to open %s/scenari", Sympa::Constants::DEFAULTDIR);
 	 return undef;
