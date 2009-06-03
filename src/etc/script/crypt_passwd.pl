@@ -28,7 +28,7 @@ unless (require Crypt::CipherSaber) {
     die "Crypt::CipherSaber not installed ; cannot crypt passwords";
 }
 
-require 'tools.pl';
+require tools;
 
 use List;
 use Log;

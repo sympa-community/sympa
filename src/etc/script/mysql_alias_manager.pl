@@ -12,8 +12,8 @@ use strict;
 use lib '--modulesdir--';
 use Conf;
 use POSIX;
-require "tools.pl";
-require "tt2.pl";
+require tools;
+require tt2;
 
 use DBI;
 
