@@ -49,25 +49,25 @@ EXTRA_DIST = $(modules_DATA) \
 CLEANFILES = $(sbin_SCRIPTS)
 
 install-exec-hook:
-	chmod 4755 $(DESTDIR)$(libexecdir)/queue
 	-chown $(USER) $(DESTDIR)$(libexecdir)/queue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/queue
+	chmod 4755 $(DESTDIR)$(libexecdir)/queue
 
-	chmod 4755 $(DESTDIR)$(libexecdir)/bouncequeue
 	-chown $(USER) $(DESTDIR)$(libexecdir)/bouncequeue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/bouncequeue
+	chmod 4755 $(DESTDIR)$(libexecdir)/bouncequeue
 
-	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 	-chown $(USER) $(DESTDIR)$(libexecdir)/familyqueue
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/familyqueue
+	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 
-	chmod 4750 aliaswrapper $(DESTDIR)$(sbindir)/aliaswrapper
 	-chown root $(DESTDIR)$(sbindir)/aliaswrapper
 	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/aliaswrapper
+	chmod 4750 aliaswrapper $(DESTDIR)$(sbindir)/aliaswrapper
 
-	chmod 4750 $(DESTDIR)$(sbindir)/virtualwrapper
 	-chown root $(DESTDIR)$(sbindir)/virtualwrapper
 	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/virtualwrapper
+	chmod 4750 $(DESTDIR)$(sbindir)/virtualwrapper
 
 alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
 	rm -f $@
