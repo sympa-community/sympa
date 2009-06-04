@@ -34,8 +34,13 @@ if test -f /etc/sympa.conf; then
     fi
 
     # standard variables
-    sbindir=$prefix/bin
-    libexecdir=$prefix/bin
+    # check current value before re-assigning
+    if test "$sbindir" = '${exec_prefix}/sbin'; then
+	sbindir=$prefix/bin
+    fi
+    if test "$libexecdir" = '${exec_prefix}/libexec'; then
+	libexecdir=$prefix/bin
+    fi
 
     # custom variables
     initdir=/etc/rc.d/init.d
