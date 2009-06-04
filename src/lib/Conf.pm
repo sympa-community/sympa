@@ -29,7 +29,6 @@ use List;
 use Log;
 use Language;
 use wwslib;
-use AuthCAS;
 use confdef;
 use tools;
 use Sympa::Constants;
@@ -1079,6 +1078,13 @@ sub _load_auth {
 			&do_log('err','Incorrect CAS paragraph in auth.conf');
 			next;
 		    }
+
+			unless ( eval "require AuthCAS" ){
+				do_log('err',"Unable to use AuthCAS library, install AuthCAS (CPAN) first");
+				return undef ;
+			}
+			require AuthCAS;
+
 
 		    my $cas_param = {casUrl => $current_paragraph->{'base_url'}};
 

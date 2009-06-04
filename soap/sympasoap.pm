@@ -35,7 +35,6 @@ my @EXPORT = ();
 use Conf;
 use Log;
 use Auth;
-use AuthCAS;
 use Language;
 
 ## Define types of SOAP type listType
@@ -204,6 +203,13 @@ sub casLogin {
 	    ->faultdetail('Use : <HTTP host> <proxyTicket>');
     }
     
+	unless ( eval "require AuthCAS" ){
+		do_log('err',"Unable to use AuthCAS library, install AuthCAS (CPAN) first");
+		return undef ;
+    }
+    require AuthCAS;
+
+	
     ## Validate the CAS ST against all known CAS servers defined in auth.conf
     ## CAS server response will include the user's NetID
     my ($user, @proxies, $email, $cas_id);
