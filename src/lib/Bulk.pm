@@ -125,7 +125,7 @@ sub next {
 
 # remove a packet from database by packet id. return undef if packet does not exist
 
-sub remove {'bulk_fork_threshold''bulk_fork_threshold''bulk_fork_threshold''bulk_fork_threshold'
+sub remove {
     my $messagekey = shift;
     my $packetid= shift;
     #
