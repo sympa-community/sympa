@@ -53,14 +53,21 @@ installdir:
 installconfig:
 	@echo "Installing basic configuration ..."
 	export PERL5LIB=$(DESTDIR)$(modulesdir); \
+	if [ ! -f  $(DESTDIR)$(sysconfdir)/sympa.conf ]; then \
+		echo "This looks like your first Sympa installation. The following wizard will assit you to create your first Sympa configuration.";\
+		$(DESTDIR)$(sbindir)/sympa_wizard.pl \
+			--create sympa.conf \
+			--target $(DESTDIR)$(sysconfdir)/sympa.conf \
+			|| /bin/true; \
+		$(DESTDIR)$(sbindir)/sympa_wizard.pl \
+			--create wwsympa.conf \
+			--target $(DESTDIR)$(sysconfdir)/wwsympa.conf \
+			|| /bin/true; \
+		$(DESTDIR)$(sbindir)/sympa_wizard.pl || /bin/true;\
+	fi
 	$(DESTDIR)$(sbindir)/sympa_wizard.pl \
-		--create sympa.conf \
-		--target $(DESTDIR)$(sysconfdir)/sympa.conf \
+		--check \
 		|| /bin/true; \
-	$(DESTDIR)$(sbindir)/sympa_wizard.pl \
-		--create wwsympa.conf \
-		--target $(DESTDIR)$(sysconfdir)/wwsympa.conf \
-		|| /bin/true
 	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
@@ -72,7 +79,7 @@ installconfig:
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** http://www.sympa.org/documentation/manual/sympa-$(SYMPA_VERSION).pdf"
+	@echo "** http://www.sympa.org/documentation/manual/sympa-$(VERSION).pdf"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# If you install Sympa for the first time on this server"

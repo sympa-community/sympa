@@ -168,7 +168,7 @@ sub edit_configuration {
     my (@new_wwsympa_conf, @new_sympa_conf);
 
     ## Edition mode
-    foreach my $param (@Conf::params) {
+    foreach my $param (@confdef::params) {
         my $desc;
 
         if ($param->{'title'}) {

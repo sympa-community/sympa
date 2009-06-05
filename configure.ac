@@ -57,6 +57,7 @@ if test -f /etc/sympa.conf; then
     staticdir=$prefix/static_content
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
+    localedir=$prefix/locale
     confdir=/etc
 else
     initdir=$sysconfdir/rc.d/init.d
@@ -73,6 +74,7 @@ else
     staticdir=$localstatedir/static_content
     arcdir=$localstatedir/arc
     bouncedir=$localstatedir/bounce
+    localedir=$defaultdir/locale
     confdir=$sysconfdir
 fi
 
@@ -91,6 +93,7 @@ AC_SUBST(spooldir)
 AC_SUBST(staticdir)
 AC_SUBST(arcdir)
 AC_SUBST(bouncedir)
+AC_SUBST(localedir)
 AC_SUBST(confdir)
 
 # allow user to redefine some of them
