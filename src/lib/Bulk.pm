@@ -93,6 +93,7 @@ sub next {
     my $lock = &tools::get_lockname();
 
     my $order;
+	## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
     
     my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s",$dbh->quote($lock), time(), $order ;
@@ -102,7 +103,7 @@ sub next {
 	return undef;
     }
 
-    # select the packet that as been locked previously
+    # select the packet that has been locked previously
     $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
 
     unless ($sth = $dbh->prepare($statement)) {
@@ -124,7 +125,7 @@ sub next {
 
 # remove a packet from database by packet id. return undef if packet does not exist
 
-sub remove {
+sub remove {'bulk_fork_threshold''bulk_fork_threshold''bulk_fork_threshold''bulk_fork_threshold'
     my $messagekey = shift;
     my $packetid= shift;
     #

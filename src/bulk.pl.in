@@ -143,7 +143,7 @@ unless (chdir($Conf::Conf{'home'})) {
 
 my $pinfo = &List::_apply_defaults();
 
-do_log('notice', "bulkd %s Started", Sympa::Constants::VERSION);
+do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
 
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
@@ -157,77 +157,106 @@ my $messagekey;       # the key of the current message in the message_table
 my $messageasstring;  # the current message as a string
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
-my $last_check_date = time();
 
 $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
 
 while (!$end) {
     my $bulk;
-    ## Create slave bulks if too much packets are waiting to be sent in the bulk_mailer table.
-    if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
-	if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && !(&tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'}) > 1)){
-	    if($Conf::Conf{'bulk_max_count'} > 1) {
-		&do_log('info','Too much packets in spool (%s). Creating %s slave bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
-		for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
-		    if ((my $child_pid = fork) != 0) {
-			do_log('info', "Starting bulk slave daemon, pid %s", $child_pid);
-                        # Saves the pid number
-			&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
-		    }else{
-			## We're in a slave bulk process
-			$date_of_last_activity = time();
-			$main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
-			do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
-			do_log('info', "Bulk slave daemon started with pid %s", $$);
-			last;
-		    }
+	
+    ## Create child bulks if too much packets are waiting to be sent in the bulk_mailer table.
+	## Only the main bulk process (DAEMON_MASTER) can create child processes
+ 	## Check if we need to run new child processes every 'bulk_wait_to_fork' (sympa.conf parameter) seconds 
+   if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
+		
+		## Start new processes if at least 'bulk_fork_threshold' (sympa.conf parameter) in the bulkmailer_table table
+		## Only if no bulk child process is still running
+		if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && 
+			!(&tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'}) > 1)){
+				
+			## disconnect from database before fork
+			## to prevent DB handlers to be shared by different processes
+			my $dbh = &List::db_get_handler();
+			$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
+				
+			if($Conf::Conf{'bulk_max_count'} > 1) {
+				&do_log('info','Too much packets in spool (%s). Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
+				for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
+					if ((my $child_pid = fork) != 0) {
+						do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
+						# Saves the pid number
+						&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
+					}else{
+						## We're in a child bulk process
+						$date_of_last_activity = time();
+						$main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
+						do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+						do_log('info', "Bulk slave daemon started with pid %s", $$);
+						last;
+					}
+				}
+			}
 		}
-	    }
-	}
-	$last_check_date = time();
+		$last_check_date = time();
     }
-    ## If a slave bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
-    if (($main::daemon_usage eq 'DAEMON_SLAVE') && (time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && !(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
-	&do_log('info', "Process %s too old, exiting.", $$);
-	last;
+	
+    ## If a child bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
+    if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
+		(time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && 
+		!(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
+		&do_log('info', "Process %s too old, exiting.", $$);
+		last;
     }
+	
+	## Go through the bulk_mailer table and process messages
     if ($bulk = Bulk::next()) {
-	if ($bulk->{'messagekey'} ne $messagekey) {
-	    # current packet is no related to the same message as the previous packet
+		if ($bulk->{'messagekey'} ne $messagekey) {
+			# current packet is no related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
-	    $messageasstring = &Bulk::messageasstring($bulk->{'messagekey'});
-	    unless ( $messageasstring ) {
-		&do_log('err',"internal error : current packet 'messagekey= %s contain a ref to a null message",$bulk->{'messagekey'});
-	    }
-	}
-	my @rcpts = split /,/,$bulk->{'receipients'};
-	if ($bulk->{'verp'}){   
-	    foreach my $rcpt (@rcpts) {
-		$return_path = $rcpt;
-		$return_path =~ s/\@/\=\=a\=\=/; 
-		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa)
-		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
-		print SMTP $messageasstring;
-		close SMTP;
-	    }
+			$messageasstring = &Bulk::messageasstring($bulk->{'messagekey'});
+			unless ( $messageasstring ) {
+				&do_log('err',"internal error : current packet 'messagekey= %s contain a ref to a null message",$bulk->{'messagekey'});
+			}
+		}
+		my @rcpts = split /,/,$bulk->{'receipients'};
+		if ($bulk->{'verp'}){   
+			foreach my $rcpt (@rcpts) {
+				$return_path = $rcpt;
+				$return_path =~ s/\@/\=\=a\=\=/; 
+				$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # VERP broken if no listname is provided
+				*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
+				print SMTP $messageasstring;
+				close SMTP;
+			}
 
-	}else{
-	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
-	    print SMTP $messageasstring;
-	    close SMTP;
-	}
-	&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'});
-	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 1){
-	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date. Now sending VERP.', $bulk->{'messagekey'}, $bulk->{'listname'}, $bulk->{'robot'}, $bulk->{'priority_message'}, time() - $bulk->{'delivery_date'});
-	}
-	$date_of_last_activity = time();
+		}else{
+			*SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
+			print SMTP $messageasstring;
+			close SMTP;
+		}
+
+		## Remove packet once it has been processed
+		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
+			&do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+			return undef;
+		}
+
+		if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 1){
+			&do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date. Now sending VERP.', 
+				$bulk->{'messagekey'}, 
+				$bulk->{'listname'}, 
+				$bulk->{'robot'}, 
+				$bulk->{'priority_message'}, 
+				time() - $bulk->{'delivery_date'});
+		}
+		$date_of_last_activity = time();
     }else{
-	sleep $Conf::Conf{'bulk_sleep'}; # scan bulk_mailer table every bulk_sleep second(s) waiting for some new packets
+		## Sleep for a while if bulk_mailer DB table is empty
+		sleep $Conf::Conf{'bulk_sleep'}; 
     }
     &mail::reaper;
 }
-do_log('notice', 'bulkd exited normally due to signal');
+do_log('notice', 'bulk.pl exited normally due to signal');
 &tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
 
 exit(0);
