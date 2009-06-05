@@ -31,9 +31,9 @@ use Scenario;
 require Fetch;
 require Exporter;
 require Encode;
-use tools;
 use tt2;
 use Sympa::Constants;
+require (Sympa::Constants::MODULEDIR.'/tools.pm');
 
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
