@@ -239,7 +239,7 @@ sub store {
     my $priority_for_packet;
     my $packet_rank = 0; # Initialize counter used to check wether we are copying the last packet.
     foreach my $packet (@{$rcpts}) {
-	if($packet_rank == $#{@$rcpts} && !$verp){
+	if($packet_rank == $#{$rcpts} && !$verp){
 	    $priority_for_packet = $priority_packet+1;
 	}else{
 	    $priority_for_packet = $priority_packet;
