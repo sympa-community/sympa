@@ -2017,7 +2017,7 @@ sub get_filename {
 	}else {
 	    @try = (
             $Conf::Conf{'etc'} . "/$robot/$name",
-		    $Conf::Conf{'etc'} . "$name",
+		    $Conf::Conf{'etc'} . "/$name",
 		    Sympa::Constants::DEFAULTDIR . "/$name"
         );
 	}
@@ -2195,7 +2195,7 @@ sub list_dir {
 }
 
 ## Q-encode a complete file hierarchy
-## Usefull to Q-encode shared documents
+## Usefull to Q-encode subshared documents
 sub qencode_hierarchy {
     my $dir = shift; ## Root directory
     my $original_encoding = shift; ## Suspected original encoding of filenames
