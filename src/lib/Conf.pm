@@ -1081,12 +1081,11 @@ sub _load_auth {
 			next;
 		    }
 
-			unless ( eval "require AuthCAS" ){
-				do_log('err',"Unable to use AuthCAS library, install AuthCAS (CPAN) first");
-				return undef ;
-			}
-			require AuthCAS;
-
+			eval "require AuthCAS";
+			if ($@) {
+				&do_log('err', 'Failed to load AuthCAS perl module');
+				return undef;
+			} 
 
 		    my $cas_param = {casUrl => $current_paragraph->{'base_url'}};
 
