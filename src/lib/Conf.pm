@@ -229,12 +229,14 @@ sub load {
 
     ## Some parameters require CPAN modules
     if ($Conf{'lock_method'} eq 'nfs') {
-	if (eval "require File::NFSLock") {
-	    require File::NFSLock;
-	}else {
-	    &do_log('err', "Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'");
-	    $Conf{'lock_method'} = 'flock';
-	}
+        eval "require File::NFSLock";
+        if ($@) {
+            &do_log(
+                'err',
+                "Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'"
+            );
+            $Conf{'lock_method'} = 'flock';
+        }
     }
 
     ## Load charset.conf file if necessary.
