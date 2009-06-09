@@ -164,42 +164,44 @@ $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'
 while (!$end) {
     my $bulk;
 	
-    ## Create child bulks if too much packets are waiting to be sent in the bulk_mailer table.
+    unless ($main::options{'foreground'}) {
+        ## 
+	## Create child bulks if too much packets are waiting to be sent in the bulk_mailer table.
 	## Only the main bulk process (DAEMON_MASTER) can create child processes
  	## Check if we need to run new child processes every 'bulk_wait_to_fork' (sympa.conf parameter) seconds 
-   if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
+	if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
+	    
+	    ## Start new processes if at least 'bulk_fork_threshold' (sympa.conf parameter) in the bulkmailer_table table
+	    ## Only if no bulk child process is still running
+	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && 
+	       !(&tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'}) > 1)){
 		
-		## Start new processes if at least 'bulk_fork_threshold' (sympa.conf parameter) in the bulkmailer_table table
-		## Only if no bulk child process is still running
-		if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && 
-			!(&tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'}) > 1)){
-				
-			## disconnect from database before fork
-			## to prevent DB handlers to be shared by different processes
-			my $dbh = &List::db_get_handler();
-			$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
-				
-			if($Conf::Conf{'bulk_max_count'} > 1) {
-				&do_log('info','Too much packets in spool (%s). Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
-				for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
-					if ((my $child_pid = fork) != 0) {
-						do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
-						# Saves the pid number
-						&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
-					}else{
-						## We're in a child bulk process
-						$date_of_last_activity = time();
-						$main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
-						do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
-						do_log('info', "Bulk slave daemon started with pid %s", $$);
-						last;
-					}
-				}
+		## disconnect from database before fork
+		## to prevent DB handlers to be shared by different processes
+		my $dbh = &List::db_get_handler();
+		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
+		
+		if($Conf::Conf{'bulk_max_count'} > 1) {
+		    &do_log('info','Too much packets in spool (%s). Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
+		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
+			if ((my $child_pid = fork) != 0) {
+			    do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
+			    # Saves the pid number
+			    &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
+			}else{
+			    ## We're in a child bulk process
+			    $date_of_last_activity = time();
+			    $main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
+			    do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+			    do_log('info', "Bulk slave daemon started with pid %s", $$);
+			    last;
 			}
+		    }
 		}
-		$last_check_date = time();
+	    }
+	    $last_check_date = time();
+	}
     }
-	
     ## If a child bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
     if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
 		(time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && 
