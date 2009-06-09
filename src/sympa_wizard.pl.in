@@ -413,12 +413,15 @@ sub check_modules {
     print "perl module          from CPAN       STATUS\n"; 
     print "-----------          ---------       ------\n";
 
-    require UNIVERSAL::require;
-
     foreach my $mod (sort keys %$todo) {
         printf ("%-20s %-15s", $mod, $todo->{$mod});
 
-        if ($mod->require()) {
+        eval "require $mod";
+        if ($@) {
+            ### not installed
+            print "was not found on this system.\n";
+            install_module($mod, {'default' => $default});
+        } else {
             my $vs = "$mod" . "::VERSION";
 
             $vs = 'mhonarc::VERSION' if $mod =~ /^mhonarc/i;
@@ -438,12 +441,7 @@ sub check_modules {
                 print ">>>>>>> You must update \"$todo->{$mod}\" to version \"$versions->{$todo->{$mod}}\" <<<<<<.\n";
                 install_module($mod, {'default' => $default}, $opt_features);
             }
-        } else {
-            ### not installed
-            print "was not found on this system.\n";
-            install_module($mod, {'default' => $default});
-
-        } 
+        }
     }
 }
 
