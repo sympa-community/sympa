@@ -680,7 +680,7 @@ sub sending {
 	printf TMP "X-Sympa-To: %s\n", $all_rcpt;
 	printf TMP "X-Sympa-From: %s\n", $from;
 	printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
-	printf TMP $messageasstring;
+	print TMP $messageasstring;
 	close TMP;
 	my $new_file = $sympa_file;
 	$new_file =~ s/T\.//g;
