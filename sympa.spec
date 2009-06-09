@@ -53,6 +53,7 @@ encryption.
 ./configure \
     --prefix=%{_prefix} \
     --sysconfdir=%{_sysconfdir} \
+    --confdir=%{_confdir} \
     --localstatedir=%{_localstatedir}
 make
 
@@ -87,4 +88,4 @@ fi
 %{_mandir}/man8/*
 %{_datadir}/sympa
 %{_datadir}/locale/*/*/*
-%config(noreplace) %{_sysconfdir}/sympa.conf
+%config(noreplace) %{_confdir}/sympa.conf

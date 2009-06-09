@@ -53,15 +53,15 @@ installdir:
 installconfig:
 	@echo "Installing basic configuration ..."
 	export PERL5LIB=$(DESTDIR)$(modulesdir); \
-	if [ ! -f  $(DESTDIR)$(sysconfdir)/sympa.conf ]; then \
+	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
 		echo "This looks like your first Sympa installation. The following wizard will assit you to create your first Sympa configuration.";\
 		$(DESTDIR)$(sbindir)/sympa_wizard.pl \
 			--create sympa.conf \
-			--target $(DESTDIR)$(sysconfdir)/sympa.conf \
+			--target $(DESTDIR)$(confdir)/sympa.conf \
 			|| /bin/true; \
 		$(DESTDIR)$(sbindir)/sympa_wizard.pl \
 			--create wwsympa.conf \
-			--target $(DESTDIR)$(sysconfdir)/wwsympa.conf \
+			--target $(DESTDIR)$(confdir)/wwsympa.conf \
 			|| /bin/true; \
 		$(DESTDIR)$(sbindir)/sympa_wizard.pl || /bin/true;\
 	fi
@@ -98,5 +98,5 @@ importantchanges:
 		--previous $${previous}
 
 uninstall-hook:
-	rm -f $(DESTDIR)$(sysconfdir)/sympa.conf
-	rm -f $(DESTDIR)$(sysconfdir)/wwsympa.conf
+	rm -f $(DESTDIR)$(confdir)/sympa.conf
+	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
