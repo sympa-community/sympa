@@ -1,0 +1,63 @@
+<!-- $Id: css_ie.tt2 5675 2009-06-10 13:59:12Z olivier.lumineau $ -->
+
+<!-- Specific css for IE -->
+<!--[if IE 7]>
+<style type="text/css">
+
+#subnav {
+          position:absolute;
+	  left:25em;
+          }
+
+</style>
+<![endif]-->
+
+<!--[if  lte IE 7]>
+<style type="text/css">
+
+ul#MainMenuLinks {
+
+                   margin-left:-3em;
+                   }
+
+</style>
+<![endif]-->
+
+
+
+<!--[if lte IE 6]>
+<style type="text/css">
+
+#logo {
+        position:absolute;
+        top:0.5em;
+        left:-5em;
+        z-index:510;
+        }
+
+#Stretcher {
+             width:99.5%;
+             }
+
+#subnav {
+          width:100%;
+	  background-color:[% color_5 %];
+          border:1px solid [% color_8 %];
+          border-width: 0 1px 0 0;
+          }
+
+#nav {
+       width:99%;
+       }
+
+#Footer {
+          margin: 0.5em 0.8em;
+          }
+
+#Footer div{
+          margin: 0;
+          }
+
+</style>
+<![endif]-->
+<!-- end  css_ie.tt2 -->

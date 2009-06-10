@@ -613,6 +613,13 @@ pre.code {
             font-variant: small-caps!important;
             }
 
+#Footer img {
+	      margin:0 0.5em 0 0;
+	      height:20px;
+	      width:20px;
+	      vertical-align:middle;
+            }
+
 .clearfooter {
 height: 3em;
 clear: both;
@@ -1385,7 +1392,7 @@ ul li.calendarLinks {
 
 ul li.calendarLinks:hover {
                             background: [% color_4 %];
-                            color: [% color_5 %]!important; 
+                            color: [% color_5 %]; 
                             border: 1px solid [% color_4 %];
                             }
 
@@ -1933,14 +1940,14 @@ table.preferences th {
           background-color: none;
           position:relative;
           float:left;
-          width:100%;
-          margin:1em 0 0 0;
+          width:99.9%;
+          margin:0 0 0 0;
           z-index:400!important;
           }
 
 #subnav ul {
              font-size:0.9em;
-             margin:0 0 0 2em;
+             margin:1em 0 0 2em;
              padding: 0;
              list-style:none;
              }
@@ -2054,11 +2061,12 @@ span.bottom_page {
 
 .top { 
        float:right;
-       margin:0.5em 1em;
+       margin:0.5em 1em 1.5em 1em;
        }
 
 .noborder { 
             border: none!important;
             }
+
 
 [% END %]

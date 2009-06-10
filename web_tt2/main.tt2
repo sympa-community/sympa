@@ -12,9 +12,16 @@
 <style type="text/css">
 [% PROCESS css.tt2 %]
 </style>
+
 [% ELSE %]
 <link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Sympa CSS" />
 [% END %]
+
+
+[% PROCESS css_ie.tt2 %]
+
+
+
 <!-- RSS chanel -->
    [% IF list -%] 
      [% IF arc_public_access %]<link rel="alternate" type="application/xml" title="[%|loc%]RSS Latest messages[%END%]" href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=20"/>[% END -%]
@@ -43,6 +50,7 @@
 <!--[if IE]>
 <![endif]-->
 
+
 <noscript>
 <style type="text/css">
 <!--
@@ -64,9 +72,14 @@
 </style>
 </noscript>
 
+
+
+
 </head>
 
-<body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
+<!--<body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]"> -->
+<body >
+
 
 <a name="top"></a>
 
@@ -108,7 +121,7 @@
      <div id="Paint">
 
        [% IF list %]
-	<div class="listTitle"><a href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a></div>
+	<div class="listTitle"><a href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a>&nbsp;</div>
         <div class="listTitle description">
 	[% IF list_title %] <span> [% list_title %] </span> [% END %]</div><br />
        [% END %]
@@ -119,7 +132,7 @@
 	 [% IF action == 'edit_list_request' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
-      <div class="top"><a href="#top" title="Top of Page"><img src="/static-sympa/icons/top.png" alt="Top of page" /></a></div>
+      <div class="top"><a href="#top" title="Top of Page"><img src="/lumineau/top.png" alt="Top of page" /></a></div>
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
 
