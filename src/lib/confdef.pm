@@ -108,7 +108,7 @@ our @params = (
     },
     {
         name    => 'bounce_path',
-        default => Sympa::Constants::BOUNCEDIR . '/bounce',
+        default => Sympa::Constants::BOUNCEDIR ,
         query   => 'Where to store bounces',
         file    => 'wwsympa.conf',
         advice  => 'Better if not in a critical partition',
