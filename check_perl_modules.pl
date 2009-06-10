@@ -79,9 +79,8 @@ use CPAN;
 	     'FCGI' => 'FCGI',
 	     'DBI' => 'DBI',
 	     'DBD::mysql' => 'Msql-Mysql-modules',
-	     'Crypt::CipherSaber' => 'CipherSaber',
 	     'Encode' => 'Encode',
-	     'MIME::Charset' => 'MIME-Charset',
+	     'MIME::Charset' => 'MIME-Charset', # may be it should be named MIME::Charset::_Compat
 	     'MIME::EncWords' => 'MIME-EncWords',
 	     'HTML::StripScripts::Parser' => 'HTML-StripScripts-Parser',
 	     'File::Copy::Recursive' => 'File-Copy-Recursive',
@@ -109,6 +108,7 @@ use CPAN;
 	     'SOAP::Lite' => 'SOAP-Lite',
 	     'File::NFSLock' => 'File-NFSLock',
 	     'File::Copy::Recursive' => 'File-Copy-Recursive',
+	     'Crypt::CipherSaber' => 'CipherSaber',
 	     );
 
 %opt_features = ('AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
@@ -120,7 +120,7 @@ use CPAN;
 		 'DBD::SQLite' => 'SQLite database driver, required if you connect to a SQLite database.',
 		 'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
 		 'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
-		 'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.',
+		 'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database. It is used only when updating from old versions with reversible password encryption',
 		 'Archive::Zip ' => 'this module provides zip/unzip for archive and shared document download/upload',
 		 'FCGI' => 'WSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
 		 'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
