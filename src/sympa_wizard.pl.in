@@ -289,6 +289,7 @@ sub check_cpan {
     ## 
     my %versions = (
         'perl' => '5.008',
+		'AuthCAS' => '1.4',
         'Net::LDAP' =>, '0.27', 
         'perl-ldap' => '0.10',
         'Mail::Internet' => '1.51', 
@@ -296,15 +297,18 @@ sub check_cpan {
         'DBD::Pg' => '0.90',
         'DBD::Sybase' => '0.90',
         'DBD::mysql' => '2.0407',
+		'Email::Date::Format' => '1.002',
         'FCGI' => '0.67',
         'HTML::StripScripts::Parser' => '1.0',
         'MIME::Tools' => '5.423',
+        'File::Copy::Recursive' => '0.36',
         'File::Spec' => '0.8',
         'Crypt::CipherSaber' => '0.50',
         'CGI' => '3.35',
         'Digest::MD5' => '2.00',
         'DB_File' => '1.75',
         'IO::Socket::SSL' => '0.90',
+  	    'Net::Netmask' => '1.9015',
         'Net::SSLeay' => '1.16',
         'Archive::Zip' => '1.05',
         'Bundle::LWP' => '1.09',
@@ -313,7 +317,11 @@ sub check_cpan {
         'MIME::Base64' => '3.03',
         'MIME::Charset' => '0.04.1',
         'MIME::EncWords' => '0.040',
-        'File::Copy::Recursive' => '0.36',
+	    'MIME::Lite' => '3.024',
+	    'MIME::Lite::HTML' => '1.23',
+  	    'Term::ProgressBar' => '2.09',
+	    'Time::HiRes' => '1.9719',
+
     );
 
     ### key:left "module" used by SYMPA, 
@@ -321,10 +329,13 @@ sub check_cpan {
     my %req_CPAN = (
         'DB_File' => 'DB_FILE',
         'Digest::MD5' => 'Digest-MD5',
-        'Mail::Internet' =>, 'MailTools',
+        'Email::Date::Format' => 'Email-Date-Format',
+		'Mail::Internet' =>, 'MailTools',
         'IO::Scalar' => 'IO-stringy',
         'MIME::Tools' => 'MIME-tools',
         'MIME::Base64' => 'MIME-Base64',
+	    'MIME::Lite' => 'MIME-Lite',
+	    'MIME::Lite::HTML' => 'MIME-Lite-HTML',
         'CGI' => 'CGI',
         'File::Spec' => 'File-Spec',
         'Regexp::Common' => 'Regexp-Common',
@@ -343,9 +354,14 @@ sub check_cpan {
         'MIME::EncWords' => 'MIME-EncWords',
         'HTML::StripScripts::Parser' => 'HTML-StripScripts-Parser',
         'File::Copy::Recursive' => 'File-Copy-Recursive',
-    );
+ 	    'HTML::TreeBuilder' => 'HTML-Tree',
+	    'HTML::FormatText' => 'HTML-Format',
+	    'Term::ProgressBar' => 'Term-ProgressBar',
+	    'Time::HiRes' => 'Time-HiRes',
+   );
 
     my %opt_CPAN = (
+		'AuthCAS' => 'AuthCAS',
         'DBD::Pg' => 'DBD-Pg',
         'DBD::Oracle' => 'DBD-Oracle',
         'DBD::Sybase' => 'DBD-Sybase',
@@ -362,6 +378,7 @@ sub check_cpan {
     );
 
     my %opt_features = (
+		'AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
         'DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
         'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
         'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
