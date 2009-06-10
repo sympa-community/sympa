@@ -28,7 +28,6 @@ use CPAN;
 			 'AuthCAS' => '1.4',
              'Net::LDAP' =>, '0.27', 
 	     'perl-ldap' => '0.10',
-	     'Net::LDAP::Server' => '0.4',
 	     'Mail::Internet' => '1.51', 
 	     'DBI' => '1.48',
 	     'DBD::Pg' => '0.90',
@@ -110,7 +109,6 @@ use CPAN;
 	     'SOAP::Lite' => 'SOAP-Lite',
 	     'File::NFSLock' => 'File-NFSLock',
 	     'File::Copy::Recursive' => 'File-Copy-Recursive',
-	     'Net::LDAP::Server' => 'Net-LDAP-Serve',
 	     );
 
 %opt_features = ('AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
@@ -130,8 +128,7 @@ use CPAN;
 		 'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
 		 'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
 		 'SOAP::Lite' => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
-		 'File::NFSLock' => 'required to perform NFS lock ; see also lock_method sympa.conf parameter',
-		 'Net::LDAP::Server' => 'used for implementing a LDAP server to query Sympa lists',
+		 'File::NFSLock' => 'required to perform NFS lock ; see also lock_method sympa.conf parameter'
 		 );
 
 ### main:
