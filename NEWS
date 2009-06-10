@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-6.0a.1		28 May 2008
+6.0b.1		10 June 2008
 
   Features:
 
@@ -44,7 +44,65 @@
 
 	If you change antispam_feature to value 'on' the other parameters default are compatible with spamassassin defaults.
 
+  Changes:
 
+***** [Submitted by G. Rousse, INRIA] A lot of modification brought to the autotools usage in Sympa. 
+***** This is still a work in progress, but should make the life of Sympa packagers quite easier once it is finished.
+***** This work has greatly simplified all Makefiles, turned into Makefile.am
+***** Substitutions in perl modules are now performed at the "make" time, no more during "make install"
+*****
+***** HERE IS THE LIST SIGNIFICANT CHANGES REGARDING THE INSTALLATION PROCESS:
+***** - Default sympa configuration files, previously stored in PREFIX/bin/etc/ are now stored in 
+*****   PREFIX/share/default/ directory
+***** - Most --with-xxdir configure options are now obsolete, replaced by equivalent standard --xxdir options
+*****   Here is the list of concerned options : 
+*****    --with-etcdir => --sysconfdir
+*****    --with-bindir => --bindir
+*****    --with-sbindir => --sbindir
+*****    --with-libexecdir => --libexecdir
+*****    --with-datadir => --with-defaultdir
+*****    --with-libdir => --with-modulesdir
+*****    --with-localedir => --localedir
+*****    --with-mandir => --mandir
+*****    --with-docdir => --docdir
+*****    --with-sampledir => now installed with the documentation
+*****    
+***** - Most default installation directories have been change to adopt standard FHS-compliant locations
+*****   However, the distributed tar.gz still uses most of the previous locations to make upgrade process 
+*****   less awkward. If you run "./configure ; make ; make install" with the tar.gz things will install as 
+*****   usually. 
+*****   If you run autoconf, it will define the set of target directories either the old way
+*****   or the FHS way, depending on wether it finds an existing /etc/sympa.conf file.
+
+***** New required library : gettext-devel
+
+    check_perl_modules.pl, src/sympa_wizard.pl.in: [Submitted by G.Rousse, INRIA] check_perl_modules.pl now replaced with sympa_wizard.pl --check. All recent changes in check_perl_modules.pl have been reported in sympa_wizard.pl
+
+	/src/List.pm, /web_tt2/list_menu.tt2, /web_tt2/subrequest.tt2: When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.  /src/etc/script/sympa.spec, /wwsympa/Auth.pm, /wwsympa/wwslib.pm: [#3989][reported by M.Deranek] No more require Net::SSLeay perl module. Using LWP::UserAgent instead
+
+	/po/Makefile: Now, when performing "make update-po", the catalogue file to update is temporarily saved to avoid losing strings from beta version when updating stable version, or vice-versa. Both updated and saved files are then merged.
+
+	/src/sympa.pl: If a message is tagued as a spam and if it is to be moderated or rejected, do not send a report information to the message sender even if the scenario did not return 'quiet' directive
+
+	/mail_tt2/moderate.tt2, /src/List.pm: Now message for moderation is not attached in the message sent to the moderator if tagued as spam.
+
+	/wwsympa/wwsympa.fcgi: Now archives by thread or by chronologie is a session attribute (and a user preference). This feature also fix a bug related to the way archives are cached by client. Now page are "static" for robots (as detected by SympaSession) and dynamic for any others.
+
+	/src/sympa.pl: Now if antispam_feature is configured, sympa robot will ignore incomming command messages if tagued as spam. By the same way, spam messages for listmaster, list-request and list-editor will be ignored. Such messages are moved in spool bad and message-id is loggued.  
+
+	/wwsympa/wwsympa.fcgi: New structure %required_args defining required parameters, %required_privileges defines required privileges to run actions and new subroutine check_action_parameters() that does the checking. Removed 1200 lines of code in wwsympa.fcgi
+
+	/soap/SympaTransport.pm, /soap/sympa_soap_client.pl, /soap/sympasoap.pm, /wwsympa/SympaSession.pm, /wwsympa/cookielib.pm: Changes regarding SOAP session management :
+		* SOAP session now uses the session DB table
+		* session_id can be validated, checked, used in authenticateAndRun()
+		* sympa_soap_client.pl has been extended : new --session_id option, new supported service --service=getUserEmailByCookie
+
+	/src/Conf.pm, /src/Upgrade.pm, /src/task_manager.pl, /wwsympa/bounced.pl: No more store unknown bounces in OTHER directories. They are now kept in a bad/ subdirectory in the bounce spool.
+
+	/src/List.pm, /web_tt2/list_menu.tt2, /web_tt2/subrequest.tt2: When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.
+	
+	web_tt2/css.tt2, web_tt2/css_ie.tt2, web_tt2/footer.tt2, web_tt2/main.tt2: [-change] css modifications for different internet explorer versions compatibilities
+	
   Bug fixes:
 
 	/src/sympa.pl, /src/task_manager.pl, /src/tools.pl, /wwsympa/archived.pl, /wwsympa/bounced.pl: STDERR is no more directed to a file if process run in foreground.
@@ -69,33 +127,6 @@
 
 	wwsympa/wwsympa.fcgi: [#3790][Reported by R. Tassoni, National Library of Australia and T. Danel] Fix: When displaying a message to moderate in the web interface, if a document was attached to the message, the link to display the message lead to empty documents. This was because we didn't take into account the fact that MHonArc put the file in a subdirectory. Fixed by changing the kind of ergument file passed from scalar to vector.
 
-
-  Changes:
-
-	/src/List.pm, /web_tt2/list_menu.tt2, /web_tt2/subrequest.tt2: When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.  /src/etc/script/sympa.spec, /wwsympa/Auth.pm, /wwsympa/wwslib.pm: [#3989][reported by M.Deranek] No more require Net::SSLeay perl module. Using LWP::UserAgent instead
-
-  [Submitted by G. Rousse, INRIA] A lot of modification brought to the autotools usage in Sympa. This is still a work in progress, but should make the life of Sympa packagers quite easier once it is finished.
-
-	/po/Makefile: Now, when performing "make update-po", the catalogue file to update is temporarily saved to avoid losing strings from beta version when updating stable version, or vice-versa. Both updated and saved files are then merged.
-
-	/src/sympa.pl: If a message is tagued as a spam and if it is to be moderated or rejected, do not send a report information to the message sender even if the scenario did not return 'quiet' directive
-
-	/mail_tt2/moderate.tt2, /src/List.pm: Now message for moderation is not attached in the message sent to the moderator if tagued as spam.
-
-	/wwsympa/wwsympa.fcgi: Now archives by thread or by chronologie is a session attribute (and a user preference). This feature also fix a bug related to the way archives are cached by client. Now page are "static" for robots (as detected by SympaSession) and dynamic for any others.
-
-	/src/sympa.pl: Now if antispam_feature is configured, sympa robot will ignore incomming command messages if tagued as spam. By the same way, spam messages for listmaster, list-request and list-editor will be ignored. Such messages are moved in spool bad and message-id is loggued.  
-
-	/wwsympa/wwsympa.fcgi: New structure %required_args defining required parameters, %required_privileges defines required privileges to run actions and new subroutine check_action_parameters() that does the checking. Removed 1200 lines of code in wwsympa.fcgi
-
-	/soap/SympaTransport.pm, /soap/sympa_soap_client.pl, /soap/sympasoap.pm, /wwsympa/SympaSession.pm, /wwsympa/cookielib.pm: Changes regarding SOAP session management :
-		* SOAP session now uses the session DB table
-		* session_id can be validated, checked, used in authenticateAndRun()
-		* sympa_soap_client.pl has been extended : new --session_id option, new supported service --service=getUserEmailByCookie
-
-	/src/Conf.pm, /src/Upgrade.pm, /src/task_manager.pl, /wwsympa/bounced.pl: No more store unknown bounces in OTHER directories. They are now kept in a bad/ subdirectory in the bounce spool.
-
-	/src/List.pm, /web_tt2/list_menu.tt2, /web_tt2/subrequest.tt2: When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.
 
 5.4.3		05 May 2008
 
