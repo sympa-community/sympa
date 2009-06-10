@@ -1,6 +1,7 @@
 <!-- $Id: css_ie.tt2 5675 2009-06-10 13:59:12Z olivier.lumineau $ -->
 
 <!-- Specific css for IE -->
+
 <!--[if IE 7]>
 <style type="text/css">
 
@@ -9,8 +10,13 @@
 	  left:25em;
           }
 
+#bandeau_top .login .MainMenuLinks {
+	                             margin-top:0.2em;
+           	                     }
+
 </style>
 <![endif]-->
+
 
 <!--[if  lte IE 7]>
 <style type="text/css">
@@ -19,6 +25,10 @@ ul#MainMenuLinks {
 
                    margin-left:-3em;
                    }
+
+a.input {
+          padding: 0 0.3em;
+          }
 
 </style>
 <![endif]-->
@@ -54,10 +64,11 @@ ul#MainMenuLinks {
           margin: 0.5em 0.8em;
           }
 
-#Footer div{
-          margin: 0;
-          }
+#bandeau_top .login .MainMenuLinks {
+	                             margin-top:0;
+           	                     }
 
 </style>
 <![endif]-->
+
 <!-- end  css_ie.tt2 -->

@@ -15,7 +15,7 @@
               <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[% server.value %]" />
            [% END %]
           [% ELSE %]
-     	    <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:[%END%]</label><br/>
+     	    <label for="auth_service_name">[%|loc%]To login, select your organization authentication server below:&nbsp;&nbsp;&nbsp;&nbsp;[%END%]</label>
             <select id="auth_service_name" name="auth_service_name" onchange="this.form.submit();">
             [% FOREACH server = sso %]
                <option value="[% server.key %]">[% server.value %]</option>
@@ -44,7 +44,7 @@
 	</fieldset>
       </form>
       [% END %] 
-  </div>
+
 
 [% IF use_passwd == '1' %]
 [% IF authentication_info_url %]
@@ -58,4 +58,6 @@
   </div>
 [% END %]
 [% END %]
+
+  </div>
 <!-- end loginbanner.tt2 -->

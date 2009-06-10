@@ -1535,11 +1535,12 @@ a.input {
           background: [% color_12 %]; 
           border: 1px solid [% color_12 %]; 
           color: [% color_13 %];
-          padding: 3px;
+          padding: 0.2em 0.3em;
 	  margin-left:0.2em;
           text-decoration: none;
 	  vertical-align: middle;
-          font-size: 0.7em;
+          font-size: 0.9em;
+	  font-weight:bold;
 	  font-variant:small-caps;
           /* if IE zoom:1;*/
           zoom: 1;
@@ -1553,6 +1554,10 @@ a.input {
 a.input:hover {
           background: [% color_13 %]; 
           color: [% color_12 %]; 
+          }
+
+h2 a.input {
+          font-size: 0.7em;
           }
 
 input {
@@ -1715,7 +1720,7 @@ table.preferences th {
 #bandeau_top {
                position: relative;
                width:98%;
-               height:2.5em;
+               min-height:2.5em;
 	       margin: 0 0.8em;
                background: [% color_12 %];
                clear:both;
@@ -1727,6 +1732,7 @@ table.preferences th {
                -KHTML-border-radius:0 0 10px 10px;
                -icab-border-radius:0 0 10px 10px;
                border-radius:0 0 10px 10px;
+	       z-index:2000;
  }
 
 #bandeau_top #Identity {
@@ -1742,8 +1748,8 @@ table.preferences th {
                          }
 
 #bandeau_top #Identity_not_connect {
-                                     float:left;
-                                     width:70%;
+
+                                     width:99%;
                                      text-align: left;
                                      font-size: 1em;
                                      font-weight: bold;
@@ -1751,6 +1757,7 @@ table.preferences th {
                                      color:[% color_5 %]!important;
                                      overflow: hidden;
                                      margin-left:1em;
+clear:none;
                                      }
 
 #bandeau_top #Identity_not_connect label {
@@ -1803,7 +1810,12 @@ table.preferences th {
                          font-weight: bold;
                          color:[% color_5 %]!important;
                          width:25%;
+
                          }
+
+#bandeau_top  #Identity_not_connect .remember {
+		  			        margin-top:-2.8em
+						}
 
 #bandeau_top .remember a { 
                            margin-right:1em;
