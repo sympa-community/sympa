@@ -160,8 +160,8 @@ sub edit_configuration {
         die("Unable to load config file $wwsympa_conf");
     }
 
-    ## Load sympa config
-    unless (Conf::load( $sympa_conf )) {
+    ## Load sympa config (but not using database)
+    unless (Conf::load( $sympa_conf,'nodb')) {
         die("Unable to load sympa config file $sympa_conf");
     }
 
