@@ -7,55 +7,55 @@
 
   Features:
 
-***** New bulk.pl daemon installed with Sympa. This daemon is dedicated to mail distribution and 
-***** allows to parallelize this process on a single server as well as on multiple servers.
-***** The main bulk.pl processes will automatically fork new processes, depending on the amount
-***** of messages left in the database. You can control this behavior with the parameters 
-***** bulk_fork_threshold, bulk_max_count,bulk_fork_threshold, see below.
+*****   New bulk.pl daemon installed with Sympa. This daemon is dedicated to mail distribution and 
+*****   allows to parallelize this process on a single server as well as on multiple servers.
+*****   The main bulk.pl processes will automatically fork new processes, depending on the amount
+*****   of messages left in the database. You can control this behavior with the parameters 
+*****   bulk_fork_threshold, bulk_max_count,bulk_fork_threshold, see below.
 *****
-***** Messages spool used by the bulk.pl daemon is stored in the database, in two tables : 
-***** - bulkspool_table : one entry per message
-***** - bulkmailer_table : subset of receipients for each message 
-***** New associated sympa.conf parameters :
-***** - bulk_fork_threshold : minimum number of packets in database before the bulk forks to increase sending rate
-***** - bulk_max_count : max number of bulks that will run on the same server
-***** - bulk_lazytime : number of seconds a slave bulk will remain running without processing a message before 
-*****   it spontaneously dies
-***** - bulk_wait_to_fork : number of seconds a master bulk waits between two packets number checks
-***** - sympa_packet_priority : default priority set to a packet to be sent by the bulk (for future use)
-***** - pidfile_bulk : location of the daemon PID file
+*****   Messages spool used by the bulk.pl daemon is stored in the database, in two tables : 
+*****   - bulkspool_table : one entry per message
+*****   - bulkmailer_table : subset of receipients for each message 
+*****   New associated sympa.conf parameters :
+*****   - bulk_fork_threshold : minimum number of packets in database before the bulk forks to increase sending rate
+*****   - bulk_max_count : max number of bulks that will run on the same server
+*****   - bulk_lazytime : number of seconds a slave bulk will remain running without processing a message before 
+*****     it spontaneously dies
+*****   - bulk_wait_to_fork : number of seconds a master bulk waits between two packets number checks
+*****   - sympa_packet_priority : default priority set to a packet to be sent by the bulk (for future use)
+*****   - pidfile_bulk : location of the daemon PID file
 
-***** [Olivier Lumineau, CRU] Fresh new web CSS for the web interface.
-***** Here is the list of changes in the web interface :
-***** - New css.tt2
-***** - A new Sympa logo :-)
-***** - New navigation menu through list admin menu and server admin menu
-***** - Miscellaneous modifications in templates (list_admin_menu.tt2 not used anymore)
-***** WARNING : if you customize your own templates you may notice some mess in the page layout. 
-***** In such a case compare your templates to the distributed version and report any difference 
-****  to your own files...
+*****   [Olivier Lumineau, CRU] Fresh new web CSS for the web interface.
+*****   Here is the list of changes in the web interface :
+*****   - New css.tt2
+*****   - A new Sympa logo :-)
+*****   - New navigation menu through list admin menu and server admin menu
+*****   - Miscellaneous modifications in templates (list_admin_menu.tt2 not used anymore)
+*****   WARNING : if you customize your own templates you may notice some mess in the page layout. 
+*****   In such a case compare your templates to the distributed version and report any difference 
+*****   to your own files...
 
-***** Replace storage of password with encryption by md5 fingerprint. This 
-***** make remind password impossible. So now a one time ticket table is created
-***** ticket are  sent by email as an authentication token. Ticket can be used 
-***** for lost password, create account, moderation request . It should be
-***** generalized to all operation that need a email chalenge.
+*****   Replace storage of password with encryption by md5 fingerprint. This 
+*****   make remind password impossible. So now a one time ticket table is created
+*****   ticket are  sent by email as an authentication token. Ticket can be used 
+*****   for lost password, create account, moderation request . It should be
+*****   generalized to all operation that need a email chalenge.
 *****
-***** sympa.pl --md5_encode_password change password encoding in the database using md5.So IT IS NOT REVERSIBLE,
-***** so you should save the database (in a safe place to protect password) 
+*****   sympa.pl --md5_encode_password change password encoding in the database using md5.So IT IS NOT REVERSIBLE,
+*****   so you should save the database (in a safe place to protect password) 
 *****
-***** <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
+*****   <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
 *****
-***** UPGRADING TO SYMPA 6.0 WILL NOT BE REVERSIBLE!
-***** BECAUSE WE DRASTICALLY CHANGED THE WAY THE PASSWORDS ARE STORED, ONCE YOU UPGRADED TO 6.0
-***** YOU WILL NEVER BE ABLE TO USE THE SYMPA DATABASE WITH A PREVIOUS VERSION AGAIN (UNLESS YOU ERASE ALL PASSWORDS)
-***** SO IF YOU'RE NOT SURE YOU WILL KEEP SYMPA 6.0, 
+*****   UPGRADING TO SYMPA 6.0 WILL NOT BE REVERSIBLE!
+*****   BECAUSE WE DRASTICALLY CHANGED THE WAY THE PASSWORDS ARE STORED, ONCE YOU UPGRADED TO 6.0
+*****   YOU WILL NEVER BE ABLE TO USE THE SYMPA DATABASE WITH A PREVIOUS VERSION AGAIN (UNLESS YOU ERASE ALL PASSWORDS)
+*****   SO IF YOU'RE NOT SURE YOU WILL KEEP SYMPA 6.0, 
 *****
-***** MAKE SURE YOU SAVED YOUR DATABASE BEFORE UPGRADING!
+*****   MAKE SURE YOU SAVED YOUR DATABASE BEFORE UPGRADING!
 *****
-***** MAKE SURE YOU SAVED YOUR DATABASE BEFORE UPGRADING!
+*****   MAKE SURE YOU SAVED YOUR DATABASE BEFORE UPGRADING!
 *****
-***** <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
+*****   <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
 
       	src/Conf.pm, src/sympa_wizard.pl: Four new languages are now available by default in Sympa:
 	  - Bokmål (B. C. Aasgaard)
@@ -146,49 +146,50 @@
 
   Changes:
 
-***** [Submitted by G. Rousse, INRIA] A lot of modification brought to the autotools usage in Sympa. 
-***** This is still a work in progress, but should make the life of Sympa packagers quite easier once it is finished.
-***** This work has greatly simplified all Makefiles, turned into Makefile.am
-***** Substitutions in perl modules are now performed at the "make" time, no more during "make install"
+
+*****   [Submitted by G. Rousse, INRIA] A lot of modification brought to the autotools usage in Sympa. 
+*****   This is still a work in progress, but should make the life of Sympa packagers quite easier once it is finished.
+*****   This work has greatly simplified all Makefiles, turned into Makefile.am
+*****   Substitutions in perl modules are now performed at the "make" time, no more during "make install"
 *****
-***** HERE IS THE LIST SIGNIFICANT CHANGES REGARDING THE INSTALLATION PROCESS:
-***** - Default sympa configuration files, previously stored in PREFIX/bin/etc/ are now stored in 
-*****   PREFIX/share/default/ directory
+*****   HERE IS THE LIST SIGNIFICANT CHANGES REGARDING THE INSTALLATION PROCESS:
+*****   - Default sympa configuration files, previously stored in PREFIX/bin/etc/ are now stored in 
+*****     PREFIX/share/default/ directory
 *****
-***** - Most --with-xxdir configure options are now obsolete, replaced by equivalent standard --xxdir options
-*****   Here is the list of concerned options : 
-*****    --with-etcdir => --sysconfdir
-*****    --with-bindir => --bindir
-*****    --with-sbindir => --sbindir
-*****    --with-libexecdir => --libexecdir
-*****    --with-datadir => --with-defaultdir
-*****    --with-libdir => --with-modulesdir
-*****    --with-localedir => --localedir
-*****    --with-mandir => --mandir
-*****    --with-docdir => --docdir
-*****    --with-sampledir => now installed with the documentation
+*****   - Most --with-xxdir configure options are now obsolete, replaced by equivalent standard --xxdir options
+*****     Here is the list of concerned options : 
+*****      --with-etcdir => --sysconfdir
+*****      --with-bindir => --bindir
+*****      --with-sbindir => --sbindir
+*****      --with-libexecdir => --libexecdir
+*****      --with-datadir => --with-defaultdir
+*****      --with-libdir => --with-modulesdir
+*****      --with-localedir => --localedir
+*****      --with-mandir => --mandir
+*****      --with-docdir => --docdir
+*****      --with-sampledir => now installed with the documentation
 *****    
-***** - Most default installation directories have been change to adopt standard FHS-compliant locations
-*****   However, the distributed tar.gz still uses most of the previous locations to make upgrade process 
-*****   less awkward. If you run "./configure ; make ; make install" with the tar.gz things will install as 
-*****   usually. 
-*****   If you run autoconf, it will define the set of target directories either the old way
-*****   or the FHS way, depending on wether it finds an existing /etc/sympa.conf file.
+*****   - Most default installation directories have been change to adopt standard FHS-compliant locations
+*****     However, the distributed tar.gz still uses most of the previous locations to make upgrade process 
+*****     less awkward. If you run "./configure ; make ; make install" with the tar.gz things will install as 
+*****     usually. 
+*****     If you run autoconf, it will define the set of target directories either the old way
+*****     or the FHS way, depending on wether it finds an existing /etc/sympa.conf file.
 *****
-***** - Removed obsolete sudo wrappers ; Sympa now includes C wrappers for both wwsympa.fcgi and sympa_soap_server.fcgi
-*****   Check the manual <http://www.sympa.org/manual/index> for more informations on that topic
+*****   - Removed obsolete sudo wrappers ; Sympa now includes C wrappers for both wwsympa.fcgi and sympa_soap_server.fcgi
+*****     Check the manual <http://www.sympa.org/manual/index> for more informations on that topic
 
-***** New required library : gettext-devel
+*****   New required library : gettext-devel
 
-***** New required CPAN modules :
-***** - AuthCAS : replaces the Sympa's CAS.pm own library
-***** - File::Copy::Recursive
-***** - Net::Netmask
-***** - Term::ProgressBar
-***** - Time::HiRes
-***** - MIME::Lite
-***** - MIME::Lite::HTML
-***** - Email::Date::Format
+*****   New required CPAN modules :
+*****   - AuthCAS : replaces the Sympa's CAS.pm own library
+*****   - File::Copy::Recursive
+*****   - Net::Netmask
+*****   - Term::ProgressBar
+*****   - Time::HiRes
+*****   - MIME::Lite
+*****   - MIME::Lite::HTML
+*****   - Email::Date::Format
 
 	[Submitted by G.Rousse, INRIA] check_perl_modules.pl now replaced with sympa_wizard.pl --check. All recent changes in 
 	check_perl_modules.pl have been reported in sympa_wizard.pl
