@@ -62,48 +62,88 @@
 	  - Polish (L. Zygmanski)
 	  - Finn (J.P. Paloposki)
 	  - Vietnamese (C. Siddall)
+	  - Russian (Chernysh, Riseup collective)
       	Thanks to the translators for their efforts!
 
-	- new login method include now "last login from [HOST] at [date]" information  message
-	- new daily task to remove tickets older than 10d (task parameters in conf.pm): 
-	- purge_one_time_ticket_table_task default daily
-       	- one_time_ticket_table_ttl default 10d
-
-     	/po/Makefile: New make command: "clean-po". Updates the PO catalogues but doesn't try to save strings that disappeared in this version.
+     	/po/Makefile: New make command: "clean-po". Updates the PO catalogues but doesn't try to save strings that disappeared 
+	in this version.
 
      	New button to toogle select/unselect all spams in modindex page
 	
-	New propertie in object message : spam_status .  This feature is used in modindex (listing of message waiting for moderation) to show message tagued as spam.
+	New propertie in object message : spam_status .  This feature is used in modindex (listing of message waiting for 
+	moderation) to show message tagued as spam.
 	4 new parameters :
-	      antispam_feature default off
-	      antispam_tag_header_name default X-Spam-Status 
-	      antispam_tag_header_spam_regexp default ^\s*Yes
-	      antispam_tag_header_ham_regexp default ^\s*No
+	- antispam_feature default off
+	- antispam_tag_header_name default X-Spam-Status 
+	- antispam_tag_header_spam_regexp default ^\s*Yes
+	- antispam_tag_header_ham_regexp default ^\s*No
 
 	If you change antispam_feature to value 'on' the other parameters default are compatible with spamassassin defaults.
 
 	src/sympa.pl:  new sympa.pl options in order to recode shared document files and solve charset slag
 
-	src/Conf.pm: Legacy character set support (submitted by S. Ikeda) is now enabled if the 'legacy_character_support_feature' sympa.conf parameter is set to on.
+	src/Conf.pm: Legacy character set support (submitted by S. Ikeda) is now enabled if the 
+	'legacy_character_support_feature' sympa.conf parameter is set to on.
 
 	New parameter 'legacy_character_support_feature'. If set to 'on', legacy character support will be enabled, as 
-        discussed in https://listes.cru.fr/sympa/arc/sympa-dev/2006-09/msg00029.html and its follow-ups. Any other value or no definition at all disables the functionnality.
+        discussed in https://listes.cru.fr/sympa/arc/sympa-dev/2006-09/msg00029.html and its follow-ups. Any other value 
+	or no definition at all disables the functionnality.
 
- 	Now http://server/sympa/<a valid listname> is redirect to http://server/sympa/info/<a valid listname> insteed of "unkown action" error
+ 	Now http://server/sympa/<a valid listname> is redirect to http://server/sympa/info/<a valid listname> insteed of 
+	"unkown action" error
 	
-	New database table in order to store robot config parameters that can be edited inline. This feature is used for color edition in sympa admin/skinsedit
+	New database table in order to store robot config parameters that can be edited inline. This feature is used for color 
+	edition in sympa admin/skinsedit
 
 	New scenario test : less_than. (Submitted by S. Amrani, gendarmerie nationale). It Allows to compare two values. Is true
         if the first one is less than the second one. Works with strings, too, if you like.
 	  
-	Now sympa.pl --test_database_message_buffer can be used in order to verify database capacity to store messages spool (dirty output a nicer is needed ;-)
+	Now sympa.pl --test_database_message_buffer can be used in order to verify database capacity to store messages spool 
+	(dirty output a nicer is needed ;-)
 
    	New delivery_time list parameter in order to make distribution at a specified time
 	
-  	Now template of lists created using web interface can use any input from the create_list_request form referenced as [% custom_input.VARNAME %]
+  	Now template of lists created using web interface can use any input from the create_list_request form referenced as 
+	[% custom_input.VARNAME %]
 
-    	New parameter 'inclusion_notification_feature'. If its value is set to 'on', subscribers are notified when they are included in a list through an external datasource. 
-	We no longer use the visibility to manage this behaviour to avoid confusion for users and an overwhelming number of scenario evaluations.
+    	New parameter 'inclusion_notification_feature'. If its value is set to 'on', subscribers are notified when they are 
+	included in a list through an external datasource. 
+	We no longer use the visibility to manage this behaviour to avoid confusion for users and an overwhelming number of 
+	scenario evaluations.
+
+	New inline color editor (skins section from "sympa admin")
+
+	New [% editor_msg_body %] mail_tt2 variable : When rejecting a message by email reject command, the message body is 
+	transmisted to the tt2 parser so it is now possible to print the message body in the notification sent to the original 
+	message sender. The tt2 var to use is [%editor_msg_body%]
+
+	The change_email feature has been rewritten as follows:
+	- using authenticating URLs to check the new user email (instead of collecting his password)
+	- provide an equivalent listmaster feature to change a user's email address
+	- check if user is included ; if so, notify the list owner
+	- rename list member picture if he changes his member email address
+
+	[Peter Hart] Message moderation : Added a new function for the moderation of messages. On rejection of messages 
+	personalised messages can be created 	and saved and used to give more information as to why these messages were 
+	refused by the moderator.
+
+	[Peter Hart] New scenario condition verify_netmask. exemple : verify_netmask('1.12.123.00/24') (changes in intanet 
+	scenrii are just comment because we don't have access to the local netmask of installation)
+
+	[Roland Hopferwieser] Extended the ldap_alias_manager.pl to use template to create LDAP entries. Also added a 
+	simulation mode for debug purpose.
+
+	New sympa;conf parameters to control logging for a specific module.
+	Current version provide only logs for scenario . 
+	- log_condition is used to controle in which case logs are applied. Both are multivaluated (list of values comma 
+	separated). Example: log_module scenario,smtp
+	- log_condition ip=127.0.0.1,email=foo@domain
+	- log_module is not implemented for most modules. 'log_module smtp'
+	  should replace the option sympa.pl -m
+
+	Clone list : a new way to create lists : creation list form allows now to clone a list as a new empty list, all 
+	config and customization are copied but not subscribers, archives and shared
+
 
   Changes:
 
@@ -151,36 +191,51 @@
 ***** - MIME::Lite::HTML
 ***** - Email::Date::Format
 
-	[Submitted by G.Rousse, INRIA] check_perl_modules.pl now replaced with sympa_wizard.pl --check. All recent changes in check_perl_modules.pl have been reported in sympa_wizard.pl
+	[Submitted by G.Rousse, INRIA] check_perl_modules.pl now replaced with sympa_wizard.pl --check. All recent changes in 
+	check_perl_modules.pl have been reported in sympa_wizard.pl
 
-	When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes. 
+	When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, 
+	this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted 
+	the text displayed in the submission form to custom attributes. 
 
 	No more require Net::SSLeay perl module. Using LWP::UserAgent instead
 
-	Now, when performing "make update-po", the catalogue file to update is temporarily saved to avoid losing strings from beta version when updating stable version, or vice-versa. Both updated and saved files are then merged.
+	Now, when performing "make update-po", the catalogue file to update is temporarily saved to avoid losing strings from 
+	beta version when updating stable version, or vice-versa. Both updated and saved files are then merged.
 
-	If a message is tagued as a spam and if it is to be moderated or rejected, do not send a report information to the message sender even if the scenario did not return 'quiet' directive
+	If a message is tagued as a spam and if it is to be moderated or rejected, do not send a report information to the 
+	message sender even if the scenario did not return 'quiet' directive
 
 	Now message for moderation is not attached in the message sent to the moderator if tagued as spam.
 
-	Now archives by thread or by chronologie is a session attribute (and a user preference). This feature also fix a bug related to the way archives are cached by client. Now page are "static" for robots (as detected by SympaSession) and dynamic for any others.
+	Now archives by thread or by chronologie is a session attribute (and a user preference). This feature also fix a bug 
+	related to the way archives are cached by client. Now page are "static" for robots (as detected by SympaSession) and 
+	dynamic for any others.
 
-	Now if antispam_feature is configured, sympa robot will ignore incomming command messages if tagued as spam. By the same way, spam messages for listmaster, list-request and list-editor will be ignored. Such messages are moved in spool bad and message-id is loggued.  
+	Now if antispam_feature is configured, sympa robot will ignore incomming command messages if tagued as spam. By the same 
+	way, spam messages for listmaster, list-request and list-editor will be ignored. Such messages are moved in spool bad 
+	and message-id is loggued.  
 
-	New structure %required_args defining required parameters, %required_privileges defines required privileges to run actions and new subroutine check_action_parameters() that does the checking. Removed 1200 lines of code in wwsympa.fcgi
+	New structure %required_args defining required parameters, %required_privileges defines required privileges to run 
+	actions and new subroutine check_action_parameters() that does the checking. Removed 1200 lines of code in wwsympa.fcgi
 
 	Changes regarding SOAP session management :
 		* SOAP session now uses the session DB table
 		* session_id can be validated, checked, used in authenticateAndRun()
-		* sympa_soap_client.pl has been extended : new --session_id option, new supported service --service=getUserEmailByCookie
+		* sympa_soap_client.pl has been extended : new --session_id option, new supported service 
+		  --service=getUserEmailByCookie
 
 	No more store unknown bounces in OTHER directories. They are now kept in a bad/ subdirectory in the bounce spool.
 
-	When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted the text displayed in the submission form to custom attributes.
+	When subscribing to a list, the confirmation popup now shows up only if no custom attributes will be used; Otherwise, 
+	this would require that the user confirm twice : first in the popup, then in the custom attributes form; Also adapted 
+	the text displayed in the submission form to custom attributes.
 	
 	css modifications for different internet explorer versions compatibilities
 	
-	Notifications are now sent to users, for remind, add and del commands, only if the visibility is set to true for these users. Notifications can now be sent to users included by external data sources, when they are added or removed from user list.
+	Notifications are now sent to users, for remind, add and del commands, only if the visibility is set to true for these 
+	users. Notifications can now be sent to users included by external data sources, when they are added or removed from 
+	user list.
 	
 	Recent versions of Oracle do support the AS clause
 	
@@ -188,86 +243,228 @@
 	
 	Use homogenous terminology for authentication. Also use one-time tickets for web signoff now
 	
+	[reported by Micah Anderson, Riseup] Micah reported problems with the use of $* instead of /m in the parser.pl module. 
+	It was a good oportunity to remove the old parser code that was used by the task_manager only. The task_manager now 
+	uses the TT2 parser. It forces us to change the task template format for structured variables : [x->y] should now
+	be written [x.y].
 	
+	[submitted by Peter Langhans, univ Zurich] in create_list form, bring back the form if a parameter is missing
+
+	[proposed by Peter Langhans, univ Zurich] made units for list parameters translatable
+
+	Add "toggle selection" button in list of closed lists
+
+	Now raising an error if alias_manager failed to install new aliases
+
+	Web interface : added contextual help links whenever appropriate
+	
+	[#713] Now notifying new list owners/moderator as they are added to the list configuration.
+
+	[#534] added more informations to the reviewbouncing page (bounce total, first bounce and last bounce date). 
+	Now printing "no score" when the bounce score could not be computed
+
+	Show custom attributes as cells in the list members html table. Now it can be copy&paste in openoffice or excel.
+
+	SOAP server : Changes regarding SOAP session management :
+	- SOAP session now uses the session DB table
+	- session_id can be validated, checked, used in authenticateAndRun()
+	- sympa_soap_client.pl has been extended : new --session_id option, new supported service --service=getUserEmailByCookie
+
+	[Reported by L. Gentis, IUFM Lorraine]When updating a config file while the upgrade process, the "email" parameter 
+	value of the "update" paragraph was set to 'listmaster'. However, this value was validated against a regexp for emails. 
+	this produced an error log, as 'listmaster' is not a valid email address. Fixed by allowing 'listamster' and 'automatic'  
+	strings in this regexp. 'automatic will be used to designate updates done by processes instead of users.
+
+
  Bug fixes:
 
 	STDERR is no more directed to a file if process run in foreground.
 
-	[reported by M.Denarek] Error "missing locale parameter" would happen whenever a notification is sent to the listmaster before the current language et set. Now using the default language when set. Also initialized the default language with 'en'.
+	[reported by M.Denarek] Error "missing locale parameter" would happen whenever a notification is sent to the listmaster 
+	before the current language et set. Now using the default language when set. Also initialized the default language 
+	with 'en'.
 
-	Copy_template failed when multiple directories had to be created (mail_tt2/ll_CC for example). Now calling mkdir_all() from tools::mk_parent_dir(). Also fixed a typo regarding authz errors handling
+	Copy_template failed when multiple directories had to be created (mail_tt2/ll_CC for example). Now calling mkdir_all() 
+	from tools::mk_parent_dir(). Also fixed a typo regarding authz errors handling
 
-	[Reported by J.M. Beuken, univ. cat. Louvain] When copying a template through the web interface, HTML was not unescaped before writing the file. c onsequently, the file used to reload the page for template edition had escaped HTML. for critical files such as main.tt2 or title.tt2, this caused the web page diaply to choke on tt2 parse errors.
+	[Reported by J.M. Beuken, univ. cat. Louvain] When copying a template through the web interface, HTML was not unescaped 
+	before writing the file. c onsequently, the file used to reload the page for template edition had escaped HTML. for 
+	critical files such as main.tt2 or title.tt2, this caused the web page diaply to choke on tt2 parse errors.
 
 	Login banner was shown even though no user_table entry was listed in auth.conf
 
 	Fix web pages in order to give appropriate messages when requesting first password or password renewal. 
 	
-	Fix incorrect password storage when crating a new user (add_user_db did not use password finger print as update_user_db does)
+	Fix incorrect password storage when crating a new user (add_user_db did not use password finger print as update_user_db 
+	does)
 
-	[reported by H.Rousseau]: bounced.pl would fail to create files in OTHER/ if From contained incorrect chars. The bounced.pl process would loop on these files.
+	[reported by H.Rousseau]: bounced.pl would fail to create files in OTHER/ if From contained incorrect chars. The 
+	bounced.pl process would loop on these files.
 	Now such bounce files are moved to the bad/ subdirectory.
 
-	The anti-XSS mecanism HTML-escape outgoing parameters before web pages are parsed. This leads to quotes '"' replaced with &quot; while editing list parameters. This could break SQL queries for example. The fix consists in unescaping HTML characters in edit_list function.
+	The anti-XSS mecanism HTML-escape outgoing parameters before web pages are parsed. This leads to quotes '"' replaced 
+	with &quot; while editing list parameters. This could break SQL queries for example. The fix consists in unescaping 
+	HTML characters in edit_list function.
 
 	[submitted by A.de Bignicourt, UREC] : fixed a charset problem with custom attributes
 
-	[Reported by R. Tassoni, National Library of Australia and T. Danel] Fix: When displaying a message to moderate in the web interface, if a document was attached to the message, the link to display the message lead to empty documents. This was because we didn't take into account the fact that MHonArc put the file in a subdirectory. Fixed by changing the kind of ergument file passed from scalar to vector.
+	[Reported by R. Tassoni, National Library of Australia and T. Danel] Fix: When displaying a message to moderate in 
+	the web interface, if a document was attached to the message, the link to display the message lead to empty documents. 
+	This was because we didn't take into account the fact that MHonArc put the file in a subdirectory. Fixed by changing 
+	the kind of ergument file passed from scalar to vector.
 
  	replacing usage of <module.pl> by its standard usage <module> in 'use' pragmas.
 
   	[Submitted by B.C. Aasgaard, Univ. Oslo] Fix several errors int Postgres database definition and usage in Sympa 6.
 	
-   	Sympa start and stop script used the "status" command for system whose OSTYPE was 'linux-gnu'. These systems don't seem to have such a command.
+   	Sympa start and stop script used the "status" command for system whose OSTYPE was 'linux-gnu'. These systems don't 
+	seem to have such a command.
 	
    	Error in the status check for plain gnu-linux stystems.
 
-   	When notifying the listamaster that an owner had changed her/his mail address, the message was croped. Only on affected list name was displayed instead of the full list. this was due to a bad parameter sending to the tt2 engine and to a bad syntax in TT2 FOREACH directive.
+   	When notifying the listamaster that an owner had changed her/his mail address, the message was croped. Only on affected 
+	list name was displayed instead of the full list. this was due to a bad parameter sending to the tt2 engine and to a bad 
+	syntax in TT2 FOREACH directive.
    
-   	[Reported by M.P. Laisne, Rennes Academy] email change through the user preferences in the web interface was our of order. This was due to a bad initialization of old and new email parameters. Fixed by using values associated to the ticket.
+   	[Reported by M.P. Laisne, Rennes Academy] email change through the user preferences in the web interface was our of 
+	order. This was due to a bad initialization of old and new email parameters. Fixed by using values associated to the 
+	ticket.
 	  
    	[Reported by A. Stephens, Bristol University] A [% list %] TT2 var was trailing after e return directive in javascript.
    
-   	Fixing a problem in custom archiver : now the custom archiver MUSt accept two parameters : list and filename. Both parameters are filled by archived.pl at execution time. wwsympa.conf must contain the absolute path to the custom archiver script if admins to use this feature.
+   	Fixing a problem in custom archiver : now the custom archiver MUSt accept two parameters : list and filename. Both 
+	parameters are filled by archived.pl at execution time. wwsympa.conf must contain the absolute path to the custom 
+	archiver script if admins to use this feature.
    
-  	[Submitted by H. Moa] When accessing an rss-feed for the shared files of a list upgraded from 5.2b, wwsympa entered a tight-loop, load went up to 100%, the webfrontend failed making the webserver reply with 500 and a single-processor system had to be rebooted. The list in question had no shared files. Fixed by checking that we don't use double slashes in the path to the shared directory.
+  	[Submitted by H. Moa] When accessing an rss-feed for the shared files of a list upgraded from 5.2b, wwsympa entered a 
+	tight-loop, load went up to 100%, the webfrontend failed making the webserver reply with 500 and a single-processor 
+	system had to be rebooted. The list in question had no shared files. Fixed by checking that we don't use double slashes 
+	in the path to the shared directory.
    
-  	When duplicating a list, the list creation and update date, as well as creation email and serail number were written to the original file instead of the new file.
+  	When duplicating a list, the list creation and update date, as well as creation email and serail number were written to 
+	the original file instead of the new file.
    
-   	[Reported by M. Jozsef, Budapest University of Technology and Economics] When fetching queries result into a hash, the case of each key string was unsure, as some RDMS could return higher cased field name, for example. This led to aparetnly empty queries result when trying to acces a lower case field value that had been returned with a higher case name. Fixed by systematically lowercasing the field name when fetching results in a hash.
+   	[Reported by M. Jozsef, Budapest University of Technology and Economics] When fetching queries result into a hash, the 
+	case of each key string was unsure, as some RDMS could return higher cased field name, for example. This led to 
+	apparently empty queries result when trying to acces a lower case field value that had been returned with a higher case 
+	name. Fixed by systematically lowercasing the field name when fetching results in a hash.
    
-   	[Reported by F. Perrichon, univ. Lille 2 and C. Zimmer, univ. Nice Sophia Antipolis] LDAP 2 level queries failed as soon as one of the queries failed during the second passe. Sympa now just issues a warning in the logs, specifying that a part of the second passe was not successful.
+   	[Reported by F. Perrichon, univ. Lille 2 and C. Zimmer, univ. Nice Sophia Antipolis] LDAP 2 level queries failed as soon 
+	as one of the queries failed during the second passe. Sympa now just issues a warning in the logs, specifying that a 
+	part of the second passe was not successful.
  
-   	When a list was created, Sympa failed to display the liste activation page to listmaster if an info file didn't exist for this list. Fixed by testing the existence of this file, and, if it isn't found, displaying an informative message instead.
+   	When a list was created, Sympa failed to display the liste activation page to listmaster if an info file didn't exist 
+	for this list. Fixed by testing the existence of this file, and, if it isn't found, displaying an informative message 
+	instead.
  
-   	When removing the last data source by manual edition of the config file, the task manager didn't do the last synchronization needed to remove the last included subscribers. Fixed by checking if a data source still exist after each synchronization (instead of before).
+   	When removing the last data source by manual edition of the config file, the task manager didn't do the last 
+	synchronization needed to remove the last included subscribers. Fixed by checking if a data source still exist after 
+	each synchronization (instead of before).
    
-	[Reported by V. Mathieu, univ. Nancy 2] When deleting the last data source, the subscribers list was not correctly updated. Fixed by restoring a faulty test in wwsympa.fcgi.
+	[Reported by V. Mathieu, univ. Nancy 2] When deleting the last data source, the subscribers list was not correctly 
+	updated. Fixed by restoring a faulty test in wwsympa.fcgi.
    
-   	[Reported by F. Guilleux] the W3C  gives recommendations for the use of GET and POST: http://www.w3.org/2001/tag/doc/whenToUseGet.html#checklist. Sympa was not fully compliant to these recommendations, leading for example to possible unwanted list deletion by administrators using prefetching tools. Fixed by replacing all the threatening GET requests by POST requests.
+   	[Reported by F. Guilleux] the W3C  gives recommendations for the use of GET and POST: 
+	http://www.w3.org/2001/tag/doc/whenToUseGet.html#checklist. Sympa was not fully compliant to these recommendations, 
+	leading for example to possible unwanted list deletion by administrators using prefetching tools. Fixed by replacing 
+	all the threatening GET requests by POST requests.
  
-	[Submitted by O. Menkens, Fraunhofer IAIS] Wrong error handling of LDAP searches caused Sympa to be unable to sychronize sources. Some attributes in the LDAP search were not correctly passed to the function.
+	[Submitted by O. Menkens, Fraunhofer IAIS] Wrong error handling of LDAP searches caused Sympa to be unable to sychronize 
+	sources. Some attributes in the LDAP search were not correctly passed to the function.
    
- 	When a user connected to the Sympa web interface clicked on a ticket for the second time, she was issued an error message. As she was connected already, the normal evaluation of the authorization scenario should ensue, instead of simply refusing to execute it. This was fixed by evaluating the existence of the ticket. Now, Sympa behaves like this: If a non connected user clicks on a ticket link, if it is the first time the ticket is clicked, the user is connected using the email of the ticket context. If the ticket has been previously used, the user is not connected and an error is issued. If the user is connected already when she clicks the ticket, the action is executed, with the authorization being checked using the email the user was authentified with at the time she clicked the ticket.
+ 	When a user connected to the Sympa web interface clicked on a ticket for the second time, she was issued an error 
+	message. As she was connected already, the normal evaluation of the authorization scenario should ensue, instead of 
+	simply refusing to execute it. This was fixed by evaluating the existence of the ticket. Now, Sympa behaves like this: 
+	If a non connected user clicks on a ticket link, if it is the first time the ticket is clicked, the user is connected 
+	using the email of the ticket context. If the ticket has been previously used, the user is not connected and an error 
+	is issued. If the user is connected already when she clicks the ticket, the action is executed, with the authorization 
+	being checked using the email the user was authentified with at the time she clicked the ticket.
    
- 	When using the multiple add form, it was difficult to create a list by copy / paste, because a javascript erased any data in the textarea on click event. Fixed by modifying said javascript.
+ 	When using the multiple add form, it was difficult to create a list by copy / paste, because a javascript erased any 
+	data in the textarea on click event. Fixed by modifying said javascript.
    
   	[reported by T. Retout] SQL injection threat removed by using place holders instead of direct sprint in a query.
   
-  	It was possible to manually remove all the list owners. This is now impossible by taking into account the minimal cardionality of complex list parameters.
+  	It was possible to manually remove all the list owners. This is now impossible by taking into account the minimal 
+	cardionality of complex list parameters.
    
-	[Submitted by M. Keisler, mitsein.net] Sympa refused to save topics which contained dashes in their name, due to an excessively selective regexp. Consequently, it was showing lists with such topics as topicsless. Fixed by accepting dashes in their regexp. Topics can now contain any alphanumeric, plus '-' and '_'. That should be enough for most needs.
+	[Submitted by M. Keisler, mitsein.net] Sympa refused to save topics which contained dashes in their name, due to an 
+	excessively selective regexp. Consequently, it was showing lists with such topics as topicsless. Fixed by accepting 
+	dashes in their regexp. Topics can now contain any alphanumeric, plus '-' and '_'. That should be enough for most needs.
    
-	[Submitted by P. Brown, univ.Southern California] init script sympa was broken for Solaris. It used some syntaxes not supported by this OS' shell language.
+	[Submitted by P. Brown, univ.Southern California] init script sympa was broken for Solaris. It used some syntaxes not 
+	supported by this OS' shell language.
    
- 	[Submitted by N. Bertrand, univ.  Minnesota] Basic logs in debug don't issue the password  unencrypted in the logs for function Auth::ldap_authentication. This way, this password won't be sent unencrypted to a possible syslog server.
+ 	[Submitted by N. Bertrand, univ.  Minnesota] Basic logs in debug don't issue the password  unencrypted in the logs for 
+	function Auth::ldap_authentication. This way, this password won't be sent unencrypted to a possible syslog server.
    
-	[reported by S. Bilbeau, univ. Rennes 1] For trusted applications, when declaring an application in trusted_applicaitons.conf, if the app name contained a higher case character, the application was not found, because Sympa compared the app name to its lower-cased version. Fixed by comparing two lower case strings, thus making the app name completely case insensitive for Sympa.
+	[reported by S. Bilbeau, univ. Rennes 1] For trusted applications, when declaring an application in
+	trusted_applicaitons.conf, if the app name contained a higher case character, the application was not found, because 
+	Sympa compared the app name to its lower-cased version. Fixed by comparing two lower case strings, thus making 
+	the app name completely case insensitive for Sympa.
    
-	[Reported by F. Guilleux, CRU] Searching for a string containing some special characters provoked various errors. Fixed by escaping characters at the moment we use the search engine and not just when parising the characters.
+	[Reported by F. Guilleux, CRU] Searching for a string containing some special characters provoked various errors. 
+	Fixed by escaping characters at the moment we use the search engine and not just when parising the characters.
 	  
-	  
-    
+	DB logs : 'logs_expiration_period' sympa.conf parameter was not loaded. As a result DB logs were expired every day.
+	Also added an error message if two virtual hosts use the same URL.
+
+	[Submited by Ryan Fox] Patch to allow informix external data source.
+
+	[#4543] When multiple "ldap" entries were defined in the auth.conf file, only the first one was queried.
+	Also fixed a bug with the default scope being "base", now "sub".
+
+	[submitted by Peter Langhans, univ Zurich] fixed oracl-related issues :
+	  * $parameter longer than 100 chars would make errors
+	  * "date" is a reserved keyword with Oracle
+
+	[#4439] [#4440] [reported by O.Berger] security vulnerability which use a file in /tmp.
+
+	[#4453][reported by Chris Hastie] Added dependencies for HTML::TreeBuilder and HTML::FormatText CPAN modules
+
+	Fix a bug related to copy list feature where the mandatory file "info" was not copied and also message.footer
+	and message.header that are optional but should be duplicated copying a list.
+
+	[#4430] store temporary files in Sympa's own tmp directory instead of /tmp to prevent symlink attacks
+
+	Web list config edition form : 
+	- default value for parameters like owner/visibility are now compliant with the default value defined in %List::pinfo.
+	- is the edit_list context, some unedited parameters were shown as edited. This has been fixed.
+	
+	When storing subscription requests, Sympa ignored subscription request if an user had already asked for a subscription, 
+	event if the new request was for another list. Fixed by checking the list name before searching previous subscription 
+	requests for the user.
+
+	[#3953] Lock.pm imports some constants from Fnctl module and used to redefine them. it resulted in warnings while 
+	running wwsympa.fcgi : "Prototype mismatch: sub Lock::LOCK_SH () vs none at /usr/share/sympa/lib/Lock.pm line 38. 
+	Constant subroutine LOCK_SH redefined at /usr/share/sympa/lib/Lock.pm line 38.". Removed duplicate definitions.
+
+	[reported by H.Rousseau]: bounced.pl would fail to create files in OTHER/ if From contained incorrect chars. 
+	The bounced.pl process would loop on these files. Now such bounce files are moved to the bad/ subdirectory.
+
+	[#4022]: the anti-XSS mecanism HTML-escape outgoing parameters before web pages are parsed. This leads to quotes 
+	'"' replaced with &quot; while editing list parameters. This could break SQL queries for example. The fix consists 
+	in unescaping HTML characters in edit_list function.
+
+	[submitted by A.de Bignicourt, UREC] : fixed a charset problem with custom attributes
+
+	[Reported by M. Kretchner, INRIA] It was impossible to remove a message from web archvives or to rebuild them. 
+	this was due to a regexp to prevent archived.pl from using dot-starting files added by some Linux distribution
+	(as Gentoo). Fixed by extending the regexp.
+
+	[#3990][Submitted by A. Berstein, electricembers.net] The quiet option had been deactivated from the "reject" mail command.
+
+	[#3919][reported by M.Denarek] Error "missing locale parameter" would happen whenever a notification is sent to the 
+	listmaster before the current language et set. Now using the default language when set. Also initialized the default 
+	language with 'en'.
+
+	CAS authentication: 
+	- [Reported by M. Gorecka-Wolniewicz, Nicolaus Copernicus univ., Torun] In some cases, CAS logout
+	  didn't work, due to a value of "0" trnaformed into an empty string in the session cookie. Fixed by upgrading CGI version.
+	- [#3947][Reported by S. costard Univ. Haute Bretagne] In the case of CAS authentication, a CAS ticket was requested 
+	  for any request in the web interface. Fixed by ensuring that the user email is attached to the session.
+
+
 5.4.3		05 May 2008
 
   Features:
