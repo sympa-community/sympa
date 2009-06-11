@@ -7,6 +7,34 @@
 
   Features:
 
+***** New bulk.pl daemon installed with Sympa. This daemon is dedicated to mail distribution and 
+***** allows to parallelize this process on a single server as well as on multiple servers.
+***** The bulk.pl process will automatically spawn new task.pl processes, depending on the amount
+***** of SMTP sessions left in the database. You can control this behavior with the parameters listed below.
+***** Note that the "maxsmtp" sympa.conf parameter should be lowered, because each bulk.pl process will
+***** use it.
+***** Messages spool used by the bulk.pl daemon is stored in the database, in two tables : 
+***** - bulkmailer_table : one entry per SMTP session
+***** - bulkspool_table : one entry per message
+***** New associated sympa.conf parameters :
+***** - pidfile_bulk : location of the daemon PID file
+***** - sympa_packet_priority : default priority set to a packet to be sent by the bulk
+***** - bulk_fork_threshold : minimum number of packets in database before the bulk forks to increase sending rate
+***** - bulk_max_count : max number of bulks that will run on the same server
+***** - bulk_lazytime : number of seconds a slave bulk will remain running without processing a message before 
+*****   it spontaneously dies
+***** - bulk_wait_to_fork : number of seconds a master bulk waits between two packets number checks
+
+***** [Olivier Lumineau, CRU] Fresh new web CSS for the web interface.
+***** Here is the list of changes in the web interface :
+***** - New css.tt2
+***** - A new Sympa logo
+***** - New navigation menu through list admin menu and server admin menu
+***** - Miscellaneous modifications in templates (list_admin_menu.tt2 not used anymore)
+***** WARNING : if you customize your own templates you may notice some mess in the page layout. 
+***** In such a case compare your templates to the distributed version and report any difference 
+****  to your own files...
+
 ***** Replace storage of password with encryption by md5 fingerprint. This 
 ***** make remind password impossible. So now a one time ticket table is created
 ***** ticket are  sent by email as an authentication token. Ticket can be used 
@@ -26,6 +54,13 @@
 *****
 ***** <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
 
+  src/Conf.pm, src/sympa_wizard.pl: Four new languages are now available by default in Sympa:
+	  - Bokmål (B. C. Aasgaard)
+	  - Polish (L. Zygmanski)
+	  - Finn (J.P. Paloposki)
+	  - Vietnamese (C. Siddall)
+	  Thanks to the translators for their efforts!
+
   -  new login method include now "last login from [HOST] at [date]" information  message
   -  new daily task to remove tickets older than 10d (task parameters in conf.pm): 
        - purge_one_time_ticket_table_task default daily
@@ -33,9 +68,9 @@
 
 	/po/Makefile: New make command: "clean-po". Updates the PO catalogues but doesn't try to save strings that disappeared in this version.
 
-	/web_tt2/modindex.tt2, /wwsympa/wwsympa.fcgi: New button to toogle select/unselect all spams in modindex page
+	web_tt2/modindex.tt2, /wwsympa/wwsympa.fcgi: New button to toogle select/unselect all spams in modindex page
 
-	/src/Conf.pm, /src/Message.pm, /src/sympa_wizard.pl, /web_tt2/modindex.tt2, /wwsympa/icons/junk.png, /wwsympa/wwsympa.fcgi: New propertie in object message : spam_status .  This feature is used in modindex (listing of message waiting for moderation) to show message tagued as spam.
+	src/Conf.pm, /src/Message.pm, /src/sympa_wizard.pl, /web_tt2/modindex.tt2, /wwsympa/icons/junk.png, /wwsympa/wwsympa.fcgi: New propertie in object message : spam_status .  This feature is used in modindex (listing of message waiting for moderation) to show message tagued as spam.
 	4 new parameters :
 	      antispam_feature default off
 	      antispam_tag_header_name default X-Spam-Status 
@@ -43,6 +78,29 @@
 	      antispam_tag_header_ham_regexp default ^\s*No
 
 	If you change antispam_feature to value 'on' the other parameters default are compatible with spamassassin defaults.
+
+    src/sympa.pl: [feature] new sympa.pl options in order to recode shared document files in order to solve charset slag
+
+	src/Conf.pm: Legacy character set support (submitted by S. Ikeda) is now enabled if the 'legacy_character_support_feature' sympa.conf parameter is set to on.
+	New parameter 'legacy_character_support_feature'. If set to 'on', legacy character support will be enabled, as
+	  discussed in https://listes.cru.fr/sympa/arc/sympa-dev/2006-09/msg00029.html and its follow-ups. Any other value or no definition at all disables the functionnality.
+
+    wwsympa/wwsympa.fcgi: Now http://server/sympa/<a valid listname> is redirect to http://server/sympa/info/<a valid listname> insteed of "unkown action" error
+	
+	src/Conf.pm, src/Upgrade.pm, wwsympa/wwsympa.fcgi: new database table in order to store robot config parameters that can be edited inline. This feature is used for color edition in sympa admin/skinsedit
+
+    src/Scenario.pm, src/tools.pl: [#930][Submitted by S. Amrani, gendarmerie nationale] New scenario test : less_than.
+	  Allows to compare two values. Is true if the first one is less than the second one. Works with strings, too, if you like.
+	  
+	src/Bulk.pm, src/List.pm, src/sympa.pl: now sympa.pl --test_database_message_buffer can be used in order to verify
+	  database capacity to store messages spool (dirty output a nicer is needed ;-)
+
+    src/Bulk.pm, src/List.pm, src/Upgrade.pm, src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql, src/mail.pm:  New delivery_time list parameter in order to make distribution at a specified time
+	
+    wwsympa/wwsympa.fcgi: Now temlpate of lists created using web interface can use any input from the create_list_request form referenced as [% custom_input.VARNAME %]
+
+    soap/sympasoap.pm, src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi: New parameter 'inclusion_notification_feature'. If its value is set to 'on', subscribers are notified when they are included in a list through an external datasource. 
+	We no longer use the visibility to manage this behaviour to avoid confusion for users and an overwhelming number of scenario evaluations.
 
   Changes:
 
@@ -54,6 +112,7 @@
 ***** HERE IS THE LIST SIGNIFICANT CHANGES REGARDING THE INSTALLATION PROCESS:
 ***** - Default sympa configuration files, previously stored in PREFIX/bin/etc/ are now stored in 
 *****   PREFIX/share/default/ directory
+*****
 ***** - Most --with-xxdir configure options are now obsolete, replaced by equivalent standard --xxdir options
 *****   Here is the list of concerned options : 
 *****    --with-etcdir => --sysconfdir
@@ -73,8 +132,22 @@
 *****   usually. 
 *****   If you run autoconf, it will define the set of target directories either the old way
 *****   or the FHS way, depending on wether it finds an existing /etc/sympa.conf file.
+*****
+***** - Removed obsolete sudo wrappers ; Sympa now includes C wrappers for both wwsympa.fcgi and sympa_soap_server.fcgi
+*****   Check the manual <http://www.sympa.org/manual/index> for more informations on that topic
 
 ***** New required library : gettext-devel
+
+***** New required CPAN modules :
+***** - AuthCAS : replaces the Sympa's CAS.pm own library
+***** - File::Copy::Recursive
+***** - Net::Netmask
+***** - Term::ProgressBar
+***** - Time::HiRes
+***** - MIME::Lite
+***** - MIME::Lite::HTML
+***** - Email::Date::Format
+
 
     check_perl_modules.pl, src/sympa_wizard.pl.in: [Submitted by G.Rousse, INRIA] check_perl_modules.pl now replaced with sympa_wizard.pl --check. All recent changes in check_perl_modules.pl have been reported in sympa_wizard.pl
 
@@ -103,6 +176,15 @@
 	
 	web_tt2/css.tt2, web_tt2/css_ie.tt2, web_tt2/footer.tt2, web_tt2/main.tt2: [-change] css modifications for different internet explorer versions compatibilities
 	
+	soap/sympasoap.pm, src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi: Notifications are now sent to users, for remind, add and del commands, only if the visibility is set to true for these users. Notifications can now be sent to users included by external data sources, when they are added or removed from user list.
+	
+	src/List.pm, wwsympa/Auth.pm, wwsympa/Challenge.pm, wwsympa/SympaSession.pm: [#1167] Recent versions of Oracle do support the AS clause
+	
+	web_tt2/ : Adding HTML comments in web templates to help users spotting which template is used for customizing purpose.
+	
+	web_tt2/, mail_tt2/: Use homogenous terminology for authentication. Also use one-time tickets for web signoff now
+	
+	
   Bug fixes:
 
 	/src/sympa.pl, /src/task_manager.pl, /src/tools.pl, /wwsympa/archived.pl, /wwsympa/bounced.pl: STDERR is no more directed to a file if process run in foreground.
@@ -127,7 +209,62 @@
 
 	wwsympa/wwsympa.fcgi: [#3790][Reported by R. Tassoni, National Library of Australia and T. Danel] Fix: When displaying a message to moderate in the web interface, if a document was attached to the message, the link to display the message lead to empty documents. This was because we didn't take into account the fact that MHonArc put the file in a subdirectory. Fixed by changing the kind of ergument file passed from scalar to vector.
 
+   src/etc/script/crypt_passwd.pl, src/etc/script/ldap_alias_manager.pl, src/etc/script/mysql_alias_manager.pl: replacing usage of <module.pl> by its standard usage <module> in 'use' pragmas.
 
+   src/Bulk.pm, src/etc/script/create_db.Pg, wwsympa/Auth.pm:[#5993][Submitted by B.C. Aasgaard, Univ. Oslo] Fix several errors int Postgres database definition and usage in Sympa 6.
+	
+   src/etc/script/sympa: Sympa start and stop script used the "status" command for system whose OSTYPE was 'linux-gnu'. These systems don't seem to have such a command.
+	
+   src/etc/script/sympa: Error in the status check for plain gnu-linux stystems.
+
+   mail_tt2/listmaster_notification.tt2, wwsympa/wwsympa.fcgi: When notifying the listamaster that an owner had changed her/his mail address, the message was croped. Only on affected list name was displayed instead of the full list. this was due to a bad parameter sending to the tt2 engine and to a bad syntax in TT2 FOREACH directive.
+   
+   wwsympa/wwsympa.fcgi: [Reported by M.P. Laisne, Rennes Academy] email change through the user preferences in the web
+	  interface was our of order. This was due to a bad initialization of old and new email parameters. Fixed by using values associated to the ticket.
+	  
+   web_tt2/javascript.tt2: [#5905][Reported by A. Stephens, Bristol University] A [% list %] TT2 var was trailing after e return directive in javascript.
+   
+   wwsympa/archived.pl: Fixing a problem in custom archiver : now the custom archiver MUSt accept two parameters : list and filename. Both parameters are filled by archived.pl at execution time. wwsympa.conf must contain the absolute path to the custom archiver script if admins to use this feature.
+   
+   wwsympa/wwsympa.fcgi: [#5872][Submitted by H. Moa] When accessing an rss-feed for the shared files of a list upgraded from 5.2b, wwsympa entered a tight-loop, load went up to 100%, the webfrontend failed making the webserver reply with 500 and a single-processor system had to be rebooted. The list in question had no shared files. Fixed by checking that we don't use double slashes in the path to the shared directory.
+   
+   src/admin.pm: [#5812] When duplicating a list, the list creation and update date, as well as creation email and serail number were written to the original file instead of the new file.
+   
+   src/Bulk.pm, src/List.pm, src/Log.pm, src/Upgrade.pm, src/etc/script/crypt_passwd.pl, src/etc/script/init_comment.pl, wwsympa/Auth.pm, wwsympa/Challenge.pm, wwsympa/SympaSession.pm: [#5820][Reported by M. Jozsef, Budapest University of Technology and Economics] When fetching queries result into a hash, the case of each key string was unsure, as some RDMS could return higher cased field name, for example. This led to aparetnly empty queries result when trying to acces a lower case field value that had been returned with a higher case name. Fixed by systematically lowercasing the field name when fetching results in a hash.
+   
+   src/List.pm: Reported by F. Perrichon, univ. Lille 2 and C. Zimmer, univ. Nice Sophia Antipolis] LDAP 2 level queries failed as soon as one of the queries failed during the second passe. Sympa now just issues a warning in the logs, specifying that a part of the second passe was not successful.
+ 
+   web_tt2/set_pending_list_request.tt2, wwsympa/wwsympa.fcgi: When a list was created, Sympa failed to display the liste activation page to listmaster if an info file didn't exist for this list. Fixed by testing the existence of this file, and, if it isn't found, displaying an informative message instead.
+ 
+   src/task_manager.pl: When removing the last data source by manual edition of the config file, the task manager didn't do the last synchronization needed to remove the last included subscribers. Fixed by checking if a data source still exist after each synchronization (instead of before).
+   
+   src/task_manager.pl, wwsympa/wwsympa.fcgi: Reported by V. Mathieu, univ. Nancy 2] When deleting the last data source, the subscribers list was not correctly updated. Fixed by restoring a faulty test in wwsympa.fcgi.
+   
+   web_tt2/admin.tt2, web_tt2/list_admin_menu.tt2, web_tt2/review.tt2: [bug][#4577][Reported by F. Guilleux] the W3C  gives recommendations for the use of GET and POST: http://www.w3.org/2001/tag/doc/whenToUseGet.html#checklist
+   Sympa was not fully compliant to these recommendations, leading for example to possible unwanted list deletion by administrators using prefetching tools. Fixed by replacing all the threatening GET requests by POST requests.
+ 
+   src/List.pm: [#4672][Submitted by O. Menkens, Fraunhofer IAIS] Wrong error handling of LDAP searches caused Sympa to be unable to sychronize sources. Some attributes in the LDAP search were not correctly passed to the function.
+   
+   wwsympa/Auth.pm, wwsympa/wwsympa.fcgi: [#4555] When a user connected to the Sympa web interface clicked on a ticket for the second time, she was issued an error message. As she was connected already, the normal evaluation of the authorization scenario should ensue, instead of simply refusing to execute it. This was fixed by evaluating the existence of the ticket. Now, Sympa behaves like this: If a non connected user clicks on a ticket link, if it is the first time the ticket is clicked, the user is connected using the email of the ticket context. If the ticket has been previously used, the user is not connected and an error is issued. If the user is connected already when she clicks the ticket, the action is executed, with the authorization being checked using the email the user was authentified with at the time she clicked the ticket.
+   
+   web_tt2/add_request.tt2, web_tt2/javascript.tt2: When using the multiple add form, it was difficult to create a list by copy / paste, because a javascript erased any data in the textarea on click event. Fixed by modifying said javascript.
+   
+  wwsympa/SympaSession.pm: reported by T. Retout] SQL injection threat removed by using place holders instead of direct sprint in a query.
+  
+   src/List.pm, web_tt2/error.tt2, wwsympa/wwsympa.fcgi: [#4516] It was possible to manually remove all the list owners. This is now impossible by taking into account the minimal cardionality of complex list parameters.
+   
+   src/List.pm, wwsympa/wwsympa.fcgi: [#4437][Submitted by M. Keisler, mitsein.net] Sympa refused to save topics which contained dashes in their name, due to an excessively selective regexp. Consequently, it was showing lists with such topics as topicsless. Fixed by accepting dashes in their regexp. Topics can now contain any alphanumeric, plus '-' and '_'. That should be enough for most needs.
+   
+   src/etc/script/sympa: [#4559][Submitted by P. Brown, univ.Southern California] init script sympa was broken for Solaris. It used some syntaxes not supported by this OS' shell language.
+   
+   wwsympa/Auth.pm: [#4645][Submitted by N. Bertrand, univ.  Minnesota] Basic logs in debug don't issue the password  unencrypted in the logs for function Auth::ldap_authentication. This way, this password won't be sent unencrypted to a possible syslog server.
+   
+   wwsympa/Auth.pm: [reported by S. Bilbeau, univ. Rennes 1] For trusted applications, when declaring an application in trusted_applicaitons.conf, if the app name contained a higher case character, the application was not found, because Sympa compared the app name to its lower-cased version. Fixed by comparing two lower case strings, thus making the app name completely case insensitive for Sympa.
+   
+   wwsympa/wwsympa.fcgi: [#4605][Reported by F. Guilleux, CRU] Searching for a string containing some special characters provoked various errors. Fixed by escaping characters at the moment we use the search engine and not just when parising the characters.
+	  
+	  
+    
 5.4.3		05 May 2008
 
   Features:
