@@ -1,5 +1,5 @@
 %define name    sympa
-%define version 6.0a.14
+%define version 6.0b
 %define release 1
 
 Name:     %{name}
