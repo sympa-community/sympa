@@ -192,7 +192,7 @@ our @params = (
     },	      
     {
         name    => 'static_content_path',
-        default => Sympa::Constants::EXPLDIR . '/static_content',
+        default => Sympa::Constants::STATICDIR,
         query   => 'The directory where Sympa stores static contents (CSS, members pictures, documentation) directly delivered by Apache',
 	vhost   => '1',
         edit    => '1',
