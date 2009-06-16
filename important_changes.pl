@@ -44,7 +44,10 @@ my $previous_version = $options{previous};
 my $current_version = $options{current};
 
 # exit immediatly if previous version is higher or equal
-exit 0 if $previous_version >= $current_version;
+if (($previous_version eq $current_version) ||
+    &higher($previous_version,$current_version)){
+    exit 0;
+}
 
 print <<EOF;
 You are upgrading from Sympa $previous_version
@@ -52,11 +55,6 @@ You should read CAREFULLY the changes listed below
 They might be incompatible changes:
 <RETURN>
 EOF
-
-if (($previous_version eq $current_version) ||
-    &higher($previous_version,$current_version)){
-    exit 0;
-}
 
 my $wait = <STDIN>;
 
