@@ -1034,7 +1034,7 @@ my $birthday = time ;
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
      $param->{'path_cgi'} =~ s/\/\//\//g; ## Replace '//' with '/' because it would break navigation     
-     $param->{'version'} = $Version::Version;
+     $param->{'version'} = Sympa::Constants::VERSION;
      $param->{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
      $param->{'time'} = gettext_strftime "%H:%M:%S", localtime(time);
 
