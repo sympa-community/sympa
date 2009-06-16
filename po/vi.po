@@ -743,10 +743,10 @@ msgid ""
 "for variable %s.\n"
 msgstr ""
 "Hệ thống này không tuân theo giao thức P1003.1 POSIX,\n"
-"hoặc cấu hình Perl trên máy này không xác định hằng « _SC_ARG_MAX » trong thư "
-"viện POSIX của nó.\n"
-"Người dùng cần phải sửa đổi mô-đun smtp.pm để đặt giá trị của biến « $max_arg "
-"».\n"
+"hoặc cấu hình Perl trên máy này không xác định hằng « _SC_ARG_MAX » trong "
+"thư viện POSIX của nó.\n"
+"Người dùng cần phải sửa đổi mô-đun smtp.pm để đặt giá trị của biến « "
+"$max_arg ».\n"
 
 #: ../src/mail.pm:757
 msgid "Unable to create a channel in smtpto: %m"
@@ -2946,7 +2946,8 @@ msgstr "Lỗi xác thực"
 #. (u_err.status)
 #: ../web_tt2/error.tt2:124
 msgid "Cannot add subscribers when list status is '%1'"
-msgstr "Không thể thêm người đăng ký khi trạng thái của hộp thư chung là « %1 »"
+msgstr ""
+"Không thể thêm người đăng ký khi trạng thái của hộp thư chung là « %1 »"
 
 #. (u_err.argument)
 #: ../web_tt2/error.tt2:125
@@ -4782,12 +4783,12 @@ msgid ""
 "following color editor. When finished, you may copy the result a new CCS "
 "static file. The target is specified by css_path parameter."
 msgstr ""
-"Nếu bạn không dùng tham số « css_path » và « css_url », màu sắc được xác định "
-"trong tập tin cấu hình « robot.conf ». Khác thì màu sắc được xác định trong "
-"mã CSS tĩnh. Màu sắc cũng có thể được thay đổi trong buổi hợp đang chạy, "
-"dùng trình chỉnh sửa màu sắc theo đây. Một khi hoàn tất, bạn có thể sao chép "
-"kết quả vào một tập tin CSS tĩnh mới. Đích được xác định theo tham số « "
-"css_path »."
+"Nếu bạn không dùng tham số « css_path » và « css_url », màu sắc được xác "
+"định trong tập tin cấu hình « robot.conf ». Khác thì màu sắc được xác định "
+"trong mã CSS tĩnh. Màu sắc cũng có thể được thay đổi trong buổi hợp đang "
+"chạy, dùng trình chỉnh sửa màu sắc theo đây. Một khi hoàn tất, bạn có thể "
+"sao chép kết quả vào một tập tin CSS tĩnh mới. Đích được xác định theo tham "
+"số « css_path »."
 
 #: ../web_tt2/skinsedit.tt2:44
 msgid ""
@@ -4804,14 +4805,14 @@ msgid ""
 "them in a new static CSS.\n"
 msgstr ""
 "\n"
-"Hãy cẩn thận: tập tin CSS bị ghi đè dùng mẫu « css.tt2 », bình thường tập tin "
-"đó được cung cấp bởi bản phát hành Sympa: mỗi lần cập nhật bản phát hành thì "
-"cũng ghi đè lên tập tin CSS. Sao chép tập tin CSS vào một thư mục riêng, và "
-"một khi cập nhật bản phát hành, sao chép nó về thư mục gốc.</p><p>Dùng trình "
-"chỉnh sửa màu sắc để thay đổi màu sắc đã xác định. Đầu tiên chọn màu cần "
-"thay đổi, sau đó chọn màu mới, và áp dụng nó dùng nút thử. Màu mới chưa được "
-"ghi lưu: nó chỉ được hiển thị trong buổi hợp đang chạy. Một khi màu sắc ổn "
-"thoả, bạn cũng có thể lưu chúng trong một tập tin CSS tĩnh mới.\n"
+"Hãy cẩn thận: tập tin CSS bị ghi đè dùng mẫu « css.tt2 », bình thường tập "
+"tin đó được cung cấp bởi bản phát hành Sympa: mỗi lần cập nhật bản phát hành "
+"thì cũng ghi đè lên tập tin CSS. Sao chép tập tin CSS vào một thư mục riêng, "
+"và một khi cập nhật bản phát hành, sao chép nó về thư mục gốc.</p><p>Dùng "
+"trình chỉnh sửa màu sắc để thay đổi màu sắc đã xác định. Đầu tiên chọn màu "
+"cần thay đổi, sau đó chọn màu mới, và áp dụng nó dùng nút thử. Màu mới chưa "
+"được ghi lưu: nó chỉ được hiển thị trong buổi hợp đang chạy. Một khi màu sắc "
+"ổn thoả, bạn cũng có thể lưu chúng trong một tập tin CSS tĩnh mới.\n"
 
 #: ../web_tt2/skinsedit.tt2:49
 msgid " pick the color you want to test. "
@@ -6656,7 +6657,8 @@ msgstr "Lỗi quản lý thư bị nảy về"
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
-"Sympa không thể xử lý thư bị nảy về « %1 » nên di chuyển nó vào thư mục « %2 »."
+"Sympa không thể xử lý thư bị nảy về « %1 » nên di chuyển nó vào thư mục « %2 "
+"»."
 
 #. (error)
 #: ../mail_tt2/listmaster_notification.tt2:137
@@ -6926,8 +6928,8 @@ msgid ""
 "auth.conf error : either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
-"lỗi « auth.conf »: có nên xác định hoặc mục nhập « email_http_header » hoặc « "
-"ldap_host/ldap_get_email_by_uid_filter »."
+"lỗi « auth.conf »: có nên xác định hoặc mục nhập « email_http_header » hoặc "
+"« ldap_host/ldap_get_email_by_uid_filter »."
 
 #. (name)
 #: ../mail_tt2/listmaster_notification.tt2:296
@@ -7040,8 +7042,8 @@ msgstr "Không có sẵn phiên bản HTML của thư này trong « %1 »."
 #: ../mail_tt2/listmaster_notification.tt2:316
 msgid "Unable to update file config_changes for list '%1'."
 msgstr ""
-"Không thể cập nhật tập tin « config_changes » (các thay đổi cấu hình) cho hộp "
-"thư chung « %1 »."
+"Không thể cập nhật tập tin « config_changes » (các thay đổi cấu hình) cho "
+"hộp thư chung « %1 »."
 
 #. (month,list.name)
 #: ../mail_tt2/listmaster_notification.tt2:317
@@ -7074,8 +7076,8 @@ msgstr "Không thể gửi kho lưu vì không tìm thấy mã số thư."
 #: ../mail_tt2/listmaster_notification.tt2:321
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
-"Không tìm thấy thư trong kho lưu mà tương ứng với mã số thư (Message-ID) « %1 "
-"»."
+"Không tìm thấy thư trong kho lưu mà tương ứng với mã số thư (Message-ID) « %"
+"1 »."
 
 #. (list.name)
 #: ../mail_tt2/listmaster_notification.tt2:322
@@ -7168,7 +7170,8 @@ msgstr "Gặp lỗi trong khi giải nén tập tin « %1 »."
 #. (from,list.name)
 #: ../mail_tt2/listmaster_notification.tt2:343
 msgid "Unable to send command REMIND from '%1' to list '%2'."
-msgstr "Không thể gửi lệnh REMIND (nhắc nhở) từ « %1 » tới hộp thư chung « %2 »."
+msgstr ""
+"Không thể gửi lệnh REMIND (nhắc nhở) từ « %1 » tới hộp thư chung « %2 »."
 
 #. (from,list.name)
 #: ../mail_tt2/listmaster_notification.tt2:344
@@ -9186,8 +9189,8 @@ msgstr ""
 #~ "CSS files, the colors in use may differ from this table."
 #~ msgstr ""
 #~ "Phiên bản hiện thời không bao gồm một trình chỉnh sửa màu sắc, do đó bạn "
-#~ "cần phải chỉnh sửa tập tin cấu hình « robot.conf » (hay « sympa.conf ») để "
-#~ "thay đổi màu sắc. Nếu bạn có phải đã cài đặt các tập tin CSS tĩnh, màu "
+#~ "cần phải chỉnh sửa tập tin cấu hình « robot.conf » (hay « sympa.conf ») "
+#~ "để thay đổi màu sắc. Nếu bạn có phải đã cài đặt các tập tin CSS tĩnh, màu "
 #~ "sắc được dùng có thể khác với bảng này."
 
 #~ msgid ""
