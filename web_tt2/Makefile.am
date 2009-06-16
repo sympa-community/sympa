@@ -40,6 +40,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   create_list_request.tt2 \
 		   create_list.tt2 \
 		   css.tt2 \
+		   css_ie.tt2 \
 		   d_control.tt2 \
 		   d_editfile.tt2 \
 		   d_install_shared.tt2 \
