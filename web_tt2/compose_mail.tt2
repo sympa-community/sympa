@@ -6,6 +6,11 @@
 	<br />
 [% END %]
 
+<p>
+[%|loc(list,host)%]The best way to post an email to the list is to compose an email to the list email address <b>%1@%2</b> using your favourite email client. We also provide a form below to compose an email through the web interface.[%END%]
+</p>
+
+
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail">
 
 [% IF subaction == "html_news_letter" %]
