@@ -858,19 +858,19 @@ our @params = (
     },
     {
         name    => 'clean_delay_queue',
-        default => '1',
-    },
-    {
-        name    => 'clean_delay_queuemod',
-        default => '10',
-    },
-    {
-        name    => 'clean_delay_queuetopic',
         default => '7',
     },
     {
+        name    => 'clean_delay_queuemod',
+        default => '30',
+    },
+    {
+        name    => 'clean_delay_queuetopic',
+        default => '30',
+    },
+    {
         name    => 'clean_delay_queuesubscribe',
-        default => '10',
+        default => '30',
     },
     {
         name    => 'clean_delay_queueautomatic',
@@ -878,15 +878,15 @@ our @params = (
     },
     {
         name    => 'clean_delay_queueauth',
-        default => '3',
+        default => '30',
     },
     {
         name    => 'clean_delay_queuebounce',
-        default => '10',
+        default => '7',
     },
     {
         name    => 'clean_delay_queueoutgoing',
-        default => '1',
+        default => '7',
     },
     {
         name    => 'clean_delay_tmpdir',
