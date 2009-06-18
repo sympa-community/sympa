@@ -182,7 +182,7 @@ while (!$end) {
 		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
 		
 		if($Conf::Conf{'bulk_max_count'} > 1) {
-		    &do_log('info','Too much packets in spool (%s). Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
+		    &do_log('info','Workload increased: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
 		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
 			if ((my $child_pid = fork) != 0) {
 			    do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
@@ -206,7 +206,7 @@ while (!$end) {
     if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
 		(time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && 
 		!(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
-		&do_log('info', "Process %s too old, exiting.", $$);
+		&do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, $Conf::Conf{'bulk_lazytime'});
 		last;
     }
 	
