@@ -321,6 +321,18 @@ our @params = (
         default => '5',
     },
     {
+        name  => 'default_ttl',
+        query => 'Default timeout between two scheduled synchronizations of list members with data sources.',
+        file  => 'sympa.conf',
+        default => '3600',
+    },
+    {
+        name  => 'default_distribution_ttl',
+        query => 'Default timeout between two action-triggered synchronizations of list members with data sources.',
+        file  => 'sympa.conf',
+        default => '300',
+    },
+    {
         name  => 'sympa_packet_priority',
         query => 'Default priority for a packet to be sent by bulk.',
         file  => 'sympa.conf',
