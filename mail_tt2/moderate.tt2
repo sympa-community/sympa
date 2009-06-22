@@ -14,8 +14,8 @@ Content-Disposition: inline
 [%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
-[%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
-[%|loc(conf.wwsympa_url,one_time_ticket) %]To browse the awaiting messages, you should click on the following link : %1/ticket/%2[%END%] 
+[%|loc(mod_spool_size)%]There are %1 message(s) awaiting moderation.[%END%] 
+[%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
 [% IF method == 'md5' -%]
 [% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,modkey)%]To tag the message in list %1 for the appropriate topic, please use the following link :
