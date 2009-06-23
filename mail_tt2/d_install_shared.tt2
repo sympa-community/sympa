@@ -4,4 +4,4 @@ Subject: [% FILTER qencode %][%|loc%]Your document has been installed.[%END%][%E
 [%|loc(filename,list.name,list.host,installed_by)%]Your document %1 for list %2@%3
 has been installed by %4 list editor.[%END%]
 
-[%|loc(conf.wwsympa_url,list.name)%]The list document repository : %1/d_read/%2[%END%]
+[%|loc%]The list document repository:[%END%] [% conf.wwsympa_url %]/d_read/[% list.name %]

@@ -32,8 +32,8 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 [%|loc(delegator,list.name,list.host)%]You have been delegate the responsability of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
-[%|loc(conf.wwsympa_url,list.name)%]The list homepage: %1/info/%2[%END%]
-[%|loc(conf.wwsympa_url)%]Owner and moderator guide: %1/help/admin[%END%]
+[%|loc%]The list homepage:[%END%] [% conf.wwsympa_url %]/info/[% list.name %]
+[%|loc%]Owner and moderator guide:[%END%] [% conf.wwsympa_url %]/help/admin
 
 
 [% ELSIF type == 'ticket_to_send' -%]

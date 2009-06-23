@@ -14,30 +14,29 @@ Content-Disposition: inline
 [%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
-[%|loc(mod_spool_size)%]There are %1 message(s) awaiting moderation.[%END%] 
-[%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
+[%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
+[%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] <[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]>
 
 [% IF method == 'md5' -%]
-[% IF request_topic -%][%|loc(list.name,conf.wwsympa_url,modkey)%]To tag the message in list %1 for the appropriate topic, please use the following link :
+[% IF request_topic -%][%|loc(list.name)%]To tag the message in list %1 for the appropriate topic, please use the following link:[%END%]
 
-%2/viewmod/%1/%3
-[%END%]
+[% conf.wwsympa_url %]/viewmod/[% list.name %]/[% modkey %]
 [%- ELSE -%]
 [%- IF spam_status == 'spam' -%]
 Because the new message is suspected to be a spam it is not attached to this one. You must use
 the web interface to reject or validate it.
 [%- ELSE -%]	
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
-[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
+<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]>
+[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
-[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%][% END %] 
-[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
+<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%][% END %]>
+[%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
 
-[%|loc(conf.wwsympa_url)%]The messages moderating documentation: %1/help/admin#moderate[%END%]
+[%|loc(conf.wwsympa_url)%]The messages moderating documentation:[%END%] <[% conf.wwsympa_url %]/help/admin#moderate>
 
 --[% boundary %]
 Content-Type: message/rfc822

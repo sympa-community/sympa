@@ -7,7 +7,7 @@ Content-Disposition: inline
 
 [%|loc(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
-[%|loc(conf.wwsympa_url)%]The messages moderating documentation: %1/help/admin#moderate[%END%]
+[%|loc%]The messages moderating documentation:[%END%] <[% conf.wwsympa_url %]/help/admin#moderate>
 
 [% IF spool %]
 --[% boundary1 %]
