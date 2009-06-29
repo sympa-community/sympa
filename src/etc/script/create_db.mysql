@@ -133,6 +133,6 @@ CREATE TABLE bulkspool_table (
 CREATE TABLE conf_table (
   robot_conf varchar(80) default NULL,
   label_conf varchar(80) default NULL,
-  value_conf varchar(300) default NULL
+  value_conf varchar(300) default NULL,
   PRIMARY KEY (robot_conf,label_conf)
 );
