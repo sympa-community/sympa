@@ -96,7 +96,7 @@ sub next {
 	## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
     
-    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s",$dbh->quote($lock), time(), $order ;
+    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d",$dbh->quote($lock), time();
 
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to select and lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
