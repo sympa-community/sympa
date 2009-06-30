@@ -442,7 +442,13 @@ sub load_robots {
 
     ## Set the defaults based on sympa.conf and wwsympa.conf first
     foreach my $key (keys %valid_robot_key_words) {
-	$robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
+	if(defined $wwsconf->{$key}){
+	    $robot_conf->{$Conf{'domain'}}{$key} = $wwsconf->{$key};
+	}elsif(defined $Conf{$key}){
+	    $robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
+	}else{
+	    printf STDERR "Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf parameter.\n" ;
+	}
     }
 
     foreach my $robot (readdir(DIR)) {
