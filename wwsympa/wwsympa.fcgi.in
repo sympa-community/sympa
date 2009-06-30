@@ -5926,8 +5926,11 @@ sub do_skinsedit {
      $list->delete_subscription_request(@added_users);
 
      &report::notice_report_web('add_performed', {'total' => $total},$param->{'action'});
-     &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
-		  'status' => 'success'});
+     
+     foreach my $email (@added_users) {
+       &web_db_log({'target_email' => $email,
+		    'status' => 'success'});
+     }
      
      $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
      return $in{'previous_action'} || 'review';
