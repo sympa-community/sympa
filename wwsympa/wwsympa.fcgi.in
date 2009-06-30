@@ -8874,7 +8874,6 @@ sub do_edit_list {
 		## Remove if empty
 		if ($new_admin->{$pname} =~ /^\s*$/) {
 		    delete $new_admin->{$pname};
-		    next; # Go directly to the next parameter.
 		}
 	    }
 	    
