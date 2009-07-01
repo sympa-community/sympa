@@ -73,7 +73,8 @@ installconfig:
 		echo "# automatically created file" >> data_structure.version; \
 		echo "# you should not modify it" >> data_structure.version; \
 		echo $(VERSION) >> data_structure.version; \
-		chown $(USER).$(GROUP) data_structure.version || /bin/true; \
+		chown $(USER) data_structure.version || /bin/true; \
+		chgrp $(GROUP) data_structure.version || /bin/true; \
 	fi
 
 nextstep: 
