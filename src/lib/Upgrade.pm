@@ -1580,7 +1580,7 @@ sub md5_encode_password {
     while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
 
 	my $clear_password ;
-	if ($user->{'password_user'} =~ /^[1-9a-f]{32}/){
+	if ($user->{'password_user'} =~ /^[0-9a-f]{32}/){
 	    do_log('info','password from %s already encoded as md5 fingerprint',$user->{'email_user'});
 	    $total_md5++ ;
 	    next;
