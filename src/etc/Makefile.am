@@ -161,7 +161,7 @@ DEFAULT_SCENARIOS = add.owner \
 		    visibility.conceal
 
 install-data-hook:
-	sed -i -e 's|--libexecdir--|$(libexecdir)|' \
+	sed -e 's|--libexecdir--|$(libexecdir)|' \
 		$(DESTDIR)$(defaultdir)/list_aliases.tt2
 	cd  $(DESTDIR)$(defaultdir)/scenari; \
 	for file in $(DEFAULT_SCENARIOS); do \

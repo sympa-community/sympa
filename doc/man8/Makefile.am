@@ -9,7 +9,7 @@ CLEANFILES = $(man8_MANS)
 	pod2man --section=8 --center="sympa $(VERSION)" --lax --release="$(VERSION)" $< $@
 
 install-data-hook:
-	sed -i \
+	sed \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--libexecdir--|$(libexecdir)|' \
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
