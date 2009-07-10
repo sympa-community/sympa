@@ -24,8 +24,10 @@
 
 use lib '--modulesdir--';
 use wwslib;
-$wwsympa_conf_file = '--WWSCONFIG--';
-$sympa_conf_file = '--CONFIG--';
+use Sympa::Constants;
+
+$wwsympa_conf_file = Sympa::Constants::WWSCONFIG;
+$sympa_conf_file = Sympa::Constants::CONFIG;
 
 use List;
 use Log;
@@ -71,8 +73,10 @@ my $listname = $ARGV[0];
 my $robot = $ARGV[1];
 
 ## Check UID
-unless ([getpwuid $<]->[0] eq '--USER--') {
-    print "You should run this script as user \"--USER--\", ignore ? (y/CR)";
+unless ([getpwuid $<]->[0] eq Sympa::Constants::USER) {
+    printf
+        "You should run this script as user \"%s\", ignore ? (y/CR)",
+        Sympa::Constants::USER;
     my $s = <STDIN>;
     die unless ($s =~ /^y$/i);
 }

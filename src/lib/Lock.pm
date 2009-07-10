@@ -23,16 +23,13 @@
 package Lock;
 
 use strict;
-require Exporter;
-my @ISA = qw(Exporter);
-my @EXPORT = qw();
+
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
+use FileHandle;
 
 use Carp;
 use Log;
 use Conf;
-
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
-use FileHandle;
 
 my %list_of_locks;
 my $default_timeout = 60 * 20; ## After this period a lock can be stolen

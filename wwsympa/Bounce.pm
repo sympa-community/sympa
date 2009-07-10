@@ -21,13 +21,13 @@
 
 package Bounce;
 
-use MIME::Parser;
-
 use strict;
 
+use MIME::Parser;
 use Exporter;
-our @ISA = ('Exporter');
-our @EXPORT = qw/rfc1891 corrige anabounce/;
+
+our @ISA = qw(Exporter);
+our @EXPORT = qw(rfc1891 corrige anabounce);
 
 ## RFC1891 compliance check
 sub rfc1891 {
@@ -991,10 +991,4 @@ sub anabounce {
     return $count;
 }
 
-
-1; #return true
-
-
-
-
-
+1;

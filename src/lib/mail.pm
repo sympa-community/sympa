@@ -21,16 +21,15 @@
 
 package mail;
 
-require Exporter;
-use Carp;
-@ISA = qw(Exporter);
-@EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
+use strict;
 
-#use strict;
-use POSIX;
+use Exporter;
+use Carp;
+use POSIX qw(sysconf);
 use Mail::Internet;
 use MIME::Charset;
 use MIME::Tools;
+
 use Conf;
 use Log;
 use Language;
@@ -39,9 +38,9 @@ use Bulk;
 use tools;
 use Sympa::Constants;
 
-use strict;
+our @ISA = qw(Exporter);
+our @EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
 
-#use strict;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -54,7 +53,7 @@ if ($@) {
     $max_arg = 4096;
     printf STDERR gettext("Your system does not conform to the POSIX P1003.1 standard, or\nyour Perl system does not define the _SC_ARG_MAX constant in its POSIX\nlibrary. You must modify the smtp.pm module in order to set a value\nfor variable %s.\n"), $max_arg;
 } else {
-    $max_arg = POSIX::sysconf($max_arg);
+    $max_arg = sysconf($max_arg);
 }
 
 my %pid = ();

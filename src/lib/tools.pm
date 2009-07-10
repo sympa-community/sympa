@@ -23,27 +23,22 @@ package tools;
 
 use strict;
 
-use Exporter;
-our @ISA = ('Exporter');
-our @EXPORT = qw//;
-
-use POSIX;
-use Sys::Hostname;
-use Mail::Internet;
-use Mail::Header;
-use Conf;
-use Language;
-use Log;
-use Sympa::Constants;
-
 use Time::Local;
 use File::Find;
 use Digest::MD5;
 use HTML::StripScripts::Parser;
 use File::Copy::Recursive;
-
+use POSIX qw(strftime mkfifo strtod);
+use Sys::Hostname;
+use Mail::Internet;
+use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
+
+use Conf;
+use Language;
+use Log;
+use Sympa::Constants;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -567,7 +562,7 @@ sub shift_file {
     }
     
     my @date = localtime (time);
-    my $file_extention = POSIX::strftime ("%Y:%m:%d:%H:%M:%S", @date);
+    my $file_extention = strftime("%Y:%m:%d:%H:%M:%S", @date);
     
     unless (rename ($file,$file.'.'.$file_extention)) {
 	&do_log('err', "shift_file : Cannot rename file $file to $file.$file_extention" );
@@ -742,7 +737,7 @@ sub smime_sign {
     close(MSGDUMP);
 
     if ($Conf::Conf{'key_passwd'} ne '') {
-	unless ( &POSIX::mkfifo($temporary_pwd,0600)) {
+	unless ( mkfifo($temporary_pwd,0600)) {
 	    do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
@@ -1116,7 +1111,7 @@ sub smime_decrypt {
 	my $keyfile = shift @$keys;
 	&do_log('debug', "Trying decrypt with $certfile, $keyfile");
 	if ($Conf::Conf{'key_passwd'} ne '') {
-	    unless (&POSIX::mkfifo($temporary_pwd,0600)) {
+	    unless (mkfifo($temporary_pwd,0600)) {
 		&do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
 		return undef;
 	    }
@@ -1865,7 +1860,7 @@ sub adate {
 
     my $epoch = $_[0];
     my @date = localtime ($epoch);
-    my $date = POSIX::strftime ("%e %a %b %Y  %H h %M min %S s", @date);
+    my $date = strftime ("%e %a %b %Y  %H h %M min %S s", @date);
     
     return $date;
 }
@@ -2358,7 +2353,7 @@ sub write_pid {
 		@err_output = <ERR>;
 		close ERR;
 		
-		$err_date = &POSIX::strftime("%d %b %Y  %H:%M", localtime( (stat($err_file))[9]));
+		$err_date = strftime("%d %b %Y  %H:%M", localtime( (stat($err_file))[9]));
 	    }
 	    
 	    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'},
@@ -3422,9 +3417,9 @@ sub smart_lessthan {
     $stra =~ s/^\s+//; $stra =~ s/\s+$//;
     $strb =~ s/^\s+//; $strb =~ s/\s+$//;
     $! = 0;
-    my($numa, $unparsed) = &POSIX::strtod($stra);
+    my($numa, $unparsed) = strtod($stra);
     my $numb;
-    $numb = &POSIX::strtod($strb)
+    $numb = strtod($strb)
     	unless ($! || $unparsed !=0);
     if (($stra eq '') || ($strb eq '') || ($unparsed != 0) || $!) {
 	return $stra lt $strb;

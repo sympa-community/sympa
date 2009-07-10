@@ -22,18 +22,13 @@
 
 package cookielib;
 
-use Exporter;
-@ISA = ('Exporter');
-@EXPORT = ();
-
+use strict vars;
 
 use Digest::MD5;
 use POSIX;
 use CGI::Cookie;
+
 use Log;
-
-use strict vars;
-
 
 ## Generic subroutine to set a cookie
 sub generic_set_cookie {

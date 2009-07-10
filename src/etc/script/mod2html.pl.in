@@ -8,8 +8,9 @@ use lib '--modulesdir--';
 use Conf; # to load Sympa conf which is needed by List.pm
 use List;
 use Log; # if you want to get logs of List.pm
+use Sympa::Constants;
 
-unless (Conf::load('--CONFIG--')) {
+unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";
 }
 &do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
@@ -22,8 +23,8 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
 &List::_apply_defaults(); # else reading of a List configuration won't work 
 
 # Set the UserID & GroupID for the process
-$( = $) = (getgrnam('--GROUP--'))[2];
-$< = $> = (getpwnam('--USER--'))[2];
+$( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
+$< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 # Sets the UMASK
 umask(oct($Conf{'umask'}));

@@ -28,8 +28,9 @@ use strict;
 
 use lib '--modulesdir--';
 use Getopt::Long;
+use Sympa::Constants;
 
-my $sympa_conf_file = '--CONFIG--';
+my $sympa_conf_file = Sympa::Constants::CONFIG;
 use Conf;
 use List;
 

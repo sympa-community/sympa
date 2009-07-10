@@ -23,6 +23,7 @@
 
 use lib '--modulesdir--';
 use wwslib;
+use Sympa::Constants;
 
 unless (require Crypt::CipherSaber) {
     die "Crypt::CipherSaber not installed ; cannot crypt passwords";
@@ -34,7 +35,7 @@ use List;
 use Log;
 
 ## Load sympa config
-&Conf::load('--CONFIG--') || die 'config_error';
+&Conf::load(Sympa::Constants::CONFIG) || die 'config_error';
 
 chdir $Conf::Conf{'home'};
 

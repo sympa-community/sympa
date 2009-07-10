@@ -23,18 +23,19 @@
 package SQLSource;
 
 use strict;
-require Exporter;
-use tools;
-use tt2;
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote);
 
 use Carp;
+use Exporter;
 
 use Conf;
 use Log;
 use List;
+use tools;
+use tt2;
+
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%date_format);
+our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote);
 
 our %date_format = (
 		   'read' => {

@@ -14,11 +14,12 @@ use Conf;
 use POSIX;
 require tools;
 require tt2;
+use Sympa::Constants;
 
 use DBI;
 
-unless (Conf::load('--CONFIG--')) {
-   print gettext("The configuration file --CONFIG-- contains errors.\n");
+unless (Conf::load(Sympa::Constants::CONFIG)) {
+   print gettext("The configuration file contains errors.\n");
    exit(1);
 }
 

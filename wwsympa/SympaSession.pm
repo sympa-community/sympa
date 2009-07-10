@@ -21,20 +21,16 @@
 
 package SympaSession;
 
-use Exporter;
-@ISA = ('Exporter');
-@EXPORT = ();
-
+use strict ;
 
 use Digest::MD5;
 use POSIX;
 use CGI::Cookie;
-use Log;
-use Conf;
 use Time::Local;
 use Text::Wrap;
-use strict ;
 
+use Log;
+use Conf;
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
 my %session_hard_attributes = ('id_session' => 1, 

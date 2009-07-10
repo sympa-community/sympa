@@ -1,8 +1,11 @@
 package Marc;
-use Carp;
-use vars qw($VERSION $AUTOLOAD);
+
 use strict;
-$VERSION = "4.3";
+
+use Carp;
+
+our $AUTOLOAD;
+our $VERSION = "4.3";
 
 ##------------------------------------------------------------------------##
 ## Constructor

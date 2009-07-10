@@ -21,14 +21,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-use lib '--modulesdir--/lib';
+use lib '--modulesdir--';
 use wwslib;
+use Sympa::Constants;
 
 use List;
 use Log;
 
 ## Load sympa config
-&Conf::load('--CONFIG--') || die 'config_error';
+&Conf::load(Sympa::Constants::CONFIG) || die 'config_error';
 
 chdir $Conf::Conf{'home'};
 

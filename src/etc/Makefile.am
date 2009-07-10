@@ -35,9 +35,15 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      global_task_models/purge_tables.daily.task \
 		      global_task_models/purge_user_table.monthly.task \
 		      charset.conf topics.conf nrcpt_by_domain.conf \
-		      ldap_alias_entry.tt2 ldap_alias_manager.conf edit_list.conf \
-		      create_list.conf crawlers_detection.conf auth.conf \
-		      ca-bundle.crt mhonarc-ressources.tt2 list_aliases.tt2 \
+		      ldap_alias_entry.tt2 \
+		      ldap_alias_manager.conf \
+		      edit_list.conf \
+		      create_list.conf \
+		      crawlers_detection.conf \
+		      auth.conf \
+		      ca-bundle.crt \
+		      mhonarc-ressources.tt2 \
+		      list_aliases.tt2 \
 		      create_list_templates/discussion_list/comment.tt2 \
 		      create_list_templates/discussion_list/config.tt2 \
 		      create_list_templates/hotline/comment.tt2 \
@@ -144,7 +150,9 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/visibility.noconceal \
 		      scenari/visibility.secret
 
-EXTRA_DIST = $(nobase_default_DATA)
+EXTRA_DIST = $(nobase_default_DATA) list_aliases.tt2.in
+
+CLEANFILES = list_aliases.tt2
 
 DEFAULT_SCENARIOS = add.owner \
 		    d_edit.owner \
@@ -160,9 +168,13 @@ DEFAULT_SCENARIOS = add.owner \
 		    unsubscribe.open \
 		    visibility.conceal
 
+list_aliases.tt2: Makefile list_aliases.tt2.in
+	rm -f $@
+	sed \
+		-e 's|--libexecdir--|$(libexecdir)|' \
+		< $(srcdir)/$@.in > $@
+
 install-data-hook:
-	sed -e 's|--libexecdir--|$(libexecdir)|' \
-		$(DESTDIR)$(defaultdir)/list_aliases.tt2
 	cd  $(DESTDIR)$(defaultdir)/scenari; \
 	for file in $(DEFAULT_SCENARIOS); do \
 		ln -sf $$file `echo $$file | sed -e 's/\.[^.]\+$$/.default/'`; \

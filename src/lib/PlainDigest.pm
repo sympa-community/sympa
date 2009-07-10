@@ -62,13 +62,15 @@
  
  package PlainDigest;
 
- @ISA = qw(MIME::Entity);
  use Mail::Internet;
  use Mail::Address;
  use MIME::Parser;
  use Text::Wrap;
  use MIME::WordDecoder;
+
  use Language;
+
+ our @ISA = qw(MIME::Entity);
  
  sub plain_body_as_string {
  
@@ -341,20 +343,4 @@
   return 1;
  }
 
-
- package HTML::myFormatText;
- 
- # This is a subclass of the HTML::FormatText object. 
- # This subclassing is done to allow internationalisation of some strings
- 
- @ISA = qw(HTML::FormatText);
-     
- use Language;
- use strict;
-
- sub img_start   {
-  my($self,$node) = @_;
-  my $alt = $node->attr('alt');
-  $self->out(  defined($alt) ? sprintf(gettext("[ Image%s ]"), ": " . $alt) : sprintf(gettext("[Image%s]"),""));
- }
-
+1;

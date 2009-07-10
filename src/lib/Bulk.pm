@@ -20,44 +20,37 @@
 package Bulk;
 
 use strict;
-use Datasource;
-use SQLSource qw(create_db %date_format);
-use Lock;
-use Task;
-require Fetch;
-require Exporter;
-require Encode;
-use tools;
-use tt2;
-use Time::HiRes qw(time);
 
-my @ISA = qw(Exporter);
-
+use Encode;
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
-
-
-
 use Carp;
-
 use IO::Scalar;
 use Storable;
 use Mail::Header;
-use Language;
-use Log;
-use Conf;
-use mail;
-use Ldap;
+use Time::HiRes qw(time);
 use Time::Local;
 use MIME::Entity;
 use MIME::EncWords;
 use MIME::WordDecoder;
 use MIME::Parser;
 use MIME::Base64;
-use Message;
-use List;
 use Term::ProgressBar;
 use constant MAX => 100_000;
 
+use Datasource;
+use SQLSource qw(create_db %date_format);
+use Lock;
+use Task;
+use Fetch;
+use tools;
+use tt2;
+use Language;
+use Log;
+use Conf;
+use mail;
+use Ldap;
+use Message;
+use List;
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);

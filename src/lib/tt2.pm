@@ -25,13 +25,10 @@ package tt2;
 
 use strict;
 
-use Exporter;
-our @ISA = ('Exporter');
-our @EXPORT = qw//;
-
-use Template;
 use CGI::Util;
 use MIME::EncWords; 
+
+use Template;
 use Log;
 use Language;
 use Sympa::Constants;

@@ -23,15 +23,13 @@
 package SharedDocument;
 
 use strict;
-require Exporter;
-use tools;
-my @ISA = qw(Exporter);
-my @EXPORT = qw();
 
 use Carp;
+use POSIX;
+
+use tools;
 use List;
 use Log;
-use POSIX;
 
 ## Creates a new object
 sub new {
@@ -476,6 +474,4 @@ sub check_access_control {
     return 1;
 }
 
-
-## Packages must return true.
 1;

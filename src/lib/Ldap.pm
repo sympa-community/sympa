@@ -23,9 +23,9 @@ package Ldap;
 
 use strict "vars";
 
-use Conf;
+use Exporter;
 
-require Exporter;
+use Conf;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Ldap);

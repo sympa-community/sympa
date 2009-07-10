@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
+SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa t
 
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \

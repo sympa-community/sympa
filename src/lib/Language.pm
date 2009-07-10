@@ -21,16 +21,18 @@
 
 package Language;
 
-require Exporter;
-use Carp;
-@ISA = qw(Exporter);
-@EXPORT = qw(&gettext gettext_strftime);
-
 use strict;
-use Log;
-use POSIX qw (setlocale);
+
+use Exporter;
+use Carp;
+use POSIX qw(setlocale strftime);
 use Locale::Messages qw (:locale_h :libintl_h !gettext);
+
+use Log;
 use Sympa::Constants;
+
+our @ISA = qw(Exporter);
+our @EXPORT = qw(&gettext gettext_strftime);
 
 BEGIN {
     ## Using the Pure Perl implementation of gettext
@@ -345,10 +347,10 @@ sub gettext {
 
 sub gettext_strftime {
     my $format = shift;
-    return &POSIX::strftime($format, @_) unless $current_charset;
+    return strftime($format, @_) unless $current_charset;
 
     $format = gettext($format);
-    my $datestr = &POSIX::strftime($format, @_);
+    my $datestr = strftime($format, @_);
     return $datestr;
 }
 

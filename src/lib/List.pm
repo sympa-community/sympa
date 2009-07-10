@@ -21,24 +21,26 @@
 package List;
 
 use strict;
-use POSIX;
+
+use POSIX qw(strftime);
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
+use Encode;
+
 use Datasource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
 use Lock;
 use Task;
 use Scenario;
-require Fetch;
-require Exporter;
-require Encode;
+use Fetch;
+use Exporter;
 use tt2;
 use Sympa::Constants;
-require (Sympa::Constants::MODULEDIR.'/tools.pm');
+use tools;
 
-my @ISA = qw(Exporter);
-my @EXPORT = qw(%list_of_lists);
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%list_of_lists);
 
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 
 =head1 CONSTRUCTOR
 
@@ -2792,7 +2794,7 @@ sub send_msg_digest {
 	$msg->{'plain_body'} = $mail->PlainDigest::plain_body_as_string();
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
-	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
+	$msg->{'month'} = strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} = &tools::clean_msg_id($mail->head->get('Message-Id'));
 	
 	## Clean up Message-ID
@@ -9069,7 +9071,7 @@ sub store_digest {
     if ($newfile) {
 	## create header
 	printf OUT "\nThis digest for list has been created on %s\n\n",
-      POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
+      strftime("%a %b %e %H:%M:%S %Y", @now);
 	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
 	printf OUT "\n%s\n\n", &tools::get_separator();
 
@@ -11485,56 +11487,4 @@ sub get_list_id {
 
 ###### END of the List package ######
 
-## This package handles Sympa virtual robots
-## It should :
-##   * provide access to global conf parameters,
-##   * deliver the list of lists
-##   * determine the current robot, given a host
-package Robot;
-
-use Conf;
-
-## Constructor of a Robot instance
-sub new {
-    my($pkg, $name) = @_;
-
-    my $robot = {'name' => $name};
-    &Log::do_log('debug2', '');
-    
-    unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-	&Log::do_log('err',"Unknown robot '$name'");
-	return undef;
-    }
-
-    ## The default robot
-    if ($name eq $Conf::Conf{'host'}) {
-	$robot->{'home'} = $Conf::Conf{'home'};
-    }else {
-	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;
-	unless (-d $robot->{'home'}) {
-	    &Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
-	    return undef;
-	}
-    }
-
-    ## Initialize internal list cache
-    undef %list_cache;
-
-    # create a new Robot object
-    bless $robot, $pkg;
-
-    return $robot;
-}
-
-## load all lists belonging to this robot
-sub get_lists {
-    my $self = shift;
-
-    return &List::get_lists($self->{'name'});
-}
-
-
-###### END of the Robot package ######
-
-## Packages must return true.
 1;

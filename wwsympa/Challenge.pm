@@ -21,22 +21,18 @@
 
 package Challenge;
 
-use Exporter;
-@ISA = ('Exporter');
-@EXPORT = ();
-
+use strict;
+no strict "vars";
 
 use Digest::MD5;
 use POSIX;
 use CGI::Cookie;
-use Log;
-use Conf;
-use SympaSession;
 use Time::Local;
 use Text::Wrap;
 
-use strict ;
-
+use Log;
+use Conf;
+use SympaSession;
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
 my %challenge_hard_attributes = ('id_challenge' => 1, 'date' => 1, 'robot'  => 1,'email' => 1, 'list' => 1);
@@ -61,7 +57,7 @@ sub create {
     }
 
     $challenge->{'id_challenge'} = &get_random();
-    $challenge->{'email'} = $email
+    $challenge->{'email'} = $email;
     $challenge->{'date'} = time;
     $challenge->{'robot'} = $robot; 
     $challenge->{'data'} = $context;
@@ -107,7 +103,7 @@ sub load {
     unless ($challenge) {
 	return 'not_found';
     }
-    my $challenge_datas
+    my $challenge_datas;
 
     my %datas= &tools::string_2_hash($challenge->{'data'});
     foreach my $key (keys %datas) {$challenge_datas->{$key} = $datas{$key};} 

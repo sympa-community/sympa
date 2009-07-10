@@ -1,10 +1,14 @@
 package Marc::Search;
-use Marc;
-use File::Find;
+
 use strict;
-use vars qw($VERSION $AUTOLOAD @MSGFILES @ISA);
-@ISA     = qw(Marc);
-$VERSION = "4.3";
+
+use File::Find;
+
+use Marc;
+
+our @ISA     = qw(Marc);
+our $VERSION = "4.3";
+our ($AUTOLOAD, @MSGFILES);
 
 ##------------------------------------------------------------------------##
 ## Constructor
@@ -411,4 +415,5 @@ sub match_this
   die "bad pattern: $@" if $@;
   return $function;
 }
+
 1;

@@ -22,16 +22,13 @@
 
 package Auth;
 
-use Exporter;
-our @ISA = ('Exporter');
-our @EXPORT = ();
+use Digest::MD5;
 
 use Language;
 use Log;
 use Conf;
 use List;
 use report;
-use Digest::MD5;
 
 ## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
 sub password_fingerprint{
@@ -491,5 +488,3 @@ sub get_one_time_ticket {
 }
     
 1;
-
-

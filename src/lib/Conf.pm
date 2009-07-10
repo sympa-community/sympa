@@ -25,6 +25,9 @@ package Conf;
 
 use strict "vars";
 
+use Exporter;
+use Carp;
+
 use List;
 use Log;
 use Language;
@@ -33,12 +36,8 @@ use confdef;
 use tools;
 use Sympa::Constants;
 
-require Exporter;
-use Carp;
-
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
-
 
 sub DAEMON_MESSAGE {1};
 sub DAEMON_COMMAND {2};

@@ -26,9 +26,10 @@ use wwslib;
 use Conf;
 use Language;
 require "tt2.pl";
+use Sympa::Constants;
 
-$wwsympa_conf_file = '--WWSCONFIG--';
-$sympa_conf_file = '--CONFIG--';
+$wwsympa_conf_file = Sympa::Constants::WWSCONFIG;
+$sympa_conf_file = Sympa::Constants::CONFIG;
 
 use List;
 use Log;
@@ -38,7 +39,7 @@ my %options;
 $| = 1;
 
 ## Check UID
-#unless (getlogin() eq '--USER--') {
+#unless (getlogin() eq Sympa::Constants::USER) {
 #    print "You should run this script as user \"sympa\", ignore ? (y/CR)";
 #    my $s = <STDIN>;
 #    die unless ($s =~ /^y$/i);
@@ -220,8 +221,8 @@ foreach my $tpl (@templates) {
 	    next;
 	}
 	unless (&tools::set_file_rights(file => $dest_path,
-					user => '--USER--',
-					group => '--GROUP--',
+					user => Sympa::Constants::USER,
+					group => Sympa::Constants::GROUP,
 					mode => 0755,
 					))
 	{
@@ -273,8 +274,8 @@ sub convert {
     printf "Template file $in_file has been converted to $out_file\n";
     
     unless (&tools::set_file_rights(file => $out_file,
-				    user => '--USER--',
-				    group => '--GROUP--',
+				    user => Sympa::Constants::USER,
+				    group => Sympa::Constants::GROUP
 				    ))
     {
 	&do_log('err','Unable to set rights on %s',$Conf{'db_name'});

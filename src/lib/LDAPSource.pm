@@ -23,18 +23,19 @@
 package LDAPSource;
 
 use strict;
-require Exporter;
-use tools;
-use tt2;
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch ping quote);
 
+use Exporter;
 use Carp;
 
+use tools;
+use tt2;
 use Conf;
 use Log;
 use List;
+
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%date_format);
+our @EXPORT_OK = qw(connect query disconnect fetch ping quote);
 
 
 ############################################################

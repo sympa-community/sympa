@@ -17,8 +17,6 @@
 
 $ENV{'PATH'} = '';
 
-my $SYMPA_CONF = '--CONFIG--';
-
 ## Load Sympa.conf
 use strict;
 use lib '--modulesdir';
@@ -26,12 +24,13 @@ use Conf;
 use POSIX;
 require tools;
 require tt2;
+use Sympa::Constants;
 
 use Net::LDAP;
 use Net::LDAPS;
 
-unless (Conf::load($SYMPA_CONF)) {
-   print gettext("The configuration file $SYMPA_CONF contains errors.\n");
+unless (Conf::load(Sympa::Constants::CONFIG)) {
+   print gettext("The configuration file contains errors.\n");
    exit(1);
 }
 
@@ -82,7 +81,7 @@ my @aliases ;
 
 my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
                         $Conf{'etc'},
-                        '--ETCBINDIR--'];
+                        Sympa::Constants::DEFAULTDIR];
 
 my $aliases_dump;
 &tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);

@@ -1,20 +1,26 @@
 man8_MANS = archived.8 bounced.8 alias_manager.8 sympa.8 
 
-EXTRA_DIST = archived.pod bounced.pod alias_manager.pod sympa.pod
+EXTRA_DIST = archived.pod.in bounced.pod.in alias_manager.pod.in sympa.pod
 
-CLEANFILES = $(man8_MANS)
+CLEANFILES = $(man8_MANS) archived.pod bounced.pod alias_manager.pod
 
 .pod.8:
 	rm -f $@
 	pod2man --section=8 --center="sympa $(VERSION)" --lax --release="$(VERSION)" $< $@
 
-install-data-hook:
+archived.pod bounced.pod alias_manager.pod: Makefile
+	rm -f $@
 	sed \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--libexecdir--|$(libexecdir)|' \
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
 		-e 's|--defaultdir--|$(defaultdir)|' \
-		-e 's|--expldir--|$(expldir)|' \
 		-e 's|--spooldir--|$(spooldir)|' \
 		-e 's|--docdir--|$(docdir)|' \
-		$(addprefix $(DESTDIR)$(man8dir)/, $(man8_MANS))
+		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
+		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
+		< $(srcdir)/$@.in > $@
+
+archived.pod: $(srcdir)/archived.pod.in
+bounced.pod: $(srcdir)/bounced.pod.in
+alias_manager.pod: $(srcdir)/alias_manager.pod.in

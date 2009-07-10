@@ -23,16 +23,13 @@
 package Task;
 
 use strict;
-require Exporter;
-use tools;
-my @ISA = qw(Exporter);
-my @EXPORT = qw();
 
 use Carp;
 
 use List;
 use Conf;
 use Log;
+use tools;
 
 my @task_list;
 my %task_by_list;

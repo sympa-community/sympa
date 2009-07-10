@@ -22,15 +22,13 @@
 package Scenario;
 
 use strict;
-require Exporter;
-use tools;
-my @ISA = qw(Exporter);
-my @EXPORT = qw();
 
+use Net::Netmask;
+
+use tools;
 use List;
 use Log;
 use Conf;
-use Net::Netmask;
 use Sympa::Constants;
 
 my %all_scenarios;
@@ -1200,6 +1198,4 @@ sub dump_all_scenarios {
     close TMP;
 }
 
-
-#### Module should return 1 #####
-return 1;
+1;
