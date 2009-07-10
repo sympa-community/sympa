@@ -1011,20 +1011,6 @@ a.actionMenuLinksInactive:hover {
                                   padding: 0px 10px 0px 10px;
                                   }
 
-ul.listenum li a.actionMenuLinks {
-                                   background: [% color_8 %];
-                                   color: [% color_9 %];
-                                   font-size:1.1em;
-                                   padding:0.2em 5px!important;
-                                   }
-
-ul.listenum li a.actionMenuLinks:hover {
-                                         background: [% color_9 %];
-                                         color: [% color_8 %];
-                                         border: 1px solid [% color_9 %];
-                                         padding:0.2em 5px!important;
-                                         }
-
 #actionnuLinksInactive {
                          border: 0px solid [% color_2 %];
                          text-decoration: none;
@@ -1343,6 +1329,12 @@ h7 strong {
                                   color:[% color_5 %]!important;
                                   }
 
+p.listenum {
+             margin: 0 0 0.5em 1.5em;
+	     padding:0.3em 0 0 0.5em!important;	
+ 	     font-size:0.9em;
+             }
+
 ul.listenum {
               list-style: none; margin: 0 0 0 1em
               }
@@ -1351,10 +1343,47 @@ ul.listenum li {
                  padding : 4px;
                  }
  
-ul.listenum span { 
-                   display: block;
-                   margin-top: 0.4em;
-                   }
+ul.listenum li a.actionMenuLinks {
+                                   background: [% color_8 %];
+                                   color: [% color_9 %];
+                                   font-size:1.1em;
+                                   padding:0em 0.4em!important;
+                                   }
+
+ul.listenum li a.actionMenuLinks:hover {
+                                         background: [% color_9 %];
+                                         color:[% color_8 %];
+                                         border: 1px solid [% color_9 %];
+                                         padding:0em 0.4em!important;
+                                         }
+div.admin_cmd {
+		float:left;
+		margin: 0em 0.3em 0.1em 0;
+		padding: 0 0.3em;
+                background: [% color_4 %];
+                border: 1px solid [% color_4 %];
+                -moz-border-radius:6px;
+                -webkit-border-radius:6px;
+                -KHTML-border-radius:6px;
+        	-icab-border-radius:6px;
+	        border-radius:6px;
+                }
+
+div.admin_cmd a {
+   	          color: [% color_5 %];
+ 	          font-size:0.7em!important;
+		  font-weight:bold;
+                  border: none;
+                  }
+
+div.admin_cmd a:hover {
+   	                color: [% color_4 %];
+                        border: none;
+                        }
+
+div.admin_cmd:hover {
+                      background: [% color_5 %];
+                      }
 
 ul li.menuLinksCurrentPage a {
 			       color:[% color_4 %]!important;
@@ -1373,7 +1402,7 @@ ul.calendar li {
                  list-style: none; 
                  display: inline;
                  padding: 0px 1px 0px 2px;
-		 margin-bottom:0.1em;
+		 line-height: 2em;
                  font-size: 1em;
                  text-decoration: none;
                  border: 1px solid [% color_12 %];
@@ -1385,16 +1414,24 @@ ul.calendar li {
                  }
 
 ul li.calendarLinks {
-                      background: [% color_5 %];
-                      color: [% color_4 %];
                       border: 1px solid [% color_4 %];
+                      background: [% color_5 %];
                       }
+
+ul li.calendarLinks a {
+                        color: [% color_4 %];
+                        border: none;
+                        }
 
 ul li.calendarLinks:hover {
                             background: [% color_4 %];
-                            color: [% color_5 %]; 
                             border: 1px solid [% color_4 %];
                             }
+
+ul li.calendarLinks a:hover {
+                            color: [% color_5 %]!important;                         
+                            }
+
 
 ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage:hover {
@@ -1412,13 +1449,20 @@ ul li.calendarLinksCurrentPage:hover,
 ul li.calendarLinksCurrentPage a:hover  {
                                           background: [% color_5 %];
                                           color: [% color_4 %]!important; 
-					  border-bottom:1px solid [% color_4 %]!important; 
+					  border-bottom:1px solid [% color_4 %]!important;
                                           }
 
 ul li.calendarLinksInactive {
-                             background: [% color_12 %];
-                             color: [% color_5 %]; 
-			     }
+                              background: #eee;
+	                      border: 1px solid #888;
+                              color: #888; 
+			      }
+
+ul li.calendarYear {
+                     background: [% color_12 %];
+	             border: 1px solid [% color_12 %];
+                     color: [% color_5 %]; 
+		     }
 
 a img {
         border: 0px;
