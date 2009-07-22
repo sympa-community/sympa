@@ -52,8 +52,8 @@ encryption.
 %build
 ./configure \
     --prefix=%{_prefix} \
+    --libdir=%{_libdir} \
     --sysconfdir=%{_sysconfdir} \
-    --confdir=%{_confdir} \
     --localstatedir=%{_localstatedir}
 make
 
@@ -84,8 +84,12 @@ fi
 %attr(-,sympa,sympa) %{_localstatedir}/lib/sympa
 %attr(-,sympa,sympa) %{_localstatedir}/spool/sympa
 %{_sbindir}/*
+%{_libexecdir}/*
 %{_libdir}/sympa
 %{_mandir}/man8/*
 %{_datadir}/sympa
 %{_datadir}/locale/*/*/*
-%config(noreplace) %{_confdir}/sympa.conf
+%config(noreplace) %{_sysconfdir}/sympa.conf
+%config(noreplace) %{_sysconfdir}/wwsympa.conf
+%config(noreplace) %{_sysconfdir}/sympa
+%{_initrddir}/sympa

@@ -69,12 +69,12 @@ else
     mailtemplatedir=$defaultdir/mail_tt2
     webtemplatedir=$defaultdir/web_tt2
     execcgidir=$libdir/sympa/cgi
-    expldir=$localstatedir/list_data
-    spooldir=$localstatedir/spool
-    staticdir=$localstatedir/static_content
-    arcdir=$localstatedir/arc
-    bouncedir=$localstatedir/bounce
-    localedir=$defaultdir/locale
+    expldir=$localstatedir/lib/sympa
+    staticdir=$localstatedir/lib/sympa/static_content
+    spooldir=$localstatedir/spool/sympa
+    arcdir=$localstatedir/lib/sympa/arc
+    bouncedir=$localstatedir/lib/sympa/bounce
+    localedir=$datadir/sympa/locale
     confdir=$sysconfdir
 fi
 

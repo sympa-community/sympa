@@ -139,47 +139,54 @@ our @params = (
     },
     {
         name    => 'queuedistribute',
-        default => 'undef,',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queueautomatic',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/',
+        query   => 'Automatic list creation spool',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuedigest',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/moderation',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuemod',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/moderation',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuetopic',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/topic',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queueauth',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/auth',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queueoutgoing',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/outgoing',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuetask',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/task',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuesubscribe',
-        default => 'undef',
+        default => Sympa::Constants::SPOOLDIR . '/subscribe',
+        query   => '',
 	file    => 'sympa.conf'
     },
     {
@@ -187,6 +194,7 @@ our @params = (
         default => 'http://domain.tld',
         query   => 'URL to a virtual host.',
 	vhost   => '1',
+        edit    => '1',
         file    => 'sympa.conf',
     },	      
     {
@@ -265,6 +273,7 @@ our @params = (
         name    => 'domain',
         default => 'domain.tld',
         query   => 'Main robot hostname',
+        edit    => '1',
         file    => 'sympa.conf',
     },
     {
@@ -281,6 +290,7 @@ our @params = (
         default => 'sympa',
         query   => 'Local part of sympa email adresse',
 	vhost   => '1',
+        edit    => '1',
         file    => 'sympa.conf',
         advice  => 'Effective address will be \[EMAIL\]@\[HOST\]',
     },
@@ -380,7 +390,6 @@ our @params = (
         default => '1',
         query   => 'the number of seconds a bulk sleeps between starting a new loop if it didn\'t find a message to send.',
         file    => 'sympa.conf',
-        edit    => '1',
         advice  => 'Keep it small if you want your server to be reactive.',
     },
     {
@@ -861,7 +870,6 @@ our @params = (
     },
     {
         name    => 'tmpdir',
-        default => 'undef',
     },
     {
         name    => 'sleep',
