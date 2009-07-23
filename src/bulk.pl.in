@@ -103,7 +103,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
-      ioctl(TTY, $TIOCNOTTY, 0);
+#      ioctl(TTY, &TIOCNOTTY, 0);
       close(TTY);
    }
    setpgrp(0, 0);
@@ -150,13 +150,14 @@ do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
-$end = 0;
+my $end = 0;
 
 my $opensmtp = 0 ;
 my $fh = 'fh0000000000';	## File handle for the stream.
 
 my $messagekey;       # the key of the current message in the message_table   
 my $messageasstring_init;  # the current message as a string
+my $messageasstring;  # the transformed message.
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = time();
@@ -246,7 +247,7 @@ while (!$end) {
 	    
 	    foreach $rcpt (@rcpts) {
 		
-		$return_path = $rcpt;
+		my $return_path = $rcpt;
 		$return_path =~ s/\@/\=\=a\=\=/; 
 		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa)
 
@@ -261,7 +262,7 @@ while (!$end) {
 			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
 		    }
 
-		    my $messageasstring = $entity->as_string;
+		    $messageasstring = $entity->as_string;
 		}
 		
 		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
