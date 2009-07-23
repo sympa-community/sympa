@@ -4889,43 +4889,61 @@ sub do_subrequest {
  sub do_signoff {
      &wwslog('info', 'do_signoff');
 
-     unless ($param->{'user'}{'email'}) {
+     my $authenticated_email_address;
+
+     unless ($authenticated_email_address) {
 	 unless ($in{'email'}) {
 	     return 'sigrequest';
 	 }
 
-	 ## Perform login first
-	 if ($in{'passwd'}) {
-	     $in{'previous_action'} = 'signoff';
-	     $in{'previous_list'} = $param->{'list'};
-	     return 'login';
+	 if ($in{'fingerprint'}) {
+
+	     unless(&tools::get_fingerprint($in{'email'}, $in{'fingerprint'})){
+		 &report::reject_report_web('user','cannot_do_signoff');
+		 &wwslog('err','do_signoff: failed to unsubscribe user %s', $in{'email'});
+		 return undef;
+	     }
+
+	     ## We don't set $param->{'user'}{'email'} because we don't want the user to be authenticated 
+	     ## to prevent the cookie from being set
+	     $authenticated_email_address = $in{'email'};
+
+	 }else {
+	     
+	     ## Perform login first
+	     if ($in{'passwd'}) {
+		 $in{'previous_action'} = 'signoff';
+		 $in{'previous_list'} = $param->{'list'};
+		 return 'login';
+	     }
+	     
+	     if ( &List::is_user_db($in{'email'}) ) {
+		 &report::reject_report_web('user','no_user',{},$param->{'action'});
+		 &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
+		 &web_db_log({'target_email' => $in{'email'},
+			      'status' => 'error',
+			      'error_type' => 'authentication'});
+		 return undef;
+	     }
+	     
+	     ## No passwd
+	     &init_passwd($in{'email'}, {'lang' => $param->{'lang'} });
+	     
+	     $param->{'user'}{'email'} = $in{'email'};
+	     $authenticated_email_address = $in{'email'};
 	 }
-
-	 if ( &List::is_user_db($in{'email'}) ) {
-	     &report::reject_report_web('user','no_user',{},$param->{'action'});
-	     &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
-	     &web_db_log({'target_email' => $in{'email'},
-			  'status' => 'error',
-			  'error_type' => 'authentication'});
-	     return undef;
-	 }
-
-	 ## No passwd
-	 &init_passwd($in{'email'}, {'lang' => $param->{'lang'} });
-
-	 $param->{'user'}{'email'} = $in{'email'};
      }
 
-     unless ($list->is_user($param->{'user'}{'email'})) {
+     unless ($list->is_user($authenticated_email_address)) {
 	 &report::reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
-	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
+	 &wwslog('info','do_signoff: %s not subscribed to %s',$authenticated_email_address, $param->{'list'} );
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'not_subscriber'});
 	 return undef;
      }
 
      my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-					  {'sender' => $param->{'user'}{'email'},
+					  {'sender' => $authenticated_email_address,
 					   'remote_host' => $param->{'remote_host'},
 					   'remote_addr' => $param->{'remote_addr'}});
      my $sig_is;
@@ -4940,13 +4958,13 @@ sub do_subrequest {
      if ($sig_is =~ /reject/) {
 	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
 	 &wwslog('info', 'do_signoff: %s may not signoff from %s'
-		 , $param->{'user'}{'email'}, $param->{'list'});
+		 , $authenticated_email_address, $param->{'list'});
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'authorization'});
 	 return undef;
      }elsif ($sig_is =~ /owner/) {
-	 unless ($list->send_notify_to_owner('sigrequest',{'who' => $param->{'user'}{'email'},
-							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'del')})) {
+	 unless ($list->send_notify_to_owner('sigrequest',{'who' => $authenticated_email_address,
+							   'keyauth' => $list->compute_auth($authenticated_email_address, 'del')})) {
 	     &wwslog('notice',"Unable to send notify 'sigrequest' to $list->{'name'} list owner");
 	 }
 	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
@@ -4954,18 +4972,18 @@ sub do_subrequest {
 	 return undef;
      }else {
 	 if ($param->{'subscriber'}{'included'}) {
-	     unless ($list->update_user($param->{'user'}{'email'}, 
+	     unless ($list->update_user($authenticated_email_address, 
 					{'subscribed' => 0,
 					 'update_date' => time})) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
 		 &wwslog('info', 'do_signoff: update failed');
 		 &web_db_log({'status' => 'error',
 			      'error_type' => 'internal'});
 		 return undef;
 	     }
 	 }else {
-	     unless ($list->delete_user($param->{'user'}{'email'})) {
-		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     unless ($list->delete_user($authenticated_email_address)) {
+		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
 		 &wwslog('info', 'do_signoff: signoff failed');
 		 &web_db_log({'status' => 'error',
 			      'error_type' => 'internal'});
@@ -4975,7 +4993,7 @@ sub do_subrequest {
 	 }
 
 	 if ($sig_is =~ /notify/) {
-	     unless ($list->send_notify_to_owner('notice',{'who' => $param->{'user'}{'email'},
+	     unless ($list->send_notify_to_owner('notice',{'who' => $authenticated_email_address,
 					  'gecos' => '', 
 							   'command' => 'signoff'})) {
 		 &wwslog('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
@@ -4983,10 +5001,10 @@ sub do_subrequest {
 	 }
 
 	 ## perform which to update your_subscribtions cookie ;
-	 @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+	 @{$param->{'get_which'}} = &List::get_which($authenticated_email_address,$robot,'member') ; 
 
-	 unless ($list->send_file('bye', $param->{'user'}{'email'}, $robot, {})) {
-	     &wwslog('notice',"Unable to send template 'bye' to $param->{'user'}{'email'}");
+	 unless ($list->send_file('bye', $authenticated_email_address, $robot, {})) {
+	     &wwslog('notice',"Unable to send template 'bye' to $authenticated_email_address");
 	 }
      }
      &report::notice_report_web('performed',{},$param->{'action'});
@@ -15020,6 +15038,8 @@ sub do_compose_mail {
      
      &wwslog('info', 'do_send_mail');
 
+     # Get the sender mail
+     my $from = $param->{'user'}{'email'};
      my $to;
      # Send the message to the list or to the sender as clicking the send to the list or to me.
      # First if : send to the list
@@ -15045,9 +15065,6 @@ sub do_compose_mail {
 	     $to = $list->get_list_address();
 	 }
      }
-
-     # Take the sender mail
-     my $from = $param->{'user'}{'email'};
 
      # Send the mail to the sender. To test his message
      # Second if : send to the sender "send to me"
@@ -15101,18 +15118,18 @@ sub do_compose_mail {
 	 # Generate a newsletter from an HTML URL and send it to a list by the Web interface.
 	 # Else you must use parse routine of MIME::Lite::HTML and send of MIME::Lite.
 	 my $mailHTML = new MIME::Lite::HTML(
-					 {
-					     From => $from,
-					     To => $to,
-					     Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
-					     'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
-					     Subject => $in{'subject'},
-					     HTMLCharset => 'utf-8',
-					     TextCharset => 'utf-8',
-					     TextEncoding => '8bit',
-					     HTMLEncoding => '8bit',
-					     remove_jscript => '1', #delete the scripts in the html
-					 }
+					     {
+						 From => $from,
+						 To => $to,
+						 Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
+						 'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+						 Subject => $in{'subject'},
+						 HTMLCharset => 'utf-8',
+						 TextCharset => 'utf-8',
+						 TextEncoding => '8bit',
+						 HTMLEncoding => '8bit',
+						 remove_jscript => '1', #delete the scripts in the html
+					     }
 					     );
 	 my $pages_url;
 	 $pages_url = $in{'url'};

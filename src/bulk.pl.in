@@ -39,6 +39,8 @@ This script must be run along with sympa. It regularly checks the bulkmailer_tab
 
 use lib '--modulesdir--';
 
+use strict;
+
 use Conf;
 use Log;
 use Commands;
@@ -154,14 +156,16 @@ my $opensmtp = 0 ;
 my $fh = 'fh0000000000';	## File handle for the stream.
 
 my $messagekey;       # the key of the current message in the message_table   
-my $messageasstring;  # the current message as a string
+my $messageasstring_init;  # the current message as a string
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
+my $last_check_date = time();
 
 $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
 
 while (!$end) {
+    &List::init_list_cache();
     my $bulk;
 	
     unless ($main::options{'foreground'}) {
@@ -212,49 +216,109 @@ while (!$end) {
 	
 	## Go through the bulk_mailer table and process messages
     if ($bulk = Bulk::next()) {
-		if ($bulk->{'messagekey'} ne $messagekey) {
-			# current packet is no related to the same message as the previous packet
+	
+	if ($bulk->{'messagekey'} ne $messagekey) {
+	    # current packet is no related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
-			$messageasstring = &Bulk::messageasstring($bulk->{'messagekey'});
-			unless ( $messageasstring ) {
-				&do_log('err',"internal error : current packet 'messagekey= %s contain a ref to a null message",$bulk->{'messagekey'});
-			}
-		}
-		my @rcpts = split /,/,$bulk->{'receipients'};
-		if ($bulk->{'verp'}){   
-			foreach my $rcpt (@rcpts) {
-				$return_path = $rcpt;
-				$return_path =~ s/\@/\=\=a\=\=/; 
-				$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # VERP broken if no listname is provided
-				*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
-				print SMTP $messageasstring;
-				close SMTP;
-			}
+	    $messageasstring_init = &Bulk::messageasstring($bulk->{'messagekey'});
+	    unless ( $messageasstring_init ) {
+		&do_log('err',"internal error : current packet 'messagekey= %s contain a ref to a null message",$bulk->{'messagekey'});
+	    }
+	}
+	#--------------------------------------------------
+	#------------- BEGIN VERP AND MERGE ---------------
+        #--------------------------------------------------
+	my $data; #HASH which will contain the attributes of the subscriber
+	
+	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
+	$data->{'listname'} = $bulk->{'listname'};
+	$data->{'robot'} = $bulk->{'robot'};
+	$data->{'to'} = $bulk->{'receipients'};
+	$data->{'wwsympa_url'} = $Conf{'wwsympa_url'};
+	
+	my $rcpt; # It is the email of a subscriber, use it in the foreach
+	my @rcpts = split /,/,$bulk->{'receipients'}; # Contain all the subscribers
+	## Use an intermediate handler to encode to filesystem_encoding
+	my $user;
+	
+	#____ Test if use verp ______
+	if ($bulk->{'verp'}){
+	    
+	    foreach $rcpt (@rcpts) {
+		
+		$return_path = $rcpt;
+		$return_path =~ s/\@/\=\=a\=\=/; 
+		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa)
 
-		}else{
-			*SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
-			print SMTP $messageasstring;
-			close SMTP;
-		}
+		#____ Test if use merge ______
+		if (1==1) { #-------- it will be : if ($bulk->{'merge'}) { ------------#
+		    
+		    ### Parse an MIME::Entity message
+		    my $parser = new MIME::Parser;
+		    my $entity = $parser->parse_data($messageasstring_init); ## Retrouver la méthode qui correspond
+		    
+		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
+			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
+		    }
 
-		## Remove packet once it has been processed
-		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
-			&do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
-			return undef;
+		    my $messageasstring = $entity->as_string;
 		}
+		
+		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
+		# Message with customized data
+		print SMTP $messageasstring;
+		close SMTP;
+	    }
+	}else{
 
-		if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 1){
-			&do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date. Now sending VERP.', 
-				$bulk->{'messagekey'}, 
-				$bulk->{'listname'}, 
-				$bulk->{'robot'}, 
-				$bulk->{'priority_message'}, 
-				time() - $bulk->{'delivery_date'});
+	    #____ Test if use merge ______
+	    if ( 1==1 ) { #-------- it will be : if ($bulk->{'merge'}) { ------------#
+
+		foreach $rcpt (@rcpts) {
+		    ### Parse an MIME::Entity message
+		    my $parser = new MIME::Parser;
+		    my $entity = $parser->parse_data($messageasstring_init);
+
+		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
+			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
+		    }
+		    my $messageasstring = $entity->as_string;
+
+		    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \$rcpt, $bulk->{'robot'});
+		    # Message with customized data
+		    print SMTP $messageasstring;
+		    close SMTP;
 		}
-		$date_of_last_activity = time();
+	    }else{
+
+		*SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
+		# Initial message
+		print SMTP $messageasstring_init;
+		close SMTP;
+	    }
+	}
+	#--------------------------------------------------
+	#------------- END VERP AND MERGE -----------------
+        #--------------------------------------------------
+	
+	## Remove packet once it has been processed
+	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
+	    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+	    return undef;
+	}
+	
+	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 1){
+	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date. Now sending VERP.', 
+		    $bulk->{'messagekey'}, 
+		    $bulk->{'listname'}, 
+		    $bulk->{'robot'}, 
+		    $bulk->{'priority_message'}, 
+		    time() - $bulk->{'delivery_date'});
+	}
+	$date_of_last_activity = time();
     }else{
-		## Sleep for a while if bulk_mailer DB table is empty
-		sleep $Conf::Conf{'bulk_sleep'}; 
+	## Sleep for a while if bulk_mailer DB table is empty
+	sleep $Conf::Conf{'bulk_sleep'}; 
     }
     &mail::reaper;
 }

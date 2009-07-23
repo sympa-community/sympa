@@ -3147,57 +3147,65 @@ sub send_msg {
     my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
  
-    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
-	unless ($user->{'email'}) {
-	    &do_log('err','Skipping user with no email address in list %s', $name);
-	    next;
-	}
-	if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
-	    next;
-	} elsif ($user->{'reception'} eq 'notice') {
-	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_notice_verp, $user->{'email'}; 
-	    }else{
-		push @tabrcpt_notice, $user->{'email'}; 
+    if ( $message->{'msg'}->head->get('X-Sympa-Receipient') ) {
+
+	@tabrcpt = split /,/, $message->{'msg'}->head->get('X-Sympa-Receipient');
+	$message->{'msg'}->head->delete('X-Sympa-Receipient');
+
+    } else {
+	
+	for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+	    unless ($user->{'email'}) {
+		&do_log('err','Skipping user with no email address in list %s', $name);
+		next;
 	    }
-        } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
-	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_txt_verp, $user->{'email'};
-	    }else{
-		push @tabrcpt_txt, $user->{'email'};
-	    }
-        } elsif ($alternative and ($user->{'reception'} eq 'html')) {
-	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_html_verp, $user->{'email'};
-	    }else{
+	    if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
+		next;
+	    } elsif ($user->{'reception'} eq 'notice') {
+		if ($user->{'bounce_address'}) {
+		    push @tabrcpt_notice_verp, $user->{'email'}; 
+		}else{
+		    push @tabrcpt_notice, $user->{'email'}; 
+		}
+	    } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
+		if ($user->{'bounce_address'}) {
+		    push @tabrcpt_txt_verp, $user->{'email'};
+		}else{
+		    push @tabrcpt_txt, $user->{'email'};
+		}
+	    } elsif ($alternative and ($user->{'reception'} eq 'html')) {
 		if ($user->{'bounce_address'}) {
 		    push @tabrcpt_html_verp, $user->{'email'};
 		}else{
-		    push @tabrcpt_html, $user->{'email'};
+		    if ($user->{'bounce_address'}) {
+			push @tabrcpt_html_verp, $user->{'email'};
+		    }else{
+			push @tabrcpt_html, $user->{'email'};
+		    }
 		}
-	   }
-	} elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
-	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_url_verp, $user->{'email'};
+	    } elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+		if ($user->{'bounce_address'}) {
+		    push @tabrcpt_url_verp, $user->{'email'};
+		}else{
+		    push @tabrcpt_url, $user->{'email'};
+		}
+	    } elsif ($message->{'smime_crypted'} && 
+		     (! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
+		      ! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
+		## Missing User certificate
+		unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
+													 'sender' => $message->{'msg'}->head->get('From')},
+											      'auto_submitted' => 'auto-generated'})) {
+		    &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
+		}
 	    }else{
-		push @tabrcpt_url, $user->{'email'};
-	    }
-	} elsif ($message->{'smime_crypted'} && 
-		 (! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
-		  ! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
-	    ## Missing User certificate
-	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
-												     'sender' => $message->{'msg'}->head->get('From')},
-											  'auto_submitted' => 'auto-generated'})) {
-	    &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
-	    }
-	}else{
-	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_verp, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');
-	    }else{	    
-		push @tabrcpt, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');}
+		if ($user->{'bounce_address'}) {
+		    push @tabrcpt_verp, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');
+		}else{	    
+		    push @tabrcpt, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');}
 	    }	    
-       }    
+	}
+    }
 
     ## sa  return 0  = Pb  ?
     unless (@tabrcpt || @tabrcpt_notice || @tabrcpt_txt || @tabrcpt_html || @tabrcpt_url || @tabrcpt_verp || @tabrcpt_notice_verp || @tabrcpt_txt_verp || @tabrcpt_html_verp || @tabrcpt_url_verp) {
@@ -4762,75 +4770,116 @@ sub get_subscriber {
     my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
     
     ## Use session cache
-    if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email}) {
-	return $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email};
+    if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$self->{'name'}}{$email}) {
+	return $list_cache{'get_subscriber'}{$self->{'domain'}}{$self->{'name'}}{$email};
     }
+
+    my $options;
+    $options->{'email'} = $email;
+    $options->{'name'} = $self->{'name'};
+    $options->{'domain'} = $self->{'domain'};
+
+    my $user = &get_subscriber_no_object($options);
+
+    unless($user){
+	do_log('err','Unable to retrieve information from database for user %s', $email);
+	return undef;
+    }
+    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+    unless ($self->is_available_reception_mode($user->{'reception'}));
+    ## In case it was not set in the database
+    $user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');	
+
+    ## Set session cache
+    $list_cache{'get_subscriber'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
+
+    return $user;
+}
+
+######################################################################
+###  get_subscriber_no_object                                        #
+## Get details regarding a subscriber.                               #
+# IN:                                                                #
+#   - a single reference to a hash with the following keys:          #
+#     * email : the subscriber email                                 #
+#     * listname: the name of the list                               #
+#     * domain: the virtual host under which the list is installed.  #
+# OUT:                                                               #
+#   - undef if something went wrong.                                 #
+#   - a hash containing the user details otherwise                   #
+######################################################################
+
+sub get_subscriber_no_object {
+    my $options = shift;
+    &do_log('debug2', 'List::get_subscriber_no_object(%s, %s, %s)', $options->{'name'}, $options->{'email'}, $options->{'domain'});
+
+    my $name = $options->{'name'};
     
+    my $email = &tools::clean_email($options->{'email'});
+
+    my $statement;
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
+    
+    ## Use session cache
+    if (defined $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email}) {
+	return $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email};
+    }
+
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
     }
-    
     ## Additional subscriber fields
     my $additional;
     if ($Conf::Conf{'db_additional_subscriber_fields'}) {
 	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
-    
     $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
-      $date_field, 
-	$update_field, 
-	  $additional, 
-	    $dbh->quote($email), 
-	      $dbh->quote($name),
-		$dbh->quote($self->{'domain'});
+    $date_field, 
+    $update_field, 
+    $additional, 
+    $dbh->quote($email), 
+    $dbh->quote($name),
+    $dbh->quote($options->{'domain'});
     
     push @sth_stack, $sth;
-    
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
-    
     unless ($sth->execute) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
-    
     my $user = $sth->fetchrow_hashref('NAME_lc');
-    
     if (defined $user) {
+	
 	$user->{'reception'} ||= 'mail';
-	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	unless ($self->is_available_reception_mode($user->{'reception'}));
-	
 	$user->{'update_date'} ||= $user->{'date'};
-	
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');	
-	
-	do_log('debug2', 'List::get_subscriber custom_attribute  = (%s)', $user->{custom_attribute});
+	do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
 	if (defined $user->{custom_attribute}) {
 	    do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
 	    $user->{'custom_attribute'} = \%custom_attr ;
 	    do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
-	    	do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
+	    do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my @k = sort keys %custom_attr ;
 	    do_log('debug2', "keys custom_attribute  = @k");
 	}
 
     }
-    
+ 
     $sth->finish();
 
     $sth = pop @sth_stack;
     
     ## Set session cache
-    $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email} = $user;
-    
+    $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email} = $user;
+
     return $user;
 }
+
 ## Returns an array of all users in User table hash for a given user
 sub get_subscriber_by_bounce_address {
 

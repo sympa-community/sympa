@@ -154,6 +154,159 @@ sub messageasstring {
 
     return( MIME::Base64::decode($messageasstring->{'message'}) );
 }
+
+############################################################
+#  merge_msg                                               #
+############################################################
+#                                                          #
+#                                                          #
+#                                                          #
+#                                                          #
+#                                                          #
+#                                                          #
+############################################################
+sub merge_msg {
+
+    my $entity = shift;
+    my $rcpt = shift;
+    my $bulk = shift;
+    my $data = shift;
+
+    ## Test MIME::Entity
+    unless (defined $entity && ref($entity) eq 'MIME::Entity') {
+	&do_log('err', 'echec entity');
+	return undef;
+    }
+
+    my $body;
+    if(defined $entity->bodyhandle){
+	$body      = $entity->bodyhandle->as_string;
+    }
+    ## Get the Content-Type / Charset / Content-Transfer-encoding of a message
+    my $type      = $entity->mime_type;
+    my $charset   = unmime $entity->head->mime_attr('content-type.charset');
+    my $encoding  = unmime $entity->head->mime_encoding;
+
+    my $message_output;
+    my $IO;
+    
+    ## If Content-Type is a text/*
+    if($entity->mime_type =~ /^text/){
+	
+	if(defined $body){
+	    ## --------- Initial Charset to UTF-8 --------- ##
+	    unless($charset =~ /UTF-8/){
+		# Put the charset to UTF-8
+		Encode::from_to($body, $charset, 'UTF-8');
+	      }
+	    ## PARSAGE ##
+	    
+	    &merge_data('rcpt' => $rcpt,
+			'listname' => $bulk->{'listname'},
+			'robot' => $bulk->{'robot'},
+			'data' => $data,
+			'body' => $body,
+			'message_output' => \$message_output,
+			); 
+	    $body = $message_output;
+
+	    unless($charset =~ /UTF-8/){
+		# Put the charset to the initial
+		Encode::from_to($body, 'UTF-8',$charset);
+	      }
+	    
+	    # Write the new body in the entity
+	    unless($IO = $entity->bodyhandle->open("w") || die "open body: $!"){
+		&do_log('err', "Can't open Entity");
+		return undef;
+	    }
+	    unless($IO->print($body)){
+		&do_log('err', "Can't write in Entity");
+		return undef;
+	    }
+	    unless($IO->close || die "close I/O handle: $!"){
+		&do_log('err', "Can't close Entity");
+		return undef;
+	    }
+	}
+    }
+    
+    ##--- Recursive call of the method. ---##
+    ## Course on the different parts of the message at all levels. 
+    foreach my $part ($entity->parts) {
+	unless(&merge_msg($part, $rcpt, $bulk, $data)){
+	    &do_log('err', "Echec d'appel &merge_msg");
+	    return undef;
+	}  
+    }
+
+    return 1;
+
+}
+
+############################################################
+#  merge_data                                              #
+############################################################
+#  This function retrieves the customized data of the      #
+#  users then parse the message. It returns the message    #
+#  personalized to bulk.pl                                 #
+#  It uses the method &tt2::parse_tt2                      #
+#  It uses the method &List::get_subscriber_no_object      #
+#  It uses the method &tools::get_fingerprint              #
+#                                                          #
+# IN : - rcpt : the receipient email                       #
+#      - listname : the name of the list                   #
+#      - robot : the host                                  #
+#      - data : HASH with many data                        #
+#      - body : message with the TT2                       #
+#      - message_output : object, IO::Scalar               #
+#                                                          #
+# OUT : - message_output : customized message              #
+#     | undef                                              #
+#                                                          #
+############################################################ 
+sub merge_data {
+
+    my %params = @_;
+    my $rcpt = $params{'rcpt'},
+    my $listname = $params{'listname'},
+    my $robot = $params{'robot'},
+    my $data = $params{'data'},
+    my $body = $params{'body'},
+    my $message_output = $params{'message_output'},
+    
+    my $options;
+    $options->{'is_not_template'} = 1;
+    
+    my $user_details;
+    $user_details->{'email'} = $rcpt;
+    $user_details->{'name'} = $listname;
+    $user_details->{'domain'} = $robot;
+    
+    # get_subscriber_no_object() return the user's details with the custom attributes
+    my $user = &List::get_subscriber_no_object($user_details);
+
+    $user->{'friendly_date'} = &POSIX::strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
+
+    $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
+    my $url = $data->{'wwsympa_url'};
+    
+    $data = {
+	'user' => $user,
+	'robot' => $robot,
+	'listname' => $listname,
+	'url' => $url, 
+    };
+
+    # Parse the TT2 in the message : replace the tags and the parameters by the corresponding values
+    unless (&tt2::parse_tt2($data,\$body, $message_output, '', $options)) {
+	&do_log('err','Unable to parse body : "%s"', \$body);
+	return undef;
+    }
+
+    return 1;
+}
+
 ## 
 sub store { 
     my %data = @_;
