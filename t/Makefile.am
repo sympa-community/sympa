@@ -1,5 +1,0 @@
-TESTS = modules.t
-
-TESTS_ENVIRONMENT = $(PERL)
-
-EXTRA_DIST = $(TESTS)
