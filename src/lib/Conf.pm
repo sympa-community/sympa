@@ -55,9 +55,11 @@ my %params =
 
 # valid virtual host parameters, keyed by parameter name
 my %valid_robot_key_words;
+my %optional_key_words;
 foreach my $hash(@confdef::params){
     $valid_robot_key_words{$hash->{'name'}} = 1 if ($hash->{'vhost'});
     $valid_robot_key_words{$hash->{'name'}} = 'db' if (defined($hash->{'db'}) and $hash->{'db'} ne 'none');
+    $optional_key_words{$hash->{'name'}} = 1 if ($hash->{'optional'});
 }
 
 my %old_params = (
@@ -438,7 +440,7 @@ sub load_robots {
 	printf STDERR "Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
 	return undef;
     }
-
+    my $exiting = 0 ;
     ## Set the defaults based on sympa.conf and wwsympa.conf first
     foreach my $key (keys %valid_robot_key_words) {
 	if(defined $wwsconf->{$key}){
@@ -446,9 +448,13 @@ sub load_robots {
 	}elsif(defined $Conf{$key}){
 	    $robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
 	}else{
-	    printf STDERR "Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf parameter.\n" ;
+	    unless ($optional_key_words{$key}){
+		printf STDERR "Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf files.\n" ;
+		$exiting = 1;
+	    }
 	}
     }
+    return undef unless ($exiting);
 
     foreach my $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
