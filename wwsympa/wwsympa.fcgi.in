@@ -4539,6 +4539,7 @@ sub check_custom_attribute {
 	 $param->{'user'}{$p} = $in{$p};
      }
 
+     &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
 		  'status' => 'success',
 	      });
