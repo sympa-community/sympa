@@ -81,7 +81,7 @@ nextstep:
 	@echo "#########################################################"
 	@echo "# If you are installing, you should check the INSTALL file"
 	@echo "# and run the installation wizard:"
-	@echo "# $(sbindir)/sympa.pl"
+	@echo "# $(sbindir)/sympa_wizard.pl"
 	@echo "#"
 	@echo "# If you are upgrading, you just need to run"
 	@echo "# $(sbindir)/sympa.pl --upgrade"
