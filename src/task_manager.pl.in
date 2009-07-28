@@ -1237,55 +1237,55 @@ sub purge_orphan_bounces {
     my($task, $context) = @_;
     
     do_log('info','purge_orphan_bounces()');
-
+    
     ## Hash {'listname' => 'bounced address' => 1}
     my %bounced_users;
     my $all_lists;
-
+    
     unless ($all_lists = &List::get_lists('*')) {
 	&do_log('notice','No list available');
 	return 1;
     }
-
-
+    
     foreach my $list (@$all_lists) {
-
+	
 	my $listname = $list->{'name'};
-
-	 ## first time: loading DB entries into %bounced_users
-	 for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
-	     my $user_id = $user_ref->{'email'};
-	     $bounced_users{$listname}{$user_id} = 1;
-	 }
-
+	
+	## first time: loading DB entries into %bounced_users
+	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
+	    my $user_id = $user_ref->{'email'};
+	    $bounced_users{$listname}{$user_id} = 1;
+	}
+	
 	my $bounce_dir = $list->get_bounce_dir();
-
-	 unless (-d $bounce_dir) {
-	     &do_log('notice', 'No bouncing subscribers in list %s', $listname);
-	     next;
-	 }
-
-	 ## then reading Bounce directory & compare with %bounced_users
-	 unless (opendir(BOUNCE,$bounce_dir)) {
-	     &do_log('err','Error while opening bounce directory %s',$bounce_dir);
-	     return undef;
-	 }
-
-	 ## Finally removing orphan files
-	 foreach my $bounce (readdir(BOUNCE)) {
-	     if ($bounce =~ /\@/){
-		 unless (defined($bounced_users{$listname}{$bounce})) {
-		     &do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
-		     unless (unlink($bounce_dir.'/'.$bounce)) {
-			 &do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
-		     }
-		 }
-	     }	    
-	 }
-
+	
+	unless (-d $bounce_dir) {
+	    &do_log('notice', 'No bouncing subscribers in list %s', $listname);
+	    next;
+	}
+	
+	## then reading Bounce directory & compare with %bounced_users
+	unless (opendir(BOUNCE,$bounce_dir)) {
+	    &do_log('err','Error while opening bounce directory %s',$bounce_dir);
+	    return undef;
+	}
+	
+	## Finally removing orphan files
+	foreach my $bounce (readdir(BOUNCE)) {
+	    if ($bounce =~ /\@/){
+		unless (defined($bounced_users{$listname}{$bounce})) {
+		    &do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
+		    unless (unlink($bounce_dir.'/'.$bounce)) {
+			&do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
+		    }
+		}
+	    }	    
+	}
+	
 	closedir BOUNCE;
-     }
- }
+    }
+    return 1;
+}
 
 
  sub expire_bounce {
@@ -1534,35 +1534,35 @@ sub purge_orphan_bounces {
 
  ## Subroutine for bouncers evaluation: 
  # give a score for each bouncing user
- sub eval_bouncers {
- #################       
-     my ($task, $context) = @_;
-
-     my $all_lists = &List::get_lists('*');
-     foreach my $list (@$all_lists) {
-
-	 my $listname = $list->{'name'};
-	 my $list_traffic = {};
-
-	 &do_log('info','eval_bouncers(%s)',$listname);
-
-	 ## Analizing file Msg-count and fill %$list_traffic
-	 unless (open(COUNT,$list->{'dir'}.'/msg_count')){
-	     &do_log('debug','** Could not open msg_count FILE for list %s',$listname);
-	     next;
-	 }    
-	 while (<COUNT>) {
-	     if ( /^(\w+)\s+(\d+)/) {
-		 my ($a, $b) = ($1, $2);
-		 $list_traffic->{$a} = $b;	
-	     }
-	 }    	
+sub eval_bouncers {
+    #################       
+    my ($task, $context) = @_;
+    
+    my $all_lists = &List::get_lists('*');
+    foreach my $list (@$all_lists) {
+	
+	my $listname = $list->{'name'};
+	my $list_traffic = {};
+	
+	&do_log('info','eval_bouncers(%s)',$listname);
+	
+	## Analizing file Msg-count and fill %$list_traffic
+	unless (open(COUNT,$list->{'dir'}.'/msg_count')){
+	    &do_log('debug','** Could not open msg_count FILE for list %s',$listname);
+	    next;
+	}    
+	while (<COUNT>) {
+	    if ( /^(\w+)\s+(\d+)/) {
+		my ($a, $b) = ($1, $2);
+		$list_traffic->{$a} = $b;	
+	    }
+	}    	
 	close(COUNT);
 	
 	#for each bouncing user
 	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
 	    my $score = &get_score($user_ref,$list_traffic) || 0;
-
+	    
 	    ## copying score into DataBase
 	    unless ($list->update_user($user_ref->{'email'},{'score' => $score }) ) {
 		&do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
@@ -1570,8 +1570,9 @@ sub purge_orphan_bounces {
 	    }
 	}
     }
+    return 1;
 }
-	    
+
 sub none {
 
     1;

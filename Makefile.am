@@ -41,14 +41,6 @@ installdir:
 		chown $(USER) $(DESTDIR)$$dir || /bin/true; \
 		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
 	done
-	@echo "Creating non-writable directories"
-	@for dir in create_list_templates mail_tt2 web_tt2 scenari \
-		task_models general_task_models; do \
-		if [ ! -d $(DESTDIR)$(sysconfdir)/sympa/$$dir ] ; then \
-			echo "Creating $(DESTDIR)$(sysconfdir)/sympa/$$dir"; \
-			install -d -m 755 $(DESTDIR)$(sysconfdir)/sympa/$$dir; \
-		fi \
-	done
 
 installconfig:
 	@echo "Installing basic configuration ..."
@@ -63,7 +55,7 @@ installconfig:
 			--create wwsympa.conf \
 			--target $(DESTDIR)$(confdir)/wwsympa.conf \
 			|| /bin/true; \
-	fi
+	fi; \
 	if [ ! -f $(DESTDIR)$(sysconfdir)/sympa/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir)/sympa; \
 		echo "# automatically created file" >> data_structure.version; \
