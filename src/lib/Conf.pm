@@ -454,7 +454,7 @@ sub load_robots {
 	    }
 	}
     }
-    return undef unless ($exiting);
+    return undef if ($exiting);
 
     foreach my $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
