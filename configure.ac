@@ -1,4 +1,4 @@
-# configure.in - Top-level configure.in for Sympa
+dev# configure.in - Top-level configure.in for Sympa
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -20,64 +20,73 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 AC_PREREQ(2.59)
-AC_INIT(sympa, 6.0b, sympa-authors@cru.fr)
+AC_INIT(sympa, 6.0b.2, sympa-authors@cru.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 AM_PO_SUBDIRS
 
 AC_PREFIX_DEFAULT(/home/sympa)
 
-# for upgrade, set default values to match previously used locations
-if test -f /etc/sympa.conf; then
-    # $prefix variable initialisation seems to be tricky
-    if test "$prefix" = "NONE"; then
-	prefix=$ac_default_prefix
-    fi
-
-    # standard variables
-    # check current value before re-assigning
-    if test "$sbindir" = '${exec_prefix}/sbin'; then
-	sbindir=$prefix/bin
-    fi
-    if test "$libexecdir" = '${exec_prefix}/libexec'; then
-	libexecdir=$prefix/bin
-    fi
-
-    # custom variables
-    initdir=/etc/rc.d/init.d
-    piddir=$prefix
-    lockdir=$localstatedir/lock/subsys
-    modulesdir=$prefix/bin
-    scriptdir=$prefix/bin
-    datadir=$prefix/default
-    defaultdir=$datadir
-    mailtemplatedir=$defaultdir/mail_tt2
-    webtemplatedir=$defaultdir/web_tt2
-    execcgidir=$prefix/bin
-    expldir=$prefix/expl
-    spooldir=$prefix/spool
-    staticdir=$prefix/static_content
-    arcdir=$prefix/arc
-    bouncedir=$prefix/bounce
-    localedir=$prefix/locale
-    confdir=/etc
-else
-    initdir=$sysconfdir/rc.d/init.d
-    piddir=$localstatedir/run
-    lockdir=$localstatedir/lock/subsys
-    modulesdir=$datadir/sympa/lib
-    scriptdir=$datadir/sympa/bin
-    defaultdir=$datadir/sympa/default
-    mailtemplatedir=$defaultdir/mail_tt2
-    webtemplatedir=$defaultdir/web_tt2
-    execcgidir=$libdir/sympa/cgi
-    expldir=$localstatedir/lib/sympa
-    staticdir=$localstatedir/lib/sympa/static_content
-    spooldir=$localstatedir/spool/sympa
-    arcdir=$localstatedir/lib/sympa/arc
-    bouncedir=$localstatedir/lib/sympa/bounce
-    localedir=$datadir/sympa/locale
-    confdir=$sysconfdir
+## first initialises parameters to the standard Sympa filesystem organization
+# $prefix variable initialisation seems to be tricky
+if test "$prefix" = "NONE"; then
+   prefix=$ac_default_prefix
 fi
+# standard variables
+# check current value before re-assigning
+if test "$sbindir" = '${exec_prefix}/sbin'; then
+   sbindir=$prefix/bin
+fi
+if test "$libexecdir" = '${exec_prefix}/libexec'; then
+   libexecdir=$prefix/bin
+fi
+
+# custom variables
+initdir=/etc/rc.d/init.d
+piddir=$prefix
+lockdir=$localstatedir/lock/subsys
+modulesdir=$prefix/bin
+scriptdir=$prefix/bin
+datadir=$prefix/default
+defaultdir=$datadir
+mailtemplatedir=$defaultdir/mail_tt2
+webtemplatedir=$defaultdir/web_tt2
+execcgidir=$prefix/bin
+expldir=$prefix/expl
+spooldir=$prefix/spool
+staticdir=$prefix/static_content
+arcdir=$prefix/arc
+bouncedir=$prefix/bounce
+localedir=$prefix/locale
+confdir=/etc
+
+## If installer wants to use the FHS standard, change 
+AC_ARG_ENABLE(
+	fhs,
+	AS_HELP_STRING(
+	[--enable-fhs],
+	[use standard FHS files and directories locations and naming (default is no)]
+	),
+	[
+	if test $enableval = 'yes';then
+		initdir=$sysconfdir/rc.d/init.d
+		piddir=$localstatedir/run
+		lockdir=$localstatedir/lock/subsys
+		modulesdir=$datadir/sympa/lib
+		scriptdir=$datadir/sympa/bin
+		defaultdir=$datadir/sympa/default
+		mailtemplatedir=$defaultdir/mail_tt2
+		webtemplatedir=$defaultdir/web_tt2
+		execcgidir=$libdir/sympa/cgi
+		expldir=$localstatedir/lib/sympa
+		staticdir=$localstatedir/lib/sympa/static_content
+		spooldir=$localstatedir/spool/sympa
+		arcdir=$localstatedir/lib/sympa/arc
+		bouncedir=$localstatedir/lib/sympa/bounce
+		localedir=$datadir/sympa/locale
+		confdir=$sysconfdir
+	fi
+	],
+)
 
 # substitute custom variables
 AC_SUBST(initdir)

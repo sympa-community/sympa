@@ -86,18 +86,47 @@ sub next {
     my $lock = &tools::get_lockname();
 
     my $order;
+    my $limit_oracle='';
+    my $limit_sybase='';
 	## Only the first record found is locked, thanks to the "LIMIT 1" clause
-    $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC LIMIT 1';
-    
-    my $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d",$dbh->quote($lock), time();
-
-    unless ($dbh->do($statement)) {
-	do_log('err','Unable to select and lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
-	return undef;
+    $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
+    if (lc($Conf::Conf{'db_type'}) eq 'mysql' || lc($Conf::Conf{'db_type'}) eq 'pg' || lc($Conf::Conf{'db_type'}) eq 'sqlite'){
+	$order.=' LIMIT 1';
+    }elsif (lc($Conf::Conf{'db_type'}) eq 'oracle'){
+	$limit_oracle = 'AND rownum<=1';
+    }elsif (lc($Conf::Conf{'db_type'}) eq 'sybase'){
+	$limit_sybase = 'TOP 1';
     }
 
+    my $statement;
+    # Select the most prioritary packet to lock.
+    $statement = sprintf "SELECT %s messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid FROM bulkmailer_table WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s %s", $limit_sybase, time(), $limit_oracle, $order;
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to select a packet to lock: "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    my $packet;
+    unless($packet = $sth->fetchrow_hashref('NAME_lc')){
+	return undef;
+    }
+    $sth->finish();
+
+    # Lock the packet previously selected.
+    $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s'",$dbh->quote($lock), $packet->{'messagekey'}, $packet->{'packetid'};
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
     # select the packet that has been locked previously
-    $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
+    $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, merge_bulkmailer as merge, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
 
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
@@ -108,7 +137,7 @@ sub next {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
-
+    
     my $result = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
     return $result;
@@ -320,8 +349,9 @@ sub store {
     my $priority_packet = $data{'priority_packet'};
     my $delivery_date = $data{'delivery_date'};
     my $verp  = $data{'verp'};
+    my $merge  = $data{'merge'};
     
-    &do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, priority_packet = %s,delivery_date= %s,verp = %s)',$from,$robot,$listname,$priority_message,$priority_packet,$delivery_date,$verp);
+    &do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, priority_packet = %s,delivery_date= %s,verp = %s, merge = %s)',$from,$robot,$listname,$priority_message,$priority_packet,$delivery_date,$verp,$merge);
 
     $dbh = &List::db_get_handler();
 
@@ -415,7 +445,7 @@ sub store {
 	    $sth->finish();
 	}
 	unless ($packet_already_exist) {
-	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s')", $dbh->quote($messagekey),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$priority_message, $priority_for_packet, $current_date,$delivery_date;
+	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')", $dbh->quote($messagekey),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date;
 	    unless ($sth = $dbh->do($statement)) {
 		do_log('err','Unable to add packet in bulkmailer_table "%s"; error : %s', $statement, $dbh->errstr);
 		return undef;
@@ -507,8 +537,9 @@ sub store_test {
     my $priority_message = 9;
     my $delivery_date = time;
     my $verp  = 1;
+    my $merge  = 1;
     
-    &do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s,delivery_date= %s,verp = %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp);
+    &do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s,delivery_date= %s,verp = %s, merge = %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$merge);
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";

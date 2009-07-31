@@ -3,7 +3,88 @@
 
 (See Changelog file for the full changes log)
 
-6.0b.1		10 June 2008
+6.0b.2		31 July 2009
+
+  Features:
+
+	No new features. Just stabilisation of the 6.0 beta version.
+
+  Changes:
+
+	src/confdef.pm: define longer period for default values of cleandelay_xx parameters
+
+	src/lib/List.pm, /src/lib/confdef.pm: Now ttl and distribution_ttl list parameters
+	take their defaults in default_ttl and default_distribution_ttl sympa.conf parameters.
+
+	po/de.po, po-wwsympa/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
+
+*****	The directory in which all the default configuration files and directories is installed
+*****	is now "default", under the root installation directory. In the previous release, it was
+*****	share/sympa/default. You should remove this directory now to avoid confusion.
+
+	New configure option: '--enable-fhs'. Sympa supports two kinds of files hierarchies. The historical one, where by default all is gathered in the Sympa directry, and also the FHS recommended hierarchy. Now if the '--enable-fhs' configure option is set, Sympa is installed according to the FHS. Otherwise, it is installed using the historical paths.
+
+ Bug fixes:
+
+	src/sympa_wizard.pl.in: [Reported by P. Maes, univ. Louvain] Net::Netmask CPAN module
+	was not checked by the Sympa wizard, though it is required.
+
+	d_install_shared.tt2, mail_tt2/moderate.tt2, mail_tt2/modindex.tt2,
+	mail_tt2/user_notification.tt2, mail_tt2/welcome.tt2, po/fr.pomail_tt2/moderate.tt2:
+	[Submitted by P. Maes, univ. Louvain] The one time ticket URL was included in the
+	internationalization message. It had no sense, as an URL won't be translated, and any
+	change in the layout (such as putting the URL in another line) would break the translation
+	key. Fixed by putting the URL out of the i18n string.
+
+	src/etc/script/create_db.mysql: [Submitted by D. Ayre, univ. E. Carr, Vancouver]
+	A missing comma in create_db.mysql made the creation script fail with an SQL error.
+
+	src/lib/Conf.pm: [Reported by M. Warkus, univ. Marburg] When using the default robot,
+	wwsympa.conf parameters were not taken into account, only the default values set
+	in confdef.pm. The value could only be set in sympa.conf. This was due to the load_robots
+	function which initialized the config with default values and sympa.conf values and then
+	looked for customized values for virtual hosts only. Fixed by replacing default values by
+	their equivalent in wwsympa.conf when found.
+	
+	wwsympa/wwsympa.fcgi.in: [Reported by Wen Si] Single value and single instance list
+	parameters value could not be removed using the web interface. fixed by *not* going
+	directly to the next parameter in do_edit_list when such a parameter is found empty.
+
+	src/lib/Upgrade.pm: [Reported by A. Suter, crox.net] "0" character was not allowed in
+	md5 encoded passwords. Changed regular expression to allow it.
+
+	src/lib/Sympa/Constants.pm.in: [Reported by N. Matthies] Typo in ARCDIR constant declaration.
+
+	src/task_manager.pl.in: [Reported by N. Matthies] The task manager failed to process the
+	eval_bouncers and purge_orphan_bounces tasks because the corresponding functions did not
+	return 1. It cause the manager to conclude there had been an error.
+
+	Makefile.am, configure.ac: [Reported by N. Matthies] It looks like some "general_task_models"
+	and "task_models" directory still installed in the etc directory. These directory are not used
+	anymore. this was due to a command in Makefile.am installing  "non  writable directories".
+	These directories were all isntalled in a separate part of the install process, using
+	their normal names and location.
+
+	src/lib/Conf.pm, src/lib/confdef.pm: Sympa doesn't complain anymore when an optional parameter
+	is missing in robot.conf.
+
+	src/lib/Bulk.pm: [Reported by Wen Si] A query in the Bulk.pm module was using MySQL-specific SQL orders.
+	This caused Oracle (and probably Sybase too) to fail to lock packets in database.
+	Fixed by splitting the query into a selection followed by an update,
+	and by tweeking it on the base of the RDBMS used.
+
+	src/etc/script/create_db.SQLite, src/lib/Upgrade.pm: [Submitted by M. deranek, slonko.net]
+	SQLite support was broken in Sympa, due to syntax errors.
+
+	src/etc/script/ldap_alias_manager.pl.in: --modulesdir-- placeholder was badly spelled in
+	ldap_alias_manager.pl, cauing it not to be replaced by its real value at install time.
+
+	src/sympa_wizard.pl.in: Removing useless warning when the 'file' parameter is not indicated
+	in the confdef.pm parameter definition. This 'file' parameter is used only when we want to 
+	write a value by default in the config file. Otherwise default value will be used.
+
+
+6.0b.1		16 June 2009
 
   Features:
 

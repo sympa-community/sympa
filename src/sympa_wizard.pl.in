@@ -195,7 +195,7 @@ sub edit_configuration {
         } elsif ($file eq 'sympa.conf') {
             $current_value = $Conf::Conf{$name}; 
         } else {
-            printf STDERR "incorrect definition of $name\n";
+            next;
         }
         my $new_value;
         if ($param->{'edit'} eq '1') {

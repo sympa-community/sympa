@@ -6324,7 +6324,8 @@ msgstr ""
 
 #. (conf.wwsympa_url,list.name)
 #: ../mail_tt2/d_install_shared.tt2:7
-msgid "The list document repository:"
+#, fuzzy
+msgid "The list document repository : %1/d_read/%2"
 msgstr "L'espace documents de la liste : "
 
 #: ../mail_tt2/d_reject_shared.tt2:2
@@ -8095,18 +8096,24 @@ msgstr "Ce message a été marqué comme spam."
 msgid "They are %1 messages awaiting moderation."
 msgstr "IL y a %1 messages en attente de modération."
 
+#. (conf.wwsympa_url,one_time_ticket)
 #: ../mail_tt2/moderate.tt2:18
+#, fuzzy
 msgid ""
-"To browse the awaiting messages, you should click on the following link:"
+"To browse the awaiting messages, you should click on the following link : %1/"
+"ticket/%2"
 msgstr ""
-"Pour consulter la liste des messages en attente, veuillez cliquer sur le "
-"lien suivant :"
+"Pour consulter les messages en attente, veuillez cliquer sur le lien "
+"suivant : %1/ticket/%2"
 
-#. (list.name)
+#. (list.name,conf.wwsympa_url,modkey)
 #: ../mail_tt2/moderate.tt2:24
+#, fuzzy
 msgid ""
 "To tag the message in list %1 for the appropriate topic, please use the "
-"following link:"
+"following link :\n"
+"\n"
+"%2/viewmod/%1/%3\n"
 msgstr ""
 "Pour sélectionner un thème pour votre message, adressé à la liste %1, "
 "consultez la page suivante :"
@@ -8118,17 +8125,19 @@ msgstr "Pour diffuser le message ci-joint dans la liste %1 :"
 
 #. (conf.email,conf.host)
 #: ../mail_tt2/moderate.tt2:32 ../mail_tt2/moderate.tt2:37
-msgid "Or send a message to %1@%2 with the following subject:"
+#, fuzzy
+msgid "Or send a message to %1@%2 with the following subject :"
 msgstr "ou envoyez un e-mail à %1@%2 avec comme sujet :"
 
 #: ../mail_tt2/moderate.tt2:35
 msgid "To reject it (it will be removed):"
 msgstr "Pour refuser sa diffusion (il sera effacé), cliquez ici :"
 
+#. (conf.wwsympa_url)
 #: ../mail_tt2/moderate.tt2:40 ../mail_tt2/modindex.tt2:10
-msgid "The messages moderating documentation:"
-msgstr ""
-"La documentation relative à la modération des messages :"
+#, fuzzy
+msgid "The messages moderating documentation: %1/help/admin#moderate"
+msgstr "La documentation relative à la modération des messages :"
 
 #. (list.name)
 #: ../mail_tt2/modindex.tt2:2
@@ -8491,12 +8500,16 @@ msgid ""
 msgstr "Vous avez été nommé modérateur de la liste %2@%3 par %1. "
 
 # nlsref 15,14
+#. (conf.wwsympa_url,list.name)
 #: ../mail_tt2/user_notification.tt2:35 ../mail_tt2/welcome.tt2:12
-msgid "The list homepage:"
+#, fuzzy
+msgid "The list homepage: %1/info/%2"
 msgstr "La page d'accueil de la liste :"
 
+#. (conf.wwsympa_url)
 #: ../mail_tt2/user_notification.tt2:36
-msgid "Owner and moderator guide:"
+#, fuzzy
+msgid "Owner and moderator guide: %1/help/admin"
 msgstr "Le guide de l'administrateur :"
 
 #: ../mail_tt2/user_notification.tt2:40
@@ -8541,8 +8554,10 @@ msgstr "Bienvenue dans la liste %1@%2"
 msgid "Your subscription email is %1"
 msgstr "Votre adresse d'abonné est : %1"
 
+#. (conf.wwsympa_url)
 #: ../mail_tt2/welcome.tt2:13
-msgid "General informations about mailing lists:"
+#, fuzzy
+msgid "General informations about mailing lists: %1/help/introduction"
 msgstr "Introduction aux listes de diffusion :"
 
 # nlsref 4,17
@@ -9213,6 +9228,12 @@ msgstr ""
 "Les messages peuvent être consultés par mail (abonnement) ou par l'interface "
 "web"
 
+#~ msgid ""
+#~ "To browse the awaiting messages, you should click on the following link:"
+#~ msgstr ""
+#~ "Pour consulter la liste des messages en attente, veuillez cliquer sur le "
+#~ "lien suivant :"
+
 #~ msgid "-List definition"
 #~ msgstr "Définition de la liste"
 
@@ -9636,13 +9657,6 @@ msgstr ""
 #~ "\n"
 #~ "Un utilisateur a demandé à être abonné à votre liste. Pour consulter "
 #~ "toutes les demandes en attente, veuillez cliquer sur ce lien :"
-
-#~ msgid ""
-#~ "To browse the awaiting messages, yshould click on the following link : %1/"
-#~ "ticket/%2"
-#~ msgstr ""
-#~ "Pour consulter les messages en attente, veuillez cliquer sur le lien "
-#~ "suivant : %1/ticket/%2"
 
 #~ msgid ""
 #~ "Changing your email address is a sensitive operation so we need to verify "
