@@ -243,16 +243,16 @@ while (!$end) {
 	## Use an intermediate handler to encode to filesystem_encoding
 	my $user;
 	
-	#____ Test if use verp ______
-	if ($bulk->{'verp'}){
+	if (($bulk->{'verp'})||($bulk->{'merge'})){ # message needs personalization
 	    
 	    foreach $rcpt (@rcpts) {
-		
-		my $return_path = $rcpt;
-		$return_path =~ s/\@/\=\=a\=\=/; 
-		$return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # xxxxxxxxxxxxx verp cassé si pas de listename (message de sympa)
-		#____ Test if use merge ______
-		if (1==1) { #-------- it will be : if ($bulk->{'merge'}) { ------------#
+		my $return_path = $bulk->{'returnpath'};
+		if ($bulk->{'verp'}) {
+		    my $return_path = $rcpt;
+		    $return_path =~ s/\@/\=\=a\=\=/; 
+		    $return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; 
+		}
+		if ($bulk->{'merge'}) { 
 		    
 		    ### Parse an MIME::Entity message
 		    my $parser = new MIME::Parser;
@@ -270,37 +270,12 @@ while (!$end) {
 		print SMTP $messageasstring;
 		close SMTP;
 	    }
-	}else{
-
-	    #____ Test if use merge ______
-	    if ( 1==1 ) { #-------- it will be : if ($bulk->{'merge'}) { ------------#
-
-		foreach $rcpt (@rcpts) {
-		    ### Parse an MIME::Entity message
-		    my $parser = new MIME::Parser;
-		    my $entity = $parser->parse_data($messageasstring_init);
-
-		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
-			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
-		    }
-		    my $messageasstring = $entity->as_string;
-
-		    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \$rcpt, $bulk->{'robot'});
-		    # Message with customized data
-		    print SMTP $messageasstring;
-		    close SMTP;
-		}
-	    }else{
-
-		*SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
-		# Initial message
-		print SMTP $messageasstring_init;
-		close SMTP;
-	    }
+	}else{ # message dont needs personalization, they can be sent by packet
+	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
+	    # Initial message
+	    print SMTP $messageasstring_init;
+	    close SMTP;
 	}
-	#--------------------------------------------------
-	#------------- END VERP AND MERGE -----------------
-        #--------------------------------------------------
 	
 	## Remove packet once it has been processed
 	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {

@@ -269,7 +269,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      send editor editor_include delivery_time account topics 
 		      host lang web_archive archive digest digest_max_size available_user_options 
 		      default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to * 
-		      verp_rate welcome_return_path remind_return_path user_data_source include_file include_remote_file 
+		      verp_rate welcome_return_path remind_return_path merge_feature user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
                       include_ldap_2level_query include_sql_query include_admin ttl distribution_ttl creation update 
 		      status serial custom_attribute);
@@ -1339,7 +1339,13 @@ my %alias = ('reply-to' => 'reply_to',
 			       'default' => {'conf' => 'pictures_feature'},
 			       'gettext_id' => "Allow picture display ? (must be enabled for the current robot)",
 			       'group' => 'other'
-			       },	    
+			       },	
+	    'merge_feature' => {'format' => ['on','off'],
+			       'occurence' => '0-1',
+			       'default' => {'conf' => 'merge_feature'},
+			       'gettext_id' => "Allow message personnalization",
+			       'group' => 'other'
+			       },
 	    'visibility' => {'scenario' => 'visibility',
 			     'synonym' => {'public' => 'noconceal',
 					   'private' => 'conceal'},
