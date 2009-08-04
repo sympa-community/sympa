@@ -136,7 +136,7 @@ AC_ARG_WITH(
 	[--with-bindir=DIR],
 	[obsolete option, those binaries are now installed in libexecdir]
     ),
-    [AC_MSG_WARN([obsolete --with-sampledir option used])]
+    [AC_MSG_WARN([obsolete --with-bindir option used])]
 )
 
 AC_ARG_WITH(
