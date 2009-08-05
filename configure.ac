@@ -1,4 +1,4 @@
-dev# configure.in - Top-level configure.in for Sympa
+# configure.in - Top-level configure.in for Sympa
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
