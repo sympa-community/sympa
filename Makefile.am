@@ -46,7 +46,7 @@ installconfig:
 	@echo "Installing basic configuration ..."
 	export PERL5LIB=$(DESTDIR)$(modulesdir); \
 	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
-		echo "This looks like your first Sympa installation. The following wizard will assit you to create your first Sympa configuration.";\
+		echo "This looks like your first Sympa installation. The following wizard will assist you to create your first Sympa configuration.";\
 		$(DESTDIR)$(sbindir)/sympa_wizard.pl \
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
