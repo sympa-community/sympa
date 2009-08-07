@@ -44,7 +44,7 @@ use Archive::Zip;
   
 use strict 'vars';
 use Time::Local;
-use Text::Wrap;
+use Text::LineFold;
 use MIME::Lite::HTML;
 use MIME::Lite;
 
@@ -15150,9 +15150,7 @@ sub do_compose_mail {
 	       return undef;
 	   }
 
-	   $Text::Wrap::columns = 80;
-	   $Text::Wrap::huge = 'overflow';
-	   $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
+	   $in{'body'} = Text::LineFold->new(Language => &Language::GetLang(), UserBreaking => ['NONBREAKURI'])->fold($in{'body'}, 'PLAIN');
 
 	   my @body = split /\0/, $in{'body'};
    }
