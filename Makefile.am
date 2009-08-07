@@ -1,4 +1,4 @@
- # Makefile.am - Top-level Makefile.am for Sympa
+# Makefile.am - Top-level Makefile.am for Sympa
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -90,8 +90,8 @@ importantchanges:
                 previous=`perl -Mlib=$(DESTDIR)$(bindir) -MVersion -e 'print $$Version::Version'`; \
 	fi; \
 	$(PERL) $(top_srcdir)/important_changes.pl \
-		--current $(VERSION) \
-		--previous $${previous};
+		--current=$(VERSION) \
+		--previous=$${previous};
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
