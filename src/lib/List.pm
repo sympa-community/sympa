@@ -33,6 +33,7 @@ use Lock;
 use Task;
 use Scenario;
 use Fetch;
+use WebAgent;
 use Exporter;
 use tt2;
 use Sympa::Constants;
