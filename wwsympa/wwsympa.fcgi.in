@@ -836,6 +836,9 @@ my %in_regexp = (
 		 
 		 ## Templates
 		 'scope' => 'distrib|robot|family|list|site',
+
+                 ## Custom Inputs from create_list_request.tt2
+                 'custom_input' => '.*',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1807,6 +1810,7 @@ sub get_parameters {
      }
 
      my $custom_attribute ;
+     my $custom_input;
      
      ## Check parameters format
      foreach my $p (keys %in) {
@@ -1834,7 +1838,12 @@ sub get_parameters {
 	     do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} $Conf{$key}{type}");
 	     $custom_attribute->{$key} = {value=>$in{$p}} ;
 	     undef $in{$p} ;
-
+	 }elsif ($pname =~ /^custom_input(.*)$/) {
+	     my $key = $tokens[1];
+	     $regexp = $in_regexp{'custom_input'};
+	     do_log ('debug2', "get_parameters (custom_input) : ($p)($key) $pname $in{$p} $Conf{$key}{type}");
+	     $custom_input->{$key} = $in{$p};
+             undef $in{$p};
 	 }elsif ($in_regexp{$pname}) {
 	     $regexp = $in_regexp{$pname};
 	 }else {
@@ -1880,6 +1889,7 @@ sub get_parameters {
      }
      
      $in{custom_attribute} = $custom_attribute ;
+     $in{custom_input} = $custom_input;
      
      ## For shared-related actions, Q-encode filenames
      ## This required for filenames that include non ascii characters
@@ -8103,9 +8113,8 @@ Creates a list using a list template
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
      $parameters->{'description'} = $in{'info'};
-     foreach my $input (keys %in) {
-	 $parameters->{'custom_input'}{$input} = $in{$input};
-     }
+     $parameters->{'custom_input'} = $in{'custom_input'};
+
      ## create liste
      if (my $testlist = new List($in{'listname'},$robot)){
 	  &report::reject_report_web('user','create_list : requested list '.$in{'listname'}.' already exist',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
