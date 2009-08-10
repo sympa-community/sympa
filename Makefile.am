@@ -42,7 +42,7 @@ installdir:
 		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
 	done
 
-installconfig:
+installconfig: installdir
 	@echo "Installing basic configuration ..."
 	export PERL5LIB=$(DESTDIR)$(modulesdir); \
 	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
