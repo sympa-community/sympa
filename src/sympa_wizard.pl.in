@@ -512,7 +512,7 @@ sub install_module {
     CPAN::Shell->install($module); ## Could use CPAN::Shell->force('install') if make test failed
 
     ## Check if module has been successfuly installed
-    unless ($module->require()) {
+    unless (eval "require $module") {
 
         ## Prevent recusive calls if already in force mode
         if ($options->{'force'}) {
