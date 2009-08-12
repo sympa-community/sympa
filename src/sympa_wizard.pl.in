@@ -441,25 +441,33 @@ sub check_modules {
             print "was not found on this system.\n";
             install_module($mod, {'default' => $default});
         } else {
-            my $vs = "$mod" . "::VERSION";
 
-            $vs = 'mhonarc::VERSION' if $mod =~ /^mhonarc/i;
+	  my ($vs, $v);
+	  
+	  ## MHonArc module does not provide its version the standard way
+	  if ($mod =~ /^MHonArc/i) {
+	    require "mhamain.pl";
+	    $mod = 'mhonarc';
+	  }
+           
+	  $vs = "$mod" . "::VERSION";
+	  
+	  $v;
+	  {
+	    no strict 'refs';
+	    $v = $$vs;
+	  }
 
-            my $v;
-            {
-                no strict 'refs';
-                $v = $$vs;
-            }
-            my $rv = $versions->{$mod} || "1.0" ;
-            ### OK: check version
-            if ($v ge $rv) {
-                printf ("OK (%-6s >= %s)\n", $v, $rv);
-                next;
-            } else {
-                print "version is too old ($v < $rv).\n";
-                print ">>>>>>> You must update \"$todo->{$mod}\" to version \"$versions->{$todo->{$mod}}\" <<<<<<.\n";
-                install_module($mod, {'default' => $default}, $opt_features);
-            }
+	  my $rv = $versions->{$mod} || "1.0" ;
+	  ### OK: check version
+	  if ($v ge $rv) {
+	    printf ("OK (%-6s >= %s)\n", $v, $rv);
+	    next;
+	  } else {
+	    print "version is too old ($v < $rv).\n";
+	    print ">>>>>>> You must update \"$todo->{$mod}\" to version \"$versions->{$todo->{$mod}}\" <<<<<<.\n";
+	    install_module($mod, {'default' => $default}, $opt_features);
+	  }
         }
     }
 }
