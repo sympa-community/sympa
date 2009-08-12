@@ -84,7 +84,7 @@ nextstep:
 	@echo "#######################################################"
 
 importantchanges:
-	if [ -f $(DESTDIR)$(modulesdir)/Constants.pm ]; then \
+	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
 		previous=`perl -Mlib=$(DESTDIR)$(modulesdir) -MVersion -e 'print Sympa::Constants::VERSION'`; \
         elif [ -f $(DESTDIR)$(bindir)/Version.pm ]; then \
                 previous=`perl -Mlib=$(DESTDIR)$(bindir) -MVersion -e 'print $$Version::Version'`; \
