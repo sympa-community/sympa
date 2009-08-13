@@ -14,12 +14,12 @@ If this problem persists, you will be automatically unsubscribed from the list.[
 Subject: [% FILTER qencode %][%|loc(list.name)%]Topics udpating in list %1[%END%][%END%]
 
 [%|loc(list.name)%]Some of the topics you are subscribed to in the list '%1' have been deleted.
-Deleted topic(s) is(are) :[%END%]
+Deleted topic(s) is(are):[%END%]
 [% FOREACH t = del_topics -%]
    [% t %]
 [% END -%]
 
-[%|loc(url)%]To update your topics subscription, go to the following page :
+[%|loc(url)%]To update your topics subscription, go to the following page:
 %1[% END %]
 
 
@@ -39,7 +39,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%EN
 [% ELSIF type == 'ticket_to_send' -%]
 Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END%][%END%]
 
-[%|loc%]You have requested to change your subscriber email address. To confirm your new email address with the SYMPA server, please click the link below :[%END%] 
+[%|loc%]You have requested to change your subscriber email address. To confirm your new email address with the SYMPA server, please click the link below:[%END%] 
   [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
 

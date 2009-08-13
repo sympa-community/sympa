@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <channel>
-  <title>[% FILTER escape_xml %][% title_clear_txt %][%END%] :
+  <title>[% FILTER escape_xml %][% title_clear_txt %][%END%][%|loc%]:[%END%]
 [%- IF errors %] [%|loc%]Server error[%END%] [% END -%]
 [%- IF action == 'latest_lists' -%][%|loc%] new lists [%END%]
 [%- ELSIF action == 'active_lists' -%][%|loc%] active lists [%END%]
@@ -69,7 +69,7 @@
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
-    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3 : %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
+    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
     <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
   </item>
  [% END -%]

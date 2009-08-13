@@ -26,14 +26,14 @@
 
 <!-- template is ready for saving scenario with scope limited to the current list or to the current robot but wwsympa 
 [% IF is_listmaster %]
-<label for=new_scenario_scope">[%|loc%]scope :[%END%]</label>
+<label for=new_scenario_scope">[%|loc%]scope:[%END%]</label>
 <select id="new_scenario_scope" name="new_scenario_scope">
     <option value="robot">[%|loc(robot)%]robot %1[%END%]</option>
     <option value="list" selected>[%|loc(list)%]list %1[%END%]</option>
 </select>	
 [% END %]
 -->
-[%|loc%]scenario name :[%END%]<input type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
+[%|loc%]scenario name:[%END%]<input type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
 <input class="MainMenuLinks" type="submit" name="action_dump_scenario" value="[%|loc%]save[%END%]" />
 </fieldset>
 </form>

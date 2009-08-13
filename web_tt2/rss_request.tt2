@@ -9,14 +9,14 @@
 <form action="[% path_cgi %]" method="post"> 
 <fieldset>
 <ul> 
-<li><label for="count">[%|loc%]Limit the number of response[%END%] : </label><select id="count" name="count">
+<li><label for="count">[%|loc%]Limit the number of responses:[%END%] </label><select id="count" name="count">
 [% n = [ 1 .. 20 ] %]
 [% FOREACH i = n %]
    <option value="[% i %]" [% IF i == '20' %]selected="selected"[% END %] >[% i %]</option>
 [% END %]
 </select>
 </li>
-<li><label for="for">[%|loc%]Limit the number of days used for the selection[%END%]  : </label><select id="for" name="for">
+<li><label for="for">[%|loc%]Limit the number of days used for the selection:[%END%] </label><select id="for" name="for">
 [% n = [ 1 .. 30 ] %]
 [% FOREACH i = n %]
           <option value="[% i %]" [% IF i== '10' %]selected="selected"[% END %]>[% i %]</option>
@@ -40,22 +40,22 @@
 <ul>
 [% IF latest_arc_url %]
 [% s = String.new(latest_arc_url) %]
-<li><label for="latest_arc">[%|loc%]latest arc[%END%] :
+<li><label for="latest_arc">[%|loc%]latest arc:[%END%]
       <input type="text" name="latest_arc" id="latest_arc" size="[% s.length %]" value="[% latest_arc_url %]" /></label></li>
 [% END %]
 [% IF latest_d_read_url %]
 [% s = String.new(latest_d_read_url) %]
-<li><label for="latest_arc">[%|loc%]latest document[%END%] :
+<li><label for="latest_arc">[%|loc%]latest document:[%END%]
       <input type="text" name="latest_d_read" id="latest_d_read" size="[% s.length %]" value="[% latest_d_read_url %]" /></label></li>
 [% END %]
 [% IF active_lists_url %]
 [% s = String.new(active_lists_url) %]
-<li><label for="active_lists">[%|loc%]active lists[%END%] :
+<li><label for="active_lists">[%|loc%]active lists:[%END%]
       <input type="text" name="active_lists" id="active_lists" size="[% s.length %]" value="[% active_lists_url %]" /></label></li>
 [% END %]
 [% IF latest_lists_url %]
 [% s = String.new(latest_lists_url) %]
-<li><label for="latest_lists">[%|loc%]latest lists[%END%] :
+<li><label for="latest_lists">[%|loc%]latest lists:[%END%]
       <input type="text" name="latest_lists" id="latest_lists" size="[% s.length %]" value="[% latest_lists_url %]" /></label></li>
 [% END %]
 </ul>

@@ -49,7 +49,7 @@
    		<br />
    		[%|loc%]This list is configured to require topic(s).[%END%]
    		<br />
-   		[%|loc%]Please select one or more topic(s) that corresponds to your message :[%END%]
+   		[%|loc%]Please select one or more topic(s) that corresponds to your message:[%END%]
    		<br />
    		[% FOREACH t = available_topics %] 
      			<input type="checkbox" name="topic_[%t.name%]" value="1"/> [% t.title %]
@@ -62,7 +62,7 @@
   		<textarea name="body" cols="80" rows="25"></textarea>
 	[%  END %]
 	[% IF subaction == "html_news_letter" %]
-   		<label for="url">[%|loc%]Url :[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	
+   		<label for="url">[%|loc%]URL:[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	
 	<br /><br />
 	[%  END %]
     </fieldset>

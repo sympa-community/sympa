@@ -7,9 +7,9 @@ occupations = {
     cio = { title=>"chief information officer", abbr=>"CHIEF INFO OFF" },
 }
 nemes = listname.split('-');
-THROW autofamily "SYNTAX ERROR : listname must begin with 'auto-' " IF (nemes.size != 2 || nemes.0 != 'auto');
+THROW autofamily "SYNTAX ERROR: listname must begin with 'auto-' " IF (nemes.size != 2 || nemes.0 != 'auto');
 tokens = nemes.1.split('\.');
-THROW autofamily "SYNTAX ERROR : wrong listname syntax" IF (tokens.size != 2 || ! occupations.${tokens.0} || tokens.1 < 20 || tokens.1 > 99 );
+THROW autofamily "SYNTAX ERROR: wrong listname syntax" IF (tokens.size != 2 || ! occupations.${tokens.0} || tokens.1 < 20 || tokens.1 > 99 );
 age = tokens.1 div 10;
 %]
 

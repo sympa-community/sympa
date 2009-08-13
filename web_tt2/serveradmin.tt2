@@ -22,7 +22,7 @@
 <h2>[%|loc%]Virtual Robots[%END%]</h2> <br />
 <div>
   [% IF robots %]
-    [%|loc%]The following virtual robots are running on this server :[%END%]
+    [%|loc%]The following virtual robots are running on this server:[%END%]
     <ul>
     [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>[% END %]
     </ul>
@@ -76,16 +76,16 @@
 </form>
 </div>
 
-<h3>[%|loc%]You can change your users email address here :[%END%]</h3><br />
+<h3>[%|loc%]You can change your users email address here:[%END%]</h3><br />
 
 [%|loc%]Changing a user's email address will apply the change his memberships but it will also apply to his ownerships if he is owner of some lists.[%END%]<br />
 
 <div>
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="old_email">[%|loc%]Current user email address : [%END%]</label><input id="old_email" type="text" name="old_email" size="30" /><br />
+<label for="old_email">[%|loc%]Current user email address: [%END%]</label><input id="old_email" type="text" name="old_email" size="30" /><br />
 
-<label for="new_email">[%|loc%]New user email address : [%END%]</label><input id="new_email" type="text" name="new_email" size="30" />
+<label for="new_email">[%|loc%]New user email address: [%END%]</label><input id="new_email" type="text" name="new_email" size="30" />
 <input type="hidden" name="action" value="change_email">
 <input class="MainMenuLinks" type="submit" name="action_change_email" value="[%|loc%]Update user memberships[%END%]" />
 </fieldset>
@@ -94,11 +94,11 @@
 
 <h3>[%|loc%]Change identity[%END%]</h3><br />
 <div>
-[%|loc%]As listmaster, you can change your identity and act as someone else. This is may be usefull when providing assistance or to test users privileges[%END%]. The new identity is attached to the current session<br/>
+[%|loc%]As listmaster, you can change your identity and act as someone else. This is may be usefull when providing assistance or to test users privileges. The new identity is attached to the current session[%END%]<br/>
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
-<input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]change identity as : [%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]change identity as: [%END%]" />
 <input id="session_email" type="text" name="email" size="50"/> 
 </fieldset>
 </form>
@@ -111,8 +111,8 @@
 [%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br />
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="list">[%|loc%]listname : [%END%]</label><input id="list" type="text" name="list" size="20" /> <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
- <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
+<label for="list">[%|loc%]listname: [%END%]</label><input id="list" type="text" name="list" size="20" /> <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
+ <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful![%END%])<br />
 </fieldset>
 </form>
 
@@ -126,7 +126,7 @@
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
-[%|loc%]Log level[%END%] : 
+[%|loc%]Log level:[%END%] 
 0 <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> |
 1 <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> |
 2 <input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> |
@@ -171,7 +171,7 @@
 <div>
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
-[%|loc%]When customizing Sympa web templates, it is needed to known which variables can be processed by the tt2 parser.This button is for controlling tt2 vars dump feature :[%END%]<br/>
+[%|loc%]When customizing Sympa web templates, it is needed to known which variables can be processed by the tt2 parser.This button is for controlling tt2 vars dump feature:[%END%]<br/>
 
 [% IF dumpvars == 'true' %]
   <input class="MainMenuLinks" type="submit" name="action_unset_dumpvars" value="[%|loc%]Unset template vars dump[%END%]" />
@@ -197,14 +197,14 @@
 [%|loc%]Sympa is designed to allow easy internationalization of its user interface (service mail messages and web interface). All translations for one language are gathered in a single PO file that can be manipulated by standard GNU gettext tools.[%END%]
 </div>
 <div>
-[%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language : [%END%] <a href="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</a>
+[%|loc%]Check our translation FAQ if you wish to translate Sympa GUI in your native language: [%END%] <a href="http://www.sympa.org/howtotranslate.html">http://www.sympa.org/howtotranslate.html</a>
 </div>
 [% END %] 
 
 [% IF subaction == 'tracker' %]
 <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2><br />
 <div>
-[%|loc%]You can submit a problem or request a new feature : [%END%]<a href="http://www.sympa.org/tracking">http://www.sympa.org/tracking</a>
+[%|loc%]You can submit a problem or request a new feature: [%END%]<a href="http://www.sympa.org/tracking">http://www.sympa.org/tracking</a>
 </div>
 [% END %] 
 

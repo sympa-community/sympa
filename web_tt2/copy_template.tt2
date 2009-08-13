@@ -5,22 +5,22 @@
 <form id="cp_template" action="[% path_cgi %]/copy_template" method="post">
 <fieldset>
   <legend><strong> [%|loc%]Input template[%END%]</strong> </legend>
-  <label>[%|loc%]Name : [%END%]</label><strong> [% template_name %] </strong><br />
-  <label>[%|loc%]Scope : [%END%]</label><strong> [% scope %] </strong><br />
-  <label for="scope_out">[%|loc%]Scope : [%END%]</label><br />
-  <label>[%|loc%]Language : [%END%]<strong></label> [% tpl_lang %] </strong><br />
+  <label>[%|loc%]Name: [%END%]</label><strong> [% template_name %] </strong><br />
+  <label>[%|loc%]Scope: [%END%]</label><strong> [% scope %] </strong><br />
+  <label for="scope_out">[%|loc%]Scope: [%END%]</label><br />
+  <label>[%|loc%]Language: [%END%]<strong></label> [% tpl_lang %] </strong><br />
 
 </fieldset>
 <fieldset>
   <legend><strong> [%|loc%]Output template[%END%]</strong> </legend>
-  <label for="template_name_out">[%|loc%]New template name : [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
-  <label for="scope_out">[%|loc%]Scope : [%END%] </label>
+  <label for="template_name_out">[%|loc%]New template name: [%END%] </label><input id="template_name_out" type="text" name="template_name_out" value="[% template_name %]" /><br />
+  <label for="scope_out">[%|loc%]Scope: [%END%] </label>
     <select id="scope_out" name="scope_out">
 	<option value="site" [% IF scope == 'site' %]selected[% END %]>[%|loc%]site[%END%]</option>
 	[% UNLESS default_robot %]<option value="robot" [% IF scope == 'robot' %]selected[% END %]>[%|loc%]robot[%END%]</option>[%END%]
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
-  <label for="tpl_lang_out">[%|loc%]Language : [%END%] </label>
+  <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
     <select is="tpl_lang_out" name="tpl_lang_out">
 	<option value="default">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
@@ -28,7 +28,7 @@
 	[%END%]
 	</select><br />
 [% list %]
-  <label for="list_out">[%|loc%]Enter listname : [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />
+  <label for="list_out">[%|loc%]Enter list name: [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />
 
     <input type="hidden" name="template_name" value="[% template_name %]" />
     <input type="hidden" name="template_path" value="[% template_path %]" />

@@ -9,7 +9,7 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [% list.subject %]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
-[%|loc%]To activate/delete this mailing list :[%END%]
+[%|loc%]To activate/delete this mailing list:[%END%]
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [%- ELSIF type == 'request_list_renaming' -%]
@@ -23,7 +23,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 [%|loc(email,list.name,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
 [% END %]
 
-[%|loc%]To activate/delete this mailing list :[%END%]
+[%|loc%]To activate/delete this mailing list:[%END%]
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [% ELSIF type == 'no_db' -%]
@@ -35,14 +35,14 @@ Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
 [% ELSIF type == 'missing_dbd' -%]
 Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%END%]
 
-[%|loc(db_type)%]No Database Driver installed for %1 ; you should download and install DBD::%1 from CPAN.[%END%]
+[%|loc(db_type)%]No Database Driver installed for %1; you should download and install DBD::%1 from CPAN.[%END%]
 
 
 [% ELSIF type == 'crash' -%]
 Subject: [% FILTER qencode %][%|loc%]Previous process crashed[%END%][%END%]
 
 [%|loc%]Previous process has died unexpectedly.[%END%]
-[%|loc(crash_date)%]Date of crash : %1[%END%]
+[%|loc(crash_date)%]Date of crash: %1[%END%]
 [%|loc%]Errors:[%END%]
 
 [% FOREACH err IN crash_err%]
@@ -54,7 +54,7 @@ Subject: [% FILTER qencode %][%|loc%]Previous process crashed[%END%][%END%]
 [% ELSIF type == 'upgrade_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 
-[%|loc%]Sympa encountered the following error while running upgrade procedures : [%END%]
+[%|loc%]Sympa encountered the following error while running upgrade procedures: [%END%]
      [%error%]
 
 [%|loc%]Check log file for further details.[%END%]
@@ -62,7 +62,7 @@ Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
 
-[%|loc(db_name)%]The database structure has been updated ; check log file for further details : [%END%]
+[%|loc(db_name)%]The database structure has been updated; check log file for further details: [%END%]
 [% FOREACH report_item IN report -%]
   [% report_item %]
 [% END %]
@@ -106,7 +106,7 @@ Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
 [%|loc%]The antivirus scan has failed while processing the following file:[%END%]
 	[% filename %]
 
-[%|loc%]The returned error message :[%END%]
+[%|loc%]The returned error message:[%END%]
 	[% error_msg %]
 
 
@@ -140,17 +140,17 @@ Subject: [% FILTER qencode %][%|loc%]A bounce management failed[%END%][%END%]
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
 
-[%|loc%]edit_list.conf format has changed :
+[%|loc%]edit_list.conf format has changed:
 'default' is no more accepted for a population.[%END%]
 
 [%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
-[%|loc(param0)%]Until then we recommend your remove %1 ;
+[%|loc(param0)%]Until then we recommend your remove %1;
 default configuration will be used.[%END%]
 
 [% ELSIF type == 'sync_include_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
 
-[%|loc%]Sympa could not include subscribers from external data sources ; the
+[%|loc%]Sympa could not include subscribers from external data sources; the
 database or LDAP directory might be unreachable.[%END%] 
 [%|loc%]Check Sympa log files for more precise information[%END%]
 
@@ -158,7 +158,7 @@ database or LDAP directory might be unreachable.[%END%]
 [% ELSIF type == 'sync_include_admin_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
 
-[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
+[%|loc%]Sympa could not include admins from external data sources; the database or LDAP directory might be unreachable.[%END%]
 [%|loc%]Check Sympa log files for more precise information[%END%]
 
 [% ELSIF type == 'no_owner_defined' -%]
@@ -172,14 +172,14 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [% ELSIF type == 'listowner_email_changed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]List owner/editor email changes[%END%][%END%]
 
-[%|loc(previous_email,new_email)%]Member %1 has changed his owner/editor email address to %2. This change has been performed for the following lists :[%END%]
+[%|loc(previous_email,new_email)%]Member %1 has changed his owner/editor email address to %2. This change has been performed for the following lists:[%END%]
 [% FOREACH updated_list IN updated_lists -%]
 [% updated_list %]
 [% END %]
 
 
 [% ELSIF type == 'failed_to_change_included_admin' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 : Failed to change admin email address[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change admin email address[%END%][%END%]
 
 [%|loc(current_email,new_email,datasource)%]Admin %1 could not change his admin email address (new email address is %2) because he is included via a the following data sources: %3.
 
@@ -225,8 +225,8 @@ Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%]
 [% ELSIF type == 'file_removed' -%]
 Subject: [% FILTER qencode %][%|loc%]File removed[%END%][%END%]
 
-[%|loc(param0)%]The following file has been removed : %1[%END%]
-[%|loc(param1)%]A backup of the file has been made : %1[%END%]
+[%|loc(param0)%]The following file has been removed: %1[%END%]
+[%|loc(param1)%]A backup of the file has been made: %1[%END%]
 
 
 [% ELSIF type == 'no_list_family' -%]
@@ -273,10 +273,10 @@ selected by Sympa as severe bouncing addresses:[%END%]
 
 [%# INTERNAL SERVER ERROR  : MAIL -%]
 [% ELSIF type == 'mail_intern_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%action%][% IF msg_id %] - MSG_ID : [%msg_id%][%END%][% IF cmd %] - COMMAND : [%cmd%][%END%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
+([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
 
 [%IF error%][%error%]
 [%END%]  
@@ -285,24 +285,24 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 
 [%# INTERNAL SERVER ERROR  : WEB -%]
 [% ELSIF type == 'web_intern_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
+([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
 
 [%IF error == 'chdir_error' %][%|loc%]Unable to change directory.[%END%]
 [%ELSIF error == 'no_authentication_service_name' %][%|loc%]The authentication server name is not defined.[%END%]
-[%ELSIF error == 'auth_conf_no_identified_user' %][%|loc%]auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined.[%END%]
+[%ELSIF error == 'auth_conf_no_identified_user' %][%|loc%]auth.conf error: either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined.[%END%]
 [%ELSIF error == 'unknown_authentication_service' %][%|loc(name)%]Unkown authentication service %1.[%END%]
 [%ELSIF error == 'add_user_db_failed' %][%|loc(user)%]Add user '%1' in DB failed.[%END%]
-[%ELSIF error == 'update_user_db_failed' %][%|loc(user)%]Update user '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email : %1)[%END%][%END%]
+[%ELSIF error == 'update_user_db_failed' %][%|loc(user)%]Update user '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email: %1)[%END%][%END%]
 [%ELSIF error == 'add_subscriber_db_failed' %][%|loc(sub)%]Add subscriber '%1' in DB failed.[%END%]
-[%ELSIF error == 'update_subscriber_db_failed' %][%|loc(sub,old_email)%]Update subscriber '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email : %1)[%END%][%END%]
+[%ELSIF error == 'update_subscriber_db_failed' %][%|loc(sub,old_email)%]Update subscriber '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email: %1)[%END%][%END%]
 [%ELSIF error == 'delete_subscriber_db_failed' %][%|loc(sub)%]Delete subscriber '%1' in DB failed.[%END%]
 [%ELSIF error == 'delete_email_failed' %][%|loc(old_email)%]Delete user in DB for old email '%1' failed.[%END%]
 [%ELSIF error == 'subscriber_not_found' %][%|loc(email,list.name)%]Subscriber '%1' is not found in list %2.[%END%]
-[%ELSIF error == 'cannot_read' %][%|loc(filepath)%]Unable to read file : '%1'.[%END%]
-[%ELSIF error == 'cannot_write' %][%|loc(filepath)%]Unable to write file : '%1'.[%END%]
+[%ELSIF error == 'cannot_read' %][%|loc(filepath)%]Unable to read file: '%1'.[%END%]
+[%ELSIF error == 'cannot_write' %][%|loc(filepath)%]Unable to write file: '%1'.[%END%]
 [%ELSIF error == 'cannot_open_file' %][%|loc(file)%]Unable to open file '%1'.[%END%]
 [%ELSIF error == 'cannot_open_dir' %][%|loc(directory)%]Unable to open directory '%1'.[%END%]
 [%ELSIF error == 'cannot_mkdir' %][%|loc(dir)%]Unable to create directory '%1'.[%END%]
@@ -314,10 +314,10 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 [%ELSIF error == 'cannot_send_distribute' %][%|loc(from,list.name)%]Unable to send command DISTRIBUTE from '%1' to list '%2'.[%END%]
 [%ELSIF error == 'no_html_message_available' %][%|loc(dir)%]No HTML version of the message available in '%1'.[%END%]
 [%ELSIF error == 'update_config_changes' %][%|loc(list.name)%]Unable to update file config_changes for list '%1'.[%END%]
-[%ELSIF error == 'month_not_found' %][%|loc(month,list.name)%]Unable to find month '%1' for list '%2'[%END%][%IF dir%][%|loc(dir)%] : unable to read '%1'.[%END%][%END%]
-[%ELSIF error == 'arc_not_found' %][%|loc(arc_file,list.name,path)%]Unable to find archive '%1' for list '%2'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
-[%ELSIF error == 'inaccessible_archive' %][%|loc(list.name)%]Unable to find archive for list '%1'[%END%][%IF path%][%|loc(path)%] : unable to read '%1'.[%END%][%END%]
-[%ELSIF error == 'may_not_send_me'%][%|loc()%]Unable to send archive : no message id found.[%END%]
+[%ELSIF error == 'month_not_found' %][%|loc(month,list.name)%]Unable to find month '%1' for list '%2'[%END%][%IF dir%][%|loc(dir)%]: unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'arc_not_found' %][%|loc(arc_file,list.name,path)%]Unable to find archive '%1' for list '%2'[%END%][%IF path%][%|loc(path)%]: unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'inaccessible_archive' %][%|loc(list.name)%]Unable to find archive for list '%1'[%END%][%IF path%][%|loc(path)%]: unable to read '%1'.[%END%][%END%]
+[%ELSIF error == 'may_not_send_me'%][%|loc()%]Unable to send archive: no message id found.[%END%]
 [%ELSIF error == 'archive_not_found'%][%|loc(msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
 [%ELSIF error == 'cannot_save_config'%][%|loc(list.name)%]Cannot save config file for list '%1'.[%END%]
 [%ELSIF error == 'failed_to_install_aliases'%][%|loc%]Failed to install aliases.[%END%]
@@ -349,17 +349,17 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server err
 [%ELSIF error == 'err_404' %][%|loc(zipfile)%]File not found.[%END%]
 [%ELSIF error == 'new_document_failed' %][%|loc(path,list.name)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
 [%ELSIF error == 'cookie_error' %][%|loc%]Parameter cookie undefined, authentication failure.[%END%]
-[%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error : '%1' undefined, authentication failure.[%END%]
+[%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error: '%1' undefined, authentication failure.[%END%]
 [%ELSIF error%][%error%]
 [%END%]
 [%|loc%]See logs for more details.[%END%]
 
 [%# SYSTEM ERROR  : WEB -%]
 [% ELSIF type == 'web_system_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : system error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: system error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered a system error[%END%]
-([%|loc%]Web interface[%END%] - ACTION : [%action%][% IF list.name %] - LIST : [%list.name%]@[%conf.host%][%END%]) :
+([%|loc%]Web interface[%END%] - ACTION[%|loc%]:[%END%] [%action%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
 
 [%IF error == 'a' %]
 [%ELSIF error%][% error %]

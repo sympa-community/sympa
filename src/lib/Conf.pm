@@ -133,7 +133,7 @@ sub load {
             $o{$keyword} = [ $value, $line_num ];
         } else {
             printf STDERR
-                gettext("Error at line %d : %s\n"), $line_num, $config, $_;
+                gettext("Error at line %d: %s\n"), $line_num, $config, $_;
             $config_err++;
         }
     }
@@ -415,7 +415,7 @@ sub load_nrcpt_by_domain {
 	  $nrcpt_by_domain->{$domain} = $value;
 	  $valid_dom +=1;
       }else {
-	  printf STDERR gettext("Error at line %d : %s"), $line_num, $config, $_;
+	  printf STDERR gettext("Error at line %d: %s"), $line_num, $config, $_;
 	  $config_err++;
       }
   } 
@@ -605,17 +605,17 @@ sub get_db_conf  {
     my $statement = sprintf "SELECT value_conf AS value FROM conf_table WHERE (robot_conf =%s AND label_conf =%s)", $dbh->quote($robot),$dbh->quote($label); 
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement: %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s": %s', $statement, $dbh->errstr);
 	return undef;
     }
     
     unless ($dbh->do($statement)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s": %s', $statement, $dbh->errstr);
 	return undef;
     }
     my $value = $sth->fetchrow;
@@ -652,17 +652,17 @@ sub set_robot_conf  {
     }	   
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement: %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s": %s', $statement, $dbh->errstr);
 	return undef;
     }
     
     unless ($dbh->do($statement)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s": %s', $statement, $dbh->errstr);
 	next;
     }
     my $count = $sth->fetchrow;
@@ -674,12 +674,12 @@ sub set_robot_conf  {
 	$statement = sprintf "UPDATE conf_table SET robot_conf=%s, label_conf=%s, value_conf=%s WHERE ( robot_conf  =%s AND label_conf =%s)",$dbh->quote($robot),$dbh->quote($label),$dbh->quote($value),$dbh->quote($robot),$dbh->quote($label); 
     }
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement: %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s": %s', $statement, $dbh->errstr);
 	return undef;
     }    
 }
@@ -719,8 +719,8 @@ sub checkfiles_as_root {
 	my $dir = &get_robot_conf($robot, 'static_content_path');
 	if ($dir ne '' && ! -d $dir){
 	    unless ( mkdir ($dir, 0775)) {
-		&do_log('err', 'Unable to create directory %s : %s', $dir, $!);
-		printf STDERR 'Unable to create directory %s : %s',$dir, $!;
+		&do_log('err', 'Unable to create directory %s: %s', $dir, $!);
+		printf STDERR 'Unable to create directory %s: %s',$dir, $!;
 		$config_err++;
 	    }
 
@@ -825,7 +825,7 @@ sub checkfiles {
 
     ## queuebounce and bounce_path pointing to the same directory
     if ($Conf{'queuebounce'} eq $wwsconf->{'bounce_path'}) {
-	&do_log('err', 'Error in config : queuebounce and bounce_path parameters pointing to the same directory (%s)', $Conf{'queuebounce'});
+	&do_log('err', 'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)', $Conf{'queuebounce'});
 	unless (&List::send_notify_to_listmaster('queuebounce_and_bounce_path_are_the_same', $Conf{'domain'}, [$Conf{'queuebounce'}])) {
 	    &do_log('err', 'Unable to send notify "queuebounce_and_bounce_path_are_the_same" to listmaster');	
 	}
@@ -834,7 +834,7 @@ sub checkfiles {
 
     ## automatic_list_creation enabled but queueautomatic pointing to queue
     if (($Conf{automatic_list_feature} eq 'on') && $Conf{'queue'} eq $Conf{'queueautomatic'}) {
-        &do_log('err', 'Error in config : queue and queueautomatic parameters pointing to the same directory (%s)', $Conf{'queue'});
+        &do_log('err', 'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)', $Conf{'queue'});
         unless (&List::send_notify_to_listmaster('queue_and_queueautomatic_are_the_same', $Conf{'domain'}, [$Conf{'queue'}])) {
             &do_log('err', 'Unable to send notify "queue_and_queueautomatic_are_the_same" to listmaster');
         }
@@ -847,7 +847,7 @@ sub checkfiles {
 	if ($dir ne '' && -d $dir) {
 	    unless (-f $dir.'/index.html'){
 		unless(open (FF, ">$dir".'/index.html')) {
-		    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory : %s', $dir, $!);
+		    &do_log('err', 'Unable to create %s/index.html as an empty file to protect directory: %s', $dir, $!);
 		}
 		close FF;		
 	    }
@@ -891,7 +891,7 @@ sub checkfiles {
 	## Create directory if required
 	unless (-d $dir) {
 	    unless ( &tools::mkdir_all($dir, 0755)) {
-		&List::send_notify_to_listmaster('cannot_mkdir',  $robot, ["Could not create directory $dir : $!"]);
+		&List::send_notify_to_listmaster('cannot_mkdir',  $robot, ["Could not create directory $dir: $!"]);
 		&do_log('err','Failed to create directory %s',$dir);
 		return undef;
 	    }
@@ -910,7 +910,7 @@ sub checkfiles {
 		rename $dir.'/'.$css, $dir.'/'.$css.'.'.time;
 
 		unless (open (CSS,">$dir/$css")) {
-		    &List::send_notify_to_listmaster('cannot_open_file',  $robot, ["Could not open file $dir/$css : $!"]);
+		    &List::send_notify_to_listmaster('cannot_open_file',  $robot, ["Could not open file $dir/$css: $!"]);
 		    &do_log('err','Failed to open (write) file %s',$dir.'/'.$css);
 		    return undef;
 		}
@@ -1117,7 +1117,7 @@ sub _load_auth {
 		    
 		    $current_paragraph->{'cas_server'} = new AuthCAS(%{$cas_param});
 		    unless (defined $current_paragraph->{'cas_server'}) {
-			&do_log('err', 'Failed to create CAS object for %s : %s', 
+			&do_log('err', 'Failed to create CAS object for %s: %s', 
 				$current_paragraph->{'base_url'}, &AuthCAS::get_errors());
 			next;
 		    }
@@ -1251,8 +1251,8 @@ sub load_crawlers_detection {
 #  load a generic config organized by paragraph syntax
 #  
 # IN : -$config_file (+): full path of config file
-#      -$structure_ref (+) : ref(HASH) describing expected syntax
-#      -$on_error : optional. sub returns undef if set to 'abort'
+#      -$structure_ref (+): ref(HASH) describing expected syntax
+#      -$on_error: optional. sub returns undef if set to 'abort'
 #          and an error is found in conf file
 # OUT : ref(HASH) of parsed parameters
 #     | undef

@@ -4,7 +4,7 @@
 <fieldset>
 [%|loc%]This list is configured to require topic(s) foreach message.[%END%]
 <br />
-<label for="topic_[%t.name%]">[%|loc%]Please select one or more topic(s) that corresponds to your message below :[%END%] </label>
+<label for="topic_[%t.name%]">[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%] </label>
 <br /><br />
 [% FOREACH t = available_topics %]
 <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
@@ -25,10 +25,10 @@
 <br />
 
 [%|loc(from)%]From: %1[%END%]<br />
-[%|loc(mailto)%]To : %1[%END%]<br />
-[%|loc(date)%]Date : %1[%END%]<br />
+[%|loc(mailto)%]To: %1[%END%]<br />
+[%|loc(date)%]Date: %1[%END%]<br />
 
-[%|loc(subject)%]Subject : %1[%END%]<br /><br />
+[%|loc(subject)%]Subject: %1[%END%]<br /><br />
 
 [%body%]<br />
 

@@ -5,13 +5,13 @@
 
 <div id="blacklist">
 [%|loc%]Operation requested by users which email is listed in the blacklist file are rejected. The
-blacklist is in use for the following operation[%END%] : [% conf.use_blacklist %].
+blacklist is in use for the following operation:[%END%] [% conf.use_blacklist %].
 <br /><br />
-[%|loc%]Syntax :[%END%]
+[%|loc%]Syntax:[%END%]
 <ul>
   <li>[%|loc%]only one email or expression by line[%END%]</li>
   <li>[%|loc%]char # introduce a comment[%END%]</li>
-  <li>[%|loc%]char * match any string. Example : "*@spammer-domain.com" match any sender from that exact domain[%END%]</li>
+  <li>[%|loc%]char * match any string. Example: "*@spammer-domain.com" match any sender from that exact domain[%END%]</li>
   <li>[%|loc%]only one char * is autorized in a line[%END%]</li>
 </ul>
 [%end%]

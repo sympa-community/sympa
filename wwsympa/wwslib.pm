@@ -30,8 +30,8 @@ use Sympa::Constants;
 		   'digestplain' => {'gettext_id' => 'digest plain text format'},
 		   'summary' => {'gettext_id' => 'summary mode'},
 		   'notice' => {'gettext_id' => 'notice mode'},
-		   'txt' => {'gettext_id' => 'text only mode'},
-		   'html'=> {'gettext_id' => 'html only mode'},
+		   'txt' => {'gettext_id' => 'text-only mode'},
+		   'html'=> {'gettext_id' => 'html-only mode'},
 		   'urlize' => {'gettext_id' => 'urlize mode'},
 		   'nomail' => {'gettext_id' => 'no mail (useful for vacations)'},
 		   'not_me' => {'gettext_id' => 'you do not receive your own posts'}

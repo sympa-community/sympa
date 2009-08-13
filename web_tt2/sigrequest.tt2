@@ -2,7 +2,7 @@
 
   [% IF status == 'user.email' %]
       [%|loc(list)%]You asked to be unsubscribed  from list %1[%END%]. <br />[%|loc%]To confirm
-      your request, please click the button below :[%END%]<br />
+      your request, please click the button below:[%END%]<br />
 	<br />
 
 	<form action="[% path_cgi %]" method="post">
@@ -18,15 +18,15 @@
       [%|loc(list,email)%]You are not subscribed to list %1 with e-mail address %2[%END%].
       <br /><br />
       [%|loc%]You might have subscribed with another address.
-      Please contact the list owner to help you unsubscribe :[%END%]
+      Please contact the list owner to help you unsubscribe:[%END%]
       <a href="mailto:[% list %]-request@[% conf.host %]">[% list %]-request@[% conf.host %]</a>
       
   [% ELSIF ! email %]
-      [%|loc(list)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside ; please provide your email address below to receive this validation link.[%END%]
+      [%|loc(list)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. <br/>Otherwise we can send you an email with a validation link inside; please provide your email address below to receive this validation link.[%END%]
 
       <form action="[% path_cgi %]" method="post">
 	<fieldset>
-          <strong><label for"email">[%|loc%]Your e-mail address :[%END%]</label></strong> 
+          <strong><label for"email">[%|loc%]Your e-mail address:[%END%]</label></strong> 
           <input id="email" type="text" name="email"><br />
           <input type="hidden" name="action" value="sigrequest" />
 	  <input type="hidden" name="list" value="[% list %]" />

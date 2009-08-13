@@ -5,7 +5,7 @@
 <br />
 
 [% IF !group %]
-  [%|loc%]You can choose below a subset of parameters to edit :[%END%] 
+  [%|loc%]You can choose below a subset of parameters to edit:[%END%] 
   <ul>
 [% IF GROUP == 'description' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
     <li><a href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]List definition[%END%]</a></li>
@@ -99,9 +99,9 @@
                                 [% IF key.may_edit != 'hidden' %]
                                       <label for="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                         [% IF key.title %]
-                                          [% key.title %] :
+                                          [% key.title %][%|loc%]:[%END%]
                                         [% ELSE %]
-                                          [% key.name %] :
+                                          [% key.name %][%|loc%]:[%END%]
                                         [% END %]
                                       </label>
 
@@ -257,9 +257,9 @@
                                 [% IF key.may_edit != 'hidden' %]
                                       <label for="single_param.[% p.name %].[% key.name %].name">
                                         [% IF key.title %]
-                                          [% key.title %] :
+                                          [% key.title %][%|loc%]:[%END%]
                                         [% ELSE %]
-                                          [% key.name %] :
+                                          [% key.name %][%|loc%]:[%END%]
                                         [% END %]
                                       </label>
                                     

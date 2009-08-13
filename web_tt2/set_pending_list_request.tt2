@@ -4,8 +4,8 @@
 
  <div class="block">
   <strong>
-   [%|loc%]Listname :[%END%] [% list %]<br />
-   [%|loc%]Subject :[%END%] [% list_subject %]<br />
+   [%|loc%]Listname:[%END%] [% list %]<br />
+   [%|loc%]Subject:[%END%] [% list_subject %]<br />
   </strong>
    [%|loc%]List requested by[%END%] [% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]<br />
  </div>
@@ -33,7 +33,7 @@
 [% END %]
 
 <div class="block">
-<strong>[%|loc%]Information file[%END%] : </strong><br /> 
+<strong>[%|loc%]Information file:[%END%] </strong><br /> 
 
    [% IF is_listmaster %]
       ([% list_info %])

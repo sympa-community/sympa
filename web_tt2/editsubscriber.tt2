@@ -7,33 +7,33 @@
 <input type="hidden" name="previous_action" value="[% previous_action %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
-<label for="new_email">[%|loc%]Email :[%END%]  </label>
+<label for="new_email">[%|loc%]Email:[%END%]  </label>
   <input type="text" name="new_email" id="new_email" value="[% current_subscriber.escaped_email %]" size="25" /><br />
-<label for="gecos">[%|loc%]Name :[%END%]  </label>
+<label for="gecos">[%|loc%]Name:[%END%]  </label>
   <input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" /><br />
 [% IF current_subscriber.custom_attribute %]
 [% SET subscriber = current_subscriber ;
 PROCESS edit_attributes.tt2 ;
 END %]
-[%|loc%]Subscribed since :[%END%] [% current_subscriber.date %]<br />
-[%|loc%]Last update :[%END%] [% current_subscriber.update_date %]<br />
-<label for="reception">[%|loc%]Receiving :[%END%]  </label><select name="reception" id="reception">
+[%|loc%]Subscribed since:[%END%] [% current_subscriber.date %]<br />
+[%|loc%]Last update:[%END%] [% current_subscriber.update_date %]<br />
+<label for="reception">[%|loc%]Receiving:[%END%]  </label><select name="reception" id="reception">
 		  [% FOREACH r = reception %]
 		    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
 		  [% END %]
 	        </select>
 		<br />
 
-<label for="visibility">[%|loc%]Visibility :[%END%]  </label>
+<label for="visibility">[%|loc%]Visibility:[%END%]  </label>
   <select id="visibility" name="visibility">
         [% FOREACH r = visibility %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
      </select><br />
 
-<label for="lang">[%|loc%]Language :[%END%]  </label>[% current_subscriber.lang %]<br />
+<label for="lang">[%|loc%]Language:[%END%]  </label>[% current_subscriber.lang %]<br />
 [% IF pictures_display %]
-<label for="picture">[%|loc%]Picture :[%END%]  </label>
+<label for="picture">[%|loc%]Picture:[%END%]  </label>
   <a id="picture" href="[% current_subscriber.pictures_url %]" title="[% current_subscriber.pictures_url %],[%|loc%]Open in a new window[%END%]" target="pictures">
     <img id="large_picture" src="[% current_subscriber.pictures_url %]" alt="[% current_subscriber.escaped_email %]'s picture"/>
   </a><br />
@@ -44,7 +44,7 @@ END %]
 [% IF additional_fields %]
 [% FOREACH field = additional_fields %]
  [% IF field.value.type == 'enum' %]
-   <label for="additional_field_[% field.key %]">[% field.key %] :  </label>
+   <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]  </label>
      <select name="additional_field_[% field.key %]" id="additional_field_[% field.key %]">
 	                  <option value=""> </option>
 	[% FOREACH e = field.value.enum %]
@@ -52,7 +52,7 @@ END %]
         [% END %]
 	                 </select><br />
  [% ELSE %]
-    <label for="additional_field_[% field.key %]">[% field.key %] :</label><input type="text" name="additional_field_[% field.key %]" id="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" /><br />
+    <label for="additional_field_[% field.key %]">[% field.key %][%|loc%]:[%END%]</label><input type="text" name="additional_field_[% field.key %]" id="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" /><br />
  [% END %]
 [% END %]
 [% END %]
@@ -70,9 +70,9 @@ END %]
 [% IF current_subscriber.escaped_bounce_address  %]
 <label for="verp">[%|loc%]Address detected via VERP technology[%END%]  </label>[% current_subscriber.escaped_bounce_address %]<br />
 [% END %]
-[%|loc%]Status :[%END%] [% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])<br />
-[%|loc%]Bounce count :[%END%] [% current_subscriber.bounce_count %]<br />
-[%|loc%]Period :[%END%] [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]<br />
+[%|loc%]Status:[%END%] [% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])<br />
+[%|loc%]Bounce count:[%END%] [% current_subscriber.bounce_count %]<br />
+[%|loc%]Period:[%END%] [%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]<br />
 <a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a><br />
 <input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /><br />
 [% END %]

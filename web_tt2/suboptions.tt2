@@ -5,12 +5,12 @@
 <br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
-   <label for="gecos">[%|loc%]Name :[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
+   <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" /> <br /><br />
 [% PROCESS edit_attributes.tt2 %]
   [%|loc%]You are subscribed since[%END%] [% subscriber.date %]  <br /><br />
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
-     [%|loc%]Receiving mode :[%END%] 
+     [%|loc%]Receiving mode:[%END%] 
      <select name="reception">
         [% FOREACH r = reception %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
@@ -22,7 +22,7 @@
  
      <br /><br />
      [%IF available_topics %]	
-      [%|loc%]Topic subscription :[%END%]		
+      [%|loc%]Topic subscription:[%END%]		
         [%IF possible_topic %] 
  	 <BLOCKQUOTE>	
  	  [% FOREACH t = available_topics %]
@@ -53,7 +53,7 @@
       [%END%]	
  	 
      <br />
-     [%|loc%]Visibility :[%END%]
+     [%|loc%]Visibility:[%END%]
      <select name="visibility">
         [% FOREACH r = visibility %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>

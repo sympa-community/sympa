@@ -6,7 +6,7 @@
   <h2>[%|loc%]Copy an existing list.[%END%]</h2>
 <br />
 
-  [%|loc%]You can create a list, using an existing list as a template ; the list configuration of the source list will be copied to create the new one. Note that neither list members, nor archives or shared documents are duplicated. The source lists you can use are limited to lists you own.[%END%]
+  [%|loc%]You can create a list, using an existing list as a template; the list configuration of the source list will be copied to create the new one. Note that neither list members, nor archives or shared documents are duplicated. The source lists you can use are limited to lists you own.[%END%]
   [%|loc%]After the list is created, you will be able to adjust it's configuration.[%END%] <br />
   <form action="[% path_cgi %]" method="post">
   <fieldset>
@@ -30,7 +30,7 @@
 <form action="[% path_cgi %]" method="post">
 <fieldset>
 
-  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]the list name ; be careful, not its address ![%END%]" />
+  <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]the list name; be careful, not its address![%END%]" />
   <label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label>
     <input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
     <br />
@@ -40,7 +40,7 @@
     <em>[% user.email %]</em><br />
     
   <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" />
-  <label for="list_type" ><strong>[%|loc%]List type :[%END%]</strong></label>
+  <label for="list_type" ><strong>[%|loc%]List type:[%END%]</strong></label>
     <ul id="list_type">
   [% FOREACH template = list_list_tpl %]
       <li>

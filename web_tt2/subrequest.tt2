@@ -5,7 +5,7 @@
 
         [% IF listconf.custom_attribute.size == 0 %]
           [%|loc(list)%]You requested a subscription to list %1[%END%].
-          [%|loc%]To confirm your request, please click the button below :[%END%]<br />
+          [%|loc%]To confirm your request, please click the button below:[%END%]<br />
         [% ELSE %] [%|loc(list)%]You want to subscribe to list %1[%END%].
           [%|loc%]Please fill in the form below and then click the validation button[%END%]<br />
           <br />
@@ -66,7 +66,7 @@
           <input type="hidden" name="previous_action" value="subrequest" />
  	  <input type="hidden" name="via_subrequest" value="1" />
         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
-        <input class="MainMenuLinks" type="submit" name="action_requestpasswd" value="[%|loc%]My password ?[%END%]" />
+        <input class="MainMenuLinks" type="submit" name="action_requestpasswd" value="[%|loc%]My password?[%END%]" />
         </fieldset>
          </form>
 

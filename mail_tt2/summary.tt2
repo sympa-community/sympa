@@ -1,7 +1,7 @@
 From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Summary of list %1[%END%][%END%]
 
-[% table_of_content %] :
+[% table_of_content %][%|loc%]:[%END%]
 
 [% FOREACH m = msg_list -%]
 [% m.id %]. [% m.subject %]   [% m.from %]

@@ -4,7 +4,7 @@ Subject: [% FILTER qencode %][%|loc%]Public lists[%END%][%END%]
 [%|loc(conf.email,conf.host)%]Here is the list of lists from %1@%2[%END%]
 
 [% FOREACH l = lists -%]
-[% l.key %]@[% l.value.host %] : [% l.value.subject %]
+[% l.key %]@[% l.value.host %][%|loc%]:[%END%] [% l.value.subject %]
 
 [% END %]
 

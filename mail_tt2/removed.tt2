@@ -5,5 +5,5 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Removed from %1[%END%][%END%]
 %2@%3, probably because we received
 non-delivery reports for your address.[%END%]
 
-[%|loc%]You can subscribe again :[%END%]
+[%|loc%]You can subscribe again:[%END%]
 [% FILTER escape_url %]mailto:[%conf.email%]@[%conf.host%]?subject=sub [%list.name%][% END %]

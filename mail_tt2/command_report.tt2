@@ -7,9 +7,9 @@ X-Loop: [% conf.sympa %]
 [%########## SUCCESS #########-%]
 [%############################-%]
 [% IF nb_notice -%]
-[% IF nb_notice == 1 -%][%|loc%]Command has been performed :[%END%]
+[% IF nb_notice == 1 -%][%|loc%]Command has been performed:[%END%]
 
-[% ELSIF nb_notice > 1 -%][%|loc%]These commands have been performed :[%END%]
+[% ELSIF nb_notice > 1 -%][%|loc%]These commands have been performed:[%END%]
 
 [% END -%]
 [%- FOREACH notice = notices -%]
@@ -45,7 +45,7 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [%|loc(notice.listname)%]Your configuration regarding list %1 has been updated.[%END%]
 
 [% ELSIF notice.entry == 'finished' -%]
-[%|loc(notice.cmd)%]Command '%1' found : ignoring end of message.[%END%]
+[%|loc(notice.cmd)%]Command '%1' found: ignoring end of message.[%END%]
 
 [% ELSIF notice.entry == 'no_message_to_moderate' -%]
 [%|loc(notice.listname)%]There is no message to moderate for list '%1'.[%END%]
@@ -60,9 +60,9 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [% IF before_auth %]
                    ===============================
 [% END %]
-[% IF nb_auth == 1 -%][%|loc%]Command has been rejected :[%END%]
+[% IF nb_auth == 1 -%][%|loc%]Command has been rejected:[%END%]
 
-[% ELSIF nb_auth > 1 -%][%|loc%]These commands have been rejected :[%END%]
+[% ELSIF nb_auth > 1 -%][%|loc%]These commands have been rejected:[%END%]
 
 [% END -%]
 [%- FOREACH auth = auths -%]
@@ -78,9 +78,9 @@ been subscribed (or unsubscribed) to the list.[%END-%]
 [% IF before_user_err %]
                    ===============================
 [% END %]
-[% IF nb_user_err == 1 -%][%|loc%]Command has failed :[%END%]
+[% IF nb_user_err == 1 -%][%|loc%]Command has failed:[%END%]
 
-[% ELSIF nb_user_err > 1 -%][%|loc%]These commands have failed :[%END%]
+[% ELSIF nb_user_err > 1 -%][%|loc%]These commands have failed:[%END%]
 
 [% END -%]
 [%- FOREACH u_err = user_errors -%]
@@ -114,7 +114,7 @@ you subscribed from a different e-mail address ?[%END-%]
 Your configuration regarding this command has not been updated.[%END-%]
 
 [% ELSIF u_err.entry == 'available_reception_mode' -%]
-  [%|loc(u_err.listname,u_err.modes)%]List %1 allows only these reception modes : %2[%END%]
+  [%|loc(u_err.listname,u_err.modes)%]List %1 allows only these reception modes: %2[%END%]
 
 [% ELSIF u_err.entry == 'empty_archives' -%]
   [%|loc()%]This list archive is empty.[%END%] 
@@ -143,9 +143,9 @@ email address. Please try using your canonical address.[%END-%]
 [% IF before_intern_err %]
                    ===============================
 [% END %]
-[% IF nb_intern_err == 1 -%][%|loc%]Command has failed because of an internal server error :[%END%]
+[% IF nb_intern_err == 1 -%][%|loc%]Command has failed because of an internal server error:[%END%]
 
-[% ELSIF nb_intern_err > 1 -%][%|loc%]These commands have failed because of an internal server error :[%END%]
+[% ELSIF nb_intern_err > 1 -%][%|loc%]These commands have failed because of an internal server error:[%END%]
 
 [% END -%]
 [%- FOREACH i_err = intern_errors -%]

@@ -3,16 +3,16 @@
 
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-  <label for="mode_delete">[%|loc(shortname)%]Do you want to delete the old file %1 ?[%END%]</label>
+  <label for="mode_delete">[%|loc(shortname)%]Do you want to delete the old file %1?[%END%]</label>
     <input id="mode_delete" class="MainMenuLinks" type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
   <br />
-  <label for="new_name">[%|loc(shortname)%]Do you want to rename your file %1 ?[%END%]</label>
+  <label for="new_name">[%|loc(shortname)%]Do you want to rename your file %1?[%END%]</label>
     <br />
     <input id="new_name" size="20" maxlength="100" name="new_name" />
     <input id="new_name" class="MainMenuLinks" type="submit" name="mode_rename" value="[%|loc%]Rename[%END%]" />
     
   <br />
-  <label for="mode_cancel">[%|loc%]Do you want to cancel the upload ?[%END%]</label>
+  <label for="mode_cancel">[%|loc%]Do you want to cancel the upload?[%END%]</label>
     <input id="mode_cancel" class="MainMenuLinks" type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" />
 
    <input type="hidden" name="action_d_upload" value="1" />

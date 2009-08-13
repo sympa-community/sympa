@@ -9,41 +9,41 @@
 <input name="archive_name" type="hidden" value="[% archive_name %]" />
 
 
-<span class="larger">[%|loc%]Search field :[%END%]  </span><a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[% archive_name %]</strong></a>
+<span class="larger">[%|loc%]Search field:[%END%]  </span><a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[% archive_name %]</strong></a>
 
 <input name="key_word" type="text" size="30" value="[% key_word %]" />
 <input name="action" type="hidden" value="arcsearch" />
 <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
 <br />
 
-<label for="how">[%|loc%]Search[%END%] :  </label>
+<label for="how">[%|loc%]Search:[%END%]  </label>
   <input id="how" type="radio" name="how" value="phrase" checked="checked" /> <em>[%|loc%]this sentence[%END%]</em>
   <input id="how" type="radio" name="how" value="all" /> <em>[%|loc%]all of these words[%END%]</em>
   <input id="how" type="radio" name="how" value="any" /> <em>[%|loc%]one of these words[%END%]</em>
 <br />
 
-<label for="age">[%|loc%]Prefer[%END%] :  </label>
+<label for="age">[%|loc%]Prefer:[%END%]  </label>
   <input id="age" type="radio" name="age" value="new" checked="checked" /> <em>[%|loc%]newest messages[%END%]</em>
   <input id="age" type="radio" name="age" value="old" /> <em>[%|loc%]oldest messages[%END%]</em>
 <br />
 
-<label for="case">[%|loc%]Case[%END%] :   </label>
+<label for="case">[%|loc%]Case:[%END%]   </label>
   <input id="case" type="radio" name="case" value="off" checked="checked" /> <em>[%|loc%]insensitive[%END%]</em>
   <input id="case" type="radio" name="case" value="on" /> <em>[%|loc%]sensitive[%END%]</em>
 <br />
 
-<label for="match">[%|loc%]Check[%END%] :  </label>
+<label for="match">[%|loc%]Check:[%END%]  </label>
   <input id="match" type="radio" name="match" value="partial" checked="checked" /> <em>[%|loc%]part of word[%END%]</em>
   <input id="match" type="radio" name="match" value="exact" /> <em>[%|loc%]entire word[%END%]</em>
 <br />
 
-<label for="limit">[%|loc%]Layout[%END%] :  </label>
+<label for="limit">[%|loc%]Layout:[%END%]  </label>
   <input id="limit" type="radio" name="limit" value="10" checked="checked" /> <em>10</em> [%|loc%]results by page[%END%]
   <input id="limit" type="radio" name="limit" value="25" /> <em>25</em> [%|loc%]results by page[%END%]
   <input id="limit" type="radio" name="limit" value="50" /> <em>50</em> [%|loc%]results by page[%END%]
 <br />
 
-<label for="from" rowspan="2">[%|loc%]Search area[%END%] :  </label>
+<label for="from" rowspan="2">[%|loc%]Search area:[%END%]  </label>
   <input id="from" type="checkbox" name="from" value="True" /> <em>[%|loc%]Sender[%END%]  </em>
   <input id="from" type="checkbox" name="subj" value="True" checked="checked" /> <em>[%|loc%]Subject[%END%]  </em>
   <input type="checkbox" name="date" value="True" /> <em>[%|loc%]Date[%END%]  </em>
@@ -51,7 +51,7 @@
 <br />
 <br />
 
-<label for="directories">[%|loc%]Extend search field[%END%] :  </label>
+<label for="directories">[%|loc%]Extend search field:[%END%]  </label>
 <br />
 <select name="directories" multiple="multiple" size="4">    
 

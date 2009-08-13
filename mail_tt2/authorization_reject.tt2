@@ -134,10 +134,10 @@
 [%|loc()%]It is not possible to unsubscribe from this list.[%END%]
 
 [% ELSIF reason == 'list_private_no_archive' -%]
-[%|loc%]List is Private : You can not read the archives.[%END%]
+[%|loc%]List is private: You can not read the archives.[%END%]
 
 [% ELSIF reason == 'list_private_no_browse' -%]
-[%|loc%]List is Private : You can not browse available files.[%END%]
+[%|loc%]List is private: You can not browse available files.[%END%]
 
 [% ELSIF reason == 'restricted_modindex' -%]
 [%|loc%]The MODINDEX command is restricted to moderators.[%END%]

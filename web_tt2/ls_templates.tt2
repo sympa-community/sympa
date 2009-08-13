@@ -6,7 +6,7 @@
 
 [%|loc%]This page is suggested in order to edit or create mail or web tt2 templates.[%END%]
 
-[%|loc%]Priority rules for template selection :
+[%|loc%]Priority rules for template selection:
 <ul>
 <li>IF list context defined, apply list template if exist</li>
 <li>ELSE apply robot defined template if exist</li>
@@ -19,11 +19,11 @@
 <form action="[% path_cgi %]/ls_templates" method="post">
 <fieldset>
 <ul>
-<li>[%|loc%]Select templates type :[%END%]  
+<li>[%|loc%]Select templates type:[%END%]  
   <input type="radio" name="webormail" value="web"  [% IF webormail == 'web' %]checked="checked"[% END %] />web
   <input type="radio" name="webormail" value="mail" [% IF webormail == 'mail' %]checked="checked"[% END %] />mail
 </li>
-<li>[%|loc%]Select a list :[%END%]  <input type="text" name="list" value="[% list %]"/></li>
+<li>[%|loc%]Select a list:[%END%]  <input type="text" name="list" value="[% list %]"/></li>
 <li><input class="MainMenuLinks" type="submit" name="action_ls_templates" value="[%|loc%]Reload[%END%]" /></li>
 </ul>
 </fieldset>
@@ -102,7 +102,7 @@
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');" />
     </fieldset>
     </form>	
   [% END %]
@@ -124,7 +124,7 @@
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');"/>
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');"/>
     </fieldset>
     </form>
   [% END %]
@@ -146,7 +146,7 @@
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="[%|loc%]edit[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1 ?[%END%][%END%]');"/>
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="[%|loc%]rm[% END %]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(lang.value)%]Do you really want to remove %1?[%END%][%END%]');"/>
     </fieldset>
     </form>
     [% END %]

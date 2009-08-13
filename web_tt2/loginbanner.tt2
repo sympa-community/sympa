@@ -36,9 +36,9 @@
         <input type="hidden" name="list" value="[% list %]" />
 
       <input type="hidden" name="action" value="login" />
-      <label for="email_login">[%|loc%]email address[%END%] :</label>
+      <label for="email_login">[%|loc%]email address:[%END%]</label>
       <input type="text" name="email" id="email_login" size="28" value="[% unauthenticated_email %]" /> &nbsp;&nbsp;
-      <label for="passwd" >[%|loc%]password[%END%] :</label>
+      <label for="passwd" >[%|loc%]password:[%END%]</label>
       <input type="password" name="passwd" id="passwd" size="8" /> &nbsp;&nbsp;
       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
 	</fieldset>
@@ -52,8 +52,8 @@
 [% ELSE %]
   <div class="remember">
   <b>
-  <a href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
-  <a href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password ?[%END%]</a>
+  <a href="[% path_cgi %]/firstpasswd/[% escaped_init_email %]">[%|loc%]First login?[%END%]</a><br />
+  <a href="[% path_cgi %]/renewpasswd/[% escaped_init_email %]">[%|loc%]Lost password?[%END%]</a>
   </b>
   </div>
 [% END %]

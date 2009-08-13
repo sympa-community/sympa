@@ -22,7 +22,7 @@
 
 [%- END -%]
 
- <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(document.moderate_mails,'[% FILTER escape_quote %][%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification ?[%END%][%END%]',document.moderate_mails.quiet)" /> 
+ <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(document.moderate_mails,'[% FILTER escape_quote %][%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification?[%END%][%END%]',document.moderate_mails.quiet)" /> 
 
 <input type="hidden" name="from_modindex" value="from_modindex" />
 
@@ -49,7 +49,7 @@
  <br />
  [%|loc%]This list is configured to require topic(s).[%END%]
  <br />
- [%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute :[%END%] 
+ [%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] 
  <br />
  [% FOREACH t = available_topics %]
  <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>

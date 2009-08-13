@@ -8,7 +8,7 @@ Total size used for %1@%2 archive is %3 Bytes. Messages
 are no longer being web-archived. Please contact %5@%4. [%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
-Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning: archive %2% full[%END%][%END%]
 
 [%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
@@ -24,16 +24,16 @@ This list has been closed.[%END%]
 [% ELSIF type == 'warn-signoff' -%]
 Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2" from %3 %4[%END%][%END%]
 
-[%|loc(who,gecos,list.name)%]WARNING : %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
+[%|loc(who,gecos,list.name)%]WARNING: %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
 (You may help this person).[%END%]
  
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
 
 [%|loc(list.name,list.host,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
-Some of the customizations have been removed because they no longer respect the family rules :
+Some of the customizations have been removed because they no longer respect the family rules:
 
-     Parameters : %4
+     Parameters: %4
 
 [%END%]
 
@@ -63,20 +63,20 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[
 [%|loc(list.name)-%]Dear owner of list %1,
  
 A user asked to be added as a subscriber to your list. In order to list and manage
-pending subscription requests you should click on the following link :[%END%]
+pending subscription requests you should click on the following link:[%END%]
 
 [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
-[%|loc(replyto,keyauth,list.name,who,gecos)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject :
+[%|loc(replyto,keyauth,list.name,who,gecos)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:
 AUTH %2 ADD %3 %4 %5
 [%END%]
 
-[%|loc%]That can be done using this mailto link :[%END%][% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_who%] [%escaped_gecos%][% END %]
+[%|loc%]That can be done using this mailto link:[%END%][% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_who%] [%escaped_gecos%][% END %]
 
 [% IF custom_attribute %]
 [%|loc%]The user has provided the following informations:[%END%]
 [% FOREACH attribute = custom_attribute %]
-[% attribute.key %] : [% attribute.value.value -%]
+[% attribute.key %][%|loc%]:[%END%] [% attribute.value.value -%]
 [%END-%]
 [% END %]
 
@@ -86,12 +86,12 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list
 [%|loc(list.name)-%]Dear owner of list %1,
 
 A user asked to be deleted from your list. If this is OK 
-with you, you should click on the following link :[% END %]
+with you, you should click on the following link:[% END %]
 
 [% FILTER escape_url %]mailto:[%sympa%]?subject=auth [%keyauth%] DEL [%list.name%] [%escaped_who%][% END %]
  
 [%|loc(sympa,keyauth,list.name,who)-%]
-or send an email to %1 with the following subject :
+or send an email to %1 with the following subject:
 AUTH %2 DEL %3 %4
 [%END%]
 
@@ -101,7 +101,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in
 
 [%|loc(list.name,rate,conf.wwsympa_url,list.name)%]Bounce rate in list %1 is %2.
 
-You should delete bouncing subscribers : 
+You should delete bouncing subscribers: 
 %3/reviewbouncing/%4
 [%END%]
 
@@ -137,7 +137,7 @@ Subject: [% FILTER qencode %][%|loc(who)%]FYI: automatic removal of user %1[%END
 (no action needed)
 
 [% ELSIF type == 'failed_to_change_included_member' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 : Failed to change member email address[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1: Failed to change member email address[%END%][%END%]
 
 [%|loc(current_email,new_email,datasource)%]User %1 could not change his member email address (new email address is %2) because he is included via a the following data sources: %3.
 

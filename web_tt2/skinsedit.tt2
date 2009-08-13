@@ -38,7 +38,7 @@
 [%|loc%]If you are not using css_path and css_url parameters, colors are defined in the robot.conf configuration file. Otherwise, colors are defined in the static CSS. Colors can be changed on your current session using the following color editor. When finished, you may copy the result a new CCS static file. The target is specified by css_path parameter.[%END%]
 [% IF css_path %]([% css_path %])[% END %]
 [%|loc%]
-Be carreful : the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.
+Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.
 </p>
 <p>
 Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
@@ -53,7 +53,7 @@ Use the color editor in order to change defined colors. First select the color y
 <input type="hidden" name="action" value="skinsedit">
 </li>
 
-<li>[%|loc%]Select the parameter you want to change : [%END%]
+<li>[%|loc%]Select the parameter you want to change: [%END%]
 <select id="custom_color_number" name="custom_color_number">
 [% FOREACH col IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] %]
 <option value="[%col%]" [% IF col == custom_color_number %]selected="selected"[% END %]>[%col%]</option>

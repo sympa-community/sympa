@@ -1,7 +1,7 @@
 From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'intern_error' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution : Internal server error[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
@@ -19,7 +19,7 @@ Content-Disposition: inline
 [%#### USER  ERROR %]
 [%################ %]
 [% ELSIF type == 'user_error' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution : User error[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
@@ -27,9 +27,9 @@ Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 
 [% IF list.name -%]
-[%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
+[%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason:[%END%]
 [% ELSE -%]
-[%|loc%]Impossible to distribute your message for the following reason :[%END%]
+[%|loc%]Impossible to distribute your message for the following reason:[%END%]
 [% END -%]
 
 [% IF entry == 'routing_error' -%]
@@ -41,7 +41,7 @@ commands should never ever be sent to lists. Commands must be sent
 to %2 exclusively.
 
 If your message was really meant to be sent to the list, it was
-interpreted by the software as a command. Please contact the list owner :  
+interpreted by the software as a command. Please contact the list owner:  
 %1-request@%3 so that he can take care of your message.
 
 Thank you for your attention.
@@ -59,7 +59,7 @@ was over the maximum size allowed on this list.[%END%]
 [% ELSIF entry == 'unfound_message' -%]
 
 [%|loc(list.name,key)%]Unable to access the message on list %1 with  key %2.
-Warning : this message may already have been sent by one of the list's editor.[%END%]
+Warning: this message may already have been sent by one of the list's editor.[%END%]
 [% ELSIF entry == 'unfound_file_message' -%]
 
 [%|loc(key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
@@ -76,7 +76,7 @@ Warning : this message may already have been sent by one of the list's editor.[%
 [%# AUTHORIZATION ERROR %]
 [%##################### %]
 [% ELSIF type == 'authorization_reject' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution : Authorization denied[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Message distribution: Authorization denied[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
 Content-Transfer-Encoding: 8bit
 
@@ -84,7 +84,7 @@ Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected. 
-You are not allowed to send this message for the following reason :[%END%]
+You are not allowed to send this message for the following reason:[%END%]
 
 [% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
@@ -104,7 +104,7 @@ Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
 
 [% ELSIF entry == 'message_in_distribution_spool' -%]
 
-[%|loc(key,list.name)%]Message %1 for list '%2' has been validated ; it will be distributed soon.[%END%]
+[%|loc(key,list.name)%]Message %1 for list '%2' has been validated; it will be distributed soon.[%END%]
 
 [% ELSIF entry == 'message_rejected' -%]
 
@@ -116,7 +116,7 @@ Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
 
 [% ELSIF entry == 'message_confirmed_and_in_distribution_spool' -%]
 
-[%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed ; it will be distributed soon.[%END%]
+[%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed; it will be distributed soon.[%END%]
 
 [% END -%]
 [% END %]

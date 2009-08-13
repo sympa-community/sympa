@@ -2,11 +2,11 @@ From: SYMPA <[% conf.email %]@[% conf.host %]>
 Subject: [% FILTER qencode %][%|loc%]near expiration of your certificate[%END%][%END%]
 
 [%|loc(expiration_date)%]Your authentification certificate will expire on %1.[%END%]
-[%|loc%]The certificate subject is :[%END%]
+[%|loc%]The certificate subject is:[%END%]
 [% certificate_id %]
 
 [%|loc%]You won't receive the signed messages from your lists.[%END%]
 [%|loc(conf.email,conf.host)%]To receive them again, renew your certificate with your certification authority
 and send a signed message to %1@%2
 or
-click : [%END%]mailto:[% conf.email %]@[% conf.host %]?subject=WHICH
+click: [%END%]mailto:[% conf.email %]@[% conf.host %]?subject=WHICH

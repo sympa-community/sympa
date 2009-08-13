@@ -2,7 +2,7 @@
 
 [% FOREACH p = param %]
   <a name="[% p.key %]"></a>
-  <strong>[% p.value.title %]</strong> ([% p.key %]):
+  <strong>[% p.value.title %]</strong> ([% p.key %])[%|helploc%]:[%END%]
   <dl>
     <dd>
       [% IF p.key == 'add' %]
@@ -81,7 +81,7 @@
         [%|helploc%]Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compiled messages are sent to subscribers according to the frequency selected with this parameter.[%END%]
       [% ELSIF p.key == 'editor' %]
         [%|helploc%]Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.[%END%] <br />
-        [%|helploc%]FYI: Defining editors will not make the list moderated ; you will have to set the "send" parameter.[%END%]<br />
+        [%|helploc%]FYI: Defining editors will not make the list moderated; you will have to set the "send" parameter.[%END%]<br />
         [%|helploc%]FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.[%END%]
       [% ELSIF p.key == 'expire_task' %]
         [%|helploc%]This parameter states which model is used to create an expire task. An expire task regularly checks the subscription or resubscription  date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
@@ -149,7 +149,7 @@
         <ul>
           <li>javascript: [%|helploc%]the address is hidden using a javascript. A user who enables javascript can see a nice mailto address where others have nothing.[%END%]</li>
           <li>at: [%|helploc%]the @ char is replaced by the string " AT ".[%END%]</li>
-          <li>none : [%|helploc%]no protection against spammer.[%END%]</li>
+          <li>none: [%|helploc%]no protection against spammer.[%END%]</li>
         </ul>
       [% ELSIF p.key == 'subject' %]
         [%|helploc%]This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line.[%END%]

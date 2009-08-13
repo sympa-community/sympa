@@ -122,7 +122,7 @@ Returns the number of subscribers to the list.
 
 =item get_user_db ( USER )
 
-Returns a hash with the informations regarding the indicated
+Returns a hash with the information regarding the indicated
 user.
 
 =item get_subscriber ( USER )
@@ -220,7 +220,7 @@ the statistics. OPTION can be 'text' or 'array'.
 
 =item print_info ( FDNAME )
 
-Print the list informations to the given file descriptor, or the
+Print the list information to the given file descriptor, or the
 currently selected descriptor.
 
 =cut
@@ -491,7 +491,7 @@ my %alias = ('reply-to' => 'reply_to',
 			},
 			'optional' => {
 				'format' => ['required','optional'],
-				'gettext_id' => "is the attribute optionnal ?",
+				'gettext_id' => "is the attribute optional?",
 				'order' => 6
 			}
 		
@@ -624,12 +624,12 @@ my %alias = ('reply-to' => 'reply_to',
 			 },
 	    'editor_include' => {'format' => {'source' => {'datasource' => 1,
 							   'occurrence' => '1',
-							   'gettext_id' => 'the datasource',
+							   'gettext_id' => 'the data source',
 							   'order' => 1
 							   },
 					      'source_parameters' => {'format' => '.*',
 								      'occurrence' => '0-1',
-								      'gettext_id' => 'datasource parameters',
+								      'gettext_id' => 'data source parameters',
 								      'order' => 2
     								      },
 					      'reception' => {'format' => ['mail','nomail'],
@@ -645,7 +645,7 @@ my %alias = ('reply-to' => 'reply_to',
 					      
 					      },
 				  'occurrence' => '0-n',
-				  'gettext_id' => 'Moderators defined in an external datasource',
+				  'gettext_id' => 'Moderators defined in an external data source',
 				  'group' => 'description',
 			      },
 	    'expire_task' => {'task' => 'expire',
@@ -974,7 +974,7 @@ my %alias = ('reply-to' => 'reply_to',
 								       },
 						 'db_env' => {'format' => '\w+\=\S+(;\w+\=\S+)*',
 							      'order' => 5,
-							      'gettext_id' => "environment variables for database connexion"
+							      'gettext_id' => "environment variables for database connection"
 							      },
 						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
@@ -1118,7 +1118,7 @@ my %alias = ('reply-to' => 'reply_to',
 						 },
 				     'info' => {'format' => '.+',
 						'length' => 30,
-						'gettext_id' => "private informations",
+						'gettext_id' => "private information",
 						'order' => 3
 						},
 				     'profile' => {'format' => ['privileged','normal'],
@@ -1158,7 +1158,7 @@ my %alias = ('reply-to' => 'reply_to',
 						       }
 					 },
 				'occurrence' => '0-n',
-				'gettext_id' => 'Owners defined in an external datasource',
+				'gettext_id' => 'Owners defined in an external data source',
 				'group' => 'description',
 			    },
 	    'priority' => {'format' => [0..9,'z'],
@@ -1182,14 +1182,14 @@ my %alias = ('reply-to' => 'reply_to',
 			      'group' => 'other'
 			      },
 	    'remove_headers' => {'format' => '\S+',
-				 'gettext_id' => 'Incoming SMTP headers fields to be removed',
+				 'gettext_id' => 'Incoming SMTP header fields to be removed',
 				 'default' => {'conf' => 'remove_headers'},
 				 'group' => 'sending',
 				 'occurrence' => '0-n',
 				 'split_char' => ',',
 				 },
 	    'remove_outgoing_headers' => {'format' => '\S+',
-					  'gettext_id' => 'Outgoing SMTP headers fields to be removed',
+					  'gettext_id' => 'Outgoing SMTP header fields to be removed',
 					  'default' => {'conf' => 'remove_outgoing_headers'},
 					  'group' => 'sending',
 					  'occurrence' => '0-n',
@@ -1338,7 +1338,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'pictures_feature' => {'format' => ['on','off'],
 			       'occurence' => '0-1',
 			       'default' => {'conf' => 'pictures_feature'},
-			       'gettext_id' => "Allow picture display ? (must be enabled for the current robot)",
+			       'gettext_id' => "Allow picture display? (must be enabled for the current robot)",
 			       'group' => 'other'
 			       },	
 	    'merge_feature' => {'format' => ['on','off'],
@@ -3076,7 +3076,7 @@ sub send_file {
     }
 
     # if the list have it's private_key and cert sign the message
-    # . used only for the welcome message, could be usefull in other case ? 
+    # . used only for the welcome message, could be usefull in other case? 
     # . a list should have several certificats and use if possible a certificat
     #   issued by the same CA as the receipient CA if it exists 
     if ($sign_mode eq 'smime') {
@@ -3145,7 +3145,7 @@ sub send_msg {
 	}
     }
  
-    ## Who is the enveloppe sender ?
+    ## Who is the enveloppe sender?
     my $host = $self->{'admin'}{'host'};
     my $from = $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host;
 
@@ -5391,7 +5391,7 @@ sub get_first_admin_user {
     }
     
      ## Oracle
-# and ok ?
+# and ok?
     if ($Conf::Conf{'db_type'} eq 'Oracle') {
 	
 	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s %s AND role_admin = %s)", 
@@ -5933,7 +5933,7 @@ sub is_user_db {
    return $is_user;
 }
 
-## Is the indicated person a subscriber to the list ?
+## Is the indicated person a subscriber to the list?
 sub is_user {
     my ($self, $who) = @_;
     $who = &tools::clean_email($who);
@@ -6448,7 +6448,7 @@ sub add_user {
 	}
 	
 	unless ($new_user->{'included'}) {
-	    ## Is the email in user table ?
+	    ## Is the email in user table?
 	    if (! is_user_db($who)) {
 		## Insert in User Table
 		$statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($new_user->{'gecos'}), $dbh->quote($new_user->{'lang'}), $dbh->quote($new_user->{'password'});
@@ -6528,7 +6528,7 @@ sub add_admin_user {
 	}
 	    
 	unless ($new_admin_user->{'included'}) {
-	    ## Is the email in user table ?
+	    ## Is the email in user table?
 	    if (! is_user_db($who)) {
 		## Insert in User Table
 		$statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($new_admin_user->{'gecos'}), $dbh->quote($new_admin_user->{'lang'}), $dbh->quote($new_admin_user->{'password'});
@@ -6641,7 +6641,7 @@ sub is_listmaster {
     return 0;
 }
 
-## Does the user have a particular function in the list ?
+## Does the user have a particular function in the list?
 sub am_i {
     my($self, $function, $who, $options) = @_;
     do_log('debug2', 'List::am_i(%s, %s, %s)', $function, $self->{'name'}, $who);
@@ -6757,7 +6757,7 @@ sub init_list_cache {
     undef %list_cache;
 }
 
-## May the indicated user edit the indicated list parameter or not ?
+## May the indicated user edit the indicated list parameter or not?
 sub may_edit {
 
     my($self,$parameter, $who) = @_;
@@ -6779,7 +6779,7 @@ sub may_edit {
         $edit_conf = $edit_list_conf{$edit_conf_file};
     }
 
-    ## What privilege ?
+    ## What privilege?
     if (&is_listmaster($who,$self->{'domain'})) {
 	$role = 'listmaster';
     }elsif ( $self->am_i('privileged_owner',$who) ) {
@@ -6798,7 +6798,7 @@ sub may_edit {
 	return ('user','hidden');
     }
 
-    ## What privilege does he/she has ?
+    ## What privilege does he/she has?
     my ($what, @order);
 
     if (($parameter =~ /^(\w+)\.(\w+)$/) &&
@@ -6850,7 +6850,7 @@ sub may_create_parameter {
 }
 
 
-## May the indicated user do something with the list or not ?
+## May the indicated user do something with the list or not?
 ## Action can be : send, review, index, get
 ##                 add, del, reconfirm, purge
 sub may_do {
@@ -6933,7 +6933,7 @@ sub is_digest {
    return (shift->{'admin'}{'digest'});
 }
 
-## Does the file exist ?
+## Does the file exist?
 sub archive_exist {
    my($self, $file) = @_;
    do_log('debug', 'List::archive_exist (%s)', $file);
@@ -6974,7 +6974,7 @@ sub archive_msg_digest {
    $self->store_digest( $msg) if ($self->{'name'});
 }
 
-## Is the list moderated ?                                                          
+## Is the list moderated?                                                          
 sub is_moderated {
     
     return 1 if (defined shift->{'admin'}{'editor'});
@@ -6982,7 +6982,7 @@ sub is_moderated {
     return 0;
 }
 
-## Is the list archived ?
+## Is the list archived?
 sub is_archived {
     do_log('debug', 'List::is_archived');    
     if (shift->{'admin'}{'web_archive'}{'access'}) {do_log('debug', 'List::is_archived : 1'); return 1 ;}  
@@ -6990,7 +6990,7 @@ sub is_archived {
     return undef;
 }
 
-## Is the list web archived ?
+## Is the list web archived?
 sub is_web_archived {
     return 1 if (shift->{'admin'}{'web_archive'}{'access'}) ;
     return undef;
@@ -7203,7 +7203,7 @@ sub load_data_sources_list {
     return \%list_of_data_sources;
 }
 
-## Loads the statistics informations
+## Loads the statistics information
 sub _load_stats_file {
     my $file = shift;
     do_log('debug3', 'List::_load_stats_file(%s)', $file);
@@ -8259,7 +8259,7 @@ sub _load_admin_users_include {
 		my $incl = &tools::dup_var($tmp_incl);
 
 		## get the list of admin users
-		## does it need to define a 'default_admin_user_option' ?
+		## does it need to define a 'default_admin_user_option'?
 		if ($type eq 'include_sql_query') {
 		    $included = _include_users_sql(\%admin_users, $incl,\%option); 
 		}elsif ($type eq 'include_ldap_query') {
@@ -10463,7 +10463,7 @@ sub _save_admin_file {
 }
 
 # Is a reception mode in the parameter reception of the available_user_options
-# section ?
+# section?
 sub is_available_reception_mode {
   my ($self,$mode) = @_;
   $mode =~ y/[A-Z]/[a-z]/;
@@ -10650,7 +10650,7 @@ sub compute_topic {
     $reply_to =  &tools::clean_msg_id($reply_to);
     my $info_msg_reply_to = $self->load_msg_topic_file($reply_to,$robot);
 
-    # is msg reply to already tagged ?	
+    # is msg reply to already tagged?	
     if (ref($info_msg_reply_to) eq "HASH") { 
 	return $info_msg_reply_to->{'topic'};
     }
@@ -10767,7 +10767,7 @@ sub tag_topic {
 #         - topic : string - list of topic name(s)
 #         - method : editor|sender|auto - method used to tag
 #         - msg_id : the msg_id
-#         - filename : name of the file containing these informations 
+#         - filename : name of the file containing this information 
 #     | undef 
 ####################################################
 sub load_msg_topic_file {

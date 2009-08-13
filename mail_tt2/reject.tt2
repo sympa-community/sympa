@@ -4,8 +4,8 @@ Subject: [% FILTER qencode %][%|loc%]Your message has been rejected.[%END%][%END
 [%|loc(list.name,list.host,rejected_by)%]Your message for list %1@%2
 has been rejected by the moderator (%3).[%END%]
 
-[%|loc(subject)%](Subject of your mail : %1)[%END%]
+[%|loc(subject)%](Subject of your mail: %1)[%END%]
 
 
-[%|loc(list.name)%]Check %1 list usage :[%END%]
+[%|loc(list.name)%]Check %1 list usage:[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]

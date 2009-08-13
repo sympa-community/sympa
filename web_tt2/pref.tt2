@@ -6,14 +6,14 @@
 
 <form action="[% path_cgi %]" method="post">
   <fieldset>
-    <label>[%|loc%]Email[%END%] :  </label>[% user.email %]<br />
-    <label for="gecos">[%|loc%]Name[%END%] :  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /><br />
-    <label for="lang">[%|loc%]Language[%END%] :  </label><select id="lang" name="lang">
+    <label>[%|loc%]Email:[%END%]  </label>[% user.email %]<br />
+    <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /><br />
+    <label for="lang">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang">
               [% FOREACH l = languages %]
 		<option value='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
             					        </select><br />
-    <label for="cookie_delay">[%|loc%]Connection expiration period[%END%] :  </label><select name="cookie_delay" id="cookie_delay">
+    <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label><select name="cookie_delay" id="cookie_delay">
               [% FOREACH period = cookie_periods %]
                 <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
               [% END %]
@@ -28,7 +28,7 @@
 [%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="new_email">[%|loc%]New email address :[%END%]  </label><input id="new_email" name="new_email" size="25" />
+<label for="new_email">[%|loc%]New email address:[%END%]  </label><input id="new_email" name="new_email" size="25" />
 <input class="MainMenuLinks" type="submit" name="action_change_email_request" value="[%|loc%]Change Email[%END%]" />
 </fieldset>
 </form>
@@ -38,8 +38,8 @@
   
 <form action="[% path_cgi %]" method="post">
 <fieldset>
-<label for="newpasswd1">[%|loc%]New password :[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" /><br />
-<label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" /><br />
+<label for="newpasswd1">[%|loc%]New password:[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" /><br />
+<label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" /><br />
 <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
 </fieldset>          
 </form>

@@ -119,9 +119,9 @@
           <span style="font-size: smaller; color: [% color_13 %];"><strong>[%|loc%]Restore List[%END%]</strong></span>
         [% END %]                              
        [% ELSIF is_privileged_owner %]                 
-        <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list ?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
+        <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% ELSIF is_owner %]                      
-       <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list ?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
+       <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[% FILTER escape_quote %][%|loc(list)%]Are you sure you wish to close %1 list?[%END%][%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% END %]                               
     </td>       
   <td style="background: [% color_9 %]; text-align: center;">

@@ -47,7 +47,7 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="action" value="viewlogs" />
 
-  <label for="target_type">[%|loc%]Search by :[%END%]</label>
+  <label for="target_type">[%|loc%]Search by:[%END%]</label>
     <select id="target_type" name="target_type">
 
        [% IF target_type  == 'target_email' %]
@@ -72,7 +72,7 @@
     <label for="date_to">[%|loc%]to:[%END%]</label>
       <input id="date_to"type="text" name="date_to" value="[% date_to %]" size ="10"/>&nbsp; <em>[%|loc%]ex: 24/05/2006[%END%]</em><br />
 
-    <label for="type">[%|loc%]Search by type :[%END%]</label>
+    <label for="type">[%|loc%]Search by type:[%END%]</label>
       <select id="type" name="type">
        [% IF type %]
 	 [% IF type == 'all_actions' %]
@@ -97,7 +97,7 @@
        
    [% IF is_listmaster %]
 
-	<label for="ip">[%|loc%]Search by IP :[%END%]</label>
+	<label for="ip">[%|loc%]Search by IP:[%END%]</label>
 	  <input id="ip" type="text" name="ip" value="[% ip %]"/><br />
    [% END %]
 

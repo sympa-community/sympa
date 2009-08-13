@@ -2,12 +2,12 @@ From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name,list.host)%]encrypted message for list %1@%2[%END%][%END%]
 
 [%|loc(mail.sender,mail.subject)%]An encrypted message from %1 has been distributed to
-Subject : %2[%END%]
+Subject: %2[%END%]
 
 [%|loc(user.email)%]It was not possible to send you the message because the mailing list manager
 was unable to access your personal certificate (email %1).[%END%]
 [%|loc(conf.email,conf.host)%]Please, in order to receive future encrypted messages send a signed message
 to  %1@%2 .[%END%]
 
-[%|loc%]Information about this list :[%END%]
+[%|loc%]Information about this list:[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]

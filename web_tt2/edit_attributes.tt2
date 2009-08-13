@@ -4,7 +4,7 @@
 <i>[%|loc%]Additional information[%END%]</i>
 <table>
 [% FOREACH k IN list_conf.custom_attribute %]
-<tr><td  class="text_right"><label for="custom_attribute.[% k.id %]">[%|loc%][% k.name %] :[% END %]<br/>
+<tr><td  class="text_right"><label for="custom_attribute.[% k.id %]">[%|loc%][% k.name %]:[% END %]<br/>
 <i>[% k.comment %]</i>
 </label></td><td>
 [% SET m = subscriber.custom_attribute.item(k.id).value %]
@@ -21,7 +21,7 @@
 [% END %] [% IF k.optional == 'required' %]*[% END %]
 <!--(k.id[% k.id %]) (m[% m %]) (k.type[% k.type %])--></td></tr>[% END %]
 </table>
-<i>* : [%|loc%]Required element[%END%]</i>
+<i>[%|loc%]*: Required element[%END%]</i>
 </div>
 
 [% END %]

@@ -2,15 +2,15 @@
 <div class="block">
 
 <h2>[%|loc%]Result of your search in the archive[%END%] 
-<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span class="color_dark">[% list %]</span></a> : </h2>
+<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span class="color_dark">[% list %]:</span></a> </h2>
 
-<p>[%|loc%]Search field :[%END%] 
+<p>[%|loc%]Search field:[%END%] 
 [% FOREACH u = directories %]
  <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span class="color_dark">[% u %]</font></a> - 
 [% END %]
 </p>
 <p>
-[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%]:<br> 
+[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;:</strong>[%END%]<br> 
 <em>
 
 [% IF how == 'phrase' %]

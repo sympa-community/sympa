@@ -36,7 +36,7 @@
 	      [% sub.value.date %]
 	  </td>
           <td class="text_left">
-              [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %] : </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
+              [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sub.value.custom_attribute.item(ca_k.id).value %][% sub.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
           </td>
         </tr>
 
