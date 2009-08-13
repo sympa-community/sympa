@@ -285,136 +285,229 @@ sub edit_configuration {
 sub check_cpan {
     require CPAN;
 
-    ## assume version = 1.0 if not specified.
-    ## 
-    my %versions = (
-		    'perl' => '5.008',
-		    'AuthCAS' => '1.4',
-		    'Net::LDAP' =>, '0.27', 
-		    'Net::Netmask' =>, '1.9015', 
-		    'perl-ldap' => '0.10',
-		    'Mail::Internet' => '1.51', 
-		    'DBI' => '1.48',
-		    'DBD::Pg' => '0.90',
-		    'DBD::Sybase' => '0.90',
-		    'DBD::mysql' => '2.0407',
-		    'Email::Date::Format' => '1.002',
-		    'FCGI' => '0.67',
-		    'HTML::StripScripts::Parser' => '1.0',
-		    'MIME::Tools' => '5.423',
-		    'File::Copy::Recursive' => '0.36',
-		    'File::Spec' => '0.8',
-		    'Crypt::CipherSaber' => '0.50',
-		    'CGI' => '3.35',
-		    'Digest::MD5' => '2.00',
-		    'DB_File' => '1.75',
-		    'IO::Socket::SSL' => '0.90',
-		    'Net::SSLeay' => '1.16',
-		    'Archive::Zip' => '1.05',
-		    'Bundle::LWP' => '1.09',
-		    'SOAP::Lite' => '0.60',
-		    'MHonArc::UTF8' => '2.6.0',
-		    'MIME::Base64' => '3.03',
-		    'MIME::Charset' => '0.04.1',
-		    'MIME::EncWords' => '0.040',
-		    'MIME::Lite' => '3.024',
-		    'MIME::Lite::HTML' => '1.23',
-		    'Term::ProgressBar' => '2.09',
-		    'Time::HiRes' => '1.9719',
-    );
-
-    ### key:left "module" used by SYMPA, 
-    ### right CPAN module.		     
-    my %req_CPAN = (
-		    'DB_File' => 'DB_FILE',
-		    'Digest::MD5' => 'Digest-MD5',
-		    'Email::Date::Format' => 'Email-Date-Format',
-		    'Mail::Internet' =>, 'MailTools',
-		    'IO::Scalar' => 'IO-stringy',
-		    'MIME::Tools' => 'MIME-tools',
-		    'MIME::Base64' => 'MIME-Base64',
-		    'MIME::Lite' => 'MIME-Lite',
-		    'MIME::Lite::HTML' => 'MIME-Lite-HTML',
-		    'Net::Netmask' =>, 'Net-Netmask', 
-		    'CGI' => 'CGI',
-		    'File::Spec' => 'File-Spec',
-		    'Regexp::Common' => 'Regexp-Common',
-		    'Locale::TextDomain' => 'libintl-perl',
-		    'Template' => 'Template-Toolkit',
-		    'Archive::Zip' => 'Archive-Zip',
-		    'LWP' => 'libwww-perl',
-		    'XML::LibXML' => 'XML-LibXML',
-		    'MHonArc::UTF8' => 'MHonArc',
-		    'FCGI' => 'FCGI',
-		    'DBI' => 'DBI',
-		    'DBD::mysql' => 'Msql-Mysql-modules',
-		    'Encode' => 'Encode',
-		    'MIME::Charset' => 'MIME-Charset',
-		    'MIME::EncWords' => 'MIME-EncWords',
-		    'Net::Netmask' =>, 'Net-Netmask', 
-		    'HTML::StripScripts::Parser' => 'HTML-StripScripts-Parser',
-		    'File::Copy::Recursive' => 'File-Copy-Recursive',
-		    'HTML::TreeBuilder' => 'HTML-Tree',
-		    'HTML::FormatText' => 'HTML-Format',
-		    'Term::ProgressBar' => 'Term-ProgressBar',
-		    'Time::HiRes' => 'Time-HiRes',
-		    'Text::LineFold' => 'Unicode-LineBreak',
-   );
-
-    my %opt_CPAN = (
-		    'AuthCAS' => 'AuthCAS',
-		    'DBD::Pg' => 'DBD-Pg',
-		    'DBD::Oracle' => 'DBD-Oracle',
-		    'DBD::Sybase' => 'DBD-Sybase',
-		    'DBD::SQLite' => 'DBD-SQLite',
-		    'Net::LDAP' =>   'perl-ldap',
-		    'CGI::Fast' => 'CGI',
-		    'Net::SMTP' => 'libnet',
-		    'IO::Socket::SSL' => 'IO-Socket-SSL',
-		    'Net::SSLeay' => 'NET-SSLeay',
-		    'Bundle::LWP' => 'LWP',
-		    'SOAP::Lite' => 'SOAP-Lite',
-		    'File::NFSLock' => 'File-NFSLock',
-		    'File::Copy::Recursive' => 'File-Copy-Recursive',
-		    'Crypt::CipherSaber' => 'CipherSaber',
-		   );
-
-    my %opt_features = (
-			'AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
-			'DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
-			'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
-			'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
-			'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
-			'DBD::Sybase' => 'Sybase database driver, required if you connect to a Sybase database.',
-			'DBD::SQLite' => 'SQLite database driver, required if you connect to a SQLite database.',
-			'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
-			'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
-			'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.usefull only when updating from old version with password reversible encryption.',
-			'Archive::Zip ' => 'this module provides zip/unzip for archive and shared document download/upload',
-			'FCGI' => 'WSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
-			'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
-			'IO::Socket::SSL' => 'required by CAS (single sign-on) and the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-			'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-			'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-			'SOAP::Lite' => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
-			'File::NFSLock' => 'required to perform NFS lock ; see also lock_method sympa.conf parameter'
-    );
+    ## assume required_version = 1.0 if not specified.
+    my %cpan_modules = (
+			'Archive::Zip' => {
+					   required_version => '1.05',
+					   package_name => 'Archive-Zip',
+					   mandatory => 1,
+					   usage => 'this module provides zip/unzip for archive and shared document download/upload',
+					  },
+			'AuthCAS' => {
+				      required_version =>'1.4',
+				      package_name => 'AuthCAS',
+				      usage => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
+				     },
+			'CGI' => {
+				  required_version =>'3.35',
+				  package_name => 'CGI',
+				  mandatory => 1,
+				  usage => 'required to run Sympa web interface',
+				  },
+			'Crypt::CipherSaber' => {
+						 required_version =>'0.50',
+						 package_name => 'CipherSaber',
+						 usage => 'this module provides reversible encryption of user passwords in the database.usefull only when updating from old version with password reversible encryption.',
+						},
+			'DB_File' => {
+				      required_version =>'1.75',
+				      package_name => 'DB_FILE',
+				      mandatory => 1,
+				      usage => ' used for maintaining snapshots of list members',
+				     },
+			'DBD::Oracle' => {
+					  required_version =>'0.90',
+					  package_name => 'DBD-Oracle',
+					  usage => 'Oracle database driver, required if you connect to a Oracle database.',
+				     },
+			'DBD::Pg' => {
+				      required_version =>'0.90',
+				      package_name => 'DBD-Pg',
+				      usage => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
+				     },
+			'DBD::SQLite' => {
+					  required_version =>'0.90',
+					  package_name => 'DBD-SQLite',
+					  usage => 'SQLite database driver, required if you connect to a SQLite database.',
+					 },
+			'DBD::Sybase' => {
+					  required_version =>'0.90',
+					  package_name => 'DBD-Sybase',
+					  usage => 'Sybase database driver, required if you connect to a Sybase database.',
+					 },
+			'DBD::mysql' => {
+					 required_version =>'2.0407',
+					 package_name => 'Msql-Mysql-modules',
+					 mandatory => 1,
+					 usage => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
+					},
+			'DBI' => {
+				  required_version =>'1.48',
+				  package_name => 'DBI',
+				  mandatory => 1,
+				  usage => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
+				 },
+			'Digest::MD5' => {
+					  required_version =>'2.00',
+					  package_name => 'Digest-MD5',
+					  mandatory => 1,
+					  usage => 'used to compute MD5 digests',
+					 },
+			'Encode' => {
+				     package_name => 'Encode',
+				     mandatory => 1,
+				     usage => 'module for character encoding processing',
+				    },
+			'FCGI' => {
+				   required_version =>'0.67',
+				   package_name => 'FCGI',
+				   mandatory => 1,
+				   usage => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
+				  },
+			'File::Copy::Recursive' => {
+						    required_version =>'0.36',
+						    package_name => 'File-Copy-Recursive',
+						    mandatory => 1,
+						    usage => 'used to copy file hierarchies',
+						   },
+			'File::NFSLock' => {
+					    package_name => 'File-NFSLock',
+					    usage => 'required to perform NFS lock ; see also lock_method sympa.conf parameter'
+					   },
+			'HTML::FormatText' => {
+					       package_name => 'HTML-Format',
+					       mandatory => 1,
+					       usage => 'used to compute plaindigest messages from HTML',
+					      },
+			'HTML::StripScripts::Parser' => {
+							 required_version =>'1.0',
+							 package_name => 'HTML-StripScripts-Parser',
+							 mandatory => 1,
+							 usage => 'required for XSS protection on the web interface',
+							},
+			'HTML::TreeBuilder' => {
+						package_name => 'HTML-Tree',
+						mandatory => 1,
+						usage => 'used to compute plaindigest messages from HTML',
+					       },
+			'IO::Scalar' => {
+					 package_name => 'IO-stringy',
+					 mandatory => 1,
+					 usage => 'internal use for string processing',
+					},
+			'IO::Socket::SSL' => {
+					      required_version =>'0.90',
+					      package_name => 'IO-Socket-SSL',
+					      usage => 'required when including members of a remote list',
+					     },
+			'Locale::TextDomain' => {
+						 package_name => 'libintl-perl',
+						 mandatory => 1,
+						 usage => 'internationalization functions',
+						},
+			'LWP' => {
+				  package_name => 'libwww-per',
+				  mandatory => 1,
+				  usage => 'required when including members of a remote list',
+				 },
+			'MHonArc::UTF8' => {
+					    required_version =>'2.6.0',
+					    package_name => 'MHonArc',
+					    mandatory => 1, 
+					    usage => 'mhonarc is used to build Sympa web archives',
+					   },
+			'MIME::Base64' => {
+					   required_version =>'3.03',
+					   package_name => 'MIME-Base64',
+					   mandatory => 1,
+					  },
+			'MIME::Charset' => {
+					    required_version =>'0.04.1',
+					    package_name => 'MIME-Charset',
+					    mandatory => 1,
+					   },
+			'MIME::EncWords' => {
+					     required_version =>'0.040',
+					     package_name => 'MIME-EncWords',
+					     mandatory => 1,
+					    },
+			'MIME::Lite' => {
+					 required_version =>'3.024',
+					 package_name => 'MIME-Lite',
+					 mandatory => 1,
+					},
+			'MIME::Lite::HTML' => {
+					       required_version =>'1.23',
+					       package_name => 'MIME-Lite-HTML',
+					       mandatory => 1,
+					      },
+			'MIME::Tools' => {
+					  required_version =>'5.423',
+					  package_name => 'MIME-tools',
+					  mandatory => 1,
+					 },
+			'Net::LDAP' => {
+					required_version =>'0.27', 
+					package_name => 'perl-ldap',
+					usage => 'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
+				       },
+			'Net::Netmask' => {
+					   required_version =>'1.9015', 
+					   package_name => 'Net-Netmask',
+					   mandatory => 1,
+					  },
+			'Net::SMTP' => {
+					package_name => 'libnet',
+					usage => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
+				       },
+			'perl' => {
+				   required_version =>'5.008',
+				  },
+			'SOAP::Lite' => {
+					 required_version =>'0.60',
+					 package_name => 'SOAP-Lite',
+					 usage => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
+					},
+			'Template' => {
+				       package_name => 'Template-Toolkit',
+				       mandatory => 1,	
+				      },
+			'Term::ProgressBar' => {
+						required_version =>'2.09',
+						package_name => 'Term-ProgressBar',
+						mandatory => 1,	
+					       },
+			'Text::LineFold' => {
+					     package_name => 'Unicode-LineBreak',
+					     mandatory => 1,
+					     usage => 'required to split lines in HTML mail composer',
+					    },
+			'Time::HiRes' => {
+					  required_version =>'1.9719',
+					  package_name => 'Time-HiRes',
+					  mandatory => 1,	
+					 },
+			'XML::LibXML' => {
+					  package_name => 'XML-LibXML',
+					  mandatory => 1,
+					 },
+		       );
 
     ### main:
     print "******* Check perl for SYMPA ********\n";
     ### REQ perl version
     print "\nChecking for PERL version:\n-----------------------------\n";
-    my $rpv = $versions{"perl"};
-    if ($] >= $versions{"perl"}){
+    my $rpv = $cpan_modules{"perl"}{'required_version'};
+    if ($] >= $cpan_modules{"perl"}{'required_version'}){
         print "your version of perl is OK ($]  >= $rpv)\n";
     }else {
         print "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
     }
 
     print "\nChecking for REQUIRED modules:\n------------------------------------------\n";
-    check_modules('y', \%req_CPAN, \%versions, \%opt_features);
+    check_modules('y', \%cpan_modules, 'mandatory');
     print "\nChecking for OPTIONAL modules:\n------------------------------------------\n";
-    check_modules('n', \%opt_CPAN, \%versions, \%opt_features);
+    check_modules('n', \%cpan_modules, 'optional');
 
     print <<EOM;
 ******* NOTE *******
@@ -423,17 +516,31 @@ You can retrieve all theses modules from any CPAN server
 EOM
 ###--------------------------
 # reports modules status
+# $cpan_modules is the cpan_modules structure
+# $type is the type of modules (mandatory | optional) that should be installed
 ###--------------------------
 }
 
 sub check_modules {
-    my($default, $todo, $versions, $opt_features) = @_;
+#    my($default, $todo, $versions, $opt_features) = @_;
+    my($default, $cpan_modules, $type) = @_;
 
     print "perl module          from CPAN       STATUS\n"; 
     print "-----------          ---------       ------\n";
 
-    foreach my $mod (sort keys %$todo) {
-        printf ("%-20s %-15s", $mod, $todo->{$mod});
+    foreach my $mod (sort keys %$cpan_modules) {
+      
+      ## Only check modules of the expected type
+      if ($type eq 'mandatory') {
+	next unless ($cpan_modules->{$mod}{mandatory});
+      }elsif ($type eq 'optional') {
+	next if ($cpan_modules->{$mod}{mandatory});
+      }
+      
+      ## Skip perl itself to prevent a huge upgrade
+      next if ($mod eq 'perl');
+
+        printf ("%-20s %-15s", $mod, $cpan_modules->{$mod}{package_name});
 
         eval "require $mod";
         if ($@) {
@@ -447,26 +554,27 @@ sub check_modules {
 	  ## MHonArc module does not provide its version the standard way
 	  if ($mod =~ /^MHonArc/i) {
 	    require "mhamain.pl";
-	    $mod = 'mhonarc';
-	  }
+	    $v = $mhonarc::VERSION;
+	  }else {
            
-	  $vs = "$mod" . "::VERSION";
-	  
-	  $v;
-	  {
-	    no strict 'refs';
-	    $v = $$vs;
+	    $vs = "$mod" . "::VERSION";
+	    
+	    $v;
+	    {
+	      no strict 'refs';
+	      $v = $$vs;
+	    }
 	  }
 
-	  my $rv = $versions->{$mod} || "1.0" ;
+	  my $rv = $cpan_modules->{$mod}{required_version} || "1.0" ;
 	  ### OK: check version
 	  if ($v ge $rv) {
 	    printf ("OK (%-6s >= %s)\n", $v, $rv);
 	    next;
 	  } else {
 	    print "version is too old ($v < $rv).\n";
-	    print ">>>>>>> You must update \"$todo->{$mod}\" to version \"$versions->{$todo->{$mod}}\" <<<<<<.\n";
-	    install_module($mod, {'default' => $default}, $opt_features);
+	    print ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}}\" <<<<<<.\n";
+	    install_module($mod, {'default' => $default}, $cpan_modules);
 	  }
         }
     }
@@ -476,7 +584,8 @@ sub check_modules {
 # Install a CPAN module
 ##----------------------
 sub install_module {
-    my ($module, $options, $opt_features) = @_;
+#    my ($module, $options, $opt_features) = @_;
+  my ($module, $options, $cpan_modules) = @_;
 
     my $default = $options->{'default'};
 
@@ -497,7 +606,7 @@ sub install_module {
     }
 
     unless ($options->{'force'}) {
-        printf "Description: %s\n", $opt_features->{$module};
+        printf "Description: %s\n", $cpan_modules->{$module}{usage};
         print "Install module $module ? [$default]";
         my $answer = <STDIN>; chomp $answer;
         $answer ||= $default;
