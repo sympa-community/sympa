@@ -504,7 +504,7 @@ sub install_module {
         return unless ($answer =~ /^y$/i);
     }
 
-    $CPAN::Config->{'inactivity_timeout'} = 4;
+    $CPAN::Config->{'inactivity_timeout'} = 120;
     $CPAN::Config->{'colorize_output'} = 1;
 
     #CPAN::Shell->clean($module) if ($options->{'force'});
