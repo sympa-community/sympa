@@ -26,7 +26,6 @@ use strict;
 use Exporter;
 use Carp;
 use POSIX qw(sysconf);
-use Mail::Internet;
 use MIME::Charset;
 use MIME::Tools;
 

@@ -30,7 +30,6 @@ use HTML::StripScripts::Parser;
 use File::Copy::Recursive;
 use POSIX qw(strftime mkfifo strtod);
 use Sys::Hostname;
-use Mail::Internet;
 use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;

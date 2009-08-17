@@ -322,11 +322,13 @@ sub check_cpan {
 				     },
 			'DBD::Pg' => {
 				      required_version =>'0.90',
+				      prerequisites => 'postgresql-devel and postgresql-server. postgresql should be running for make test to succeed',
 				      package_name => 'DBD-Pg',
 				      usage => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
 				     },
 			'DBD::SQLite' => {
 					  required_version =>'0.90',
+					  prerequisites => 'sqlite-devel. No need to install a server, the SQLite server code being provided with the client code.',
 					  package_name => 'DBD-SQLite',
 					  usage => 'SQLite database driver, required if you connect to a SQLite database.',
 					 },
@@ -337,6 +339,7 @@ sub check_cpan {
 					 },
 			'DBD::mysql' => {
 					 required_version =>'2.0407',
+					 prerequisites => 'mysql-devel and myslq-server. mysql should be running for make test to succeed',
 					 package_name => 'Msql-Mysql-modules',
 					 mandatory => 1,
 					 usage => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
@@ -351,7 +354,7 @@ sub check_cpan {
 					  required_version =>'2.00',
 					  package_name => 'Digest-MD5',
 					  mandatory => 1,
-					  usage => 'used to compute MD5 digests',
+					  usage => 'used to compute MD5 digests for passwords, etc',
 					 },
 			'Encode' => {
 				     package_name => 'Encode',
@@ -420,34 +423,35 @@ sub check_cpan {
 					   required_version =>'3.03',
 					   package_name => 'MIME-Base64',
 					   mandatory => 1,
+					   usage => 'required to compute digest for password and emails',
 					  },
 			'MIME::Charset' => {
 					    required_version =>'0.04.1',
 					    package_name => 'MIME-Charset',
 					    mandatory => 1,
+					    usage => 'used to encode mail body using a different charset',
 					   },
 			'MIME::EncWords' => {
 					     required_version =>'0.040',
 					     package_name => 'MIME-EncWords',
 					     mandatory => 1,
+					     usage => 'required to decode/encode SMTP header fields without breaking character encoding', 
 					    },
-			'MIME::Lite' => {
-					 required_version =>'3.024',
-					 package_name => 'MIME-Lite',
-					 mandatory => 1,
-					},
 			'MIME::Lite::HTML' => {
 					       required_version =>'1.23',
 					       package_name => 'MIME-Lite-HTML',
 					       mandatory => 1,
+					       usage => 'used to compose HTML mail from the web interface',
 					      },
 			'MIME::Tools' => {
 					  required_version =>'5.423',
 					  package_name => 'MIME-tools',
 					  mandatory => 1,
+					  usage => 'provides libraries for manipulating MIME messages',
 					 },
 			'Net::LDAP' => {
 					required_version =>'0.27', 
+					prerequisites => 'openldap-devel is needed to build the Perl code',
 					package_name => 'perl-ldap',
 					usage => 'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
 				       },
@@ -455,6 +459,7 @@ sub check_cpan {
 					   required_version =>'1.9015', 
 					   package_name => 'Net-Netmask',
 					   mandatory => 1,
+					   usage => 'used to check netmask within Sympa autorization scenario rules',
 					  },
 			'Net::SMTP' => {
 					package_name => 'libnet',
@@ -470,12 +475,14 @@ sub check_cpan {
 					},
 			'Template' => {
 				       package_name => 'Template-Toolkit',
-				       mandatory => 1,	
+				       mandatory => 1,
+				       usage => 'Sympa template format, used for web pages and other mail, config file templates. See http://template-toolkit.org/.',
 				      },
 			'Term::ProgressBar' => {
 						required_version =>'2.09',
 						package_name => 'Term-ProgressBar',
 						mandatory => 1,	
+						usage => 'used while checking the RDBMS buffer size',
 					       },
 			'Text::LineFold' => {
 					     package_name => 'Unicode-LineBreak',
@@ -485,16 +492,29 @@ sub check_cpan {
 			'Time::HiRes' => {
 					  required_version =>'1.9719',
 					  package_name => 'Time-HiRes',
-					  mandatory => 1,	
+					  mandatory => 1,
 					 },
 			'XML::LibXML' => {
+					  prerequisites => 'libxml2-devel is needed to build the Perl code',
 					  package_name => 'XML-LibXML',
 					  mandatory => 1,
+					  usage => 'used to parse list configuration templates and instanciate list families',
 					 },
 		       );
 
-    ### main:
-    print "******* Check perl for SYMPA ********\n";
+
+    print "##########################################################################################
+# This process will help you install all Perl (CPAN) modules required by Sympa software.
+# Sympa requires from 50 to 65 additional Perl modules to run properly. 
+# The whole installation process should take around 15 minutes.
+# You'll first have to configure the CPAN shell itself and select your favourite CPAN server.
+# Note that you might prefer to install the required Perl modules using your favourite DEB/RPM mechanism.
+# Feel free to interrupt the process if needed ; you can restart it safely afterward.
+##############################################################################################
+Strike return key to continue...
+";
+    my $rep = <STDIN>;
+
     ### REQ perl version
     print "\nChecking for PERL version:\n-----------------------------\n";
     my $rpv = $cpan_modules{"perl"}{'required_version'};
@@ -546,7 +566,7 @@ sub check_modules {
         if ($@) {
             ### not installed
             print "was not found on this system.\n";
-            install_module($mod, {'default' => $default});
+            install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
 
 	  my ($vs, $v);
@@ -606,8 +626,9 @@ sub install_module {
     }
 
     unless ($options->{'force'}) {
-        printf "Description: %s\n", $cpan_modules->{$module}{usage};
-        print "Install module $module ? [$default]";
+        printf "-> Usage of this module: %s\n", $cpan_modules->{$module}{usage} if ($cpan_modules->{$module}{usage});
+        printf "-> Prerequisites: %s\n", $cpan_modules->{$module}{prerequisites} if ($cpan_modules->{$module}{prerequisites});
+	printf "-> Install module $module ? [$default]";
         my $answer = <STDIN>; chomp $answer;
         $answer ||= $default;
         return unless ($answer =~ /^y$/i);
@@ -643,7 +664,7 @@ sub install_module {
             print  "Installation of $module FAILED. Do you want to force the installation of this module? (y/N) ";
             my $answer = <STDIN>; chomp $answer;
             if ($answer =~ /^y/i) {
-                install_module($module, {'force' => 1});
+                install_module($module, {'force' => 1}, $cpan_modules);
             }
         }
     }

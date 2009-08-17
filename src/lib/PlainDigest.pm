@@ -62,7 +62,6 @@
  
  package PlainDigest;
 
- use Mail::Internet;
  use Mail::Address;
  use MIME::Parser;
  use Text::Wrap;
@@ -86,7 +85,6 @@
 #  $parser->extract_nested_messages(1);
 #  $parser->output_dir($output_dir);
 
-  # Convert Mail::Internet object to a MIME::Entity:
 #  my @lines = (@{$mail->header}, "\n", @{$mail->body});
 #  my $topent = $parser->parse_data(\@lines);
   

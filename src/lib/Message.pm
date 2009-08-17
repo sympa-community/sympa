@@ -38,7 +38,6 @@ use strict;
 
 use Carp;
 use Mail::Header;
-use Mail::Internet;
 use Mail::Address;
 use MIME::Entity;
 use MIME::EncWords;
