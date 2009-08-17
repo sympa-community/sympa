@@ -613,11 +613,12 @@ sub install_module {
         return unless ($answer =~ /^y$/i);
     }
 
-    $CPAN::Config->{'inactivity_timeout'} = 0; ## disable timeout to prevent timeout during modules installation 
-    $CPAN::Config->{'colorize_output'} = 1; 
-    $CPAN::Config->{'build_requires_install_policy'} = 'yes';  ## automatically installed prerequisites without asking
-    $CPAN::Config->{'load_module_verbosity'} = 'none';  ## minimum verbosity during module loading
-    $CPAN::Config->{'tar_verbosity'} = 'none';  ## minimum verbosity with tar command
+  $CPAN::Config->{'inactivity_timeout'} = 0; ## disable timeout to prevent timeout during modules installation 
+  $CPAN::Config->{'colorize_output'} = 1; 
+  $CPAN::Config->{'build_requires_install_policy'} = 'yes';  ## automatically installed prerequisites without asking
+  $CPAN::Config->{'prerequisites_policy'} = 'follow'; ## build prerequisites automatically
+  $CPAN::Config->{'load_module_verbosity'} = 'none';  ## minimum verbosity during module loading
+  $CPAN::Config->{'tar_verbosity'} = 'none';  ## minimum verbosity with tar command
 
     #CPAN::Shell->clean($module) if ($options->{'force'});
 
