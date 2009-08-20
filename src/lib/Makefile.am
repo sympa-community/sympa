@@ -10,12 +10,6 @@ nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm
 
-## AuthCAS module used to be distributed with Sympa
-## Since Sympa 6, it is a standalone CPAN module
-## The module still has the same name, therefore old installed versions of the module need to be removed
-install-exec-hook:
-	rm -f $(modulesdir)/AuthCAS.pm
-
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	[ -d Sympa ] || mkdir Sympa
 	rm -f $@
