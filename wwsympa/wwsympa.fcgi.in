@@ -1061,11 +1061,6 @@ my $birthday = time ;
 				 'info_content' => 1,
 				 };
      
-     my $tmp_lang = &Language::GetLang();
-     &Language::SetLang('en_US');
-     $param->{'RFC822_date'} = &POSIX::strftime("%a, %d %b %Y %H:%M:%S %z", localtime(time));
-     &Language::SetLang($tmp_lang);
-     
      my @tmp_split = split(/_/,$tmp_lang);
      $param->{'ISO639_language'} = $tmp_split[0];
      
