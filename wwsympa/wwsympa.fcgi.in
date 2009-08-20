@@ -1061,9 +1061,6 @@ my $birthday = time ;
 				 'info_content' => 1,
 				 };
      
-     my @tmp_split = split(/_/,$tmp_lang);
-     $param->{'ISO639_language'} = $tmp_split[0];
-     
      ## Change to list root
      unless (chdir($Conf{'home'})) {
 	 &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
