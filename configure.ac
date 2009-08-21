@@ -43,6 +43,7 @@ fi
 # custom variables
 initdir=/etc/rc.d/init.d
 piddir=$prefix
+localstatedir=/var
 lockdir=$localstatedir/lock/subsys
 modulesdir=$prefix/bin
 scriptdir=$prefix/bin
