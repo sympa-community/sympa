@@ -243,9 +243,30 @@ sub play_soap{
   }    
     
   ## Don't use authenticateAndRun for lists command
+
+  ## Split parameters
+  my @parameters=split /,/,$service_parameters;
+
     if ($service eq 'lists') {
       printf "\n\nlists....\n";
       $reponse = $soap->lists();
+
+    }elsif ($service eq 'subscribe') {
+      printf "\n\n$service....\n";      
+      $reponse = $soap->subscribe(@parameters);
+
+    }elsif ($service eq 'signoff') {
+      printf "\n\n$service....\n";      
+      $reponse = $soap->signoff(@parameters);
+
+    }elsif ($service eq 'add') {
+      printf "\n\n$service....\n";      
+      $reponse = $soap->add(@parameters);
+
+    }elsif ($service eq 'del') {
+      printf "\n\n$service....\n";      
+      $reponse = $soap->del(@parameters);
+
     }elsif ($service eq 'getUserEmailByCookie') {
       printf "\n\n$service....\n";
       $reponse = $soap->getUserEmailByCookie($session_id);
