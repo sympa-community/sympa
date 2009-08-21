@@ -243,7 +243,7 @@ sub new {
     }
 
     ## file mtime
-    $self->{'mtime'}{'param_constraint_conf'};
+    $self->{'mtime'}{'param_constraint_conf'} = undef;
     
     ## hash of parameters constraint
     $self->{'param_constraint_conf'} = undef;
@@ -625,7 +625,7 @@ sub modify_list {
     }
 
     ## status
-    my $result = $self->_set_status_changes($list,$old_status);
+    $result = $self->_set_status_changes($list,$old_status);
 
     if ($result->{'aliases'} == 1) {
 	push @{$return->{'string_info'}}, "The $list->{'name'} list has been modified.";
@@ -2215,7 +2215,7 @@ sub _update_existing_list {
     }
 
     ## status
-    my $result = $self->_set_status_changes($list,$old_status);
+    $result = $self->_set_status_changes($list,$old_status);
 
     if ($result->{'aliases'} == 1) {
 	push (@{$self->{'updated_lists'}{'aliases_ok'}},$list->{'name'});
@@ -2761,7 +2761,7 @@ sub _load_param_constraint_conf {
     while (<FILE>) {
 	next if /^\s*(\#.*|\s*)$/;
 
-	if (/^\s*([\w-\.]+)\s+(.+)\s*$/) {
+	if (/^\s*([\w\-\.]+)\s+(.+)\s*$/) {
 	    my $param = $1;
 	    my $value = $2;
 	    my @values = split /,/, $value;

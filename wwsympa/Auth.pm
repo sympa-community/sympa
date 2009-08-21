@@ -202,7 +202,6 @@ sub ldap_authentication {
      $filter =~ s/\[sender\]/$auth/ig;
      
      ## bind in order to have the user's DN
-     my $ldap_anonymous;
      my $param = &tools::dup_var($ldap);
      my $ds = new Datasource('LDAP', $param);
      
@@ -228,15 +227,14 @@ sub ldap_authentication {
      $ds->disconnect();
      
      ##  bind with the DN and the pwd
-     my $ldap_passwd;
      
      ## Duplicate structure first
      ## Then set the bind_dn and password according to the current user
-     my $param = &tools::dup_var($ldap);
+     $param = &tools::dup_var($ldap);
      $param->{'ldap_bind_dn'} = $DN[0];
      $param->{'ldap_bind_password'} = $pwd;
      
-     my $ds = new Datasource('LDAP', $param);
+     $ds = new Datasource('LDAP', $param);
      
      unless (defined $ds && ($ldap_passwd = $ds->connect())) {
        do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'host'});

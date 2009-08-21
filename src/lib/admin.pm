@@ -613,7 +613,6 @@ sub update_list{
     $lock->unlock();
 
     ## Create list object
-    my $list;
     unless ($list = new List ($param->{'listname'}, $robot)) {
 	&do_log('err','admin::create_list : unable to create list %s', $param->{'listname'});
 	return undef;

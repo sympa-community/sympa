@@ -46,8 +46,7 @@ use Sympa::Constants;
 my ($reponse, @ret, $val, %fault);
 
 
-my $usage = <<EOF;
-$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
+my $usage = "$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
 code access to features of Sympa soap server. Authentication can be done via
 user/password or user cookie or as a trusted remote application
 
@@ -74,8 +73,8 @@ OR usage: $0 <with the following options:>
 --cookie=<sympauser cookie string>
 
 Example:
-$0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr%3A8be58b86o
-EOF
+$0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr
+";
 
 my %options;
 unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s','session_id=s')) {

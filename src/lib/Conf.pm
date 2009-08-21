@@ -1266,11 +1266,6 @@ sub load_generic_conf_file {
 
     # printf STDERR "load_generic_file  $config_file \n";
 
-    unless (open (CONF,$config_file)) {
-	 printf STDERR "load_generic_conf_file: Unable to open $config_file";
-	 return undef;
-    }
-
     my %admin;
     my (@paragraphs);
     

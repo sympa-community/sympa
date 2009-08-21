@@ -317,7 +317,7 @@ sub create_db {
     &do_log('notice', 'Database %s created', $Conf::Conf{'db_name'});
 
     ## Reload MysqlD to take changes into account
-    my $rc = $drh->func("reload", $Conf::Conf{'db_name'}, 'localhost', $Conf::Conf{'db_user'}, $Conf::Conf{'db_passwd'}, 'admin');
+    $rc = $drh->func("reload", $Conf::Conf{'db_name'}, 'localhost', $Conf::Conf{'db_user'}, $Conf::Conf{'db_passwd'}, 'admin');
     unless (defined $rc) {
 	&do_log('err', 'Cannot reload mysqld : %s', $drh->errstr);
 	return undef;

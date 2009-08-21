@@ -591,39 +591,6 @@ sub store_test {
     return $result;
 }
 
-## remove file that are not referenced by any packet
-sub purge_bulkspool {
-    &do_log('debug', 'purge_bulkspool');
-
-    my $dbh = &List::db_get_handler();
-    my $sth;
-
-    unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-    }
-    my $statement = "SELECT messagekey_bulkspool AS messagekey FROM bulkspool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0";
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-    
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-
-    my $count = 0;
-    while (my $key = $sth->fetchrow_hashref('NAME_lc')) {	
-	if ( &Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
-	    $count++;
-	}else{
-	    &do_log('err','Unable to remove message (key = %s) from bulkspool_table',$key->{'messagekey'});	    
-	}
-   }
-    $sth->finish;
-    return $count;
-}
-
 ## Return the number of remaining packets in the bulkmailer table.
 sub get_remaining_packets_count {
     &do_log('debug3', 'get_remaining_packets_count');

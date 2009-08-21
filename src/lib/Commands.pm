@@ -282,7 +282,6 @@ sub lists {
 	}
     }
 
-    my $data = {};
     $data->{'lists'} = $lists;
     $data->{'auto_submitted'} = 'auto-replied';
     
@@ -707,13 +706,10 @@ sub subscribe {
     my $sign_mod = shift;
     my $message = shift;
 
-    my $sign_mod = shift ;
-
     &do_log('debug', 'Commands::subscribe(%s,%s, %s, %s)', $what,$robot,$sign_mod,$message);
 
     $what =~ /^(\S+)(\s+(.+))?\s*$/;
     my($which, $comment) = ($1, $3);
-    my $auth_method ;
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -1006,7 +1002,6 @@ sub signoff {
     my $sign_mod = shift;
     my $message = shift;
 
-    my $sign_mod = shift ;
     &do_log('debug', 'Commands::signoff(%s,%s, %s, %s)', $which,$robot, $sign_mod, $message);
 
     my ($l,$list,$auth_method);
@@ -1048,7 +1043,7 @@ sub signoff {
 		next;
 	    }
 	    
-	    my $result = &signoff("$l $email", $robot);
+	    $result = &signoff("$l $email", $robot);
             $success ||= $result;
 	}
 	return ($success);
@@ -1065,7 +1060,7 @@ sub signoff {
 
     &Language::SetLang($list->{'admin'}{'lang'});
 
-    my $auth_method = &get_auth_method('signoff',$email,{'type'=>'wrong_email_confirm',
+    $auth_method = &get_auth_method('signoff',$email,{'type'=>'wrong_email_confirm',
 							 'data'=>{'command'=>'unsubscription'},
 							 'msg'=> "SIG $which from $sender"},$sign_mod,$list);
     return 'wrong_auth'
@@ -1206,15 +1201,12 @@ sub add {
     my $sign_mod = shift;
     my $message = shift;
 
-    my $sign_mod = shift ;
-
     do_log('debug', 'Commands::add(%s,%s,%s,%s)', $what,$robot, $sign_mod, $message);
 
     my $email_regexp = &tools::get_regexp('email');    
 
     $what =~ /^(\S+)\s+($email_regexp)(\s+(.+))?\s*$/;
     my($which, $email, $comment) = ($1, $2, $6);
-    my $auth_method ;
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -1354,7 +1346,6 @@ sub invite {
 
     $what =~ /^(\S+)\s+(\S+)(\s+(.+))?\s*$/;
     my($which, $email, $comment) = ($1, $2, $4);
-    my $auth_method ;
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -1507,7 +1498,6 @@ sub remind {
 
     my $host = &Conf::get_robot_conf($robot, 'host');
     
-    my $auth_method ;
     my %context;
     
     unless ($which =~ /^(\*|[\w\.\-]+)(\@$host)?\s*$/) {
@@ -1742,7 +1732,6 @@ sub del {
 
     $what =~ /^(\S+)\s+($email_regexp)\s*/;
     my($which, $who) = ($1, $2);
-    my $auth_method;
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -2363,7 +2352,7 @@ sub reject {
     }
     
     my $message;
-    my $parser = new MIME::Parser;
+    $parser = new MIME::Parser;
     $parser->output_to_core(1);
     unless ($message = $parser->read(\*IN)) {
 	&do_log('notice', 'Commands::reject(): Unable to parse message');
