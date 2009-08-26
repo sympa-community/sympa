@@ -156,7 +156,7 @@ sympa_stop() {
 		echo $echo_opt "Stopping module $1.pl: "
 		pid=`head -1 --piddir--/$1.pid`
 		running=`ps -A | grep "$pid"`
-		if [ $1 == 'bulk' ]; then
+		if [ $1 = 'bulk' ]; then
 		    if [ ${use_functions} ]; then
 			kill -TERM $pid && success || failure
 		    else
