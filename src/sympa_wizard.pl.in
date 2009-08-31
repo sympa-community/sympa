@@ -493,6 +493,7 @@ sub check_cpan {
 					  required_version =>'1.9719',
 					  package_name => 'Time-HiRes',
 					  mandatory => 1,
+					  usage => 'used by sympa.pl --test_database_message_buffer to test database performances',
 					 },
 			'XML::LibXML' => {
 					  prerequisites => 'libxml2-devel is needed to build the Perl code',
