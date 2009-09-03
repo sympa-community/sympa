@@ -285,9 +285,14 @@ sub ldap_authentication {
      
      $ds->disconnect() or &do_log('notice', "unable to unbind");
      &do_log('debug3',"canonic: $canonic_email[0]");
-     return lc($canonic_email[0]);
-     
- }
+     ## If the identifier provided was a valid email, return the provided email.
+     ## Otherwise, return the canonical email guessed after the login.
+     if( &tools::valid_email($auth)) {
+	 return ($auth);
+     }else{
+	 return lc($canonic_email[0]);
+     } 
+}
 
 
 # fetch user email using his cas net_id and the paragrapah number in auth.conf
