@@ -17,7 +17,12 @@
 [% END %]
 
 <td>[% list.creation_date %]</td>
-<td>[% list.last_message_date %]</td>
+<td>[% IF list.last_message_epoch > 0 %]
+      [% list.last_message_date %]
+    [% ELSE %]
+      <em>[%|loc%]none so far[%END%]</em>
+    [% END %]
+</td>
 <td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>
 </tr>
