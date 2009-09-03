@@ -3027,7 +3027,7 @@ sub do_ticket {
 		  'target_email' => $in{'email'},
 		  'status' => 'success'});
 
-     &do_redirect ($session->{'redirect_url'});          
+     &do_redirect ($session->{'redirect_url'});
      return ;
 
  }
@@ -3336,7 +3336,8 @@ sub do_sso_login {
 	## Required to provide logout feature if available
 	$session->{'sso_id'} = $in{'auth_service_name'};
 	
-	return 'home';
+	&do_redirect ($session->{'redirect_url'}); 
+	return ;
     }else{
 	## Unknown SSO service
 	&report::reject_report_web('intern','unknown_authentication_service',{'name'=> $in{'auth_service_name'}},$param->{'action'},'','',$robot);

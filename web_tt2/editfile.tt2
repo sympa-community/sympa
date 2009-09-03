@@ -27,28 +27,28 @@
 
 <h3>[%|loc%]HTML pages[%END%]</h3>
 
-<a href="[% path_cgi %]/editfile/[%list%]/homepage" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]List homepage: HTML text to describe the list. It is printed on the right-hand side of the main list page. (default for this is the list description)[%END%]<br />
-<a href="[% path_cgi %]/editfile/[%list%]/info" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]List description: This text is sent as an answer to the mail command
+<a href="[% path_cgi %]/editfile/[%list%]/homepage" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List homepage: HTML text to describe the list. It is printed on the right-hand side of the main list page. (default for this is the list description)[%END%]<br />
+<a href="[% path_cgi %]/editfile/[%list%]/info" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List description: This text is sent as an answer to the mail command
 INFO. It can also be included in the <em>Welcome message</em>.[%END%]<br />
 
 <h3>[%|loc%]Automatic messages[%END%]</h3>
 
-<a href="[% path_cgi %]/editfile/[%list%]/welcome.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]<br />
-<a href="[% path_cgi %]/manage_template/ls_template/[% list %]/reject" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
-<a href="[% path_cgi %]/editfile/[%list%]/remind.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Remind message: This message is sent to each subscriber
+<a href="[% path_cgi %]/editfile/[%list%]/welcome.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]<br />
+<a href="[% path_cgi %]/manage_template/ls_template/[% list %]/reject" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
+<a href="[% path_cgi %]/editfile/[%list%]/remind.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Remind message: This message is sent to each subscriber
 when using the command  REMIND. It's very useful to help people who are confused about their own subscription emails or people who are not able to unsubscribe themselves.[%END%]<br />
-<a href="[% path_cgi %]/editfile/[%list%]/invite.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Subscribing invitation message: sent to a person if someone  
+<a href="[% path_cgi %]/editfile/[%list%]/invite.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Subscribing invitation message: sent to a person if someone  
 uses the INVITE command to invite someone to subscribe.[%END%]<br />
 
 <h3>[%|loc%]Added in distributed messages[%END%]</h3>
 
-<a href="[% path_cgi %]/editfile/[%list%]/message.footer" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]<br />
-<a href="[% path_cgi %]/editfile/[%list%]/message.header" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]<br />
+<a href="[% path_cgi %]/editfile/[%list%]/message.footer" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]<br />
+<a href="[% path_cgi %]/editfile/[%list%]/message.header" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]<br />
 
 <h3>[%|loc%]More[%END%]</h3>
 
-<a href="[% path_cgi %]/editfile/[%list%]/bye.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Unsubscribe message: This message is sent when users leave the list.[%END%]<br />
-<a href="[% path_cgi %]/editfile/[%list%]/removed.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|helploc%]Deletion message: This message is sent to users when you
+<a href="[% path_cgi %]/editfile/[%list%]/bye.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Unsubscribe message: This message is sent when users leave the list.[%END%]<br />
+<a href="[% path_cgi %]/editfile/[%list%]/removed.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Deletion message: This message is sent to users when you
 remove them from the list using the DEL command (unless you hit the Quiet button).[%END%]<br />
 
 </fieldset>
