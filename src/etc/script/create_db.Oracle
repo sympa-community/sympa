@@ -44,6 +44,9 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	number NULL    constraint  cons_subscribed_subscriber CHECK (subscribed_subscriber in (0,1)),
 	included_subscriber 	number NULL    constraint  cons_included_subscriber CHECK (included_subscriber in (0,1)),
 	include_sources_subscriber varchar2(50),
+	suspend_subscriber      number,
+	suspend_start_date_subscriber    number,
+	suspend_end_date_subscriber      number,
         CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)
 );
 CREATE TABLE admin_table (
@@ -62,6 +65,13 @@ CREATE TABLE admin_table (
 	info_admin   		varchar2(150),
 	profile_admin  		varchar2(20),
        CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin)
+);
+
+CREATE TABLE exclusion_table (
+	list_exclusion 		varchar2(50),
+ 	user_exclusion 		varchar2(100),
+	date_exclusion 		date,
+       CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion,user_exclusion)
 );
 
 CREATE TABLE netidmap_table (

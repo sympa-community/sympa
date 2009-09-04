@@ -37,6 +37,9 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	smallint,
 	included_subscriber 	smallint,
 	include_sources_subscriber varchar(50),
+	suspend_subscriber      smallint,
+	suspend_start_date_subscriber    int4,
+	suspend_end_date_subscriber      int4,
 	CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber,list_subscriber,user_subscriber)
 );
 CREATE INDEX subscriber_idx ON subscriber_table (robot_subscriber,list_subscriber,user_subscriber);
@@ -63,7 +66,16 @@ CREATE TABLE admin_table (
 );
 CREATE	INDEX admin_idx ON admin_table(robot_admin, list_admin, role_admin, user_admin);
 CREATE	INDEX admin_idx2 ON admin_table(user_admin);
- 
+
+DROP TABLE exclusion_table;
+CREATE TABLE exclusion_table (
+	list_exclusion 		varchar(50),
+ 	user_exclusion 		varchar(100),
+	date_exclusion 		int4,
+        CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion)
+);
+CREATE	INDEX exclusion_idx ON exclusion_table(list_exclusion, user_exclusion);
+
 DROP TABLE netidmap_table;
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,

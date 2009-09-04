@@ -766,7 +766,7 @@ sub subscribe {
 
     ## Unless rejected by scenario, don't go further if the user is subscribed already.
     my $user_entry = $list->get_subscriber($sender);    
-    if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
+    if ( defined($user_entry)) {
 	&report::reject_report_cmd('user','already_subscriber',{'email'=>$sender, 'listname'=>$list->{'name'}},$cmd_line);
 	&do_log('err','User %s is subscribed to %s already. Ignoring subscription request.', $sender, $list->{'name'});
 	return undef;
@@ -1121,7 +1121,7 @@ sub signoff {
 	## remove it if found, otherwise just reject the
 	## command.
 	my $user_entry = $list->get_subscriber($email);
-	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	unless ((defined $user_entry)) {
 	    &report::reject_report_cmd('user','your_email_not_found',{'email'=> $email, 'listname' => $list->{'name'}},$cmd_line); 
 	    &do_log('info', 'SIG %s from %s refused, not on list', $which, $email);
 	    
@@ -1135,23 +1135,12 @@ sub signoff {
 	    return 'not_allowed';
 	}
 	
-	if ($user_entry->{'included'} == 1) {
-	    unless ($list->update_user($email, 
-				       {'subscribed' => 0,
-					'update_date' => time})) {
-		&do_log('info', 'SIG %s from %s failed, database update failed', $which, $email);
-		my $error = "Unable to update user $user in list $listname";
-		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
-		return undef;
-	    }
-
-	}else {
-	    ## Really delete and rewrite to disk.
-	    unless ($list->delete_user($email)){
-		my $error = "Unable to delete user $user from list $listname";
-		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
-	    }
+	## Really delete and rewrite to disk.
+	unless ($list->delete_user('users' => [$email], 'exclude' =>' 1')){
+	    my $error = "Unable to delete user $user from list $listname";
+	    &report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 	}
+	
 	
 	## Notify the owner
 	if ($action =~ /notify/i) {
@@ -1795,7 +1784,7 @@ sub del {
 	## just reject the message.
 	my $user_entry = $list->get_subscriber($who);
 
-	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	unless ((defined $user_entry)) {
 	    &report::reject_report_cmd('user','your_email_not_found',{'email'=> $who, 'listname' => $which},$cmd_line); 
 	    &do_log('info', 'DEL %s %s from %s refused, not on list', $which, $who, $sender);
 	    return 'not_allowed';
@@ -1804,24 +1793,14 @@ sub del {
 	## Get gecos before deletion
 	my $gecos = $user_entry->{'gecos'};
 	
-	if ($user_entry->{'included'} == 1) {
-	    unless ($list->update_user($who, 
-				       {'subscribed' => 0,
-					'update_date' => time})) {
-		&do_log('info', 'DEL %s %s from %s failed, database update failed', $which, $who, $sender);
-		my $error = "Unable to update user $who in list $which";
-		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
-		return undef;
-	    }
-
-	}else {
-	    ## Really delete and rewrite to disk.
-	    my $u;
-	    unless ($u = $list->delete_user($who)){
-		my $error = "Unable to delete user $who from list $which for command 'del'";
-		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
-	    }
+	
+	## Really delete and rewrite to disk.
+	my $u;
+	unless ($u = $list->delete_user('users' => [$who], 'exclude' =>' 1')){
+	    my $error = "Unable to delete user $who from list $which for command 'del'";
+	    &report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 	}
+	
 
 	## Send a notice to the removed user, unless the owner indicated
 	## quiet del.

@@ -1,14 +1,15 @@
 <!-- $Id$ -->
 
 [% IF user.email %]
-<div class="MenuBlock without_padding">
 
+<div class="MenuBlock">
 [% IF which_info %]
-<p class="text_center"><strong> [%|loc%]Your Lists[%END%] </strong></p>
-
- <ul class="listenum" >
- [% FOREACH l = which_info %]
+<ul class="listenum" >
   <li>
+    <a class="input" href="[% path_cgi %]/suspend_request" >[%|loc%]Manage your subscriptions[%END%]</a><br />
+  </li>
+ [% FOREACH l = which_info %]
+<li>
   [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >
 [%|loc%]admin[%END%]</a>[% END %]
   <a class="list_menu_links" href="[% path_cgi %]/info/[% l.key %]" >
@@ -21,8 +22,8 @@
 [% ELSE %]
 <p>[%|loc%]No mailing list available.[%END%]</p>
 [% END %]
-</div>
 
+</div>
 [% END %]
 
 <!-- end login_menu.tt2 -->

@@ -2,21 +2,18 @@
 <div class="block">
 
 [% IF !subaction %]
-	<h2>[%|loc%]Sendind a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
+	<h2>[%|loc%]Sending a message to the list[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
 	<br />
 [% END %]
-
-<p>
-[%|loc(list,host)%]The best way to post an email to the list is to compose an email to the list email address <b>%1@%2</b> using your favourite email client. We also provide a form below to compose an email through the web interface.[%END%]
-</p>
-
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="compose_mail">
 
 [% IF subaction == "html_news_letter" %]
 	<h2>[%|loc%]Sending an html page to the list [%END%] <a class="input" href="[% path_cgi %]/nomenu/help/sendmsg" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h3>
    	<br />
+
 [% END %]
+
 
     <fieldset>
 	[%|loc(user.email)%]From: %1[%END%]<br />
@@ -26,8 +23,8 @@
 		<input type="hidden" name="html_news_letter" value="[% subaction %]" />
 	[% END %]
 	<input type="hidden" name="action" value="send_mail"/>
-		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="Send to the list" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
-		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtome" value="Send to me" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="[%|loc%]Send to the list[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+		<input class="MainMenuLinks" type="submit" name="sub_action_sendmailtome" value="[%|loc%]Send to me[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
 	<br />
 
 	<input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
@@ -59,7 +56,22 @@
  	[%  END %]
 
 	[% IF !subaction %]
+		[% balise_email = '['_'%'_' user.email '_'%'_']' %]
+		[% balise_fingerprint = '['_'%'_' user.fingerprint '_'%'_']' %]
   		<textarea name="body" cols="80" rows="25"></textarea>
+		<br />
+		<br />
+		<b>Personnalisation de messages : (on rajoute les balises TT2 : [ %  et  % ])</b><br />
+		user.email : destinataire par exemple, [% balise_email %]<br />
+		listname : nom de la liste <br />
+		robot : serveur utilisé <br /><br />
+		user.custom_attribute.civility.value : civilité (Mr, ...) <br />
+		user.custom_attribute.name.value :  nom <br />
+		user.custom_attribute.surname.value : prénom <br />
+		--- Il suffit de remplacer le paramètre du milieu par le nom donné au paramètre personnalisé <br /><br />
+		user.friendly_date : abonné depuis le <br />
+		user.gecos : nom prénom par défaut, surnom donné dans les paramètres utilisateurs sinon <br />
+		etc ...
 	[%  END %]
 	[% IF subaction == "html_news_letter" %]
    		<label for="url">[%|loc%]URL:[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	

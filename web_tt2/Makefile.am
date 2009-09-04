@@ -117,6 +117,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   setlang.tt2 \
 		   set_pending_list_request.tt2 \
 		   show_cert.tt2 \
+		   show_exclude.tt2 \
 		   show_sessions.tt2 \
 		   sigrequest.tt2 \
 		   skinsedit.tt2 \
@@ -125,6 +126,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   subindex.tt2 \
 		   suboptions.tt2 \
 		   subrequest.tt2 \
+		   suspend_request.tt2 \
 		   ticket.tt2 \
 		   title.tt2 \
 		   tt2_error.tt2 \

@@ -48,7 +48,9 @@
   [% ELSE %]
      <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
   [% END %]
+     <a class="actionMenuLinks" href="[% path_cgi %]/show_exclude/[% list %]">[%|loc%]Exclude[%END%]</a> 
   <br />
+
   [% IF may_sync %]
   <br />
   <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
@@ -179,13 +181,9 @@
 	[% END %]
 
 	 [% IF is_owner %]
-	  [% IF u.subscribed %]
 	    <td>
 	        <input type="checkbox" name="email" value="[% u.escaped_email %]" />
 	    </td>
-	  [% ELSE %]
-            <td>&nbsp;</td>
-          [% END %]
  	 [% END %]
 	 [% IF u.bounce %]
 	   <td colspan="2" class="text_left">
@@ -287,7 +285,28 @@
 	<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
         <input type="checkbox" name="quiet" />[%|loc%]quiet[%END%]
       [% END %]
+    <br /><br />
 
+   [% IF action == 'search' %]
+     <h4>[%|loc%]Excluded users[%END%]</h4>
+     <table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
+      <tr>
+	<th>[%|loc%]Email[%END%]</th>
+        <th>[%|loc%]Since[%END%]</th>
+      </tr>
+
+      [% IF user.email %]
+        [% IF exclude_users %]
+          [% FOREACH exc = exclude_users %] 
+            <tr class="color0">
+              <td>&nbsp;[% exc.email %]&nbsp;</td>
+	      <td>&nbsp;[% exc.since %]&nbsp;</td>
+            </tr>
+	  [% END %]
+        [% END %]
+      [% END %]
+    </table>
+   [% END %]
    </fieldset>
    </form>
 

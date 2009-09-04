@@ -43,6 +43,9 @@ create table subscriber_table
     subscribed_subscriber  numeric		  null    ,
     included_subscriber    numeric                null    ,
     include_sources_subscriber varchar(50)        null    ,
+    suspend_subscriber     numeric                null    ,
+    suspend_start_date_subscriber   numeric       null    ,
+    suspend_end_date_subscriber     numeric       null    ,
     constraint ind_subscriber primary key (list_subscriber, user_subscriber, robot_subscriber)
 )
 go
@@ -86,6 +89,21 @@ create index robot_admin_fk on admin_table (robot_admin)
 go
 
 create index role_admin_fk on admin_table (role_admin)
+go
+
+create table exclusion_table 
+(
+	list_exclusion 		varchar(50)       null,
+ 	user_exclusion 		varchar(100) 	  null,
+	date_exclusion 		numeric          null,
+    	constraint ind_exclusion primary key (list_exclusion, user_exclusion)
+)
+go
+
+create index list_exclusion_fk on exclusion_table (list_exclusion)
+go
+
+create index user_exclusion_fk on exclusion_table (user_exclusion)
 go
 
 create table netidmap_table 

@@ -5,7 +5,7 @@
 
 <div id="list_admin_menu">
 <ul>
-[% IF is_subscriber == '1' %]
+[% IF (is_subscriber == '1') %]
   [% IF may_suboptions == '1' %]
       [% IF action == 'suboptions' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
   <li class="[% class %]"><a href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a></li>

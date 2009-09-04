@@ -29,6 +29,9 @@ CREATE TABLE subscriber_table (
 	included_subscriber 	boolean,
 	include_sources_subscriber text,
 	bounce_score_subscriber integer,
+	suspend_subscriber	boolean,
+	suspend_start_date_subscriber	integer,
+	suspend_end_date_subscriber	integer,	
 	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
 );
 CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
@@ -51,6 +54,14 @@ CREATE TABLE admin_table (
 	PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin)
 );
 CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_admin);
+
+CREATE TABLE exclusion_table (
+	list_exclusion 		text,
+ 	user_exclusion 		text,
+	date_exclusion 		integer,
+	PRIMARY KEY (list_exclusion, user_exclusion)
+);
+CREATE	INDEX exclusion_idx ON exclusion_table(list_exclusion, user_exclusion);
 
 CREATE TABLE netidmap_table (
         netid_netidmap		text NOT NULL,

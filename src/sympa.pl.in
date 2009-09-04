@@ -1144,7 +1144,6 @@ sub DoFile {
     my ($file) = @_;
     &do_log('debug', 'DoFile(%s)', $file);
 
-    
     my ($listname, $robot);
     my $status;
     
@@ -1453,7 +1452,6 @@ sub DoFile {
     }else {	
 	$status =  &DoMessage($rcpt, $message, $robot);
     }
-    
 
     ## Mail back the result.
     if (&report::is_there_any_report_cmd()) {

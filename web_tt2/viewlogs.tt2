@@ -68,10 +68,10 @@
     <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
 
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
-      <input id="date_from" type="text" name="date_from" value="[% date_from %]" size ="10"/>&nbsp;
-    <label for="date_to">[%|loc%]to:[%END%]</label>
-      <input id="date_to"type="text" name="date_to" value="[% date_to %]" size ="10"/>&nbsp; <em>[%|loc%]ex: 24/05/2006[%END%]</em><br />
-
+      <input type="text" id="date_deb" name="date_debm" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
+          <label for="date_to">[%|loc%]to:[%END%]</label>
+      <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
+      <br />
     <label for="type">[%|loc%]Search by type:[%END%]</label>
       <select id="type" name="type">
        [% IF type %]

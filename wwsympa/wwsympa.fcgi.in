@@ -67,7 +67,7 @@ use wwslib;
 use cookielib;
 use Robot;
 use tt2;
-
+#use DateTime;
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
@@ -305,6 +305,9 @@ my %comm = ('home' => 'do_home',
 	 'ticket' => 'do_ticket',
 	 'manage_template' => 'do_manage_template',
 	 'send_newsletter' => 'do_send_newsletter',
+	 'suspend_request' => 'do_suspend_request',
+	 'suspend_request_action' => 'do_suspend_request_action',
+	 'show_exclude' => 'do_show_exclude',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -425,6 +428,8 @@ my %action_args = ('default' => ['list'],
 		'manage_template' => ['subaction','list','message_template'],   
 		'send_newsletter' => [],
 		'compose_mail' => ['list','subaction'],
+                'suspend_request' => ['subaction'],
+		'show_exclude' => ['list'],
 		);
 
 ## Define the required parameters for each action
@@ -542,6 +547,9 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'subrequest' => ['param.list'],
 		     'subscribe' => ['param.list'],
 		     'subscriber_count' => ['param.list'],
+		     'suspend_request' => [],
+		     'suspend_request_action' => [],
+		     'show_exclude' => ['param.list'],
 		     'sync_include' => ['param.list','param.user.email'],
 		     'tag_topic_by_sender' => ['param.list'],
 		     'upload_pictures' => ['param.user.email','param.list'],
@@ -668,6 +676,7 @@ my %action_type = ('editfile' => 'admin',
 		'review_family' => 'serveradmin',
 		'search_user' => 'serveradmin',
 		'show_sessions' => 'serveradmin',
+		'show_exclude' => 'admin',
 		'rebuildarc' => 'serveradmin',
 		'set_session_email' => 'serveradmin',
 		'set_loglevel' => 'serveradmin',
@@ -2475,7 +2484,7 @@ Use it to create a List object and initialize output parameters.
 	## If the user logged in is a privileged user, gather informations relative to administration tasks
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_message'} = $list->get_mod_spool_size();
-
+	    
             $param->{'mod_subscription'} = $list->get_subscription_request_count();
 	   
 	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
@@ -2491,39 +2500,31 @@ Use it to create a List object and initialize output parameters.
 	    $param->{'mod_total'} = $param->{'mod_total_shared'}+$param->{'mod_message'}+$param->{'mod_subscription'};
 	}
 
-	## If the subscription/unsubscription are defined by a set of rules, there is no permanent user list
-	## in which subscribe or from which unsubscribe, thus removing any sense from those operations.
-	## They are consequently forbidden...
-	if ($list->{'admin'}{'user_data_source'} eq 'include') {
-	    $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
 	
-	## ... otherwise, we must check the (un)subscription authorization scenarios.
-	}else {
-	    ## Check unsubscription authorization for the current user and list.
-	    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-						 {'sender' =>$param->{'user'}{'email'},
-						  'remote_host' => $param->{'remote_host'},
-						  'remote_addr' => $param->{'remote_addr'}});
-	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	## Check unsubscription authorization for the current user and list.
+	my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+					     {'sender' =>$param->{'user'}{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});
+	$main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	
+	if (! $param->{'user'}{'email'}) {
+	    $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
 	    
-	    if (! $param->{'user'}{'email'}) {
-		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-		
-	    }elsif ($param->{'is_subscriber'} &&
-		    ($param->{'subscriber'}{'subscribed'} == 1)) {
-		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-		$param->{'may_suboptions'} = 1;
-	    }
-	    
-	    ## Check subscription authorization for the current user and list.
-	    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
-						 {'sender' =>$param->{'user'}{'email'},
-						  'remote_host' => $param->{'remote_host'},
-						  'remote_addr' => $param->{'remote_addr'}});
-	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-	    
-	    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	}elsif ($param->{'is_subscriber'}) {
+	    $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	    $param->{'may_suboptions'} = 1;
 	}
+	
+	## Check subscription authorization for the current user and list.
+	my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+					     {'sender' =>$param->{'user'}{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});
+	$main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	
+	$param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	
 	
     	## Check if the current user can read the shared documents.
 	my %mode;
@@ -2534,12 +2535,12 @@ Use it to create a List object and initialize output parameters.
 	## Check the status (exists, deleted, doesn't exist) of the shared directory
 	$param->{'shared'} = $list->get_shared_status();
     }
-
+     
      ## Check if the current user can create a list.
      my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot,
-					 {'sender' => $param->{'user'}{'email'},
-					  'remote_host' => $param->{'remote_host'},
-					  'remote_addr' => $param->{'remote_addr'}}); 
+					     {'sender' => $param->{'user'}{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}}); 
      my $r_action;
      my $reason;
      if (ref($result) eq 'HASH') {
@@ -2547,14 +2548,14 @@ Use it to create a List object and initialize output parameters.
 	 $reason = $result->{'reason'};
      }
      $param->{'create_list_reason'} = $reason;
-
+     
      if ($param->{'user'}{'email'} && 
 	 (($param->{'create_list'} = $r_action ) =~ /do_it|listmaster/)) {
 	 $param->{'may_create_list'} = 1;
      }else{
 	 undef ($param->{'may_create_list'});
      }
-
+     
      return 1;
 
  }
@@ -2754,37 +2755,33 @@ Use it to create a List object and initialize output parameters.
 	 $param->{'may_review'} = 1 if ($r_action =~ /do_it/);
 	 $param->{'list_status'} = $list->{'admin'}{'status'};
 
-	## (Un)Subscribing 
-	if ($list->{'admin'}{'user_data_source'} eq 'include') {
-	    $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
-	}else {
-	    ## May signoff
-	    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-						 {'sender' =>$param->{'user'}{'email'},
+	 ## May signoff
+	 my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+					      {'sender' =>$param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
-						  'remote_addr' => $param->{'remote_addr'}});
-	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+					       'remote_addr' => $param->{'remote_addr'}});
+	 $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	 
+	 if (! $param->{'user'}{'email'}) {
+	     $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	     
+	 }elsif ($param->{'is_subscriber'} &&
+		 ($param->{'subscriber'}{'subscribed'} == 1)) {
+	     $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	     $param->{'may_suboptions'} = 1;
+	 }
 	    
-	    if (! $param->{'user'}{'email'}) {
-		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-		
-	    }elsif ($param->{'is_subscriber'} &&
-		    ($param->{'subscriber'}{'subscribed'} == 1)) {
-		$param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-		$param->{'may_suboptions'} = 1;
-	    }
-	    
-	    ## May Subscribe
-	    my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
-						 {'sender' =>$param->{'user'}{'email'},
-						  'remote_host' => $param->{'remote_host'},
-						  'remote_addr' => $param->{'remote_addr'}});
-	    $main::action = $result->{'action'} if (ref($result) eq 'HASH');
-	    
-	    $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-
-	}
-
+	 ## May Subscribe
+	 my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+					      {'sender' =>$param->{'user'}{'email'},
+					       'remote_host' => $param->{'remote_host'},
+					       'remote_addr' => $param->{'remote_addr'}});
+	 $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	 
+	 $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
+	 
+	
+	 
 	 ## Archives Access control
 	 if (defined $list->{'admin'}{'web_archive'}) {
 	     $param->{'is_archived'} = 1;
@@ -4176,7 +4173,7 @@ sub do_renewpasswd {
 
 	 push @{$param->{'members'}}, $i;
      }
-
+    
      if ($param->{'page'} > 1) {
 	 $param->{'prev_page'} = $param->{'page'} - 1;
      }
@@ -4188,6 +4185,13 @@ sub do_renewpasswd {
      $param->{'size'} = $size;
      $param->{'sortby'} = $sortby;
 
+     ######################
+     if($in{'exclude'} eq '1'){
+	 $param->{'exclude_opt'} = 0;
+     }else{
+	 $param->{'exclude_opt'} = 1;
+     }
+     #######################
 
      ## additional DB fields
      $param->{'additional_fields'} = $Conf{'db_additional_subscriber_fields'};
@@ -4206,63 +4210,100 @@ sub do_renewpasswd {
      return 1;
  }
 
- ## Search in subscribers
- sub do_search {
-     &wwslog('info', 'do_search(%s)', $in{'filter'});
+## Show the table of exclude
+sub do_show_exclude {
 
-     my %sources;
+    &wwslog('info', 'do_exclude()');
+    # Get the emails of the exclude about a list and the date of their insertion
+    my $data_exclu = &List::get_exclusion($list->{'name'});
+    
+    my $excluded;
+    my $key = 0;
+    while (($data_exclu->{emails}->[$key]) && ($data_exclu->{date}->[$key])){
+	my $email = $data_exclu->{'emails'}->[$key];
+	my $date = gettext_strftime "%d %b %Y", localtime($data_exclu->{'date'}->[$key]);
+	
+	$excluded = {'email' => $email,
+		     'since' => $date};
+	push @{$param->{'exclude_users'}}, $excluded;
+	$key = $key + 1;
+    }
+    return 1;
+}
 
-     ## Additional DB fields
-     my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
+## Search in subscribers and in exclude
+sub do_search {
+    &wwslog('info', 'do_search(%s)', $in{'filter'});
 
-     ## Access control
-     return undef unless (defined &check_authz('do_search', 'review'));
+    my %sources;
+    
+    ## Additional DB fields
+    my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
+    ## Access control
+    return undef unless (defined &check_authz('do_search', 'review'));
+    ## Regexp
+    $param->{'filter'} = $in{'filter'};
+    my $regexp = &tools::escape_regexp($param->{'filter'});
+    
+    my $sql_regexp;
+    if ($list->{'admin'}{'user_data_source'} eq 'database') {
+	$sql_regexp = $param->{'filter'};
+	$sql_regexp =~ s/\%/\\\%/g;
+	$sql_regexp =~ s/\*/\%/g;
+	$sql_regexp = '%'.$sql_regexp.'%';
+    }
+    
+    my $record = 0;
+    ## Members list
+    for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
+	
+	## Search filter
+	next if ($i->{'email'} !~ /$regexp/i
+		 && $i->{'gecos'} !~ /$regexp/i);
+	
+	next if (($i->{'visibility'} eq 'conceal')
+		 and (! $param->{'is_owner'}) );
 
-     ## Regexp
-     $param->{'filter'} = $in{'filter'};
-     my $regexp = &tools::escape_regexp($param->{'filter'});
-
-     my $sql_regexp;
-     if ($list->{'admin'}{'user_data_source'} eq 'database') {
-	 $sql_regexp = $param->{'filter'};
-	 $sql_regexp =~ s/\%/\\\%/g;
-	 $sql_regexp =~ s/\*/\%/g;
-	 $sql_regexp = '%'.$sql_regexp.'%';
-     }
-
-     my $record = 0;
-     ## Members list
-     for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp, 'sortby' => 'email'})
-	  ; $i; $i = $list->get_next_user()) {
-
-	 ## Search filter
-	 next if ($i->{'email'} !~ /$regexp/i
-		  && $i->{'gecos'} !~ /$regexp/i);
-
-	 next if (($i->{'visibility'} eq 'conceal')
-		  and (! $param->{'is_owner'}) );
-
-	 ## Add user
-	 &_prepare_subscriber($i, \@additional_fields, \%sources);
-
+	## Add user
+	&_prepare_subscriber($i, \@additional_fields, \%sources);
+	
 	 $record++;
-	 push @{$param->{'members'}}, $i;
-     }
+	push @{$param->{'members'}}, $i;
+    }
+    
+    my $data_exclu =  &List::get_exclusion($list->{'name'});
+    my $key = 0;
+    ## Exclude users are searched too
+    while (($data_exclu->{emails}->[$key]) && ($data_exclu->{date}->[$key])){
+	my $email = $data_exclu->{'emails'}->[$key];
+	my $date = gettext_strftime "%d %b %Y", localtime($data_exclu->{'date'}->[$key]);
+	$key = $key + 1;
 
-     ## Maximum size of selection
-     my $max_select = 500;
+        ## Search filter
+	next if ($email !~ /$regexp/i);
+	next if (!$param->{'is_owner'});
 
-     if ($record > $max_select) {
-	 undef $param->{'members'};
-	 $param->{'too_many_select'} = 1;
-     }
+	my $excluded = {'email' => $email,
+			'since' => $date};
+	
+	push @{$param->{'exclude_users'}}, $excluded;
+	$record++;
+    }
+        
+    ## Maximum size of selection
+    my $max_select = 500;
+    
+    if ($record > $max_select) {
+	undef $param->{'members'};
+	$param->{'too_many_select'} = 1;
+    }
+    
+    $param->{'occurrence'} = $record;
+    return 1;
+}
 
-     $param->{'occurrence'} = $record;
-     return 1;
- }
-
- ## Access to user preferences
- sub do_pref {
+## Access to user preferences
+sub do_pref {
      &wwslog('info', 'do_pref');
 
      ## Find nearest expiration period
@@ -4284,7 +4325,7 @@ sub do_renewpasswd {
 
      $param->{'previous_list'} = $in{'previous_list'};
      $param->{'previous_action'} = $in{'previous_action'};
-
+     
      return 1;
  }
 
@@ -4478,6 +4519,7 @@ sub do_renewpasswd {
      &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
 		  'status' => 'success',
 	      });
+
      return $in{'previous_action'} || 'suboptions';
  }
  
@@ -4632,7 +4674,7 @@ sub do_subscribe {
 	    $xml_custom_attribute = $xml ;
 	}
 	
-	if ($param->{'is_subscriber'} && ($param->{'subscriber'}{'subscribed'} == 1)) {
+	if ($param->{'is_subscriber'}) {
 	    &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
 	    &wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
 	    &web_db_log({'parameters' => $in{'email'},
@@ -4795,7 +4837,7 @@ sub do_suboptions {
     
     unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
 	&report::reject_report_web('intern','subscriber_not_found',{'email' => $param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	&wwslog('info', 'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
+	&wwslog('info',  'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
 	return undef;
     }
     
@@ -4995,26 +5037,13 @@ sub do_subrequest {
 	 &wwslog('info', 'do_signoff: signoff sent to owner');
 	 return undef;
      }else {
-	 if ($param->{'subscriber'}{'included'}) {
-	     unless ($list->update_user($authenticated_email_address, 
-					{'subscribed' => 0,
-					 'update_date' => time})) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
-		 &wwslog('info', 'do_signoff: update failed');
-		 &web_db_log({'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
-	 }else {
-	     unless ($list->delete_user($authenticated_email_address)) {
+	     unless ($list->delete_user('users' => [$authenticated_email_address], 'exclude' =>' 1')) {
 		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
 		 &wwslog('info', 'do_signoff: signoff failed');
 		 &web_db_log({'status' => 'error',
 			      'error_type' => 'internal'});
 		 return undef;
 	     }
-
-	 }
 
 	 if ($sig_is =~ /notify/) {
 	     unless ($list->send_notify_to_owner('notice',{'who' => $authenticated_email_address,
@@ -5818,9 +5847,9 @@ sub do_skinsedit {
  sub do_add {
      &wwslog('info', 'do_add(%s)', $in{'email'}||$in{'pending_email'});
      my $subscriptions = $list->get_subscription_requests();
-
+     
      my %user;
-
+     
      ## If a list is not 'open' and allow_subscribe_if_pending has been set to 'off' returns undef.
      unless (($list->{'admin'}{'status'} eq 'open') || (&Conf::get_robot_conf($robot, 'allow_subscribe_if_pending') eq 'on')) {
 	 &report::reject_report_web('user','list_not_open',{'status' =>  $list->{'admin'}{'status'}},$param->{'action'});
@@ -5862,16 +5891,16 @@ sub do_skinsedit {
 		      'error_type' => 'no_email'});
 	 return undef;
      }
-
+     
      my ($total, @new_users, @added_users );
      my $comma_emails ;
      foreach my $email (keys %user) {
-	&wwslog('debug', "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})" );
-        if (ref($subscriptions->{$email}{'custom_attribute'}) eq 'HASH') {
-                my $xml = List::createXMLCustomAttribute($subscriptions->{$email}{'custom_attribute'}) ;
-                &wwslog('debug', "do_add subscription XML \$subscriptions->{$email}{custom_attribute} = $xml;");
-        }
-
+	 &wwslog('debug', "do_add subscription \$subscriptions->{$email}{custom_attribute} = $subscriptions->{$email}{'custom_attribute'})" );
+	 if (ref($subscriptions->{$email}{'custom_attribute'}) eq 'HASH') {
+	     my $xml = List::createXMLCustomAttribute($subscriptions->{$email}{'custom_attribute'}) ;
+	     &wwslog('debug', "do_add subscription XML \$subscriptions->{$email}{custom_attribute} = $xml;");
+	 }
+	 
 	 my $result = $list->check_list_authz('add',$param->{'auth_method'},
 					      {'sender' => $param->{'user'}{'email'}, 
 					       'email' => $in{'email'},
@@ -5901,10 +5930,10 @@ sub do_skinsedit {
 			  'error_type' => 'incorrect_email'});
 	     next;
 	 }
-
+	 
 	 my $user_entry = $list->get_subscriber($email);
 	 
-	 if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
+	 if (defined($user_entry)) {
 	     &report::reject_report_web('user','user_already_subscriber', {'list' => $list->{'name'},'email' => $email},$param->{'action'},$list);
 	     &wwslog('info','do_add: %s already subscriber', $email);
 	     &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
@@ -5913,48 +5942,32 @@ sub do_skinsedit {
 	     next;
 	 }
 	 
-	 ## If already included
-	 if (defined($user_entry)) {
-	     unless ($list->update_user($email, 
-					{'subscribed' => 1,
-					 'update_date' => time})) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &wwslog('info', 'do_add: update failed');
-		 &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
-	     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"updated");
-	     
-	 }else {
-	     my $u2 = &List::get_user_db($email);
-	     my $defaults = $list->get_default_user_options();
-	     my $u;
-	     %{$u} = %{$defaults};
-	     $u->{'email'} = $email;
-	     $u->{'gecos'} = $user{$email} || $u2->{'gecos'};
-	     $u->{'date'} = $u->{'update_date'} = time;
-	     $u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
-	     $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
-	     if ($comma_emails) {
-		 $comma_emails = $comma_emails .','. $email;
-	     }else{
-		 $comma_emails = $email;
-	     }
-
-	     ##
-	     push @new_users, $u;
-	     push @added_users, $email; ## List only email addresses ; used later to remove pending subrequests
+	 my $u2 = &List::get_user_db($email);
+	 my $defaults = $list->get_default_user_options();
+	 my $u;
+	 %{$u} = %{$defaults};
+	 $u->{'email'} = $email;
+	 $u->{'gecos'} = $user{$email} || $u2->{'gecos'};
+	 $u->{'date'} = $u->{'update_date'} = time;
+	 $u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
+	 $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
+	 if ($comma_emails) {
+	     $comma_emails = $comma_emails .','. $email;
+	 }else{
+	     $comma_emails = $email;
 	 }
-
+	 
+	 ##
+	 push @new_users, $u;
+	 push @added_users, $email; ## List only email addresses ; used later to remove pending subrequests
+	 
 	 unless ($in{'quiet'} || $add_is =~ /quiet/i) {
 	     unless ($list->send_file('welcome', $email, $robot,{})) {
 		 &wwslog('err',"Unable to send template 'welcome' to $email");
 	     }
 	 }
      }
-
+     
      $total = $list->add_user(@new_users);
      unless( defined $total) {
 	 &report::reject_report_web('intern','add_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -5964,15 +5977,15 @@ sub do_skinsedit {
 		      'error_type' => 'internal'});
 	 return undef;
      }
-
+     
      ## Delete subscription request if any
      $list->delete_subscription_request(@added_users);
-
+     
      &report::notice_report_web('add_performed', {'total' => $total},$param->{'action'});
      
      foreach my $email (@added_users) {
-       &web_db_log({'target_email' => $email,
-		    'status' => 'success'});
+	 &web_db_log({'target_email' => $email,
+		      'status' => 'success'});
      }
      
      $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
@@ -6030,7 +6043,7 @@ sub do_skinsedit {
 
 	 my $user_entry = $list->get_subscriber($email);
 
-	 unless ( defined($user_entry) && ($user_entry->{'subscribed'} == 1) ) {
+	 unless (defined($user_entry)) {
 	     &report::reject_report_web('user','not_subscriber',{'email' => $email},$param->{'action'},$list);
 	     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
@@ -6039,24 +6052,9 @@ sub do_skinsedit {
 			  'error_type' => 'not_subscriber'});
 	     next;
 	 }
-
-	 if ($user_entry->{'included'}) {
-	     unless ($list->update_user($email, 
-					{'subscribed' => 0,
-					 'update_date' => time})) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'failed subscriber included');
-		 &wwslog('info', 'do_del: update failed');
-		 &web_db_log({'target_email' => $in{'email'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
-
-
-	 }else {
-	     push @removed_users, $email;
-	 }
+ 
+	 push @removed_users, $email;
+	 
 	 
 	 my $bounce_dir = $list->get_bounce_dir();
 
@@ -6080,7 +6078,7 @@ sub do_skinsedit {
 	 }
      }
 
-     $total = $list->delete_user(@removed_users);
+     $total = $list->delete_user('users' => \@removed_users, 'exclude' =>'1');
 
      unless( defined $total) {
 	 &report::reject_report_web('intern','delete_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -14894,7 +14892,7 @@ sub do_change_email {
 	 ## Check if user is already member of the list with his new address
 	 ## then we just need to remove the old address
 	 if ($list->is_user($new_email)) {
-	     unless ($list->delete_user($old_email) ) {
+	     unless ($list->delete_user('users' => [$old_email]) ) {
 		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$new_email},
 					    $param->{'action'},$list,$old_email,$robot);
 		 &wwslog('info', 'do_change_email: could not remove email from list %s', $l);
@@ -14995,6 +14993,237 @@ sub do_change_email {
      return 'pref';
     
  }
+
+####################################################
+#  do_suspend_request                           
+####################################################
+#  Suspend a subscription to one or more lists     #
+#  for a given period: start date and end date     #
+#  (or unlimited). The user may at any time        #
+#  stop the suspension.                            #
+#                                                  #
+#  IN : -                                          #
+#  OUT : 'loginrequest'                            #
+#      | 'info' | undef                            #
+#                                                  #                         
+####################################################
+sub do_suspend_request {
+
+    &wwslog('info', 'do_suspend_request', $in{'action'}); #Action = suspend_request
+    my $email = $param->{'user'}{'email'};
+    my $data;
+
+    ## Sets the date of the field "start date" to "today"
+    my @d_day = localtime(time);
+    $param->{'d_day'} = ($d_day[3])."-".($d_day[4]+1)."-".($d_day[5]+1900);
+    my $display_resume = 0;
+
+    ## We display in the table the lists of the subscriber and the state in which they are.
+    ## reception : - nomail/digest/mail ||
+    ##             - . suspended  From XX/XX/XXXX To XX/XX/XXXX
+    my @lists = &List::get_which($email, $robot, 'member');
+
+    foreach my $list (@lists) {
+	my $member_info = $list->get_subscriber($param->{'user'}{'email'});
+	if(($member_info->{'enddate'} < time) && ($member_info->{'enddate'})){
+	    ## If end date is < time, update the BDD by deleting the suspending's data
+	    &List::restore_suspended_subscription($param->{'user'}{'email'},$list->{'name'},$list->{'domain'});
+	}
+	my $final_start_date = gettext_strftime "%d %b %Y", localtime($member_info->{'startdate'});
+	my $final_end_date;
+
+	if($member_info->{'suspend'} == 1){
+	    $display_resume = 1;
+	}
+	if($member_info->{'enddate'}){
+	    $final_end_date = gettext_strftime "%d %b %Y", localtime($member_info->{'enddate'});
+	}else{
+	    $final_end_date = undef;
+	}
+
+	$member_info->{'reception'} ||= 'mail';
+	$member_info->{'visibility'} ||= 'noconceal';
+	foreach my $mode (keys %wwslib::reception_mode) {
+	    if ($list->is_available_reception_mode($mode)) {
+		$param->{'reception'}{$list->{'name'}}{$mode}{'description'} = sprintf(gettext($wwslib::reception_mode{$mode}->{'gettext_id'}));
+		if ($member_info->{'reception'} eq $mode) {
+		    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} = 'selected="selected"';
+		}else {
+		    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} = '';
+		}
+	    }
+	}
+	
+	my $subscription = {'listname' => $list->{'name'},
+			    'listdomain' => $list->{'domain'},
+			    'listreception' => $member_info->{'reception'},
+			    'listsuspend' => $member_info->{'suspend'},
+			    'liststartdate' =>$final_start_date,
+			    'listenddate' => $final_end_date,
+			    'display' => $display_resume,
+			    'visibility' => $member_info->{'visibility'},
+			    'reception' => $param->{'reception'}{$list->{'name'}},
+			};
+	push @{$param->{'suspend_list'}}, $subscription;
+    }
+        
+    return 1;
+}
+
+####################################################
+#  do_suspend_request_action                           
+####################################################
+#  Suspend a subscription for lists.               #
+#  Action from the suspend form.                   #
+#                                                  #
+#  IN : %in : HASH with the form's values          #
+#  OUT : 'pref' : action                           #
+#      | 'info' | undef                            #                        
+####################################################
+sub do_suspend_request_action {
+
+    &wwslog('info', 'do_suspend_request_action', $in{'action'});
+    
+    my $day1;
+    my $month1;
+    my $year1;
+    my $day2;
+    my $month2;
+    my $year2;
+    my @lists;
+    my $data;
+ 
+    if($in{'sub_action'} eq 'suspendsave'){
+
+	# to retrieve the selected list
+	@lists = split /\0/, $in{'listname'};
+	my @list_selected;
+	foreach my $list (@lists){
+	    unless($list eq ''){
+		push @list_selected, $list;
+	    }
+	}
+	
+	if($list_selected[0] eq ''){
+	    &report::reject_report_web('user','missing_arg',{'argument' => 'must picked one or more list(s) you are subscribed'}, $param->{'action'});
+	    &wwslog('info','suspend_request: must picked one or more list(s) you are subscribed');
+	    return 'suspend_request';
+	}
+	
+	if ($in{'date_deb'}){
+	    ($day1, $month1, $year1) = split(/\-/, $in{'date_deb'});
+	    $month1 = $month1-1;
+
+	    if (($day1 =~ /([0-9]*)/) && ($month1 =~ /([0-9]*)/) && ($year1 =~ /([0-9]*)/)){
+		if (((1<=$day1) && ($day1<=31)) && ((0<=$month1) && ($month1<=11)) && (1900<=$year1)){
+		    ## Return an epoch date
+		    $data->{'startdate'} = timelocal(0, 0, 0, $day1,$month1,$year1);
+		}else{
+		    &report::reject_report_web('user','missing_arg',{'argument' => 'Start Date doesn\'t exist.'}, $param->{'action'});
+		    &wwslog('info','suspend_request: Date doesn\'t exist.');
+		    return 'suspend_request';
+		}
+	    }else{
+		&report::reject_report_web('user','missing_arg',{'argument' => 'Start Date doesn\'t exist.'}, $param->{'action'});
+		&wwslog('info','suspend_request: Date doesn\'t exist.');
+		return 'suspend_request';
+	    }
+	    ## Case 1 : Start date & End date (without indefinite)	    
+	    if (($in{'date_fin'}) && (!$in{'indefinite'})){
+		($day2, $month2, $year2) = split(/\-/, $in{'date_fin'});
+		$month2 = $month2-1;
+		
+		if (($day2 =~ /([0-9]*)/) && ($month2 =~ /([0-9]*)/) && ($year2 =~ /([0-9]*)/)){
+		    if (((1<=$day2) && ($day2<=31)) && ((0<=$month2) && ($month2<=11)) && (1900<=$year2)){
+			## Return an epoch date
+			$data->{'enddate'} = timelocal(0, 0, 0, $day2,$month2,$year2);
+		    }else{
+			&report::reject_report_web('user','missing_arg',{'argument' => 'End Date doesn\'t exist.'}, $param->{'action'});
+			&wwslog('info','suspend_request: Date doesn\'t exist.');
+			return 'suspend_request';
+		    }
+		}else{
+		    &report::reject_report_web('user','missing_arg',{'argument' => 'End Date doesn\'t exist.'}, $param->{'action'});
+		    &wwslog('info','suspend_request: Date doesn\'t exist.');
+		    return 'suspend_request';
+		}
+
+		unless($data->{'startdate'} <= $data->{'enddate'}){
+		    &report::reject_report_web('user','missing_arg',{'argument' => 'The start date must be less than the end date.'}, $param->{'action'});
+		    &wwslog('info','suspend_request: The start date must be less than the end date.');
+		    return 'suspend_request';
+		} 
+		## Case 2 : Start date & without indefinite (without end date)	
+	    }elsif((!$in{'date_fin'}) && ($in{'indefinite'})){
+		$data->{'enddate'} = undef;
+	    }else{
+		&report::reject_report_web('user','missing_arg',{'argument' => 'Choose end date (dd/mm/yyyy) or indefinite end date'}, $param->{'action'});
+		&wwslog('info','suspend_request: missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date');
+		return 'suspend_request';
+	    }
+	}else{
+	    &report::reject_report_web('user','missing_arg',{'argument' => 'Miss start date (dd/mm/yyyy)'}, $param->{'action'});
+	    &wwslog('info','suspend_request: missing argument for the start date or syntax error : dd/mm/yyyy');
+	    return 'suspend_request';
+	}
+	
+	## Suspend subscription
+	foreach my $list (@list_selected){
+	    unless(&List::suspend_subscription($param->{'user'}{'email'}, $list, $data, $robot)){
+		&wwslog('info','Can\'t do List suspend_subscription');
+		return 'suspend_request';
+	    }
+	}
+	
+	&report::notice_report_web('performed',{},$in{'sub_action'});
+    }
+    ## Restore suspended subscription
+    elsif($in{'sub_action'} eq 'suspendstop'){
+
+	# to renew membership lists selected
+	@lists = split /\0/, $in{'listname'};
+	foreach my $line (@lists) {
+	    &List::restore_suspended_subscription($param->{'user'}{'email'}, $line, $robot); 
+	}
+
+	if($lists[0] eq ''){
+	    &report::reject_report_web('user','missing_arg',{'argument' => 'must picked one or more list(s)'}, $param->{'action'});
+	    &wwslog('info','suspend_request: must picked one or more list(s)');
+	    return 'suspend_request';
+	}
+	&report::notice_report_web('performed',{},"Resume the subscription for the list(s)");
+		
+    }
+    ## Unsubscribe from the selected lists
+    elsif($in{'sub_action'} eq 'signoff'){
+
+	# lists selected
+	@lists = split /\0/, $in{'listname'};
+	foreach my $line (@lists) {
+
+	    my $unsub_list = new List ($line, $robot);
+	    unless ($unsub_list) {
+		&wwslog('info', 'List %s unknown' , $unsub_list);
+		return undef;
+	    }
+
+	    $unsub_list->delete_user('users' => [$param->{'user'}{'email'}],'exclude' => 1 ); 
+	}
+	if($lists[0] eq ''){
+	    &report::reject_report_web('user','missing_arg',{'argument' => 'must picked one or more list(s)'}, $param->{'action'});
+	    &wwslog('info','suspend_request: must picked one or more list(s)');
+	    return 'suspend_request';
+	}
+	
+	&report::notice_report_web('performed',{},"You are unsubscribe from the list(s)");
+    }else{
+	&report::reject_report_web('user','unknown_action',{},$in{'sub_action'},$list);
+	&wwslog('info','unknown action %s', $in{'sub_action'});
+	return undef;
+    }
+
+    return 'suspend_request';
+}
 
 ####################################################
 #  do_compose_mail                           
@@ -15879,8 +16108,8 @@ sub do_viewlogs {
     my $sortby = $in{'sortby'} || 'email';
     my @date = &Log::get_log_date();
        
-    $param->{'date_from_formated'} = gettext_strftime "%Y/%m/%d/%H/%M/%S", localtime($date[0]);
-    $param->{'date_to_formated'} = gettext_strftime "%Y/%m/%d/%H/%M/%S", localtime($date[1]);
+    $param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[0]);
+    $param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[1]);
 
     $param->{'total'} = '17';
     
@@ -15918,7 +16147,7 @@ sub do_viewlogs {
     $select->{'robot'} = $robot;
     $select->{'list'} = $param->{'list'};
     
-    foreach my $p ('target_type','target','date_from','date_to','type','ip') {
+    foreach my $p ('target_type','target','date_deb','date_fin','type','ip') {
 	$param->{$p} = $in{$p};
 	$select->{$p} = $in{$p};
     }

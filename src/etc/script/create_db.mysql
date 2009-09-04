@@ -35,6 +35,9 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	int(1),
 	included_subscriber 	int(1),
 	include_sources_subscriber varchar(50),
+	suspend_subscriber	int(1),
+	suspend_start_date_subscriber	int(11),
+	suspend_end_date_subscriber	int(11),
 	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber),
 	INDEX user_index (user_subscriber)
 );
@@ -58,9 +61,17 @@ CREATE TABLE admin_table (
 	INDEX user_index (user_admin)
 );
  
+CREATE TABLE exclusion_table (
+	list_exclusion 		varchar(50) NOT NULL,
+ 	user_exclusion 		varchar(100) NOT NULL,
+	date_exclusion 		int(11),
+	PRIMARY KEY (list_exclusion, user_exclusion),
+	INDEX user_index (user_exclusion)
+);
+
 CREATE TABLE netidmap_table (
         netid_netidmap              varchar (100) NOT NULL,
-	serviceid_netidmap		    varchar (100) NOT NULL,
+	serviceid_netidmap	    varchar (100) NOT NULL,
 	robot_netidmap	            varchar (80) NOT NULL,
         email_netidmap              varchar (100),
         PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)

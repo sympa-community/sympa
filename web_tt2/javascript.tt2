@@ -825,4 +825,294 @@ myAddEventListener(window, 'load', makeColorSelectors);
 // end browsers -->
 </script>
 
+<script type="text/javascript">
+
+/***********************************************************************
+* script MICRO-CAL (V4.2) par Amroune Selim (amrounix@gmail.com)
+* all copies, releases, modifications or improvements are allowed.
+************************************************************************
+* Using script to manage the calendar.
+* Used by suspend_request.tt2
+* Select a start date and end date.
+*************************************************************************/
+
+var param_ddeb = {"dfin" : "date_fin", "titre" : "[%|loc%]Start date[%END%]" };
+var param_dfin = {"ddeb" : "date_deb", "titre" : "[%|loc%]End date[%END%]"  };
+
+/* vars */
+var pDefaut = { 
+	"mois" : new Array("[%|loc%]January[%END%]","[%|loc%]February[%END%]","[%|loc%]March[%END%]","[%|loc%]April[%END%]","[%|loc%]May[%END%]","[%|loc%]June[%END%]","[%|loc%]July[%END%]","[%|loc%]August[%END%]","[%|loc%]September[%END%]","[%|loc%]October[%END%]","[%|loc%]November[%END%]","[%|loc%]December[%END%]"),
+	"jour" : new Array("[%|loc%]Su[%END%]","[%|loc%]Mo[%END%]","[%|loc%]Tu[%END%]","[%|loc%]We[%END%]","[%|loc%]Th[%END%]","[%|loc%]Fr[%END%]","[%|loc%]Sa[%END%]"),
+	"jLib" : new Array("[%|loc%]Sunday[%END%]","[%|loc%]Monday[%END%]","[%|loc%]Tuesday[%END%]","[%|loc%]Wednesday[%END%]","[%|loc%]Thursday[%END%]","[%|loc%]Friday[%END%]","[%|loc%]Saturday[%END%]"),
+	"titre" : "[%|loc%]Calendar[%END%]",
+	"aujourdhui" : "[%|loc%]today[%END%]",
+	"debutSemaine" : 1,                      /*debut de la semaine 0=dim,1=lun,...*/
+	"jPause" : {6:true,0:true},              /*jour de pause de la semaine (samedi & dimanche)*/
+	"jFeriee": {"1-1":"jour an","1-5":"fête du travail","8-5":"armistice","14-7":"fête nationale","15-8":"ascencion","1-11":"armistice","11-11":"toussain","25-12":"noel"} ,
+	"moisMoins" : "<", "moisPlus" : ">",     /*naviagation par mois*/ 
+	"anneeMoins" : "<<", "anneePlus" : ">>", /*naviagation par annee*/
+	"format" : "%j-%m-%a",                   /*format de sortie : %j = jour, %m = mois, %a =année*/ 
+	"date" : null, "ddeb" : "", "dfin" : "",
+	"dateMin" : null, "dateMax" : null
+}
+
+var tempo = new Array(); /*gestion de la fermeture des calendriers quand on perd le focus*/
+var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI":0,"PRE":0,"SPAN":0,"SUB":0,"SUP":0,"FORM":0};
+//var nomove={"TD":0,"TABLE":0};
+
+/* simplification calls */
+function _(x) 
+{
+  return document.getElementById(x);
+}
+
+/* Returns the number of days since January 1 (for number of the week)*/
+function nbJ(dateX) 
+{
+  var j_mois=[0,31,59,90,120,151,181,212,243,273,304,334];
+  mm=dateX.getMonth();aa=dateX.getFullYear();nb=j_mois[mm]+dateX.getDate()-1 ;
+  if ((aa%4==0 && aa %100!=0 || aa%400==0) && mm>1) nb++; /*test bissextile*/
+  return nb;
+}
+
+function dateMin(dateA,dateB)
+{
+  return (dateB==null||(dateA!=null&&(dateA.getFullYear()<dateB.getFullYear()
+				      ||(dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()<dateB.getMonth())
+				      ||(dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()==dateB.getMonth()&&dateA.getDate()<dateB.getDate())
+				      ))) ? dateA:dateB
+    }
+
+function dateMax(dateA,dateB)
+{
+  return (dateB==null||(dateA!=null&&(dateA.getFullYear()>dateB.getFullYear()
+				      ||(dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()>dateB.getMonth())
+				      ||(dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()==dateB.getMonth()&&dateA.getDate()>dateB.getDate())
+				      ))) ? dateA:dateB
+    }
+
+/* compare two dates and return true if dateA<=dateB */
+function dateBefore(dateA,dateB) 
+{
+  return dateA!=null&&dateB!=null&&(dateA.getFullYear()<dateB.getFullYear()||(dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()<dateB.getMonth())||
+				    (dateA.getFullYear()==dateB.getFullYear()&&dateA.getMonth()==dateB.getMonth()&&dateA.getDate()<dateB.getDate()));
+}
+
+/* function to display the navigation informations */
+function htmNavChk(dateA,dateB,src,srcId,mm,yy,txt) 
+{
+  return (dateBefore(dateA,dateB)) ? 
+    "<td onclick=\"\">&nbsp;</td>" : ("<td class=\"zoneNav\" onclick=\"return generateCal('"+src+"','"+srcId+"',"+mm+","+yy+")\">"+txt+"</td>");
+}
+
+/* create the calendar */
+function generateCal(src,srcId,mm,yy) 
+{
+  if (tempo!=null&&tempo[srcId]!=null)
+    {
+      clearTimeout(tempo[srcId]);
+      _(src).focus();
+    }
+  
+  if (mm<0) {mm+=12;yy--;} /*changement de mois/année*/
+  else if (mm>11) {mm-=12;yy++;}
+  
+  dnow=new Date(); /*date du jour*/
+  param=_(srcId).parametre; /*parametre par defaut*/
+  ddeb = null; dfin = null;
+  
+  if (param["ddeb"]!="" && _(param["ddeb"]+"_cal")!=null && _(param["ddeb"]+"_cal").parametre.date != null)
+    ddeb = _(param["ddeb"]+"_cal").parametre.date;
+  if (param["dfin"]!="" && _(param["dfin"]+"_cal")!=null && _(param["dfin"]+"_cal").parametre.date != null)
+    dfin = _(param["dfin"]+"_cal").parametre.date;
+  
+  htm="<table cellpadding=0 cellspacing=0 >";
+  
+  /*titre*/
+  if (param["titre"]!= null )
+    {htm+="<tr><td colspan=\"8\" class=\"zoneTitre\" >"+param["titre"]+"</td></tr>";}
+  
+  /*navigation area*/
+  htm+="<tr><td colspan=\"8\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" ><tr>";
+  htm+=htmNavChk(new Date(yy-1,mm,1),dateMax(ddeb,param["dateMin"]),src,srcId,mm,yy-1,param["anneeMoins"]);
+  htm+=htmNavChk(new Date(yy,mm,0),dateMax(ddeb,param["dateMin"]),src,srcId,mm-1,yy,param["moisMoins"]);
+  htm+="<td class=\"zoneMois\">"+param["mois"][mm]+"</td>";
+  htm+=htmNavChk(dateMin(dfin,param["dateMax"]),new Date(yy,mm+1,1),src,srcId,mm+1,yy,param["moisPlus"]);
+  htm+=htmNavChk(dateMin(dfin,param["dateMax"]),new Date(yy+1,mm,1),src,srcId,mm,yy+1,param["anneePlus"]);
+  htm+="</tr></table></td></tr>";
+  
+  /* day of the week*/
+  htm+="<tr><td></td>";
+  pJs = param["debutSemaine"];
+  pJm = new Date(yy,mm,1).getDay(); /*day of the 1st of the month*/
+  pjT = 1-pJm+pJs;
+  pjT-=(pjT>1)?7:0;
+  dateX = new Date(yy,mm,pjT);
+  for (j=0;j<7;j++)                 /*display the days of the week*/
+    {
+      htm+="<td>"+param["jour"][(j+pJs)%7]+"</td>";
+    }
+  htm+="</tr>";
+  avantFinMois=true;idx=0;
+  idxSem=parseInt(nbJ(new Date(yy,mm,1))/7+1,10); /*index de la semaine*/
+  
+  while(avantFinMois) /*loop until the end month */
+    {
+      /* If we want to display the number of weeks : htm+=(idx%7==0)?"<tr><td class=\"nSemaine\" >"+idxSem+"</td>":""; */
+	htm+=(idx%7==0)?"<tr><td class='nSemaine' >"+""+"</td>":""; /* delete the number of weeks*/
+      if (dateBefore(dateX,dateMax(ddeb,param["dateMin"]))||dateBefore(dateMin(dfin,param["dateMax"]),dateX))
+	htm+="<td style=\"text-decoration:line-through;\"><a class=\"tdx\" href=\"#\">"+subDiv(param,idx,dateX,mm,aa,0)+"</b></td>";
+      else
+	htm+="<td><a class=\"tdx\" href=\"#\" onclick=\"javascript:choix("+dateX.getFullYear()+","+dateX.getMonth()+","+dateX.getDate()+",'"+srcId+"','"+src+"')\" >"+subDiv(param,idx,dateX,mm,aa,0)+"</a></td>";
+      idx++;
+      if (idx%7==0)
+	{htm+="</tr>"; idxSem++;}
+      dateX= new Date(dateX.getFullYear(),dateX.getMonth(),dateX.getDate()+1);
+      if (idx>7&&idx%7==0&&dateX.getMonth()!=mm)
+	{avantFinMois=false;}
+    }
+  htm+="<tr><td colspan='6'>&nbsp;&nbsp;";
+  if (!dateBefore(dnow,dateMax(ddeb,param["dateMin"]))&&!dateBefore(dateMin(dfin,param["dateMax"]),dnow))
+    htm+="<a class=\"tdxNow\" href=\"#\" onclick=\"javascript:choix("+dnow.getFullYear()+","+dnow.getMonth()+","+dnow.getDate()+",'"+srcId+"','"+src+"')\" >"+param["aujourdhui"]+"</a>";
+  else htm+="&nbsp;"
+    
+    /*year*/
+    htm+="</td><td colspan=\"2\" class=\"zoneAnnee\">"+yy+"</td></tr></table>";
+  //alert(htm);
+  _(srcId).innerHTML=htm;
+  return false;
+}
+
+/* add a zero before */
+function addZero(val) 
+{ return ((val<10)?"0":"")+val;}
+
+function choix(aa,mm,jj,srcId,src)
+{
+  var datePos=new Date(aa,mm,jj);
+  var jour = datePos.getDay();
+  param=_(srcId).parametre;
+  param.date = datePos;
+  var dateAffiche = param["format"].replace("%j",addZero(datePos.getDate())).replace("%k",datePos.getDate()).replace("%d",param["jLib"][jour]);
+  dateAffiche = dateAffiche.replace("%m",addZero(datePos.getMonth()+1)).replace("%n",datePos.getMonth()+1).replace("%p",param["mois"][datePos.getMonth()]);
+  dateAffiche = dateAffiche.replace("%a",datePos.getFullYear()).replace("%y",datePos.getYear());
+  _(src).value = dateAffiche;
+}
+
+function subDiv(param,idx,dateX,mm,aa,code)
+{
+  pJs = param["debutSemaine"];
+  dnow=new Date();
+  switch(code)
+    {
+    case 0 : return (param["jPause"][(idx+pJs)%7]==true) ? "<div class=\"enWeekEnd\" >"+subDiv(param,idx,dateX,mm,aa,1)+"</div>" : subDiv(param,idx,dateX,mm,aa,1) ; break;
+    case 1 : return (param["jFeriee"][dateX.getDate()+"-"+(dateX.getMonth()+1)]!=null) ? ("<div class=\"enFeriee\" title=\""+param["jFeriee"][dateX.getDate()+"-"+(dateX.getMonth()+1)]+"\" >"+subDiv(param,idx,dateX,mm,aa,2)+"</div>") : subDiv(param,idx,dateX,mm,aa,2) ; break;
+    case 2 : return (dateX.getMonth()==mm) ? "<div class=\"enMois\" >"+subDiv(param,idx,dateX,mm,aa,3)+"</div>" : subDiv(param,idx,dateX,mm,aa,3) ; break;
+    case 3 : return (dateX.getMonth()==dnow.getMonth()&&dateX.getFullYear()==dnow.getFullYear()&&dateX.getDate()==dnow.getDate()) ? "<div class=\"aujourdhui\" >"+subDiv(param,idx,dateX,mm,aa,4)+"</div>" : subDiv(param,idx,dateX,mm,aa,4) ; break;
+    case 4 : return dateX.getDate(); break;
+    }
+}
+
+function getMinx(tab,mini)
+{
+  var rc=mini,code="";
+  for (k in tab)
+    {
+      if (tab[k]>mini && rc<tab[k]) {rc=tab[k]; code = k; }
+    }
+  return code;
+}
+
+function decodeDate(val,format,defaut)
+{
+  var dnow = defaut,jj= dnow.getDate(),mm = dnow.getMonth(), aa= dnow.getFullYear();
+  var parx = {"%j":"([0123][0-9])","%k":"([0123]?[0-9])","%d":"("+(param["jLib"].join("|"))+")","%m":"([01][0-9])","%n":"([01]?[0-9])",
+	      "%p":"("+(param["mois"].join("|"))+")","%a":"([12][0-9]{3})","%y":"([0-9]{2})"};
+  var ff= format,df = format;
+  for (e in parx)
+    {
+      ff = ff.replace(e,parx[e]);
+      df = df.replace(e,"("+e+")");
+    }
+  tablo = (new RegExp(ff)).exec(val);
+  clef = (new RegExp(df)).exec(format);
+  if (tablo!=null&&clef!=null)
+    {
+      for (i = 0; i< tablo.length;i++)
+	{
+	  switch(clef[i])
+	    {
+	    case "%j": case "%k" : jj=parseInt(tablo[i],10); break;
+	    case "%m": case "%n" : mm=parseInt(tablo[i],10)-1; break;
+	    case "%p" : mm=0; while(mm<param["mois"].length&&param["mois"][mm]!=tablo[i]){mm++;};  break;
+	    case "%a": aa = parseInt(tablo[i],10); break;
+	    }
+	}
+    }
+  return new Date(aa,mm,jj);
+}
+
+/* Initialisation of the parameters for the calendar : display position, create div, ... */
+/* Let you see the calendar when you click on the input */
+function visuCal(src,paramX)
+{
+  if (src.id=="")         /*if not ID, create one*/
+    {
+      cpt=0;
+      while(_("microcal"+cpt) != null) 
+	{cpt++;}
+      src.id="microcal"+cpt;
+    }
+  pos_ = new Array();
+  pos_ = getOffsets(_(src.id)); 
+  srcId = src.id+"_cal";  /*id div for calendar*/
+  dnow= new Date();
+  if (_(srcId)==null)     /*if doesn't exist create one*/
+    {
+      param={}
+      for (e in pDefaut) {
+	trouve=false;
+	if (paramX!=null)
+	  for (i in paramX) { if (e==i) {param[e]=paramX[e];trouve=true;} }
+	if (!trouve) param[e]=pDefaut[e];
+      }
+      dnow = decodeDate(src.value,param.format,new Date()); 
+      div = document.createElement('div');
+      div.setAttribute('id',srcId);
+      div.style.position = 'absolute';
+      div.style.top = (pos_[1] + 18) + 'px'; /* 18 : high of the input */
+      div.style.left = pos_[0] + 'px';  /*this.deltaG = 0; */
+      div.className = 'divCal';
+      div.parametre = param;
+      document.body.appendChild(div);
+      generateCal(src.id,srcId,dnow.getMonth(),dnow.getFullYear(),param);
+    } else
+    {
+      div = _(src.id+"_cal");
+      div.style.display='inline';      /*display calendar*/
+      div.style.top = (pos_[1] + 18) + 'px'; 
+      div.style.left = pos_[0] + 'px';  /*this.deltaG = 0; */
+    }
+  
+}
+
+/* hide the calendar  */
+function masqueCal(src)
+{
+  tempo[src.id+"_cal"]=window.setTimeout("_('"+src.id+"_cal').style.display='none'",500);
+}
+
+/* return the position (x, y) of an element in an array */
+function getOffsets(obj) {
+    var offsetTop = obj.offsetTop;
+    var offsetLeft = obj.offsetLeft;
+    while ((obj = obj.offsetParent )!=null) {
+        offsetTop += obj.offsetTop;
+        offsetLeft += obj.offsetLeft;
+    }
+    return [offsetLeft, offsetTop];
+}
+
+</script>
+
 <!-- end javascript.tt2 -->

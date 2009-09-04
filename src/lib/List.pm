@@ -2726,6 +2726,21 @@ sub send_msg_digest {
 
     ## Create the list of subscribers in various digest modes
     for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
+	my $options;
+	$options->{'email'} = $user->{'email'};
+	$options->{'name'} = $self->{'name'};
+	$options->{'domain'} = $self->{'domain'};
+	my $user_data = &get_subscriber_no_object($options);
+	## test to know if the rcpt suspended her subscription for this list
+	## if yes, don't send the message
+	if ($user_data->{'suspend'} eq '1'){
+	    if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
+		next;
+	    }elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
+		## If end date is < time, update the BDD by deleting the suspending's data
+		&restore_suspended_subscription($user->{'email'},$self->{'name'},$self->{'domain'});
+	    }
+	}
 	if ($user->{'reception'} eq "digest") {
 	    push @tabrcpt, $user->{'email'};
 
@@ -2733,8 +2748,8 @@ sub send_msg_digest {
 	    ## Create the list of subscribers in summary mode
 	    push @tabrcptsummary, $user->{'email'};
         
-    }elsif ($user->{'reception'} eq "digestplain") {
-        push @tabrcptplain, $user->{'email'};              
+	}elsif ($user->{'reception'} eq "digestplain") {
+	    push @tabrcptplain, $user->{'email'};              
 	}
     }
     if (($#tabrcptsummary == -1) and ($#tabrcpt == -1) and ($#tabrcptplain == -1)) {
@@ -3165,6 +3180,21 @@ sub send_msg {
 	    unless ($user->{'email'}) {
 		&do_log('err','Skipping user with no email address in list %s', $name);
 		next;
+	    }
+	    my $options;
+	    $options->{'email'} = $user->{'email'};
+	    $options->{'name'} = $name;
+	    $options->{'domain'} = $host;
+	    my $user_data = &get_subscriber_no_object($options);
+	    ## test to know if the rcpt suspended her subscription for this list
+	    ## if yes, don't send the message
+	    if ($user_data->{'suspend'} eq '1'){
+		if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
+		    next;
+		}elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
+		    ## If end date is < time, update the BDD by deleting the suspending's data
+		    &restore_suspended_subscription($user->{'email'},$name,$host);
+		}
 	    }
 	    if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
 		next;
@@ -4503,13 +4533,21 @@ sub delete_user_db {
 }
 
 ## Delete the indicate users from the list.
+## IN : - ref to array 
+##      - option exclude
+##
+## $list->delete_user('users' => \@u, 'exclude' => 1)
+## $list->delete_user('users' => [$email], 'exclude' => 1)
 sub delete_user {
-    my($self, @u) = @_;
-    do_log('debug2', 'List::delete_user');
+    my $self = shift;
+    my %param = @_;
+    my @u = @{$param{'users'}};
+    my $exclude = $param{'exclude'};
+    &do_log('debug2', 'List::delete_user');
 
     my $name = $self->{'name'};
     my $total = 0;
-    
+
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
@@ -4517,8 +4555,15 @@ sub delete_user {
     
     foreach my $who (@u) {
 	$who = &tools::clean_email($who);
+
 	my $statement;
-	
+	## Include in exclusion_table only if option is set.
+	if($exclude == 1){
+	    ## Insert in exclusion_table if $user->{'included'} eq '1'
+	    &insert_delete_exclusion($who, $name, $self->{'domain'}, 'insert');
+	    
+	}
+
 	$list_cache{'is_user'}{$self->{'domain'}}{$name}{$who} = undef;    
 	$list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$who} = undef;    
 	
@@ -4761,8 +4806,218 @@ sub get_all_user_db {
     return @users;
 }
 
+######################################################################
+###  suspend_subscription                                            #
+## Suspend an user from list(s)                                      #
+######################################################################
+# IN:                                                                #
+#   - email : the subscriber email                                   #
+#   - list : the name of the list                                    #
+#   - data : start_date and end_date                                 #
+#   - robot : domain                                                 #
+# OUT:                                                               #
+#   - undef if something went wrong.                                 #
+#   - 1 if user is suspended from the list                           #
+######################################################################
+sub suspend_subscription {
+    
+    my $email = shift;
+    my $list = shift;
+    my $data = shift;
+    my $robot = shift;
+    &do_log('debug2', 'List::suspend_subscription("%s", "%s", "%s" )', $email, $list, $data);
 
-## Returns a subscriber of the list.
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    my $statement = sprintf "UPDATE subscriber_table SET suspend_subscriber='1', suspend_start_date_subscriber=%s, suspend_end_date_subscriber=%s WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber = %s )", 
+    $dbh->quote($data->{'startdate'}), 
+    $dbh->quote($data->{'enddate'}), 
+    $dbh->quote($email), 
+    $dbh->quote($list),
+    $dbh->quote($robot);
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    return 1;
+}
+
+######################################################################
+###  restore_suspended_subscription                                  #
+## Restore the subscription of an user from list(s)                  #
+######################################################################
+# IN:                                                                #
+#   - email : the subscriber email                                   #
+#   - list : the name of the list                                    #
+#   - robot : domain                                                 #
+# OUT:                                                               #
+#   - undef if something went wrong.                                 #
+#   - 1 if his/her subscription is restored                          #
+######################################################################
+sub restore_suspended_subscription {
+
+    my $email = shift;
+    my $list = shift;
+    my $robot = shift;
+    &do_log('debug2', 'List::restore_suspended_subscription("%s", "%s", "%s")', $email, $list, $robot);
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    ## Update field
+    my $statement = sprintf "UPDATE subscriber_table SET suspend_subscriber='0', suspend_start_date_subscriber=NULL, suspend_end_date_subscriber=NULL WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber = %s )",  
+    $dbh->quote($email), 
+    $dbh->quote($list),
+    $dbh->quote($robot);
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    return 1;
+}
+
+######################################################################
+###  insert_delete_exclusion                                         #
+## Update the exclusion_table                                        #
+######################################################################
+# IN:                                                                #
+#   - email : the subscriber email                                   #
+#   - list : the name of the list                                    #
+#   - robot : the name of the domain                                 #
+#   - action : insert or delete                                      #
+# OUT:                                                               #
+#   - undef if something went wrong.                                 #
+#   - 1                                                              #
+######################################################################
+sub insert_delete_exclusion {
+
+    my $email = shift;
+    my $list = shift;
+    my $robot = shift;
+    my $action = shift;
+    &do_log('info', 'List::insert_delete_exclusion("%s", "%s", "%s", "%s")', $email, $list, $robot, $action);
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    my $statement;
+    if($action eq 'insert'){
+	## INSERT only if $user->{'included'} eq '1'
+
+	my $options;
+	$options->{'email'} = $email;
+	$options->{'name'} = $list;
+	$options->{'domain'} = $robot;
+	my $user = &get_subscriber_no_object($options);
+	my $date = time;
+
+	if ($user->{'included'} eq '1') {
+	    ## Insert : list, user and date
+	    $statement = sprintf "INSERT INTO exclusion_table (list_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s)", $dbh->quote($list), $dbh->quote($email), $dbh->quote($date);
+	    
+	    unless ($dbh->do($statement)) {
+		&do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		return undef;
+	    }
+	}
+	
+    }elsif($action eq 'delete') {
+	## If $email is in exclusion_table, delete it.
+	my $data_excluded = &get_exclusion($list);
+	my @users_excluded;
+
+	my $key =0;
+	while ($data_excluded->{'emails'}->[$key]){
+	    push @users_excluded, $data_excluded->{'emails'}->[$key];
+	    $key = $key + 1;
+	}
+
+	foreach my $users (@users_excluded) {
+	    if($email eq $users){
+		## Delete : list, user and date
+		$statement = sprintf "DELETE FROM exclusion_table WHERE (list_exclusion = %s AND user_exclusion = %s)",	$dbh->quote($list), $dbh->quote($email);
+
+		unless ($dbh->do($statement)) {
+		    &do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    return undef;
+		}
+	    }
+	}
+
+    }else{
+	&do_log('err','You must choose an action');
+	return undef;
+    }
+   
+    return 1;
+}
+
+######################################################################
+###  get_exclusion                                                   #
+## Returns a hash with those excluded from the list and the date.    #
+##                                                                   # 
+# IN:  - name : the name of the list                                 #
+# OUT: - data_exclu : * %data_exclu->{'emails'}->[]                  #
+#                     * %data_exclu->{'date'}->[]                    # 
+######################################################################
+sub get_exclusion {
+    
+    my  $name= shift;
+    &do_log('debug2', 'List::get_exclusion(%s)', $name);
+   
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    ## the query return the email and the date in a hash
+    my $statement = sprintf "SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s", 
+    $dbh->quote($name); 
+  
+    push @sth_stack, $sth;
+    unless ($sth = $dbh->prepare($statement)) {
+	&do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    unless ($sth->execute) {
+	&do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    my @users;
+    my @date;
+    my $data;
+    while ($data = $sth->fetchrow_hashref){
+	push @users, $data->{'email'};
+	push @date, $data->{'date'};
+    }
+    ## in order to use the data, we add the emails and dates in differents array
+    my $data_exclu = {"emails" => \@users,
+		      "date"   => \@date
+		      };
+    
+    $sth->finish();
+    $sth = pop @sth_stack;
+   
+    unless($data_exclu){
+	&do_log('err','Unable to retrieve information from database for list %s', $name);
+	return undef;
+    }
+    return $data_exclu;
+}
+
+######################################################################
+###  get_subscriber                                                  #
+## Returns a subscriber of the list.                                 #
+######################################################################
 sub get_subscriber {
     my  $self= shift;
     my  $email = &tools::clean_email(shift);
@@ -4807,7 +5062,7 @@ sub get_subscriber {
 # IN:                                                                #
 #   - a single reference to a hash with the following keys:          #
 #     * email : the subscriber email                                 #
-#     * listname: the name of the list                               #
+#     * name: the name of the list                                   #
 #     * domain: the virtual host under which the list is installed.  #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
@@ -4821,7 +5076,6 @@ sub get_subscriber_no_object {
     my $name = $options->{'name'};
     
     my $email = &tools::clean_email($options->{'email'});
-
     my $statement;
     my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
     my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
@@ -4840,7 +5094,7 @@ sub get_subscriber_no_object {
     if ($Conf::Conf{'db_additional_subscriber_fields'}) {
 	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
     $date_field, 
     $update_field, 
     $additional, 
@@ -4878,10 +5132,8 @@ sub get_subscriber_no_object {
     $sth->finish();
 
     $sth = pop @sth_stack;
-    
     ## Set session cache
     $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email} = $user;
-
     return $user;
 }
 
@@ -5050,7 +5302,7 @@ sub get_first_user {
     ## Oracle
     if ($Conf::Conf{'db_type'} eq 'Oracle') {
 	
-	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber AS \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -5060,7 +5312,7 @@ sub get_first_user {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5083,7 +5335,7 @@ sub get_first_user {
 	## Sybase
     }elsif ($Conf::Conf{'db_type'} eq 'Sybase'){
 	
-	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -5093,7 +5345,7 @@ sub get_first_user {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5117,7 +5369,7 @@ sub get_first_user {
 	## mysql
     }elsif ($Conf::Conf{'db_type'} eq 'mysql') {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -5129,7 +5381,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5158,7 +5410,7 @@ sub get_first_user {
 	## SQLite
     }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute,suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -5170,7 +5422,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5199,7 +5451,7 @@ sub get_first_user {
 	## Pg    
     }else {
 	
-	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
+	$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute,suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)", 
 	$date_field, 
 	$update_field, 
 	$additional, 
@@ -5211,7 +5463,7 @@ sub get_first_user {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5753,7 +6005,7 @@ sub get_first_bouncing_user {
 	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
 
-    $statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce,bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND bounce_subscriber is not NULL)", 
+    $statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce,bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date,suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND bounce_subscriber is not NULL)", 
       $date_field, 
 	$update_field, 
 	  $additional, 
@@ -6006,7 +6258,10 @@ sub update_user {
 		      included => 'included_subscriber',
 		      id => 'include_sources_subscriber',
 		      bounce_address => 'bounce_address_subscriber',
-		      custom_attribute => 'custom_attribute_subscriber'
+		      custom_attribute => 'custom_attribute_subscriber',
+		      suspend => 'suspend_subscriber',
+		      startdate_subscriber => 'suspend_start_date_subscriber',
+		      enddate => 'suspend_end_date_subscriber'
 		      );
     
     ## mapping between var and tables
@@ -6024,7 +6279,10 @@ sub update_user {
 		      included => 'subscriber_table',
 		      id => 'subscriber_table',
 		      bounce_address => 'subscriber_table',
-		      custom_attribute => 'subscriber_table'
+		      custom_attribute => 'subscriber_table',
+		      suspend => 'subscriber_table',
+		      startdate => 'subscriber_table',
+		      enddate => 'subscriber_table'
 		      );
     
     ## additional DB fields
@@ -6403,7 +6661,7 @@ sub add_user_db {
 ## Adds a new user, no overwrite.
 sub add_user {
     my($self, @new_users) = @_;
-    do_log('debug2', 'List::add_user');
+    &do_log('debug2', 'List::add_user');
     
     my $name = $self->{'name'};
     my $total = 0;
@@ -6417,9 +6675,11 @@ sub add_user {
     
     foreach my $new_user (@new_users) {
 	my $who = &tools::clean_email($new_user->{'email'});
-	
 	next unless $who;
 	
+	# Delete from exclusion_table if new_user is in.
+	&insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete');
+
 	$new_user->{'date'} ||= time;
 	$new_user->{'update_date'} ||= $new_user->{'date'};
 	
@@ -6462,7 +6722,7 @@ sub add_user {
 	$new_user->{'included'} ||= 0;
 	
 	## Update Subscriber Table
-	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber,suspend_subscriber,suspend_start_date_subscriber,suspend_end_date_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 	$dbh->quote($who), 
 	$dbh->quote($new_user->{'gecos'}), 
 	$dbh->quote($name), 
@@ -6475,7 +6735,10 @@ sub add_user {
 	$new_user->{'subscribed'}, 
 	$new_user->{'included'}, 
 	$dbh->quote($new_user->{'id'}),
-	$dbh->quote($new_user->{'custom_attribute'});
+	$dbh->quote($new_user->{'custom_attribute'}),
+	$dbh->quote($new_user->{'suspend'}),
+	$dbh->quote($new_user->{'startdate'}),
+	$dbh->quote($new_user->{'enddate'});
 	
 	unless ($dbh->do($statement)) {
 	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
@@ -8495,7 +8758,7 @@ sub sync_include {
     my $option = shift;
     my $name=$self->{'name'};
     &do_log('debug', 'List:sync_include(%s)', $name);
-
+    
     my %old_subscribers;
     my $total=0;
 
@@ -8516,7 +8779,7 @@ sub sync_include {
 
 	$total++;
     }
-
+    
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
@@ -8533,6 +8796,19 @@ sub sync_include {
 	}
     }
 
+    my $data_exclu;
+    my @subscriber_exclusion;
+
+    ## Récupérer un array d'emails pour une liste donnée in 'exclusion_table'
+    $data_exclu = &get_exclusion($name);
+
+    my $key =0;
+    while ($data_exclu->{'emails'}->[$key]){
+	push @subscriber_exclusion, $data_exclu->{'emails'}->[$key];
+	$key = $key + 1;
+    }
+    
+
     my $users_added = 0;
     my $users_updated = 0;
 
@@ -8543,7 +8819,6 @@ sub sync_include {
 	return undef;
     }
     $lock->set_timeout(10*60); 
-
     unless ($lock->lock('write')) {
 	return undef;
     }
@@ -8552,7 +8827,8 @@ sub sync_include {
     my @add_tab;
     $users_added = 0;
     foreach my $email (keys %{$new_subscribers}) {
-	if (defined($old_subscribers{$email}) ) {	   
+	if (defined($old_subscribers{$email}) ) {
+
 	    if ($old_subscribers{$email}{'included'}) {
 
 	      ## If one user attribute has changed, then we should update the user entry
@@ -8567,7 +8843,6 @@ sub sync_include {
 		  $users_updated++;
 		}
 	      }
-	      
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
@@ -8583,6 +8858,19 @@ sub sync_include {
 
 	    ## Add new included user
 	}else {
+	    my $compare = 0;
+	    foreach my $sub_exclu (@subscriber_exclusion){
+		unless ($compare eq '1'){
+		    if ($email eq $sub_exclu){
+			$compare = 1;
+		    }else{
+			next;
+		    }
+		}
+	    }
+	    if($compare eq '1'){
+		next;
+	    }
 	    &do_log('debug3', 'List:sync_include: adding %s to list %s', $email, $name);
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
@@ -8631,7 +8919,7 @@ sub sync_include {
 	    }else {
 		&do_log('debug3', 'List:sync_include: removing %s from list %s', $email, $name);
 		@deltab = ($email);
-		unless($user_removed = $self->delete_user(@deltab)) {
+		unless($user_removed = $self->delete_user('users' => \@deltab)) {
 		    &do_log('err', 'List:sync_include(%s): Failed to delete %s', $name, $user_removed);
 		    return undef;
 		}
@@ -11330,7 +11618,7 @@ sub close {
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
 	push @users, $user->{'email'};
     }
-    $self->delete_user(@users);
+    $self->delete_user('users' => \@users);
 
     ## Remove entries from admin_table
     foreach my $role ('owner','editor') {
@@ -11434,8 +11722,8 @@ sub remove_bouncers {
 	&do_log('notice','Removing bouncing subsrciber of list %s : %s', $self->{'name'}, $bouncer);
     }
 
-    unless (&delete_user($self,@$reftab)){
-      &do_log('info','error while caling sub delete_users');
+    unless ($self->delete_user('users' => $reftab, 'exclude' =>' 1')){
+      &do_log('info','error while calling sub delete_users');
       return undef;
     }
     return 1;

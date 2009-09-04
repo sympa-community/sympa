@@ -1,0 +1,79 @@
+<!-- $Id: suspend_request.tt2 5973 2009-07-20 10:29:53Z jourdan $ -->
+
+<div class="block">
+
+  <h2>[%|loc%]Manage your subscriptions[%END%]</h2>
+  <br />
+  <form class="noborder" action="[% path_cgi %]" method="post" name="suspend_request">
+
+	<table summary="[%|loc%]Lists[%END%]" class="listOfItems">
+      <tr>
+	<th>[%|loc%]Lists[%END%]</th>
+	<th>[%|loc%]Reception[%END%]</th>   
+	<th>[%|loc%]Suspended[%END%]</th>
+      </tr>
+
+      [% IF user.email %]
+        [% IF suspend_list %]
+          [% FOREACH sub = suspend_list %]
+            <tr class="color0">
+              <td><input type="checkbox" checked="checked" name="listname" value="[% sub.listname %]" /> [% hidden_head %][% sub.listname %][% hidden_end %]&nbsp;</td>
+	      [% IF sub.listsuspend %]
+	        <td></td>
+	        <td>&nbsp;[%|loc%]Suspended from [% END %][% sub.liststartdate %][%|loc%] to [% END %][% IF sub.listenddate %][% sub.listenddate %][% ELSE %][%|loc%]indefinite end date[% END %][% END %]</td>	        
+	      [% ELSE %]
+	      <td>
+		 [% sub.listreception %] 
+	      </td>
+	      <td></td>
+	      [% END %]
+            </tr>
+	  [% END %]
+	[% ELSE %]
+          <p>[%|loc%]No subscription.[% END %]</p>
+        [% END %]
+      [% END %]
+    </table>
+    <input class="MainMenuLinks" type="button" value="[%|loc%]Toogle selection[%END%]" onclick="toggle_selection(document.suspend_request.listname)" />
+
+    <br /><br />
+
+      <h3>[%|loc%]Suspend[% IF sub.display == 1 %]/Resume[% END %] selected lists[%END%]</h3>
+	<p><b>
+ 	  [%|loc%]From : <noscript>[%|loc%](dd-mm-yyyy) [%END%]</noscript>[%END%]<input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
+          [%|loc%] to [%END%]<input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" >      
+      	</b>
+	<input type="checkbox" name="indefinite" /> [%|loc%]Select the checkbox for an indefinite end date. [%END%]
+	<br />
+	<input type="hidden" name="action" value="suspend_request_action"/>
+	<input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]"/>
+	[% IF sub.display == 1 %]
+        	<input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscriptions[%END%]"/>
+        [% END %]
+	</p>
+
+      <h3>[%|loc%]Unsubscribe selected lists[%END%]</h3>
+	<p>
+	  <input class="MainMenuLinks" type="submit" name="sub_action_signoff" value="[%|loc%]Unsubscribe[%END%]"/>
+	</p>
+  </form>
+	<br />
+</div>
+
+<div class="block">
+  <h3>[%|helploc%]How the suspension works[%END%]<a class="input" href="[% path_cgi %]/help/user#options">[%|loc%]Help[%END%]</a></h3>
+	<p>[%|helploc%]In order to <strong>suspend your subscription</strong> to one or more lists, follow these steps:[%END%]</p>
+	<ul>
+		<li>[%|helploc%]Select a start date through the calendar that appears when you click on the "start date" field;[%END%]</li>
+		<li>[%|helploc%]if you wish, you can specify the date when you want your subscription to resume. Do it using the "end date" field. You can click on "indefinite." In this case, you will have to return to this page to resume your subscription;[%END%]</li>
+		<li>[%|helploc%]Select the lists you want to suspend you subscription for. The "Toogle selection" button allows you to invert the selection;[%END%]</li>
+		<li>[%|helploc%]Click on "Suspend my subscriptions" to confirm the suspension.[%END%]</li>
+	</ul>
+	<p>[%|helploc%]<strong>To resume your subscription</strong> to one or more lists, follow these steps:[%END%]</p>
+	<ul>
+		<li>[%|helploc%]Select the list(s) you want to reactivate. The "Toogle selection" button allows you to invert the selection;[%END%]</li>
+		<li>[%|helploc%]Click "Resume".[%END%]</li>
+	</ul>
+
+</div>
+<!-- end suspend_request.tt2 -->

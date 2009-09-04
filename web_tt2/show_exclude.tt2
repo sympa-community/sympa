@@ -1,0 +1,37 @@
+<!-- $Id: show_exclude.tt2 5204 2008-11-07 13:35:51Z david.verdin $ -->
+<div class="block">
+<h2>[%|loc%]Show the exclusion table[%END%]</h2>
+
+<form class="noborder" action="[% path_cgi %]" method="post" name="show_exclude">
+<fieldset>
+[%|loc%]Users listed below are excluded from the list. Beware, that this feature is different from the blacklist. Exclusion makes sense
+when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though 
+he should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. 
+They get off the exclusion table with the standard subscribe/add functions.[%END%]
+<br />
+
+<table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
+      <tr>
+	<th>[%|loc%]Email[%END%]</th>
+        <th>[%|loc%]Since[%END%]</th>
+      </tr>
+
+      [% IF user.email %]
+        [% IF exclude_users %]
+          [% FOREACH exc = exclude_users %] 
+            <tr class="color0">
+              <td>&nbsp;[% exc.email %]&nbsp;</td>
+	      <td>&nbsp;[% exc.since %]&nbsp;</td>
+            </tr>
+	  [% END %]
+	[% ELSE %]
+          <p>[%|loc%]No exclude.[% END %]</p>
+        [% END %]
+      [% END %]
+    </table>
+
+   </fieldset>
+ </form>
+
+</div>
+<!-- end show_exclude.tt2 -->

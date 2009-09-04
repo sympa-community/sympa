@@ -188,11 +188,14 @@ sub messageasstring {
 ############################################################
 #  merge_msg                                               #
 ############################################################
+#  Merge a message with custom attributes of a user.       #
 #                                                          #
 #                                                          #
-#                                                          #
-#                                                          #
-#                                                          #
+#  IN : - MIME:Entity                                      #
+#       - $rcpt : a receipient                             #
+#       - $bulk : HASH                                     #
+#       - $data : HASH with user's data                    #
+#  OUT : 1 | undef                                         #
 #                                                          #
 ############################################################
 sub merge_msg {
