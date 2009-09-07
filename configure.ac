@@ -58,6 +58,7 @@ staticdir=$prefix/static_content
 arcdir=$prefix/arc
 bouncedir=$prefix/bounce
 confdir=/etc
+localedir=$prefix/locale
 
 ## If installer wants to use the FHS standard, change 
 AC_ARG_ENABLE(
