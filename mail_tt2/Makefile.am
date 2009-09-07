@@ -67,4 +67,4 @@ EXTRA_DIST = $(mailtemplate_DATA)
 install-data-hook:
 	(cd $(DESTDIR)$(webtemplatedir); \
 		rm -f authorization_reject.tt2; \
-		ln -s ../mail_tt2/authorization_reject.tt2)
+		$(LN_S) -f ../mail_tt2/authorization_reject.tt2)

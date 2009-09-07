@@ -39,7 +39,7 @@ CLEANFILES = $(perlscripts) $(init_SCRIPTS)
 
 arc2webarc.pl crypt_passwd.pl init_comment.pl ldap_alias_manager.pl mod2html.pl mysql_alias_manager.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl: Makefile
 	rm -f $@
-	sed \
+	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		< $(srcdir)/$@.in > $@
@@ -47,7 +47,7 @@ arc2webarc.pl crypt_passwd.pl init_comment.pl ldap_alias_manager.pl mod2html.pl 
 
 sympa: Makefile
 	rm -f $@
-	sed \
+	$(AM_V_GEN)$(SED) \
 		-e 's|--CONFIG--|$(CONFIG)|' \
 		-e 's|--WWSCONFIG--|$(WWSCONFIG)|' \
 		-e 's|--sbindir--|$(sbindir)|' \

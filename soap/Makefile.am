@@ -44,7 +44,7 @@ install-exec-hook:
 
 sympa_soap_client.pl sympa_soap_server.fcgi: Makefile
 	rm -f $@
-	sed \
+	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
 		< $(srcdir)/$@.in > $@

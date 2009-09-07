@@ -6,11 +6,12 @@ CLEANFILES = $(man8_MANS) archived.pod bounced.pod alias_manager.pod
 
 .pod.8:
 	rm -f $@
-	pod2man --section=8 --center="sympa $(VERSION)" --lax --release="$(VERSION)" $< $@
+	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $< $@
 
 archived.pod bounced.pod alias_manager.pod: Makefile
 	rm -f $@
-	sed \
+	$(AM_V_GEN)$(SED) \
 		-e 's|--piddir--|$(piddir)|' \
 		-e 's|--libexecdir--|$(libexecdir)|' \
 		-e 's|--sysconfdir--|$(sysconfdir)|' \
