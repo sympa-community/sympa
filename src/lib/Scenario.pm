@@ -538,16 +538,6 @@ sub verify {
     
     $context->{'execution_date'} = time unless ( defined ($context->{'execution_date'}) );
     
-    if (defined ($context->{'msg'})) {
-	my $header = $context->{'msg'}->head;
-	unless (($header->get('to') && ($header->get('to') =~ /$context->{'listname'}/i)) || 
-		($header->get('cc') && ($header->get('cc') =~ /$context->{'listname'}/i))) {
-	    $context->{'is_bcc'} = 1;
-	}else{
-	    $context->{'is_bcc'} = 0;
-	}
-	
-    }
     my $list;
     if ($context->{'listname'} && ! defined $context->{'list_object'}) {
         unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
@@ -563,6 +553,16 @@ sub verify {
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
     
+    if (defined ($context->{'msg'})) {
+	my $header = $context->{'msg'}->head;
+	unless (($header->get('to') && ($header->get('to') =~ /$context->{'listname'}/i)) || 
+		($header->get('cc') && ($header->get('cc') =~ /$context->{'listname'}/i))) {
+	    $context->{'is_bcc'} = 1;
+	}else{
+	    $context->{'is_bcc'} = 0;
+	}
+	
+    }
     unless ($condition =~ /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i) {
 	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
