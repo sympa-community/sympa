@@ -192,6 +192,7 @@ our @params = (
     {
         name    => 'http_host',
         query   => 'URL to a virtual host.',
+        default => 'http://domain.tld',
 	vhost   => '1',
         edit    => '1',
         file    => 'sympa.conf',
