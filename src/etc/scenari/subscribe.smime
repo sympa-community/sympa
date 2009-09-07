@@ -1,6 +1,6 @@
 title.gettext requires S/MIME signed
 
-is_subscriber([listname],[sender]) smtp,smime -> do_it
-true()				   smime      -> do_it
-true()                             smtp,md5 -> reject(reason='subscribe_smime')	
+is_subscriber([listname],[sender]) smtp,dkim,smime -> do_it
+true()				   smime           -> do_it
+true()                             smtp,dkim,md5        -> reject(reason='subscribe_smime')	
 

@@ -1,8 +1,8 @@
 title.gettext requires authentication then owner approval
 
 # subscription under owner control but previously email are checked by auth
-true()                                     smtp      -> request_auth
-is_subscriber([listname],[previous_email]) smime,md5 -> do_it
+true()                                     smtp,dkim      -> request_auth
+is_subscriber([listname],[previous_email]) md5,smime -> do_it
 true()                                     md5,smime -> owner
 
 

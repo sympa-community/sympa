@@ -1,8 +1,8 @@
 title.gettext Private, confirmation for non subscribers
 
-true()                             md5,smime     -> do_it
-is_subscriber([listname],[sender]) smtp          -> do_it
-true()                             smtp          -> request_auth
+true()                             md5,smime          -> do_it
+is_subscriber([listname],[sender]) smtp,dkim          -> do_it
+true()                             smtp,dkim          -> request_auth
 
 
 

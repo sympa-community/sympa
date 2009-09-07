@@ -57,9 +57,9 @@ my %params =
 my %valid_robot_key_words;
 my %optional_key_words;
 foreach my $hash(@confdef::params){
-    $valid_robot_key_words{$hash->{'name'}} = 1 if ($hash->{'vhost'});
+    $valid_robot_key_words{$hash->{'name'}} = 1 if ($hash->{'vhost'});    
     $valid_robot_key_words{$hash->{'name'}} = 'db' if (defined($hash->{'db'}) and $hash->{'db'} ne 'none');
-    $optional_key_words{$hash->{'name'}} = 1 if ($hash->{'optional'});
+    $optional_key_words{$hash->{'name'}} = 1 if ($hash->{'optional'}); 
 }
 
 my %old_params = (
@@ -232,11 +232,17 @@ sub load {
     if ($Conf{'lock_method'} eq 'nfs') {
         eval "require File::NFSLock";
         if ($@) {
-            &do_log(
-                'err',
-                "Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'"
-            );
+            &do_log('err',"Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'" );
             $Conf{'lock_method'} = 'flock';
+        }
+    }
+
+    ## Some parameters require CPAN modules
+    if ($Conf{'DKIM_feature'} eq 'on') {
+        eval "require Mail::DKIM";
+        if ($@) {
+            &do_log('err', "Failed to load Mail::DKIM perl module ; setting 'DKIM_feature' to 'off'");
+            $Conf{'DKIM_feature'} = 'off';
         }
     }
 
@@ -440,7 +446,7 @@ sub load_robots {
 	printf STDERR "Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
 	return undef;
     }
-    my $exiting = 0 ;
+    my $exiting = 0;
     ## Set the defaults based on sympa.conf and wwsympa.conf first
     foreach my $key (keys %valid_robot_key_words) {
 	if(defined $wwsconf->{$key}){
@@ -449,7 +455,7 @@ sub load_robots {
 	    $robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
 	}else{
 	    unless ($optional_key_words{$key}){
-		printf STDERR "Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf files.\n" ;
+		printf STDERR "Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf parameter.\n" ;
 		$exiting = 1;
 	    }
 	}
@@ -471,7 +477,7 @@ sub load_robots {
 	    printf STDERR "load robots config: Unable to open $Conf{'etc'}/$robot/robot.conf\n"; 
 	    next ;
 	}
-	
+
 	while (<ROBOT_CONF>) {
 	    next if (/^\s*$/o || /^[\#\;]/o);
 	    if (/^\s*(\S+)\s+(.+)\s*$/io) {

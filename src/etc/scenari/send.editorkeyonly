@@ -1,4 +1,4 @@
 title.gettext Moderated, even for moderators
 
-is_editor([listname],[sender])     smime,md5             -> do_it
-true()                             smtp,smime,md5        -> editorkey
+is_editor([listname],[sender])     smime,md5                  -> do_it
+true()                             smtp,dkim,smime,md5        -> editorkey

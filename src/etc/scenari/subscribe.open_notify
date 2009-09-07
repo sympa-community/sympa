@@ -1,5 +1,5 @@
 title.gettext anyone, notification is sent to list owner
 
 # do not notify if it is just an update
-is_subscriber([listname],[sender])	 smtp,smime,md5 -> do_it
-true()					 smtp,smime,md5 -> do_it,notify
+is_subscriber([listname],[sender])	 smtp,dkim,smime,md5 -> do_it
+true()					 smtp,dkim,smime,md5 -> do_it,notify

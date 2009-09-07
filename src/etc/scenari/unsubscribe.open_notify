@@ -1,5 +1,5 @@
 title.gettext open with mail confirmation, owner is notified
 
-!is_subscriber ([listname],[email]) smtp,md5,smime -> do_it,notify
-!equal ([sender],[email])           smtp           -> request_auth([email])
-true()			            smtp,md5,smime -> do_it,notify
+!is_subscriber ([listname],[email]) smtp,dkim,md5,smime -> do_it,notify
+!equal ([sender],[email])           smtp                -> request_auth([email])
+true()			            smtp,dkim,md5,smime -> do_it,notify

@@ -1,5 +1,5 @@
 title.gettext need authentication
 
-!is_subscriber ([listname],[email]) smtp,smime,md5 -> do_it
-true()                              smtp           -> request_auth([email])
-true()			            md5,smime      -> do_it
+!is_subscriber ([listname],[email]) smtp,dkim,smime,md5 -> do_it
+true()                              smtp, dkim          -> request_auth([email])
+true()			            md5,smime           -> do_it

@@ -1,7 +1,7 @@
 title.gettext list owners, authentication not needed (notification)
 
-is_owner([listname],[sender])  smtp,smime,md5 -> do_it,notify
-is_listmaster([sender])        smtp           -> request_auth
+is_owner([listname],[sender])  smtp,dkim,smime,md5 -> do_it,notify
+is_listmaster([sender])        smtp,dkim           -> request_auth
 is_listmaster([sender])        md5,smime      -> do_it,notify
-true()                         smtp,md5,smime -> reject(reason='del_owner')	
+true()                         smtp,dkim,md5,smime -> reject(reason='del_owner')	
 

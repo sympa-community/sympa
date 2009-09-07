@@ -1,7 +1,7 @@
 title.gettext add performed by owner does not need authentication (notification)
 
-is_owner([listname],[sender])  smtp,md5,smime -> do_it,notify
+is_owner([listname],[sender])  smtp,dkim,md5,smime -> do_it,notify
 is_listmaster([sender])        smtp           -> request_auth
-is_listmaster([sender])        md5,smime      -> do_it,notify
-true()                         smtp,md5,smime -> reject(reason='add_owner')	
+is_listmaster([sender])        dkim,md5,smime      -> do_it,notify
+true()                         smtp,dkim,md5,smime -> reject(reason='add_owner')	
 

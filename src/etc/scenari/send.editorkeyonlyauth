@@ -1,5 +1,5 @@
-title.gettext Moderated, with editor confirmation
+title.gettext Moderated, need  authentication  from editor
 
-is_editor([listname],[sender])                 md5,smime        -> do_it
-is_editor([listname],[sender])                 smtp             -> request_auth
-true()                                         smtp,smime,md5   -> editorkey
+is_editor([listname],[sender])                 md5,smime             -> do_it
+is_editor([listname],[sender])                 smtp,dkim             -> request_auth
+true()                                         smtp,dkim,smime,md5   -> editorkey

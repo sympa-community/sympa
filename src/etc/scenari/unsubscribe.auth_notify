@@ -1,6 +1,6 @@
 title.gettext authentication requested, notification sent to owner
 
-!is_subscriber ([listname],[email]) smtp,md5,smime -> do_it,notify
-true()                              smtp           -> request_auth([email])
+!is_subscriber ([listname],[email]) smtp,dkim,md5,smime -> do_it,notify
+true()                              smtp,dkim          -> request_auth([email])
 true()			            md5,smime      -> do_it,notify
 

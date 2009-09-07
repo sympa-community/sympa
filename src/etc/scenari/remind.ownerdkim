@@ -1,0 +1,8 @@
+title.gettext restricted to list owners (authentication is not required if a DKIM signature is OK)
+
+# only owner's may perform a reminder command
+is_owner([listname],[sender])      smtp       -> request_auth
+is_owner([listname],[sender])      dkim,md5,smime  -> do_it
+is_listmaster([sender])            smtp       -> request_auth
+is_listmaster([sender])		   dkim,md5,smime  -> do_it
+true()                             smtp,dkim,md5,smime -> reject(reason='remind_owner')	

@@ -33,11 +33,14 @@ use Sys::Hostname;
 use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
+use Mail::DKIM::Signer;
+use Mail::DKIM::Verifier;
 
 use Conf;
 use Language;
 use Log;
 use Sympa::Constants;
+use Message;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -700,6 +703,207 @@ sub get_template_path {
     }
 
     return undef;
+}
+
+sub get_dkim_parameters {
+
+    my $params = shift;
+
+    my $robot = $params->{'robot'};
+    my $listname = $params->{'listname'};
+    do_log('debug2',"get_dkim_parameters (%s,%s)",$robot, $listname);
+
+    my $data ; my $keyfile ;
+    if ($listname) {
+	# fetch dkim parameter in list context
+	my $list = new List ($listname,$robot);
+	unless ($list){
+	    do_log('err',"Could not load list %s@%s",$listname, $robot);
+	    return undef;
+	}
+
+	$data->{'d'} = $list->{'admin'}{'dkim_parameters'}{'signer_domain'};
+	if ($list->{'admin'}{'dkim_parameters'}{'signer_identity'}) {
+	    $data->{'i'} = $list->{'admin'}{'dkim_parameters'}{'signer_identity'};
+	}else{
+	    # RFC 4871 (page 21) 
+	    $data->{'i'} = $list->{'name'}.'-request@'.$robot;
+	}
+	
+	$data->{'header_list'} = $list->{'admin'}{'dkim_parameters'}{'header_list'};
+	$data->{'selector'} = $list->{'admin'}{'dkim_parameters'}{'selector'};
+	$keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'};
+    }else{
+	# in robot context
+	$data->{'d'} = &Conf::get_robot_conf($robot, 'dkim_signer_domain');
+	$data->{'i'} = &Conf::get_robot_conf($robot, 'dkim_signer_identity');
+	$data->{'header_list'} = &Conf::get_robot_conf($robot, 'dkim_header_list');
+	$data->{'selector'} = &Conf::get_robot_conf($robot, 'dkim_selector');
+	$keyfile = &Conf::get_robot_conf($robot, 'dkim_private_key_path');
+    }
+    unless (open (KEY, $keyfile)) {
+	do_log('err',"Could not read dkim private key %s",&Conf::get_robot_conf($robot, 'dkim_signer_selector'));
+	return undef;
+    }
+    while (<KEY>){
+	$data->{'private_key'} .= $_;
+    }
+    close (KEY);
+
+    return $data;
+}
+
+# input a msg as string, output the dkim status
+sub dkim_verifier {
+    my $msg_as_string = shift;
+    my $dkim;
+
+    unless (eval "require Mail::DKIM::Verifier") {
+	&do_log('err', "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature");
+	return undef;
+    }
+    
+    unless ( $dkim = Mail::DKIM::Verifier->new() ){
+	&do_log('err', 'Could not create Mail::DKIM::Verifier');
+	return undef;
+    }
+   
+    my $temporary_file = $Conf::Conf{'tmpdir'}."/dkim.".$$ ;  
+    if (!open(MSGDUMP,"> $temporary_file")) {
+	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
+	return undef;
+    }
+    print MSGDUMP $msg_as_string ;
+
+    unless (close(MSGDUMP)){ 
+	do_log('err',"unable to dump message in temporary file $temporary_file"); 
+	return undef; 
+    }
+
+    unless (open (MSGDUMP, "$temporary_file")) {
+	&do_log('err', 'Can\'t read message in file %s', $temporary_file);
+	return undef;
+    }
+
+    # this documented method is pretty but dont validate signatures, why ?
+    # $dkim->load(\*MSGDUMP);
+    while (<MSGDUMP>){
+	chomp;
+	s/\015$//;
+	$dkim->PRINT("$_\015\012");
+    }
+
+    $dkim->CLOSE;
+    close(MSGDUMP);
+    unlink ($temporary_file);
+    
+    foreach my $signature ($dkim->signatures) {
+	return 1 if  ($signature->result_detail eq "pass");
+    }    
+    return undef;
+}
+
+# input object msg and listname, output signed message object
+sub dkim_sign {
+    # in case of any error, this proc MUST return $msg_as_string NOT undef ; this would cause Sympa to send empty mail 
+    my $msg_as_string = shift;
+    my $data = shift;
+    my $dkim_d = $data->{'dkim_d'};    
+    my $dkim_i = $data->{'dkim_i'};
+    my $dkim_selector = $data->{'dkim_selector'};
+    my $dkim_privatekey = $data->{'dkim_privatekey'};
+    my $dkim_header_list = $data->{'dkim_header_list'};
+
+    do_log('debug2', 'tools::dkim_sign (msg:%s,dkim_d:%s,dkim_i%s,dkim_selector:%s,dkim_header_list:%s,dkim_privatekey:%s)',substr($msg_as_string,0,30),$dkim_d,$data->{'dkim_i'},$data->{'dkim_selector'},$data->{'dkim_header_list'}, substr($data->{'dkim_privatekey'},0,30));
+
+    unless ($dkim_selector) {
+	do_log('err',"DKIM selector is undefined, could not sign message");
+	return $msg_as_string;
+    }
+    unless ($dkim_privatekey) {
+	do_log('err',"DKIM key file is undefined, could not sign message");
+	return $msg_as_string;
+    }
+    unless ($dkim_d) {
+	do_log('err',"DKIM d= tag is undefined, could not sign message");
+	return $msg_as_string;
+    }
+    
+    my $temporary_keyfile = $Conf::Conf{'tmpdir'}."/dkimkey.".$$ ;  
+    if (!open(MSGDUMP,"> $temporary_keyfile")) {
+	&do_log('err', 'Can\'t store key in file %s', $temporary_keyfile);
+	return $msg_as_string;
+    }
+    print MSGDUMP $dkim_privatekey ;
+    close(MSGDUMP);
+
+    unless (eval "require Mail::DKIM::Signer") {
+	&do_log('err', "Failed to load Mail::DKIM::signer perl module, ignoring DKIM signature");
+	return ($msg_as_string); 
+    }
+    my $dkim ;
+    if ($dkim_i) {
+    # create a signer object
+	$dkim = Mail::DKIM::Signer->new(
+					Algorithm => "rsa-sha1",
+					Method    => "relaxed",
+					Domain    => $dkim_d,
+					Identity  => $dkim_i,
+					Selector  => $dkim_selector,
+					KeyFile   => $temporary_keyfile,
+					);
+    }else{
+	$dkim = Mail::DKIM::Signer->new(
+					Algorithm => "rsa-sha1",
+					Method    => "relaxed",
+					Domain    => $dkim_d,
+					Selector  => $dkim_selector,
+					KeyFile   => $temporary_keyfile,
+					);
+    }
+    unless ($dkim) {
+	&do_log('err', 'Can\'t create Mail::DKIM::Signer');
+	return ($msg_as_string); 
+    }    
+    my $temporary_file = $Conf::Conf{'tmpdir'}."/dkim.".$$ ;  
+    if (!open(MSGDUMP,"> $temporary_file")) {
+	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
+	return ($msg_as_string); 
+    }
+    print MSGDUMP $msg_as_string ;
+    close(MSGDUMP);
+
+    unless (open (MSGDUMP , $temporary_file)){
+	&do_log('err', 'Can\'t read temporary file %s', $temporary_file);
+	return undef;
+    }
+
+    $dkim->load(\*MSGDUMP);
+
+    close (MSGDUMP);
+    unless ($dkim->CLOSE) {
+	&do_log('err', 'Cannot sign (DKIM) message');
+	return ($msg_as_string); 
+    }
+    my $message = new Message($temporary_file,'noxsympato');
+    unless ($message){
+	do_log('err',"unable to load $temporary_file as a message objet");
+	return ($msg_as_string); 
+    }
+
+    if ($main::options{'debug'}) {
+	do_log('debug',"temporary file is $temporary_file");
+    }else{
+	unlink ($temporary_file);
+    }
+    unlink ($temporary_keyfile);
+#    $dkim->signature->headerlist("Message-ID:Date:From:To:Subject:Sender");
+    $dkim->signature->headerlist($dkim_header_list);
+    $dkim->signature->prettify;
+    
+    $message->{'msg'}->head->add('DKIM-signature',$dkim->signature->as_string);
+
+    return $message->{'msg'}->as_string ;
 }
 
 # input object msg and listname, output signed message object
@@ -2926,6 +3130,25 @@ sub diff_on_arrays {
     return $result;
     
 } 
+
+####################################################
+# is_on_array                     
+####################################################
+# Test if a value is on an array
+# 
+# IN : -$setA : ref(ARRAY) - set
+#      -$value : a serached value
+#
+# OUT : boolean
+#######################################################    
+sub is_in_array {
+    my ($set,$value) = @_;
+    
+    foreach my $elt (@$set) {
+	return 1 if ($elt eq $value);
+    }
+    return undef;
+}
 
 ####################################################
 # clean_msg_id

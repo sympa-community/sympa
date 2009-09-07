@@ -1,6 +1,6 @@
 title.gettext restricted to subscribers
 
-is_subscriber([listname],[sender])             smtp,smime,md5    -> do_it
-is_editor([listname],[sender])                 smtp,smime,md5    -> do_it
-is_owner([listname],[sender])                  smtp,smime,md5    -> do_it
-true()					       smtp,md5,smime  -> reject(reason='send_subscriber')
+is_subscriber([listname],[sender])             smtp,dkim,smime,md5    -> do_it
+is_editor([listname],[sender])                 smtp,dkim,smime,md5    -> do_it
+is_owner([listname],[sender])                  smtp,dkim,smime,md5    -> do_it
+true()					       smtp,dkim,md5,smime    -> reject(reason='send_subscriber')

@@ -4,5 +4,5 @@ title.gettext local domain users or owner approval
 is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
 # this is example of a rule to check local adresses
 # verify_netmask('1.12.123.0/24') smtp,md5,smime -> do_it
-match([sender],/[conf->host]$/)          smtp,smime,md5    -> do_it
-true()                             smtp,smime,md5    -> owner
+match([sender],/[conf->host]$/)          smtp,dkim,smime,md5    -> do_it
+true()                             smtp,dkim,smime,md5    -> owner

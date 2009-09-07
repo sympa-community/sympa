@@ -579,7 +579,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'length' => 2,
 				  'gettext_unit' => 'messages',
 				  'default' => 25,
-				  'gettext_id' => "Digest maximum number of messages",
+				  'gettext_id' => "Digest maximum number of messages",				  
 				  'group' => 'sending'
 		       },	    
 
@@ -591,6 +591,63 @@ my %alias = ('reply-to' => 'reply_to',
 		      'group' => 'data_source'
 		      },
 
+	    'dkim_feature' => {'format' => ['on','off'],
+			      'occurence' => '0-1',
+			      'default' => {'conf' => 'dkim_feature'},
+			      'gettext_id' => "Insert DKIM signature to messages sent to the list",
+			      'comment' =>  "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
+			      'group' => 'dkim',
+			  },
+	    'dkim_signature_apply_on'=> {'format' => ['md5_authenticated_messages','smime_authenticated_messages','dkim_authenticated_messages','editor_validated_messages','none','any'],
+					 'occurrence' => '0-n',
+					 'split_char' => ',',
+					 'default' => {'conf' => 'dkim_signature_apply_on'},
+					 'gettext_id' => "Type of list message where a DKIM signature is added",
+					 'comment' => "This parameter control in which case messages must be signed using DKIM, you maysign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
+					 'group' => 'dkim',
+					 },
+	    'dkim_parameters'=> {'format' => {'private_key_path'=> {'format' => '\S+',
+		                         			  'occurence' => '0-1',
+			                                          'default' => {'conf' => 'dkim_private_key_path'},
+			                                          'gettext_id' => "file path for list DKIM private key",
+								  'comment' => "the file must contain a RSA pem encoded private key", 
+								  'order' => 1
+					                         },
+					     'selector' => { 'format' => '\S+',
+		                         			  'occurence' => '0-1',
+			                                          'default' => {'conf' => 'dkim_selector'},
+							          'comment' => "the selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
+			                                          'gettext_id' => "Selector for DNS lookup of DKIM public key",
+								  'order' => 2
+                                                                  },
+							          
+					     'header_list'=>      { 'format' => '\S+',
+		                         			  'occurence' => '0-1',
+			                                          'default' => {'conf' => 'dkim_header_list'},
+			                                          'gettext_id' => 'list of headers to be included ito the message for signature',
+								  'comment' => 'You should probably use teh default value which is the value recommended by RFC4871',
+								  'order' => 4
+                                                                  },
+					     'signer_domain' =>   {'format' => '\S+',
+		                         			  'occurence' => '0-1',
+			                                          'default' => {'conf' => 'dkim_signer_domain'},
+			                                          'gettext_id' => 'DKIM "d=" tag, you should probably use the default value',
+								   'omment' => ' The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
+								  'order' => 5
+								 },
+                                             'signer_identity'=>  {'format' => '\S+',
+		                         			  'occurence' => '0-1',
+								  'comment' => "DKIM \"i=\" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>",
+			                                          'gettext_id' => "DKIM \"i=\" tag, you should probably leave this parameter empty",
+								  'order' => 6
+								 },
+					     },
+			      'group' => 'dkim',
+			      'comment' => 'A set of parameters in order to define outgoing DKIM signature', 
+			      'occurrence' => '0-1',
+			      'gettext_id' => "DKIM configuration",
+			  },
+			      
 	    'editor' => {'format' => {'email' => {'format' => &tools::get_regexp('email'),
 						  'length' => 30,
 						  'occurrence' => '1',
@@ -1093,8 +1150,7 @@ my %alias = ('reply-to' => 'reply_to',
 				      'default' => 'optional',
 				      'gettext_id' => "Message tagging",
 				      'group' => 'sending'
-				      },    
-						   
+				      },    	       				   
 	    'owner' => {'format' => {'email' => {'format' => &tools::get_regexp('email'),
 						 'length' =>30,
 						 'occurrence' => '1',
@@ -2444,8 +2500,6 @@ sub _get_single_param_value {
 
 
 
-
-
 ########################################################################################
 #                       FUNCTIONS FOR MESSAGE SENDING                                  #
 ########################################################################################
@@ -2472,11 +2526,17 @@ sub _get_single_param_value {
 #  
 # IN : -$self (+): ref(List)
 #      -$message (+): ref(Message)
+#      -$apply_dkim_signature : on | off
 # OUT : -$numsmtp : number of sendmail process
 ####################################################
 sub distribute_msg {
-    my($self, $message) = @_;
-    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s)', $self->{'name'}, $message->{'msg'}, $message->{'size'}, $message->{'filename'}, $message->{'smime_crypted'});
+    my $self = shift;
+    my %param = @_;
+
+    my $message = $param{'message'};
+    my $apply_dkim_signature = $param{'apply_dkim_signature'};
+
+    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s, %s, apply_dkim_signature=%s)', $self->{'name'}, $message->{'msg'}, $message->{'size'}, $message->{'filename'}, $message->{'smime_crypted'}, $apply_dkim_signature );
 
     my $hdr = $message->{'msg'}->head;
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
@@ -2670,7 +2730,7 @@ sub distribute_msg {
     }
 
     ## Blindly send the message to all users.
-    my $numsmtp = $self->send_msg($message);
+    my $numsmtp = $self->send_msg('message'=> $message, 'apply_dkim_signature'=>$apply_dkim_signature);
     unless (defined ($numsmtp)) {
 	return $numsmtp;
     }
@@ -2953,6 +3013,11 @@ sub send_global_file {
     $data->{'return_path'} = &Conf::get_robot_conf($robot, 'request');
     $data->{'boundary'} = '----------=_'.&tools::get_message_id($robot) unless ($data->{'boundary'});
 
+    if ((&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on')&&(&Conf::get_robot_conf($robot, 'dkim_add_signature_to')=~/robot/)){
+	$data->{'dkim'} = &tools::get_dkim_parameters({'robot' => $robot});
+    }
+    
+    $data->{'use_bulk'} = 1  unless ($data->{'alarm'}) ; # use verp excepted for alarms. We should make this configurable in order to support Sympa server on a machine without any MTA service
     unless (&mail::mail_file($filename, $who, $data, $robot)) {
 	&do_log('err',"List::send_global_file, could not send template $filename to $who");
 	return undef;
@@ -3102,11 +3167,13 @@ sub send_file {
     }
 
     $data->{'from'} = $data->{'fromlist'} unless ($data->{'from'});
-
     $data->{'boundary'} = '----------=_'.&tools::get_message_id($robot) unless ($data->{'boundary'});
-
     $data->{'sign_mode'} = $sign_mode;
     
+    if ((&Conf::get_robot_conf($self->{'domain'}, 'dkim_feature') eq 'on')&&(&Conf::get_robot_conf($self->{'domain'}, 'dkim_add_signature_to')=~/robot/)){
+	$data->{'dkim'} = &tools::get_dkim_parameters({'robot' => $self->{'domain'}});
+    } 
+    $data->{'use_bulk'} = 1  unless ($data->{'alarm'}) ; # use verp excepted for alarms. We should make this configurable in order to support Sympa server on a machine without any MTA service
     unless (&mail::mail_file($filename, $who, $data, $self->{'domain'})) {
 	&do_log('err',"List::send_file, could not send template $filename to $who");
 	return undef;
@@ -3132,8 +3199,14 @@ sub send_file {
 #       | undef 
 ####################################################
 sub send_msg {
-    my($self, $message) = @_;
-    do_log('debug2', 'List::send_msg(%s, %s)', $message->{'filename'}, $message->{'smime_crypted'});
+
+    my $self = shift;
+    my %param = @_;
+
+    my $message = $param{'message'};
+    my $apply_dkim_signature = $param{'apply_dkim_signature'};
+
+    do_log('debug2', 'List::send_msg(filname = %s, smime_crypted = %s,apply_dkim_signature = %s )', $message->{'filename'}, $message->{'smime_crypted'},$apply_dkim_signature);
     
     my $hdr = $message->{'msg'}->head;
     my $name = $self->{'name'};
@@ -3259,6 +3332,11 @@ sub send_msg {
     my $verp_rate =  $self->{'admin'}{'verp_rate'};
     my $xsequence =  $self->{'stats'}->[0] ;
 
+    my $dkim_parameters ;
+    # prepare dkim parameters
+    if ($apply_dkim_signature eq 'on') {
+	$dkim_parameters = &tools::get_dkim_parameters({'robot'=>$self->{'domain'}, 'listname'=>$self->{'name'}});
+    }
     ##Send message for normal reception mode
     if (@tabrcpt) {
 	## Add a footer
@@ -3281,14 +3359,21 @@ sub send_msg {
 	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@tabrcpt_verp);
 
 
-	my $result = &mail::mail_message($message, $self, {'enable' => 'off'}, @selected_tabrcpt);
+	my $result = &mail::mail_message('message'=>$message, 
+					 'rcpt'=> \@selected_tabrcpt, 
+					 'list'=>$self, 
+					 'verp' => 'off', 
+					 'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp = $result;
 	
-	$result = &mail::mail_message($message, $self, {'enable' => 'on'}, @verp_selected_tabrcpt);
+	$result = &mail::mail_message('message'=> $message, 
+				      'rcpt'=> \@verp_selected_tabrcpt, 
+				      'list'=> $self, 'verp' => 'on',
+				      'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
 	    return undef;
@@ -3307,14 +3392,22 @@ sub send_msg {
 	
 	my @verp_tabrcpt_notice = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_notice, \@tabrcpt_notice_verp);
 
-	my $result = &mail::mail_message($new_message, $self, {'enable' => 'off'}, @tabrcpt_notice);
+	my $result = &mail::mail_message('message'=>$new_message, 
+					 'rcpt'=>\@tabrcpt_notice, 
+					 'list'=>$self, 
+					 'verp' => 'off',
+					 'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
 
-	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_notice);
+	$result = &mail::mail_message('message'=>$new_message, 
+				      'rcpt'=>\@verp_tabrcpt_notice,
+				      'list'=>$self ,
+				      'verp' => 'on', 
+				      'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
 	    return undef;
@@ -3340,14 +3433,22 @@ sub send_msg {
 
 	my @verp_tabrcpt_txt = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_txt, \@tabrcpt_txt_verp);
 	
-	my $result = &mail::mail_message($new_message, $self,  {'enable' => 'off'}, @tabrcpt_txt);
+	my $result = &mail::mail_message('message'=>$new_message, 
+					 'rcpt'=>\@tabrcpt_txt,
+					 'list'=>$self, 
+					 'verp' => 'off',
+					 'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
 
-	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_txt);
+	$result = &mail::mail_message('message'=>$new_message, 
+				       'rcpt'=>\@verp_tabrcpt_txt, 
+				       'list'=>$self, 
+				       'verp' => 'on',
+				       'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
 	    return undef;
@@ -3372,14 +3473,22 @@ sub send_msg {
 
 	my @verp_tabrcpt_html = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_html, \@tabrcpt_html_verp);
 
-	my $result = &mail::mail_message($new_message, $self , {'enable' => 'off'}, @tabrcpt_html);
+	my $result = &mail::mail_message('message'=>$new_message, 
+					 'rcpt'=>\@tabrcpt_html,
+					 'list'=>$self,
+					 'verp' => 'off',
+					 'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
 
-	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_html);
+	$result = &mail::mail_message('message'=>$new_message, 
+				      'rcpt'=>\@verp_tabrcpt_html,
+				      'list'=>$self,
+				      'verp' => 'on',
+				      'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
 	    return undef;
@@ -3433,14 +3542,22 @@ sub send_msg {
 
 	my @verp_tabrcpt_url = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_url, \@tabrcpt_url_verp);
 
-	my $result = &mail::mail_message($new_message, $self , {'enable' => 'off'}, @tabrcpt_url);
+	my $result = &mail::mail_message('message'=>$new_message,
+					 'rcpt'=>\@tabrcpt_url, 
+					 'list'=>$self ,
+					 'verp' => 'off',
+					 'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
 	    return undef;
 	}
 	$nbr_smtp += $result;
 
-	$result = &mail::mail_message($new_message, $self , {'enable' => 'on'}, @verp_tabrcpt_url);
+	$result = &mail::mail_message('message'=>$new_message,
+				      'rcpt'=>\@verp_tabrcpt_url,
+				      'list'=>$self ,
+				      'verp' => 'on', 
+				      'dkim_parameters'=>$dkim_parameters);
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
 	    return undef;
@@ -3814,6 +3931,7 @@ sub request_auth {
 	    $data->{'command'} = "auth $keyauth $cmd *";
 	    $data->{'command_escaped'} = &tt2::escape_url($data->{'command'});
 	    $data->{'type'} = 'remind';
+	    
 	}
 	$data->{'auto_submitted'} = 'auto-replied';
 	unless (&send_global_file('request_auth',$email,$robot,$data)) {
@@ -3961,12 +4079,15 @@ sub send_notify_to_listmaster {
     my $host = &Conf::get_robot_conf($robot, 'host');
     my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
     my $to = "$Conf::Conf{'listmaster_email'}\@$host";
-    my $options = {}; ## options for send_global_file()
+    my $options = {}; ## options for send_global_file()    
 
     if ($operation eq 'logs_failed') {
 	my $data = {'to' => $to,
 		    'type' => $operation,
-		    'auto_submitted' => 'auto-generated'};
+		    'auto_submitted' => 'auto-generated',
+		    'alarm' => 1, # bypass bulk
+		};
+	
 	for my $i(0..$#{$param}) {
 	    $data->{"param$i"} = $param->[$i];
 	}
@@ -3987,7 +4108,8 @@ sub send_notify_to_listmaster {
 	  my $list = $param->{'list'};
 	  $param->{'list'} = {'name' => $list->{'name'},
 			      'host' => $list->{'domain'},
-			      'subject' => $list->{'admin'}{'subject'}};
+			      'subject' => $list->{'admin'}{'subject'},
+			  };
 	}
 
 	## Automatic action done on bouncing adresses
@@ -4022,7 +4144,7 @@ sub send_notify_to_listmaster {
 		if (($operation eq 'request_list_creation')or($operation eq 'request_list_renaming')) {
 		    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($email,$robot,'get_pending_lists',$param->{'ip'});
 		}
-		
+		$param->{'alarm'} = 1;
 		unless (&send_global_file('listmaster_notification', $email, $robot, $param, $options)) {
 		    &do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
 		    return undef;
@@ -4034,7 +4156,9 @@ sub send_notify_to_listmaster {
 	
 	my $data = {'to' => $to,
 		    'type' => $operation,
-		    'auto_submitted' => 'auto-generated'};
+		    'auto_submitted' => 'auto-generated',
+		    'alarm' => 1
+		    };
 	for my $i(0..$#{$param}) {
 	    $data->{"param$i"} = $param->[$i];
 	}

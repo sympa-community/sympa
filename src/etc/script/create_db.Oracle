@@ -145,6 +145,11 @@ CREATE TABLE bulkspool_table (
   	messagekey_bulkspool  	varchar2(33) NOT NULL,
 	message_bulkspool 	long,
 	lock_bulkspool 	number,
+        dkim_sender_bulkspool varchar2(100),
+        dkim_privatekey_bulkspool  varchar2(100),
+	dkim_signer_selector_bulkspool varchar2(50),
+	dkim_signer_domain_bulkspool varchar2(50),
+	dkim_header_list_bulkspool' varchar2(500),
 	CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool)
 );
 

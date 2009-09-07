@@ -1,6 +1,6 @@
-title.gettext restricted to subscribers check smime signature
+title.gettext restricted to subscribers and checked smime signature
 
 is_subscriber([listname],[sender])             smime  -> do_it
 is_editor([listname],[sender])                 smime  -> do_it
 is_owner([listname],[sender])                  smime  -> do_it
-true()					       smtp,md5,smime  -> reject(reason='send_subscriber_smime')
+true()					       smtp,dkim,md5,smime  -> reject(reason='send_subscriber_smime')

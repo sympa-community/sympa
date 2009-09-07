@@ -15,8 +15,12 @@ X-Loop: [% conf.sympa %]
 [%- FOREACH notice = notices -%]
 > [% notice.cmd -%]
 
+> [% notice.entry %]
 [% IF notice.entry == 'smime' -%]
 [%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
+
+[% IF notice.entry == 'dkim' -%]
+[%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
 
 [% ELSIF notice.entry == 'req_forward' -%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's

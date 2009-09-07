@@ -1,10 +1,11 @@
 title.gettext restricted to local domain users
 
 # if subscriber request come from local domain do_it else reject
-is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
-match([sender],/[conf->host]$/)          smtp,smime,md5    -> do_it
+is_subscriber([listname],[sender]) smtp,dkim,smime,md5    -> do_it
+match([sender],/[conf->host]$/)          smtp,dkim,smime,md5    -> do_it
+#
 # this is example of a rule to check local adresses
-# verify_netmask('1.12.123.0/24') smtp,md5,smime -> do_it
-match([sender],/[conf->host]$/)            smtp,md5,smime    -> do_it
-true()                         smtp,md5,smime -> reject(reason='subscribe_local_user')	
+# verify_netmask('1.12.123.0/24') smtp,dkim,md5,smime -> do_it
+#
+true()                         smtp,dkim,md5,smime -> reject(reason='subscribe_local_user')	
 

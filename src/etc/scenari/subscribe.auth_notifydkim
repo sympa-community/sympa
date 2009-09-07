@@ -1,0 +1,6 @@
+title.gettext need authentication unless DKIM signature is OK. (notification is sent to owners)
+
+# do not authentify nor notify updates 
+is_subscriber ([listname],[sender])  smtp,dkim,smime,md5 -> do_it
+true()				     smtp                -> request_auth
+true()				     dkim,md5,smime      -> do_it,notify

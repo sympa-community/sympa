@@ -1,5 +1,5 @@
 title.gettext listmaster only
 
 # only owner's may perform a review command
-is_listmaster([sender])            smtp,smime,md5  -> do_it
-true()                             smtp,md5,smime -> reject(reason='review_listmaster')	
+is_listmaster([sender])            smtp,dkim,md5,smime -> do_it
+true()                             smtp,dkim,md5,smime -> reject(reason='review_listmaster')	

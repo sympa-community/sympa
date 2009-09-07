@@ -1,5 +1,5 @@
 title.gettext just for listmaster
 
-is_listmaster([sender])     smtp -> request_auth
+is_listmaster([sender])     smtp,dkim -> request_auth
 is_listmaster([sender])     md5,smime -> do_it
-true()                      smtp,md5,smime -> reject(reason='global_remind_listmaster')	
+true()                      smtp,dkim,md5,smime -> reject(reason='global_remind_listmaster')	

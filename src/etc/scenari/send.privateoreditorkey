@@ -1,8 +1,8 @@
 title.gettext Private, moderated for non subscribers
 
-is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
-is_editor([listname],[sender])     smtp,smime,md5    -> do_it
-true()                             smtp,smime,md5    -> editorkey
+is_subscriber([listname],[sender]) smtp,dkim,md5,smime    -> do_it
+is_editor([listname],[sender])     smtp,dkim,md5,smime    -> do_it
+true()                             smtp,dkim,md5,smime    -> editorkey
 
 
 

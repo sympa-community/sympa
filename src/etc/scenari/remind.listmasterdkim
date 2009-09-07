@@ -1,0 +1,6 @@
+title.gettext listmaster only (do not require authentication if DKIM siganture is OK) 
+
+# only listmaster can perform remind
+is_listmaster([sender])   smtp   -> request_auth
+is_listmaster([sender])   dkim,md5,smime    -> do_it
+true()                    smtp,dkim,md5,smime -> reject(reason='remind_listmaster')	

@@ -1,6 +1,6 @@
 title.gettext need authentication (notification is sent to owners)
 
 # do not authentify nor notify updates 
-is_subscriber ([listname],[sender])  smtp,smime,md5 -> do_it
-true()				     smtp -> request_auth
-true()				     md5,smime  -> do_it,notify
+is_subscriber ([listname],[sender])  smtp,dkim,smime,md5 -> do_it
+true()				     smtp,dkim           -> request_auth
+true()				     md5,smime           -> do_it,notify

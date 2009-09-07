@@ -99,6 +99,8 @@
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]Bounces[%END%]</a></li>
 [% IF group == 'data_source' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]Data sources setup[%END%]</a></li>
+[% IF group == 'dkim' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+     <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/dkim" >[%|loc%]DKIM[%END%]</a></li>
 [% IF group == 'other' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]Miscellaneous[%END%]</a></li>
   </ul>

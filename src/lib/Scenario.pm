@@ -171,7 +171,7 @@ sub _parse_scenario {
         
 	if ($current_rule =~ /\s*(include\s*\(?\'?(.*)\'?\)?)\s*$/i) {
 	    $rule->{'condition'} = $1;
-	}elsif ($current_rule =~ /^\s*(.*)\s+(md5|pgp|smtp|smime)((\s*,\s*(md5|pgp|smtp|smime))*)\s*->\s*(.*)\s*$/i) {
+	}elsif ($current_rule =~ /^\s*(.*)\s+(md5|pgp|smtp|smime|dkim)((\s*,\s*(md5|pgp|smtp|smime|dkim))*)\s*->\s*(.*)\s*$/i) {
 	    $rule->{'condition'}=$1;
 	    $rule->{'auth_method'}=$2 || 'smtp';
 	    $rule->{'action'} = $6;
@@ -194,7 +194,7 @@ sub _parse_scenario {
 
 	## Duplicate the rule for each mentionned authentication method
         my $auth_list = $3 ; 
-        while ($auth_list =~ /\s*,\s*(md5|pgp|smtp|smime)((\s*,\s*(md5|pgp|smtp|smime))*)\s*/i) {
+        while ($auth_list =~ /\s*,\s*(md5|pgp|smtp|smime|dkim)((\s*,\s*(md5|pgp|smtp|smime|dkim))*)\s*/i) {
 	    push(@scenario,{'condition' => $rule->{condition}, 
                             'auth_method' => $1,
                             'action' => $rule->{action}});
@@ -217,7 +217,7 @@ sub _parse_scenario {
 # using 1 auth method to perform 1 operation
 #
 # IN : -$operation (+) : scalar
-#      -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'
+#      -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'|'dkim'
 #      -$robot (+) : scalar
 #      -$context (+) : ref(HASH) containing information
 #        to evaluate scenario (scenario var)
@@ -256,7 +256,7 @@ sub request_action {
     $context->{'msg_encrypted'} = 'smime' if (defined $context->{'message'} && 
 					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
     ## Check that authorization method is one of those known by Sympa
-    unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
+    unless ( $auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
 	do_log('info',"fatal error : unknown auth method $auth_method in List::get_action");
 	return undef;
     }
@@ -271,7 +271,7 @@ sub request_action {
 
     ## Include a Blacklist rules if configured for this action
     if ($Conf::Conf{'blacklist'}{$operation}) {
-	foreach my $auth ('smtp','md5','pgp','smime'){
+	foreach my $auth ('smtp','dkim','md5','pgp','smime'){
 	    my $blackrule = {'condition' => "search('blacklist.txt',[sender])",
 			     'action' => 'reject,quiet',
 			     'auth_method' => $auth};	

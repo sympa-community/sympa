@@ -1251,9 +1251,14 @@ sub DoFile {
             }
             
 	    # check authorization
-	    my $result = &Scenario::request_action('automatic_list_creation',
-	        ($message->{'smime_signed'} ? 'smime' : 'smtp'),$robot,
-		{'sender' => $sender, 'message' => $message, 'family'=>$dyn_list_family, 'automatic_listname'=>$listname });
+	    my $auth_level =  'smtp';
+	    $auth_level = 'dkim' if $message->{'dkim_pass'};
+	    $auth_level = 'smime' if $message->{'smime_signed'};
+	    my $result = &Scenario::request_action('automatic_list_creation',$auth_level,$robot,
+						   {'sender' => $sender, 
+						    'message' => $message, 
+						    'family'=>$dyn_list_family, 
+						    'automatic_listname'=>$listname });
 	    my $r_action;
 	    unless (defined $result) {
 		&do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $hdr->get('Message-Id'),$listname);
@@ -1344,11 +1349,11 @@ sub DoFile {
 	$is_crypted = 'not_crypted';
     }
 
-    ## S/MIME signed messages
+    ## S/MIME or DKIM signed messages
     if ($message->{'smime_signed'}) {
-	$is_signed = {'subject' => $message->{'smime_subject'},
+	$is_signed = {'subject' => $message->{'smime_subject'},# subject semantic is relater to X509 (subject is the private key owner, not the message Subject header !)
 		      'body' => 'smime'};
-    }else {
+    }else{
 	undef $is_signed;
     }
 	
@@ -1845,16 +1850,17 @@ sub DoMessage{
 	
     ## Call scenarii : auth_method MD5 do not have any sense in send
     ## scenarii because auth is perfom by distribute or reject command.
-    
+	
     my $action;
     my $result;	
-    if ($is_signed->{'body'}) {
-	$result = $list->check_list_authz('send', 'smime',$context);
-	$action = $result->{'action'} if (ref($result) eq 'HASH');
-    }else{
-	$result = $list->check_list_authz('send', 'smtp',$context);
-	$action = $result->{'action'} if (ref($result) eq 'HASH');
-    } 
+
+    # the order of the following 3 lines is important ! SMIME > DKIM > SMTP
+    my $auth_method = 'smtp';   
+    $auth_method = 'dkim' if ($message->{'dkim_pass'});
+    $auth_method = 'smime' if ($is_signed->{'body'}) ;
+    
+    $result = $list->check_list_authz('send',$auth_method,$context);
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
 	&do_log('err', 'sympa::DoMessage(): message (%s) ignored because unable to evaluate scenario "send" for list %s',$messageid,$listname);
@@ -1865,7 +1871,6 @@ sub DoMessage{
 	return undef ;
     }
 	
-
     ## message topic context	
     if (($action =~ /^do_it/) && ($context->{'topic_needed'})) {
         $action = 'editorkey' if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_moderator');
@@ -1874,9 +1879,15 @@ sub DoMessage{
 
     if (($action =~ /^do_it/) || ($main::daemon_usage == DAEMON_MESSAGE)) {
 
-
 	if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
-	    my $numsmtp = $list->distribute_msg($message);
+
+	    my $apply_dkim_signature = 'off';
+	    $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'any');
+	    $apply_dkim_signature = 'on' if (&tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'smime_authenticated_messages') && ($is_signed->{'body'}));
+	    $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'dkim_authenticated_messages');
+
+	    my $numsmtp =$list->distribute_msg('message'=> $message,
+					       'apply_dkim_signature'=>$apply_dkim_signature);
 	    
 	    ## Keep track of known message IDs...if any
 	    $msgid_table{$list->get_list_id()}{$messageid}++ if ($messageid);
@@ -2036,7 +2047,9 @@ sub DoCommand {
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	&do_log('debug',"processing message for $1-$2");
-	&Commands::parse($sender,$robot,"$2 $1",,$message);
+	my $auth_level ;
+	$auth_level = 'dkim' if $message->{'dkim_pass'}; # at this point $message->{'dkim_pass'} does not verify that Subject: is part of the signature. It SHOULD !
+	&Commands::parse($sender,$robot,"$2 $1",$auth_level ,$message);
 	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return 1; 
     }
@@ -2047,7 +2060,10 @@ sub DoCommand {
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 
-    $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'},$message) ;
+    my $auth_level = 'dkim' if ($message->{'dkim_pass'});
+    $auth_level = $is_signed->{'subject'} if ($is_signed->{'subject'}) ;
+
+    $success ||= &Commands::parse($sender, $robot, $subject_field, $auth_level, $message) ;
 
     unless ($success eq 'unknown_cmd') {
 	$cmd_found = 1;
@@ -2101,15 +2117,17 @@ sub DoCommand {
 	    
 	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
 	    
-	    $status = &Commands::parse($sender, $robot, $i, $is_signed->{'body'},$message);
+	    $auth_level = 'dkim' if ($message->{'dkim_pass'});
+	    $auth_level = $is_signed->{'body'} if ($is_signed->{'body'}) ;
+	    $status = &Commands::parse($sender, $robot, $i, $auth_level, $message);
+
 	    $cmd_found = 1; # if problem no_cmd_understood is sent here
 	    if ($status eq 'unknown_cmd') {
 		&do_log('notice', "Unknown command found :%s", $i);
 		&report::reject_report_cmd('user','not_understood',{},$i);
 		&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'not_understood','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		last;
-	    }
-	    
+	    }	    
 	    if ($i =~ /^(quit|end|stop|-)\s*$/io) {
 		last;
 	    }
@@ -2158,7 +2176,7 @@ sub SendDigest{
  	my ($listname, $listrobot) = split /\@/, $listaddress;
  	my $list = new List ($listname, $listrobot);
 	unless ($list) {
-	    &do_log('info', 'Unknown list, deleting digest file %s', $filename);
+	    &do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename,$listname, $listrobot )
 	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	    unlink $filename;
 	    return undef;

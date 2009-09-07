@@ -1,0 +1,6 @@
+title.gettext authentication requested unless DKIM signature is OK, notification sent to owner
+
+!is_subscriber ([listname],[email]) smtp,dkim,md5,smime -> do_it,notify
+true()                              smtp           -> request_auth([email])
+true()			            dkim,md5,smime      -> do_it,notify
+

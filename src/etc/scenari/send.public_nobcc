@@ -1,7 +1,7 @@
 title.gettext public list, Bcc rejected (anti-spam)
 
-equal([is_bcc],1)	              smtp,smime,md5    -> reject
-true()				      smtp,md5,smime    -> do_it
+equal([is_bcc],1)	              smtp,dkim,md5,smime    -> reject
+true()				      smtp,dkim,md5,smime    -> do_it
 
 
 

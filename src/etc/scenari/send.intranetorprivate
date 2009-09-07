@@ -1,8 +1,8 @@
 title.gettext restricted to local domain and subscribers
 
-is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
-is_editor([listname],[sender])     smtp,smime,md5    -> do_it
-is_owner([listname],[sender])      smtp,smime,md5    -> do_it
-match([sender],/[conf->host]$/)          smtp,smime,md5    -> do_it
-true()				     smtp,smime,md5    -> reject(reason='send_local_user_sub')
+is_subscriber([listname],[sender]) smtp,dkim,smime,md5    -> do_it
+is_editor([listname],[sender])     smtp,dkim,smime,md5    -> do_it
+is_owner([listname],[sender])      smtp,dkim,smime,md5    -> do_it
+match([sender],/[conf->host]$/)    smtp,dkim,smime,md5    -> do_it
+true()				   smtp,dkim,smime,md5    -> reject(reason='send_local_user_sub')
 

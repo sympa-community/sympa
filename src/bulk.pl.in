@@ -169,6 +169,7 @@ $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'
 while (!$end) {
     &List::init_list_cache();
     my $bulk;
+    my $message_from_spool ;
 	
     unless ($main::options{'foreground'}) {
         ## 
@@ -222,14 +223,15 @@ while (!$end) {
 	if ($bulk->{'messagekey'} ne $messagekey) {
 	    # current packet is no related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
-	    $messageasstring_init = &Bulk::messageasstring($bulk->{'messagekey'});
+	    $message_from_spool = &Bulk::message_from_spool($bulk->{'messagekey'});
+
+	    $messageasstring_init = $message_from_spool->{'messageasstring'};
+	    
 	    unless ( $messageasstring_init ) {
-		&do_log('err',"internal error : current packet 'messagekey= %s contain a ref to a null message",$bulk->{'messagekey'});
+		&do_log('err',"internal error : current packet (messagekey= %s) contain a ref to a null message",$bulk->{'messagekey'});
 	    }
 	}
-	#--------------------------------------------------
-	#------------- BEGIN VERP AND MERGE ---------------
-        #--------------------------------------------------
+
 	my $data; #HASH which will contain the attributes of the subscriber
 	
 	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
@@ -243,6 +245,14 @@ while (!$end) {
 	## Use an intermediate handler to encode to filesystem_encoding
 	my $user;
 	
+	# message transformation must be done in the folowing order 
+        #  -1 headers modifications (done in sympa.pl)
+        #  -2 merge
+        #  -3 smime sign
+        #  -4 smime encrypt
+        #  -5 dkim sign
+        # 
+ 
 	if (($bulk->{'verp'})||($bulk->{'merge'})){ # message needs personalization
 	    
 	    foreach $rcpt (@rcpts) {
@@ -262,17 +272,31 @@ while (!$end) {
 			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
 		    }
 
-		    $messageasstring = $entity->as_string;
+		    $messageasstring = $entity->as_string;		    
 		}
-		
+		if ($message_from_spool->{'dkim_d'}){ # apply dkim signature AFTER any other message transformation.
+		    $messageasstring = &tools::dkim_sign($messageasstring,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
+									   'dkim_i'=>           $message_from_spool->{'dkim_i'},
+									   'dkim_selector'=>    $message_from_spool->{'dkim_selector'},
+									   'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
+									   'dkim_header_list' =>$message_from_spool->{'dkim_header_list'} } );
+		}		
 		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
 		# Message with customized data
 		print SMTP $messageasstring;
 		close SMTP;
 	    }
 	}else{ # message dont needs personalization, they can be sent by packet
-	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
+	    
 	    # Initial message
+	    if ($message_from_spool->{'dkim_d'}){
+		$messageasstring_init = &tools::dkim_sign($messageasstring_init,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
+										 'dkim_i'=>           $message_from_spool->{'dkim_i'},
+										 'dkim_selector'=>    $message_from_spool->{'dkim_selector'},
+										 'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
+										 'dkim_header_list' =>$message_from_spool->{'dkim_header_list'} } );
+	    }
+	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});		
 	    print SMTP $messageasstring_init;
 	    close SMTP;
 	}

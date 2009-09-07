@@ -87,7 +87,7 @@ my $quiet;
 # IN :-$sender (+): the command sender
 #     -$robot (+): robot
 #     -$i (+): command line
-#     -$sign_mod : 'smime'| -
+#     -$sign_mod : 'smime'| 'dkim' -
 #
 # OUT : $status |'unknown_cmd'
 #      
@@ -255,10 +255,11 @@ sub lists {
     my $lists = {};
 
     my $all_lists =  &List::get_lists($robot);
+    
     foreach my $list ( @$all_lists ) {
 	my $l = $list->{'name'};
-
-	my $result = $list->check_list_authz('visibility','smtp',
+	
+	my $result = $list->check_list_authz('visibility','smtp', # 'smtp' isn't it a bug ? 
 					     {'sender' => $sender,
 					      'message' => $message, });
 
@@ -303,7 +304,7 @@ sub lists {
 # 
 # IN : -$listname (+): list name
 #      -$robot (+): robot 
-#      -$sign_mod : 'smime' | -
+#      -$sign_mod : 'smime' | 'dkim'|  -
 #
 # OUT : 'unknown_list'|'not_allowed'|1  | undef
 #      
@@ -559,7 +560,6 @@ sub review {
     my $message = shift ;
 
     &do_log('debug', 'Commands::review(%s,%s,%s)', $listname,$robot,$sign_mod );
-
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
@@ -659,7 +659,7 @@ sub review {
 #
 # IN : -$listname (+): list name
 #      -$robot (+): robot 
-#      -$sign_mod : 'smime'| -
+#      -$sign_mod : 'smime'| 'dkim' | -
 #
 # OUT : 1
 #
@@ -675,10 +675,15 @@ sub verify {
     
     &Language::SetLang($list->{'admin'}{'lang'});
     
-    if ($sign_mod eq 'smime') {
-	$auth_method='smime';
+    if  ($sign_mod) {
 	&do_log('info', 'VERIFY successfull from %s', $sender,time-$time_command);
-	&report::notice_report_cmd('smime',{},$cmd_line); 
+	if ($sign_mod eq 'smime') {
+	    $auth_method='smime';
+	    &report::notice_report_cmd('smime',{},$cmd_line); 
+	}elsif($sign_mod eq 'dkim') {
+	    $auth_method='dkim';
+	    &report::notice_report_cmd('dkim',{},$cmd_line); 
+	}
     }else{
 	&do_log('info', 'VERIFY from %s : could not find correct s/mime signature', $sender,time-$time_command);
 	&report::reject_report_cmd('user','no_verify_sign',{},$cmd_line);
@@ -2047,8 +2052,13 @@ sub distribute {
 
     ## Distribute the message
     if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
+	my $numsmtp;
+	my $apply_dkim_signature = 'off';
+	$apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'any');
+        $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'editor_validated_messages');
 
-	my $numsmtp =$list->distribute_msg($message);
+	$numsmtp =$list->distribute_msg('message'=> $message,
+					'apply_dkim_signature'=>$apply_dkim_signature);
 	unless (defined $numsmtp) {
 	    &do_log('err','Commands::distribute(): Unable to send message to list %s', $name);
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
@@ -2226,7 +2236,13 @@ sub confirm {
 	
 	## Distribute the message
 	if (($main::daemon_usage == DAEMON_MESSAGE) || ($main::daemon_usage == DAEMON_ALL)) {
-	    my $numsmtp = $list->distribute_msg($message);
+	    my $numsmtp;
+	    my $apply_dkim_signature = 'off'; 
+	    $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'any');
+	    $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'md5_authenticated_messages');
+
+	    $numsmtp =$list->distribute_msg('message'=> $message,
+					    'apply_dkim_signature'=>$apply_dkim_signature);
 
 	    unless (defined $numsmtp) {
 		&do_log('err','Commands::confirm(): Unable to send message to list %s', $list->{'name'});
@@ -2581,10 +2597,10 @@ sub which {
 #        -type : for message_report.tt2 parsing
 #        -data : ref(HASH) for message_report.tt2 parsing
 #        -msg : for do_log
-#     -$sign_mod (+): 'smime'| -
+#     -$sign_mod (+): 'smime'| 'dkim' | -
 #     -$list : ref(List) | -
 #
-# OUT : 'smime'|'md5'|'smtp' if authentification OK, undef else
+# OUT : 'smime'|'md5'|'dkim'|'smtp' if authentification OK, undef else
 #       | undef   
 ##########################################################
 sub get_auth_method {
@@ -2594,7 +2610,7 @@ sub get_auth_method {
     my $auth_method;
 
     if ($sign_mod eq 'smime') {
-	$auth_method='smime';
+	$auth_method ='smime';
 
     }elsif ($auth ne '') {
 	&do_log('debug',"auth received from $sender : $auth");	
@@ -2607,7 +2623,7 @@ sub get_auth_method {
 	    $compute= &List::compute_auth($email,$cmd);	    
 	}
 	if ($auth eq $compute) {
-	    $auth_method='md5' ;
+	    $auth_method = 'md5' ;
 	}else{           
 	    &do_log('debug2', 'auth should be %s',$compute);
 	    if ($error->{'type'} eq 'auth_failed'){
@@ -2618,8 +2634,9 @@ sub get_auth_method {
 	    &do_log('info', '%s refused, auth failed',$error->{'msg'});
 	    return undef;
 	}
-    }else {
-	$auth_method='smtp';
+    }else {	
+	$auth_method = 'smtp';
+	$auth_method = 'dkim' if ($sign_mod eq 'dkim');
     }
  
     return $auth_method;

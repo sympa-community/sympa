@@ -1,4 +1,4 @@
 title.gettext Newsletter, restricted to moderators
 
-is_editor([listname],[sender])                 smtp,smime,md5     -> do_it
-true()					       smtp,smime,md5     -> reject(reason='send_editor')
+is_editor([listname],[sender])                 smtp,dkim,smime,md5     -> do_it
+true()					       smtp,dkim,smime,md5     -> reject(reason='send_editor')

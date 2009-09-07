@@ -1,5 +1,5 @@
 title.gettext subscription request confirmed
 
 is_subscriber([listname],[sender]) smtp,dkim,smime     -> do_it
-true()				   smtp,dkim           -> request_auth
-true()				   md5,smime           -> do_it
+true()				   smtp                -> request_auth
+true()				   dkim,md5,smime          -> do_it

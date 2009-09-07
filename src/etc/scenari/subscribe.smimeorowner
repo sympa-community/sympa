@@ -1,7 +1,7 @@
 title.gettext requires S/MIME signed or owner approval
 
 # if subscriber request come from a subscriber, it's just an update, do it
-is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
-true()                             smtp,md5          -> owner
-true()                             smime             -> do_it
+is_subscriber([listname],[sender]) smtp,dkim,smime,md5    -> do_it
+true()                             smtp,dkim,md5          -> owner
+true()                             smime                  -> do_it
 

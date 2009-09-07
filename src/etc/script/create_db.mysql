@@ -135,12 +135,19 @@ CREATE TABLE bulkmailer_table (
 	PRIMARY KEY (messagekey_bulkmailer,packetid_bulkmailer)
 );
 
-CREATE TABLE bulkspool_table (
-	messagekey_bulkspool varchar(33) NOT NULL,
-	message_bulkspool longtext NOT NULL,
-	lock_bulkspool int(1) NOT NULL,
-	PRIMARY KEY (messagekey_bulkspool)
-);
+
+CREATE TABLE `bulkspool_table` (
+  `messagekey_bulkspool` varchar(33) NOT NULL COMMENT 'An internal id of the message in order to join this table with bulkmailer_table'
+  `message_bulkspool` longtext COMMENT 'The message itself as a string. The database MUST be tuned in order to accept big data blog for storing messages with attachments',
+  `lock_bulkspool` int(1) default NULL COMMENT 'lock used by parallele bulk demon ni order to prevent a message to be distribited twice',
+  `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',
+  `dkim_privatekey_bulkspool` varchar(100) default NULL COMMENT 'The DKIM private key value.',
+  `dkim_sender_identity_bulkspool` varchar(100) default NULL COMMENT 'The dkim signature "i=" tag ',
+  `dkim_signer_domain_bulkspool` varchar(50) default NULL COMMENT 'The DKIM signature "d=" tag',
+  `dkim_signer_selector_bulkspool` varchar(50) default NULL COMMENT 'The DKIM DNS selector',
+  PRIMARY KEY  (`messagekey_bulkspool`)
+)
+
 
 CREATE TABLE conf_table (
   robot_conf varchar(80) default NULL,
