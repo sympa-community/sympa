@@ -321,7 +321,8 @@ AC_SUBST(WWSCONFIG)
 AC_PROG_CC
 # needed for using per-target flags
 AM_PROG_CC_C_O
-AC_PROG_SED
+AC_PATH_PROGS([SED], [sed gsed])
+#AC_PROG_SED
 AC_PROG_LN_S
 
 AC_ARG_WITH(
