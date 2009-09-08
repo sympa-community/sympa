@@ -2969,7 +2969,7 @@ sub send_global_file {
     my($tpl, $who, $robot, $context, $options) = @_;
     do_log('debug2', 'List::send_global_file(%s, %s, %s)', $tpl, $who, $robot);
 
-    my $data = $context;
+    my $data = &tools::dup_var($context);
 
     unless ($data->{'user'}) {
 	$data->{'user'} = &get_user_db($who) unless ($options->{'skip_db'});
@@ -3058,7 +3058,7 @@ sub send_file {
     my $name = $self->{'name'};
     my $sign_mode;
 
-    my $data = $context;
+    my $data = &tools::dup_var($context);
 
     ## Any recipients
     if ((ref ($who) && ($#{$who} < 0)) ||
