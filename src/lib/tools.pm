@@ -33,8 +33,6 @@ use Sys::Hostname;
 use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
-use Mail::DKIM::Signer;
-use Mail::DKIM::Verifier;
 
 use Conf;
 use Language;
