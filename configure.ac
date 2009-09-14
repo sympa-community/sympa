@@ -20,7 +20,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 AC_PREREQ(2.59)
-AC_INIT(sympa, 6.0b.2, sympa-authors@cru.fr)
+AC_INIT(sympa, 6.0b.3, sympa-authors@cru.fr)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
@@ -52,7 +52,7 @@ defaultdir=$prefix/default
 mailtemplatedir=$defaultdir/mail_tt2
 webtemplatedir=$defaultdir/web_tt2
 execcgidir=$prefix/bin
-expldir=$prefix/expl
+expldir=$prefix/list_data
 spooldir=$prefix/spool
 staticdir=$prefix/static_content
 arcdir=$prefix/arc

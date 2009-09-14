@@ -3,6 +3,108 @@
 
 (See Changelog file for the full changes log)
 
+6.0b.3		14 September 2009
+
+  Features:
+
+	src/lib/Conf.pm, wwsympa/wwsympa.fcgi.in: Extended the format of the generic_sso paragraph in auth.conf.
+	Added two new parameters :
+	  - http_header_list : allows to explicitely list HTTP header fields that should be cached in sympa user_table. 
+	  - http_header_value_separator : user attributes may be multi-valued (including the user email address.
+	    This parameter defines the values separator ; defualt is ';' (adapted for Shibboleth)
+
+	soap/sympa_soap_client.pl.in: add new features to soap client : add,del,subscribe,signoff
+
+
+  Changes:
+
+	sympa.spec.in: [proposed by Jose-Marcio Martins] no more check the OSYTE, check if functions file exists instead.
+	
+	[Suggested by G.Rousse] removed 'check-macro-version' Makefile target to avoid the "*** warning: gettext
+	infrastructure mismatch: using a Makefile.in.in from gettext version 0.17 but the autoconf macros are from
+	gettext version @GETTEXT_MACRO_VERSION@" error. The check can be safely removed because very few macros are used
+
+***** [#6190][Submitted by P.Crandall, univ Chicago] custom inputs, set in create_list, are now clearly prefixed
+*****  in the create_list_request.tt2 HTML form. Prefix is 'custom_input.'
+
+	src/lib/Makefile.am: AuthCAS module used to be distributed with Sympa. Since Sympa 6,
+	it is a standalone CPAN module. The module still has the same name, therefore old installed
+	versions of the module need to be removed
+
+	po/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
+
+	src/lib/CAS.pm: Use a standard AuthCAS module instead of CAS.pm
+
+	check_perl_modules.pl, src/sympa_wizard.pl.in:  check_perl_modules.pl now replaced with sympa_wizard.pl --check
+
+	src/lib/Archive.pm, src/lib/Message.pm, src/lib/PlainDigest.pm, src/lib/mail.pm, src/lib/tools.pm, src/sympa_wizard.pl.in,
+	 wwsympa/wwsympa.fcgi.in: Changes to the cpan installation process :
+		 - Mail::Internet and MIME::Lite modules not directly required
+		 - fix calls to install_module()
+		 - added informations about prerequisites
+		 - generalized the 'usage' entry for each module
+		 - added an introduction to warn the user about the length/nature of the process
+
+***** configure.ac: default value for localstatedir changes from $prefix/var to /var.
+***** This change should make upgrade easier for sympa 5.x and previous
+
+***** The expl directory has been renamed "list_data". This name better reflects the actual directory content.
+***** If you are upgrading from a previous version, you SHOULD:
+*****    1- rename you "/home/sympa/expl" directory to "/home/sympa/list_data" to reflect this change.
+*****    2- set the "home" sympa.conf parameter to "/home/sympa/list_data".
+
+	Makefile.am, NEWS, configure.ac:
+	- Improving the last install message to help people know what command is required to have a running Sympa.
+	- Restoring usage of list_data instead of expl. Updating the NEWS file to reflect this change.
+	- Restoring the localedir definition in non FHS context to avoid i18n directories to be scattered in the root directory.
+
+
+  Bug fixes:
+
+	src/lib/tools.pm: [Reported by M.Warkus] remove_dir() subroutine (used to remove web archives of closed lists) did expect
+	the path to include a minimum of 4 slashes '/'. This limitation was introduced in revision 2108.
+	Removed this limitation.
+
+	src/lib/confdef.pm: http_host was not set by default in syma.conf, making the sympa wizard to fail starting.
+
+	src/lib/tools.pm: [#6380][Reported by M.Warkus, Philipps-Univ. Marburg] Added a line break to written PID files.
+	Without the linebreak, the init script failed to check process status on OS without /etc/init.d/functions
+
+	src/lib/Bulk.pm, src/lib/List.pm: [bug] Missing "use WebAgent" directive since recent reorganization of code (revision 5939).
+	Error: Sympa.pl would die while running List::_include_users_remote_file() with error
+	"Can't locate object method "new" via package "WebAgent" at /home/sympa/bin/List.pm line 7505."
+
+	Makefile.am: [Submitted by M.Deranek] On a multi core system, installdir & installconfig targets can run in parallel.
+	Added a dependency between these targets.
+	
+	src/sympa_wizard.pl.in: Can't do $module->require() since we no more require the UNIVERSAl::require module.
+	Replaced with eval "require $module". Error message : Can't locate object method "require" via package 
+	"XX" at /home/sympa/bin/sympa_wizard.pl line 515
+
+	src/sympa_wizard.pl.in: Installed MHonArc version was not properly detected
+
+	soap/sympa_soap_client.pl.in: Fixed a typo in the sympa_soap_client.pl
+	command line tool that prevented the service parameters to be used.
+
+	wwsympa/Auth.pm: [Submitted by M. Warkus, univ. Marburg] When a user logged in, using LDAP,
+	by providing an email address, if this email was not the first one in the LDAP email attribute,
+	then the uiser was not logged with the address she provided but with the default address found
+	in the LDAP directory. Now, if an email is provided and the login is successful ,the user is
+	logged in with the email she provided.
+
+	wwsympa/wwsympa.fcgi.in: return to the user target page after authentication even if using shibboleth.
+
+	src/lib/Scenario.pm: [Submitted by P. Maes, univ. Louvain] On some servers, the 'is_bcc'
+	condition failed event though the message sent was not a BCC. Fixed by moving the code
+	setting the BCC state to another place in the module.
+
+	Makefile.am, configure.ac: [Submitted by G. rousse, INRIA]
+		- Make sure that directories exist before trying to copy files into them
+		- Copy i18n catalogues into standard directories instead of dedicated location
+		- Remove modification of $datadir. Replaced by defaultdir redefinition.
+		- gives explicit ownership of pid dir to Sympa by adding the "sympa" subdirectory.
+
+
 6.0b.2		31 July 2009
 
   Features:
