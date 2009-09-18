@@ -1402,7 +1402,7 @@ sub get_reason_string {
     my $string;
     my $tt2_include_path =  &tools::make_tt2_include_path($robot,'mail_tt2','','');
 
-    unless (&tt2::parse_tt2($data,'authorization.tt2' ,\$string, $tt2_include_path)) {
+    unless (&tt2::parse_tt2($data,'authorization_reject.tt2' ,\$string, $tt2_include_path)) {
 	my $error = &tt2::get_error();
 	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
 	&do_log('info', "get_reason_string : error parsing");

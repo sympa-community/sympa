@@ -3324,14 +3324,35 @@ sub send_msg {
     }
     #save the message before modifying it
     my $saved_msg = $message->{'msg'}->dup;
-    my $nbr_smtp;
-    my $nbr_verp;
-
+    my $smtp_count = {
+	'nbr_smtp' => 0,
+	'nbr_verp' => 0,
+    };
+    my $tags_to_use = {
+	'tag_first_noverp' => 1,
+	'tag_last_noverp' => 1,
+	'tag_first_verp' => 1,
+	'tag_last_verp' => 1,
+    };
 
     # prepare verp parameter
     my $verp_rate =  $self->{'admin'}{'verp_rate'};
     my $xsequence =  $self->{'stats'}->[0] ;
 
+    # Define messages can be tagged as first or last according to the verp rate.
+    if($verp_rate eq '100%'){
+	$tags_to_use->{'tag_first_noverp'} = 0;
+	$tags_to_use->{'tag_last_noverp'} = 0;
+    }
+    elsif($verp_rate eq '0%'){
+	$tags_to_use->{'tag_first_verp'} = 0;
+	$tags_to_use->{'tag_last_verp'} = 0;
+    }
+    else{
+	$tags_to_use->{'tag_first_verp'} = 0;
+	$tags_to_use->{'tag_last_noverp'} = 0;
+    }
+ 
     my $dkim_parameters ;
     # prepare dkim parameters
     if ($apply_dkim_signature eq 'on') {
@@ -3538,36 +3559,45 @@ sub send_msg {
 	    $url_msg = $new_msg;
 	} 
 	my $new_message = new Message($url_msg);
-
-
-	my @verp_tabrcpt_url = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_url, \@tabrcpt_url_verp);
-
-	my $result = &mail::mail_message('message'=>$new_message,
-					 'rcpt'=>\@tabrcpt_url, 
-					 'list'=>$self ,
-					 'verp' => 'off',
-					 'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-
-	$result = &mail::mail_message('message'=>$new_message,
-				      'rcpt'=>\@verp_tabrcpt_url,
-				      'list'=>$self ,
-				      'verp' => 'on', 
-				      'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
-
+	return undef unless(&send_message_to_option(
+						   {
+						       'message' => $new_message,
+						       'verp_rate' => $verp_rate,
+						       'xsequence' => $xsequence,
+						       'tabrcpt' => \@tabrcpt_url,
+						       'tabrcpt_verp' => \@tabrcpt_url_verp,
+						       'tags_to_use' => $tags_to_use,
+						       'smtp_count' => $smtp_count,
+						   }
+						   )
+			    );
     }
 
-    return $nbr_smtp;
+    return $smtp_count{'nbr_smtp'};
+}
+
+# Factorizing the calls necessary to send a message to a said reception mode users group.
+# Return undef if it fails or 1 if it works.
+sub send_message_to_option{
+    my $param = shift;
+    my @verp_tabrcpt = &extract_verp_rcpt($param->{'verp_rate'}, $param->{'xsequence'},$param->{'tabrcpt'},$param->{'tabrcpt_verp'}) ;
+    
+    my $result = &mail::mail_message($param->{'message'}, $self , {'enable' => 'off'}, $param->{'tabrcpt'});
+    unless (defined $result) {
+	&do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
+	return undef;
+    }
+    $param->{'smtp_count'}->{'nbr_smtp'} += $result;
+    
+    $result = &mail::mail_message($param->{'message'}, $self , {'enable' => 'on'}, @verp_tabrcpt);
+    unless (defined $result) {
+	&do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
+	return undef;
+    }
+    $param->{'smtp_count'}->{'nbr_smtp'} += $result;
+    $param->{'smtp_count'}->{'nbr_verp'} += $result;
+    
+    return 1;
 }
 
 #########################   SERVICE MESSAGES   ##########################################

@@ -1,4 +1,35 @@
 ------------------------------------------------------------------------
+r6208 | david.verdin | 2009-09-14 17:42:00 +0200 (lun 14 sep 2009) | 3 lignes
+Chemins modifiés :
+   M /branches/sympa-6.0-branch/src/lib/confdef.pm
+
+[bug][#6425][Reported by S. Rijnhart, milieudefensie.nl] The spool directories not often used were automatically deleted because CleanSpool was sometimes called on the spool root directory instead of one the actual spools.This was due to the automatic spool being initialized as the spool root directory. Therefore, the sympa.pl automatic cleaning was called on the root directory and all its too old subdirectories were deleted.
+Fixed by giving its right value to this spool (and to the digest spool too, by the way).
+
+------------------------------------------------------------------------
+r6207 | david.verdin | 2009-09-14 17:27:13 +0200 (lun 14 sep 2009) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.0-branch/soap/sympasoap.pm
+
+[bug][#6400][Submitted by A. Bendzsak] There was a typo in sympasoap.pm making it use authorization.tt2 instead of authorization_reject.tt2.
+
+------------------------------------------------------------------------
+r6202 | david.verdin | 2009-09-14 16:39:36 +0200 (lun 14 sep 2009) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.0-branch/NEWS
+   M /branches/sympa-6.0-branch/configure.ac
+
+[svn] Preparing version 6.0b.3
+
+------------------------------------------------------------------------
+r6201 | david.verdin | 2009-09-14 16:00:52 +0200 (lun 14 sep 2009) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.0-branch/ChangeLog
+   M /branches/sympa-6.0-branch/configure.ac
+
+[-svn] Preparing version 6.0 stable.
+
+------------------------------------------------------------------------
 r6200 | david.verdin | 2009-09-14 11:54:30 +0200 (lun 14 sep 2009) | 2 lignes
 Chemins modifiés :
    M /branches/sympa-6.0-branch

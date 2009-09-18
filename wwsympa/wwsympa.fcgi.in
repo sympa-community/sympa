@@ -2847,7 +2847,6 @@ sub do_ticket {
     
     # if the ticket is related to someone which is not logged in, the system performs the same operation as for a login
     my $email_regexp = &tools::get_regexp('email');
-    if ($session->{'email'} !~ $email_regexp) {
 	if ($param->{'ticket_context'}{'result'} eq 'success') {
 	    $session->{'email'} = lc($param->{'ticket_context'}{'email'});
 	    $param->{'user'} =  &List::get_user_db($session->{'email'});
@@ -2862,7 +2861,6 @@ sub do_ticket {
 	    &wwslog('err', 'do_ticket(%s) : Unable to evaluate the ticket validity (status: %s)', $in{'ticket'}, $param->{'ticket_context'}{'result'});
 	    return 1;
 	}
-    }
     &_split_params($param->{'ticket_context'}{'data'});
     return $in{'action'} ;
 
@@ -5863,7 +5861,7 @@ sub do_skinsedit {
      my $email_regexp = &tools::get_regexp('email');
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {
-	     if (/^($email_regexp)(\s+(.*))?\s*$/) {
+	     if (/^\s*($email_regexp)(\s+(.*))?\s*$/) {
 		 $user{&tools::get_canonical_email($1)} = $5;
 	     }
 	 }
@@ -14805,7 +14803,8 @@ sub do_change_email_request {
     $param->{'new_email'} = $in{'new_email'};
     my $tt2_param = {'type' => 'ticket_to_send', 
 		     'one_time_ticket' => $param->{'one_time_ticket'},
-		     'email' => $param->{'user'}{'email'}};
+		     'to' => $in{'new_email'},
+		 };
     unless (&List::send_global_file('user_notification', $in{'new_email'}, $robot, $tt2_param)) {
 	&do_log('notice',"Unable to send template 'user_notification' to $in{'new_email'}");
 	return undef;
@@ -14935,7 +14934,7 @@ sub do_change_email {
 
 	     ## Go through owners/editors of the list
 	     foreach my $admin (@{$list->{'admin'}{$role}}) {
-		 next unless ($admin->{'email'} eq $old_email);
+		 next unless (lc($admin->{'email'}) eq lc($old_email));
 		 
 		 ## Update entry with new email address
 		 $admin->{'email'} = $new_email;

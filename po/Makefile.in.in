@@ -54,6 +54,7 @@ MSGFMT_yes = @MSGFMT_015@
 MSGFMT = $(MSGFMT_$(USE_MSGCTXT))
 XGETTEXT = ./xgettext.pl
 MSGMERGE = msgmerge
+MSGCAT = msgcat
 MSGMERGE_UPDATE = @MSGMERGE@ --update
 MSGINIT = msginit
 MSGCONV = msgconv
@@ -76,7 +77,7 @@ CATALOGS = @CATALOGS@
 # Makevars gets inserted here. (Don't remove this line!)
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-create .po-update
+.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-create .po-update  .po-clean
 
 .po.mo:
 	@echo "$(MSGFMT) -c -o $@ $<"; \
@@ -345,6 +346,11 @@ update-po: Makefile
 	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
 	$(MAKE) update-gmo
 
+clean-po: Makefile
+	$(MAKE) $(DOMAIN).pot-update
+	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
+	$(MAKE) update-gmo
+
 # General rule for creating PO files.
 
 .nop.po-create:
@@ -355,6 +361,25 @@ update-po: Makefile
 # General rule for updating PO files.
 
 .nop.po-update:
+	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
+	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
+	tmpdir=`pwd`; \
+	echo "$$lang:"; \
+	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
+	echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
+	cd $(srcdir); \
+	if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
+	  if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
+	    rm -f $$tmpdir/$$lang.new.po; \
+	  else \
+            $(MSGCAT) --use-first -o $$tmpdir/$$lang.new.po $$tmpdir/$$lang.new.po $$lang.po; \
+	  fi; \
+	else \
+	  echo "msgmerge for $$lang.po failed!" 1>&2; \
+	  rm -f $$tmpdir/$$lang.new.po; \
+	fi
+
+.nop.po-clean:
 	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
 	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
 	tmpdir=`pwd`; \

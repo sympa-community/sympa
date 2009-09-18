@@ -1480,7 +1480,7 @@ sub DoFile {
 	    
 	    ## Too many reports sent => message skipped !!
 	    if ($loop_info{$sender}{'count'} >=  &Conf::get_robot_conf($robot, 'loop_command_max')) {
-		&do_log('notice', 'Ignoring message which would cause a loop, %d messages sent to %s', $loop_info{$sender}{'count'}, $sender);
+		&do_log('notice', 'Ignoring message which would cause a loop, %d messages received from %s', $loop_info{$sender}{'count'}, $sender);
 		
 		return undef;
 	    }

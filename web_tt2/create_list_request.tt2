@@ -43,23 +43,24 @@
   <label for="list_type" ><strong>[%|loc%]List type:[%END%]</strong></label>
     <ul id="list_type">
   [% FOREACH template = list_list_tpl %]
+      [% IF template.value.comment %]
       <li>
-      <dl>
-      <dt>
+        <input type="radio" name="template" value="[% template.key %]"
+     [% IF template.value.selected %]
+       checked="checked"
+     [% END %]
+       />
+        [% PROCESS $template.value.comment %]
+     </li>
+     [% ELSE %]
+     <li>
         <input type="radio" name="template" value="[% template.key %]"
      [% IF template.value.selected %]
        checked="checked"
      [% END %]
        /> [% template.key %]
-     </dt>
-     [% IF template.value.comment %]
-     <dd>
-     [% PROCESS $template.value.comment %]
-     </dd>
-     [% END %]
-     </dl>
-
      </li>
+     [% END %]
   [% END %]
      </ul>
      <br />

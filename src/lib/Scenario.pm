@@ -851,6 +851,9 @@ sub verify {
 	}
 	my $regexp = $1;
 	
+	# Nothing can match an empty regexp.
+	return -1 * $negation if ($regexp =~ /^$/);
+
 	if ($regexp =~ /\[host\]/) {
 	    my $reghost = &Conf::get_robot_conf($robot, 'host');
             $reghost =~ s/\./\\./g ;

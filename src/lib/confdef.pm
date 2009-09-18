@@ -143,13 +143,13 @@ our @params = (
     },
     {
         name    => 'queueautomatic',
-        default => Sympa::Constants::SPOOLDIR . '/',
+        default => Sympa::Constants::SPOOLDIR . '/automatic',
         query   => 'Automatic list creation spool',
 	file    => 'sympa.conf'
     },
     {
         name    => 'queuedigest',
-        default => Sympa::Constants::SPOOLDIR . '/moderation',
+        default => Sympa::Constants::SPOOLDIR . '/digest',
         query   => '',
 	file    => 'sympa.conf'
     },

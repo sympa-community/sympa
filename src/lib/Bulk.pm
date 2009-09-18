@@ -392,9 +392,10 @@ sub store {
     my $priority_packet = $data{'priority_packet'};
     my $delivery_date = $data{'delivery_date'};
     my $verp  = $data{'verp'};
+    $verp=0 unless($verp);
     my $merge  = $data{'merge'};
     my $dkim = $data{'dkim'};
-
+    
     &do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, priority_packet = %s,delivery_date= %s,verp = %s, merge = %s, dkim: d= %s i=%s)',$from,$robot,$listname,$priority_message,$priority_packet,$delivery_date,$verp,$merge,$dkim->{'d'},$dkim->{'i'});
 
     $dbh = &List::db_get_handler();
@@ -449,7 +450,7 @@ sub store {
 	}
     }
 
-    my $current_date = time; 
+    my $current_date = int(time);
     
     # second : create each receipient packet in bulkmailer_table
     my $type = ref $rcpts;
@@ -464,7 +465,7 @@ sub store {
     my $priority_for_packet;
     my $packet_rank = 0; # Initialize counter used to check wether we are copying the last packet.
     foreach my $packet (@{$rcpts}) {
-	if($packet_rank == $#{$rcpts} && !$verp){
+	if($packet_rank == $#{$rcpts}){
 	    $priority_for_packet = $priority_packet+1;
 	}else{
 	    $priority_for_packet = $priority_packet;

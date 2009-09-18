@@ -104,6 +104,16 @@
 		- Remove modification of $datadir. Replaced by defaultdir redefinition.
 		- gives explicit ownership of pid dir to Sympa by adding the "sympa" subdirectory.
 
+	soap/sympasoap.pm: [#6400][Submitted by A. Bendzsak] There was a typo in sympasoap.pm making
+	it use authorization.tt2 instead of authorization_reject.tt2.
+
+	src/lib/confdef.pm: [#6425][Reported by S. Rijnhart, milieudefensie.nl] The spool directories
+	not often used were automatically deleted because CleanSpool was sometimes called on the spool
+	root directory instead of one the actual spools.This was due to the automatic spool being
+	initialized as the spool root directory. Therefore, the sympa.pl automatic cleaning was called
+	on the root directory and all its too old subdirectories were deleted.
+	Fixed by giving its right value to this spool (and to the digest spool too, by the way).
+
 
 6.0b.2		31 July 2009
 

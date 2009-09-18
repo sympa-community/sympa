@@ -177,5 +177,5 @@ list_aliases.tt2: Makefile list_aliases.tt2.in
 install-data-hook:
 	cd  $(DESTDIR)$(defaultdir)/scenari; \
 	for file in $(DEFAULT_SCENARIOS); do \
-		$(LN_S) -f $$file `echo $$file | $(SED) -e 's/\.[^.]\+$$/.default/'`; \
+		$(LN_S) -f $$file `echo $$file | $(SED) -e 's/\.[^.]*$$/.default/'`; \
 	done
