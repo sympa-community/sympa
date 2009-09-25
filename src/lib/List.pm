@@ -8124,7 +8124,7 @@ sub _include_users_ldap {
     }
 
     do_log('debug2',"unbinded from LDAP server %s ", $param->{'host'});
-    do_log('debug2','%d new users included from LDAP query',$total);
+    do_log('info','%d new users included from LDAP query',$total);
 
     return $total;
 }
@@ -8293,7 +8293,7 @@ sub _include_users_ldap_2level {
     }
 
     do_log('debug2',"unbinded from LDAP server %s ", $param->{'host'}) ;
-    do_log('debug2','%d new users included from LDAP query',$total);
+    do_log('info','%d new users included from LDAP query',$total);
 
     my $result;
     $result->{'total'} = $total;
@@ -8356,7 +8356,7 @@ sub _include_users_sql {
     }
     $ds->disconnect();
     
-    do_log('debug2','%d included users from SQL query', $total);
+    do_log('info','%d included users from SQL query', $total);
     return $total;
 }
 
@@ -8523,8 +8523,10 @@ sub _load_users_include2 {
     my $dir = $self->{'dir'};
     do_log('debug2', 'List::_load_users_include for list %s',$name);
 
-    my (%users, $depend_on, $ref, $error);
+    my (%users, $depend_on, $ref);
     my $total = 0;
+    my @errors;
+    my $result;
 
     foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	last unless (defined $total);
@@ -8537,20 +8539,31 @@ sub _load_users_include2 {
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
 		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
+		}
 	    }elsif ($type eq 'include_ldap_query') {
 		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
+		}
 	    }elsif ($type eq 'include_ldap_2level_query') {
 		my $result = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
 		if (defined $result) {
 		    $included = $result->{'total'};
 		    if (defined $result->{'errors'}){
 			&do_log('err', 'Errors occurred during the second LDAP passe');
+			push @errors, {'type' => $type, 'name' => $incl->{'name'}};
 		    }
 		}else{
 		    $included = undef;
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
 		}
 	    }elsif ($type eq 'include_remote_sympa_list') {
 		$included = $self->_include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
+		}
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
@@ -8558,27 +8571,33 @@ sub _load_users_include2 {
 		}else{
 		    $depend_on->{$incl} = 1;
 		    $included = _include_users_list (\%users, $incl, $self->{'domain'}, $admin->{'default_user_options'});
+		    unless (defined $included){
+			push @errors, {'type' => $type, 'name' => $incl};
+		    }
 		}
 	    }elsif ($type eq 'include_file') {
 		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl};
+		}
 	    }elsif ($type eq 'include_remote_file') {
 		$included = _include_users_remote_file (\%users, $incl, $admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
+		}
 	    }
 	    unless (defined $included) {
 		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);
-		$error = 1;
 		next;
 	    }
-	    
 	    $total += $included;
 	}
     }
 
     ## If an error occured, return an undef value
-    if ($error) {
-	return undef;
-    }
-    return \%users;
+    $result->{'users'} = \%users;
+    $result->{'errors'} = \@errors;
+    return $result;
 }
 
 ## Loads the list of admin users from an external include source
@@ -8885,6 +8904,7 @@ sub sync_include {
     
     my %old_subscribers;
     my $total=0;
+    my $errors_occurred=0;
 
     ## Load a hash with the old subscribers
     for (my $user=$self->get_first_user(); $user; $user=$self->get_next_user()) {
@@ -8907,16 +8927,18 @@ sub sync_include {
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
-	$new_subscribers = $self->_load_users_include2();
-
+	my $result = $self->_load_users_include2();
+	$new_subscribers = $result->{'users'};
+	my $tmp_errors = $result->{'errors'};
+	my @errors = @$tmp_errors;
 	## If include sources were not available, do not update subscribers
 	## Use DB cache instead
-	unless (defined $new_subscribers) {
-	    &do_log('err', 'Could not include subscribers for list %s', $name);
-	    unless (&List::send_notify_to_listmaster('sync_include_failed', $self->{'domain'}, [$name])) {
+	if($#errors > -1) {
+	    &do_log('err', 'Errors occurred while synchornizing datasources for list: %s', $name);
+	    $errors_occurred = 1;
+	    unless (&List::send_notify_to_listmaster('sync_include_failed', $self->{'domain'}, {'errors' => \@errors, 'listname' => $self->{'name'}})) {
 		&do_log('notice',"Unable to send notify 'sync_include_failed' to listmaster");
 	    }
-	    return undef;
 	}
     }
 

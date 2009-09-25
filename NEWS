@@ -3,6 +3,65 @@
 
 (See Changelog file for the full changes log)
 
+6.0b.4		23 September 2009
+
+  Changes:
+
+	src/etc/create_list_templates/discussion_list/comment.tt2, src/etc/create_list_templates/hotline/comment.tt2,
+	src/etc/create_list_templates/html-news-letter/comment.tt2,src/etc/create_list_templates/news-letter/comment.tt2,
+	src/etc/create_list_templates/private_working_group/comment.tt2, src/etc/create_list_templates/public_web_forum/comment.tt2,
+	web_tt2/create_list_request.tt2: 
+	[Submitted by M. Warkus, univ. Marburg] In the list creation form, suppress the display of the files name
+	without a comment.tt2. Get also rid of useless <dl/> tags. The whole page is now translatable.
+
+	web_tt2/css.tt2, web_tt2/javascript.tt2, web_tt2/main.tt2, web_tt2/notice.tt2: When notifying a successful
+	action in the web interface, the full interface was unusable before a user clicked a validation button.
+	Now, the notification doesn't prevent users from clicking other links or button in the interface.
+	It is also smaller, though visible.
+
+  Bug fixes:
+
+	src/lib/Bulk.pm: [Reported by M. Waltz, univ. univ. of the Pacific] When the verp value
+	was not defined, it resulted in the value used when storing a packet into database to be
+	an empty value. PostgreSQL refuses to store an integer with an empty value. Fixed by
+	forcing the value of the VERP field to '0' when it is given undefined to the Bulk::store function.
+
+	wwsympa/wwsympa.fcgi.in: When a user already connected on the web interface used a
+	one time ticket based on another address than the one she was connected with, the
+	identity was not changed in the session. It lead to the impossibility to actually
+	change its user email address. Now the session email is defined using the email of
+	the one time ticket, whatever was previously set in the current session.
+
+	wwsympa/wwsympa.fcgi.in: [Reported by S. Lorenz, univ. Karlsruhe] If an owner or editor
+	of a list was registered with one ore more large capitals in her address, the change_email
+	function did not change the address for that list. Fixed by lowercasing the addresses.
+	when comparing them.
+
+	src/lib/Bulk.pm: [Submitted by M. Waltz, univ. univ. of the Pacific] The reception_date_bulkmailer
+	field's value was set to an integer value when storing a packet, htough it is an integer field.
+	This led PostGReSQL to refuse to sotre the packets. Fixed by restricting thi value to its integer part.
+
+	wwsympa/wwsympa.fcgi.in: [Reported by M. Warkus, univ. Marburg] In the mulitple add form, if a a usbscriber address was preceded
+	by empty spaces, it was ignored. Fixed by ignoring leading white spaces in that form.
+
+	src/lib/Scenario.pm: [Reported by M. Warkus, univ. Marburg] In the "match" scenario condition,
+	if the regexp was empty, the condition returuned true. So if the regexp contained a list variable
+	that was not set for that list, the condition returned true. Logically, norhing matches an empty
+	regexp, so if the rexep is empty (not white space, really empty) then the condition now return false.
+
+	src/etc/Makefile.am: [Reported by M. Walts, univ. of the Pacific][solution by G. Rousse, INRIA] Default scenarios were
+	not installed on Solaris 10 x64/x86, because the regular expression used to do it in the Makefile
+	used the "+" sign which is not available in POSIX. replaced it by "*" fixed the problem.
+
+	mail_tt2/listmaster_notification.tt2, src/lib/List.pm: [Reported by P. Maes, univ. Louvain] When using
+	several user data sources, if one source failed the whole synchronization aborted. Now Sympa keeps one
+	synchronizing all the data sources, and a mail is sent to the listmaster, in which all the sources for
+	which an error was encountered are listed. no error is diplayed to the list owner.
+
+	wwsympa/wwsympa.fcgi.in: [#6438][Reported by M. Warkus, univ. Marburg]When the list homepage of a list
+	was empty, displaying the info in lieu of it resulted in displaying a text without any linebreaks, as
+	they have no meaning in HTML. fixed by replacing linebreaks with <br/> tags when this happens.
+
 6.0b.3		14 September 2009
 
   Features:

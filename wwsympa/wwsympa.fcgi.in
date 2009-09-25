@@ -4053,6 +4053,7 @@ sub do_renewpasswd {
 	     $param->{'info_content'} .= $_;
 	 }
 	 close FILE;
+	 $param->{'info_content'} =~ s/\n/\<br\/\>/g;
      }
 
      &tt2::add_include_path($list->{'dir'});
@@ -5253,14 +5254,18 @@ sub do_show_sessions {
 sub do_set_session_email {
     &wwslog('info', 'do_set_session_email');
     
-    
-    if (($in{'email'})||($session)){
+    my $email_regexp = &tools::get_regexp('email');
+    unless ($in{'email'} =~ /^\s*$email_regexp\s*$/){
+	&report::reject_report_web('user','Invalid email provided.',{},$param->{'action'},$list);
+	return 'serveradmin';
+    };
+    if ($session){
 	$session->{'restore_email'} = $param->{'user'}{'email'}; 
 	$session->{'email'} = $in{'email'};
 	$param->{'redirect_to'} = $param->{'base_url'}.$param->{'path_cgi'};
 	return '1';
     }else{
-	&report::reject_report_web('user','wrong_param or no active session',{},$param->{'action'},$list);
+	&report::reject_report_web('user','No active session',{},$param->{'action'},$list);
 	return 'serveradmin';
     }
 }

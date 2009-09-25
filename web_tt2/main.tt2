@@ -47,33 +47,6 @@
 [% PROCESS javascript.tt2 %]
 
 [% IF base %] <base href="[% base %]" /> [% END %]
-<!--[if IE]>
-<![endif]-->
-
-
-<noscript>
-<style type="text/css">
-<!--
-#ErrorBlock,
-#noticeBlock {
-	       height:0%!important;
-               position:relative!important;
-               }
-
-#ErrorMsg,
-#noticeMsg { 
-             position:relative!important;
-             width:80%!important;
-             margin:1em auto!important;
-             border:none!important;
- }
-
--->
-</style>
-</noscript>
-
-
-
 
 </head>
 
@@ -87,15 +60,14 @@
 
 [% IF nomenu %]
        [% PROCESS error.tt2 IF errors %]
-       [% PROCESS notice.tt2 IF notices %]
        <div class="ContentBlock"> 
+         [% PROCESS notice.tt2 IF notices %]
          [% PROCESS "${action}.tt2" IF action %]
        </div>
 [% ELSE %]
 
        [% PROCESS error.tt2 IF errors %]
-       [% PROCESS notice.tt2 IF notices %]
- [% PROCESS login_menu.tt2 %]
+       [% PROCESS login_menu.tt2 %]
 <div id="Canvas">
 
   <div id="Header">
@@ -117,7 +89,7 @@
   <!-- </div> --><!-- End div contenant -->
 	
 
-  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the menu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
+  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hide or show the menu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
      <div id="Paint">
 
        [% IF list %]
@@ -129,6 +101,7 @@
 	 [% PROCESS nav.tt2 %]
 
         <div class="ContentBlock">
+         [% PROCESS notice.tt2 IF notices %]
 	 [% IF action == 'edit_list_request' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
