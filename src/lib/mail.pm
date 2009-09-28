@@ -318,6 +318,7 @@ sub mail_message {
     my $verp = $params{'verp'};
     my @rcpt =  @{$params{'rcpt'}};
     my $dkim  =  $params{'dkim_parameters'};
+    my $tag_as_last = $params{'tag_as_last'};
 
     my $host = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
@@ -325,7 +326,7 @@ sub mail_message {
     # normal return_path (ie used if verp is not enabled)
     my $from = $list->{'name'}.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host;
 
-    do_log('debug', 'mail::mail_message(from: %s, , file:%s, %s, verp->%s, %d rcpt)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $verp, $#rcpt+1);
+    do_log('debug', 'mail::mail_message(from: %s, , file:%s, %s, verp->%s, %d rcpt, last: %s)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $verp, $#rcpt+1, $tag_as_last);
     
     my($i, $j, $nrcpt, $size); 
     my $numsmtp = 0;
@@ -418,7 +419,8 @@ sub mail_message {
 				'use_bulk' => 1,
 				'verp' => $verp,
 				'dkim' => $dkim,
-				'merge' => $list->{'admin'}{'merge_feature'} ));
+				'merge' => $list->{'admin'}{'merge_feature'},
+				'tag_as_last' => $tag_as_last));
 }
 
 
@@ -538,8 +540,9 @@ sub sendto {
     my $merge = $params{'merge'};
     my $dkim = $params{'dkim'};
     my $use_bulk = $params{'use_bulk'};
+    my $tag_as_last = $params{'tag_as_last'};
 
-    do_log('debug', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s', $from, $listname, $encrypt, $verp, $priority);
+    do_log('debug', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s, last: %s', $from, $listname, $encrypt, $verp, $priority, $tag_as_last);
     
     my $delivery_date =  $params{'delivery_date'};
     $delivery_date = time() unless $delivery_date; # if not specified, delivery tile is right now (used for sympa messages etc)
@@ -565,8 +568,10 @@ sub sendto {
 			 'robot' => $robot,
 			 'priority' => $priority,
 			 'delivery_date' =>  $delivery_date,
-			 'use_bulk' => $use_bulk );
-	    }    
+			 'use_bulk' => $use_bulk,
+			 'tag_as_last' => $tag_as_last);
+	    }
+	    $tag_as_last = 0;
 	}
     }else{
 	$msg = $msg_header->as_string . "\n" . $msg_body;   
@@ -582,7 +587,8 @@ sub sendto {
 				  'verp' => $verp,
 				  'merge' => $merge,
 				  'use_bulk' => $use_bulk,
-				  'dkim' => $dkim );
+				  'dkim' => $dkim,
+				  'tag_as_last' => $tag_as_last);
 	    return $result;
 	}else{
 	    return undef;
@@ -630,6 +636,7 @@ sub sending {
     my $merge  =  $params{'merge'};
     my $use_bulk = $params{'use_bulk'};
     my $dkim = $params{'dkim'};
+    my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
     my $signed_msg; # if signing
@@ -682,8 +689,9 @@ sub sending {
 				     'delivery_date' => $delivery_date,
 				     'verp' => $verpfeature,
 				     'merge' => $mergefeature,
-				     'dkim' => $dkim
-				     );
+				     'dkim' => $dkim,
+				     'tag_as_last' => $tag_as_last);
+
 	unless (defined $bulk_code) {
 	    &do_log('err', 'Failed to store message for list %s', $listname);
 	    &List::send_notify_to_listmaster('bulk_error',  $robot, {'listname' => $listname});

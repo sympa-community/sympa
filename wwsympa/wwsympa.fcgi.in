@@ -4469,7 +4469,7 @@ sub do_pref {
      }
 
      ## message topic subscription
-     if (($reception eq '') && $list->is_there_msg_topic()) {
+     if ($list->is_there_msg_topic()) {
  	my @user_topics;
  	
  	if ($in{'no_topic'}) {
@@ -4490,10 +4490,10 @@ sub do_pref {
  	    $update->{'topics'} = join(',',@user_topics);
  	}
      }
-     
-     if ($reception ne '') {
+
+     if ($reception =~ /^digest|digestplain|nomail|summary$/i) {
 	 $update->{'topics'} = '';
-     }     
+     }
 
      ## Get additional DB fields
      foreach my $v (keys %in) {
@@ -4850,8 +4850,7 @@ sub do_suboptions {
 	    $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
 	    if ($s->{'reception'} eq $m) {
 		$param->{'reception'}{$m}{'selected'} = 'selected="selected"';
-		
-		if ($m eq 'mail') {
+		if ($m =~ /^mail|notice|not_me|txt|html|urlize$/i) {
 		    $param->{'possible_topic'} = 1;
 		}
 	    }else {

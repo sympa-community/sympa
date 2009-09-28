@@ -22,8 +22,8 @@
  
      <br /><br />
      [%IF available_topics %]	
-      [%|loc%]Topic subscription:[%END%]		
-        [%IF possible_topic %] 
+        [%|loc%]Topic subscription:[%END%]		
+        [%IF possible_topic %]
  	 <BLOCKQUOTE>	
  	  [% FOREACH t = available_topics %]
  	    [%IF topic_checked.${t.name} %]	
@@ -48,9 +48,9 @@
  	  [%END%]
        	
         [%ELSE%]
- 	 <BLOCKQUOTE><i>[%|loc%]Only possible in "normal" receiving mode[%END%]</i></BLOCKQUOTE>
+        <BLOCKQUOTE><i>[%|loc%]Only possible for direct reception modes.[%END%]</i></BLOCKQUOTE>
         [%END%]
-      [%END%]	
+     [%END%]	
  	 
      <br />
      [%|loc%]Visibility:[%END%]

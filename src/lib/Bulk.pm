@@ -395,8 +395,9 @@ sub store {
     $verp=0 unless($verp);
     my $merge  = $data{'merge'};
     my $dkim = $data{'dkim'};
-    
-    &do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, priority_packet = %s,delivery_date= %s,verp = %s, merge = %s, dkim: d= %s i=%s)',$from,$robot,$listname,$priority_message,$priority_packet,$delivery_date,$verp,$merge,$dkim->{'d'},$dkim->{'i'});
+    my $tag_as_last = $data{'tag_as_last'};
+
+    &do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
 
     $dbh = &List::db_get_handler();
 
@@ -465,8 +466,8 @@ sub store {
     my $priority_for_packet;
     my $packet_rank = 0; # Initialize counter used to check wether we are copying the last packet.
     foreach my $packet (@{$rcpts}) {
-	if($packet_rank == $#{$rcpts}){
-	    $priority_for_packet = $priority_packet+1;
+	if($tag_as_last){
+	    $priority_for_packet = $priority_packet + 5;
 	}else{
 	    $priority_for_packet = $priority_packet;
 	}

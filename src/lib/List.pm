@@ -128,7 +128,7 @@ user.
 =item get_subscriber ( USER )
 
 Returns a subscriber of the list.
-
+s
 =item get_admin_user ( ROLE, USER)
 
 Return an admin user of the list with predefined role
@@ -3324,247 +3324,187 @@ sub send_msg {
     }
     #save the message before modifying it
     my $saved_msg = $message->{'msg'}->dup;
-    my $nbr_smtp;
-    my $nbr_verp;
-
+    my $nbr_smtp = 0;
+    my $nbr_verp = 0;
 
     # prepare verp parameter
     my $verp_rate =  $self->{'admin'}{'verp_rate'};
     my $xsequence =  $self->{'stats'}->[0] ;
 
+    my $tags_to_use;
+
+    # Define messages which can be tagged as first or last according to the verp rate.
+    # If the VERP is 100%, then all the messages are VERP. Don't try to tag not VERP
+    # messages as they won't even exist.
+    if($verp_rate eq '0%'){
+	$tags_to_use->{'tag_verp'} = 0;
+	$tags_to_use->{'tag_noverp'} = 1;
+    }else{
+	$tags_to_use->{'tag_verp'} = 1;
+	$tags_to_use->{'tag_noverp'} = 0;
+    }
+ 
     my $dkim_parameters ;
     # prepare dkim parameters
     if ($apply_dkim_signature eq 'on') {
 	$dkim_parameters = &tools::get_dkim_parameters({'robot'=>$self->{'domain'}, 'listname'=>$self->{'name'}});
     }
-    ##Send message for normal reception mode
+
+    ## Storing the not empty subscribers' arrays into a hash.
+    my $available_rcpt;
+    my $available_verp_rcpt;
+
     if (@tabrcpt) {
-	## Add a footer
-	unless ($message->{'protected'}) {
-	    my $new_msg = $self->add_parts($message->{'msg'});
-	    if (defined $new_msg) {
-		$message->{'msg'} = $new_msg;
-		$message->{'altered'} = '_ALTERED_';
+	$available_rcpt->{'tabrcpt'} = \@tabrcpt;
+	$available_verp_rcpt->{'tabrcpt'} = \@tabrcpt_verp;
+    }
+    if (@tabrcpt_notice) {
+	$available_rcpt->{'tabrcpt_notice'} = \@tabrcpt_notice;
+	$available_verp_rcpt->{'tabrcpt_notice'} = \@tabrcpt_notice_verp;
+    }
+    if (@tabrcpt_txt) {
+	$available_rcpt->{'tabrcpt_txt'} = \@tabrcpt_txt;
+	$available_verp_rcpt->{'tabrcpt_txt'} = \@tabrcpt_txt_verp;
+    }
+    if (@tabrcpt_html) {
+	$available_rcpt->{'tabrcpt_html'} = \@tabrcpt_html;
+	$available_verp_rcpt->{'tabrcpt_html'} = \@tabrcpt_html_verp;
+    }
+    if (@tabrcpt_url) {
+	$available_rcpt->{'tabrcpt_url'} = \@tabrcpt_url;
+	$available_verp_rcpt->{'tabrcpt_url'} = \@tabrcpt_url_verp;
+    }
+
+    foreach my $array_name (keys %$available_rcpt) {
+	my $new_message;
+	##Prepare message for normal reception mode
+	if ($array_name eq 'tabrcpt') {
+	    ## Add a footer
+	    unless ($message->{'protected'}) {
+		my $new_msg = $self->add_parts($message->{'msg'});
+		if (defined $new_msg) {
+		    $message->{'msg'} = $new_msg;
+		    $message->{'altered'} = '_ALTERED_';
+		}
 	    }
+	    $new_message = $message;	    
+	    
+	##Prepare message for notice reception mode
+	}elsif($array_name eq 'tabrcpt_notice'){
+	    my $notice_msg = $saved_msg->dup;
+	    $notice_msg->bodyhandle(undef);    
+	    $notice_msg->parts([]);
+	    $new_message = new Message($notice_msg);
+
+	##Prepare message for txt reception mode
+	}elsif($array_name eq 'tabrcpt_txt'){
+	    my $txt_msg = $saved_msg->dup;
+	    if (&tools::as_singlepart($txt_msg, 'text/plain')) {
+		do_log('notice', 'Multipart message changed to singlepart');
+	    }
+	    
+	    ## Add a footer
+	    my $new_msg = $self->add_parts($txt_msg);
+	    if (defined $new_msg) {
+		$txt_msg = $new_msg;
+	    }
+	    $new_message = new Message($txt_msg);
+
+	##Prepare message for html reception mode
+	}elsif($array_name eq 'tabrcpt_html'){
+	    my $html_msg = $saved_msg->dup;
+	    if (&tools::as_singlepart($html_msg, 'text/html')) {
+		do_log('notice', 'Multipart message changed to singlepart');
+	    }
+	    ## Add a footer
+	    my $new_msg = $self->add_parts($html_msg);
+	    if (defined $new_msg) {
+		$html_msg = $new_msg;
+	    }
+	    $new_message = new Message($html_msg);
+	    
+	##Prepare message for urlize reception mode
+	}elsif($array_name eq 'tabrcpt_url'){
+	    my $url_msg = $saved_msg->dup; 
+	    
+	    my $expl = $self->{'dir'}.'/urlized';
+	    
+	    unless ((-d $expl) ||( mkdir $expl, 0775)) {
+		do_log('err', "Unable to create urlize directory $expl");
+		return undef;
+	    }
+	    
+	    my $dir1 = &tools::clean_msg_id($url_msg->head->get('Message-ID'));
+	    
+	    ## Clean up Message-ID
+	    $dir1 = &tools::escape_chars($dir1);
+	    $dir1 = '/'.$dir1;
+	    
+	    unless ( mkdir ("$expl/$dir1", 0775)) {
+		do_log('err', "Unable to create urlize directory $expl/$dir1");
+		printf "Unable to create urlized directory $expl/$dir1";
+		return 0;
+	    }
+	    my $mime_types = &tools::load_mime_types();
+	    my @parts = $url_msg->parts();
+	    
+	    foreach my $i (0..$#parts) {
+		my $entity = &_urlize_part ($url_msg->parts ($i), $self, $dir1, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
+		if (defined $entity) {
+		    $parts[$i] = $entity;
+		}
+	    }
+	    
+	    ## Replace message parts
+	    $url_msg->parts (\@parts);
+	    
+	    ## Add a footer
+	    my $new_msg = $self->add_parts($url_msg);
+	    if (defined $new_msg) {
+		$url_msg = $new_msg;
+	    } 
+	    $new_message = new Message($url_msg);
 	}
-	
+
 	## TOPICS
 	my @selected_tabrcpt;
 	if ($self->is_there_msg_topic()){
-	    @selected_tabrcpt = $self->select_subscribers_for_topic($message->get_topic(),\@tabrcpt);
+	    @selected_tabrcpt = $self->select_subscribers_for_topic($message->get_topic(),$available_rcpt->{$array_name});
 	} else {
-	    @selected_tabrcpt = @tabrcpt;
+	    @selected_tabrcpt = $available_rcpt->{$array_name};
 	}
 
+	## Preparing VERP receipients.
 	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@tabrcpt_verp);
-
-
-	my $result = &mail::mail_message('message'=>$message, 
+	
+	## Sending non VERP.
+	my $result = &mail::mail_message('message'=>$new_message, 
 					 'rcpt'=> \@selected_tabrcpt, 
 					 'list'=>$self, 
 					 'verp' => 'off', 
-					 'dkim_parameters'=>$dkim_parameters);
+					 'dkim_parameters'=>$dkim_parameters,
+					 'tag_as_last' => $tags_to_use->{'tag_noverp'});
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
 	    return undef;
 	}
-	$nbr_smtp = $result;
+	$tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
+	$nbr_smtp += $result;
 	
+	## Sending VERP.
 	$result = &mail::mail_message('message'=> $message, 
 				      'rcpt'=> \@verp_selected_tabrcpt, 
-				      'list'=> $self, 'verp' => 'on',
-				      'dkim_parameters'=>$dkim_parameters);
+				      'list'=> $self,
+				      'verp' => 'on',
+				      'dkim_parameters'=>$dkim_parameters,
+				      'tag_as_last' => $tags_to_use->{'tag_verp'});
 	unless (defined $result) {
 	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
 	    return undef;
 	}
+	$tags_to_use->{'tag_verp'} = 0 if ($result > 0);
 	$nbr_smtp += $result;
-	$nbr_verp = $result;
-
-    }
-
-    ##Prepare and send message for notice reception mode
-    if (@tabrcpt_notice) {
-	my $notice_msg = $saved_msg->dup;
-        $notice_msg->bodyhandle(undef);    
-	$notice_msg->parts([]);
-	my $new_message = new Message($notice_msg);
-	
-	my @verp_tabrcpt_notice = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_notice, \@tabrcpt_notice_verp);
-
-	my $result = &mail::mail_message('message'=>$new_message, 
-					 'rcpt'=>\@tabrcpt_notice, 
-					 'list'=>$self, 
-					 'verp' => 'off',
-					 'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-
-	$result = &mail::mail_message('message'=>$new_message, 
-				      'rcpt'=>\@verp_tabrcpt_notice,
-				      'list'=>$self ,
-				      'verp' => 'on', 
-				      'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
-
-    }
-
-    ##Prepare and send message for txt reception mode
-    if (@tabrcpt_txt) {
-	my $txt_msg = $saved_msg->dup;
-	if (&tools::as_singlepart($txt_msg, 'text/plain')) {
-	    do_log('notice', 'Multipart message changed to singlepart');
-	}
-	
-	## Add a footer
-	my $new_msg = $self->add_parts($txt_msg);
-	if (defined $new_msg) {
-	    $txt_msg = $new_msg;
-	}
-	my $new_message = new Message($txt_msg);
-
-	my @verp_tabrcpt_txt = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_txt, \@tabrcpt_txt_verp);
-	
-	my $result = &mail::mail_message('message'=>$new_message, 
-					 'rcpt'=>\@tabrcpt_txt,
-					 'list'=>$self, 
-					 'verp' => 'off',
-					 'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-
-	$result = &mail::mail_message('message'=>$new_message, 
-				       'rcpt'=>\@verp_tabrcpt_txt, 
-				       'list'=>$self, 
-				       'verp' => 'on',
-				       'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
-
-    }
-
-   ##Prepare and send message for html reception mode
-    if (@tabrcpt_html) {
-	my $html_msg = $saved_msg->dup;
-	if (&tools::as_singlepart($html_msg, 'text/html')) {
-	    do_log('notice', 'Multipart message changed to singlepart');
-	}
-        ## Add a footer
-	my $new_msg = $self->add_parts($html_msg);
-	if (defined $new_msg) {
-	    $html_msg = $new_msg;
-        }
-	my $new_message = new Message($html_msg);
-
-	my @verp_tabrcpt_html = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_html, \@tabrcpt_html_verp);
-
-	my $result = &mail::mail_message('message'=>$new_message, 
-					 'rcpt'=>\@tabrcpt_html,
-					 'list'=>$self,
-					 'verp' => 'off',
-					 'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-
-	$result = &mail::mail_message('message'=>$new_message, 
-				      'rcpt'=>\@verp_tabrcpt_html,
-				      'list'=>$self,
-				      'verp' => 'on',
-				      'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
-    }
-
-   ##Prepare and send message for urlize reception mode
-    if (@tabrcpt_url) {
-	my $url_msg = $saved_msg->dup; 
- 
-	my $expl = $self->{'dir'}.'/urlized';
-    
-	unless ((-d $expl) ||( mkdir $expl, 0775)) {
-	    do_log('err', "Unable to create urlize directory $expl");
-	    return undef;
-	}
-
-	my $dir1 = &tools::clean_msg_id($url_msg->head->get('Message-ID'));
-
-	## Clean up Message-ID
-	$dir1 = &tools::escape_chars($dir1);
-	$dir1 = '/'.$dir1;
-
-	unless ( mkdir ("$expl/$dir1", 0775)) {
-	    do_log('err', "Unable to create urlize directory $expl/$dir1");
-	    printf "Unable to create urlized directory $expl/$dir1";
-	    return 0;
-	}
-	my $mime_types = &tools::load_mime_types();
-	my @parts = $url_msg->parts();
-	
-	foreach my $i (0..$#parts) {
-	    my $entity = &_urlize_part ($url_msg->parts ($i), $self, $dir1, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
-	    if (defined $entity) {
-		$parts[$i] = $entity;
-	    }
-	}
-	
-	## Replace message parts
-	$url_msg->parts (\@parts);
-
-        ## Add a footer
-	my $new_msg = $self->add_parts($url_msg);
-	if (defined $new_msg) {
-	    $url_msg = $new_msg;
-	} 
-	my $new_message = new Message($url_msg);
-
-
-	my @verp_tabrcpt_url = &extract_verp_rcpt($verp_rate, $xsequence,\@tabrcpt_url, \@tabrcpt_url_verp);
-
-	my $result = &mail::mail_message('message'=>$new_message,
-					 'rcpt'=>\@tabrcpt_url, 
-					 'list'=>$self ,
-					 'verp' => 'off',
-					 'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp desabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-
-	$result = &mail::mail_message('message'=>$new_message,
-				      'rcpt'=>\@verp_tabrcpt_url,
-				      'list'=>$self ,
-				      'verp' => 'on', 
-				      'dkim_parameters'=>$dkim_parameters);
-	unless (defined $result) {
-	    &do_log('err',"List::send_msg, could not send message to distribute from $from  (verp enabled)");
-	    return undef;
-	}
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
-
+	$nbr_verp += $result;	
     }
 
     return $nbr_smtp;
@@ -11312,7 +11252,7 @@ sub modifying_msg_topic_for_subscribers(){
 # select_subscribers_for_topic
 ####################################################
 # Select users subscribed to a topic that is in
-# the topic list incoming when reception mode is 'mail', and the other
+# the topic list incoming when reception mode is 'mail', 'notice', 'not_me', 'txt', 'html' or 'urlize', and the other
 # subscribers (recpetion mode different from 'mail'), 'mail' and no topic subscription
 # 
 # IN : -$self(+) : ref(List)
@@ -11340,7 +11280,7 @@ sub select_subscribers_for_topic {
 	# user topic
 	my $info_user = $self->get_subscriber($user);
 
-	if ($info_user->{'reception'} ne 'mail') {
+	if ($info_user->{'reception'} !~ /^mail|notice|not_me|txt|html|urlize$/i) {
 	    push @selected_users,$user;
 	    next;
 	}
