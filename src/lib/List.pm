@@ -3471,7 +3471,7 @@ sub send_msg {
 	if ($self->is_there_msg_topic()){
 	    @selected_tabrcpt = $self->select_subscribers_for_topic($message->get_topic(),$available_rcpt->{$array_name});
 	} else {
-	    @selected_tabrcpt = $available_rcpt->{$array_name};
+	    @selected_tabrcpt = @{$available_rcpt->{$array_name}};
 	}
 
 	## Preparing VERP receipients.
