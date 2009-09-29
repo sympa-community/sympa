@@ -250,7 +250,8 @@ while (!$end) {
         #  -2 merge
         #  -3 smime sign
         #  -4 smime encrypt
-        #  -5 dkim sign
+	#  -5 remove existing signature if altered 
+        #  -6 dkim sign
         # 
  
 	if (($bulk->{'verp'})||($bulk->{'merge'})){ # message needs personalization
@@ -274,6 +275,9 @@ while (!$end) {
 
 		    $messageasstring = $entity->as_string;		    
 		}
+		if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
+		    $messageasstring = &tools::remove_invalid_dkim_signature($messageasstring );
+		}
 		if ($message_from_spool->{'dkim_d'}){ # apply dkim signature AFTER any other message transformation.
 		    $messageasstring = &tools::dkim_sign($messageasstring,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
 									   'dkim_i'=>           $message_from_spool->{'dkim_i'},
@@ -287,7 +291,9 @@ while (!$end) {
 		close SMTP;
 	    }
 	}else{ # message dont needs personalization, they can be sent by packet
-	    
+	    if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
+		$messageasstring_init = &tools::remove_invalid_dkim_signature($messageasstring_init );
+	    }
 	    # Initial message
 	    if ($message_from_spool->{'dkim_d'}){
 		$messageasstring_init = &tools::dkim_sign($messageasstring_init,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
@@ -306,6 +312,7 @@ while (!$end) {
 	    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
 	    return undef;
 	}
+
 	
 	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 5){
 	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date.', 

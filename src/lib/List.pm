@@ -637,8 +637,8 @@ my %alias = ('reply-to' => 'reply_to',
 								 },
                                              'signer_identity'=>  {'format' => '\S+',
 		                         			  'occurence' => '0-1',
-								  'comment' => "DKIM 'i=' tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>",
-			                                          'gettext_id' => "DKIM 'i=' tag, you should probably leave this parameter empty",
+								  'comment' => 'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+			                                          'gettext_id' => 'DKIM "i=" tag, you should probably leave this parameter empty',
 								  'order' => 6
 								 },
 					     },
@@ -2679,6 +2679,7 @@ sub distribute_msg {
     $hdr->add('Errors-to', $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host);
     $hdr->add('Precedence', 'list');
     $hdr->add('Precedence', 'bulk');
+    $hdr->add('Sender', "$self->{'name'}-request\@$self->{'admin'}{'host'}"); # The Sender: header should be add at least for DKIM compatibility
     $hdr->add('X-no-archive', 'yes');
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
 	$hdr->add($1, $2) if ($i=~/^([\S\-\:]*)\s(.*)$/);

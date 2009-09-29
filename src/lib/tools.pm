@@ -801,6 +801,27 @@ sub dkim_verifier {
     return undef;
 }
 
+# input a msg as string, output idem without signature if invalid
+sub remove_invalid_dkim_signature {
+
+    do_log('debug',"removing invalide dkim signature");
+
+    my $msg_as_string = shift;
+
+    unless (&tools::dkim_verifier($msg_as_string)){
+	my $parser = new MIME::Parser;
+	my $entity = $parser->parse_data($msg_as_string);
+	unless($entity) {
+	    &do_log('err','could not parse message');
+	    return $msg_as_string ;
+	}
+	$entity->head->delete('DKIM-Signature');
+	return $entity->as_string;
+    }else{
+	return ($msg_as_string); # sgnature is valid.
+    }
+}
+
 # input object msg and listname, output signed message object
 sub dkim_sign {
     # in case of any error, this proc MUST return $msg_as_string NOT undef ; this would cause Sympa to send empty mail 
