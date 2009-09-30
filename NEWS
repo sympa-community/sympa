@@ -3,6 +3,44 @@
 
 (See Changelog file for the full changes log)
 
+6.1b.1		1st October 2009
+
+Features:
+
+	[Submitted by J. jourdan] Web page sending. In the post page of the web interface,
+	user can specify an URL coresponding to a page whe want to send to the list. The page
+	is sent in HTML form, with all the referenced objects such as images as mail attachments.
+
+	[Submitted by J. jourdan] Messages parsing; custom attributes can be now used as parameters
+	for TT2 tags in messages distributed by Sympa. This adds notably the possibility to add
+	authenticated unsubscribe URL to message footers.
+
+
+	[Submitted by J. jourdan] "Suspension of membership." The user can suspend his subscription to the lists that he subscribes.
+	The user can manage all her subscriptions in a single page, where she can specify what subscriptions
+	will be supsended, for what period of time (or indefinitely). The subscriptions can be
+	handled globally or one by one.
+
+	[Submitted by J. jourdan] Users exclusion. Beware, that this feature is different from the blacklist.
+	Exclusion makes sense when a list is based on external data sources, thanks to exclusion,
+	a user can unsubscribe (or being removed by list owner) even though he should be included
+	via an external data source. Users get into the exclusion table, through the standard
+	unsubscribe / delete functions. They get off the exclusion table with the standard
+	subscribe / add functions. Adding of the table 'exclusion_table'.
+
+
+Changes:
+	
+	Now bulk.pl logs when the last packet is sent, being a VERP or non VERP packet.
+	
+	It is now possible to enable topics when the reception mode is 'mail', 'notice', 'not_me', 'txt', 'html' or 'urlize'.
+
+Bug fixes:
+
+	Nothing: The Sympa 6.1 beta was finalized while the 6.0 was in stabilization, so it benefited
+	exactly the same bug fixes as the 6.0 at the point it was released.
+
+
 6.0		1st October 2009
 
 	The changes and features below are the compilation of the announces made for the

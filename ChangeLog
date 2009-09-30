@@ -1,609 +1,977 @@
 ------------------------------------------------------------------------
-r6254 | david.verdin | 2009-09-30 16:30:08 +0200 (mer 30 sep 2009) | 2 lignes
+r6257 | david.verdin | 2009-10-01 01:10:18 +0200 (jeu 01 oct 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/Makefile.in.in
+   M /trunk
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
 
-[-bug] The definition of the "msgcat" command was missing.
+[svn] Retrieving version release information from branch 6.0.
 
 ------------------------------------------------------------------------
-r6250 | david.verdin | 2009-09-30 15:35:22 +0200 (mer 30 sep 2009) | 2 lignes
+r6253 | david.verdin | 2009-09-30 16:26:43 +0200 (mer 30 sep 2009) | 1 ligne
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/Makefile.in.in
-   M /branches/sympa-6.0-branch/po/xgettext.pl
+   M /trunk/po/Makefile.in.in
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/la.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+   M /trunk/po-wwsympa/ar.po
+   M /trunk/po-wwsympa/bg.po
+   M /trunk/po-wwsympa/br.po
+   M /trunk/po-wwsympa/cs.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/po-wwsympa/el.po
+   M /trunk/po-wwsympa/en_US.po
+   M /trunk/po-wwsympa/es.po
+   M /trunk/po-wwsympa/et.po
+   M /trunk/po-wwsympa/eu.po
+   M /trunk/po-wwsympa/fi.po
+   M /trunk/po-wwsympa/fr.po
+   M /trunk/po-wwsympa/hu.po
+   M /trunk/po-wwsympa/id.po
+   M /trunk/po-wwsympa/it.po
+   M /trunk/po-wwsympa/ja.po
+   M /trunk/po-wwsympa/nb_NO.po
+   M /trunk/po-wwsympa/nl.po
+   M /trunk/po-wwsympa/oc.po
+   M /trunk/po-wwsympa/pl.po
+   M /trunk/po-wwsympa/pt.po
+   M /trunk/po-wwsympa/pt_BR.po
+   M /trunk/po-wwsympa/ro.po
+   M /trunk/po-wwsympa/ru.po
+   M /trunk/po-wwsympa/sv.po
+   M /trunk/po-wwsympa/tr.po
+   M /trunk/po-wwsympa/vi.po
+   M /trunk/po-wwsympa/web_help.pot
+   M /trunk/po-wwsympa/zh_CN.po
+
+[-feature] Updating the Sympa catalogue templates with the latest Sympa developments.
+------------------------------------------------------------------------
+r6252 | david.verdin | 2009-09-30 15:56:28 +0200 (mer 30 sep 2009) | 3 lignes
+Chemins modifiés :
+   M /trunk
+   M /trunk/po/LINGUAS
+   M /trunk/po/Makefile.in.in
+   M /trunk/po/xgettext.pl
 
 [feature] Restoring the export and clean-po Makefile directives. This is mandatory to maintaint the several translations of Sympa, though it never needs to be used by Sympa users.
 
-------------------------------------------------------------------------
-r6249 | david.verdin | 2009-09-30 15:32:26 +0200 (mer 30 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/sympa.pot
-   M /branches/sympa-6.0-branch/po-wwsympa/web_help.pot
-
-[-feature] Updating the Sympa catalogue templates with the latest Sympa developments.
 
 ------------------------------------------------------------------------
-r6248 | david.verdin | 2009-09-30 15:30:34 +0200 (mer 30 sep 2009) | 2 lignes
+r6251 | david.verdin | 2009-09-30 15:49:51 +0200 (mer 30 sep 2009) | 66 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/ar.po
-   M /branches/sympa-6.0-branch/po/bg.po
-   M /branches/sympa-6.0-branch/po/br.po
-   M /branches/sympa-6.0-branch/po/ca.po
-   M /branches/sympa-6.0-branch/po/cs.po
-   M /branches/sympa-6.0-branch/po/de.po
-   M /branches/sympa-6.0-branch/po/el.po
-   M /branches/sympa-6.0-branch/po/en_US.po
-   M /branches/sympa-6.0-branch/po/es.po
-   M /branches/sympa-6.0-branch/po/et.po
-   M /branches/sympa-6.0-branch/po/eu.po
-   M /branches/sympa-6.0-branch/po/fi.po
-   M /branches/sympa-6.0-branch/po/fr.po
-   M /branches/sympa-6.0-branch/po/hu.po
-   M /branches/sympa-6.0-branch/po/id.po
-   M /branches/sympa-6.0-branch/po/it.po
-   M /branches/sympa-6.0-branch/po/ja.po
-   M /branches/sympa-6.0-branch/po/ko.po
-   M /branches/sympa-6.0-branch/po/la.po
-   M /branches/sympa-6.0-branch/po/ml.po
-   M /branches/sympa-6.0-branch/po/nb_NO.po
-   M /branches/sympa-6.0-branch/po/nl.po
-   M /branches/sympa-6.0-branch/po/oc.po
-   M /branches/sympa-6.0-branch/po/pl.po
-   M /branches/sympa-6.0-branch/po/pt.po
-   M /branches/sympa-6.0-branch/po/pt_BR.po
-   M /branches/sympa-6.0-branch/po/ro.po
-   M /branches/sympa-6.0-branch/po/ru.po
-   M /branches/sympa-6.0-branch/po/sv.po
-   M /branches/sympa-6.0-branch/po/tr.po
-   M /branches/sympa-6.0-branch/po/vi.po
-   M /branches/sympa-6.0-branch/po/zh_CN.po
-   M /branches/sympa-6.0-branch/po/zh_TW.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ar.po
-   M /branches/sympa-6.0-branch/po-wwsympa/bg.po
-   M /branches/sympa-6.0-branch/po-wwsympa/br.po
-   M /branches/sympa-6.0-branch/po-wwsympa/cs.po
-   M /branches/sympa-6.0-branch/po-wwsympa/de.po
-   M /branches/sympa-6.0-branch/po-wwsympa/el.po
-   M /branches/sympa-6.0-branch/po-wwsympa/en_US.po
-   M /branches/sympa-6.0-branch/po-wwsympa/es.po
-   M /branches/sympa-6.0-branch/po-wwsympa/et.po
-   M /branches/sympa-6.0-branch/po-wwsympa/eu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/hu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/id.po
-   M /branches/sympa-6.0-branch/po-wwsympa/it.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ja.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nb_NO.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/oc.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt_BR.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ro.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ru.po
-   M /branches/sympa-6.0-branch/po-wwsympa/sv.po
-   M /branches/sympa-6.0-branch/po-wwsympa/tr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/vi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/zh_CN.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+   M /trunk/po-wwsympa/ar.po
+   M /trunk/po-wwsympa/bg.po
+   M /trunk/po-wwsympa/br.po
+   M /trunk/po-wwsympa/cs.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/po-wwsympa/el.po
+   M /trunk/po-wwsympa/en_US.po
+   M /trunk/po-wwsympa/es.po
+   M /trunk/po-wwsympa/et.po
+   M /trunk/po-wwsympa/eu.po
+   M /trunk/po-wwsympa/fi.po
+   M /trunk/po-wwsympa/fr.po
+   M /trunk/po-wwsympa/hu.po
+   M /trunk/po-wwsympa/id.po
+   M /trunk/po-wwsympa/it.po
+   M /trunk/po-wwsympa/ja.po
+   M /trunk/po-wwsympa/nb_NO.po
+   M /trunk/po-wwsympa/nl.po
+   M /trunk/po-wwsympa/oc.po
+   M /trunk/po-wwsympa/pl.po
+   M /trunk/po-wwsympa/pt.po
+   M /trunk/po-wwsympa/pt_BR.po
+   M /trunk/po-wwsympa/ro.po
+   M /trunk/po-wwsympa/ru.po
+   M /trunk/po-wwsympa/sv.po
+   M /trunk/po-wwsympa/tr.po
+   M /trunk/po-wwsympa/vi.po
+   M /trunk/po-wwsympa/web_help.pot
+   M /trunk/po-wwsympa/zh_CN.po
 
-[-feature] Updating the latest translations with the latest Sympa developments.
+[svn] Retrieving clean translation from 6.0 branch.
+-Cette ligne, et les suivantes ci-dessous, seront ignorées--
+
+M    po/ar.po
+M    po/bg.po
+M    po/br.po
+M    po/ca.po
+M    po/cs.po
+M    po/de.po
+M    po/el.po
+M    po/en_US.po
+M    po/es.po
+M    po/et.po
+M    po/eu.po
+M    po/fi.po
+M    po/fr.po
+M    po/hu.po
+M    po/id.po
+M    po/it.po
+M    po/ja.po
+M    po/ko.po
+M    po/ml.po
+M    po/nb_NO.po
+M    po/nl.po
+M    po/oc.po
+M    po/pl.po
+M    po/pt_BR.po
+M    po/pt.po
+M    po/ro.po
+M    po/ru.po
+M    po/sv.po
+M    po/sympa.pot
+M    po/tr.po
+M    po/vi.po
+M    po/zh_CN.po
+M    po/zh_TW.po
+M    po-wwsympa/ar.po
+M    po-wwsympa/bg.po
+M    po-wwsympa/br.po
+M    po-wwsympa/cs.po
+M    po-wwsympa/de.po
+M    po-wwsympa/el.po
+M    po-wwsympa/en_US.po
+M    po-wwsympa/es.po
+M    po-wwsympa/et.po
+M    po-wwsympa/eu.po
+M    po-wwsympa/fi.po
+M    po-wwsympa/fr.po
+M    po-wwsympa/hu.po
+M    po-wwsympa/id.po
+M    po-wwsympa/it.po
+M    po-wwsympa/ja.po
+M    po-wwsympa/nb_NO.po
+M    po-wwsympa/nl.po
+M    po-wwsympa/oc.po
+M    po-wwsympa/pl.po
+M    po-wwsympa/pt_BR.po
+M    po-wwsympa/pt.po
+M    po-wwsympa/ro.po
+M    po-wwsympa/ru.po
+M    po-wwsympa/sv.po
+M    po-wwsympa/tr.po
+M    po-wwsympa/vi.po
+M    po-wwsympa/web_help.pot
+M    po-wwsympa/zh_CN.po
 
 ------------------------------------------------------------------------
-r6247 | david.verdin | 2009-09-29 18:20:54 +0200 (mar 29 sep 2009) | 1 ligne
+r6244 | serge.aumont | 2009-09-29 15:08:02 +0200 (mar 29 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/LINGUAS
-   M /branches/sympa-6.0-branch/po/Makefile.in.in
-   M /branches/sympa-6.0-branch/po/ar.po
-   M /branches/sympa-6.0-branch/po/bg.po
-   M /branches/sympa-6.0-branch/po/br.po
-   M /branches/sympa-6.0-branch/po/ca.po
-   M /branches/sympa-6.0-branch/po/cs.po
-   M /branches/sympa-6.0-branch/po/el.po
-   M /branches/sympa-6.0-branch/po/en_US.po
-   M /branches/sympa-6.0-branch/po/es.po
-   M /branches/sympa-6.0-branch/po/et.po
-   M /branches/sympa-6.0-branch/po/eu.po
-   M /branches/sympa-6.0-branch/po/fi.po
-   M /branches/sympa-6.0-branch/po/fr.po
-   M /branches/sympa-6.0-branch/po/hu.po
-   M /branches/sympa-6.0-branch/po/id.po
-   M /branches/sympa-6.0-branch/po/it.po
-   M /branches/sympa-6.0-branch/po/ja.po
-   M /branches/sympa-6.0-branch/po/ko.po
-   A /branches/sympa-6.0-branch/po/la.po
-   M /branches/sympa-6.0-branch/po/ml.po
-   M /branches/sympa-6.0-branch/po/nb_NO.po
-   M /branches/sympa-6.0-branch/po/nl.po
-   M /branches/sympa-6.0-branch/po/oc.po
-   M /branches/sympa-6.0-branch/po/pl.po
-   M /branches/sympa-6.0-branch/po/pt.po
-   M /branches/sympa-6.0-branch/po/pt_BR.po
-   M /branches/sympa-6.0-branch/po/ro.po
-   M /branches/sympa-6.0-branch/po/ru.po
-   M /branches/sympa-6.0-branch/po/sv.po
-   M /branches/sympa-6.0-branch/po/tr.po
-   M /branches/sympa-6.0-branch/po/vi.po
-   M /branches/sympa-6.0-branch/po/zh_CN.po
-   M /branches/sympa-6.0-branch/po/zh_TW.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ar.po
-   M /branches/sympa-6.0-branch/po-wwsympa/bg.po
-   M /branches/sympa-6.0-branch/po-wwsympa/br.po
-   M /branches/sympa-6.0-branch/po-wwsympa/cs.po
-   M /branches/sympa-6.0-branch/po-wwsympa/el.po
-   M /branches/sympa-6.0-branch/po-wwsympa/en_US.po
-   M /branches/sympa-6.0-branch/po-wwsympa/es.po
-   M /branches/sympa-6.0-branch/po-wwsympa/et.po
-   M /branches/sympa-6.0-branch/po-wwsympa/eu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/hu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/id.po
-   M /branches/sympa-6.0-branch/po-wwsympa/it.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ja.po
-   A /branches/sympa-6.0-branch/po-wwsympa/la.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nb_NO.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/oc.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt_BR.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ro.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ru.po
-   M /branches/sympa-6.0-branch/po-wwsympa/sv.po
-   M /branches/sympa-6.0-branch/po-wwsympa/tr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/vi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/zh_CN.po
+   M /trunk/src/lib/confdef.pm
+
+[change] DKIM-Signature is removed for anonymous lists
+
+------------------------------------------------------------------------
+r6243 | serge.aumont | 2009-09-29 15:04:14 +0200 (mar 29 sep 2009) | 2 lignes
+Chemins modifiés :
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/tools.pm
+
+[change]  bulk remove DKIM-Signature if invalid
+
+------------------------------------------------------------------------
+r6242 | david.verdin | 2009-09-29 14:15:29 +0200 (mar 29 sep 2009) | 1 ligne
+Chemins modifiés :
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+   M /trunk/po-wwsympa/ar.po
+   M /trunk/po-wwsympa/bg.po
+   M /trunk/po-wwsympa/br.po
+   M /trunk/po-wwsympa/cs.po
+   M /trunk/po-wwsympa/el.po
+   M /trunk/po-wwsympa/en_US.po
+   M /trunk/po-wwsympa/es.po
+   M /trunk/po-wwsympa/et.po
+   M /trunk/po-wwsympa/eu.po
+   M /trunk/po-wwsympa/fi.po
+   M /trunk/po-wwsympa/fr.po
+   M /trunk/po-wwsympa/hu.po
+   M /trunk/po-wwsympa/id.po
+   M /trunk/po-wwsympa/it.po
+   M /trunk/po-wwsympa/ja.po
+   M /trunk/po-wwsympa/nb_NO.po
+   M /trunk/po-wwsympa/nl.po
+   M /trunk/po-wwsympa/oc.po
+   M /trunk/po-wwsympa/pl.po
+   M /trunk/po-wwsympa/pt.po
+   M /trunk/po-wwsympa/pt_BR.po
+   M /trunk/po-wwsympa/ro.po
+   M /trunk/po-wwsympa/ru.po
+   M /trunk/po-wwsympa/sv.po
+   M /trunk/po-wwsympa/tr.po
+   M /trunk/po-wwsympa/vi.po
+   M /trunk/po-wwsympa/zh_CN.po
 
 [-feature] Updating catalogues with latest Sympa modifications.
 ------------------------------------------------------------------------
-r6246 | david.verdin | 2009-09-29 17:43:17 +0200 (mar 29 sep 2009) | 2 lignes
+r6241 | david.verdin | 2009-09-29 12:15:05 +0200 (mar 29 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/de.po
+   M /trunk/src/lib/List.pm
 
-[-feature] Retrieving the pootle specific part of the i18n catalogues.
+[-bug] Removing escaped double quote that made the getext tools fail.
 
 ------------------------------------------------------------------------
-r6245 | david.verdin | 2009-09-29 17:41:14 +0200 (mar 29 sep 2009) | 1 ligne
+r6240 | david.verdin | 2009-09-29 11:56:31 +0200 (mar 29 sep 2009) | 1 ligne
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/ar.po
-   M /branches/sympa-6.0-branch/po/bg.po
-   M /branches/sympa-6.0-branch/po/br.po
-   M /branches/sympa-6.0-branch/po/ca.po
-   M /branches/sympa-6.0-branch/po/cs.po
-   M /branches/sympa-6.0-branch/po/el.po
-   M /branches/sympa-6.0-branch/po/en_US.po
-   M /branches/sympa-6.0-branch/po/es.po
-   M /branches/sympa-6.0-branch/po/et.po
-   M /branches/sympa-6.0-branch/po/eu.po
-   M /branches/sympa-6.0-branch/po/fi.po
-   M /branches/sympa-6.0-branch/po/fr.po
-   M /branches/sympa-6.0-branch/po/hu.po
-   M /branches/sympa-6.0-branch/po/id.po
-   M /branches/sympa-6.0-branch/po/it.po
-   M /branches/sympa-6.0-branch/po/ja.po
-   M /branches/sympa-6.0-branch/po/ko.po
-   M /branches/sympa-6.0-branch/po/ml.po
-   M /branches/sympa-6.0-branch/po/nb_NO.po
-   M /branches/sympa-6.0-branch/po/nl.po
-   M /branches/sympa-6.0-branch/po/oc.po
-   M /branches/sympa-6.0-branch/po/pl.po
-   M /branches/sympa-6.0-branch/po/pt.po
-   M /branches/sympa-6.0-branch/po/pt_BR.po
-   M /branches/sympa-6.0-branch/po/ro.po
-   M /branches/sympa-6.0-branch/po/ru.po
-   M /branches/sympa-6.0-branch/po/sv.po
-   M /branches/sympa-6.0-branch/po/tr.po
-   M /branches/sympa-6.0-branch/po/vi.po
-   M /branches/sympa-6.0-branch/po/zh_CN.po
-   M /branches/sympa-6.0-branch/po/zh_TW.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ar.po
-   M /branches/sympa-6.0-branch/po-wwsympa/bg.po
-   M /branches/sympa-6.0-branch/po-wwsympa/br.po
-   M /branches/sympa-6.0-branch/po-wwsympa/cs.po
-   M /branches/sympa-6.0-branch/po-wwsympa/el.po
-   M /branches/sympa-6.0-branch/po-wwsympa/en_US.po
-   M /branches/sympa-6.0-branch/po-wwsympa/es.po
-   M /branches/sympa-6.0-branch/po-wwsympa/et.po
-   M /branches/sympa-6.0-branch/po-wwsympa/eu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/fr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/hu.po
-   M /branches/sympa-6.0-branch/po-wwsympa/id.po
-   M /branches/sympa-6.0-branch/po-wwsympa/it.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ja.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nb_NO.po
-   M /branches/sympa-6.0-branch/po-wwsympa/nl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/oc.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pl.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt.po
-   M /branches/sympa-6.0-branch/po-wwsympa/pt_BR.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ro.po
-   M /branches/sympa-6.0-branch/po-wwsympa/ru.po
-   M /branches/sympa-6.0-branch/po-wwsympa/sv.po
-   M /branches/sympa-6.0-branch/po-wwsympa/tr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/vi.po
-   M /branches/sympa-6.0-branch/po-wwsympa/zh_CN.po
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   A /trunk/po/la.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+   M /trunk/po-wwsympa/ar.po
+   M /trunk/po-wwsympa/bg.po
+   M /trunk/po-wwsympa/br.po
+   M /trunk/po-wwsympa/cs.po
+   M /trunk/po-wwsympa/el.po
+   M /trunk/po-wwsympa/en_US.po
+   M /trunk/po-wwsympa/es.po
+   M /trunk/po-wwsympa/et.po
+   M /trunk/po-wwsympa/eu.po
+   M /trunk/po-wwsympa/fi.po
+   M /trunk/po-wwsympa/fr.po
+   M /trunk/po-wwsympa/hu.po
+   M /trunk/po-wwsympa/id.po
+   M /trunk/po-wwsympa/it.po
+   M /trunk/po-wwsympa/ja.po
+   A /trunk/po-wwsympa/la.po
+   M /trunk/po-wwsympa/nb_NO.po
+   M /trunk/po-wwsympa/nl.po
+   M /trunk/po-wwsympa/oc.po
+   M /trunk/po-wwsympa/pl.po
+   M /trunk/po-wwsympa/pt.po
+   M /trunk/po-wwsympa/pt_BR.po
+   M /trunk/po-wwsympa/ro.po
+   M /trunk/po-wwsympa/ru.po
+   M /trunk/po-wwsympa/sv.po
+   M /trunk/po-wwsympa/tr.po
+   M /trunk/po-wwsympa/vi.po
+   M /trunk/po-wwsympa/zh_CN.po
 
 [-feature] Retrieving latest translations from Pootle.
 ------------------------------------------------------------------------
-r6232 | david.verdin | 2009-09-23 18:03:12 +0200 (mer 23 sep 2009) | 2 lignes
+r6239 | david.verdin | 2009-09-29 11:36:55 +0200 (mar 29 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/NEWS
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk/src/lib/List.pm
 
-[svn]Preparing version 6.0b.4.
+[-bug] Forgot to dereference an array ref. this caused the array to be unreadable when trying to create the packets.
 
 ------------------------------------------------------------------------
-r6231 | david.verdin | 2009-09-23 17:44:53 +0200 (mer 23 sep 2009) | 2 lignes
+r6238 | david.verdin | 2009-09-28 17:22:08 +0200 (lun 28 sep 2009) | 4 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/web_tt2/suboptions.tt2
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
-[change][#6438][Reported by M. Warkus, univ. Marburg]When the list homepage of a list was empty, displaying the info in lieu of it resulted in displaying a text without any linebreaks, as they have no meaning in HTML. fixed by replacing linebreaks with <br/> tags when this happens.
+[change] Now bulk.pl logs when the last packet is sent, being a VERP or non VERP packet.
+[change] Is is now possible to enable topics chen the reception mode is 'mail', 'notice', 'not_me', 'txt', 'html' or 'urlize'.
+
 
 ------------------------------------------------------------------------
-r6230 | david.verdin | 2009-09-23 17:27:11 +0200 (mer 23 sep 2009) | 2 lignes
+r6236 | david.verdin | 2009-09-25 10:11:21 +0200 (ven 25 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
+   M /trunk/mail_tt2/listmaster_notification.tt2
+   M /trunk/src/lib/List.pm
+   M /trunk/web_tt2/css.tt2
+   M /trunk/web_tt2/javascript.tt2
+   M /trunk/web_tt2/main.tt2
+   M /trunk/web_tt2/notice.tt2
+   M /trunk/web_tt2/skinsedit.tt2
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
-[bug][#6435][Reported by M. Warkus, univ. Marburg] no control was made on the email provided when changing identity in the admin area. Fixed by using the email regexp on the incoming email parameter.
+[svn] Retrieving latest bug fixes from branch 6.0.
 
 ------------------------------------------------------------------------
-r6229 | david.verdin | 2009-09-23 16:59:54 +0200 (mer 23 sep 2009) | 2 lignes
+r6235 | david.verdin | 2009-09-25 10:08:45 +0200 (ven 25 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/web_tt2/css.tt2
-   M /branches/sympa-6.0-branch/web_tt2/skinsedit.tt2
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+   M /trunk/po-wwsympa/ar.po
+   M /trunk/po-wwsympa/bg.po
+   M /trunk/po-wwsympa/br.po
+   M /trunk/po-wwsympa/cs.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/po-wwsympa/el.po
+   M /trunk/po-wwsympa/en_US.po
+   M /trunk/po-wwsympa/es.po
+   M /trunk/po-wwsympa/et.po
+   M /trunk/po-wwsympa/eu.po
+   M /trunk/po-wwsympa/fi.po
+   M /trunk/po-wwsympa/fr.po
+   M /trunk/po-wwsympa/hu.po
+   M /trunk/po-wwsympa/id.po
+   M /trunk/po-wwsympa/it.po
+   M /trunk/po-wwsympa/ja.po
+   M /trunk/po-wwsympa/nb_NO.po
+   M /trunk/po-wwsympa/nl.po
+   M /trunk/po-wwsympa/oc.po
+   M /trunk/po-wwsympa/pl.po
+   M /trunk/po-wwsympa/pt.po
+   M /trunk/po-wwsympa/pt_BR.po
+   M /trunk/po-wwsympa/ro.po
+   M /trunk/po-wwsympa/ru.po
+   M /trunk/po-wwsympa/sv.po
+   M /trunk/po-wwsympa/tr.po
+   M /trunk/po-wwsympa/vi.po
+   M /trunk/po-wwsympa/zh_CN.po
 
-[change] Updating the online help for color parameters according to the new CSS.
+[-change] Committing updated translations.
 
 ------------------------------------------------------------------------
-r6228 | david.verdin | 2009-09-23 10:56:52 +0200 (mer 23 sep 2009) | 2 lignes
+r6234 | david.verdin | 2009-09-25 10:08:04 +0200 (ven 25 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/web_tt2/css.tt2
-   M /branches/sympa-6.0-branch/web_tt2/javascript.tt2
-   M /branches/sympa-6.0-branch/web_tt2/main.tt2
-   M /branches/sympa-6.0-branch/web_tt2/notice.tt2
+   M /trunk/src/lib/List.pm
 
-[change] When notifying a successful action in the web interface, the full interface was unusable before a user clicked a validation button. Nos, the notification doesn't prevent users from clicking other links or button in the interface. It is also smaller, though visible.
+[svn] Retrieving List.pm of rev 6194 which was working correctly.
 
 ------------------------------------------------------------------------
-r6227 | david.verdin | 2009-09-22 17:04:15 +0200 (mar 22 sep 2009) | 2 lignes
+r6224 | david.verdin | 2009-09-18 16:07:29 +0200 (ven 18 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/mail_tt2/listmaster_notification.tt2
-   M /branches/sympa-6.0-branch/src/lib/List.pm
+   M /trunk
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/po/Makefile.in.in
+   M /trunk/po/sympa.pot
+   M /trunk/po-wwsympa/web_help.pot
+   M /trunk/soap/sympasoap.pm
+   M /trunk/src/etc/Makefile.am
+   M /trunk/src/etc/create_list_templates/discussion_list/comment.tt2
+   M /trunk/src/etc/create_list_templates/hotline/comment.tt2
+   M /trunk/src/etc/create_list_templates/html-news-letter/comment.tt2
+   M /trunk/src/etc/create_list_templates/news-letter/comment.tt2
+   M /trunk/src/etc/create_list_templates/private_working_group/comment.tt2
+   M /trunk/src/etc/create_list_templates/public_web_forum/comment.tt2
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/Scenario.pm
+   M /trunk/src/lib/confdef.pm
+   M /trunk/src/sympa.pl.in
+   M /trunk/web_tt2/create_list_request.tt2
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
-[change][Reported by P. Maes, univ. Louvain] When using several user data sources, if one source failed the whole synchronization aborted. Now Sympa keeps one synchronizing all the data sources, and a mail is sent to the listmaster, in which all the sources for which an error was encountered are listed. no error is diplayed to the list owner.
+[svn] Retrieving latest bug fixes from the Sympa 6.0 branch.
 
 ------------------------------------------------------------------------
-r6223 | david.verdin | 2009-09-18 16:04:08 +0200 (ven 18 sep 2009) | 2 lignes
+r6206 | david.verdin | 2009-09-14 16:52:43 +0200 (lun 14 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
 
-[bug][Reported by M. Walts, univ. of the Pacific][solution by G. Rousse, INRIA] Default scenarios were not installed on Solaris 10 x64/x86, because the regular expression used to do it in the Makefile used the "+" sign which is not available in POSIX. replaced it by "*" fixed the problem.
+[svn] Retrieving modification due to the Sympa 6.0b.3 version tagging.
 
 ------------------------------------------------------------------------
-r6222 | david.verdin | 2009-09-18 15:48:22 +0200 (ven 18 sep 2009) | 2 lignes
+r6205 | david.verdin | 2009-09-14 16:51:57 +0200 (lun 14 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Scenario.pm
+   M /trunk/Makefile.am
 
-[bug][Reported by M. Warkus, univ. Marburg] In the "match" scenario condition, if the regexp was empty, the condition returuned true. So if the regexp contained a list variable that was not set for that list, the condition returned true. Logically, norhing matches an empty regexp, so if the rexep is empty (not white space, really empty) then the condition now return false.
+[svn] Retrieving change from the Sympa 6.0 branch.
 
 ------------------------------------------------------------------------
-r6221 | david.verdin | 2009-09-18 15:14:55 +0200 (ven 18 sep 2009) | 2 lignes
+r6204 | david.verdin | 2009-09-14 16:50:51 +0200 (lun 14 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/etc/Makefile.am
+   M /trunk/src/lib/confdef.pm
 
-[bug][Reported by M. Warkus, univ. Marburg] In the mulitple add form, if a a usbscriber address was preceded by empty spaces, it was ignored. Fixed by ignoring leading white spaces in that form.
+[-svn] resolving branch management conflict.
 
 ------------------------------------------------------------------------
-r6220 | david.verdin | 2009-09-18 14:46:54 +0200 (ven 18 sep 2009) | 2 lignes
+r6197 | olivier.salaun | 2009-09-08 16:12:50 +0200 (mar 08 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Bulk.pm
+   M /trunk/src/lib/Commands.pm
+   M /trunk/src/lib/tools.pm
 
-[bug][Submitted by M. Waltz, univ. univ. of the Pacific] The reception_date_bulkmailer field's value was set to an integer value when storing a packet, htough it is an integer field. This led PostGReSQL to refuse to sotre the packets. Fixed by restricting thi value to its integer part.
+[-bug] remove "hard" dependencies for Mail::DKIM module
 
 ------------------------------------------------------------------------
-r6219 | david.verdin | 2009-09-18 11:00:22 +0200 (ven 18 sep 2009) | 2 lignes
+r6194 | olivier.salaun | 2009-09-08 13:58:59 +0200 (mar 08 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/discussion_list/comment.tt2
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/hotline/comment.tt2
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/html-news-letter/comment.tt2
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/news-letter/comment.tt2
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/private_working_group/comment.tt2
-   M /branches/sympa-6.0-branch/src/etc/create_list_templates/public_web_forum/comment.tt2
-   M /branches/sympa-6.0-branch/web_tt2/create_list_request.tt2
+   M /trunk/src/lib/List.pm
 
-[change][Submitted by M. Warkus, univ. Marburg] In the list creation form, suppress the display of the files name withour a comment.tt2. Get also rid of useless <dl/> tags. The whole page is now translatable.
+[bug][#3047][reported by N.Chipaux, Mandriva] Some service messages sent by Sympa would use an unappropriate language (did not match the user language). This issue happened whenever a message was sent to more than one reciepient; the first user's language was used for the following ones. Fixed List::send_file() and List::send_global_file(): now duplicating the 'context' parameter to prevent changes of the original data structure.
 
 ------------------------------------------------------------------------
-r6218 | david.verdin | 2009-09-18 10:48:28 +0200 (ven 18 sep 2009) | 2 lignes
+r6193 | david.verdin | 2009-09-07 18:31:43 +0200 (lun 07 sep 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
-
-[bug][Reported by S. Lorenz, univ. Karlsruhe] If an owner or editor of a list was registered with one ore more large capitals in her address, the change_email function did not change the address for that list. Fixed by lowercasnig the addresses when comparing them.
-
-------------------------------------------------------------------------
-r6217 | david.verdin | 2009-09-18 10:34:06 +0200 (ven 18 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
-
-[-bug] The "To:" field was not set in the SMTP headers in the change email request notifications.
-
-------------------------------------------------------------------------
-r6216 | david.verdin | 2009-09-18 10:31:46 +0200 (ven 18 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
-
-[bug] When a user already connected on the web interface used a one time ticket based on another address than the one she was connected with, the identity was not changed in the session. It lead to the impossibility to actually change its user email address. Now the session email is defined using the email of the one time ticket, whatever was previously set in the current session.
-
-------------------------------------------------------------------------
-r6215 | david.verdin | 2009-09-17 14:01:29 +0200 (jeu 17 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Bulk.pm
-
-[bug][Reported by M. Waltz, univ. univ. of the Pacific] When the verp value was not defined, it resulted in the value used when storing a packet into database to be an empty value. PostgreSQL refuses to store an integer with an empty value. Fixed by forcing the value of the VERP field to '0' when it is given undefined to the Bulk::store function.
-
-------------------------------------------------------------------------
-r6210 | david.verdin | 2009-09-14 17:51:53 +0200 (lun 14 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/NEWS
-
-[svn] Repreparing Sympa 6.0b.3
-
-------------------------------------------------------------------------
-r6208 | david.verdin | 2009-09-14 17:42:00 +0200 (lun 14 sep 2009) | 3 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/confdef.pm
-
-[bug][#6425][Reported by S. Rijnhart, milieudefensie.nl] The spool directories not often used were automatically deleted because CleanSpool was sometimes called on the spool root directory instead of one the actual spools.This was due to the automatic spool being initialized as the spool root directory. Therefore, the sympa.pl automatic cleaning was called on the root directory and all its too old subdirectories were deleted.
-Fixed by giving its right value to this spool (and to the digest spool too, by the way).
-
-------------------------------------------------------------------------
-r6207 | david.verdin | 2009-09-14 17:27:13 +0200 (lun 14 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympasoap.pm
-
-[bug][#6400][Submitted by A. Bendzsak] There was a typo in sympasoap;pm making it use authorization.tt2 instead of authorization_reject.tt2.
-
-------------------------------------------------------------------------
-r6202 | david.verdin | 2009-09-14 16:39:36 +0200 (lun 14 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/NEWS
-   M /branches/sympa-6.0-branch/configure.ac
-
-[svn] Preparing version 6.0b.3
-
-------------------------------------------------------------------------
-r6201 | david.verdin | 2009-09-14 16:00:52 +0200 (lun 14 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/configure.ac
-
-[-svn] Preparing version 6.0 stable.
-
-------------------------------------------------------------------------
-r6200 | david.verdin | 2009-09-14 11:54:30 +0200 (lun 14 sep 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/src/lib/confdef.pm
-
-[-bug] Retrieving revision 6193 from the trunk. Also fixing a typo.
-
-------------------------------------------------------------------------
-r6199 | david.verdin | 2009-09-14 11:52:46 +0200 (lun 14 sep 2009) | 3 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/src/lib/confdef.pm
+   M /trunk/src/lib/confdef.pm
 
 [bug] http_host was not set by default in syma.conf, making the sympa wizard to fail starting.
 
 
 ------------------------------------------------------------------------
-r6198 | david.verdin | 2009-09-14 11:52:08 +0200 (lun 14 sep 2009) | 5 lignes
+r6192 | david.verdin | 2009-09-07 18:16:41 +0200 (lun 07 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
-   M /branches/sympa-6.0-branch/NEWS
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk/configure.ac
 
-[change]
-- Improving the last install message to help people know what command is required to have a running Sympa.
-- Restoring usage of list_data instead of expl. Updating the NEWS file to reflect this change.
-- Restoring the localedir definition in non FHS context to avoid i18n directories to be scattered in the root directory.
+[-bug] Restoring the localedir definition in non FHS context to avoid i18n directories to be scattered in the root directory.
 
 ------------------------------------------------------------------------
-r6195 | olivier.salaun | 2009-09-08 14:03:05 +0200 (mar 08 sep 2009) | 2 lignes
+r6191 | david.verdin | 2009-09-07 16:23:54 +0200 (lun 07 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/src/lib/List.pm
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk/configure.ac
 
-[-change] explain why Time-HiRes is required
+[-bug][Submitted by G. Rousse, INRIA] AC_PROG_SED macro appears with the 2.60 version of autoconf. this a little too high for some OS (RHEL 5 for example). Replacing it with a more general macro.
 
 ------------------------------------------------------------------------
-r6189 | david.verdin | 2009-09-07 15:31:35 +0200 (lun 07 sep 2009) | 6 lignes
+r6190 | david.verdin | 2009-09-07 15:34:21 +0200 (lun 07 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/configure.ac
+   M /trunk/src/lib/Scenario.pm
 
-[bug][Submitted by G. rousse, INRIA]
-- Make sure that directories exist before trying to copy files into them
-- Copy i18n catalogues into standard directories instead of dedicated location
-- Remove modification of $datadir. Replaced by defaultdir redefinition.
-- gives explicit ownership of pid dir to Sympa by adding the "sympa" subdirectory.
+[svn] Retrieving latest bug fixes from the Sympa-6.0 branch.
 
 ------------------------------------------------------------------------
-r6185 | david.verdin | 2009-09-04 15:08:02 +0200 (ven 04 sep 2009) | 1 ligne
+r6188 | david.verdin | 2009-09-07 14:55:37 +0200 (lun 07 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Scenario.pm
+   M /trunk
+   M /trunk/configure.ac
+   M /trunk/doc/man8/Makefile.am
+   M /trunk/mail_tt2/Makefile.am
+   M /trunk/soap/Makefile.am
+   M /trunk/src/Makefile.am
+   M /trunk/src/etc/Makefile.am
+   M /trunk/src/etc/script/Makefile.am
+   M /trunk/src/lib/Makefile.am
+   M /trunk/web_tt2/Makefile.am
+   M /trunk/wwsympa/Makefile.am
 
-[bug][Submitted by P. Maes, univ. Louvain] On some servers, the 'is_bcc' condition failed event though the message sent was not a BCC. Fixed by moving the code setting the BCC state to another place in the module.
+[svn] Retrieving latest commits from Guillaume Rousse in the autotools-cleanup branch.
+
 ------------------------------------------------------------------------
-r6181 | david.verdin | 2009-09-04 14:38:05 +0200 (ven 04 sep 2009) | 1 ligne
+r6187 | david.verdin | 2009-09-07 12:47:35 +0200 (lun 07 sep 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk
+   M /trunk/mail_tt2/command_report.tt2
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/etc/edit_list.conf
+   M /trunk/src/etc/scenari/add.auth
+   A /trunk/src/etc/scenari/add.authdkim (de /branches/sympa-dkim/src/etc/scenari/add.authdkim:6186)
+   M /trunk/src/etc/scenari/add.closed
+   M /trunk/src/etc/scenari/add.owner
+   M /trunk/src/etc/scenari/add.owner_notify
+   A /trunk/src/etc/scenari/add.ownerdkim (de /branches/sympa-dkim/src/etc/scenari/add.ownerdkim:6186)
+   M /trunk/src/etc/scenari/automatic_list_creation.listmaster
+   M /trunk/src/etc/scenari/automatic_list_creation.public
+   M /trunk/src/etc/scenari/del.auth
+   A /trunk/src/etc/scenari/del.authdkim (de /branches/sympa-dkim/src/etc/scenari/del.authdkim:6186)
+   M /trunk/src/etc/scenari/del.closed
+   M /trunk/src/etc/scenari/del.owner
+   M /trunk/src/etc/scenari/del.owner_notify
+   M /trunk/src/etc/scenari/global_remind.listmaster
+   M /trunk/src/etc/scenari/invite.closed
+   M /trunk/src/etc/scenari/invite.owner
+   M /trunk/src/etc/scenari/invite.private
+   M /trunk/src/etc/scenari/invite.public
+   M /trunk/src/etc/scenari/remind.listmaster
+   A /trunk/src/etc/scenari/remind.listmasterdkim (de /branches/sympa-dkim/src/etc/scenari/remind.listmasterdkim:6186)
+   M /trunk/src/etc/scenari/remind.owner
+   A /trunk/src/etc/scenari/remind.ownerdkim (de /branches/sympa-dkim/src/etc/scenari/remind.ownerdkim:6186)
+   M /trunk/src/etc/scenari/review.closed
+   M /trunk/src/etc/scenari/review.intranet
+   M /trunk/src/etc/scenari/review.listmaster
+   M /trunk/src/etc/scenari/review.owner
+   M /trunk/src/etc/scenari/review.private
+   M /trunk/src/etc/scenari/review.public
+   M /trunk/src/etc/scenari/send.closed
+   A /trunk/src/etc/scenari/send.editordkim (de /branches/sympa-dkim/src/etc/scenari/send.editordkim:6186)
+   M /trunk/src/etc/scenari/send.editorkey
+   M /trunk/src/etc/scenari/send.editorkeyonly
+   M /trunk/src/etc/scenari/send.editorkeyonlyauth
+   M /trunk/src/etc/scenari/send.intranet
+   M /trunk/src/etc/scenari/send.intranetorprivate
+   M /trunk/src/etc/scenari/send.newsletter
+   M /trunk/src/etc/scenari/send.newsletterkeyonly
+   M /trunk/src/etc/scenari/send.private
+   M /trunk/src/etc/scenari/send.private_smime
+   M /trunk/src/etc/scenari/send.privateandeditorkey
+   M /trunk/src/etc/scenari/send.privateandnomultipartoreditorkey
+   M /trunk/src/etc/scenari/send.privatekey
+   M /trunk/src/etc/scenari/send.privatekeyandeditorkeyonly
+   M /trunk/src/etc/scenari/send.privateoreditorkey
+   M /trunk/src/etc/scenari/send.privateorpublickey
+   M /trunk/src/etc/scenari/send.public
+   M /trunk/src/etc/scenari/send.public_nobcc
+   M /trunk/src/etc/scenari/send.publickey
+   M /trunk/src/etc/scenari/send.publicnoattachment
+   M /trunk/src/etc/scenari/send.publicnomultipart
+   M /trunk/src/etc/scenari/subscribe.auth
+   M /trunk/src/etc/scenari/subscribe.auth_notify
+   A /trunk/src/etc/scenari/subscribe.auth_notifydkim (de /branches/sympa-dkim/src/etc/scenari/subscribe.auth_notifydkim:6186)
+   M /trunk/src/etc/scenari/subscribe.auth_owner
+   A /trunk/src/etc/scenari/subscribe.auth_ownerdkim (de /branches/sympa-dkim/src/etc/scenari/subscribe.auth_ownerdkim:6186)
+   A /trunk/src/etc/scenari/subscribe.authdkim (de /branches/sympa-dkim/src/etc/scenari/subscribe.authdkim:6186)
+   M /trunk/src/etc/scenari/subscribe.closed
+   M /trunk/src/etc/scenari/subscribe.intranet
+   M /trunk/src/etc/scenari/subscribe.intranetorowner
+   M /trunk/src/etc/scenari/subscribe.open
+   M /trunk/src/etc/scenari/subscribe.open_notify
+   M /trunk/src/etc/scenari/subscribe.open_quiet
+   M /trunk/src/etc/scenari/subscribe.owner
+   M /trunk/src/etc/scenari/subscribe.smime
+   M /trunk/src/etc/scenari/subscribe.smimeorowner
+   M /trunk/src/etc/scenari/topics_visibility.conceal
+   M /trunk/src/etc/scenari/topics_visibility.identified
+   M /trunk/src/etc/scenari/topics_visibility.noconceal
+   M /trunk/src/etc/scenari/unsubscribe.auth
+   M /trunk/src/etc/scenari/unsubscribe.auth_notify
+   A /trunk/src/etc/scenari/unsubscribe.auth_notifydkim (de /branches/sympa-dkim/src/etc/scenari/unsubscribe.auth_notifydkim:6186)
+   A /trunk/src/etc/scenari/unsubscribe.authdkim (de /branches/sympa-dkim/src/etc/scenari/unsubscribe.authdkim:6186)
+   M /trunk/src/etc/scenari/unsubscribe.closed
+   M /trunk/src/etc/scenari/unsubscribe.open
+   M /trunk/src/etc/scenari/unsubscribe.open_notify
+   M /trunk/src/etc/scenari/unsubscribe.owner
+   M /trunk/src/etc/scenari/visibility.conceal
+   M /trunk/src/etc/scenari/visibility.intranet
+   M /trunk/src/etc/scenari/visibility.noconceal
+   M /trunk/src/etc/scenari/visibility.secret
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/Commands.pm
+   M /trunk/src/lib/Conf.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/Message.pm
+   M /trunk/src/lib/Scenario.pm
+   M /trunk/src/lib/Upgrade.pm
+   M /trunk/src/lib/confdef.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/src/lib/tools.pm
+   M /trunk/src/sympa.pl.in
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/web_tt2/nav.tt2
+
+[svn] Reintegrating and closing branch sympa-dkim. this is the end of the side development of the DKIM feature for Sympa. DON'T FORGET TO INCLUDE THE COMMIT LOGS FROM THAT BRACNH TO THE NEWS FILE BEFORE RELEASING THE NEXT VERSION.
+
+
+------------------------------------------------------------------------
+r6184 | david.verdin | 2009-09-04 14:57:30 +0200 (ven 04 sep 2009) | 2 lignes
+Chemins modifiés :
+   M /trunk
+   M /trunk/soap/sympasoap.pm
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/Commands.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/Upgrade.pm
+   M /trunk/src/sympa.pl.in
+   M /trunk/web_tt2/Makefile.am
+   M /trunk/web_tt2/compose_mail.tt2
+   M /trunk/web_tt2/css.tt2
+   M /trunk/web_tt2/css_ie.tt2
+   M /trunk/web_tt2/help_user.tt2
+   M /trunk/web_tt2/javascript.tt2
+   M /trunk/web_tt2/list_menu.tt2
+   M /trunk/web_tt2/menu_search.tt2
+   M /trunk/web_tt2/review.tt2
+   A /trunk/web_tt2/show_exclude.tt2 (de /branches/branche-julien/web_tt2/show_exclude.tt2:6180)
+   A /trunk/web_tt2/suspend_request.tt2 (de /branches/branche-julien/web_tt2/suspend_request.tt2:6180)
+   M /trunk/web_tt2/viewlogs.tt2
+   M /trunk/web_tt2/your_lists.tt2
+   M /trunk/wwsympa/bounced.pl.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[-feature] Retrieving all the work done by Julien Jourdan. DON'T FORGET TO INCLUDE COMMIT COMMENTS FROM BRANCH https://svn.cru.fr/sympa/branches/branche-julien INTO THE RELEASE NOTES.
+
+------------------------------------------------------------------------
+r6179 | david.verdin | 2009-09-04 14:32:54 +0200 (ven 04 sep 2009) | 1 ligne
+Chemins modifiés :
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
 
 [-svn] Deleting svn-merginfo property
 ------------------------------------------------------------------------
-r6176 | david.verdin | 2009-09-04 14:27:47 +0200 (ven 04 sep 2009) | 2 lignes
+r6177 | david.verdin | 2009-09-04 14:30:09 +0200 (ven 04 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/sympa.spec.in
 
-[-svn]Deleting svn:merginfo property.
+[-svn] Deleting svn:mergeinof property.
 
 ------------------------------------------------------------------------
-r6175 | david.verdin | 2009-09-04 14:11:11 +0200 (ven 04 sep 2009) | 2 lignes
+r6174 | david.verdin | 2009-09-04 14:10:46 +0200 (ven 04 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/sympa.spec.in
 
 [-svn] Experiments regarding svn merginfo property.
 
 ------------------------------------------------------------------------
-r6170 | david.verdin | 2009-09-03 17:35:06 +0200 (jeu 03 sep 2009) | 2 lignes
+r6173 | david.verdin | 2009-09-03 18:03:11 +0200 (jeu 03 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/de.po
-   M /branches/sympa-6.0-branch/po-wwsympa/de.po
-   M /branches/sympa-6.0-branch/web_tt2/editfile.tt2
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
 
-[bug][Submitted by M. Warkus, univ. Marburg] Sympa doesn't seem to handle cortrectly [loc] and [helploc] tags in the same file.
+[svn] Restauration of svn:merginfo property failed.
 
 ------------------------------------------------------------------------
-r6169 | serge.aumont | 2009-09-03 16:22:42 +0200 (jeu 03 sep 2009) | 2 lignes
+r6172 | david.verdin | 2009-09-03 18:02:22 +0200 (jeu 03 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
 
-[bug] return to the user target page after authentication even if using shibb
+[-svn] Testing the restauration of the merginfo properties.
 
 ------------------------------------------------------------------------
-r6167 | david.verdin | 2009-09-03 12:23:11 +0200 (jeu 03 sep 2009) | 2 lignes
+r6171 | david.verdin | 2009-09-03 17:36:51 +0200 (jeu 03 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/Auth.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/po/de.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/sympa.spec.in
+   M /trunk/web_tt2/editfile.tt2
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[svn] Retrieving latest bug fixes from the 6.0 branch.
+
+------------------------------------------------------------------------
+r6168 | david.verdin | 2009-09-03 12:25:43 +0200 (jeu 03 sep 2009) | 3 lignes
+Chemins modifiés :
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/Auth.pm
 
 [bug][Submitted by M. Warkus, univ. Marburg] When a user logged in, using LDAP, by providing an email address, if this email was not the first one in the LDAP email attribute, then the uiser was not logged with the address she provided but with the default address found in the LDAP directory. Now, if an email is provided and the login is successful ,the user is logged in with the email she provided.
 
+
 ------------------------------------------------------------------------
-r6165 | david.verdin | 2009-09-03 11:52:38 +0200 (jeu 03 sep 2009) | 3 lignes
+r6164 | david.verdin | 2009-09-03 11:49:29 +0200 (jeu 03 sep 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/sympa.spec.in
-   M /branches/sympa-6.0-branch/web_tt2/get_inactive_lists.tt2
+   M /trunk/web_tt2/get_inactive_lists.tt2
 
 [change][Submitted by M. Warkus] Lists for which no message was ever sent will display a user friendly message instead "January 1 1970".
 
+------------------------------------------------------------------------
+r6161 | olivier.salaun | 2009-08-31 17:41:00 +0200 (lun 31 aoû 2009) | 2 lignes
+Chemins modifiés :
+   M /trunk/src/sympa_wizard.pl.in
+
+[-change] document usage for Time::HiRes
 
 ------------------------------------------------------------------------
-r6148 | david.verdin | 2009-08-28 14:05:32 +0200 (ven 28 aoû 2009) | 2 lignes
+r6149 | david.verdin | 2009-08-28 14:06:46 +0200 (ven 28 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympa_soap_client.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/soap/sympa_soap_client.pl.in
+   M /trunk/sympa.spec.in
 
 [bug] Fixed a typo in the sympa_soap_client.pl command line tool that prevented the service parameters to be used.
 
 ------------------------------------------------------------------------
-r6144 | david.verdin | 2009-08-26 12:03:02 +0200 (mer 26 aoû 2009) | 2 lignes
+r6145 | david.verdin | 2009-08-26 12:43:00 +0200 (mer 26 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/Auth.pm
+   M /trunk
+   M /trunk/NEWS
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/etc/script/sympa.in
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/Auth.pm
 
-[bug][Submitted by M. Warkus, univ. Marburg] The call to Net::LDAP get_value() broke the LDAP authentication. Fixed by reverting the 6130 revision.
+[-svn] Merging latest bug fixes from Sympa 6.0 branch.
 
 ------------------------------------------------------------------------
-r6138 | olivier.salaun | 2009-08-21 15:51:20 +0200 (ven 21 aoû 2009) | 2 lignes
+r6139 | olivier.salaun | 2009-08-21 15:52:03 +0200 (ven 21 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk
+   M /trunk/configure.ac
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 ***** [change] default value for localstatedir changes from $prefix/var to /var. This change should make upgrade easier for sympa 5.x and previous
 
 ------------------------------------------------------------------------
-r6136 | olivier.salaun | 2009-08-21 15:27:03 +0200 (ven 21 aoû 2009) | 2 lignes
+r6137 | olivier.salaun | 2009-08-21 15:35:21 +0200 (ven 21 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympa_soap_client.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/soap/sympa_soap_client.pl.in
+   M /trunk/sympa.spec.in
 
 [feature] add new features to soap client : add,del,subscribe,signoff
 
 ------------------------------------------------------------------------
-r6134 | olivier.salaun | 2009-08-21 14:19:05 +0200 (ven 21 aoû 2009) | 2 lignes
+r6135 | olivier.salaun | 2009-08-21 14:19:27 +0200 (ven 21 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympa_soap_client.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/soap/sympa_soap_client.pl.in
+   M /trunk/sympa.spec.in
 
 [-bug] remove the -w perl option
 
 ------------------------------------------------------------------------
-r6132 | olivier.salaun | 2009-08-21 14:17:56 +0200 (ven 21 aoû 2009) | 2 lignes
+r6133 | olivier.salaun | 2009-08-21 14:18:29 +0200 (ven 21 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympa_soap_client.pl.in
-   M /branches/sympa-6.0-branch/src/lib/Archive.pm
-   M /branches/sympa-6.0-branch/src/lib/Bulk.pm
-   M /branches/sympa-6.0-branch/src/lib/Commands.pm
-   M /branches/sympa-6.0-branch/src/lib/Conf.pm
-   M /branches/sympa-6.0-branch/src/lib/Family.pm
-   M /branches/sympa-6.0-branch/src/lib/List.pm
-   M /branches/sympa-6.0-branch/src/lib/SQLSource.pm
-   M /branches/sympa-6.0-branch/src/lib/Upgrade.pm
-   M /branches/sympa-6.0-branch/src/lib/admin.pm
-   M /branches/sympa-6.0-branch/wwsympa/Auth.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/soap/sympa_soap_client.pl.in
+   M /trunk/src/lib/Archive.pm
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/Commands.pm
+   M /trunk/src/lib/Conf.pm
+   M /trunk/src/lib/Family.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/SQLSource.pm
+   M /trunk/src/lib/Upgrade.pm
+   M /trunk/src/lib/admin.pm
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/Auth.pm
 
 [-bug] fix a couple of perl warnings (duplicate variables and sub definitions)
 
 ------------------------------------------------------------------------
-r6130 | olivier.salaun | 2009-08-21 11:58:37 +0200 (ven 21 aoû 2009) | 2 lignes
+r6131 | olivier.salaun | 2009-08-21 12:01:15 +0200 (ven 21 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/soap/sympa_soap_client.pl.in
-   M /branches/sympa-6.0-branch/wwsympa/Auth.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/soap/sympa_soap_client.pl.in
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/Auth.pm
 
 [-bug] incorrect call to Net::LDAP get_value() ; alloptions being incorrectly used
 
 ------------------------------------------------------------------------
-r6128 | olivier.salaun | 2009-08-20 16:11:41 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6129 | olivier.salaun | 2009-08-20 16:12:50 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
 [-change] remove dead code about ISO639_language
 
 ------------------------------------------------------------------------
-r6126 | olivier.salaun | 2009-08-20 15:59:40 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6127 | olivier.salaun | 2009-08-20 16:00:06 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
 [-change] remove unused code (related to RFC822_date)
 
 ------------------------------------------------------------------------
-r6124 | olivier.salaun | 2009-08-20 15:03:31 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6125 | olivier.salaun | 2009-08-20 15:04:07 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Makefile.am
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Makefile.am
+   M /trunk/sympa.spec.in
 
-[-change] No need to remove installed AuthCAS.pm since previous module was CAS.pm.
+[-change] No need to remove installed AuthCAS.pm since previous module was CAS.pm
 
 ------------------------------------------------------------------------
-r6122 | olivier.salaun | 2009-08-20 10:21:51 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6123 | olivier.salaun | 2009-08-20 10:22:10 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/INSTALL
+   M /trunk
+   M /trunk/INSTALL
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [-bug] change instructions to build configure : autoreconf -i instead of aclocal;autoconf;automake
 
 ------------------------------------------------------------------------
-r6120 | olivier.salaun | 2009-08-20 09:37:52 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6121 | olivier.salaun | 2009-08-20 09:38:14 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/INSTALL
+   M /trunk
+   M /trunk/INSTALL
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [-change] gettext-devel not required to install from tar.gz
 
 ------------------------------------------------------------------------
-r6118 | olivier.salaun | 2009-08-20 09:32:40 +0200 (jeu 20 aoû 2009) | 2 lignes
+r6119 | olivier.salaun | 2009-08-20 09:33:19 +0200 (jeu 20 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/POTFILES.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/po/POTFILES.in
+   M /trunk/sympa.spec.in
 
 [-change] update POTFILES.in
 
 ------------------------------------------------------------------------
-r6115 | olivier.salaun | 2009-08-17 18:08:08 +0200 (lun 17 aoû 2009) | 7 lignes
+r6116 | olivier.salaun | 2009-08-17 18:08:53 +0200 (lun 17 aoû 2009) | 7 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Archive.pm
-   M /branches/sympa-6.0-branch/src/lib/Message.pm
-   M /branches/sympa-6.0-branch/src/lib/PlainDigest.pm
-   M /branches/sympa-6.0-branch/src/lib/mail.pm
-   M /branches/sympa-6.0-branch/src/lib/tools.pm
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Archive.pm
+   M /trunk/src/lib/Message.pm
+   M /trunk/src/lib/PlainDigest.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/src/lib/tools.pm
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
 [change]Changes to the cpan installation process :
  - Mail::Internet and MIME::Lite modules not directly required
@@ -613,201 +981,235 @@ Chemins modifiés :
  - added an introduction to warn the user about the length/nature of the process
 
 ------------------------------------------------------------------------
-r6113 | olivier.salaun | 2009-08-17 15:28:49 +0200 (lun 17 aoû 2009) | 2 lignes
+r6114 | olivier.salaun | 2009-08-17 15:29:33 +0200 (lun 17 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [-change] adding the prerequisites_policy for CPAN install
 
 ------------------------------------------------------------------------
-r6111 | olivier.salaun | 2009-08-13 17:47:17 +0200 (jeu 13 aoû 2009) | 3 lignes
+r6112 | olivier.salaun | 2009-08-13 17:52:46 +0200 (jeu 13 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [change]gathering all informations about CPAN modules in a single hash.
 Also removed some modules that are no more used.
 
 ------------------------------------------------------------------------
-r6109 | olivier.salaun | 2009-08-13 17:12:11 +0200 (jeu 13 aoû 2009) | 2 lignes
+r6110 | olivier.salaun | 2009-08-13 17:13:07 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Makefile.am
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Makefile.am
+   M /trunk/sympa.spec.in
 
 [-change] remove ref to CAS.pm
 
 ------------------------------------------------------------------------
-r6108 | olivier.salaun | 2009-08-13 16:43:53 +0200 (jeu 13 aoû 2009) | 2 lignes
+r6107 | olivier.salaun | 2009-08-13 16:37:36 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
-
-[svn] undo latest uncomplete changes
-
-------------------------------------------------------------------------
-r6106 | olivier.salaun | 2009-08-13 16:34:59 +0200 (jeu 13 aoû 2009) | 2 lignes
-Chemins modifiés :
-   D /branches/sympa-6.0-branch/check_perl_modules.pl
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   D /trunk/check_perl_modules.pl
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [change] check_perl_modules.pl now replaced with sympa_wizard.pl --check
 
 ------------------------------------------------------------------------
-r6104 | olivier.salaun | 2009-08-13 16:12:02 +0200 (jeu 13 aoû 2009) | 2 lignes
+r6105 | olivier.salaun | 2009-08-13 16:12:38 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   D /branches/sympa-6.0-branch/src/lib/CAS.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   D /trunk/src/lib/CAS.pm
+   M /trunk/sympa.spec.in
 
 [change] use a standard AuthCAS module instead of CAS.pm
 
 ------------------------------------------------------------------------
-r6102 | olivier.salaun | 2009-08-13 15:12:03 +0200 (jeu 13 aoû 2009) | 2 lignes
+r6103 | olivier.salaun | 2009-08-13 15:12:28 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [-change] disable incativity_timeout to prevent CPAN modules installation failure. Also lowered verbosity of installation processes. Decreased the interaction with the user while asking for prerequisites (from 135 to 76 questions).
 
 ------------------------------------------------------------------------
-r6100 | olivier.salaun | 2009-08-13 13:42:35 +0200 (jeu 13 aoû 2009) | 3 lignes
+r6101 | olivier.salaun | 2009-08-13 13:43:02 +0200 (jeu 13 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [-change] extending the CPAN inactivity_timeout.
 A short inactivity_timeout may make some CPAN module installation fail.
 
 ------------------------------------------------------------------------
-r6098 | olivier.salaun | 2009-08-13 10:26:28 +0200 (jeu 13 aoû 2009) | 1 ligne
+r6099 | olivier.salaun | 2009-08-13 10:31:02 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/authorization_reject.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/certif_warning.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/command_report.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/expire_deletion.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/expire_warning1.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/expire_warning2.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/helpfile.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/info_report.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/invite.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/list_unknown.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/listeditor_notification.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/listmaster_notification.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/listowner_notification.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/lists.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/message_report.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/reject.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/remind.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/removed.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/review.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/send_auth.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/sendssopasswd.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/summary.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/user_notification.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/which.tt2
-   M /branches/sympa-6.0-branch/mail_tt2/x509-user-cert-missing.tt2
-   M /branches/sympa-6.0-branch/po/de.po
-   M /branches/sympa-6.0-branch/po-wwsympa/de.po
-   M /branches/sympa-6.0-branch/src/etc/families/sample-auto/config.tt2
-   M /branches/sympa-6.0-branch/src/etc/global_task_models/chk_cert_expiration.daily.task
-   M /branches/sympa-6.0-branch/src/etc/mhonarc-ressources.tt2
-   M /branches/sympa-6.0-branch/src/lib/Conf.pm
-   M /branches/sympa-6.0-branch/src/lib/List.pm
-   M /branches/sympa-6.0-branch/web_tt2/active_lists.tt2
-   M /branches/sympa-6.0-branch/web_tt2/admin.tt2
-   M /branches/sympa-6.0-branch/web_tt2/admin_menu.tt2
-   M /branches/sympa-6.0-branch/web_tt2/arcsearch.tt2
-   M /branches/sympa-6.0-branch/web_tt2/arcsearch_form.tt2
-   M /branches/sympa-6.0-branch/web_tt2/blacklist.tt2
-   M /branches/sympa-6.0-branch/web_tt2/change_email_request.tt2
-   M /branches/sympa-6.0-branch/web_tt2/choosepasswd.tt2
-   M /branches/sympa-6.0-branch/web_tt2/compose_mail.tt2
-   M /branches/sympa-6.0-branch/web_tt2/copy_template.tt2
-   M /branches/sympa-6.0-branch/web_tt2/create_list_request.tt2
-   M /branches/sympa-6.0-branch/web_tt2/css.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_control.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_editfile.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_install_shared.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_properties.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_read.tt2
-   M /branches/sympa-6.0-branch/web_tt2/d_upload.tt2
-   M /branches/sympa-6.0-branch/web_tt2/dump_scenario.tt2
-   M /branches/sympa-6.0-branch/web_tt2/edit_attributes.tt2
-   M /branches/sympa-6.0-branch/web_tt2/edit_list_request.tt2
-   M /branches/sympa-6.0-branch/web_tt2/edit_template.tt2
-   M /branches/sympa-6.0-branch/web_tt2/editfile.tt2
-   M /branches/sympa-6.0-branch/web_tt2/editsubscriber.tt2
-   M /branches/sympa-6.0-branch/web_tt2/error.tt2
-   M /branches/sympa-6.0-branch/web_tt2/help_editfile.tt2
-   M /branches/sympa-6.0-branch/web_tt2/help_editlist.tt2
-   M /branches/sympa-6.0-branch/web_tt2/help_user.tt2
-   M /branches/sympa-6.0-branch/web_tt2/install_pending_list.tt2
-   M /branches/sympa-6.0-branch/web_tt2/loginbanner.tt2
-   M /branches/sympa-6.0-branch/web_tt2/ls_templates.tt2
-   M /branches/sympa-6.0-branch/web_tt2/main.tt2
-   M /branches/sympa-6.0-branch/web_tt2/manage_template.tt2
-   M /branches/sympa-6.0-branch/web_tt2/modindex.tt2
-   M /branches/sympa-6.0-branch/web_tt2/notice.tt2
-   M /branches/sympa-6.0-branch/web_tt2/picture_upload.tt2
-   M /branches/sympa-6.0-branch/web_tt2/pref.tt2
-   M /branches/sympa-6.0-branch/web_tt2/renewpasswd.tt2
-   M /branches/sympa-6.0-branch/web_tt2/request_topic.tt2
-   M /branches/sympa-6.0-branch/web_tt2/requestpasswd.tt2
-   M /branches/sympa-6.0-branch/web_tt2/rss.tt2
-   M /branches/sympa-6.0-branch/web_tt2/rss_request.tt2
-   M /branches/sympa-6.0-branch/web_tt2/scenario_test.tt2
-   M /branches/sympa-6.0-branch/web_tt2/search_user.tt2
-   M /branches/sympa-6.0-branch/web_tt2/serveradmin.tt2
-   M /branches/sympa-6.0-branch/web_tt2/set_pending_list_request.tt2
-   M /branches/sympa-6.0-branch/web_tt2/sigrequest.tt2
-   M /branches/sympa-6.0-branch/web_tt2/skinsedit.tt2
-   M /branches/sympa-6.0-branch/web_tt2/sso_login.tt2
-   M /branches/sympa-6.0-branch/web_tt2/stats.tt2
-   M /branches/sympa-6.0-branch/web_tt2/subindex.tt2
-   M /branches/sympa-6.0-branch/web_tt2/suboptions.tt2
-   M /branches/sympa-6.0-branch/web_tt2/subrequest.tt2
-   M /branches/sympa-6.0-branch/web_tt2/tt2_error.tt2
-   M /branches/sympa-6.0-branch/web_tt2/view_template.tt2
-   M /branches/sympa-6.0-branch/web_tt2/viewlogs.tt2
-   M /branches/sympa-6.0-branch/web_tt2/viewmod.tt2
-   M /branches/sympa-6.0-branch/wwsympa/wwslib.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/mail_tt2/authorization_reject.tt2
+   M /trunk/mail_tt2/certif_warning.tt2
+   M /trunk/mail_tt2/command_report.tt2
+   M /trunk/mail_tt2/expire_deletion.tt2
+   M /trunk/mail_tt2/expire_warning1.tt2
+   M /trunk/mail_tt2/expire_warning2.tt2
+   M /trunk/mail_tt2/helpfile.tt2
+   M /trunk/mail_tt2/info_report.tt2
+   M /trunk/mail_tt2/invite.tt2
+   M /trunk/mail_tt2/list_unknown.tt2
+   M /trunk/mail_tt2/listeditor_notification.tt2
+   M /trunk/mail_tt2/listmaster_notification.tt2
+   M /trunk/mail_tt2/listowner_notification.tt2
+   M /trunk/mail_tt2/lists.tt2
+   M /trunk/mail_tt2/message_report.tt2
+   M /trunk/mail_tt2/reject.tt2
+   M /trunk/mail_tt2/remind.tt2
+   M /trunk/mail_tt2/removed.tt2
+   M /trunk/mail_tt2/review.tt2
+   M /trunk/mail_tt2/send_auth.tt2
+   M /trunk/mail_tt2/sendssopasswd.tt2
+   M /trunk/mail_tt2/summary.tt2
+   M /trunk/mail_tt2/user_notification.tt2
+   M /trunk/mail_tt2/which.tt2
+   M /trunk/mail_tt2/x509-user-cert-missing.tt2
+   M /trunk/po/de.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/src/etc/families/sample-auto/config.tt2
+   M /trunk/src/etc/global_task_models/chk_cert_expiration.daily.task
+   M /trunk/src/etc/mhonarc-ressources.tt2
+   M /trunk/src/lib/Conf.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/sympa.spec.in
+   M /trunk/web_tt2/active_lists.tt2
+   M /trunk/web_tt2/admin.tt2
+   M /trunk/web_tt2/admin_menu.tt2
+   M /trunk/web_tt2/arcsearch.tt2
+   M /trunk/web_tt2/arcsearch_form.tt2
+   M /trunk/web_tt2/blacklist.tt2
+   M /trunk/web_tt2/change_email_request.tt2
+   M /trunk/web_tt2/choosepasswd.tt2
+   M /trunk/web_tt2/compose_mail.tt2
+   M /trunk/web_tt2/copy_template.tt2
+   M /trunk/web_tt2/create_list_request.tt2
+   M /trunk/web_tt2/css.tt2
+   M /trunk/web_tt2/d_control.tt2
+   M /trunk/web_tt2/d_editfile.tt2
+   M /trunk/web_tt2/d_install_shared.tt2
+   M /trunk/web_tt2/d_properties.tt2
+   M /trunk/web_tt2/d_read.tt2
+   M /trunk/web_tt2/d_upload.tt2
+   M /trunk/web_tt2/dump_scenario.tt2
+   M /trunk/web_tt2/edit_attributes.tt2
+   M /trunk/web_tt2/edit_list_request.tt2
+   M /trunk/web_tt2/edit_template.tt2
+   M /trunk/web_tt2/editfile.tt2
+   M /trunk/web_tt2/editsubscriber.tt2
+   M /trunk/web_tt2/error.tt2
+   M /trunk/web_tt2/help_editfile.tt2
+   M /trunk/web_tt2/help_editlist.tt2
+   M /trunk/web_tt2/help_user.tt2
+   M /trunk/web_tt2/install_pending_list.tt2
+   M /trunk/web_tt2/loginbanner.tt2
+   M /trunk/web_tt2/ls_templates.tt2
+   M /trunk/web_tt2/main.tt2
+   M /trunk/web_tt2/manage_template.tt2
+   M /trunk/web_tt2/modindex.tt2
+   M /trunk/web_tt2/notice.tt2
+   M /trunk/web_tt2/picture_upload.tt2
+   M /trunk/web_tt2/pref.tt2
+   M /trunk/web_tt2/renewpasswd.tt2
+   M /trunk/web_tt2/request_topic.tt2
+   M /trunk/web_tt2/requestpasswd.tt2
+   M /trunk/web_tt2/rss.tt2
+   M /trunk/web_tt2/rss_request.tt2
+   M /trunk/web_tt2/scenario_test.tt2
+   M /trunk/web_tt2/search_user.tt2
+   M /trunk/web_tt2/serveradmin.tt2
+   M /trunk/web_tt2/set_pending_list_request.tt2
+   M /trunk/web_tt2/sigrequest.tt2
+   M /trunk/web_tt2/skinsedit.tt2
+   M /trunk/web_tt2/sso_login.tt2
+   M /trunk/web_tt2/stats.tt2
+   M /trunk/web_tt2/subindex.tt2
+   M /trunk/web_tt2/suboptions.tt2
+   M /trunk/web_tt2/subrequest.tt2
+   M /trunk/web_tt2/tt2_error.tt2
+   M /trunk/web_tt2/view_template.tt2
+   M /trunk/web_tt2/viewlogs.tt2
+   M /trunk/web_tt2/viewmod.tt2
+   M /trunk/wwsympa/wwslib.pm
 
 [change][Submitted by M.Warkus, Uni Marburg, Germany] fixing many German translations as well as typography errors.
+
 ------------------------------------------------------------------------
-r6096 | olivier.salaun | 2009-08-13 09:24:26 +0200 (jeu 13 aoû 2009) | 2 lignes
+r6097 | olivier.salaun | 2009-08-13 09:25:24 +0200 (jeu 13 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [-bug] Error "Can't locate Version.pm in @INC" during make install if first install. No more require old module Versioin.pm
 
 ------------------------------------------------------------------------
-r6094 | olivier.salaun | 2009-08-12 16:16:17 +0200 (mer 12 aoû 2009) | 2 lignes
+r6095 | olivier.salaun | 2009-08-12 16:16:45 +0200 (mer 12 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [-bug] important_changes.pl was run at "make install" time, even no upgrade was performed. Fixed the path to Sympa::Constants.pm
 
 ------------------------------------------------------------------------
-r6092 | olivier.salaun | 2009-08-12 16:04:00 +0200 (mer 12 aoû 2009) | 2 lignes
+r6093 | olivier.salaun | 2009-08-12 16:04:30 +0200 (mer 12 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Makefile.am
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Makefile.am
+   M /trunk/sympa.spec.in
 
 [change] AuthCAS module used to be distributed with Sympa. Since Sympa 6, it is a standalone CPAN module. The module still has the same name, therefore old installed versions of the module need to be removed
 
 ------------------------------------------------------------------------
-r6090 | olivier.salaun | 2009-08-12 15:45:00 +0200 (mer 12 aoû 2009) | 2 lignes
+r6091 | olivier.salaun | 2009-08-12 15:46:12 +0200 (mer 12 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [bug] Installed MHonArc version was not properly detected
 
 ------------------------------------------------------------------------
-r6088 | olivier.salaun | 2009-08-12 15:08:56 +0200 (mer 12 aoû 2009) | 3 lignes
+r6089 | olivier.salaun | 2009-08-12 15:09:34 +0200 (mer 12 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
 
 [bug]Can't do $module->require() since we no more require the UNIVERSAl::require module. Replaced with eval "require $module".
 Error message : Can't locate object method "require" via package "XX" at /home/sympa/bin/sympa_wizard.pl line 515
 
 ------------------------------------------------------------------------
-r6086 | olivier.salaun | 2009-08-12 11:52:35 +0200 (mer 12 aoû 2009) | 5 lignes
+r6087 | olivier.salaun | 2009-08-12 11:53:23 +0200 (mer 12 aoû 2009) | 5 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Conf.pm
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Conf.pm
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
 [feature] Extended the format of the generic_sso paragraph in auth.conf.
 Added two new parameters :
@@ -815,359 +1217,256 @@ Added two new parameters :
   - http_header_value_separator : user attributes may be multi-valued (including the user email address. This parameter defines the values separator ; defualt is ';' (adapted for Shibboleth)
 
 ------------------------------------------------------------------------
-r6082 | olivier.salaun | 2009-08-10 13:52:19 +0200 (lun 10 aoû 2009) | 2 lignes
+r6084 | olivier.salaun | 2009-08-10 13:57:31 +0200 (lun 10 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+***** [change][#6190][Submitted by P.Crandall, univ Chicago] custom inputs, set in create_list, are now clearly prefixed i
+n the create_list_request.tt2 HTML form. Prefix is 'custom_input.'
+
+------------------------------------------------------------------------
+r6083 | olivier.salaun | 2009-08-10 13:53:37 +0200 (lun 10 aoû 2009) | 2 lignes
+Chemins modifiés :
+   M /trunk/Makefile.am
 
 [bug][Submitted by M.Deranek] On a multi core system, installdir & installconfig targets can run in parallel. Added a dependency between these targets.
 
 ------------------------------------------------------------------------
-r6075 | olivier.salaun | 2009-08-07 17:03:24 +0200 (ven 07 aoû 2009) | 2 lignes
+r6074 | olivier.salaun | 2009-08-07 16:15:22 +0200 (ven 07 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
-***** [change][#6190][Submitted by P.Crandall, univ Chicago] custom inputs, set in create_list, are now clearly prefixed in the create_list_request.tt2 HTML form. Prefix is 'custom_input.'
+[change][#6022][Submited by Soji Ikeda] Text::Wrap module worked only with languages with word separator (space). New module Text::LineFold supports most languages.
 
 ------------------------------------------------------------------------
-r6072 | olivier.salaun | 2009-08-07 15:51:26 +0200 (ven 07 aoû 2009) | 2 lignes
+r6073 | olivier.salaun | 2009-08-07 15:54:00 +0200 (ven 07 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
+   M /trunk/src/sympa_wizard.pl.in
 
 [-change] just formating of Perl code
 
 ------------------------------------------------------------------------
-r6070 | olivier.salaun | 2009-08-07 15:13:47 +0200 (ven 07 aoû 2009) | 4 lignes
+r6071 | olivier.salaun | 2009-08-07 15:14:41 +0200 (ven 07 aoû 2009) | 4 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Bulk.pm
-   M /branches/sympa-6.0-branch/src/lib/List.pm
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/sympa.spec.in
 
 [bug] Missing "use WebAgent" directive since recent reorganization of code (revision 5939).
 Error: Sympa.pl would die while running List::_include_users_remote_file() with error "Can't locate object method "new" via package "WebAgent" at
 /home/sympa/bin/List.pm line 7505."
 
 ------------------------------------------------------------------------
-r6068 | olivier.salaun | 2009-08-07 11:27:57 +0200 (ven 07 aoû 2009) | 3 lignes
+r6069 | olivier.salaun | 2009-08-07 11:29:29 +0200 (ven 07 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/tools.pm
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/lib/tools.pm
+   M /trunk/sympa.spec.in
 
 [bug][#6380][Reported by M.Warkus, Philipps-Univ. Marburg] Added a line break to written PID files.
 Without the linebreak, the init script failed to check process status on OS without /etc/init.d/functions
 
 ------------------------------------------------------------------------
-r6067 | olivier.salaun | 2009-08-06 11:28:49 +0200 (jeu 06 aoû 2009) | 3 lignes
+r6065 | olivier.salaun | 2009-08-06 10:41:54 +0200 (jeu 06 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/tools.pm
-
-[bug] [Reported by M.Warkus] remove_dir() subroutine (used to remove web archives of closed lists) did expect the path to include a minimum of 4 slashes '/'. This limitation was introduced in revision 2108.
-Removed this limitation.
-
-------------------------------------------------------------------------
-r6066 | olivier.salaun | 2009-08-06 11:03:18 +0200 (jeu 06 aoû 2009) | 3 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
-
-[bug] [Reported by N.Matties] bad arguments to important-changes.pl (missing =)
-Related error : Option previous requires an argument
-
-------------------------------------------------------------------------
-r6064 | olivier.salaun | 2009-08-06 10:41:26 +0200 (jeu 06 aoû 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
+   M /trunk/Makefile.am
 
 [-bug] fixed a typo
 
 ------------------------------------------------------------------------
-r6059 | olivier.salaun | 2009-08-05 16:15:23 +0200 (mer 05 aoû 2009) | 3 lignes
+r6060 | olivier.salaun | 2009-08-05 16:16:45 +0200 (mer 05 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk
+   M /trunk/configure.ac
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [bug] Fix typo introduced in recent commit.
 Related error: ./configure: line 1851: syntax error near unexpected token `foreign'
 
 ------------------------------------------------------------------------
-r6057 | olivier.salaun | 2009-08-05 15:17:07 +0200 (mer 05 aoû 2009) | 3 lignes
+r6058 | olivier.salaun | 2009-08-05 15:48:30 +0200 (mer 05 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/Makefile.in.in
-   M /branches/sympa-6.0-branch/po-wwsympa/Makefile.in.in
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/po/Makefile.in.in
+   M /trunk/po-wwsympa/Makefile.in.in
+   M /trunk/sympa.spec.in
 
 [change][Suggested by G.Rousse] removed 'check-macro-version' Makefile target to avoid the "*** warning: gettext infrastructure mismatch: using a Makefile.in.in from gettext version 0.17 but the autoconf macros are from gettext version @GETTEXT_MACRO_VERSION@" error.
 The check can be safely removed because very few macros are used
 
 ------------------------------------------------------------------------
-r6056 | olivier.salaun | 2009-08-05 15:14:45 +0200 (mer 05 aoû 2009) | 2 lignes
+r6053 | olivier.salaun | 2009-08-04 15:19:59 +0200 (mar 04 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/NEWS
-
-[-change] Add stars ('*') in front of the --enable-fhs option
-
-------------------------------------------------------------------------
-r6054 | olivier.salaun | 2009-08-04 15:21:47 +0200 (mar 04 aoû 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/configure.ac
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/configure.ac
 
 [-bug] [reported by Niklas Matthies] bindir instead of sampledir
 
 ------------------------------------------------------------------------
-r6052 | serge.aumont | 2009-08-04 08:38:41 +0200 (mar 04 aoû 2009) | 2 lignes
+r6050 | olivier.salaun | 2009-08-03 17:48:16 +0200 (lun 03 aoû 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/etc/script/sympa.in
-
-[bug] syntaxe error reported by Pascal Maes
-
-------------------------------------------------------------------------
-r6051 | olivier.salaun | 2009-08-03 17:50:46 +0200 (lun 03 aoû 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/src/etc/script/sympa.in
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/src/etc/script/sympa.in
 
 [change] [proposed by Jpse-Marcio Martins] no more check the OSYTE, check if functions file exists instead
 
 ------------------------------------------------------------------------
-r6044 | david.verdin | 2009-07-31 17:11:47 +0200 (ven 31 jui 2009) | 2 lignes
+r6047 | david.verdin | 2009-08-03 10:45:04 +0200 (lun 03 aoû 2009) | 3 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/confdef.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/src/lib/tools.pm
+   M /trunk/sympa.spec.in
 
-[-change] updating the ChangeLog file.
-
-------------------------------------------------------------------------
-r6043 | david.verdin | 2009-07-31 17:10:42 +0200 (ven 31 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/NEWS
-   M /branches/sympa-6.0-branch/configure.ac
-
-[-bug] Typo: Wrote "fsh" instead of "fhs". Fixed.
-
-------------------------------------------------------------------------
-r6042 | david.verdin | 2009-07-31 16:13:04 +0200 (ven 31 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/NEWS
-
-[-feature] Preparing Sympa 6.0b.2 (the real true end).
-
-------------------------------------------------------------------------
-r6041 | david.verdin | 2009-07-31 15:55:07 +0200 (ven 31 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
-
-[-bug] The 'etc' directory was not created at install time as no file is located  there by default. Creation forced during the make install and all rights granted to the Sympa user.
-
-------------------------------------------------------------------------
-r6040 | david.verdin | 2009-07-31 15:13:35 +0200 (ven 31 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/configure.ac
-
-[change] Sympa supports two kinds of fuiles hierarchies. The historical one, where by default all is gathered in the Sympa directry, and also the FSH recommended hierarchy. Now if the '--enable-fsh' configure option is set, Sympa is installed according to the FSH. Otherwise, it is installed using the historical paths.
-
-------------------------------------------------------------------------
-r6039 | david.verdin | 2009-07-30 15:05:05 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/NEWS
-
-[-feature] Preparing version 6.0b.2 (the end).
-
-------------------------------------------------------------------------
-r6038 | david.verdin | 2009-07-30 14:59:53 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/sympa_wizard.pl.in
-
-[bug] Removing useless warning when the 'file' parameter is not indicated in the confdef.pm parameter definition. This 'file' parameter is used only when we want to write a value by default in the config file. Otherwise default value will be used.
-
-------------------------------------------------------------------------
-r6037 | david.verdin | 2009-07-30 14:42:38 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/etc/script/ldap_alias_manager.pl.in
-
-[bug] --modulesdir-- placeholder was badly spelled in ldap_alias_manager.pl, cauing it not to be replaced by its real value at install time.
-
-------------------------------------------------------------------------
-r6036 | david.verdin | 2009-07-30 14:20:35 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/ChangeLog
-   M /branches/sympa-6.0-branch/NEWS
-
-[-feature] Preparing Sympa 6.0b.2
-
-------------------------------------------------------------------------
-r6035 | david.verdin | 2009-07-30 10:40:07 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-
-[svn] Updated SVN properties (merge and ignore).
-
-------------------------------------------------------------------------
-r6034 | david.verdin | 2009-07-30 10:37:32 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/configure.ac
-
-[-change] changing the version number to 6.0b.2.
-
-------------------------------------------------------------------------
-r6033 | david.verdin | 2009-07-30 10:36:18 +0200 (jeu 30 jui 2009) | 3 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/etc/script/create_db.SQLite
-   M /branches/sympa-6.0-branch/src/lib/Upgrade.pm
-
-[bug][Submitted by M. deranek, slonko.net] SQLite suport was broken in Sympa, due to syntax errors.
-[change][Submitted by M. deranek, slonko.net] The character string fields in Sympa are represented as TEXT fields only, the only type making sense in SQLite.
-
-------------------------------------------------------------------------
-r6032 | david.verdin | 2009-07-30 10:33:15 +0200 (jeu 30 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/de.po
-   M /branches/sympa-6.0-branch/po/fr.po
-   M /branches/sympa-6.0-branch/po-wwsympa/de.po
-
-[change][Submitted by M. Warkus, univ. Marburg] Updated German translation and numerous typos fixed in the catalogues.
-
-------------------------------------------------------------------------
-r6031 | david.verdin | 2009-07-30 10:29:42 +0200 (jeu 30 jui 2009) | 3 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Bulk.pm
-
-[bug][Reported by Wen Si] A query in the Bulk.pm module was using MySQL-specific SQL orders. This caused Oracle (and probably Sybase too) to fail to lock packets in database. Fixed by splitting the query into a selection followed by an update, and by tweeking it on the base of the RDBMS used.
+[feature] now merge is controled by a list|robot paremeter : merge_feature on|off
 
 
 ------------------------------------------------------------------------
-r6030 | david.verdin | 2009-07-30 10:29:10 +0200 (jeu 30 jui 2009) | 2 lignes
+r6045 | david.verdin | 2009-07-31 17:51:07 +0200 (ven 31 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
+   M /trunk/ChangeLog
+   M /trunk/Makefile.am
+   M /trunk/NEWS
+   M /trunk/configure.ac
+   M /trunk/po/de.po
+   M /trunk/po/fr.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/ldap_alias_manager.pl.in
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/Upgrade.pm
+   M /trunk/src/sympa_wizard.pl.in
 
-[bug] fixing message after install that indicated to launch sympa.pl instead of sympa_wizard.pl.
+[svn] Merging the latest bug fixes from the Sympa 6.0 branch.
 
 ------------------------------------------------------------------------
-r6029 | david.verdin | 2009-07-29 16:31:25 +0200 (mer 29 jui 2009) | 2 lignes
+r6026 | david.verdin | 2009-07-28 16:42:21 +0200 (mar 28 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/src/lib/Conf.pm
 
-[-svn] Committing merge metadata.
+[bug][Submitted by M. Warkus, univ.Marburg] Inverted test caused the config not to be loaded.
 
 ------------------------------------------------------------------------
-r6027 | david.verdin | 2009-07-28 17:49:28 +0200 (mar 28 jui 2009) | 3 lignes
+r6025 | david.verdin | 2009-07-28 15:19:54 +0200 (mar 28 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/lib/Conf.pm
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/configure.ac
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/task_manager.pl.in
+   M /trunk/sympa.spec.in
 
-[svn] Reporting r6026 from trunk: [Submitted by M. Warkus, univ.Marburg] Inverted test caused the config not to be loaded.
+[svn] Retrieving latest bug fixes from the Sympa 6.0 stabilization branch.
+
+------------------------------------------------------------------------
+r6024 | david.verdin | 2009-07-28 14:57:25 +0200 (mar 28 jui 2009) | 2 lignes
+Chemins modifiés :
+   M /trunk/Makefile.am
+
+[bug] The last install message didn't tell to launch sympa_wizzard.pl but sympa.pl.
+
+------------------------------------------------------------------------
+r6022 | david.verdin | 2009-07-28 14:32:39 +0200 (mar 28 jui 2009) | 3 lignes
+Chemins modifiés :
+   M /trunk/src/lib/Conf.pm
+   M /trunk/src/lib/confdef.pm
+
+[bug] Now Sympa don't complain about optional robot parameters without definition in sympa;conf and wwsympa.conf. Sympa now stop because of required robot parameters without value (minimum a default).  
 
 
 ------------------------------------------------------------------------
-r6023 | david.verdin | 2009-07-28 14:54:25 +0200 (mar 28 jui 2009) | 2 lignes
+r6019 | olivier.salaun | 2009-07-28 11:30:31 +0200 (mar 28 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/src/lib/Conf.pm
-   M /branches/sympa-6.0-branch/src/lib/confdef.pm
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
 
-[bug] Sympa doesn't complain anymore chen an optional paramater is missing in robot.conf.
+[bug] [reported by N.Matthies] Added notice when user preferences have been updated
 
 ------------------------------------------------------------------------
-r6021 | david.verdin | 2009-07-28 13:50:28 +0200 (mar 28 jui 2009) | 3 lignes
+r6014 | david.verdin | 2009-07-24 12:41:06 +0200 (ven 24 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/Makefile.am
-   M /branches/sympa-6.0-branch/configure.ac
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/po/de.po
+   M /trunk/po-wwsympa/de.po
+   M /trunk/sympa.spec.in
+   M /trunk/web_tt2/help_listconfig.tt2
+   M /trunk/web_tt2/help_shared.tt2
+   M /trunk/web_tt2/help_user.tt2
 
-[bug][Reported by N. Matthies] It looks like some "general_task_models" and "task_models" directory still installed in the etc directory. These directory are not used anymore. this was due to a command in Makefile.am installing  "non  writable directories". these directories were all isntalled in a separate part of the install process, using their normal names and location.
-[*change] The directory in which all the default configuration files and directories is installed is now "default", under the root installation directory. In the previous release, it was share/sympa/default. You should remove this directory now to avoid confusion.
+[bug][Submitted by M. Warkus, univ. Marburg] Reporting commits 6012 and 6013 from the 6.0 branch: german translation and fixed typos in webhelp.
 
 ------------------------------------------------------------------------
-r6020 | olivier.salaun | 2009-07-28 11:42:47 +0200 (mar 28 jui 2009) | 3 lignes
+r6005 | david.verdin | 2009-07-23 17:40:10 +0200 (jeu 23 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/sympa.spec.in
-   M /branches/sympa-6.0-branch/wwsympa/wwsympa.fcgi.in
+   M /trunk/src/bulk.pl.in
 
-[bug][submitted bu M. Deranek, slonko.net] A missing semi-colon made wizard.pl to fail installing correctly Cosntants.pm 
-on some systems.
+[bug] bulk.pl now uses the "use strict" pragma. Some variables were not properly defined.
 
 ------------------------------------------------------------------------
-r6017 | david.verdin | 2009-07-28 09:29:45 +0200 (mar 28 jui 2009) | 2 lignes
+r6003 | david.verdin | 2009-07-23 17:04:16 +0200 (jeu 23 jui 2009) | 2 lignes
 Chemins modifiés :
-   M /branches/sympa-6.0-branch/Makefile.am
-
-[bug][submitted bu M. Deranek, slonko.net] A missing semi-colon made wizard.pl to fail installing correctly Cosntants.pm on some systems.
-
-------------------------------------------------------------------------
-r6015 | david.verdin | 2009-07-24 16:08:32 +0200 (ven 24 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/task_manager.pl.in
-
-[bug][Reported by N. Matthies] The task manager failed to process the eval_bouncers and purge_orphan_bounces tasks because the corresponding functions did not return 1. It cause the manager to conclude there had been an error.
-
-------------------------------------------------------------------------
-r6013 | david.verdin | 2009-07-24 12:34:14 +0200 (ven 24 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/po/de.po
-   M /branches/sympa-6.0-branch/po-wwsympa/de.po
-
-[change][Submitted by M. Warkus, univ. Marburg] Updated German translations.
-
-------------------------------------------------------------------------
-r6012 | david.verdin | 2009-07-24 12:33:30 +0200 (ven 24 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/web_tt2/help_listconfig.tt2
-   M /branches/sympa-6.0-branch/web_tt2/help_shared.tt2
-   M /branches/sympa-6.0-branch/web_tt2/help_user.tt2
-
-[bug][Submitted by M. WArkus, univ. Marburg] Fixed typos in templates.
-
-------------------------------------------------------------------------
-r6011 | david.verdin | 2009-07-24 12:32:06 +0200 (ven 24 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch/src/bulk.pl.in
-
-[-bug] A variable was still defined without "my" in "use strict" context.
-
-------------------------------------------------------------------------
-r6006 | david.verdin | 2009-07-23 17:53:58 +0200 (jeu 23 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/src/bulk.pl.in
-   M /branches/sympa-6.0-branch/sympa.spec.in
-
-[svn] Reporting the correction from revision 6005.
-
-------------------------------------------------------------------------
-r6004 | david.verdin | 2009-07-23 17:05:17 +0200 (jeu 23 jui 2009) | 2 lignes
-Chemins modifiés :
-   M /branches/sympa-6.0-branch
-   M /branches/sympa-6.0-branch/Makefile.am
-   M /branches/sympa-6.0-branch/configure.ac
-   M /branches/sympa-6.0-branch/doc/sample/test/web_tt2/welcome.tt2
-   M /branches/sympa-6.0-branch/sympa.spec.in
+   M /trunk
+   M /trunk/Makefile.am
+   M /trunk/configure.ac
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
 
 [svn] Some references to the 't' directory remained.
 
 ------------------------------------------------------------------------
-r5993 | david.verdin | 2009-07-23 14:23:23 +0200 (jeu 23 jui 2009) | 2 lignes
+r5998 | david.verdin | 2009-07-23 16:49:20 +0200 (jeu 23 jui 2009) | 2 lignes
 Chemins modifiés :
-   D /branches/sympa-6.0-branch/sympa-6.0b.tar.gz
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/src/bulk.pl.in
+   M /trunk/src/lib/Bulk.pm
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/src/lib/tools.pm
+   M /trunk/src/lib/tt2.pm
+   M /trunk/src/sympa_wizard.pl.in
+   M /trunk/sympa.spec.in
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[feature][Submitted by J. jourdan] Messages parsing; custom attributes can be now used as parameters for TT2 tags in messages distributed by Sympa. This adds notably the possibility to add authenticated unsubscribe URL to message footers.
+
+------------------------------------------------------------------------
+r5992 | david.verdin | 2009-07-23 14:22:41 +0200 (jeu 23 jui 2009) | 2 lignes
+Chemins modifiés :
+   D /trunk/sympa-6.0b.tar.gz
 
 [svn] Removing the Sympa tar.gz file. It's a generated archive.
 
 ------------------------------------------------------------------------
-r5986 | david.verdin | 2009-07-23 10:35:49 +0200 (jeu 23 jui 2009) | 2 lignes
+r5988 | david.verdin | 2009-07-23 10:38:50 +0200 (jeu 23 jui 2009) | 2 lignes
 Chemins modifiés :
-   D /branches/sympa-6.0-branch/t
+   D /trunk/t
 
 [svn] removing useless t directory.
 
 ------------------------------------------------------------------------
-r5985 | david.verdin | 2009-07-23 09:42:40 +0200 (jeu 23 jui 2009) | 2 lignes
+r5987 | david.verdin | 2009-07-23 10:38:20 +0200 (jeu 23 jui 2009) | 2 lignes
 Chemins modifiés :
-   A /branches/sympa-6.0-branch (de /trunk:5984)
+   M /trunk
+   M /trunk/doc/sample/test/web_tt2/welcome.tt2
+   M /trunk/sympa.spec.in
+   M /trunk/t
 
-[svn] Recreating the Sympa 6.0 stabilisation branch.
+[svn] Merging modifications from 6.0 branch.
 
 ------------------------------------------------------------------------
 r5981 | david.verdin | 2009-07-22 15:59:40 +0200 (mer 22 jui 2009) | 2 lignes
