@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2009-09-29 10:54+0200\n"
+"PO-Revision-Date: 2009-09-29 13:34+0200\n"
 "Last-Translator: Alfonso Marin <amm44@alu.um.es>\n"
 "Language-Team: Español\n"
 "MIME-Version: 1.0\n"
@@ -34,33 +34,1685 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.0.2\n"
 
+#: ../web_tt2/help.tt2:11
+msgid "Subscriber, moderator and owner documentation"
+msgstr "Documentación para el suscriptor, moderador y administrador"
+
+#: ../web_tt2/help.tt2:13
+msgid "In this documentation, you will find:"
+msgstr "En esta documentación encontrarás:"
+
+#. (path_cgi)
+#: ../web_tt2/help.tt2:15
+msgid ""
+"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
+msgstr ""
+"una <a href=\"%1/help/introduction\">introducción general</a> a las listas "
+"de correo;"
+
+#. (path_cgi)
+#: ../web_tt2/help.tt2:16
+msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"una <a href=\"%1/help/user\">guía de usuario</a> acerca del uso de Sympa;"
+
+#. (path_cgi)
+#: ../web_tt2/help.tt2:17
+msgid ""
+"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
+msgstr ""
+"una <a href=\"%1/help/admin\">guía de administrador</a> sobre el uso de "
+"Sympa."
+
+#. (path_cgi)
+#: ../web_tt2/help.tt2:20
+msgid ""
+"If you want to perform a particular task, take a look at the list of all <a "
+"href=\"%1/help/introduction#features\">available features</a> in the mailing "
+"list management software Sympa."
+msgstr ""
+"Si deseas realizar una tarea determinada, revisa la lista de <a href=\"%1/"
+"help/introduction#features\">funciones disponibles</a> en el software de "
+"administración de listas de correo Sympa."
+
+#. (path_cgi)
+#: ../web_tt2/help.tt2:21
+msgid ""
+"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
+"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
+"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
+"\"Frequently asked questions\">FAQ</acronym></a>."
+msgstr ""
+"Si experimentas cualquier problema, por favor revisa las <a href=\"%1/help/"
+"faquser\"><acronym title=\"Preguntas Frecuentemente Formuladas\">FAQ</"
+"acronym> del usuario</a> o las <a href=\"%1/help/faqadmin\"><acronym title="
+"\"Preguntas Frecuentemente Formuladas\">FAQ</acronym> del administrador</a>."
+
+#: ../web_tt2/help_introduction.tt2:3
+msgid "Mailing lists - General introduction"
+msgstr "Listas de correo - Introducción General"
+
+#: ../web_tt2/help_introduction.tt2:5
+msgid "What is a mailing list?"
+msgstr "¿Qué es una lista de correo?"
+
+#: ../web_tt2/help_introduction.tt2:6
+msgid ""
+"A mailing list is a <strong>distribution list allowing a group of "
+"subscribers to automatically receive by email all messages sent to the list</"
+"strong>: every message sent to the list by a subscriber is received by all "
+"the other subscribers. When subscribed to a mailing list, it is possible to "
+"send messages, to reply to them or to read them without contributing (i.e. "
+"to \"lurk\")."
+msgstr ""
+"Una lista de correo es un <strong>lista de distribución que permite a un "
+"grupo de suscriptores recibir todos los mensajes de e-mail enviados a ella</"
+"strong>: todo mensaje enviado a la lista por un suscriptor es recibido por "
+"todos los otros suscriptores. Cuando te suscribes a una lista de correo, "
+"pueden enviar mensajes, responderlos o simplemente leerlos sin participar."
+
+#: ../web_tt2/help_introduction.tt2:7
+msgid "Special cases:</strong>"
+msgstr "Casos especiales:"
+
+#: ../web_tt2/help_introduction.tt2:9
+msgid ""
+"It is sometimes possible to send messages to a mailing lit without having "
+"subscribed to it. However, you need to be subscribed to a list to receive "
+"its messages."
+msgstr ""
+"A veces es posible enviar mensajes a una lista de correo sin estar suscrito "
+"a ella. Sin embargo, necesitas estar suscrito a una lista para poder recibir "
+"sus mensajes."
+
+#: ../web_tt2/help_introduction.tt2:10
+msgid ""
+"It is sometimes impossible to send messages to the list even though you are "
+"actually subscribed to it: it is the case for announcement lists, which are "
+"used to transmit information from a unique sender to a large number of "
+"recipients."
+msgstr ""
+"A veces es imposible enviar mensajes a una lista aún cuando estés suscrito a "
+"ella: Éste es el caso de las listas de anuncios, las cuales son usadas para "
+"enviar información desde un único remitente a un largo número de receptores."
+
+#: ../web_tt2/help_introduction.tt2:13
+msgid "Interest of mailing lists"
+msgstr "Utilidad de las listas de correo"
+
+#: ../web_tt2/help_introduction.tt2:14
+msgid ""
+"People subscribe to a mailing list (sometimes abbreviated in <acronym title="
+"\"Mailing List\">ML</acronym>) to <strong>be informed about a particular "
+"topic</strong> and to <strong>take part in exchanges about it</strong>. "
+"Examples are:"
+msgstr ""
+"Las personas que se suscriben a una lista de correo (algunas veces abreviada "
+"como <acronym title=\"Mailing List, en inglés\">ML</acronym>) para "
+"<strong>informarse sobre un tema determinado</strong> y para <strong>ser "
+"partícipe de los intercambios al respecto</strong>. Ejemplos de esto son:"
+
+#: ../web_tt2/help_introduction.tt2:16
+msgid "mailing list for all the employees of a company;"
+msgstr "listas de correo para todos los empleados de una compañía;"
+
+#: ../web_tt2/help_introduction.tt2:17
+msgid "mailing list reserved to the participants in a project;"
+msgstr "una lista de correo reservada a los participantes de un proyecto;"
+
+#: ../web_tt2/help_introduction.tt2:18
+msgid "mailing list dedicated to a class of students;"
+msgstr "una lista de correo dedicada a los estudiantes de una clase;"
+
+#: ../web_tt2/help_introduction.tt2:19
+msgid "mailing list about the latest news in computer security;"
+msgstr ""
+"una lista de correo sobre las últimas noticias sobre seguridad computacional;"
+
+#: ../web_tt2/help_introduction.tt2:20
+msgid "mailing list of mutual aid between handymen;"
+msgstr "una lista de correo para la ayuda mutua entre reparadores;"
+
+#: ../web_tt2/help_introduction.tt2:21
+msgid ""
+"mailing list restricted to a family and dedicated to the organization of "
+"large family gatherings;"
+msgstr ""
+"una lista de correo restringida a los miembros de una familia y dedicada a "
+"la orgnización de grandes reuniones familiares;"
+
+#: ../web_tt2/help_introduction.tt2:22
+msgid "and so on!"
+msgstr "¡Y así sucesivamente!"
+
+#: ../web_tt2/help_introduction.tt2:25
+msgid "Types of mailing lists"
+msgstr "Tipos de listas de correo"
+
+#: ../web_tt2/help_introduction.tt2:26
+msgid ""
+"There are <strong>thousands of mailing lists</strong> of all kinds on the "
+"Internet: public or private, free or not, with subscription subject to "
+"conditions or not, etc. Those lists may have from a dozen up to several "
+"thousand members."
+msgstr ""
+"Hay <strong>miles de listas de correo</strong> de todos los tipos en "
+"Internet: públicas y privadas, gratis y de pago, con la suscripción "
+"condicionada a ciertas reglas y no, etc. Estas listas pueden tener desde una "
+"docena a varios miles de miembros."
+
+#: ../web_tt2/help_introduction.tt2:27
+msgid ""
+"According to the way they work, we can distinguish between <strong>two types "
+"of lists</strong>:"
+msgstr ""
+"De acuerdo a como funcionan, podemos distinguir entre <strong>dos tipos de "
+"listas</strong>:"
+
+#: ../web_tt2/help_introduction.tt2:29
+msgid ""
+"<strong>Announcements lists</strong> allow subscribers to receive messages "
+"without being allowed to post some themselves. In fact, those messages are "
+"newsletters: electronic magazines, daily services (daily horoscope, daily "
+"weather report, daily security alert, etc.), update notices about a website, "
+"etc. With this type of mailing list, the information flows from a unique "
+"sender to a large number of recipients."
+msgstr ""
+"<strong>Listas de anuncios</strong>, que permiten a los suscriptores solo "
+"recibir mensajes. De hecho, aquellos mensajes son conocidos como "
+"newsletters: revistas electrónicas, servicios diarios (horóscopo del día, el "
+"clima del día, alertas de seguridad del día, etc.), notificaciones de "
+"actualización de un sitio web, etc. Con este tipo de lista de correo, la "
+"información va desde un remitente único a un largo número de receptores."
+
+#: ../web_tt2/help_introduction.tt2:30
+msgid ""
+"<strong>Discussion lists</strong> allow all subscribers to take part in "
+"exchanges. Those lists can be moderated or not:"
+msgstr ""
+"<strong>Listas de discusión</strong>, que permiten a todos los suscriptores "
+"tomar parte de los envíos. Estas listas pueden ser moderadas o no:"
+
+#: ../web_tt2/help_introduction.tt2:32
+msgid ""
+"In a <strong>moderated discussion list</strong>, messages are transmitted to "
+"all subscribers after approval by one of the list moderators. Moderation is "
+"a token of quality for the list. For example, it ensures that subscribers "
+"will not receive off-topic messages, unsolicited commercial messages "
+"(spams), messages containing large attachments, etc."
+msgstr ""
+"En una <strong>lista de discusión moderada</strong>, los mensajes son "
+"transmitidos a todos los suscriptores una vez que han sido aprobados por uno "
+"de los moderadores de la lista. La moderación es una de las cualidades de la "
+"lista. Por ejemplo, asegura que los suscriptores no recibirán mensajes fuera "
+"del tema de la lista o mensajes comerciales no solicitados (spams) o "
+"mensajes que contienen archivos adjuntos de gran tamaño, etc."
+
+#: ../web_tt2/help_introduction.tt2:33
+msgid ""
+"In a <strong>non moderated discussion list</strong>, messages are "
+"transmitted to all subscribers as soon as the mailing list management robot "
+"receives them."
+msgstr ""
+"Es una <strong>lista de discusión no moderada</strong>, los mensajes son "
+"transmitidos tan pronto como el robot de administración de la lista los "
+"recibe."
+
+#: ../web_tt2/help_introduction.tt2:37
+msgid "Features"
+msgstr "Funciones"
+
+#: ../web_tt2/help_introduction.tt2:38
+msgid "Once subscribed to a mailing list service, you can:"
+msgstr "Una vez suscrito a una lista de correo, puedes:"
+
+#: ../web_tt2/help_introduction.tt2:40
+msgid ""
+"search for mailing lists</strong> matching your main interests or your "
+"particular situation;"
+msgstr ""
+"buscar una lista de correo</strong> según tus intereses principales o tu "
+"situación particular;"
+
+#: ../web_tt2/help_introduction.tt2:41
+msgid "manage your subscriptions</strong>:"
+msgstr "gestionar tus suscripciones</strong>:"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:43
+msgid "<a href=\"%1/help/user#subscribe\">subscribe</a> to lists,"
+msgstr "<a href=\"%1/help/user#subscribe\">suscribirte</a> a listas,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:44
+msgid ""
+"<a href=\"%1/help/user#unsubscribe\">unsubscribe</a> from lists to which you "
+"are subscribed,"
+msgstr ""
+"<a href=\"%1/help/user#unsubscribe\">desuscribirte</a> de listas a las que "
+"te encuentras suscrito,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:45
+msgid ""
+"change your <a href=\"%1/help/user#options\">subscriber options</a> list by "
+"list,"
+msgstr ""
+"cambiar tus <a href=\"%1/help/user#options\">opciones de suscripción</a> "
+"lista por lista,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:46
+msgid ""
+"change your <a href=\"%1/help/user#pref\">general preferences</a>, which "
+"apply to the whole mailing list environment (name, password, language of the "
+"mailing list web interface, etc.);"
+msgstr ""
+"cambiar tus <a href=\"%1/help/user#pref\">preferencias generales</a>, las "
+"que se aplican todo el entorno de las listas de correo (nombre, contraseña, "
+"idioma de la interfaz web, etc.);"
+
+#: ../web_tt2/help_introduction.tt2:48
+msgid "use mailing lists"
+msgstr "usar las listas de correo"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:50
+msgid ""
+"read the <a href=\"%1/help/arc\">online message archive of lists to which "
+"you are not subscribed</a> if that archive is public and if your personal "
+"rights allow you to access those lists,"
+msgstr ""
+"leer el <a href=\"%1/help/arc\">archivo de mensajes online de las listas a "
+"las que no estás suscrito</a>, si ese archivo es público y si tus permisos "
+"personales te permiten acceder a esas listas,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:51
+msgid ""
+"read the <a href=\"%1/help/arc\">archive of lists to which you are "
+"subscribed</a>,"
+msgstr ""
+"leer el <a href=\"%1/help/arc\">archivo de las listas a las cuales estás "
+"suscrito</a>,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:52
+msgid ""
+"perform <a href=\"%1/help/arc#arcsearch\">searches in the list archive</a>,"
+msgstr ""
+"realizar <a href=\"%1/help/arc#arcsearch\">búsquedas en los archivos de la "
+"lista</a>,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:53
+msgid ""
+"<a href=\"%1/help/sendmsg\">send messages</a> to lists to which you are "
+"subscribed,"
+msgstr ""
+"<a href=\"%1/help/sendmsg\">enviar mensajes</a> a las listas a las que estás "
+"suscrito,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:54
+msgid ""
+"<a href=\"%1/help/shared#shared_read\">download documents</a> from the "
+"shared document web space,"
+msgstr ""
+"<a href=\"%1/help/shared#shared_read\">descargar documentos</a> desde el "
+"espacio de documentos compartidos,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:55 ../web_tt2/help_user.tt2:81
+msgid ""
+"<a href=\"%1/help/shared#shared_upload\">upload documents</a> in the shared "
+"document web space;"
+msgstr ""
+"<a href=\"%1/help/shared#shared_upload\">subir documentos</a> al espacio de "
+"documentos compartidos;"
+
+#: ../web_tt2/help_introduction.tt2:57
+msgid "manage mailing lists"
+msgstr "manejar listas de correo"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:59
+msgid ""
+"<a href=\"%1/help/admin#create_list\">create new lists</a> (restricted "
+"access) - subject to authorization,"
+msgstr ""
+"<a href=\"%1/help/admin#create_list\">crear nuevas listas</a> (acceso "
+"restringido) - sujeto a la autorización,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:60
+msgid "<a href=\"%1/help/admin#edit_list\">configure lists</a> you own,"
+msgstr ""
+"<a href=\"%1/help/admin#edit_list\">configurar las listas</a> que te "
+"pertenecen,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:61
+msgid "<a href=\"%1/help/admin#manage_members\">manage subscriptions</a>,"
+msgstr ""
+"<a href=\"%1/help/admin#manage_members\">administrar suscripciones</a>,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:62
+msgid ""
+"<a href=\"%1/help/admin#manage_shared\">manage the shared document web "
+"space</a>,"
+msgstr ""
+"<a href=\"%1/help/admin#manage_shared\">administrar el espacio de documentos "
+"compartidos</a>,"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:63
+msgid ""
+"<a href=\"%1/help/admin#moderate\">moderate lists</a> for which you are a "
+"moderator."
+msgstr ""
+"<a href=\"%1/help/admin#moderate\">moderar las listas</a> de las cuales eres "
+"moderador."
+
+#: ../web_tt2/help_introduction.tt2:67
+msgid "How the mailing list service works: roles and responsibilities"
+msgstr ""
+"Cómo funciona el servicio de listas de correo: roles y responsabilidades"
+
+#: ../web_tt2/help_introduction.tt2:69
+msgid "A mailing list service involves four types of roles:"
+msgstr "Un servicio de listas de correo involucra cuatro tipos de roles:"
+
+#: ../web_tt2/help_introduction.tt2:71
+msgid "<strong>listmaster;</strong>"
+msgstr "<strong>listmaster;</strong>"
+
+#: ../web_tt2/help_introduction.tt2:72
+msgid "<strong>owner;</strong>"
+msgstr "<strong>dueño;</strong>"
+
+#: ../web_tt2/help_introduction.tt2:73
+msgid "<strong>moderator;</strong>"
+msgstr "<strong>moderador;</strong>"
+
+#: ../web_tt2/help_introduction.tt2:74
+msgid "<strong>subscriber.</strong>"
+msgstr "<strong>suscriptor.</strong>"
+
+#: ../web_tt2/help_introduction.tt2:76
+msgid ""
+"It is possible to have several roles at once (for example, you can be an "
+"owner and a moderator of a list and be subscribed to several others)."
+msgstr ""
+"Es posible tener varios roles al mismo tiempo (por ejemplo, puedes ser el "
+"dueño y moderador de una lista y estar suscrito a varias otras)."
+
+#: ../web_tt2/help_introduction.tt2:78
+msgid "Listmasters"
+msgstr "Listmasters"
+
+#: ../web_tt2/help_introduction.tt2:79
+msgid ""
+"Listmasters are in charge of the <strong>management of the mailing list "
+"service</strong>. Their duties:"
+msgstr ""
+"Los listmasters están a cargo de <strong>la administración del servicio de "
+"listas de correo</strong>. Sus tareas:"
+
+#: ../web_tt2/help_introduction.tt2:81
+msgid ""
+"<strong>manage the mailing list server</strong> (deployment, maintenance, "
+"etc.);"
+msgstr ""
+"<strong>administración del servidor de listas de correo</strong> "
+"(implementación, mantención, etc.);"
+
+#: ../web_tt2/help_introduction.tt2:82
+msgid ""
+"<strong>define the general orientations of the mailing list service</strong>:"
+msgstr ""
+"<strong>definir las orientaciones generales del servicio de listas de "
+"correo</strong>:"
+
+#: ../web_tt2/help_introduction.tt2:84
+msgid "who will be allowed to ask for the creation of a new list,"
+msgstr "a quién se le permitirá pedir la creación de una nueva lista,"
+
+#: ../web_tt2/help_introduction.tt2:85
+msgid "which options will be available to manage lists (scenario definition),"
+msgstr ""
+"cuales opciones estarán disponibles en la gestión de la lista (definición "
+"del scenario),"
+
+#: ../web_tt2/help_introduction.tt2:86
+msgid "what the default files will contain (creation of templates),"
+msgstr "el contenido por defecto de los archivos (creación de plantillas),"
+
+#: ../web_tt2/help_introduction.tt2:87
+msgid "what will the mailing list web interface look like;"
+msgstr "cómo se verá la interfaz web de la lista de correo;"
+
+#: ../web_tt2/help_introduction.tt2:89
+msgid ""
+"<strong>set the way the mailing list service should be used</strong> and "
+"<strong>document those rules through providing charters</strong> to "
+"subscribers, moderators and owners;"
+msgstr ""
+"<strong>indica la forma en que el servicio de listas de correo debe usarse</"
+"strong> y <strong>documenta esas reglas en los mensajes</strong> enviados a "
+"suscritpores, moderadores y propietarios;"
+
+#: ../web_tt2/help_introduction.tt2:90
+msgid "<strong>approve of requests of mailing list creations</strong>;"
+msgstr "<strong>aprueba las slocitides de creación de lista de correo</strong>"
+
+#: ../web_tt2/help_introduction.tt2:91
+msgid ""
+"<strong>temporarily replace list owners</strong> when necessary; on the "
+"other hand, listmasters are not supposed to take the place of moderators."
+msgstr ""
+"<strong>temporalmente replaza los propietarios de la lista</strong> cuando "
+"sea necesario; por otra parte, los listmasters no deberían realizar las "
+"acciones de moderadores"
+
+#: ../web_tt2/help_introduction.tt2:93
+msgid ""
+"List owners and moderators can turn to listmasters</strong> when they face a "
+"problem not dealt with by the documentation or for any comment. However, in "
+"order not to flood listmasters with messages, it is recommended that "
+"subscribers rather turn to list owners."
+msgstr ""
+"Los propietarios de la lista y los moderadores pueden notificar a los "
+"listmasters</strong> cuando encuentren algún problema que no esté "
+"relacionado  con la documentación o con algún comentario. Sin embargo, para "
+"no inundar a los listmasters con mensajes, se recomienda que los "
+"suscriptores se pongan en contacto con los propietarios de la lista"
+
+#: ../web_tt2/help_introduction.tt2:95
+msgid "Owners"
+msgstr "Propietarios"
+
+#: ../web_tt2/help_introduction.tt2:96
+msgid ""
+"The list owner is generally its creator</strong> or, failing him/her, the "
+"person who requested the list creation or who became responsible for it. "
+"<strong>His/her role</strong>:"
+msgstr ""
+"El propietario de la lista suele ser su creador</strong> o, en su defecto, "
+"la persona que ha solicitado la creación de la lista o quien se haga "
+"responsable de ella. <strong>Su rol</strong>:"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:98
+msgid ""
+"<strong>define the <a href=\"%1/help/admin#edit_list\">way the list will be "
+"used</a></strong>;"
+msgstr ""
+"<strong>define la <a href=\"%1/help/admin#edit_list\">forma en que se "
+"utilizará la lista</a></strong>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:99
+msgid ""
+"<strong> write a <a href=\"%1/help/admin#charter\">list charter</a></strong> "
+"aimed at subscribers;"
+msgstr ""
+"<strong> escribe una <a href=\"%1/help/admin#charter\">carta de bienvenida</"
+"a></strong> orientada a los suscriptores;"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:100
+msgid ""
+"<strong>appoint one or several <a href=\"%1/help/listconfig#description"
+"\">moderators</a></strong>;"
+msgstr ""
+"<strong>establece uno o varios <a href(\"%1/help/listconfig#description"
+"\">moderadores</a></strong>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:101
+msgid ""
+"<strong>manage <a href=\"%1/help/admin#manage_members\">subscriptions and "
+"unsubscriptions</a></strong>;"
+msgstr ""
+"<strong>gestiona las <a href=\"%1/help/admin#manage_members\">suscripciones "
+"y desuscripciones</a></strong>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:102
+msgid ""
+"<strong>decide whether it is relevant to put a <a href=\"%1/help/"
+"admin#manage_shared\">shared document web space</a></strong> at the "
+"subscribers' disposal;"
+msgstr ""
+"<strong>cuando es relevante poner un <a href=\"%1/help/admin#manage_shared"
+"\">documento compartido en el espacio web</a></strong> a la disposición de "
+"los suscriptores;"
+
+#: ../web_tt2/help_introduction.tt2:103
+msgid ""
+"<strong>answer questions from subscribers and potential subscribers about "
+"the list;</strong>"
+msgstr ""
+"<strong>contesta preguntas de los suscriptores o potenciales suscritores "
+"sobre la lista;</strong>"
+
+#: ../web_tt2/help_admin.tt2:253 ../web_tt2/help_introduction.tt2:104
+msgid "etc."
+msgstr "etc."
+
+#: ../web_tt2/help_introduction.tt2:106
+msgid ""
+"A list can have several owners. However, the <strong>'Privileged' profile</"
+"strong> is reserved to the list's creator; other owners have a 'Normal' "
+"profile, which has fewer prerogatives."
+msgstr ""
+"Una lista puede tener varios propietarios. Sin embargo, el <strong>perfil "
+"'Privilegiado'</strong> se reserva a los creadores de la lista; otros "
+"creadores tienen un perfil 'Normal', el cual tiene menos prerogativas"
+
+#: ../web_tt2/help_introduction.tt2:108
+msgid "Moderators"
+msgstr "Moderadores"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:110
+msgid ""
+"<strong>Moderators are appointed by the list owner</strong>. They are "
+"<strong>in charge of <a href=\"%1/help/admin#moderate\">controlling the "
+"relevancy of the messages</a></strong> sent to the list: after reading them, "
+"<strong>they choose to accept or to reject them </strong>. Moderation occurs "
+"before the message is actually sent to subscribers. Rejection of a message "
+"is possibly followed by a notice to the sender in order to explain the "
+"reason for that rejection."
+msgstr ""
+"<strong>Los moderadores los nombra el propietario de la lista</strong>. "
+"Ellos se encargan de <a href=\"%1/help/admin#moderate\">controlar la "
+"relevancia de los mensajes</a></strong> enviados a la lista: despues de "
+"leerlos, <strong>eligen si los aceptan o los rechazan.</strong>. El proceso "
+"de moderación ocurre antes de que el mensaje se envie. El rechazo de un "
+"mensaje posiblemente va asociado a una notificación para el remitente con la "
+"intención de explicar la razón del rechazo."
+
+#: ../web_tt2/help_introduction.tt2:111
+msgid ""
+"A list can have <strong>one or several moderators</strong>; generally, the "
+"list owner is also a moderator."
+msgstr ""
+"Una lista puede tener <strong>uno o varios moderadores</stgrong>; "
+"generalmente, el propietario de la lista es también moderador."
+
+#: ../web_tt2/help_introduction.tt2:112
+msgid "This concerns only moderated lists."
+msgstr "Esto concierne solo a los moderadores de listas."
+
+#: ../web_tt2/help_introduction.tt2:114
+msgid "Regulatory framework"
+msgstr "Framework Regulador"
+
+#: ../web_tt2/help_introduction.tt2:115
+msgid "The use of a mailing list service means respecting a number of rules:"
+msgstr ""
+"El uso de un servicio de listas de correo significa respetar una serie de "
+"normas:"
+
+#: ../web_tt2/help_introduction.tt2:117
+msgid ""
+"In most mailing list services, subscribers receive a '<a target=\"_blank\" "
+"title=\"Example of subscribers charter (French)\" href=\"http://listes.cru."
+"fr/cnil/charte.abonne.html\">List subscribers charter</a>' on subscription. "
+"Then they are obliged to respect all the rules contained in that charter."
+msgstr ""
+"En la mayoría de los servicios de listas de ocrreo, los suscriptores reciben "
+"a <a target=\"_blank\" title=\"Ejemplo de carta de bienvenida(Francés)\" "
+"href=\"http://listes.cru.fr/cnil/charte.abonne.html\">Carta de bienvenida</"
+"a> en la suscripción.  Entonces están obligados a respetar todas las reglas "
+"contenidas en dicha carta."
+
+#: ../web_tt2/help_introduction.tt2:118
+msgid ""
+"If available, list owners and moderators have to conform to the <a target="
+"\"_blank\" title=\"Example of charter aimed at owners and moderators (French)"
+"\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner and "
+"moderator charter</a>."
+msgstr ""
+"Si está disponible, los moderadores y propietarios deben ajustarse a la <a "
+"target=\"_blank\" title=\"Ejamplo de carta de bienvenida destinada a "
+"propietarios y moderadores (Francés)\" href=\"http://listes.cru.fr/cnil/"
+"charte.proprio.html\">carta de bienvenida para moderadores y propietarios</"
+"a>."
+
+#: ../web_tt2/help_introduction.tt2:119
+msgid ""
+"The use of mailing lists naturally means respecting the rules of good "
+"practices as regards email (the \"Netiquette\")."
+msgstr ""
+"El uso de listas de correo naturalmente implica respetar las reglas del buen "
+"uso del correo"
+
+#. (path_cgi)
+#: ../web_tt2/help_introduction.tt2:121
+msgid ""
+"To know more, refer to the section dedicated to <a href=\"%1/help/"
+"sendmsg#rulesuser\">good practices for subscribers</a> and to the section "
+"about <a href=\"%1/help/admin#rulesadmin\">good practices for owners and "
+"moderators</a>."
+msgstr ""
+"Para conocer mas, diríjase a la sección dedicada a <a href=\"%1/help/"
+"sendmsg#rulesuser\"> las buenas prácticas para suscriptores</a> y a la "
+"sección sobre <a href=\"%1/help/admin#rulesadmin\">buenas prácticas de "
+"propietarios y moderadores</a>."
+
+#: ../web_tt2/help_user.tt2:3
+msgid "Mailing lists - User Guide"
+msgstr "Listas de Correo - Guía de Usuario"
+
+#: ../web_tt2/help_user.tt2:5
+msgid "How the mailing list service works"
+msgstr "Cómo funciona el servicio de listas de correo"
+
+#: ../web_tt2/help_user.tt2:6
+msgid ""
+"The mailing-list service is managed by a <strong>mailing-list software: "
+"Sympa</strong>. This software comes with a <strong>web mailing list "
+"environment</strong>."
+msgstr ""
+"El servicio de listas de correo está gestionado por un <strong>sofware de "
+"listas de correo: Sympa</strong>. El software viene con un <strong>entorno "
+"web de listas de correo</strong>."
+
+#: ../web_tt2/help_user.tt2:7
+msgid ""
+"To perform actions related to mailing lists</strong> (subscribe, change your "
+"options, etc.), you have two options:"
+msgstr ""
+"Para realizar acciones relacionadas con las listas de correo</strong>"
+"(suscripción, chambiar tus opciones, etc.), tienes dos opciones:"
+
+#: ../web_tt2/help_user.tt2:9
+msgid "<strong>log on to the web environment</strong>;"
+msgstr "<strong>Entrar en el entorno web</stronG>;"
+
+#. (conf.email,conf.host)
+#: ../web_tt2/help_user.tt2:10
+msgid ""
+"<strong>send commands by email</strong> to the Sympa mailing list manager at "
+"<strong>%1@%2</strong>."
+msgstr ""
+"<strong>enviar comando por email</strong> al gestor de listas de correo "
+"Sympa <strong>%1@%2</strong>"
+
+#: ../web_tt2/help_user.tt2:12
+msgid "<strong>To send a command to Sympa</strong>, do as follows:"
+msgstr "<strong>Para enviar un comando a Sympa</strong>, haz lo siguiente:"
+
+#: ../web_tt2/help_user.tt2:14
+msgid ""
+"<strong>If you send a single command</strong>, type it into the subject line "
+"of your email and leave its body blank."
+msgstr ""
+"<strong>Is mandas un solo comando</strong>, escríbelo en el Asunto del "
+"mensaje y deja el cuerpo del mensaje en blanco."
+
+#: ../web_tt2/help_user.tt2:15
+msgid ""
+"<strong>If you send several commands</strong>, leave the subject line of "
+"your email blank and type all the commands in the email body. <strong>Be "
+"careful</strong>: Sympa will not process your message unless you respect the "
+"following rules:"
+msgstr ""
+"<strong>Si mandas varios comandos</strong>, deja el Asunto del mensaje en "
+"blanco y escribe todos los comandos dentro del cuerpo del mensaje."
+"<strong>Ten cuidado</strong: Sympa no procesará tu mensaje si no respetas "
+"las siguientes reglas:"
+
+#: ../web_tt2/help_user.tt2:17
+msgid "Write every command on a new line."
+msgstr "Escribe cada comando en una nueva línea."
+
+#: ../web_tt2/help_user.tt2:18
+msgid ""
+"Send your message in plain text, not in <acronym lang=\"en\" xml:lang=\"en\" "
+"title=\"HyperText Markup Language\">HTML</acronym> (no formatting)."
+msgstr ""
+"Escribe un mensaje en texto plano, no en <acronym lang=\"en\" xml:lang=\"en"
+"\" title=\"HyperText Markup Language\">HTML</acronym>(sin formato)."
+
+#: ../web_tt2/help_user.tt2:19
+msgid ""
+"Your message can not contain anything else than Sympa commands (no signature "
+"block)."
+msgstr ""
+"Tu mensaje no puede contener otra cosa que no sean comandos Sympa (no se "
+"debe incluir ninguna firma)."
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:23
+msgid ""
+"A description of all the commands you can send to Sympa is available at <a "
+"href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
+msgstr ""
+"Una descripción de todos los comandos que puedes enviar a Sympa está "
+"disponible en <a href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
+
+#: ../web_tt2/help_user.tt2:25
+msgid "Subscribing to mailing lists"
+msgstr "Suscripción a listas de correo"
+
+#: ../web_tt2/help_user.tt2:26
+msgid "Subscribing to a mailing list is very simple:"
+msgstr "La suscripción a una lista de correo es muy simple:"
+
+#: ../web_tt2/help_user.tt2:28
+msgid ""
+"Choose the address</strong> with which you want to subscribe to the list."
+msgstr "Elige la dirección</strong> con la que quieres suscribirte a la lista."
+
+#: ../web_tt2/help_user.tt2:29
+msgid ""
+"You should choose an address you can check frequently and which offers a "
+"large storage capacity for your email: some lists distribute many messages, "
+"which sometimes contain large attachments."
+msgstr ""
+"Debes escoger una dirección que compruebes frecuentemente a que ofrezca una "
+"buena capacidad de almacenamiento para tus email: algunas listas distribuyen "
+"muchos mensajes, los cuales a veces contienen adjuntos grandes."
+
+#: ../web_tt2/help_user.tt2:30
+msgid ""
+"Of course you can subscribe to the same list with several email addresses. "
+"Then you will need to redo the whole process with a different email address."
+msgstr ""
+"Por supuesto puedes suscribirte en una misma lista con distintas cuentas de "
+"correo. En ese caso necesitarás repetir el proceso de suscripción por cada "
+"dirección de correo diferente."
+
+#. (conf.email,conf.host)
+#: ../web_tt2/help_user.tt2:31
+msgid ""
+"Send a <strong>message to %1@%2</strong> from the address you want to "
+"subscribe to the list."
+msgstr ""
+"Envia un <strong>mensaje a %1@%2</strong> desde la dirección que quieres "
+"suscribir a la lista."
+
+#: ../web_tt2/help_user.tt2:32
+msgid ""
+"Sympa is not a person but a mailing list management robot. Thus it is "
+"useless to send it loving words! ;-)"
+msgstr ""
+"Sympa no es una persona sino un robot de gestión de listas de correo. Así "
+"que no sirve de nada enviarle palabras cariñosas! ;-)"
+
+#: ../web_tt2/help_user.tt2:33
+msgid ""
+"In the subject line of your message, type in: <strong>subscribe "
+"nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name "
+"of the list you want to subscribe to and indicate your own first name and "
+"name)."
+msgstr ""
+"En el asunto del mensaje, escribe: <strong>subscribe nnombredelalista Nombre "
+"Apellidos</strong> (cambia 'nombredelalista' por el nombre de la lista a la "
+"que te quieres suscribir e indica tu propio Nombre y Apellidos)."
+
+#: ../web_tt2/help_user.tt2:167 ../web_tt2/help_user.tt2:34
+msgid "<strong>Leave the message body blank</strong>."
+msgstr "<strong>Deja el cuerpo del mensaje en blanco</strong>."
+
+#: ../web_tt2/help_user.tt2:168 ../web_tt2/help_user.tt2:35
+msgid ""
+"To save some time, you can also send several commands in a single message. "
+"To do that, follow the instructions available in the <a href=\"#howitworks"
+"\">How the mailing list service works</a> section."
+msgstr ""
+"Para ahorrar tiempo, puedes enviar varios comandos en un mismo mensaje. Para "
+"hacer eso, sigue las instrucciones disponibles en la sección <a href="
+"\"howitworks\">Cómo funciona un servicio de listas de correo</a>"
+
+#. (conf.host)
+#: ../web_tt2/help_user.tt2:38
+msgid ""
+"<strong>After this, you will receive a message telling you whether your "
+"request was accepted or not</strong>: if the subscription to the list is "
+"subject to any approval, the list owner may choose not to subscribe you. If "
+"so, do not send several other requests: it is useless as the result will "
+"remain the same. You can possibly send a message directly to the list owner "
+"(nameofthelist-request@%1) to explain why you really want to subscribe to "
+"the list..."
+msgstr ""
+"<strong> Después de esto, recibirás un mensaje diciéndote si tu solicitud ha "
+"sido aceptada o no</strong>: si la suscripción de la lista está sujeta a "
+"algún tipo de aprobación, el propietario de la lista debe decidir si te "
+"suscribe o no. Si es así, no envíes varias solicitudes: no sirve de nada ya "
+"que obtendrás el mismo resultado. Posiblemente podrás enviar un mensaje "
+"directamente al propietario de la lista (nombredelalista-request@%1) para "
+"eplicar por qué quieres ser suscriptor de la lista..."
+
+#: ../web_tt2/help_user.tt2:39
+msgid ""
+"Note: you will sometimes be asked to confirm your subscription request "
+"before it can be processed. If so, please conform to the instructions "
+"contained in the message you receive."
+msgstr ""
+"Nota: algunas veces tendrás que confirmar tu solicitud de suscripción antes "
+"de que sea procesada. Si es así, por favor sigue las instrucciones que se "
+"indican en el mensaje que hayas recibido."
+
+#: ../web_tt2/help_user.tt2:40
+msgid ""
+"According to the type of list (list with subscription subject to conditions "
+"or not) and to the availability of the list owner, <strong>you may not "
+"receive the notice immediately</strong>. It is useless to send several "
+"requests."
+msgstr ""
+"Según el tipo de lista (lista con suscriptores sujetos a condiciones o no) y "
+"a la disponibilidad del propietario de la lista, <strong>puede que no "
+"recibas noticias inmediatamente</strong>. No sirve de nada enviar varias "
+"solicitudes."
+
+#: ../web_tt2/help_user.tt2:41
+msgid ""
+"<strong>If your request is accepted, the message you receive confirms your "
+"subscription to the list. This message</strong> (the list Charter) "
+"<strong>contains several pieces of essential information:</strong>"
+msgstr ""
+"<strong>Si se acepta tu solicitud, el mensaje que recibirás confirmará tu "
+"suscripción a la lista. Éste mensaje</strong>(la carta de bienvenida)"
+"<strong>contiene varias piezas de información esencial:</strong>"
+
+#: ../web_tt2/help_user.tt2:43
+msgid ""
+"your <strong>list password</strong>. This password is the same for all the "
+"lists you subscribed to with a single email address. You can <a href="
+"\"#global_pref\" title=\"How to change your password\">change it online</a> "
+"after logging on to the mailing list environment;"
+msgstr ""
+"tu <strong>password de la lista</strong>. Este password es el mismo para "
+"todas las listas a las que estés suscrito con una misma cuenta de correo. "
+"Puedes <a href=\"#global_pref\" title=\"Cómo cambiar tu password\">cambiarlo "
+"online</a> después de acceder al entorno web del servidor de listas de "
+"correo;"
+
+#: ../web_tt2/help_user.tt2:44
+msgid ""
+"<strong>detailed information about the list</strong>: its purpose, the "
+"Internet address at which the message archive is available, etc."
+msgstr ""
+"<strong>información detallada sobre la lista</strong>: su propósito, la "
+"dirección de internet donde están disponibles el archivo de mensajes, etc."
+
+#: ../web_tt2/help_user.tt2:45
+msgid ""
+"the <strong>rules applying to the list and its members</strong>: allowed and "
+"forbidden topics, netiquette, legal information, privacy policy, etc."
+msgstr ""
+"las <strong>reglas aplicables a la lista y a sus miembros</strong>: temas "
+"permitidos y prohibidos, información legal, políticas de privacidad, etc."
+
+#: ../web_tt2/help_user.tt2:47
+msgid ""
+"<strong>You should keep your subscription notice</strong>: you may need it "
+"later to remember your password or to send a precise command to Sympa "
+"(example: signoff command). More generally, <strong>we advise you to keep "
+"all your subscription notices to mailing lists</strong>."
+msgstr ""
+"<strong>Debes guardar tu notificación de suscripción</strong>: puede que la "
+"necesites antes para recordar tu password o para enviar un comando preciso a "
+"Sympa (ejemplo: comando signoff). En gteneral, <strong> te recomendamos que "
+"guardes todas tus notificaciones de suscripción a listas de correo</strong>."
+
+#: ../web_tt2/help_user.tt2:48
+msgid ""
+"<strong>You can also subscribe to a list through the mailing list web "
+"interface</strong>. To do that, do as follows:"
+msgstr ""
+"<strong>Puedes también suscribirte a una lista a través de la interfaz de la "
+"lista de correo</strong>. Para hacer eso, haz lo siguiente:"
+
+#. (path_cgi)
+#: ../web_tt2/help_arc.tt2:12 ../web_tt2/help_arc.tt2:77
+#: ../web_tt2/help_arc.tt2:93 ../web_tt2/help_shared.tt2:9
+#: ../web_tt2/help_user.tt2:100 ../web_tt2/help_user.tt2:127
+#: ../web_tt2/help_user.tt2:172 ../web_tt2/help_user.tt2:50
+msgid ""
+"Go to the list environment <strong><a href=\"%1/home\">homepage</a></strong> "
+"and <strong>log on</strong>."
+msgstr ""
+"Ve a la <a href=\"%1/home\">página principal</a> del entorno web de listas y "
+"<strong>entra</strong>."
+
+#: ../web_tt2/help_user.tt2:51
+msgid ""
+"<strong>Go to the information page of the list</strong> you want to "
+"subscribe to."
+msgstr ""
+"<strong>Ve a la página información de la lista</strong> de la que quieres "
+"suscribirte."
+
+#: ../web_tt2/help_user.tt2:52
+msgid "In the left menu, <strong>click on the 'Subscribe'</strong> link."
+msgstr "En el menú lateral, <strong>pincha en el enalce 'Suscribir'</strong>."
+
+#: ../web_tt2/help_user.tt2:55
+msgid "Logging on to the mailing list environment"
+msgstr "Entrar en el entorno de listas de correo"
+
+#: ../web_tt2/help_user.tt2:56
+msgid ""
+"To log on to the mailing list environment, use the authentication form "
+"displayed on top of the left column of the web interface. When you are "
+"logged on, your email address and user profile (subscriber, moderator or "
+"owner) are displayed there."
+msgstr ""
+"Para entrar al entorno de listas de correo, utilice el formulario de "
+"autenticación situado en la columna superior derecha de la interfaz web. "
+"Cuando hayas entrado, ahí se mostrará tu dirección de correo y perfil "
+"(suscriptor, moderador o propietario)."
+
+#: ../web_tt2/help_user.tt2:58
+msgid "The authentication process varies according to your personal situation:"
+msgstr "El proceso de autenticación varía según tu situación personal:"
+
+#: ../web_tt2/help_user.tt2:60
+msgid ""
+"<strong>If the organization offering the mailing list service uses single "
+"sign-on technology</strong> (unique account and unique authentication, for "
+"example through the <acronym lang=\"en\" xml:lang=\"en\" title=\"Central "
+"Authentication Service\">CAS</acronym> system), you will preferably log on "
+"with your unique account. To do that, click on the 'Go' button next to the "
+"text '<strong>Authentication [name of the system used]</strong>'. Then, type "
+"in your login and password to log on to the authentication server."
+msgstr ""
+"<strong>Si la organización que ofrece el servicio de listas de correo "
+"utiliza tecnología de Single sign-on </strong>(una única cuenta y una única "
+"autenticación, por jemplo a travéz de un sistema <acronym lang=\"en\" xml:"
+"lang=\"en\" title=\"Central Authentication Service\">CAS</acronym>), "
+"preferirás entrar con tu cuenta única. Para hacer eso, pincha en el botón "
+"\"Ir\" al lado del testo '<strong>Autenticación [nombre del sistema "
+"utilizado]</strong'. Entonces, escribe tu login y password para entrar al "
+"servidor de autenticación."
+
+#: ../web_tt2/help_user.tt2:61
+msgid ""
+"If you have already logged on to another service using the unique "
+"authentication system, your authentication is automatic. Refresh page if "
+"necessary."
+msgstr ""
+"Si ya has entrado en otro servicio que esté utilizando el mismo sistema de "
+"autenticaión, tu autenticación será automática. Refresca la página si es "
+"necesario."
+
+#: ../web_tt2/help_user.tt2:62
+#, fuzzy
+msgid ""
+"<strong>If the unique authentication process does not apply to you, you can "
+"use your list password.</strong> In this case, log on through the classic "
+"method: enter the <strong>email address with which you subscribed to the "
+"list</strong> as a login and your <strong>list password</strong> in the "
+"'Password' field."
+msgstr ""
+"<strong>Si no se aplica ningún proceso de autenticación única deberás "
+"utilizar tu password de lista. En ese caso, entra a través del método "
+"clásico: introduce la <strong>dirección de correo con la que te suscribiste "
+"a la lista</strong> como login y tu <strong>password de lista</strong> en la "
+"casilla 'Password'."
+
+#: ../web_tt2/help_user.tt2:63
+#, fuzzy
+msgid ""
+"If you do not remember your list password, click on 'Lost password?'. After "
+"you've provided your email address, a mail with a validation URL will be "
+"sent at that address."
+msgstr ""
+"Si no recuerdas tu password de lista, pincha en '¿Contraseña perdida?'. "
+"Después de indicar tu dirección de correo, recibirás un correo con una URL "
+"de validación."
+
+#: ../web_tt2/help_user.tt2:65
+#, fuzzy
+msgid ""
+"<strong>If the unique authentication process does not apply to you and you "
+"do no have a list password yet</strong>, click on '<strong>First login?</"
+"strong>' and type in your email address. A confirmation URL will be sent at "
+"that address. Then you will be able to choose your password."
+msgstr ""
+"<strong>Si no se aplica ningún proceso de autenticación único y no tienes un "
+"password de lista todavía</strong>, pincha en <strong>¿Primera conexión?</"
+"strong>' y escribe tu dirección de correo. Recibirás una URL de "
+"confirmación. Entonces podrás elegir tu password."
+
+#: ../web_tt2/help_user.tt2:68
+msgid ""
+"Remember: the list password is a special password you will only use for the "
+"mailing list service."
+msgstr ""
+"Recuerda: el password de lista es un password especial que solo utilizarás "
+"para el servicio de listas de correo."
+
+#: ../web_tt2/help_user.tt2:70
+msgid "Checking your subscriptions"
+msgstr "Comprobar tus suscripciones"
+
+#: ../web_tt2/help_user.tt2:71
+msgid ""
+"To see all the lists you subscribed to, you need to <a href=\"#sympa_auth"
+"\">log on</a> first. Then a list of all your lists, including a short "
+"description for each of them, will be displayed in the 'Your lists' form on "
+"the left column."
+msgstr ""
+"Para ver todas las listas a las que estás suscrito, necesitas <a href="
+"\"#syma_auth\">acceder</a> primero. Posteriormente se mostrará un listado de "
+"todas tus listas, incluyendo una breve descripción de cada una de ellas, en "
+"el formulario \"Tus listas\" de la columna situada a la izquierda."
+
+#: ../web_tt2/help_user.tt2:73
+msgid ""
+"<strong>To look at a list information page, click on its name</strong>. The "
+"information page includes a description of the list (object, rules applying "
+"when sending a message, etc.), which length varies according to the list."
+msgstr ""
+"<strong>Para ver la página de información de una lista, pincha en el nombre "
+"de la misma</strong>. La página de información incluye una descripción de la "
+"lista( objetivo, reglas aplicables cuando se envía un mensaje, etc.), cuya "
+"longitud variará según la lista."
+
+#: ../web_tt2/help_user.tt2:74
+msgid "Form this information page, you can:"
+msgstr "Desde esta página de información, podrás:"
+
+#: ../web_tt2/help_user.tt2:76
+msgid "change your <a href=\"#options\">subscriber options</a>;"
+msgstr "cambiar tus <a href=\"#options\">opciones de suscriptor</a>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:77
+msgid "read the <a href=\"%1/help/arc\">list archive</a>;"
+msgstr "leer el <a href=\"%1/help/arc\">archivo de mensajes de la lista</a>"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:78
+msgid "<a href=\"%1/help/arc#arcsearch\">search in the message archive</a>;"
+msgstr "<a href=\"%1/help/arc#arcsearch>buscar en el archivo de mensajes</a>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:79
+msgid "<a href=\"%1/help/sendmsg\">send new messages</a>;"
+msgstr "<a href=\"%1/help/sendmsg\">enviar un nuevo mensaje</a>;"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:80
+msgid ""
+"<a href=\"%1/help/shared#shared_read\">download documents</a> from the "
+"shared document web space;"
+msgstr ""
+"<a href=\"%1/help/shared#shared_read\">descargar documentos</a> desde el "
+"espacio web compartido de documentos;"
+
+#: ../web_tt2/help_user.tt2:82
+msgid "<a href=\"#subscribers\">review members</a> of the list (if available);"
+msgstr ""
+"<a href=\"#subscribers\">revisar los suscriptores</a> de la lista (en caso "
+"de estar disponible)"
+
+#: ../web_tt2/help_user.tt2:83
+msgid "<a href=\"#unsubscribe\">unsubscribe</a> from the list."
+msgstr "<a href=\"#unsubscribe\">desuscribirte</a> de la lista."
+
+#: ../web_tt2/help_user.tt2:85
+#, fuzzy
+msgid ""
+"The <strong>number of people subscribed</strong> to the list is permanently "
+"displayed in the <strong>left menu</strong>. <strong>To review the list "
+"members, click on the 'Review members' link</strong> in the left menu (if "
+"the list-owner decided to deny access to the members list, this link is not "
+"available). The subscribers list displays and shows the <strong>email "
+"address</strong> and <strong>name</strong> of each of the subscribers (the "
+"indication of the name depends on the subscription method used by the "
+"subscribers)."
+msgstr ""
+"El <strong> número de personas suscritas</strong> a la lista se muestra "
+"permanentemente en el <strong>menú izquierdo</strong>.<strong>Para revisar "
+"la lista de suscriptores, pincha en el enlace 'Revisar suscriptores'</"
+"strong> en el menú izquierdo (si los propietarios de la lista deciden "
+"denegar el acceso a la lista de suscriptores, este enlace no estará "
+"disponible). La lista de suscriptores muestra las <strong>direcciones de "
+"correo</strong> y <strong>el nombre</strong> de cada uno de los suscriptores "
+"(el nombre se indica dependiendo del método de suscripción utilizado por los "
+"suscriptores)"
+
+#: ../web_tt2/help_user.tt2:86
+msgid ""
+"By default, each page displays 25&#160;subscribers. You can browse through "
+"the pages by using the browsing arrows or display more subscribers per page. "
+"You may also wish to sort subscribers according to their email address, "
+"domain or name by clicking on the corresponding column header."
+msgstr ""
+"Por defecto, cada página muestra 25&#160;suscriptores. Puedes navegar a "
+"través de las páginas utilizando las flechas de navegación o mostrar más "
+"suscriptores por página. También podrás ordenar los suscriptores según la "
+"dirección de correo, dominio o nombre pinchando en la correspondiente "
+"cabecera de columna."
+
+#. (conf.host)
+#: ../web_tt2/help_user.tt2:87
+msgid ""
+"<strong>The names of the list owners and moderators are displayed in the "
+"left menu</strong>. You should never write directly to a list owner or "
+"moderator. If you want to ask a question or make a comment, you should use "
+"the following address: <strong>nameofthelist-request@%1</strong> (replace "
+"'nameofthelist' by the name of the list in question)."
+msgstr ""
+"<strong>Los nombres de la lista de propietarios y moderadores se muestra en "
+"el menú izquierdo</strong>. Nunca debes escribir directamente a los "
+"propietario o moderadores de la lista. Si quieres realizar alguna pregunta o "
+"hacer algún comentario, debes utilizar la siguiente dirección: "
+"<strong>nombredelalista-request@%1</strong> (cambia 'nombredelalista' por el "
+"nombre de la lista en cuestión)."
+
+#: ../web_tt2/help_user.tt2:88
+msgid ""
+"To know <strong>when you subscribed to the list</strong> and <strong>when "
+"you last updated your subscriber options</strong>, <strong>click on the "
+"'Subscriber options' link</strong> in the left menu."
+msgstr ""
+"Para saber <strong>cuando te suscribste a la lista</strong> y <strong>cuando "
+"has actualizado por última vez tus opciones de suscripción</strong>, "
+"<strong> pincha en el enlace \"Opciones del suscriptor\"</strong> en el menú "
+"izquierdo."
+
+#: ../web_tt2/help_user.tt2:90
+msgid "Managing your preferences"
+msgstr "Gestionar tus preferencias"
+
+#: ../web_tt2/help_user.tt2:91
+msgid ""
+"To allow you to <strong>use lists more easily</strong>, <strong>you can "
+"define a number of personal preferences</strong>. There are two types of "
+"preferences you can change:"
+msgstr ""
+"Para <strong>simplificar el uso de las listas</strong>,<strong>puedes "
+"definir una serie de preferencias personales</strong>. Existen dos tipos de "
+"preferencias que puedes cambiar:"
+
+#: ../web_tt2/help_user.tt2:93
+msgid ""
+"your <strong>subscriber options</strong>, which can vary according to the "
+"list;"
+msgstr ""
+"tus <strong>opciones de suscriptor</strong>, las cuales pueden variar según "
+"la lista;"
+
+#: ../web_tt2/help_user.tt2:94
+msgid ""
+"your <strong>general preferences</strong>, which apply to the entire Sympa "
+"mailing list environment."
+msgstr ""
+"tus <strong>preferencias generales</strong>, las cuales se aplican a todo el "
+"entorno de listas de correo Sympa."
+
+#: ../web_tt2/help_user.tt2:97
+msgid "Changing your subscriber options"
+msgstr "Cambiar tus opciones de suscriptor"
+
+#: ../web_tt2/help_user.tt2:98
+msgid ""
+"<strong>Your subscriber options can vary from a list to another</strong>. To "
+"change them, do as follows:"
+msgstr ""
+"<strong>Tus opciones de suscriptor pueden variar de una lista a otra</"
+"strong>. Para cambiarlas, haz lo siguiente:"
+
+#: ../web_tt2/help_user.tt2:101
+msgid ""
+"<strong>Go to the information page of the list</strong> for which you want "
+"to change your subscriber options."
+msgstr ""
+"<strong>Ve a la página de información de la lista</strong> en la que quieres "
+"cambiar tus opciones de suscriptor."
+
+#: ../web_tt2/help_user.tt2:102
+msgid ""
+"In the left menu, <strong>click on the 'Subscriber options' link</strong>."
+msgstr ""
+"En el menu izquierdo, <strong>pincha en el enlace 'Opciones del suscriptor'</"
+"strong>."
+
+#: ../web_tt2/help_user.tt2:103
+msgid ""
+"strong>Choose a message delivery mode</strong> (those options are mutually "
+"exclusive, thus you can not select several of them):"
+msgstr ""
+"<strong>Cambia el modo de recepción de mensajes</strong> (estas opciones son "
+"mutuamente excluyentes, así que no puedes seleccionar varias a la vez):"
+
+#: ../web_tt2/help_user.tt2:105
+msgid ""
+"<strong>digest MIME format</strong>: instead of receiving the list messages "
+"in a normal manner, you will get a digest of them on a regular basis. This "
+"digest compiles a group of messages from the list, using multipart/digest "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
+"Extension\">MIME</acronym> format. The digest frequency is set up by the "
+"list owner."
+msgstr ""
+"<strong>digest MIME format</strong>: en vez de recibir los mensajes de la "
+"lista de forma normal, recibirás un resumen de ellos. Este resumen recopila "
+"un grupo de mensajes de la lista, utilizando el formato <atronym lang=\"en\" "
+"xml:lang=\"en\" title=\"Multipurpose Internet Mail Extension\">MIME</"
+"acronym>multipart/digest"
+
+#: ../web_tt2/help_user.tt2:106
+msgid ""
+"<strong>digest plain text format</strong>: instead of receiving the list "
+"messages in a normal manner, you will get a digest of them on a regular "
+"basis. This digest compiles a group of messages from the list, using plain "
+"text format. The digest frequency is set up by the list owner."
+msgstr ""
+"<strong>digest plain text format</strong>: en vez de recibir los mensajes de "
+"la lista de forma normal, recibirás un resumen. El resumen recopila un grupo "
+"de mensajes de la lista, utilizando formato de texto plano. La frecuencia "
+"del resumen lo establece el propietario de la lista."
+
+#: ../web_tt2/help_user.tt2:107
+msgid ""
+"<strong>summary mode</strong>: instead of receiving the list messages in a "
+"normal manner, you will get a list of them on a regular basis. To read the "
+"messages, you will need to browse the online list archive."
+msgstr ""
+"<strong>modo de listado</strong>: en vez de recibir los mensajes de la lista "
+"de forma normal, tendrás un listado de ellos. Para leer los mensajes, debes "
+"navegar por el archivo online de la lista."
+
+#: ../web_tt2/help_user.tt2:108
+msgid ""
+"<strong>notice mode</strong>: with this mode, you will receive all the "
+"messages with a blank body: this way you are informed of every message sent "
+"to the list real time, without risk of flooding your inbox."
+msgstr ""
+"<strong>modo de notificación</strong>: con este modo, recibirás todos los "
+"mensajes con el cuerpo del mensaje en blanco: de esta forma se te informa de "
+"cada mensaje enviado a la lista en tiempo real, sin riesgo de inundar tu "
+"carpeta de entrada."
+
+#: ../web_tt2/help_user.tt2:109
+msgid ""
+"<strong>no mail (useful for vacations)</strong>: this mode makes it possible "
+"not to receive the messages of the list. It is especially useful when you "
+"have no access to your email for a long time and want to remain subscribed "
+"to the list nevertheless."
+msgstr ""
+"<strong>no mail (útil para las vacaciones)</strong>: este modo hace posible "
+"que no recibas mensajes de la lista. Es especialmente útil cuando no tienes "
+"acceso a tu correo durante un largo periodo de tiempo y sin embargo quieres "
+"mantenerte suscrito a la lista."
+
+#: ../web_tt2/help_user.tt2:110
+msgid ""
+"<strong>text only mode</strong>: this mode allows you to receive only the "
+"text version (text/plain) of messages sent in both formats (plain text and "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym>)."
+msgstr ""
+"<strong>modo sólo texto</strong: este modo permite recibir únicamente la "
+"versión en texto (text/plain) de un mensaje enviado en varios formatos "
+"(texto plano y <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup "
+"Language\">HTML</acronym>)."
+
+#: ../web_tt2/help_user.tt2:111
+msgid ""
+"<strong>HTML only mode</strong>: this mode allows you to receive only the "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym> version (text/html) of messages sent in both formats."
+msgstr ""
+"<strong>modo sólo HTML</strong>: este modo permite recibir sólo la versión "
+"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
+"\">HTML</acronym> de mensajes enviados en ambos formatos."
+
+#: ../web_tt2/help_user.tt2:112
+msgid ""
+"<strong>urlize mode</strong>: this mode allows you not to receive attached "
+"documents. However these documents are available in the list archive and you "
+"can access them through a <acronym title=\"Uniform Resource Locator\" lang="
+"\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
+msgstr ""
+"<strong>modo URLizado</strong>: este modo permite no recibir documentos "
+"adjuntos. Sin embargo estos documentos están disponibles en el archivo de la "
+"lista y puedes acceder a ellos a travéz de la <acronym title=\"Uniform "
+"Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> proporcionada "
+"en el mensaje."
+
+#: ../web_tt2/help_user.tt2:113
+msgid ""
+"<strong>you do not receive your own posts</strong>: this mode allows you not "
+"to receive a copy of your own messages."
+msgstr ""
+"<strong>no recibes tus propios mensajes</strong>: este modo permite no "
+"recibir una copia de tus propios mensajes."
+
+#: ../web_tt2/help_user.tt2:114
+msgid ""
+"<strong>standard (direct reception)</strong>: this mode is the default "
+"delivery mode; it cancels any other delivery mode."
+msgstr ""
+"<strong>estandar (recepción directa)</strong>: este modo es el modo de "
+"entrega por defecto; éste modo cancela cualquier otro modo de entrega:"
+
+#: ../web_tt2/help_user.tt2:116
+msgid "<strong>Choose a visibility option</strong>:"
+msgstr "<strong>Cambiar las opciones de visibilidad</strong>:"
+
+#: ../web_tt2/help_user.tt2:118
+msgid ""
+"<strong>listed in the list review page</strong>: your name and email address "
+"will be displayed in the members list (if the list owner allowed subscribers "
+"to review the list members)."
+msgstr ""
+"<strong>listado en la página de revisión de la lista</strong>: tu nombre y "
+"dirección de correo se mostrará en la lista de suscriptores (en caso de que "
+"el propietario permita ver a otros suscriptores dicha lista)."
+
+#: ../web_tt2/help_user.tt2:119
+msgid ""
+"<strong>concealed</strong>: your name and email address will not be "
+"displayed in the members list. However you email address will be visible in "
+"the list archive if you send messages."
+msgstr ""
+"<strong>ocultado</strong>: tu nombre y dirección de correo no se mostrará en "
+"la lista de suscriptores. Sin embargo, tu dirección de correo será visible "
+"en el archivo de mensajes de la lista si envías uno."
+
+#: ../web_tt2/help_user.tt2:121
+msgid "<strong>Click on the 'Update' button</strong>."
+msgstr "<strong>Pincha en el botón 'Actualizar'</strong>."
+
+#: ../web_tt2/help_user.tt2:124
+msgid "Changing your general preferences"
+msgstr "Cambiar tus preferencias generales"
+
+#: ../web_tt2/help_user.tt2:125
+#, fuzzy
+msgid ""
+"The general preferences apply to all your subscriptions as well as to the "
+"way your Sympa mailing list web interface displays. To change your "
+"preferences, do as follows:"
+msgstr ""
+"Las preferencias generales se aplican a todas las suscripciones así como la "
+"forma en que la interfaz de tu servidor de listas Sympa lo muestra. Para "
+"cambiar tus preferencias, haz lo siguiente:"
+
+#: ../web_tt2/help_user.tt2:128
+msgid ""
+"In the form displayed on top of the left column, <strong>click on the 'Your "
+"preferences' link</strong>."
+msgstr ""
+"En el formulario mostrado en la columna superior derecha, <strong>pincha en "
+"el enlace 'Tus preferencias'</strong>"
+
+#: ../web_tt2/help_user.tt2:129
+msgid "<strong>Change your preferences</strong>."
+msgstr "<strong>Cambia tus preferencias</strong>"
+
+#: ../web_tt2/help_user.tt2:130
+msgid "<strong>Click on 'Submit' for every option</strong> you change."
+msgstr ""
+"<strong>Pincha en el botón 'Enviar' de cada opción</strong> que cambias."
+
+#: ../web_tt2/help_user.tt2:132
+msgid "You can change:"
+msgstr "Puedes cambiar:"
+
+#: ../web_tt2/help_user.tt2:134
+msgid ""
+"your <strong>name</strong>; if you subscribe to a list from the mailing list "
+"server web interface, the 'Name' field will automatically be filled in in "
+"the members list;"
+msgstr ""
+"tu <strong>nombre</strong>: si te suscribes a una lista desde la interfaz "
+"web del servidor de listas, el campo 'Nombre' se rellenará automáticamente "
+"en la lista de suscriptores;"
+
+#: ../web_tt2/help_user.tt2:135
+msgid ""
+"the <strong>language in which the Sympa web interface is displayed</strong> "
+"(you can change language on every page of the web interface; your choice "
+"will remain even though you change the interface language on another page "
+"than the 'Preferences' page;"
+msgstr ""
+"el <strong>lenguaje que deseas para la interfaz web</strong> (puedes cambiar "
+"el lenguaje en cada página de la interfaz web; tu elección se mantendrá "
+"incluso si cambias el lenguaje en otra página distinta a la página de "
+"'Preferencias';"
+
+#: ../web_tt2/help_user.tt2:136
+msgid ""
+"the <strong>lifetime of the cookie placed on your computer by Sympa</strong> "
+"('Connection expiration period'). By default, the session expires when you "
+"close your browser; if you use the mailing list service a lot, we advise you "
+"to choose a longer duration;"
+msgstr ""
+"el <strong>tiempo de vida de la cookie depositada por Sympa en tu navegador</"
+"strong> ('Periodo de expiración de la conexión'). Por defecto, la sesión "
+"expira cuando cierras el navegador; si usas el servicio de listas con "
+"frecuencia, te recomendamos que elijas un tiempo de duración mas largo;"
+
+#: ../web_tt2/help_user.tt2:137
+msgid ""
+"A cookie is a small file a web server stores on your hard disk, most "
+"generally temporarily, in order to identify you as a user of its service. It "
+"contains a few pieces of personal information about you: name, email "
+"address, latest logon time, etc."
+msgstr ""
+"Una cookie es un pequeño fichero que el servidor web guarda en tu disco "
+"duro, normalmente de forma temporal, con la intención de identificarte como "
+"un usuario del servicio. Contiene pequeñas piezas de información sobre tí: "
+"nombre, dirección de correo, última vez que accediste, etc."
+
+#: ../web_tt2/help_user.tt2:138
+msgid ""
+"the <strong>email address with which you subscribed</strong> to the lists "
+"(if you subscribed with several email addresses, the address to be replaced "
+"will be the one you logged on with);"
+msgstr ""
+"la <strong>dirección de correo con la que te suscribes</strong> a las listas "
+"(si te suscribes con distintas direcciones de correo, la dirección se "
+"cambiará a la dirección con la que hayas entrado);"
+
+#: ../web_tt2/help_user.tt2:139
+msgid ""
+"Be careful: this will change your subscriptions to all your lists. If you "
+"want to change address for a single mailing list, you had better unsubscribe "
+"from that list and subscribe again with the right email address."
+msgstr ""
+"Ten cuidado: esta acción cambiará tus suscripciones de todas las listas. Si "
+"quieres cambiar una dirección de una única lista, es mejor que te "
+"desuscribas de la lista y te suscribas de nuevo con la dirección de correo "
+"correcta."
+
+#: ../web_tt2/help_user.tt2:140
+msgid "your <strong>list password</strong>."
+msgstr "tu <strong>password de lista</strong>."
+
+#: ../web_tt2/help_user.tt2:142
+msgid ""
+"The '<strong>Your other email addresses</strong>' section acts like an email "
+"address change."
+msgstr ""
+"La sección '<strong>Tus otras direcciones de correo</strong>' actua como un "
+"cambio de dirección de correo."
+
+#: ../web_tt2/help_user.tt2:144
+msgid "Searching for a mailing list"
+msgstr "Buscar una lista de correo"
+
+#: ../web_tt2/help_user.tt2:145
+msgid ""
+"You may need to search for a mailing list. To do that, you have three "
+"options:"
+msgstr ""
+"Puede que necesites buscar una lista de correo. Para hacerlo, tienes tres "
+"opciones:"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:147
+msgid ""
+"<strong>browse the different sections</strong> displayed on the <a href=\"%1/"
+"home\">list environment homepage</a>;"
+msgstr ""
+"<strong>navegar por las diferentes secciones</strong> mostradas en <a href="
+"\"%1/home\">la página de inicio del entorno web</a>"
+
+#: ../web_tt2/help_user.tt2:148
+msgid ""
+"search for a list via the <strong>search box</strong>: the searched string "
+"will return all the lists whose name or description matches your search "
+"criteria (descriptions of the lists generally consist of a short sentence);"
+msgstr ""
+"buscar una lista a travéz del <strong>campo de búsqueda</strong>: la cadena "
+"buscada devolverá todas aquellas listas cuyo nombre o descripción coincida "
+"con tu criterio de búsqueda (las descripciones de las listas generalmente "
+"consisten en sentencias cortas);"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:149
+msgid ""
+"click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
+"<strong>display all available lists</strong>."
+msgstr ""
+"pinchar en la pestaña '<a href=\"%1/lists\">Lista de listas</a>' al inicio "
+"de la página para <strong>mostrar todas las listas disponibles</strong>."
+
+#: ../web_tt2/help_user.tt2:151
+msgid ""
+"According to the domain to which your email address belongs (example: <em "
+"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and "
+"to the location you log on from, you will not have access to the same lists. "
+"However you can subscribe to a list that does not display if you know its "
+"name. To do this, <a href=\"#subscribe\">use your email client</a>."
+msgstr ""
+"Según el dominio al que pertenezca tu dirección de correo (ejemplo: <em "
+"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>,etc.) y a "
+"la localización a la que perteneces, no tendrás acceso a las mismas listas. "
+"Sin embargo, puedes suscribirte a una lista que no se muestra si conoces el "
+"nombre. Para hacer esto, <a href=\"#subscribe\">utiliza tu cliente de "
+"correo</a>."
+
+#: ../web_tt2/help_user.tt2:153
+msgid "Reading a list archive online"
+msgstr "Leer el archivo online de una lista"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:154
+msgid ""
+"Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
+"strong></a>."
+msgstr ""
+"Por favor revisa la <a href=\"%1/help/arc\"><strong>documentación del "
+"archivo</strong></a>"
+
+#: ../web_tt2/help_sendmsg.tt2:3 ../web_tt2/help_user.tt2:156
+msgid "Sending a message"
+msgstr "Enviar un mensaje"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:157
+msgid ""
+"Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
+"sending messages</strong></a>."
+msgstr ""
+"Por favor revisa la <a href=\"%1/help/sendmsg\"><strong>documentación sobre "
+"envío de mensajes</strong></a>"
+
+#: ../web_tt2/help_shared.tt2:3 ../web_tt2/help_user.tt2:159
+msgid "Using the shared document web space"
+msgstr "Utilizar el espacio web compartido de documentos"
+
+#. (path_cgi)
+#: ../web_tt2/help_user.tt2:160
+msgid ""
+"Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
+"space documentation</strong></a>."
+msgstr ""
+"Por favor revisa la <a href=\"%1/help/shared\"><strong>documentación sobre "
+"espacio web compartido de documentos</strong></a>."
+
+#: ../web_tt2/help_user.tt2:162
+msgid "Unsubscribing from lists"
+msgstr "Desuscripción de listas"
+
+#: ../web_tt2/help_user.tt2:163
+msgid "To unsubscribe from a list, do as follows:"
+msgstr "Para desuscribirse de una lista, haz lo siguiente:"
+
+#. (conf.email,conf.host)
+#: ../web_tt2/help_user.tt2:165
+msgid ""
+"From the address with which you subscribed to the list, send a "
+"<strong>message to %1@%2</strong>."
+msgstr ""
+"Desde la dirección de correo con la que estás suscrito a la lista, envía un "
+"<strong>mensaje a %1@%2</strong>."
+
+#: ../web_tt2/help_user.tt2:166
+msgid ""
+"In the subject line of your email, type in: <strong>unsubscribe "
+"nameofthelist</strong> (replace 'nameofthelist' by the name of the list you "
+"want to unsubscribe from)."
+msgstr ""
+"En el campo Asunto de tu correo, escribe: <strong>unsubscribe "
+"nombredelalista</strong> (cambia 'nombredelalista' por el nombre de la lista "
+"de la cual te quieres desuscribir)."
+
+#: ../web_tt2/help_user.tt2:170
+msgid ""
+"You can also unsubscribe through the mailing list web interface (you will "
+"need to repeat the operation for each list you want to unsubscribe from):"
+msgstr ""
+"También puedes desuscribirte a través de la interfaz web de listas de correo "
+"(necesitarás repetir la operación por cada lista de la que te quieres "
+"desuscribir):"
+
+#: ../web_tt2/help_user.tt2:173
+msgid ""
+"<strong>Go to the information page of the list</strong> you want to "
+"unsubscribe from."
+msgstr ""
+"<strong>Ve a la página de información de la lista</strong> de la que quieres "
+"desuscribirte."
+
+#: ../web_tt2/help_user.tt2:174
+msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
+msgstr ""
+"<strong>En el menú izquierdo, pincha en el enlace 'Desuscribir'</strong>."
+
 #: ../web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
-msgstr ""
+msgstr "Listas de correo - Guía para propietarios y moderadores"
 
 #: ../web_tt2/help_admin.tt2:5
 msgid "Introduction: who is in charge of managing mailing lists?"
 msgstr ""
+"Introducción: ¿quién es el encargado de gestionar las listas de correo?"
 
 #: ../web_tt2/help_admin.tt2:6
 msgid "Reminder: a mailing list service involves four types of roles:"
 msgstr ""
+"Recuerda: un servicio de listas de correo involucra a cuatro tipos de roles:"
 
 #: ../web_tt2/help_admin.tt2:8
 msgid "listmaster;"
-msgstr ""
+msgstr "listmaster;"
 
 #: ../web_tt2/help_admin.tt2:9
 msgid "owner;"
-msgstr ""
+msgstr "propietario;"
 
 #: ../web_tt2/help_admin.tt2:10
 msgid "moderator;"
-msgstr ""
+msgstr "moderador;"
 
 #: ../web_tt2/help_admin.tt2:11
 msgid "subscriber."
-msgstr ""
+msgstr "suscriptor;"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:13
@@ -68,10 +1720,12 @@ msgid ""
 "Refer to the <a href=\"%1/help/introduction#roles\">description of each "
 "role</a> to know more about this."
 msgstr ""
+"Revisa la <a href=\"%1/help/introduction#roles\">descripción de cada rol</a> "
+"para saber más sobre esto."
 
 #: ../web_tt2/help_admin.tt2:15
 msgid "Requesting the creation of a mailing list"
-msgstr ""
+msgstr "Solicitar la creación de una lista de correo"
 
 #: ../web_tt2/help_admin.tt2:16
 msgid ""
@@ -80,10 +1734,14 @@ msgid ""
 "creation</strong> will nevertheless be <strong>subject to approval by the "
 "listmasters</strong>."
 msgstr ""
+"La <strong>solicitud de creación de una lista</strong> puede estar "
+"<strong>sujeta a condiciones</strong>. Incluso si cumples esas condiciones, "
+"<strong>la creación de la lista</strong> estará <strong>sujeta a la "
+"aprobación por parte de los listmasters</strong>"
 
 #: ../web_tt2/help_admin.tt2:17
 msgid "To request the creation of a mailing list, do as follows:"
-msgstr ""
+msgstr "Para solicitar la creación de una lista de correo, haz lo siguiente:"
 
 #. (path_cgi,conf.host)
 #: ../web_tt2/help_admin.tt2:19
@@ -91,16 +1749,22 @@ msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
 "and <a href=\"%1/help/user#sympa_auth\"><strong>log on</strong></a>."
 msgstr ""
+"Dirígete a la <strong><a href=\"%1/home\">página de inicio del entorno web "
+"de listas</a></strong> y <a href=\"%1/help/user#sympa_auth\"><strong>accede</"
+"strong></a>."
 
 #: ../web_tt2/help_admin.tt2:20
 msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
 msgstr ""
+"En el menú superior, <strong>pincha en el enlace 'Crear lista'</strong>."
 
 #: ../web_tt2/help_admin.tt2:21
 msgid ""
 "If this link does not display, it means that you do not have the privileges "
 "required to create a list."
 msgstr ""
+"Si no se muestra el enlace, significa que no tienes privilegios suficientes "
+"para crear una lista."
 
 #. (conf.host)
 #: ../web_tt2/help_admin.tt2:22
@@ -109,12 +1773,17 @@ msgid ""
 "and the domain name; example: <em class=\"example\">languages_spanish</em> "
 "and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
+"Dale un <strong>nombre</strong> a la lista (sólo introduce el nombre, sin "
+"'@' ni el dominio; ejemplo: <em class=\"example\">languages_spanish</em> y "
+"no <em class=\"example\">languages_spanish@%2</em>)."
 
 #: ../web_tt2/help_admin.tt2:23
 msgid ""
 "Do not use any spaces, accents or specials characters in list names: those "
 "characters might cause problems."
 msgstr ""
+"No utilices ningún espacio, acnetos o caracteres especiales para los nombres "
+"de listas: esos caracteres pueden causar problemas."
 
 #: ../web_tt2/help_admin.tt2:24
 msgid ""
@@ -124,8 +1793,15 @@ msgid ""
 "prefix; thus they will be sorted together and will be easily recognizable "
 "(example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
+"Elige un nombre corto y explícito: ¡piensa en los suscritpores que tienen "
+"que escribir ese nombre cada vez que quieran mandar un mensajes a la lista!. "
+"Si gestionas un conjunto de listas, puedes poner un prefijo común a los "
+"nombres de las listas; así estarán juntas cuando se ordenen y serán "
+"fácilmente reconocibles (ejemplo: <em class=\"example\">xx-users@%2, xx-"
+"hotline@%2</em>, etc.)."
 
 #: ../web_tt2/help_admin.tt2:25
+#, fuzzy
 msgid ""
 "Choose a <strong>list type</strong> among the predefined types (the "
 "predefined types are only examples of typical configurations that can be "
@@ -133,6 +1809,11 @@ msgid ""
 "the list beyond the options offered in the list administration module, by "
 "asking the listmasters)."
 msgstr ""
+"Elige un <strong>tipo de lista</strong> dentro de los tipos predefinidos "
+"(los tipos predefinidos son solo ejemplos de configuraciones típicas que "
+"pueden cambiarse por los propietarios de la lista después de la creación; es "
+"incluso posible configurar la lista bajo las opciones ofrecidasen el módulo "
+"de administración de la lista, preguntando a los listmasters)."
 
 #: ../web_tt2/help_admin.tt2:26
 msgid ""
@@ -1086,10 +2767,6 @@ msgstr ""
 msgid "sanctions applying to those who would not respect the list charter;"
 msgstr ""
 
-#: ../web_tt2/help_admin.tt2:253 ../web_tt2/help_introduction.tt2:104
-msgid "etc."
-msgstr "etc."
-
 #: ../web_tt2/help_admin.tt2:256
 msgid ""
 "In order to have all subscribers read the list charter, you should include "
@@ -1129,18 +2806,6 @@ msgstr ""
 #: ../web_tt2/help_arc.tt2:10
 msgid "<strong>To read the list archive online</strong>, do as follows:"
 msgstr ""
-
-#. (path_cgi)
-#: ../web_tt2/help_arc.tt2:12 ../web_tt2/help_arc.tt2:77
-#: ../web_tt2/help_arc.tt2:93 ../web_tt2/help_shared.tt2:9
-#: ../web_tt2/help_user.tt2:100 ../web_tt2/help_user.tt2:128
-#: ../web_tt2/help_user.tt2:173 ../web_tt2/help_user.tt2:50
-msgid ""
-"Go to the list environment <strong><a href=\"%1/home\">homepage</a></strong> "
-"and <strong>log on</strong>."
-msgstr ""
-"Ve a la <a href=\"%1/home\">página principal</a> del entorno web de listas y "
-"<strong>entra</strong>."
 
 #: ../web_tt2/help_arc.tt2:13
 msgid ""
@@ -2627,618 +4292,6 @@ msgid ""
 "the list)."
 msgstr ""
 
-#: ../web_tt2/help_introduction.tt2:3
-msgid "Mailing lists - General introduction"
-msgstr "Listas de correo - Introducción General"
-
-#: ../web_tt2/help_introduction.tt2:5
-msgid "What is a mailing list?"
-msgstr "¿Qué es una lista de correo?"
-
-#: ../web_tt2/help_introduction.tt2:6
-msgid ""
-"A mailing list is a <strong>distribution list allowing a group of "
-"subscribers to automatically receive by email all messages sent to the list</"
-"strong>: every message sent to the list by a subscriber is received by all "
-"the other subscribers. When subscribed to a mailing list, it is possible to "
-"send messages, to reply to them or to read them without contributing (i.e. "
-"to \"lurk\")."
-msgstr ""
-"Una lista de correo es un <strong>lista de distribución que permite a un "
-"grupo de suscriptores recibir todos los mensajes de e-mail enviados a ella</"
-"strong>: todo mensaje enviado a la lista por un suscriptor es recibido por "
-"todos los otros suscriptores. Cuando te suscribes a una lista de correo, "
-"pueden enviar mensajes, responderlos o simplemente leerlos sin participar."
-
-#: ../web_tt2/help_introduction.tt2:7
-msgid "Special cases:</strong>"
-msgstr "Casos especiales:"
-
-#: ../web_tt2/help_introduction.tt2:9
-msgid ""
-"It is sometimes possible to send messages to a mailing lit without having "
-"subscribed to it. However, you need to be subscribed to a list to receive "
-"its messages."
-msgstr ""
-"A veces es posible enviar mensajes a una lista de correo sin estar suscrito "
-"a ella. Sin embargo, necesitas estar suscrito a una lista para poder recibir "
-"sus mensajes."
-
-#: ../web_tt2/help_introduction.tt2:10
-msgid ""
-"It is sometimes impossible to send messages to the list even though you are "
-"actually subscribed to it: it is the case for announcement lists, which are "
-"used to transmit information from a unique sender to a large number of "
-"recipients."
-msgstr ""
-"A veces es imposible enviar mensajes a una lista aún cuando estés suscrito a "
-"ella: Éste es el caso de las listas de anuncios, las cuales son usadas para "
-"enviar información desde un único remitente a un largo número de receptores."
-
-#: ../web_tt2/help_introduction.tt2:13
-msgid "Interest of mailing lists"
-msgstr "Utilidad de las listas de correo"
-
-#: ../web_tt2/help_introduction.tt2:14
-msgid ""
-"People subscribe to a mailing list (sometimes abbreviated in <acronym title="
-"\"Mailing List\">ML</acronym>) to <strong>be informed about a particular "
-"topic</strong> and to <strong>take part in exchanges about it</strong>. "
-"Examples are:"
-msgstr ""
-"Las personas que se suscriben a una lista de correo (algunas veces abreviada "
-"como <acronym title=\"Mailing List, en inglés\">ML</acronym>) para "
-"<strong>informarse sobre un tema determinado</strong> y para <strong>ser "
-"partícipe de los intercambios al respecto</strong>. Ejemplos de esto son:"
-
-#: ../web_tt2/help_introduction.tt2:16
-msgid "mailing list for all the employees of a company;"
-msgstr "listas de correo para todos los empleados de una compañía;"
-
-#: ../web_tt2/help_introduction.tt2:17
-msgid "mailing list reserved to the participants in a project;"
-msgstr "una lista de correo reservada a los participantes de un proyecto;"
-
-#: ../web_tt2/help_introduction.tt2:18
-msgid "mailing list dedicated to a class of students;"
-msgstr "una lista de correo dedicada a los estudiantes de una clase;"
-
-#: ../web_tt2/help_introduction.tt2:19
-msgid "mailing list about the latest news in computer security;"
-msgstr ""
-"una lista de correo sobre las últimas noticias sobre seguridad computacional;"
-
-#: ../web_tt2/help_introduction.tt2:20
-msgid "mailing list of mutual aid between handymen;"
-msgstr "una lista de correo para la ayuda mutua entre reparadores;"
-
-#: ../web_tt2/help_introduction.tt2:21
-msgid ""
-"mailing list restricted to a family and dedicated to the organization of "
-"large family gatherings;"
-msgstr ""
-"una lista de correo restringida a los miembros de una familia y dedicada a "
-"la orgnización de grandes reuniones familiares;"
-
-#: ../web_tt2/help_introduction.tt2:22
-msgid "and so on!"
-msgstr "¡Y así sucesivamente!"
-
-#: ../web_tt2/help_introduction.tt2:25
-msgid "Types of mailing lists"
-msgstr "Tipos de listas de correo"
-
-#: ../web_tt2/help_introduction.tt2:26
-msgid ""
-"There are <strong>thousands of mailing lists</strong> of all kinds on the "
-"Internet: public or private, free or not, with subscription subject to "
-"conditions or not, etc. Those lists may have from a dozen up to several "
-"thousand members."
-msgstr ""
-"Hay <strong>miles de listas de correo</strong> de todos los tipos en "
-"Internet: públicas y privadas, gratis y de pago, con la suscripción "
-"condicionada a ciertas reglas y no, etc. Estas listas pueden tener desde una "
-"docena a varios miles de miembros."
-
-#: ../web_tt2/help_introduction.tt2:27
-msgid ""
-"According to the way they work, we can distinguish between <strong>two types "
-"of lists</strong>:"
-msgstr ""
-"De acuerdo a como funcionan, podemos distinguir entre <strong>dos tipos de "
-"listas</strong>:"
-
-#: ../web_tt2/help_introduction.tt2:29
-msgid ""
-"<strong>Announcements lists</strong> allow subscribers to receive messages "
-"without being allowed to post some themselves. In fact, those messages are "
-"newsletters: electronic magazines, daily services (daily horoscope, daily "
-"weather report, daily security alert, etc.), update notices about a website, "
-"etc. With this type of mailing list, the information flows from a unique "
-"sender to a large number of recipients."
-msgstr ""
-"<strong>Listas de anuncios</strong>, que permiten a los suscriptores solo "
-"recibir mensajes. De hecho, aquellos mensajes son conocidos como "
-"newsletters: revistas electrónicas, servicios diarios (horóscopo del día, el "
-"clima del día, alertas de seguridad del día, etc.), notificaciones de "
-"actualización de un sitio web, etc. Con este tipo de lista de correo, la "
-"información va desde un remitente único a un largo número de receptores."
-
-#: ../web_tt2/help_introduction.tt2:30
-msgid ""
-"<strong>Discussion lists</strong> allow all subscribers to take part in "
-"exchanges. Those lists can be moderated or not:"
-msgstr ""
-"<strong>Listas de discusión</strong>, que permiten a todos los suscriptores "
-"tomar parte de los envíos. Estas listas pueden ser moderadas o no:"
-
-#: ../web_tt2/help_introduction.tt2:32
-msgid ""
-"In a <strong>moderated discussion list</strong>, messages are transmitted to "
-"all subscribers after approval by one of the list moderators. Moderation is "
-"a token of quality for the list. For example, it ensures that subscribers "
-"will not receive off-topic messages, unsolicited commercial messages "
-"(spams), messages containing large attachments, etc."
-msgstr ""
-"En una <strong>lista de discusión moderada</strong>, los mensajes son "
-"transmitidos a todos los suscriptores una vez que han sido aprobados por uno "
-"de los moderadores de la lista. La moderación es una de las cualidades de la "
-"lista. Por ejemplo, asegura que los suscriptores no recibirán mensajes fuera "
-"del tema de la lista o mensajes comerciales no solicitados (spams) o "
-"mensajes que contienen archivos adjuntos de gran tamaño, etc."
-
-#: ../web_tt2/help_introduction.tt2:33
-msgid ""
-"In a <strong>non moderated discussion list</strong>, messages are "
-"transmitted to all subscribers as soon as the mailing list management robot "
-"receives them."
-msgstr ""
-"Es una <strong>lista de discusión no moderada</strong>, los mensajes son "
-"transmitidos tan pronto como el robot de administración de la lista los "
-"recibe."
-
-#: ../web_tt2/help_introduction.tt2:37
-msgid "Features"
-msgstr "Funciones"
-
-#: ../web_tt2/help_introduction.tt2:38
-msgid "Once subscribed to a mailing list service, you can:"
-msgstr "Una vez suscrito a una lista de correo, puedes:"
-
-#: ../web_tt2/help_introduction.tt2:40
-msgid ""
-"search for mailing lists</strong> matching your main interests or your "
-"particular situation;"
-msgstr ""
-"buscar una lista de correo</strong> según tus intereses principales o tu "
-"situación particular;"
-
-#: ../web_tt2/help_introduction.tt2:41
-msgid "manage your subscriptions</strong>:"
-msgstr "gestionar tus suscripciones</strong>:"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:43
-msgid "<a href=\"%1/help/user#subscribe\">subscribe</a> to lists,"
-msgstr "<a href=\"%1/help/user#subscribe\">suscribirte</a> a listas,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:44
-msgid ""
-"<a href=\"%1/help/user#unsubscribe\">unsubscribe</a> from lists to which you "
-"are subscribed,"
-msgstr ""
-"<a href=\"%1/help/user#unsubscribe\">desuscribirte</a> de listas a las que "
-"te encuentras suscrito,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:45
-msgid ""
-"change your <a href=\"%1/help/user#options\">subscriber options</a> list by "
-"list,"
-msgstr ""
-"cambiar tus <a href=\"%1/help/user#options\">opciones de suscripción</a> "
-"lista por lista,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:46
-msgid ""
-"change your <a href=\"%1/help/user#pref\">general preferences</a>, which "
-"apply to the whole mailing list environment (name, password, language of the "
-"mailing list web interface, etc.);"
-msgstr ""
-"cambiar tus <a href=\"%1/help/user#pref\">preferencias generales</a>, las "
-"que se aplican todo el entorno de las listas de correo (nombre, contraseña, "
-"idioma de la interfaz web, etc.);"
-
-#: ../web_tt2/help_introduction.tt2:48
-msgid "use mailing lists"
-msgstr "usar las listas de correo"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:50
-msgid ""
-"read the <a href=\"%1/help/arc\">online message archive of lists to which "
-"you are not subscribed</a> if that archive is public and if your personal "
-"rights allow you to access those lists,"
-msgstr ""
-"leer el <a href=\"%1/help/arc\">archivo de mensajes online de las listas a "
-"las que no estás suscrito</a>, si ese archivo es público y si tus permisos "
-"personales te permiten acceder a esas listas,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:51
-msgid ""
-"read the <a href=\"%1/help/arc\">archive of lists to which you are "
-"subscribed</a>,"
-msgstr ""
-"leer el <a href=\"%1/help/arc\">archivo de las listas a las cuales estás "
-"suscrito</a>,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:52
-msgid ""
-"perform <a href=\"%1/help/arc#arcsearch\">searches in the list archive</a>,"
-msgstr ""
-"realizar <a href=\"%1/help/arc#arcsearch\">búsquedas en los archivos de la "
-"lista</a>,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:53
-msgid ""
-"<a href=\"%1/help/sendmsg\">send messages</a> to lists to which you are "
-"subscribed,"
-msgstr ""
-"<a href=\"%1/help/sendmsg\">enviar mensajes</a> a las listas a las que estás "
-"suscrito,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:54
-msgid ""
-"<a href=\"%1/help/shared#shared_read\">download documents</a> from the "
-"shared document web space,"
-msgstr ""
-"<a href=\"%1/help/shared#shared_read\">descargar documentos</a> desde el "
-"espacio de documentos compartidos,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:55 ../web_tt2/help_user.tt2:81
-msgid ""
-"<a href=\"%1/help/shared#shared_upload\">upload documents</a> in the shared "
-"document web space;"
-msgstr ""
-"<a href=\"%1/help/shared#shared_upload\">subir documentos</a> al espacio de "
-"documentos compartidos;"
-
-#: ../web_tt2/help_introduction.tt2:57
-msgid "manage mailing lists"
-msgstr "manejar listas de correo"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:59
-msgid ""
-"<a href=\"%1/help/admin#create_list\">create new lists</a> (restricted "
-"access) - subject to authorization,"
-msgstr ""
-"<a href=\"%1/help/admin#create_list\">crear nuevas listas</a> (acceso "
-"restringido) - sujeto a la autorización,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:60
-msgid "<a href=\"%1/help/admin#edit_list\">configure lists</a> you own,"
-msgstr ""
-"<a href=\"%1/help/admin#edit_list\">configurar las listas</a> que te "
-"pertenecen,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:61
-msgid "<a href=\"%1/help/admin#manage_members\">manage subscriptions</a>,"
-msgstr ""
-"<a href=\"%1/help/admin#manage_members\">administrar suscripciones</a>,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:62
-msgid ""
-"<a href=\"%1/help/admin#manage_shared\">manage the shared document web "
-"space</a>,"
-msgstr ""
-"<a href=\"%1/help/admin#manage_shared\">administrar el espacio de documentos "
-"compartidos</a>,"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:63
-msgid ""
-"<a href=\"%1/help/admin#moderate\">moderate lists</a> for which you are a "
-"moderator."
-msgstr ""
-"<a href=\"%1/help/admin#moderate\">moderar las listas</a> de las cuales eres "
-"moderador."
-
-#: ../web_tt2/help_introduction.tt2:67
-msgid "How the mailing list service works: roles and responsibilities"
-msgstr ""
-"Cómo funciona el servicio de listas de correo: roles y responsabilidades"
-
-#: ../web_tt2/help_introduction.tt2:69
-msgid "A mailing list service involves four types of roles:"
-msgstr "Un servicio de listas de correo involucra cuatro tipos de roles:"
-
-#: ../web_tt2/help_introduction.tt2:71
-msgid "<strong>listmaster;</strong>"
-msgstr "<strong>listmaster;</strong>"
-
-#: ../web_tt2/help_introduction.tt2:72
-msgid "<strong>owner;</strong>"
-msgstr "<strong>dueño;</strong>"
-
-#: ../web_tt2/help_introduction.tt2:73
-msgid "<strong>moderator;</strong>"
-msgstr "<strong>moderador;</strong>"
-
-#: ../web_tt2/help_introduction.tt2:74
-msgid "<strong>subscriber.</strong>"
-msgstr "<strong>suscriptor.</strong>"
-
-#: ../web_tt2/help_introduction.tt2:76
-msgid ""
-"It is possible to have several roles at once (for example, you can be an "
-"owner and a moderator of a list and be subscribed to several others)."
-msgstr ""
-"Es posible tener varios roles al mismo tiempo (por ejemplo, puedes ser el "
-"dueño y moderador de una lista y estar suscrito a varias otras)."
-
-#: ../web_tt2/help_introduction.tt2:78
-msgid "Listmasters"
-msgstr "Listmasters"
-
-#: ../web_tt2/help_introduction.tt2:79
-msgid ""
-"Listmasters are in charge of the <strong>management of the mailing list "
-"service</strong>. Their duties:"
-msgstr ""
-"Los listmasters están a cargo de <strong>la administración del servicio de "
-"listas de correo</strong>. Sus tareas:"
-
-#: ../web_tt2/help_introduction.tt2:81
-msgid ""
-"<strong>manage the mailing list server</strong> (deployment, maintenance, "
-"etc.);"
-msgstr ""
-"<strong>administración del servidor de listas de correo</strong> "
-"(implementación, mantención, etc.);"
-
-#: ../web_tt2/help_introduction.tt2:82
-msgid ""
-"<strong>define the general orientations of the mailing list service</strong>:"
-msgstr ""
-"<strong>definir las orientaciones generales del servicio de listas de "
-"correo</strong>:"
-
-#: ../web_tt2/help_introduction.tt2:84
-msgid "who will be allowed to ask for the creation of a new list,"
-msgstr "a quién se le permitirá pedir la creación de una nueva lista,"
-
-#: ../web_tt2/help_introduction.tt2:85
-msgid "which options will be available to manage lists (scenario definition),"
-msgstr ""
-"cuales opciones estarán disponibles en la gestión de la lista (definición "
-"del scenario),"
-
-#: ../web_tt2/help_introduction.tt2:86
-msgid "what the default files will contain (creation of templates),"
-msgstr "el contenido por defecto de los archivos (creación de plantillas),"
-
-#: ../web_tt2/help_introduction.tt2:87
-msgid "what will the mailing list web interface look like;"
-msgstr "cómo se verá la interfaz web de la lista de correo;"
-
-#: ../web_tt2/help_introduction.tt2:89
-msgid ""
-"<strong>set the way the mailing list service should be used</strong> and "
-"<strong>document those rules through providing charters</strong> to "
-"subscribers, moderators and owners;"
-msgstr ""
-"<strong>indica la forma en que el servicio de listas de correo debe usarse</"
-"strong> y <strong>documenta esas reglas en los mensajes</strong> enviados a "
-"suscritpores, moderadores y propietarios;"
-
-#: ../web_tt2/help_introduction.tt2:90
-msgid "<strong>approve of requests of mailing list creations</strong>;"
-msgstr "<strong>aprueba las slocitides de creación de lista de correo</strong>"
-
-#: ../web_tt2/help_introduction.tt2:91
-msgid ""
-"<strong>temporarily replace list owners</strong> when necessary; on the "
-"other hand, listmasters are not supposed to take the place of moderators."
-msgstr ""
-"<strong>temporalmente replaza los propietarios de la lista</strong> cuando "
-"sea necesario; por otra parte, los listmasters no deberían realizar las "
-"acciones de moderadores"
-
-#: ../web_tt2/help_introduction.tt2:93
-msgid ""
-"List owners and moderators can turn to listmasters</strong> when they face a "
-"problem not dealt with by the documentation or for any comment. However, in "
-"order not to flood listmasters with messages, it is recommended that "
-"subscribers rather turn to list owners."
-msgstr ""
-"Los propietarios de la lista y los moderadores pueden notificar a los "
-"listmasters</strong> cuando encuentren algún problema que no esté "
-"relacionado  con la documentación o con algún comentario. Sin embargo, para "
-"no inundar a los listmasters con mensajes, se recomienda que los "
-"suscriptores se pongan en contacto con los propietarios de la lista"
-
-#: ../web_tt2/help_introduction.tt2:95
-msgid "Owners"
-msgstr "Propietarios"
-
-#: ../web_tt2/help_introduction.tt2:96
-msgid ""
-"The list owner is generally its creator</strong> or, failing him/her, the "
-"person who requested the list creation or who became responsible for it. "
-"<strong>His/her role</strong>:"
-msgstr ""
-"El propietario de la lista suele ser su creador</strong> o, en su defecto, "
-"la persona que ha solicitado la creación de la lista o quien se haga "
-"responsable de ella. <strong>Su rol</strong>:"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:98
-msgid ""
-"<strong>define the <a href=\"%1/help/admin#edit_list\">way the list will be "
-"used</a></strong>;"
-msgstr ""
-"<strong>define la <a href=\"%1/help/admin#edit_list\">forma en que se "
-"utilizará la lista</a></strong>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:99
-msgid ""
-"<strong> write a <a href=\"%1/help/admin#charter\">list charter</a></strong> "
-"aimed at subscribers;"
-msgstr ""
-"<strong> escribe una <a href=\"%1/help/admin#charter\">carta de bienvenida</"
-"a></strong> orientada a los suscriptores;"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:100
-msgid ""
-"<strong>appoint one or several <a href=\"%1/help/listconfig#description"
-"\">moderators</a></strong>;"
-msgstr ""
-"<strong>establece uno o varios <a href(\"%1/help/listconfig#description"
-"\">moderadores</a></strong>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:101
-msgid ""
-"<strong>manage <a href=\"%1/help/admin#manage_members\">subscriptions and "
-"unsubscriptions</a></strong>;"
-msgstr ""
-"<strong>gestiona las <a href=\"%1/help/admin#manage_members\">suscripciones "
-"y desuscripciones</a></strong>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:102
-msgid ""
-"<strong>decide whether it is relevant to put a <a href=\"%1/help/"
-"admin#manage_shared\">shared document web space</a></strong> at the "
-"subscribers' disposal;"
-msgstr ""
-"<strong>cuando es relevante poner un <a href=\"%1/help/admin#manage_shared"
-"\">documento compartido en el espacio web</a></strong> a la disposición de "
-"los suscriptores;"
-
-#: ../web_tt2/help_introduction.tt2:103
-msgid ""
-"<strong>answer questions from subscribers and potential subscribers about "
-"the list;</strong>"
-msgstr ""
-"<strong>contesta preguntas de los suscriptores o potenciales suscritores "
-"sobre la lista;</strong>"
-
-#: ../web_tt2/help_introduction.tt2:106
-msgid ""
-"A list can have several owners. However, the <strong>'Privileged' profile</"
-"strong> is reserved to the list's creator; other owners have a 'Normal' "
-"profile, which has fewer prerogatives."
-msgstr ""
-"Una lista puede tener varios propietarios. Sin embargo, el <strong>perfil "
-"'Privilegiado'</strong> se reserva a los creadores de la lista; otros "
-"creadores tienen un perfil 'Normal', el cual tiene menos prerogativas"
-
-#: ../web_tt2/help_introduction.tt2:108
-msgid "Moderators"
-msgstr "Moderadores"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:110
-msgid ""
-"<strong>Moderators are appointed by the list owner</strong>. They are "
-"<strong>in charge of <a href=\"%1/help/admin#moderate\">controlling the "
-"relevancy of the messages</a></strong> sent to the list: after reading them, "
-"<strong>they choose to accept or to reject them </strong>. Moderation occurs "
-"before the message is actually sent to subscribers. Rejection of a message "
-"is possibly followed by a notice to the sender in order to explain the "
-"reason for that rejection."
-msgstr ""
-"<strong>Los moderadores los nombra el propietario de la lista</strong>. "
-"Ellos se encargan de <a href=\"%1/help/admin#moderate\">controlar la "
-"relevancia de los mensajes</a></strong> enviados a la lista: despues de "
-"leerlos, <strong>eligen si los aceptan o los rechazan.</strong>. El proceso "
-"de moderación ocurre antes de que el mensaje se envie. El rechazo de un "
-"mensaje posiblemente va asociado a una notificación para el remitente con la "
-"intención de explicar la razón del rechazo."
-
-#: ../web_tt2/help_introduction.tt2:111
-msgid ""
-"A list can have <strong>one or several moderators</strong>; generally, the "
-"list owner is also a moderator."
-msgstr ""
-"Una lista puede tener <strong>uno o varios moderadores</stgrong>; "
-"generalmente, el propietario de la lista es también moderador."
-
-#: ../web_tt2/help_introduction.tt2:112
-msgid "This concerns only moderated lists."
-msgstr "Esto concierne solo a los moderadores de listas."
-
-#: ../web_tt2/help_introduction.tt2:114
-msgid "Regulatory framework"
-msgstr "Framework Regulador"
-
-#: ../web_tt2/help_introduction.tt2:115
-msgid "The use of a mailing list service means respecting a number of rules:"
-msgstr ""
-"El uso de un servicio de listas de correo significa respetar una serie de "
-"normas:"
-
-#: ../web_tt2/help_introduction.tt2:117
-msgid ""
-"In most mailing list services, subscribers receive a '<a target=\"_blank\" "
-"title=\"Example of subscribers charter (French)\" href=\"http://listes.cru."
-"fr/cnil/charte.abonne.html\">List subscribers charter</a>' on subscription. "
-"Then they are obliged to respect all the rules contained in that charter."
-msgstr ""
-"En la mayoría de los servicios de listas de ocrreo, los suscriptores reciben "
-"a <a target=\"_blank\" title=\"Ejemplo de carta de bienvenida(Francés)\" "
-"href=\"http://listes.cru.fr/cnil/charte.abonne.html\">Carta de bienvenida</"
-"a> en la suscripción.  Entonces están obligados a respetar todas las reglas "
-"contenidas en dicha carta."
-
-#: ../web_tt2/help_introduction.tt2:118
-msgid ""
-"If available, list owners and moderators have to conform to the <a target="
-"\"_blank\" title=\"Example of charter aimed at owners and moderators (French)"
-"\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner and "
-"moderator charter</a>."
-msgstr ""
-"Si está disponible, los moderadores y propietarios deben ajustarse a la <a "
-"target=\"_blank\" title=\"Ejamplo de carta de bienvenida destinada a "
-"propietarios y moderadores (Francés)\" href=\"http://listes.cru.fr/cnil/"
-"charte.proprio.html\">carta de bienvenida para moderadores y propietarios</"
-"a>."
-
-#: ../web_tt2/help_introduction.tt2:119
-msgid ""
-"The use of mailing lists naturally means respecting the rules of good "
-"practices as regards email (the \"Netiquette\")."
-msgstr ""
-"El uso de listas de correo naturalmente implica respetar las reglas del buen "
-"uso del correo"
-
-#. (path_cgi)
-#: ../web_tt2/help_introduction.tt2:121
-msgid ""
-"To know more, refer to the section dedicated to <a href=\"%1/help/"
-"sendmsg#rulesuser\">good practices for subscribers</a> and to the section "
-"about <a href=\"%1/help/admin#rulesadmin\">good practices for owners and "
-"moderators</a>."
-msgstr ""
-"Para conocer mas, diríjase a la sección dedicada a <a href=\"%1/help/"
-"sendmsg#rulesuser\"> las buenas prácticas para suscriptores</a> y a la "
-"sección sobre <a href=\"%1/help/admin#rulesadmin\">buenas prácticas de "
-"propietarios y moderadores</a>."
-
 #: ../web_tt2/help_listconfig.tt2:4
 msgid ""
 "As the list configuration is quite complex, it is divided in several parts "
@@ -4122,10 +5175,6 @@ msgid ""
 "moderated"
 msgstr ""
 
-#: ../web_tt2/help_sendmsg.tt2:3 ../web_tt2/help_user.tt2:157
-msgid "Sending a message"
-msgstr "Enviar un mensaje"
-
 #: ../web_tt2/help_sendmsg.tt2:4
 msgid ""
 "When you are subscribed to a list, you receive all messages subscribers "
@@ -4392,10 +5441,6 @@ msgid ""
 "many links on the <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/"
 "Netiquette\">page of the Wikipedia dedicated to the Netiquette</a>."
 msgstr ""
-
-#: ../web_tt2/help_shared.tt2:3 ../web_tt2/help_user.tt2:160
-msgid "Using the shared document web space"
-msgstr "Utilizar el espacio web compartido de documentos"
 
 #: ../web_tt2/help_shared.tt2:4
 msgid ""
@@ -4984,60 +6029,6 @@ msgid ""
 "characters</strong>."
 msgstr ""
 
-#: ../web_tt2/help.tt2:11
-msgid "Subscriber, moderator and owner documentation"
-msgstr "Documentación para el suscriptor, moderador y administrador"
-
-#: ../web_tt2/help.tt2:13
-msgid "In this documentation, you will find:"
-msgstr "En esta documentación encontrarás:"
-
-#. (path_cgi)
-#: ../web_tt2/help.tt2:15
-msgid ""
-"a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
-"una <a href=\"%1/help/introduction\">introducción general</a> a las listas "
-"de correo;"
-
-#. (path_cgi)
-#: ../web_tt2/help.tt2:16
-msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
-msgstr ""
-"una <a href=\"%1/help/user\">guía de usuario</a> acerca del uso de Sympa;"
-
-#. (path_cgi)
-#: ../web_tt2/help.tt2:17
-msgid ""
-"an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
-msgstr ""
-"una <a href=\"%1/help/admin\">guía de administrador</a> sobre el uso de "
-"Sympa."
-
-#. (path_cgi)
-#: ../web_tt2/help.tt2:20
-msgid ""
-"If you want to perform a particular task, take a look at the list of all <a "
-"href=\"%1/help/introduction#features\">available features</a> in the mailing "
-"list management software Sympa."
-msgstr ""
-"Si deseas realizar una tarea determinada, revisa la lista de <a href=\"%1/"
-"help/introduction#features\">funciones disponibles</a> en el software de "
-"administración de listas de correo Sympa."
-
-#. (path_cgi)
-#: ../web_tt2/help.tt2:21
-msgid ""
-"If you experience any problem, please refer to the <a href=\"%1/help/faquser"
-"\">users <acronym title=\"Frequently asked questions\">FAQ</acronym></a> or "
-"to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
-"\"Frequently asked questions\">FAQ</acronym></a>."
-msgstr ""
-"Si experimentas cualquier problema, por favor revisa las <a href=\"%1/help/"
-"faquser\"><acronym title=\"Preguntas Frecuentemente Formuladas\">FAQ</"
-"acronym> del usuario</a> o las <a href=\"%1/help/faqadmin\"><acronym title="
-"\"Preguntas Frecuentemente Formuladas\">FAQ</acronym> del administrador</a>."
-
 #: ../web_tt2/help_user_options.tt2:3
 msgid ""
 "This is a description of the receivie modes available in Sympa. These "
@@ -5177,961 +6168,6 @@ msgstr ""
 "Esta opción se usa principalmente para cancelar los modos nomail, resumen "
 "(summary) o resumen (digest). Si el/la subscriptor/a estaba en modo nomail, "
 "él/ella volverá a recibir correos individuales de la lista."
-
-#: ../web_tt2/help_user.tt2:3
-msgid "Mailing lists - User Guide"
-msgstr "Listas de Correo - Guía de Usuario"
-
-#: ../web_tt2/help_user.tt2:5
-msgid "How the mailing list service works"
-msgstr "Cómo funciona el servicio de listas de correo"
-
-#: ../web_tt2/help_user.tt2:6
-msgid ""
-"The mailing-list service is managed by a <strong>mailing-list software: "
-"Sympa</strong>. This software comes with a <strong>web mailing list "
-"environment</strong>."
-msgstr ""
-"El servicio de listas de correo está gestionado por un <strong>sofware de "
-"listas de correo: Sympa</strong>. El software viene con un <strong>entorno "
-"web de listas de correo</strong>."
-
-#: ../web_tt2/help_user.tt2:7
-msgid ""
-"To perform actions related to mailing lists</strong> (subscribe, change your "
-"options, etc.), you have two options:"
-msgstr ""
-"Para realizar acciones relacionadas con las listas de correo</strong>"
-"(suscripción, chambiar tus opciones, etc.), tienes dos opciones:"
-
-#: ../web_tt2/help_user.tt2:9
-msgid "<strong>log on to the web environment</strong>;"
-msgstr "<strong>Entrar en el entorno web</stronG>;"
-
-#. (conf.email,conf.host)
-#: ../web_tt2/help_user.tt2:10
-msgid ""
-"<strong>send commands by email</strong> to the Sympa mailing list manager at "
-"<strong>%1@%2</strong>."
-msgstr ""
-"<strong>enviar comando por email</strong> al gestor de listas de correo "
-"Sympa <strong>%1@%2</strong>"
-
-#: ../web_tt2/help_user.tt2:12
-msgid "<strong>To send a command to Sympa</strong>, do as follows:"
-msgstr "<strong>Para enviar un comando a Sympa</strong>, haz lo siguiente:"
-
-#: ../web_tt2/help_user.tt2:14
-msgid ""
-"<strong>If you send a single command</strong>, type it into the subject line "
-"of your email and leave its body blank."
-msgstr ""
-"<strong>Is mandas un solo comando</strong>, escríbelo en el Asunto del "
-"mensaje y deja el cuerpo del mensaje en blanco."
-
-#: ../web_tt2/help_user.tt2:15
-msgid ""
-"<strong>If you send several commands</strong>, leave the subject line of "
-"your email blank and type all the commands in the email body. <strong>Be "
-"careful</strong>: Sympa will not process your message unless you respect the "
-"following rules:"
-msgstr ""
-"<strong>Si mandas varios comandos</strong>, deja el Asunto del mensaje en "
-"blanco y escribe todos los comandos dentro del cuerpo del mensaje."
-"<strong>Ten cuidado</strong: Sympa no procesará tu mensaje si no respetas "
-"las siguientes reglas:"
-
-#: ../web_tt2/help_user.tt2:17
-msgid "Write every command on a new line."
-msgstr "Escribe cada comando en una nueva línea."
-
-#: ../web_tt2/help_user.tt2:18
-msgid ""
-"Send your message in plain text, not in <acronym lang=\"en\" xml:lang=\"en\" "
-"title=\"HyperText Markup Language\">HTML</acronym> (no formatting)."
-msgstr ""
-"Escribe un mensaje en texto plano, no en <acronym lang=\"en\" xml:lang=\"en"
-"\" title=\"HyperText Markup Language\">HTML</acronym>(sin formato)."
-
-#: ../web_tt2/help_user.tt2:19
-msgid ""
-"Your message can not contain anything else than Sympa commands (no signature "
-"block)."
-msgstr ""
-"Tu mensaje no puede contener otra cosa que no sean comandos Sympa (no se "
-"debe incluir ninguna firma)."
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:23
-msgid ""
-"A description of all the commands you can send to Sympa is available at <a "
-"href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
-msgstr ""
-"Una descripción de todos los comandos que puedes enviar a Sympa está "
-"disponible en <a href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
-
-#: ../web_tt2/help_user.tt2:25
-msgid "Subscribing to mailing lists"
-msgstr "Suscripción a listas de correo"
-
-#: ../web_tt2/help_user.tt2:26
-msgid "Subscribing to a mailing list is very simple:"
-msgstr "La suscripción a una lista de correo es muy simple:"
-
-#: ../web_tt2/help_user.tt2:28
-msgid ""
-"Choose the address</strong> with which you want to subscribe to the list."
-msgstr "Elige la dirección</strong> con la que quieres suscribirte a la lista."
-
-#: ../web_tt2/help_user.tt2:29
-msgid ""
-"You should choose an address you can check frequently and which offers a "
-"large storage capacity for your email: some lists distribute many messages, "
-"which sometimes contain large attachments."
-msgstr ""
-"Debes escoger una dirección que compruebes frecuentemente a que ofrezca una "
-"buena capacidad de almacenamiento para tus email: algunas listas distribuyen "
-"muchos mensajes, los cuales a veces contienen adjuntos grandes."
-
-#: ../web_tt2/help_user.tt2:30
-msgid ""
-"Of course you can subscribe to the same list with several email addresses. "
-"Then you will need to redo the whole process with a different email address."
-msgstr ""
-"Por supuesto puedes suscribirte en una misma lista con distintas cuentas de "
-"correo. En ese caso necesitarás repetir el proceso de suscripción por cada "
-"dirección de correo diferente."
-
-#. (conf.email,conf.host)
-#: ../web_tt2/help_user.tt2:31
-msgid ""
-"Send a <strong>message to %1@%2</strong> from the address you want to "
-"subscribe to the list."
-msgstr ""
-"Envia un <strong>mensaje a %1@%2</strong> desde la dirección que quieres "
-"suscribir a la lista."
-
-#: ../web_tt2/help_user.tt2:32
-msgid ""
-"Sympa is not a person but a mailing list management robot. Thus it is "
-"useless to send it loving words! ;-)"
-msgstr ""
-"Sympa no es una persona sino un robot de gestión de listas de correo. Así "
-"que no sirve de nada enviarle palabras cariñosas! ;-)"
-
-#: ../web_tt2/help_user.tt2:33
-msgid ""
-"In the subject line of your message, type in: <strong>subscribe "
-"nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name "
-"of the list you want to subscribe to and indicate your own first name and "
-"name)."
-msgstr ""
-"En el asunto del mensaje, escribe: <strong>subscribe nnombredelalista Nombre "
-"Apellidos</strong> (cambia 'nombredelalista' por el nombre de la lista a la "
-"que te quieres suscribir e indica tu propio Nombre y Apellidos)."
-
-#: ../web_tt2/help_user.tt2:168 ../web_tt2/help_user.tt2:34
-msgid "<strong>Leave the message body blank</strong>."
-msgstr "<strong>Deja el cuerpo del mensaje en blanco</strong>."
-
-#: ../web_tt2/help_user.tt2:169 ../web_tt2/help_user.tt2:35
-msgid ""
-"To save some time, you can also send several commands in a single message. "
-"To do that, follow the instructions available in the <a href=\"#howitworks"
-"\">How the mailing list service works</a> section."
-msgstr ""
-"Para ahorrar tiempo, puedes enviar varios comandos en un mismo mensaje. Para "
-"hacer eso, sigue las instrucciones disponibles en la sección <a href="
-"\"howitworks\">Cómo funciona un servicio de listas de correo</a>"
-
-#. (conf.host)
-#: ../web_tt2/help_user.tt2:38
-msgid ""
-"<strong>After this, you will receive a message telling you whether your "
-"request was accepted or not</strong>: if the subscription to the list is "
-"subject to any approval, the list owner may choose not to subscribe you. If "
-"so, do not send several other requests: it is useless as the result will "
-"remain the same. You can possibly send a message directly to the list owner "
-"(nameofthelist-request@%1) to explain why you really want to subscribe to "
-"the list..."
-msgstr ""
-"<strong> Después de esto, recibirás un mensaje diciéndote si tu solicitud ha "
-"sido aceptada o no</strong>: si la suscripción de la lista está sujeta a "
-"algún tipo de aprobación, el propietario de la lista debe decidir si te "
-"suscribe o no. Si es así, no envíes varias solicitudes: no sirve de nada ya "
-"que obtendrás el mismo resultado. Posiblemente podrás enviar un mensaje "
-"directamente al propietario de la lista (nombredelalista-request@%1) para "
-"eplicar por qué quieres ser suscriptor de la lista..."
-
-#: ../web_tt2/help_user.tt2:39
-msgid ""
-"Note: you will sometimes be asked to confirm your subscription request "
-"before it can be processed. If so, please conform to the instructions "
-"contained in the message you receive."
-msgstr ""
-"Nota: algunas veces tendrás que confirmar tu solicitud de suscripción antes "
-"de que sea procesada. Si es así, por favor sigue las instrucciones que se "
-"indican en el mensaje que hayas recibido."
-
-#: ../web_tt2/help_user.tt2:40
-msgid ""
-"According to the type of list (list with subscription subject to conditions "
-"or not) and to the availability of the list owner, <strong>you may not "
-"receive the notice immediately</strong>. It is useless to send several "
-"requests."
-msgstr ""
-"Según el tipo de lista (lista con suscriptores sujetos a condiciones o no) y "
-"a la disponibilidad del propietario de la lista, <strong>puede que no "
-"recibas noticias inmediatamente</strong>. No sirve de nada enviar varias "
-"solicitudes."
-
-#: ../web_tt2/help_user.tt2:41
-msgid ""
-"<strong>If your request is accepted, the message you receive confirms your "
-"subscription to the list. This message</strong> (the list Charter) "
-"<strong>contains several pieces of essential information:</strong>"
-msgstr ""
-"<strong>Si se acepta tu solicitud, el mensaje que recibirás confirmará tu "
-"suscripción a la lista. Éste mensaje</strong>(la carta de bienvenida)"
-"<strong>contiene varias piezas de información esencial:</strong>"
-
-#: ../web_tt2/help_user.tt2:43
-msgid ""
-"your <strong>list password</strong>. This password is the same for all the "
-"lists you subscribed to with a single email address. You can <a href="
-"\"#global_pref\" title=\"How to change your password\">change it online</a> "
-"after logging on to the mailing list environment;"
-msgstr ""
-"tu <strong>password de la lista</strong>. Este password es el mismo para "
-"todas las listas a las que estés suscrito con una misma cuenta de correo. "
-"Puedes <a href=\"#global_pref\" title=\"Cómo cambiar tu password\">cambiarlo "
-"online</a> después de acceder al entorno web del servidor de listas de "
-"correo;"
-
-#: ../web_tt2/help_user.tt2:44
-msgid ""
-"<strong>detailed information about the list</strong>: its purpose, the "
-"Internet address at which the message archive is available, etc."
-msgstr ""
-"<strong>información detallada sobre la lista</strong>: su propósito, la "
-"dirección de internet donde están disponibles el archivo de mensajes, etc."
-
-#: ../web_tt2/help_user.tt2:45
-msgid ""
-"the <strong>rules applying to the list and its members</strong>: allowed and "
-"forbidden topics, netiquette, legal information, privacy policy, etc."
-msgstr ""
-"las <strong>reglas aplicables a la lista y a sus miembros</strong>: temas "
-"permitidos y prohibidos, información legal, políticas de privacidad, etc."
-
-#: ../web_tt2/help_user.tt2:47
-msgid ""
-"<strong>You should keep your subscription notice</strong>: you may need it "
-"later to remember your password or to send a precise command to Sympa "
-"(example: signoff command). More generally, <strong>we advise you to keep "
-"all your subscription notices to mailing lists</strong>."
-msgstr ""
-"<strong>Debes guardar tu notificación de suscripción</strong>: puede que la "
-"necesites antes para recordar tu password o para enviar un comando preciso a "
-"Sympa (ejemplo: comando signoff). En gteneral, <strong> te recomendamos que "
-"guardes todas tus notificaciones de suscripción a listas de correo</strong>."
-
-#: ../web_tt2/help_user.tt2:48
-msgid ""
-"<strong>You can also subscribe to a list through the mailing list web "
-"interface</strong>. To do that, do as follows:"
-msgstr ""
-"<strong>Puedes también suscribirte a una lista a través de la interfaz de la "
-"lista de correo</strong>. Para hacer eso, haz lo siguiente:"
-
-#: ../web_tt2/help_user.tt2:51
-msgid ""
-"<strong>Go to the information page of the list</strong> you want to "
-"subscribe to."
-msgstr ""
-"<strong>Ve a la página información de la lista</strong> de la que quieres "
-"suscribirte."
-
-#: ../web_tt2/help_user.tt2:52
-msgid "In the left menu, <strong>click on the 'Subscribe'</strong> link."
-msgstr "En el menú lateral, <strong>pincha en el enalce 'Suscribir'</strong>."
-
-#: ../web_tt2/help_user.tt2:55
-msgid "Logging on to the mailing list environment"
-msgstr "Entrar en el entorno de listas de correo"
-
-#: ../web_tt2/help_user.tt2:56
-msgid ""
-"To log on to the mailing list environment, use the authentication form "
-"displayed on top of the left column of the web interface. When you are "
-"logged on, your email address and user profile (subscriber, moderator or "
-"owner) are displayed there."
-msgstr ""
-"Para entrar al entorno de listas de correo, utilice el formulario de "
-"autenticación situado en la columna superior derecha de la interfaz web. "
-"Cuando hayas entrado, ahí se mostrará tu dirección de correo y perfil "
-"(suscriptor, moderador o propietario)."
-
-#: ../web_tt2/help_user.tt2:58
-msgid "The authentication process varies according to your personal situation:"
-msgstr "El proceso de autenticación varía según tu situación personal:"
-
-#: ../web_tt2/help_user.tt2:60
-msgid ""
-"<strong>If the organization offering the mailing list service uses single "
-"sign-on technology</strong> (unique account and unique authentication, for "
-"example through the <acronym lang=\"en\" xml:lang=\"en\" title=\"Central "
-"Authentication Service\">CAS</acronym> system), you will preferably log on "
-"with your unique account. To do that, click on the 'Go' button next to the "
-"text '<strong>Authentication [name of the system used]</strong>'. Then, type "
-"in your login and password to log on to the authentication server."
-msgstr ""
-"<strong>Si la organización que ofrece el servicio de listas de correo "
-"utiliza tecnología de Single sign-on </strong>(una única cuenta y una única "
-"autenticación, por jemplo a travéz de un sistema <acronym lang=\"en\" xml:"
-"lang=\"en\" title=\"Central Authentication Service\">CAS</acronym>), "
-"preferirás entrar con tu cuenta única. Para hacer eso, pincha en el botón "
-"\"Ir\" al lado del testo '<strong>Autenticación [nombre del sistema "
-"utilizado]</strong'. Entonces, escribe tu login y password para entrar al "
-"servidor de autenticación."
-
-#: ../web_tt2/help_user.tt2:61
-msgid ""
-"If you have already logged on to another service using the unique "
-"authentication system, your authentication is automatic. Refresh page if "
-"necessary."
-msgstr ""
-"Si ya has entrado en otro servicio que esté utilizando el mismo sistema de "
-"autenticaión, tu autenticación será automática. Refresca la página si es "
-"necesario."
-
-#: ../web_tt2/help_user.tt2:62
-#, fuzzy
-msgid ""
-"<strong>If the unique authentication process does not apply to you, you can "
-"use your list password.</strong> In this case, log on through the classic "
-"method: enter the <strong>email address with which you subscribed to the "
-"list</strong> as a login and your <strong>list password</strong> in the "
-"'Password' field."
-msgstr ""
-"<strong>Si no se aplica ningún proceso de autenticación única deberás "
-"utilizar tu password de lista. En ese caso, entra a través del método "
-"clásico: introduce la <strong>dirección de correo con la que te suscribiste "
-"a la lista</strong> como login y tu <strong>password de lista</strong> en la "
-"casilla 'Password'."
-
-#: ../web_tt2/help_user.tt2:63
-#, fuzzy
-msgid ""
-"If you do not remember your list password, click on 'Lost password?'. After "
-"you've provided your email address, a mail with a validation URL will be "
-"sent at that address."
-msgstr ""
-"Si no recuerdas tu password de lista, pincha en '¿Contraseña perdida?'. "
-"Después de indicar tu dirección de correo, recibirás un correo con una URL "
-"de validación."
-
-#: ../web_tt2/help_user.tt2:65
-#, fuzzy
-msgid ""
-"<strong>If the unique authentication process does not apply to you and you "
-"do no have a list password yet</strong>, click on '<strong>First login?</"
-"strong>' and type in your email address. A confirmation URL will be sent at "
-"that address. Then you will be able to choose your password."
-msgstr ""
-"<strong>Si no se aplica ningún proceso de autenticación único y no tienes un "
-"password de lista todavía</strong>, pincha en <strong>¿Primera conexión?</"
-"strong>' y escribe tu dirección de correo. Recibirás una URL de "
-"confirmación. Entonces podrás elegir tu password."
-
-#: ../web_tt2/help_user.tt2:68
-msgid ""
-"Remember: the list password is a special password you will only use for the "
-"mailing list service."
-msgstr ""
-"Recuerda: el password de lista es un password especial que solo utilizarás "
-"para el servicio de listas de correo."
-
-#: ../web_tt2/help_user.tt2:70
-msgid "Checking your subscriptions"
-msgstr "Comprobar tus suscripciones"
-
-#: ../web_tt2/help_user.tt2:71
-msgid ""
-"To see all the lists you subscribed to, you need to <a href=\"#sympa_auth"
-"\">log on</a> first. Then a list of all your lists, including a short "
-"description for each of them, will be displayed in the 'Your lists' form on "
-"the left column."
-msgstr ""
-"Para ver todas las listas a las que estás suscrito, necesitas <a href="
-"\"#syma_auth\">acceder</a> primero. Posteriormente se mostrará un listado de "
-"todas tus listas, incluyendo una breve descripción de cada una de ellas, en "
-"el formulario \"Tus listas\" de la columna situada a la izquierda."
-
-#: ../web_tt2/help_user.tt2:73
-msgid ""
-"<strong>To look at a list information page, click on its name</strong>. The "
-"information page includes a description of the list (object, rules applying "
-"when sending a message, etc.), which length varies according to the list."
-msgstr ""
-"<strong>Para ver la página de información de una lista, pincha en el nombre "
-"de la misma</strong>. La página de información incluye una descripción de la "
-"lista( objetivo, reglas aplicables cuando se envía un mensaje, etc.), cuya "
-"longitud variará según la lista."
-
-#: ../web_tt2/help_user.tt2:74
-msgid "Form this information page, you can:"
-msgstr "Desde esta página de información, podrás:"
-
-#: ../web_tt2/help_user.tt2:76
-msgid "change your <a href=\"#options\">subscriber options</a>;"
-msgstr "cambiar tus <a href=\"#options\">opciones de suscriptor</a>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:77
-msgid "read the <a href=\"%1/help/arc\">list archive</a>;"
-msgstr "leer el <a href=\"%1/help/arc\">archivo de mensajes de la lista</a>"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:78
-msgid "<a href=\"%1/help/arc#arcsearch\">search in the message archive</a>;"
-msgstr "<a href=\"%1/help/arc#arcsearch>buscar en el archivo de mensajes</a>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:79
-msgid "<a href=\"%1/help/sendmsg\">send new messages</a>;"
-msgstr "<a href=\"%1/help/sendmsg\">enviar un nuevo mensaje</a>;"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:80
-msgid ""
-"<a href=\"%1/help/shared#shared_read\">download documents</a> from the "
-"shared document web space;"
-msgstr ""
-"<a href=\"%1/help/shared#shared_read\">descargar documentos</a> desde el "
-"espacio web compartido de documentos;"
-
-#: ../web_tt2/help_user.tt2:82
-msgid "<a href=\"#subscribers\">review members</a> of the list (if available);"
-msgstr ""
-"<a href=\"#subscribers\">revisar los suscriptores</a> de la lista (en caso "
-"de estar disponible)"
-
-#: ../web_tt2/help_user.tt2:83
-msgid "<a href=\"#unsubscribe\">unsubscribe</a> from the list."
-msgstr "<a href=\"#unsubscribe\">desuscribirte</a> de la lista."
-
-#: ../web_tt2/help_user.tt2:85
-#, fuzzy
-msgid ""
-"The <strong>number of people subscribed</strong> to the list is permanently "
-"displayed in the <strong>left menu</strong>. <strong>To review the list "
-"members, click on the 'Review members' link</strong> in the left menu (if "
-"the list-owner decided to deny access to the members list, this link is not "
-"available). The subscribers list displays and shows the <strong>email "
-"address</strong> and <strong>name</strong> of each of the subscribers (the "
-"indication of the name depends on the subscription method used by the "
-"subscribers)."
-msgstr ""
-"El <strong> número de personas suscritas</strong> a la lista se muestra "
-"permanentemente en el <strong>menú izquierdo</strong>.<strong>Para revisar "
-"la lista de suscriptores, pincha en el enlace 'Revisar suscriptores'</"
-"strong> en el menú izquierdo (si los propietarios de la lista deciden "
-"denegar el acceso a la lista de suscriptores, este enlace no estará "
-"disponible). La lista de suscriptores muestra las <strong>direcciones de "
-"correo</strong> y <strong>el nombre</strong> de cada uno de los suscriptores "
-"(el nombre se indica dependiendo del método de suscripción utilizado por los "
-"suscriptores)"
-
-#: ../web_tt2/help_user.tt2:86
-msgid ""
-"By default, each page displays 25&#160;subscribers. You can browse through "
-"the pages by using the browsing arrows or display more subscribers per page. "
-"You may also wish to sort subscribers according to their email address, "
-"domain or name by clicking on the corresponding column header."
-msgstr ""
-"Por defecto, cada página muestra 25&#160;suscriptores. Puedes navegar a "
-"través de las páginas utilizando las flechas de navegación o mostrar más "
-"suscriptores por página. También podrás ordenar los suscriptores según la "
-"dirección de correo, dominio o nombre pinchando en la correspondiente "
-"cabecera de columna."
-
-#. (conf.host)
-#: ../web_tt2/help_user.tt2:87
-msgid ""
-"<strong>The names of the list owners and moderators are displayed in the "
-"left menu</strong>. You should never write directly to a list owner or "
-"moderator. If you want to ask a question or make a comment, you should use "
-"the following address: <strong>nameofthelist-request@%1</strong> (replace "
-"'nameofthelist' by the name of the list in question)."
-msgstr ""
-"<strong>Los nombres de la lista de propietarios y moderadores se muestra en "
-"el menú izquierdo</strong>. Nunca debes escribir directamente a los "
-"propietario o moderadores de la lista. Si quieres realizar alguna pregunta o "
-"hacer algún comentario, debes utilizar la siguiente dirección: "
-"<strong>nombredelalista-request@%1</strong> (cambia 'nombredelalista' por el "
-"nombre de la lista en cuestión)."
-
-#: ../web_tt2/help_user.tt2:88
-msgid ""
-"To know <strong>when you subscribed to the list</strong> and <strong>when "
-"you last updated your subscriber options</strong>, <strong>click on the "
-"'Subscriber options' link</strong> in the left menu."
-msgstr ""
-"Para saber <strong>cuando te suscribste a la lista</strong> y <strong>cuando "
-"has actualizado por última vez tus opciones de suscripción</strong>, "
-"<strong> pincha en el enlace \"Opciones del suscriptor\"</strong> en el menú "
-"izquierdo."
-
-#: ../web_tt2/help_user.tt2:90
-msgid "Managing your preferences"
-msgstr "Gestionar tus preferencias"
-
-#: ../web_tt2/help_user.tt2:91
-msgid ""
-"To allow you to <strong>use lists more easily</strong>, <strong>you can "
-"define a number of personal preferences</strong>. There are two types of "
-"preferences you can change:"
-msgstr ""
-"Para <strong>simplificar el uso de las listas</strong>,<strong>puedes "
-"definir una serie de preferencias personales</strong>. Existen dos tipos de "
-"preferencias que puedes cambiar:"
-
-#: ../web_tt2/help_user.tt2:93
-msgid ""
-"your <strong>subscriber options</strong>, which can vary according to the "
-"list;"
-msgstr ""
-"tus <strong>opciones de suscriptor</strong>, las cuales pueden variar según "
-"la lista;"
-
-#: ../web_tt2/help_user.tt2:94
-msgid ""
-"your <strong>general preferences</strong>, which apply to the entire Sympa "
-"mailing list environment."
-msgstr ""
-"tus <strong>preferencias generales</strong>, las cuales se aplican a todo el "
-"entorno de listas de correo Sympa."
-
-#: ../web_tt2/help_user.tt2:97
-msgid "Changing your subscriber options"
-msgstr "Cambiar tus opciones de suscriptor"
-
-#: ../web_tt2/help_user.tt2:98
-msgid ""
-"<strong>Your subscriber options can vary from a list to another</strong>. To "
-"change them, do as follows:"
-msgstr ""
-"<strong>Tus opciones de suscriptor pueden variar de una lista a otra</"
-"strong>. Para cambiarlas, haz lo siguiente:"
-
-#: ../web_tt2/help_user.tt2:101
-msgid ""
-"<strong>Go to the information page of the list</strong> for which you want "
-"to change your subscriber options."
-msgstr ""
-"<strong>Ve a la página de información de la lista</strong> en la que quieres "
-"cambiar tus opciones de suscriptor."
-
-#: ../web_tt2/help_user.tt2:102
-msgid ""
-"In the left menu, <strong>click on the 'Subscriber options' link</strong>."
-msgstr ""
-"En el menu izquierdo, <strong>pincha en el enlace 'Opciones del suscriptor'</"
-"strong>."
-
-#: ../web_tt2/help_user.tt2:103
-msgid ""
-"strong>Choose a message delivery mode</strong> (those options are mutually "
-"exclusive, thus you can not select several of them):"
-msgstr ""
-"<strong>Cambia el modo de recepción de mensajes</strong> (estas opciones son "
-"mutuamente excluyentes, así que no puedes seleccionar varias a la vez):"
-
-#: ../web_tt2/help_user.tt2:105
-msgid ""
-"<strong>digest MIME format</strong>: instead of receiving the list messages "
-"in a normal manner, you will get a digest of them on a regular basis. This "
-"digest compiles a group of messages from the list, using multipart/digest "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail "
-"Extension\">MIME</acronym> format. The digest frequency is set up by the "
-"list owner."
-msgstr ""
-"<strong>digest MIME format</strong>: en vez de recibir los mensajes de la "
-"lista de forma normal, recibirás un resumen de ellos. Este resumen recopila "
-"un grupo de mensajes de la lista, utilizando el formato <atronym lang=\"en\" "
-"xml:lang=\"en\" title=\"Multipurpose Internet Mail Extension\">MIME</"
-"acronym>multipart/digest"
-
-#: ../web_tt2/help_user.tt2:106
-msgid ""
-"<strong>digest plain text format</strong>: instead of receiving the list "
-"messages in a normal manner, you will get a digest of them on a regular "
-"basis. This digest compiles a group of messages from the list, using plain "
-"text format. The digest frequency is set up by the list owner."
-msgstr ""
-"<strong>digest plain text format</strong>: en vez de recibir los mensajes de "
-"la lista de forma normal, recibirás un resumen. El resumen recopila un grupo "
-"de mensajes de la lista, utilizando formato de texto plano. La frecuencia "
-"del resumen lo establece el propietario de la lista."
-
-#: ../web_tt2/help_user.tt2:107
-msgid ""
-"<strong>summary mode</strong>: instead of receiving the list messages in a "
-"normal manner, you will get a list of them on a regular basis. To read the "
-"messages, you will need to browse the online list archive."
-msgstr ""
-"<strong>modo de listado</strong>: en vez de recibir los mensajes de la lista "
-"de forma normal, tendrás un listado de ellos. Para leer los mensajes, debes "
-"navegar por el archivo online de la lista."
-
-#: ../web_tt2/help_user.tt2:108
-msgid ""
-"<strong>notice mode</strong>: with this mode, you will receive all the "
-"messages with a blank body: this way you are informed of every message sent "
-"to the list real time, without risk of flooding your inbox."
-msgstr ""
-"<strong>modo de notificación</strong>: con este modo, recibirás todos los "
-"mensajes con el cuerpo del mensaje en blanco: de esta forma se te informa de "
-"cada mensaje enviado a la lista en tiempo real, sin riesgo de inundar tu "
-"carpeta de entrada."
-
-#: ../web_tt2/help_user.tt2:109
-msgid ""
-"<strong>no mail (useful for vacations)</strong>: this mode makes it possible "
-"not to receive the messages of the list. It is especially useful when you "
-"have no access to your email for a long time and want to remain subscribed "
-"to the list nevertheless."
-msgstr ""
-"<strong>no mail (útil para las vacaciones)</strong>: este modo hace posible "
-"que no recibas mensajes de la lista. Es especialmente útil cuando no tienes "
-"acceso a tu correo durante un largo periodo de tiempo y sin embargo quieres "
-"mantenerte suscrito a la lista."
-
-#: ../web_tt2/help_user.tt2:110
-msgid ""
-"<strong>text only mode</strong>: this mode allows you to receive only the "
-"text version (text/plain) of messages sent in both formats (plain text and "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym>)."
-msgstr ""
-"<strong>modo sólo texto</strong: este modo permite recibir únicamente la "
-"versión en texto (text/plain) de un mensaje enviado en varios formatos "
-"(texto plano y <acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup "
-"Language\">HTML</acronym>)."
-
-#: ../web_tt2/help_user.tt2:111
-msgid ""
-"<strong>HTML only mode</strong>: this mode allows you to receive only the "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym> version (text/html) of messages sent in both formats."
-msgstr ""
-"<strong>modo sólo HTML</strong>: este modo permite recibir sólo la versión "
-"<acronym lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup Language"
-"\">HTML</acronym> de mensajes enviados en ambos formatos."
-
-#: ../web_tt2/help_user.tt2:112
-msgid ""
-"<strong>urlize mode</strong>: this mode allows you not to receive attached "
-"documents. However these documents are available in the list archive and you "
-"can access them through a <acronym title=\"Uniform Resource Locator\" lang="
-"\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
-msgstr ""
-"<strong>modo URLizado</strong>: este modo permite no recibir documentos "
-"adjuntos. Sin embargo estos documentos están disponibles en el archivo de la "
-"lista y puedes acceder a ellos a travéz de la <acronym title=\"Uniform "
-"Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> proporcionada "
-"en el mensaje."
-
-#: ../web_tt2/help_user.tt2:113
-msgid ""
-"<strong>you do not receive your own posts</strong>: this mode allows you not "
-"to receive a copy of your own messages."
-msgstr ""
-"<strong>no recibes tus propios mensajes</strong>: este modo permite no "
-"recibir una copia de tus propios mensajes."
-
-#: ../web_tt2/help_user.tt2:114
-msgid ""
-"<strong>standard (direct reception)</strong>: this mode is the default "
-"delivery mode; it cancels any other delivery mode."
-msgstr ""
-"<strong>estandar (recepción directa)</strong>: este modo es el modo de "
-"entrega por defecto; éste modo cancela cualquier otro modo de entrega:"
-
-#: ../web_tt2/help_user.tt2:115
-msgid ""
-"<strong>suspended</strong>: this mode allows you to suspend your "
-"subscription to one or more lists for a specified period or not."
-msgstr ""
-
-#: ../web_tt2/help_user.tt2:117
-msgid "<strong>Choose a visibility option</strong>:"
-msgstr "<strong>Cambiar las opciones de visibilidad</strong>:"
-
-#: ../web_tt2/help_user.tt2:119
-msgid ""
-"<strong>listed in the list review page</strong>: your name and email address "
-"will be displayed in the members list (if the list owner allowed subscribers "
-"to review the list members)."
-msgstr ""
-"<strong>listado en la página de revisión de la lista</strong>: tu nombre y "
-"dirección de correo se mostrará en la lista de suscriptores (en caso de que "
-"el propietario permita ver a otros suscriptores dicha lista)."
-
-#: ../web_tt2/help_user.tt2:120
-msgid ""
-"<strong>concealed</strong>: your name and email address will not be "
-"displayed in the members list. However you email address will be visible in "
-"the list archive if you send messages."
-msgstr ""
-"<strong>ocultado</strong>: tu nombre y dirección de correo no se mostrará en "
-"la lista de suscriptores. Sin embargo, tu dirección de correo será visible "
-"en el archivo de mensajes de la lista si envías uno."
-
-#: ../web_tt2/help_user.tt2:122
-msgid "<strong>Click on the 'Update' button</strong>."
-msgstr "<strong>Pincha en el botón 'Actualizar'</strong>."
-
-#: ../web_tt2/help_user.tt2:125
-msgid "Changing your general preferences"
-msgstr "Cambiar tus preferencias generales"
-
-#: ../web_tt2/help_user.tt2:126
-#, fuzzy
-msgid ""
-"The general preferences apply to all your subscriptions as well as to the "
-"way your Sympa mailing list web interface displays. To change your "
-"preferences, do as follows:"
-msgstr ""
-"Las preferencias generales se aplican a todas las suscripciones así como la "
-"forma en que la interfaz de tu servidor de listas Sympa lo muestra. Para "
-"cambiar tus preferencias, haz lo siguiente:"
-
-#: ../web_tt2/help_user.tt2:129
-msgid ""
-"In the form displayed on top of the left column, <strong>click on the 'Your "
-"preferences' link</strong>."
-msgstr ""
-"En el formulario mostrado en la columna superior derecha, <strong>pincha en "
-"el enlace 'Tus preferencias'</strong>"
-
-#: ../web_tt2/help_user.tt2:130
-msgid "<strong>Change your preferences</strong>."
-msgstr "<strong>Cambia tus preferencias</strong>"
-
-#: ../web_tt2/help_user.tt2:131
-msgid "<strong>Click on 'Submit' for every option</strong> you change."
-msgstr ""
-"<strong>Pincha en el botón 'Enviar' de cada opción</strong> que cambias."
-
-#: ../web_tt2/help_user.tt2:133
-msgid "You can change:"
-msgstr "Puedes cambiar:"
-
-#: ../web_tt2/help_user.tt2:135
-msgid ""
-"your <strong>name</strong>; if you subscribe to a list from the mailing list "
-"server web interface, the 'Name' field will automatically be filled in in "
-"the members list;"
-msgstr ""
-"tu <strong>nombre</strong>: si te suscribes a una lista desde la interfaz "
-"web del servidor de listas, el campo 'Nombre' se rellenará automáticamente "
-"en la lista de suscriptores;"
-
-#: ../web_tt2/help_user.tt2:136
-msgid ""
-"the <strong>language in which the Sympa web interface is displayed</strong> "
-"(you can change language on every page of the web interface; your choice "
-"will remain even though you change the interface language on another page "
-"than the 'Preferences' page;"
-msgstr ""
-"el <strong>lenguaje que deseas para la interfaz web</strong> (puedes cambiar "
-"el lenguaje en cada página de la interfaz web; tu elección se mantendrá "
-"incluso si cambias el lenguaje en otra página distinta a la página de "
-"'Preferencias';"
-
-#: ../web_tt2/help_user.tt2:137
-msgid ""
-"the <strong>lifetime of the cookie placed on your computer by Sympa</strong> "
-"('Connection expiration period'). By default, the session expires when you "
-"close your browser; if you use the mailing list service a lot, we advise you "
-"to choose a longer duration;"
-msgstr ""
-"el <strong>tiempo de vida de la cookie depositada por Sympa en tu navegador</"
-"strong> ('Periodo de expiración de la conexión'). Por defecto, la sesión "
-"expira cuando cierras el navegador; si usas el servicio de listas con "
-"frecuencia, te recomendamos que elijas un tiempo de duración mas largo;"
-
-#: ../web_tt2/help_user.tt2:138
-msgid ""
-"A cookie is a small file a web server stores on your hard disk, most "
-"generally temporarily, in order to identify you as a user of its service. It "
-"contains a few pieces of personal information about you: name, email "
-"address, latest logon time, etc."
-msgstr ""
-"Una cookie es un pequeño fichero que el servidor web guarda en tu disco "
-"duro, normalmente de forma temporal, con la intención de identificarte como "
-"un usuario del servicio. Contiene pequeñas piezas de información sobre tí: "
-"nombre, dirección de correo, última vez que accediste, etc."
-
-#: ../web_tt2/help_user.tt2:139
-msgid ""
-"the <strong>email address with which you subscribed</strong> to the lists "
-"(if you subscribed with several email addresses, the address to be replaced "
-"will be the one you logged on with);"
-msgstr ""
-"la <strong>dirección de correo con la que te suscribes</strong> a las listas "
-"(si te suscribes con distintas direcciones de correo, la dirección se "
-"cambiará a la dirección con la que hayas entrado);"
-
-#: ../web_tt2/help_user.tt2:140
-msgid ""
-"Be careful: this will change your subscriptions to all your lists. If you "
-"want to change address for a single mailing list, you had better unsubscribe "
-"from that list and subscribe again with the right email address."
-msgstr ""
-"Ten cuidado: esta acción cambiará tus suscripciones de todas las listas. Si "
-"quieres cambiar una dirección de una única lista, es mejor que te "
-"desuscribas de la lista y te suscribas de nuevo con la dirección de correo "
-"correcta."
-
-#: ../web_tt2/help_user.tt2:141
-msgid "your <strong>list password</strong>."
-msgstr "tu <strong>password de lista</strong>."
-
-#: ../web_tt2/help_user.tt2:143
-msgid ""
-"The '<strong>Your other email addresses</strong>' section acts like an email "
-"address change."
-msgstr ""
-"La sección '<strong>Tus otras direcciones de correo</strong>' actua como un "
-"cambio de dirección de correo."
-
-#: ../web_tt2/help_user.tt2:145
-msgid "Searching for a mailing list"
-msgstr "Buscar una lista de correo"
-
-#: ../web_tt2/help_user.tt2:146
-msgid ""
-"You may need to search for a mailing list. To do that, you have three "
-"options:"
-msgstr ""
-"Puede que necesites buscar una lista de correo. Para hacerlo, tienes tres "
-"opciones:"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:148
-msgid ""
-"<strong>browse the different sections</strong> displayed on the <a href=\"%1/"
-"home\">list environment homepage</a>;"
-msgstr ""
-"<strong>navegar por las diferentes secciones</strong> mostradas en <a href="
-"\"%1/home\">la página de inicio del entorno web</a>"
-
-#: ../web_tt2/help_user.tt2:149
-msgid ""
-"search for a list via the <strong>search box</strong>: the searched string "
-"will return all the lists whose name or description matches your search "
-"criteria (descriptions of the lists generally consist of a short sentence);"
-msgstr ""
-"buscar una lista a travéz del <strong>campo de búsqueda</strong>: la cadena "
-"buscada devolverá todas aquellas listas cuyo nombre o descripción coincida "
-"con tu criterio de búsqueda (las descripciones de las listas generalmente "
-"consisten en sentencias cortas);"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:150
-msgid ""
-"click on the '<a href=\"%1/lists\">List of lists</a>' tab on top of page to "
-"<strong>display all available lists</strong>."
-msgstr ""
-"pinchar en la pestaña '<a href=\"%1/lists\">Lista de listas</a>' al inicio "
-"de la página para <strong>mostrar todas las listas disponibles</strong>."
-
-#: ../web_tt2/help_user.tt2:152
-msgid ""
-"According to the domain to which your email address belongs (example: <em "
-"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>, etc.) and "
-"to the location you log on from, you will not have access to the same lists. "
-"However you can subscribe to a list that does not display if you know its "
-"name. To do this, <a href=\"#subscribe\">use your email client</a>."
-msgstr ""
-"Según el dominio al que pertenezca tu dirección de correo (ejemplo: <em "
-"class=\"example\">cru.fr</em>, <em class=\"example\">fai.com</em>,etc.) y a "
-"la localización a la que perteneces, no tendrás acceso a las mismas listas. "
-"Sin embargo, puedes suscribirte a una lista que no se muestra si conoces el "
-"nombre. Para hacer esto, <a href=\"#subscribe\">utiliza tu cliente de "
-"correo</a>."
-
-#: ../web_tt2/help_user.tt2:154
-msgid "Reading a list archive online"
-msgstr "Leer el archivo online de una lista"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:155
-msgid ""
-"Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
-"strong></a>."
-msgstr ""
-"Por favor revisa la <a href=\"%1/help/arc\"><strong>documentación del "
-"archivo</strong></a>"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:158
-msgid ""
-"Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
-"sending messages</strong></a>."
-msgstr ""
-"Por favor revisa la <a href=\"%1/help/sendmsg\"><strong>documentación sobre "
-"envío de mensajes</strong></a>"
-
-#. (path_cgi)
-#: ../web_tt2/help_user.tt2:161
-msgid ""
-"Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
-"space documentation</strong></a>."
-msgstr ""
-"Por favor revisa la <a href=\"%1/help/shared\"><strong>documentación sobre "
-"espacio web compartido de documentos</strong></a>."
-
-#: ../web_tt2/help_user.tt2:163
-msgid "Unsubscribing from lists"
-msgstr "Desuscripción de listas"
-
-#: ../web_tt2/help_user.tt2:164
-msgid "To unsubscribe from a list, do as follows:"
-msgstr "Para desuscribirse de una lista, haz lo siguiente:"
-
-#. (conf.email,conf.host)
-#: ../web_tt2/help_user.tt2:166
-msgid ""
-"From the address with which you subscribed to the list, send a "
-"<strong>message to %1@%2</strong>."
-msgstr ""
-
-#: ../web_tt2/help_user.tt2:167
-msgid ""
-"In the subject line of your email, type in: <strong>unsubscribe "
-"nameofthelist</strong> (replace 'nameofthelist' by the name of the list you "
-"want to unsubscribe from)."
-msgstr ""
-
-#: ../web_tt2/help_user.tt2:171
-msgid ""
-"You can also unsubscribe through the mailing list web interface (you will "
-"need to repeat the operation for each list you want to unsubscribe from):"
-msgstr ""
-
-#: ../web_tt2/help_user.tt2:174
-msgid ""
-"<strong>Go to the information page of the list</strong> you want to "
-"unsubscribe from."
-msgstr ""
-
-#: ../web_tt2/help_user.tt2:175
-msgid "<strong>In the left menu, click on the 'Unsubscribe' link</strong>."
-msgstr ""
 
 #~ msgid "Expert mode"
 #~ msgstr "Modo Experto"

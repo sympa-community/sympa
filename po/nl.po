@@ -27,1240 +27,265 @@ msgstr ""
 "X-Generator: Pootle 1.0.2\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
 
-#: ../mail_tt2/helpfile.tt2:2 ../src/lib/Commands.pm:196
-#: ../src/lib/Commands.pm:213
-msgid "User guide"
-msgstr "Gebruikershandleiding"
+#: ../web_tt2/home.tt2:2
+#, fuzzy
+msgid "Mailing lists server"
+msgstr "Mailing lijsten"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9633
-msgid "%A"
+#. (conf.email,conf.host)
+#: ../web_tt2/home.tt2:4
+#, fuzzy
+msgid ""
+"This server provides you access to your mailing list environment. Starting "
+"from this web page, you can perform subscription options, unsubscription, "
+"archive, list moderation, list configuration."
 msgstr ""
+"Deze server geeft je toegang tot je persoonlijke omgeving op server %1@%2. "
+"Vanaf deze webpagina, kan je je abonnementsopties aanpassen, je "
+"uitschrijven,\n"
+" archieven, lijstbeheer enzovoorts."
 
-#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1627
-msgid "Subscription summary"
-msgstr "Abonnementssamenvatting"
+#: ../web_tt2/home.tt2:7
+msgid "Mailing lists categories"
+msgstr "Mailinglijstcategorieën"
 
-#: ../src/lib/Conf.pm:136
+#: ../web_tt2/home.tt2:17
+msgid "Others"
+msgstr "Overige"
+
+#: ../web_tt2/home.tt2:42
+msgid "RSS news"
+msgstr "RSS nieuws"
+
+#. (user.email)
+#: ../web_tt2/login.tt2:3
+msgid "You have logged in with email address %1"
+msgstr "U bent ingelogd met e-mail adres %1"
+
+#: ../web_tt2/main.tt2:27
+msgid "RSS Latest messages"
+msgstr "Webfeed van de laatste berichten"
+
+#: ../web_tt2/main.tt2:28
+msgid "RSS Latest documents"
+msgstr "Webfeed van de laatste gedeelde documenten"
+
+#: ../web_tt2/main.tt2:31 ../web_tt2/main.tt2:34
 #, fuzzy
-msgid "Error at line %d: %s\n"
-msgstr "Fout in regel %d : %s"
+msgid "RSS Latest lists"
+msgstr "Webfeed nieuwste lijsten"
 
-#: ../src/lib/Conf.pm:424
+#: ../web_tt2/main.tt2:32 ../web_tt2/main.tt2:35
 #, fuzzy
-msgid "Error at line %d: %s"
-msgstr "Fout in regel %d : %s"
+msgid "RSS Active lists"
+msgstr "Webfeed actieve lijsten"
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1864 ../wwsympa/Auth.pm:464
-#: ../wwsympa/wwsympa.fcgi.in:1050 ../wwsympa/wwsympa.fcgi.in:2844
-msgid "%d %b %Y at %H:%M:%S"
-msgstr ""
+#: ../web_tt2/main.tt2:59
+msgid "Please activate JavaScript in your web browser"
+msgstr "Gelieve JavaScript te activeren in uw browser"
 
-#: ../src/lib/List.pm:322
-msgid "Account"
-msgstr "Inlognaam"
+#: ../web_tt2/menu.tt2:7
+msgid "Create list"
+msgstr "Maak een nieuwe lijst"
 
-#: ../src/lib/List.pm:326
-msgid "Who can add subscribers"
-msgstr "Wie kan abonnees toevoegen"
+#: ../web_tt2/menu.tt2:12
+msgid "Sympa admin"
+msgstr "Sympa administratie"
 
-#: ../src/lib/List.pm:330
-msgid "Anonymous sender"
-msgstr "Anonieme verzender"
+#: ../web_tt2/menu.tt2:16
+msgid "List of lists"
+msgstr "Overzicht van lijsten"
 
-#: ../src/lib/List.pm:335
-msgid "frequency"
-msgstr "frequentie"
+#: ../web_tt2/menu.tt2:19
+msgid "Home"
+msgstr "Hoofdpagina"
 
-#: ../src/lib/List.pm:1413 ../src/lib/List.pm:340
-msgid "access right"
-msgstr "toegangsrecht"
+#: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
+#: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
+#: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
+#: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
+#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:93
+#: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
+#: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
+#: ../web_tt2/d_properties.tt2:6 ../web_tt2/d_properties.tt2:8
+#: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
+#: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
+#: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
+#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:6
+#: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
+msgid "Help"
+msgstr "Help"
 
-#: ../src/lib/List.pm:344
-msgid "Text archives"
-msgstr "Text archieven"
-
-#: ../src/lib/List.pm:349
+#: ../web_tt2/login_menu.tt2:9
 #, fuzzy
-msgid "Archive encrypted mails as cleartext"
-msgstr "Archief heeft encrypted mails opgeslagen als leesbare tekst"
+msgid "Restore identity"
+msgstr "Terugzetten lijst"
 
-#: ../src/lib/List.pm:1162 ../src/lib/List.pm:1202 ../src/lib/List.pm:356
-#: ../src/lib/List.pm:532 ../src/lib/List.pm:659 ../src/lib/List.pm:694
-msgid "reception mode"
-msgstr "Ontvangst stand"
+#: ../web_tt2/login_menu.tt2:13
+#, fuzzy
+msgid "[Listmaster]"
+msgstr "Beheerder van de lijst"
 
-#: ../src/lib/List.pm:359
-msgid "Available subscription options"
-msgstr "Aanwezige inschrijvings opties"
-
-#: ../src/lib/List.pm:367
-msgid "warn rate"
-msgstr "waarschuwingspercentage"
-
-#: ../src/lib/List.pm:374
-msgid "halt rate"
-msgstr "stop percentage"
+#: ../web_tt2/login_menu.tt2:14
+#, fuzzy
+msgid "[Privileged owner]"
+msgstr "Hoofdeigenaar"
 
 # #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:378
-msgid "Bounces management"
-msgstr "Bounces management"
-
-#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
-msgid "threshold"
-msgstr ""
-
-#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
-msgid "action for this population"
-msgstr ""
-
-#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
-msgid "notification"
-msgstr ""
-
-#: ../src/lib/List.pm:399
-msgid "Management of bouncers, 1st level"
-msgstr ""
-
-#: ../src/lib/List.pm:420
-msgid "Management of bouncers, 2nd level"
-msgstr ""
-
-#: ../src/lib/List.pm:427
-msgid "Expiration of unmoderated messages"
-msgstr "Afloop van de termijn voor gemodereerde berichten"
-
-#: ../src/lib/List.pm:433
-msgid "Secret string for generating unique keys"
-msgstr "Geheim woord voor het aanmaken van een unieke sleutel"
-
-#: ../src/lib/List.pm:451
-msgid "Creation of the list"
-msgstr "Aanmaken van de lijst"
-
-#: ../src/lib/List.pm:462
-msgid "internal identifier"
-msgstr ""
-
-#: ../src/lib/List.pm:470
-msgid "label"
-msgstr ""
-
-#: ../src/lib/List.pm:476
-msgid "additional comment"
-msgstr ""
-
-#: ../src/lib/List.pm:483
+#: ../web_tt2/login_menu.tt2:15
 #, fuzzy
-msgid "type"
-msgstr "type"
-
-#: ../src/lib/List.pm:489
-msgid "possible attribute values (if enum is used)"
-msgstr ""
-
-#: ../src/lib/List.pm:494
-msgid "is the attribute optional?"
-msgstr ""
-
-#: ../src/lib/List.pm:500
-msgid "Custom user attributes"
-msgstr ""
-
-#: ../src/lib/List.pm:506
-msgid "Custom header field"
-msgstr "Speciaal koptekst veld"
-
-#: ../src/lib/List.pm:511
-msgid "Subject tagging"
-msgstr "Onderwerp markeren"
-
-#: ../src/lib/List.pm:525
-#, fuzzy
-msgid "custom parameters"
-msgstr "Data bronnen configuratie"
-
-#: ../src/lib/List.pm:1167 ../src/lib/List.pm:1207 ../src/lib/List.pm:537
-#: ../src/lib/List.pm:664 ../src/lib/List.pm:699
-msgid "visibility"
-msgstr "zichtbaar"
-
-#: ../src/lib/List.pm:541
-msgid "Subscription profile"
-msgstr "Inschrijvings profiel"
-
-#: ../src/lib/List.pm:545
-msgid "Who can delete subscribers"
-msgstr "Wie kan abonnees verwijderen"
-
-#: ../src/lib/List.pm:550
-msgid "Delivery time (hh:mm)"
-msgstr ""
-
-#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
-msgid "days"
-msgstr "dagen"
-
-#: ../src/lib/List.pm:564
-msgid "hour"
-msgstr "uur"
-
-#: ../src/lib/List.pm:570
-msgid "minute"
-msgstr "minuut"
-
-#: ../src/lib/List.pm:574
-msgid "Digest frequency"
-msgstr "Samenvattings frequentie"
-
-#: ../src/lib/List.pm:582
-msgid "Digest maximum number of messages"
-msgstr ""
-
-#: ../src/lib/List.pm:590
-#, fuzzy
-msgid "Inclusions timeout for message distribution"
-msgstr "voetregel van bericht"
-
-#: ../src/lib/List.pm:597
-#, fuzzy
-msgid "Insert DKIM signature to messages sent to the list"
-msgstr "Berichten sturen   : %1"
-
-#: ../src/lib/List.pm:605
-msgid "Type of list message where a DKIM signature is added"
-msgstr ""
-
-#: ../src/lib/List.pm:612
-msgid "file path for list DKIM private key"
-msgstr ""
-
-#: ../src/lib/List.pm:620
-msgid "Selector for DNS lookup of DKIM public key"
-msgstr ""
-
-#: ../src/lib/List.pm:641
-msgid "DKIM 'i=' tag, you should probably leave this parameter empty"
-msgstr ""
-
-#: ../src/lib/List.pm:648
-#, fuzzy
-msgid "DKIM configuration"
-msgstr "Wijzig lijst configuratie"
-
-#: ../src/lib/List.pm:1157 ../src/lib/List.pm:654
-msgid "email address"
-msgstr "emailadres"
-
-#: ../src/lib/List.pm:1172 ../src/lib/List.pm:669
-msgid "name"
-msgstr "naam"
-
-#: ../src/lib/List.pm:1177 ../src/lib/List.pm:674
-msgid "private information"
-msgstr "private informatie"
-
-# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:679 ../web_tt2/list_panel.tt2:20
-#, fuzzy
-msgid "Moderators"
-msgstr "Moderators"
-
-#: ../src/lib/List.pm:709
-#, fuzzy
-msgid "Periodical subscription expiration task"
-msgstr "Aanwezige inschrijvings opties"
-
-#: ../src/lib/List.pm:720
-msgid "Attachment type"
-msgstr "Bijlage type"
-
-#: ../src/lib/List.pm:724
-msgid "Forced reply address"
-msgstr "Verplicht antwoord adres"
-
-#: ../src/lib/List.pm:730
-msgid "Internet domain"
-msgstr "Internet domein"
-
-#: ../src/lib/List.pm:736
-msgid "File inclusion"
-msgstr "Bestand insluiten"
-
-#: ../src/lib/List.pm:740
-msgid "data location URL"
-msgstr ""
-
-#: ../src/lib/List.pm:1038 ../src/lib/List.pm:746 ../src/lib/List.pm:779
-#: ../src/lib/List.pm:860
-msgid "remote user"
-msgstr "gebruiker"
-
-#: ../src/lib/List.pm:1043 ../src/lib/List.pm:753 ../src/lib/List.pm:785
-#: ../src/lib/List.pm:866
-msgid "remote password"
-msgstr "wachtwoord"
-
-#: ../src/lib/List.pm:1057 ../src/lib/List.pm:758 ../src/lib/List.pm:821
-#: ../src/lib/List.pm:945 ../src/lib/List.pm:999
-msgid "short name for this source"
-msgstr ""
-
-#: ../src/lib/List.pm:763
-msgid "Remote file inclusion"
-msgstr "Extern bestand toegevoegd"
-
-#: ../src/lib/List.pm:1016 ../src/lib/List.pm:769 ../src/lib/List.pm:850
-#: ../src/lib/List.pm:977
-msgid "remote host"
-msgstr "systeem"
-
-#: ../src/lib/List.pm:774 ../src/lib/List.pm:855 ../src/lib/List.pm:983
-msgid "remote port"
-msgstr "poort"
-
-#: ../src/lib/List.pm:789
-msgid "suffix"
-msgstr "extensie"
-
-#: ../src/lib/List.pm:795
-msgid "filter"
-msgstr "filter"
-
-#: ../src/lib/List.pm:801
-msgid "extracted attribute"
-msgstr "afgeleid attribuut"
-
-#: ../src/lib/List.pm:806
-msgid "selection (if multiple)"
-msgstr "selectie (waneer meerdere)"
-
-#: ../src/lib/List.pm:811
-msgid "search scope"
-msgstr "Zoek scope"
-
-#: ../src/lib/List.pm:817
-msgid "connection timeout"
-msgstr "connectie timeout"
-
-#: ../src/lib/List.pm:845
-msgid "LDAP query inclusion"
-msgstr "LDAP aanvraag insluiten"
-
-#: ../src/lib/List.pm:870
-msgid "first-level suffix"
-msgstr "eerste-nivo suffix"
-
-#: ../src/lib/List.pm:876
-msgid "first-level filter"
-msgstr "eerste-nivo filter"
-
-#: ../src/lib/List.pm:881
-msgid "first-level extracted attribute"
-msgstr "eerste-nivo extracted attribute"
-
-#: ../src/lib/List.pm:886
-msgid "first-level selection"
-msgstr "eerste-nivo selectie"
-
-#: ../src/lib/List.pm:891
-msgid "first-level search scope"
-msgstr "eerste-nivo zoek scope"
-
-#: ../src/lib/List.pm:897
-msgid "first-level connection timeout"
-msgstr "eerste-nivo connectie timeout"
-
-#: ../src/lib/List.pm:903
-msgid "first-level regular expression"
-msgstr "eerste-nivo regular expression"
-
-#: ../src/lib/List.pm:907
-msgid "second-level suffix template"
-msgstr "tweede-nivo suffix template"
-
-#: ../src/lib/List.pm:913
-msgid "second-level filter template"
-msgstr "tweede-nivo filter template"
-
-#: ../src/lib/List.pm:919
-msgid "second-level extracted attribute"
-msgstr "tweede-nivo extracted attribute"
-
-#: ../src/lib/List.pm:924
-msgid "second-level selection"
-msgstr "tweede-nivo selectie"
-
-#: ../src/lib/List.pm:929
-msgid "second-level search scope"
-msgstr "tweede-nivo zoek scope"
-
-#: ../src/lib/List.pm:935
-msgid "second-level connection timeout"
-msgstr "tweede-nivo connectie timeout"
-
-#: ../src/lib/List.pm:941
-msgid "second-level regular expression"
-msgstr "tweede-nivo regular expression"
-
-#: ../src/lib/List.pm:967
-msgid "LDAP 2-level query inclusion"
-msgstr "LDAP 2-level query inclusion"
-
-#: ../src/lib/List.pm:972
-msgid "List inclusion"
-msgstr "Lijst insluiten"
-
-#: ../src/lib/List.pm:989
-msgid "remote path of sympa list dump"
-msgstr "Extern pad voor de sympa lijst dump"
-
-#: ../src/lib/List.pm:994
-msgid "certificate for authentication by remote Sympa"
-msgstr "certificaat voor authenticatie voor een externe Sympa"
-
-#: ../src/lib/List.pm:1006
-msgid "remote list inclusion"
-msgstr "Externe lijst inclusie"
-
-#: ../src/lib/List.pm:1011
-msgid "database type"
-msgstr "database type"
-
-#: ../src/lib/List.pm:1020
-#, fuzzy
-msgid "database port"
-msgstr "database type"
-
-#: ../src/lib/List.pm:1025
-msgid "database name"
-msgstr "database naam"
-
-#: ../src/lib/List.pm:1029
-msgid "connection options"
-msgstr "connectie opties"
-
-#: ../src/lib/List.pm:1034
-#, fuzzy
-msgid "environment variables for database connection"
-msgstr "environment variabele voor database connectie."
-
-#: ../src/lib/List.pm:1049
-msgid "SQL query"
-msgstr "SQL query"
-
-#: ../src/lib/List.pm:1053
-msgid "Directory where the database is stored (used for DBD::CSV only)"
-msgstr "De map waar de database is opgeslagen (enkel gebruikt bij DBD:CSV)"
-
-#: ../src/lib/List.pm:1064
-msgid "SQL query inclusion"
-msgstr "SQL query insluiten"
-
-#: ../src/lib/List.pm:1070
-#, fuzzy
-msgid "Notify subscribers when they are included from a data source?"
-msgstr "U bent al geabonneerd op de lijst %1"
-
-#: ../src/lib/List.pm:1074
-msgid "Who can view list information"
-msgstr "Wie kan lijstinformatie zien"
-
-#: ../src/lib/List.pm:1078
-msgid "Who can invite people"
-msgstr "Wie kan mensen uitnodigen"
-
-#: ../src/lib/List.pm:1084
-msgid "Language of the list"
-msgstr "Taal van de lijst"
-
-#: ../src/lib/List.pm:1109
-msgid "Regular expression applied to prevent loops with robots"
-msgstr ""
-
-#: ../src/lib/List.pm:1116
-msgid "Maximum message size"
-msgstr "Maximum berichten grootte"
-
-#: ../src/lib/List.pm:1122
-#, fuzzy
-msgid "Message topic name"
-msgstr "Aantal berichten te modereren :"
-
-#: ../src/lib/List.pm:1127
-#, fuzzy
-msgid "Message topic keywords"
-msgstr "Reset foutmeldingen"
-
-#: ../src/lib/List.pm:1133
-#, fuzzy
-msgid "Message topic title"
-msgstr "Aantal berichten te modereren :"
-
-#: ../src/lib/List.pm:1138
-#, fuzzy
-msgid "Topics for message categorization"
-msgstr "Onderwerpen voor de lijst"
-
-#: ../src/lib/List.pm:1144
-msgid "Defines to which part of messages topic keywords are applied"
-msgstr ""
-
-#: ../src/lib/List.pm:1151
-#, fuzzy
-msgid "Message tagging"
-msgstr "voetregel van bericht"
-
-#: ../src/lib/List.pm:1182 ../src/lib/List.pm:1212
-msgid "profile"
-msgstr "profiel"
-
-# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:1187
-msgid "Owner"
+msgid "[Owner]"
 msgstr "Eigenaar"
 
-#: ../src/lib/List.pm:1223
-msgid "Priority"
-msgstr "Prioriteit"
-
-#: ../src/lib/List.pm:1227
-msgid "Who can start a remind process"
-msgstr "Wie kan een herinneringsproces starten"
-
-#: ../src/lib/List.pm:1232
-msgid "Return-path of the REMIND command"
-msgstr ""
-
-#: ../src/lib/List.pm:1256 ../src/lib/List.pm:1276
-msgid "Reply address"
-msgstr "Antwoordadres"
-
-#: ../src/lib/List.pm:1262
-msgid "value"
-msgstr "waarde"
-
-#: ../src/lib/List.pm:1267
-msgid "other email address"
-msgstr "ander email adres"
-
-#: ../src/lib/List.pm:1272
-msgid "respect of existing header field"
-msgstr "behoud bestaande kopveld"
-
-#: ../src/lib/List.pm:1281
-msgid "Who can review subscribers"
-msgstr "Wie kan de abonnees bekijken"
-
-#: ../src/lib/List.pm:1288
+#: ../web_tt2/login_menu.tt2:16
 #, fuzzy
-msgid "RFC 2369 Header fields"
-msgstr "Speciaal koptekst veld"
+msgid "[Editor]"
+msgstr "Editor"
 
-#: ../src/lib/List.pm:1292
-msgid "Who can send messages"
-msgstr "Wie kan berichten sturen"
-
-#: ../src/lib/List.pm:1299
-msgid "Serial number of the config"
-msgstr "Serienummer van de configuratie"
-
-#: ../src/lib/List.pm:1304
-msgid "Who can view"
-msgstr "Wie kan zien"
-
-#: ../src/lib/List.pm:1308
-msgid "Who can edit"
-msgstr "Wie kan wijzigen"
-
-#: ../src/lib/List.pm:1315 ../src/lib/List.pm:1420
-msgid "quota"
-msgstr "quota"
-
-#: ../src/lib/List.pm:1319 ../web_tt2/list_menu.tt2:80
-#: ../web_tt2/list_menu.tt2:82
-msgid "Shared documents"
-msgstr "Gedeelde documenten"
-
-#: ../src/lib/List.pm:1324 ../src/lib/List.pm:1329
+#: ../web_tt2/login_menu.tt2:17
 #, fuzzy
-msgid "email address protection method"
-msgstr "emailadres beveiligingsmethode"
+msgid "[Subscriber]"
+msgstr "Abonnee"
 
-#: ../src/lib/List.pm:1335
-msgid "Status of the list"
-msgstr "Status van de lijst"
-
-#: ../src/lib/List.pm:1342
-msgid "Subject of the list"
-msgstr "Onderwerp van de lijst"
-
-#: ../src/lib/List.pm:1346
-msgid "Who can subscribe to the list"
-msgstr "Wie kan inschrijven op de lijst"
-
-#: ../src/lib/List.pm:1352
-msgid "Topics for the list"
-msgstr "Onderwerpen voor de lijst"
-
-#: ../src/lib/List.pm:1359
-msgid "Inclusions timeout"
-msgstr "Timeout voor de inclusions"
-
-#: ../src/lib/List.pm:1363
-msgid "Who can unsubscribe"
-msgstr "Wie kan uitschrijven"
-
-#: ../src/lib/List.pm:1384
-msgid "Last update of config"
-msgstr "Laatste update van de configuratie"
-
-#: ../src/lib/List.pm:1391
-msgid "User data source"
-msgstr "Gebruiker data bron"
-
-#: ../src/lib/List.pm:1397
-msgid "Allow picture display? (must be enabled for the current robot)"
-msgstr ""
-
-#: ../src/lib/List.pm:1403
+#. (last_login_host,last_login_date)
+#: ../web_tt2/login_menu.tt2:21
 #, fuzzy
-msgid "Allow message personnalization"
-msgstr "Onderwerpen voor de lijst"
+msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
+msgstr "meest recente login vanaf %1 <br />(%2)</span>"
 
-#: ../src/lib/List.pm:1409
-msgid "Visibility of the list"
-msgstr "Zichtbaarheid van de lijst"
+#: ../web_tt2/login_menu.tt2:36
+msgid "Logout"
+msgstr "Uitloggen"
 
-#: ../src/lib/List.pm:1425
-msgid "Maximum number of month archived"
-msgstr ""
+#: ../web_tt2/login_menu.tt2:43
+msgid "Your preferences"
+msgstr "Uw voorkeuren"
 
-#: ../src/lib/List.pm:1430
-msgid "Web archives"
-msgstr "Web archieven"
-
-#: ../src/lib/List.pm:1436
-msgid "Welcome return-path"
-msgstr "Welkom return-path"
-
-#: ../src/lib/List.pm:1441
-msgid "percentage of list members in VERP mode"
-msgstr ""
-
-#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
-msgid "%"
-msgstr ""
-
-#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
-msgid "points"
-msgstr ""
-
-#: ../src/lib/List.pm:516
+#: ../web_tt2/your_lists.tt2:7
 #, fuzzy
-msgid "var name"
-msgstr "naam"
+msgid "Your Lists"
+msgstr "Lijsten"
 
-#: ../src/lib/List.pm:521
+#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:13
+msgid "admin"
+msgstr "administratie"
+
+#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
+#: ../web_tt2/your_lists.tt2:22
 #, fuzzy
-msgid "var value"
-msgstr "waarde"
+msgid "No mailing list available."
+msgstr "Geen mailinglijsten beschikbaar."
 
-#: ../src/lib/List.pm:580
+#: ../web_tt2/list_menu.tt2:11
+msgid "Subscriber Options"
+msgstr "Abonnee opties"
+
+#. (list)
+#: ../web_tt2/list_menu.tt2:15
+msgid "Do you really want to unsubscribe from list %1?"
+msgstr "Wilt u zich echt uitschrijven van lijst %1?"
+
+#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
+msgid "Unsubscribe"
+msgstr "Uitschrijven"
+
+#. (list)
+#: ../web_tt2/list_menu.tt2:20
+msgid "Do you really want to subscribe to list %1?"
+msgstr "Wilt u echt inschrijven op lijst %1?"
+
+#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
+msgid "Subscribe"
+msgstr "Inschrijven"
+
+#: ../web_tt2/list_menu.tt2:31
+msgid "Info"
+msgstr "Info"
+
+#: ../web_tt2/list_menu.tt2:34
 #, fuzzy
-msgid "messages"
-msgstr "# bericht"
-
-#: ../src/lib/List.pm:1357 ../src/lib/List.pm:588 ../src/lib/List.pm:816
-#: ../src/lib/List.pm:896 ../src/lib/List.pm:934
-msgid "seconds"
-msgstr ""
-
-#: ../src/lib/List.pm:627
-msgid "list of headers to be included ito the message for signature"
-msgstr ""
-
-#: ../src/lib/List.pm:634
-msgid "DKIM \"d=\" tag, you should probably use the default value"
-msgstr ""
-
-#: ../src/lib/List.pm:684
-#, fuzzy
-msgid "the data source"
-msgstr "Gebruiker data bron"
-
-#: ../src/lib/List.pm:689
-#, fuzzy
-msgid "data source parameters"
-msgstr "Data bronnen configuratie"
-
-#: ../src/lib/List.pm:705
-msgid "Moderators defined in an external data source"
-msgstr ""
-
-#: ../src/lib/List.pm:714
-#, fuzzy
-msgid "Family name"
-msgstr "Bestand"
-
-#: ../src/lib/List.pm:827 ../src/lib/List.pm:951
-msgid "use SSL (LDAPS)"
-msgstr ""
-
-#: ../src/lib/List.pm:832 ../src/lib/List.pm:956
-#, fuzzy
-msgid "SSL version"
-msgstr "SQL query insluiten"
-
-#: ../src/lib/List.pm:837 ../src/lib/List.pm:961
-#, fuzzy
-msgid "SSL ciphers used"
-msgstr "Gebruiker sleutelgrootte"
-
-#: ../src/lib/List.pm:1089 ../src/lib/List.pm:1369
-#, fuzzy
-msgid "epoch date"
-msgstr "Wijzig"
-
-#: ../src/lib/List.pm:1093 ../src/lib/List.pm:1374
-#, fuzzy
-msgid "date"
-msgstr "Wijzig"
-
-#: ../src/lib/List.pm:1098
-#, fuzzy
-msgid "who ran the instantiation"
-msgstr "Wie kan lijstinformatie zien"
-
-#: ../src/lib/List.pm:1102
-msgid "Latest family instantiation"
-msgstr ""
-
-#: ../src/lib/List.pm:1114
-#, fuzzy
-msgid "bytes"
-msgstr "Tot ziens !"
-
-#: ../src/lib/List.pm:1192
-#, fuzzy
-msgid "the datasource"
-msgstr "Gebruiker data bron"
-
-#: ../src/lib/List.pm:1197
-#, fuzzy
-msgid "datasource parameters"
-msgstr "Data bronnen configuratie"
-
-#: ../src/lib/List.pm:1217
-msgid "Owners defined in an external data source"
-msgstr ""
-
-#: ../src/lib/List.pm:1236
-#, fuzzy
-msgid "Periodical subscription reminder task"
-msgstr "Aanwezige inschrijvings opties"
-
-#: ../src/lib/List.pm:1241
-msgid "Incoming SMTP header fields to be removed"
-msgstr ""
-
-#: ../src/lib/List.pm:1248
-msgid "Outgoing SMTP header fields to be removed"
-msgstr ""
-
-#: ../src/lib/List.pm:1314 ../src/lib/List.pm:1419
-msgid "Kbytes"
-msgstr ""
-
-#: ../src/lib/List.pm:1380
-#, fuzzy
-msgid "who updated the config"
-msgstr "Laatste update van de configuratie"
-
-#: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:8
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2772
-#, fuzzy
-msgid "Table of contents:"
-msgstr "Inhoudsopgave:"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2890
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2891
-msgid "%a, %d %b %Y"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3082 ../src/lib/List.pm:3083 ../src/lib/List.pm:3087
-#: ../wwsympa/wwsympa.fcgi.in:11000 ../wwsympa/wwsympa.fcgi.in:11069
-#: ../wwsympa/wwsympa.fcgi.in:11271 ../wwsympa/wwsympa.fcgi.in:11608
-#: ../wwsympa/wwsympa.fcgi.in:15035 ../wwsympa/wwsympa.fcgi.in:15042
-#: ../wwsympa/wwsympa.fcgi.in:15744 ../wwsympa/wwsympa.fcgi.in:16474
-#: ../wwsympa/wwsympa.fcgi.in:16475 ../wwsympa/wwsympa.fcgi.in:4223
-#: ../wwsympa/wwsympa.fcgi.in:4278 ../wwsympa/wwsympa.fcgi.in:4845
-#: ../wwsympa/wwsympa.fcgi.in:4846 ../wwsympa/wwsympa.fcgi.in:6242
-#: ../wwsympa/wwsympa.fcgi.in:7260 ../wwsympa/wwsympa.fcgi.in:7803
-#: ../wwsympa/wwsympa.fcgi.in:7843 ../wwsympa/wwsympa.fcgi.in:7845
-#: ../wwsympa/wwsympa.fcgi.in:8321 ../wwsympa/wwsympa.fcgi.in:8322
-#: ../wwsympa/wwsympa.fcgi.in:8356 ../wwsympa/wwsympa.fcgi.in:8357
-#: ../wwsympa/wwsympa.fcgi.in:8536 ../wwsympa/wwsympa.fcgi.in:8537
-msgid "%d %b %Y"
-msgstr ""
-
-#: ../src/lib/mail.pm:53
-#, fuzzy
-msgid ""
-"Your system does not conform to the POSIX P1003.1 standard, or\n"
-"your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
-"library. You must modify the smtp.pm module in order to set a value\n"
-"for variable %s.\n"
-msgstr ""
-"Uw systeem voldoet niet aan de POSIX P1003.1 standaard, of\n"
-"uw Perl systeem definieerd de _SC_ARG_MAX constante in zijn POSIX\n"
-"bibliotheek. U dient de smtp.pm module te veranderen om een waarde te "
-"zetten\n"
-"voor de variabele $max_arg.\n"
-
-#: ../src/lib/mail.pm:798
-msgid "Unable to create a channel in smtpto: %m"
-msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
-
-#: ../src/lib/PlainDigest.pm:163
-#, fuzzy
-msgid ""
-"----- Malformed message ignored -----\n"
-"\n"
-msgstr ""
-"------ Einde origineel bericht van %s ------\n"
-"\n"
-
-#: ../src/lib/PlainDigest.pm:194
-msgid ""
-"\n"
-"[Attached message follows]\n"
-"-----Original message-----\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:204
-msgid ""
-"-----End of original message from %s-----\n"
-"\n"
-msgstr ""
-"------ Einde origineel bericht van %s ------\n"
-"\n"
-
-#: ../src/lib/PlainDigest.pm:243
-msgid ""
-"** Warning: Message part originally used character set %s\n"
-"    Some characters may be lost or incorrect **\n"
-"\n"
-msgstr ""
-"** Opgelet: de gebruikte characterset is %S\n"
-"Sommige caracters kunnen verloren gaan of fout weergegeven worden!\n"
-
-#: ../src/lib/PlainDigest.pm:255
-msgid ""
-"\n"
-"[An attachment of type %s was included here]\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:261
-msgid ""
-"\n"
-"-----Delivery Status Report-----\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:263
-msgid "-----End of Delivery Status Report-----\n"
-msgstr "-----Einde Delivery Status Report-----\n"
-
-#: ../src/lib/PlainDigest.pm:301 ../src/lib/PlainDigest.pm:322
-msgid ""
-"\n"
-"[** Unable to process HTML message part **]\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:328
-msgid ""
-"\n"
-"[ ** Unable to process HTML message part **]\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:332
-msgid "[ Text converted from HTML ]\n"
-msgstr ""
-
-#: ../src/lib/PlainDigest.pm:339
-msgid ""
-"\n"
-"[ ** Unable to process HTML message part ** ]\n"
-msgstr ""
-
-#: ../src/lib/tt2.pm:150
-#, fuzzy
-msgid "(unknown date)"
-msgstr "%1 : onbekende actie"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1051
-msgid "%H:%M:%S"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11832 ../wwsympa/wwsympa.fcgi.in:11965
-#: ../wwsympa/wwsympa.fcgi.in:14278 ../wwsympa/wwsympa.fcgi.in:7757
-msgid "%d %b %y  %H:%M"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16114 ../wwsympa/wwsympa.fcgi.in:16115
-msgid "%Y-%m-%d-%H-%M-%S"
-msgstr ""
-
-#. (date_from_formated)
-#. (date_to_formated)
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16169
-msgid "%d %b %Y %H:%M:%S"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:41
-msgid "session"
-msgstr "sessie"
-
-#: ../wwsympa/wwslib.pm:42
-msgid "10 minutes"
-msgstr "10 minuten"
-
-#: ../wwsympa/wwslib.pm:43
-msgid "30 minutes"
-msgstr "30 minuten"
-
-#: ../wwsympa/wwslib.pm:44
-msgid "1 hour"
-msgstr "1 uur"
-
-#: ../wwsympa/wwslib.pm:45
-msgid "6 hours"
-msgstr "6 uren"
-
-#: ../wwsympa/wwslib.pm:46
-msgid "1 day"
-msgstr "1 dag"
-
-#: ../wwsympa/wwslib.pm:47
-msgid "1 week"
-msgstr "1 week"
-
-#: ../wwsympa/wwslib.pm:49
-msgid "listed in the list review page"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:50
-#, fuzzy
-msgid "concealed"
-msgstr "niet verbergen"
-
-#: ../wwsympa/wwslib.pm:54
-msgid "welcome message"
-msgstr "welkomstbericht"
-
-#: ../wwsympa/wwslib.pm:55
-#, fuzzy
-msgid "unsubscribe message"
-msgstr "uitschrijfbericht"
-
-#: ../wwsympa/wwslib.pm:56
-msgid "deletion message"
-msgstr "verwijderbericht"
-
-#: ../wwsympa/wwslib.pm:57
-msgid "message footer"
-msgstr "voetregel van bericht"
-
-#: ../wwsympa/wwslib.pm:58
-msgid "message header"
-msgstr "hoofdregels van bericht"
-
-#: ../wwsympa/wwslib.pm:59
-msgid "remind message"
-msgstr "herinneringsbericht"
-
-#: ../wwsympa/wwslib.pm:60
-msgid "editor rejection message"
-msgstr "editor afwijzings bericht"
-
-#: ../wwsympa/wwslib.pm:61
-msgid "subscribing invitation message"
-msgstr "uitnodigingsbericht om in te schrijven"
-
-#: ../wwsympa/wwslib.pm:62
-msgid "help file"
-msgstr "help bestand"
-
-#: ../wwsympa/wwslib.pm:63
-msgid "directory of lists"
-msgstr "overzicht van lijsten"
-
-#: ../wwsympa/wwslib.pm:64
-msgid "global remind message"
-msgstr "globaal herinneringsbericht"
-
-#: ../wwsympa/wwslib.pm:65
-msgid "summary message"
-msgstr "samenvattings bericht"
-
-#: ../wwsympa/wwslib.pm:66
-msgid "list description"
-msgstr "lijst omschrijving"
-
-#: ../wwsympa/wwslib.pm:67
-msgid "list homepage"
-msgstr "lijst thuispagina"
-
-#: ../wwsympa/wwslib.pm:68
-msgid "list creation request message"
-msgstr "list aanmaak bericht"
-
-#: ../wwsympa/wwslib.pm:69
-msgid "list creation notification message"
-msgstr "list aanmaak herinneringsbericht"
-
-#: ../wwsympa/wwslib.pm:70
-msgid "virus infection message"
-msgstr "virusinfectiebericht"
-
-#: ../wwsympa/wwslib.pm:71
-msgid "list aliases template"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:28
-msgid "standard (direct reception)"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:29
-msgid "digest MIME format"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:30
-msgid "digest plain text format"
-msgstr ""
-
-#: ../wwsympa/wwslib.pm:31
-#, fuzzy
-msgid "summary mode"
-msgstr "samenvattings bericht"
-
-#: ../wwsympa/wwslib.pm:32
-#, fuzzy
-msgid "notice mode"
-msgstr "entire"
-
-#: ../wwsympa/wwslib.pm:33
-#, fuzzy
-msgid "text-only mode"
-msgstr "Ontvangst stand"
-
-#: ../wwsympa/wwslib.pm:34
-#, fuzzy
-msgid "html-only mode"
-msgstr "Ontvangst stand"
-
-#: ../wwsympa/wwslib.pm:35
-#, fuzzy
-msgid "urlize mode"
-msgstr "Gebruikershandleiding"
-
-#: ../wwsympa/wwslib.pm:36
-msgid "no mail (useful for vacations)"
-msgstr "geen mail (handig voor vakanties)"
-
-#: ../wwsympa/wwslib.pm:37
-msgid "you do not receive your own posts"
-msgstr "U ontvangt niet uw eigen e-mails"
-
-#. (count)
-#: ../web_tt2/active_lists.tt2:17 ../web_tt2/active_lists.tt2:5
-msgid " The %1 most active lists "
-msgstr "De % 1 meest active lijsten"
-
-#: ../web_tt2/active_lists.tt2:7
-msgid " Active lists "
-msgstr "Actieve lijsten"
-
-#. (for)
-#: ../web_tt2/active_lists.tt2:11 ../web_tt2/active_lists.tt2:17
-#: ../web_tt2/latest_arc.tt2:12 ../web_tt2/latest_d_read.tt2:11
-#: ../web_tt2/latest_lists.tt2:11
-msgid " for %1 days "
-msgstr "gedurende %1 dag(en)"
-
-#: ../web_tt2/active_lists.tt2:19
-#, fuzzy
-msgid "List name"
-msgstr "Lijst naam:"
-
-#: ../web_tt2/active_lists.tt2:20
-#, fuzzy
-msgid "Number of messages"
-msgstr "samenvattings bericht"
-
-#: ../web_tt2/active_lists.tt2:21
-#, fuzzy
-msgid "Average per day"
-msgstr "Gemiddelde per dag"
-
-#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
-#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
-msgid "Creation date"
-msgstr "Aanmaak datum"
-
-#: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
-#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
-#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
-msgid "Subject"
-msgstr "Onderwerp"
-
-#: ../web_tt2/add_request.tt2:7
-msgid "email1@dom1 Name1"
-msgstr ""
-
-#: ../web_tt2/add_request.tt2:8
-msgid "email2@dom2 Name2"
-msgstr ""
-
-#: ../web_tt2/add_request.tt2:12
-msgid "Add subscribers"
-msgstr "Voeg abonnees toe"
-
-#: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:286
-#: ../web_tt2/review.tt2:75 ../web_tt2/reviewbouncing.tt2:127
-msgid "quiet"
-msgstr "quiet"
-
-#: ../web_tt2/admin_menu.tt2:4
-msgid "List Administration Panel"
-msgstr "Lijst Administratie Paneel"
-
-#: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
-msgid "Subscribers"
-msgstr "Abonnees"
-
-#: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
-#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:62
-msgid "Edit List Config"
-msgstr "Wijzig Lijst Configuratie"
+msgid "Admin"
+msgstr "administratie"
 
 #: ../web_tt2/admin_menu.tt2:35 ../web_tt2/admin_menu.tt2:41
 #: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:37
 msgid "Moderate"
 msgstr "Modereer"
 
-#: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
-#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:65
-msgid "Customizing"
-msgstr "Modereren"
-
-#: ../web_tt2/admin_menu.tt2:67 ../web_tt2/admin_menu.tt2:73
-#: ../web_tt2/nav.tt2:75
+#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
 #, fuzzy
-msgid "Manage Archives"
-msgstr "Archives"
+msgid "Message"
+msgstr "berichten"
 
-#: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
-#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:79 ../web_tt2/nav.tt2:99
-#: ../web_tt2/review.tt2:45
+#: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
+#: ../web_tt2/list_menu.tt2:45
+msgid "Document"
+msgstr "Document"
+
+#: ../web_tt2/list_menu.tt2:50
 #, fuzzy
-msgid "Bounces"
-msgstr "Bounce Instellingen"
+msgid "Subscriptions"
+msgstr "Abonnee opties"
 
-#: ../web_tt2/admin.tt2:59 ../web_tt2/admin_menu.tt2:96
-#: ../web_tt2/admin_menu.tt2:98
-msgid "Create Shared"
-msgstr "Aanmaken gedeeld"
+#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
+msgid "Archive"
+msgstr "Archief"
 
-#: ../web_tt2/admin_menu.tt2:102
-msgid "Restore shared"
-msgstr "Zet terug"
+#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
+msgid "Post"
+msgstr "Bericht plaatsen"
 
-#: ../web_tt2/admin.tt2:63 ../web_tt2/admin_menu.tt2:105
-msgid "Delete Shared"
-msgstr "Terugzetten gedeeld"
-
-#: ../web_tt2/admin.tt2:33 ../web_tt2/admin_menu.tt2:117
-#: ../web_tt2/admin_menu.tt2:119
-msgid "Restore List"
-msgstr "Terugzetten lijst"
-
-#. (list)
-#: ../web_tt2/admin_menu.tt2:122 ../web_tt2/admin_menu.tt2:124
-#, fuzzy
-msgid "Are you sure you wish to close %1 list?"
-msgstr "Weet u zeker dat u lijst %1 wilt sluiten ?"
-
-#: ../web_tt2/admin.tt2:36 ../web_tt2/admin_menu.tt2:122
-#: ../web_tt2/admin_menu.tt2:124
-msgid "Remove List"
-msgstr "Verwijder lijst"
-
-#: ../web_tt2/admin.tt2:46 ../web_tt2/admin_menu.tt2:129
-#: ../web_tt2/admin_menu.tt2:131
-msgid "Rename List"
-msgstr "Hernoem lijst"
-
-#: ../web_tt2/admin_menu.tt2:139
-msgid "List Definition"
-msgstr "Lijst definitie"
-
-#: ../web_tt2/admin_menu.tt2:143
-#, fuzzy
-msgid "Sending/Receiving"
-msgstr "Sturen/ontvangen"
-
-#: ../web_tt2/admin_menu.tt2:147 ../web_tt2/edit_list_request.tt2:13
-#: ../web_tt2/nav.tt2:95
-msgid "Privileges"
-msgstr "Toegangsrechten"
-
-#: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
-#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:97 ../web_tt2/serveradmin.tt2:109
-msgid "Archives"
-msgstr "Archieven"
-
-#: ../web_tt2/admin_menu.tt2:155
-msgid "Bounce Settings"
-msgstr "Bounce Instellingen"
-
-#: ../web_tt2/admin_menu.tt2:160 ../web_tt2/edit_list_request.tt2:17
-#: ../web_tt2/nav.tt2:105
-msgid "Miscellaneous"
-msgstr "Overig"
-
-#: ../web_tt2/admin_menu.tt2:164
-msgid "Data Source"
-msgstr "Data Bron"
-
-#: ../web_tt2/admin_menu.tt2:172
-msgid "Attribute optionnal/required"
+#: ../web_tt2/list_menu.tt2:75
+msgid "RSS"
 msgstr ""
+
+#: ../src/lib/List.pm:1263 ../web_tt2/list_menu.tt2:80
+#: ../web_tt2/list_menu.tt2:82
+msgid "Shared documents"
+msgstr "Gedeelde documenten"
+
+#: ../web_tt2/list_menu.tt2:88
+#, fuzzy
+msgid "Review members"
+msgstr "Beheer leden"
+
+#: ../web_tt2/list_panel.tt2:7
+msgid "Closed list"
+msgstr "Gesloten lijst"
+
+#: ../web_tt2/list_panel.tt2:9
+msgid "List not yet activated"
+msgstr "Lijst nog niet geactiveerd"
+
+#: ../web_tt2/list_panel.tt2:11
+msgid "Subscribers:"
+msgstr "Abonnees:"
+
+#: ../web_tt2/list_panel.tt2:12
+#, fuzzy
+msgid "Error rate:&nbsp;"
+msgstr "Fout in regel %d : %s"
+
+#: ../web_tt2/list_panel.tt2:13
+msgid "Owners"
+msgstr "Eigenaren"
+
+# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
+#: ../src/lib/List.pm:622 ../web_tt2/list_panel.tt2:20
+#, fuzzy
+msgid "Moderators"
+msgstr "Moderators"
+
+#: ../web_tt2/list_panel.tt2:26
+msgid "Load certificate"
+msgstr "Laad certificaat"
+
+#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
+#, fuzzy
+msgid "Contact owners"
+msgstr "melden bij eigenaar"
 
 #: ../web_tt2/admin.tt2:4
 #, fuzzy
@@ -1342,6 +367,11 @@ msgstr ""
 msgid "Drastic operations"
 msgstr "private informatie"
 
+#: ../web_tt2/admin.tt2:33 ../web_tt2/admin_menu.tt2:117
+#: ../web_tt2/admin_menu.tt2:119
+msgid "Restore List"
+msgstr "Terugzetten lijst"
+
 #. (list)
 #: ../web_tt2/admin.tt2:33
 #, fuzzy
@@ -1353,6 +383,11 @@ msgid ""
 "This list is currently closed. Clicking this button will make it active "
 "again."
 msgstr ""
+
+#: ../web_tt2/admin.tt2:36 ../web_tt2/admin_menu.tt2:122
+#: ../web_tt2/admin_menu.tt2:124
+msgid "Remove List"
+msgstr "Verwijder lijst"
 
 #. (list)
 #: ../web_tt2/admin.tt2:36
@@ -1369,12 +404,22 @@ msgstr ""
 "de huidige lijst compleet verwijderen. Listmaster rechten zijn nodig om "
 "telijst te"
 
+#: ../web_tt2/admin.tt2:46 ../web_tt2/admin_menu.tt2:129
+#: ../web_tt2/admin_menu.tt2:131
+msgid "Rename List"
+msgstr "Hernoem lijst"
+
 #: ../web_tt2/admin.tt2:46
 msgid ""
 "Allows you to change this list's name. Everything related to the list will "
 "be relabeled according to the new name, including the mail aliases and the "
 "web archives."
 msgstr ""
+
+#: ../web_tt2/admin.tt2:59 ../web_tt2/admin_menu.tt2:96
+#: ../web_tt2/admin_menu.tt2:98
+msgid "Create Shared"
+msgstr "Aanmaken gedeeld"
 
 #: ../web_tt2/admin.tt2:59
 #, fuzzy
@@ -1383,6 +428,10 @@ msgstr ""
 "<strong>Create Shared</strong>: maak de \"gedeelde documenten\" webruimte "
 "aan..\n"
 "                        "
+
+#: ../web_tt2/admin.tt2:63 ../web_tt2/admin_menu.tt2:105
+msgid "Delete Shared"
+msgstr "Terugzetten gedeeld"
 
 #: ../web_tt2/admin.tt2:63
 #, fuzzy
@@ -1411,13 +460,151 @@ msgstr ""
 "aan..\n"
 "                        "
 
+#. (count)
+#: ../web_tt2/active_lists.tt2:17 ../web_tt2/active_lists.tt2:5
+msgid " The %1 most active lists "
+msgstr "De % 1 meest active lijsten"
+
+#: ../web_tt2/active_lists.tt2:7
+msgid " Active lists "
+msgstr "Actieve lijsten"
+
+#. (for)
+#: ../web_tt2/active_lists.tt2:11 ../web_tt2/active_lists.tt2:17
+#: ../web_tt2/latest_arc.tt2:12 ../web_tt2/latest_d_read.tt2:11
+#: ../web_tt2/latest_lists.tt2:11
+msgid " for %1 days "
+msgstr "gedurende %1 dag(en)"
+
+#: ../web_tt2/active_lists.tt2:19
+#, fuzzy
+msgid "List name"
+msgstr "Lijst naam:"
+
+#: ../web_tt2/active_lists.tt2:20
+#, fuzzy
+msgid "Number of messages"
+msgstr "samenvattings bericht"
+
+#: ../web_tt2/active_lists.tt2:21
+#, fuzzy
+msgid "Average per day"
+msgstr "Gemiddelde per dag"
+
+#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
+#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
+msgid "Creation date"
+msgstr "Aanmaak datum"
+
+#: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
+#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
+#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
+#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
+msgid "Subject"
+msgstr "Onderwerp"
+
+#: ../web_tt2/add_request.tt2:7
+msgid "email1@dom1 Name1"
+msgstr ""
+
+#: ../web_tt2/add_request.tt2:8
+msgid "email2@dom2 Name2"
+msgstr ""
+
+#: ../web_tt2/add_request.tt2:12
+msgid "Add subscribers"
+msgstr "Voeg abonnees toe"
+
+#: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
+#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:288
+#: ../web_tt2/review.tt2:73 ../web_tt2/reviewbouncing.tt2:127
+msgid "quiet"
+msgstr "quiet"
+
+#: ../web_tt2/admin_menu.tt2:4
+msgid "List Administration Panel"
+msgstr "Lijst Administratie Paneel"
+
+#: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
+msgid "Subscribers"
+msgstr "Abonnees"
+
+#: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
+#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:62
+msgid "Edit List Config"
+msgstr "Wijzig Lijst Configuratie"
+
+#: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
+#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:65
+msgid "Customizing"
+msgstr "Modereren"
+
+#: ../web_tt2/admin_menu.tt2:67 ../web_tt2/admin_menu.tt2:73
+#: ../web_tt2/nav.tt2:75
+#, fuzzy
+msgid "Manage Archives"
+msgstr "Archives"
+
+#: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
+#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:79 ../web_tt2/nav.tt2:99
+#: ../web_tt2/review.tt2:45
+#, fuzzy
+msgid "Bounces"
+msgstr "Bounce Instellingen"
+
+#: ../web_tt2/admin_menu.tt2:102
+msgid "Restore shared"
+msgstr "Zet terug"
+
+#. (list)
+#: ../web_tt2/admin_menu.tt2:122 ../web_tt2/admin_menu.tt2:124
+#, fuzzy
+msgid "Are you sure you wish to close %1 list?"
+msgstr "Weet u zeker dat u lijst %1 wilt sluiten ?"
+
+#: ../web_tt2/admin_menu.tt2:139
+msgid "List Definition"
+msgstr "Lijst definitie"
+
+#: ../web_tt2/admin_menu.tt2:143
+#, fuzzy
+msgid "Sending/Receiving"
+msgstr "Sturen/ontvangen"
+
+#: ../web_tt2/admin_menu.tt2:147 ../web_tt2/edit_list_request.tt2:13
+#: ../web_tt2/nav.tt2:95
+msgid "Privileges"
+msgstr "Toegangsrechten"
+
+#: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
+#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:97 ../web_tt2/serveradmin.tt2:109
+msgid "Archives"
+msgstr "Archieven"
+
+#: ../web_tt2/admin_menu.tt2:155
+msgid "Bounce Settings"
+msgstr "Bounce Instellingen"
+
+#: ../web_tt2/admin_menu.tt2:160 ../web_tt2/edit_list_request.tt2:17
+#: ../web_tt2/nav.tt2:103
+msgid "Miscellaneous"
+msgstr "Overig"
+
+#: ../web_tt2/admin_menu.tt2:164
+msgid "Data Source"
+msgstr "Data Bron"
+
+#: ../web_tt2/admin_menu.tt2:172
+msgid "Attribute optionnal/required"
+msgstr ""
+
 # #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
 #: ../web_tt2/arc_manage.tt2:4
 msgid "Archive Management"
 msgstr "Archief management"
 
 #: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
 #: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
 #: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
 #: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
@@ -1429,30 +616,11 @@ msgstr "Archief management"
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
 #: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
-#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:215
+#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:217
 #: ../web_tt2/review.tt2:6 ../web_tt2/reviewbouncing.tt2:3
 #: ../web_tt2/suboptions.tt2:20
 msgid "Open in a new window"
 msgstr ""
-
-#: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
-#: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
-#: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
-#: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
-#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:93
-#: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
-#: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
-#: ../web_tt2/d_properties.tt2:6 ../web_tt2/d_properties.tt2:8
-#: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
-#: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
-#: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
-#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
-#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:6
-#: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
-#: ../web_tt2/suspend_request.tt2:64
-msgid "Help"
-msgstr "Help"
 
 #: ../web_tt2/arc_manage.tt2:6
 msgid ""
@@ -1507,7 +675,7 @@ msgid "Search field:"
 msgstr "Search field :"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:90 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:88 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Zoek"
 
@@ -1824,51 +992,49 @@ msgstr "U dient lijst aliassen handmatig te verwijderen."
 
 #: ../web_tt2/compose_mail.tt2:5
 #, fuzzy
-msgid "Sending a message to the list"
+msgid "Sendind a message to the list"
 msgstr "Berichten sturen   : %1"
 
-#: ../web_tt2/compose_mail.tt2:12
+#. (list,host)
+#: ../web_tt2/compose_mail.tt2:10
+msgid ""
+"The best way to post an email to the list is to compose an email to the list "
+"email address <b>%1@%2</b> using your favourite email client. We also "
+"provide a form below to compose an email through the web interface."
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:17
 #, fuzzy
 msgid "Sending an html page to the list "
 msgstr "Berichten sturen   : %1"
 
 #. (user.email)
 #. (from)
-#: ../web_tt2/compose_mail.tt2:19 ../web_tt2/request_topic.tt2:27
+#: ../web_tt2/compose_mail.tt2:22 ../web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "Van: %1"
 
 #. (mailto)
-#: ../web_tt2/compose_mail.tt2:20 ../web_tt2/request_topic.tt2:28
+#: ../web_tt2/compose_mail.tt2:23 ../web_tt2/request_topic.tt2:28
 msgid "To: %1"
 msgstr "Aan: %1"
 
-#: ../web_tt2/compose_mail.tt2:21 ../web_tt2/create_list_request.tt2:69
+#: ../web_tt2/compose_mail.tt2:24 ../web_tt2/create_list_request.tt2:69
 #: ../web_tt2/install_pending_list.tt2:14
 #: ../web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Onderwerp:"
 
-#: ../web_tt2/compose_mail.tt2:26
-#, fuzzy
-msgid "Send to the list"
-msgstr "Onderwerp van de lijst"
-
-#: ../web_tt2/compose_mail.tt2:27
-#, fuzzy
-msgid "Send to me"
-msgstr "Stuur deze email"
-
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/compose_mail.tt2:50 ../web_tt2/modindex.tt2:50
 #: ../web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr ""
 
-#: ../web_tt2/compose_mail.tt2:49
+#: ../web_tt2/compose_mail.tt2:52
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr ""
 
-#: ../web_tt2/compose_mail.tt2:77
+#: ../web_tt2/compose_mail.tt2:65
 #, fuzzy
 msgid "URL:"
 msgstr "URL"
@@ -2246,11 +1412,6 @@ msgstr "toegangsrechten"
 msgid "Listing of root folder"
 msgstr "Listing van de hoofdmap"
 
-#: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
-#: ../web_tt2/list_menu.tt2:45
-msgid "Document"
-msgstr "Document"
-
 #: ../web_tt2/d_read.tt2:59 ../web_tt2/d_read.tt2:61
 #: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:153
 #: ../web_tt2/modindex.tt2:69
@@ -2262,7 +1423,7 @@ msgid "Size (Kb)"
 msgstr "Size (Kb)"
 
 #: ../web_tt2/d_read.tt2:69 ../web_tt2/d_read.tt2:71
-#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:168
+#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:166
 msgid "Last update"
 msgstr "Last update"
 
@@ -2375,7 +1536,7 @@ msgstr "title"
 msgid "URL"
 msgstr "URL"
 
-#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:74
+#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:72
 msgid "Add"
 msgstr "Toevoegen"
 
@@ -3370,7 +2531,7 @@ msgstr "Aangevraagd door"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/modindex.tt2:125
-#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:284
+#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:286
 #: ../web_tt2/reviewbouncing.tt2:131
 msgid "Toggle Selection"
 msgstr "Wissel selectie"
@@ -3414,36 +2575,6 @@ msgstr "Wachtende lijsten"
 msgid "Requested date"
 msgstr "Aangevraagd door"
 
-#: ../web_tt2/home.tt2:2
-#, fuzzy
-msgid "Mailing lists server"
-msgstr "Mailing lijsten"
-
-#. (conf.email,conf.host)
-#: ../web_tt2/home.tt2:4
-#, fuzzy
-msgid ""
-"This server provides you access to your mailing list environment. Starting "
-"from this web page, you can perform subscription options, unsubscription, "
-"archive, list moderation, list configuration."
-msgstr ""
-"Deze server geeft je toegang tot je persoonlijke omgeving op server %1@%2. "
-"Vanaf deze webpagina, kan je je abonnementsopties aanpassen, je "
-"uitschrijven,\n"
-" archieven, lijstbeheer enzovoorts."
-
-#: ../web_tt2/home.tt2:7
-msgid "Mailing lists categories"
-msgstr "Mailinglijstcategorieën"
-
-#: ../web_tt2/home.tt2:17
-msgid "Others"
-msgstr "Overige"
-
-#: ../web_tt2/home.tt2:42
-msgid "RSS news"
-msgstr "RSS nieuws"
-
 #: ../web_tt2/info.tt2:8
 #, fuzzy
 msgid "List informations"
@@ -3465,149 +2596,6 @@ msgstr "Lijst aangevraagd door"
 #, fuzzy
 msgid "on %1"
 msgstr "Aan: %1"
-
-#: ../web_tt2/javascript.tt2:833
-#, fuzzy
-msgid "Start date"
-msgstr "Sort by date"
-
-#: ../web_tt2/javascript.tt2:834
-#, fuzzy
-msgid "End date"
-msgstr "Wijzig"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "January"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "February"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "March"
-msgstr "Zoek"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "April"
-msgstr "profiel"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "May"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "June"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "July"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "August"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "September"
-msgstr "Beheer"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "October"
-msgstr "Overig"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "November"
-msgstr "Beheer"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "December"
-msgstr "Beheer"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Su"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Mo"
-msgstr "Modereer"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Tu"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "We"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Th"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Fr"
-msgstr "Van"
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Sa"
-msgstr "Opslaan"
-
-#: ../web_tt2/javascript.tt2:840
-#, fuzzy
-msgid "Sunday"
-msgstr "Samenvatting"
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Monday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Tuesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Wednesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Thursday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Friday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Saturday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:841
-msgid "Calendar"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:842
-#, fuzzy
-msgid "today"
-msgstr "Inhoud"
-
-#. (+cpt)
-#: ../web_tt2/javascript.tt2:1056
-#, fuzzy
-msgid "microcal"
-msgstr "Lijsten op deze server"
-
-#: ../web_tt2/javascript.tt2:1096
-msgid "\"+src.id+\"_cal"
-msgstr ""
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -3640,8 +2628,8 @@ msgstr "Nieuwste gedeelde documenten"
 msgid "Most recent documents for this list "
 msgstr "Nieuwste gedeelde documenten"
 
-#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:140
-#: ../web_tt2/review.tt2:143 ../web_tt2/subindex.tt2:12
+#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:138
+#: ../web_tt2/review.tt2:141 ../web_tt2/subindex.tt2:12
 msgid "Name"
 msgstr "Naam"
 
@@ -3664,97 +2652,8 @@ msgstr "lijst naam"
 msgid " The latest lists of this robot"
 msgstr "De nieuwste lijsten van deze robot"
 
-#: ../web_tt2/list_menu.tt2:11
-msgid "Subscriber Options"
-msgstr "Abonnee opties"
-
-#. (list)
-#: ../web_tt2/list_menu.tt2:15
-msgid "Do you really want to unsubscribe from list %1?"
-msgstr "Wilt u zich echt uitschrijven van lijst %1?"
-
-#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
-#: ../web_tt2/suspend_request.tt2:57
-msgid "Unsubscribe"
-msgstr "Uitschrijven"
-
-#. (list)
-#: ../web_tt2/list_menu.tt2:20
-msgid "Do you really want to subscribe to list %1?"
-msgstr "Wilt u echt inschrijven op lijst %1?"
-
-#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
-msgid "Subscribe"
-msgstr "Inschrijven"
-
-#: ../web_tt2/list_menu.tt2:31
-msgid "Info"
-msgstr "Info"
-
-#: ../web_tt2/list_menu.tt2:34
-#, fuzzy
-msgid "Admin"
-msgstr "administratie"
-
-#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
-#, fuzzy
-msgid "Message"
-msgstr "berichten"
-
-#: ../web_tt2/list_menu.tt2:50
-#, fuzzy
-msgid "Subscriptions"
-msgstr "Abonnee opties"
-
-#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
-msgid "Archive"
-msgstr "Archief"
-
-#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
-msgid "Post"
-msgstr "Bericht plaatsen"
-
-#: ../web_tt2/list_menu.tt2:75
-msgid "RSS"
-msgstr ""
-
-#: ../web_tt2/list_menu.tt2:88
-#, fuzzy
-msgid "Review members"
-msgstr "Beheer leden"
-
-#: ../web_tt2/list_panel.tt2:7
-msgid "Closed list"
-msgstr "Gesloten lijst"
-
-#: ../web_tt2/list_panel.tt2:9
-msgid "List not yet activated"
-msgstr "Lijst nog niet geactiveerd"
-
-#: ../web_tt2/list_panel.tt2:11
-msgid "Subscribers:"
-msgstr "Abonnees:"
-
-#: ../web_tt2/list_panel.tt2:12
-#, fuzzy
-msgid "Error rate:&nbsp;"
-msgstr "Fout in regel %d : %s"
-
-#: ../web_tt2/list_panel.tt2:13
-msgid "Owners"
-msgstr "Eigenaren"
-
-#: ../web_tt2/list_panel.tt2:26
-msgid "Load certificate"
-msgstr "Laad certificaat"
-
-#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
-#, fuzzy
-msgid "Contact owners"
-msgstr "melden bij eigenaar"
-
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:93
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:91
 msgid "%1 occurrence(s) found"
 msgstr "%1 keer gevonden"
 
@@ -3764,10 +2663,6 @@ msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr ""
 "<B>%1</B> is ingeschreven op de volgende mailinglijsten\n"
 "                        "
-
-#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
-msgid "admin"
-msgstr "administratie"
 
 #: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:67
 #, fuzzy
@@ -3789,12 +2684,6 @@ msgstr "Inloggen"
 #: ../web_tt2/lists.tt2:62
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Geen inschrijvingen met adres <strong>%1</strong>!"
-
-#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
-#: ../web_tt2/your_lists.tt2:23
-#, fuzzy
-msgid "No mailing list available."
-msgstr "Geen mailinglijsten beschikbaar."
 
 #: ../web_tt2/loginbanner.tt2:18
 #, fuzzy
@@ -3838,61 +2727,11 @@ msgstr "Eerste login?"
 msgid "Lost password?"
 msgstr "Wachtwoord verloren?"
 
-#: ../web_tt2/login_menu.tt2:9
-#, fuzzy
-msgid "Restore identity"
-msgstr "Terugzetten lijst"
-
-#: ../web_tt2/login_menu.tt2:13
-#, fuzzy
-msgid "[Listmaster]"
-msgstr "Beheerder van de lijst"
-
-#: ../web_tt2/login_menu.tt2:14
-#, fuzzy
-msgid "[Privileged owner]"
-msgstr "Hoofdeigenaar"
-
-# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../web_tt2/login_menu.tt2:15
-#, fuzzy
-msgid "[Owner]"
-msgstr "Eigenaar"
-
-#: ../web_tt2/login_menu.tt2:16
-#, fuzzy
-msgid "[Editor]"
-msgstr "Editor"
-
-#: ../web_tt2/login_menu.tt2:17
-#, fuzzy
-msgid "[Subscriber]"
-msgstr "Abonnee"
-
-#. (last_login_host,last_login_date)
-#: ../web_tt2/login_menu.tt2:21
-#, fuzzy
-msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
-msgstr "meest recente login vanaf %1 <br />(%2)</span>"
-
-#: ../web_tt2/login_menu.tt2:36
-msgid "Logout"
-msgstr "Uitloggen"
-
-#: ../web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Uw voorkeuren"
-
 #: ../web_tt2/loginrequest.tt2:4
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
 "address), you need to login."
 msgstr ""
-
-#. (user.email)
-#: ../web_tt2/login.tt2:3
-msgid "You have logged in with email address %1"
-msgstr "U bent ingelogd met e-mail adres %1"
 
 #: ../web_tt2/ls_templates.tt2:7
 msgid ""
@@ -3975,28 +2814,6 @@ msgid ""
 "performed during this period."
 msgstr ""
 
-#: ../web_tt2/main.tt2:27
-msgid "RSS Latest messages"
-msgstr "Webfeed van de laatste berichten"
-
-#: ../web_tt2/main.tt2:28
-msgid "RSS Latest documents"
-msgstr "Webfeed van de laatste gedeelde documenten"
-
-#: ../web_tt2/main.tt2:31 ../web_tt2/main.tt2:34
-#, fuzzy
-msgid "RSS Latest lists"
-msgstr "Webfeed nieuwste lijsten"
-
-#: ../web_tt2/main.tt2:32 ../web_tt2/main.tt2:35
-#, fuzzy
-msgid "RSS Active lists"
-msgstr "Webfeed actieve lijsten"
-
-#: ../web_tt2/main.tt2:59
-msgid "Please activate JavaScript in your web browser"
-msgstr "Gelieve JavaScript te activeren in uw browser"
-
 #: ../web_tt2/manage_template.tt2:3
 #, fuzzy
 msgid "Modify or delete existing rejection messages"
@@ -4063,29 +2880,13 @@ msgstr "Aantal berichten te modereren :"
 msgid "create"
 msgstr "Maak een nieuwe lijst"
 
-#: ../web_tt2/menu_search.tt2:5
+#: ../web_tt2/menu_search.tt2:6
 msgid "Enter a list name"
 msgstr "Voer een lijstnaam in"
 
-#: ../web_tt2/menu_search.tt2:7
+#: ../web_tt2/menu_search.tt2:8
 msgid "Search lists"
 msgstr "Zoek lijsten"
-
-#: ../web_tt2/menu.tt2:7
-msgid "Create list"
-msgstr "Maak een nieuwe lijst"
-
-#: ../web_tt2/menu.tt2:12
-msgid "Sympa admin"
-msgstr "Sympa administratie"
-
-#: ../web_tt2/menu.tt2:16
-msgid "List of lists"
-msgstr "Overzicht van lijsten"
-
-#: ../web_tt2/menu.tt2:19
-msgid "Home"
-msgstr "Hoofdpagina"
 
 #: ../web_tt2/modindex.tt2:61 ../web_tt2/modindex.tt2:9
 #, fuzzy
@@ -4195,7 +2996,6 @@ msgid "Manage rejection messages"
 msgstr "editor afwijzings bericht"
 
 #: ../web_tt2/nav.tt2:15 ../web_tt2/serveradmin.tt2:5
-#: ../web_tt2/suspend_request.tt2:11 ../web_tt2/suspend_request.tt2:9
 msgid "Lists"
 msgstr "Lijsten"
 
@@ -4229,16 +3029,12 @@ msgstr ""
 msgid "Submitting a bug, a feature request"
 msgstr "Verstuur uw lijst aanmaak aanvraag"
 
-#: ../web_tt2/nav.tt2:103
-msgid "DKIM"
-msgstr ""
-
-#: ../web_tt2/nav.tt2:115
+#: ../web_tt2/nav.tt2:113
 #, fuzzy
 msgid "Send a message"
 msgstr "herinneringsbericht"
 
-#: ../web_tt2/nav.tt2:117
+#: ../web_tt2/nav.tt2:115
 msgid "Send an html page"
 msgstr ""
 
@@ -4604,7 +3400,7 @@ msgid "Remind all subscribers"
 msgstr "Herinner alle abonnees"
 
 #. (total)
-#: ../web_tt2/review.tt2:63 ../web_tt2/reviewbouncing.tt2:19
+#: ../web_tt2/review.tt2:61 ../web_tt2/reviewbouncing.tt2:19
 #, fuzzy
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
@@ -4612,7 +3408,7 @@ msgid ""
 msgstr ""
 "Wilt u echt een abonnements herinneringsmailtje sturen naar de %1 abonnees ?"
 
-#: ../web_tt2/review.tt2:272 ../web_tt2/review.tt2:28
+#: ../web_tt2/review.tt2:274 ../web_tt2/review.tt2:28
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -4623,7 +3419,7 @@ msgstr "Vorige pagina"
 msgid "page %1 / %2"
 msgstr "pagina %1 / %2"
 
-#: ../web_tt2/review.tt2:278 ../web_tt2/review.tt2:34
+#: ../web_tt2/review.tt2:280 ../web_tt2/review.tt2:34
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -4633,9 +3429,8 @@ msgstr "Volgende pagina"
 msgid "Table which display list bounces"
 msgstr ""
 
-#: ../web_tt2/review.tt2:119 ../web_tt2/review.tt2:122
-#: ../web_tt2/review.tt2:294 ../web_tt2/reviewbouncing.tt2:61
-#: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
+#: ../web_tt2/review.tt2:117 ../web_tt2/review.tt2:120
+#: ../web_tt2/reviewbouncing.tt2:61 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
 msgid "Email"
 msgstr "Email"
@@ -4670,7 +3465,7 @@ msgstr "Bekijk laatste bounce"
 msgid "no score"
 msgstr "bounce teller"
 
-#: ../web_tt2/review.tt2:107 ../web_tt2/review.tt2:285
+#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:287
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "Verwijder geselecteerde emailadressen"
@@ -4701,7 +3496,7 @@ msgstr "Mailing lijsten"
 msgid "Page size"
 msgstr "Page size"
 
-#: ../web_tt2/review.tt2:275 ../web_tt2/review.tt2:31
+#: ../web_tt2/review.tt2:277 ../web_tt2/review.tt2:31
 #: ../web_tt2/viewlogs.tt2:34
 #, fuzzy
 msgid "page"
@@ -4712,98 +3507,79 @@ msgstr "[% list.name %] thuispagina"
 msgid "Pending subscriptions"
 msgstr "Uw abonnementen"
 
-#: ../web_tt2/review.tt2:51
-msgid "Exclude"
-msgstr ""
-
-#: ../web_tt2/review.tt2:57
+#: ../web_tt2/review.tt2:55
 msgid "Synchronize members with data sources"
 msgstr ""
 
-#: ../web_tt2/review.tt2:63
+#: ../web_tt2/review.tt2:61
 #, fuzzy
 msgid "Remind all"
 msgstr "Hergenereer archief"
 
-#: ../web_tt2/review.tt2:72
+#: ../web_tt2/review.tt2:70
 msgid "Add an user: "
 msgstr ""
 
-#: ../web_tt2/review.tt2:76
+#: ../web_tt2/review.tt2:74
 msgid "Multiple add"
 msgstr "Voeg meerdere toe"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:86
 #, fuzzy
 msgid "Search user by e-mail: "
 msgstr "Zoek Gebruiker"
 
-#: ../web_tt2/review.tt2:89
+#: ../web_tt2/review.tt2:87
 #, fuzzy
 msgid "Search user by email"
 msgstr "Zoek Gebruiker"
 
-#: ../web_tt2/review.tt2:95
+#: ../web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr "Te veel geselecteerd"
 
-#: ../web_tt2/review.tt2:111
+#: ../web_tt2/review.tt2:109
 #, fuzzy
 msgid "List members"
 msgstr "Beheer"
 
-#: ../web_tt2/review.tt2:127 ../web_tt2/review.tt2:130
+#: ../web_tt2/review.tt2:125 ../web_tt2/review.tt2:128
 msgid "Domain"
 msgstr "Domein"
 
-#: ../web_tt2/review.tt2:135
+#: ../web_tt2/review.tt2:133
 msgid "Picture"
 msgstr ""
 
-#: ../web_tt2/review.tt2:148 ../web_tt2/suspend_request.tt2:12
+#: ../web_tt2/review.tt2:146
 msgid "Reception"
 msgstr "Ontvangst"
 
-#: ../web_tt2/review.tt2:153 ../web_tt2/review.tt2:156
+#: ../web_tt2/review.tt2:151 ../web_tt2/review.tt2:154
 #, fuzzy
 msgid "Sources"
 msgstr "Data Bron"
 
-#: ../web_tt2/review.tt2:162 ../web_tt2/review.tt2:165
+#: ../web_tt2/review.tt2:160 ../web_tt2/review.tt2:163
 #: ../web_tt2/viewlogs.tt2:124
 #, fuzzy
 msgid "Sub date"
 msgstr "Sort by date"
 
-#: ../web_tt2/review.tt2:198
+#: ../web_tt2/review.tt2:200
 #, fuzzy
 msgid "bouncing"
 msgstr "waarbij de"
 
 #. (u.email)
-#: ../web_tt2/review.tt2:215
+#: ../web_tt2/review.tt2:217
 msgid "%1's picture"
 msgstr "afbeelding van %1"
 
-#: ../web_tt2/review.tt2:283
+#: ../web_tt2/review.tt2:285
 #, fuzzy
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Wilt u echt alle geselecteerde abonnees verwijderen ?"
-
-#: ../web_tt2/review.tt2:291
-#, fuzzy
-msgid "Excluded users"
-msgstr "Verder zoeken"
-
-#: ../web_tt2/review.tt2:292 ../web_tt2/show_exclude.tt2:13
-#, fuzzy
-msgid "List of exclude"
-msgstr "Listing van de map SHARED"
-
-#: ../web_tt2/review.tt2:295 ../web_tt2/show_exclude.tt2:16
-#, fuzzy
-msgid "Since"
-msgstr "Grootte"
 
 #: ../web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -5286,25 +4062,6 @@ msgstr "Certificaat uitgever"
 msgid "Cipher key size used"
 msgstr "Gebruiker sleutelgrootte"
 
-#: ../web_tt2/show_exclude.tt2:3
-msgid "Show the exclusion table"
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:10
-msgid ""
-"Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense\n"
-"when a list is based on external data sources ; thanks to exclusion, a user "
-"can unsubscribe (or being removed by list owner) even though \n"
-"he should be included via an external data source. Users get into the "
-"exclusion table, through the standard unsubscribe/delete functions. \n"
-"They get off the exclusion table with the standard subscribe/add functions."
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:28
-msgid "No exclude."
-msgstr ""
-
 #: ../web_tt2/show_sessions.tt2:2
 #, fuzzy
 msgid "Sessions list"
@@ -5726,7 +4483,7 @@ msgid "Disable topics subscription"
 msgstr "Uw abonnementen"
 
 #: ../web_tt2/suboptions.tt2:51
-msgid "Only possible for direct reception modes."
+msgid "Only possible in \"normal\" receiving mode"
 msgstr ""
 
 #. (list)
@@ -5806,65 +4563,6 @@ msgstr "Mijn wachtwoord ?"
 #, fuzzy
 msgid "You are already subscribed to list %1"
 msgstr "U bent al geabonneerd op de lijst %1"
-
-#: ../web_tt2/suspend_request.tt2:5 ../web_tt2/your_lists.tt2:9
-#, fuzzy
-msgid "Manage your subscriptions"
-msgstr "Uw abonnementen"
-
-#: ../web_tt2/suspend_request.tt2:13
-#, fuzzy
-msgid "Suspended"
-msgstr "Afzender"
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "Suspended from "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:23 ../web_tt2/suspend_request.tt2:44
-msgid " to "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "indefinite end date"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:33
-#, fuzzy
-msgid "No subscription."
-msgstr "Uw abonnementen"
-
-#: ../web_tt2/suspend_request.tt2:37
-#, fuzzy
-msgid "Toogle selection"
-msgstr "Wissel selectie"
-
-#: ../web_tt2/suspend_request.tt2:41
-msgid "Suspend[% IF sub.display == 1 %]/Resume"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:43
-msgid "From : <noscript>[%|loc%](dd-mm-yyyy) "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:46
-msgid "Select the checkbox for an indefinite end date. "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:49
-#, fuzzy
-msgid "Suspend my subscriptions"
-msgstr "Uw abonnementen"
-
-#: ../web_tt2/suspend_request.tt2:51
-#, fuzzy
-msgid "Resume my subscriptions"
-msgstr "Uw abonnementen"
-
-#: ../web_tt2/suspend_request.tt2:55
-#, fuzzy
-msgid "Unsubscribe selected lists"
-msgstr "Verwijder geselecteerde lijsten"
 
 #: ../web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -5965,7 +4663,7 @@ msgid "to:"
 msgstr ""
 
 #: ../web_tt2/viewlogs.tt2:73
-msgid "ex: 24-05-2006"
+msgid "ex: 24/05/2006"
 msgstr ""
 
 #: ../web_tt2/viewlogs.tt2:75
@@ -6019,6 +4717,14 @@ msgstr "Weiger"
 #, fuzzy
 msgid "Search period: "
 msgstr "Zoek Gebruiker"
+
+#. (date_from_formated)
+#. (date_to_formated)
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:15926
+msgid "%d %b %Y %H:%M:%S"
+msgstr ""
 
 #: ../web_tt2/viewlogs.tt2:113
 msgid "to"
@@ -6524,17 +5230,12 @@ msgstr "Commando syntax fout.\n"
 msgid "These commands have been performed:"
 msgstr "Uw bericht aan %s is afgewezen."
 
-#: ../mail_tt2/command_report.tt2:20
+#: ../mail_tt2/command_report.tt2:19
 #, fuzzy
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "Uw handtekening onder dit bericht was succesvol gechecked met S/MIME"
 
-#: ../mail_tt2/command_report.tt2:23
-#, fuzzy
-msgid "Your message contain a DKIM signature. It was succesfully verified"
-msgstr "Uw handtekening onder dit bericht was succesvol gechecked met S/MIME"
-
-#: ../mail_tt2/command_report.tt2:28
+#: ../mail_tt2/command_report.tt2:24
 #, fuzzy
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
@@ -6547,85 +5248,85 @@ msgstr ""
 "in- of uitgeschreven voor de lijst.\n"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:31
+#: ../mail_tt2/command_report.tt2:27
 #, fuzzy
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Informatie over gebruiker %s is gewijzigd voor lijst %s.\n"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:34
+#: ../mail_tt2/command_report.tt2:30
 #, fuzzy
 msgid "User %1 is now subscriber of list %2."
 msgstr "Gebruiker %s is nu geabonneerd op lijst %s.\n"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:37
+#: ../mail_tt2/command_report.tt2:33
 #, fuzzy
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "Gebruiker %s is uitgenodigd om zich in te schrijven voor lijst %s.\n"
 
 #. (notice.total,notice.listname)
-#: ../mail_tt2/command_report.tt2:40
+#: ../mail_tt2/command_report.tt2:36
 #, fuzzy
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "Abonnements herinnering gestuurd naar %d %s abonnees\n"
 
 #. (notice.count)
-#: ../mail_tt2/command_report.tt2:43
+#: ../mail_tt2/command_report.tt2:39
 msgid "The Reminder has been sent to %1 users."
 msgstr ""
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:46
+#: ../mail_tt2/command_report.tt2:42
 #, fuzzy
 msgid "The user %1 has been removed from the list %2."
 msgstr "Gebruiker %s is uitgeschreven van lijst %s/\n"
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:49
+#: ../mail_tt2/command_report.tt2:45
 #, fuzzy
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "Uw configuratie voor lijst %s is gewijzigd.\n"
 
 #. (notice.cmd)
-#: ../mail_tt2/command_report.tt2:52
+#: ../mail_tt2/command_report.tt2:48
 #, fuzzy
 msgid "Command '%1' found: ignoring end of message."
 msgstr ""
 "Commando 'quit' gevonden : Het einde van het bericht wordt genegeerd.\n"
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:55
+#: ../mail_tt2/command_report.tt2:51
 #, fuzzy
 msgid "There is no message to moderate for list '%1'."
 msgstr "Er zijn %1 berichten die gemodereerd moeten worden voor de lijst %2@%3"
 
-#: ../mail_tt2/command_report.tt2:67
+#: ../mail_tt2/command_report.tt2:63
 #, fuzzy
 msgid "Command has been rejected:"
 msgstr "Uw bericht is afgwezen"
 
-#: ../mail_tt2/command_report.tt2:69
+#: ../mail_tt2/command_report.tt2:65
 #, fuzzy
 msgid "These commands have been rejected:"
 msgstr "Uw bericht aan %s is afgewezen."
 
-#: ../mail_tt2/command_report.tt2:85
+#: ../mail_tt2/command_report.tt2:81
 #, fuzzy
 msgid "Command has failed:"
 msgstr "Laden administratie gefaald"
 
-#: ../mail_tt2/command_report.tt2:87
+#: ../mail_tt2/command_report.tt2:83
 #, fuzzy
 msgid "These commands have failed:"
 msgstr "Uw bericht aan %s is afgewezen."
 
-#: ../mail_tt2/command_report.tt2:94
+#: ../mail_tt2/command_report.tt2:90
 #, fuzzy
 msgid "Command not understood: ignoring end of message."
 msgstr "Commando niet begrepen: Het einde van het bericht wordt genegeerd.\n"
 
-#: ../mail_tt2/command_report.tt2:98
+#: ../mail_tt2/command_report.tt2:94
 #, fuzzy
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
@@ -6637,7 +5338,7 @@ msgstr ""
 "handtekening niet controleren (let er op dat Sympa uw handtekening niet kan "
 "controleren met een commando in het onderwerp)."
 
-#: ../mail_tt2/command_report.tt2:101
+#: ../mail_tt2/command_report.tt2:97
 #, fuzzy
 msgid "Command syntax error."
 msgstr "Commando syntax fout.\n"
@@ -6645,19 +5346,19 @@ msgstr "Commando syntax fout.\n"
 #. (u_err.listname)
 #. (glob.listname)
 #. (listname)
-#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:178
+#: ../mail_tt2/command_report.tt2:100 ../mail_tt2/command_report.tt2:174
 #: ../mail_tt2/message_report.tt2:55
 #, fuzzy
 msgid "List '%1' does not exist."
 msgstr "Lijst '%s' bestaat niet.\n"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:107
+#: ../mail_tt2/command_report.tt2:103
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 mailinglijst voorziet geen voorkeursinstellingen per abonnee."
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:111
+#: ../mail_tt2/command_report.tt2:107
 #, fuzzy
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe\n"
@@ -6667,13 +5368,13 @@ msgstr ""
 "bent u met een ander emailadres ingeschreven op de lijst?\n"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:114
+#: ../mail_tt2/command_report.tt2:110
 #, fuzzy
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr "Email adres %s is niet gevonden op deze lijst.\n"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:118
+#: ../mail_tt2/command_report.tt2:114
 #, fuzzy
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
@@ -6681,37 +5382,37 @@ msgid ""
 msgstr "Lijst %s kent geen DIGEST stand. Uw configuratie is niet gewijzigd..\n"
 
 #. (u_err.listname,u_err.modes)
-#: ../mail_tt2/command_report.tt2:121
+#: ../mail_tt2/command_report.tt2:117
 #, fuzzy
 msgid "List %1 allows only these reception modes: %2"
 msgstr ""
 "Lijst %s staat alleen de volgende ontvangstmethodes toe: : %s\n"
 "Uw configuratie is niet veranderd.\n"
 
-#: ../mail_tt2/command_report.tt2:124
+#: ../mail_tt2/command_report.tt2:120
 #, fuzzy
 msgid "This list archive is empty."
 msgstr "Nieuwste lijsten"
 
-#: ../mail_tt2/command_report.tt2:127
+#: ../mail_tt2/command_report.tt2:123
 #, fuzzy
 msgid "Required file does not exist."
 msgstr "Het verplichte bestand bestaat niet.\n"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:130
+#: ../mail_tt2/command_report.tt2:126
 #, fuzzy
 msgid "List %1 has no subscriber."
 msgstr "Lijst '%s' heeft geen geabonneerden.\n"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:133
+#: ../mail_tt2/command_report.tt2:129
 #, fuzzy
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "De gebruiker '%s' is al ingeschreven op lijst '%s'\n"
 
 #. (u_err.command)
-#: ../mail_tt2/command_report.tt2:138
+#: ../mail_tt2/command_report.tt2:134
 #, fuzzy
 msgid ""
 "The authentication process failed.\n"
@@ -6721,17 +5422,17 @@ msgstr ""
 "U hebt waarschijnlijk uw abonnement met een ander email adres\n"
 " bevestigd. Probeer met uw echte adres in te schrijven."
 
-#: ../mail_tt2/command_report.tt2:150
+#: ../mail_tt2/command_report.tt2:146
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "Reset foutmeldingen"
 
-#: ../mail_tt2/command_report.tt2:152
+#: ../mail_tt2/command_report.tt2:148
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "Reset foutmeldingen"
 
-#: ../mail_tt2/command_report.tt2:169
+#: ../mail_tt2/command_report.tt2:165
 #, fuzzy
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
@@ -6741,17 +5442,17 @@ msgstr ""
 "gebruikt uw alstublieft uitsluitend text/plain \n"
 "(of zet uw commando in het onderwerp).\n"
 
-#: ../mail_tt2/command_report.tt2:172
+#: ../mail_tt2/command_report.tt2:168
 #, fuzzy
 msgid "No command found in message."
 msgstr "Geen commando gevonden in het bericht."
 
-#: ../mail_tt2/command_report.tt2:175
+#: ../mail_tt2/command_report.tt2:171
 msgid "Ignoring message because of an internal server error."
 msgstr ""
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/command_report.tt2:185
+#: ../mail_tt2/command_report.tt2:181
 #, fuzzy
 msgid "For further information, check the mailing list web site %1"
 msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
@@ -6760,6 +5461,12 @@ msgstr "Heeft u verder nog vragen, stuur dan een email naar listmaster@%1"
 #: ../mail_tt2/digest_plain.tt2:4 ../mail_tt2/digest_plain.tt2:6
 msgid "%1 Digest %2"
 msgstr "%1 Digest %2"
+
+#: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:8
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2706
+#, fuzzy
+msgid "Table of contents:"
+msgstr "Inhoudsopgave:"
 
 #. (list.name,date)
 #: ../mail_tt2/digest_plain.tt2:26
@@ -6857,6 +5564,10 @@ msgstr "Uitschrijven :"
 msgid "Archive of %1, file %2"
 msgstr ""
 
+#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1633
+msgid "Subscription summary"
+msgstr "Abonnementssamenvatting"
+
 #. (user.email)
 #: ../mail_tt2/global_remind.tt2:4
 msgid "Summary of your subscription (using the e-mail %1)."
@@ -6873,6 +5584,11 @@ msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
 "Voor elke lijst is een mailadres om te gebruiken wanneer u zich wilt "
 "uitschrijven."
+
+#: ../mail_tt2/helpfile.tt2:2 ../src/lib/Commands.pm:196
+#: ../src/lib/Commands.pm:213
+msgid "User guide"
+msgstr "Gebruikershandleiding"
 
 #: ../mail_tt2/helpfile.tt2:7
 msgid "User's Guide"
@@ -9140,6 +7856,313 @@ msgid ""
 "disregard this message."
 msgstr ""
 
+#: ../src/etc/scenari/access_web_archive.closed:1
+#: ../src/etc/scenari/invite.closed:1 ../src/etc/scenari/send.closed:1
+msgid "closed"
+msgstr "gesloten"
+
+#: ../src/etc/scenari/access_web_archive.intranet:1
+#: ../src/etc/scenari/subscribe.intranet:1
+msgid "restricted to local domain users"
+msgstr "beperkt tot lokale domeingebruikers"
+
+#: ../src/etc/scenari/access_web_archive.listmaster:1
+msgid "listmaster"
+msgstr "listmaster"
+
+#: ../src/etc/scenari/access_web_archive.owner:1
+msgid "by owner"
+msgstr "door eigenaar"
+
+#: ../src/etc/scenari/access_web_archive.private:1
+msgid "subscribers only"
+msgstr "alleen abonnees"
+
+#: ../src/etc/scenari/access_web_archive.public:1
+#: ../src/etc/scenari/invite.public:1
+msgid "public"
+msgstr "publiek"
+
+#: ../src/etc/scenari/add.auth:1
+#, fuzzy
+msgid "restricted to owner with authentication"
+msgstr "door eigenlijk zonder authenticatie"
+
+#: ../src/etc/scenari/add.closed:1
+msgid "add impossible"
+msgstr "toevoegen onmogelijk"
+
+#: ../src/etc/scenari/add.owner:1
+#, fuzzy
+msgid "add performed by list owner does not need authentication"
+msgstr "toevoegen door de eigenaar heeft geen authenticatie nodig"
+
+#: ../src/etc/scenari/add.owner_notify:1
+#, fuzzy
+msgid "add performed by owner does not need authentication (notification)"
+msgstr "toevoegen gebeurd door eigenaar, geen authenticatie nodig"
+
+#: ../src/etc/scenari/automatic_list_creation.listmaster:1
+#: ../src/etc/scenari/create_list.listmaster:1
+msgid "restricted to listmaster"
+msgstr "beperkt tot de listmaster"
+
+#: ../src/etc/scenari/automatic_list_creation.public:1
+msgid "anybody. Be sure you know what you are doing"
+msgstr ""
+
+#: ../src/etc/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "iedereen uit het lokale domein"
+
+#: ../src/etc/scenari/create_list.public_listmaster:1
+#, fuzzy
+msgid "anybody by validation by listmaster required"
+msgstr "iedereen, validatie door listmaster verplicht"
+
+#: ../src/etc/scenari/d_edit.editor:1
+#, fuzzy
+msgid "moderated for subscribers"
+msgstr "Prive, gemodereerd voor niet abonnees"
+
+#: ../src/etc/scenari/d_edit.owner:1 ../src/etc/scenari/d_read.owner:1
+#: ../src/etc/scenari/remind.owner:1
+msgid "restricted to list owners"
+msgstr "beperkt to lijst eigenaren"
+
+#: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
+#: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
+#: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
+msgid "restricted to subscribers"
+msgstr "beperkt tot abonnees"
+
+#: ../src/etc/scenari/d_edit.private-https:1
+#: ../src/etc/scenari/d_read.private-https:1
+#, fuzzy
+msgid "restricted to subscribers authenticated with user cert"
+msgstr "beperkt tot abonnees controleer smime handtekening"
+
+#: ../src/etc/scenari/d_edit.public:1 ../src/etc/scenari/d_read.public:1
+msgid "public documents"
+msgstr "publieke documenten"
+
+#: ../src/etc/scenari/del.auth:1
+msgid "deletion performed only by list owners, need authentication"
+msgstr "verwijderen alleen door lijst eigenaren, authenticatie nodig"
+
+#: ../src/etc/scenari/del.closed:1
+msgid "remove subscriber impossible"
+msgstr "verwijder abonnee onmogelijk"
+
+#: ../src/etc/scenari/del.owner:1
+msgid "by owner without authentication"
+msgstr "door eigenlijk zonder authenticatie"
+
+#: ../src/etc/scenari/del.owner_notify:1
+msgid "list owners, authentication not needed (notification)"
+msgstr "lijst eigenaren, authenticatie niet nodig (herinnering)"
+
+#: ../src/etc/scenari/global_remind.listmaster:1
+msgid "just for listmaster"
+msgstr "alleen voor de listmaster"
+
+#: ../src/etc/scenari/info.open:1
+msgid "for anyone"
+msgstr "voor iedereen"
+
+#: ../src/etc/scenari/invite.owner:1
+msgid "invite perform by list owner do not need authentication"
+msgstr "uitnodiging uitgevoerd door lijsteigenaar, authenticatie niet nodig"
+
+#: ../src/etc/scenari/remind.listmaster:1
+#: ../src/etc/scenari/review.listmaster:1
+msgid "listmaster only"
+msgstr "alleen voor de listmaster"
+
+#: ../src/etc/scenari/review.closed:1
+#, fuzzy
+msgid "no one can review"
+msgstr "niemand"
+
+#: ../src/etc/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "beperkt tot lokale domein gebruikers"
+
+#: ../src/etc/scenari/review.owner:1
+msgid "only owner (and listmaster)"
+msgstr "alleen de eigenaar (en listmaster)"
+
+#: ../src/etc/scenari/review.public:1
+msgid "anyone can do it !"
+msgstr "iedereen kan het !"
+
+#: ../src/etc/scenari/send.editorkey:1
+msgid "Moderated"
+msgstr "Gemodereerd"
+
+#: ../src/etc/scenari/send.editorkeyonly:1
+msgid "Moderated, even for moderators"
+msgstr "Gemodereerd, zelfs voor moderators"
+
+#: ../src/etc/scenari/send.editorkeyonlyauth:1
+msgid "Moderated, with editor confirmation"
+msgstr "Gemodereerd, met md5 sleutel"
+
+#: ../src/etc/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "beperkt tot het lokale domein"
+
+#: ../src/etc/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "beperkt tot het lokale domein en abonnees"
+
+#: ../src/etc/scenari/send.newsletter:1
+msgid "Newsletter, restricted to moderators"
+msgstr "Nieuwsbrief, beperkt tot moderators"
+
+#: ../src/etc/scenari/send.newsletterkeyonly:1
+msgid "Newsletter, restricted to moderators after confirmation"
+msgstr "Nieuwsbrief, beperkt tot moderators met md5 sleutel"
+
+#: ../src/etc/scenari/send.privateandeditorkey:1
+msgid "Moderated, restricted to subscribers"
+msgstr "Gemodereerd, beperkt tot abonnees"
+
+#: ../src/etc/scenari/send.privateandnomultipartoreditorkey:1
+msgid "Moderated, for non subscribers sending multipart messages"
+msgstr "Gemodereerd, voor niet-abonnees die een multipart bericht sturen."
+
+#: ../src/etc/scenari/send.privatekey:1
+msgid "restricted to subscribers with previous md5 authentication"
+msgstr "beperkt to abonnees met md5 authenticatie"
+
+#: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
+msgid "Moderated, for subscribers and moderators"
+msgstr "Gemodereerd, voor abonnees en moderators"
+
+#: ../src/etc/scenari/send.privateoreditorkey:1
+msgid "Private, moderated for non subscribers"
+msgstr "Prive, gemodereerd voor niet abonnees"
+
+#: ../src/etc/scenari/send.privateorpublickey:1
+msgid "Private, confirmation for non subscribers"
+msgstr "Prive, bevestiging voor niet geabonneerden"
+
+#: ../src/etc/scenari/send.private_smime:1
+msgid "restricted to subscribers check smime signature"
+msgstr "beperkt tot abonnees controleer smime handtekening"
+
+#: ../src/etc/scenari/send.public:1
+msgid "public list"
+msgstr "publieke lijst"
+
+#: ../src/etc/scenari/send.publickey:1
+msgid "anyone with previous md5 authentication"
+msgstr "iedereen met voorafgaande md5 authenticatie"
+
+#: ../src/etc/scenari/send.publicnoattachment:1
+msgid "public list multipart/mixed messages are forwarded to moderator"
+msgstr ""
+"publieke lijst multipart/mixed berichten voor naar de moderator gestuurd."
+
+#: ../src/etc/scenari/send.public_nobcc:1
+msgid "public list, Bcc rejected (anti-spam)"
+msgstr "publieke lijst, Bcc verboden (anti-spam)"
+
+#: ../src/etc/scenari/send.publicnomultipart:1
+msgid "public list multipart messages are rejected"
+msgstr "publieke lijst multipart berichten worden geweigerd"
+
+#: ../src/etc/scenari/subscribe.auth:1
+msgid "subscription request confirmed"
+msgstr "Abonnementsvraag bevestigd"
+
+#: ../src/etc/scenari/subscribe.auth_notify:1
+msgid "need authentication (notification is sent to owners)"
+msgstr "authenticatie benodigd (waarschuwing wordt gestuurd naar de eigenaren)"
+
+#: ../src/etc/scenari/subscribe.auth_owner:1
+msgid "requires authentication then owner approval"
+msgstr "authenticatie nodig, dan toestemming van eigenaar"
+
+#: ../src/etc/scenari/subscribe.closed:1
+msgid "subscribe is impossible"
+msgstr "abonneren is onmogelijk"
+
+#: ../src/etc/scenari/subscribe.intranetorowner:1
+msgid "local domain users or owner approval"
+msgstr "lokale domein gebruikers of eigenaren toestemming"
+
+#: ../src/etc/scenari/subscribe.open:1
+msgid "for anyone without authentication"
+msgstr "voor iedereen zonder authenticatie"
+
+#: ../src/etc/scenari/subscribe.open_notify:1
+msgid "anyone, notification is sent to list owner"
+msgstr "iedereen, waarschuwing wordt verstuurd naar de lijst eigenaar"
+
+#: ../src/etc/scenari/subscribe.open_quiet:1
+msgid "anyone, no welcome message"
+msgstr "iedereen, geen welkomstbericht"
+
+#: ../src/etc/scenari/subscribe.owner:1 ../src/etc/scenari/unsubscribe.owner:1
+msgid "owners approval"
+msgstr "toestemming van de eigenaren"
+
+#: ../src/etc/scenari/subscribe.smime:1
+msgid "requires S/MIME signed"
+msgstr "vereist S/MIME ondertekend"
+
+#: ../src/etc/scenari/subscribe.smimeorowner:1
+msgid "requires S/MIME signed or owner approval"
+msgstr "vereist S/MIME handtekening of eigenaar toestemming"
+
+#: ../src/etc/scenari/topics_visibility.conceal:1
+msgid "conceal unless for listmaster"
+msgstr "verbergen behalve voor listmaster"
+
+#: ../src/etc/scenari/topics_visibility.identified:1
+msgid "conceal unless user is logged in"
+msgstr "verbergen behalve wanneer gebruiker ingelogd is"
+
+#: ../src/etc/scenari/topics_visibility.noconceal:1
+#: ../src/etc/scenari/visibility.noconceal:1
+msgid "no conceal"
+msgstr "niet verbergen"
+
+#: ../src/etc/scenari/unsubscribe.auth:1
+msgid "need authentication"
+msgstr "authenticatie verplicht"
+
+#: ../src/etc/scenari/unsubscribe.auth_notify:1
+msgid "authentication requested, notification sent to owner"
+msgstr "authenticatie gevraagd, waarschuwing verstuurd naar eigenaar"
+
+#: ../src/etc/scenari/unsubscribe.closed:1
+msgid "impossible"
+msgstr "onmogelijk"
+
+#: ../src/etc/scenari/unsubscribe.open:1
+#, fuzzy
+msgid "open"
+msgstr "op"
+
+#: ../src/etc/scenari/unsubscribe.open_notify:1
+msgid "open with mail confirmation, owner is notified"
+msgstr ""
+
+#: ../src/etc/scenari/visibility.conceal:1
+msgid "conceal except for subscribers"
+msgstr "verborgen behalve voor abonnees"
+
+#: ../src/etc/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "intranet toegang"
+
+#: ../src/etc/scenari/visibility.secret:1
+msgid "conceal even for subscribers"
+msgstr "verbergen zelfs voor abonnees"
+
 #. (year.value.item(month))
 #: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
 msgid "%1 message(s)"
@@ -9277,374 +8300,6 @@ msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
 msgstr ""
-
-#: ../src/etc/scenari/access_web_archive.closed:1
-#: ../src/etc/scenari/invite.closed:1 ../src/etc/scenari/send.closed:1
-msgid "closed"
-msgstr "gesloten"
-
-#: ../src/etc/scenari/access_web_archive.intranet:1
-#: ../src/etc/scenari/subscribe.intranet:1
-msgid "restricted to local domain users"
-msgstr "beperkt tot lokale domeingebruikers"
-
-#: ../src/etc/scenari/access_web_archive.listmaster:1
-msgid "listmaster"
-msgstr "listmaster"
-
-#: ../src/etc/scenari/access_web_archive.owner:1
-msgid "by owner"
-msgstr "door eigenaar"
-
-#: ../src/etc/scenari/access_web_archive.private:1
-msgid "subscribers only"
-msgstr "alleen abonnees"
-
-#: ../src/etc/scenari/access_web_archive.public:1
-#: ../src/etc/scenari/invite.public:1
-msgid "public"
-msgstr "publiek"
-
-#: ../src/etc/scenari/add.auth:1
-#, fuzzy
-msgid "restricted to owner with authentication"
-msgstr "door eigenlijk zonder authenticatie"
-
-#: ../src/etc/scenari/add.authdkim:1
-#, fuzzy
-msgid "restricted to owner without authentication if DKIM signature is OK."
-msgstr "door eigenlijk zonder authenticatie"
-
-#: ../src/etc/scenari/add.closed:1
-msgid "add impossible"
-msgstr "toevoegen onmogelijk"
-
-#: ../src/etc/scenari/add.owner:1
-#, fuzzy
-msgid "add performed by list owner does not need authentication"
-msgstr "toevoegen door de eigenaar heeft geen authenticatie nodig"
-
-#: ../src/etc/scenari/add.ownerdkim:1
-#, fuzzy
-msgid ""
-"add performed by list owner does not need authentication if DKIM signature OK"
-msgstr "toevoegen door de eigenaar heeft geen authenticatie nodig"
-
-#: ../src/etc/scenari/add.owner_notify:1
-#, fuzzy
-msgid "add performed by owner does not need authentication (notification)"
-msgstr "toevoegen gebeurd door eigenaar, geen authenticatie nodig"
-
-#: ../src/etc/scenari/automatic_list_creation.listmaster:1
-#: ../src/etc/scenari/create_list.listmaster:1
-msgid "restricted to listmaster"
-msgstr "beperkt tot de listmaster"
-
-#: ../src/etc/scenari/automatic_list_creation.public:1
-msgid "anybody. Be sure you know what you are doing"
-msgstr ""
-
-#: ../src/etc/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "iedereen uit het lokale domein"
-
-#: ../src/etc/scenari/create_list.public_listmaster:1
-#, fuzzy
-msgid "anybody by validation by listmaster required"
-msgstr "iedereen, validatie door listmaster verplicht"
-
-#: ../src/etc/scenari/d_edit.editor:1
-#, fuzzy
-msgid "moderated for subscribers"
-msgstr "Prive, gemodereerd voor niet abonnees"
-
-#: ../src/etc/scenari/d_edit.owner:1 ../src/etc/scenari/d_read.owner:1
-#: ../src/etc/scenari/remind.owner:1
-msgid "restricted to list owners"
-msgstr "beperkt to lijst eigenaren"
-
-#: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
-#: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
-#: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
-msgid "restricted to subscribers"
-msgstr "beperkt tot abonnees"
-
-#: ../src/etc/scenari/d_edit.private-https:1
-#: ../src/etc/scenari/d_read.private-https:1
-#, fuzzy
-msgid "restricted to subscribers authenticated with user cert"
-msgstr "beperkt tot abonnees controleer smime handtekening"
-
-#: ../src/etc/scenari/d_edit.public:1 ../src/etc/scenari/d_read.public:1
-msgid "public documents"
-msgstr "publieke documenten"
-
-#: ../src/etc/scenari/del.auth:1
-msgid "deletion performed only by list owners, need authentication"
-msgstr "verwijderen alleen door lijst eigenaren, authenticatie nodig"
-
-#: ../src/etc/scenari/del.authdkim:1
-#, fuzzy
-msgid ""
-"deletion performed only by list owners, need authentication unless DKIM "
-"signature is OK"
-msgstr "verwijderen alleen door lijst eigenaren, authenticatie nodig"
-
-#: ../src/etc/scenari/del.closed:1
-msgid "remove subscriber impossible"
-msgstr "verwijder abonnee onmogelijk"
-
-#: ../src/etc/scenari/del.owner:1
-msgid "by owner without authentication"
-msgstr "door eigenlijk zonder authenticatie"
-
-#: ../src/etc/scenari/del.owner_notify:1
-msgid "list owners, authentication not needed (notification)"
-msgstr "lijst eigenaren, authenticatie niet nodig (herinnering)"
-
-#: ../src/etc/scenari/global_remind.listmaster:1
-msgid "just for listmaster"
-msgstr "alleen voor de listmaster"
-
-#: ../src/etc/scenari/info.open:1
-msgid "for anyone"
-msgstr "voor iedereen"
-
-#: ../src/etc/scenari/invite.owner:1
-msgid "invite perform by list owner do not need authentication"
-msgstr "uitnodiging uitgevoerd door lijsteigenaar, authenticatie niet nodig"
-
-#: ../src/etc/scenari/remind.listmaster:1
-#: ../src/etc/scenari/review.listmaster:1
-msgid "listmaster only"
-msgstr "alleen voor de listmaster"
-
-#: ../src/etc/scenari/remind.listmasterdkim:1
-msgid ""
-"listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr ""
-
-#: ../src/etc/scenari/remind.ownerdkim:1
-#, fuzzy
-msgid ""
-"restricted to list owners (authentication is not required if a DKIM "
-"signature is OK)"
-msgstr "lijst eigenaren, authenticatie niet nodig (herinnering)"
-
-#: ../src/etc/scenari/review.closed:1
-#, fuzzy
-msgid "no one can review"
-msgstr "niemand"
-
-#: ../src/etc/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "beperkt tot lokale domein gebruikers"
-
-#: ../src/etc/scenari/review.owner:1
-msgid "only owner (and listmaster)"
-msgstr "alleen de eigenaar (en listmaster)"
-
-#: ../src/etc/scenari/review.public:1
-msgid "anyone can do it !"
-msgstr "iedereen kan het !"
-
-#: ../src/etc/scenari/send.editordkim:1
-msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
-msgstr ""
-
-#: ../src/etc/scenari/send.editorkey:1
-msgid "Moderated"
-msgstr "Gemodereerd"
-
-#: ../src/etc/scenari/send.editorkeyonly:1
-msgid "Moderated, even for moderators"
-msgstr "Gemodereerd, zelfs voor moderators"
-
-#: ../src/etc/scenari/send.editorkeyonlyauth:1
-#, fuzzy
-msgid "Moderated, need  authentication  from editor"
-msgstr "toevoegen heeft authenticatie nodig"
-
-#: ../src/etc/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "beperkt tot het lokale domein"
-
-#: ../src/etc/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "beperkt tot het lokale domein en abonnees"
-
-#: ../src/etc/scenari/send.newsletter:1
-msgid "Newsletter, restricted to moderators"
-msgstr "Nieuwsbrief, beperkt tot moderators"
-
-#: ../src/etc/scenari/send.newsletterkeyonly:1
-msgid "Newsletter, restricted to moderators after confirmation"
-msgstr "Nieuwsbrief, beperkt tot moderators met md5 sleutel"
-
-#: ../src/etc/scenari/send.privateandeditorkey:1
-msgid "Moderated, restricted to subscribers"
-msgstr "Gemodereerd, beperkt tot abonnees"
-
-#: ../src/etc/scenari/send.privateandnomultipartoreditorkey:1
-msgid "Moderated, for non subscribers sending multipart messages"
-msgstr "Gemodereerd, voor niet-abonnees die een multipart bericht sturen."
-
-#: ../src/etc/scenari/send.privatekey:1
-msgid "restricted to subscribers with previous md5 authentication"
-msgstr "beperkt to abonnees met md5 authenticatie"
-
-#: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
-#, fuzzy
-msgid "Moderated, for subscribers and even moderators themself"
-msgstr "Gemodereerd, voor abonnees en moderators"
-
-#: ../src/etc/scenari/send.privateoreditorkey:1
-msgid "Private, moderated for non subscribers"
-msgstr "Prive, gemodereerd voor niet abonnees"
-
-#: ../src/etc/scenari/send.privateorpublickey:1
-msgid "Private, confirmation for non subscribers"
-msgstr "Prive, bevestiging voor niet geabonneerden"
-
-#: ../src/etc/scenari/send.private_smime:1
-#, fuzzy
-msgid "restricted to subscribers and checked smime signature"
-msgstr "beperkt tot abonnees controleer smime handtekening"
-
-#: ../src/etc/scenari/send.public:1
-msgid "public list"
-msgstr "publieke lijst"
-
-#: ../src/etc/scenari/send.publickey:1
-msgid "anyone no authentication if DKIM signature is OK"
-msgstr ""
-
-#: ../src/etc/scenari/send.publicnoattachment:1
-msgid "public list multipart/mixed messages are forwarded to moderator"
-msgstr ""
-"publieke lijst multipart/mixed berichten voor naar de moderator gestuurd."
-
-#: ../src/etc/scenari/send.public_nobcc:1
-msgid "public list, Bcc rejected (anti-spam)"
-msgstr "publieke lijst, Bcc verboden (anti-spam)"
-
-#: ../src/etc/scenari/send.publicnomultipart:1
-msgid "public list multipart messages are rejected"
-msgstr "publieke lijst multipart berichten worden geweigerd"
-
-#: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
-msgid "subscription request confirmed"
-msgstr "Abonnementsvraag bevestigd"
-
-#: ../src/etc/scenari/subscribe.auth_notify:1
-msgid "need authentication (notification is sent to owners)"
-msgstr "authenticatie benodigd (waarschuwing wordt gestuurd naar de eigenaren)"
-
-#: ../src/etc/scenari/subscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"need authentication unless DKIM signature is OK. (notification is sent to "
-"owners)"
-msgstr "authenticatie benodigd (waarschuwing wordt gestuurd naar de eigenaren)"
-
-#: ../src/etc/scenari/subscribe.auth_owner:1
-msgid "requires authentication then owner approval"
-msgstr "authenticatie nodig, dan toestemming van eigenaar"
-
-#: ../src/etc/scenari/subscribe.auth_ownerdkim:1
-#, fuzzy
-msgid ""
-"requires authentication unless DKIM signature is OK, then owner approval"
-msgstr "authenticatie nodig, dan toestemming van eigenaar"
-
-#: ../src/etc/scenari/subscribe.closed:1
-msgid "subscribe is impossible"
-msgstr "abonneren is onmogelijk"
-
-#: ../src/etc/scenari/subscribe.intranetorowner:1
-msgid "local domain users or owner approval"
-msgstr "lokale domein gebruikers of eigenaren toestemming"
-
-#: ../src/etc/scenari/subscribe.open:1
-msgid "for anyone without authentication"
-msgstr "voor iedereen zonder authenticatie"
-
-#: ../src/etc/scenari/subscribe.open_notify:1
-msgid "anyone, notification is sent to list owner"
-msgstr "iedereen, waarschuwing wordt verstuurd naar de lijst eigenaar"
-
-#: ../src/etc/scenari/subscribe.open_quiet:1
-msgid "anyone, no welcome message"
-msgstr "iedereen, geen welkomstbericht"
-
-#: ../src/etc/scenari/subscribe.owner:1 ../src/etc/scenari/unsubscribe.owner:1
-msgid "owners approval"
-msgstr "toestemming van de eigenaren"
-
-#: ../src/etc/scenari/subscribe.smime:1
-msgid "requires S/MIME signed"
-msgstr "vereist S/MIME ondertekend"
-
-#: ../src/etc/scenari/subscribe.smimeorowner:1
-msgid "requires S/MIME signed or owner approval"
-msgstr "vereist S/MIME handtekening of eigenaar toestemming"
-
-#: ../src/etc/scenari/topics_visibility.conceal:1
-msgid "conceal unless for listmaster"
-msgstr "verbergen behalve voor listmaster"
-
-#: ../src/etc/scenari/topics_visibility.identified:1
-msgid "conceal unless user is logged in"
-msgstr "verbergen behalve wanneer gebruiker ingelogd is"
-
-#: ../src/etc/scenari/topics_visibility.noconceal:1
-#: ../src/etc/scenari/visibility.noconceal:1
-msgid "no conceal"
-msgstr "niet verbergen"
-
-#: ../src/etc/scenari/unsubscribe.auth:1
-msgid "need authentication"
-msgstr "authenticatie verplicht"
-
-#: ../src/etc/scenari/unsubscribe.authdkim:1
-msgid "need authentication unless DKIM signature is OK"
-msgstr ""
-
-#: ../src/etc/scenari/unsubscribe.auth_notify:1
-msgid "authentication requested, notification sent to owner"
-msgstr "authenticatie gevraagd, waarschuwing verstuurd naar eigenaar"
-
-#: ../src/etc/scenari/unsubscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"authentication requested unless DKIM signature is OK, notification sent to "
-"owner"
-msgstr "authenticatie gevraagd, waarschuwing verstuurd naar eigenaar"
-
-#: ../src/etc/scenari/unsubscribe.closed:1
-msgid "impossible"
-msgstr "onmogelijk"
-
-#: ../src/etc/scenari/unsubscribe.open:1
-#, fuzzy
-msgid "open"
-msgstr "op"
-
-#: ../src/etc/scenari/unsubscribe.open_notify:1
-msgid "open with mail confirmation, owner is notified"
-msgstr ""
-
-#: ../src/etc/scenari/visibility.conceal:1
-msgid "conceal except for subscribers"
-msgstr "verborgen behalve voor abonnees"
-
-#: ../src/etc/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "intranet toegang"
-
-#: ../src/etc/scenari/visibility.secret:1
-msgid "conceal even for subscribers"
-msgstr "verbergen zelfs voor abonnees"
 
 #: ../src/etc/global_task_models/chk_cert_expiration.daily.task:1
 msgid ""
@@ -9796,9 +8451,998 @@ msgstr ""
 "Berichten kunnnen gelezen worden via email (door in te schrijven) of door te "
 "surfen (web archieven)"
 
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/Commands.pm:958 ../wwsympa/wwsympa.fcgi.in:9618
+msgid "%A"
+msgstr ""
+
+#: ../src/lib/Conf.pm:136
 #, fuzzy
-#~ msgid "Your Lists"
-#~ msgstr "Lijsten"
+msgid "Error at line %d: %s\n"
+msgstr "Fout in regel %d : %s"
+
+#: ../src/lib/Conf.pm:418
+#, fuzzy
+msgid "Error at line %d: %s"
+msgstr "Fout in regel %d : %s"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
+#: ../src/lib/List.pm:1802 ../wwsympa/Auth.pm:464
+#: ../wwsympa/wwsympa.fcgi.in:1041 ../wwsympa/wwsympa.fcgi.in:2847
+msgid "%d %b %Y at %H:%M:%S"
+msgstr ""
+
+#: ../src/lib/List.pm:322
+msgid "Account"
+msgstr "Inlognaam"
+
+#: ../src/lib/List.pm:326
+msgid "Who can add subscribers"
+msgstr "Wie kan abonnees toevoegen"
+
+#: ../src/lib/List.pm:330
+msgid "Anonymous sender"
+msgstr "Anonieme verzender"
+
+#: ../src/lib/List.pm:335
+msgid "frequency"
+msgstr "frequentie"
+
+#: ../src/lib/List.pm:1351 ../src/lib/List.pm:340
+msgid "access right"
+msgstr "toegangsrecht"
+
+#: ../src/lib/List.pm:344
+msgid "Text archives"
+msgstr "Text archieven"
+
+#: ../src/lib/List.pm:349
+#, fuzzy
+msgid "Archive encrypted mails as cleartext"
+msgstr "Archief heeft encrypted mails opgeslagen als leesbare tekst"
+
+#: ../src/lib/List.pm:1106 ../src/lib/List.pm:1146 ../src/lib/List.pm:356
+#: ../src/lib/List.pm:532 ../src/lib/List.pm:602 ../src/lib/List.pm:637
+msgid "reception mode"
+msgstr "Ontvangst stand"
+
+#: ../src/lib/List.pm:359
+msgid "Available subscription options"
+msgstr "Aanwezige inschrijvings opties"
+
+#: ../src/lib/List.pm:367
+msgid "warn rate"
+msgstr "waarschuwingspercentage"
+
+#: ../src/lib/List.pm:374
+msgid "halt rate"
+msgstr "stop percentage"
+
+# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
+#: ../src/lib/List.pm:378
+msgid "Bounces management"
+msgstr "Bounces management"
+
+#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
+msgid "threshold"
+msgstr ""
+
+#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
+msgid "action for this population"
+msgstr ""
+
+#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
+msgid "notification"
+msgstr ""
+
+#: ../src/lib/List.pm:399
+msgid "Management of bouncers, 1st level"
+msgstr ""
+
+#: ../src/lib/List.pm:420
+msgid "Management of bouncers, 2nd level"
+msgstr ""
+
+#: ../src/lib/List.pm:427
+msgid "Expiration of unmoderated messages"
+msgstr "Afloop van de termijn voor gemodereerde berichten"
+
+#: ../src/lib/List.pm:433
+msgid "Secret string for generating unique keys"
+msgstr "Geheim woord voor het aanmaken van een unieke sleutel"
+
+#: ../src/lib/List.pm:451
+msgid "Creation of the list"
+msgstr "Aanmaken van de lijst"
+
+#: ../src/lib/List.pm:462
+msgid "internal identifier"
+msgstr ""
+
+#: ../src/lib/List.pm:470
+msgid "label"
+msgstr ""
+
+#: ../src/lib/List.pm:476
+msgid "additional comment"
+msgstr ""
+
+#: ../src/lib/List.pm:483
+#, fuzzy
+msgid "type"
+msgstr "type"
+
+#: ../src/lib/List.pm:489
+msgid "possible attribute values (if enum is used)"
+msgstr ""
+
+#: ../src/lib/List.pm:494
+msgid "is the attribute optional?"
+msgstr ""
+
+#: ../src/lib/List.pm:500
+msgid "Custom user attributes"
+msgstr ""
+
+#: ../src/lib/List.pm:506
+msgid "Custom header field"
+msgstr "Speciaal koptekst veld"
+
+#: ../src/lib/List.pm:511
+msgid "Subject tagging"
+msgstr "Onderwerp markeren"
+
+#: ../src/lib/List.pm:525
+#, fuzzy
+msgid "custom parameters"
+msgstr "Data bronnen configuratie"
+
+#: ../src/lib/List.pm:1111 ../src/lib/List.pm:1151 ../src/lib/List.pm:537
+#: ../src/lib/List.pm:607 ../src/lib/List.pm:642
+msgid "visibility"
+msgstr "zichtbaar"
+
+#: ../src/lib/List.pm:541
+msgid "Subscription profile"
+msgstr "Inschrijvings profiel"
+
+#: ../src/lib/List.pm:545
+msgid "Who can delete subscribers"
+msgstr "Wie kan abonnees verwijderen"
+
+#: ../src/lib/List.pm:550
+msgid "Delivery time (hh:mm)"
+msgstr ""
+
+#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
+msgid "days"
+msgstr "dagen"
+
+#: ../src/lib/List.pm:564
+msgid "hour"
+msgstr "uur"
+
+#: ../src/lib/List.pm:570
+msgid "minute"
+msgstr "minuut"
+
+#: ../src/lib/List.pm:574
+msgid "Digest frequency"
+msgstr "Samenvattings frequentie"
+
+#: ../src/lib/List.pm:582
+msgid "Digest maximum number of messages"
+msgstr ""
+
+#: ../src/lib/List.pm:590
+#, fuzzy
+msgid "Inclusions timeout for message distribution"
+msgstr "voetregel van bericht"
+
+#: ../src/lib/List.pm:1101 ../src/lib/List.pm:597
+msgid "email address"
+msgstr "emailadres"
+
+#: ../src/lib/List.pm:1116 ../src/lib/List.pm:612
+msgid "name"
+msgstr "naam"
+
+#: ../src/lib/List.pm:1121 ../src/lib/List.pm:617
+msgid "private information"
+msgstr "private informatie"
+
+#: ../src/lib/List.pm:652
+#, fuzzy
+msgid "Periodical subscription expiration task"
+msgstr "Aanwezige inschrijvings opties"
+
+#: ../src/lib/List.pm:663
+msgid "Attachment type"
+msgstr "Bijlage type"
+
+#: ../src/lib/List.pm:667
+msgid "Forced reply address"
+msgstr "Verplicht antwoord adres"
+
+#: ../src/lib/List.pm:673
+msgid "Internet domain"
+msgstr "Internet domein"
+
+#: ../src/lib/List.pm:679
+msgid "File inclusion"
+msgstr "Bestand insluiten"
+
+#: ../src/lib/List.pm:683
+msgid "data location URL"
+msgstr ""
+
+#: ../src/lib/List.pm:689 ../src/lib/List.pm:722 ../src/lib/List.pm:803
+#: ../src/lib/List.pm:981
+msgid "remote user"
+msgstr "gebruiker"
+
+#: ../src/lib/List.pm:696 ../src/lib/List.pm:728 ../src/lib/List.pm:809
+#: ../src/lib/List.pm:986
+msgid "remote password"
+msgstr "wachtwoord"
+
+#: ../src/lib/List.pm:1000 ../src/lib/List.pm:701 ../src/lib/List.pm:764
+#: ../src/lib/List.pm:888 ../src/lib/List.pm:942
+msgid "short name for this source"
+msgstr ""
+
+#: ../src/lib/List.pm:706
+msgid "Remote file inclusion"
+msgstr "Extern bestand toegevoegd"
+
+#: ../src/lib/List.pm:712 ../src/lib/List.pm:793 ../src/lib/List.pm:920
+#: ../src/lib/List.pm:959
+msgid "remote host"
+msgstr "systeem"
+
+#: ../src/lib/List.pm:717 ../src/lib/List.pm:798 ../src/lib/List.pm:926
+msgid "remote port"
+msgstr "poort"
+
+#: ../src/lib/List.pm:732
+msgid "suffix"
+msgstr "extensie"
+
+#: ../src/lib/List.pm:738
+msgid "filter"
+msgstr "filter"
+
+#: ../src/lib/List.pm:744
+msgid "extracted attribute"
+msgstr "afgeleid attribuut"
+
+#: ../src/lib/List.pm:749
+msgid "selection (if multiple)"
+msgstr "selectie (waneer meerdere)"
+
+#: ../src/lib/List.pm:754
+msgid "search scope"
+msgstr "Zoek scope"
+
+#: ../src/lib/List.pm:760
+msgid "connection timeout"
+msgstr "connectie timeout"
+
+#: ../src/lib/List.pm:788
+msgid "LDAP query inclusion"
+msgstr "LDAP aanvraag insluiten"
+
+#: ../src/lib/List.pm:813
+msgid "first-level suffix"
+msgstr "eerste-nivo suffix"
+
+#: ../src/lib/List.pm:819
+msgid "first-level filter"
+msgstr "eerste-nivo filter"
+
+#: ../src/lib/List.pm:824
+msgid "first-level extracted attribute"
+msgstr "eerste-nivo extracted attribute"
+
+#: ../src/lib/List.pm:829
+msgid "first-level selection"
+msgstr "eerste-nivo selectie"
+
+#: ../src/lib/List.pm:834
+msgid "first-level search scope"
+msgstr "eerste-nivo zoek scope"
+
+#: ../src/lib/List.pm:840
+msgid "first-level connection timeout"
+msgstr "eerste-nivo connectie timeout"
+
+#: ../src/lib/List.pm:846
+msgid "first-level regular expression"
+msgstr "eerste-nivo regular expression"
+
+#: ../src/lib/List.pm:850
+msgid "second-level suffix template"
+msgstr "tweede-nivo suffix template"
+
+#: ../src/lib/List.pm:856
+msgid "second-level filter template"
+msgstr "tweede-nivo filter template"
+
+#: ../src/lib/List.pm:862
+msgid "second-level extracted attribute"
+msgstr "tweede-nivo extracted attribute"
+
+#: ../src/lib/List.pm:867
+msgid "second-level selection"
+msgstr "tweede-nivo selectie"
+
+#: ../src/lib/List.pm:872
+msgid "second-level search scope"
+msgstr "tweede-nivo zoek scope"
+
+#: ../src/lib/List.pm:878
+msgid "second-level connection timeout"
+msgstr "tweede-nivo connectie timeout"
+
+#: ../src/lib/List.pm:884
+msgid "second-level regular expression"
+msgstr "tweede-nivo regular expression"
+
+#: ../src/lib/List.pm:910
+msgid "LDAP 2-level query inclusion"
+msgstr "LDAP 2-level query inclusion"
+
+#: ../src/lib/List.pm:915
+msgid "List inclusion"
+msgstr "Lijst insluiten"
+
+#: ../src/lib/List.pm:932
+msgid "remote path of sympa list dump"
+msgstr "Extern pad voor de sympa lijst dump"
+
+#: ../src/lib/List.pm:937
+msgid "certificate for authentication by remote Sympa"
+msgstr "certificaat voor authenticatie voor een externe Sympa"
+
+#: ../src/lib/List.pm:949
+msgid "remote list inclusion"
+msgstr "Externe lijst inclusie"
+
+#: ../src/lib/List.pm:954
+msgid "database type"
+msgstr "database type"
+
+#: ../src/lib/List.pm:963
+#, fuzzy
+msgid "database port"
+msgstr "database type"
+
+#: ../src/lib/List.pm:968
+msgid "database name"
+msgstr "database naam"
+
+#: ../src/lib/List.pm:972
+msgid "connection options"
+msgstr "connectie opties"
+
+#: ../src/lib/List.pm:977
+#, fuzzy
+msgid "environment variables for database connection"
+msgstr "environment variabele voor database connectie."
+
+#: ../src/lib/List.pm:992
+msgid "SQL query"
+msgstr "SQL query"
+
+#: ../src/lib/List.pm:996
+msgid "Directory where the database is stored (used for DBD::CSV only)"
+msgstr "De map waar de database is opgeslagen (enkel gebruikt bij DBD:CSV)"
+
+#: ../src/lib/List.pm:1007
+msgid "SQL query inclusion"
+msgstr "SQL query insluiten"
+
+#: ../src/lib/List.pm:1013
+#, fuzzy
+msgid "Notify subscribers when they are included from a data source?"
+msgstr "U bent al geabonneerd op de lijst %1"
+
+#: ../src/lib/List.pm:1017
+msgid "Who can view list information"
+msgstr "Wie kan lijstinformatie zien"
+
+#: ../src/lib/List.pm:1021
+msgid "Who can invite people"
+msgstr "Wie kan mensen uitnodigen"
+
+#: ../src/lib/List.pm:1027
+msgid "Language of the list"
+msgstr "Taal van de lijst"
+
+#: ../src/lib/List.pm:1052
+msgid "Regular expression applied to prevent loops with robots"
+msgstr ""
+
+#: ../src/lib/List.pm:1059
+msgid "Maximum message size"
+msgstr "Maximum berichten grootte"
+
+#: ../src/lib/List.pm:1065
+#, fuzzy
+msgid "Message topic name"
+msgstr "Aantal berichten te modereren :"
+
+#: ../src/lib/List.pm:1070
+#, fuzzy
+msgid "Message topic keywords"
+msgstr "Reset foutmeldingen"
+
+#: ../src/lib/List.pm:1076
+#, fuzzy
+msgid "Message topic title"
+msgstr "Aantal berichten te modereren :"
+
+#: ../src/lib/List.pm:1081
+#, fuzzy
+msgid "Topics for message categorization"
+msgstr "Onderwerpen voor de lijst"
+
+#: ../src/lib/List.pm:1087
+msgid "Defines to which part of messages topic keywords are applied"
+msgstr ""
+
+#: ../src/lib/List.pm:1094
+#, fuzzy
+msgid "Message tagging"
+msgstr "voetregel van bericht"
+
+#: ../src/lib/List.pm:1126 ../src/lib/List.pm:1156
+msgid "profile"
+msgstr "profiel"
+
+# #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
+#: ../src/lib/List.pm:1131
+msgid "Owner"
+msgstr "Eigenaar"
+
+#: ../src/lib/List.pm:1167
+msgid "Priority"
+msgstr "Prioriteit"
+
+#: ../src/lib/List.pm:1171
+msgid "Who can start a remind process"
+msgstr "Wie kan een herinneringsproces starten"
+
+#: ../src/lib/List.pm:1176
+msgid "Return-path of the REMIND command"
+msgstr ""
+
+#: ../src/lib/List.pm:1200 ../src/lib/List.pm:1220
+msgid "Reply address"
+msgstr "Antwoordadres"
+
+#: ../src/lib/List.pm:1206
+msgid "value"
+msgstr "waarde"
+
+#: ../src/lib/List.pm:1211
+msgid "other email address"
+msgstr "ander email adres"
+
+#: ../src/lib/List.pm:1216
+msgid "respect of existing header field"
+msgstr "behoud bestaande kopveld"
+
+#: ../src/lib/List.pm:1225
+msgid "Who can review subscribers"
+msgstr "Wie kan de abonnees bekijken"
+
+#: ../src/lib/List.pm:1232
+#, fuzzy
+msgid "RFC 2369 Header fields"
+msgstr "Speciaal koptekst veld"
+
+#: ../src/lib/List.pm:1236
+msgid "Who can send messages"
+msgstr "Wie kan berichten sturen"
+
+#: ../src/lib/List.pm:1243
+msgid "Serial number of the config"
+msgstr "Serienummer van de configuratie"
+
+#: ../src/lib/List.pm:1248
+msgid "Who can view"
+msgstr "Wie kan zien"
+
+#: ../src/lib/List.pm:1252
+msgid "Who can edit"
+msgstr "Wie kan wijzigen"
+
+#: ../src/lib/List.pm:1259 ../src/lib/List.pm:1358
+msgid "quota"
+msgstr "quota"
+
+#: ../src/lib/List.pm:1268 ../src/lib/List.pm:1273
+#, fuzzy
+msgid "email address protection method"
+msgstr "emailadres beveiligingsmethode"
+
+#: ../src/lib/List.pm:1279
+msgid "Status of the list"
+msgstr "Status van de lijst"
+
+#: ../src/lib/List.pm:1286
+msgid "Subject of the list"
+msgstr "Onderwerp van de lijst"
+
+#: ../src/lib/List.pm:1290
+msgid "Who can subscribe to the list"
+msgstr "Wie kan inschrijven op de lijst"
+
+#: ../src/lib/List.pm:1296
+msgid "Topics for the list"
+msgstr "Onderwerpen voor de lijst"
+
+#: ../src/lib/List.pm:1303
+msgid "Inclusions timeout"
+msgstr "Timeout voor de inclusions"
+
+#: ../src/lib/List.pm:1307
+msgid "Who can unsubscribe"
+msgstr "Wie kan uitschrijven"
+
+#: ../src/lib/List.pm:1328
+msgid "Last update of config"
+msgstr "Laatste update van de configuratie"
+
+#: ../src/lib/List.pm:1335
+msgid "User data source"
+msgstr "Gebruiker data bron"
+
+#: ../src/lib/List.pm:1341
+msgid "Allow picture display? (must be enabled for the current robot)"
+msgstr ""
+
+#: ../src/lib/List.pm:1347
+msgid "Visibility of the list"
+msgstr "Zichtbaarheid van de lijst"
+
+#: ../src/lib/List.pm:1363
+msgid "Maximum number of month archived"
+msgstr ""
+
+#: ../src/lib/List.pm:1368
+msgid "Web archives"
+msgstr "Web archieven"
+
+#: ../src/lib/List.pm:1374
+msgid "Welcome return-path"
+msgstr "Welkom return-path"
+
+#: ../src/lib/List.pm:1379
+msgid "percentage of list members in VERP mode"
+msgstr ""
+
+#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
+msgid "%"
+msgstr ""
+
+#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
+msgid "points"
+msgstr ""
+
+#: ../src/lib/List.pm:516
+#, fuzzy
+msgid "var name"
+msgstr "naam"
+
+#: ../src/lib/List.pm:521
+#, fuzzy
+msgid "var value"
+msgstr "waarde"
+
+#: ../src/lib/List.pm:580
+#, fuzzy
+msgid "messages"
+msgstr "# bericht"
+
+#: ../src/lib/List.pm:1301 ../src/lib/List.pm:588 ../src/lib/List.pm:759
+#: ../src/lib/List.pm:839 ../src/lib/List.pm:877
+msgid "seconds"
+msgstr ""
+
+#: ../src/lib/List.pm:627
+#, fuzzy
+msgid "the data source"
+msgstr "Gebruiker data bron"
+
+#: ../src/lib/List.pm:632
+#, fuzzy
+msgid "data source parameters"
+msgstr "Data bronnen configuratie"
+
+#: ../src/lib/List.pm:648
+msgid "Moderators defined in an external data source"
+msgstr ""
+
+#: ../src/lib/List.pm:657
+#, fuzzy
+msgid "Family name"
+msgstr "Bestand"
+
+#: ../src/lib/List.pm:770 ../src/lib/List.pm:894
+msgid "use SSL (LDAPS)"
+msgstr ""
+
+#: ../src/lib/List.pm:775 ../src/lib/List.pm:899
+#, fuzzy
+msgid "SSL version"
+msgstr "SQL query insluiten"
+
+#: ../src/lib/List.pm:780 ../src/lib/List.pm:904
+#, fuzzy
+msgid "SSL ciphers used"
+msgstr "Gebruiker sleutelgrootte"
+
+#: ../src/lib/List.pm:1032 ../src/lib/List.pm:1313
+#, fuzzy
+msgid "epoch date"
+msgstr "Wijzig"
+
+#: ../src/lib/List.pm:1036 ../src/lib/List.pm:1318
+#, fuzzy
+msgid "date"
+msgstr "Wijzig"
+
+#: ../src/lib/List.pm:1041
+#, fuzzy
+msgid "who ran the instantiation"
+msgstr "Wie kan lijstinformatie zien"
+
+#: ../src/lib/List.pm:1045
+msgid "Latest family instantiation"
+msgstr ""
+
+#: ../src/lib/List.pm:1057
+#, fuzzy
+msgid "bytes"
+msgstr "Tot ziens !"
+
+#: ../src/lib/List.pm:1136
+#, fuzzy
+msgid "the datasource"
+msgstr "Gebruiker data bron"
+
+#: ../src/lib/List.pm:1141
+#, fuzzy
+msgid "datasource parameters"
+msgstr "Data bronnen configuratie"
+
+#: ../src/lib/List.pm:1161
+msgid "Owners defined in an external data source"
+msgstr ""
+
+#: ../src/lib/List.pm:1180
+#, fuzzy
+msgid "Periodical subscription reminder task"
+msgstr "Aanwezige inschrijvings opties"
+
+#: ../src/lib/List.pm:1185
+msgid "Incoming SMTP header fields to be removed"
+msgstr ""
+
+#: ../src/lib/List.pm:1192
+msgid "Outgoing SMTP header fields to be removed"
+msgstr ""
+
+#: ../src/lib/List.pm:1258 ../src/lib/List.pm:1357
+msgid "Kbytes"
+msgstr ""
+
+#: ../src/lib/List.pm:1324
+#, fuzzy
+msgid "who updated the config"
+msgstr "Laatste update van de configuratie"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2809
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2810
+msgid "%a, %d %b %Y"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2996 ../src/lib/List.pm:2997 ../src/lib/List.pm:3001
+#: ../wwsympa/wwsympa.fcgi.in:10985 ../wwsympa/wwsympa.fcgi.in:11054
+#: ../wwsympa/wwsympa.fcgi.in:11256 ../wwsympa/wwsympa.fcgi.in:11593
+#: ../wwsympa/wwsympa.fcgi.in:15501 ../wwsympa/wwsympa.fcgi.in:16231
+#: ../wwsympa/wwsympa.fcgi.in:16232 ../wwsympa/wwsympa.fcgi.in:4803
+#: ../wwsympa/wwsympa.fcgi.in:4804 ../wwsympa/wwsympa.fcgi.in:6227
+#: ../wwsympa/wwsympa.fcgi.in:7245 ../wwsympa/wwsympa.fcgi.in:7788
+#: ../wwsympa/wwsympa.fcgi.in:7828 ../wwsympa/wwsympa.fcgi.in:7830
+#: ../wwsympa/wwsympa.fcgi.in:8306 ../wwsympa/wwsympa.fcgi.in:8307
+#: ../wwsympa/wwsympa.fcgi.in:8341 ../wwsympa/wwsympa.fcgi.in:8342
+#: ../wwsympa/wwsympa.fcgi.in:8521 ../wwsympa/wwsympa.fcgi.in:8522
+msgid "%d %b %Y"
+msgstr ""
+
+#: ../src/lib/mail.pm:53
+#, fuzzy
+msgid ""
+"Your system does not conform to the POSIX P1003.1 standard, or\n"
+"your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
+"library. You must modify the smtp.pm module in order to set a value\n"
+"for variable %s.\n"
+msgstr ""
+"Uw systeem voldoet niet aan de POSIX P1003.1 standaard, of\n"
+"uw Perl systeem definieerd de _SC_ARG_MAX constante in zijn POSIX\n"
+"bibliotheek. U dient de smtp.pm module te veranderen om een waarde te "
+"zetten\n"
+"voor de variabele $max_arg.\n"
+
+#: ../src/lib/mail.pm:755
+msgid "Unable to create a channel in smtpto: %m"
+msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
+
+#: ../src/lib/PlainDigest.pm:163
+#, fuzzy
+msgid ""
+"----- Malformed message ignored -----\n"
+"\n"
+msgstr ""
+"------ Einde origineel bericht van %s ------\n"
+"\n"
+
+#: ../src/lib/PlainDigest.pm:194
+msgid ""
+"\n"
+"[Attached message follows]\n"
+"-----Original message-----\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:204
+msgid ""
+"-----End of original message from %s-----\n"
+"\n"
+msgstr ""
+"------ Einde origineel bericht van %s ------\n"
+"\n"
+
+#: ../src/lib/PlainDigest.pm:243
+msgid ""
+"** Warning: Message part originally used character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Opgelet: de gebruikte characterset is %S\n"
+"Sommige caracters kunnen verloren gaan of fout weergegeven worden!\n"
+
+#: ../src/lib/PlainDigest.pm:255
+msgid ""
+"\n"
+"[An attachment of type %s was included here]\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:261
+msgid ""
+"\n"
+"-----Delivery Status Report-----\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:263
+msgid "-----End of Delivery Status Report-----\n"
+msgstr "-----Einde Delivery Status Report-----\n"
+
+#: ../src/lib/PlainDigest.pm:301 ../src/lib/PlainDigest.pm:322
+msgid ""
+"\n"
+"[** Unable to process HTML message part **]\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:328
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part **]\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:332
+msgid "[ Text converted from HTML ]\n"
+msgstr ""
+
+#: ../src/lib/PlainDigest.pm:339
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part ** ]\n"
+msgstr ""
+
+#: ../src/lib/tt2.pm:150
+#, fuzzy
+msgid "(unknown date)"
+msgstr "%1 : onbekende actie"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/wwsympa.fcgi.in:1042
+msgid "%H:%M:%S"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
+#: ../wwsympa/wwsympa.fcgi.in:11817 ../wwsympa/wwsympa.fcgi.in:11950
+#: ../wwsympa/wwsympa.fcgi.in:14263 ../wwsympa/wwsympa.fcgi.in:7742
+msgid "%d %b %y  %H:%M"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/wwsympa.fcgi.in:15871 ../wwsympa/wwsympa.fcgi.in:15872
+msgid "%Y/%m/%d/%H/%M/%S"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:41
+msgid "session"
+msgstr "sessie"
+
+#: ../wwsympa/wwslib.pm:42
+msgid "10 minutes"
+msgstr "10 minuten"
+
+#: ../wwsympa/wwslib.pm:43
+msgid "30 minutes"
+msgstr "30 minuten"
+
+#: ../wwsympa/wwslib.pm:44
+msgid "1 hour"
+msgstr "1 uur"
+
+#: ../wwsympa/wwslib.pm:45
+msgid "6 hours"
+msgstr "6 uren"
+
+#: ../wwsympa/wwslib.pm:46
+msgid "1 day"
+msgstr "1 dag"
+
+#: ../wwsympa/wwslib.pm:47
+msgid "1 week"
+msgstr "1 week"
+
+#: ../wwsympa/wwslib.pm:49
+msgid "listed in the list review page"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:50
+#, fuzzy
+msgid "concealed"
+msgstr "niet verbergen"
+
+#: ../wwsympa/wwslib.pm:54
+msgid "welcome message"
+msgstr "welkomstbericht"
+
+#: ../wwsympa/wwslib.pm:55
+#, fuzzy
+msgid "unsubscribe message"
+msgstr "uitschrijfbericht"
+
+#: ../wwsympa/wwslib.pm:56
+msgid "deletion message"
+msgstr "verwijderbericht"
+
+#: ../wwsympa/wwslib.pm:57
+msgid "message footer"
+msgstr "voetregel van bericht"
+
+#: ../wwsympa/wwslib.pm:58
+msgid "message header"
+msgstr "hoofdregels van bericht"
+
+#: ../wwsympa/wwslib.pm:59
+msgid "remind message"
+msgstr "herinneringsbericht"
+
+#: ../wwsympa/wwslib.pm:60
+msgid "editor rejection message"
+msgstr "editor afwijzings bericht"
+
+#: ../wwsympa/wwslib.pm:61
+msgid "subscribing invitation message"
+msgstr "uitnodigingsbericht om in te schrijven"
+
+#: ../wwsympa/wwslib.pm:62
+msgid "help file"
+msgstr "help bestand"
+
+#: ../wwsympa/wwslib.pm:63
+msgid "directory of lists"
+msgstr "overzicht van lijsten"
+
+#: ../wwsympa/wwslib.pm:64
+msgid "global remind message"
+msgstr "globaal herinneringsbericht"
+
+#: ../wwsympa/wwslib.pm:65
+msgid "summary message"
+msgstr "samenvattings bericht"
+
+#: ../wwsympa/wwslib.pm:66
+msgid "list description"
+msgstr "lijst omschrijving"
+
+#: ../wwsympa/wwslib.pm:67
+msgid "list homepage"
+msgstr "lijst thuispagina"
+
+#: ../wwsympa/wwslib.pm:68
+msgid "list creation request message"
+msgstr "list aanmaak bericht"
+
+#: ../wwsympa/wwslib.pm:69
+msgid "list creation notification message"
+msgstr "list aanmaak herinneringsbericht"
+
+#: ../wwsympa/wwslib.pm:70
+msgid "virus infection message"
+msgstr "virusinfectiebericht"
+
+#: ../wwsympa/wwslib.pm:71
+msgid "list aliases template"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:28
+msgid "standard (direct reception)"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:29
+msgid "digest MIME format"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:30
+msgid "digest plain text format"
+msgstr ""
+
+#: ../wwsympa/wwslib.pm:31
+#, fuzzy
+msgid "summary mode"
+msgstr "samenvattings bericht"
+
+#: ../wwsympa/wwslib.pm:32
+#, fuzzy
+msgid "notice mode"
+msgstr "entire"
+
+#: ../wwsympa/wwslib.pm:33
+#, fuzzy
+msgid "text-only mode"
+msgstr "Ontvangst stand"
+
+#: ../wwsympa/wwslib.pm:34
+#, fuzzy
+msgid "html-only mode"
+msgstr "Ontvangst stand"
+
+#: ../wwsympa/wwslib.pm:35
+#, fuzzy
+msgid "urlize mode"
+msgstr "Gebruikershandleiding"
+
+#: ../wwsympa/wwslib.pm:36
+msgid "no mail (useful for vacations)"
+msgstr "geen mail (handig voor vakanties)"
+
+#: ../wwsympa/wwslib.pm:37
+msgid "you do not receive your own posts"
+msgstr "U ontvangt niet uw eigen e-mails"
 
 #, fuzzy
 #~ msgid "-List definition"
@@ -9830,6 +9474,9 @@ msgstr ""
 #~ msgid "# message"
 #~ msgstr "# bericht"
 
+#~ msgid "Send this mail"
+#~ msgstr "Stuur deze email"
+
 #~ msgid "Last update :"
 #~ msgstr "Laatste wijziging:"
 
@@ -9852,12 +9499,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "The list homepage: %1/info/%2"
 #~ msgstr "lijst thuispagina"
-
-#~ msgid "Moderated, with editor confirmation"
-#~ msgstr "Gemodereerd, met md5 sleutel"
-
-#~ msgid "anyone with previous md5 authentication"
-#~ msgstr "iedereen met voorafgaande md5 authenticatie"
 
 #, fuzzy
 #~ msgid "The configuration file --CONFIG-- contains errors.\n"
@@ -10476,6 +10117,9 @@ msgstr ""
 #~ msgid "DigestPlain"
 #~ msgstr "Digest"
 
+#~ msgid "Summary"
+#~ msgstr "Samenvatting"
+
 #~ msgid ""
 #~ "Instead of receiving individual mail messages from the list, the "
 #~ "subscriber will periodically \n"
@@ -10516,6 +10160,10 @@ msgstr ""
 #, fuzzy
 #~ msgid "Research was carried out in the robot <strong>%1</strong>."
 #~ msgstr "Geen inschrijvingen met adres <strong>%1</strong>!"
+
+#, fuzzy
+#~ msgid "Search on the list"
+#~ msgstr "Onderwerp van de lijst"
 
 #, fuzzy
 #~ msgid "View all"
@@ -11185,6 +10833,9 @@ msgstr ""
 #~ " - Minstens 20 woorden gevatten,\n"
 #~ " - en eindigen met het QUIT commando.\n"
 
+#~ msgid "add need authentication"
+#~ msgstr "toevoegen heeft authenticatie nodig"
+
 #~ msgid "without authentication, notification is sent to owners"
 #~ msgstr "zonder authenticatie, waarschuwing verstuurd naar eigenaren"
 
@@ -11257,6 +10908,9 @@ msgstr ""
 #~ msgid "Documents to moderate :"
 #~ msgstr "Aantal berichten te modereren :"
 
+#~ msgid "Extended search"
+#~ msgstr "Verder zoeken"
+
 #, fuzzy
 #~ msgid "Failed to add user"
 #~ msgstr "Mislukt om de gebruiker toe te voegen %1"
@@ -11266,6 +10920,9 @@ msgstr ""
 
 #~ msgid "List info"
 #~ msgstr "Lijst informatie"
+
+#~ msgid "Local"
+#~ msgstr "Lijsten op deze server"
 
 #, fuzzy
 #~ msgid "Login failed, no authentication service was provided"
@@ -11299,6 +10956,9 @@ msgstr ""
 
 #~ msgid "Sort by author"
 #~ msgstr "Sort by author"
+
+#~ msgid "Sort by date"
+#~ msgstr "Sort by date"
 
 #~ msgid "Sort by name"
 #~ msgstr "Sort by name"

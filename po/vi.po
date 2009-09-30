@@ -16,1220 +16,251 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 1.0.2\n"
 
-#: ../mail_tt2/helpfile.tt2:2 ../src/lib/Commands.pm:196
-#: ../src/lib/Commands.pm:213
-msgid "User guide"
-msgstr "Sổ tay người dùng"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9633
-msgid "%A"
-msgstr "%A"
-
-#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1627
-msgid "Subscription summary"
-msgstr "Tóm tắt sự đăng ký"
-
-#: ../src/lib/Conf.pm:136
+#: ../web_tt2/home.tt2:2
 #, fuzzy
-msgid "Error at line %d: %s\n"
-msgstr "Lỗi trên dòng %d : %s"
+msgid "Mailing lists server"
+msgstr "Loại hộp thư chung"
 
-#: ../src/lib/Conf.pm:424
-#, fuzzy
-msgid "Error at line %d: %s"
-msgstr "Lỗi trên dòng %d : %s"
+#. (conf.email,conf.host)
+#: ../web_tt2/home.tt2:4
+msgid ""
+"This server provides you access to your mailing list environment. Starting "
+"from this web page, you can perform subscription options, unsubscription, "
+"archive, list moderation, list configuration."
+msgstr ""
+"Máy phục vụ này cung cấp truy cập đến môi trường hộp thư chung của bạn. Bắt "
+"đầu từ trang Web này, bạn có thể đặt các tuỳ chọn đăng ký, hủy đăng ky, kho "
+"thư, điều tiết bài viết và cấu hình hộp thư chung."
 
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1864 ../wwsympa/Auth.pm:464
-#: ../wwsympa/wwsympa.fcgi.in:1050 ../wwsympa/wwsympa.fcgi.in:2844
-msgid "%d %b %Y at %H:%M:%S"
-msgstr "%d %b %Y lúc %H:%M:%S"
+#: ../web_tt2/home.tt2:7
+msgid "Mailing lists categories"
+msgstr "Loại hộp thư chung"
 
-#: ../src/lib/List.pm:322
-msgid "Account"
-msgstr "Tài khoản"
+#: ../web_tt2/home.tt2:17
+msgid "Others"
+msgstr "Khác"
 
-#: ../src/lib/List.pm:326
-msgid "Who can add subscribers"
-msgstr "Ai có quyền thêm người đăng ký"
+#: ../web_tt2/home.tt2:42
+msgid "RSS news"
+msgstr "Tin tức RSS"
 
-#: ../src/lib/List.pm:330
-msgid "Anonymous sender"
-msgstr "Người gửi nặc danh"
+#. (user.email)
+#: ../web_tt2/login.tt2:3
+msgid "You have logged in with email address %1"
+msgstr "Bạn đã đăng nhập với địa chỉ thư %1"
 
-#: ../src/lib/List.pm:335
-msgid "frequency"
-msgstr "tần số"
+#: ../web_tt2/main.tt2:27
+msgid "RSS Latest messages"
+msgstr "RSS Tin nhẳn mới nhất"
 
-#: ../src/lib/List.pm:1413 ../src/lib/List.pm:340
-msgid "access right"
-msgstr "quyền truy cập"
+#: ../web_tt2/main.tt2:28
+msgid "RSS Latest documents"
+msgstr "RSS Tài liệu mới nhất"
 
-#: ../src/lib/List.pm:344
-msgid "Text archives"
-msgstr "Kho thư nhập thô"
+#: ../web_tt2/main.tt2:31 ../web_tt2/main.tt2:34
+msgid "RSS Latest lists"
+msgstr "RSS Hộp thư chung mới nhất"
 
-#: ../src/lib/List.pm:349
-msgid "Archive encrypted mails as cleartext"
-msgstr "Lưu trữ các thư đã mật mã dưới dạng nhập thô"
+#: ../web_tt2/main.tt2:32 ../web_tt2/main.tt2:35
+msgid "RSS Active lists"
+msgstr "RSS Hộp thư chung hoạt động"
 
-#: ../src/lib/List.pm:1162 ../src/lib/List.pm:1202 ../src/lib/List.pm:356
-#: ../src/lib/List.pm:532 ../src/lib/List.pm:659 ../src/lib/List.pm:694
-msgid "reception mode"
-msgstr "chế độ nhận"
+#: ../web_tt2/main.tt2:59
+msgid "Please activate JavaScript in your web browser"
+msgstr "Hãy kích hoạt JavaScript trong trình duyệt Web"
 
-#: ../src/lib/List.pm:359
-msgid "Available subscription options"
-msgstr "Tuỳ chọn đăng ký sẵn sàng"
-
-#: ../src/lib/List.pm:367
-msgid "warn rate"
-msgstr "tỷ lệ cảnh báo"
-
-#: ../src/lib/List.pm:374
-msgid "halt rate"
-msgstr "tỷ lệ tạm dừng lại"
-
-#: ../src/lib/List.pm:378
-msgid "Bounces management"
-msgstr "Quản lý thư nảy về"
-
-#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
-msgid "threshold"
-msgstr "ngưỡng"
-
-#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
-msgid "action for this population"
-msgstr "hành vi đối với tập hợp này"
-
-#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
-msgid "notification"
-msgstr "thông báo"
-
-#: ../src/lib/List.pm:399
-msgid "Management of bouncers, 1st level"
-msgstr "Quản lý thư nảy về, cấp 1"
-
-#: ../src/lib/List.pm:420
-msgid "Management of bouncers, 2nd level"
-msgstr "Quản lý thư nảy về, cấp 2"
-
-#: ../src/lib/List.pm:427
-msgid "Expiration of unmoderated messages"
-msgstr "Làm hết hạn các thư chưa điều tiết"
-
-#: ../src/lib/List.pm:433
-msgid "Secret string for generating unique keys"
-msgstr "Chuỗi bí mật để tạo khoá duy nhất"
-
-#: ../src/lib/List.pm:451
-msgid "Creation of the list"
+#: ../web_tt2/menu.tt2:7
+msgid "Create list"
 msgstr "Tạo hộp thư chung"
 
-#: ../src/lib/List.pm:462
-msgid "internal identifier"
-msgstr "nhận diện nội bộ"
+#: ../web_tt2/menu.tt2:12
+msgid "Sympa admin"
+msgstr "Quản trị Sympa"
 
-#: ../src/lib/List.pm:470
-msgid "label"
-msgstr "nhãn"
+#: ../web_tt2/menu.tt2:16
+msgid "List of lists"
+msgstr "Danh sách hộp thư chung"
 
-#: ../src/lib/List.pm:476
-msgid "additional comment"
-msgstr "ghi chú thêm"
+#: ../web_tt2/menu.tt2:19
+msgid "Home"
+msgstr "Nhà"
 
-#: ../src/lib/List.pm:483
-msgid "type"
-msgstr "loại"
+#: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
+#: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
+#: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
+#: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
+#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:93
+#: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
+#: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
+#: ../web_tt2/d_properties.tt2:6 ../web_tt2/d_properties.tt2:8
+#: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
+#: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
+#: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
+#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:6
+#: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
+msgid "Help"
+msgstr "Trợ giúp"
 
-#: ../src/lib/List.pm:489
-msgid "possible attribute values (if enum is used)"
-msgstr "các giá trị thuộc tính có thể đặt (nếu dùng enum)"
+#: ../web_tt2/login_menu.tt2:9
+msgid "Restore identity"
+msgstr "Phục hồi chứng minh"
 
-#: ../src/lib/List.pm:494
+#: ../web_tt2/login_menu.tt2:13
 #, fuzzy
-msgid "is the attribute optional?"
-msgstr "thuộc tính đó vẫn tuỳ chọn ?"
+msgid "[Listmaster]"
+msgstr "Chủ hộp thư chung"
 
-#: ../src/lib/List.pm:500
-msgid "Custom user attributes"
-msgstr "Thuộc tính người dùng riêng"
-
-#: ../src/lib/List.pm:506
-msgid "Custom header field"
-msgstr "Trường phần đầu riêng"
-
-#: ../src/lib/List.pm:511
-msgid "Subject tagging"
-msgstr "Đặt thẻ chủ đề"
-
-#: ../src/lib/List.pm:525
-msgid "custom parameters"
-msgstr "tham số riêng"
-
-#: ../src/lib/List.pm:1167 ../src/lib/List.pm:1207 ../src/lib/List.pm:537
-#: ../src/lib/List.pm:664 ../src/lib/List.pm:699
-msgid "visibility"
-msgstr "khả kiến"
-
-#: ../src/lib/List.pm:541
-msgid "Subscription profile"
-msgstr "Hồ sơ đăng ký"
-
-#: ../src/lib/List.pm:545
-msgid "Who can delete subscribers"
-msgstr "Ai có quyền xoá người đăng ký"
-
-#: ../src/lib/List.pm:550
-msgid "Delivery time (hh:mm)"
-msgstr "Giờ phát thư (gi:ph)"
-
-#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
-msgid "days"
-msgstr "ngày"
-
-#: ../src/lib/List.pm:564
-msgid "hour"
-msgstr "giờ"
-
-#: ../src/lib/List.pm:570
-msgid "minute"
-msgstr "phút"
-
-#: ../src/lib/List.pm:574
-msgid "Digest frequency"
-msgstr "Tần số gửi bó thư"
-
-#: ../src/lib/List.pm:582
-msgid "Digest maximum number of messages"
-msgstr "Số tối đa các thư trong bó thư"
-
-#: ../src/lib/List.pm:590
-msgid "Inclusions timeout for message distribution"
-msgstr "Thời hạn bao gồm thư cần phát"
-
-#: ../src/lib/List.pm:597
+#: ../web_tt2/login_menu.tt2:14
 #, fuzzy
-msgid "Insert DKIM signature to messages sent to the list"
-msgstr "Đang gửi một thư cho hộp thư chung"
+msgid "[Privileged owner]"
+msgstr "Người sở hữu có quyền đặc biệt"
 
-#: ../src/lib/List.pm:605
-msgid "Type of list message where a DKIM signature is added"
-msgstr ""
-
-#: ../src/lib/List.pm:612
-msgid "file path for list DKIM private key"
-msgstr ""
-
-#: ../src/lib/List.pm:620
-msgid "Selector for DNS lookup of DKIM public key"
-msgstr ""
-
-#: ../src/lib/List.pm:641
-msgid "DKIM 'i=' tag, you should probably leave this parameter empty"
-msgstr ""
-
-#: ../src/lib/List.pm:648
+#: ../web_tt2/login_menu.tt2:15
 #, fuzzy
-msgid "DKIM configuration"
-msgstr "chép cấu hình hộp thư"
-
-#: ../src/lib/List.pm:1157 ../src/lib/List.pm:654
-msgid "email address"
-msgstr "địa chỉ thư"
-
-#: ../src/lib/List.pm:1172 ../src/lib/List.pm:669
-msgid "name"
-msgstr "tên"
-
-#: ../src/lib/List.pm:1177 ../src/lib/List.pm:674
-msgid "private information"
-msgstr "thông tin riêng tư"
-
-#: ../src/lib/List.pm:679 ../web_tt2/list_panel.tt2:20
-msgid "Moderators"
-msgstr "Điều tiết viên"
-
-#: ../src/lib/List.pm:709
-msgid "Periodical subscription expiration task"
-msgstr "Công việc định kỳ làm hết hạn sự đăng ký"
-
-#: ../src/lib/List.pm:720
-msgid "Attachment type"
-msgstr "Kiểu đồ định kèm"
-
-#: ../src/lib/List.pm:724
-msgid "Forced reply address"
-msgstr "Địa chỉ hồi âm bị buộc"
-
-#: ../src/lib/List.pm:730
-msgid "Internet domain"
-msgstr "Miền Internet"
-
-#: ../src/lib/List.pm:736
-msgid "File inclusion"
-msgstr "Bao gồm tập tin"
-
-#: ../src/lib/List.pm:740
-msgid "data location URL"
-msgstr "địa chỉ URL của dữ liệu"
-
-#: ../src/lib/List.pm:1038 ../src/lib/List.pm:746 ../src/lib/List.pm:779
-#: ../src/lib/List.pm:860
-msgid "remote user"
-msgstr "người dùng từ xa"
-
-#: ../src/lib/List.pm:1043 ../src/lib/List.pm:753 ../src/lib/List.pm:785
-#: ../src/lib/List.pm:866
-msgid "remote password"
-msgstr "mật khẩu từ xa"
-
-#: ../src/lib/List.pm:1057 ../src/lib/List.pm:758 ../src/lib/List.pm:821
-#: ../src/lib/List.pm:945 ../src/lib/List.pm:999
-msgid "short name for this source"
-msgstr "tên ngắn cho nguồn này"
-
-#: ../src/lib/List.pm:763
-msgid "Remote file inclusion"
-msgstr "Bao gồm tập tin từ xa"
-
-#: ../src/lib/List.pm:1016 ../src/lib/List.pm:769 ../src/lib/List.pm:850
-#: ../src/lib/List.pm:977
-msgid "remote host"
-msgstr "máy từ xa"
-
-#: ../src/lib/List.pm:774 ../src/lib/List.pm:855 ../src/lib/List.pm:983
-msgid "remote port"
-msgstr "cổng từ xa"
-
-#: ../src/lib/List.pm:789
-msgid "suffix"
-msgstr "hậu tố"
-
-#: ../src/lib/List.pm:795
-msgid "filter"
-msgstr "lọc"
-
-#: ../src/lib/List.pm:801
-msgid "extracted attribute"
-msgstr "thuộc tính đã trích ra"
-
-#: ../src/lib/List.pm:806
-msgid "selection (if multiple)"
-msgstr "vùng chọn (nếu có nhiều)"
-
-#: ../src/lib/List.pm:811
-msgid "search scope"
-msgstr "phạm vi tìm kiếm"
-
-#: ../src/lib/List.pm:817
-msgid "connection timeout"
-msgstr "thời hạn kết nối"
-
-#: ../src/lib/List.pm:845
-msgid "LDAP query inclusion"
-msgstr "Bao gồm truy vấn LDAP"
-
-#: ../src/lib/List.pm:870
-msgid "first-level suffix"
-msgstr "hậu tố cấp đầu"
-
-#: ../src/lib/List.pm:876
-msgid "first-level filter"
-msgstr "lọc cấp đầu"
-
-#: ../src/lib/List.pm:881
-msgid "first-level extracted attribute"
-msgstr "thuộc tính cấp đầu đã trích ra"
-
-#: ../src/lib/List.pm:886
-msgid "first-level selection"
-msgstr "vùng chọn cấp đầu"
-
-#: ../src/lib/List.pm:891
-msgid "first-level search scope"
-msgstr "phạm vi tìm kiếm cấp đầu"
-
-#: ../src/lib/List.pm:897
-msgid "first-level connection timeout"
-msgstr "thời hạn kết nối cấp đầu"
-
-#: ../src/lib/List.pm:903
-msgid "first-level regular expression"
-msgstr "biểu thức chính quy cấp đầu"
-
-#: ../src/lib/List.pm:907
-msgid "second-level suffix template"
-msgstr "mẫu hậu tố cấp phụ"
-
-#: ../src/lib/List.pm:913
-msgid "second-level filter template"
-msgstr "mẫu lọc cấp phụ"
-
-#: ../src/lib/List.pm:919
-msgid "second-level extracted attribute"
-msgstr "thuộc tính cấp phụ đã trích ra"
-
-#: ../src/lib/List.pm:924
-msgid "second-level selection"
-msgstr "vùng chọn cấp phụ"
-
-#: ../src/lib/List.pm:929
-msgid "second-level search scope"
-msgstr "phạm vi tìm kiếm cấp phụ"
-
-#: ../src/lib/List.pm:935
-msgid "second-level connection timeout"
-msgstr "thời hạn kết nối cấp phụ"
-
-#: ../src/lib/List.pm:941
-msgid "second-level regular expression"
-msgstr "biểu thức chính quy cấp phụ"
-
-#: ../src/lib/List.pm:967
-msgid "LDAP 2-level query inclusion"
-msgstr "bao gồm truy vấn LDAP cấp phụ"
-
-#: ../src/lib/List.pm:972
-msgid "List inclusion"
-msgstr "Bao gồm hộp thư chung"
-
-#: ../src/lib/List.pm:989
-msgid "remote path of sympa list dump"
-msgstr "đường dẫn từ xa theo đó đổ hộp thư chung sympa"
-
-#: ../src/lib/List.pm:994
-msgid "certificate for authentication by remote Sympa"
-msgstr "chứng nhận cho Sympa xác thực từ xa"
-
-#: ../src/lib/List.pm:1006
-msgid "remote list inclusion"
-msgstr "bao gồm hộp thư chung từ xa"
-
-#: ../src/lib/List.pm:1011
-msgid "database type"
-msgstr "kiểu cơ sở dữ liệu"
-
-#: ../src/lib/List.pm:1020
-msgid "database port"
-msgstr "cổng cơ sở dữ liệu"
-
-#: ../src/lib/List.pm:1025
-msgid "database name"
-msgstr "tên cơ sở dữ liệu"
-
-#: ../src/lib/List.pm:1029
-msgid "connection options"
-msgstr "tuỳ chọn kết nối"
-
-#: ../src/lib/List.pm:1034
-#, fuzzy
-msgid "environment variables for database connection"
-msgstr "các biến môi trường cho kết nối cơ sở dữ liệu"
-
-#: ../src/lib/List.pm:1049
-msgid "SQL query"
-msgstr "Truy vấn SQL"
-
-#: ../src/lib/List.pm:1053
-msgid "Directory where the database is stored (used for DBD::CSV only)"
-msgstr "Thư mục chứa cơ sở dữ liệu (chỉ dùng cho DBD::CSV)"
-
-#: ../src/lib/List.pm:1064
-msgid "SQL query inclusion"
-msgstr "Bao gồm truy vấn SQL"
-
-#: ../src/lib/List.pm:1070
-msgid "Notify subscribers when they are included from a data source?"
-msgstr "Thông báo người đăng ký khi họ được bao gồm từ một nguồn dữ liệu ?"
-
-#: ../src/lib/List.pm:1074
-msgid "Who can view list information"
-msgstr "Ai có quyền xem thông tin về hộp thư chung"
-
-#: ../src/lib/List.pm:1078
-msgid "Who can invite people"
-msgstr "Ai có quyền mời người khác"
-
-#: ../src/lib/List.pm:1084
-msgid "Language of the list"
-msgstr "Ngôn ngữ của hộp thư chung"
-
-#: ../src/lib/List.pm:1109
-msgid "Regular expression applied to prevent loops with robots"
-msgstr "Biểu thức chính quy được áp dụng để ngăn cản vòng lặp với rô-bốt"
-
-#: ../src/lib/List.pm:1116
-msgid "Maximum message size"
-msgstr "Kích cỡ thư tối đa"
-
-#: ../src/lib/List.pm:1122
-msgid "Message topic name"
-msgstr "Tên chủ đề thư"
-
-#: ../src/lib/List.pm:1127
-msgid "Message topic keywords"
-msgstr "Từ khoá chủ đề thư"
-
-#: ../src/lib/List.pm:1133
-msgid "Message topic title"
-msgstr "Tựa đề chủ đề thư"
-
-#: ../src/lib/List.pm:1138
-msgid "Topics for message categorization"
-msgstr "Chủ đề để phân loại thư"
-
-#: ../src/lib/List.pm:1144
-msgid "Defines to which part of messages topic keywords are applied"
-msgstr "Xác định phần của thư cho đó cần áp dụng từ khoá"
-
-#: ../src/lib/List.pm:1151
-msgid "Message tagging"
-msgstr "Đặt thẻ thư"
-
-#: ../src/lib/List.pm:1182 ../src/lib/List.pm:1212
-msgid "profile"
-msgstr "hồ sơ"
-
-#: ../src/lib/List.pm:1187
-msgid "Owner"
+msgid "[Owner]"
 msgstr "Người sở hữu"
 
-#: ../src/lib/List.pm:1223
-msgid "Priority"
-msgstr "Ưu tiên"
-
-#: ../src/lib/List.pm:1227
-msgid "Who can start a remind process"
-msgstr "Ai có quyền khởi chạy một tiến trình nhắc nhở"
-
-#: ../src/lib/List.pm:1232
-msgid "Return-path of the REMIND command"
-msgstr "Đường dẫn trở về của lệnh REMIND (nhắc nhở)"
-
-#: ../src/lib/List.pm:1256 ../src/lib/List.pm:1276
-msgid "Reply address"
-msgstr "Địa chỉ hồi âm"
-
-#: ../src/lib/List.pm:1262
-msgid "value"
-msgstr "giá trị"
-
-#: ../src/lib/List.pm:1267
-msgid "other email address"
-msgstr "địa chỉ thư khác"
-
-#: ../src/lib/List.pm:1272
-msgid "respect of existing header field"
-msgstr "tương ứng với trường dòng đầu tồn tại"
-
-#: ../src/lib/List.pm:1281
-msgid "Who can review subscribers"
-msgstr "Ai có quyền xem lại người đăng ký"
-
-#: ../src/lib/List.pm:1288
-msgid "RFC 2369 Header fields"
-msgstr "Dòng đầu RFC 2369"
-
-#: ../src/lib/List.pm:1292
-msgid "Who can send messages"
-msgstr "Ai có quyền gửi thư"
-
-#: ../src/lib/List.pm:1299
-msgid "Serial number of the config"
-msgstr "Số thứ tự của cấu hình"
-
-#: ../src/lib/List.pm:1304
-msgid "Who can view"
-msgstr "Ai có quyền xem"
-
-#: ../src/lib/List.pm:1308
-msgid "Who can edit"
-msgstr "Ai có quyền sửa"
-
-#: ../src/lib/List.pm:1315 ../src/lib/List.pm:1420
-msgid "quota"
-msgstr "hạn ngạch"
-
-#: ../src/lib/List.pm:1319 ../web_tt2/list_menu.tt2:80
-#: ../web_tt2/list_menu.tt2:82
-msgid "Shared documents"
-msgstr "Tài liệu dùng chung"
-
-#: ../src/lib/List.pm:1324 ../src/lib/List.pm:1329
-msgid "email address protection method"
-msgstr "phương pháp bảo vế địa chỉ thư"
-
-#: ../src/lib/List.pm:1335
-msgid "Status of the list"
-msgstr "Trạng thái về hộp thư chung"
-
-#: ../src/lib/List.pm:1342
-msgid "Subject of the list"
-msgstr "Đề tài của hộp thư chung"
-
-#: ../src/lib/List.pm:1346
-msgid "Who can subscribe to the list"
-msgstr "Ai có quyền đăng ký với hộp thư chung"
-
-#: ../src/lib/List.pm:1352
-msgid "Topics for the list"
-msgstr "Các chủ đề cho hộp thư chung"
-
-#: ../src/lib/List.pm:1359
-msgid "Inclusions timeout"
-msgstr "Thời hạn bao gồm"
-
-#: ../src/lib/List.pm:1363
-msgid "Who can unsubscribe"
-msgstr "Ai có quyền hủy đăng ký"
-
-#: ../src/lib/List.pm:1384
-msgid "Last update of config"
-msgstr "Lần cuối cập nhật cấu hình"
-
-#: ../src/lib/List.pm:1391
-msgid "User data source"
-msgstr "Nguồn dữ liệu người dùng"
-
-#: ../src/lib/List.pm:1397
+#: ../web_tt2/login_menu.tt2:16
 #, fuzzy
-msgid "Allow picture display? (must be enabled for the current robot)"
-msgstr ""
-"Cho phép hiển thị hình ảnh không? (Phải được bật cho rô-bốt hiện thời.)"
+msgid "[Editor]"
+msgstr "Người biên soạn"
 
-#: ../src/lib/List.pm:1403
+#: ../web_tt2/login_menu.tt2:17
 #, fuzzy
-msgid "Allow message personnalization"
-msgstr "Chủ đề để phân loại thư"
-
-#: ../src/lib/List.pm:1409
-msgid "Visibility of the list"
-msgstr "Hiện/ẩn hộp thư chung"
-
-#: ../src/lib/List.pm:1425
-msgid "Maximum number of month archived"
-msgstr "Số tối đa các tháng đã lưu trữ"
-
-#: ../src/lib/List.pm:1430
-msgid "Web archives"
-msgstr "Kho thư Web"
-
-#: ../src/lib/List.pm:1436
-msgid "Welcome return-path"
-msgstr "Đường dẫn trở về Chào mừng"
-
-#: ../src/lib/List.pm:1441
-msgid "percentage of list members in VERP mode"
-msgstr "phần trăm các thành viên hộp thư chung trong chế độ VERP"
-
-#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
-msgid "%"
-msgstr "%%"
-
-#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
-msgid "points"
-msgstr "điểm"
-
-#: ../src/lib/List.pm:516
-msgid "var name"
-msgstr "tên biến"
-
-#: ../src/lib/List.pm:521
-msgid "var value"
-msgstr "giá trị biến"
-
-#: ../src/lib/List.pm:580
-msgid "messages"
-msgstr "thư"
-
-#: ../src/lib/List.pm:1357 ../src/lib/List.pm:588 ../src/lib/List.pm:816
-#: ../src/lib/List.pm:896 ../src/lib/List.pm:934
-msgid "seconds"
-msgstr "giây"
-
-#: ../src/lib/List.pm:627
-msgid "list of headers to be included ito the message for signature"
-msgstr ""
-
-#: ../src/lib/List.pm:634
-msgid "DKIM \"d=\" tag, you should probably use the default value"
-msgstr ""
-
-#: ../src/lib/List.pm:684
-#, fuzzy
-msgid "the data source"
-msgstr "nguồn dữ liệu"
-
-#: ../src/lib/List.pm:689
-#, fuzzy
-msgid "data source parameters"
-msgstr "tham số nguồn dữ liệu"
-
-#: ../src/lib/List.pm:705
-#, fuzzy
-msgid "Moderators defined in an external data source"
-msgstr "Các điều tiết viên được xác định trong một nguồn dữ liệu bên ngoài"
-
-#: ../src/lib/List.pm:714
-msgid "Family name"
-msgstr "Họ"
-
-#: ../src/lib/List.pm:827 ../src/lib/List.pm:951
-msgid "use SSL (LDAPS)"
-msgstr "dùng SSL (LDAPS)"
-
-#: ../src/lib/List.pm:832 ../src/lib/List.pm:956
-msgid "SSL version"
-msgstr "Phiên bản SSL"
-
-#: ../src/lib/List.pm:837 ../src/lib/List.pm:961
-msgid "SSL ciphers used"
-msgstr "Mật mã SSL dùng"
-
-#: ../src/lib/List.pm:1089 ../src/lib/List.pm:1369
-msgid "epoch date"
-msgstr "ngày thời điểm"
-
-#: ../src/lib/List.pm:1093 ../src/lib/List.pm:1374
-msgid "date"
-msgstr "ngày"
-
-#: ../src/lib/List.pm:1098
-msgid "who ran the instantiation"
-msgstr "ai đã chạy hàm tạo lần"
-
-#: ../src/lib/List.pm:1102
-msgid "Latest family instantiation"
-msgstr "Lần cuối tạo nhóm"
-
-#: ../src/lib/List.pm:1114
-msgid "bytes"
-msgstr "byte"
-
-#: ../src/lib/List.pm:1192
-msgid "the datasource"
-msgstr "nguồn dữ liệu"
-
-#: ../src/lib/List.pm:1197
-msgid "datasource parameters"
-msgstr "tham số nguồn dữ liệu"
-
-#: ../src/lib/List.pm:1217
-#, fuzzy
-msgid "Owners defined in an external data source"
-msgstr "Chủ hộp được xác định trong một nguồn dữ liệu bên ngoài"
-
-#: ../src/lib/List.pm:1236
-msgid "Periodical subscription reminder task"
-msgstr "Công việc định kỳ nhắc nhở về sự đăng ký"
-
-#: ../src/lib/List.pm:1241
-#, fuzzy
-msgid "Incoming SMTP header fields to be removed"
-msgstr "Các dòng đầu SMTP gửi đến mà cần gỡ bỏ"
-
-#: ../src/lib/List.pm:1248
-#, fuzzy
-msgid "Outgoing SMTP header fields to be removed"
-msgstr "Các dòng đầu SMTP gửi đi mà cần gỡ bỏ"
-
-#: ../src/lib/List.pm:1314 ../src/lib/List.pm:1419
-msgid "Kbytes"
-msgstr "Kbyte"
-
-#: ../src/lib/List.pm:1380
-msgid "who updated the config"
-msgstr "ai đã cập nhật cấu hình"
-
-#: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:8
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2772
-msgid "Table of contents:"
-msgstr "Mục Lục: "
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2890
-msgid "%a, %d %b %Y %H:%M:%S"
-msgstr "%a, %d %b %Y %H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2891
-msgid "%a, %d %b %Y"
-msgstr "%a, %d %b %Y"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3082 ../src/lib/List.pm:3083 ../src/lib/List.pm:3087
-#: ../wwsympa/wwsympa.fcgi.in:11000 ../wwsympa/wwsympa.fcgi.in:11069
-#: ../wwsympa/wwsympa.fcgi.in:11271 ../wwsympa/wwsympa.fcgi.in:11608
-#: ../wwsympa/wwsympa.fcgi.in:15035 ../wwsympa/wwsympa.fcgi.in:15042
-#: ../wwsympa/wwsympa.fcgi.in:15744 ../wwsympa/wwsympa.fcgi.in:16474
-#: ../wwsympa/wwsympa.fcgi.in:16475 ../wwsympa/wwsympa.fcgi.in:4223
-#: ../wwsympa/wwsympa.fcgi.in:4278 ../wwsympa/wwsympa.fcgi.in:4845
-#: ../wwsympa/wwsympa.fcgi.in:4846 ../wwsympa/wwsympa.fcgi.in:6242
-#: ../wwsympa/wwsympa.fcgi.in:7260 ../wwsympa/wwsympa.fcgi.in:7803
-#: ../wwsympa/wwsympa.fcgi.in:7843 ../wwsympa/wwsympa.fcgi.in:7845
-#: ../wwsympa/wwsympa.fcgi.in:8321 ../wwsympa/wwsympa.fcgi.in:8322
-#: ../wwsympa/wwsympa.fcgi.in:8356 ../wwsympa/wwsympa.fcgi.in:8357
-#: ../wwsympa/wwsympa.fcgi.in:8536 ../wwsympa/wwsympa.fcgi.in:8537
-msgid "%d %b %Y"
-msgstr "%d %b %Y"
-
-#: ../src/lib/mail.pm:53
-#, fuzzy
-msgid ""
-"Your system does not conform to the POSIX P1003.1 standard, or\n"
-"your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
-"library. You must modify the smtp.pm module in order to set a value\n"
-"for variable %s.\n"
-msgstr ""
-"Hệ thống này không tuân theo giao thức P1003.1 POSIX,\n"
-"hoặc cấu hình Perl trên máy này không xác định hằng « _SC_ARG_MAX » trong "
-"thư viện POSIX của nó.\n"
-"Người dùng cần phải sửa đổi mô-đun smtp.pm để đặt giá trị của biến « "
-"$max_arg ».\n"
-
-#: ../src/lib/mail.pm:798
-msgid "Unable to create a channel in smtpto: %m"
-msgstr "Không thể tạo một kênh trong smtpto: %m"
-
-#: ../src/lib/PlainDigest.pm:163
-msgid ""
-"----- Malformed message ignored -----\n"
-"\n"
-msgstr ""
-"----- Thư bị hỏng thì cũng bị bỏ qua -----\n"
-"\n"
-
-#: ../src/lib/PlainDigest.pm:194
-msgid ""
-"\n"
-"[Attached message follows]\n"
-"-----Original message-----\n"
-msgstr ""
-"\n"
-"[Thư đính kèm cũng theo đây]\n"
-"-----Thư gốc-----\n"
-
-#: ../src/lib/PlainDigest.pm:204
-msgid ""
-"-----End of original message from %s-----\n"
-"\n"
-msgstr ""
-"-----Kết thúc thư gốc từ %s-----\n"
-"\n"
-
-#: ../src/lib/PlainDigest.pm:243
-msgid ""
-"** Warning: Message part originally used character set %s\n"
-"    Some characters may be lost or incorrect **\n"
-"\n"
-msgstr ""
-"** Cảnh báo : phần thư này đầu tiên dùng bộ ký tự %s\n"
-"    Do đó một số ký tự có thể bị mất hay không đúng **\n"
-"\n"
-
-#: ../src/lib/PlainDigest.pm:255
-msgid ""
-"\n"
-"[An attachment of type %s was included here]\n"
-msgstr ""
-"\n"
-"[Ở đây thì bao gồm một đồ đính kèm dạng %s]\n"
-
-#: ../src/lib/PlainDigest.pm:261
-msgid ""
-"\n"
-"-----Delivery Status Report-----\n"
-msgstr ""
-"\n"
-"-----Báo cáo Trạng thái Phát thư-----\n"
-
-#: ../src/lib/PlainDigest.pm:263
-msgid "-----End of Delivery Status Report-----\n"
-msgstr "-----Kết thúc Báo cáo Trạng thái Phát thư-----\n"
-
-#: ../src/lib/PlainDigest.pm:301 ../src/lib/PlainDigest.pm:322
-msgid ""
-"\n"
-"[** Unable to process HTML message part **]\n"
-msgstr ""
-"\n"
-"[** Không thể xử lý phần thư dạng HTML **]\n"
-
-#: ../src/lib/PlainDigest.pm:328
-msgid ""
-"\n"
-"[ ** Unable to process HTML message part **]\n"
-msgstr ""
-"\n"
-"[ ** Không thể xử lý phần thư dạng HTML **]\n"
-
-#: ../src/lib/PlainDigest.pm:332
-msgid "[ Text converted from HTML ]\n"
-msgstr "[ Thân thư được chuyển đổi từ HTML ]\n"
-
-#: ../src/lib/PlainDigest.pm:339
-msgid ""
-"\n"
-"[ ** Unable to process HTML message part ** ]\n"
-msgstr ""
-"\n"
-"[ ** Không thể xử lý phần thư dạng HTML ** ]\n"
-
-#: ../src/lib/tt2.pm:150
-msgid "(unknown date)"
-msgstr "(không rõ ngày tháng)"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1051
-msgid "%H:%M:%S"
-msgstr "%H:%M:%S"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11832 ../wwsympa/wwsympa.fcgi.in:11965
-#: ../wwsympa/wwsympa.fcgi.in:14278 ../wwsympa/wwsympa.fcgi.in:7757
-msgid "%d %b %y  %H:%M"
-msgstr "%d %b %y  %H:%M"
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16114 ../wwsympa/wwsympa.fcgi.in:16115
-#, fuzzy
-msgid "%Y-%m-%d-%H-%M-%S"
-msgstr "%Y/%m/%d/%H/%M/%S"
-
-#. (date_from_formated)
-#. (date_to_formated)
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16169
-msgid "%d %b %Y %H:%M:%S"
-msgstr "%d %b %Y %H:%M:%S"
-
-#: ../wwsympa/wwslib.pm:41
-msgid "session"
-msgstr "buổi hợp"
-
-#: ../wwsympa/wwslib.pm:42
-msgid "10 minutes"
-msgstr "10 phút"
-
-#: ../wwsympa/wwslib.pm:43
-msgid "30 minutes"
-msgstr "30 phút"
-
-#: ../wwsympa/wwslib.pm:44
-msgid "1 hour"
-msgstr "1 giờ"
-
-#: ../wwsympa/wwslib.pm:45
-msgid "6 hours"
-msgstr "6 giờ"
-
-#: ../wwsympa/wwslib.pm:46
-msgid "1 day"
-msgstr "1 ngày"
-
-#: ../wwsympa/wwslib.pm:47
-msgid "1 week"
-msgstr "1 tuần"
-
-#: ../wwsympa/wwslib.pm:49
-msgid "listed in the list review page"
-msgstr "được liệt kê trên trang xem lại hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:50
-msgid "concealed"
-msgstr "bị ẩn"
-
-#: ../wwsympa/wwslib.pm:54
-msgid "welcome message"
-msgstr "thông điệp chào mừng"
-
-#: ../wwsympa/wwslib.pm:55
-msgid "unsubscribe message"
-msgstr "thông điêp hủy đăng ký"
-
-#: ../wwsympa/wwslib.pm:56
-msgid "deletion message"
-msgstr "thông điệp xoá"
-
-#: ../wwsympa/wwslib.pm:57
-msgid "message footer"
-msgstr "chân thân thư"
-
-#: ../wwsympa/wwslib.pm:58
-msgid "message header"
-msgstr "đầu thân thư"
-
-#: ../wwsympa/wwslib.pm:59
-msgid "remind message"
-msgstr "thông điệp nhắc nhở"
-
-#: ../wwsympa/wwslib.pm:60
-msgid "editor rejection message"
-msgstr "thông điệp từ chối biên tập"
-
-#: ../wwsympa/wwslib.pm:61
-msgid "subscribing invitation message"
-msgstr "thông điệp mời đăng ký"
-
-#: ../wwsympa/wwslib.pm:62
-msgid "help file"
-msgstr "tập tin trợ giúp"
-
-#: ../wwsympa/wwslib.pm:63
-msgid "directory of lists"
-msgstr "thư mục các hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:64
-msgid "global remind message"
-msgstr "thông điệp nhắc nhở toàn cục"
-
-#: ../wwsympa/wwslib.pm:65
-msgid "summary message"
-msgstr "thông điệp tóm tắt"
-
-#: ../wwsympa/wwslib.pm:66
-msgid "list description"
-msgstr "mô tả hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:67
-msgid "list homepage"
-msgstr "trang chủ của hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:68
-msgid "list creation request message"
-msgstr "thông điệp yêu cầu tạo hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:69
-msgid "list creation notification message"
-msgstr "thông điệp báo về hộp thư chung mới tạo"
-
-#: ../wwsympa/wwslib.pm:70
-msgid "virus infection message"
-msgstr "thông điệp sự nhiễm độc vi-rút"
-
-#: ../wwsympa/wwslib.pm:71
-msgid "list aliases template"
-msgstr "mẫu bí danh hộp thư chung"
-
-#: ../wwsympa/wwslib.pm:28
-msgid "standard (direct reception)"
-msgstr "tiêu chuẩn (nhận trực tiếp)"
-
-#: ../wwsympa/wwslib.pm:29
-msgid "digest MIME format"
-msgstr "định dạng bó thư MIME"
-
-#: ../wwsympa/wwslib.pm:30
-msgid "digest plain text format"
-msgstr "định dạng bó thư nhập thô"
-
-#: ../wwsympa/wwslib.pm:31
-msgid "summary mode"
-msgstr "chế độ tóm tắt"
-
-#: ../wwsympa/wwslib.pm:32
-msgid "notice mode"
-msgstr "chế độ thông báo"
-
-#: ../wwsympa/wwslib.pm:33
-#, fuzzy
-msgid "text-only mode"
-msgstr "chế độ chỉ nhập thô"
-
-#: ../wwsympa/wwslib.pm:34
-#, fuzzy
-msgid "html-only mode"
-msgstr "chế độ chỉ HTML"
-
-#: ../wwsympa/wwslib.pm:35
-msgid "urlize mode"
-msgstr "chế độ urlize"
-
-#: ../wwsympa/wwslib.pm:36
-msgid "no mail (useful for vacations)"
-msgstr "không thư (có ích khi đi nghỉ)"
-
-#: ../wwsympa/wwslib.pm:37
-msgid "you do not receive your own posts"
-msgstr "bạn không nhận bài thư được mình gửi"
-
-#. (count)
-#: ../web_tt2/active_lists.tt2:17 ../web_tt2/active_lists.tt2:5
-msgid " The %1 most active lists "
-msgstr "%1 hộp bận nhất"
-
-#: ../web_tt2/active_lists.tt2:7
-msgid " Active lists "
-msgstr "Hộp hoạt động"
-
-#. (for)
-#: ../web_tt2/active_lists.tt2:11 ../web_tt2/active_lists.tt2:17
-#: ../web_tt2/latest_arc.tt2:12 ../web_tt2/latest_d_read.tt2:11
-#: ../web_tt2/latest_lists.tt2:11
-msgid " for %1 days "
-msgstr "trong %1 ngày"
-
-#: ../web_tt2/active_lists.tt2:19
-msgid "List name"
-msgstr "Tên hộp"
-
-#: ../web_tt2/active_lists.tt2:20
-#, fuzzy
-msgid "Number of messages"
-msgstr "Số tối đa các thư trong bó thư"
-
-#: ../web_tt2/active_lists.tt2:21
-#, fuzzy
-msgid "Average per day"
-msgstr "Tính trung bình theo ngày"
-
-#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
-#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
-msgid "Creation date"
-msgstr "Ngày tạo"
-
-#: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
-#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
-#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
-msgid "Subject"
-msgstr "Chủ đề"
-
-# Biến ?
-#: ../web_tt2/add_request.tt2:7
-msgid "email1@dom1 Name1"
-msgstr "email1@dom1 Name1"
-
-# Biến?
-#: ../web_tt2/add_request.tt2:8
-msgid "email2@dom2 Name2"
-msgstr "email2@dom2 Name2"
-
-#: ../web_tt2/add_request.tt2:12
-msgid "Add subscribers"
-msgstr "Thêm người đăng ký"
-
-#: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:286
-#: ../web_tt2/review.tt2:75 ../web_tt2/reviewbouncing.tt2:127
-msgid "quiet"
-msgstr "im"
-
-#: ../web_tt2/admin_menu.tt2:4
-msgid "List Administration Panel"
-msgstr "Bảng quản trị hộp"
-
-#: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
-msgid "Subscribers"
+msgid "[Subscriber]"
 msgstr "Người đăng ký"
 
-#: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
-#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:62
-msgid "Edit List Config"
-msgstr "Sửa cấu hình hộp"
+#. (last_login_host,last_login_date)
+#: ../web_tt2/login_menu.tt2:21
+#, fuzzy
+msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
+msgstr "đăng nhập cuối từ %1 <br />(%2)</span>"
+
+#: ../web_tt2/login_menu.tt2:36
+msgid "Logout"
+msgstr "Đăng xuất"
+
+#: ../web_tt2/login_menu.tt2:43
+msgid "Your preferences"
+msgstr "Tùy thích của bạn"
+
+#: ../web_tt2/your_lists.tt2:7
+msgid "Your Lists"
+msgstr "Hộp thư chung của bạn"
+
+#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:13
+msgid "admin"
+msgstr "quản trị"
+
+#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
+#: ../web_tt2/your_lists.tt2:22
+msgid "No mailing list available."
+msgstr "Không có hộp thư chung sẵn sàng."
+
+#: ../web_tt2/list_menu.tt2:11
+msgid "Subscriber Options"
+msgstr "Tùy chọn người đăng ký"
+
+#. (list)
+#: ../web_tt2/list_menu.tt2:15
+msgid "Do you really want to unsubscribe from list %1?"
+msgstr "Bạn thực sự muốn hủy đăng ký khỏi hộp thư chung %1 không?"
+
+#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
+msgid "Unsubscribe"
+msgstr "Hủy đăng ký"
+
+#. (list)
+#: ../web_tt2/list_menu.tt2:20
+msgid "Do you really want to subscribe to list %1?"
+msgstr "Bạn thực sự muốn đăng ký với hộp thư chung %1 không?"
+
+#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
+msgid "Subscribe"
+msgstr "Đăng ký"
+
+#: ../web_tt2/list_menu.tt2:31
+msgid "Info"
+msgstr "Thông tin"
+
+#: ../web_tt2/list_menu.tt2:34
+msgid "Admin"
+msgstr "Quản trị"
 
 #: ../web_tt2/admin_menu.tt2:35 ../web_tt2/admin_menu.tt2:41
 #: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:37
 msgid "Moderate"
 msgstr "Điều tiết"
 
-#: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
-#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:65
-msgid "Customizing"
-msgstr "Tùy chỉnh"
+#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
+msgid "Message"
+msgstr "Thư"
 
-#: ../web_tt2/admin_menu.tt2:67 ../web_tt2/admin_menu.tt2:73
-#: ../web_tt2/nav.tt2:75
-msgid "Manage Archives"
-msgstr "Quản lý kho lưu"
+#: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
+#: ../web_tt2/list_menu.tt2:45
+msgid "Document"
+msgstr "Tài liệu"
 
-#: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
-#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:79 ../web_tt2/nav.tt2:99
-#: ../web_tt2/review.tt2:45
-msgid "Bounces"
-msgstr "Nảy về"
+#: ../web_tt2/list_menu.tt2:50
+msgid "Subscriptions"
+msgstr "Sự đăng ký"
 
-#: ../web_tt2/admin.tt2:59 ../web_tt2/admin_menu.tt2:96
-#: ../web_tt2/admin_menu.tt2:98
-msgid "Create Shared"
-msgstr "Tạo vùng chia sẻ"
+#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
+msgid "Archive"
+msgstr "Kho thư"
 
-#: ../web_tt2/admin_menu.tt2:102
-msgid "Restore shared"
-msgstr "Phục hồi vùng chia sẻ"
+# Danh từ hay động từ ? Giả sử danh từ.
+#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
+msgid "Post"
+msgstr "Bài viết"
 
-#: ../web_tt2/admin.tt2:63 ../web_tt2/admin_menu.tt2:105
-msgid "Delete Shared"
-msgstr "Xoá vùng chia sẻ"
+#: ../web_tt2/list_menu.tt2:75
+msgid "RSS"
+msgstr "RSS"
 
-#: ../web_tt2/admin.tt2:33 ../web_tt2/admin_menu.tt2:117
-#: ../web_tt2/admin_menu.tt2:119
-msgid "Restore List"
-msgstr "Phục hồi hộp"
+#: ../src/lib/List.pm:1263 ../web_tt2/list_menu.tt2:80
+#: ../web_tt2/list_menu.tt2:82
+msgid "Shared documents"
+msgstr "Tài liệu dùng chung"
 
-#. (list)
-#: ../web_tt2/admin_menu.tt2:122 ../web_tt2/admin_menu.tt2:124
+#: ../web_tt2/list_menu.tt2:88
+msgid "Review members"
+msgstr "Xem lại thành viên"
+
+#: ../web_tt2/list_panel.tt2:7
+msgid "Closed list"
+msgstr "Hộp thư chung bị đóng"
+
+#: ../web_tt2/list_panel.tt2:9
+msgid "List not yet activated"
+msgstr "Hộp thư chung chưa được kích hoạt"
+
+#: ../web_tt2/list_panel.tt2:11
+msgid "Subscribers:"
+msgstr "Người đăng ký:"
+
+#: ../web_tt2/list_panel.tt2:12
 #, fuzzy
-msgid "Are you sure you wish to close %1 list?"
-msgstr "Bạn có chắc muốn đóng hộp thư chung %1 không?"
+msgid "Error rate:&nbsp;"
+msgstr "Tỷ lệ lỗi:"
 
-#: ../web_tt2/admin.tt2:36 ../web_tt2/admin_menu.tt2:122
-#: ../web_tt2/admin_menu.tt2:124
-msgid "Remove List"
-msgstr "Bỏ hộp"
+#: ../web_tt2/list_panel.tt2:13
+msgid "Owners"
+msgstr "Người sở hữu"
 
-#: ../web_tt2/admin.tt2:46 ../web_tt2/admin_menu.tt2:129
-#: ../web_tt2/admin_menu.tt2:131
-msgid "Rename List"
-msgstr "Thay tên hộp"
+#: ../src/lib/List.pm:622 ../web_tt2/list_panel.tt2:20
+msgid "Moderators"
+msgstr "Điều tiết viên"
 
-#: ../web_tt2/admin_menu.tt2:139
-msgid "List Definition"
-msgstr "Xác định hộp"
+#: ../web_tt2/list_panel.tt2:26
+msgid "Load certificate"
+msgstr "Nạp chứng nhận"
 
-#: ../web_tt2/admin_menu.tt2:143
-msgid "Sending/Receiving"
-msgstr "Gửi/Nhận"
-
-#: ../web_tt2/admin_menu.tt2:147 ../web_tt2/edit_list_request.tt2:13
-#: ../web_tt2/nav.tt2:95
-msgid "Privileges"
-msgstr "Quyền hạn"
-
-#: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
-#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:97 ../web_tt2/serveradmin.tt2:109
-msgid "Archives"
-msgstr "Kho lưu"
-
-#: ../web_tt2/admin_menu.tt2:155
-msgid "Bounce Settings"
-msgstr "Thiết lập nảy về"
-
-#: ../web_tt2/admin_menu.tt2:160 ../web_tt2/edit_list_request.tt2:17
-#: ../web_tt2/nav.tt2:105
-msgid "Miscellaneous"
-msgstr "Linh tinh"
-
-#: ../web_tt2/admin_menu.tt2:164
-msgid "Data Source"
-msgstr "Nguồn dữ liệu"
-
-#: ../web_tt2/admin_menu.tt2:172
-msgid "Attribute optionnal/required"
-msgstr "Thuộc tính tùy chọn/cần thiết"
+#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
+msgid "Contact owners"
+msgstr "Liên lạc với người sở hữu"
 
 #: ../web_tt2/admin.tt2:4
 msgid "Casual administration"
@@ -1309,6 +340,11 @@ msgstr "Công cụ để xem lại bản ghi lưu hộp thư chung."
 msgid "Drastic operations"
 msgstr "Thao tác quyết liệt"
 
+#: ../web_tt2/admin.tt2:33 ../web_tt2/admin_menu.tt2:117
+#: ../web_tt2/admin_menu.tt2:119
+msgid "Restore List"
+msgstr "Phục hồi hộp"
+
 #. (list)
 #: ../web_tt2/admin.tt2:33
 #, fuzzy
@@ -1320,6 +356,11 @@ msgid ""
 "This list is currently closed. Clicking this button will make it active "
 "again."
 msgstr "Hộp thư chung hiện thời bị đóng. Nhấn vào nút này để kích hoạt lại."
+
+#: ../web_tt2/admin.tt2:36 ../web_tt2/admin_menu.tt2:122
+#: ../web_tt2/admin_menu.tt2:124
+msgid "Remove List"
+msgstr "Bỏ hộp"
 
 #. (list)
 #: ../web_tt2/admin.tt2:36
@@ -1334,6 +375,11 @@ msgstr ""
 "Xoá hẳn hộp thư chung hiện thời. Để phục hồi hộp thư chung thì yêu cầu quyền "
 "Chủ Hộp Thư."
 
+#: ../web_tt2/admin.tt2:46 ../web_tt2/admin_menu.tt2:129
+#: ../web_tt2/admin_menu.tt2:131
+msgid "Rename List"
+msgstr "Thay tên hộp"
+
 #: ../web_tt2/admin.tt2:46
 msgid ""
 "Allows you to change this list's name. Everything related to the list will "
@@ -1344,9 +390,18 @@ msgstr ""
 "thư chung sẽ được đặt nhãn lại tùy theo tên mới, bao gồm các bí danh thư tín "
 "và các kho thư trên Web."
 
+#: ../web_tt2/admin.tt2:59 ../web_tt2/admin_menu.tt2:96
+#: ../web_tt2/admin_menu.tt2:98
+msgid "Create Shared"
+msgstr "Tạo vùng chia sẻ"
+
 #: ../web_tt2/admin.tt2:59
 msgid "Initializes the shared document web space."
 msgstr "Sơ khởi vùng Web của tài liệu chia sẻ."
+
+#: ../web_tt2/admin.tt2:63 ../web_tt2/admin_menu.tt2:105
+msgid "Delete Shared"
+msgstr "Xoá vùng chia sẻ"
 
 #: ../web_tt2/admin.tt2:63
 #, fuzzy
@@ -1369,12 +424,148 @@ msgstr "Phục hồi vùng chia sẻ"
 msgid "Restores the previously closed shared document web space."
 msgstr "Phục hồi vùng Web tài liệu chia sẻ bị đóng trước."
 
+#. (count)
+#: ../web_tt2/active_lists.tt2:17 ../web_tt2/active_lists.tt2:5
+msgid " The %1 most active lists "
+msgstr "%1 hộp bận nhất"
+
+#: ../web_tt2/active_lists.tt2:7
+msgid " Active lists "
+msgstr "Hộp hoạt động"
+
+#. (for)
+#: ../web_tt2/active_lists.tt2:11 ../web_tt2/active_lists.tt2:17
+#: ../web_tt2/latest_arc.tt2:12 ../web_tt2/latest_d_read.tt2:11
+#: ../web_tt2/latest_lists.tt2:11
+msgid " for %1 days "
+msgstr "trong %1 ngày"
+
+#: ../web_tt2/active_lists.tt2:19
+msgid "List name"
+msgstr "Tên hộp"
+
+#: ../web_tt2/active_lists.tt2:20
+#, fuzzy
+msgid "Number of messages"
+msgstr "Số tối đa các thư trong bó thư"
+
+#: ../web_tt2/active_lists.tt2:21
+#, fuzzy
+msgid "Average per day"
+msgstr "Tính trung bình theo ngày"
+
+#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
+#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
+msgid "Creation date"
+msgstr "Ngày tạo"
+
+#: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
+#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
+#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
+#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
+msgid "Subject"
+msgstr "Chủ đề"
+
+# Biến ?
+#: ../web_tt2/add_request.tt2:7
+msgid "email1@dom1 Name1"
+msgstr "email1@dom1 Name1"
+
+# Biến?
+#: ../web_tt2/add_request.tt2:8
+msgid "email2@dom2 Name2"
+msgstr "email2@dom2 Name2"
+
+#: ../web_tt2/add_request.tt2:12
+msgid "Add subscribers"
+msgstr "Thêm người đăng ký"
+
+#: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
+#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:288
+#: ../web_tt2/review.tt2:73 ../web_tt2/reviewbouncing.tt2:127
+msgid "quiet"
+msgstr "im"
+
+#: ../web_tt2/admin_menu.tt2:4
+msgid "List Administration Panel"
+msgstr "Bảng quản trị hộp"
+
+#: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
+msgid "Subscribers"
+msgstr "Người đăng ký"
+
+#: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
+#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:62
+msgid "Edit List Config"
+msgstr "Sửa cấu hình hộp"
+
+#: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
+#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:65
+msgid "Customizing"
+msgstr "Tùy chỉnh"
+
+#: ../web_tt2/admin_menu.tt2:67 ../web_tt2/admin_menu.tt2:73
+#: ../web_tt2/nav.tt2:75
+msgid "Manage Archives"
+msgstr "Quản lý kho lưu"
+
+#: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
+#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:79 ../web_tt2/nav.tt2:99
+#: ../web_tt2/review.tt2:45
+msgid "Bounces"
+msgstr "Nảy về"
+
+#: ../web_tt2/admin_menu.tt2:102
+msgid "Restore shared"
+msgstr "Phục hồi vùng chia sẻ"
+
+#. (list)
+#: ../web_tt2/admin_menu.tt2:122 ../web_tt2/admin_menu.tt2:124
+#, fuzzy
+msgid "Are you sure you wish to close %1 list?"
+msgstr "Bạn có chắc muốn đóng hộp thư chung %1 không?"
+
+#: ../web_tt2/admin_menu.tt2:139
+msgid "List Definition"
+msgstr "Xác định hộp"
+
+#: ../web_tt2/admin_menu.tt2:143
+msgid "Sending/Receiving"
+msgstr "Gửi/Nhận"
+
+#: ../web_tt2/admin_menu.tt2:147 ../web_tt2/edit_list_request.tt2:13
+#: ../web_tt2/nav.tt2:95
+msgid "Privileges"
+msgstr "Quyền hạn"
+
+#: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
+#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:97 ../web_tt2/serveradmin.tt2:109
+msgid "Archives"
+msgstr "Kho lưu"
+
+#: ../web_tt2/admin_menu.tt2:155
+msgid "Bounce Settings"
+msgstr "Thiết lập nảy về"
+
+#: ../web_tt2/admin_menu.tt2:160 ../web_tt2/edit_list_request.tt2:17
+#: ../web_tt2/nav.tt2:103
+msgid "Miscellaneous"
+msgstr "Linh tinh"
+
+#: ../web_tt2/admin_menu.tt2:164
+msgid "Data Source"
+msgstr "Nguồn dữ liệu"
+
+#: ../web_tt2/admin_menu.tt2:172
+msgid "Attribute optionnal/required"
+msgstr "Thuộc tính tùy chọn/cần thiết"
+
 #: ../web_tt2/arc_manage.tt2:4
 msgid "Archive Management"
 msgstr "Quản lý kho lưu"
 
 #: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
 #: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
 #: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
 #: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
@@ -1386,30 +577,11 @@ msgstr "Quản lý kho lưu"
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
 #: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
-#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:215
+#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:217
 #: ../web_tt2/review.tt2:6 ../web_tt2/reviewbouncing.tt2:3
 #: ../web_tt2/suboptions.tt2:20
 msgid "Open in a new window"
 msgstr "Mở trong cửa sổ mới"
-
-#: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
-#: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
-#: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
-#: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
-#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:93
-#: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
-#: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
-#: ../web_tt2/d_properties.tt2:6 ../web_tt2/d_properties.tt2:8
-#: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
-#: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
-#: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
-#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
-#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:6
-#: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
-#: ../web_tt2/suspend_request.tt2:64
-msgid "Help"
-msgstr "Trợ giúp"
 
 #: ../web_tt2/arc_manage.tt2:6
 msgid ""
@@ -1462,7 +634,7 @@ msgid "Search field:"
 msgstr "Trường tìm kiếm:"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:90 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:88 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -1775,53 +947,50 @@ msgid "You should remove list aliases manually"
 msgstr "Bạn nên gỡ bỏ biệt hiệu của hộp thư chung một cách thủ công."
 
 #: ../web_tt2/compose_mail.tt2:5
-#, fuzzy
-msgid "Sending a message to the list"
+msgid "Sendind a message to the list"
 msgstr "Đang gửi một thư cho hộp thư chung"
 
-#: ../web_tt2/compose_mail.tt2:12
+#. (list,host)
+#: ../web_tt2/compose_mail.tt2:10
+msgid ""
+"The best way to post an email to the list is to compose an email to the list "
+"email address <b>%1@%2</b> using your favourite email client. We also "
+"provide a form below to compose an email through the web interface."
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:17
 #, fuzzy
 msgid "Sending an html page to the list "
 msgstr "Đang gửi một thư cho hộp thư chung"
 
 #. (user.email)
 #. (from)
-#: ../web_tt2/compose_mail.tt2:19 ../web_tt2/request_topic.tt2:27
+#: ../web_tt2/compose_mail.tt2:22 ../web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "Từ : %1"
 
 #. (mailto)
-#: ../web_tt2/compose_mail.tt2:20 ../web_tt2/request_topic.tt2:28
+#: ../web_tt2/compose_mail.tt2:23 ../web_tt2/request_topic.tt2:28
 msgid "To: %1"
 msgstr "Cho : %1"
 
-#: ../web_tt2/compose_mail.tt2:21 ../web_tt2/create_list_request.tt2:69
+#: ../web_tt2/compose_mail.tt2:24 ../web_tt2/create_list_request.tt2:69
 #: ../web_tt2/install_pending_list.tt2:14
 #: ../web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "Chủ đề:"
 
-#: ../web_tt2/compose_mail.tt2:26
-#, fuzzy
-msgid "Send to the list"
-msgstr "Đề tài của hộp thư chung"
-
-#: ../web_tt2/compose_mail.tt2:27
-#, fuzzy
-msgid "Send to me"
-msgstr "Gửi thư này"
-
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/compose_mail.tt2:50 ../web_tt2/modindex.tt2:50
 #: ../web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "Hộp thư chung này được cấu hình để yêu cầu chủ đề."
 
-#: ../web_tt2/compose_mail.tt2:49
+#: ../web_tt2/compose_mail.tt2:52
 #, fuzzy
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr "Hãy chọn một hay nhiều chủ đề tương ứng với thư của bạn."
 
-#: ../web_tt2/compose_mail.tt2:77
+#: ../web_tt2/compose_mail.tt2:65
 #, fuzzy
 msgid "URL:"
 msgstr "URL"
@@ -2197,11 +1366,6 @@ msgstr "truy cập"
 msgid "Listing of root folder"
 msgstr "Liệt kê thư mục gốc"
 
-#: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
-#: ../web_tt2/list_menu.tt2:45
-msgid "Document"
-msgstr "Tài liệu"
-
 #: ../web_tt2/d_read.tt2:59 ../web_tt2/d_read.tt2:61
 #: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:153
 #: ../web_tt2/modindex.tt2:69
@@ -2213,7 +1377,7 @@ msgid "Size (Kb)"
 msgstr "Kích cỡ (KB)"
 
 #: ../web_tt2/d_read.tt2:69 ../web_tt2/d_read.tt2:71
-#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:168
+#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:166
 msgid "Last update"
 msgstr "Cập nhật cuối"
 
@@ -2317,7 +1481,7 @@ msgstr "tựa đề"
 msgid "URL"
 msgstr "URL"
 
-#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:74
+#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:72
 msgid "Add"
 msgstr "Thêm"
 
@@ -3249,7 +2413,7 @@ msgstr "Yêu cầu bởi"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/modindex.tt2:125
-#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:284
+#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:286
 #: ../web_tt2/reviewbouncing.tt2:131
 msgid "Toggle Selection"
 msgstr "Bật/tắt chọn"
@@ -3289,34 +2453,6 @@ msgstr "Hộp thư chung bị hoãn"
 msgid "Requested date"
 msgstr "Ngày tháng đã yêu cầu"
 
-#: ../web_tt2/home.tt2:2
-#, fuzzy
-msgid "Mailing lists server"
-msgstr "Loại hộp thư chung"
-
-#. (conf.email,conf.host)
-#: ../web_tt2/home.tt2:4
-msgid ""
-"This server provides you access to your mailing list environment. Starting "
-"from this web page, you can perform subscription options, unsubscription, "
-"archive, list moderation, list configuration."
-msgstr ""
-"Máy phục vụ này cung cấp truy cập đến môi trường hộp thư chung của bạn. Bắt "
-"đầu từ trang Web này, bạn có thể đặt các tuỳ chọn đăng ký, hủy đăng ky, kho "
-"thư, điều tiết bài viết và cấu hình hộp thư chung."
-
-#: ../web_tt2/home.tt2:7
-msgid "Mailing lists categories"
-msgstr "Loại hộp thư chung"
-
-#: ../web_tt2/home.tt2:17
-msgid "Others"
-msgstr "Khác"
-
-#: ../web_tt2/home.tt2:42
-msgid "RSS news"
-msgstr "Tin tức RSS"
-
 #: ../web_tt2/info.tt2:8
 #, fuzzy
 msgid "List informations"
@@ -3337,147 +2473,6 @@ msgstr "Hộp thư chung yêu cầu bởi"
 #: ../web_tt2/install_pending_list.tt2:17
 msgid "on %1"
 msgstr "trên %1"
-
-#: ../web_tt2/javascript.tt2:833
-#, fuzzy
-msgid "Start date"
-msgstr "Cập nhật cuối"
-
-#: ../web_tt2/javascript.tt2:834
-#, fuzzy
-msgid "End date"
-msgstr "ngày"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "January"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "February"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "March"
-msgstr "Tìm kiếm"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "April"
-msgstr "hồ sơ"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "May"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "June"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "July"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "August"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "September"
-msgstr "thành viên"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "October"
-msgstr "Khác"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "November"
-msgstr "thành viên"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "December"
-msgstr "thành viên"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Su"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Mo"
-msgstr "Thêm"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Tu"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "We"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Th"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Fr"
-msgstr "Từ"
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Sa"
-msgstr "Lưu"
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Sunday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Monday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Tuesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Wednesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Thursday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Friday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Saturday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:841
-msgid "Calendar"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:842
-#, fuzzy
-msgid "today"
-msgstr "Thân"
-
-#. (+cpt)
-#: ../web_tt2/javascript.tt2:1056
-msgid "microcal"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:1096
-msgid "\"+src.id+\"_cal"
-msgstr ""
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -3509,8 +2504,8 @@ msgstr "Tài liệu chia sẻ vừa nhất"
 msgid "Most recent documents for this list "
 msgstr "Tài liệu vừa nhất cho hộp thư chung này"
 
-#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:140
-#: ../web_tt2/review.tt2:143 ../web_tt2/subindex.tt2:12
+#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:138
+#: ../web_tt2/review.tt2:141 ../web_tt2/subindex.tt2:12
 msgid "Name"
 msgstr "Tên"
 
@@ -3531,93 +2526,8 @@ msgstr "Hộp thư chung mới"
 msgid " The latest lists of this robot"
 msgstr "Các hộp thư chung mới nhất của rô-bốt này"
 
-#: ../web_tt2/list_menu.tt2:11
-msgid "Subscriber Options"
-msgstr "Tùy chọn người đăng ký"
-
-#. (list)
-#: ../web_tt2/list_menu.tt2:15
-msgid "Do you really want to unsubscribe from list %1?"
-msgstr "Bạn thực sự muốn hủy đăng ký khỏi hộp thư chung %1 không?"
-
-#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
-#: ../web_tt2/suspend_request.tt2:57
-msgid "Unsubscribe"
-msgstr "Hủy đăng ký"
-
-#. (list)
-#: ../web_tt2/list_menu.tt2:20
-msgid "Do you really want to subscribe to list %1?"
-msgstr "Bạn thực sự muốn đăng ký với hộp thư chung %1 không?"
-
-#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
-msgid "Subscribe"
-msgstr "Đăng ký"
-
-#: ../web_tt2/list_menu.tt2:31
-msgid "Info"
-msgstr "Thông tin"
-
-#: ../web_tt2/list_menu.tt2:34
-msgid "Admin"
-msgstr "Quản trị"
-
-#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
-msgid "Message"
-msgstr "Thư"
-
-#: ../web_tt2/list_menu.tt2:50
-msgid "Subscriptions"
-msgstr "Sự đăng ký"
-
-#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
-msgid "Archive"
-msgstr "Kho thư"
-
-# Danh từ hay động từ ? Giả sử danh từ.
-#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
-msgid "Post"
-msgstr "Bài viết"
-
-#: ../web_tt2/list_menu.tt2:75
-msgid "RSS"
-msgstr "RSS"
-
-#: ../web_tt2/list_menu.tt2:88
-msgid "Review members"
-msgstr "Xem lại thành viên"
-
-#: ../web_tt2/list_panel.tt2:7
-msgid "Closed list"
-msgstr "Hộp thư chung bị đóng"
-
-#: ../web_tt2/list_panel.tt2:9
-msgid "List not yet activated"
-msgstr "Hộp thư chung chưa được kích hoạt"
-
-#: ../web_tt2/list_panel.tt2:11
-msgid "Subscribers:"
-msgstr "Người đăng ký:"
-
-#: ../web_tt2/list_panel.tt2:12
-#, fuzzy
-msgid "Error rate:&nbsp;"
-msgstr "Tỷ lệ lỗi:"
-
-#: ../web_tt2/list_panel.tt2:13
-msgid "Owners"
-msgstr "Người sở hữu"
-
-#: ../web_tt2/list_panel.tt2:26
-msgid "Load certificate"
-msgstr "Nạp chứng nhận"
-
-#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
-msgid "Contact owners"
-msgstr "Liên lạc với người sở hữu"
-
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:93
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:91
 msgid "%1 occurrence(s) found"
 msgstr "Tìm thấy %1 lần"
 
@@ -3625,10 +2535,6 @@ msgstr "Tìm thấy %1 lần"
 #: ../web_tt2/lists.tt2:9
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> đã đăng ký với những hộp thư chung theo đây"
-
-#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
-msgid "admin"
-msgstr "quản trị"
 
 #: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:67
 msgid "Manage Subscribers"
@@ -3647,11 +2553,6 @@ msgstr "Bản ghi"
 #: ../web_tt2/lists.tt2:62
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Không có người đăng ký với địa chỉ <strong>%1</strong> !"
-
-#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
-#: ../web_tt2/your_lists.tt2:23
-msgid "No mailing list available."
-msgstr "Không có hộp thư chung sẵn sàng."
 
 #: ../web_tt2/loginbanner.tt2:18
 #, fuzzy
@@ -3693,49 +2594,6 @@ msgstr "Đăng nhập đầu tiên ?"
 msgid "Lost password?"
 msgstr "Mất mật khẩu ?"
 
-#: ../web_tt2/login_menu.tt2:9
-msgid "Restore identity"
-msgstr "Phục hồi chứng minh"
-
-#: ../web_tt2/login_menu.tt2:13
-#, fuzzy
-msgid "[Listmaster]"
-msgstr "Chủ hộp thư chung"
-
-#: ../web_tt2/login_menu.tt2:14
-#, fuzzy
-msgid "[Privileged owner]"
-msgstr "Người sở hữu có quyền đặc biệt"
-
-#: ../web_tt2/login_menu.tt2:15
-#, fuzzy
-msgid "[Owner]"
-msgstr "Người sở hữu"
-
-#: ../web_tt2/login_menu.tt2:16
-#, fuzzy
-msgid "[Editor]"
-msgstr "Người biên soạn"
-
-#: ../web_tt2/login_menu.tt2:17
-#, fuzzy
-msgid "[Subscriber]"
-msgstr "Người đăng ký"
-
-#. (last_login_host,last_login_date)
-#: ../web_tt2/login_menu.tt2:21
-#, fuzzy
-msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
-msgstr "đăng nhập cuối từ %1 <br />(%2)</span>"
-
-#: ../web_tt2/login_menu.tt2:36
-msgid "Logout"
-msgstr "Đăng xuất"
-
-#: ../web_tt2/login_menu.tt2:43
-msgid "Your preferences"
-msgstr "Tùy thích của bạn"
-
 #: ../web_tt2/loginrequest.tt2:4
 msgid ""
 "In order to perform a privileged operation (one that requires your email "
@@ -3743,11 +2601,6 @@ msgid ""
 msgstr ""
 "Bạn cần phải đăng nhập để làm một thao tác cần quyền đặc biệt (thao tác yêu "
 "cầu địa chỉ thư điện tử)."
-
-#. (user.email)
-#: ../web_tt2/login.tt2:3
-msgid "You have logged in with email address %1"
-msgstr "Bạn đã đăng nhập với địa chỉ thư %1"
 
 #: ../web_tt2/ls_templates.tt2:7
 msgid ""
@@ -3840,26 +2693,6 @@ msgstr ""
 "Máy phục vụ hộp thư chung hiện thời nằm trong chế độ bảo trì nên không thể "
 "làm thao tác nào trong khoảng thời gian này."
 
-#: ../web_tt2/main.tt2:27
-msgid "RSS Latest messages"
-msgstr "RSS Tin nhẳn mới nhất"
-
-#: ../web_tt2/main.tt2:28
-msgid "RSS Latest documents"
-msgstr "RSS Tài liệu mới nhất"
-
-#: ../web_tt2/main.tt2:31 ../web_tt2/main.tt2:34
-msgid "RSS Latest lists"
-msgstr "RSS Hộp thư chung mới nhất"
-
-#: ../web_tt2/main.tt2:32 ../web_tt2/main.tt2:35
-msgid "RSS Active lists"
-msgstr "RSS Hộp thư chung hoạt động"
-
-#: ../web_tt2/main.tt2:59
-msgid "Please activate JavaScript in your web browser"
-msgstr "Hãy kích hoạt JavaScript trong trình duyệt Web"
-
 #: ../web_tt2/manage_template.tt2:3
 msgid "Modify or delete existing rejection messages"
 msgstr "Sửa đổi hoặc xoá thông điệp từ chối đã có"
@@ -3914,29 +2747,13 @@ msgstr "Tên thông điệp mới:"
 msgid "create"
 msgstr "tạo"
 
-#: ../web_tt2/menu_search.tt2:5
+#: ../web_tt2/menu_search.tt2:6
 msgid "Enter a list name"
 msgstr "Nhập một tên hộp thư chung"
 
-#: ../web_tt2/menu_search.tt2:7
+#: ../web_tt2/menu_search.tt2:8
 msgid "Search lists"
 msgstr "Tìm trong các hộp thư chung"
-
-#: ../web_tt2/menu.tt2:7
-msgid "Create list"
-msgstr "Tạo hộp thư chung"
-
-#: ../web_tt2/menu.tt2:12
-msgid "Sympa admin"
-msgstr "Quản trị Sympa"
-
-#: ../web_tt2/menu.tt2:16
-msgid "List of lists"
-msgstr "Danh sách hộp thư chung"
-
-#: ../web_tt2/menu.tt2:19
-msgid "Home"
-msgstr "Nhà"
 
 #: ../web_tt2/modindex.tt2:61 ../web_tt2/modindex.tt2:9
 msgid "Listing messages to moderate"
@@ -4035,7 +2852,6 @@ msgid "Manage rejection messages"
 msgstr "Quản lý các thông điệp từ chối"
 
 #: ../web_tt2/nav.tt2:15 ../web_tt2/serveradmin.tt2:5
-#: ../web_tt2/suspend_request.tt2:11 ../web_tt2/suspend_request.tt2:9
 msgid "Lists"
 msgstr "Hộp"
 
@@ -4067,16 +2883,12 @@ msgstr "Dịch Sympa"
 msgid "Submitting a bug, a feature request"
 msgstr "Gửi báo cáo lỗi hay yêu cầu tính năng"
 
-#: ../web_tt2/nav.tt2:103
-msgid "DKIM"
-msgstr ""
-
-#: ../web_tt2/nav.tt2:115
+#: ../web_tt2/nav.tt2:113
 #, fuzzy
 msgid "Send a message"
 msgstr "thông điệp nhắc nhở"
 
-#: ../web_tt2/nav.tt2:117
+#: ../web_tt2/nav.tt2:115
 msgid "Send an html page"
 msgstr ""
 
@@ -4438,14 +3250,14 @@ msgid "Remind all subscribers"
 msgstr "Nhắc nhở mọi người đăng ký"
 
 #. (total)
-#: ../web_tt2/review.tt2:63 ../web_tt2/reviewbouncing.tt2:19
+#: ../web_tt2/review.tt2:61 ../web_tt2/reviewbouncing.tt2:19
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr ""
 "Bạn thực sự muốn gửi một thư nhắc nhở đăng ký cho %1 người đăng ký không?"
 
-#: ../web_tt2/review.tt2:272 ../web_tt2/review.tt2:28
+#: ../web_tt2/review.tt2:274 ../web_tt2/review.tt2:28
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -4456,7 +3268,7 @@ msgstr "Trang trước"
 msgid "page %1 / %2"
 msgstr "trang %1 / %2"
 
-#: ../web_tt2/review.tt2:278 ../web_tt2/review.tt2:34
+#: ../web_tt2/review.tt2:280 ../web_tt2/review.tt2:34
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -4466,9 +3278,8 @@ msgstr "Trang kế"
 msgid "Table which display list bounces"
 msgstr "Bảng hiển thị các thư nảy về của hộp thư chung"
 
-#: ../web_tt2/review.tt2:119 ../web_tt2/review.tt2:122
-#: ../web_tt2/review.tt2:294 ../web_tt2/reviewbouncing.tt2:61
-#: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
+#: ../web_tt2/review.tt2:117 ../web_tt2/review.tt2:120
+#: ../web_tt2/reviewbouncing.tt2:61 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
 msgid "Email"
 msgstr "Địa chỉ thư"
@@ -4497,7 +3308,7 @@ msgstr "Thư nảy về cuối cùng"
 msgid "no score"
 msgstr "không có điểm"
 
-#: ../web_tt2/review.tt2:107 ../web_tt2/review.tt2:285
+#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:287
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "Xoá các địa chỉ thư đã chọn"
@@ -4526,7 +3337,7 @@ msgstr "Quản lý các thành viên hộp thư chung"
 msgid "Page size"
 msgstr "Kích cỡ trang"
 
-#: ../web_tt2/review.tt2:275 ../web_tt2/review.tt2:31
+#: ../web_tt2/review.tt2:277 ../web_tt2/review.tt2:31
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "trang"
@@ -4535,89 +3346,71 @@ msgstr "trang"
 msgid "Pending subscriptions"
 msgstr "Sự đăng ký bị hoãn"
 
-#: ../web_tt2/review.tt2:51
-msgid "Exclude"
-msgstr ""
-
-#: ../web_tt2/review.tt2:57
+#: ../web_tt2/review.tt2:55
 msgid "Synchronize members with data sources"
 msgstr "Đồng bộ hoá các thành viên với các nguồn dữ liệu"
 
-#: ../web_tt2/review.tt2:63
+#: ../web_tt2/review.tt2:61
 msgid "Remind all"
 msgstr "Nhắc nhở tất cả"
 
-#: ../web_tt2/review.tt2:72
+#: ../web_tt2/review.tt2:70
 msgid "Add an user: "
 msgstr "Thêm một người dùng:"
 
-#: ../web_tt2/review.tt2:76
+#: ../web_tt2/review.tt2:74
 msgid "Multiple add"
 msgstr "Đa thêm"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:86
 msgid "Search user by e-mail: "
 msgstr "Tìm người dùng theo địa chỉ thư :"
 
-#: ../web_tt2/review.tt2:89
+#: ../web_tt2/review.tt2:87
 msgid "Search user by email"
 msgstr "Tìm người dùng theo địa chỉ thư điện tử"
 
-#: ../web_tt2/review.tt2:95
+#: ../web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr "Vùng chọn quá rộng nên không thể hiển thị."
 
-#: ../web_tt2/review.tt2:111
+#: ../web_tt2/review.tt2:109
 msgid "List members"
 msgstr "Thành viên của hộp thư chung"
 
-#: ../web_tt2/review.tt2:127 ../web_tt2/review.tt2:130
+#: ../web_tt2/review.tt2:125 ../web_tt2/review.tt2:128
 msgid "Domain"
 msgstr "Miền"
 
-#: ../web_tt2/review.tt2:135
+#: ../web_tt2/review.tt2:133
 msgid "Picture"
 msgstr "Ảnh"
 
-#: ../web_tt2/review.tt2:148 ../web_tt2/suspend_request.tt2:12
+#: ../web_tt2/review.tt2:146
 msgid "Reception"
 msgstr "Thu nhận"
 
-#: ../web_tt2/review.tt2:153 ../web_tt2/review.tt2:156
+#: ../web_tt2/review.tt2:151 ../web_tt2/review.tt2:154
 msgid "Sources"
 msgstr "Nguồn"
 
-#: ../web_tt2/review.tt2:162 ../web_tt2/review.tt2:165
+#: ../web_tt2/review.tt2:160 ../web_tt2/review.tt2:163
 #: ../web_tt2/viewlogs.tt2:124
 msgid "Sub date"
 msgstr "Ngày đăng ký"
 
-#: ../web_tt2/review.tt2:198
+#: ../web_tt2/review.tt2:200
 msgid "bouncing"
 msgstr "nảy về"
 
 #. (u.email)
-#: ../web_tt2/review.tt2:215
+#: ../web_tt2/review.tt2:217
 msgid "%1's picture"
 msgstr "Ảnh của %1"
 
-#: ../web_tt2/review.tt2:283
+#: ../web_tt2/review.tt2:285
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Bạn thực sự muốn hủy đăng ký TẤT CẢ các người đăng ký đã chọn không?"
-
-#: ../web_tt2/review.tt2:291
-msgid "Excluded users"
-msgstr ""
-
-#: ../web_tt2/review.tt2:292 ../web_tt2/show_exclude.tt2:13
-#, fuzzy
-msgid "List of exclude"
-msgstr "Liệt kê thư mục"
-
-#: ../web_tt2/review.tt2:295 ../web_tt2/show_exclude.tt2:16
-#, fuzzy
-msgid "Since"
-msgstr "Kích cỡ"
 
 #: ../web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -5090,25 +3883,6 @@ msgstr "Nhà cấp chứng nhận"
 #: ../web_tt2/show_cert.tt2:10
 msgid "Cipher key size used"
 msgstr "Kích cỡ khoá mã hoá được dùng"
-
-#: ../web_tt2/show_exclude.tt2:3
-msgid "Show the exclusion table"
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:10
-msgid ""
-"Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense\n"
-"when a list is based on external data sources ; thanks to exclusion, a user "
-"can unsubscribe (or being removed by list owner) even though \n"
-"he should be included via an external data source. Users get into the "
-"exclusion table, through the standard unsubscribe/delete functions. \n"
-"They get off the exclusion table with the standard subscribe/add functions."
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:28
-msgid "No exclude."
-msgstr ""
 
 #: ../web_tt2/show_sessions.tt2:2
 msgid "Sessions list"
@@ -5592,8 +4366,7 @@ msgid "Disable topics subscription"
 msgstr "Tắt chức năng đăng ký với chu đề"
 
 #: ../web_tt2/suboptions.tt2:51
-#, fuzzy
-msgid "Only possible for direct reception modes."
+msgid "Only possible in \"normal\" receiving mode"
 msgstr "Chỉ có thể làm ở chế độ nhận « thông thường »"
 
 #. (list)
@@ -5673,66 +4446,6 @@ msgstr "Mật khẩu của tôi ?"
 #: ../web_tt2/subrequest.tt2:75
 msgid "You are already subscribed to list %1"
 msgstr "Bạn đã đăng ký trước với hộp thư chung %1"
-
-#: ../web_tt2/suspend_request.tt2:5 ../web_tt2/your_lists.tt2:9
-#, fuzzy
-msgid "Manage your subscriptions"
-msgstr "Quản lý người đăng ký"
-
-#: ../web_tt2/suspend_request.tt2:13
-#, fuzzy
-msgid "Suspended"
-msgstr "Người gửi"
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "Suspended from "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:23 ../web_tt2/suspend_request.tt2:44
-#, fuzzy
-msgid " to "
-msgstr "đến"
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "indefinite end date"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:33
-#, fuzzy
-msgid "No subscription."
-msgstr "Đăng ký với chủ đề : "
-
-#: ../web_tt2/suspend_request.tt2:37
-#, fuzzy
-msgid "Toogle selection"
-msgstr "Bật/tắt chọn"
-
-#: ../web_tt2/suspend_request.tt2:41
-msgid "Suspend[% IF sub.display == 1 %]/Resume"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:43
-msgid "From : <noscript>[%|loc%](dd-mm-yyyy) "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:46
-msgid "Select the checkbox for an indefinite end date. "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:49
-#, fuzzy
-msgid "Suspend my subscriptions"
-msgstr "Sự đăng ký bị hoãn"
-
-#: ../web_tt2/suspend_request.tt2:51
-#, fuzzy
-msgid "Resume my subscriptions"
-msgstr "Sự đăng ký bị hoãn"
-
-#: ../web_tt2/suspend_request.tt2:55
-#, fuzzy
-msgid "Unsubscribe selected lists"
-msgstr "Đổ các hộp thư chung đã chọn"
 
 #: ../web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -5828,8 +4541,7 @@ msgid "to:"
 msgstr "đến: "
 
 #: ../web_tt2/viewlogs.tt2:73
-#, fuzzy
-msgid "ex: 24-05-2006"
+msgid "ex: 24/05/2006"
 msgstr "v.d.: 24/05/2006"
 
 #: ../web_tt2/viewlogs.tt2:75
@@ -5873,6 +4585,14 @@ msgstr "Đặt lại"
 #: ../web_tt2/viewlogs.tt2:113
 msgid "Search period: "
 msgstr "Kỳ tìm: "
+
+#. (date_from_formated)
+#. (date_to_formated)
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:15926
+msgid "%d %b %Y %H:%M:%S"
+msgstr "%d %b %Y %H:%M:%S"
 
 #: ../web_tt2/viewlogs.tt2:113
 msgid "to"
@@ -6355,16 +5075,11 @@ msgstr "Câu lệnh đã được thực hiện: "
 msgid "These commands have been performed:"
 msgstr "Các câu lệnh này đã được thực hiện: "
 
-#: ../mail_tt2/command_report.tt2:20
+#: ../mail_tt2/command_report.tt2:19
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "Chữ ký thư của bạn đã được thẩm tra thành công dùng S/MIME."
 
-#: ../mail_tt2/command_report.tt2:23
-#, fuzzy
-msgid "Your message contain a DKIM signature. It was succesfully verified"
-msgstr "Chữ ký thư của bạn đã được thẩm tra thành công dùng S/MIME."
-
-#: ../mail_tt2/command_report.tt2:28
+#: ../mail_tt2/command_report.tt2:24
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you have\n"
@@ -6376,77 +5091,77 @@ msgstr ""
 "hộp thư chung này."
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:31
+#: ../mail_tt2/command_report.tt2:27
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Thông tin về người dùng %1 đã được cập nhật cho hộp thư chung %2."
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:34
+#: ../mail_tt2/command_report.tt2:30
 msgid "User %1 is now subscriber of list %2."
 msgstr "Người dùng %1 mới đăng ký với hộp thư chung %2."
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:37
+#: ../mail_tt2/command_report.tt2:33
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "Người dùng %1 đã được mời đăng ký với hộp thư chung %2."
 
 #. (notice.total,notice.listname)
-#: ../mail_tt2/command_report.tt2:40
+#: ../mail_tt2/command_report.tt2:36
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr ""
 "Thư nhắc nhở đăng ký đã được gửi cho mỗi người trong %1 người đăng ký %2."
 
 #. (notice.count)
-#: ../mail_tt2/command_report.tt2:43
+#: ../mail_tt2/command_report.tt2:39
 msgid "The Reminder has been sent to %1 users."
 msgstr "Thư nhắc nhở đã được gửi cho %1 người dùng."
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:46
+#: ../mail_tt2/command_report.tt2:42
 msgid "The user %1 has been removed from the list %2."
 msgstr "Người dùng %1 đã được gỡ bỏ khỏi hộp thư chung %2."
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:49
+#: ../mail_tt2/command_report.tt2:45
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "Cấu hình về hộp thư chung %1 đã được cập nhật."
 
 #. (notice.cmd)
-#: ../mail_tt2/command_report.tt2:52
+#: ../mail_tt2/command_report.tt2:48
 #, fuzzy
 msgid "Command '%1' found: ignoring end of message."
 msgstr "Tìm thấy câu lệnh « %1 » nên bỏ qua kết thúc của thư."
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:55
+#: ../mail_tt2/command_report.tt2:51
 msgid "There is no message to moderate for list '%1'."
 msgstr "Không có thư cần điều tiết cho hộp thư chung « %1 »."
 
-#: ../mail_tt2/command_report.tt2:67
+#: ../mail_tt2/command_report.tt2:63
 #, fuzzy
 msgid "Command has been rejected:"
 msgstr "Câu lệnh đã bị từ chối: "
 
-#: ../mail_tt2/command_report.tt2:69
+#: ../mail_tt2/command_report.tt2:65
 #, fuzzy
 msgid "These commands have been rejected:"
 msgstr "Những câu lệnh này đã bị từ chối: "
 
-#: ../mail_tt2/command_report.tt2:85
+#: ../mail_tt2/command_report.tt2:81
 #, fuzzy
 msgid "Command has failed:"
 msgstr "Câu lệnh bị lỗi: "
 
-#: ../mail_tt2/command_report.tt2:87
+#: ../mail_tt2/command_report.tt2:83
 #, fuzzy
 msgid "These commands have failed:"
 msgstr "Những câu lệnh này đã bị lỗi: "
 
-#: ../mail_tt2/command_report.tt2:94
+#: ../mail_tt2/command_report.tt2:90
 msgid "Command not understood: ignoring end of message."
 msgstr "Câu lệnh khó hiểu nên bỏ qua kết thúc của thư."
 
-#: ../mail_tt2/command_report.tt2:98
+#: ../mail_tt2/command_report.tt2:94
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature \n"
@@ -6458,25 +5173,25 @@ msgstr ""
 "(chú ý rằng Sympa không có khả năng kiểm tra chữ ký nếu bạn sử dụng dòng đầu "
 "chủ đề để ghi một câu lệnh)."
 
-#: ../mail_tt2/command_report.tt2:101
+#: ../mail_tt2/command_report.tt2:97
 msgid "Command syntax error."
 msgstr "Lỗi cú pháp câu lệnh."
 
 #. (u_err.listname)
 #. (glob.listname)
 #. (listname)
-#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:178
+#: ../mail_tt2/command_report.tt2:100 ../mail_tt2/command_report.tt2:174
 #: ../mail_tt2/message_report.tt2:55
 msgid "List '%1' does not exist."
 msgstr "Hộp thư chung « %1 » không tồn tại."
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:107
+#: ../mail_tt2/command_report.tt2:103
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "Hộp thư chung %1 không cho người đăng ký đặt tùy thích."
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:111
+#: ../mail_tt2/command_report.tt2:107
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe\n"
 "you subscribed from a different e-mail address ?"
@@ -6485,12 +5200,12 @@ msgstr ""
 "Có lẽ bạn đã đăng ký từ một địa chỉ khác ?"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:114
+#: ../mail_tt2/command_report.tt2:110
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr "Địa chỉ thư điện tử %1 không tìm thấy trong hộp thư chung %2."
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:118
+#: ../mail_tt2/command_report.tt2:114
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
@@ -6499,31 +5214,31 @@ msgstr ""
 "Vì vậy cấu hình của bạn về câu lệnh này đã không được cập nhật."
 
 #. (u_err.listname,u_err.modes)
-#: ../mail_tt2/command_report.tt2:121
+#: ../mail_tt2/command_report.tt2:117
 #, fuzzy
 msgid "List %1 allows only these reception modes: %2"
 msgstr "Hộp thư chung %1 chỉ cho phép những chế độ nhận thư này: %2"
 
-#: ../mail_tt2/command_report.tt2:124
+#: ../mail_tt2/command_report.tt2:120
 msgid "This list archive is empty."
 msgstr "Kho thư còn rỗng."
 
-#: ../mail_tt2/command_report.tt2:127
+#: ../mail_tt2/command_report.tt2:123
 msgid "Required file does not exist."
 msgstr "Tập tin cần thiết không tồn tại."
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:130
+#: ../mail_tt2/command_report.tt2:126
 msgid "List %1 has no subscriber."
 msgstr "Hộp thư chung %1 không có người đăng ký."
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:133
+#: ../mail_tt2/command_report.tt2:129
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Người dùng « %1 » đã đăng ký trước với hộp thư chung « %2 »."
 
 #. (u_err.command)
-#: ../mail_tt2/command_report.tt2:138
+#: ../mail_tt2/command_report.tt2:134
 msgid ""
 "The authentication process failed.\n"
 "You probably confirmed your %1 using a different\n"
@@ -6533,17 +5248,17 @@ msgstr ""
 "Rất có thể là bạn đã xác nhận %1 dùng một địa chỉ thư điện tử khác.\n"
 "Hãy thử lại, dùng địa chỉ thư chính tắc."
 
-#: ../mail_tt2/command_report.tt2:150
+#: ../mail_tt2/command_report.tt2:146
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "Câu lệnh không thành công do một lỗi trình phục vụ nội bộ : "
 
-#: ../mail_tt2/command_report.tt2:152
+#: ../mail_tt2/command_report.tt2:148
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "Những câu lệnh này không thành công do một lỗi trình phục vụ nội bộ : "
 
-#: ../mail_tt2/command_report.tt2:169
+#: ../mail_tt2/command_report.tt2:165
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
 "your command in the subject)."
@@ -6551,16 +5266,16 @@ msgstr ""
 "Đang bỏ qua thân thư không phải theo định dạng nhập thô (text/plain): hãy "
 "chỉ nhập thô (hoặc đặt câu lệnh trong chủ đề)."
 
-#: ../mail_tt2/command_report.tt2:172
+#: ../mail_tt2/command_report.tt2:168
 msgid "No command found in message."
 msgstr "Không tìm thấy câu lệnh trong thư."
 
-#: ../mail_tt2/command_report.tt2:175
+#: ../mail_tt2/command_report.tt2:171
 msgid "Ignoring message because of an internal server error."
 msgstr "Đang bỏ qua thư do một lỗi trình phục vụ nội bộ."
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/command_report.tt2:185
+#: ../mail_tt2/command_report.tt2:181
 msgid "For further information, check the mailing list web site %1"
 msgstr "Để tìm thêm thông tin, xem trang Web của hộp thư chung ở %1"
 
@@ -6568,6 +5283,11 @@ msgstr "Để tìm thêm thông tin, xem trang Web của hộp thư chung ở %1
 #: ../mail_tt2/digest_plain.tt2:4 ../mail_tt2/digest_plain.tt2:6
 msgid "%1 Digest %2"
 msgstr "%1 Bó thư %2"
+
+#: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:8
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2706
+msgid "Table of contents:"
+msgstr "Mục Lục: "
 
 #. (list.name,date)
 #: ../mail_tt2/digest_plain.tt2:26
@@ -6666,6 +5386,10 @@ msgstr "Huỷ đăng ký: "
 msgid "Archive of %1, file %2"
 msgstr "Kho lưu của %1, tập tin %2"
 
+#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1633
+msgid "Subscription summary"
+msgstr "Tóm tắt sự đăng ký"
+
 #. (user.email)
 #: ../mail_tt2/global_remind.tt2:4
 msgid "Summary of your subscription (using the e-mail %1)."
@@ -6681,6 +5405,11 @@ msgid "For each list here is a mail address to use if you want to unsubscribe."
 msgstr ""
 "Đối với mỗi hộp thư chung có một địa chỉ thư điện tử cụ thể cần dùng nếu bạn "
 "muốn huỷ đăng ký."
+
+#: ../mail_tt2/helpfile.tt2:2 ../src/lib/Commands.pm:196
+#: ../src/lib/Commands.pm:213
+msgid "User guide"
+msgstr "Sổ tay người dùng"
 
 #: ../mail_tt2/helpfile.tt2:7
 msgid "User's Guide"
@@ -8947,6 +7676,309 @@ msgstr ""
 "vi-rút này có thể không đến tử máy tính của bạn. Trong trường hợp đó, vui "
 "lòng lờ đi thư này."
 
+#: ../src/etc/scenari/access_web_archive.closed:1
+#: ../src/etc/scenari/invite.closed:1 ../src/etc/scenari/send.closed:1
+msgid "closed"
+msgstr "bị đóng"
+
+#: ../src/etc/scenari/access_web_archive.intranet:1
+#: ../src/etc/scenari/subscribe.intranet:1
+msgid "restricted to local domain users"
+msgstr "bị hạn chế thành những người dùng miền cục bộ"
+
+#: ../src/etc/scenari/access_web_archive.listmaster:1
+msgid "listmaster"
+msgstr "chủ hộp thư chung"
+
+#: ../src/etc/scenari/access_web_archive.owner:1
+msgid "by owner"
+msgstr "bởi chủ"
+
+#: ../src/etc/scenari/access_web_archive.private:1
+msgid "subscribers only"
+msgstr "chỉ cho người đăng ký"
+
+#: ../src/etc/scenari/access_web_archive.public:1
+#: ../src/etc/scenari/invite.public:1
+msgid "public"
+msgstr "công cộng"
+
+#: ../src/etc/scenari/add.auth:1
+msgid "restricted to owner with authentication"
+msgstr "bị hạn chế thành chủ có xác thực"
+
+#: ../src/etc/scenari/add.closed:1
+msgid "add impossible"
+msgstr "không thể thêm được"
+
+#: ../src/etc/scenari/add.owner:1
+msgid "add performed by list owner does not need authentication"
+msgstr "thao tác thêm được chủ hộp thư chung làm thì không yêu cầu xác thực"
+
+#: ../src/etc/scenari/add.owner_notify:1
+msgid "add performed by owner does not need authentication (notification)"
+msgstr ""
+"thao tác thêm được chủ hộp thư chung làm thì không yêu cầu xác thực (thông "
+"báo)"
+
+#: ../src/etc/scenari/automatic_list_creation.listmaster:1
+#: ../src/etc/scenari/create_list.listmaster:1
+msgid "restricted to listmaster"
+msgstr "bị hạn chế thành chủ hộp thư chung"
+
+#: ../src/etc/scenari/automatic_list_creation.public:1
+msgid "anybody. Be sure you know what you are doing"
+msgstr "mọi người (hãy cẩn thận)"
+
+#: ../src/etc/scenari/create_list.intranet:1
+msgid "anyone from local domain "
+msgstr "mọi người từ miền cục bộ"
+
+#: ../src/etc/scenari/create_list.public_listmaster:1
+msgid "anybody by validation by listmaster required"
+msgstr "mọi người được chủ hộp thẩm tra (bắt buộc)"
+
+#: ../src/etc/scenari/d_edit.editor:1
+msgid "moderated for subscribers"
+msgstr "điều tiết cho người đăng ký"
+
+#: ../src/etc/scenari/d_edit.owner:1 ../src/etc/scenari/d_read.owner:1
+#: ../src/etc/scenari/remind.owner:1
+msgid "restricted to list owners"
+msgstr "bị hạn chế thành chủ hộp thư chung"
+
+#: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
+#: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
+#: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
+msgid "restricted to subscribers"
+msgstr "bị hạn chế thành người đăng ký"
+
+#: ../src/etc/scenari/d_edit.private-https:1
+#: ../src/etc/scenari/d_read.private-https:1
+msgid "restricted to subscribers authenticated with user cert"
+msgstr ""
+"bị hạn chế thành người đăng ký được xác thực bằng chứng nhận người dùng"
+
+#: ../src/etc/scenari/d_edit.public:1 ../src/etc/scenari/d_read.public:1
+msgid "public documents"
+msgstr "tài liệu công cộng"
+
+#: ../src/etc/scenari/del.auth:1
+msgid "deletion performed only by list owners, need authentication"
+msgstr "thao tác xoá chỉ được làm bởi chủ hộp thư chung, cần xác thực"
+
+#: ../src/etc/scenari/del.closed:1
+msgid "remove subscriber impossible"
+msgstr "không thể gỡ bỏ người đăng ký"
+
+#: ../src/etc/scenari/del.owner:1
+msgid "by owner without authentication"
+msgstr "bởi chủ hộp thư chung, không cần xác thực"
+
+#: ../src/etc/scenari/del.owner_notify:1
+msgid "list owners, authentication not needed (notification)"
+msgstr "chủ hộp thư chung, không cần xác thực (thông báo)"
+
+#: ../src/etc/scenari/global_remind.listmaster:1
+msgid "just for listmaster"
+msgstr "chỉ cho chủ hộp thư chung"
+
+#: ../src/etc/scenari/info.open:1
+msgid "for anyone"
+msgstr "cho mọi người"
+
+#: ../src/etc/scenari/invite.owner:1
+msgid "invite perform by list owner do not need authentication"
+msgstr "thao tác mời được chủ hộp thư chung làm thì không cần xác thực"
+
+#: ../src/etc/scenari/remind.listmaster:1
+#: ../src/etc/scenari/review.listmaster:1
+msgid "listmaster only"
+msgstr "chỉ chủ hộp thư chung"
+
+#: ../src/etc/scenari/review.closed:1
+msgid "no one can review"
+msgstr "không có ai có khả năng xem lại"
+
+#: ../src/etc/scenari/review.intranet:1
+msgid "restricted to subscribers or local domain users"
+msgstr "bị hạn chế thành người đăng ký hay người dùng miền cục bộ"
+
+#: ../src/etc/scenari/review.owner:1
+msgid "only owner (and listmaster)"
+msgstr "chỉ chủ hộp thư chung"
+
+#: ../src/etc/scenari/review.public:1
+msgid "anyone can do it !"
+msgstr "mọi người có thể làm được !"
+
+#: ../src/etc/scenari/send.editorkey:1
+msgid "Moderated"
+msgstr "Điều tiết"
+
+#: ../src/etc/scenari/send.editorkeyonly:1
+msgid "Moderated, even for moderators"
+msgstr "Điều tiết, ngay cả đối với điều tiết viên"
+
+#: ../src/etc/scenari/send.editorkeyonlyauth:1
+msgid "Moderated, with editor confirmation"
+msgstr "Điều tiết, và biên tập xác nhận"
+
+#: ../src/etc/scenari/send.intranet:1
+msgid "restricted to local domain"
+msgstr "bị hạn chế thành miền cục bộ"
+
+#: ../src/etc/scenari/send.intranetorprivate:1
+msgid "restricted to local domain and subscribers"
+msgstr "bị hạn chế thành miền cục bộ và người đăng ký"
+
+#: ../src/etc/scenari/send.newsletter:1
+msgid "Newsletter, restricted to moderators"
+msgstr "Bản tin, bị hạn chế thành điều tiết viên"
+
+#: ../src/etc/scenari/send.newsletterkeyonly:1
+msgid "Newsletter, restricted to moderators after confirmation"
+msgstr "Bản tin, bị hạn chế thành điều tiết viên một khi xác nhận"
+
+#: ../src/etc/scenari/send.privateandeditorkey:1
+msgid "Moderated, restricted to subscribers"
+msgstr "Điều tiết, bị hạn chế thành người đăng ký"
+
+#: ../src/etc/scenari/send.privateandnomultipartoreditorkey:1
+msgid "Moderated, for non subscribers sending multipart messages"
+msgstr "Điều tiết, đối với người chưa đăng ký mà gửi thư đa phần"
+
+#: ../src/etc/scenari/send.privatekey:1
+msgid "restricted to subscribers with previous md5 authentication"
+msgstr "bị hạn chế thành người đăng ký đã xác thực bằng MD5"
+
+#: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
+msgid "Moderated, for subscribers and moderators"
+msgstr "Điều tiết, đối với người đăng ký và điều tiết viên"
+
+#: ../src/etc/scenari/send.privateoreditorkey:1
+msgid "Private, moderated for non subscribers"
+msgstr "Riêng tư, điều tiết đối với người chưa đăng ký"
+
+#: ../src/etc/scenari/send.privateorpublickey:1
+msgid "Private, confirmation for non subscribers"
+msgstr "Riêng tư, xác nhận đối với người chưa đăng ký"
+
+#: ../src/etc/scenari/send.private_smime:1
+msgid "restricted to subscribers check smime signature"
+msgstr "bị hạn chế thành người đăng ký, kiểm tra chữ ký S/MIME"
+
+#: ../src/etc/scenari/send.public:1
+msgid "public list"
+msgstr "hộp thư chung công cộng"
+
+#: ../src/etc/scenari/send.publickey:1
+msgid "anyone with previous md5 authentication"
+msgstr "bật cứ ai nào đã xác thực bằng MD5"
+
+#: ../src/etc/scenari/send.publicnoattachment:1
+msgid "public list multipart/mixed messages are forwarded to moderator"
+msgstr ""
+"hộp thư chung công cộng, các thư đa phần/hỗn hợp bị chuyển tiếp tới điều "
+"tiết viên"
+
+#: ../src/etc/scenari/send.public_nobcc:1
+msgid "public list, Bcc rejected (anti-spam)"
+msgstr "hộp thư chung công cộng, từ chối BCC (chống thư rác)"
+
+#: ../src/etc/scenari/send.publicnomultipart:1
+msgid "public list multipart messages are rejected"
+msgstr "hộp thư chung công cộng, các thư đa phần bị từ chối"
+
+#: ../src/etc/scenari/subscribe.auth:1
+msgid "subscription request confirmed"
+msgstr "yêu cầu đăng ký đã được xác nhận"
+
+#: ../src/etc/scenari/subscribe.auth_notify:1
+msgid "need authentication (notification is sent to owners)"
+msgstr "cần xác thực (thông báo được gửi cho chủ)"
+
+#: ../src/etc/scenari/subscribe.auth_owner:1
+msgid "requires authentication then owner approval"
+msgstr "yêu cầu xác thực và sau đó chủ tán thành"
+
+#: ../src/etc/scenari/subscribe.closed:1
+msgid "subscribe is impossible"
+msgstr "không thể đăng ký"
+
+#: ../src/etc/scenari/subscribe.intranetorowner:1
+msgid "local domain users or owner approval"
+msgstr "các người dùng miền cục bộ hay chủ tán thành"
+
+#: ../src/etc/scenari/subscribe.open:1
+msgid "for anyone without authentication"
+msgstr "đối với ai đó không xác thực được"
+
+#: ../src/etc/scenari/subscribe.open_notify:1
+msgid "anyone, notification is sent to list owner"
+msgstr "ai đó thì thông báo được gửi cho chủ hộp thư chung"
+
+#: ../src/etc/scenari/subscribe.open_quiet:1
+msgid "anyone, no welcome message"
+msgstr "ai đó, không có thông điệp chào mừng"
+
+#: ../src/etc/scenari/subscribe.owner:1 ../src/etc/scenari/unsubscribe.owner:1
+msgid "owners approval"
+msgstr "chủ tán thành"
+
+#: ../src/etc/scenari/subscribe.smime:1
+msgid "requires S/MIME signed"
+msgstr "yêu cầu chữ ký S/MIME"
+
+#: ../src/etc/scenari/subscribe.smimeorowner:1
+msgid "requires S/MIME signed or owner approval"
+msgstr "yêu cầu chữ ký S/MIME hay chủ tán thành"
+
+#: ../src/etc/scenari/topics_visibility.conceal:1
+msgid "conceal unless for listmaster"
+msgstr "ẩn nếu không phải chủ hộp thư chung"
+
+#: ../src/etc/scenari/topics_visibility.identified:1
+msgid "conceal unless user is logged in"
+msgstr "ẩn nếu người dùng chưa đăng nhập"
+
+#: ../src/etc/scenari/topics_visibility.noconceal:1
+#: ../src/etc/scenari/visibility.noconceal:1
+msgid "no conceal"
+msgstr "không ẩn"
+
+#: ../src/etc/scenari/unsubscribe.auth:1
+msgid "need authentication"
+msgstr "cần xác thực"
+
+#: ../src/etc/scenari/unsubscribe.auth_notify:1
+msgid "authentication requested, notification sent to owner"
+msgstr "yêu cầu xác thực, thông báo được gửi cho chủ hộp thư chung"
+
+#: ../src/etc/scenari/unsubscribe.closed:1
+msgid "impossible"
+msgstr "không thể làm được"
+
+#: ../src/etc/scenari/unsubscribe.open:1
+msgid "open"
+msgstr "mở"
+
+#: ../src/etc/scenari/unsubscribe.open_notify:1
+msgid "open with mail confirmation, owner is notified"
+msgstr "mở do thư xác nhận, cũng thông báo cho chủ hộp thư chung"
+
+#: ../src/etc/scenari/visibility.conceal:1
+msgid "conceal except for subscribers"
+msgstr "ẩn nếu không phải người đăng ký"
+
+#: ../src/etc/scenari/visibility.intranet:1
+msgid "intranet access"
+msgstr "truy cập mạng nội bộ"
+
+#: ../src/etc/scenari/visibility.secret:1
+msgid "conceal even for subscribers"
+msgstr "ẩn ngay cả chống người đăng ký"
+
 #. (year.value.item(month))
 #: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
 msgid "%1 message(s)"
@@ -9077,370 +8109,6 @@ msgid ""
 msgstr ""
 "Tháng Một:Tháng Hai:Tháng Ba:Tháng Tư:Tháng Năm:Tháng Sáu:Tháng Bảy:Tháng "
 "Tám:Tháng Chín:Tháng Mười:Tháng Mười Một:Tháng Mười Hai"
-
-#: ../src/etc/scenari/access_web_archive.closed:1
-#: ../src/etc/scenari/invite.closed:1 ../src/etc/scenari/send.closed:1
-msgid "closed"
-msgstr "bị đóng"
-
-#: ../src/etc/scenari/access_web_archive.intranet:1
-#: ../src/etc/scenari/subscribe.intranet:1
-msgid "restricted to local domain users"
-msgstr "bị hạn chế thành những người dùng miền cục bộ"
-
-#: ../src/etc/scenari/access_web_archive.listmaster:1
-msgid "listmaster"
-msgstr "chủ hộp thư chung"
-
-#: ../src/etc/scenari/access_web_archive.owner:1
-msgid "by owner"
-msgstr "bởi chủ"
-
-#: ../src/etc/scenari/access_web_archive.private:1
-msgid "subscribers only"
-msgstr "chỉ cho người đăng ký"
-
-#: ../src/etc/scenari/access_web_archive.public:1
-#: ../src/etc/scenari/invite.public:1
-msgid "public"
-msgstr "công cộng"
-
-#: ../src/etc/scenari/add.auth:1
-msgid "restricted to owner with authentication"
-msgstr "bị hạn chế thành chủ có xác thực"
-
-#: ../src/etc/scenari/add.authdkim:1
-#, fuzzy
-msgid "restricted to owner without authentication if DKIM signature is OK."
-msgstr "bị hạn chế thành chủ có xác thực"
-
-#: ../src/etc/scenari/add.closed:1
-msgid "add impossible"
-msgstr "không thể thêm được"
-
-#: ../src/etc/scenari/add.owner:1
-msgid "add performed by list owner does not need authentication"
-msgstr "thao tác thêm được chủ hộp thư chung làm thì không yêu cầu xác thực"
-
-#: ../src/etc/scenari/add.ownerdkim:1
-#, fuzzy
-msgid ""
-"add performed by list owner does not need authentication if DKIM signature OK"
-msgstr "thao tác thêm được chủ hộp thư chung làm thì không yêu cầu xác thực"
-
-#: ../src/etc/scenari/add.owner_notify:1
-msgid "add performed by owner does not need authentication (notification)"
-msgstr ""
-"thao tác thêm được chủ hộp thư chung làm thì không yêu cầu xác thực (thông "
-"báo)"
-
-#: ../src/etc/scenari/automatic_list_creation.listmaster:1
-#: ../src/etc/scenari/create_list.listmaster:1
-msgid "restricted to listmaster"
-msgstr "bị hạn chế thành chủ hộp thư chung"
-
-#: ../src/etc/scenari/automatic_list_creation.public:1
-msgid "anybody. Be sure you know what you are doing"
-msgstr "mọi người (hãy cẩn thận)"
-
-#: ../src/etc/scenari/create_list.intranet:1
-msgid "anyone from local domain "
-msgstr "mọi người từ miền cục bộ"
-
-#: ../src/etc/scenari/create_list.public_listmaster:1
-msgid "anybody by validation by listmaster required"
-msgstr "mọi người được chủ hộp thẩm tra (bắt buộc)"
-
-#: ../src/etc/scenari/d_edit.editor:1
-msgid "moderated for subscribers"
-msgstr "điều tiết cho người đăng ký"
-
-#: ../src/etc/scenari/d_edit.owner:1 ../src/etc/scenari/d_read.owner:1
-#: ../src/etc/scenari/remind.owner:1
-msgid "restricted to list owners"
-msgstr "bị hạn chế thành chủ hộp thư chung"
-
-#: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
-#: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
-#: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
-msgid "restricted to subscribers"
-msgstr "bị hạn chế thành người đăng ký"
-
-#: ../src/etc/scenari/d_edit.private-https:1
-#: ../src/etc/scenari/d_read.private-https:1
-msgid "restricted to subscribers authenticated with user cert"
-msgstr ""
-"bị hạn chế thành người đăng ký được xác thực bằng chứng nhận người dùng"
-
-#: ../src/etc/scenari/d_edit.public:1 ../src/etc/scenari/d_read.public:1
-msgid "public documents"
-msgstr "tài liệu công cộng"
-
-#: ../src/etc/scenari/del.auth:1
-msgid "deletion performed only by list owners, need authentication"
-msgstr "thao tác xoá chỉ được làm bởi chủ hộp thư chung, cần xác thực"
-
-#: ../src/etc/scenari/del.authdkim:1
-#, fuzzy
-msgid ""
-"deletion performed only by list owners, need authentication unless DKIM "
-"signature is OK"
-msgstr "thao tác xoá chỉ được làm bởi chủ hộp thư chung, cần xác thực"
-
-#: ../src/etc/scenari/del.closed:1
-msgid "remove subscriber impossible"
-msgstr "không thể gỡ bỏ người đăng ký"
-
-#: ../src/etc/scenari/del.owner:1
-msgid "by owner without authentication"
-msgstr "bởi chủ hộp thư chung, không cần xác thực"
-
-#: ../src/etc/scenari/del.owner_notify:1
-msgid "list owners, authentication not needed (notification)"
-msgstr "chủ hộp thư chung, không cần xác thực (thông báo)"
-
-#: ../src/etc/scenari/global_remind.listmaster:1
-msgid "just for listmaster"
-msgstr "chỉ cho chủ hộp thư chung"
-
-#: ../src/etc/scenari/info.open:1
-msgid "for anyone"
-msgstr "cho mọi người"
-
-#: ../src/etc/scenari/invite.owner:1
-msgid "invite perform by list owner do not need authentication"
-msgstr "thao tác mời được chủ hộp thư chung làm thì không cần xác thực"
-
-#: ../src/etc/scenari/remind.listmaster:1
-#: ../src/etc/scenari/review.listmaster:1
-msgid "listmaster only"
-msgstr "chỉ chủ hộp thư chung"
-
-#: ../src/etc/scenari/remind.listmasterdkim:1
-msgid ""
-"listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr ""
-
-#: ../src/etc/scenari/remind.ownerdkim:1
-#, fuzzy
-msgid ""
-"restricted to list owners (authentication is not required if a DKIM "
-"signature is OK)"
-msgstr "chủ hộp thư chung, không cần xác thực (thông báo)"
-
-#: ../src/etc/scenari/review.closed:1
-msgid "no one can review"
-msgstr "không có ai có khả năng xem lại"
-
-#: ../src/etc/scenari/review.intranet:1
-msgid "restricted to subscribers or local domain users"
-msgstr "bị hạn chế thành người đăng ký hay người dùng miền cục bộ"
-
-#: ../src/etc/scenari/review.owner:1
-msgid "only owner (and listmaster)"
-msgstr "chỉ chủ hộp thư chung"
-
-#: ../src/etc/scenari/review.public:1
-msgid "anyone can do it !"
-msgstr "mọi người có thể làm được !"
-
-#: ../src/etc/scenari/send.editordkim:1
-msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
-msgstr ""
-
-#: ../src/etc/scenari/send.editorkey:1
-msgid "Moderated"
-msgstr "Điều tiết"
-
-#: ../src/etc/scenari/send.editorkeyonly:1
-msgid "Moderated, even for moderators"
-msgstr "Điều tiết, ngay cả đối với điều tiết viên"
-
-#: ../src/etc/scenari/send.editorkeyonlyauth:1
-#, fuzzy
-msgid "Moderated, need  authentication  from editor"
-msgstr "cần xác thực"
-
-#: ../src/etc/scenari/send.intranet:1
-msgid "restricted to local domain"
-msgstr "bị hạn chế thành miền cục bộ"
-
-#: ../src/etc/scenari/send.intranetorprivate:1
-msgid "restricted to local domain and subscribers"
-msgstr "bị hạn chế thành miền cục bộ và người đăng ký"
-
-#: ../src/etc/scenari/send.newsletter:1
-msgid "Newsletter, restricted to moderators"
-msgstr "Bản tin, bị hạn chế thành điều tiết viên"
-
-#: ../src/etc/scenari/send.newsletterkeyonly:1
-msgid "Newsletter, restricted to moderators after confirmation"
-msgstr "Bản tin, bị hạn chế thành điều tiết viên một khi xác nhận"
-
-#: ../src/etc/scenari/send.privateandeditorkey:1
-msgid "Moderated, restricted to subscribers"
-msgstr "Điều tiết, bị hạn chế thành người đăng ký"
-
-#: ../src/etc/scenari/send.privateandnomultipartoreditorkey:1
-msgid "Moderated, for non subscribers sending multipart messages"
-msgstr "Điều tiết, đối với người chưa đăng ký mà gửi thư đa phần"
-
-#: ../src/etc/scenari/send.privatekey:1
-msgid "restricted to subscribers with previous md5 authentication"
-msgstr "bị hạn chế thành người đăng ký đã xác thực bằng MD5"
-
-#: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
-#, fuzzy
-msgid "Moderated, for subscribers and even moderators themself"
-msgstr "Điều tiết, đối với người đăng ký và điều tiết viên"
-
-#: ../src/etc/scenari/send.privateoreditorkey:1
-msgid "Private, moderated for non subscribers"
-msgstr "Riêng tư, điều tiết đối với người chưa đăng ký"
-
-#: ../src/etc/scenari/send.privateorpublickey:1
-msgid "Private, confirmation for non subscribers"
-msgstr "Riêng tư, xác nhận đối với người chưa đăng ký"
-
-#: ../src/etc/scenari/send.private_smime:1
-#, fuzzy
-msgid "restricted to subscribers and checked smime signature"
-msgstr "bị hạn chế thành người đăng ký, kiểm tra chữ ký S/MIME"
-
-#: ../src/etc/scenari/send.public:1
-msgid "public list"
-msgstr "hộp thư chung công cộng"
-
-#: ../src/etc/scenari/send.publickey:1
-msgid "anyone no authentication if DKIM signature is OK"
-msgstr ""
-
-#: ../src/etc/scenari/send.publicnoattachment:1
-msgid "public list multipart/mixed messages are forwarded to moderator"
-msgstr ""
-"hộp thư chung công cộng, các thư đa phần/hỗn hợp bị chuyển tiếp tới điều "
-"tiết viên"
-
-#: ../src/etc/scenari/send.public_nobcc:1
-msgid "public list, Bcc rejected (anti-spam)"
-msgstr "hộp thư chung công cộng, từ chối BCC (chống thư rác)"
-
-#: ../src/etc/scenari/send.publicnomultipart:1
-msgid "public list multipart messages are rejected"
-msgstr "hộp thư chung công cộng, các thư đa phần bị từ chối"
-
-#: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
-msgid "subscription request confirmed"
-msgstr "yêu cầu đăng ký đã được xác nhận"
-
-#: ../src/etc/scenari/subscribe.auth_notify:1
-msgid "need authentication (notification is sent to owners)"
-msgstr "cần xác thực (thông báo được gửi cho chủ)"
-
-#: ../src/etc/scenari/subscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"need authentication unless DKIM signature is OK. (notification is sent to "
-"owners)"
-msgstr "cần xác thực (thông báo được gửi cho chủ)"
-
-#: ../src/etc/scenari/subscribe.auth_owner:1
-msgid "requires authentication then owner approval"
-msgstr "yêu cầu xác thực và sau đó chủ tán thành"
-
-#: ../src/etc/scenari/subscribe.auth_ownerdkim:1
-#, fuzzy
-msgid ""
-"requires authentication unless DKIM signature is OK, then owner approval"
-msgstr "yêu cầu xác thực và sau đó chủ tán thành"
-
-#: ../src/etc/scenari/subscribe.closed:1
-msgid "subscribe is impossible"
-msgstr "không thể đăng ký"
-
-#: ../src/etc/scenari/subscribe.intranetorowner:1
-msgid "local domain users or owner approval"
-msgstr "các người dùng miền cục bộ hay chủ tán thành"
-
-#: ../src/etc/scenari/subscribe.open:1
-msgid "for anyone without authentication"
-msgstr "đối với ai đó không xác thực được"
-
-#: ../src/etc/scenari/subscribe.open_notify:1
-msgid "anyone, notification is sent to list owner"
-msgstr "ai đó thì thông báo được gửi cho chủ hộp thư chung"
-
-#: ../src/etc/scenari/subscribe.open_quiet:1
-msgid "anyone, no welcome message"
-msgstr "ai đó, không có thông điệp chào mừng"
-
-#: ../src/etc/scenari/subscribe.owner:1 ../src/etc/scenari/unsubscribe.owner:1
-msgid "owners approval"
-msgstr "chủ tán thành"
-
-#: ../src/etc/scenari/subscribe.smime:1
-msgid "requires S/MIME signed"
-msgstr "yêu cầu chữ ký S/MIME"
-
-#: ../src/etc/scenari/subscribe.smimeorowner:1
-msgid "requires S/MIME signed or owner approval"
-msgstr "yêu cầu chữ ký S/MIME hay chủ tán thành"
-
-#: ../src/etc/scenari/topics_visibility.conceal:1
-msgid "conceal unless for listmaster"
-msgstr "ẩn nếu không phải chủ hộp thư chung"
-
-#: ../src/etc/scenari/topics_visibility.identified:1
-msgid "conceal unless user is logged in"
-msgstr "ẩn nếu người dùng chưa đăng nhập"
-
-#: ../src/etc/scenari/topics_visibility.noconceal:1
-#: ../src/etc/scenari/visibility.noconceal:1
-msgid "no conceal"
-msgstr "không ẩn"
-
-#: ../src/etc/scenari/unsubscribe.auth:1
-msgid "need authentication"
-msgstr "cần xác thực"
-
-#: ../src/etc/scenari/unsubscribe.authdkim:1
-msgid "need authentication unless DKIM signature is OK"
-msgstr ""
-
-#: ../src/etc/scenari/unsubscribe.auth_notify:1
-msgid "authentication requested, notification sent to owner"
-msgstr "yêu cầu xác thực, thông báo được gửi cho chủ hộp thư chung"
-
-#: ../src/etc/scenari/unsubscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"authentication requested unless DKIM signature is OK, notification sent to "
-"owner"
-msgstr "yêu cầu xác thực, thông báo được gửi cho chủ hộp thư chung"
-
-#: ../src/etc/scenari/unsubscribe.closed:1
-msgid "impossible"
-msgstr "không thể làm được"
-
-#: ../src/etc/scenari/unsubscribe.open:1
-msgid "open"
-msgstr "mở"
-
-#: ../src/etc/scenari/unsubscribe.open_notify:1
-msgid "open with mail confirmation, owner is notified"
-msgstr "mở do thư xác nhận, cũng thông báo cho chủ hộp thư chung"
-
-#: ../src/etc/scenari/visibility.conceal:1
-msgid "conceal except for subscribers"
-msgstr "ẩn nếu không phải người đăng ký"
-
-#: ../src/etc/scenari/visibility.intranet:1
-msgid "intranet access"
-msgstr "truy cập mạng nội bộ"
-
-#: ../src/etc/scenari/visibility.secret:1
-msgid "conceal even for subscribers"
-msgstr "ẩn ngay cả chống người đăng ký"
 
 #: ../src/etc/global_task_models/chk_cert_expiration.daily.task:1
 #, fuzzy
@@ -9586,6 +8254,983 @@ msgid ""
 msgstr ""
 "Có thể đọc thư hoặc bằng thư điện tử (đăng ký) hoặc trên Web (kho thư Web)"
 
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/Commands.pm:958 ../wwsympa/wwsympa.fcgi.in:9618
+msgid "%A"
+msgstr "%A"
+
+#: ../src/lib/Conf.pm:136
+#, fuzzy
+msgid "Error at line %d: %s\n"
+msgstr "Lỗi trên dòng %d : %s"
+
+#: ../src/lib/Conf.pm:418
+#, fuzzy
+msgid "Error at line %d: %s"
+msgstr "Lỗi trên dòng %d : %s"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
+#: ../src/lib/List.pm:1802 ../wwsympa/Auth.pm:464
+#: ../wwsympa/wwsympa.fcgi.in:1041 ../wwsympa/wwsympa.fcgi.in:2847
+msgid "%d %b %Y at %H:%M:%S"
+msgstr "%d %b %Y lúc %H:%M:%S"
+
+#: ../src/lib/List.pm:322
+msgid "Account"
+msgstr "Tài khoản"
+
+#: ../src/lib/List.pm:326
+msgid "Who can add subscribers"
+msgstr "Ai có quyền thêm người đăng ký"
+
+#: ../src/lib/List.pm:330
+msgid "Anonymous sender"
+msgstr "Người gửi nặc danh"
+
+#: ../src/lib/List.pm:335
+msgid "frequency"
+msgstr "tần số"
+
+#: ../src/lib/List.pm:1351 ../src/lib/List.pm:340
+msgid "access right"
+msgstr "quyền truy cập"
+
+#: ../src/lib/List.pm:344
+msgid "Text archives"
+msgstr "Kho thư nhập thô"
+
+#: ../src/lib/List.pm:349
+msgid "Archive encrypted mails as cleartext"
+msgstr "Lưu trữ các thư đã mật mã dưới dạng nhập thô"
+
+#: ../src/lib/List.pm:1106 ../src/lib/List.pm:1146 ../src/lib/List.pm:356
+#: ../src/lib/List.pm:532 ../src/lib/List.pm:602 ../src/lib/List.pm:637
+msgid "reception mode"
+msgstr "chế độ nhận"
+
+#: ../src/lib/List.pm:359
+msgid "Available subscription options"
+msgstr "Tuỳ chọn đăng ký sẵn sàng"
+
+#: ../src/lib/List.pm:367
+msgid "warn rate"
+msgstr "tỷ lệ cảnh báo"
+
+#: ../src/lib/List.pm:374
+msgid "halt rate"
+msgstr "tỷ lệ tạm dừng lại"
+
+#: ../src/lib/List.pm:378
+msgid "Bounces management"
+msgstr "Quản lý thư nảy về"
+
+#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
+msgid "threshold"
+msgstr "ngưỡng"
+
+#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
+msgid "action for this population"
+msgstr "hành vi đối với tập hợp này"
+
+#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
+msgid "notification"
+msgstr "thông báo"
+
+#: ../src/lib/List.pm:399
+msgid "Management of bouncers, 1st level"
+msgstr "Quản lý thư nảy về, cấp 1"
+
+#: ../src/lib/List.pm:420
+msgid "Management of bouncers, 2nd level"
+msgstr "Quản lý thư nảy về, cấp 2"
+
+#: ../src/lib/List.pm:427
+msgid "Expiration of unmoderated messages"
+msgstr "Làm hết hạn các thư chưa điều tiết"
+
+#: ../src/lib/List.pm:433
+msgid "Secret string for generating unique keys"
+msgstr "Chuỗi bí mật để tạo khoá duy nhất"
+
+#: ../src/lib/List.pm:451
+msgid "Creation of the list"
+msgstr "Tạo hộp thư chung"
+
+#: ../src/lib/List.pm:462
+msgid "internal identifier"
+msgstr "nhận diện nội bộ"
+
+#: ../src/lib/List.pm:470
+msgid "label"
+msgstr "nhãn"
+
+#: ../src/lib/List.pm:476
+msgid "additional comment"
+msgstr "ghi chú thêm"
+
+#: ../src/lib/List.pm:483
+msgid "type"
+msgstr "loại"
+
+#: ../src/lib/List.pm:489
+msgid "possible attribute values (if enum is used)"
+msgstr "các giá trị thuộc tính có thể đặt (nếu dùng enum)"
+
+#: ../src/lib/List.pm:494
+#, fuzzy
+msgid "is the attribute optional?"
+msgstr "thuộc tính đó vẫn tuỳ chọn ?"
+
+#: ../src/lib/List.pm:500
+msgid "Custom user attributes"
+msgstr "Thuộc tính người dùng riêng"
+
+#: ../src/lib/List.pm:506
+msgid "Custom header field"
+msgstr "Trường phần đầu riêng"
+
+#: ../src/lib/List.pm:511
+msgid "Subject tagging"
+msgstr "Đặt thẻ chủ đề"
+
+#: ../src/lib/List.pm:525
+msgid "custom parameters"
+msgstr "tham số riêng"
+
+#: ../src/lib/List.pm:1111 ../src/lib/List.pm:1151 ../src/lib/List.pm:537
+#: ../src/lib/List.pm:607 ../src/lib/List.pm:642
+msgid "visibility"
+msgstr "khả kiến"
+
+#: ../src/lib/List.pm:541
+msgid "Subscription profile"
+msgstr "Hồ sơ đăng ký"
+
+#: ../src/lib/List.pm:545
+msgid "Who can delete subscribers"
+msgstr "Ai có quyền xoá người đăng ký"
+
+#: ../src/lib/List.pm:550
+msgid "Delivery time (hh:mm)"
+msgstr "Giờ phát thư (gi:ph)"
+
+#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
+msgid "days"
+msgstr "ngày"
+
+#: ../src/lib/List.pm:564
+msgid "hour"
+msgstr "giờ"
+
+#: ../src/lib/List.pm:570
+msgid "minute"
+msgstr "phút"
+
+#: ../src/lib/List.pm:574
+msgid "Digest frequency"
+msgstr "Tần số gửi bó thư"
+
+#: ../src/lib/List.pm:582
+msgid "Digest maximum number of messages"
+msgstr "Số tối đa các thư trong bó thư"
+
+#: ../src/lib/List.pm:590
+msgid "Inclusions timeout for message distribution"
+msgstr "Thời hạn bao gồm thư cần phát"
+
+#: ../src/lib/List.pm:1101 ../src/lib/List.pm:597
+msgid "email address"
+msgstr "địa chỉ thư"
+
+#: ../src/lib/List.pm:1116 ../src/lib/List.pm:612
+msgid "name"
+msgstr "tên"
+
+#: ../src/lib/List.pm:1121 ../src/lib/List.pm:617
+msgid "private information"
+msgstr "thông tin riêng tư"
+
+#: ../src/lib/List.pm:652
+msgid "Periodical subscription expiration task"
+msgstr "Công việc định kỳ làm hết hạn sự đăng ký"
+
+#: ../src/lib/List.pm:663
+msgid "Attachment type"
+msgstr "Kiểu đồ định kèm"
+
+#: ../src/lib/List.pm:667
+msgid "Forced reply address"
+msgstr "Địa chỉ hồi âm bị buộc"
+
+#: ../src/lib/List.pm:673
+msgid "Internet domain"
+msgstr "Miền Internet"
+
+#: ../src/lib/List.pm:679
+msgid "File inclusion"
+msgstr "Bao gồm tập tin"
+
+#: ../src/lib/List.pm:683
+msgid "data location URL"
+msgstr "địa chỉ URL của dữ liệu"
+
+#: ../src/lib/List.pm:689 ../src/lib/List.pm:722 ../src/lib/List.pm:803
+#: ../src/lib/List.pm:981
+msgid "remote user"
+msgstr "người dùng từ xa"
+
+#: ../src/lib/List.pm:696 ../src/lib/List.pm:728 ../src/lib/List.pm:809
+#: ../src/lib/List.pm:986
+msgid "remote password"
+msgstr "mật khẩu từ xa"
+
+#: ../src/lib/List.pm:1000 ../src/lib/List.pm:701 ../src/lib/List.pm:764
+#: ../src/lib/List.pm:888 ../src/lib/List.pm:942
+msgid "short name for this source"
+msgstr "tên ngắn cho nguồn này"
+
+#: ../src/lib/List.pm:706
+msgid "Remote file inclusion"
+msgstr "Bao gồm tập tin từ xa"
+
+#: ../src/lib/List.pm:712 ../src/lib/List.pm:793 ../src/lib/List.pm:920
+#: ../src/lib/List.pm:959
+msgid "remote host"
+msgstr "máy từ xa"
+
+#: ../src/lib/List.pm:717 ../src/lib/List.pm:798 ../src/lib/List.pm:926
+msgid "remote port"
+msgstr "cổng từ xa"
+
+#: ../src/lib/List.pm:732
+msgid "suffix"
+msgstr "hậu tố"
+
+#: ../src/lib/List.pm:738
+msgid "filter"
+msgstr "lọc"
+
+#: ../src/lib/List.pm:744
+msgid "extracted attribute"
+msgstr "thuộc tính đã trích ra"
+
+#: ../src/lib/List.pm:749
+msgid "selection (if multiple)"
+msgstr "vùng chọn (nếu có nhiều)"
+
+#: ../src/lib/List.pm:754
+msgid "search scope"
+msgstr "phạm vi tìm kiếm"
+
+#: ../src/lib/List.pm:760
+msgid "connection timeout"
+msgstr "thời hạn kết nối"
+
+#: ../src/lib/List.pm:788
+msgid "LDAP query inclusion"
+msgstr "Bao gồm truy vấn LDAP"
+
+#: ../src/lib/List.pm:813
+msgid "first-level suffix"
+msgstr "hậu tố cấp đầu"
+
+#: ../src/lib/List.pm:819
+msgid "first-level filter"
+msgstr "lọc cấp đầu"
+
+#: ../src/lib/List.pm:824
+msgid "first-level extracted attribute"
+msgstr "thuộc tính cấp đầu đã trích ra"
+
+#: ../src/lib/List.pm:829
+msgid "first-level selection"
+msgstr "vùng chọn cấp đầu"
+
+#: ../src/lib/List.pm:834
+msgid "first-level search scope"
+msgstr "phạm vi tìm kiếm cấp đầu"
+
+#: ../src/lib/List.pm:840
+msgid "first-level connection timeout"
+msgstr "thời hạn kết nối cấp đầu"
+
+#: ../src/lib/List.pm:846
+msgid "first-level regular expression"
+msgstr "biểu thức chính quy cấp đầu"
+
+#: ../src/lib/List.pm:850
+msgid "second-level suffix template"
+msgstr "mẫu hậu tố cấp phụ"
+
+#: ../src/lib/List.pm:856
+msgid "second-level filter template"
+msgstr "mẫu lọc cấp phụ"
+
+#: ../src/lib/List.pm:862
+msgid "second-level extracted attribute"
+msgstr "thuộc tính cấp phụ đã trích ra"
+
+#: ../src/lib/List.pm:867
+msgid "second-level selection"
+msgstr "vùng chọn cấp phụ"
+
+#: ../src/lib/List.pm:872
+msgid "second-level search scope"
+msgstr "phạm vi tìm kiếm cấp phụ"
+
+#: ../src/lib/List.pm:878
+msgid "second-level connection timeout"
+msgstr "thời hạn kết nối cấp phụ"
+
+#: ../src/lib/List.pm:884
+msgid "second-level regular expression"
+msgstr "biểu thức chính quy cấp phụ"
+
+#: ../src/lib/List.pm:910
+msgid "LDAP 2-level query inclusion"
+msgstr "bao gồm truy vấn LDAP cấp phụ"
+
+#: ../src/lib/List.pm:915
+msgid "List inclusion"
+msgstr "Bao gồm hộp thư chung"
+
+#: ../src/lib/List.pm:932
+msgid "remote path of sympa list dump"
+msgstr "đường dẫn từ xa theo đó đổ hộp thư chung sympa"
+
+#: ../src/lib/List.pm:937
+msgid "certificate for authentication by remote Sympa"
+msgstr "chứng nhận cho Sympa xác thực từ xa"
+
+#: ../src/lib/List.pm:949
+msgid "remote list inclusion"
+msgstr "bao gồm hộp thư chung từ xa"
+
+#: ../src/lib/List.pm:954
+msgid "database type"
+msgstr "kiểu cơ sở dữ liệu"
+
+#: ../src/lib/List.pm:963
+msgid "database port"
+msgstr "cổng cơ sở dữ liệu"
+
+#: ../src/lib/List.pm:968
+msgid "database name"
+msgstr "tên cơ sở dữ liệu"
+
+#: ../src/lib/List.pm:972
+msgid "connection options"
+msgstr "tuỳ chọn kết nối"
+
+#: ../src/lib/List.pm:977
+#, fuzzy
+msgid "environment variables for database connection"
+msgstr "các biến môi trường cho kết nối cơ sở dữ liệu"
+
+#: ../src/lib/List.pm:992
+msgid "SQL query"
+msgstr "Truy vấn SQL"
+
+#: ../src/lib/List.pm:996
+msgid "Directory where the database is stored (used for DBD::CSV only)"
+msgstr "Thư mục chứa cơ sở dữ liệu (chỉ dùng cho DBD::CSV)"
+
+#: ../src/lib/List.pm:1007
+msgid "SQL query inclusion"
+msgstr "Bao gồm truy vấn SQL"
+
+#: ../src/lib/List.pm:1013
+msgid "Notify subscribers when they are included from a data source?"
+msgstr "Thông báo người đăng ký khi họ được bao gồm từ một nguồn dữ liệu ?"
+
+#: ../src/lib/List.pm:1017
+msgid "Who can view list information"
+msgstr "Ai có quyền xem thông tin về hộp thư chung"
+
+#: ../src/lib/List.pm:1021
+msgid "Who can invite people"
+msgstr "Ai có quyền mời người khác"
+
+#: ../src/lib/List.pm:1027
+msgid "Language of the list"
+msgstr "Ngôn ngữ của hộp thư chung"
+
+#: ../src/lib/List.pm:1052
+msgid "Regular expression applied to prevent loops with robots"
+msgstr "Biểu thức chính quy được áp dụng để ngăn cản vòng lặp với rô-bốt"
+
+#: ../src/lib/List.pm:1059
+msgid "Maximum message size"
+msgstr "Kích cỡ thư tối đa"
+
+#: ../src/lib/List.pm:1065
+msgid "Message topic name"
+msgstr "Tên chủ đề thư"
+
+#: ../src/lib/List.pm:1070
+msgid "Message topic keywords"
+msgstr "Từ khoá chủ đề thư"
+
+#: ../src/lib/List.pm:1076
+msgid "Message topic title"
+msgstr "Tựa đề chủ đề thư"
+
+#: ../src/lib/List.pm:1081
+msgid "Topics for message categorization"
+msgstr "Chủ đề để phân loại thư"
+
+#: ../src/lib/List.pm:1087
+msgid "Defines to which part of messages topic keywords are applied"
+msgstr "Xác định phần của thư cho đó cần áp dụng từ khoá"
+
+#: ../src/lib/List.pm:1094
+msgid "Message tagging"
+msgstr "Đặt thẻ thư"
+
+#: ../src/lib/List.pm:1126 ../src/lib/List.pm:1156
+msgid "profile"
+msgstr "hồ sơ"
+
+#: ../src/lib/List.pm:1131
+msgid "Owner"
+msgstr "Người sở hữu"
+
+#: ../src/lib/List.pm:1167
+msgid "Priority"
+msgstr "Ưu tiên"
+
+#: ../src/lib/List.pm:1171
+msgid "Who can start a remind process"
+msgstr "Ai có quyền khởi chạy một tiến trình nhắc nhở"
+
+#: ../src/lib/List.pm:1176
+msgid "Return-path of the REMIND command"
+msgstr "Đường dẫn trở về của lệnh REMIND (nhắc nhở)"
+
+#: ../src/lib/List.pm:1200 ../src/lib/List.pm:1220
+msgid "Reply address"
+msgstr "Địa chỉ hồi âm"
+
+#: ../src/lib/List.pm:1206
+msgid "value"
+msgstr "giá trị"
+
+#: ../src/lib/List.pm:1211
+msgid "other email address"
+msgstr "địa chỉ thư khác"
+
+#: ../src/lib/List.pm:1216
+msgid "respect of existing header field"
+msgstr "tương ứng với trường dòng đầu tồn tại"
+
+#: ../src/lib/List.pm:1225
+msgid "Who can review subscribers"
+msgstr "Ai có quyền xem lại người đăng ký"
+
+#: ../src/lib/List.pm:1232
+msgid "RFC 2369 Header fields"
+msgstr "Dòng đầu RFC 2369"
+
+#: ../src/lib/List.pm:1236
+msgid "Who can send messages"
+msgstr "Ai có quyền gửi thư"
+
+#: ../src/lib/List.pm:1243
+msgid "Serial number of the config"
+msgstr "Số thứ tự của cấu hình"
+
+#: ../src/lib/List.pm:1248
+msgid "Who can view"
+msgstr "Ai có quyền xem"
+
+#: ../src/lib/List.pm:1252
+msgid "Who can edit"
+msgstr "Ai có quyền sửa"
+
+#: ../src/lib/List.pm:1259 ../src/lib/List.pm:1358
+msgid "quota"
+msgstr "hạn ngạch"
+
+#: ../src/lib/List.pm:1268 ../src/lib/List.pm:1273
+msgid "email address protection method"
+msgstr "phương pháp bảo vế địa chỉ thư"
+
+#: ../src/lib/List.pm:1279
+msgid "Status of the list"
+msgstr "Trạng thái về hộp thư chung"
+
+#: ../src/lib/List.pm:1286
+msgid "Subject of the list"
+msgstr "Đề tài của hộp thư chung"
+
+#: ../src/lib/List.pm:1290
+msgid "Who can subscribe to the list"
+msgstr "Ai có quyền đăng ký với hộp thư chung"
+
+#: ../src/lib/List.pm:1296
+msgid "Topics for the list"
+msgstr "Các chủ đề cho hộp thư chung"
+
+#: ../src/lib/List.pm:1303
+msgid "Inclusions timeout"
+msgstr "Thời hạn bao gồm"
+
+#: ../src/lib/List.pm:1307
+msgid "Who can unsubscribe"
+msgstr "Ai có quyền hủy đăng ký"
+
+#: ../src/lib/List.pm:1328
+msgid "Last update of config"
+msgstr "Lần cuối cập nhật cấu hình"
+
+#: ../src/lib/List.pm:1335
+msgid "User data source"
+msgstr "Nguồn dữ liệu người dùng"
+
+#: ../src/lib/List.pm:1341
+#, fuzzy
+msgid "Allow picture display? (must be enabled for the current robot)"
+msgstr ""
+"Cho phép hiển thị hình ảnh không? (Phải được bật cho rô-bốt hiện thời.)"
+
+#: ../src/lib/List.pm:1347
+msgid "Visibility of the list"
+msgstr "Hiện/ẩn hộp thư chung"
+
+#: ../src/lib/List.pm:1363
+msgid "Maximum number of month archived"
+msgstr "Số tối đa các tháng đã lưu trữ"
+
+#: ../src/lib/List.pm:1368
+msgid "Web archives"
+msgstr "Kho thư Web"
+
+#: ../src/lib/List.pm:1374
+msgid "Welcome return-path"
+msgstr "Đường dẫn trở về Chào mừng"
+
+#: ../src/lib/List.pm:1379
+msgid "percentage of list members in VERP mode"
+msgstr "phần trăm các thành viên hộp thư chung trong chế độ VERP"
+
+#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
+msgid "%"
+msgstr "%%"
+
+#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
+msgid "points"
+msgstr "điểm"
+
+#: ../src/lib/List.pm:516
+msgid "var name"
+msgstr "tên biến"
+
+#: ../src/lib/List.pm:521
+msgid "var value"
+msgstr "giá trị biến"
+
+#: ../src/lib/List.pm:580
+msgid "messages"
+msgstr "thư"
+
+#: ../src/lib/List.pm:1301 ../src/lib/List.pm:588 ../src/lib/List.pm:759
+#: ../src/lib/List.pm:839 ../src/lib/List.pm:877
+msgid "seconds"
+msgstr "giây"
+
+#: ../src/lib/List.pm:627
+#, fuzzy
+msgid "the data source"
+msgstr "nguồn dữ liệu"
+
+#: ../src/lib/List.pm:632
+#, fuzzy
+msgid "data source parameters"
+msgstr "tham số nguồn dữ liệu"
+
+#: ../src/lib/List.pm:648
+#, fuzzy
+msgid "Moderators defined in an external data source"
+msgstr "Các điều tiết viên được xác định trong một nguồn dữ liệu bên ngoài"
+
+#: ../src/lib/List.pm:657
+msgid "Family name"
+msgstr "Họ"
+
+#: ../src/lib/List.pm:770 ../src/lib/List.pm:894
+msgid "use SSL (LDAPS)"
+msgstr "dùng SSL (LDAPS)"
+
+#: ../src/lib/List.pm:775 ../src/lib/List.pm:899
+msgid "SSL version"
+msgstr "Phiên bản SSL"
+
+#: ../src/lib/List.pm:780 ../src/lib/List.pm:904
+msgid "SSL ciphers used"
+msgstr "Mật mã SSL dùng"
+
+#: ../src/lib/List.pm:1032 ../src/lib/List.pm:1313
+msgid "epoch date"
+msgstr "ngày thời điểm"
+
+#: ../src/lib/List.pm:1036 ../src/lib/List.pm:1318
+msgid "date"
+msgstr "ngày"
+
+#: ../src/lib/List.pm:1041
+msgid "who ran the instantiation"
+msgstr "ai đã chạy hàm tạo lần"
+
+#: ../src/lib/List.pm:1045
+msgid "Latest family instantiation"
+msgstr "Lần cuối tạo nhóm"
+
+#: ../src/lib/List.pm:1057
+msgid "bytes"
+msgstr "byte"
+
+#: ../src/lib/List.pm:1136
+msgid "the datasource"
+msgstr "nguồn dữ liệu"
+
+#: ../src/lib/List.pm:1141
+msgid "datasource parameters"
+msgstr "tham số nguồn dữ liệu"
+
+#: ../src/lib/List.pm:1161
+#, fuzzy
+msgid "Owners defined in an external data source"
+msgstr "Chủ hộp được xác định trong một nguồn dữ liệu bên ngoài"
+
+#: ../src/lib/List.pm:1180
+msgid "Periodical subscription reminder task"
+msgstr "Công việc định kỳ nhắc nhở về sự đăng ký"
+
+#: ../src/lib/List.pm:1185
+#, fuzzy
+msgid "Incoming SMTP header fields to be removed"
+msgstr "Các dòng đầu SMTP gửi đến mà cần gỡ bỏ"
+
+#: ../src/lib/List.pm:1192
+#, fuzzy
+msgid "Outgoing SMTP header fields to be removed"
+msgstr "Các dòng đầu SMTP gửi đi mà cần gỡ bỏ"
+
+#: ../src/lib/List.pm:1258 ../src/lib/List.pm:1357
+msgid "Kbytes"
+msgstr "Kbyte"
+
+#: ../src/lib/List.pm:1324
+msgid "who updated the config"
+msgstr "ai đã cập nhật cấu hình"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2809
+msgid "%a, %d %b %Y %H:%M:%S"
+msgstr "%a, %d %b %Y %H:%M:%S"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2810
+msgid "%a, %d %b %Y"
+msgstr "%a, %d %b %Y"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/List.pm:2996 ../src/lib/List.pm:2997 ../src/lib/List.pm:3001
+#: ../wwsympa/wwsympa.fcgi.in:10985 ../wwsympa/wwsympa.fcgi.in:11054
+#: ../wwsympa/wwsympa.fcgi.in:11256 ../wwsympa/wwsympa.fcgi.in:11593
+#: ../wwsympa/wwsympa.fcgi.in:15501 ../wwsympa/wwsympa.fcgi.in:16231
+#: ../wwsympa/wwsympa.fcgi.in:16232 ../wwsympa/wwsympa.fcgi.in:4803
+#: ../wwsympa/wwsympa.fcgi.in:4804 ../wwsympa/wwsympa.fcgi.in:6227
+#: ../wwsympa/wwsympa.fcgi.in:7245 ../wwsympa/wwsympa.fcgi.in:7788
+#: ../wwsympa/wwsympa.fcgi.in:7828 ../wwsympa/wwsympa.fcgi.in:7830
+#: ../wwsympa/wwsympa.fcgi.in:8306 ../wwsympa/wwsympa.fcgi.in:8307
+#: ../wwsympa/wwsympa.fcgi.in:8341 ../wwsympa/wwsympa.fcgi.in:8342
+#: ../wwsympa/wwsympa.fcgi.in:8521 ../wwsympa/wwsympa.fcgi.in:8522
+msgid "%d %b %Y"
+msgstr "%d %b %Y"
+
+#: ../src/lib/mail.pm:53
+#, fuzzy
+msgid ""
+"Your system does not conform to the POSIX P1003.1 standard, or\n"
+"your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
+"library. You must modify the smtp.pm module in order to set a value\n"
+"for variable %s.\n"
+msgstr ""
+"Hệ thống này không tuân theo giao thức P1003.1 POSIX,\n"
+"hoặc cấu hình Perl trên máy này không xác định hằng « _SC_ARG_MAX » trong "
+"thư viện POSIX của nó.\n"
+"Người dùng cần phải sửa đổi mô-đun smtp.pm để đặt giá trị của biến « "
+"$max_arg ».\n"
+
+#: ../src/lib/mail.pm:755
+msgid "Unable to create a channel in smtpto: %m"
+msgstr "Không thể tạo một kênh trong smtpto: %m"
+
+#: ../src/lib/PlainDigest.pm:163
+msgid ""
+"----- Malformed message ignored -----\n"
+"\n"
+msgstr ""
+"----- Thư bị hỏng thì cũng bị bỏ qua -----\n"
+"\n"
+
+#: ../src/lib/PlainDigest.pm:194
+msgid ""
+"\n"
+"[Attached message follows]\n"
+"-----Original message-----\n"
+msgstr ""
+"\n"
+"[Thư đính kèm cũng theo đây]\n"
+"-----Thư gốc-----\n"
+
+#: ../src/lib/PlainDigest.pm:204
+msgid ""
+"-----End of original message from %s-----\n"
+"\n"
+msgstr ""
+"-----Kết thúc thư gốc từ %s-----\n"
+"\n"
+
+#: ../src/lib/PlainDigest.pm:243
+msgid ""
+"** Warning: Message part originally used character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Cảnh báo : phần thư này đầu tiên dùng bộ ký tự %s\n"
+"    Do đó một số ký tự có thể bị mất hay không đúng **\n"
+"\n"
+
+#: ../src/lib/PlainDigest.pm:255
+msgid ""
+"\n"
+"[An attachment of type %s was included here]\n"
+msgstr ""
+"\n"
+"[Ở đây thì bao gồm một đồ đính kèm dạng %s]\n"
+
+#: ../src/lib/PlainDigest.pm:261
+msgid ""
+"\n"
+"-----Delivery Status Report-----\n"
+msgstr ""
+"\n"
+"-----Báo cáo Trạng thái Phát thư-----\n"
+
+#: ../src/lib/PlainDigest.pm:263
+msgid "-----End of Delivery Status Report-----\n"
+msgstr "-----Kết thúc Báo cáo Trạng thái Phát thư-----\n"
+
+#: ../src/lib/PlainDigest.pm:301 ../src/lib/PlainDigest.pm:322
+msgid ""
+"\n"
+"[** Unable to process HTML message part **]\n"
+msgstr ""
+"\n"
+"[** Không thể xử lý phần thư dạng HTML **]\n"
+
+#: ../src/lib/PlainDigest.pm:328
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part **]\n"
+msgstr ""
+"\n"
+"[ ** Không thể xử lý phần thư dạng HTML **]\n"
+
+#: ../src/lib/PlainDigest.pm:332
+msgid "[ Text converted from HTML ]\n"
+msgstr "[ Thân thư được chuyển đổi từ HTML ]\n"
+
+#: ../src/lib/PlainDigest.pm:339
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part ** ]\n"
+msgstr ""
+"\n"
+"[ ** Không thể xử lý phần thư dạng HTML ** ]\n"
+
+#: ../src/lib/tt2.pm:150
+msgid "(unknown date)"
+msgstr "(không rõ ngày tháng)"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/wwsympa.fcgi.in:1042
+msgid "%H:%M:%S"
+msgstr "%H:%M:%S"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
+#: ../wwsympa/wwsympa.fcgi.in:11817 ../wwsympa/wwsympa.fcgi.in:11950
+#: ../wwsympa/wwsympa.fcgi.in:14263 ../wwsympa/wwsympa.fcgi.in:7742
+msgid "%d %b %y  %H:%M"
+msgstr "%d %b %y  %H:%M"
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../wwsympa/wwsympa.fcgi.in:15871 ../wwsympa/wwsympa.fcgi.in:15872
+msgid "%Y/%m/%d/%H/%M/%S"
+msgstr "%Y/%m/%d/%H/%M/%S"
+
+#: ../wwsympa/wwslib.pm:41
+msgid "session"
+msgstr "buổi hợp"
+
+#: ../wwsympa/wwslib.pm:42
+msgid "10 minutes"
+msgstr "10 phút"
+
+#: ../wwsympa/wwslib.pm:43
+msgid "30 minutes"
+msgstr "30 phút"
+
+#: ../wwsympa/wwslib.pm:44
+msgid "1 hour"
+msgstr "1 giờ"
+
+#: ../wwsympa/wwslib.pm:45
+msgid "6 hours"
+msgstr "6 giờ"
+
+#: ../wwsympa/wwslib.pm:46
+msgid "1 day"
+msgstr "1 ngày"
+
+#: ../wwsympa/wwslib.pm:47
+msgid "1 week"
+msgstr "1 tuần"
+
+#: ../wwsympa/wwslib.pm:49
+msgid "listed in the list review page"
+msgstr "được liệt kê trên trang xem lại hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:50
+msgid "concealed"
+msgstr "bị ẩn"
+
+#: ../wwsympa/wwslib.pm:54
+msgid "welcome message"
+msgstr "thông điệp chào mừng"
+
+#: ../wwsympa/wwslib.pm:55
+msgid "unsubscribe message"
+msgstr "thông điêp hủy đăng ký"
+
+#: ../wwsympa/wwslib.pm:56
+msgid "deletion message"
+msgstr "thông điệp xoá"
+
+#: ../wwsympa/wwslib.pm:57
+msgid "message footer"
+msgstr "chân thân thư"
+
+#: ../wwsympa/wwslib.pm:58
+msgid "message header"
+msgstr "đầu thân thư"
+
+#: ../wwsympa/wwslib.pm:59
+msgid "remind message"
+msgstr "thông điệp nhắc nhở"
+
+#: ../wwsympa/wwslib.pm:60
+msgid "editor rejection message"
+msgstr "thông điệp từ chối biên tập"
+
+#: ../wwsympa/wwslib.pm:61
+msgid "subscribing invitation message"
+msgstr "thông điệp mời đăng ký"
+
+#: ../wwsympa/wwslib.pm:62
+msgid "help file"
+msgstr "tập tin trợ giúp"
+
+#: ../wwsympa/wwslib.pm:63
+msgid "directory of lists"
+msgstr "thư mục các hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:64
+msgid "global remind message"
+msgstr "thông điệp nhắc nhở toàn cục"
+
+#: ../wwsympa/wwslib.pm:65
+msgid "summary message"
+msgstr "thông điệp tóm tắt"
+
+#: ../wwsympa/wwslib.pm:66
+msgid "list description"
+msgstr "mô tả hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:67
+msgid "list homepage"
+msgstr "trang chủ của hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:68
+msgid "list creation request message"
+msgstr "thông điệp yêu cầu tạo hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:69
+msgid "list creation notification message"
+msgstr "thông điệp báo về hộp thư chung mới tạo"
+
+#: ../wwsympa/wwslib.pm:70
+msgid "virus infection message"
+msgstr "thông điệp sự nhiễm độc vi-rút"
+
+#: ../wwsympa/wwslib.pm:71
+msgid "list aliases template"
+msgstr "mẫu bí danh hộp thư chung"
+
+#: ../wwsympa/wwslib.pm:28
+msgid "standard (direct reception)"
+msgstr "tiêu chuẩn (nhận trực tiếp)"
+
+#: ../wwsympa/wwslib.pm:29
+msgid "digest MIME format"
+msgstr "định dạng bó thư MIME"
+
+#: ../wwsympa/wwslib.pm:30
+msgid "digest plain text format"
+msgstr "định dạng bó thư nhập thô"
+
+#: ../wwsympa/wwslib.pm:31
+msgid "summary mode"
+msgstr "chế độ tóm tắt"
+
+#: ../wwsympa/wwslib.pm:32
+msgid "notice mode"
+msgstr "chế độ thông báo"
+
+#: ../wwsympa/wwslib.pm:33
+#, fuzzy
+msgid "text-only mode"
+msgstr "chế độ chỉ nhập thô"
+
+#: ../wwsympa/wwslib.pm:34
+#, fuzzy
+msgid "html-only mode"
+msgstr "chế độ chỉ HTML"
+
+#: ../wwsympa/wwslib.pm:35
+msgid "urlize mode"
+msgstr "chế độ urlize"
+
+#: ../wwsympa/wwslib.pm:36
+msgid "no mail (useful for vacations)"
+msgstr "không thư (có ích khi đi nghỉ)"
+
+#: ../wwsympa/wwslib.pm:37
+msgid "you do not receive your own posts"
+msgstr "bạn không nhận bài thư được mình gửi"
+
 #~ msgid "-List definition"
 #~ msgstr "~Xác định hộp"
 
@@ -9609,6 +9254,9 @@ msgstr ""
 
 #~ msgid "# message"
 #~ msgstr "# thư"
+
+#~ msgid "Send this mail"
+#~ msgstr "Gửi thư này"
 
 #~ msgid "Last update :"
 #~ msgstr "Cập nhật cuối:"
@@ -9732,12 +9380,6 @@ msgstr ""
 
 #~ msgid "The list homepage: %1/info/%2"
 #~ msgstr "Trang chủ của hộp thư chung: %1/info/%2"
-
-#~ msgid "Moderated, with editor confirmation"
-#~ msgstr "Điều tiết, và biên tập xác nhận"
-
-#~ msgid "anyone with previous md5 authentication"
-#~ msgstr "bật cứ ai nào đã xác thực bằng MD5"
 
 #~ msgid "The configuration file --CONFIG-- contains errors.\n"
 #~ msgstr "Tập tin cấu hình --CONFIG-- chứa lỗi.\n"
