@@ -3,262 +3,12 @@
 
 (See Changelog file for the full changes log)
 
-6.0b.4		23 September 2009
-
-  Changes:
-
-	src/etc/create_list_templates/discussion_list/comment.tt2, src/etc/create_list_templates/hotline/comment.tt2,
-	src/etc/create_list_templates/html-news-letter/comment.tt2,src/etc/create_list_templates/news-letter/comment.tt2,
-	src/etc/create_list_templates/private_working_group/comment.tt2, src/etc/create_list_templates/public_web_forum/comment.tt2,
-	web_tt2/create_list_request.tt2: 
-	[Submitted by M. Warkus, univ. Marburg] In the list creation form, suppress the display of the files name
-	without a comment.tt2. Get also rid of useless <dl/> tags. The whole page is now translatable.
-
-	web_tt2/css.tt2, web_tt2/javascript.tt2, web_tt2/main.tt2, web_tt2/notice.tt2: When notifying a successful
-	action in the web interface, the full interface was unusable before a user clicked a validation button.
-	Now, the notification doesn't prevent users from clicking other links or button in the interface.
-	It is also smaller, though visible.
-
-  Bug fixes:
-
-	src/lib/Bulk.pm: [Reported by M. Waltz, univ. univ. of the Pacific] When the verp value
-	was not defined, it resulted in the value used when storing a packet into database to be
-	an empty value. PostgreSQL refuses to store an integer with an empty value. Fixed by
-	forcing the value of the VERP field to '0' when it is given undefined to the Bulk::store function.
-
-	wwsympa/wwsympa.fcgi.in: When a user already connected on the web interface used a
-	one time ticket based on another address than the one she was connected with, the
-	identity was not changed in the session. It lead to the impossibility to actually
-	change its user email address. Now the session email is defined using the email of
-	the one time ticket, whatever was previously set in the current session.
-
-	wwsympa/wwsympa.fcgi.in: [Reported by S. Lorenz, univ. Karlsruhe] If an owner or editor
-	of a list was registered with one ore more large capitals in her address, the change_email
-	function did not change the address for that list. Fixed by lowercasing the addresses.
-	when comparing them.
-
-	src/lib/Bulk.pm: [Submitted by M. Waltz, univ. univ. of the Pacific] The reception_date_bulkmailer
-	field's value was set to an integer value when storing a packet, htough it is an integer field.
-	This led PostGReSQL to refuse to sotre the packets. Fixed by restricting thi value to its integer part.
-
-	wwsympa/wwsympa.fcgi.in: [Reported by M. Warkus, univ. Marburg] In the mulitple add form, if a a usbscriber address was preceded
-	by empty spaces, it was ignored. Fixed by ignoring leading white spaces in that form.
-
-	src/lib/Scenario.pm: [Reported by M. Warkus, univ. Marburg] In the "match" scenario condition,
-	if the regexp was empty, the condition returuned true. So if the regexp contained a list variable
-	that was not set for that list, the condition returned true. Logically, norhing matches an empty
-	regexp, so if the rexep is empty (not white space, really empty) then the condition now return false.
-
-	src/etc/Makefile.am: [Reported by M. Walts, univ. of the Pacific][solution by G. Rousse, INRIA] Default scenarios were
-	not installed on Solaris 10 x64/x86, because the regular expression used to do it in the Makefile
-	used the "+" sign which is not available in POSIX. replaced it by "*" fixed the problem.
-
-	mail_tt2/listmaster_notification.tt2, src/lib/List.pm: [Reported by P. Maes, univ. Louvain] When using
-	several user data sources, if one source failed the whole synchronization aborted. Now Sympa keeps one
-	synchronizing all the data sources, and a mail is sent to the listmaster, in which all the sources for
-	which an error was encountered are listed. no error is diplayed to the list owner.
-
-	wwsympa/wwsympa.fcgi.in: [#6438][Reported by M. Warkus, univ. Marburg]When the list homepage of a list
-	was empty, displaying the info in lieu of it resulted in displaying a text without any linebreaks, as
-	they have no meaning in HTML. fixed by replacing linebreaks with <br/> tags when this happens.
-
-6.0b.3		14 September 2009
-
-  Features:
-
-	src/lib/Conf.pm, wwsympa/wwsympa.fcgi.in: Extended the format of the generic_sso paragraph in auth.conf.
-	Added two new parameters :
-	  - http_header_list : allows to explicitely list HTTP header fields that should be cached in sympa user_table. 
-	  - http_header_value_separator : user attributes may be multi-valued (including the user email address.
-	    This parameter defines the values separator ; defualt is ';' (adapted for Shibboleth)
-
-	soap/sympa_soap_client.pl.in: add new features to soap client : add,del,subscribe,signoff
-
-
-  Changes:
-
-	sympa.spec.in: [proposed by Jose-Marcio Martins] no more check the OSYTE, check if functions file exists instead.
-	
-	[Suggested by G.Rousse] removed 'check-macro-version' Makefile target to avoid the "*** warning: gettext
-	infrastructure mismatch: using a Makefile.in.in from gettext version 0.17 but the autoconf macros are from
-	gettext version @GETTEXT_MACRO_VERSION@" error. The check can be safely removed because very few macros are used
-
-***** [#6190][Submitted by P.Crandall, univ Chicago] custom inputs, set in create_list, are now clearly prefixed
-*****  in the create_list_request.tt2 HTML form. Prefix is 'custom_input.'
-
-	src/lib/Makefile.am: AuthCAS module used to be distributed with Sympa. Since Sympa 6,
-	it is a standalone CPAN module. The module still has the same name, therefore old installed
-	versions of the module need to be removed
-
-	po/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
-
-	src/lib/CAS.pm: Use a standard AuthCAS module instead of CAS.pm
-
-	check_perl_modules.pl, src/sympa_wizard.pl.in:  check_perl_modules.pl now replaced with sympa_wizard.pl --check
-
-	src/lib/Archive.pm, src/lib/Message.pm, src/lib/PlainDigest.pm, src/lib/mail.pm, src/lib/tools.pm, src/sympa_wizard.pl.in,
-	 wwsympa/wwsympa.fcgi.in: Changes to the cpan installation process :
-		 - Mail::Internet and MIME::Lite modules not directly required
-		 - fix calls to install_module()
-		 - added informations about prerequisites
-		 - generalized the 'usage' entry for each module
-		 - added an introduction to warn the user about the length/nature of the process
-
-***** configure.ac: default value for localstatedir changes from $prefix/var to /var.
-***** This change should make upgrade easier for sympa 5.x and previous
-
-***** The expl directory has been renamed "list_data". This name better reflects the actual directory content.
-***** If you are upgrading from a previous version, you SHOULD:
-*****    1- rename you "/home/sympa/expl" directory to "/home/sympa/list_data" to reflect this change.
-*****    2- set the "home" sympa.conf parameter to "/home/sympa/list_data".
-
-	Makefile.am, NEWS, configure.ac:
-	- Improving the last install message to help people know what command is required to have a running Sympa.
-	- Restoring usage of list_data instead of expl. Updating the NEWS file to reflect this change.
-	- Restoring the localedir definition in non FHS context to avoid i18n directories to be scattered in the root directory.
-
-
-  Bug fixes:
-
-	src/lib/tools.pm: [Reported by M.Warkus] remove_dir() subroutine (used to remove web archives of closed lists) did expect
-	the path to include a minimum of 4 slashes '/'. This limitation was introduced in revision 2108.
-	Removed this limitation.
-
-	src/lib/confdef.pm: http_host was not set by default in syma.conf, making the sympa wizard to fail starting.
-
-	src/lib/tools.pm: [#6380][Reported by M.Warkus, Philipps-Univ. Marburg] Added a line break to written PID files.
-	Without the linebreak, the init script failed to check process status on OS without /etc/init.d/functions
-
-	src/lib/Bulk.pm, src/lib/List.pm: [bug] Missing "use WebAgent" directive since recent reorganization of code (revision 5939).
-	Error: Sympa.pl would die while running List::_include_users_remote_file() with error
-	"Can't locate object method "new" via package "WebAgent" at /home/sympa/bin/List.pm line 7505."
-
-	Makefile.am: [Submitted by M.Deranek] On a multi core system, installdir & installconfig targets can run in parallel.
-	Added a dependency between these targets.
-	
-	src/sympa_wizard.pl.in: Can't do $module->require() since we no more require the UNIVERSAl::require module.
-	Replaced with eval "require $module". Error message : Can't locate object method "require" via package 
-	"XX" at /home/sympa/bin/sympa_wizard.pl line 515
-
-	src/sympa_wizard.pl.in: Installed MHonArc version was not properly detected
-
-	soap/sympa_soap_client.pl.in: Fixed a typo in the sympa_soap_client.pl
-	command line tool that prevented the service parameters to be used.
-
-	wwsympa/Auth.pm: [Submitted by M. Warkus, univ. Marburg] When a user logged in, using LDAP,
-	by providing an email address, if this email was not the first one in the LDAP email attribute,
-	then the uiser was not logged with the address she provided but with the default address found
-	in the LDAP directory. Now, if an email is provided and the login is successful ,the user is
-	logged in with the email she provided.
-
-	wwsympa/wwsympa.fcgi.in: return to the user target page after authentication even if using shibboleth.
-
-	src/lib/Scenario.pm: [Submitted by P. Maes, univ. Louvain] On some servers, the 'is_bcc'
-	condition failed event though the message sent was not a BCC. Fixed by moving the code
-	setting the BCC state to another place in the module.
-
-	Makefile.am, configure.ac: [Submitted by G. rousse, INRIA]
-		- Make sure that directories exist before trying to copy files into them
-		- Copy i18n catalogues into standard directories instead of dedicated location
-		- Remove modification of $datadir. Replaced by defaultdir redefinition.
-		- gives explicit ownership of pid dir to Sympa by adding the "sympa" subdirectory.
-
-	soap/sympasoap.pm: [#6400][Submitted by A. Bendzsak] There was a typo in sympasoap.pm making
-	it use authorization.tt2 instead of authorization_reject.tt2.
-
-	src/lib/confdef.pm: [#6425][Reported by S. Rijnhart, milieudefensie.nl] The spool directories
-	not often used were automatically deleted because CleanSpool was sometimes called on the spool
-	root directory instead of one the actual spools.This was due to the automatic spool being
-	initialized as the spool root directory. Therefore, the sympa.pl automatic cleaning was called
-	on the root directory and all its too old subdirectories were deleted.
-	Fixed by giving its right value to this spool (and to the digest spool too, by the way).
-
-
-6.0b.2		31 July 2009
-
-  Features:
-
-	No new features. Just stabilisation of the 6.0 beta version.
-
-  Changes:
-
-	src/confdef.pm: define longer period for default values of cleandelay_xx parameters
-
-	src/lib/List.pm, /src/lib/confdef.pm: Now ttl and distribution_ttl list parameters
-	take their defaults in default_ttl and default_distribution_ttl sympa.conf parameters.
-
-	po/de.po, po-wwsympa/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
-
-*****	The directory in which all the default configuration files and directories is installed
-*****	is now "default", under the root installation directory. In the previous release, it was
-*****	share/sympa/default. You should remove this directory now to avoid confusion.
-
-*****	New configure option: '--enable-fhs'. Sympa supports two kinds of files hierarchies. 
-*****	The historical one, where by default all is gathered in the Sympa directry, and also the FHS 
-*****	recommended hierarchy. Now if the '--enable-fhs' configure option is set, Sympa is installed 
-*****	according to the FHS. Otherwise, it is installed using the historical paths.
-
- Bug fixes:
-
-	src/sympa_wizard.pl.in: [Reported by P. Maes, univ. Louvain] Net::Netmask CPAN module
-	was not checked by the Sympa wizard, though it is required.
-
-	d_install_shared.tt2, mail_tt2/moderate.tt2, mail_tt2/modindex.tt2,
-	mail_tt2/user_notification.tt2, mail_tt2/welcome.tt2, po/fr.pomail_tt2/moderate.tt2:
-	[Submitted by P. Maes, univ. Louvain] The one time ticket URL was included in the
-	internationalization message. It had no sense, as an URL won't be translated, and any
-	change in the layout (such as putting the URL in another line) would break the translation
-	key. Fixed by putting the URL out of the i18n string.
-
-	src/etc/script/create_db.mysql: [Submitted by D. Ayre, univ. E. Carr, Vancouver]
-	A missing comma in create_db.mysql made the creation script fail with an SQL error.
-
-	src/lib/Conf.pm: [Reported by M. Warkus, univ. Marburg] When using the default robot,
-	wwsympa.conf parameters were not taken into account, only the default values set
-	in confdef.pm. The value could only be set in sympa.conf. This was due to the load_robots
-	function which initialized the config with default values and sympa.conf values and then
-	looked for customized values for virtual hosts only. Fixed by replacing default values by
-	their equivalent in wwsympa.conf when found.
-	
-	wwsympa/wwsympa.fcgi.in: [Reported by Wen Si] Single value and single instance list
-	parameters value could not be removed using the web interface. fixed by *not* going
-	directly to the next parameter in do_edit_list when such a parameter is found empty.
-
-	src/lib/Upgrade.pm: [Reported by A. Suter, crox.net] "0" character was not allowed in
-	md5 encoded passwords. Changed regular expression to allow it.
-
-	src/lib/Sympa/Constants.pm.in: [Reported by N. Matthies] Typo in ARCDIR constant declaration.
-
-	src/task_manager.pl.in: [Reported by N. Matthies] The task manager failed to process the
-	eval_bouncers and purge_orphan_bounces tasks because the corresponding functions did not
-	return 1. It cause the manager to conclude there had been an error.
-
-	Makefile.am, configure.ac: [Reported by N. Matthies] It looks like some "general_task_models"
-	and "task_models" directory still installed in the etc directory. These directory are not used
-	anymore. this was due to a command in Makefile.am installing  "non  writable directories".
-	These directories were all isntalled in a separate part of the install process, using
-	their normal names and location.
-
-	src/lib/Conf.pm, src/lib/confdef.pm: Sympa doesn't complain anymore when an optional parameter
-	is missing in robot.conf.
-
-	src/lib/Bulk.pm: [Reported by Wen Si] A query in the Bulk.pm module was using MySQL-specific SQL orders.
-	This caused Oracle (and probably Sybase too) to fail to lock packets in database.
-	Fixed by splitting the query into a selection followed by an update,
-	and by tweeking it on the base of the RDBMS used.
-
-	src/etc/script/create_db.SQLite, src/lib/Upgrade.pm: [Submitted by M. deranek, slonko.net]
-	SQLite support was broken in Sympa, due to syntax errors.
-
-	src/etc/script/ldap_alias_manager.pl.in: --modulesdir-- placeholder was badly spelled in
-	ldap_alias_manager.pl, cauing it not to be replaced by its real value at install time.
-
-	src/sympa_wizard.pl.in: Removing useless warning when the 'file' parameter is not indicated
-	in the confdef.pm parameter definition. This 'file' parameter is used only when we want to 
-	write a value by default in the config file. Otherwise default value will be used.
-
-
-6.0b.1		16 June 2009
+6.0		1st October 2009
+
+	The changes and features below are the compilation of the announces made for the
+	previous beta releases of Sympa 6.0. Son't bother read them if you followed the
+	beta. The bugs specifically fixed in each beta are still referred in these beta 
+	version sections below.
 
   Features:
 
@@ -313,7 +63,7 @@
 *****   <WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING><WARNING>
 
       	src/Conf.pm, src/sympa_wizard.pl: Four new languages are now available by default in Sympa:
-	  - Bokmål (B. C. Aasgaard)
+	  - Bokmal (B. C. Aasgaard)
 	  - Polish (L. Zygmanski)
 	  - Finn (J.P. Paloposki)
 	  - Vietnamese (C. Siddall)
@@ -398,9 +148,15 @@
 	Clone list : a new way to create lists : creation list form allows now to clone a list as a new empty list, all 
 	config and customization are copied but not subscribers, archives and shared.
 
+	src/lib/Conf.pm, wwsympa/wwsympa.fcgi.in: Extended the format of the generic_sso paragraph in auth.conf.
+	Added two new parameters :
+	  - http_header_list : allows to explicitely list HTTP header fields that should be cached in sympa user_table. 
+	  - http_header_value_separator : user attributes may be multi-valued (including the user email address.
+	    This parameter defines the values separator ; defualt is ';' (adapted for Shibboleth)
+
+	soap/sympa_soap_client.pl.in: add new features to soap client : add,del,subscribe,signoff
 
   Changes:
-
 
 *****   [Submitted by G. Rousse, INRIA] A lot of modification brought to the autotools usage in Sympa. 
 *****   This is still a work in progress, but should make the life of Sympa packagers quite easier once it is finished.
@@ -535,6 +291,73 @@
 	Message moderation : 
 	- Now message for moderation is not attached in the message sent to the moderator if tagued as spam.
 
+	src/confdef.pm: define longer period for default values of cleandelay_xx parameters
+
+	src/lib/List.pm, /src/lib/confdef.pm: Now ttl and distribution_ttl list parameters
+	take their defaults in default_ttl and default_distribution_ttl sympa.conf parameters.
+
+	po/de.po, po-wwsympa/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
+
+*****	The directory in which all the default configuration files and directories is installed
+*****	is now "default", under the root installation directory. In the previous release, it was
+*****	share/sympa/default. You should remove this directory now to avoid confusion.
+
+*****	New configure option: '--enable-fhs'. Sympa supports two kinds of files hierarchies. 
+*****	The historical one, where by default all is gathered in the Sympa directry, and also the FHS 
+*****	recommended hierarchy. Now if the '--enable-fhs' configure option is set, Sympa is installed 
+*****	according to the FHS. Otherwise, it is installed using the historical paths.
+
+	sympa.spec.in: [proposed by Jose-Marcio Martins] no more check the OSYTE, check if functions file exists instead.
+	
+	[Suggested by G.Rousse] removed 'check-macro-version' Makefile target to avoid the "*** warning: gettext
+	infrastructure mismatch: using a Makefile.in.in from gettext version 0.17 but the autoconf macros are from
+	gettext version @GETTEXT_MACRO_VERSION@" error. The check can be safely removed because very few macros are used
+
+***** [#6190][Submitted by P.Crandall, univ Chicago] custom inputs, set in create_list, are now clearly prefixed
+*****  in the create_list_request.tt2 HTML form. Prefix is 'custom_input.'
+
+	src/lib/Makefile.am: AuthCAS module used to be distributed with Sympa. Since Sympa 6,
+	it is a standalone CPAN module. The module still has the same name, therefore old installed
+	versions of the module need to be removed
+
+	po/de.po: [Submitted by M. Warkus, univ. Marburg] Updated German translation.
+
+	src/lib/CAS.pm: Use a standard AuthCAS module instead of CAS.pm
+
+	check_perl_modules.pl, src/sympa_wizard.pl.in:  check_perl_modules.pl now replaced with sympa_wizard.pl --check
+
+	src/lib/Archive.pm, src/lib/Message.pm, src/lib/PlainDigest.pm, src/lib/mail.pm, src/lib/tools.pm, src/sympa_wizard.pl.in,
+	 wwsympa/wwsympa.fcgi.in: Changes to the cpan installation process :
+		 - Mail::Internet and MIME::Lite modules not directly required
+		 - fix calls to install_module()
+		 - added informations about prerequisites
+		 - generalized the 'usage' entry for each module
+		 - added an introduction to warn the user about the length/nature of the process
+
+***** configure.ac: default value for localstatedir changes from $prefix/var to /var.
+***** This change should make upgrade easier for sympa 5.x and previous
+
+***** The expl directory has been renamed "list_data". This name better reflects the actual directory content.
+***** If you are upgrading from a previous version, you SHOULD:
+*****    1- rename you "/home/sympa/expl" directory to "/home/sympa/list_data" to reflect this change.
+*****    2- set the "home" sympa.conf parameter to "/home/sympa/list_data".
+
+	Makefile.am, NEWS, configure.ac:
+	- Improving the last install message to help people know what command is required to have a running Sympa.
+	- Restoring usage of list_data instead of expl. Updating the NEWS file to reflect this change.
+	- Restoring the localedir definition in non FHS context to avoid i18n directories to be scattered in the root directory.
+
+	src/etc/create_list_templates/discussion_list/comment.tt2, src/etc/create_list_templates/hotline/comment.tt2,
+	src/etc/create_list_templates/html-news-letter/comment.tt2,src/etc/create_list_templates/news-letter/comment.tt2,
+	src/etc/create_list_templates/private_working_group/comment.tt2, src/etc/create_list_templates/public_web_forum/comment.tt2,
+	web_tt2/create_list_request.tt2: 
+	[Submitted by M. Warkus, univ. Marburg] In the list creation form, suppress the display of the files name
+	without a comment.tt2. Get also rid of useless <dl/> tags. The whole page is now translatable.
+
+	web_tt2/css.tt2, web_tt2/javascript.tt2, web_tt2/main.tt2, web_tt2/notice.tt2: When notifying a successful
+	action in the web interface, the full interface was unusable before a user clicked a validation button.
+	Now, the notification doesn't prevent users from clicking other links or button in the interface.
+	It is also smaller, though visible.
 
  Bug fixes:
 
@@ -710,6 +533,175 @@
 	- Copy_template failed when multiple directories had to be created (mail_tt2/ll_CC for example). Now calling mkdir_all() 
 	  from tools::mk_parent_dir(). Also fixed a typo regarding authz errors handling
 
+
+6.0b.4		23 September 2009
+
+  Bug fixes:
+
+	src/lib/Bulk.pm: [Reported by M. Waltz, univ. univ. of the Pacific] When the verp value
+	was not defined, it resulted in the value used when storing a packet into database to be
+	an empty value. PostgreSQL refuses to store an integer with an empty value. Fixed by
+	forcing the value of the VERP field to '0' when it is given undefined to the Bulk::store function.
+
+	wwsympa/wwsympa.fcgi.in: When a user already connected on the web interface used a
+	one time ticket based on another address than the one she was connected with, the
+	identity was not changed in the session. It lead to the impossibility to actually
+	change its user email address. Now the session email is defined using the email of
+	the one time ticket, whatever was previously set in the current session.
+
+	wwsympa/wwsympa.fcgi.in: [Reported by S. Lorenz, univ. Karlsruhe] If an owner or editor
+	of a list was registered with one ore more large capitals in her address, the change_email
+	function did not change the address for that list. Fixed by lowercasing the addresses.
+	when comparing them.
+
+	src/lib/Bulk.pm: [Submitted by M. Waltz, univ. univ. of the Pacific] The reception_date_bulkmailer
+	field's value was set to an integer value when storing a packet, htough it is an integer field.
+	This led PostGReSQL to refuse to sotre the packets. Fixed by restricting thi value to its integer part.
+
+	wwsympa/wwsympa.fcgi.in: [Reported by M. Warkus, univ. Marburg] In the mulitple add form, if a a usbscriber address was preceded
+	by empty spaces, it was ignored. Fixed by ignoring leading white spaces in that form.
+
+	src/lib/Scenario.pm: [Reported by M. Warkus, univ. Marburg] In the "match" scenario condition,
+	if the regexp was empty, the condition returuned true. So if the regexp contained a list variable
+	that was not set for that list, the condition returned true. Logically, norhing matches an empty
+	regexp, so if the rexep is empty (not white space, really empty) then the condition now return false.
+
+	src/etc/Makefile.am: [Reported by M. Walts, univ. of the Pacific][solution by G. Rousse, INRIA] Default scenarios were
+	not installed on Solaris 10 x64/x86, because the regular expression used to do it in the Makefile
+	used the "+" sign which is not available in POSIX. replaced it by "*" fixed the problem.
+
+	mail_tt2/listmaster_notification.tt2, src/lib/List.pm: [Reported by P. Maes, univ. Louvain] When using
+	several user data sources, if one source failed the whole synchronization aborted. Now Sympa keeps one
+	synchronizing all the data sources, and a mail is sent to the listmaster, in which all the sources for
+	which an error was encountered are listed. no error is diplayed to the list owner.
+
+	wwsympa/wwsympa.fcgi.in: [#6438][Reported by M. Warkus, univ. Marburg]When the list homepage of a list
+	was empty, displaying the info in lieu of it resulted in displaying a text without any linebreaks, as
+	they have no meaning in HTML. fixed by replacing linebreaks with <br/> tags when this happens.
+
+6.0b.3		14 September 2009
+
+  Bug fixes:
+
+	src/lib/tools.pm: [Reported by M.Warkus] remove_dir() subroutine (used to remove web archives of closed lists) did expect
+	the path to include a minimum of 4 slashes '/'. This limitation was introduced in revision 2108.
+	Removed this limitation.
+
+	src/lib/confdef.pm: http_host was not set by default in syma.conf, making the sympa wizard to fail starting.
+
+	src/lib/tools.pm: [#6380][Reported by M.Warkus, Philipps-Univ. Marburg] Added a line break to written PID files.
+	Without the linebreak, the init script failed to check process status on OS without /etc/init.d/functions
+
+	src/lib/Bulk.pm, src/lib/List.pm: [bug] Missing "use WebAgent" directive since recent reorganization of code (revision 5939).
+	Error: Sympa.pl would die while running List::_include_users_remote_file() with error
+	"Can't locate object method "new" via package "WebAgent" at /home/sympa/bin/List.pm line 7505."
+
+	Makefile.am: [Submitted by M.Deranek] On a multi core system, installdir & installconfig targets can run in parallel.
+	Added a dependency between these targets.
+	
+	src/sympa_wizard.pl.in: Can't do $module->require() since we no more require the UNIVERSAl::require module.
+	Replaced with eval "require $module". Error message : Can't locate object method "require" via package 
+	"XX" at /home/sympa/bin/sympa_wizard.pl line 515
+
+	src/sympa_wizard.pl.in: Installed MHonArc version was not properly detected
+
+	soap/sympa_soap_client.pl.in: Fixed a typo in the sympa_soap_client.pl
+	command line tool that prevented the service parameters to be used.
+
+	wwsympa/Auth.pm: [Submitted by M. Warkus, univ. Marburg] When a user logged in, using LDAP,
+	by providing an email address, if this email was not the first one in the LDAP email attribute,
+	then the uiser was not logged with the address she provided but with the default address found
+	in the LDAP directory. Now, if an email is provided and the login is successful ,the user is
+	logged in with the email she provided.
+
+	wwsympa/wwsympa.fcgi.in: return to the user target page after authentication even if using shibboleth.
+
+	src/lib/Scenario.pm: [Submitted by P. Maes, univ. Louvain] On some servers, the 'is_bcc'
+	condition failed event though the message sent was not a BCC. Fixed by moving the code
+	setting the BCC state to another place in the module.
+
+	Makefile.am, configure.ac: [Submitted by G. rousse, INRIA]
+		- Make sure that directories exist before trying to copy files into them
+		- Copy i18n catalogues into standard directories instead of dedicated location
+		- Remove modification of $datadir. Replaced by defaultdir redefinition.
+		- gives explicit ownership of pid dir to Sympa by adding the "sympa" subdirectory.
+
+	soap/sympasoap.pm: [#6400][Submitted by A. Bendzsak] There was a typo in sympasoap.pm making
+	it use authorization.tt2 instead of authorization_reject.tt2.
+
+	src/lib/confdef.pm: [#6425][Reported by S. Rijnhart, milieudefensie.nl] The spool directories
+	not often used were automatically deleted because CleanSpool was sometimes called on the spool
+	root directory instead of one the actual spools.This was due to the automatic spool being
+	initialized as the spool root directory. Therefore, the sympa.pl automatic cleaning was called
+	on the root directory and all its too old subdirectories were deleted.
+	Fixed by giving its right value to this spool (and to the digest spool too, by the way).
+
+
+6.0b.2		31 July 2009
+
+ Bug fixes:
+
+	src/sympa_wizard.pl.in: [Reported by P. Maes, univ. Louvain] Net::Netmask CPAN module
+	was not checked by the Sympa wizard, though it is required.
+
+	d_install_shared.tt2, mail_tt2/moderate.tt2, mail_tt2/modindex.tt2,
+	mail_tt2/user_notification.tt2, mail_tt2/welcome.tt2, po/fr.pomail_tt2/moderate.tt2:
+	[Submitted by P. Maes, univ. Louvain] The one time ticket URL was included in the
+	internationalization message. It had no sense, as an URL won't be translated, and any
+	change in the layout (such as putting the URL in another line) would break the translation
+	key. Fixed by putting the URL out of the i18n string.
+
+	src/etc/script/create_db.mysql: [Submitted by D. Ayre, univ. E. Carr, Vancouver]
+	A missing comma in create_db.mysql made the creation script fail with an SQL error.
+
+	src/lib/Conf.pm: [Reported by M. Warkus, univ. Marburg] When using the default robot,
+	wwsympa.conf parameters were not taken into account, only the default values set
+	in confdef.pm. The value could only be set in sympa.conf. This was due to the load_robots
+	function which initialized the config with default values and sympa.conf values and then
+	looked for customized values for virtual hosts only. Fixed by replacing default values by
+	their equivalent in wwsympa.conf when found.
+	
+	wwsympa/wwsympa.fcgi.in: [Reported by Wen Si] Single value and single instance list
+	parameters value could not be removed using the web interface. fixed by *not* going
+	directly to the next parameter in do_edit_list when such a parameter is found empty.
+
+	src/lib/Upgrade.pm: [Reported by A. Suter, crox.net] "0" character was not allowed in
+	md5 encoded passwords. Changed regular expression to allow it.
+
+	src/lib/Sympa/Constants.pm.in: [Reported by N. Matthies] Typo in ARCDIR constant declaration.
+
+	src/task_manager.pl.in: [Reported by N. Matthies] The task manager failed to process the
+	eval_bouncers and purge_orphan_bounces tasks because the corresponding functions did not
+	return 1. It cause the manager to conclude there had been an error.
+
+	Makefile.am, configure.ac: [Reported by N. Matthies] It looks like some "general_task_models"
+	and "task_models" directory still installed in the etc directory. These directory are not used
+	anymore. this was due to a command in Makefile.am installing  "non  writable directories".
+	These directories were all isntalled in a separate part of the install process, using
+	their normal names and location.
+
+	src/lib/Conf.pm, src/lib/confdef.pm: Sympa doesn't complain anymore when an optional parameter
+	is missing in robot.conf.
+
+	src/lib/Bulk.pm: [Reported by Wen Si] A query in the Bulk.pm module was using MySQL-specific SQL orders.
+	This caused Oracle (and probably Sybase too) to fail to lock packets in database.
+	Fixed by splitting the query into a selection followed by an update,
+	and by tweeking it on the base of the RDBMS used.
+
+	src/etc/script/create_db.SQLite, src/lib/Upgrade.pm: [Submitted by M. deranek, slonko.net]
+	SQLite support was broken in Sympa, due to syntax errors.
+
+	src/etc/script/ldap_alias_manager.pl.in: --modulesdir-- placeholder was badly spelled in
+	ldap_alias_manager.pl, cauing it not to be replaced by its real value at install time.
+
+	src/sympa_wizard.pl.in: Removing useless warning when the 'file' parameter is not indicated
+	in the confdef.pm parameter definition. This 'file' parameter is used only when we want to 
+	write a value by default in the config file. Otherwise default value will be used.
+
+
+6.0b.1		16 June 2009
+
+	Changes introduced by this version are int the main 6.0 section.
 
 5.4.3		05 May 2008
 
