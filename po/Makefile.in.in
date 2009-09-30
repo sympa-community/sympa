@@ -54,7 +54,6 @@ MSGFMT_yes = @MSGFMT_015@
 MSGFMT = $(MSGFMT_$(USE_MSGCTXT))
 XGETTEXT = ./xgettext.pl
 MSGMERGE = msgmerge
-MSGCAT = msgcat
 MSGMERGE_UPDATE = @MSGMERGE@ --update
 MSGINIT = msginit
 MSGCONV = msgconv
@@ -77,7 +76,7 @@ CATALOGS = @CATALOGS@
 # Makevars gets inserted here. (Don't remove this line!)
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-create .po-update  .po-clean
+.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-create .po-update
 
 .po.mo:
 	@echo "$(MSGFMT) -c -o $@ $<"; \
@@ -304,7 +303,7 @@ mostlyclean:
 clean: mostlyclean
 
 distclean: clean
-	rm -f Makefile Makefile.in POTFILES *.mo
+	rm -f Makefile Makefile.in POTFILES *.mo *.new.po
 
 maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
@@ -346,11 +345,6 @@ update-po: Makefile
 	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
 	$(MAKE) update-gmo
 
-clean-po: Makefile
-	$(MAKE) $(DOMAIN).pot-update
-	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
-	$(MAKE) update-gmo
-
 # General rule for creating PO files.
 
 .nop.po-create:
@@ -379,29 +373,62 @@ clean-po: Makefile
 	  rm -f $$tmpdir/$$lang.new.po; \
 	fi
 
-.nop.po-clean:
-	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
-	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
-	tmpdir=`pwd`; \
-	echo "$$lang:"; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
-	cd $(srcdir); \
-	if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
-	  if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
-	    rm -f $$tmpdir/$$lang.new.po; \
-	  else \
-	    if mv -f $$tmpdir/$$lang.new.po $$lang.po; then \
-	      :; \
-	    else \
-	      echo "msgmerge for $$lang.po failed: cannot move $$tmpdir/$$lang.new.po to $$lang.po" 1>&2; \
-	      exit 1; \
-	    fi; \
-	  fi; \
-	else \
-	  echo "msgmerge for $$lang.po failed!" 1>&2; \
-	  rm -f $$tmpdir/$$lang.new.po; \
+## Prepare a tar.gz with a structure adapted to Pootle
+## ie made of subdirectories (ll/sympa.po...templates/sympa.pot
+export:
+	echo "Building /tmp/sympa-po.tar.gz..."; \
+	if [ -d  /tmp/sympa-po ]; then \
+		rm -rf /tmp/sympa-po; \
 	fi
+	mkdir /tmp/sympa-po; \
+	mkdir /tmp/sympa-po/sympa; \
+	mkdir /tmp/sympa-po/web_help; \
+	mkdir /tmp/sympa-po/terminology; \
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
+	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
+          mkdir /tmp/sympa-po/sympa/$$lang; \
+	  cp $$lang.po /tmp/sympa-po/sympa/$$lang/sympa.po; \
+	  mkdir /tmp/sympa-po/web_help/$$lang; \
+	  cp ../po-wwsympa/$$lang.po /tmp/sympa-po/web_help/$$lang/web_help.po; \
+	done
+	mkdir /tmp/sympa-po/sympa/templates; \
+	mkdir /tmp/sympa-po/web_help/templates; \
+	mkdir /tmp/sympa-po/terminology/templates; \
+	cp sympa.pot /tmp/sympa-po/sympa/templates/sympa.pot; \
+	cp ../po-wwsympa/web_help.pot /tmp/sympa-po/web_help/templates/web_help.pot; \
+	cp terminology.pot /tmp/sympa-po/terminology/templates/terminology.pot; \
+	(cd /tmp/sympa-po; tar -zcvf /tmp/sympa-po.tar.gz *)
+
+clean-po: 
+	$(MAKE) $(DOMAIN).pot-update
+	@languages=`echo $(POFILES) | sed -e 's/\.po//g'`;\
+	for lang in $$languages; do \
+	  if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
+	  tmpdir=`pwd`; \
+	  echo "$$lang:"; \
+	  test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
+	  echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
+	  cd $(srcdir); \
+	  if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
+	    if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
+	      rm -f $$tmpdir/$$lang.new.po; \
+	    else \
+	      if mv -f $$tmpdir/$$lang.new.po $$lang.po; then \
+	        :; \
+	      else \
+	        echo "msgmerge for $$lang.po failed: cannot move $$tmpdir/$$lang.new.po to $$lang.po" 1>&2; \
+	        exit 1; \
+	      fi; \
+	    fi; \
+	  else \
+	    echo "msgmerge for $$lang.po failed!" 1>&2; \
+	    rm -f $$tmpdir/$$lang.new.po; \
+	  fi;\
+        done;\
+        msgen en_US.po -o en_US.po;\
+
 
 $(DUMMYPOFILES):
 

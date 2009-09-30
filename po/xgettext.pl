@@ -151,14 +151,14 @@ foreach my $file_to_parse (@ARGV) {
 }
 my %favoured_files;
 my @ordered_files;
-my @planned_ordered_files = ("web_tt2/help.tt2","web_tt2/help_introduction.tt2","web_tt2/help_user.tt2","web_tt2/help_admin.tt2","web_tt2/home.tt2","web_tt2/login.tt2","web_tt2/main.tt2","web_tt2/title.tt2","web_tt2/menu.tt2","web_tt2/login_menu.tt2",
-			     "web_tt2/your_lists.tt2","web_tt2/footer.tt2","web_tt2/list_menu.tt2","web_tt2/list_panel.tt2","web_tt2/admin.tt2","web_tt2/list_admin_menu.tt2");
+my @planned_ordered_files = ("../web_tt2/help.tt2","../web_tt2/help_introduction.tt2","../web_tt2/help_user.tt2","../web_tt2/help_admin.tt2","../web_tt2/home.tt2","../web_tt2/login.tt2","../web_tt2/main.tt2","../web_tt2/title.tt2","../web_tt2/menu.tt2","../web_tt2/login_menu.tt2",
+			     "../web_tt2/your_lists.tt2","../web_tt2/footer.tt2","../web_tt2/list_menu.tt2","../web_tt2/list_panel.tt2","../web_tt2/admin.tt2","../web_tt2/list_admin_menu.tt2");
 foreach my $file (@planned_ordered_files) {
     if ($files_to_parse{$file}) {
 	@ordered_files = (@ordered_files,$file);
     }
 }
-my @ordered_directories = ("web_tt2","mail_tt2","src/etc/scenari","src/etc");
+my @ordered_directories = ("../web_tt2","../mail_tt2","../src/etc/scenari","../src/etc");
 
 foreach my $file (@ordered_files) {
     $favoured_files{$file} = 1;
