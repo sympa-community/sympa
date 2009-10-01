@@ -360,7 +360,8 @@ sub merge_data {
 
     $user->{'friendly_date'} = &POSIX::strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
 
-    $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
+    # this method as been removed because some users may forward authentication link
+    # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
     my $url = $data->{'wwsympa_url'};
     
     $data = {
