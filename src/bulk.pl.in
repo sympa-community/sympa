@@ -274,6 +274,8 @@ while (!$end) {
 		    }
 
 		    $messageasstring = $entity->as_string;		    
+		}else{
+		    $messageasstring = $messageasstring_init;
 		}
 		if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
 		    $messageasstring = &tools::remove_invalid_dkim_signature($messageasstring );
