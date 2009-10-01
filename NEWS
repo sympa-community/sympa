@@ -7,6 +7,14 @@
 
 Features:
 
+	DKIM features:
+	As you known DKIM is an issue for mailing lists. Sympa 6.1 can verify incomming signature
+	and use DKIM signature status in scenario. It can sign all messages sent by sympa itself
+	(automatic answers and digest). It also able to sign some or all brodcasted messages and
+	remove original DKIM-Signature if some changes such as message footer insertion or subject
+	tag make it invalid. In order to activate those features you should install Mail::DKIM cpan
+	module and tune a set of parameters Please see dkim section of reference manual.
+
 	[Submitted by J. jourdan] Web page sending. In the post page of the web interface,
 	user can specify an URL coresponding to a page whe want to send to the list. The page
 	is sent in HTML form, with all the referenced objects such as images as mail attachments.
