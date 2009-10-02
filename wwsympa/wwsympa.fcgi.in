@@ -3538,8 +3538,9 @@ sub do_redirect {
 	 ## Check if logout_url is known for this SSO
 	 my $sso;
 	 unless ($sso = &Conf::get_sso_by_id(robot => $robot, service_id => $session->{'sso_id'})) {
-	     &wwslog('info','unknown SSO service_id');
-	     return undef;
+	      
+	   &wwslog('err',"unknown SSO service_id '%s'", $session->{'sso_id'});
+	     return undef   ;
 	 }
 
 	 ## Remove sso_id
