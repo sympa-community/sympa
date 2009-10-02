@@ -245,6 +245,10 @@ sub load {
             $Conf{'DKIM_feature'} = 'off';
         }
     }
+    unless ($Conf{'DKIM_feature'} eq 'on'){
+	# dkim_signature_apply_ on nothing if DKIM_feature is off
+	$Conf{'dkim_signature_apply_on'} = (''); # empty array
+    }
 
     ## Load charset.conf file if necessary.
     if($Conf{'legacy_character_support_feature'} eq 'on'){
