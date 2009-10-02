@@ -1679,6 +1679,7 @@ sub remind {
 		$context{'user'}{'lang'} = $global_info{$email}{'lang'};
 		$context{'user'}{'password'} = $global_info{$email}{'password'};
 		$context{'user'}{'gecos'} = $global_info{$email}{'gecos'};
+		$context{'use_bulk'} = 1;
                 @{$context{'lists'}} = @{$global_subscription{$email}};
 		$context{'use_bulk'} = 1;
 

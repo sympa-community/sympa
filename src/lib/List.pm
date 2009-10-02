@@ -1401,7 +1401,7 @@ my %alias = ('reply-to' => 'reply_to',
 			       'occurence' => '0-1',
 			       'default' => {'conf' => 'merge_feature'},
 			       'gettext_id' => "Allow message personnalization",
-			       'group' => 'other'
+			       'group' => 'sending'
 			       },
 	    'visibility' => {'scenario' => 'visibility',
 			     'synonym' => {'public' => 'noconceal',
