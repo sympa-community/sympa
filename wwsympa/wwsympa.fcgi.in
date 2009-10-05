@@ -4954,7 +4954,7 @@ sub do_subrequest {
  sub do_signoff {
      &wwslog('info', 'do_signoff');
 
-     my $authenticated_email_address;
+     my $authenticated_email_address = $param->{'user'}{'email'};
 
      unless ($authenticated_email_address) {
 	 unless ($in{'email'}) {
