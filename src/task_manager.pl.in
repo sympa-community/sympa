@@ -1810,7 +1810,7 @@ sub sync_include {
 
     if (! $list->has_include_data_sources() &&
 	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {
-	&do_log('debug1', "List $list->{'name'} no more require sync_include task");
+	&do_log('debug', "List $list->{'name'} no more require sync_include task");
 	return -1;	
     }    
 }
