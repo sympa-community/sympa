@@ -19,7 +19,7 @@ X-Loop: [% conf.sympa %]
 [% IF notice.entry == 'smime' -%]
 [%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
 
-[% IF notice.entry == 'dkim' -%]
+[% ELSIF notice.entry == 'dkim' -%]
 [%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
 
 [% ELSIF notice.entry == 'req_forward' -%]
