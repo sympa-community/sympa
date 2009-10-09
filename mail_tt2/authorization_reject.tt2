@@ -6,6 +6,7 @@
 
 [% ELSIF reason == 'web_archive_local_user_sub' -%]
 [%|loc()%]Web archives are restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'web_archive_listmaster' -%]
 [%|loc()%]Web archives are restricted to listmaster.[%END%]
@@ -15,6 +16,7 @@
 
 [% ELSIF reason == 'web_archive_subscriber' -%]
 [%|loc()%]Web archives are restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'add_owner' -%]
 [%|loc()%]Adding a user to the list is restricted to list owners.[%END%]
@@ -30,12 +32,14 @@
 
 [% ELSIF reason == 'd_edit_subscriber' -%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'd_edit_owner' -%]
 [%|loc()%]Shared document edition is restricted to list owners.[%END%]
 
 [% ELSIF reason == 'd_edit_subscriber_https' -%]
 [%|loc()%]Shared document edition is restricted to list subscribers authenticated with user certificate.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'del_owner' -%]
 [%|loc()%]Deleting a user from the list is restricted to list owners.[%END%]
@@ -48,6 +52,7 @@
 
 [% ELSIF reason == 'd_read_subscriber' -%]
 [%|loc()%]Shared document reading is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'd_read_subscriber_https' -%]
 [%|loc()%]Shared document reading is restricted to list subscribers authenticated with user certificat.[%END%]
@@ -63,6 +68,7 @@
 
 [% ELSIF reason == 'info_subscriber' -%]
 [%|loc()%]List information is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'invite_closed' -%]
 [%|loc()%]The 'invite' feature is unavailable.[%END%]
@@ -72,6 +78,7 @@
 
 [% ELSIF reason == 'invite_subscriber' -%]
 [%|loc()%]The 'invite' feature is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'remind_listmaster' -%]
 [%|loc()%]The 'remind' feature is restricted to listmaster.[%END%]
@@ -84,6 +91,7 @@
 
 [% ELSIF reason == 'review_local_user_sub' -%]
 [%|loc()%]The 'review' feature is restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'review_listmaster' -%]
 [%|loc()%]The 'review' feature is restricted to listmaster.[%END%]
@@ -93,6 +101,7 @@
 
 [% ELSIF reason == 'review_subscriber' -%]
 [%|loc()%]The 'review' feature is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'send_closed' -%]
 [%|loc()%]Message distribution in this list is not allowed.[%END%]
@@ -102,6 +111,7 @@
 
 [% ELSIF reason == 'send_local_user_sub' -%]
 [%|loc()%]Message distribution for this list is restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'send_editor' -%]
 [%|loc()%]Message distribution for this list is restricted to list moderators.[%END%]
@@ -111,9 +121,11 @@
 
 [% ELSIF reason == 'send_subscriber' -%]
 [%|loc()%]Message distribution in the list is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'send_subscriber_smime' -%]
 [%|loc()%]Message distribution for this list is restricted to list subscribers check S/MIME signature.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
 
 [% ELSIF reason == 'subscribe_closed' -%]
 [%|loc()%]You are not allowed to subscribe to this list.[%END%]
