@@ -128,7 +128,7 @@ user.
 =item get_subscriber ( USER )
 
 Returns a subscriber of the list.
-s
+
 =item get_admin_user ( ROLE, USER)
 
 Return an admin user of the list with predefined role
