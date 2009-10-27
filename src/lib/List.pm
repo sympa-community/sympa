@@ -3470,7 +3470,7 @@ sub send_msg {
 	## TOPICS
 	my @selected_tabrcpt;
 	if ($self->is_there_msg_topic()){
-	    @selected_tabrcpt = $self->select_subscribers_for_topic($message->get_topic(),$available_rcpt->{$array_name});
+	    @selected_tabrcpt = $self->select_subscribers_for_topic($new_message->get_topic(),$available_rcpt->{$array_name});
 	} else {
 	    @selected_tabrcpt = @{$available_rcpt->{$array_name}};
 	}
@@ -3493,7 +3493,7 @@ sub send_msg {
 	$nbr_smtp += $result;
 	
 	## Sending VERP.
-	$result = &mail::mail_message('message'=> $message, 
+	$result = &mail::mail_message('message'=> $new_message, 
 				      'rcpt'=> \@verp_selected_tabrcpt, 
 				      'list'=> $self,
 				      'verp' => 'on',
@@ -11385,13 +11385,14 @@ sub _urlize_part {
     my $new_part;
 
     my $lang = &Language::GetLang();
+    my $charset = &Language::GetCharset();
 
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$list);
 
     &tt2::parse_tt2({'file_name' => $file_name,
 		     'file_url'  => $file_url,
 		     'file_size' => $size ,
-		     'charset' => &Language::GetCharset()},
+		     'charset' => $charset},
 		    'urlized_part.tt2',
 		    \$new_part,
 		    $tt2_include_path);
