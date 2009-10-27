@@ -465,12 +465,13 @@ sub store {
     }
 
     my $priority_for_packet;
+    my $already_tagged = 0;
     my $packet_rank = 0; # Initialize counter used to check wether we are copying the last packet.
     foreach my $packet (@{$rcpts}) {
-	if($tag_as_last){
+	$priority_for_packet = $priority_packet;
+	if($tag_as_last && !$already_tagged){
 	    $priority_for_packet = $priority_packet + 5;
-	}else{
-	    $priority_for_packet = $priority_packet;
+	    $already_tagged = 1;
 	}
 	$type = ref $packet;
 	my $rcptasstring ;
