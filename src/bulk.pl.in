@@ -312,7 +312,6 @@ while (!$end) {
 	## Remove packet once it has been processed
 	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
 	    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
-	    return undef;
 	}
 
 	
