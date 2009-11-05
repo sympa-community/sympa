@@ -810,6 +810,7 @@ sub remove_invalid_dkim_signature {
 
     unless (&tools::dkim_verifier($msg_as_string)){
 	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
 	my $entity = $parser->parse_data($msg_as_string);
 	unless($entity) {
 	    &do_log('err','could not parse message');

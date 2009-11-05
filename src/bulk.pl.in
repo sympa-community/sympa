@@ -267,6 +267,7 @@ while (!$end) {
 		    
 		    ### Parse an MIME::Entity message
 		    my $parser = new MIME::Parser;
+		    $parser->output_to_core(1);
 		    my $entity = $parser->parse_data($messageasstring_init); ## Retrouver la méthode qui correspond
 		    
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
