@@ -125,8 +125,9 @@ CREATE TABLE one_time_ticket_table (
 
 
 CREATE TABLE bulkmailer_table(
-  	messagekey_bulkmailer  	varchar2(80)) NOT NULL,
-	packetid_bulkmailer 	varchar2(33)) NOT NULL,
+  	messagekey_bulkmailer  	varchar2(80) NOT NULL,
+	packetid_bulkmailer 	varchar2(33) NOT NULL,
+  	messageid_bulkmailer  	varchar2(100),
 	receipients_bulkmailer 	long,
 	returnpath_bulkmailer 	varchar2(100),
 	robot_bulkmailer 	varchar2(80),
@@ -143,6 +144,7 @@ CREATE TABLE bulkmailer_table(
 
 CREATE TABLE bulkspool_table (
   	messagekey_bulkspool  	varchar2(33) NOT NULL,
+  	messageid_bulkspool  	varchar2(100),
 	message_bulkspool 	long,
 	lock_bulkspool 	number,
         dkim_sender_bulkspool varchar2(100),

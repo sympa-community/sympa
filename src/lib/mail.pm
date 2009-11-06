@@ -622,6 +622,7 @@ sub sendto {
 sub sending {
     my %params = @_;
     my $msg = $params{'msg'};
+    my $msg_id;
     my $rcpt = $params{'rcpt'};
     my $from = $params{'from'};
     my $robot = $params{'robot'};
@@ -670,9 +671,14 @@ sub sending {
     #	$messageasstring = $signed_msg->{'msg_as_string'};
     #    }
     if (ref($msg) eq "MIME::Entity") {
-	$messageasstring = $msg->as_string;    
+	$messageasstring = $msg->as_string;
+	my $head = $msg->head;
+	$msg_id = $head->get('Message-ID');
     }else {
 	$messageasstring = $msg;
+	if ($messageasstring =~ /Message-ID:\s*(\<.*\>)\s*\n/) {
+	    $msg_id = $1;
+	}
     }
     my $verpfeature = ($verp eq 'on');
     my $mergefeature = ($merge eq 'on');
@@ -680,6 +686,7 @@ sub sending {
     if ($use_bulk){ # in that case use bulk tables to prepare message distribution 
 
 	my $bulk_code = &Bulk::store('msg' => $messageasstring,
+				     'msg_id' => $msg_id,
 				     'rcpts' => $rcpt,
 				     'from' => $from,
 				     'robot' => $robot,
@@ -698,7 +705,7 @@ sub sending {
 	    return undef;
 	}
 	
-    }elsif(defined $send_spool) { # in context wwsympa.fcgi do note send message to reciepients but copy it to standard spool 
+    }elsif(defined $send_spool) { # in context wwsympa.fcgi do not send message to reciepients but copy it to standard spool 
 	do_log('debug',"NOT USING BULK");
 
 	$sympa_email = &Conf::get_robot_conf($robot, 'sympa');	

@@ -121,16 +121,17 @@ CREATE TABLE one_time_ticket_table (
 CREATE TABLE bulkmailer_table (
 	messagekey_bulkmailer varchar(80) NOT NULL,
 	packetid_bulkmailer varchar(33) NOT NULL,
-	receipients_bulkmailer text NOT NULL,
-	returnpath_bulkmailer varchar(100) NOT NULL,
-	robot_bulkmailer varchar(80) NOT NULL,
+	messageid_bulkmailer varchar(100),
+	receipients_bulkmailer text,
+	returnpath_bulkmailer varchar(100),
+	robot_bulkmailer varchar(80),
 	listname_bulkmailer varchar(50) default NULL,
-	verp_bulkmailer int(1) NOT NULL,
-	merge_bulkmailer int(1) NOT NULL,
-	priority_message_bulkmailer smallint(10) NOT NULL,
-	priority_packet_bulkmailer smallint(10) NOT NULL,
-	reception_date_bulkmailer int(11) NOT NULL,
-	delivery_date_bulkmailer int(11) NOT NULL,
+	verp_bulkmailer int(1),
+	merge_bulkmailer int(1),
+	priority_message_bulkmailer smallint(10),
+	priority_packet_bulkmailer smallint(10),
+	reception_date_bulkmailer int(11),
+	delivery_date_bulkmailer int(11),
 	lock_bulkmailer varchar(30) default NULL,
 	PRIMARY KEY (messagekey_bulkmailer,packetid_bulkmailer)
 );
@@ -138,6 +139,7 @@ CREATE TABLE bulkmailer_table (
 
 CREATE TABLE `bulkspool_table` (
   `messagekey_bulkspool` varchar(33) NOT NULL COMMENT 'An internal id of the message in order to join this table with bulkmailer_table'
+  `messageid_bulkspool` varchar(100) NOT NULL COMMENT 'The value of the `Message-ID` SMTP field for this message'
   `message_bulkspool` longtext COMMENT 'The message itself as a string. The database MUST be tuned in order to accept big data blog for storing messages with attachments',
   `lock_bulkspool` int(1) default NULL COMMENT 'lock used by parallele bulk demon ni order to prevent a message to be distribited twice',
   `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',

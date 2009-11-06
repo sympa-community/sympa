@@ -318,7 +318,7 @@ while (!$end) {
 	
 	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 5){
 	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date.', 
-		    $bulk->{'messagekey'}, 
+		    $bulk->{'messageid'}, 
 		    $bulk->{'listname'}, 
 		    $bulk->{'robot'}, 
 		    $bulk->{'priority_message'}, 

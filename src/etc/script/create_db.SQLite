@@ -116,8 +116,9 @@ CREATE TABLE one_time_ticket_table (
 CREATE	INDEX one_time_ticket_idx ON one_time_ticket_table(ticket_one_time_ticket);
 
 CREATE TABLE bulkmailer_table(
-  	messagekey_bulkmailer  	varchar(80)) NOT NULL,
-	packetid_bulkmailer 	varchar(33)) NOT NULL,
+  	messagekey_bulkmailer  	varchar(80) NOT NULL,
+	packetid_bulkmailer 	varchar(33) NOT NULL,
+  	messageid_bulkmailer  	varchar(100),
 	receipients_bulkmailer 	text,
 	returnpath_bulkmailer 	varchar(100),
 	robot_bulkmailer 	varchar(80),
@@ -135,6 +136,7 @@ CREATE INDEX bulkmailer_idx ON bulkmailer_table(messagekey_bulkmailer,packetid_b
 
 CREATE TABLE bulkspool_table (
   	messagekey_bulkspool  	varchar(33) NOT NULL,
+  	messageid_bulkspool  	varchar(100),
 	message_bulkspool 	text,
 	lock_bulkspool 	integer,
         dkim_sender_bulkspool varchar2(100),

@@ -180,6 +180,7 @@ go
 CREATE TABLE bulkmailer_table (
   	messagekey_bulkmailer  	varchar(80),
 	packetid_bulkmailer 	varchar(33),
+  	messageid_bulkmailer  	varchar(100),
 	receipients_bulkmailer 	text,
 	returnpath_bulkmailer 	varchar(100),
 	robot_bulkmailer 	varchar(80),
@@ -201,6 +202,7 @@ go
 
 CREATE TABLE bulkspool_table (
   	messagekey_bulkspool  	varchar(33),
+  	messageid_bulkspool  	varchar(100),
 	message_bulkspool 	text,
 	lock_bulkspool 	int(1),
         dkim_sender_bulkspool varchar2(100),
