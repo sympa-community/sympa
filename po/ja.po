@@ -9,10 +9,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Sympa-5.4.6, Sympa-6.0b2\n"
+"Project-Id-Version: Sympa-5.4.6, Sympa-6.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-09-18 17:45+0900\n"
+"PO-Revision-Date: 2009-11-06 06:12+0100\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,8 @@ msgstr ""
 "X-Generator: Pootle 1.0.2\n"
 
 #: ../web_tt2/home.tt2:2
-#, fuzzy
 msgid "Mailing lists server"
-msgstr "メーリングリストの分野別一覧"
+msgstr "メーリングリストのサーバ"
 
 #. (conf.email,conf.host)
 #: ../web_tt2/home.tt2:4
@@ -90,7 +89,7 @@ msgid "Home"
 msgstr "ホーム"
 
 #: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
 #: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
 #: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
 #: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
@@ -104,7 +103,6 @@ msgstr "ホーム"
 #: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:6
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
-#: ../web_tt2/suspend_request.tt2:64
 msgid "Help"
 msgstr "使いかた"
 
@@ -112,36 +110,30 @@ msgstr "使いかた"
 msgid "Restore identity"
 msgstr "自分に戻る"
 
-#: ../web_tt2/login_menu.tt2:13
-#, fuzzy
-msgid "[Listmaster]"
+#: ../mail_tt2/listmaster_notification.tt2:2 ../web_tt2/login_menu.tt2:13
+msgid "Listmaster"
 msgstr "リストシステム管理者"
 
 #: ../web_tt2/login_menu.tt2:14
-#, fuzzy
-msgid "[Privileged owner]"
+msgid "Privileged owner"
 msgstr "特権オーナー"
 
-#: ../web_tt2/login_menu.tt2:15
-#, fuzzy
-msgid "[Owner]"
+#: ../src/lib/List.pm:1131 ../web_tt2/login_menu.tt2:15
+msgid "Owner"
 msgstr "オーナー"
 
 #: ../web_tt2/login_menu.tt2:16
-#, fuzzy
-msgid "[Editor]"
+msgid "Editor"
 msgstr "吟味役"
 
 #: ../web_tt2/login_menu.tt2:17
-#, fuzzy
-msgid "[Subscriber]"
+msgid "Subscriber"
 msgstr "読者"
 
-#. (last_login_host,last_login_date)
+#. (last_login_host)
 #: ../web_tt2/login_menu.tt2:21
-#, fuzzy
-msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
-msgstr "前回のログインは %1 からでした<br />(%2)</span>"
+msgid "last login from %1"
+msgstr "前回のログインは %1 からでした"
 
 #: ../web_tt2/login_menu.tt2:36
 msgid "Logout"
@@ -151,17 +143,16 @@ msgstr "ログアウト"
 msgid "Your preferences"
 msgstr "個人設定"
 
-#: ../web_tt2/suspend_request.tt2:5 ../web_tt2/your_lists.tt2:9
-#, fuzzy
-msgid "Manage your subscriptions"
-msgstr "承認待ち読者"
+#: ../web_tt2/your_lists.tt2:7
+msgid "Your Lists"
+msgstr "あなたが関わっているリスト"
 
-#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
+#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:13
 msgid "admin"
 msgstr "運営"
 
 #: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
-#: ../web_tt2/your_lists.tt2:23
+#: ../web_tt2/your_lists.tt2:22
 msgid "No mailing list available."
 msgstr "ご利用になれるメーリングリストはありません。"
 
@@ -175,7 +166,6 @@ msgid "Do you really want to unsubscribe from list %1?"
 msgstr "本当に %1 メーリングリストの登録解除をしてよいのですか。"
 
 #: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
-#: ../web_tt2/suspend_request.tt2:57
 msgid "Unsubscribe"
 msgstr "登録解除"
 
@@ -226,7 +216,7 @@ msgstr "投稿"
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1319 ../web_tt2/list_menu.tt2:80
+#: ../src/lib/List.pm:1263 ../web_tt2/list_menu.tt2:80
 #: ../web_tt2/list_menu.tt2:82
 msgid "Shared documents"
 msgstr "共有文書置き場"
@@ -248,15 +238,14 @@ msgid "Subscribers:"
 msgstr "読者数:"
 
 #: ../web_tt2/list_panel.tt2:12
-#, fuzzy
-msgid "Error rate:&nbsp;"
+msgid "Error rate:"
 msgstr "エラー率:"
 
 #: ../web_tt2/list_panel.tt2:13
 msgid "Owners"
 msgstr "オーナー"
 
-#: ../src/lib/List.pm:679 ../web_tt2/list_panel.tt2:20
+#: ../src/lib/List.pm:622 ../web_tt2/list_panel.tt2:20
 msgid "Moderators"
 msgstr "吟味役"
 
@@ -273,12 +262,10 @@ msgid "Casual administration"
 msgstr "日常の管理作業"
 
 #: ../web_tt2/admin.tt2:7
-#, fuzzy
 msgid "Edit list config:"
-msgstr "リストの設定変更"
+msgstr "リストの設定変更:"
 
 #: ../web_tt2/admin.tt2:7
-#, fuzzy
 msgid ""
 "Use it with care: it allows you to modify some of the list parameters. The "
 "list of the parameters you can modify depends on your privileges."
@@ -287,18 +274,16 @@ msgstr ""
 "パラメータを変更できるかは、あなたがもっている権限によって変わります。"
 
 #: ../web_tt2/admin.tt2:9
-#, fuzzy
 msgid "Customizing: "
-msgstr "メッセージ設定"
+msgstr "メッセージ設定:"
 
 #: ../web_tt2/admin.tt2:9
 msgid "Editing of various files and messages attached to your list."
 msgstr "このリストに関わるいろいろなファイルやメッセージを変更できます。"
 
 #: ../web_tt2/admin.tt2:10
-#, fuzzy
 msgid "Manage subscribers:"
-msgstr "読者管理"
+msgstr "読者管理:"
 
 #: ../web_tt2/admin.tt2:10
 msgid ""
@@ -307,36 +292,32 @@ msgid ""
 msgstr "リストの読者の追加、削除、読者登録の吟味などができます。"
 
 #: ../web_tt2/admin.tt2:12
-#, fuzzy
 msgid "Blacklist:"
-msgstr "ブラックリスト"
+msgstr "ブラックリスト:"
 
 #: ../web_tt2/admin.tt2:12
 msgid "Handles the set of black-listed mail addresses for this list."
 msgstr "このリストでブラックリストに入れるアドレスを操作します。"
 
 #: ../web_tt2/admin.tt2:15
-#, fuzzy
 msgid "Manage archives:"
-msgstr "投稿保管庫の管理"
+msgstr "投稿保管庫の管理:"
 
 #: ../web_tt2/admin.tt2:15
 msgid "Allows you to download and delete list archives."
 msgstr "リストの投稿保管庫をダウンロードしたり削除したりできます。"
 
 #: ../web_tt2/admin.tt2:18
-#, fuzzy
 msgid "Bounces:"
-msgstr "配送エラー"
+msgstr "配送エラー:"
 
 #: ../web_tt2/admin.tt2:18
 msgid "Manages non-delivery reports (also called bounces)."
 msgstr "配送失敗レポート (「バウンス」とも言います) の管理。"
 
 #: ../web_tt2/admin.tt2:21
-#, fuzzy
 msgid "Logs:"
-msgstr "運用記録"
+msgstr "運用記録:"
 
 #: ../web_tt2/admin.tt2:21
 msgid "A tool for exploring the list logs."
@@ -353,7 +334,6 @@ msgstr "リストの再開"
 
 #. (list)
 #: ../web_tt2/admin.tt2:33
-#, fuzzy
 msgid "Are you sure you wish to restore list %1?"
 msgstr "%1メーリングリストが再開してしまいますが、それでよいのですか。"
 
@@ -361,7 +341,7 @@ msgstr "%1メーリングリストが再開してしまいますが、それで�
 msgid ""
 "This list is currently closed. Clicking this button will make it active "
 "again."
-msgstr "このリストは現在、閉鎖中です。このボタンをクリックすると再会できます。"
+msgstr "このリストは現在、閉鎖中です。このボタンをクリックすると再開できます。"
 
 #: ../web_tt2/admin.tt2:36 ../web_tt2/admin_menu.tt2:122
 #: ../web_tt2/admin_menu.tt2:124
@@ -407,10 +387,10 @@ msgstr "共有文書を置くウェブスペースを初期化します。"
 msgid "Delete Shared"
 msgstr "共有文書置き場の閉鎖"
 
+#. (listname)
 #: ../web_tt2/admin.tt2:63
-#, fuzzy
-msgid "Are you sure you wish to delete the shared documents?"
-msgstr "共有文書は削除されてしまいますが、それでよいのですか。"
+msgid "Are you sure you wish to delete the shared documents for list %1?"
+msgstr "%1 メーリングリストの共有文書が削除されてしまいますが、それでよいのですか。"
 
 #: ../web_tt2/admin.tt2:63
 msgid ""
@@ -449,12 +429,10 @@ msgid "List name"
 msgstr "リスト名"
 
 #: ../web_tt2/active_lists.tt2:20
-#, fuzzy
 msgid "Number of messages"
-msgstr "まとめ読み内の最大メッセージ数"
+msgstr "通数"
 
 #: ../web_tt2/active_lists.tt2:21
-#, fuzzy
 msgid "Average per day"
 msgstr "日平均"
 
@@ -483,8 +461,8 @@ msgid "Add subscribers"
 msgstr "読者を追加"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:286
-#: ../web_tt2/review.tt2:75 ../web_tt2/reviewbouncing.tt2:127
+#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:288
+#: ../web_tt2/review.tt2:73 ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "知らせない"
 
@@ -523,9 +501,8 @@ msgstr "共有文書置き場の再開"
 
 #. (list)
 #: ../web_tt2/admin_menu.tt2:122 ../web_tt2/admin_menu.tt2:124
-#, fuzzy
 msgid "Are you sure you wish to close %1 list?"
-msgstr "%1 メーリングリストは閉鎖されてしまいますが、それでよいのですか。"
+msgstr "%1メーリングリストは閉鎖されてしまいますが、それでよいのですか。"
 
 #: ../web_tt2/admin_menu.tt2:139
 msgid "List Definition"
@@ -550,7 +527,7 @@ msgid "Bounce Settings"
 msgstr "配送エラー"
 
 #: ../web_tt2/admin_menu.tt2:160 ../web_tt2/edit_list_request.tt2:17
-#: ../web_tt2/nav.tt2:105
+#: ../web_tt2/nav.tt2:103
 msgid "Miscellaneous"
 msgstr "その他"
 
@@ -567,7 +544,7 @@ msgid "Archive Management"
 msgstr "投稿保管庫の管理"
 
 #: ../web_tt2/arc.tt2:4 ../web_tt2/arc_manage.tt2:4
-#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:12
+#: ../web_tt2/arcsearch_form.tt2:4 ../web_tt2/compose_mail.tt2:17
 #: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
 #: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
 #: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
@@ -579,7 +556,7 @@ msgstr "投稿保管庫の管理"
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
 #: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
-#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:215
+#: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:217
 #: ../web_tt2/review.tt2:6 ../web_tt2/reviewbouncing.tt2:3
 #: ../web_tt2/suboptions.tt2:20
 msgid "Open in a new window"
@@ -630,19 +607,17 @@ msgid "Advanced archive search"
 msgstr "高度な検索"
 
 #: ../web_tt2/arcsearch.tt2:7 ../web_tt2/arcsearch_form.tt2:12
-#, fuzzy
 msgid "Search field:"
-msgstr "検索する範囲 :"
+msgstr "検索する範囲:"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:90 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:88 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "探す"
 
 #: ../web_tt2/arcsearch_form.tt2:19
-#, fuzzy
 msgid "Search:"
-msgstr "探す"
+msgstr "探す:"
 
 #: ../web_tt2/arcsearch_form.tt2:20
 msgid "this sentence"
@@ -657,9 +632,8 @@ msgid "one of these words"
 msgstr "どれかの語"
 
 #: ../web_tt2/arcsearch_form.tt2:25
-#, fuzzy
 msgid "Prefer:"
-msgstr "並び順"
+msgstr "並び順:"
 
 #: ../web_tt2/arcsearch_form.tt2:26
 msgid "newest messages"
@@ -670,9 +644,8 @@ msgid "oldest messages"
 msgstr "古いメッセージから"
 
 #: ../web_tt2/arcsearch_form.tt2:30
-#, fuzzy
 msgid "Case:"
-msgstr "大文字小文字"
+msgstr "大文字小文字:"
 
 #: ../web_tt2/arcsearch_form.tt2:31
 msgid "insensitive"
@@ -683,9 +656,8 @@ msgid "sensitive"
 msgstr "区別する"
 
 #: ../web_tt2/arcsearch_form.tt2:35
-#, fuzzy
 msgid "Check:"
-msgstr "語が"
+msgstr "語が:"
 
 #: ../web_tt2/arcsearch_form.tt2:36
 msgid "part of word"
@@ -696,9 +668,8 @@ msgid "entire word"
 msgstr "一致する語がある"
 
 #: ../web_tt2/arcsearch_form.tt2:40
-#, fuzzy
 msgid "Layout:"
-msgstr "表示通数"
+msgstr "表示通数:"
 
 #: ../web_tt2/arcsearch_form.tt2:41 ../web_tt2/arcsearch_form.tt2:42
 #: ../web_tt2/arcsearch_form.tt2:43
@@ -706,9 +677,8 @@ msgid "results by page"
 msgstr "通/ページ"
 
 #: ../web_tt2/arcsearch_form.tt2:46
-#, fuzzy
 msgid "Search area:"
-msgstr "検索対象"
+msgstr "検索対象:"
 
 #: ../web_tt2/arcsearch_form.tt2:47
 msgid "Sender"
@@ -725,9 +695,8 @@ msgid "Body"
 msgstr "本文"
 
 #: ../web_tt2/arcsearch_form.tt2:54
-#, fuzzy
 msgid "Extend search field:"
-msgstr "検索する範囲を広げる"
+msgstr "探す範囲を広げる:"
 
 #: ../web_tt2/arcsearch.tt2:4
 msgid "Result of your search in the archive"
@@ -735,9 +704,8 @@ msgstr "投稿保管庫内の検索結果"
 
 #. (key_word)
 #: ../web_tt2/arcsearch.tt2:13
-#, fuzzy
 msgid "Parameters of these search make on <strong> &quot;%1&quot;:</strong>"
-msgstr "「<strong>%1</strong>」を以下の条件で検索しました"
+msgstr "「<strong>%1</strong>」を以下の条件で検索しました。"
 
 #: ../web_tt2/arcsearch.tt2:17
 msgid "(This sentence,"
@@ -821,17 +789,13 @@ msgid "Blacklist management"
 msgstr "ブラックリスト管理"
 
 #: ../web_tt2/blacklist.tt2:8
-#, fuzzy
 msgid ""
 "Operation requested by users which email is listed in the blacklist file are "
 "rejected. The\n"
 "blacklist is in use for the following operation:"
-msgstr ""
-"ブラックリストに載っている電子メールアドレスでの操作は拒否します。ブラックリ"
-"ストは以下の操作に使います"
+msgstr "ブラックリストに載っている電子メールアドレスでの操作は拒否します。次の操作にブラックリストを使います: "
 
 #: ../web_tt2/blacklist.tt2:10
-#, fuzzy
 msgid "Syntax:"
 msgstr "書きかた:"
 
@@ -844,7 +808,6 @@ msgid "char # introduce a comment"
 msgstr "「#」で始まる行はコメントで、無視されます"
 
 #: ../web_tt2/blacklist.tt2:14
-#, fuzzy
 msgid ""
 "char * match any string. Example: \"*@spammer-domain.com\" match any sender "
 "from that exact domain"
@@ -878,13 +841,10 @@ msgstr "テンプレートを保存しました"
 msgid ""
 "Changing your email address is a sensitive operation so we need to verify "
 "your email."
-msgstr ""
-"電子メールアドレスの変更は慎重に進めなければなりません。あなたの電子メールア"
-"ドレスを確認します。"
+msgstr "電子メールアドレスの変更は慎重に進めなければなりません。あなたの電子メールアドレスを確認する必要があります。"
 
 #. (new_email)
 #: ../web_tt2/change_email_request.tt2:4
-#, fuzzy
 msgid ""
 "To this end we have sent you an email to this address: %1 with a validation "
 "link."
@@ -916,14 +876,12 @@ msgstr ""
 "これは、権限を必要とする操作を行うために必要となります。"
 
 #: ../web_tt2/choosepasswd.tt2:11 ../web_tt2/pref.tt2:41
-#, fuzzy
 msgid "New password:"
 msgstr "新しいパスワード:"
 
 #: ../web_tt2/choosepasswd.tt2:12
-#, fuzzy
 msgid "New password again:"
-msgstr "新しいパスワード(確認):"
+msgstr "新しいパスワード (確認):"
 
 #: ../web_tt2/choosepasswd.tt2:13 ../web_tt2/picture_upload.tt2:13
 #: ../web_tt2/pref.tt2:20 ../web_tt2/pref.tt2:43
@@ -947,57 +905,53 @@ msgid "You should remove list aliases manually"
 msgstr "リストのエイリアスは手作業で削除しなければなりません"
 
 #: ../web_tt2/compose_mail.tt2:5
-#, fuzzy
-msgid "Sending a message to the list"
+msgid "Sendind a message to the list"
 msgstr "リストへメッセージを送信"
 
-#: ../web_tt2/compose_mail.tt2:12
-#, fuzzy
+#. (list,host)
+#: ../web_tt2/compose_mail.tt2:10
+msgid ""
+"The best way to post an email to the list is to compose an email to the list "
+"email address <b>%1@%2</b> using your favourite email client. We also "
+"provide a form below to compose an email through the web interface."
+msgstr ""
+"リストに電子メールを投稿するのにいちばんよいやりかたは、リストの電子メールアドレス <b>%1@%2</b> "
+"へ、使いなれたメールソフトを使って電子メールを送ることです。しかしウェブインタフェースでも、下のフォームで電子メールを送れるようになっています。"
+
+#: ../web_tt2/compose_mail.tt2:17
 msgid "Sending an html page to the list "
-msgstr "リストへメッセージを送信"
+msgstr "リストへHTMLページを送信"
 
 #. (user.email)
 #. (from)
-#: ../web_tt2/compose_mail.tt2:19 ../web_tt2/request_topic.tt2:27
+#: ../web_tt2/compose_mail.tt2:22 ../web_tt2/request_topic.tt2:27
 msgid "From: %1"
 msgstr "送信者: %1"
 
 #. (mailto)
-#: ../web_tt2/compose_mail.tt2:20 ../web_tt2/request_topic.tt2:28
+#: ../web_tt2/compose_mail.tt2:23 ../web_tt2/request_topic.tt2:28
 msgid "To: %1"
 msgstr "送信先: %1"
 
-#: ../web_tt2/compose_mail.tt2:21 ../web_tt2/create_list_request.tt2:69
+#: ../web_tt2/compose_mail.tt2:24 ../web_tt2/create_list_request.tt2:69
 #: ../web_tt2/install_pending_list.tt2:14
 #: ../web_tt2/set_pending_list_request.tt2:8
 msgid "Subject:"
 msgstr "表題:"
 
-#: ../web_tt2/compose_mail.tt2:26
-#, fuzzy
-msgid "Send to the list"
-msgstr "リストの表題"
-
-#: ../web_tt2/compose_mail.tt2:27
-#, fuzzy
-msgid "Send to me"
-msgstr "登録確認メッセージ"
-
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/compose_mail.tt2:50 ../web_tt2/modindex.tt2:50
 #: ../web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr ""
 "このリストは、メッセージにトピックがなければならないように設定してあります。"
 
-#: ../web_tt2/compose_mail.tt2:49
-#, fuzzy
+#: ../web_tt2/compose_mail.tt2:52
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr "メッセージに関連するトピックを選んでください (複数可):"
 
-#: ../web_tt2/compose_mail.tt2:77
-#, fuzzy
+#: ../web_tt2/compose_mail.tt2:65
 msgid "URL:"
-msgstr "URL"
+msgstr "URL:"
 
 #: ../web_tt2/copy_template.tt2:3
 msgid "Copying template"
@@ -1008,18 +962,15 @@ msgid "Input template"
 msgstr "元のテンプレート"
 
 #: ../web_tt2/copy_template.tt2:8
-#, fuzzy
 msgid "Name: "
 msgstr "名前: "
 
 #: ../web_tt2/copy_template.tt2:10 ../web_tt2/copy_template.tt2:17
 #: ../web_tt2/copy_template.tt2:9 ../web_tt2/view_template.tt2:10
-#, fuzzy
 msgid "Scope: "
 msgstr "範囲: "
 
 #: ../web_tt2/copy_template.tt2:11 ../web_tt2/copy_template.tt2:23
-#, fuzzy
 msgid "Language: "
 msgstr "言語: "
 
@@ -1028,7 +979,6 @@ msgid "Output template"
 msgstr "作るテンプレート"
 
 #: ../web_tt2/copy_template.tt2:16
-#, fuzzy
 msgid "New template name: "
 msgstr "新しいテンプレート名: "
 
@@ -1049,7 +999,6 @@ msgid "default"
 msgstr "初期値のまま"
 
 #: ../web_tt2/copy_template.tt2:31
-#, fuzzy
 msgid "Enter list name: "
 msgstr "リスト名を入力:"
 
@@ -1062,16 +1011,14 @@ msgid "Copy an existing list."
 msgstr "すでにあるリストを複写する。"
 
 #: ../web_tt2/create_list_request.tt2:9
-#, fuzzy
 msgid ""
 "You can create a list, using an existing list as a template; the list "
 "configuration of the source list will be copied to create the new one. Note "
 "that neither list members, nor archives or shared documents are duplicated. "
 "The source lists you can use are limited to lists you own."
 msgstr ""
-"既にあるリストを雛形にして別のリストを作成できます。もとのリストの設定を新し"
-"いリストに複写します。なお、リストのメンバ、投稿保管庫、共有文書は複製しませ"
-"ん。もとのリストに使えるのは、自分がオーナーになっているリストだけです。"
+"既にあるリストを雛形にして別のリストを作成できます。新しくできたリストには、もとのリストの設定が複写されます。ただし、リストのメンバ、投稿保管庫、共有文"
+"書は複製しません。もとのリストに使えるのは、自分がオーナーになっているリストだけです。"
 
 #: ../web_tt2/create_list_request.tt2:10 ../web_tt2/create_list_request.tt2:29
 msgid ""
@@ -1101,10 +1048,8 @@ msgstr ""
 "合いそうなものを選んでください。"
 
 #: ../web_tt2/create_list_request.tt2:33
-#, fuzzy
 msgid "the list name; be careful, not its address!"
-msgstr ""
-"リストの名前です。メールアドレスを入れるのではありませんからご注意ください。"
+msgstr "リストの名前です。リストのメールアドレスを入れるのではありませんからご注意ください。"
 
 #: ../web_tt2/create_list_request.tt2:34
 msgid "List name:"
@@ -1127,7 +1072,6 @@ msgstr ""
 "パラメータは、リストを作成したあとでも変更できます。"
 
 #: ../web_tt2/create_list_request.tt2:43
-#, fuzzy
 msgid "List type:"
 msgstr "リストの種類:"
 
@@ -1198,14 +1142,12 @@ msgstr "文書 %1 のアクセス制御"
 #. (doc_owner)
 #: ../web_tt2/d_control.tt2:9 ../web_tt2/d_editfile.tt2:17
 #: ../web_tt2/d_properties.tt2:15 ../web_tt2/d_read.tt2:38
-#, fuzzy
 msgid "Owner: %1"
 msgstr "オーナー: %1"
 
 #. (doc_date)
 #: ../web_tt2/d_control.tt2:10 ../web_tt2/d_editfile.tt2:18
 #: ../web_tt2/d_properties.tt2:16 ../web_tt2/d_read.tt2:39
-#, fuzzy
 msgid "Last update: %1"
 msgstr "最終更新: %1"
 
@@ -1213,7 +1155,6 @@ msgstr "最終更新: %1"
 #. (desc)
 #: ../web_tt2/d_control.tt2:11 ../web_tt2/d_editfile.tt2:19
 #: ../web_tt2/d_properties.tt2:17 ../web_tt2/d_read.tt2:41
-#, fuzzy
 msgid "Description: %1"
 msgstr "説明: %1"
 
@@ -1273,7 +1214,6 @@ msgid "Edit the file %1"
 msgstr "%1 ファイルの変更"
 
 #: ../web_tt2/d_install_shared.tt2:10
-#, fuzzy
 msgid ""
 "already exist(s), do you want to confirm the install and erase the old file"
 "(s) or cancel the install?"
@@ -1343,7 +1283,6 @@ msgstr "フォルダ内の一覧"
 
 #. (visible_path)
 #: ../web_tt2/d_read.tt2:27
-#, fuzzy
 msgid "Do you really want to delete %1?"
 msgstr "本当に %1 を削除してよいのですか。"
 
@@ -1380,7 +1319,7 @@ msgid "Size (Kb)"
 msgstr "サイズ (キロバイト)"
 
 #: ../web_tt2/d_read.tt2:69 ../web_tt2/d_read.tt2:71
-#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:168
+#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/review.tt2:166
 msgid "Last update"
 msgstr "最終更新"
 
@@ -1423,7 +1362,6 @@ msgstr "不明"
 
 #. (visible_path,s.doc)
 #: ../web_tt2/d_read.tt2:116 ../web_tt2/d_read.tt2:118
-#, fuzzy
 msgid "Do you really want to delete %1%2?"
 msgstr "本当に %1%2を削除してよいのですか。"
 
@@ -1439,7 +1377,6 @@ msgstr "変更"
 
 #. (visible_path,f.doc,f.size)
 #: ../web_tt2/d_read.tt2:253 ../web_tt2/d_read.tt2:255
-#, fuzzy
 msgid "Do you really want to delete %1%2 (%3 Kb)?"
 msgstr "本当に %1%2 (%3キロバイト) を削除してよいのですか。"
 
@@ -1484,7 +1421,7 @@ msgstr "タイトル"
 msgid "URL"
 msgstr "URL"
 
-#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:74
+#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:72
 msgid "Add"
 msgstr "追加"
 
@@ -1527,7 +1464,6 @@ msgid "path:"
 msgstr "パス:"
 
 #: ../web_tt2/dump_scenario.tt2:29
-#, fuzzy
 msgid "scope:"
 msgstr "範囲:"
 
@@ -1542,7 +1478,6 @@ msgid "list %1"
 msgstr "%1 メーリングリスト"
 
 #: ../web_tt2/dump_scenario.tt2:36
-#, fuzzy
 msgid "scenario name:"
 msgstr "シナリオ名:"
 
@@ -1553,18 +1488,15 @@ msgstr "%1 というファイルはすでに存在します"
 
 #. (shortname)
 #: ../web_tt2/d_upload.tt2:6
-#, fuzzy
 msgid "Do you want to delete the old file %1?"
 msgstr "元の %1 ファイルを削除してよいのですか。"
 
 #. (shortname)
 #: ../web_tt2/d_upload.tt2:9
-#, fuzzy
 msgid "Do you want to rename your file %1?"
 msgstr "%1 ファイルを移動してよいのですか。"
 
 #: ../web_tt2/d_upload.tt2:15
-#, fuzzy
 msgid "Do you want to cancel the upload?"
 msgstr "アップロードを取りやめてよいのですか。"
 
@@ -1577,9 +1509,8 @@ msgid "[% k.name %]:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
-#, fuzzy
 msgid "*: Required element"
-msgstr "必須の要素"
+msgstr "*: 必須の要素"
 
 #: ../web_tt2/editfile.tt2:4
 msgid "Edit list templates"
@@ -1590,35 +1521,40 @@ msgid "Save"
 msgstr "保存"
 
 #: ../web_tt2/editfile.tt2:23
-#, fuzzy
 msgid "You can edit several messages/files associated with your list:"
-msgstr "リストから発信するメッセージやファイルを変更できます:"
+msgstr "リストから発信するメッセージやファイルを変更できます。"
 
 #: ../web_tt2/editfile.tt2:28
 msgid "HTML pages"
 msgstr "HTML ページ"
 
+# duplicate of web_help.po
 #: ../web_tt2/editfile.tt2:30
 msgid ""
 "List homepage: HTML text to describe the list. It is printed on the right-"
 "hand side of the main list page. (default for this is the list description)"
 msgstr ""
+"リストのホームページ: リストを説明するHTMLテキスト。 これはリストのメインページの右側に表示されます "
+"(なければ、かわりに下の「リストの説明」が入ります)。"
 
+# dumplicate of web_help.po
 #: ../web_tt2/editfile.tt2:32
 msgid ""
 "List description: This text is sent as an answer to the mail command\n"
 "INFO. It can also be included in the <em>Welcome message</em>."
 msgstr ""
+"リストの説明: このテキストを INFO コマンドに対する返信として送ります。また、<em>歓迎メッセージ</em>にもこのテキストが入ります。"
 
 #: ../web_tt2/editfile.tt2:34
 msgid "Automatic messages"
 msgstr "自動送信されるメッセージ"
 
+# dumplicate of web_help.po
 #: ../web_tt2/editfile.tt2:36
 msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
-msgstr ""
+msgstr "歓迎メッセージ: 登録された読者に送るメッセージ。MIME の複雑なメッセージを書くこともできます (MIME の知識に精通している人なら)。"
 
 #: ../web_tt2/editfile.tt2:37
 msgid ""
@@ -1626,6 +1562,7 @@ msgid ""
 "can be sent to the original author. You may prepare various rejection "
 "messages."
 msgstr ""
+"拒否メッセージ: リストの吟味役は、メッセージを拒否する際に、メッセージを書いた人に知らせることができます。いろいろな拒否メッセージを用意しておけます。"
 
 #: ../web_tt2/editfile.tt2:39
 msgid ""
@@ -1634,28 +1571,31 @@ msgid ""
 "confused about their own subscription emails or people who are not able to "
 "unsubscribe themselves."
 msgstr ""
+"登録確認メッセージ: REMIND コマンドを使うと、このメッセージを全読者に送れます。\n"
+"読者登録している電子メールアドレスがわからなくなった人や、自分で登録解除ができない人に便利です。"
 
 #: ../web_tt2/editfile.tt2:41
 msgid ""
 "Subscribing invitation message: sent to a person if someone  \n"
 "uses the INVITE command to invite someone to subscribe."
-msgstr ""
+msgstr "読者登録に招待するメッセージ: 誰かが INVITE コマンドを使って読者登録に招待すると、招待される人にこのメッセージを送ります。"
 
 #: ../web_tt2/editfile.tt2:43
 msgid "Added in distributed messages"
 msgstr "配信するメッセージに追加するもの"
 
+# duplicate of web_help.po
 #: ../web_tt2/editfile.tt2:45
 msgid ""
 "Message footer: If this file is not empty, it is added as a MIME attachment "
 "at the end of each message distributed to the list."
-msgstr ""
+msgstr "メッセージの後付け: このテキストが空でなければ、リストに配信するすべてのメッセージの最後にMIMEのパートとして追加します。"
 
 #: ../web_tt2/editfile.tt2:46
 msgid ""
 "Message header: If this file is not empty, it is added as a MIME attachment "
 "at the beginning of each message distributed to the list."
-msgstr ""
+msgstr "メッセージの前付け: このテキストが空でなければ、リストで配信するすべてのメッセージの先頭にMIME のパートとして追加します。"
 
 #: ../web_tt2/editfile.tt2:48
 msgid "More"
@@ -1663,7 +1603,7 @@ msgstr "その他"
 
 #: ../web_tt2/editfile.tt2:50
 msgid "Unsubscribe message: This message is sent when users leave the list."
-msgstr ""
+msgstr "登録解除メッセージ: 誰かが登録解除したときに、その人にこのメッセージを送ります。"
 
 #: ../web_tt2/editfile.tt2:52
 msgid ""
@@ -1671,15 +1611,16 @@ msgid ""
 "remove them from the list using the DEL command (unless you hit the Quiet "
 "button)."
 msgstr ""
+"削除メッセージ: (「知らせない」にチェックを入れずに)\n"
+"読者を削除 (DEL コマンド) したときに、削除された人にこのメッセージを送ります。"
 
 #: ../web_tt2/edit_list_request.tt2:4
 msgid "Configuring the list"
 msgstr "リストの設定"
 
 #: ../web_tt2/edit_list_request.tt2:8
-#, fuzzy
 msgid "You can choose below a subset of parameters to edit:"
-msgstr "変更する項目を選んでください:"
+msgstr "変更する項目を選んでください。"
 
 #: ../web_tt2/edit_list_request.tt2:11 ../web_tt2/nav.tt2:93
 msgid "List definition"
@@ -1718,18 +1659,15 @@ msgid "Subscriber information"
 msgstr "読者情報"
 
 #: ../web_tt2/editsubscriber.tt2:10 ../web_tt2/pref.tt2:9
-#, fuzzy
 msgid "Email:"
 msgstr "電子メール:"
 
 #: ../web_tt2/editsubscriber.tt2:12 ../web_tt2/pref.tt2:10
 #: ../web_tt2/suboptions.tt2:8
-#, fuzzy
 msgid "Name:"
 msgstr "名前:"
 
 #: ../web_tt2/editsubscriber.tt2:18
-#, fuzzy
 msgid "Subscribed since:"
 msgstr "読者登録日:"
 
@@ -1738,22 +1676,18 @@ msgid "Last update:"
 msgstr "最終更新:"
 
 #: ../web_tt2/editsubscriber.tt2:20
-#, fuzzy
 msgid "Receiving:"
 msgstr "受け取りかた:"
 
 #: ../web_tt2/editsubscriber.tt2:27 ../web_tt2/suboptions.tt2:56
-#, fuzzy
 msgid "Visibility:"
 msgstr "見えかた:"
 
 #: ../web_tt2/editsubscriber.tt2:34 ../web_tt2/pref.tt2:11
-#, fuzzy
 msgid "Language:"
 msgstr "言語:"
 
 #: ../web_tt2/editsubscriber.tt2:36
-#, fuzzy
 msgid "Picture:"
 msgstr "ピクチャ: "
 
@@ -1774,17 +1708,14 @@ msgid "Address detected via VERP technology"
 msgstr "VERP 技術で検出したアドレス"
 
 #: ../web_tt2/editsubscriber.tt2:73
-#, fuzzy
 msgid "Status:"
 msgstr "状況:"
 
 #: ../web_tt2/editsubscriber.tt2:74
-#, fuzzy
 msgid "Bounce count:"
 msgstr "配送エラー数:"
 
 #: ../web_tt2/editsubscriber.tt2:75
-#, fuzzy
 msgid "Period:"
 msgstr "期間:"
 
@@ -1807,24 +1738,20 @@ msgid "Template edition system"
 msgstr "テンプレート編集システム"
 
 #: ../web_tt2/edit_template.tt2:6
-#, fuzzy
 msgid "Template name:"
-msgstr "テンプレート名"
+msgstr "テンプレート名:"
 
 #: ../web_tt2/edit_template.tt2:7
-#, fuzzy
 msgid "Type:"
-msgstr "種類"
+msgstr "種類:"
 
 #: ../web_tt2/edit_template.tt2:8
-#, fuzzy
 msgid "Path:"
-msgstr "パス"
+msgstr "パス:"
 
 #: ../web_tt2/edit_template.tt2:9
-#, fuzzy
 msgid "Scope:"
-msgstr "範囲"
+msgstr "範囲:"
 
 #. (list,robot)
 #: ../web_tt2/edit_template.tt2:10
@@ -1849,7 +1776,6 @@ msgstr ""
 "ロボットで使います"
 
 #: ../web_tt2/edit_template.tt2:19
-#, fuzzy
 msgid "language: "
 msgstr "言語: "
 
@@ -1964,25 +1890,21 @@ msgstr "そんな操作は知りません"
 
 #. (u_err.params)
 #: ../web_tt2/error.tt2:46
-#, fuzzy
 msgid "Syntax errors with the following parameters: %1"
 msgstr "次のパラメータに書き間違いがあります: %1"
 
 #. (u_err.list)
 #: ../web_tt2/error.tt2:47
-#, fuzzy
 msgid "%1: unknown list"
 msgstr "%1: そういうリストは知りません"
 
 #. (u_err.new_robot)
 #: ../web_tt2/error.tt2:48
-#, fuzzy
 msgid "%1: unknown robot"
 msgstr "%1: そういうロボットは知りません"
 
 #. (u_err.family)
 #: ../web_tt2/error.tt2:49
-#, fuzzy
 msgid "%1: unknown family"
 msgstr "%1: そういう設定族は知りません"
 
@@ -1992,7 +1914,6 @@ msgid "You are already logged in as %1"
 msgstr "すでに %1 としてログインしています"
 
 #: ../web_tt2/error.tt2:51
-#, fuzzy
 msgid ""
 "You can not get a password reminder; probably because your password is "
 "managed outside Sympa (Single Sign-On system or LDAP directory)."
@@ -2082,7 +2003,6 @@ msgstr "%1 という受け取りモードにはできません"
 
 #. (u_err.file)
 #: ../web_tt2/error.tt2:70
-#, fuzzy
 msgid "%1: file not editable"
 msgstr "%1: このファイルは変更できません"
 
@@ -2119,7 +2039,6 @@ msgid "You need to provide list name"
 msgstr "リスト名を教えてください"
 
 #: ../web_tt2/error.tt2:78
-#, fuzzy
 msgid ""
 "Failed to moderate a message; it was probably moderated by another moderator"
 msgstr ""
@@ -2171,9 +2090,8 @@ msgstr "パラメータ '%1' には、値がなければなりません"
 
 #. (u_err.param,u_err.val)
 #: ../web_tt2/error.tt2:89
-#, fuzzy
 msgid "Parameter '%1' has got wrong value: '%2'"
-msgstr "パラメータ '%1' の値としてはおかしいです: '%2'"
+msgstr "パラメータ '%1' の値として '%2' はおかしいです"
 
 #. (u_err.listname)
 #: ../web_tt2/error.tt2:90
@@ -2187,7 +2105,6 @@ msgstr "リスト '%1' は閉鎖中ではありません"
 
 #. (u_err.bad_listname)
 #: ../web_tt2/error.tt2:92
-#, fuzzy
 msgid "'%1': bad listname"
 msgstr "'%1': リスト名がおかしい"
 
@@ -2198,11 +2115,8 @@ msgstr "'%1' というリストはすでにあります"
 
 #. (u_err.new_listname)
 #: ../web_tt2/error.tt2:94
-#, fuzzy
 msgid "Incorrect listname '%1': matches one of service aliases"
-msgstr ""
-"'%1' というリスト名は正しくありません: サービス用のエイリアス名と合致していま"
-"す"
+msgstr "'%1' というリスト名は正しくありません。サービス用のエイリアス名と合致してしまいます"
 
 #. (u_err.listname)
 #: ../web_tt2/error.tt2:95
@@ -2211,15 +2125,13 @@ msgstr "%1 メーリングリストのリストエイリアスを削除するの
 
 #. (u_err.path)
 #: ../web_tt2/error.tt2:96
-#, fuzzy
 msgid "%1: No such file or directory"
 msgstr "%1: そのようなファイルやディレクトリはありません"
 
 #. (u_err.path)
 #: ../web_tt2/error.tt2:97
-#, fuzzy
 msgid "Unable to read %1: empty document"
-msgstr "%1 を読めません: この文書は空です"
+msgstr "%1 を読めません。この文書は空です"
 
 #: ../web_tt2/error.tt2:98
 msgid "There is no shared documents"
@@ -2248,30 +2160,25 @@ msgstr "ディスク上のデータが更新されていましたので、変更
 
 #. (u_err.name)
 #: ../web_tt2/error.tt2:104
-#, fuzzy
 msgid "%1: incorrect name"
 msgstr "%1: 名前が正しくありません"
 
 #: ../web_tt2/error.tt2:105
-#, fuzzy
 msgid "Failed: your content is empty"
 msgstr "失敗: 中身がありません"
 
 #. (u_err.path)
 #: ../web_tt2/error.tt2:106
-#, fuzzy
 msgid "Cannot overwrite file %1:"
-msgstr "ファイル %1 を上書きできません"
+msgstr "ファイル %1 を上書きできません。"
 
 #. (u_err.path)
 #: ../web_tt2/error.tt2:107
-#, fuzzy
 msgid "A directory named '%1' already exists:"
-msgstr "'%1' という名前のディレクトリはすでにあります"
+msgstr "'%1' という名前のディレクトリはすでにあります。"
 
 #. (u_err.name)
 #: ../web_tt2/error.tt2:108
-#, fuzzy
 msgid "This is an already existing document: '%1'"
 msgstr "この文書はもうありますね: '%1'"
 
@@ -2285,9 +2192,8 @@ msgstr "文書置き場の容量がディスクの容量制限を超えました
 
 #. (u_err.path)
 #: ../web_tt2/error.tt2:111
-#, fuzzy
 msgid "Cannot upload file %1:"
-msgstr "ファイル %1 をアップロードできません"
+msgstr "ファイル %1 をアップロードできません。"
 
 #. (u_err.dir)
 #: ../web_tt2/error.tt2:112
@@ -2300,19 +2206,16 @@ msgstr "アップロードが失敗しました。もう一度やってみてく
 
 #. (u_err.name,u_err.reason)
 #: ../web_tt2/error.tt2:114
-#, fuzzy
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "ディレクトリ %1 とその中身をコピーすることができませんでした: %2"
 
 #. (u_err.name,u_err.reason)
 #: ../web_tt2/error.tt2:115
-#, fuzzy
 msgid "File %1 was not copied: %2 "
 msgstr "ファイル %1 はコピーしていません: %2 "
 
 #. (u_err.directory)
 #: ../web_tt2/error.tt2:116
-#, fuzzy
 msgid "Failed: %1 not empty"
 msgstr "失敗: %1 は空ではありません"
 
@@ -2388,7 +2291,6 @@ msgstr "できません (%1)"
 
 #. (auth.listname)
 #: ../web_tt2/error.tt2:140
-#, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe:"
@@ -2416,7 +2318,7 @@ msgstr "申し込んだ人:"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/modindex.tt2:125
-#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:284
+#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:286
 #: ../web_tt2/reviewbouncing.tt2:131
 msgid "Toggle Selection"
 msgstr "選択を逆転"
@@ -2439,9 +2341,8 @@ msgid "Listname"
 msgstr "リスト名"
 
 #: ../web_tt2/get_inactive_lists.tt2:23
-#, fuzzy
 msgid "none so far"
-msgstr "点数なし"
+msgstr "今のところなし"
 
 #: ../web_tt2/get_latest_lists.tt2:4
 msgid "Latests Lists"
@@ -2457,13 +2358,11 @@ msgid "Requested date"
 msgstr "申込日"
 
 #: ../web_tt2/info.tt2:8
-#, fuzzy
 msgid "List informations"
-msgstr "非公開メモ"
+msgstr "リストの案内"
 
 #: ../web_tt2/install_pending_list.tt2:11 ../web_tt2/scenario_test.tt2:13
 #: ../web_tt2/set_pending_list_request.tt2:7
-#, fuzzy
 msgid "Listname:"
 msgstr "リスト名:"
 
@@ -2476,147 +2375,6 @@ msgstr "作成者"
 #: ../web_tt2/install_pending_list.tt2:17
 msgid "on %1"
 msgstr "%1"
-
-#: ../web_tt2/javascript.tt2:833
-#, fuzzy
-msgid "Start date"
-msgstr "最終更新"
-
-#: ../web_tt2/javascript.tt2:834
-#, fuzzy
-msgid "End date"
-msgstr "日付"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "January"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "February"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "March"
-msgstr "探す"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "April"
-msgstr "特権"
-
-#: ../web_tt2/javascript.tt2:838
-msgid "May"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "June"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "July"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-msgid "August"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "September"
-msgstr "読者"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "October"
-msgstr "その他"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "November"
-msgstr "読者"
-
-#: ../web_tt2/javascript.tt2:838
-#, fuzzy
-msgid "December"
-msgstr "読者"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Su"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Mo"
-msgstr "その他"
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Tu"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "We"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-msgid "Th"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Fr"
-msgstr "From"
-
-#: ../web_tt2/javascript.tt2:839
-#, fuzzy
-msgid "Sa"
-msgstr "保存"
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Sunday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Monday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Tuesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Wednesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Thursday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Friday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:840
-msgid "Saturday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:841
-msgid "Calendar"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:842
-#, fuzzy
-msgid "today"
-msgstr "本文"
-
-#. (+cpt)
-#: ../web_tt2/javascript.tt2:1056
-msgid "microcal"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:1096
-msgid "\"+src.id+\"_cal"
-msgstr ""
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -2648,8 +2406,8 @@ msgstr " 最新の共有文書 "
 msgid "Most recent documents for this list "
 msgstr " このリストの最新の共有文書 "
 
-#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:140
-#: ../web_tt2/review.tt2:143 ../web_tt2/subindex.tt2:12
+#: ../web_tt2/latest_d_read.tt2:19 ../web_tt2/review.tt2:138
+#: ../web_tt2/review.tt2:141 ../web_tt2/subindex.tt2:12
 msgid "Name"
 msgstr "名前"
 
@@ -2671,7 +2429,7 @@ msgid " The latest lists of this robot"
 msgstr " このロボットの最近のリスト "
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:93
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:91
 msgid "%1 occurrence(s) found"
 msgstr "%1 件見つかりました"
 
@@ -2701,25 +2459,20 @@ msgstr ""
 "せんね"
 
 #: ../web_tt2/loginbanner.tt2:18
-#, fuzzy
-msgid ""
-"To login, select your organization authentication server below:&nbsp;&nbsp;"
-"&nbsp;&nbsp;"
-msgstr "ログインするには、以下から自分の組織の認証サーバを選択してください"
+msgid "To login, select your organization authentication server below:"
+msgstr "ログインするには、以下から自分の組織の認証サーバを選択してください。"
 
 #: ../web_tt2/loginbanner.tt2:24
 msgid "Go"
 msgstr "実行"
 
 #: ../web_tt2/loginbanner.tt2:39 ../web_tt2/sso_login.tt2:46
-#, fuzzy
 msgid "email address:"
-msgstr "電子メールアドレス"
+msgstr "電子メールアドレス:"
 
 #: ../web_tt2/loginbanner.tt2:41 ../web_tt2/sso_login.tt2:48
-#, fuzzy
 msgid "password:"
-msgstr "パスワード"
+msgstr "パスワード:"
 
 #: ../web_tt2/loginbanner.tt2:43
 msgid "Login"
@@ -2730,12 +2483,10 @@ msgid "Authentication help"
 msgstr "認証の使いかた"
 
 #: ../web_tt2/loginbanner.tt2:55
-#, fuzzy
 msgid "First login?"
 msgstr "まだログインしたことがない"
 
 #: ../web_tt2/loginbanner.tt2:56
-#, fuzzy
 msgid "Lost password?"
 msgstr "パスワードを忘れた"
 
@@ -2755,7 +2506,6 @@ msgstr ""
 "す。"
 
 #: ../web_tt2/ls_templates.tt2:15
-#, fuzzy
 msgid ""
 "Priority rules for template selection:\n"
 "<ul>\n"
@@ -2766,14 +2516,13 @@ msgid ""
 "edited because Sympa's update will over write these files)</li>\n"
 "</ul>"
 msgstr ""
-"テンプレート決定の手順は以下のとおりです:\n"
+"テンプレート決定の手順は以下のとおりです。\n"
 "<ul>\n"
 "<li>リストを特定でき、リスト専用のテンプレートがあればそれを適用する</li>\n"
 "<li>そうではなく、ロボット全体用のテンプレートがあればそれを適用する</li>\n"
 "<li>そうではなく、独自に決めたテンプレートがあればそれを適用する</li>\n"
-"<li>さもなければ、インストール時からあるテンプレートを適用する (このテンプ"
-"レートは変更できません。たとえ変更しても、Sympa がアップデートされると上書き"
-"されてしまうからです)</li>\n"
+"<li>さもなければ、インストール時からあるテンプレートを適用する (このテンプレートは変更できません。たとえ変更しても、Sympa "
+"がアップデートされると上書きされてしまうからです)</li>\n"
 "</ul>"
 
 #: ../web_tt2/ls_templates.tt2:17
@@ -2789,12 +2538,10 @@ msgstr ""
 "き、それからテンプレートをひとつひとつ変更していくとよいでしょう。"
 
 #: ../web_tt2/ls_templates.tt2:22
-#, fuzzy
 msgid "Select templates type:"
 msgstr "テンプレートの種類を選ぶ:"
 
 #: ../web_tt2/ls_templates.tt2:26
-#, fuzzy
 msgid "Select a list:"
 msgstr "リストを選ぶ:"
 
@@ -2832,7 +2579,6 @@ msgstr "削除"
 #. (lang.value)
 #: ../web_tt2/ls_templates.tt2:105 ../web_tt2/ls_templates.tt2:127
 #: ../web_tt2/ls_templates.tt2:149
-#, fuzzy
 msgid "Do you really want to remove %1?"
 msgstr "本当に %1 を削除してよいのですか。"
 
@@ -2874,7 +2620,6 @@ msgid "There are currently no Rejection Messages available"
 msgstr "現在、ご利用になれる拒否メッセージはありません"
 
 #: ../web_tt2/manage_template.tt2:59
-#, fuzzy
 msgid "Message Name:"
 msgstr "メッセージの名前:"
 
@@ -2898,11 +2643,11 @@ msgstr "新たなメッセージの名前:"
 msgid "create"
 msgstr "作成"
 
-#: ../web_tt2/menu_search.tt2:5
+#: ../web_tt2/menu_search.tt2:6
 msgid "Enter a list name"
 msgstr "リスト名を入力"
 
-#: ../web_tt2/menu_search.tt2:7
+#: ../web_tt2/menu_search.tt2:8
 msgid "Search lists"
 msgstr "リストを探す"
 
@@ -2923,15 +2668,13 @@ msgid "Reject"
 msgstr "拒否"
 
 #: ../web_tt2/modindex.tt2:25
-#, fuzzy
 msgid ""
 "You should probably not reject message detected as spam with notification "
 "because the message sender is probably spoofed. Do you really want to reject "
 "those messages with notification?"
 msgstr ""
-"スパムはメッセージの送信元を騙っていることがありますから、スパム検出でメッ"
-"セージを拒否するときは送信元に知らせるべきではないかもしれません。このメッ"
-"セージを拒否することを、本当に知らせていいのでしょうか。"
+"スパムはメッセージの送信元を騙っていることがありますから、スパム検出でメッセージを拒否するときは送信元に知らせるべきではないかもしれません。このメッセー"
+"ジを拒否することを、本当に知らせてよいのでしょうか。"
 
 #: ../web_tt2/modindex.tt2:31
 msgid "Server default rejection message"
@@ -2946,12 +2689,10 @@ msgid "Add to blacklist"
 msgstr "ブラックリストに追加"
 
 #: ../web_tt2/modindex.tt2:52
-#, fuzzy
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute:"
-msgstr ""
-"配信したいメッセージに関係のあるトピックをなにか選んでください (複数可):"
+msgstr "配信したいメッセージに関係のあるトピックをなにか選んでください (複数可)。"
 
 #: ../web_tt2/modindex.tt2:155 ../web_tt2/modindex.tt2:71
 msgid "Size"
@@ -3003,7 +2744,6 @@ msgid "Manage rejection messages"
 msgstr "拒否メッセージの管理"
 
 #: ../web_tt2/nav.tt2:15 ../web_tt2/serveradmin.tt2:5
-#: ../web_tt2/suspend_request.tt2:11 ../web_tt2/suspend_request.tt2:9
 msgid "Lists"
 msgstr "リスト"
 
@@ -3035,18 +2775,13 @@ msgstr "Sympa の翻訳"
 msgid "Submitting a bug, a feature request"
 msgstr "バグや仕様追加希望の登録"
 
-#: ../web_tt2/nav.tt2:103
-msgid "DKIM"
-msgstr ""
+#: ../web_tt2/nav.tt2:113
+msgid "Send a message"
+msgstr "メッセージを送信"
 
 #: ../web_tt2/nav.tt2:115
-#, fuzzy
-msgid "Send a message"
-msgstr "登録確認メッセージ"
-
-#: ../web_tt2/nav.tt2:117
 msgid "Send an html page"
-msgstr ""
+msgstr "HTMLページを送信"
 
 #. (last_login_host,last_login_date)
 #: ../web_tt2/notice.tt2:5
@@ -3158,7 +2893,6 @@ msgid "File %1 has been renamed to %2"
 msgstr "ファイル %1 を %2 へ移動しました"
 
 #: ../web_tt2/notice.tt2:79
-#, fuzzy
 msgid "List has been set to the pending status; listmaster need to validate it"
 msgstr ""
 "リストは「承認待ち」(pending) になっています。リストシステム管理者が承認する"
@@ -3178,15 +2912,13 @@ msgid "Setting your picture for this list"
 msgstr "このリスト用のピクチャを設定"
 
 #: ../web_tt2/picture_upload.tt2:9
-#, fuzzy
 msgid ""
 "You can upload your picture below; it will be available in the list review "
 "page. The picture should use a standard format (gif, jpp, jpeg or png) and "
 "its size should not exceed 100 Kb."
 msgstr ""
-"自分のピクチャをアップロードできます。これはリストの読者一覧ページで使いま"
-"す。ピクチャのデータは標準的な形式 (GIF、JPP、JPEG、PNG) でなければならず、大"
-"きさが 100 キロバイトを超えてはなりません。"
+"自分のピクチャをアップロードできます。これはリストの読者一覧ページに出ます。ピクチャのデータは標準的な形式 (GIF、JPP、JPEG、PNG) "
+"でなければならず、大きさが 100 キロバイトを超えてはなりません。"
 
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/picture_upload.tt2:22
 msgid "Your picture"
@@ -3205,9 +2937,8 @@ msgid "User preferences"
 msgstr "個人設定"
 
 #: ../web_tt2/pref.tt2:16
-#, fuzzy
 msgid "Connection expiration period:"
-msgstr "接続の有効期間"
+msgstr "接続の有効期間:"
 
 #: ../web_tt2/pref.tt2:26
 msgid "Changing your email address"
@@ -3224,7 +2955,6 @@ msgstr ""
 "しょに変わります。"
 
 #: ../web_tt2/pref.tt2:31
-#, fuzzy
 msgid "New email address:"
 msgstr "新しい電子メールアドレス:"
 
@@ -3237,9 +2967,8 @@ msgid "Changing your password"
 msgstr "パスワードの変更"
 
 #: ../web_tt2/pref.tt2:42
-#, fuzzy
 msgid "Re-enter your new password:"
-msgstr "パスワードの再入力:"
+msgstr "新しいパスワードの再入力:"
 
 #: ../web_tt2/remove_arc.tt2:5
 msgid ""
@@ -3284,21 +3013,17 @@ msgid "Do you really want to rename this list?"
 msgstr "本当にこのリストを移動してよいのですか。"
 
 #: ../web_tt2/renewpasswd.tt2:5
-#, fuzzy
 msgid "You requested an account creation on this list server."
 msgstr "あなたは当メーリングリストサーバでアカウント作成を申し込みました。"
 
 #: ../web_tt2/renewpasswd.tt2:7
-#, fuzzy
 msgid "The password you submitted is wrong. Maybe you forgot it?"
 msgstr ""
 "入力したパスワードは間違っています。もしかして、パスワードを忘れたのでは?"
 
 #: ../web_tt2/renewpasswd.tt2:9
-#, fuzzy
 msgid "You missed the password, please submit again. Maybe you forgot it?"
-msgstr ""
-"入力したパスワードは間違っています。もしかして、パスワードを忘れたのでは?"
+msgstr "入力したパスワードは間違っています。入力しなおしてください。もしかして、パスワードを忘れたのでは?"
 
 #: ../web_tt2/renewpasswd.tt2:11
 msgid "You will receive an email that will allow you to choose your password."
@@ -3310,12 +3035,10 @@ msgid "In order to use Sympa, you will need to define a password."
 msgstr "Sympa を使うためには、パスワードを決めなければなりません。"
 
 #: ../web_tt2/renewpasswd.tt2:16
-#, fuzzy
 msgid "You forgot your password, so you have to renew it."
 msgstr "パスワードを忘れてしまったのなら、パスワードを作り直してください。"
 
 #: ../web_tt2/renewpasswd.tt2:19
-#, fuzzy
 msgid ""
 "Please submit your email address, you will receive a message that gives you "
 "access to the appropriate form in order to choose your password."
@@ -3353,7 +3076,6 @@ msgid "We were not able to send you a validation message."
 msgstr "確認メッセージを送ることができませんでした。"
 
 #: ../web_tt2/requestpasswd.tt2:14
-#, fuzzy
 msgid ""
 "Internal error: could not build a validation link, please contact the "
 "service administrator"
@@ -3372,10 +3094,9 @@ msgstr ""
 "してあります。"
 
 #: ../web_tt2/request_topic.tt2:7 ../web_tt2/viewmod.tt2:34
-#, fuzzy
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below:"
-msgstr "下記のメッセージに関連するトピックを選んでください (複数可):"
+msgstr "下のメッセージに関連するトピックを選んでください (複数可):"
 
 #: ../web_tt2/request_topic.tt2:15 ../web_tt2/request_topic.tt2:17
 msgid "Tag this mail"
@@ -3383,13 +3104,11 @@ msgstr "このメールにトピックの印をつける"
 
 #. (date)
 #: ../web_tt2/request_topic.tt2:29
-#, fuzzy
 msgid "Date: %1"
 msgstr "最終更新: %1"
 
 #. (subject)
 #: ../web_tt2/request_topic.tt2:31
-#, fuzzy
 msgid "Subject: %1"
 msgstr "表題 (Subject): %1"
 
@@ -3407,13 +3126,13 @@ msgid "Remind all subscribers"
 msgstr "全ての読者に登録確認を送付"
 
 #. (total)
-#: ../web_tt2/review.tt2:63 ../web_tt2/reviewbouncing.tt2:19
+#: ../web_tt2/review.tt2:61 ../web_tt2/reviewbouncing.tt2:19
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr "本当に %1 名の読者に登録確認メッセージを送付してよいのですか。"
 
-#: ../web_tt2/review.tt2:272 ../web_tt2/review.tt2:28
+#: ../web_tt2/review.tt2:274 ../web_tt2/review.tt2:28
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3424,7 +3143,7 @@ msgstr "前ページ"
 msgid "page %1 / %2"
 msgstr "%2 ページ中 %1 ページ目"
 
-#: ../web_tt2/review.tt2:278 ../web_tt2/review.tt2:34
+#: ../web_tt2/review.tt2:280 ../web_tt2/review.tt2:34
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3434,9 +3153,8 @@ msgstr "次ページ"
 msgid "Table which display list bounces"
 msgstr "リストの配送エラーを表示する表"
 
-#: ../web_tt2/review.tt2:119 ../web_tt2/review.tt2:122
-#: ../web_tt2/review.tt2:294 ../web_tt2/reviewbouncing.tt2:61
-#: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
+#: ../web_tt2/review.tt2:117 ../web_tt2/review.tt2:120
+#: ../web_tt2/reviewbouncing.tt2:61 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
 msgid "Email"
 msgstr "電子メール"
@@ -3465,7 +3183,7 @@ msgstr "最後の配送エラー"
 msgid "no score"
 msgstr "点数なし"
 
-#: ../web_tt2/review.tt2:107 ../web_tt2/review.tt2:285
+#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:287
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "選択した電子メールアドレスを削除"
@@ -3494,7 +3212,7 @@ msgstr "リスト登録状況の管理"
 msgid "Page size"
 msgstr "一度に表示する数"
 
-#: ../web_tt2/review.tt2:275 ../web_tt2/review.tt2:31
+#: ../web_tt2/review.tt2:277 ../web_tt2/review.tt2:31
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "ページ"
@@ -3503,89 +3221,71 @@ msgstr "ページ"
 msgid "Pending subscriptions"
 msgstr "承認待ち読者"
 
-#: ../web_tt2/review.tt2:51
-msgid "Exclude"
-msgstr ""
-
-#: ../web_tt2/review.tt2:57
+#: ../web_tt2/review.tt2:55
 msgid "Synchronize members with data sources"
 msgstr "データソースとメンバー情報の同期"
 
-#: ../web_tt2/review.tt2:63
+#: ../web_tt2/review.tt2:61
 msgid "Remind all"
 msgstr "全てに登録確認を送る"
 
-#: ../web_tt2/review.tt2:72
+#: ../web_tt2/review.tt2:70
 msgid "Add an user: "
 msgstr "一人だけ追加:"
 
-#: ../web_tt2/review.tt2:76
+#: ../web_tt2/review.tt2:74
 msgid "Multiple add"
 msgstr "まとめて追加"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:86
 msgid "Search user by e-mail: "
 msgstr "電子メールアドレスで探す: "
 
-#: ../web_tt2/review.tt2:89
+#: ../web_tt2/review.tt2:87
 msgid "Search user by email"
 msgstr "電子メールアドレスで探す"
 
-#: ../web_tt2/review.tt2:95
+#: ../web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr "探す範囲が広すぎて表示することができません"
 
-#: ../web_tt2/review.tt2:111
+#: ../web_tt2/review.tt2:109
 msgid "List members"
 msgstr "読者一覧"
 
-#: ../web_tt2/review.tt2:127 ../web_tt2/review.tt2:130
+#: ../web_tt2/review.tt2:125 ../web_tt2/review.tt2:128
 msgid "Domain"
 msgstr "区分"
 
-#: ../web_tt2/review.tt2:135
+#: ../web_tt2/review.tt2:133
 msgid "Picture"
 msgstr "ピクチャ"
 
-#: ../web_tt2/review.tt2:148 ../web_tt2/suspend_request.tt2:12
+#: ../web_tt2/review.tt2:146
 msgid "Reception"
 msgstr "受け取りかた"
 
-#: ../web_tt2/review.tt2:153 ../web_tt2/review.tt2:156
+#: ../web_tt2/review.tt2:151 ../web_tt2/review.tt2:154
 msgid "Sources"
 msgstr "ソース"
 
-#: ../web_tt2/review.tt2:162 ../web_tt2/review.tt2:165
+#: ../web_tt2/review.tt2:160 ../web_tt2/review.tt2:163
 #: ../web_tt2/viewlogs.tt2:124
 msgid "Sub date"
 msgstr "読者登録日"
 
-#: ../web_tt2/review.tt2:198
+#: ../web_tt2/review.tt2:200
 msgid "bouncing"
 msgstr "配送エラー"
 
 #. (u.email)
-#: ../web_tt2/review.tt2:215
+#: ../web_tt2/review.tt2:217
 msgid "%1's picture"
 msgstr "%1 のピクチャ"
 
-#: ../web_tt2/review.tt2:283
+#: ../web_tt2/review.tt2:285
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "本当に*全ての*メーリングリストの登録解除をしてよいのですか。"
-
-#: ../web_tt2/review.tt2:291
-msgid "Excluded users"
-msgstr ""
-
-#: ../web_tt2/review.tt2:292 ../web_tt2/show_exclude.tt2:13
-#, fuzzy
-msgid "List of exclude"
-msgstr "フォルダ内の一覧"
-
-#: ../web_tt2/review.tt2:295 ../web_tt2/show_exclude.tt2:16
-#, fuzzy
-msgid "Since"
-msgstr "サイズ"
 
 #: ../web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -3600,38 +3300,32 @@ msgstr ""
 "するURLを作ることができます。"
 
 #: ../web_tt2/rss_request.tt2:12
-#, fuzzy
 msgid "Limit the number of responses:"
-msgstr "メール通数の制限"
+msgstr "メール通数の制限:"
 
 #: ../web_tt2/rss_request.tt2:19
-#, fuzzy
 msgid "Limit the number of days used for the selection:"
-msgstr "日数の制限"
+msgstr "日数の制限:"
 
 #: ../web_tt2/rss_request.tt2:31
 msgid "Update RSS URL"
 msgstr "RSSのURLを更新"
 
 #: ../web_tt2/rss_request.tt2:43
-#, fuzzy
 msgid "latest arc:"
-msgstr "最近の投稿"
+msgstr "最近の投稿:"
 
 #: ../web_tt2/rss_request.tt2:48
-#, fuzzy
 msgid "latest document:"
-msgstr "最近の共有文書"
+msgstr "最近の共有文書:"
 
 #: ../web_tt2/rss_request.tt2:53
-#, fuzzy
 msgid "active lists:"
-msgstr "活発なリスト"
+msgstr "活発なリスト:"
 
 #: ../web_tt2/rss_request.tt2:58
-#, fuzzy
 msgid "latest lists:"
-msgstr "最近のリスト"
+msgstr "最近のリスト:"
 
 #: ../web_tt2/rss.tt2:15 ../web_tt2/rss.tt2:5
 msgid "Server error"
@@ -3697,7 +3391,6 @@ msgstr "最新の共有文書"
 
 #. (l.name,l.host,l.subject,l.msg_count)
 #: ../web_tt2/rss.tt2:72
-#, fuzzy
 msgid "%1@%2 - %3: %4 messages"
 msgstr "%1@%2 - %3: %4 通"
 
@@ -3716,49 +3409,41 @@ msgid "Scenario test module"
 msgstr "シナリオテストモジュール"
 
 #: ../web_tt2/scenario_test.tt2:7
-#, fuzzy
 msgid "Scenario name:"
-msgstr "シナリオ名"
+msgstr "シナリオ名:"
 
 #: ../web_tt2/scenario_test.tt2:19
-#, fuzzy
 msgid "sender email:"
-msgstr "送信者の電子メールアドレス"
+msgstr "送信者の電子メールアドレス:"
 
 #: ../web_tt2/scenario_test.tt2:22
-#, fuzzy
 msgid "Related email:"
-msgstr "対象電子メールアドレス"
+msgstr "対象電子メールアドレス:"
 
 #: ../web_tt2/scenario_test.tt2:25
-#, fuzzy
 msgid "Remote IP address:"
-msgstr "リモートIPアドレス"
+msgstr "リモートIPアドレス:"
 
 #: ../web_tt2/scenario_test.tt2:28
-#, fuzzy
 msgid "Remote host:"
-msgstr "リモートホスト"
+msgstr "リモートホスト:"
 
 #: ../web_tt2/scenario_test.tt2:31
-#, fuzzy
 msgid "Auth method:"
-msgstr "認証方式"
+msgstr "認証方式:"
 
 #: ../web_tt2/scenario_test.tt2:38
 msgid "get matched rule"
 msgstr "該当するルールを取得する"
 
 #: ../web_tt2/search_user.tt2:3
-#, fuzzy
 msgid "User search result:"
-msgstr "初期値にする"
+msgstr "人の検索結果:"
 
 #. (email)
 #: ../web_tt2/search_user.tt2:5
-#, fuzzy
 msgid "<strong>%1</strong> is subscribed to the following mailing lists:"
-msgstr "<strong>%1</strong> は以下のメーリングリストに読者登録しています"
+msgstr "<strong>%1</strong> は以下のメーリングリストに読者登録しています。"
 
 #. (email)
 #: ../web_tt2/search_user.tt2:8
@@ -3810,9 +3495,8 @@ msgid "Lists sorted by last message date"
 msgstr "最終投稿日順"
 
 #: ../web_tt2/serveradmin.tt2:25
-#, fuzzy
 msgid "The following virtual robots are running on this server:"
-msgstr "このサーバでは以下の仮想ロボットが稼働しています:"
+msgstr "このサーバでは以下の仮想ロボットが稼働しています。"
 
 #: ../web_tt2/serveradmin.tt2:30
 msgid "No Virtual Robot defined on this server"
@@ -3839,7 +3523,6 @@ msgid "Show sessions"
 msgstr "セッションの表示"
 
 #: ../web_tt2/serveradmin.tt2:79
-#, fuzzy
 msgid "You can change your users email address here:"
 msgstr "自分の電子メールアドレスを変えるには: "
 
@@ -3852,12 +3535,10 @@ msgstr ""
 "ではなくオーナーをしているリストのアドレスも変わります。"
 
 #: ../web_tt2/serveradmin.tt2:86
-#, fuzzy
 msgid "Current user email address: "
 msgstr "現在の電子メールアドレス:"
 
 #: ../web_tt2/serveradmin.tt2:88
-#, fuzzy
 msgid "New user email address: "
 msgstr "新しい電子メールアドレス:"
 
@@ -3870,18 +3551,15 @@ msgid "Change identity"
 msgstr "他人になる"
 
 #: ../web_tt2/serveradmin.tt2:97
-#, fuzzy
 msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges. The "
 "new identity is attached to the current session"
 msgstr ""
-"リストシステム管理者は、他人になってその人の権限で操作をすることができます。"
-"これは、誰かの手伝いをしたり、利用者権限のテストをしたりするときに便利でしょ"
-"う"
+"リストシステム管理者であれば、他人になってその人の権限で操作をすることができます。誰かの手伝いをしたり、利用者権限のテストをしたりするときに便利でしょう"
+"。セッションが終わるまで有効です"
 
 #: ../web_tt2/serveradmin.tt2:101
-#, fuzzy
 msgid "change identity as: "
 msgstr "この人になる: "
 
@@ -3890,7 +3568,6 @@ msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "\"arctxt\"ディレクトリを入力としてHTML投稿保管庫を再生成する。"
 
 #: ../web_tt2/serveradmin.tt2:114
-#, fuzzy
 msgid "listname: "
 msgstr "リスト名: "
 
@@ -3903,9 +3580,8 @@ msgid "Rebuild all"
 msgstr "全ての投稿保管庫を再生成する"
 
 #: ../web_tt2/serveradmin.tt2:115
-#, fuzzy
 msgid "  May take a lot of CPU time,  be careful!"
-msgstr "CPU時間をたくさん使います。ご注意ください"
+msgstr "CPU時間をたくさん使います。ご注意ください。"
 
 #: ../web_tt2/serveradmin.tt2:125
 msgid ""
@@ -3918,9 +3594,8 @@ msgstr ""
 "ながら特定の機能だけを最大の記録レベルでテストできます。"
 
 #: ../web_tt2/serveradmin.tt2:129
-#, fuzzy
 msgid "Log level:"
-msgstr "記録レベル"
+msgstr "記録レベル:"
 
 #: ../web_tt2/serveradmin.tt2:135
 msgid "Set log level"
@@ -3943,7 +3618,6 @@ msgid "Customize templates"
 msgstr "テンプレートのカスタマイズ"
 
 #: ../web_tt2/serveradmin.tt2:174
-#, fuzzy
 msgid ""
 "When customizing Sympa web templates, it is needed to known which variables "
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
@@ -3977,7 +3651,6 @@ msgstr ""
 "gettext ツールで扱えます。"
 
 #: ../web_tt2/serveradmin.tt2:200
-#, fuzzy
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language: "
@@ -3986,7 +3659,6 @@ msgstr ""
 "ご覧ください: "
 
 #: ../web_tt2/serveradmin.tt2:207
-#, fuzzy
 msgid "You can submit a problem or request a new feature: "
 msgstr "問題が起きたり、新しく仕様を追加してほしければ、登録できます: "
 
@@ -4029,9 +3701,8 @@ msgid "notify owner"
 msgstr "オーナーに報告する"
 
 #: ../web_tt2/set_pending_list_request.tt2:36
-#, fuzzy
 msgid "Information file:"
-msgstr "案内ファイル"
+msgstr "案内ファイル:"
 
 #: ../web_tt2/set_pending_list_request.tt2:52
 msgid "Configuration file"
@@ -4057,25 +3728,6 @@ msgstr "証明書の発行者"
 msgid "Cipher key size used"
 msgstr "暗号鍵のサイズ"
 
-#: ../web_tt2/show_exclude.tt2:3
-msgid "Show the exclusion table"
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:10
-msgid ""
-"Users listed below are excluded from the list. Beware, that this feature is "
-"different from the blacklist. Exclusion makes sense\n"
-"when a list is based on external data sources ; thanks to exclusion, a user "
-"can unsubscribe (or being removed by list owner) even though \n"
-"he should be included via an external data source. Users get into the "
-"exclusion table, through the standard unsubscribe/delete functions. \n"
-"They get off the exclusion table with the standard subscribe/add functions."
-msgstr ""
-
-#: ../web_tt2/show_exclude.tt2:28
-msgid "No exclude."
-msgstr ""
-
 #: ../web_tt2/show_sessions.tt2:2
 msgid "Sessions list"
 msgstr "セッション一覧"
@@ -4086,11 +3738,10 @@ msgid "You asked to be unsubscribed  from list %1"
 msgstr "あなたは %1 メーリングリストの登録解除を申し込みました。"
 
 #: ../web_tt2/sigrequest.tt2:5
-#, fuzzy
 msgid ""
 "To confirm\n"
 "      your request, please click the button below:"
-msgstr "申込を確認するため、以下のボタンをクリックしてください:"
+msgstr "申込を確認するため、下のボタンをクリックしてください。"
 
 #. (list)
 #: ../web_tt2/sigrequest.tt2:12
@@ -4103,7 +3754,6 @@ msgid "You are not subscribed to list %1 with e-mail address %2"
 msgstr "%1 メーリングリストには電子メールアドレス %2 では読者登録していません"
 
 #: ../web_tt2/sigrequest.tt2:21
-#, fuzzy
 msgid ""
 "You might have subscribed with another address.\n"
 "      Please contact the list owner to help you unsubscribe:"
@@ -4113,7 +3763,6 @@ msgstr ""
 
 #. (list)
 #: ../web_tt2/sigrequest.tt2:25
-#, fuzzy
 msgid ""
 "We need to check your identity before validating your unsubscription request "
 "for list %1. If you have a user account you should login or create an "
@@ -4222,38 +3871,32 @@ msgstr ""
 "戻ってしまいます。変更が終わったら、結果を新たな静的 CSS ファイルにコピーでき"
 "ます。コピー先は css_path パラメータで指定しています。"
 
-#: ../web_tt2/skinsedit.tt2:45
-#, fuzzy
+#: ../web_tt2/skinsedit.tt2:41
 msgid ""
 "\n"
 "Be careful: the CSS file is overwritten using css.tt2 template, usually this "
 "file is comming from Sympa distribution so your CSS customization may be "
-"erased when doing this.\n"
-"</p>\n"
-"<p>\n"
+"erased when doing this."
+msgstr ""
+"\n"
+"ご注意ください。CSS ファイルを css.tt2 テンプレート (通常は Sympa の配布物に入っていたものと同じ) を使って上書きします。CSS "
+"にカスタマイズを加えていたのなら、それは消えてしまいます。"
+
+#: ../web_tt2/skinsedit.tt2:45
+msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
 "button. The new color is not really installed but it is used only for your "
 "own session. When happy with the different colors you choosen, you may save "
 "them in a new static CSS.\n"
-msgstr ""
-"\n"
-"ご注意ください。CSS ファイルを css.tt2 テンプレート (通常は Sympa の配布物に"
-"入っていたものと同じ) を使って上書きします。CSS にカスタマイズを加えていたの"
-"なら、それは消えてしまいます。\n"
-"</p>\n"
-"<p>\n"
-"決まっている色を変えるには色エディタを使います。まず、変えたい色を選択し、色"
-"を選び、テストボタンを使って適用します。新しい色は実際にはインストールされ"
-"ず、セッションが終わるまでだけ有効です。選んだ色あいが気に入ったら、それを新"
-"たな静的 CSS に保存します。\n"
+msgstr "決まっている色を変えるには色エディタを使います。まず、変えたい色を選択し、色を選び、テストボタンを使って適用します。新しい色は実際にはインストールされず"
+"、セッションが終わるまでだけ有効です。選んだ色あいが気に入ったら、それを新たな静的 CSS に保存します。\n"
 
 #: ../web_tt2/skinsedit.tt2:50
 msgid " pick the color you want to test. "
 msgstr "テストする色を選びます。"
 
 #: ../web_tt2/skinsedit.tt2:56
-#, fuzzy
 msgid "Select the parameter you want to change: "
 msgstr "変えたい色パラメータを選択: "
 
@@ -4271,7 +3914,18 @@ msgstr "現在のセッションの色を新たな静的 CSS へインストー�
 
 #: ../web_tt2/skinsedit.tt2:74
 msgid "Color chart"
+msgstr "色の一覧"
+
+#: ../web_tt2/skinsedit.tt2:76
+msgid ""
+"Please note that these indications don't cover the exact usage of each color "
+"parameter, as it would be far too long to describe. What lies in this table "
+"should however give you a correct snapshot of what the color parameters are "
+"used for. For more details on rendering, feel free to try changing the "
+"colors in your session to see how well all that works."
 msgstr ""
+"この表では、それぞれの色の用途を網羅できてはいません。しかし、どういう場合にどの色パラメータを使っているかを知ることはできます。セッションの間は好きなよ"
+"うに色を変えられますから、うまい色の組み合わせを見つけてください。"
 
 #: ../web_tt2/skinsedit.tt2:78
 msgid ""
@@ -4299,37 +3953,33 @@ msgstr "パラメータの用途"
 #: ../web_tt2/skinsedit.tt2:161 ../web_tt2/skinsedit.tt2:167
 #: ../web_tt2/skinsedit.tt2:89 ../web_tt2/skinsedit.tt2:95
 msgid "background color of:"
-msgstr ""
+msgstr "背景色として: "
 
 #: ../web_tt2/skinsedit.tt2:89
 msgid "one out of two lines in tables, alternated with color_14."
-msgstr ""
+msgstr "表の列で、color_14と交互に色を変える。"
 
 #: ../web_tt2/skinsedit.tt2:95
-#, fuzzy
 msgid "main navigation tabs;"
-msgstr "ページの移動: "
+msgstr "画面上部のタブ。"
 
 #: ../web_tt2/skinsedit.tt2:95
 msgid "most of the buttons;"
-msgstr ""
+msgstr "ほとんどのボタン。"
 
 #: ../web_tt2/skinsedit.tt2:95
 msgid "border colors in the online help."
-msgstr ""
+msgstr "オンラインヘルプでの境界色。"
 
 #: ../web_tt2/skinsedit.tt2:101 ../web_tt2/skinsedit.tt2:137
 msgid "font and border color of:"
-msgstr ""
+msgstr "文字色や境界色として: "
 
 #: ../web_tt2/skinsedit.tt2:101
-#, fuzzy
 msgid ""
 "almost everything. Exceptions for borders are &lt;TD/&gt; borders; "
 "exceptions for fonts are links, buttons and some titles."
-msgstr ""
-"次の箇所の文字色と境界色:<ul><li>ほとんどすべて。ただし、&lt;TD/&gt;による境"
-"界と、リンクやボタンなどの文字を除く。</li></ul>"
+msgstr "ほとんどすべて。ただし、&lt;TD/&gt;による境界と、リンク、ボタン、一部の見出しの文字を除く。"
 
 #: ../web_tt2/skinsedit.tt2:107 ../web_tt2/skinsedit.tt2:179
 msgid "unused"
@@ -4337,102 +3987,96 @@ msgstr "未使用"
 
 #: ../web_tt2/skinsedit.tt2:113
 msgid "font color of:"
-msgstr ""
+msgstr "文字色として: "
 
 #: ../web_tt2/skinsedit.tt2:113
-#, fuzzy
 msgid "titles;"
-msgstr "タイトル"
+msgstr "見出し。"
 
 #: ../web_tt2/skinsedit.tt2:113
 msgid "hovered links."
-msgstr ""
+msgstr "マウスカーソルのあるリンク。"
 
 #: ../web_tt2/skinsedit.tt2:119
 msgid "all the main interface boxes."
-msgstr ""
+msgstr "インタフェースの箱すべて。"
 
 #: ../web_tt2/skinsedit.tt2:125 ../web_tt2/skinsedit.tt2:137
 msgid "buttons;"
-msgstr ""
+msgstr "ボタン。"
 
 #: ../web_tt2/skinsedit.tt2:125 ../web_tt2/skinsedit.tt2:137
-#, fuzzy
 msgid "navigation tabs;"
-msgstr "ページの移動: "
+msgstr "画面上部のタブ。"
 
 #: ../web_tt2/skinsedit.tt2:125
 msgid "active option, if you have several buttons representing an alternative."
-msgstr ""
+msgstr "複数の選択肢があるボタンのうち、選ばれているもの。"
 
 # unit
 #: ../web_tt2/skinsedit.tt2:131
-#, fuzzy
 msgid "error messages."
-msgstr "通"
+msgstr "エラーメッセージ。"
 
 #: ../web_tt2/skinsedit.tt2:137
-msgid "hovered hyperlinks;"
-msgstr ""
+msgid "hovered links;"
+msgstr "マウスカーソルのあるリンク。"
 
 #: ../web_tt2/skinsedit.tt2:137
 msgid "background color of hovered buttons."
-msgstr ""
+msgstr "マウスカーソルのあるボタンの背景色。"
 
 #: ../web_tt2/skinsedit.tt2:143
-#, fuzzy
 msgid "main page;"
-msgstr "%1 運営のためのページ"
+msgstr "メインページ。"
 
 #: ../web_tt2/skinsedit.tt2:143
-#, fuzzy
 msgid "table headers;"
-msgstr "メッセージの前付け"
+msgstr "表の見出し。"
 
 #: ../web_tt2/skinsedit.tt2:143
 msgid "buttons."
-msgstr ""
+msgstr "ボタン。"
 
 #: ../web_tt2/skinsedit.tt2:149
 msgid "border color for forms."
-msgstr ""
+msgstr "入力フォームの境界色。"
 
 #: ../web_tt2/skinsedit.tt2:155
 msgid "border color that can be used to isolate some forms."
-msgstr ""
+msgstr "複数の入力フォームを区切る境界色。"
 
 #: ../web_tt2/skinsedit.tt2:161
-#, fuzzy
 msgid "top box;"
-msgstr "両方に"
+msgstr "画面上部の箱。"
 
 #: ../web_tt2/skinsedit.tt2:161
 msgid "footer box;"
-msgstr ""
+msgstr "画面下部の箱。"
 
 #: ../web_tt2/skinsedit.tt2:161
 msgid "online help buttons;"
-msgstr ""
+msgstr "「使いかた」ボタン。"
 
 #: ../web_tt2/skinsedit.tt2:161
 msgid "border color of:"
-msgstr ""
+msgstr "境界色として: "
 
 #: ../web_tt2/skinsedit.tt2:161
 msgid "tables;"
-msgstr ""
+msgstr "表。"
 
 #: ../web_tt2/skinsedit.tt2:161
 msgid "side menu areas."
-msgstr ""
+msgstr "画面左側のメニュー。"
 
 #: ../web_tt2/skinsedit.tt2:167
 msgid "editable form areas (text areas, selection lists, etc.)."
-msgstr ""
+msgstr "フォームの項目で変更できるところ (テキストエリア、選択ボックス、など)。"
 
 #: ../web_tt2/skinsedit.tt2:173
 msgid "Default background color of the tables."
-msgstr ""
+msgstr "表の背景色の初期値。"
 
 #: ../web_tt2/skinsedit.tt2:185 ../web_tt2/skinsedit.tt2:191
 #: ../web_tt2/skinsedit.tt2:197 ../web_tt2/skinsedit.tt2:203
@@ -4493,14 +4137,12 @@ msgid "Validate Address"
 msgstr "アドレスの確認"
 
 #: ../web_tt2/stats.tt2:2
-#, fuzzy
 msgid "Shared document directory size:"
-msgstr "共有文書ディレクトリの容量"
+msgstr "共有文書ディレクトリの容量:"
 
 #: ../web_tt2/stats.tt2:3
-#, fuzzy
 msgid "Web archives size:"
-msgstr "投稿保管庫の容量"
+msgstr "投稿保管庫の容量:"
 
 #: ../web_tt2/subindex.tt2:4 ../web_tt2/subindex.tt2:8
 msgid "Listing subscription to moderate"
@@ -4519,21 +4161,18 @@ msgid "Reject selected addresses"
 msgstr "選択したアドレスを拒否"
 
 #: ../web_tt2/suboptions.tt2:4
-#, fuzzy
 msgid "Your list options"
-msgstr "あなたが関わっているリスト"
+msgstr "読者登録の設定"
 
 #: ../web_tt2/suboptions.tt2:10
 msgid "You are subscribed since"
 msgstr "読者登録日"
 
 #: ../web_tt2/suboptions.tt2:13
-#, fuzzy
 msgid "Receiving mode:"
-msgstr "受け取りモード     : %1"
+msgstr "受け取りモード:"
 
 #: ../web_tt2/suboptions.tt2:25
-#, fuzzy
 msgid "Topic subscription:"
 msgstr "トピックへの読者登録:"
 
@@ -4546,9 +4185,8 @@ msgid "Disable topics subscription"
 msgstr "トピックへの読者登録をやめる"
 
 #: ../web_tt2/suboptions.tt2:51
-#, fuzzy
-msgid "Only possible for direct reception modes."
-msgstr "直接受け取る (normal) 受け取りモードのときだけできます"
+msgid "Only possible in \"normal\" receiving mode"
+msgstr "「直接受け取る」(normal) 受け取りモードのときだけできます"
 
 #. (list)
 #: ../web_tt2/subrequest.tt2:28 ../web_tt2/subrequest.tt2:7
@@ -4556,9 +4194,8 @@ msgid "You requested a subscription to list %1"
 msgstr "あなたは %1 メーリングリストへの読者登録を申し込みました"
 
 #: ../web_tt2/subrequest.tt2:8
-#, fuzzy
 msgid "To confirm your request, please click the button below:"
-msgstr "申込を確認するため、下のボタンをクリックしてください:"
+msgstr "申込を確認するため、下のボタンをクリックしてください。"
 
 #. (list)
 #: ../web_tt2/subrequest.tt2:9
@@ -4620,7 +4257,6 @@ msgid "password"
 msgstr "パスワード"
 
 #: ../web_tt2/subrequest.tt2:69
-#, fuzzy
 msgid "My password?"
 msgstr "パスワードがわからない"
 
@@ -4628,61 +4264,6 @@ msgstr "パスワードがわからない"
 #: ../web_tt2/subrequest.tt2:75
 msgid "You are already subscribed to list %1"
 msgstr "すでに %1 メーリングリストに読者登録しています"
-
-#: ../web_tt2/suspend_request.tt2:13
-#, fuzzy
-msgid "Suspended"
-msgstr "送信者"
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "Suspended from "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:23 ../web_tt2/suspend_request.tt2:44
-#, fuzzy
-msgid " to "
-msgstr "から"
-
-#: ../web_tt2/suspend_request.tt2:23
-msgid "indefinite end date"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:33
-#, fuzzy
-msgid "No subscription."
-msgstr "トピックへの読者登録:"
-
-#: ../web_tt2/suspend_request.tt2:37
-#, fuzzy
-msgid "Toogle selection"
-msgstr "選択を逆転"
-
-#: ../web_tt2/suspend_request.tt2:41
-msgid "Suspend[% IF sub.display == 1 %]/Resume"
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:43
-msgid "From : <noscript>[%|loc%](dd-mm-yyyy) "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:46
-msgid "Select the checkbox for an indefinite end date. "
-msgstr ""
-
-#: ../web_tt2/suspend_request.tt2:49
-#, fuzzy
-msgid "Suspend my subscriptions"
-msgstr "承認待ち読者"
-
-#: ../web_tt2/suspend_request.tt2:51
-#, fuzzy
-msgid "Resume my subscriptions"
-msgstr "承認待ち読者"
-
-#: ../web_tt2/suspend_request.tt2:55
-#, fuzzy
-msgid "Unsubscribe selected lists"
-msgstr "選択したリストを削除"
 
 #: ../web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -4747,7 +4328,6 @@ msgid "Sympa error - could not display web page"
 msgstr "Sympa のエラー - ウェブページを表示できません"
 
 #: ../web_tt2/tt2_error.tt2:12
-#, fuzzy
 msgid "Sympa could not deliver the requested page for the following reason: "
 msgstr "次の理由で、要求されたページを送信できません: "
 
@@ -4760,12 +4340,10 @@ msgid "Powered by"
 msgstr ""
 
 #: ../web_tt2/viewlogs.tt2:4
-#, fuzzy
 msgid "Logs view"
-msgstr "記録レベル"
+msgstr "運用記録"
 
 #: ../web_tt2/viewlogs.tt2:50
-#, fuzzy
 msgid "Search by:"
 msgstr "探す項目:"
 
@@ -4782,14 +4360,12 @@ msgid "to:"
 msgstr "から"
 
 #: ../web_tt2/viewlogs.tt2:73
-#, fuzzy
-msgid "ex: 24-05-2006"
+msgid "ex: 24/05/2006"
 msgstr "例: 24/05/2006"
 
 #: ../web_tt2/viewlogs.tt2:75
-#, fuzzy
 msgid "Search by type:"
-msgstr "動作を限定:"
+msgstr "種類を限定:"
 
 #: ../web_tt2/viewlogs.tt2:79 ../web_tt2/viewlogs.tt2:86
 msgid "All"
@@ -4812,7 +4388,6 @@ msgid "Web documents management"
 msgstr "ウェブ文書管理"
 
 #: ../web_tt2/viewlogs.tt2:100
-#, fuzzy
 msgid "Search by IP:"
 msgstr "IPアドレスを限定:"
 
@@ -4832,7 +4407,7 @@ msgstr "探す期間"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16169
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:15926
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -4903,17 +4478,14 @@ msgid "Do Not Notify"
 msgstr "知らせない"
 
 #: ../web_tt2/view_template.tt2:7
-#, fuzzy
 msgid "Template name: "
 msgstr "テンプレート名: "
 
 #: ../web_tt2/view_template.tt2:8
-#, fuzzy
 msgid "Type: "
 msgstr "種類: "
 
 #: ../web_tt2/view_template.tt2:9
-#, fuzzy
 msgid "Path: "
 msgstr "パス: "
 
@@ -5139,12 +4711,10 @@ msgid "It is not possible to unsubscribe from this list."
 msgstr "このリストを登録解除することはできません。"
 
 #: ../mail_tt2/authorization_reject.tt2:137
-#, fuzzy
 msgid "List is private: You can not read the archives."
 msgstr "リストは非公開です。あなたは投稿保管庫の中を見ることができません。"
 
 #: ../mail_tt2/authorization_reject.tt2:140
-#, fuzzy
 msgid "List is private: You can not browse available files."
 msgstr "リストは非公開です。あなたはファイルを閲覧することができません。"
 
@@ -5247,7 +4817,6 @@ msgid "Your authentification certificate will expire on %1."
 msgstr "あなたの本人確認用証明書は %1 に期限切れとなります。"
 
 #: ../mail_tt2/certif_warning.tt2:5
-#, fuzzy
 msgid "The certificate subject is:"
 msgstr "証明書の名義は:"
 
@@ -5257,7 +4826,6 @@ msgstr "あなたはリストから届く署名付きメッセージを受け取
 
 #. (conf.email,conf.host)
 #: ../mail_tt2/certif_warning.tt2:12
-#, fuzzy
 msgid ""
 "To receive them again, renew your certificate with your certification "
 "authority\n"
@@ -5275,25 +4843,18 @@ msgid "Results of your commands"
 msgstr "コマンドの結果"
 
 #: ../mail_tt2/command_report.tt2:10
-#, fuzzy
 msgid "Command has been performed:"
 msgstr "コマンドを実行しました:"
 
 #: ../mail_tt2/command_report.tt2:12
-#, fuzzy
 msgid "These commands have been performed:"
 msgstr "次のコマンドを実行しました:"
 
-#: ../mail_tt2/command_report.tt2:20
+#: ../mail_tt2/command_report.tt2:19
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "メッセージの署名は S/MIME を使って確認できました。"
 
-#: ../mail_tt2/command_report.tt2:23
-#, fuzzy
-msgid "Your message contain a DKIM signature. It was succesfully verified"
-msgstr "メッセージの署名は S/MIME を使って確認できました。"
-
-#: ../mail_tt2/command_report.tt2:28
+#: ../mail_tt2/command_report.tt2:24
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you have\n"
@@ -5304,76 +4865,71 @@ msgstr ""
 "の登録解除) ができたら、電子メールでお知らせします。"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:31
+#: ../mail_tt2/command_report.tt2:27
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "%2 メーリングリストでの %1 に関する情報を更新しました。"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:34
+#: ../mail_tt2/command_report.tt2:30
 msgid "User %1 is now subscriber of list %2."
 msgstr "%1 が %2 メーリングリストの読者になりました。"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:37
+#: ../mail_tt2/command_report.tt2:33
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "%1 を %2 メーリングリストに招待しました。"
 
 #. (notice.total,notice.listname)
-#: ../mail_tt2/command_report.tt2:40
+#: ../mail_tt2/command_report.tt2:36
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "%2 メーリングリストの読者 %1 名に、読者登録確認を送りました。"
 
 #. (notice.count)
-#: ../mail_tt2/command_report.tt2:43
+#: ../mail_tt2/command_report.tt2:39
 msgid "The Reminder has been sent to %1 users."
 msgstr "%1 名に登録確認を送りました。"
 
 #. (notice.email,notice.listname)
-#: ../mail_tt2/command_report.tt2:46
+#: ../mail_tt2/command_report.tt2:42
 msgid "The user %1 has been removed from the list %2."
 msgstr "%1 を %2 メーリングリストから削除しました。"
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:49
+#: ../mail_tt2/command_report.tt2:45
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "%1 メーリングリストに関するあなたの設定を更新しました。"
 
 #. (notice.cmd)
-#: ../mail_tt2/command_report.tt2:52
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:48
 msgid "Command '%1' found: ignoring end of message."
-msgstr "'%1' コマンドがありました: メッセージの残りは無視します。"
+msgstr "'%1' コマンドがありました。メッセージの残りは無視します。"
 
 #. (notice.listname)
-#: ../mail_tt2/command_report.tt2:55
+#: ../mail_tt2/command_report.tt2:51
 msgid "There is no message to moderate for list '%1'."
 msgstr "%1 メーリングリストには、吟味を待っているメッセージはありません。"
 
-#: ../mail_tt2/command_report.tt2:67
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:63
 msgid "Command has been rejected:"
 msgstr "コマンドを拒否しました:"
 
-#: ../mail_tt2/command_report.tt2:69
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:65
 msgid "These commands have been rejected:"
 msgstr "次のコマンドを拒否しました:"
 
-#: ../mail_tt2/command_report.tt2:85
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:81
 msgid "Command has failed:"
 msgstr "コマンドが失敗しました:"
 
-#: ../mail_tt2/command_report.tt2:87
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:83
 msgid "These commands have failed:"
 msgstr "次のコマンドが失敗しました:"
 
-#: ../mail_tt2/command_report.tt2:94
+#: ../mail_tt2/command_report.tt2:90
 msgid "Command not understood: ignoring end of message."
 msgstr "コマンドの意味がわかりません: メッセージの残りは無視します。"
 
-#: ../mail_tt2/command_report.tt2:98
+#: ../mail_tt2/command_report.tt2:94
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature \n"
@@ -5384,25 +4940,25 @@ msgstr ""
 "ませんでした (なお、表題 (Subject ヘッダ) にコマンドを書いていると署名 \n"
 "を確認できません。ご注意ください)。"
 
-#: ../mail_tt2/command_report.tt2:101
+#: ../mail_tt2/command_report.tt2:97
 msgid "Command syntax error."
 msgstr "コマンドの書きかたに間違いがあります。"
 
 #. (u_err.listname)
 #. (glob.listname)
 #. (listname)
-#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:178
+#: ../mail_tt2/command_report.tt2:100 ../mail_tt2/command_report.tt2:174
 #: ../mail_tt2/message_report.tt2:55
 msgid "List '%1' does not exist."
 msgstr "'%1' というリストはありません。"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:107
+#: ../mail_tt2/command_report.tt2:103
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "%1 メーリングリストでは読者の個人設定をお使いになれません。"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:111
+#: ../mail_tt2/command_report.tt2:107
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe\n"
 "you subscribed from a different e-mail address ?"
@@ -5413,14 +4969,14 @@ msgstr ""
 "すか?"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:114
+#: ../mail_tt2/command_report.tt2:110
 msgid "E-mail address %1 has not been found in the list %2."
 msgstr ""
 "%1 という電子メールアドレスは、 \n"
 "%2 メーリングリストにありませんでした。"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:118
+#: ../mail_tt2/command_report.tt2:114
 msgid ""
 "List %1 does not accept the DIGEST mode. \n"
 "Your configuration regarding this command has not been updated."
@@ -5429,31 +4985,30 @@ msgstr ""
 "あなたの個人設定のうち、このコマンドに関する設定は更新しません。"
 
 #. (u_err.listname,u_err.modes)
-#: ../mail_tt2/command_report.tt2:121
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:117
 msgid "List %1 allows only these reception modes: %2"
-msgstr "リスト %1 では次の受け取りモードが選べます: %2"
+msgstr "リスト %1 では次の受け取りモードだけを選べます: %2"
 
-#: ../mail_tt2/command_report.tt2:124
+#: ../mail_tt2/command_report.tt2:120
 msgid "This list archive is empty."
 msgstr "このリストの投稿保管庫は空です。"
 
-#: ../mail_tt2/command_report.tt2:127
+#: ../mail_tt2/command_report.tt2:123
 msgid "Required file does not exist."
 msgstr "必要なファイルがありません。"
 
 #. (u_err.listname)
-#: ../mail_tt2/command_report.tt2:130
+#: ../mail_tt2/command_report.tt2:126
 msgid "List %1 has no subscriber."
 msgstr "%1 メーリングリストには読者がいません。"
 
 #. (u_err.email,u_err.listname)
-#: ../mail_tt2/command_report.tt2:133
+#: ../mail_tt2/command_report.tt2:129
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "%1 はすでに %2 メーリングリストに読者登録されています。"
 
 #. (u_err.command)
-#: ../mail_tt2/command_report.tt2:138
+#: ../mail_tt2/command_report.tt2:134
 msgid ""
 "The authentication process failed.\n"
 "You probably confirmed your %1 using a different\n"
@@ -5463,17 +5018,15 @@ msgstr ""
 "おそらく、%1の確認を別の電子メールアドレスでやってしまったのでしょう。 \n"
 "あなたの正式なアドレスを使ってやり直してみてください。"
 
-#: ../mail_tt2/command_report.tt2:150
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:146
 msgid "Command has failed because of an internal server error:"
 msgstr "コマンドが失敗しました。サーバ内部のエラーのためです:"
 
-#: ../mail_tt2/command_report.tt2:152
-#, fuzzy
+#: ../mail_tt2/command_report.tt2:148
 msgid "These commands have failed because of an internal server error:"
 msgstr "次のコマンドが失敗しました。サーバ内部のエラーのためです:"
 
-#: ../mail_tt2/command_report.tt2:169
+#: ../mail_tt2/command_report.tt2:165
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
 "your command in the subject)."
@@ -5482,16 +5035,16 @@ msgstr ""
 "けを使って書いてください (あるいは、コマンドを表題 (Subject) に書くよ \n"
 "うにしてください)。"
 
-#: ../mail_tt2/command_report.tt2:172
+#: ../mail_tt2/command_report.tt2:168
 msgid "No command found in message."
 msgstr "このメッセージには、コマンドがなにもありませんでした。"
 
-#: ../mail_tt2/command_report.tt2:175
+#: ../mail_tt2/command_report.tt2:171
 msgid "Ignoring message because of an internal server error."
 msgstr "メッセージを無視します。サーバ内部のエラーのためです。"
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/command_report.tt2:185
+#: ../mail_tt2/command_report.tt2:181
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "詳しくは、メーリングリストのウェブサイト \n"
@@ -5503,7 +5056,7 @@ msgid "%1 Digest %2"
 msgstr "%1 - %2のまとめ読み"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:8
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2773
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2706
 msgid "Table of contents:"
 msgstr "目次:"
 
@@ -5536,9 +5089,8 @@ msgstr ""
 "リストの吟味役 %4 が登録しました。"
 
 #: ../mail_tt2/d_install_shared.tt2:7
-#, fuzzy
 msgid "The list document repository:"
-msgstr "リストの文書置き場: %1/d_read/%2"
+msgstr "リストの文書置き場:"
 
 #: ../mail_tt2/d_reject_shared.tt2:2
 msgid "Your document has been rejected."
@@ -5570,7 +5122,6 @@ msgstr ""
 "あなたが読者登録の確認をしていなかったためです。"
 
 #: ../mail_tt2/expire_deletion.tt2:8 ../mail_tt2/removed.tt2:8
-#, fuzzy
 msgid "You can subscribe again:"
 msgstr "また読者登録することもできます:"
 
@@ -5589,13 +5140,11 @@ msgstr ""
 
 #: ../mail_tt2/expire_warning1.tt2:7 ../mail_tt2/expire_warning2.tt2:7
 #: ../mail_tt2/remind.tt2:6
-#, fuzzy
 msgid "Everything about this list: "
 msgstr "このリストの情報はこちら: "
 
 #: ../mail_tt2/expire_warning1.tt2:8 ../mail_tt2/expire_warning2.tt2:8
 #: ../mail_tt2/remind.tt2:8
-#, fuzzy
 msgid "Unsubscription:"
 msgstr "登録解除するには:"
 
@@ -5604,7 +5153,7 @@ msgstr "登録解除するには:"
 msgid "Archive of %1, file %2"
 msgstr "%1 の投稿保管庫 - ファイル %2"
 
-#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1627
+#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1633
 msgid "Subscription summary"
 msgstr "読者登録の概要"
 
@@ -5858,49 +5407,41 @@ msgstr "%1 メーリングリストのご案内"
 
 #. (list.name,list.host)
 #: ../mail_tt2/info_report.tt2:4
-#, fuzzy
 msgid "Information regarding list %1@%2:"
 msgstr "メーリングリスト %1@%2 に関するご案内"
 
 #. (list.subject)
 #: ../mail_tt2/info_report.tt2:6
-#, fuzzy
 msgid "Subject          : %1"
 msgstr "表題               : %1"
 
 #. (o.gecos)
 #: ../mail_tt2/info_report.tt2:9
-#, fuzzy
 msgid "Owner             : %1"
 msgstr "オーナー           : %1"
 
 #. (e.gecos)
 #: ../mail_tt2/info_report.tt2:14
-#, fuzzy
 msgid "Moderator         : %1"
 msgstr "吟味役             : %1"
 
 #. (subscribe)
 #: ../mail_tt2/info_report.tt2:17
-#, fuzzy
 msgid "Subscription      : %1"
 msgstr "読者登録           : %1"
 
 #. (unsubscribe)
 #: ../mail_tt2/info_report.tt2:18
-#, fuzzy
 msgid "Unsubscription    : %1"
 msgstr "登録解除           : %1"
 
 #. (send)
 #: ../mail_tt2/info_report.tt2:19
-#, fuzzy
 msgid "Sending messages  : %1"
 msgstr "メッセージの送信   : %1"
 
 #. (review)
 #: ../mail_tt2/info_report.tt2:20
-#, fuzzy
 msgid "Review subscribers: %1"
 msgstr "読者一覧           : %1"
 
@@ -5911,25 +5452,21 @@ msgstr "返信先             : %1"
 
 #. (max_size)
 #: ../mail_tt2/info_report.tt2:22
-#, fuzzy
 msgid "Maximum size      : %1"
 msgstr "最大サイズ         : %1"
 
 #. (digest)
 #: ../mail_tt2/info_report.tt2:24
-#, fuzzy
 msgid "Digest            : %1"
 msgstr "まとめ読み         : %1"
 
 #. (available_reception_mode)
 #: ../mail_tt2/info_report.tt2:26
-#, fuzzy
 msgid "Receiving modes   : %1"
 msgstr "受け取りモード     : %1"
 
 #. (url)
 #: ../mail_tt2/info_report.tt2:27
-#, fuzzy
 msgid "Homepage          : %1"
 msgstr "ホームページ       : %1"
 
@@ -5946,7 +5483,6 @@ msgstr ""
 "思います。"
 
 #: ../mail_tt2/invite.tt2:7
-#, fuzzy
 msgid "To subscribe just hit the following link:"
 msgstr "読者登録は、次のリンクをクリックするだけでできます:"
 
@@ -5990,7 +5526,6 @@ msgstr "承認が要る %1 の共有文書"
 
 #. (list.name,filename,who,conf.wwsympa_url)
 #: ../mail_tt2/listeditor_notification.tt2:13
-#, fuzzy
 msgid ""
 "There are new shared documents in list %1: \n"
 "\t%2\n"
@@ -6010,7 +5545,6 @@ msgstr ""
 
 #. (list.name,filename,who,conf.wwsympa_url)
 #: ../mail_tt2/listeditor_notification.tt2:21
-#, fuzzy
 msgid ""
 "There is a new shared document in list %1: \n"
 "\t%2 from %3\n"
@@ -6032,10 +5566,6 @@ msgstr ""
 msgid "Moderators List %1 / %2"
 msgstr "%1 メーリングリストでの吟味 / %2"
 
-#: ../mail_tt2/listmaster_notification.tt2:2
-msgid "Listmaster"
-msgstr "リストシステム管理者"
-
 #. (list.name,list.host,email)
 #: ../mail_tt2/listmaster_notification.tt2:4
 msgid "List \"%1@%2\" creation request from %3"
@@ -6048,7 +5578,6 @@ msgstr "%1 から、\"%2\" というリスト作成の申込がありました�
 
 #: ../mail_tt2/listmaster_notification.tt2:12
 #: ../mail_tt2/listmaster_notification.tt2:26
-#, fuzzy
 msgid "To activate/delete this mailing list:"
 msgstr "このメーリングリストを 有効にしたり削除したりするには:"
 
@@ -6083,7 +5612,6 @@ msgstr "%1 のデータベースドライバががありません"
 
 #. (db_type)
 #: ../mail_tt2/listmaster_notification.tt2:38
-#, fuzzy
 msgid ""
 "No Database Driver installed for %1; you should download and install DBD::%1 "
 "from CPAN."
@@ -6102,7 +5630,6 @@ msgstr "以前のプロセスは予期せず終了しました。"
 
 #. (crash_date)
 #: ../mail_tt2/listmaster_notification.tt2:45
-#, fuzzy
 msgid "Date of crash: %1"
 msgstr "クラッシュ日時: %1"
 
@@ -6120,7 +5647,6 @@ msgid "Upgrade procedures failed"
 msgstr "アップグレード手続き失敗"
 
 #: ../mail_tt2/listmaster_notification.tt2:57
-#, fuzzy
 msgid ""
 "Sympa encountered the following error while running upgrade procedures: "
 msgstr "Sympa はアップグレード手続きの際に以下のエラーに遭いました: "
@@ -6131,7 +5657,6 @@ msgstr "データベースの構成を更新しました"
 
 #. (db_name)
 #: ../mail_tt2/listmaster_notification.tt2:65
-#, fuzzy
 msgid ""
 "The database structure has been updated; check log file for further details: "
 msgstr ""
@@ -6177,7 +5702,6 @@ msgid "The antivirus scan has failed while processing the following file:"
 msgstr "以下のファイルを処理中にウイルススキャンが失敗しました:"
 
 #: ../mail_tt2/listmaster_notification.tt2:109
-#, fuzzy
 msgid "The returned error message:"
 msgstr "エラーメッセージは:"
 
@@ -6247,13 +5771,12 @@ msgid "incorrect format of edit_list.conf"
 msgstr "edit_list.confの書式が正しくありません"
 
 #: ../mail_tt2/listmaster_notification.tt2:144
-#, fuzzy
 msgid ""
 "edit_list.conf format has changed:\n"
 "'default' is no more accepted for a population."
 msgstr ""
-"edit_list.conf の形式を変更しました:\n"
-"'default' はもう受け付けられません。"
+"edit_list.conf の形式が変更されています。\n"
+"'population' では 'default' を使えなくなくなりました。"
 
 #. (param0)
 #: ../mail_tt2/listmaster_notification.tt2:146
@@ -6262,13 +5785,12 @@ msgstr "ドキュメントを参照して、%1 を修正してください。"
 
 #. (param0)
 #: ../mail_tt2/listmaster_notification.tt2:148
-#, fuzzy
 msgid ""
 "Until then we recommend your remove %1;\n"
 "default configuration will be used."
 msgstr ""
-"%1 の設定を削除して \n"
-"初期設定を使うことをお勧めします。"
+"それまでは、%1 の設定を削除して \n"
+"初期設定を使っておくことをお勧めします。"
 
 #. (listname)
 #: ../mail_tt2/listmaster_notification.tt2:151
@@ -6276,17 +5798,14 @@ msgid "subscribers update failed for list %1"
 msgstr "%1 メーリングリストの読者情報の更新に失敗しました"
 
 #: ../mail_tt2/listmaster_notification.tt2:153
-#, fuzzy
 msgid ""
 "Sympa could not include subscribers from the following external data sources:"
-msgstr ""
-"Sympaは外部データソースから読者情報を取り込むことができませんでした。 \n"
-"データベースもしくはLDAPディレクトリへ接続できなかったようです。"
+msgstr "Sympaは次の外部データソースから読者情報を取り込むことができませんでした:"
 
 #. (e.name,e.type)
 #: ../mail_tt2/listmaster_notification.tt2:156
 msgid "Include of datasource %1 (type %2) failed."
-msgstr ""
+msgstr "データソース%1 (種類は %2) からの取り込みが失敗しました。"
 
 #: ../mail_tt2/listmaster_notification.tt2:159
 #: ../mail_tt2/listmaster_notification.tt2:166
@@ -6299,13 +5818,10 @@ msgid "admins update failed for list %1"
 msgstr "%1 メーリングリストの管理情報の更新に失敗しました"
 
 #: ../mail_tt2/listmaster_notification.tt2:165
-#, fuzzy
 msgid ""
 "Sympa could not include admins from external data sources; the database or "
 "LDAP directory might be unreachable."
-msgstr ""
-"Sympaは外部データソースから管理情報を取り込むことができませんでした。 \n"
-"データベースもしくはLDAPディレクトリへ接続できなかったようです。"
+msgstr "Sympaは外部データソースから管理情報を取り込むことができませんでした。データベースもしくはLDAPディレクトリへ接続できなかったようです。"
 
 #. (param0)
 #: ../mail_tt2/listmaster_notification.tt2:169
@@ -6352,19 +5868,17 @@ msgstr "リストオーナー/吟味役の電子メールアドレス変更"
 
 #. (previous_email,new_email)
 #: ../mail_tt2/listmaster_notification.tt2:179
-#, fuzzy
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
 "been performed for the following lists:"
 msgstr ""
-"%1 のオーナーか吟味役の電子メールアドレスを %2 に変更しました。この変更\n"
-"は、以下のリストで実施しました:"
+"%1 の、オーナーや吟味役の電子メールアドレスを %2 に変更しました。\n"
+"この変更は、次のリストで実施しました:"
 
 #. (list.name)
 #: ../mail_tt2/listmaster_notification.tt2:186
-#, fuzzy
 msgid "List %1: Failed to change admin email address"
-msgstr "%1 メーリングリスト: 管理者電子メールアドレスの変更に失敗しました"
+msgstr "%1 メーリングリスト: 管理者電子メールアドレスの変更に失敗"
 
 #. (current_email,new_email,datasource)
 #: ../mail_tt2/listmaster_notification.tt2:190
@@ -6421,13 +5935,11 @@ msgstr "ファイルを削除しました"
 
 #. (param0)
 #: ../mail_tt2/listmaster_notification.tt2:232
-#, fuzzy
 msgid "The following file has been removed: %1"
 msgstr "次のファイルを削除しました: %1"
 
 #. (param1)
 #: ../mail_tt2/listmaster_notification.tt2:233
-#, fuzzy
 msgid "A backup of the file has been made: %1"
 msgstr "ファイルのバックアップを次の名前で作成しました: %1"
 
@@ -6492,9 +6004,8 @@ msgstr "配送エラーを起こしている読者の管理:"
 #. (list.name)
 #: ../mail_tt2/listmaster_notification.tt2:280
 #: ../mail_tt2/listmaster_notification.tt2:292
-#, fuzzy
 msgid "Listmaster: internal server error "
-msgstr "リストシステム管理者: サーバ内部のエラー "
+msgstr "リストシステム管理者: サーバ内部のエラー"
 
 #. (who)
 #: ../mail_tt2/listmaster_notification.tt2:282
@@ -6516,13 +6027,12 @@ msgid "The authentication server name is not defined."
 msgstr "認証サーバの名前が決まっていません。"
 
 #: ../mail_tt2/listmaster_notification.tt2:299
-#, fuzzy
 msgid ""
 "auth.conf error: either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
 "auth.conf の間違い: email_http_header か \n"
-"ldap_host/ldap_get_email_by_uid_filter かどちらかは決めなければいけません。"
+"ldap_host/ldap_get_email_by_uid_filter のどちらかは決めなければいけません。"
 
 #. (name)
 #: ../mail_tt2/listmaster_notification.tt2:300
@@ -6542,7 +6052,6 @@ msgstr "'%1' のデータベースでの更新が失敗しました。"
 #. (old_email)
 #: ../mail_tt2/listmaster_notification.tt2:302
 #: ../mail_tt2/listmaster_notification.tt2:304
-#, fuzzy
 msgid " (old email: %1)"
 msgstr " (前の電子メールアドレス: %1)"
 
@@ -6575,13 +6084,11 @@ msgstr "'%1' という読者はリスト %2 にいません。"
 
 #. (filepath)
 #: ../mail_tt2/listmaster_notification.tt2:308
-#, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "次のファイルが読み取れません: '%1'。"
 
 #. (filepath)
 #: ../mail_tt2/listmaster_notification.tt2:309
-#, fuzzy
 msgid "Unable to write file: '%1'."
 msgstr "次のファイルに書き込めません: '%1'。"
 
@@ -6650,7 +6157,6 @@ msgstr "リスト %2 に%1の投稿はありません"
 #: ../mail_tt2/listmaster_notification.tt2:321
 #: ../mail_tt2/listmaster_notification.tt2:322
 #: ../mail_tt2/listmaster_notification.tt2:323
-#, fuzzy
 msgid ": unable to read '%1'."
 msgstr ": '%1' は読めません。"
 
@@ -6665,9 +6171,8 @@ msgid "Unable to find archive for list '%1'"
 msgstr "リスト %1 には投稿保管庫がありません。"
 
 #: ../mail_tt2/listmaster_notification.tt2:324
-#, fuzzy
 msgid "Unable to send archive: no message id found."
-msgstr "投稿保管庫のメッセージを送れません: メッセージIDがありませんでした。"
+msgstr "投稿保管庫のメッセージを送れません。メッセージIDがありませんでした。"
 
 #. (msgid)
 #: ../mail_tt2/listmaster_notification.tt2:325
@@ -6805,15 +6310,13 @@ msgstr "パラメータクッキーが決まっていません。本人確認失
 
 #. (env)
 #: ../mail_tt2/listmaster_notification.tt2:356
-#, fuzzy
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "クッキーの間違い: '%1' が決まっていません。本人確認失敗。"
 
 #. (list.name)
 #: ../mail_tt2/listmaster_notification.tt2:363
-#, fuzzy
 msgid "Listmaster: system error "
-msgstr "リストシステム管理者: システムエラー "
+msgstr "リストシステム管理者: システムエラー"
 
 #. (who)
 #: ../mail_tt2/listmaster_notification.tt2:365
@@ -6839,7 +6342,6 @@ msgstr ""
 
 #. (list.name,rate)
 #: ../mail_tt2/listowner_notification.tt2:11
-#, fuzzy
 msgid "List \"%1\" warning: archive %2% full"
 msgstr "メーリングリスト \"%1\" の警告: 投稿保管庫の容量が %2 パーセントです"
 
@@ -6881,7 +6383,6 @@ msgstr "参考: %4 <%3> から \"%2\" メーリングリスト宛ての %1"
 
 #. (who,gecos,list.name)
 #: ../mail_tt2/listowner_notification.tt2:28
-#, fuzzy
 msgid ""
 "WARNING: %1 %2 failed to unsubscribe from %3 because his address was not "
 "found in the list.\n"
@@ -6897,7 +6398,6 @@ msgstr "\"%1\" メーリングリストのメッセージ設定が削除され�
 
 #. (list.name,list.host,param0,param1,param2)
 #: ../mail_tt2/listowner_notification.tt2:38
-#, fuzzy
 msgid ""
 "List %1@%2 has been reinstantiated (family %3). \n"
 "Some of the customizations have been removed because they no longer respect "
@@ -6951,7 +6451,6 @@ msgstr "%1 メーリングリストへの読者登録申込"
 
 #. (list.name)-)
 #: ../mail_tt2/listowner_notification.tt2:66
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 " \n"
@@ -6961,24 +6460,18 @@ msgid ""
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
 " \n"
-"ある人から、あなたがオーナーをしているリストに読者として追加してほしい  \n"
-"との申し出がありました。保留中の読者登録申込を見て処理するには、下記の  \n"
-"リンクをクリックして ください:"
+"ある人から、あなたがオーナーをしているリストに読者として追加してほしい \n"
+"との申し出がありました。保留中の読者登録申込を見て処理するには、下記の \n"
+"リンクをクリックして ください: "
 
-#. (replyto,keyauth,list.name,who,gecos)
-#: ../mail_tt2/listowner_notification.tt2:72
-#, fuzzy
+#. (replyto)
+#: ../mail_tt2/listowner_notification.tt2:70
 msgid ""
 "If prefered, you can accept this subscription request sending an email to %1 "
-"with the following subject:\n"
-"AUTH %2 ADD %3 %4 %5\n"
-msgstr ""
-"問題なければ、%1 宛てに、下記の表題 (Subject) で電子メールを送って読者登録申"
-"込を受け付けてください:\n"
-"AUTH %2 ADD %3 %4 %5\n"
+"with the following subject:"
+msgstr "問題なければ、%1 宛てに、下記の表題 (Subject) で電子メールを送って読者登録申込を受け付けてください:"
 
 #: ../mail_tt2/listowner_notification.tt2:74
-#, fuzzy
 msgid "That can be done using this mailto link:"
 msgstr "この mailto URL リンクを使えばできます:"
 
@@ -6993,7 +6486,6 @@ msgstr "%1 メーリングリストの登録解除申込"
 
 #. (list.name)-)
 #: ../mail_tt2/listowner_notification.tt2:89
-#, fuzzy
 msgid ""
 "Dear owner of list %1,\n"
 "\n"
@@ -7001,42 +6493,36 @@ msgid ""
 "with you, you should click on the following link:"
 msgstr ""
 "%1 メーリングリストのオーナーさんへ\n"
-"\n"
+" \n"
 "ある人から、あなたがオーナーをしているリストから削除してほしいとの申し \n"
 "出がありました。構わないのであれば、下記のリンクをクリックしてくださ \n"
 "い:"
 
-#. (sympa,keyauth,list.name,who)-)
-#: ../mail_tt2/listowner_notification.tt2:96
-#, fuzzy
+#. (sympa)-)
+#: ../mail_tt2/listowner_notification.tt2:95
 msgid ""
 "\n"
 "or send an email to %1 with the following subject:\n"
-"AUTH %2 DEL %3 %4\n"
 msgstr ""
 "\n"
 "あるいは、%1 宛てに、 \n"
 "下記の表題 (Subject) で電子メールを送ってください:\n"
-"AUTH %2 DEL %3 %4\n"
 
 #. (list.name)
 #: ../mail_tt2/listowner_notification.tt2:100
 msgid "WARNING: bounce rate too high in list %1"
 msgstr "注意: %1 メーリングリストの配送エラー率が高すぎます"
 
-#. (list.name,rate,conf.wwsympa_url,list.name)
-#: ../mail_tt2/listowner_notification.tt2:106
-#, fuzzy
+#. (list.name,rate)
+#: ../mail_tt2/listowner_notification.tt2:105
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
 "You should delete bouncing subscribers: \n"
-"%3/reviewbouncing/%4\n"
 msgstr ""
 "%1 メーリングリストでの配送エラー率は %2 です。\n"
-"\n"
+" \n"
 "配送エラーを起こしている読者を削除しなければいけません: \n"
-"%3/reviewbouncing/%4\n"
 
 #. (command,list.name,who,gecos)
 #: ../mail_tt2/listowner_notification.tt2:110
@@ -7071,9 +6557,8 @@ msgstr "%1 を %2 メーリングリストから自動的に削除しました�
 
 #. (list.name)
 #: ../mail_tt2/listowner_notification.tt2:140
-#, fuzzy
 msgid "List %1: Failed to change member email address"
-msgstr "%1 メーリングリスト: 読者電子メールアドレスの変更に失敗しました"
+msgstr "%1 メーリングリスト: 読者電子メールアドレスの変更に失敗"
 
 #. (current_email,new_email,datasource)
 #: ../mail_tt2/listowner_notification.tt2:144
@@ -7119,12 +6604,10 @@ msgid "This is an automatic response sent by Sympa Mailing Lists Manager."
 msgstr "このメールは、Sympa メーリングリスト管理システムからの自動応答です。"
 
 #: ../mail_tt2/list_unknown.tt2:12
-#, fuzzy
 msgid "The following address is not a known mailing list:"
 msgstr "以下のアドレスは、メーリングリストとして登録されていません:"
 
 #: ../mail_tt2/list_unknown.tt2:16
-#, fuzzy
 msgid ""
 "To find out the correct listname, ask for this server's lists directory:"
 msgstr "正確なリスト名を探すには、当サーバのリスト一覧をご覧ください:"
@@ -7135,7 +6618,6 @@ msgid "For further information, please contact %1@%2"
 msgstr "詳しいことは、%1@%2 にお問い合わせください"
 
 #: ../mail_tt2/message_report.tt2:4
-#, fuzzy
 msgid "Message distribution: Internal server error"
 msgstr "メッセージのゆくえ: サーバ内部でのエラー"
 
@@ -7161,26 +6643,22 @@ msgid "For further information, please contact %1-request@%2"
 msgstr "詳しいことは、%1-request@%2 にお問い合わせください"
 
 #: ../mail_tt2/message_report.tt2:22
-#, fuzzy
 msgid "Message distribution: User error"
 msgstr "メッセージのゆくえ: 間違い"
 
 #. (list.name)
 #: ../mail_tt2/message_report.tt2:30
-#, fuzzy
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr ""
 "リスト '%1' 宛のメッセージを配信できませんでした。理由は以下の通りです:"
 
 #: ../mail_tt2/message_report.tt2:32
-#, fuzzy
 msgid "Impossible to distribute your message for the following reason:"
 msgstr "メッセージを配信できませんでした。理由は以下の通りです:"
 
 #. (list.name,conf.sympa,list.host)
 #: ../mail_tt2/message_report.tt2:48
-#, fuzzy
 msgid ""
 "The following message was sent to list '%1' and it seems to contain\n"
 "one or more commands like subscribe, unsubscribe, help, index, get, ...\n"
@@ -7226,7 +6704,6 @@ msgstr "%1 メーリングリストは作成できませんでした。"
 
 #. (list.name,key)
 #: ../mail_tt2/message_report.tt2:62
-#, fuzzy
 msgid ""
 "Unable to access the message on list %1 with  key %2.\n"
 "Warning: this message may already have been sent by one of the list's editor."
@@ -7260,13 +6737,11 @@ msgid "For further information, please contact listmaster@%1"
 msgstr "詳しいことは、listmaster@%1 にお問い合わせください"
 
 #: ../mail_tt2/message_report.tt2:79
-#, fuzzy
 msgid "Message distribution: Authorization denied"
 msgstr "メッセージのゆくえ: 認められませんでした"
 
 #. (list.name)
 #: ../mail_tt2/message_report.tt2:87
-#, fuzzy
 msgid ""
 "Your message for list '%1' (attached below) was rejected. \n"
 "You are not allowed to send this message for the following reason:"
@@ -7292,12 +6767,11 @@ msgstr "%2 メーリングリスト宛てのメッセージ %1 を配送しま�
 
 #. (key,list.name)
 #: ../mail_tt2/message_report.tt2:107
-#, fuzzy
 msgid ""
 "Message %1 for list '%2' has been validated; it will be distributed soon."
 msgstr ""
-"\"%2 メーリングリスト宛てのメッセージ %1 を確認できました。 \n"
-"まもなく配送します。"
+"%2 メーリングリスト宛てのメッセージ %1 を確認できました。 \n"
+"まもなく配信します。"
 
 #. (key,list.name)
 #: ../mail_tt2/message_report.tt2:111
@@ -7313,14 +6787,12 @@ msgstr ""
 
 #. (key,list.name)
 #: ../mail_tt2/message_report.tt2:119
-#, fuzzy
 msgid ""
 "Your message for list '%2' with the %1 ID has been confirmed; it will be "
 "distributed soon."
 msgstr ""
-"\"%2 メーリングリスト宛てでメッセージIDが %1 のメッセージを確認できまし"
-"た。 \n"
-"まもなく配送します。"
+"%2 メーリングリスト宛てでメッセージIDが %1 のメッセージを確認できました。 \n"
+"まもなく配信します。"
 
 #. (list.name,msg_from)
 #: ../mail_tt2/moderate.tt2:3
@@ -7347,24 +6819,18 @@ msgid "They are %1 messages awaiting moderation."
 msgstr "このリストで吟味を待っているメッセージが %1 通あります。"
 
 #: ../mail_tt2/moderate.tt2:18
-#, fuzzy
 msgid ""
 "To browse the awaiting messages, you should click on the following link:"
-msgstr ""
-"保留メッセージを見るには、次のリンクをクリックしてください:\n"
-"    %1/ticket/%2"
+msgstr "保留メッセージを見るには、次のリンクをクリックしてください:"
 
 #. (list.name)
 #: ../mail_tt2/moderate.tt2:21
-#, fuzzy
 msgid ""
 "To tag the message in list %1 for the appropriate topic, please use the "
 "following link:"
 msgstr ""
 "添付の %1 リスト宛てメッセージにトピックの印をつけるには、 \n"
-"以下のページへ行ってください:\n"
-"\n"
-"%2/viewmod/%1/%3\n"
+"次のページへ行ってください:"
 
 #. (list.name)
 #: ../mail_tt2/moderate.tt2:29
@@ -7373,11 +6839,10 @@ msgstr "添付のメッセージを %1 メーリングリストに配送する�
 
 #. (conf.email,conf.host)
 #: ../mail_tt2/moderate.tt2:31 ../mail_tt2/moderate.tt2:36
-#, fuzzy
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr ""
 "あるいは、%1@%2 宛てに、 \n"
-"下記の表題 (subject) でメッセージを送ってください:"
+"次の表題 (subject) でメッセージを送ってください:"
 
 #: ../mail_tt2/moderate.tt2:34
 msgid "To reject it (it will be removed):"
@@ -7385,11 +6850,8 @@ msgstr "拒否するには (削除されます):"
 
 #. (conf.wwsympa_url)
 #: ../mail_tt2/moderate.tt2:39 ../mail_tt2/modindex.tt2:10
-#, fuzzy
 msgid "The messages moderating documentation:"
-msgstr ""
-"メッセージの吟味についての説明:\n"
-"    %1/help/admin#moderate"
+msgstr "メッセージの吟味についての説明:"
 
 #. (list.name)
 #: ../mail_tt2/modindex.tt2:2
@@ -7418,13 +6880,11 @@ msgstr ""
 
 #. (subject)
 #: ../mail_tt2/reject.tt2:7
-#, fuzzy
 msgid "(Subject of your mail: %1)"
 msgstr "(メールの表題: %1)"
 
 #. (list.name)
 #: ../mail_tt2/reject.tt2:10
-#, fuzzy
 msgid "Check %1 list usage:"
 msgstr "%1 メーリングリストの利用目的をご確認ください:"
 
@@ -7529,7 +6989,6 @@ msgstr "メーリングリスト %1@%2 の読者一覧:"
 
 #. (total)
 #: ../mail_tt2/review.tt2:10
-#, fuzzy
 msgid "Total subscribers: %1"
 msgstr "読者数:            %1名"
 
@@ -7540,33 +6999,27 @@ msgstr "%1 リスト宛てのメッセージにトピックの印をつける"
 
 #. (list.name,conf.wwsympa_url,authkey)
 #: ../mail_tt2/send_auth.tt2:11
-#, fuzzy
 msgid ""
 "List %1 allows you to tag your messages, using a set of defined topics. To "
 "tag the attached message go to the following page:"
 msgstr ""
 "%1 リストでは、メッセージにあらかじめ決まっているトピックの印をつけるこ \n"
-"とができます。添付のメッセージにトピックの印をつけるには、以下のページへ \n"
+"とができます。添付のメッセージにトピックの印をつけるには、次のページへ \n"
 "行ってください:"
 
 #. (list.name)
 #: ../mail_tt2/send_auth.tt2:14
-#, fuzzy
 msgid "To distribute the attached message in list %1, follow the link below:"
 msgstr ""
 "添付のメッセージを %1 メーリングリストへ配信したいのでしたら、 \n"
 "下のリンクをクリックしてください:"
 
-#. (conf.sympa,authkey)
-#: ../mail_tt2/send_auth.tt2:20
-#, fuzzy
-msgid ""
-"Or send a message to %1 with the following subject:\n"
-"CONFIRM %2\n"
+#. (conf.sympa)
+#: ../mail_tt2/send_auth.tt2:19
+msgid "Or send a message to %1 with the following subject:\n"
 msgstr ""
-"あるいは、%1 宛てに、 \n"
-"次の表題 (Subject) でメッセージを送ってください:\n"
-"CONFIRM %2\n"
+"あるいは、%1@%2 宛てに、 \n"
+"次の表題 (subject) でメッセージを送ってください:\n"
 
 #. (conf.title,list)
 #: ../mail_tt2/sendpasswd.tt2:4
@@ -7653,13 +7106,11 @@ msgstr ""
 
 #. (newuser.email)
 #: ../mail_tt2/sendssopasswd.tt2:9
-#, fuzzy
 msgid "your email address   : %1"
 msgstr "電子メールアドレス: %1"
 
 #. (newuser.password)
 #: ../mail_tt2/sendssopasswd.tt2:10
-#, fuzzy
 msgid "your password: %1"
 msgstr "パスワード: %1"
 
@@ -7731,7 +7182,6 @@ msgstr "%1 メーリングリストのトピックを更新"
 
 #. (list.name)
 #: ../mail_tt2/user_notification.tt2:17
-#, fuzzy
 msgid ""
 "Some of the topics you are subscribed to in the list '%1' have been "
 "deleted.\n"
@@ -7743,12 +7193,11 @@ msgstr ""
 
 #. (url)
 #: ../mail_tt2/user_notification.tt2:23
-#, fuzzy
 msgid ""
 "To update your topics subscription, go to the following page:\n"
 "%1"
 msgstr ""
-"トピック登録を更新するには、次のページへ行ってください:\n"
+"トピックへの読者登録を更新するには、次のページへ行ってください:\n"
 "%1"
 
 #. (list.name)
@@ -7770,28 +7219,25 @@ msgid ""
 msgstr "あなたは、%1 から %2@%3 メーリングリストの吟味役に指名されました。"
 
 #: ../mail_tt2/user_notification.tt2:35 ../mail_tt2/welcome.tt2:12
-#, fuzzy
 msgid "The list homepage:"
-msgstr "リストのホームページ"
+msgstr "リストのホームページ:"
 
 #: ../mail_tt2/user_notification.tt2:36
-#, fuzzy
 msgid "Owner and moderator guide:"
-msgstr "オーナーと吟味役の手引き: %1/help/admin"
+msgstr "オーナーと吟味役の手引き:"
 
 #: ../mail_tt2/user_notification.tt2:40
 msgid "Changing your subscriber email address"
 msgstr "読者電子メールアドレスの変更"
 
 #: ../mail_tt2/user_notification.tt2:42
-#, fuzzy
 msgid ""
 "You have requested to change your subscriber email address. To confirm your "
 "new email address with the SYMPA server, please click the link below:"
 msgstr ""
-"読者電子メールアドレスを変更するよう申込がありました。ご自分の新しい電子  \n"
-"メールアドレスを Sympa サーバで確認するため、以下のリンクをクリックしてく  \n"
-"ださい:"
+"読者電子メールアドレスを変更するよう申込がありました。ご自分の新しい電子 \n"
+"メールアドレスを Sympa サーバで確認するため、下のリンクをクリックしてくだ \n"
+"さい:"
 
 #. (list.name)
 #: ../mail_tt2/user_notification.tt2:47
@@ -7823,16 +7269,14 @@ msgid "Your subscription email is %1"
 msgstr "読者登録した電子メールアドレスは %1 です"
 
 #: ../mail_tt2/welcome.tt2:13
-#, fuzzy
 msgid "General informations about mailing lists:"
-msgstr "メーリングリストについての一般的な説明: %1/help/introduction"
+msgstr "メーリングリストというものについての一般的な説明:"
 
 #: ../mail_tt2/which.tt2:2
 msgid "Result of your command"
 msgstr "コマンドの結果"
 
 #: ../mail_tt2/which.tt2:4
-#, fuzzy
 msgid "Here are the lists you are currently subscribed to:"
 msgstr "あなたが現在読者登録しているリストは次のとおり:"
 
@@ -7851,7 +7295,6 @@ msgstr "メーリングリスト %1@%2への暗号化されたメッセージ"
 
 #. (mail.sender,mail.subject)
 #: ../mail_tt2/x509-user-cert-missing.tt2:5
-#, fuzzy
 msgid ""
 "An encrypted message from %1 has been distributed to\n"
 "Subject: %2"
@@ -7881,7 +7324,6 @@ msgstr ""
 "%1@%2 へお送りください。"
 
 #: ../mail_tt2/x509-user-cert-missing.tt2:12
-#, fuzzy
 msgid "Information about this list:"
 msgstr "このメーリングリストの案内:"
 
@@ -7954,23 +7396,12 @@ msgstr "公開"
 msgid "restricted to owner with authentication"
 msgstr "本人確認できたオーナー (かリストシステム管理者) のみ"
 
-#: ../src/etc/scenari/add.authdkim:1
-#, fuzzy
-msgid "restricted to owner without authentication if DKIM signature is OK."
-msgstr "本人確認できたオーナー (かリストシステム管理者) のみ"
-
 #: ../src/etc/scenari/add.closed:1
 msgid "add impossible"
 msgstr "追加できない"
 
 #: ../src/etc/scenari/add.owner:1
 msgid "add performed by list owner does not need authentication"
-msgstr "オーナー (かリストシステム管理者)。オーナーは本人確認不要"
-
-#: ../src/etc/scenari/add.ownerdkim:1
-#, fuzzy
-msgid ""
-"add performed by list owner does not need authentication if DKIM signature OK"
 msgstr "オーナー (かリストシステム管理者)。オーナーは本人確認不要"
 
 #: ../src/etc/scenari/add.owner_notify:1
@@ -8022,13 +7453,6 @@ msgstr "公開文書"
 msgid "deletion performed only by list owners, need authentication"
 msgstr "削除はオーナー (とリストシステム管理者) だけができる。本人確認が必要"
 
-#: ../src/etc/scenari/del.authdkim:1
-#, fuzzy
-msgid ""
-"deletion performed only by list owners, need authentication unless DKIM "
-"signature is OK"
-msgstr "削除はオーナー (とリストシステム管理者) だけができる。本人確認が必要"
-
 #: ../src/etc/scenari/del.closed:1
 msgid "remove subscriber impossible"
 msgstr "読者を削除することはできない"
@@ -8058,18 +7482,6 @@ msgstr "オーナー (かリストシステム管理者)。オーナーは本人
 msgid "listmaster only"
 msgstr "リストシステム管理者のみ"
 
-#: ../src/etc/scenari/remind.listmasterdkim:1
-msgid ""
-"listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr ""
-
-#: ../src/etc/scenari/remind.ownerdkim:1
-#, fuzzy
-msgid ""
-"restricted to list owners (authentication is not required if a DKIM "
-"signature is OK)"
-msgstr "オーナー (とリストシステム管理者)。オーナーは本人確認不要 (報告する)"
-
 #: ../src/etc/scenari/review.closed:1
 msgid "no one can review"
 msgstr "誰も読者一覧を見ることができない"
@@ -8086,10 +7498,6 @@ msgstr "オーナー (かリストシステム管理者) のみ。本人確認�
 msgid "anyone can do it !"
 msgstr "誰でもできてしまう"
 
-#: ../src/etc/scenari/send.editordkim:1
-msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
-msgstr ""
-
 #: ../src/etc/scenari/send.editorkey:1
 msgid "Moderated"
 msgstr "投稿は吟味を受ける"
@@ -8099,9 +7507,8 @@ msgid "Moderated, even for moderators"
 msgstr "投稿は吟味を受ける。吟味役自身の投稿も吟味を受ける"
 
 #: ../src/etc/scenari/send.editorkeyonlyauth:1
-#, fuzzy
-msgid "Moderated, need  authentication  from editor"
-msgstr "本人確認が必要"
+msgid "Moderated, with editor confirmation"
+msgstr "投稿は吟味を受ける。吟味役は承認するのに本人確認が必要"
 
 #: ../src/etc/scenari/send.intranet:1
 msgid "restricted to local domain"
@@ -8132,9 +7539,8 @@ msgid "restricted to subscribers with previous md5 authentication"
 msgstr "本人確認できた読者のみ"
 
 #: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
-#, fuzzy
-msgid "Moderated, for subscribers and even moderators themself"
-msgstr "投稿は吟味を受ける。読者も吟味役も本人確認が必要"
+msgid "Moderated, for subscribers and moderators"
+msgstr "投稿は吟味を受ける (読者も吟味役も)"
 
 #: ../src/etc/scenari/send.privateoreditorkey:1
 msgid "Private, moderated for non subscribers"
@@ -8145,8 +7551,7 @@ msgid "Private, confirmation for non subscribers"
 msgstr "読者限定。読者以外の投稿は本人確認が必要"
 
 #: ../src/etc/scenari/send.private_smime:1
-#, fuzzy
-msgid "restricted to subscribers and checked smime signature"
+msgid "restricted to subscribers check smime signature"
 msgstr "S/MIME署名で確認された読者のみ"
 
 #: ../src/etc/scenari/send.public:1
@@ -8154,8 +7559,8 @@ msgid "public list"
 msgstr "公開リスト"
 
 #: ../src/etc/scenari/send.publickey:1
-msgid "anyone no authentication if DKIM signature is OK"
-msgstr ""
+msgid "anyone with previous md5 authentication"
+msgstr "本人確認できれば誰でも"
 
 #: ../src/etc/scenari/send.publicnoattachment:1
 msgid "public list multipart/mixed messages are forwarded to moderator"
@@ -8170,7 +7575,7 @@ msgstr ""
 msgid "public list multipart messages are rejected"
 msgstr "公開リスト。マルチパートのメッセージは拒否"
 
-#: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
+#: ../src/etc/scenari/subscribe.auth:1
 msgid "subscription request confirmed"
 msgstr "読者登録申込には本人確認が必要"
 
@@ -8178,21 +7583,8 @@ msgstr "読者登録申込には本人確認が必要"
 msgid "need authentication (notification is sent to owners)"
 msgstr "本人確認が必要 (オーナーに報告を送る)"
 
-#: ../src/etc/scenari/subscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"need authentication unless DKIM signature is OK. (notification is sent to "
-"owners)"
-msgstr "本人確認が必要 (オーナーに報告を送る)"
-
 #: ../src/etc/scenari/subscribe.auth_owner:1
 msgid "requires authentication then owner approval"
-msgstr "本人確認とオーナーの承認が必要"
-
-#: ../src/etc/scenari/subscribe.auth_ownerdkim:1
-#, fuzzy
-msgid ""
-"requires authentication unless DKIM signature is OK, then owner approval"
 msgstr "本人確認とオーナーの承認が必要"
 
 #: ../src/etc/scenari/subscribe.closed:1
@@ -8244,19 +7636,8 @@ msgstr "公開"
 msgid "need authentication"
 msgstr "本人確認が必要"
 
-#: ../src/etc/scenari/unsubscribe.authdkim:1
-msgid "need authentication unless DKIM signature is OK"
-msgstr ""
-
 #: ../src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
-msgstr "本人確認が必要。オーナーに報告を送る"
-
-#: ../src/etc/scenari/unsubscribe.auth_notifydkim:1
-#, fuzzy
-msgid ""
-"authentication requested unless DKIM signature is OK, notification sent to "
-"owner"
 msgstr "本人確認が必要。オーナーに報告を送る"
 
 #: ../src/etc/scenari/unsubscribe.closed:1
@@ -8299,7 +7680,6 @@ msgstr "通"
 
 #: ../src/etc/mhonarc-ressources.tt2:179 ../src/etc/mhonarc-ressources.tt2:291
 #: ../src/etc/mhonarc-ressources.tt2:64
-#, fuzzy
 msgid "Pages navigation: "
 msgstr "ページの移動: "
 
@@ -8413,7 +7793,6 @@ msgid ""
 msgstr "1月:2月:3月:4月:5月:6月:7月:8月:9月:10月:11月:12月"
 
 #: ../src/etc/global_task_models/chk_cert_expiration.daily.task:1
-#, fuzzy
 msgid ""
 "daily certificate expiration date checking; users are warned when their "
 "certificate has expired or expires within 3 days"
@@ -8557,25 +7936,23 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9633
+#: ../src/lib/Commands.pm:958 ../wwsympa/wwsympa.fcgi.in:9618
 msgid "%A"
 msgstr "%a"
 
 #: ../src/lib/Conf.pm:136
-#, fuzzy
 msgid "Error at line %d: %s\n"
-msgstr "間違いがあります (%d 行目): %s"
+msgstr "間違いがあります (%d 行目): %s\n"
 
-#: ../src/lib/Conf.pm:424
-#, fuzzy
+#: ../src/lib/Conf.pm:418
 msgid "Error at line %d: %s"
 msgstr "間違いがあります (%d 行目): %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1864 ../wwsympa/Auth.pm:464
-#: ../wwsympa/wwsympa.fcgi.in:1050 ../wwsympa/wwsympa.fcgi.in:2844
+#: ../src/lib/List.pm:1802 ../wwsympa/Auth.pm:464
+#: ../wwsympa/wwsympa.fcgi.in:1041 ../wwsympa/wwsympa.fcgi.in:2847
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
@@ -8595,7 +7972,7 @@ msgstr "送信者を秘匿する"
 msgid "frequency"
 msgstr "時期"
 
-#: ../src/lib/List.pm:1413 ../src/lib/List.pm:340
+#: ../src/lib/List.pm:1351 ../src/lib/List.pm:340
 msgid "access right"
 msgstr "アクセス権限"
 
@@ -8607,8 +7984,8 @@ msgstr "テキスト投稿保管庫"
 msgid "Archive encrypted mails as cleartext"
 msgstr "暗号化メールを平文で投稿保管庫に保管するか"
 
-#: ../src/lib/List.pm:1162 ../src/lib/List.pm:1202 ../src/lib/List.pm:356
-#: ../src/lib/List.pm:532 ../src/lib/List.pm:659 ../src/lib/List.pm:694
+#: ../src/lib/List.pm:1106 ../src/lib/List.pm:1146 ../src/lib/List.pm:356
+#: ../src/lib/List.pm:532 ../src/lib/List.pm:602 ../src/lib/List.pm:637
 msgid "reception mode"
 msgstr "受け取りモード"
 
@@ -8681,7 +8058,6 @@ msgid "possible attribute values (if enum is used)"
 msgstr "属性が取りうる値 (enum を使う場合)"
 
 #: ../src/lib/List.pm:494
-#, fuzzy
 msgid "is the attribute optional?"
 msgstr "属性は省略可能か"
 
@@ -8701,8 +8077,8 @@ msgstr "表題 (Subject) につける目印"
 msgid "custom parameters"
 msgstr "カスタムパラメータ"
 
-#: ../src/lib/List.pm:1167 ../src/lib/List.pm:1207 ../src/lib/List.pm:537
-#: ../src/lib/List.pm:664 ../src/lib/List.pm:699
+#: ../src/lib/List.pm:1111 ../src/lib/List.pm:1151 ../src/lib/List.pm:537
+#: ../src/lib/List.pm:607 ../src/lib/List.pm:642
 msgid "visibility"
 msgstr "見えかた"
 
@@ -8742,406 +8118,373 @@ msgstr "まとめ読み内の最大メッセージ数"
 msgid "Inclusions timeout for message distribution"
 msgstr "メッセージ配信の際の取り込み時間制限"
 
-#: ../src/lib/List.pm:597
-#, fuzzy
-msgid "Insert DKIM signature to messages sent to the list"
-msgstr "リストへメッセージを送信"
-
-#: ../src/lib/List.pm:605
-msgid "Type of list message where a DKIM signature is added"
-msgstr ""
-
-#: ../src/lib/List.pm:612
-msgid "file path for list DKIM private key"
-msgstr ""
-
-#: ../src/lib/List.pm:620
-msgid "Selector for DNS lookup of DKIM public key"
-msgstr ""
-
-#: ../src/lib/List.pm:648
-#, fuzzy
-msgid "DKIM configuration"
-msgstr "リストの設定を複写"
-
-#: ../src/lib/List.pm:1157 ../src/lib/List.pm:654
+#: ../src/lib/List.pm:1101 ../src/lib/List.pm:597
 msgid "email address"
 msgstr "電子メールアドレス"
 
-#: ../src/lib/List.pm:1172 ../src/lib/List.pm:669
+#: ../src/lib/List.pm:1116 ../src/lib/List.pm:612
 msgid "name"
 msgstr "名前"
 
-#: ../src/lib/List.pm:1177 ../src/lib/List.pm:674
+#: ../src/lib/List.pm:1121 ../src/lib/List.pm:617
 msgid "private information"
 msgstr "非公開メモ"
 
-#: ../src/lib/List.pm:709
+#: ../src/lib/List.pm:652
 msgid "Periodical subscription expiration task"
 msgstr "定期的な読者登録期限切れタスク"
 
-#: ../src/lib/List.pm:720
+#: ../src/lib/List.pm:663
 msgid "Attachment type"
 msgstr "前付け/後付けの付けかた"
 
-#: ../src/lib/List.pm:724
+#: ../src/lib/List.pm:667
 msgid "Forced reply address"
 msgstr "返信先アドレスを強制する"
 
-#: ../src/lib/List.pm:730
+#: ../src/lib/List.pm:673
 msgid "Internet domain"
 msgstr "インターネットドメイン"
 
-#: ../src/lib/List.pm:736
+#: ../src/lib/List.pm:679
 msgid "File inclusion"
 msgstr "ファイルからの取り込み"
 
-#: ../src/lib/List.pm:740
+#: ../src/lib/List.pm:683
 msgid "data location URL"
 msgstr "データの場所(URL)"
 
-#: ../src/lib/List.pm:1038 ../src/lib/List.pm:746 ../src/lib/List.pm:779
-#: ../src/lib/List.pm:860
+#: ../src/lib/List.pm:689 ../src/lib/List.pm:722 ../src/lib/List.pm:803
+#: ../src/lib/List.pm:981
 msgid "remote user"
 msgstr "リモートユーザ"
 
-#: ../src/lib/List.pm:1043 ../src/lib/List.pm:753 ../src/lib/List.pm:785
-#: ../src/lib/List.pm:866
+#: ../src/lib/List.pm:696 ../src/lib/List.pm:728 ../src/lib/List.pm:809
+#: ../src/lib/List.pm:986
 msgid "remote password"
 msgstr "リモートパスワード"
 
-#: ../src/lib/List.pm:1057 ../src/lib/List.pm:758 ../src/lib/List.pm:821
-#: ../src/lib/List.pm:945 ../src/lib/List.pm:999
+#: ../src/lib/List.pm:1000 ../src/lib/List.pm:701 ../src/lib/List.pm:764
+#: ../src/lib/List.pm:888 ../src/lib/List.pm:942
 msgid "short name for this source"
 msgstr "このデータソースの略称"
 
-#: ../src/lib/List.pm:763
+#: ../src/lib/List.pm:706
 msgid "Remote file inclusion"
 msgstr "外部ファイルからの取り込み"
 
-#: ../src/lib/List.pm:1016 ../src/lib/List.pm:769 ../src/lib/List.pm:850
-#: ../src/lib/List.pm:977
+#: ../src/lib/List.pm:712 ../src/lib/List.pm:793 ../src/lib/List.pm:920
+#: ../src/lib/List.pm:959
 msgid "remote host"
 msgstr "リモートホスト"
 
-#: ../src/lib/List.pm:774 ../src/lib/List.pm:855 ../src/lib/List.pm:983
+#: ../src/lib/List.pm:717 ../src/lib/List.pm:798 ../src/lib/List.pm:926
 msgid "remote port"
 msgstr "リモートポート"
 
-#: ../src/lib/List.pm:789
+#: ../src/lib/List.pm:732
 msgid "suffix"
 msgstr "ベース識別名"
 
-#: ../src/lib/List.pm:795
+#: ../src/lib/List.pm:738
 msgid "filter"
 msgstr "フィルタ"
 
-#: ../src/lib/List.pm:801
+#: ../src/lib/List.pm:744
 msgid "extracted attribute"
 msgstr "取得属性"
 
-#: ../src/lib/List.pm:806
+#: ../src/lib/List.pm:749
 msgid "selection (if multiple)"
 msgstr "複数該当した場合の対象"
 
-#: ../src/lib/List.pm:811
+#: ../src/lib/List.pm:754
 msgid "search scope"
 msgstr "検索スコープ"
 
-#: ../src/lib/List.pm:817
+#: ../src/lib/List.pm:760
 msgid "connection timeout"
 msgstr "接続タイムアウト"
 
-#: ../src/lib/List.pm:845
+#: ../src/lib/List.pm:788
 msgid "LDAP query inclusion"
 msgstr "LDAPクエリでの取り込み"
 
-#: ../src/lib/List.pm:870
+#: ../src/lib/List.pm:813
 msgid "first-level suffix"
 msgstr "第一段階のベース識別名"
 
-#: ../src/lib/List.pm:876
+#: ../src/lib/List.pm:819
 msgid "first-level filter"
 msgstr "第一段階のフィルタ"
 
-#: ../src/lib/List.pm:881
+#: ../src/lib/List.pm:824
 msgid "first-level extracted attribute"
 msgstr "第一段階で取得する属性"
 
-#: ../src/lib/List.pm:886
+#: ../src/lib/List.pm:829
 msgid "first-level selection"
 msgstr "第一段階の対象"
 
-#: ../src/lib/List.pm:891
+#: ../src/lib/List.pm:834
 msgid "first-level search scope"
 msgstr "第一段階の検索スコープ"
 
-#: ../src/lib/List.pm:897
+#: ../src/lib/List.pm:840
 msgid "first-level connection timeout"
 msgstr "第一段階の接続タイムアウト"
 
-#: ../src/lib/List.pm:903
+#: ../src/lib/List.pm:846
 msgid "first-level regular expression"
 msgstr "第一段階の正規表現"
 
-#: ../src/lib/List.pm:907
+#: ../src/lib/List.pm:850
 msgid "second-level suffix template"
 msgstr "第二段階のベース識別名テンプレート"
 
-#: ../src/lib/List.pm:913
+#: ../src/lib/List.pm:856
 msgid "second-level filter template"
 msgstr "第二段階のフィルタテンプレート"
 
-#: ../src/lib/List.pm:919
+#: ../src/lib/List.pm:862
 msgid "second-level extracted attribute"
 msgstr "第二段階で取得する属性"
 
-#: ../src/lib/List.pm:924
+#: ../src/lib/List.pm:867
 msgid "second-level selection"
 msgstr "第二段階の対象"
 
-#: ../src/lib/List.pm:929
+#: ../src/lib/List.pm:872
 msgid "second-level search scope"
 msgstr "第二段階の検索スコープ"
 
-#: ../src/lib/List.pm:935
+#: ../src/lib/List.pm:878
 msgid "second-level connection timeout"
 msgstr "第二段階の接続タイムアウト"
 
-#: ../src/lib/List.pm:941
+#: ../src/lib/List.pm:884
 msgid "second-level regular expression"
 msgstr "第二段階の正規表現"
 
-#: ../src/lib/List.pm:967
+#: ../src/lib/List.pm:910
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP二段階クエリでの取り込み"
 
-#: ../src/lib/List.pm:972
+#: ../src/lib/List.pm:915
 msgid "List inclusion"
 msgstr "他のリストからの取り込み"
 
-#: ../src/lib/List.pm:989
+#: ../src/lib/List.pm:932
 msgid "remote path of sympa list dump"
 msgstr "Sympa リストダンプのリモートパス"
 
-#: ../src/lib/List.pm:994
+#: ../src/lib/List.pm:937
 msgid "certificate for authentication by remote Sympa"
 msgstr "外部の Sympa で認証してログインする"
 
-#: ../src/lib/List.pm:1006
+#: ../src/lib/List.pm:949
 msgid "remote list inclusion"
 msgstr "外部のリストからの取り込み"
 
-#: ../src/lib/List.pm:1011
+#: ../src/lib/List.pm:954
 msgid "database type"
 msgstr "データベースの種類"
 
-#: ../src/lib/List.pm:1020
+#: ../src/lib/List.pm:963
 msgid "database port"
 msgstr "データベースのポート番号"
 
-#: ../src/lib/List.pm:1025
+#: ../src/lib/List.pm:968
 msgid "database name"
 msgstr "データベース名"
 
-#: ../src/lib/List.pm:1029
+#: ../src/lib/List.pm:972
 msgid "connection options"
 msgstr "接続オプション"
 
-#: ../src/lib/List.pm:1034
-#, fuzzy
+#: ../src/lib/List.pm:977
 msgid "environment variables for database connection"
 msgstr "データベース接続の環境変数"
 
-#: ../src/lib/List.pm:1049
+#: ../src/lib/List.pm:992
 msgid "SQL query"
 msgstr "SQLクエリ"
 
-#: ../src/lib/List.pm:1053
+#: ../src/lib/List.pm:996
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "データベース格納ディレクトリ (DBD::CSVの場合のみ)"
 
-#: ../src/lib/List.pm:1064
+#: ../src/lib/List.pm:1007
 msgid "SQL query inclusion"
 msgstr "SQLクエリでの取り込み"
 
-#: ../src/lib/List.pm:1070
+#: ../src/lib/List.pm:1013
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "データソースから取り込んだらその読者に知らせるか"
 
-#: ../src/lib/List.pm:1074
+#: ../src/lib/List.pm:1017
 msgid "Who can view list information"
 msgstr "リストの案内を見ることができるのは"
 
-#: ../src/lib/List.pm:1078
+#: ../src/lib/List.pm:1021
 msgid "Who can invite people"
 msgstr "招待できるのは"
 
-#: ../src/lib/List.pm:1084
+#: ../src/lib/List.pm:1027
 msgid "Language of the list"
 msgstr "リストの言語"
 
-#: ../src/lib/List.pm:1109
+#: ../src/lib/List.pm:1052
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "メール自動処理プログラムが引き起こすメールループを停めるための正規表現"
 
-#: ../src/lib/List.pm:1116
+#: ../src/lib/List.pm:1059
 msgid "Maximum message size"
 msgstr "最大メッセージサイズ"
 
-#: ../src/lib/List.pm:1122
+#: ../src/lib/List.pm:1065
 msgid "Message topic name"
 msgstr "トピックの名前"
 
-#: ../src/lib/List.pm:1127
+#: ../src/lib/List.pm:1070
 msgid "Message topic keywords"
 msgstr "トピックのキーワード"
 
-#: ../src/lib/List.pm:1133
+#: ../src/lib/List.pm:1076
 msgid "Message topic title"
 msgstr "トピックの題名"
 
-#: ../src/lib/List.pm:1138
+#: ../src/lib/List.pm:1081
 msgid "Topics for message categorization"
 msgstr "メッセージを分類するトピック"
 
-#: ../src/lib/List.pm:1144
+#: ../src/lib/List.pm:1087
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "メッセージのどの部分でトピックのキーワードを試すか決める"
 
-#: ../src/lib/List.pm:1151
+#: ../src/lib/List.pm:1094
 msgid "Message tagging"
 msgstr "メッセージにトピックの印をつける"
 
-#: ../src/lib/List.pm:1182 ../src/lib/List.pm:1212
+#: ../src/lib/List.pm:1126 ../src/lib/List.pm:1156
 msgid "profile"
 msgstr "特権"
 
-#: ../src/lib/List.pm:1187
-msgid "Owner"
-msgstr "オーナー"
-
-#: ../src/lib/List.pm:1223
+#: ../src/lib/List.pm:1167
 msgid "Priority"
 msgstr "優先度"
 
-#: ../src/lib/List.pm:1227
+#: ../src/lib/List.pm:1171
 msgid "Who can start a remind process"
 msgstr "登録確認処理を開始できるのは"
 
-#: ../src/lib/List.pm:1232
+#: ../src/lib/List.pm:1176
 msgid "Return-path of the REMIND command"
 msgstr "読者登録確認の送信元"
 
-#: ../src/lib/List.pm:1256 ../src/lib/List.pm:1276
+#: ../src/lib/List.pm:1200 ../src/lib/List.pm:1220
 msgid "Reply address"
 msgstr "返信先アドレス"
 
-#: ../src/lib/List.pm:1262
+#: ../src/lib/List.pm:1206
 msgid "value"
 msgstr "値"
 
-#: ../src/lib/List.pm:1267
+#: ../src/lib/List.pm:1211
 msgid "other email address"
 msgstr "他の電子メールアドレス"
 
-#: ../src/lib/List.pm:1272
+#: ../src/lib/List.pm:1216
 msgid "respect of existing header field"
 msgstr "すでに存在するヘッダを優先する"
 
-#: ../src/lib/List.pm:1281
+#: ../src/lib/List.pm:1225
 msgid "Who can review subscribers"
 msgstr "読者一覧を見ることができるのは"
 
-#: ../src/lib/List.pm:1288
+#: ../src/lib/List.pm:1232
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369ヘッダフィールド"
 
-#: ../src/lib/List.pm:1292
+#: ../src/lib/List.pm:1236
 msgid "Who can send messages"
 msgstr "メッセージを送ることができるのは"
 
-#: ../src/lib/List.pm:1299
+#: ../src/lib/List.pm:1243
 msgid "Serial number of the config"
 msgstr "設定の連番"
 
-#: ../src/lib/List.pm:1304
+#: ../src/lib/List.pm:1248
 msgid "Who can view"
 msgstr "見ることができるのは"
 
-#: ../src/lib/List.pm:1308
+#: ../src/lib/List.pm:1252
 msgid "Who can edit"
 msgstr "変更できるのは"
 
-#: ../src/lib/List.pm:1315 ../src/lib/List.pm:1420
+#: ../src/lib/List.pm:1259 ../src/lib/List.pm:1358
 msgid "quota"
 msgstr "容量制限"
 
-#: ../src/lib/List.pm:1324 ../src/lib/List.pm:1329
+#: ../src/lib/List.pm:1268 ../src/lib/List.pm:1273
 msgid "email address protection method"
 msgstr "電子メールアドレス保護手法"
 
-#: ../src/lib/List.pm:1335
+#: ../src/lib/List.pm:1279
 msgid "Status of the list"
 msgstr "リストの状況"
 
-#: ../src/lib/List.pm:1342
+#: ../src/lib/List.pm:1286
 msgid "Subject of the list"
 msgstr "リストの表題"
 
-#: ../src/lib/List.pm:1346
+#: ../src/lib/List.pm:1290
 msgid "Who can subscribe to the list"
 msgstr "リストへ読者登録をできるのは"
 
-#: ../src/lib/List.pm:1352
+#: ../src/lib/List.pm:1296
 msgid "Topics for the list"
 msgstr "リストのトピック"
 
-#: ../src/lib/List.pm:1359
+#: ../src/lib/List.pm:1303
 msgid "Inclusions timeout"
 msgstr "読み込みタイムアウト"
 
-#: ../src/lib/List.pm:1363
+#: ../src/lib/List.pm:1307
 msgid "Who can unsubscribe"
 msgstr "登録解除をできるのは"
 
-#: ../src/lib/List.pm:1384
+#: ../src/lib/List.pm:1328
 msgid "Last update of config"
 msgstr "設定の最終更新"
 
-#: ../src/lib/List.pm:1391
+#: ../src/lib/List.pm:1335
 msgid "User data source"
 msgstr "ユーザデータソース"
 
-#: ../src/lib/List.pm:1397
-#, fuzzy
+#: ../src/lib/List.pm:1341
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "ピクチャを表示するようにするか (現在のロボットでは有効にしないと表示されませ"
 "ん)"
 
-#: ../src/lib/List.pm:1403
-#, fuzzy
-msgid "Allow message personnalization"
-msgstr "メッセージを分類するトピック"
-
-#: ../src/lib/List.pm:1409
+#: ../src/lib/List.pm:1347
 msgid "Visibility of the list"
 msgstr "リストの見えかた"
 
-#: ../src/lib/List.pm:1425
+#: ../src/lib/List.pm:1363
 msgid "Maximum number of month archived"
 msgstr "投稿保管庫に保管する月数"
 
-#: ../src/lib/List.pm:1430
+#: ../src/lib/List.pm:1368
 msgid "Web archives"
 msgstr "投稿保管庫"
 
-#: ../src/lib/List.pm:1436
+#: ../src/lib/List.pm:1374
 msgid "Welcome return-path"
 msgstr "歓迎メッセージの送信元"
 
-#: ../src/lib/List.pm:1441
+#: ../src/lib/List.pm:1379
 msgid "percentage of list members in VERP mode"
 msgstr "リストのメンバへ配送するメッセージのうち、VERP 方式で送るものの割合"
 
@@ -9166,141 +8509,120 @@ msgstr "値"
 msgid "messages"
 msgstr "通"
 
-#: ../src/lib/List.pm:1357 ../src/lib/List.pm:588 ../src/lib/List.pm:816
-#: ../src/lib/List.pm:896 ../src/lib/List.pm:934
+#: ../src/lib/List.pm:1301 ../src/lib/List.pm:588 ../src/lib/List.pm:759
+#: ../src/lib/List.pm:839 ../src/lib/List.pm:877
 msgid "seconds"
 msgstr "秒"
 
 #: ../src/lib/List.pm:627
-msgid "list of headers to be included ito the message for signature"
-msgstr ""
-
-#: ../src/lib/List.pm:634
-msgid "DKIM \"d=\" tag, you should probably use the default value"
-msgstr ""
-
-#: ../src/lib/List.pm:641
-msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
-msgstr ""
-
-#: ../src/lib/List.pm:684
-#, fuzzy
 msgid "the data source"
 msgstr "データソース"
 
-#: ../src/lib/List.pm:689
-#, fuzzy
+#: ../src/lib/List.pm:632
 msgid "data source parameters"
 msgstr "データソースのパラメータ"
 
-#: ../src/lib/List.pm:705
-#, fuzzy
+#: ../src/lib/List.pm:648
 msgid "Moderators defined in an external data source"
 msgstr "吟味役を外部データソースで決める"
 
-#: ../src/lib/List.pm:714
+#: ../src/lib/List.pm:657
 msgid "Family name"
 msgstr "設定族の名前"
 
-#: ../src/lib/List.pm:827 ../src/lib/List.pm:951
+#: ../src/lib/List.pm:770 ../src/lib/List.pm:894
 msgid "use SSL (LDAPS)"
 msgstr "SSL (LDAPS) を使う"
 
-#: ../src/lib/List.pm:832 ../src/lib/List.pm:956
+#: ../src/lib/List.pm:775 ../src/lib/List.pm:899
 msgid "SSL version"
 msgstr "SSLのバージョン"
 
-#: ../src/lib/List.pm:837 ../src/lib/List.pm:961
+#: ../src/lib/List.pm:780 ../src/lib/List.pm:904
 msgid "SSL ciphers used"
 msgstr "利用するSSL暗号方式"
 
-#: ../src/lib/List.pm:1089 ../src/lib/List.pm:1369
+#: ../src/lib/List.pm:1032 ../src/lib/List.pm:1313
 msgid "epoch date"
 msgstr "エポック"
 
-#: ../src/lib/List.pm:1093 ../src/lib/List.pm:1374
+#: ../src/lib/List.pm:1036 ../src/lib/List.pm:1318
 msgid "date"
 msgstr "日付"
 
-#: ../src/lib/List.pm:1098
+#: ../src/lib/List.pm:1041
 msgid "who ran the instantiation"
 msgstr "設定族の変更を実行した人"
 
-#: ../src/lib/List.pm:1102
+#: ../src/lib/List.pm:1045
 msgid "Latest family instantiation"
 msgstr "最近の設定族変更"
 
-#: ../src/lib/List.pm:1114
+#: ../src/lib/List.pm:1057
 msgid "bytes"
 msgstr "バイト"
 
-#: ../src/lib/List.pm:1192
+#: ../src/lib/List.pm:1136
 msgid "the datasource"
 msgstr "データソース"
 
-#: ../src/lib/List.pm:1197
+#: ../src/lib/List.pm:1141
 msgid "datasource parameters"
 msgstr "データソースのパラメータ"
 
-#: ../src/lib/List.pm:1217
-#, fuzzy
+#: ../src/lib/List.pm:1161
 msgid "Owners defined in an external data source"
 msgstr "オーナーを外部データソースで決める"
 
-#: ../src/lib/List.pm:1236
+#: ../src/lib/List.pm:1180
 msgid "Periodical subscription reminder task"
 msgstr "読者登録確認の定期発送"
 
-#: ../src/lib/List.pm:1241
-#, fuzzy
+#: ../src/lib/List.pm:1185
 msgid "Incoming SMTP header fields to be removed"
 msgstr "メッセージを受け取ったときに削除するヘッダフィールド"
 
-#: ../src/lib/List.pm:1248
-#, fuzzy
+#: ../src/lib/List.pm:1192
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "メッセージを送り出すときに削除するヘッダフィールド"
 
-#: ../src/lib/List.pm:1314 ../src/lib/List.pm:1419
+#: ../src/lib/List.pm:1258 ../src/lib/List.pm:1357
 msgid "Kbytes"
 msgstr "キロバイト"
 
-#: ../src/lib/List.pm:1380
+#: ../src/lib/List.pm:1324
 msgid "who updated the config"
 msgstr "設定の最終更新者"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2891
+#: ../src/lib/List.pm:2809
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日(%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2892
+#: ../src/lib/List.pm:2810
 msgid "%a, %d %b %Y"
 msgstr "%Y年%m月%d日(%a)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3083 ../src/lib/List.pm:3084 ../src/lib/List.pm:3088
-#: ../wwsympa/wwsympa.fcgi.in:11000 ../wwsympa/wwsympa.fcgi.in:11069
-#: ../wwsympa/wwsympa.fcgi.in:11271 ../wwsympa/wwsympa.fcgi.in:11608
-#: ../wwsympa/wwsympa.fcgi.in:15035 ../wwsympa/wwsympa.fcgi.in:15042
-#: ../wwsympa/wwsympa.fcgi.in:15744 ../wwsympa/wwsympa.fcgi.in:16474
-#: ../wwsympa/wwsympa.fcgi.in:16475 ../wwsympa/wwsympa.fcgi.in:4223
-#: ../wwsympa/wwsympa.fcgi.in:4278 ../wwsympa/wwsympa.fcgi.in:4845
-#: ../wwsympa/wwsympa.fcgi.in:4846 ../wwsympa/wwsympa.fcgi.in:6242
-#: ../wwsympa/wwsympa.fcgi.in:7260 ../wwsympa/wwsympa.fcgi.in:7803
-#: ../wwsympa/wwsympa.fcgi.in:7843 ../wwsympa/wwsympa.fcgi.in:7845
-#: ../wwsympa/wwsympa.fcgi.in:8321 ../wwsympa/wwsympa.fcgi.in:8322
-#: ../wwsympa/wwsympa.fcgi.in:8356 ../wwsympa/wwsympa.fcgi.in:8357
-#: ../wwsympa/wwsympa.fcgi.in:8536 ../wwsympa/wwsympa.fcgi.in:8537
+#: ../src/lib/List.pm:2996 ../src/lib/List.pm:2997 ../src/lib/List.pm:3001
+#: ../wwsympa/wwsympa.fcgi.in:10985 ../wwsympa/wwsympa.fcgi.in:11054
+#: ../wwsympa/wwsympa.fcgi.in:11256 ../wwsympa/wwsympa.fcgi.in:11593
+#: ../wwsympa/wwsympa.fcgi.in:15501 ../wwsympa/wwsympa.fcgi.in:16231
+#: ../wwsympa/wwsympa.fcgi.in:16232 ../wwsympa/wwsympa.fcgi.in:4803
+#: ../wwsympa/wwsympa.fcgi.in:4804 ../wwsympa/wwsympa.fcgi.in:6227
+#: ../wwsympa/wwsympa.fcgi.in:7245 ../wwsympa/wwsympa.fcgi.in:7788
+#: ../wwsympa/wwsympa.fcgi.in:7828 ../wwsympa/wwsympa.fcgi.in:7830
+#: ../wwsympa/wwsympa.fcgi.in:8306 ../wwsympa/wwsympa.fcgi.in:8307
+#: ../wwsympa/wwsympa.fcgi.in:8341 ../wwsympa/wwsympa.fcgi.in:8342
+#: ../wwsympa/wwsympa.fcgi.in:8521 ../wwsympa/wwsympa.fcgi.in:8522
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
 #: ../src/lib/mail.pm:53
-#, fuzzy
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -9309,10 +8631,10 @@ msgid ""
 msgstr ""
 "システムが、POSIX P1003.1 標準に準拠していない、もしくは、Perl システムの\n"
 "POSIX ライブラリで、定数 _SC_ARG_MAX が定義されていません。\n"
-"smtp.pm モジュールを変更して、$max_arg 変数を設定できるようにしなければな\n"
-"りません。\n"
+"smtp.pm モジュールを変更して、%s 変数を設定できるようにしなければなりま\n"
+"せん。\n"
 
-#: ../src/lib/mail.pm:798
+#: ../src/lib/mail.pm:755
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "smtpto: %m でチャンネルを生成できません"
 
@@ -9405,22 +8727,22 @@ msgstr "(日付不明)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1051
+#: ../wwsympa/wwsympa.fcgi.in:1042
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11832 ../wwsympa/wwsympa.fcgi.in:11965
-#: ../wwsympa/wwsympa.fcgi.in:14278 ../wwsympa/wwsympa.fcgi.in:7757
+#: ../wwsympa/wwsympa.fcgi.in:11817 ../wwsympa/wwsympa.fcgi.in:11950
+#: ../wwsympa/wwsympa.fcgi.in:14263 ../wwsympa/wwsympa.fcgi.in:7742
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16114 ../wwsympa/wwsympa.fcgi.in:16115
-msgid "%Y-%m-%d-%H-%M-%S"
+#: ../wwsympa/wwsympa.fcgi.in:15871 ../wwsympa/wwsympa.fcgi.in:15872
+msgid "%Y/%m/%d/%H/%M/%S"
 msgstr ""
 
 #: ../wwsympa/wwslib.pm:41
@@ -9552,12 +8874,10 @@ msgid "notice mode"
 msgstr "表題 (Subject) のみ"
 
 #: ../wwsympa/wwslib.pm:33
-#, fuzzy
 msgid "text-only mode"
 msgstr "テキストのみ"
 
 #: ../wwsympa/wwslib.pm:34
-#, fuzzy
 msgid "html-only mode"
 msgstr "HTML のみ"
 
@@ -9573,14 +8893,187 @@ msgstr "受け取らない (休暇のときなどに便利)"
 msgid "you do not receive your own posts"
 msgstr "自分が投稿したものは受け取らない"
 
-#~ msgid "Your Lists"
-#~ msgstr "あなたが関わっているリスト"
+#, fuzzy
+#~ msgid "[Listmaster]"
+#~ msgstr "リストシステム管理者"
 
-#~ msgid "Moderated, with editor confirmation"
-#~ msgstr "投稿は吟味を受ける。吟味役は承認するのに本人確認が必要"
+#, fuzzy
+#~ msgid "[Owner]"
+#~ msgstr "オーナー"
 
-#~ msgid "anyone with previous md5 authentication"
-#~ msgstr "本人確認できれば誰でも"
+#, fuzzy
+#~ msgid "[Subscriber]"
+#~ msgstr "読者"
+
+#, fuzzy
+#~ msgid "last login from %1 &nbsp;&nbsp; (%2)</span>"
+#~ msgstr "前回のログインは %1 からでした<br />(%2)</span>"
+
+#, fuzzy
+#~ msgid "Manage your subscriptions"
+#~ msgstr "承認待ち読者"
+
+#, fuzzy
+#~ msgid "Send to the list"
+#~ msgstr "リストの表題"
+
+#, fuzzy
+#~ msgid "Send to me"
+#~ msgstr "登録確認メッセージ"
+
+#, fuzzy
+#~ msgid "Start date"
+#~ msgstr "最終更新"
+
+#, fuzzy
+#~ msgid "End date"
+#~ msgstr "日付"
+
+#, fuzzy
+#~ msgid "March"
+#~ msgstr "探す"
+
+#, fuzzy
+#~ msgid "April"
+#~ msgstr "特権"
+
+#, fuzzy
+#~ msgid "September"
+#~ msgstr "読者"
+
+#, fuzzy
+#~ msgid "October"
+#~ msgstr "その他"
+
+#, fuzzy
+#~ msgid "November"
+#~ msgstr "読者"
+
+#, fuzzy
+#~ msgid "December"
+#~ msgstr "読者"
+
+#, fuzzy
+#~ msgid "Mo"
+#~ msgstr "その他"
+
+#, fuzzy
+#~ msgid "Fr"
+#~ msgstr "From"
+
+#, fuzzy
+#~ msgid "Sa"
+#~ msgstr "保存"
+
+#, fuzzy
+#~ msgid "today"
+#~ msgstr "本文"
+
+#, fuzzy
+#~ msgid "List of exclude"
+#~ msgstr "フォルダ内の一覧"
+
+#, fuzzy
+#~ msgid "Since"
+#~ msgstr "サイズ"
+
+#, fuzzy
+#~ msgid "Suspended"
+#~ msgstr "送信者"
+
+#, fuzzy
+#~ msgid " to "
+#~ msgstr "から"
+
+#, fuzzy
+#~ msgid "No subscription."
+#~ msgstr "トピックへの読者登録:"
+
+#, fuzzy
+#~ msgid "Toogle selection"
+#~ msgstr "選択を逆転"
+
+#, fuzzy
+#~ msgid "Suspend my subscriptions"
+#~ msgstr "承認待ち読者"
+
+#, fuzzy
+#~ msgid "Resume my subscriptions"
+#~ msgstr "承認待ち読者"
+
+#, fuzzy
+#~ msgid "Unsubscribe selected lists"
+#~ msgstr "選択したリストを削除"
+
+#, fuzzy
+#~ msgid "Your message contain a DKIM signature. It was succesfully verified"
+#~ msgstr "メッセージの署名は S/MIME を使って確認できました。"
+
+#, fuzzy
+#~ msgid ""
+#~ "Or send a message to %1 with the following subject:\n"
+#~ "CONFIRM %2\n"
+#~ msgstr ""
+#~ "あるいは、%1 宛てに、 \n"
+#~ "次の表題 (Subject) でメッセージを送ってください:\n"
+#~ "CONFIRM %2\n"
+
+#, fuzzy
+#~ msgid "restricted to owner without authentication if DKIM signature is OK."
+#~ msgstr "本人確認できたオーナー (かリストシステム管理者) のみ"
+
+#, fuzzy
+#~ msgid ""
+#~ "add performed by list owner does not need authentication if DKIM "
+#~ "signature OK"
+#~ msgstr "オーナー (かリストシステム管理者)。オーナーは本人確認不要"
+
+#, fuzzy
+#~ msgid ""
+#~ "deletion performed only by list owners, need authentication unless DKIM "
+#~ "signature is OK"
+#~ msgstr ""
+#~ "削除はオーナー (とリストシステム管理者) だけができる。本人確認が必要"
+
+#, fuzzy
+#~ msgid ""
+#~ "restricted to list owners (authentication is not required if a DKIM "
+#~ "signature is OK)"
+#~ msgstr ""
+#~ "オーナー (とリストシステム管理者)。オーナーは本人確認不要 (報告する)"
+
+#, fuzzy
+#~ msgid "Moderated, need  authentication  from editor"
+#~ msgstr "本人確認が必要"
+
+#, fuzzy
+#~ msgid ""
+#~ "need authentication unless DKIM signature is OK. (notification is sent to "
+#~ "owners)"
+#~ msgstr "本人確認が必要 (オーナーに報告を送る)"
+
+#, fuzzy
+#~ msgid ""
+#~ "requires authentication unless DKIM signature is OK, then owner approval"
+#~ msgstr "本人確認とオーナーの承認が必要"
+
+#, fuzzy
+#~ msgid ""
+#~ "authentication requested unless DKIM signature is OK, notification sent "
+#~ "to owner"
+#~ msgstr "本人確認が必要。オーナーに報告を送る"
+
+#, fuzzy
+#~ msgid "Insert DKIM signature to messages sent to the list"
+#~ msgstr "リストへメッセージを送信"
+
+#, fuzzy
+#~ msgid "DKIM configuration"
+#~ msgstr "リストの設定を複写"
+
+#, fuzzy
+#~ msgid "Allow message personnalization"
+#~ msgstr "メッセージを分類するトピック"
 
 #~ msgid "-List definition"
 #~ msgstr "-リストの基本設定"

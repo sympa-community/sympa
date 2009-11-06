@@ -15,20 +15,20 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2008-09-13 20:52+0200\n"
-"Last-Translator: chernysh <mail33@gmail.com>\n"
+"PO-Revision-Date: 2009-10-21 11:31+0200\n"
+"Last-Translator: Serguei S. Dukachev <iam@dukess.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 1.0.2\n"
 "X-Rosetta-Version: 0.1\n"
 
 #: ../web_tt2/help.tt2:11
 msgid "Subscriber, moderator and owner documentation"
-msgstr ""
+msgstr "Руководство для подписчика, модератора и владельца"
 
 #: ../web_tt2/help.tt2:13
 msgid "In this documentation, you will find:"
@@ -38,18 +38,21 @@ msgstr "В этой документации Вы найдёте:"
 #: ../web_tt2/help.tt2:15
 msgid ""
 "a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
-msgstr ""
+msgstr "<a href=\"%1/help/introduction\">введение в основы</a> списков рассылки;"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:16
 msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
 msgstr ""
+"<a href=\"%1/help/user\">Руководство пользователя</a> по использованию Sympa;"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:17
 msgid ""
 "an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
 msgstr ""
+"<a href=\"%1/help/admin\">Руководство администратора</a> по использованию "
+"Sympa."
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:20
@@ -67,10 +70,15 @@ msgid ""
 "to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
 "\"Frequently asked questions\">FAQ</acronym></a>."
 msgstr ""
+"Если Вы столкнулись с проблемами, ознакомьтесь с <a "
+"href=\"%1/help/faquser\">пользовательским  <acronym title=\"Часто задаваемые "
+"Вопросы\">ЧаВо</acronym></a> или с <a "
+"href=\"%1/help/faqadmin\">администраторским <acronym title=\"Часто задаваемые "
+"Вопросы\">ЧаВо</acronym></</a>."
 
 #: ../web_tt2/help_introduction.tt2:3
 msgid "Mailing lists - General introduction"
-msgstr ""
+msgstr "Списки рассылки - Общая информация"
 
 #: ../web_tt2/help_introduction.tt2:5
 msgid "What is a mailing list?"
@@ -85,10 +93,16 @@ msgid ""
 "send messages, to reply to them or to read them without contributing (i.e. "
 "to \"lurk\")."
 msgstr ""
+"Список рассылки - это <strong>список распространения, позволяющий группе "
+"подписчиков автоматически получать по почте все сообщения, отправленные в "
+"список рассылки</strong>: каждое сообщение, отправленное в список рассылки "
+"подписчиком, будет получено всеми остальными подписчиками. Когда "
+"подписываешься на список рассылки, становится возможным отправлять "
+"сообщения, отвечать на них или просто читать без всякого активного участия."
 
 #: ../web_tt2/help_introduction.tt2:7
 msgid "Special cases:</strong>"
-msgstr ""
+msgstr "Особые случаи:</strong>"
 
 #: ../web_tt2/help_introduction.tt2:9
 msgid ""
@@ -106,10 +120,15 @@ msgid ""
 "used to transmit information from a unique sender to a large number of "
 "recipients."
 msgstr ""
+"Иногда невозможно отправлять сообщения в список рассылки, на который Вы "
+"подписаны: это бывает в случае извещающих списков рассылки, которые "
+"используются для передачи информации от единственного отправителя к большому "
+"количеству получателей."
 
 #: ../web_tt2/help_introduction.tt2:13
+#, fuzzy
 msgid "Interest of mailing lists"
-msgstr ""
+msgstr "Привлекательность списков рассылки"
 
 #: ../web_tt2/help_introduction.tt2:14
 msgid ""
@@ -118,40 +137,47 @@ msgid ""
 "topic</strong> and to <strong>take part in exchanges about it</strong>. "
 "Examples are:"
 msgstr ""
+"Люди подписываются на списки рассылки для того, чтобы <strong>получать "
+"информацию на определённые темы</strong> и <strong>стать участниками обмена "
+"информацией на эти темы</strong>. Например:"
 
 #: ../web_tt2/help_introduction.tt2:16
 msgid "mailing list for all the employees of a company;"
-msgstr ""
+msgstr "список рассылки для всех сотрудников компании;"
 
 #: ../web_tt2/help_introduction.tt2:17
 msgid "mailing list reserved to the participants in a project;"
-msgstr ""
+msgstr "список рассылки, предназначенный для участников какого-либо проекта;"
 
 #: ../web_tt2/help_introduction.tt2:18
 msgid "mailing list dedicated to a class of students;"
-msgstr ""
+msgstr "список рассылки, выделенный для группы учащихся (студентов);"
 
 #: ../web_tt2/help_introduction.tt2:19
 msgid "mailing list about the latest news in computer security;"
-msgstr ""
+msgstr "список рассылки о последних новостях в компьютерной безопасности;"
 
 #: ../web_tt2/help_introduction.tt2:20
+#, fuzzy
 msgid "mailing list of mutual aid between handymen;"
-msgstr ""
+msgstr "список рассылки об обмене опытом между мастерами рукоделия;"
 
 #: ../web_tt2/help_introduction.tt2:21
 msgid ""
 "mailing list restricted to a family and dedicated to the organization of "
 "large family gatherings;"
 msgstr ""
+"внутрисемейный список рассылки, посвященный организации больших семейных "
+"сборов;"
 
 #: ../web_tt2/help_introduction.tt2:22
+#, fuzzy
 msgid "and so on!"
-msgstr ""
+msgstr "и так далее!"
 
 #: ../web_tt2/help_introduction.tt2:25
 msgid "Types of mailing lists"
-msgstr ""
+msgstr "Виды списков рассылки"
 
 #: ../web_tt2/help_introduction.tt2:26
 msgid ""
@@ -331,58 +357,67 @@ msgstr ""
 
 #: ../web_tt2/help_introduction.tt2:69
 msgid "A mailing list service involves four types of roles:"
-msgstr ""
+msgstr "Сервис списков рассылки использует четыре типа ролей:"
 
 #: ../web_tt2/help_introduction.tt2:71
 msgid "<strong>listmaster;</strong>"
-msgstr ""
+msgstr "<strong>глобальный администратор;</strong>"
 
 #: ../web_tt2/help_introduction.tt2:72
 msgid "<strong>owner;</strong>"
-msgstr ""
+msgstr "<strong>владелец;</strong>"
 
 #: ../web_tt2/help_introduction.tt2:73
 msgid "<strong>moderator;</strong>"
-msgstr ""
+msgstr "<strong>модератор;</strong>"
 
 #: ../web_tt2/help_introduction.tt2:74
 msgid "<strong>subscriber.</strong>"
-msgstr ""
+msgstr "<strong>подписчик.</strong>"
 
 #: ../web_tt2/help_introduction.tt2:76
 msgid ""
 "It is possible to have several roles at once (for example, you can be an "
 "owner and a moderator of a list and be subscribed to several others)."
 msgstr ""
+"Возможно совмещение нескольких ролей (например, Вы можете быть владельцем и "
+"модератором одного списка рассылки и подписчиком в нескольких других)"
 
 #: ../web_tt2/help_introduction.tt2:78
 msgid "Listmasters"
-msgstr ""
+msgstr "Глобальные администраторы"
 
 #: ../web_tt2/help_introduction.tt2:79
 msgid ""
 "Listmasters are in charge of the <strong>management of the mailing list "
 "service</strong>. Their duties:"
 msgstr ""
+"Глобальные администраторы возглавляют <strong>управление службой списков "
+"рассылки</strong>. Их задачи: "
 
 #: ../web_tt2/help_introduction.tt2:81
 msgid ""
 "<strong>manage the mailing list server</strong> (deployment, maintenance, "
 "etc.);"
 msgstr ""
+"<strong>управление сервером списков рассылки</strong> (разработка, "
+"обслуживание, и так далее);"
 
 #: ../web_tt2/help_introduction.tt2:82
 msgid ""
 "<strong>define the general orientations of the mailing list service</strong>:"
 msgstr ""
+"<strong>определение основных направлений службы списков рассылки</strong>:"
 
 #: ../web_tt2/help_introduction.tt2:84
 msgid "who will be allowed to ask for the creation of a new list,"
-msgstr ""
+msgstr "кому может быть разрешено запрашивать создание списков рассылки,"
 
 #: ../web_tt2/help_introduction.tt2:85
 msgid "which options will be available to manage lists (scenario definition),"
 msgstr ""
+"какие настройки будут доступны для управления списками рассылки (определение "
+"сценариев),"
 
 #: ../web_tt2/help_introduction.tt2:86
 msgid "what the default files will contain (creation of templates),"
@@ -548,11 +583,11 @@ msgstr ""
 
 #: ../web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
-msgstr ""
+msgstr "Списки рассылки - руководство пользователя"
 
 #: ../web_tt2/help_user.tt2:5
 msgid "How the mailing list service works"
-msgstr ""
+msgstr "Как работает служба списков рассылок"
 
 #: ../web_tt2/help_user.tt2:6
 msgid ""
