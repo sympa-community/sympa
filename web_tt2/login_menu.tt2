@@ -10,15 +10,15 @@
   </fieldset>
   </form>	
 [%END%]
-[% IF is_listmaster %][%|loc%][Listmaster][%END%]
-[% ELSIF is_privileged_owner %][%|loc%][Privileged owner][%END%]
-[% ELSIF is_owner %][%|loc%][Owner][%END%]
-[% ELSIF is_editor %][%|loc%][Editor][%END%]
-[% ELSIF is_subscriber %][%|loc%][Subscriber][%END%]
+[% IF is_listmaster %][[%|loc%]Listmaster[%END%]]
+[% ELSIF is_privileged_owner %][[%|loc%]Privileged owner[%END%]]
+[% ELSIF is_owner %][[%|loc%]Owner[%END%]]
+[% ELSIF is_editor %][[%|loc%]Editor[%END%]]
+[% ELSIF is_subscriber %][[%|loc%]Subscriber[%END%]]
 [% END %]
 <br />
 [% IF last_login_date %]
-	<span>[%|loc(last_login_host,last_login_date)%]last login from %1 &nbsp;&nbsp; (%2)</span>[%END%]
+	<span>[%|loc(last_login_host)%]last login from %1[%END%] &nbsp;&nbsp; ([% last_login_date %])</span>
 [%END%]
 </div>
 

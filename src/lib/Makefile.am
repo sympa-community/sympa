@@ -33,4 +33,4 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--staticdir--|$(staticdir)|' \
 		-e 's|--arcdir--|$(arcdir)|' \
 		-e 's|--bouncedir--|$(bouncedir)|' \
-		< $< > $@
+		< $(srcdir)/$@.in > $@

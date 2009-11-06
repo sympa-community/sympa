@@ -15,9 +15,9 @@ Content-Disposition: inline
 
 [% FILTER escape_url %]mailto:[%conf.sympa%]?subject=CONFIRM [%authkey%][% END %]
 
-[%|loc(conf.sympa,authkey)%]Or send a message to %1 with the following subject:
-CONFIRM %2
+[%|loc(conf.sympa)%]Or send a message to %1 with the following subject:
 [% END %]
+CONFIRM [% authkey %]
 [%- END -%]
 
 --[% boundary %]

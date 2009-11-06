@@ -67,9 +67,9 @@ pending subscription requests you should click on the following link:[%END%]
 
 [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
-[%|loc(replyto,keyauth,list.name,who,gecos)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:
-AUTH %2 ADD %3 %4 %5
-[%END%]
+[%|loc(replyto)%]If prefered, you can accept this subscription request sending an email to %1 with the following subject:[%END%]
+AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
+
 
 [%|loc%]That can be done using this mailto link:[%END%][% FILTER escape_url %]mailto:[%replyto%]?subject=auth [%keyauth%] ADD [%list.name%] [%escaped_who%] [%escaped_gecos%][% END %]
 
@@ -90,20 +90,20 @@ with you, you should click on the following link:[% END %]
 
 [% FILTER escape_url %]mailto:[%sympa%]?subject=auth [%keyauth%] DEL [%list.name%] [%escaped_who%][% END %]
  
-[%|loc(sympa,keyauth,list.name,who)-%]
+[%|loc(sympa)-%]
 or send an email to %1 with the following subject:
-AUTH %2 DEL %3 %4
 [%END%]
+AUTH [%keyauth%] DEL [%list.name%] [%who%]
 
 
 [% ELSIF type == 'bounce_rate' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in list %1[%END%][%END%]
 
-[%|loc(list.name,rate,conf.wwsympa_url,list.name)%]Bounce rate in list %1 is %2.
+[%|loc(list.name,rate)%]Bounce rate in list %1 is %2.
 
 You should delete bouncing subscribers: 
-%3/reviewbouncing/%4
 [%END%]
+[% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
 
 
 [% ELSIF type == 'notice' -%]

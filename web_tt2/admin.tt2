@@ -60,7 +60,7 @@
   <input type="hidden" name="list" value="[% list %]"/>
   <input type="hidden" name="d_admin" value="create"/>
 [% ELSIF shared == 'exist' %]
-  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Delete Shared[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc%]Are you sure you wish to delete the shared documents?[%END%][%END%]');"/> [%|loc%]Closes the shared document web space. It can be restored using "Restore shared" button.[%END%]</li>
+  <input class="MainMenuLinks" type="submit" name="action_d_admin" value="[%|loc%]Delete Shared[%END%]" onClick="return request_confirm('[% FILTER escape_quote %][%|loc(listname)%]Are you sure you wish to delete the shared documents for list %1?[%END%][%END%]');"/> [%|loc%]Closes the shared document web space. It can be restored using "Restore shared" button.[%END%]</li>
   <input type="hidden" name="list" value="[% list %]"/>
   <input type="hidden" name="d_admin" value="delete"/>
 [% ELSIF shared == 'deleted' %]

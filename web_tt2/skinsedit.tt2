@@ -38,10 +38,10 @@
 [%|loc%]If you are not using css_path and css_url parameters, colors are defined in the robot.conf configuration file. Otherwise, colors are defined in the static CSS. Colors can be changed on your current session using the following color editor. When finished, you may copy the result a new CCS static file. The target is specified by css_path parameter.[%END%]
 [% IF css_path %]([% css_path %])[% END %]
 [%|loc%]
-Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.
+Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
 </p>
 <p>
-Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
+[%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
 [%END%]
 </p>
 
@@ -73,7 +73,7 @@ Use the color editor in order to change defined colors. First select the color y
 
 <h3>[%|loc%]Color chart[%END%]</h3>
 
-<p>Please note that these indications don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well all that works.</p>
+<p>[%|loc%]Please note that these indications don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well all that works.[%END%]</p>
 
 <table summary="[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]" id="color_table">
 <tr id="color_table_title">
@@ -134,7 +134,7 @@ Use the color editor in order to change defined colors. First select the color y
      <td>color_8</td>
      <td>[% color_8 %]</td>
      <td style="background-color: [% color_8 %];cursor: pointer ;" onclick="chooseColorNumber('color_8')"  align="center">&nbsp;</td>
-     <td>[%|loc%]font and border color of:[%END%]<UL><LI>[%|loc%]hovered hyperlinks;[%END%]</LI><LI>[%|loc%]navigation tabs;[%END%]</LI><LI>[%|loc%]buttons;[%END%]</LI></UL>[%|loc%]background color of hovered buttons.[%END%]</td>
+     <td>[%|loc%]font and border color of:[%END%]<UL><LI>[%|loc%]hovered links;[%END%]</LI><LI>[%|loc%]navigation tabs;[%END%]</LI><LI>[%|loc%]buttons;[%END%]</LI></UL>[%|loc%]background color of hovered buttons.[%END%]</td>
 </tr>
 <tr>
      <td>color_9</td>

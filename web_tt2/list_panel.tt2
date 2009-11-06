@@ -9,7 +9,7 @@
    <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
    [% END %]
    <li class="menuLinks">[%|loc%]Subscribers:[%END%] [% total %]</li>
-   <li class="menuLinks">[% IF is_priv %]<span>([%|loc%]Error rate:&nbsp;[%END%][% bounce_rate %] %)</span>[% END %]</li>
+   <li class="menuLinks">[% IF is_priv %]<span>([%|loc%]Error rate:[%END%][% bounce_rate %]&nbsp;%)</span>[% END %]</li>
    <li class="menuLinks">[%|loc%]Owners[%END%]</li>
    [% FOREACH o = owner %]
       [% IF o.value.visibility != 'conceal' %]
