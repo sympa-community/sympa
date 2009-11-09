@@ -1797,9 +1797,6 @@ sub extract_verp_rcpt() {
     my $modulo = $xseq % $nbpart ;
     my $lenght = int (($#{$refrcpt} + 1) / $nbpart) + 1;
 
-    &do_log('debug','&extract_verp(%s,%s,%s,%s)',$percent,$xseq,$refrcpt,$refrcptverp)  ;
-
-    
     my @result = splice @$refrcpt, $lenght*$modulo, $lenght ;
     
     foreach my $verprcpt (@$refrcptverp) {
@@ -3469,14 +3466,17 @@ sub send_msg {
 
 	## TOPICS
 	my @selected_tabrcpt;
+	my @possible_verptabrcpt;
 	if ($self->is_there_msg_topic()){
 	    @selected_tabrcpt = $self->select_subscribers_for_topic($new_message->get_topic(),$available_rcpt->{$array_name});
+	    @possible_verptabrcpt = $self->select_subscribers_for_topic($new_message->get_topic(),$available_verp_rcpt->{$array_name});
 	} else {
 	    @selected_tabrcpt = @{$available_rcpt->{$array_name}};
+	    @possible_verptabrcpt = @{$available_verp_rcpt->{$array_name}};
 	}
 
 	## Preparing VERP receipients.
-	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@tabrcpt_verp);
+	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@possible_verptabrcpt);
 	
 	## Sending non VERP.
 	my $result = &mail::mail_message('message'=>$new_message, 
