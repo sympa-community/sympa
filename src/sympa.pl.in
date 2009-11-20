@@ -1886,8 +1886,9 @@ sub DoMessage{
 	    $apply_dkim_signature = 'on' if (&tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'smime_authenticated_messages') && ($is_signed->{'body'}));
 	    $apply_dkim_signature = 'on' if &tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},'dkim_authenticated_messages');
 
-	    my $numsmtp =$list->distribute_msg('message'=> $message,
-					       'apply_dkim_signature'=>$apply_dkim_signature);
+	    my $numsmtp;
+	    eval { $numsmtp =$list->distribute_msg('message'=> $message,
+						   'apply_dkim_signature'=>$apply_dkim_signature)};
 	    
 	    ## Keep track of known message IDs...if any
 	    $msgid_table{$list->get_list_id()}{$messageid}++ if ($messageid);
