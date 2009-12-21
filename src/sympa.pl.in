@@ -102,6 +102,7 @@ Options:
                                          : close lists of family_name family under robot_name.      
 
    --close_list=listname\@robot          : close a list
+   --rename_list=listname\@robot --new_listname=newlistname --new_listrobot=newrobot : renames a list or move it to another virtual robot
    --purge_list=listname\@robot          : remove a list no backup is possible
    --sync_include=listname\@robot        : trigger the list members update
    --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
@@ -124,7 +125,7 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
-		    'close_list=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
+		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
 		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer')) {
     &fatal_err("Unknown options.");
 }
@@ -143,6 +144,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'close_list'} ||
 				$main::options{'purge_list'} ||
 				$main::options{'create_list'} ||
+				$main::options{'rename_list'} ||
 				$main::options{'instantiate_family'} ||
 				$main::options{'add_list'} ||
 				$main::options{'modify_list'} ||
@@ -559,6 +561,46 @@ if ($main::options{'dump'}) {
     printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
     
     exit 0;
+}elsif ($main::options{'rename_list'}) {
+
+  ## TODO A completer
+  
+    my ($listname, $robotname) = split /\@/, $main::options{'rename_list'};
+    my $list = new List ($listname, $robotname);
+
+    unless (defined $list) {
+	print STDERR "Incorrect list name $main::options{'rename_list'}\n";
+	exit 1;
+    }
+
+    unless ($main::options{'new_listname'}) {
+      print STDERR "Missing parameter new_listname\n";
+      exit 1;
+    }
+    
+    unless ($main::options{'new_listrobot'}) {
+      print STDERR "Missing parameter new_listrobot\n";
+      exit 1;
+    }
+    
+    my ($new_listname, $new_robotname) = ($main::options{'new_listname'}, $main::options{'new_listrobot'});
+    
+    my $result = &admin::rename_list(list => $list,
+				     new_listname => $new_listname,
+				     new_robot => $new_robotname,
+				     options => {'skip_authz' => 1},
+				     user_email => 'listmaster@'.$robotname,
+				    );
+
+    unless($result == 1) {
+      printf STDERR "Could not rename list %s to %s: %s\@%s\n", $main::options{'rename_list'}, $main::options{'new_listname'}, $main::options{'new_listrobot'}, $result;
+      exit 1;	
+    }
+
+    printf STDOUT "List %s has been renamed to %s\@%s\n", $main::options{'rename_list'}, $main::options{'new_listname'}, $main::options{'new_listrobot'};
+    
+    exit 0;
+
 }elsif ($main::options{'test_database_message_buffer'}) {
     my $size = 0;   
     printf "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";

@@ -643,7 +643,245 @@ sub update_list{
     return $list;
 }
 
+########################################################
+# create_list                                      
+########################################################  
+# Rename a list or move a list to another virtual host
+# 
+# IN  : - list
+#       - new_listname
+#       - new_robot
+#       - mode  : 'copy' 
+#       - auth_method
+#       - user_email
+#       - remote_host
+#       - remote_addr
+#       - options : 'skip_authz' to skip authorization scenarios eval
+#       
+# OUT via reference :
+#       - aliases
+#       - status : 'pending'
+#
+# OUT : - scalar
+#           undef  : error
+#           1      : success
+#           string : error code
+#######################################################
+sub rename_list{
+    my (%param) = @_;
+    &do_log('info', '',);
 
+    my $list = $param{'list'};
+    my $robot = $list->{'domain'};
+    my $old_listname = $list->{'name'};
+
+    # check new listname syntax
+    my $new_listname = lc ($param{'new_listname'});
+    my $listname_regexp = &tools::get_regexp('listname');
+    
+    unless ($new_listname =~ /^$listname_regexp$/i) {
+      &do_log('err','incorrect listname %s', $new_listname);
+      return 'incorrect_listname';
+    }
+    
+    ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
+    my ($result, $r_action, $reason); 
+    unless ($param{'options'}{'skip_authz'}) {
+      $result = &Scenario::request_action ('create_list',$param{'auth_method'},$param{'new_robot'},
+					   {'sender' => $param{'user_email'},
+					    'remote_host' => $param{'remote_host'},
+					    'remote_addr' => $param{'remote_addr'}});
+      
+      $r_action;
+      $reason;
+      if (ref($result) eq 'HASH') {
+	$r_action = $result->{'action'};
+	$reason = $result->{'reason'};
+      }
+      
+      unless ($r_action =~ /do_it|listmaster/) {
+	&do_log('err','authorization error');
+	return 'authorization';
+      }
+    }
+
+    ## Check listname on SMTP server
+    my $res = list_check_smtp($param{'new_listname'}, $param{'new_robot'});
+    unless ( defined($res) ) {
+      &do_log('err', "can't check list %.128s on %.128s", $param{'new_listname'}, &Conf::get_robot_conf($param{'new_robot'}, 'list_check_smtp'));
+      return 'internal';
+    }
+
+    if( $res || 
+	($list->{'name'} ne $param{'new_listname'}) && ## Do not test if listname did not change
+	(new List ($param{'new_listname'}, $param{'new_robot'}, {'just_try' => 1}))) {
+      &do_log('err', 'Could not rename list %s : new list %s already existing list', $list->{'name'}, $param{'new_listname'});
+      return 'list_already_exists';
+    }
+    
+    my $regx = &Conf::get_robot_conf($param{'new_robot'},'list_check_regexp');
+    if( $regx ) {
+      if ($param{'new_listname'} =~ /^(\S+)-($regx)$/) {
+	&do_log('err','Incorrect listname %s matches one of service aliases', $param{'new_listname'});
+	return 'incorrect_listname';
+      }
+    }
+
+     unless ($param{'mode'} eq 'copy') {
+         $list->savestats();
+	 
+	 ## Dump subscribers
+	 $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
+	 
+	 $param{'aliases'} = &remove_aliases($list, $list->{'domain'});
+     }
+
+     ## Rename or create this list directory itself
+     my $new_dir;
+     ## Default robot
+     if (-d "$Conf::Conf{'home'}/$param{'new_robot'}") {
+	 $new_dir = $Conf::Conf{'home'}.'/'.$param{'new_robot'}.'/'.$param{'new_listname'};
+     }elsif ($param{'new_robot'} eq $Conf::Conf{'host'}) {
+	 $new_dir = $Conf::Conf{'home'}.'/'.$param{'new_listname'};
+     }else {
+	 &do_log('err',"Unknown robot $param{'new_robot'}");
+	 return 'unknown_robot';
+     }
+
+    ## If we are in 'copy' mode, create en new list
+    if ($param{'mode'} eq 'copy') {	 
+	 unless ( $list = &admin::clone_list_as_empty($list->{'name'},$list->{'domain'},$param{'new_listname'},$param{'new_robot'},$param{'user_email'})){
+	     &do_log('err',"Unable to load $param{'new_listname'} while renaming");
+	     return 'internal';
+	 }	 
+     }
+
+    # set list status to pending if creation list is moderated
+    if ($r_action =~ /listmaster/) {
+      $list->{'admin'}{'status'} = 'pending' ;
+      &List::send_notify_to_listmaster('request_list_renaming',$list->{'domain'}, 
+				       {'list' => $list,
+					'new_listname' => $param{'new_listname'},
+					'email' => $param{'user_email'},
+					'is_a_copy' => 'true'});
+      $param{'status'} = 'pending';
+    }
+     
+    ## Save config file for the new() later to reload it
+    $list->save_config($param{'user_email'});
+     
+    ## This code should be in List::rename()
+    unless ($param{'mode'} eq 'copy') {     
+	 unless (rename ($list->{'dir'}, $new_dir )){
+	     &do_log('err',"Unable to rename $list->{'dir'} to $new_dir : $!");
+	     return 'internal';
+	 }
+     
+	 ## Rename archive
+	 my $arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
+	 my $new_arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
+	 if (-d $arc_dir) {
+	     unless (rename ($arc_dir,$new_arc_dir)) {
+		 &do_log('err',"Unable to rename archive $arc_dir");
+		 # continue even if there is some troubles with archives
+		 # return undef;
+	     }
+	 }
+
+	 ## Rename bounces
+	 my $bounce_dir = $list->get_bounce_dir();
+	 my $new_bounce_dir = &Conf::get_robot_conf($param{'new_robot'}, 'bounce_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
+	 if (-d $bounce_dir &&
+	     ($list->{'name'} ne $param{'new_listname'})
+	     ) {
+	     unless (rename ($bounce_dir,$new_bounce_dir)) {
+		 &do_log('err',"Unable to rename bounces from $bounce_dir to $new_bounce_dir");
+	     }
+	 }
+	 
+	 # if subscribtion are stored in database rewrite the database
+	 if ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
+	     &List::rename_list_db ($list,$param{'new_listname'},$param{'new_robot'});
+	 }
+     }
+     ## Install new aliases
+     $param{'listname'} = $param{'new_listname'};
+     
+     unless ($list = new List ($param{'new_listname'}, $param{'new_robot'},{'reload_config' => 1})) {
+	 &do_log('err',"Unable to load $param{'new_listname'} while renaming");
+	 return 'internal';
+     }
+
+     ## Check custom_subject
+     if (defined $list->{'admin'}{'custom_subject'} &&
+	 $list->{'admin'}{'custom_subject'} =~ /$old_listname/) {
+	 $list->{'admin'}{'custom_subject'} =~ s/$old_listname/$param{'new_listname'}/g;
+
+	 $list->save_config($param{'user_email'});	
+     }
+
+     if ($list->{'admin'}{'status'} eq 'open') {
+      	 $param{'aliases'} = &admin::install_aliases($list,$robot);
+     } 
+     
+     unless ($param{'mode'} eq 'copy') {
+
+	 ## Rename files in spools
+	 ## Auth & Mod  spools
+	 foreach my $spool ('queueauth','queuemod','queuetask','queuebounce',
+			'queue','queueoutgoing','queuesubscribe','queueautomatic') {
+	     unless (opendir(DIR, $Conf::Conf{$spool})) {
+		 &do_log('err', "Unable to open '%s' spool : %s", $Conf::Conf{$spool}, $!);
+	     }
+	     
+	     foreach my $file (sort grep (!/^\.+$/,readdir(DIR))) {
+		 next unless ($file =~ /^$old_listname\_/ ||
+			      $file =~ /^$old_listname\./ ||
+			      $file =~ /^$old_listname\@$robot\./ ||
+			      $file =~ /^$old_listname\@$robot\_/ ||
+			      $file =~ /\.$old_listname$/);
+		 
+		 my $newfile = $file;
+		 if ($file =~ /^$old_listname\_/) {
+		     $newfile =~ s/^$old_listname\_/$param{'new_listname'}\_/;
+		 }elsif ($file =~ /^$old_listname\./) {
+		     $newfile =~ s/^$old_listname\./$param{'new_listname'}\./;
+		 }elsif ($file =~ /^$old_listname\@$robot\./) {
+		     $newfile =~ s/^$old_listname\@$robot\./$param{'new_listname'}\@$param{'new_robot'}\./;
+		 }elsif ($file =~ /^$old_listname\@$robot\_/) {
+		     $newfile =~ s/^$old_listname\@$robot\_/$param{'new_listname'}\@$param{'new_robot'}\_/;
+		 }elsif ($file =~ /\.$old_listname$/) {
+		     $newfile =~ s/\.$old_listname$/\.$param{'new_listname'}/;
+		 }
+		 
+		 ## Rename file
+		 unless (rename "$Conf::Conf{$spool}/$file", "$Conf::Conf{$spool}/$newfile") {
+		     &do_log('err', "Unable to rename %s to %s : %s", "$Conf::Conf{$spool}/$newfile", "$Conf::Conf{$spool}/$newfile", $!);
+		     next;
+		 }
+		 
+		 ## Change X-Sympa-To
+		 &tools::change_x_sympa_to("$Conf::Conf{$spool}/$newfile", "$param{'new_listname'}\@$param{'new_robot'}");
+	     }
+	     
+	     close DIR;
+	 } 
+	 ## Digest spool
+	 if (-f "$Conf::Conf{'queuedigest'}/$old_listname") {
+	     unless (rename "$Conf::Conf{'queuedigest'}/$old_listname", "$Conf::Conf{'queuedigest'}/$param{'new_listname'}") {
+		 &do_log('err', "Unable to rename %s to %s : %s", "$Conf::Conf{'queuedigest'}/$old_listname", "$Conf::Conf{'queuedigest'}/$param{'new_listname'}", $!);
+		 next;
+	     }
+	 }elsif (-f "$Conf::Conf{'queuedigest'}/$old_listname\@$robot") {
+	     unless (rename "$Conf::Conf{'queuedigest'}/$old_listname\@$robot", "$Conf::Conf{'queuedigest'}/$param{'new_listname'}\@$param{'new_robot'}") {
+		 &do_log('err', "Unable to rename %s to %s : %s", "$Conf::Conf{'queuedigest'}/$old_listname\@$robot", "$Conf::Conf{'queuedigest'}/$param{'new_listname'}\@$param{'new_robot'}", $!);
+		 next;
+	     }
+	 }     
+     }
+
+    return 1;
+  }
 
 ########################################################
 # clone_list_as_empty {                          
