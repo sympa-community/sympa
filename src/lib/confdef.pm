@@ -402,11 +402,6 @@ our @params = (
         optional => '1',
     },
     {
-        name    => 'cookie_cas_expire',
-        default => '6',
-	file   => 'wwsympa.conf',
-    },
-    {
         name   => 'legacy_character_support_feature',
         default => 'off',
         query  => 'If set to "on", enables support of legacy characters',
