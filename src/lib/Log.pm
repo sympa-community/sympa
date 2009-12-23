@@ -103,6 +103,9 @@ sub do_log {
         $message = $call[3] . '() ' . $message if ($call[3]);
     }
 
+    ## Add facility to log entry
+    $message = $facility.' '.$message;
+
     # map to standard syslog facility if needed
     if ($facility eq 'trace' ) {
         $message = "###### TRACE MESSAGE ######:  " . $message;
