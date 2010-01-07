@@ -130,9 +130,6 @@ sub connect {
 	if ($param->{'db_host'} && $param->{'db_name'}) {
 	    $connect_string .= "host=$param->{'db_host'};sid=$param->{'db_name'}";
 	}
-	if (defined $param->{'db_port'}) {
-	    $connect_string .= ';port=' . $param->{'db_port'};
-	}
     }elsif ($param->{'db_type'} eq 'Pg') {
 	$connect_string = "DBI:Pg:dbname=$param->{'db_name'};host=$param->{'db_host'}";
     }elsif ($param->{'db_type'} eq 'Sybase') {
