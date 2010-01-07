@@ -1565,9 +1565,8 @@ sub qencode_filename {
 	$leading = $1 if ($part =~ s/^(\.desc\.)//); ## leading .desc
 	$trailing = $1 if ($part =~ s/((\.\w+)+)$//); ## trailing .xx
 
-	## We use low-level subroutine instead of to prevent Encode::encode('MIME-Q')
-	## Otherwise \n are inserted
-	my $encoded_part = &Encode::encode_utf8(&Encode::MIME::Header::_encode_q($part));
+	my $encoded_part = MIME::EncWords::encode_mimewords($part, Charset => 'utf8', Encoding => 'q', Folding => '', Minimal => 'NO');
+	
 
 	$filename = $leading.$encoded_part.$trailing;
     }
