@@ -3613,9 +3613,11 @@ sub string_2_hash {
     my $data = shift;
     my %hash ;
     
-    while ($data =~ /^(\;?(\w+)\=\"([^\"]*)\")/) {
-	$hash{$2} = $3; 
-	$data =~ s/$1// ;
+    pos($data) = 0;
+    while ($data =~ /\G;?(\w+)\=\"((\\[\"\\]|[^\"])*)\"(?=(;|\z))/g) {
+	my ($var, $val) = ($1, $2);
+	$val =~ s/\\([\"\\])/$1/g;
+	$hash{$var} = $val; 
     }    
 
     return (%hash);
@@ -3630,7 +3632,9 @@ sub hash_2_string {
     my $data_string ;
     foreach my $var (keys %$refhash ) {
 	next unless ($var);
-	$data_string .= ';'.$var.'="'.$refhash->{$var}.'"';
+	my $val = $refhash->{$var};
+	$val =~ s/([\"\\])/\\$1/g;
+	$data_string .= ';'.$var.'="'.$val.'"';
     }
     return ($data_string);
 }
