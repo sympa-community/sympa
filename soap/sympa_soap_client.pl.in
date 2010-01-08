@@ -239,7 +239,7 @@ sub play_soap{
     $reponse = $soap->login($user_email,$user_password);
     $cookies->save;
     &print_result($reponse);
-    my $session_id = $reponse->result;
+    $session_id = $reponse->result;
   }    
     
   ## Don't use authenticateAndRun for lists command
@@ -272,7 +272,7 @@ sub play_soap{
       $reponse = $soap->getUserEmailByCookie($session_id);
 
     }else {
-      printf "\n\nAuthenticateAndRun %s....\n",$service;
+      printf "\n\nAuthenticateAndRun service=%s;(session_id=%s)....\n",$service,session_idq;
       $reponse = $soap->authenticateAndRun($user_email,$session_id,$service,\@parameters);
     }
 
