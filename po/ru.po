@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-11-05 20:34+0100\n"
+"PO-Revision-Date: 2009-12-08 11:23+0100\n"
 "Last-Translator: Serguei S. Dukachev <iam@dukess.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -113,9 +113,8 @@ msgid "Listmaster"
 msgstr "Глобальный администратор"
 
 #: ../web_tt2/login_menu.tt2:14
-#, fuzzy
 msgid "Privileged owner"
-msgstr "[Привилегированный владелец]"
+msgstr "Привилегированный владелец"
 
 #: ../src/lib/List.pm:1131 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
@@ -237,7 +236,6 @@ msgid "Subscribers:"
 msgstr "Подписчики:"
 
 #: ../web_tt2/list_panel.tt2:12
-#, fuzzy
 msgid "Error rate:"
 msgstr "Доля ошибок: "
 
@@ -313,7 +311,7 @@ msgstr "Позволяет вам загружать и удалять архи�
 #: ../web_tt2/admin.tt2:18
 #, fuzzy
 msgid "Bounces:"
-msgstr "Возврат сообщений"
+msgstr "Возвращено сообщений: "
 
 #: ../web_tt2/admin.tt2:18
 msgid "Manages non-delivery reports (also called bounces)."
@@ -399,7 +397,8 @@ msgstr "Удалить общее пространство"
 #. (listname)
 #: ../web_tt2/admin.tt2:63
 msgid "Are you sure you wish to delete the shared documents for list %1?"
-msgstr "Вы уверены, что хотите удалить общие документы для списка рассылки %1? "
+msgstr ""
+"Вы уверены, что хотите удалить общие документы для списка рассылки %1? "
 
 #: ../web_tt2/admin.tt2:63
 msgid ""
@@ -1005,7 +1004,7 @@ msgstr "Язык: "
 
 #: ../web_tt2/copy_template.tt2:15
 msgid "Output template"
-msgstr ""
+msgstr "Шаблон вывода"
 
 #: ../web_tt2/copy_template.tt2:16
 #, fuzzy
@@ -1514,9 +1513,8 @@ msgid "list %1"
 msgstr "рассылка %1"
 
 #: ../web_tt2/dump_scenario.tt2:36
-#, fuzzy
 msgid "scenario name:"
-msgstr "название сценария :"
+msgstr "название сценария: "
 
 #. (shortname)
 #: ../web_tt2/d_upload.tt2:2
@@ -2562,7 +2560,6 @@ msgstr ""
 "шаблоны tt2. "
 
 #: ../web_tt2/ls_templates.tt2:15
-#, fuzzy
 msgid ""
 "Priority rules for template selection:\n"
 "<ul>\n"
@@ -2575,14 +2572,14 @@ msgid ""
 msgstr ""
 "Правила приоритета для выбора шаблона :\n"
 "<ul>\n"
-"<li>ЕСЛИ контект рассылки указан, применить шаблон рассылки при наличии "
+"<li>ЕСЛИ контекст рассылки указан, применить шаблон рассылки при наличии "
 "такового</li>\n"
 "<li>ИНАЧЕ применить шаблон, указанный роботом, если такой шаблон существует</"
 "li>\n"
 "<li>ИНАЧЕ применить локально заданный шаблон, если такой шаблон существует</"
 "li>\n"
-"ИНАЧЕ применить шаблон, включенный в дистрибутив (они не должны "
-"редактироваться, посколько при обновлении Sympa эти файлы будут "
+"<li>ИНАЧЕ применить шаблон, включенный в дистрибутив (они не должны "
+"редактироваться, поскольку при обновлении Sympa эти файлы будут "
 "перезаписаны</li>\n"
 "</ul>"
 
@@ -2599,9 +2596,8 @@ msgstr ""
 "редактировать шаблоны для текущего робота или указанной рассылки. "
 
 #: ../web_tt2/ls_templates.tt2:22
-#, fuzzy
 msgid "Select templates type:"
-msgstr "Выберите тип шаблонов :"
+msgstr "Выберите тип шаблонов: "
 
 #: ../web_tt2/ls_templates.tt2:26
 msgid "Select a list:"
@@ -3964,8 +3960,7 @@ msgstr ""
 "конфигурационном файле robot.conf. В противном случае, цвета задаются "
 "статической CSS. Цвета могут быть изменены в Вашей текущей сессии с помощью "
 "следующего редактора цветов. После окончания Вы можете скопировать результат "
-"в новый файл статической CSS. Место назначения задаётся параметром "
-"css_path. "
+"в новый файл статической CSS. Место назначения задаётся параметром css_path. "
 
 #: ../web_tt2/skinsedit.tt2:41
 msgid ""
@@ -3986,7 +3981,8 @@ msgid ""
 "button. The new color is not really installed but it is used only for your "
 "own session. When happy with the different colors you choosen, you may save "
 "them in a new static CSS.\n"
-msgstr "Используйте редактор цветов, чтобы изменить заданные цвета. Сперва выберите "
+msgstr ""
+"Используйте редактор цветов, чтобы изменить заданные цвета. Сперва выберите "
 "цвет, который Вы хотите изменить, затем выберите нужный цвет и примените его "
 "кнопкой Тест. Новый цвет ещё не будет установлен, он будет использоваться "
 "только для Вашей текущей сессии. Когда Вы выберете все нужные цвета, Вы "
@@ -4521,7 +4517,7 @@ msgstr "Период поиска: с "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:15926
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:15927
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -4846,7 +4842,8 @@ msgstr "Конфиденциальная рассылка: Вы не может�
 
 #: ../mail_tt2/authorization_reject.tt2:140
 msgid "List is private: You can not browse available files."
-msgstr "Конфиденциальная рассылка: Вы не можете просматривать доступные файлы. "
+msgstr ""
+"Конфиденциальная рассылка: Вы не можете просматривать доступные файлы. "
 
 #: ../mail_tt2/authorization_reject.tt2:143
 msgid "The MODINDEX command is restricted to moderators."
@@ -5708,7 +5705,7 @@ msgstr "%1 запросил создание листа \"%2\""
 msgid "To activate/delete this mailing list:"
 msgstr "Чтобы активировать удалить этот список рассылки: "
 
-#. (email,list.name,new_listname)
+#. (email,old_listname,new_listname)
 #: ../mail_tt2/listmaster_notification.tt2:19
 msgid "%1 has copied list \"%2\" as a new list \"%3\""
 msgstr "%1 скопировал рассылку \"%2\" в новую рассылку \"%3\""
@@ -5718,7 +5715,7 @@ msgstr "%1 скопировал рассылку \"%2\" в новую рассы
 msgid "List \"%1\" renaming"
 msgstr "Переименование рассылки \"%1\""
 
-#. (email,list.name,new_listname)
+#. (email,old_listname,new_listname)
 #: ../mail_tt2/listmaster_notification.tt2:23
 msgid "%1 has renamed list \"%2\" to \"%3\""
 msgstr "%1 переименовал рассылку \"%2\" в \"%3\""
@@ -6157,8 +6154,8 @@ msgid ""
 "auth.conf error: either email_http_header or ldap_host/"
 "ldap_get_email_by_uid_filter entries should be defined."
 msgstr ""
-"Ошибка auth.conf: необходимо задать параметр email_http_header или "
-"ldap_host/ldap_get_email_by_uid_filter."
+"Ошибка auth.conf: необходимо задать параметр email_http_header или ldap_host/"
+"ldap_get_email_by_uid_filter."
 
 #. (name)
 #: ../mail_tt2/listmaster_notification.tt2:300
@@ -6479,8 +6476,9 @@ msgstr "Архивы %2@%3 используют %4% выделенной дис�
 
 #. (list.name,size)
 #: ../mail_tt2/listowner_notification.tt2:14
+#, fuzzy
 msgid "Total size used for %1@%2 Bytes."
-msgstr ""
+msgstr "Полный размер для %1@%2 байт."
 
 #. (conf.host,conf.listmaster_email)
 #: ../mail_tt2/listowner_notification.tt2:16
@@ -6503,8 +6501,9 @@ msgstr ""
 
 #. (type,list.name,who,gecos)
 #: ../mail_tt2/listowner_notification.tt2:25
+#, fuzzy
 msgid "FYI: %1 List \"%2\" from %3 %4"
-msgstr ""
+msgstr "FYI: %1 список \"%2\" от %3 %4"
 
 #. (who,gecos,list.name)
 #: ../mail_tt2/listowner_notification.tt2:28
@@ -6699,8 +6698,8 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
-"Пользователь %1 не смог изменить свой электронный адрес (его новый адрес "
-"%2), посколько он включен из следующих источников данных: %3.\n"
+"Пользователь %1 не смог изменить свой электронный адрес (его новый адрес %"
+"2), посколько он включен из следующих источников данных: %3.\n"
 "\n"
 "Если Вы можете, Вам, вероятно, следует обновить эти источники, указав новый "
 "электронный адрес этого пользователя. "
@@ -8141,12 +8140,14 @@ msgid "Available subscription options"
 msgstr "Доступные опции подписки"
 
 #: ../src/lib/List.pm:367
+#, fuzzy
 msgid "warn rate"
-msgstr ""
+msgstr "порог предупреждения"
 
 #: ../src/lib/List.pm:374
+#, fuzzy
 msgid "halt rate"
-msgstr ""
+msgstr "порог остановки"
 
 #: ../src/lib/List.pm:378
 msgid "Bounces management"
@@ -8209,20 +8210,23 @@ msgid "is the attribute optional?"
 msgstr "атрибут не обязателен?"
 
 #: ../src/lib/List.pm:500
+#, fuzzy
 msgid "Custom user attributes"
-msgstr ""
+msgstr "Особые пользовательские атрибуты"
 
 #: ../src/lib/List.pm:506
+#, fuzzy
 msgid "Custom header field"
-msgstr ""
+msgstr "Особые поля заголовка"
 
 #: ../src/lib/List.pm:511
 msgid "Subject tagging"
 msgstr "Метка в теме письма"
 
 #: ../src/lib/List.pm:525
+#, fuzzy
 msgid "custom parameters"
-msgstr ""
+msgstr "особые параметры"
 
 #: ../src/lib/List.pm:1111 ../src/lib/List.pm:1151 ../src/lib/List.pm:537
 #: ../src/lib/List.pm:607 ../src/lib/List.pm:642
@@ -8262,8 +8266,9 @@ msgid "Digest maximum number of messages"
 msgstr "Максимальное количество сообщений в дайджесте"
 
 #: ../src/lib/List.pm:590
+#, fuzzy
 msgid "Inclusions timeout for message distribution"
-msgstr ""
+msgstr "Тайм-аут подключений при распространении сообщения"
 
 #: ../src/lib/List.pm:1101 ../src/lib/List.pm:597
 msgid "email address"
@@ -8602,8 +8607,9 @@ msgid "Topics for the list"
 msgstr "Тематика списка рассылки"
 
 #: ../src/lib/List.pm:1303
+#, fuzzy
 msgid "Inclusions timeout"
-msgstr ""
+msgstr "тайм-аут подключения"
 
 #: ../src/lib/List.pm:1307
 msgid "Who can unsubscribe"
@@ -8763,10 +8769,10 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:2996 ../src/lib/List.pm:2997 ../src/lib/List.pm:3001
-#: ../wwsympa/wwsympa.fcgi.in:10985 ../wwsympa/wwsympa.fcgi.in:11054
-#: ../wwsympa/wwsympa.fcgi.in:11256 ../wwsympa/wwsympa.fcgi.in:11593
-#: ../wwsympa/wwsympa.fcgi.in:15501 ../wwsympa/wwsympa.fcgi.in:16231
-#: ../wwsympa/wwsympa.fcgi.in:16232 ../wwsympa/wwsympa.fcgi.in:4803
+#: ../wwsympa/wwsympa.fcgi.in:10986 ../wwsympa/wwsympa.fcgi.in:11055
+#: ../wwsympa/wwsympa.fcgi.in:11257 ../wwsympa/wwsympa.fcgi.in:11594
+#: ../wwsympa/wwsympa.fcgi.in:15502 ../wwsympa/wwsympa.fcgi.in:16232
+#: ../wwsympa/wwsympa.fcgi.in:16233 ../wwsympa/wwsympa.fcgi.in:4803
 #: ../wwsympa/wwsympa.fcgi.in:4804 ../wwsympa/wwsympa.fcgi.in:6227
 #: ../wwsympa/wwsympa.fcgi.in:7245 ../wwsympa/wwsympa.fcgi.in:7788
 #: ../wwsympa/wwsympa.fcgi.in:7828 ../wwsympa/wwsympa.fcgi.in:7830
@@ -8890,14 +8896,14 @@ msgstr "%H:%M:%S"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11817 ../wwsympa/wwsympa.fcgi.in:11950
-#: ../wwsympa/wwsympa.fcgi.in:14263 ../wwsympa/wwsympa.fcgi.in:7742
+#: ../wwsympa/wwsympa.fcgi.in:11818 ../wwsympa/wwsympa.fcgi.in:11951
+#: ../wwsympa/wwsympa.fcgi.in:14264 ../wwsympa/wwsympa.fcgi.in:7742
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:15871 ../wwsympa/wwsympa.fcgi.in:15872
+#: ../wwsympa/wwsympa.fcgi.in:15872 ../wwsympa/wwsympa.fcgi.in:15873
 #, fuzzy
 msgid "%Y/%m/%d/%H/%M/%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
