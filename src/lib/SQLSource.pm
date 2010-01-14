@@ -219,7 +219,7 @@ sub connect {
       if ($param->{'db_type'} eq 'mysql' ||
 	  $param->{'db_type'} eq 'Pg') {
 	$dbh->do("SET NAMES 'utf8'");
-      }elsif ($param->{'db_type'} eq 'oracle') { 
+      }elsif ($param->{'db_type'} eq 'Oracle') { 
 	$ENV{'NLS_LANG'} = 'UTF8';
       }elsif ($param->{'db_type'} eq 'Sybase') { 
 	$ENV{'SYBASE_CHARSET'} = 'utf8';

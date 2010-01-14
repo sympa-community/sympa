@@ -762,6 +762,7 @@ sub rename_list{
       &List::send_notify_to_listmaster('request_list_renaming',$list->{'domain'}, 
 				       {'list' => $list,
 					'new_listname' => $param{'new_listname'},
+					'old_listname' => $old_listname,
 					'email' => $param{'user_email'},
 					'is_a_copy' => 'true'});
       $param{'status'} = 'pending';

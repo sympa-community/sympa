@@ -1184,7 +1184,7 @@ my $birthday = time ;
 		     
 		     
 		 }else{
-		     do_log('err',"CAS ticket validation failed : %s", &CAS::get_errors()); 
+		     do_log('err',"CAS ticket validation failed : %s", &AuthCAS::get_errors()); 
 		 }
 	     }else{
 		 do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
@@ -4119,7 +4119,7 @@ sub do_renewpasswd {
      $param->{'total_page'} ++
 	 if ($param->{'total'} % $size);
 
-     if ($param->{'page'} > $param->{'total_page'}) {
+     if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'},$list);
 	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	 &wwslog('info','do_review: no page %d', $param->{'page'});

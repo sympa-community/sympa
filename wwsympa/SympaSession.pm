@@ -116,7 +116,7 @@ sub load {
     
     my $statement ;
 
-    $statement = "SELECT id_session AS id_session, date_session AS date, remote_addr_session AS remote_addr, robot_session AS robot, email_session AS email, data_session AS data, hit_session AS hit, start_date_session AS start_date FROM session_table WHERE id_session = ?";
+    $statement = "SELECT id_session AS id_session, date_session AS \"date\", remote_addr_session AS remote_addr, robot_session AS robot, email_session AS email, data_session AS data, hit_session AS hit, start_date_session AS start_date FROM session_table WHERE id_session = ?";
 
     my $dbh = &List::db_get_handler();
     my $sth;

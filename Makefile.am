@@ -59,8 +59,8 @@ installconfig: installdir
 			--target $(DESTDIR)$(confdir)/wwsympa.conf \
 			|| /bin/true; \
 	fi; \
-	if [ ! -f $(DESTDIR)$(sysconfdir)/sympa/data_structure.version ]; then \
-		cd $(DESTDIR)$(sysconfdir)/sympa; \
+	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
+		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
 		echo "# you should not modify it" >> data_structure.version; \
 		echo $(VERSION) >> data_structure.version; \

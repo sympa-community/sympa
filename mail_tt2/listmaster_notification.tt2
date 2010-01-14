@@ -16,11 +16,11 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [%- IF is_a_copy -%]
 Subject: [% FILTER qencode %][%|loc(new_listname)%]%1 mailing list creation[%END%][%END%]
 
-[%|loc(email,list.name,new_listname)%]%1 has copied list "%2" as a new list "%3"[%END-%]
+[%|loc(email,old_listname,new_listname)%]%1 has copied list "%2" as a new list "%3"[%END-%]
 [%- ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 
-[%|loc(email,list.name,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
+[%|loc(email,old_listname,new_listname)%]%1 has renamed list "%2" to "%3"[%END%]
 [% END %]
 
 [%|loc%]To activate/delete this mailing list:[%END%]

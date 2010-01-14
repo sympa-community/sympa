@@ -359,7 +359,6 @@ sub _lock_nfs {
 	return ($FH, $nfs_lock);
     } else {
 	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-	close($FH);
 	return undef;
 	}
         

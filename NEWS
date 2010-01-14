@@ -3,51 +3,42 @@
 
 (See Changelog file for the full changes log)
 
-6.1b.1		1st October 2009
+6.0.1		9th December 2009
 
-Features:
+  Bug fixes:
 
-	DKIM features:
-	As you known DKIM is an issue for mailing lists. Sympa 6.1 can verify incomming signature
-	and use DKIM signature status in scenario. It can sign all messages sent by sympa itself
-	(automatic answers and digest). It also able to sign some or all brodcasted messages and
-	remove original DKIM-Signature if some changes such as message footer insertion or subject
-	tag make it invalid. In order to activate those features you should install Mail::DKIM cpan
-	module and tune a set of parameters Please see dkim section of reference manual.
+	[Submitted by Wen Si] "date" is a reserved keywork with Oracle. Fixed by replacing all the occurrences
+	of "AS date" by "AS \"date\".
 
-	[Submitted by J. jourdan] Web page sending. In the post page of the web interface,
-	user can specify an URL coresponding to a page whe want to send to the list. The page
-	is sent in HTML form, with all the referenced objects such as images as mail attachments.
-
-	[Submitted by J. jourdan] Messages parsing; custom attributes can be now used as parameters
-	for TT2 tags in messages distributed by Sympa. This adds notably the possibility to add
-	authenticated unsubscribe URL to message footers.
+	wwsympa/wwsympa.fcgi.in: [Submitted by T. Bellempois, ENS Lyon] In case of CAS error, wwsympa.fcgi crashed,
+	because it was calling a subroutine in the module CAS, which doesn't exist in Sympa, instead of AuthCAS.
 
 
-	[Submitted by J. jourdan] "Suspension of membership." The user can suspend his subscription to the lists that he subscribes.
-	The user can manage all her subscriptions in a single page, where she can specify what subscriptions
-	will be supsended, for what period of time (or indefinitely). The subscriptions can be
-	handled globally or one by one.
+	mail_tt2/listmaster_notification.tt2, wwsympa/wwsympa.fcgi.in:
+	[Reported by P. Maes, univ. Louvain] The report sent to the listmaster when a user cloned a list
+	said "<newlistname> was cloned as <newlistname>". the old listname was not used.
 
-	[Submitted by J. jourdan] Users exclusion. Beware, that this feature is different from the blacklist.
-	Exclusion makes sense when a list is based on external data sources, thanks to exclusion,
-	a user can unsubscribe (or being removed by list owner) even though he should be included
-	via an external data source. Users get into the exclusion table, through the standard
-	unsubscribe / delete functions. They get off the exclusion table with the standard
-	subscribe / add functions. Adding of the table 'exclusion_table'.
+	src/sympa.pl.in: [Submitted by H. Moa] Some message could cause a sympa.pl crash. Fixed by embedding
+	the dangerous part of the code in an eval statement.
+
+	src/etc/script/tpl2tt2.pl.in: [Reported by A. Schieber, AMUE] tt2.pl was still called by tpl2tt2.pl,
+	though the former has been renamed to tt2.pm.
 
 
-Changes:
-	
-	Now bulk.pl logs when the last packet is sent, being a VERP or non VERP packet.
-	
-	It is now possible to enable topics when the reception mode is 'mail', 'notice', 'not_me', 'txt', 'html' or 'urlize'.
+	configure.ac: [Submitted by G. rousse, INRIA] Existence of a postfix command was tested in the configure step. failing to find such a command
+	caused the configure to stop. As postfix is not mandatory, such a behaviour is a bug. Check command path (both
+	for postmap and newaliases) only if explicitely given by user, otherwise it revert to default values.
 
-Bug fixes:
+	configure.ac: [Submitted by G. Rousse, INRIA] Verifies in detail that the newaliases commnd exists and is executable by Sympa.
 
-	Nothing: The Sympa 6.1 beta was finalized while the 6.0 was in stabilization, so it benefited
-	exactly the same bug fixes as the 6.0 at the point it was released.
+  Changes:
 
+	po/ po-wwsympa: [Submitted by M. Warkus, univ. Karlsruhe]: All the i18n strings include now diacritics signs, such as semi-column.
+	this allows to respect each language's typography rules.
+
+	po/de.po, /po-wwsympa/de.po: [Submitted by M. Warkus, univ. Karlsruhe] Updated german translations.
+
+	po/pl.po: [Submitted by Marcin Woloszyn, Silesian univ. of Poland] Updated polish translation.
 
 6.0		1st October 2009
 

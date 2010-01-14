@@ -701,7 +701,7 @@ sub checkfiles_as_root {
   my $config_err = 0;
 
     ## Check aliases file
-    unless (-f $Conf{'sendmail_aliases'}) {
+    unless (-f $Conf{'sendmail_aliases'} || ($Conf{'sendmail_aliases'} =~ /^none$/i)) {
 	unless (open ALIASES, ">$Conf{'sendmail_aliases'}") {
 	    &do_log('err',"Failed to create aliases file %s", $Conf{'sendmail_aliases'});
 	    # printf STDERR "Failed to create aliases file %s", $Conf{'sendmail_aliases'};
