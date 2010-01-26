@@ -254,11 +254,12 @@ my %list_cache;
 ## DB fields with numeric type
 ## We should not do quote() for these while inserting data
 my %numeric_field = ('cookie_delay_user' => 1,
-		      'bounce_score_subscriber' => 1,
-		      'subscribed_subscriber' => 1,
-		      'included_subscriber' => 1,
-		      'subscribed_admin' => 1,
-		      'included_admin' => 1,
+		     'bounce_score_subscriber' => 1,
+		     'subscribed_subscriber' => 1,
+		     'included_subscriber' => 1,
+		     'subscribed_admin' => 1,
+		     'included_admin' => 1,
+		     'wrong_login_count' => 1,
 		      );
 		      
 ## List parameters defaults
@@ -4786,7 +4787,7 @@ sub get_user_db {
 	$additional = ',' . $Conf::Conf{'db_additional_user_fields'};
     }
 
-    $statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+    $statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, wrong_login_count_user AS wrong_login_count, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     
     push @sth_stack, $sth;
 
@@ -6616,7 +6617,8 @@ sub update_user_db {
 		      email => 'email_user',
 		      data => 'data_user',
 		      last_login_date => 'last_login_date_user',
-		      last_login_host => 'last_login_host_user'
+		      last_login_host => 'last_login_host_user',
+		      wrong_login_count => 'wrong_login_count_user'
 		      );
     
     ## Check database connection
@@ -6626,8 +6628,12 @@ sub update_user_db {
     
     ## Update each table
     my @set_list;
+
     while (($field, $value) = each %{$values}) {
-	next unless ($map_field{$field});
+	unless ($map_field{$field}) {
+	    do_log('error',"unkown field $field in map_field internal error");
+	    next;
+	};
 	my $set;
 	
 	if ($numeric_field{$map_field{$field}})  {
@@ -6639,10 +6645,12 @@ sub update_user_db {
 	push @set_list, $set;
     }
     
-    return undef 
-	unless @set_list;
+    return undef unless @set_list;
     
     ## Update field
+
+    # my $statement2 = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)",$setlist,dbh->quote($who); 
+    # do_log('trace', 'statement2 : %s', $statement2);
 
     $statement = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)"
 	    , join(',', @set_list), $dbh->quote($who); 

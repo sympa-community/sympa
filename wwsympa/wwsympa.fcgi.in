@@ -2937,7 +2937,6 @@ sub do_ticket {
 	 }
      }
 
-     ##authentication of the sender
      my $data;
      unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
 	 &do_log('notice', "Authentication failed\n");
@@ -2945,9 +2944,12 @@ sub do_ticket {
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
 		      'error_type' => 'authentication'});
-	
-	 $param->{'login_error'} = 'wrong_password';
-
+	 my $unauthenticated_user = &List::get_user_db($in{'email'});
+	 if ($unauthenticated_user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
+	     $param->{'login_error'} = 'password_reset';
+	 }else{
+	     $param->{'login_error'} = 'wrong_password';
+	 }
 	 if ($in{'previous_action'}) {
 	     delete $in{'passwd'};
 	     $in{'list'} = $in{'previous_list'};
@@ -2966,7 +2968,7 @@ sub do_ticket {
      $session->{'email'} = $email;
      $session->{'unauthenticated_email'} = '';
 
-     &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+     &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip, wrong_login_count =>0}) ;
      
      ## Set alt_email
      if ($data->{'alt_emails'}) {
@@ -3026,7 +3028,6 @@ sub do_ticket {
      return ;
 
  }
-
 
  ## Login WWSympa
 sub do_sso_login {
@@ -5127,7 +5128,8 @@ sub do_subrequest {
      }
 
      if (&List::is_user_db($param->{'user'}{'email'})) {
-	 unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'}} )) {
+
+	 unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_setpasswd: update failed');
 	     &web_db_log({'status' => 'error',
@@ -5135,8 +5137,10 @@ sub do_subrequest {
 	     return undef;
 	 }
      }else {
+
 	 unless ( &List::add_user_db({'email' => $param->{'user'}{'email'}, 
-				      'password' => $in{'newpasswd1'}} )) {
+				      'password' => $in{'newpasswd1'},
+				      'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_setpasswd: update failed');
 	     &web_db_log({'status' => 'error',

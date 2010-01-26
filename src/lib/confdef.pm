@@ -1322,6 +1322,12 @@ our @params = (
         default => Sympa::Constants::SBINDIR . '/alias_manager.pl',
     },
     {
+        name    => 'max_wrong_password',
+        default => '19',
+        vhost => '1',
+	file   => 'sympa.conf',
+    },
+    {
         name    => 'dkim_feature',
         default => 'off',
         vhost => '1',

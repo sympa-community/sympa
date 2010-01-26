@@ -5,6 +5,8 @@
       [%|loc%]You requested an account creation on this list server.[%END%]
 [% ELSIF login_error == 'wrong_password' %]
       [%|loc%]The password you submitted is wrong. Maybe you forgot it?[%END%]
+[% ELSIF login_error == 'password_reset' %]
+      [%|loc%]Too many wrong password were sumitted for this account. Your account as been blocked in order to protect you agains attacks. You must renew renew your password in order to login.[%END%]
 [% ELSIF login_error == 'missing_password' %]
       [%|loc%]You missed the password, please submit again. Maybe you forgot it?[%END%]
 [% ELSIF login_error == 'ticket_sent' %]
