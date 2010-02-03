@@ -14,6 +14,7 @@ create table user_table
     password_user          varchar(40)            null    , 
     last_login_date_user   numeric,
     last_login_host_user   varchar (60),
+    wrong_login_count_user numeric,
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
     attributes_user	   varchar(255)           null    ,
