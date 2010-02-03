@@ -121,7 +121,7 @@
   [% ELSIF u_err.msg == 'select_month' %][%|loc%]Please select archive months[%END%]
   [% ELSIF u_err.msg == 'no_soap_service' %][%|loc%]No SOAP service[%END%]
   [% ELSIF u_err.msg == 'auth_failed' %][%|loc%]Authentication failed[%END%]
-  [% ELSIF u_err.msg == 'list_not_open' %][%|loc(u_err.status)%]Cannot add subscribers when list status is '%1'[%END%]
+  [% ELSIF u_err.msg == 'list_not_open' %][%|loc(u_err.status)%]Service unavailable because list status is '%1'[%END%]
   [% ELSIF u_err.msg == 'template_exists' %][%|loc(u_err.argument)%]This Template '%1' already exists[%END%]
   [% ELSIF u_err.msg == 'cannot_delete' %][%|loc(u_err.file_del)%]Cannot delete this file '%1'[%END%]
   [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]

@@ -10710,6 +10710,16 @@ sub do_d_read {
 	 $doc = $shareddir;
      }
 
+     ### is list open ?
+     unless ($list->{'admin'}{'status'} eq 'open'){
+	 &report::reject_report_web('user','list_not_open',{'status' => $list->{'admin'}{'status'}},$param->{'action'},$list);
+	 &wwslog('err','d_read : access denied for %s because list is not open', $param->{'user'}{'email'});
+	 &web_db_log({'parameters' => $in{'path'},
+		      'status' => 'error',
+		      'error_type' => 'authorization'});
+	 return undef;	 
+     }
+
      ### Document exists ? 
      unless (-r "$doc") {
 	 &wwslog('err',"do_d_read : unable to read $shareddir/$path : no such file or directory");
@@ -11277,6 +11287,16 @@ sub make_visible_path {
 sub do_latest_d_read {
      &wwslog('info', 'do_latest_d_read(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
 
+     ### is list open ?
+     unless ($list->{'admin'}{'status'} eq 'open'){
+	 &report::reject_report_web('user','list_not_open',{'status' => $list->{'admin'}{'status'}},$param->{'action'},$list);
+	 &wwslog('err','d_latest_d_read : access denied for %s because list is not open', $param->{'user'}{'email'});
+	 &web_db_log({'parameters' => $in{'path'},
+		      'status' => 'error',
+		      'error_type' => 'authorization'});
+	 return undef;	 
+     }
+
      ### shared exist ? 
      my $shareddir =  $list->{'dir'}.'/shared';
      unless (-r "$shareddir") {
@@ -11570,6 +11590,16 @@ sub do_latest_d_read {
 
 	 $param->{'url'} = $url;
 	 $visible_path =~ s/\.url$//;
+     }
+
+     ### is list open ?
+     unless ($list->{'admin'}{'status'} eq 'open'){
+	 &report::reject_report_web('user','list_not_open',{'status' => $list->{'admin'}{'status'}},$param->{'action'},$list);
+	 &wwslog('err','d_edit : access denied for %s because list is not open', $param->{'user'}{'email'});
+	 &web_db_log({'parameters' => $in{'path'},
+		      'status' => 'error',
+		      'error_type' => 'authorization'});
+	 return undef;	 
      }
 
      # Access control
