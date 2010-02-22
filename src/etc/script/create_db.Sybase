@@ -216,3 +216,11 @@ CREATE TABLE bulkspool_table (
 
 create index messagekey_bulkspool_fk on bulkspool_table (messagekey_bulkspool)
 go
+create table conf_tabl
+
+  robot_conf        varchar(80)        not null      
+  label_conf	    varchar(80)        not null      
+  value_conf        varchar(300)       null     
+  constraint ind_conf primary key (robot_conf, label_conf
+
+go
