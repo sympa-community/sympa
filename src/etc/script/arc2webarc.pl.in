@@ -258,7 +258,7 @@ sub store_messages {
 		# Checking Year format
 		if ($year =~ /^[89]\d$/) {
 		    $year = "19".$year;
-		}elsif ($year !~ /^19[89]\d|200[0-9]$/) {
+		}elsif ($year !~ /^19[89]\d|20[0-9][0-9]$/) {
 		    $incorrect = 1;
 		}
 		
