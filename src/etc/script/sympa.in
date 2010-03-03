@@ -219,9 +219,9 @@ case "$1" in
 	sympa_stop archived
 	sympa_stop bulk
 	sympa_stop sympa
-	if [ -f --piddir--/sympa-distribute.pid ]; then
-		sympa_stop sympa-distribute
-	fi
+	#if [ -f --piddir--/sympa-distribute.pid ]; then
+	#	sympa_stop sympa-distribute
+	#fi
 	if [ -f --piddir--/sympa-creation.pid ]; then
 		sympa_stop sympa-creation
 	fi
