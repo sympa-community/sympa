@@ -426,13 +426,13 @@ sub check_cpan {
 					   usage => 'required to compute digest for password and emails',
 					  },
 			'MIME::Charset' => {
-					    required_version =>'0.04.1',
+					    required_version =>'1.006.2',
 					    package_name => 'MIME-Charset',
 					    mandatory => 1,
 					    usage => 'used to encode mail body using a different charset',
 					   },
 			'MIME::EncWords' => {
-					     required_version =>'0.040',
+					     required_version =>'1.010',
 					     package_name => 'MIME-EncWords',
 					     mandatory => 1,
 					     usage => 'required to decode/encode SMTP header fields without breaking character encoding', 
@@ -485,9 +485,13 @@ sub check_cpan {
 						usage => 'used while checking the RDBMS buffer size',
 					       },
 			'Text::LineFold' => {
+			    		     required_version =>'0.008',
 					     package_name => 'Unicode-LineBreak',
-					     mandatory => 1,
-					     usage => 'required to split lines in HTML mail composer',
+					     usage => 'used to fold lines in HTML mail composer and system messages, prior to Text::Wrap',
+					    },
+			'Text::Wrap' => {
+					     package_name => 'Text-Tabs+Wrap',
+					     usage => 'used to fold lines in HTML mail composer and system messages',
 					    },
 			'Time::HiRes' => {
 					  required_version =>'1.9719',

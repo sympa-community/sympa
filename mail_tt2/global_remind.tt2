@@ -7,7 +7,7 @@ Subject: [% FILTER qencode %][%|loc%]Subscription summary[%END%][%END%]
 [%|loc%]For each list here is a mail address to use if you want to unsubscribe.[%END%]
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-[% FOREACH l = lists -%]
+[%|wrap(0,4)%][% FOREACH l = lists -%]
 [% l %]	[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=sig [%l%] [%user.email%][% END %] 
-[% END %]
+[% END %][%END#wrap%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

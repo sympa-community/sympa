@@ -3,7 +3,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]INFO %1[%END%][%END%]
 
 [%|loc(list.name,list.host)%]Information regarding list %1@%2:[%END%]
 
-[%|loc(list.subject)%]Subject          : %1[%END%]
+[%|wrap(0,20)%][%|loc(list.subject)%]Subject          : %1[%END%]
 [% FOREACH o = owner -%]
 [% IF o.visibility != 'conceal' %]
 [%|loc(o.gecos)%]Owner             : %1[%END%] <[% o.email %]>
@@ -24,7 +24,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]INFO %1[%END%][%END%]
 [%|loc(digest)%]Digest            : %1[%END%]
 [% END %]
 [%|loc(available_reception_mode)%]Receiving modes   : %1[%END%]
-[%|loc(url)%]Homepage          : %1[%END%]
+[%|loc(url)%]Homepage          : %1[%END%][%END#wrap%]
 
 [% TRY %]
 [% PROCESS 'info' %]

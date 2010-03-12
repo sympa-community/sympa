@@ -154,6 +154,29 @@ sub locdatetime {
     }
 }
 
+# IN:
+#    $context: Context.
+#    $init: Indentation (or its length) of each paragraphm if any.
+#    $subs: Indentation (or its length) of other lines if any.
+#    $cols: Line width, defaults to 78.
+# OUT:
+#    Subref to generate folded text.
+sub wrap {
+    my ($context, $init, $subs, $cols) = @_;
+    $init = '' unless defined $init;
+    $init = ' ' x $init if $init =~ /^\d+$/;
+    $subs = '' unless defined $subs;
+    $subs = ' ' x $subs if $subs =~ /^\d+$/;
+
+    return sub {
+        my $text = shift;
+        my $nl = $text =~ /\n$/;
+        my $ret = &tools::wrap_text($text, $init, $subs, $cols);
+        $ret =~ s/\n$// unless $nl;
+        $ret;
+    };
+}
+
 ## To add a directory to the TT2 include_path
 sub add_include_path {
     my $path = shift;
@@ -212,6 +235,7 @@ sub parse_tt2 {
 	    loc => [\&tt2::maketext, 1],
 	    helploc => [\&tt2::maketext, 1],
 	    locdt => [\&tt2::locdatetime, 1],
+	    wrap => [\&tt2::wrap, 1],
 	    qencode => [\&qencode, 0],
  	    escape_xml => [\&escape_xml, 0],
 	    escape_url => [\&escape_url, 0],

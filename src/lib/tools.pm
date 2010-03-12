@@ -70,6 +70,22 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 
+## Local variables to determine whether to use Text::LineFold or Text::Wrap.
+my $use_text_linefold;
+my $use_text_wrap;
+eval { require Text::LineFold; Text::LineFold->import(0.008); };
+if ($@) {
+    $use_text_linefold = 0;
+    eval { require Text::Wrap; };
+    if ($@) {
+	$use_text_wrap = 0;
+    } else {
+	$use_text_wrap = 1;
+    }
+} else {
+    $use_text_linefold = 1;
+}
+
 ## Sets owner and/or access rights on a file.
 sub set_file_rights {
     my %param = @_;
@@ -3834,5 +3850,38 @@ sub count_numbers_in_string {
     $count++ while $str =~ /(\d+\s+)/g;
     return $count;
 }
+
+#*******************************************
+# Function : wrap_text
+# Description : return line-wrapped text.
+## IN : text, init, subs, cols
+#*******************************************
+sub wrap_text {
+    my $text = shift;
+    my $init = shift;
+    my $subs = shift;
+    my $cols = shift;
+    $cols = 78 unless defined $cols;
+    return $text unless $cols;
+
+    if ($use_text_linefold) {
+	my $emailre = &tools::get_regexp('email');
+	$text = Text::LineFold->new(
+	    Language => &Language::GetLang(),
+	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
+	    UserBreaking => ['NONBREAKURI',
+			     [qr/\b$emailre\b/ => sub { ($_[1]) }],
+			     ],
+	    ColumnsMax => $cols
+	)->fold($init, $subs, $text);
+    } elsif ($use_text_wrap) {
+	local ($Text::Wrap::unexpand) = 0;
+	local ($Text::Wrap::columns) = $cols + 1;
+	$text = Text::Wrap::wrap($init, $subs, $text);
+    }
+
+    return $text;
+}
+
 
 1;

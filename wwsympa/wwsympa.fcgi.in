@@ -44,7 +44,6 @@ use Archive::Zip;
   
 use strict 'vars';
 use Time::Local;
-use Text::LineFold;
 use MIME::Lite::HTML;
 
 ## Sympa API
@@ -6574,7 +6573,8 @@ sub do_skinsedit {
      my ($msg, $file);
 
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot)},
+     my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot),
+			       'X-Sympa-NoWrap' => 'yes'},
 		 'from'=> $param->{'user'}{'email'}};
 
      ## msg topics
@@ -14467,7 +14467,8 @@ sub d_test_existing_and_rights {
      }
 
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
+     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>',
+			       'X-Sympa-NoWrap' => 'yes'},
 		 'from'=> $param->{'user'}{'email'},
 		 'body' => $mail_command};
 
@@ -15237,10 +15238,6 @@ sub do_compose_mail {
 	       &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	       return undef;
 	   }
-
-	   $in{'body'} = Text::LineFold->new(Language => &Language::GetLang(), UserBreaking => ['NONBREAKURI'])->fold($in{'body'}, 'PLAIN');
-
-	   my @body = split /\0/, $in{'body'};
    }
 
 
@@ -15401,7 +15398,8 @@ sub do_compose_mail {
 
      ## CONFIRM
      my $time = time;
-     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>'},
+     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>',
+			       'X-Sympa-NoWrap' => 'yes'},
 		 'from'=> $sender};
 
      $data->{'body'} = sprintf ("QUIET CONFIRM %s\n",$in{'authkey'});

@@ -2,9 +2,9 @@ From: SYMPA <[% conf.email %]@[% conf.host %]>
 Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
 
               SYMPA -- Systeme de Multi-Postage Automatique
-                       (Automatic Mailing System)
+[%|loc%]                       (Automatic Mailing System)[%END%]
 
-                                [%|loc%]User's Guide[%END%]
+[%|loc%]                                User's Guide[%END%]
 
 
 [%|loc%]SYMPA is an electronic mailing-list manager that automates list management functions such as subscriptions, moderation, and archive management.[%END%]
@@ -14,7 +14,7 @@ Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
 [%|loc%]You can put multiple commands in a message. These commands must appear in the message body and each line must contain only one command.[%END%]
 
 [%|loc%]Available commands are:[%END%]
-
+[%|wrap(0,39)%]
  [%|loc%]HELp                        * This help file[%END%]
  [%|loc%]INFO <list>                 * Information about a list[%END%]
  [%|loc%]LISts                       * Directory of lists managed on this node[%END%]
@@ -41,22 +41,22 @@ Subject: [% FILTER qencode %][%|loc%]User guide[%END%][%END%]
  [%|loc%]INVITE <list> <email>       * Invite <email> for subscription in <list>[%END%]
  [%|loc%]CONFIRM <key>               * Confirmation for sending a message (depending on the list configuration)[%END%]
  [%|loc%]QUIT                        * Indicates the end of the commands (to ignore a signature)[%END%]
-
+[%END#wrap%]
 [% IF is_owner -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 [%|loc%]The following commands are available only for lists owners or moderators:[%END%]
-
+[%|wrap(0,39)%]
  [%|loc%]ADD <list> user@host Full name  * To add a user to a list[%END%]
  [%|loc%]DEL <list> user@host            * To delete a user from a list[%END%]
  [%|loc%]STATS <list>                    * To consult the statistics for <list>[%END%]
 
  [%|loc%]REMIND <list>                   * Send a reminder message to each subscriber (this is a way to inform anyone what is his real subscribing email).[%END%]
-[% END %]
+[%END#wrap%][% END %]
 [% IF is_editor -%]
-
+[%|wrap(0,39)%]
  [%|loc%]DISTribute <list> <key>        * Moderation: to validate a message[%END%]
  [%|loc%]REJect <list> <key>            * Moderation: to reject a message[%END%]
  [%|loc%]MODINDEX <list>                 * Moderation: to view the list of messages to moderate[%END%]
-[% END %]
+[%END#wrap%][% END %]
 
 [%|loc%]Powered by Sympa[%END%] [% conf.version %][%|loc%]:[%END%] http://www.sympa.org

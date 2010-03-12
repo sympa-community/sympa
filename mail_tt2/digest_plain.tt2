@@ -2,21 +2,22 @@ From: [% fromlist %]
 To: [% to %]
 Reply-to: [% replyto %]
 Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %][%END%]
+X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 Digest %2[%END%]
 
 [%|loc%]Table of contents:[%END%]
 
-[% FOREACH m = msg_list -%]
+[%|wrap(0,4)%][% FOREACH m = msg_list -%]
 [% m.id %]. [% m.subject %] - [% m.from %]
-[% END %]
+[% END %][%END#wrap%]
 
 ----------------------------------------------------------------------
 
 [% FOREACH m = msg_list -%]
-Date: [% m.date %]
+[%|wrap(0,4)%]Date: [% m.date %]
 From: [% m.from %]
-Subject: [% m.subject %]
+Subject: [% m.subject %][%END#wrap%]
 
 [% m.plain_body %]
 

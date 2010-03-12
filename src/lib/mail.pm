@@ -1019,10 +1019,18 @@ sub fix_part($$$$) {
 
 	my $head = $part->head;
 	my $body = $bodyh->as_string;
+	my $wrap;
+	if ($head->get('X-Sympa-NoWrap')) { # Need not wrapping
+	    $wrap = $body;
+	    $head->delete('X-Sympa-NoWrap');
+	} elsif ($eff_type eq 'text/plain' and
+		 lc($head->mime_attr('Content-type.Format')||'') ne 'flowed') {
+	    $wrap = &tools::wrap_text($body);
+	}
 	my $charset = $head->mime_attr("Content-Type.Charset") || $defcharset;
 
 	my ($newbody, $newcharset, $newenc) = 
-	    MIME::Charset::body_encode(Encode::decode('utf8', $body), $charset,
+	    MIME::Charset::body_encode(Encode::decode('utf8', $wrap), $charset,
 				       Replacement => 'FALLBACK');
 	if ($newenc eq $enc and $newcharset eq $charset and
 	    $newbody eq $body) {

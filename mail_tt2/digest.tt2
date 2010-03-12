@@ -9,9 +9,9 @@ Content-Disposition: inline
 
 [%|loc%]Table of contents:[%END%]
 
-[% FOREACH m = msg_list -%]
+[%|wrap(0,4)%][% FOREACH m = msg_list -%]
 [% m.id %]. [% m.subject %] - [% m.from %]
-[% END %]
+[% END %][%END#wrap%]
 
 --[% boundary1 %]
 Content-Type: multipart/digest; boundary="[% boundary2 %]"
