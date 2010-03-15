@@ -1,0 +1,63 @@
+
+<h2>[%|loc%]Edit robot config[%END%]</h2><br />
+<div>
+
+<ul>
+[% FOREACH confparam IN editable_params %]
+ [% IF confparam.title %]<li><a href="#[%confparam.title%]">[%confparam.title%]</a></li>[% END %]
+[% END %]
+</ul>
+<p>
+[% SET close_table = '' %]
+[% FOREACH confparam IN editable_params %]
+  [% IF confparam.title %]
+     [% close_table %]
+     <a name="[%confparam.title%]">
+     <h4>[% confparam.title %]</h4>
+<table class="listOfItems"><tr><th>parameter name</th><th>value</th><th>apply to</th><th>default</th>[%# <th>semantic</th> %]</tr> 
+  [% ELSE %]
+     [% IF dark == '1' %]
+       <tr> [% SET dark='0'%]
+     [% ELSE  %]
+       <tr class="color0">[% SET dark='1'%]
+     [% END %]
+<form action="[% path_cgi %]" method="post">
+  <fieldset>
+     <td [% IF confparam.query %]onmouseover="config_ctxhelp(this);"[% END %]>
+	<strong>[% confparam.name  %]</strong>
+	[% IF confparam.query %]<div style="position:absolute;display:none;margin-top:5px;border:1px solid black;background-color:[%color_5%];padding:3px">[% confparam.query %]</div>[% END %]
+     </td>
+     <td>
+
+ [% IF confparam.edit == '1'   && removethistesttoenblefeature == '1' %]
+  <input type="text" name="conf_new_value"  value="[% confparam.current_value %]" style="width:75%"/> 
+  <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
+  <input class="MainMenuLinks" type="submit" name="action_edit_config" value="[%|loc%]Set[%END%]" style="width:20%" />
+
+[% ELSE %]
+[% confparam.current_value %]
+[% END %]
+</td>
+<td>
+[% IF confparam.vhost == '1' %]
+  [% IF confparam.edit == '1' && removethistesttoenblefeature == '1' %]
+    <select name="robot">
+	[% FOREACH vr = robots %]<option value="[% vr.key %]" [% IF vr.key == robot %] selected="selected" [% END %]>[% vr.key %]</option>[% END %]
+    </select>
+  [% ELSE %]
+	[% robot %]
+  [% END %]
+[% ELSE %]
+	main conf
+[% END %]
+</td>
+<td>[% confparam.default %]</td>[%# <td>confparam.query</td> %]
+</fieldset>
+</form>
+</tr>
+     [% SET close_table = '</table>' %]
+  [% END %]
+[% END %]
+[% close_table %]
+
+</div>
