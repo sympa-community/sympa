@@ -8,7 +8,7 @@
 </div>
 [% END %]
 
-[% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
+[% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
 <div id="nav">
   <ul>
 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
@@ -26,6 +26,8 @@
 [% IF main_robot %]
 [% IF subaction == 'vhosts' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/vhosts">[%|loc%]Virtual Robots[%END%]</a></li>
+[% IF action == 'edit_config' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/edit_config">[%|loc%]Edit Robot Config[%END%]</a></li>
 [% END %]
 [% IF families -%]
 [% IF subaction == 'families' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]

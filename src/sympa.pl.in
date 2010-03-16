@@ -112,6 +112,7 @@ Options:
    --log_level=LEVEL                     : sets Sympa log level
    --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
    --test_database_message_buffer        : test the database message buffer size
+   --conf_2_db			         : load in database, sympa;conf, wwsympa.conf and each robot.conf
    -h, --help                            : print this help
    -v, --version                         : print version number
 
@@ -126,7 +127,7 @@ my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
 		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
-		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer')) {
+		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db')) {
     &fatal_err("Unknown options.");
 }
 
@@ -154,6 +155,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'upgrade'} ||
 				$main::options{'upgrade_shared'} ||
 				$main::options{'test_database_message_buffer'} || 
+				$main::options{'conf_2_db'} || 
 				$main::options{'reload_list_config'}
 				 );
 
@@ -161,7 +163,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
-$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'} || $main::options{'test_database_message_buffer'});
+$main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'} || $main::options{'test_database_message_buffer'} || $main::options{'conf_2_db'});
 
 my %loop_info;
 my %msgid_table;
@@ -177,8 +179,7 @@ my $config_file = $main::options{'config'} || Sympa::Constants::CONFIG;
 
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
 unless (Conf::load($config_file,1)) {
-   &fatal_err("Configuration file $config_file has errors.");
-   
+   &fatal_err("Configuration file $config_file has errors.");  
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -609,6 +610,16 @@ if ($main::options{'dump'}) {
 	printf "The maximum message size ($size Ko) testing was successful \n";
     }else{
 	printf "maximun message size that can be stored in database : $size Ko\n";
+    }
+    exit 1;
+    
+}elsif ($main::options{'conf_2_db'}) {
+   
+    printf "Sympa is going to store $config_file in database conf_table. This operation do NOT remove original files\n";
+    if ( Conf::conf_2_db($config_file) ) {
+	printf "Done";
+    }else{
+	printf "an error occur";
     }
     exit 1;
     

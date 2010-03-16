@@ -1132,8 +1132,9 @@ sub signoff {
 	    
 	    ## Tell the owner somebody tried to unsubscribe
 	    if ($action =~ /notify/i) {
-		unless ($list->send_notify_to_owner('warn-signoff',{'who' => $email, 
-								    'gecos' => $comment})) {
+		# try to find email from same domain or email wwith same local part.
+	
+		unless ($list->send_notify_to_owner('warn-signoff',{'who' => $email, 'gecos' => $comment })) {
 		    &do_log('info',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
 		}
 	    }

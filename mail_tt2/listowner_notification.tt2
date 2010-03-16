@@ -25,7 +25,9 @@ This list has been closed.[%END%]
 Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2" from %3 %4[%END%][%END%]
 
 [%|loc(who,gecos,list.name)%]WARNING: %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
-(You may help this person).[%END%]
+You may help this person looking for similar email in subscriber list using the following link :[%END%]
+
+[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
  
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]

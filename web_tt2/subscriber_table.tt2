@@ -1,0 +1,160 @@
+
+<!--  subscriber_table.tt2  -->
+
+    <table summary="[%|loc%]List members[%END%]" class="listOfItems text_center">
+      <tr>
+	[% IF is_owner %]
+	   <th>X</th>
+	[% END %]
+
+        [% IF sortby == 'email' %]
+  	    <th colspan="2" class="sortby">
+	    [%|loc%]Email[%END%]
+	[% ELSE %]
+	    <th colspan="2">	    
+	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/email">[%|loc%]Email[%END%]</a>
+	[% END %]
+	</th>
+        [% IF sortby == 'domain' %]
+  	    <th class="sortby">
+	    [%|loc%]Domain[%END%]
+	[% ELSE %]
+	    <th>
+               <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/domain">[%|loc%]Domain[%END%]</a>
+	[% END %]
+	</th>
+	[% IF pictures_display %]
+  	    <th>	    
+  	    [%|loc%]Picture[%END%]
+	    </th>
+  	[% END %]
+	[% IF sortby == 'name' %]
+	<th class="sortby">
+	  [%|loc%]Name[%END%]
+	[% ELSE %]
+	<th>
+          <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/name">[%|loc%]Name[%END%]</a>
+	[% END %] 
+	</th>
+        [% IF is_owner %]
+          <th>
+	  [%|loc%]Reception[%END%]
+	  </th>
+	  [% IF list_conf.user_data_source == 'include2' %]
+            [% IF sortby == 'sources' %]
+  	      <th class="sortby">
+	      [%|loc%]Sources[%END%]
+	    [% ELSE %]
+	      <th>
+	      <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >[%|loc%]Sources[%END%]</a>
+	    [% END %]
+	    </th>
+          [% END %]
+	  [% IF sortby == 'date' %]
+  	    <th class="sortby">
+	    [%|loc%]Sub date[%END%]
+	  [% ELSE %]
+	    <th>
+            <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/date" >[%|loc%]Sub date[%END%]</a>
+	  [% END %]
+          </th>
+	  <th>[%|loc%]Last update[%END%]</th>
+	  [% IF additional_fields %]
+	    <th>[% additional_fields %]</th>
+	  [% END %]
+          [% FOREACH ca_k IN list_conf.custom_attribute %]<th>[% ca_k.name %]</th>[% END %]
+        [% END %]
+      </tr>
+      
+      [% FOREACH u = thosesubscribers %]
+	[% IF dark == '1' %]
+	  <tr>
+	[% ELSE %]
+          <tr class="color0">
+	[% END %]
+
+	 [% IF is_owner %]
+	    <td>
+	        <input type="checkbox" name="email" value="[% u.escaped_email %]" />
+	    </td>
+ 	 [% END %]
+	 [% IF u.bounce %]
+	   <td colspan="2" class="text_left">
+	 
+	     [% IF is_owner %]
+	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
+	     [% ELSE %]
+ 	       [% u.email %]
+ 	     [% END %]
+	   </td>
+	 [% IF is_owner %]
+           <td class="color7"><strong>[%|loc%]bouncing[%END%]</strong>
+	   </td>
+	 [% END %]
+
+	 [% ELSE %]
+	   <td colspan="3" class="text_left">
+	     [% IF is_owner %]
+	       <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/review">[% u.email %]</a>
+	     [% ELSE %]
+	       [% u.email %]
+	     [% END %]
+	   </td>
+	 [% END %]
+
+  	  [% IF pictures_display %]
+  	    [% IF u.pictures_url %]
+  	      <td>
+  	      <a href="[%u.pictures_url%]" title="[%|loc%]Open in a new window[%END%]" target="pictures"><img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc(u.email)%]%1's picture[%END%]" /></a>   
+  	      </td>
+  	    [% ELSE %]
+  	      <td>
+  	      </td>
+  	    [% END %]
+  	  [% END %]
+	  <td>
+             <span class="smaller">
+	        [% u.gecos %]&nbsp;
+	     </span>
+          </td>
+	  [% IF is_owner %]
+  	    <td>
+  	      [% u.reception %]
+	    </td>
+          [% IF list_conf.user_data_source == 'include2' %]
+            <td>
+            [% IF u.subscribed %]
+              [% IF u.included %]
+                 subscribed<br />[% u.sources %]
+              [% ELSE %]
+                 subscribed
+              [% END %]
+            [% ELSE %]
+              [% u.sources %]
+            [% END %]   
+            </td>
+          [% END %]
+	    <td>
+	      [% u.date %]
+	    </td>
+	    <td>
+	      [% u.update_date %]
+	    </td>
+    	  [% IF additional_fields %]
+	     <td>
+	      [% u.additional %]
+	     </td>
+	  [% END %]
+	  [% FOREACH ca_k IN list_conf.custom_attribute %]<td>[% SET id = ca_k.id %][% u.custom_attribute.$id.value %]</td>[% END %]
+       	  [% END %]
+        </tr>
+
+        [% IF dark == '1' %]
+	  [% SET dark = 0 %]
+	[% ELSE %]
+	  [% SET dark = 1 %]
+	[% END %]
+
+        [% END %]
+</table>
+<!-- end subscribers_table.tt2 (distrib) -->

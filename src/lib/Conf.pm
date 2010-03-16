@@ -99,9 +99,15 @@ my $wwsconf;
 our %Conf = ();
 
 ## Loads and parses the configuration file. Reports errors if any.
+# do not try to load database values if $no_db is set ;
+# do not change gloval hash %Conf if $return_result  is set ;
+# we known that's dirty, this proc should be rewritten without this global var %Conf
 sub load {
     my $config = shift;
     my $no_db = shift;
+    my $return_result = shift;
+
+
     my $line_num = 0;
     my $config_err = 0;
     my($i, %o);
@@ -115,29 +121,30 @@ sub load {
         $line_num++;
         # skip empty or commented lines
         next if (/^\s*$/ || /^[#;]/);
-        # match "keyword value" pattern
-        if (/^(\S+)\s+(.+)$/) {
-            my ($keyword, $value) = ($1, $2);
-            $value =~ s/\s*$//;
-            ##  'tri' is a synonyme for 'sort'
-            ## (for compatibily with old versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
-            ##  'key_password' is a synonyme for 'key_passwd'
-            ## (for compatibily with old versions)
-            $keyword = 'key_passwd' if ($keyword eq 'key_password');
-            ## Special case: `command`
-            if ($value =~ /^\`(.*)\`$/) {
-                $value = qx/$1/;
-                chomp($value);
-            }
-            $o{$keyword} = [ $value, $line_num ];
-        } else {
-            printf STDERR
-                gettext("Error at line %d: %s\n"), $line_num, $config, $_;
-            $config_err++;
-        }
+	    # match "keyword value" pattern
+	    if (/^(\S+)\s+(.+)$/) {
+		my ($keyword, $value) = ($1, $2);
+		$value =~ s/\s*$//;
+		##  'tri' is a synonyme for 'sort'
+		## (for compatibily with old versions)
+		$keyword = 'sort' if ($keyword eq 'tri');
+		##  'key_password' is a synonyme for 'key_passwd'
+		## (for compatibily with old versions)
+		$keyword = 'key_passwd' if ($keyword eq 'key_password');
+		## Special case: `command`
+		if ($value =~ /^\`(.*)\`$/) {
+		    $value = qx/$1/;
+		    chomp($value);
+		}
+		$o{$keyword} = [ $value, $line_num ];
+	    } else {
+		printf STDERR  gettext("Error at line %d: %s\n"), $line_num, $config, $_;
+		$config_err++;
+	    }
     }
     close(IN);
+
+    return (\%o) if ($return_result);
 
     ## Hardcoded values
     foreach my $p (keys %hardcoded_params) {
@@ -359,9 +366,6 @@ sub load {
     $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
     $Conf{'pictures_path'}  = $Conf{'static_content_path'}.'/pictures/';
 	
-
-
-
     return 1;
 }    
 
@@ -434,6 +438,41 @@ sub load_nrcpt_by_domain {
   return ($nrcpt_by_domain);
 }
 
+#load a confif file without any default and inherited property 
+sub load_conf_file {
+
+    my $config_type = shift; #  'robot' or other
+    my $path=shift;
+
+    do_log('info',"load_config_file($config_type,$path)");
+
+    my %thisconf;
+
+    return undef unless (-f $path) ;
+    return undef unless (-r $path) ;
+    return undef unless (open (CONF,$path));
+    while (<CONF>) {
+	next if (/^\s*$/o || /^[\#\;]/o);
+	if (/^\s*(\S+)\s+(.+)\s*$/io) {
+	    my($keyword, $value) = ($1, $2);
+	    $value =~ s/\s*$//;
+	    $keyword = lc($keyword);
+	    
+	    ## Not all parameters should be lowercased
+	    ## We should define which parameter needs to be lowercased
+	    #$value = lc($value) unless ($keyword eq 'title' || $keyword eq 'logo_html_definition' || $keyword eq 'lang');
+
+	    if ($config_type eq 'robot') {
+		unless($valid_robot_key_words{$keyword}) {
+		    printf STDERR "load_config_file robot config: unknown keyword $keyword\n";
+		    next;
+		}
+	    }# elseif(some other config type) { some other check of valid keywords
+	    $thisconf{$keyword} = $value;
+	}
+    }
+    return (\%thisconf);
+}
 
 ## load each virtual robots configuration files
 sub load_robots {
@@ -504,6 +543,7 @@ sub load_robots {
 	}
 	# listmaster is a list of email separated by commas
 	$robot_conf->{$robot}{'listmaster'} =~ s/\s//g;
+
 	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'})
 	    if $robot_conf->{$robot}{'listmaster'};
 
@@ -1479,6 +1519,53 @@ sub _load_a_param {
 	return \@array;
     }else {
 	return $value;
+    }
+}
+
+# Store configs to database
+sub conf_2_db {
+    my $config_file = shift;
+    do_log('info',"conf_2_db");
+
+    my @conf_parameters = @confdef::params ;
+
+    # store in database robots parameters.
+    my $robots_conf = &load_robots ; #load only parameters that are in a robot.txt file (do not apply defaults). 
+
+    unless (opendir DIR,$Conf{'etc'} ) {
+	printf STDERR "Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
+	return undef;
+    }
+
+    foreach my $robot (readdir(DIR)) {
+	next unless (-d "$Conf{'etc'}/$robot");
+	next unless (-f "$Conf{'etc'}/$robot/robot.conf");
+	
+	my $config = &load_conf_file('robot',$Conf{'etc'}.'/'.$robot.'/robot.txt');
+	
+	for my $i ( 0 .. $#conf_parameters ) {
+	    if ($conf_parameters[$i]->{'name'}) { #skip separators in conf_parameters structure
+		if (($conf_parameters[$i]->{'vhost'} eq '1') && #skip parameters that can't be define by robot so not to be loaded in db at that stage 
+		    ($config->{$conf_parameters[$i]->{'name'}})){
+		    &Conf::set_robot_conf($robot, $conf_parameters[$i]->{'name'}, $config->{$conf_parameters[$i]->{'name'}});
+		}
+	    }
+	}
+    }
+    closedir (DIR);
+
+    # store in database sympa;conf and wwsympa.conf
+    
+    ## Load configuration file. Ignoring database config and get result
+    my $global_conf;
+    unless ($global_conf= Conf::load($config_file,1,'return_result')) {
+	&fatal_err("Configuration file $config_file has errors.");  
+    }
+    
+    for my $i ( 0 .. $#conf_parameters ) {
+	if (($conf_parameters[$i]->{'edit'} eq '1') && $global_conf->{$conf_parameters[$i]->{'name'}}) {
+	    &Conf::set_robot_conf("*",$conf_parameters[$i]->{'name'},$global_conf->{$conf_parameters[$i]->{'name'}}[0]);
+	}       
     }
 }
 

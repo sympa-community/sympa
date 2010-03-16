@@ -162,8 +162,6 @@
   <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 </fieldset>
 </form>
-
-
 	
 <a class="actionMenuLinks" href="http://pootle.sympa.org/">[%|loc%]view translations[%END%]</a>
 <a class="actionMenuLinks" href="[% path_cgi %]/ls_templates">[%|loc%]Customize templates[%END%]</a>
@@ -190,7 +188,43 @@
 <a class="actionMenuLinks" href="[% path_cgi %]/skinsedit">[%|loc%]Skins administration page[%END%]</a>
 </div>
 [% END %] 
+[% IF subaction == 'edit_config' %]
+<h2>[%|loc%]View main config[%END%]</h2><br />
+<div>
 
+[% SET close_table = '' %]
+[% FOREACH confparam IN editable_params %]
+  [% IF confparam.title %]
+     [% close_table %]
+     <h4> [% confparam.title %] </h4> <table class="listOfItems"><tr><th>parameter name</th><th>value</th><th>default</th><th>semantic</th></tr> 
+  [% ELSE %]
+     [% IF dark == '1' %]
+       <tr> [% SET dark='0'%]
+     [% ELSE  %]
+       <tr class="color0">[% SET dark='1'%]
+     [% END %]
+     <td>[% confparam.name  %]</td>
+     <td>
+     [% IF confparam.edit == '1' %]
+<form action="[% path_cgi %]" method="post">
+  <fieldset>
+  <input type="text" name="new_value"  value="[% confparam.current_value %]" style="width:75%"/> 
+  <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
+  <input class="MainMenuLinks" type="submit" name="action_set_param" value="[%|loc%]Set[%END%]" style="width:20%" />
+</fieldset>
+</form>
+[% ELSE %]
+[% confparam.current_value %]
+[% END %]
+</td>
+<td>[% confparam.default %]</td><td>[% confparam.query %]</td></tr>
+     [% SET close_table = '</table>' %]
+  [% END %]
+[% END %]
+[% close_table %]
+
+</div>
+[% END %] 
 [% IF subaction == 'translation' %]
 <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
 <div>

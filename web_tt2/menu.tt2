@@ -8,7 +8,7 @@
 [% END %]
 
 [% IF is_listmaster %]
-   [% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+   [% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' or action == 'edit_config' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
    <li><a  class="[% class %]" href="[% path_cgi %]/serveradmin" >[%|loc%]Sympa admin[%END%]</a></li>
 [% END %]
 

@@ -4154,7 +4154,19 @@ sub send_notify_to_owner {
 	$param->{'to'} =join(',', @to);
 	$param->{'type'} = $operation;
 
-	if ($operation eq 'subrequest') {
+
+	if ($operation eq 'warn-signoff') {
+	    $param->{'escaped_gecos'} = $param->{'gecos'};
+	    $param->{'escaped_gecos'} =~ s/\s/\%20/g;
+	    $param->{'escaped_who'} = $param->{'who'};
+	    $param->{'escaped_who'} =~ s/\s/\%20/g;
+	    foreach my $owner (@to) {
+		$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($owner,$robot,'search/'.$self->{'name'}.'/'.$param->{'escaped_who'},$param->{'ip'});
+		unless ($self->send_file('listowner_notification',[$owner], $robot,$param)) {
+		    &do_log('notice',"Unable to send template 'listowner_notification' to $self->{'name'} list owner $owner");		    
+		}
+	    }
+	}elsif ($operation eq 'subrequest') {
 	    $param->{'escaped_gecos'} = $param->{'gecos'};
 	    $param->{'escaped_gecos'} =~ s/\s/\%20/g;
 	    $param->{'escaped_who'} = $param->{'who'};
@@ -5120,6 +5132,208 @@ sub get_subscriber {
     $list_cache{'get_subscriber'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
 
     return $user;
+}
+
+#######################################################################
+# IN
+#   - a single reference to a hash with the following keys:          #
+#     * email : the subscriber email                                 #
+#     * name: the name of the list                                   #
+#     * domain: the virtual host under which the list is installed.  #
+#
+# OUT : undef if something wrong
+#       a hash of tab of ressembling emails
+sub get_ressembling_subscribers_no_object {
+    my $options = shift;
+    &do_log('debug2', 'List::get_ressembling_subscribers_no_object(%s, %s, %s)', $options->{'name'}, $options->{'email'}, $options->{'domain'});
+    my $name = $options->{'name'};
+    my @output;
+
+
+    
+    my $email = &tools::clean_email($options->{'email'});
+    my $robot = $options->{'domain'};
+    my $listname = $options->{'name'};
+    
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
+
+    $email =~ /^(.*)\@(.*)$/;
+    my $local_part = $1;
+    my $subscriber_domain = $2;
+    my %subscribers_email;
+
+
+
+    ##### plused
+    # is subscriber a plused email ?
+    if ($local_part =~ /^(.*)\+(.*)$/) {
+
+	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $1.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	    next if ($subscribers_email{$subscriber->{'email'}});
+	    $subscribers_email{$subscriber->{'email'}} = 1;
+	    push @output,$subscriber;
+	}			       
+    }
+    # is some subscriber ressembling with a plused email ?    
+    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'+%@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+    	next if ($subscribers_email{$subscriber->{'email'}});
+       $subscribers_email{ $subscriber->{'email'} } = 1;
+    	push @output,$subscriber;
+    }		
+
+    # ressembling local part    
+    # try to compare firstname.name@domain with name@domain
+        foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => '%'.$local_part.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+    	next if ($subscribers_email{$subscriber->{'email'}});
+    	$subscribers_email{ $subscriber->{'email'} } = 1;
+    	push @output,$subscriber;
+    }
+    
+    if ($local_part =~ /^(.*)\.(.*)$/) {
+	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $2.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	    next if ($subscribers_email{$subscriber->{'email'}});
+	    $subscribers_email{ $subscriber->{'email'} } = 1;
+	    push @output,$subscriber;
+	}
+    }
+
+    #### Same local_part and ressembling domain
+    #
+    # compare host.domain.tld with domain.tld
+    if ($subscriber_domain =~ /^[^\.]\.(.*)$/) {
+	my $upperdomain = $1;
+	if ($upperdomain =~ /\./) {
+            # remove first token if there is still at least 2 tokens try to find a subscriber with that domain
+	    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@'.$upperdomain,'name'=>$listname,'domain'=>$robot})){
+	    	next if ($subscribers_email{$subscriber->{'email'}});
+	    	$subscribers_email{ $subscriber->{'email'} } = 1;
+	    	push @output,$subscriber;
+	    }
+	}
+    }
+    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@%'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+    	next if ($subscribers_email{$subscriber->{'email'}});
+    	$subscribers_email{ $subscriber->{'email'} } = 1;
+    	push @output,$subscriber;
+    }
+
+    # looking for initial
+    if ($local_part =~ /^(.*)\.(.*)$/) {
+	my $givenname = $1;
+	my $name= $2;
+	my $initial = '';
+	if ($givenname =~ /^([a-z])/){
+	    $initial = $1;
+	}
+	if ($name =~ /^([a-z])/){
+	    $initial = $initial.$1;
+	}
+	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $initial.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	    next if ($subscribers_email{$subscriber->{'email'}});
+	    $subscribers_email{ $subscriber->{'email'} } = 1;
+	    push @output,$subscriber;
+	}
+    }
+    
+
+
+    #### users in the same local part in any other domain
+    #
+    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@%','name'=>$listname,'domain'=>$robot})){
+	next if ($subscribers_email{$subscriber->{'email'}});
+	$subscribers_email{ $subscriber->{'email'} } = 1;
+	push @output,$subscriber;
+    }
+
+    return \@output;
+
+
+}
+
+
+######################################################################
+###  find_subscriber_by_pattern_no_object                            #
+## Get details regarding a subscriber.                               #
+# IN:                                                                #
+#   - a single reference to a hash with the following keys:          #
+#     * email pattern : the subscriber email patern looking for      #
+#     * name: the name of the list                                   #
+#     * domain: the virtual host under which the list is installed.  #
+# OUT:                                                               #
+#   - undef if something went wrong.                                 #
+#   - a hash containing the user details otherwise                   #
+######################################################################
+
+sub find_subscriber_by_pattern_no_object {
+    my $options = shift;
+
+    my $name = $options->{'name'};
+    
+    my $email_pattern = &tools::clean_email($options->{'email_pattern'});
+    my $statement;
+    my $date_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
+    my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
+    
+    my @ressembling_users;
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    ## Additional subscriber fields
+    my $additional;
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
+    }
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (user_subscriber LIKE %s AND list_subscriber = %s AND robot_subscriber = %s)", 
+    $date_field, 
+    $update_field, 
+    $additional, 
+    $dbh->quote($email_pattern), 
+    $dbh->quote($name),
+    $dbh->quote($options->{'domain'});
+#    $statement = sprintf "SELECT user_subscriber AS email FROM subscriber_table WHERE (user_subscriber LIKE %s AND list_subscriber = %s AND robot_subscriber = %s)",     
+#    $dbh->quote($email_pattern), 
+#    $dbh->quote($name),
+#    $dbh->quote($options->{'domain'});
+
+
+    push @sth_stack, $sth;
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    while (my $user = $sth->fetchrow_hashref('NAME_lc')){
+	if (defined $user) {
+	    
+	    $user->{'reception'} ||= 'mail';
+	    $user->{'escaped_email'} = &tools::escape_chars($user->{'email'});
+	    $user->{'update_date'} ||= $user->{'date'};
+	    if (defined $user->{custom_attribute}) {
+		my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+		$user->{'custom_attribute'} = \%custom_attr ;
+		my @k = sort keys %custom_attr ;
+	    }
+	push @ressembling_users, $user;
+	}
+    }
+    $sth->finish();
+    
+    $sth = pop @sth_stack;
+    ## Set session cache
+
+    return @ressembling_users;
 }
 
 ######################################################################
@@ -6650,7 +6864,6 @@ sub update_user_db {
     ## Update field
 
     # my $statement2 = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)",$setlist,dbh->quote($who); 
-    # do_log('trace', 'statement2 : %s', $statement2);
 
     $statement = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)"
 	    , join(',', @set_list), $dbh->quote($who); 

@@ -1107,6 +1107,21 @@ function getOffsets(obj) {
     return [offsetLeft, offsetTop];
 }
 
+/* popups config contextual help */
+function config_ctxhelp(td) {
+	if(!td.d) {
+		var tbl = td;
+		var d = td.getElementsByTagName('div')[0];
+		while(tbl.parentNode && tbl.tagName.toLowerCase() != 'table') tbl = tbl.parentNode;
+		if(tbl.tagName.toLowerCase() == 'table') d.style.width = tbl.offsetWidth + 'px';
+		td.d = d;
+		td.onmouseout = function() {
+			this.d.style.display = 'none';
+		}
+	}
+	td.d.style.display = 'block';
+}
+
 </script>
 
 <!-- end javascript.tt2 -->

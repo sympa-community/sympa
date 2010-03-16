@@ -50,6 +50,7 @@ use MIME::Lite::HTML;
 use List;
 use mail;
 use Conf;
+use confdef;
 use Commands;
 use Language;
 use Log;
@@ -240,6 +241,7 @@ my %comm = ('home' => 'do_home',
 	 'get_inactive_lists' => 'do_get_inactive_lists', 
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
+	 'edit_config' => 'do_edit_config',
 	 'submit_list' => 'do_submit_list',
 	 'editsubscriber' => 'do_editsubscriber',
 	 'viewbounce' => 'do_viewbounce',
@@ -496,6 +498,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'ignoresub' => ['param.list','param.user.email'],
 		     'info' => ['param.list'],
 		     'install_pending_list' => ['param.user.email'],
+		     'edit_config' => ['param.user.email'],
 		     'latest_arc' => ['param.list','for|count'],
 		     'latest_d_read' => ['param.list','for','count'],
 		     'latest_lists' => ['for|count'],
@@ -583,6 +586,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'get_pending_lists' => ['listmaster'],
 			   'ignoresub' => ['owner'],
 			   'install_pending_list' => ['listmaster'],
+			   'edit_config' => ['listmaster'],
 			   'ls_templates' => ['listmaster'],
 			   'manage_template' => ['owner'],
 			   'manage_template' => ['owner'],
@@ -846,6 +850,9 @@ my %in_regexp = (
 
                  ## Custom Inputs from create_list_request.tt2
                  'custom_input' => '.*',
+
+		 ## conf parameters
+		 'conf_new_value' => '.*',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1022,6 +1029,7 @@ my $birthday = time ;
 	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature',
                     'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
+
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
@@ -4250,10 +4258,13 @@ sub do_search {
 	$sql_regexp = $param->{'filter'};
 	$sql_regexp =~ s/\%/\\\%/g;
 	$sql_regexp =~ s/\*/\%/g;
-	$sql_regexp = '%'.$sql_regexp.'%';
+	#$sql_regexp = '%'.$sql_regexp.'%';
     }
     
     my $record = 0;
+    ## Maximum size of selection
+    my $max_select = 50;
+    
     ## Members list
     for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
 	
@@ -4290,14 +4301,14 @@ sub do_search {
 	$record++;
     }
         
-    ## Maximum size of selection
-    my $max_select = 500;
-    
     if ($record > $max_select) {
 	undef $param->{'members'};
 	$param->{'too_many_select'} = 1;
     }
-    
+
+    $param->{'similar_subscribers'} = &List::get_ressembling_subscribers_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}});
+    $param->{'similar_subscribers_occurence'} =$#{$param->{'similar_subscribers'}}+1;
+
     $param->{'occurrence'} = $record;
     return 1;
 }
@@ -5210,11 +5221,53 @@ sub do_subrequest {
      }
      $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'selected="selected"';
      $param->{'log_level'} = $session->{'log_level'} ;
-     $param->{'subaction'} = $in{'subaction'},
-
+     $param->{'subaction'} = $in{'subaction'} ;
      return 1;
  }
 
+sub do_edit_config {
+
+    my @editable_params = @confdef::params ;
+
+    &get_server_details;
+
+    unless ($param->{'main_robot'}) {
+	&report::reject_report_web('auth','super lismaster feature only','{}',$param->{'action'});
+	&wwslog('info','check_authz: access denied in edit_config for %s because not super listmaster',  $param->{'user'}{'email'});
+    }
+
+    for my $i ( 0 .. $#editable_params ) {
+	if ($editable_params[$i]->{'name'}) {
+	    $editable_params[$i]->{'current_value'} = &Conf::get_robot_conf($robot, $editable_params[$i]->{'name'});
+            $editable_params[$i]->{'current_value'} = join( ",", @{$editable_params[$i]->{'current_value'}}) if (ref($editable_params[$i]->{'current_value'}) eq 'ARRAY');
+	}	     
+    }
+    
+    if ($in{'conf_new_value'}) {
+	my $editable; my $i;
+	for $i ( 0 .. $#editable_params ) {
+	    # if the parameter is editable and if the is a change 
+	    next unless ($editable_params[$i]->{'name'} eq   $in{'conf_parameter_name'});
+	    if ($editable_params[$i]->{'edit'} ne '1'){
+		do_log ('err','Ignoring change of parameter %s (value %s) because not editable', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+		last;
+	    }
+	    if ($in{'conf_new_value'} eq $editable_params[$i]->{'current_value'} ){
+		do_log ('notice','Ignoring change of parameter %s (value %s) because inchanged', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+		last;
+	    }else{
+		$editable_params[$i]->{'current_value'} = $in{'conf_new_value'};
+		&Conf::set_robot_conf($robot, $in{'conf_parameter_name'}, $in{'conf_new_value'});
+		do_log ('notice','setting parameter %s to value %s', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+		last;
+	    }
+	}
+    }
+    
+    $param->{'editable_params'} = \@editable_params ; 
+    return 1;
+    
+}
 
 ## Change log_level for the current session
 sub do_set_loglevel {
