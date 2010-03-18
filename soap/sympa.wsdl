@@ -32,6 +32,15 @@
 			</restriction>
 		</complexContent>
 	</complexType>
+
+	<complexType name="bounce">
+		<all>
+			<element name="firstBounceDate"  minOccurs="0"  type="int"/>		
+			<element name="lastBounceDate"  minOccurs="0"  type="int"/>		
+			<element name="bounceCount"  minOccurs="1"  type="int"/>
+			<element name="bounceScore" minOccurs="1"  type="int"/>
+		</all>
+        </complexType>	
 	
 	<complexType name="listType">
            <all>
@@ -41,6 +50,10 @@
 		<element name="isOwner" minOccurs="0" type="boolean"/>
 		<element name="isEditor" minOccurs="0" type="boolean"/>
 		<element name="subject" minOccurs="0" type="string"/>
+                <element name="firstBounceDate"  minOccurs="0"  type="int"/>		
+		<element name="lastBounceDate"  minOccurs="0"  type="int"/>		
+		<element name="bounceCount"  minOccurs="0"  type="int"/>
+		<element name="bounceCode" minOccurs="0"  type="int"/>
            </all>
 	</complexType>
 </schema>

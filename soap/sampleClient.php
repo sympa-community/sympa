@@ -92,15 +92,27 @@ if ($_GET['viewSource']) {
     $res = $soapclient->authenticateAndRun($userEmail,$md5,'complexWhich');
     
     if (isset($res) && gettype($res) == 'array') {
-      
+
+      echo "<table><tr><th>listAdress</th><th>list home page</th><th>Subject</th><th>Bounce count</th><th>first bounce date</th><th>last bounce date</th><th>bounce type</th></tr>";
       foreach ($res as $list) {
-	echo "<DD>";
+	echo "<tr>";
 	list ($list->listName,$list->listDomain) = explode("@",$list->listAddress);
 	$subscribed[$list->listAddress] = True;
 	
-      echo "<P>".$list->listAddress." [<A HREF=\"".$_SERVER['PHP_SELF']."?signoff=1&list=".$list->listName."\">signoff</A>] [<A HREF=\"".$list->homepage."\">info</A>]<BR>".$list->subject."</P>\n";
+	echo "<td>".$list->listAddress." [<A HREF=\"".$_SERVER['PHP_SELF']."?signoff=1&list=".$list->listName."\">signoff</A>]</td><td>[<A HREF=\"".$list->homepage."\">info</A>]</td><td>".$list->subject."</td>";
+	echo "<td>".$list->bounceCount."</td><td>".$list->firstBounceDate."</td><td>".$list->lastBounceDate."</td><td>".$list->bounceCode."</td></tr>";
       }
-      echo "</DL>\n";
+      echo "</table>";
+
+      #foreach ($res as $list) {
+#	echo "<DD>";
+#	list ($list->listName,$list->listDomain) = explode("@",$list->listAddress);
+	$subscribed[$list->listAddress] = True;
+#	
+#	echo "<P>".$list->listAddress." [<A HREF=\"".$_SERVER['PHP_SELF']."?signoff=1&list=".$list->listName."\">signoff</A>] [<A HREF=\"".$list->homepage."\">info</A>]<BR>".$list->subject."<br>";
+#	echo "$list->   </P>\n";
+#      }
+#      echo "</DL>\n";
     }else {
       echo "<DL><DD>No subscription</DL><BR>\n";
     }

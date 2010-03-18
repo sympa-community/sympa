@@ -1340,6 +1340,20 @@ sub which {
 	if ($list->is_user($sender)) {
 	    $result_item->{'isSubscriber'} = 1;
 	}
+	## determine bounce informations of this user for this list
+ 
+	my $subscriber ;
+	if($subscriber = $list->get_subscriber($sender)) { 
+	    $result_item->{'bounceCount'} = 0;
+	    if ($subscriber->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
+		$result_item->{'firstBounceDate'} =  $1;
+		$result_item->{'lastBounceDate'} = $2;
+		$result_item->{'bounceCount'} = $3;
+		if ($4 =~ /^(\d+\.(\d+\.\d+))$/) {
+		    $result_item->{'bounceCode'} = $1;
+		}	
+	    }
+	}
 	
 	my $listInfo;
 	if ($mode eq 'complex') {
