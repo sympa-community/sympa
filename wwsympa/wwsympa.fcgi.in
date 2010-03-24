@@ -2945,6 +2945,17 @@ sub do_ticket {
      }
 
      my $data;
+
+     unless ($ENV{'REQUEST_METHOD'} eq 'POST') {
+	 &do_log('notice', "Authentication failed, because do not use HTTP method POST but %s",$ENV{'REQUEST_METHOD'} );
+	 &web_db_log({'parameters' => $in{'email'},
+		      'target_email' => $in{'email'},
+		      'status' => 'error',
+		      'error_type' => 'not_using_post'});
+	 return  'loginrequest';
+     }
+
+
      unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
 	 &do_log('notice', "Authentication failed\n");
 	 &web_db_log({'parameters' => $in{'email'},
