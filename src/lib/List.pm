@@ -1926,8 +1926,8 @@ sub load {
 
 	# default list host is robot domain
 	$self->{'admin'}{'host'} ||= $self->{'domain'};
-
 	$self->{'name'}  = $name ;
+	$self->{'address'} = $name.'@'.$self->{'domain'};
     }
 
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
