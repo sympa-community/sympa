@@ -1559,7 +1559,6 @@ sub new {
 	$options->{'first_access'} = 1;
 	$status = $list->load($name, $robot, $options);
     }   
-    
     unless (defined $status) {
 	return undef;
     }
@@ -1927,7 +1926,6 @@ sub load {
 	# default list host is robot domain
 	$self->{'admin'}{'host'} ||= $self->{'domain'};
 	$self->{'name'}  = $name ;
-	$self->{'address'} = $name.'@'.$self->{'domain'};
     }
 
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
@@ -2035,6 +2033,9 @@ sub load {
 
     $self->{'as_x509_cert'} = 1  if ((-r "$self->{'dir'}/cert.pem") || (-r "$self->{'dir'}/cert.pem.enc"));
     
+
+    $self->{'admin'}{'address'} = $name.'@'.$self->{'domain'};
+
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 

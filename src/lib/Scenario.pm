@@ -611,10 +611,12 @@ sub verify {
 	    
 	    ## List param
 	}elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
-	    if ($1 =~ /^name|total$/) {
-		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$1}/;
-	    }elsif ($list->{'admin'}{$1} and (!ref($list->{'admin'}{$1})) ) {
-		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$1}/;
+	    my $param = $1;
+
+	    if ($param =~ /^name|total$/) {
+		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$param}/;
+	    }elsif ($list->{'admin'}{$param} and (!ref($list->{'admin'}{$param})) ) {
+		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
 	    }else{
 		do_log('err','Unknown list parameter %s in rule %s', $value, $condition);
 		return undef;
