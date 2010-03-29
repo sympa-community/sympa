@@ -883,6 +883,14 @@ our @params = (
 	vhost   => '1',
     },
     {
+        name  => 'spam_status',
+        default => 'x-spam-status',
+        query => 'Messages are supposed to be filtered by an antispam that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status : ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
+	vhost   => '1',
+        file  => 'sympa.conf',
+        edit  => '1',
+    },
+    {
         name  => 'antispam_tag_header_name',
         default => 'X-Spam-Status',
         query => 'If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag spams, name of this header (example X-Spam-Status)',

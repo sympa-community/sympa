@@ -24,15 +24,13 @@ if ($_GET['viewSource']) {
 }else {
 
   echo "<html> <body BGCOLOR=\"#000099\" TEXT=\"#cccccc\" LINK=\"#ff9933\" ALINK=\"#ff9933\" VLINK=\"#ff9933\"> \n";
-  if ($_COOKIE['sympaEmail'] && $_COOKIE['sympaMd5']) {
+  if ( $_COOKIE['sympaMd5']) {
     
     // LOGOUT
     if ($_GET['logout'] == 1) {
-      setcookie ("sympaEmail", "", time() - 3600);
       setcookie ("sympaMd5", "", time() - 3600);
       echo "<P ALIGN=\"center\"><FONT COLOR=\"#ff0000\">Logged out</FONT></P>\n";
     }else {  
-      $userEmail = $_COOKIE['sympaEmail'];
       $md5 = $_COOKIE['sympaMd5'];
     }
     
@@ -43,7 +41,6 @@ if ($_GET['viewSource']) {
     if (gettype($md5) == "string") {
       $userEmail = $_POST['email'];
       
-      setcookie("sympaEmail",$userEmail);
       setcookie("sympaMd5",$md5);
       
     }else {

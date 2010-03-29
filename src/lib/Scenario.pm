@@ -455,6 +455,9 @@ sub request_action {
 	    my $action = $rule->{'action'};
 
             ## reject : get parameters
+	    if ($action =~ /^(ham|spam|unsure)/) {
+		$action = $1 ;		
+	    }
 	    if ($action =~/^reject(\((.+)\))?(\s?,\s?(quiet))?/) {
 
 		if ($4 eq 'quiet') { 
@@ -498,7 +501,7 @@ sub request_action {
 		}
 
 		## Check syntax of returned action
-		unless ($action =~ /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster)/) {
+		unless ($action =~ /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/) {
 		    &do_log('err', "Matched unknown action '%s' in scenario", $rule->{'action'});
 		    return undef;
 		}

@@ -1201,6 +1201,7 @@ sub DoFile {
     my $status;
     
     my $message = new Message($file);
+
     unless (defined $message) {
 	&do_log('err', 'Unable to create Message object %s', $file);
 	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'unable_create_message','user_email' => '','client' => $ip,'daemon' => $daemon_name});
@@ -1476,7 +1477,8 @@ sub DoFile {
             }
             &do_log('info', 'Successfully create list %s with %s subscribers', $listname, $list->get_total());
         }
-    }
+    } 
+
     if ($main::daemon_usage == DAEMON_CREATION) {
         #do not process messages in list creation only mode, move them to main spool
         unless ($list->move_message($message->{'filename'}, $Conf{'queue'})) {
@@ -1489,7 +1491,7 @@ sub DoFile {
         $status = 1;
 
     }elsif ($rcpt =~ /^listmaster(\@(\S+))?$/) {
-	$status = &DoForward('sympa', 'listmaster', $robot, $msg);
+	$status = &DoForward('sympa', 'listmaster', $robot, $message);
 
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
@@ -1505,7 +1507,7 @@ sub DoFile {
 	    
 	    $status = &DoCommand("$listname-$command", $robot, $message);
 	}else {
-	    $status = &DoForward($listname, $type, $robot, $msg);
+	    $status = &DoForward($listname, $type, $robot, $message);
 	}         
     }else {	
 	$status =  &DoMessage($rcpt, $message, $robot);
@@ -1623,21 +1625,23 @@ sub DoSendMessage {
 # IN : -$name : list name (+) if ($function <> 'listmaster')
 #      -$function (+): 'listmaster'|'request'|'editor'
 #      -$robot (+): robot
-#      -$msg (+): ref(MIME::Entity)
+#      -$msg (+): ref(message object).
 #
 # OUT : 1 
 #     | undef
 #
 ############################################################
 sub DoForward {
-    my($name, $function, $robot, $msg) = @_;
+    my($name, $function, $robot, $message) = @_;
     &do_log('debug', 'DoForward(%s, %s)', $name, $function);
 
+    my $msg = $message->{'msg'};
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
 
-    if ($msg->{'spam_status'} eq 'spam'){
+
+    if ($message->{'spam_status'} eq 'spam'){
 	&do_log('notice', "Message for %s-%s ignored, because tagued as spam (Message-id: %s)",$name, $function,$messageid);
 	return undef;
     }
