@@ -4525,7 +4525,11 @@ sub do_pref {
 	 }
      }
 
-     $update->{'gecos'} = $in{'gecos'} if $in{'gecos'};
+     if ($in{'gecos'}) {
+	 $update->{'gecos'} = $in{'gecos'};
+     }else{
+	 $update->{'gecos'} = undef;
+     }
      $update->{'custom_attribute'} = $xml_custom_attribute if $xml_custom_attribute;
 
      unless ( $list->update_user($email, $update) ) {
@@ -8559,7 +8563,7 @@ Sends back the list creation edition form.
 	     if ($param->{'bounce_total'} % $size);
      }
 
-     if ($param->{'page'} > $param->{'total_page'}) {
+     if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
 	 &wwslog('info','do_reviewbouncing: no page %d', $param->{'page'});
 	 return 'admin';

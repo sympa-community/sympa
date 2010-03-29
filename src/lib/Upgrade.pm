@@ -1319,7 +1319,7 @@ sub probe_db {
 		    }
 		}	 
 	    }   
-	    elsif ($Conf::Conf{'db_type'} eq 'sqlite') {
+	    elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
 		## Create required INDEX and PRIMARY KEY
 		my $should_update;
 		foreach my $field (@{$primary{$t}}) {
@@ -1331,28 +1331,10 @@ sub probe_db {
 		
 		if ($should_update) {
 		    my $fields = join ',',@{$primary{$t}};
-		    
-		    ## drop previous primary key
-		    unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
-			&do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
-		    }
-		    push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
-		    &do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
-		    
-		    ## Add primary key
-		    &do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
-		    unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
-			&do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
-			return undef;
-		    }
-		    push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
-		    &do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
-		    
-		    
 		    ## drop previous index
 		    my $success;
 		    foreach my $field (@{$primary{$t}}) {
-			unless ($dbh->do("ALTER TABLE $t DROP INDEX $field")) {
+			unless ($dbh->do("DROP INDEX $field")) {
 			    next;
 			}
 			$success = 1; last;
@@ -1366,7 +1348,7 @@ sub probe_db {
 		    }
 		    
 		    ## Add INDEX
-		    unless ($dbh->do("ALTER TABLE $t ADD INDEX $t\_index ($fields)")) {
+		    unless ($dbh->do("CREATE INDEX IF NOT EXIST $t\_index ON $t ($fields)")) {
 			&do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
 			return undef;
 		    }

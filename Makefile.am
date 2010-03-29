@@ -74,6 +74,10 @@ nextstep:
 	@echo "** http://www.sympa.org/documentation/manual/sympa-$(VERSION).pdf"
 	@echo ""
 	@echo "#########################################################"
+	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
+	@echo "#    * Check the required perl modules are installed:"
+	@echo "#        $(sbindir)/sympa_wizard.pl --check"
+	@echo "#"
 	@echo "# FIRST INSTALLATION:"
 	@echo "#    * Check the INSTALL file."
 	@echo "#    * Run the wizard to define some required parameters that can't be guessed."
@@ -82,10 +86,6 @@ nextstep:
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
 	@echo "#        $(sbindir)/sympa.pl --upgrade"
-	@echo "#"
-	@echo "# IN BOTH CASES:"
-	@echo "#    * Check the required perl modules are installed:"
-	@echo "#        $(sbindir)/sympa_wizard.pl --check"
 	@echo "#######################################################"
 
 importantchanges:

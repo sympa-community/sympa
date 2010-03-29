@@ -424,6 +424,7 @@ sub get_first_db_log {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
+    my $log = $sth->fetchrow_hashref('NAME_lc');
     $rows_nb = $sth->rows;
 
     ## If no rows returned, return an empty hash
@@ -432,7 +433,6 @@ sub get_first_db_log {
 	return {};
     }
 
-    my $log = $sth->fetchrow_hashref('NAME_lc');
     ## We can't use the "AS date" directive in the SELECT statement because "date" is a reserved keywork with Oracle
     $log->{date} = $log->{date_logs} if defined($log->{date_logs});
     return $log;

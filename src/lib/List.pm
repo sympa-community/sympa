@@ -2610,12 +2610,11 @@ sub distribute_msg {
 	## The custom subject is not kept.
 	my $before_tag = '';
 	my $after_tag = $subject_field;
-	$after_tag =~ s/.*\[$tag_regexp\]//;
+	$after_tag =~ s/.*\[$tag_regexp\]\s*//;
+        $after_tag =~ s/\s*$//;
 
-	if($subject_field =~ /(.*)\s*\[$tag_regexp\](.*)/) {
+        if($subject_field =~ /(.*)\s*\[$tag_regexp\].*/) {
 	    $before_tag = $1;
-	    $after_tag = $2;
-	    $after_tag =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
 	}
 	
  	## Encode subject using initial charset
@@ -8045,20 +8044,27 @@ sub _include_users_file {
     do_log('debug2','including file %s' , $filename);
 
     my $id = Datasource::_get_datasource_id($filename);
+    my $lines = 0;
+    my $emails_found = 0;
+    my $email_regexp = &tools::get_regexp('email');
     
     while (<INCLUDE>) {
+	if($lines > 49 && $emails_found == 0){
+	    &do_log('err','Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',$filename, $lines, $emails_found);
+	    return undef;
+	}
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
-	my $email_regexp = &tools::get_regexp('email');
 	unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-	    &do_log('notice', 'Not an email address: %s', $_);
+	    &do_log('err', 'Not an email address: %s', $_);
 	}
 
 	my $email = &tools::clean_email($1);
-	my $gecos = $5;
-
+        $lines++;
 	next unless $email;
+	my $gecos = $5;
+	$emails_found++;
 
 	my %u;
 	## Check if user has already been included
@@ -8119,19 +8125,27 @@ sub _include_users_remote_file {
     # check the outcome
     if ($res->is_success) {
 	my @remote_file = split(/\n/,$res->content);
+	my $lines = 0;
+	my $emails_found = 0;
+	my $email_regexp = &tools::get_regexp('email');
 
 	# forgot headers (all line before one that contain a email
 	foreach my $line (@remote_file) {
+	    if($lines > 49 && $emails_found == 0){
+		&do_log('err','Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',$url, $lines, $emails_found);
+		return undef;
+	    }
 	    next if ($line =~ /^\s*$/);
 	    next if ($line =~ /^\s*\#/);
 
-	    my $email_regexp = &tools::get_regexp('email');
 	    unless ( $line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
 		&do_log('err', 'Not an email address: %s', $_);
 	    }     
 	    my $email = &tools::clean_email($1);
+	    $lines++;
 	    next unless $email;
 	    my $gecos = $5;		
+	    $emails_found++;
 
 	    my %u;
 	    ## Check if user has already been included

@@ -102,7 +102,7 @@ sub next {
     my $statement;
     # Select the most prioritary packet to lock.
     $statement = sprintf "SELECT %s messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid FROM bulkmailer_table WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s %s", $limit_sybase, time(), $limit_oracle, $order;
-
+    
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
@@ -117,15 +117,26 @@ sub next {
 	return undef;
     }
     $sth->finish();
-
+    
     # Lock the packet previously selected.
-    $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s'",$dbh->quote($lock), $packet->{'messagekey'}, $packet->{'packetid'};
+    $statement = sprintf "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", $dbh->quote($lock), $packet->{'messagekey'}, $packet->{'packetid'};
 
-    unless ($dbh->do($statement)) {
-	do_log('err','Unable to lock bulk packet  SQL statement "%s"; error : %s', $statement, $dbh->errstr);
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
     
+    my $rv = $sth->execute;
+    if ($rv < 0) {
+	do_log('err','Unable to lock bulk packet: "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    $sth->finish;
+    unless ($rv) {
+	do_log('info','Bulk packet is already locked');
+	return undef;
+    }
+
     # select the packet that has been locked previously
     $statement = sprintf "SELECT messagekey_bulkmailer AS messagekey, messageid_bulkmailer AS messageid, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, merge_bulkmailer as merge, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",$dbh->quote($lock), $order;
 
@@ -562,7 +573,7 @@ sub remove_bulkspool_message {
 	return undef unless &List::db_connect();
     }
 
-    my $statement = sprintf "DELETE FROM `%s` WHERE `%s` = '%s'",$table,$key,$messagekey;
+    my $statement = sprintf "DELETE FROM %s WHERE %s = '%s'",$table,$key,$messagekey;
 
     unless ($sth = $dbh->prepare($statement)) {
 	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);

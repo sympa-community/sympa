@@ -196,8 +196,9 @@ sub anabounce {
 		}
 
 		## Le champ From:
-		$champ{from} =~ /([^\s<]+@[^\s>]+)/;
-		$$from = $1;
+		if($champ{from} =~ /([^\s<]+@[^\s>]+)/){
+		    $$from = $1;
+		}
 		
 	    }
 	    local $/ = '';
