@@ -126,6 +126,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   subindex.tt2 \
 		   suboptions.tt2 \
 		   subrequest.tt2 \
+		   subscriber_table.tt2 \
 		   suspend_request.tt2 \
 		   ticket.tt2 \
 		   title.tt2 \
