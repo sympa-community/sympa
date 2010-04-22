@@ -14573,9 +14573,9 @@ sub d_test_existing_and_rights {
 	 $ct = 'application/pkix-cert';
      }
      $param->{'bypass'} = 'extreme';
-     printf "Content-type: $ct\n\n";
+     print "Content-type: $ct\n\n";
      foreach my $l (@cert) {
-	 printf "$l";
+	 print "$l";
      }
      return 1;
  }
