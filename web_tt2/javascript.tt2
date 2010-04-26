@@ -330,6 +330,30 @@ cacheId('contenu','Stretcher');
 // Without JavaScript, content will be display.
 
 
+// Pour afficher/cacher avec timeout des commandes d'admin dans la liste des listes
+function affiche(id) {
+  document.getElementById(id).style.display = '';
+  if(document.getElementById(id).to) window.clearTimeout(document.getElementById(id).to);
+}
+function cache(e,id) {
+  var relTarg = e.relatedTarget || e.toElement;
+  if(!isChildOf(relTarg,document.getElementById('admin_[% listname %]'))) {
+    document.getElementById(id).to = window.setTimeout(function() {
+      document.getElementById(id).style.display = 'none';
+    }, 1000);
+  }
+}
+function isChildOf(child,par) {
+  while(child!=document) {
+    if(child==par) { return true; }
+    child = child.parentNode;
+  }
+  return false;
+}
+// Fin afficher/cacher avec timeout des commandes d'admin dans la liste des listes
+
+
+
 [% IF action=='skinsedit' %]
 
 // A few configuration settings

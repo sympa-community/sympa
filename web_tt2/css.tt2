@@ -2037,6 +2037,7 @@ clear:none;
                                            text-decoration:none;
                                            }
 
+/*
 .columns {
            -moz-column-width:40%;
            -moz-column-count:2;
@@ -2058,6 +2059,15 @@ clear:none;
            column-gap:1em;
            column-rule: 1px solid black;
            }
+
+.columns div {
+	   -moz-column-break-inside: avoid!important;
+
+	   -webkit-column-break-inside: avoid!important;
+
+	   column-break-inside: avoid!important;
+           }
+*/
 
 .menu_search { 
                width:100%;
