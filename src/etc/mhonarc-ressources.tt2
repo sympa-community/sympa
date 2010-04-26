@@ -456,22 +456,22 @@ $POWERED_BY$
   <input type="hidden" name="list" value="($tag$% list %$tag$)" />
   ($tag$% IF list_conf.reply_to_header.apply == 'forced' %$tag$)
       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-          <input type="hidden" name="to" value="$FROMADDRNAME$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'other_email' %$tag$)
 	  ($tag$% SET oemail = list_conf.reply_to_header.other_email %$tag$)
           <input type="hidden" name="to" value="($tag$% oemail.replace('@',' ') %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'list' %$tag$)
           <input type="hidden" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
       ($tag$% ELSIF list_conf.reply_to_header.value == 'sender' %$tag$)
-          <input type="hidden" name="to" value="$FROMADDRNAME$ $FROMADDRDOMAIN$" />
+          <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
       ($tag$% END %$tag$)
   ($tag$% ELSE %$tag$)
       ($tag$%|loc%$tag$)Reply to sender($tag$%END%$tag$)
-      <input type="radio" name="to" value="$FROMADDRNAME$ $FROMADDRDOMAIN$" checked />
+      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" checked />
       ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
       <input type="radio" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
       ($tag$%|loc%$tag$)to both($tag$%END%$tag$)
-      <input type="radio" name="to" value="$FROMADDRNAME$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
   ($tag$% END %$tag$)
   <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
   <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
@@ -479,7 +479,7 @@ $POWERED_BY$
     <input type="hidden" name="month" value="$mois$" />
     <input type="hidden" name="msgid" value="$MSGID$" />
     <input type="hidden" name="action" value="" />
-   ($tag$% IF user.email == "$FROMADDRNAME$@$FROMADDRDOMAIN$"  || is_owner %$tag$)
+   ($tag$% IF user.email == '$FROMADDRNAME:J$@$FROMADDRDOMAIN$'  || is_owner %$tag$)
     <input class="MainMenuLinks" type="submit" name="action_remove_arc" value="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
     ($tag$% END %$tag$)
     ($tag$% IF is_owner %$tag$)
