@@ -371,8 +371,9 @@ update-po: Makefile
 	  fi; \
 	else \
 	  echo "msgmerge for $$lang.po failed!" 1>&2; \
-	  rm -f $$tmpdir/$$lang.new.po; \
-	fi
+	fi;\
+        rm -f $$tmpdir/$$lang.new.po;
+
 
 ## Prepare a tar.gz with a structure adapted to Pootle
 ## ie made of subdirectories (ll/sympa.po...templates/sympa.pot

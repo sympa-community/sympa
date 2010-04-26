@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2009-06-19 09:14+0200\n"
+"PO-Revision-Date: 2010-03-31 11:53+0200\n"
 "Last-Translator: Olivier Salaün <os@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -1060,7 +1060,6 @@ msgstr ""
 "si nécessaire."
 
 #: ../web_tt2/help_user.tt2:62
-#, fuzzy
 msgid ""
 "<strong>If the unique authentication process does not apply to you, you can "
 "use your list password.</strong> In this case, log on through the classic "
@@ -1075,7 +1074,6 @@ msgstr ""
 "champ 'Mot de passe'.<br />"
 
 #: ../web_tt2/help_user.tt2:63
-#, fuzzy
 msgid ""
 "If you do not remember your list password, click on 'Lost password?'. After "
 "you've provided your email address, a mail with a validation URL will be "
@@ -1086,7 +1084,6 @@ msgstr ""
 "un mail contenant une URL de validation vous sera envoyé à cette adresse."
 
 #: ../web_tt2/help_user.tt2:65
-#, fuzzy
 msgid ""
 "<strong>If the unique authentication process does not apply to you and you "
 "do no have a list password yet</strong>, click on '<strong>First login?</"
@@ -1097,7 +1094,8 @@ msgstr ""
 "unique et que vous ne possédez pas encore de mot de passe de listes</"
 "strong>, cliquez sur '<strong>Première connexion</strong>' puis indiquez "
 "votre adresse e-mail. Un lien de confirmation vous sera envoyé à cette "
-"adresse. Par la suite vous pourrez définir votre mot de passe."
+"adresse. Cliquer dessus vous redirigera vers un pge où vous pourrez définir "
+"votre mot de passe."
 
 #: ../web_tt2/help_user.tt2:68
 msgid ""
@@ -1425,7 +1423,9 @@ msgstr ""
 #: ../web_tt2/help_user.tt2:115
 msgid ""
 "<strong>suspended</strong>: this mode allows you to suspend your "
-"subscription to one or more lists for a specified period or not."
+"subscription to one or more lists for a specified period or not. Unlike "
+"unsubscription, you can keep track of your subscription and reactivate it at "
+"any time by visiting the \"Manage your subscription\" section."
 msgstr ""
 
 #: ../web_tt2/help_user.tt2:117
@@ -3801,7 +3801,6 @@ msgstr ""
 "format MIME)."
 
 #: ../web_tt2/help_editfile.tt2:9
-#, fuzzy
 msgid ""
 "Unsubscribe message: This message is sent when users leave the list\n"
 "using the UNSUBSCRIBE command."
@@ -3810,7 +3809,6 @@ msgstr ""
 "liste."
 
 #: ../web_tt2/help_editfile.tt2:13
-#, fuzzy
 msgid ""
 "Deletion message: This message is sent to users when you\n"
 "remove them from the list using the DEL command (unless you hit the\n"
@@ -3818,10 +3816,10 @@ msgid ""
 msgstr ""
 "Message de suppression : Envoyé aux personnes supprimées de la liste des "
 "abonnés\n"
-"par le propriétaire de la liste ou via le module de gestion des erreurs."
+"par le propriétaire de la liste (sauf s'il active l'option « quiet ») ou via "
+"le module de gestion des erreurs."
 
 #: ../web_tt2/help_editfile.tt2:18
-#, fuzzy
 msgid ""
 "Remind message: This message is sent to each subscriber\n"
 "when using the command  REMIND. It's very useful to help people who are\n"
@@ -3832,12 +3830,11 @@ msgstr ""
 "rappel des abonnements.\n"
 "Ce message peut être envoyé depuis l'interface d'administration de liste "
 "dans la page\n"
-"<i>abonnés</i>. Cette procédure est très utile pour aider chaque personne à "
-"se désabonner\n"
+"<i>abonnés</i> ou via la commande REMIND. Cette procédure est très utile "
+"pour aider chaque personne à se désabonner\n"
 "au cas où celles-ci ne connaissent plus leur adresse d'abonnement."
 
 #: ../web_tt2/help_editfile.tt2:21
-#, fuzzy
 msgid ""
 "Subscribing invitation message: sent to a person if someone  \n"
 "uses the INVITE command to invite someone to subscribe."
@@ -3846,12 +3843,10 @@ msgstr ""
 "<CODE>INVITE [nom de liste]</CODE>."
 
 #: ../web_tt2/help_editfile.tt2:24
-#, fuzzy
 msgid "Other files/pages description:"
 msgstr "Description des autres fichiers/pages :"
 
 #: ../web_tt2/help_editfile.tt2:28
-#, fuzzy
 msgid ""
 "List homepage: HTML text to describe the list. It is printed on the\n"
 "right-hand side of the main list page. (default for this is the list "
@@ -3862,7 +3857,6 @@ msgstr ""
 "droite de la page de la liste. (a pour défaut la description de la liste)"
 
 #: ../web_tt2/help_editfile.tt2:31
-#, fuzzy
 msgid ""
 "List description: This text is sent as an answer to the mail command\n"
 "INFO. It can also be included in the <em>Welcome message</em>."
@@ -3881,7 +3875,6 @@ msgstr ""
 "début de chaque message diffusé dans la liste."
 
 #: ../web_tt2/help_editfile.tt2:37
-#, fuzzy
 msgid ""
 "Message footer: same as <em>Message header,</em> but attached at the\n"
 "end of the message."
@@ -3891,7 +3884,7 @@ msgstr ""
 
 #: ../web_tt2/help_editlist.tt2:5
 msgid ":"
-msgstr ""
+msgstr "&#160;:"
 
 # nlsref 16,73
 #: ../web_tt2/help_editlist.tt2:9
@@ -4151,7 +4144,6 @@ msgstr ""
 "des champs"
 
 #: ../web_tt2/help_editlist.tt2:84
-#, fuzzy
 msgid ""
 "FYI: Defining editors will not make the list moderated; you will have to set "
 "the \"send\" parameter."
@@ -7057,7 +7049,6 @@ msgstr ""
 "sur les fichiers et dossiers qui sont déjà en ligne&#160;:"
 
 #: ../web_tt2/help_shared.tt2:102
-#, fuzzy
 msgid "by changing their access rights (read and write);"
 msgstr "en modifiant les droits d'accès (lecture et écriture)&#160;;"
 

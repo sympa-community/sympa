@@ -603,21 +603,21 @@ my %alias = ('reply-to' => 'reply_to',
 					 'occurrence' => '0-n',
 					 'split_char' => ',',
 					 'default' => {'conf' => 'dkim_signature_apply_on'},
-					 'gettext_id' => "Type of list message where a DKIM signature is added",
-					 'comment' => "This parameter control in which case messages must be signed using DKIM, you maysign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
+					 'gettext_id' => "The categories of messages sent to the list that will be signed using DKIM.",
+					 'comment' => "This parameter controls in which case messages must be signed using DKIM, you may sign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
 					 'group' => 'dkim',
 					 },
 	    'dkim_parameters'=> {'format' => {'private_key_path'=> {'format' => '\S+',
 		                         			  'occurence' => '0-1',
 			                                          'default' => {'conf' => 'dkim_private_key_path'},
-			                                          'gettext_id' => "file path for list DKIM private key",
-								  'comment' => "the file must contain a RSA pem encoded private key", 
+			                                          'gettext_id' => "File path for list DKIM private key",
+								  'comment' => "The file must contain a RSA pem encoded private key", 
 								  'order' => 1
 					                         },
 					     'selector' => { 'format' => '\S+',
 		                         			  'occurence' => '0-1',
 			                                          'default' => {'conf' => 'dkim_selector'},
-							          'comment' => "the selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
+							          'comment' => "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
 			                                          'gettext_id' => "Selector for DNS lookup of DKIM public key",
 								  'order' => 2
                                                                   },
@@ -625,7 +625,7 @@ my %alias = ('reply-to' => 'reply_to',
 					     'header_list'=>      { 'format' => '\S+',
 		                         			  'occurence' => '0-1',
 			                                          'default' => {'conf' => 'dkim_header_list'},
-			                                          'gettext_id' => 'list of headers to be included ito the message for signature',
+			                                          'gettext_id' => 'List of headers to be included ito the message for signature',
 								  'comment' => 'You should probably use teh default value which is the value recommended by RFC4871',
 								  'order' => 4
                                                                   },
@@ -4138,7 +4138,6 @@ sub send_notify_to_owner {
     my $host = $self->{'admin'}{'host'};
     my @to = $self->get_owners_email();
     my $robot = $self->{'domain'};
-    $param->{'auto_submitted'} = 'auto-generated';
 
     unless (@to) {
 	do_log('notice', 'No owner defined or all of them use nomail option in list %s ; using listmasters as default', $self->{'name'} );
@@ -4151,6 +4150,7 @@ sub send_notify_to_owner {
 
     if (ref($param) eq 'HASH') {
 
+	$param->{'auto_submitted'} = 'auto-generated';
 	$param->{'to'} =join(',', @to);
 	$param->{'type'} = $operation;
 

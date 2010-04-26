@@ -20,11 +20,11 @@
       [% END %]
 
       [% IF topic.sub.size %]
-            <li class="no_style"><ul class="no_style">
+            <ul class="no_style">
       [% FOREACH subtopic = topic.sub %]
               <li class="smaller"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a></li>
       [% END %]
-      </ul></li>
+      </ul>
       [% END %]
       [% IF topic.next %]
        </ul>

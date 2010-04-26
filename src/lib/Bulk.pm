@@ -371,7 +371,7 @@ sub merge_data {
     # get_subscriber_no_object() return the user's details with the custom attributes
     my $user = &List::get_subscriber_no_object($user_details);
 
-    $user->{'friendly_date'} = &POSIX::strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
+    $user->{'friendly_date'} = gettext_strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
 
     # this method as been removed because some users may forward authentication link
     # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);

@@ -61,19 +61,18 @@
   		<textarea name="body" cols="80" rows="25"></textarea>
 		<br />
 		<br />
-		<b[%|loc%]>Messages personalization: use the TT2 <a href="http://www.tt2.org">template syntax TT2 </a>:[%END%] 
-[% TAGS (! !) %]
-( [%   %] are used to introduce vars and keywords )</b><br />
-		<ul><li> [%user.email %] </li>
-		<li> [%listname %] </li>
-		<li> [%robot %] </li>
-		<li> [%user.custom_attribute.title.value %] </li> 
-		<li> [%user.custom_attribute.name.value %] </li> 
-		<li> [%user.custom_attribute.organization.value %] </li>
-		<li> [% user.friendly_date%] </li>
-		<li> [% user.gecos%] </li>
+		<b>[%|loc%]Messages customization: use the template syntax:[%END%] <a href="http://www.tt2.org">TT2</a></b><br />
+		[%|loc%]Below are some examples of TT2 parameters usable in messages.[%END%]<br/>
+		<ul>
+			<li> <b>[&#37; listname &#37;]</b>[%|loc%]: the listname; always available.[%END%]</li>
+			<li> <b>[&#37; robot &#37;]</b>[%|loc%]: the name of the host the list is intalled on; always available.[%END%]</li>
+			<li> <b>[&#37; user.email &#37;]</b>[%|loc%]: the user email; always available.[%END%]</li>
+			<li> <b>[&#37; user.gecos &#37;]</b>[%|loc%]: the user name associated to her email; always available.[%END%]</li>
+			<li> <b>[&#37; user.friendly_date &#37;]</b>[%|loc%]: the - human readable - user's subscription date; always available.[%END%]</li>
+			<li> <b>[&#37; user.custom_attribute.title.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "title" (see the list configuration, section "Miscellaneous").[%END%]</li>
+			<li> <b>[&#37; user.custom_attribute.name.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "name".[%END%]</li>
+			<li> <b>[&#37; user.custom_attribute.organization.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "organization".[%END%]</li>
 		</ul>
-(! TAGS [% %] !)
 	[%  END %]
 	[% IF subaction == "html_news_letter" %]
    		<label for="url">[%|loc%]URL:[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	
