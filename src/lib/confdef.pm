@@ -785,9 +785,10 @@ our @params = (
     },
     {
         name   => 'db_port',
-        default => '3306',
+        default => undef,
         query  => 'The database port',
         file   => 'sympa.conf',
+	optional => '1',
     },
     {
         name   => 'db_user',
