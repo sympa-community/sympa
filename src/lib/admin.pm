@@ -1083,24 +1083,27 @@ sub check_owner_defined {
      my (@suf, @addresses);
 
      my $smtp_relay = $Conf::Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf::Conf{'list_check_smtp'};
+     my $smtp_helo = $Conf::Conf{'robots'}{$robot}{'list_check_helo'} || $Conf::Conf{'list_check_helo'} || $smtp_relay;
+     $smtp_helo =~ s/:[-\w]+$//;
      my $suffixes = $Conf::Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf::Conf{'list_check_suffixes'};
      return 0 
 	 unless ($smtp_relay && $suffixes);
      my $domain = &Conf::get_robot_conf($robot, 'host');
      &do_log('debug2', 'list_check_smtp(%s)',$list);
-     @suf = split(/,/,$suffixes);
+     @suf = split(/[,\s]+/,$suffixes);
      return 0 if ! @suf;
      for(@suf) {
 	 push @addresses, $list."-$_\@".$domain;
      }
      push @addresses,"$list\@" . $domain;
 
-     unless (require Net::SMTP) {
+     eval { require Net::SMTP; };
+     if ($@) {
 	 do_log ('err',"admin::list_check_smtp : Unable to use Net library, Net::SMTP required, install it (CPAN) first");
 	 return undef;
      }
      if( $smtp = Net::SMTP->new($smtp_relay,
-				Hello => $smtp_relay,
+				Hello => $smtp_helo,
 				Timeout => 30) ) {
 	 $smtp->mail('');
 	 for(@addresses) {

@@ -8046,12 +8046,14 @@ sub do_set_pending_list_request {
      my (@suf, @addresses);
 
      my $smtp_relay = $Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf{'list_check_smtp'};
+     my $smtp_helo = $Conf{'robots'}{$robot}{'list_check_helo'} || $Conf{'list_check_helo'} || $smtp_relay; 
+     $smtp_helo =~ s/:[-\w]+$//;
      my $suffixes = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
      return 0 
 	 unless ($smtp_relay && $suffixes);
      my $domain = &Conf::get_robot_conf($robot, 'host');
      &wwslog('debug2', 'list_check_smtp(%s)',$in{'listname'});
-     @suf = split(/,/,$suffixes);
+     @suf = split(/[,\s]+/,$suffixes);
      return 0 if ! @suf;
      for(@suf) {
 	 push @addresses, $list."-$_\@".$domain;
@@ -8065,7 +8067,7 @@ sub do_set_pending_list_request {
      require Net::SMTP;
 
      if( $smtp = Net::SMTP->new($smtp_relay,
-				Hello => $smtp_relay,
+				Hello => $smtp_helo,
 				Timeout => 30) ) {
 	 $smtp->mail('');
 	 for(@addresses) {

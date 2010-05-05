@@ -356,7 +356,7 @@ sub load {
     ## Set Regexp for accepted list suffixes
     if (defined ($Conf{'list_check_suffixes'})) {
 	$Conf{'list_check_regexp'} = $Conf{'list_check_suffixes'};
-	$Conf{'list_check_regexp'} =~ s/,/\|/g;
+	$Conf{'list_check_regexp'} =~ s/[,\s]+/\|/g;
     }
 	
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";

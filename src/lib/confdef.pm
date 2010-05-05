@@ -1142,6 +1142,10 @@ our @params = (
 	vhost   => '1',
 	db      => 'db_first',
     },
+    {	name	=> 'list_check_helo',
+	default	=> '',
+	vhost	=> '1',
+    },
     {
         name    => 'list_check_smtp',
         default => '',
