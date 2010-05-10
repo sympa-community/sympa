@@ -8185,7 +8185,7 @@ sub _include_users_remote_file {
     ## Reset http credentials
     &WebAgent::set_basic_credentials('','');
 
-    do_log('info',"include %d new subscribers from remote file %s",$total,$url);
+    do_log('info',"include %d users from remote file %s",$total,$url);
     return $total ;
 }
 
@@ -9111,7 +9111,7 @@ sub sync_include {
 	## If include sources were not available, do not update subscribers
 	## Use DB cache instead and warn the listmaster.
 	if($#errors > -1) {
-	    &do_log('err', 'Errors occurred while synchornizing datasources for list: %s', $name);
+	    &do_log('err', 'Errors occurred while synchronizing datasources for list %s', $name);
 	    $errors_occurred = 1;
 	    unless (&List::send_notify_to_listmaster('sync_include_failed', $self->{'domain'}, {'errors' => \@errors, 'listname' => $self->{'name'}})) {
 		&do_log('notice',"Unable to send notify 'sync_include_failed' to listmaster");
@@ -9145,6 +9145,48 @@ sub sync_include {
     $lock->set_timeout(10*60); 
     unless ($lock->lock('write')) {
 	return undef;
+    }
+
+    ## Go though previous list of users
+    my $users_removed = 0;
+    my $user_removed;
+    my @deltab;
+    foreach my $email (keys %old_subscribers) {
+	unless( defined($new_subscribers->{$email}) ) {
+	    ## User is also subscribed, update DB entry
+	    if ($old_subscribers{$email}{'subscribed'}) {
+		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		unless( $self->update_user($email,  {'update_date' => time,
+						     'included' => 0,
+						     'id' => ''}) ) {
+		    &do_log('err', 'List:sync_include(%s): Failed to update %s',  $name, $email);
+		    next;
+		}
+		
+		$users_updated++;
+
+		## Tag user for deletion
+	    }else {
+		&do_log('debug3', 'List:sync_include: removing %s from list %s', $email, $name);
+		@deltab = ($email);
+		unless($user_removed = $self->delete_user('users' => \@deltab)) {
+		    &do_log('err', 'List:sync_include(%s): Failed to delete %s', $name, $user_removed);
+		    return undef;
+		}
+		if ($user_removed) {
+		    $users_removed++;
+		    ## Send notification if the list config authorizes it only.
+		    if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
+			unless ($self->send_file('removed', $email, $self->{'domain'},{})) {
+			    &do_log('err',"Unable to send template 'removed' to $email");
+			}
+		    }
+		}
+	    }
+	}
+    }
+    if ($users_removed > 0) {
+	&do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_removed);
     }
 
     ## Go through new users
@@ -9221,47 +9263,6 @@ sub sync_include {
         &do_log('notice', 'List:sync_include(%s): %d users added', $name, $users_added);
     }
 
-    ## Go though previous list of users
-    my $users_removed = 0;
-    my $user_removed;
-    my @deltab;
-    foreach my $email (keys %old_subscribers) {
-	unless( defined($new_subscribers->{$email}) ) {
-	    ## User is also subscribed, update DB entry
-	    if ($old_subscribers{$email}{'subscribed'}) {
-		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		unless( $self->update_user($email,  {'update_date' => time,
-						     'included' => 0,
-						     'id' => ''}) ) {
-		    &do_log('err', 'List:sync_include(%s): Failed to update %s',  $name, $email);
-		    next;
-		}
-		
-		$users_updated++;
-
-		## Tag user for deletion
-	    }else {
-		&do_log('debug3', 'List:sync_include: removing %s from list %s', $email, $name);
-		@deltab = ($email);
-		unless($user_removed = $self->delete_user('users' => \@deltab)) {
-		    &do_log('err', 'List:sync_include(%s): Failed to delete %s', $name, $user_removed);
-		    return undef;
-		}
-		if ($user_removed) {
-		    $users_removed++;
-		    ## Send notification if the list config authorizes it only.
-		    if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
-			unless ($self->send_file('removed', $email, $self->{'domain'},{})) {
-			    &do_log('err',"Unable to send template 'removed' to $email");
-			}
-		    }
-		}
-	    }
-	}
-    }
-    if ($users_removed > 0) {
-	&do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_removed);
-    }
     &do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
     ## Release lock
