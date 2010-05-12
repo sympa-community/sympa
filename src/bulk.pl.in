@@ -219,7 +219,6 @@ while (!$end) {
 	
 	## Go through the bulk_mailer table and process messages
     if ($bulk = Bulk::next()) {
-	
 	if ($bulk->{'messagekey'} ne $messagekey) {
 	    # current packet is no related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
@@ -229,6 +228,9 @@ while (!$end) {
 	    
 	    unless ( $messageasstring_init ) {
 		&do_log('err',"internal error : current packet (messagekey= %s) contain a ref to a null message",$bulk->{'messagekey'});
+		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
+		    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+		}
 	    }
 	}
 
