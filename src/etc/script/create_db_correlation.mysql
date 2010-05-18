@@ -1,0 +1,242 @@
+-- phpMyAdmin SQL Dump
+-- version 2.11.8.1deb5+lenny1
+-- http://www.phpmyadmin.net
+--
+-- Serveur: localhost
+-- Généré le : Jeu 10 Septembre 2009 à 15:43
+-- Version du serveur: 5.0.51
+-- Version de PHP: 5.2.6-1+lenny3
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Base de données: `sympa`
+--
+CREATE DATABASE sympa;
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin_table`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_table` (
+  `list_admin` varchar(50) NOT NULL,
+  `user_admin` varchar(100) NOT NULL,
+  `robot_admin` varchar(80) NOT NULL,
+  `role_admin` enum('listmaster','owner','editor') NOT NULL,
+  `date_admin` datetime NOT NULL,
+  `update_admin` datetime default NULL,
+  `reception_admin` varchar(20) default NULL,
+  `visibility_admin` varchar(20) default NULL,
+  `comment_admin` varchar(150) default NULL,
+  `subscribed_admin` int(1) default NULL,
+  `included_admin` int(1) default NULL,
+  `include_sources_admin` varchar(50) default NULL,
+  `info_admin` varchar(150) default NULL,
+  `profile_admin` enum('privileged','normal') default NULL,
+  PRIMARY KEY  (`robot_admin`,`list_admin`,`role_admin`,`user_admin`),
+  KEY `user_index` (`user_admin`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `bulkmailer_table`
+--
+
+CREATE TABLE IF NOT EXISTS `bulkmailer_table` (
+  `messagekey_bulkmailer` varchar(80) NOT NULL,
+  `packetid_bulkmailer` varchar(33) NOT NULL,
+  `receipients_bulkmailer` text NOT NULL,
+  `returnpath_bulkmailer` varchar(100) NOT NULL,
+  `robot_bulkmailer` varchar(80) NOT NULL,
+  `listname_bulkmailer` varchar(50) default NULL,
+  `verp_bulkmailer` int(1) NOT NULL,
+  `priority_message_bulkmailer` smallint(10) NOT NULL,
+  `priority_packet_bulkmailer` smallint(10) NOT NULL,
+  `reception_date_bulkmailer` int(11) NOT NULL,
+  `delivery_date_bulkmailer` int(11) NOT NULL,
+  `lock_bulkmailer` varchar(30) default NULL,
+  PRIMARY KEY  (`messagekey_bulkmailer`,`packetid_bulkmailer`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `bulkspool_table`
+--
+
+CREATE TABLE IF NOT EXISTS `bulkspool_table` (
+  `messagekey_bulkspool` varchar(33) NOT NULL,
+  `message_bulkspool` longtext NOT NULL,
+  `lock_bulkspool` int(1) NOT NULL,
+  PRIMARY KEY  (`messagekey_bulkspool`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `conf_table`
+--
+
+CREATE TABLE IF NOT EXISTS `conf_table` (
+  `robot_conf` varchar(80) NOT NULL default '',
+  `label_conf` varchar(80) NOT NULL default '',
+  `value_conf` varchar(300) default NULL,
+  PRIMARY KEY  (`robot_conf`,`label_conf`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `logs_table`
+--
+
+CREATE TABLE IF NOT EXISTS `logs_table` (
+  `id_logs` bigint(20) NOT NULL,
+  `date_logs` int(11) NOT NULL,
+  `robot_logs` varchar(80) default NULL,
+  `list_logs` varchar(50) default NULL,
+  `action_logs` varchar(50) NOT NULL,
+  `parameters_logs` varchar(100) default NULL,
+  `target_email_logs` varchar(100) default NULL,
+  `user_email_logs` varchar(100) default NULL,
+  `msg_id_logs` varchar(255) default NULL,
+  `status_logs` varchar(10) NOT NULL,
+  `error_type_logs` varchar(150) default NULL,
+  `client_logs` varchar(100) default NULL,
+  `daemon_logs` varchar(10) NOT NULL,
+  PRIMARY KEY  (`id_logs`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `mail_table`
+--
+
+CREATE TABLE IF NOT EXISTS `mail_table` (
+  `pk_mail` int(11) NOT NULL auto_increment,
+  `message_id_mail` varchar(1000) NOT NULL,
+  `from_mail` varchar(1000) NOT NULL,
+  `date_mail` varchar(1000) NOT NULL,
+  `subject_mail` text NOT NULL,
+  `list_mail` varchar(1000) NOT NULL,
+  PRIMARY KEY  (`pk_mail`),
+  KEY `messageID` (`message_id_mail`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=203 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `netidmap_table`
+--
+
+CREATE TABLE IF NOT EXISTS `netidmap_table` (
+  `netid_netidmap` varchar(100) NOT NULL,
+  `serviceid_netidmap` varchar(100) NOT NULL,
+  `robot_netidmap` varchar(80) NOT NULL,
+  `email_netidmap` varchar(100) default NULL,
+  PRIMARY KEY  (`netid_netidmap`,`serviceid_netidmap`,`robot_netidmap`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification_table`
+--
+
+CREATE TABLE IF NOT EXISTS `notification_table` (
+  `pk_notification` int(11) NOT NULL auto_increment,
+  `pk_mail_notification` int(11) NOT NULL,
+  `message_id_notification` varchar(1000) default NULL,
+  `recipient_notification` varchar(1000) NOT NULL,
+  `status_notification` varchar(1000) NOT NULL COMMENT 'suivant si dsn ou mdn, correspond au champ Action ou Disposition',
+  `arrival_date_notification` varchar(1000) default NULL,
+  `type_notification` enum('DSN','MDN') NOT NULL,
+  `list_notification` varchar(1000) NOT NULL,
+  PRIMARY KEY  (`pk_notification`),
+  KEY `pk_mail_notification` (`pk_mail_notification`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=970 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `one_time_ticket_table`
+--
+
+CREATE TABLE IF NOT EXISTS `one_time_ticket_table` (
+  `ticket_one_time_ticket` varchar(30) NOT NULL default '',
+  `robot_one_time_ticket` varchar(80) default NULL,
+  `email_one_time_ticket` varchar(100) default NULL,
+  `date_one_time_ticket` int(11) default NULL,
+  `data_one_time_ticket` varchar(200) default NULL,
+  `remote_addr_one_time_ticket` varchar(60) default NULL,
+  `status_one_time_ticket` varchar(60) default NULL,
+  PRIMARY KEY  (`ticket_one_time_ticket`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `session_table`
+--
+
+CREATE TABLE IF NOT EXISTS `session_table` (
+  `id_session` varchar(30) NOT NULL,
+  `start_date_session` int(11) NOT NULL,
+  `date_session` int(11) NOT NULL,
+  `remote_addr_session` varchar(60) default NULL,
+  `robot_session` varchar(80) default NULL,
+  `email_session` varchar(100) default NULL,
+  `hit_session` int(11) default NULL,
+  `data_session` text,
+  PRIMARY KEY  (`id_session`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `subscriber_table`
+--
+
+CREATE TABLE IF NOT EXISTS `subscriber_table` (
+  `list_subscriber` varchar(50) NOT NULL,
+  `user_subscriber` varchar(100) NOT NULL,
+  `custom_attribute_subscriber` text,
+  `robot_subscriber` varchar(80) NOT NULL,
+  `date_subscriber` datetime NOT NULL,
+  `update_subscriber` datetime default NULL,
+  `visibility_subscriber` varchar(20) default NULL,
+  `reception_subscriber` varchar(20) default NULL,
+  `topics_subscriber` varchar(200) default NULL,
+  `bounce_subscriber` varchar(35) default NULL,
+  `bounce_score_subscriber` smallint(6) default NULL,
+  `bounce_address_subscriber` varchar(100) default NULL,
+  `comment_subscriber` varchar(150) default NULL,
+  `subscribed_subscriber` int(1) default NULL,
+  `included_subscriber` int(1) default NULL,
+  `include_sources_subscriber` varchar(50) default NULL,
+  PRIMARY KEY  (`robot_subscriber`,`list_subscriber`,`user_subscriber`),
+  KEY `user_index` (`user_subscriber`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_table`
+--
+
+CREATE TABLE IF NOT EXISTS `user_table` (
+  `email_user` varchar(100) NOT NULL,
+  `gecos_user` varchar(150) default NULL,
+  `password_user` varchar(40) default NULL,
+  `last_login_date_user` int(11) default NULL,
+  `last_login_host_user` varchar(60) default NULL,
+  `cookie_delay_user` int(11) default NULL,
+  `lang_user` varchar(10) default NULL,
+  `attributes_user` text,
+  `data_user` text,
+  PRIMARY KEY  (`email_user`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+

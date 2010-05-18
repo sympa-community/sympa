@@ -763,7 +763,7 @@ sub sending {
 #
 ##################################################################################
 sub smtpto {
-   my($from, $rcpt, $robot, $sign_mode) = @_;
+   my($from, $rcpt, $robot, $msgkey, $sign_mode) = @_;
 
    unless ($from) {
        &do_log('err', 'Missing Return-Path in mail::smtpto()');
@@ -813,14 +813,25 @@ sub smtpto {
    if ($pid == 0) {
        close(OUT);
        open(STDIN, "<&IN");
-       
+       ############################################################################
+       ## correlation
        if (! ref($rcpt)) {
+           if ($msgkey) {
+                exec $sendmail, split(/\s+/,$sendmail_args), '-N success,delay,failure',"-V $msgkey",'-f', $from, $rcpt;
+	   }
 	   exec $sendmail, split(/\s+/,$sendmail_args), '-f', $from, $rcpt;
        }elsif (ref($rcpt) eq 'SCALAR') {
+           if ($msgkey) {
+                exec $sendmail, split(/\s+/,$sendmail_args), '-N success,delay,failure',"-V $msgkey",'-f', $from, $$rcpt;
+           }
 	   exec $sendmail, split(/\s+/,$sendmail_args), '-f', $from, $$rcpt;
        }elsif (ref($rcpt) eq 'ARRAY'){
+           if ($msgkey) {
+                exec $sendmail, split(/\s+/,$sendmail_args), '-N success,delay,failure', "-V $msgkey",'-f', $from, join(',', @{$rcpt});
+           }
 	   exec $sendmail, split(/\s+/,$sendmail_args), '-f', $from, @$rcpt;
        }
+       ############################################################################
        exit 1; ## Should never get there.
        }
    if ($main::options{'mail'}) {

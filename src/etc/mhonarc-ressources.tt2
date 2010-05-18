@@ -485,6 +485,13 @@ $POWERED_BY$
     ($tag$% IF is_owner %$tag$)
     <br /><input class="MainMenuLinks" type="submit" name="action_view_source" value="($tag$%|loc%$tag$)view source($tag$%END%$tag$)" />
     ($tag$% END %$tag$)
+   <!-- CORRELATION -->
+    ($tag$% IF is_subscriber || is_owner %$tag$)
+     <input class="MainMenuLinks" type="submit" name="action_correlation" value="Suivi du Courrier" />
+  ($tag$% ELSE %$tag$)
+     <input class="MainMenuLinks" type="submit" name="action_correlation_percent" value="Suivi du Courrier en Pourcentages" />
+    ($tag$% END %$tag$)
+
 </form>
 </span>
 

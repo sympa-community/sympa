@@ -49,6 +49,10 @@ use tools;
 use tt2;
 use Sympa::Constants;
 
+#---------------------------------------------
+use correlation;
+#---------------------------------------------
+
 # durty global variables
 my $is_signed = {}; 
 my $is_crypted ;
@@ -1928,6 +1932,21 @@ sub DoMessage{
 	return undef ;
     }
 	
+#########################################################################################################################
+## xxxxxxxxxxxxx Ajout Correlation
+
+   # &do_log('notice', "subject : %s date : %s msgid : %s\n from : %s\n robot : %s\n list : %s\n which : %s\n message string : \n\n%s\n\n", $hdr->get('subject'),$hdr->get('date'), $messageid, $sender, $robot, $list->{'name'}, $which, $msg_string);
+
+    if($list->{'admin'}{'correlation'} eq "on"){
+	if($list->{'admin'}{'verp_rate'} != "100%"){
+	    &do_log('err', "The verp_rate parameter in sympa.conf need to have a value to 100% in order to use activate the correlation; current verp_rate value : %s ", $list->{'admin'}{'verp_rate'});
+	}else{
+ 	    &do_log('notice', "Correlation enable verp rate : %s ", $list->{'admin'}{'verp_rate'});
+            &correlation::db_insert_message($message, $robot, $list);
+    	}
+    }
+#########################################################################################################################
+
     ## message topic context	
     if (($action =~ /^do_it/) && ($context->{'topic_needed'})) {
         $action = 'editorkey' if ($list->{'admin'}{'msg_topic_tagging'} eq 'required_moderator');

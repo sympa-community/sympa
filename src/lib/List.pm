@@ -271,7 +271,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      send editor editor_include delivery_time account topics 
 		      host lang web_archive archive digest digest_max_size available_user_options 
 		      default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to * 
-		      verp_rate welcome_return_path remind_return_path merge_feature user_data_source include_file include_remote_file 
+		      verp_rate correlation welcome_return_path remind_return_path merge_feature user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
                       include_ldap_2level_query include_sql_query include_admin ttl distribution_ttl creation update 
 		      status serial custom_attribute);
@@ -1442,6 +1442,13 @@ my %alias = ('reply-to' => 'reply_to',
 			     'gettext_id' => "percentage of list members in VERP mode",
 			     'group' => 'bounces'
 			     },
+####################################################################################################"
+	    'correlation' => {'format' => ['on','off'],
+			     'default' =>  {'conf' => 'correlation'},
+			     'gettext_id' => "Correlation Module; allow to follow outgoing mails",
+			     'group' => 'bounces'
+			     },
+####################################################################################################"
 
 	    );
 

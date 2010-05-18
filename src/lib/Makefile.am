@@ -5,7 +5,7 @@ nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
 		      LDAPSource.pm Scenario.pm PlainDigest.pm report.pm \
 		      tools.pm tt2.pm time_utils.pm Sympa/Constants.pm \
 		      Sympa/Template/Compat.pm Robot.pm WebAgent.pm \
-		      HTML/myFormatText.pm
+		      HTML/myFormatText.pm correlation.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm
