@@ -1396,10 +1396,8 @@ our @params = (
         vhost => '1',
 	file   => 'sympa.conf',
     },
-    {
-        name    => 'correlation',
-        default => 'off',
-    },
+
+
 
 );
 

@@ -52,10 +52,6 @@ use List;
 use tools;
 use Sympa::Constants;
 
-#------------------
-use correlation;
-#------------------
-
 my $daemon_name = &Log::set_daemon($0);
 my $date_of_last_activity = time();
 local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as master daemon.
@@ -265,39 +261,9 @@ while (!$end) {
 	    foreach $rcpt (@rcpts) {
 		my $return_path = $bulk->{'returnpath'};
 		if ($bulk->{'verp'}) {
-##########################################################################################
-## Ajout modification correlation
-		    if($list->{'admin'}{'correlation'} eq "on"){
-
-                        my $msgid = &correlation::extract_msgid($messageasstring);
-                        my $key = &correlation::find_msg_key($msgid, $bulk->{'listname'});
-                        &do_log('debug2', "VERP CORRELATION FINDED Key: %s ", $key);
-                        $return_path = $rcpt;
-                        $return_path =~ s/\@/\=\=a\=\=/;
-                        $return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\=\=$key\@$bulk->{'robot'}";
-                        &do_log('debug2', "MSG VERP return-path: %s ", $return_path);
-                        #Specify the return_path value for the Disposition-Notification-To header in order that
-                        # mdn report returns to the sympa server for correlation treatment
-                        my $msg_result;
-                        $msg_result = &correlation::change_mdn_receiver($messageasstring, $return_path);
-                        #*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
-                        if($msg_result) {
-                               $messageasstring = $msg_result;
-                               *SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'}, $key);
-                        }
-                        else{
-                               *SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'}, $key);
-                        }
-		    }
-		    else {
-                         &do_log('debug2', "BULK MSG VERP NO CORRELATION: %s ", $rcpt );
-                         my $msgid = &correlation::extract_msgid($messageasstring);
-                         $return_path = $rcpt;
-                         $return_path =~ s/\@/\=\=a\=\=/;
-                         $return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; # VERP broken if no listname is provided
-                         #*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
-                         *SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'}, $msgid);
-		    }
+		    my $return_path = $rcpt;
+		    $return_path =~ s/\@/\=\=a\=\=/; 
+		    $return_path = "$Conf::Conf{'bounce_email_prefix'}+$return_path\=\=$bulk->{'listname'}\@$bulk->{'robot'}"; 
 		}
 		if ($bulk->{'merge'}) { 
 		    
@@ -324,21 +290,15 @@ while (!$end) {
 									   'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
 									   'dkim_header_list' =>$message_from_spool->{'dkim_header_list'} } );
 		}		
-###		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
+		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'});
 		# Message with customized data
 		print SMTP $messageasstring;
 		close SMTP;
-
 	    }
-	}else{ # xxxxxxxxxxx et si merge ??? message dont needs personalization, they can be sent by packet
+	}else{ # message dont needs personalization, they can be sent by packet
 	    if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
 		$messageasstring_init = &tools::remove_invalid_dkim_signature($messageasstring_init );
 	    }
-	    my $msgid = &correlation::extract_msgid($messageasstring);
-	    my $key = &correlation::find_msg_key($msgid, $bulk->{'listname'});
-##	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});
-            *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'}, $key);
-
 	    # Initial message
 	    if ($message_from_spool->{'dkim_d'}){
 		$messageasstring_init = &tools::dkim_sign($messageasstring_init,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
@@ -351,7 +311,7 @@ while (!$end) {
 	    print SMTP $messageasstring_init;
 	    close SMTP;
 	}
-##########################################################################################
+	
 	## Remove packet once it has been processed
 	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
 	    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});

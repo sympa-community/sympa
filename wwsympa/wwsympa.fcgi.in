@@ -68,10 +68,6 @@ use cookielib;
 use Robot;
 use tt2;
 #use DateTime;
-#########################
-use correlation;
-#########################
-
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
@@ -218,11 +214,6 @@ my %comm = ('home' => 'do_home',
 	 'remove_arc' => 'do_remove_arc',
 	 'send_me' => 'do_send_me',
 	 'view_source' => 'do_view_source',
-############################################################
-# Correlation
-         'correlation' => 'do_correlation',
-         'correlation_percent' => 'do_correlation_percent',
-#############################################################
 	 'arcsearch_form' => 'do_arcsearch_form',
 	 'arcsearch_id' => 'do_arcsearch_id',
 	 'arcsearch' => 'do_arcsearch',
@@ -541,10 +532,6 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'send_newsletter' => ['param.list','param.user.email', 'url'],
 		     'send_me' => ['param.list'],
 		     'view_source' => ['param.list'],
-##############################################################################################
-                     'correlation' => ['param.list'],
-                     'correlation_percent' => ['param.list'],
-##############################################################################################
 		     'requestpasswd' => ['email'],
 		     'serveradmin' => ['param.user.email'],
 		     'set' => ['param.list','reception|visibility'],
@@ -7435,10 +7422,6 @@ sub do_remove_arc {
     foreach my $msgid (@msgids) {	
 	chomp $msgid ;	
 	printf REBUILD ('%s||%s',$msgid,$param->{'user'}{'email'}) ; printf  REBUILD "\n";
-	#########################################################################
-	# Correlation
-	&correlation::remove_message($msgid, $in{'list'});
-	########################################################################
     }
     close REBUILD;	
     &wwslog('info', 'do_remove_arc %d messages marked to be removed by archived', $#msgids+1);
@@ -7593,133 +7576,6 @@ sub do_remove_arc {
 
      return 1;
  }
-
-
-####################################################
-#  do_correlation_percent                           
-####################################################
-#  Display notifications status when a recipient is not usually delivered
-# 
-# IN : -
-#
-# OUT : 'arc' | 1 | undef
-#
-#################################################### 
- sub do_correlation_percent   {
-     &wwslog('info', 'do_view_source(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
-     
-     unless ( ($list->{admin}{correlation} eq "on") && ($list->{admin}{verp_rate} eq "100%") ){
-         &wwslog('info','do_correlation_percent: invalid parameters; verp_rate must be = \"100%\", correlation must be \"on\"');
-	 printf "Content-Type: text/html\n\n";
-	 printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
-	 printf '</HEAD><BODY>';
-    	 printf "<br /><p>";
-    	 printf "Error in the configuration parameters : <br />verp_rate = $list->{admin}{verp_rate} (must be = 100%)";
-    	 printf "<br />correlation = $list->{admin}{correlation} (must be on)";
-    	 printf "<br /></p>";
-    	 printf '</BODY></HTML>';
-	return 1;
-     }
-     ## Access control
-     unless (defined &check_authz('do_arc', 'web_archive.access')) {
-	 $param->{'previous_action'} = 'arc';
-	 $param->{'previous_list'} = $list->{'name'};
-	 return undef;
-     }
-
-     if (! $in{'msgid'} || 
-	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	 &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info','view_source: no message id found');
-	 $param->{'status'} = 'no_msgid';
-	 return undef;
-     } 
-     ##
-     my $correlation_info;
-     unless($correlation_info = &correlation::get_delivered_info_percent($in{'msgid'}, $in{'list'})){
-         #TODO: Change error names
-         &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-         $param->{'status'} = 'no_msgid';
-         return undef;
-     }
- 
-     $param->{'bypass'} = 'extreme';
-     printf "Content-Type: text/html\n\n";
-
-     printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
-#<META HTTP-EQUIV="refresh" CONTENT="2">
-     printf '</HEAD><BODY>';
-     printf "<br /><p>";
-     printf $correlation_info;
-     printf "<br /></p>";
-     printf '</BODY></HTML>';
-     return 1;
- }
-
-####################################################
-#  do_correlation                           
-####################################################
-#  Display notifications status when a recipient is not usually delivered
-# 
-# IN : -
-#
-# OUT : 'arc' | 1 | undef
-#
-#################################################### 
- sub do_correlation   {
-     &wwslog('info', 'do_view_source(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
-
-     unless ( ($list->{admin}{correlation} eq "on") && ($list->{admin}{verp_rate} eq "100%") ){
-         &wwslog('info','do_correlation : invalid parameters; verp_rate must be = \"100%\", correlation must be \"on\"');
-     	 $param->{'bypass'} = 'extreme';
-         printf "Content-Type: text/html\n\n";
-         printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
-         printf '</HEAD><BODY>';
-         printf "<br /><p>";
-         printf "Error in the configuration parameters : <br />verp_rate = $list->{admin}{verp_rate} (must be = \"100%\")";
-         printf "<br />correlation = $list->{admin}{correlation} (must be \"on\")";
-         printf "<br /></p>";
-         printf '</BODY></HTML>';
-        return 1;
-     }
-
-     ## Access control
-     unless (defined &check_authz('do_arc', 'web_archive.access')) {
-	 $param->{'previous_action'} = 'arc';
-	 $param->{'previous_list'} = $list->{'name'};
-	 return undef;
-     }
-
-     if (! $in{'msgid'} || 
-	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	 &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info','view_source: no message id found');
-	 $param->{'status'} = 'no_msgid';
-	 return undef;
-     } 
-     ##
-     my $correlation_info;
-     unless($correlation_info = &correlation::get_delivered_info($in{'msgid'}, $in{'list'})){
-         #TODO: Change error names
-         &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-         &wwslog('info','view_source: no message id found');
-         $param->{'status'} = 'no_msgid';
-         return undef;
-     }
- 
-     $param->{'bypass'} = 'extreme';
-     printf "Content-Type: text/html\n\n";
-
-     printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
-#<META HTTP-EQUIV="refresh" CONTENT="2">
-printf '</HEAD><BODY>';
-     printf "<br /><p>";
-     printf $correlation_info;
-     printf "<br /></p>";
-     printf '</BODY></HTML>';
-     return 1;
- }
-
 
  ## Output an initial form to search in web archives
  sub do_arcsearch_form {
