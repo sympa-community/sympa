@@ -1,5 +1,5 @@
 <!-- $Id: edit_attributes.tt2 $ -->
-[% IF list_conf.custom_attribute.size > 0 %]
+[% IF list_conf.custom_attribute && list_conf.custom_attribute.size > 0 %]
 <div class="block">
 <i>[%|loc%]Additional information[%END%]</i>
 <table>
