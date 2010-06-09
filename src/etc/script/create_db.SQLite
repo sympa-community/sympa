@@ -140,11 +140,11 @@ CREATE TABLE bulkspool_table (
   	messageid_bulkspool  	varchar(100),
 	message_bulkspool 	text,
 	lock_bulkspool 	integer,
-        dkim_sender_bulkspool varchar2(100),
-        dkim_privatekey_bulkspool  varchar2(100),
-	dkim_signer_selector_bulkspool varchar2(50),
-	dkim_signer_domain_bulkspool varchar2(50),
-	dkim_header_list_bulkspool' varchar2(500),
+        dkim_privatekey_bulkspool  varchar(100),
+	dkim_selector_bulkspool varchar(50),
+	dkim_d_bulkspool varchar(50),
+	dkim_i_bulkspool varchar(50),
+	dkim_header_list_bulkspool' varchar(500),
 	PRIMARY KEY (messagekey_bulkspool)
 );
 CREATE INDEX bulkspool_idx ON bulkspool_table(messagekey_bulkspool);

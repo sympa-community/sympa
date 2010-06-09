@@ -45,8 +45,13 @@ Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END
 
 [% ELSIF type == 'ticket_to_signoff' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscribing from list %1[%END%][%END%]
-
+[% IF context == 'auto_signoff'%]
+[%|loc(list.name,ip)%]Somebody (probably you) requested to unsubscribe you from list %1.
+This query was issued from the IP number '%2'.
+To confirm and get removed from the list, please click the link below: [%END%] 
+[% ELSE %]
 [%|loc(list.name)%]You have requested to removed from list %1. To confirm and get removed from the list, please click the link below: [%END%] 
+[% END %]
   [% conf.wwsympa_url %]/ticket/[% one_time_ticket %]
 
 

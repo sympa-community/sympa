@@ -72,6 +72,8 @@ readconf(char *file)
       if (s != NULL)
          strcpy(s, r);
    }
+   else
+      s = SPOOLDIR "/bounce";
    return s;
 }
 

@@ -697,7 +697,8 @@ sub sending {
 				     'verp' => $verpfeature,
 				     'merge' => $mergefeature,
 				     'dkim' => $dkim,
-				     'tag_as_last' => $tag_as_last);
+				     'tag_as_last' => $tag_as_last,
+				     );
 
 	unless (defined $bulk_code) {
 	    &do_log('err', 'Failed to store message for list %s', $listname);

@@ -226,7 +226,7 @@ while (!$end) {
 
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
 	    
-	    unless ( $messageasstring_init ) {
+	    unless ( $messageasstring ) {
 		&do_log('err',"internal error : current packet (messagekey= %s) contain a ref to a null message",$bulk->{'messagekey'});
 		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
 		    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});

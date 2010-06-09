@@ -172,6 +172,7 @@ my %comm = ('home' => 'do_home',
 	 'subindex' => 'do_subindex',
 	 'suboptions' => 'do_suboptions',
 	 'signoff' => 'do_signoff',
+	 'auto_signoff' => 'do_auto_signoff',
 	 'multiple_signoff' => 'do_multiple_sigoff',
 	 'sigrequest' => 'do_sigrequest',
 	 'ignoresub' => 'do_ignoresub',
@@ -376,6 +377,7 @@ my %action_args = ('default' => ['list'],
 		'subindex' => ['list'],
                 'ignoresub' => ['list','@email','@gecos'],
 		'signoff' => ['list','email','passwd'],
+		'auto_signoff' => ['list','email'],
 		'sigrequest' => ['list','email'],
 		'set' => ['list','email','reception','gecos'],
 		'serveradmin' => ['subaction'],
@@ -1922,7 +1924,13 @@ sub get_parameters {
 		 ## Q-encode file path
 		 my @tokens = split /\//, $in{$p};
 		 foreach my $i (0..$#tokens) {
-		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
+		     if( &tools::qencode_filename($tokens[$i]) ne $tokens[$i]) {
+			 $tokens[$i] =~ s/\s/!!space!!/g;
+			 $tokens[$i] =~ s/-/!!dash!!/g;
+			 $tokens[$i] = &tools::qencode_filename($tokens[$i]);
+			 $tokens[$i] =~ s/!!dash!!/=2D/g;
+			 $tokens[$i] =~ s/!!space!!/=20/g;
+		     }
 		 }
 		 $in{$p} = join '/', @tokens;
 		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
@@ -4965,6 +4973,59 @@ sub do_subrequest {
     }
     
     return 1;
+}
+sub do_auto_signoff {
+     &wwslog('info', 'do_signoff');
+     ## If the URL isn't valid, then go to home page. No need to guide the user: this function is supposed to be used by clicking on autocreated URL only.
+     return 'home' unless $in{'email'};
+
+     ## If unsubscribe is forbidden, reject the request. Other
+
+     my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+					  {'sender' => $in{'email'},
+					   'remote_host' => $param->{'remote_host'},
+					   'remote_addr' => $param->{'remote_addr'}});
+     my $sig_is;
+     my $reason;
+     if (ref($result) eq 'HASH') {
+	 $sig_is = $result->{'action'};
+	 $reason = $result->{'reason'};
+     }
+
+     if ($sig_is =~ /reject/) {
+	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
+	 &wwslog('info', 'do_signoff: %s may not signoff from %s'
+		 , $in{'email'}, $param->{'list'});
+	 &web_db_log({'status' => 'error',
+		      'error_type' => 'authorization'});
+	 return undef;
+     }
+
+     ## Send the confirmation email to the user.
+
+     if ($list->is_user($in{'email'})) {
+
+       my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
+       
+       my $tt2_param = {
+	   'list' => $list,
+	   'type' => 'ticket_to_signoff', 
+	   'one_time_ticket' => $ticket,
+	   'email' => $in{'email'},
+	   'context' => 'auto_signoff',
+	   'ip' => $ip,
+       };
+       unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
+	 &do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	 return undef;
+       }
+   }else{
+       return 'home';
+   }
+     $param->{'signing_off_email'} = $in {'email'};
+     ## If OK, return the page displaying the informations to the user.
+     return 1;
+     
 }
 ####################################################
 # do_signoff

@@ -28,6 +28,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   arcsearch_form.tt2 \
 		   arcsearch.tt2 \
 		   arc.tt2 \
+		   auto_signoff.tt2 \
 		   blacklist.tt2 \
 		   button_footer.tt2 \
 		   button_header.tt2 \

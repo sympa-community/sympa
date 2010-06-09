@@ -143,11 +143,11 @@ CREATE TABLE `bulkspool_table` (
   `messageid_bulkspool` varchar(100) NOT NULL COMMENT 'The value of the `Message-ID` SMTP field for this message'
   `message_bulkspool` longtext COMMENT 'The message itself as a string. The database MUST be tuned in order to accept big data blog for storing messages with attachments',
   `lock_bulkspool` int(1) default NULL COMMENT 'lock used by parallele bulk demon ni order to prevent a message to be distribited twice',
-  `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',
   `dkim_privatekey_bulkspool` varchar(100) default NULL COMMENT 'The DKIM private key value.',
-  `dkim_sender_identity_bulkspool` varchar(100) default NULL COMMENT 'The dkim signature "i=" tag ',
-  `dkim_signer_domain_bulkspool` varchar(50) default NULL COMMENT 'The DKIM signature "d=" tag',
-  `dkim_signer_selector_bulkspool` varchar(50) default NULL COMMENT 'The DKIM DNS selector',
+  `dkim_selector_bulkspool` varchar(50) default NULL COMMENT 'The DKIM DNS selector',
+  `dkim_i_bulkspool` varchar(100) default NULL COMMENT 'The dkim signature "i=" tag ',
+  `dkim_d_bulkspool` varchar(50) default NULL COMMENT 'The DKIM signature "d=" tag',
+  `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',
   PRIMARY KEY  (`messagekey_bulkspool`)
 )
 

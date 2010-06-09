@@ -35,6 +35,7 @@ use MIME::WordDecoder;
 use MIME::Parser;
 use MIME::Base64;
 use Term::ProgressBar;
+use URI::Escape;
 use constant MAX => 100_000;
 
 use Datasource;
@@ -371,18 +372,15 @@ sub merge_data {
     # get_subscriber_no_object() return the user's details with the custom attributes
     my $user = &List::get_subscriber_no_object($user_details);
 
+    $user->{'escaped_email'} = &URI::Escape::uri_escape($rcpt);
     $user->{'friendly_date'} = gettext_strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
 
     # this method as been removed because some users may forward authentication link
     # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
-    my $url = $data->{'wwsympa_url'};
-    
-    $data = {
-	'user' => $user,
-	'robot' => $robot,
-	'listname' => $listname,
-	'url' => $url, 
-    };
+
+    $data->{'user'} = $user;
+    $data->{'robot'} = $robot;
+    $data->{'listname'} = $listname;
 
     # Parse the TT2 in the message : replace the tags and the parameters by the corresponding values
     unless (&tt2::parse_tt2($data,\$body, $message_output, '', $options)) {
@@ -451,7 +449,7 @@ sub store {
 	$sth->finish();
 	
 	# if message is not found in bulkspool_table store it
-	if ($message_already_on_spool == 0) {	    
+	if ($message_already_on_spool == 0) {
 	    my $statement      = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool,dkim_header_list_bulkspool) VALUES (%s, %s, %s, '1', %s, %s, %s ,%s ,%s)",$dbh->quote($messagekey),$dbh->quote($msg_id),$dbh->quote($msg),$dbh->quote($dkim->{d}), $dbh->quote($dkim->{i}),$dbh->quote($dkim->{selector}),$dbh->quote($dkim->{private_key}), $dbh->quote($dkim->{header_list}); 
 
 	    my $statementtrace = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool, dkim_i_bulkspool, dkim_selector_bulkspool, dkim_privatekey_bulkspool, dkim_header_list_bulkspool) VALUES (%s, %s, %s, '1', %s ,%s ,%s, %s, %s)",$dbh->quote($messagekey),$dbh->quote($msg_id),$dbh->quote(substr($msg, 0, 100)), $dbh->quote($dkim->{d}), $dbh->quote($dkim->{i}),$dbh->quote($dkim->{selector}),$dbh->quote(substr($dkim->{private_key},0,30)), $dbh->quote($dkim->{header_list});  

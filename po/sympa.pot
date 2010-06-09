@@ -687,6 +687,20 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr ""
 
+#: ../web_tt2/auto_signoff.tt2:1
+msgid "Unsubscription request"
+msgstr ""
+
+#: ../web_tt2/auto_signoff.tt2:2
+#. (signing_off_email,list)
+msgid "You clicked a link to unsubscribe the address %1 from list %2."
+msgstr ""
+
+#: ../web_tt2/auto_signoff.tt2:3
+#. (list)
+msgid "A confirmation was just sent to this address. By clicking the link it contains, you will be definitively unsubscribed from list %1"
+msgstr ""
+
 #: ../web_tt2/blacklist.tt2:4
 msgid "Blacklist management"
 msgstr ""
@@ -4149,7 +4163,7 @@ msgstr ""
 msgid "Search period: "
 msgstr ""
 
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16069
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16124
 #. (date_from_formated)
 #. (date_to_formated)
 #. This entry is a date/time format
@@ -6498,7 +6512,15 @@ msgstr ""
 msgid "Unsubscribing from list %1"
 msgstr ""
 
-#: ../mail_tt2/user_notification.tt2:49
+#: ../mail_tt2/user_notification.tt2:51
+#. (list.name,ip)
+msgid ""
+"Somebody (probably you) requested to unsubscribe you from list %1.\n"
+"This query was issued from the IP number '%2'.\n"
+"To confirm and get removed from the list, please click the link below: "
+msgstr ""
+
+#: ../mail_tt2/user_notification.tt2:53
 #. (list.name)
 msgid "You have requested to removed from list %1. To confirm and get removed from the list, please click the link below: "
 msgstr ""
@@ -6816,6 +6838,10 @@ msgstr ""
 
 #: ../src/etc/scenari/send.publicnomultipart:1
 msgid "public list multipart messages are rejected"
+msgstr ""
+
+#: ../src/etc/scenari/spam_status.x-spam-status:1
+msgid "test x-spam-status  header"
 msgstr ""
 
 #: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
@@ -7164,13 +7190,13 @@ msgid ""
 "via the web (web archives)"
 msgstr ""
 
-#: ../src/lib/Bulk.pm:374
+#: ../src/lib/Bulk.pm:376
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y  %H:%M"
 msgstr ""
 
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9706
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9761
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%A"
@@ -7185,7 +7211,7 @@ msgstr ""
 msgid "Error at line %d: %s"
 msgstr ""
 
-#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665 ../src/lib/List.pm:1861 ../wwsympa/Auth.pm:459 ../wwsympa/wwsympa.fcgi.in:1057 ../wwsympa/wwsympa.fcgi.in:2851
+#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665 ../src/lib/List.pm:1861 ../wwsympa/Auth.pm:459 ../wwsympa/wwsympa.fcgi.in:1059 ../wwsympa/wwsympa.fcgi.in:2853
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y at %H:%M:%S"
@@ -7867,7 +7893,7 @@ msgstr ""
 msgid "%a, %d %b %Y"
 msgstr ""
 
-#: ../src/lib/List.pm:3081 ../src/lib/List.pm:3082 ../src/lib/List.pm:3086 ../wwsympa/wwsympa.fcgi.in:10882 ../wwsympa/wwsympa.fcgi.in:10951 ../wwsympa/wwsympa.fcgi.in:11153 ../wwsympa/wwsympa.fcgi.in:11500 ../wwsympa/wwsympa.fcgi.in:14938 ../wwsympa/wwsympa.fcgi.in:14945 ../wwsympa/wwsympa.fcgi.in:15644 ../wwsympa/wwsympa.fcgi.in:16374 ../wwsympa/wwsympa.fcgi.in:16375 ../wwsympa/wwsympa.fcgi.in:4243 ../wwsympa/wwsympa.fcgi.in:4301 ../wwsympa/wwsympa.fcgi.in:4872 ../wwsympa/wwsympa.fcgi.in:4873 ../wwsympa/wwsympa.fcgi.in:6314 ../wwsympa/wwsympa.fcgi.in:7333 ../wwsympa/wwsympa.fcgi.in:7876 ../wwsympa/wwsympa.fcgi.in:7916 ../wwsympa/wwsympa.fcgi.in:7918 ../wwsympa/wwsympa.fcgi.in:8394 ../wwsympa/wwsympa.fcgi.in:8395 ../wwsympa/wwsympa.fcgi.in:8429 ../wwsympa/wwsympa.fcgi.in:8430 ../wwsympa/wwsympa.fcgi.in:8609 ../wwsympa/wwsympa.fcgi.in:8610
+#: ../src/lib/List.pm:3081 ../src/lib/List.pm:3082 ../src/lib/List.pm:3086 ../wwsympa/wwsympa.fcgi.in:10937 ../wwsympa/wwsympa.fcgi.in:11006 ../wwsympa/wwsympa.fcgi.in:11208 ../wwsympa/wwsympa.fcgi.in:11555 ../wwsympa/wwsympa.fcgi.in:14993 ../wwsympa/wwsympa.fcgi.in:15000 ../wwsympa/wwsympa.fcgi.in:15699 ../wwsympa/wwsympa.fcgi.in:16429 ../wwsympa/wwsympa.fcgi.in:16430 ../wwsympa/wwsympa.fcgi.in:4245 ../wwsympa/wwsympa.fcgi.in:4303 ../wwsympa/wwsympa.fcgi.in:4874 ../wwsympa/wwsympa.fcgi.in:4875 ../wwsympa/wwsympa.fcgi.in:6369 ../wwsympa/wwsympa.fcgi.in:7388 ../wwsympa/wwsympa.fcgi.in:7931 ../wwsympa/wwsympa.fcgi.in:7971 ../wwsympa/wwsympa.fcgi.in:7973 ../wwsympa/wwsympa.fcgi.in:8449 ../wwsympa/wwsympa.fcgi.in:8450 ../wwsympa/wwsympa.fcgi.in:8484 ../wwsympa/wwsympa.fcgi.in:8485 ../wwsympa/wwsympa.fcgi.in:8664 ../wwsympa/wwsympa.fcgi.in:8665
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %Y"
@@ -7881,7 +7907,7 @@ msgid ""
 "for variable %s.\n"
 msgstr ""
 
-#: ../src/lib/mail.pm:805
+#: ../src/lib/mail.pm:806
 msgid "Unable to create a channel in smtpto: %m"
 msgstr ""
 
@@ -7946,19 +7972,19 @@ msgstr ""
 msgid "(unknown date)"
 msgstr ""
 
-#: ../wwsympa/wwsympa.fcgi.in:1058
+#: ../wwsympa/wwsympa.fcgi.in:1060
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%H:%M:%S"
 msgstr ""
 
-#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428 ../wwsympa/wwsympa.fcgi.in:11734 ../wwsympa/wwsympa.fcgi.in:11867 ../wwsympa/wwsympa.fcgi.in:14180 ../wwsympa/wwsympa.fcgi.in:7830
+#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428 ../wwsympa/wwsympa.fcgi.in:11789 ../wwsympa/wwsympa.fcgi.in:11922 ../wwsympa/wwsympa.fcgi.in:14235 ../wwsympa/wwsympa.fcgi.in:7885
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%d %b %y  %H:%M"
 msgstr ""
 
-#: ../wwsympa/wwsympa.fcgi.in:16014 ../wwsympa/wwsympa.fcgi.in:16015
+#: ../wwsympa/wwsympa.fcgi.in:16069 ../wwsympa/wwsympa.fcgi.in:16070
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 msgid "%Y-%m-%d-%H-%M-%S"

@@ -19,7 +19,11 @@ msgid ""
 "This server provides you access to your mailing list environment. Starting "
 "from this web page, you can perform subscription options, unsubscription, "
 "archive, list moderation, list configuration."
-msgstr "Ce serveur vous propose un accès à votre environnement de listes de diffusion. A partir de cette page vous pouvez choisir vos options d'abonnement, vous désabonner, accéder aux archives ou gérer les listes dont vous êtes propriétaire, etc."
+msgstr ""
+"Ce serveur vous propose un accès à votre environnement de listes de "
+"diffusion. A partir de cette page vous pouvez choisir vos options "
+"d'abonnement, vous désabonner, accéder aux archives ou gérer les listes dont "
+"vous êtes propriétaire, etc."
 
 #: ../web_tt2/home.tt2:7
 msgid "Mailing lists categories"
@@ -793,6 +797,24 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr "Retour dans les archives %1"
 
+#: ../web_tt2/auto_signoff.tt2:1
+#, fuzzy
+msgid "Unsubscription request"
+msgstr "Aucune demande d'abonnement"
+
+#. (signing_off_email,list)
+#: ../web_tt2/auto_signoff.tt2:2
+#, fuzzy
+msgid "You clicked a link to unsubscribe the address %1 from list %2."
+msgstr "Vous avez demandé à vous désabonner de la liste %1."
+
+#. (list)
+#: ../web_tt2/auto_signoff.tt2:3
+msgid ""
+"A confirmation was just sent to this address. By clicking the link it "
+"contains, you will be definitively unsubscribed from list %1"
+msgstr ""
+
 # nlsref 16,7
 #: ../web_tt2/blacklist.tt2:4
 msgid "Blacklist management"
@@ -973,7 +995,9 @@ msgstr "Personnalisation des messages. Utilisez la syntaxe de templates :"
 
 #: ../web_tt2/compose_mail.tt2:65
 msgid "Below are some examples of TT2 parameters usable in messages."
-msgstr "Vous trouverez ci-dessous des exemples de paramètres utilisables dans les messages."
+msgstr ""
+"Vous trouverez ci-dessous des exemples de paramètres utilisables dans les "
+"messages."
 
 #: ../web_tt2/compose_mail.tt2:67
 msgid ": the listname; always available."
@@ -981,7 +1005,8 @@ msgstr "&#160;: le nom de la liste&#160;; toujours disponible."
 
 #: ../web_tt2/compose_mail.tt2:68
 msgid ": the name of the host the list is intalled on; always available."
-msgstr "<&#160;: le nom de l'hôte hébergeant la liste&#160;; toujours disponible."
+msgstr ""
+"<&#160;: le nom de l'hôte hébergeant la liste&#160;; toujours disponible."
 
 #: ../web_tt2/compose_mail.tt2:69
 msgid ": the user email; always available."
@@ -989,29 +1014,39 @@ msgstr "&#160;: l'email de l'utilisateur&#160;; toujours disponible."
 
 #: ../web_tt2/compose_mail.tt2:70
 msgid ": the user name associated to her email; always available."
-msgstr "&#160;: le nom associé à l'email de l'utilisateur&#160;; toujours disponible."
+msgstr ""
+"&#160;: le nom associé à l'email de l'utilisateur&#160;; toujours disponible."
 
 #: ../web_tt2/compose_mail.tt2:71
 msgid ": the - human readable - user's subscription date; always available."
-msgstr "<&#160;: la date d'abonnement de l'utilisateur&#160;; toujours disponible."
+msgstr ""
+"<&#160;: la date d'abonnement de l'utilisateur&#160;; toujours disponible."
 
 #: ../web_tt2/compose_mail.tt2:72
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
-msgstr "&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini un attribut utilisateur personnalisé nommé &#170;&#160;title&#160;&#187; (voir la configuration de la lsite, section &#170;&#160;Divers&#160;&#187;)"
+msgstr ""
+"&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini "
+"un attribut utilisateur personnalisé nommé &#170;&#160;title&#160;&#187; "
+"(voir la configuration de la lsite, section &#170;&#160;Divers&#160;&#187;)"
 
 #: ../web_tt2/compose_mail.tt2:73
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
-msgstr "&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini un attribut utilisateur personnalisé nommé &#170;&#160;name&#160;&#187;."
+msgstr ""
+"&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini "
+"un attribut utilisateur personnalisé nommé &#170;&#160;name&#160;&#187;."
 
 #: ../web_tt2/compose_mail.tt2:74
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
-msgstr "<&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini un attribut utilisateur personnalisé nommé &#170;&#160;organization&#160;&#187;."
+msgstr ""
+"<&#160;: peut être ce que vous voulez&#160;; disponible si vous avez défini "
+"un attribut utilisateur personnalisé nommé &#170;&#160;organization&#160;"
+"&#187;."
 
 #: ../web_tt2/compose_mail.tt2:78
 msgid "URL:"
@@ -3329,7 +3364,10 @@ msgid ""
 "Too many wrong password were sumitted for this account. Your account as been "
 "blocked in order to protect you agains attacks. You must renew your password "
 "in order to login."
-msgstr "Trop de mots de passe invalides ont été soumis pour ce compte. Il a été suspendu pour vous protéger des attaques. Vous devez renouveler votre mot de passe pour vous connecter."
+msgstr ""
+"Trop de mots de passe invalides ont été soumis pour ce compte. Il a été "
+"suspendu pour vous protéger des attaques. Vous devez renouveler votre mot de "
+"passe pour vous connecter."
 
 #: ../web_tt2/renewpasswd.tt2:11
 msgid "You missed the password, please submit again. Maybe you forgot it?"
@@ -4071,10 +4109,19 @@ msgid ""
 "exclusion table, through the standard unsubscribe/delete functions. \n"
 "They get off the exclusion table with the standard subscribe/add functions."
 msgstr ""
-"Les utilisateurs dont la liste suit sont exclus de la liste. Prenez bien garde au fait que la liste d'exclusion n'est pas une liste noire. L'exclusion prend tout son sens\n"
-"quand la liste des abonnés est importée depuis une ou plusieurs source(s) de donneées externe(s). Dans ce cas, l'exclusion permet aux utilisateurs de se désabonner ou au propriétaire de les supprimer. En pratique, l'utilisateur désabonné est alors ajouté à la table des exclusions et son adresses sera ignorée la prochaine fois que la liste se synchronisera avec ses sources de données.\n"
-"Les utilisateurs sont ajoutés à la liste des exclusions via les fonctions habituelles de désabonnement ou de suppression d'abonné.\n"
-"Ils en sont supprimés via les fonctions standards d'abonnement ou d'ajout d'abonné."
+"Les utilisateurs dont la liste suit sont exclus de la liste. Prenez bien "
+"garde au fait que la liste d'exclusion n'est pas une liste noire. "
+"L'exclusion prend tout son sens\n"
+"quand la liste des abonnés est importée depuis une ou plusieurs source(s) de "
+"donneées externe(s). Dans ce cas, l'exclusion permet aux utilisateurs de se "
+"désabonner ou au propriétaire de les supprimer. En pratique, l'utilisateur "
+"désabonné est alors ajouté à la table des exclusions et son adresses sera "
+"ignorée la prochaine fois que la liste se synchronisera avec ses sources de "
+"données.\n"
+"Les utilisateurs sont ajoutés à la liste des exclusions via les fonctions "
+"habituelles de désabonnement ou de suppression d'abonné.\n"
+"Ils en sont supprimés via les fonctions standards d'abonnement ou d'ajout "
+"d'abonné."
 
 #: ../web_tt2/show_exclude.tt2:28
 msgid "No user excluded."
@@ -4880,7 +4927,7 @@ msgstr "Période explorée :"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16069
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16124
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5008,7 +5055,10 @@ msgid ""
 "If you are subscribed to the list with a different email address, you should "
 "either use that other email address or update your list membership with the "
 "new email address."
-msgstr "Si vous êtes abonné à cette liste avec une autre adresse email, vous devez utiliser cette adresse ou bien vous abonner à la liste avec votre nouvelle adresse."
+msgstr ""
+"Si vous êtes abonné à cette liste avec une autre adresse email, vous devez "
+"utiliser cette adresse ou bien vous abonner à la liste avec votre nouvelle "
+"adresse."
 
 #: ../mail_tt2/authorization_reject.tt2:12
 msgid "Web archives are restricted to listmaster."
@@ -7824,8 +7874,19 @@ msgstr ""
 msgid "Unsubscribing from list %1"
 msgstr "Se désabonner de la liste %1"
 
+#. (list.name,ip)
+#: ../mail_tt2/user_notification.tt2:51
+#, fuzzy
+msgid ""
+"Somebody (probably you) requested to unsubscribe you from list %1.\n"
+"This query was issued from the IP number '%2'.\n"
+"To confirm and get removed from the list, please click the link below: "
+msgstr ""
+"Vous avez demandé votre désabonnement de la liste %1. Pour confirmer votre "
+"demande et être désabonné, veuillez cliquer sur le lien ci-dessous :"
+
 #. (list.name)
-#: ../mail_tt2/user_notification.tt2:49
+#: ../mail_tt2/user_notification.tt2:53
 msgid ""
 "You have requested to removed from list %1. To confirm and get removed from "
 "the list, please click the link below: "
@@ -7993,7 +8054,9 @@ msgstr "ajout par le propriétaire sans authentification"
 #: ../src/etc/scenari/add.ownerdkim:1
 msgid ""
 "add performed by list owner does not need authentication if DKIM signature OK"
-msgstr "ajout par le propriétaire sans authentification si la signature DKIM est valide."
+msgstr ""
+"ajout par le propriétaire sans authentification si la signature DKIM est "
+"valide."
 
 #: ../src/etc/scenari/add.owner_notify:1
 msgid "add performed by owner does not need authentication (notification)"
@@ -8084,7 +8147,9 @@ msgstr "listmaster seulement"
 #: ../src/etc/scenari/remind.listmasterdkim:1
 msgid ""
 "listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr "listmaster seulement (pas d'authentification si une signature DKIM valide est fournie)"
+msgstr ""
+"listmaster seulement (pas d'authentification si une signature DKIM valide "
+"est fournie)"
 
 #: ../src/etc/scenari/remind.ownerdkim:1
 msgid ""
@@ -8178,7 +8243,8 @@ msgstr "liste ouverte"
 
 #: ../src/etc/scenari/send.publickey:1
 msgid "anyone no authentication if DKIM signature is OK"
-msgstr "public ; pas d'authentification si une signature DKIM valide est trouvée."
+msgstr ""
+"public ; pas d'authentification si une signature DKIM valide est trouvée."
 
 #: ../src/etc/scenari/send.publicnoattachment:1
 msgid "public list multipart/mixed messages are forwarded to moderator"
@@ -8191,6 +8257,10 @@ msgstr "liste ouverte, Bcc interdit (anti-spam)"
 #: ../src/etc/scenari/send.publicnomultipart:1
 msgid "public list multipart messages are rejected"
 msgstr "liste ouverte mais attachements interdits"
+
+#: ../src/etc/scenari/spam_status.x-spam-status:1
+msgid "test x-spam-status  header"
+msgstr ""
 
 #: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
 msgid "subscription request confirmed"
@@ -8270,7 +8340,8 @@ msgstr "possible après authentification"
 
 #: ../src/etc/scenari/unsubscribe.authdkim:1
 msgid "need authentication unless DKIM signature is OK"
-msgstr "tuthentification requise suaf si une signature DKIM valide est trouvée."
+msgstr ""
+"tuthentification requise suaf si une signature DKIM valide est trouvée."
 
 #: ../src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
@@ -8587,13 +8658,13 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Bulk.pm:374
+#: ../src/lib/Bulk.pm:376
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9706
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9761
 msgid "%A"
 msgstr "%A"
 
@@ -8611,7 +8682,7 @@ msgstr "Erreur ligne %d : %s"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
 #: ../src/lib/List.pm:1861 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1057 ../wwsympa/wwsympa.fcgi.in:2851
+#: ../wwsympa/wwsympa.fcgi.in:1059 ../wwsympa/wwsympa.fcgi.in:2853
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
@@ -9314,7 +9385,8 @@ msgstr "Liste des entêtes SMTP qui doivent être inclus dans la signature DKIM.
 
 #: ../src/lib/List.pm:635
 msgid "DKIM \"d=\" tag, you should probably use the default value"
-msgstr "Balise DKIM \"d=\" ; vous devriez probablement utiliser la valeur par défaut."
+msgstr ""
+"Balise DKIM \"d=\" ; vous devriez probablement utiliser la valeur par défaut."
 
 #: ../src/lib/List.pm:642
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
@@ -9421,18 +9493,18 @@ msgstr "%a, %d %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:3081 ../src/lib/List.pm:3082 ../src/lib/List.pm:3086
-#: ../wwsympa/wwsympa.fcgi.in:10882 ../wwsympa/wwsympa.fcgi.in:10951
-#: ../wwsympa/wwsympa.fcgi.in:11153 ../wwsympa/wwsympa.fcgi.in:11500
-#: ../wwsympa/wwsympa.fcgi.in:14938 ../wwsympa/wwsympa.fcgi.in:14945
-#: ../wwsympa/wwsympa.fcgi.in:15644 ../wwsympa/wwsympa.fcgi.in:16374
-#: ../wwsympa/wwsympa.fcgi.in:16375 ../wwsympa/wwsympa.fcgi.in:4243
-#: ../wwsympa/wwsympa.fcgi.in:4301 ../wwsympa/wwsympa.fcgi.in:4872
-#: ../wwsympa/wwsympa.fcgi.in:4873 ../wwsympa/wwsympa.fcgi.in:6314
-#: ../wwsympa/wwsympa.fcgi.in:7333 ../wwsympa/wwsympa.fcgi.in:7876
-#: ../wwsympa/wwsympa.fcgi.in:7916 ../wwsympa/wwsympa.fcgi.in:7918
-#: ../wwsympa/wwsympa.fcgi.in:8394 ../wwsympa/wwsympa.fcgi.in:8395
-#: ../wwsympa/wwsympa.fcgi.in:8429 ../wwsympa/wwsympa.fcgi.in:8430
-#: ../wwsympa/wwsympa.fcgi.in:8609 ../wwsympa/wwsympa.fcgi.in:8610
+#: ../wwsympa/wwsympa.fcgi.in:10937 ../wwsympa/wwsympa.fcgi.in:11006
+#: ../wwsympa/wwsympa.fcgi.in:11208 ../wwsympa/wwsympa.fcgi.in:11555
+#: ../wwsympa/wwsympa.fcgi.in:14993 ../wwsympa/wwsympa.fcgi.in:15000
+#: ../wwsympa/wwsympa.fcgi.in:15699 ../wwsympa/wwsympa.fcgi.in:16429
+#: ../wwsympa/wwsympa.fcgi.in:16430 ../wwsympa/wwsympa.fcgi.in:4245
+#: ../wwsympa/wwsympa.fcgi.in:4303 ../wwsympa/wwsympa.fcgi.in:4874
+#: ../wwsympa/wwsympa.fcgi.in:4875 ../wwsympa/wwsympa.fcgi.in:6369
+#: ../wwsympa/wwsympa.fcgi.in:7388 ../wwsympa/wwsympa.fcgi.in:7931
+#: ../wwsympa/wwsympa.fcgi.in:7971 ../wwsympa/wwsympa.fcgi.in:7973
+#: ../wwsympa/wwsympa.fcgi.in:8449 ../wwsympa/wwsympa.fcgi.in:8450
+#: ../wwsympa/wwsympa.fcgi.in:8484 ../wwsympa/wwsympa.fcgi.in:8485
+#: ../wwsympa/wwsympa.fcgi.in:8664 ../wwsympa/wwsympa.fcgi.in:8665
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
@@ -9452,7 +9524,7 @@ msgstr ""
 "valeur pour la variable %s.\n"
 
 # nlsref 11,2
-#: ../src/lib/mail.pm:805
+#: ../src/lib/mail.pm:806
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Impossible de créer un canal dans smtpto: %m"
 
@@ -9546,21 +9618,21 @@ msgstr "(date inconnue)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1058
+#: ../wwsympa/wwsympa.fcgi.in:1060
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11734 ../wwsympa/wwsympa.fcgi.in:11867
-#: ../wwsympa/wwsympa.fcgi.in:14180 ../wwsympa/wwsympa.fcgi.in:7830
+#: ../wwsympa/wwsympa.fcgi.in:11789 ../wwsympa/wwsympa.fcgi.in:11922
+#: ../wwsympa/wwsympa.fcgi.in:14235 ../wwsympa/wwsympa.fcgi.in:7885
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16014 ../wwsympa/wwsympa.fcgi.in:16015
+#: ../wwsympa/wwsympa.fcgi.in:16069 ../wwsympa/wwsympa.fcgi.in:16070
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%d/%m/%Y/%H/%M/%S"
 

@@ -206,10 +206,10 @@ CREATE TABLE bulkspool_table (
   	messageid_bulkspool  	varchar(100),
 	message_bulkspool 	text,
 	lock_bulkspool 	int(1),
-        dkim_sender_bulkspool varchar2(100),
         dkim_privatekey_bulkspool  varchar2(100),
-	dkim_signer_selector_bulkspool varchar2(50),
-	dkim_signer_domain_bulkspool varchar2(50),
+	dkim_selector_bulkspool varchar2(50),
+	dkim_d_bulkspool varchar2(50),
+	dkim_i_bulkspool varchar2(50),
 	dkim_header_list_bulkspool' varchar2(500),
 	constraint ind_bulkspool primary key (messagekey_bulkspool)
 )

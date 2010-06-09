@@ -3,6 +3,545 @@
 
 (See Changelog file for the full changes log)
 
+6.1b.3		June 07, 2010
+
+  Bug fixes:
+
+	src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase,
+	src/etc/script/create_db.mysql:
+	[Reported by A. Michon, IBCP and A.Gouaux]
+	In the create_db.* scripts, some of the name of the fields
+	related to DKIM were uncorrect, leading bulk.pl to fail starting. These
+	names are now correct.
+
+	src/etc/script/create_db.Pg: [reported by A. Michon, IBCP] A typo in
+	create_db.Pg caused the db creation query to fail.
+
+6.1b.2		June 03, 2010
+
+  Features:
+
+	mail_tt2/user_notification.tt2, src/lib/Bulk.pm,src/lib/mail.pm,
+	src/sympa_wizard.pl.in, web_tt2/Makefile.am, wwsympa/wwsympa.fcgi.in
+	web_tt2/auto_signoff.tt2:
+	Autosignoff footer link. It is nw possible to add a link in list messages
+	which are customized for each user. When clicking this link, the user will
+	trigger the sending of a confirmation email. This confirmation email
+	contain an authenticating link. Clicking this link will unsubscribe
+	the user.
+
+6.1b.1		May 26, 2010
+
+  Features:
+
+*****  DKIM : Sympa now supports DKIM for message diffusion and control.
+*****          Incoming messages: Authorization scenarios can now use DKIM. Turning
+*****on the dkim_feature configuration parameter will provide a new authentication level
+*****to the scenario engine. Scenario evaluation for incoming messages with a valid DKIM
+*****signature (but no S/MIME signature) will be evaluated with authentication method dkim.
+*****So rules that use authentication method smtp will not match. You will nedd to update
+*****your scenarios if you want to use DKIM.
+*****
+*****          Outgoing messages: You may want to make Sympa sign outgoing messages.
+*****Almost every aspects of DKIM signature behavior can be customized via Sympa
+*****configuration parameters. Please check the DKIM parameters section for
+*****further details. Note that each parameter can also be set for a given
+*****virtual robot; and most of them are available as list parameter.
+*****
+*****Which messages should be signed?
+*****In order to configure Sympa for signing outgoing messages, you have to decide which messages Sympa should sign . This should be decided for four kind of messages:
+*****     Services messages : these are all messages sent by Sympa itself : welcome messages, answers to mail commands, various notification such as remind message and digest messages;
+*****     List messages : messages distributed to list members (where the initial From: header is preserved). These messages will fall is one one the following subcategory:
+*****           - authenticated messages (using S/MIME signature, challenge or password);
+*****           - received with a valid DKIM signature;
+*****           - validated by one of the list editors;
+*****           - other messages.
+*****
+*****Server parameters used with DKIM:
+*****    o dkim_feature
+*****    o dkim_add_signature_to
+*****    o dkim_signature_apply_on
+*****    o dkim_private_key_path
+*****    o dkim_selector
+*****    o dkim_signer_domain
+*****    o dkim_signer_identity
+*****    o dkim_header_list
+*****
+*****List parameters used with DKIM:
+*****
+*****    o dkim_feature
+*****    o dkim_signature_apply_on
+*****    o dkim_parameters
+*****        + private_key_path
+*****        + selector
+*****        + header_list
+*****        + signer_domain
+*****        + signer_identity
+*****
+***** YOU WILL NEED TO ADAPT YOUR SCENARIOS TO USE DKIM.
+***** PLEASE READ THE DOCUMENTATION: 
+***** http://www.sympa.org/manual_6.1/dkim
+
+	[Submitted by J. jourdan] Exclude users. Beware, that this feature is different from the blacklist.
+	Exclusion makes sense when a list is based on external data sources, thanks
+	to exclusion, a user can unsubscribe (or being removed by list owner) even
+	though he should be included via an external data source. Users get into the
+	exclusion table, through the standard unsubscribe / delete functions. They get
+	off the exclusion table with the standard subscribe / add functions. Adding of
+	the table 'exclusion_table'.
+
+	[Submitted by J. jourdan] "suspension of membership." The user can suspend his subscription to the lists
+	that he subscribes. For a finite length or not. Added a calendar in javascript
+	to select a date.
+
+	[Submitted by J. jourdan] Messages parsing; custom attributes can be
+	now used as parameters for TT2 tags in messages distributed by Sympa.
+	This adds notably the possibility to add authenticated unsubscribe URL
+	to message footers. merge is controled by a list|robot paremeter :
+	merge_feature on|off
+
+	soap/sampleClient.php, soap/sympa.wsdl, soap/sympasoap.pm:  Now soap
+	complexWhich service include subscribers information about bounce
+
+	mail_tt2/listowner_notification.tt2, src/lib/Commands.pm,
+	src/lib/Conf.pm, src/lib/List.pm, src/sympa.pl.in,
+	web_tt2/javascript.tt2, web_tt2/menu.tt2, web_tt2/nav.tt2,
+	web_tt2/review.tt2, web_tt2/serveradmin.tt2,
+	web_tt2/subscriber_table.tt2, wwsympa/wwsympa.fcgi.in:
+	sympa.pl --conf2db load in database sympa.conf, wwsympa.conf and robot.conf
+
+	src/lib/List.pm, src/lib/confdef.pm, web_tt2/renewpasswd.tt2,
+	wwsympa/Auth.pm, wwsympa/wwsympa.fcgi.in:  max_wrong_password robot
+	parameter (default 19) now Sympa block account after this number of
+	wrong account submition is reached. Needed to block brut force attack. 
+
+	configure.ac, src/bulk.pl.in, src/etc/script/create_db.Oracle,
+	src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite,
+	src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql,
+	src/lib/Bulk.pm, src/lib/Upgrade.pm, src/lib/mail.pm:  two new fields
+	in the database :
+	- messageid_bulkspool in bulkspool_table
+	- messageid_bulkmailer in bulkmailer_table
+	These fields both contain the value of the "Message-ID" SMTP header for each message
+	-or packet - to be sent. This allows more reliable logs about the treatment of messages
+	all along the distribution chain.
+
+	doc/sample/test/web_tt2/welcome.tt2, soap/sympa_soap_client.pl.in,
+	sympa.spec.in:	add new features to soap client :
+	add,del,subscribe,signoff
+
+	doc/sample/test/web_tt2/welcome.tt2, src/lib/Conf.pm, sympa.spec.in,
+	wwsympa/wwsympa.fcgi.in:  Extended the format of the generic_sso
+	paragraph in auth.conf.
+	Added two new parameters :
+	  - http_header_list : allows to explicitely list HTTP header fields that should be
+		cached in sympa user_table. 
+	  - http_header_value_separator : user attributes may be multi-valued (including the
+		user email address. This parameter defines the values separator ;
+		defualt is ';' (adapted for Shibboleth)
+
+  Changes:
+
+	soap/sampleClient.php, src/lib/Message.pm, src/lib/Scenario.pm,
+	src/lib/confdef.pm, src/sympa.pl.in:  spam_status message property is
+	now evaluated from a scial scenario spam_status. This scenario accept
+	ham, spam and unsure as result. This replace the antisspam_header_name
+	antispam_tag_header_spam_regexp 
+
+	mail_tt2/digest.tt2, mail_tt2/digest_plain.tt2,
+	mail_tt2/get_archive.tt2, mail_tt2/global_remind.tt2,
+	mail_tt2/helpfile.tt2, mail_tt2/info_report.tt2, mail_tt2/review.tt2,
+	mail_tt2/summary.tt2, src/lib/mail.pm, src/lib/tools.pm,
+	src/lib/tt2.pm, src/sympa_wizard.pl.in, wwsympa/wwsympa.fcgi.in:
+	[Submitted by S. Ikeda] Line wrapping is now enabled for both European
+	and non European languages.
+
+	src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase,
+	src/etc/script/create_db.mysql, src/lib/Upgrade.pm:  change database
+	structure in order to store nimber of wrong login attempts
+
+	src/bulk.pl.in, src/lib/Bulk.pm, src/lib/List.pm, src/lib/mail.pm,
+	web_tt2/suboptions.tt2, wwsympa/wwsympa.fcgi.in:  Is is now possible to
+	enable topics chen the reception mode is 'mail', 'notice', 'not_me',
+	'txt', 'html' or 'urlize'.
+
+	web_tt2/get_inactive_lists.tt2: [Submitted by M. Warkus] Lists for
+	which no message was ever sent will display a user friendly message
+	instead "January 1 1970".
+
+	doc/sample/test/web_tt2/welcome.tt2, src/lib/Archive.pm,
+	src/lib/Message.pm, src/lib/PlainDigest.pm, src/lib/mail.pm,
+	src/lib/tools.pm, src/sympa_wizard.pl.in, sympa.spec.in,
+	wwsympa/wwsympa.fcgi.in: Changes to the cpan installation process :
+	 - Mail::Internet and MIME::Lite modules not directly required
+	 - fix calls to install_module()
+	 - added informations about prerequisites
+	 - generalized the 'usage' entry for each module
+	 - added an introduction to warn the user about the length/nature of the process
+
+	[Submitted by M.Warkus, Univ. Marburg, Germany] fixing many German translations as well as typography
+	errors.
+
+	doc/sample/test/web_tt2/welcome.tt2, src/lib/Makefile.am,
+	sympa.spec.in:	AuthCAS module used to be distributed with Sympa. Since
+	Sympa 6, it is a standalone CPAN module. The module still has the same
+	name, therefore old installed versions of the module need to be removed
+
+	src/sympa_wizard.pl.in, wwsympa/wwsympa.fcgi.in: [#6022][Submited by
+	Soji Ikeda] Text::Wrap module worked only with languages with word
+	separator (space). New module Text::LineFold supports most languages.
+
+	src/etc/script/sympa.in:  [proposed by Jpse-Marcio Martins] no more
+	check the OSYTE, check if functions file exists instead
+
+  Bug fixes:
+
+	wwsympa/wwsympa.fcgi.in:  Dan Pritts fix
+	https://sourcesup.cru.fr/tracker/index.php?func=detail&aid=6839&group_id=23&atid=167
+
+	src/lib/List.pm:  Reverting a part of revision #6227. This lead to
+	datasources loosing all their subscribers when using a single
+	datasource and the synchronizing failed.
+
+	src/lib/List.pm:  When calling send_notify_to_owner, the '$param'
+	parameter was used as a hash, wihout checking first that it was
+	actually a hash. in some cases though, such as in
+	set_status_family_closed(), it was a ref to an array. This caused Sympa
+	to crach with a "Can't coerce array into a hash" error. Fixed by moving
+	the bad line in the hash-specific part of the sub.
+
+	wwsympa/wwsympa.fcgi.in:  security fix : block login submitted with any
+	http method but POST. (security audit vuln #5)
+
+	web_tt2/edit_config.tt2:  missing template for config editor
+
+	src/etc/script/arc2webarc.pl.in:  fix incorrect check of date format
+	that block 2010 messages (reported by Omen Wild  (ucdavis.edu)
+
+	src/etc/script/create_db.Sybase:   fix missing conf_table in Sybase
+	creation script.
+
+	web_tt2/error.tt2, wwsympa/wwsympa.fcgi.in:  Now shared document can't
+	be read or edited unless list is open. This is a security fix
+
+	soap/sympa_soap_client.pl.in: Fixed a bug that prevented authentication
+	while using authenticateAndRun()
+
+	src/lib/SQLSource.pm: [Submùitted by F. Lachapelle, Inverse] If the
+	db_type is set to Oracle and db_port is specified in the main
+	configuration file, than the port would appear two times in the
+	connection string.
+
+	src/lib/tools.pm: [reported by F.Fareneau, univ Valenciennes] shared
+	documents/folders names were badly encoded while using Encode >= 2.19.
+	The issue was related to a low level subroutine
+	(Encode::MIME::Header::_encode_q()) that slightly changed its API
+	(expecting unicode instead of bytes parameter). Now using
+	MIME::EncWords::encode_mimewords() instead.
+
+	src/lib/tools.pm: [#6552] [Soji IKEDA] Wwsympa would stall while
+	loading session data including metacharacters. Existing code
+	(tools::string_2_hash()) would loop on a regular expression match.
+	Patch also escapes ``"'' characters.
+
+	src/sympa.pl.in: [Submitted by H. Moa] Some message could cause a
+	sympa.pl crash. Fixed by embedding the dangerous part of the code in an
+	eval statement.
+
+	src/lib/List.pm:  Users received the same message multiple times. This
+	was due to a problem in the VERP provisionning. When filling the array
+	containing the users for which VERP will be used, Sympa add to sources
+	of users : a certain rate of all the users and all the users that have
+	a high bounce rate already. for each reception mode, Sympa provisions
+	VERP users this way. the problem was the following: for each reception
+	mode, Sympa used the list of users using the default distribution mode
+	instead of the list of users using the specific distribution mode
+	currently treated. this lead to the addition, to the list of bouncing
+	users of each reception mode, the list of users selected to receive the
+	message in VERP for normal reception mode instead of the high bouncers
+	for this reception mode. fixed by using an aray variable regarding the
+	kind of reception mode currently treated.
+
+	src/bulk.pl.in, src/lib/tools.pm:  When parsing a message to merge or
+	verifying DKIM signature, a MIME::Parser object was created and the
+	message parsed into a MIME::Entity. The output of the parser was not
+	set to core, so it used its default: the filesystem. It led to the
+	creation of a lots of files in the expl directory, that were never
+	removed. Fixed by adding the line :
+
+	src/bulk.pl.in:  bulk.pl exited when it could not remove the packet it
+	had juste sent. It now only issue an error messge in the logs.
+
+	mail_tt2/urlized_part.tt2, src/lib/List.pm:  Urlize messages charset
+	was nor properly set. Consequently, bulk crashed when trying to merge
+	the message. In addition, a faulty var name caused Sympa to try to send
+	the originla message instead of the urlized message.
+
+	src/lib/Bulk.pm:  Messages were tagged multiple times as last.
+
+	mail_tt2/command_report.tt2:  fixed bug introduced in revision 6187.
+	Sympa.pl would send empty command reports with a "Failed to parse
+	command_report.tt2 : Template::Exception" error in its log file
+
+	wwsympa/wwsympa.fcgi.in:  Fixed bug introduced in revision 5998. web
+	signoff did not recognize authenticated users.
+
+	src/bulk.pl.in:  When merge was not activated, Messages were not
+	initialized, leading to empty messages.
+
+	src/lib/Bulk.pm:  remove usage of fingerprint authentication token 
+
+	web_tt2/compose_mail.tt2:  remove some coin coin style text
+
+	src/lib/List.pm: [#3047][reported by N.Chipaux, Mandriva] Some service
+	messages sent by Sympa would use an unappropriate language (did not
+	match the user language). This issue happened whenever a message was
+	sent to more than one reciepient; the first user's language was used
+	for the following ones. Fixed List::send_file() and
+	List::send_global_file(): now duplicating the 'context' parameter to
+	prevent changes of the original data structure.
+
+	src/lib/confdef.pm:  http_host was not set by default in syma.conf,
+	making the sympa wizard to fail starting.
+
+	doc/sample/test/web_tt2/welcome.tt2, sympa.spec.in, wwsympa/Auth.pm:
+	[Submitted by M. Warkus, univ. Marburg] When a user logged in, using
+	LDAP, by providing an email address, if this email was not the first
+	one in the LDAP email attribute, then the uiser was not logged with the
+	address she provided but with the default address found in the LDAP
+	directory. Now, if an email is provided and the login is successful
+	,the user is logged in with the email she provided.
+
+	doc/sample/test/web_tt2/welcome.tt2, soap/sympa_soap_client.pl.in,
+	sympa.spec.in:	Fixed a typo in the sympa_soap_client.pl command line
+	tool that prevented the service parameters to be used.
+
+	doc/sample/test/web_tt2/welcome.tt2, src/sympa_wizard.pl.in,
+	sympa.spec.in:	Installed MHonArc version was not properly detected
+
+	doc/sample/test/web_tt2/welcome.tt2, src/sympa_wizard.pl.in,
+	sympa.spec.in: Can't do $module->require() since we no more require the
+	UNIVERSAl::require module. Replaced with eval "require $module".
+
+	Makefile.am: [Submitted by M.Deranek] On a multi core system,
+	installdir & installconfig targets can run in parallel. Added a
+	dependency between these targets.
+
+	doc/sample/test/web_tt2/welcome.tt2, src/lib/Bulk.pm, src/lib/List.pm,
+	sympa.spec.in:	Missing "use WebAgent" directive since recent
+	reorganization of code (revision 5939).
+
+	Makefile.am, doc/sample/test/web_tt2/welcome.tt2, src/lib/tools.pm,
+	sympa.spec.in: [#6380][Reported by M.Warkus, Philipps-Univ. Marburg]
+	Added a line break to written PID files.
+
+	configure.ac, doc/sample/test/web_tt2/welcome.tt2, sympa.spec.in:  Fix
+	typo introduced in recent commit.
+
+	src/lib/Conf.pm: [Submitted by M. Warkus, univ.Marburg] Inverted test
+	caused the config not to be loaded.
+
+	Makefile.am:  The last install message didn't tell to launch
+	sympa_wizzard.pl but sympa.pl.
+
+	src/lib/Conf.pm, src/lib/confdef.pm:  Now Sympa don't complain about
+	optional robot parameters without definition in sympa;conf and
+	wwsympa.conf. Sympa now stop because of required robot parameters
+	without value (minimum a default).  
+
+	wwsympa/wwsympa.fcgi.in:  [reported by N.Matthies] Added notice when
+	user preferences have been updated
+
+	doc/sample/test/web_tt2/welcome.tt2, po/de.po, po-wwsympa/de.po,
+	sympa.spec.in, web_tt2/help_listconfig.tt2, web_tt2/help_shared.tt2,
+	web_tt2/help_user.tt2: [Submitted by M. Warkus, univ. Marburg]
+	Reporting commits 6012 and 6013 from the 6.0 branch: german translation
+	and fixed typos in webhelp.
+
+	src/bulk.pl.in:  bulk.pl now uses the "use strict" pragma. Some
+	variables were not properly defined.
+
+6.0.3		June 03, 2010
+
+  Bug fixes:
+
+	src/lib/SQLSource.pm: [Reported by O. Germes, univ. Rennes1] The upper
+	case "O" in "Oracle" caused the task_manager.pl to be unable to
+	synchronize datasources. This is a quick fix that reverts the patch for
+	bug [#6603].
+
+	src/lib/Conf.pm: [submitted by G. rousse, INRIA] Spool directories
+	created in Conf.pm didn't have ownership set, meaning they belonged to
+	root.root, preventing sympa to create new content therein, preventing
+	sympa.pl to start.
+
+	src/bulk.pl.in: [Reported by S. Bosquin, Ejinov] A bad variable name
+	seemed to have appeared just before the version tag, making bulk.pl to
+	fail starting. Fixed by giving the right name to this variable.
+
+
+6.0.2		May 28, 2010
+
+  Bug fixes:
+
+	src/lib/Bulk.pm: [Submitted by S. Ikeda] When bulk_max_count was
+	increased, some message packets were processed more than once. Fixed to
+	check that a packet is really not locked before trying to send it and
+	using a prepared statement to quicken lock process.
+
+	wwsympa/wwsympa.fcgi.in:  Dan Pritts fix
+	https://sourcesup.cru.fr/tracker/index.php?func=detail&aid=6839&group_id=23&atid=167
+
+	src/bulk.pl.in:  When a packet was found which corresponded to no
+	message in the spool table, then an empty message was sent anyway.
+	Should such a case arise again, the packet would be deleted.
+
+	src/lib/List.pm:  Reverting a part of revision #6227. This lead to
+	datasources loosing all their subscribers when using a single
+	datasource and the synchronizing failed.
+
+	src/lib/List.pm:  When calling send_notify_to_owner, the '$param'
+	parameter was used as a hash, wihout checking first that it was
+	actually a hash. in some cases though, such as in
+	set_status_family_closed(), it was a ref to an array. This caused Sympa
+	to crach with a "Can't coerce array into a hash" error. Fixed by moving
+	the bad line in the hash-specific part of the sub.
+
+	src/lib/List.pm: [Submitted by M. Brethous, Orange FT Group] When a
+	file was used as datasource for subscribers inclusion, no test was done
+	on the data found in the file. This led to 100% CPU usage when, for
+	example, a very large excel file was used instead of a normal text file
+	- a likely error when sources are handled by list owners. Fixed by
+	cancelling inclusion when no valid email is found in the 50 first non
+	empty lines of the source file.
+
+	src/lib/Bulk.pm:  Fix a bug reported by K Clair (riseup) and Thomas
+	Berry (nasa) : no purge where done in bulk_spool_table.
+
+	src/sympa_wizard.pl.in: [Submitted by R. ANDERSSON] With older version
+	of DBD::Mysql, bulk.pl happened to die with an "Out of memory!" cry.
+	Fixed by increasing the version to the oldest fixing this problem. See
+	http://bugs.mysql.com/bug.php?id=19453 for more details.
+
+	src/lib/SQLSource.pm: [Submitted by T. Berry, NASA] Some SQL statements
+	with Sybase failed when the actual backend was Microsoft SQL Server
+	2005 sp3. This was due to a double quote in the definition of a
+	constant breaking the query. Fixed by replacing double quotes by
+	slash-escaped simple quotes.
+
+	src/lib/Log.pm: [Submitted by P. DiCamillo, univ. Brown] Using Oracle
+	10, the logs for the list were never displayed in the web interface.
+	This was due to Oracle returning 0 to function $sth->rows, before any
+	row are fetched. fixed by first trying to fetch rows before counting
+	the number of rows.
+
+	src/sympa_wizard.pl.in: [Reported by M. anderson, riseup.net] changed
+	the minimal version of Time::hires to the older which doesn't seem to
+	have any problem with the "time()" function.
+
+	po/ar.po, po/bg.po, po/br.po, po/ca.po, po/cs.po, po/de.po, po/el.po,
+	po/en_US.po, po/es.po, po/et.po, po/eu.po, po/fi.po, po/fr.po,
+	po/hu.po, po/id.po, po/it.po, po/ja.po, po/ko.po, po/la.po, po/ml.po,
+	po/nb_NO.po, po/nl.po, po/oc.po, po/pl.po, po/pt.po, po/pt_BR.po,
+	po/ro.po, po/ru.po, po/sv.po, po/sympa.pot, po/tr.po, po/vi.po,
+	po/zh_CN.po, po/zh_TW.po, web_tt2/home.tt2: [Reported by M. deranek,
+	slonko.net] Removed inheritance of a faulty message with the sympa
+	email address in it.
+
+	Makefile.am: [Reported by P. Polkinghorne, Brunel univ.] The message
+	displayed at the end of the "make install" didn't make it clear that
+	the Perl modules checking must be done before any other upgrade or
+	setting operation.
+
+	wwsympa/wwsympa.fcgi.in: [Submitted by K. Maneva-Jakimoska, univ.
+	Montclair] when a user had set her name, she could not delete it. the
+	only was to set it as ' '. fixed by setting it to undef if no value is
+	provided by the form.
+
+	wwsympa/Bounce.pm: [Reported by Q. Brown, univ. Simmons] Sympa
+	misinterpreted a header added by the puremessage antispam engine when
+	no from was present in a bounce file. this lead to huge filenames for
+	bad bounces and overwhlmingly large logs.
+
+	src/lib/List.pm: [Submitted by R. Pinson] When a cutsom_subject was
+	used AND the user added the tag herself AND The subject was a
+	multi-line subject, then only the first line of the subject was kept in
+	the final messgage. Fixed by changing the way Wympa catches the
+	non-funtional (subject message and "Re:") part of the subject.
+
+	wwsympa/wwsympa.fcgi.in: [Submitted by K. clair, when no user was
+	bouncing in a list, trying to access to the bounces review lead to a
+	cryptic error : "No page 1". Fixed by checking if there are more than 0
+	bounces before issuing an error.
+
+	src/lib/Upgrade.pm: [Reproted by M. Deranek, slonko.net] Upgrade.pm had
+	three problems :
+
+	src/lib/Conf.pm: [Reported by J. Bazik, Brown University] When the
+	'sendmail_aliases' parameter was set to 'none', a file named 'none' was
+	still created in the list_data directory. Fixed by testing the value of
+	this parameter before creating the file.
+
+	src/lib/Lock.pm: [Reported by J. Bazik, Brown University] In the
+	subroutine Lock::_lock_nfs, if File::NFSLock failed, the else clause
+	attempted to close a filehandle that was never set. Fixed by removing
+	this closing attempt.
+
+	Makefile.am:  During the make isntall, the Makefile used a line tha
+	ttested the existence of the data_structure.version file in the sympa
+	subdirectory of etc. If the file did not exist, then it was created.
+	Problems:
+
+	configure.ac: [Reported by M. Deranek, slonko.net] While running
+	configure, the option "--with-localedir" could be used, but a warning
+	was issued, stating that this option was obsolete. But the replacement
+	option proposed (--localedir) was invalid. Fixed by deleting this
+	warning message and the overall documentation in configure. Same
+	problem fixed with the pair "--with-docdir"/"--docdir".
+
+	src/lib/Upgrade.pm: [Submitted by M. Deranek, slonko.net] The upgrade
+	process failed with SQLite, because DBD::SQLite >= 1.26_02 returns the
+	table names prefixed with "main".
+
+	web_tt2/compose_mail.tt2: [Submitted by M. Warkus, univ. Marburg]When
+	accessing the "Compose message" page from an archive by selecting
+	"sender", "list" or "both" with the radio buttons, the selected
+	destination address appeared next to two buttons: "Send to the list"
+	and "Send to me".
+
+	wwsympa/wwsympa.fcgi.in:  Avoid to print a sybillin message when no
+	bounces exist. If nothing exist, just go on and display a page with no
+	entries.
+
+	src/lib/SQLSource.pm: [Submitted by F. Lachapelle, Inverse] If the
+	db_type is set to Oracle and db_port is specified in the main
+	configuration file, than the port would appear two times in the
+	connection string. Fixed by removing useless isolated port insertion
+	in the connect string, as it is done for any connection in a central place.
+
+
+	src/lib/tools.pm: [reported by F.Fareneau, univ Valenciennes] shared
+	documents/folders names were badly encoded while using Encode >= 2.19.
+	The issue was related to a low level subroutine
+	(Encode::MIME::Header::_encode_q()) that slightly changed its API
+	(expecting unicode instead of bytes parameter). Now using
+	MIME::EncWords::encode_mimewords() instead.
+
+	src/lib/tools.pm: [#6552] [Soji IKEDA] Wwsympa would stall while
+	loading session data including metacharacters. Existing code
+	(tools::string_2_hash()) would loop on a regular expression match.
+	Patch also escapes ``"'' characters.
+
+
+
+  Changes:
+
+	po/Makefile.in.in:  Updated the make rules for i18N to update the
+	English catalogue withou loosing customization.
+
+
 6.0.1		9th December 2009
 
   Bug fixes:

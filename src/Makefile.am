@@ -36,8 +36,11 @@ virtualwrapper_CPPFLAGS = $(AM_CPPFLAGS) \
 
 libexec_PROGRAMS = queue bouncequeue familyqueue
 queue_SOURCES = queue.c
+queue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 bouncequeue_SOURCES = bouncequeue.c
+bouncequeue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 familyqueue_SOURCES = familyqueue.c
+familyqueue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 
 EXTRA_DIST = $(modules_DATA) \
 	     bulk.pl.in \

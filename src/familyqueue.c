@@ -74,6 +74,8 @@ readconf(char *file)
       if (s != NULL)
          strcpy(s, r);
    }
+   else
+      s = SPOOLDIR "/automatic";
    return s;
 }
 
