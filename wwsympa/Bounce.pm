@@ -164,7 +164,7 @@ sub anabounce {
     my %info;
     my ($qmail, $type_9, $type_18, $exchange, $ibm_vm, $lotus, $sendmail_5, $yahoo, $type_21, $exim, $vines,
 	$mercury_143, $altavista, $mercury_131, $type_31, $type_32,$exim_173, $type_38, $type_39,
-	$type_40, $pmdf, $following_recipients, $postfix);
+	$type_40, $pmdf, $following_recipients, $postfix, $groupwise7);
 
     ## Le champ separateur de paragraphe est un ensemble
     ## de lignes vides
@@ -954,6 +954,28 @@ sub anabounce {
 		 }
 	     }
 	     local $/ = '';
+	 }elsif ( /^The message that you sent was undeliverable to the following:/ ) {
+
+             $groupwise7 = 1;
+
+         }elsif ($groupwise7) {
+
+             undef $groupwise7;
+
+	     ## Parcour du paragraphe
+	     my @paragraphe = split /\n/, $_;
+	     local $/ = "\n";
+	     foreach (@paragraphe) {
+
+		if ( /^\s+(\S*) \((.+)\)/ ) {
+
+		     $info{$1}{error} = $2;
+
+		}
+	     }
+
+	     local $/ = '';
+
 	 ## Wanadoo    
 	 }elsif (/^(\S+); Action: Failed; Status: \d.\d.\d \((.*)\)/m) {
 	     $info{$1}{error} = $2;
