@@ -2,12 +2,12 @@
 <div class="block">
 
 <h2>[%|loc%]Listing subscription to moderate[%END%]</h2>
-<form class="noborder" action="[% path_cgi %]" method="post"> 
+<form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
 <fieldset>
 <input type="hidden" name="list" value="[% list %]" />
     <table summary="[%|loc%]Listing subscription to moderate[%END%]" class="listOfItems">
       <tr>
-          <th>X</th>
+          <th><a href="#" onclick="toggle_selection(document.myform.pending_email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></strong></th>
           <th colspan="2">[%|loc%]Email[%END%]</th>
           <th>[%|loc%]Name[%END%]</th>
           <th>[%|loc%]Date[%END%]</th>
@@ -54,6 +54,7 @@
       </table>
 <input type="hidden" name="previous_action" value="subindex" />
 <input type="hidden" name="previous_list" value="[% list %]" />
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.pending_email)" />
 <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
 <input class="MainMenuLinks" type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
 </fieldset>

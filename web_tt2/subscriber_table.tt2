@@ -4,7 +4,7 @@
     <table summary="[%|loc%]List members[%END%]" class="listOfItems text_center">
       <tr>
 	[% IF is_owner %]
-	   <th>X</th>
+	   <th><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></th>
 	[% END %]
 
         [% IF sortby == 'email' %]
