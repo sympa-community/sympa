@@ -43,7 +43,7 @@ my $default_timeout = 60 * 20; ## After this period a lock can be stolen
 ## Creates a new object
 sub new {
     my($pkg, $filepath) = @_;
-    &do_log('debug', 'Lock::new(%s,%s)',$filepath);
+    &do_log('debug', 'Lock::new(%s)',$filepath);
     
     my $lock_filename = $filepath.'.lock';
     my $lock = {'lock_filename' => $lock_filename};
