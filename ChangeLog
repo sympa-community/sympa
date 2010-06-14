@@ -1,4 +1,92 @@
 ------------------------------------------------------------------------
+r6499 | sympa-authors | 2010-06-14 11:07:13 +0200 (Mon, 14 Jun 2010) | 1 line
+Changed paths:
+   M /branches/sympa-6.1-branch/po/ar.po
+   M /branches/sympa-6.1-branch/po/bg.po
+   M /branches/sympa-6.1-branch/po/br.po
+   M /branches/sympa-6.1-branch/po/ca.po
+   M /branches/sympa-6.1-branch/po/cs.po
+   M /branches/sympa-6.1-branch/po/de.po
+   M /branches/sympa-6.1-branch/po/el.po
+   M /branches/sympa-6.1-branch/po/en_US.po
+   M /branches/sympa-6.1-branch/po/es.po
+   M /branches/sympa-6.1-branch/po/et.po
+   M /branches/sympa-6.1-branch/po/eu.po
+   M /branches/sympa-6.1-branch/po/fi.po
+   M /branches/sympa-6.1-branch/po/fr.po
+   M /branches/sympa-6.1-branch/po/hu.po
+   M /branches/sympa-6.1-branch/po/id.po
+   M /branches/sympa-6.1-branch/po/it.po
+   M /branches/sympa-6.1-branch/po/ja.po
+   M /branches/sympa-6.1-branch/po/ko.po
+   M /branches/sympa-6.1-branch/po/la.po
+   M /branches/sympa-6.1-branch/po/ml.po
+   M /branches/sympa-6.1-branch/po/nb_NO.po
+   M /branches/sympa-6.1-branch/po/nl.po
+   M /branches/sympa-6.1-branch/po/oc.po
+   M /branches/sympa-6.1-branch/po/pl.po
+   M /branches/sympa-6.1-branch/po/pt.po
+   M /branches/sympa-6.1-branch/po/pt_BR.po
+   M /branches/sympa-6.1-branch/po/ro.po
+   M /branches/sympa-6.1-branch/po/ru.po
+   M /branches/sympa-6.1-branch/po/sv.po
+   M /branches/sympa-6.1-branch/po/sympa.pot
+   M /branches/sympa-6.1-branch/po/tr.po
+   M /branches/sympa-6.1-branch/po/vi.po
+   M /branches/sympa-6.1-branch/po/zh_CN.po
+   M /branches/sympa-6.1-branch/po/zh_TW.po
+
+[-feature]Committing updated catalogues from Pootle
+------------------------------------------------------------------------
+r6498 | sympa-authors | 2010-06-14 11:05:52 +0200 (Mon, 14 Jun 2010) | 1 line
+Changed paths:
+   M /branches/sympa-6.1-branch/configure.ac
+   M /branches/sympa-6.1-branch/po/ja.po
+
+[-feature]Committing latest translations from Pootle
+------------------------------------------------------------------------
+r6497 | sympa-authors | 2010-06-14 10:55:35 +0200 (Mon, 14 Jun 2010) | 2 lines
+Changed paths:
+   M /branches/sympa-6.1-branch/src/lib/Lock.pm
+
+[bug] Invalid log facility for some logs in Lock.pm. It looks like we can't go below debug3.
+
+------------------------------------------------------------------------
+r6496 | sympa-authors | 2010-06-14 10:44:44 +0200 (Mon, 14 Jun 2010) | 2 lines
+Changed paths:
+   M /branches/sympa-6.1-branch/src/lib/Bulk.pm
+
+[bug][#6937][#6907][#6915][Reported by S. Dukachev, A. Gouaux and A. Michon (in order of apparition)] The query used to store packets in the bulk_mailer table did enclose interger values between quotes, which is not correct. In addition, it obfuscated the problem that the '$merge' parameter was sometimes undefined. This led to trying to submit an insert query containg a value '' for an integer field. Fixed by suppressing quotes for integer values and ensuring that the $merge variable has a value set.
+
+------------------------------------------------------------------------
+r6494 | sympa-authors | 2010-06-10 11:01:33 +0200 (Thu, 10 Jun 2010) | 2 lines
+Changed paths:
+   M /branches/sympa-6.1-branch/web_tt2/Makefile.am
+
+[bug][Reported by P. Evans] The edit_config.tt2 file was not installed during the "make isntall" because it was nt declared in the Makefile.am.
+
+------------------------------------------------------------------------
+r6491 | sympa-authors | 2010-06-09 11:50:02 +0200 (Wed, 09 Jun 2010) | 2 lines
+Changed paths:
+   M /branches/sympa-6.1-branch
+   M /branches/sympa-6.1-branch/NEWS
+   M /branches/sympa-6.1-branch/src/Makefile.am
+   M /branches/sympa-6.1-branch/src/bouncequeue.c
+   M /branches/sympa-6.1-branch/src/familyqueue.c
+   M /branches/sympa-6.1-branch/src/lib/Lock.pm
+   M /branches/sympa-6.1-branch/src/queue.c
+   M /branches/sympa-6.1-branch/wwsympa/wwsympa.fcgi.in
+
+[svn] Retrieving latest bug fixes from 6.0 branch.
+
+------------------------------------------------------------------------
+r6484 | sympa-authors | 2010-06-07 11:42:29 +0200 (Mon, 07 Jun 2010) | 1 line
+Changed paths:
+   M /branches/sympa-6.1-branch/ChangeLog
+   M /branches/sympa-6.1-branch/NEWS
+
+[-release]Preparing version 6.1b.3
+------------------------------------------------------------------------
 r6483 | sympa-authors | 2010-06-07 11:16:57 +0200 (Mon, 07 Jun 2010) | 1 line
 Changed paths:
    M /branches/sympa-6.1-branch/po/ru.po

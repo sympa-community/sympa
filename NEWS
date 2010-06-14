@@ -3,6 +3,26 @@
 
 (See Changelog file for the full changes log)
 
+6.1b.4		June 14, 2010
+
+  Bug fixes:
+
+	src/lib/Lock.pm:  Invalid log facility for some logs in Lock.pm. It
+	looks like we can't go below debug3.
+
+	src/lib/Bulk.pm: [#6937][#6907][#6915][Reported by S. Dukachev, A.
+	Gouaux and A. Michon (in order of apparition)] The query used to store
+	packets in the bulk_mailer table did enclose interger values between
+	quotes, which is not correct. In addition, it obfuscated the problem
+	that the '$merge' parameter was sometimes undefined. This led to trying
+	to submit an insert query containg a value '' for an integer field.
+	Fixed by suppressing quotes for integer values and ensuring that the
+	$merge variable has a value set.
+
+	web_tt2/Makefile.am: [Reported by P. Evans] The edit_config.tt2 file
+	was not installed during the "make install" because it was not declared
+	in the Makefile.am.
+
 6.1b.3		June 07, 2010
 
   Bug fixes:

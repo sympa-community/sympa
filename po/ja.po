@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Sympa-5.4.6, Sympa-6.0, Sympa-6.1a.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2010-06-02 02:39+0200\n"
+"PO-Revision-Date: 2010-06-10 05:47+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
 "MIME-Version: 1.0\n"
@@ -788,15 +788,15 @@ msgid "Return to archive %1"
 msgstr "%1の投稿保管庫へ戻る"
 
 #: ../web_tt2/auto_signoff.tt2:1
-#, fuzzy
 msgid "Unsubscription request"
-msgstr "読者登録申込はありません"
+msgstr "登録解除申込"
 
 #. (signing_off_email,list)
 #: ../web_tt2/auto_signoff.tt2:2
-#, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
-msgstr "あなたは %1 メーリングリストの登録解除を申し込みました。"
+msgstr ""
+"%2 メーリングリストでのメールアドレス %1 の登録解除をするリンクをクリックしま"
+"したね。"
 
 #. (list)
 #: ../web_tt2/auto_signoff.tt2:3
@@ -804,6 +804,9 @@ msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be definitively unsubscribed from list %1"
 msgstr ""
+"確認のメッセージはこのメールアドレスにしか送っていません。そこに書いてあった"
+"リンクをクリックすると、あなたは %1 メーリングリストを登録解除をされることに"
+"なります。"
 
 #: ../web_tt2/blacklist.tt2:4
 msgid "Blacklist management"
@@ -4781,7 +4784,7 @@ msgstr "探す期間"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16124
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16130
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -7655,14 +7658,14 @@ msgstr "%1 メーリングリストの登録解除"
 
 #. (list.name,ip)
 #: ../mail_tt2/user_notification.tt2:51
-#, fuzzy
 msgid ""
 "Somebody (probably you) requested to unsubscribe you from list %1.\n"
 "This query was issued from the IP number '%2'.\n"
 "To confirm and get removed from the list, please click the link below: "
 msgstr ""
-"%1 メーリングリストからの登録解除の申込がありました。確認  \n"
-"して解除するために、以下のリンクをクリックしてください: "
+"だれか (おそらくあなた) から、%1 メーリングリスト登録解除の申込がありました。"
+"申込は、IPアドレス「%2」から発信されています。解除するには確認が必要です。次"
+"のリンクをクリックしてください: "
 
 #. (list.name)
 #: ../mail_tt2/user_notification.tt2:53
@@ -8032,7 +8035,7 @@ msgstr "公開リスト。マルチパートのメッセージは拒否"
 
 #: ../src/etc/scenari/spam_status.x-spam-status:1
 msgid "test x-spam-status  header"
-msgstr ""
+msgstr "X-Spam-Statusヘッダを調べる"
 
 #: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
 msgid "subscription request confirmed"
@@ -8423,7 +8426,7 @@ msgstr "%Y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9761
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9767
 msgid "%A"
 msgstr "%a"
 
@@ -8439,7 +8442,7 @@ msgstr "間違いがあります (%d 行目): %s"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
 #: ../src/lib/List.pm:1861 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1059 ../wwsympa/wwsympa.fcgi.in:2853
+#: ../wwsympa/wwsympa.fcgi.in:1059 ../wwsympa/wwsympa.fcgi.in:2859
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
@@ -9133,18 +9136,18 @@ msgstr "%Y年%m月%d日(%a)"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:3081 ../src/lib/List.pm:3082 ../src/lib/List.pm:3086
-#: ../wwsympa/wwsympa.fcgi.in:10937 ../wwsympa/wwsympa.fcgi.in:11006
-#: ../wwsympa/wwsympa.fcgi.in:11208 ../wwsympa/wwsympa.fcgi.in:11555
-#: ../wwsympa/wwsympa.fcgi.in:14993 ../wwsympa/wwsympa.fcgi.in:15000
-#: ../wwsympa/wwsympa.fcgi.in:15699 ../wwsympa/wwsympa.fcgi.in:16429
-#: ../wwsympa/wwsympa.fcgi.in:16430 ../wwsympa/wwsympa.fcgi.in:4245
-#: ../wwsympa/wwsympa.fcgi.in:4303 ../wwsympa/wwsympa.fcgi.in:4874
-#: ../wwsympa/wwsympa.fcgi.in:4875 ../wwsympa/wwsympa.fcgi.in:6369
-#: ../wwsympa/wwsympa.fcgi.in:7388 ../wwsympa/wwsympa.fcgi.in:7931
-#: ../wwsympa/wwsympa.fcgi.in:7971 ../wwsympa/wwsympa.fcgi.in:7973
-#: ../wwsympa/wwsympa.fcgi.in:8449 ../wwsympa/wwsympa.fcgi.in:8450
-#: ../wwsympa/wwsympa.fcgi.in:8484 ../wwsympa/wwsympa.fcgi.in:8485
-#: ../wwsympa/wwsympa.fcgi.in:8664 ../wwsympa/wwsympa.fcgi.in:8665
+#: ../wwsympa/wwsympa.fcgi.in:10943 ../wwsympa/wwsympa.fcgi.in:11012
+#: ../wwsympa/wwsympa.fcgi.in:11214 ../wwsympa/wwsympa.fcgi.in:11561
+#: ../wwsympa/wwsympa.fcgi.in:14999 ../wwsympa/wwsympa.fcgi.in:15006
+#: ../wwsympa/wwsympa.fcgi.in:15705 ../wwsympa/wwsympa.fcgi.in:16435
+#: ../wwsympa/wwsympa.fcgi.in:16436 ../wwsympa/wwsympa.fcgi.in:4251
+#: ../wwsympa/wwsympa.fcgi.in:4309 ../wwsympa/wwsympa.fcgi.in:4880
+#: ../wwsympa/wwsympa.fcgi.in:4881 ../wwsympa/wwsympa.fcgi.in:6375
+#: ../wwsympa/wwsympa.fcgi.in:7394 ../wwsympa/wwsympa.fcgi.in:7937
+#: ../wwsympa/wwsympa.fcgi.in:7977 ../wwsympa/wwsympa.fcgi.in:7979
+#: ../wwsympa/wwsympa.fcgi.in:8455 ../wwsympa/wwsympa.fcgi.in:8456
+#: ../wwsympa/wwsympa.fcgi.in:8490 ../wwsympa/wwsympa.fcgi.in:8491
+#: ../wwsympa/wwsympa.fcgi.in:8670 ../wwsympa/wwsympa.fcgi.in:8671
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -9262,14 +9265,14 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11789 ../wwsympa/wwsympa.fcgi.in:11922
-#: ../wwsympa/wwsympa.fcgi.in:14235 ../wwsympa/wwsympa.fcgi.in:7885
+#: ../wwsympa/wwsympa.fcgi.in:11795 ../wwsympa/wwsympa.fcgi.in:11928
+#: ../wwsympa/wwsympa.fcgi.in:14241 ../wwsympa/wwsympa.fcgi.in:7891
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16069 ../wwsympa/wwsympa.fcgi.in:16070
+#: ../wwsympa/wwsympa.fcgi.in:16075 ../wwsympa/wwsympa.fcgi.in:16076
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
