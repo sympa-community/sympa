@@ -124,6 +124,7 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/send.publicnoattachment \
 		      scenari/send.public_nobcc \
 		      scenari/send.publicnomultipart \
+		      scenari/spam_status.x-spam-status \
 		      scenari/subscribe.auth \
 		      scenari/subscribe.auth_notify \
 		      scenari/subscribe.auth_owner \

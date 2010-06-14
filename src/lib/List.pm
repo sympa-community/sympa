@@ -10751,6 +10751,18 @@ sub _load_admin_file {
 	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
     }
 
+    ## Lock file
+    my $lock = new Lock ($config_file);
+    unless (defined $lock) {
+	&do_log('err','Could not create new lock on %s',$config_file);
+	return undef;
+    }
+    $lock->set_timeout(5); 
+    unless ($lock->lock('read')) {
+	&do_log('err','Could not put a read lock on the config file %s',$config_file);
+	return undef;
+    }   
+
     unless (open CONFIG, "<", $config_file) {
 	&do_log('info', 'Cannot open %s', $config_file);
     }
@@ -10909,6 +10921,12 @@ sub _load_admin_file {
     }
     
     close CONFIG;
+
+    ## Release the lock
+    unless ($lock->unlock()) {
+	&do_log('err', 'Could not remove the read lock on file %s',$config_file);
+	return undef;
+    }
 
     ## Apply defaults & check required parameters
     foreach my $p (keys %::pinfo) {
