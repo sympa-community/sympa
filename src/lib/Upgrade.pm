@@ -684,6 +684,7 @@ sub probe_db {
 							'user_subscriber' => 'varchar(100)',
 							'robot_subscriber' => 'varchar(80)',
 							'date_subscriber' => 'datetime',
+							'number_messages_subscriber' => 'int(5)',
 							'update_subscriber' => 'datetime',
 							'visibility_subscriber' => 'varchar(20)',
 							'reception_subscriber' => 'varchar(20)',
@@ -772,6 +773,17 @@ sub probe_db {
 						       'dkim_i_bulkspool' => 'varchar(100)',
 						       'dkim_header_list_bulkspool' => 'varchar(500)',
 						   },
+				 'stat_table' => {'id_stat' => 'bigint(20)',
+						  'date_stat' => 'int(11)',
+						  'email_stat' => 'varchar(100)',
+						  'operation_stat' => 'varchar(50)',
+						  'list_stat' => 'varchar(150)',
+						  'daemon_stat' => 'varchar(10)',
+						  'user_ip_stat' => 'varchar(100)',
+						  'robot_stat' => 'varchar(80)',
+						  'parameter_stat' => 'varchar(50)',
+						  'read_stat' => 'tinyint(1)'
+						  },
 				 'conf_table' => {'robot_conf' => 'varchar(80)',
 						  'label_conf' => 'varchar(80)',
 						  'value_conf' => 'varchar(300)'}
@@ -790,6 +802,7 @@ sub probe_db {
 							 'user_subscriber' => 'text',
 							 'robot_subscriber' => 'text',
 							 'date_subscriber' => 'numeric',
+							 'number_messages_subscriber' => 'numeric',
 							 'update_subscriber' => 'numeric',
 							 'visibility_subscriber' => 'text',
 							 'reception_subscriber' => 'text',
@@ -878,6 +891,16 @@ sub probe_db {
 							'dkim_d_bulkspool' => 'varchar(50)',
 							'dkim_i_bulkspool' => 'varchar(100)',
 							'dkim_header_list_bulkspool' => 'varchar(500)'},
+				  'stat_table' => {'id_stat' => 'integer',
+						   'date_stat' => 'integer',
+						   'email_stat' => 'text',
+						   'operation_stat' => 'text',
+						   'list_stat' => 'text',
+						   'daemon_stat' => 'text',
+						   'user_ip_stat' => 'text',
+						   'robot_stat' => 'text',
+						   'parameter_stat' => 'text',
+						   'read_stat' => 'integer'},
 				  'conf_table' => {'robot_conf' => 'text',
 						   'label_conf' => 'text',
 						   'value_conf' => 'text'}});
@@ -887,6 +910,7 @@ sub probe_db {
 		    'robot_subscriber' => 1,
 		    'user_subscriber' => 1,
 		    'date_subscriber' => 1,
+		    'number_messages_subscriber' => 1,
 		    'list_admin' => 1,
 		    'robot_admin' => 1,
 		    'user_admin' => 1,
@@ -908,6 +932,11 @@ sub probe_db {
 		    'messagekey_bulkmailer' => 1,
 		    'packetid_bulkmailer' => 1,
 		    'messagekey_bulkspool' => 1,
+		    'id_stat' => 1,
+		    'date_stat' => 1,
+		    'operation_stat' => 1,
+		    'robot_stat' => 1,
+		    'read_stat' => 1,
 		    );
     
     my %primary = ('user_table' => ['email_user'],
@@ -920,7 +949,8 @@ sub probe_db {
 		   'one_time_ticket_table' => ['ticket_one_time_ticket'],
 		   'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
 		   'bulkspool_table' => ['messagekey_bulkspool'],
-		   'conf_table' => ['robot_conf','label_conf']
+		   'conf_table' => ['robot_conf','label_conf'],
+		   'stat_table' => ['id_stat']
 		   );
 
     ## List the required INDEXES
@@ -928,7 +958,8 @@ sub probe_db {
     ##   2nd key is the index name
     ##   the table lists the field on which the index applies
     my %indexes = ('admin_table' => {'user_index' => ['user_admin']},
-		   'subscriber_table' => {'user_index' => ['user_subscriber']}				     
+		   'subscriber_table' => {'user_index' => ['user_subscriber']},
+		   'stat_table' => {'user_index' => ['email_stat']}
 		   );
 
     # table indexes that can be removed during upgrade process

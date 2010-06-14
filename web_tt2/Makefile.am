@@ -100,6 +100,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   menu_search.tt2 \
 		   modindex.tt2 \
 		   nav.tt2 \
+		   news.tt2 \
 		   notice.tt2 \
 		   picture_upload.tt2 \
 		   pref.tt2 \

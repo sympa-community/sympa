@@ -332,6 +332,8 @@ while (!$end) {
 	sleep $Conf::Conf{'bulk_sleep'}; 
     }
     &mail::reaper;
+
+    
 }
 do_log('notice', 'bulk.pl exited normally due to signal');
 &tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);

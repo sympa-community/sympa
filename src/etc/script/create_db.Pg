@@ -41,6 +41,7 @@ CREATE TABLE subscriber_table (
 	suspend_subscriber      smallint,
 	suspend_start_date_subscriber    int4,
 	suspend_end_date_subscriber      int4,
+	number_messages_subscriber	int4,
 	CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber,list_subscriber,user_subscriber)
 );
 CREATE INDEX subscriber_idx ON subscriber_table (robot_subscriber,list_subscriber,user_subscriber);
@@ -178,3 +179,18 @@ CREATE TABLE conf_table (
   constraint ind_conf primary key (robot_conf,label_conf)
 );
 CREATE INDEX robot_conf_idx ON conf_table(robot_conf,label_conf);
+
+
+CREATE TABLE stat_table (
+	id_stat			bigint NOT NULL,
+	date_stat		int4 NOT NULL,
+	email_stat		varchar(100),
+	operation_stat		varchar(50) NOT NULL,
+	list_stat		varchar(150),
+	daemon_stat		varchar(10),
+	user_ip_stat		varchar(100),
+	robot_stat		varchar(80) NOT NULL,
+	parameter_stat		varchar(50),
+	read_stat		smallint NOT NULL,
+	CONSTRAINT ind_stat primary key (id_stat)
+);

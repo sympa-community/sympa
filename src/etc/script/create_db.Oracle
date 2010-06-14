@@ -48,6 +48,7 @@ CREATE TABLE subscriber_table (
 	suspend_subscriber      number,
 	suspend_start_date_subscriber    number,
 	suspend_end_date_subscriber      number,
+	number_messages_subscriber	number, NOT NULL
         CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)
 );
 CREATE TABLE admin_table (
@@ -162,5 +163,20 @@ CREATE TABLE conf_table (
   value_conf varchar(300)
   CONSTRAINT ind_conf primary key (robot_conf,label_conf)
 );
+
+CREATE TABLE stat_table (
+	id_stat			number NOT NULL,
+	date_stat		number NOT NULL,
+	email_stat		varchar2(100),
+	operation_stat		varchar2(50) NOT NULL,
+	list_stat		varchar2(150),
+	daemon_stat		varchar2(10),
+	user_ip_stat		varchar2(100),
+	robot_stat		varchar2(80) NOT NULL,
+	parameter_stat		varchar2(50),
+	read_stat		number NOT NULL,
+	CONSTRAINT ind_stat primary key (id_stat)
+);
+	
 
 !

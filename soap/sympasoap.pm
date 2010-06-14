@@ -1093,7 +1093,8 @@ sub signoff {
 	}
 	
 	&Log::do_log('info', 'SOAP : sign off %s from %s accepted', $listname, $sender);
-	
+
+     
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
 
@@ -1247,6 +1248,7 @@ sub subscribe {
       }
       &Log::do_log('info', 'SOAP subcribe : %s from %s accepted', $listname, $sender);
       
+
       return SOAP::Data->name('result')->type('boolean')->value(1);
   }
 

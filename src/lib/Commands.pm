@@ -1142,7 +1142,7 @@ sub signoff {
 	}
 	
 	## Really delete and rewrite to disk.
-	unless ($list->delete_user('users' => [$email], 'exclude' =>' 1')){
+	unless ($list->delete_user('users' => [$email], 'exclude' =>' 1', 'parameter' => 'unsubscription')){
 	    my $error = "Unable to delete user $user from list $listname";
 	    &report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 	}
@@ -1804,7 +1804,7 @@ sub del {
 	
 	## Really delete and rewrite to disk.
 	my $u;
-	unless ($u = $list->delete_user('users' => [$who], 'exclude' =>' 1')){
+	unless ($u = $list->delete_user('users' => [$who], 'exclude' =>' 1', 'parameter' => 'deletd by admin')){
 	    my $error = "Unable to delete user $who from list $which for command 'del'";
 	    &report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 	}

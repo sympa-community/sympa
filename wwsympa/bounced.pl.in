@@ -302,6 +302,9 @@ while (!$end) {
 				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
 				      'daemon' => 'bounced'});
 
+			&Log::db_stat_log({'robot' => $list->{'domain'}, 'list' => $list->{'name'}, 'operation' => 'auto_del', 'parameter' => "",
+					   'mail' => $who, 'client' => "", 'daemon' => 'bounced.pl'});
+
 			if ($action =~ /notify/) {
 			    unless ($list->send_notify_to_owner('automatic_del',
 								{'who' => $who,

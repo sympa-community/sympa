@@ -32,7 +32,8 @@ CREATE TABLE subscriber_table (
 	bounce_score_subscriber integer,
 	suspend_subscriber	boolean,
 	suspend_start_date_subscriber	integer,
-	suspend_end_date_subscriber	integer,	
+	suspend_end_date_subscriber	integer,
+	number_messages_subscriber	integer,	
 	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
 );
 CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
@@ -156,3 +157,17 @@ CREATE TABLE conf_table (
 	PRIMARY KEY (robot_conf,label_conf)
 );
 CREATE INDEX conf_idx ON conf_table(robot_conf,label_conf);
+
+CREATE TABLE stat_table (
+	id_stat			integer NOT NULL,
+	date_stat		integer NOT NULL,
+	email_stat		text,
+	operation_stat		text NOT NULL,
+	list_stat		text,
+	daemon_stat		text,
+	user_ip_stat		text,
+	robot_stat		text NOT NULL,
+	parameter_stat		text,
+	read_stat		integer,
+	PRIMARY KEY (id_stat)
+);

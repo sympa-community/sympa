@@ -1121,12 +1121,38 @@ sub purge_logs_table {
     my ($task, $Rarguments, $context) = @_;
     my $date;
     my $execution_date = $task->{'date'};
+    my @slots = ();
     
     do_log('debug2','purge_logs_table()');
     unless(&Log::db_log_del()) {
 	&do_log('err','purge_logs_table(): Failed to delete logs');
 	return undef;
     }
+
+    #-----------Data aggregation, to make statistics-----------------
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($execution_date);
+    $min = 0; #get fix hour
+    $sec = 0;
+    my $date_end = timelocal($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
+
+
+    my $date_deb = $date_end-86400;#on enleve 24h !!!!!! IN DEVELOPMENT !!!! 
+    
+    #open TMP2, ">/tmp/digdump"; &tools::dump_var($begin_date, 0, \*TMP2); close TMP2;
+
+
+    #hour to hour
+    for  (my $i=$date_deb; $i <= $date_end; $i=$i+3600){
+	push(@slots, $i);
+	
+    }
+
+    for (my $j=1; $j <= scalar(@slots); $j++){
+	 
+	&Log::aggregate_data($slots[$j-1], $slots[$j]);
+    }
+    #-------------------------------------------------------------------
+
     &do_log('notice','purge_logs_table(): logs purged');
     return 1;
 }

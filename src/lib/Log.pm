@@ -29,6 +29,7 @@ use Carp;
 use POSIX qw(mktime);
 use Encode;
 
+
 our @ISA = qw(Exporter);
 our @EXPORT = qw(fatal_err do_log do_openlog $log_level %levels);
 
@@ -49,6 +50,8 @@ our %levels = (
     debug2 => 2,
     debug3 => 3,
 );
+
+our $last_date_aggregation;
 
 sub fatal_err {
     my $m  = shift;
@@ -284,6 +287,105 @@ sub db_log {
       
 }
 
+#insert data in stats table
+sub db_stat_log{
+    my $arg = shift;
+
+    my $list = $arg->{'list'};
+    my $operation = $arg->{'operation'};
+    my $date = time; #epoch time : time since 1st january 1970
+    my $mail = $arg->{'mail'};
+    my $daemon = $arg->{'daemon'};
+    my $ip = $arg->{'client'};
+    my $robot = $arg->{'robot'};
+    my $parameter = $arg->{'parameter'};
+    my $random = int(rand(1000000));
+    my $id = $date.$random;
+    my $read = 0; 
+
+    if($list =~ /(.+)\@(.+)/) {#remove the robot name of the list name
+	$list = $1;
+	unless($robot) {
+	    $robot = $2;
+	}
+    }
+
+    my $dbh = &List::db_get_handler();#recupérer le gestionnaire de base de données
+
+
+    unless ($dbh and $dbh->ping) {## Check database connection
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+
+    ##insert in stat table
+    my $statement = sprintf 'INSERT INTO stat_table (id_stat, date_stat, email_stat, operation_stat, list_stat, daemon_stat, user_ip_stat, robot_stat, parameter_stat, read_stat) VALUES (%s, %d, %s, %s, %s, %s, %s, %s, %s, %d)', 
+    $id,
+    $date,
+    $dbh->quote($mail),
+    $dbh->quote($operation),
+    $dbh->quote($list),
+    $dbh->quote($daemon),
+    $dbh->quote($ip),
+    $dbh->quote($robot),
+    $dbh->quote($parameter),
+    $dbh->quote($read);
+    
+    unless($dbh->do($statement)){
+	do_log('err', 'Unable to execute SQL statement "%s", %s', $statement, $dbh->errstr);
+	return undef;
+    }
+   
+
+
+}#end sub
+
+sub db_stat_counter_log {
+    my $arg = shift;
+    
+    my $date_deb = $arg->{'begin_date'};
+    my $date_fin = $arg->{'end_date'};
+    my $data = $arg->{'data'};
+    my $list = $arg->{'list'};
+    my $variation = $arg->{'variation'};
+    my $total = $arg->{'total'};
+    my $robot = $arg->{'robot'};
+    my $random = int(rand(1000000));
+    my $id = $date_deb.$random;
+
+    if($list =~ /(.+)\@(.+)/) {#remove the robot name of the list name
+	$list = $1;
+	unless($robot) {
+	    $robot = $2;
+	}
+    }
+
+    my $dbh = &List::db_get_handler();#recupérer le gestionnaire de base de données
+
+
+    unless ($dbh and $dbh->ping) {## Check database connection
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+    
+    my $statement = sprintf 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
+    $id,
+    $date_deb,
+    $date_fin,
+    $dbh->quote($data),
+    $dbh->quote($robot),
+    $dbh->quote($list),
+    $variation,
+    $total;
+
+    unless($dbh->do($statement)){
+	do_log('err', 'Unable to execute SQL statement "%s", %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+}#end sub
+
+
 # delete logs in RDBMS
 sub db_log_del {
     my $exp = &Conf::get_robot_conf('*','logs_expiration_period');
@@ -395,10 +497,9 @@ sub get_first_db_log {
 	
     }
     
-    #if the listmaster want to make a search by an IP adress.
-    if($select->{'ip'}) {
+    #if the listmaster want to make a search by an IP adress.    if($select->{'ip'}) {
 	$statement .= sprintf "AND client_logs = '%s'",$select->{'ip'};
-    }
+    
     
     ## Currently not used
     #if the search is on the actor of the action
@@ -465,6 +566,507 @@ sub get_log_level {
     return $log_level;
 }
 
+
+#aggregate date from stat_table to stat_counter_table
+#dates must be in epoch format
+sub aggregate_data {
+    my ($begin_date, $end_date) = @_;
+
+    
+    my $statement;
+    
+    my $dbh = &List::db_get_handler();
+    my $aggregated_data; # the hash containing aggregated data that the sub deal_data will return.
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+    
+    
+    
+    
+    $statement = sprintf "SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date; 
+    my $sth = $dbh->prepare($statement);
+    
+    unless($sth->execute){
+	&do_log('err','Unable to execute statement %s',$statement);
+	return undef;
+    }
+
+    
+    my $res = $sth->fetchall_hashref('id_stat');
+
+    
+    $aggregated_data = &deal_data($res);
+    
+    #the line is read, so update the read_stat from 0 to 1
+    my $update = sprintf "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date;
+    $dbh->do($update);
+    
+    
+    #store reslults in stat_counter_table
+    foreach my $key_op (keys (%$aggregated_data)) {
+	
+	#open TMP2, ">/tmp/digdump"; &tools::dump_var($aggregated_data->{$key_op}, 0, \*TMP2); close TMP2;
+
+	#store send mail data-------------------------------
+	if($key_op eq 'send_mail'){
+
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' => '', 'robot' => $key_robot});
+		    
+		    #updating susbcriber_table
+		    foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
+
+			if (($key_mail ne 'count') && ($key_mail ne 'size')){
+			    &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
+			}
+		    }
+		}
+	    }
+	}
+	
+    #store added subscribers--------------------------------
+	if($key_op eq 'add_subscriber'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' =>'', 'robot' => $key_robot}); 
+		}
+	    }
+	}
+	#store deleted subscribers--------------------------------------
+	if($key_op eq 'del_subscriber'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+		    foreach my $key_param (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
+			
+			&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_param, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_param}, 'total'=>'', 'robot' => $key_robot});
+			
+		    }
+		}
+	    }
+	}
+	#store lists created--------------------------------------------
+	if($key_op eq 'create_list'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+	    }
+	}
+	#store lists copy-----------------------------------------------
+	if($key_op eq 'copy_list'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+	    }
+	}
+	#store lists closed----------------------------------------------
+	if($key_op eq 'close_list'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+	    }
+	}
+	#store lists purged-------------------------------------------------
+	if($key_op eq 'purge_list'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+	    }
+	}
+	#store messages rejected-------------------------------------------
+	if($key_op eq 'reject'){
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		}
+	    }
+	}
+	#store lists rejected----------------------------------------------
+	if($key_op eq 'list_rejected') {
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+	    }
+	}
+	#store documents uploaded------------------------------------------
+	if($key_op eq 'd_upload') {
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		}
+	    }
+				     
+	}
+	#store folder creation in shared-----------------------------------
+	if($key_op eq 'd_create_directory') {
+	    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		}
+	    }
+	    
+	}
+	#store file creation in shared-------------------------------------
+	if($key_op eq 'd_create_file') {
+		    
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+		
+		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
+		    
+		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		}
+	    }
+	    
+	}
+	
+    }#end of foreach
+	
+    my $d_deb = localtime($begin_date);
+    my $d_fin = localtime($end_date);
+    &do_log('info', 'data aggregated from %s to %s', $d_deb, $d_fin);
+}
+
+
+#called by subroutine aggregate_data
+#get in parameter the result of db request and put in an hash data we need.
+sub deal_data {
+    
+    my $result_request = shift;
+    my %data;
+
+
+    #on parcours caque ligne correspondant a un nuplet
+    #each $id correspond to an hash
+    foreach my $id (keys(%$result_request)) {
+			
+	#----------------------------test about send_mail----------------------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'send_mail') {
+	    
+	    
+	    #test if send_mail value exists already or not, if not, create it
+	    unless(exists ($data{'send_mail'})){
+		$data{'send_mail'} = undef;
+		
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'};#get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'};#get name of list
+	    my $email = $result_request->{$id}->{'email_stat'}; #get the sender
+	    
+	    
+	    #if the listname and robot  dont exist in $data, create it, with size & count to zero
+	    unless(exists ($data{'send_mail'}{$r_name}{$l_name})) {
+		$data{'send_mail'}{$r_name}{$l_name}{'size'} = 0;
+		$data{'send_mail'}{$r_name}{$l_name}{'count'} = 0;
+		$data{'send_mail'}{$r_name}{$l_name}{$email} = 0;
+		
+	    }
+	    	    
+	    #on ajoute la taille du message
+	    $data{'send_mail'}{$r_name}{$l_name}{'size'} += $result_request->{$id}->{'parameter_stat'};
+	    #on ajoute +1 message envoyé
+	    $data{'send_mail'}{$r_name}{$l_name}{'count'}++;
+	    #et on incrémente le mail
+	    $data{'send_mail'}{$r_name}{$l_name}{$email}++;
+	}	
+	#------------------------------test about add_susbcriber-----------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'add subscriber') {
+	    
+	    unless(exists ($data{'add_subscriber'})){
+		$data{'add_subscriber'}=undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    #if the listname and robot  dont exist in $data, create it, with  count to zero
+	    unless(exists ($data{'add_subscriber'}{$r_name}{$l_name})) {
+		$data{'add_subscriber'}{$r_name}{$l_name}{'count'}=0;
+	    }
+	    
+	    #on incrémente le nombre d'inscriptions
+	    $data{'add_subscriber'}{$r_name}{$l_name}{'count'}++;
+	    
+	    
+	}	
+	#-------------------------------test about del_subscriber-----------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'del subscriber') {
+	    
+	    unless(exists ($data{'del_subscriber'})){
+		$data{'del_subscriber'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    my $param = $result_request->{$id}->{'parameter_stat'}; #if del is usubcription, deleted by admin or bounce...
+	    
+	    unless(exists ($data{'del_subscriber'}{$r_name}{$l_name})){
+		$data{'del_subscriber'}{$r_name}{$l_name}{$param} = 0;
+	    }
+	    
+	    #on incrémente les parametres
+	    $data{'del_subscriber'}{$r_name}{$l_name}{$param}++;
+	}	
+	#------------------------------test about list creation-------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'create_list'){
+	    
+	    unless(exists ($data{'create_list'})){
+		$data{'create_list'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
+	    
+	    unless(exists ($data{'create_list'}{$r_name})){
+		$data{'create_list'}{$r_name} = 0;
+	    }
+		
+
+	    #on incrémente le nombre de création de listes
+	    $data{'create_list'}{$r_name}++;
+	}
+	#-------------------------------test about copy list-------------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'copy list'){
+	    
+	    unless(exists ($data{'copy_list'})){
+		$data{'copy_list'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
+	    
+	    unless(exists ($data{'copy_list'}{$r_name})){
+		$data{'copy_list'}{$r_name} = 0;
+	    }
+		
+
+	    #on incrémente le nombre de copies de listes
+	    $data{'copy_list'}{$r_name}++;
+	}
+	#-------------------------------test about closing list----------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'close_list'){
+	    
+	    unless(exists ($data{'close_list'})){
+		$data{'close_list'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
+	    
+	    unless(exists ($data{'close_list'}{$r_name})){
+		$data{'close_list'}{$r_name} = 0;
+	    }
+
+	    #on incrémente le nombre de création de listes
+	    $data{'close_list'}{$r_name}++;
+	}
+	#--------------------------------test abount purge list-------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'purge list'){
+	    
+	    unless(exists ($data{'purge_list'})){
+		$data{'purge_list'} = 0;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
+	    
+	    unless(exists ($data{'purge_list'}{$r_name})){
+		$data{'purge_list'}{$r_name} = 0;
+	    }
+
+	    #on incrémente le nombre de création de listes
+	    $data{'purge_list'}{$r_name}++;
+	}
+	#-----------------------------test about rejected messages-----------------
+	if($result_request->{$id}->{'operation_stat'} eq 'reject') {
+	    
+	    unless (exists ($data{'reject'})){
+		$data{'reject'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    unless(exists ($data{'reject'}{$r_name}{$l_name})){
+		$data{'reject'}{$r_name}{$l_name} = 0;
+	    }
+
+	    #on icrémente le nombre de messages rejetés pour une liste
+	    $data{'reject'}{$r_name}{$l_name}++;
+	}
+	#-----------------------------test about rejected creation lists-----------
+	if($result_request->{$id}->{'operation_stat'} eq 'list_rejected') {
+	    
+	    unless (exists ($data{'list_rejected'})){
+		$data{'list_rejected'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    
+	    unless (exists ($data{'list_rejected'}{$r_name})){
+		$data{'list_rejected'}{$r_name} = 0;
+	    }
+	    
+	    #on incrémente le nombre de listes rejetées par robot
+	    $data{'list_rejected'}{$r_name}++;
+	}
+	#------------------------------test about upload sharing------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'd_upload'){
+	    
+	    unless (exists ($data{'d_upload'})){
+		$data{'d_upload'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    unless (exists ($data{'d_upload'}{$r_name}{$l_name})){
+		$data{'d_upload'}{$r_name}{$l_name} = 0;
+	    }
+	    
+	    #on incrémente le nombre de docupents uploadés par liste
+	    $data{'d_upload'}{$r_name}{$l_name}++;
+	}
+	#------------------------------test about folder creation in shared----------------
+	if($result_request->{$id}->{'operation_stat'} eq 'd_create_dir(directory)'){
+
+	    unless (exists ($data{'d_create_directory'})){
+		$data{'d_create_directory'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    unless (exists ($data{'d_create_directory'}{$r_name}{$l_name})){
+		$data{'d_create_directory'}{$r_name}{$l_name} = 0;
+	    }
+	    
+	    #on incrémente le nombre de docupents uploadés par liste
+	    $data{'d_create_directory'}{$r_name}{$l_name}++;
+	}
+	    
+	#------------------------------test about file creation in shared------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'd_create_dir(file)'){
+
+	    unless (exists ($data{'d_create_file'})){
+		$data{'d_create_file'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    unless (exists ($data{'d_create_file'}{$r_name}{$l_name})){
+		$data{'d_create_file'}{$r_name}{$l_name} = 0;
+	    }
+	    
+	    #on incrémente le nombre de docupents uploadés par liste
+	    $data{'d_create_file'}{$r_name}{$l_name}++;
+	}
+	#---------------------------------test about archive-----------------------------
+	if($result_request->{$id}->{'operation_stat'} eq 'arc'){
+	    
+	    unless(exists ($data{'archive visited'})){
+		$data{'archive_visited'} = undef;
+	    }
+	    
+	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get name of robot
+	    my $l_name = $result_request->{$id}->{'list_stat'}; #get name of list
+	    
+	    unless (exists ($data{'archive_visited'}{$r_name}{$l_name})){
+		$data{'archive_visited'}{$r_name}{$l_name} = 0;
+	    }
+	    
+	    #on incrémente le nombre de fois ou les archive sont visitées
+	    $data{'archive_visited'}{$r_name}{$l_name}++;
+	}
+	
+	#open TMP2, ">/tmp/digdump"; &tools::dump_var(\%data, 0, \*TMP2); close TMP2;
+	
+    }#end of foreach
+    return \%data;
+}
+
+#subroutine to Update subscriber_table about message send, upgrade field number_messages_subscriber
+sub update_subscriber_msg_send {
+
+    my ($mail, $list, $robot, $counter) = @_;
+    my $dbh = &List::db_get_handler;
+    
+     ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+
+
+    my $statement = "SELECT * from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail;
+    my $sth = $dbh->prepare($statement);
+    
+    unless($sth->execute){
+	&do_log('err','Unable to execute statement %s',$statement);
+	return undef;
+    }
+    
+    my $nb_msg = $sth->fetchrow_hashref('number_messages_subscriber') + $counter;
+    
+    
+    my $update = sprintf "UPDATE subscriber_table SET number_messages_subscriber = '%d' WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $nb_msg, $robot, $list, $mail;
+    $dbh->do($update);
+
+    &do_log('info', 'subscriber_table updated');
+    return 1;
+
+}
+
+#get date of the last time we have aggregated data
+sub get_last_date_aggregation {
+    
+    my $dbh = &List::db_get_handler;
+    
+     ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+	$dbh = &List::db_get_handler();
+    }
+    
+    
+    my $statement = " SELECT MAX( end_date_counter ) FROM `stat_counter_table` ";
+    my $sth = $dbh->prepare($statement);
+    
+    unless($sth->execute){
+	&do_log('err','Unable to execute statement %s',$statement);
+	return undef;
+    }
+    
+    my $last_date = $sth->fetchrow_array;
+    
+    #open TMP2, ">/tmp/digdump"; &tools::dump_var($last_date, 0, \*TMP2); close TMP2;
+    return $last_date;
+    
+}
 1;
 
 

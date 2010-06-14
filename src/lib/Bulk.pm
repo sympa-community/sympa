@@ -27,6 +27,7 @@ use Carp;
 use IO::Scalar;
 use Storable;
 use Mail::Header;
+use Mail::Address;
 use Time::HiRes qw(time);
 use Time::Local;
 use MIME::Entity;
@@ -422,12 +423,27 @@ sub store {
     unless ($dbh and $dbh->ping) {
 	return undef unless &List::db_connect();
     }
+
+
+    #creation of a MIME entity to extract the real sender of a message
+    my $parser = MIME::Parser->new();
+
+    my $msg_as_entity= $parser->parse_data($msg);
+ 
+    my $msg_head = $msg_as_entity->head;
+
+
+    my @sender_hdr = Mail::Address->parse($msg_head->get('From'));
+    my $message_sender = $sender_hdr[0]->address;
+
     
     $msg = MIME::Base64::encode($msg);
 
+    ##-----------------------------##
+    
     my $messagekey = &tools::md5_fingerprint($msg);
 
-    # first store the message in bulk_message_table (because as soon as packet are created bulk.pl may distribute them).
+    # first store the message in bulk_spool_table (because as soon as packet are created bulk.pl may distribute them).
     # if messagekey is equal to message_fingerprint, the message is already stored in database
     
     my $message_already_on_spool;
@@ -452,15 +468,24 @@ sub store {
 	# if message is not found in bulkspool_table store it
 	if ($message_already_on_spool == 0) {
 	    my $statement      = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool,dkim_header_list_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s ,%s)",$dbh->quote($messagekey),$dbh->quote($msg_id),$dbh->quote($msg),$dbh->quote($dkim->{d}), $dbh->quote($dkim->{i}),$dbh->quote($dkim->{selector}),$dbh->quote($dkim->{private_key}), $dbh->quote($dkim->{header_list}); 
-
+	    
 	    my $statementtrace = sprintf "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool, dkim_i_bulkspool, dkim_selector_bulkspool, dkim_privatekey_bulkspool, dkim_header_list_bulkspool) VALUES (%s, %s, %s, 1, %s ,%s ,%s, %s, %s)",$dbh->quote($messagekey),$dbh->quote($msg_id),$dbh->quote(substr($msg, 0, 100)), $dbh->quote($dkim->{d}), $dbh->quote($dkim->{i}),$dbh->quote($dkim->{selector}),$dbh->quote(substr($dkim->{private_key},0,30)), $dbh->quote($dkim->{header_list});  
 	    # do_log('debug',"insert : $statement_trace");
+	    
+	    unless ($dbh->do($statement)) {
+		do_log('err','Unable to add message in bulkspool_table "%s"; error : %s', $statementtrace, $dbh->errstr);
+		return undef;
+	    }
 
-		unless ($dbh->do($statement)) {
-		    do_log('err','Unable to add message in bulkspool_table "%s"; error : %s', $statementtrace, $dbh->errstr);
-		    return undef;
+
+	    #log in stat_table to make statistics...
+	    unless($message_sender =~ /($robot)\@/) { #ignore messages sent by robot
+		unless ($message_sender =~ /($listname)-request/) { #ignore messages of requests
+
+		    &Log::db_stat_log({'robot' => $robot, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
+				       'mail' => $message_sender, 'client' => '', 'daemon' => 'sympa.pl'});
 		}
-
+	    }
 	    $message_fingerprint = $messagekey;
 	}
     }

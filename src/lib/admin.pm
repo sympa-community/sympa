@@ -155,7 +155,7 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 #           are not installed or 1(in status open)
 #######################################################
 sub create_list_old{
-    my ($param,$template,$robot,$origin) = @_;
+    my ($param,$template,$robot,$origin, $user_mail) = @_;
     &do_log('debug', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot,$origin);
 
      ## obligatory list parameters 
@@ -326,6 +326,12 @@ sub create_list_old{
 	$list->create_shared();
     }
 
+    #log in stat_table to make statistics
+
+    if($origin eq "web"){
+	&Log::db_stat_log({'robot' => $robot, 'list' => $param->{'listname'}, 'operation' => 'create list', 'parameter' => '', 'mail' => $user_mail, 'client' => '', 'daemon' => 'wwsympa.fcgi'});
+    }
+
     my $return = {};
     $return->{'list'} = $list;
 
@@ -341,8 +347,7 @@ sub create_list_old{
 	&do_log('notice', "Synchronizing list members...");
 	$list->sync_include();
     }   
-
-    return $return;
+   return $return;
 }
 
 ########################################################
@@ -644,7 +649,7 @@ sub update_list{
 }
 
 ########################################################
-# create_list                                      
+# rename_list                                      
 ########################################################  
 # Rename a list or move a list to another virtual host
 # 

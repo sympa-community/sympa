@@ -48,10 +48,13 @@
      [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 
 	<li class="[% class %]">&#187; &nbsp;<a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
-
+ 
   [% END %]
   </ul>
 </li>
+  [% IF is_owner %]
+	<li class="[% class %]"><a href="[% path_cgi %]/stats/[% list %]">[%|loc%]Statistics[%END%]</a></li>	
+  [% END %]
 [% END %]
 
 
