@@ -24,7 +24,7 @@
   [% IF robots %]
     [%|loc%]The following virtual robots are running on this server:[%END%]
     <ul>
-    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>[% END %]
+    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a> - <i>[%|loc%]Sympa URL:[%END%]</i> <b>[% vr.value.wwsympa_url %]</b> - <i>[%|loc%]Mail domain:[%END%]</i> <b>[% vr.value.host %]</b> - <i>[%|loc%]Listmaster(s):[%END%]</i> <b>[% FOREACH admin = vr.value.listmaster %][% admin %] [% END %]</b></li>[% END %]
     </ul>
   [% ELSE %]
     [%|loc%]No Virtual Robot defined on this server[%END%]
