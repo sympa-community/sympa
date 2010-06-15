@@ -2044,13 +2044,6 @@ sub distribute {
     my $msg_id = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
 
-    ## encrypted message ## no used variable ???
-    if ($message->{'smime_crypted'}) {
-	$is_crypted = 'smime_crypted';
-    }else {
-	$is_crypted = 'not_crypted';
-    }
-
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message

@@ -51,7 +51,6 @@ use Sympa::Constants;
 
 # durty global variables
 my $is_signed = {}; 
-my $is_crypted ;
 
 
 ## Internal tuning
@@ -1398,13 +1397,6 @@ sub DoFile {
 	#}
     }
     
-    ## encrypted message
-    if ($message->{'smime_crypted'}) {
-	$is_crypted = 'smime_crypted';
-    }else {
-	$is_crypted = 'not_crypted';
-    }
-
     ## S/MIME or DKIM signed messages
     if ($message->{'smime_signed'}) {
 	$is_signed = {'subject' => $message->{'smime_subject'},# subject semantic is relater to X509 (subject is the private key owner, not the message Subject header !)
