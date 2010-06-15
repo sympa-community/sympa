@@ -6771,7 +6771,6 @@ sub do_skinsedit {
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} .= $mail_command;
 
-
 	 ## For compatibility concerns
 	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
 	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
@@ -6818,6 +6817,7 @@ sub do_skinsedit {
 	 }
      }
 
+     $data->{'not_auto_submitted'} = 1;
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'), $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -14738,6 +14738,7 @@ sub d_test_existing_and_rights {
 		 'from'=> $param->{'user'}{'email'},
 		 'body' => $mail_command};
 
+     $data->{'not_auto_submitted'} = 1;
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'),$data,$robot)) {
 	 &report::reject_report_web('intern','cannot_send_remind',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -15519,7 +15520,8 @@ sub do_compose_mail {
 		'sign_mode' => '',
 		'header_possible' => '1'};
 
-    unless (&mail::mail_file('', $to, $data, $robot)) {
+     $data->{'not_auto_submitted'} = 1;
+     unless (&mail::mail_file('', $to, $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err','do_send_mail: failed to send message for $to list');
@@ -15689,6 +15691,7 @@ sub do_compose_mail {
 	 return undef;
      }
 
+     $data->{'not_auto_submitted'} = 1;
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'),$data,$robot)) {
 	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);

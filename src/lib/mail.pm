@@ -118,7 +118,6 @@ sub mail_file {
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
 
-
     &do_log('debug2', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
 
     my ($to,$message);
@@ -240,11 +239,14 @@ sub mail_file {
     ## Determine what value the Auto-Submitted header field should take
     ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
     ## the header filed can have one of the following values : auto-generated, auto-replied, auto-forwarded
-    #unless ($header_ok{'auto_submitted'}) {
-    #  ## Default value is 'auto-generated'
-    #  my $header_value = $data->{'auto_submitted'} || 'auto-generated';
-    #  $headers .= "Auto-Submitted: $header_value\n"; 
-    #}
+    ## The header should not be set when wwsympa sends a command/mail to sympa.pl through its spool
+    unless ($data->{'not_auto_submitted'} ||
+	    $header_ok{'auto_submitted'}) {
+      ## Default value is 'auto-generated'
+      my $header_value = $data->{'auto_submitted'} || 'auto-generated';
+      $headers .= "Auto-Submitted: $header_value\n"; 
+    }
+
     unless ($existing_headers) {
 	$headers .= "\n";
    }
@@ -456,10 +458,11 @@ sub mail_forward {
 	&do_log('err',"Unknown message variable type: '%s'. can't process message forwarding.",ref($msg));
 	return undef;
     }
+
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
-    #if (defined $message and $message->head) {
-    #	$message->head->add('Auto-Submitted', 'auto-forwarded');
-    #}
+    if (defined $message && $message->head) {
+      $message->head->add('Auto-Submitted', 'auto-forwarded');
+    }
     
 
     unless (defined &sending('msg' => $messageasstring, 
