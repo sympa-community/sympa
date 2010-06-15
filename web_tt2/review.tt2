@@ -63,7 +63,7 @@
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
   <br /><br />
-  <form action="[% path_cgi %]" method="post">
+  <form action="[% path_cgi %]" method="post" id="myform">
   <fieldset>
    <input type="hidden" name="previous_action" value="review" />
    <input type="hidden" name="list" value="[% list %]" />
@@ -71,7 +71,8 @@
    <label for="email_search">[%|loc%]Add an user: [%END%]</label>
    <input id="email_search" type="text" name="email" size="35" />
    <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
-   <input id="quietly" type="checkbox" name="quiet" /> <label for="quietly">[%|loc%]quiet[%END%]</label>
+   <input id="quietly" type="hidden" name="quiet" value="0"/>
+   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add quietly[%END%]" onclick="setnsubmit('quietly','value','1','myform');return false;"/>
    &nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
   </fieldset>
   </form>

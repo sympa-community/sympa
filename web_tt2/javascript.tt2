@@ -10,6 +10,13 @@
 [% END %]
 
 <script type="text/javascript">
+function setnsubmit(element,attribute,value,formid) {
+	elt =  document.getElementById(element);
+	elt.setAttribute(attribute,value);
+	form=document.getElementById(formid);
+	form.submit();
+}
+
 function showhide(div){
     oDiv = document.getElementById(div);
     if(oDiv.style.display == "none"){
