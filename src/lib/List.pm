@@ -1225,6 +1225,12 @@ my %alias = ('reply-to' => 'reply_to',
 			   'gettext_id' => "Priority",
 			   'group' => 'description'
 		       },
+	    'reject_mail_from_automates_feature' => {'format' => ['on','off'],
+						     'occurence' => '0-1',
+						     'default' => {'conf' => 'reject_mail_from_automates_feature'},
+			       'gettext_id' => "Reject mail from automates (crontab, etc)?",
+			       'group' => 'sending'
+			       },	
 	    'remind' => {'scenario' => 'remind',
 			 'gettext_id' => "Who can start a remind process",
 			 'group' => 'command'

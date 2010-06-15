@@ -458,6 +458,12 @@ our @params = (
         file    => 'sympa.conf',
     },
     {
+        name   => 'reject_mail_from_automates_feature',
+        query  => 'Reject mail from automates (crontab, etc) sent to a list?',
+        default => 'on',
+        file    => 'sympa.conf',
+    },
+    {
         name    => 'automatic_list_feature',
         default => 'off',
 	vhost   => '1',
