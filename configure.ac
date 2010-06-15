@@ -496,6 +496,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/etc/Makefile
     src/etc/script/Makefile
+    src/etc/script/js/Makefile
     src/lib/Makefile
     soap/Makefile
     doc/Makefile

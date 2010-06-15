@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+SUBDIRS = js
+
 dbscripts = create_db.Pg create_db.mysql create_db.Oracle \
 	    create_db.Sybase create_db.SQLite
 

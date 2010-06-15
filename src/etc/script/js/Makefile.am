@@ -19,12 +19,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-javascript_DATA = jqplot.barRenderer.min.js \
-		  jqplot.CanvasAxisTickRenderer.js \
-		  jqplot.CanvasTextRenderer.js \
-		  jqplot.categoryAxisRenderer.min.js \
-		  jquery.jqplot.css \
-		  jquery.jqplot.min.js \
-		  jquery.js
+jsdir = $(staticdir)/js
 
-EXTRA_DIST = $(javascript_DATA)
+js_DATA = jqplot.barRenderer.min.js \
+	jqplot.CanvasAxisTickRenderer.js \
+	jqplot.CanvasTextRenderer.js \
+	jqplot.categoryAxisRenderer.min.js \
+	jquery.jqplot.css \
+	jquery.jqplot.min.js \
+	jquery.js
+
+EXTRA_DIST = $(js_DATA)
