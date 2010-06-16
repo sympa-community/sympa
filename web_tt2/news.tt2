@@ -1,54 +1,41 @@
 <!-- $Id: news.tt2 william.roquet $ -->
 
 <!-- beginning of the admin news -->
-[% IF admin_summary.size > 0 %]
-
-
-
+[% IF admin_summary.size > 0 -%]
 <div class="news_container">
 
 <h1>[%|loc%]Administration Summary[%END%]</h1>
-
-
-<h2>[%|loc%]What's new today?[%END%]</h2>
+<p>[%|loc%]Tasks waiting for your validation[%END%]</p>
 <div id="home_admin_summary">
 <ul>
-
-<!-- list of new admins -->
- [% FOREACH list_to_admin = admin_summary %]
-   <li>[%|loc(list_to_admin.key)%]List %1: [%END%]
-   [% IF list_to_admin.value.mod_message %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_message)%]%1 messages[%END%][% END %]</a>
-   [% IF list_to_admin.value.mod_shared_total %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_shared_total)%]%1 documents[%END%][% END %]</a>
-   [% IF list_to_admin.value.mod_subscription %]<a href="[% path_cgi %]/subindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_subscription)%]%1 subscription requests[%END%][% END %]</a></li>
- [% END %]
- </ul>
+<!-- list of administrative tasks -->
+ [% FOREACH list_to_admin = admin_summary -%]
+   <li>[%|loc(list_to_admin.key)%]List %1:[%END%] 
+   [% IF list_to_admin.value.mod_message %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_message)%]%1 message(s)[%END%][% END %]</a>
+   [% IF list_to_admin.value.mod_shared_total %]<a href="[% path_cgi %]/modindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_shared_total)%]%1 document(s)[%END%][% END %]</a>
+   [% IF list_to_admin.value.mod_subscription %]<a href="[% path_cgi %]/subindex/[% list_to_admin.key %]">[%|loc(list_to_admin.value.mod_subscription)%]%1 subscription request(s)[%END%][% END %]</a></li>
+ [% END -%]
+</ul>
 </div>
 </div>
 [% ELSE %]
 <br>
 <!-- do nothing-->
-
 [% END %]
+
 <!-- list of new errors-->
-
-
-
-[% IF errors_summary.size > 0 %]
+[% IF errors_summary.size > 0 -%]
 <div class="news_container">
 <h1>[%|loc%]User Errors[%END%]</h1>
-<h2>[%|loc%]You've got errors ![%END%]</h2>
+<p>[%|loc%]We received error reports while trying to send you messages. Some of them may have been lost.[%END%]</p>
 <div id="home_admin_summary">
-
 <ul>
-[% FOREACH user_with_errors = errors_summary %]
-
+[% FOREACH user_with_errors = errors_summary -%]
 <li>[%|loc(user_with_errors.key)%] List %1: [%END%]
 [% IF user_with_errors.value %] [%|loc(user_with_errors.value)%] %1 error(s)[% END %], 
 <a href="mailto:[% user_with_errors.key %]-request@dev-sympa.cru.fr">please contact the list owners</a>
 [% END %]<!--IF-->
 </li>
-
-
 [% END %]<!--FOREACH-->
 </ul>
 
