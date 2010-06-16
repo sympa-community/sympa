@@ -1,11 +1,13 @@
 <!-- $Id: news.tt2 william.roquet $ -->
 
 <!-- beginning of the admin news -->
-[% IF admin_summary.size > 0 -%]
-<div class="news_container">
 
-<h1>[%|loc%]Administration Summary[%END%]</h1>
-<p>[%|loc%]Tasks waiting for your validation[%END%]</p>
+[% IF admin_summary.size > 0 || errors_summary.size > 0-%]
+<div class="news_container">
+[% IF admin_summary.size > 0 -%]
+
+<h2>[%|loc%]Administration Tasks[%END%]</h2>
+<p>[%|loc%]The following items are waiting for your validation[%END%]</p>
 <div id="home_admin_summary">
 <ul>
 <!-- list of administrative tasks -->
@@ -17,7 +19,6 @@
  [% END -%]
 </ul>
 </div>
-</div>
 [% ELSE %]
 <br>
 <!-- do nothing-->
@@ -25,8 +26,7 @@
 
 <!-- list of new errors-->
 [% IF errors_summary.size > 0 -%]
-<div class="news_container">
-<h1>[%|loc%]User Errors[%END%]</h1>
+<h2>[%|loc%]User Errors[%END%]</h2>
 <p>[%|loc%]We received error reports while trying to send you messages. Some of them may have been lost.[%END%]</p>
 <div id="home_admin_summary">
 <ul>
@@ -40,6 +40,7 @@
 </ul>
 
 </div>
+[% END %]<!--IF-->
 </div>
 [% END %]<!--IF-->
 
