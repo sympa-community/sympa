@@ -662,6 +662,47 @@ sub upgrade {
 
    }
 
+   if (&tools::lower_version($previous_version, '6.1b.5')) {
+		## Encoding of shared documents was not consistent with recent versions of MIME::Encode
+		## MIME::EncWords::encode_mimewords() used to encode characters -!*+/ 
+		## Now these characters are preserved, according to RFC 2047 section 5 
+		## We change encoding of shared documents according to new algorithm
+		&do_log('notice','Fixing Q-encoding of web document filenames...');
+		my $all_lists = &List::get_lists('*');
+		foreach my $list ( @$all_lists ) {
+			if (-d $list->{'dir'}.'/shared') {
+				&do_log('notice','  Processing list %s...', $list->get_list_address());
+
+				my @all_files;
+				&tools::list_dir($list->{'dir'}, \@all_files, 'utf-8');
+				
+				my $count;
+				foreach my $f_struct (reverse @all_files) {
+					my $new_filename = $f_struct->{'filename'};
+					
+					## Decode and re-encode filename
+					$new_filename = &tools::qencode_filename(&tools::qdecode_filename($new_filename));
+					
+					if ($new_filename ne $f_struct->{'filename'}) {
+						## Rename file
+						my $orig_f = $f_struct->{'directory'}.'/'.$f_struct->{'filename'};
+						my $new_f = $f_struct->{'directory'}.'/'.$new_filename;
+						&do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
+						unless (rename $orig_f, $new_f) {
+							&do_log('err', "Failed to rename %s to %s : %s", $orig_f, $new_f, $!);
+							next;
+						}
+						$count++;
+					}
+				}
+				if ($count) {
+				&do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);
+				}
+			}
+		}
+		
+   }	
+
     return 1;
 }
 
