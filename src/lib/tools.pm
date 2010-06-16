@@ -1390,6 +1390,11 @@ sub smime_decrypt {
 	}
     }
 	
+    unless (defined $decryptedmsg) {
+      &do_log('err', 'Message could not be decrypted');
+      return undef;
+    }
+
     ## Now remove headers from $msg_as_string
     my @msg_tab = split(/\n/, $msg_as_string);
     my $line;
