@@ -437,16 +437,16 @@ my %alias = ('reply-to' => 'reply_to',
 		     },
 	    'creation' => {'format' => {'date_epoch' => {'format' => '\d+',
 							 'occurrence' => '1',
-							 'gettext_id' => "",
+							 'gettext_id' => "epoch date",
 							 'order' => 3
 						     },
 					'date' => {'format' => '.+',
-						   'gettext_id' => "",
+						   'gettext_id' => "human readable",
 						   'order' => 2
 						   },
 					'email' => {'format' => 'listmaster|'.&tools::get_regexp('email'),
 						    'occurrence' => '1',
-						    'gettext_id' => "",
+						    'gettext_id' => "who created the list",
 						    'order' => 1
 						    }
 				    },
