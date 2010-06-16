@@ -27,6 +27,7 @@ js_DATA = jqplot.barRenderer.min.js \
 	jqplot.categoryAxisRenderer.min.js \
 	jquery.jqplot.css \
 	jquery.jqplot.min.js \
-	jquery.js
+	jquery.js \
+	sympa.js
 
 EXTRA_DIST = $(js_DATA)

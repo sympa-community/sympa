@@ -1102,6 +1102,9 @@ my $birthday = time ;
      ## Get PATH_INFO parameters
      &get_parameters();
 
+     # Static content
+     $param->{'static_content_url'} = &Conf::get_robot_conf($robot, 'static_content_url');
+
      ## CSS related
      $param->{'css_path'} = &Conf::get_robot_conf($robot, 'css_path');
      $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
@@ -15889,7 +15892,6 @@ sub do_stats {
 
      $param->{'shared_size'} = int (($list->get_shared_size + 512)/1024);
      $param->{'arc_size'} = int (($list->get_arc_size($wwsconf->{'arc_path'}) + 512)/1024);
-     $param->{'static_content_url'} = &Conf::get_robot_conf($robot, 'static_content_url');
 
 
      #-------------------send_mail treatment-----------------
