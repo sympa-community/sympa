@@ -376,7 +376,9 @@ sub purge_old_tickets {
 	    return undef;
 	}
 	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL stat
+
+ement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}    
     }
@@ -517,6 +519,16 @@ sub as_hashref {
   }
   
   return $data;
+}
+
+## Return 1 if the Session object corresponds to an anonymous session.
+sub is_anonymous {
+    my $self = shift;
+    if($self->{'email'} eq 'nobody' || $self->{'email'} eq '') {
+	return 1;
+    }else{
+	return 0;
+    }
 }
 
 1;

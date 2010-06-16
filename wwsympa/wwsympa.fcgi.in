@@ -8494,38 +8494,40 @@ Sends back the list creation edition form.
 sub do_home {
     &wwslog('info', 'do_home');
     
-    ## Build the admin_summary variable that tells foreach list 
-    ## how many messages/subscriptions are awaiting moderation
-    foreach my $one_list (@{$param->{'get_which_owner'}},@{$param->{'get_which_editor'}}) {
-
-	next if $param->{'admin_summary'}{$one_list->{'name'}}; ## skip already treated ones
+    if(!$session->is_anonymous()) {
 	
-	my $mod_message = $one_list->get_mod_spool_size();
-	$param->{'admin_summary'}{$one_list->{'name'}}{'mod_message'} = $mod_message if ($mod_message > 0);
+	## Build the admin_summary variable that tells foreach list 
+	## how many messages/subscriptions are awaiting moderation
+	foreach my $one_list (@{$param->{'get_which_owner'}},@{$param->{'get_which_editor'}}) {
+	    
+	    next if $param->{'admin_summary'}{$one_list->{'name'}}; ## skip already treated ones
+	    
+	    my $mod_message = $one_list->get_mod_spool_size();
+	    $param->{'admin_summary'}{$one_list->{'name'}}{'mod_message'} = $mod_message if ($mod_message > 0);
+	    
+	    my $mod_subscription = $one_list->get_subscription_request_count();
+	    $param->{'admin_summary'}{$one_list->{'name'}}{'mod_subscription'} = $mod_subscription if ($mod_subscription > 0);
+	    
+	    my $doc_mod_list = $one_list->get_shared_moderated();
+	    my $mod_shared_total = $#{$doc_mod_list} + 1;
+	    $param->{'admin_summary'}{$one_list->{'name'}}{'mod_shared_total'} = $mod_shared_total if ($mod_shared_total > 0);
+	    
+	}
 	
-	my $mod_subscription = $one_list->get_subscription_request_count();
-	$param->{'admin_summary'}{$one_list->{'name'}}{'mod_subscription'} = $mod_subscription if ($mod_subscription > 0);
+	## Build the errors_summary variable, tells for a suscriber
+	## how many sending messages are in errors
 	
-	my $doc_mod_list = $one_list->get_shared_moderated();
-	my $mod_shared_total = $#{$doc_mod_list} + 1;
-	$param->{'admin_summary'}{$one_list->{'name'}}{'mod_shared_total'} = $mod_shared_total if ($mod_shared_total > 0);
-	
+	foreach my $the_list (@{$param->{'get_which'}}){ #review all the lists
+	    
+	    next if $param->{'errors_summary'}{$the_list->{'name'}};
+	    
+	    my $errors = $the_list->get_total_bouncing(); #get the bounces of the subscriber
+	    
+	    $param->{'errors_summary'}{$the_list->{'name'}} = $errors if ($errors > 0); #if there is bounces put it in errors_summary
+	}
     }
-
-    ## Build the errors_summary variable, tells for a suscriber
-    ## how many sending messages are in errors
-
-    foreach my $the_list (@{$param->{'get_which'}}){ #review all the lists
-
-	next if $param->{'errors_summary'}{$the_list->{'name'}};
-	
-	my $errors = $the_list->get_total_bouncing(); #get the bounces of the subscriber
-	
-	$param->{'errors_summary'}{$the_list->{'name'}} = $errors if ($errors > 0); #if there is bounces put it in errors_summary
-    }
-
+    
     return 1;
-
 
 }
 
