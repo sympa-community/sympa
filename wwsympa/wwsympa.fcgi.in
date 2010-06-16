@@ -6321,8 +6321,9 @@ sub do_skinsedit {
 	 $param->{'spool'}{$id}{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
 	 $param->{'spool'}{$id}{'spam_status'} = $mail->{'spam_status'};
 	 foreach my $field ('subject','date','from') {
-	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/;
-	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;
+	     $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
+	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/g;
+	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/g;
 	 }
      }
      closedir SPOOL;
@@ -15431,7 +15432,8 @@ sub do_compose_mail {
      }
 
      if (defined $param->{'subscriber'}) {
-	 $from = $param->{'subscriber'}{'gecos'}.' <'.$from.'>';
+	 $from = &tools::addrencode($from, $param->{'subscriber'}{'gecos'},
+				    &Language::GetCharset());
      }
 
      ##--------------- TOPICS --------------------
@@ -15512,9 +15514,8 @@ sub do_compose_mail {
 			       'Message-ID' => $in{'message_id'}}, 
 		'subject' => $in{'subject'},
 		'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
-		'from'=> $from,
 		'to' => $to,
-		'body' => $in{'body'},
+		'body' => "From: $from\n\n" . $in{'body'},
 		'sign_mode' => '',
 		'header_possible' => '1'};
 
@@ -16229,6 +16230,9 @@ sub mailto {
     @addresses = split (',',$email);
     
     $gecos = $email unless ($gecos);
+    $gecos =~ s/&/&amp;/g;
+    $gecos =~ s/</&lt;/g;
+    $gecos =~ s/>/&gt;/g;
     foreach my $address (@addresses) {
 
 	($recipients{$address}{'local'},$recipients{$address}{'domain'}) = split ('@',$address);	
