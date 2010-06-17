@@ -705,6 +705,7 @@ our @params = (
         query  => 'The directory path use by OpenSSL for trusted CA certificates',
         file   => 'sympa.conf',
         edit   => '1',
+        optional => '1',
     },
     {
         name   => 'cafile',
@@ -712,6 +713,7 @@ our @params = (
         query  => ' This parameter sets the all-in-one file where you can assemble the Certificates of Certification Authorities (CA)',
         file   => 'sympa.conf',
         edit   => '1',
+        optional => '1',
     },
     {
         name    => 'ssl_cert_dir',
