@@ -249,8 +249,8 @@ sub create_db {
     &do_log('notice', 'Database %s created', $Conf{'db_name'});
 
     ## Reload MysqlD to take changes into account
-    my $rc = $drh->func("reload", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc) {
+    my $rc2 = $drh->func("reload", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
+    unless (defined $rc2) {
 	&do_log('err', 'Cannot reload mysqld : %s', $drh->errstr);
 	return undef;
     }
@@ -258,11 +258,6 @@ sub create_db {
     $drh->disconnect();
 
     return 1;
-}
-
-sub ping {
-    my $self = shift;
-    return $self->{'dbh'}->ping; 
 }
 
 sub quote {
