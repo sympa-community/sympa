@@ -3531,9 +3531,13 @@ sub do_sso_login_succeeded {
      if ($in{'help_topic'}) {
 	 if ($in{'help_topic'} eq 'editlist') {
 	     foreach my $pname (sort List::by_order keys %{$pinfo}) {
-		 next if ($pname =~ /^comment|defaults$/);
+		 next if ($pname =~ /^(comment|defaults)$/);
 
-		 $param->{'param'}{$pname}{'title'} = $pinfo->{$pname}{'title'}{$param->{'lang'}};
+		 if ($pinfo->{$pname}{'gettext_id'}) {
+		     $param->{'param'}{$pname}{'title'} = gettext($pinfo->{$pname}{'gettext_id'});
+		 } else {
+		     $param->{'param'}{$pname}{'title'} = $pinfo->{$pname}{'title'}{$param->{'lang'}};
+		 }
 		 $param->{'param'}{$pname}{'comment'} = $pinfo->{$pname}{'comment'}{$param->{'lang'}};
 	     }
 	 }
