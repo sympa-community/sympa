@@ -1086,13 +1086,13 @@ sub smime_sign_check {
     ## a better analyse should be performed to extract the signer email. 
     my $signer = smime_parse_cert({file => $temporary_file});
 
-    unless ($signer->{'email'} eq lc($sender)) {
-	unlink($temporary_file) unless ($main::options{'debug'}) ;	
-	&do_log('notice', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$sender,$signer->{'email'});
+    unless ($signer->{'email'}{lc($sender)}) {
+	unlink($temporary_file) unless ($main::options{'debug'}) ;
+	&do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$sender, join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
 
-    &do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)",$signer->{'email'});
+    &do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
     ## store the signer certificat
     unless (-d $Conf::Conf{'ssl_cert_dir'}) {
 	if ( mkdir ($Conf::Conf{'ssl_cert_dir'}, 0775)) {
@@ -1158,9 +1158,8 @@ sub smime_sign_check {
 		next;
 	    }
 	    
-	    &do_log('debug', "Found cert for <$parsed->{email}>");
-
-	    if (lc($sender) eq $parsed->{email}) {
+	    &do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
+	    if ($parsed->{'email'}{lc($sender)}) {
 		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
 		    $certs{'both'} = $workcert;
 		    &do_log('debug', 'Found a signing + encryption cert');
@@ -1177,7 +1176,7 @@ sub smime_sign_check {
     }
     close(BUNDLE);
     if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
-	&do_log('err', "Could not extract certificate for $signer->{email}");
+	&do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
     ## OK, now we have the certs, either a combined sign+encryption one
@@ -2865,26 +2864,31 @@ sub smime_parse_cert {
 	return undef;
     }
 
-    my @output = <PSC>;
-    my %res;
+    my (%res, $purpose_section);
 
-    $res{'email'} = lc($output[0]);
-    chomp $res{'email'};
+    while (<PSC>) {
+      ## First lines before subject are the email address(es)
 
-    if ($output[1] =~ /^subject=\s+(\S.+)\s*$/) {
+      if (/^subject=\s+(\S.+)\s*$/) {
 	$res{'subject'} = $1;
-    }
 
-    if ($output[2] =~ /^Certificate purposes:/) {
-	foreach my $i (3..$#output) {
-	    $_ = $output[$i];
-	    
-	    if (/^S\/MIME signing : (\S+)/) {
-		$res{purpose}->{sign} = ($1 eq 'Yes');
-	    }elsif (/^S\/MIME encryption : (\S+)/) {
-		$res{purpose}->{enc} = ($1 eq 'Yes');
-	    }
-	}
+      }elsif (! $res{'subject'} && /\@/) {
+	my $email_address = lc($_);
+	chomp $email_address;
+	$res{'email'}{$email_address} = 1;
+
+	  ## Purpose section appears at the end of the output
+	  ## because options order matters for openssl
+      }elsif (/^Certificate purposes:/) {
+		  $purpose_section = 1;
+	  }elsif ($purpose_section) {
+		if (/^S\/MIME signing : (\S+)/) {
+			$res{purpose}->{sign} = ($1 eq 'Yes');
+	  
+		}elsif (/^S\/MIME encryption : (\S+)/) {
+			$res{purpose}->{enc} = ($1 eq 'Yes');
+		}
+      }
     }
     
     ## OK, so there's CAs which put the email in the subjectAlternateName only
