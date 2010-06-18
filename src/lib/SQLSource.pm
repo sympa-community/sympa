@@ -17,7 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
+# along with this program; if not, write to the Free Softwarec
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package SQLSource;
@@ -35,7 +35,7 @@ use tt2;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote);
+our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetch_timeout);
 
 our %date_format = (
 		   'read' => {
@@ -265,7 +265,25 @@ sub query {
 
 sub fetch {
     my $self = shift;
-    return $self->{'sth'}->fetchrow_arrayref;
+	
+    ## call to fetchrow_arrayref() uses eval to set a timeout
+    ## this prevents one data source to make the process wait forever if SELECT does not respond
+    my $array_of_users;
+    $array_of_users = eval {
+	local $SIG{ALRM} = sub { die "TIMEOUT\n" }; # NB: \n required
+	alarm $self->{'fetch_timeout'}; 
+	return $self->{'sth'}->fetchall_arrayref;
+	alarm 0;
+    };
+    if ( $@ eq "TIMEOUT\n" ) {
+	do_log('err','Fetch timeout on remote SQL database');
+        return undef;
+    }elsif ($@) {
+	do_log('err','Fetch failed on remote SQL database');
+    return undef;
+    }
+
+    return $array_of_users;
 }
 
 sub disconnect {
@@ -334,6 +352,12 @@ sub quote {
     my ($self, $string, $datatype) = @_;
     
     return $self->{'dbh'}->quote($string, $datatype); 
+}
+
+sub set_fetch_timeout {
+    my ($self, $timeout) = @_;
+
+    return $self->{'fetch_timeout'} = $timeout;
 }
 
 ## Packages must return true.

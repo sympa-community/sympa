@@ -342,6 +342,12 @@ our @params = (
         file  => 'sympa.conf',
         default => '300',
     },
+   {
+        name  => 'default_sql_fetch_timeout',
+        query => 'Default timeout while performing a fetch for an include_sql_query sync',
+        file  => 'sympa.conf',
+        default => '300',
+    },
     {
         name  => 'sympa_packet_priority',
         query => 'Default priority for a packet to be sent by bulk.',

@@ -1344,6 +1344,13 @@ my %alias = ('reply-to' => 'reply_to',
 			 'internal' => 1,
 			 'group' => 'other'
 			 },
+	    'sql_fetch_timeout' => {'format' => '\d+',
+		      'length' => 6,
+		      'gettext_unit' => 'seconds',
+		      'default' => {'conf' => 'default_sql_fetch_timeout'},
+		      'gettext_id' => "Timeout for fetch of include_sql_query",
+		      'group' => 'data_source'
+		      },
 	    'subject' => {'format' => '.+',
 			  'length' => 50,
 			  'occurrence' => '1',
@@ -8498,7 +8505,7 @@ sub _include_users_ldap_2level {
 
 ## Returns a list of subscribers extracted from an remote Database
 sub _include_users_sql {
-    my ($users, $param, $default_user_options, $tied) = @_;
+    my ($users, $param, $default_user_options, $tied, $fetch_timeout) = @_;
 
     &do_log('debug2','List::_include_users_sql()');
 
@@ -8511,10 +8518,15 @@ sub _include_users_sql {
     my $total = 0;
     
     ## Process the SQL results
-    # my $rows = $sth->rows;
-    # foreach (1..$rows) { ## This way we don't stop at the first NULL entry found
-    while (defined (my $row = $ds->fetch)) {
+    $ds->set_fetch_timeout($fetch_timeout);
+    my $array_of_users = $ds->fetch;
 	
+    unless (defined $array_of_users && ref($array_of_users) eq 'ARRAY') {
+	&do_log('err', 'Failed to include users from ',$param->{'name'});
+	return undef;
+    }
+
+    foreach my $row (@{$array_of_users}) {
 	my $email = $row->[0]; ## only get first field
 	## Empty value
 	next if ($email =~ /^\s*$/);
@@ -8523,7 +8535,7 @@ sub _include_users_sql {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    if ($tied) {
+	    if ($tied eq 'tied') {
 		%u = split "\n",$users->{$email};
 	    }else {
 		%u = %{$users->{$email}};
@@ -8543,7 +8555,7 @@ sub _include_users_sql {
 	$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
 	$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
 
-	if ($tied) {
+	if ($tied eq 'tied') {
 	    $users->{$email} = join("\n", %u);
 	}else {
 	    $users->{$email} = \%u;
@@ -8610,7 +8622,7 @@ sub _load_users_include {
 
 		## get the list of users
 		if ($type eq 'include_sql_query') {
-		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'}, 'tied');
+		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'}, 'tied', $admin->{'sql_fetch_timeout'});
 		}elsif ($type eq 'include_ldap_query') {
 		    $included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_ldap_2level_query') {
@@ -8717,7 +8729,6 @@ sub _load_users_include2 {
     my $admin = $self->{'admin'};
     my $dir = $self->{'dir'};
     do_log('debug2', 'List::_load_users_include for list %s',$name);
-
     my (%users, $depend_on, $ref);
     my $total = 0;
     my @errors;
@@ -8733,7 +8744,7 @@ sub _load_users_include2 {
 
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
-		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'}, 'untied', $admin->{'sql_fetch_timeout'});
 		unless (defined $included){
 		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
 		}
@@ -8860,7 +8871,7 @@ sub _load_admin_users_include {
 		## get the list of admin users
 		## does it need to define a 'default_admin_user_option'?
 		if ($type eq 'include_sql_query') {
-		    $included = _include_users_sql(\%admin_users, $incl,\%option); 
+		    $included = _include_users_sql(\%admin_users, $incl,\%option, 'untied', $list_admin->{'sql_fetch_timeout'}); 
 		}elsif ($type eq 'include_ldap_query') {
 		    $included = _include_users_ldap(\%admin_users, $incl,\%option); 
 		}elsif ($type eq 'include_ldap_2level_query') {
