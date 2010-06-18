@@ -1868,7 +1868,7 @@ sub set {
     }
 
     ## SET EACH is a synonim for SET MAIL
-    $mode = 'mail' if ($mode =~ /^each|eachmail|nodigest|normal$/i);
+    $mode = 'mail' if ($mode =~ /^(each|eachmail|nodigest|normal)$/i);
     $mode =~ y/[A-Z]/[a-z]/;
     
     ## Recursive call to subroutine

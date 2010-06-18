@@ -60,7 +60,7 @@ if (grep(/^-s$/, @ARGV)) {
 }
 my ($operation, $listname, $domain, $file) = @ARGV;
 
-if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
+if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     printf "\n";
     printf "  Options:\n";

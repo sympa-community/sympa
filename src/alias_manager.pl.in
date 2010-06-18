@@ -55,7 +55,7 @@ my $path_to_bouncequeue = Sympa::Constants::LIBEXECDIR .'/bouncequeue';
 my ($operation, $listname, $domain, $file) = @ARGV;
 
 
-if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
+if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     printf STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
     exit(2);
 }

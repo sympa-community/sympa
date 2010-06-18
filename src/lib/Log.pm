@@ -258,7 +258,7 @@ sub db_log {
 	$dbh = &List::db_get_handler();
     }
 
-    unless ($daemon =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounced)|(sympa_soap))$/) {
+    unless ($daemon =~ /^(task|archived|sympa|wwsympa|bounced|sympa_soap)$/) {
 	do_log ('err',"Internal_error : incorrect process value $daemon");
 	return undef;
     }

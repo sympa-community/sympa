@@ -334,7 +334,7 @@ sub request_action {
 
 	## pending/closed lists => send/visibility are closed
 	unless ($list->{'admin'}{'status'} eq 'open') {
-	    if ($operation =~ /^send|visibility$/) {
+	    if ($operation =~ /^(send|visibility)$/) {
 		my $return = {'action' => 'reject',
 			      'reason' => 'list-no-open',
 			      'auth_method' => '',
@@ -616,7 +616,7 @@ sub verify {
 	}elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
 	    my $param = $1;
 
-	    if ($param =~ /^name|total$/) {
+	    if ($param =~ /^(name|total)$/) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$param}/;
 	    }elsif ($list->{'admin'}{$param} and (!ref($list->{'admin'}{$param})) ) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
@@ -722,13 +722,13 @@ sub verify {
     $condition_key =~ s/^\s*//g;
     $condition_key =~ s/\s*$//g;
     # condition that require 0 argument
-    if ($condition_key =~ /^true|all$/i) {
+    if ($condition_key =~ /^(true|all)$/i) {
 	unless ($#args == -1){ 
 	    do_log('err',"error rule syntaxe : incorrect number of argument or incorrect argument syntaxe $condition") ; 
 	    return undef ;
 	}
 	# condition that require 1 argument
-    }elsif ($condition_key =~ /^is_listmaster|verify_netmask$/) {
+    }elsif ($condition_key =~ /^(is_listmaster|verify_netmask)$/) {
 	unless ($#args == 0) { 
 	     do_log('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
@@ -740,7 +740,7 @@ sub verify {
 	    return undef ;
 	}
 	# condition that require 2 args
-    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|less_than|match|equal|message|newer|older$/o) {
+    }elsif ($condition_key =~ /^(is_owner|is_editor|is_subscriber|less_than|match|equal|message|newer|older)$/o) {
 	unless ($#args == 1) {
 	    do_log('err',"error rule syntaxe : incorrect argument number (%d instead of %d) for condition $condition_key", $#args+1, 2) ; 
 	    return undef ;
@@ -752,7 +752,7 @@ sub verify {
 
     ## Now eval the condition
     ##### condition : true
-    if ($condition_key =~ /^true|any|all$/i) {
+    if ($condition_key =~ /^(true|any|all)$/i) {
 	return $negation;
     }
     ##### condition is_listmaster
@@ -790,7 +790,7 @@ sub verify {
     }
 
     ##### condition older
-    if ($condition_key =~ /^older|newer$/) {
+    if ($condition_key =~ /^(older|newer)$/) {
 	 
 	$negation *= -1 if ($condition_key eq 'newer');
  	my $arg0 = &tools::epoch_conv($args[0]);
@@ -806,7 +806,7 @@ sub verify {
 
 
     ##### condition is_owner, is_subscriber and is_editor
-    if ($condition_key =~ /^is_owner|is_subscriber|is_editor$/i) {
+    if ($condition_key =~ /^(is_owner|is_subscriber|is_editor)$/i) {
 	my ($list2);
 
 	if ($args[1] eq 'nobody') {

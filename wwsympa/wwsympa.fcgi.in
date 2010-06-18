@@ -1203,7 +1203,7 @@ my $birthday = time ;
 	     }else{
 		 do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
 	     }
-	 }elsif(($Conf{'cas_number'}{$robot} > 0) && ($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
+	 }elsif(($Conf{'cas_number'}{$robot} > 0) && ($in{'action'} !~ /^(login|sso_login|wsdl)$/)) { # some cas server are defined but no CAS ticket detected
 	     unless ($session->{'do_not_use_cas'}) {
 		 # user not taggued as not using cas
 		 foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){		     
@@ -2912,7 +2912,7 @@ sub do_ticket {
      if ($in{'referer'}) {
 	 $param->{'redirect_to'} = &tools::unescape_chars($in{'referer'});
      }elsif ($in{'previous_action'} && 
-	     $in{'previous_action'} !~ /^login|logout|loginrequest$/) {
+	     $in{'previous_action'} !~ /^(login|logout|loginrequest)$/) {
 	 $next_action = $in{'previous_action'};
 	 $in{'list'} = $in{'previous_list'};
      }else {
@@ -4191,8 +4191,8 @@ sub do_renewpasswd {
 
      ## We might not use LIMIT clause
      my ($limit_not_used, $count);
-     unless (($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) && 
-	     ($Conf{'db_type'} =~ /^Pg|mysql$/)) {
+     unless (($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) && 
+	     ($Conf{'db_type'} =~ /^(Pg|mysql$)/)) {
 	 $limit_not_used = 1;
      }
 
@@ -4551,7 +4551,7 @@ sub do_pref {
  	}
      }
 
-     if ($reception =~ /^digest|digestplain|nomail|summary$/i) {
+     if ($reception =~ /^(digest|digestplain|nomail|summary)$/i) {
 	 $update->{'topics'} = '';
      }
 
@@ -4917,7 +4917,7 @@ sub do_suboptions {
 	    $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
 	    if ($s->{'reception'} eq $m) {
 		$param->{'reception'}{$m}{'selected'} = 'selected="selected"';
-		if ($m =~ /^mail|notice|not_me|txt|html|urlize$/i) {
+		if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
 		    $param->{'possible_topic'} = 1;
 		}
 	    }else {
@@ -9796,7 +9796,7 @@ sub _prepare_edit_form {
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	 
 	 ## Skip comments and default values.
-	 next if ($pname =~ /^comment|defaults$/);
+	 next if ($pname =~ /^(comment|defaults)$/);
 	 
 	 ## Skip parameters belonging to another group.
 	 next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
@@ -10397,7 +10397,7 @@ sub do_purge_list {
 
      if ($list->{'admin'}{'user_data_source'} eq 'file') {
 	 $list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
-     }elsif ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
+     }elsif ($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) {
 	 unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 	     &wwslog('notice', 'No subscribers to restore');
 	     &web_db_log({'status' => 'error',

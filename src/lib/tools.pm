@@ -962,7 +962,7 @@ sub smime_sign {
     ## OpenSSL only needs content type & encoding to generate a multipart/signed msg
     my $dup_msg = $in_msg->dup;
     foreach my $field ($dup_msg->head->tags) {
-         next if ($field =~ /^content-type|content-transfer-encoding$/i);
+         next if ($field =~ /^(content-type|content-transfer-encoding)$/i);
          $dup_msg->head->delete($field);
     }
 	    

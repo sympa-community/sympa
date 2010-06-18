@@ -3282,7 +3282,7 @@ sub send_msg {
 		    &restore_suspended_subscription($user->{'email'},$name,$host);
 		}
 	    }
-	    if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
+	    if ($user->{'reception'} =~ /^(digest|digestplain|summary|nomail)$/i) {
 		next;
 	    } elsif ($user->{'reception'} eq 'notice') {
 		if ($user->{'bounce_address'}) {
@@ -7413,7 +7413,7 @@ sub may_create_parameter {
 	do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');
 	return undef;
     }
-    if ($edit_conf->{$parameter}  =~ /^(owner)||(privileged_owner)$/i ) {
+    if ($edit_conf->{$parameter}  =~ /^(owner|privileged_owner)$/i ) {
 	return 1;
     }else{
 	return 0;
@@ -11100,7 +11100,7 @@ sub _save_admin_file {
 
     foreach my $key (sort by_order keys %{$admin}) {
 
-	next if ($key =~ /^comment|defaults$/);
+	next if ($key =~ /^(comment|defaults)$/);
 	next unless (defined $admin->{$key});
 
 	## Multiple parameter (owner, custom_header,...)
@@ -11566,7 +11566,7 @@ sub select_subscribers_for_topic {
 	# user topic
 	my $info_user = $self->get_subscriber($user);
 
-	if ($info_user->{'reception'} !~ /^mail|notice|not_me|txt|html|urlize$/i) {
+	if ($info_user->{'reception'} !~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
 	    push @selected_users,$user;
 	    next;
 	}
@@ -11637,7 +11637,7 @@ sub _urlize_part {
 	return undef ; 
     }
     
-    if ($encoding =~ /^binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64$/ ) {
+    if ($encoding =~ /^(binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64)$/ ) {
 	open TMP, ">$expl/$dir/$filename.$encoding";
 	$message->print_body (\*TMP);
 	close TMP;
