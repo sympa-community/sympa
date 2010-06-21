@@ -12631,7 +12631,8 @@ sub do_d_savefile {
      # name of the file, without path
      my ($fname, $visible_fname);
      if ($fn =~ /([^\/\\]+)$/) {
-		$fname = &tools::qencode_filename($1);
+	$fname = &tools::qencode_filename($1);
+	$visible_fname = &make_visible_path($fname);
      }
      
      # param from d_upload.tt2
