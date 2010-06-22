@@ -10215,7 +10215,7 @@ sub _restrict_values {
      }
 
      ## Super listmaster can move a list to another robot
-     if (&List::is_listmaster($param->{'user'}{'email'})) {
+     if (&List::is_listmaster($param->{'user'}{'email'}, $robot)) {
 	 foreach (keys %{$Conf{'robots'}}) {
 	     if ($_ eq $robot) {
 		 $param->{'robots'}{$_} = 'selected="selected"';
@@ -14956,7 +14956,7 @@ sub do_change_email {
 	 ## so that at the end of the function we can return to the SympaAdmin page
 	 ## instead of the preferences page
 	 $edited_by_listmaster = 1;
-	 unless  (&List::is_listmaster ($param->{'user'}{'email'})) {
+	 unless  (&List::is_listmaster ($param->{'user'}{'email'}, $robot)) {
 	     &report::reject_report_web('auth','User is not Listmaster',{},$param->{'action'});
 	     &wwslog('err','do_change_email : not listmaster');
 	     &web_db_log({'parameters' => $in{'email'},
