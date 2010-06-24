@@ -272,8 +272,13 @@ sub fetch {
     $array_of_users = eval {
 	local $SIG{ALRM} = sub { die "TIMEOUT\n" }; # NB: \n required
 	alarm $self->{'fetch_timeout'}; 
-	return $self->{'sth'}->fetchall_arrayref;
+	
+	## Inner eval just in case the fetchall_arrayref call would die, thus leaving the alarm trigered
+	my $status = eval {
+	    return $self->{'sth'}->fetchall_arrayref;
+	};
 	alarm 0;
+	return $status;
     };
     if ( $@ eq "TIMEOUT\n" ) {
 	do_log('err','Fetch timeout on remote SQL database');
