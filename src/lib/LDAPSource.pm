@@ -35,7 +35,7 @@ use List;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch ping quote);
+our @EXPORT_OK = qw(connect query disconnect fetch ping quote set_fetch_timeout);
 
 
 ############################################################
@@ -264,6 +264,10 @@ sub quote {
     my ($self, $string, $datatype) = @_;
     
     return $self->{'dbh'}->quote($string, $datatype); 
+}
+
+## Does not make sense in LDAP context
+sub set_fetch_timeout {
 }
 
 ## Packages must return true.
