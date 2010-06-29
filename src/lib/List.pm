@@ -2047,9 +2047,6 @@ sub load {
 
     $self->{'as_x509_cert'} = 1  if ((-r "$self->{'dir'}/cert.pem") || (-r "$self->{'dir'}/cert.pem.enc"));
     
-
-    $self->{'admin'}{'address'} = $name.'@'.$self->{'domain'};
-
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 

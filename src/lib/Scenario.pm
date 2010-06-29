@@ -618,6 +618,10 @@ sub verify {
 
 	    if ($param =~ /^(name|total)$/) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$param}/;
+	    }elsif ($param eq 'address') {
+		my $list_address = $list->get_list_address();
+		$value =~ s/\[list\-\>([\w\-]+)\]/$list_address/;
+	    
 	    }elsif ($list->{'admin'}{$param} and (!ref($list->{'admin'}{$param})) ) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
 	    }else{
