@@ -28,6 +28,13 @@ js_DATA = jqplot.barRenderer.min.js \
 	jquery.jqplot.css \
 	jquery.jqplot.min.js \
 	jquery.js \
-	sympa.js
+	sympa.js 
 
 EXTRA_DIST = $(js_DATA)
+
+install-data-hook:
+	unzip -f tinymce_3_3_7.zip;\
+	if [ ! -d $(staticdir)/js/tinymce ] ; then \
+		echo "Creating $(staticdir)/js/tinymce"; \
+		mv tinymce  $(staticdir)/js; \
+	fi;

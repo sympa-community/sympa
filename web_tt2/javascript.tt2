@@ -53,14 +53,10 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 <script type="text/javascript" src="[% static_content_url %]/js/jqplot.CanvasAxisTickRenderer.js"></script>
 <script type="text/javascript" src="[% static_content_url %]/js/jqplot.CanvasTextRenderer.js"></script>
 <link rel="stylesheet" type="text/css" href="[% static_content_url %]/js/jquery.jqplot.css" />
-[% IF use_htmlarea %]
+[% IF use_html_editor %]
+<script type="text/javascript" src="[% static_content_url %]/js/[% html_editor_file %]"></script>
 <script type="text/javascript">
-  _editor_url = "[% htmlarea_url %]/";
-  _editor_lang = "en";
+[% html_editor_init %]
 </script>
-
-<script type="text/javascript" src="[% htmlarea_url %]/htmlarea.js"></script>
 [% END %]
-
-
 <!-- end javascript.tt2 -->

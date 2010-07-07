@@ -1074,6 +1074,7 @@ my $birthday = time ;
 				     'logo_html_definition' => 1,
 				     'template_content' => 1,
 				     'html_dumpvars' => 1,
+				     'html_editor_init' => 1,
 				     };
      ## Hash defining the parameters where HTML must be filtered.
      $param->{'htmlToFilter'} = {
@@ -15347,6 +15348,10 @@ sub do_compose_mail {
 	return undef;
     }
 
+    $param->{'use_html_editor'} = &Conf::get_robot_conf($robot, 'use_html_editor');
+    $param->{'html_editor_file'} = &Conf::get_robot_conf($robot, 'html_editor_file');
+    $param->{'html_editor_init'} = &Conf::get_robot_conf($robot, 'html_editor_init');
+    
     # Set the subaction to html_news_letter or undef
     $param->{'subaction'} = $in{'subaction'};
     if ($in{'to'}) {
@@ -15512,15 +15517,37 @@ sub do_compose_mail {
 	       &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	       return undef;
 	   }
-   }
 
-
-    my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
+	   if(&Conf::get_robot_conf($robot, 'use_html_editor')){
+	       # Generate a multipart/relative message using the body.
+	       my $mailHTML = new MIME::Lite::HTML(
+						   {
+						       From => $from,
+						       To => $to,
+						       Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
+						       'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+						       Subject => $in{'subject'},
+						       HTMLCharset => 'utf-8',
+						       TextCharset => 'utf-8',
+						       TextEncoding => '8bit',
+						       HTMLEncoding => '8bit',
+						       remove_jscript => '1', #delete the scripts in the html
+						   }
+						   );
+	       my $pages_url = $in{'body'};
+	       
+	       # parse return the MIME::Lite part to send 
+	       my $MIMEmail = $mailHTML->parse($pages_url); 
+	       $in{'body'} = $MIMEmail->as_string;
+	   }
+       }
+     
+     my $data = {'headers' => {'In-Reply-To' => $in{'in_reply_to'},
 			       'Message-ID' => $in{'message_id'}}, 
 		'subject' => $in{'subject'},
 		'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
 		'to' => $to,
-		'body' => "From: $from\n\n" . $in{'body'},
+		'body' => "From: $from\n" . $in{'body'},
 		'sign_mode' => '',
 		'header_possible' => '1'};
 
@@ -15971,7 +15998,6 @@ sub do_stats {
      }
 
      $param->{'stats_new_file_shared'} = $data_shared;
-     open TMP2, ">/tmp/digdump"; &tools::dump_var($param->{'stats_new_file_shared'}, 0, \*TMP2); close TMP2;
 	 
      return 1;
 }

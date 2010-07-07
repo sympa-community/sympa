@@ -898,6 +898,28 @@ our @params = (
 	vhost   => '1',
     },
     {
+        name    => 'use_html_editor',
+        query => 'If set to "on", users will be able to post messages in HTML using a javascript WYSIWYG editor.',
+	vhost   => '1',
+        default => '0',
+        edit  => '1',
+	file => 'wwsympa.conf',
+    },
+    {
+        name    => 'html_editor_file',
+        query => 'the path to the javascript file making the WYSIWYG HTML editor available',
+	vhost   => '1',
+        default => 'tinymce/jscripts/tiny_mce/tiny_mce.js',
+	file => 'wwsympa.conf',
+    },
+    {
+        name    => 'html_editor_init',
+        query => 'the javascript excerpt that enables and configures the WYSIWYG HTML editor.',
+	vhost   => '1',
+        default => 'tinyMCE.init({mode : "exact",elements : "body"});',
+	file => 'wwsympa.conf',
+    },
+    {
         name  => 'spam_status',
         default => 'x-spam-status',
         query => 'Messages are supposed to be filtered by an antispam that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status : ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
@@ -1081,7 +1103,7 @@ our @params = (
     },
     {
         name    => 'color_3',
-        default => '#ccccff', # top boxe and footer box bacground color
+        default => '#ffffce', # top boxe and footer box bacground color
 	vhost   => '1',
 	db      => 'db_first',
     },

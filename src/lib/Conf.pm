@@ -552,6 +552,9 @@ sub load_robots {
 
 	$robot_conf->{$robot}{'title'} ||= $wwsconf->{'title'};
 	$robot_conf->{$robot}{'default_home'} ||= $wwsconf->{'default_home'};
+	$robot_conf->{$robot}{'use_html_editor'} ||= $wwsconf->{'use_html_editor'};
+	$robot_conf->{$robot}{'html_editor_file'} ||= $wwsconf->{'html_editor_file'};
+	$robot_conf->{$robot}{'html_editor_init'} ||= $wwsconf->{'html_editor_init'};
 
 	$robot_conf->{$robot}{'lang'} ||= $Conf{'lang'};
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
