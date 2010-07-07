@@ -105,7 +105,21 @@ our @params = (
 	edit => '1',
         advice  =>'Better if not in a critical partition',
     },
-    {
+     {
+        name    => 'archive_default_index',
+        default => 'thrd',
+        query   => 'The default index organization when entering the web archive: either threaded or in chronological order',
+        file    => 'wwsympa.conf',
+	edit => '1',
+    },
+     {
+        name    => 'custom_archiver',
+        default => '',
+        query   => 'Activates a custom archiver to use instead of MHOnArc. The value of this parameter is the absolute path on the file system to the script of the custom archiver.',
+        file    => 'wwsympa.conf',
+	edit => '1',
+    },
+   {
         name    => 'bounce_path',
         default => Sympa::Constants::BOUNCEDIR ,
         query   => 'Where to store bounces',
@@ -896,6 +910,20 @@ our @params = (
         name    => 'antispam_feature',
         default => 'off',
 	vhost   => '1',
+    },
+    {
+        name    => 'review_page_size',
+        query => 'The default number of lines of the array displaying users in the review page',
+	vhost   => '1',
+        default => 25,
+	file => 'wwsympa.conf',
+    },
+    {
+        name    => 'viewlogs_page_size',
+        query => 'The default number of lines of the array displaying the log entries in the logs page',
+	vhost   => '1',
+        default => 25,
+	file => 'wwsympa.conf',
     },
     {
         name    => 'use_html_editor',

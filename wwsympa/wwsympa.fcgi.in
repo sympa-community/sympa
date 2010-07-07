@@ -1397,7 +1397,6 @@ my $birthday = time ;
 	 $param->{'main_title'} = $param->{'title'} = &Conf::get_robot_conf($robot,'title');
 	 $param->{'title_clear_txt'} = $param->{'title'};
      }
-     $param->{'robot_title'} = &Conf::get_robot_conf($robot,'title');
 
      ## store in session table this session contexte
      $session->store();
@@ -1810,7 +1809,6 @@ sub get_parameters {
     
     $param->{'path_info'} = $ENV{'PATH_INFO'};
     $param->{'http_method'} = $ENV{'REQUEST_METHOD'}; ## Usefull to skip previous_action when using POST
-    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
     
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	&_split_params ($ENV{'PATH_INFO'});
@@ -1989,7 +1987,6 @@ sub get_parameters_old {
     }
     
     $param->{'path_info'} = $ENV{'PATH_INFO'};
-    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{&get_header_field('SERVER_NAME')};
     
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	my $path_info = $ENV{'PATH_INFO'};

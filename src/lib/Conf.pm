@@ -37,7 +37,7 @@ use tools;
 use Sympa::Constants;
 
 our @ISA = qw(Exporter);
-our @EXPORT = qw(%Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
+our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
 
 sub DAEMON_MESSAGE {1};
 sub DAEMON_COMMAND {2};
@@ -48,7 +48,7 @@ sub DAEMON_ALL {7};
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 
 # parameters hash, keyed by parameter name
-my %params =
+our %params =
     map  { $_->{name} => $_ }
     grep { $_->{name} }
     @confdef::params;
