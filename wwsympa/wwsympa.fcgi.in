@@ -104,17 +104,24 @@ my $ip ;
 my $rss ;
 my $session;
 
-## Load config 
-unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &fatal_err('Unable to load config file %s', $conf_file);
-}
-
 ## Load sympa config
 unless (&Conf::load( $sympa_conf_file )) {
     &fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
 }
 
 &Log::set_log_level($Conf{'log_level'}) if ($Conf{'log_level'});
+
+my $daemon_name = &Log::set_daemon($0);
+
+## Open log
+$wwsconf->{'log_facility'}||= $Conf{'syslog'};
+
+&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'wwsympa');
+
+## Load config 
+unless ($wwsconf = &wwslib::load_config($conf_file)) {
+    &fatal_err('Unable to load config file %s', $conf_file);
+}
 
 &mail::set_send_spool($Conf{'queue'});
 
@@ -123,8 +130,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 }else {
     require CGI;
 }
-my $daemon_name = &Log::set_daemon($0);
-
 my $mime_types = &wwslib::load_mime_types();
 
 
@@ -892,10 +897,6 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'change_email' => {'*email' => 'normalize'}, ## Remove leading/trailing white spaces and lowercase
 		 );
 
-## Open log
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'wwsympa');
 &do_log('info', 'WWSympa started');
 
 ## Set locale configuration	 
