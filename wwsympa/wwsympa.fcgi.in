@@ -3772,6 +3772,7 @@ sub do_renewpasswd {
      &wwslog('debug','do_requestpasswd: sending one time ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
+     $param->{'newuser'} =  &List::get_user_db($in{'email'});
      if ($param->{'one_time_ticket'}) {
 	 $param->{'login_error'}='ticket_sent';
 	 unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
@@ -4993,6 +4994,7 @@ sub do_subrequest {
 	$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
 	$param->{'login_error'}='ticket_sent';
 	$param->{'request_from_host'} = $ip;
+	$param->{'newuser'} =  &List::get_user_db($in{'email'});
 	unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
 	  &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
 	  $param->{'login_error'}='unable_to_send_ticket';
