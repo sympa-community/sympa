@@ -3769,7 +3769,7 @@ sub do_renewpasswd {
 	 &report::reject_report_web('user','passwd_reminder_not_allowed',{},$param->{'action'});
 	 return undef
      }
-     &wwslog('debug','do_requestpasswd: sending one tile ticket for %s', $in{'email'});
+     &wwslog('debug','do_requestpasswd: sending one time ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
      if ($param->{'one_time_ticket'}) {
