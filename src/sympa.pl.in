@@ -1354,11 +1354,7 @@ sub DoFile {
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
 	$list_address = $list->get_list_address();
-	# setting log_level using list config unless it is set by calling option
-	unless ($main::options{'log_level'}) {
-	    &Log::set_log_level($list->{'log_level'});
-	}
-	    &do_log('debug', "Setting log level with list configuration : %d", $list->{'log_level'}); 
+	
     }
     
     ## Loop prevention
