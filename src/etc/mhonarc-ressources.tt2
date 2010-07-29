@@ -407,7 +407,7 @@ MSGPGEND
      <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Chronological($tag$% END %$tag$)</a>
      <a class="ArcMenuLinksSortInactive" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
    </span>
-   <ul id="MainMenuLinks">
+   <ul id="MainMenuLinks" style="border: none;">
      $PREVBUTTON$ ($tag$%|loc%$tag$)Chronological($tag$%END%$tag$) $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$TPREVBUTTON$  ($tag$%|loc%$tag$)Thread($tag$%END%$tag$) $TNEXTBUTTON$
    </ul>
 </div>
@@ -449,8 +449,8 @@ $POWERED_BY$
 </div>
 ($tag$% END %$tag$)
 ($tag$% IF user.email && action == 'arc' %$tag$)
-<span class="search_form">
-<form action="($tag$% path_cgi %$tag$)" method="post">
+<span class="search_form" style="margin-top: -30px">
+<form action="($tag$% path_cgi %$tag$)" method="post" style="border: none;">
   <input type="hidden" name="in_reply_to" value="$MSGID$" />
   <input type="hidden" name="subject" value="Re: $SUBJECTNA$" />
   <input type="hidden" name="list" value="($tag$% list %$tag$)" />
