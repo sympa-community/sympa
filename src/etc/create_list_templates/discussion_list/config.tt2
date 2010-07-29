@@ -22,6 +22,14 @@ owner
 
 [% END -%]
 
+[% IF owner_include %]
+[% FOREACH o = owner_include -%]
+owner_include
+  source [% o.source %]
+  
+[% END -%]
+[% END -%]
+
 send privateoreditorkey
 
 [% IF topics -%]
