@@ -443,12 +443,19 @@ sub store {
     
     my $messagekey = &tools::md5_fingerprint($msg);
 
-    # first store the message in bulk_spool_table (because as soon as packet are created bulk.pl may distribute them).
-    # if messagekey is equal to message_fingerprint, the message is already stored in database
+    # first store the message in bulk_spool_table 
+    # because as soon as packet are created bulk.pl may distribute them
+    # Compare the current message finger print to the fingerprint
+    # of the last call to store() ($message_fingerprint is a global var)
+    # If fingerprint is the same, then the message should not be stored
+    # again in bulkspool_table
     
     my $message_already_on_spool;
 
-    if ($messagekey ne $message_fingerprint) {
+    if ($messagekey eq $message_fingerprint) {
+	$message_already_on_spool = 1;
+	
+    }else {
 
 	## search if this message is already in spool database : mailfile may perform multiple submission of exactly the same message 
 	my $statement = sprintf "SELECT count(*) FROM bulkspool_table WHERE ( messagekey_bulkspool = %s )", $dbh->quote($messagekey);
@@ -534,7 +541,11 @@ sub store {
 	    $packet_already_exist = $sth->fetchrow;
 	    $sth->finish();
 	}
-	unless ($packet_already_exist) {
+	 
+	 if ($packet_already_exist) {
+	     do_log('err','Duplicate message not stored in bulmailer_table');
+	     
+	 }else {
 	    my $statement = sprintf "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $dbh->quote($messagekey),$dbh->quote($msg_id),$dbh->quote($packetid),$dbh->quote($rcptasstring),$dbh->quote($from),$dbh->quote($robot),$dbh->quote($listname),$verp,$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date;
 	    unless ($sth = $dbh->do($statement)) {
 		do_log('err','Unable to add packet in bulkmailer_table "%s"; error : %s', $statement, $dbh->errstr);
