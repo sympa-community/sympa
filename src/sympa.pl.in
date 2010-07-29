@@ -1367,7 +1367,7 @@ sub DoFile {
 		$conf_loop_prevention_regex = $list->{'admin'}{'loop_prevention_regex'};
 		$conf_loop_prevention_regex ||= &Conf::get_robot_conf($robot, 'loop_prevention_regex');
 		if ($sender =~ /^($conf_loop_prevention_regex)(\@|$)/mio) {
-			&do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
+			&do_log('err','Ignoring message which would cause a loop, sent by %s; matches loop_prevention_regex', $sender);
 			return undef;
 		}
 	
@@ -1376,7 +1376,7 @@ sub DoFile {
 		if ($hdr->get('Content-Identifier') =~ /Auto-replied/i ||
 		$hdr->get('X400-Content-Identifier') =~ /Auto Reply to/i ||
 		($hdr->get('Auto-Submitted') && $hdr->get('Auto-Submitted') ne 'no')) {
-			do_log('notice', "Ignoring message which would cause a loop");
+			do_log('err', "Ignoring message which would cause a loop; message appears to be an auto-reply");
 			return undef;
 		}
 	}
@@ -1391,7 +1391,7 @@ sub DoFile {
 	&do_log('debug2','X-Loop: %s', $loop);
 	#foreach my $l (split(/[\s,]+/, lc($loop))) {
 	    if ($loop eq lc($list_address)) {
-		do_log('notice', "Ignoring message which would cause a loop (X-Loop: $loop)");
+		do_log('err', "Ignoring message which would cause a loop (X-Loop: $loop)");
 		return undef;
 	    }
 	#}
@@ -1529,7 +1529,7 @@ sub DoFile {
 	    
 	    ## Too many reports sent => message skipped !!
 	    if ($loop_info{$sender}{'count'} >=  &Conf::get_robot_conf($robot, 'loop_command_max')) {
-		&do_log('notice', 'Ignoring message which would cause a loop, %d messages received from %s', $loop_info{$sender}{'count'}, $sender);
+		&do_log('err', 'Ignoring message which would cause a loop, %d messages sent to %s; loop_command_max exceeded', $loop_info{$sender}{'count'}, $sender);
 		
 		return undef;
 	    }
@@ -1817,7 +1817,7 @@ sub DoMessage{
     
     
     if ($msgid_table{$list->get_list_id()}{$messageid}) {
-		&do_log('notice', 'Found known Message-ID, ignoring message which would cause a loop');
+		&do_log('err', 'Found known Message-ID, ignoring message which would cause a loop');
 		&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'known_message','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef;
     }
@@ -1826,7 +1826,7 @@ sub DoMessage{
     if ( &Conf::get_robot_conf($robot,'misaddressed_commands') =~ /reject/i) {
 	## Check the message for commands and catch them.
 	if (&tools::checkcommand($message->{'msg'}, $sender, $robot)) {
-	    &do_log('info', 'sympa::DoMessage(): Found command in message, ignoring message');
+	    &do_log('err', 'sympa::DoMessage(): Found command in message, ignoring message');
 	    &report::reject_report_msg('user','routing_error',$sender,{'message' => $message},$robot,$msg_string,$list);
 	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'routing_error','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
@@ -2080,7 +2080,7 @@ sub DoCommand {
 
     ## Detect loops
     if ($msgid_table{'sympa@'.$robot}{$messageid}) {
-	&do_log('notice', 'Found known Message-ID, ignoring command which would cause a loop');
+	&do_log('err', 'Found known Message-ID, ignoring command which would cause a loop');
 	&Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'known_message','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }## Clean old files from spool
@@ -2144,7 +2144,7 @@ sub DoCommand {
 	unless (($content_type =~ /text/i and !$mime)
 		or !($content_type) 
 		or ($content_type =~ /text\/plain/i)) {
-	    &do_log('notice', "Ignoring message body not in text/plain, Content-type: %s", $content_type);
+	    &do_log('err', "Ignoring message body not in text/plain, Content-type: %s", $content_type);
 	    &report::global_report_cmd('user','error_content_type',{});
 	    &Log::db_log({'robot' => $robot,'list' => $rcpt,'action' => 'DoCommand','parameters' => "$rcpt,$robot,$message",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'error_content_type','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return $success; 
