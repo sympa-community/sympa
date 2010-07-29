@@ -2156,6 +2156,7 @@ sub DoCommand {
 		$i = MIME::QuotedPrint::decode($i);
 	    }
 	    
+	    last if ($i =~ /^-- $/); ## ignore signature
 	    $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
 	    next if ($i =~ /^$/); ## skip empty lines
 	    next if ($i =~ /^\s*\#/) ;
