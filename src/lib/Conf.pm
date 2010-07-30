@@ -969,11 +969,12 @@ sub checkfiles {
 	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 
 	    $param->{'css'} = $css;
-
+	    my $css_tt2_path = &tools::get_filename('etc',{}, 'web_tt2/css.tt2', $robot, undef);
+	    
 	    ## Update the CSS if it is missing or if a new css.tt2 was installed
 	    if (! -f $dir.'/'.$css ||
-		(stat(Sympa::Constants::DEFAULTDIR . '/web_tt2/css.tt2'))[9] > (stat($dir.'/'.$css))[9]) {
-		&do_log('notice',"Updating static CSS file $dir/$css ; previous file renamed");
+		(stat($css_tt2_path))[9] > (stat($dir.'/'.$css))[9]) {
+		&do_log('notice',"TT2 file $css_tt2_path has changed; updating static CSS file $dir/$css ; previous file renamed");
 		
 		## Keep copy of previous file
 		rename $dir.'/'.$css, $dir.'/'.$css.'.'.time;
