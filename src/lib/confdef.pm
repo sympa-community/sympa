@@ -474,7 +474,7 @@ our @params = (
     {
         name   => 'remove_headers',
         query  => 'Specify header fields to be removed before message distribution',
-        default => 'X-Sympa-To,X-Family-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
+        default => 'X-Sympa-To,X-Family-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To,Sender',
         file    => 'sympa.conf',
     },
     {
