@@ -769,7 +769,7 @@ sub rename_list{
 					'new_listname' => $param{'new_listname'},
 					'old_listname' => $old_listname,
 					'email' => $param{'user_email'},
-					'is_a_copy' => 'true'});
+					'mode' => $param{'mode'}});
       $param{'status'} = 'pending';
     }
      

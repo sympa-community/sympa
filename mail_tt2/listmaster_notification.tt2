@@ -13,7 +13,7 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [%- ELSIF type == 'request_list_renaming' -%]
-[%- IF is_a_copy -%]
+[%- IF mode == 'copy' -%]
 Subject: [% FILTER qencode %][%|loc(new_listname)%]%1 mailing list creation[%END%][%END%]
 
 [%|loc(email,old_listname,new_listname)%]%1 has copied list "%2" as a new list "%3"[%END-%]
