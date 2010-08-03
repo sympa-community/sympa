@@ -97,8 +97,12 @@ dl {
                  border-radius:4px;
                 }
 
+#ActionHeader #MainMenuLinks {
+				border: none;		
+                }
+
 #ActionHeader span.search_form {
-				margin-top:1em;
+				margin-bottom:1em;
 				}
 
 #Clock {
@@ -1132,6 +1136,17 @@ a.ArcMenuLinksSortInactive {
                         border: 0px solid [% color_2 %];
                         text-decoration: none;
                         padding: 0px 0px 0px 3px;}
+
+.ArcActions {
+	     float:right;
+	     margin-top: -2.9em;
+	     margin-right:0.5em
+}
+
+.ArcActions form {
+		   border: none!important;
+}
+
 
 .block {
          border: 1px dotted [% color_2 %];
