@@ -43,8 +43,8 @@ fi
 
 # custom variables
 initdir=/etc/rc.d/init.d
-piddir=$prefix
 localstatedir=/var
+piddir=$localstatedir/run
 lockdir=$localstatedir/lock/subsys
 modulesdir=$prefix/bin
 scriptdir=$prefix/bin
@@ -244,7 +244,7 @@ AC_ARG_WITH(
     expldir,
     AS_HELP_STRING(
 	[--with-expldir=DIR],
-	[list data directory @<:@LOCALSTATEDIR/list_data@:>@]
+	[list data directory @<:@PREFIX/list_data@:>@]
     ),
     [expldir="$withval"]
 )
@@ -253,7 +253,7 @@ AC_ARG_WITH(
     spooldir,
     AS_HELP_STRING(
 	[--with-spooldir=DIR],
-	[application spool directory @<:@LOCALSTATEDIR/spool@:>@]
+	[application spool directory @<:@PREFIX/spool@:>@]
     ),
     [spooldir="$withval"]
 )
@@ -289,7 +289,7 @@ AC_ARG_WITH(
     modulesdir,
     AS_HELP_STRING(
 	[--with-modulesdir=DIR],
-	[Perl modules file installed with Sympa @<:@DATADIR/default@:>@]
+	[Perl modules file installed with Sympa @<:@PREFIX/bin@:>@]
     ),
     [modulesdir="$withval"]
 )
@@ -298,7 +298,7 @@ AC_ARG_WITH(
     defaultdir,
     AS_HELP_STRING(
 	[--with-defaultdir=DIR],
-	[default configuration files (scenarios and templates also) @<:@DATADIR/sympa/default@:>@]
+	[default configuration files (scenarios and templates also) @<:@PREFIX/default@:>@]
     ),
     [defaultdir="$withval"]
 )
@@ -307,7 +307,7 @@ AC_ARG_WITH(
     scriptdir,
     AS_HELP_STRING(
 	[--with-scriptdir=DIR],
-	[application scripts @<:@DATADIR/sympa/bin@:>@]
+	[application scripts @<:@PREFIX/bin@:>@]
     ),
     [scriptdir="$withval"]
 )
