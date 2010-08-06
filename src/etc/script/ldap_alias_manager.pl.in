@@ -38,17 +38,19 @@ my $manager_conf_file = $Conf{etc}.'/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
-my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclasses,$ldap_ssl,$ldap_cachain)=(undef,undef,undef,undef,undef,undef,undef,undef);
+my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclasses,$ldap_ssl,$ldap_cachain,$queue_transport,$bouncequeue_transport)=(undef,undef,undef,undef,undef,undef,undef,undef,undef,undef);
 &GetLdapParameter();
 
 my $ldap_connection = undef;
-$ldap_host = $ldap_params{'ldap_host'} or print STDERR "Missing required parameter ldap_host the config file $manager_conf_file\n" and exit 0;
-$ldap_base_dn = $ldap_params{'ldap_base_dn'} or print STDERR "Missing required parameter ldap_base_dn the config file $manager_conf_file\n" and exit 0;
-$ldap_bind_dn = $ldap_params{'ldap_bind_dn'} or print STDERR "Missing required parameter ldap_bind_dn the config file $manager_conf_file\n" and exit 0;
-$ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'} or print STDERR "Missing required parameter ldap_bind_pwd the config file $manager_conf_file\n" and exit 0;
-$ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'} or print STDERR "Missing required parameter ldap_mail_attribute the config file $manager_conf_file\n" and exit 0;
-(($ldap_ssl = $ldap_params{'ldap_ssl'}) ne '') or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) the config file $manager_conf_file\n" and exit 0;
+$ldap_host = $ldap_params{'ldap_host'} or print STDERR "Missing required parameter ldap_host in the config file $manager_conf_file\n" and exit 0;
+$ldap_base_dn = $ldap_params{'ldap_base_dn'} or print STDERR "Missing required parameter ldap_base_dn in the config file $manager_conf_file\n" and exit 0;
+$ldap_bind_dn = $ldap_params{'ldap_bind_dn'} or print STDERR "Missing required parameter ldap_bind_dn in the config file $manager_conf_file\n" and exit 0;
+$ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'} or print STDERR "Missing required parameter ldap_bind_pwd in the config file $manager_conf_file\n" and exit 0;
+$ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'} or print STDERR "Missing required parameter ldap_mail_attribute in the config file $manager_conf_file\n" and exit 0;
+(($ldap_ssl = $ldap_params{'ldap_ssl'}) ne '') or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) in the config file $manager_conf_file\n" and exit 0;
 $ldap_cachain=$ldap_params{'ldap_cachain'} or undef;
+$queue_transport = $ldap_params{'queue_transport'} or print STDERR "Missing required parameter queue_transport in the config file $manager_conf_file\n" and exit 0;
+$bouncequeue_transport = $ldap_params{'bouncequeue_transport'} or print STDERR "Missing required parameter bouncequeue_transport in the config file $manager_conf_file\n" and exit 0;
 
 my $default_domain;
 
@@ -77,6 +79,7 @@ $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'ldap_base_dn'} = $ldap_base_dn;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
+$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases ;
 
 my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
@@ -109,24 +112,26 @@ exit(14);
 foreach my $alias (@aliases) {
     next if ($alias =~ /^\#/);
     next if ($alias =~ /^\s*$/);
-    
-    $alias =~ /^([^:]+):\s*(\".*\")$/;
+
+    $alias =~ /^([^:]+):\s*\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
     my $alias_value = $1;
     my $command_value = $2;
-    
+    my $maildrop = $3;
+
     if ($command_value =~ m/bouncequeue/) {
-	$command_value = "sympabounce";
+	$command_value = $bouncequeue_transport;
     } else{
-	$command_value = "sympa";
-    } 
-    
+	$command_value = $queue_transport;
+    }
+
     # We substitute all occurences of + by - for the rest of the attributes, including the dn.
     # The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
     $alias_value =~ s/\+/\-/g;
-    
+
     my $ldif_dump;
     $data{'list'}{'alias'} = $alias_value;
     $data{'list'}{'command'} = $command_value;
+    $data{'list'}{'maildrop'} = $maildrop;
     &tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
     my @attribute_lines = split /\n/, $ldif_dump;
 
