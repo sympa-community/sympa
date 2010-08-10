@@ -487,12 +487,8 @@ sub check_cpan {
 			'Text::LineFold' => {
 			    		     required_version =>'0.008',
 					     package_name => 'Unicode-LineBreak',
+					     mandatory => 1,
 					     usage => 'used to fold lines in HTML mail composer and system messages, prior to Text::Wrap',
-					    },
-			'Text::Wrap' => {
-					     package_name => 'Text-Tabs+Wrap',
-					     mandatory => 1,	
-					     usage => 'used to fold lines in HTML mail composer and system messages',
 					    },
 			'Time::HiRes' => {
 					  required_version =>'1.29',

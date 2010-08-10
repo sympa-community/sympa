@@ -240,7 +240,6 @@ use Ldap;
 use Time::Local;
 use MIME::Entity;
 use MIME::EncWords;
-use MIME::WordDecoder;
 use MIME::Parser;
 use Message;
 use Family;

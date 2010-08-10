@@ -1,6 +1,6 @@
  ###############################################################
  #                      PlainDigest                            #
- # version: 0.3.1                                              #
+ # version: 0.4.0rc6                                           #
  #                                                             #
  # PlainDigest provides an extension to the MIME::Entity       #
  # class that returns a plain text version of an email         #
@@ -10,22 +10,28 @@
  # (assuming an existing MIME::Entity object as $mail)         #
  #                                                             #
  # use PlainDigest;                                            #
- # $string = $mail->PlainDigest::plain_body_as_string(@opt);   #
+ # $string = $mail->PlainDigest::plain_body_as_string(%opt);   #
  #                                                             #
- # where @opt is an are options, currently:                    #
- # use_lynx:    default to using Lynx when processing HTML     #
+ # where %opt is a hash of options, currently:                 #
+ # use_lynx => [0|1]: use Lynx to process HTML rather than     #
+ #                      cpan HTML::TreeBuilder and             #
+ #                      HTML::FormatText modules               #
  #                                                             #
  # WHAT DOES IT DO?                                            #
  # Most attachments are stripped out and replaced with a       #
  # note that they've been stripped. text/plain parts are       #
- # retained and encoding is 'levelled' to 8bit. A crude        #
- # attempt to convert single part text/html messages to plain  #
- # text is made. For text/plain parts that were not            #
- # originally in chasrset us-ascii or ISO-8859-1 all           #
- # characters above ascii 127 are replaced with '?' and a      #
- # warning added. Parts of type message/rfc822 are recursed    #
- # through in the same way, with brief headers included. Any   #
- # line consisting only of 30 hyphens has the first            #
+ # retained.                                                   #
+ #                                                             #
+ # An attempt to convert text/html parts to plain text is made #
+ # if there is no text/plain alternative.                      #
+ #                                                             #
+ # All messages are converted from their original character    #
+ # set to UTF-8                                                #
+ #                                                             #
+ # Parts of type message/rfc822 are recursed                   #
+ # through in the same way, with brief headers included.       #
+ #                                                             #
+ # Any line consisting only of 30 hyphens has the first        #
  # character changed to space (see RFC 1153). Lines are        #
  # wrapped at 80 characters.                                   #
  #                                                             #
@@ -34,11 +40,9 @@
  # versions of Perl and MIME-Tools (on which it is very        #
  # reliant).                                                   #
  # Seems to ignore any text after a UUencoded attachment.      #
- # Probably horrible if ISO-8859-1 or something close isn't    #
- # you're usual charset.                                       #
  #                                                             #
  # LICENSE                                                     #
- # Written by and (c) Chris Hastie 2004                        #
+ # Written by and (c) Chris Hastie 2004 - 2008                 #
  # This program is free software; you can redistribute it      #
  # and/or modify it under the terms of the GNU General Public  #
  # License as published by the Free Software Foundation; either#
@@ -58,18 +62,32 @@
  #                                        Chris Hastie         #
  #                                                             #
  ###############################################################
- 
+ # Changes
+ # 20080910
+ # - don't bother trying to find path to lynx unless use_lynx is true
+ # - anchor content-type test strings to end of string to avoid
+ #    picking up malformed headers as per bug 3702
+ # - local Text::Wrap variables
+ # - moved repeated code to get charset into sub _getCharset
+ # - added use of MIME::Charset to check charset aliases
+ # 20100810 - S. Ikeda
+ # - Remove dependency on Text::Wrap: use common utility tools::wrap_text().
+ # - Use MIME::Charset OO to handle vendor-defined encodings.
+ # - Use MIME::EncWords instead of MIME::WordDecoder.
+ # - Now HTML::FormatText is mandatory.  Remove Lynx support.
  
  package PlainDigest;
 
+ @ISA = qw(MIME::Entity);
+ use Mail::Internet;
  use Mail::Address;
  use MIME::Parser;
- use Text::Wrap;
- use MIME::WordDecoder;
-
+ use MIME::EncWords;
+ use MIME::Charset;
+ use HTML::TreeBuilder;
+ use HTML::FormatText;
  use Language;
-
- our @ISA = qw(MIME::Entity);
+ use tools;
  
  sub plain_body_as_string {
  
@@ -77,44 +95,30 @@
   my ($topent, @paramlist) = @_;
   my %params = @paramlist;
   
-#  my $output_dir = $params{output_dir} || '.';
-  local $use_lynx = $params{use_lynx} || undef;
-
-#  my $parser = new MIME::Parser;
-#  $parser->extract_uuencode(1);  
-#  $parser->extract_nested_messages(1);
-#  $parser->output_dir($output_dir);
-
-#  my @lines = (@{$mail->header}, "\n", @{$mail->body});
-#  my $topent = $parser->parse_data(\@lines);
-  
-  #$topent->dump_skeleton; # for debugging only!
-  
   _do_toplevel ($topent);
-
+  
   # clean up after ourselves
   $topent->purge;
-  
-  $Text::Wrap::columns = 80;
-  return wrap ('','',$outstring);
+
+  return &tools::wrap_text($outstring, '', '');
  }
 
  sub _do_toplevel {
  
   my $topent = shift;
-  if ($topent->effective_type =~ /^text\/plain/i) {
+  if ($topent->effective_type =~ /^text\/plain$/i) {
     _do_text_plain($topent);
   }
-  elsif ($topent->effective_type =~ /^text\/html/i) {
+  elsif ($topent->effective_type =~ /^text\/html$/i) {
     _do_text_html($topent);
   }
   elsif ($topent->effective_type =~ /^multipart\/.*/i) {
     _do_multipart ($topent);
   }
-  elsif ($topent->effective_type =~ /^message\/rfc822/i) {
+  elsif ($topent->effective_type =~ /^message\/rfc822$/i) {
     _do_message ($topent);
   } 
-  elsif ($topent->effective_type =~ /^message\/delivery-status/i) {
+  elsif ($topent->effective_type =~ /^message\/delivery\-status$/i) {
     _do_dsn ($topent);
   }       
   else {
@@ -129,24 +133,38 @@
 
   # cycle through each part and process accordingly
   foreach $subent ($topent->parts) {    
-     if ($subent->effective_type =~ /^text\/plain/i) {
+     if ($subent->effective_type =~ /^text\/plain$/i) {
        _do_text_plain($subent);
      }
+     elsif ($subent->effective_type =~ /^multipart\/related$/i){
+       if ($topent->effective_type =~ /^multipart\/alternative$/i && &_hasTextPlain($topent)) {
+         # this is a rare case - /related nested inside /alternative.
+         # If there's also a text/plain alternative just ignore it         
+         next;       
+       } else {
+         # just treat like any other multipart
+         &_do_multipart ($subent);
+       }
+     }     
      elsif ($subent->effective_type =~ /^multipart\/.*/i) {
        _do_multipart ($subent);
      } 
-     elsif ($subent->effective_type =~ /^text\/html/i && $topent->effective_type =~ /^multipart\/alternative/i) {
-       # assume there's a text/plain alternive, so don't warn
-       # that the text/html part has been scrubbed
-       next;
+     elsif ($subent->effective_type =~ /^text\/html$/i ) {
+       if( $topent->effective_type =~ /^multipart\/alternative$/i && _hasTextPlain($topent)) {
+         # there's a text/plain alternive, so don't warn
+         # that the text/html part has been scrubbed
+         next;
+       }
+       _do_text_html ($subent);
      }
-     elsif ($subent->effective_type =~ /^message\/rfc822/i) {
+     elsif ($subent->effective_type =~ /^message\/rfc822$/i) {
        _do_message ($subent);
      } 
-     elsif ($subent->effective_type =~ /^message\/delivery-status/i) {
+     elsif ($subent->effective_type =~ /^message\/delivery\-status$/i) {
        _do_dsn ($subent);
      }     
      else {
+       # something else - just scrub it and add a message to say what was there
        _do_other ($subent);
      }
   }
@@ -157,47 +175,43 @@
  sub _do_message {
   my $topent = shift;
   my $msgent = $topent->parts(0);
-  my $wdecode = new MIME::WordDecoder::ISO_8859 (1);
 
   unless ($msgent) {
       $outstring .= sprintf(gettext("----- Malformed message ignored -----\n\n"));
       return undef;
   }
   
-  my $from = $msgent->head->get('From');
-  my $subject = $msgent->head->get('Subject');
-  my $date = $msgent->head->get('Date');
-  my $to = $msgent->head->get('To');
-  my $cc = $msgent->head->get('Cc');
-  unless ($from = $wdecode->decode($from)) {
-     $from = "???????";
-  }
-  unless ($to = $wdecode->decode($to)) {
-     $to = "";
-  }
-  unless ($cc = $wdecode->decode($cc)) {
-     $cc = "";
-  } 
-  unless ($subject = $wdecode->decode($subject)) {
-     $subject = "";
-  }
+  my $from = $msgent->head->get('From') ? MIME::EncWords::decode_mimewords($msgent->head->get('From'), Charset=>'utf8') : gettext("[Unknown]");
+  my $subject = $msgent->head->get('Subject') ? MIME::EncWords::decode_mimewords($msgent->head->get('Subject'), Charset=>'utf8') : '';
+  my $date = $msgent->head->get('Date') ? MIME::EncWords::decode_mimewords($msgent->head->get('Date'), Charset=>'utf8') : '';
+  my $to = $msgent->head->get('To') ? MIME::EncWords::decode_mimewords($msgent->head->get('To'), Charset=>'utf8') : '';
+  my $cc = $msgent->head->get('Cc') ? MIME::EncWords::decode_mimewords($msgent->head->get('Cc'), Charset=>'utf8') : '';
+  
   chomp $from;
   chomp $to;
   chomp $cc;
   chomp $subject;
   chomp $date;
   
-  my @fromline = Mail::Address->parse($from);
-  my $name = $fromline[0]->name();
-  $name = $fromline[0]->address() unless $name;
+  my @fromline = Mail::Address->parse($msgent->head->get('From'));
+  my $name;
+  if ($fromline[0]) {
+    $name = MIME::EncWords::decode_mimewords($fromline[0]->name(),
+					     Charset=>'utf8');
+    $name = $fromline[0]->address() unless $name =~ /\S/;
+    chomp $name;
+  }
+  $name ||= $from;
 
   $outstring .= gettext("\n[Attached message follows]\n-----Original message-----\n"); 
-  $outstring .= "Date: $date\n" if $date;
-  $outstring .= "From: $from\n" if $from;
-  $outstring .= "To: $to\n" if $to;
-  $outstring .= "Cc: $cc\n" if $cc;
-  $outstring .= "Subject: $subject\n" if $subject;
-  $outstring .= "\n";
+  my $headers = '';
+  $headers .= sprintf(gettext("Date: %s\n") , $date) if $date;
+  $headers .= sprintf(gettext("From: %s\n"), $from) if $from;
+  $headers .= sprintf(gettext("To: %s\n"), $to) if $to;
+  $headers .= sprintf(gettext("Cc: %s\n"), $cc) if $cc;
+  $headers .= sprintf(gettext("Subject: %s\n"),$subject ) if $subject;
+  $headers .= "\n";
+  $outstring .= &tools::wrap_text($headers, '', '    ');
   
   _do_toplevel ($msgent);
   
@@ -208,43 +222,31 @@
  sub _do_text_plain {
   my $entity = shift;    
 
-  my $charset = $entity->head->mime_attr('content-type.charset'); 
-  my $thispart;
+  my $thispart = $entity->bodyhandle->as_string;
   
-  # this reads in the decoded body of the current entity  
-  if ($io = $entity->open("r")) {
-    while (defined($_ = $io->getline)) { 
-      chomp $_;
-      # if line is 30 hyphens, replace first character with space (RFC 1153)
-      if ($_ eq "------------------------------") {
-        s/^\-/ /;       
-      }
-      $thispart .= $_ . "\n";
-    }
+  # deal with CR/LF left over - a problem from Outlook which 
+  # qp encodes them
+  $thispart =~ s/\r\n/\n/g;  
+    
+  ## normalise body to UTF-8
+  # get charset
+  my $charset = &_getCharset($entity);
+  eval {
+    $charset->encoder('utf8');
+    $thispart = $charset->encode($thispart);
+  };
+  if ($@) {
+    # mmm, what to do if it fails?
+    $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+    $thispart =~ s/[^\x00-\x7F]/?/g;
   }
-  
-  # scrub the 8bit characters (replace with '?') if the charset
-  # isn't us-ascii or iso-8859-1. Add a warning.
-  my %ok_charset = (
-    'us-ascii' => 1,
-    'iso-8859-1' => 1,
-    'iso_8859-1' => 1,
-    'latin1' => 1,
-    'latin-1' => 1,
-    'l1' => 1,
-    'windows-1252' => 1,
-    'iso-ir-100' => 1,
-    'ibm819' => 1,
-    'cp819' => 1,
-    'csisolatin1' => 1
-  );
-  if ($charset) {
-    unless ($ok_charset{lc($charset)}) {
-      $outstring .= sprintf (gettext("** Warning: Message part originally used character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset);
-      $thispart =~ tr/\x00-\x7F/\?/c;
-    }
-  }
-
+    
+  # deal with 30 hyphens (RFC 1153)
+  $thispart =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;  
+  # leading and trailing lines (RFC 1153)
+  $thispart =~ s/^\n*//;
+  $thispart =~ s/\n+$/\n/;
+      
   $outstring .= $thispart;
   return 1;
  }
@@ -260,7 +262,7 @@
    my $entity = shift;
    $outstring .= sprintf (gettext("\n-----Delivery Status Report-----\n"));
    _do_text_plain ($entity);
-   $outstring .= sprintf (gettext("-----End of Delivery Status Report-----\n"));
+   $outstring .= sprintf (gettext("\n-----End of Delivery Status Report-----\n"));
  }
 
  sub _do_text_html {
@@ -268,77 +270,90 @@
   my $entity = shift;
   my $text;
   my $have_mods = 1;
-  my $lynx = undef;
   
-  # do we have the relevant HTML::* modules?
-  eval {
-    require HTML::TreeBuilder;
-    require HTML::FormatText;
-  } or $have_mods = 0;
-  
-  # find the path to lynx
-  my @path = ('/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin', '.');
-  foreach $path (@path) {
-    if (-x $path . '/lynx') {
-       $lynx = $path . '/lynx';
-       last;
-    }
+  unless (defined $entity->bodyhandle) {
+    $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
+    return undef;
   }
   
-  $use_lynx = undef if (!$lynx);
+  my $body = $entity->bodyhandle->as_string;
   
-  if (defined $entity->bodyhandle) {
-    
-    if ($have_mods && !$use_lynx) { # use perl HTML::* modules 
-      eval {
-        my $tree = HTML::TreeBuilder->new->parse($entity->bodyhandle->as_string);
-        $tree->eof();
-        my $formatter = HTML::myFormatText->new(leftmargin => 0, rightmargin => 72);    
-        $text = $formatter->format($tree); 
-        $tree->delete();
-      } ;
-      if ($@) {
-        $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
-        return 1;
-      }      
-    }
+  # deal with CR/LF left over - a problem from Outlook which 
+  # qp encodes them
+  $body =~ s/\r\n/\n/g;  
+  
+  my $charset = &_getCharset($entity);
 
-    elsif ($lynx) {     # use Lynx
-      eval {
-        use IPC::Open3;         
-        my $mypid;
-        my $read;
-        $mypid = open3(\*SEND, \*GET, \*ERR, "lynx --stdin --dump --force_html --hiddenlinks=ignore --localhost --image_links --nolist --noredir --noreferer --realm");
-        syswrite( SEND, $entity->bodyhandle->as_string);
-        close SEND;
-        while (sysread(GET, $read, 4096)) {
-          $text .= $read ;
-        }   
-        close GET;
-        close ERR;      
-        waitpid($mypid,0);
-      };
-      if ($@) {
-        $outstring .= gettext ("\n[** Unable to process HTML message part **]\n");
-        return 1;
-      }
-    }
-    
-    else {
-      $outstring .= gettext ("\n[ ** Unable to process HTML message part **]\n");
-      return 1;      
-    }
-    
-    $outstring .= sprintf(gettext ("[ Text converted from HTML ]\n"));
-    
-    # deal with 30 hyphens (RFC 1153)
-    $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/;
-    $outstring .= $text;
-  }
-  else {
-    $outstring .= gettext("\n[ ** Unable to process HTML message part ** ]\n");   
-  }
+  eval {
+      # normalise body to internal unicode
+      if ($charset->decoder) {
+        $body =  $charset->decode($body);
+      } else {
+        # mmm, what to do if it fails?
+        $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+        $body =~ s/[^\x00-\x7F]/?/g;
+      }           
+      my $tree = HTML::TreeBuilder->new->parse($body);
+      $tree->eof();
+      my $formatter = HTML::myFormatText->new(leftmargin => 0, rightmargin => 72);    
+      $text = $formatter->format($tree); 
+      $tree->delete();
+      $text = Encode::encode_utf8($text);
+  } ;
+  if ($@) {
+      $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
+      return 1;
+  }      
+
+  $outstring .= sprintf(gettext ("[ Text converted from HTML ]\n"));
+  
+  # deal with 30 hyphens (RFC 1153)
+  $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;
+  # leading and trailing lines (RFC 1153)
+  $text =~ s/^\n*//;
+  $text =~ s/\n+$/\n/;  
+  
+  $outstring .= $text;
+
   return 1;
  }
 
-1;
+ sub _hasTextPlain {
+   # tell if an entity has text/plain children
+   my $topent = shift;
+   my @subents = $topent->parts;
+   foreach my $subent (@subents) {    
+     if ($subent->effective_type =~ /^text\/plain$/i) {
+       return 1;
+     }
+   }
+   return undef;
+ }
+ 
+ sub _getCharset {
+   my $entity = shift;
+   
+   my $charset = $entity->head->mime_attr('content-type.charset')?$entity->head->mime_attr('content-type.charset'):'us-ascii';
+   # malformed mail with single quotes around charset?
+   if ($charset =~ /'([^']*)'/i) { $charset = $1; };  
+     
+   # get charset object.
+   return MIME::Charset->new($charset);
+ }
+ 
+ package HTML::myFormatText;
+ 
+ # This is a subclass of the HTML::FormatText object. 
+ # This subclassing is done to allow internationalisation of some strings
+ 
+ @ISA = qw(HTML::FormatText);
+     
+ use Language;
+ use strict;
+
+ sub img_start   {
+  my($self,$node) = @_;
+  my $alt = Encode::encode_utf8($node->attr('alt'));
+  $self->out(  Encode::decode_utf8(defined($alt) ? sprintf(gettext("[ Image%s ]"), ":" . $alt) : sprintf(gettext("[Image%s]"),"")));
+ }
+

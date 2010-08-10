@@ -33,6 +33,7 @@ use Sys::Hostname;
 use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
+use Text::LineFold;
 
 use Conf;
 use Language;
@@ -69,22 +70,6 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
-
-## Local variables to determine whether to use Text::LineFold or Text::Wrap.
-my $use_text_linefold;
-my $use_text_wrap;
-eval { require Text::LineFold; Text::LineFold->import(0.008); };
-if ($@) {
-    $use_text_linefold = 0;
-    eval { require Text::Wrap; };
-    if ($@) {
-	$use_text_wrap = 0;
-    } else {
-	$use_text_wrap = 1;
-    }
-} else {
-    $use_text_linefold = 1;
-}
 
 ## Sets owner and/or access rights on a file.
 sub set_file_rights {
@@ -3873,9 +3858,8 @@ sub wrap_text {
     $cols = 78 unless defined $cols;
     return $text unless $cols;
 
-    if ($use_text_linefold) {
-	my $emailre = &tools::get_regexp('email');
-	$text = Text::LineFold->new(
+    my $emailre = &tools::get_regexp('email');
+    $text = Text::LineFold->new(
 	    Language => &Language::GetLang(),
 	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
 	    UserBreaking => ['NONBREAKURI',
@@ -3883,11 +3867,6 @@ sub wrap_text {
 			     ],
 	    ColumnsMax => $cols
 	)->fold($init, $subs, $text);
-    } elsif ($use_text_wrap) {
-	local ($Text::Wrap::unexpand) = 0;
-	local ($Text::Wrap::columns) = $cols + 1;
-	$text = Text::Wrap::wrap($init, $subs, $text);
-    }
 
     return $text;
 }
