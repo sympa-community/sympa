@@ -1022,7 +1022,7 @@ sub update_subscriber_msg_send {
     }
 
 
-    my $statement = "SELECT * from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail;
+    my $statement = sprintf "SELECT * from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail;
     my $sth = $dbh->prepare($statement);
     
     unless($sth->execute){
