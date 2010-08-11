@@ -527,7 +527,7 @@ if ($main::options{'dump'}) {
  	    exit 1;	
  	}
     } else {
-	unless ($list->close()) {
+	unless ($list->close_list()) {
 	    print STDERR "Could not close list $main::options{'close_list'}\n";
 	    exit 1;	
 	}
@@ -1441,7 +1441,7 @@ sub DoFile {
 		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'dyn_cant_sync','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		# purge the unwanted empty automatic list
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
-		    $list->close(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
+		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
 		    # but what about list_of_lists ?
 		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
 		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};
@@ -1456,7 +1456,7 @@ sub DoFile {
 		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'list_unknown','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		# purge the unwanted empty automatic list
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
-		    $list->close(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
+		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
 		    # but what about list_of_lists ?
 		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
 		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};

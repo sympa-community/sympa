@@ -1645,7 +1645,7 @@ sub set_status_family_closed {
 	
 	my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');	
 	
-	unless ($self->close("listmaster\@$host",'family_closed')) {
+	unless ($self->close_list("listmaster\@$host",'family_closed')) {
 	    &do_log('err','Impossible to set the list %s in status family_closed');
 	    return undef;
 	}
@@ -11971,7 +11971,7 @@ sub remove_task {
 }
 
 ## Close the list (remove from DB, remove aliases, change status to 'closed' or 'family_closed')
-sub close {
+sub close_list {
     my ($self, $email, $status) = @_;
 
     return undef 
@@ -12039,7 +12039,7 @@ sub purge {
     }
     
     ## Close the list first, just in case...
-    $self->close();
+    $self->close_list();
 
     if ($self->{'name'}) {
 	my $arc_dir = &Conf::get_robot_conf($self->{'domain'},'arc_path');

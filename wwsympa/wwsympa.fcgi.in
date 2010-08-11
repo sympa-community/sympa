@@ -10369,7 +10369,7 @@ sub do_purge_list {
 
 	 return 'home';	
      }else{
-	 $list->close($param->{'user'}{'email'});
+	 $list->close_list($param->{'user'}{'email'});
 	 &report::notice_report_web('list_closed',{},$param->{'action'});
 	 &web_db_log({'status' => 'success'});
 

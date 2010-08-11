@@ -662,7 +662,7 @@ sub closeList {
 	 &Log::do_log('info','do_close_list: closing a pending list makes it purged');
 	 $list->purge($sender);
      }else{
-	 $list->close($sender);
+	 $list->close_list($sender);
 	 &Log::do_log('info','do_close_list: list %s closed',$listname);
      }     
      return 1;
