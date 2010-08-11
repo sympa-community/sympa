@@ -1334,7 +1334,7 @@ sub DoFile {
 		return undef;
 	    }
             
-            my $result = $dyn_family->add_list({listname=>$listname}, 1);
+            $result = $dyn_family->add_list({listname=>$listname}, 1);
             unless (defined $result->{'ok'}) {
 		my $details = $result->{'string_error'} || $result->{'string_info'} || [];
                 &do_log('err', "Failed to add a dynamic list to the family %s : ", $dyn_list_family, join(';', @{$details}));
@@ -2218,7 +2218,7 @@ sub SendDigest{
  	my ($listname, $listrobot) = split /\@/, $listaddress;
  	my $list = new List ($listname, $listrobot);
 	unless ($list) {
-	    &do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename,$listname, $listrobot )
+	    &Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename,$listname, $listrobot );
 	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	    unlink $filename;
 	    return undef;

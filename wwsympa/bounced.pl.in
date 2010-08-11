@@ -333,7 +333,7 @@ while (!$end) {
 	    my $user_agent;
 	    my $version;
 	    my $feedback_type = '';
-	    my $listname, $robot;
+	    my ($listname, $robot);
 	    foreach my $p (@parts) {
 		my $h = $p->head();
 		my $content = $h->get('Content-type');
@@ -521,7 +521,7 @@ while (!$end) {
 	    unless ($adr_count) {
 		
 		if ( $who ) {	# rcpt not recognized in the bounce but VERP was used
-		    &store_bounce ($bounce_dir,$file,$who)
+		    &store_bounce ($bounce_dir,$file,$who);
 		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);

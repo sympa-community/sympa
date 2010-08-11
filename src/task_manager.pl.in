@@ -25,7 +25,7 @@
 ##         :  d		-> debug -d is equiv to -dF
 
 use lib '--modulesdir--';
-use strict vars;
+use strict "vars";
 
 use Task;
 use List;
@@ -324,9 +324,6 @@ while (!$end) {
 	}
     }
 
-    my $current_date = time; # current epoch date
-    my $rep = &tools::adate ($current_date);
-
     ## Execute existing tasks
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
@@ -450,8 +447,7 @@ sub create {
     }
    
     &do_log ('notice', "with model $model_file");
-    close (MODEL);
-
+    
     ## creation
     open (TASK, ">$task_file");
     my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
@@ -706,7 +702,7 @@ sub chk_cmd {
 		return undef;
 	    }
 	    
-	    $Rused_labels->{$args[1]} if ($cmd eq 'next' && ($args[1]));   
+	    $Rused_labels->{$args[1]} =1 if ($cmd eq 'next' && ($args[1]));   
 	    $Rused_vars->{$args[0]} = 1 if ($var_commands{$cmd});
 	}
     }

@@ -917,7 +917,7 @@ unless (&Upgrade::data_structure_uptodate()) {
 
 &tools::ciphersaber_installed();
 
-%::changed_params;
+our %changed_params;
 
 my (%in, $query);
 
@@ -2552,7 +2552,7 @@ Use it to create a List object and initialize output parameters.
 	}
 	
 	## Check subscription authorization for the current user and list.
-	my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+	$result = $list->check_list_authz('subscribe',$param->{'auth_method'},
 					     {'sender' =>$param->{'user'}{'email'},
 					      'remote_host' => $param->{'remote_host'},
 					      'remote_addr' => $param->{'remote_addr'}});
@@ -2791,7 +2791,7 @@ Use it to create a List object and initialize output parameters.
 	 $param->{'list_status'} = $list->{'admin'}{'status'};
 
 	 ## May signoff
-	 my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+	 $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
 					      {'sender' =>$param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
 					       'remote_addr' => $param->{'remote_addr'}});
@@ -2807,7 +2807,7 @@ Use it to create a List object and initialize output parameters.
 	 }
 	    
 	 ## May Subscribe
-	 my $result = $list->check_list_authz('subscribe',$param->{'auth_method'},
+	$result = $list->check_list_authz('subscribe',$param->{'auth_method'},
 					      {'sender' =>$param->{'user'}{'email'},
 					       'remote_host' => $param->{'remote_host'},
 					       'remote_addr' => $param->{'remote_addr'}});
@@ -2836,9 +2836,8 @@ Use it to create a List object and initialize output parameters.
 	     }
 
 	     ## Check if web archive is publically accessible (useful information for RSS)
-	     my $result = $list->check_list_authz('web_archive.access',$param->{'auth_method'},
+	     $result = $list->check_list_authz('web_archive.access',$param->{'auth_method'},
 						  {'sender' => 'nobody'});
-	     my $r_action;
 	     $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 	     
 	     if ($r_action =~ /do_it/i) {
@@ -3142,7 +3141,7 @@ sub do_sso_login {
 		$path .= "/init/sso_login_succeeded/$in{'auth_service_name'}";
 	    }
 
-	    my $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
+	    $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
 	    
 	    &wwslog('info', 'do_sso_login: redirect user to %s', $service);
 	    $in{'action'} = 'redirect';
@@ -4177,7 +4176,7 @@ sub do_renewpasswd {
 
      if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'},$list);
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+	 &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	 &wwslog('info','do_review: no page %d', $param->{'page'});
 	 return undef;
      }
@@ -4251,7 +4250,7 @@ sub do_renewpasswd {
 
      ## additional DB fields
      $param->{'additional_fields'} = $Conf{'db_additional_subscriber_fields'};
-     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
+     &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
 
      ## msg_topics
      if ($list->is_there_msg_topic()) {
@@ -6632,8 +6631,7 @@ sub do_skinsedit {
      $in{'id'} .= ','.$in{'idspam'} if ($in{'idspam'});
      $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
-     $in{'message_template'};
-
+     
      ## The quiet information might either be provided by the 'quiet' variable 
      ## or by the 'quiet' value of the 'message_template' variable
      if ($in{'message_template'} eq 'quiet') {
@@ -10441,7 +10439,8 @@ sub do_purge_list {
      while ($ligne = <DESC_FILE>) {
 	 if ($ligne =~ /^title\s*$/) {
 	     #case title of the document
-	     while (($ligne = <DESC_FILE>) and ($ligne!~/^\s*$/)) {
+	     while ($ligne = <DESC_FILE>) {
+		 last if ($ligne =~ /^\s*$/);
 		 $ligne =~ /^\s*(\S.*\S)\s*/;
 		 $hash{'title'} = $hash{'title'}.$1." ";
 	     }
@@ -10451,7 +10450,8 @@ sub do_purge_list {
 
 	 if ($ligne =~ /^creation\s*$/) {
 	     #case creation of the document
-	     while (($ligne = <DESC_FILE>) and ($ligne!~/^\s*$/)) {
+	     while ($ligne = <DESC_FILE>) {
+		 last if ($ligne =~ /^\s*$/);
 		 if ($ligne =~ /^\s*email\s*(\S*)\s*/) {
 		     $hash{'email'} = $1;
 		 } 
@@ -10464,7 +10464,8 @@ sub do_purge_list {
 
 	 if ($ligne =~ /^access\s*$/) {
 	     #case access scenari for the document
-	     while (($ligne = <DESC_FILE>) and ($ligne!~/^\s*$/)) {
+	     while ($ligne = <DESC_FILE>) {
+		 last if  ($ligne =~ /^\s*$/);
 		 if ($ligne =~ /^\s*read\s*(\S*)\s*/) {
 		     $hash{'read'} = $1;
 		 }
@@ -14402,7 +14403,7 @@ sub d_test_existing_and_rights {
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
      ## Scenario list for EDIT
-     my $tmp_list_of_scenario = $list->load_scenario_list('d_edit',$robot);
+     $tmp_list_of_scenario = $list->load_scenario_list('d_edit',$robot);
 	     
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
@@ -14677,7 +14678,7 @@ sub d_test_existing_and_rights {
      &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'name_doc'}",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      ## ONLY IF SET_OWNER can be performed even if not control of the father directory
      $mode{'control'} = 1;
-     my %access = &d_access_control(\%mode,$path);
+     %access = &d_access_control(\%mode,$path);
      unless ($access{'may'}{'control'}) {
 	 ## father directory
 	 $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
@@ -16010,7 +16011,7 @@ sub export_topics {
      wwslog ('debug2',"export_topics($robot)");
      my %topics = &List::load_topics($robot);
 
-     unless (defined %topics) {
+     unless (%topics) {
 	 &wwslog('err','No topics defined');
 	 return undef;
      }
@@ -16353,7 +16354,7 @@ sub do_viewlogs {
     
     if ($param->{'page'} > $param->{'total_page'}) {
 	&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
 	return undef;
     }

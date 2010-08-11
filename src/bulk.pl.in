@@ -158,7 +158,6 @@ my $fh = 'fh0000000000';	## File handle for the stream.
 my $messagekey;       # the key of the current message in the message_table   
 my $messageasstring_init;  # the current message as a string
 my $messageasstring;  # the transformed message.
-my $last_check_date = 0;
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = time();

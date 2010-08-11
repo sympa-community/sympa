@@ -339,7 +339,7 @@ sub upgrade {
 		    &do_log('notice', 'Fixing DB field %s ; turning 2 to 1...', $field);
 		    
 		    $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 1, $field, 2;
-		    $rows;
+
 		    unless ($rows = $dbh->do($statement)) {
 			do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 			return undef;

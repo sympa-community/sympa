@@ -697,8 +697,6 @@ sub rename_list{
 					    'remote_host' => $param{'remote_host'},
 					    'remote_addr' => $param{'remote_addr'}});
       
-      $r_action;
-      $reason;
       if (ref($result) eq 'HASH') {
 	$r_action = $result->{'action'};
 	$reason = $result->{'reason'};

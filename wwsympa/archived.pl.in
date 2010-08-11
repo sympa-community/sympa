@@ -77,7 +77,6 @@ $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
 $sympa_conf_file = Sympa::Constants::CONFIG;
 
 $wwsconf = {};
-$adrlist = {};
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
@@ -117,7 +116,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
-      ioctl(TTY, $TIOCNOTTY, 0);
+      ioctl(TTY, &TIOCNOTTY, 0);
       close(TTY);
    }
    setpgrp(0, 0);
@@ -262,13 +261,13 @@ while (!$end) {
 	       unless ($list->am_i('privileged_owner',$sender)|| $list->am_i('owner',$sender)||$list->am_i('editor', $sender)||&List::is_listmaster($sender,$list->{'domain'} )){
 		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 
-		   unless (my $new_message = new Message("$arcpath/arctxt/$message",'noxsympato')) {
-		        do_log('err',"unable to load new message $arcpath/arctxt/$message");
-			next;
+		   my $new_message;
+		   unless ($new_message = new Message("$arcpath/arctxt/$message",'noxsympato')) {
+		      do_log('err',"unable to load new message $arcpath/arctxt/$message");
+		      next;
 		   }
-		   my $messagesender = $new_message->{'sender'};
-		   lc($messagesender);
-
+		   my $messagesender = lc($new_message->{'sender'});
+		   
 		   unless ($sender == $messagesender) {
 		       &do_log('err', 'remove command by unauthorized sender');
 		       return undef;
@@ -857,7 +856,7 @@ sub mail2arc {
 	else
 	{
 	    ## recreate index file if needed and update it
-	    $newfile = $index = &create_idx($monthdir) + 1;
+	    $newfile = &create_idx($monthdir) + 1;
 	}
 	
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
