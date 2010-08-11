@@ -916,7 +916,7 @@ elsif ($main::options{'close_family'}) {
     }
     
     my $string;
-    unless ($string = $family->close()) {
+    unless ($string = $family->close_family()) {
  	print STDERR "\nImpossible family closure : action stopped \n";
  	exit 1;
     } 
