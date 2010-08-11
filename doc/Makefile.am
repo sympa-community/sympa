@@ -21,6 +21,7 @@
 
 SUBDIRS = man8 sample
 
-pdf_DATA = sympa.pdf
+## pdf_DATA requires autoconf 2.60; not available yet
+#pdf_DATA = sympa.pdf
 
 EXTRA_DIST = $(pdf_DATA)
