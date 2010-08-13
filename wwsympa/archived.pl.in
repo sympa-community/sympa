@@ -116,7 +116,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
-      ioctl(TTY, &TIOCNOTTY, 0);
+      ioctl(TTY, 0x20007471, 0);
       close(TTY);
    }
    setpgrp(0, 0);
