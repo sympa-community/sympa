@@ -3833,7 +3833,7 @@ sub do_renewpasswd {
 	 }
 
      }
-     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
+     # &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
      return 1;
  }
 
@@ -4164,7 +4164,7 @@ sub do_renewpasswd {
      unless ($param->{'total'}) {
 	 &report::reject_report_web('user','no_subscriber',{},$param->{'action'},$list);
 	 &wwslog('info','do_review: no subscriber');
-	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
+	 # &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
 	 return 1;
      }
 
@@ -4176,7 +4176,7 @@ sub do_renewpasswd {
 
      if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
 	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'},$list);
-	 &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+	 &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	 &wwslog('info','do_review: no page %d', $param->{'page'});
 	 return undef;
      }
@@ -4250,7 +4250,7 @@ sub do_renewpasswd {
 
      ## additional DB fields
      $param->{'additional_fields'} = $Conf{'db_additional_subscriber_fields'};
-     &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
+     &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
 
      ## msg_topics
      if ($list->is_there_msg_topic()) {
@@ -6195,7 +6195,7 @@ sub do_skinsedit {
      
      unless ( $del_is =~ /do_it/) {
 	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
-	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
+	 # &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
 	 &wwslog('info','do_del: %s may not del', $param->{'user'}{'email'});
 	 &web_db_log({'target_email' => $in{'email'},
 		      'status' => 'error',
@@ -6215,7 +6215,7 @@ sub do_skinsedit {
 
 	 unless (defined($user_entry)) {
 	     &report::reject_report_web('user','not_subscriber',{'email' => $email},$param->{'action'},$list);
-	     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
+	     # &Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     &web_db_log({'target_email' => $in{'email'},
 			  'status' => 'error',
@@ -14988,16 +14988,32 @@ sub do_change_email {
 	 my $l = $list->{'name'};
 	 
 	 my $user_entry = $list->get_subscriber($old_email);
+	 
 	 if ($user_entry->{'included'} == 1) {
-	     ## Notify list owner
-	     $list->send_notify_to_owner('failed_to_change_included_member',{'current_email' => $old_email, 
-									     'new_email' => $new_email,
-									     'datasource' => $list->get_datasource_name($user_entry->{'id'})});
-
-	     &report::reject_report_web('user','change_member_email_failed_included',{'listname'=>$list->{'name'}},
-					$param->{'action'},$list,$old_email,$robot);
-	     &wwslog('err', 'could not change member email for list %s because member is included', $l);
-	     next;
+	     ## Check the type of data sources
+	     ## If only include_list of local mailing lists, then no problem
+	     ## Otherwise, notify list owner
+	     ## We could also force a sync_include for local lists
+	     my $use_external_data_sources;
+	     foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
+		 my $datasource = $list->search_datasource($datasource_id);
+		 if (!defined $datasource || $datasource->{'type'} ne 'include_list' || ($datasource->{'def'} =~ /\@(.+)$/ && $1 ne $robot)) {
+		     $use_external_data_sources = 1;
+		     last;
+		 }
+	     }
+	     if ($use_external_data_sources) {
+		 ## Notify list owner
+		 $list->send_notify_to_owner('failed_to_change_included_member',
+		    {'current_email' => $old_email, 
+		     'new_email' => $new_email,
+		     'datasource' => $list->get_datasource_name($user_entry->{'id'})});
+    
+		 &report::reject_report_web('user','change_member_email_failed_included',{'listname'=>$list->{'name'}},
+					    $param->{'action'},$list,$old_email,$robot);
+		 &wwslog('err', 'could not change member email for list %s because member is included', $l);
+		 next;
+	     }
 	 }
 
 	 ## Check if user is already member of the list with his new address
@@ -16354,7 +16370,7 @@ sub do_viewlogs {
     
     if ($param->{'page'} > $param->{'total_page'}) {
 	&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+	&Log::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
 	return undef;
     }

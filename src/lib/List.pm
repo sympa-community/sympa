@@ -11913,11 +11913,7 @@ sub search_datasource {
 	## Go through sources
 	foreach my $s (@{$self->{'admin'}{$p}}) {
 	    if (&Datasource::_get_datasource_id($s) eq $id) {
-		if (ref($s)) {
- 		    return $s->{'name'} || $s->{'host'};
-		}else{
-		    return $s;
-		}
+		return {'type' => $p, 'def' => $s};
 	    }
 	}
     }
@@ -11938,7 +11934,14 @@ sub get_datasource_name {
     foreach my $id (@ids) {
 	## User may come twice from the same datasource
 	unless (defined ($sources{$id})) {
-	    $sources{$id} = $self->search_datasource($id);
+	    my $datasource = $self->search_datasource($id);
+	    if (defined $datasource) {
+		if (ref($datasource->{'def'})) {
+		    $sources{$id} = $datasource->{'def'}{'name'} || $datasource->{'def'}{'host'};
+		}else {
+		    $sources{$id} = $datasource->{'def'};
+		}
+	    }
 	}
     }
     
