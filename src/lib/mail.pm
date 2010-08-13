@@ -410,20 +410,25 @@ sub mail_message {
 	my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
     }
 
-    return $numsmtp if (&sendto('msg_header' => $msg_header, 
-				'msg_body' => $msg_body,
-				'from' => $from,
-				'rcpt' => \@sendtobypacket,
-				'listname' => $list->{'name'},
-				'priority' => $list->{'admin'}{'priority'},
-				'delivery_date' => $list->get_next_delivery_date,
-				'robot' => $robot,
-				'encrypt' => $message->{'smime_crypted'},
-				'use_bulk' => 1,
-				'verp' => $verp,
-				'dkim' => $dkim,
-				'merge' => $list->{'admin'}{'merge_feature'},
-				'tag_as_last' => $tag_as_last));
+    unless (&sendto('msg_header' => $msg_header, 
+		    'msg_body' => $msg_body,
+		    'from' => $from,
+		    'rcpt' => \@sendtobypacket,
+		    'listname' => $list->{'name'},
+		    'priority' => $list->{'admin'}{'priority'},
+		    'delivery_date' => $list->get_next_delivery_date,
+		    'robot' => $robot,
+		    'encrypt' => $message->{'smime_crypted'},
+		    'use_bulk' => 1,
+		    'verp' => $verp,
+		    'dkim' => $dkim,
+		    'merge' => $list->{'admin'}{'merge_feature'},
+		    'tag_as_last' => $tag_as_last)) {
+	do_log ('err',"Failed to send message to list %s", $list->{'name'});
+	return undef;
+    }
+    
+    return $numsmtp;
 }
 
 
@@ -557,27 +562,34 @@ sub sendto {
     if ($encrypt eq 'smime_crypted') {
         # encrypt message for each rcpt and send the message
 	# this MUST be moved to the bulk mailer. This way, merge will be applied after the SMIME encryption is applied ! This is a bug !
-	foreach my $unique_rcpt (@{$rcpt}) {
-	    my $email = lc(@{$unique_rcpt}[0]);
-	    if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
-		do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
-		# internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
-		return undef;
-	    }
-	    my $encrypted_msg_as_string;
-	    if ($encrypted_msg_as_string = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
+	foreach my $bulk_of_rcpt (@{$rcpt}) {
+	    foreach my $unique_rcpt (@{$bulk_of_rcpt}) {
+		my $email = lc(@{$unique_rcpt}[0]);
+		if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
+		    do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
+		    # internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
+		    return undef;
+		}
+		my $encrypted_msg_as_string;
+		unless ($encrypted_msg_as_string = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
+    		    do_log('err',"Failed to encrypt message"); 
+		    return undef;
+                }	
 
-		&sending('msg' => $encrypted_msg_as_string,
-			 'rcpt' => $email,
-			 'from' => $from,
-			 'listname' => $listname,
-			 'robot' => $robot,
-			 'priority' => $priority,
-			 'delivery_date' =>  $delivery_date,
-			 'use_bulk' => $use_bulk,
-			 'tag_as_last' => $tag_as_last);
-	    }
-	    $tag_as_last = 0;
+		unless (&sending('msg' => $encrypted_msg_as_string,
+				 'rcpt' => $email,
+				 'from' => $from,
+				 'listname' => $listname,
+				 'robot' => $robot,
+				 'priority' => $priority,
+				 'delivery_date' =>  $delivery_date,
+				 'use_bulk' => $use_bulk,
+				 'tag_as_last' => $tag_as_last)) {
+		    do_log('err',"Failed to send encrypted message"); 
+		    return undef;
+		}
+		$tag_as_last = 0;
+	    }    
 	}
     }else{
 	$msg = $msg_header->as_string . "\n" . $msg_body;   
@@ -601,6 +613,8 @@ sub sendto {
 	    return undef;
 	}   
     }
+    
+    return 1;
 }
 
 ####################################################
