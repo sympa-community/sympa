@@ -570,6 +570,8 @@ sub load_robots {
 
 	$robot_conf->{$robot}{'static_content_url'} ||= $Conf{'static_content_url'};
 	$robot_conf->{$robot}{'static_content_path'} ||= $Conf{'static_content_path'};
+	$robot_conf->{$robot}{'tracking_delivery_status_notification'} ||= $Conf{'tracking_delivery_status_notification'};
+	$robot_conf->{$robot}{'tracking_message_delivery_notification'} ||= $Conf{'tracking_message_delivery_notification'};
 
 	## CSS
 	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'static_content_url'}.'/css/'.$robot;

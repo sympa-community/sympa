@@ -1460,8 +1460,13 @@ our @params = (
         vhost => '1',
 	file   => 'sympa.conf',
     },
-
-
-
+    {
+        name    => 'tracking_delivery_status_notification',
+        default => 'off',
+    },
+    {
+        name    => 'tracking_message_delivery_notification',
+        default => 'off',
+    },
 );
 

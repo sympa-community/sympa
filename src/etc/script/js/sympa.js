@@ -1,3 +1,51 @@
+function showMDN(el) {
+  var pre = el.parentNode.getElementsByTagName('pre');
+  if(!pre) return;
+  var mdn = pre[0].innerHTML;
+  return showMessage(mdn.replace(/ /g, '&nbsp;').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br />'), true);
+}
+
+function showMessage(message, ishtml) { // if ishtml not set then \n to <br /> transformation is applied to message
+  if(!ishtml) message = message.replace(/\n/g, '<br />');
+  var body = document.getElementsByTagName('body')[0];
+  if(!body) return;
+  
+  var block = document.createElement('div');
+  block.id = 'ErrorBlock';
+  body.insertBefore(block, body.childNodes[0]);
+  
+  var msg = document.createElement('div');
+  msg.id = 'ErrorMsg';
+  body.insertBefore(msg, body.childNodes[0]);
+  
+  var ctn = document.createElement('div');
+  ctn.className = 'messageContent';
+  msg.appendChild(ctn);
+  
+  if(message) ctn.innerHTML = message;
+  
+  var form = document.createElement('form');
+  msg.appendChild(form);
+  
+  var fs = document.createElement('fieldset');
+  form.appendChild(fs);
+  
+  var cls = document.createElement('input');
+  cls.type = 'button';
+  cls.className = 'MainMenuLinks';
+  cls.value = 'OK';
+  cls._body = body;
+  cls._block = block;
+  cls._msg = msg;
+  cls.onclick = function() {
+    this._body.removeChild(this._block);
+    this._body.removeChild(this._msg);
+  };
+  fs.appendChild(cls);
+  
+  return ctn;
+}
+
 // To confirm archives deletion
 function dbl_confirm(my_form, my_message,my_message2) {
   if (confirm(my_message)) {

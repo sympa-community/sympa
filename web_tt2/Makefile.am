@@ -133,6 +133,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   suspend_request.tt2 \
 		   ticket.tt2 \
 		   title.tt2 \
+		   tracking.tt2 \
 		   tt2_error.tt2 \
 		   viewbounce.tt2 \
 		   viewlogs.tt2 \

@@ -66,9 +66,10 @@ use time_utils;
 use Sympa::Constants;
 use wwslib;
 use cookielib;
-use Robot;
 use tt2;
 #use DateTime;
+use tracking;
+
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
@@ -93,6 +94,7 @@ my $wwsconf = {};
 ## Change to your wwsympa.conf location
 my $conf_file = Sympa::Constants::WWSCONFIG;
 my $sympa_conf_file = Sympa::Constants::CONFIG;
+
 
 
 
@@ -221,6 +223,8 @@ my %comm = ('home' => 'do_home',
 	 'remove_arc' => 'do_remove_arc',
 	 'send_me' => 'do_send_me',
 	 'view_source' => 'do_view_source',
+	 'tracking' => 'do_tracking',
+	 'tracking_percent' => 'do_tracking_percent',
 	 'arcsearch_form' => 'do_arcsearch_form',
 	 'arcsearch_id' => 'do_arcsearch_id',
 	 'arcsearch' => 'do_arcsearch',
@@ -541,6 +545,8 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'send_newsletter' => ['param.list','param.user.email', 'url'],
 		     'send_me' => ['param.list'],
 		     'view_source' => ['param.list'],
+		     'tracking' => ['param.list'],
+		     'tracking_percent' => ['param.list'],
 		     'requestpasswd' => ['email'],
 		     'serveradmin' => ['param.user.email'],
 		     'set' => ['param.list','reception|visibility'],
@@ -736,6 +742,7 @@ my %in_regexp = (
 		 ## Free data
 		 'subject' => '.*',
 		 'gecos' => '[^<>\\\*\$\n]+',
+		 'fromname' =>  '[^<>\\\*\$\n]+',
 		 'additional_field' => '[^<>\\\*\$\n]+',
 		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
 
@@ -805,6 +812,7 @@ my %in_regexp = (
 		 'new_email' => &tools::get_regexp('email'),
 		 'pending_email' => &tools::get_regexp('email').',.*', # Email address is followed by ',' + gecos data
 		 'sender' => &tools::get_regexp('email'),
+		 'fromaddr' =>  &tools::get_regexp('email'),
 		 'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
 
 		 ## Host
@@ -4666,7 +4674,6 @@ sub check_custom_attribute {
 	 $param->{'user'}{$p} = $in{$p};
      }
 
-     &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
 		  'status' => 'success',
 	      });
@@ -5073,61 +5080,45 @@ sub do_auto_signoff {
  sub do_signoff {
      &wwslog('info', 'do_signoff');
 
-     my $authenticated_email_address = $param->{'user'}{'email'};
 
+     my $authenticated_email_address = $param->{'user'}{'email'};
      unless ($authenticated_email_address) {
 	 unless ($in{'email'}) {
 	     return 'sigrequest';
 	 }
 
-	 if ($in{'fingerprint'}) {
-
-	     unless(&tools::get_fingerprint($in{'email'}, $in{'fingerprint'})){
-		 &report::reject_report_web('user','cannot_do_signoff');
-		 &wwslog('err','do_signoff: failed to unsubscribe user %s', $in{'email'});
-		 return undef;
-	     }
-
-	     ## We don't set $param->{'user'}{'email'} because we don't want the user to be authenticated 
-	     ## to prevent the cookie from being set
-	     $authenticated_email_address = $in{'email'};
-
-	 }else {
-	     
-	     ## Perform login first
-	     if ($in{'passwd'}) {
-		 $in{'previous_action'} = 'signoff';
-		 $in{'previous_list'} = $param->{'list'};
-		 return 'login';
-	     }
-	     
-	     if ( &List::is_user_db($in{'email'}) ) {
-		 &report::reject_report_web('user','no_user',{},$param->{'action'});
-		 &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
-		 &web_db_log({'target_email' => $in{'email'},
-			      'status' => 'error',
-			      'error_type' => 'authentication'});
-		 return undef;
-	     }
-	     
-	     ## No passwd
-	     &init_passwd($in{'email'}, {'lang' => $param->{'lang'} });
-	     
-	     $param->{'user'}{'email'} = $in{'email'};
-	     $authenticated_email_address = $in{'email'};
+	 ## Perform login first
+	 if ($in{'passwd'}) {
+	     $in{'previous_action'} = 'signoff';
+	     $in{'previous_list'} = $param->{'list'};
+	     return 'login';
 	 }
+
+	 if ( &List::is_user_db($in{'email'}) ) {
+	     &report::reject_report_web('user','no_user',{},$param->{'action'});
+	     &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
+	     &web_db_log({'target_email' => $in{'email'},
+			  'status' => 'error',
+			  'error_type' => 'authentication'});
+	     return undef;
+	 }
+
+	 ## No passwd
+	 &init_passwd($in{'email'}, {'lang' => $param->{'lang'} });
+
+	 $param->{'user'}{'email'} = $in{'email'};
      }
 
-     unless ($list->is_user($authenticated_email_address)) {
+     unless ($list->is_user($param->{'user'}{'email'})) {
 	 &report::reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
-	 &wwslog('info','do_signoff: %s not subscribed to %s',$authenticated_email_address, $param->{'list'} );
+	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'not_subscriber'});
 	 return undef;
      }
 
      my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
-					  {'sender' => $authenticated_email_address,
+					  {'sender' => $param->{'user'}{'email'},
 					   'remote_host' => $param->{'remote_host'},
 					   'remote_addr' => $param->{'remote_addr'}});
      my $sig_is;
@@ -5142,13 +5133,13 @@ sub do_auto_signoff {
      if ($sig_is =~ /reject/) {
 	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
 	 &wwslog('info', 'do_signoff: %s may not signoff from %s'
-		 , $authenticated_email_address, $param->{'list'});
+		 , $param->{'user'}{'email'}, $param->{'list'});
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'authorization'});
 	 return undef;
      }elsif ($sig_is =~ /owner/) {
-	 unless ($list->send_notify_to_owner('sigrequest',{'who' => $authenticated_email_address,
-							   'keyauth' => $list->compute_auth($authenticated_email_address, 'del')})) {
+	 unless ($list->send_notify_to_owner('sigrequest',{'who' => $param->{'user'}{'email'},
+							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'del')})) {
 	     &wwslog('notice',"Unable to send notify 'sigrequest' to $list->{'name'} list owner");
 	 }
 	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
@@ -6152,6 +6143,8 @@ sub do_skinsedit {
      $list->delete_subscription_request(@added_users);
      
      &report::notice_report_web('add_performed', {'total' => $total},$param->{'action'});
+     &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
+		  'status' => 'success'});
      
      foreach my $email (@added_users) {
 	 &web_db_log({'target_email' => $email,
@@ -7530,6 +7523,10 @@ sub do_remove_arc {
     foreach my $msgid (@msgids) {	
 	chomp $msgid ;	
 	printf REBUILD ('%s||%s',$msgid,$param->{'user'}{'email'}) ; printf  REBUILD "\n";
+	#########################################################################
+	# Tracking
+	&tracking::remove_message($msgid, $in{'list'});
+	########################################################################
     }
     close REBUILD;	
     &wwslog('info', 'do_remove_arc %d messages marked to be removed by archived', $#msgids+1);
@@ -7686,6 +7683,120 @@ sub do_remove_arc {
 	 return undef;
      }
 
+     return 1;
+ }
+####################################################
+#  do_tracking_percent                           
+####################################################
+#  Display notifications status when a recipient is not usually delivered
+# 
+# IN : -
+#
+# OUT : 'arc' | 1 | undef
+#
+#################################################### 
+ sub do_tracking_percent   {
+     &wwslog('info', 'do_view_source(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+     
+ #    unless ( ($Conf::Conf{'tracking'}) && ($Conf::Conf{'verp_rate'} eq 100) ){
+     unless ( ($list->{admin}{tracking} eq "on") && ($list->{admin}{verp_rate} eq "100%") ){
+         &wwslog('info','do_tracking_percent: invalid parameters; verp_rate must be = \"100%\", tracking must be \"on\"');
+	 printf "Content-Type: text/html\n\n";
+	 printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
+	 printf '</HEAD><BODY>';
+    	 printf "<br /><p>";
+    	 printf "Error in the configuration parameters : <br />verp_rate = $list->{admin}{verp_rate} (must be = 100%)";
+    	 printf "<br />tracking = $list->{admin}{tracking} (must be on)";
+    	 printf "<br /></p>";
+    	 printf '</BODY></HTML>';
+	return 1;
+     }
+     ## Access control
+     unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	 $param->{'previous_action'} = 'arc';
+	 $param->{'previous_list'} = $list->{'name'};
+	 return undef;
+     }
+
+     if (! $in{'msgid'} || 
+	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+	 &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('info','view_source: no message id found');
+	 $param->{'status'} = 'no_msgid';
+	 return undef;
+     } 
+     ##
+     my $tracking_info;
+     unless($tracking_info = &tracking::get_delivered_info_percent($in{'msgid'}, $in{'list'})){
+         #TODO: Change error names
+         &report::reject_report_web('intern','may_not_view_source',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+       #  &wwslog('info','view_source: no message id found');
+         $param->{'status'} = 'no_msgid';
+         return undef;
+     }
+ 
+     $param->{'bypass'} = 'extreme';
+   #  printf "Content-Type: text/plain\n\n";
+    # printf "Content-Type: text/html";
+     printf "Content-Type: text/html\n\n";
+
+     printf '<HTML><HEAD><TITLE>Suivi du Courrier</TITLE>';
+#<META HTTP-EQUIV="refresh" CONTENT="2">
+     printf '</HEAD><BODY>';
+     printf "<br /><p>";
+     printf $tracking_info;
+     printf "<br /></p>";
+     printf '</BODY></HTML>';
+     return 1;
+ }
+
+####################################################
+#  do_tracking                           
+####################################################
+#  Display notifications status when a recipient is not usually delivered
+# 
+# IN : -
+#
+# OUT : 'arc' | 1 | undef
+#
+#################################################### 
+ sub do_tracking   {
+     &wwslog('info', 'do_tracking(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+
+     ## Access control
+     unless ($param->{'is_owner'}){
+	 $param->{'previous_action'} = 'arc';
+	 $param->{'previous_list'} = $list->{'name'};
+	 return undef;
+     }
+     unless (($list->{admin}{tracking}{delivery_status_notification} eq 'on')||($list->{admin}{tracking}{message_delivery_notification} eq 'on')||($list->{admin}{tracking}{message_delivery_notification} eq 'on_demand')){
+         &wwslog('err','do_tracking : list not configured for tracking');
+	 &report::reject_report_web('intern','list_not_configured_for_tracking');
+	 $param->{'previous_action'} = 'arc';
+	 $param->{'previous_list'} = $list->{'name'};
+	 return undef;
+     }
+     if (! $in{'msgid'} || 
+	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+	 &report::reject_report_web('err','no_msgid',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('err','view_source: no message id found');
+	 $param->{'status'} = 'no_msgid';
+	 return undef;
+     } 
+     ##
+
+     $param->{'subject'} = $in{'subject'};
+     $param->{'fromname'} = $in{'fromname'};
+     $param->{'fromaddr'} = $in{'fromaddr'};
+     $param->{'msgid'} = $in{'msgid'} ;
+     $param->{'listname'} = $in{'list'};
+
+     unless($param->{'tracking_info'} = &tracking::get_recipients_status($in{'msgid'}, $in{'list'},$robot)){
+         &report::reject_report_web('err','could_not_get_tracking_info',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+         &wwslog('err',"could not get tracking info for message_id $in{'msgid'} and list $in{'list'}");
+         $param->{'status'} = 'could_not_get_tracking_info';
+         return undef;
+     }
      return 1;
  }
 
@@ -7917,7 +8028,7 @@ sub do_remove_arc {
 
      unless ($#{$param->{'res'}} >= 0) {
 	 &report::reject_report_web('intern_quiet','archive_not_found',{'msgid'=> $in{'msgid'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info','No message found in archives matching Message-ID %s', $in{'msgid'});
+	 &wwslog('err','No message found in archives matching Message-ID %s', $in{'msgid'});
 	 return 'arc';
      }
 
@@ -9146,6 +9257,7 @@ sub do_edit_list {
 		## Remove if empty
 		if ($new_admin->{$pname} =~ /^\s*$/) {
 		    delete $new_admin->{$pname};
+		    next; # Go directly to the next parameter.
 		}
 	    }
 	    
@@ -15421,8 +15533,6 @@ sub do_compose_mail {
      
      &wwslog('info', 'do_send_mail');
 
-     # Get the sender mail
-     my $from = $param->{'user'}{'email'};
      my $to;
      my $message = $param->{'message'};
 
@@ -15450,6 +15560,9 @@ sub do_compose_mail {
 	     $to = $list->get_list_address();
 	 }
      }
+
+     # Take the sender mail
+     my $from = $param->{'user'}{'email'};
 
      # Send the mail to the sender. To test his message
      # Second if : send to the sender "send to me"
@@ -15504,18 +15617,18 @@ sub do_compose_mail {
 	 # Generate a newsletter from an HTML URL and send it to a list by the Web interface.
 	 # Else you must use parse routine of MIME::Lite::HTML and send of MIME::Lite.
 	 my $mailHTML = new MIME::Lite::HTML(
-					     {
-						 From => $from,
-						 To => $to,
-						 Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
-						 'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
-						 Subject => $in{'subject'},
-						 HTMLCharset => 'utf-8',
-						 TextCharset => 'utf-8',
-						 TextEncoding => '8bit',
-						 HTMLEncoding => '8bit',
-						 remove_jscript => '1', #delete the scripts in the html
-					     }
+					 {
+					     From => $from,
+					     To => $to,
+					     Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
+					     'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+					     Subject => $in{'subject'},
+					     HTMLCharset => 'utf-8',
+					     TextCharset => 'utf-8',
+					     TextEncoding => '8bit',
+					     HTMLEncoding => '8bit',
+					     remove_jscript => '1', #delete the scripts in the html
+					 }
 					     );
 	 my $pages_url;
 	 $pages_url = $in{'url'};

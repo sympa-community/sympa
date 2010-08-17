@@ -173,3 +173,17 @@ CREATE TABLE stat_table (
 	read_stat		number NOT NULL,
 	PRIMARY KEY (id_stat)
 );
+
+CREATE TABLE IF NOT EXISTS `notification_table` (
+  `pk_notification` int(11) NOT NULL AUTO_INCREMENT COMMENT 'primary key of tracking datas. one for each message and each subscriber',
+  `message_id_notification` varchar(1000) DEFAULT NULL COMMENT 'message-id for which tracking is actived',
+  `recipient_notification` varchar(1000) NOT NULL COMMENT 'subscriber email',
+  `reception_option_notification` varchar(10) DEFAULT NULL COMMENT 'qsubscriber reception option. Not all reception option are compatible with tracking',
+  `status_notification` varchar(1000) DEFAULT NULL COMMENT 'latest notification status received',
+  `arrival_date_notification` varchar(1000) DEFAULT NULL COMMENT 'latest notification date ( a string extracted from the notification itself)',
+  `type_notification` enum('DSN','MDN') DEFAULT NULL COMMENT 'DSN or MDN depending of the latest notification received',
+  `message_notification` longtext COMMENT 'DSN or MDM when received',
+  `list_notification` varchar(1000) NOT NULL,
+  `robot_notification` varchar(80) NOT NULL,
+  PRIMARY KEY (`pk_notification`)
+) ;

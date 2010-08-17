@@ -1,0 +1,37 @@
+<!-- $Id: tracking.tt2 6369 2010-03-16 08:05:56Z serge.aumont $ -->
+<div class="block">
+
+<h4>[%|loc %]Message tracking[%END%]</h4>
+
+[%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
+<ul>
+    <li>Subject : [% subject %]</li>
+    <li>Message-Id :  [% msgid %]</li>
+    <li>[%|loc%]Distribution ended at[%END%] : [% distribution_date %]</li>
+</ul>
+
+<table summary="[%|loc%]Message tracking[%END%]" class="listOfItems text_center">
+  <tr><th>[%|loc%]Recipient Email[%END%]</th><th>[%|loc%]Reception Option[%END%]</th>
+     <th>[%|loc%]Delivery status[%END%]</th>
+     <th>[%|loc%]Notification Date[%END%]</th>
+     <th>[%|loc%]Notification[%END%]</th>
+  </tr>
+      
+  [% FOREACH u = tracking_info %]
+    [% IF dark == '1' %]
+      [% SET dark = 0 %]
+       <tr>
+    [% ELSE %]
+       <tr class="color0">
+       [% SET dark = 1 %]
+    [% END %]
+    <td>[% u.recipient %]</td><td>[% u.reception_option %]</td><td>[% u.status %]</td><td>[% u.arrival_date %]</td>
+     <td>
+       [% IF u.notification_message %] <a href="javascript:void(0);" onclick="showMDN(this)">X</a><pre style="display:none">[% u.notification_message %]</pre>[% END %]
+     </td>
+    </tr>
+  [% END %]
+</table>
+
+</div>
+<!-- end tracking.tt2 (distrib) -->
