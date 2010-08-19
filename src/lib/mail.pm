@@ -559,11 +559,10 @@ sub sendto {
         # encrypt message for each rcpt and send the message
 	# this MUST be moved to the bulk mailer. This way, merge will be applied after the SMIME encryption is applied ! This is a bug !
 	foreach my $bulk_of_rcpt (@{$rcpt}) {
-	    foreach my $unique_rcpt (@{$bulk_of_rcpt}) {
-		my $email = lc(@{$unique_rcpt}[0]);
-		if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
+	    # trace foreach my $unique_rcpt (@{$bulk_of_rcpt}) {
+	    foreach my $email (@{$bulk_of_rcpt}) {
+		if ($email !~ /@/) {
 		    do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
-		    # internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
 		    return undef;
 		}
 		my $encrypted_msg_as_string;
@@ -605,10 +604,10 @@ sub sendto {
 				  'tag_as_last' => $tag_as_last);
 	    return $result;
 	}else{
+	    do_log('err',"empty message, internal error");
 	    return undef;
 	}   
     }
-    
     return 1;
 }
 

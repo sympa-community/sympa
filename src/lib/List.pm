@@ -2761,12 +2761,8 @@ sub distribute_msg {
 
     ## Blindly send the message to all users.
     my $numsmtp = $self->send_msg('message'=> $message, 'apply_dkim_signature'=>$apply_dkim_signature, 'apply_tracking'=>$apply_tracking);
-    unless (defined ($numsmtp)) {
-	return $numsmtp;
-    }
-    
-    $self->savestats();
-    
+
+    $self->savestats() if (defined ($numsmtp));
     return $numsmtp;
 }
 
@@ -12296,8 +12292,6 @@ sub get_data {
 	return undef;
     }
     my $res = $sth->fetchall_hashref('id_counter');
-    #&do_log('trace', 'test');
-
     return $res;
 }
 
