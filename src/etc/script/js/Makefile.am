@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-jsdir = $(staticdir)/js
+jsdir = $(DESTDIR)$(staticdir)/js
 
 js_DATA = jqplot.barRenderer.min.js \
 	jqplot.CanvasAxisTickRenderer.js \
@@ -33,8 +33,7 @@ js_DATA = jqplot.barRenderer.min.js \
 EXTRA_DIST = $(js_DATA)
 
 install-data-hook:
-	unzip -f tinymce_3_3_7.zip;\
-	if [ ! -d $(staticdir)/js/tinymce ] ; then \
-		echo "Creating $(staticdir)/js/tinymce"; \
-		mv tinymce  $(staticdir)/js; \
+	if [ ! -d $(DESTDIR)$(staticdir)/js/tinymce ] ; then \
+		echo "Creating $(DESTDIR)$(staticdir)/js/tinymce"; \
+		mv tinymce $(DESTDIR)$(staticdir)/js; \
 	fi;
