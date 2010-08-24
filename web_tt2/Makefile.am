@@ -32,6 +32,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   blacklist.tt2 \
 		   button_footer.tt2 \
 		   button_header.tt2 \
+		   ca.tt2 \
 		   change_email.tt2 \
 		   change_email_request.tt2 \
 	     	   choosepasswd.tt2 \
@@ -83,6 +84,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   latest_arc.tt2 \
 		   latest_d_read.tt2 \
 		   latest_lists.tt2 \
+		   lca.tt2 \
 		   list_button_footer.tt2 \
 		   list_button_header.tt2 \
 		   list_menu.tt2 \

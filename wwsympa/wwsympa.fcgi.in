@@ -320,6 +320,8 @@ my %comm = ('home' => 'do_home',
 	 'suspend_request' => 'do_suspend_request',
 	 'suspend_request_action' => 'do_suspend_request_action',
 	 'show_exclude' => 'do_show_exclude',
+	 'ca' => 'do_ca',
+	 'lca' => 'do_lca',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -444,6 +446,8 @@ my %action_args = ('default' => ['list'],
 		'compose_mail' => ['list','subaction'],
                 'suspend_request' => ['subaction'],
 		'show_exclude' => ['list'],
+		'ca' => ['custom_action','p1','p2','p3','p4','p5'],
+		'lca' => ['custom_action','list','p1','p2','p3','p4','p5'],
 		);
 
 ## Define the required parameters for each action
@@ -12745,8 +12749,8 @@ sub do_d_savefile {
      # name of the file, without path
      my ($fname, $visible_fname);
      if ($fn =~ /([^\/\\]+)$/) {
-	$fname = &tools::qencode_filename($1);
-	$visible_fname = &make_visible_path($fname);
+	 $fname = &tools::qencode_filename($1);
+	 $visible_fname = &make_visible_path($fname);
      }
      
      # param from d_upload.tt2
@@ -16814,6 +16818,28 @@ sub do_review_family {
 				       };
     }
 
+    return 1;
+}
+
+sub do_ca {
+    &wwslog('info', 'custom action: %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$robot,$in{'p1'},$in{'p2'},$in{'p3'},$in{'p4'},$in{'p5'});
+    $param->{'custom_action'} = $in{'custom_action'};
+    $param->{'p1'} = $in{'p1'};
+    $param->{'p2'} = $in{'p2'};
+    $param->{'p3'} = $in{'p3'};
+    $param->{'p4'} = $in{'p4'};
+    $param->{'p5'} = $in{'p5'};
+    return 1;
+}
+
+sub do_lca {
+    &wwslog('info', 'List custom action: %s for list %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$in{'list'},$robot,$in{'p1'},$in{'p2'},$in{'p3'},$in{'p4'},$in{'p5'});
+    $param->{'custom_action'} = $in{'custom_action'};
+    $param->{'p1'} = $in{'p1'};
+    $param->{'p2'} = $in{'p2'};
+    $param->{'p3'} = $in{'p3'};
+    $param->{'p4'} = $in{'p4'};
+    $param->{'p5'} = $in{'p5'};
     return 1;
 }
 

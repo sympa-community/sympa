@@ -1803,7 +1803,6 @@ sub extract_verp_rcpt() {
     my $refrcpt = shift;
     my $refrcptverp = shift;
 
-
     &do_log('debug','&extract_verp(%s,%s,%s,%s)',$percent,$xseq,$refrcpt,$refrcptverp)  ;
 
     my @result;
@@ -1811,8 +1810,9 @@ sub extract_verp_rcpt() {
     if ($percent != '0%') {
 	my $nbpart ; 
 	if ( $percent =~ /^(\d+)\%/ ) {
-	    $nbpart = 100/$1;
-	}else {
+	    $nbpart = 100/$1;  
+	}
+	else {
 	    &do_log ('err', 'Wrong format for parameter extract_verp: %s. Can\'t process VERP.',$percent);
 	    return undef;
 	}

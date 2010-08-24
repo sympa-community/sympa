@@ -1355,9 +1355,7 @@ sub DoFile {
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
 	$list_address = $list->get_list_address();
-	
-    }
-    
+
     ## Loop prevention
     if ($list->{'admin'}{'reject_mail_from_automates_feature'} eq 'on') {
 		my $conf_loop_prevention_regex;
@@ -1852,7 +1850,7 @@ sub DoMessage{
     if ($hdr->get('multipart/report')) {
 	&do_log('notice', 'Message for %s from %s ignored because it is a report', $listname, $sender);
 	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'ignored_report','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-		return undef;
+	return undef;
     }
     
     ## Check if the message is too large

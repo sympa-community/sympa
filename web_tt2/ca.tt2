@@ -1,0 +1,7 @@
+[% TRY %]
+   [% PROCESS "${custom_action}.tt2" %]
+[% CATCH file %]
+   File Error! [% error.info %]
+[% CATCH %]
+   [% error %]
+[% END %]

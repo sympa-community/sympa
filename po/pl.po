@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sympa 6.0\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2009-12-02 14:48+0100\n"
-"Last-Translator: Marcin Wołoszyn <marcin.woloszyn@us.edu.pl>\n"
+"PO-Revision-Date: 2010-08-20 21:38+0200\n"
+"Last-Translator: Dominika Tkaczyk <d.tkaczyk@uw.edu.pl>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Pootle 1.0.2\n"
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -114,29 +115,25 @@ msgid "Listmaster"
 msgstr "Administrator list"
 
 #: ../web_tt2/login_menu.tt2:14
-#, fuzzy
 msgid "Privileged owner"
-msgstr "[Privileged owner]"
+msgstr "Uprzywilejowany właściciel"
 
 #: ../src/lib/List.pm:1188 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
-msgstr "Administrator"
+msgstr "Właściciel"
 
 #: ../web_tt2/login_menu.tt2:16
-#, fuzzy
 msgid "Editor"
-msgstr "[Editor]"
+msgstr "Redaktor"
 
 #: ../web_tt2/login_menu.tt2:17
-#, fuzzy
 msgid "Subscriber"
-msgstr "Subskrybenci"
+msgstr "Subskrybent"
 
 #. (last_login_host)
 #: ../web_tt2/login_menu.tt2:21
-#, fuzzy
 msgid "last login from %1"
-msgstr "ostatnie logowanie z %1 (%2)"
+msgstr "ostatnie logowanie z %1"
 
 #: ../web_tt2/login_menu.tt2:36
 msgid "Logout"
@@ -147,9 +144,8 @@ msgid "Your preferences"
 msgstr "Twoje ustawienia"
 
 #: ../web_tt2/suspend_request.tt2:5 ../web_tt2/your_lists.tt2:9
-#, fuzzy
 msgid "Manage your subscriptions"
-msgstr "Oczekujące subskrypcje"
+msgstr "Zarządzanie subskrypcjami"
 
 #: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
 msgid "admin"
@@ -243,9 +239,8 @@ msgid "Subscribers:"
 msgstr "Subskrybenci:"
 
 #: ../web_tt2/list_panel.tt2:12
-#, fuzzy
 msgid "Error rate:"
-msgstr "Stopień błędów:"
+msgstr "Współczynnik błędów:"
 
 #: ../web_tt2/list_panel.tt2:13
 msgid "Owners"
@@ -406,9 +401,8 @@ msgstr "Usuń współdzielone"
 
 #. (listname)
 #: ../web_tt2/admin.tt2:63
-#, fuzzy
 msgid "Are you sure you wish to delete the shared documents for list %1?"
-msgstr "Czy napewno chcesz usunąć dokumenty współdzielone?"
+msgstr "Czy na pewno chcesz usunąć dokumenty współdzielone listy %1?"
 
 #: ../web_tt2/admin.tt2:63
 msgid ""
@@ -807,15 +801,13 @@ msgid "Return to archive %1"
 msgstr "Powróć do archiwum %1"
 
 #: ../web_tt2/auto_signoff.tt2:1
-#, fuzzy
 msgid "Unsubscription request"
-msgstr "Brak żądań subskrypcji"
+msgstr "Prośba o wypisanie z listy"
 
 #. (signing_off_email,list)
 #: ../web_tt2/auto_signoff.tt2:2
-#, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
-msgstr "Poprosiłeś o wypisanie z listy %1"
+msgstr "Poprosiłeś o wypisanie adresu %1 z listy %2"
 
 #. (list)
 #: ../web_tt2/auto_signoff.tt2:3
@@ -823,6 +815,8 @@ msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
 "contains, you will be definitively unsubscribed from list %1"
 msgstr ""
+"Na ten adres została wysłana wiadomość potwierdzająca. Po kliknięciu linku, "
+"który zawiera wiadomość, zostaniesz całkowicie usunięty z listy %1"
 
 #: ../web_tt2/blacklist.tt2:4
 msgid "Blacklist management"
@@ -951,7 +945,6 @@ msgid "You should remove list aliases manually"
 msgstr "Powinieneś usunąć aliasy listy ręcznie"
 
 #: ../web_tt2/compose_mail.tt2:5
-#, fuzzy
 msgid "Sending a message to the list"
 msgstr "Wysyłanie wiadomości na listę"
 
@@ -978,12 +971,11 @@ msgstr "Temat:"
 
 #: ../web_tt2/compose_mail.tt2:26
 msgid "Send to selected receipient"
-msgstr ""
+msgstr "Wyślij do zaznaczonych odbiorów"
 
 #: ../web_tt2/compose_mail.tt2:27
-#, fuzzy
 msgid "Send to me"
-msgstr "wiadomość przypominająca"
+msgstr "Wyślij do mnie"
 
 #: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
 #: ../web_tt2/viewmod.tt2:32
@@ -997,51 +989,55 @@ msgstr "Wybierz jeden lub więcej tematów które odpowiadają Twojej wiadomośc
 
 #: ../web_tt2/compose_mail.tt2:64
 msgid "Messages customization: use the template syntax:"
-msgstr ""
+msgstr "Dostosowanie wiadomości: użyj składni szablonów:"
 
 #: ../web_tt2/compose_mail.tt2:65
 msgid "Below are some examples of TT2 parameters usable in messages."
-msgstr ""
+msgstr "Poniżej kilka przykładów parametrów TT2 użytecznych w wiadomościach."
 
 #: ../web_tt2/compose_mail.tt2:67
-#, fuzzy
 msgid ": the listname; always available."
-msgstr "Brak dostępnych list mailingowych."
+msgstr ": nazwa listy; zawsze dostępna."
 
 #: ../web_tt2/compose_mail.tt2:68
 msgid ": the name of the host the list is intalled on; always available."
-msgstr ""
+msgstr ": nazwa hosta, na którym lista jest zainstalowana, zawsze dostępna."
 
 #: ../web_tt2/compose_mail.tt2:69
-#, fuzzy
 msgid ": the user email; always available."
-msgstr "Brak dostępnych list mailingowych."
+msgstr ": adres email użytkownika; zawsze dostępny."
 
 #: ../web_tt2/compose_mail.tt2:70
 msgid ": the user name associated to her email; always available."
-msgstr ""
+msgstr ": nazwa użytkownika skojarzona z adresem email; zawsze dostępna."
 
 #: ../web_tt2/compose_mail.tt2:71
 msgid ": the - human readable - user's subscription date; always available."
-msgstr ""
+msgstr ": data subskrypcji użytkownika; zawsze dostępna."
 
 #: ../web_tt2/compose_mail.tt2:72
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
 msgstr ""
+": wartość atrybutu użytkownika \"title\" (sprawdź w konfiguracji listy, "
+"sekcja \"Różne\"), dostępna jeśli atrybut jest zdefiniowany."
 
 #: ../web_tt2/compose_mail.tt2:73
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
 msgstr ""
+": wartość atrybutu użytkownika \"name\", dostępna jeśli atrybut jest "
+"zdefiniowany."
 
 #: ../web_tt2/compose_mail.tt2:74
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
 msgstr ""
+": wartość atrybutu użytkownika \"organization\", dostępna jeśli atrybut jest "
+"zdefiniowany."
 
 #: ../web_tt2/compose_mail.tt2:78
 msgid "URL:"
@@ -1613,13 +1609,12 @@ msgid "*: Required element"
 msgstr "Wymagany element"
 
 #: ../web_tt2/edit_config.tt2:2
-#, fuzzy
 msgid "Edit robot config"
-msgstr "Edycja konfiguracji listy"
+msgstr "Edycja konfiguracji robota"
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
-msgstr ""
+msgstr "Ustaw"
 
 #: ../web_tt2/editfile.tt2:4
 msgid "Edit list templates"
@@ -2373,7 +2368,7 @@ msgstr "Uwierzytelnienie zawiodło"
 #. (u_err.status)
 #: ../web_tt2/error.tt2:124
 msgid "Service unavailable because list status is '%1'"
-msgstr ""
+msgstr "Usługa niedostępna, status listy: '%1'"
 
 #. (u_err.argument)
 #: ../web_tt2/error.tt2:125
@@ -2499,137 +2494,124 @@ msgid "on %1"
 msgstr "dnia %1"
 
 #: ../web_tt2/javascript.tt2:833
-#, fuzzy
 msgid "Start date"
-msgstr "Ostatnia aktualizacja"
+msgstr "Data początkowa"
 
 #: ../web_tt2/javascript.tt2:834
-#, fuzzy
 msgid "End date"
-msgstr "data"
+msgstr "Data końcowa"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "January"
-msgstr ""
+msgstr "styczeń"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "February"
-msgstr ""
+msgstr "luty"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "March"
-msgstr "Szukaj"
+msgstr "marzec"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "April"
-msgstr "profil"
+msgstr "kwiecień"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "May"
-msgstr ""
+msgstr "maj"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "June"
-msgstr ""
+msgstr "czerwiec"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "July"
-msgstr ""
+msgstr "lipiec"
 
 #: ../web_tt2/javascript.tt2:838
 msgid "August"
-msgstr ""
+msgstr "sierpień"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "September"
-msgstr "Subskrybent"
+msgstr "wrzesień"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "October"
-msgstr "Inne"
+msgstr "październik"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "November"
-msgstr "Subskrybent"
+msgstr "listopad"
 
 #: ../web_tt2/javascript.tt2:838
-#, fuzzy
 msgid "December"
-msgstr "Subskrybent"
+msgstr "grudzień"
 
 #: ../web_tt2/javascript.tt2:839
 msgid "Su"
-msgstr ""
+msgstr "N"
 
 #: ../web_tt2/javascript.tt2:839
-#, fuzzy
 msgid "Mo"
-msgstr "Więcej"
+msgstr "Pon"
 
 #: ../web_tt2/javascript.tt2:839
 msgid "Tu"
-msgstr ""
+msgstr "Wt"
 
 #: ../web_tt2/javascript.tt2:839
 msgid "We"
-msgstr ""
+msgstr "Śr"
 
 #: ../web_tt2/javascript.tt2:839
 msgid "Th"
-msgstr ""
+msgstr "Czw"
 
 #: ../web_tt2/javascript.tt2:839
-#, fuzzy
 msgid "Fr"
-msgstr "Od"
+msgstr "Pt"
 
 #: ../web_tt2/javascript.tt2:839
-#, fuzzy
 msgid "Sa"
-msgstr "Zapisz"
+msgstr "So"
 
 #: ../web_tt2/javascript.tt2:840
-#, fuzzy
 msgid "Sunday"
-msgstr "Summary"
+msgstr "niedziela"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Monday"
-msgstr ""
+msgstr "poniedziałek"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Tuesday"
-msgstr ""
+msgstr "wtorek"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Wednesday"
-msgstr ""
+msgstr "środa"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Thursday"
-msgstr ""
+msgstr "czwartek"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Friday"
-msgstr ""
+msgstr "piątek"
 
 #: ../web_tt2/javascript.tt2:840
 msgid "Saturday"
-msgstr ""
+msgstr "sobota"
 
 #: ../web_tt2/javascript.tt2:841
 msgid "Calendar"
-msgstr ""
+msgstr "Kalendarz"
 
 #: ../web_tt2/javascript.tt2:842
-#, fuzzy
 msgid "today"
-msgstr "Treść"
+msgstr "dzisiaj"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -2722,9 +2704,8 @@ msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Brak subskrypcji dla adresu <strong>%1</strong>!"
 
 #: ../web_tt2/loginbanner.tt2:18
-#, fuzzy
 msgid "To login, select your organization authentication server below:"
-msgstr "Wybierz swój serwer uwierzytelniania"
+msgstr "Aby się zalogować, wybierz serwer uwierzytelniania swojej organizacji:"
 
 #: ../web_tt2/loginbanner.tt2:24
 msgid "Go"
@@ -3035,9 +3016,8 @@ msgid "Virtual Robots"
 msgstr "Wirtualne roboty"
 
 #: ../web_tt2/nav.tt2:30
-#, fuzzy
 msgid "Edit Robot Config"
-msgstr "Edytuj Konfigurację Listy"
+msgstr "Edytuj Konfigurację Robota"
 
 #: ../web_tt2/nav.tt2:34 ../web_tt2/serveradmin.tt2:38
 msgid "Families"
@@ -3053,7 +3033,7 @@ msgstr "Wysyłanie buga, prośba o dodanie nowej funkcji"
 
 #: ../web_tt2/nav.tt2:105
 msgid "DKIM"
-msgstr ""
+msgstr "DKIM"
 
 #: ../web_tt2/nav.tt2:117
 msgid "Send a message"
@@ -3311,6 +3291,9 @@ msgid ""
 "blocked in order to protect you agains attacks. You must renew your password "
 "in order to login."
 msgstr ""
+"Dla tego konta wprowadzono zbyt dużo błędnych haseł. Twoje konto zostało "
+"zablokowanie w celu ochrony przed atakami. Aby się zalogować, musisz odnowić "
+"swoje hasło."
 
 #: ../web_tt2/renewpasswd.tt2:11
 msgid "You missed the password, please submit again. Maybe you forgot it?"
@@ -3517,7 +3500,7 @@ msgstr "Oczekujące subskrypcje"
 
 #: ../web_tt2/review.tt2:50
 msgid "Exclude"
-msgstr ""
+msgstr "Wyłącz"
 
 #: ../web_tt2/review.tt2:56
 msgid "Synchronize members with data sources"
@@ -3550,25 +3533,23 @@ msgstr "Zaznaczenie zbyt szerokie, nie mogę pokazać zaznaczenia"
 #. (similar_subscribers_occurence)
 #: ../web_tt2/review.tt2:117
 msgid " Other similar subscriber's email(s) (%1)"
-msgstr ""
+msgstr " Inne podobne adresy email subskrybentów (%1)"
 
 #: ../web_tt2/review.tt2:137
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
-msgstr "Czy napewno chcesz wypisać wszystkich zaznaczonych subskrybentów?"
+msgstr "Czy na pewno chcesz wypisać wszystkich zaznaczonych subskrybentów?"
 
 #: ../web_tt2/review.tt2:145
 msgid "Excluded users"
-msgstr ""
+msgstr "Wyłączeni użytkownicy"
 
 #: ../web_tt2/review.tt2:146 ../web_tt2/show_exclude.tt2:13
-#, fuzzy
 msgid "List of exclude"
-msgstr "Wylistowanie katalogu"
+msgstr "Lista wyłączonych"
 
 #: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:16
-#, fuzzy
 msgid "Since"
-msgstr "Rozmiar"
+msgstr "Od"
 
 #: ../web_tt2/rss_request.tt2:5
 msgid "RSS channel"
@@ -3927,9 +3908,8 @@ msgid "Skins administration page"
 msgstr "Strona zarządzania skórkami"
 
 #: ../web_tt2/serveradmin.tt2:192
-#, fuzzy
 msgid "View main config"
-msgstr "Edycja konfiguracji listy"
+msgstr "Zobacz główną konfigurację"
 
 #: ../web_tt2/serveradmin.tt2:231
 msgid ""
@@ -4024,7 +4004,7 @@ msgstr "użyty rozmiar klucza szyfrowania"
 
 #: ../web_tt2/show_exclude.tt2:3
 msgid "Show the exclusion table"
-msgstr ""
+msgstr "Pokaż tabelę wyłączonych"
 
 #: ../web_tt2/show_exclude.tt2:10
 msgid ""
@@ -4036,10 +4016,20 @@ msgid ""
 "exclusion table, through the standard unsubscribe/delete functions. \n"
 "They get off the exclusion table with the standard subscribe/add functions."
 msgstr ""
+"Użytkownicy poniżej zostali wykluczeni z listy. Uwaga, ta funkcja oznacza "
+"coś innego niż czarna lista. Wykluczenie ma sens\n"
+"jeśli lista opiera się na zewnętrznych źródłach danych; dzięki wykluczeniu "
+"użytkownik może się wypisać z listy (lub zostać wypisany przez właściciela), "
+"nawet jeśli\n"
+"powinien być zapisany przez zewnętrzne źródło danych. Użytkownicy trafiają "
+"do tabeli wyłączonych za pomocą standardowych funkcji wypisania się/"
+"usunięcia.\n"
+"Zapisanie się na listę/dodanie powoduje natomiast usunięcia użytkownika z "
+"tabeli wyłączonych."
 
 #: ../web_tt2/show_exclude.tt2:28
 msgid "No user excluded."
-msgstr ""
+msgstr "Nie ma wyłączonych użytkowników."
 
 #: ../web_tt2/show_sessions.tt2:2
 msgid "Sessions list"
@@ -4193,9 +4183,12 @@ msgid ""
 "file is comming from Sympa distribution so your CSS customization may be "
 "erased when doing this."
 msgstr ""
+"\n"
+"Uwaga: plik CSS jest nadpisywany przy użyciu szablonu css.tt2. Zwykle ten "
+"plik jest częścią dystrybucji Sympy, więc Twoje zmiany w stylach mogą zostać "
+"usunięte przez tą operację."
 
 #: ../web_tt2/skinsedit.tt2:45
-#, fuzzy
 msgid ""
 "Use the color editor in order to change defined colors. First select the "
 "color you want to change and pick a color,then apply it using the test "
@@ -4203,12 +4196,6 @@ msgid ""
 "own session. When happy with the different colors you choosen, you may save "
 "them in a new static CSS.\n"
 msgstr ""
-"\n"
-"Ostrożnie: plik CSS zostanie nadpisany nowo wygenerowanym w oparciu o "
-"szablon css.tt2. Zwykle ten plik jest dostarczany z Sympą; Twoje modyfikacje "
-"pliku CSS mogą zostać nadpisane wykonując tą operację.\n"
-"</p>\n"
-"<p>\n"
 "Możesz użyć edytora kolorów w celu zmiany zdefiniowanych kolorów. Najpierw "
 "wybierz identyfikator koloru który chcesz zmienić, następnie na palecie "
 "zaznacz kolor i naciśnij przycisk Test. Nowy kolor nie zostanie faktycznie "
@@ -4248,6 +4235,10 @@ msgid ""
 "used for. For more details on rendering, feel free to try changing the "
 "colors in your session to see how well all that works."
 msgstr ""
+"Zauważ, że te opisy nie oddają dokładnego użycia parametrów kolorów, to "
+"byłoby zbyt długie. To co jest w tabeli powinno dać ogólne odczucie, do "
+"czego używany jest dany parametr. Możesz potestować użycie kolorów "
+"zmieniając je dla swojej sesji."
 
 #: ../web_tt2/skinsedit.tt2:78
 msgid ""
@@ -4346,9 +4337,8 @@ msgid "error messages."
 msgstr "# message"
 
 #: ../web_tt2/skinsedit.tt2:137
-#, fuzzy
 msgid "hovered links;"
-msgstr "podświetlone linki."
+msgstr "podświetlone linki;"
 
 #: ../web_tt2/skinsedit.tt2:137
 msgid "background color of hovered buttons."
@@ -4514,9 +4504,8 @@ msgid "Disable topics subscription"
 msgstr "Wyłącz subskrypcję tematów"
 
 #: ../web_tt2/suboptions.tt2:51
-#, fuzzy
 msgid "Only possible for direct reception modes."
-msgstr "Możliwe tylko w \"normalnym\" trybie otrzymywania"
+msgstr "Możliwe tylko w bezpośrednich trybach dostarczania wiadomości."
 
 #. (list)
 #: ../web_tt2/subrequest.tt2:28 ../web_tt2/subrequest.tt2:7
@@ -4630,14 +4619,12 @@ msgid "%1's picture"
 msgstr "zdjęcie %1"
 
 #: ../web_tt2/suspend_request.tt2:13
-#, fuzzy
 msgid "Suspended"
-msgstr "Nadawca"
+msgstr "Zawieszony"
 
 #: ../web_tt2/suspend_request.tt2:23
-#, fuzzy
 msgid "Suspended from"
-msgstr "Nadawca"
+msgstr "Zawieszony od"
 
 #: ../web_tt2/suspend_request.tt2:23 ../web_tt2/viewlogs.tt2:113
 msgid "to"
@@ -4645,12 +4632,11 @@ msgstr "do"
 
 #: ../web_tt2/suspend_request.tt2:23
 msgid "indefinite end date"
-msgstr ""
+msgstr "data końcowa nieokreślona"
 
 #: ../web_tt2/suspend_request.tt2:33
-#, fuzzy
 msgid "No subscription."
-msgstr "Subskrypcja wg. tematu:"
+msgstr "Brak subskrypcji."
 
 #: ../web_tt2/suspend_request.tt2:37
 #, fuzzy
@@ -4658,38 +4644,32 @@ msgid "Toogle selection"
 msgstr "Wybierz"
 
 #: ../web_tt2/suspend_request.tt2:41
-#, fuzzy
 msgid "Suspend / Resume the selected lists"
-msgstr "Skasuj zaznaczone listy"
+msgstr "Zawieś / Odblokuj zaznaczone listy"
 
 #: ../web_tt2/suspend_request.tt2:43
-#, fuzzy
 msgid "From:"
-msgstr "Od"
+msgstr "Od:"
 
 #: ../web_tt2/suspend_request.tt2:44
-#, fuzzy
 msgid "To:"
-msgstr "Do: %1"
+msgstr "Do:"
 
 #: ../web_tt2/suspend_request.tt2:46
 msgid "Check this box if you want to suspend your subscription indefinitely."
-msgstr ""
+msgstr "Zaznacz, jeśli chcesz zawiesić swoją subskrypcję na stałe."
 
 #: ../web_tt2/suspend_request.tt2:49
-#, fuzzy
 msgid "Suspend my subscriptions"
-msgstr "Oczekujące subskrypcje"
+msgstr "Zawieś moje subskrypcje"
 
 #: ../web_tt2/suspend_request.tt2:51
-#, fuzzy
 msgid "Resume my subscriptions"
-msgstr "Oczekujące subskrypcje"
+msgstr "Odblokuj moje subskrypcje"
 
 #: ../web_tt2/suspend_request.tt2:55
-#, fuzzy
 msgid "Unsubscribe selected lists"
-msgstr "Skasuj zaznaczone listy"
+msgstr "Usuń zaznaczone listy"
 
 #: ../web_tt2/ticket.tt2:4
 msgid "The link you used is unvalid"
@@ -4782,9 +4762,8 @@ msgid "to:"
 msgstr "do:"
 
 #: ../web_tt2/viewlogs.tt2:73
-#, fuzzy
 msgid "ex: 24-05-2006"
-msgstr "przykład: 03/05/2006"
+msgstr "przykład: 24-05-2006"
 
 #: ../web_tt2/viewlogs.tt2:75
 msgid "Search by type:"
@@ -4957,6 +4936,8 @@ msgid ""
 "either use that other email address or update your list membership with the "
 "new email address."
 msgstr ""
+"Jeśli subskrybujesz listę innym adresem email, powinieneś albo użyć tego "
+"adresu lub uaktualnić adres na liście."
 
 #: ../mail_tt2/authorization_reject.tt2:12
 msgid "Web archives are restricted to listmaster."
@@ -5305,10 +5286,9 @@ msgstr ""
 "Twój podpis wiadomości został pomyślnie zweryfikowany przy użyciu S/MIME."
 
 #: ../mail_tt2/command_report.tt2:23
-#, fuzzy
 msgid "Your message contain a DKIM signature. It was succesfully verified"
 msgstr ""
-"Twój podpis wiadomości został pomyślnie zweryfikowany przy użyciu S/MIME."
+"Twoja wiadomość zawiera sygnaturę DKIM. Została ona pomyślnie zweryfikowana."
 
 #: ../mail_tt2/command_report.tt2:28
 msgid ""
@@ -5627,14 +5607,12 @@ msgid "User guide"
 msgstr "Instrukcja obsługi"
 
 #: ../mail_tt2/helpfile.tt2:5
-#, fuzzy
 msgid "                       (Automatic Mailing System)"
-msgstr "HELp                       * Ten plik pomocy"
+msgstr "                       (Automatyczny System Pocztowy)"
 
 #: ../mail_tt2/helpfile.tt2:7
-#, fuzzy
 msgid "                                User's Guide"
-msgstr "HELp                       * Ten plik pomocy"
+msgstr "                                Podręcznik użytkownika"
 
 #: ../mail_tt2/helpfile.tt2:10
 msgid ""
@@ -6820,16 +6798,16 @@ msgstr "FYI: %s lista %s od %s %s"
 
 #. (who,gecos,list.name)
 #: ../mail_tt2/listowner_notification.tt2:28
-#, fuzzy
 msgid ""
 "WARNING: %1 %2 failed to unsubscribe from %3 because his address was not "
 "found in the list.\n"
 "You may help this person looking for similar email in subscriber list using "
 "the following link :"
 msgstr ""
-"UWAGA: %1 %2 nie powiodło się wypisanie z %3, ponieważ jego adres nie został "
-"znaleziony na liście.\n"
-"(Możesz pomóc tej osobie)."
+"UWAGA: nie powiodło się wypisanie użytkownika %1 %2 z %3, ponieważ jego "
+"adres nie został znaleziony na liście.\n"
+"Możesz spróbować poszukać podobnego adresu email na liście subskrybentów "
+"używając następującego linka:"
 
 #. (list.name)
 #: ../mail_tt2/listowner_notification.tt2:33
@@ -6907,14 +6885,12 @@ msgstr ""
 
 #. (replyto)
 #: ../mail_tt2/listowner_notification.tt2:72
-#, fuzzy
 msgid ""
 "If prefered, you can accept this subscription request sending an email to %1 "
 "with the following subject:"
 msgstr ""
 "Jeśli wolisz, możesz zaakceptować to żądanie wysyłając email na %1 z "
 "następującym tematem:\n"
-"AUTH %2 ADD %3 %4 %5\n"
 
 #: ../mail_tt2/listowner_notification.tt2:76
 msgid "That can be done using this mailto link:"
@@ -6944,14 +6920,12 @@ msgstr ""
 
 #. (sympa)-)
 #: ../mail_tt2/listowner_notification.tt2:97
-#, fuzzy
 msgid ""
 "\n"
 "or send an email to %1 with the following subject:\n"
 msgstr ""
 "\n"
 "lub wyślij wiadomość email do %1 z następującym tematem:\n"
-"AUTH %2 DEL %3 %4\n"
 
 #. (list.name)
 #: ../mail_tt2/listowner_notification.tt2:102
@@ -6960,16 +6934,14 @@ msgstr "UWAGA: współczynnik odbić listów jest zbyt wysoki na liście %1"
 
 #. (list.name,rate)
 #: ../mail_tt2/listowner_notification.tt2:107
-#, fuzzy
 msgid ""
 "Bounce rate in list %1 is %2.\n"
 "\n"
 "You should delete bouncing subscribers: \n"
 msgstr ""
-"Współczynnik odbić w liście %1 wynosi %2.\n"
+"Współczynnik odbić na liście %1 wynosi %2.\n"
 "\n"
-"Powinieneś usunąć adresy odbijające listy: \n"
-"%3/reviewbouncing/%4\n"
+"Powinieneś usunąć odbijające adresy:\n"
 
 #. (command,list.name,who,gecos)
 #: ../mail_tt2/listowner_notification.tt2:112
@@ -7455,9 +7427,8 @@ msgstr "Aby rozesłać załączoną wiadomość na listę %1, kliknij poniższy 
 
 #. (conf.sympa)
 #: ../mail_tt2/send_auth.tt2:19
-#, fuzzy
 msgid "Or send a message to %1 with the following subject:\n"
-msgstr "Lub wyślij wiadomość do %1@%2 z następującym tematem:"
+msgstr "Lub wyślij wiadomość do %1 z następującym tematem:\n"
 
 #. (conf.title,list)
 #: ../mail_tt2/sendpasswd.tt2:4
@@ -7681,14 +7652,14 @@ msgstr "Wypisuję się z listy %1"
 
 #. (list.name,ip)
 #: ../mail_tt2/user_notification.tt2:51
-#, fuzzy
 msgid ""
 "Somebody (probably you) requested to unsubscribe you from list %1.\n"
 "This query was issued from the IP number '%2'.\n"
 "To confirm and get removed from the list, please click the link below: "
 msgstr ""
-"Zażądałeś zmiany adresu email. Aby potwierdzić nowy adres, proszę kliknąć na "
-"następujący link:"
+"Ktoś (prawdopodobnie Ty) poprosił o usunięcie z listy %1.\n"
+"Prośba przyszła z numeru IP '%2'.\n"
+"Aby potwierdzić i zostać usuniętym z listy, kliknij poniższy link:"
 
 #. (list.name)
 #: ../mail_tt2/user_notification.tt2:53
@@ -7842,9 +7813,10 @@ msgid "restricted to owner with authentication"
 msgstr "zastrzeżone dla uwierzytelnionego właściciela"
 
 #: ../src/etc/scenari/add.authdkim:1
-#, fuzzy
 msgid "restricted to owner without authentication if DKIM signature is OK."
-msgstr "zastrzeżone dla uwierzytelnionego właściciela"
+msgstr ""
+"zastrzeżone dla właściciela bez uwierzytelnienia, jeśli sygnatura DKIM jest "
+"poprawna."
 
 #: ../src/etc/scenari/add.closed:1
 msgid "add impossible"
@@ -7855,10 +7827,11 @@ msgid "add performed by list owner does not need authentication"
 msgstr "dodanie wykonane przez właściciela listy nie wymaga uwierzytelnienia"
 
 #: ../src/etc/scenari/add.ownerdkim:1
-#, fuzzy
 msgid ""
 "add performed by list owner does not need authentication if DKIM signature OK"
-msgstr "dodanie wykonane przez właściciela listy nie wymaga uwierzytelnienia"
+msgstr ""
+"dodanie wykonane przez właściciela listy nie wymaga uwierzytelnienia, jeśli "
+"sygnatura DKIM jest poprawna"
 
 #: ../src/etc/scenari/add.owner_notify:1
 msgid "add performed by owner does not need authentication (notification)"
@@ -7913,12 +7886,12 @@ msgstr ""
 "usuwanie wykonywane jedynie przez właścicieli listy, wymaga uwierzytelnienia"
 
 #: ../src/etc/scenari/del.authdkim:1
-#, fuzzy
 msgid ""
 "deletion performed only by list owners, need authentication unless DKIM "
 "signature is OK"
 msgstr ""
-"usuwanie wykonywane jedynie przez właścicieli listy, wymaga uwierzytelnienia"
+"usuwanie wykonywane jedynie przez właścicieli listy, wymaga "
+"uwierzytelnienia, chyba że sygnatura DKIM jest poprawna"
 
 #: ../src/etc/scenari/del.closed:1
 msgid "remove subscriber impossible"
@@ -7954,13 +7927,16 @@ msgstr "tylko właściciel listy"
 msgid ""
 "listmaster only (do not require authentication if DKIM siganture is OK) "
 msgstr ""
+"tylko administrator (nie wymaga uwierzytelnienia jeśli sygnatura DKIM jest "
+"poprawna)"
 
 #: ../src/etc/scenari/remind.ownerdkim:1
-#, fuzzy
 msgid ""
 "restricted to list owners (authentication is not required if a DKIM "
 "signature is OK)"
-msgstr "właściciele listy, uwierzytelnienie nie wymagane (powiadomienie)"
+msgstr ""
+"ograniczone do właścicieli listy (uwierzytelnienie nie jest wymagane, jeśli "
+"sygnatura DKIM jest poprawna)"
 
 #: ../src/etc/scenari/review.closed:1
 msgid "no one can review"
@@ -7981,6 +7957,8 @@ msgstr "każdy może to zrobić!"
 #: ../src/etc/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
 msgstr ""
+"Moderowane, uwierzytelnianie nie jest potrzebne jeśli sygnatura DKIM "
+"redaktora jest poprawna"
 
 #: ../src/etc/scenari/send.editorkey:1
 msgid "Moderated"
@@ -7991,9 +7969,8 @@ msgid "Moderated, even for moderators"
 msgstr "Moderowane, nawet dla moderatorów"
 
 #: ../src/etc/scenari/send.editorkeyonlyauth:1
-#, fuzzy
 msgid "Moderated, need  authentication  from editor"
-msgstr "uwierzytelnienie wymagane"
+msgstr "Moderowane, konieczne uwierzytelnienie od redaktora"
 
 #: ../src/etc/scenari/send.intranet:1
 msgid "restricted to local domain"
@@ -8026,7 +8003,6 @@ msgid "restricted to subscribers with previous md5 authentication"
 msgstr "zastrzeżony dla subskrybentów z uprzednią autentykacją md5"
 
 #: ../src/etc/scenari/send.privatekeyandeditorkeyonly:1
-#, fuzzy
 msgid "Moderated, for subscribers and even moderators themself"
 msgstr "Moderowane, dla subskrybentów i moderatorów"
 
@@ -8039,9 +8015,9 @@ msgid "Private, confirmation for non subscribers"
 msgstr "Prywatne, potwierdzenie dla użytkowników nie będących subskrybentami"
 
 #: ../src/etc/scenari/send.private_smime:1
-#, fuzzy
 msgid "restricted to subscribers and checked smime signature"
-msgstr "zastrzeżone do sprawdzania podpisu smime subskrybenta"
+msgstr ""
+"zastrzeżone dla subskrybentów i tych, których podpis smime został sprawdzony"
 
 #: ../src/etc/scenari/send.public:1
 msgid "public list"
@@ -8049,7 +8025,7 @@ msgstr "publiczna lista"
 
 #: ../src/etc/scenari/send.publickey:1
 msgid "anyone no authentication if DKIM signature is OK"
-msgstr ""
+msgstr "każdy bez uwierzytelniania, jeśli sygnatura DKIM jest poprawna"
 
 #: ../src/etc/scenari/send.publicnoattachment:1
 msgid "public list multipart/mixed messages are forwarded to moderator"
@@ -8066,7 +8042,7 @@ msgstr "wiadomości typu multipart wysyłane na listę publiczną są odrzucane"
 
 #: ../src/etc/scenari/spam_status.x-spam-status:1
 msgid "test x-spam-status  header"
-msgstr ""
+msgstr "sprawdź nagłówek x-spam-status"
 
 #: ../src/etc/scenari/subscribe.auth:1 ../src/etc/scenari/subscribe.authdkim:1
 msgid "subscription request confirmed"
@@ -8077,21 +8053,23 @@ msgid "need authentication (notification is sent to owners)"
 msgstr "uwierzytelnienie wymagane (powiadomienie jest wysyłane do właścicieli)"
 
 #: ../src/etc/scenari/subscribe.auth_notifydkim:1
-#, fuzzy
 msgid ""
 "need authentication unless DKIM signature is OK. (notification is sent to "
 "owners)"
-msgstr "uwierzytelnienie wymagane (powiadomienie jest wysyłane do właścicieli)"
+msgstr ""
+"uwierzytelnienie wymagane, chyba że sygnatura DKIM jest poprawna "
+"(powiadomienie jest wysyłane do właścicieli)"
 
 #: ../src/etc/scenari/subscribe.auth_owner:1
 msgid "requires authentication then owner approval"
 msgstr "wymaga uwierzytelnienia, a następnie zgody właściciela"
 
 #: ../src/etc/scenari/subscribe.auth_ownerdkim:1
-#, fuzzy
 msgid ""
 "requires authentication unless DKIM signature is OK, then owner approval"
-msgstr "wymaga uwierzytelnienia, a następnie zgody właściciela"
+msgstr ""
+"wymaga uwierzytelnienia, chyba że sygnatura DKIM jest poprawna, a następnie "
+"zgody właściciela"
 
 #: ../src/etc/scenari/subscribe.closed:1
 msgid "subscribe is impossible"
@@ -8144,18 +8122,19 @@ msgstr "uwierzytelnienie wymagane"
 
 #: ../src/etc/scenari/unsubscribe.authdkim:1
 msgid "need authentication unless DKIM signature is OK"
-msgstr ""
+msgstr "wymagane uwierzytelnianie, chyba że sygnatura DKIM jest poprawna"
 
 #: ../src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
 msgstr "zażądano uwierzytelnienia, powiadomienie wysłane do właściciela"
 
 #: ../src/etc/scenari/unsubscribe.auth_notifydkim:1
-#, fuzzy
 msgid ""
 "authentication requested unless DKIM signature is OK, notification sent to "
 "owner"
-msgstr "zażądano uwierzytelnienia, powiadomienie wysłane do właściciela"
+msgstr ""
+"zażądano uwierzytelnienia, chyba że sygnatura DKIM jest poprawna, "
+"powiadomienie wysłane do właściciela"
 
 #: ../src/etc/scenari/unsubscribe.closed:1
 msgid "impossible"
@@ -8459,7 +8438,6 @@ msgstr ""
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Bulk.pm:376
-#, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
@@ -8648,27 +8626,27 @@ msgid "Inclusions timeout for message distribution"
 msgstr "Czas wygaśnięcia include'ów dla rozsyłanych wiadomosci"
 
 #: ../src/lib/List.pm:598
-#, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
-msgstr "Wysyłanie wiadomości na listę"
+msgstr "Wstaw sygnaturę DKIM do wiadomości wysyłanych na listę"
 
 #: ../src/lib/List.pm:606
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
+"Kategorie wiadomości wysyłanych na listę, które będą podpisane przy użyciu "
+"DKIM."
 
 #: ../src/lib/List.pm:613
 msgid "File path for list DKIM private key"
-msgstr ""
+msgstr "Ścieżka do pliku z kluczem prywatnym DKIM listy"
 
 #: ../src/lib/List.pm:621
 msgid "Selector for DNS lookup of DKIM public key"
-msgstr ""
+msgstr "Selektor dla wyszukiwania DNS klucza prywatnego DKIM"
 
 #: ../src/lib/List.pm:649
-#, fuzzy
 msgid "DKIM configuration"
-msgstr "skopiuj konfigurację listy"
+msgstr "Konfiguracja DKIM"
 
 #: ../src/lib/List.pm:1158 ../src/lib/List.pm:655
 msgid "email address"
@@ -9026,9 +9004,8 @@ msgstr ""
 "robota)"
 
 #: ../src/lib/List.pm:1404
-#, fuzzy
 msgid "Allow message personnalization"
-msgstr "Tematy dla kategoryzacji wiadomości"
+msgstr "Pozwól na dostosowanie wiadomości"
 
 #: ../src/lib/List.pm:1410
 msgid "Visibility of the list"
@@ -9077,15 +9054,15 @@ msgstr "sekund"
 
 #: ../src/lib/List.pm:628
 msgid "List of headers to be included ito the message for signature"
-msgstr ""
+msgstr "Lista nagłówków, które mają być dołączane do wiadomości dla sygnatury"
 
 #: ../src/lib/List.pm:635
 msgid "DKIM \"d=\" tag, you should probably use the default value"
-msgstr ""
+msgstr "Tag DKIM \"d=\", prawdopodobnie powinieneś użyć wartości domyślnej"
 
 #: ../src/lib/List.pm:642
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
-msgstr ""
+msgstr "Tag DKIM \"i=\", prawdopodobnie powinieneś pozostawić pustą wartość"
 
 #: ../src/lib/List.pm:685
 msgid "the data source"
@@ -9318,7 +9295,6 @@ msgstr "%d %b %y  %H:%M"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/wwsympa.fcgi.in:16075 ../wwsympa/wwsympa.fcgi.in:16076
-#, fuzzy
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
 
@@ -9469,6 +9445,28 @@ msgstr "żadnej poczty (przydatne na urlop)"
 #: ../wwsympa/wwslib.pm:37
 msgid "you do not receive your own posts"
 msgstr "nie otrzymuj swoich własnych postów"
+
+#: ../src/lib/List.pm:1230
+msgid "Reject mail from automates (crontab, etc)?"
+msgstr ""
+
+#~ msgid "Sympa URL:"
+#~ msgstr "URL Sympy:"
+
+#~ msgid "Mail domain:"
+#~ msgstr "Domena:"
+
+#~ msgid "Listmaster(s):"
+#~ msgstr "Administrator:"
+
+#~ msgid "human readable"
+#~ msgstr "czytelne dla ludzi"
+
+#~ msgid "who created the list"
+#~ msgstr "kto utworzył listę"
+
+#~ msgid "Timeout for fetch of include_sql_query"
+#~ msgstr "Timeout dla pobrania include_sql_query"
 
 #, fuzzy
 #~ msgid " to "

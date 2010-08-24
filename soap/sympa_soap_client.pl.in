@@ -272,7 +272,7 @@ sub play_soap{
       $reponse = $soap->getUserEmailByCookie($session_id);
 
     }else {
-      printf "\n\nAuthenticateAndRun service=%s;(session_id=%s)....\n",$service,session_idq;
+      printf "\n\nAuthenticateAndRun service=%s;(session_id=%s)....\n",$service,$session_id;
       $reponse = $soap->authenticateAndRun($user_email,$session_id,$service,\@parameters);
     }
 
