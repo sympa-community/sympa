@@ -1526,7 +1526,6 @@ sub db_disconnect {
 sub db_get_handler {
     do_log('debug3', 'List::db_get_handler');
 
-
     return $dbh;
 }
 
@@ -12273,16 +12272,13 @@ sub get_data {
     my ($data, $robotname, $listname) = @_;
 
     my $statement;
-    my $dbh = &db_get_handler();
     #my $data; # the hash containing aggregated data that the sub deal_data will return.
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-	$dbh = &List::db_get_handler();
-    }
-           
-    
+	return undef unless &db_connect();
+    }	   
+
     $statement = sprintf "SELECT * FROM stat_counter_table WHERE data_counter = '%s' AND robot_counter = '%s' AND list_counter = '%s'", $data,$robotname, $listname;
 
     my $sth = $dbh->prepare($statement);
