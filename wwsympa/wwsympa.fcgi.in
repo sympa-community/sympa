@@ -15652,6 +15652,9 @@ sub do_compose_mail {
 	       return undef;
 	   }
 
+	   $in{'body'} = "\n".$in{'body'};
+   }
+
 	   if(&Conf::get_robot_conf($robot, 'use_html_editor')){
 	       # Generate a multipart/relative message using the body.
 	       my $mailHTML = new MIME::Lite::HTML(
