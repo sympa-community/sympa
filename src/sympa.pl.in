@@ -1355,7 +1355,7 @@ sub DoFile {
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
 	$list_address = $list->get_list_address();
-
+    }
     ## Loop prevention
     if ($list->{'admin'}{'reject_mail_from_automates_feature'} eq 'on') {
 		my $conf_loop_prevention_regex;
