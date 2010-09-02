@@ -449,6 +449,13 @@ our @params = (
         file  => 'wwsympa.conf',
     },
     {
+        name    => 'custom_robot_parameter',
+        query   => 'Used to define a custom parameter for your server. Do not forget the semicolo between the param name and the param value.', 
+	vhost   => '1',
+        file    => 'sympa.conf',
+        edit    => '1',
+    },
+    {
         name  => 'max_size',
         query => 'The default maximum size (in bytes) for messages (can be re-defined for each list)',
         default => '5242880',

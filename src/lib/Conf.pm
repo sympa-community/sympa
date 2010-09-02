@@ -125,11 +125,11 @@ sub load {
 	    if (/^(\S+)\s+(.+)$/) {
 		my ($keyword, $value) = ($1, $2);
 		$value =~ s/\s*$//;
-		##  'tri' is a synonyme for 'sort'
-		## (for compatibily with old versions)
+		##  'tri' is a synonym for 'sort'
+		## (for compatibilyty with older versions)
 		$keyword = 'sort' if ($keyword eq 'tri');
-		##  'key_password' is a synonyme for 'key_passwd'
-		## (for compatibily with old versions)
+		##  'key_password' is a synonym for 'key_passwd'
+		## (for compatibilyty with older versions)
 		$keyword = 'key_passwd' if ($keyword eq 'key_password');
 		## Special case: `command`
 		if ($value =~ /^\`(.*)\`$/) {
@@ -243,7 +243,7 @@ sub load {
             $Conf{'lock_method'} = 'flock';
         }
     }
-
+		 
     ## Some parameters require CPAN modules
     if ($Conf{'DKIM_feature'} eq 'on') {
         eval "require Mail::DKIM";
@@ -366,6 +366,12 @@ sub load {
     $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
     $Conf{'pictures_path'}  = $Conf{'static_content_path'}.'/pictures/';
 	
+    ## Parsing custom robot parameters.
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	if($Conf{'robots'}{$robot}{'custom_robot_parameter'} =~ /(\S+)\s*\;\s*(.+)/) {
+	    $Conf{'robots'}{$robot}{'custom_robot_parameter'} = {$1 => $2};
+	}
+    }
     return 1;
 }    
 
