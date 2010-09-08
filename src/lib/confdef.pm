@@ -33,6 +33,8 @@ use Sympa::Constants;
 ##   file   : Conf file where the param. is defined
 ##   vhost   : 1|0 : if 1, the parameter can have a specific value in a virtual host
 ##   db   : 'db_first','file_first','no'
+##   multiple   : 1|0: If 1, the parameter can have mutiple values. Default i 0.
+##   optional   : 1|0: If 1, the parameter is optional. It can have no value at all.
 ##   edit   : 1|0
 ##   advice : Additionnal advice concerning the parameter
 
@@ -449,11 +451,13 @@ our @params = (
         file  => 'wwsympa.conf',
     },
     {
-        name    => 'custom_robot_parameter',
-        query   => 'Used to define a custom parameter for your server. Do not forget the semicolo between the param name and the param value.', 
-	vhost   => '1',
-        file    => 'sympa.conf',
-        edit    => '1',
+        name     => 'custom_robot_parameter',
+        query    => 'Used to define a custom parameter for your server. Do not forget the semicolo between the param name and the param value.', 
+	vhost    => '1',
+        file     => 'sympa.conf',
+        edit     => '1',
+        multiple => '1',
+        optional => '1',
     },
     {
         name  => 'max_size',
