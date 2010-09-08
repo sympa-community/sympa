@@ -31,6 +31,304 @@ use Conf;
 use Log;
 use Sympa::Constants;
 
+my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
+					      'gecos_user' => 'varchar(150)',
+					      'password_user' => 'varchar(40)',
+					      'last_login_date_user' => 'int(11)',
+					      'last_login_host_user' => 'varchar(60)',
+					      'wrong_login_count_user' => 'int(11)',
+					      'cookie_delay_user' => 'int(11)',
+					      'lang_user' => 'varchar(10)',
+					      'attributes_user' => 'text',
+					      'data_user' => 'text'},
+			     'subscriber_table' => {'list_subscriber' => 'varchar(50)',
+						    'user_subscriber' => 'varchar(100)',
+						    'robot_subscriber' => 'varchar(80)',
+						    'date_subscriber' => 'datetime',
+						    'number_messages_subscriber' => 'int(5)',
+						    'update_subscriber' => 'datetime',
+						    'visibility_subscriber' => 'varchar(20)',
+						    'reception_subscriber' => 'varchar(20)',
+						    'topics_subscriber' => 'varchar(200)',
+						    'bounce_subscriber' => 'varchar(35)',
+						    'comment_subscriber' => 'varchar(150)',
+						    'subscribed_subscriber' => "int(1)",
+						    'included_subscriber' => "int(1)",
+						    'include_sources_subscriber' => 'varchar(50)',
+						    'bounce_score_subscriber' => 'smallint(6)',
+						    'bounce_address_subscriber' => 'varchar(100)',
+						    'custom_attribute_subscriber' => 'text',
+						    'suspend_subscriber' => "int(1)",
+						    'suspend_start_date_subscriber' => 'int(11)',
+						    'suspend_end_date_subscriber' => 'int(11)'},
+			     'admin_table' => {'list_admin' => 'varchar(50)',
+					       'user_admin' => 'varchar(100)',
+					       'robot_admin' => 'varchar(80)',
+					       'role_admin' => "enum('listmaster','owner','editor')",
+					       'date_admin' => 'datetime',
+					       'update_admin' => 'datetime',
+					       'reception_admin' => 'varchar(20)',
+					       'visibility_admin' => 'varchar(20)',
+					       'comment_admin' => 'varchar(150)',
+					       'subscribed_admin' => "int(1)",
+					       'included_admin' => "int(1)",
+					       'include_sources_admin' => 'varchar(50)',
+					       'info_admin' =>  'varchar(150)',
+					       'profile_admin' => "enum('privileged','normal')"},
+			     'exclusion_table' => {'list_exclusion' => 'varchar(50)',
+						   'user_exclusion' => 'varchar(100)',
+						   'date_exclusion' => 'int(11)'},
+			     'netidmap_table' => {'netid_netidmap' => 'varchar(100)',
+						  'serviceid_netidmap' => 'varchar(100)',
+						  'email_netidmap' => 'varchar(100)',
+						  'robot_netidmap' => 'varchar(80)'},
+			     'session_table' => {'id_session' => 'varchar(30)',
+						 'start_date_session' => 'int(11)',
+						 'date_session' => 'int(11)',
+						 'remote_addr_session' => 'varchar(60)',
+						 'robot_session'  => 'varchar(80)',
+						 'email_session'  => 'varchar(100)',
+						 'hit_session' => 'int(11)',
+						 'data_session'  => 'text'},
+			     'logs_table' => {'id_logs' => 'bigint(20)',
+					      'date_logs' => 'int(11)',
+					      'robot_logs' => 'varchar(80)',
+					      'list_logs' => 'varchar(50)',
+					      'action_logs' => 'varchar(50)',
+					      'parameters_logs' => 'varchar(100)',
+					      'target_email_logs' => 'varchar(100)',
+					      'user_email_logs' => 'varchar(100)',
+					      'msg_id_logs' => 'varchar(255)',
+					      'status_logs' => 'varchar(10)',
+					      'error_type_logs' => 'varchar(150)',
+					      'client_logs' => 'varchar(100)',
+					      'daemon_logs' => 'varchar(10)'},
+			     'one_time_ticket_table' => {'ticket_one_time_ticket' => 'varchar(30)',
+							 'email_one_time_ticket' => 'varchar(100)',
+							 'robot_one_time_ticket' => 'varchar(80)',
+							 'date_one_time_ticket' => 'int(11)',
+							 'data_one_time_ticket' => 'varchar(200)',
+							 'remote_addr_one_time_ticket' => 'varchar(60)',
+							 'status_one_time_ticket' => 'varchar(60)'},
+			     'bulkmailer_table' => {'messagekey_bulkmailer' => 'varchar(80)',
+						    'messageid_bulkmailer' => 'varchar(100)',
+						    'packetid_bulkmailer' => 'varchar(33)',
+						    'receipients_bulkmailer' => 'text',
+						    'returnpath_bulkmailer' => 'varchar(100)',
+						    'robot_bulkmailer' => 'varchar(80)',
+						    'listname_bulkmailer' => 'varchar(50)',
+						    'verp_bulkmailer' => 'int(1)',
+						    'tracking_bulkmailer' => "enum('mdn','dsn')",
+						    'merge_bulkmailer' => 'int(1)',
+						    'priority_message_bulkmailer' => 'smallint(10)',
+						    'priority_packet_bulkmailer' => 'smallint(10)',
+						    'reception_date_bulkmailer' => 'int(11)',
+						    'delivery_date_bulkmailer' => 'int(11)',
+						    'lock_bulkmailer' => 'varchar(30)'},
+			     'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
+						   'messageid_bulkspool' => 'varchar(100)',
+						   'message_bulkspool' => 'longtext',
+						   'lock_bulkspool' => 'int(1)',
+						   'dkim_privatekey_bulkspool' => 'varchar(1000)',
+						   'dkim_selector_bulkspool' => 'varchar(50)',
+						   'dkim_d_bulkspool' => 'varchar(50)',
+						   'dkim_i_bulkspool' => 'varchar(100)',
+						   'dkim_header_list_bulkspool' => 'varchar(500)',
+					       },
+			     'stat_table' => {'id_stat' => 'bigint(20)',
+					      'date_stat' => 'int(11)',
+					      'email_stat' => 'varchar(100)',
+					      'operation_stat' => 'varchar(50)',
+					      'list_stat' => 'varchar(150)',
+					      'daemon_stat' => 'varchar(10)',
+					      'user_ip_stat' => 'varchar(100)',
+					      'robot_stat' => 'varchar(80)',
+					      'parameter_stat' => 'varchar(50)',
+					      'read_stat' => 'tinyint(1)',
+					  },
+			     'conf_table' => {'robot_conf' => 'varchar(80)',
+					      'label_conf' => 'varchar(80)',
+					      'value_conf' => 'varchar(300)'}
+			 },
+		 'SQLite' => {'user_table' => {'email_user' => 'text',
+					       'gecos_user' => 'text',
+					       'password_user' => 'text',
+					       'last_login_date_user' => 'integer',
+					       'last_login_host_user' => 'text',
+					       'wrong_login_count_user' => 'integer',
+					       'cookie_delay_user' => 'integer',
+					       'lang_user' => 'text',
+					       'attributes_user' => 'text',
+					       'data_user' => 'text'},
+			      'subscriber_table' => {'list_subscriber' => 'text',
+						     'user_subscriber' => 'text',
+						     'robot_subscriber' => 'text',
+						     'date_subscriber' => 'numeric',
+						     'number_messages_subscriber' => 'numeric',
+						     'update_subscriber' => 'numeric',
+						     'visibility_subscriber' => 'text',
+						     'reception_subscriber' => 'text',
+						     'topics_subscriber' => 'text',
+						     'bounce_subscriber' => 'text',
+						     'comment_subscriber' => 'text',
+						     'subscribed_subscriber' => 'numeric',
+						     'included_subscriber' => 'numeric',
+						     'include_sources_subscriber' => 'text',
+						     'bounce_score_subscriber' => 'integer',
+						     'bounce_address_subscriber' => 'text',
+						     'custom_attribute_subscriber' => 'text',
+						     'suspend_subscriber' => "boolean",
+						     'suspend_start_date_subscriber' => 'integer',
+						     'suspend_end_date_subscriber' => 'integer'},
+			      'admin_table' => {'list_admin' => 'text',
+						'user_admin' => 'text',
+						'robot_admin' => 'text',
+						'role_admin' => 'text',
+						'date_admin' => 'numeric',
+						'update_admin' => 'numeric',
+						'reception_admin' => 'text',
+						'visibility_admin' => 'text',
+						'comment_admin' => 'text',
+						'subscribed_admin' => 'numeric',
+						'included_admin' => 'numeric',
+						'include_sources_admin' => 'text',
+						'info_admin' =>  'text',
+						'profile_admin' => 'text'},
+			      'exclusion_table' => {'list_exclusion' => 'text',
+						    'user_exclusion' => 'text',
+						    'date_exclusion' => 'integer'},
+			      'netidmap_table' => {'netid_netidmap' => 'text',
+						   'serviceid_netidmap' => 'text',
+						   'email_netidmap' => 'text',
+						   'robot_netidmap' => 'text'},
+			      'session_table' => {'id_session' => 'text',
+						  'start_date_session' => 'integer',
+						  'date_session' => 'integer',
+						  'remote_addr_session' => 'text',
+						  'robot_session'  => 'text',
+						  'email_session'  => 'text',
+						  'hit_session' => 'integer',
+						  'data_session'  => 'text'},
+			      'logs_table' => {'id_logs' => 'integer',
+					       'date_logs' => 'integer',
+					       'robot_logs' => 'text',
+					       'list_logs' => 'text',
+					       'action_logs' => 'text',
+					       'parameters_logs' => 'text',
+					       'target_email_logs' => 'text',
+					       'user_email_logs' => 'text',
+					       'msg_id_logs' => 'text',
+					       'status_logs' => 'text',
+					       'error_type_logs' => 'text',
+					       'client_logs' => 'text',
+					       'daemon_logs' => 'text'},
+			      'one_time_ticket_table' => {'ticket_one_time_ticket' => 'text',
+							  'robot_one_time_ticket' => 'text',
+							  'email_one_time_ticket' => 'text',
+							  'date_one_time_ticket' => 'integer',
+							  'data_one_time_ticket' => 'text',
+							  'remote_addr_one_time_ticket' => 'text',
+							  'status_one_time_ticket' => 'text',				  
+						      },				 
+			      'bulkmailer_table' => {'messagekey_bulkmailer' => 'text',
+						     'messageid_bulkmailer' => 'text',
+						     'packetid_bulkmailer' => 'text',
+						     'receipients_bulkmailer' => 'text',
+						     'returnpath_bulkmailer' => 'text',
+						     'robot_bulkmailer' => 'text',
+						     'listname_bulkmailer' => 'text',
+						     'verp_bulkmailer' => 'integer',
+						     'tracking_bulkmailer' => 'integer',
+						     'merge_bulkmailer' => 'integer',
+						     'priority_message_bulkmailer' => 'integer',
+						     'priority_packet_bulkmailer' => 'integer',
+						     'reception_date_bulkmailer' => 'integer',
+						     'delivery_date_bulkmailer' => 'integer',
+						     'lock_bulkmailer' => 'text'},
+			      'bulkspool_table' => {'messagekey_bulkspool' => 'text',
+						    'messageid_bulkspool' => 'text',
+						    'message_bulkspool' => 'text',
+						    'lock_bulkspool' => 'integer',
+						    'dkim_privatekey_bulkspool' => 'varchar(1000)',
+						    'dkim_selector_bulkspool' => 'varchar(50)',
+						    'dkim_d_bulkspool' => 'varchar(50)',
+						    'dkim_i_bulkspool' => 'varchar(100)',
+						    'dkim_header_list_bulkspool' => 'varchar(500)'},
+			      'stat_table' => {'id_stat' => 'integer',
+					       'date_stat' => 'integer',
+					       'email_stat' => 'text',
+					       'operation_stat' => 'text',
+					       'list_stat' => 'text',
+					       'daemon_stat' => 'text',
+					       'user_ip_stat' => 'text',
+					       'robot_stat' => 'text',
+					       'parameter_stat' => 'text',
+					       'read_stat' => 'integer'},
+			      'conf_table' => {'robot_conf' => 'text',
+					       'label_conf' => 'text',
+					       'value_conf' => 'text'}});
+
+my %not_null = ('email_user' => 1,
+		'list_subscriber' => 1,
+		'robot_subscriber' => 1,
+		'user_subscriber' => 1,
+		'date_subscriber' => 1,
+		'number_messages_subscriber' => 1,
+		'list_admin' => 1,
+		'robot_admin' => 1,
+		'user_admin' => 1,
+		'role_admin' => 1,
+		'date_admin' => 1,
+		'list_exclusion' => 1,
+		'user_exclusion' => 1,
+		'netid_netidmap' => 1,
+		'serviceid_netidmap' => 1,
+		'robot_netidmap' => 1,
+		'id_logs' => 1,
+		'date_logs' => 1,
+		'action_logs' => 1,
+		'status_logs' => 1,
+		'daemon_logs' => 1,
+		'id_session' => 1,
+		'start_date_session' => 1,
+		'date_session' => 1,
+		'messagekey_bulkmailer' => 1,
+		'packetid_bulkmailer' => 1,
+		'messagekey_bulkspool' => 1,
+		'id_stat' => 1,
+		'date_stat' => 1,
+		'operation_stat' => 1,
+		'robot_stat' => 1,
+		'read_stat' => 1,
+		);
+
+my %primary = ('user_table' => ['email_user'],
+	       'subscriber_table' => ['robot_subscriber','list_subscriber','user_subscriber'],
+	       'admin_table' => ['robot_admin','list_admin','role_admin','user_admin'],
+	       'exclusion_table' => ['list_exclusion','user_exclusion'],
+	       'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
+	       'logs_table' => ['id_logs'],
+	       'session_table' => ['id_session'],
+	       'one_time_ticket_table' => ['ticket_one_time_ticket'],
+	       'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
+	       'bulkspool_table' => ['messagekey_bulkspool'],
+	       'conf_table' => ['robot_conf','label_conf'],
+	       'stat_table' => ['id_stat']
+	       );
+
+## List the required INDEXES
+##   1st key is the concerned table
+##   2nd key is the index name
+##   the table lists the field on which the index applies
+my %indexes = ('admin_table' => {'user_index' => ['user_admin']},
+	       'subscriber_table' => {'user_index' => ['user_subscriber']},
+	       'stat_table' => {'user_index' => ['email_stat']}
+	       );
+
+# table indexes that can be removed during upgrade process
+my @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index');
+
+
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
     my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
@@ -711,303 +1009,6 @@ sub probe_db {
     my (%checked, $table);
     
     ## Database structure
-    my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
-						  'gecos_user' => 'varchar(150)',
-						  'password_user' => 'varchar(40)',
-						  'last_login_date_user' => 'int(11)',
-						  'last_login_host_user' => 'varchar(60)',
-						  'wrong_login_count_user' => 'int(11)',
-						  'cookie_delay_user' => 'int(11)',
-						  'lang_user' => 'varchar(10)',
-						  'attributes_user' => 'text',
-						  'data_user' => 'text'},
-				 'subscriber_table' => {'list_subscriber' => 'varchar(50)',
-							'user_subscriber' => 'varchar(100)',
-							'robot_subscriber' => 'varchar(80)',
-							'date_subscriber' => 'datetime',
-							'number_messages_subscriber' => 'int(5)',
-							'update_subscriber' => 'datetime',
-							'visibility_subscriber' => 'varchar(20)',
-							'reception_subscriber' => 'varchar(20)',
-							'topics_subscriber' => 'varchar(200)',
-							'bounce_subscriber' => 'varchar(35)',
-							'comment_subscriber' => 'varchar(150)',
-							'subscribed_subscriber' => "int(1)",
-							'included_subscriber' => "int(1)",
-							'include_sources_subscriber' => 'varchar(50)',
-							'bounce_score_subscriber' => 'smallint(6)',
-							'bounce_address_subscriber' => 'varchar(100)',
-							'custom_attribute_subscriber' => 'text',
-							'suspend_subscriber' => "int(1)",
-							'suspend_start_date_subscriber' => 'int(11)',
-							'suspend_end_date_subscriber' => 'int(11)'},
-				 'admin_table' => {'list_admin' => 'varchar(50)',
-						   'user_admin' => 'varchar(100)',
-						   'robot_admin' => 'varchar(80)',
-						   'role_admin' => "enum('listmaster','owner','editor')",
-						   'date_admin' => 'datetime',
-						   'update_admin' => 'datetime',
-						   'reception_admin' => 'varchar(20)',
-						   'visibility_admin' => 'varchar(20)',
-						   'comment_admin' => 'varchar(150)',
-						   'subscribed_admin' => "int(1)",
-						   'included_admin' => "int(1)",
-						   'include_sources_admin' => 'varchar(50)',
-						   'info_admin' =>  'varchar(150)',
-						   'profile_admin' => "enum('privileged','normal')"},
-				 'exclusion_table' => {'list_exclusion' => 'varchar(50)',
-						       'user_exclusion' => 'varchar(100)',
-						       'date_exclusion' => 'int(11)'},
-				 'netidmap_table' => {'netid_netidmap' => 'varchar(100)',
-						      'serviceid_netidmap' => 'varchar(100)',
-						      'email_netidmap' => 'varchar(100)',
-						      'robot_netidmap' => 'varchar(80)'},
-				 'session_table' => {'id_session' => 'varchar(30)',
-						     'start_date_session' => 'int(11)',
-						     'date_session' => 'int(11)',
-						     'remote_addr_session' => 'varchar(60)',
-						     'robot_session'  => 'varchar(80)',
-						     'email_session'  => 'varchar(100)',
-						     'hit_session' => 'int(11)',
-						     'data_session'  => 'text'},
-				 'logs_table' => {'id_logs' => 'bigint(20)',
-						  'date_logs' => 'int(11)',
-						  'robot_logs' => 'varchar(80)',
-						  'list_logs' => 'varchar(50)',
-						  'action_logs' => 'varchar(50)',
-						  'parameters_logs' => 'varchar(100)',
-						  'target_email_logs' => 'varchar(100)',
-						  'user_email_logs' => 'varchar(100)',
-						  'msg_id_logs' => 'varchar(255)',
-						  'status_logs' => 'varchar(10)',
-						  'error_type_logs' => 'varchar(150)',
-						  'client_logs' => 'varchar(100)',
-						  'daemon_logs' => 'varchar(10)'},
-				 'one_time_ticket_table' => {'ticket_one_time_ticket' => 'varchar(30)',
-							     'email_one_time_ticket' => 'varchar(100)',
-							     'robot_one_time_ticket' => 'varchar(80)',
-							     'date_one_time_ticket' => 'int(11)',
-							     'data_one_time_ticket' => 'varchar(200)',
-							     'remote_addr_one_time_ticket' => 'varchar(60)',
-							     'status_one_time_ticket' => 'varchar(60)'},
-				 'bulkmailer_table' => {'messagekey_bulkmailer' => 'varchar(80)',
-							'messageid_bulkmailer' => 'varchar(100)',
-							'packetid_bulkmailer' => 'varchar(33)',
-							'receipients_bulkmailer' => 'text',
-							'returnpath_bulkmailer' => 'varchar(100)',
-							'robot_bulkmailer' => 'varchar(80)',
-							'listname_bulkmailer' => 'varchar(50)',
-							'verp_bulkmailer' => 'int(1)',
-							'tracking_bulkmailer' => "enum('mdn','dsn')",
-							'merge_bulkmailer' => 'int(1)',
-							'priority_message_bulkmailer' => 'smallint(10)',
-							'priority_packet_bulkmailer' => 'smallint(10)',
-							'reception_date_bulkmailer' => 'int(11)',
-							'delivery_date_bulkmailer' => 'int(11)',
-							'lock_bulkmailer' => 'varchar(30)'},
-				 'bulkspool_table' => {'messagekey_bulkspool' => 'varchar(33)',
-						       'messageid_bulkspool' => 'varchar(100)',
-						       'message_bulkspool' => 'longtext',
-						       'lock_bulkspool' => 'int(1)',
-						       'dkim_privatekey_bulkspool' => 'varchar(1000)',
-						       'dkim_selector_bulkspool' => 'varchar(50)',
-						       'dkim_d_bulkspool' => 'varchar(50)',
-						       'dkim_i_bulkspool' => 'varchar(100)',
-						       'dkim_header_list_bulkspool' => 'varchar(500)',
-						   },
-				 'stat_table' => {'id_stat' => 'bigint(20)',
-						  'date_stat' => 'int(11)',
-						  'email_stat' => 'varchar(100)',
-						  'operation_stat' => 'varchar(50)',
-						  'list_stat' => 'varchar(150)',
-						  'daemon_stat' => 'varchar(10)',
-						  'user_ip_stat' => 'varchar(100)',
-						  'robot_stat' => 'varchar(80)',
-						  'parameter_stat' => 'varchar(50)',
-						  'read_stat' => 'tinyint(1)'
-						  },
-				 'conf_table' => {'robot_conf' => 'varchar(80)',
-						  'label_conf' => 'varchar(80)',
-						  'value_conf' => 'varchar(300)'}
-			     },
-		     'SQLite' => {'user_table' => {'email_user' => 'text',
-						   'gecos_user' => 'text',
-						   'password_user' => 'text',
-						   'last_login_date_user' => 'integer',
-						   'last_login_host_user' => 'text',
-						   'wrong_login_count_user' => 'integer',
-						   'cookie_delay_user' => 'integer',
-						   'lang_user' => 'text',
-						   'attributes_user' => 'text',
-						   'data_user' => 'text'},
-				  'subscriber_table' => {'list_subscriber' => 'text',
-							 'user_subscriber' => 'text',
-							 'robot_subscriber' => 'text',
-							 'date_subscriber' => 'numeric',
-							 'number_messages_subscriber' => 'numeric',
-							 'update_subscriber' => 'numeric',
-							 'visibility_subscriber' => 'text',
-							 'reception_subscriber' => 'text',
-							 'topics_subscriber' => 'text',
-							 'bounce_subscriber' => 'text',
-							 'comment_subscriber' => 'text',
-							 'subscribed_subscriber' => 'numeric',
-							 'included_subscriber' => 'numeric',
-							 'include_sources_subscriber' => 'text',
-							 'bounce_score_subscriber' => 'integer',
-							 'bounce_address_subscriber' => 'text',
-							 'custom_attribute_subscriber' => 'text',
-							 'suspend_subscriber' => "boolean",
-							 'suspend_start_date_subscriber' => 'integer',
-							 'suspend_end_date_subscriber' => 'integer'},
-				  'admin_table' => {'list_admin' => 'text',
-						    'user_admin' => 'text',
-						    'robot_admin' => 'text',
-						    'role_admin' => 'text',
-						    'date_admin' => 'numeric',
-						    'update_admin' => 'numeric',
-						    'reception_admin' => 'text',
-						    'visibility_admin' => 'text',
-						    'comment_admin' => 'text',
-						    'subscribed_admin' => 'numeric',
-						    'included_admin' => 'numeric',
-						    'include_sources_admin' => 'text',
-						    'info_admin' =>  'text',
-						    'profile_admin' => 'text'},
-				  'exclusion_table' => {'list_exclusion' => 'text',
-							'user_exclusion' => 'text',
-							'date_exclusion' => 'integer'},
-				  'netidmap_table' => {'netid_netidmap' => 'text',
-						       'serviceid_netidmap' => 'text',
-						       'email_netidmap' => 'text',
-						       'robot_netidmap' => 'text'},
-				  'session_table' => {'id_session' => 'text',
-						     'start_date_session' => 'integer',
-						     'date_session' => 'integer',
-						     'remote_addr_session' => 'text',
-						     'robot_session'  => 'text',
-						     'email_session'  => 'text',
-						     'hit_session' => 'integer',
-						     'data_session'  => 'text'},
-				  'logs_table' => {'id_logs' => 'integer',
-						   'date_logs' => 'integer',
-						   'robot_logs' => 'text',
-						   'list_logs' => 'text',
-						   'action_logs' => 'text',
-						   'parameters_logs' => 'text',
-						   'target_email_logs' => 'text',
-						   'user_email_logs' => 'text',
-						   'msg_id_logs' => 'text',
-						   'status_logs' => 'text',
-						   'error_type_logs' => 'text',
-						   'client_logs' => 'text',
-						   'daemon_logs' => 'text'},
-				 'one_time_ticket_table' => {'ticket_one_time_ticket' => 'text',
-						       'robot_one_time_ticket' => 'text',
-						       'email_one_time_ticket' => 'text',
-						       'date_one_time_ticket' => 'integer',
-						       'data_one_time_ticket' => 'text',
-						       'remote_addr_one_time_ticket' => 'text',
-						       'status_one_time_ticket' => 'text',				  
-							 },				 
-				  'bulkmailer_table' => {'messagekey_bulkmailer' => 'text',
-							 'messageid_bulkmailer' => 'text',
-							 'packetid_bulkmailer' => 'text',
-							 'receipients_bulkmailer' => 'text',
-							 'returnpath_bulkmailer' => 'text',
-							 'robot_bulkmailer' => 'text',
-							 'listname_bulkmailer' => 'text',
-							 'verp_bulkmailer' => 'integer',
-							 'tracking_bulkmailer' => 'integer',
-							 'merge_bulkmailer' => 'integer',
-							 'priority_message_bulkmailer' => 'integer',
-							 'priority_packet_bulkmailer' => 'integer',
-							 'reception_date_bulkmailer' => 'integer',
-							 'delivery_date_bulkmailer' => 'integer',
-							 'lock_bulkmailer' => 'text'},
-				  'bulkspool_table' => {'messagekey_bulkspool' => 'text',
-							'messageid_bulkspool' => 'text',
-							'message_bulkspool' => 'text',
-							'lock_bulkspool' => 'integer',
-							'dkim_privatekey_bulkspool' => 'varchar(1000)',
-							'dkim_selector_bulkspool' => 'varchar(50)',
-							'dkim_d_bulkspool' => 'varchar(50)',
-							'dkim_i_bulkspool' => 'varchar(100)',
-							'dkim_header_list_bulkspool' => 'varchar(500)'},
-				  'stat_table' => {'id_stat' => 'integer',
-						   'date_stat' => 'integer',
-						   'email_stat' => 'text',
-						   'operation_stat' => 'text',
-						   'list_stat' => 'text',
-						   'daemon_stat' => 'text',
-						   'user_ip_stat' => 'text',
-						   'robot_stat' => 'text',
-						   'parameter_stat' => 'text',
-						   'read_stat' => 'integer'},
-				  'conf_table' => {'robot_conf' => 'text',
-						   'label_conf' => 'text',
-						   'value_conf' => 'text'}});
-
-    my %not_null = ('email_user' => 1,
-		    'list_subscriber' => 1,
-		    'robot_subscriber' => 1,
-		    'user_subscriber' => 1,
-		    'date_subscriber' => 1,
-		    'number_messages_subscriber' => 1,
-		    'list_admin' => 1,
-		    'robot_admin' => 1,
-		    'user_admin' => 1,
-		    'role_admin' => 1,
-		    'date_admin' => 1,
-		    'list_exclusion' => 1,
-		    'user_exclusion' => 1,
-		    'netid_netidmap' => 1,
-		    'serviceid_netidmap' => 1,
-		    'robot_netidmap' => 1,
-		    'id_logs' => 1,
-		    'date_logs' => 1,
-		    'action_logs' => 1,
-		    'status_logs' => 1,
-		    'daemon_logs' => 1,
-		    'id_session' => 1,
-		    'start_date_session' => 1,
-		    'date_session' => 1,
-		    'messagekey_bulkmailer' => 1,
-		    'packetid_bulkmailer' => 1,
-		    'messagekey_bulkspool' => 1,
-		    'id_stat' => 1,
-		    'date_stat' => 1,
-		    'operation_stat' => 1,
-		    'robot_stat' => 1,
-		    'read_stat' => 1,
-		    );
-    
-    my %primary = ('user_table' => ['email_user'],
-		   'subscriber_table' => ['robot_subscriber','list_subscriber','user_subscriber'],
-		   'admin_table' => ['robot_admin','list_admin','role_admin','user_admin'],
-		   'exclusion_table' => ['list_exclusion','user_exclusion'],
-		   'netidmap_table' => ['netid_netidmap','serviceid_netidmap','robot_netidmap'],
-		   'logs_table' => ['id_logs'],
-		   'session_table' => ['id_session'],
-		   'one_time_ticket_table' => ['ticket_one_time_ticket'],
-		   'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
-		   'bulkspool_table' => ['messagekey_bulkspool'],
-		   'conf_table' => ['robot_conf','label_conf'],
-		   'stat_table' => ['id_stat']
-		   );
-
-    ## List the required INDEXES
-    ##   1st key is the concerned table
-    ##   2nd key is the index name
-    ##   the table lists the field on which the index applies
-    my %indexes = ('admin_table' => {'user_index' => ['user_admin']},
-		   'subscriber_table' => {'user_index' => ['user_subscriber']},
-		   'stat_table' => {'user_index' => ['email_stat']}
-		   );
-
-    # table indexes that can be removed during upgrade process
-    my @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index');
-    
     ## Report changes to listmaster
     my @report;
 
@@ -1133,8 +1134,8 @@ sub probe_db {
 	    }
 	}
 	
-	# Une simple requÍte sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
-	# La liste retournÈe est composÈe d'un N∞Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par dÈfaut,ClÈ primaire (1 ou 0)
+	# Une simple requÅÍte sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
+	# La liste retournÅÈe est composÅÈe d'un NÅ∞Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par dÅÈfaut,ClÅÈ primaire (1 ou 0)
 	
     }elsif ($Conf::Conf{'db_type'} eq 'Oracle') {
  	
@@ -1714,6 +1715,289 @@ sub md5_encode_password {
     return $total;
 }
 
- 
+
+sub create_db_script {
+    
+## DATABASE Creation script
+    
+    my $create_db_mysql;
+    my $create_db_Pg;
+    my $create_db_Oracle;
+    my $create_db_SQLite;
+    my $create_db_Sybase;
+
+    
+# MYSQL CREATION DATABASE SCRIPT
+    
+    $create_db_mysql = "## MySQL Database creation script
+
+CREATE DATABASE sympa;
+
+## Connect to DB 
+\\r sympa \n";
+    
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {
+	$create_db_mysql .= "\n\n-- --------------------------------------------------------
+--
+-- Table structure for table \`$table\`
+-- \n\n";
+	
+        $create_db_mysql .= "CREATE TABLE $table ( \n";
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
+	    $create_db_mysql .= "\t $field \t $db_struct{'mysql'}{$table}{$field}";
+	    if (exists $not_null{$field}){
+		$create_db_mysql .= " NOT NULL";
+	    }
+	    $create_db_mysql .= ", \n";
+	}
+	
+	if (exists $primary{$table}){
+	    $create_db_mysql .= "\t PRIMARY KEY (";
+	    for my $i (0 .. @{$primary{$table}}-1){
+		$create_db_mysql .= "$primary{$table}[$i]";
+		if  (exists $primary{$table}[$i+1]){$create_db_mysql .= ", ";}
+	    }
+	    $create_db_mysql .= ")"
+	    }
+	if (exists $indexes{$table}){
+	    $create_db_mysql .= ", \n \t INDEX user_index ( $indexes{$table}{'user_index'}[0] ) \n";
+	}
+	
+	
+	$create_db_mysql .= " \n );\n";
+    }
+    
+    
+# ORACLE DATABASE CREATION SCRIPT
+    
+    $create_db_Oracle = "## ORACLE Database creation script
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle <<-!
+create user SYMPA identified by SYMPA default tablespace TABLESP
+temporary tablespace TEMP;
+ grant create session to SYMPA;
+ grant create table to SYMPA;
+ grant create synonym to SYMPA;
+ grant create view to SYMPA;
+ grant execute any procedure to SYMPA;
+ grant select any table to SYMPA;
+ grant select any sequence to SYMPA;
+ grant resource to SYMPA;
+!
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA <<-!
+";
+    
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {
+	$create_db_Oracle .= "\n\n## --------------------------------------------------------
+##
+## Table structure for table \`$table\`
+## \n\n";
+	    
+	    $create_db_Oracle .= "CREATE TABLE $table ( \n";
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
+	    my $trans = $db_struct{'mysql'}{$table}{$field};
+	    $trans =~ s/^varchar/varchar2/g;
+	    $trans =~ s/^int.*/number/g;
+	    $trans =~ s/^bigint.*/number/g;
+	    $trans =~ s/^smallint.*/number/g;
+	    $trans =~ s/^enum.*/varchar2(20)/g;
+	    $trans =~ s/^text.*/varchar2(500)/g;
+	    $trans =~ s/^longtext.*/long/g;
+	    $trans =~ s/^datetime.*/date/g;
+	    $create_db_Oracle .= "\t $field \t".$trans;
+	    if (exists $not_null{$field}){
+		$create_db_Oracle .= " NOT NULL";
+	    }
+	    $create_db_Oracle .= ", \n";
+	}
+	
+	if (exists $primary{$table}){
+	    my $tablet = $table;
+	    $tablet =~ s/\_table$/\1/g;
+	    $create_db_Oracle .= "\t CONSTRAINT ind_$tablet PRIMARY KEY (";
+	    for my $i (0 .. @{$primary{$table}}-1){
+		$create_db_Oracle .= "$primary{$table}[$i]";
+		if  (exists $primary{$table}[$i+1]){$create_db_Oracle .= ", ";}
+	    }
+	    $create_db_Oracle .= ")"
+	    }
+	
+	$create_db_Oracle .= " \n );\n";
+    }
+    
+# Postgresql DATABASE CREATION SCRIPT
+    
+    $create_db_Pg = "-- POSTGRESQL Database creation script
+
+CREATE DATABASE sympa;
+
+-- Connect to DB 
+\\connect sympa \n";
+    
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {
+	$create_db_Pg .= "\n\n-- --------------------------------------------------------
+--
+-- Table structure for table \`$table\`
+-- \n\n";
+	$create_db_Pg .= $table;
+	$create_db_Pg .= "CREATE TABLE $table ( \n";
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
+	    my $trans = $db_struct{'mysql'}{$table}{$field};
+	    $trans =~ s/^int(1)/smallint/g;
+	    $trans =~ s/^int\(.*/int4/g;
+	    $trans =~ s/^bigint.*/bigint/g;
+	    $trans =~ s/^smallint.*/int4/g;
+	    $trans =~ s/^enum.*/varchar(15)/g;
+	    $trans =~ s/^text.*/varchar(500)/g;
+	    $trans =~ s/^longtext.*/text/g;
+	    $trans =~ s/^datetime.*/timestamp with time zone/g;
+	    $create_db_Pg .= "\t $field \t".$trans ;
+	    if (exists $not_null{$field}){
+		$create_db_Pg .= " NOT NULL";
+	    }
+	    $create_db_Pg .= ", \n";
+	}
+	my $tablet = $table;
+	$tablet =~ s/\_table$/\1/g;
+	if (exists $primary{$table}){
+	    $create_db_Pg .= "\t CONSTRAINT ind_$tablet PRIMARY KEY (";
+	    for my $i (0 .. @{$primary{$table}}-1){
+		$create_db_Pg .= "$primary{$table}[$i]";
+		if  (exists $primary{$table}[$i+1]){$create_db_Pg .= ", ";}
+	    }
+	    $create_db_Pg .= ")"
+	    }
+	$create_db_Pg .= " \n );\n";
+	if (exists $indexes{$table}){
+	    $create_db_Pg .= "\n CREATE INDEX $tablet\_idx ON $table($indexes{$table}{'user_index'}[0]) ) \n";
+	}
+	
+	
+	
+    }
+    
+    
+# Sybase DATABASE CREATION SCRIPT
+    
+    $create_db_Sybase = "/* Sybase Database creation script */
+
+/* sympa database must have been created */
+
+/* Connect to DB */
+use sympa \n
+go \n";
+    
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {
+	$create_db_Sybase .= "\n\n/* -------------------------------------------------------- */
+
+/* Table structure for table \`$table\` */
+ \n\n";
+	
+	$create_db_Sybase .= "create table $table \n( \n";
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
+	    my $trans = $db_struct{'mysql'}{$table}{$field};
+	    $trans =~ s/^int.*/numeric/g;
+	    $trans =~ s/^text.*/varchar(500)/g;
+	    $trans =~ s/^smallint.*/numeric/g;
+	    $trans =~ s/^bigint.*/numeric/g;
+	    $trans =~ s/^longtext.*/text/g;
+	    $trans =~ s/^enum.*/varchar(15)/g;
+	    $create_db_Sybase .= "\t $field \t".$trans;
+	    if (exists $not_null{$field}){
+		$create_db_Sybase .= " NOT NULL";
+	    }
+	$create_db_Sybase .= ", \n";
+	}
+	
+	if (exists $primary{$table}){
+	    my $tablet = $table;
+	    $tablet =~ s/\_table$/\1/g;
+	    $create_db_Sybase .= "\t constraint ind_".$tablet." PRIMARY KEY (";
+	    for my $i (0 .. @{$primary{$table}}-1){
+		$create_db_Sybase .= "$primary{$table}[$i]";
+		if  (exists $primary{$table}[$i+1]){$create_db_Sybase .= ", ";}
+	    }
+	    $create_db_Sybase .=")"
+	    }
+	
+	
+	$create_db_Sybase .= "\n)\ngo \n";
+	if (exists $indexes{$table}){
+	    my $ckey = $indexes{$table}{'user_index'}[0];
+	    $create_db_Sybase .= "\ncreate index ".$ckey."_fk on $table ($ckey) \ngo\n";
+	}
+	
+	
+	
+    }
+    
+    
+# SQLITE DATABASE CREATION SCRIPT
+    
+    $create_db_SQLite = "-- SQLITE Database creation script";
+    
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {
+	$create_db_SQLite .= "\n\n-- --------------------------------------------------------
+--
+-- Table structure for table \`$table\`
+-- \n\n";
+	
+	$create_db_SQLite .= "CREATE TABLE $table ( \n";
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
+	    my $trans = $db_struct{'mysql'}{$table}{$field};
+	    $trans =~ s/^varchar.*/text/g;
+	    $trans =~ s/^int\(1\).*/boolean/g;
+	    $trans =~ s/^int.*/integer/g;
+	    $trans =~ s/^bigint.*/integer/g;
+	    $trans =~ s/^smallint.*/integer/g;
+	    $trans =~ s/^datetime.*/timestamp/g;
+	    $trans =~ s/^enum.*/text/g;	 
+	    $create_db_SQLite .= "\t $field \t".$trans;
+	    if (exists $not_null{$field}){
+		$create_db_SQLite .= " NOT NULL";
+	    }
+	    $create_db_SQLite .= ", \n";
+	}
+	
+	if (exists $primary{$table}){
+	    $create_db_SQLite .= "\t PRIMARY KEY (";
+	    for my $i (0 .. @{$primary{$table}}-1){
+		$create_db_SQLite .= "$primary{$table}[$i]";
+		if  (exists $primary{$table}[$i+1]){$create_db_SQLite .= ", ";}
+	    }
+	    $create_db_SQLite .= ")"
+	    }
+	$create_db_SQLite .= " \n );\n";
+	if (exists $indexes{$table}){
+	    my $tablet = $table;
+	    $tablet =~ s/\_table$/\1/g;
+	    $create_db_SQLite .= "\nCREATE INDEX ".$tablet."_idx ON $table ( $indexes{$table}{'user_index'}[0] ); \n";
+	}
+	
+	
+    }
+    
+    
+    open(MYSQL_CREATE,">../etc/script/create_db.mysql") || die ("error") ;
+    print MYSQL_CREATE $create_db_mysql;
+    close(MYSQL_CREATE);
+    
+    open(ORACLE_CREATE,">../etc/script/create_db.Oracle") || die ("error") ;
+    print ORACLE_CREATE $create_db_Oracle;
+    close(ORACLE_CREATE);
+    
+    open(PG_CREATE,">../etc/script/create_db.Pg") || die ("error") ;
+    print PG_CREATE $create_db_Pg;
+    close(PG_CREATE);
+    
+    open(SYBASE_CREATE,">../etc/script/create_db.Sybase") || die ("error") ;
+    print SYBASE_CREATE $create_db_Sybase;
+    close(SYBASE_CREATE);
+    
+    open(SQLITE_CREATE,">../etc/script/create_db.SQLite") || die ("error") ;
+    print SQLITE_CREATE $create_db_SQLite;
+    close(SQLITE_CREATE);
+} 
 ## Packages must return true.
 1;
