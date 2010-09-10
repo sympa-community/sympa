@@ -1144,30 +1144,30 @@ sub install_aliases {
      if (-x $alias_manager) {
 	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
 	 my $status = $? / 256;
-	 if ($status == '0') {
+	 if ($status == 0) {
 	     &do_log('err','admin::install_aliases : Aliases installed successfully') ;
 	     $alias_installed = 1;
-	 }elsif ($status == '1') {
+	 }elsif ($status == 1) {
 	     &do_log('err','admin::install_aliases : Configuration file %s has errors', Sympa::Constants::CONFIG);
-	 }elsif ($status == '2')  {
+	 }elsif ($status == 2)  {
 	     &do_log('err','admin::install_aliases : Internal error : Incorrect call to alias_manager');
-	 }elsif ($status == '3')  {
+	 }elsif ($status == 3)  {
 	     &do_log('err','admin::install_aliases : Could not read sympa config file, report to httpd error_log') ;
-	 }elsif ($status == '4')  {
+	 }elsif ($status == 4)  {
 	     &do_log('err','admin::install_aliases : Could not get default domain, report to httpd error_log') ;
-	 }elsif ($status == '5')  {
+	 }elsif ($status == 5)  {
 	     &do_log('err','admin::install_aliases : Unable to append to alias file') ;
-	 }elsif ($status == '6')  {
+	 }elsif ($status == 6)  {
 	     &do_log('err','admin::install_aliases : Unable to run newaliases') ;
-	 }elsif ($status == '7')  {
+	 }elsif ($status == 7)  {
 	     &do_log('err','admin::install_aliases : Unable to read alias file, report to httpd error_log') ;
-	 }elsif ($status == '8')  {
+	 }elsif ($status == 8)  {
 	     &do_log('err','admin::install_aliases : Could not create temporay file, report to httpd error_log') ;
-	 }elsif ($status == '13') {
+	 }elsif ($status == 13) {
 	     &do_log('err','admin::install_aliases : Some of list aliases already exist') ;
-	 }elsif ($status == '14') {
+	 }elsif ($status == 14) {
 	     &do_log('err','admin::install_aliases : Can not open lock file, report to httpd error_log') ;
-	 }elsif ($status == '15') {
+	 }elsif ($status == 15) {
 	     &do_log('err','The parser returned empty aliases') ;
 	 }else {
 	     &do_log('err',"admin::install_aliases : Unknown error $status while running alias manager $alias_manager");

@@ -1806,7 +1806,7 @@ sub extract_verp_rcpt() {
 
     my @result;
 
-    if ($percent != '0%') {
+    if ($percent ne '0%') {
 	my $nbpart ; 
 	if ( $percent =~ /^(\d+)\%/ ) {
 	    $nbpart = 100/$1;  

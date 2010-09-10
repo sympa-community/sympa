@@ -602,7 +602,7 @@ sub get_templates_list {
     my $listdir;
 
     do_log('debug', "get_templates_list ($type, $robot, $list)");
-    unless (($type == 'web')||($type == 'mail')) {
+    unless (($type eq 'web')||($type eq 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
