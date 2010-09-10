@@ -89,7 +89,7 @@ sub new {
 	#}
     }else{
 	# create a new session context
-      $session->{'new_session'} = 1; ## Tag this session as new, ie no data in the DB exist
+	$session->{'new_session'} = 1; ## Tag this session as new, ie no data in the DB exist
         $session->{'id_session'} = &get_random();
 	$session->{'email'} = 'nobody';
         $session->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
@@ -133,6 +133,11 @@ sub load {
 	return undef;
     }    
     my $session = $sth->fetchrow_hashref('NAME_lc');
+
+    if ( $sth->fetchrow_hashref('NAME_lc')){
+	do_log('err',"the SQL statement %s did return more then one session. Is this a bug comming from dbi or mysql ? ");
+	$session->{'email'} = '';
+    }
     $sth->finish();
     
     unless ($session) {
@@ -148,7 +153,7 @@ sub load {
     $self->{'hit'} = $session->{'hit'} +1 ;
     $self->{'remote_addr'} = $session->{'remote_addr'};
     $self->{'robot'} = $session->{'robot'};
-    $self->{'email'} = $session->{'email'};
+    $self->{'email'} = $session->{'email'};    
 
     return ($self);
 }
