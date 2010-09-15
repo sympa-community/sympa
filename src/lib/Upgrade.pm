@@ -150,123 +150,61 @@ my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
 					      'label_conf' => 'varchar(80)',
 					      'value_conf' => 'varchar(300)'}
 			 },
-		 'SQLite' => {'user_table' => {'email_user' => 'text',
-					       'gecos_user' => 'text',
-					       'password_user' => 'text',
-					       'last_login_date_user' => 'integer',
-					       'last_login_host_user' => 'text',
-					       'wrong_login_count_user' => 'integer',
-					       'cookie_delay_user' => 'integer',
-					       'lang_user' => 'text',
-					       'attributes_user' => 'text',
-					       'data_user' => 'text'},
-			      'subscriber_table' => {'list_subscriber' => 'text',
-						     'user_subscriber' => 'text',
-						     'robot_subscriber' => 'text',
-						     'date_subscriber' => 'numeric',
-						     'number_messages_subscriber' => 'numeric',
-						     'update_subscriber' => 'numeric',
-						     'visibility_subscriber' => 'text',
-						     'reception_subscriber' => 'text',
-						     'topics_subscriber' => 'text',
-						     'bounce_subscriber' => 'text',
-						     'comment_subscriber' => 'text',
-						     'subscribed_subscriber' => 'numeric',
-						     'included_subscriber' => 'numeric',
-						     'include_sources_subscriber' => 'text',
-						     'bounce_score_subscriber' => 'integer',
-						     'bounce_address_subscriber' => 'text',
-						     'custom_attribute_subscriber' => 'text',
-						     'suspend_subscriber' => "boolean",
-						     'suspend_start_date_subscriber' => 'integer',
-						     'suspend_end_date_subscriber' => 'integer'},
-			      'admin_table' => {'list_admin' => 'text',
-						'user_admin' => 'text',
-						'robot_admin' => 'text',
-						'role_admin' => 'text',
-						'date_admin' => 'numeric',
-						'update_admin' => 'numeric',
-						'reception_admin' => 'text',
-						'visibility_admin' => 'text',
-						'comment_admin' => 'text',
-						'subscribed_admin' => 'numeric',
-						'included_admin' => 'numeric',
-						'include_sources_admin' => 'text',
-						'info_admin' =>  'text',
-						'profile_admin' => 'text'},
-			      'exclusion_table' => {'list_exclusion' => 'text',
-						    'user_exclusion' => 'text',
-						    'date_exclusion' => 'integer'},
-			      'netidmap_table' => {'netid_netidmap' => 'text',
-						   'serviceid_netidmap' => 'text',
-						   'email_netidmap' => 'text',
-						   'robot_netidmap' => 'text'},
-			      'session_table' => {'id_session' => 'text',
-						  'start_date_session' => 'integer',
-						  'date_session' => 'integer',
-						  'remote_addr_session' => 'text',
-						  'robot_session'  => 'text',
-						  'email_session'  => 'text',
-						  'hit_session' => 'integer',
-						  'data_session'  => 'text'},
-			      'logs_table' => {'id_logs' => 'integer',
-					       'date_logs' => 'integer',
-					       'robot_logs' => 'text',
-					       'list_logs' => 'text',
-					       'action_logs' => 'text',
-					       'parameters_logs' => 'text',
-					       'target_email_logs' => 'text',
-					       'user_email_logs' => 'text',
-					       'msg_id_logs' => 'text',
-					       'status_logs' => 'text',
-					       'error_type_logs' => 'text',
-					       'client_logs' => 'text',
-					       'daemon_logs' => 'text'},
-			      'one_time_ticket_table' => {'ticket_one_time_ticket' => 'text',
-							  'robot_one_time_ticket' => 'text',
-							  'email_one_time_ticket' => 'text',
-							  'date_one_time_ticket' => 'integer',
-							  'data_one_time_ticket' => 'text',
-							  'remote_addr_one_time_ticket' => 'text',
-							  'status_one_time_ticket' => 'text',				  
-						      },				 
-			      'bulkmailer_table' => {'messagekey_bulkmailer' => 'text',
-						     'messageid_bulkmailer' => 'text',
-						     'packetid_bulkmailer' => 'text',
-						     'receipients_bulkmailer' => 'text',
-						     'returnpath_bulkmailer' => 'text',
-						     'robot_bulkmailer' => 'text',
-						     'listname_bulkmailer' => 'text',
-						     'verp_bulkmailer' => 'integer',
-						     'tracking_bulkmailer' => 'integer',
-						     'merge_bulkmailer' => 'integer',
-						     'priority_message_bulkmailer' => 'integer',
-						     'priority_packet_bulkmailer' => 'integer',
-						     'reception_date_bulkmailer' => 'integer',
-						     'delivery_date_bulkmailer' => 'integer',
-						     'lock_bulkmailer' => 'text'},
-			      'bulkspool_table' => {'messagekey_bulkspool' => 'text',
-						    'messageid_bulkspool' => 'text',
-						    'message_bulkspool' => 'text',
-						    'lock_bulkspool' => 'integer',
-						    'dkim_privatekey_bulkspool' => 'varchar(1000)',
-						    'dkim_selector_bulkspool' => 'varchar(50)',
-						    'dkim_d_bulkspool' => 'varchar(50)',
-						    'dkim_i_bulkspool' => 'varchar(100)',
-						    'dkim_header_list_bulkspool' => 'varchar(500)'},
-			      'stat_table' => {'id_stat' => 'integer',
-					       'date_stat' => 'integer',
-					       'email_stat' => 'text',
-					       'operation_stat' => 'text',
-					       'list_stat' => 'text',
-					       'daemon_stat' => 'text',
-					       'user_ip_stat' => 'text',
-					       'robot_stat' => 'text',
-					       'parameter_stat' => 'text',
-					       'read_stat' => 'integer'},
-			      'conf_table' => {'robot_conf' => 'text',
-					       'label_conf' => 'text',
-					       'value_conf' => 'text'}});
+		 );
+
+&multi_db;
+
+sub multi_db {
+    foreach my $table ( keys %{ $db_struct{'mysql'} } ) {		
+	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  }) {
+	    my $trans = $db_struct{'mysql'}{$table}{$field};
+	    my $trans_o = $trans;
+	    my $trans_pg = $trans;
+	    my $trans_syb = $trans;
+	    my $trans_sq = $trans;
+# Oracle	
+	    $trans_o =~ s/^varchar/varchar2/g;	
+	    $trans_o =~ s/^int.*/number/g;	
+	    $trans_o =~ s/^bigint.*/number/g;	
+	    $trans_o =~ s/^smallint.*/number/g;	
+	    $trans_o =~ s/^enum.*/varchar2(20)/g;	
+	    $trans_o =~ s/^text.*/varchar2(500)/g;	
+	    $trans_o =~ s/^longtext.*/long/g;	
+	    $trans_o =~ s/^datetime.*/date/g;	
+#Postgresql
+	    $trans_pg =~ s/^int(1)/smallint/g;
+	    $trans_pg =~ s/^int\(.*/int4/g;
+	    $trans_pg =~ s/^bigint.*/bigint/g;
+	    $trans_pg =~ s/^smallint.*/int4/g;
+	    $trans_pg =~ s/^enum.*/varchar(15)/g;
+	    $trans_pg =~ s/^text.*/varchar(500)/g;
+	    $trans_pg =~ s/^longtext.*/text/g;
+	    $trans_pg =~ s/^datetime.*/timestamp with time zone/g;
+#Sybase		
+	    $trans_syb =~ s/^int.*/numeric/g;
+	    $trans_syb =~ s/^text.*/varchar(500)/g;
+	    $trans_syb =~ s/^smallint.*/numeric/g;
+	    $trans_syb =~ s/^bigint.*/numeric/g;
+	    $trans_syb =~ s/^longtext.*/text/g;
+	    $trans_syb =~ s/^enum.*/varchar(15)/g;
+#Sqlite		
+	    $trans_sq =~ s/^varchar.*/text/g;
+	    $trans_sq =~ s/^int\(1\).*/boolean/g;
+	    $trans_sq =~ s/^int.*/integer/g;
+	    $trans_sq =~ s/^bigint.*/integer/g;
+	    $trans_sq =~ s/^smallint.*/integer/g;
+	    $trans_sq =~ s/^datetime.*/timestamp/g;
+	    $trans_sq =~ s/^enum.*/text/g;	 
+
+	    $db_struct{'pg'}{$table}{$field} = $trans_pg;
+	    $db_struct{'Oracle'}{$table}{$field} = $trans_o;
+	    $db_struct{'Sybase'}{$table}{$field} = $trans_syb;
+	    $db_struct{'SQLite'}{$table}{$field} = $trans_sq;
+	}
+    }	
+}
+
+
 
 my %not_null = ('email_user' => 1,
 		'list_subscriber' => 1,
@@ -1795,16 +1733,8 @@ temporary tablespace TEMP;
 ## \n\n";
 	    
 	    $create_db_Oracle .= "CREATE TABLE $table ( \n";
-	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
-	    my $trans = $db_struct{'mysql'}{$table}{$field};
-	    $trans =~ s/^varchar/varchar2/g;
-	    $trans =~ s/^int.*/number/g;
-	    $trans =~ s/^bigint.*/number/g;
-	    $trans =~ s/^smallint.*/number/g;
-	    $trans =~ s/^enum.*/varchar2(20)/g;
-	    $trans =~ s/^text.*/varchar2(500)/g;
-	    $trans =~ s/^longtext.*/long/g;
-	    $trans =~ s/^datetime.*/date/g;
+	foreach my $field  ( keys %{ $db_struct{'Oracle'}{$table}  } ) {
+	    my $trans = $db_struct{'Oracle'}{$table}{$field};
 	    $create_db_Oracle .= "\t $field \t".$trans;
 	    if (exists $not_null{$field}){
 		$create_db_Oracle .= " NOT NULL";
@@ -1842,16 +1772,8 @@ CREATE DATABASE sympa;
 -- \n\n";
 	$create_db_Pg .= $table;
 	$create_db_Pg .= "CREATE TABLE $table ( \n";
-	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
-	    my $trans = $db_struct{'mysql'}{$table}{$field};
-	    $trans =~ s/^int(1)/smallint/g;
-	    $trans =~ s/^int\(.*/int4/g;
-	    $trans =~ s/^bigint.*/bigint/g;
-	    $trans =~ s/^smallint.*/int4/g;
-	    $trans =~ s/^enum.*/varchar(15)/g;
-	    $trans =~ s/^text.*/varchar(500)/g;
-	    $trans =~ s/^longtext.*/text/g;
-	    $trans =~ s/^datetime.*/timestamp with time zone/g;
+	foreach my $field  ( keys %{ $db_struct{'pg'}{$table}  } ) {
+	    my $trans = $db_struct{'pg'}{$table}{$field};
 	    $create_db_Pg .= "\t $field \t".$trans ;
 	    if (exists $not_null{$field}){
 		$create_db_Pg .= " NOT NULL";
@@ -1895,14 +1817,8 @@ go \n";
  \n\n";
 	
 	$create_db_Sybase .= "create table $table \n( \n";
-	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
-	    my $trans = $db_struct{'mysql'}{$table}{$field};
-	    $trans =~ s/^int.*/numeric/g;
-	    $trans =~ s/^text.*/varchar(500)/g;
-	    $trans =~ s/^smallint.*/numeric/g;
-	    $trans =~ s/^bigint.*/numeric/g;
-	    $trans =~ s/^longtext.*/text/g;
-	    $trans =~ s/^enum.*/varchar(15)/g;
+	foreach my $field  ( keys %{ $db_struct{'Sybase'}{$table}  } ) {
+	    my $trans = $db_struct{'Sybase'}{$table}{$field};
 	    $create_db_Sybase .= "\t $field \t".$trans;
 	    if (exists $not_null{$field}){
 		$create_db_Sybase .= " NOT NULL";
@@ -1944,15 +1860,8 @@ go \n";
 -- \n\n";
 	
 	$create_db_SQLite .= "CREATE TABLE $table ( \n";
-	foreach my $field  ( keys %{ $db_struct{'mysql'}{$table}  } ) {
-	    my $trans = $db_struct{'mysql'}{$table}{$field};
-	    $trans =~ s/^varchar.*/text/g;
-	    $trans =~ s/^int\(1\).*/boolean/g;
-	    $trans =~ s/^int.*/integer/g;
-	    $trans =~ s/^bigint.*/integer/g;
-	    $trans =~ s/^smallint.*/integer/g;
-	    $trans =~ s/^datetime.*/timestamp/g;
-	    $trans =~ s/^enum.*/text/g;	 
+	foreach my $field  ( keys %{ $db_struct{'SQLite'}{$table}  } ) {
+	    my $trans = $db_struct{'SQLite'}{$table}{$field};
 	    $create_db_SQLite .= "\t $field \t".$trans;
 	    if (exists $not_null{$field}){
 		$create_db_SQLite .= " NOT NULL";
