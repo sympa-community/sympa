@@ -2308,7 +2308,7 @@ sub make_tt2_include_path {
     if ($dir) {
 	$path_etcbindir = Sympa::Constants::DEFAULTDIR . "/$dir";
 	$path_etcdir = "$Conf::Conf{'etc'}/".$dir;
-	$path_robot = "$Conf::Conf{'etc'}/".$robot.'/'.$dir if (lc($robot) ne lc($Conf::Conf{'host'}));
+	$path_robot = "$Conf::Conf{'etc'}/".$robot.'/'.$dir if (lc($robot) ne lc($Conf::Conf{'domain'}));
 	if (ref($list) eq 'List'){
 	    $path_list = $list->{'dir'}.'/'.$dir;
 	    if (defined $list->{'admin'}{'family_name'}) {
@@ -2319,7 +2319,7 @@ sub make_tt2_include_path {
     }else {
 	$path_etcbindir = Sympa::Constants::DEFAULTDIR;
 	$path_etcdir = "$Conf::Conf{'etc'}";
-	$path_robot = "$Conf::Conf{'etc'}/".$robot if (lc($robot) ne lc($Conf::Conf{'host'}));
+	$path_robot = "$Conf::Conf{'etc'}/".$robot if (lc($robot) ne lc($Conf::Conf{'domain'}));
 	if (ref($list) eq 'List') {
 	    $path_list = $list->{'dir'} ;
 	    if (defined $list->{'admin'}{'family_name'}) {

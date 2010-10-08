@@ -63,7 +63,7 @@ sub fatal_err {
     };
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -72,7 +72,7 @@ sub fatal_err {
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    unless (&List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'host'}, [$full_msg])) {
+    unless (&List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'}, [$full_msg])) {
 	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
     }
 
@@ -127,7 +127,7 @@ sub do_log {
     if ($@ && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         &List::send_notify_to_listmaster(
-            'logs_failed', $Conf::Conf{'host'}, [$@]
+            'logs_failed', $Conf::Conf{'domain'}, [$@]
         );
     };
 
@@ -165,7 +165,7 @@ sub do_connect {
     eval {openlog("$log_service\[$$\]", 'ndelay', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'host'}, [$@])) {
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };

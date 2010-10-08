@@ -486,7 +486,7 @@ sub upgrade {
 	## Rename web archive directories using 'domain' instead of 'host'
 	&do_log('notice','Renaming web archive directories with the list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'host'},'arc_path');
+	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'domain'},'arc_path');
 	unless (opendir ARCDIR, $root_dir) {
 	    do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -604,7 +604,7 @@ sub upgrade {
 
 	&do_log('notice','Renaming bounce sub-directories adding list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'host'},'bounce_path');
+	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'domain'},'bounce_path');
 	unless (opendir BOUNCEDIR, $root_dir) {
 	    do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -673,7 +673,7 @@ sub upgrade {
 	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 	    my $etc_dir = $Conf::Conf{'etc'};
 
-	    if ($vr ne $Conf::Conf{'host'}) {
+	    if ($vr ne $Conf::Conf{'domain'}) {
 		$etc_dir .= '/'.$vr;
 	    }
 
@@ -681,7 +681,7 @@ sub upgrade {
 		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
 		rename $etc_dir.'/mhonarc-ressources.tt2', $new_filename;
 		&do_log('notice', "Custom %s file has been backed up as %s", $etc_dir.'/mhonarc-ressources.tt2', $new_filename);
-		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'host'},
+		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'domain'},
 						 [$etc_dir.'/mhonarc-ressources.tt2', $new_filename]);
 	    }
 	}
@@ -881,10 +881,10 @@ sub upgrade {
 
       ## Remove OTHER/ subdirectories in bounces
       &do_log('notice', "Removing obsolete OTHER/ bounce directories");
-      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf::Conf{'host'}, 'bounce_path')) {
+      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path')) {
 	
 	foreach my $subdir (sort grep (!/^\.+$/,readdir(BOUNCEDIR))) {
-	  my $other_dir = &Conf::get_robot_conf($Conf::Conf{'host'}, 'bounce_path').'/'.$subdir.'/OTHER';
+	  my $other_dir = &Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path').'/'.$subdir.'/OTHER';
 	  if (-d $other_dir) {
 	    &tools::remove_dir($other_dir) && &do_log('notice', "Directory $other_dir removed");
 	  }

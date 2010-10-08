@@ -744,7 +744,7 @@ sub rename_list{
      ## Default robot
      if (-d "$Conf::Conf{'home'}/$param{'new_robot'}") {
 	 $new_dir = $Conf::Conf{'home'}.'/'.$param{'new_robot'}.'/'.$param{'new_listname'};
-     }elsif ($param{'new_robot'} eq $Conf::Conf{'host'}) {
+     }elsif ($param{'new_robot'} eq $Conf::Conf{'domain'}) {
 	 $new_dir = $Conf::Conf{'home'}.'/'.$param{'new_listname'};
      }else {
 	 &do_log('err',"Unknown robot $param{'new_robot'}");
@@ -920,7 +920,7 @@ sub clone_list_as_empty {
     my $new_dir;
     if (-d $Conf::Conf{'home'}.'/'.$new_robot) {
 	$new_dir = $Conf::Conf{'home'}.'/'.$new_robot.'/'.$new_listname;
-    }elsif ($new_robot eq $Conf::Conf{'host'}) {
+    }elsif ($new_robot eq $Conf::Conf{'domain'}) {
 	$new_dir = $Conf::Conf{'home'}.'/'.$new_listname;
     }else {
 	&do_log('err',"Admin::clone_list_as_empty : unknown robot $new_robot");

@@ -207,7 +207,7 @@ sub new {
 	    
 	    $robot = lc($robot);
 	    $listname = lc($listname);
-	    $robot ||= $Conf::Conf{'host'};
+	    $robot ||= $Conf::Conf{'domain'};
 	    
 
 	    ## Antispam feature.

@@ -1616,7 +1616,7 @@ sub search_list_among_robots {
     
     ## Search in default robot
     if (-d $Conf::Conf{'home'}.'/'.$listname) {
- 	return $Conf::Conf{'host'};
+ 	return $Conf::Conf{'domain'};
     }
     
      foreach my $r (keys %{$Conf::Conf{'robots'}}) {
@@ -1929,14 +1929,14 @@ sub load {
 	    ## Try default robot
 	    unless ($robot) {
 		if (-d "$Conf::Conf{'home'}/$name") {
-		    $robot = $Conf::Conf{'host'};
+		    $robot = $Conf::Conf{'domain'};
 		}
 	    }
 	}
 	
 	if ($robot && (-d "$Conf::Conf{'home'}/$robot")) {
 	    $self->{'dir'} = "$Conf::Conf{'home'}/$robot/$name";
-	}elsif (lc($robot) eq lc($Conf::Conf{'host'})) {
+	}elsif (lc($robot) eq lc($Conf::Conf{'domain'})) {
 	    $self->{'dir'} = "$Conf::Conf{'home'}/$name";
 	}else {
 	    &do_log('err', 'No such robot (virtual domain) %s', $robot) unless ($options->{'just_try'});
@@ -9861,7 +9861,7 @@ sub get_lists {
 	    push @lists, @{$list_cache{'get_lists'}{$robot}};
 	}else {
 	    my $robot_dir =  $Conf::Conf{'home'}.'/'.$robot ;
-	    $robot_dir = $Conf::Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'host'}));
+	    $robot_dir = $Conf::Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'domain'}));
 	    
 	    unless (-d $robot_dir) {
 		do_log('err',"unknown robot $robot, Unable to open $robot_dir");
@@ -9919,11 +9919,11 @@ sub get_robots {
 	next unless (($r !~ /^\./o) && (-d "$Conf::Conf{'home'}/$r"));
 	next unless (-r "$Conf::Conf{'etc'}/$r/robot.conf");
 	push @robots, $r;
-	undef $use_default_robot if ($r eq $Conf::Conf{'host'});
+	undef $use_default_robot if ($r eq $Conf::Conf{'domain'});
     }
     closedir DIR;
 
-    push @robots, $Conf::Conf{'host'} if ($use_default_robot);
+    push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots ;
 }
 
@@ -12320,7 +12320,7 @@ sub new {
     }
 
     ## The default robot
-    if ($name eq $Conf::Conf{'host'}) {
+    if ($name eq $Conf::Conf{'domain'}) {
 	$robot->{'home'} = $Conf::Conf{'home'};
     }else {
 	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;

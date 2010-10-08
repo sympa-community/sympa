@@ -20,7 +20,7 @@ sub new {
     }
 
     ## The default robot
-    if ($name eq $Conf::Conf{'host'}) {
+    if ($name eq $Conf::Conf{'domain'}) {
 	$robot->{'home'} = $Conf::Conf{'home'};
     }else {
 	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;

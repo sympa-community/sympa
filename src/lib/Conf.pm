@@ -383,8 +383,8 @@ sub load {
 	$Conf{'list_check_regexp'} =~ s/[,\s]+/\|/g;
     }
 	
-    $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
-    $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
+    $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'domain'}";
+    $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'domain'}";
     $Conf{'trusted_applications'} = &load_trusted_application (); 
     $Conf{'crawlers_detection'} = &load_crawlers_detection (); 
     $Conf{'pictures_url'}  = $Conf{'static_content_url'}.'/pictures/';
@@ -1037,7 +1037,7 @@ sub checkfiles {
     }
     if ($css_updated) {
 	## Notify main listmaster
-	&List::send_notify_to_listmaster('css_updated',  $Conf{'host'}, ["Static CSS files have been updated ; check log file for details"]);
+	&List::send_notify_to_listmaster('css_updated',  $Conf{'domain'}, ["Static CSS files have been updated ; check log file for details"]);
     }
 
 
