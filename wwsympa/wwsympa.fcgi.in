@@ -1196,8 +1196,15 @@ my $birthday = time ;
 	     delete $session->{'do_not_use_cas'}; #reset do_not_use_cas because this client probably use CAS
 	     # select the cas server that redirect the user to sympa and check the ticket
 	     do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}");
-	     if ($session->{'checked_cas'} =~ /^(\d+)\,?/) {
-		 my $cas_id = $1;
+
+
+	     my $cas_id = '';
+	     if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
+		 $cas_id = $1;
+	     } elsif ($session->{'checked_cas'} =~ /^(\d+)\,?/) {
+		 $cas_id = $1;
+	     }
+	     if ($cas_id ne '') { 
 		 my $ticket = $in{'ticket'};
 		 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 		 
