@@ -1202,7 +1202,7 @@ my $birthday = time ;
 		 my $cas_server = $Conf{'auth_services'}{$robot}[$cas_id]{'cas_server'};
 		 
 		 my $service_url = &wwslib::get_my_url();
-		 $service_url =~ s/\?ticket\=.+$//;
+		 $service_url =~ s/(\?|&)ticket\=.+$//; 
 		 
 		 my $net_id = $cas_server->validateST($service_url, $ticket);
 		 
