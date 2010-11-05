@@ -455,7 +455,6 @@ our @params = (
         query    => 'Used to define a custom parameter for your server. Do not forget the semicolon between the param name and the param value.', 
 	vhost    => '1',
         file     => 'sympa.conf',
-        edit     => '1',
         multiple => '1',
         optional => '1',
     },

@@ -213,7 +213,7 @@ msgstr "發表"
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1320 ../web_tt2/list_menu.tt2:80
+#: ../src/lib/List.pm:1326 ../web_tt2/list_menu.tt2:80
 #: ../web_tt2/list_menu.tt2:82
 msgid "Shared documents"
 msgstr "共享文檔"
@@ -2482,6 +2482,16 @@ msgstr ""
 msgid "Closed lists"
 msgstr "關閉的郵件列表"
 
+#: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
+#: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
+#: ../web_tt2/modindex.tt2:125 ../web_tt2/modindex.tt2:182
+#: ../web_tt2/modindex.tt2:64 ../web_tt2/review.tt2:138
+#: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
+#: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
+#: ../web_tt2/subscriber_table.tt2:7
+msgid "Toggle Selection"
+msgstr "切換選項"
+
 #: ../web_tt2/get_closed_lists.tt2:10 ../web_tt2/get_pending_lists.tt2:9
 msgid "list name"
 msgstr "郵件列表名稱"
@@ -2493,13 +2503,6 @@ msgstr "郵件列表主題"
 #: ../web_tt2/get_closed_lists.tt2:12 ../web_tt2/get_pending_lists.tt2:11
 msgid "Requested by"
 msgstr "請求者"
-
-#: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
-#: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/modindex.tt2:125
-#: ../web_tt2/modindex.tt2:182 ../web_tt2/review.tt2:138
-#: ../web_tt2/reviewbouncing.tt2:131
-msgid "Toggle Selection"
-msgstr "切換選項"
 
 #: ../web_tt2/get_closed_lists.tt2:30
 msgid "Purge selected lists"
@@ -3879,6 +3882,19 @@ msgstr ""
 msgid "The following virtual robots are running on this server:"
 msgstr "以下真正的郵件系統正在這台服務器上運行："
 
+#: ../web_tt2/serveradmin.tt2:27
+msgid "Sympa URL:"
+msgstr ""
+
+#: ../web_tt2/serveradmin.tt2:27
+msgid "Mail domain:"
+msgstr ""
+
+#: ../web_tt2/serveradmin.tt2:27
+#, fuzzy
+msgid "Listmaster(s):"
+msgstr "郵件列表管理員"
+
 #: ../web_tt2/serveradmin.tt2:30
 msgid "No Virtual Robot defined on this server"
 msgstr "在這台服務器上沒有定義Virtual Robot"
@@ -4538,11 +4554,11 @@ msgstr "監管的訂閱目錄"
 msgid "No subscription requests"
 msgstr "沒有訂閱請求"
 
-#: ../web_tt2/subindex.tt2:57
+#: ../web_tt2/subindex.tt2:58
 msgid "Add selected addresses"
 msgstr "添加選中的地址"
 
-#: ../web_tt2/subindex.tt2:58
+#: ../web_tt2/subindex.tt2:59
 msgid "Reject selected addresses"
 msgstr "拒絕選中的地址"
 
@@ -4905,7 +4921,7 @@ msgstr "查找間隔："
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16130
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16155
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5562,7 +5578,7 @@ msgid "%1 Digest %2"
 msgstr "%1郵件摘要%2"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2771
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2779
 msgid "Table of contents:"
 msgstr "目錄表："
 
@@ -8480,7 +8496,7 @@ msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9767
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9784
 msgid "%A"
 msgstr "%A"
 
@@ -8489,7 +8505,7 @@ msgstr "%A"
 msgid "Error at line %d: %s\n"
 msgstr "%d：%s行有錯誤"
 
-#: ../src/lib/Conf.pm:432
+#: ../src/lib/Conf.pm:438
 #, fuzzy
 msgid "Error at line %d: %s"
 msgstr "%d：%s行有錯誤"
@@ -8497,8 +8513,8 @@ msgstr "%d：%s行有錯誤"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1861 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1059 ../wwsympa/wwsympa.fcgi.in:2859
+#: ../src/lib/List.pm:1872 ../wwsympa/Auth.pm:459
+#: ../wwsympa/wwsympa.fcgi.in:1067 ../wwsympa/wwsympa.fcgi.in:2869
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日 %H時%M分%S秒"
 
@@ -8518,7 +8534,7 @@ msgstr "匿名發送者"
 msgid "frequency"
 msgstr "頻率"
 
-#: ../src/lib/List.pm:1414 ../src/lib/List.pm:341
+#: ../src/lib/List.pm:1427 ../src/lib/List.pm:341
 msgid "access right"
 msgstr "訪問權限"
 
@@ -8578,6 +8594,19 @@ msgstr "未監管的郵件失效"
 #: ../src/lib/List.pm:434
 msgid "Secret string for generating unique keys"
 msgstr "生成密鑰的秘密字符串"
+
+#: ../src/lib/List.pm:1090 ../src/lib/List.pm:1383 ../src/lib/List.pm:439
+msgid "epoch date"
+msgstr "新紀元日期"
+
+#: ../src/lib/List.pm:443
+msgid "human readable"
+msgstr ""
+
+#: ../src/lib/List.pm:448
+#, fuzzy
+msgid "who created the list"
+msgstr "配置的最近更新人"
 
 #: ../src/lib/List.pm:452
 msgid "Creation of the list"
@@ -8948,121 +8977,129 @@ msgstr "配置"
 msgid "Priority"
 msgstr "優先級"
 
-#: ../src/lib/List.pm:1228
+#: ../src/lib/List.pm:1230
+msgid "Reject mail from automates (crontab, etc)?"
+msgstr ""
+
+#: ../src/lib/List.pm:1234
 msgid "Who can start a remind process"
 msgstr "啟動提醒過程"
 
-#: ../src/lib/List.pm:1233
+#: ../src/lib/List.pm:1239
 msgid "Return-path of the REMIND command"
 msgstr "REMIND命令的返回路徑"
 
-#: ../src/lib/List.pm:1257 ../src/lib/List.pm:1277
+#: ../src/lib/List.pm:1263 ../src/lib/List.pm:1283
 msgid "Reply address"
 msgstr "回復地址"
 
-#: ../src/lib/List.pm:1263
+#: ../src/lib/List.pm:1269
 msgid "value"
 msgstr "值"
 
-#: ../src/lib/List.pm:1268
+#: ../src/lib/List.pm:1274
 msgid "other email address"
 msgstr "其它郵件"
 
-#: ../src/lib/List.pm:1273
+#: ../src/lib/List.pm:1279
 msgid "respect of existing header field"
 msgstr "遵守現有郵件頭信息字段"
 
-#: ../src/lib/List.pm:1282
+#: ../src/lib/List.pm:1288
 msgid "Who can review subscribers"
 msgstr "查看訂閱者"
 
-#: ../src/lib/List.pm:1289
+#: ../src/lib/List.pm:1295
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369郵件頭信息字段"
 
-#: ../src/lib/List.pm:1293
+#: ../src/lib/List.pm:1299
 msgid "Who can send messages"
 msgstr "發送信息"
 
-#: ../src/lib/List.pm:1300
+#: ../src/lib/List.pm:1306
 msgid "Serial number of the config"
 msgstr "配置的序列號"
 
-#: ../src/lib/List.pm:1305
+#: ../src/lib/List.pm:1311
 msgid "Who can view"
 msgstr "查看"
 
-#: ../src/lib/List.pm:1309
+#: ../src/lib/List.pm:1315
 msgid "Who can edit"
 msgstr "編輯"
 
-#: ../src/lib/List.pm:1316 ../src/lib/List.pm:1421
+#: ../src/lib/List.pm:1322 ../src/lib/List.pm:1434
 msgid "quota"
 msgstr "配額"
 
-#: ../src/lib/List.pm:1325 ../src/lib/List.pm:1330
+#: ../src/lib/List.pm:1331 ../src/lib/List.pm:1336
 msgid "email address protection method"
 msgstr "郵件地址保護模式"
 
-#: ../src/lib/List.pm:1336
+#: ../src/lib/List.pm:1342
 msgid "Status of the list"
 msgstr "郵件列表的狀態"
 
-#: ../src/lib/List.pm:1343
+#: ../src/lib/List.pm:1350
+msgid "Timeout for fetch of include_sql_query"
+msgstr ""
+
+#: ../src/lib/List.pm:1356
 msgid "Subject of the list"
 msgstr "郵件列表標題"
 
-#: ../src/lib/List.pm:1347
+#: ../src/lib/List.pm:1360
 msgid "Who can subscribe to the list"
 msgstr "訂閱郵件列表"
 
-#: ../src/lib/List.pm:1353
+#: ../src/lib/List.pm:1366
 msgid "Topics for the list"
 msgstr "這個郵件列表的主題"
 
-#: ../src/lib/List.pm:1360
+#: ../src/lib/List.pm:1373
 msgid "Inclusions timeout"
 msgstr "包含操作超時值"
 
-#: ../src/lib/List.pm:1364
+#: ../src/lib/List.pm:1377
 msgid "Who can unsubscribe"
 msgstr "退訂"
 
-#: ../src/lib/List.pm:1385
+#: ../src/lib/List.pm:1398
 msgid "Last update of config"
 msgstr "配置的最近更新"
 
-#: ../src/lib/List.pm:1392
+#: ../src/lib/List.pm:1405
 msgid "User data source"
 msgstr "用戶數據來源"
 
-#: ../src/lib/List.pm:1398
+#: ../src/lib/List.pm:1411
 #, fuzzy
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "允許圖片顯示（必須被當前郵件系統激活）"
 
-#: ../src/lib/List.pm:1404
+#: ../src/lib/List.pm:1417
 #, fuzzy
 msgid "Allow message personnalization"
 msgstr "郵件分類的主題"
 
-#: ../src/lib/List.pm:1410
+#: ../src/lib/List.pm:1423
 msgid "Visibility of the list"
 msgstr "郵件列表的可見性"
 
-#: ../src/lib/List.pm:1426
+#: ../src/lib/List.pm:1439
 msgid "Maximum number of month archived"
 msgstr "月歸檔最大數"
 
-#: ../src/lib/List.pm:1431
+#: ../src/lib/List.pm:1444
 msgid "Web archives"
 msgstr "網頁歸檔"
 
-#: ../src/lib/List.pm:1437
+#: ../src/lib/List.pm:1450
 msgid "Welcome return-path"
 msgstr "歡迎返回路徑"
 
-#: ../src/lib/List.pm:1442
+#: ../src/lib/List.pm:1455
 msgid "percentage of list members in VERP mode"
 msgstr "在VERP模式下郵件列表成員百分比"
 
@@ -9090,8 +9127,8 @@ msgstr "值"
 msgid "messages"
 msgstr "＃郵件"
 
-#: ../src/lib/List.pm:1358 ../src/lib/List.pm:589 ../src/lib/List.pm:817
-#: ../src/lib/List.pm:897 ../src/lib/List.pm:935
+#: ../src/lib/List.pm:1348 ../src/lib/List.pm:1371 ../src/lib/List.pm:589
+#: ../src/lib/List.pm:817 ../src/lib/List.pm:897 ../src/lib/List.pm:935
 msgid "seconds"
 msgstr ""
 
@@ -9138,11 +9175,7 @@ msgstr "SSL版本"
 msgid "SSL ciphers used"
 msgstr "使用了SSL暗號"
 
-#: ../src/lib/List.pm:1090 ../src/lib/List.pm:1370
-msgid "epoch date"
-msgstr "新紀元日期"
-
-#: ../src/lib/List.pm:1094 ../src/lib/List.pm:1375
+#: ../src/lib/List.pm:1094 ../src/lib/List.pm:1388
 msgid "date"
 msgstr "日期"
 
@@ -9172,53 +9205,53 @@ msgstr "數據來源參量"
 msgid "Owners defined in an external data source"
 msgstr "外在數據來源所有者"
 
-#: ../src/lib/List.pm:1237
+#: ../src/lib/List.pm:1243
 msgid "Periodical subscription reminder task"
 msgstr "週期性訂閱提醒任務"
 
-#: ../src/lib/List.pm:1242
+#: ../src/lib/List.pm:1248
 msgid "Incoming SMTP header fields to be removed"
 msgstr ""
 
-#: ../src/lib/List.pm:1249
+#: ../src/lib/List.pm:1255
 msgid "Outgoing SMTP header fields to be removed"
 msgstr ""
 
-#: ../src/lib/List.pm:1315 ../src/lib/List.pm:1420
+#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1433
 msgid "Kbytes"
 msgstr ""
 
-#: ../src/lib/List.pm:1381
+#: ../src/lib/List.pm:1394
 msgid "who updated the config"
 msgstr "配置的最近更新人"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2889
+#: ../src/lib/List.pm:2897
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日（%a）%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2890
+#: ../src/lib/List.pm:2898
 msgid "%a, %d %b %Y"
 msgstr "%Y年%m月%d日（%a）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3081 ../src/lib/List.pm:3082 ../src/lib/List.pm:3086
-#: ../wwsympa/wwsympa.fcgi.in:10943 ../wwsympa/wwsympa.fcgi.in:11012
-#: ../wwsympa/wwsympa.fcgi.in:11214 ../wwsympa/wwsympa.fcgi.in:11561
-#: ../wwsympa/wwsympa.fcgi.in:14999 ../wwsympa/wwsympa.fcgi.in:15006
-#: ../wwsympa/wwsympa.fcgi.in:15705 ../wwsympa/wwsympa.fcgi.in:16435
-#: ../wwsympa/wwsympa.fcgi.in:16436 ../wwsympa/wwsympa.fcgi.in:4251
-#: ../wwsympa/wwsympa.fcgi.in:4309 ../wwsympa/wwsympa.fcgi.in:4880
-#: ../wwsympa/wwsympa.fcgi.in:4881 ../wwsympa/wwsympa.fcgi.in:6375
-#: ../wwsympa/wwsympa.fcgi.in:7394 ../wwsympa/wwsympa.fcgi.in:7937
-#: ../wwsympa/wwsympa.fcgi.in:7977 ../wwsympa/wwsympa.fcgi.in:7979
-#: ../wwsympa/wwsympa.fcgi.in:8455 ../wwsympa/wwsympa.fcgi.in:8456
-#: ../wwsympa/wwsympa.fcgi.in:8490 ../wwsympa/wwsympa.fcgi.in:8491
-#: ../wwsympa/wwsympa.fcgi.in:8670 ../wwsympa/wwsympa.fcgi.in:8671
+#: ../src/lib/List.pm:3089 ../src/lib/List.pm:3090 ../src/lib/List.pm:3094
+#: ../wwsympa/wwsympa.fcgi.in:10960 ../wwsympa/wwsympa.fcgi.in:11029
+#: ../wwsympa/wwsympa.fcgi.in:11231 ../wwsympa/wwsympa.fcgi.in:11578
+#: ../wwsympa/wwsympa.fcgi.in:15017 ../wwsympa/wwsympa.fcgi.in:15024
+#: ../wwsympa/wwsympa.fcgi.in:15727 ../wwsympa/wwsympa.fcgi.in:16505
+#: ../wwsympa/wwsympa.fcgi.in:16506 ../wwsympa/wwsympa.fcgi.in:4266
+#: ../wwsympa/wwsympa.fcgi.in:4324 ../wwsympa/wwsympa.fcgi.in:4895
+#: ../wwsympa/wwsympa.fcgi.in:4896 ../wwsympa/wwsympa.fcgi.in:6392
+#: ../wwsympa/wwsympa.fcgi.in:7411 ../wwsympa/wwsympa.fcgi.in:7954
+#: ../wwsympa/wwsympa.fcgi.in:7994 ../wwsympa/wwsympa.fcgi.in:7996
+#: ../wwsympa/wwsympa.fcgi.in:8472 ../wwsympa/wwsympa.fcgi.in:8473
+#: ../wwsympa/wwsympa.fcgi.in:8507 ../wwsympa/wwsympa.fcgi.in:8508
+#: ../wwsympa/wwsympa.fcgi.in:8687 ../wwsympa/wwsympa.fcgi.in:8688
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -9234,7 +9267,7 @@ msgstr ""
 "Perl系統在POSIX庫中不是不斷的定義_SC_ARG_MAXg。為不定的$max_arg配置一個值，\n"
 "您必須修改smtp.pm模塊。\n"
 
-#: ../src/lib/mail.pm:806
+#: ../src/lib/mail.pm:810
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "無法在smtpto：%m中創建渠道"
 
@@ -9332,21 +9365,21 @@ msgstr "（未知日期）"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1060
+#: ../wwsympa/wwsympa.fcgi.in:1068
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:427 ../wwsympa/SympaSession.pm:428
-#: ../wwsympa/wwsympa.fcgi.in:11795 ../wwsympa/wwsympa.fcgi.in:11928
-#: ../wwsympa/wwsympa.fcgi.in:14241 ../wwsympa/wwsympa.fcgi.in:7891
+#: ../wwsympa/SympaSession.pm:432 ../wwsympa/SympaSession.pm:433
+#: ../wwsympa/wwsympa.fcgi.in:11812 ../wwsympa/wwsympa.fcgi.in:11945
+#: ../wwsympa/wwsympa.fcgi.in:14258 ../wwsympa/wwsympa.fcgi.in:7908
 msgid "%d %b %y  %H:%M"
 msgstr "%Y年%m月%d日　%H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16075 ../wwsympa/wwsympa.fcgi.in:16076
+#: ../wwsympa/wwsympa.fcgi.in:16100 ../wwsympa/wwsympa.fcgi.in:16101
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
@@ -9500,49 +9533,50 @@ msgstr "不接收郵件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己發的郵件"
 
-#: ../web_tt2/serveradmin.tt2:27
-msgid "Sympa URL:"
-msgstr ""
-
-#: ../web_tt2/serveradmin.tt2:27
-msgid "Mail domain:"
-msgstr ""
-
-#: ../src/lib/List.pm:443
-msgid "human readable"
-msgstr ""
-
-#: ../src/lib/List.pm:1230
-msgid "Reject mail from automates (crontab, etc)?"
-msgstr ""
-
-#: ../src/lib/List.pm:1350
-msgid "Timeout for fetch of include_sql_query"
-msgstr ""
-
-#, fuzzy
-#~ msgid "Listmaster(s):"
-#~ msgstr "郵件列表管理員"
-
-#, fuzzy
-#~ msgid "who created the list"
-#~ msgstr "配置的最近更新人"
-
-#, fuzzy
-#~ msgid " to "
-#~ msgstr "到"
-
 #~ msgid "Your Lists"
 #~ msgstr "您的郵件列表"
+
+#, fuzzy
+#~ msgid "Sendind a message to the list"
+#~ msgstr "發送信息：%1"
+
+#, fuzzy
+#~ msgid "Only possible in \"normal\" receiving mode"
+#~ msgstr "只可能在〞normal〞接收模式"
+
+#, fuzzy
+#~ msgid "ex: 24/05/2006"
+#~ msgstr "前：24／05／2006"
 
 #~ msgid "User's Guide"
 #~ msgstr "用戶指南"
 
+#, fuzzy
+#~ msgid ""
+#~ "WARNING: %1 %2 failed to unsubscribe from %3 because his address was not "
+#~ "found in the list.\n"
+#~ "(You may help this person)."
+#~ msgstr ""
+#~ "警告：%1%2從%3退訂失敗主，因為此郵件地址在郵件列表中沒找到。\n"
+#~ "（您可以幫助這個人）。"
+
 #~ msgid "Moderated, with editor confirmation"
 #~ msgstr "監管，編輯確認"
 
+#, fuzzy
+#~ msgid "Moderated, for subscribers and moderators"
+#~ msgstr "監管訂閱者和監管員，"
+
+#, fuzzy
+#~ msgid "restricted to subscribers check smime signature"
+#~ msgstr "僅限訂閱者檢查smime署名"
+
 #~ msgid "anyone with previous md5 authentication"
 #~ msgstr "有以前md5身份驗證的人"
+
+#, fuzzy
+#~ msgid " to "
+#~ msgstr "到"
 
 #, fuzzy
 #~ msgid "[Listmaster]"

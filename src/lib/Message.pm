@@ -159,7 +159,7 @@ sub new {
 
     ## Extract sender address
     unless ($hdr->get('From')) {
-	do_log('notice', 'No From found in message %s, skipping.', $file);
+	do_log('err', 'No From found in message %s, skipping.', $file);
 	return undef;
     }   
     my @sender_hdr = Mail::Address->parse($hdr->get('From'));
@@ -452,6 +452,48 @@ sub get_topic {
     } else {
 	return '';
     }
+}
+
+sub clean_html {
+    my $self = shift;
+    my ($listname, $robot) = split(/\@/,$self->{'rcpt'});
+    $robot = lc($robot);
+    $listname = lc($listname);
+    $robot ||= $Conf::Conf{'host'};
+    my $new_msg;
+    if($new_msg = &fix_html_part($self->{'msg'},$robot)) {
+	$self->{'msg'} = $new_msg;
+	return 1;
+    }
+    return 0;
+}
+
+sub fix_html_part {
+    my $part = shift;
+    my $robot = shift;
+    return $part unless $part;
+    my $eff_type = $part->head->mime_attr("Content-Type");
+    if ($part->parts) {
+	my @newparts = ();
+	foreach ($part->parts) {
+	    push @newparts, &fix_html_part($_,$robot);
+	}
+	$part->parts(\@newparts);
+    } elsif (MIME::Tools::textual_type($eff_type)) {
+	my $bodyh = $part->bodyhandle;
+	# Encoded body or null body won't be modified.
+	return $part if !$bodyh or $bodyh->is_encoded;
+	my $filtered_body = &tools::sanitize_html('string' => $bodyh->as_string, 'robot'=> $robot);
+
+	my $io = $bodyh->open("w");
+	unless (defined $io) {
+	    &do_log('err', "Failed to save message : $!");
+	    return undef;
+	}
+	$io->print($filtered_body);
+	$io->close;
+    }
+    return $part;
 }
 
 

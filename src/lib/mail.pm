@@ -1049,9 +1049,8 @@ sub fix_part($$$$) {
 
 	my $head = $part->head;
 	my $body = $bodyh->as_string;
-	my $wrap;
+	my $wrap = $body;
 	if ($head->get('X-Sympa-NoWrap')) { # Need not wrapping
-	    $wrap = $body;
 	    $head->delete('X-Sympa-NoWrap');
 	} elsif ($eff_type eq 'text/plain' and
 		 lc($head->mime_attr('Content-type.Format')||'') ne 'flowed') {

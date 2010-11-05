@@ -40,6 +40,7 @@ This script must be run along with sympa. It regularly checks the 'outgoing' spo
 use lib '--modulesdir--';
 
 use List;
+use Message;
 use Conf;
 use Log;
 use Commands;
@@ -608,12 +609,20 @@ sub rebuild {
 	}	
 	closedir HTML;
 
-	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	my $arcs_dir = &clean_archive_directory({'arc_root' => $wwsconf->{'arc_path'},'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if($arcs_dir);
+
+	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 
 	do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode / 256;
 
+	# Delete temporary directory containing files with escaped HTML.
+	if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
+	    &tools::del_dir($arcs_dir->{'cleaned_dir'});
+	}
+	
 	## Remove lock if required
 	if ($exitcode == 75) {
 	    &do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
@@ -652,16 +661,25 @@ sub rebuild {
 	    foreach my $html_file (grep !/^arctxt$|^index$|\.+$/, readdir(HTML)) {
 		unlink $arcdir.'/'.$html_file;
 	    }	
-	    closedir HTML;	
-
+	    closedir HTML;
+	    my $dir_to_rebuild = "$wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	    my $arcs_dir = &clean_archive_directory({'arc_root' => $wwsconf->{'arc_path'},'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	    if($arcs_dir) {
+		$dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
+	    }
 	    ## recreate index file if needed
 	    unless (-f $arcdir.'/index') {
 		&create_idx($arcdir);
 	    }
 
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;
+
+	    # Delete temporary directory containing files with escaped HTML.
+	    if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
+		&tools::del_dir($arcs_dir->{'cleaned_dir'});
+	    }
 
 	    ## Remove lock if required
 	    if ($exitcode == 75) {
@@ -859,16 +877,22 @@ sub mail2arc {
 	    $newfile = &create_idx($monthdir) + 1;
 	}
 	
+	my $file_to_archive = $queue.'/'.$file;
+	my $cleaned_file = clean_archived_message({'path' => $queue, 'file' => $file});
+	$file_to_archive = $cleaned_file if($cleaned_file);
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 	
 	do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
-	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";
+	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $file_to_archive";
 	
 	do_log('debug',"System call : $cmd");
 	
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode / 256;
 	
+	# Delete temporary file containing escaped HTML.
+	if ($cleaned_file && -f $cleaned_file) {unlink $cleaned_file;}
+
 	## Remove lock if required
 	if ($exitcode == 75) {
 	    &do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
@@ -890,6 +914,7 @@ sub mail2arc {
 	
 	close ORIG;  
 	close DEST;
+
 	&save_idx("$monthdir/index",$newfile);
     }
 }
@@ -1080,6 +1105,66 @@ sub get_tag {
     my $listname = shift;
     
     return (substr(Digest::MD5::md5_hex(join('/', $Conf{'cookie'}, $listname)), -10)) ;
+}
+
+sub clean_archive_directory{
+    my $params = shift;
+    &do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
+    my $answer;
+    $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
+    $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'}.'/'.$params->{'dir_to_rebuild'};
+    unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
+	&do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
+	return undef;
+    }
+    if(opendir ARCDIR,$answer->{'cleaned_dir'}){
+	my $files_left_uncleaned = 0;
+	foreach my $file (readdir(ARCDIR)){
+	    next if($file =~ /^\./);
+	    $files_left_uncleaned++ unless(&clean_archived_message({'path' => $answer->{'cleaned_dir'}, 'file' => $file, 'overwrite' => 1}));
+	}
+	closedir DIR;
+	if ($files_left_uncleaned) {
+	    &do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
+	}
+	$answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
+    }else{
+	&do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
+	&tools::del_dir($answer->{'cleaned_dir'});
+	return undef;
+    }
+    return $answer;
+}
+
+sub clean_archived_message{
+    my $params = shift;
+    &do_log('debug',"Cleaning HTML in archived file '%s/%s' (overwrite: %s).",$params->{'path'},$params->{'file'},$params->{'overwrite'});
+    my $filtered_file;
+    if ($params->{'overwrite'}){
+	$filtered_file = $params->{'path'}.'/'.$params->{'file'};
+    }else{
+	$filtered_file = $Conf::Conf{'tmpdir'}.'/'.$params->{'file'};
+    }
+    my $file_to_archive = $params->{'path'}.'/'.$params->{'file'};
+    if (my $msg = new Message($file_to_archive,1)){
+	if($msg->clean_html()){
+	    if(open TMP, ">$filtered_file") {
+		print TMP $msg->{'msg'}->as_string;
+		close TMP;
+		$file_to_archive = $filtered_file;
+	    }else{
+		&do_log('err','Unable to create a tmp file to write clean HTML to file %s',$filtered_file);
+		return undef;
+	    }
+	}else{
+	    &do_log('err','HTML cleaning in file %s failed.',$file_to_archive);
+	    return undef;
+	}
+    }else{
+	&do_log('err','Unable to create a Message object with file %s',$file_to_archive);
+	return undef;
+    }
+    return $file_to_archive;
 }
 
 =pod 

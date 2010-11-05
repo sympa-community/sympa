@@ -141,7 +141,7 @@ CREATE TABLE bulkmailer_table (
 
 CREATE TABLE `bulkspool_table` (
   `messagekey_bulkspool` varchar(33) NOT NULL COMMENT 'An internal id of the message in order to join this table with bulkmailer_table',
-  `messageid_bulkspool` varchar(100) NOT NULL COMMENT 'The value of the `Message-ID` SMTP field for this message',
+  `messageid_bulkspool` varchar(100) COMMENT 'The value of the `Message-ID` SMTP field for this message',
   `message_bulkspool` longtext COMMENT 'The message itself as a string. The database MUST be tuned in order to accept big data blog for storing messages with attachments',
   `lock_bulkspool` int(1) default NULL COMMENT 'lock used by parallele bulk demon ni order to prevent a message to be distribited twice',
   `dkim_privatekey_bulkspool` varchar(100) default NULL COMMENT 'The DKIM private key value.',
