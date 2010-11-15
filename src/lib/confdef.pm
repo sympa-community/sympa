@@ -773,6 +773,13 @@ our @params = (
         default => '',
     },
     {
+        name    => 'ldap_force_canonical_email',
+        default => '1',
+        query  => 'When using LDAP authentication, if the identifier provided by the user was a valid email, if this parameter is set to false, then the provided email will be used to authenticate the user. Otherwise, use of the first email returned by the LDAP server will be used.',
+        file   => 'wwsympa.conf',
+	vhost => '1',
+    },
+    {
         name    => 'ldap_export_name',
         default => '',
     },

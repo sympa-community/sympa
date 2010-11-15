@@ -150,7 +150,7 @@ CREATE TABLE `bulkspool_table` (
   `dkim_d_bulkspool` varchar(50) default NULL COMMENT 'The DKIM signature "d=" tag',
   `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',
   PRIMARY KEY  (`messagekey_bulkspool`)
-)
+);
 
 
 CREATE TABLE conf_table (

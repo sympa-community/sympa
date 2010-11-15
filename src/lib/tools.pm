@@ -111,9 +111,6 @@ sub _create_xss_parser {
     &do_log('debug3','tools::_create_xss_parser(%s)',$parameters{'robot'});
     my $hss = HTML::StripScripts::Parser->new({ Context => 'Document',
 						AllowSrc        => 1,
-						AllowHref       => 1,
-						AllowRelURL     => 1,
-						EscapeFiltered  => 0,
 						Rules => {
 						    '*' => {
 							src => '^http://'.&Conf::get_robot_conf($parameters{'robot'},'http_host'),
