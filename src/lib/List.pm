@@ -6954,10 +6954,10 @@ sub update_user_db {
     return 1;
 }
 
-## Adds a new user to Database (in User table)
-sub add_user_db {
+## Adds a user to the user_table
+sub add_global_user {
     my($values) = @_;
-    do_log('debug2', 'List::add_user_db');
+    do_log('debug2', '');
 
     my ($field, $value);
     my ($user, $statement, $table);

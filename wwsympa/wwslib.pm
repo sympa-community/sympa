@@ -298,7 +298,7 @@ sub init_passwd {
 	}
     }else {
 	$passwd = &new_passwd();
-	unless ( &List::add_user_db({'email' => $email,
+	unless ( &List::add_global_user({'email' => $email,
 				     'password' => $passwd,
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {

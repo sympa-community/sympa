@@ -3374,7 +3374,7 @@ sub do_sso_login {
 	
 	## Create user entry if required
 	unless (&List::is_user_db($email)) {
-	    unless (&List::add_user_db({'email' => $email})) {
+	    unless (&List::add_global_user({'email' => $email})) {
 		&report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
 		&wwslog('info','do_sso_login: add failed');
 		&web_db_log({'parameters' => $in{'auth_service_name'},
@@ -4544,7 +4544,7 @@ sub do_pref {
 
 	     my $user_pref = &List::get_user_db($in{'email'});
 	     $user_pref->{'email'} = $in{'new_email'};
-	     &List::add_user_db($user_pref);
+	     &List::add_global_user($user_pref);
 	 }
 
 	 $update->{'email'} = $in{'new_email'};
@@ -4675,7 +4675,7 @@ sub check_custom_attribute {
 	 }
      }else {
 	 $changes->{'email'} = $param->{'user'}{'email'};
-	 unless (&List::add_user_db($changes)) {
+	 unless (&List::add_global_user($changes)) {
 	     &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_pref: add failed');
 	     &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
@@ -5265,7 +5265,7 @@ sub do_auto_signoff {
 	 }
      }else {
 
-	 unless ( &List::add_user_db({'email' => $param->{'user'}{'email'}, 
+	 unless ( &List::add_global_user({'email' => $param->{'user'}{'email'}, 
 				      'password' => $in{'newpasswd1'},
 				      'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -15926,7 +15926,7 @@ sub do_send_mail {
 		  return undef;
 	     }
 	 }else {
-	     unless (&List::add_user_db({'email' => $param->{'user'}{'email'}, 'lang' => $in{'lang'}})) {
+	     unless (&List::add_global_user({'email' => $param->{'user'}{'email'}, 'lang' => $in{'lang'}})) {
 		 &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		 &wwslog('info','do_set_lang: update failed');
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'lang'}",'target_email' => "$param->{'user'}{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
