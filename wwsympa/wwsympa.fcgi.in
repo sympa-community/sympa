@@ -15211,7 +15211,7 @@ sub do_change_email {
 	 }
      
      ## Update User_table and remove existing entry first (to avoid duplicate entries)
-     &List::delete_user_db($new_email,);
+     &List::delete_global_user($new_email,);
      
      unless ( &List::update_user_db($old_email,
 				    {'email' => $new_email,

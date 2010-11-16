@@ -1245,7 +1245,7 @@ sub purge_user_table {
     }
     
     unless ($#purged_users < 0) {
-	unless (&List::delete_user_db(@purged_users)) {
+	unless (&List::delete_global_user(@purged_users)) {
 	    &do_log('err', 'purge_user_table error: Failed to delete users');
 	    return undef;
 	}

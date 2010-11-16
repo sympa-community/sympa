@@ -4645,11 +4645,11 @@ sub add_parts {
 
 
 
-## Delete a new user to Database (in User table)
-sub delete_user_db {
+## Delete a user in the user_table
+sub delete_global_user {
     my @users = @_;
     
-    do_log('debug2', 'List::delete_user_db');
+    do_log('debug2', '');
     
     return undef unless ($#users >= 0);
     
