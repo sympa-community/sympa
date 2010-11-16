@@ -310,7 +310,7 @@ while (!$end) {
 		
 		if ($action =~ /do_it/i) {
 		    if ($list->is_user($who)) {
-			my $u = $list->delete_user('users' => [$who], 'exclude' =>' 1');
+			my $u = $list->delete_list_member('users' => [$who], 'exclude' =>' 1');
 			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'del',
 				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
@@ -653,7 +653,7 @@ while (!$end) {
 			$action = $result->{'action'} if (ref($result) eq 'HASH');		    
 			if ($action =~ /do_it/i) {
 			    if ($list->is_user($original_rcpt)) {
-				my $u = $list->delete_user('users' => [$original_rcpt], 'exclude' =>' 1');
+				my $u = $list->delete_list_member('users' => [$original_rcpt], 'exclude' =>' 1');
 				
 				do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
 				unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {

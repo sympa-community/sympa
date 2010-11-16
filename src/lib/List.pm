@@ -91,7 +91,7 @@ Sends the Mail::Internet message to the list.
 
 Sends the file to the USER. FILE may only be welcome for now.
 
-=item delete_user ( ARRAY )
+=item delete_list_member ( ARRAY )
 
 Delete the indicated users from the list.
  
@@ -4680,20 +4680,20 @@ sub delete_user_db {
     return $#users + 1;
 }
 
-## Delete the indicate users from the list.
+## Delete the indicate list member 
 ## IN : - ref to array 
 ##      - option exclude
 ##
-## $list->delete_user('users' => \@u, 'exclude' => 1)
-## $list->delete_user('users' => [$email], 'exclude' => 1)
-sub delete_user {
+## $list->delete_list_member('users' => \@u, 'exclude' => 1)
+## $list->delete_list_member('users' => [$email], 'exclude' => 1)
+sub delete_list_member {
     my $self = shift;
     my %param = @_;
     my @u = @{$param{'users'}};
     my $exclude = $param{'exclude'};
     my $parameter = $param{'parameter'};#case of deleting : bounce? manual signoff or deleted by admin?
     my $daemon_name = $param{'daemon'};
-    &do_log('debug2', 'List::delete_user');
+    &do_log('debug2', 'List::delete_list_member');
 
     my $name = $self->{'name'};
     my $total = 0;
@@ -9254,7 +9254,7 @@ sub sync_include {
 	    }else {
 		&do_log('debug3', 'List:sync_include: removing %s from list %s', $email, $name);
 		@deltab = ($email);
-		unless($user_removed = $self->delete_user('users' => \@deltab)) {
+		unless($user_removed = $self->delete_list_member('users' => \@deltab)) {
 		    &do_log('err', 'List:sync_include(%s): Failed to delete %s', $name, $user_removed);
 		    return undef;
 		}
@@ -12050,7 +12050,7 @@ sub close_list {
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
 	push @users, $user->{'email'};
     }
-    $self->delete_user('users' => \@users);
+    $self->delete_list_member('users' => \@users);
 
     ## Remove entries from admin_table
     foreach my $role ('owner','editor') {
@@ -12163,7 +12163,7 @@ sub remove_bouncers {
 	&do_log('notice','Removing bouncing subsrciber of list %s : %s', $self->{'name'}, $bouncer);
     }
 
-    unless ($self->delete_user('users' => $reftab, 'exclude' =>' 1')){
+    unless ($self->delete_list_member('users' => $reftab, 'exclude' =>' 1')){
       &do_log('info','error while calling sub delete_users');
       return undef;
     }

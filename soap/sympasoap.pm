@@ -869,7 +869,7 @@ sub del {
     
     ## Really delete and rewrite to disk.
     my $u;
-    unless ($u = $list->delete_user('users' => [$email], 'exclude' =>' 1')){
+    unless ($u = $list->delete_list_member('users' => [$email], 'exclude' =>' 1')){
 	my $error = "Unable to delete user $email from list $listname for command 'del'";
 	&do_log('info', 'DEL %s %s from %s failed, '.$error);
 	die SOAP::Fault->faultcode('Server')
@@ -1077,7 +1077,7 @@ sub signoff {
 	}
 	
 	## Really delete and rewrite to disk.
-	$list->delete_user('users' => [$sender], 'exclude' =>' 1');
+	$list->delete_list_member('users' => [$sender], 'exclude' =>' 1');
 
 	## Notify the owner
 	if ($action =~ /notify/i) {

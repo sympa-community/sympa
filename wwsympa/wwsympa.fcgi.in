@@ -5161,7 +5161,7 @@ sub do_auto_signoff {
 	 &wwslog('info', 'do_signoff: signoff sent to owner');
 	 return undef;
      }else {
-	     unless ($list->delete_user('users' => [$authenticated_email_address], 'exclude' =>' 1', 'parameter' => 'unsubscription', 'daemon' => 'wwsympa.fcgi')) {
+	     unless ($list->delete_list_member('users' => [$authenticated_email_address], 'exclude' =>' 1', 'parameter' => 'unsubscription', 'daemon' => 'wwsympa.fcgi')) {
 		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
 		 &wwslog('info', 'do_signoff: signoff failed');
 		 &web_db_log({'status' => 'error',
@@ -6256,7 +6256,7 @@ sub do_skinsedit {
 	 }
      }
 
-     $total = $list->delete_user('users' => \@removed_users, 'exclude' =>'1', 'parameter' => 'deleted by admin', 'daemon' => 'wwsympa.fcgi');
+     $total = $list->delete_list_member('users' => \@removed_users, 'exclude' =>'1', 'parameter' => 'deleted by admin', 'daemon' => 'wwsympa.fcgi');
 
      unless( defined $total) {
 	 &report::reject_report_web('intern','delete_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -15146,7 +15146,7 @@ sub do_change_email {
 	 ## Check if user is already member of the list with his new address
 	 ## then we just need to remove the old address
 	 if ($list->is_user($new_email)) {
-	     unless ($list->delete_user('users' => [$old_email]) ) {
+	     unless ($list->delete_list_member('users' => [$old_email]) ) {
 		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$new_email},
 					    $param->{'action'},$list,$old_email,$robot);
 		 &wwslog('info', 'do_change_email: could not remove email from list %s', $l);
@@ -15461,7 +15461,7 @@ sub do_suspend_request_action {
 		return undef;
 	    }
 
-	    $unsub_list->delete_user('users' => [$param->{'user'}{'email'}],'exclude' => 1 ); 
+	    $unsub_list->delete_list_member('users' => [$param->{'user'}{'email'}],'exclude' => 1 ); 
 	}
 	if($lists[0] eq ''){
 	    &report::reject_report_web('user','missing_arg',{'argument' => 'must picked one or more list(s)'}, $param->{'action'});
