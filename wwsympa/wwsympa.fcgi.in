@@ -4232,7 +4232,7 @@ sub do_renewpasswd {
 
      ## Members list
      $count = -1;
-     for (my $i = $list->get_first_user({'sortby' => $sortby, 
+     for (my $i = $list->get_first_list_member({'sortby' => $sortby, 
 					 'offset' => $offset, 
 					 'rows' => $size}); 
 	  $i; $i = $list->get_next_user()) {
@@ -4336,7 +4336,7 @@ sub do_search {
     my $max_select = 50;
     
     ## Members list
-    for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_list_member({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
 	
 	## Search filter
 	next if ($i->{'email'} !~ /$regexp/i
@@ -8851,7 +8851,7 @@ sub do_home {
 
      my @users;
      ## Members list
-     for (my $i = $list->get_first_bouncing_user(); $i; $i = $list->get_next_bouncing_user()) {
+     for (my $i = $list->get_first_bouncing_list_member(); $i; $i = $list->get_next_bouncing_list_member()) {
 	 $i->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 	 $i->{'first_bounce'} = $1;
 	 $i->{'last_bounce'} = $2;
@@ -15173,7 +15173,7 @@ sub do_change_email {
 	 foreach my $list ( &List::get_which($old_email,$robot, $role) ) {
 
 	     ## Check if admin is include via an external datasource
-	     my $admin_user = $list->get_admin_user($role, $old_email);
+	     my $admin_user = $list->get_list_admin($role, $old_email);
 	     if ($admin_user->{'included'}) {
 		 ## Notify listmaster
 		 &List::send_notify_to_listmaster('failed_to_change_included_admin',$robot,{'list' => $list,

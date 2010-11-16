@@ -620,7 +620,7 @@ sub review {
 
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
-	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
+	unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
 	    &report::reject_report_cmd('user','no_subscriber',{'listname' => $listname},$cmd_line); 
 	    &do_log('err', "No subscribers in list '%s'", $list->{'name'});
 	    return 'no_subscribers';
@@ -1601,7 +1601,7 @@ sub remind {
 	    my $total=0;
 	    my $user;
 	    
-	    unless ($user = $list->get_first_user()) {
+	    unless ($user = $list->get_first_list_member()) {
 		my $error = "Unable to get subscribers for list $listname";
 		&report::reject_report_cmd('intern',$error,{'listname'=>$listname},$cmd_line,$sender,$robot);
 		return undef;
@@ -1633,7 +1633,7 @@ sub remind {
 		
 		my $listname = $list->{'name'};
 
-		next unless ($user = $list->get_first_user()) ;
+		next unless ($user = $list->get_first_list_member()) ;
 
 		do {
 		    my $email = lc ($user->{'email'});

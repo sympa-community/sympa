@@ -965,7 +965,7 @@ sub review {
 		&Log::do_log('notice','Unable to synchronize list %s.', $listname);
 	    }
 	}
-	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
+	unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
 	    &Log::do_log('err', "SOAP : no subscribers in list '%s'", $list->{'name'});
 	    push @resultSoap, SOAP::Data->name('result')->type('string')->value('no_subscribers');
 	    return SOAP::Data->name('return')->value(\@resultSoap);

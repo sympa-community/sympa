@@ -998,7 +998,7 @@ sub select_subs {
     my $list = $task->{'list_object'};
     
     if ( $list->{'admin'}{'user_data_source'} =~ /database|file|include2/) {
-        for ( my $user = $list->get_first_user(); $user; $user = $list->get_next_user() ) { 
+        for ( my $user = $list->get_first_list_member(); $user; $user = $list->get_next_user() ) { 
             push (@users, $user);
 	}
     }
@@ -1197,7 +1197,7 @@ sub purge_user_table {
     do_log('debug2','purge_user_table()');
 
     ## Load user_table entries
-    my @users = &List::get_all_user_db();
+    my @users = &List::get_all_global_user();
 
     ## Load known subscribers/owners/editors
     my %known_people;
@@ -1229,7 +1229,7 @@ sub purge_user_table {
 	    }
 	    
 	    ## Subscribers
-	    for (my $user = $list->get_first_user(); $user; $user = $list->get_next_user()) {
+	    for (my $user = $list->get_first_list_member(); $user; $user = $list->get_next_user()) {
 		$known_people{$user->{'email'}} = 1;
 	    }
 	}
@@ -1274,7 +1274,7 @@ sub purge_orphan_bounces {
 	my $listname = $list->{'name'};
 	
 	## first time: loading DB entries into %bounced_users
-	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
+	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
 	    my $user_id = $user_ref->{'email'};
 	    $bounced_users{$listname}{$user_id} = 1;
 	}
@@ -1338,7 +1338,7 @@ sub purge_orphan_bounces {
 	 }
 	 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
 
-	 for (my $u = $list->get_first_bouncing_user(); $u ; $u = $list->get_next_bouncing_user()) {
+	 for (my $u = $list->get_first_bouncing_list_member(); $u ; $u = $list->get_next_bouncing_list_member()) {
 	     $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 	     $u->{'last_bounce'} = $2;
 	     if ($u->{'last_bounce'} < $refdate) {
@@ -1582,7 +1582,7 @@ sub eval_bouncers {
 	close(COUNT);
 	
 	#for each bouncing user
-	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
+	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
 	    my $score = &get_score($user_ref,$list_traffic) || 0;
 	    
 	    ## copying score into DataBase
@@ -1644,7 +1644,7 @@ sub process_bouncers {
 	}
 	
 	##  first, bouncing email are sorted in @bouncer 
-	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()) {	   
+	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()) {	   
 
 	    ## Skip included users (cannot be removed)
 	    next if ($user_ref->{'is_included'});

@@ -95,7 +95,7 @@ Sends the file to the USER. FILE may only be welcome for now.
 
 Delete the indicated users from the list.
  
-=item delete_admin_user ( ROLE, ARRAY )
+=item delete_list_admin ( ROLE, ARRAY )
 
 Delete the indicated admin user with the predefined role from the list.
 
@@ -128,11 +128,11 @@ user.
 
 Returns a subscriber of the list.
 
-=item get_admin_user ( ROLE, USER)
+=item get_list_admin ( ROLE, USER)
 
 Return an admin user of the list with predefined role
 
-=item get_first_user ()
+=item get_first_list_member ()
 
 Returns a hash to the first user on the list.
 
@@ -145,7 +145,7 @@ Returns a hash to the first admin user with predefined role on the list.
 Returns a hash to the next users, until we reach the end of
 the list.
 
-=item get_next_admin_user ()
+=item get_next_list_admin ()
 
 Returns a hash to the next admin users, until we reach the end of
 the list.
@@ -2163,7 +2163,7 @@ sub get_owners {
     my $owners = ();
 
     # owners are in the admin_table ; they might come from an include data source
-    for (my $owner = $self->get_first_admin_user('owner'); $owner; $owner = $self->get_next_admin_user()) {
+    for (my $owner = $self->get_first_admin_user('owner'); $owner; $owner = $self->get_next_list_admin()) {
 	push(@{$owners},$owner);
     } 
 
@@ -2191,7 +2191,7 @@ sub get_editors {
     my $editors = ();
 
     # editors are in the admin_table ; they might come from an include data source
-    for (my $editor = $self->get_first_admin_user('editor'); $editor; $editor = $self->get_next_admin_user()) {
+    for (my $editor = $self->get_first_admin_user('editor'); $editor; $editor = $self->get_next_list_admin()) {
 	push(@{$editors},$editor);
     } 
 
@@ -2810,7 +2810,7 @@ sub send_msg_digest {
     my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
-    for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
+    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user()) {
 	my $options;
 	$options->{'email'} = $user->{'email'};
 	$options->{'name'} = $self->{'name'};
@@ -3268,7 +3268,7 @@ sub send_msg {
     my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
  
-    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user() ){
 	unless ($user->{'email'}) {
 	    &do_log('err','Skipping user with no email address in list %s', $name);
 	    next;
@@ -4745,9 +4745,9 @@ sub delete_list_member {
 
 
 ## Delete the indicated admin users from the list.
-sub delete_admin_user {
+sub delete_list_admin {
     my($self, $role, @u) = @_;
-    do_log('debug2', 'List::delete_admin_user(%s)', $role); 
+    do_log('debug2', '', $role); 
 
     my $name = $self->{'name'};
     my $total = 0;
@@ -4782,8 +4782,8 @@ sub delete_admin_user {
 }
 
 ## Delete all admin_table entries
-sub delete_admin_all {
-    &do_log('debug2', 'List::delete_admin_all()'); 
+sub delete_all_list_admin {
+    &do_log('debug2', ''); 
 	    
     my $total = 0;
     
@@ -4920,8 +4920,8 @@ sub get_user_db {
 }
 
 ## Returns an array of all users in User table hash for a given user
-sub get_all_user_db {
-    do_log('debug2', 'List::get_all_user_db()');
+sub get_all_global_user {
+    do_log('debug2', '');
 
     my $statement;
     my @users;
@@ -5251,14 +5251,14 @@ sub get_ressembling_subscribers_no_object {
     # is subscriber a plused email ?
     if ($local_part =~ /^(.*)\+(.*)$/) {
 
-	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $1.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $1.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
 	    next if ($subscribers_email{$subscriber->{'email'}});
 	    $subscribers_email{$subscriber->{'email'}} = 1;
 	    push @output,$subscriber;
 	}			       
     }
     # is some subscriber ressembling with a plused email ?    
-    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'+%@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+    foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $local_part.'+%@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
     	next if ($subscribers_email{$subscriber->{'email'}});
        $subscribers_email{ $subscriber->{'email'} } = 1;
     	push @output,$subscriber;
@@ -5266,14 +5266,14 @@ sub get_ressembling_subscribers_no_object {
 
     # ressembling local part    
     # try to compare firstname.name@domain with name@domain
-        foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => '%'.$local_part.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+        foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => '%'.$local_part.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
     	next if ($subscribers_email{$subscriber->{'email'}});
     	$subscribers_email{ $subscriber->{'email'} } = 1;
     	push @output,$subscriber;
     }
     
     if ($local_part =~ /^(.*)\.(.*)$/) {
-	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $2.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $2.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
 	    next if ($subscribers_email{$subscriber->{'email'}});
 	    $subscribers_email{ $subscriber->{'email'} } = 1;
 	    push @output,$subscriber;
@@ -5287,14 +5287,14 @@ sub get_ressembling_subscribers_no_object {
 	my $upperdomain = $1;
 	if ($upperdomain =~ /\./) {
             # remove first token if there is still at least 2 tokens try to find a subscriber with that domain
-	    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@'.$upperdomain,'name'=>$listname,'domain'=>$robot})){
+	    foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $local_part.'@'.$upperdomain,'name'=>$listname,'domain'=>$robot})){
 	    	next if ($subscribers_email{$subscriber->{'email'}});
 	    	$subscribers_email{ $subscriber->{'email'} } = 1;
 	    	push @output,$subscriber;
 	    }
 	}
     }
-    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@%'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+    foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $local_part.'@%'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
     	next if ($subscribers_email{$subscriber->{'email'}});
     	$subscribers_email{ $subscriber->{'email'} } = 1;
     	push @output,$subscriber;
@@ -5311,7 +5311,7 @@ sub get_ressembling_subscribers_no_object {
 	if ($name =~ /^([a-z])/){
 	    $initial = $initial.$1;
 	}
-	foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $initial.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
+	foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $initial.'@'.$subscriber_domain,'name'=>$listname,'domain'=>$robot})){
 	    next if ($subscribers_email{$subscriber->{'email'}});
 	    $subscribers_email{ $subscriber->{'email'} } = 1;
 	    push @output,$subscriber;
@@ -5322,7 +5322,7 @@ sub get_ressembling_subscribers_no_object {
 
     #### users in the same local part in any other domain
     #
-    foreach my $subscriber (&find_subscriber_by_pattern_no_object({'email_pattern' => $local_part.'@%','name'=>$listname,'domain'=>$robot})){
+    foreach my $subscriber (&find_list_member_by_pattern_no_object({'email_pattern' => $local_part.'@%','name'=>$listname,'domain'=>$robot})){
 	next if ($subscribers_email{$subscriber->{'email'}});
 	$subscribers_email{ $subscriber->{'email'} } = 1;
 	push @output,$subscriber;
@@ -5335,7 +5335,7 @@ sub get_ressembling_subscribers_no_object {
 
 
 ######################################################################
-###  find_subscriber_by_pattern_no_object                            #
+###  find_list_member_by_pattern_no_object                            #
 ## Get details regarding a subscriber.                               #
 # IN:                                                                #
 #   - a single reference to a hash with the following keys:          #
@@ -5347,7 +5347,7 @@ sub get_ressembling_subscribers_no_object {
 #   - a hash containing the user details otherwise                   #
 ######################################################################
 
-sub find_subscriber_by_pattern_no_object {
+sub find_list_member_by_pattern_no_object {
     my $options = shift;
 
     my $name = $options->{'name'};
@@ -5543,12 +5543,12 @@ sub get_subscriber_by_bounce_address {
 
 
 ## Returns an admin user of the list.
-sub get_admin_user {
+sub get_list_admin {
     my  $self= shift;
     my  $role= shift;
     my  $email = &tools::clean_email(shift);
     
-    do_log('debug2', 'List::get_admin_user(%s,%s)', $role,$email); 
+    do_log('debug2', '(%s,%s)', $role,$email); 
 
     my $name = $self->{'name'};
     my $statement;
@@ -5556,8 +5556,8 @@ sub get_admin_user {
     my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_admin', 'update_admin';	
 
     ## Use session cache
-    if (defined $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email}) {
-	return $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email};
+    if (defined $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$email}) {
+	return $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$email};
     }
 
     ## Check database connection
@@ -5600,7 +5600,7 @@ sub get_admin_user {
     $sth = pop @sth_stack;
     
     ## Set session cache
-    $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$email} = $admin_user;
+    $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$email} = $admin_user;
     
     return $admin_user;
     
@@ -5608,7 +5608,7 @@ sub get_admin_user {
 
 
 ## Returns the first user for the list.
-sub get_first_user {
+sub get_first_list_member {
     my ($self, $data) = @_;
 
     my ($sortby, $offset, $rows, $sql_regexp);
@@ -5626,7 +5626,7 @@ sub get_first_user {
     }
     $lock->set_timeout(10*60); 
 
-    do_log('debug2', 'List::get_first_user(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
+    do_log('debug2', 'List::get_first_list_member(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
         
     ## Get an Shared lock	    
     unless ($lock->lock('read')) {
@@ -5953,7 +5953,7 @@ sub createXMLCustomAttribute {
 }
 
 ## Returns the first admin_user with $role for the list.
-sub get_first_admin_user {
+sub get_first_list_admin {
     my ($self, $role, $data) = @_;
 
     my ($sortby, $offset, $rows, $sql_regexp);
@@ -5965,7 +5965,7 @@ sub get_first_admin_user {
     $sql_regexp = $data->{'sql_regexp'};
     my $fh;
 
-    &do_log('debug2', 'List::get_first_admin_user(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
+    &do_log('debug2', '(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
 
     my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
     unless (defined $lock) {
@@ -6235,7 +6235,7 @@ sub get_next_user {
     do_log('debug2', 'List::get_next_user');
 
     unless (defined $sth) {
-	&do_log('err', 'No handle defined, get_first_user(%s) was not run', $self->{'name'});
+	&do_log('err', 'No handle defined, get_first_list_member(%s) was not run', $self->{'name'});
 	return undef;
     }
     
@@ -6287,13 +6287,13 @@ sub get_next_user {
     return $user;
 }
 
-## Loop for all subsequent admin users with the role defined in get_first_admin_user.
-sub get_next_admin_user {
+## Loop for all subsequent admin users with the role defined in get_first_list_admin.
+sub get_next_list_admin {
     my $self = shift;
-    do_log('debug2', 'List::get_next_admin_user'); 
+    do_log('debug2', ''); 
 
     unless (defined $sth) {
-	&do_log('err','Statement handle not defined in get_next_admin_user for list %s', $self->{'name'});
+	&do_log('err','Statement handle not defined in get_next_list_admin for list %s', $self->{'name'});
 	return undef;
     }
     
@@ -6330,9 +6330,9 @@ sub get_next_admin_user {
 
 
 ## Returns the first bouncing user
-sub get_first_bouncing_user {
+sub get_first_bouncing_list_member {
     my $self = shift;
-    do_log('debug2', 'List::get_first_bouncing_user');
+    do_log('debug2', '');
 
     my $lock = new Lock ($self->{'dir'}.'/include');
     unless (defined $lock) {
@@ -6403,12 +6403,12 @@ sub get_first_bouncing_user {
 }
 
 ## Loop for all subsequent bouncing users.
-sub get_next_bouncing_user {
+sub get_next_bouncing_list_member {
     my $self = shift;
-    do_log('debug2', 'List::get_next_bouncing_user');
+    do_log('debug2', '');
 
     unless (defined $sth) {
-	&do_log('err', 'No handle defined, get_first_bouncing_user(%s) was not run', $self->{'name'});
+	&do_log('err', 'No handle defined, get_first_bouncing_list_member(%s) was not run', $self->{'name'});
 	return undef;
     }
     
@@ -6873,7 +6873,7 @@ sub update_admin_user {
     }
 
     ## Reset session cache
-    $list_cache{'get_admin_user'}{$self->{'domain'}}{$name}{$role}{$who} = undef;
+    $list_cache{'get_list_admin'}{$self->{'domain'}}{$name}{$role}{$who} = undef;
     
     return 1;
 }
@@ -7121,10 +7121,10 @@ sub add_list_member {
 }
 
 
-## Adds a new admin user, no overwrite.
-sub add_admin_user {
+## Adds a new list admin user, no overwrite.
+sub add_list_admin {
     my($self, $role, @new_admin_users) = @_;
-    do_log('debug2', 'List::add_admin_user');
+    do_log('debug2', '');
     
     my $name = $self->{'name'};
     my $total = 0;
@@ -7304,7 +7304,7 @@ sub am_i {
 	    return 1;
 	}
 	
-	my $editor = $self->get_admin_user('editor',$who);
+	my $editor = $self->get_list_admin('editor',$who);
 	
 	if (defined $editor) {
 	    return 1;
@@ -7314,7 +7314,7 @@ sub am_i {
 	    if ($#{$editors} < 0) {
 		
 		# if no editor defined, owners has editor privilege
-		$editor = $self->get_admin_user('owner',$who);
+		$editor = $self->get_list_admin('owner',$who);
 		if (defined $editor){
 		    ## Update cache
 		    $list_cache{'am_i'}{'editor'}{$self->{'domain'}}{$self->{'name'}}{$who} = 1;
@@ -7332,7 +7332,7 @@ sub am_i {
     }
     ## Check owners
     if ($function =~ /^owner$/i){
-	my $owner = $self->get_admin_user('owner',$who);
+	my $owner = $self->get_list_admin('owner',$who);
 	if (defined $owner) {		    
 	    ## Update cache
 	    $list_cache{'am_i'}{'owner'}{$self->{'domain'}}{$self->{'name'}}{$who} = 1;
@@ -7346,7 +7346,7 @@ sub am_i {
 	    return undef;
 	}
     }elsif ($function =~ /^privileged_owner$/i) {
-	my $privileged = $self->get_admin_user('owner',$who);
+	my $privileged = $self->get_list_admin('owner',$who);
 	if ($privileged->{'profile'} eq 'privileged') {
 	    
 	    ## Update cache
@@ -8055,7 +8055,7 @@ sub _include_users_list {
     
     my $id = Datasource::_get_datasource_id($includelistname);
 
-    for (my $user = $includelist->get_first_user(); $user; $user = $includelist->get_next_user()) {
+    for (my $user = $includelist->get_first_list_member(); $user; $user = $includelist->get_next_user()) {
 	my %u;
 
 	## Check if user has already been included
@@ -9169,7 +9169,7 @@ sub sync_include {
     my $errors_occurred=0;
 
     ## Load a hash with the old subscribers
-    for (my $user=$self->get_first_user(); $user; $user=$self->get_next_user()) {
+    for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_user()) {
 	$old_subscribers{lc($user->{'email'})} = $user;
 	
 	## User neither included nor subscribed = > set subscribed to 1 
@@ -9398,7 +9398,7 @@ sub sync_include_admin {
     foreach my $role ('owner','editor'){
 	my $old_admin_users = {};
         ## Load a hash with the old admin users
-	for (my $admin_user=$self->get_first_admin_user($role); $admin_user; $admin_user=$self->get_next_admin_user()) {
+	for (my $admin_user=$self->get_first_list_admin($role); $admin_user; $admin_user=$self->get_next_list_admin()) {
 	    $old_admin_users->{lc($admin_user->{'email'})} = $admin_user;
 	}
 	
@@ -9573,7 +9573,7 @@ sub sync_include_admin {
 	}
 	
 	if ($#add_tab >= 0) {
-	    unless( $admin_users_added = $self->add_admin_user($role,@add_tab ) ) {
+	    unless( $admin_users_added = $self->add_list_admin($role,@add_tab ) ) {
 		&do_log('err', 'List:sync_include_admin(%s): Failed to add new %ss',  $role, $name);
 		return undef;
 	    }
@@ -9598,7 +9598,7 @@ sub sync_include_admin {
 	}
 	
 	if ($#deltab >= 0) {
-	    unless($admin_users_removed = $self->delete_admin_user($role,@deltab)) {
+	    unless($admin_users_removed = $self->delete_list_admin($role,@deltab)) {
 		&do_log('err', 'List:sync_include_admin(%s): Failed to delete %s %s',
 			$name, $role, $admin_users_removed);
 		return undef;
@@ -9769,7 +9769,7 @@ sub _save_users_file {
     rename("$file", "$file.old");
     open SUB, "> $file" or return undef;
     
-    for ($s = $self->get_first_user(); $s; $s = $self->get_next_user()) {
+    for ($s = $self->get_first_list_member(); $s; $s = $self->get_next_user()) {
 	foreach $k ('date','update_date','email','gecos','reception','visibility') {
 	    printf SUB "%s %s\n", $k, $s->{$k} unless ($s->{$k} eq '');
 	    
@@ -11564,7 +11564,7 @@ sub modifying_msg_topic_for_subscribers(){
 
     if ($#{$msg_topic_changes->{'deleted'}} >= 0) {
 	
-	for (my $subscriber=$self->get_first_user(); $subscriber; $subscriber=$self->get_next_user()) {
+	for (my $subscriber=$self->get_first_list_member(); $subscriber; $subscriber=$self->get_next_user()) {
 	    
 	    if ($subscriber->{'reception'} eq 'mail') {
 		my $topics = &tools::diff_on_arrays($msg_topic_changes->{'deleted'},&tools::get_array_from_splitted_string($subscriber->{'topics'}));
@@ -12047,7 +12047,7 @@ sub close_list {
 
     ## Delete users
     my @users;
-    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user() ){
 	push @users, $user->{'email'};
     }
     $self->delete_list_member('users' => \@users);
@@ -12055,10 +12055,10 @@ sub close_list {
     ## Remove entries from admin_table
     foreach my $role ('owner','editor') {
 	my @admin_users;
-	for ( my $user = $self->get_first_admin_user($role); $user; $user = $self->get_next_admin_user() ){
+	for ( my $user = $self->get_first_list_admin($role); $user; $user = $self->get_next_list_admin() ){
 	    push @admin_users, $user->{'email'};
 	}
-	$self->delete_admin_user($role, @admin_users);
+	$self->delete_list_admin($role, @admin_users);
     }
 
     ## Change status & save config

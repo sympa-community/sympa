@@ -332,7 +332,7 @@ sub upgrade {
 
     ## Empty the admin_table entries and recreate them
     &do_log('notice','Rebuilding the admin_table...');
-    &List::delete_admin_all();
+    &List::delete_all_list_admin();
     foreach my $list (@$all_lists) {
 	$list->sync_include_admin();
     }
