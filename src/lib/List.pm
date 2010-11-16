@@ -4284,13 +4284,13 @@ sub send_notify_to_owner {
 }
 
 #########################
-## Delete a pictures file
+## Delete a member's picture file
 #########################
 # remove picture from user $2 in list $1 
 #########################
-sub delete_user_picture {
+sub delete_list_member_picture {
     my ($self,$email) = @_;    
-    do_log('debug2', 'delete_user_picture(%s)', $email);
+    do_log('debug2', '(%s)', $email);
     
     my $fullfilename = undef;
     my $filename = &tools::md5_fingerprint($email);
@@ -4307,11 +4307,11 @@ sub delete_user_picture {
     
     if (defined $fullfilename) {
 	unless(unlink($fullfilename)) {
-	    do_log('err', 'delete_user_picture() : Failed to delete '.$fullfilename);
+	    do_log('err', 'Failed to delete '.$fullfilename);
 	    return undef;  
 	}
 
-	do_log('notice', 'delete_user_picture() : File deleted successfull '.$fullfilename);
+	do_log('notice', 'File deleted successfull '.$fullfilename);
     }
 
     return 1;
@@ -4738,7 +4738,7 @@ sub delete_list_member {
 
     $self->{'total'} += $total;
     $self->savestats();
-    &delete_user_picture($self,shift(@u));
+    &delete_list_member_picture($self,shift(@u));
     return (-1 * $total);
 
 }

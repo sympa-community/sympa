@@ -15004,7 +15004,7 @@ sub do_delete_pictures {
  	return 'suboptions';
     }
     
-    unless($list->delete_user_picture($email)) { 
+    unless($list->delete_list_member_picture($email)) { 
  	&report::reject_report_web('intern','erase_file',{'file' => &tools::pictures_filename('email' => $email, 'list' => $list)},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
  	&wwslog('err',"do_delete_pictures : Failed to erase ".&tools::pictures_filename('email' => $email, 'list' => $list));
  	return undef;  
