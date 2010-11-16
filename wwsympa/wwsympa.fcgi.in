@@ -4827,7 +4827,7 @@ sub do_subscribe {
 		$u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
 		$u->{'parameter'} = 'manual subscription';
 		
-		unless ($list->add_user($u)) {
+		unless ($list->add_list_member($u)) {
 		    &report::reject_report_web('intern','add_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 		    &wwslog('info', 'do_subscribe: subscribe failed');
 		    &web_db_log({'parameters' => $in{'email'},
@@ -6144,7 +6144,7 @@ sub do_skinsedit {
 	 }
      }
      
-     $total = $list->add_user(@new_users);
+     $total = $list->add_list_member(@new_users);
      unless( defined $total) {
 	 &report::reject_report_web('intern','add_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_add: failed adding');
@@ -9557,7 +9557,7 @@ sub do_edit_list {
 	    
 	    ## Insert users in database
 	    foreach my $user (@users) {
-		$list->add_user($user);
+		$list->add_list_member($user);
 	    }
 	    
 	    $list->get_total();
@@ -10533,7 +10533,7 @@ sub do_purge_list {
 
 	 ## Insert users in database
 	 foreach my $user (@users) {
-	     $list->add_user($user);
+	     $list->add_list_member($user);
 	 }
      }
 

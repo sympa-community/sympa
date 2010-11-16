@@ -470,7 +470,7 @@ if ($main::options{'dump'}) {
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos;
 
-	unless ($list->add_user($u)) {
+	unless ($list->add_list_member($u)) {
 	    printf STDERR "\nCould not add %s\n", $email;
 	    next;
 	}

@@ -831,7 +831,7 @@ sub subscribe {
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
 
-	    unless ($list->add_user($u)){
+	    unless ($list->add_list_member($u)){
 		my $error = "Unable to add user $user in list $listname";
 		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 		return undef; 
@@ -1271,7 +1271,7 @@ sub add {
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
 	    
-	    unless ($list->add_user($u)) {
+	    unless ($list->add_list_member($u)) {
 		my $error = "Unable to add user $user in list $listname";
 		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 		return undef; 

@@ -158,7 +158,7 @@ Sets the new values given in the hash for the user.
 
 Sets the new values given in the hash for the admin user.
 
-=item add_user ( USER, HASHPTR )
+=item add_list_member ( USER, HASHPTR )
 
 Adds a new user to the list. May overwrite existing
 entries.
@@ -7021,10 +7021,10 @@ sub add_user_db {
     return 1;
 }
 
-## Adds a new user, no overwrite.
-sub add_user {
+## Adds a list member ; no overwrite.
+sub add_list_member {
     my($self, @new_users, $daemon) = @_;
-    &do_log('debug2', 'List::add_user');
+    &do_log('debug2', '%s', $self->{'name'});
     
     my $name = $self->{'name'};
     my $total = 0;
@@ -7048,7 +7048,7 @@ sub add_user {
 	
 	my %custom_attr = %{ $subscriptions->{$who}{'custom_attribute'} } if (defined $subscriptions->{$who}{'custom_attribute'} );
 	$new_user->{'custom_attribute'} ||= &createXMLCustomAttribute(\%custom_attr) ;
-	do_log('debug2', 'List::add_user custom_attribute = %s', $new_user->{'custom_attribute'});
+	do_log('debug2', 'custom_attribute = %s', $new_user->{'custom_attribute'});
 
 	my $date_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
 	my $update_field = sprintf $date_format{'write'}{$Conf::Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
@@ -9328,7 +9328,7 @@ sub sync_include {
 	    $u->{'date'} = time;
 	    @add_tab = ($u);
 	    my $user_added = 0;
-	    unless( $user_added = $self->add_user( @add_tab ) ) {
+	    unless( $user_added = $self->add_list_member( @add_tab ) ) {
 		&do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
 		return undef;
 	    }

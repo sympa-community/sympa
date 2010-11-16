@@ -753,7 +753,7 @@ sub add {
 	$u->{'gecos'} = $gecos;
 	$u->{'date'} = $u->{'update_date'} = time;
 	
-	unless ($list->add_user($u)) {
+	unless ($list->add_list_member($u)) {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
 	    my $error = "Unable to add user $email in list $listname";
 	    die SOAP::Fault->faultcode('Server')
@@ -1221,7 +1221,7 @@ sub subscribe {
 	  die SOAP::Fault->faultcode('Server')
 	      ->faultstring('Undef')
 		  ->faultdetail("SOAP subscribe : add user failed")
-		      unless $list->add_user($u);
+		      unless $list->add_list_member($u);
       }
       
       if ($List::use_db) {

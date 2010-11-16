@@ -2439,7 +2439,7 @@ Sets changes (loads the users, installs or removes the aliases); deals with the 
 
 =item * admin::remove_aliases
 
-=item * List::add_user
+=item * List::add_list_member
 
 =item * List::_load_users_file
 
@@ -2503,7 +2503,7 @@ sub _set_status_changes {
 	    
 	    ## Insert users in database
 	    foreach my $user (@users) {
-		$list->add_user($user);
+		$list->add_list_member($user);
 	    }
 	}
     }

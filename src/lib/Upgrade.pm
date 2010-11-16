@@ -849,7 +849,7 @@ sub upgrade {
 		$list->{'total'} = 0;
 		
 		## Add users to the DB
-		my $total = $list->add_user(@users);
+		my $total = $list->add_list_member(@users);
 		unless (defined $total) {
 		    &do_log('err', 'Failed to add users');
 		    next;
