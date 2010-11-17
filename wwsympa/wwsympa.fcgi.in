@@ -2910,7 +2910,7 @@ sub do_ticket {
 	    $param->{'user'}{'email'} =  $session->{'email'} ;
 	    $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
 	    $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
-	    &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+	    &List::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
 	}elsif($param->{'ticket_context'}{'result'} eq 'closed'){
 	    &wwslog('info', 'do_ticket(%s) : Refusing to perform login because the ticket has been used before', $in{'ticket'});
 	    return 1;
@@ -3036,7 +3036,7 @@ sub do_ticket {
      $session->{'email'} = $email;
      $session->{'unauthenticated_email'} = '';
 
-     &List::update_user_db($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip, wrong_login_count =>0}) ;
+     &List::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip, wrong_login_count =>0}) ;
      
      ## Set alt_email
      if ($data->{'alt_emails'}) {
@@ -3062,7 +3062,7 @@ sub do_ticket {
 
 
      if ($session->{'lang'}) {   #  user did choose a specific language before being logged. Apply it as a user pref.
-	 &List::update_user_db($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
+	 &List::update_global_user($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
 	 $param->{'lang'} = $session->{'lang'};
      }else{                      # user did not choose a specific language, apply user pref for this session. 
 	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
@@ -3070,11 +3070,11 @@ sub do_ticket {
      }
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
-	 &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }
 
      if ($session->{'shared_mode'}) {   #  user did choose a shared expert/standard mode
-	 &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }    
 
      if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
@@ -3385,7 +3385,7 @@ sub do_sso_login {
 	    }
 	}
 	
-	unless (&List::update_user_db($email,
+	unless (&List::update_global_user($email,
 				      {'attributes' => $all_sso_attr })) {
 	    &report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
 	    &wwslog('info','do_sso_login: update failed');
@@ -3677,7 +3677,7 @@ sub sendssopasswd {
 	
 	## Create a password if none
 	unless ($param->{'newuser'}{'password'}) {
-	    unless ( &List::update_user_db($email,
+	    unless ( &List::update_global_user($email,
 					   {'password' => &tools::tmp_passwd($email) 
 					    })) {
 		&report::reject_report_web('intern','db_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -4177,7 +4177,7 @@ sub do_renewpasswd {
 	 if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
 	     # update user pref  as soon as connected user change page size
 	     $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};	     
-	     &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	     &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	 }
      }else{
 	 $size = $param->{'user'}{'prefs'}{'review_page_size'} || $session->{'review_page_size'} || $wwsconf->{'review_page_size'};
@@ -4591,7 +4591,7 @@ sub do_pref {
      }
      $update->{'custom_attribute'} = $xml_custom_attribute if $xml_custom_attribute;
 
-     unless ( $list->update_user($email, $update) ) {
+     unless ( $list->update_list_member($email, $update) ) {
 	 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info', 'do_set: set failed');
 	 &web_db_log({'parameters' => "$email,$update",
@@ -4665,7 +4665,7 @@ sub check_custom_attribute {
 
      if (&List::is_global_user($param->{'user'}{'email'})) {
 
-	 unless (&List::update_user_db($param->{'user'}{'email'}, $changes)) {
+	 unless (&List::update_global_user($param->{'user'}{'email'}, $changes)) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_pref: update failed');
 	     &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
@@ -4805,7 +4805,7 @@ sub do_subscribe {
 	    return 'info';
 	}elsif ($sub_is =~ /do_it/) {
 	    if ($param->{'is_subscriber'}) {
-		unless ($list->update_user($param->{'user'}{'email'}, 
+		unless ($list->update_list_member($param->{'user'}{'email'}, 
 					   {'subscribed' => 1,
 					    'update_date' => time})) {
 		    &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -5256,7 +5256,7 @@ sub do_auto_signoff {
 
      if (&List::is_global_user($param->{'user'}{'email'})) {
 
-	 unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
+	 unless ( &List::update_global_user($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_setpasswd: update failed');
 	     &web_db_log({'status' => 'error',
@@ -7255,7 +7255,7 @@ sub do_arc {
 	    if ($param->{'user'}{'prefs'}{'arc_mode'} ne $session->{'arc_mode'}) {
 		# update user pref  as soon as connected user change the way he consult archives
 		$param->{'user'}{'prefs'}{'arc_mode'} = $session->{'arc_mode'}; 
-		&List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+		&List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	    }
 	}
 	
@@ -8923,7 +8923,7 @@ sub do_home {
 	     return undef;
 	 }
 
-	 unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time, 'score' => 0})) {
+	 unless( $list->update_list_member($email, {'bounce' => 'NULL', 'update_date' => time, 'score' => 0})) {
 	     &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=> $email},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_resetbounce: failed update database for %s', $email);
 	     &web_db_log({'status' => 'error',
@@ -9427,7 +9427,7 @@ sub do_edit_list {
     }
 
     ## For changed msg_topic.name
-    if (defined $new_admin->{'msg_topic'} && $list->modifying_msg_topic_for_subscribers($new_admin->{'msg_topic'})) {
+    if (defined $new_admin->{'msg_topic'} && $list->modifying_msg_topic_for_list_members($new_admin->{'msg_topic'})) {
 	&report::notice_report_web('subscribers_noticed_deleted_topics',{},$param->{'action'});
     }
 
@@ -9531,7 +9531,7 @@ sub do_edit_list {
 		@users = &List::_load_list_members_file("$list->{'dir'}/subscribers");
 	    }elsif (($list->{'admin'}{'user_data_source'} ne 'include2') &&
 		    ($new_admin->{'user_data_source'} eq 'include2')) {
-		$list->update_user('*', {'subscribed' => 1});
+		$list->update_list_member('*', {'subscribed' => 1});
 		&report::notice_report_web('subscribers_updated_soon',{},$param->{'action'});
 	    }elsif (($list->{'admin'}{'user_data_source'} eq 'include2') &&
 		    ($new_admin->{'user_data_source'} eq 'database')) {
@@ -11538,7 +11538,7 @@ sub do_d_read {
       if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
 	# update user pref  as soon as connected user change shared mode
 	$param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-	&List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	&List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
       }
       $param->{'expert_page'} = 1;
  
@@ -11547,7 +11547,7 @@ sub do_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 0;
     } else {
@@ -15155,7 +15155,7 @@ sub do_change_email {
 	     
 	 }else {
 	     
-	     unless ($list->update_user($old_email, {'email' => $new_email, 'update_date' => time}) ) {
+	     unless ($list->update_list_member($old_email, {'email' => $new_email, 'update_date' => time}) ) {
 		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$new_email},
 										    'old_email' => $old_email,
 					    $param->{'action'},$list,$old_email,$robot);
@@ -15213,7 +15213,7 @@ sub do_change_email {
      ## Update User_table and remove existing entry first (to avoid duplicate entries)
      &List::delete_global_user($new_email,);
      
-     unless ( &List::update_user_db($old_email,
+     unless ( &List::update_global_user($old_email,
 				    {'email' => $new_email,
 				   
 				 })) {
@@ -15919,7 +15919,7 @@ sub do_send_mail {
 
      if ($param->{'user'}{'email'}) {
 	 if (&List::is_global_user($param->{'user'}{'email'})) {
-	     unless (&List::update_user_db($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
+	     unless (&List::update_global_user($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
 		  &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		  &wwslog('info','do_set_lang: update failed');
 		  &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'lang'}",'target_email' => "$param->{'user'}{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
@@ -17102,7 +17102,7 @@ sub new_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 1;
  
@@ -17111,7 +17111,7 @@ sub new_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-	  &List::update_user_db($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 0;
     } else {

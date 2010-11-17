@@ -889,13 +889,13 @@ sub update_subscriber_bounce_history {
     if ($rcpt ne $bouncefor) {
 	&do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
 	&do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
-	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status",
+	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
 	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce','parameters' => "address=$rcpt",
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
     }else{
-	$list->update_user($bouncefor,{'bounce' => "$first $last $count $status"});
+	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status"});
 	&do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list->{'name'});
 	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce',
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,

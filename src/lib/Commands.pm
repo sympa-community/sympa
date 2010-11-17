@@ -817,7 +817,7 @@ sub subscribe {
 		$user->{'gecos'} = $comment if $comment;
 	    $user->{'subscribed'} = 1;
 	    
-	    unless ($list->update_user($sender, $user)){
+	    unless ($list->update_list_member($sender, $user)){
 		my $error = "Unable to update user $user in list $listname";
 		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 		return undef; 
@@ -841,7 +841,7 @@ sub subscribe {
 	if ($List::use_db) {
 	    my $u = &List::get_global_user($sender);
 	    
-	    &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
+	    &List::update_global_user($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 					    'password' => $u->{'password'} || &tools::tmp_passwd($sender)
 					    });
 	}
@@ -1283,7 +1283,7 @@ sub add {
 	if ($List::use_db) {
 	    my $u = &List::get_global_user($email);
 	    
-	    &List::update_user_db($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
+	    &List::update_global_user($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 					   'password' => $u->{'password'} || &tools::tmp_passwd($email)
 					    });
 	}
@@ -1950,7 +1950,7 @@ sub set {
 
 	my $update_mode = $mode;
 	$update_mode = '' if ($update_mode eq 'mail');
-	unless ($list->update_user($sender,{'reception'=> $update_mode, 'update_date' => time})) {
+	unless ($list->update_list_member($sender,{'reception'=> $update_mode, 'update_date' => time})) {
 	    my $error = "Failed to change subscriber '$sender' options for list $which";
 	    &report::reject_report_cmd('intern',$error,{'listname' => $which},$cmd_line,$sender,$robot);
 	    &do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
@@ -1963,7 +1963,7 @@ sub set {
     }
     
     if ($mode =~ /^(conceal|noconceal)/){
-	unless ($list->update_user($sender,{'visibility'=> $mode, 'update_date' => time})) {
+	unless ($list->update_list_member($sender,{'visibility'=> $mode, 'update_date' => time})) {
 	    my $error = "Failed to change subscriber '$sender' options for list $which";
 	    &report::reject_report_cmd('intern',$error,{'listname' => $which},$cmd_line,$sender,$robot);
 	    &do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);

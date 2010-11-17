@@ -1349,7 +1349,7 @@ sub purge_orphan_bounces {
 		     next;
 		 }
 
-		 unless( $list->update_user($email, {'bounce' => 'NULL'},{'bounce_address' => 'NULL'})) {
+		 unless( $list->update_list_member($email, {'bounce' => 'NULL'},{'bounce_address' => 'NULL'})) {
 		     do_log('info','expire_bounce: failed update database for %s', $email);
 		     next;
 		 }
@@ -1586,7 +1586,7 @@ sub eval_bouncers {
 	    my $score = &get_score($user_ref,$list_traffic) || 0;
 	    
 	    ## copying score into DataBase
-	    unless ($list->update_user($user_ref->{'email'},{'score' => $score }) ) {
+	    unless ($list->update_list_member($user_ref->{'email'},{'score' => $score }) ) {
 		&do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
 		next;
 	    }

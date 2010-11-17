@@ -765,7 +765,7 @@ sub add {
     
     if ($List::use_db) {
 	my $u = &List::get_global_user($email);	
-	&List::update_user_db($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
+	&List::update_global_user($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 				       'password' => $u->{'password'} || &tools::tmp_passwd($email)
 				       });
     }
@@ -1208,7 +1208,7 @@ sub subscribe {
 	  die SOAP::Fault->faultcode('Server')
 	      ->faultstring('Undef.')
 		  ->faultdetail("SOAP subscribe : update user failed")
-		      unless $list->update_user($sender, $user);
+		      unless $list->update_list_member($sender, $user);
       }else {
 	  
 	  my $u;
@@ -1227,7 +1227,7 @@ sub subscribe {
       if ($List::use_db) {
 	  my $u = &List::get_global_user($sender);
 	  
-	  &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'}
+	  &List::update_global_user($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'}
 					  });
       }
       

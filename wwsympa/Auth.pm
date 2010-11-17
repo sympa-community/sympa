@@ -119,7 +119,7 @@ sub authentication {
     
     if ($user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
 	# too many wrong login attemp
-	&List::update_user_db($email,{wrong_login_count => $user->{'wrong_login_count'}+1}) ;
+	&List::update_global_user($email,{wrong_login_count => $user->{'wrong_login_count'}+1}) ;
 	&report::reject_report_web('user','too_many_wrong_login',{}) unless ($ENV{'SYMPA_SOAP'});
 	&do_log('err','login is blocked : too many wrong password submission for %s', $email);
 	return undef;
@@ -135,7 +135,7 @@ sub authentication {
 	    my $fingerprint = &password_fingerprint ($pwd);	    	    
 	    
 	    if ($fingerprint eq $user->{'password'}) {
-		&List::update_user_db($email,{wrong_login_count => 0}) ;
+		&List::update_global_user($email,{wrong_login_count => 0}) ;
 		return {'user' => $user,
 			'auth' => 'classic',
 			'alt_emails' => {$email => 'classic'}
@@ -146,7 +146,7 @@ sub authentication {
 		unless($user = &List::get_global_user($canonic)){
 		    $user = {'email' => $canonic};
 		}
-		&List::update_user_db($canonic,{wrong_login_count => 0}) ;
+		&List::update_global_user($canonic,{wrong_login_count => 0}) ;
 		return {'user' => $user,
 			'auth' => 'ldap',
 			'alt_emails' => {$email => 'ldap'}
@@ -156,7 +156,7 @@ sub authentication {
     }
 
     # increment wrong login count.
-    &List::update_user_db($email,{wrong_login_count =>$user->{'wrong_login_count'}+1}) ;
+    &List::update_global_user($email,{wrong_login_count =>$user->{'wrong_login_count'}+1}) ;
 
     &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
     &do_log('err','authentication: incorrect password for user %s', $email);

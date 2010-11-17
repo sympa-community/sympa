@@ -150,11 +150,11 @@ the list.
 Returns a hash to the next admin users, until we reach the end of
 the list.
 
-=item update_user ( USER, HASHPTR )
+=item update_list_member ( USER, HASHPTR )
 
 Sets the new values given in the hash for the user.
 
-=item update_admin_user ( USER, ROLE, HASHPTR )
+=item update_list_admin ( USER, ROLE, HASHPTR )
 
 Sets the new values given in the hash for the admin user.
 
@@ -1841,7 +1841,7 @@ sub dump {
 
     my $user_file_name = "$self->{'dir'}/subscribers.db.dump";
 
-    unless ($self->_save_users_file($user_file_name)) {
+    unless ($self->_save_list_members_file($user_file_name)) {
 	&do_log('err', 'Failed to save file %s', $user_file_name);
 	return undef;
     }
@@ -1883,7 +1883,7 @@ sub save_config {
 				  'date' => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time)),
 				  };
 
-    unless (&_save_admin_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
+    unless (&_save_list_config_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
 	$lock->unlock();
 	return undef;
@@ -3443,8 +3443,8 @@ sub send_msg {
 	my @selected_tabrcpt;
 	my @possible_verptabrcpt;
 	if ($self->is_there_msg_topic()){
-	    @selected_tabrcpt = $self->select_subscribers_for_topic($new_message->get_topic(),$available_rcpt->{$array_name});
-	    @possible_verptabrcpt = $self->select_subscribers_for_topic($new_message->get_topic(),$available_verp_rcpt->{$array_name});
+	    @selected_tabrcpt = $self->select_list_members_for_topic($new_message->get_topic(),$available_rcpt->{$array_name});
+	    @possible_verptabrcpt = $self->select_list_members_for_topic($new_message->get_topic(),$available_verp_rcpt->{$array_name});
 	} else {
 	    @selected_tabrcpt = @{$available_rcpt->{$array_name}};
 	    @possible_verptabrcpt = @{$available_verp_rcpt->{$array_name}};
@@ -6470,9 +6470,9 @@ sub is_list_member {
 }
 
 ## Sets new values for the given user (except gecos)
-sub update_user {
+sub update_list_member {
     my($self, $who, $values) = @_;
-    do_log('debug2', 'List::update_user(%s)', $who);
+    do_log('debug2', '(%s)', $who);
     $who = &tools::clean_email($who);    
 
     my ($field, $value);
@@ -6541,7 +6541,7 @@ sub update_user {
     ## custom attributes
     if (defined $Conf::Conf{'custom_attribute'}){
 	foreach my $f (sort keys %{$Conf::Conf{'custom_attribute'}}){
-	    do_log('debug2', "List::update_user custom_attribute id: $Conf::Conf{'custom_attribute'}{id} name: $Conf::Conf{'custom_attribute'}{name} type: $Conf::Conf{'custom_attribute'}{type} ");
+	    do_log('debug2', "custom_attribute id: $Conf::Conf{'custom_attribute'}{id} name: $Conf::Conf{'custom_attribute'}{name} type: $Conf::Conf{'custom_attribute'}{type} ");
 	    	
 	}
     }
@@ -6634,9 +6634,9 @@ sub update_user {
 
 
 ## Sets new values for the given admin user (except gecos)
-sub update_admin_user {
+sub update_list_admin {
     my($self, $who,$role, $values) = @_;
-    do_log('debug2', 'List::update_admin_user(%s,%s)', $role, $who); 
+    do_log('debug2', '(%s,%s)', $role, $who); 
     $who = &tools::clean_email($who);    
 
     my ($field, $value);
@@ -6761,9 +6761,9 @@ sub update_admin_user {
 
 
 ## Sets new values for the given user in the Database
-sub update_user_db {
+sub update_global_user {
     my($who, $values) = @_;
-    do_log('debug', 'List::update_user_db(%s)', $who);
+    do_log('debug', '(%s)', $who);
 
     $who = &tools::clean_email($who);
 
@@ -6825,7 +6825,7 @@ sub update_user_db {
     $statement = sprintf "UPDATE user_table SET %s WHERE (email_user=%s)"
 	    , join(',', @set_list), $dbh->quote($who); 
     
-    do_log('debug3', 'List::update_user_db()   statement : %s', $statement);
+    do_log('debug3', 'statement : %s', $statement);
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
@@ -8464,7 +8464,7 @@ sub _include_users_sql {
 }
 
 ## Loads the list of subscribers from an external include source
-sub _load_users_include2 {
+sub _load_list_members_from_include {
     my $self = shift;
     my $name = $self->{'name'}; 
     my $admin = $self->{'admin'};
@@ -8860,7 +8860,7 @@ sub sync_include {
 	## User neither included nor subscribed = > set subscribed to 1 
 	unless ($old_subscribers{lc($user->{'email'})}{'included'} || $old_subscribers{lc($user->{'email'})}{'subscribed'}) {
 	    &do_log('notice','Update user %s neither included nor subscribed', $user->{'email'});
-	    unless( $self->update_user(lc($user->{'email'}),  {'update_date' => time,
+	    unless( $self->update_list_member(lc($user->{'email'}),  {'update_date' => time,
 							       'subscribed' => 1 }) ) {
 		&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, lc($user->{'email'}));
 		next;
@@ -8874,7 +8874,7 @@ sub sync_include {
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
-	my $result = $self->_load_users_include2();
+	my $result = $self->_load_list_members_from_include();
 	$new_subscribers = $result->{'users'};
 	my $tmp_errors = $result->{'errors'};
 	my @errors = @$tmp_errors;
@@ -8926,7 +8926,7 @@ sub sync_include {
 	    ## User is also subscribed, update DB entry
 	    if ($old_subscribers{$email}{'subscribed'}) {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		unless( $self->update_user($email,  {'update_date' => time,
+		unless( $self->update_list_member($email,  {'update_date' => time,
 						     'included' => 0,
 						     'id' => ''}) ) {
 		    &do_log('err', 'List:sync_include(%s): Failed to update %s',  $name, $email);
@@ -8971,7 +8971,7 @@ sub sync_include {
 	      foreach my $attribute ('id','gecos') {
 		if ($old_subscribers{$email}{$attribute} ne $new_subscribers->{$email}{$attribute}) {
 		  &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		  unless( $self->update_user($email,  {'update_date' => time,
+		  unless( $self->update_list_member($email,  {'update_date' => time,
 						       $attribute => $new_subscribers->{$email}{$attribute} }) ) {
 		    &do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
 		    next;
@@ -8982,7 +8982,7 @@ sub sync_include {
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		unless( $self->update_user($email,  {'update_date' => time,
+		unless( $self->update_list_member($email,  {'update_date' => time,
 						     'included' => 1,
 						     'id' => $new_subscribers->{$email}{'id'} }) ) {
 		    &do_log('err', 'List:sync_include(%s): Failed to update %s',
@@ -9155,7 +9155,7 @@ sub sync_include_admin {
 			    &do_log('debug', 'List:sync_include_admin : updating %s %s to list %s',$role, $email, $name);
 			    $param_update->{'update_date'} = time;
 			    
-			    unless ($self->update_admin_user($email, $role,$param_update)) {
+			    unless ($self->update_list_admin($email, $role,$param_update)) {
 				&do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name,$role,$email);
 				next;
 			    }
@@ -9199,7 +9199,7 @@ sub sync_include_admin {
 			    &do_log('debug', 'List:sync_include_admin : updating %s %s to list %s', $role, $email, $name);
 			    $param_update->{'update_date'} = time;
 			    
-			    unless ($self->update_admin_user($email, $role,$param_update)) {
+			    unless ($self->update_list_admin($email, $role,$param_update)) {
 				&do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name, $role,$email);
 				next;
 			    }
@@ -9238,7 +9238,7 @@ sub sync_include_admin {
 			&do_log('debug', 'List:sync_include_admin : updating %s %s to list %s', $role, $email, $name);
 			$param_update->{'update_date'} = time;
 			
-			unless ($self->update_admin_user($email, $role,$param_update)) {
+			unless ($self->update_list_admin($email, $role,$param_update)) {
 			    &do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name, $role, $email);
 			    next;
 			}
@@ -9443,9 +9443,9 @@ sub _save_stats_file {
 }
 
 ## Writes the user list to disk
-sub _save_users_file {
+sub _save_list_members_file {
     my($self, $file) = @_;
-    do_log('debug3', 'List::_save_users_file(%s)', $file);
+    do_log('debug3', '(%s)', $file);
     
     my($k, $s);
     
@@ -10818,9 +10818,9 @@ sub _load_list_config_file {
 }
 
 ## Save a config file
-sub _save_admin_file {
+sub _save_list_config_file {
     my ($config_file, $old_config_file, $admin) = @_;
-    do_log('debug3', 'List::_save_admin_file(%s, %s, %s)', $config_file,$old_config_file, $admin);
+    do_log('debug3', '(%s, %s, %s)', $config_file,$old_config_file, $admin);
 
     unless (rename $config_file, $old_config_file) {
 	&do_log('notice', 'Cannot rename %s to %s', $config_file, $old_config_file);
@@ -11231,7 +11231,7 @@ sub load_msg_topic_file {
 
 
 ####################################################
-# modifying_msg_topic_for_subscribers()
+# modifying_msg_topic_for_list_members()
 ####################################################
 #  Deletes topics subscriber that does not exist anymore
 #  and send a notify to concerned subscribers.
@@ -11243,9 +11243,9 @@ sub load_msg_topic_file {
 # OUT : -0 if no subscriber topics have been deleted
 #       -1 if some subscribers topics have been deleted 
 ##################################################### 
-sub modifying_msg_topic_for_subscribers(){
+sub modifying_msg_topic_for_list_members(){
     my ($self,$new_msg_topic) = @_;
-    &do_log('debug3',"List::modifying_msg_topic_for_subscribers($self->{'name'}");
+    &do_log('debug3',"($self->{'name'}");
     my $deleted = 0;
 
     my @old_msg_topic_name;
@@ -11272,12 +11272,12 @@ sub modifying_msg_topic_for_subscribers(){
 		    unless ($self->send_notify_to_user('deleted_msg_topics',$subscriber->{'email'},
 						       {'del_topics' => $topics->{'intersection'},
 							'url' => $wwsympa_url.'/suboptions/'.$self->{'name'}})) {
-			&do_log('err',"List::modifying_msg_topic_for_subscribers($self->{'name'}) : impossible to send notify to user about 'deleted_msg_topics'");
+			&do_log('err',"($self->{'name'}) : impossible to send notify to user about 'deleted_msg_topics'");
 		    }
-		    unless ($self->update_user(lc($subscriber->{'email'}), 
+		    unless ($self->update_list_member(lc($subscriber->{'email'}), 
 					       {'update_date' => time,
 						'topics' => join(',',@{$topics->{'added'}})})) {
-			&do_log('err',"List::modifying_msg_topic_for_subscribers($self->{'name'} : impossible to update user '$subscriber->{'email'}'");
+			&do_log('err',"($self->{'name'} : impossible to update user '$subscriber->{'email'}'");
 		    }
 		    $deleted = 1;
 		}
@@ -11289,7 +11289,7 @@ sub modifying_msg_topic_for_subscribers(){
 }
 
 ####################################################
-# select_subscribers_for_topic
+# select_list_members_for_topic
 ####################################################
 # Select users subscribed to a topic that is in
 # the topic list incoming when reception mode is 'mail', 'notice', 'not_me', 'txt', 'html' or 'urlize', and the other
@@ -11304,9 +11304,9 @@ sub modifying_msg_topic_for_subscribers(){
 #     
 #
 ####################################################
-sub select_subscribers_for_topic {
+sub select_list_members_for_topic {
     my ($self,$string_topic,$subscribers) = @_;
-    &do_log('debug3', 'List::select_subscribers_for_topic(%s, %s)', $self->{'name'},$string_topic); 
+    &do_log('debug3', '(%s, %s)', $self->{'name'},$string_topic); 
     
     my @selected_users;
     my $msg_topics;
@@ -11740,7 +11740,7 @@ sub close_list {
     
     ## Dump subscribers, unless list is already closed
     unless ($self->{'admin'}{'status'} eq 'closed') {
-	$self->_save_users_file("$self->{'dir'}/subscribers.closed.dump");
+	$self->_save_list_members_file("$self->{'dir'}/subscribers.closed.dump");
     }
 
     ## Delete users

@@ -734,7 +734,7 @@ sub rename_list{
          $list->savestats();
 	 
 	 ## Dump subscribers
-	 $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
+	 $list->_save_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 	 
 	 $param{'aliases'} = &remove_aliases($list, $list->{'domain'});
      }
