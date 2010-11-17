@@ -5494,54 +5494,6 @@ sub get_subscriber_no_object {
     return $user;
 }
 
-## Returns an array of all users in User table hash for a given user
-sub get_subscriber_by_bounce_address {
-
-    my  $self= shift;
-    my  $bounce_address = &tools::clean_email(shift);
-    
-    do_log('debug2', '(%s)', $bounce_address);
-
-    return undef unless $bounce_address;
-
-    my $statement;
-    my @users;
-    my @subscribers;
- 
-    unless ($List::use_db) {
-	&do_log('info', 'Sympa not setup to use DBI');
-	return undef;
-    }
-
-    my $listname = $self->{'name'};
-    my $robot = $self->{'domain'};
-
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }
-
-    $statement = sprintf "SELECT user_subscriber AS email, bounce_address_subscriber AS bounce_address FROM subscriber_table WHERE (list_subscriber=%s AND robot_subscriber=%s AND bounce_address_subscriber LIKE %s",$dbh->quote($listname),$dbh->quote($robot),$dbh->quote($bounce_address);
-    
-    push @sth_stack, $sth;
-
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-    while (my $subscriber = $sth->fetchrow_hashref('NAME_lc')) {
-	push @subscribers, $subscriber;
-    }
-    $sth->finish();
-    $sth = pop @sth_stack;
-    return @subscribers;
-}
-
-
 ## Returns an admin user of the list.
 sub get_list_admin {
     my  $self= shift;
