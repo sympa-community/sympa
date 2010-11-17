@@ -152,32 +152,54 @@ sympa_stop() {
         return 1
     fi
  
-	if [ -f --piddir--/$1.pid ]; then
-		echo $echo_opt "Stopping module $1.pl: "
-		pid=`head -1 --piddir--/$1.pid`
-		running=`ps -A | grep "$pid"`
-		if [ $1 = 'bulk' ]; then
-		    if [ ${use_functions} ]; then
-			kill -TERM $pid && success || failure
-		    else
-			kill -TERM $pid && echo "success" || echo "failure"
-		    fi		    
-		else 
-		    if [ "$running" != "" ]; then
+    if [ -f --piddir--/$1.pid ]; then
+	echo $echo_opt "Stopping module $1.pl: "
+	pids=`head -1 --piddir--/$1.pid`
+	runcount=0
+	if [ "$pids" != "" ]; then
+	    for pid in $pids; do
+		killcount=0
+		running=`ps -A | grep "$pid ..* $1\\.pl"`
+		while [ "$running" != "" ]; do
+		    if [ $killcount -gt 10 ]; then
 			if [ ${use_functions} ]; then
-			    kill -TERM $pid && success || failure
+			    failure
 			else
-			    kill -TERM $pid && echo "success" || echo "failure"
-			fi		    
-
-		    else
-			echo "died"
+			    echo 'failure'
+			fi
+			return 3
 		    fi
-		fi
-		echo
-	else
-	        echo "Module $1.pl not running"
+
+		    kill -TERM $pid >/dev/null 2>&1
+		    running=`ps -A | grep "$pid ..* $1\\.pl"`
+		    if [ "$running" = "" ]; then
+			runcount=`expr $runcount + 1`
+			break
+		    fi
+		    sleep 2
+		    running=`ps -A | grep "$pid ..* $1\\.pl"`
+		    if [ "$running" = "" ]; then
+			runcount=`expr $runcount + 1`
+			break
+		    fi
+		    killcount=`expr $killcount + 1`
+		done
+	    done
 	fi
+	if [ $runcount -gt 0 ]; then
+	    if [ ${use_functions} ]; then
+		success
+	    else
+		echo 'success'
+	    fi
+	else
+	    echo 'died'
+	fi
+	echo
+    else
+	echo "Module $1.pl not running"
+    fi
+    return 0
 }
 
 
@@ -245,9 +267,7 @@ case "$1" in
 	;;
   restart)
 	echo "Restarting Sympa subsystem: "
-	$0 stop
-	sleep 3
-	$0 start
+	$0 stop && $0 start
 	echo
 	;;
   *)
@@ -257,7 +277,4 @@ case "$1" in
 esac
 
 exit 0
-
-
-
 

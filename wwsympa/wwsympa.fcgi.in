@@ -9984,7 +9984,7 @@ sub _prepare_edit_form {
 		 next unless ($v->{'name'} eq 'days');
 
 		 foreach my $day (keys %{$v->{'value'}}) {
-		     $v->{'value'}{$day}{'title'} = gettext_strftime "%A", localtime(0 + ($day +3) * (3600 * 24));
+		     $v->{'value'}{$day}{'title'} = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
 		 }
 	     }
 	 }elsif ($pname eq 'lang') {

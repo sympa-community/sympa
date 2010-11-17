@@ -265,12 +265,16 @@ sub edit_configuration {
 
         ## Write new config files
         unless (open (WWSYMPA,"> $wwsympa_conf")){
-            die "unable to open $new_wwsympa_conf : $!";
+            die "unable to open $wwsympa_conf : $!";
         };
 
+        my $umask = umask 037;
         unless (open (SYMPA,"> $sympa_conf")){
-            die "unable to open $new_sympa_conf : $!";
+            umask $umask;
+            die "unable to open $sympa_conf : $!";
         };
+        umask $umask;
+        chown [getpwnam(Sympa::Constants::USER)]->[2], [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
 
         print SYMPA @new_sympa_conf;
         print WWSYMPA @new_wwsympa_conf;

@@ -342,12 +342,12 @@ sub _lock_nfs {
     my $nfs_lock = undef;
     my $FH = undef;
     
-    if ($nfs_lock = new File::NFSLock {
+    if ($nfs_lock = File::NFSLock->new( {
 	file      => $lock_file,
 	lock_type => $operation|LOCK_NB,
 	blocking_timeout   => $hold,
 	stale_lock_timeout => $timeout,
-    }) {
+    })) {
 	## Read access to prevent "Bad file number" error on Solaris
 	$FH = new FileHandle;
 	unless (open $FH, $open_mode.$lock_file) {

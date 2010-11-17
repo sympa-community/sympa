@@ -1,6 +1,6 @@
 title.gettext test x-spam-status  header
 
-match([header->X-Spam-Status],/yes\s*$/)   	       smtp,dkim,smime,md5  -> spam
-match([header->X-j-chkmail-Status],/Spam Hi/)  smtp,dkim,smime,md5  -> spam
-match([header->X-j-chkmail-Status],/Spam Low/) smtp,dkim,smime,md5  -> unsure
-true()					       smtp,dkim,md5,smime   -> ham
+match([header->X-Spam-Status],/^\s*yes/)	smtp,dkim,smime,md5  -> spam
+match([header->X-j-chkmail-Status],/Spam Hi/)  	smtp,dkim,smime,md5  -> spam
+match([header->X-j-chkmail-Status],/Spam Low/) 	smtp,dkim,smime,md5  -> unsure
+true()					       	smtp,dkim,md5,smime   -> ham

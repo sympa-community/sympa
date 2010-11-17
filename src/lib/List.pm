@@ -2638,8 +2638,8 @@ sub distribute_msg {
 	
  	## Encode subject using initial charset
 
-	## Don't try to encode the subject if it was not originaly encoded non-ASCII.
-	if ($message->{'subject_charset'} or $subject_field !~ /[^\x00-\x7E]/) {
+	## Don't try to encode the subject if it was not originaly encoded.
+	if ($message->{'subject_charset'}) {
 	    $subject_field = MIME::EncWords::encode_mimewords([
 							       [Encode::decode('utf8', $before_tag), $message->{'subject_charset'}],
 							       [Encode::decode('utf8', '['.$parsed_tag.'] '), &Language::GetCharset()],
@@ -11383,30 +11383,43 @@ sub compute_topic {
     }
 
     # getting string to parse
-    my $mail_string;
-
+    # We convert it to Unicode for case-ignore match with non-ASCII keywords.
+    my $mail_string = '';
     if ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject'){
-	$mail_string = $msg->head->get('subject');
-
-    }elsif ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'body'){
-	if (defined $msg->bodyhandle) {
-	    $mail_string = $msg->bodyhandle->as_string();
+	$mail_string = &MIME::EncWords::decode_mimewords($msg->head->get('subject'), Charset=>'_UNICODE_')."\n";
+    }
+    unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
+	# get bodies of any text/* parts, not digging nested subparts.
+	my @parts;
+	if ($msg->effective_type =~ /^(multipart|message)\//i) {
+	    @parts = $msg->parts();
+	} else {
+	    @parts = ($msg);
 	}
-
-	## Default : search in both subject and message body
-    }else {
-	$mail_string = $msg->head->get('subject');
-
-	if (defined $msg->bodyhandle) {
-	    $mail_string .= $msg->bodyhandle->as_string();
+	foreach my $part (@parts) {
+	    next unless $part->effective_type =~ /^text\//i;
+	    my $charset = $part->head->mime_attr("Content-Type.Charset");
+	    $charset = MIME::Charset->new($charset);
+	    if (defined $part->bodyhandle) {
+		my $body = $msg->bodyhandle->as_string();
+		my $converted;
+		eval {
+		    $converted = $charset->decode($body);
+		};
+		if ($@) {
+		    $converted = Encode::decode('US-ASCII', $body);
+		}
+		$mail_string .= $converted."\n";
+	    }
 	}
     }
 
     # parsing
     foreach my $keyw (keys %keywords) {
+	my $k = $keywords{$keyw};
+	$keyw = Encode::decode_utf8($keyw);
 	$keyw = &tools::escape_regexp($keyw);
 	if ($mail_string =~ /$keyw/i){
-	    my $k = $keywords{$keyw};
 	    $topic_hash{$k} = 1;
 	}
     }

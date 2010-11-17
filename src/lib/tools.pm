@@ -1705,10 +1705,14 @@ sub cookie_changed {
 	}
 	return $changed ;
     }else{
+	my $umask = umask 037;
 	unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
+	    umask $umask;
 	    do_log('err', "Unable to create $Conf::Conf{'etc'}/cookies.history") ;
 	    return undef ; 
 	}
+	umask $umask;
+	chown [getpwnam(Sympa::Constants::USER)]->[2], [getgrnam(Sympa::Constants::GROUP)]->[2], "$Conf::Conf{'etc'}/cookies.history";
 	printf COOK "$current ";
 	close COOK;
 	return(0);

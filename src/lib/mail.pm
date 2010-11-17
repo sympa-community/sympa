@@ -137,7 +137,9 @@ sub mail_file {
     }
 
     ## Charset for encoding
+    &Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
     $data->{'charset'} ||= &Language::GetCharset();
+    &Language::PopLang() if defined $data->{'lang'};
 
     ## TT2 file parsing 
     if ($filename =~ /\.tt2$/) {
