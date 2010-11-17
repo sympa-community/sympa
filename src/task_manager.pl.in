@@ -1051,7 +1051,7 @@ sub delete_subs_cmd {
 	if ($action =~ /reject/i) {
 	    error ($task->{'filepath'}, "error in delete_subs command : deletion of $email not allowed");
 	} else {
-	    my $u = $list->delete_user ($email) if (!$log);
+	    my $u = $list->delete_list_member ($email) if (!$log);
 	    &do_log ('notice', "--> $email deleted");
 	    $selection{$email} = {};
 	}
@@ -1344,7 +1344,7 @@ sub purge_orphan_bounces {
 	     if ($u->{'last_bounce'} < $refdate) {
 		 my $email = $u->{'email'};
 
-		 unless ( $list->is_user($email) ) {
+		 unless ( $list->is_list_member($email) ) {
 		     do_log('info','expire_bounce: %s not subscribed', $email);
 		     next;
 		 }

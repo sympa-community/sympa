@@ -843,7 +843,7 @@ sub upgrade {
 
 		&do_log('notice','List %s ; changing user_data_source from file to include2...', $list->{'name'});
 		
-		my @users = &List::_load_users_file("$list->{'dir'}/subscribers");
+		my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers");
 		
 		$list->{'admin'}{'user_data_source'} = 'include2';
 		$list->{'total'} = 0;

@@ -66,7 +66,7 @@ sub password_fingerprint{
 	 }
 	 if ($canonic){
 	     
-	     unless($user = &List::get_user_db($canonic)){
+	     unless($user = &List::get_global_user($canonic)){
 		 $user = {'email' => $canonic};
 	     }
 	     return {'user' => $user,
@@ -110,7 +110,7 @@ sub authentication {
     &do_log('debug', 'Auth::authentication(%s)', $email);
 
 
-    unless ($user = &List::get_user_db($email)) {
+    unless ($user = &List::get_global_user($email)) {
 	$user = {'email' => $email };
     }    
     unless ($user->{'password'}) {
@@ -143,7 +143,7 @@ sub authentication {
 	    }
 	}elsif($auth_service->{'auth_type'} eq 'ldap') {
 	    if ($canonic = &ldap_authentication($robot, $auth_service, $email,$pwd,'email_filter')){
-		unless($user = &List::get_user_db($canonic)){
+		unless($user = &List::get_global_user($canonic)){
 		    $user = {'email' => $canonic};
 		}
 		&List::update_user_db($canonic,{wrong_login_count => 0}) ;

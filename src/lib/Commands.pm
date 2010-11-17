@@ -191,7 +191,7 @@ sub help {
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'user'} =  &List::get_user_db($sender);
+	$data->{'user'} =  &List::get_global_user($sender);
 	&Language::SetLang($data->{'user'}{'lang'}) if $data->{'user'}{'lang'};
 	$data->{'subject'} = gettext("User guide");
 	$data->{'auto_submitted'} = 'auto-replied';
@@ -839,7 +839,7 @@ sub subscribe {
 	}
 	
 	if ($List::use_db) {
-	    my $u = &List::get_user_db($sender);
+	    my $u = &List::get_global_user($sender);
 	    
 	    &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 					    'password' => $u->{'password'} || &tools::tmp_passwd($sender)
@@ -1258,7 +1258,7 @@ sub add {
 	return 1;
     }
     if ($action =~ /do_it/i) {
-	if ($list->is_user($email)) {
+	if ($list->is_list_member($email)) {
 	  &report::reject_report_cmd('user','already_subscriber',{'email'=> $email, 'listname' => $which},$cmd_line); 
 	  &do_log('err',"ADD command rejected ; user '%s' already member of list '%s'", $email, $which);
 	  return undef; 
@@ -1281,7 +1281,7 @@ sub add {
 	}
 	
 	if ($List::use_db) {
-	    my $u = &List::get_user_db($email);
+	    my $u = &List::get_global_user($email);
 	    
 	    &List::update_user_db($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 					   'password' => $u->{'password'} || &tools::tmp_passwd($email)
@@ -1396,7 +1396,7 @@ sub invite {
 	return 1;
     }
     if ($action =~ /do_it/i) {
-	if ($list->is_user($email)) {
+	if ($list->is_list_member($email)) {
 	    &report::reject_report_cmd('user','already_subscriber',{'email'=> $email, 'listname' => $which},$cmd_line); 
 	    &do_log('err',"INVITE command rejected ; user '%s' already member of list '%s'", $email, $which);
 	    return undef;
@@ -1670,7 +1670,7 @@ sub remind {
 	    &do_log('debug2','Sending REMIND * to %d users', $count);
 
 	    foreach my $email (keys %global_subscription) {
-		my $user = &List::get_user_db($email);
+		my $user = &List::get_global_user($email);
 		foreach my $key (keys %{$user}) {
 		    $global_info{$email}{$key} = $user->{$key}
 		    if ($user->{$key});
@@ -1927,7 +1927,7 @@ sub set {
 
     ## Check if we know this email on the list and remove it. Otherwise
     ## just reject the message.
-    unless ($list->is_user($sender) ) {
+    unless ($list->is_list_member($sender) ) {
 	&report::reject_report_cmd('user','email_not_found',{'email'=> $sender, 'listname' => $which},$cmd_line); 
 	&do_log('info', 'SET %s %s from %s refused, not on list',  $which, $mode, $sender);
 	return 'not allowed';

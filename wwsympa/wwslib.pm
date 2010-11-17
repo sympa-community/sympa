@@ -280,8 +280,8 @@ sub init_passwd {
     
     my ($passwd, $user);
     
-    if (&List::is_user_db($email)) {
-	$user = &List::get_user_db($email);
+    if (&List::is_global_user($email)) {
+	$user = &List::get_global_user($email);
 	
 	$passwd = $user->{'password'};
 	

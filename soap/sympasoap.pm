@@ -390,7 +390,7 @@ sub amI {
 
   if ($list) {
       if ($function eq 'subscriber') {
-	  return SOAP::Data->name('result')->type('boolean')->value($list->is_user($user));
+	  return SOAP::Data->name('result')->type('boolean')->value($list->is_list_member($user));
       }elsif ($function =~ /^owner|editor$/) {
 	  return SOAP::Data->name('result')->type('boolean')->value($list->am_i($function, $user));
       }else {
@@ -442,7 +442,7 @@ sub info {
     my $user;
 
     # Part of the authorization code
-    $user = &List::get_user_db($sender);
+    $user = &List::get_global_user($sender);
      
     my $result = $list->check_list_authz('info','md5',
 					 {'sender' => $sender,
@@ -476,7 +476,7 @@ sub info {
 	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
 	    $result_item->{'isEditor'} = SOAP::Data->name('isEditor')->type('boolean')->value(1);
 	}
-	if ($list->is_user($sender)) {
+	if ($list->is_list_member($sender)) {
 	    $result_item->{'isSubscriber'} = SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
 	}
 	
@@ -569,8 +569,8 @@ sub createList {
     # prepare parameters
     my $param = {};
     $param->{'user'}{'email'} = $sender;
-    if (&List::is_user_db($param->{'user'}{'email'})) {
-	$param->{'user'} = &List::get_user_db($sender);
+    if (&List::is_global_user($param->{'user'}{'email'})) {
+	$param->{'user'} = &List::get_global_user($sender);
     }
     my $parameters;
     $parameters->{'creation_email'} =$sender;
@@ -738,7 +738,7 @@ sub add {
     }
 
 
-    if ($list->is_user($email)) {
+    if ($list->is_list_member($email)) {
       &Log::do_log('err', 'add %s@%s %s from %s : failed, user already member of the list', $listname,$robot,$email,$sender);
       my $error = "User already member of list $listname";
       die SOAP::Fault->faultcode('Server')
@@ -764,7 +764,7 @@ sub add {
     }
     
     if ($List::use_db) {
-	my $u = &List::get_user_db($email);	
+	my $u = &List::get_global_user($email);	
 	&List::update_user_db($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
 				       'password' => $u->{'password'} || &tools::tmp_passwd($email)
 				       });
@@ -936,7 +936,7 @@ sub review {
     my $user;
 
     # Part of the authorization code
-    $user = &List::get_user_db($sender);
+    $user = &List::get_global_user($sender);
      
     my $result = $list->check_list_authz('review','md5',
 					 {'sender' => $sender,
@@ -1036,7 +1036,7 @@ sub signoff {
     $list = new List ($listname, $robot);
     
     # Part of the authorization code
-    my $user = &List::get_user_db($sender);
+    my $user = &List::get_global_user($sender);
     
     my $result = $list->check_list_authz('unsubscribe','md5',
 					 {'email' => $sender,
@@ -1062,7 +1062,7 @@ sub signoff {
 	## Now check if we know this email on the list and
 	## remove it if found, otherwise just reject the
 	## command.
-	unless ($list->is_user($sender)) {
+	unless ($list->is_list_member($sender)) {
 	    &Log::do_log('info', 'SOAP : sign off %s from %s refused, not on list', $listname, $sender);
 	    
 	    ## Tell the owner somebody tried to unsubscribe
@@ -1186,7 +1186,7 @@ sub subscribe {
   }
   if ($action =~ /do_it/i) {
       
-      my $is_sub = $list->is_user($sender);
+      my $is_sub = $list->is_list_member($sender);
       
       unless (defined($is_sub)) {
 	  &Log::do_log('err','SOAP subscribe : user lookup failed');
@@ -1225,7 +1225,7 @@ sub subscribe {
       }
       
       if ($List::use_db) {
-	  my $u = &List::get_user_db($sender);
+	  my $u = &List::get_global_user($sender);
 	  
 	  &List::update_user_db($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'}
 					  });
@@ -1339,7 +1339,7 @@ sub which {
 	     $result_item->{'isEditor'} = 1;
 	 }
 	$result_item->{'isSubscriber'} = 0;
-	if ($list->is_user($sender)) {
+	if ($list->is_list_member($sender)) {
 	    $result_item->{'isSubscriber'} = 1;
 	}
 	## determine bounce informations of this user for this list

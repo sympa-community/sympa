@@ -2441,7 +2441,7 @@ Sets changes (loads the users, installs or removes the aliases); deals with the 
 
 =item * List::add_list_member
 
-=item * List::_load_users_file
+=item * List::_load_list_members_file
 
 =item * Log::do_log
 
@@ -2494,12 +2494,12 @@ sub _set_status_changes {
     if (($old_status ne 'pending') && ($old_status ne 'open')) {
 	
 	if ($list->{'admin'}{'user_data_source'} eq 'file') {
-	    $list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+	    $list->{'users'} = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 	}elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
 	    unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 		&do_log('notice', 'No subscribers to restore');
 	    }
-	    my @users = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+	    my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 	    
 	    ## Insert users in database
 	    foreach my $user (@users) {

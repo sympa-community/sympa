@@ -1272,8 +1272,8 @@ my $birthday = time ;
 	 if ($param->{'user'}{'email'}) {
 #         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 	     
-	     if (&List::is_user_db($param->{'user'}{'email'})) {
-		 $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
+	     if (&List::is_global_user($param->{'user'}{'email'})) {
+		 $param->{'user'} = &List::get_global_user($param->{'user'}{'email'});
 	     }
 	     
 	     ## For the parser to display an empty field instead of [xxx]
@@ -2435,7 +2435,7 @@ Use it to create a List object and initialize output parameters.
 
 =item * List::is_moderated
 
-=item * List::is_user
+=item * List::is_list_member
 
 =item * List::new
 
@@ -2511,7 +2511,7 @@ Use it to create a List object and initialize output parameters.
 
 	## If an user is logged in, checks this user's privileges.
 	if ($param->{'user'}{'email'}) {
-	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
+	    $param->{'is_subscriber'} = $list->is_list_member($param->{'user'}{'email'});
 	    $param->{'subscriber'} = $list->get_list_member($param->{'user'}{'email'})
 		if $param->{'is_subscriber'};
 	    $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
@@ -2751,7 +2751,7 @@ Use it to create a List object and initialize output parameters.
 	 }
 	## privileges
 	if ($param->{'user'}{'email'}) {
-	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
+	    $param->{'is_subscriber'} = $list->is_list_member($param->{'user'}{'email'});
 	    $param->{'subscriber'} = $list->get_list_member($param->{'user'}{'email'})
 		if $param->{'is_subscriber'};
 	    $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
@@ -2906,7 +2906,7 @@ sub do_ticket {
     my $email_regexp = &tools::get_regexp('email');
 	if ($param->{'ticket_context'}{'result'} eq 'success') {
 	    $session->{'email'} = lc($param->{'ticket_context'}{'email'});
-	    $param->{'user'} =  &List::get_user_db($session->{'email'});
+	    $param->{'user'} =  &List::get_global_user($session->{'email'});
 	    $param->{'user'}{'email'} =  $session->{'email'} ;
 	    $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
 	    $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
@@ -3012,7 +3012,7 @@ sub do_ticket {
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
 		      'error_type' => 'authentication'});
-	 my $unauthenticated_user = &List::get_user_db($in{'email'});
+	 my $unauthenticated_user = &List::get_global_user($in{'email'});
 	 if ($unauthenticated_user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
 	     $param->{'login_error'} = 'password_reset';
 	 }else{
@@ -3373,7 +3373,7 @@ sub do_sso_login {
 	my $all_sso_attr = join ';', @sso_attr;
 	
 	## Create user entry if required
-	unless (&List::is_user_db($email)) {
+	unless (&List::is_global_user($email)) {
 	    unless (&List::add_global_user({'email' => $email})) {
 		&report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
 		&wwslog('info','do_sso_login: add failed');
@@ -3673,7 +3673,7 @@ sub sendssopasswd {
     
     my $url_redirect;
     
-    if ($param->{'newuser'} =  &List::get_user_db($email)) {
+    if ($param->{'newuser'} =  &List::get_global_user($email)) {
 	
 	## Create a password if none
 	unless ($param->{'newuser'}{'password'}) {
@@ -3794,7 +3794,7 @@ sub do_renewpasswd {
      &wwslog('debug','do_requestpasswd: sending one time ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
-     $param->{'newuser'} =  &List::get_user_db($in{'email'});
+     $param->{'newuser'} =  &List::get_global_user($in{'email'});
      if ($param->{'one_time_ticket'}) {
 	 $param->{'login_error'}='ticket_sent';
 	 unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
@@ -3906,7 +3906,7 @@ sub do_renewpasswd {
 	     $list_info->{'admin'} = 1;
 	 }
 	 if ($param->{'user'}{'email'} &&
-	     $list->is_user($param->{'user'}{'email'})) {
+	     $list->is_list_member($param->{'user'}{'email'})) {
 	     $list_info->{'is_subscriber'} = 1;
 	 }
 
@@ -4493,7 +4493,7 @@ sub do_pref {
 	 $email = $param->{'user'}{'email'};
      } 
 
-     unless ($list->is_user($email)) {
+     unless ($list->is_list_member($email)) {
 	 &report::reject_report_web('user','not_subscriber',{'list'=> $param->{'list'}},$param->{'action'},$list);
 	 &wwslog('info','do_set: %s not subscriber of list %s', $email, $param->{'list'});
 	 &web_db_log({'parameters' => "$in{'reception'},$in{'visibility'}",
@@ -4530,7 +4530,7 @@ sub do_pref {
 	 }
 
 	 ## Check if new email is already subscribed
-	 if ($list->is_user($in{'new_email'})) {
+	 if ($list->is_list_member($in{'new_email'})) {
 	     &report::reject_report_web('user','already_subscriber', {'list' => $list->{'name'}},$param->{'action'},$list);
 	     &wwslog('info','do_set: %s already subscriber', $in{'new_email'});
 	     &web_db_log({'parameters' => $in{'new_email'},
@@ -4540,9 +4540,9 @@ sub do_pref {
 	 }
 
 	 ## Duplicate entry in user_table
-	 unless (&List::is_user_db($in{'new_email'})) {
+	 unless (&List::is_global_user($in{'new_email'})) {
 
-	     my $user_pref = &List::get_user_db($in{'email'});
+	     my $user_pref = &List::get_global_user($in{'email'});
 	     $user_pref->{'email'} = $in{'new_email'};
 	     &List::add_global_user($user_pref);
 	 }
@@ -4663,7 +4663,7 @@ sub check_custom_attribute {
      $session->{'lang'} = $in{'lang'} ;
      $param->{'lang'} = $in{'lang'};
 
-     if (&List::is_user_db($param->{'user'}{'email'})) {
+     if (&List::is_global_user($param->{'user'}{'email'})) {
 
 	 unless (&List::update_user_db($param->{'user'}{'email'}, $changes)) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -5003,19 +5003,19 @@ sub do_subrequest {
 	    return 1;
 	}
 	## Subscriber ?
-	if ($list->is_user($in{'email'})) {
+	if ($list->is_list_member($in{'email'})) {
 	    $param->{'status'} = 'notauth_subscriber';
 	    return 1;
 	}
 	my $user;
-	$user = &List::get_user_db($in{'email'})
-	    if &List::is_user_db($in{'email'});
+	$user = &List::get_global_user($in{'email'})
+	    if &List::is_global_user($in{'email'});
 	
 	## Need to send a password by email
 	$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
 	$param->{'login_error'}='ticket_sent';
 	$param->{'request_from_host'} = $ip;
-	$param->{'newuser'} =  &List::get_user_db($in{'email'});
+	$param->{'newuser'} =  &List::get_global_user($in{'email'});
 	unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
 	  &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
 	  $param->{'login_error'}='unable_to_send_ticket';
@@ -5057,7 +5057,7 @@ sub do_auto_signoff {
 
      ## Send the confirmation email to the user.
 
-     if ($list->is_user($in{'email'})) {
+     if ($list->is_list_member($in{'email'})) {
 
        my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
        
@@ -5109,7 +5109,7 @@ sub do_auto_signoff {
 	     return 'login';
 	 }
 
-	 if ( &List::is_user_db($in{'email'}) ) {
+	 if ( &List::is_global_user($in{'email'}) ) {
 	     &report::reject_report_web('user','no_user',{},$param->{'action'});
 	     &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
 	     &web_db_log({'target_email' => $in{'email'},
@@ -5124,7 +5124,7 @@ sub do_auto_signoff {
 	 $param->{'user'}{'email'} = $in{'email'};
      }
 
-     unless ($list->is_user($param->{'user'}{'email'})) {
+     unless ($list->is_list_member($param->{'user'}{'email'})) {
 	 &report::reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
 	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 &web_db_log({'status' => 'error',
@@ -5211,7 +5211,7 @@ sub do_auto_signoff {
      }
 
      
-     if ($list->is_user($in{'email'})) {
+     if ($list->is_list_member($in{'email'})) {
 
        my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
        
@@ -5254,7 +5254,7 @@ sub do_auto_signoff {
 	 return undef;
      }
 
-     if (&List::is_user_db($param->{'user'}{'email'})) {
+     if (&List::is_global_user($param->{'user'}{'email'})) {
 
 	 unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -6118,7 +6118,7 @@ sub do_skinsedit {
 	     next;
 	 }
 	 
-	 my $u2 = &List::get_user_db($email);
+	 my $u2 = &List::get_global_user($email);
 	 my $defaults = $list->get_default_user_options();
 	 my $u;
 	 %{$u} = %{$defaults};
@@ -8680,7 +8680,7 @@ sub do_home {
      $param->{'current_subscriber'}{'visibility'} ||= 'noconceal';
 
      ## Get language from user_table
-     my $user = &List::get_user_db($in{'email'});
+     my $user = &List::get_global_user($in{'email'});
      $param->{'current_subscriber'}{'lang'} = &Language::GetLangName($user->{'lang'});
 
      foreach my $m (keys %wwslib::reception_mode) {		
@@ -8915,7 +8915,7 @@ sub do_home {
 
 	 my $escaped_email = &tools::escape_chars($email);
 
-	 unless ( $list->is_user($email) ) {
+	 unless ( $list->is_list_member($email) ) {
 	     &report::reject_report_web('user','not_subscriber',{'email'=> $email},$param->{'action'},$list);
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     &web_db_log({'status' => 'error',
@@ -9528,7 +9528,7 @@ sub do_edit_list {
 		    &web_db_log({'status' => 'error',
 				 'error_type' => 'no_subsciber'});
 		}
-		@users = &List::_load_users_file("$list->{'dir'}/subscribers");
+		@users = &List::_load_list_members_file("$list->{'dir'}/subscribers");
 	    }elsif (($list->{'admin'}{'user_data_source'} ne 'include2') &&
 		    ($new_admin->{'user_data_source'} eq 'include2')) {
 		$list->update_user('*', {'subscribed' => 1});
@@ -10522,14 +10522,14 @@ sub do_purge_list {
      $list->save_config($param->{'user'}{'email'});
 
      if ($list->{'admin'}{'user_data_source'} eq 'file') {
-	 $list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+	 $list->{'users'} = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
      }elsif ($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) {
 	 unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 	     &wwslog('notice', 'No subscribers to restore');
 	     &web_db_log({'status' => 'error',
 			  'error_type' => 'no_subscribers'});
 	 }
-	 my @users = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+	 my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 
 	 ## Insert users in database
 	 foreach my $user (@users) {
@@ -15103,7 +15103,7 @@ sub do_change_email {
 
      my ($password, $newuser);
 
-     if ($newuser =  &List::get_user_db($old_email)) {
+     if ($newuser =  &List::get_global_user($old_email)) {
 	 
 	 $password = $newuser->{'password'};
      }
@@ -15145,7 +15145,7 @@ sub do_change_email {
 
 	 ## Check if user is already member of the list with his new address
 	 ## then we just need to remove the old address
-	 if ($list->is_user($new_email)) {
+	 if ($list->is_list_member($new_email)) {
 	     unless ($list->delete_list_member('users' => [$old_email]) ) {
 		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$new_email},
 					    $param->{'action'},$list,$old_email,$robot);
@@ -15918,7 +15918,7 @@ sub do_send_mail {
      $param->{'lang'} = $in{'lang'};
 
      if ($param->{'user'}{'email'}) {
-	 if (&List::is_user_db($param->{'user'}{'email'})) {
+	 if (&List::is_global_user($param->{'user'}{'email'})) {
 	     unless (&List::update_user_db($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
 		  &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		  &wwslog('info','do_set_lang: update failed');
