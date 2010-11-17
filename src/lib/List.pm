@@ -124,7 +124,7 @@ Returns the number of subscribers to the list.
 Returns a hash with the information regarding the indicated
 user.
 
-=item get_subscriber ( USER )
+=item get_list_member ( USER )
 
 Returns a subscriber of the list.
 
@@ -140,7 +140,7 @@ Returns a hash to the first user on the list.
 
 Returns a hash to the first admin user with predefined role on the list.
 
-=item get_next_user ()
+=item get_next_list_member ()
 
 Returns a hash to the next users, until we reach the end of
 the list.
@@ -2810,7 +2810,7 @@ sub send_msg_digest {
     my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
-    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user()) {
+    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
 	my $options;
 	$options->{'email'} = $user->{'email'};
 	$options->{'name'} = $self->{'name'};
@@ -3101,7 +3101,7 @@ sub send_file {
 	    }
 	}
 	
-	$data->{'subscriber'} = $self->get_subscriber($who);
+	$data->{'subscriber'} = $self->get_list_member($who);
 	
 	if ($data->{'subscriber'}) {
 	    $data->{'subscriber'}{'date'} = gettext_strftime "%d %b %Y", localtime($data->{'subscriber'}{'date'});
@@ -3268,7 +3268,7 @@ sub send_msg {
     my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
  
-    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user() ){
+    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member() ){
 	unless ($user->{'email'}) {
 	    &do_log('err','Skipping user with no email address in list %s', $name);
 	    next;
@@ -4715,7 +4715,7 @@ sub delete_list_member {
 	}
 
 	$list_cache{'is_user'}{$self->{'domain'}}{$name}{$who} = undef;    
-	$list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$who} = undef;    
+	$list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who} = undef;    
 	
 	## Delete record in SUBSCRIBER
 	$statement = sprintf "DELETE FROM subscriber_table WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber=%s)",
@@ -5170,14 +5170,14 @@ sub get_exclusion {
 }
 
 ######################################################################
-###  get_subscriber                                                  #
+###  get_list_member                                                  #
 ## Returns a subscriber of the list.                                 #
 ######################################################################
-sub get_subscriber {
+sub get_list_member {
     my  $self= shift;
     my  $email = &tools::clean_email(shift);
     
-    do_log('debug2', 'List::get_subscriber(%s)', $email);
+    do_log('debug2', '(%s)', $email);
 
     my $name = $self->{'name'};
     my $statement;
@@ -5185,8 +5185,8 @@ sub get_subscriber {
     my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
     
     ## Use session cache
-    if (defined $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email}) {
-	return $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$email};
+    if (defined $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$email}) {
+	return $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$email};
     }
 
     my $options;
@@ -5206,7 +5206,7 @@ sub get_subscriber {
     $user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');	
 
     ## Set session cache
-    $list_cache{'get_subscriber'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
+    $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
 
     return $user;
 }
@@ -5438,8 +5438,8 @@ sub get_subscriber_no_object {
     my $update_field = sprintf $date_format{'read'}{$Conf::Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
     
     ## Use session cache
-    if (defined $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email}) {
-	return $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email};
+    if (defined $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email}) {
+	return $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email};
     }
 
     ## Check database connection
@@ -5490,7 +5490,7 @@ sub get_subscriber_no_object {
 
     $sth = pop @sth_stack;
     ## Set session cache
-    $list_cache{'get_subscriber'}{$options->{'domain'}}{$name}{$email} = $user;
+    $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email} = $user;
     return $user;
 }
 
@@ -5500,7 +5500,7 @@ sub get_subscriber_by_bounce_address {
     my  $self= shift;
     my  $bounce_address = &tools::clean_email(shift);
     
-    do_log('debug2', 'List::get_subscriber_by_bounce_address (%s)', $bounce_address);
+    do_log('debug2', '(%s)', $bounce_address);
 
     return undef unless $bounce_address;
 
@@ -6230,9 +6230,9 @@ sub get_first_list_admin {
 }
     
 ## Loop for all subsequent users.
-sub get_next_user {
+sub get_next_list_member {
     my $self = shift;
-    do_log('debug2', 'List::get_next_user');
+    do_log('debug2', '');
 
     unless (defined $sth) {
 	&do_log('err', 'No handle defined, get_first_list_member(%s) was not run', $self->{'name'});
@@ -6747,7 +6747,7 @@ sub update_user {
     }
     
     ## Reset session cache
-    $list_cache{'get_subscriber'}{$self->{'domain'}}{$name}{$who} = undef;
+    $list_cache{'get_list_member'}{$self->{'domain'}}{$name}{$who} = undef;
     
     return 1;
 }
@@ -8055,7 +8055,7 @@ sub _include_users_list {
     
     my $id = Datasource::_get_datasource_id($includelistname);
 
-    for (my $user = $includelist->get_first_list_member(); $user; $user = $includelist->get_next_user()) {
+    for (my $user = $includelist->get_first_list_member(); $user; $user = $includelist->get_next_list_member()) {
 	my %u;
 
 	## Check if user has already been included
@@ -9169,7 +9169,7 @@ sub sync_include {
     my $errors_occurred=0;
 
     ## Load a hash with the old subscribers
-    for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_user()) {
+    for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_list_member()) {
 	$old_subscribers{lc($user->{'email'})} = $user;
 	
 	## User neither included nor subscribed = > set subscribed to 1 
@@ -9769,7 +9769,7 @@ sub _save_users_file {
     rename("$file", "$file.old");
     open SUB, "> $file" or return undef;
     
-    for ($s = $self->get_first_list_member(); $s; $s = $self->get_next_user()) {
+    for ($s = $self->get_first_list_member(); $s; $s = $self->get_next_list_member()) {
 	foreach $k ('date','update_date','email','gecos','reception','visibility') {
 	    printf SUB "%s %s\n", $k, $s->{$k} unless ($s->{$k} eq '');
 	    
@@ -11577,7 +11577,7 @@ sub modifying_msg_topic_for_subscribers(){
 
     if ($#{$msg_topic_changes->{'deleted'}} >= 0) {
 	
-	for (my $subscriber=$self->get_first_list_member(); $subscriber; $subscriber=$self->get_next_user()) {
+	for (my $subscriber=$self->get_first_list_member(); $subscriber; $subscriber=$self->get_next_list_member()) {
 	    
 	    if ($subscriber->{'reception'} eq 'mail') {
 		my $topics = &tools::diff_on_arrays($msg_topic_changes->{'deleted'},&tools::get_array_from_splitted_string($subscriber->{'topics'}));
@@ -11633,7 +11633,7 @@ sub select_subscribers_for_topic {
     foreach my $user (@$subscribers) {
 
 	# user topic
-	my $info_user = $self->get_subscriber($user);
+	my $info_user = $self->get_list_member($user);
 
 	if ($info_user->{'reception'} !~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
 	    push @selected_users,$user;
@@ -11832,7 +11832,7 @@ sub get_subscription_requests {
 	    next;
 	}
 
-	my $user_entry = $self->get_subscriber($email);
+	my $user_entry = $self->get_list_member($email);
 	 
 	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    &do_log('err','User %s is subscribed to %s already. Deleting subscription request.', $email, $self->{'name'});
@@ -12060,7 +12060,7 @@ sub close_list {
 
     ## Delete users
     my @users;
-    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_user() ){
+    for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member() ){
 	push @users, $user->{'email'};
     }
     $self->delete_list_member('users' => \@users);

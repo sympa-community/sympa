@@ -856,7 +856,7 @@ sub del {
 	    ->faultdetail($reason_string);
     }
 
-    my $user_entry = $list->get_subscriber($email);
+    my $user_entry = $list->get_list_member($email);
     unless ((defined $user_entry)) {
 	    &do_log('info', 'DEL %s %s from %s refused, not on list', $listname, $email, $sender);
 	    die SOAP::Fault->faultcode('Client')
@@ -979,7 +979,7 @@ sub review {
 		$user->{'email'} =~ y/A-Z/a-z/;
 		push @resultSoap, SOAP::Data->name('item')->type('string')->value($user->{'email'});
 	    }
-	} while ($user = $list->get_next_user());
+	} while ($user = $list->get_next_list_member());
 	&Log::do_log('info', 'SOAP : review %s from %s accepted', $listname, $sender);
 	return SOAP::Data->name('return')->value(\@resultSoap);
     }
@@ -1345,7 +1345,7 @@ sub which {
 	## determine bounce informations of this user for this list
  
 	my $subscriber ;
-	if($subscriber = $list->get_subscriber($sender)) { 
+	if($subscriber = $list->get_list_member($sender)) { 
 	    $result_item->{'bounceCount'} = 0;
 	    if ($subscriber->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
 		$result_item->{'firstBounceDate'} =  $1;

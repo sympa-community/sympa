@@ -646,7 +646,7 @@ sub verify {
 	    
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
 	    
-	    $context->{'subscriber'} ||= $list->get_subscriber($context->{'sender'});
+	    $context->{'subscriber'} ||= $list->get_list_member($context->{'sender'});
 	    $value =~ s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
 	    
 	    ## SMTP Header field

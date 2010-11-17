@@ -998,7 +998,7 @@ sub select_subs {
     my $list = $task->{'list_object'};
     
     if ( $list->{'admin'}{'user_data_source'} =~ /database|file|include2/) {
-        for ( my $user = $list->get_first_list_member(); $user; $user = $list->get_next_user() ) { 
+        for ( my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member() ) { 
             push (@users, $user);
 	}
     }
@@ -1229,7 +1229,7 @@ sub purge_user_table {
 	    }
 	    
 	    ## Subscribers
-	    for (my $user = $list->get_first_list_member(); $user; $user = $list->get_next_user()) {
+	    for (my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member()) {
 		$known_people{$user->{'email'}} = 1;
 	    }
 	}

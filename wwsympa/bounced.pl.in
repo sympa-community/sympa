@@ -875,7 +875,7 @@ sub update_subscriber_bounce_history {
     my $first = my $last = time;
     my $count = 0;
     
-    my $user = $list->get_subscriber($bouncefor);
+    my $user = $list->get_list_member($bouncefor);
     
     unless ($user) {
 	&do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $bouncefor); 		    

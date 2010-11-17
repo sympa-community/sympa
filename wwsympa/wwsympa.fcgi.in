@@ -2423,7 +2423,7 @@ Use it to create a List object and initialize output parameters.
 
 =item * List::get_shared_moderated
 
-=item * List::get_subscriber
+=item * List::get_list_member
 
 =item * List::get_subscription_request_count
 
@@ -2512,7 +2512,7 @@ Use it to create a List object and initialize output parameters.
 	## If an user is logged in, checks this user's privileges.
 	if ($param->{'user'}{'email'}) {
 	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
-	    $param->{'subscriber'} = $list->get_subscriber($param->{'user'}{'email'})
+	    $param->{'subscriber'} = $list->get_list_member($param->{'user'}{'email'})
 		if $param->{'is_subscriber'};
 	    $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
 	    $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
@@ -2752,7 +2752,7 @@ Use it to create a List object and initialize output parameters.
 	## privileges
 	if ($param->{'user'}{'email'}) {
 	    $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
-	    $param->{'subscriber'} = $list->get_subscriber($param->{'user'}{'email'})
+	    $param->{'subscriber'} = $list->get_list_member($param->{'user'}{'email'})
 		if $param->{'is_subscriber'};
 	    $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
 	    $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
@@ -4235,7 +4235,7 @@ sub do_renewpasswd {
      for (my $i = $list->get_first_list_member({'sortby' => $sortby, 
 					 'offset' => $offset, 
 					 'rows' => $size}); 
-	  $i; $i = $list->get_next_user()) {
+	  $i; $i = $list->get_next_list_member()) {
 
 	 ## some review pages may be empty while viewed by subscribers
 	 next if (($i->{'visibility'} eq 'conceal')
@@ -4336,7 +4336,7 @@ sub do_search {
     my $max_select = 50;
     
     ## Members list
-    for (my $i = $list->get_first_list_member({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_list_member({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_list_member()) {
 	
 	## Search filter
 	next if ($i->{'email'} !~ /$regexp/i
@@ -4376,7 +4376,7 @@ sub do_search {
 	$param->{'too_many_select'} = 1;
     }
 
-    $param->{'similar_subscribers'} = &List::get_ressembling_subscribers_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}});
+    $param->{'similar_subscribers'} = &List::get_ressembling_list_member_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}});
     $param->{'similar_subscribers_occurence'} =$#{$param->{'similar_subscribers'}}+1;
 
     $param->{'occurrence'} = $record;
@@ -4922,7 +4922,7 @@ sub do_suboptions {
     
     my ($s, $m);
     
-    unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
+    unless($s = $list->get_list_member($param->{'user'}{'email'})) {
 	&report::reject_report_web('intern','subscriber_not_found',{'email' => $param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	&wwslog('info',  'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
 	return undef;
@@ -6107,7 +6107,7 @@ sub do_skinsedit {
 	     next;
 	 }
 	 
-	 my $user_entry = $list->get_subscriber($email);
+	 my $user_entry = $list->get_list_member($email);
 	 
 	 if (defined($user_entry)) {
 	     &report::reject_report_web('user','user_already_subscriber', {'list' => $list->{'name'},'email' => $email},$param->{'action'},$list);
@@ -6219,7 +6219,7 @@ sub do_skinsedit {
 
 	 my $escaped_email = &tools::escape_chars($email);
 
-	 my $user_entry = $list->get_subscriber($email);
+	 my $user_entry = $list->get_list_member($email);
 
 	 unless (defined($user_entry)) {
 	     &report::reject_report_web('user','not_subscriber',{'email' => $email},$param->{'action'},$list);
@@ -8662,7 +8662,7 @@ sub do_home {
 
      $in{'email'} = &tools::unescape_chars($in{'email'});
 
-     unless($subscriber = $list->get_subscriber($in{'email'})) {
+     unless($subscriber = $list->get_list_member($in{'email'})) {
 	 &report::reject_report_web('intern','subscriber_not_found',{'email' => $in{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('info','do_editsubscriber: subscriber %s not found', $in{'email'});
 	 return undef;
@@ -15114,7 +15114,7 @@ sub do_change_email {
 	 
 	 my $l = $list->{'name'};
 	 
-	 my $user_entry = $list->get_subscriber($old_email);
+	 my $user_entry = $list->get_list_member($old_email);
 	 
 	 if ($user_entry->{'included'} == 1) {
 	     ## Check the type of data sources
@@ -15278,7 +15278,7 @@ sub do_suspend_request {
     my @lists = &List::get_which($email, $robot, 'member');
 
     foreach my $list (@lists) {
-	my $member_info = $list->get_subscriber($param->{'user'}{'email'});
+	my $member_info = $list->get_list_member($param->{'user'}{'email'});
 	if(($member_info->{'enddate'} < time) && ($member_info->{'enddate'})){
 	    ## If end date is < time, update the BDD by deleting the suspending's data
 	    &List::restore_suspended_subscription($param->{'user'}{'email'},$list->{'name'},$list->{'domain'});

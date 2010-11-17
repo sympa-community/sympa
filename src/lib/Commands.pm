@@ -634,7 +634,7 @@ sub review {
 		$user->{'email'} =~ y/A-Z/a-z/;
 		push @users, $user;
 	    }
-	} while ($user = $list->get_next_user());
+	} while ($user = $list->get_next_list_member());
 	unless ($list->send_file('review', $sender, $robot, {'users' => \@users, 
 							     'total' => $list->get_total(),
 							     'subject' => "REVIEW $listname",
@@ -770,7 +770,7 @@ sub subscribe {
     }
 
     ## Unless rejected by scenario, don't go further if the user is subscribed already.
-    my $user_entry = $list->get_subscriber($sender);    
+    my $user_entry = $list->get_list_member($sender);    
     if ( defined($user_entry)) {
 	&report::reject_report_cmd('user','already_subscriber',{'email'=>$sender, 'listname'=>$list->{'name'}},$cmd_line);
 	&do_log('err','User %s is subscribed to %s already. Ignoring subscription request.', $sender, $list->{'name'});
@@ -806,7 +806,7 @@ sub subscribe {
     }
     if ($action =~ /do_it/i) {
 
-	my $user_entry = $list->get_subscriber($sender);
+	my $user_entry = $list->get_list_member($sender);
 	
 	if (defined $user_entry) {
 		
@@ -1125,7 +1125,7 @@ sub signoff {
 	## Now check if we know this email on the list and
 	## remove it if found, otherwise just reject the
 	## command.
-	my $user_entry = $list->get_subscriber($email);
+	my $user_entry = $list->get_list_member($email);
 	unless ((defined $user_entry)) {
 	    &report::reject_report_cmd('user','your_email_not_found',{'email'=> $email, 'listname' => $list->{'name'}},$cmd_line); 
 	    &do_log('info', 'SIG %s from %s refused, not on list', $which, $email);
@@ -1613,7 +1613,7 @@ sub remind {
 		    &report::reject_report_cmd('intern_quiet','',{'listname'=> $listname},$cmd_line,$sender,$robot);
 		}
 		$total += 1 ;
-	    } while ($user = $list->get_next_user());
+	    } while ($user = $list->get_next_list_member());
 	    
 	    &report::notice_report_cmd('remind',{'total'=> $total,'listname' => $listname},$cmd_line);
 	    &do_log('info', 'REMIND %s  from %s accepted, sent to %d subscribers (%d seconds)',$listname,$sender,$total,time-$time_command);
@@ -1665,7 +1665,7 @@ sub remind {
 			do_log('debug2','remind * : %s subscriber of %s', $email,$listname);
 			$count++ ;
 		    } 
-		} while ($user = $list->get_next_user());
+		} while ($user = $list->get_next_list_member());
 	    }
 	    &do_log('debug2','Sending REMIND * to %d users', $count);
 
@@ -1790,7 +1790,7 @@ sub del {
     if ($action =~ /do_it/i) {
 	## Check if we know this email on the list and remove it. Otherwise
 	## just reject the message.
-	my $user_entry = $list->get_subscriber($who);
+	my $user_entry = $list->get_list_member($who);
 
 	unless ((defined $user_entry)) {
 	    &report::reject_report_cmd('user','your_email_not_found',{'email'=> $who, 'listname' => $which},$cmd_line); 
