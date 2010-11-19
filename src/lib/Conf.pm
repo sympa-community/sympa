@@ -107,54 +107,22 @@ sub load {
     my $no_db = shift;
     my $return_result = shift;
 
-
-    my $line_num = 0;
+    ## Loading the config file.
     my $config_err = 0;
     my($i, %o);
-
-    ## Open the configuration file or return and read the lines.
-    unless (open(IN, $config)) {
-        printf STDERR  "load: Unable to open %s: %s\n", $config, $!;
+    if(my $config_loading_result = &_load_config_file_to_hash({'path_to_config_file' => $config})) {
+#	my $ref_to_config = $config_loading_result->{'config'};
+	%o = %{$config_loading_result->{'config'}};
+	$config_err = $config_loading_result->{'errors'};
+    }else{
+        printf STDERR  "load: Unable to load %s. Aborting\n", $config;
         return undef;
     }
-    while (<IN>) {
-        $line_num++;
-        # skip empty or commented lines
-        next if (/^\s*$/ || /^[#;]/);
-	    # match "keyword value" pattern
-	    if (/^(\S+)\s+(.+)$/) {
-		my ($keyword, $value) = ($1, $2);
-		$value =~ s/\s*$//;
-		##  'tri' is a synonym for 'sort'
-		## (for compatibilyty with older versions)
-		$keyword = 'sort' if ($keyword eq 'tri');
-		##  'key_password' is a synonym for 'key_passwd'
-		## (for compatibilyty with older versions)
-		$keyword = 'key_passwd' if ($keyword eq 'key_password');
-		## Special case: `command`
-		if ($value =~ /^\`(.*)\`$/) {
-		    $value = qx/$1/;
-		    chomp($value);
-		}
-		if($params{$keyword}{'multiple'} == 1){
-		    if($o{$keyword}) {
-			push @{$o{$keyword}}, [$value, $line_num];
-		    }else{
-			$o{$keyword} = [[$value, $line_num]];
-		    }
-		}else{
-		    $o{$keyword} = [ $value, $line_num ];
-		}
-	    } else {
-		printf STDERR  gettext("Error at line %d: %s\n"), $line_num, $config, $_;
-		$config_err++;
-	    }
-    }
-    close(IN);
-
+    open TMP, ">>/tmp/dumpo"; &tools::dump_var(\%o,0,\*TMP);close TMP;
+    # Returning the config file content if this is what has been asked.
     return (\%o) if ($return_result);
 
-    ## Hardcoded values
+    ## Some parameter values are hardcoded. In that case, ignore what was set in the config file and simply use the hardcoded value.
     foreach my $p (keys %hardcoded_params) {
 	$Ignored_Conf{$p} = $o{$p}[0] if (defined $o{$p});
 	$o{$p}[0] = $hardcoded_params{$p};
@@ -1623,5 +1591,56 @@ sub conf_2_db {
     }
 }
 
+## Simply load a config file and returns a hash.
+## the returned hash contains two keys:
+## 1- the key 'config' points to a hash containing the data found in the config file.
+## 2- the key 'errors' contains the number of config entries that could not be loaded, due to an error.
+## Returns undef if something went wrong while attempting to read the file.
+sub _load_config_file_to_hash {
+    my $param = shift;
+    my $result;
+    $result->{'errors'} = 0;
+    my $line_num = 0;
+    ## Open the configuration file or return and read the lines.
+    unless (open(IN, $param->{'path_to_config_file'})) {
+        printf STDERR  "load: Unable to open %s: %s\n", $param->{'path_to_config_file'}, $!;
+        return undef;
+    }
+    while (<IN>) {
+        $line_num++;
+        # skip empty or commented lines
+        next if (/^\s*$/ || /^[\#;]/);
+	    # match "keyword value" pattern
+	    if (/^(\S+)\s+(.+)$/) {
+		my ($keyword, $value) = ($1, $2);
+		$value =~ s/\s*$//;
+		##  'tri' is a synonym for 'sort'
+		## (for compatibilyty with older versions)
+		$keyword = 'sort' if ($keyword eq 'tri');
+		##  'key_password' is a synonym for 'key_passwd'
+		## (for compatibilyty with older versions)
+		$keyword = 'key_passwd' if ($keyword eq 'key_password');
+		## Special case: `command`
+		if ($value =~ /^\`(.*)\`$/) {
+		    $value = qx/$1/;
+		    chomp($value);
+		}
+		if($params{$keyword}{'multiple'} == 1){
+		    if($result->{'config'}{$keyword}) {
+			push @{$result->{'config'}{$keyword}}, [$value, $line_num];
+		    }else{
+			$result->{'config'}{$keyword} = [[$value, $line_num]];
+		    }
+		}else{
+		    $result->{'config'}{$keyword} = [ $value, $line_num ];
+		}
+	    } else {
+		printf STDERR  gettext("Error at line %d: %s\n"), $line_num, $param->{'path_to_config_file'}, $_;
+		$result->{'errors'}++;
+	    }
+    }
+    close(IN);
+    return $result;
+}
 ## Packages must return true.
 1;
