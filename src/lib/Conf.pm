@@ -27,6 +27,7 @@ use strict "vars";
 
 use Exporter;
 use Carp;
+use Storable;
 
 use List;
 use Log;
@@ -1641,5 +1642,35 @@ sub _load_config_file_to_hash {
     close(IN);
     return $result;
 }
+
+# Stores the config hash binary representation to a file.
+# Returns 1 or undef if something went wrong.
+sub _save_binary_cache {
+    my $param = shift;
+    eval {
+	&Storable::store($param->{'conf_to_save'},$param->{'target_file'});
+    };
+    if ($@) {
+	printf STDERR  'Failed to save the binary config %s. error: %s', $param->{'target_file'},$@;
+	return undef;
+    }
+    return 1;
+}
+
+# Loads the config hash binary representation from a file an returns it
+# Returns the hash or undef if something went wrong.
+sub _load_binary_cache {
+    my $param = shift;
+    my $result = undef;
+    eval {
+	$result = &Storable::retrieve($param->{'source_file'});
+    };
+    if ($@) {
+	printf STDERR  'Failed to load the binary config %s. error: %s', $param->{'source_file'},$@;
+	return undef;
+    }
+    return $result;
+}
+
 ## Packages must return true.
 1;
