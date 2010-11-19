@@ -111,14 +111,13 @@ sub load {
     my $config_err = 0;
     my($i, %o);
     if(my $config_loading_result = &_load_config_file_to_hash({'path_to_config_file' => $config})) {
-#	my $ref_to_config = $config_loading_result->{'config'};
 	%o = %{$config_loading_result->{'config'}};
 	$config_err = $config_loading_result->{'errors'};
     }else{
         printf STDERR  "load: Unable to load %s. Aborting\n", $config;
         return undef;
     }
-    open TMP, ">>/tmp/dumpo"; &tools::dump_var(\%o,0,\*TMP);close TMP;
+
     # Returning the config file content if this is what has been asked.
     return (\%o) if ($return_result);
 
