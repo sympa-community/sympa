@@ -156,50 +156,28 @@ function toggle_selection(myfield) {
   }
 }
 
- function chooseColorNumber(cn) {
+function chooseColorNumber(cn) {
     var select = document.getElementById('custom_color_number');
 
     if(select) for(var i=0; i<select.options.length; i++) if(select.options[i].value == cn) select.options.selectedIndex = i;
  }
 
 // check if rejecting quietly spams
+ function check_reject_spam(form,warningId) {
 
- function check_reject_spams(form,my_question,prevent_notify) {
-    var checkbox_checked = false;
-
-    if (prevent_notify.checked == "1") {
-	return(true);
+    if (form.elements['iConfirm'].checked) {
+	return (true);
     }
+    if ( form.elements['message_template'].options[form.elements['message_template'].selectedIndex].value ==  'reject_quiet' ){
+	return (true);
+    }	
+    document.getElementById(warningId).style.display = 'block';	
+    return (false);
+}
 
-    if (!form.elements.length) {
-      if (form.elements.name == "idspam") { 
-        var box = form.elements;
-        if (box.checked == "1" ) {
- 	 checkbox_checked = true;
-        }
-      }
-    }else{
-      for (i = 0; i < form.elements.length; i++) {
-        if (form.elements[i].name == "idspam") { 
-          var box = form.elements[i];
-          if (box.checked == "1" ) {
-            checkbox_checked = true;
-            break;	
-          }
-        }
-      }
-    }
-    if (checkbox_checked) {
-	if (confirm(my_question)){	
-          return(true);
-	}else{
-	  return(false);
-        }	
-    }
-  }
 
-  // To check at least one checkbox checked
-  function checkbox_check_topic(form,string) {
+// To check at least one checkbox checked
+function checkbox_check_topic(form,warningId) {
  
     var checkbox_checked = false;
     var expr = /^topic_/;	
@@ -214,12 +192,12 @@ function toggle_selection(myfield) {
       }
     }
     if (checkbox_checked) {
-      return(true);	
+      	return(true);	
     } else {
-      alert("You must select a topic");
-      return(false);
+	document.getElementById(warningId).style.display='block';
+        return(false);
     }
-  }
+}
 
 //launch a search by message Id
 function searched_by_msgId(id) {
@@ -1065,3 +1043,32 @@ function config_ctxhelp(td) {
 	td.d.style.display = 'block';
 }
 
+
+// function that hide all hiddenform except one which Id is the function parameter (used in modindex and more)
+function toggleDivDisplay(my_message_id) 
+{
+  for( i=0; i<document.getElementsByName( 'hiddenform').length; i++){
+     if (document.getElementsByName('hiddenform')[i].id == my_message_id) {		
+	if (document.getElementById(my_message_id).style.display == 'block') {
+		document.getElementById(my_message_id).style.display = 'none';
+	} else {
+		document.getElementById(my_message_id).style.display = 'block';
+	}
+     } else {
+	document.getElementsByName('hiddenform')[i].style.display = 'none';
+     }
+  }
+}
+
+//hide a div (usually a part of a form) 
+function hideform(my_message_id)
+{
+	document.getElementById(my_message_id).style.display='none';
+}
+
+
+// fade effect for notification boxes
+jQuery(document).ready(function() {
+    $('#noticeMsg').delay(500).fadeOut(4000);
+  }
+); 

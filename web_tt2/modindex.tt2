@@ -2,75 +2,46 @@
 <div class="block">
 
 [% IF mod_total %]
-<!-- moderation of messages -->
-<form class="noborder" action="[% path_cgi %]" method="post" name="moderate_mails">
-<fieldset>
-  <input type="hidden" name="list" value="[% list %]" />
+
 <h2>[%|loc%]Listing messages to moderate[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
-
 <p>
- [%- IF topic_required -%]
 
-<input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>
+<!-- moderation of messages -->
+
+[% line_count = 0 %]
+[% mod_display_message = 1 %]
+[% FOREACH msg = spool %]
+    [% line_count = line_count + 1 %]
+<div id="mainviewmod[% msg.key %]" class="block viewmod" style="display:none; background-color:[% color_5 %]; position:absolute; width:80%">
+<input style="float:right" type="button" name="action_distribute" value="X"  onclick="return hideform('mainviewmod[% msg.key %]')"/>
+<h3>Current message</h3>
+[% PROCESS modform.tt2 %]
+<p>
+<div id="viewmod[% msg.key %]">
+  [%|loc%]loading message...[%END%]
+  <!-- empty div that will display a content by AJAX -->
+</div>
 </p>
-<p>
+</div>
 
- [%- ELSE -%]
-<input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
-</p>
-<p>
+[% END %]
 
-[%- END -%]
-
- <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spams(document.moderate_mails,'[% FILTER escape_quote %][%|loc %]You should probably not reject message detected as spam with notification because the message sender is probably spoofed. Do you really want to reject those messages with notification?[%END%][%END%]',document.moderate_mails.quiet)" /> 
-
-<input type="hidden" name="from_modindex" value="from_modindex" />
-
-  <select  name="message_template">
-
-  <option  value="reject">[%|loc %]Server default rejection message[%END%]</option>
-    [% FOREACH file = available_files %]
-        <option  value="reject_[%  file  %]" [% IF file == default_reject_template %] selected="selected" [%END%] > [%  file  %]</option> 
-    [%- END- %]
-  </select>
-<br />
-
-
-<input type=checkbox name="quiet">[%|loc %]Reject without notification [%END%]</option>
-<br />
-<input type=checkbox name="blacklist">[%|loc %]Add to blacklist[%END%]</option>
-
-
-</p>
-<p>
-
-
- [%- IF request_topic -%]
- <br />
- [%|loc%]This list is configured to require topic(s).[%END%]
- <br />
- [%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] 
- <br />
- [% FOREACH t = available_topics %]
- <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
- <br />
- [%- END- %]
- <br />
- [%- END -%]
+[% mod_display_message = 0 %]
 
  <table summary="[%|loc%]Listing messages to moderate[%END%]" class="listOfItems">
       <tr>
      [%- IF conf.antispam_feature == 'on' -%]
-	<th colspan="2"><a href="#" onclick="toggle_selection(document.moderate_mails.id);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></strong></th>	
-     [%- ELSE -%]
-	<th>X</th>
+	<th>Spam</th>	
      [%- END -%]
-        <th>[%|loc%]Date[%END%]</th>
+	<th>Moderate</th>
 	<th>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
+        <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
       </tr>	 
       [% FOREACH msg = spool %]
+
+        [% line_count = line_count + 1 %]	
         [% IF dark == '1' %]
 	  [% dark = '0' %]
 	  <tr>
@@ -78,24 +49,19 @@
 	  [% dark = '1' %]
           <tr class="color0">
 	[% END %]
-         <td>
-	[%- IF msg.value.spam_status == 'spam' -%][% idname = 'idspam' %][% therissomespam = '1' %][% ELSE %][% idname = 'id' %][% therissomeham = '1' %][% END %]
-            <input type="checkbox" name="[% idname %]" value="[% msg.key %]" />
-	 </td>
+
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
 	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
 	  [%- ELSE -%]&nbsp;
 	  [%- END -%]
-	[%- END -%]
 	</td>
-	  <td>
-	    [% IF msg.value.date %]
-	      [% msg.value.date %]
-	    [% ELSE %]
-	      &nbsp;
-	    [% END %]
-	  </td>
+	[%- END -%]
+
+          <td style="white-space: nowrap">
+           [% PROCESS modform.tt2 %]
+          </td>
+
 	  <td>[% msg.value.from %]</td>
 	  <td>
 	    [% IF msg.value.subject == 'no_subject' %]
@@ -103,34 +69,21 @@
 	    [% ELSE %]
 	      <a href="[% path_cgi %]/viewmod/[% list %]/[% msg.key %]">[% msg.value.subject %]</a>
 	    [% END %]
+
+
+	  </td>
+	  <td>
+	    [% IF msg.value.date %]
+	      [% msg.value.date %]
+	    [% ELSE %]
+	      &nbsp;
+	    [% END %]
 	  </td>
 	  <td>[% msg.value.size %] kb</td>
+
 	</tr>
       [% END %] 
     </table>
-[% IF mod_message >= 10 %]
- [%- IF topic_required -%]
-  <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return checkbox_check_topic(moderate_mails)"/>
- [%- ELSE -%]
-  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
- [% END %]
-  <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
-[% IF conf.use_blacklist != 'none' %]
-  <input class="MainMenuLinks" type="submit" name="action_reject.blacklist" value="[%|loc%]Reject and blacklist sender[%END%]" />
-[% END %]
-<br />
-[%- END- %]
-
-<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_mails.id); toggle_selection(document.moderate_mails.idspam)" />
-
-[%- IF therissomespam  -%]
-   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle spams[%END%]" onclick="toggle_selection(document.moderate_mails.idspam)" />
-[%- END -%]
-<br />
-
-</fieldset>
-</form>
 
 
 [%END%]

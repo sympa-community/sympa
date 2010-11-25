@@ -104,6 +104,7 @@ my $param = {};
 my ($robot, $robot_object);
 my $ip ; 
 my $rss ;
+my $ajax;
 my $session;
 
 ## Load sympa config
@@ -716,6 +717,7 @@ my %temporary_actions = ( 'logout' => 1,
  			  'ticket' => 1,
  			  'css' => 1,
  			  'rss' => 1,
+ 			  'ajax' => 1,
  			  'wsdl' => 1,
  			  'redirect' => 1,
 			  );
@@ -960,6 +962,7 @@ my $birthday = time ;
      undef $robot_object;
      undef $ip;
      undef $rss;
+     undef $ajax;
      undef $session;
 
      &Log::set_log_level($Conf{'log_level'});
@@ -1049,7 +1052,9 @@ my $birthday = time ;
 	            'main_menu_custom_button_2_url','main_menu_custom_button_2_title','main_menu_custom_button_2_target',
 	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature','custom_robot_parameter',
-                    'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15') {
+                    'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15',
+		    'reporting_spam_script_path'
+		    ) {
 
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
@@ -1136,7 +1141,8 @@ my $birthday = time ;
 
      $session = new SympaSession ($robot,{'cookie'=>&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}),
 					  'action'=>$in{'action'},
-					  'rss'=>$rss});
+					  'rss'=>$rss, 'ajax' => $ajax});
+
      undef $ENV{'HTTP_COOKIE'}; # Getting rid of the environment variable to make sure it won't be affected to another anonymous session.
      unless (defined $session) {
 	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
@@ -1318,7 +1324,6 @@ my $birthday = time ;
 	 &do_maintenance();
 	 $param->{'action'} = 'maintenance';
      }else {
-     
 	 ## Session loop
 	 while ($action) {
 	     unless (&check_param_in()) {
@@ -1428,7 +1433,7 @@ my $birthday = time ;
      unless ($param->{'bypass'} eq 'extreme' || 
 	     $param->{'action'} eq 'css' || 
 	     $maintenance_mode ||
-	     $rss) {
+	     $rss||$ajax) {
 
 	 my $delay = $param->{'user'}{'cookie_delay'};
 	 unless (defined $delay) {
@@ -1603,7 +1608,31 @@ my $birthday = time ;
  	     }
  	 }
 
+     }elsif ($ajax) {
+	 print "Cache-control: no-cache\n";
+ 	 print "Content-Type: text/html; charset=utf-8\n\n"; 
+	
+ 	 ## Icons
+ 	 $param->{'icons_url'} = $Conf{'static_content_url'}.'/icons';
+ 
+ 	 ## Retro compatibility concerns
+ 	 $param->{'active'} = 1;
+ 
+ 	 if (defined $list) {
+ 	     $param->{'list_conf'} = $list->{'admin'};
+ 	 }
 
+	 my $lang = &Language::Lang2Locale($param->{'lang'});
+	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
+	 
+ 	 unless (&tt2::parse_tt2($param,'ajax.tt2' ,\*STDOUT, $tt2_include_path, {})) {
+ 	     my $error = &tt2::get_error();
+ 	     $param->{'tt2_error'} = $error;
+ 	     unless (&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error])) {
+ 		 &wwslog('notice','Unable to send notify "web_tt2_error" to listmaster');
+ 	     } 
+
+     }
 # 	 close FILE;
      }elsif ($param->{'redirect_to'}) {
 	 do_log ('notice',"Redirecting to $param->{'redirect_to'}");
@@ -1789,9 +1818,14 @@ sub _split_params {
 	$rss = 1;
     } 
     
+    ## ajax mode 
+    if ($params[0] eq 'ajax') {
+	shift @params;
+	$ajax = 1;
+    } 
+    
     if ($#params >= 0) {
 	$in{'action'} = $params[0];
-	
 	my $args;
 	if (defined $action_args{$in{'action'}}) {
 	    $args = $action_args{$in{'action'}};
@@ -6708,6 +6742,27 @@ sub do_skinsedit {
 	     }
 	 }
 	 close(IN);  
+	 if (($in{'signal_spam'}) && ($Conf{'reporting_spam_script_path'} ne '')){
+	     if (-x $Conf{'reporting_spam_script_path'}){
+		 unless (open(IN, $file)) {
+		     do_log('err',"could not open $file");
+		 }
+		 unless (open(SCRIPT, "|$Conf{'reporting_spam_script_path'}")) {
+		     do_log('err',"could not execute $Conf{'reporting_spam_script_path'}");
+		 }
+		 while(<IN>){
+		     print SCRIPT $_;
+		 }
+		 close (IN);
+		 if (close(SCRIPT)){		 
+		     &do_log('info',"message $file reported as spam by $param->{'user'}{'email'}") ;
+		 }else{
+		     &do_log('err',"could not report message $file as spam (close failed)");
+		 }
+	     }else{
+		 &do_log('err',"ignoring parameter reporting_spam_script_path, value $Conf{'reporting_spam_script_path'} because not an executable script");
+	     }	
+	 }
 
 	 unless (unlink($file)) {
 	     &report::reject_report_web('intern','erase_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -6857,6 +6912,73 @@ sub do_skinsedit {
 #
 ####################################################
 sub do_viewmod {
+     &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
+
+     my $msg;
+     my $tmp_dir;
+
+     my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
+     foreach my $file (keys %$available_files) {
+	 next unless($file =~ /^reject_/);
+	 $file =~ s/^reject_//;
+         $file =~ s/.tt2$//;
+	 push (@{$param->{'available_files'}},$file); 
+     }
+
+     ## For compatibility concerns
+     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
+	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
+	 if (-d $tmp_dir) {
+	     last;
+	 }
+     }
+     
+     unless (-d $tmp_dir) {
+	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
+	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
+	 return undef;
+     }     
+
+     if ($in{'file'}) {
+	 $in{'file'} =~ /\.(\w+)$/;
+	 $param->{'file_extension'} = $1;
+	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
+	 $param->{'bypass'} = 1;
+     }else {
+	 &tt2::add_include_path($tmp_dir) ;
+     }
+
+     $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};     
+     $param->{'id'} = $in{'id'};
+
+     if ($list->is_there_msg_topic()) {
+
+	 $param->{'request_topic'} = 1;
+     
+	 foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
+	     if ($top->{'name'}) {
+		 push (@{$param->{'available_topics'}},$top);
+	     }
+	 }
+	 $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
+     }
+
+     return 1;
+ }
+
+
+####################################################
+#  do_viewmod
+####################################################
+#  Web page for an editor to moderate a mail and/or 
+#  to tag it in message topic context
+# 
+# IN : -
+#
+# OUT : 'login,request' | '1' | undef
+#
+####################################################
+sub do_viewmod_old {
      &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
 
      my $msg;
@@ -16054,7 +16176,6 @@ sub do_stats {
      }
      $param->{'stats_values'} =~ s/,$//;
      $param->{'stats_values'} .= "]";
-     #&wwslog('trace', "$data_mail->{$id_data}->{'end_date_counter'}");
      
      #------------------subscriptions treatment----------------------
      my $data_sub = &List::get_data('add_subscriber', $robot , $in{'list'});

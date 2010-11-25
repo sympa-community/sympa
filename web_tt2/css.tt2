@@ -1278,6 +1278,21 @@ h7 strong {
             }
 
 
+.formError {
+	    float:right;
+            background: [% color_7 %];
+            z-index:610!important;
+            border: 2px ridge [% color_12 %];
+            padding:1em 0.5em;
+            -moz-border-radius:20px;
+            -webkit-border-radius:20px;
+            -KHTML-border-radius:20px;
+            -icab-border-radius:20px;
+            border-radius:20px;
+	    display:none;
+            }
+
+
 
 #ErrorMsg .MainMenuLinks { 
                            color:[% color_4 %];
@@ -1301,9 +1316,10 @@ h7 strong {
                                  }
 
 #noticeMsg { 
-             margin-top:1.5em;
-	     width:98%;
-             border: 5px ridge [% color_12 %];
+	     position: absolute;
+	     top:20%;left:25%;right:25%;
+	     z-index: 700!important;
+             border: 2px ridge [% color_12 %];
              font-family:serif;
              font-size: 1.6em;
              font-weight: bold;
@@ -1338,6 +1354,8 @@ h7 strong {
                                   color:[% color_5 %]!important;
                                   }
 
+
+
 div.messageContent {
 	text-align: left;
 	color:[% color_5 %]!important;
@@ -1346,6 +1364,26 @@ div.messageContent {
 	height: 400px;
 	overflow-y: scroll;
 }
+
+
+
+div.hiddenform { 
+            position:absolute;
+            width:40%;
+	    background: [% color_3 %];
+            z-index:610!important;
+            border: 2px ridge [% color_12 %];
+            padding:1em 0.5em;
+            -moz-border-radius:20px;
+            -webkit-border-radius:20px;
+            -KHTML-border-radius:20px;
+            -icab-border-radius:20px;
+            border-radius:20px;
+	    display:none;
+            }
+
+
+
 
 p.listenum {
              margin: 0 0 0.5em 1.5em;
@@ -1711,6 +1749,7 @@ table.listOfItems {
 
 table.listOfItems td { 
                        font-size: smaller;
+		       padding: 5px;
                        border:1px solid [% color_12 %];
                        }
 

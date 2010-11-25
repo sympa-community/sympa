@@ -23,6 +23,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   add_request.tt2 \
 		   admin_menu.tt2 \
 		   admin.tt2 \
+		   ajax.tt2 \
 		   arc_manage.tt2 \
 		   arc_protect.tt2 \
 		   arcsearch_form.tt2 \
@@ -101,6 +102,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   menu.tt2 \
 		   menu_search.tt2 \
 		   modindex.tt2 \
+		   modform.tt2 \
 		   nav.tt2 \
 		   news.tt2 \
 		   notice.tt2 \

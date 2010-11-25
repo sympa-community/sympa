@@ -51,9 +51,9 @@ sub new {
     my $cookie = $context->{'cookie'};
     my $action = $context->{'action'};
     my $rss = $context->{'rss'};
+    my $ajax =  $context->{'ajax'};
 
     do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
-
     my $session={};
     bless $session, $pkg;
     
@@ -62,7 +62,7 @@ sub new {
 	return undef;
     }
 
-#   passive_session are session not stored in the database, they are used for crawler bots and action such as css, wsdl and rss
+#   passive_session are session not stored in the database, they are used for crawler bots and action such as css, wsdl, ajax and rss
     
     if (&tools::is_a_crawler($robot,{'user_agent_string' => $ENV{'HTTP_USER_AGENT'}})) {
 	$session->{'is_a_crawler'} = 1;

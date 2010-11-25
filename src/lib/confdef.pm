@@ -997,6 +997,14 @@ our @params = (
         edit  => '1',
     },
     {
+        name  => 'reporting_spam_script_path',
+        default => '',
+        query => 'If set, when a list editor report a spam, this external script is run by wwsympa or sympa, the spam is sent into script stdin',
+	vhost   => '1',
+        file  => 'sympa.conf',
+        edit  => '1',
+    },
+    {
         name    => 'allow_subscribe_if_pending',
         default => 'on',
 	vhost   => '1',

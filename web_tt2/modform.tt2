@@ -1,0 +1,68 @@
+[%- IF msg.value.spam_status == 'spam' -%][% idname = 'idspam' %][% therissomespam = '1' %][% ELSE %][% idname = 'id' %][% therissomeham = '1' %][% END -%]
+<form class="noborder" style="display:inline" action="[% path_cgi %]" method="post" name="moderate_mail[% line_count %]"><fieldset>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="[% idname %]" value="[% msg.key %]" />
+[%- IF topic_required -%]
+  <input class="MainMenuLinks" type="button" name="action_distribute" value="[%|loc%]Distribute[%END%]"  onclick="return toggleDivDisplay('topics[% line_count %]')"/>
+  <div name="hiddenform" class="hiddenform" id="topics[% line_count %]" style="display:none">
+   <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return toggleDivDisplay('topics[% line_count %]')"/>
+   [%- IF request_topic -%]
+     <h3> [%|loc%]This list is configured to require topic(s).[%END%]</h3>
+     <br />[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] <br />
+     [% FOREACH t = available_topics %]
+       <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input><br />
+     [%- END- %]
+     <br />
+   [%- END -%]
+   <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" onclick="return checkbox_check_topic(moderate_mail[% line_count %],'warningTopic[% line_count %]')"/>
+   <div class="formError" style="display:none"  id="warningTopic[% line_count %]">
+     [%|loc%]You must select a topic[%END%]
+   </div>
+  </div>
+[%- ELSE -%]
+  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+[%- END -%]
+&nbsp;
+<input class="MainMenuLinks" type="button" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return toggleDivDisplay('reject[% line_count %]')"/>
+<div name="hiddenform" class="hiddenform" id="reject[% line_count %]" style="display:none">
+  <input type="hidden" name="from_modindex" value="from_modindex" />
+  <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return toggleDivDisplay('reject[% line_count %]')"/>
+  <h3>[%|loc%]Rejecting message[%END%]</h3>
+ 
+  [%|loc%]Choose notification [%END%]:
+  <select  name="message_template">
+    <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
+    [% FOREACH file = available_files %]
+        <option  value="reject_[%  file  %]" [% IF file == default_reject_template && msg.value.spam_status != 'spam' -%][% one_template_is_selected = '1' %]selected="selected" [%END%] > [%  file  %]</option> 
+    [%- END- %]
+    <option  value="reject" [% IF one_template_is_selected != '1' %] selected="selected"[% END %]>[%|loc %]Server default rejection message[%END%]</option>
+  </select>
+  <br />
+  [% IF conf.reporting_spam_script_path %]
+     [%- IF msg.value.spam_status != 'spam' -%]
+        <br /> <input type=checkbox name="signal_spam" />[%|loc %]Report message as undetected spam [%END%]</option>
+     [% END %] 
+  [% END %] 
+  <br /> <input type=checkbox name="blacklist" />[%|loc %]Add sender to blacklist[%END%]</option>
+  <br />
+  <div class="formError" style="display:none"  id="warningSpam[% line_count %]">
+   [%|loc%]You should rejet spams quietly because the sender of a spam is often spoofed, if you really want to send this notification, please confirm [%END%]
+   <input type="checkbox" name="iConfirm" value="1" />
+  </div>
+
+  [%- IF msg.value.spam_status != 'spam' -%]
+     <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]">
+  [% ELSE %]
+     <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" onclick="return check_reject_spam(moderate_mail[% line_count %],'warningSpam[% line_count %]')" />
+  [% END %]
+  <br />
+  </div>
+[% IF mod_display_message %]
+<input type="button" class="MainMenuLinks" name="action_distribute" value="hide" onclick="return hideform('mainviewmod[% msg.key %]')" />
+[% ELSE %]
+<input type="button" class="MainMenuLinks" name="action_distribute" value="view" onclick="jQuery('.viewmod').hide();jQuery('#viewmod[% msg.key %]').load('http://dev-sympa.cru.fr[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]').parent().show()" />
+[% END %]
+
+
+</fieldset>
+</form>

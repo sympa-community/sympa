@@ -1145,7 +1145,7 @@ sub install_aliases {
 	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
 	 my $status = $? / 256;
 	 if ($status == 0) {
-	     &do_log('err','admin::install_aliases : Aliases installed successfully') ;
+	     &do_log('info','admin::install_aliases : Aliases installed successfully') ;
 	     $alias_installed = 1;
 	 }elsif ($status == 1) {
 	     &do_log('err','admin::install_aliases : Configuration file %s has errors', Sympa::Constants::CONFIG);
