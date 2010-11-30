@@ -2938,7 +2938,9 @@ sub do_ticket {
     
     # if the ticket is related to someone which is not logged in, the system performs the same operation as for a login
     my $email_regexp = &tools::get_regexp('email');
-	if ($param->{'ticket_context'}{'result'} eq 'success') {
+    if (($param->{'ticket_context'}{'result'} eq 'success')||  # a valid ticket or a closed or expired ticket but with a valid pre-existing session
+	((($param->{'ticket_context'}{'result'} eq 'expired')||($param->{'ticket_context'}{'result'} eq 'closed')) && (lc($param->{'ticket_context'}{'email'}) eq $session->{'email'})) 
+       ) {
 	    $session->{'email'} = lc($param->{'ticket_context'}{'email'});
 	    $param->{'user'} =  &List::get_global_user($session->{'email'});
 	    $param->{'user'}{'email'} =  $session->{'email'} ;
