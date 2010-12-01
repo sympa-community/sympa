@@ -28,15 +28,15 @@ msgstr ""
 "können Sie Ihre Abonnements verwalten oder abbestellen, Archive einsehen, "
 "Listen verwalten und moderieren."
 
-#: ../web_tt2/home.tt2:13
+#: ../web_tt2/home.tt2:7
 msgid "Mailing lists categories"
 msgstr "Listenkategorien"
 
-#: ../web_tt2/home.tt2:23
+#: ../web_tt2/home.tt2:17
 msgid "Others"
 msgstr "Andere"
 
-#: ../web_tt2/home.tt2:48
+#: ../web_tt2/home.tt2:42
 msgid "RSS news"
 msgstr "RSS-Nachrichten"
 
@@ -93,7 +93,7 @@ msgstr "Hauptseite"
 #: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
-#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6 ../web_tt2/pref.tt2:4
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
 #: ../web_tt2/suspend_request.tt2:64
@@ -113,7 +113,7 @@ msgid "Privileged owner"
 msgstr "Privilegierter Eigentümer"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:1200 ../web_tt2/login_menu.tt2:15
+#: ../src/lib/List.pm:1187 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Eigentümer"
 
@@ -143,11 +143,11 @@ msgstr "Ihre Einstellungen"
 msgid "Manage your subscriptions"
 msgstr "Unbestätigte Abonnements"
 
-#: ../web_tt2/lists.tt2:29 ../web_tt2/your_lists.tt2:14
+#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
 msgid "admin"
 msgstr "Admin"
 
-#: ../web_tt2/lists.tt2:73 ../web_tt2/search_user.tt2:77
+#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
 #: ../web_tt2/your_lists.tt2:23
 msgid "No mailing list available."
 msgstr "Keine Mailingliste verfügbar."
@@ -201,29 +201,24 @@ msgstr "Dokument"
 msgid "Subscriptions"
 msgstr "Abonnements"
 
-#: ../web_tt2/list_menu.tt2:56
-#, fuzzy
-msgid "Statistics"
-msgstr "Status"
-
-#: ../web_tt2/list_menu.tt2:64 ../web_tt2/list_menu.tt2:66
+#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
 msgid "Archive"
 msgstr "Archiv"
 
-#: ../web_tt2/list_menu.tt2:72 ../web_tt2/list_menu.tt2:74
+#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
 msgid "Post"
 msgstr "Senden"
 
-#: ../web_tt2/list_menu.tt2:78
+#: ../web_tt2/list_menu.tt2:75
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1338 ../web_tt2/list_menu.tt2:83
-#: ../web_tt2/list_menu.tt2:85
+#: ../src/lib/List.pm:1325 ../web_tt2/list_menu.tt2:80
+#: ../web_tt2/list_menu.tt2:82
 msgid "Shared documents"
 msgstr "Gemeinsame Dokumente"
 
-#: ../web_tt2/list_menu.tt2:91
+#: ../web_tt2/list_menu.tt2:88
 msgid "Review members"
 msgstr "Abonnenten auflisten"
 
@@ -248,7 +243,7 @@ msgid "Owners"
 msgstr "Eigentümer"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:692 ../web_tt2/list_panel.tt2:20
+#: ../src/lib/List.pm:679 ../web_tt2/list_panel.tt2:20
 msgid "Moderators"
 msgstr "Moderatoren"
 
@@ -458,7 +453,7 @@ msgstr "Erstellungsdatum"
 #: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
 #: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
 #: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:38 ../web_tt2/review_family.tt2:9
+#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Titel"
 
@@ -475,8 +470,8 @@ msgid "Add subscribers"
 msgstr "Abonnenten hinzufügen"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:107 ../web_tt2/review.tt2:141
-#: ../web_tt2/reviewbouncing.tt2:127
+#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:74 ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "leise"
 
@@ -489,12 +484,12 @@ msgid "Subscribers"
 msgstr "Abonnenten"
 
 #: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
-#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:64
+#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:64
 msgid "Edit List Config"
 msgstr "Listenkonfiguration bearbeiten"
 
 #: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
-#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:67
+#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:67
 msgid "Customizing"
 msgstr "Anpassen"
 
@@ -504,7 +499,7 @@ msgid "Manage Archives"
 msgstr "Archive verwalten"
 
 #: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
-#: ../web_tt2/lists.tt2:43 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
+#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
 #: ../web_tt2/review.tt2:44
 msgid "Bounces"
 msgstr "Zustellfehler"
@@ -569,7 +564,7 @@ msgstr "Archiv-Verwaltung"
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/editsubscriber.tt2:37
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
-#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:20
@@ -626,7 +621,7 @@ msgid "Search field:"
 msgstr "Suchfeld:"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:90 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:89 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Suchen"
 
@@ -700,7 +695,7 @@ msgid "Sender"
 msgstr "Absender"
 
 #: ../web_tt2/arcsearch_form.tt2:49 ../web_tt2/latest_arc.tt2:19
-#: ../web_tt2/modindex.tt2:105 ../web_tt2/modindex.tt2:39
+#: ../web_tt2/modindex.tt2:152 ../web_tt2/modindex.tt2:68
 #: ../web_tt2/subindex.tt2:13 ../web_tt2/viewlogs.tt2:127
 msgid "Date"
 msgstr "Datum"
@@ -981,7 +976,8 @@ msgstr ""
 msgid "Send to me"
 msgstr "Eine Nachricht senden"
 
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modform.tt2:10
+#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr ""
 "Diese Liste ist so konfiguriert, dass sie ein oder mehrere Themen benötigt."
@@ -1185,7 +1181,7 @@ msgstr "Themenbereiche:"
 msgid "--Select a topic--"
 msgstr "--Wählen Sie ein Themengebiet--"
 
-#: ../web_tt2/create_list_request.tt2:89
+#: ../web_tt2/create_list_request.tt2:89 ../web_tt2/javascript.tt2:101
 msgid "Other"
 msgstr "Andere"
 
@@ -1405,8 +1401,8 @@ msgid "Listing of root folder"
 msgstr "Inhaltsverzeichnis des Hauptordners"
 
 #: ../web_tt2/d_read.tt2:59 ../web_tt2/d_read.tt2:61
-#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:106
-#: ../web_tt2/modindex.tt2:37
+#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:153
+#: ../web_tt2/modindex.tt2:69
 msgid "Author"
 msgstr "Urheber"
 
@@ -2439,7 +2435,8 @@ msgstr "Geschlossene Listen"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
-#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:139
+#: ../web_tt2/modindex.tt2:125 ../web_tt2/modindex.tt2:182
+#: ../web_tt2/modindex.tt2:64 ../web_tt2/review.tt2:138
 #: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
 #: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
 #: ../web_tt2/subscriber_table.tt2:7
@@ -2511,137 +2508,146 @@ msgstr "Liste beantragt von"
 msgid "on %1"
 msgstr "auf %1"
 
-#: ../web_tt2/javascript.tt2:22
-msgid "January"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "February"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "March"
-msgstr "Suchen"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "April"
-msgstr "Profil"
-
-#: ../web_tt2/javascript.tt2:22
-msgid "May"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "June"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "July"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "August"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "September"
-msgstr "Abonnent"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "October"
-msgstr "Andere"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "November"
-msgstr "Abonnent"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "December"
-msgstr "Abonnent"
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Su"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Mo"
-msgstr "Mehr"
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Tu"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-msgid "We"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Th"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Fr"
-msgstr "Absender"
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Sa"
-msgstr "Speichern"
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Sunday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Monday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Tuesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Wednesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Thursday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Friday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Saturday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:25
-msgid "Calendar"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:26
-#, fuzzy
-msgid "today"
-msgstr "Nachrichtentext"
-
-#: ../web_tt2/javascript.tt2:38
+#: ../web_tt2/javascript.tt2:833
 #, fuzzy
 msgid "Start date"
 msgstr "Letzte Aktualisierung"
 
-#: ../web_tt2/javascript.tt2:39
+#: ../web_tt2/javascript.tt2:834
 #, fuzzy
 msgid "End date"
 msgstr "Datum"
+
+#: ../web_tt2/javascript.tt2:838
+msgid "January"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "February"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "March"
+msgstr "Suchen"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "April"
+msgstr "Profil"
+
+#: ../web_tt2/javascript.tt2:838
+msgid "May"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "June"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "July"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "August"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "September"
+msgstr "Abonnent"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "October"
+msgstr "Andere"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "November"
+msgstr "Abonnent"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "December"
+msgstr "Abonnent"
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Su"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Mo"
+msgstr "Mehr"
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Tu"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+msgid "We"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Th"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Fr"
+msgstr "Absender"
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Sa"
+msgstr "Speichern"
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Sunday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Monday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Tuesday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Wednesday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Thursday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Friday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Saturday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:841
+msgid "Calendar"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:842
+#, fuzzy
+msgid "today"
+msgstr "Nachrichtentext"
+
+#. (+cpt)
+#: ../web_tt2/javascript.tt2:1056
+msgid "microcal"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:1096
+msgid "\"+src.id+\"_cal"
+msgstr ""
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -2696,7 +2702,7 @@ msgid " The latest lists of this robot"
 msgstr " Die neuesten Listen dieses Robots"
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:110
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:109
 msgid "%1 occurrence(s) found"
 msgstr "%1 Treffer"
 
@@ -2705,21 +2711,21 @@ msgstr "%1 Treffer"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> hat folgende Mailinglisten abonniert:"
 
-#: ../web_tt2/lists.tt2:39 ../web_tt2/nav.tt2:69
+#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:69
 msgid "Manage Subscribers"
 msgstr "Abonnenten verwalten"
 
-#: ../web_tt2/lists.tt2:41 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
+#: ../web_tt2/lists.tt2:40 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
 msgid "Blacklist"
 msgstr "schwarze Liste"
 
-#: ../web_tt2/lists.tt2:45 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
+#: ../web_tt2/lists.tt2:44 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
 #: ../web_tt2/serveradmin.tt2:123
 msgid "Logs"
 msgstr "Logs"
 
 #. (user.email)
-#: ../web_tt2/lists.tt2:67
+#: ../web_tt2/lists.tt2:62
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Keine Abonnenten mit der Adresse <strong>%1</strong>!"
 
@@ -2922,12 +2928,46 @@ msgstr "Listennamen eingeben"
 msgid "Search lists"
 msgstr "Liste suchen"
 
-#: ../web_tt2/modform.tt2:17 ../web_tt2/modform.tt2:23
-#: ../web_tt2/modform.tt2:6
+#: ../web_tt2/modindex.tt2:61 ../web_tt2/modindex.tt2:9
+msgid "Listing messages to moderate"
+msgstr "Liste der zu moderierenden Nachrichten"
+
+#: ../web_tt2/modindex.tt2:113 ../web_tt2/modindex.tt2:115
+#: ../web_tt2/modindex.tt2:14 ../web_tt2/modindex.tt2:19
+#: ../web_tt2/viewmod.tt2:10 ../web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Verteilen"
 
-#: ../web_tt2/modform.tt2:11
+#: ../web_tt2/modindex.tt2:117 ../web_tt2/modindex.tt2:146
+#: ../web_tt2/modindex.tt2:185 ../web_tt2/modindex.tt2:25
+#: ../web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "Ablehnen"
+
+#: ../web_tt2/modindex.tt2:25
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification?"
+msgstr ""
+"Sie sollten eine als Spam erkannte Nachricht nicht mit Benachrichtigung "
+"ablehnen, weil der Absender vermutlich gefälscht ist. Möchten Sie die "
+"Nachricht wirklich mit Benachrichtigung ablehnen?"
+
+#: ../web_tt2/modindex.tt2:31
+msgid "Server default rejection message"
+msgstr "Vorgebene Ablehnungsnachricht des Servers"
+
+#: ../web_tt2/modindex.tt2:39
+msgid "Reject without notification "
+msgstr "Ohne Benachrichtigung ablehnen"
+
+#: ../web_tt2/modindex.tt2:41
+#, fuzzy
+msgid "Add to blacklist"
+msgstr "Zur schwarzen Liste hinzufügen"
+
+#: ../web_tt2/modindex.tt2:52
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute:"
@@ -2935,99 +2975,53 @@ msgstr ""
 "Bitte wählen Sie ein oder mehrere Themen aus, die auf die Nachricht, die sie "
 "verteilen möchten, zutreffen:"
 
-#: ../web_tt2/modform.tt2:19
-#, fuzzy
-msgid "You must select a topic"
-msgstr "--Wählen Sie ein Themengebiet--"
-
-#: ../web_tt2/modform.tt2:26 ../web_tt2/modform.tt2:54
-#: ../web_tt2/modform.tt2:56 ../web_tt2/modindex.tt2:138
-#: ../web_tt2/modindex.tt2:99
-msgid "Reject"
-msgstr "Ablehnen"
-
-#: ../web_tt2/modform.tt2:30
-#, fuzzy
-msgid "Rejecting message"
-msgstr "Löschnachricht"
-
-#: ../web_tt2/modform.tt2:32
-#, fuzzy
-msgid "Choose notification "
-msgstr "Benachrichtigung"
-
-#: ../web_tt2/modform.tt2:34
-#, fuzzy
-msgid "No notification"
-msgstr "Benachrichtigung"
-
-#: ../web_tt2/modform.tt2:38
-msgid "Server default rejection message"
-msgstr "Vorgebene Ablehnungsnachricht des Servers"
-
-#: ../web_tt2/modform.tt2:43
-#, fuzzy
-msgid "Report message as undetected spam "
-msgstr "Ihre Nachricht wurde abgelehnt."
-
-#: ../web_tt2/modform.tt2:46
-#, fuzzy
-msgid "Add sender to blacklist"
-msgstr "Zur schwarzen Liste hinzufügen"
-
-#: ../web_tt2/modform.tt2:49
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
-#: ../web_tt2/modindex.tt2:31 ../web_tt2/modindex.tt2:6
-msgid "Listing messages to moderate"
-msgstr "Liste der zu moderierenden Nachrichten"
-
-#: ../web_tt2/modindex.tt2:21
-#, fuzzy
-msgid "loading message..."
-msgstr "Globale Erinnerungsnachricht"
-
-#: ../web_tt2/modindex.tt2:108 ../web_tt2/modindex.tt2:40
+#: ../web_tt2/modindex.tt2:155 ../web_tt2/modindex.tt2:71
 msgid "Size"
 msgstr "Größe"
 
-#: ../web_tt2/modindex.tt2:68
+#: ../web_tt2/modindex.tt2:102
 msgid "No subject"
 msgstr "Ohne Betreff"
 
-#: ../web_tt2/modindex.tt2:96
-msgid "Listing of shared documents to moderate"
-msgstr "Liste der zu moderierenden gemeinsamen Dokumente"
-
-#: ../web_tt2/modindex.tt2:137 ../web_tt2/modindex.tt2:98
-msgid "Install"
-msgstr "Installieren"
-
-#: ../web_tt2/modindex.tt2:100 ../web_tt2/modindex.tt2:139
+#: ../web_tt2/modindex.tt2:118 ../web_tt2/modindex.tt2:147
+#: ../web_tt2/modindex.tt2:186
 msgid "Notified reject"
 msgstr "Ablehnen mit Rückmeldung"
 
-#: ../web_tt2/modindex.tt2:102
+#: ../web_tt2/modindex.tt2:120
+msgid "Reject and blacklist sender"
+msgstr "Ablehnen und den Absender in die schwarze Liste aufnehmen"
+
+#: ../web_tt2/modindex.tt2:128
+msgid "Toggle spams"
+msgstr "Spams an/aus"
+
+#: ../web_tt2/modindex.tt2:143
+msgid "Listing of shared documents to moderate"
+msgstr "Liste der zu moderierenden gemeinsamen Dokumente"
+
+#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:184
+msgid "Install"
+msgstr "Installieren"
+
+#: ../web_tt2/modindex.tt2:149
 msgid "Listing of documents shared to moderate"
 msgstr "Liste der zu moderierenden gemeinsamen Dokumente"
 
-#: ../web_tt2/modindex.tt2:107
+#: ../web_tt2/modindex.tt2:154
 msgid "Path"
 msgstr "Pfad"
 
-#: ../web_tt2/modindex.tt2:133 ../web_tt2/modindex.tt2:152
+#: ../web_tt2/modindex.tt2:180 ../web_tt2/modindex.tt2:199
 msgid "edit blacklist"
 msgstr "schwarze Liste bearbeiten"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../web_tt2/modindex.tt2:145
+#: ../web_tt2/modindex.tt2:192
 msgid "Moderation management"
 msgstr "Moderationsverwaltung"
 
-#: ../web_tt2/modindex.tt2:154
+#: ../web_tt2/modindex.tt2:201
 msgid "Manage rejection messages"
 msgstr "Ablehnungsnachrichten verwalten"
 
@@ -3080,62 +3074,6 @@ msgstr "Eine Nachricht senden"
 #: ../web_tt2/nav.tt2:119
 msgid "Send an html page"
 msgstr "Eine HTML-Seite senden"
-
-#: ../web_tt2/news.tt2:9
-#, fuzzy
-msgid "Administration Tasks"
-msgstr "Listen-Administrationsmenü"
-
-#: ../web_tt2/news.tt2:10
-msgid "The following items are waiting for your validation"
-msgstr ""
-
-#. (list_to_admin.key)
-#: ../web_tt2/news.tt2:15
-#, fuzzy
-msgid "List %1:"
-msgstr "Liste %1"
-
-#. (list_to_admin.value.mod_message)
-#. (year.value.item(month))
-#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
-#: ../web_tt2/news.tt2:16
-msgid "%1 message(s)"
-msgstr "%1 Nachricht(en)"
-
-#. (list_to_admin.value.mod_shared_total)
-#: ../web_tt2/news.tt2:17
-#, fuzzy
-msgid "%1 document(s)"
-msgstr "Gemeinsame Dokumente"
-
-#. (list_to_admin.value.mod_subscription)
-#: ../web_tt2/news.tt2:18
-#, fuzzy
-msgid "%1 subscription request(s)"
-msgstr "Keine Abonnement-Anfragen"
-
-#: ../web_tt2/news.tt2:29
-#, fuzzy
-msgid "User Errors"
-msgstr "Fehler zurücksetzen"
-
-#: ../web_tt2/news.tt2:30
-msgid ""
-"We received error reports while trying to send you messages. Some of them "
-"may have been lost."
-msgstr ""
-
-#. (user_with_errors.key)
-#: ../web_tt2/news.tt2:34
-#, fuzzy
-msgid " List %1: "
-msgstr "Liste %1 / %2"
-
-#. (user_with_errors.value)
-#: ../web_tt2/news.tt2:35
-msgid " %1 error(s)"
-msgstr ""
 
 #. (last_login_host,last_login_date)
 #: ../web_tt2/notice.tt2:5
@@ -3461,7 +3399,7 @@ msgstr ""
 "Diese Liste ist so konfiguriert, dass sie für jede Nachricht eines oder "
 "mehrere Themen benötigt."
 
-#: ../web_tt2/request_topic.tt2:7
+#: ../web_tt2/request_topic.tt2:7 ../web_tt2/viewmod.tt2:34
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below:"
 msgstr ""
@@ -3502,7 +3440,7 @@ msgid ""
 "subscribers?"
 msgstr "Wollen Sie wirklich Erinnerungs-E-Mails an %1 Abonnenten senden?"
 
-#: ../web_tt2/review.tt2:127 ../web_tt2/review.tt2:27
+#: ../web_tt2/review.tt2:126 ../web_tt2/review.tt2:27
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3513,7 +3451,7 @@ msgstr "Vorherige Seite"
 msgid "page %1 / %2"
 msgstr "Seite %1 / %2"
 
-#: ../web_tt2/review.tt2:133 ../web_tt2/review.tt2:33
+#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:33
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3523,7 +3461,7 @@ msgstr "Nächste Seite"
 msgid "Table which display list bounces"
 msgstr "Tabelle, die die Zustellungsfehler einer Liste anzeigt"
 
-#: ../web_tt2/review.tt2:149 ../web_tt2/reviewbouncing.tt2:61
+#: ../web_tt2/review.tt2:148 ../web_tt2/reviewbouncing.tt2:61
 #: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/subscriber_table.tt2:12 ../web_tt2/subscriber_table.tt2:15
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
@@ -3554,7 +3492,7 @@ msgstr "Letzter Zustellfehler"
 msgid "no score"
 msgstr "Keine Punktzahl"
 
-#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:139
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "Ausgewählte E-Mail-Adressen löschen"
@@ -3583,7 +3521,7 @@ msgstr "Abonnenten verwalten"
 msgid "Page size"
 msgstr "Seitengröße"
 
-#: ../web_tt2/review.tt2:130 ../web_tt2/review.tt2:30
+#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:30
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "Seite"
@@ -3609,45 +3547,40 @@ msgid "Add an user: "
 msgstr "Benutzer hinzufügen: "
 
 #: ../web_tt2/review.tt2:75
-#, fuzzy
-msgid "Add quietly"
-msgstr "leise"
-
-#: ../web_tt2/review.tt2:76
 msgid "Multiple add"
 msgstr "Mehrfaches Hinzufügen"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:87
 msgid "Search user by e-mail: "
 msgstr "Benutzer über E-Mail suchen: "
 
-#: ../web_tt2/review.tt2:89
+#: ../web_tt2/review.tt2:88
 msgid "Search user by email"
 msgstr "Benutzer über E-Mail suchen"
 
-#: ../web_tt2/review.tt2:94
+#: ../web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr "Auswahl zu groß, kann nicht angezeigt werden"
 
 #. (similar_subscribers_occurence)
-#: ../web_tt2/review.tt2:118
+#: ../web_tt2/review.tt2:117
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr ""
 
-#: ../web_tt2/review.tt2:138
+#: ../web_tt2/review.tt2:137
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Wollen Sie wirklich ALLE ausgewählten Abonnenten kündigen?"
 
-#: ../web_tt2/review.tt2:146
+#: ../web_tt2/review.tt2:145
 msgid "Excluded users"
 msgstr ""
 
-#: ../web_tt2/review.tt2:147 ../web_tt2/show_exclude.tt2:13
+#: ../web_tt2/review.tt2:146 ../web_tt2/show_exclude.tt2:13
 #, fuzzy
 msgid "List of exclude"
 msgstr "Inhaltsverzeichnis des Ordners"
 
-#: ../web_tt2/review.tt2:150 ../web_tt2/show_exclude.tt2:16
+#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:16
 #, fuzzy
 msgid "Since"
 msgstr "Größe"
@@ -4404,9 +4337,9 @@ msgstr ""
 "quasi allem. Ausnahmen für Rahmen sind &lt;TD/&gt;-Rahmen; Ausnahmen für "
 "Schriften sind Links, Knöpfe und einige Titel."
 
-#: ../web_tt2/skinsedit.tt2:107
-msgid "Background color for the news area of the home page."
-msgstr ""
+#: ../web_tt2/skinsedit.tt2:107 ../web_tt2/skinsedit.tt2:179
+msgid "unused"
+msgstr "unbenutzt"
 
 #: ../web_tt2/skinsedit.tt2:113
 msgid "font color of:"
@@ -4500,10 +4433,6 @@ msgstr "bearbeitbare Formularbereiche (Textfelder, Auswahllisten etc.)."
 msgid "Default background color of the tables."
 msgstr "Vorgabe-Hintergrundfarbe der Tabellen."
 
-#: ../web_tt2/skinsedit.tt2:179
-msgid "unused"
-msgstr "unbenutzt"
-
 #: ../web_tt2/skinsedit.tt2:185 ../web_tt2/skinsedit.tt2:191
 #: ../web_tt2/skinsedit.tt2:197 ../web_tt2/skinsedit.tt2:203
 #: ../web_tt2/skinsedit.tt2:209 ../web_tt2/skinsedit.tt2:215
@@ -4564,11 +4493,11 @@ msgstr ""
 msgid "Validate Address"
 msgstr "Überprüfe Adresse"
 
-#: ../web_tt2/stats.tt2:5
+#: ../web_tt2/stats.tt2:2
 msgid "Shared document directory size:"
 msgstr "Verzeichnisgröße der gemeinsamen Dokumente:"
 
-#: ../web_tt2/stats.tt2:7
+#: ../web_tt2/stats.tt2:3
 msgid "Web archives size:"
 msgstr "Größe des Webarchivs:"
 
@@ -4850,44 +4779,6 @@ msgstr ""
 "Der Bestätigungslink hat ein unbekanntes Format oder seine Gültigkeitsdauer "
 "ist abgelaufen"
 
-#: ../web_tt2/tracking.tt2:13 ../web_tt2/tracking.tt2:4
-#, fuzzy
-msgid "Message tracking"
-msgstr "Nachrichtenmarkierung"
-
-#. (fromname,fromaddr,listname)
-#: ../web_tt2/tracking.tt2:6
-msgid "Message from %1 %2 for list %3 "
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:10
-#, fuzzy
-msgid "Distribution ended at"
-msgstr "Verteilen"
-
-#: ../web_tt2/tracking.tt2:14
-msgid "Recipient Email"
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:14
-#, fuzzy
-msgid "Reception Option"
-msgstr "Empfang"
-
-#: ../web_tt2/tracking.tt2:15
-msgid "Delivery status"
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:16
-#, fuzzy
-msgid "Notification Date"
-msgstr "Benachrichtigung"
-
-#: ../web_tt2/tracking.tt2:17
-#, fuzzy
-msgid "Notification"
-msgstr "Benachrichtigung"
-
 #: ../web_tt2/tt2_error.tt2:8
 msgid "Sympa error - could not display web page"
 msgstr "Sympa Fehler - Konnte die Webseite nicht anzeigen"
@@ -4977,7 +4868,7 @@ msgstr "Suchzeitraum: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16638
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16154
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d. %B %Y %H:%M:%S"
 
@@ -5035,6 +4926,14 @@ msgstr ""
 #: ../web_tt2/viewlogs.tt2:214
 msgid "Other events"
 msgstr "Andere Ereignisse"
+
+#: ../web_tt2/viewmod.tt2:17
+msgid "Default rejection message"
+msgstr "Vorgabe-Ablehnungsnachricht"
+
+#: ../web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr "Nicht benachrichtigen"
 
 #: ../web_tt2/view_template.tt2:7
 msgid "Template name: "
@@ -5645,7 +5544,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Nachrichtenkompilat %2"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2725
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2778
 msgid "Table of contents:"
 msgstr "Inhaltsverzeichnis:"
 
@@ -8336,6 +8235,11 @@ msgstr "Intranet-Zugang"
 msgid "conceal even for subscribers"
 msgstr "unsichtbar - sogar für Abonnenten"
 
+#. (year.value.item(month))
+#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
+msgid "%1 message(s)"
+msgstr "%1 Nachricht(en)"
+
 #: ../src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Erweiterte Suche"
@@ -8388,8 +8292,8 @@ msgstr "Wollen Sie diese Nachrichten wirklich löschen?"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/etc/mhonarc-ressources.tt2:306 ../src/etc/mhonarc-ressources.tt2:310
-#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:575
-#: ../src/etc/mhonarc-ressources.tt2:579 ../src/etc/mhonarc-ressources.tt2:583
+#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:563
+#: ../src/etc/mhonarc-ressources.tt2:567 ../src/etc/mhonarc-ressources.tt2:571
 msgid "%m/%d/%Y"
 msgstr "%d.%m.%Y"
 
@@ -8409,51 +8313,51 @@ msgstr "<em>Nachricht nicht verfügbar</em>"
 msgid "picture"
 msgstr "Bild"
 
-#: ../src/etc/mhonarc-ressources.tt2:472
+#: ../src/etc/mhonarc-ressources.tt2:469
 msgid "Reply to sender"
 msgstr "Antwort an Absender"
 
-#: ../src/etc/mhonarc-ressources.tt2:474
+#: ../src/etc/mhonarc-ressources.tt2:471
 msgid "to list"
 msgstr "an Liste"
 
-#: ../src/etc/mhonarc-ressources.tt2:476
+#: ../src/etc/mhonarc-ressources.tt2:473
 msgid "to both"
 msgstr "an beide"
 
-#: ../src/etc/mhonarc-ressources.tt2:479
+#: ../src/etc/mhonarc-ressources.tt2:476
 msgid "Reply"
 msgstr "Antwort"
 
 #. (user.email)
-#: ../src/etc/mhonarc-ressources.tt2:480
+#: ../src/etc/mhonarc-ressources.tt2:477
 msgid "send it back to %1"
 msgstr "Zurücksenden an %1"
 
-#: ../src/etc/mhonarc-ressources.tt2:486
+#: ../src/etc/mhonarc-ressources.tt2:483
 msgid "tag this mail for deletion"
 msgstr "Diese E-Mail zum Löschen markieren"
 
-#: ../src/etc/mhonarc-ressources.tt2:486
+#: ../src/etc/mhonarc-ressources.tt2:483
 msgid "Do you really want to delete this message ?"
 msgstr "Wollen Sie diese Nachricht wirklich löschen?"
 
-#: ../src/etc/mhonarc-ressources.tt2:489
+#: ../src/etc/mhonarc-ressources.tt2:486
 msgid "view source"
 msgstr "Quelle einsehen"
 
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/etc/mhonarc-ressources.tt2:628
+#: ../src/etc/mhonarc-ressources.tt2:616
 msgid "%y/%m/%d"
 msgstr "%y/%m/%d"
 
-#: ../src/etc/mhonarc-ressources.tt2:638
+#: ../src/etc/mhonarc-ressources.tt2:626
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Sonntag:Montag:Dienstag:Mittwoch:Donnerstag:Freitag:Samstag"
 
-#: ../src/etc/mhonarc-ressources.tt2:656
+#: ../src/etc/mhonarc-ressources.tt2:644
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -8607,776 +8511,763 @@ msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Bulk.pm:390
+#: ../src/lib/Bulk.pm:387
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%d. %B %y %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:10111
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9784
 msgid "%A"
 msgstr "%A"
 
-#: ../src/lib/Conf.pm:424
-msgid "Error at line %d: %s"
-msgstr "Fehler in Zeile %d: %s"
-
-#: ../src/lib/Conf.pm:1638
+#: ../src/lib/Conf.pm:141
 msgid "Error at line %d: %s\n"
 msgstr "Fehler in Zeile %d: %s\n"
+
+#: ../src/lib/Conf.pm:438
+msgid "Error at line %d: %s"
+msgstr "Fehler in Zeile %d: %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1883 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1083 ../wwsympa/wwsympa.fcgi.in:2935
+#: ../src/lib/List.pm:1871 ../wwsympa/Auth.pm:459
+#: ../wwsympa/wwsympa.fcgi.in:1067 ../wwsympa/wwsympa.fcgi.in:2869
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %B %Y um %H:%M:%S"
 
-#: ../src/lib/List.pm:321
+#: ../src/lib/List.pm:322
 msgid "Account"
 msgstr "Account"
 
-#: ../src/lib/List.pm:325
+#: ../src/lib/List.pm:326
 msgid "Who can add subscribers"
 msgstr "Wer kann Abonnenten hinzufügen"
 
-#: ../src/lib/List.pm:329
+#: ../src/lib/List.pm:330
 msgid "Anonymous sender"
 msgstr "Anonymer Absender"
 
-#: ../src/lib/List.pm:334
+#: ../src/lib/List.pm:335
 msgid "frequency"
 msgstr "Turnus"
 
-#: ../src/lib/List.pm:1439 ../src/lib/List.pm:339
+#: ../src/lib/List.pm:1426 ../src/lib/List.pm:340
 msgid "access right"
 msgstr "Zugriffsrechte"
 
-#: ../src/lib/List.pm:343
+#: ../src/lib/List.pm:344
 msgid "Text archives"
 msgstr "Textarchive"
 
-#: ../src/lib/List.pm:348
+#: ../src/lib/List.pm:349
 msgid "Archive encrypted mails as cleartext"
 msgstr "Verschlüsselte E-Mails im Klartext archivieren"
 
-#: ../src/lib/List.pm:1175 ../src/lib/List.pm:1215 ../src/lib/List.pm:355
-#: ../src/lib/List.pm:546 ../src/lib/List.pm:672 ../src/lib/List.pm:707
+#: ../src/lib/List.pm:1162 ../src/lib/List.pm:1202 ../src/lib/List.pm:356
+#: ../src/lib/List.pm:532 ../src/lib/List.pm:659 ../src/lib/List.pm:694
 msgid "reception mode"
 msgstr "Empfangsmodus"
 
-#: ../src/lib/List.pm:358
+#: ../src/lib/List.pm:359
 msgid "Available subscription options"
 msgstr "Verfügbare Abonnement-Optionen"
 
-#: ../src/lib/List.pm:366
+#: ../src/lib/List.pm:367
 msgid "warn rate"
 msgstr "Warnungsrate"
 
-#: ../src/lib/List.pm:373
+#: ../src/lib/List.pm:374
 msgid "halt rate"
 msgstr "Stopprate"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:377
+#: ../src/lib/List.pm:378
 msgid "Bounces management"
 msgstr "Verwaltung der Zustellfehler"
 
-#: ../src/lib/List.pm:384 ../src/lib/List.pm:405
+#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
 msgid "threshold"
 msgstr "Grenzwert"
 
-#: ../src/lib/List.pm:389 ../src/lib/List.pm:410
+#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
 msgid "action for this population"
 msgstr "Aktion für diese Gruppe"
 
-#: ../src/lib/List.pm:394 ../src/lib/List.pm:415
+#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
 msgid "notification"
 msgstr "Benachrichtigung"
 
-#: ../src/lib/List.pm:398
+#: ../src/lib/List.pm:399
 msgid "Management of bouncers, 1st level"
 msgstr "Benutzer mit Zustellfehlern verwalten, 1. Ebene"
 
-#: ../src/lib/List.pm:419
+#: ../src/lib/List.pm:420
 msgid "Management of bouncers, 2nd level"
 msgstr "Benutzer mit Zustellfehlern verwalten, 2. Ebene"
 
-#: ../src/lib/List.pm:426
+#: ../src/lib/List.pm:427
 msgid "Expiration of unmoderated messages"
 msgstr "Verfall unmoderierter Nachrichten"
 
-#: ../src/lib/List.pm:432
+#: ../src/lib/List.pm:433
 msgid "Secret string for generating unique keys"
 msgstr "Geheime Zeichenkette zum Erzeugen eindeutiger Schlüssel"
 
-#: ../src/lib/List.pm:437
-msgid "tracking message by delivery status notification"
-msgstr ""
-
-#: ../src/lib/List.pm:443
-msgid "tracking message by message delivery notification"
-msgstr ""
-
-#: ../src/lib/List.pm:448
-#, fuzzy
-msgid "Message tracking feature"
-msgstr "Nachrichtenmarkierung"
-
-#: ../src/lib/List.pm:1102 ../src/lib/List.pm:1395 ../src/lib/List.pm:452
+#: ../src/lib/List.pm:1089 ../src/lib/List.pm:1382 ../src/lib/List.pm:438
 msgid "epoch date"
 msgstr "Epoche-Datum"
 
-#: ../src/lib/List.pm:456
+#: ../src/lib/List.pm:442
 msgid "human readable"
 msgstr ""
 
-#: ../src/lib/List.pm:461
+#: ../src/lib/List.pm:447
 #, fuzzy
 msgid "who created the list"
 msgstr "Konfigurationsaktualisierung durchgeführt von"
 
-#: ../src/lib/List.pm:465
+#: ../src/lib/List.pm:451
 msgid "Creation of the list"
 msgstr "Erzeugung der Liste"
 
-#: ../src/lib/List.pm:476
+#: ../src/lib/List.pm:462
 msgid "internal identifier"
 msgstr "interner Bezeichner"
 
-#: ../src/lib/List.pm:484
+#: ../src/lib/List.pm:470
 msgid "label"
 msgstr "Kennung"
 
-#: ../src/lib/List.pm:490
+#: ../src/lib/List.pm:476
 msgid "additional comment"
 msgstr "zusätzlicher Kommentar"
 
-#: ../src/lib/List.pm:497
+#: ../src/lib/List.pm:483
 msgid "type"
 msgstr "Typ"
 
-#: ../src/lib/List.pm:503
+#: ../src/lib/List.pm:489
 msgid "possible attribute values (if enum is used)"
 msgstr "evtl. Attributwerte (falls Enum verwendet wird)"
 
-#: ../src/lib/List.pm:508
+#: ../src/lib/List.pm:494
 msgid "is the attribute optional?"
 msgstr "ist das Attribut optional?"
 
-#: ../src/lib/List.pm:514
+#: ../src/lib/List.pm:500
 msgid "Custom user attributes"
 msgstr "Benutzereigene Attribute"
 
-#: ../src/lib/List.pm:520
+#: ../src/lib/List.pm:506
 msgid "Custom header field"
 msgstr "Eigene Kopfzeile"
 
-#: ../src/lib/List.pm:525
+#: ../src/lib/List.pm:511
 msgid "Subject tagging"
 msgstr "Titelmarkierung"
 
-#: ../src/lib/List.pm:539
+#: ../src/lib/List.pm:525
 msgid "custom parameters"
 msgstr "eigene Parameter"
 
-#: ../src/lib/List.pm:1180 ../src/lib/List.pm:1220 ../src/lib/List.pm:551
-#: ../src/lib/List.pm:677 ../src/lib/List.pm:712
+#: ../src/lib/List.pm:1167 ../src/lib/List.pm:1207 ../src/lib/List.pm:537
+#: ../src/lib/List.pm:664 ../src/lib/List.pm:699
 msgid "visibility"
 msgstr "Sichtbarkeit"
 
-#: ../src/lib/List.pm:555
+#: ../src/lib/List.pm:541
 msgid "Subscription profile"
 msgstr "Abonnementprofil"
 
-#: ../src/lib/List.pm:559
+#: ../src/lib/List.pm:545
 msgid "Who can delete subscribers"
 msgstr "Wer kann Abonnenten löschen"
 
-#: ../src/lib/List.pm:564
+#: ../src/lib/List.pm:550
 msgid "Delivery time (hh:mm)"
 msgstr "Auslieferungszeit (hh:mm)"
 
-#: ../src/lib/List.pm:424 ../src/lib/List.pm:572
+#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
 msgid "days"
 msgstr "Tage"
 
-#: ../src/lib/List.pm:578
+#: ../src/lib/List.pm:564
 msgid "hour"
 msgstr "Stunde"
 
-#: ../src/lib/List.pm:584
+#: ../src/lib/List.pm:570
 msgid "minute"
 msgstr "Minute"
 
-#: ../src/lib/List.pm:588
+#: ../src/lib/List.pm:574
 msgid "Digest frequency"
 msgstr "Häufigkeit der Kompilierung"
 
-#: ../src/lib/List.pm:596
+#: ../src/lib/List.pm:582
 msgid "Digest maximum number of messages"
 msgstr "Maximale Anzahl Nachrichten pro Kompilat"
 
-#: ../src/lib/List.pm:603
+#: ../src/lib/List.pm:590
 msgid "Inclusions timeout for message distribution"
 msgstr "Zeitlimit für Einbindevorgänge bei Nachrichtenverteilung"
 
-#: ../src/lib/List.pm:610
+#: ../src/lib/List.pm:597
 #, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Nachricht an die Liste senden"
 
-#: ../src/lib/List.pm:618
+#: ../src/lib/List.pm:605
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: ../src/lib/List.pm:625
+#: ../src/lib/List.pm:612
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: ../src/lib/List.pm:633
+#: ../src/lib/List.pm:620
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: ../src/lib/List.pm:661
+#: ../src/lib/List.pm:648
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "Listenkonfiguration kopieren"
 
-#: ../src/lib/List.pm:1170 ../src/lib/List.pm:667
+#: ../src/lib/List.pm:1157 ../src/lib/List.pm:654
 msgid "email address"
 msgstr "E-Mail-Adresse"
 
-#: ../src/lib/List.pm:1185 ../src/lib/List.pm:682
+#: ../src/lib/List.pm:1172 ../src/lib/List.pm:669
 msgid "name"
 msgstr "Name"
 
-#: ../src/lib/List.pm:1190 ../src/lib/List.pm:687
+#: ../src/lib/List.pm:1177 ../src/lib/List.pm:674
 msgid "private information"
 msgstr "private Information"
 
-#: ../src/lib/List.pm:722
+#: ../src/lib/List.pm:709
 msgid "Periodical subscription expiration task"
 msgstr "Periodische Aufgabe zum Abonnement-Ablauf"
 
-#: ../src/lib/List.pm:733
+#: ../src/lib/List.pm:720
 msgid "Attachment type"
 msgstr "Anlagentyp"
 
-#: ../src/lib/List.pm:737
+#: ../src/lib/List.pm:724
 msgid "Forced reply address"
 msgstr "Erzwungene Antwortadresse"
 
-#: ../src/lib/List.pm:743
+#: ../src/lib/List.pm:730
 msgid "Internet domain"
 msgstr "Internet-Domäne"
 
-#: ../src/lib/List.pm:749
+#: ../src/lib/List.pm:736
 msgid "File inclusion"
 msgstr "Dateieinbindung"
 
-#: ../src/lib/List.pm:753
+#: ../src/lib/List.pm:740
 msgid "data location URL"
 msgstr "URL der Daten"
 
-#: ../src/lib/List.pm:1051 ../src/lib/List.pm:759 ../src/lib/List.pm:792
-#: ../src/lib/List.pm:873
+#: ../src/lib/List.pm:1038 ../src/lib/List.pm:746 ../src/lib/List.pm:779
+#: ../src/lib/List.pm:860
 msgid "remote user"
 msgstr "Benutzer auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1056 ../src/lib/List.pm:766 ../src/lib/List.pm:798
-#: ../src/lib/List.pm:879
+#: ../src/lib/List.pm:1043 ../src/lib/List.pm:753 ../src/lib/List.pm:785
+#: ../src/lib/List.pm:866
 msgid "remote password"
 msgstr "Passwort auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1012 ../src/lib/List.pm:1070 ../src/lib/List.pm:771
-#: ../src/lib/List.pm:834 ../src/lib/List.pm:958
+#: ../src/lib/List.pm:1057 ../src/lib/List.pm:758 ../src/lib/List.pm:821
+#: ../src/lib/List.pm:945 ../src/lib/List.pm:999
 msgid "short name for this source"
 msgstr "Kurzname für diese Quelle"
 
-#: ../src/lib/List.pm:776
+#: ../src/lib/List.pm:763
 msgid "Remote file inclusion"
 msgstr "Einbindung entfernter Dateien"
 
-#: ../src/lib/List.pm:1029 ../src/lib/List.pm:782 ../src/lib/List.pm:863
-#: ../src/lib/List.pm:990
+#: ../src/lib/List.pm:1016 ../src/lib/List.pm:769 ../src/lib/List.pm:850
+#: ../src/lib/List.pm:977
 msgid "remote host"
 msgstr "entfernter Rechner"
 
-#: ../src/lib/List.pm:787 ../src/lib/List.pm:868 ../src/lib/List.pm:996
+#: ../src/lib/List.pm:774 ../src/lib/List.pm:855 ../src/lib/List.pm:983
 msgid "remote port"
 msgstr "Port auf entferntem Rechner"
 
-#: ../src/lib/List.pm:802
+#: ../src/lib/List.pm:789
 msgid "suffix"
 msgstr "Suffix"
 
-#: ../src/lib/List.pm:808
+#: ../src/lib/List.pm:795
 msgid "filter"
 msgstr "Filter"
 
-#: ../src/lib/List.pm:814
+#: ../src/lib/List.pm:801
 msgid "extracted attribute"
 msgstr "extrahiertes Attribut"
 
-#: ../src/lib/List.pm:819
+#: ../src/lib/List.pm:806
 msgid "selection (if multiple)"
 msgstr "Auswahl (falls mehrere)"
 
-#: ../src/lib/List.pm:824
+#: ../src/lib/List.pm:811
 msgid "search scope"
 msgstr "Suchbereich"
 
-#: ../src/lib/List.pm:830
+#: ../src/lib/List.pm:817
 msgid "connection timeout"
 msgstr "Verbindungs-Zeitlimit"
 
-#: ../src/lib/List.pm:858
+#: ../src/lib/List.pm:845
 msgid "LDAP query inclusion"
 msgstr "Einbindung per LDAP-Anfrage"
 
-#: ../src/lib/List.pm:883
+#: ../src/lib/List.pm:870
 msgid "first-level suffix"
 msgstr "Suffix, 1. Ebene"
 
-#: ../src/lib/List.pm:889
+#: ../src/lib/List.pm:876
 msgid "first-level filter"
 msgstr "Filter, 1. Ebene"
 
-#: ../src/lib/List.pm:894
+#: ../src/lib/List.pm:881
 msgid "first-level extracted attribute"
 msgstr "extrahiertes Attribut, 1. Ebene"
 
-#: ../src/lib/List.pm:899
+#: ../src/lib/List.pm:886
 msgid "first-level selection"
 msgstr "Auswahl, 1. Ebene"
 
-#: ../src/lib/List.pm:904
+#: ../src/lib/List.pm:891
 msgid "first-level search scope"
 msgstr "Suchbereich, 1. Ebene"
 
-#: ../src/lib/List.pm:910
+#: ../src/lib/List.pm:897
 msgid "first-level connection timeout"
 msgstr "Verbindungszeitüberschreitung, 1. Ebene"
 
-#: ../src/lib/List.pm:916
+#: ../src/lib/List.pm:903
 msgid "first-level regular expression"
 msgstr "regulärer Ausdruck, 1. Ebene"
 
-#: ../src/lib/List.pm:920
+#: ../src/lib/List.pm:907
 msgid "second-level suffix template"
 msgstr "Suffixvorlage, 2. Ebene"
 
-#: ../src/lib/List.pm:926
+#: ../src/lib/List.pm:913
 msgid "second-level filter template"
 msgstr "Filtervorlage, 2. Ebene"
 
-#: ../src/lib/List.pm:932
+#: ../src/lib/List.pm:919
 msgid "second-level extracted attribute"
 msgstr "extrahiertes Attribut, 2. Ebene"
 
-#: ../src/lib/List.pm:937
+#: ../src/lib/List.pm:924
 msgid "second-level selection"
 msgstr "Auswahl, 2. Ebene"
 
-#: ../src/lib/List.pm:942
+#: ../src/lib/List.pm:929
 msgid "second-level search scope"
 msgstr "Suchbereich, 2. Ebene"
 
-#: ../src/lib/List.pm:948
+#: ../src/lib/List.pm:935
 msgid "second-level connection timeout"
 msgstr "Verbindungszeitüberschreitung, 2. Ebene"
 
-#: ../src/lib/List.pm:954
+#: ../src/lib/List.pm:941
 msgid "second-level regular expression"
 msgstr "regulärer Ausdruck, 2. Ebene"
 
-#: ../src/lib/List.pm:980
+#: ../src/lib/List.pm:967
 msgid "LDAP 2-level query inclusion"
 msgstr "Einbindung per zweistufiger LDAP-Abfrage"
 
-#: ../src/lib/List.pm:985
+#: ../src/lib/List.pm:972
 msgid "List inclusion"
 msgstr "Listeneinbindung"
 
-#: ../src/lib/List.pm:1002
+#: ../src/lib/List.pm:989
 msgid "remote path of sympa list dump"
 msgstr "entfernter Pfad der Sympa-Listen-Auflistung"
 
-#: ../src/lib/List.pm:1007
+#: ../src/lib/List.pm:994
 msgid "certificate for authentication by remote Sympa"
 msgstr "Zertifikat zur Legitimierung bei einer entfernten Sympa-Instanz"
 
-#: ../src/lib/List.pm:1019
+#: ../src/lib/List.pm:1006
 msgid "remote list inclusion"
 msgstr "Listeneinbindung auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1024
+#: ../src/lib/List.pm:1011
 msgid "database type"
 msgstr "Datenbanktyp"
 
-#: ../src/lib/List.pm:1033
+#: ../src/lib/List.pm:1020
 msgid "database port"
 msgstr "Datenbankport"
 
-#: ../src/lib/List.pm:1038
+#: ../src/lib/List.pm:1025
 msgid "database name"
 msgstr "Datanbankname"
 
-#: ../src/lib/List.pm:1042
+#: ../src/lib/List.pm:1029
 msgid "connection options"
 msgstr "Verbindungseinstellungen"
 
-#: ../src/lib/List.pm:1047
+#: ../src/lib/List.pm:1034
 msgid "environment variables for database connection"
 msgstr "Umgebungsvariablen für die Datenbankverbindung"
 
-#: ../src/lib/List.pm:1062
+#: ../src/lib/List.pm:1049
 msgid "SQL query"
 msgstr "SQL-Abfrage"
 
-#: ../src/lib/List.pm:1066
+#: ../src/lib/List.pm:1053
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 "Verzeichnis, in dem die Datenbank gespeichert ist (nur benutzt von DBD::CSV)"
 
-#: ../src/lib/List.pm:1077
+#: ../src/lib/List.pm:1064
 msgid "SQL query inclusion"
 msgstr "Einbindung per SQL-Abfrage"
 
-#: ../src/lib/List.pm:1083
+#: ../src/lib/List.pm:1070
 msgid "Notify subscribers when they are included from a data source?"
 msgstr ""
 "Abonnenten informieren, wenn Sie über eine Datenquelle eingebunden werden?"
 
-#: ../src/lib/List.pm:1087
+#: ../src/lib/List.pm:1074
 msgid "Who can view list information"
 msgstr "Wer kann Listen-Information ansehen"
 
-#: ../src/lib/List.pm:1091
+#: ../src/lib/List.pm:1078
 msgid "Who can invite people"
 msgstr "Wer kann Personen einladen"
 
-#: ../src/lib/List.pm:1097
+#: ../src/lib/List.pm:1084
 msgid "Language of the list"
 msgstr "Sprache der Liste"
 
-#: ../src/lib/List.pm:1122
+#: ../src/lib/List.pm:1109
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 "Regulärer Ausdruck, der angewendet wird, um Schleifen mit Robots zu "
 "verhindern"
 
-#: ../src/lib/List.pm:1129
+#: ../src/lib/List.pm:1116
 msgid "Maximum message size"
 msgstr "Maximale Nachrichtengröße"
 
-#: ../src/lib/List.pm:1135
+#: ../src/lib/List.pm:1122
 msgid "Message topic name"
 msgstr "Name für Nachrichtenthema"
 
-#: ../src/lib/List.pm:1140
+#: ../src/lib/List.pm:1127
 msgid "Message topic keywords"
 msgstr "Schlagwörter für Nachrichtenthema"
 
-#: ../src/lib/List.pm:1146
+#: ../src/lib/List.pm:1133
 msgid "Message topic title"
 msgstr "Titel für Nachrichtenthema"
 
-#: ../src/lib/List.pm:1151
+#: ../src/lib/List.pm:1138
 msgid "Topics for message categorization"
 msgstr "Themen, um Nachrichten zu gruppieren"
 
-#: ../src/lib/List.pm:1157
+#: ../src/lib/List.pm:1144
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 "Legt fest, welchem Teil der Nachrichten Themen-Stichworte zugeordnet werden"
 
-#: ../src/lib/List.pm:1164
+#: ../src/lib/List.pm:1151
 msgid "Message tagging"
 msgstr "Nachrichtenmarkierung"
 
-#: ../src/lib/List.pm:1195 ../src/lib/List.pm:1225
+#: ../src/lib/List.pm:1182 ../src/lib/List.pm:1212
 msgid "profile"
 msgstr "Profil"
 
-#: ../src/lib/List.pm:1236
+#: ../src/lib/List.pm:1223
 msgid "Priority"
 msgstr "Priorität"
 
-#: ../src/lib/List.pm:1242
+#: ../src/lib/List.pm:1229
 msgid "Reject mail from automates (crontab, etc)?"
 msgstr ""
 
-#: ../src/lib/List.pm:1246
+#: ../src/lib/List.pm:1233
 msgid "Who can start a remind process"
 msgstr "Wer kann Erinnerungen veranlassen"
 
-#: ../src/lib/List.pm:1251
+#: ../src/lib/List.pm:1238
 msgid "Return-path of the REMIND command"
 msgstr "Rückantwort-Adresse für den REMIND-Befehl"
 
-#: ../src/lib/List.pm:1275 ../src/lib/List.pm:1295
+#: ../src/lib/List.pm:1262 ../src/lib/List.pm:1282
 msgid "Reply address"
 msgstr "Antwortadresse"
 
-#: ../src/lib/List.pm:1281
+#: ../src/lib/List.pm:1268
 msgid "value"
 msgstr "Wert"
 
-#: ../src/lib/List.pm:1286
+#: ../src/lib/List.pm:1273
 msgid "other email address"
 msgstr "andere E-Mail-Adresse"
 
-#: ../src/lib/List.pm:1291
+#: ../src/lib/List.pm:1278
 msgid "respect of existing header field"
 msgstr "Berücksichtung existierender Felder im Nachrichtenkopf"
 
-#: ../src/lib/List.pm:1300
+#: ../src/lib/List.pm:1287
 msgid "Who can review subscribers"
 msgstr "Wer kann Abonnenten auflisten"
 
-#: ../src/lib/List.pm:1307
+#: ../src/lib/List.pm:1294
 msgid "RFC 2369 Header fields"
 msgstr "Kopfzeilen nach RFC 2369"
 
-#: ../src/lib/List.pm:1311
+#: ../src/lib/List.pm:1298
 msgid "Who can send messages"
 msgstr "Wer kann Nachrichten senden"
 
-#: ../src/lib/List.pm:1318
+#: ../src/lib/List.pm:1305
 msgid "Serial number of the config"
 msgstr "Seriennummer der Konfiguration"
 
-#: ../src/lib/List.pm:1323
+#: ../src/lib/List.pm:1310
 msgid "Who can view"
 msgstr "Wer kann ansehen"
 
-#: ../src/lib/List.pm:1327
+#: ../src/lib/List.pm:1314
 msgid "Who can edit"
 msgstr "Wer kann bearbeiten"
 
-#: ../src/lib/List.pm:1334 ../src/lib/List.pm:1446
+#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1433
 msgid "quota"
 msgstr "Quota"
 
-#: ../src/lib/List.pm:1343 ../src/lib/List.pm:1348
+#: ../src/lib/List.pm:1330 ../src/lib/List.pm:1335
 msgid "email address protection method"
 msgstr "Methode zum Schutz der E-Mail-Adresse"
 
-#: ../src/lib/List.pm:1354
+#: ../src/lib/List.pm:1341
 msgid "Status of the list"
 msgstr "Status der Liste"
 
-#: ../src/lib/List.pm:1362
+#: ../src/lib/List.pm:1349
 msgid "Timeout for fetch of include_sql_query"
 msgstr ""
 
-#: ../src/lib/List.pm:1368
+#: ../src/lib/List.pm:1355
 msgid "Subject of the list"
 msgstr "Thema der Liste"
 
-#: ../src/lib/List.pm:1372
+#: ../src/lib/List.pm:1359
 msgid "Who can subscribe to the list"
 msgstr "Wer kann die Liste abonnieren"
 
-#: ../src/lib/List.pm:1378
+#: ../src/lib/List.pm:1365
 msgid "Topics for the list"
 msgstr "Themen der Liste"
 
-#: ../src/lib/List.pm:1385
+#: ../src/lib/List.pm:1372
 msgid "Inclusions timeout"
 msgstr "Zeitüberschreitung beim Einbinden"
 
-#: ../src/lib/List.pm:1389
+#: ../src/lib/List.pm:1376
 msgid "Who can unsubscribe"
 msgstr "Wer kann abbestellen"
 
-#: ../src/lib/List.pm:1410
+#: ../src/lib/List.pm:1397
 msgid "Last update of config"
 msgstr "Letze Konfigurationsänderung"
 
-#: ../src/lib/List.pm:1417
+#: ../src/lib/List.pm:1404
 msgid "User data source"
 msgstr "Benutzerdatenquelle"
 
-#: ../src/lib/List.pm:1423
+#: ../src/lib/List.pm:1410
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "Anzeigen von Bildern erlauben? (muss für den aktuellen Robot aktiviert sein)"
 
-#: ../src/lib/List.pm:1429
+#: ../src/lib/List.pm:1416
 #, fuzzy
 msgid "Allow message personnalization"
 msgstr "Themen, um Nachrichten zu gruppieren"
 
-#: ../src/lib/List.pm:1435
+#: ../src/lib/List.pm:1422
 msgid "Visibility of the list"
 msgstr "Sichtbarkeit der Liste"
 
-#: ../src/lib/List.pm:1451
+#: ../src/lib/List.pm:1438
 msgid "Maximum number of month archived"
 msgstr "Maximale Anzahl an Monaten, die archiviert werden sollen"
 
-#: ../src/lib/List.pm:1456
+#: ../src/lib/List.pm:1443
 msgid "Web archives"
 msgstr "Webarchive"
 
-#: ../src/lib/List.pm:1462
+#: ../src/lib/List.pm:1449
 msgid "Welcome return-path"
 msgstr "Rücklaufpfad für Begrüßungen"
 
-#: ../src/lib/List.pm:1467
+#: ../src/lib/List.pm:1454
 msgid "percentage of list members in VERP mode"
 msgstr "Prozent der Abonnenten im VERP-Modus"
 
-#: ../src/lib/List.pm:364 ../src/lib/List.pm:371
+#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
 msgid "%"
 msgstr "%"
 
-#: ../src/lib/List.pm:382 ../src/lib/List.pm:403
+#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
 msgid "points"
 msgstr "Punkte"
 
-#: ../src/lib/List.pm:530
+#: ../src/lib/List.pm:516
 msgid "var name"
 msgstr "Var.-Name"
 
-#: ../src/lib/List.pm:535
+#: ../src/lib/List.pm:521
 msgid "var value"
 msgstr "Var.-Wert"
 
-#: ../src/lib/List.pm:594
+#: ../src/lib/List.pm:580
 msgid "messages"
 msgstr "Nachrichten"
 
-#: ../src/lib/List.pm:1360 ../src/lib/List.pm:1383 ../src/lib/List.pm:602
-#: ../src/lib/List.pm:829 ../src/lib/List.pm:909 ../src/lib/List.pm:947
+#: ../src/lib/List.pm:1347 ../src/lib/List.pm:1370 ../src/lib/List.pm:588
+#: ../src/lib/List.pm:816 ../src/lib/List.pm:896 ../src/lib/List.pm:934
 msgid "seconds"
 msgstr "Sekunden"
 
-#: ../src/lib/List.pm:640
+#: ../src/lib/List.pm:627
 msgid "List of headers to be included ito the message for signature"
 msgstr ""
 
-#: ../src/lib/List.pm:647
+#: ../src/lib/List.pm:634
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: ../src/lib/List.pm:654
+#: ../src/lib/List.pm:641
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: ../src/lib/List.pm:697
+#: ../src/lib/List.pm:684
 msgid "the data source"
 msgstr "die Datenquelle"
 
-#: ../src/lib/List.pm:702
+#: ../src/lib/List.pm:689
 msgid "data source parameters"
 msgstr "Parameter der Datenquelle"
 
-#: ../src/lib/List.pm:718
+#: ../src/lib/List.pm:705
 msgid "Moderators defined in an external data source"
 msgstr "in einer externen Datenquelle definierte Moderatoren"
 
-#: ../src/lib/List.pm:727
+#: ../src/lib/List.pm:714
 msgid "Family name"
 msgstr "Name der Familie"
 
-#: ../src/lib/List.pm:840 ../src/lib/List.pm:964
+#: ../src/lib/List.pm:827 ../src/lib/List.pm:951
 msgid "use SSL (LDAPS)"
 msgstr "SSL (LDAPS) benutzen"
 
-#: ../src/lib/List.pm:845 ../src/lib/List.pm:969
+#: ../src/lib/List.pm:832 ../src/lib/List.pm:956
 msgid "SSL version"
 msgstr "SSL-Version"
 
-#: ../src/lib/List.pm:850 ../src/lib/List.pm:974
+#: ../src/lib/List.pm:837 ../src/lib/List.pm:961
 msgid "SSL ciphers used"
 msgstr "Verwendete SSL-Schlüssel"
 
-#: ../src/lib/List.pm:1106 ../src/lib/List.pm:1400
+#: ../src/lib/List.pm:1093 ../src/lib/List.pm:1387
 msgid "date"
 msgstr "Datum"
 
-#: ../src/lib/List.pm:1111
+#: ../src/lib/List.pm:1098
 msgid "who ran the instantiation"
 msgstr "Instanziierung durchgeführt von"
 
-#: ../src/lib/List.pm:1115
+#: ../src/lib/List.pm:1102
 msgid "Latest family instantiation"
 msgstr "Neueste Familieninstanziierung"
 
-#: ../src/lib/List.pm:1127
+#: ../src/lib/List.pm:1114
 msgid "bytes"
 msgstr "Byte"
 
-#: ../src/lib/List.pm:1205
+#: ../src/lib/List.pm:1192
 msgid "the datasource"
 msgstr "die Datenquelle"
 
-#: ../src/lib/List.pm:1210
+#: ../src/lib/List.pm:1197
 msgid "datasource parameters"
 msgstr "Parameter der Datenquelle"
 
-#: ../src/lib/List.pm:1230
+#: ../src/lib/List.pm:1217
 msgid "Owners defined in an external data source"
 msgstr "In einer externen Datenquelle definierte Eigentümer"
 
-#: ../src/lib/List.pm:1255
+#: ../src/lib/List.pm:1242
 msgid "Periodical subscription reminder task"
 msgstr "Periodische Aufgabe zur Abonnenten-Erinnerung"
 
-#: ../src/lib/List.pm:1260
+#: ../src/lib/List.pm:1247
 msgid "Incoming SMTP header fields to be removed"
 msgstr "Beim Eingang zu entfernende SMTP-Kopfzeilen"
 
-#: ../src/lib/List.pm:1267
+#: ../src/lib/List.pm:1254
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "Beim Ausgang zu entfernende SMTP-Kopfzeilen"
 
-#: ../src/lib/List.pm:1333 ../src/lib/List.pm:1445
+#: ../src/lib/List.pm:1320 ../src/lib/List.pm:1432
 msgid "Kbytes"
 msgstr "KByte"
 
-#: ../src/lib/List.pm:1406
+#: ../src/lib/List.pm:1393
 msgid "who updated the config"
 msgstr "Konfigurationsaktualisierung durchgeführt von"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2843
+#: ../src/lib/List.pm:2896
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d. %B %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2844
+#: ../src/lib/List.pm:2897
 msgid "%a, %d %b %Y"
 msgstr "%a, %d. %B %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3035 ../src/lib/List.pm:3036 ../src/lib/List.pm:3040
-#: ../wwsympa/wwsympa.fcgi.in:11304 ../wwsympa/wwsympa.fcgi.in:11373
-#: ../wwsympa/wwsympa.fcgi.in:11575 ../wwsympa/wwsympa.fcgi.in:11922
-#: ../wwsympa/wwsympa.fcgi.in:15410 ../wwsympa/wwsympa.fcgi.in:15417
-#: ../wwsympa/wwsympa.fcgi.in:16126 ../wwsympa/wwsympa.fcgi.in:16988
-#: ../wwsympa/wwsympa.fcgi.in:16989 ../wwsympa/wwsympa.fcgi.in:4338
-#: ../wwsympa/wwsympa.fcgi.in:4396 ../wwsympa/wwsympa.fcgi.in:4969
-#: ../wwsympa/wwsympa.fcgi.in:4970 ../wwsympa/wwsympa.fcgi.in:6457
-#: ../wwsympa/wwsympa.fcgi.in:7573 ../wwsympa/wwsympa.fcgi.in:8238
-#: ../wwsympa/wwsympa.fcgi.in:8278 ../wwsympa/wwsympa.fcgi.in:8280
-#: ../wwsympa/wwsympa.fcgi.in:8798 ../wwsympa/wwsympa.fcgi.in:8799
-#: ../wwsympa/wwsympa.fcgi.in:8833 ../wwsympa/wwsympa.fcgi.in:8834
-#: ../wwsympa/wwsympa.fcgi.in:9013 ../wwsympa/wwsympa.fcgi.in:9014
+#: ../src/lib/List.pm:3088 ../src/lib/List.pm:3089 ../src/lib/List.pm:3093
+#: ../wwsympa/wwsympa.fcgi.in:10960 ../wwsympa/wwsympa.fcgi.in:11029
+#: ../wwsympa/wwsympa.fcgi.in:11231 ../wwsympa/wwsympa.fcgi.in:11578
+#: ../wwsympa/wwsympa.fcgi.in:15017 ../wwsympa/wwsympa.fcgi.in:15024
+#: ../wwsympa/wwsympa.fcgi.in:15726 ../wwsympa/wwsympa.fcgi.in:16504
+#: ../wwsympa/wwsympa.fcgi.in:16505 ../wwsympa/wwsympa.fcgi.in:4266
+#: ../wwsympa/wwsympa.fcgi.in:4324 ../wwsympa/wwsympa.fcgi.in:4895
+#: ../wwsympa/wwsympa.fcgi.in:4896 ../wwsympa/wwsympa.fcgi.in:6392
+#: ../wwsympa/wwsympa.fcgi.in:7411 ../wwsympa/wwsympa.fcgi.in:7954
+#: ../wwsympa/wwsympa.fcgi.in:7994 ../wwsympa/wwsympa.fcgi.in:7996
+#: ../wwsympa/wwsympa.fcgi.in:8472 ../wwsympa/wwsympa.fcgi.in:8473
+#: ../wwsympa/wwsympa.fcgi.in:8507 ../wwsympa/wwsympa.fcgi.in:8508
+#: ../wwsympa/wwsympa.fcgi.in:8687 ../wwsympa/wwsympa.fcgi.in:8688
 msgid "%d %b %Y"
 msgstr "%d. %B %Y"
 
-#: ../src/lib/mail.pm:54
+#: ../src/lib/mail.pm:53
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
 "your Perl system does not define the _SC_ARG_MAX constant in its POSIX\n"
@@ -9388,7 +9279,7 @@ msgstr ""
 "_SC_ARG_MAX nicht. Sie müssen das Modul smtp.pm anpassen, um der\n"
 "Variablen %s einen Wert zuzuweisen.\n"
 
-#: ../src/lib/mail.pm:832
+#: ../src/lib/mail.pm:810
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "\"smtpto\" konnte keinen Kanal öffnen: %m"
 
@@ -9507,21 +9398,21 @@ msgstr "(unbekanntes Datum)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1084
+#: ../wwsympa/wwsympa.fcgi.in:1068
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:433 ../wwsympa/SympaSession.pm:434
-#: ../wwsympa/wwsympa.fcgi.in:12156 ../wwsympa/wwsympa.fcgi.in:12289
-#: ../wwsympa/wwsympa.fcgi.in:14635 ../wwsympa/wwsympa.fcgi.in:8192
+#: ../wwsympa/SympaSession.pm:431 ../wwsympa/SympaSession.pm:432
+#: ../wwsympa/wwsympa.fcgi.in:11812 ../wwsympa/wwsympa.fcgi.in:11945
+#: ../wwsympa/wwsympa.fcgi.in:14258 ../wwsympa/wwsympa.fcgi.in:7908
 msgid "%d %b %y  %H:%M"
 msgstr "%d. %B %y %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16583 ../wwsympa/wwsympa.fcgi.in:16584
+#: ../wwsympa/wwsympa.fcgi.in:16099 ../wwsympa/wwsympa.fcgi.in:16100
 #, fuzzy
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
@@ -9674,33 +9565,135 @@ msgstr "keine Nachricht (nützlich für Urlaube)"
 msgid "you do not receive your own posts"
 msgstr "Sie empfangen Ihre eigenen Nachrichten nicht"
 
-#~ msgid ""
-#~ "You should probably not reject message detected as spam with notification "
-#~ "because the message sender is probably spoofed. Do you really want to "
-#~ "reject those messages with notification?"
-#~ msgstr ""
-#~ "Sie sollten eine als Spam erkannte Nachricht nicht mit Benachrichtigung "
-#~ "ablehnen, weil der Absender vermutlich gefälscht ist. Möchten Sie die "
-#~ "Nachricht wirklich mit Benachrichtigung ablehnen?"
+#: ../web_tt2/modform.tt2:49
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
 
-#~ msgid "Reject without notification "
-#~ msgstr "Ohne Benachrichtigung ablehnen"
+#: ../web_tt2/news.tt2:10
+msgid "The following items are waiting for your validation"
+msgstr ""
+
+#: ../web_tt2/news.tt2:30
+msgid ""
+"We received error reports while trying to send you messages. Some of them "
+"may have been lost."
+msgstr ""
+
+#. (user_with_errors.value)
+#: ../web_tt2/news.tt2:35
+msgid " %1 error(s)"
+msgstr ""
+
+#: ../web_tt2/skinsedit.tt2:107
+msgid "Background color for the news area of the home page."
+msgstr ""
+
+#. (fromname,fromaddr,listname)
+#: ../web_tt2/tracking.tt2:6
+msgid "Message from %1 %2 for list %3 "
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:14
+msgid "Recipient Email"
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:15
+msgid "Delivery status"
+msgstr ""
+
+#: ../src/lib/List.pm:437
+msgid "tracking message by delivery status notification"
+msgstr ""
+
+#: ../src/lib/List.pm:443
+msgid "tracking message by message delivery notification"
+msgstr ""
 
 #, fuzzy
-#~ msgid "Add to blacklist"
+#~ msgid "Statistics"
+#~ msgstr "Status"
+
+#, fuzzy
+#~ msgid "You must select a topic"
+#~ msgstr "--Wählen Sie ein Themengebiet--"
+
+#, fuzzy
+#~ msgid "Rejecting message"
+#~ msgstr "Löschnachricht"
+
+#, fuzzy
+#~ msgid "Choose notification "
+#~ msgstr "Benachrichtigung"
+
+#, fuzzy
+#~ msgid "No notification"
+#~ msgstr "Benachrichtigung"
+
+#, fuzzy
+#~ msgid "Report message as undetected spam "
+#~ msgstr "Ihre Nachricht wurde abgelehnt."
+
+#, fuzzy
+#~ msgid "Add sender to blacklist"
 #~ msgstr "Zur schwarzen Liste hinzufügen"
 
-#~ msgid "Reject and blacklist sender"
-#~ msgstr "Ablehnen und den Absender in die schwarze Liste aufnehmen"
+#, fuzzy
+#~ msgid "loading message..."
+#~ msgstr "Globale Erinnerungsnachricht"
 
-#~ msgid "Toggle spams"
-#~ msgstr "Spams an/aus"
+#, fuzzy
+#~ msgid "Administration Tasks"
+#~ msgstr "Listen-Administrationsmenü"
 
-#~ msgid "Default rejection message"
-#~ msgstr "Vorgabe-Ablehnungsnachricht"
+#, fuzzy
+#~ msgid "List %1:"
+#~ msgstr "Liste %1"
 
-#~ msgid "Do Not Notify"
-#~ msgstr "Nicht benachrichtigen"
+#, fuzzy
+#~ msgid "%1 document(s)"
+#~ msgstr "Gemeinsame Dokumente"
+
+#, fuzzy
+#~ msgid "%1 subscription request(s)"
+#~ msgstr "Keine Abonnement-Anfragen"
+
+#, fuzzy
+#~ msgid "User Errors"
+#~ msgstr "Fehler zurücksetzen"
+
+#, fuzzy
+#~ msgid " List %1: "
+#~ msgstr "Liste %1 / %2"
+
+#, fuzzy
+#~ msgid "Add quietly"
+#~ msgstr "leise"
+
+#, fuzzy
+#~ msgid "Message tracking"
+#~ msgstr "Nachrichtenmarkierung"
+
+#, fuzzy
+#~ msgid "Distribution ended at"
+#~ msgstr "Verteilen"
+
+#, fuzzy
+#~ msgid "Reception Option"
+#~ msgstr "Empfang"
+
+#, fuzzy
+#~ msgid "Notification Date"
+#~ msgstr "Benachrichtigung"
+
+#, fuzzy
+#~ msgid "Notification"
+#~ msgstr "Benachrichtigung"
+
+#, fuzzy
+#~ msgid "Message tracking feature"
+#~ msgstr "Nachrichtenmarkierung"
 
 #~ msgid ""
 #~ "** Warning: Message part originally used character set %s\n"
