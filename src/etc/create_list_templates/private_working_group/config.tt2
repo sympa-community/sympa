@@ -54,7 +54,7 @@ owner_include
 [% END -%]
 [% END -%]
 
-% IF editor -%]
+[% IF editor -%]
 [% FOREACH e = editor -%]
 editor
   email [% e.email %]
