@@ -5159,9 +5159,9 @@ sub get_list_member {
 #
 # OUT : undef if something wrong
 #       a hash of tab of ressembling emails
-sub get_ressembling_subscribers_no_object {
+sub get_ressembling_list_members_no_object {
     my $options = shift;
-    &do_log('debug2', 'List::get_ressembling_subscribers_no_object(%s, %s, %s)', $options->{'name'}, $options->{'email'}, $options->{'domain'});
+    &do_log('debug2', '(%s, %s, %s)', $options->{'name'}, $options->{'email'}, $options->{'domain'});
     my $name = $options->{'name'};
     my @output;
 

@@ -4411,7 +4411,7 @@ sub do_search {
 	$param->{'too_many_select'} = 1;
     }
 
-    $param->{'similar_subscribers'} = &List::get_ressembling_list_member_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}});
+    $param->{'similar_subscribers'} = &List::get_ressembling_list_members_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}});
     $param->{'similar_subscribers_occurence'} =$#{$param->{'similar_subscribers'}}+1;
 
     $param->{'occurrence'} = $record;
