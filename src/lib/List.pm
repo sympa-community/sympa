@@ -3174,6 +3174,11 @@ sub send_msg {
 	$sender_hash{lc($email->address)} = 1;
     }
    
+    unless (ref($message) eq 'Message') {
+	&do_log('err', 'Invalid message paramater');
+	return undef;	
+    }
+
     unless ($total > 0) {
 	&do_log('info', 'No subscriber in list %s', $name);
 	return 0;
@@ -3351,7 +3356,7 @@ sub send_msg {
 	}
 	my $new_message;
 	##Prepare message for normal reception mode
-	if (($array_name eq 'tabrcpt')||($array_name eq 'tabrcpt_nomail')||($array_name eq 'summary')||($array_name eq 'digest')||($array_name eq 'digestplain')){
+	if (($array_name eq 'tabrcpt')||($array_name eq 'tabrcpt_nomail')||($array_name eq 'tabrcpt_summary')||($array_name eq 'tabrcpt_digest')||($array_name eq 'tabrcpt_digestplain')){
 	    ## Add a footer
 	    unless ($message->{'protected'}) {
 		my $new_msg = $self->add_parts($message->{'msg'});
@@ -3437,6 +3442,14 @@ sub send_msg {
 		$url_msg = $new_msg;
 	    } 
 	    $new_message = new Message($url_msg);
+	}else {
+	    do_log('err', "Unknown variable/reception mode $array_name");
+	    return undef;
+	}
+
+	unless (defined $new_message) {
+		do_log('err', "Failed to create Message object");
+		return undef;	    
 	}
 
 	## TOPICS
@@ -3593,8 +3606,6 @@ sub send_to_editor {
    @rcpt = $self->get_editors_email();
    
    my $hdr = $message->{'msg'}->head;
-
-&do_log('notice', 'LIST::send_to_editor DO MESSAGE6 HEADER : %s', $hdr->as_string());
 
    ## Did we find a recipient?
    if ($#rcpt < 0) {
