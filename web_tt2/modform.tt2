@@ -60,7 +60,7 @@
 [% IF mod_display_message %]
 <input type="button" class="MainMenuLinks" name="action_distribute" value="hide" onclick="return hideform('mainviewmod[% msg.key %]')" />
 [% ELSE %]
-<input type="button" class="MainMenuLinks" name="action_distribute" value="view" onclick="jQuery('.viewmod').hide();jQuery('#viewmod[% msg.key %]').load('http://dev-sympa.cru.fr[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]').parent().show()" />
+<input type="button" class="MainMenuLinks" name="action_distribute" value="view" onclick="jQuery('.viewmod').hide();jQuery('#viewmod[% msg.key %]').load('[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]').parent().show()" />
 [% END %]
 
 

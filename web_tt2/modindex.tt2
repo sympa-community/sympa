@@ -65,9 +65,9 @@
 	  <td>[% msg.value.from %]</td>
 	  <td>
 	    [% IF msg.value.subject == 'no_subject' %]
-	      <a href="[% path_cgi %]/viewmod/[% list %]/[% msg.key %]">[%|loc%]No subject[%END%]</a>
+	      [%|loc%]No subject[%END%]
 	    [% ELSE %]
-	      <a href="[% path_cgi %]/viewmod/[% list %]/[% msg.key %]">[% msg.value.subject %]</a>
+	      [% msg.value.subject %]
 	    [% END %]
 
 
