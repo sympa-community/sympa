@@ -250,7 +250,7 @@ my %not_null = ('email_user' => 1,
 		'operation_stat' => 1,
 		'robot_stat' => 1,
 		'read_stat' => 1,
-		);
+	);
 
 my %primary = ('user_table' => ['email_user'],
 	       'subscriber_table' => ['robot_subscriber','list_subscriber','user_subscriber'],
@@ -266,6 +266,8 @@ my %primary = ('user_table' => ['email_user'],
 	       'stat_table' => ['id_stat'],
 	       'notification_table' => ['pk_notification']
 	       );
+	       
+my %autoincrement = ('notification_table' => 'pk_notification');
 
 ## List the required INDEXES
 ##   1st key is the concerned table
@@ -1168,15 +1170,17 @@ sub probe_db {
 		    if ($not_null{$f}) {
 			$options .= 'NOT NULL';
 		    }
-		    
+		    if ( $autoincrement{$t} eq $f) {
+					$options .= ' AUTO_INCREMENT PRIMARY KEY ';
+			}
 		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options")) {
-			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
-			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			return undef;
+			    &do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
+			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			    return undef;
 		    }
 		    
-		    push @report, sprintf('Field %s added to table %s', $f, $t);
-		    &do_log('info', 'Field %s added to table %s', $f, $t);
+		    push @report, sprintf('Field %s added to table %s (options : %s)', $f, $t, $options);
+		    &do_log('info', 'Field %s added to table %s  (options : %s)', $f, $t, $options);
 		    $added_fields{$f} = 1;
 		    
 		    ## Remove temporary DB field
