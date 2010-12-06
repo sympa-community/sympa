@@ -135,6 +135,18 @@ my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
 						   'dkim_i_bulkspool' => 'varchar(100)',
 						   'dkim_header_list_bulkspool' => 'varchar(500)',
 					       },
+			     'notification_table' => {'pk_notification' => 'int(11)',
+						      'message_id_notification' => 'varchar(100)',
+						      'recipient_notification' => 'varchar(100)',
+						      'reception_option_notification' => 'varchar(20)',
+						      'status_notification' => 'varchar(100)',
+						      'arrival_date_notification' => 'varchar(80)',
+						      'type_notification' => "enum('DSN', 'MDN')",
+						      'message_notification' => 'longtext',
+						      'list_notification' => 'varchar(50)',
+						      'robot_notification' => 'varchar(80)',
+
+			     },
 			     'stat_table' => {'id_stat' => 'bigint(20)',
 					      'date_stat' => 'int(11)',
 					      'email_stat' => 'varchar(100)',
@@ -251,7 +263,8 @@ my %primary = ('user_table' => ['email_user'],
 	       'bulkmailer_table' => ['messagekey_bulkmailer','packetid_bulkmailer'],
 	       'bulkspool_table' => ['messagekey_bulkspool'],
 	       'conf_table' => ['robot_conf','label_conf'],
-	       'stat_table' => ['id_stat']
+	       'stat_table' => ['id_stat'],
+	       'notification_table' => ['pk_notification']
 	       );
 
 ## List the required INDEXES
