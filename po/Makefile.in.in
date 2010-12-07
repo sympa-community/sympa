@@ -344,6 +344,7 @@ dist2: stamp-po $(DISTFILES)
 	done
 
 update-po: Makefile
+	test -x $(XGETTEXT) || chmod u+x $(XGETTEXT) ; \
 	$(MAKE) $(DOMAIN).pot-update
 	test -z "$(UPDATEPOFILES)" || $(MAKE) $(UPDATEPOFILES)
 	$(MAKE) update-gmo
@@ -412,6 +413,7 @@ export:
 	(cd /tmp/sympa-po; tar -zcvf /tmp/sympa-po.tar.gz *)
 
 clean-po: 
+	test -x $(XGETTEXT) || chmod u+x $(XGETTEXT) ; \
 	$(MAKE) $(DOMAIN).pot-update
 	@languages=`echo $(POFILES) | sed -e 's/\.po//g'`;\
 	for lang in $$languages; do \
