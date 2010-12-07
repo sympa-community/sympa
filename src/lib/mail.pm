@@ -546,6 +546,7 @@ sub sendto {
     my $priority =  $params{'priority'}; 
     my $encrypt = $params{'encrypt'};
     my $verp = $params{'verp'};
+    my $merge = $params{'merge'};
     my $dkim = $params{'dkim'};
     my $use_bulk = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
@@ -601,6 +602,7 @@ sub sendto {
 				  'priority' => $priority,
 				  'delivery_date' =>  $delivery_date,
 				  'verp' => $verp,
+				  'merge' => $merge,
 				  'use_bulk' => $use_bulk,
 				  'dkim' => $dkim,
 				  'tag_as_last' => $tag_as_last);
