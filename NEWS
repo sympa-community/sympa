@@ -3,6 +3,43 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.1		December 07, 2010
+
+  Bug fixes:
+
+	[6931] src/lib/mail.pm:  For some reason, the merge parameter was not
+	initialized nor transferred to 'sending' function in the 'sendto' sub.
+
+	[6930] po/Makefile.in.in:  xgettext.pl did not have the right to be
+	executed.
+
+	[6923] src/lib/Upgrade.pm:  notification table is now created with an
+	autoincrement primary key when running sympa.pl --upgrade . STILL
+	database creation script do NOT include it.  
+
+	[6917] src/lib/Upgrade.pm:  Add mysql notification_table description.
+	Still not complete because of a autoincrement index.
+
+	[6913] web_tt2/modform.tt2, web_tt2/modindex.tt2:  fix hardcoded
+	hostname in ajax URL
+
+	[6912] configure.ac, src/etc/script/js/Makefile.am:  The tinymce
+	library was not included in the distribution. Fixed by adding its name
+	to the "EXTRA_DIR" variable.
+
+	[6910] src/etc/create_list_templates/private_working_group/config.tt2: 
+	Fixed TT2 format bug introduced in revision 6610
+
+	[6908] wwsympa/wwsympa.fcgi.in:  Fixed bug while calling Log::db_log(),
+	now taking a hash as parameter. 
+	Calls to web_db_log() should also be cleaned to remove unrequired
+	parameters.
+
+	[6907] src/lib/List.pm: Fixed bug in List::send_msg() : Can't call
+	method "get_topic" on an undefined value at /home/sympa/bin/List.pm
+	Also added checks to detect errors.
+	Removed traces
+
 6.2a.0		December 01, 2010
 
   Features:

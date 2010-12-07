@@ -1,4 +1,179 @@
 ------------------------------------------------------------------------
+r6933 | sympa-authors | 2010-12-07 22:47:30 +0100 (Tue, 07 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/la.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature]Committing updated catalogues from Pootle
+------------------------------------------------------------------------
+r6932 | sympa-authors | 2010-12-07 22:46:46 +0100 (Tue, 07 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/la.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature]Committing latest translations from Pootle
+------------------------------------------------------------------------
+r6931 | david.verdin | 2010-12-07 22:34:30 +0100 (Tue, 07 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/src/lib/mail.pm
+
+[bug] For some reason, the merge parameter was not initialized nor transferred to 'sending' function in the 'sendto' sub.
+------------------------------------------------------------------------
+r6930 | david.verdin | 2010-12-07 16:26:20 +0100 (Tue, 07 Dec 2010) | 1 line
+Changed paths:
+   M /trunk
+   M /trunk/po/Makefile.in.in
+
+[bug] xgettext.pl did not have the right to be executed.
+------------------------------------------------------------------------
+r6838 | david.verdin | 2010-12-01 15:08:56 +0100 (Wed, 01 Dec 2010) | 2 lines
+Changed paths:
+   M /branches/config-bin-dev-branch/po/Makefile.in.in
+Merged via: r6930
+
+[bug] xgettext.pl had not the x bit by default. Ensuring that this bit is set anytime we try to use this script.
+
+------------------------------------------------------------------------
+r6923 | serge.aumont | 2010-12-06 14:05:16 +0100 (Mon, 06 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/lib/Upgrade.pm
+
+[bug] notification table is now created with an autoincrement primary key when running sympa.pl --upgrade . STILL database creation script do NOT include it.  
+
+------------------------------------------------------------------------
+r6917 | sympa-authors | 2010-12-06 11:54:00 +0100 (Mon, 06 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/lib/Upgrade.pm
+
+[bug] Add mysql notification_table description. Still not complete because of a autoincrement index.
+
+
+------------------------------------------------------------------------
+r6913 | serge.aumont | 2010-12-03 11:21:58 +0100 (Fri, 03 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/web_tt2/modform.tt2
+   M /trunk/web_tt2/modindex.tt2
+
+[bug] fix hardcoded hostname in ajax URL
+
+------------------------------------------------------------------------
+r6912 | david.verdin | 2010-12-03 10:46:34 +0100 (Fri, 03 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/configure.ac
+   M /trunk/src/etc/script/js/Makefile.am
+
+[bug] The tinymce library was not included in the distribution. Fixed by adding its name to the "EXTRA_DIR" variable.
+
+------------------------------------------------------------------------
+r6911 | david.verdin | 2010-12-03 10:45:20 +0100 (Fri, 03 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/sympa_wizard.pl.in
+
+[-bug] The sympa wizard was not checking that the mandatory Email::Simple CPAN module was installed.
+
+------------------------------------------------------------------------
+r6910 | sympa-authors | 2010-12-02 18:00:31 +0100 (Thu, 02 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/etc/create_list_templates/private_working_group/config.tt2
+
+[bug] Fixed TT2 format bug introduced in revision 6610
+
+------------------------------------------------------------------------
+r6909 | sympa-authors | 2010-12-02 17:42:07 +0100 (Thu, 02 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[-bug] Renaming of List::get_ressembling_subscribers_no_object() was not properly done
+
+------------------------------------------------------------------------
+r6908 | sympa-authors | 2010-12-02 16:35:50 +0100 (Thu, 02 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[bug] Fixed bug while calling Log::db_log(), now taking a hash as parameter. 
+Calls to web_db_log() should also be cleaned to remove unrequired parameters.
+
+------------------------------------------------------------------------
+r6907 | sympa-authors | 2010-12-02 15:14:19 +0100 (Thu, 02 Dec 2010) | 4 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+
+[bug]Fixed bug in List::send_msg() : Can't call method "get_topic" on an undefined value at /home/sympa/bin/List.pm
+Also added checks to detect errors.
+Removed traces
+
+------------------------------------------------------------------------
+r6886 | sympa-authors | 2010-12-01 17:15:04 +0100 (Wed, 01 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
+
+[-release]Preparing version 6.2a.0
+------------------------------------------------------------------------
 r6885 | sympa-authors | 2010-12-01 17:13:30 +0100 (Wed, 01 Dec 2010) | 1 line
 Changed paths:
    M /trunk/po/ar.po
