@@ -3592,8 +3592,8 @@ sub send_to_editor {
 	   ## generate HTML
 	   chdir $tmp_dir;
 	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
-	   
-	   open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file|";
+	   my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
+	   open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host -attachmenturl=viewmod/$name/$modkey $mod_file|";
 	   open MSG, ">msg00000.html";
 	   &do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file");
 	   print MSG <ARCMOD>;
