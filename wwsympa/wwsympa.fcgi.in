@@ -7302,6 +7302,23 @@ sub do_arc {
 	$param->{'previous_list'} = $list->{'name'};
 	return undef;
     }
+
+     ## check autorization for tracking     
+     my $result = $list->check_list_authz('tracking.tracking',$param->{'auth_method'},
+					  {'sender' => $param->{'user'}{'email'},
+					   'remote_host' => $param->{'remote_host'},
+					   'remote_addr' => $param->{'remote_addr'}});
+     my $r_action;
+     if (ref($result) eq 'HASH') {
+	 $r_action = $result->{'action'};
+     }
+
+     if ($r_action =~ /do_it/i) {
+	$param->{'may_tracking'} = 1 ; 
+    }else{
+	$param->{'may_tracking'} = 0 ;
+    } 
+
     
     $session->{'archive_sniffer'} = 'false' if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) ;
     
@@ -7901,12 +7918,27 @@ sub do_remove_arc {
  sub do_tracking   {
      &wwslog('info', 'do_tracking(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
-     ## Access control
-     unless ($param->{'is_owner'}){
+     ## Access control     
+     my $result = $list->check_list_authz('tracking.tracking',$param->{'auth_method'},
+					  {'sender' => $param->{'user'}{'email'},
+					   'remote_host' => $param->{'remote_host'},
+					   'remote_addr' => $param->{'remote_addr'}});
+     my $r_action;
+     my $reason;
+     if (ref($result) eq 'HASH') {
+	 $r_action = $result->{'action'};
+	 $reason = $result->{'reason'};
+     }
+
+     unless ($r_action =~ /do_it/i) {
 	 $param->{'previous_action'} = 'arc';
 	 $param->{'previous_list'} = $list->{'name'};
+	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
+	 &wwslog('info','tracking : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
+
+     # is tracking configured for this list ?
      unless (($list->{admin}{tracking}{delivery_status_notification} eq 'on')||($list->{admin}{tracking}{message_delivery_notification} eq 'on')||($list->{admin}{tracking}{message_delivery_notification} eq 'on_demand')){
          &wwslog('err','do_tracking : list not configured for tracking');
 	 &report::reject_report_web('intern','list_not_configured_for_tracking');

@@ -437,16 +437,19 @@ my %alias = ('reply-to' => 'reply_to',
 										'gettext_id' => "tracking message by delivery status notification",
 										'order' => 1
 									   },
-									   								   									   
-									'message_delivery_notification' => {'format' => ['on','on_demand','off'],
+					'message_delivery_notification' => {'format' => ['on','on_demand','off'],
 										'default' =>  {'conf' => 'tracking_message_delivery_notification'},
 										'gettext_id' => "tracking message by message delivery notification",
 										'order' => 2
-									   }
-				         },
-					'group' => 'bounces',
-					'gettext_id' => "Message tracking feature"
-					},		
+									   },
+					'tracking' => {'scenario' => 'tracking',
+						       'gettext_id' => "who can view message tracking",
+						       'order' => 3 
+						       }
+				        },
+			   'group' => 'bounces',
+			   'gettext_id' => "Message tracking feature"
+			   },		
 	    'creation' => {'format' => {'date_epoch' => {'format' => '\d+',
 							 'occurrence' => '1',
 							 'gettext_id' => "epoch date",

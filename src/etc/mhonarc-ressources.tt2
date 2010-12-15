@@ -490,10 +490,8 @@ $POWERED_BY$
     ($tag$% END %$tag$)
 
     ($tag$% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %$tag$) 
-      ($tag$% IF is_owner %$tag$) 
+      ($tag$% IF may_tracking %$tag$) 
         <input class="MainMenuLinks" type="submit" name="action_tracking" value="mail tracking" /> 
-      ($tag$% ELSE %$tag$)
-        <input class="MainMenuLinks" type="submit" name="action_tracking_percent" value="mail tracking (percentage)" /> 
       ($tag$% END %$tag$) 
     ($tag$% END %$tag$) 
 

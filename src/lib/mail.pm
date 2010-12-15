@@ -838,11 +838,10 @@ sub smtpto {
        
    my $sendmail = &Conf::get_robot_conf($robot, 'sendmail');
    my $sendmail_args = &Conf::get_robot_conf($robot, 'sendmail_args');
+   if ($msgkey) {
+       $sendmail_args .= ' -N success,delay,failure -V '.$msgkey;
+   }
    if ($pid == 0) {
-       if ($msgkey) {
-	   $sendmail_args .= ' -N success,delay,failure -V '.$msgkey;
-       }
-
 
        close(OUT);
        open(STDIN, "<&IN");
