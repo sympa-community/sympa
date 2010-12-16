@@ -277,27 +277,33 @@ sub find_notification_id_by_message{
     return @pk_notifications[0];
 }
 
+
 ##############################################
-#   remove_notifications
+#   remove_message_by_id
 ##############################################
 # Function use to remove notifications in argument to the given datatable
 # 
-# IN :-$dbh (+): the database connection
-#    : $msgid : id of related message
+# IN : $msgid : id of related message
 #    : $listname
 #    : $robot
 #
 # OUT : $sth | undef
 #      
 ##############################################
-sub remove_notifications{
-    my $dbh = shift;
+sub remove_message_by_id{
     my $msgid =shift;
     my $listname =shift;
     my $robot =shift;
 
-    &do_log('debug2', 'Remove notification id =  %s, listname = %s, robot = %s', $msgid,$listname,$robot );
+    &do_log('debug2', 'Remove message id =  %s, listname = %s, robot = %s', $msgid,$listname,$robot );
     my $sth;
+
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
 
     my $request = sprintf "DELETE FROM notification_table WHERE `message_id_notification` = %s AND list_notification = %s AND robot_notification = %s", $dbh->quote($msgid),$dbh->quote($listname),$dbh->quote($robot);
 
