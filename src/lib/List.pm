@@ -3353,7 +3353,7 @@ sub send_msg {
     }
     foreach my $array_name (keys %$available_rcpt) {
 	my $reception_option ;	 
-	if ($array_name =~ /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(htlm)|(txt)|(notice))?(_verp)?/) {
+	if ($array_name =~ /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(html)|(txt)|(notice))?(_verp)?/) {
 	    $reception_option =  $1;	    
 	    $reception_option = 'mail' unless $reception_option ;
 	}
@@ -3466,7 +3466,7 @@ sub send_msg {
 	    @possible_verptabrcpt = @{$available_verp_rcpt->{$array_name}};
 	}
 	
-	if ($array_name =~ /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(htlm)|(txt)|(notice)|())(_verp)+/) {
+	if ($array_name =~ /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(html)|(txt)|(notice))?(_verp)?/) {
 	    my $reception_option =  $1;
 	    
 	    $reception_option = 'mail' unless $reception_option ;
