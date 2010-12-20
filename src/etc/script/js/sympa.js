@@ -1045,20 +1045,24 @@ function config_ctxhelp(td) {
 
 
 // function that hide all hiddenform except one which Id is the function parameter (used in modindex and more)
-function toggleDivDisplay(my_message_id) 
+function toggleDivDisplay(my_message_id)
 {
-  for( i=0; i<document.getElementsByName( 'hiddenform').length; i++){
-     if (document.getElementsByName('hiddenform')[i].id == my_message_id) {		
-	if (document.getElementById(my_message_id).style.display == 'block') {
-		document.getElementById(my_message_id).style.display = 'none';
-	} else {
-		document.getElementById(my_message_id).style.display = 'block';
-	}
+  var divs = document.getElementsByTagName('div');
+  for(var i=0; i<divs.length; i++){
+     if(divs[i].getAttribute('name') != 'hiddenform') continue;
+     if (divs[i].id == my_message_id) {
+        if (divs[i].style.display == 'block') {
+                divs[i].style.display = 'none';
+        } else {
+                divs[i].style.display = 'block';
+        }
      } else {
-	document.getElementsByName('hiddenform')[i].style.display = 'none';
+        divs[i].style.display = 'none';
      }
   }
 }
+
+
 
 //hide a div (usually a part of a form) 
 function hideform(my_message_id)
