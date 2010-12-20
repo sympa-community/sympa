@@ -1493,5 +1493,10 @@ our @params = (
         name    => 'tracking_message_delivery_notification',
         default => 'off',
     },
+    {
+        name    => 'tracking_default_retention_period',
+        default => '90',
+    },
+
 );
 

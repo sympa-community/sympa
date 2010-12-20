@@ -146,11 +146,12 @@ sub db_init_notification_table{
     }
     
     my $sth;
-    
+    my $time = time ;
+
     foreach my $email (@rcpt){
 	my $email= lc($email);
 	
-	my $request = sprintf "INSERT INTO notification_table (message_id_notification,recipient_notification,reception_option_notification,list_notification,robot_notification) VALUES (%s,%s,%s,%s,%s)",$dbh->quote($msgid),$dbh->quote($email),$dbh->quote($reception_option),$dbh->quote($listname),$dbh->quote($robot);
+	my $request = sprintf "INSERT INTO notification_table (message_id_notification,recipient_notification,reception_option_notification,list_notification,robot_notification,date_notification) VALUES (%s,%s,%s,%s,%s,%s)",$dbh->quote($msgid),$dbh->quote($email),$dbh->quote($reception_option),$dbh->quote($listname),$dbh->quote($robot),$time;
 	
 	unless ($sth = $dbh->prepare($request)) {
                 &do_log('err','Unable to prepare SQL statement "%s": %s', $request, $dbh->errstr);
@@ -209,8 +210,6 @@ sub db_insert_notification {
     
     my $request = sprintf "UPDATE notification_table SET  `status_notification` = %s, `arrival_date_notification` = %s, `message_notification` = %s WHERE (pk_notification = %s)",$dbh->quote($status),$dbh->quote($arrival_date),$dbh->quote($notification_as_string),$dbh->quote($notification_id);
 
-    # my $request_trace = sprintf "UPDATE notification_table SET  `status_notification` = %s, `arrival_date_notification` = %s, WHERE (pk_notification = %s)",$dbh->quote($status),$dbh->quote($arrival_date),$dbh->quote($notification_id);
-    
     my $sth;
     
     unless ($sth = $dbh->prepare($request)) {
@@ -281,7 +280,7 @@ sub find_notification_id_by_message{
 ##############################################
 #   remove_message_by_id
 ##############################################
-# Function use to remove notifications in argument to the given datatable
+# Function use to remove notifications 
 # 
 # IN : $msgid : id of related message
 #    : $listname
@@ -319,6 +318,49 @@ sub remove_message_by_id{
     }
     $sth -> finish;
     return 1;
+}
+
+##############################################
+#   remove_message_by_period
+##############################################
+# Function use to remove notifications iolder than number of days
+# 
+# IN : $period
+#    : $listname
+#    : $robot
+#
+# OUT : $sth | undef
+#      
+##############################################
+sub remove_message_by_period{
+    my $period =shift;
+    my $listname =shift;
+    my $robot =shift;
+
+    &do_log('debug2', 'Remove message by period=  %s, listname = %s, robot = %s', $period,$listname,$robot );
+    my $sth;
+
+    my $dbh = &List::db_get_handler();
+    my $sth;
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &List::db_connect();
+    }
+    my $limit = time - ($period * 24 * 60 * 60);
+
+    my $request = sprintf "DELETE FROM notification_table WHERE `date_notification` < %s AND list_notification = %s AND robot_notification = %s", $limit,$dbh->quote($listname),$dbh->quote($robot);
+
+    unless ($sth = $dbh->prepare($request)) {
+            &do_log('err','Unable to prepare SQL statement "%s": %s', $request, $dbh->errstr);
+            return undef;
+    }
+    unless ($sth->execute()) {
+            &do_log('err','Unable to execute SQL statement "%s" : %s', $request, $dbh->errstr);
+            return undef;
+    }
+    my $deleted = $sth->rows;
+    $sth -> finish;
+    return $deleted;
 }
 
 1;

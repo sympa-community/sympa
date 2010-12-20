@@ -36,6 +36,7 @@ use Time::Local;
 use Digest::MD5;
 use Scenario;
 use SympaSession;
+use tracking;
 use Bulk;
 use mail;
 use wwslib;
@@ -1173,9 +1174,18 @@ sub purge_tables {
     my $removed = &Bulk::purge_bulkspool();
     unless(defined $removed) {
 	&do_log('err','Failed to purge bulkspool');
-	return undef;
     }
-    &do_log('notice','%s rows removed in bulkspool_table',$removed);
+    &do_log('notice','%s rows removed in bulkspool_table',$removed);    
+    #
+    my $removed = 0;
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	my $all_lists = &List::get_lists($robot);
+	foreach my $list ( @$all_lists ) {
+	    $removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
+	}
+    }
+    &do_log('notice', "%s rows removed in tracking table",$removed);
+
     return 1;
 }
 

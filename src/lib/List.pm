@@ -445,7 +445,14 @@ my %alias = ('reply-to' => 'reply_to',
 					'tracking' => {'scenario' => 'tracking',
 						       'gettext_id' => "who can view message tracking",
 						       'order' => 3 
-						       }
+						       },
+					'retention_period' => {'format' => '\d+',
+    							       'default' =>  {'conf' => 'tracking_default_retention_period'},
+							       'gettext_unit' => 'days',
+							       'length' => 5,
+							       'gettext_id' => "Tracking datas are removed after this number of days",
+							       'order' => 4 
+  						               }
 				        },
 			   'group' => 'bounces',
 			   'gettext_id' => "Message tracking feature"

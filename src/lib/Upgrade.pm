@@ -145,6 +145,7 @@ my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
 						      'message_notification' => 'longtext',
 						      'list_notification' => 'varchar(50)',
 						      'robot_notification' => 'varchar(80)',
+						      'date_notification' => 'int(11)',
 
 			     },
 			     'stat_table' => {'id_stat' => 'bigint(20)',
