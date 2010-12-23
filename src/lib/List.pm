@@ -3366,7 +3366,7 @@ sub send_msg {
 	}
 	my $new_message;
 	##Prepare message for normal reception mode
-	if (($array_name eq 'tabrcpt')||($array_name eq 'tabrcpt_nomail')||($array_name eq 'tabrcpt_summary')||($array_name eq 'tabrcpt_digest')||($array_name eq 'tabrcpt_digestplain')){
+	if ($array_name eq 'tabrcpt'){
 	    ## Add a footer
 	    unless ($message->{'protected'}) {
 		my $new_msg = $self->add_parts($message->{'msg'});
@@ -3376,7 +3376,9 @@ sub send_msg {
 		}
 	    }
 	    $new_message = $message;	    
-	    
+	}elsif(($array_name eq 'tabrcpt_nomail')||($array_name eq 'tabrcpt_summary')||($array_name eq 'tabrcpt_digest')||($array_name eq 'tabrcpt_digestplain')){
+	    $new_message = $message;
+	}
 	##Prepare message for notice reception mode
 	}elsif($array_name eq 'tabrcpt_notice'){
 	    my $notice_msg = $saved_msg->dup;
