@@ -69,5 +69,4 @@ p12topem.pl: p12topem.pl.in
 testldap.pl: testldap.pl.in
 testlogs.pl: testlogs.pl.in
 tpl2tt2.pl: tpl2tt2.pl.in
-
 sympa: sympa.in
