@@ -2628,7 +2628,7 @@ sub distribute_msg {
 	    if ($self->{'admin'}{'reply_to_header'}{'value'} eq 'list') {
 		$reply = "$name\@$host";
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'sender') {
-		$reply = undef;
+		$reply = $hdr->get('From');
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'all') {
 		$reply = "$name\@$host,".$hdr->get('From');
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'other_email') {
@@ -3378,9 +3378,8 @@ sub send_msg {
 	    $new_message = $message;	    
 	}elsif(($array_name eq 'tabrcpt_nomail')||($array_name eq 'tabrcpt_summary')||($array_name eq 'tabrcpt_digest')||($array_name eq 'tabrcpt_digestplain')){
 	    $new_message = $message;
-	}
-	##Prepare message for notice reception mode
-	}elsif($array_name eq 'tabrcpt_notice'){
+	}	##Prepare message for notice reception mode
+	elsif($array_name eq 'tabrcpt_notice'){
 	    my $notice_msg = $saved_msg->dup;
 	    $notice_msg->bodyhandle(undef);    
 	    $notice_msg->parts([]);
