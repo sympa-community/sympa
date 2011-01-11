@@ -53,6 +53,7 @@
   [% ELSIF u_err.msg == 'missing_arg' %][%|loc(u_err.argument)%]Missing argument %1[%END%]
   [% ELSIF u_err.msg == 'missing_post_source' %][%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
   [% ELSIF u_err.msg == 'two_post_sources_defined' %][%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
+  [% ELSIF u_err.msg == 'unable_to_parse' %][%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
   [% ELSIF u_err.msg == 'wrong_value' %][%|loc(u_err.argument)%]Wrong value for parameter %1[%END%]
   [% ELSIF u_err.msg == 'no_user' %][%|loc%]You need to login[%END%]
   [% ELSIF u_err.msg == 'incorrect_email' %][%|loc(u_err.email)%]Address "%1" is incorrect[%END%]

@@ -13369,7 +13369,6 @@ sub creation_shared_file {
  	}
 
     }
-
     unless(&wwslib::upload_file_to_server({
 				    'query' => $query,
 				    'file_field' => 'uploaded_file',
@@ -15720,19 +15719,39 @@ sub do_send_mail {
 	     ($Log::log_level >= 0) && &wwslog('info','User specified both an URL (%s) and a file to upload (%s). Can\'t choose between them.',$in{'url'},$in{'uploaded_file'});
 	     return 'compose_mail';
 	 }
-	 my $source = $in{'url'};
+	 my $page_source = $in{'url'};
 	 if ($in{'uploaded_file'} =~ /\S/) {
-	     $source = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$in{'uploaded_file'};
+	    $page_source = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$in{'uploaded_file'};
+	    unless(&wwslib::upload_file_to_server({
+				    'query' => $query,
+				    'file_field' => 'uploaded_file',
+				    'destination' => $page_source,
+				    }))
+	    {
+		&wwslog('err','Can\'t upload %s', $in{'uploaded_file'});
+		&report::reject_report_web('intern','cannot_upload',{'path' => $page_source},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => $in{'uploaded_file'},'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+		return undef;    
+	    }
+	    $page_source = 'file://'.$page_source;
 	}
-	
-	 $in{'body'} = &tools::create_html_part_from_web_page({
+
+	 my $html_part_body = &tools::create_html_part_from_web_page({
 						'From' => $from,
 						'To' => $to,
 						'Headers' => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
 						'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
 						'Subject' => $in{'subject'},
-						'source' => $source,
+						'source' => $page_source,
 	     });
+	if (defined $html_part_body) {
+            $in{'body'} = $html_part_body;
+	}else{
+	     &report::reject_report_web('user','unable_to_parse',{},$param->{'action'});
+	     ($Log::log_level >= 0) && &wwslog('info','A MIME part could not be created with the supplied data, %s, %s',$in{'url'},$in{'uploaded_file'});
+	     return undef;
+	}            
+	
      }else{
 	 
 	 ## Message body should not be empty

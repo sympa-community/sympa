@@ -2944,7 +2944,7 @@ sub dump_var {
 		print $fd "\t"x$level.$index."\n";
 		&dump_var($var->[$index], $level+1, $fd);
 	    }
-	}elsif (ref($var) eq 'HASH' || ref($var) eq 'Scenario' || ref($var) eq 'List') {
+	}elsif (ref($var) eq 'HASH' || ref($var) eq 'Scenario' || ref($var) eq 'List' || ref($var) eq 'CGI::Fast') {
 	    foreach my $key (sort keys %{$var}) {
 		print $fd "\t"x$level.'_'.$key.'_'."\n";
 		&dump_var($var->{$key}, $level+1, $fd);
@@ -3935,7 +3935,7 @@ sub addrencode {
 # Generate a newsletter from an HTML URL or a file path.
 sub create_html_part_from_web_page {
     my $param = shift;
-    &do_log('notice',"Creating HTML MIME part");
+    &do_log('debug',"Creating HTML MIME part. Source: %s",$param->{'source'});
     my $mailHTML = new MIME::Lite::HTML(
 					{
 					    From => $param->{'From'},
@@ -3951,6 +3951,10 @@ sub create_html_part_from_web_page {
 					);
     # parse return the MIME::Lite part to send
     my $part = $mailHTML->parse($param->{'source'});
+    unless (defined($part)) {
+	&do_log('err', 'Unable to convert file %s to a MIME part',$param->{'source'});
+	return undef;
+    }
     return $part->as_string;
 }
 
