@@ -44,7 +44,6 @@ use Archive::Zip;
   
 use strict 'vars';
 use Time::Local;
-use MIME::Lite::HTML;
 
 
 ## Sympa API
@@ -13370,20 +13369,18 @@ sub creation_shared_file {
  	}
 
     }
+
+    unless(&wwslib::upload_file_to_server({
+				    'query' => $query,
+				    'file_field' => 'uploaded_file',
+				    'destination' => "$shareddir/$path/$fname",
+				    }))
+	{
+	    &report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	    &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	    return undef;
+	}
     
-    my $fh = $query->upload('uploaded_file');
-
-    unless (open FILE, ">:bytes", "$shareddir/$path/$fname") {
-	&report::reject_report_web('intern','cannot_upload',{'path' => "$path/$fname"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	&wwslog('err',"creation_shared_file : Cannot open file $shareddir/$path/$fname : $!");
-	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
-    while (<$fh>) {
-	print FILE;
-    }
-    close FILE;
-
     ## XSS Protection for HTML files.
     if (lc($fname) =~ /\.html?/) {
 	my $sanitized_file = &tools::sanitize_html_file('robot' => $robot,
@@ -15625,7 +15622,6 @@ sub do_compose_mail {
 ####################################################
 #  Sends a message to a list by the Web interface
 #  or an html page getting its url.
-#  Need MIME::Lite - MIME::Lite::HTML - EMAIL::DATE::FORMAT
 #  It uses mail::mail_file() to do it.
 # 
 # IN : -
@@ -15711,38 +15707,32 @@ sub do_send_mail {
     
      if ($in{'html_news_letter'}) {
 	 
-	 # url should not be empty -> missing argument
-	 if ($in{'url'} =~ /^\s*$/) {
-	     &report::reject_report_web('user','missing_arg',{'argument' => 'url'},$param->{'action'});
-	     ($Log::log_level >= 0) && &wwslog('info','Missing url');
-	     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_url','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-	     return undef;
+	 # url and uploaded_file should not be both empty -> missing argument
+	 if ($in{'url'} =~ /^\s*$/ && $in{'uploaded_file'} =~ /^\s*$/) {
+	     &report::reject_report_web('user','missing_post_source',{},$param->{'action'});
+	     ($Log::log_level >= 0) && &wwslog('info','Missing url and uploaded file');
+	     return 'compose_mail';
 	 }
 	 
-	 # Generate a newsletter from an HTML URL and send it to a list by the Web interface.
-	 # Else you must use parse routine of MIME::Lite::HTML and send of MIME::Lite.
-	 my $mailHTML = new MIME::Lite::HTML(
-					     {
-						 From => $from,
-						 To => $to,
-						 Headers => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
-						 'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
-						 Subject => $in{'subject'},
-						 HTMLCharset => 'utf-8',
-						 TextCharset => 'utf-8',
-						 TextEncoding => '8bit',
-						 HTMLEncoding => '8bit',
-						 remove_jscript => '1', #delete the scripts in the html
-					     }
-					     );
-	 my $pages_url;
-	 $pages_url = $in{'url'};
-	 
-	 # parse return the MIME::Lite part to send 
-	 my $MIMEmail = $mailHTML->parse($pages_url); 
-
-	 $in{'body'} = $MIMEmail->as_string;
-	 
+	 # url and uploaded_file should not be both filled: we could not chooe which one to use.
+	 if ($in{'url'} =~ /\S/ && $in{'uploaded_file'} =~ /\S/) {
+	     &report::reject_report_web('user','two_post_sources_defined',{},$param->{'action'});
+	     ($Log::log_level >= 0) && &wwslog('info','User specified both an URL (%s) and a file to upload (%s). Can\'t choose between them.',$in{'url'},$in{'uploaded_file'});
+	     return 'compose_mail';
+	 }
+	 my $source = $in{'url'};
+	 if ($in{'uploaded_file'} =~ /\S/) {
+	     $source = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$in{'uploaded_file'};
+	}
+	
+	 $in{'body'} = &tools::create_html_part_from_web_page({
+						'From' => $from,
+						'To' => $to,
+						'Headers' => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
+						'return_path' => &Conf::get_robot_conf($robot, 'sympa'),
+						'Subject' => $in{'subject'},
+						'source' => $source,
+	     });
      }else{
 	 
 	 ## Message body should not be empty

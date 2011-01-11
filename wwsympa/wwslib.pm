@@ -329,5 +329,22 @@ sub get_my_url {
     return ($return_url);
 }
 
+# Uploade source file to the destination on the server
+sub upload_file_to_server {
+    my $param = shift;
+    &do_log('debug',"Uploading file %s, query %s, destination %s",$param->{'file_field'},$param->{'query'},$param->{'destination'});
+    my $query = $param->{'query'};
+    my $fh = $query->upload($param->{'file_field'});
+
+    unless (open FILE, ">:bytes", $param->{'destination'}) {
+	&wwslog('err',"Cannot open file $param->{'destination'} : $!");
+	return undef;
+    }
+    while (<$fh>) {
+	print FILE;
+    }
+    close FILE;
+    return 1;
+}
 
 1;

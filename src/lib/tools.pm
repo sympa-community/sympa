@@ -34,6 +34,7 @@ use Mail::Header;
 use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
 use Text::LineFold;
+use MIME::Lite::HTML;
 
 use Conf;
 use Language;
@@ -3930,5 +3931,28 @@ sub addrencode {
 	return "<$addr>";
     }
 }
+
+# Generate a newsletter from an HTML URL or a file path.
+sub create_html_part_from_web_page {
+    my $param = shift;
+    &do_log('notice',"Creating HTML MIME part");
+    my $mailHTML = new MIME::Lite::HTML(
+					{
+					    From => $param->{'From'},
+					    To => $param->{'To'},
+					    Headers => $param->{'Headers'},
+					    Subject => $param->{'Subject'},
+					    HTMLCharset => 'utf-8',
+					    TextCharset => 'utf-8',
+					    TextEncoding => '8bit',
+					    HTMLEncoding => '8bit',
+					    remove_jscript => '1', #delete the scripts in the html
+					}
+					);
+    # parse return the MIME::Lite part to send
+    my $part = $mailHTML->parse($param->{'source'});
+    return $part->as_string;
+}
+
 
 1;

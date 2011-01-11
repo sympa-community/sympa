@@ -75,8 +75,17 @@
 		</ul>
 	[%  END %]
 	[% IF subaction == "html_news_letter" %]
-   		<label for="url">[%|loc%]URL:[%END%] <input id="url" type="text" size="45" name="url" value="[% url %]" /></label>	
-	<br /><br />
+		
+		<h3>[%|loc%]Select the source of your HTML newsletter[%END%]</h3>
+		<br/>
+		
+		<label for="url"><strong>[%|loc%]Send the page from the following URL:[%END%] </strong></label>
+		<input id="url" type="text" size="55" name="url" value="[% url %]" /><br/>
+		
+		<p><strong>[%|loc%]OR[%END%]</strong></p>
+		
+		<label for="uploaded_file">[%|loc%]<strong>Send an HTML file from your computer:[%END%] </strong></label>
+		<input id="uploaded_file" type="file" size="45" name="uploaded_file" value="[% uploaded_file %]"/>
 	[%  END %]
     </fieldset>
 </form>
