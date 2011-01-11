@@ -1,4 +1,172 @@
 ------------------------------------------------------------------------
+r6961 | sympa-authors | 2011-01-11 16:18:42 +0100 (Tue, 11 Jan 2011) | 1 line
+Changed paths:
+   M /trunk/po/ar.po
+   M /trunk/po/bg.po
+   M /trunk/po/br.po
+   M /trunk/po/ca.po
+   M /trunk/po/cs.po
+   M /trunk/po/de.po
+   M /trunk/po/el.po
+   M /trunk/po/en_US.po
+   M /trunk/po/es.po
+   M /trunk/po/et.po
+   M /trunk/po/eu.po
+   M /trunk/po/fi.po
+   M /trunk/po/fr.po
+   M /trunk/po/hu.po
+   M /trunk/po/id.po
+   M /trunk/po/it.po
+   M /trunk/po/ja.po
+   M /trunk/po/ko.po
+   M /trunk/po/la.po
+   M /trunk/po/ml.po
+   M /trunk/po/nb_NO.po
+   M /trunk/po/nl.po
+   M /trunk/po/oc.po
+   M /trunk/po/pl.po
+   M /trunk/po/pt.po
+   M /trunk/po/pt_BR.po
+   M /trunk/po/ro.po
+   M /trunk/po/ru.po
+   M /trunk/po/sv.po
+   M /trunk/po/sympa.pot
+   M /trunk/po/tr.po
+   M /trunk/po/vi.po
+   M /trunk/po/zh_CN.po
+   M /trunk/po/zh_TW.po
+
+[-feature]Committing updated catalogues from Pootle
+------------------------------------------------------------------------
+r6960 | sympa-authors | 2011-01-11 16:17:20 +0100 (Tue, 11 Jan 2011) | 1 line
+Changed paths:
+   M /trunk/src/etc/script/create_db.Oracle
+   M /trunk/src/etc/script/create_db.Pg
+   M /trunk/src/etc/script/create_db.SQLite
+   M /trunk/src/etc/script/create_db.Sybase
+   M /trunk/src/etc/script/create_db.mysql
+
+[-feature]Committing latest translations from Pootle
+------------------------------------------------------------------------
+r6959 | david.verdin | 2011-01-11 16:10:55 +0100 (Tue, 11 Jan 2011) | 2 lines
+Changed paths:
+   M /trunk/src/lib/tools.pm
+   M /trunk/web_tt2/compose_mail.tt2
+   M /trunk/web_tt2/error.tt2
+   M /trunk/wwsympa/wwslib.pm
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[feature] It is now possible, when sending an HTML newsletter through the web interface, to upload a local file from the computer instead of using an URL.
+
+------------------------------------------------------------------------
+r6958 | david.verdin | 2011-01-11 12:24:34 +0100 (Tue, 11 Jan 2011) | 1 line
+Changed paths:
+   M /trunk/src/lib/tools.pm
+   M /trunk/web_tt2/compose_mail.tt2
+   M /trunk/web_tt2/error.tt2
+   M /trunk/wwsympa/wwslib.pm
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[change] Factorizing the file uploading and HTML page sending code.
+------------------------------------------------------------------------
+r6956 | serge.aumont | 2011-01-06 09:30:56 +0100 (Thu, 06 Jan 2011) | 3 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+
+[change] Patch from Adam Bernstein to always set Reply-To header
+
+
+------------------------------------------------------------------------
+r6950 | sympa-authors | 2010-12-23 16:10:12 +0100 (Thu, 23 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/etc/script/Makefile.am
+   M /trunk/src/lib/Sympa/Constants.pm.in
+   M /trunk/src/lib/Upgrade.pm
+
+[change] database structure is described in Sympa::Constants.
+[change] db creation script are produced by an authors only script part of the tools involved for new version creation. They should not be edited anymore by developpers 
+
+------------------------------------------------------------------------
+r6949 | sympa-authors | 2010-12-23 11:39:55 +0100 (Thu, 23 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+
+[bug] fix incorrect multiple footer message 
+
+
+------------------------------------------------------------------------
+r6948 | serge.aumont | 2010-12-20 17:19:47 +0100 (Mon, 20 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/etc/script/js/sympa.js
+
+[bug] fix a toggleDivDisplay used in moderation because of a bug in IE
+
+
+------------------------------------------------------------------------
+r6947 | serge.aumont | 2010-12-20 10:43:50 +0100 (Mon, 20 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/Upgrade.pm
+   M /trunk/src/lib/confdef.pm
+   M /trunk/src/lib/tracking.pm
+   M /trunk/src/task_manager.pl.in
+
+[change] new entry in notification  table for expiration of notification records. retention period is controle by a new list parameter (tracking/retention_period) with a default in robot;conf : tracking_default_retention_pediod. Job is performed by task_manager (purge_tables task)
+
+
+------------------------------------------------------------------------
+r6946 | david.verdin | 2010-12-17 15:37:49 +0100 (Fri, 17 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+
+[bug] HTML only reception mode was never used due to a typo in the regular expression.
+
+------------------------------------------------------------------------
+r6945 | sympa-authors | 2010-12-16 10:09:47 +0100 (Thu, 16 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/lib/tracking.pm
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[bug] tracking::remove_message_by_id don't need file handle as parameter
+
+
+------------------------------------------------------------------------
+r6944 | sympa-authors | 2010-12-15 16:35:46 +0100 (Wed, 15 Dec 2010) | 3 lines
+Changed paths:
+   M /trunk/src/etc/Makefile.am
+   M /trunk/src/etc/mhonarc-ressources.tt2
+   A /trunk/src/etc/scenari/tracking.owner
+   A /trunk/src/etc/scenari/tracking.private
+   M /trunk/src/lib/List.pm
+   M /trunk/src/lib/mail.pm
+   M /trunk/wwsympa/wwsympa.fcgi.in
+
+[feature] tracking is now controled by a scenario (default is tracking.owner)
+
+
+------------------------------------------------------------------------
+r6942 | david.verdin | 2010-12-10 16:09:38 +0100 (Fri, 10 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/lib/Scenario.pm
+
+[bug][#7356][Submitted by A. Bernstein, electricembers.net] a space between two auth methods in scenario (e.g. smtp, md5 instead of smtp,md5) caused the second authentication method to be ignored. Fixed by changing the regexp responsible of scenraio rules extraction.
+
+------------------------------------------------------------------------
+r6941 | david.verdin | 2010-12-09 16:21:06 +0100 (Thu, 09 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/src/lib/List.pm
+
+[bug] In the moderation interface, trying to read an attachment led to an error because the context within which the attachment is read is no longer viewmod, but modindex. Fixed by specifying to mhonarc an attchment url root and a relative basedir.
+
+------------------------------------------------------------------------
+r6939 | sympa-authors | 2010-12-07 23:22:18 +0100 (Tue, 07 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/NEWS
+   M /trunk/configure.ac
+
+[-release]Preparing version 6.2a.2
+------------------------------------------------------------------------
 r6938 | sympa-authors | 2010-12-07 23:14:27 +0100 (Tue, 07 Dec 2010) | 1 line
 Changed paths:
    M /trunk/po/sympa.pot
