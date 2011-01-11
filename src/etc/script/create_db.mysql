@@ -3,187 +3,261 @@
 CREATE DATABASE sympa;
 
 ## Connect to DB 
-\r sympa
-
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-  	password_user		varchar (40),
-	last_login_date_user	int(11),
-	last_login_host_user	varchar(60),
-	wrong_login_count_user  int(11),
-	cookie_delay_user	int,
-	lang_user		varchar (10),
-	attributes_user		text,
-	data_user		text,
-	PRIMARY KEY (email_user)
-);
-
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-  	custom_attribute_subscriber	text,
-	robot_subscriber	varchar (80) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber	datetime,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	topics_subscriber	varchar (200),
-	bounce_subscriber	varchar (35),
-	bounce_score_subscriber smallint (6),
-	bounce_address_subscriber	varchar (100),
-	comment_subscriber	varchar (150),
-	subscribed_subscriber 	int(1),
-	included_subscriber 	int(1),
-	include_sources_subscriber varchar(50),
-	suspend_subscriber	int(1),
-	suspend_start_date_subscriber	int(11),
-	suspend_end_date_subscriber	int(11),
-	number_messages_subscriber	int(5), NOT NULL
-	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber),
-	INDEX user_index (user_subscriber)
-);
-
-CREATE TABLE admin_table (
-	list_admin 		varchar(50) NOT NULL,
- 	user_admin 		varchar(100) NOT NULL,
- 	robot_admin 		varchar(80) NOT NULL,
-	role_admin 		enum('listmaster','owner','editor') NOT NULL,
-	date_admin 		datetime NOT NULL,
-	update_admin 		datetime,
-	reception_admin 	varchar(20),
-	visibility_admin 	varchar(20),
-	comment_admin 		varchar(150),
-	subscribed_admin  	int(1),
-	included_admin  	int(1),
-	include_sources_admin  	varchar(50),
-	info_admin   		varchar(150),
-	profile_admin  		enum('privileged','normal'),
-	PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin),
-	INDEX user_index (user_admin)
-);
- 
-CREATE TABLE exclusion_table (
-	list_exclusion 		varchar(50) NOT NULL,
- 	user_exclusion 		varchar(100) NOT NULL,
-	date_exclusion 		int(11),
-	PRIMARY KEY (list_exclusion, user_exclusion),
-	INDEX user_index (user_exclusion)
-);
-
-CREATE TABLE netidmap_table (
-        netid_netidmap              varchar (100) NOT NULL,
-	serviceid_netidmap	    varchar (100) NOT NULL,
-	robot_netidmap	            varchar (80) NOT NULL,
-        email_netidmap              varchar (100),
-        PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
-);
-
-CREATE TABLE logs_table (
-	id_logs			bigint(20) NOT NULL,
-	date_logs		int(11) NOT NULL,
-	robot_logs		varchar(80),
-	list_logs		varchar(50),
-	action_logs		varchar(50) NOT NULL,
-	parameters_logs		varchar(100),
-	target_email_logs	varchar(100),
-	user_email_logs		varchar(100),
-	msg_id_logs		varchar(255),
-	status_logs		varchar(10) NOT NULL,
-	error_type_logs		varchar(150),
-	client_logs		varchar(100),
-	daemon_logs		varchar(10) NOT NULL,
-	PRIMARY KEY (id_logs)					  
-);
+\r sympa 
 
 
-CREATE TABLE session_table (
-	id_session			varchar(30) NOT NULL,
-	start_date_session		int(11) NOT NULL,
-	date_session		        int(11) NOT NULL,
-	remote_addr_session		varchar(60),
-	robot_session		        varchar(80),
-	email_session		        varchar(100),
-	hit_session     	        int(11),
-	data_session		        text,
-	PRIMARY KEY (id_session)
-);
+-- --------------------------------------------------------
+--
+-- Table structure for table `conf_table`
+-- 
 
-CREATE TABLE one_time_ticket_table (
-	ticket_one_time_ticket		varchar(30),
-	robot_one_time_ticket		varchar(80),
-	email_one_time_ticket		varchar(100),
-	date_one_time_ticket		int(11),
-	data_one_time_ticket		varchar(200),
-	remote_addr_one_time_ticket	varchar(60),
-	status_one_time_ticket		varchar(60),
-	PRIMARY KEY (ticket_one_time_ticket)
-);
-
-CREATE TABLE bulkmailer_table (
-	messagekey_bulkmailer varchar(80) NOT NULL,
-	packetid_bulkmailer varchar(33) NOT NULL,
-	messageid_bulkmailer varchar(100),
-	receipients_bulkmailer text,
-	returnpath_bulkmailer varchar(100),
-	robot_bulkmailer varchar(80),
-	listname_bulkmailer varchar(50) default NULL,
-	verp_bulkmailer int(1),
-	merge_bulkmailer int(1),
-	priority_message_bulkmailer smallint(10),
-	priority_packet_bulkmailer smallint(10),
-	reception_date_bulkmailer int(11),
-	delivery_date_bulkmailer int(11),
-	lock_bulkmailer varchar(30) default NULL,
-	PRIMARY KEY (messagekey_bulkmailer,packetid_bulkmailer)
-);
+CREATE TABLE conf_table ( 
+	 robot_conf 	 varchar(80), 
+	 value_conf 	 varchar(300), 
+	 label_conf 	 varchar(80), 
+	 PRIMARY KEY (robot_conf, label_conf) 
+ );
 
 
-CREATE TABLE `bulkspool_table` (
-  `messagekey_bulkspool` varchar(33) NOT NULL COMMENT 'An internal id of the message in order to join this table with bulkmailer_table',
-  `messageid_bulkspool` varchar(100) COMMENT 'The value of the `Message-ID` SMTP field for this message',
-  `message_bulkspool` longtext COMMENT 'The message itself as a string. The database MUST be tuned in order to accept big data blog for storing messages with attachments',
-  `lock_bulkspool` int(1) default NULL COMMENT 'lock used by parallele bulk demon ni order to prevent a message to be distribited twice',
-  `dkim_privatekey_bulkspool` varchar(100) default NULL COMMENT 'The DKIM private key value.',
-  `dkim_selector_bulkspool` varchar(50) default NULL COMMENT 'The DKIM DNS selector',
-  `dkim_i_bulkspool` varchar(100) default NULL COMMENT 'The dkim signature "i=" tag ',
-  `dkim_d_bulkspool` varchar(50) default NULL COMMENT 'The DKIM signature "d=" tag',
-  `dkim_header_list_bulkspool` varchar(500) default NULL COMMENT 'The list of header part of the signed datas',
-  PRIMARY KEY  (`messagekey_bulkspool`)
-);
+-- --------------------------------------------------------
+--
+-- Table structure for table `notification_table`
+-- 
+
+CREATE TABLE notification_table ( 
+	 type_notification 	 enum('DSN', 'MDN'), 
+	 arrival_date_notification 	 varchar(80), 
+	 status_notification 	 varchar(100), 
+	 recipient_notification 	 varchar(100), 
+	 message_notification 	 longtext, 
+	 message_id_notification 	 varchar(100), 
+	 date_notification 	 int(11) NOT NULL, 
+	 reception_option_notification 	 varchar(20), 
+	 pk_notification 	 int(11) NOT NULL AUTO_INCREMENT, 
+	 list_notification 	 varchar(50), 
+	 robot_notification 	 varchar(80), 
+	 PRIMARY KEY (pk_notification) 
+ );
 
 
-CREATE TABLE conf_table (
-  robot_conf varchar(80) default NULL,
-  label_conf varchar(80) default NULL,
-  value_conf varchar(300) default NULL,
-  PRIMARY KEY (robot_conf,label_conf)
-);
+-- --------------------------------------------------------
+--
+-- Table structure for table `logs_table`
+-- 
 
-CREATE TABLE stat_table (
-	id_stat			number NOT NULL,
-	date_stat		number NOT NULL,
-	email_stat		varchar2(100),
-	operation_stat		varchar2(50) NOT NULL,
-	list_stat		varchar2(150),
-	daemon_stat		varchar2(10),
-	user_ip_stat		varchar2(100),
-	robot_stat		varchar2(80) NOT NULL,
-	parameter_stat		varchar2(50),
-	read_stat		number NOT NULL,
-	PRIMARY KEY (id_stat)
-);
+CREATE TABLE logs_table ( 
+	 msg_id_logs 	 varchar(255), 
+	 parameters_logs 	 varchar(100), 
+	 list_logs 	 varchar(50), 
+	 client_logs 	 varchar(100), 
+	 action_logs 	 varchar(50) NOT NULL, 
+	 user_email_logs 	 varchar(100), 
+	 daemon_logs 	 varchar(10) NOT NULL, 
+	 target_email_logs 	 varchar(100), 
+	 status_logs 	 varchar(10) NOT NULL, 
+	 error_type_logs 	 varchar(150), 
+	 robot_logs 	 varchar(80), 
+	 id_logs 	 bigint(20) NOT NULL, 
+	 date_logs 	 int(11) NOT NULL, 
+	 PRIMARY KEY (id_logs) 
+ );
 
-CREATE TABLE IF NOT EXISTS `notification_table` (
-  `pk_notification` int(11) NOT NULL AUTO_INCREMENT COMMENT 'primary key of tracking datas. one for each message and each subscriber',
-  `message_id_notification` varchar(1000) DEFAULT NULL COMMENT 'message-id for which tracking is actived',
-  `recipient_notification` varchar(1000) NOT NULL COMMENT 'subscriber email',
-  `reception_option_notification` varchar(10) DEFAULT NULL COMMENT 'qsubscriber reception option. Not all reception option are compatible with tracking',
-  `status_notification` varchar(1000) DEFAULT NULL COMMENT 'latest notification status received',
-  `arrival_date_notification` varchar(1000) DEFAULT NULL COMMENT 'latest notification date ( a string extracted from the notification itself)',
-  `type_notification` enum('DSN','MDN') DEFAULT NULL COMMENT 'DSN or MDN depending of the latest notification received',
-  `message_notification` longtext COMMENT 'DSN or MDM when received',
-  `list_notification` varchar(1000) NOT NULL,
-  `robot_notification` varchar(80) NOT NULL,
-  PRIMARY KEY (`pk_notification`)
-) ;
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `user_table`
+-- 
+
+CREATE TABLE user_table ( 
+	 email_user 	 varchar(100) NOT NULL, 
+	 last_login_date_user 	 int(11), 
+	 attributes_user 	 text, 
+	 data_user 	 text, 
+	 cookie_delay_user 	 int(11), 
+	 last_login_host_user 	 varchar(60), 
+	 gecos_user 	 varchar(150), 
+	 password_user 	 varchar(40), 
+	 wrong_login_count_user 	 int(11), 
+	 lang_user 	 varchar(10), 
+	 PRIMARY KEY (email_user) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `exclusion_table`
+-- 
+
+CREATE TABLE exclusion_table ( 
+	 user_exclusion 	 varchar(100) NOT NULL, 
+	 date_exclusion 	 int(11), 
+	 list_exclusion 	 varchar(50) NOT NULL, 
+	 PRIMARY KEY (list_exclusion, user_exclusion) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `session_table`
+-- 
+
+CREATE TABLE session_table ( 
+	 data_session 	 text, 
+	 id_session 	 varchar(30) NOT NULL, 
+	 robot_session 	 varchar(80), 
+	 hit_session 	 int(11), 
+	 email_session 	 varchar(100), 
+	 remote_addr_session 	 varchar(60), 
+	 date_session 	 int(11) NOT NULL, 
+	 start_date_session 	 int(11) NOT NULL, 
+	 PRIMARY KEY (id_session) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `netidmap_table`
+-- 
+
+CREATE TABLE netidmap_table ( 
+	 netid_netidmap 	 varchar(100) NOT NULL, 
+	 email_netidmap 	 varchar(100), 
+	 robot_netidmap 	 varchar(80) NOT NULL, 
+	 serviceid_netidmap 	 varchar(100) NOT NULL, 
+	 PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkspool_table`
+-- 
+
+CREATE TABLE bulkspool_table ( 
+	 dkim_selector_bulkspool 	 varchar(50), 
+	 dkim_d_bulkspool 	 varchar(50), 
+	 dkim_privatekey_bulkspool 	 varchar(1000), 
+	 messageid_bulkspool 	 varchar(100), 
+	 dkim_i_bulkspool 	 varchar(100), 
+	 dkim_header_list_bulkspool 	 varchar(500), 
+	 messagekey_bulkspool 	 varchar(33) NOT NULL, 
+	 message_bulkspool 	 longtext, 
+	 lock_bulkspool 	 int(1), 
+	 PRIMARY KEY (messagekey_bulkspool) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `admin_table`
+-- 
+
+CREATE TABLE admin_table ( 
+	 date_admin 	 datetime NOT NULL, 
+	 update_admin 	 datetime, 
+	 info_admin 	 varchar(150), 
+	 list_admin 	 varchar(50) NOT NULL, 
+	 profile_admin 	 enum('privileged','normal'), 
+	 subscribed_admin 	 int(1), 
+	 comment_admin 	 varchar(150), 
+	 reception_admin 	 varchar(20), 
+	 role_admin 	 enum('listmaster','owner','editor') NOT NULL, 
+	 included_admin 	 int(1), 
+	 user_admin 	 varchar(100) NOT NULL, 
+	 include_sources_admin 	 varchar(50), 
+	 robot_admin 	 varchar(80) NOT NULL, 
+	 visibility_admin 	 varchar(20), 
+	 PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `one_time_ticket_table`
+-- 
+
+CREATE TABLE one_time_ticket_table ( 
+	 data_one_time_ticket 	 varchar(200), 
+	 status_one_time_ticket 	 varchar(60), 
+	 remote_addr_one_time_ticket 	 varchar(60), 
+	 ticket_one_time_ticket 	 varchar(30), 
+	 date_one_time_ticket 	 int(11), 
+	 robot_one_time_ticket 	 varchar(80), 
+	 email_one_time_ticket 	 varchar(100), 
+	 PRIMARY KEY (ticket_one_time_ticket) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkmailer_table`
+-- 
+
+CREATE TABLE bulkmailer_table ( 
+	 priority_packet_bulkmailer 	 smallint(10), 
+	 receipients_bulkmailer 	 text, 
+	 reception_date_bulkmailer 	 int(11), 
+	 priority_message_bulkmailer 	 smallint(10), 
+	 packetid_bulkmailer 	 varchar(33) NOT NULL, 
+	 verp_bulkmailer 	 int(1), 
+	 merge_bulkmailer 	 int(1), 
+	 tracking_bulkmailer 	 enum('mdn','dsn'), 
+	 messagekey_bulkmailer 	 varchar(80) NOT NULL, 
+	 messageid_bulkmailer 	 varchar(100), 
+	 returnpath_bulkmailer 	 varchar(100), 
+	 listname_bulkmailer 	 varchar(50), 
+	 delivery_date_bulkmailer 	 int(11), 
+	 lock_bulkmailer 	 varchar(30), 
+	 robot_bulkmailer 	 varchar(80), 
+	 PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `subscriber_table`
+-- 
+
+CREATE TABLE subscriber_table ( 
+	 reception_subscriber 	 varchar(20), 
+	 robot_subscriber 	 varchar(80) NOT NULL, 
+	 custom_attribute_subscriber 	 text, 
+	 visibility_subscriber 	 varchar(20), 
+	 list_subscriber 	 varchar(50) NOT NULL, 
+	 comment_subscriber 	 varchar(150), 
+	 suspend_start_date_subscriber 	 int(11), 
+	 suspend_end_date_subscriber 	 int(11), 
+	 bounce_address_subscriber 	 varchar(100), 
+	 bounce_subscriber 	 varchar(35), 
+	 included_subscriber 	 int(1), 
+	 include_sources_subscriber 	 varchar(50), 
+	 update_subscriber 	 datetime, 
+	 user_subscriber 	 varchar(100) NOT NULL, 
+	 topics_subscriber 	 varchar(200), 
+	 subscribed_subscriber 	 int(1), 
+	 date_subscriber 	 datetime NOT NULL, 
+	 bounce_score_subscriber 	 smallint(6), 
+	 suspend_subscriber 	 int(1), 
+	 number_messages_subscriber 	 int(5) NOT NULL, 
+	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `stat_table`
+-- 
+
+CREATE TABLE stat_table ( 
+	 daemon_stat 	 varchar(10), 
+	 parameter_stat 	 varchar(50), 
+	 list_stat 	 varchar(150), 
+	 id_stat 	 bigint(20) NOT NULL, 
+	 operation_stat 	 varchar(50) NOT NULL, 
+	 email_stat 	 varchar(100), 
+	 user_ip_stat 	 varchar(100), 
+	 read_stat 	 tinyint(1) NOT NULL, 
+	 date_stat 	 int(11) NOT NULL, 
+	 robot_stat 	 varchar(80) NOT NULL, 
+	 PRIMARY KEY (id_stat) 
+ );

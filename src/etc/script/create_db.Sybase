@@ -1,243 +1,291 @@
-/* Sybase Database creation script 2.5.2 */
-/* Thierry Charles <tcharles@electron-libre.com> */
-/* 15/06/01 : extend password_user */
+/* Sybase Database creation script */
 
 /* sympa database must have been created */
-/* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
-use sympa
-go
 
-create table user_table
-(
-    email_user             varchar(100)           not null,
-    gecos_user             varchar(150)           null    ,
-    password_user          varchar(40)            null    , 
-    last_login_date_user   numeric,
-    last_login_host_user   varchar (60),
-    wrong_login_count_user numeric,
-    cookie_delay_user      numeric                null    ,
-    lang_user              varchar(10)            null    ,
-    attributes_user	   varchar(255)           null    ,
-    data_user              varchar(255)         null    ,
-    constraint ind_user primary key (email_user)
+/* Connect to DB */
+use sympa 
+
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `conf_table` */
+ 
+
+create table conf_table 
+( 
+	 robot_conf 	varchar(80), 
+	 label_conf 	varchar(80), 
+	 value_conf 	varchar(300), 
+	 constraint ind_conf PRIMARY KEY (robot_conf, label_conf)
 )
-go
-
-create index email_user_fk on user_table (email_user)
-go
+go 
 
 
-create table subscriber_table
-(
-    list_subscriber        varchar(50)            not null,
-    user_subscriber        varchar(100)           not null,
-    custom_attribute_subscriber varchar (500)          null    ,
-    robot_subscriber       varchar(80)           not null,
-    date_subscriber        datetime               not null,
-    update_subscriber      datetime               null,
-    visibility_subscriber  varchar(20)            null    ,
-    reception_subscriber   varchar(20)            null    ,
-    topics_subscriber	   varchar(200)           null,
-    bounce_subscriber      varchar(35)            null    ,
-    bounce_score_subscriber numeric               null    ,
-    comment_subscriber     varchar(150)           null    ,
-    subscribed_subscriber  numeric		  null    ,
-    included_subscriber    numeric                null    ,
-    include_sources_subscriber varchar(50)        null    ,
-    suspend_subscriber     numeric                null    ,
-    suspend_start_date_subscriber   numeric       null    ,
-    suspend_end_date_subscriber     numeric       null    ,
-    number_messages_subscriber	    numeric       not null,
-    constraint ind_subscriber primary key (list_subscriber, user_subscriber, robot_subscriber)
+/* -------------------------------------------------------- */
+
+/* Table structure for table `notification_table` */
+ 
+
+create table notification_table 
+( 
+	 type_notification 	varchar(15), 
+	 arrival_date_notification 	varchar(80), 
+	 status_notification 	varchar(100), 
+	 recipient_notification 	varchar(100), 
+	 message_notification 	text, 
+	 message_id_notification 	varchar(100), 
+	 date_notification 	numeric NOT NULL, 
+	 reception_option_notification 	varchar(20), 
+	 pk_notification 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 list_notification 	varchar(50), 
+	 robot_notification 	varchar(80), 
+	 constraint ind_notification PRIMARY KEY (pk_notification)
 )
-go
+go 
 
-create index list_subscriber_fk on subscriber_table (list_subscriber)
-go
 
-create index user_subscriber_fk on subscriber_table (user_subscriber)
-go
+/* -------------------------------------------------------- */
 
-create index robot_subscriber_fk on subscriber_table (robot_subscriber)
-go
+/* Table structure for table `logs_table` */
+ 
 
-create table admin_table 
-(
-	list_admin 		varchar(50)       not null,
- 	user_admin 		varchar(100) 	  not null,
- 	robot_admin 		varchar(80) 	  not null,
-	role_admin 		varchar(15)       not null,
-	date_admin 		datetime 	  not null,
-	update_admin 		datetime          null,
-	reception_admin 	varchar(20)       null,
-	visibility_admin 	varchar(20)       null,
-	comment_admin 		varchar(150)	  null,
-	subscribed_admin  	numeric           null,
-	included_admin  	numeric           null,
-	include_sources_admin  	varchar(50)       null,
-	info_admin   		varchar(150)      null,
-	profile_admin  		varchar(15)       null,
-       constraint ind_admin primary key (list_admin, user_admin,robot_admin,role_admin)
+create table logs_table 
+( 
+	 list_logs 	varchar(50), 
+	 parameters_logs 	varchar(100), 
+	 msg_id_logs 	varchar(255), 
+	 action_logs 	varchar(50) NOT NULL, 
+	 client_logs 	varchar(100), 
+	 user_email_logs 	varchar(100), 
+	 daemon_logs 	varchar(10) NOT NULL, 
+	 target_email_logs 	varchar(100), 
+	 status_logs 	varchar(10) NOT NULL, 
+	 error_type_logs 	varchar(150), 
+	 robot_logs 	varchar(80), 
+	 date_logs 	numeric NOT NULL, 
+	 id_logs 	numeric NOT NULL, 
+	 constraint ind_logs PRIMARY KEY (id_logs)
 )
-go
+go 
 
-create index list_admin_fk on admin_table (list_admin)
-go
 
-create index user_admin_fk on admin_table (user_admin)
-go
+/* -------------------------------------------------------- */
 
-create index robot_admin_fk on admin_table (robot_admin)
-go
+/* Table structure for table `user_table` */
+ 
 
-create index role_admin_fk on admin_table (role_admin)
-go
+create table user_table 
+( 
+	 email_user 	varchar(100) NOT NULL, 
+	 last_login_date_user 	numeric, 
+	 attributes_user 	varchar(500), 
+	 data_user 	varchar(500), 
+	 cookie_delay_user 	numeric, 
+	 last_login_host_user 	varchar(60), 
+	 gecos_user 	varchar(150), 
+	 password_user 	varchar(40), 
+	 lang_user 	varchar(10), 
+	 wrong_login_count_user 	numeric, 
+	 constraint ind_user PRIMARY KEY (email_user)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `exclusion_table` */
+ 
 
 create table exclusion_table 
-(
-	list_exclusion 		varchar(50)       null,
- 	user_exclusion 		varchar(100) 	  null,
-	date_exclusion 		numeric          null,
-    	constraint ind_exclusion primary key (list_exclusion, user_exclusion)
+( 
+	 user_exclusion 	varchar(100) NOT NULL, 
+	 date_exclusion 	numeric, 
+	 list_exclusion 	varchar(50) NOT NULL, 
+	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion)
 )
-go
+go 
 
-create index list_exclusion_fk on exclusion_table (list_exclusion)
-go
 
-create index user_exclusion_fk on exclusion_table (user_exclusion)
-go
+/* -------------------------------------------------------- */
+
+/* Table structure for table `session_table` */
+ 
+
+create table session_table 
+( 
+	 data_session 	varchar(500), 
+	 id_session 	varchar(30) NOT NULL, 
+	 remote_addr_session 	varchar(60), 
+	 date_session 	numeric NOT NULL, 
+	 robot_session 	varchar(80), 
+	 hit_session 	numeric, 
+	 email_session 	varchar(100), 
+	 start_date_session 	numeric NOT NULL, 
+	 constraint ind_session PRIMARY KEY (id_session)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `netidmap_table` */
+ 
 
 create table netidmap_table 
-(
-        netid_netidmap             varchar (100) NOT NULL,
-	serviceid_netidmap	   varchar (100) NOT NULL,
-	robot_netidmap	           varchar (80) NOT NULL,
-        email_netidmap             varchar (100),
-        constraint ind_netidmap primary key (netid_netidmap, serviceid_netidmap, robot_netidmap)
+( 
+	 netid_netidmap 	varchar(100) NOT NULL, 
+	 email_netidmap 	varchar(100), 
+	 robot_netidmap 	varchar(80) NOT NULL, 
+	 serviceid_netidmap 	varchar(100) NOT NULL, 
+	 constraint ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
 )
-go
+go 
 
-create index netid_netidmap_fk on netidmap_table (netid_netidmap)
-go
 
-create index serviceid_netidmap_fk on netidmap_table (serviceid_netidmap)
-go
+/* -------------------------------------------------------- */
 
-create index robot_netidmap_fk on netidmap_table (robot_netidmap)
-go
+/* Table structure for table `bulkspool_table` */
+ 
 
-CREATE TABLE logs_table (
-	id_logs			numeric NOT NULL,
-	date_logs		numeric NOT NULL,
-	robot_logs		varchar(80),
-	list_logs		varchar(50),
-	action_logs		varchar(50) NOT NULL,
-	parameters_logs		varchar(100),
-	target_email_logs	varchar(100),
-	user_email_logs		varchar(100),
-	msg_id_logs		varchar(255),
-	status_logs		varchar(10) NOT NULL,
-	error_type_logs		varchar(150),
-	client_logs		varchar(100),
-	daemon_logs		varchar(10) NOT NULL,
-	constraint ind_logs primary key (id_logs)
+create table bulkspool_table 
+( 
+	 dkim_selector_bulkspool 	varchar(50), 
+	 dkim_d_bulkspool 	varchar(50), 
+	 dkim_privatekey_bulkspool 	varchar(1000), 
+	 messageid_bulkspool 	varchar(100), 
+	 dkim_i_bulkspool 	varchar(100), 
+	 dkim_header_list_bulkspool 	varchar(500), 
+	 messagekey_bulkspool 	varchar(33) NOT NULL, 
+	 message_bulkspool 	text, 
+	 lock_bulkspool 	numeric, 
+	 constraint ind_bulkspool PRIMARY KEY (messagekey_bulkspool)
 )
-go
+go 
 
-create index id_logs_fk on logs_table (id_logs)
-go
 
-CREATE TABLE session_table (
-	id_session			varchar(30) NOT NULL,
-	start_date_session		numeric NOT NULL,
-	date_session		        numeric NOT NULL,
-	remote_addr_session		varchar(60),
-	robot_session		        varchar(80),
-	email_session		        varchar(100),
-	hit_session     	        numeric,
-	data_session		        varchar(255),
-	constraint ind_session primary key (id_session)
+/* -------------------------------------------------------- */
+
+/* Table structure for table `admin_table` */
+ 
+
+create table admin_table 
+( 
+	 date_admin 	datetime NOT NULL, 
+	 update_admin 	datetime, 
+	 info_admin 	varchar(150), 
+	 list_admin 	varchar(50) NOT NULL, 
+	 reception_admin 	varchar(20), 
+	 comment_admin 	varchar(150), 
+	 subscribed_admin 	numeric, 
+	 profile_admin 	varchar(15), 
+	 role_admin 	varchar(15) NOT NULL, 
+	 included_admin 	numeric, 
+	 user_admin 	varchar(100) NOT NULL, 
+	 include_sources_admin 	varchar(50), 
+	 robot_admin 	varchar(80) NOT NULL, 
+	 visibility_admin 	varchar(20), 
+	 constraint ind_admin PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin)
 )
-go
+go 
 
-create index id_session_fk on session_table (id_session)
-go
 
-CREATE TABLE one_time_ticket_table (
-	ticket_one_time_ticket		varchar(30),
-	robot_one_time_ticket		varchar(80),
-	email_one_time_ticket		varchar(100),
-	date_one_time_ticket		int(11),
-	data_one_time_ticket		varchar(200),
-	remote_addr_one_time_ticket	varchar(60),
-	status_one_time_ticket		varchar(60),
-	constraint ind_one_time_ticket primary key (ticket_one_time_ticket)
+/* -------------------------------------------------------- */
+
+/* Table structure for table `one_time_ticket_table` */
+ 
+
+create table one_time_ticket_table 
+( 
+	 data_one_time_ticket 	varchar(200), 
+	 status_one_time_ticket 	varchar(60), 
+	 ticket_one_time_ticket 	varchar(30), 
+	 remote_addr_one_time_ticket 	varchar(60), 
+	 robot_one_time_ticket 	varchar(80), 
+	 date_one_time_ticket 	numeric, 
+	 email_one_time_ticket 	varchar(100), 
+	 constraint ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket)
 )
-go
+go 
 
-create index ticket_one_time_ticket_fk on one_time_ticket_table (ticket_one_time_ticket)
-go
 
-CREATE TABLE bulkmailer_table (
-  	messagekey_bulkmailer  	varchar(80),
-	packetid_bulkmailer 	varchar(33),
-  	messageid_bulkmailer  	varchar(100),
-	receipients_bulkmailer 	text,
-	returnpath_bulkmailer 	varchar(100),
-	robot_bulkmailer 	varchar(80),
-	listname_bulkmailer 	varchar(50),
-	verp_bulkmailer 	int(1),
-	merge_bulkmailer 	int(1),
-	priority_message_bulkmailer 	int(10),
-	priority_packet_bulkmailer 	int(10),
-	reception_date_bulkmailer 	int(11),
-	delivery_date_bulkmailer 	int(11),
-	lock_bulkmailer 	varchar(30),
-	constraint ind_bulkmailer primary key (messagekey_bulkmailer, packetid_bulkmailer)
+/* -------------------------------------------------------- */
+
+/* Table structure for table `bulkmailer_table` */
+ 
+
+create table bulkmailer_table 
+( 
+	 priority_packet_bulkmailer 	numeric, 
+	 receipients_bulkmailer 	varchar(500), 
+	 reception_date_bulkmailer 	numeric, 
+	 packetid_bulkmailer 	varchar(33) NOT NULL, 
+	 priority_message_bulkmailer 	numeric, 
+	 verp_bulkmailer 	numeric, 
+	 merge_bulkmailer 	numeric, 
+	 tracking_bulkmailer 	varchar(15), 
+	 returnpath_bulkmailer 	varchar(100), 
+	 messageid_bulkmailer 	varchar(100), 
+	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
+	 listname_bulkmailer 	varchar(50), 
+	 delivery_date_bulkmailer 	numeric, 
+	 robot_bulkmailer 	varchar(80), 
+	 lock_bulkmailer 	varchar(30), 
+	 constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
 )
+go 
 
-create index messagekey_bulkmailer_fk on bulkmailer_table (messagekey_bulkmailer)
-go
-create index packetid_bulkmailer_fk on bulkmailer_table (packetid_bulkmailer)
-go
 
-CREATE TABLE bulkspool_table (
-  	messagekey_bulkspool  	varchar(33),
-  	messageid_bulkspool  	varchar(100),
-	message_bulkspool 	text,
-	lock_bulkspool 	int(1),
-        dkim_privatekey_bulkspool  varchar2(100),
-	dkim_selector_bulkspool varchar2(50),
-	dkim_d_bulkspool varchar2(50),
-	dkim_i_bulkspool varchar2(50),
-	dkim_header_list_bulkspool' varchar2(500),
-	constraint ind_bulkspool primary key (messagekey_bulkspool)
+/* -------------------------------------------------------- */
+
+/* Table structure for table `subscriber_table` */
+ 
+
+create table subscriber_table 
+( 
+	 robot_subscriber 	varchar(80) NOT NULL, 
+	 reception_subscriber 	varchar(20), 
+	 custom_attribute_subscriber 	varchar(500), 
+	 list_subscriber 	varchar(50) NOT NULL, 
+	 visibility_subscriber 	varchar(20), 
+	 comment_subscriber 	varchar(150), 
+	 suspend_start_date_subscriber 	numeric, 
+	 suspend_end_date_subscriber 	numeric, 
+	 bounce_address_subscriber 	varchar(100), 
+	 bounce_subscriber 	varchar(35), 
+	 included_subscriber 	numeric, 
+	 include_sources_subscriber 	varchar(50), 
+	 update_subscriber 	datetime, 
+	 user_subscriber 	varchar(100) NOT NULL, 
+	 topics_subscriber 	varchar(200), 
+	 subscribed_subscriber 	numeric, 
+	 date_subscriber 	datetime NOT NULL, 
+	 bounce_score_subscriber 	numeric, 
+	 number_messages_subscriber 	numeric NOT NULL, 
+	 suspend_subscriber 	numeric, 
+	 constraint ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
 )
+go 
 
-create index messagekey_bulkspool_fk on bulkspool_table (messagekey_bulkspool)
-go
-create table conf_tabl
 
-  robot_conf        varchar(80)        not null      
-  label_conf	    varchar(80)        not null      
-  value_conf        varchar(300)       null     
-  constraint ind_conf primary key (robot_conf, label_conf
+/* -------------------------------------------------------- */
 
-go
+/* Table structure for table `stat_table` */
+ 
 
-CREATE TABLE stat_table (
-	id_stat			numeric NOT NULL,
-	date_stat		numeric NOT NULL,
-	email_stat		varchar2(100),
-	operation_stat		varchar2(50) NOT NULL,
-	list_stat		varchar2(150),
-	daemon_stat		varchar2(10),
-	user_ip_stat		varchar2(100),
-	robot_stat		varchar2(80) NOT NULL,
-	parameter_stat		varchar2(50),
-	read_stat		numeric NOT NULL,
-	constraint ind_stat primary key (id_stat)
+create table stat_table 
+( 
+	 daemon_stat 	varchar(10), 
+	 list_stat 	varchar(150), 
+	 parameter_stat 	varchar(50), 
+	 id_stat 	numeric NOT NULL, 
+	 email_stat 	varchar(100), 
+	 operation_stat 	varchar(50) NOT NULL, 
+	 user_ip_stat 	varchar(100), 
+	 read_stat 	tinyint(1) NOT NULL, 
+	 date_stat 	numeric NOT NULL, 
+	 robot_stat 	varchar(80) NOT NULL, 
+	 constraint ind_stat PRIMARY KEY (id_stat)
 )
-
-go		
+go 

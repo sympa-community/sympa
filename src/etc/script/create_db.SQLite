@@ -1,173 +1,257 @@
+-- SQLITE Database creation script
 
-CREATE TABLE user_table (
-  	email_user          	text NOT NULL,
-  	gecos_user          	text,
-  	password_user		text,
-	last_login_date_user	integer,	
-	last_login_host_user	text,
-        wrong_login_count_user  integer,,
-	cookie_delay_user	integer,
-	lang_user		text,
-	attributes_user		text,
-	data_user		text,
-	PRIMARY KEY (email_user)
-);
+-- --------------------------------------------------------
+--
+-- Table structure for table `conf_table`
+-- 
 
-CREATE TABLE subscriber_table (
-  	list_subscriber       	text NOT NULL,
-	user_subscriber		text NOT NULL,
-  	custom_attribute_subscriber text,
-	robot_subscriber	text NOT NULL,
-	date_subscriber		timestamp NOT NULL,
-	update_subscriber	timestamp,
-	visibility_subscriber	text,
-	reception_subscriber	text,
-	topics_subscriber	text,
-	bounce_subscriber	text,
-	bounce_address_subscriber text,
-	comment_subscriber	text,
-	subscribed_subscriber 	boolean,
-	included_subscriber 	boolean,
-	include_sources_subscriber text,
-	bounce_score_subscriber integer,
-	suspend_subscriber	boolean,
-	suspend_start_date_subscriber	integer,
-	suspend_end_date_subscriber	integer,
-	number_messages_subscriber	integer,	
-	PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
-);
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
+CREATE TABLE conf_table ( 
+	 robot_conf 	text, 
+	 label_conf 	text, 
+	 value_conf 	text, 
+	 PRIMARY KEY (robot_conf, label_conf) 
+ );
 
-CREATE TABLE admin_table (
-	list_admin 		text NOT NULL,
- 	user_admin 		text NOT NULL,
- 	robot_admin 		text NOT NULL,
-	role_admin 		text NOT NULL,
-	date_admin 		timestamp NOT NULL,
-	update_admin 		timestamp,
-	reception_admin 	text,
-	visibility_admin 	text,
-	comment_admin 		text,
-	subscribed_admin  	boolean,
-	included_admin  	boolean,
-	include_sources_admin  	text,
-	info_admin   		text,
-	profile_admin  		text,
-	PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin)
-);
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_admin);
 
-CREATE TABLE exclusion_table (
-	list_exclusion 		text,
- 	user_exclusion 		text,
-	date_exclusion 		integer,
-	PRIMARY KEY (list_exclusion, user_exclusion)
-);
-CREATE	INDEX exclusion_idx ON exclusion_table(list_exclusion, user_exclusion);
+-- --------------------------------------------------------
+--
+-- Table structure for table `notification_table`
+-- 
 
-CREATE TABLE netidmap_table (
-        netid_netidmap		text NOT NULL,
-	serviceid_netidmap	text NOT NULL,
-	robot_netidmap		text NOT NULL,
-        email_netidmap		text,
-        PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
-);
-CREATE	INDEX netidmap_idx ON netidmap_table(netid_netidmap, serviceid_netidmap, robot_netidmap);
+CREATE TABLE notification_table ( 
+	 type_notification 	text, 
+	 arrival_date_notification 	text, 
+	 status_notification 	text, 
+	 recipient_notification 	text, 
+	 message_notification 	longtext, 
+	 message_id_notification 	text, 
+	 date_notification 	integer NOT NULL, 
+	 reception_option_notification 	text, 
+	 pk_notification 	integer NOT NULL, 
+	 list_notification 	text, 
+	 robot_notification 	text, 
+	 PRIMARY KEY (pk_notification) 
+ );
 
-CREATE TABLE logs_table (
-	id_logs			integer NOT NULL,
-	date_logs		integer NOT NULL,
-	robot_logs		text,
-	list_logs		text,
-	action_logs		text NOT NULL,
-	parameters_logs		text,
-	target_email_logs	text,
-	user_email_logs		text,
-	msg_id_logs		text,
-	status_logs		text NOT NULL,
-	error_type_logs		text,
-	client_logs		text,
-	daemon_logs		text NOT NULL,
-	PRIMARY KEY (id_logs)					  
-);
-CREATE	INDEX logs_idx ON logs_table(id_logs);
 
-CREATE TABLE session_table (
-	id_session		text NOT NULL,
-	start_date_session	integer NOT NULL,
-	date_session		integer NOT NULL,
-	remote_addr_session	text,
-	robot_session		text,
-	email_session		text,
-	hit_session		integer,
-	data_session		text,
-	PRIMARY KEY (id_session)
-);
-CREATE INDEX session_idx ON session_table(id_session);
+-- --------------------------------------------------------
+--
+-- Table structure for table `logs_table`
+-- 
 
-CREATE TABLE one_time_ticket_table (
-	ticket_one_time_ticket	text NOT NULL,
-	robot_one_time_ticket	text,
-	email_one_time_ticket	text,
-	date_one_time_ticket	integer,
-	data_one_time_ticket	text,
-	remote_addr_one_time_ticket text,
-	status_one_time_ticket	text,
-	PRIMARY KEY (ticket_one_time_ticket)
-);
-CREATE	INDEX one_time_ticket_idx ON one_time_ticket_table(ticket_one_time_ticket);
+CREATE TABLE logs_table ( 
+	 list_logs 	text, 
+	 parameters_logs 	text, 
+	 msg_id_logs 	text, 
+	 action_logs 	text NOT NULL, 
+	 client_logs 	text, 
+	 user_email_logs 	text, 
+	 daemon_logs 	text NOT NULL, 
+	 target_email_logs 	text, 
+	 status_logs 	text NOT NULL, 
+	 error_type_logs 	text, 
+	 robot_logs 	text, 
+	 date_logs 	integer NOT NULL, 
+	 id_logs 	integer NOT NULL, 
+	 PRIMARY KEY (id_logs) 
+ );
 
-CREATE TABLE bulkmailer_table(
-  	messagekey_bulkmailer  	varchar(80) NOT NULL,
-	packetid_bulkmailer 	varchar(33) NOT NULL,
-  	messageid_bulkmailer  	varchar(100),
-	receipients_bulkmailer 	text,
-	returnpath_bulkmailer 	varchar(100),
-	robot_bulkmailer 	varchar(80),
-	listname_bulkmailer 	varchar(50),
-	verp_bulkmailer 	integer,
-	merge_bulkmailer 	integer,
-	priority_message_bulkmailer 	integer,
-	priority_packet_bulkmailer 	integer,
-	reception_date_bulkmailer 	integer,
-	delivery_date_bulkmailer 	integer,
-	lock_bulkmailer 	varchar(30),
-	PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
-);
-CREATE INDEX bulkmailer_idx ON bulkmailer_table(messagekey_bulkmailer,packetid_bulkmailer);
 
-CREATE TABLE bulkspool_table (
-  	messagekey_bulkspool  	varchar(33) NOT NULL,
-  	messageid_bulkspool  	varchar(100),
-	message_bulkspool 	text,
-	lock_bulkspool 	integer,
-        dkim_privatekey_bulkspool  varchar(100),
-	dkim_selector_bulkspool varchar(50),
-	dkim_d_bulkspool varchar(50),
-	dkim_i_bulkspool varchar(50),
-	dkim_header_list_bulkspool' varchar(500),
-	PRIMARY KEY (messagekey_bulkspool)
-);
-CREATE INDEX bulkspool_idx ON bulkspool_table(messagekey_bulkspool);
+-- --------------------------------------------------------
+--
+-- Table structure for table `user_table`
+-- 
 
-CREATE TABLE conf_table (
-	robot_conf		text DEFAULT NULL,
-	label_conf		text DEFAULT NULL,
-	value_conf		text DEFAULT NULL,
-	PRIMARY KEY (robot_conf,label_conf)
-);
-CREATE INDEX conf_idx ON conf_table(robot_conf,label_conf);
+CREATE TABLE user_table ( 
+	 email_user 	text NOT NULL, 
+	 last_login_date_user 	integer, 
+	 attributes_user 	text, 
+	 data_user 	text, 
+	 cookie_delay_user 	integer, 
+	 last_login_host_user 	text, 
+	 gecos_user 	text, 
+	 password_user 	text, 
+	 lang_user 	text, 
+	 wrong_login_count_user 	integer, 
+	 PRIMARY KEY (email_user) 
+ );
 
-CREATE TABLE stat_table (
-	id_stat			integer NOT NULL,
-	date_stat		integer NOT NULL,
-	email_stat		text,
-	operation_stat		text NOT NULL,
-	list_stat		text,
-	daemon_stat		text,
-	user_ip_stat		text,
-	robot_stat		text NOT NULL,
-	parameter_stat		text,
-	read_stat		integer,
-	PRIMARY KEY (id_stat)
-);
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `exclusion_table`
+-- 
+
+CREATE TABLE exclusion_table ( 
+	 user_exclusion 	text NOT NULL, 
+	 date_exclusion 	integer, 
+	 list_exclusion 	text NOT NULL, 
+	 PRIMARY KEY (list_exclusion, user_exclusion) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `session_table`
+-- 
+
+CREATE TABLE session_table ( 
+	 data_session 	text, 
+	 id_session 	text NOT NULL, 
+	 remote_addr_session 	text, 
+	 date_session 	integer NOT NULL, 
+	 robot_session 	text, 
+	 hit_session 	integer, 
+	 email_session 	text, 
+	 start_date_session 	integer NOT NULL, 
+	 PRIMARY KEY (id_session) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `netidmap_table`
+-- 
+
+CREATE TABLE netidmap_table ( 
+	 netid_netidmap 	text NOT NULL, 
+	 email_netidmap 	text, 
+	 robot_netidmap 	text NOT NULL, 
+	 serviceid_netidmap 	text NOT NULL, 
+	 PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkspool_table`
+-- 
+
+CREATE TABLE bulkspool_table ( 
+	 dkim_selector_bulkspool 	text, 
+	 dkim_d_bulkspool 	text, 
+	 dkim_privatekey_bulkspool 	text, 
+	 messageid_bulkspool 	text, 
+	 dkim_i_bulkspool 	text, 
+	 dkim_header_list_bulkspool 	text, 
+	 messagekey_bulkspool 	text NOT NULL, 
+	 message_bulkspool 	longtext, 
+	 lock_bulkspool 	boolean, 
+	 PRIMARY KEY (messagekey_bulkspool) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `admin_table`
+-- 
+
+CREATE TABLE admin_table ( 
+	 date_admin 	timestamp NOT NULL, 
+	 update_admin 	timestamp, 
+	 info_admin 	text, 
+	 list_admin 	text NOT NULL, 
+	 reception_admin 	text, 
+	 comment_admin 	text, 
+	 subscribed_admin 	boolean, 
+	 profile_admin 	text, 
+	 role_admin 	text NOT NULL, 
+	 included_admin 	boolean, 
+	 user_admin 	text NOT NULL, 
+	 include_sources_admin 	text, 
+	 robot_admin 	text NOT NULL, 
+	 visibility_admin 	text, 
+	 PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `one_time_ticket_table`
+-- 
+
+CREATE TABLE one_time_ticket_table ( 
+	 data_one_time_ticket 	text, 
+	 status_one_time_ticket 	text, 
+	 ticket_one_time_ticket 	text, 
+	 remote_addr_one_time_ticket 	text, 
+	 robot_one_time_ticket 	text, 
+	 date_one_time_ticket 	integer, 
+	 email_one_time_ticket 	text, 
+	 PRIMARY KEY (ticket_one_time_ticket) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkmailer_table`
+-- 
+
+CREATE TABLE bulkmailer_table ( 
+	 priority_packet_bulkmailer 	integer, 
+	 receipients_bulkmailer 	text, 
+	 reception_date_bulkmailer 	integer, 
+	 packetid_bulkmailer 	text NOT NULL, 
+	 priority_message_bulkmailer 	integer, 
+	 verp_bulkmailer 	boolean, 
+	 merge_bulkmailer 	boolean, 
+	 tracking_bulkmailer 	text, 
+	 returnpath_bulkmailer 	text, 
+	 messageid_bulkmailer 	text, 
+	 messagekey_bulkmailer 	text NOT NULL, 
+	 listname_bulkmailer 	text, 
+	 delivery_date_bulkmailer 	integer, 
+	 robot_bulkmailer 	text, 
+	 lock_bulkmailer 	text, 
+	 PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `subscriber_table`
+-- 
+
+CREATE TABLE subscriber_table ( 
+	 robot_subscriber 	text NOT NULL, 
+	 reception_subscriber 	text, 
+	 custom_attribute_subscriber 	text, 
+	 list_subscriber 	text NOT NULL, 
+	 visibility_subscriber 	text, 
+	 comment_subscriber 	text, 
+	 suspend_start_date_subscriber 	integer, 
+	 suspend_end_date_subscriber 	integer, 
+	 bounce_address_subscriber 	text, 
+	 bounce_subscriber 	text, 
+	 included_subscriber 	boolean, 
+	 include_sources_subscriber 	text, 
+	 update_subscriber 	timestamp, 
+	 user_subscriber 	text NOT NULL, 
+	 topics_subscriber 	text, 
+	 subscribed_subscriber 	boolean, 
+	 date_subscriber 	timestamp NOT NULL, 
+	 bounce_score_subscriber 	integer, 
+	 number_messages_subscriber 	integer NOT NULL, 
+	 suspend_subscriber 	boolean, 
+	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `stat_table`
+-- 
+
+CREATE TABLE stat_table ( 
+	 daemon_stat 	text, 
+	 list_stat 	text, 
+	 parameter_stat 	text, 
+	 id_stat 	integer NOT NULL, 
+	 email_stat 	text, 
+	 operation_stat 	text NOT NULL, 
+	 user_ip_stat 	text, 
+	 read_stat 	tinyint(1) NOT NULL, 
+	 date_stat 	integer NOT NULL, 
+	 robot_stat 	text NOT NULL, 
+	 PRIMARY KEY (id_stat) 
+ );
