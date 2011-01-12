@@ -12,13 +12,15 @@ msgstr ""
 "Project-Id-Version: Sympa-5.4.6, Sympa-6.0.3, Sympa-6.1b.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2010-11-19 09:42+0100\n"
+"PO-Revision-Date: 2010-12-27 17:13+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.2\n"
 
 #: ../web_tt2/home.tt2:2
 msgid "Mailing lists server"
@@ -118,7 +120,7 @@ msgstr "リストシステム管理者"
 msgid "Privileged owner"
 msgstr "特権オーナー"
 
-#: ../src/lib/List.pm:1210 ../web_tt2/login_menu.tt2:15
+#: ../src/lib/List.pm:1200 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "オーナー"
 
@@ -173,7 +175,7 @@ msgstr "登録解除"
 #. (list)
 #: ../web_tt2/list_menu.tt2:20
 msgid "Do you really want to subscribe to list %1?"
-msgstr "本当に %1 メーリングリストに読者登録ししてよいのですか。"
+msgstr "本当に %1 メーリングリストに読者登録してよいのですか。"
 
 #: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
 msgid "Subscribe"
@@ -206,9 +208,8 @@ msgid "Subscriptions"
 msgstr "読者登録"
 
 #: ../web_tt2/list_menu.tt2:56
-#, fuzzy
 msgid "Statistics"
-msgstr "状況"
+msgstr "統計"
 
 #: ../web_tt2/list_menu.tt2:64 ../web_tt2/list_menu.tt2:66
 msgid "Archive"
@@ -222,7 +223,7 @@ msgstr "投稿"
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1348 ../web_tt2/list_menu.tt2:83
+#: ../src/lib/List.pm:1338 ../web_tt2/list_menu.tt2:83
 #: ../web_tt2/list_menu.tt2:85
 msgid "Shared documents"
 msgstr "共有文書置き場"
@@ -251,7 +252,7 @@ msgstr "エラー率:"
 msgid "Owners"
 msgstr "オーナー"
 
-#: ../src/lib/List.pm:702 ../web_tt2/list_panel.tt2:20
+#: ../src/lib/List.pm:692 ../web_tt2/list_panel.tt2:20
 msgid "Moderators"
 msgstr "モデレータ"
 
@@ -413,7 +414,7 @@ msgstr "共有文書置き場の再開"
 
 #: ../web_tt2/admin.tt2:67
 msgid "Restores the previously closed shared document web space."
-msgstr "共有文書を置くウェブスペースを初期化します。"
+msgstr "前に閉鎖された共有文書置き場を再開します。"
 
 #. (count)
 #: ../web_tt2/active_lists.tt2:17 ../web_tt2/active_lists.tt2:5
@@ -704,7 +705,7 @@ msgstr "本文"
 
 #: ../web_tt2/arcsearch_form.tt2:54
 msgid "Extend search field:"
-msgstr "探す範囲:"
+msgstr "探す範囲を拡げる:"
 
 #: ../web_tt2/arcsearch.tt2:4
 msgid "Result of your search in the archive"
@@ -896,9 +897,7 @@ msgstr "確認用リンクの入った電子メールをお送りします。"
 msgid ""
 "To confirm your email address change, go to your email account and click on "
 "the provided link"
-msgstr ""
-"電子メールアドレスの変更を確認するために、メールを受け取って、そこに書いてあ"
-"るリンクをクリックしてください"
+msgstr "電子メールアドレスの変更を確認するために、届いたメールを読んで、そこに書いてあるリンクをクリックしてください"
 
 #: ../web_tt2/choosepasswd.tt2:4
 msgid ""
@@ -1030,21 +1029,9 @@ msgstr ""
 ": カスタムユーザ属性として「organization」という名前の属性を定義していれば、"
 "その値。"
 
-#: ../web_tt2/compose_mail.tt2:79
-msgid "Select the source of your HTML newsletter"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:82
-msgid "Send the page from the following URL:"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:85
-msgid "OR"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:87
-msgid "<strong>Send an HTML file from your computer:"
-msgstr ""
+#: ../web_tt2/compose_mail.tt2:78
+msgid "URL:"
+msgstr "URL:"
 
 #: ../web_tt2/copy_template.tt2:3
 msgid "Copying template"
@@ -1122,7 +1109,7 @@ msgstr "リストを作成したあとで、設定を調整することもでき
 
 #: ../web_tt2/create_list_request.tt2:18 ../web_tt2/rename_list_request.tt2:8
 msgid "New list name:"
-msgstr "新リスト名:"
+msgstr "新しいリスト名:"
 
 #: ../web_tt2/create_list_request.tt2:20
 msgid "copy list configuration"
@@ -1464,7 +1451,7 @@ msgstr "本当に %1%2を削除してよいのですか。"
 
 #: ../web_tt2/d_read.tt2:211
 msgid "to moderate"
-msgstr "モデレーション"
+msgstr "モデレーションする"
 
 #: ../web_tt2/d_read.tt2:246 ../web_tt2/d_read.tt2:248
 #: ../web_tt2/ls_templates.tt2:103 ../web_tt2/ls_templates.tt2:125
@@ -1770,7 +1757,7 @@ msgstr "シナリオのソース"
 #: ../mail_tt2/summary.tt2:4 ../web_tt2/edit_list_request.tt2:102
 #: ../web_tt2/edit_list_request.tt2:104 ../web_tt2/edit_list_request.tt2:260
 #: ../web_tt2/edit_list_request.tt2:262 ../web_tt2/editsubscriber.tt2:47
-#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:107
+#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:104
 #: ../web_tt2/rss.tt2:4 ../web_tt2/subindex.tt2:39
 msgid ":"
 msgstr ""
@@ -2052,45 +2039,32 @@ msgstr "電子メールアドレスを教えてください"
 msgid "Missing argument %1"
 msgstr "%1 という引数が要ります"
 
-#: ../web_tt2/error.tt2:54
-msgid ""
-"You didn't define the web page you want to use to create your newsletter. "
-"Please specify either an URL or a file to upload."
-msgstr ""
-
-#: ../web_tt2/error.tt2:55 ../web_tt2/error.tt2:56
-msgid ""
-"You specified both an URL and a file to upload. Sympa can't choose which one "
-"to send. Please fill the form with one of them only. A web page OR a file to "
-"upload."
-msgstr ""
-
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:57
+#: ../web_tt2/error.tt2:54
 msgid "Wrong value for parameter %1"
 msgstr "パラメータ %1 の値が違います"
 
-#: ../web_tt2/error.tt2:147 ../web_tt2/error.tt2:58
+#: ../web_tt2/error.tt2:144 ../web_tt2/error.tt2:55
 msgid "You need to login"
 msgstr "ログインする必要があります"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:59
+#: ../web_tt2/error.tt2:56
 msgid "Address \"%1\" is incorrect"
 msgstr "\"%1\" は正しいアドレスではありません"
 
-#: ../web_tt2/error.tt2:60
+#: ../web_tt2/error.tt2:57
 msgid "Provided password is incorrect"
 msgstr "パスワードが正しくないようです"
 
-#: ../web_tt2/error.tt2:61
+#: ../web_tt2/error.tt2:58
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "パスワードがまだ決まっていません。初期パスワードの取り寄せを申し込んでくださ"
 "い"
 
-#: ../web_tt2/error.tt2:62
+#: ../web_tt2/error.tt2:59
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -2099,313 +2073,313 @@ msgstr ""
 "できません"
 
 #. (u_err.nb_days)
-#: ../web_tt2/error.tt2:63
+#: ../web_tt2/error.tt2:60
 msgid "The period is too long (%1 days)"
 msgstr "期間が長すぎます (%1日間)"
 
-#: ../web_tt2/error.tt2:64
+#: ../web_tt2/error.tt2:61
 msgid "List has no subscribers"
 msgstr "リストに読者がいません"
 
 #. (u_err.page)
-#: ../web_tt2/error.tt2:65
+#: ../web_tt2/error.tt2:62
 msgid "No page %1"
 msgstr "%1 ページはありません"
 
-#: ../web_tt2/error.tt2:66
+#: ../web_tt2/error.tt2:63
 msgid "Missing filter"
 msgstr "フィルタがありません"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:68
+#: ../web_tt2/error.tt2:65
 msgid "Not subscribed: %1"
 msgstr "このアドレスでは読者登録していません: %1"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:69
+#: ../web_tt2/error.tt2:66
 msgid "You are not subscribed to list %1"
 msgstr "%1 メーリングリストには読者登録していません"
 
-#: ../web_tt2/error.tt2:71
+#: ../web_tt2/error.tt2:68
 msgid "Check the additional information"
 msgstr "追加情報を確認してください"
 
 #. (u_err.reception_mode)
-#: ../web_tt2/error.tt2:72
+#: ../web_tt2/error.tt2:69
 msgid "%1 is not an available reception mode"
 msgstr "%1 という受け取りモードにはできません"
 
 #. (u_err.file)
-#: ../web_tt2/error.tt2:73
+#: ../web_tt2/error.tt2:70
 msgid "%1: file not editable"
 msgstr "%1: このファイルは変更できません"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:74
+#: ../web_tt2/error.tt2:71
 msgid "You are already subscribed to the list %1"
 msgstr "すでに %1 メーリングリストに読者登録しています"
 
 #. (u_err.email,u_err.list)
-#: ../web_tt2/error.tt2:75
+#: ../web_tt2/error.tt2:72
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 はすでに %2 メーリングリストに読者登録しています"
 
-#: ../web_tt2/error.tt2:76
+#: ../web_tt2/error.tt2:73
 msgid "Please provide your password"
 msgstr "パスワードを入力してください"
 
-#: ../web_tt2/error.tt2:77
+#: ../web_tt2/error.tt2:74
 msgid "The passwords you typed do not match"
 msgstr "入力したパスワードが一致しません"
 
 #. (u_err.tpl)
-#: ../web_tt2/error.tt2:78
+#: ../web_tt2/error.tt2:75
 msgid "Provided path is incorrect for template '%1'"
 msgstr "入力したテンプレート '%1' のパスが正しくありません"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:79
+#: ../web_tt2/error.tt2:76
 msgid "Cannot open file '%1'"
 msgstr "ファイル '%1' を開けません"
 
-#: ../web_tt2/error.tt2:80
+#: ../web_tt2/error.tt2:77
 msgid "You need to provide list name"
 msgstr "リスト名を教えてください"
 
-#: ../web_tt2/error.tt2:81
+#: ../web_tt2/error.tt2:78
 msgid ""
 "Failed to moderate a message; it was probably moderated by another moderator"
 msgstr ""
 "メッセージの処理に失敗しました。おそらく、他のモデレータが処理したのでしょう"
 
-#: ../web_tt2/error.tt2:82
+#: ../web_tt2/error.tt2:79
 msgid "Tagging message is required for this list"
 msgstr "このリストではメッセージにトピックの印をつけなければいけません"
 
-#: ../web_tt2/error.tt2:83
+#: ../web_tt2/error.tt2:80
 msgid "Archives are empty for this list"
 msgstr "このリストの投稿保管庫は空です"
 
-#: ../web_tt2/error.tt2:84
+#: ../web_tt2/error.tt2:81
 msgid "You did not select an action to perform"
 msgstr "実施する操作を選んでいません"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:85
+#: ../web_tt2/error.tt2:82
 msgid "No bounce for user  %1"
 msgstr "%1 は配送エラーを起こしていません"
 
-#: ../web_tt2/error.tt2:86
+#: ../web_tt2/error.tt2:83
 msgid "List has no bouncing subscribers"
 msgstr "このリストに配送エラーを起こしている読者はいません"
 
-#: ../web_tt2/error.tt2:87
+#: ../web_tt2/error.tt2:84
 msgid "No parameter was edited"
 msgstr "パラメータの変更はありませんでした"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:88
+#: ../web_tt2/error.tt2:85
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "%1 が設定ファイルを書き換えたため、変更することができませんでした"
 
-#: ../web_tt2/error.tt2:89
+#: ../web_tt2/error.tt2:86
 msgid "Topic \"other\" is a reserved word"
 msgstr "トピックに \"other\" は使えません。これは予約ずみの言葉です"
 
 #. (u_err.p_name)
-#: ../web_tt2/error.tt2:90
+#: ../web_tt2/error.tt2:87
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "パラメータ '%1' は必須です。削除しません。"
 
 #. (u_err.param)
-#: ../web_tt2/error.tt2:91
+#: ../web_tt2/error.tt2:88
 msgid "Parameter '%1' must have values"
 msgstr "パラメータ '%1' には、値がなければなりません"
 
 #. (u_err.param,u_err.val)
-#: ../web_tt2/error.tt2:92
+#: ../web_tt2/error.tt2:89
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "パラメータ '%1' の値として '%2' はおかしいです"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:93
+#: ../web_tt2/error.tt2:90
 msgid "The list '%1' is already closed"
 msgstr "リスト '%1' は閉鎖中です"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:94
+#: ../web_tt2/error.tt2:91
 msgid "The list '%1' is not closed"
 msgstr "リスト '%1' は閉鎖中ではありません"
 
 #. (u_err.bad_listname)
-#: ../web_tt2/error.tt2:95
+#: ../web_tt2/error.tt2:92
 msgid "'%1': bad listname"
 msgstr "'%1': リスト名がおかしい"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:96
+#: ../web_tt2/error.tt2:93
 msgid "'%1' list already exists"
 msgstr "'%1' というリストはすでにあります"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:97
+#: ../web_tt2/error.tt2:94
 msgid "Incorrect listname '%1': matches one of service aliases"
 msgstr ""
 "'%1' というリスト名は正しくありません。サービス用のエイリアス名と重複してしま"
 "います"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:98
+#: ../web_tt2/error.tt2:95
 msgid "Failed to remove list aliases for list %1"
 msgstr "%1 メーリングリストのリストエイリアスを削除するのに失敗しました"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:99
+#: ../web_tt2/error.tt2:96
 msgid "%1: No such file or directory"
 msgstr "%1: そのようなファイルやディレクトリはありません"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:100
+#: ../web_tt2/error.tt2:97
 msgid "Unable to read %1: empty document"
 msgstr "%1 を読めません。この文書は空です"
 
-#: ../web_tt2/error.tt2:101
+#: ../web_tt2/error.tt2:98
 msgid "There is no shared documents"
 msgstr "共有文書がありません"
 
-#: ../web_tt2/error.tt2:102
+#: ../web_tt2/error.tt2:99
 msgid "The shared document space is empty"
 msgstr "共有文書置き場は空です"
 
-#: ../web_tt2/error.tt2:103
+#: ../web_tt2/error.tt2:100
 msgid "The shared directory cannot have any description"
 msgstr "共有文書置き場のディレクトリに、説明をつけることはできません"
 
-#: ../web_tt2/error.tt2:104
+#: ../web_tt2/error.tt2:101
 msgid "No description specified"
 msgstr "説明はありません"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:105
+#: ../web_tt2/error.tt2:102
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "説明できません。「%1」という文書はありません"
 
-#: ../web_tt2/error.tt2:106
+#: ../web_tt2/error.tt2:103
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "ディスク上のデータが更新されていましたので、変更を反映できませんでした"
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:107
+#: ../web_tt2/error.tt2:104
 msgid "%1: incorrect name"
 msgstr "%1: 名前が正しくありません"
 
-#: ../web_tt2/error.tt2:108
+#: ../web_tt2/error.tt2:105
 msgid "Failed: your content is empty"
 msgstr "失敗: 中身がありません"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:109
+#: ../web_tt2/error.tt2:106
 msgid "Cannot overwrite file %1:"
 msgstr "ファイル %1 を上書きできません。"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:110
+#: ../web_tt2/error.tt2:107
 msgid "A directory named '%1' already exists:"
 msgstr "'%1' という名前のディレクトリはすでにあります。"
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:111
+#: ../web_tt2/error.tt2:108
 msgid "This is an already existing document: '%1'"
 msgstr "この文書はもうありますね: '%1'"
 
-#: ../web_tt2/error.tt2:112
+#: ../web_tt2/error.tt2:109
 msgid "No name specified"
 msgstr "名前を指定してください"
 
-#: ../web_tt2/error.tt2:113
+#: ../web_tt2/error.tt2:110
 msgid "The document repository exceed disk quota."
 msgstr "文書置き場の容量がディスクの容量制限を超えました。"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:114
+#: ../web_tt2/error.tt2:111
 msgid "Cannot upload file %1:"
 msgstr "ファイル %1 をアップロードできません。"
 
 #. (u_err.dir)
-#: ../web_tt2/error.tt2:115
+#: ../web_tt2/error.tt2:112
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "%1 へ INDEX.HTML をアップロードすることはできません"
 
-#: ../web_tt2/error.tt2:116
+#: ../web_tt2/error.tt2:113
 msgid "The upload failed, try it again"
 msgstr "アップロードが失敗しました。もう一度やってみてください"
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:117
+#: ../web_tt2/error.tt2:114
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "ディレクトリ %1 とその中身をコピーすることができませんでした: %2"
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:118
+#: ../web_tt2/error.tt2:115
 msgid "File %1 was not copied: %2 "
 msgstr "ファイル %1 はコピーしていません: %2 "
 
 #. (u_err.directory)
-#: ../web_tt2/error.tt2:119
+#: ../web_tt2/error.tt2:116
 msgid "Failed: %1 not empty"
 msgstr "失敗: %1 は空ではありません"
 
-#: ../web_tt2/error.tt2:120
+#: ../web_tt2/error.tt2:117
 msgid "No certificate for this list"
 msgstr "このリスト用の証明書はありません"
 
-#: ../web_tt2/error.tt2:121
+#: ../web_tt2/error.tt2:118
 msgid "This list has no message topic"
 msgstr "このリストではメッセージにつけられるトピックはありません"
 
-#: ../web_tt2/error.tt2:122
+#: ../web_tt2/error.tt2:119
 msgid "Tag message with topic is required for this list"
 msgstr "このリストでは、メッセージにトピックをつけなければいけません"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:123
+#: ../web_tt2/error.tt2:120
 msgid "No entry for user '%1'"
 msgstr "「%1」のエントリはありません"
 
-#: ../web_tt2/error.tt2:124
+#: ../web_tt2/error.tt2:121
 msgid "Please select archive months"
 msgstr "投稿保管庫の月を選択してください"
 
-#: ../web_tt2/error.tt2:125
+#: ../web_tt2/error.tt2:122
 msgid "No SOAP service"
 msgstr "SOAP サービスはありません"
 
-#: ../web_tt2/error.tt2:126
+#: ../web_tt2/error.tt2:123
 msgid "Authentication failed"
 msgstr "ログイン失敗"
 
 #. (u_err.status)
-#: ../web_tt2/error.tt2:127
+#: ../web_tt2/error.tt2:124
 msgid "Service unavailable because list status is '%1'"
 msgstr "リストが「%1」状態のためサービスを提供できない"
 
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:128
+#: ../web_tt2/error.tt2:125
 msgid "This Template '%1' already exists"
 msgstr "この %1 というテンプレートはすでに存在します"
 
 #. (u_err.file_del)
-#: ../web_tt2/error.tt2:129
+#: ../web_tt2/error.tt2:126
 msgid "Cannot delete this file '%1'"
 msgstr "この '%1' というファイルが削除できません"
 
 #. (u_err.filename)
-#: ../web_tt2/error.tt2:130
+#: ../web_tt2/error.tt2:127
 msgid "Invalid filename: '%1'"
 msgstr "このファイル名は使えません: '%1'"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:131
+#: ../web_tt2/error.tt2:128
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
@@ -2413,7 +2387,7 @@ msgstr ""
 "オーナーに知らせました。"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:132
+#: ../web_tt2/error.tt2:129
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
@@ -2421,12 +2395,12 @@ msgstr ""
 "オーナーに知らせました。"
 
 #. (auth.action)
-#: ../web_tt2/error.tt2:141
+#: ../web_tt2/error.tt2:138
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "できません (%1)"
 
 #. (auth.listname)
-#: ../web_tt2/error.tt2:143
+#: ../web_tt2/error.tt2:140
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
 "     because your new address is not allowed to subscribe/unsubscribe:"
@@ -2680,7 +2654,7 @@ msgstr "最新 %1 件のリスト"
 
 #: ../web_tt2/latest_lists.tt2:7 ../web_tt2/rss.tt2:20
 msgid "New lists"
-msgstr "新着リスト"
+msgstr "新しいリスト"
 
 #: ../web_tt2/latest_lists.tt2:18
 msgid " The latest lists of this robot"
@@ -2923,9 +2897,8 @@ msgstr ""
 "配信したいメッセージに関係のあるトピックをなにか選んでください (複数可)。"
 
 #: ../web_tt2/modform.tt2:19
-#, fuzzy
 msgid "You must select a topic"
-msgstr "--分野を選択してください--"
+msgstr "トピックを選ばなければいけません"
 
 #: ../web_tt2/modform.tt2:26 ../web_tt2/modform.tt2:54
 #: ../web_tt2/modform.tt2:56 ../web_tt2/modindex.tt2:138
@@ -2934,48 +2907,43 @@ msgid "Reject"
 msgstr "拒否"
 
 #: ../web_tt2/modform.tt2:30
-#, fuzzy
 msgid "Rejecting message"
-msgstr "削除メッセージ"
+msgstr "メッセージの拒否"
 
 #: ../web_tt2/modform.tt2:32
-#, fuzzy
 msgid "Choose notification "
-msgstr "通知"
+msgstr "通知を選ぶ"
 
 #: ../web_tt2/modform.tt2:34
-#, fuzzy
 msgid "No notification"
-msgstr "通知"
+msgstr "通知なし"
 
 #: ../web_tt2/modform.tt2:38
 msgid "Server default rejection message"
 msgstr "拒否メッセージのサイト全体での初期値"
 
 #: ../web_tt2/modform.tt2:43
-#, fuzzy
 msgid "Report message as undetected spam "
-msgstr "メッセージは拒否されました。"
+msgstr "スパムとして検出できなかったメッセージとして報告"
 
 #: ../web_tt2/modform.tt2:46
-#, fuzzy
 msgid "Add sender to blacklist"
-msgstr "ブラックリストに追加"
+msgstr "送信者をブラックリストに追加"
 
 #: ../web_tt2/modform.tt2:49
 msgid ""
 "You should rejet spams quietly because the sender of a spam is often "
 "spoofed, if you really want to send this notification, please confirm "
 msgstr ""
+"スパムは、送信者に通知しないで拒否すべきです。スパムの送信者はしばしば騙られたものだからです。あえて通知を送りたいのであればチェックを入れてください"
 
 #: ../web_tt2/modindex.tt2:31 ../web_tt2/modindex.tt2:6
 msgid "Listing messages to moderate"
 msgstr "モデレーション待ちメッセージの一覧"
 
 #: ../web_tt2/modindex.tt2:21
-#, fuzzy
 msgid "loading message..."
-msgstr "全員宛て登録確認メッセージ"
+msgstr "メッセージを読み込み中……"
 
 #: ../web_tt2/modindex.tt2:108 ../web_tt2/modindex.tt2:40
 msgid "Size"
@@ -3067,19 +3035,17 @@ msgid "Send an html page"
 msgstr "HTMLページを送る"
 
 #: ../web_tt2/news.tt2:9
-#, fuzzy
 msgid "Administration Tasks"
-msgstr "リスト運営パネル"
+msgstr "運営案件"
 
 #: ../web_tt2/news.tt2:10
 msgid "The following items are waiting for your validation"
-msgstr ""
+msgstr "次の案件が承認を待っています。"
 
 #. (list_to_admin.key)
 #: ../web_tt2/news.tt2:15
-#, fuzzy
 msgid "List %1:"
-msgstr "%1 メーリングリスト"
+msgstr "%1 メーリングリスト: "
 
 #. (list_to_admin.value.mod_message)
 #. (year.value.item(month))
@@ -3090,37 +3056,33 @@ msgstr "メッセージ %1 通"
 
 #. (list_to_admin.value.mod_shared_total)
 #: ../web_tt2/news.tt2:17
-#, fuzzy
 msgid "%1 document(s)"
-msgstr "共有文書置き場"
+msgstr "文書 %1 件"
 
 #. (list_to_admin.value.mod_subscription)
 #: ../web_tt2/news.tt2:18
-#, fuzzy
 msgid "%1 subscription request(s)"
-msgstr "読者登録申込はありません"
+msgstr "読者登録申込 %1 件"
 
 #: ../web_tt2/news.tt2:29
-#, fuzzy
 msgid "User Errors"
-msgstr "エラーをリセットする"
+msgstr "配送エラー"
 
 #: ../web_tt2/news.tt2:30
 msgid ""
 "We received error reports while trying to send you messages. Some of them "
 "may have been lost."
-msgstr ""
+msgstr "あなたにメッセージを送る際にエラーが発生しています。届けられなかったメッセージがあるかもしれません。"
 
 #. (user_with_errors.key)
 #: ../web_tt2/news.tt2:34
-#, fuzzy
 msgid " List %1: "
-msgstr "%1 メーリングリスト / %2"
+msgstr "%1 メーリングリスト: "
 
 #. (user_with_errors.value)
 #: ../web_tt2/news.tt2:35
 msgid " %1 error(s)"
-msgstr ""
+msgstr "エラー %1 件"
 
 #. (last_login_host,last_login_date)
 #: ../web_tt2/notice.tt2:5
@@ -3560,7 +3522,7 @@ msgstr "設定族に入れた日"
 
 #: ../web_tt2/review.tt2:5
 msgid "Manage list members"
-msgstr "リスト登録状況の管理"
+msgstr "読者の管理"
 
 #: ../web_tt2/review.tt2:12 ../web_tt2/viewlogs.tt2:8
 msgid "Page size"
@@ -3592,9 +3554,8 @@ msgid "Add an user: "
 msgstr "一人だけ追加:"
 
 #: ../web_tt2/review.tt2:75
-#, fuzzy
 msgid "Add quietly"
-msgstr "知らせない"
+msgstr "知らせず追加"
 
 #: ../web_tt2/review.tt2:76
 msgid "Multiple add"
@@ -3679,15 +3640,16 @@ msgstr "サーバエラー"
 
 #: ../web_tt2/rss.tt2:6
 msgid " new lists "
-msgstr "新着リスト"
+msgstr " 新しいリスト "
 
 #: ../web_tt2/rss.tt2:7
 msgid " active lists "
-msgstr "活発なリスト"
+msgstr " 活発なリスト "
 
 #: ../web_tt2/rss.tt2:8
+#, fuzzy
 msgid " most recent messages "
-msgstr "拒否メッセージの多いリスト"
+msgstr " 拒否メッセージの多いリスト "
 
 #: ../web_tt2/rss.tt2:9
 msgid " most recent documents "
@@ -4380,7 +4342,7 @@ msgstr ""
 
 #: ../web_tt2/skinsedit.tt2:107
 msgid "Background color for the news area of the home page."
-msgstr ""
+msgstr "ホームページでのお知らせエリアの背景色。"
 
 #: ../web_tt2/skinsedit.tt2:113
 msgid "font color of:"
@@ -4642,9 +4604,7 @@ msgstr "あなたの電子メールアドレス"
 msgid ""
 "To confirm your subscription to list %1, please enter\n"
 "        your password below"
-msgstr ""
-"%1 メーリングリストへのあなたの読者登録申込を確認するため、下の欄にあなたのパ"
-"スワードを入力してください。"
+msgstr "%1 メーリングリストへのあなたの読者登録申込を確認するため、下の欄にあなたのパスワードを入力してください"
 
 #: ../web_tt2/subrequest.tt2:53
 msgid ", in addition to the personnal informations requested."
@@ -4812,42 +4772,37 @@ msgstr ""
 "しれません"
 
 #: ../web_tt2/tracking.tt2:13 ../web_tt2/tracking.tt2:4
-#, fuzzy
 msgid "Message tracking"
-msgstr "メッセージへのトピックの印づけ"
+msgstr "メッセージの追跡"
 
 #. (fromname,fromaddr,listname)
 #: ../web_tt2/tracking.tt2:6
 msgid "Message from %1 %2 for list %3 "
-msgstr ""
+msgstr "%1 &lt;%2&gt; からの %3 リスト宛てメッセージ"
 
 #: ../web_tt2/tracking.tt2:10
-#, fuzzy
 msgid "Distribution ended at"
-msgstr "配送"
+msgstr "配送完了時刻"
 
 #: ../web_tt2/tracking.tt2:14
 msgid "Recipient Email"
-msgstr ""
+msgstr "宛先電子メールアドレス"
 
 #: ../web_tt2/tracking.tt2:14
-#, fuzzy
 msgid "Reception Option"
 msgstr "受け取りかた"
 
 #: ../web_tt2/tracking.tt2:15
 msgid "Delivery status"
-msgstr ""
+msgstr "配送状況"
 
 #: ../web_tt2/tracking.tt2:16
-#, fuzzy
 msgid "Notification Date"
-msgstr "通知"
+msgstr "通知日時"
 
 #: ../web_tt2/tracking.tt2:17
-#, fuzzy
 msgid "Notification"
-msgstr "通知"
+msgstr "通知内容"
 
 #: ../web_tt2/tt2_error.tt2:8
 msgid "Sympa error - could not display web page"
@@ -4934,7 +4889,7 @@ msgstr "探す期間"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16613
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16637
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -5598,7 +5553,7 @@ msgid "%1 Digest %2"
 msgstr "%1 - %2のまとめ読み"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2735
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2725
 msgid "Table of contents:"
 msgstr "目次:"
 
@@ -5725,7 +5680,7 @@ msgstr "                        (自動メール配信システム)"
 
 #: ../mail_tt2/helpfile.tt2:7
 msgid "                                User's Guide"
-msgstr "                                 ご利用案内"
+msgstr "                               ご利用案内"
 
 #: ../mail_tt2/helpfile.tt2:10
 msgid ""
@@ -5798,7 +5753,7 @@ msgstr ""
 
 #: ../mail_tt2/helpfile.tt2:26
 msgid "UNSubscribe * <EMAIL>       * To quit all lists."
-msgstr "UNSubscribe * <メール>      * 全てのリストの登録解除。"
+msgstr "UNSubscribe * <メール>      * 全てのリストの登録解除"
 
 #: ../mail_tt2/helpfile.tt2:28
 msgid ""
@@ -5933,10 +5888,7 @@ msgstr "REJect <リスト> <キー>         * モデレーション: メッセ�
 msgid ""
 "MODINDEX <list>                 * Moderation: to view the list of messages "
 "to moderate"
-msgstr ""
-"MODINDEX <リスト>               * モデレーション: モデレーションしなければな"
-"らない\n"
-"                                  メッセージの一覧を取り寄せ"
+msgstr "MODINDEX <リスト>               * モデレーション: モデレーションしなければならないメッセージの一覧を取り寄せ"
 
 # 仮訳です。
 #: ../mail_tt2/helpfile.tt2:62
@@ -5986,7 +5938,7 @@ msgstr "登録解除           : %1"
 #. (send)
 #: ../mail_tt2/info_report.tt2:19
 msgid "Sending messages  : %1"
-msgstr "メッセージの送信   : %1"
+msgstr "メッセージの送り先 : %1"
 
 #. (review)
 #: ../mail_tt2/info_report.tt2:20
@@ -7263,8 +7215,7 @@ msgid ""
 "Warning: this message may already have been sent by one of the list's editor."
 msgstr ""
 "キー %2 のあるリスト %1 のメッセージにアクセスできません。\n"
-"注意: おそらく、リストのモデレータの誰かがこのメッセージを発送してしまっ \n"
-"たのでしょう。"
+"注意: おそらく、リストのモデレータの誰かがこのメッセージを発送してしまったのでしょう。"
 
 #. (key)
 #: ../mail_tt2/message_report.tt2:65
@@ -7637,9 +7588,7 @@ msgstr ""
 msgid ""
 "You may ignore this request or click on the following link in order to "
 "choose your password. "
-msgstr ""
-"なにもしたくなければ、このメッセージは無視してください。したければ、以下\n"
-"のリンクをクリックしてパスワードを決めてください"
+msgstr "設定したくなければ、このメッセージは無視してください。設定したければ、次のリンクをクリックしてパスワードを決めてください。"
 
 #. (base_url,path_cgi)
 #: ../mail_tt2/sendpasswd.tt2:30 ../mail_tt2/sendssopasswd.tt2:14
@@ -7690,7 +7639,7 @@ msgstr "受信サイズ (メガバイト)        :      %1"
 #. (stats.byte_sent)
 #: ../mail_tt2/stats_report.tt2:10
 msgid "Forwarded mega-bytes        :      %1"
-msgstr "送信サイズ (MB)        :      %1"
+msgstr "送信サイズ (メガバイト):      %1"
 
 #. (list.name)
 #: ../mail_tt2/summary.tt2:2
@@ -7962,7 +7911,7 @@ msgstr "オーナーのみ。本人確認あり"
 
 #: ../src/etc/scenari/add.authdkim:1
 msgid "restricted to owner without authentication if DKIM signature is OK."
-msgstr "オーナーのみ。DKIM署名で確認できればオーナーの本人確認は不要。"
+msgstr "オーナーのみ。DKIM署名が正しければ本人確認不要"
 
 #: ../src/etc/scenari/add.closed:1
 msgid "add impossible"
@@ -7975,7 +7924,7 @@ msgstr "オーナーによる登録は本人確認不要"
 #: ../src/etc/scenari/add.ownerdkim:1
 msgid ""
 "add performed by list owner does not need authentication if DKIM signature OK"
-msgstr "追加はオーナーができる。DKIM署名で確認できればオーナーの本人確認は不要"
+msgstr "オーナーによる登録は、DKIM署名が正しければ本人確認不要"
 
 #: ../src/etc/scenari/add.owner_notify:1
 msgid "add performed by owner does not need authentication (notification)"
@@ -8010,7 +7959,6 @@ msgstr "リストのオーナーのみ"
 #: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
 #: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
 #: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
-#: ../src/etc/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "読者のみ"
 
@@ -8031,8 +7979,7 @@ msgstr "削除はオーナーだけができる。本人確認が必要"
 msgid ""
 "deletion performed only by list owners, need authentication unless DKIM "
 "signature is OK"
-msgstr ""
-"削除はオーナーのみができる。DKIM署名で確認できればオーナーの本人確認は不要。"
+msgstr "削除はオーナーだけができる。DKIM署名が正しければ本人確認は不要"
 
 #: ../src/etc/scenari/del.closed:1
 msgid "remove subscriber impossible"
@@ -8066,13 +8013,13 @@ msgstr "リストシステム管理者のみ"
 #: ../src/etc/scenari/remind.listmasterdkim:1
 msgid ""
 "listmaster only (do not require authentication if DKIM siganture is OK) "
-msgstr "リストシステム管理者 (DKIM署名で確認できれば本人確認は不要) のみ"
+msgstr "リストシステム管理者のみ (DKIM署名が正しければ本人確認不要)"
 
 #: ../src/etc/scenari/remind.ownerdkim:1
 msgid ""
 "restricted to list owners (authentication is not required if a DKIM "
 "signature is OK)"
-msgstr "オーナー　(DKIM署名で確認できれば本人確認は不要) のみ"
+msgstr "オーナーのみ (DKIM署名が正しければ本人確認不要)"
 
 #: ../src/etc/scenari/review.closed:1
 msgid "no one can review"
@@ -8082,7 +8029,7 @@ msgstr "誰も読者一覧を見ることができない"
 msgid "restricted to subscribers or local domain users"
 msgstr "読者かローカルドメインのユーザのみ"
 
-#: ../src/etc/scenari/review.owner:1 ../src/etc/scenari/tracking.owner:1
+#: ../src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "オーナー (かリストシステム管理者) のみ"
 
@@ -8092,9 +8039,7 @@ msgstr "誰でもできてしまう"
 
 #: ../src/etc/scenari/send.editordkim:1
 msgid "Moderated, no authentication needed if DKIM signature from editor is OK"
-msgstr ""
-"投稿はモデレーションを受ける (DKIM署名で確認できればモデレータの本人確認は不"
-"要)"
+msgstr "投稿はモデレーションを受ける。DKIM署名が正しければモデレータの本人確認は不要"
 
 #: ../src/etc/scenari/send.editorkey:1
 msgid "Moderated"
@@ -8107,7 +8052,7 @@ msgstr ""
 
 #: ../src/etc/scenari/send.editorkeyonlyauth:1
 msgid "Moderated, need  authentication  from editor"
-msgstr "投稿はモデレーションを受ける (モデレータは本人確認が必要)"
+msgstr "投稿はモデレーションを受ける。モデレータは本人確認が必要"
 
 #: ../src/etc/scenari/send.intranet:1
 msgid "restricted to local domain"
@@ -8160,7 +8105,7 @@ msgstr "公開リスト"
 
 #: ../src/etc/scenari/send.publickey:1
 msgid "anyone no authentication if DKIM signature is OK"
-msgstr "DKIM署名で確認できれば誰でも"
+msgstr "DKIM署名が正しければ誰でも本人確認不要"
 
 #: ../src/etc/scenari/send.publicnoattachment:1
 msgid "public list multipart/mixed messages are forwarded to moderator"
@@ -8191,7 +8136,7 @@ msgstr "本人確認が必要 (オーナーに報告を送る)"
 msgid ""
 "need authentication unless DKIM signature is OK. (notification is sent to "
 "owners)"
-msgstr "DKIM署名で確認できれば本人確認は不要 (オーナーに報告を送る)"
+msgstr "DKIM署名が正しくなければ本人確認が必要 (オーナーに報告を送る)"
 
 #: ../src/etc/scenari/subscribe.auth_owner:1
 msgid "requires authentication then owner approval"
@@ -8200,7 +8145,7 @@ msgstr "本人確認とオーナーの承認が必要"
 #: ../src/etc/scenari/subscribe.auth_ownerdkim:1
 msgid ""
 "requires authentication unless DKIM signature is OK, then owner approval"
-msgstr "DKIM署名で確認できれば本人確認は不要。その後オーナーの承認が必要"
+msgstr "DKIM署名が正しくなければ本人確認が必要。その後オーナーの承認が必要"
 
 #: ../src/etc/scenari/subscribe.closed:1
 msgid "subscribe is impossible"
@@ -8253,7 +8198,7 @@ msgstr "本人確認が必要"
 
 #: ../src/etc/scenari/unsubscribe.authdkim:1
 msgid "need authentication unless DKIM signature is OK"
-msgstr "DKIM署名で確認できれば本人確認は不要"
+msgstr "DKIM署名が正しくなければ本人確認が必要"
 
 #: ../src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
@@ -8263,7 +8208,7 @@ msgstr "本人確認が必要。オーナーに報告を送る"
 msgid ""
 "authentication requested unless DKIM signature is OK, notification sent to "
 "owner"
-msgstr "DKIM署名で確認できれば本人確認は不要。オーナーに報告を送る"
+msgstr "DKIM署名が正しくなければ本人確認が必要。オーナーに報告を送る"
 
 #: ../src/etc/scenari/unsubscribe.closed:1
 msgid "impossible"
@@ -8342,8 +8287,8 @@ msgstr "本当にこのメッセージを削除してよいのですか。"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/etc/mhonarc-ressources.tt2:306 ../src/etc/mhonarc-ressources.tt2:310
-#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:573
-#: ../src/etc/mhonarc-ressources.tt2:577 ../src/etc/mhonarc-ressources.tt2:581
+#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:575
+#: ../src/etc/mhonarc-ressources.tt2:579 ../src/etc/mhonarc-ressources.tt2:583
 msgid "%m/%d/%Y"
 msgstr "%Y年%m月%d日"
 
@@ -8399,15 +8344,15 @@ msgstr "ソースを見る"
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/etc/mhonarc-ressources.tt2:626
+#: ../src/etc/mhonarc-ressources.tt2:628
 msgid "%y/%m/%d"
 msgstr "%y年%m月%d日"
 
-#: ../src/etc/mhonarc-ressources.tt2:636
+#: ../src/etc/mhonarc-ressources.tt2:638
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "日:月:火:水:木:金:土"
 
-#: ../src/etc/mhonarc-ressources.tt2:654
+#: ../src/etc/mhonarc-ressources.tt2:656
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -8534,7 +8479,7 @@ msgstr "初期の受け取り形式はHTML"
 
 #: ../src/etc/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
-msgstr "イントラネット用メーリングリスト"
+msgstr "イントラネット用"
 
 #: ../src/etc/create_list_templates/news-letter/comment.tt2:1
 msgid "Mailing list configuration to be used for a news letter"
@@ -8563,7 +8508,7 @@ msgstr "%Y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:10076
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:10110
 msgid "%A"
 msgstr "%a"
 
@@ -8578,8 +8523,8 @@ msgstr "間違いがあります (%d 行目): %s\n"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1893 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1080 ../wwsympa/wwsympa.fcgi.in:2932
+#: ../src/lib/List.pm:1883 ../wwsympa/Auth.pm:459
+#: ../wwsympa/wwsympa.fcgi.in:1083 ../wwsympa/wwsympa.fcgi.in:2935
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
@@ -8599,7 +8544,7 @@ msgstr "送信者を秘匿する"
 msgid "frequency"
 msgstr "時期"
 
-#: ../src/lib/List.pm:1449 ../src/lib/List.pm:339
+#: ../src/lib/List.pm:1439 ../src/lib/List.pm:339
 msgid "access right"
 msgstr "アクセス権限"
 
@@ -8611,8 +8556,8 @@ msgstr "テキスト投稿保管庫"
 msgid "Archive encrypted mails as cleartext"
 msgstr "暗号化メールを平文で投稿保管庫に保管するか"
 
-#: ../src/lib/List.pm:1185 ../src/lib/List.pm:1225 ../src/lib/List.pm:355
-#: ../src/lib/List.pm:556 ../src/lib/List.pm:682 ../src/lib/List.pm:717
+#: ../src/lib/List.pm:1175 ../src/lib/List.pm:1215 ../src/lib/List.pm:355
+#: ../src/lib/List.pm:546 ../src/lib/List.pm:672 ../src/lib/List.pm:707
 msgid "reception mode"
 msgstr "受け取りモード"
 
@@ -8662,523 +8607,513 @@ msgstr "ユニークキーを生成するための秘密の文字列"
 
 #: ../src/lib/List.pm:437
 msgid "tracking message by delivery status notification"
-msgstr ""
+msgstr "配送状況通知によってメッセージを追跡する"
 
-#: ../src/lib/List.pm:442
+#: ../src/lib/List.pm:443
 msgid "tracking message by message delivery notification"
-msgstr ""
+msgstr "メール配送通知によってメッセージを追跡する"
 
-#: ../src/lib/List.pm:446
-#, fuzzy
-msgid "who can view message tracking"
-msgstr "メッセージへのトピックの印づけ"
-
-#: ../src/lib/List.pm:453
-msgid "Tracking datas are removed after this number of days"
-msgstr ""
-
-#: ../src/lib/List.pm:458
-#, fuzzy
+#: ../src/lib/List.pm:448
 msgid "Message tracking feature"
-msgstr "メッセージへのトピックの印づけ"
+msgstr "メッセージ追跡機能"
 
-#: ../src/lib/List.pm:1112 ../src/lib/List.pm:1405 ../src/lib/List.pm:462
+#: ../src/lib/List.pm:1102 ../src/lib/List.pm:1395 ../src/lib/List.pm:452
 msgid "epoch date"
 msgstr "Unix時間"
 
-#: ../src/lib/List.pm:466
+#: ../src/lib/List.pm:456
 msgid "human readable"
 msgstr "日時"
 
-#: ../src/lib/List.pm:471
+#: ../src/lib/List.pm:461
 msgid "who created the list"
 msgstr "リスト作成者"
 
-#: ../src/lib/List.pm:475
+#: ../src/lib/List.pm:465
 msgid "Creation of the list"
 msgstr "リストの作成"
 
-#: ../src/lib/List.pm:486
+#: ../src/lib/List.pm:476
 msgid "internal identifier"
 msgstr "内部名"
 
-#: ../src/lib/List.pm:494
+#: ../src/lib/List.pm:484
 msgid "label"
 msgstr "見出し"
 
-#: ../src/lib/List.pm:500
+#: ../src/lib/List.pm:490
 msgid "additional comment"
 msgstr "追加説明"
 
-#: ../src/lib/List.pm:507
+#: ../src/lib/List.pm:497
 msgid "type"
 msgstr "種類"
 
-#: ../src/lib/List.pm:513
+#: ../src/lib/List.pm:503
 msgid "possible attribute values (if enum is used)"
 msgstr "属性が取りうる値 (enum を使う場合)"
 
-#: ../src/lib/List.pm:518
+#: ../src/lib/List.pm:508
 msgid "is the attribute optional?"
 msgstr "属性は省略可能か"
 
-#: ../src/lib/List.pm:524
+#: ../src/lib/List.pm:514
 msgid "Custom user attributes"
 msgstr "利用者属性の追加"
 
-#: ../src/lib/List.pm:530
+#: ../src/lib/List.pm:520
 msgid "Custom header field"
 msgstr "メッセージヘッダの追加"
 
-#: ../src/lib/List.pm:535
+#: ../src/lib/List.pm:525
 msgid "Subject tagging"
 msgstr "表題 (Subject) につける目印"
 
-#: ../src/lib/List.pm:549
+#: ../src/lib/List.pm:539
 msgid "custom parameters"
 msgstr "カスタムパラメータ"
 
-#: ../src/lib/List.pm:1190 ../src/lib/List.pm:1230 ../src/lib/List.pm:561
-#: ../src/lib/List.pm:687 ../src/lib/List.pm:722
+#: ../src/lib/List.pm:1180 ../src/lib/List.pm:1220 ../src/lib/List.pm:551
+#: ../src/lib/List.pm:677 ../src/lib/List.pm:712
 msgid "visibility"
 msgstr "見えかた"
 
-#: ../src/lib/List.pm:565
+#: ../src/lib/List.pm:555
 msgid "Subscription profile"
 msgstr "読者の初期設定"
 
-#: ../src/lib/List.pm:569
+#: ../src/lib/List.pm:559
 msgid "Who can delete subscribers"
 msgstr "読者を削除できるのは"
 
-#: ../src/lib/List.pm:574
+#: ../src/lib/List.pm:564
 msgid "Delivery time (hh:mm)"
 msgstr "配送時刻 (hh:mm)"
 
-#: ../src/lib/List.pm:424 ../src/lib/List.pm:451 ../src/lib/List.pm:582
+#: ../src/lib/List.pm:424 ../src/lib/List.pm:572
 msgid "days"
 msgstr "日"
 
-#: ../src/lib/List.pm:588
+#: ../src/lib/List.pm:578
 msgid "hour"
 msgstr "時"
 
-#: ../src/lib/List.pm:594
+#: ../src/lib/List.pm:584
 msgid "minute"
 msgstr "分"
 
-#: ../src/lib/List.pm:598
+#: ../src/lib/List.pm:588
 msgid "Digest frequency"
 msgstr "まとめ読み送信をする時期"
 
-#: ../src/lib/List.pm:606
+#: ../src/lib/List.pm:596
 msgid "Digest maximum number of messages"
 msgstr "まとめ読み内の最大メッセージ数"
 
-#: ../src/lib/List.pm:613
+#: ../src/lib/List.pm:603
 msgid "Inclusions timeout for message distribution"
 msgstr "メッセージ配信の際の取り込み時間制限"
 
-#: ../src/lib/List.pm:620
+#: ../src/lib/List.pm:610
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "リストへ送るメッセージにDKIM署名を付ける"
 
-#: ../src/lib/List.pm:628
+#: ../src/lib/List.pm:618
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr "リストへ送るメッセージのうち、DKIMで署名するもの"
 
-#: ../src/lib/List.pm:635
+#: ../src/lib/List.pm:625
 msgid "File path for list DKIM private key"
 msgstr "リストのDKIM秘密鍵のファイルのパス"
 
-#: ../src/lib/List.pm:643
+#: ../src/lib/List.pm:633
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "DKIM公開鍵をDNSで探す際のセレクタ"
 
-#: ../src/lib/List.pm:671
+#: ../src/lib/List.pm:661
 msgid "DKIM configuration"
 msgstr "DKIMの設定"
 
-#: ../src/lib/List.pm:1180 ../src/lib/List.pm:677
+#: ../src/lib/List.pm:1170 ../src/lib/List.pm:667
 msgid "email address"
 msgstr "電子メールアドレス"
 
-#: ../src/lib/List.pm:1195 ../src/lib/List.pm:692
+#: ../src/lib/List.pm:1185 ../src/lib/List.pm:682
 msgid "name"
 msgstr "名前"
 
-#: ../src/lib/List.pm:1200 ../src/lib/List.pm:697
+#: ../src/lib/List.pm:1190 ../src/lib/List.pm:687
 msgid "private information"
 msgstr "非公開メモ"
 
-#: ../src/lib/List.pm:732
+#: ../src/lib/List.pm:722
 msgid "Periodical subscription expiration task"
 msgstr "定期的な読者登録期限切れタスク"
 
-#: ../src/lib/List.pm:743
+#: ../src/lib/List.pm:733
 msgid "Attachment type"
 msgstr "前付け/後付けの付けかた"
 
-#: ../src/lib/List.pm:747
+#: ../src/lib/List.pm:737
 msgid "Forced reply address"
 msgstr "返信先アドレスを強制する"
 
-#: ../src/lib/List.pm:753
+#: ../src/lib/List.pm:743
 msgid "Internet domain"
 msgstr "インターネットドメイン"
 
-#: ../src/lib/List.pm:759
+#: ../src/lib/List.pm:749
 msgid "File inclusion"
 msgstr "ファイルからの取り込み"
 
-#: ../src/lib/List.pm:763
+#: ../src/lib/List.pm:753
 msgid "data location URL"
 msgstr "データの場所(URL)"
 
-#: ../src/lib/List.pm:1061 ../src/lib/List.pm:769 ../src/lib/List.pm:802
-#: ../src/lib/List.pm:883
+#: ../src/lib/List.pm:1051 ../src/lib/List.pm:759 ../src/lib/List.pm:792
+#: ../src/lib/List.pm:873
 msgid "remote user"
 msgstr "リモートユーザ"
 
-#: ../src/lib/List.pm:1066 ../src/lib/List.pm:776 ../src/lib/List.pm:808
-#: ../src/lib/List.pm:889
+#: ../src/lib/List.pm:1056 ../src/lib/List.pm:766 ../src/lib/List.pm:798
+#: ../src/lib/List.pm:879
 msgid "remote password"
 msgstr "リモートパスワード"
 
-#: ../src/lib/List.pm:1022 ../src/lib/List.pm:1080 ../src/lib/List.pm:781
-#: ../src/lib/List.pm:844 ../src/lib/List.pm:968
+#: ../src/lib/List.pm:1012 ../src/lib/List.pm:1070 ../src/lib/List.pm:771
+#: ../src/lib/List.pm:834 ../src/lib/List.pm:958
 msgid "short name for this source"
 msgstr "このデータソースの略称"
 
-#: ../src/lib/List.pm:786
+#: ../src/lib/List.pm:776
 msgid "Remote file inclusion"
 msgstr "外部ファイルからの取り込み"
 
-#: ../src/lib/List.pm:1000 ../src/lib/List.pm:1039 ../src/lib/List.pm:792
-#: ../src/lib/List.pm:873
+#: ../src/lib/List.pm:1029 ../src/lib/List.pm:782 ../src/lib/List.pm:863
+#: ../src/lib/List.pm:990
 msgid "remote host"
 msgstr "リモートホスト"
 
-#: ../src/lib/List.pm:1006 ../src/lib/List.pm:797 ../src/lib/List.pm:878
+#: ../src/lib/List.pm:787 ../src/lib/List.pm:868 ../src/lib/List.pm:996
 msgid "remote port"
 msgstr "リモートポート"
 
-#: ../src/lib/List.pm:812
+#: ../src/lib/List.pm:802
 msgid "suffix"
 msgstr "ベース識別名"
 
-#: ../src/lib/List.pm:818
+#: ../src/lib/List.pm:808
 msgid "filter"
 msgstr "フィルタ"
 
-#: ../src/lib/List.pm:824
+#: ../src/lib/List.pm:814
 msgid "extracted attribute"
 msgstr "取得属性"
 
-#: ../src/lib/List.pm:829
+#: ../src/lib/List.pm:819
 msgid "selection (if multiple)"
 msgstr "複数該当した場合の対象"
 
-#: ../src/lib/List.pm:834
+#: ../src/lib/List.pm:824
 msgid "search scope"
 msgstr "検索スコープ"
 
-#: ../src/lib/List.pm:840
+#: ../src/lib/List.pm:830
 msgid "connection timeout"
 msgstr "接続タイムアウト"
 
-#: ../src/lib/List.pm:868
+#: ../src/lib/List.pm:858
 msgid "LDAP query inclusion"
 msgstr "LDAPクエリでの取り込み"
 
-#: ../src/lib/List.pm:893
+#: ../src/lib/List.pm:883
 msgid "first-level suffix"
 msgstr "第一段階のベース識別名"
 
-#: ../src/lib/List.pm:899
+#: ../src/lib/List.pm:889
 msgid "first-level filter"
 msgstr "第一段階のフィルタ"
 
-#: ../src/lib/List.pm:904
+#: ../src/lib/List.pm:894
 msgid "first-level extracted attribute"
 msgstr "第一段階で取得する属性"
 
-#: ../src/lib/List.pm:909
+#: ../src/lib/List.pm:899
 msgid "first-level selection"
 msgstr "第一段階の対象"
 
-#: ../src/lib/List.pm:914
+#: ../src/lib/List.pm:904
 msgid "first-level search scope"
 msgstr "第一段階の検索スコープ"
 
-#: ../src/lib/List.pm:920
+#: ../src/lib/List.pm:910
 msgid "first-level connection timeout"
 msgstr "第一段階の接続タイムアウト"
 
-#: ../src/lib/List.pm:926
+#: ../src/lib/List.pm:916
 msgid "first-level regular expression"
 msgstr "第一段階の正規表現"
 
-#: ../src/lib/List.pm:930
+#: ../src/lib/List.pm:920
 msgid "second-level suffix template"
 msgstr "第二段階のベース識別名テンプレート"
 
-#: ../src/lib/List.pm:936
+#: ../src/lib/List.pm:926
 msgid "second-level filter template"
 msgstr "第二段階のフィルタテンプレート"
 
-#: ../src/lib/List.pm:942
+#: ../src/lib/List.pm:932
 msgid "second-level extracted attribute"
 msgstr "第二段階で取得する属性"
 
-#: ../src/lib/List.pm:947
+#: ../src/lib/List.pm:937
 msgid "second-level selection"
 msgstr "第二段階の対象"
 
-#: ../src/lib/List.pm:952
+#: ../src/lib/List.pm:942
 msgid "second-level search scope"
 msgstr "第二段階の検索スコープ"
 
-#: ../src/lib/List.pm:958
+#: ../src/lib/List.pm:948
 msgid "second-level connection timeout"
 msgstr "第二段階の接続タイムアウト"
 
-#: ../src/lib/List.pm:964
+#: ../src/lib/List.pm:954
 msgid "second-level regular expression"
 msgstr "第二段階の正規表現"
 
-#: ../src/lib/List.pm:990
+#: ../src/lib/List.pm:980
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP二段階クエリでの取り込み"
 
-#: ../src/lib/List.pm:995
+#: ../src/lib/List.pm:985
 msgid "List inclusion"
 msgstr "他のリストからの取り込み"
 
-#: ../src/lib/List.pm:1012
+#: ../src/lib/List.pm:1002
 msgid "remote path of sympa list dump"
 msgstr "Sympa リストダンプのリモートパス"
 
-#: ../src/lib/List.pm:1017
+#: ../src/lib/List.pm:1007
 msgid "certificate for authentication by remote Sympa"
 msgstr "外部の Sympa で認証してログインする"
 
-#: ../src/lib/List.pm:1029
+#: ../src/lib/List.pm:1019
 msgid "remote list inclusion"
 msgstr "外部のリストからの取り込み"
 
-#: ../src/lib/List.pm:1034
+#: ../src/lib/List.pm:1024
 msgid "database type"
 msgstr "データベースの種類"
 
-#: ../src/lib/List.pm:1043
+#: ../src/lib/List.pm:1033
 msgid "database port"
 msgstr "データベースのポート番号"
 
-#: ../src/lib/List.pm:1048
+#: ../src/lib/List.pm:1038
 msgid "database name"
 msgstr "データベース名"
 
-#: ../src/lib/List.pm:1052
+#: ../src/lib/List.pm:1042
 msgid "connection options"
 msgstr "接続オプション"
 
-#: ../src/lib/List.pm:1057
+#: ../src/lib/List.pm:1047
 msgid "environment variables for database connection"
 msgstr "データベース接続の環境変数"
 
-#: ../src/lib/List.pm:1072
+#: ../src/lib/List.pm:1062
 msgid "SQL query"
 msgstr "SQLクエリ"
 
-#: ../src/lib/List.pm:1076
+#: ../src/lib/List.pm:1066
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "データベース格納ディレクトリ (DBD::CSVの場合のみ)"
 
-#: ../src/lib/List.pm:1087
+#: ../src/lib/List.pm:1077
 msgid "SQL query inclusion"
 msgstr "SQLクエリでの取り込み"
 
-#: ../src/lib/List.pm:1093
+#: ../src/lib/List.pm:1083
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "データソースから取り込んだらその読者に知らせるか"
 
-#: ../src/lib/List.pm:1097
+#: ../src/lib/List.pm:1087
 msgid "Who can view list information"
 msgstr "リストの案内を見ることができるのは"
 
-#: ../src/lib/List.pm:1101
+#: ../src/lib/List.pm:1091
 msgid "Who can invite people"
 msgstr "招待できるのは"
 
-#: ../src/lib/List.pm:1107
+#: ../src/lib/List.pm:1097
 msgid "Language of the list"
 msgstr "リストの言語"
 
-#: ../src/lib/List.pm:1132
+#: ../src/lib/List.pm:1122
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "メール自動処理プログラムが引き起こすメールループを停めるための正規表現"
 
-#: ../src/lib/List.pm:1139
+#: ../src/lib/List.pm:1129
 msgid "Maximum message size"
 msgstr "最大メッセージサイズ"
 
-#: ../src/lib/List.pm:1145
+#: ../src/lib/List.pm:1135
 msgid "Message topic name"
 msgstr "トピックの名前"
 
-#: ../src/lib/List.pm:1150
+#: ../src/lib/List.pm:1140
 msgid "Message topic keywords"
 msgstr "トピックのキーワード"
 
-#: ../src/lib/List.pm:1156
+#: ../src/lib/List.pm:1146
 msgid "Message topic title"
 msgstr "トピックの題名"
 
-#: ../src/lib/List.pm:1161
+#: ../src/lib/List.pm:1151
 msgid "Topics for message categorization"
 msgstr "メッセージを分類するトピック"
 
-#: ../src/lib/List.pm:1167
+#: ../src/lib/List.pm:1157
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr "メッセージのどの部分でトピックのキーワードを探すか"
 
-#: ../src/lib/List.pm:1174
+#: ../src/lib/List.pm:1164
 msgid "Message tagging"
 msgstr "メッセージへのトピックの印づけ"
 
-#: ../src/lib/List.pm:1205 ../src/lib/List.pm:1235
+#: ../src/lib/List.pm:1195 ../src/lib/List.pm:1225
 msgid "profile"
 msgstr "特権"
 
-#: ../src/lib/List.pm:1246
+#: ../src/lib/List.pm:1236
 msgid "Priority"
 msgstr "優先度"
 
-#: ../src/lib/List.pm:1252
+#: ../src/lib/List.pm:1242
 msgid "Reject mail from automates (crontab, etc)?"
 msgstr "自動処理 (cronジョブなど) で送られる電子メールを拒否するか"
 
-#: ../src/lib/List.pm:1256
+#: ../src/lib/List.pm:1246
 msgid "Who can start a remind process"
 msgstr "登録確認処理を開始できるのは"
 
-#: ../src/lib/List.pm:1261
+#: ../src/lib/List.pm:1251
 msgid "Return-path of the REMIND command"
 msgstr "読者登録確認の送信元"
 
-#: ../src/lib/List.pm:1285 ../src/lib/List.pm:1305
+#: ../src/lib/List.pm:1275 ../src/lib/List.pm:1295
 msgid "Reply address"
 msgstr "返信先アドレス"
 
-#: ../src/lib/List.pm:1291
+#: ../src/lib/List.pm:1281
 msgid "value"
 msgstr "値"
 
-#: ../src/lib/List.pm:1296
+#: ../src/lib/List.pm:1286
 msgid "other email address"
 msgstr "他の電子メールアドレス"
 
-#: ../src/lib/List.pm:1301
+#: ../src/lib/List.pm:1291
 msgid "respect of existing header field"
 msgstr "すでに存在するヘッダを優先する"
 
-#: ../src/lib/List.pm:1310
+#: ../src/lib/List.pm:1300
 msgid "Who can review subscribers"
 msgstr "読者一覧を見ることができるのは"
 
-#: ../src/lib/List.pm:1317
+#: ../src/lib/List.pm:1307
 msgid "RFC 2369 Header fields"
 msgstr "RFC 2369ヘッダフィールド"
 
-#: ../src/lib/List.pm:1321
+#: ../src/lib/List.pm:1311
 msgid "Who can send messages"
 msgstr "メッセージを送ることができるのは"
 
-#: ../src/lib/List.pm:1328
+#: ../src/lib/List.pm:1318
 msgid "Serial number of the config"
 msgstr "設定の連番"
 
-#: ../src/lib/List.pm:1333
+#: ../src/lib/List.pm:1323
 msgid "Who can view"
 msgstr "見ることができるのは"
 
-#: ../src/lib/List.pm:1337
+#: ../src/lib/List.pm:1327
 msgid "Who can edit"
 msgstr "変更できるのは"
 
-#: ../src/lib/List.pm:1344 ../src/lib/List.pm:1456
+#: ../src/lib/List.pm:1334 ../src/lib/List.pm:1446
 msgid "quota"
 msgstr "容量制限"
 
-#: ../src/lib/List.pm:1353 ../src/lib/List.pm:1358
+#: ../src/lib/List.pm:1343 ../src/lib/List.pm:1348
 msgid "email address protection method"
 msgstr "電子メールアドレス保護手法"
 
-#: ../src/lib/List.pm:1364
+#: ../src/lib/List.pm:1354
 msgid "Status of the list"
 msgstr "リストの状況"
 
-#: ../src/lib/List.pm:1372
+#: ../src/lib/List.pm:1362
 msgid "Timeout for fetch of include_sql_query"
 msgstr "「SQLクエリでの取り込み」(include_sql_query) の取得タイムアウト "
 
-#: ../src/lib/List.pm:1378
+#: ../src/lib/List.pm:1368
 msgid "Subject of the list"
 msgstr "リストの表題"
 
-#: ../src/lib/List.pm:1382
+#: ../src/lib/List.pm:1372
 msgid "Who can subscribe to the list"
 msgstr "リストへ読者登録をできるのは"
 
-#: ../src/lib/List.pm:1388
+#: ../src/lib/List.pm:1378
 msgid "Topics for the list"
 msgstr "リストのトピック"
 
-#: ../src/lib/List.pm:1395
+#: ../src/lib/List.pm:1385
 msgid "Inclusions timeout"
 msgstr "読み込みタイムアウト"
 
-#: ../src/lib/List.pm:1399
+#: ../src/lib/List.pm:1389
 msgid "Who can unsubscribe"
 msgstr "登録解除をできるのは"
 
-#: ../src/lib/List.pm:1420
+#: ../src/lib/List.pm:1410
 msgid "Last update of config"
 msgstr "設定の最終更新"
 
-#: ../src/lib/List.pm:1427
+#: ../src/lib/List.pm:1417
 msgid "User data source"
 msgstr "ユーザデータソース"
 
-#: ../src/lib/List.pm:1433
+#: ../src/lib/List.pm:1423
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "ピクチャを表示するようにするか (現在のロボットでは有効にしないと表示されませ"
 "ん)"
 
-#: ../src/lib/List.pm:1439
+#: ../src/lib/List.pm:1429
 msgid "Allow message personnalization"
 msgstr "メッセージを個別化できるようにする"
 
-#: ../src/lib/List.pm:1445
+#: ../src/lib/List.pm:1435
 msgid "Visibility of the list"
 msgstr "リストの見えかた"
 
-#: ../src/lib/List.pm:1461
+#: ../src/lib/List.pm:1451
 msgid "Maximum number of month archived"
 msgstr "投稿保管庫に保管する月数"
 
-#: ../src/lib/List.pm:1466
+#: ../src/lib/List.pm:1456
 msgid "Web archives"
 msgstr "投稿保管庫"
 
-#: ../src/lib/List.pm:1472
+#: ../src/lib/List.pm:1462
 msgid "Welcome return-path"
 msgstr "歓迎メッセージの送信元"
 
-#: ../src/lib/List.pm:1477
+#: ../src/lib/List.pm:1467
 msgid "percentage of list members in VERP mode"
 msgstr "リストのメンバへ配送するメッセージのうち、VERP 方式で送るものの割合"
 
@@ -9190,139 +9125,139 @@ msgstr "パーセント"
 msgid "points"
 msgstr "点"
 
-#: ../src/lib/List.pm:540
+#: ../src/lib/List.pm:530
 msgid "var name"
 msgstr "変数名"
 
-#: ../src/lib/List.pm:545
+#: ../src/lib/List.pm:535
 msgid "var value"
 msgstr "値"
 
 # unit
-#: ../src/lib/List.pm:604
+#: ../src/lib/List.pm:594
 msgid "messages"
 msgstr "通"
 
-#: ../src/lib/List.pm:1370 ../src/lib/List.pm:1393 ../src/lib/List.pm:612
-#: ../src/lib/List.pm:839 ../src/lib/List.pm:919 ../src/lib/List.pm:957
+#: ../src/lib/List.pm:1360 ../src/lib/List.pm:1383 ../src/lib/List.pm:602
+#: ../src/lib/List.pm:829 ../src/lib/List.pm:909 ../src/lib/List.pm:947
 msgid "seconds"
 msgstr "秒"
 
-#: ../src/lib/List.pm:650
+#: ../src/lib/List.pm:640
 msgid "List of headers to be included ito the message for signature"
 msgstr "メッセージで署名の対象とするヘッダの一覧"
 
-#: ../src/lib/List.pm:657
+#: ../src/lib/List.pm:647
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr "DKIMの「d=」タグ。初期値のままにしておかなければならないこともあります"
 
-#: ../src/lib/List.pm:664
+#: ../src/lib/List.pm:654
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr "DKIMの「i=」タグ。空のままにしておかなければならないこともあります"
 
-#: ../src/lib/List.pm:707
+#: ../src/lib/List.pm:697
 msgid "the data source"
 msgstr "データソース"
 
-#: ../src/lib/List.pm:712
+#: ../src/lib/List.pm:702
 msgid "data source parameters"
 msgstr "データソースのパラメータ"
 
-#: ../src/lib/List.pm:728
+#: ../src/lib/List.pm:718
 msgid "Moderators defined in an external data source"
 msgstr "モデレータを外部データソースで決める"
 
-#: ../src/lib/List.pm:737
+#: ../src/lib/List.pm:727
 msgid "Family name"
 msgstr "設定族の名前"
 
-#: ../src/lib/List.pm:850 ../src/lib/List.pm:974
+#: ../src/lib/List.pm:840 ../src/lib/List.pm:964
 msgid "use SSL (LDAPS)"
 msgstr "SSL (LDAPS) を使う"
 
-#: ../src/lib/List.pm:855 ../src/lib/List.pm:979
+#: ../src/lib/List.pm:845 ../src/lib/List.pm:969
 msgid "SSL version"
 msgstr "SSLのバージョン"
 
-#: ../src/lib/List.pm:860 ../src/lib/List.pm:984
+#: ../src/lib/List.pm:850 ../src/lib/List.pm:974
 msgid "SSL ciphers used"
 msgstr "利用するSSL暗号方式"
 
-#: ../src/lib/List.pm:1116 ../src/lib/List.pm:1410
+#: ../src/lib/List.pm:1106 ../src/lib/List.pm:1400
 msgid "date"
 msgstr "日付"
 
-#: ../src/lib/List.pm:1121
+#: ../src/lib/List.pm:1111
 msgid "who ran the instantiation"
 msgstr "設定族の変更を実行した人"
 
-#: ../src/lib/List.pm:1125
+#: ../src/lib/List.pm:1115
 msgid "Latest family instantiation"
 msgstr "最近の設定族変更"
 
-#: ../src/lib/List.pm:1137
+#: ../src/lib/List.pm:1127
 msgid "bytes"
 msgstr "バイト"
 
-#: ../src/lib/List.pm:1215
+#: ../src/lib/List.pm:1205
 msgid "the datasource"
 msgstr "データソース"
 
-#: ../src/lib/List.pm:1220
+#: ../src/lib/List.pm:1210
 msgid "datasource parameters"
 msgstr "データソースのパラメータ"
 
-#: ../src/lib/List.pm:1240
+#: ../src/lib/List.pm:1230
 msgid "Owners defined in an external data source"
 msgstr "オーナーを外部データソースで決める"
 
-#: ../src/lib/List.pm:1265
+#: ../src/lib/List.pm:1255
 msgid "Periodical subscription reminder task"
-msgstr "読者登録確認の定期発送"
+msgstr "読者登録確認の定期発送タスク"
 
-#: ../src/lib/List.pm:1270
+#: ../src/lib/List.pm:1260
 msgid "Incoming SMTP header fields to be removed"
 msgstr "メッセージを受け取ったときに削除するヘッダフィールド"
 
-#: ../src/lib/List.pm:1277
+#: ../src/lib/List.pm:1267
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "メッセージを送り出すときに削除するヘッダフィールド"
 
-#: ../src/lib/List.pm:1343 ../src/lib/List.pm:1455
+#: ../src/lib/List.pm:1333 ../src/lib/List.pm:1445
 msgid "Kbytes"
 msgstr "キロバイト"
 
-#: ../src/lib/List.pm:1416
+#: ../src/lib/List.pm:1406
 msgid "who updated the config"
 msgstr "設定の最終更新者"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2853
+#: ../src/lib/List.pm:2843
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日(%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2854
+#: ../src/lib/List.pm:2844
 msgid "%a, %d %b %Y"
 msgstr "%Y年%m月%d日(%a)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3045 ../src/lib/List.pm:3046 ../src/lib/List.pm:3050
-#: ../wwsympa/wwsympa.fcgi.in:11269 ../wwsympa/wwsympa.fcgi.in:11338
-#: ../wwsympa/wwsympa.fcgi.in:11540 ../wwsympa/wwsympa.fcgi.in:11887
-#: ../wwsympa/wwsympa.fcgi.in:15372 ../wwsympa/wwsympa.fcgi.in:15379
-#: ../wwsympa/wwsympa.fcgi.in:16101 ../wwsympa/wwsympa.fcgi.in:16963
-#: ../wwsympa/wwsympa.fcgi.in:16964 ../wwsympa/wwsympa.fcgi.in:4334
-#: ../wwsympa/wwsympa.fcgi.in:4392 ../wwsympa/wwsympa.fcgi.in:4965
-#: ../wwsympa/wwsympa.fcgi.in:4966 ../wwsympa/wwsympa.fcgi.in:6453
-#: ../wwsympa/wwsympa.fcgi.in:7586 ../wwsympa/wwsympa.fcgi.in:8203
-#: ../wwsympa/wwsympa.fcgi.in:8243 ../wwsympa/wwsympa.fcgi.in:8245
-#: ../wwsympa/wwsympa.fcgi.in:8763 ../wwsympa/wwsympa.fcgi.in:8764
-#: ../wwsympa/wwsympa.fcgi.in:8798 ../wwsympa/wwsympa.fcgi.in:8799
-#: ../wwsympa/wwsympa.fcgi.in:8978 ../wwsympa/wwsympa.fcgi.in:8979
+#: ../src/lib/List.pm:3035 ../src/lib/List.pm:3036 ../src/lib/List.pm:3040
+#: ../wwsympa/wwsympa.fcgi.in:11303 ../wwsympa/wwsympa.fcgi.in:11372
+#: ../wwsympa/wwsympa.fcgi.in:11574 ../wwsympa/wwsympa.fcgi.in:11921
+#: ../wwsympa/wwsympa.fcgi.in:15409 ../wwsympa/wwsympa.fcgi.in:15416
+#: ../wwsympa/wwsympa.fcgi.in:16125 ../wwsympa/wwsympa.fcgi.in:16987
+#: ../wwsympa/wwsympa.fcgi.in:16988 ../wwsympa/wwsympa.fcgi.in:4337
+#: ../wwsympa/wwsympa.fcgi.in:4395 ../wwsympa/wwsympa.fcgi.in:4968
+#: ../wwsympa/wwsympa.fcgi.in:4969 ../wwsympa/wwsympa.fcgi.in:6456
+#: ../wwsympa/wwsympa.fcgi.in:7572 ../wwsympa/wwsympa.fcgi.in:8237
+#: ../wwsympa/wwsympa.fcgi.in:8277 ../wwsympa/wwsympa.fcgi.in:8279
+#: ../wwsympa/wwsympa.fcgi.in:8797 ../wwsympa/wwsympa.fcgi.in:8798
+#: ../wwsympa/wwsympa.fcgi.in:8832 ../wwsympa/wwsympa.fcgi.in:8833
+#: ../wwsympa/wwsympa.fcgi.in:9012 ../wwsympa/wwsympa.fcgi.in:9013
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
@@ -9452,21 +9387,21 @@ msgstr "(日付不明)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1081
+#: ../wwsympa/wwsympa.fcgi.in:1084
 msgid "%H:%M:%S"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:433 ../wwsympa/SympaSession.pm:434
-#: ../wwsympa/wwsympa.fcgi.in:12121 ../wwsympa/wwsympa.fcgi.in:12254
-#: ../wwsympa/wwsympa.fcgi.in:14597 ../wwsympa/wwsympa.fcgi.in:8157
+#: ../wwsympa/wwsympa.fcgi.in:12155 ../wwsympa/wwsympa.fcgi.in:12288
+#: ../wwsympa/wwsympa.fcgi.in:14634 ../wwsympa/wwsympa.fcgi.in:8191
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16558 ../wwsympa/wwsympa.fcgi.in:16559
+#: ../wwsympa/wwsympa.fcgi.in:16582 ../wwsympa/wwsympa.fcgi.in:16583
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
@@ -9617,9 +9552,6 @@ msgstr "受け取らない (休暇のときなどに便利)"
 #: ../wwsympa/wwslib.pm:37
 msgid "you do not receive your own posts"
 msgstr "自分が投稿したものは受け取らない"
-
-#~ msgid "URL:"
-#~ msgstr "URL:"
 
 #~ msgid ""
 #~ "You should probably not reject message detected as spam with notification "
