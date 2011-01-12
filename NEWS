@@ -3,6 +3,64 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.3		January 12, 2011
+
+  Features:
+
+	[6959] src/lib/tools.pm, web_tt2/compose_mail.tt2, web_tt2/error.tt2,
+	wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi.in:  It is now possible, when
+	sending an HTML newsletter through the web interface, to upload a local
+	file from the computer instead of using an URL.
+
+	[6944] src/etc/Makefile.am, src/etc/mhonarc-ressources.tt2,
+	src/etc/scenari/tracking.owner, src/etc/scenari/tracking.private,
+	src/lib/List.pm, src/lib/mail.pm, wwsympa/wwsympa.fcgi.in:  tracking is
+	now controled by a scenario (default is tracking.owner)
+
+
+
+  Changes:
+
+	[6956] src/lib/List.pm:  Patch from Adam Bernstein to always set
+	Reply-To header
+
+	[6950] src/etc/script/Makefile.am, src/lib/Sympa/Constants.pm.in,
+	src/lib/Upgrade.pm:  database structure is described in
+	Sympa::Constants. db creation script are produced by an authors only
+	script part of the tools involved for new version creation. They should
+	not be edited anymore by developpers 
+
+	[6947] src/lib/List.pm, src/lib/Upgrade.pm, src/lib/confdef.pm,
+	src/lib/tracking.pm, src/task_manager.pl.in:  new entry in notification
+	 table for expiration of notification records. retention period is
+	controle by a new list parameter (tracking/retention_period) with a
+	default in robot;conf : tracking_default_retention_pediod. Job is
+	performed by task_manager (purge_tables task)
+
+  Bug fixes:
+
+	[6949] src/lib/List.pm:  fix incorrect multiple footer message 
+
+	[6948] src/etc/script/js/sympa.js:  fix a toggleDivDisplay used in
+	moderation because of a bug in IE
+
+	[6946] src/lib/List.pm:  HTML only reception mode was never used due to
+	a typo in the regular expression.
+
+	[6945] src/lib/tracking.pm, wwsympa/wwsympa.fcgi.in: 
+	tracking::remove_message_by_id don't need file handle as parameter
+
+	[6942] src/lib/Scenario.pm: [#7356][Submitted by A. Bernstein,
+	electricembers.net] a space between two auth methods in scenario (e.g.
+	smtp, md5 instead of smtp,md5) caused the second authentication method
+	to be ignored. Fixed by changing the regexp responsible of scenraio
+	rules extraction.
+
+	[6941] src/lib/List.pm:  In the moderation interface, trying to read an
+	attachment led to an error because the context within which the
+	attachment is read is no longer viewmod, but modindex. Fixed by
+	specifying to mhonarc an attchment url root and a relative basedir.
+
 6.2a.2		December 07, 2010
 
   Bug fixes:
